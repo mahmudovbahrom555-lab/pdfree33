@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /sw.js
+
+Sitemap: https://pdfree.io/sitemap.xml

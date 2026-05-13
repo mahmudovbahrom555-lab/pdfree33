@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!--
+    ════════════════════════════════════════════════════════════════
+    Content Security Policy — defence-in-depth against XSS
+
+    Design decisions:
+    ─────────────────
+    script-src: NO 'unsafe-inline'
+      We have zero inline <script> tags. Allowing unsafe-inline would
+      let any XSS bypass every other protection. AdSense injects its
+      scripts via programmatic document.createElement — that is covered
+      by the domain allowlist, not by unsafe-inline.
+
+    style-src: 'unsafe-inline' ALLOWED
+      We set element.style.display/opacity/width in JS and have
+      inline style= attributes in HTML (ad <ins> tags, footer spans).
+      Style-only XSS cannot execute code, so this is an acceptable
+      tradeoff. Alternative would be refactoring all inline styles to
+      CSS classes — noted as future improvement.
+
+    worker-src: blob: REQUIRED
+      pdf.js ≥ 3.x creates its PDF worker via a blob URL
+      (pdfjsLib.GlobalWorkerOptions.workerSrc = blob:...).
+      Without blob: the PDF→JPG tool breaks silently on first use.
+      Our own worker.js is covered by 'self'.
+
+    connect-src: *.doubleclick.net REQUIRED for AdSense
+      AdSense makes fetch/XHR calls to multiple googlesyndication and
+      doubleclick endpoints for ad selection and reporting. Without
+      these the ad slots show as empty (fallback to Ko-fi is fine, but
+      kills revenue). Added conservatively; remove if not monetising.
+
+    img-src: data: and blob: REQUIRED
+      pdf.js renders page thumbnails as data: URIs.
+      URL.createObjectURL() for JPG→PDF previews produces blob: URIs.
+      Without blob: the image preview thumbnails are blocked by CSP.
+      (Symptoms: blank previews + console error about img-src blob:)
+
+    frame-src: googlesyndication/doubleclick
+      AdSense renders ad creatives inside cross-origin iframes.
+    ════════════════════════════════════════════════════════════════
+  -->
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src  'self'
+                'wasm-unsafe-eval'
+                blob:
+                https://cdnjs.cloudflare.com
+                https://esm.sh
+                https://plausible.io
+                https://pagead2.googlesyndication.com
+                https://static.cloudflareinsights.com;
+    style-src   'self' 'unsafe-inline'
+                https://fonts.googleapis.com;
+    font-src    https://fonts.gstatic.com;
+    img-src     'self' data: blob: https:;
+    connect-src 'self'
+                https://cdnjs.cloudflare.com
+                https://*.workers.dev
+                https://plausible.io
+                https://pagead2.googlesyndication.com
+                https://www.googletagservices.com
+                https://*.doubleclick.net
+                https://cloudflareinsights.com;
+    frame-src   https://googleads.g.doubleclick.net
+                https://tpc.googlesyndication.com;
+    worker-src  'self' blob:;
+    object-src  'none';
+  ">
+  <title>{{ t('seo.merge.title') }}</title>
+  <meta name="description" content="{{ t('seo.merge.desc') }}">
+  <meta property="og:title"       content="{{ t('seo.merge.title') }}">
+  <meta property="og:description" content="{{ t('seo.merge.desc') }}">
+  <meta property="og:type"        content="website">
+  
+  <link rel="canonical" href="{{ canonical_url }}">
+  {{ hreflang_tags|safe }}
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="PDFree">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <!-- Privacy-first analytics (no cookies, GDPR compliant) -->
+  <!-- Replace pdfree.com with your actual domain after deployment -->
+  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap"></noscript>
+
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+
+  <!--
+    ══════════════════════════════════════════════════════
+    GOOGLE ADSENSE — раскомментируй когда аккаунт одобрен:
+
+    <script async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX"
+      crossorigin="anonymous">
+    </script>
+
+    Без этого тега adsbygoogle.push({}) накапливает запросы
+    в очереди и выполнит их когда скрипт загрузится —
+    это стандартное поведение, ничего не сломается.
+    ══════════════════════════════════════════════════════
+  -->
+</head>
+<body>
+
+  <nav>
+    <a href="{{ base_url }}" class="logo" id="logo" aria-label="Go to homepage" style="text-decoration:none">PDF<span>{{ t('ui.nav.logo_span') }}</span></a>
+    <div class="nav-links">
+      <a href="{{ url('merge') }}" class="nav-link" data-tool="merge">{{ t('ui.nav.merge') }}</a>
+      <a href="{{ url('split') }}" class="nav-link" data-tool="split">{{ t('ui.nav.split') }}</a>
+      <a href="{{ url('compress') }}" class="nav-link" data-tool="compress">{{ t('ui.nav.compress') }}</a>
+      <a href="{{ url('jpg2pdf') }}" class="nav-link" data-tool="jpg2pdf">{{ t('ui.nav.jpg2pdf') }}</a>
+      <a href="{{ url('watermark') }}" class="nav-link" data-tool="watermark">{{ t('ui.nav.watermark') }}</a>
+      <a href="{{ url('meta') }}" class="nav-link" data-tool="meta">{{ t('ui.nav.meta') }}</a>
+      <a href="{{ url('protect') }}" class="nav-link" data-tool="protect">{{ t('ui.nav.protect') }}</a>
+    </div>
+  </nav>
+
+  <!-- ══════════════════════════════════════════════════
+       ZONE A — Leaderboard 728×90
+       · Под nav, выше fold → +38% CTR
+       · Статичный <ins>, один impression на сессию
+       · Рекомендуемый формат: фиксированный 728×90
+         (data-ad-format="auto" иногда даёт неожиданную высоту)
+       ══════════════════════════════════════════════════ -->
+  <div id="ad-zone-a" class="ad-slot ad-slot--leaderboard" aria-label="Advertisement">
+    <ins class="adsbygoogle"
+         style="display:block;width:728px;height:90px;margin:0 auto"
+         data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+         data-ad-slot="SLOT_ID_ZONE_A">
+    </ins>
+    <div class="ad-fallback" style="display:none">
+      <a href="https://ko-fi.com/YOUR_USERNAME" target="_blank" rel="noopener" class="ad-fallback__link">
+        ♥ PDFree is free — support it with a coffee
+      </a>
+    </div>
+    <div class="ad-placeholder">
+      <span class="ad-placeholder__label">Ad · Zone A · Leaderboard 728×90</span>
+      <span class="ad-placeholder__note">Под навигацией · один impression · всегда видима</span>
+    </div>
+  </div>
+
+  <!-- ── Hero ── -->
+  <section id="hero" class="hero">
+    <div class="hero-badge">{{ t('ui.hero.badge') }}</div>
+    <h1>{{ t('ui.hero.h1_1') }}<br><em>{{ t('ui.hero.h1_em') }}</em></h1>
+    <p>{{ t('ui.hero.p_1') }} <strong>{{ t('ui.hero.p_strong') }}</strong>{{ t('ui.hero.p_2') }}</p>
+  </section>
+
+  <!-- ── Privacy banner (compact inline) ── -->
+  <section class="privacy-banner" aria-label="Privacy promise">
+    <div class="privacy-banner__icon" aria-hidden="true">🔒</div>
+    <div class="privacy-banner__text">
+      <strong>Your files stay on your device.</strong>
+      We use Web Workers and client-side libraries — nothing is ever sent to any server.
+    </div>
+  </section>
+
+  <!-- ── No-limit bar ── -->
+  <div id="noLimitBar" class="no-limit-bar">
+    <div class="no-limit-item"><span>✓</span> {{ t('ui.no_limit.1') }}</div>
+    <div class="no-limit-item"><span>✓</span> {{ t('ui.no_limit.2') }}</div>
+    <div class="no-limit-item"><span>✓</span> {{ t('ui.no_limit.3') }}</div>
+    <div class="no-limit-item"><span>🔒</span> {{ t('ui.no_limit.4') }}</div>
+  </div>
+
+  <!-- ── Tools grid ── -->
+  <section id="toolsGrid" class="tools-section">
+    <div class="section-label">{{ t('ui.tools.label') }}</div>
+    <div class="tools-grid">
+      <a href="{{ url('merge') }}" class="tool-card featured" data-tool="merge" aria-label="Merge PDF">
+        <span class="tool-icon">🔗</span>
+        <div class="tool-name">{{ t('ui.tool.merge.name') }}</div>
+        <div class="tool-desc">{{ t('ui.tool.merge.desc') }}</div>
+      </a>
+      <a href="{{ url('split') }}" class="tool-card" data-tool="split"><span class="tool-icon">✂️</span><div class="tool-name">{{ t('ui.tool.split.name') }}</div><div class="tool-desc">{{ t('ui.tool.split.desc') }}</div></a>
+      <a href="{{ url('compress') }}" class="tool-card" data-tool="compress"><span class="tool-icon">🗜️</span><div class="tool-name">{{ t('ui.tool.compress.name') }}</div><div class="tool-desc">{{ t('ui.tool.compress.desc') }}</div></a>
+      <a href="{{ url('jpg2pdf') }}" class="tool-card" data-tool="jpg2pdf"><span class="tool-icon">🖼️</span><div class="tool-name">{{ t('ui.tool.jpg2pdf.name') }}</div><div class="tool-desc">{{ t('ui.tool.jpg2pdf.desc') }}</div></a>
+      <a href="{{ url('pdf2jpg') }}" class="tool-card" data-tool="pdf2jpg"><span class="tool-icon">📸</span><div class="tool-name">{{ t('ui.tool.pdf2jpg.name') }}</div><div class="tool-desc">{{ t('ui.tool.pdf2jpg.desc') }}</div></a>
+      <a href="{{ url('extract') }}" class="tool-card" data-tool="extract"><span class="tool-icon">📑</span><div class="tool-name">{{ t('ui.tool.extract.name') }}</div><div class="tool-desc">{{ t('ui.tool.extract.desc') }}</div></a>
+      <a href="{{ url('watermark') }}" class="tool-card" data-tool="watermark"><span class="tool-icon">💧</span><div class="tool-name">{{ t('ui.tool.watermark.name') }}</div><div class="tool-desc">{{ t('ui.tool.watermark.desc') }}</div></a>
+      <a href="{{ url('pagenum') }}" class="tool-card" data-tool="pagenum"><span class="tool-icon">🔢</span><div class="tool-name">{{ t('ui.tool.pagenum.name') }}</div><div class="tool-desc">{{ t('ui.tool.pagenum.desc') }}</div></a>
+      <a href="{{ url('meta') }}" class="tool-card" data-tool="meta"><span class="tool-icon">🏷️</span><div class="tool-name">{{ t('ui.tool.meta.name') }}</div><div class="tool-desc">{{ t('ui.tool.meta.desc') }}</div></a>
+      <a href="{{ url('redact') }}" class="tool-card" data-tool="redact"><span class="tool-icon">🖌️</span><div class="tool-name">{{ t('ui.tool.redact.name') }}</div><div class="tool-desc">{{ t('ui.tool.redact.desc') }}</div></a>
+      <a href="{{ url('rotate') }}" class="tool-card" data-tool="rotate"><span class="tool-icon">🔄</span><div class="tool-name">{{ t('ui.tool.rotate.name') }}</div><div class="tool-desc">{{ t('ui.tool.rotate.desc') }}</div></a>
+      <a href="{{ url('protect') }}" class="tool-card" data-tool="protect"><span class="tool-icon">🔒</span><div class="tool-name">{{ t('ui.tool.protect.name') }}</div><div class="tool-desc">{{ t('ui.tool.protect.desc') }}</div></a>
+    </div>
+  </section>
+
+  <!-- ── Privacy trust bar ── -->
+  <section class="privacy-bar" aria-label="Privacy guarantee">
+    <div class="privacy-bar__inner">
+      <div class="privacy-bar__item">
+        <span class="privacy-bar__icon" aria-hidden="true">🔒</span>
+        <div>
+          <strong>{{ t('ui.privacy.1.title') }}</strong>
+          <p>{{ t('ui.privacy.1.desc') }}</p>
+        </div>
+      </div>
+      <div class="privacy-bar__item">
+        <span class="privacy-bar__icon" aria-hidden="true">⚙️</span>
+        <div>
+          <strong>{{ t('ui.privacy.2.title') }}</strong>
+          <p>{{ t('ui.privacy.2.desc') }}</p>
+        </div>
+      </div>
+      <div class="privacy-bar__item">
+        <span class="privacy-bar__icon" aria-hidden="true">🗑️</span>
+        <div>
+          <strong>{{ t('ui.privacy.3.title') }}</strong>
+          <p>{{ t('ui.privacy.3.desc') }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════
+       ZONE B — In-feed native
+       · Показывается после добавления первого файла
+         (выше вовлечённость → выше CTR)
+       · Один impression — не сбрасывается между обработками
+       · <ins> создаётся один раз через ads.js
+       ══════════════════════════════════════════════════ -->
+  <div id="ad-zone-b" class="ad-slot ad-slot--infeed" style="display:none" aria-label="Advertisement">
+    <!-- ads.js инжектирует <ins> сюда один раз -->
+    <div class="ad-fallback" style="display:none">
+      <a href="https://ko-fi.com/YOUR_USERNAME" target="_blank" rel="noopener" class="ad-fallback__link">
+        ♥ Keep PDFree free — buy us a coffee
+      </a>
+    </div>
+    <div class="ad-placeholder">
+      <span class="ad-placeholder__label">Ad · Zone B · In-feed</span>
+      <span class="ad-placeholder__note">После первого файла · один impression</span>
+    </div>
+  </div>
+
+  <!-- ── Tool workspace ── -->
+  <main id="toolArea" class="main-area" style="display:none" aria-busy="false">
+
+    <div class="tool-header">
+      <div class="tool-header-icon" id="toolIcon" aria-hidden="true">🔗</div>
+      <div class="tool-header-text">
+        <h2 id="toolTitle">{{ t('seo.merge.title') }}</h2>
+        <p  id="toolDesc">{{ t('seo.merge.desc') }}</p>
+      </div>
+    </div>
+
+    <div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-label="Upload files — click or drag and drop">
+      <input type="file" id="fileInput" multiple accept=".pdf" aria-hidden="true">
+      <span class="drop-icon" aria-hidden="true">📂</span>
+      <div class="drop-title">{{ t('ui.workspace.drop_title') }}</div>
+      <div class="drop-sub">{{ t('ui.workspace.drop_sub') }}</div>
+      <button class="drop-btn" id="chooseFilesBtn" type="button">{{ t('ui.workspace.choose_btn') }}</button>
+    </div>
+
+    <div id="fileList"    class="file-list" aria-live="polite" aria-label="Selected files"></div>
+    <div id="fileCount"   class="file-count"   style="display:none"></div>
+    <div id="reorderHint" class="reorder-hint" style="display:none">{{ t('ui.workspace.reorder') }}</div>
+
+    <div id="splitOptions"    class="split-options"   style="display:none" aria-label="Split options"></div>
+    <div id="compressOptions" class="compress-options" style="display:none" aria-label="Compression options"></div>
+    <div id="jpg2pdfOptions"  class="j2p-options"     style="display:none" aria-label="JPG to PDF options"></div>
+    <div id="pdf2jpgOptions"  class="j2p-options"     style="display:none" aria-label="PDF to JPG options"></div>
+    <div id="watermarkOptions" class="j2p-options"    style="display:none" aria-label="Watermark options"></div>
+    <div id="pageNumOptions"  class="j2p-options"     style="display:none" aria-label="Page numbers options"></div>
+    <div id="metaOptions"     class="j2p-options"     style="display:none" aria-label="Metadata editor"></div>
+    <div id="protectOptions"  class="j2p-options"     style="display:none" aria-label="Protect PDF options"></div>
+    <div id="redactOptions"   class="j2p-options"     style="display:none" aria-label="Cover Area options"></div>
+    <div id="rotateOptions"   class="j2p-options"     style="display:none" aria-label="Rotate PDF options"></div>
+
+    <button id="mergeBtn"  class="merge-btn"  type="button" disabled data-mode="process">{{ t('ui.tool.merge.name') }}</button>
+    <button id="cancelBtn" class="cancel-btn" type="button" style="display:none" aria-label="Cancel processing">{{ t('ui.workspace.cancel') }}</button>
+
+    <div id="progressBar"   class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+    <div id="progressLabel" class="progress-label"></div>
+
+    <!-- Success card -->
+    <div id="successCard" class="success-card" role="alert" aria-live="polite" style="display:none">
+      <div class="success-top">
+        <div class="success-icon" aria-hidden="true">✓</div>
+        <div class="success-text">
+          <h3 id="successTitle">{{ t('ui.success.title') }}</h3>
+          <p  id="successDesc"></p>
+        </div>
+        <button id="downloadBtn" class="download-btn" type="button">{{ t('ui.success.download') }}</button>
+      </div>
+
+      <!-- Feedback — priority #0: directly under download, same visual weight -->
+      <div class="fb-row" id="fbRow">
+        <button type="button" class="fb-row-btn fb-row-btn--bug"  data-open-feedback data-fb-type="bug">🐛 Found a bug</button>
+        <button type="button" class="fb-row-btn fb-row-btn--idea" data-open-feedback data-fb-type="idea">💡 Have an idea</button>
+        <button type="button" class="fb-row-btn fb-row-btn--good" data-open-feedback data-fb-type="other">👍 All good!</button>
+      </div>
+
+      <!-- Донат — ненавязчивый, появляется через 2 сек после успеха.
+           Совместим с рекламой: лояльные пользователи донатят,
+           остальные видят рекламу. Два источника дохода не конфликтуют. -->
+      <div id="donateStrip" class="donate-strip" style="display:none" role="complementary">
+        <span class="donate-plant" aria-hidden="true">🌱</span>
+        <div class="donate-text">
+          <strong id="donateTitle">This tool is free, forever.</strong>
+          <p id="donateDesc">If it saved you time, a small tip helps keep it alive — and ad-free.</p>
+        </div>
+        <div class="donate-actions">
+          <button id="donateBtnYes"   class="donate-yes"   type="button">☕ Support $0.50+</button>
+          <button id="donateBtnSkip"  class="donate-skip"  type="button">Maybe later</button>
+          <button id="donateBtnClose" class="donate-close" type="button" aria-label="Close">✕</button>
+        </div>
+      </div>
+      <div id="thankyouStrip" class="thankyou-strip" style="display:none" role="status">
+        🌿 Thank you! You help keep this free for everyone.
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════
+         ZONE C — Post-success ★ ЛУЧШИЙ CTR ×2.4
+         · Появляется через 3 сек (пользователь сначала скачивает)
+         · <ins> пересоздаётся при каждом успехе → новый impression
+         · Кнопка закрытия снижает раздражение
+         ══════════════════════════════════════════════════ -->
+    <div id="ad-zone-c"
+         class="ad-slot ad-slot--post-success"
+         style="display:none; opacity:0; transition: opacity 0.3s ease;"
+         aria-label="Advertisement">
+      <button class="ad-zone-c__close" id="adZoneCClose" type="button" aria-label="Close ad">✕</button>
+      <!-- ads.js пересоздаёт <ins> здесь при каждом успехе -->
+      <div class="ad-fallback" style="display:none">
+        <a href="https://ko-fi.com/YOUR_USERNAME" target="_blank" rel="noopener" class="ad-fallback__link">
+          ♥ Enjoy PDFree? Support us with a coffee
+        </a>
+      </div>
+      <div class="ad-placeholder">
+        <span class="ad-placeholder__label">Ad · Zone C · Post-success ★</span>
+        <span class="ad-placeholder__note">Через 3 сек после скачивания · новый impression каждый раз</span>
+      </div>
+    </div>
+
+
+
+  </main>
+
+  <!-- ── SEO Content (for indexing) ── -->
+  <section class="seo-article" aria-labelledby="seoArticleTitle">
+    <div class="seo-article__inner">
+      <h2 id="seoArticleTitle">{{ t('seo.article.h2') }}</h2>
+      <p>{{ t('seo.article.p1') }}</p>
+      <p>{{ t('seo.article.p2') }}</p>
+      
+      <h3>{{ t('seo.faq.title') }}</h3>
+      <dl class="seo-faq">
+        <dt>{{ t('seo.faq.q1') }}</dt>
+        <dd>{{ t('seo.faq.a1') }}</dd>
+        <dt>{{ t('seo.faq.q2') }}</dt>
+        <dd>{{ t('seo.faq.a2') }}</dd>
+      </dl>
+    </div>
+  </section>
+
+  <footer>
+    PDFree · <strong>All processing happens 100% in your browser</strong> · Files are <strong>never uploaded</strong><br>
+    <span style="color:var(--green)">🔒</span> Your documents never leave your device &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> Built to be free for everyone, forever<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
+      Open source under the
+      <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a>
+      &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/PDFree" target="_blank" rel="noopener" style="color:var(--green)">View source on GitHub</a>
+      &nbsp;·&nbsp;
+      <button type="button" data-open-feedback class="fb-footer-btn">💬 Feedback</button>
+    </span>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <!-- JSZip and pdf-lib are now dynamically imported via ESM when needed -->
+  <script type="module" src="js/feedback.js"></script>
+  <script type="module" src="js/app.js?v=14"></script>
+
+
+<!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

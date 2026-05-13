@@ -1,0 +1,515 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+  <!-- ── Homepage ── -->
+  <url>
+    <loc>https://pdfree.io/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pdfree.io/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pdfree.io/es/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://pdfree.io/pt/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pdfree.io/de/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pdfree.io/fr/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pdfree.io/"/>
+  </url>
+
+  <!-- ── EN tool pages ── -->
+  <url>
+    <loc>https://pdfree.io/merge-pdf/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pdfree.io/merge-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pdfree.io/es/unir-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://pdfree.io/pt/juntar-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pdfree.io/de/pdf-zusammenfuehren/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pdfree.io/fr/fusionner-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pdfree.io/merge-pdf/"/>
+  </url>
+  <url>
+    <loc>https://pdfree.io/compress-pdf/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pdfree.io/compress-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pdfree.io/es/comprimir-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://pdfree.io/pt/comprimir-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pdfree.io/de/pdf-komprimieren/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pdfree.io/fr/compresser-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pdfree.io/compress-pdf/"/>
+  </url>
+  <url>
+    <loc>https://pdfree.io/split-pdf/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pdfree.io/split-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pdfree.io/es/dividir-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://pdfree.io/pt/dividir-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pdfree.io/de/pdf-aufteilen/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pdfree.io/fr/diviser-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pdfree.io/split-pdf/"/>
+  </url>
+  <url>
+    <loc>https://pdfree.io/rotate-pdf/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pdfree.io/rotate-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pdfree.io/es/rotar-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://pdfree.io/pt/girar-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pdfree.io/de/pdf-drehen/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pdfree.io/fr/rotation-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pdfree.io/rotate-pdf/"/>
+  </url>
+  <url>
+    <loc>https://pdfree.io/watermark-pdf/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pdfree.io/watermark-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pdfree.io/es/marca-de-agua-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://pdfree.io/pt/marca-dagua-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pdfree.io/de/wasserzeichen-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pdfree.io/fr/filigrane-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pdfree.io/watermark-pdf/"/>
+  </url>
+  <url>
+    <loc>https://pdfree.io/protect-pdf/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pdfree.io/protect-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pdfree.io/es/proteger-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://pdfree.io/pt/proteger-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pdfree.io/de/pdf-schuetzen/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pdfree.io/fr/proteger-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pdfree.io/protect-pdf/"/>
+  </url>
+  <url>
+    <loc>https://pdfree.io/redact-pdf/</loc>
+    <lastmod>2026-05-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pdfree.io/redact-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pdfree.io/es/censurar-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://pdfree.io/pt/censurar-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pdfree.io/de/pdf-schwaerzen/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pdfree.io/fr/censurer-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pdfree.io/redact-pdf/"/>
+  </url>
+  <url>
+    <loc>https://pdfree.io/annotate-pdf/</loc>
+    <lastmod>2026-05-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pdfree.io/annotate-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pdfree.io/annotate-pdf/"/>
+  </url>
+  <url>
+    <loc>https://pdfree.io/highlight-pdf/</loc>
+    <lastmod>2026-05-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pdfree.io/highlight-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pdfree.io/highlight-pdf/"/>
+  </url>
+  <url>
+    <loc>https://pdfree.io/pagenum-pdf/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pdfree.io/pagenum-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pdfree.io/es/numeros-de-pagina-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://pdfree.io/pt/numeros-de-pagina-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pdfree.io/de/seitenzahlen-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pdfree.io/fr/numerotation-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pdfree.io/pagenum-pdf/"/>
+  </url>
+  <url>
+    <loc>https://pdfree.io/extract-pdf/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pdfree.io/extract-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pdfree.io/es/extraer-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://pdfree.io/pt/extrair-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pdfree.io/de/seiten-extrahieren/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pdfree.io/fr/extraire-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pdfree.io/extract-pdf/"/>
+  </url>
+  <url>
+    <loc>https://pdfree.io/jpg2pdf/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pdfree.io/jpg2pdf/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pdfree.io/es/jpg-a-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://pdfree.io/pt/jpg-para-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pdfree.io/de/jpg-zu-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pdfree.io/fr/jpg-en-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pdfree.io/jpg2pdf/"/>
+  </url>
+  <url>
+    <loc>https://pdfree.io/pdf2jpg/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pdfree.io/pdf2jpg/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pdfree.io/es/pdf-a-jpg/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://pdfree.io/pt/pdf-para-jpg/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pdfree.io/de/pdf-zu-jpg/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pdfree.io/fr/pdf-en-jpg/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pdfree.io/pdf2jpg/"/>
+  </url>
+  <url>
+    <loc>https://pdfree.io/metadata-pdf/</loc>
+    <lastmod>2026-05-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pdfree.io/metadata-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pdfree.io/es/metadatos-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://pdfree.io/pt/metadados-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pdfree.io/de/pdf-metadaten/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pdfree.io/fr/metadonnees-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pdfree.io/metadata-pdf/"/>
+  </url>
+
+  <!-- ── ES pages ── -->
+  <url>
+    <loc>https://pdfree.io/es/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/es/unir-pdf/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/es/comprimir-pdf/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/es/dividir-pdf/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/es/rotar-pdf/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/es/marca-de-agua-pdf/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/es/proteger-pdf/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/es/censurar-pdf/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/es/numeros-de-pagina-pdf/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/es/extraer-pdf/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/es/jpg-a-pdf/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/es/pdf-a-jpg/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/es/metadatos-pdf/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- ── PT pages ── -->
+  <url>
+    <loc>https://pdfree.io/pt/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/pt/juntar-pdf/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/pt/comprimir-pdf/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/pt/dividir-pdf/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/pt/girar-pdf/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/pt/marca-dagua-pdf/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/pt/proteger-pdf/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/pt/censurar-pdf/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/pt/numeros-de-pagina-pdf/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/pt/extrair-pdf/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/pt/jpg-para-pdf/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/pt/pdf-para-jpg/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/pt/metadados-pdf/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- ── DE pages ── -->
+  <url>
+    <loc>https://pdfree.io/de/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/de/pdf-zusammenfuehren/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/de/pdf-komprimieren/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/de/pdf-aufteilen/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/de/pdf-drehen/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/de/wasserzeichen-pdf/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/de/pdf-schuetzen/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/de/pdf-schwaerzen/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/de/seitenzahlen-pdf/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/de/seiten-extrahieren/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/de/jpg-zu-pdf/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/de/pdf-zu-jpg/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/de/pdf-metadaten/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- ── FR pages ── -->
+  <url>
+    <loc>https://pdfree.io/fr/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/fr/fusionner-pdf/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/fr/compresser-pdf/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/fr/diviser-pdf/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/fr/rotation-pdf/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/fr/filigrane-pdf/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/fr/proteger-pdf/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/fr/censurer-pdf/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/fr/numerotation-pdf/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/fr/extraire-pdf/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/fr/jpg-en-pdf/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/fr/pdf-en-jpg/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/fr/metadonnees-pdf/</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- ── Legal ── -->
+  <url>
+    <loc>https://pdfree.io/privacy.html</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/terms.html</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
+</urlset>

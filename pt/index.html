@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src  'self'
+                'wasm-unsafe-eval'
+                blob:
+                https://cdnjs.cloudflare.com
+                https://plausible.io
+                https://pagead2.googlesyndication.com
+                https://static.cloudflareinsights.com;
+    style-src   'self' 'unsafe-inline'
+                https://fonts.googleapis.com;
+    font-src    https://fonts.gstatic.com;
+    img-src     'self' data: blob: https:;
+    connect-src 'self'
+                https://cdnjs.cloudflare.com
+                https://*.workers.dev
+                https://plausible.io
+                https://pagead2.googlesyndication.com
+                https://www.googletagservices.com
+                https://*.doubleclick.net
+                https://cloudflareinsights.com;
+    frame-src   https://googleads.g.doubleclick.net
+                https://tpc.googlesyndication.com;
+    worker-src  'self' blob:;
+    object-src  'none';
+  ">
+  <title>PDFree — Ferramentas PDF Grátis, Sem Limites</title>
+  <meta name="description" content="Ferramentas PDF privadas: juntar, dividir, comprimir, marca d'água, números de página, extrair páginas, editar metadados. Tudo no seu navegador — arquivos nunca enviados. Grátis, sem limites, sem cadastro.">
+  <meta name="keywords"    content="juntar pdf, dividir pdf, comprimir pdf, ferramentas pdf grátis, combinar arquivos pdf, pdf privado, pdf sem upload, pdf client-side, marca d'água pdf, números de página pdf, editor metadados pdf">
+  <meta property="og:title"       content="PDFree — Ferramentas PDF Privadas, Grátis para Sempre">
+  <meta property="og:description" content="Juntar, dividir, comprimir, marca d'água em PDFs. 100% privado — arquivos nunca saem do seu dispositivo. Sem cadastro, sem limites.">
+  <meta property="og:type"        content="website">
+  <meta property="og:url"       content="https://pdfree.io/pt/">
+  <meta property="og:site_name" content="PDFree">
+  <meta property="og:locale"    content="pt_BR">
+  <meta property="og:image"     content="https://pdfree.io/icons/og-image.jpg">
+  <meta property="og:image:width"  content="1200">
+  <meta property="og:image:height" content="633">
+  <meta name="twitter:card"        content="summary_large_image">
+  <meta name="twitter:site"        content="@pdfree_io">
+  <meta name="twitter:image"       content="https://pdfree.io/icons/og-image.jpg">
+
+  <link rel="canonical" href="https://pdfree.io/pt/">
+  <link rel="alternate" hreflang="en" href="https://pdfree.io/">
+  <link rel="alternate" hreflang="es" href="https://pdfree.io/es/">
+  <link rel="alternate" hreflang="pt" href="https://pdfree.io/pt/">
+  <link rel="alternate" hreflang="de" href="https://pdfree.io/de/">
+  <link rel="alternate" hreflang="fr" href="https://pdfree.io/fr/">
+  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/">
+
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="PDFree">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <!-- Privacy-first analytics (no cookies, GDPR compliant) -->
+  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap"></noscript>
+
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/animations.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+
+</head>
+<body>
+
+  <!-- ── Navigation ── -->
+  <nav>
+    <div class="logo" id="logo" tabindex="0" role="button" aria-label="Ir para página inicial">
+      <div class="logo-icon" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+      </div>
+      <span class="logo-text">PDF<span>ree</span></span>
+    </div>
+    <div class="nav-links">
+      <button class="nav-link" data-tool="merge">Juntar</button>
+      <button class="nav-link" data-tool="split">Dividir</button>
+      <button class="nav-link" data-tool="compress">Comprimir</button>
+      <button class="nav-link" data-tool="jpg2pdf">JPG→PDF</button>
+      <button class="nav-link" data-tool="watermark">Marca d'água</button>
+      <button class="nav-link" data-tool="meta">Metadados</button>
+      <button class="nav-link" data-tool="protect">Proteger</button>
+    </div>
+  </nav>
+
+  <!-- ── Hero ── -->
+  <section id="hero" class="hero">
+    <div class="hero-badge">🔒 100% privado · sem uploads · sem cadastro · sem limites</div>
+    <h1>Ferramentas PDF que<br><em>realmente funcionam</em></h1>
+    <p>Juntar, dividir, comprimir, marca d'água, converter — tudo roda <strong>no seu navegador</strong>. Seus arquivos nunca saem do seu dispositivo. Sem servidor. Sem conta. Apenas resultados.</p>
+
+    <div class="hero-features">
+      <div class="hero-feature">
+        <div class="hero-feature__icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <div>
+          <strong>100% Privado</strong>
+          <span>Arquivos nunca saem do seu dispositivo</span>
+        </div>
+      </div>
+      <div class="hero-feature">
+        <div class="hero-feature__icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        </div>
+        <div>
+          <strong>Super Rápido</strong>
+          <span>Funciona instantaneamente, offline</span>
+        </div>
+      </div>
+      <div class="hero-feature">
+        <div class="hero-feature__icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+        <div>
+          <strong>Sem Limites</strong>
+          <span>Sem limites de tamanho ou diários</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Trust alert block ── -->
+  <div class="trust-alert" id="trustAlert" aria-label="Promessa de privacidade">
+    <div class="trust-alert-icon" aria-hidden="true">
+      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
+    </div>
+    <div class="trust-alert-text">
+      <strong>Seus arquivos permanecem no seu dispositivo.</strong>
+      <span>Usamos Web Workers e bibliotecas client-side — nada nunca é enviado para nenhum servidor.</span>
+    </div>
+  </div>
+
+  <!-- ── No-limit bar ── -->
+  <div id="noLimitBar" class="no-limit-bar">
+    <div class="no-limit-item">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+      Sem limites de arquivos
+    </div>
+    <div class="no-limit-item">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+      Sem marcas d'água adicionadas
+    </div>
+    <div class="no-limit-item">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+      Sem cadastro necessário
+    </div>
+    <div class="no-limit-item">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      Arquivos nunca saem do seu dispositivo
+    </div>
+  </div>
+
+  <!-- ── Tools grid ── -->
+  <section id="toolsGrid" class="tools-section">
+    <div class="section-label">Todas as ferramentas</div>
+    <div class="tools-grid">
+      <div class="tool-card featured" data-tool="merge" tabindex="0" role="button" aria-label="Juntar PDF">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
+        <div class="tool-name">Juntar PDF</div>
+        <div class="tool-desc">Combine qualquer quantidade de PDFs — sem restrições</div>
+      </div>
+      <div class="tool-card" data-tool="split" tabindex="0" role="button" aria-label="Dividir PDF">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg></div>
+        <div class="tool-name">Dividir PDF</div>
+        <div class="tool-desc">Extrair páginas ou dividir em arquivos separados instantaneamente</div>
+      </div>
+      <div class="tool-card" data-tool="compress" tabindex="0" role="button" aria-label="Comprimir PDF">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/><path d="M5 2h14"/><path d="M5 22h14"/></svg></div>
+        <div class="tool-name">Comprimir PDF</div>
+        <div class="tool-desc">Reduza o tamanho sem perder qualidade — localmente</div>
+      </div>
+      <div class="tool-card" data-tool="jpg2pdf" tabindex="0" role="button" aria-label="JPG para PDF">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
+        <div class="tool-name">JPG para PDF</div>
+        <div class="tool-desc">Converta suas imagens em um único PDF instantaneamente</div>
+      </div>
+      <div class="tool-card" data-tool="pdf2jpg" tabindex="0" role="button" aria-label="PDF para JPG">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg></div>
+        <div class="tool-name">PDF para JPG</div>
+        <div class="tool-desc">Extraia páginas como imagens de alta qualidade</div>
+      </div>
+      <div class="tool-card" data-tool="extract" tabindex="0" role="button" aria-label="Extrair Páginas">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="M12 12v6"/><path d="m9 15 3-3 3 3"/></svg></div>
+        <div class="tool-name">Extrair Páginas</div>
+        <div class="tool-desc">Pegue páginas selecionadas em um novo PDF limpo</div>
+      </div>
+      <div class="tool-card" data-tool="watermark" tabindex="0" role="button" aria-label="Marca d'Água">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg></div>
+        <div class="tool-name">Marca d'Água</div>
+        <div class="tool-desc">Carimbar texto em cada página — diagonal ou em mosaico</div>
+      </div>
+      <div class="tool-card" data-tool="pagenum" tabindex="0" role="button" aria-label="Números de Página">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 22h14a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v4"/><polyline points="14 2 14 8 20 8"/><path d="M2 15h4v4"/><path d="M4 15v6"/><path d="M10 15v6"/><path d="M14 15v6"/></svg></div>
+        <div class="tool-name">Números de Página</div>
+        <div class="tool-desc">Adicionar rodapés numerados — Arábico, Romano ou ABC</div>
+      </div>
+      <div class="tool-card" data-tool="meta" tabindex="0" role="button" aria-label="Editar Metadados">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"/><path d="M7 7h.01"/></svg></div>
+        <div class="tool-name">Editar Metadados</div>
+        <div class="tool-desc">Ver e editar título, autor e palavras-chave</div>
+      </div>
+      <div class="tool-card" data-tool="redact" tabindex="0" role="button" aria-label="Censurar PDF">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 14l2 2 4-4"/></svg></div>
+        <div class="tool-name">Censurar PDF</div>
+        <div class="tool-desc">Oculte marcas d'água, assinaturas ou dados sensíveis localmente</div>
+      </div>
+      <div class="tool-card" data-tool="rotate" tabindex="0" role="button" aria-label="Girar PDF">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg></div>
+        <div class="tool-name">Girar PDF</div>
+        <div class="tool-desc">Corrige a orientação de páginas em qualquer PDF</div>
+      </div>
+      <div class="tool-card" data-tool="protect" tabindex="0" role="button" aria-label="Proteger PDF">
+        <div class="tool-card-pulse" aria-hidden="true">
+          <div class="tool-card-pulse__ring"></div>
+          <div class="tool-card-pulse__dot"></div>
+        </div>
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div class="tool-name">Proteger PDF</div>
+        <div class="tool-desc">Senha AES-256 e permissões — 100% privado</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Privacy trust bar ── -->
+  <section class="privacy-bar" aria-label="Garantia de privacidade">
+    <div class="privacy-bar__inner">
+      <div class="privacy-bar__item">
+        <div class="privacy-bar__icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <div>
+          <strong>100% privado por design</strong>
+          <p>Seus arquivos são processados inteiramente no seu navegador. Zero uploads — nunca.</p>
+        </div>
+      </div>
+      <div class="privacy-bar__item">
+        <div class="privacy-bar__icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </div>
+        <div>
+          <strong>Roda no seu dispositivo</strong>
+          <p>Todas as operações PDF rodam em um Web Worker — uma thread isolada no seu próprio hardware.</p>
+        </div>
+      </div>
+      <div class="privacy-bar__item">
+        <div class="privacy-bar__icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+        </div>
+        <div>
+          <strong>Esquecido instantaneamente</strong>
+          <p>Os arquivos vivem apenas na RAM. Feche a aba e eles desaparecem — sem logs, sem rastros.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Tool workspace ── -->
+  <main id="toolArea" class="main-area" style="display:none" aria-busy="false">
+
+    <div class="tool-header">
+      <div class="tool-header-icon" id="toolIcon" aria-hidden="true">🔗</div>
+      <div class="tool-header-text">
+        <h2 id="toolTitle">Juntar PDF</h2>
+        <p  id="toolDesc">Combine arquivos PDF ilimitados — sem restrições</p>
+      </div>
+    </div>
+
+    <div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-label="Enviar arquivos — clique ou arraste e solte">
+      <input type="file" id="fileInput" multiple accept=".pdf" aria-hidden="true">
+      <span class="drop-icon" aria-hidden="true">📂</span>
+      <div class="drop-title">Solte os arquivos aqui</div>
+      <div class="drop-sub">ou clique para navegar — qualquer quantidade de arquivos</div>
+      <button class="drop-btn" id="chooseFilesBtn" type="button">Escolher arquivos</button>
+    </div>
+
+    <div id="fileList"    class="file-list" aria-live="polite" aria-label="Selected files"></div>
+    <div id="fileCount"   class="file-count"   style="display:none"></div>
+    <div id="reorderHint" class="reorder-hint" style="display:none">↕ Arraste para reordenar arquivos antes de juntar</div>
+
+    <div id="splitOptions"    class="split-options"   style="display:none" aria-label="Split options"></div>
+    <div id="compressOptions" class="compress-options" style="display:none" aria-label="Compression options"></div>
+    <div id="jpg2pdfOptions"  class="j2p-options"     style="display:none" aria-label="JPG to PDF options"></div>
+    <div id="pdf2jpgOptions"  class="j2p-options"     style="display:none" aria-label="PDF to JPG options"></div>
+    <div id="watermarkOptions" class="j2p-options"    style="display:none" aria-label="Watermark options"></div>
+    <div id="pageNumOptions"  class="j2p-options"     style="display:none" aria-label="Page numbers options"></div>
+    <div id="metaOptions"     class="j2p-options"     style="display:none" aria-label="Metadata editor"></div>
+    <div id="protectOptions"  class="j2p-options"     style="display:none" aria-label="Protect PDF options"></div>
+    <div id="redactOptions"   class="j2p-options"     style="display:none" aria-label="Cover Area options"></div>
+    <div id="rotateOptions"   class="j2p-options"     style="display:none" aria-label="Rotate PDF options"></div>
+
+    <button id="mergeBtn"  class="merge-btn"  type="button" disabled data-mode="process">🔗 Juntar arquivos PDF</button>
+    <button id="cancelBtn" class="cancel-btn" type="button" style="display:none" aria-label="Cancelar processamento">✕ Cancelar</button>
+
+    <div id="progressBar"   class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+    <div id="progressLabel" class="progress-label"></div>
+
+    <!-- Success card -->
+    <div id="successCard" class="success-card" role="alert" aria-live="polite" style="display:none">
+      <div class="success-top">
+        <div class="success-icon" aria-hidden="true">✓</div>
+        <div class="success-text">
+          <h3 id="successTitle">Pronto!</h3>
+          <p  id="successDesc"></p>
+        </div>
+        <button id="downloadBtn" class="download-btn" type="button">⬇ Download</button>
+      </div>
+
+      <!-- Install PWA nudge — shown only when browser supports it -->
+      <div class="pwa-nudge" id="pwaNudge" style="display:none">
+        <span class="pwa-nudge__text">⚡ Instale para acesso instantâneo — funciona offline</span>
+        <button type="button" class="pwa-nudge__btn" id="pwaNudgeBtn">Instalar app</button>
+        <button type="button" class="pwa-nudge__skip" id="pwaNudgeSkip" aria-label="Fechar">✕</button>
+      </div>
+
+    </div>
+
+  </main>
+
+  <footer>
+    PDFree · <strong>Todo o processamento acontece 100% no seu navegador</strong> · <strong>nunca enviados</strong><br>
+    <span style="color:var(--green)">🔒</span> Seus documentos nunca saem do seu dispositivo &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> Feito para ser grátis para todos, para sempre<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
+      <a href="/privacy.html" style="color:var(--green)">Privacidade</a>
+      &nbsp;·&nbsp;
+      <a href="/terms.html" style="color:var(--green)">Termos</a>
+      &nbsp;·&nbsp;
+      <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a>
+      &nbsp;·&nbsp;
+      <a href="https://github.com/yourusername/pdfree" target="_blank" rel="noopener" style="color:var(--green)">GitHub</a>
+    </span>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <!-- JSZip для создания ZIP-архива при Split PDF -->
+  <!-- pdf-lib нужен в основном потоке для splitUI.js (window.PDFLib) -->
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <!-- Inline version check: runs before modules, shows cache diagnostic in console -->
+  <script>
+    console.info('[PDFree] v6.3 loaded. If rotate tool fails, open DevTools → Application → Service Workers → Unregister → hard reload (Ctrl+F5).');
+  </script>
+  <script type="module" src="../js/app.js?v=14"></script>
+
+
+<!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

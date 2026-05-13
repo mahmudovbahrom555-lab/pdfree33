@@ -1,0 +1,53 @@
+/* SPDX-License-Identifier: AGPL-3.0-only
+   Copyright (C) 2025 PDFree Contributors  https://github.com/yourusername/pdfree */
+
+/* ============================================================
+   variables.css — Design tokens & global reset
+   Чтобы изменить цвет/шрифт всего сайта — меняй только здесь
+   ============================================================ */
+
+:root {
+  /* Colors */
+  --bg:           #F7F6F2;
+  --surface:      #FFFFFF;
+  --surface2:     #F0EFE9;
+  --border:       rgba(0, 0, 0, 0.08);
+  --text:         #1A1A18;
+  --text2:        #6B6B62;
+  --text3:        #A0A096;
+  --green:        #2D7A4F;
+  --green-light:  #E8F5EE;
+  --green-mid:    #4CAF78;
+
+  /* Spacing */
+  --radius:    14px;
+  --radius-sm: 8px;
+
+  /* Shadows */
+  --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.10);
+
+  /* Typography */
+  --font-sans: 'DM Sans', sans-serif;
+  --font-mono: 'DM Mono', monospace;
+
+  /* Transitions */
+  --transition-fast:   0.15s ease;
+  --transition-normal: 0.2s ease;
+  --transition-bounce: 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Global reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 15px;
+  line-height: 1.5;
+}

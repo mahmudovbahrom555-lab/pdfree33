@@ -1,0 +1,19 @@
+{
+  "name": "pdfree",
+  "version": "1.0.0",
+  "description": "Private PDF tools \u2014 all processing in your browser",
+  "main": "sw.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "node tests/utils.test.js && node tests/processor.logic.test.js && node tests/files.logic.test.js && node tests/splitUI.logic.test.js && node tests/worker.integration.test.js",
+    "test:watch": "node --watch tests/splitUI.logic.test.js",
+    "test:unit": "node tests/utils.test.js && node tests/processor.logic.test.js && node tests/splitUI.logic.test.js",
+    "test:integration": "node tests/worker.integration.test.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "AGPL-3.0-only",
+  "type": "module"
+}

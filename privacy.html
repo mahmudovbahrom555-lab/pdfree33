@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy — PDFree</title>
+  <link rel="stylesheet" href="/css/variables.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <style>
+    .legal-page {
+      max-width: 800px;
+      margin: 80px auto 60px;
+      padding: 0 24px;
+      line-height: 1.7;
+    }
+    .legal-page h1 {
+      font-size: 36px;
+      margin-bottom: 12px;
+      color: var(--text);
+    }
+    .legal-page .updated {
+      color: var(--text3);
+      font-size: 14px;
+      margin-bottom: 32px;
+    }
+    .legal-page h2 {
+      font-size: 24px;
+      margin: 40px 0 16px;
+      color: var(--text);
+    }
+    .legal-page h3 {
+      font-size: 18px;
+      margin: 24px 0 12px;
+      color: var(--text);
+    }
+    .legal-page p {
+      margin: 16px 0;
+      color: var(--text2);
+    }
+    .legal-page ul {
+      margin: 16px 0;
+      padding-left: 24px;
+      color: var(--text2);
+    }
+    .legal-page li {
+      margin: 8px 0;
+    }
+    .legal-page a {
+      color: var(--green);
+      text-decoration: none;
+    }
+    .legal-page a:hover {
+      text-decoration: underline;
+    }
+    .highlight-box {
+      background: var(--green-light);
+      border-left: 4px solid var(--green);
+      padding: 20px;
+      margin: 24px 0;
+      border-radius: 8px;
+    }
+    .highlight-box p {
+      margin: 0;
+      color: var(--text);
+    }
+  </style>
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+</head>
+<body>
+  
+  <header>
+    <a href="/" class="logo">
+      <span class="logo-icon">🔒</span>
+      <span class="logo-text">PDFree</span>
+    </a>
+    <nav>
+      <a href="/">Tools</a>
+      <a href="/privacy.html" class="active">Privacy</a>
+      <a href="/terms.html">Terms</a>
+    </nav>
+  </header>
+
+  <div class="legal-page">
+    
+    <h1>Privacy Policy</h1>
+    <p class="updated">Last updated: May 7, 2026</p>
+
+    <div class="highlight-box">
+      <p><strong>TL;DR:</strong> PDFree processes everything in your browser. We don't collect, store, or transmit your files or personal data. Ever.</p>
+    </div>
+
+    <h2>Our Privacy Commitment</h2>
+    
+    <p>PDFree is built on a simple principle: <strong>your documents are yours</strong>. We designed this service to operate entirely on your device (client-side) so that your files never need to leave your computer, tablet, or phone.</p>
+
+    <h2>What Data We DON'T Collect</h2>
+    
+    <p>Unlike most online PDF tools, PDFree does not:</p>
+    
+    <ul>
+      <li><strong>Upload your files:</strong> All PDF processing happens in your browser using JavaScript and WebAssembly. Your documents never touch our servers because we don't have document-processing servers.</li>
+      <li><strong>Store your files:</strong> Files exist only in your browser's temporary memory (RAM) while you're using the tool. Close the tab and they're gone — no traces, no backups.</li>
+      <li><strong>Track your activity:</strong> We don't use analytics, advertising pixels, or third-party tracking scripts. We don't know which tools you use or how often.</li>
+      <li><strong>Collect personal information:</strong> No email, no name, no account required. We don't ask for it, and we don't want it.</li>
+      <li><strong>Use cookies for tracking:</strong> The only data stored locally is your UI preferences (like theme choice) using browser localStorage. This never leaves your device.</li>
+    </ul>
+
+    <h2>Technical Details: How Privacy Works</h2>
+    
+    <h3>Client-Side Processing</h3>
+    <p>PDFree uses <strong>pdf-lib</strong> and <strong>pdf.js</strong> — JavaScript libraries that run entirely in your browser. When you upload a PDF:</p>
+    <ol>
+      <li>The file is loaded into your browser's memory (RAM)</li>
+      <li>JavaScript processes the file (merge, split, compress, etc.)</li>
+      <li>A new PDF is generated in memory</li>
+      <li>You download the result directly from your browser</li>
+    </ol>
+    <p>At no point does the file leave your device or get transmitted over the internet to any server.</p>
+
+    <h3>What Happens to Your Files</h3>
+    <p>Once you close or refresh the browser tab, all file data is immediately cleared from memory. There are no server-side logs, no cached copies, and no "temp folders" where your documents could linger.</p>
+
+    <h3>LocalStorage</h3>
+    <p>PDFree stores minimal UI state in your browser's localStorage:</p>
+    <ul>
+      <li>Theme preference (light/dark mode)</li>
+      <li>Tool-specific settings (like last-used compression level)</li>
+      <li>PWA installation state</li>
+    </ul>
+    <p>This data never leaves your device and can be cleared at any time through your browser's settings.</p>
+
+    <h2>Third-Party Services</h2>
+    
+    <p>PDFree loads resources from these external domains:</p>
+    
+    <ul>
+      <li><strong>cdn.jsdelivr.net:</strong> To deliver pdf-lib and pdf.js libraries (open-source PDF processing tools)</li>
+      <li><strong>fonts.googleapis.com:</strong> Optional web fonts (only if you enable them in settings)</li>
+    </ul>
+    
+    <p>These are standard CDN services that do not track or log your usage in a way that can be attributed to you personally.</p>
+
+    <h2>Data Security</h2>
+    
+    <p>Since your files never leave your device, the primary security model is your device's security:</p>
+    
+    <ul>
+      <li><strong>HTTPS encryption:</strong> PDFree.io is served over HTTPS to prevent man-in-the-middle attacks</li>
+      <li><strong>Content Security Policy:</strong> Strict CSP headers prevent cross-site scripting (XSS) attacks</li>
+      <li><strong>No server-side attack surface:</strong> Because there's no server processing files, there's no server to hack</li>
+    </ul>
+    
+    <p>Your responsibility: Keep your device secure with up-to-date software, strong passwords, and antivirus protection.</p>
+
+    <h2>Children's Privacy</h2>
+    
+    <p>PDFree does not knowingly collect any information from anyone, including children under 13. Since we don't collect data at all, there's nothing to protect or delete.</p>
+
+    <h2>Changes to This Policy</h2>
+    
+    <p>If we ever change our privacy practices (for example, if we add optional analytics with your consent), we will update this page and note the revision date at the top.</p>
+
+    <h2>Compliance</h2>
+    
+    <p><strong>GDPR (EU):</strong> PDFree's architecture makes it GDPR-compliant by design. We cannot violate data subject rights because we don't have your data.</p>
+    
+    <p><strong>CCPA (California):</strong> We do not sell personal information because we do not collect personal information.</p>
+
+    <h2>Contact</h2>
+    
+    <p>If you have questions about this privacy policy or PDFree's privacy practices, you can reach us at:</p>
+    
+    <p><strong>Email:</strong> <a href="mailto:privacy@pdfree.io">privacy@pdfree.io</a></p>
+
+    <div class="highlight-box" style="margin-top: 40px;">
+      <p><strong>Bottom line:</strong> We built PDFree to be the PDF tool we'd want to use with our own confidential documents. Your privacy isn't a feature — it's the foundation.</p>
+    </div>
+
+  </div>
+
+  <footer>
+    PDFree · <strong>All processing happens 100% in your browser</strong> · Files are <strong>never uploaded</strong><br>
+    <span style="color:var(--green)">🔒</span> Your documents never leave your device &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> Built to be free for everyone, forever<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
+      <a href="/privacy.html" style="color:var(--green)">Privacy</a> · 
+      <a href="/terms.html" style="color:var(--green)">Terms</a> · 
+      <a href="/" style="color:var(--green)">Tools</a>
+    </span>
+  </footer>
+
+
+<!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

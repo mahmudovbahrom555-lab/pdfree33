@@ -1,0 +1,256 @@
+{
+  "seo": {
+    "merge.slug": { "en": "merge", "es": "unir", "pt": "juntar" },
+    "merge.title": {
+      "en": "Merge PDF files online — free, no signup",
+      "es": "Unir PDF gratis online — sin registro",
+      "pt": "Juntar PDF grátis online — sem registro"
+    },
+    "merge.desc": {
+      "en": "Combine unlimited PDF files instantly. 100% private, no uploads, no file size limits.",
+      "es": "Combina archivos PDF ilimitados al instante. 100% privado, sin subir archivos, sin límites de tamaño.",
+      "pt": "Combine arquivos PDF ilimitados instantaneamente. 100% privado, sem uploads, sem limites de tamanho."
+    },
+    "split.slug": { "en": "split", "es": "dividir", "pt": "dividir" },
+    "split.title": {
+      "en": "Split PDF online — extract pages for free",
+      "es": "Dividir PDF gratis online — extraer páginas",
+      "pt": "Dividir PDF grátis online — extrair páginas"
+    },
+    "split.desc": {
+      "en": "Extract pages or split into separate files. Secure, fast, and fully offline in your browser.",
+      "es": "Extrae páginas o divide en archivos separados. Seguro, rápido y totalmente offline en tu navegador.",
+      "pt": "Extraia páginas ou divida em arquivos separados. Seguro, rápido e totalmente offline no seu navegador."
+    },
+    "compress.slug": { "en": "compress", "es": "comprimir", "pt": "comprimir" },
+    "compress.title": {
+      "en": "Compress PDF online — reduce file size",
+      "es": "Comprimir PDF gratis online — reducir tamaño",
+      "pt": "Comprimir PDF grátis online — reduzir tamanho"
+    },
+    "compress.desc": {
+      "en": "Reduce PDF file size without losing quality. 100% private processing on your device.",
+      "es": "Reduce el tamaño del PDF sin perder calidad. Procesamiento 100% privado en tu dispositivo.",
+      "pt": "Reduza o tamanho do PDF sem perder qualidade. Processamento 100% privado no seu dispositivo."
+    },
+    "jpg2pdf.slug": { "en": "jpg2pdf", "es": "jpg-a-pdf", "pt": "jpg-para-pdf" },
+    "jpg2pdf.title": {
+      "en": "Convert JPG to PDF online — free, secure",
+      "es": "Convertir JPG a PDF gratis online — seguro",
+      "pt": "Converter JPG em PDF grátis online — seguro"
+    },
+    "jpg2pdf.desc": {
+      "en": "Convert images to PDF instantly. Auto EXIF rotation correction. No upload required.",
+      "es": "Convierte imágenes a PDF al instante. Corrección automática de rotación EXIF. Sin necesidad de subir archivos.",
+      "pt": "Converta imagens em PDF instantaneamente. Correção automática de rotação EXIF. Não é necessário fazer upload."
+    },
+    "pdf2jpg.slug": { "en": "pdf2jpg", "es": "pdf-a-jpg", "pt": "pdf-para-jpg" },
+    "pdf2jpg.title": {
+      "en": "Convert PDF to JPG online — high quality",
+      "es": "Convertir PDF a JPG gratis online — alta calidad",
+      "pt": "Converter PDF em JPG grátis online — alta qualidade"
+    },
+    "pdf2jpg.desc": {
+      "en": "Extract pages as high-quality JPG or PNG images. 100% private, processes locally.",
+      "es": "Extrae páginas como imágenes JPG o PNG de alta calidad. 100% privado, se procesa localmente.",
+      "pt": "Extraia páginas como imagens JPG ou PNG de alta qualidade. 100% privado, processado localmente."
+    },
+    "extract.slug": { "en": "extract", "es": "extraer", "pt": "extrair" },
+    "extract.title": {
+      "en": "Extract PDF Pages online — free, instant",
+      "es": "Extraer páginas de PDF gratis online",
+      "pt": "Extrair páginas de PDF grátis online"
+    },
+    "extract.desc": {
+      "en": "Pull selected pages into a new PDF. Smart presets, no registration, fully secure.",
+      "es": "Extrae páginas seleccionadas en un nuevo PDF. Preajustes inteligentes, sin registro, totalmente seguro.",
+      "pt": "Extraia páginas selecionadas para um novo PDF. Predefinições inteligentes, sem registro, totalmente seguro."
+    },
+    "watermark.slug": { "en": "watermark", "es": "marca-de-agua", "pt": "marca-dagua" },
+    "watermark.title": {
+      "en": "Add Watermark to PDF online — free tool",
+      "es": "Añadir marca de agua a PDF gratis online",
+      "pt": "Adicionar marca d'água ao PDF grátis online"
+    },
+    "watermark.desc": {
+      "en": "Add custom text watermarks to every page. Private, client-side processing.",
+      "es": "Añade marcas de agua de texto personalizadas a cada página. Procesamiento privado en el cliente.",
+      "pt": "Adicione marcas d'água de texto personalizadas a cada página. Processamento privado no lado do cliente."
+    },
+    "pagenum.slug": { "en": "pagenum", "es": "numeros-de-pagina", "pt": "numeros-de-pagina" },
+    "pagenum.title": {
+      "en": "Add Page Numbers to PDF online — free",
+      "es": "Añadir números de página a PDF gratis online",
+      "pt": "Adicionar números de página ao PDF grátis online"
+    },
+    "pagenum.desc": {
+      "en": "Number pages easily: Arabic, Roman, or ABC. Fully secure in-browser tool.",
+      "es": "Numera páginas fácilmente: Arábigos, Romanos o ABC. Herramienta totalmente segura en el navegador.",
+      "pt": "Numere as páginas facilmente: Arábicos, Romanos ou ABC. Ferramenta totalmente segura no navegador."
+    },
+    "meta.slug": { "en": "meta", "es": "metadatos", "pt": "metadados" },
+    "meta.title": {
+      "en": "Edit PDF Metadata online — free & private",
+      "es": "Editar metadatos de PDF gratis online",
+      "pt": "Editar metadados de PDF grátis online"
+    },
+    "meta.desc": {
+      "en": "View and edit PDF title, author, and keywords locally. No server uploads.",
+      "es": "Ver y editar el título, autor y palabras clave del PDF localmente. Sin subidas al servidor.",
+      "pt": "Visualize e edite o título, autor e palavras-chave do PDF localmente. Sem uploads no servidor."
+    },
+    "redact.slug": { "en": "redact", "es": "censurar", "pt": "censurar" },
+    "redact.title": {
+      "en": "Redact PDF online — cover sensitive data",
+      "es": "Censurar PDF gratis online — ocultar datos",
+      "pt": "Censurar PDF grátis online — ocultar dados"
+    },
+    "redact.desc": {
+      "en": "Hide text, signatures, or sensitive data with opaque blocks. 100% local processing.",
+      "es": "Oculta texto, firmas o datos sensibles con bloques opacos. Procesamiento 100% local.",
+      "pt": "Oculte texto, assinaturas ou dados sensíveis com blocos opacos. Processamento 100% local."
+    },
+    "rotate.slug": { "en": "rotate", "es": "rotar", "pt": "girar" },
+    "rotate.title": {
+      "en": "Rotate PDF pages online — free, no limits",
+      "es": "Rotar páginas de PDF gratis online",
+      "pt": "Girar páginas de PDF grátis online"
+    },
+    "rotate.desc": {
+      "en": "Fix page orientation in any PDF. Private, secure, and instant rotation.",
+      "es": "Arregla la orientación de las páginas en cualquier PDF. Rotación privada, segura e instantánea.",
+      "pt": "Corrija a orientação da página em qualquer PDF. Rotação privada, segura e instantânea."
+    },
+    "protect.slug": { "en": "protect", "es": "proteger", "pt": "proteger" },
+    "protect.title": {
+      "en": "Protect PDF with password — AES-256 secure",
+      "es": "Proteger PDF con contraseña — AES-256 gratis",
+      "pt": "Proteger PDF com senha — AES-256 grátis"
+    },
+    "protect.desc": {
+      "en": "Add open password and restrict permissions. Encrypted in your browser, never sent to a server.",
+      "es": "Añade contraseña de apertura y restringe permisos. Encriptado en tu navegador, nunca se envía a un servidor.",
+      "pt": "Adicione senha de abertura e restrinja permissões. Criptografado no seu navegador, nunca enviado a um servidor."
+    },
+    
+    "article.h2": {
+      "en": "The best free PDF tool for security and privacy",
+      "es": "La mejor herramienta PDF gratuita para seguridad y privacidad",
+      "pt": "A melhor ferramenta PDF gratuita para segurança e privacidade"
+    },
+    "article.p1": {
+      "en": "PDFree is designed to provide professional-grade PDF manipulation without the risks associated with cloud uploads. When you use our tools, the processing happens directly inside your web browser using WebAssembly. This means your sensitive documents, such as legal contracts, financial reports, or personal ID scans, are never transmitted over the internet.",
+      "es": "PDFree está diseñado para ofrecer manipulación de PDF de nivel profesional sin los riesgos asociados a la subida en la nube. Al utilizar nuestras herramientas, el procesamiento se realiza directamente en tu navegador web mediante WebAssembly. Esto significa que tus documentos confidenciales nunca se transmiten por internet.",
+      "pt": "O PDFree foi projetado para fornecer manipulação de PDF de nível profissional sem os riscos associados aos uploads em nuvem. Ao usar nossas ferramentas, o processamento ocorre diretamente no seu navegador usando WebAssembly. Isso significa que seus documentos confidenciais nunca são transmitidos pela internet."
+    },
+    "article.p2": {
+      "en": "We believe essential tools should be accessible to everyone. That's why PDFree has absolutely no file size limits, no daily usage caps, and no mandatory watermarks. It is a completely free, unlimited utility built for students, professionals, and anyone who values digital privacy.",
+      "es": "Creemos que las herramientas esenciales deben ser accesibles para todos. Por eso PDFree no tiene límites de tamaño de archivo, ni topes de uso diario, ni marcas de agua obligatorias. Es una utilidad completamente gratuita e ilimitada.",
+      "pt": "Acreditamos que ferramentas essenciais devem ser acessíveis a todos. É por isso que o PDFree não tem limites de tamanho de arquivo, sem limites de uso diário e sem marcas d'água obrigatórias. É um utilitário totalmente gratuito e ilimitado."
+    },
+    "faq.title": {
+      "en": "Frequently Asked Questions",
+      "es": "Preguntas Frecuentes",
+      "pt": "Perguntas Frequentes"
+    },
+    "faq.q1": {
+      "en": "Are my files stored on your servers?",
+      "es": "¿Se almacenan mis archivos en sus servidores?",
+      "pt": "Meus arquivos são armazenados em seus servidores?"
+    },
+    "faq.a1": {
+      "en": "No. PDFree operates entirely on your device (client-side). We don't have servers that process your files, which guarantees 100% privacy.",
+      "es": "No. PDFree opera completamente en tu dispositivo (del lado del cliente). No tenemos servidores que procesen tus archivos, lo que garantiza 100% de privacidad.",
+      "pt": "Não. O PDFree opera totalmente no seu dispositivo (no lado do cliente). Não temos servidores que processem seus arquivos, o que garante 100% de privacidade."
+    },
+    "faq.q2": {
+      "en": "Is there a limit to the file size or number of pages?",
+      "es": "¿Hay un límite para el tamaño del archivo o número de páginas?",
+      "pt": "Existe um limite para o tamanho do arquivo ou número de páginas?"
+    },
+    "faq.a2": {
+      "en": "No, there are no artificial limits. The only limitation is the RAM (memory) available on your computer or smartphone.",
+      "es": "No, no hay límites artificiales. La única limitación es la memoria RAM disponible en tu computadora o smartphone.",
+      "pt": "Não, não há limites artificiais. A única limitação é a memória RAM disponível no seu computador ou smartphone."
+    }
+  },
+  "ui": {
+    "nav.logo_span": { "en": "ree", "es": "ree", "pt": "ree" },
+    "nav.merge": { "en": "Merge", "es": "Unir", "pt": "Juntar" },
+    "nav.split": { "en": "Split", "es": "Dividir", "pt": "Dividir" },
+    "nav.compress": { "en": "Compress", "es": "Comprimir", "pt": "Comprimir" },
+    "nav.jpg2pdf": { "en": "JPG→PDF", "es": "JPG→PDF", "pt": "JPG→PDF" },
+    "nav.pdf2jpg": { "en": "PDF→JPG", "es": "PDF→JPG", "pt": "PDF→JPG" },
+    "nav.watermark": { "en": "Watermark", "es": "Marca de agua", "pt": "Marca d'água" },
+    "nav.meta": { "en": "Metadata", "es": "Metadatos", "pt": "Metadados" },
+    "nav.protect": { "en": "Protect", "es": "Proteger", "pt": "Proteger" },
+    
+    "hero.badge": { 
+      "en": "🔒 100% private · no upload · no signup · no limits",
+      "es": "🔒 100% privado · sin subidas · sin registro · sin límites",
+      "pt": "🔒 100% privado · sem uploads · sem registro · sem limites"
+    },
+    "hero.h1_1": { "en": "PDF tools that", "es": "Herramientas PDF que", "pt": "Ferramentas PDF que" },
+    "hero.h1_em": { "en": "actually work", "es": "realmente funcionan", "pt": "realmente funcionam" },
+    "hero.p_1": { "en": "Merge, split, compress, watermark, convert — everything runs", "es": "Une, divide, comprime, marca y convierte — todo ocurre", "pt": "Junte, divida, comprima, marque e converta — tudo roda" },
+    "hero.p_strong": { "en": "in your browser", "es": "en tu navegador", "pt": "no seu navegador" },
+    "hero.p_2": { "en": ". Your files never leave your device. No server. No account. Just results.", "es": ". Tus archivos nunca salen de tu dispositivo. Sin servidores. Sin cuentas. Solo resultados.", "pt": ". Seus arquivos nunca saem do seu dispositivo. Sem servidores. Sem contas. Apenas resultados." },
+    
+    "privacy_banner.strong": { "en": "Your files stay on your device.", "es": "Tus archivos se quedan en tu dispositivo.", "pt": "Seus arquivos ficam no seu dispositivo." },
+    "privacy_banner.text": { "en": "We use Web Workers and client-side libraries — nothing is ever sent to any server.", "es": "Usamos Web Workers y librerías locales — nada se envía jamás a un servidor.", "pt": "Usamos Web Workers e bibliotecas locais — nada é enviado a nenhum servidor." },
+    
+    "no_limit.1": { "en": "No file limits", "es": "Sin límites de archivos", "pt": "Sem limites de arquivos" },
+    "no_limit.2": { "en": "No watermarks", "es": "Sin marcas de agua", "pt": "Sem marcas d'água" },
+    "no_limit.3": { "en": "No signup", "es": "Sin registro", "pt": "Sem registro" },
+    "no_limit.4": { "en": "Files never leave your device", "es": "Los archivos no salen de tu dispositivo", "pt": "Os arquivos não saem do seu dispositivo" },
+    
+    "tools.label": { "en": "All tools", "es": "Todas las herramientas", "pt": "Todas as ferramentas" },
+    
+    "tool.merge.name": { "en": "Merge PDF files", "es": "Unir PDF", "pt": "Juntar PDF" },
+    "tool.merge.desc": { "en": "Combine unlimited PDF files — no restrictions", "es": "Combina archivos PDF ilimitados — sin restricciones", "pt": "Combine arquivos PDF ilimitados — sem restrições" },
+    "tool.split.name": { "en": "Split PDF", "es": "Dividir PDF", "pt": "Dividir PDF" },
+    "tool.split.desc": { "en": "Extract pages or split into separate files", "es": "Extrae páginas o divide en archivos separados", "pt": "Extraia páginas ou divida em arquivos separados" },
+    "tool.compress.name": { "en": "Compress PDF", "es": "Comprimir PDF", "pt": "Comprimir PDF" },
+    "tool.compress.desc": { "en": "Reduce file size without losing quality", "es": "Reduce el tamaño sin perder calidad", "pt": "Reduza o tamanho sem perder qualidade" },
+    "tool.jpg2pdf.name": { "en": "JPG to PDF", "es": "JPG a PDF", "pt": "JPG para PDF" },
+    "tool.jpg2pdf.desc": { "en": "Convert images to PDF instantly", "es": "Convierte imágenes a PDF al instante", "pt": "Converta imagens em PDF instantaneamente" },
+    "tool.pdf2jpg.name": { "en": "PDF to JPG", "es": "PDF a JPG", "pt": "PDF para JPG" },
+    "tool.pdf2jpg.desc": { "en": "Extract pages as high-quality images", "es": "Extrae páginas como imágenes de alta calidad", "pt": "Extraia páginas como imagens de alta qualidade" },
+    "tool.extract.name": { "en": "Extract Pages", "es": "Extraer Páginas", "pt": "Extrair Páginas" },
+    "tool.extract.desc": { "en": "Pull selected pages into a new PDF", "es": "Extrae páginas seleccionadas a un nuevo PDF", "pt": "Extraia páginas selecionadas para um novo PDF" },
+    "tool.watermark.name": { "en": "Watermark", "es": "Marca de agua", "pt": "Marca d'água" },
+    "tool.watermark.desc": { "en": "Stamp text on every page — diagonal or tiled", "es": "Estampa texto en cada página — diagonal o en mosaico", "pt": "Estampe texto em cada página — diagonal ou em mosaico" },
+    "tool.pagenum.name": { "en": "Page Numbers", "es": "Números de página", "pt": "Números de página" },
+    "tool.pagenum.desc": { "en": "Add numbered footers — Arabic, Roman or ABC", "es": "Añade números de página en el pie — Arábigos, Romanos o ABC", "pt": "Adicione números de página no rodapé — Arábicos, Romanos ou ABC" },
+    "tool.meta.name": { "en": "Edit Metadata", "es": "Editar Metadatos", "pt": "Editar Metadados" },
+    "tool.meta.desc": { "en": "View and edit title, author, keywords", "es": "Ver y editar título, autor, palabras clave", "pt": "Ver e editar título, autor, palavras-chave" },
+    "tool.redact.name": { "en": "Cover Area", "es": "Censurar Área", "pt": "Censurar Área" },
+    "tool.redact.desc": { "en": "Hide watermarks, signatures or sensitive data locally", "es": "Oculta marcas de agua, firmas o datos sensibles localmente", "pt": "Oculte marcas d'água, assinaturas ou dados sensíveis localmente" },
+    "tool.rotate.name": { "en": "Rotate PDF", "es": "Rotar PDF", "pt": "Girar PDF" },
+    "tool.rotate.desc": { "en": "Fix page orientation in any PDF", "es": "Arregla la orientación de páginas en cualquier PDF", "pt": "Corrija a orientação das páginas em qualquer PDF" },
+    "tool.protect.name": { "en": "Protect PDF", "es": "Proteger PDF", "pt": "Proteger PDF" },
+    "tool.protect.desc": { "en": "AES-256 password & permissions — 100% private", "es": "Contraseña AES-256 y permisos — 100% privado", "pt": "Senha AES-256 e permissões — 100% privado" },
+
+    "privacy.1.title": { "en": "100% private by design", "es": "100% privado por diseño", "pt": "100% privado por design" },
+    "privacy.1.desc": { "en": "Your files are processed entirely in your browser. Zero uploads — ever.", "es": "Tus archivos se procesan por completo en tu navegador. Cero subidas — nunca.", "pt": "Seus arquivos são processados totalmente no seu navegador. Zero uploads — nunca." },
+    "privacy.2.title": { "en": "Runs on your device", "es": "Se ejecuta en tu dispositivo", "pt": "Roda no seu dispositivo" },
+    "privacy.2.desc": { "en": "All PDF operations run inside a Web Worker — a sandboxed thread in your own hardware.", "es": "Todas las operaciones PDF se ejecutan en un Web Worker — un hilo seguro en tu propio hardware.", "pt": "Todas as operações PDF rodam em um Web Worker — uma thread segura no seu próprio hardware." },
+    "privacy.3.title": { "en": "Instantly forgotten", "es": "Olvidado al instante", "pt": "Esquecido instantaneamente" },
+    "privacy.3.desc": { "en": "Files live only in RAM. Close the tab and they vanish — no logs, no traces.", "es": "Los archivos viven solo en RAM. Cierra la pestaña y desaparecen — sin registros ni rastros.", "pt": "Os arquivos vivem apenas na RAM. Feche a aba e eles desaparecem — sem logs, sem rastros." },
+    
+    "workspace.drop_title": { "en": "Drop files here", "es": "Suelta los archivos aquí", "pt": "Arraste os arquivos aqui" },
+    "workspace.drop_sub": { "en": "or click to browse — any number of files", "es": "o haz clic para explorar — cualquier número de archivos", "pt": "ou clique para procurar — qualquer número de arquivos" },
+    "workspace.choose_btn": { "en": "Choose files", "es": "Elegir archivos", "pt": "Escolher arquivos" },
+    
+    "workspace.reorder": { "en": "↕ Drag to reorder files before merging", "es": "↕ Arrastra para reordenar los archivos", "pt": "↕ Arraste para reordenar os arquivos" },
+    "workspace.cancel": { "en": "✕ Cancel", "es": "✕ Cancelar", "pt": "✕ Cancelar" },
+    
+    "success.title": { "en": "Done!", "es": "¡Listo!", "pt": "Pronto!" },
+    "success.download": { "en": "⬇ Download", "es": "⬇ Descargar", "pt": "⬇ Baixar" },
+    
+    "footer.desc1": { "en": "All processing happens 100% in your browser", "es": "Todo el procesamiento ocurre 100% en tu navegador", "pt": "Todo o processamento acontece 100% no seu navegador" },
+    "footer.desc2": { "en": "Files are <strong>never uploaded</strong>", "es": "Tus archivos <strong>nunca se suben</strong>", "pt": "Os arquivos <strong>nunca são enviados</strong>" },
+    "footer.guarantee": { "en": "Your documents never leave your device", "es": "Tus documentos nunca salen de tu dispositivo", "pt": "Seus documentos nunca saem do seu dispositivo" },
+    "footer.free": { "en": "Built to be free for everyone, forever", "es": "Creado para ser gratis para todos, siempre", "pt": "Feito para ser grátis para todos, sempre" }
+  }
+}

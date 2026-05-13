@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!--
+    ════════════════════════════════════════════════════════════════
+    Content Security Policy — defence-in-depth against XSS
+    ════════════════════════════════════════════════════════════════
+  -->
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src  'self'
+                'wasm-unsafe-eval'
+                blob:
+                https://cdnjs.cloudflare.com
+                https://esm.sh
+                https://plausible.io
+                https://pagead2.googlesyndication.com
+                https://static.cloudflareinsights.com;
+    style-src   'self' 'unsafe-inline'
+                https://fonts.googleapis.com;
+    font-src    https://fonts.gstatic.com;
+    img-src     'self' data: blob: https:;
+    connect-src 'self'
+                https://cdnjs.cloudflare.com
+                https://*.workers.dev
+                https://plausible.io
+                https://pagead2.googlesyndication.com
+                https://www.googletagservices.com
+                https://*.doubleclick.net
+                https://cloudflareinsights.com;
+    frame-src   https://googleads.g.doubleclick.net
+                https://tpc.googlesyndication.com;
+    worker-src  'self' blob:;
+    object-src  'none';
+  ">
+  <title>Añadir Marca de Agua al PDF — Gratis, Privado | PDFree</title>
+  <meta name="description" content="Añade marcas de agua de texto personalizadas al PDF. 100% privado, sin subidas.">
+  <meta property="og:title"       content="Añadir Marca de Agua al PDF — Gratis, Privado | PDFree">
+  <meta property="og:description" content="Añade marcas de agua de texto personalizadas al PDF. 100% privado, sin subidas.">
+  <meta property="og:type"        content="website">
+  <meta property="og:url"       content="https://pdfree.io/es/marca-de-agua-pdf/">
+  <meta property="og:site_name" content="PDFree">
+  <meta property="og:locale"    content="es_ES">
+  <meta property="og:image"     content="https://pdfree.io/icons/og-image.jpg">
+  <meta property="og:image:width"  content="1200">
+  <meta property="og:image:height" content="633">
+  <meta name="twitter:card"        content="summary_large_image">
+  <meta name="twitter:site"        content="@pdfree_io">
+  <meta name="twitter:image"       content="https://pdfree.io/icons/og-image.jpg">
+  <link rel="canonical" href="https://pdfree.io/es/marca-de-agua-pdf/">
+  <link rel="alternate" hreflang="en" href="https://pdfree.io/watermark-pdf/">
+  <link rel="alternate" hreflang="es" href="https://pdfree.io/es/marca-de-agua-pdf/">
+  <link rel="alternate" hreflang="pt" href="https://pdfree.io/pt/marca-dagua-pdf/">
+  <link rel="alternate" hreflang="de" href="https://pdfree.io/de/wasserzeichen-pdf/">
+  <link rel="alternate" hreflang="fr" href="https://pdfree.io/fr/filigrane-pdf/">
+  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/watermark-pdf/">
+
+  <!-- PWA -->
+  <link rel="manifest" href="../../manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="PDFree">
+  <link rel="apple-touch-icon" href="../../icons/icon-192.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap"></noscript>
+
+  <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/animations.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/components.css">
+
+  <script type="application/ld+json">
+  {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Marca de agua",
+  "description": "Añade marcas de agua de texto personalizadas al PDF. 100% privado, sin subidas.",
+  "url": "https://pdfree.io/es/marca-de-agua-pdf/",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any",
+  "browserRequirements": "Requires a modern browser with JavaScript enabled",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "featureList": [
+    "No file upload required",
+    "100% private — files processed locally",
+    "No registration required",
+    "Free forever"
+  ]
+}
+  </script>
+  <script type="application/ld+json">
+  {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "¿Se almacenan mis archivos en sus servidores?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. PDFree opera completamente en tu dispositivo (del lado del cliente). No tenemos servidores que procesen tus archivos, lo que garantiza 100% de privacidad."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Hay un límite para el tamaño del archivo o número de páginas?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No, no hay límites artificiales. La única limitación es la memoria RAM disponible en tu computadora o smartphone."
+      }
+    }
+  ]
+}
+  </script>
+  <script type="application/ld+json">
+  {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "PDFree",
+      "item": "https://pdfree.io/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "ES",
+      "item": "https://pdfree.io/es/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Marca de Agua PDF",
+      "item": "https://pdfree.io/es/marca-de-agua-pdf/"
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+
+  <nav>
+    <a href="../../es/" class="logo" id="logo" aria-label="Go to homepage" style="text-decoration:none">PDF<span>ree</span></a>
+    <div class="nav-links">
+      <a href="../../es/unir-pdf/" class="nav-link" data-tool="merge">Unir</a>
+      <a href="../../es/dividir-pdf/" class="nav-link" data-tool="split">Dividir</a>
+      <a href="../../es/comprimir-pdf/" class="nav-link" data-tool="compress">Comprimir</a>
+      <a href="../../es/jpg-a-pdf/" class="nav-link" data-tool="jpg2pdf">JPG→PDF</a>
+      <a href="../../es/marca-de-agua-pdf/" class="nav-link active" data-tool="watermark">Marca de agua</a>
+      <a href="../../es/metadatos-pdf/" class="nav-link" data-tool="meta">Metadatos</a>
+      <a href="../../es/proteger-pdf/" class="nav-link" data-tool="protect">Proteger</a>
+    </div>
+  </nav>
+
+  <!-- ── Hero ── -->
+  <section id="hero" class="hero">
+    <div class="hero-badge">🔒 100% privado · sin subidas · sin registro · sin límites</div>
+    <h1>Herramientas PDF que<br><em>realmente funcionan</em></h1>
+    <p>Une, divide, comprime, marca y convierte — todo ocurre <strong>en tu navegador</strong>. Tus archivos nunca salen de tu dispositivo. Sin servidores. Sin cuentas. Solo resultados.</p>
+  </section>
+
+  <!-- ── Privacy banner ── -->
+  <section class="privacy-banner" aria-label="Privacy promise">
+    <div class="privacy-banner__icon" aria-hidden="true">🔒</div>
+    <div class="privacy-banner__text">
+      <strong>Tus archivos se quedan en tu dispositivo.</strong>
+      Usamos Web Workers y librerías locales — nada se envía jamás a un servidor.
+    </div>
+  </section>
+
+  <!-- ── No-limit bar ── -->
+  <div id="noLimitBar" class="no-limit-bar">
+    <div class="no-limit-item"><span>✓</span> Sin límites de archivos</div>
+    <div class="no-limit-item"><span>✓</span> Sin marcas de agua</div>
+    <div class="no-limit-item"><span>✓</span> Sin registro</div>
+    <div class="no-limit-item"><span>🔒</span> Los archivos no salen de tu dispositivo</div>
+  </div>
+
+  <!-- ── Tools grid ── -->
+  <section id="toolsGrid" class="tools-section">
+    <div class="section-label">Todas las herramientas</div>
+    <div class="tools-grid">
+      <a href="../../es/unir-pdf/" class="tool-card featured" data-tool="merge" aria-label="Unir PDF">
+        <span class="tool-icon">🔗</span>
+        <div class="tool-name">Unir PDF</div>
+        <div class="tool-desc">Combina archivos PDF ilimitados — sin restricciones</div>
+      </a>
+      <a href="../../es/dividir-pdf/" class="tool-card" data-tool="split" aria-label="Dividir PDF">
+        <span class="tool-icon">✂️</span>
+        <div class="tool-name">Dividir PDF</div>
+        <div class="tool-desc">Extrae páginas o divide en archivos separados</div>
+      </a>
+      <a href="../../es/comprimir-pdf/" class="tool-card" data-tool="compress" aria-label="Comprimir PDF">
+        <span class="tool-icon">🗜️</span>
+        <div class="tool-name">Comprimir PDF</div>
+        <div class="tool-desc">Reduce el tamaño sin perder calidad</div>
+      </a>
+      <a href="../../es/rotar-pdf/" class="tool-card" data-tool="rotate" aria-label="Rotar PDF">
+        <span class="tool-icon">🔄</span>
+        <div class="tool-name">Rotar PDF</div>
+        <div class="tool-desc">Arregla la orientación de páginas en cualquier PDF</div>
+      </a>
+      <a href="../../es/marca-de-agua-pdf/" class="tool-card" data-tool="watermark" aria-label="Marca de agua">
+        <span class="tool-icon">💧</span>
+        <div class="tool-name">Marca de agua</div>
+        <div class="tool-desc">Estampa texto en cada página — diagonal o en mosaico</div>
+      </a>
+      <a href="../../es/proteger-pdf/" class="tool-card" data-tool="protect" aria-label="Proteger PDF">
+        <span class="tool-icon">🔒</span>
+        <div class="tool-name">Proteger PDF</div>
+        <div class="tool-desc">Contraseña AES-256 y permisos — 100% privado</div>
+      </a>
+      <a href="../../es/censurar-pdf/" class="tool-card" data-tool="redact" aria-label="Ocultar Área">
+        <span class="tool-icon">🖌️</span>
+        <div class="tool-name">Ocultar Área</div>
+        <div class="tool-desc">Ocultar marcas de agua, firmas o datos sensibles localmente</div>
+      </a>
+      <a href="../../es/numeros-de-pagina-pdf/" class="tool-card" data-tool="pagenum" aria-label="Números de página">
+        <span class="tool-icon">🔢</span>
+        <div class="tool-name">Números de página</div>
+        <div class="tool-desc">Añade números de página en el pie — Arábigos, Romanos o ABC</div>
+      </a>
+      <a href="../../es/extraer-pdf/" class="tool-card" data-tool="extract" aria-label="Extraer Páginas">
+        <span class="tool-icon">📑</span>
+        <div class="tool-name">Extraer Páginas</div>
+        <div class="tool-desc">Extrae páginas seleccionadas a un nuevo PDF</div>
+      </a>
+      <a href="../../es/metadatos-pdf/" class="tool-card" data-tool="meta" aria-label="Editar Metadatos">
+        <span class="tool-icon">🏷️</span>
+        <div class="tool-name">Editar Metadatos</div>
+        <div class="tool-desc">Ver y editar título, autor, palabras clave</div>
+      </a>
+      <a href="../../es/jpg-a-pdf/" class="tool-card" data-tool="jpg2pdf" aria-label="JPG a PDF">
+        <span class="tool-icon">🖼️</span>
+        <div class="tool-name">JPG a PDF</div>
+        <div class="tool-desc">Convierte imágenes a PDF al instante</div>
+      </a>
+      <a href="../../es/pdf-a-jpg/" class="tool-card" data-tool="pdf2jpg" aria-label="PDF a JPG">
+        <span class="tool-icon">📸</span>
+        <div class="tool-name">PDF a JPG</div>
+        <div class="tool-desc">Extrae páginas como imágenes de alta calidad</div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ── Privacy trust bar ── -->
+  <section class="privacy-bar" aria-label="Privacy guarantee">
+    <div class="privacy-bar__inner">
+      <div class="privacy-bar__item">
+        <span class="privacy-bar__icon" aria-hidden="true">🔒</span>
+        <div>
+          <strong>100% privado por diseño</strong>
+          <p>Tus archivos se procesan por completo en tu navegador. Cero subidas — nunca.</p>
+        </div>
+      </div>
+      <div class="privacy-bar__item">
+        <span class="privacy-bar__icon" aria-hidden="true">⚙️</span>
+        <div>
+          <strong>Se ejecuta en tu dispositivo</strong>
+          <p>Todas las operaciones PDF se ejecutan en un Web Worker — un hilo seguro en tu propio hardware.</p>
+        </div>
+      </div>
+      <div class="privacy-bar__item">
+        <span class="privacy-bar__icon" aria-hidden="true">🗑️</span>
+        <div>
+          <strong>Eliminados al instante</strong>
+          <p>Los archivos viven solo en RAM. Cierra la pestaña y desaparecen — sin registros ni rastros.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Tool workspace ── -->
+  <main id="toolArea" class="main-area" style="display:none" aria-busy="false">
+
+    <div class="tool-header">
+      <div class="tool-header-icon" id="toolIcon" aria-hidden="true">💧</div>
+      <div class="tool-header-text">
+        <h2 id="toolTitle">Añadir Marca de Agua al PDF</h2>
+        <p  id="toolDesc">Añade marcas de agua de texto personalizadas al PDF. 100% privado, sin subidas.</p>
+      </div>
+    </div>
+
+    <div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-label="Suelta los archivos aquí">
+      <input type="file" id="fileInput" multiple accept=".pdf" aria-hidden="true">
+      <span class="drop-icon" aria-hidden="true">📂</span>
+      <div class="drop-title">Suelta los archivos aquí</div>
+      <div class="drop-sub">o haz clic para explorar — cualquier número de archivos</div>
+      <button class="drop-btn" id="chooseFilesBtn" type="button">Elegir archivos</button>
+    </div>
+
+    <div id="fileList"     class="file-list"    aria-live="polite" aria-label="Suelta los archivos aquí"></div>
+    <div id="fileCount"    class="file-count"   style="display:none"></div>
+    <div id="reorderHint"  class="reorder-hint" style="display:none">↕ Arrastra para reordenar los archivos</div>
+
+    <div id="splitOptions"     class="split-options"    style="display:none"></div>
+    <div id="compressOptions"  class="compress-options" style="display:none"></div>
+    <div id="jpg2pdfOptions"   class="j2p-options"      style="display:none"></div>
+    <div id="pdf2jpgOptions"   class="j2p-options"      style="display:none"></div>
+    <div id="watermarkOptions" class="j2p-options"      style="display:none"></div>
+    <div id="pageNumOptions"   class="j2p-options"      style="display:none"></div>
+    <div id="metaOptions"      class="j2p-options"      style="display:none"></div>
+    <div id="protectOptions"   class="j2p-options"      style="display:none"></div>
+    <div id="redactOptions"    class="j2p-options"      style="display:none"></div>
+    <div id="rotateOptions"    class="j2p-options"      style="display:none"></div>
+
+    <button id="mergeBtn"  class="merge-btn"  type="button" disabled data-mode="process">Marca de agua</button>
+    <button id="cancelBtn" class="cancel-btn" type="button" style="display:none" aria-label="✕ Cancelar">✕ Cancelar</button>
+
+    <div id="progressBar"   class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+    <div id="progressLabel" class="progress-label"></div>
+
+    <div id="successCard" class="success-card" role="alert" aria-live="polite" style="display:none">
+      <div class="success-top">
+        <div class="success-icon" aria-hidden="true">✓</div>
+        <div class="success-text">
+          <h3 id="successTitle">¡Listo!</h3>
+          <p  id="successDesc"></p>
+        </div>
+        <button id="downloadBtn" class="download-btn" type="button">⬇ Descargar</button>
+      </div>
+    </div>
+
+  </main>
+
+<section class="seo-article" aria-labelledby="seoArticleTitle">
+    <div class="seo-article__inner">
+      <h2 id="seoArticleTitle">La mejor herramienta PDF gratuita para seguridad y privacidad</h2>
+      <p>PDFree está diseñado para ofrecer manipulación de PDF de nivel profesional sin los riesgos asociados a la subida en la nube. Al utilizar nuestras herramientas, el procesamiento se realiza directamente en tu navegador web mediante WebAssembly. Esto significa que tus documentos confidenciales nunca se transmiten por internet.</p>
+      <p>Creemos que las herramientas esenciales deben ser accesibles para todos. Por eso PDFree no tiene límites de tamaño de archivo, ni topes de uso diario, ni marcas de agua obligatorias. Es una utilidad completamente gratuita e ilimitada.</p>
+      
+      <h3>Preguntas Frecuentes</h3>
+      <dl class="seo-faq">
+        <dt>¿Se almacenan mis archivos en sus servidores?</dt>
+        <dd>No. PDFree opera completamente en tu dispositivo (del lado del cliente). No tenemos servidores que procesen tus archivos, lo que garantiza 100% de privacidad.</dd>
+        <dt>¿Hay un límite para el tamaño del archivo o número de páginas?</dt>
+        <dd>No, no hay límites artificiales. La única limitación es la memoria RAM disponible en tu computadora o smartphone.</dd>
+      </dl>
+    </div>
+  </section>
+
+  <footer>
+    PDFree · <strong>Todo el procesamiento ocurre 100% en tu navegador</strong> · Los archivos nunca son <strong>enviados</strong><br>
+    <span style="color:var(--green)">🔒</span> Tus documentos nunca salen de tu dispositivo &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> Creado para ser gratuito para todos — para siempre<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
+      Código abierto bajo la licencia
+      <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a>
+      &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/PDFree" target="_blank" rel="noopener" style="color:var(--green)">Código fuente en GitHub</a>
+    </span>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script type="module" src="../../js/app.js?v=14"></script>
+<!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

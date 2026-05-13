@@ -1,0 +1,463 @@
+{
+  "baseUrl": "https://pdfree.io",
+  "cfToken": "5cbef445bc6d4370af5d5ad3d9633534",
+  "appJsVersion": "9",
+
+  "languages": {
+    "en": { "code": "en", "locale": "en_US", "dir": ".",  "depth": 1 },
+    "es": { "code": "es", "locale": "es_ES", "dir": "es", "depth": 2 },
+    "pt": { "code": "pt", "locale": "pt_BR", "dir": "pt", "depth": 2 },
+    "de": { "code": "de", "locale": "de_DE", "dir": "de", "depth": 2 },
+    "fr": { "code": "fr", "locale": "fr_FR", "dir": "fr", "depth": 2 }
+  },
+
+  "tools": [
+    {
+      "id": "merge", "icon": "🔗", "toolKey": "merge",
+      "slugs":   { "en": "merge-pdf",      "es": "unir-pdf",           "pt": "juntar-pdf",            "de": "pdf-zusammenfuehren",  "fr": "fusionner-pdf" },
+      "titles":  {
+        "en": "Merge PDF Online — Free, No Upload | PDFree",
+        "es": "Unir PDF Gratis Online — Sin Registro | PDFree",
+        "pt": "Juntar PDF Grátis Online — Sem Registro | PDFree",
+        "de": "PDF Zusammenfügen Online — Kostenlos, Kein Upload | PDFree",
+        "fr": "Fusionner PDF en Ligne — Gratuit, Aucun Envoi | PDFree"
+      },
+      "descs":   {
+        "en": "Combine unlimited PDF files instantly. 100% private, no uploads, no file size limits.",
+        "es": "Combina archivos PDF ilimitados al instante. 100% privado, sin subir archivos, sin límites de tamaño.",
+        "pt": "Combine arquivos PDF ilimitados instantaneamente. 100% privado, sem uploads, sem limites.",
+        "de": "PDF-Dateien kostenlos online zusammenfügen. 100 % privat — Dateien verlassen deinen Browser nie. Kein Upload, keine Registrierung, keine Limits.",
+        "fr": "Fusionner des fichiers PDF gratuitement en ligne. 100 % privé — vos fichiers ne quittent jamais votre navigateur. Aucun envoi, sans inscription, sans limite."
+      },
+      "navLabels":  { "en": "Merge",   "es": "Unir",         "pt": "Juntar",       "de": "Zusammenfügen", "fr": "Fusionner" },
+      "cardNames":  { "en": "Merge PDF files", "es": "Unir PDF", "pt": "Juntar PDF", "de": "PDF Zusammenfügen", "fr": "Fusionner PDF" },
+      "cardDescs":  { "en": "Combine unlimited PDF files — no restrictions", "es": "Combina archivos PDF ilimitados — sin restricciones", "pt": "Combine arquivos PDF ilimitados — sem restrições", "de": "Beliebig viele PDF-Dateien zusammenfügen — keine Einschränkungen", "fr": "Fusionner un nombre illimité de fichiers PDF — sans restrictions" },
+      "breadcrumb": { "en": "Merge PDF", "es": "Unir PDF", "pt": "Juntar PDF", "de": "PDF Zusammenfügen", "fr": "Fusionner PDF" }
+    },
+    {
+      "id": "split", "icon": "✂️", "toolKey": "split",
+      "slugs":   { "en": "split-pdf",      "es": "dividir-pdf",        "pt": "dividir-pdf",           "de": "pdf-aufteilen",         "fr": "diviser-pdf" },
+      "titles":  {
+        "en": "Split PDF Online — Extract Pages, No Upload | PDFree",
+        "es": "Dividir PDF Online — Extraer Páginas, Sin Subir | PDFree",
+        "pt": "Dividir PDF Online — Extrair Páginas, Sem Upload | PDFree",
+        "de": "PDF Aufteilen Online — Seiten Extrahieren, Kein Upload | PDFree",
+        "fr": "Diviser PDF en Ligne — Gratuit, Aucun Envoi | PDFree"
+      },
+      "descs":   {
+        "en": "Extract pages or split PDF into separate files. 100% private, no uploads, no limits.",
+        "es": "Extrae páginas o divide en archivos separados. 100% privado, sin subidas, sin límites.",
+        "pt": "Extraia páginas ou divida em arquivos separados. 100% privado, sem uploads, sem limites.",
+        "de": "PDFs in einzelne Seiten aufteilen oder Seitenbereich extrahieren. 100 % privat — kein Upload. Kostenlos, ohne Registrierung.",
+        "fr": "Diviser des fichiers PDF gratuitement en ligne. Extrayez des pages spécifiques ou séparez chaque page. 100 % privé — aucun envoi, sans inscription."
+      },
+      "navLabels":  { "en": "Split",  "es": "Dividir",      "pt": "Dividir",      "de": "Aufteilen",     "fr": "Diviser" },
+      "cardNames":  { "en": "Split PDF", "es": "Dividir PDF", "pt": "Dividir PDF", "de": "PDF Aufteilen", "fr": "Diviser PDF" },
+      "cardDescs":  { "en": "Extract pages or split into separate files", "es": "Extrae páginas o divide en archivos separados", "pt": "Extraia páginas ou divida em arquivos separados", "de": "Seiten extrahieren oder in einzelne Dateien aufteilen", "fr": "Extraire des pages ou diviser en fichiers séparés" },
+      "breadcrumb": { "en": "Split PDF", "es": "Dividir PDF", "pt": "Dividir PDF", "de": "PDF Aufteilen", "fr": "Diviser PDF" }
+    },
+    {
+      "id": "compress", "icon": "🗜️", "toolKey": "compress",
+      "slugs":   { "en": "compress-pdf",   "es": "comprimir-pdf",      "pt": "comprimir-pdf",         "de": "pdf-komprimieren",      "fr": "compresser-pdf" },
+      "titles":  {
+        "en": "Compress PDF Online — Reduce File Size, No Upload | PDFree",
+        "es": "Comprimir PDF Online — Reducir Tamaño Localmente | PDFree",
+        "pt": "Comprimir PDF Online — Reduzir Tamanho Localmente | PDFree",
+        "de": "PDF Komprimieren Online — Dateigröße Reduzieren | PDFree",
+        "fr": "Compresser PDF en Ligne — Gratuit, Aucun Envoi | PDFree"
+      },
+      "descs":   {
+        "en": "Reduce PDF file size without losing quality. Processed locally in your browser — files never uploaded.",
+        "es": "Reduce el tamaño del PDF sin perder calidad. Procesado en tu navegador — archivos nunca subidos. Gratis, sin límites.",
+        "pt": "Reduza o tamanho do PDF sem perder qualidade. Processado localmente no seu navegador — sem uploads.",
+        "de": "PDF-Dateigröße reduzieren ohne Qualitätsverlust. Vollständig im Browser verarbeitet — keine Uploads, keine Registrierung. Kostenlos.",
+        "fr": "Compresser vos fichiers PDF gratuitement en ligne. Trois niveaux de qualité. 100 % privé — aucun envoi, sans inscription, sans limite."
+      },
+      "navLabels":  { "en": "Compress",  "es": "Comprimir",    "pt": "Comprimir",    "de": "Komprimieren",  "fr": "Compresser" },
+      "cardNames":  { "en": "Compress PDF", "es": "Comprimir PDF", "pt": "Comprimir PDF", "de": "PDF Komprimieren", "fr": "Compresser PDF" },
+      "cardDescs":  { "en": "Reduce file size without losing quality", "es": "Reduce el tamaño sin perder calidad", "pt": "Reduza o tamanho sem perder qualidade", "de": "Dateigröße ohne Qualitätsverlust reduzieren", "fr": "Réduire la taille sans perte de qualité" },
+      "breadcrumb": { "en": "Compress PDF", "es": "Comprimir PDF", "pt": "Comprimir PDF", "de": "PDF Komprimieren", "fr": "Compresser PDF" }
+    },
+    {
+      "id": "rotate", "icon": "🔄", "toolKey": "rotate",
+      "slugs":   { "en": "rotate-pdf",     "es": "rotar-pdf",          "pt": "girar-pdf",             "de": "pdf-drehen",            "fr": "rotation-pdf" },
+      "titles":  {
+        "en": "Rotate PDF Pages Online — Free, No Upload | PDFree",
+        "es": "Rotar Páginas PDF Online — Gratis, Sin Subir | PDFree",
+        "pt": "Girar Páginas PDF Online — Grátis, Sem Upload | PDFree",
+        "de": "PDF Drehen Online — Seitenausrichtung Korrigieren | PDFree",
+        "fr": "Rotation PDF en Ligne — Gratuit, Aucun Envoi | PDFree"
+      },
+      "descs":   {
+        "en": "Fix page orientation in any PDF. 100% private — processed locally, no uploads, no signup.",
+        "es": "Corrige la orientación de páginas en cualquier PDF. 100% privado — procesado localmente, sin subidas.",
+        "pt": "Corrija a orientação das páginas em qualquer PDF. 100% privado — processado localmente, sem uploads.",
+        "de": "PDF-Seiten um 90°, 180° oder 270° drehen. Verarbeitung im Browser — kein Upload, kein Server. Kostenlos, ohne Registrierung.",
+        "fr": "Faire pivoter les pages d'un PDF gratuitement en ligne. 90°, 180° ou 270°. 100 % privé — aucun envoi, sans inscription."
+      },
+      "navLabels":  { "en": "Rotate",  "es": "Rotar",        "pt": "Girar",        "de": "Drehen",        "fr": "Rotation" },
+      "cardNames":  { "en": "Rotate PDF", "es": "Rotar PDF", "pt": "Girar PDF", "de": "PDF Drehen", "fr": "Rotation PDF" },
+      "cardDescs":  { "en": "Fix page orientation in any PDF", "es": "Arregla la orientación de páginas en cualquier PDF", "pt": "Corrija a orientação das páginas em qualquer PDF", "de": "Seitenausrichtung in beliebigen PDFs korrigieren", "fr": "Corriger l'orientation des pages dans n'importe quel PDF" },
+      "breadcrumb": { "en": "Rotate PDF", "es": "Rotar PDF", "pt": "Girar PDF", "de": "PDF Drehen", "fr": "Rotation PDF" }
+    },
+    {
+      "id": "watermark", "icon": "💧", "toolKey": "watermark",
+      "slugs":   { "en": "watermark-pdf",  "es": "marca-de-agua-pdf",  "pt": "marca-dagua-pdf",       "de": "wasserzeichen-pdf",     "fr": "filigrane-pdf" },
+      "titles":  {
+        "en": "Add Watermark to PDF Online — Free, No Upload | PDFree",
+        "es": "Añadir Marca de Agua al PDF — Gratis, Privado | PDFree",
+        "pt": "Adicionar Marca d'Água ao PDF — Grátis, Privado | PDFree",
+        "de": "Wasserzeichen in PDF Einfügen — Kostenlos, Kein Upload | PDFree",
+        "fr": "Filigrane PDF en Ligne — Gratuit, Aucun Envoi | PDFree"
+      },
+      "descs":   {
+        "en": "Add custom text watermarks to every PDF page. 100% private — processed locally, no uploads.",
+        "es": "Añade marcas de agua de texto personalizadas al PDF. 100% privado, sin subidas.",
+        "pt": "Adicione marcas d'água de texto personalizadas ao PDF. 100% privado, sem uploads.",
+        "de": "Text- oder Bild-Wasserzeichen in PDF einfügen. Vollständig privat — im Browser verarbeitet, kein Upload. Kostenlos, für immer.",
+        "fr": "Ajouter un filigrane à un PDF gratuitement en ligne. Texte ou image, diagonal ou en mosaïque. 100 % privé — aucun envoi, sans inscription."
+      },
+      "navLabels":  { "en": "Watermark",  "es": "Marca de agua",  "pt": "Marca d'água",  "de": "Wasserzeichen", "fr": "Filigrane" },
+      "cardNames":  { "en": "Watermark", "es": "Marca de agua", "pt": "Marca d'água", "de": "Wasserzeichen", "fr": "Filigrane PDF" },
+      "cardDescs":  { "en": "Stamp text on every page — diagonal or tiled", "es": "Estampa texto en cada página — diagonal o en mosaico", "pt": "Estampe texto em cada página — diagonal ou em mosaico", "de": "Text auf jeder Seite stempeln — diagonal oder gekachelt", "fr": "Tamponner du texte sur chaque page — diagonal ou en mosaïque" },
+      "breadcrumb": { "en": "Watermark PDF", "es": "Marca de Agua PDF", "pt": "Marca d'Água PDF", "de": "Wasserzeichen PDF", "fr": "Filigrane PDF" }
+    },
+    {
+      "id": "protect", "icon": "🔒", "toolKey": "protect",
+      "slugs":   { "en": "protect-pdf",    "es": "proteger-pdf",       "pt": "proteger-pdf",          "de": "pdf-schuetzen",         "fr": "proteger-pdf" },
+      "titles":  {
+        "en": "Protect PDF with Password — AES-256, No Upload | PDFree",
+        "es": "Proteger PDF con Contraseña — AES-256, Sin Subir | PDFree",
+        "pt": "Proteger PDF com Senha — AES-256, Sem Upload | PDFree",
+        "de": "PDF Schützen — AES-256 Verschlüsselung, Kein Upload | PDFree",
+        "fr": "Protéger PDF en Ligne — Chiffrement AES-256, Aucun Envoi | PDFree"
+      },
+      "descs":   {
+        "en": "Add password and restrict permissions. AES-256 encrypted in your browser — files never sent to a server.",
+        "es": "Añade contraseña y restringe permisos. AES-256 en tu navegador — nunca se envía a un servidor.",
+        "pt": "Adicione senha e restrinja permissões. AES-256 no seu navegador — nunca enviado a um servidor.",
+        "de": "PDF mit AES-256-Passwort schützen. Dateien bleiben auf deinem Gerät — werden nie hochgeladen. Kostenlos, ohne Registrierung.",
+        "fr": "Protéger un PDF avec un mot de passe gratuitement en ligne. Chiffrement AES-256. 100 % privé — aucun envoi, sans inscription."
+      },
+      "navLabels":  { "en": "Protect",  "es": "Proteger",    "pt": "Proteger",    "de": "Schützen",      "fr": "Protéger" },
+      "cardNames":  { "en": "Protect PDF", "es": "Proteger PDF", "pt": "Proteger PDF", "de": "PDF Schützen", "fr": "Protéger PDF" },
+      "cardDescs":  { "en": "AES-256 password & permissions — 100% private", "es": "Contraseña AES-256 y permisos — 100% privado", "pt": "Senha AES-256 e permissões — 100% privado", "de": "AES-256-Passwort und Berechtigungen — 100 % privat", "fr": "Mot de passe AES-256 et permissions — 100 % privé" },
+      "breadcrumb": { "en": "Protect PDF", "es": "Proteger PDF", "pt": "Proteger PDF", "de": "PDF Schützen", "fr": "Protéger PDF" }
+    },
+    {
+      "id": "redact", "icon": "🖌️", "toolKey": "redact",
+      "slugs":   { "en": "redact-pdf",     "es": "censurar-pdf",       "pt": "censurar-pdf",          "de": "pdf-schwaerzen",        "fr": "censurer-pdf" },
+      "titles":  {
+        "en": "Redact PDF Online — Cover Sensitive Data, No Upload | PDFree",
+        "es": "Ocultar PDF Online — Eliminar Info Sensible Localmente | PDFree",
+        "pt": "Ocultar PDF Online — Remover Info Sensível Localmente | PDFree",
+        "de": "PDF Schwärzen Online — Sensible Daten Entfernen | PDFree",
+        "fr": "Caviarder un PDF en Ligne — Gratuit, Suppression Définitive | PDFree"
+      },
+      "descs":   {
+        "en": "Hide text, signatures, or sensitive data with opaque blocks. 100% local processing — files never uploaded.",
+        "es": "Oculta texto, firmas o datos sensibles con bloques opacos. 100% privado — procesado localmente.",
+        "pt": "Oculte texto, assinaturas ou dados sensíveis com blocos opacos. 100% privado — processado localmente.",
+        "de": "Sensible Texte und Bilder in PDFs dauerhaft schwärzen. 100 % lokale Verarbeitung — nichts verlässt dein Gerät. Kostenlos.",
+        "fr": "Caviarder un PDF gratuitement en ligne. Suppression définitive et irrécupérable des zones sensibles. 100 % privé — aucun envoi, sans inscription."
+      },
+      "navLabels":  { "en": "Redact",  "es": "Censurar",    "pt": "Censurar",    "de": "Schwärzen",     "fr": "Caviarder" },
+      "cardNames":  { "en": "Cover Area", "es": "Ocultar Área", "pt": "Ocultar Área", "de": "Bereich Abdecken", "fr": "Caviarder Zone" },
+      "cardDescs":  { "en": "Hide watermarks, signatures or sensitive data locally", "es": "Ocultar marcas de agua, firmas o datos sensibles localmente", "pt": "Ocultar marcas d'água, assinaturas ou dados sensíveis localmente", "de": "Wasserzeichen, Unterschriften oder sensible Daten lokal ausblenden", "fr": "Masquer filigranes, signatures ou données sensibles localement" },
+      "breadcrumb": { "en": "Redact PDF", "es": "Ocultar PDF", "pt": "Ocultar PDF", "de": "PDF Schwärzen", "fr": "Caviarder PDF" }
+    },
+    {
+      "id": "pagenum", "icon": "🔢", "toolKey": "pagenum",
+      "slugs":   { "en": "pagenum-pdf",    "es": "numeros-de-pagina-pdf", "pt": "numeros-de-pagina-pdf", "de": "seitenzahlen-pdf",     "fr": "numerotation-pdf" },
+      "titles":  {
+        "en": "Add Page Numbers to PDF Online — Free, No Upload | PDFree",
+        "es": "Añadir Números de Página al PDF — Gratis, Sin Subir | PDFree",
+        "pt": "Adicionar Números de Página ao PDF — Grátis | PDFree",
+        "de": "Seitenzahlen in PDF Einfügen — Kostenlos, Kein Upload | PDFree",
+        "fr": "Numérotation PDF en Ligne — Gratuit, Aucun Envoi | PDFree"
+      },
+      "descs":   {
+        "en": "Add page numbers to any PDF. Processed locally in your browser — no uploads, no signup, no limits. Free.",
+        "es": "Añade números de página a cualquier PDF. Procesado en el navegador — sin subidas, sin registro, sin límites.",
+        "pt": "Adicione números de página a qualquer PDF. Processado no navegador — sem uploads, sem registro, sem limites.",
+        "de": "Seitenzahlen in beliebige PDFs einfügen. Im Browser verarbeitet — kein Upload, keine Registrierung, keine Limits. Kostenlos.",
+        "fr": "Ajouter des numéros de page à un PDF gratuitement en ligne. Format arabe, romain ou alphabétique. 100 % privé — aucun envoi, sans inscription."
+      },
+      "navLabels":  { "en": "Page Nos",  "es": "Núm. página",  "pt": "Núm. página",  "de": "Seitenzahlen",  "fr": "Numérotation" },
+      "cardNames":  { "en": "Page Numbers", "es": "Números de página", "pt": "Números de página", "de": "Seitenzahlen", "fr": "Numérotation PDF" },
+      "cardDescs":  { "en": "Add numbered footers — Arabic, Roman or ABC", "es": "Añade números de página en el pie — Arábigos, Romanos o ABC", "pt": "Adicione números de página no rodapé — Arábicos, Romanos ou ABC", "de": "Nummerierte Fußzeilen hinzufügen — Arabisch, Römisch oder ABC", "fr": "Ajouter des pieds de page numérotés — arabe, romain ou alphabétique" },
+      "breadcrumb": { "en": "Page Numbers PDF", "es": "Números de Página PDF", "pt": "Números de Página PDF", "de": "Seitenzahlen PDF", "fr": "Numérotation PDF" }
+    },
+    {
+      "id": "extract", "icon": "📑", "toolKey": "extract",
+      "slugs":   { "en": "extract-pdf",    "es": "extraer-pdf",        "pt": "extrair-pdf",           "de": "seiten-extrahieren",    "fr": "extraire-pdf" },
+      "titles":  {
+        "en": "Extract PDF Pages Online — Free, No Upload | PDFree",
+        "es": "Extraer Páginas de PDF — Gratis, Privado, Sin Subir | PDFree",
+        "pt": "Extrair Páginas de PDF — Grátis, Privado | PDFree",
+        "de": "Seiten aus PDF Extrahieren — Kostenlos, Kein Upload | PDFree",
+        "fr": "Extraire des Pages PDF en Ligne — Gratuit, Aucun Envoi | PDFree"
+      },
+      "descs":   {
+        "en": "Extract specific pages from a PDF. 100% private — processed locally, no uploads, no signup.",
+        "es": "Extrae páginas específicas de un PDF. 100% privado — procesado localmente, sin subidas.",
+        "pt": "Extraia páginas específicas de um PDF. 100% privado — processado localmente, sem uploads.",
+        "de": "Bestimmte Seiten aus einem PDF extrahieren. Vollständige Browserverarbeitung — Dateien verlassen dein Gerät nie. Kostenlos, privat.",
+        "fr": "Extraire des pages d'un PDF gratuitement en ligne. Pages individuelles ou plages de pages. 100 % privé — aucun envoi, sans inscription."
+      },
+      "navLabels":  { "en": "Extract",  "es": "Extraer",      "pt": "Extrair",      "de": "Extrahieren",   "fr": "Extraire" },
+      "cardNames":  { "en": "Extract Pages", "es": "Extraer Páginas", "pt": "Extrair Páginas", "de": "Seiten Extrahieren", "fr": "Extraire Pages" },
+      "cardDescs":  { "en": "Pull selected pages into a new PDF", "es": "Extrae páginas seleccionadas a un nuevo PDF", "pt": "Extraia páginas selecionadas para um novo PDF", "de": "Ausgewählte Seiten in ein neues PDF extrahieren", "fr": "Extraire des pages sélectionnées dans un nouveau PDF" },
+      "breadcrumb": { "en": "Extract Pages PDF", "es": "Extraer Páginas PDF", "pt": "Extrair Páginas PDF", "de": "Seiten Extrahieren", "fr": "Extraire PDF" }
+    },
+    {
+      "id": "metadata", "icon": "🏷️", "toolKey": "meta",
+      "slugs":   { "en": "metadata-pdf",   "es": "metadatos-pdf",      "pt": "metadados-pdf",         "de": "pdf-metadaten",         "fr": "metadonnees-pdf" },
+      "titles":  {
+        "en": "Edit PDF Metadata Online — Free, No Upload | PDFree",
+        "es": "Editar Metadatos PDF Online — Gratis, Privado | PDFree",
+        "pt": "Editar Metadados PDF Online — Grátis, Privado | PDFree",
+        "de": "PDF Metadaten Bearbeiten — Kostenlos, Privat | PDFree",
+        "fr": "Métadonnées PDF en Ligne — Modifier ou Supprimer, Aucun Envoi | PDFree"
+      },
+      "descs":   {
+        "en": "View and edit PDF metadata: title, author, subject, keywords. Processed locally — files never uploaded.",
+        "es": "Ver y editar metadatos del PDF: título, autor, asunto, palabras clave. Procesado localmente — sin subidas.",
+        "pt": "Ver e editar metadados do PDF: título, autor, assunto, palavras-chave. Processado localmente — sem uploads.",
+        "de": "PDF-Metadaten online bearbeiten oder entfernen. Im Browser verarbeitet — keine Uploads, keine Registrierung. Kostenlos, privat.",
+        "fr": "Modifier ou supprimer les métadonnées d'un PDF gratuitement en ligne. 100 % privé — aucun envoi, sans inscription."
+      },
+      "navLabels":  { "en": "Metadata",  "es": "Metadatos",    "pt": "Metadados",    "de": "Metadaten",     "fr": "Métadonnées" },
+      "cardNames":  { "en": "Edit Metadata", "es": "Editar Metadatos", "pt": "Editar Metadados", "de": "Metadaten Bearbeiten", "fr": "Métadonnées PDF" },
+      "cardDescs":  { "en": "View and edit title, author, keywords", "es": "Ver y editar título, autor, palabras clave", "pt": "Ver e editar título, autor, palavras-chave", "de": "Titel, Autor, Schlüsselwörter anzeigen und bearbeiten", "fr": "Afficher et modifier titre, auteur, mots-clés" },
+      "breadcrumb": { "en": "Edit PDF Metadata", "es": "Metadatos PDF", "pt": "Metadados PDF", "de": "PDF Metadaten", "fr": "Métadonnées PDF" }
+    },
+    {
+      "id": "jpg2pdf", "icon": "🖼️", "toolKey": "jpg2pdf",
+      "slugs":   { "en": "jpg2pdf",         "es": "jpg-a-pdf",          "pt": "jpg-para-pdf",          "de": "jpg-zu-pdf",            "fr": "jpg-en-pdf" },
+      "titles":  {
+        "en": "Convert JPG to PDF Online — Free, No Upload | PDFree",
+        "es": "Convertir JPG a PDF — Gratis, Sin Subir | PDFree",
+        "pt": "Converter JPG para PDF — Grátis, Sem Upload | PDFree",
+        "de": "JPG in PDF Umwandeln — Kostenlos, Kein Upload | PDFree",
+        "fr": "JPG en PDF en Ligne — Gratuit, Aucun Envoi | PDFree"
+      },
+      "descs":   {
+        "en": "Convert images to PDF instantly. Auto EXIF rotation. 100% private — processed locally, no uploads.",
+        "es": "Convierte imágenes a PDF al instante. Corrección automática de rotación EXIF. 100% privado, sin subidas.",
+        "pt": "Converta imagens em PDF instantaneamente. Correção automática de rotação EXIF. 100% privado, sem uploads.",
+        "de": "JPG-Bilder in PDF umwandeln. 100 % privat — im Browser verarbeitet, kein Upload. Kostenlos, keine Limits.",
+        "fr": "Convertir des images JPG en PDF gratuitement en ligne. Plusieurs images en un seul PDF. 100 % privé — aucun envoi, sans inscription."
+      },
+      "navLabels":  { "en": "JPG→PDF", "es": "JPG→PDF", "pt": "JPG→PDF", "de": "JPG→PDF", "fr": "JPG→PDF" },
+      "cardNames":  { "en": "JPG to PDF", "es": "JPG a PDF", "pt": "JPG para PDF", "de": "JPG zu PDF", "fr": "JPG en PDF" },
+      "cardDescs":  { "en": "Convert images to PDF instantly", "es": "Convierte imágenes a PDF al instante", "pt": "Converta imagens em PDF instantaneamente", "de": "Bilder sofort in PDF umwandeln", "fr": "Convertir des images en PDF instantanément" },
+      "breadcrumb": { "en": "JPG to PDF", "es": "JPG a PDF", "pt": "JPG para PDF", "de": "JPG zu PDF", "fr": "JPG en PDF" }
+    },
+    {
+      "id": "pdf2jpg", "icon": "📸", "toolKey": "pdf2jpg",
+      "slugs":   { "en": "pdf2jpg",         "es": "pdf-a-jpg",          "pt": "pdf-para-jpg",          "de": "pdf-zu-jpg",            "fr": "pdf-en-jpg" },
+      "titles":  {
+        "en": "Convert PDF to JPG Online — Free, No Upload | PDFree",
+        "es": "Convertir PDF a JPG — Gratis, Sin Subir | PDFree",
+        "pt": "Converter PDF para JPG — Grátis, Sem Upload | PDFree",
+        "de": "PDF in JPG Umwandeln — Kostenlos, Kein Upload | PDFree",
+        "fr": "PDF en JPG en Ligne — Gratuit, Aucun Envoi | PDFree"
+      },
+      "descs":   {
+        "en": "Extract PDF pages as high-quality JPG or PNG images. 100% private — processed locally, no uploads.",
+        "es": "Extrae páginas como imágenes JPG o PNG de alta calidad. 100% privado, procesado localmente.",
+        "pt": "Extraia páginas como imagens JPG ou PNG de alta qualidade. 100% privado, processado localmente.",
+        "de": "PDF-Seiten in hochwertige JPG-Bilder umwandeln. Im Browser verarbeitet — kein Upload, keine Registrierung. Kostenlos.",
+        "fr": "Convertir un PDF en images JPG gratuitement en ligne. Toutes les pages ou une sélection. 100 % privé — aucun envoi, sans inscription."
+      },
+      "navLabels":  { "en": "PDF→JPG", "es": "PDF→JPG", "pt": "PDF→JPG", "de": "PDF→JPG", "fr": "PDF→JPG" },
+      "cardNames":  { "en": "PDF to JPG", "es": "PDF a JPG", "pt": "PDF para JPG", "de": "PDF zu JPG", "fr": "PDF en JPG" },
+      "cardDescs":  { "en": "Extract pages as high-quality images", "es": "Extrae páginas como imágenes de alta calidad", "pt": "Extraia páginas como imagens de alta qualidade", "de": "Seiten als hochwertige Bilder exportieren", "fr": "Exporter les pages en images haute qualité" },
+      "breadcrumb": { "en": "PDF to JPG", "es": "PDF a JPG", "pt": "PDF para JPG", "de": "PDF zu JPG", "fr": "PDF en JPG" }
+    }
+  ],
+
+  "ui": {
+    "en": {
+      "heroBadge": "🔒 100% private · no upload · no signup · no limits",
+      "heroH1": "PDF tools that<br><em>actually work</em>",
+      "heroP": "Merge, split, compress, watermark, convert — everything runs <strong>in your browser</strong>. Your files never leave your device. No server. No account. Just results.",
+      "privacyBannerStrong": "Your files stay on your device.",
+      "privacyBannerText": "We use Web Workers and client-side libraries — nothing is ever sent to any server.",
+      "noLimit": ["No file limits", "No watermarks", "No signup", "Files never leave your device"],
+      "sectionLabel": "All tools",
+      "privacy1Title": "100% private by design",
+      "privacy1Desc": "Your files are processed entirely in your browser. Zero uploads — ever.",
+      "privacy2Title": "Runs on your device",
+      "privacy2Desc": "All PDF operations run inside a Web Worker — a sandboxed thread in your own hardware.",
+      "privacy3Title": "Instantly forgotten",
+      "privacy3Desc": "Files live only in RAM. Close the tab and they vanish — no logs, no traces.",
+      "dropTitle": "Drop files here",
+      "dropSub": "or click to browse — any number of files",
+      "chooseBtn": "Choose files",
+      "reorderHint": "↕ Drag to reorder files before merging",
+      "cancelBtn": "✕ Cancel",
+      "successTitle": "Done!",
+      "downloadBtn": "⬇ Download",
+      "footerLine1": "All processing happens 100% in your browser",
+      "footerLine2": "Files are <strong>never uploaded</strong>",
+      "footerGuarantee": "Your documents never leave your device",
+      "footerFree": "Built to be free for everyone, forever",
+      "footerOpenSource": "Open source under the",
+      "footerGitHub": "View source on GitHub",
+      "seoH2": "The best free PDF tool for security and privacy",
+      "seoP1": "PDFree is designed to provide professional-grade PDF manipulation without the risks associated with cloud uploads. When you use our tools, the processing happens directly inside your web browser using WebAssembly. This means your sensitive documents, such as legal contracts, financial reports, or personal ID scans, are never transmitted over the internet.",
+      "seoP2": "We believe essential tools should be accessible to everyone. That's why PDFree has absolutely no file size limits, no daily usage caps, and no mandatory watermarks. It is a completely free, unlimited utility built for students, professionals, and anyone who values digital privacy.",
+      "faqTitle": "Frequently Asked Questions",
+      "faqQ1": "Are my files stored on your servers?",
+      "faqA1": "No. PDFree operates entirely on your device (client-side). We don't have servers that process your files, which guarantees 100% privacy.",
+      "faqQ2": "Is there a limit to the file size or number of pages?",
+      "faqA2": "No, there are no artificial limits. The only limitation is the RAM (memory) available on your computer or smartphone."
+    },
+    "es": {
+      "heroBadge": "🔒 100% privado · sin subidas · sin registro · sin límites",
+      "heroH1": "Herramientas PDF que<br><em>realmente funcionan</em>",
+      "heroP": "Une, divide, comprime, marca y convierte — todo ocurre <strong>en tu navegador</strong>. Tus archivos nunca salen de tu dispositivo. Sin servidores. Sin cuentas. Solo resultados.",
+      "privacyBannerStrong": "Tus archivos se quedan en tu dispositivo.",
+      "privacyBannerText": "Usamos Web Workers y librerías locales — nada se envía jamás a un servidor.",
+      "noLimit": ["Sin límites de archivos", "Sin marcas de agua", "Sin registro", "Los archivos no salen de tu dispositivo"],
+      "sectionLabel": "Todas las herramientas",
+      "privacy1Title": "100% privado por diseño",
+      "privacy1Desc": "Tus archivos se procesan por completo en tu navegador. Cero subidas — nunca.",
+      "privacy2Title": "Se ejecuta en tu dispositivo",
+      "privacy2Desc": "Todas las operaciones PDF se ejecutan en un Web Worker — un hilo seguro en tu propio hardware.",
+      "privacy3Title": "Eliminados al instante",
+      "privacy3Desc": "Los archivos viven solo en RAM. Cierra la pestaña y desaparecen — sin registros ni rastros.",
+      "dropTitle": "Suelta los archivos aquí",
+      "dropSub": "o haz clic para explorar — cualquier número de archivos",
+      "chooseBtn": "Elegir archivos",
+      "reorderHint": "↕ Arrastra para reordenar los archivos",
+      "cancelBtn": "✕ Cancelar",
+      "successTitle": "¡Listo!",
+      "downloadBtn": "⬇ Descargar",
+      "footerLine1": "Todo el procesamiento ocurre 100% en tu navegador",
+      "footerLine2": "Los archivos nunca son <strong>enviados</strong>",
+      "footerGuarantee": "Tus documentos nunca salen de tu dispositivo",
+      "footerFree": "Creado para ser gratuito para todos — para siempre",
+      "footerOpenSource": "Código abierto bajo la licencia",
+      "footerGitHub": "Código fuente en GitHub",
+      "seoH2": "La mejor herramienta PDF gratuita para seguridad y privacidad",
+      "seoP1": "PDFree está diseñado para ofrecer manipulación de PDF de nivel profesional sin los riesgos asociados a la subida en la nube. Al utilizar nuestras herramientas, el procesamiento se realiza directamente en tu navegador web mediante WebAssembly. Esto significa que tus documentos confidenciales nunca se transmiten por internet.",
+      "seoP2": "Creemos que las herramientas esenciales deben ser accesibles para todos. Por eso PDFree no tiene límites de tamaño de archivo, ni topes de uso diario, ni marcas de agua obligatorias. Es una utilidad completamente gratuita e ilimitada.",
+      "faqTitle": "Preguntas Frecuentes",
+      "faqQ1": "¿Se almacenan mis archivos en sus servidores?",
+      "faqA1": "No. PDFree opera completamente en tu dispositivo (del lado del cliente). No tenemos servidores que procesen tus archivos, lo que garantiza 100% de privacidad.",
+      "faqQ2": "¿Hay un límite para el tamaño del archivo o número de páginas?",
+      "faqA2": "No, no hay límites artificiales. La única limitación es la memoria RAM disponible en tu computadora o smartphone."
+    },
+    "pt": {
+      "heroBadge": "🔒 100% privado · sem uploads · sem registro · sem limites",
+      "heroH1": "Ferramentas PDF que<br><em>realmente funcionam</em>",
+      "heroP": "Junte, divida, comprima, marque e converta — tudo roda <strong>no seu navegador</strong>. Seus arquivos nunca saem do seu dispositivo. Sem servidores. Sem contas. Apenas resultados.",
+      "privacyBannerStrong": "Seus arquivos ficam no seu dispositivo.",
+      "privacyBannerText": "Usamos Web Workers e bibliotecas locais — nada é enviado a nenhum servidor.",
+      "noLimit": ["Sem limites de arquivos", "Sem marcas d'água", "Sem registro", "Os arquivos não saem do seu dispositivo"],
+      "sectionLabel": "Todas as ferramentas",
+      "privacy1Title": "100% privado por design",
+      "privacy1Desc": "Seus arquivos são processados totalmente no seu navegador. Zero uploads — nunca.",
+      "privacy2Title": "Roda no seu dispositivo",
+      "privacy2Desc": "Todas as operações PDF rodam em um Web Worker — uma thread segura no seu próprio hardware.",
+      "privacy3Title": "Apagados instantaneamente",
+      "privacy3Desc": "Os arquivos vivem apenas na RAM. Feche a aba e eles desaparecem — sem logs, sem rastros.",
+      "dropTitle": "Arraste os arquivos aqui",
+      "dropSub": "ou clique para procurar — qualquer número de arquivos",
+      "chooseBtn": "Escolher arquivos",
+      "reorderHint": "↕ Arraste para reordenar os arquivos",
+      "cancelBtn": "✕ Cancelar",
+      "successTitle": "Pronto!",
+      "downloadBtn": "⬇ Baixar",
+      "footerLine1": "Todo o processamento acontece 100% no seu navegador",
+      "footerLine2": "Os arquivos <strong>nunca são enviados</strong>",
+      "footerGuarantee": "Seus documentos nunca saem do seu dispositivo",
+      "footerFree": "Feito para ser grátis para todos, sempre",
+      "footerOpenSource": "Código aberto sob a licença",
+      "footerGitHub": "Código-fonte no GitHub",
+      "seoH2": "A melhor ferramenta PDF gratuita para segurança e privacidade",
+      "seoP1": "O PDFree foi projetado para fornecer manipulação de PDF de nível profissional sem os riscos associados aos uploads em nuvem. Ao usar nossas ferramentas, o processamento ocorre diretamente no seu navegador usando WebAssembly. Isso significa que seus documentos confidenciais nunca são transmitidos pela internet.",
+      "seoP2": "Acreditamos que ferramentas essenciais devem ser acessíveis a todos. É por isso que o PDFree não tem limites de tamanho de arquivo, sem limites de uso diário e sem marcas d'água obrigatórias. É um utilitário totalmente gratuito e ilimitado.",
+      "faqTitle": "Perguntas Frequentes",
+      "faqQ1": "Meus arquivos são armazenados em seus servidores?",
+      "faqA1": "Não. O PDFree opera totalmente no seu dispositivo (no lado do cliente). Não temos servidores que processem seus arquivos, o que garante 100% de privacidade.",
+      "faqQ2": "Existe um limite para o tamanho do arquivo ou número de páginas?",
+      "faqA2": "Não, não há limites artificiais. A única limitação é a memória RAM disponível no seu computador ou smartphone."
+    },
+    "de": {
+      "heroBadge": "🔒 100 % privat · kein Upload · kein Konto · keine Limits",
+      "heroH1": "PDF-Werkzeuge, die<br><em>wirklich funktionieren</em>",
+      "heroP": "Zusammenfügen, aufteilen, komprimieren, konvertieren — alles läuft <strong>in deinem Browser</strong>. Deine Dateien verlassen dein Gerät nie. Kein Server. Kein Konto. Nur Ergebnisse.",
+      "privacyBannerStrong": "Deine Dateien bleiben auf deinem Gerät.",
+      "privacyBannerText": "Wir nutzen Web Worker und clientseitige Bibliotheken — nichts wird jemals an einen Server gesendet.",
+      "noLimit": ["Keine Dateilimits", "Keine Wasserzeichen", "Keine Registrierung", "Dateien verlassen dein Gerät nie"],
+      "sectionLabel": "Alle Werkzeuge",
+      "privacy1Title": "Privacy by Design",
+      "privacy1Desc": "Deine Dateien werden vollständig in deinem Browser verarbeitet. Kein Upload — niemals.",
+      "privacy2Title": "Läuft auf deinem Gerät",
+      "privacy2Desc": "Alle PDF-Operationen laufen in einem Web Worker — einem sicheren Thread auf deiner eigenen Hardware.",
+      "privacy3Title": "Sofort gelöscht",
+      "privacy3Desc": "Dateien leben nur im RAM. Tab schließen — und sie sind weg. Keine Protokolle, keine Spuren.",
+      "dropTitle": "Dateien hier ablegen",
+      "dropSub": "oder durchsuchen — beliebig viele Dateien",
+      "chooseBtn": "Dateien auswählen",
+      "reorderHint": "↕ Zum Neuanordnen ziehen",
+      "cancelBtn": "✕ Abbrechen",
+      "successTitle": "Fertig!",
+      "downloadBtn": "⬇ Herunterladen",
+      "footerLine1": "Gesamte Verarbeitung 100 % im Browser",
+      "footerLine2": "Dateien werden <strong>nie hochgeladen</strong>",
+      "footerGuarantee": "Deine Dokumente verlassen dein Gerät nie",
+      "footerFree": "Kostenlos für alle — für immer",
+      "footerOpenSource": "Open Source unter der",
+      "footerGitHub": "Quellcode auf GitHub",
+      "seoH2": "Das beste kostenlose PDF-Werkzeug für Sicherheit und Privatsphäre",
+      "seoP1": "PDFree bietet professionelle PDF-Bearbeitung ohne die Risiken von Cloud-Uploads. Die Verarbeitung erfolgt direkt in deinem Browser mit WebAssembly. Deine sensiblen Dokumente werden nie übertragen.",
+      "seoP2": "Grundlegende Werkzeuge sollten für alle zugänglich sein. Deshalb hat PDFree keine Dateigrößenlimits, keine täglichen Nutzungsgrenzen und keine Pflicht-Wasserzeichen. Ein völlig kostenloses, unbegrenztes Hilfsmittel.",
+      "faqTitle": "Häufig gestellte Fragen",
+      "faqQ1": "Werden meine Dateien auf einem Server gespeichert?",
+      "faqA1": "Nein. PDFree arbeitet vollständig auf deinem Gerät (clientseitig). Wir haben keine Server, die deine Dateien verarbeiten, was 100 % Privatsphäre garantiert.",
+      "faqQ2": "Gibt es ein Limit für die Dateigröße oder Seitenanzahl?",
+      "faqA2": "Nein, es gibt keine künstlichen Limits. Die einzige Begrenzung ist der verfügbare Arbeitsspeicher deines Computers oder Smartphones."
+    },
+    "fr": {
+      "heroBadge": "🔒 100 % privé · aucun envoi · aucun compte · aucune limite",
+      "heroH1": "Des outils PDF qui<br><em>fonctionnent vraiment</em>",
+      "heroP": "Fusionner, diviser, compresser, convertir — tout s'exécute <strong>dans votre navigateur</strong>. Vos fichiers ne quittent jamais votre appareil. Aucun serveur. Aucun compte. Rien que des résultats.",
+      "privacyBannerStrong": "Vos fichiers restent sur votre appareil.",
+      "privacyBannerText": "Nous utilisons des Web Workers et des bibliothèques locales — rien n'est jamais envoyé à un serveur.",
+      "noLimit": ["Aucune limite de taille", "Aucun filigrane", "Sans inscription", "Fichiers toujours locaux"],
+      "sectionLabel": "Tous les outils",
+      "privacy1Title": "Privacy by Design",
+      "privacy1Desc": "Vos fichiers sont traités entièrement dans votre navigateur. Aucun envoi — jamais.",
+      "privacy2Title": "Fonctionne sur votre appareil",
+      "privacy2Desc": "Toutes les opérations PDF s'exécutent dans un Web Worker — un thread sécurisé sur votre propre machine.",
+      "privacy3Title": "Aucune trace",
+      "privacy3Desc": "Vos fichiers disparaissent dès la fermeture de l'onglet. Aucun journal, aucune donnée conservée.",
+      "dropTitle": "Déposez vos fichiers ici",
+      "dropSub": "ou cliquez pour parcourir — autant de fichiers que vous voulez",
+      "chooseBtn": "Sélectionner les fichiers",
+      "reorderHint": "↕ Glissez pour réorganiser",
+      "cancelBtn": "✕ Annuler",
+      "successTitle": "Terminé !",
+      "downloadBtn": "⬇ Télécharger",
+      "footerLine1": "Traitement 100 % dans le navigateur",
+      "footerLine2": "Les fichiers ne sont <strong>jamais envoyés</strong>",
+      "footerGuarantee": "Vos documents ne quittent jamais votre appareil",
+      "footerFree": "Gratuit pour tous — pour toujours",
+      "footerOpenSource": "Open Source sous la licence",
+      "footerGitHub": "Code source sur GitHub",
+      "seoH2": "Le meilleur outil PDF gratuit pour la sécurité et la confidentialité",
+      "seoP1": "PDFree est conçu pour fournir une manipulation de PDF de qualité professionnelle sans les risques associés aux envois vers le cloud. Le traitement se fait directement dans votre navigateur avec WebAssembly. Vos documents sensibles ne sont jamais transmis sur internet.",
+      "seoP2": "Nous pensons que les outils essentiels doivent être accessibles à tous. C'est pourquoi PDFree n'a aucune limite de taille de fichier, aucun plafond d'utilisation quotidien et aucun filigrane obligatoire. Un utilitaire entièrement gratuit et illimité.",
+      "faqTitle": "Questions Fréquentes",
+      "faqQ1": "Mes fichiers sont-ils stockés sur vos serveurs ?",
+      "faqA1": "Non. PDFree fonctionne entièrement sur votre appareil (côté client). Nous n'avons pas de serveurs qui traitent vos fichiers, ce qui garantit 100 % de confidentialité.",
+      "faqQ2": "Y a-t-il une limite de taille de fichier ou de nombre de pages ?",
+      "faqA2": "Non, il n'y a pas de limites artificielles. La seule limitation est la mémoire vive disponible sur votre ordinateur ou smartphone."
+    }
+  }
+}

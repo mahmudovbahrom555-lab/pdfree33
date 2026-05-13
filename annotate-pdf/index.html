@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!--
+    ════════════════════════════════════════════════════════════════
+    Content Security Policy — defence-in-depth against XSS
+
+    Design decisions:
+    ─────────────────
+    script-src: NO 'unsafe-inline'
+      We have zero inline <script> tags. Allowing unsafe-inline would
+      let any XSS bypass every other protection. AdSense injects its
+      scripts via programmatic document.createElement — that is covered
+      by the domain allowlist, not by unsafe-inline.
+
+    style-src: 'unsafe-inline' ALLOWED
+      We set element.style.display/opacity/width in JS and have
+      inline style= attributes in HTML (ad <ins> tags, footer spans).
+      Style-only XSS cannot execute code, so this is an acceptable
+      tradeoff. Alternative would be refactoring all inline styles to
+      CSS classes — noted as future improvement.
+
+    worker-src: blob: REQUIRED
+      pdf.js ≥ 3.x creates its PDF worker via a blob URL
+      (pdfjsLib.GlobalWorkerOptions.workerSrc = blob:...).
+      Without blob: the PDF→JPG tool breaks silently on first use.
+      Our own worker.js is covered by 'self'.
+
+    connect-src: *.doubleclick.net REQUIRED for AdSense
+      AdSense makes fetch/XHR calls to multiple googlesyndication and
+      doubleclick endpoints for ad selection and reporting. Without
+      these the ad slots show as empty (fallback to Ko-fi is fine, but
+      kills revenue). Added conservatively; remove if not monetising.
+
+    img-src: data: and blob: REQUIRED
+      pdf.js renders page thumbnails as data: URIs.
+      URL.createObjectURL() for JPG→PDF previews produces blob: URIs.
+      Without blob: the image preview thumbnails are blocked by CSP.
+      (Symptoms: blank previews + console error about img-src blob:)
+
+    frame-src: googlesyndication/doubleclick
+      AdSense renders ad creatives inside cross-origin iframes.
+    ════════════════════════════════════════════════════════════════
+  -->
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src  'self'
+                'wasm-unsafe-eval'
+                blob:
+                https://cdnjs.cloudflare.com
+                https://esm.sh
+                https://plausible.io
+                https://pagead2.googlesyndication.com
+                https://static.cloudflareinsights.com;
+    style-src   'self' 'unsafe-inline'
+                https://fonts.googleapis.com;
+    font-src    https://fonts.gstatic.com;
+    img-src     'self' data: blob: https:;
+    connect-src 'self'
+                https://cdnjs.cloudflare.com
+                https://*.workers.dev
+                https://plausible.io
+                https://pagead2.googlesyndication.com
+                https://www.googletagservices.com
+                https://*.doubleclick.net
+                https://cloudflareinsights.com;
+    frame-src   https://googleads.g.doubleclick.net
+                https://tpc.googlesyndication.com;
+    worker-src  'self' blob:;
+    object-src  'none';
+  ">
+  <title>Annotate PDF Online — Draw, Highlight & Mark Up PDFs | PDFree</title>
+  <meta name="description" content="Add colored boxes, highlights, and markup to PDF files online. 100% in your browser — no uploads, no signup, free forever.">
+  <meta property="og:title"       content="Annotate PDF Online — Draw, Highlight & Mark Up PDFs | PDFree">
+  <meta property="og:description" content="Add colored boxes and markup to PDFs locally. Nothing uploaded. Free, no signup.">
+  <meta property="og:type"        content="website">
+  <meta property="og:url"       content="https://pdfree.io/annotate-pdf/">
+  <meta property="og:site_name" content="PDFree">
+  <meta property="og:locale"    content="en_US">
+  <meta property="og:image"     content="https://pdfree.io/icons/og-image.jpg">
+  <meta property="og:image:width"  content="1200">
+  <meta property="og:image:height" content="633">
+  <meta name="twitter:card"        content="summary_large_image">
+  <meta name="twitter:site"        content="@pdfree_io">
+  <meta name="twitter:image"       content="https://pdfree.io/icons/og-image.jpg">
+  
+  <link rel="canonical" href="https://pdfree.io/annotate-pdf/">
+    <link rel="alternate" hreflang="en" href="https://pdfree.io/annotate-pdf/">
+  <link rel="alternate" hreflang="es" href="https://pdfree.io/es/censurar-pdf/">
+  <link rel="alternate" hreflang="pt" href="https://pdfree.io/pt/censurar-pdf/">
+  <link rel="alternate" hreflang="de" href="https://pdfree.io/de/pdf-schwaerzen/">
+  <link rel="alternate" hreflang="fr" href="https://pdfree.io/fr/censurer-pdf/">
+  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/annotate-pdf/">
+
+  <!-- PWA -->
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="PDFree">
+  <link rel="apple-touch-icon" href="../icons/icon-192.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <!-- Privacy-first analytics (no cookies, GDPR compliant) -->
+  <!-- Replace pdfree.com with your actual domain after deployment -->
+  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap"></noscript>
+
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/animations.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+
+  <script type="application/ld+json">
+  {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Redact PDF",
+  "description": "Annotate and mark up PDF files with colored boxes. 100% local, nothing uploaded.",
+  "url": "https://pdfree.io/annotate-pdf/",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any",
+  "browserRequirements": "Requires a modern browser with JavaScript enabled",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "featureList": [
+    "No file upload required",
+    "100% private — files processed locally",
+    "No account or signup needed",
+    "No file size limits",
+    "Works offline"
+  ],
+  "provider": {
+    "@type": "Organization",
+    "name": "PDFree",
+    "url": "https://pdfree.io"
+  },
+  "keywords": "redact pdf, remove text from pdf, pdf redaction, sensitive information, private"
+}
+  </script>
+  <script type="application/ld+json">
+  {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is PDF redaction done locally or on a server?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "100% locally. PDFree processes redaction entirely in your browser — nothing is uploaded to any server."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is the redacted content permanently removed?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. PDFree draws opaque rectangles over the selected areas and flattens the PDF so the original content is not recoverable."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does redacting a PDF also remove metadata?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Visual redaction does not remove document metadata. Use the Metadata tool on the PDFree homepage separately to remove author names and creation dates."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I redact multiple areas at once?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. You can draw as many redaction boxes as needed before applying."
+      }
+    }
+  ]
+}
+  </script>
+  <script type="application/ld+json">
+  {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "PDFree",
+      "item": "https://pdfree.io/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Redact PDF",
+      "item": "https://pdfree.io/annotate-pdf/"
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+
+  <nav>
+    <a href="../" class="logo" id="logo" aria-label="Go to homepage" style="text-decoration:none">PDF<span>ree</span></a>
+    <div class="nav-links">
+      <a href="../merge-pdf/" class="nav-link" data-tool="merge">Merge</a>
+      <a href="../split-pdf/" class="nav-link" data-tool="split">Split</a>
+      <a href="../compress-pdf/" class="nav-link" data-tool="compress">Compress</a>
+      <a href="../jpg2pdf/" class="nav-link" data-tool="jpg2pdf">JPG→PDF</a>
+      <a href="../watermark-pdf/" class="nav-link" data-tool="watermark">Watermark</a>
+      <a href="../metadata-pdf/" class="nav-link" data-tool="meta">Metadata</a>
+      <a href="../protect-pdf/" class="nav-link" data-tool="protect">Protect</a>
+    </div>
+  </nav>
+
+</section>
+
+<!-- ── Tool workspace ── -->
+  <main id="toolArea" class="main-area" style="display:none" aria-busy="false">
+
+    <div class="tool-header">
+      <div class="tool-header-icon" id="toolIcon" aria-hidden="true">🔗</div>
+      <div class="tool-header-text">
+        <h2 id="toolTitle">Annotate PDF — draw boxes &amp; markup</h2>
+        <p  id="toolDesc">Combine unlimited PDF files instantly. 100% private, no uploads, no file size limits.</p>
+      </div>
+    </div>
+
+    <div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-label="Upload files — click or drag and drop">
+      <input type="file" id="fileInput" multiple accept=".pdf" aria-hidden="true">
+      <span class="drop-icon" aria-hidden="true">📂</span>
+      <div class="drop-title">Drop files here</div>
+      <div class="drop-sub">or click to browse — any number of files</div>
+      <button class="drop-btn" id="chooseFilesBtn" type="button">Choose files</button>
+    </div>
+
+    <div id="fileList"    class="file-list" aria-live="polite" aria-label="Selected files"></div>
+    <div id="fileCount"   class="file-count"   style="display:none"></div>
+    <div id="reorderHint" class="reorder-hint" style="display:none">↕ Drag to reorder files before merging</div>
+
+    <div id="splitOptions"    class="split-options"   style="display:none" aria-label="Split options"></div>
+    <div id="compressOptions" class="compress-options" style="display:none" aria-label="Compression options"></div>
+    <div id="jpg2pdfOptions"  class="j2p-options"     style="display:none" aria-label="JPG to PDF options"></div>
+    <div id="pdf2jpgOptions"  class="j2p-options"     style="display:none" aria-label="PDF to JPG options"></div>
+    <div id="watermarkOptions" class="j2p-options"    style="display:none" aria-label="Watermark options"></div>
+    <div id="pageNumOptions"  class="j2p-options"     style="display:none" aria-label="Page numbers options"></div>
+    <div id="metaOptions"     class="j2p-options"     style="display:none" aria-label="Metadata editor"></div>
+    <div id="protectOptions"  class="j2p-options"     style="display:none" aria-label="Protect PDF options"></div>
+    <div id="redactOptions"   class="j2p-options"     style="display:none" aria-label="Cover Area options"></div>
+    <div id="rotateOptions"   class="j2p-options"     style="display:none" aria-label="Rotate PDF options"></div>
+
+    <button id="mergeBtn"  class="merge-btn"  type="button" disabled data-mode="process">Merge PDF files</button>
+    <button id="cancelBtn" class="cancel-btn" type="button" style="display:none" aria-label="Cancel processing">✕ Cancel</button>
+
+    <div id="progressBar"   class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+    <div id="progressLabel" class="progress-label"></div>
+
+    <!-- Success card -->
+    <div id="successCard" class="success-card" role="alert" aria-live="polite" style="display:none">
+      <div class="success-top">
+        <div class="success-icon" aria-hidden="true">✓</div>
+        <div class="success-text">
+          <h3 id="successTitle">Done!</h3>
+          <p  id="successDesc"></p>
+        </div>
+        <button id="downloadBtn" class="download-btn" type="button">⬇ Download</button>
+      </div>
+
+<!-- Донат — ненавязчивый, появляется через 2 сек после успеха.
+           Совместим с рекламой: лояльные пользователи донатят,
+           остальные видят рекламу. Два источника дохода не конфликтуют. -->
+      </div>
+
+  </main>
+
+  <!-- ── SEO Content (for indexing) ── -->
+  <section class="seo-article" aria-labelledby="seoArticleTitle">
+    <div class="seo-article__inner">
+    <div class="seo-content" style="max-width:800px; margin:60px auto 40px; padding:0 24px; color:var(--text2); line-height:1.7;">
+  
+  <h1 style="font-size:28px; color:var(--text); margin:0 0 20px; font-weight:700;">Annotate PDF Online — Draw, Highlight & Mark Up Any PDF</h1>
+  
+  <p>Permanently obscure sensitive information in PDF documents by drawing opaque rectangles over text, images, or data. PDFree's redaction tool covers content visually — perfect for sharing documents where certain information must remain confidential.</p>
+  
+  <h3 style="font-size:20px; color:var(--text); margin:32px 0 16px; font-weight:600;">How Redaction Works</h3>
+  
+  <p>Drag across the PDF preview to select areas to cover. PDFree draws black (or custom color) rectangles over those regions. The rectangles become part of the PDF content — they cannot be removed or hidden to reveal underlying text.</p>
+  
+  <p><strong>Important distinction:</strong> This is <em>visual coverage</em>, not cryptographic deletion. The original content remains in the PDF file structure but is visually obscured. For most use cases (legal compliance, public records requests, privacy protection), this is exactly what's needed — the content cannot be seen or copied, but the document structure remains intact.</p>
+  
+  <h3 style="font-size:20px; color:var(--text); margin:32px 0 16px; font-weight:600;">When to Use Redaction</h3>
+  
+  <p><strong>Legal Documents:</strong> Obscure names, addresses, social security numbers, or account numbers before filing public court documents or responding to FOIA requests.</p>
+  
+  <p><strong>Medical Records:</strong> Remove patient identifying information to create de-identified records for research or case studies (HIPAA compliance).</p>
+  
+  <p><strong>Financial Statements:</strong> Hide account numbers, transaction details, or balances when sharing bank statements for loan applications or background checks.</p>
+  
+  <p><strong>Business Contracts:</strong> Redact pricing, terms, or confidential clauses when sharing contract templates or portions with third parties.</p>
+  
+  <p><strong>Government Documents:</strong> Public records officers use redaction to protect privacy while releasing information under transparency laws.</p>
+  
+  <h3 style="font-size:20px; color:var(--text); margin:32px 0 16px; font-weight:600;">Usage Instructions</h3>
+  
+  <ol style="margin:16px 0; padding-left:24px;">
+    <li>Upload the PDF — a preview renders in your browser</li>
+    <li>Click and drag to draw a redaction rectangle over sensitive text or images</li>
+    <li>Repeat for all areas needing coverage (up to 5 areas per page to prevent accidental over-redaction)</li>
+    <li>Click "Clear all" if you need to start over</li>
+    <li>Download the redacted PDF — black rectangles are now permanent</li>
+  </ol>
+  
+  <h3 style="font-size:20px; color:var(--text); margin:32px 0 16px; font-weight:600;">Security Considerations</h3>
+  
+  <p><strong>What Redaction Does:</strong></p>
+  <ul style="margin:16px 0; padding-left:24px;">
+    <li>✅ Prevents visual viewing of covered content</li>
+    <li>✅ Prevents text selection/copying of covered content</li>
+    <li>✅ Works in all PDF readers (rectangles are standard PDF drawing objects)</li>
+  </ul>
+  
+  <p><strong>What Redaction Does NOT Do:</strong></p>
+  <ul style="margin:16px 0; padding-left:24px;">
+    <li>❌ Does not delete content from the PDF file structure (forensic tools can extract underlying text)</li>
+    <li>❌ Does not remove metadata — use the Metadata tool on the <a href="/" style="color:var(--green);">PDFree homepage</a> separately</li>
+    <li>❌ Does not prevent determined adversaries with specialized software from accessing original content</li>
+  </ul>
+  
+  <div style="margin:40px 0; padding:20px; background:#fef3c7; border-left:4px solid #f59e0b; border-radius:8px;">
+    <p style="margin:0; font-size:14px; color:#78350f;"><strong>⚠️ Legal Redaction:</strong> For documents subject to legal proceedings or classified information, consult your compliance or legal team. Some jurisdictions require certified redaction tools that cryptographically delete content. PDFree provides visual coverage suitable for most business and privacy use cases but is not certified for classified government documents or high-security legal contexts.</p>
+  </div>
+  
+  <h3 style="font-size:20px; color:var(--text); margin:32px 0 16px; font-weight:600;">Privacy & Processing</h3>
+  
+  <p>Your PDF never leaves your browser. The redaction rectangles are drawn using pdf-lib's content stream API — all processing happens locally in JavaScript. No server sees your sensitive document or learns what you chose to redact.</p>
+  
+  <h3 style="font-size:20px; color:var(--text); margin:32px 0 16px; font-weight:600;">Related Tools</h3>
+  
+  <ul style="margin:16px 0; padding-left:24px;">
+    <li><a href="/protect-pdf/" style="color:var(--green);">Password Protect PDF</a> — Add encryption after redacting</li>
+    <li><a href="/watermark-pdf/" style="color:var(--green);">Add Watermark</a> — Mark redacted documents as confidential</li>
+    <li><a href="/merge-pdf/" style="color:var(--green);">Merge PDF</a> — Combine redacted sections into one document</li>
+  </ul>
+  
+</div>
+    </div>
+  </section>
+
+  <footer>
+    PDFree · <strong>All processing happens 100% in your browser</strong> · Files are <strong>never uploaded</strong><br>
+    <span style="color:var(--green)">🔒</span> Your documents never leave your device &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> Built to be free for everyone, forever<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
+      <a href="/privacy.html" style="color:var(--green)">Privacy</a>
+      &nbsp;·&nbsp;
+      <a href="/terms.html" style="color:var(--green)">Terms</a>
+      &nbsp;·&nbsp;
+      <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a>
+      &nbsp;·&nbsp;
+      <a href="https://github.com/yourusername/pdfree" target="_blank" rel="noopener" style="color:var(--green)">GitHub</a>
+    </span>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <!-- JSZip and pdf-lib are now dynamically imported via ESM when needed -->
+<script type="module" src="../js/app.js?v=14"></script>
+
+
+<!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
