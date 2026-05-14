@@ -5,5 +5,8 @@
   "assets": {
     "directory": ".",
     "not_found_handling": "single-page-application"
+  },
+  "placement": {
+    "mode": "smart"
   }
 }

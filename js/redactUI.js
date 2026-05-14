@@ -1095,12 +1095,14 @@ function _bindEvents(container) {
     _updatePreviewLabel();
   });
 
-  // Opacity slider
+  // Opacity slider — update existing boxes in-place to avoid full DOM rebuild on every tick
   id('rdctOpacity')?.addEventListener('input', e => {
     _opacity = parseInt(e.target.value, 10) / 100;
     const valEl = id('rdctOpacityVal');
     if (valEl) valEl.textContent = `${e.target.value}%`;
-    _redrawOverlay();
+    id('rdctOverlay')?.querySelectorAll('.rdct-box').forEach(b => {
+      b.style.opacity = _opacity;
+    });
   });
 
   // Page navigation buttons
@@ -1126,7 +1128,19 @@ function _bindEvents(container) {
         });
         sw.classList.add('rdct-swatch--active');
         sw.setAttribute('aria-pressed', 'true');
-        _redrawOverlay();
+        // Update existing boxes in-place — avoids full DOM rebuild on color switch
+        const newHex = COLORS[colorKey].hex;
+        const rects  = _currentRects();
+        id('rdctOverlay')?.querySelectorAll('.rdct-box').forEach(b => {
+          const r = rects[parseInt(b.dataset.idx, 10)];
+          if (!r) return;
+          b.style.borderColor = newHex;
+          if (r.type === 'rect' || !r.type) b.style.backgroundColor = newHex;
+          const svg = b.querySelector('.rdct-shape-svg');
+          if (svg) svg.style.color = newHex;
+          const ta = b.querySelector('textarea');
+          if (ta) ta.style.color = newHex;
+        });
       }
       return;
     }

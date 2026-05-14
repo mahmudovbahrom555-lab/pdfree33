@@ -512,4 +512,52 @@
     <priority>0.3</priority>
   </url>
 
+  <url>
+    <loc>https://pdfree.io/blog/how-to-fill-pdf-form/</loc>
+    <lastmod>2026-05-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://pdfree.io/blog/how-to-fill-pdf-form/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pdfree.io/blog/how-to-fill-pdf-form/"/>
+  </url>
+  <url>
+    <loc>https://pdfree.io/blog/how-to-annotate-pdf-on-mobile/</loc>
+    <lastmod>2026-05-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://pdfree.io/blog/how-to-annotate-pdf-on-mobile/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pdfree.io/blog/how-to-annotate-pdf-on-mobile/"/>
+  </url>
+  <url>
+    <loc>https://pdfree.io/blog/how-to-sign-pdf-free/</loc>
+    <lastmod>2026-05-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://pdfree.io/blog/how-to-sign-pdf-free/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pdfree.io/blog/how-to-sign-pdf-free/"/>
+  </url>
+  <url>
+    <loc>https://pdfree.io/fill/</loc>
+    <lastmod>2026-05-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.80</priority>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://pdfree.io/fill/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pdfree.io/fill/"/>
+  </url>
+  <url>
+    <loc>https://pdfree.io/annotate/</loc>
+    <lastmod>2026-05-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.80</priority>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://pdfree.io/annotate/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pdfree.io/annotate/"/>
+  </url>
+  <url>
+    <loc>https://pdfree.io/sign/</loc>
+    <lastmod>2026-05-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.80</priority>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://pdfree.io/sign/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pdfree.io/sign/"/>
+  </url>
 </urlset>
