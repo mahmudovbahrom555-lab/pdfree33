@@ -1600,12 +1600,13 @@
   display: inline-block;
   border: 1px solid var(--border);
   border-radius: 6px;
-  overflow: hidden;
+  overflow: auto;
   max-width: 100%;
+  max-height: 65vh;
   cursor: crosshair;
   line-height: 0;
   margin-bottom: 14px;
-  touch-action: none;  /* block pinch-zoom on single-finger drag */
+  touch-action: pan-x pan-y;
 }
 
 .rdct-canvas {
@@ -1615,30 +1616,128 @@
   -webkit-user-select: none;
 }
 
+/* Div-based overlay (replaces SVG overlay) */
 .rdct-overlay {
   position: absolute;
   top: 0; left: 0;
   pointer-events: none;
 }
 
-/* Confirmed rect — colors now set via JS (fill/stroke attrs).
-   Only static properties remain in CSS. */
-.rdct-confirmed {
-  stroke-width: 1.5;
+.rdct-box {
+  position: absolute;
+  pointer-events: auto;
+  cursor: pointer;
+  border: 2px solid transparent;
+  box-sizing: border-box;
 }
 
-/* Ghost rect (drawn while dragging) — colors via JS */
-.rdct-ghost {
-  stroke-width: 2;
-  stroke-dasharray: 4 3;
+.rdct-box.active {
+  z-index: 10;
+}
+
+.rdct-box-ghost {
+  position: absolute;
   pointer-events: none;
+  border: 2px dashed currentColor;
+  box-sizing: border-box;
+  z-index: 5;
 }
 
 .rdct-rect-label {
-  font-size: 12px;
+  position: absolute;
+  font-size: 11px;
   font-weight: 700;
+  top: 100%; left: 0;
+  margin-top: 2px;
   pointer-events: none;
-  user-select: none;
+  white-space: nowrap;
+}
+
+/* Resize handles — shown only on .active box */
+.rdct-handle {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  background: #2563EB;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+  display: none;
+  pointer-events: auto;
+  z-index: 5;
+}
+
+.rdct-handle.nw { top: -10px; left:  -10px; cursor: nwse-resize; }
+.rdct-handle.ne { top: -10px; right: -10px; cursor: nesw-resize; }
+.rdct-handle.sw { bottom: -10px; left:  -10px; cursor: nesw-resize; }
+.rdct-handle.se { bottom: -10px; right: -10px; cursor: nwse-resize; }
+
+.rdct-box.active .rdct-handle,
+.rdct-box.active .rdct-move-handle {
+  display: flex;
+}
+
+.rdct-move-handle {
+  position: absolute;
+  top: -26px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 4px;
+  cursor: move;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+  z-index: 6;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+.rdct-move-handle svg { width: 14px; height: 14px; }
+
+/* SVG icon inside annotation box */
+.rdct-shape-svg {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0; left: 0;
+  pointer-events: none;
+}
+
+/* Text input inside annotation box */
+.rdct-text-input {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  resize: none;
+  font-family: 'Helvetica', 'Arial', sans-serif;
+  padding: 2px 4px;
+  box-sizing: border-box;
+  overflow: hidden;
+  white-space: pre-wrap;
+  line-height: 1.2;
+  z-index: 2;
+  position: relative;
+}
+.rdct-text-input::placeholder { color: currentColor; opacity: 0.5; }
+
+/* Magnifier canvas */
+.rdct-magnifier {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  border: 2px solid rgba(0,0,0,0.6);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 100;
+  display: none;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  background-color: white;
 }
 
 .rdct-no-preview {
@@ -1648,6 +1747,64 @@
   padding: 40px 20px;
   font-size: 13px;
 }
+
+/* Tool picker */
+.rdct-tool-picker {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+
+.rdct-shape-btn {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text2);
+  font-family: var(--font-sans);
+  transition: all .15s;
+}
+.rdct-shape-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+.rdct-shape-btn:hover { background: var(--surface2); }
+.rdct-shape-btn.active {
+  background: var(--green);
+  color: #fff;
+  border-color: var(--green);
+}
+
+/* History undo/redo buttons */
+.rdct-history-btn {
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  padding: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text2);
+  transition: all .15s;
+}
+.rdct-history-btn:hover:not(:disabled) { background: var(--surface2); color: var(--text); }
+.rdct-history-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.rdct-history-btn svg { width: 16px; height: 16px; }
+
+/* Zoom control */
+.rdct-zoom-ctrl {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--text2);
+}
+.rdct-zoom-ctrl input[type=range] { flex: 1; }
 
 /* ── Layout: preview + controls side by side on desktop ─────── */
 

@@ -1080,26 +1080,86 @@ async function handleRedact(fileBuffer, options) {
         let rectsForThisPage;
 
         if (applyAll) {
-          // Same rects on every page
           rectsForThisPage = rects;
         } else if (rectsByPage) {
-          // Per-page rects (page index is 1-based in the map)
           rectsForThisPage = rectsByPage[i + 1] || [];
         } else {
-          // Legacy fallback — only first page
           rectsForThisPage = (i === 0) ? rects : [];
         }
 
         for (const r of rectsForThisPage) {
-          page.drawRectangle({
-            x:      r.x,
-            y:      r.y,
-            width:  r.w,
-            height: r.h,
-            color,
-            opacity,
-            borderWidth:  0,
-          });
+          const type = r.type || 'rect';
+
+          if (type === 'rect') {
+            page.drawRectangle({
+              x:      r.x,
+              y:      r.y,
+              width:  r.w,
+              height: r.h,
+              color,
+              opacity,
+              borderWidth: 0,
+            });
+          } else {
+            const cx = r.x + r.w / 2;
+            const cy = r.y + r.h / 2;
+            const thickness = Math.max(2, Math.min(r.w, r.h) * 0.1);
+
+            if (type === 'text') {
+              const textStr = r.text || '';
+              if (textStr.trim()) {
+                if (!pdf._cachedHelveticaFont) {
+                  pdf._cachedHelveticaFont = await pdf.embedFont(PDFLib.StandardFonts.Helvetica);
+                }
+                const font = pdf._cachedHelveticaFont;
+                page.drawText(textStr, {
+                  x:       r.x + r.h * 0.1,
+                  y:       r.y + r.h * 0.15,
+                  size:    r.h * 0.8,
+                  font,
+                  color,
+                  opacity,
+                });
+              }
+            } else if (type === 'arrow') {
+              const padding = Math.min(r.w, r.h) * 0.1;
+              const left  = r.x + padding;
+              const right = r.x + r.w - padding;
+              const bottom = r.y + padding;
+              const top   = r.y + r.h - padding;
+              const startX = r.flipX ? right : left;
+              const endX   = r.flipX ? left  : right;
+              const startY = r.flipY ? bottom : top;
+              const endY   = r.flipY ? top   : bottom;
+              page.drawLine({ start: { x: startX, y: startY }, end: { x: endX, y: endY }, thickness, color, opacity });
+              const headLen = Math.min(r.w * 0.3, r.h * 0.4);
+              const angle   = Math.atan2(endY - startY, endX - startX);
+              page.drawLine({ start: { x: endX, y: endY }, end: { x: endX - headLen * Math.cos(angle - Math.PI/6), y: endY - headLen * Math.sin(angle - Math.PI/6) }, thickness, color, opacity });
+              page.drawLine({ start: { x: endX, y: endY }, end: { x: endX - headLen * Math.cos(angle + Math.PI/6), y: endY - headLen * Math.sin(angle + Math.PI/6) }, thickness, color, opacity });
+            } else if (type === 'cross') {
+              const p = Math.min(r.w, r.h) * 0.15;
+              page.drawLine({ start: { x: r.x + p, y: r.y + r.h - p }, end: { x: r.x + r.w - p, y: r.y + p         }, thickness, color, opacity });
+              page.drawLine({ start: { x: r.x + p, y: r.y + p       }, end: { x: r.x + r.w - p, y: r.y + r.h - p   }, thickness, color, opacity });
+            } else if (type === 'check') {
+              const p      = Math.min(r.w, r.h) * 0.15;
+              const leftX  = r.x + p;
+              const midX   = r.x + r.w * 0.4;
+              const rightX = r.x + r.w - p;
+              const leftY  = r.y + r.h * 0.5;
+              const midY   = r.y + p;
+              const rightY = r.y + r.h - p;
+              page.drawLine({ start: { x: leftX,  y: leftY  }, end: { x: midX,   y: midY   }, thickness, color, opacity });
+              page.drawLine({ start: { x: midX,   y: midY   }, end: { x: rightX, y: rightY }, thickness, color, opacity });
+            } else if (type === 'plus') {
+              const px = r.w * 0.2;
+              const py = r.h * 0.2;
+              page.drawLine({ start: { x: r.x + px, y: cy           }, end: { x: r.x + r.w - px, y: cy           }, thickness, color, opacity });
+              page.drawLine({ start: { x: cx,        y: r.y + py    }, end: { x: cx,              y: r.y + r.h - py }, thickness, color, opacity });
+            } else if (type === 'minus') {
+              const px = r.w * 0.15;
+              page.drawLine({ start: { x: r.x + px, y: cy }, end: { x: r.x + r.w - px, y: cy }, thickness, color, opacity });
+            }
+          }
         }
 
         if (pages.length > 1) {

@@ -12,6 +12,10 @@
 //  • SEO routing: /redact-pdf/, /annotate-pdf/, /highlight-pdf/
 //  • MULTI-PAGE NAVIGATION — ← / → between pages
 //  • Per-page rects when "apply to all" is OFF
+//  • Tool picker: rect / arrow / cross / check / plus / minus / text
+//  • Undo / Redo (Cmd+Z / Cmd+Shift+Z)
+//  • Zoom slider (1x–4x) with magnifier on drag
+//  • Move + resize handles on annotation boxes
 //
 //  Honesty with user (kept from v1):
 //  ─────────────────────────────────
@@ -19,6 +23,7 @@
 //  Text underneath remains in the PDF structure — for real
 //  redaction use Acrobat Redact with flattening.
 //
+//  Memory: single pdf.js load — no pdf-lib in UI (OOM fix).
 //  CRITICAL: do NOT change _toCanvasCoords logic (v9.5 fix).
 // ============================================================
 
@@ -60,7 +65,7 @@ function _detectPreset() {
 // ── State ──────────────────────────────────────────────────────
 
 let _pageCount  = 0;
-let _pageSizes  = [];   // [{width, height}] per page in PDF points
+let _pageSizes  = [];   // [{width, height}] per page in PDF points — lazily populated
 let _applyAll   = true;
 let _previewLoaded = false;
 
@@ -83,6 +88,74 @@ let _dragging   = false;
 let _dragStart  = null;
 let _canvasScale = 1;
 let _canvasOffsetY = 0;
+
+let _isTouch = false;
+let _activeRectIdx = -1;
+let _resizingHandle = null;
+let _resizeStartRect = null;
+let _moveHandler = null;
+let _endHandler = null;
+let _zoomLevel = 1;
+let _currentTool = 'rect';
+
+// History state
+let _history = [];
+let _historyIdx = -1;
+
+function _saveHistory() {
+  _history = _history.slice(0, _historyIdx + 1);
+  _history.push({
+    rectsByPage: JSON.parse(JSON.stringify(_rectsByPage)),
+    sharedRects: JSON.parse(JSON.stringify(_sharedRects)),
+  });
+  _historyIdx++;
+  _updateHistoryUI();
+}
+
+function _updateHistoryUI() {
+  const undoBtn = document.getElementById('rdctUndoBtn');
+  const redoBtn = document.getElementById('rdctRedoBtn');
+  if (undoBtn) undoBtn.disabled = _historyIdx <= 0;
+  if (redoBtn) redoBtn.disabled = _historyIdx >= _history.length - 1;
+}
+
+function _undo() {
+  if (_historyIdx > 0) {
+    _historyIdx--;
+    const state = JSON.parse(JSON.stringify(_history[_historyIdx]));
+    _rectsByPage = state.rectsByPage;
+    _sharedRects = state.sharedRects;
+    _activeRectIdx = -1;
+    _redrawOverlay();
+    _updateRectsList();
+    _updateMergeBtn();
+    _updateHistoryUI();
+  }
+}
+
+function _redo() {
+  if (_historyIdx < _history.length - 1) {
+    _historyIdx++;
+    const state = JSON.parse(JSON.stringify(_history[_historyIdx]));
+    _rectsByPage = state.rectsByPage;
+    _sharedRects = state.sharedRects;
+    _activeRectIdx = -1;
+    _redrawOverlay();
+    _updateRectsList();
+    _updateMergeBtn();
+    _updateHistoryUI();
+  }
+}
+
+const TOOL_ICONS = {
+  rect: '<svg viewBox="0 0 24 24" preserveAspectRatio="none" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>',
+  arrow: '<svg viewBox="0 0 24 24" preserveAspectRatio="none" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>',
+  cross: '<svg viewBox="0 0 24 24" preserveAspectRatio="none" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>',
+  check: '<svg viewBox="0 0 24 24" preserveAspectRatio="none" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>',
+  plus: '<svg viewBox="0 0 24 24" preserveAspectRatio="none" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>',
+  minus: '<svg viewBox="0 0 24 24" preserveAspectRatio="none" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line></svg>',
+  text: '<svg viewBox="0 0 24 24" preserveAspectRatio="none" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 7 4 4 20 4 20 7"></polyline><line x1="9" y1="20" x2="15" y2="20"></line><line x1="12" y1="4" x2="12" y2="20"></line></svg>',
+};
 
 // ── Helper: get current page's rects (handles applyAll mode) ───
 
@@ -146,9 +219,9 @@ export async function initRedactOptions(file) {
   container.style.display = 'block';
 
   try {
-    // Use pdf.js for both page metadata AND rendering — one file load instead of two.
-    // Previously: pdf-lib loaded buf → pdf.js loaded buf.slice(0) = 2 full copies in RAM.
-    // Now: pdf.js loads buf once; page sizes are populated lazily in _renderPage.
+    // Single load: use pdf.js for both page count and rendering.
+    // Page sizes are populated lazily per page in _renderPage (scale=1 viewport = PDF points).
+    // Previously pdfree 12 used pdf-lib + pdf.js = 2 full copies in RAM (OOM on mobile).
     await loadPdfJs();
     const buf = await file.arrayBuffer();
     _pdfDoc = await window.pdfjsLib.getDocument({
@@ -169,6 +242,9 @@ export async function initRedactOptions(file) {
     _applyAll = true;
     _currentPage = 1;
     _previewLoaded = false;
+    _history = [];
+    _historyIdx = -1;
+    _saveHistory();
 
     _render(container, file.name, preset);
 
@@ -232,6 +308,14 @@ function _render(container, fileName, preset) {
     </div>
   ` : '';
 
+  const zoomCtrlHtml = `
+    <div class="rdct-zoom-ctrl">
+      <label>Zoom:</label>
+      <input type="range" id="rdctZoomSlider" min="1" max="4" step="0.5" value="${_zoomLevel}">
+      <span id="rdctZoomValue">${_zoomLevel}x</span>
+    </div>
+  `;
+
   container.innerHTML = `
     <div class="compress-info">
       <span class="compress-info__name" title="${esc(fileName)}">${_truncName(fileName)}</span>
@@ -246,20 +330,44 @@ function _render(container, fileName, preset) {
       <!-- Left: canvas preview with page navigation -->
       <div class="rdct-preview-wrap">
         <div class="rdct-preview-label">
-          <span id="rdctPreviewLabel">Drag to draw a box on page 1</span>
+          <span id="rdctPreviewLabel">Drag to draw a shape on page 1</span>
         </div>
         <div class="rdct-canvas-wrap" id="rdctCanvasWrap">
           <canvas id="rdctCanvas" class="rdct-canvas"></canvas>
-          <svg id="rdctOverlay" class="rdct-overlay"></svg>
+          <div id="rdctOverlay" class="rdct-overlay"></div>
+          <canvas id="rdctMagnifier" class="rdct-magnifier"></canvas>
           <div id="rdctNoPreview" class="rdct-no-preview" style="display:none">
             Preview unavailable.<br>Use the options below to cover all pages.
           </div>
         </div>
         ${pageNavHtml}
+        ${zoomCtrlHtml}
       </div>
 
       <!-- Right: controls -->
       <div class="rdct-controls">
+
+        <!-- Tool picker -->
+        <div class="rdct-tools">
+          <div class="rdct-tool-label" style="display:flex; justify-content:space-between; align-items:center;">
+            <span>Shape Tool</span>
+            <div style="display:flex; gap:4px;">
+              <button class="rdct-history-btn" id="rdctUndoBtn" disabled title="Undo (Cmd+Z)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3l-3 2.7"/></svg>
+              </button>
+              <button class="rdct-history-btn" id="rdctRedoBtn" disabled title="Redo (Cmd+Shift+Z)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3l3 2.7"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="rdct-tool-picker" id="rdctToolPicker">
+            ${Object.entries(TOOL_ICONS).map(([key, svg]) => `
+              <button class="rdct-shape-btn ${key === _currentTool ? 'active' : ''}" data-tool="${key}" title="${key.charAt(0).toUpperCase() + key.slice(1)}">
+                ${svg} ${key === 'rect' ? 'Box' : key.charAt(0).toUpperCase() + key.slice(1)}
+              </button>
+            `).join('')}
+          </div>
+        </div>
 
         <!-- Color picker -->
         <div class="rdct-tools">
@@ -334,18 +442,20 @@ async function _renderPage(pageNum) {
   _renderInProgress = (async () => {
     const page = await _pdfDoc.getPage(pageNum);
 
-    // Scale to fit container width (max ~340px)
-    const maxW  = Math.min(wrap.offsetWidth || 340, 340);
-    const vp0   = page.getViewport({ scale: 1 });
-    const scale = maxW / vp0.width;
-    const vp    = page.getViewport({ scale });
+    // Scale to fit available width multiplied by zoom level
+    const maxW      = Math.min(wrap.parentElement.offsetWidth || 340, 340);
+    const vp0       = page.getViewport({ scale: 1 });
+
+    // Lazily populate page size from pdf.js viewport (scale=1 units = PDF points).
+    // Different pages can have different sizes — always update for current page.
+    _pageSizes[pageNum - 1] = { width: vp0.width, height: vp0.height };
+
+    const baseScale = maxW / vp0.width;
+    const scale     = baseScale * _zoomLevel;
+    const vp        = page.getViewport({ scale });
 
     canvas.width  = vp.width;
     canvas.height = vp.height;
-
-    // Populate size cache from pdf.js viewport (scale=1 units = PDF points).
-    // Different pages can have different sizes — always update for current page.
-    _pageSizes[pageNum - 1] = { width: vp0.width, height: vp0.height };
 
     // Coordinate conversion uses CURRENT page size (different pages may differ!)
     _canvasScale   = vp0.width / vp.width;
@@ -356,17 +466,16 @@ async function _renderPage(pageNum) {
       viewport: vp
     }).promise;
 
-    // Update overlay SVG dimensions
-    const svg = id('rdctOverlay');
-    if (svg) {
-      svg.setAttribute('width',  vp.width);
-      svg.setAttribute('height', vp.height);
-      svg.setAttribute('viewBox', `0 0 ${vp.width} ${vp.height}`);
+    // Update div overlay dimensions
+    const overlay = id('rdctOverlay');
+    if (overlay) {
+      overlay.style.width  = `${vp.width}px`;
+      overlay.style.height = `${vp.height}px`;
     }
 
     // Bind drag ONLY on first render (otherwise listeners stack)
     if (!canvas.dataset.dragBound) {
-      _bindDrag(canvas);
+      _bindDrag(id('rdctCanvasWrap'));
       canvas.dataset.dragBound = '1';
     }
 
@@ -396,7 +505,7 @@ function _updatePreviewLabel() {
   const lbl = id('rdctPreviewLabel');
   if (!lbl) return;
   if (_pageCount === 1) {
-    lbl.textContent = 'Drag to draw a box';
+    lbl.textContent = 'Drag to draw a shape';
   } else if (_applyAll) {
     lbl.textContent = `Drag on page ${_currentPage} — applies to all pages`;
   } else {
@@ -425,41 +534,14 @@ function _toCanvasCoords(clientX, clientY, canvas) {
 
 // ── Drag to select (mouse + touch unified) ─────────────────────
 
-function _bindDrag(canvas) {
-  canvas.addEventListener('mousedown',  _onMouseDown);
-  canvas.addEventListener('mousemove',  _onMouseMove);
-  canvas.addEventListener('mouseup',    _onMouseUp);
-  canvas.addEventListener('mouseleave', _onMouseUp);
-
-  canvas.addEventListener('touchstart', e => {
+function _bindDrag(wrap) {
+  wrap.addEventListener('mousedown',  _onMouseDown);
+  wrap.addEventListener('touchstart', e => {
     if (e.touches.length === 1) {
-      e.preventDefault();
-      const t = e.touches[0];
-      const c = _toCanvasCoords(t.clientX, t.clientY, canvas);
-      _dragStartAt(c.x, c.y);
+      if (e.cancelable !== false) e.preventDefault();
+      _isTouch = true;
+      _onMouseDown(e.touches[0]);
     }
-  }, { passive: false });
-
-  canvas.addEventListener('touchmove', e => {
-    if (e.touches.length === 1 && _dragging) {
-      e.preventDefault();
-      const t = e.touches[0];
-      const c = _toCanvasCoords(t.clientX, t.clientY, canvas);
-      _dragMoveTo(c.x, c.y);
-    }
-  }, { passive: false });
-
-  canvas.addEventListener('touchend', e => {
-    if (_dragging) {
-      e.preventDefault();
-      const t = e.changedTouches[0];
-      const c = _toCanvasCoords(t.clientX, t.clientY, canvas);
-      _dragEndAt(c.x, c.y);
-    }
-  }, { passive: false });
-
-  canvas.addEventListener('touchcancel', () => {
-    if (_dragging) _dragEndAt(_dragStart?.x ?? 0, _dragStart?.y ?? 0);
   }, { passive: false });
 }
 
@@ -467,29 +549,161 @@ function _onMouseDown(e) {
   const canvas = id('rdctCanvas');
   if (!canvas) return;
   const c = _toCanvasCoords(e.clientX, e.clientY, canvas);
-  _dragStartAt(c.x, c.y);
-}
 
-function _onMouseMove(e) {
-  if (!_dragging) return;
-  const canvas = id('rdctCanvas');
-  if (!canvas) return;
-  const c = _toCanvasCoords(e.clientX, e.clientY, canvas);
-  _dragMoveTo(c.x, c.y);
-}
-
-function _onMouseUp(e) {
-  if (!_dragging) return;
-  if (e && e.clientX != null) {
-    const canvas = id('rdctCanvas');
-    const c = _toCanvasCoords(e.clientX, e.clientY, canvas);
-    _dragEndAt(c.x, c.y);
+  const moveHandle = e.target.closest('.rdct-move-handle');
+  if (moveHandle) {
+    _dragging = true;
+    _resizingHandle = 'move';
+    _activeRectIdx = parseInt(moveHandle.closest('.rdct-box').dataset.idx, 10);
+    _dragStart = { x: c.x, y: c.y };
+    _resizeStartRect = { ..._currentRects()[_activeRectIdx] };
+    _showMagnifier(e.clientX, e.clientY);
   } else {
-    _dragEndAt(_dragStart?.x ?? 0, _dragStart?.y ?? 0);
-  }
-}
 
-// Unified drag handlers
+  const handle = e.target.closest('.rdct-handle');
+  if (handle) {
+    _dragging = true;
+    _resizingHandle = handle.className.split(' ').find(cls => ['nw','ne','sw','se'].includes(cls));
+    _activeRectIdx = parseInt(handle.closest('.rdct-box').dataset.idx, 10);
+    _dragStart = { x: c.x, y: c.y };
+    _resizeStartRect = { ..._currentRects()[_activeRectIdx] };
+    _showMagnifier(e.clientX, e.clientY);
+  } else {
+    const box = e.target.closest('.rdct-box');
+    if (box) {
+      if (e.target.tagName.toLowerCase() === 'textarea') return;
+      _activeRectIdx = parseInt(box.dataset.idx, 10);
+      _dragging = true;
+      _resizingHandle = 'move';
+      _dragStart = { x: c.x, y: c.y };
+      _resizeStartRect = { ..._currentRects()[_activeRectIdx] };
+      _redrawOverlay();
+      return;
+    }
+    _activeRectIdx = -1;
+    _redrawOverlay();
+
+    _dragStartAt(c.x, c.y);
+    _showMagnifier(e.clientX, e.clientY);
+  }
+
+  _moveHandler = ev => {
+    if (!_dragging) return;
+    const t = ev.touches ? ev.touches[0] : ev;
+    if (!t) return;
+    if (ev.cancelable !== false) ev.preventDefault();
+    const pos = _toCanvasCoords(t.clientX, t.clientY, canvas);
+    _showMagnifier(t.clientX, t.clientY);
+
+    if (_resizingHandle) {
+      const r = _resizeStartRect;
+      const dx = pos.x - _dragStart.x;
+      const dy = pos.y - _dragStart.y;
+
+      const rects = _currentRects();
+      const currentRect = rects[_activeRectIdx];
+
+      if (_resizingHandle === 'move') {
+        currentRect.x = r.x + dx * _canvasScale;
+        currentRect.y = r.y - dy * _canvasScale;
+
+        const box = document.querySelector(`.rdct-box[data-idx="${_activeRectIdx}"]`);
+        if (box) {
+          box.style.left = `${currentRect.x / _canvasScale}px`;
+          box.style.top = `${(_canvasOffsetY - currentRect.y / _canvasScale - currentRect.h / _canvasScale)}px`;
+        } else {
+          _redrawOverlay();
+        }
+        return;
+      }
+
+      const cx0 = r.x / _canvasScale;
+      const cy0 = _canvasOffsetY - (r.y + r.h) / _canvasScale;
+      const cw0 = r.w / _canvasScale;
+      const ch0 = r.h / _canvasScale;
+
+      let cx = cx0, cy = cy0, cw = cw0, ch = ch0;
+      let finalFlipX = r.flipX;
+      let finalFlipY = r.flipY;
+
+      if (_resizingHandle.includes('w')) { cx += dx; cw -= dx; }
+      if (_resizingHandle.includes('e')) { cw += dx; }
+      if (_resizingHandle.includes('n')) { cy += dy; ch -= dy; }
+      if (_resizingHandle.includes('s')) { ch += dy; }
+
+      if (cw < 0) {
+        cw = Math.abs(cw);
+        cx -= cw;
+        finalFlipX = !finalFlipX;
+      }
+      if (ch < 0) {
+        ch = Math.abs(ch);
+        cy -= ch;
+        finalFlipY = !finalFlipY;
+      }
+
+      if (cw < 5) { cw = 5; if (_resizingHandle.includes('w')) cx = cx0 + cw0 - 5; }
+      if (ch < 5) { ch = 5; if (_resizingHandle.includes('n')) cy = cy0 + ch0 - 5; }
+
+      currentRect.x = cx * _canvasScale;
+      currentRect.y = (_canvasOffsetY - cy - ch) * _canvasScale;
+      currentRect.w = cw * _canvasScale;
+      currentRect.h = ch * _canvasScale;
+      currentRect.flipX = finalFlipX;
+      currentRect.flipY = finalFlipY;
+
+      const box = document.querySelector(`.rdct-box[data-idx="${_activeRectIdx}"]`);
+      if (box) {
+        box.style.left   = `${cx}px`;
+        box.style.top    = `${cy}px`;
+        box.style.width  = `${cw}px`;
+        box.style.height = `${ch}px`;
+        const svg = box.querySelector('.rdct-shape-svg');
+        if (svg && currentRect.type === 'arrow') {
+          let transform = '';
+          if (finalFlipX) transform += 'scaleX(-1) ';
+          if (finalFlipY) transform += 'scaleY(-1) ';
+          svg.style.transform = transform.trim();
+        }
+        const ta = box.querySelector('textarea');
+        if (ta) ta.style.fontSize = `${ch * 0.8}px`;
+      } else {
+        _redrawOverlay();
+      }
+    } else {
+      _dragMoveTo(pos.x, pos.y);
+    }
+  };
+
+  _endHandler = ev => {
+    if (!_dragging) return;
+    _hideMagnifier();
+
+    document.removeEventListener('mousemove', _moveHandler);
+    document.removeEventListener('touchmove', _moveHandler);
+    document.removeEventListener('mouseup', _endHandler);
+    document.removeEventListener('touchend', _endHandler);
+
+    if (_resizingHandle) {
+      _dragging = false;
+      _resizingHandle = null;
+      _resizeStartRect = null;
+      _updateMergeBtn();
+      _saveHistory();
+      return;
+    }
+
+    const t = ev.changedTouches ? ev.changedTouches[0] : ev;
+    const pos = t ? _toCanvasCoords(t.clientX, t.clientY, canvas) : _dragStart;
+    _dragEndAt(pos.x, pos.y);
+  };
+
+  document.addEventListener('mousemove', _moveHandler, { passive: false });
+  document.addEventListener('touchmove', _moveHandler, { passive: false });
+  document.addEventListener('mouseup', _endHandler);
+  document.addEventListener('touchend', _endHandler);
+}
+}
 
 function _dragStartAt(x, y) {
   if (_currentRects().length >= MAX_RECTS_PER_PAGE) {
@@ -508,49 +722,62 @@ function _dragMoveTo(x, y) {
 function _dragEndAt(endX, endY) {
   _dragging = false;
 
-  const ghost = id('rdctGhost');
+  const ghost = document.getElementById('rdctGhost');
   if (ghost) ghost.remove();
 
   if (!_dragStart) return;
 
-  const cx = Math.min(_dragStart.x, endX);
-  const cy = Math.min(_dragStart.y, endY);
-  const cw = Math.abs(endX - _dragStart.x);
-  const ch = Math.abs(endY - _dragStart.y);
+  let cx = Math.min(_dragStart.x, endX);
+  let cy = Math.min(_dragStart.y, endY);
+  let cw = Math.abs(endX - _dragStart.x);
+  let ch = Math.abs(endY - _dragStart.y);
 
-  if (cw < MIN_DRAG_SIZE || ch < MIN_DRAG_SIZE) {
+  if (cw < 5 || ch < 5) {
     _dragStart = null;
     return;
   }
 
+  const minSize = _isTouch ? 24 : 6;
+  if (cw < minSize) { cx -= (minSize - cw) / 2; cw = minSize; }
+  if (ch < minSize) { cy -= (minSize - ch) / 2; ch = minSize; }
+
+  const flipX = _dragStart.x > endX;
+  const flipY = _dragStart.y > endY;
+
   const pdfRect = {
+    type: _currentTool,
     x: cx * _canvasScale,
     y: (_canvasOffsetY - cy - ch) * _canvasScale,
     w: cw * _canvasScale,
     h: ch * _canvasScale,
+    flipX,
+    flipY,
+    text: '',
   };
 
   const rects = _currentRects();
   rects.push(pdfRect);
   _setCurrentRects(rects);
 
+  _activeRectIdx = rects.length - 1;
   _dragStart = null;
   _redrawOverlay();
   _updateRectsList();
   _updateMergeBtn();
+  _saveHistory();
 }
 
 function _updateDragRect(cx, cy) {
   if (!_dragStart) return;
-  const svg = id('rdctOverlay');
-  if (!svg) return;
+  const overlay = id('rdctOverlay');
+  if (!overlay) return;
 
   let ghost = id('rdctGhost');
   if (!ghost) {
-    ghost = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-    ghost.setAttribute('id', 'rdctGhost');
-    ghost.setAttribute('class', 'rdct-ghost');
-    svg.appendChild(ghost);
+    ghost = document.createElement('div');
+    ghost.id = 'rdctGhost';
+    ghost.className = 'rdct-box-ghost';
+    overlay.appendChild(ghost);
   }
 
   const x = Math.min(_dragStart.x, cx);
@@ -558,23 +785,43 @@ function _updateDragRect(cx, cy) {
   const w = Math.abs(cx - _dragStart.x);
   const h = Math.abs(cy - _dragStart.y);
 
+  ghost.style.left   = `${x}px`;
+  ghost.style.top    = `${y}px`;
+  ghost.style.width  = `${Math.max(1, w)}px`;
+  ghost.style.height = `${Math.max(1, h)}px`;
+
   const color = COLORS[_colorKey]?.hex || '#000000';
-  ghost.setAttribute('x', x);
-  ghost.setAttribute('y', y);
-  ghost.setAttribute('width',  Math.max(1, w));
-  ghost.setAttribute('height', Math.max(1, h));
-  ghost.setAttribute('fill', color);
-  ghost.setAttribute('fill-opacity', _opacity * 0.7);
-  ghost.setAttribute('stroke', color);
-  ghost.setAttribute('stroke-width', '2');
-  ghost.setAttribute('stroke-opacity', _opacity);
+  ghost.style.borderColor = color;
+  ghost.style.backgroundColor = _currentTool === 'rect' ? color : 'transparent';
+  ghost.style.opacity = _opacity * 0.7;
+
+  if (_currentTool !== 'rect') {
+    if (_currentTool === 'text') {
+      ghost.innerHTML = `<div style="width:100%;height:100%;display:flex;align-items:center;color:${color};font-family:sans-serif;font-size:${Math.max(1,h)*0.8}px;padding:2px;overflow:hidden;">Text...</div>`;
+    } else {
+      ghost.innerHTML = TOOL_ICONS[_currentTool];
+      const svg = ghost.querySelector('svg');
+      if (svg) {
+        svg.setAttribute('class', 'rdct-shape-svg');
+        svg.style.color = color;
+        if (_currentTool === 'arrow') {
+          let transform = '';
+          if (_dragStart.x > cx) transform += 'scaleX(-1) ';
+          if (_dragStart.y > cy) transform += 'scaleY(-1) ';
+          svg.style.transform = transform.trim();
+        }
+      }
+    }
+  } else {
+    ghost.innerHTML = '';
+  }
 }
 
 function _redrawOverlay() {
-  const svg = id('rdctOverlay');
-  if (!svg) return;
+  const overlay = id('rdctOverlay');
+  if (!overlay) return;
 
-  svg.querySelectorAll('.rdct-confirmed, .rdct-rect-label').forEach(el => el.remove());
+  overlay.querySelectorAll('.rdct-box, .rdct-rect-label').forEach(el => el.remove());
 
   const color = COLORS[_colorKey]?.hex || '#000000';
   const rects = _currentRects();
@@ -586,32 +833,130 @@ function _redrawOverlay() {
     const cw  = r.w / _canvasScale;
     const ch  = r.h / _canvasScale;
 
-    const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-    rect.setAttribute('x', cx);
-    rect.setAttribute('y', cy);
-    rect.setAttribute('width', cw);
-    rect.setAttribute('height', ch);
-    rect.setAttribute('class', 'rdct-confirmed');
-    rect.setAttribute('data-idx', i);
-    rect.setAttribute('fill', color);
-    rect.setAttribute('fill-opacity', _opacity * 0.7);
-    rect.setAttribute('stroke', color);
-    rect.setAttribute('stroke-width', '1.5');
-    rect.setAttribute('stroke-opacity', _opacity);
-    svg.insertBefore(rect, svg.firstChild);
+    const box = document.createElement('div');
+    box.className = `rdct-box ${i === _activeRectIdx ? 'active' : ''}`;
+    box.dataset.idx = i;
+    box.style.left   = `${cx}px`;
+    box.style.top    = `${cy}px`;
+    box.style.width  = `${cw}px`;
+    box.style.height = `${ch}px`;
 
-    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    text.setAttribute('x', cx + 6);
-    text.setAttribute('y', cy + 16);
-    text.setAttribute('class', 'rdct-rect-label');
-    const labelColor = (_colorKey === 'white') ? '#000' : '#fff';
-    text.setAttribute('fill', labelColor);
-    text.textContent = `${i + 1}`;
-    svg.appendChild(text);
+    box.style.borderColor = color;
+    box.style.backgroundColor = r.type === 'rect' || !r.type ? color : 'transparent';
+    box.style.opacity = _opacity;
+
+    if (r.type && r.type !== 'rect') {
+      if (r.type === 'text') {
+        const ta = document.createElement('textarea');
+        ta.className = 'rdct-text-input';
+        ta.value = r.text || '';
+        ta.style.color = color;
+        ta.style.fontSize = `${ch * 0.8}px`;
+        ta.placeholder = 'Type here...';
+
+        // Prevent drag conflict
+        ta.addEventListener('mousedown', e => e.stopPropagation());
+        ta.addEventListener('touchstart', e => e.stopPropagation());
+
+        ta.addEventListener('input', e => {
+          r.text = e.target.value;
+
+          if (ta.scrollWidth > box.offsetWidth) {
+            const newW = ta.scrollWidth;
+            box.style.width = `${newW}px`;
+            r.w = newW * _canvasScale;
+          }
+          if (ta.scrollHeight > box.offsetHeight) {
+            const newH = ta.scrollHeight;
+            const oldH = box.offsetHeight;
+            box.style.height = `${newH}px`;
+            r.h = newH * _canvasScale;
+            r.y = r.y - (newH - oldH) * _canvasScale;
+          }
+        });
+        ta.addEventListener('blur', () => {
+          _saveHistory();
+        });
+        box.appendChild(ta);
+      } else {
+        box.innerHTML = TOOL_ICONS[r.type];
+        const svg = box.querySelector('svg');
+        if (svg) {
+          svg.setAttribute('class', 'rdct-shape-svg');
+          svg.style.color = color;
+
+          if (r.type === 'arrow') {
+            let transform = '';
+            if (r.flipX) transform += 'scaleX(-1) ';
+            if (r.flipY) transform += 'scaleY(-1) ';
+            svg.style.transform = transform.trim();
+          }
+        }
+      }
+    }
+
+    ['nw', 'ne', 'sw', 'se'].forEach(pos => {
+      const handle = document.createElement('div');
+      handle.className = `rdct-handle ${pos}`;
+      box.appendChild(handle);
+    });
+
+    const moveHandle = document.createElement('div');
+    moveHandle.className = 'rdct-move-handle';
+    moveHandle.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="5 9 2 12 5 15"></polyline><polyline points="9 5 12 2 15 5"></polyline><polyline points="19 9 22 12 19 15"></polyline><polyline points="9 19 12 22 15 19"></polyline><line x1="2" y1="12" x2="22" y2="12"></line><line x1="12" y1="2" x2="12" y2="22"></line></svg>';
+    moveHandle.title = 'Move';
+    box.appendChild(moveHandle);
+
+    const label = document.createElement('div');
+    label.className = 'rdct-rect-label';
+    label.style.color = (_colorKey === 'white') ? '#000' : color;
+    label.textContent = `${i + 1}`;
+    box.appendChild(label);
+
+    overlay.appendChild(box);
   }
 }
 
-// ── Human position helper ──────────────────────────────────────
+function _showMagnifier(clientX, clientY) {
+  const mag = id('rdctMagnifier');
+  const mainCanvas = id('rdctCanvas');
+  const wrap = id('rdctCanvasWrap');
+  if (!mag || !mainCanvas || !wrap) return;
+
+  const wrapRect = wrap.getBoundingClientRect();
+  const c = _toCanvasCoords(clientX, clientY, mainCanvas);
+
+  mag.style.display = 'block';
+
+  let magX = (clientX - wrapRect.left) - 130;
+  let magY = (clientY - wrapRect.top) - 130;
+  if (magX < 0) magX = (clientX - wrapRect.left) + 20;
+  if (magY < 0) magY = (clientY - wrapRect.top) + 20;
+
+  mag.style.left = `${magX}px`;
+  mag.style.top  = `${magY}px`;
+
+  mag.width  = 120;
+  mag.height = 120;
+  const magCtx = mag.getContext('2d');
+
+  magCtx.fillStyle = 'white';
+  magCtx.fillRect(0, 0, 120, 120);
+
+  magCtx.drawImage(mainCanvas, c.x - 20, c.y - 20, 40, 40, 0, 0, 120, 120);
+
+  magCtx.strokeStyle = 'rgba(239, 68, 68, 0.6)';
+  magCtx.lineWidth = 1;
+  magCtx.beginPath();
+  magCtx.moveTo(0, 60);  magCtx.lineTo(120, 60);
+  magCtx.moveTo(60, 0);  magCtx.lineTo(60, 120);
+  magCtx.stroke();
+}
+
+function _hideMagnifier() {
+  const mag = id('rdctMagnifier');
+  if (mag) mag.style.display = 'none';
+}
 
 function _humanPosition(r) {
   const size = _pageSizes[_currentPage - 1] || { width: 595, height: 842 };
@@ -649,10 +994,10 @@ function _sizeDescription(r) {
 // ── Rects list (right panel) — human-readable ──────────────────
 
 function _updateRectsList() {
-  const list  = id('rdctRectsList');
-  const count = id('rdctCount');
+  const list      = id('rdctRectsList');
+  const count     = id('rdctCount');
   const countText = id('rdctCountText');
-  const clearBtn = id('rdctClearAll');
+  const clearBtn  = id('rdctClearAll');
 
   const rects = _currentRects();
 
@@ -660,7 +1005,6 @@ function _updateRectsList() {
 
   if (countText) {
     if (_applyAll) {
-      // Shared mode — same areas on every page
       if (rects.length === 0) {
         countText.textContent = 'No areas yet';
       } else if (rects.length === 1) {
@@ -669,7 +1013,6 @@ function _updateRectsList() {
         countText.textContent = `${rects.length} areas · all pages`;
       }
     } else {
-      // Per-page mode — show current page's count
       if (rects.length === 0) {
         countText.textContent = `No areas on page ${_currentPage}`;
       } else if (rects.length === 1) {
@@ -701,12 +1044,42 @@ function _updateRectsList() {
 // ── Events ─────────────────────────────────────────────────────
 
 function _bindEvents(container) {
+  // History buttons
+  id('rdctUndoBtn')?.addEventListener('click', _undo);
+  id('rdctRedoBtn')?.addEventListener('click', _redo);
+
+  // Keyboard shortcuts
+  document.addEventListener('keydown', e => {
+    if (e.key.toLowerCase() === 'z' && (e.metaKey || e.ctrlKey)) {
+      e.preventDefault();
+      if (e.shiftKey) _redo();
+      else _undo();
+    }
+  });
+
+  // Tool picker
+  id('rdctToolPicker').addEventListener('click', e => {
+    const btn = e.target.closest('.rdct-shape-btn');
+    if (!btn) return;
+    document.querySelectorAll('.rdct-shape-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    _currentTool = btn.dataset.tool;
+  });
+
+  // Zoom slider — preview updates on change (not input) to avoid re-render on every tick
+  id('rdctZoomSlider').addEventListener('input', e => {
+    _zoomLevel = parseFloat(e.target.value);
+    id('rdctZoomValue').textContent = _zoomLevel + 'x';
+  });
+  id('rdctZoomSlider').addEventListener('change', () => {
+    _renderPage(_currentPage);
+  });
+
   // Apply-all checkbox
   id('rdctApplyAll')?.addEventListener('change', e => {
     const newValue = e.target.checked;
 
     // When switching from per-page to all-pages, migrate page-1 rects to shared
-    // (best heuristic — user has been mostly editing first page)
     if (newValue && !_applyAll && Object.keys(_rectsByPage).length > 0) {
       _sharedRects = _rectsByPage[1] ? [..._rectsByPage[1]] : [];
     }
@@ -736,7 +1109,7 @@ function _bindEvents(container) {
 
   // Keyboard navigation: ← / → arrow keys
   container.addEventListener('keydown', e => {
-    if (e.key === 'ArrowLeft' && _currentPage > 1)        _goToPage(_currentPage - 1);
+    if (e.key === 'ArrowLeft' && _currentPage > 1)               _goToPage(_currentPage - 1);
     else if (e.key === 'ArrowRight' && _currentPage < _pageCount) _goToPage(_currentPage + 1);
   });
 
@@ -767,6 +1140,7 @@ function _bindEvents(container) {
       _redrawOverlay();
       _updateRectsList();
       _updateMergeBtn();
+      _saveHistory();
       return;
     }
 
@@ -775,6 +1149,7 @@ function _bindEvents(container) {
       _redrawOverlay();
       _updateRectsList();
       _updateMergeBtn();
+      _saveHistory();
       return;
     }
   });
@@ -830,6 +1205,19 @@ function _cleanup() {
   _previewLoaded = false;
   _pdfDoc = null;
   _renderInProgress = null;
+  _activeRectIdx = -1;
+  _zoomLevel = 1;
+  _currentTool = 'rect';
+  _resizingHandle = null;
+  _history = [];
+  _historyIdx = -1;
+  _resizeStartRect = null;
+  if (_moveHandler) {
+    document.removeEventListener('mousemove', _moveHandler);
+    document.removeEventListener('touchmove', _moveHandler);
+    document.removeEventListener('mouseup', _endHandler);
+    document.removeEventListener('touchend', _endHandler);
+  }
   // Don't reset _colorKey / _opacity — keep user preference across files
 }
 
