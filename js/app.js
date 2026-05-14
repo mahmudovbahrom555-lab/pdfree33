@@ -97,6 +97,8 @@ function resetState() {
   hide('reorderHint');
   hide('successCard');
   id('privacyCleared')?.classList.remove('visible');
+  const dlBtn = id('downloadBtn');
+  if (dlBtn) { dlBtn.textContent = '⬇ Download'; dlBtn.disabled = false; dlBtn.style.opacity = ''; }
   hide('progressBar');
   hide('progressLabel');
   id('progressFill').style.width = '0%';
@@ -140,10 +142,17 @@ function _handleSuccess({ tool, blob, desc, filename, compressionReport }) {
     const a = document.createElement('a');
     a.href = _resultUrl; a.download = filename;
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
-    // Show privacy-cleared banner 1.5s after download — reassure user their file is gone
+    // Show privacy-cleared banner 1.5s after download, then revoke blob so file is truly gone
     setTimeout(() => {
       const banner = id('privacyCleared');
       if (banner) banner.classList.add('visible');
+      _freeResultUrl();                          // revoke blob URL — file now truly unreadable
+      const btn = id('downloadBtn');
+      if (btn) {
+        btn.textContent = '✓ Saved to device';
+        btn.disabled    = true;
+        btn.style.opacity = '0.5';
+      }
     }, 1500);
   };
 
