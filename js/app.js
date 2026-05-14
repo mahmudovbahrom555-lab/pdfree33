@@ -39,10 +39,10 @@ function _freeResultUrl() {
 
 function goHome() {
   if (isProcessing) { showToast('⏳ Please wait for processing to finish'); return; }
-  showHomePage();
-  hideAllToolOptions();
+  showHomePage();                                    // visual feedback — immediate
   history.pushState({}, 'PDFree', location.pathname);
   document.title = 'PDFree — Free PDF Tools, No Limits';
+  requestAnimationFrame(() => hideAllToolOptions()); // heavy DOM — after paint
 }
 
 function showTool(tool, pushHistory = true) {
@@ -56,19 +56,9 @@ function showTool(tool, pushHistory = true) {
   currentTool = tool;
   const t = TOOLS[tool];
 
+  // Visual feedback — immediate so browser paints before heavy DOM work
   showToolPage();
-  renderToolHeader(t);
-  setCurrentTool(tool, t.accept);
-
-  id('fileInput').multiple = t.multi;
-  id('fileInput').accept   = t.accept;
-
-  // Скрываем панели инструментов при переходе
-  hideAllToolOptions();
-
   if (pushHistory) {
-    // Use clean URL paths for SEO (/compress-pdf/ not ?tool=compress)
-    // Special cases: jpg2pdf and pdf2jpg have their own directories
     const SLUGS = {
       jpg2pdf: '/jpg2pdf/', pdf2jpg: '/pdf2jpg/',
       merge:   '/merge-pdf/', split: '/split-pdf/',
@@ -79,8 +69,17 @@ function showTool(tool, pushHistory = true) {
     };
     history.pushState({ tool }, t.title, SLUGS[tool] || `/${tool}-pdf/`);
   }
-  resetState();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  // Heavy DOM work deferred to after first paint — keeps INP under 200ms
+  requestAnimationFrame(() => {
+    renderToolHeader(t);
+    setCurrentTool(tool, t.accept);
+    id('fileInput').multiple = t.multi;
+    id('fileInput').accept   = t.accept;
+    hideAllToolOptions();
+    resetState();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
 }
 
 // ── State reset ───────────────────────────────────────────────
