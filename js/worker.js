@@ -658,13 +658,13 @@ async function handleJpg2Pdf(fileBuffers, options) {
       const mime   = isJpeg ? 'image/jpeg' : 'image/png';
       const blobA  = new Blob([buf], { type: mime });
       try {
-        bitmap = await createImageBitmap(blobA);
+        bitmap = await createImageBitmap(blobA, { imageOrientation: 'none' });
       } catch (e1) {
         // Fallback b: no MIME type — Windows ANGLE sometimes decodes untyped blobs
         self.postMessage({ type: 'warn',
           message: `Image #${i + 1}: typed-blob failed (${e1.name}: ${e1.message}), trying untyped fallback` });
         const blobB = new Blob([buf]);
-        bitmap = await createImageBitmap(blobB);
+        bitmap = await createImageBitmap(blobB, { imageOrientation: 'none' });
       }
       if (!bitmap.width || !bitmap.height) throw new Error('zero-size bitmap after decode');
     } catch (e) {
