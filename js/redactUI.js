@@ -133,13 +133,6 @@ export function getRedactParams() {
   }
 }
 
-// Backward-compat
-export function getRedactFillColor() {
-  const color = COLORS[_colorKey] || COLORS.black;
-  const { rgb } = window.PDFLib;
-  return rgb(...color.rgb);
-}
-
 export async function initRedactOptions(file) {
   const container = id('redactOptions');
   if (!container) return;
@@ -153,18 +146,22 @@ export async function initRedactOptions(file) {
   container.style.display = 'block';
 
   try {
-    const { PDFDocument } = window.PDFLib;
+    // Use pdf.js for both page metadata AND rendering — one file load instead of two.
+    // Previously: pdf-lib loaded buf → pdf.js loaded buf.slice(0) = 2 full copies in RAM.
+    // Now: pdf.js loads buf once; page sizes are populated lazily in _renderPage.
+    await loadPdfJs();
     const buf = await file.arrayBuffer();
-    const doc = await PDFDocument.load(buf, { ignoreEncryption: true });
+    _pdfDoc = await window.pdfjsLib.getDocument({
+      data: new Uint8Array(buf),
+      disableWorker: true,
+    }).promise;
 
-    _pageCount = doc.getPageCount();
+    _pageCount = _pdfDoc.numPages;
     if (_pageCount === 0) { showToast('This PDF has no pages'); _collapse(container); return; }
 
-    // Cache all page sizes
-    _pageSizes = doc.getPages().map(p => {
-      const { width, height } = p.getSize();
-      return { width, height };
-    });
+    // Sizes populated lazily per page in _renderPage (viewport at scale=1 = PDF points).
+    // _humanPosition/_sizeDescription have A4 fallbacks so no upfront load needed.
+    _pageSizes = new Array(_pageCount).fill(null);
 
     // Reset state
     _sharedRects = [];
@@ -172,18 +169,10 @@ export async function initRedactOptions(file) {
     _applyAll = true;
     _currentPage = 1;
     _previewLoaded = false;
-    _pdfDoc = null;
 
     _render(container, file.name, preset);
 
-    // Load pdf.js + first page preview
     try {
-      await loadPdfJs();
-      _pdfDoc = await window.pdfjsLib.getDocument({
-        data: new Uint8Array(buf.slice(0)),
-        disableWorker: true,
-      }).promise;
-
       await _renderPage(_currentPage);
       _previewLoaded = true;
     } catch (e) {
@@ -344,19 +333,22 @@ async function _renderPage(pageNum) {
 
   _renderInProgress = (async () => {
     const page = await _pdfDoc.getPage(pageNum);
-    const size = _pageSizes[pageNum - 1] || { width: 595, height: 842 };
 
     // Scale to fit container width (max ~340px)
-    const maxW   = Math.min(wrap.offsetWidth || 340, 340);
-    const vp0    = page.getViewport({ scale: 1 });
-    const scale  = maxW / vp0.width;
-    const vp     = page.getViewport({ scale });
+    const maxW  = Math.min(wrap.offsetWidth || 340, 340);
+    const vp0   = page.getViewport({ scale: 1 });
+    const scale = maxW / vp0.width;
+    const vp    = page.getViewport({ scale });
 
     canvas.width  = vp.width;
     canvas.height = vp.height;
 
+    // Populate size cache from pdf.js viewport (scale=1 units = PDF points).
+    // Different pages can have different sizes — always update for current page.
+    _pageSizes[pageNum - 1] = { width: vp0.width, height: vp0.height };
+
     // Coordinate conversion uses CURRENT page size (different pages may differ!)
-    _canvasScale   = size.width  / vp.width;
+    _canvasScale   = vp0.width / vp.width;
     _canvasOffsetY = vp.height;
 
     await page.render({

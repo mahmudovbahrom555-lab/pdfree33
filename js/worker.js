@@ -7,7 +7,7 @@
 //  Теперь это ОТДЕЛЬНЫЙ ФАЙЛ, не inline blob — легче дебажить
 // ============================================================
 
-importScripts('https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js');
+importScripts('./vendor/pdf-lib.min.js');
 importScripts('pdfEncrypt.js');
 
 // Note: pdf-lib-encrypt.min.js (broken fork) is no longer loaded here.

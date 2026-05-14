@@ -28,9 +28,7 @@ import { fileURLToPath } from 'url';
 const __dir = dirname(fileURLToPath(import.meta.url));
 
 // ── Load pdf-lib into the test environment ────────────────────
-// In production CI, replace this path with the npm-installed version.
-const PDF_LIB_PATH = '/home/claude/.npm-global/lib/node_modules/pdf-lib/dist/pdf-lib.esm.js';
-const PDFLib = await import(PDF_LIB_PATH);
+const PDFLib = await import('pdf-lib');
 
 // ── Mock self (Worker global) ─────────────────────────────────
 // Captures all postMessage calls so tests can assert on them.

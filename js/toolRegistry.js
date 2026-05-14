@@ -103,3 +103,12 @@ export function getRunner(key) {
 export function getWorkerTool(key) {
   return _registry.get(key)?.workerTool;
 }
+
+/**
+ * Call onSuccess hook for the active tool (e.g. post-process UI after done).
+ * @param {string} key
+ * @param {object} detail — same shape as pdfree:success event detail
+ */
+export function notifyToolSuccess(key, detail) {
+  _registry.get(key)?.onSuccess?.(detail);
+}

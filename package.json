@@ -1,7 +1,7 @@
 {
   "name": "pdfree",
   "version": "1.0.0",
-  "description": "Private PDF tools \u2014 all processing in your browser",
+  "description": "Private PDF tools — all processing in your browser",
   "main": "sw.js",
   "directories": {
     "test": "tests"
@@ -15,5 +15,8 @@
   "keywords": [],
   "author": "",
   "license": "AGPL-3.0-only",
-  "type": "module"
+  "type": "module",
+  "devDependencies": {
+    "pdf-lib": "^1.17.1"
+  }
 }

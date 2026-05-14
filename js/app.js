@@ -21,9 +21,8 @@ import { initFileListeners, setCurrentTool,
          clearFiles, selectedFiles }              from './files.js';
 import { doProcess, isProcessing,
          cancelProcess }                          from './processor.js';
-import { renderCompressionReport }               from './compressUI.js';
 import { hideAllToolOptions, initToolOptions,
-         collectToolParams }                     from './toolRegistry.js';
+         collectToolParams, notifyToolSuccess }  from './toolRegistry.js';
 import './toolRegistrations.js';                 // side-effect: registers all tools
 import { trackToolStart, trackToolSuccess,
          trackFileAdded, trackInstallPrompt }     from './analytics.js';
@@ -152,10 +151,7 @@ function _handleSuccess({ tool, blob, desc, filename, compressionReport }) {
   hide('progressLabel');
   card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
-  // Compress: inject animated breakdown report (beyond standard ТЗ)
-  if (tool === 'compress' && compressionReport) {
-    renderCompressionReport(compressionReport);
-  }
+  notifyToolSuccess(tool, { compressionReport });
 
   _maybeShowPwaNudge();
 }

@@ -15,7 +15,8 @@ import { registerTool } from './toolRegistry.js';
 import { initSplitOptions, hideSplitOptions,
          getSelectedPages, getSplitMode }   from './splitUI.js';
 import { initCompressOptions, hideCompressOptions,
-         getCompressParams }               from './compressUI.js';
+         getCompressParams,
+         renderCompressionReport }         from './compressUI.js';
 import { initJpg2PdfOptions, hideJpg2PdfOptions,
          getJpg2PdfParams }               from './jpg2pdfUI.js';
 import { initPdf2JpgOptions, hidePdf2JpgOptions,
@@ -33,7 +34,7 @@ import { initProtectOptions, hideProtectOptions,
 import { initRotateOptions, hideRotateOptions,
          getRotateParams }              from './rotateUI.js';
 import { initRedactOptions, hideRedactOptions,
-         getRedactParams, getRedactFillColor } from './redactUI.js';
+         getRedactParams }                from './redactUI.js';
 
 // ── Registrations ──────────────────────────────────────────────
 
@@ -62,6 +63,9 @@ registerTool('compress', {
   init:      initCompressOptions,
   hide:      hideCompressOptions,
   getParams: getCompressParams,
+  onSuccess: ({ compressionReport }) => {
+    if (compressionReport) renderCompressionReport(compressionReport);
+  },
 });
 
 registerTool('jpg2pdf', {
