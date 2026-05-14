@@ -375,6 +375,20 @@
         <button id="downloadBtn" class="download-btn" type="button">⬇ Download</button>
       </div>
 
+      <!-- Privacy cleared banner — shown 1.5s after download -->
+      <div class="privacy-cleared" id="privacyCleared" aria-live="polite" aria-label="Document cleared from memory">
+        <div class="privacy-cleared__shield">🔒</div>
+        <div class="privacy-cleared__body">
+          <p class="privacy-cleared__title">Document cleared from memory</p>
+          <p class="privacy-cleared__sub">Never uploaded &nbsp;·&nbsp; Not cached &nbsp;·&nbsp; Gone forever</p>
+        </div>
+        <div class="privacy-cleared__dots" aria-hidden="true">
+          <div class="privacy-cleared__dot"></div>
+          <div class="privacy-cleared__dot"></div>
+          <div class="privacy-cleared__dot"></div>
+        </div>
+      </div>
+
       <!-- Install PWA nudge — shown only when browser supports it -->
       <div class="pwa-nudge" id="pwaNudge" style="display:none">
         <span class="pwa-nudge__text">⚡ Install for instant access — works offline</span>
