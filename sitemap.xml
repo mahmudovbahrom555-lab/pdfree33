@@ -16,6 +16,16 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://pdfree.io/"/>
   </url>
 
+  <!-- ── Privacy niche landing pages ── -->
+  <url>
+    <loc>https://pdfree.io/merge-pdf-without-uploading/</loc>
+    <lastmod>2026-05-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://pdfree.io/merge-pdf-without-uploading/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pdfree.io/merge-pdf-without-uploading/"/>
+  </url>
+
   <!-- ── EN tool pages ── -->
   <url>
     <loc>https://pdfree.io/merge-pdf/</loc>
