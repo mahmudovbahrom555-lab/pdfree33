@@ -18,7 +18,7 @@
 //  the activate handler to clear the old cache.
 // ============================================================
 
-const CACHE_VERSION  = 'v53';   // Phase 1: Cover Area redesign — 4 colors, opacity, human UX, SEO routing
+const CACHE_VERSION  = 'v54';   // Fix footer links, mobile UX, nav scroll, legal page headers
 const STATIC_CACHE   = `pdfree-static-${CACHE_VERSION}`;
 const CDN_CACHE      = `pdfree-cdn-${CACHE_VERSION}`;
 const ALL_CACHES     = [STATIC_CACHE, CDN_CACHE];
