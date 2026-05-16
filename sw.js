@@ -18,7 +18,7 @@
 //  the activate handler to clear the old cache.
 // ============================================================
 
-const CACHE_VERSION  = 'v54';   // Fix footer links, mobile UX, nav scroll, legal page headers
+const CACHE_VERSION  = 'v55';   // Pre-cache privacy/terms, fix navigateFallback fetch mode
 const STATIC_CACHE   = `pdfree-static-${CACHE_VERSION}`;
 const CDN_CACHE      = `pdfree-cdn-${CACHE_VERSION}`;
 const ALL_CACHES     = [STATIC_CACHE, CDN_CACHE];
@@ -64,6 +64,8 @@ const STATIC_ASSETS = [
   '/icons/icon-128.png',
   '/icons/icon-192.png',
   '/icons/icon-512.png',
+  '/privacy.html',
+  '/terms.html',
 ];
 
 // CDN assets — cache on first use (versioned URLs, safe to store)
@@ -147,25 +149,25 @@ self.addEventListener('fetch', event => {
 // 2. If network fails (offline, Live Server 404) → serve cached index.html
 // This makes the SPA work on refresh in all environments.
 async function navigateFallback(request) {
-  const url = new URL(request.url);
+  // Cache-first for pre-cached HTML pages (privacy, terms, index).
+  // Avoids fetch(request) with mode:navigate which can misbehave in SW context.
+  const cached = await caches.match(request);
+  if (cached) return cached;
+
   try {
-    // Network first: if the page exists as a file (SEO sub-pages), serve it.
-    // If Live Server has it, great. If not, fall through to cache.
-    const response = await fetch(request);
+    // Fetch by URL string (not request object) to avoid navigate-mode issues.
+    const response = await fetch(request.url);
     if (response.ok) {
-      // Cache for next time
       const cache = await caches.open(STATIC_CACHE);
-      cache.put(request, response.clone());
+      cache.put(request.url, response.clone());
       return response;
     }
-    // Non-OK response (404) → serve index.html
     throw new Error(`HTTP ${response.status}`);
   } catch {
     // Offline or 404: serve the root SPA shell from cache.
-    // App.js will read the URL and open the right tool.
-    const cached = await caches.match('/index.html')
-                || await caches.match('/');
-    return cached || new Response('Offline', { status: 503 });
+    const fallback = await caches.match('/index.html')
+                  || await caches.match('/');
+    return fallback || new Response('Offline', { status: 503 });
   }
 }
 
