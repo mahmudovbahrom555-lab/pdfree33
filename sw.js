@@ -18,7 +18,7 @@
 //  the activate handler to clear the old cache.
 // ============================================================
 
-const CACHE_VERSION  = 'v55';   // Pre-cache privacy/terms, fix navigateFallback fetch mode
+const CACHE_VERSION  = 'v56';   // Let browser fetch legal pages directly, bypass SW
 const STATIC_CACHE   = `pdfree-static-${CACHE_VERSION}`;
 const CDN_CACHE      = `pdfree-cdn-${CACHE_VERSION}`;
 const ALL_CACHES     = [STATIC_CACHE, CDN_CACHE];
@@ -106,6 +106,10 @@ self.addEventListener('fetch', event => {
 
   // Only handle GET requests
   if (request.method !== 'GET') return;
+
+  // Legal pages: let browser fetch directly from network — no SW caching.
+  // Bypassing SW avoids mode:navigate and stale-cache issues for these pages.
+  if (url.pathname === '/privacy.html' || url.pathname === '/terms.html') return;
 
   // CDN resources: cache-first
   if (CDN_PREFIXES.some(p => request.url.startsWith(p))) {
