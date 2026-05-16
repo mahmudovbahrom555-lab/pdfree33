@@ -262,8 +262,8 @@ async function _runCompress(filesSnapshot, { preset = 'medium', preserveText = t
         ? Math.round((data.savedBytes / data.originalSize) * 100)
         : 0;
       const desc = savedPct > 0
-        ? `${fmtSize(data.originalSize)} → ${fmtSize(data.compressedSize)} · saved ${savedPct}%`
-        : `${fmtSize(blob.size)} · file was already optimized`;
+        ? `${savedPct}% smaller · processed locally`
+        : `File already optimized · processed locally`;
 
       document.dispatchEvent(new CustomEvent('pdfree:success', {
         detail: {

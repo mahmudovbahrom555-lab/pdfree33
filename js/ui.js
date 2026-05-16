@@ -127,3 +127,20 @@ export function hideCancelBtn() {
   const btn = id('cancelBtn');
   if (btn) btn.style.display = 'none';
 }
+
+/** Обновляет мобильную подсказку в dropzone при смене инструмента */
+export function setDropHint(accept) {
+  const zone = id('dropZone');
+  if (!zone) return;
+  let hint = zone.querySelector('.drop-mobile-hint');
+  if (accept === '.pdf') {
+    if (!hint) {
+      hint = document.createElement('p');
+      hint.className = 'drop-mobile-hint';
+      zone.appendChild(hint);
+    }
+    hint.textContent = 'Open your Files app and select a PDF — not Photos or Camera';
+  } else {
+    if (hint) hint.remove();
+  }
+}

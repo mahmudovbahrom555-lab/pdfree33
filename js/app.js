@@ -16,7 +16,7 @@ console.info(`[PDFree] v${APP_VERSION} loaded — rotate implemented: ${TOOLS.ro
 import { showHomePage, showToolPage,
          renderToolHeader, setButtonReady,
          setButtonDisabled, hideCancelBtn,
-         showToast }                              from './ui.js';
+         showToast, setDropHint }                 from './ui.js';
 import { initFileListeners, setCurrentTool,
          clearFiles, selectedFiles }              from './files.js';
 import { doProcess, isProcessing,
@@ -74,6 +74,7 @@ function showTool(tool, pushHistory = true) {
   requestAnimationFrame(() => {
     renderToolHeader(t);
     setCurrentTool(tool, t.accept);
+    setDropHint(t.accept);
     id('fileInput').multiple = t.multi;
     id('fileInput').accept   = t.accept;
     hideAllToolOptions();

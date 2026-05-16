@@ -153,7 +153,12 @@ export function addFiles(files) {
     else dupes++;
   });
 
-  if (invalid > 0) showToast(`${invalid} file${invalid > 1 ? 's' : ''} skipped — wrong format`);
+  if (invalid > 0) {
+    const msg = _currentAccept === '.pdf'
+      ? 'Please select a PDF file — open your Files app, not Photos or Camera'
+      : 'Please select a JPG or PNG image';
+    showToast(msg, 5000);
+  }
   if (dupes   > 0) showToast(`${dupes} duplicate${dupes > 1 ? 's' : ''} skipped`);
 
   if (selectedFiles.length > 0) {

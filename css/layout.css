@@ -340,6 +340,13 @@ footer a:hover { text-decoration: underline; }
 /* ── Responsive ── */
 @media (max-width: 700px) {
   nav                   { padding: 0 16px; }
+  .nav-links            {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    min-width: 0;
+  }
+  .nav-links::-webkit-scrollbar { display: none; }
   .tools-section        { padding: 0 16px 60px; }
   .hero                 { padding: 48px 16px 36px; }
   .no-limit-bar         { gap: 14px; }
