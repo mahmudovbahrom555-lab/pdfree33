@@ -20,13 +20,24 @@ import { showHomePage, showToolPage,
 import { initFileListeners, setCurrentTool,
          clearFiles, selectedFiles }              from './files.js';
 import { doProcess, isProcessing,
-         cancelProcess }                          from './processor.js';
+         cancelProcess,
+         getProcessStartMs }                      from './processor.js';
 import { hideAllToolOptions, initToolOptions,
          collectToolParams, notifyToolSuccess }  from './toolRegistry.js';
 import './toolRegistrations.js';                 // side-effect: registers all tools
 import { trackToolStart, trackToolSuccess,
          trackToolCancel, trackFileAdded,
          trackInstallPrompt }                     from './analytics.js';
+
+// ── Module-level constants ────────────────────────────────────
+const TOOL_SLUGS = {
+  jpg2pdf:  '/jpg2pdf/',   pdf2jpg:  '/pdf2jpg/',
+  merge:    '/merge-pdf/', split:    '/split-pdf/',
+  compress: '/compress-pdf/', extract: '/extract-pdf/',
+  watermark:'/watermark-pdf/', pagenum: '/pagenum-pdf/',
+  meta:     '/meta-pdf/', redact:   '/redact-pdf/',
+  rotate:   '/rotate-pdf/', protect: '/protect-pdf/',
+};
 
 // ── App state ─────────────────────────────────────────────────
 let currentTool    = 'merge';
@@ -54,8 +65,7 @@ function _canShareFiles(blob) {
 
 async function _doShare() {
   if (!_resultBlob) return;
-  const shareBtn  = id('shareBtn');
-  const origLabel = shareBtn?.innerHTML;
+  const shareBtn = id('shareBtn');
 
   try {
     const file = new File([_resultBlob], _resultFilename, {
@@ -99,15 +109,7 @@ function showTool(tool, pushHistory = true) {
   // Visual feedback — immediate so browser paints before heavy DOM work
   showToolPage();
   if (pushHistory) {
-    const SLUGS = {
-      jpg2pdf: '/jpg2pdf/', pdf2jpg: '/pdf2jpg/',
-      merge:   '/merge-pdf/', split: '/split-pdf/',
-      compress:'/compress-pdf/', extract: '/extract-pdf/',
-      watermark:'/watermark-pdf/', pagenum: '/pagenum-pdf/',
-      meta:    '/meta-pdf/', redact: '/redact-pdf/',
-      rotate:  '/rotate-pdf/', protect: '/protect-pdf/',
-    };
-    history.pushState({ tool }, t.title, SLUGS[tool] || `/${tool}-pdf/`);
+    history.pushState({ tool }, t.title, TOOL_SLUGS[tool] || `/${tool}-pdf/`);
   }
 
   // Heavy DOM work deferred to after first paint — keeps INP under 200ms
@@ -117,8 +119,7 @@ function showTool(tool, pushHistory = true) {
     setDropHint(t.accept);
     id('fileInput').multiple = t.multi;
     id('fileInput').accept   = t.accept;
-    hideAllToolOptions();
-    resetState();
+    resetState();   // already calls hideAllToolOptions internally
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 }
@@ -169,9 +170,8 @@ function _handleSuccess({ tool, blob, desc, filename, compressionReport }) {
   card.style.display = 'block';
 
   // "Moment of value" — show processing time + privacy confirmation at peak loyalty
-  const elapsedRaw = window._processStartMs
-    ? (Date.now() - window._processStartMs) / 1000
-    : null;
+  const startMs    = getProcessStartMs();
+  const elapsedRaw = startMs ? (Date.now() - startMs) / 1000 : null;
   // Show "< 1s" if under a second — "0.0s" looks broken even if correct
   const elapsedStr = elapsedRaw === null  ? null
                    : elapsedRaw < 1       ? '< 1'
@@ -410,45 +410,3 @@ function _initPWA() {
   });
 }
 
-/** Called from _handleSuccess — show install prompt after first win */
-function _maybeShowInstallPrompt() {
-  if (_installShown || !_installPromptEvent) return;
-  if (localStorage.getItem('pwa_dismissed')) return;
-  _installShown = true;
-
-  const banner = document.createElement('div');
-  banner.id        = 'pwaPrompt';
-  banner.className = 'pwa-prompt';
-  banner.setAttribute('role', 'complementary');
-  banner.setAttribute('aria-label', 'Install PDFree app');
-  banner.innerHTML = `
-    <span class="pwa-prompt__icon" aria-hidden="true">📲</span>
-    <div class="pwa-prompt__text">
-      <strong>Install PDFree</strong>
-      <small>Add to home screen for one-tap access — works offline</small>
-    </div>
-    <button type="button" class="pwa-prompt__install" id="pwaInstall">Install</button>
-    <button type="button" class="pwa-prompt__dismiss" id="pwaDismiss" aria-label="Dismiss">✕</button>
-  `;
-  document.body.appendChild(banner);
-
-  // Animate in
-  requestAnimationFrame(() => banner.classList.add('pwa-prompt--visible'));
-  trackInstallPrompt('shown');
-
-  id('pwaInstall')?.addEventListener('click', async () => {
-    banner.remove();
-    if (!_installPromptEvent) return;
-    _installPromptEvent.prompt();
-    const { outcome } = await _installPromptEvent.userChoice;
-    trackInstallPrompt(outcome === 'accepted' ? 'accepted' : 'dismissed');
-    _installPromptEvent = null;
-  });
-
-  id('pwaDismiss')?.addEventListener('click', () => {
-    banner.classList.remove('pwa-prompt--visible');
-    setTimeout(() => banner.remove(), 400);
-    localStorage.setItem('pwa_dismissed', '1');
-    trackInstallPrompt('dismissed');
-  });
-}

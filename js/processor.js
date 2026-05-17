@@ -14,6 +14,8 @@ import { getRunner, getWorkerTool } from './toolRegistry.js';
 
 let _worker = _createWorker();
 export let isProcessing = false;
+let _processStartMs = null;
+export function getProcessStartMs() { return _processStartMs; }
 
 function _createWorker() {
   // ?v= query forces cache bypass when worker.js changes — prevents stale SW cache
@@ -43,7 +45,7 @@ export function cancelProcess(currentTool) {
 export async function doProcess(currentTool, extraParams = {}) {
   if (isProcessing) return;
   isProcessing = true;
-  window._processStartMs = Date.now();  // for "Done in X.Xs" success message
+  _processStartMs = Date.now();
 
   const filesSnapshot = [...selectedFiles];
 
@@ -93,6 +95,9 @@ async function _runMerge(filesSnapshot) {
     if (data.type === 'progress') {
       setProgress(data.value, data.label);
     } else if (data.type === 'done') {
+      if (!(data.result instanceof ArrayBuffer)) {
+        _handleError('merge', 'Unexpected result type from worker'); return;
+      }
       isProcessing = false;
       setFilesLocked(false);
       hideCancelBtn();
@@ -168,11 +173,17 @@ async function _runSplit(filesSnapshot, { pages, mode }) {
         let blob, desc, filename;
 
         if (data.mode === 'single') {
+          if (!(data.result instanceof ArrayBuffer)) {
+            _handleError('split', 'Unexpected result type from worker'); return;
+          }
           // Один PDF
           blob     = new Blob([data.result], { type: 'application/pdf' });
           desc     = `Extracted ${data.totalPages} page${data.totalPages > 1 ? 's' : ''} · ${fmtSize(blob.size)}`;
           filename = 'extracted.pdf';
         } else {
+          if (!Array.isArray(data.result)) {
+            _handleError('split', 'Unexpected result type from worker'); return;
+          }
           // Несколько PDF → ZIP через JSZip (глобальная переменная из CDN)
           const JSZip = window.JSZip;
           if (!JSZip) throw new Error('JSZip not loaded');
