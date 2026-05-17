@@ -64,14 +64,9 @@ async function _doShare() {
 
     // User completed the share (didn't cancel)
     if (shareBtn) {
-      shareBtn.disabled   = true;
+      shareBtn.disabled    = true;
       shareBtn.textContent = '✓ Sent';
     }
-    // Show the same privacy-cleared banner — file was sent directly from device, not via server
-    setTimeout(() => {
-      const banner = id('privacyCleared');
-      if (banner) banner.classList.add('visible');
-    }, 400);
 
   } catch (err) {
     // AbortError = user dismissed the share sheet — do nothing
