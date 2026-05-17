@@ -887,7 +887,7 @@ def generate_index(locale_code):
       &nbsp;·&nbsp;
       <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a>
       &nbsp;·&nbsp;
-      <a href="https://github.com/yourusername/pdfree" target="_blank" rel="noopener" style="color:var(--green)">{t['footer_github']}</a>
+      <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green)">{t['footer_github']}</a>
     </span>
   </footer>
 

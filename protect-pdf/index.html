@@ -326,84 +326,138 @@
   </main>
 
   <!-- ── SEO Content (for indexing) ── -->
-  <section class="seo-article" aria-labelledby="seoArticleTitle">
+    <section class="seo-article" aria-labelledby="seoH1_protect-pdf">
     <div class="seo-article__inner">
-    <div class="seo-content" style="max-width:800px; margin:60px auto 40px; padding:0 24px; color:var(--text2); line-height:1.7;">
-  
-  <h1 style="font-size:28px; color:var(--text); margin:0 0 20px; font-weight:700;">Password Protect PDF — AES-256 Encryption, Files Stay Local</h1>
-  
-  <p>Add password protection and usage restrictions to your PDFs. PDFree uses RC4-128 encryption (compatible with all PDF readers) to secure documents with a user password for opening and owner password for permissions. All encryption happens in your browser — your password and document never touch a server.</p>
-  
-  <h3 style="font-size:20px; color:var(--text); margin:32px 0 16px; font-weight:600;">Two Types of Protection</h3>
-  
-  <p><strong>Open Password (User Password):</strong> Required to view the document. Without this password, the PDF cannot be opened in any reader. Use this for truly confidential documents.</p>
-  
-  <p><strong>Owner Password (Permissions Password):</strong> Controls what users can do with the document even after opening. Restrict printing, copying text, editing content, adding comments, filling forms, or rotating pages.</p>
-  
-  <p>You can set both passwords or just one. If you only set permissions without an open password, the document is viewable by anyone but usage is restricted.</p>
-  
-  <h3 style="font-size:20px; color:var(--text); margin:32px 0 16px; font-weight:600;">Permission Control</h3>
-  
-  <p>Choose exactly what users can do:</p>
-  
-  <ul style="margin:16px 0; padding-left:24px;">
-    <li><strong>Print:</strong> Allow or deny printing the document</li>
-    <li><strong>Copy Text:</strong> Enable or block text selection and copying</li>
-    <li><strong>Edit:</strong> Control whether content can be modified</li>
-    <li><strong>Annotate:</strong> Allow or prevent adding comments, highlights, or notes</li>
-    <li><strong>Fill Forms:</strong> Enable or disable filling interactive form fields</li>
-    <li><strong>Assemble:</strong> Control page insertion, deletion, or rotation</li>
-  </ul>
-  
-  <h3 style="font-size:20px; color:var(--text); margin:32px 0 16px; font-weight:600;">Quick Presets</h3>
-  
-  <p><strong>🔓 Open Only:</strong> Password required to open, but all operations allowed inside. Use when you want to control access but not usage.</p>
-  
-  <p><strong>📖 Read-Only:</strong> Users can view and print, but cannot copy, edit, or comment. Perfect for distributing reports or documentation you want read but not modified.</p>
-  
-  <p><strong>🏰 Fort Knox:</strong> Maximum restrictions. No printing, no copying, no editing. Useful for watermarked drafts or confidential previews.</p>
-  
-  <h3 style="font-size:20px; color:var(--text); margin:32px 0 16px; font-weight:600;">Encryption Technical Details</h3>
-  
-  <p>PDFree uses <strong>RC4-128 encryption</strong>, the same algorithm used by Adobe Acrobat for decades. RC4-128 provides:</p>
-  
-  <ul style="margin:16px 0; padding-left:24px;">
-    <li><strong>Universal compatibility:</strong> Supported by all PDF readers (Adobe Reader, Preview, Chrome, Firefox, mobile apps)</li>
-    <li><strong>128-bit security:</strong> Strong enough for most business and personal use</li>
-    <li><strong>Fast processing:</strong> Encryption happens instantly in browser JavaScript</li>
-  </ul>
-  
-  <p>For context: 128-bit encryption means 2¹²⁸ possible keys (340 undecillion combinations). Even with modern computing, brute-forcing a strong password is computationally infeasible.</p>
-  
-  <div style="margin:40px 0; padding:20px; background:var(--green-light); border-left:4px solid var(--green); border-radius:8px;">
-    <p style="margin:0; font-size:14px;"><strong>⚡ Password Strength:</strong> Use the built-in password generator (⚡ button) for cryptographically random 16+ character passwords. Store passwords in a password manager — if you lose the password, the PDF is unrecoverable.</p>
-  </div>
-  
-  <h3 style="font-size:20px; color:var(--text); margin:32px 0 16px; font-weight:600;">Privacy & Security</h3>
-  
-  <p>Encryption happens entirely in your browser using pdf-lib's built-in RC4 implementation. Your password and document content never leave your device. This is critical — even HTTPS-encrypted transmission to a server means the server momentarily has access to your unencrypted file and password.</p>
-  
-  <p>PDFree generates the encryption keys in-browser, encrypts the PDF content, and outputs a protected file directly to your download folder. No intermediate storage, no server logs, no password recovery system (because we never see your password).</p>
-  
-  <h3 style="font-size:20px; color:var(--text); margin:32px 0 16px; font-weight:600;">Use Cases</h3>
-  
-  <p><strong>Legal:</strong> Protect contracts, NDAs, or settlement agreements during negotiation phases. Share drafts with "no printing" permissions to prevent unauthorized distribution.</p>
-  
-  <p><strong>Financial:</strong> Secure tax returns, bank statements, or investment reports before emailing to accountants or advisors.</p>
-  
-  <p><strong>Medical:</strong> Encrypt health records or test results when sharing via email. Ensure HIPAA compliance by preventing unauthorized forwarding (permissions control).</p>
-  
-  <p><strong>Business:</strong> Distribute read-only reports, presentations, or proposals. Prevent competitors from copying your content while still allowing client viewing.</p>
-  
-  <h3 style="font-size:20px; color:var(--text); margin:32px 0 16px; font-weight:600;">Related Tools</h3>
-  
-  <ul style="margin:16px 0; padding-left:24px;">
-    <li><a href="/watermark-pdf/" style="color:var(--green);">Add Watermark</a> — Combine with password protection for dual security</li>
-    <li><a href="/redact-pdf/" style="color:var(--green);">Redact PDF</a> — Remove sensitive content before encrypting</li>
-    <li><a href="/merge-pdf/" style="color:var(--green);">Merge PDF</a> — Combine documents, then protect as one file</li>
-  </ul>
-  
-</div>
+      <div class="seo-content" style="max-width:800px;margin:60px auto 40px;padding:0 24px;color:var(--text2);line-height:1.75;">
+
+        <h1 id="seoH1_protect-pdf" style="font-size:clamp(22px,3.5vw,30px);color:var(--text);margin:0 0 16px;font-weight:700;">Password Protect a PDF Online — Encrypt Without Uploading</h1>
+        <p style="font-size:15px;margin:0 0 40px;">Add 256-bit AES encryption to any PDF with a password of your choice. The encryption happens entirely in your browser — your password and your document are never sent to any server, not even PDFree's.</p>
+
+        <!-- How to use -->
+        <h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">How to Password Protect a PDF in 3 Steps</h2>
+        
+        <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
+          <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">1</div>
+          <div>
+            <strong style="color:var(--text);font-size:15px;">Upload your PDF</strong>
+            <p style="margin:6px 0 0;font-size:14px;">Click <strong>Choose files</strong> or drag your PDF into the drop zone. The file is loaded into browser memory only.</p>
+          </div>
+        </div>
+        <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
+          <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">2</div>
+          <div>
+            <strong style="color:var(--text);font-size:15px;">Set a strong password</strong>
+            <p style="margin:6px 0 0;font-size:14px;">Type the password you want to use. The stronger the password (12+ characters, mixed case, numbers, symbols), the harder it is to brute-force. The password never leaves your device.</p>
+          </div>
+        </div>
+        <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
+          <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">3</div>
+          <div>
+            <strong style="color:var(--text);font-size:15px;">Protect and download</strong>
+            <p style="margin:6px 0 0;font-size:14px;">Click <strong>Protect PDF</strong>. The encrypted PDF is generated in your browser and downloaded immediately. Share it with confidence — only someone with the password can open it.</p>
+          </div>
+        </div>
+
+        <!-- When to use -->
+        <h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">When to Password Protect a PDF</h2>
+        
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">Contracts and legal agreements</strong>
+          <p style="margin:6px 0 0;font-size:14px;">Before emailing a signed contract to a counterparty, add password protection. Share the password by phone or a separate channel to prevent anyone who intercepts the email from reading it.</p>
+        </div>
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">Financial statements and tax documents</strong>
+          <p style="margin:6px 0 0;font-size:14px;">Bank statements, tax returns, and payslips contain sensitive personal data. Encrypt them before storing in cloud folders shared with others or sending to accountants.</p>
+        </div>
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">Medical and HR records</strong>
+          <p style="margin:6px 0 0;font-size:14px;">Patient records, performance reviews, and HR documents should be restricted to authorized readers. Password encryption adds a layer of access control.</p>
+        </div>
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">Sensitive personal documents</strong>
+          <p style="margin:6px 0 0;font-size:14px;">Passport scans, ID copies, and birth certificates are prime targets for identity theft. Encrypt before storing in cloud storage or sending by email.</p>
+        </div>
+
+        <!-- Comparison table -->
+        <h2 style="font-size:22px;color:var(--text);margin:48px 0 16px;font-weight:700;">PDFree vs Competitors</h2>
+        <div style="overflow-x:auto;margin:0 0 32px;">
+          <table style="width:100%;border-collapse:collapse;font-size:14px;min-width:520px;">
+            <thead>
+              <tr style="border-bottom:2px solid var(--border);">
+                <th style="text-align:left;padding:10px 14px;color:var(--text);font-weight:600;">Tool</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">Encryption standard</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">Daily limit</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">Privacy</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom:1px solid var(--border);background:var(--green-light);">
+                <td style="padding:10px 14px;color:var(--green);font-weight:700;">PDFree</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">256-bit AES</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">No limit</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;">No upload — key stays on device</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Free forever</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 14px;color:var(--text);">iLovePDF</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">128-bit or 256-bit</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Daily limit</td>
+                <td style="text-align:center;padding:10px 14px;color:#b45309;">Uploaded to servers</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Free / $6+/mo</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 14px;color:var(--text);">SmallPDF</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Not specified</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">2 tasks/day</td>
+                <td style="text-align:center;padding:10px 14px;color:#b45309;">Uploaded to servers</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Free / $9+/mo</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 14px;color:var(--text);">Adobe Acrobat</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">256-bit AES</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">2/month free</td>
+                <td style="text-align:center;padding:10px 14px;color:#b45309;">Uploaded to servers</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">$19.99/mo</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- FAQ -->
+        <h2 style="font-size:22px;color:var(--text);margin:48px 0 20px;font-weight:700;">Frequently Asked Questions</h2>
+        
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">What encryption does PDFree use?</h3>
+          <p style="margin:0;font-size:14px;">PDFree uses 256-bit AES encryption, the same standard used by banks and government agencies. It is the highest level of PDF encryption defined in the PDF specification (PDF 2.0 / PDF 1.7).</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Can I remove the password from a protected PDF?</h3>
+          <p style="margin:0;font-size:14px;">Yes — upload the encrypted PDF, enter the current password, leave the new password field empty, and save. This produces an unprotected version of the file.</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Will the password-protected PDF open in Adobe Reader?</h3>
+          <p style="margin:0;font-size:14px;">Yes. PDFree produces standard-compliant encrypted PDFs that open in Adobe Acrobat, Adobe Reader, macOS Preview, and all modern PDF viewers.</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Is it safe to set the password on PDFree's website?</h3>
+          <p style="margin:0;font-size:14px;">Yes. The entire encryption process runs in your browser using pdf-lib. Your password and document are never transmitted to any server — PDFree literally cannot see them.</p>
+        </div>
+        <div style="margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Can I set different passwords for opening and editing?</h3>
+          <p style="margin:0;font-size:14px;">Currently PDFree sets an owner password that restricts opening the document. Separate user/owner permissions (controlling printing, copying, editing) are on the roadmap.</p>
+        </div>
+
+        <!-- Related tools -->
+        <h2 style="font-size:22px;color:var(--text);margin:48px 0 12px;font-weight:700;">Related Tools</h2>
+        <ul style="margin:0 0 40px;padding-left:24px;display:flex;flex-direction:column;gap:8px;">
+          
+        <li><a href="/watermark-pdf/" style="color:var(--green);font-weight:500;">Watermark PDF</a> — Add a visible 'CONFIDENTIAL' stamp before encrypting</li>
+        <li><a href="/redact-pdf/" style="color:var(--green);font-weight:500;">Redact PDF</a> — Permanently remove sensitive content before sharing</li>
+        <li><a href="/metadata-pdf/" style="color:var(--green);font-weight:500;">Edit Metadata</a> — Remove author/creator metadata before protecting</li>
+        </ul>
+
+      </div>
     </div>
   </section>
 
@@ -418,7 +472,7 @@
       &nbsp;·&nbsp;
       <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a>
       &nbsp;·&nbsp;
-      <a href="https://github.com/yourusername/pdfree" target="_blank" rel="noopener" style="color:var(--green)">GitHub</a>
+      <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green)">GitHub</a>
     </span>
   </footer>
 

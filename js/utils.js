@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-// Copyright (C) 2025 PDFree Contributors  https://github.com/yourusername/pdfree
+// Copyright (C) 2025 PDFree Contributors  https://github.com/mahmudovbahrom555-lab/pdfree33
 
 // ============================================================
 //  utils.js — Pure helper functions (no DOM, no side effects)

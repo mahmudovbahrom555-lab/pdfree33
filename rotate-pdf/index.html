@@ -326,68 +326,138 @@
   </main>
 
   <!-- ── SEO Content (for indexing) ── -->
-  <section class="seo-article" aria-labelledby="seoArticleTitle">
+    <section class="seo-article" aria-labelledby="seoH1_rotate-pdf">
     <div class="seo-article__inner">
-    <div class="seo-content" style="max-width:800px; margin:60px auto 40px; padding:0 24px; color:var(--text2); line-height:1.7;">
-  
-  <h1 style="font-size:28px; color:var(--text); margin:0 0 20px; font-weight:700;">Rotate PDF Pages Online — Fix Orientation Instantly</h1>
-  
-  <p>Fix incorrectly oriented PDF pages without re-scanning or re-creating the document. PDFree lets you rotate individual pages or all pages at once — 90°, 180°, or 270° (clockwise). Preview thumbnails before saving to ensure proper orientation.</p>
-  
-  <h3 style="font-size:20px; color:var(--text); margin:32px 0 16px; font-weight:600;">How It Works</h3>
-  
-  <p>Click any page thumbnail and choose a rotation angle. The rotation is applied to the page's coordinate system — content, images, and text all rotate together as a unit. This is different from image rotation (which can degrade quality); PDF rotation is lossless and instantaneous.</p>
-  
-  <p><strong>Rotation options:</strong></p>
-  <ul style="margin:16px 0; padding-left:24px;">
-    <li><strong>↻ 90°:</strong> Rotate clockwise (portrait → landscape)</li>
-    <li><strong>↔ 180°:</strong> Flip upside-down</li>
-    <li><strong>↺ 270°:</strong> Rotate counter-clockwise (landscape → portrait)</li>
-  </ul>
-  
-  <h3 style="font-size:20px; color:var(--text); margin:32px 0 16px; font-weight:600;">Quick Selection Tools</h3>
-  
-  <p>For large documents:</p>
-  
-  <ul style="margin:16px 0; padding-left:24px;">
-    <li><strong>Select All:</strong> Apply rotation to every page at once</li>
-    <li><strong>Odd Pages / Even Pages:</strong> Rotate alternating pages (useful for double-sided scans where orientation alternates)</li>
-    <li><strong>Undo / Reset:</strong> Revert changes and start over</li>
-  </ul>
-  
-  <h3 style="font-size:20px; color:var(--text); margin:32px 0 16px; font-weight:600;">Common Scenarios</h3>
-  
-  <p><strong>Scanned Documents:</strong> Scanner feeds paper incorrectly, resulting in sideways or upside-down pages. Rotate after scanning instead of re-scanning hundreds of pages.</p>
-  
-  <p><strong>Mobile Phone Scans:</strong> Photos taken in landscape mode but interpreted as portrait (or vice versa). Batch rotate all pages to correct orientation.</p>
-  
-  <p><strong>Mixed Orientation Documents:</strong> Legal documents with some portrait and some landscape pages (like attached spreadsheets or diagrams). Rotate individual pages to uniform orientation.</p>
-  
-  <p><strong>PDF Form Filling:</strong> Downloaded forms sometimes have incorrect rotation. Fix before filling to ensure proper field alignment.</p>
-  
-  <h3 style="font-size:20px; color:var(--text); margin:32px 0 16px; font-weight:600;">Technical Implementation</h3>
-  
-  <p>PDF pages have a <code>/Rotate</code> property that tells the viewer how to display the page. PDFree modifies this property directly — it's a metadata change, not a pixel-level transformation. This means:</p>
-  
-  <ul style="margin:16px 0; padding-left:24px;">
-    <li><strong>Instant processing:</strong> Rotation is applied in milliseconds, even for 100-page documents</li>
-    <li><strong>No quality loss:</strong> Text remains searchable, images stay crisp, no re-encoding</li>
-    <li><strong>Small file size:</strong> The output PDF is the same size as the input (rotation adds ~4 bytes per page)</li>
-  </ul>
-  
-  <div style="margin:40px 0; padding:20px; background:var(--green-light); border-left:4px solid var(--green); border-radius:8px;">
-    <p style="margin:0; font-size:14px;"><strong>⚡ Preview Rendering:</strong> For documents under 30 pages, PDFree shows thumbnail previews of each page. For larger files, you'll see page numbers only (to save memory). The rotation still works the same way.</p>
-  </div>
-  
-  <h3 style="font-size:20px; color:var(--text); margin:32px 0 16px; font-weight:600;">Related Tools</h3>
-  
-  <ul style="margin:16px 0; padding-left:24px;">
-    <li><a href="/split-pdf/" style="color:var(--green);">Split PDF</a> — Extract and rotate specific pages separately</li>
-    <li><a href="/merge-pdf/" style="color:var(--green);">Merge PDF</a> — Combine rotated documents with others</li>
-    <li><a href="/extract-pdf/" style="color:var(--green);">Extract Pages</a> — Pull out pages that need rotating</li>
-  </ul>
-  
-</div>
+      <div class="seo-content" style="max-width:800px;margin:60px auto 40px;padding:0 24px;color:var(--text2);line-height:1.75;">
+
+        <h1 id="seoH1_rotate-pdf" style="font-size:clamp(22px,3.5vw,30px);color:var(--text);margin:0 0 16px;font-weight:700;">Rotate PDF Pages Online — Fix Orientation in Seconds</h1>
+        <p style="font-size:15px;margin:0 0 40px;">Pages scanned sideways, mobile photos rotated 90°, or a mixed-orientation document that needs standardizing — PDFree rotates all pages or individual pages to any angle, locally, without uploading.</p>
+
+        <!-- How to use -->
+        <h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">How to Rotate PDF Pages in 3 Steps</h2>
+        
+        <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
+          <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">1</div>
+          <div>
+            <strong style="color:var(--text);font-size:15px;">Upload your PDF</strong>
+            <p style="margin:6px 0 0;font-size:14px;">Click <strong>Choose files</strong> or drag your PDF into the drop zone. Page thumbnails load in your browser.</p>
+          </div>
+        </div>
+        <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
+          <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">2</div>
+          <div>
+            <strong style="color:var(--text);font-size:15px;">Choose rotation</strong>
+            <p style="margin:6px 0 0;font-size:14px;">Select 90° clockwise, 90° counter-clockwise, or 180°. Apply to <strong>all pages</strong> at once, or click individual page thumbnails to rotate only specific pages.</p>
+          </div>
+        </div>
+        <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
+          <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">3</div>
+          <div>
+            <strong style="color:var(--text);font-size:15px;">Save and download</strong>
+            <p style="margin:6px 0 0;font-size:14px;">Click <strong>Rotate PDF</strong>. The corrected PDF downloads instantly — page content, text, and images are unchanged, only the orientation is updated.</p>
+          </div>
+        </div>
+
+        <!-- When to use -->
+        <h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">When to Rotate PDF Pages</h2>
+        
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">Scanned documents came out sideways</strong>
+          <p style="margin:6px 0 0;font-size:14px;">Flatbed scanners sometimes feed pages at 90° if the paper is loaded incorrectly. Rotate all pages at once to correct the entire batch.</p>
+        </div>
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">Mobile camera scans</strong>
+          <p style="margin:6px 0 0;font-size:14px;">Scanning with your phone in landscape mode produces portrait pages stored sideways. Rotate to fix orientation before sending.</p>
+        </div>
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">Mixed-orientation documents</strong>
+          <p style="margin:6px 0 0;font-size:14px;">Some PDFs mix portrait and landscape pages (e.g., a report with landscape-format tables). Rotate individual pages so all pages read naturally.</p>
+        </div>
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">Wrong orientation from a PDF export</strong>
+          <p style="margin:6px 0 0;font-size:14px;">Software like Excel or PowerPoint sometimes exports PDF pages in the wrong orientation. Rotate to correct before distributing.</p>
+        </div>
+
+        <!-- Comparison table -->
+        <h2 style="font-size:22px;color:var(--text);margin:48px 0 16px;font-weight:700;">PDFree vs Competitors</h2>
+        <div style="overflow-x:auto;margin:0 0 32px;">
+          <table style="width:100%;border-collapse:collapse;font-size:14px;min-width:520px;">
+            <thead>
+              <tr style="border-bottom:2px solid var(--border);">
+                <th style="text-align:left;padding:10px 14px;color:var(--text);font-weight:600;">Tool</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">Per-page rotation</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">Daily limit</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">Privacy</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom:1px solid var(--border);background:var(--green-light);">
+                <td style="padding:10px 14px;color:var(--green);font-weight:700;">PDFree</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">All pages or per-page</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">No limit</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;">No upload</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Free forever</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 14px;color:var(--text);">iLovePDF</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">All pages only (free)</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Daily limit</td>
+                <td style="text-align:center;padding:10px 14px;color:#b45309;">Uploaded to servers</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Free / $6+/mo</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 14px;color:var(--text);">SmallPDF</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">All pages only</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">2 tasks/day</td>
+                <td style="text-align:center;padding:10px 14px;color:#b45309;">Uploaded to servers</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Free / $9+/mo</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 14px;color:var(--text);">Adobe Acrobat</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Per-page control</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">2/month free</td>
+                <td style="text-align:center;padding:10px 14px;color:#b45309;">Uploaded to servers</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">$19.99/mo</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- FAQ -->
+        <h2 style="font-size:22px;color:var(--text);margin:48px 0 20px;font-weight:700;">Frequently Asked Questions</h2>
+        
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Can I rotate only specific pages, not all of them?</h3>
+          <p style="margin:0;font-size:14px;">Yes. Click individual page thumbnails to select which pages to rotate. Unselected pages remain in their original orientation. You can also use Select All / Deselect All for quick batch selection.</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Does rotating a PDF reduce image quality?</h3>
+          <p style="margin:0;font-size:14px;">No. Rotation is a metadata change in the PDF file. The page content (images, text, vector graphics) is not re-rendered or recompressed. The file size barely changes.</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">What rotation angles are available?</h3>
+          <p style="margin:0;font-size:14px;">90° clockwise, 90° counter-clockwise (equivalent to 270° clockwise), and 180°. These cover all standard orientation corrections.</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Can I rotate a PDF on my iPhone or Android phone?</h3>
+          <p style="margin:0;font-size:14px;">Yes. PDFree works in mobile Safari (iOS) and Chrome for Android. Use the file picker to select your PDF and apply rotation — the result downloads to your device.</p>
+        </div>
+        <div style="margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Does rotating preserve hyperlinks and bookmarks?</h3>
+          <p style="margin:0;font-size:14px;">Yes. Rotation only changes the page orientation flag in the PDF. All interactive elements (links, bookmarks, form fields) are preserved intact.</p>
+        </div>
+
+        <!-- Related tools -->
+        <h2 style="font-size:22px;color:var(--text);margin:48px 0 12px;font-weight:700;">Related Tools</h2>
+        <ul style="margin:0 0 40px;padding-left:24px;display:flex;flex-direction:column;gap:8px;">
+          
+        <li><a href="/split-pdf/" style="color:var(--green);font-weight:500;">Split PDF</a> — Extract specific pages after correcting orientation</li>
+        <li><a href="/merge-pdf/" style="color:var(--green);font-weight:500;">Merge PDF</a> — Combine rotated pages with other documents</li>
+        <li><a href="/compress-pdf/" style="color:var(--green);font-weight:500;">Compress PDF</a> — Reduce file size after rotating many pages</li>
+        </ul>
+
+      </div>
     </div>
   </section>
 
@@ -402,7 +472,7 @@
       &nbsp;·&nbsp;
       <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a>
       &nbsp;·&nbsp;
-      <a href="https://github.com/yourusername/pdfree" target="_blank" rel="noopener" style="color:var(--green)">GitHub</a>
+      <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green)">GitHub</a>
     </span>
   </footer>
 
