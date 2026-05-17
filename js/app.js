@@ -25,7 +25,8 @@ import { hideAllToolOptions, initToolOptions,
          collectToolParams, notifyToolSuccess }  from './toolRegistry.js';
 import './toolRegistrations.js';                 // side-effect: registers all tools
 import { trackToolStart, trackToolSuccess,
-         trackFileAdded, trackInstallPrompt }     from './analytics.js';
+         trackToolCancel, trackFileAdded,
+         trackInstallPrompt }                     from './analytics.js';
 
 // ── App state ─────────────────────────────────────────────────
 let currentTool    = 'merge';
