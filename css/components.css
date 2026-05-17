@@ -289,6 +289,26 @@
 }
 .download-btn:hover { background: #235f3c; }
 
+.share-btn {
+  display: none; /* shown via JS only when navigator.canShare({files}) is true */
+  align-items: center;
+  gap: 5px;
+  background: transparent;
+  color: var(--green);
+  border: 1.5px solid var(--green);
+  border-radius: 24px;
+  padding: 9px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--transition-normal);
+  flex-shrink: 0;
+}
+.share-btn:hover  { background: var(--green-light); }
+.share-btn:disabled { opacity: 0.45; cursor: default; }
+
 /* ── Privacy cleared banner ── */
 .privacy-cleared {
   display: none;

@@ -28,11 +28,55 @@ import { trackToolStart, trackToolSuccess,
          trackFileAdded, trackInstallPrompt }     from './analytics.js';
 
 // ── App state ─────────────────────────────────────────────────
-let currentTool = 'merge';
-let _resultUrl  = null;
+let currentTool    = 'merge';
+let _resultUrl     = null;
+let _resultBlob    = null;   // kept for Web Share API (not revoked after share)
+let _resultFilename = 'document.pdf';
 
 function _freeResultUrl() {
   if (_resultUrl) { URL.revokeObjectURL(_resultUrl); _resultUrl = null; }
+  _resultBlob    = null;
+  _resultFilename = 'document.pdf';
+  // Hide share button — blob is gone, sharing would produce an empty file
+  const shareBtn = id('shareBtn');
+  if (shareBtn) shareBtn.style.display = 'none';
+}
+
+// Returns true only on devices/browsers that can share files natively
+function _canShareFiles(blob) {
+  if (!navigator.canShare) return false;
+  try {
+    const testFile = new File([blob.slice(0, 0)], 'test.pdf', { type: 'application/pdf' });
+    return navigator.canShare({ files: [testFile] });
+  } catch { return false; }
+}
+
+async function _doShare() {
+  if (!_resultBlob) return;
+  const shareBtn  = id('shareBtn');
+  const origLabel = shareBtn?.innerHTML;
+
+  try {
+    const file = new File([_resultBlob], _resultFilename, {
+      type: _resultBlob.type || 'application/pdf',
+    });
+    await navigator.share({ files: [file] });
+
+    // User completed the share (didn't cancel)
+    if (shareBtn) {
+      shareBtn.disabled   = true;
+      shareBtn.textContent = '✓ Sent';
+    }
+    // Show the same privacy-cleared banner — file was sent directly from device, not via server
+    setTimeout(() => {
+      const banner = id('privacyCleared');
+      if (banner) banner.classList.add('visible');
+    }, 400);
+
+  } catch (err) {
+    // AbortError = user dismissed the share sheet — do nothing
+    if (err.name !== 'AbortError') console.warn('[PDFree] Share failed:', err.message);
+  }
 }
 
 // ── Navigation ────────────────────────────────────────────────
@@ -100,6 +144,8 @@ function resetState() {
   id('privacyCleared')?.classList.remove('visible');
   const dlBtn = id('downloadBtn');
   if (dlBtn) { dlBtn.textContent = '⬇ Download'; dlBtn.disabled = false; dlBtn.style.opacity = ''; }
+  const shareBtn = id('shareBtn');
+  if (shareBtn) { shareBtn.style.display = 'none'; shareBtn.disabled = false; }
   hide('progressBar');
   hide('progressLabel');
   id('progressFill').style.width = '0%';
@@ -116,7 +162,9 @@ function resetState() {
 
 function _handleSuccess({ tool, blob, desc, filename, compressionReport }) {
   _freeResultUrl();
-  _resultUrl = URL.createObjectURL(blob);
+  _resultUrl      = URL.createObjectURL(blob);
+  _resultBlob     = blob;
+  _resultFilename = filename;
 
   // Analytics: track success with file size bucket
   trackToolSuccess(tool, { outputSize: blob.size });
@@ -154,8 +202,24 @@ function _handleSuccess({ tool, blob, desc, filename, compressionReport }) {
         btn.disabled    = true;
         btn.style.opacity = '0.5';
       }
+      // Share button is now useless — blob is gone
+      const shareBtn = id('shareBtn');
+      if (shareBtn) shareBtn.style.display = 'none';
     }, 1500);
   };
+
+  // Wire share button — show only where Web Share API supports files
+  const shareBtn = id('shareBtn');
+  if (shareBtn) {
+    if (_canShareFiles(blob)) {
+      shareBtn.style.display = 'inline-flex';
+      shareBtn.disabled      = false;
+      shareBtn.innerHTML     = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg> Send';
+      shareBtn.onclick = _doShare;
+    } else {
+      shareBtn.style.display = 'none';
+    }
+  }
 
   const btn        = id('mergeBtn');
   btn.textContent  = '↺ Process again';
