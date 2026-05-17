@@ -88,7 +88,10 @@ async function _runMerge(filesSnapshot) {
 
   // ⚠️  TRANSFERABLE: all buffers in `buffers` are transferred to the worker.
   //     They are DETACHED here immediately after postMessage — do not read them.
-  _worker.postMessage({ tool: 'merge', files: buffers }, buffers);
+  //     Filenames are passed separately (plain strings, not Transferable) so the
+  //     worker can include them in error reports for the "skipped files" toast.
+  const names = filesSnapshot.map(f => f.name);
+  _worker.postMessage({ tool: 'merge', files: buffers, names }, buffers);
 
   _worker.onmessage = (e) => {
     const data = e.data;

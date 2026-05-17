@@ -15,12 +15,12 @@ importScripts('pdfEncrypt.js');
 // encrypts stream bytes, not just the /Encrypt dictionary header.
 
 self.onmessage = async function (e) {
-  const { tool, files } = e.data;
+  const { tool, files, names } = e.data;
 
   try {
     switch (tool) {
       case 'merge':
-        await handleMerge(files);
+        await handleMerge(files, names);
         break;
       case 'split':
         await handleSplit(e.data.file, e.data.options);
@@ -138,7 +138,7 @@ function _classifyError(err) {
   return 'UNKNOWN';
 }
 
-async function handleMerge(files) {
+async function handleMerge(files, names) {
   const { PDFDocument } = PDFLib;
   const merged = await PDFDocument.create();
   let totalPages = 0;
@@ -167,7 +167,7 @@ async function handleMerge(files) {
     } catch (err) {
       fileErrors.push({
         index:   i + 1,
-        name:    files[i]?.name ?? `file${i + 1}.pdf`,
+        name:    names?.[i] ?? `file${i + 1}.pdf`,
         code:    _classifyError(err),
         message: err?.message || String(err),
       });
@@ -182,7 +182,7 @@ async function handleMerge(files) {
       // copyPages can fail on PDFs with unsupported features (Type3 fonts, etc.)
       fileErrors.push({
         index:   i + 1,
-        name:    files[i]?.name ?? `file${i + 1}.pdf`,
+        name:    names?.[i] ?? `file${i + 1}.pdf`,
         code:    'CORRUPT',
         message: err?.message || String(err),
       });
@@ -396,10 +396,13 @@ async function _recompressImages(pdf, jpegQuality) {
 
       // 10% savings rule — only replace if meaningfully smaller
       if (newBytes.length >= origSize * 0.9) {
-        // Revert any filter changes we made (for FlateDecode that didn't win)
+        // Revert filter changes made during FlateDecode→JPEG attempt.
+        // Only restore ColorSpace if it existed originally — setting it to
+        // undefined would write an invalid entry into the PDF dict.
         if (isFlate) {
-          dict.set(PDFName.of('Filter'),     PDFName.of('FlateDecode'));
-          dict.set(PDFName.of('ColorSpace'), colorSpace);
+          dict.set(PDFName.of('Filter'), PDFName.of('FlateDecode'));
+          if (colorSpace) dict.set(PDFName.of('ColorSpace'), colorSpace);
+          else            dict.delete(PDFName.of('ColorSpace'));
         }
         skipped++;
         continue;
@@ -1061,8 +1064,6 @@ async function handleRedact(fileBuffer, options) {
     total = rects.length;
   } else if (rectsByPage) {
     for (const k in rectsByPage) total += rectsByPage[k].length;
-  } else {
-    total = rects.length;  // fallback to legacy single-array mode
   }
 
   if (total === 0) return;
@@ -1075,17 +1076,12 @@ async function handleRedact(fileBuffer, options) {
     { loadLabel: 'Loading PDF…', saveValue: 90 },
     async (pdf, pages) => {
       progress(30, 'Covering areas…');
+      let cachedFont = null;  // embedded once on first text rect, reused across pages
       for (let i = 0; i < pages.length; i++) {
         const page = pages[i];
-        let rectsForThisPage;
-
-        if (applyAll) {
-          rectsForThisPage = rects;
-        } else if (rectsByPage) {
-          rectsForThisPage = rectsByPage[i + 1] || [];
-        } else {
-          rectsForThisPage = (i === 0) ? rects : [];
-        }
+        const rectsForThisPage = applyAll
+          ? rects
+          : (rectsByPage ? (rectsByPage[i + 1] || []) : []);
 
         for (const r of rectsForThisPage) {
           const type = r.type || 'rect';
@@ -1108,10 +1104,10 @@ async function handleRedact(fileBuffer, options) {
             if (type === 'text') {
               const textStr = r.text || '';
               if (textStr.trim()) {
-                if (!pdf._cachedHelveticaFont) {
-                  pdf._cachedHelveticaFont = await pdf.embedFont(PDFLib.StandardFonts.Helvetica);
+                if (!cachedFont) {
+                  cachedFont = await pdf.embedFont(PDFLib.StandardFonts.Helvetica);
                 }
-                const font = pdf._cachedHelveticaFont;
+                const font = cachedFont;
                 page.drawText(textStr, {
                   x:       r.x + r.h * 0.1,
                   y:       r.y + r.h * 0.15,
