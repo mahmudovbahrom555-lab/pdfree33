@@ -16,6 +16,24 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://pdfree.io/"/>
   </url>
 
+  <!-- ── "No limits" landing pages ── -->
+  <url>
+    <loc>https://pdfree.io/merge-large-pdf-files/</loc>
+    <lastmod>2026-05-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://pdfree.io/merge-large-pdf-files/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pdfree.io/merge-large-pdf-files/"/>
+  </url>
+  <url>
+    <loc>https://pdfree.io/compress-large-pdf-free/</loc>
+    <lastmod>2026-05-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://pdfree.io/compress-large-pdf-free/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pdfree.io/compress-large-pdf-free/"/>
+  </url>
+
   <!-- ── Privacy niche landing pages ── -->
   <url>
     <loc>https://pdfree.io/merge-pdf-without-uploading/</loc>
