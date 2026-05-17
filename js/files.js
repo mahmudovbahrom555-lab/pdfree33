@@ -41,6 +41,16 @@ import { ACCEPTED_MIME } from './config.js';
 async function _preflightPDF(file) {
   if (!file.name.toLowerCase().endsWith('.pdf')) return null;
   try {
+    // Verify PDF magic bytes (%PDF-) before any further processing.
+    // Extension check alone is insufficient — a renamed .exe or .html passes it.
+    // Reading only 5 bytes is O(1) regardless of file size.
+    const headBuf = await file.slice(0, 5).arrayBuffer();
+    const magic   = new Uint8Array(headBuf);
+    const isPDF   = magic[0] === 0x25 && magic[1] === 0x50 &&  // %P
+                    magic[2] === 0x44 && magic[3] === 0x46 &&  // DF
+                    magic[4] === 0x2D;                          // -
+    if (!isPDF) return { notPDF: true };
+
     // Read last 8 KB — covers xref table / xref stream / Encrypt dict.
     // 8 KB (vs 4 KB) adds margin for large Encrypt dicts with long O/U keys.
     const TAIL = 8192;
@@ -172,6 +182,14 @@ export function addFiles(files) {
   for (const f of added) {
     _preflightPDF(f).then(meta => {
       if (!meta) return;
+      if (meta.notPDF) {
+        // File has .pdf extension but missing %PDF- magic bytes — reject it.
+        import('./ui.js').then(({ showToast }) =>
+          showToast(`⚠️ "${f.name}" is not a valid PDF file`, 5000)
+        );
+        removeFile(selectedFiles.indexOf(f));
+        return;
+      }
       f._pdfMeta = meta;
       if (meta.isEncrypted) renderList();  // show the warning badge
     });

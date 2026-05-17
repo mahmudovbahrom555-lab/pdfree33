@@ -59,9 +59,10 @@ export async function initPdf2JpgOptions(file) {
     // pdf.worker.min.js is bundled locally, disableWorker:true is correct.
     const rawBuf = await file.arrayBuffer();
     const doc = await window.pdfjsLib.getDocument({
-      data:           new Uint8Array(rawBuf),
-      useSystemFonts: false,
-      verbosity:      0,
+      data:              new Uint8Array(rawBuf),
+      useSystemFonts:    false,
+      verbosity:         0,
+      disableJavaScript: true,  // prevent PDF JS execution during rendering
     }).promise;
     console.info('[pdf2jpg] init pages=%d offline=%s', doc.numPages, !navigator.onLine);
 

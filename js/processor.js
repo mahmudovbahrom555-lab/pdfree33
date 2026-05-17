@@ -420,9 +420,10 @@ async function _runPdf2Jpg(filesSnapshot, { pages, format, dpi, zip }) {
   try {
     const rawBuf = await file.arrayBuffer();
     pdfDoc = await window.pdfjsLib.getDocument({
-      data:           new Uint8Array(rawBuf),
-      useSystemFonts: false,
-      verbosity:      0,
+      data:              new Uint8Array(rawBuf),
+      useSystemFonts:    false,
+      verbosity:         0,
+      disableJavaScript: true,  // prevent PDF JS execution during rendering
     }).promise;
   } catch (err) {
     isProcessing = false; setFilesLocked(false); hideCancelBtn();
