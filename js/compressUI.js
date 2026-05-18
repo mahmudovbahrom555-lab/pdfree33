@@ -12,9 +12,9 @@
 //  3. "Already optimized" state: честное сообщение вместо "0% saved".
 // ============================================================
 
-import { id }      from './utils.js';
+import { id, fmtSize } from './utils.js';
 import { showToast } from './ui.js';
-import { fmtSize }  from './utils.js';
+import { t } from './i18n.js';
 import { chip, sliderRow, checkbox, loadingRow } from './uiComponents.js';
 
 // ── State ──────────────────────────────────────────────────────
@@ -37,9 +37,8 @@ export async function initCompressOptions(file) {
   const container = id('compressOptions');
   if (!container) return;
 
-  // Ограничение по размеру: 150 МБ
   if (file.size > 150 * 1024 * 1024) {
-    showToast('⚠️ File too large (max 150 MB)', 5000);
+    showToast(t('warn_file_too_large', { size: fmtSize(file.size), max: 150 }), 8000);
     return;
   }
 

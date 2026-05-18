@@ -15,6 +15,8 @@
 
 import { id }        from './utils.js';
 import { showToast } from './ui.js';
+import { t }         from './i18n.js';
+import { trackToolError } from './analytics.js';
 import { parseRange } from './splitUI.js';   // public re-export chain: splitUI → pageSelectorUtils
 import { pagesToRangeString, renderCheckboxes as _renderCheckboxesUtil,
          renderRangeInput } from './pageSelectorUtils.js';
@@ -80,19 +82,20 @@ export async function initPdf2JpgOptions(file) {
     const isCdnError = err.message?.includes('Failed to load');
 
     if (isCdnError) {
+      trackToolError('pdf2jpg', 'pdf_engine_failed');
       // Show a retry button — user may have regained connectivity
       container.innerHTML = `
         <div class="compress-scan compress-scan--found" role="alert">
-          <strong>PDF engine could not load.</strong>
-          Check your internet connection — pdf.js is loaded from CDN.
+          ${t('err_pdf_engine')}
           <button type="button" class="split-range__apply" id="p2jRetryLoad"
-                  style="margin-top:8px">⟳ Try again</button>
+                  style="margin-top:8px">${t('retry')}</button>
         </div>
       `;
       container.style.display = 'block';
       id('p2jRetryLoad')?.addEventListener('click', () => initPdf2JpgOptions(file));
     } else {
-      showToast('Could not read PDF: ' + err.message, 5000);
+      trackToolError('pdf2jpg', 'pdf_read_failed');
+      showToast(t('error_msg', { msg: err.message }), 5000);
       container.style.display = 'none';
     }
   }
@@ -147,13 +150,13 @@ function _render(file, viewport) {
       <div class="split-pages__header">
         <span class="split-pages__label">Pages to export</span>
         <div class="split-pages__actions">
-          <button type="button" class="split-action-btn" id="p2jSelectAll">All</button>
-          <button type="button" class="split-action-btn" id="p2jDeselectAll">None</button>
+          <button type="button" class="split-action-btn" id="p2jSelectAll">${t('select_all_short')}</button>
+          <button type="button" class="split-action-btn" id="p2jDeselectAll">${t('deselect_all_short')}</button>
         </div>
       </div>
       ${useRange ? _renderRange() : _renderCheckboxes()}
       <div class="split-pages__count" id="p2jPageCount">
-        ${_selectedPages.length} of ${_pageCount} pages selected
+        ${t('pages_selected', { n: _selectedPages.length, total: _pageCount })}
       </div>
     </div>
 
@@ -240,7 +243,7 @@ function _bindEvents(useRange, viewport) {
       const raw = id('p2jRangeInput')?.value || '';
       const pages = parseRange(raw, _pageCount);
       if (pages.length === 0 && raw.trim() !== '') {
-        showToast('Invalid range — no valid pages found'); return;
+        showToast(t('invalid_range')); return;
       }
       _selectedPages = pages;
       _updateCount();
@@ -260,7 +263,7 @@ function _syncCheckboxes() {
 
 function _updateCount() {
   const el = id('p2jPageCount');
-  if (el) el.textContent = `${_selectedPages.length} of ${_pageCount} pages selected`;
+  if (el) el.textContent = t('pages_selected', { n: _selectedPages.length, total: _pageCount });
 }
 
 // ── Lazy-load pdf.js ───────────────────────────────────────────

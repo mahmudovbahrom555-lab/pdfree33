@@ -7,6 +7,7 @@
 // ============================================================
 
 import { id, show, hide, setText } from './utils.js';
+import { t } from './i18n.js';
 
 // ── Toast ──────────────────────────────────────────────────
 
@@ -91,7 +92,7 @@ export function renderToolHeader(tool) {
 export function setButtonProcessing() {
   const btn = id('mergeBtn');
   btn.disabled = true;
-  btn.textContent = '⏳ Processing...';
+  btn.textContent = t('btn_processing');
 }
 
 /**
@@ -139,7 +140,7 @@ export function setDropHint(accept) {
       hint.className = 'drop-mobile-hint';
       zone.appendChild(hint);
     }
-    hint.textContent = 'Open your Files app and select a PDF — not Photos or Camera';
+    hint.textContent = t('drop_mobile_hint');
   } else {
     if (hint) hint.remove();
   }

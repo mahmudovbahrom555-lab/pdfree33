@@ -12,6 +12,8 @@
 
 import { id, esc } from './utils.js';
 import { showToast } from './ui.js';
+import { t, tp } from './i18n.js';
+import { trackToolError } from './analytics.js';
 import { parseRange as _parseRangeUtil, pagesToRangeString,
          renderCheckboxes as _renderCheckboxesUtil,
          renderRangeInput as _renderRangeInputUtil } from './pageSelectorUtils.js';
@@ -46,14 +48,14 @@ export async function initSplitOptions(file) {
     _pageCount = doc.getPageCount();
 
     if (_pageCount === 0) {
-      showToast('This PDF has no pages');
+      showToast(t('no_pages_pdf'));
       container.innerHTML = '';
       container.style.display = 'none';
       return;
     }
 
     if (_pageCount > 500) {
-      showToast(`⚠️ Large PDF (${_pageCount} pages) — processing may take a while`, 5000);
+      showToast(t('warn_large_pdf', { n: _pageCount }), 5000);
     }
 
     // По умолчанию выбраны все страницы
@@ -62,7 +64,8 @@ export async function initSplitOptions(file) {
 
     _render();
   } catch (err) {
-    showToast('Could not read PDF pages: ' + err.message);
+    trackToolError('split', 'pdf_read_failed');
+    showToast(t('err_read_pages', { msg: err.message }));
     container.style.display = 'none';
   }
 }
@@ -88,35 +91,35 @@ function _render() {
 
   container.innerHTML = `
     <div class="split-info">
-      <span class="split-info__pages">${_pageCount} page${_pageCount > 1 ? 's' : ''}</span>
+      <span class="split-info__pages">${tp(_pageCount, 'split_info_page', 'split_info_pages')}</span>
     </div>
 
     <div class="split-mode">
       <label class="split-mode__opt ${_mode === 'separate' ? 'active' : ''}" data-mode="separate">
         <input type="radio" name="splitMode" value="separate" ${_mode === 'separate' ? 'checked' : ''}>
-        <span>✂️ Separate files</span>
-        <small>Each page → individual PDF</small>
+        <span>✂️ ${t('split_mode_separate')}</span>
+        <small>${t('split_mode_separate_desc')}</small>
       </label>
       <label class="split-mode__opt ${_mode === 'single' ? 'active' : ''}" data-mode="single">
         <input type="radio" name="splitMode" value="single" ${_mode === 'single' ? 'checked' : ''}>
-        <span>📄 Single file</span>
-        <small>Selected pages → one PDF</small>
+        <span>📄 ${t('split_mode_single')}</span>
+        <small>${t('split_mode_single_desc')}</small>
       </label>
     </div>
 
     <div class="split-pages">
       <div class="split-pages__header">
-        <span class="split-pages__label">Pages to extract</span>
+        <span class="split-pages__label">${t('split_pages_label')}</span>
         <div class="split-pages__actions">
-          <button type="button" class="split-action-btn" id="splitSelectAll">Select all</button>
-          <button type="button" class="split-action-btn" id="splitDeselectAll">Deselect all</button>
+          <button type="button" class="split-action-btn" id="splitSelectAll">${t('select_all')}</button>
+          <button type="button" class="split-action-btn" id="splitDeselectAll">${t('deselect_all')}</button>
         </div>
       </div>
 
       ${useRange ? _renderRangeInput() : _renderCheckboxes()}
 
       <div class="split-pages__count" id="splitPageCount">
-        ${_selectedPages.length} of ${_pageCount} pages selected
+        ${t('pages_selected', { n: _selectedPages.length, total: _pageCount })}
       </div>
     </div>
   `;
@@ -180,7 +183,7 @@ function _bindEvents(useRange) {
       const raw = id('splitRangeInput')?.value || '';
       const pages = _parseRange(raw, _pageCount);
       if (pages.length === 0 && raw.trim() !== '') {
-        showToast('Invalid range — no valid pages found');
+        showToast(t('invalid_range'));
         return;
       }
       _selectedPages = pages;
@@ -220,7 +223,7 @@ function _syncCheckboxes() {
 
 function _updateCount() {
   const el = id('splitPageCount');
-  if (el) el.textContent = `${_selectedPages.length} of ${_pageCount} pages selected`;
+  if (el) el.textContent = t('pages_selected', { n: _selectedPages.length, total: _pageCount });
 }
 
 function _updateBtn() {
@@ -228,10 +231,11 @@ function _updateBtn() {
   if (!btn) return;
   const ok = _selectedPages.length > 0;
   btn.disabled = !ok;
+  const n = _selectedPages.length;
   const label = _mode === 'separate'
-    ? `✂️ Split into ${_selectedPages.length} file${_selectedPages.length > 1 ? 's' : ''}`
-    : `📄 Extract ${_selectedPages.length} page${_selectedPages.length > 1 ? 's' : ''}`;
-  btn.textContent = ok ? label : '✂️ Select pages to split';
+    ? tp(n, 'split_btn_separate', 'split_btn_separate_many')
+    : tp(n, 'split_btn_single',   'split_btn_single_many');
+  btn.textContent = ok ? label : t('split_btn_disabled');
 }
 
 // ── Utilities ─────────────────────────────────────────────────

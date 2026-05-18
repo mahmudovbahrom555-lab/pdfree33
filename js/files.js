@@ -8,6 +8,7 @@
 import { esc, fmtSize, id, show, hide, isFileAccepted } from './utils.js';
 import { showToast } from './ui.js';
 import { ACCEPTED_MIME } from './config.js';
+import { t, tp } from './i18n.js';
 
 // ── PDF encryption preflight ──────────────────────────────────
 //
@@ -144,7 +145,7 @@ export function addFiles(files) {
 
   // Split работает только с одним файлом
   if (_currentTool === 'split' && selectedFiles.length >= 1) {
-    showToast('Split works with one PDF only. Remove the current file first.');
+    showToast(t('split_one_only'));
     return;
   }
 
@@ -165,11 +166,11 @@ export function addFiles(files) {
 
   if (invalid > 0) {
     const msg = _currentAccept === '.pdf'
-      ? 'Please select a PDF file — open your Files app, not Photos or Camera'
-      : 'Please select a JPG or PNG image';
+      ? t('invalid_pdf')
+      : t('invalid_img');
     showToast(msg, 5000);
   }
-  if (dupes   > 0) showToast(`${dupes} duplicate${dupes > 1 ? 's' : ''} skipped`);
+  if (dupes   > 0) showToast(tp(dupes, 'dupe_skip_one', 'dupe_skip_many'));
 
   if (selectedFiles.length > 0) {
     document.dispatchEvent(new CustomEvent('pdfree:files-added'));
@@ -185,7 +186,7 @@ export function addFiles(files) {
       if (meta.notPDF) {
         // File has .pdf extension but missing %PDF- magic bytes — reject it.
         import('./ui.js').then(({ showToast }) =>
-          showToast(`⚠️ "${f.name}" is not a valid PDF file`, 5000)
+          showToast(t('not_valid_pdf', { name: f.name }), 5000)
         );
         removeFile(selectedFiles.indexOf(f));
         return;
@@ -274,12 +275,7 @@ export function renderList() {
         ? `Restrictions detected: ${meta.restrictions.join(', ')}.`
         : '';
       const ver = meta?.aesVersion || 'AES';
-      showToast(
-        `🔒 ${ver}-encrypted PDF — cannot be processed without the owner password. ${restricted} ` +
-        `To fix: 1) Open in Adobe Acrobat. 2) File → Properties → Security. ` +
-        `3) Set Security Method: No Security → Save. Then re-upload here.`,
-        12000
-      );
+      showToast(t('aes_help', { ver, restricted }), 12000);
     }
   };
 

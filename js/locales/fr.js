@@ -1,0 +1,119 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// French (FR) UI strings — loaded before app.js on /fr/ pages
+window.PDFREE_LOCALE = {
+  // app
+  wait_processing:  '⏳ Veuillez patienter pendant le traitement',
+  coming_soon:      '🚧 Bientôt disponible !',
+  done_time:        '⚡ Terminé en {time}s — traitement local, aucun upload',
+  done_no_time:     "⚡ Traitement local — vos fichiers n'ont jamais quitté votre appareil",
+  saved_device:     "✓ Enregistré sur l'appareil",
+  sent:             '✓ Envoyé',
+  process_again:    '↺ Traiter à nouveau',
+
+  // files
+  split_one_only:  "Split ne fonctionne qu'avec un seul PDF. Supprimez d'abord le fichier actuel.",
+  invalid_pdf:     "Veuillez sélectionner un fichier PDF — ouvrez l'app Fichiers, pas Photos ou Appareil photo",
+  invalid_img:     'Veuillez sélectionner une image JPG ou PNG',
+  dupe_skip_one:   '{n} doublon ignoré',
+  dupe_skip_many:  '{n} doublons ignorés',
+  not_valid_pdf:   '⚠️ « {name} » n\'est pas un fichier PDF valide',
+  aes_help:        "🔒 PDF chiffré {ver} — impossible à traiter sans le mot de passe propriétaire. {restricted} Solution : 1) Ouvrir dans Adobe Acrobat. 2) Fichier → Propriétés → Sécurité. 3) Méthode de sécurité : Aucune sécurité → Enregistrer. Puis re-déposez ici.",
+
+  // ui
+  btn_processing:   '⏳ Traitement en cours...',
+  drop_mobile_hint: "Ouvrez l'app Fichiers et sélectionnez un PDF — pas Photos ou Appareil photo",
+
+  // progress
+  cancelled:         'Traitement annulé',
+  prog_reading:      'Lecture des fichiers...',
+  prog_merging:      'Fusion en cours...',
+  prog_done:         'Terminé !',
+  prog_loading_pdf:  'Chargement du PDF...',
+  prog_loading_imgs: 'Chargement des images...',
+  prog_packaging:    'Mise en paquet...',
+  prog_zip:          'Création du ZIP...',
+  prog_compressing:  'Compression...',
+  prog_processing:   'Traitement en cours...',
+  prog_rendering:    'Rendu de la page {i} sur {n}...',
+  prog_watermark:    'Application du filigrane...',
+  prog_pagenum:      'Ajout des numéros de page...',
+  prog_meta:         'Mise à jour des métadonnées...',
+  prog_protect:      'Chiffrement du PDF...',
+  prog_rotate:       'Application des rotations...',
+  prog_redact:       'Masquage des zones...',
+
+  // success descriptions
+  desc_merged_partial:      '{n} sur {total} fichiers fusionnés · {pages} pages · {size}',
+  desc_merged:              '{total} fichiers fusionnés · {pages} pages · {size}',
+  desc_compress_saved:      '{pct}% plus petit · traitement local',
+  desc_compress_optimized:  'Fichier déjà optimisé · traitement local',
+  desc_watermark:           'Filigrane ajouté · {pages} pages · {size}',
+  desc_pagenum:             'Numéros de page ajoutés · {pages} pages · {size}',
+  desc_meta:                'Métadonnées mises à jour · {pages} pages · {size}',
+  desc_protect:             'Protégé AES-256 · {pages} pages · {size}{extra}',
+  desc_rotate:              'Pivoté · {pages} pages · {size}',
+  desc_redact:              'Zones masquées · {pages} pages · {size}',
+  desc_split_single:        '{n} page extraite · {size}',
+  desc_split_single_many:   '{n} pages extraites · {size}',
+  desc_split_separate:      'Divisé en {n} fichier · {size}',
+  desc_split_separate_many: 'Divisé en {n} fichiers · {size}',
+  desc_pdf2jpg_one:         '1 page · {ext} · {size}',
+  desc_pdf2jpg_many:        '{n} images {ext} · {size}',
+
+  // word units
+  word_page:   'page',
+  word_pages:  'pages',
+  word_image:  'image',
+  word_images: 'images',
+
+  // toasts / warnings
+  skipped_files_one:   '⚠️ {n} fichier ignoré : {labels}',
+  skipped_files_many:  '⚠️ {n} fichiers ignorés : {labels}',
+  hint_protected:      ' (protégé par mot de passe)',
+  hint_corrupted:      ' (corrompu)',
+  more_files:          '+{n} autres',
+  warn_encrypted_pdf:  '⚠️ Le PDF chiffré a été traité avec des limitations',
+  skipped_imgs_one:    '⚠️ {n} image ignorée (impossible à décoder) : #{nums}',
+  skipped_imgs_many:   '⚠️ {n} images ignorées (impossible à décoder) : #{nums}',
+  warn_large_export:   '⏳ Export volumineux ({n} pages à {dpi} DPI) — le traitement peut prendre du temps.',
+  warn_page_fail:      '⚠️ Page {page} échouée : {msg}',
+  already_protected:   'ℹ️ Le fichier était déjà protégé — mot de passe mis à jour',
+  warn_file_too_large:  '⚠️ Le fichier fait {size} — le navigateur traite les PDF en mémoire vive, limite : {max} Mo. Astuce : divisez le PDF d\'abord, puis traitez chaque partie.',
+  warn_total_too_large: '⚠️ Taille totale : {size} — limite navigateur : {max} Mo. Supprimez des fichiers pour continuer.',
+
+  // splitUI
+  no_pages_pdf:             "Ce PDF n'a aucune page",
+  warn_large_pdf:           '⚠️ PDF volumineux ({n} pages) — le traitement peut prendre du temps',
+  split_info_page:          '{n} page',
+  split_info_pages:         '{n} pages',
+  split_mode_separate:      'Fichiers séparés',
+  split_mode_separate_desc: 'Chaque page → PDF individuel',
+  split_mode_single:        'Fichier unique',
+  split_mode_single_desc:   'Pages sélectionnées → un PDF',
+  split_pages_label:        'Pages à extraire',
+  err_read_pages:           'Impossible de lire les pages du PDF : {msg}',
+  select_all:               'Tout sélectionner',
+  deselect_all:             'Tout désélectionner',
+  select_all_short:         'Tout',
+  deselect_all_short:       'Aucun',
+  pages_selected:           '{n} sur {total} pages sélectionnées',
+  invalid_range:            'Plage invalide — aucune page valide trouvée',
+  split_btn_separate:       '✂️ Diviser en {n} fichier',
+  split_btn_separate_many:  '✂️ Diviser en {n} fichiers',
+  split_btn_single:         '📄 Extraire {n} page',
+  split_btn_single_many:    '📄 Extraire {n} pages',
+  split_btn_disabled:       '✂️ Sélectionnez des pages à diviser',
+
+  // pdf2jpgUI
+  err_pdf_engine: "Le moteur PDF n'a pas pu être chargé. Vérifiez votre connexion internet.",
+  retry:          '⟳ Réessayer',
+
+  // errors
+  no_pages_selected:   'Aucune page valide sélectionnée',
+  err_no_render:       "Aucune page n'a pu être rendue",
+  err_no_renderer:     "Moteur PDF non chargé — veuillez rouvrir l'outil",
+  err_enc_unavailable: "La bibliothèque de chiffrement n'a pas pu être chargée. Veuillez recharger la page.",
+  err_enc_failed:      "Chiffrement échoué. Le PDF est peut-être dans un format non pris en charge.",
+  err_encrypted_pdf:   "Ce PDF est protégé par mot de passe ou a des restrictions d'édition. Supprimez d'abord le mot de passe et réessayez.",
+  error_msg:           'Erreur : {msg}',
+};

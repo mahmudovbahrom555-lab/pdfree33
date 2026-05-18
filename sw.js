@@ -18,7 +18,7 @@
 //  the activate handler to clear the old cache.
 // ============================================================
 
-const CACHE_VERSION  = 'v56';   // Let browser fetch legal pages directly, bypass SW
+const CACHE_VERSION  = 'v58';   // Let browser fetch legal pages directly, bypass SW
 const STATIC_CACHE   = `pdfree-static-${CACHE_VERSION}`;
 const CDN_CACHE      = `pdfree-cdn-${CACHE_VERSION}`;
 const ALL_CACHES     = [STATIC_CACHE, CDN_CACHE];
@@ -32,15 +32,22 @@ const STATIC_ASSETS = [
   '/css/animations.css',
   '/css/layout.css',
   '/css/components.css',
+  '/css/fonts.css',
   '/js/app.js',
+  '/js/i18n.js',
+  '/js/locales/de.js',
+  '/js/locales/es.js',
+  '/js/locales/fr.js',
+  '/js/locales/pt.js',
   '/js/config.js',
   '/js/utils.js',
   '/js/ui.js',
   '/js/files.js',
   '/js/processor.js',
   '/js/worker.js',
-  '/js/worker.js?v=11',
+  '/js/worker.js?v=13',
   '/js/ads.js',
+  '/js/pageSelectorUtils.js',
   '/js/splitUI.js',
   '/js/compressUI.js',
   '/js/jpg2pdfUI.js',
@@ -58,6 +65,12 @@ const STATIC_ASSETS = [
   '/js/vendor/pdf.worker.min.js',
   '/js/toolRegistrations.js',
   '/js/pdfEncrypt.js',
+  '/fonts/dm-mono-400-latin-ext.woff2',
+  '/fonts/dm-mono-400-latin.woff2',
+  '/fonts/dm-mono-500-latin-ext.woff2',
+  '/fonts/dm-mono-500-latin.woff2',
+  '/fonts/dm-sans-latin-ext.woff2',
+  '/fonts/dm-sans-latin.woff2',
   '/icons/icon-48.png',
   '/icons/icon-72.png',
   '/icons/icon-96.png',
@@ -71,8 +84,6 @@ const STATIC_ASSETS = [
 // CDN assets — cache on first use (versioned URLs, safe to store)
 const CDN_PREFIXES = [
   'https://cdnjs.cloudflare.com/',
-  'https://fonts.googleapis.com/',
-  'https://fonts.gstatic.com/',
 ];
 
 // ── Install: pre-cache all static assets ─────────────────────

@@ -27,7 +27,8 @@ import { hideAllToolOptions, initToolOptions,
 import './toolRegistrations.js';                 // side-effect: registers all tools
 import { trackToolStart, trackToolSuccess,
          trackToolCancel, trackFileAdded,
-         trackInstallPrompt }                     from './analytics.js';
+         trackToolOpen, trackInstallPrompt }      from './analytics.js';
+import { t }                                      from './i18n.js';
 
 // ── Module-level constants ────────────────────────────────────
 const TOOL_SLUGS = {
@@ -76,7 +77,7 @@ async function _doShare() {
     // User completed the share (didn't cancel)
     if (shareBtn) {
       shareBtn.disabled    = true;
-      shareBtn.textContent = '✓ Sent';
+      shareBtn.textContent = t('sent');
     }
 
   } catch (err) {
@@ -88,7 +89,7 @@ async function _doShare() {
 // ── Navigation ────────────────────────────────────────────────
 
 function goHome() {
-  if (isProcessing) { showToast('⏳ Please wait for processing to finish'); return; }
+  if (isProcessing) { showToast(t('wait_processing')); return; }
   showHomePage();                                    // visual feedback — immediate
   history.pushState({}, 'PDFree', location.pathname);
   document.title = 'PDFree — Free PDF Tools, No Limits';
@@ -97,14 +98,15 @@ function goHome() {
 
 function showTool(tool, pushHistory = true) {
   if (!TOOLS[tool]) return;
-  if (isProcessing) { showToast('⏳ Please wait for processing to finish'); return; }
+  if (isProcessing) { showToast(t('wait_processing')); return; }
   if (!TOOLS[tool].implemented) {
-    showToast(TOOLS[tool].comingSoon || '🚧 Coming soon!', 4000);
+    showToast(TOOLS[tool].comingSoon || t('coming_soon'), 4000);
     return;
   }
 
   currentTool = tool;
   const t = TOOLS[tool];
+  trackToolOpen(tool);
 
   // Visual feedback — immediate so browser paints before heavy DOM work
   showToolPage();
@@ -177,8 +179,8 @@ function _handleSuccess({ tool, blob, desc, filename, compressionReport }) {
                    : elapsedRaw < 1       ? '< 1'
                    :                        elapsedRaw.toFixed(1);
   const speedMsg = elapsedStr
-    ? `⚡ Done in ${elapsedStr}s — processed locally, nothing uploaded`
-    : '⚡ Processed locally — your files never left your device';
+    ? t('done_time', { time: elapsedStr })
+    : t('done_no_time');
 
   setText('successTitle', speedMsg);
   setText('successDesc',  desc);
@@ -194,7 +196,7 @@ function _handleSuccess({ tool, blob, desc, filename, compressionReport }) {
       _freeResultUrl();                          // revoke blob URL — file now truly unreadable
       const btn = id('downloadBtn');
       if (btn) {
-        btn.textContent = '✓ Saved to device';
+        btn.textContent = t('saved_device');
         btn.disabled    = true;
         btn.style.opacity = '0.5';
       }
@@ -218,7 +220,7 @@ function _handleSuccess({ tool, blob, desc, filename, compressionReport }) {
   }
 
   const btn        = id('mergeBtn');
-  btn.textContent  = '↺ Process again';
+  btn.textContent  = t('process_again');
   btn.disabled     = false;
   btn.dataset.mode = 'reset';
 

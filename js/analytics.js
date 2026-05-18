@@ -48,6 +48,14 @@ function _track(eventName, props = {}) {
 // ── Per-tool timing ───────────────────────────────────────────
 const _timers = {};
 
+/**
+ * Call when a tool becomes visible to the user (step 1 of the funnel).
+ * Plausible funnel: Tool Open → File Added → Tool Start → Tool Success/Cancel/Error
+ */
+export function trackToolOpen(tool) {
+  _track('Tool Open', { tool });
+}
+
 /** Call when a tool starts processing */
 export function trackToolStart(tool) {
   _timers[tool] = performance.now();
@@ -83,6 +91,26 @@ export function trackToolCancel(tool) {
 /** Track first file added — measures "activation rate" */
 export function trackFileAdded(tool, fileSize = 0) {
   _track('File Added', { tool, size: _sizeBucket(fileSize) });
+}
+
+/**
+ * Track tool errors — the single most useful signal for knowing what to fix.
+ *
+ * error_type taxonomy (based on actual runtime error sources):
+ *   enc_lib_failed      — encryption library failed to load from CDN
+ *   enc_failed          — encryption failed (unsupported PDF format)
+ *   pdf_restricted      — PDF has AES owner-password restrictions
+ *   renderer_not_loaded — pdf.js renderer was not initialized
+ *   render_all_failed   — pdf2jpg: every page failed to render
+ *   pdf_engine_failed   — pdf.js failed to load from CDN
+ *   pdf_read_failed     — could not read PDF page metadata
+ *   worker_crash        — unhandled worker error
+ *   no_pages            — user submitted with no pages selected (UX gap)
+ *   unknown             — unclassified
+ */
+export function trackToolError(tool, errorType = 'unknown') {
+  delete _timers[tool];
+  _track('Tool Error', { tool, error_type: errorType });
 }
 
 /** Track install prompt shown / accepted / dismissed */

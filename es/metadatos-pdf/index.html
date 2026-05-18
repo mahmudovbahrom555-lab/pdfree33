@@ -19,9 +19,8 @@
                 https://plausible.io
                 https://pagead2.googlesyndication.com
                 https://static.cloudflareinsights.com;
-    style-src   'self' 'unsafe-inline'
-                https://fonts.googleapis.com;
-    font-src    https://fonts.gstatic.com;
+    style-src   'self' 'unsafe-inline';
+    font-src    'self';
     img-src     'self' data: blob: https:;
     connect-src 'self'
                 https://cdnjs.cloudflare.com
@@ -69,12 +68,8 @@
   <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
 
   <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preload" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap"></noscript>
-
+  <link rel="stylesheet" href="../../css/fonts.css">
+  
   <link rel="stylesheet" href="../../css/variables.css">
   <link rel="stylesheet" href="../../css/animations.css">
   <link rel="stylesheet" href="../../css/layout.css">
@@ -370,7 +365,8 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-  <script type="module" src="../../js/app.js?v=14"></script>
+  <script type="module" src="../../js/locales/es.js"></script>
+  <script type="module" src="../../js/app.js"></script>
 <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>
