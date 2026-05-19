@@ -294,7 +294,13 @@ function initEvents() {
     cancelProcess(currentTool);
   });
 
-  id('dropZone').addEventListener('click',   () => id('fileInput').click());
+  id('dropZone').addEventListener('click', e => {
+    // Skip if the click was synthetically dispatched by fileInput.click() itself —
+    // that call creates a bubbling event back up to dropZone, causing a double-open
+    // that immediately closes the file dialog (invisible to the user).
+    if (e.target === id('fileInput')) return;
+    id('fileInput').click();
+  });
   id('dropZone').addEventListener('keydown', e => e.key === 'Enter' && id('fileInput').click());
   id('chooseFilesBtn').addEventListener('click', e => { e.stopPropagation(); id('fileInput').click(); });
 

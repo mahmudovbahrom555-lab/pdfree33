@@ -25,7 +25,7 @@ function _createWorker() {
   // (js/processor.js), not relative to the HTML page that loaded it.
   // CRITICAL for localized subfolders (/de/, /es/, /fr/, /pt/) where a plain
   // './js/worker.js' would resolve to /de/js/worker.js → 404 → silent hang.
-  return new Worker(new URL('./worker.js?v=15', import.meta.url));
+  return new Worker(new URL('./worker.js?v=16', import.meta.url));
 }
 
 // ── Cancel ────────────────────────────────────────────────────
