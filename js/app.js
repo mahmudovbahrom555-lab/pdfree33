@@ -34,9 +34,9 @@ import { t }                                      from './i18n.js';
 // ── Module-level constants ────────────────────────────────────
 const TOOL_SLUGS = {
   jpg2pdf:  '/jpg2pdf/',   pdf2jpg:  '/pdf2jpg/',
-  merge:    '/merge-pdf/', split:    '/split-pdf/',
-  compress: '/compress-pdf/', extract: '/extract-pdf/',
-  watermark:'/watermark-pdf/', pagenum: '/pagenum-pdf/',
+  merge:    '/merge-large-pdf-files/', split:    '/split-pdf/',
+  compress: '/compress-large-pdf-free/', extract: '/extract-pdf/',
+  watermark:'/watermark-pdf/', pagenum: '/add-page-numbers-to-pdf/',
   meta:     '/meta-pdf/', redact:   '/redact-pdf/',
   rotate:   '/rotate-pdf/', protect: '/protect-pdf/',
 };

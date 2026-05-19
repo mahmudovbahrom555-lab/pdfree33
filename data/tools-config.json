@@ -563,7 +563,7 @@
       "icon": "🔢",
       "toolKey": "pagenum",
       "slugs": {
-        "en": "pagenum-pdf",
+        "en": "add-page-numbers-to-pdf",
         "es": "numeros-de-pagina-pdf",
         "pt": "numeros-de-pagina-pdf",
         "de": "seitenzahlen-pdf",
