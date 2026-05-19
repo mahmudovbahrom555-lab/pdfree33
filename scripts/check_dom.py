@@ -17,6 +17,7 @@ ROOT = Path(__file__).parent.parent
 # IDs every page that loads app.js must have.
 # Home-page sections (hero, trustAlert, etc.) are NOT required — tool pages
 # legitimately omit them, and show()/hide() are now null-safe.
+# ↓ When adding a new element to index.html that app.js depends on, add it here too.
 REQUIRED_IDS = [
     'logo',
     'toolArea',
