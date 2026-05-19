@@ -1,0 +1,34 @@
+[
+  {
+    "@type": "Question",
+    "name": "Does PDFree upload my PDF to fill it?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. The entire filling process runs in your browser using pdf-lib and pdf.js. Your document never leaves your device — PDFree has no access to your file or the data you type into it."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "What types of PDF form fields are supported?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree supports all standard AcroForm field types: text inputs, checkboxes, radio buttons, dropdown lists, and signature fields. Signature fields open a drawing pad so you can sign with your finger or mouse."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I fill a scanned PDF form?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Not with this tool — scanned PDFs are images without embedded interactive fields. PDFree detects AcroForm fields only. For scanned forms you would need OCR software to convert the scan into a fillable PDF first."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is the signature legally valid?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "A drawn signature image is an electronic signature. Its legal weight depends on your jurisdiction and the document type. For everyday forms, consent documents, and internal approvals it is widely accepted. For regulated legal contexts, use a certified e-signature service with an audit trail."
+    }
+  }
+]

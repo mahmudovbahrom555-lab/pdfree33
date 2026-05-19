@@ -106,7 +106,12 @@
     <a href="../" class="logo" id="logo" aria-label="Go to homepage" style="text-decoration:none">PDF<span>ree</span></a>
     <div class="nav-links">
       {% for t in all_tools %}
-      <a href="../{{ t.slugs[lang] }}/" class="nav-link" data-tool="{{ t.id }}">{{ t.navLabels[lang] }}</a>
+        {% set t_slug = t.slugs.get(lang) %}
+        {% if t_slug %}
+      <a href="../{{ t_slug }}/" class="nav-link" data-tool="{{ t.id }}">{{ t.navLabels.get(lang, t.navLabels.get('en', '')) }}</a>
+        {% elif t.slugs.get('en') %}
+      <a href="/{{ t.slugs.get('en') }}/" class="nav-link" data-tool="{{ t.id }}">{{ t.navLabels.get('en', '') }}</a>
+        {% endif %}
       {% endfor %}
     </div>
   </nav>

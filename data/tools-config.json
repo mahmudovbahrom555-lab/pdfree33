@@ -932,6 +932,41 @@
         "de": "PDF-Seiten in hochwertige JPG-Bilder umwandeln. Im Browser verarbeitet — kein Upload, keine Registrierung. Kostenlos.",
         "fr": "Convertir un PDF en images JPG gratuitement en ligne. Toutes les pages ou une sélection. 100 % privé — aucun envoi, sans inscription."
       }
+    },
+    {
+      "id": "fill",
+      "icon": "✍️",
+      "toolKey": "fill",
+      "slugs": {
+        "en": "fill"
+      },
+      "titles": {
+        "en": "Fill PDF Form Online Free — No Upload, No Signup | PDFree"
+      },
+      "descs": {
+        "en": "Fill AcroForm fields and add signatures to PDFs. Processed 100% in your browser — files never leave your device."
+      },
+      "navLabels": {
+        "en": "Fill PDF"
+      },
+      "cardNames": {
+        "en": "Fill PDF Form"
+      },
+      "cardDescs": {
+        "en": "Fill form fields and sign PDFs locally"
+      },
+      "breadcrumb": {
+        "en": "Fill PDF Form"
+      },
+      "metaDescs": {
+        "en": "Fill PDF form fields online free. Text inputs, checkboxes, dropdowns, and signatures — all processed locally. No upload, no signup, no limits."
+      },
+      "ogTitles": {
+        "en": "Fill PDF Forms Free Online — AcroForm Fields & Signatures, No Upload"
+      },
+      "ogDescs": {
+        "en": "Fill PDF form fields and add signatures. 100% local — files never leave your browser. Free, no account required."
+      }
     }
   ],
   "ui": {
