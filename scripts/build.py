@@ -43,6 +43,8 @@ BASE_URL = 'https://pdfree.io'
 SKIP_DIRS = {
     '.git', 'node_modules', '.wrangler', '.claude', '.husky',
     'dist', 'data', 'scripts',
+    # Short-slug source dirs superseded by keyword-rich SSG pages
+    'compress-pdf', 'merge-pdf',
 }
 SKIP_FILES = {
     'wrangler.toml', '.assetsignore', 'eslint.config.js',

@@ -38,7 +38,7 @@
       "icon": "🔗",
       "toolKey": "merge",
       "slugs": {
-        "en": "merge-pdf",
+        "en": "merge-large-pdf-files",
         "es": "unir-pdf",
         "pt": "juntar-pdf",
         "de": "pdf-zusammenfuehren",
@@ -188,7 +188,7 @@
       "icon": "🗜️",
       "toolKey": "compress",
       "slugs": {
-        "en": "compress-pdf",
+        "en": "compress-large-pdf-free",
         "es": "comprimir-pdf",
         "pt": "comprimir-pdf",
         "de": "pdf-komprimieren",
