@@ -273,8 +273,10 @@ function _onMergeBtnClick() {
 // ── Events ────────────────────────────────────────────────────
 
 function initEvents() {
-  id('logo').addEventListener('click',   goHome);
-  id('logo').addEventListener('keydown', e => e.key === 'Enter' && goHome());
+  // Landing pages use <a class="logo"> without id="logo" — skip SPA handler,
+  // let the <a href> navigate normally. Use ?. to avoid crash on null.
+  id('logo')?.addEventListener('click',   goHome);
+  id('logo')?.addEventListener('keydown', e => e.key === 'Enter' && goHome());
 
   document.querySelectorAll('[data-tool]').forEach(el => {
     const handler = (e) => {
@@ -286,7 +288,7 @@ function initEvents() {
     el.addEventListener('keydown', handler);
   });
 
-  id('mergeBtn').addEventListener('click', _onMergeBtnClick);
+  id('mergeBtn')?.addEventListener('click', _onMergeBtnClick);
 
   const cancelBtn = id('cancelBtn');
   if (cancelBtn) cancelBtn.addEventListener('click', () => {
