@@ -310,12 +310,28 @@ async function _recompressImages(pdf, jpegQuality) {
   const entries = [];
   ctx.enumerateIndirectObjects().forEach(([ref, obj]) => entries.push([ref, obj]));
 
+  // Count eligible images upfront so we can emit per-image progress (55→72%)
+  const imageEntries = entries.filter(([, obj]) => {
+    if (!(obj instanceof PDFRawStream)) return false;
+    const sub = obj.dict.get(PDFName.of('Subtype'))?.toString();
+    return sub === '/Image';
+  });
+  const totalImages = imageEntries.length;
+  let imgIdx = 0;
+
   for (const [ref, obj] of entries) {
     // Must be a raw stream
     if (!(obj instanceof PDFRawStream)) continue;
 
     const dict = obj.dict;
     if (dict.get(PDFName.of('Subtype'))?.toString() !== '/Image') continue;
+
+    // Emit progress every 3 images so watchdog resets and UI stays alive
+    imgIdx++;
+    if (imgIdx % 3 === 0 && totalImages > 0) {
+      const pct = 55 + Math.round((imgIdx / totalImages) * 17);
+      self.postMessage({ type: 'progress', value: Math.min(pct, 72), label: `Recompressing image ${imgIdx} of ${totalImages}…` });
+    }
 
     const filter     = dict.get(PDFName.of('Filter'))?.toString() ?? '';
     const colorSpace = dict.get(PDFName.of('ColorSpace'));

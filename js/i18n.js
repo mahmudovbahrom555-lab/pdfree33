@@ -127,6 +127,9 @@ const EN = {
   err_enc_unavailable:  'Encryption library failed to load. Please refresh the page and try again.',
   err_enc_failed:       'Encryption failed. The PDF may be in an unsupported format.',
   err_encrypted_pdf:    'This PDF is password-protected or has editing restrictions. Remove the password first (use Acrobat or a trusted tool with the owner password), then try again.',
+  err_compress_timeout: '⏱ Compression timed out — the file may be too image-heavy for the browser. Try the Light preset or split the PDF into smaller parts first.',
+  warn_compress_large:  '⚠️ Large file ({size}) — compression may take 1–2 minutes. The browser processes everything locally in RAM.',
+  compress_scan_skipped: 'Large file — pre-scan skipped to save memory',
   error_msg:            'Error: {msg}',
 };
 

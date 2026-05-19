@@ -115,5 +115,8 @@ window.PDFREE_LOCALE = {
   err_enc_unavailable: 'A biblioteca de cifragem não pôde ser carregada. Por favor recarregue a página.',
   err_enc_failed:      'Cifragem falhou. O PDF pode estar num formato não suportado.',
   err_encrypted_pdf:   'Este PDF está protegido por senha ou tem restrições de edição. Remova a senha primeiro e tente novamente.',
+  err_compress_timeout: '⏱ Compressão cancelada — o ficheiro tem demasiadas imagens para o navegador. Tente o preset Light ou divida o PDF primeiro.',
+  warn_compress_large:  '⚠️ Ficheiro grande ({size}) — a compressão pode demorar 1–2 minutos. O navegador processa tudo localmente na memória RAM.',
+  compress_scan_skipped: 'Ficheiro grande — pré-análise ignorada para poupar memória',
   error_msg:           'Erro: {msg}',
 };

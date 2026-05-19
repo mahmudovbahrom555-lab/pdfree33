@@ -25,7 +25,7 @@ function _createWorker() {
   // (js/processor.js), not relative to the HTML page that loaded it.
   // CRITICAL for localized subfolders (/de/, /es/, /fr/, /pt/) where a plain
   // './js/worker.js' would resolve to /de/js/worker.js → 404 → silent hang.
-  return new Worker(new URL('./worker.js?v=13', import.meta.url));
+  return new Worker(new URL('./worker.js?v=14', import.meta.url));
 }
 
 // ── Cancel ────────────────────────────────────────────────────
@@ -264,9 +264,30 @@ async function _runSplit(filesSnapshot, { pages, mode }) {
 // ── Compress ───────────────────────────────────────────────────
 
 async function _runCompress(filesSnapshot, { preset = 'medium', preserveText = true } = {}) {
+  if (!_checkSize(filesSnapshot[0], 150)) { isProcessing = false; setFilesLocked(false); hideCancelBtn(); return; }
+
   const file   = filesSnapshot[0];
   const buffer = await file.arrayBuffer();
   setProgress(5, t('prog_loading_pdf'));
+
+  // Watchdog: if the worker goes silent for 90s (OOM crash or freeze),
+  // browsers don't reliably fire onerror — detect it ourselves.
+  const WATCHDOG_MS = 90_000;
+  let watchdog = setTimeout(() => {
+    isProcessing = false;
+    setFilesLocked(false);
+    hideCancelBtn();
+    _handleError('compress', t('err_compress_timeout'), 'timeout');
+  }, WATCHDOG_MS);
+  const _resetWatchdog = () => {
+    clearTimeout(watchdog);
+    watchdog = setTimeout(() => {
+      isProcessing = false;
+      setFilesLocked(false);
+      hideCancelBtn();
+      _handleError('compress', t('err_compress_timeout'), 'timeout');
+    }, WATCHDOG_MS);
+  };
 
   // ⚠️  TRANSFERABLE: buffer detached after this call — worker owns it until done.
   _worker.postMessage(
@@ -277,8 +298,10 @@ async function _runCompress(filesSnapshot, { preset = 'medium', preserveText = t
   _worker.onmessage = (e) => {
     const data = e.data;
     if (data.type === 'progress') {
+      _resetWatchdog();
       setProgress(data.value, data.label);
     } else if (data.type === 'done') {
+      clearTimeout(watchdog);
       isProcessing = false;
       setFilesLocked(false);
       hideCancelBtn();
@@ -324,6 +347,7 @@ async function _runCompress(filesSnapshot, { preset = 'medium', preserveText = t
         showToast(t('warn_encrypted_pdf'), 5000);
       }
     } else if (data.type === 'error') {
+      clearTimeout(watchdog);
       isProcessing = false;
       setFilesLocked(false);
       hideCancelBtn();
@@ -332,6 +356,7 @@ async function _runCompress(filesSnapshot, { preset = 'medium', preserveText = t
   };
 
   _worker.onerror = (e) => {
+    clearTimeout(watchdog);
     isProcessing = false;
     setFilesLocked(false);
     hideCancelBtn();

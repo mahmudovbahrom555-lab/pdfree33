@@ -45,11 +45,20 @@ export async function initCompressOptions(file) {
   container.innerHTML = loadingRow('Scanning PDF…');
   container.style.display = 'block';
 
+  // Skip full PDFDocument.load for large files — it would consume 3–5× file size
+  // in main thread heap (e.g. 25 MB file → ~120 MB RAM). Threshold: 25 MB.
+  const SCAN_LIMIT = 25 * 1024 * 1024;
   let scan = null;
-  try {
-    scan = await _scanFile(file);
-  } catch {
-    // Не смогли просканировать — показываем UI без scan-данных
+  if (file.size <= SCAN_LIMIT) {
+    try {
+      scan = await _scanFile(file);
+    } catch {
+      // Scan failed silently — UI still shows with scan=null
+    }
+  }
+
+  if (file.size > 40 * 1024 * 1024) {
+    showToast(t('warn_compress_large', { size: fmtSize(file.size) }), 7000);
   }
 
   _render(file, scan);
@@ -203,7 +212,7 @@ function _render(file, scan) {
       ${scan?.isEncrypted ? '<span class="compress-info__badge compress-info__badge--warn">🔒 encrypted</span>' : ''}
     </div>
 
-    ${scan ? _buildScanBanner(scan) : ''}
+    ${scan ? _buildScanBanner(scan) : file.size > 25 * 1024 * 1024 ? `<div class="compress-scan compress-scan--info" role="status">ℹ️ ${t('compress_scan_skipped')}</div>` : ''}
 
     <div class="compress-presets">
       ${_presetCard('low',    '🪶', 'Light',    'Removes thumbnails and info fields only. No image recompression — maximum compatibility.')}
