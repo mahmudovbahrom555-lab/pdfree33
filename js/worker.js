@@ -1223,10 +1223,16 @@ async function handleFill(fileBuffer, { fieldValues = {}, sigImages = {} } = {})
     } catch { /* skip fields that reject their value */ }
   }
 
-  // Embed signature images (visual, not cryptographic)
+  // Flatten first: bakes field appearances into page content stream.
+  // Signature PNG is drawn AFTER flatten so it renders on top of the
+  // (now-empty) Sig widget appearance — prevents white background covering PNG.
+  progress(70, 'Saving filled PDF…');
+  try { form.flatten(); } catch { /* flatten fails on some encrypted forms; skip */ }
+
+  // Embed signature images after flatten (visual, not cryptographic)
   const sigEntries = Object.values(sigImages);
   if (sigEntries.length > 0) {
-    progress(65, 'Embedding signatures…');
+    progress(80, 'Embedding signatures…');
     const pages = pdfDoc.getPages();
     for (const { dataUrl, rect, pageIndex } of sigEntries) {
       if (!dataUrl || !rect || rect.length < 4) continue;
@@ -1235,9 +1241,6 @@ async function handleFill(fileBuffer, { fieldValues = {}, sigImages = {} } = {})
       } catch { /* skip malformed sig */ }
     }
   }
-
-  progress(80, 'Saving filled PDF…');
-  try { form.flatten(); } catch { /* flatten fails on some encrypted forms; skip */ }
 
   const bytes = await pdfDoc.save({ useObjectStreams: true, addDefaultPage: false });
   self.postMessage(
