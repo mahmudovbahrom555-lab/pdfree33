@@ -21,7 +21,6 @@
 // ============================================================
 
 import { id }        from './utils.js';
-import { showToast } from './ui.js';
 import { loadPdfJs } from './pdf2jpgUI.js';
 
 // ── Module state ──────────────────────────────────────────────
@@ -248,7 +247,7 @@ function _fieldHTML(f) {
 
   const baseStyle = `width:100%;box-sizing:border-box;padding:11px 13px;
     border:1.5px solid var(--border);border-radius:8px;
-    background:var(--surface);color:var(--text);font-size:15px;
+    background:var(--surface);color:var(--text);font-size:16px;
     font-family:inherit;outline:none;transition:border-color .15s;`;
 
   if (f.type === 'checkbox') {
