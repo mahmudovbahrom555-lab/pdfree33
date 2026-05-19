@@ -18,7 +18,7 @@
 //  the activate handler to clear the old cache.
 // ============================================================
 
-const CACHE_VERSION  = 'v63';   // Let browser fetch legal pages directly, bypass SW
+const CACHE_VERSION  = 'v64';   // bump: force-evict stale tool-page HTML from all clients
 const STATIC_CACHE   = `pdfree-static-${CACHE_VERSION}`;
 const CDN_CACHE      = `pdfree-cdn-${CACHE_VERSION}`;
 const ALL_CACHES     = [STATIC_CACHE, CDN_CACHE];
@@ -161,31 +161,29 @@ self.addEventListener('fetch', event => {
 
 // ── Strategy implementations ──────────────────────────────────
 
-// Navigate fallback: F5 on /jpg2pdf/ etc.
-// 1. Try network (SEO page exists as real file → serves correctly)
-// 2. If network fails (offline, Live Server 404) → serve cached index.html
-// This makes the SPA work on refresh in all environments.
+// Navigate fallback: stale-while-revalidate for HTML pages.
+// Always fetches fresh HTML in the background so the next load
+// (or this one, on first visit) gets the latest page with
+// PDFREE_INITIAL_TOOL set. Falls back to cache when offline.
+// Uses URL string (not Request object) to avoid navigate-mode issues in SW.
 async function navigateFallback(request) {
-  // Cache-first for pre-cached HTML pages (privacy, terms, index).
-  // Avoids fetch(request) with mode:navigate which can misbehave in SW context.
-  const cached = await caches.match(request);
-  if (cached) return cached;
+  const cache  = await caches.open(STATIC_CACHE);
+  const cached = await cache.match(request);
 
-  try {
-    // Fetch by URL string (not request object) to avoid navigate-mode issues.
-    const response = await fetch(request.url);
-    if (response.ok) {
-      const cache = await caches.open(STATIC_CACHE);
-      cache.put(request.url, response.clone());
-      return response;
-    }
-    throw new Error(`HTTP ${response.status}`);
-  } catch {
-    // Offline or 404: serve the root SPA shell from cache.
-    const fallback = await caches.match('/index.html')
-                  || await caches.match('/');
-    return fallback || new Response('Offline', { status: 503 });
-  }
+  // Background fetch — updates cache silently; always resolves to a Response.
+  const fetchPromise = fetch(request.url).then(response => {
+    if (response.ok) cache.put(request.url, response.clone());
+    return response;
+  }).catch(async () => {
+    // Network failed: use cached version or SPA shell.
+    return cached
+        || await caches.match('/index.html')
+        || await caches.match('/')
+        || new Response('Offline', { status: 503 });
+  });
+
+  // Return cached immediately (instant load); otherwise wait for network.
+  return cached ?? fetchPromise;
 }
 
 async function cacheFirst(request) {
