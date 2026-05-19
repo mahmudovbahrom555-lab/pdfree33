@@ -53,6 +53,7 @@ window.PDFREE_LOCALE = {
   desc_protect:             'Protegido com AES-256 · {pages} páginas · {size}{extra}',
   desc_rotate:              'Rodado · {pages} páginas · {size}',
   desc_redact:              'Áreas cobertas · {pages} páginas · {size}',
+  desc_fill:                'Formulário preenchido · {pages} páginas · {size}',
   desc_split_single:        '{n} página extraída · {size}',
   desc_split_single_many:   '{n} páginas extraídas · {size}',
   desc_split_separate:      'Dividido em {n} ficheiro · {size}',

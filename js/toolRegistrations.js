@@ -31,6 +31,8 @@ import { initExtractOptions, hideExtractOptions,
          getExtractParams }               from './extractUI.js';
 import { initProtectOptions, hideProtectOptions,
          getProtectParams }              from './protectUI.js';
+import { initFillOptions, hideFillOptions,
+         getFillParams }                 from './fillUI.js';
 import { initRotateOptions, hideRotateOptions,
          getRotateParams }              from './rotateUI.js';
 import { initRedactOptions, hideRedactOptions,
@@ -154,4 +156,15 @@ registerTool('protect', {
     }
     return null;
   },
+});
+
+registerTool('fill', {
+  runner:     'worker',
+  workerTool: 'fill',
+  init:       initFillOptions,
+  hide:       hideFillOptions,
+  getParams:  getFillParams,
+  validate:   p => Object.keys(p.fieldValues).length === 0
+    ? 'No fillable fields found in this PDF'
+    : null,
 });

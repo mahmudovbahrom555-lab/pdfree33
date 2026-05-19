@@ -65,6 +65,7 @@ const EN = {
   desc_protect:             'AES-256 protected · {pages} pages · {size}{extra}',
   desc_rotate:              'Rotated · {pages} pages · {size}',
   desc_redact:              'Areas covered · {pages} pages · {size}',
+  desc_fill:                'Form filled · {pages} pages · {size}',
   desc_split_single:        'Extracted {n} page · {size}',
   desc_split_single_many:   'Extracted {n} pages · {size}',
   desc_split_separate:      'Split into {n} file · {size}',

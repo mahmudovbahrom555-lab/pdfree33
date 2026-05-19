@@ -39,6 +39,7 @@ const TOOL_SLUGS = {
   watermark:'/watermark-pdf/', pagenum: '/add-page-numbers-to-pdf/',
   meta:     '/meta-pdf/', redact:   '/redact-pdf/',
   rotate:   '/rotate-pdf/', protect: '/protect-pdf/',
+  fill:     '/fill/',
 };
 
 // ── App state ─────────────────────────────────────────────────

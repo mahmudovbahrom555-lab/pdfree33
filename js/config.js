@@ -151,4 +151,13 @@ export const TOOLS = {
     accept:      '.pdf',
     implemented: true,
   },
+  fill: {
+    icon:        '✏️',
+    title:       'Fill PDF Form',
+    desc:        'Fill any PDF form — text fields, checkboxes, dropdowns. No upload.',
+    btn:         '✏️ Fill & Download PDF',
+    multi:       false,
+    accept:      '.pdf',
+    implemented: true,
+  },
 };

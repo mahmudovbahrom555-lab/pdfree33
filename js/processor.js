@@ -622,7 +622,7 @@ async function _runPdf2Jpg(filesSnapshot, { pages, format, dpi, zip }) {
 
 async function _runWorkerTool(tool, filesSnapshot, params) {
   const file   = filesSnapshot[0];
-  const limits = { watermark: 200, pagenum: 200, meta: 200, protect: 200, rotate: 150, redact: 150 };
+  const limits = { watermark: 200, pagenum: 200, meta: 200, protect: 200, rotate: 150, redact: 150, fill: 200 };
   if (!_checkSize(file, limits[tool] ?? 200)) { isProcessing = false; setFilesLocked(false); hideCancelBtn(); return; }
   const buffer = await file.arrayBuffer();
 
@@ -633,6 +633,7 @@ async function _runWorkerTool(tool, filesSnapshot, params) {
     protect:   t('prog_protect'),
     rotate:    t('prog_rotate'),
     redact:    t('prog_redact'),
+    fill:      'Filling PDF…',
   };
   setProgress(5, labelMap[tool] || t('prog_processing'));
 
@@ -657,7 +658,7 @@ async function _runWorkerTool(tool, filesSnapshot, params) {
 
       const blob = new Blob([data.result], { type: 'application/pdf' });
       const base = file.name.replace(/\.pdf$/i, '');
-      const suffixes = { watermark: '-watermarked', pagenum: '-numbered', meta: '-edited', protect: '-protected', rotate: '-rotated', redact: '-redacted' };
+      const suffixes = { watermark: '-watermarked', pagenum: '-numbered', meta: '-edited', protect: '-protected', rotate: '-rotated', redact: '-redacted', fill: '-filled' };
       const filename = `${base}${suffixes[tool] || '-processed'}.pdf`;
 
       const pages = data.pageCount;
@@ -670,6 +671,7 @@ async function _runWorkerTool(tool, filesSnapshot, params) {
         protect:   t('desc_protect',   { pages, size, extra }),
         rotate:    t('desc_rotate',    { pages, size }),
         redact:    t('desc_redact',    { pages, size }),
+        fill:      t('desc_fill',      { pages, size }),
       };
 
       document.dispatchEvent(new CustomEvent('pdfree:success', {

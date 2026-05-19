@@ -40,7 +40,7 @@ REQUIRED_IDS = [
 # Excludes: root index.html, language homepages (de/index.html etc.),
 # and placeholder pages for unimplemented tools.
 LANG_CODES = {'de', 'es', 'fr', 'pt'}
-PLACEHOLDER_DIRS = {'annotate-pdf', 'highlight-pdf', 'sign', 'fill', 'annotate'}
+PLACEHOLDER_DIRS = {'annotate-pdf', 'highlight-pdf', 'sign', 'annotate'}
 
 def _is_tool_page(path: Path) -> bool:
     rel   = path.relative_to(ROOT)

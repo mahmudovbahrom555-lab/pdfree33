@@ -49,6 +49,9 @@ self.onmessage = async function (e) {
       case 'redact':
         await handleRedact(e.data.file, e.data.options);
         break;
+      case 'fill':
+        await handleFill(e.data.file, e.data.options);
+        break;
       default:
         throw new Error('Unknown tool: ' + tool);
     }
@@ -1179,5 +1182,53 @@ async function handleRedact(fileBuffer, options) {
         }
       }
     }
+  );
+}
+
+// ── Fill AcroForm ─────────────────────────────────────────────
+// fieldValues: { fieldName: value } — strings for text/select,
+// truthy/falsy for checkboxes, string matching exportValue for radios.
+
+async function handleFill(fileBuffer, { fieldValues = {} } = {}) {
+  const { PDFDocument } = PDFLib;
+
+  progress(10, 'Loading PDF…');
+  const pdfDoc = await PDFDocument.load(fileBuffer, { ignoreEncryption: true });
+  const form   = pdfDoc.getForm();
+  const fields = form.getFields();
+
+  progress(40, 'Filling fields…');
+
+  for (const field of fields) {
+    const name  = field.getName();
+    const value = fieldValues[name];
+    if (value === undefined) continue;
+
+    try {
+      const type = field.constructor.name;
+      if (type === 'PDFTextField') {
+        field.setText(String(value));
+      } else if (type === 'PDFCheckBox') {
+        value ? field.check() : field.uncheck();
+      } else if (type === 'PDFRadioGroup') {
+        if (value) field.select(String(value));
+      } else if (type === 'PDFDropdown') {
+        if (value) {
+          try { field.select(String(value)); }
+          catch { field.setText(String(value)); }
+        }
+      } else if (type === 'PDFOptionList') {
+        if (value) field.select(String(value));
+      }
+    } catch { /* skip fields that reject their value */ }
+  }
+
+  progress(80, 'Saving filled PDF…');
+  try { form.flatten(); } catch { /* flatten fails on some encrypted forms; skip */ }
+
+  const bytes = await pdfDoc.save({ useObjectStreams: true, addDefaultPage: false });
+  self.postMessage(
+    { type: 'done', result: bytes.buffer, pageCount: pdfDoc.getPageCount() },
+    [bytes.buffer]
   );
 }
