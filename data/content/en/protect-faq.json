@@ -1,0 +1,34 @@
+[
+  {
+    "@type": "Question",
+    "name": "Does PDFree send my PDF to a server to encrypt it?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Encryption is performed entirely in your browser using the PDF-Lib library. Your file never leaves your device."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "What encryption standard does PDFree use?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree uses AES-256 encryption, the same standard used by banks and government systems."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I set separate passwords for opening and editing?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. You can set an owner password (for editing/printing restrictions) separately from a user password (for opening the file)."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can someone crack the password?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "AES-256 is practically uncrackable by brute force. Use a strong, unique password for best security."
+    }
+  }
+]

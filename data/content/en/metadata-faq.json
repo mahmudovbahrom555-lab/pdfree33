@@ -1,0 +1,34 @@
+[
+  {
+    "@type": "Question",
+    "name": "Are my files uploaded when editing metadata?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Metadata editing is processed entirely in your browser using pdf-lib. Files never leave your device."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Which metadata fields can I edit?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "You can view and edit the standard PDF metadata fields: Title, Author, Subject, Keywords, Creator, and Producer."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I remove all metadata from a PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. You can clear any or all metadata fields before saving. This is useful for removing personal information before sharing a document."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is there a file size limit?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. PDFree has no file size or page count limits."
+    }
+  }
+]

@@ -1,0 +1,34 @@
+[
+  {
+    "@type": "Question",
+    "name": "Does extracting PDF pages upload my file?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. PDFree extracts pages entirely in your browser. Your files never leave your device."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "What is the difference between Extract and Split?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Extract lets you pick specific pages (e.g. pages 2, 5, 8) and save them as one new PDF. Split divides the entire document into individual files."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I extract non-consecutive pages?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. You can select any combination of individual pages and page ranges."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is there a page limit?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. There are no file size or page count limits."
+    }
+  }
+]

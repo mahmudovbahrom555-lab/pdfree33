@@ -15,11 +15,16 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Validate DOM (required IDs on all pages)
-        run: python3 scripts/check_dom.py
+      - name: Install Python dependencies
+        run: pip3 install jinja2
 
-      - name: Validate i18n (locale keys in sync)
-        run: python3 scripts/check_i18n.py
+      - name: Validate source pages (DOM + i18n)
+        run: |
+          python3 scripts/check_dom.py
+          python3 scripts/check_i18n.py
+
+      - name: Build site
+        run: python3 scripts/build.py
 
       - name: Setup Node.js
         uses: actions/setup-node@v4

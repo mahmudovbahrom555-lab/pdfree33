@@ -1,0 +1,34 @@
+[
+  {
+    "@type": "Question",
+    "name": "Does adding a watermark upload my PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Watermarking is done entirely in your browser using pdf-lib. Nothing is uploaded."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I add an image as a watermark instead of text?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. PDFree supports both text watermarks and image watermarks (PNG/JPG)."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I control watermark opacity and position?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. You can adjust opacity, size, position, and rotation angle."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Will the watermark be permanent?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. The watermark is embedded into the PDF and cannot be easily removed."
+    }
+  }
+]

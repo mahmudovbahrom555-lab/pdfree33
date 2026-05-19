@@ -1,7 +1,7 @@
 {
   "name": "pdfree",
   "version": "1.0.0",
-  "description": "Private PDF tools — all processing in your browser",
+  "description": "Private PDF tools \u2014 all processing in your browser",
   "main": "sw.js",
   "directories": {
     "test": "tests"
@@ -12,8 +12,9 @@
     "lint": "eslint js/*.js --ignore-pattern 'js/vendor/**'",
     "check:dom": "python3 scripts/check_dom.py",
     "check:i18n": "python3 scripts/check_i18n.py",
-    "validate": "npm run check:dom && npm run check:i18n && npm run lint && npm test",
-    "prepare": "husky"
+    "validate": "npm run check:dom && npm run check:i18n && npm run lint && npm test && npm run build",
+    "prepare": "husky",
+    "build": "python3 scripts/build.py"
   },
   "keywords": [],
   "author": "",

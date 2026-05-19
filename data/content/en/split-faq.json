@@ -1,0 +1,34 @@
+[
+  {
+    "@type": "Question",
+    "name": "Are my files uploaded when splitting a PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. PDFree splits PDFs entirely in your browser. Files never leave your device."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I split only specific pages from a PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. You can extract a custom page range (e.g. pages 3–7) or split every page into individual files."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is there a page limit for splitting?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. PDFree has no page or file size limits. Processing depends on your device's memory."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I split a PDF offline?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. PDFree is a PWA and works fully offline once loaded in your browser."
+    }
+  }
+]

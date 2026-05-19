@@ -1,0 +1,34 @@
+[
+  {
+    "@type": "Question",
+    "name": "Does compressing a PDF upload my file?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Compression happens entirely in your browser. Your PDF is never uploaded to any server or sent over the internet."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Will compression reduce the visual quality of my PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree offers three quality levels. The 'High' setting preserves near-original quality. Images may be slightly reduced at lower settings."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "How much can PDFree reduce a PDF file size?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Typical reductions are 20–70%. Results depend on content: PDFs with many images compress more; text-only PDFs compress less."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Does PDF compression work without an internet connection?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. PDFree works fully offline as a PWA once the page has loaded."
+    }
+  }
+]

@@ -74,7 +74,7 @@ def main():
 
     for path in html_files:
         parts = path.parts
-        if any(p.startswith('.') or p in ('node_modules',) for p in parts):
+        if any(p.startswith('.') or p in ('node_modules', 'dist', 'data') for p in parts):
             continue
         missing_ids, missing_tool = check_file(path)
         issues = missing_ids + missing_tool

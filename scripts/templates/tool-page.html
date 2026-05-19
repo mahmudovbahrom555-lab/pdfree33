@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="{{ lang_cfg.code }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!--
+    ════════════════════════════════════════════════════════════════
+    Content Security Policy — defence-in-depth against XSS
+
+    script-src: NO 'unsafe-inline' — zero inline <script> tags.
+    style-src: 'unsafe-inline' ALLOWED — element.style.display/opacity
+      set in JS; inline style= attributes throughout HTML.
+    worker-src: blob: REQUIRED — pdf.js ≥ 3.x creates worker via blob URL.
+    connect-src: *.doubleclick.net REQUIRED for AdSense reporting.
+    img-src: data: blob: REQUIRED — pdf.js thumbnails + JPG→PDF previews.
+    ════════════════════════════════════════════════════════════════
+  -->
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src  'self'
+                'wasm-unsafe-eval'
+                blob:
+                https://cdnjs.cloudflare.com
+                https://esm.sh
+                https://plausible.io
+                https://pagead2.googlesyndication.com
+                https://static.cloudflareinsights.com;
+    style-src   'self' 'unsafe-inline';
+    font-src    'self';
+    img-src     'self' data: blob: https:;
+    connect-src 'self'
+                https://cdnjs.cloudflare.com
+                https://*.workers.dev
+                https://plausible.io
+                https://pagead2.googlesyndication.com
+                https://www.googletagservices.com
+                https://*.doubleclick.net
+                https://cloudflareinsights.com;
+    frame-src   https://googleads.g.doubleclick.net
+                https://tpc.googlesyndication.com;
+    worker-src  'self' blob:;
+    object-src  'none';
+  ">
+  <title>{{ tool.titles[lang] }}</title>
+  <meta name="description" content="{{ tool.metaDescs[lang] }}">
+  <meta property="og:title"       content="{{ tool.ogTitles[lang] }}">
+  <meta property="og:description" content="{{ tool.ogDescs[lang] }}">
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="{{ base_url }}/{{ canonical_path }}">
+  <meta property="og:site_name"   content="PDFree">
+  <meta property="og:locale"      content="{{ lang_cfg.locale }}">
+  <meta property="og:image"       content="{{ base_url }}/icons/og-image.jpg">
+  <meta property="og:image:width"  content="1200">
+  <meta property="og:image:height" content="633">
+  <meta name="twitter:card"        content="summary_large_image">
+  <meta name="twitter:site"        content="@pdfree_io">
+  <meta name="twitter:image"       content="{{ base_url }}/icons/og-image.jpg">
+
+  <link rel="canonical" href="{{ base_url }}/{{ canonical_path }}">
+  {% for hl_lang, hl_url in hreflang_links %}
+  <link rel="alternate" hreflang="{{ hl_lang }}" href="{{ hl_url }}">
+  {% endfor %}
+  <link rel="alternate" hreflang="x-default" href="{{ base_url }}/{{ tool.slugs['en'] }}/">
+
+  <!-- PWA -->
+  <link rel="manifest" href="{{ prefix }}manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="PDFree">
+  <link rel="apple-touch-icon" href="{{ prefix }}icons/icon-192.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+  <link rel="stylesheet" href="{{ prefix }}css/fonts.css">
+  <link rel="stylesheet" href="{{ prefix }}css/variables.css">
+  <link rel="stylesheet" href="{{ prefix }}css/animations.css">
+  <link rel="stylesheet" href="{{ prefix }}css/layout.css">
+  <link rel="stylesheet" href="{{ prefix }}css/components.css?v={{ hashes.components_css }}">
+
+  <script type="application/ld+json">
+{{ webapp_schema }}
+  </script>
+  {% if faq_items %}
+  <script type="application/ld+json">
+{{ faq_schema }}
+  </script>
+  {% endif %}
+  <script type="application/ld+json">
+{{ breadcrumb_schema }}
+  </script>
+</head>
+<body>
+
+  <nav>
+    <a href="../" class="logo" id="logo" aria-label="Go to homepage" style="text-decoration:none">PDF<span>ree</span></a>
+    <div class="nav-links">
+      {% for t in all_tools %}
+      <a href="../{{ t.slugs[lang] }}/" class="nav-link" data-tool="{{ t.id }}">{{ t.navLabels[lang] }}</a>
+      {% endfor %}
+    </div>
+  </nav>
+
+  <nav aria-label="Breadcrumb" style="position:static;padding:8px 24px;border-bottom:1px solid var(--border);background:var(--surface);">
+    <ol style="list-style:none;margin:0;padding:0;display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text3);"
+        itemscope itemtype="https://schema.org/BreadcrumbList">
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a href="/" itemprop="item" style="color:var(--green);text-decoration:none;font-weight:500;">
+          <span itemprop="name">PDFree</span>
+        </a>
+        <meta itemprop="position" content="1">
+      </li>
+      {% if lang != 'en' %}
+      <li aria-hidden="true" style="color:var(--border);">›</li>
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a href="/{{ lang_cfg.dir }}/" itemprop="item" style="color:var(--text2);text-decoration:none;">
+          <span itemprop="name">{{ lang_cfg.code | upper }}</span>
+        </a>
+        <meta itemprop="position" content="2">
+      </li>
+      <li aria-hidden="true" style="color:var(--border);">›</li>
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a href="/{{ canonical_path }}" itemprop="item" style="color:var(--text2);text-decoration:none;" aria-current="page">
+          <span itemprop="name">{{ tool.breadcrumb[lang] }}</span>
+        </a>
+        <meta itemprop="position" content="3">
+      </li>
+      {% else %}
+      <li aria-hidden="true" style="color:var(--border);">›</li>
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a href="/{{ canonical_path }}" itemprop="item" style="color:var(--text2);text-decoration:none;" aria-current="page">
+          <span itemprop="name">{{ tool.breadcrumb[lang] }}</span>
+        </a>
+        <meta itemprop="position" content="2">
+      </li>
+      {% endif %}
+    </ol>
+  </nav>
+
+  <!-- ── Tool workspace ── -->
+  <main id="toolArea" class="main-area" aria-busy="false">
+
+    <div class="tool-header">
+      <div class="tool-header-icon" id="toolIcon" aria-hidden="true">{{ tool.icon }}</div>
+      <div class="tool-header-text">
+        <h2 id="toolTitle">{{ tool.cardNames[lang] }}</h2>
+        <p  id="toolDesc">{{ tool.descs[lang] }}</p>
+      </div>
+    </div>
+
+    <div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-label="{{ ui.dropTitle }}">
+      <input type="file" id="fileInput" multiple accept=".pdf" aria-hidden="true">
+      <span class="drop-icon" aria-hidden="true">📂</span>
+      <div class="drop-title">{{ ui.dropTitle }}</div>
+      <div class="drop-sub">{{ ui.dropSub }}</div>
+      <button class="drop-btn" id="chooseFilesBtn" type="button">{{ ui.chooseBtn }}</button>
+    </div>
+
+    <div id="fileList"    class="file-list" aria-live="polite" aria-label="Selected files"></div>
+    <div id="fileCount"   class="file-count"   style="display:none"></div>
+    <div id="reorderHint" class="reorder-hint" style="display:none">{{ ui.reorderHint }}</div>
+
+    <div id="splitOptions"     class="split-options"   style="display:none" aria-label="Split options"></div>
+    <div id="compressOptions"  class="compress-options" style="display:none" aria-label="Compression options"></div>
+    <div id="jpg2pdfOptions"   class="j2p-options"     style="display:none" aria-label="JPG to PDF options"></div>
+    <div id="pdf2jpgOptions"   class="j2p-options"     style="display:none" aria-label="PDF to JPG options"></div>
+    <div id="watermarkOptions" class="j2p-options"     style="display:none" aria-label="Watermark options"></div>
+    <div id="pageNumOptions"   class="j2p-options"     style="display:none" aria-label="Page numbers options"></div>
+    <div id="metaOptions"      class="j2p-options"     style="display:none" aria-label="Metadata editor"></div>
+    <div id="protectOptions"   class="j2p-options"     style="display:none" aria-label="Protect PDF options"></div>
+    <div id="redactOptions"    class="j2p-options"     style="display:none" aria-label="Cover area options"></div>
+    <div id="rotateOptions"    class="j2p-options"     style="display:none" aria-label="Rotate PDF options"></div>
+
+    <button id="mergeBtn"  class="merge-btn"  type="button" disabled data-mode="process">{{ tool.cardNames[lang] }}</button>
+    <button id="cancelBtn" class="cancel-btn" type="button" style="display:none" aria-label="{{ ui.cancelBtn }}">{{ ui.cancelBtn }}</button>
+
+    <div id="progressBar"   class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+    <div id="progressLabel" class="progress-label"></div>
+
+    <div id="successCard" class="success-card" role="alert" aria-live="polite" style="display:none">
+      <div class="success-top">
+        <div class="success-icon" aria-hidden="true">✓</div>
+        <div class="success-text">
+          <h3 id="successTitle">{{ ui.successTitle }}</h3>
+          <p  id="successDesc"></p>
+        </div>
+        <button id="downloadBtn" class="download-btn" type="button">{{ ui.downloadBtn }}</button>
+        <button id="shareBtn" class="share-btn" type="button" style="display:none" aria-label="Send file via device apps"></button>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ── SEO Content (for indexing) ── -->
+  <section class="seo-article" aria-label="{{ tool.breadcrumb[lang] }}">
+    <div class="seo-article__inner">
+      {{ seo_content }}
+    </div>
+  </section>
+
+  <footer>
+    PDFree · <strong>{{ ui.footerLine1 }}</strong> · {{ ui.footerLine2 }}<br>
+    <span style="color:var(--green)">🔒</span> {{ ui.footerGuarantee }} &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> {{ ui.footerFree }}<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
+      {% if lang == 'en' %}
+      <a href="/privacy.html" style="color:var(--green)">Privacy</a>
+      &nbsp;·&nbsp;
+      <a href="/terms.html" style="color:var(--green)">Terms</a>
+      &nbsp;·&nbsp;
+      <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a>
+      &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green)">{{ ui.footerGitHub }}</a>
+      {% else %}
+      {{ ui.footerOpenSource }}
+      <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a>
+      &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green)">{{ ui.footerGitHub }}</a>
+      {% endif %}
+    </span>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  {% if lang != 'en' %}
+  <script type="module" src="{{ prefix }}js/locales/{{ lang }}.js"></script>
+  {% endif %}
+  <script>window.PDFREE_INITIAL_TOOL = '{{ tool.toolKey }}';</script>
+  <script type="module" src="{{ prefix }}js/app.js?v={{ hashes.app }}"></script>
+
+<!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

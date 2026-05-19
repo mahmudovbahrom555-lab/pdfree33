@@ -1,0 +1,18 @@
+[
+  {
+    "@type": "Question",
+    "name": "Meus arquivos são armazenados em seus servidores?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Não. O PDFree opera totalmente no seu dispositivo (no lado do cliente). Não temos servidores que processem seus arquivos, o que garante 100% de privacidade."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Existe um limite para o tamanho do arquivo ou número de páginas?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Não, não há limites artificiais. A única limitação é a memória RAM disponível no seu computador ou smartphone."
+    }
+  }
+]

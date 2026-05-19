@@ -1,0 +1,34 @@
+[
+  {
+    "@type": "Question",
+    "name": "Are my files uploaded to a server when merging?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. PDFree merges PDF files entirely in your browser using pdf-lib. Your files never leave your device and are never sent to any server."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is there a file size limit for merging PDFs?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. PDFree has no file size or page count limits. Processing is done locally in your browser, so limits depend only on your device's available memory."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I merge more than two PDFs at once?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. You can merge unlimited PDF files in one operation. Just add all the files you want to combine."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Does merging PDFs work offline?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. PDFree is a Progressive Web App (PWA). Once loaded, it works fully offline — no internet connection required for processing."
+    }
+  }
+]

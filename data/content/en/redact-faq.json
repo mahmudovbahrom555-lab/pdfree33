@@ -1,0 +1,34 @@
+[
+  {
+    "@type": "Question",
+    "name": "Is PDF redaction done locally or on a server?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "100% locally. PDFree processes redaction entirely in your browser — nothing is uploaded to any server."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is the redacted content permanently removed?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. PDFree draws opaque rectangles over the selected areas and flattens the PDF so the original content is not recoverable."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Does redacting a PDF also remove metadata?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Visual redaction does not remove document metadata. Use the Metadata tool on the PDFree homepage separately to remove author names and creation dates."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I redact multiple areas at once?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. You can draw as many redaction boxes as needed before applying."
+    }
+  }
+]

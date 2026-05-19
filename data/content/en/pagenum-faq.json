@@ -1,0 +1,34 @@
+[
+  {
+    "@type": "Question",
+    "name": "Are my files uploaded when adding page numbers?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Page numbering is processed entirely in your browser. Files never leave your device."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I customise the format of page numbers?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. You can choose position (top/bottom, left/center/right), font size, starting number, and prefix/suffix text."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I skip the first page (cover page) when numbering?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. You can set the starting page and choose which pages to number."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is there a page limit?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. PDFree has no page or file size limits."
+    }
+  }
+]

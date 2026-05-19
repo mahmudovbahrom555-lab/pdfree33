@@ -1,0 +1,34 @@
+[
+  {
+    "@type": "Question",
+    "name": "Does converting JPG to PDF upload my images?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Conversion happens entirely in your browser. Your image files are never sent to any server."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I convert multiple JPG images into one PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. You can add multiple images and they will be combined into a single multi-page PDF."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "What image formats are supported?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "JPG and PNG are fully supported. Each image becomes one page in the resulting PDF."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is there a file size limit?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. PDFree has no file size or image count limits."
+    }
+  }
+]

@@ -1,0 +1,34 @@
+[
+  {
+    "@type": "Question",
+    "name": "Does converting PDF to JPG upload my file?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. PDFree converts PDF pages to images entirely in your browser using PDF.js. Nothing is uploaded."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "What image quality can I expect?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree renders PDF pages at high resolution (150–300 DPI). You can select the output quality level."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I convert only specific pages to JPG?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. You can select individual pages or a page range to convert."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is there a page limit for conversion?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. There are no page count or file size limits."
+    }
+  }
+]

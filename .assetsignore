@@ -1,7 +1,2 @@
-.git/
-.git
-scripts/
-node_modules/
-*.py
-wrangler.toml
-.assetsignore
+# Wrangler now deploys from dist/ — this file is kept for reference only.
+# build.py controls what enters dist/; no filtering needed here.

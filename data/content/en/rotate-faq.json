@@ -1,0 +1,34 @@
+[
+  {
+    "@type": "Question",
+    "name": "Does rotating a PDF upload my file to a server?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Rotation is processed entirely in your browser. Your files are never sent anywhere."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I rotate only specific pages, not the whole PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. You can choose to rotate all pages or select individual pages to rotate."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "What rotation angles are supported?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree supports 90°, 180°, and 270° rotation for any page selection."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is there a file size limit for rotating PDFs?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. There are no file size or page count limits."
+    }
+  }
+]
