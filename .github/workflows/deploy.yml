@@ -10,6 +10,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Validate DOM (required IDs on all pages)
+        run: python3 scripts/check_dom.py
+
+      - name: Validate i18n (locale keys in sync)
+        run: python3 scripts/check_i18n.py
+
+      - name: Lint JavaScript
+        run: |
+          npm install -g eslint
+          eslint js/*.js --rule '{"no-undef": "warn", "no-unused-vars": "warn"}' --env browser,es2022 || true
+
       - name: Deploy to Cloudflare Workers
         uses: cloudflare/wrangler-action@v3
         with:
