@@ -1189,7 +1189,7 @@ async function handleRedact(fileBuffer, options) {
 // fieldValues: { fieldName: value } — strings for text/select,
 // truthy/falsy for checkboxes, string matching exportValue for radios.
 
-async function handleFill(fileBuffer, { fieldValues = {} } = {}) {
+async function handleFill(fileBuffer, { fieldValues = {}, sigImages = {} } = {}) {
   const { PDFDocument } = PDFLib;
 
   progress(10, 'Loading PDF…');
@@ -1223,6 +1223,19 @@ async function handleFill(fileBuffer, { fieldValues = {} } = {}) {
     } catch { /* skip fields that reject their value */ }
   }
 
+  // Embed signature images (visual, not cryptographic)
+  const sigEntries = Object.values(sigImages);
+  if (sigEntries.length > 0) {
+    progress(65, 'Embedding signatures…');
+    const pages = pdfDoc.getPages();
+    for (const { dataUrl, rect, pageIndex } of sigEntries) {
+      if (!dataUrl || !rect || rect.length < 4) continue;
+      try {
+        await _embedSigImage(pdfDoc, pages, dataUrl, rect, pageIndex);
+      } catch { /* skip malformed sig */ }
+    }
+  }
+
   progress(80, 'Saving filled PDF…');
   try { form.flatten(); } catch { /* flatten fails on some encrypted forms; skip */ }
 
@@ -1231,4 +1244,35 @@ async function handleFill(fileBuffer, { fieldValues = {} } = {}) {
     { type: 'done', result: bytes.buffer, pageCount: pdfDoc.getPageCount() },
     [bytes.buffer]
   );
+}
+
+async function _embedSigImage(pdfDoc, pages, dataUrl, rect, pageIndex) {
+  const page = pages[pageIndex];
+  if (!page) return;
+
+  // data URL → Uint8Array
+  const b64   = dataUrl.replace(/^data:image\/png;base64,/, '');
+  const raw   = atob(b64);
+  const bytes = new Uint8Array(raw.length);
+  for (let i = 0; i < raw.length; i++) bytes[i] = raw.charCodeAt(i);
+
+  const img = await pdfDoc.embedPng(bytes);
+
+  // rect from pdf.js is in PDF coordinate space (bottom-left origin, points)
+  const [x1, y1, x2, y2] = rect;
+  const fieldW = x2 - x1;
+  const fieldH = y2 - y1;
+
+  // Scale to fit field, preserve aspect ratio, 90% fill
+  const scale = Math.min(fieldW / img.width, fieldH / img.height) * 0.9;
+  const drawW = img.width  * scale;
+  const drawH = img.height * scale;
+
+  page.drawImage(img, {
+    x:      x1 + (fieldW - drawW) / 2,
+    y:      y1 + (fieldH - drawH) / 2,
+    width:  drawW,
+    height: drawH,
+    opacity: 1,
+  });
 }

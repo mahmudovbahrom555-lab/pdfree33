@@ -24,9 +24,11 @@ import { id }        from './utils.js';
 import { loadPdfJs } from './pdf2jpgUI.js';
 
 // ── Module state ──────────────────────────────────────────────
-let _fields   = [];
-let _values   = {};
-let _draftKey = null;
+let _fields    = [];
+let _values    = {};
+let _draftKey  = null;
+let _sigImages = {};   // fieldName → { dataUrl, rect, pageIndex }
+let _sigModal  = null; // active signature pad DOM node
 
 // ── Public API ────────────────────────────────────────────────
 
@@ -41,12 +43,17 @@ export function initFillOptions(files) {
 export function hideFillOptions() {
   const el = id('fillOptions');
   if (el) { el.style.display = 'none'; el.innerHTML = ''; }
-  _fields = []; _values = {}; _draftKey = null;
+  _closeSigPad();
+  _fields = []; _values = {}; _draftKey = null; _sigImages = {};
 }
 
 export function getFillParams() {
   _syncValuesFromDOM();
-  return { fieldValues: { ..._values }, hasFields: _fields.length > 0 };
+  return {
+    fieldValues: { ..._values },
+    hasFields:   _fields.length > 0,
+    sigImages:   { ..._sigImages },
+  };
 }
 
 // ── Field extraction ──────────────────────────────────────────
@@ -145,7 +152,11 @@ function _processRawAnnotations(raw) {
     }
 
     if (a.fieldType === 'Sig') {
-      fields.push({ name, type: 'sig', label, page: a._page, required: a.required || false });
+      fields.push({
+        name, type: 'sig', label, page: a._page, required: a.required || false,
+        rect:      Array.from(a.rect || [0, 0, 200, 60]),
+        pageIndex: a._page - 1,
+      });
       continue;
     }
 
@@ -198,7 +209,8 @@ function _buildFormHTML(fields) {
   const pages      = Object.keys(byPage).map(Number).sort((a, b) => a - b);
   const multiPage  = pages.length > 1;
   const fillable    = fields.filter(f => f.type !== 'sig');
-  const totalFilled = fillable.filter(f => _values[f.name] !== undefined && _values[f.name] !== '').length;
+  const totalFilled = fillable.filter(f => _values[f.name] !== undefined && _values[f.name] !== '').length
+                    + Object.keys(_sigImages).length;
 
   let html = `
     <div class="fill-form" style="padding:0 0 16px;">
@@ -211,7 +223,7 @@ function _buildFormHTML(fields) {
           <div id="fillProgressFill" style="height:100%;background:var(--green);border-radius:3px;width:0%;transition:width .3s ease;"></div>
         </div>
         <span id="fillProgressLabel" style="white-space:nowrap;min-width:80px;text-align:right;">
-          <strong id="fillDone">${totalFilled}</strong> / ${fillable.length} filled
+          <strong id="fillDone">${totalFilled}</strong> / ${fields.length} filled
         </span>
       </div>`;
 
@@ -290,11 +302,20 @@ function _fieldHTML(f) {
   }
 
   if (f.type === 'sig') {
+    const rectJson = _esc(JSON.stringify(f.rect));
     return `<div>
       ${labelHTML}
-      <div style="${baseStyle}color:var(--text3);font-size:13px;border-style:dashed;display:flex;align-items:center;gap:8px;">
-        <span>✍️</span> Signature field — must be signed in Acrobat or Adobe Reader
-      </div>
+      <button type="button"
+        data-sig-field="${_esc(f.name)}"
+        data-sig-rect="${rectJson}"
+        data-sig-page="${f.pageIndex}"
+        style="${baseStyle}cursor:pointer;display:flex;align-items:center;gap:10px;
+          border-color:var(--border);color:var(--text2);justify-content:center;">
+        <span style="font-size:20px;">✍️</span> Tap to sign
+      </button>
+      <p style="margin:4px 0 0;font-size:11px;color:var(--text3);line-height:1.4;">
+        Visual signature — not a certified digital signature
+      </p>
     </div>`;
   }
 
@@ -328,6 +349,16 @@ function _fieldHTML(f) {
 function _bindEvents(container) {
   container.addEventListener('input',  _onInput);
   container.addEventListener('change', _onInput);
+  container.addEventListener('click',  _onSigClick);
+}
+
+function _onSigClick(e) {
+  const btn = e.target.closest('[data-sig-field]');
+  if (!btn) return;
+  const fieldName = btn.dataset.sigField;
+  const rect      = JSON.parse(btn.dataset.sigRect  || '[0,0,200,60]');
+  const pageIndex = parseInt(btn.dataset.sigPage || '0', 10);
+  _openSigPad(fieldName, rect, pageIndex);
 }
 
 function _onInput(e) {
@@ -380,10 +411,160 @@ function _updateProgress(root) {
   const fillLabel = document.getElementById('fillDone');
   if (!fillBar || !fillLabel) return;
   const fillable = _fields.filter(f => f.type !== 'sig');
-  const filled   = fillable.filter(f => _values[f.name] !== undefined && String(_values[f.name]).trim() !== '').length;
-  const pct      = fillable.length > 0 ? Math.round((filled / fillable.length) * 100) : 0;
+  const filled   = fillable.filter(f => _values[f.name] !== undefined && String(_values[f.name]).trim() !== '').length
+                 + Object.keys(_sigImages).length;
+  const total    = _fields.length;
+  const pct      = total > 0 ? Math.round((filled / total) * 100) : 0;
   fillBar.style.width   = `${pct}%`;
   fillLabel.textContent = String(filled);
+}
+
+// ── Signature pad ─────────────────────────────────────────────
+
+function _openSigPad(fieldName, rect, pageIndex) {
+  if (_sigModal) return;
+
+  const isPortrait = window.innerHeight > window.innerWidth;
+
+  // Canvas logical dimensions: always landscape (wide × short)
+  // On portrait: W = screen height minus controls, H = screen width
+  // CSS rotate(-90deg) makes this fill the portrait screen naturally
+  const CTRL_H = 150;
+  const logW   = isPortrait ? (window.innerHeight - CTRL_H) : (window.innerWidth  - CTRL_H);
+  const logH   = isPortrait ?  window.innerWidth             :  window.innerHeight - CTRL_H;
+  const dpr    = window.devicePixelRatio || 1;
+
+  _sigModal = document.createElement('div');
+  _sigModal.style.cssText = 'position:fixed;inset:0;background:#111;z-index:10000;display:flex;flex-direction:column;touch-action:none;';
+  _sigModal.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 20px;background:#1a1a1a;flex-shrink:0;">
+      <span style="color:#fff;font-size:15px;font-weight:600;">✍️ Sign here</span>
+      <button data-sig-action="cancel" style="color:#aaa;background:none;border:none;font-size:22px;padding:4px 8px;cursor:pointer;line-height:1;">✕</button>
+    </div>
+    <div style="flex:1;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+      <canvas id="_fillSigCanvas"
+        style="background:#fff;border-radius:8px;touch-action:none;cursor:crosshair;display:block;
+               ${isPortrait ? 'transform:rotate(-90deg);' : ''}
+               width:${logW}px;height:${logH}px;">
+      </canvas>
+    </div>
+    <p style="text-align:center;color:#555;font-size:11px;padding:4px 0;margin:0;flex-shrink:0;">
+      ${isPortrait ? '↻ Rotated canvas — sign naturally left to right' : 'Draw your signature'}
+    </p>
+    <div style="display:flex;gap:12px;padding:14px 20px;background:#1a1a1a;flex-shrink:0;">
+      <button data-sig-action="clear" style="flex:1;padding:13px;background:#333;color:#fff;border:none;border-radius:10px;font-size:15px;cursor:pointer;">Clear</button>
+      <button data-sig-action="save"  style="flex:1;padding:13px;background:#2D7A4F;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;">Done ✓</button>
+    </div>
+    <p style="text-align:center;color:#444;font-size:10px;padding:0 20px 12px;margin:0;line-height:1.5;flex-shrink:0;">
+      Visual signature only — not a PKI digital signature. For legally binding e-signatures use Adobe Acrobat.
+    </p>`;
+  document.body.appendChild(_sigModal);
+
+  const canvas = document.getElementById('_fillSigCanvas');
+  canvas.width  = logW * dpr;
+  canvas.height = logH * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(0, 0, logW, logH);
+  ctx.strokeStyle = '#111';
+  ctx.lineWidth   = 2.5;
+  ctx.lineCap     = 'round';
+  ctx.lineJoin    = 'round';
+
+  let drawing = false, lastX = 0, lastY = 0, lastMidX = 0, lastMidY = 0;
+
+  function _coords(e) {
+    const p    = e.touches ? e.touches[0] : e;
+    const px   = p.clientX, py = p.clientY;
+    const rect = canvas.getBoundingClientRect();
+    if (isPortrait) {
+      // CSS rotate(-90deg): lx = logW - (py - rect.top), ly = px - rect.left
+      return { x: logW - (py - rect.top), y: px - rect.left };
+    }
+    return { x: px - rect.left, y: py - rect.top };
+  }
+
+  canvas.addEventListener('pointerdown', e => {
+    drawing = true;
+    const { x, y } = _coords(e);
+    lastX = lastMidX = x; lastY = lastMidY = y;
+    ctx.beginPath();
+    ctx.arc(x, y, ctx.lineWidth / 2, 0, Math.PI * 2);
+    ctx.fillStyle = '#111';
+    ctx.fill();
+  });
+
+  canvas.addEventListener('pointermove', e => {
+    if (!drawing) return;
+    e.preventDefault();
+    const { x, y } = _coords(e);
+    const mx = (lastX + x) / 2, my = (lastY + y) / 2;
+    ctx.beginPath();
+    ctx.moveTo(lastMidX, lastMidY);
+    ctx.quadraticCurveTo(lastX, lastY, mx, my);
+    ctx.stroke();
+    lastMidX = mx; lastMidY = my;
+    lastX = x;     lastY = y;
+  });
+
+  canvas.addEventListener('pointerup',     () => { drawing = false; });
+  canvas.addEventListener('pointercancel', () => { drawing = false; });
+
+  _sigModal.addEventListener('click', e => {
+    const action = e.target.closest('[data-sig-action]')?.dataset.sigAction;
+    if (action === 'cancel') {
+      _closeSigPad();
+    } else if (action === 'clear') {
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(0, 0, logW, logH);
+    } else if (action === 'save') {
+      if (_isSigEmpty(ctx, logW * dpr, logH * dpr)) return;
+      const dataUrl = _captureSig(canvas, logW * dpr, logH * dpr, isPortrait);
+      _sigImages[fieldName] = { dataUrl, rect, pageIndex };
+      _closeSigPad();
+      _updateSigBtn(fieldName, dataUrl);
+    }
+  });
+}
+
+function _closeSigPad() {
+  if (_sigModal) { _sigModal.remove(); _sigModal = null; }
+}
+
+function _isSigEmpty(ctx, physW, physH) {
+  const d = ctx.getImageData(0, 0, physW, physH).data;
+  for (let i = 0; i < d.length; i += 4) {
+    if (d[i] < 240 || d[i + 1] < 240 || d[i + 2] < 240) return false;
+  }
+  return true;
+}
+
+function _captureSig(canvas, physW, physH, rotate90) {
+  // If canvas was CSS-rotated, the logical pixel data is also rotated.
+  // Rotate captured image +90deg (clockwise) to restore natural orientation.
+  if (!rotate90) return canvas.toDataURL('image/png');
+  const off = document.createElement('canvas');
+  off.width  = physH;
+  off.height = physW;
+  const offCtx = off.getContext('2d');
+  offCtx.translate(physH / 2, physW / 2);
+  offCtx.rotate(Math.PI / 2);
+  offCtx.drawImage(canvas, -physW / 2, -physH / 2);
+  return off.toDataURL('image/png');
+}
+
+function _updateSigBtn(fieldName, dataUrl) {
+  const el = id('fillOptions');
+  if (!el) return;
+  const btn = Array.from(el.querySelectorAll('[data-sig-field]'))
+    .find(b => b.dataset.sigField === fieldName);
+  if (btn) {
+    btn.innerHTML = `<img src="${dataUrl}" style="height:28px;vertical-align:middle;border-radius:3px;margin-right:8px;"> Re-sign`;
+    btn.style.borderColor = 'var(--green)';
+    btn.style.color       = 'var(--text)';
+  }
+  _updateProgress(el);
 }
 
 // ── Draft persistence ─────────────────────────────────────────
