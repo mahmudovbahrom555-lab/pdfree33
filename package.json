@@ -7,16 +7,24 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "node tests/utils.test.js && node tests/processor.logic.test.js && node tests/files.logic.test.js && node tests/splitUI.logic.test.js && node tests/worker.integration.test.js",
+    "test": "node tests/utils.test.js && node tests/processor.logic.test.js && node tests/files.logic.test.js && node tests/splitUI.logic.test.js",
     "test:watch": "node --watch tests/splitUI.logic.test.js",
-    "test:unit": "node tests/utils.test.js && node tests/processor.logic.test.js && node tests/splitUI.logic.test.js",
-    "test:integration": "node tests/worker.integration.test.js"
+    "lint": "eslint js/*.js --ignore-pattern 'js/vendor/**'",
+    "check:dom": "python3 scripts/check_dom.py",
+    "check:i18n": "python3 scripts/check_i18n.py",
+    "validate": "npm run check:dom && npm run check:i18n && npm run lint && npm test",
+    "prepare": "husky"
   },
   "keywords": [],
   "author": "",
   "license": "AGPL-3.0-only",
   "type": "module",
   "devDependencies": {
-    "pdf-lib": "^1.17.1"
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.4.0",
+    "eslint-plugin-compat": "^7.0.2",
+    "husky": "^9.1.7",
+    "pdf-lib": "^1.17.1",
+    "vitest": "^4.1.6"
   }
 }

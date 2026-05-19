@@ -536,8 +536,8 @@ async function handleCompress(fileBuffer, options) {
   // These are large tagged-PDF structures; removing them can save 5–20% on Acrobat exports.
   // Kept when preserveText=true because assistive technologies rely on them.
   if (options.preset === 'high' && !options.preserveText) {
-    if (cat.has(PDFName.of('MarkInfo')))      { try { cat.delete(PDFName.of('MarkInfo'));      } catch {} }
-    if (cat.has(PDFName.of('StructTreeRoot'))) { try { cat.delete(PDFName.of('StructTreeRoot')); } catch {} }
+    if (cat.has(PDFName.of('MarkInfo')))       { try { cat.delete(PDFName.of('MarkInfo'));       } catch { /* pdf-lib version compat */ } }
+    if (cat.has(PDFName.of('StructTreeRoot'))) { try { cat.delete(PDFName.of('StructTreeRoot')); } catch { /* pdf-lib version compat */ } }
     report.removedStructTree = true;
   }
 
@@ -957,12 +957,12 @@ async function handleMeta(fileBuffer, { meta }) {
     if (meta.author   !== undefined) pdf.setAuthor(meta.author);
     if (meta.subject  !== undefined) pdf.setSubject(meta.subject);
     if (meta.keywords !== undefined) {
-      try { pdf.setKeywords(meta.keywords.split(',').map(s => s.trim()).filter(Boolean)); } catch {}
+      try { pdf.setKeywords(meta.keywords.split(',').map(s => s.trim()).filter(Boolean)); } catch { /* older pdf-lib */ }
     }
     if (meta.creator  !== undefined) pdf.setCreator(meta.creator  || '');
     if (meta.producer !== undefined) pdf.setProducer(meta.producer || '');
     if (Object.values(meta).every(v => !v?.trim())) {
-      try { pdf.catalog.delete(PDFLib.PDFName.of('Metadata')); } catch {}
+      try { pdf.catalog.delete(PDFLib.PDFName.of('Metadata')); } catch { /* optional field */ }
     }
   });
 }

@@ -389,7 +389,6 @@ function _prefetchHeavyAssets() {
 // We never show it on first visit — only after demonstrated value.
 
 let _installPromptEvent = null;
-let _installShown = false;
 
 function _initPWA() {
   // Register service worker

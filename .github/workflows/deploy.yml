@@ -21,10 +21,20 @@ jobs:
       - name: Validate i18n (locale keys in sync)
         run: python3 scripts/check_i18n.py
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run JS tests
+        run: npm test
+
       - name: Lint JavaScript
-        run: |
-          npm install -g eslint
-          eslint js/*.js --rule '{"no-undef": "warn", "no-unused-vars": "warn"}' --env browser,es2022 || true
+        run: npm run lint -- --quiet
 
       - name: Deploy to Cloudflare Workers
         uses: cloudflare/wrangler-action@v3

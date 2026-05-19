@@ -1,0 +1,6 @@
+#!/bin/sh
+echo "🔍 Pre-commit validation..."
+python3 scripts/check_dom.py || exit 1
+python3 scripts/check_i18n.py || exit 1
+npx eslint js/*.js --ignore-pattern 'js/vendor/**' --quiet || exit 1
+echo "✅ All checks passed"
