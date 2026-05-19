@@ -22,7 +22,9 @@ import json
 import os
 import re
 import shutil
+import subprocess
 import sys
+from datetime import date
 
 try:
     from jinja2 import Environment, FileSystemLoader, select_autoescape
@@ -168,33 +170,59 @@ def _load_content(tool_id, lang):
 
 # ── Sitemap ───────────────────────────────────────────────────────────────────
 
+def _git_lastmod(rel_path):
+    """Return YYYY-MM-DD of the last git commit that touched rel_path.
+    Falls back to today if the file has no git history (new/untracked)."""
+    try:
+        out = subprocess.check_output(
+            ['git', 'log', '-1', '--format=%cI', '--', rel_path],
+            cwd=ROOT,
+            stderr=subprocess.DEVNULL,
+        ).decode().strip()
+        if out:
+            return out[:10]
+    except Exception:
+        pass
+    return date.today().isoformat()
+
+
 def _write_sitemap(config, out_dir):
-    """Generate sitemap.xml for all tool pages + homepages."""
-    urls = [f'{BASE_URL}/']
+    """Generate sitemap.xml for all tool pages + homepages.
+    lastmod reflects the last git commit date of each page's content file so
+    Google only re-crawls pages whose content actually changed."""
+    today = date.today().isoformat()
+
+    # (url, lastmod) pairs
+    entries = [(f'{BASE_URL}/', _git_lastmod('index.html'))]
     for lang_code, lang_cfg in config['languages'].items():
         if lang_code != 'en':
-            urls.append(f"{BASE_URL}/{lang_cfg['dir']}/")
+            entries.append((
+                f"{BASE_URL}/{lang_cfg['dir']}/",
+                _git_lastmod(f"{lang_cfg['dir']}/index.html"),
+            ))
 
     for tool in config['tools']:
         for lang_code, lang_cfg in config['languages'].items():
             slug = tool['slugs'].get(lang_code)
             if not slug:
                 continue
+            content_file = f"data/content/{lang_code}/{tool['id']}.html"
+            lastmod = _git_lastmod(content_file)
             if lang_code == 'en':
-                urls.append(f"{BASE_URL}/{slug}/")
+                entries.append((f"{BASE_URL}/{slug}/", lastmod))
             else:
-                urls.append(f"{BASE_URL}/{lang_cfg['dir']}/{slug}/")
+                entries.append((f"{BASE_URL}/{lang_cfg['dir']}/{slug}/", lastmod))
 
     lines = ['<?xml version="1.0" encoding="UTF-8"?>',
              '<urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">']
-    for url in urls:
-        lines.append(f'  <url><loc>{url}</loc></url>')
+    for url, lastmod in entries:
+        lines.append(f'  <url><loc>{url}</loc><lastmod>{lastmod}</lastmod></url>')
     lines.append('</urlset>')
 
     sitemap_path = os.path.join(out_dir, 'sitemap.xml')
     with open(sitemap_path, 'w', encoding='utf-8') as f:
         f.write('\n'.join(lines) + '\n')
-    print(f'  sitemap.xml  ({len(urls)} URLs)')
+    print(f'  sitemap.xml  ({len(entries)} URLs)')
 
 
 # ── Hash injection ────────────────────────────────────────────────────────────
