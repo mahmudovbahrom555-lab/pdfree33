@@ -186,8 +186,21 @@ def _git_lastmod(rel_path):
     return date.today().isoformat()
 
 
+SPECIALTY_PAGES = [
+    'annotate-pdf',
+    'fill',
+    'hipaa-pdf-tools',
+    'ilovepdf-alternative',
+    'merge-pdf-without-uploading',
+    'secure-pdf-tools',
+    'blog/how-to-annotate-pdf-on-mobile',
+    'blog/how-to-fill-pdf-form',
+    'blog/how-to-sign-pdf-free',
+]
+
+
 def _write_sitemap(config, out_dir):
-    """Generate sitemap.xml for all tool pages + homepages.
+    """Generate sitemap.xml for all tool pages + homepages + specialty pages.
     lastmod reflects the last git commit date of each page's content file so
     Google only re-crawls pages whose content actually changed."""
     today = date.today().isoformat()
@@ -212,6 +225,9 @@ def _write_sitemap(config, out_dir):
                 entries.append((f"{BASE_URL}/{slug}/", lastmod))
             else:
                 entries.append((f"{BASE_URL}/{lang_cfg['dir']}/{slug}/", lastmod))
+
+    for slug in SPECIALTY_PAGES:
+        entries.append((f"{BASE_URL}/{slug}/", _git_lastmod(f"{slug}/index.html")))
 
     lines = ['<?xml version="1.0" encoding="UTF-8"?>',
              '<urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">']
