@@ -18,7 +18,7 @@
 //  the activate handler to clear the old cache.
 // ============================================================
 
-const CACHE_VERSION  = 'v62';   // Let browser fetch legal pages directly, bypass SW
+const CACHE_VERSION  = 'v63';   // Let browser fetch legal pages directly, bypass SW
 const STATIC_CACHE   = `pdfree-static-${CACHE_VERSION}`;
 const CDN_CACHE      = `pdfree-cdn-${CACHE_VERSION}`;
 const ALL_CACHES     = [STATIC_CACHE, CDN_CACHE];
@@ -45,7 +45,7 @@ const STATIC_ASSETS = [
   '/js/files.js',
   '/js/processor.js',
   '/js/worker.js',
-  '/js/worker.js?v=17',
+  '/js/worker.js?v=18',
   '/js/ads.js',
   '/js/pageSelectorUtils.js',
   '/js/splitUI.js',

@@ -42,7 +42,7 @@ export function id(elementId) {
  * @param {string} elementId
  */
 export function show(elementId) {
-  id(elementId).style.display = '';
+  const el = id(elementId); if (el) el.style.display = '';
 }
 
 /**
@@ -50,7 +50,7 @@ export function show(elementId) {
  * @param {string} elementId
  */
 export function hide(elementId) {
-  id(elementId).style.display = 'none';
+  const el = id(elementId); if (el) el.style.display = 'none';
 }
 
 /**
@@ -59,7 +59,7 @@ export function hide(elementId) {
  * @param {string} value
  */
 export function setText(elementId, value) {
-  id(elementId).textContent = value;
+  const el = id(elementId); if (el) el.textContent = value;
 }
 
 /**
