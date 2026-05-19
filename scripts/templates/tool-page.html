@@ -75,6 +75,12 @@
   <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
   <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
 
+  <!-- Resource hints: establish connections + preload LCP font before CSS blocks render -->
+  <link rel="preconnect" href="https://plausible.io">
+  <link rel="preconnect" href="https://static.cloudflareinsights.com">
+  <link rel="preload" href="{{ prefix }}fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="modulepreload" href="{{ prefix }}js/app.js?v={{ hashes.app }}">
+
   <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
   <link rel="stylesheet" href="{{ prefix }}css/fonts.css">
   <link rel="stylesheet" href="{{ prefix }}css/variables.css">
