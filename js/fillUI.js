@@ -47,7 +47,7 @@ export function hideFillOptions() {
 
 export function getFillParams() {
   _syncValuesFromDOM();
-  return { fieldValues: { ..._values } };
+  return { fieldValues: { ..._values }, hasFields: _fields.length > 0 };
 }
 
 // ── Field extraction ──────────────────────────────────────────
@@ -145,6 +145,11 @@ function _processRawAnnotations(raw) {
       continue;
     }
 
+    if (a.fieldType === 'Sig') {
+      fields.push({ name, type: 'sig', label, page: a._page, required: a.required || false });
+      continue;
+    }
+
     // Text field (Tx)
     const meta = _detectInputMeta(label, name);
     fields.push({
@@ -193,7 +198,8 @@ function _buildFormHTML(fields) {
   }
   const pages      = Object.keys(byPage).map(Number).sort((a, b) => a - b);
   const multiPage  = pages.length > 1;
-  const totalFilled = fields.filter(f => _values[f.name] !== undefined && _values[f.name] !== '').length;
+  const fillable    = fields.filter(f => f.type !== 'sig');
+  const totalFilled = fillable.filter(f => _values[f.name] !== undefined && _values[f.name] !== '').length;
 
   let html = `
     <div class="fill-form" style="padding:0 0 16px;">
@@ -206,7 +212,7 @@ function _buildFormHTML(fields) {
           <div id="fillProgressFill" style="height:100%;background:var(--green);border-radius:3px;width:0%;transition:width .3s ease;"></div>
         </div>
         <span id="fillProgressLabel" style="white-space:nowrap;min-width:80px;text-align:right;">
-          <strong id="fillDone">${totalFilled}</strong> / ${fields.length} filled
+          <strong id="fillDone">${totalFilled}</strong> / ${fillable.length} filled
         </span>
       </div>`;
 
@@ -281,6 +287,15 @@ function _fieldHTML(f) {
         <option value="">— Select —</option>
         ${opts}
       </select>
+    </div>`;
+  }
+
+  if (f.type === 'sig') {
+    return `<div>
+      ${labelHTML}
+      <div style="${baseStyle}color:var(--text3);font-size:13px;border-style:dashed;display:flex;align-items:center;gap:8px;">
+        <span>✍️</span> Signature field — must be signed in Acrobat or Adobe Reader
+      </div>
     </div>`;
   }
 
@@ -365,8 +380,9 @@ function _updateProgress(root) {
   const fillBar   = document.getElementById('fillProgressFill');
   const fillLabel = document.getElementById('fillDone');
   if (!fillBar || !fillLabel) return;
-  const filled = _fields.filter(f => _values[f.name] !== undefined && String(_values[f.name]).trim() !== '').length;
-  const pct    = _fields.length > 0 ? Math.round((filled / _fields.length) * 100) : 0;
+  const fillable = _fields.filter(f => f.type !== 'sig');
+  const filled   = fillable.filter(f => _values[f.name] !== undefined && String(_values[f.name]).trim() !== '').length;
+  const pct      = fillable.length > 0 ? Math.round((filled / fillable.length) * 100) : 0;
   fillBar.style.width   = `${pct}%`;
   fillLabel.textContent = String(filled);
 }
