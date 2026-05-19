@@ -197,6 +197,33 @@ def _write_sitemap(config, out_dir):
     print(f'  sitemap.xml  ({len(urls)} URLs)')
 
 
+# ── Hash injection ────────────────────────────────────────────────────────────
+
+def _inject_hashes(hashes, out_dir):
+    """Replace __APP_HASH__, __WORKER_HASH__, __CSS_HASH__ placeholders in
+    dist/sw.js and dist/js/processor.js after the static copy step."""
+    targets = [
+        os.path.join(out_dir, 'sw.js'),
+        os.path.join(out_dir, 'js', 'processor.js'),
+    ]
+    replacements = {
+        '__APP_HASH__':    hashes['app'],
+        '__WORKER_HASH__': hashes['worker'],
+        '__CSS_HASH__':    hashes['components_css'],
+    }
+    for path in targets:
+        if not os.path.exists(path):
+            print(f'  WARN: {path} not found, skipping injection')
+            continue
+        content = open(path, encoding='utf-8').read()
+        for token, value in replacements.items():
+            content = content.replace(token, value)
+        with open(path, 'w', encoding='utf-8') as f:
+            f.write(content)
+    injected = [os.path.relpath(t, out_dir) for t in targets if os.path.exists(t)]
+    print(f'  hash-injected: {injected}')
+
+
 # ── Static asset copy ─────────────────────────────────────────────────────────
 
 def _should_skip(name, is_dir):
@@ -342,6 +369,10 @@ def main():
         print('Copying static assets...')
         _copy_static(ROOT, DIST, tool_dirs)
         print('  done')
+
+        # Inject computed hashes into sw.js and processor.js
+        print('Injecting hashes...')
+        _inject_hashes(hashes, DIST)
 
     # Generate tool pages
     print(f'Generating tool pages{"  (dry run)" if dry_run else ""}...')
