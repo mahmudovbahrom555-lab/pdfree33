@@ -27,7 +27,8 @@ import { hideAllToolOptions, initToolOptions,
 import './toolRegistrations.js';                 // side-effect: registers all tools
 import { trackToolStart, trackToolSuccess,
          trackToolCancel, trackFileAdded,
-         trackToolOpen, trackInstallPrompt }      from './analytics.js';
+         trackToolOpen, trackInstallPrompt,
+         trackToolError }                         from './analytics.js';
 import { t }                                      from './i18n.js';
 
 // ── Module-level constants ────────────────────────────────────
@@ -418,4 +419,19 @@ function _initPWA() {
     id('pwaPrompt')?.remove();
   });
 }
+
+// ── Global error handlers ────────────────────────────────────
+// Catches errors that no individual try/catch handles — worker crashes,
+// CDN load failures, unexpected exceptions. Closed over `currentTool`
+// so no window global needed.
+window.addEventListener('unhandledrejection', event => {
+  console.error('[PDFree] Unhandled rejection:', event.reason);
+  trackToolError(currentTool, 'unhandled_rejection');
+});
+
+window.addEventListener('error', event => {
+  if (!event.message) return;          // some browser events fire without message
+  console.error('[PDFree] Uncaught error:', event.message);
+  trackToolError(currentTool, 'js_error');
+});
 
