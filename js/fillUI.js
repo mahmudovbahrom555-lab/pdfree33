@@ -32,12 +32,12 @@ let _sigModal  = null; // active signature pad DOM node
 
 // ── Public API ────────────────────────────────────────────────
 
-export function initFillOptions(files) {
+export function initFillOptions(file) {
   const el = id('fillOptions');
   if (!el) return;
   el.style.display = '';
-  if (!files || files.length === 0) { el.innerHTML = ''; return; }
-  _extractAndRender(files[0], el);
+  if (!file) { el.innerHTML = ''; return; }
+  _extractAndRender(file, el);
 }
 
 export function hideFillOptions() {
