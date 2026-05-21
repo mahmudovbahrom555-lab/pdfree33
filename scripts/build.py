@@ -244,7 +244,8 @@ def _write_sitemap(config, out_dir):
 
 def _inject_hashes(hashes, out_dir):
     """Replace __APP_HASH__, __WORKER_HASH__, __CSS_HASH__ placeholders in
-    dist/sw.js and dist/js/processor.js after the static copy step."""
+    dist/sw.js and dist/js/processor.js, and append ?v=HASH to app.js script
+    tags in all dist/**/*.html so the browser HTTP cache is busted on deploy."""
     targets = [
         os.path.join(out_dir, 'sw.js'),
         os.path.join(out_dir, 'js', 'processor.js'),
@@ -265,6 +266,27 @@ def _inject_hashes(hashes, out_dir):
             f.write(content)
     injected = [os.path.relpath(t, out_dir) for t in targets if os.path.exists(t)]
     print(f'  hash-injected: {injected}')
+
+    # Inject version hash into every HTML file's app.js script tag.
+    # Without this, Cache-Control: immutable on /js/* causes browsers to serve
+    # the old app.js for up to a year even after a deployment.
+    app_hash = hashes['app']
+    html_count = 0
+    for root, _dirs, files in os.walk(out_dir):
+        for fname in files:
+            if not fname.endswith('.html'):
+                continue
+            path = os.path.join(root, fname)
+            content = open(path, encoding='utf-8').read()
+            # Match all relative/absolute variants: ../js/app.js, js/app.js, /js/app.js
+            new_content = content.replace(
+                'app.js"', f'app.js?v={app_hash}"'
+            )
+            if new_content != content:
+                with open(path, 'w', encoding='utf-8') as f:
+                    f.write(new_content)
+                html_count += 1
+    print(f'  app.js?v={app_hash} injected into {html_count} HTML files')
 
 
 # ── Static asset copy ─────────────────────────────────────────────────────────
