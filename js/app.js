@@ -335,6 +335,11 @@ function initEvents() {
 // ── Initial routing ──────────────────────────────────────────
 
 document.addEventListener('DOMContentLoaded', () => {
+  // On tool landing pages, show #toolArea immediately — before any other init.
+  // This guarantees the tool UI is visible even if later init code throws.
+  // (Homepage has #toolArea hidden via inline style="display:none".)
+  if (window.PDFREE_INITIAL_TOOL) showToolPage();
+
   initFileListeners();
   initEvents();
   _initPWA();
@@ -353,7 +358,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   if (requestedTool && TOOLS[requestedTool]) {
     showTool(requestedTool, false);
-  } else {
+  } else if (!window.PDFREE_INITIAL_TOOL) {
+    // Only hide toolArea on homepage — never on dedicated tool pages
     showHomePage();
   }
 });
