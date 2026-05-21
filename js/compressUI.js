@@ -16,6 +16,7 @@ import { id, fmtSize } from './utils.js';
 import { showToast } from './ui.js';
 import { t } from './i18n.js';
 import { chip, sliderRow, checkbox, loadingRow } from './uiComponents.js';
+import { loadPdfLib } from './lazyLibs.js';
 
 // ── State ──────────────────────────────────────────────────────
 let _preset       = 'medium';  // 'low' | 'medium' | 'high'
@@ -165,6 +166,7 @@ export function renderCompressionReport(data) {
 // Для 50 МБ файла это занимает ~200-500ms — приемлемо.
 
 async function _scanFile(file) {
+  await loadPdfLib();
   const { PDFDocument, PDFName } = window.PDFLib;
   const buf = await file.arrayBuffer();
   const pdf = await PDFDocument.load(buf, { ignoreEncryption: true });

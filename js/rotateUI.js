@@ -37,6 +37,7 @@ import { id, esc } from './utils.js';
 import { showToast }       from './ui.js';
 import { loadingRow, infoBanner } from './uiComponents.js';
 import { loadPdfJs } from './pdf2jpgUI.js';  // reuse CDN loader with retry logic
+import { loadPdfLib } from './lazyLibs.js';
 
 // ── Constants ─────────────────────────────────────────────────
 
@@ -78,7 +79,8 @@ export async function initRotateOptions(file) {
   container.style.display = 'block';
 
   try {
-    // 1. Read page count + initial rotations via pdf-lib (always available)
+    // 1. Read page count + initial rotations via pdf-lib
+    await loadPdfLib();
     const { PDFDocument } = window.PDFLib;
     const buf = await file.arrayBuffer();
     const doc = await PDFDocument.load(buf, { ignoreEncryption: true });

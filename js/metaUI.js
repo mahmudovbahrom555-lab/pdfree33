@@ -15,6 +15,7 @@
 
 import { id }       from './utils.js';
 import { showToast } from './ui.js';
+import { loadPdfLib } from './lazyLibs.js';
 
 // ── State ──────────────────────────────────────────────────────
 let _meta = { title: '', author: '', subject: '', keywords: '', creator: '', producer: '' };
@@ -40,6 +41,7 @@ export async function initMetaOptions(file) {
   container.style.display = 'block';
 
   try {
+    await loadPdfLib();
     const { PDFDocument } = window.PDFLib;
     const buf = await file.arrayBuffer();
     const pdf = await PDFDocument.load(buf, { ignoreEncryption: true });

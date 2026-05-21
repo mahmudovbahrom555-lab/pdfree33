@@ -17,6 +17,7 @@ import { trackToolError } from './analytics.js';
 import { parseRange as _parseRangeUtil, pagesToRangeString,
          renderCheckboxes as _renderCheckboxesUtil,
          renderRangeInput as _renderRangeInputUtil } from './pageSelectorUtils.js';
+import { loadPdfLib } from './lazyLibs.js';
 
 // ── State ──────────────────────────────────────────────────────
 let _pageCount    = 0;
@@ -41,7 +42,7 @@ export async function initSplitOptions(file) {
   container.style.display = 'block';
 
   try {
-    // pdf-lib доступен как глобальная переменная через CDN скрипт в index.html
+    await loadPdfLib();
     const { PDFDocument } = window.PDFLib;
     const buf  = await file.arrayBuffer();
     const doc  = await PDFDocument.load(buf, { ignoreEncryption: true });

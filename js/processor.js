@@ -13,6 +13,7 @@ import { selectedFiles, setFilesLocked } from './files.js';
 import { trackToolError } from './analytics.js';
 import { TOOLS } from './config.js';
 import { getRunner, getWorkerTool } from './toolRegistry.js';
+import { loadJSZip } from './lazyLibs.js';
 
 let _worker = _createWorker();
 export let isProcessing = false;
@@ -212,9 +213,9 @@ async function _runSplit(filesSnapshot, { pages, mode }) {
           if (!Array.isArray(data.result)) {
             _handleError('split', 'Unexpected result type from worker'); return;
           }
-          // Несколько PDF → ZIP через JSZip (глобальная переменная из CDN)
+          // Несколько PDF → ZIP через JSZip
+          await loadJSZip();
           const JSZip = window.JSZip;
-          if (!JSZip) throw new Error('JSZip not loaded');
           const zip = new JSZip();
           setProgress(96, t('prog_zip'));
           // ⚠️  item.buffer is a transferred (detached) ArrayBuffer received from
@@ -516,6 +517,7 @@ async function _runPdf2Jpg(filesSnapshot, { pages, format, dpi, zip }) {
   // Two modes:
   //   zip=true   → streaming into JSZip as pages render
   //   zip=false  → buffer only 1 page (already bounded)
+  if (zip) await loadJSZip();
   let streamZip   = null;
   let streamCount = 0;
   let singleResult = null;
