@@ -400,14 +400,10 @@ function _initPWA() {
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js')
       .catch(err => console.warn('[SW] Registration failed:', err));
-
-    // When a NEW service worker takes control (after skipWaiting), reload the
-    // page so the browser fetches fresh assets instead of serving stale cache.
-    // This fixes "canvasW is not defined" from old cached worker.js.
-    navigator.serviceWorker.addEventListener('controllerchange', () => {
-      console.info('[SW] New worker active — reloading for fresh assets');
-      window.location.reload();
-    });
+    // No controllerchange reload — hash-versioned URLs (?v=HASH) on app.js and
+    // worker.js guarantee fresh assets on each deploy without a forced reload.
+    // The old reload caused a "flash": tool visible briefly then hidden after SW
+    // took control and called showHomePage() on the second load.
   }
 
   // Capture the deferred prompt
