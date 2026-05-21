@@ -63,8 +63,8 @@ def check_file(html_path: Path) -> tuple[list[str], list[str]]:
         return [], []
     missing_ids    = [rid for rid in REQUIRED_IDS if f'id="{rid}"' not in text]
     missing_tool   = []
-    if _is_tool_page(html_path) and 'PDFREE_INITIAL_TOOL' not in text:
-        missing_tool = ['PDFREE_INITIAL_TOOL not set']
+    if _is_tool_page(html_path) and 'data-tool=' not in text and 'PDFREE_INITIAL_TOOL' not in text:
+        missing_tool = ['data-tool attribute not set on <body>']
     return missing_ids, missing_tool
 
 def main():

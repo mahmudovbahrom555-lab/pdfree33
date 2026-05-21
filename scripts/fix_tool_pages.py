@@ -100,12 +100,11 @@ def fix_page(path: Path, tool: str) -> bool:
         text = new_text
         changed = True
 
-    # 2. Add PDFREE_INITIAL_TOOL before app.js script tag (if not already there)
-    if 'PDFREE_INITIAL_TOOL' not in text:
-        script_tag = re.search(r'<script[^>]+app\.js[^>]*>', text)
-        if script_tag:
-            insert = f'<script>window.PDFREE_INITIAL_TOOL = \'{tool}\';</script>\n  '
-            text = text[:script_tag.start()] + insert + text[script_tag.start():]
+    # 2. Add data-tool attribute to <body> (CSP-safe replacement for inline script)
+    if f'data-tool="{tool}"' not in text:
+        new_text = text.replace('<body>', f'<body data-tool="{tool}">', 1)
+        if new_text != text:
+            text = new_text
             changed = True
 
     if changed:

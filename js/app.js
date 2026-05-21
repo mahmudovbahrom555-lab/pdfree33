@@ -42,9 +42,9 @@ const TOOL_SLUGS = {
   fill:     '/fill/',
 };
 
-// Reverse map pathname → tool key.
-// CSP blocks inline <script> tags, so window.PDFREE_INITIAL_TOOL is unreliable.
-// URL is the only safe source of truth for tool detection on landing pages.
+// Reverse map pathname → tool key (primary tool slug URLs).
+// CSP blocks inline <script> tags so window.PDFREE_INITIAL_TOOL is unreliable.
+// Tool detection priority: data-tool body attribute → URL path → query param.
 const _PATH_TO_TOOL = Object.fromEntries(
   Object.entries(TOOL_SLUGS).map(([tool, slug]) => [slug, tool])
 );
@@ -52,6 +52,16 @@ const _PATH_TO_TOOL = Object.fromEntries(
 function _toolFromPath(pathname) {
   const p = pathname.endsWith('/') ? pathname : pathname + '/';
   return _PATH_TO_TOOL[p] || null;
+}
+
+function _detectTool() {
+  // 1. data-tool on <body> — set by template, CSP-safe, works for all landing pages
+  const bodyTool = document.body.dataset.tool;
+  if (bodyTool && TOOLS[bodyTool]) return bodyTool;
+  // 2. URL path — works for primary tool slug URLs even without data-tool
+  return _toolFromPath(location.pathname)
+      || new URLSearchParams(location.search).get('tool')
+      || null;
 }
 
 // ── App state ─────────────────────────────────────────────────
@@ -294,7 +304,7 @@ function initEvents() {
 
   document.querySelectorAll('[data-tool]').forEach(el => {
     // On standalone tool pages, <a> nav links navigate normally via href.
-    if (el.tagName === 'A' && _toolFromPath(location.pathname)) return;
+    if (el.tagName === 'A' && _detectTool()) return;
     const handler = (e) => {
       if (e.type === 'keydown' && e.key !== 'Enter') return;
       e.preventDefault();
@@ -346,11 +356,8 @@ function initEvents() {
 // ── Initial routing ──────────────────────────────────────────
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Determine tool from URL — CSP blocks inline <script> tags so
-  // window.PDFREE_INITIAL_TOOL is unreliable; URL is the safe source of truth.
-  const requestedTool = _toolFromPath(location.pathname)
-      || new URLSearchParams(location.search).get('tool')
-      || null;
+  // Detect tool via data-tool attribute or URL — both CSP-safe.
+  const requestedTool = _detectTool();
 
   // Show #toolArea immediately on tool landing pages, before any other init.
   if (requestedTool) showToolPage();
