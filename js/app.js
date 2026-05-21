@@ -281,6 +281,9 @@ function initEvents() {
   id('logo')?.addEventListener('keydown', e => e.key === 'Enter' && goHome());
 
   document.querySelectorAll('[data-tool]').forEach(el => {
+    // On standalone tool pages (PDFREE_INITIAL_TOOL set), <a> nav links should
+    // navigate normally via href — do not hijack with SPA. SPA stays on homepage.
+    if (el.tagName === 'A' && window.PDFREE_INITIAL_TOOL) return;
     const handler = (e) => {
       if (e.type === 'keydown' && e.key !== 'Enter') return;
       e.preventDefault();
@@ -331,7 +334,7 @@ function initEvents() {
 
 // ── Initial routing ──────────────────────────────────────────
 
-window.addEventListener('load', () => {
+document.addEventListener('DOMContentLoaded', () => {
   initFileListeners();
   initEvents();
   _initPWA();
