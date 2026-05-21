@@ -18,7 +18,7 @@
 //  the activate handler to clear the old cache.
 // ============================================================
 
-const CACHE_VERSION  = 'v65';   // bump: force-evict stale app.js — DOMContentLoaded fix
+const CACHE_VERSION  = 'v66';   // bump: URL-based tool routing — CSP blocks inline scripts
 const STATIC_CACHE   = `pdfree-static-${CACHE_VERSION}`;
 const CDN_CACHE      = `pdfree-cdn-${CACHE_VERSION}`;
 const ALL_CACHES     = [STATIC_CACHE, CDN_CACHE];

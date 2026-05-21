@@ -42,6 +42,18 @@ const TOOL_SLUGS = {
   fill:     '/fill/',
 };
 
+// Reverse map pathname → tool key.
+// CSP blocks inline <script> tags, so window.PDFREE_INITIAL_TOOL is unreliable.
+// URL is the only safe source of truth for tool detection on landing pages.
+const _PATH_TO_TOOL = Object.fromEntries(
+  Object.entries(TOOL_SLUGS).map(([tool, slug]) => [slug, tool])
+);
+
+function _toolFromPath(pathname) {
+  const p = pathname.endsWith('/') ? pathname : pathname + '/';
+  return _PATH_TO_TOOL[p] || null;
+}
+
 // ── App state ─────────────────────────────────────────────────
 let currentTool    = 'merge';
 let _resultUrl     = null;
@@ -281,9 +293,8 @@ function initEvents() {
   id('logo')?.addEventListener('keydown', e => e.key === 'Enter' && goHome());
 
   document.querySelectorAll('[data-tool]').forEach(el => {
-    // On standalone tool pages (PDFREE_INITIAL_TOOL set), <a> nav links should
-    // navigate normally via href — do not hijack with SPA. SPA stays on homepage.
-    if (el.tagName === 'A' && window.PDFREE_INITIAL_TOOL) return;
+    // On standalone tool pages, <a> nav links navigate normally via href.
+    if (el.tagName === 'A' && _toolFromPath(location.pathname)) return;
     const handler = (e) => {
       if (e.type === 'keydown' && e.key !== 'Enter') return;
       e.preventDefault();
@@ -335,31 +346,23 @@ function initEvents() {
 // ── Initial routing ──────────────────────────────────────────
 
 document.addEventListener('DOMContentLoaded', () => {
-  // On tool landing pages, show #toolArea immediately — before any other init.
-  // This guarantees the tool UI is visible even if later init code throws.
-  // (Homepage has #toolArea hidden via inline style="display:none".)
-  if (window.PDFREE_INITIAL_TOOL) showToolPage();
+  // Determine tool from URL — CSP blocks inline <script> tags so
+  // window.PDFREE_INITIAL_TOOL is unreliable; URL is the safe source of truth.
+  const requestedTool = _toolFromPath(location.pathname)
+      || new URLSearchParams(location.search).get('tool')
+      || null;
+
+  // Show #toolArea immediately on tool landing pages, before any other init.
+  if (requestedTool) showToolPage();
 
   initFileListeners();
   initEvents();
   _initPWA();
   _prefetchHeavyAssets();
 
-  // Priority 1: global var set by SEO sub-pages (e.g. compress-pdf/index.html)
-  // Priority 2: URL path  (/compress-pdf/ → compress, /jpg2pdf/ → jpg2pdf)
-  // Priority 3: legacy query param  ?tool=compress  (backwards compat)
-  let requestedTool = window.PDFREE_INITIAL_TOOL || null;
-  if (!requestedTool) {
-    const match = location.pathname.match(/\/([a-z0-9]+)(?:-pdf)?\/?$/);
-    if (match && TOOLS[match[1]]) requestedTool = match[1];
-  }
-  if (!requestedTool) {
-    requestedTool = new URLSearchParams(location.search).get('tool');
-  }
   if (requestedTool && TOOLS[requestedTool]) {
     showTool(requestedTool, false);
-  } else if (!window.PDFREE_INITIAL_TOOL) {
-    // Only hide toolArea on homepage — never on dedicated tool pages
+  } else {
     showHomePage();
   }
 });
