@@ -303,6 +303,8 @@ function initEvents() {
   id('logo')?.addEventListener('keydown', e => e.key === 'Enter' && goHome());
 
   document.querySelectorAll('[data-tool]').forEach(el => {
+    // <body data-tool> is for routing only — never a click target.
+    if (el.tagName === 'BODY') return;
     // On standalone tool pages, <a> nav links navigate normally via href.
     if (el.tagName === 'A' && _detectTool()) return;
     const handler = (e) => {

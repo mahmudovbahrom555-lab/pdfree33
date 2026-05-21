@@ -18,7 +18,7 @@
 //  the activate handler to clear the old cache.
 // ============================================================
 
-const CACHE_VERSION  = 'v66';   // bump: URL-based tool routing — CSP blocks inline scripts
+const CACHE_VERSION  = 'v67';   // bump: fix file picker blocked by body[data-tool] click handler
 const STATIC_CACHE   = `pdfree-static-${CACHE_VERSION}`;
 const CDN_CACHE      = `pdfree-cdn-${CACHE_VERSION}`;
 const ALL_CACHES     = [STATIC_CACHE, CDN_CACHE];
