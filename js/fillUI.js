@@ -5,7 +5,7 @@
 //  fillUI.js — AcroForm PDF fill tool
 //
 //  Flow:
-//    1. initFillOptions(files) — loads pdf.js, extracts Widget
+//    1. initFillOptions(file) — loads pdf.js, extracts Widget
 //       annotations, renders native mobile-first form
 //    2. User fills inputs — values stored in _values, drafted
 //       to localStorage on every change
@@ -20,15 +20,19 @@
 //    - XFA / no-field PDFs handled with honest error message
 // ============================================================
 
-import { id }        from './utils.js';
-import { loadPdfJs } from './pdf2jpgUI.js';
+import { id }                from './utils.js';
+import { loadPdfJs }         from './pdf2jpgUI.js';
+import { setButtonDisabled } from './ui.js';
 
 // ── Module state ──────────────────────────────────────────────
-let _fields    = [];
-let _values    = {};
-let _draftKey  = null;
-let _sigImages = {};   // fieldName → { dataUrl, rect, pageIndex }
-let _sigModal  = null; // active signature pad DOM node
+let _fields      = [];
+let _values      = {};
+let _draftKey    = null;
+let _sigImages   = {};   // fieldName → { dataUrl, rect, pageIndex }
+let _sigModal    = null; // active signature pad DOM node
+let _loading     = false; // true while _extractAndRender is in progress
+let _eventsBound = false; // prevent duplicate listeners on re-upload
+let _generation  = 0;    // incremented on each new extraction; stale calls bail early
 
 // ── Public API ────────────────────────────────────────────────
 
@@ -44,7 +48,7 @@ export function hideFillOptions() {
   const el = id('fillOptions');
   if (el) { el.style.display = 'none'; el.innerHTML = ''; }
   _closeSigPad();
-  _fields = []; _values = {}; _draftKey = null; _sigImages = {};
+  _fields = []; _values = {}; _draftKey = null; _sigImages = {}; _loading = false; _eventsBound = false; _generation = 0;
 }
 
 export function getFillParams() {
@@ -53,15 +57,19 @@ export function getFillParams() {
     fieldValues: { ..._values },
     hasFields:   _fields.length > 0,
     sigImages:   { ..._sigImages },
+    loading:     _loading,
   };
 }
 
 // ── Field extraction ──────────────────────────────────────────
 
 async function _extractAndRender(file, container) {
+  _loading = true;
+  const myGen = ++_generation;
   container.innerHTML = _spinnerHTML('Analysing form fields…');
   try {
     await loadPdfJs();
+    if (myGen !== _generation) return; // superseded by newer upload
     if (!window.pdfjsLib) throw new Error('pdf.js renderer not available');
 
     const rawBuf = await file.arrayBuffer();
@@ -72,6 +80,7 @@ async function _extractAndRender(file, container) {
 
     const raw = [];
     for (let p = 1; p <= pdfDoc.numPages; p++) {
+      if (myGen !== _generation) return; // superseded mid-scan
       const page   = await pdfDoc.getPage(p);
       const annots = await page.getAnnotations();
       for (const a of annots) {
@@ -79,13 +88,18 @@ async function _extractAndRender(file, container) {
       }
     }
 
+    if (myGen !== _generation) return; // superseded after scan
+
     _fields = _processRawAnnotations(raw);
+    _loading = false;
 
     if (_fields.length === 0) {
       container.innerHTML = _noFieldsHTML();
+      setButtonDisabled();
       return;
     }
 
+    _sigImages = {};
     _draftKey = `pdfree_fill_${file.name}_${file.size}`;
     const draft = _loadDraft(_draftKey);
     _values = draft || _defaultValues(_fields);
@@ -96,7 +110,10 @@ async function _extractAndRender(file, container) {
     _updateProgress(container);
 
   } catch (err) {
+    if (myGen !== _generation) return;
+    _loading = false;
     container.innerHTML = _errorHTML(err.message);
+    setButtonDisabled();
   }
 }
 
@@ -347,6 +364,8 @@ function _fieldHTML(f) {
 // ── Event binding ─────────────────────────────────────────────
 
 function _bindEvents(container) {
+  if (_eventsBound) return;
+  _eventsBound = true;
   container.addEventListener('input',  _onInput);
   container.addEventListener('change', _onInput);
   container.addEventListener('click',  _onSigClick);
@@ -373,7 +392,7 @@ function _onInput(e) {
     _values[name] = input.value;
   }
   _saveDraft(_draftKey, _values);
-  _updateProgress(input.closest('.fill-form') || input.closest('[id="fillOptions"]'));
+  _updateProgress(input.closest('.fill-form') || input.closest('#fillOptions'));
 }
 
 function _applyValues(container) {
@@ -475,8 +494,7 @@ function _openSigPad(fieldName, rect, pageIndex) {
   let drawing = false, lastX = 0, lastY = 0, lastMidX = 0, lastMidY = 0;
 
   function _coords(e) {
-    const p    = e.touches ? e.touches[0] : e;
-    const px   = p.clientX, py = p.clientY;
+    const px   = e.clientX, py = e.clientY;
     const rect = canvas.getBoundingClientRect();
     if (isPortrait) {
       // CSS rotate(-90deg): lx = logW - (py - rect.top), ly = px - rect.left

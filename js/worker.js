@@ -1227,6 +1227,16 @@ async function handleFill(fileBuffer, { fieldValues = {}, sigImages = {} } = {})
   // Signature PNG is drawn AFTER flatten so it renders on top of the
   // (now-empty) Sig widget appearance — prevents white background covering PNG.
   progress(70, 'Saving filled PDF…');
+
+  // Many PDFs lack embedded fonts in their AcroForm resources, which causes
+  // pdf-lib's flatten() to silently skip appearance generation — the output
+  // PDF looks blank even though values were set. Calling updateFieldAppearances()
+  // with an embedded font first guarantees visible text for all filled fields.
+  try {
+    const fillFont = await pdfDoc.embedFont(PDFLib.StandardFonts.Helvetica);
+    form.updateFieldAppearances(fillFont);
+  } catch { /* PDF may already have valid font resources — proceed to flatten */ }
+
   try { form.flatten(); } catch { /* flatten fails on some encrypted forms; skip */ }
 
   // Embed signature images after flatten (visual, not cryptographic)

@@ -164,5 +164,7 @@ registerTool('fill', {
   init:       initFillOptions,
   hide:       hideFillOptions,
   getParams:  getFillParams,
-  validate:   p => !p.hasFields ? 'No fillable fields found in this PDF' : null,
+  validate:   p => p.loading    ? 'Reading PDF fields — please wait a moment…'
+                : !p.hasFields  ? 'No fillable fields found in this PDF'
+                : null,
 });
