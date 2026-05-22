@@ -199,45 +199,63 @@ SPECIALTY_PAGES = [
 
 
 def _write_sitemap(config, out_dir):
-    """Generate sitemap.xml for all tool pages + homepages + specialty pages.
-    lastmod reflects the last git commit date of each page's content file so
-    Google only re-crawls pages whose content actually changed."""
-    today = date.today().isoformat()
+    """Generate sitemap.xml with hreflang alternate links for all languages.
+    lastmod reflects the last git commit date so Google only re-crawls changed pages."""
 
-    # (url, lastmod) pairs
-    entries = [(f'{BASE_URL}/', _git_lastmod('index.html'))]
-    for lang_code, lang_cfg in config['languages'].items():
-        if lang_code != 'en':
-            entries.append((
-                f"{BASE_URL}/{lang_cfg['dir']}/",
-                _git_lastmod(f"{lang_cfg['dir']}/index.html"),
-            ))
+    langs = config['languages']  # ordered: en first
+    lang_codes = list(langs.keys())
 
+    lines = [
+        '<?xml version="1.0" encoding="UTF-8"?>',
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"',
+        '        xmlns:xhtml="http://www.w3.org/1999/xhtml">',
+    ]
+
+    def _url_block(loc, lastmod, alternates):
+        """alternates: list of (hreflang, href)"""
+        block = ['  <url>',
+                 f'    <loc>{loc}</loc>',
+                 f'    <lastmod>{lastmod}</lastmod>']
+        for lang, href in alternates:
+            block.append(f'    <xhtml:link rel="alternate" hreflang="{lang}" href="{href}"/>')
+        block.append('  </url>')
+        return block
+
+    # ── Homepages ──────────────────────────────────────────────
+    homepage_alts = [(lc if lc != 'en' else 'en', f"{BASE_URL}/{cfg['dir']}/" if lc != 'en' else f"{BASE_URL}/")
+                     for lc, cfg in langs.items()]
+    homepage_alts.append(('x-default', f'{BASE_URL}/'))
+    lines += _url_block(f'{BASE_URL}/', _git_lastmod('index.html'), homepage_alts)
+
+    # ── Tool pages ─────────────────────────────────────────────
     for tool in config['tools']:
-        for lang_code, lang_cfg in config['languages'].items():
-            slug = tool['slugs'].get(lang_code)
+        en_slug = tool['slugs'].get('en')
+        if not en_slug:
+            continue
+        en_url = f"{BASE_URL}/{en_slug}/"
+        lastmod = _git_lastmod(f"data/content/en/{tool['id']}.html")
+
+        alts = []
+        for lc, cfg in langs.items():
+            slug = tool['slugs'].get(lc)
             if not slug:
                 continue
-            content_file = f"data/content/{lang_code}/{tool['id']}.html"
-            lastmod = _git_lastmod(content_file)
-            if lang_code == 'en':
-                entries.append((f"{BASE_URL}/{slug}/", lastmod))
-            else:
-                entries.append((f"{BASE_URL}/{lang_cfg['dir']}/{slug}/", lastmod))
+            href = f"{BASE_URL}/{slug}/" if lc == 'en' else f"{BASE_URL}/{cfg['dir']}/{slug}/"
+            alts.append((lc, href))
+        alts.append(('x-default', en_url))
+        lines += _url_block(en_url, lastmod, alts)
 
+    # ── Specialty / SEO pages (EN only) ───────────────────────
     for slug in SPECIALTY_PAGES:
-        entries.append((f"{BASE_URL}/{slug}/", _git_lastmod(f"{slug}/index.html")))
+        url = f"{BASE_URL}/{slug}/"
+        lines += _url_block(url, _git_lastmod(f"{slug}/index.html"), [('en', url), ('x-default', url)])
 
-    lines = ['<?xml version="1.0" encoding="UTF-8"?>',
-             '<urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">']
-    for url, lastmod in entries:
-        lines.append(f'  <url><loc>{url}</loc><lastmod>{lastmod}</lastmod></url>')
     lines.append('</urlset>')
 
     sitemap_path = os.path.join(out_dir, 'sitemap.xml')
     with open(sitemap_path, 'w', encoding='utf-8') as f:
         f.write('\n'.join(lines) + '\n')
-    print(f'  sitemap.xml  ({len(entries)} URLs)')
+    print(f'  sitemap.xml  ({sum(1 for l in lines if "<loc>" in l)} URLs, hreflang included)')
 
 
 # ── Hash injection ────────────────────────────────────────────────────────────
