@@ -188,10 +188,12 @@ def _git_lastmod(rel_path):
 
 SPECIALTY_PAGES = [
     'annotate-pdf',
+    'highlight-pdf',
     'hipaa-pdf-tools',
     'ilovepdf-alternative',
     'merge-pdf-without-uploading',
     'secure-pdf-tools',
+    'sign',
     'blog/how-to-annotate-pdf-on-mobile',
     'blog/how-to-fill-pdf-form',
     'blog/how-to-sign-pdf-free',
