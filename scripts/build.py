@@ -55,6 +55,7 @@ SKIP_FILES = {
     'package-lock.json', '.gitignore', 'vercel.json',
     'CONTRIBUTING.md', 'LICENSE', 'README.md',
     '3c51839cdd6944c79259fdf6a0c383cc.txt',
+    'qpdf-run-0.2.1.tgz',
 }
 SKIP_EXTS = {'.py', '.toml', '.local'}
 

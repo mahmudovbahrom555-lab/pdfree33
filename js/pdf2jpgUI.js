@@ -21,6 +21,7 @@ import { parseRange } from './splitUI.js';   // public re-export chain: splitUI 
 import { pagesToRangeString, renderCheckboxes as _renderCheckboxesUtil,
          renderRangeInput } from './pageSelectorUtils.js';
 import { chip, chipGroup, checkbox, loadingRow, infoBanner, group, row } from './uiComponents.js';
+import { preprocessPdfBuffer } from './decryptPdf.js';
 
 // ── State ──────────────────────────────────────────────────────
 let _pageCount    = 0;
@@ -59,7 +60,7 @@ export async function initPdf2JpgOptions(file) {
     // Adaptive worker mode would be faster for large PDFs but needs a LOCAL
     // pdf.worker.js — we only have CDN URL, which fails offline. Until
     // pdf.worker.min.js is bundled locally, disableWorker:true is correct.
-    const rawBuf = await file.arrayBuffer();
+    const rawBuf = await preprocessPdfBuffer(await file.arrayBuffer());
     const doc = await window.pdfjsLib.getDocument({
       data:              new Uint8Array(rawBuf),
       useSystemFonts:    false,
