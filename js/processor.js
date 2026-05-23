@@ -109,11 +109,11 @@ function _checkTotalSize(files, maxMb) {
 
 async function _runMerge(filesSnapshot) {
   if (!_checkTotalSize(filesSnapshot, 300)) { isProcessing = false; setFilesLocked(false); hideCancelBtn(); return; }
-  const rawBuffers = await Promise.all(filesSnapshot.map(f => f.arrayBuffer()));
-  // Pre-process: silently decrypt owner-only encrypted PDFs before sending to worker.
-  // Non-encrypted files pass through instantly (fast /Encrypt heuristic).
-  // Files with a real user password are passed as-is; worker will report ENCRYPTED.
-  const buffers = await Promise.all(rawBuffers.map(b => preprocessPdfBuffer(b)));
+  // Use pre-decrypted buffer when files.js already ran QPDF at file-add time.
+  // .slice(0) copies so the cached buffer survives the postMessage transfer.
+  const buffers = await Promise.all(filesSnapshot.map(async f =>
+    f._decryptedBuffer ? f._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await f.arrayBuffer())
+  ));
   setProgress(10, t('prog_merging'));
 
   // ⚠️  TRANSFERABLE: all buffers in `buffers` are transferred to the worker.
@@ -186,7 +186,8 @@ async function _runMerge(filesSnapshot) {
 
 async function _runSplit(filesSnapshot, { pages, mode }) {
   if (!_checkSize(filesSnapshot[0], 200)) { isProcessing = false; setFilesLocked(false); hideCancelBtn(); return; }
-  const buffer = await preprocessPdfBuffer(await filesSnapshot[0].arrayBuffer());
+  const _sf = filesSnapshot[0];
+  const buffer = _sf._decryptedBuffer ? _sf._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await _sf.arrayBuffer());
   setProgress(5, t('prog_loading_pdf'));
 
   // ⚠️  TRANSFERABLE CONTRACT: `buffer` was passed to worker as a Transferable.
@@ -273,7 +274,7 @@ async function _runCompress(filesSnapshot, { preset = 'medium', preserveText = t
   if (!_checkSize(filesSnapshot[0], 150)) { isProcessing = false; setFilesLocked(false); hideCancelBtn(); return; }
 
   const file   = filesSnapshot[0];
-  const buffer = await preprocessPdfBuffer(await file.arrayBuffer());
+  const buffer = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await file.arrayBuffer());
   setProgress(5, t('prog_loading_pdf'));
 
   // Watchdog: if the worker goes silent for 90s (OOM crash or freeze),
@@ -485,7 +486,7 @@ async function _runPdf2Jpg(filesSnapshot, { pages, format, dpi, zip }) {
   // on all origins including localhost. No disableWorker needed.
   let pdfDoc;
   try {
-    const rawBuf = await preprocessPdfBuffer(await file.arrayBuffer());
+    const rawBuf = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await file.arrayBuffer());
     pdfDoc = await window.pdfjsLib.getDocument({
       data:              new Uint8Array(rawBuf),
       useSystemFonts:    false,
@@ -631,7 +632,7 @@ async function _runWorkerTool(tool, filesSnapshot, params) {
   const file   = filesSnapshot[0];
   const limits = { watermark: 200, pagenum: 200, meta: 200, protect: 200, rotate: 150, redact: 150, fill: 200 };
   if (!_checkSize(file, limits[tool] ?? 200)) { isProcessing = false; setFilesLocked(false); hideCancelBtn(); return; }
-  const buffer = await preprocessPdfBuffer(await file.arrayBuffer());
+  const buffer = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await file.arrayBuffer());
 
   const labelMap = {
     watermark: t('prog_watermark'),

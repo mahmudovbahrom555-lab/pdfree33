@@ -9,6 +9,7 @@ import { esc, fmtSize, id, show, hide, isFileAccepted } from './utils.js';
 import { showToast } from './ui.js';
 import { ACCEPTED_MIME } from './config.js';
 import { t, tp } from './i18n.js';
+import { decryptOwnerOnly } from './decryptPdf.js';
 
 // ── PDF encryption preflight ──────────────────────────────────
 //
@@ -179,9 +180,10 @@ export function addFiles(files) {
   renderList();
 
   // Run preflight on newly added PDFs — async, non-blocking.
-  // Annotates file._pdfMeta, then re-renders to show warning badge.
+  // Annotates file._pdfMeta. For AES-encrypted files, tries QPDF silent
+  // decryption (owner-only / empty user password) before showing badge.
   for (const f of added) {
-    _preflightPDF(f).then(meta => {
+    _preflightPDF(f).then(async meta => {
       if (!meta) return;
       if (meta.notPDF) {
         // File has .pdf extension but missing %PDF- magic bytes — reject it.
@@ -192,7 +194,19 @@ export function addFiles(files) {
         return;
       }
       f._pdfMeta = meta;
-      if (meta.isEncrypted) renderList();  // show the warning badge
+      if (meta.isEncrypted) {
+        // Try silent decryption — owner-only PDFs (empty user password) open fine.
+        // QPDF WASM loads lazily here; only fires on first encrypted PDF.
+        try {
+          const bytes = new Uint8Array(await f.arrayBuffer());
+          const decrypted = await decryptOwnerOnly(bytes);
+          if (decrypted) {
+            f._decryptedBuffer = decrypted.buffer;  // cache for processor.js
+            f._pdfMeta.isEncrypted = false;          // suppress lock badge
+          }
+        } catch { /* WASM init failure — keep isEncrypted = true */ }
+        renderList();
+      }
     });
   }
 }
