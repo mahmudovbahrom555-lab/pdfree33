@@ -18,6 +18,7 @@ import { parseRange as _parseRangeUtil, pagesToRangeString,
          renderCheckboxes as _renderCheckboxesUtil,
          renderRangeInput as _renderRangeInputUtil } from './pageSelectorUtils.js';
 import { loadPdfLib } from './lazyLibs.js';
+import { wmRemoveHtml, bindWmRemove, resetWmRemove } from './watermarkRemoveUI.js';
 
 // ── State ──────────────────────────────────────────────────────
 let _pageCount    = 0;
@@ -80,6 +81,7 @@ export function hideSplitOptions() {
   _pageCount     = 0;
   _selectedPages = [];
   _mode          = 'separate';
+  resetWmRemove();
 }
 
 // ── Render ────────────────────────────────────────────────────
@@ -123,6 +125,8 @@ function _render() {
         ${t('pages_selected', { n: _selectedPages.length, total: _pageCount })}
       </div>
     </div>
+
+    ${wmRemoveHtml()}
   `;
 
   _bindEvents(useRange);
@@ -143,6 +147,8 @@ function _renderRangeInput() {
 // что уничтожает старые DOM-узлы вместе с их слушателями.
 
 function _bindEvents(useRange) {
+  bindWmRemove();
+
   // Mode switch
   id('splitOptions').addEventListener('change', e => {
     if (e.target.name === 'splitMode') {

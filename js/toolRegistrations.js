@@ -10,6 +10,8 @@
 // ============================================================
 
 import { registerTool } from './toolRegistry.js';
+import { id }           from './utils.js';
+import { getWmRemove, wmRemoveHtml, bindWmRemove, resetWmRemove } from './watermarkRemoveUI.js';
 
 // ── UI modules ─────────────────────────────────────────────────
 import { initSplitOptions, hideSplitOptions,
@@ -38,17 +40,38 @@ import { initRotateOptions, hideRotateOptions,
 import { initRedactOptions, hideRedactOptions,
          getRedactParams }                from './redactUI.js';
 
+// ── Merge options — inline (no separate mergeUI.js needed) ─────
+
+function _initMerge() {
+  const c = id('mergeOptions');
+  if (!c) return;
+  c.innerHTML      = wmRemoveHtml();
+  c.style.display  = 'block';
+  bindWmRemove();
+}
+
+function _hideMerge() {
+  const c = id('mergeOptions');
+  if (c) { c.style.display = 'none'; c.innerHTML = ''; }
+  resetWmRemove();
+}
+
 // ── Registrations ──────────────────────────────────────────────
 
 registerTool('merge', {
-  runner: 'merge',
+  runner:    'merge',
+  multiFile: true,
+  minFiles:  1,
+  init:      _initMerge,
+  hide:      _hideMerge,
+  getParams: () => ({ removeWatermarks: getWmRemove() }),
 });
 
 registerTool('split', {
   runner:    'split',
   init:      initSplitOptions,
   hide:      hideSplitOptions,
-  getParams: () => ({ pages: getSelectedPages(), mode: getSplitMode() }),
+  getParams: () => ({ pages: getSelectedPages(), mode: getSplitMode(), removeWatermarks: getWmRemove() }),
   validate:  p => p.pages.length === 0 ? 'Please select at least one page' : null,
 });
 
@@ -64,7 +87,7 @@ registerTool('compress', {
   runner:    'compress',
   init:      initCompressOptions,
   hide:      hideCompressOptions,
-  getParams: getCompressParams,
+  getParams: () => ({ ...getCompressParams(), removeWatermarks: getWmRemove() }),
   onSuccess: ({ compressionReport }) => {
     if (compressionReport) renderCompressionReport(compressionReport);
   },
@@ -132,7 +155,7 @@ registerTool('rotate', {
   workerTool: 'rotate',
   init:       initRotateOptions,
   hide:       hideRotateOptions,
-  getParams:  getRotateParams,
+  getParams:  () => ({ ...getRotateParams(), removeWatermarks: getWmRemove() }),
   validate:   (p) => {
     const changed = p.rotations.filter(r => r.angle !== 0).length;
     if (changed === 0) return 'Rotate at least one page';

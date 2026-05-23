@@ -38,6 +38,7 @@ import { showToast }       from './ui.js';
 import { loadingRow, infoBanner } from './uiComponents.js';
 import { loadPdfJs } from './pdf2jpgUI.js';  // reuse CDN loader with retry logic
 import { loadPdfLib } from './lazyLibs.js';
+import { wmRemoveHtml, bindWmRemove, resetWmRemove } from './watermarkRemoveUI.js';
 
 // ── Constants ─────────────────────────────────────────────────
 
@@ -136,6 +137,7 @@ export function hideRotateOptions() {
   _prevDeltas = null;
   _selected = new Set();
   _useThumbs = false;
+  resetWmRemove();
 }
 
 // ── Thumbnail rendering ────────────────────────────────────────
@@ -222,6 +224,8 @@ function _render(file) {
       ${_renderGrid()}
     </div>
 
+    ${wmRemoveHtml()}
+
     ${infoBanner('🔒 Processed entirely in your browser · No upload', 'info')}
   `;
 
@@ -281,6 +285,8 @@ function _cardHTML(i) {
 // ── Events ─────────────────────────────────────────────────────
 
 function _bindEvents(container) {
+  bindWmRemove();
+
   // Rotation buttons
   id('rotLeft') ?.addEventListener('click', () => _applyRotation(-90));
   id('rot180')  ?.addEventListener('click', () => _applyRotation(180));

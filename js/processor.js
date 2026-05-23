@@ -64,7 +64,7 @@ export async function doProcess(currentTool, extraParams = {}) {
   // Adding a new runner type: add one entry here + one _run* function.
   // Adding a new tool that uses an existing runner: only toolRegistrations.js.
   const runnerMap = {
-    merge:    () => _runMerge(filesSnapshot),
+    merge:    () => _runMerge(filesSnapshot, extraParams),
     split:    () => _runSplit(filesSnapshot, extraParams),
     compress: () => _runCompress(filesSnapshot, extraParams),
     jpg2pdf:  () => _runJpg2Pdf(filesSnapshot, extraParams),
@@ -107,7 +107,7 @@ function _checkTotalSize(files, maxMb) {
 
 // ── Merge ──────────────────────────────────────────────────────
 
-async function _runMerge(filesSnapshot) {
+async function _runMerge(filesSnapshot, { removeWatermarks = false } = {}) {
   if (!_checkTotalSize(filesSnapshot, 300)) { isProcessing = false; setFilesLocked(false); hideCancelBtn(); return; }
   // Use pre-decrypted buffer when files.js already ran QPDF at file-add time.
   // .slice(0) copies so the cached buffer survives the postMessage transfer.
@@ -121,7 +121,7 @@ async function _runMerge(filesSnapshot) {
   //     Filenames are passed separately (plain strings, not Transferable) so the
   //     worker can include them in error reports for the "skipped files" toast.
   const names = filesSnapshot.map(f => f.name);
-  _worker.postMessage({ tool: 'merge', files: buffers, names }, buffers);
+  _worker.postMessage({ tool: 'merge', files: buffers, names, removeWatermarks }, buffers);
 
   _worker.onmessage = (e) => {
     const data = e.data;
@@ -184,7 +184,7 @@ async function _runMerge(filesSnapshot) {
 
 // ── Split ──────────────────────────────────────────────────────
 
-async function _runSplit(filesSnapshot, { pages, mode }) {
+async function _runSplit(filesSnapshot, { pages, mode, removeWatermarks = false }) {
   if (!_checkSize(filesSnapshot[0], 200)) { isProcessing = false; setFilesLocked(false); hideCancelBtn(); return; }
   const _sf = filesSnapshot[0];
   const buffer = _sf._decryptedBuffer ? _sf._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await _sf.arrayBuffer());
@@ -196,7 +196,7 @@ async function _runSplit(filesSnapshot, { pages, mode }) {
   //     (single mode) or data.result[*].buffer (separate mode) are transferred
   //     back and become the new owners. Each buffer must be consumed exactly once
   //     (Blob constructor, JSZip.file()) and never stored for later reuse.
-  _worker.postMessage({ tool: 'split', file: buffer, options: { pages, mode } }, [buffer]);
+  _worker.postMessage({ tool: 'split', file: buffer, options: { pages, mode, removeWatermarks } }, [buffer]);
 
   _worker.onmessage = async (e) => {
     const data = e.data;
@@ -270,7 +270,7 @@ async function _runSplit(filesSnapshot, { pages, mode }) {
 
 // ── Compress ───────────────────────────────────────────────────
 
-async function _runCompress(filesSnapshot, { preset = 'medium', preserveText = true } = {}) {
+async function _runCompress(filesSnapshot, { preset = 'medium', preserveText = true, removeWatermarks = false } = {}) {
   if (!_checkSize(filesSnapshot[0], 150)) { isProcessing = false; setFilesLocked(false); hideCancelBtn(); return; }
 
   const file   = filesSnapshot[0];
@@ -298,7 +298,7 @@ async function _runCompress(filesSnapshot, { preset = 'medium', preserveText = t
 
   // ⚠️  TRANSFERABLE: buffer detached after this call — worker owns it until done.
   _worker.postMessage(
-    { tool: 'compress', file: buffer, options: { preset, preserveText } },
+    { tool: 'compress', file: buffer, options: { preset, preserveText, removeWatermarks } },
     [buffer]
   );
 

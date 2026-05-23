@@ -17,6 +17,7 @@ import { showToast } from './ui.js';
 import { t } from './i18n.js';
 import { chip, sliderRow, checkbox, loadingRow } from './uiComponents.js';
 import { loadPdfLib } from './lazyLibs.js';
+import { wmRemoveHtml, bindWmRemove, resetWmRemove } from './watermarkRemoveUI.js';
 
 // ── State ──────────────────────────────────────────────────────
 let _preset       = 'medium';  // 'low' | 'medium' | 'high'
@@ -73,6 +74,7 @@ export function hideCompressOptions() {
   container.innerHTML = '';
   _preset       = 'medium';
   _preserveText = true;
+  resetWmRemove();
 }
 
 /**
@@ -229,6 +231,8 @@ function _render(file, scan) {
       subtitle: 'On Maximum: keeps PDF tagging intact (turn off for smallest file)',
       ariaLabel: 'Preserve text quality — keeps PDF tagging and structure trees intact',
     })}
+
+    ${wmRemoveHtml()}
   `;
 
   _bindEvents();
@@ -275,6 +279,8 @@ function _presetCard(value, icon, label, desc) {
 // _render() перезаписывает innerHTML → старые узлы уничтожаются.
 
 function _bindEvents() {
+  bindWmRemove();
+
   id('compressOptions').addEventListener('change', e => {
     if (e.target.name === 'compressPreset') {
       _preset = e.target.value;

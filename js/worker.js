@@ -20,7 +20,7 @@ self.onmessage = async function (e) {
   try {
     switch (tool) {
       case 'merge':
-        await handleMerge(files, names);
+        await handleMerge(files, names, e.data.removeWatermarks ?? false);
         break;
       case 'split':
         await handleSplit(e.data.file, e.data.options);
@@ -74,6 +74,16 @@ self.onmessage = async function (e) {
 
 function progress(value, label) {
   self.postMessage({ type: 'progress', value, label });
+}
+
+// Phase 1 watermark removal: delete /Annots from every page.
+// Covers stamp-annotation watermarks (~30-40% of real-world cases).
+// Content-stream watermarks are unaffected (Phase 2, future work).
+function _stripAnnotations(pdf) {
+  const { PDFName } = PDFLib;
+  for (const page of pdf.getPages()) {
+    try { page.node.delete(PDFName.of('Annots')); } catch { /* skip unreadable pages */ }
+  }
 }
 
 /**
@@ -141,7 +151,7 @@ function _classifyError(err) {
   return 'UNKNOWN';
 }
 
-async function handleMerge(files, names) {
+async function handleMerge(files, names, removeWatermarks = false) {
   const { PDFDocument } = PDFLib;
   const merged = await PDFDocument.create();
   let totalPages = 0;
@@ -167,6 +177,7 @@ async function handleMerge(files, names) {
     let pdf;
     try {
       pdf = await PDFDocument.load(files[i], { ignoreEncryption: true });
+      if (removeWatermarks) _stripAnnotations(pdf);
     } catch (err) {
       fileErrors.push({
         index:   i + 1,
@@ -217,6 +228,7 @@ async function handleMerge(files, names) {
 async function handleSplit(fileBuffer, options) {
   const { PDFDocument } = PDFLib;
   const srcDoc = await PDFDocument.load(fileBuffer, { ignoreEncryption: true });
+  if (options.removeWatermarks) _stripAnnotations(srcDoc);
   const pageCount = srcDoc.getPageCount();
 
   // Фильтруем страницы которые реально существуют в документе
@@ -448,6 +460,7 @@ async function handleCompress(fileBuffer, options) {
   self.postMessage({ type: 'progress', value: 5,  label: 'Loading PDF…' });
 
   const pdf = await PDFDocument.load(fileBuffer, { ignoreEncryption: true });
+  if (options.removeWatermarks) _stripAnnotations(pdf);
   const wasEncrypted = pdf.isEncrypted;
 
   self.postMessage({ type: 'progress', value: 18, label: 'Analyzing structure…' });
@@ -1037,6 +1050,7 @@ async function handleRotate(fileBuffer, options) {
     fileBuffer,
     { loadLabel: 'Loading PDF…', saveValue: 90, objectStreams: false },
     async (pdf, pages) => {
+      if (options.removeWatermarks) _stripAnnotations(pdf);
       progress(40, 'Applying rotations…');
       for (const { index, angle } of rotations) {
         if (index >= 0 && index < pages.length) {
