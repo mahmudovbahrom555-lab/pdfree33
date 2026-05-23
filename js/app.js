@@ -6,7 +6,7 @@
 //  Роутинг, состояние, склейка всех модулей
 // ============================================================
 
-import { TOOLS, APP_VERSION }                     from './config.js';
+import { TOOLS, APP_VERSION, getLocalizedTool }   from './config.js';
 import { id, hide, setText }                      from './utils.js';
 
 // Fires on every load — open DevTools Console to confirm active version.
@@ -129,7 +129,7 @@ function showTool(tool, pushHistory = true) {
   }
 
   currentTool = tool;
-  const t = TOOLS[tool];
+  const t = getLocalizedTool(TOOLS[tool]);
   trackToolOpen(tool);
 
   // Visual feedback — immediate so browser paints before heavy DOM work
@@ -177,7 +177,7 @@ function resetState() {
 
   const btn        = id('mergeBtn');
   btn.dataset.mode = 'process';
-  setButtonReady(TOOLS[currentTool].btn);
+  setButtonReady(getLocalizedTool(TOOLS[currentTool]).btn);
   setButtonDisabled();
 }
 
