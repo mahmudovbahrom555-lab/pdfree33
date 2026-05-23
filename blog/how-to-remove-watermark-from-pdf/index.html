@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src  'self' 'wasm-unsafe-eval' blob:
+                https://cdnjs.cloudflare.com https://esm.sh
+                https://plausible.io https://pagead2.googlesyndication.com
+                https://static.cloudflareinsights.com;
+    style-src   'self' 'unsafe-inline';
+    font-src    'self';
+    img-src     'self' data: blob: https:;
+    connect-src 'self' https://cdnjs.cloudflare.com https://*.workers.dev
+                https://plausible.io https://pagead2.googlesyndication.com
+                https://www.googletagservices.com https://*.doubleclick.net
+                https://cloudflareinsights.com;
+    frame-src   https://googleads.g.doubleclick.net https://tpc.googlesyndication.com;
+    worker-src  'self' blob:;
+    object-src  'none';
+  ">
+
+  <title>How to Remove a Watermark From a PDF — Free Guide | PDFree</title>
+  <meta name="description" content="Learn how to remove watermarks from PDFs for free. Covers annotation-based stamps (Acrobat, PDF tools) and image watermarks. Honest guide on what each method can and can't do.">
+
+  <meta property="og:title"       content="How to Remove a Watermark From a PDF — Free Guide | PDFree">
+  <meta property="og:description" content="Remove annotation-based watermarks from PDFs for free, without uploading. Honest guide: what works, what doesn't, and why.">
+  <meta property="og:type"        content="article">
+  <meta property="og:url"         content="https://pdfree.io/blog/how-to-remove-watermark-from-pdf/">
+  <meta property="og:site_name"   content="PDFree">
+  <meta property="og:image"       content="https://pdfree.io/icons/og-image.jpg">
+  <meta name="twitter:card"       content="summary_large_image">
+  <meta name="twitter:site"       content="@pdfree_io">
+  <meta name="twitter:image"      content="https://pdfree.io/icons/og-image.jpg">
+
+  <link rel="canonical" href="https://pdfree.io/blog/how-to-remove-watermark-from-pdf/">
+  <link rel="alternate" hreflang="en"        href="https://pdfree.io/blog/how-to-remove-watermark-from-pdf/">
+  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/blog/how-to-remove-watermark-from-pdf/">
+
+  <link rel="manifest" href="../../manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="PDFree">
+  <link rel="apple-touch-icon" href="../../icons/icon-192.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+  <link rel="stylesheet" href="../../css/fonts.css">
+  <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/animations.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/components.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "How to Remove a Watermark From a PDF (Free Guide)",
+    "description": "Honest guide to removing watermarks from PDFs: annotation-based stamps, image watermarks, and what each method can remove.",
+    "url": "https://pdfree.io/blog/how-to-remove-watermark-from-pdf/",
+    "datePublished": "2026-05-24",
+    "dateModified": "2026-05-24",
+    "publisher": { "@type": "Organization", "name": "PDFree", "url": "https://pdfree.io" },
+    "author": { "@type": "Organization", "name": "PDFree" }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "PDFree", "item": "https://pdfree.io/" },
+      { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://pdfree.io/blog/" },
+      { "@type": "ListItem", "position": 3, "name": "How to Remove Watermark from PDF", "item": "https://pdfree.io/blog/how-to-remove-watermark-from-pdf/" }
+    ]
+  }
+  </script>
+</head>
+<body>
+
+  <nav>
+    <a href="../../" class="logo" id="logo" aria-label="Go to homepage" style="text-decoration:none"><span class="logo-text">PDF<span>ree</span></span></a>
+    <div class="nav-links">
+      <a href="../../merge-pdf/"              class="nav-link" data-tool="merge">Merge</a>
+      <a href="../../split-pdf/"              class="nav-link" data-tool="split">Split</a>
+      <a href="../../compress-pdf/"           class="nav-link" data-tool="compress">Compress</a>
+      <a href="../../jpg2pdf/"                class="nav-link" data-tool="jpg2pdf">JPG→PDF</a>
+      <a href="../../pdf2jpg/"                class="nav-link" data-tool="pdf2jpg">PDF→JPG</a>
+      <a href="../../watermark-pdf/"          class="nav-link" data-tool="watermark">Watermark</a>
+      <a href="../../add-page-numbers-to-pdf/" class="nav-link" data-tool="pagenum">Page №</a>
+      <a href="../../metadata-pdf/"           class="nav-link" data-tool="meta">Metadata</a>
+      <a href="../../extract-pdf/"            class="nav-link" data-tool="extract">Extract</a>
+      <a href="../../redact-pdf/"             class="nav-link" data-tool="redact">Redact</a>
+      <a href="../../rotate-pdf/"             class="nav-link" data-tool="rotate">Rotate</a>
+      <a href="../../protect-pdf/"            class="nav-link" data-tool="protect">Protect</a>
+    </div>
+  </nav>
+
+  <section class="seo-article" aria-labelledby="articleTitle">
+    <div class="seo-article__inner">
+      <div style="max-width:800px;margin:60px auto 40px;padding:0 24px;color:var(--text2);line-height:1.8;">
+
+        <p style="font-size:13px;color:var(--text3);margin:0 0 16px;">
+          <a href="../../" style="color:var(--text3);text-decoration:none;">PDFree</a> ›
+          <a href="../" style="color:var(--text3);text-decoration:none;">Blog</a> ›
+          How to Remove Watermark from PDF
+        </p>
+
+        <h1 id="articleTitle" style="font-size:32px;color:var(--text);margin:0 0 16px;font-weight:700;line-height:1.25;">How to Remove a Watermark From a PDF<br>(Free, Honest Guide)</h1>
+
+        <p style="font-size:15px;color:var(--text3);margin:0 0 32px;">6-minute read · Updated May 2026</p>
+
+        <p style="font-size:18px;margin:0 0 32px;color:var(--text);">Most guides on "removing watermarks from PDF" promise to remove any watermark with one click. That is not honest. Whether a watermark can be removed depends entirely on <em>how it was added to the PDF</em>. This guide explains the difference and tells you exactly what PDFree — and any other free tool — can and cannot do.</p>
+
+        <h2 style="font-size:22px;color:var(--text);margin:0 0 16px;font-weight:600;">The two types of PDF watermarks</h2>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin:0 0 32px;">
+          <div style="background:var(--green-light);border:1px solid rgba(45,122,79,0.2);border-radius:12px;padding:20px;">
+            <strong style="color:var(--green);display:block;margin-bottom:8px;font-size:15px;">✓ Annotation-based watermarks</strong>
+            <p style="margin:0;font-size:14px;color:var(--text2);">Added as PDF annotations (stamps) layered on top of the page content. Created by Acrobat's "Watermark" dialog, PDF-processing software, and many PDF tools. These are <strong>removable</strong> — they are separate objects from the page content and can be stripped without touching the underlying document.</p>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;">
+            <strong style="color:var(--text);display:block;margin-bottom:8px;font-size:15px;">✗ Content-stream watermarks</strong>
+            <p style="margin:0;font-size:14px;color:var(--text2);">Baked directly into the page's drawing instructions (content stream). Cannot be separated from the page content without OCR-level analysis or manual editing. No browser-based tool can remove these — they require specialized software like Acrobat Pro or QPDF with content editing.</p>
+          </div>
+        </div>
+
+        <p>The way to find out which type you have: open the PDF in a PDF reader, try to click on the watermark. If it selects as a separate object (a box appears around just the watermark), it is annotation-based and removable. If clicking just selects the whole page or the text beneath, it is baked into the content stream.</p>
+
+        <h2 style="font-size:22px;color:var(--text);margin:32px 0 16px;font-weight:600;">How to remove annotation-based watermarks with PDFree</h2>
+
+        <p>PDFree's merge, compress, split, and rotate tools include a "Remove watermarks" toggle that strips PDF annotations of type <code style="background:var(--surface2);padding:2px 6px;border-radius:4px;font-size:13px;">/Watermark</code> and <code style="background:var(--surface2);padding:2px 6px;border-radius:4px;font-size:13px;">/Stamp</code> while leaving functional elements like links (<code style="background:var(--surface2);padding:2px 6px;border-radius:4px;font-size:13px;">/Link</code>) and form fields (<code style="background:var(--surface2);padding:2px 6px;border-radius:4px;font-size:13px;">/Widget</code>) intact.</p>
+
+        <ol style="margin:16px 0 32px;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:20px;">
+          <li style="display:flex;gap:16px;align-items:flex-start;">
+            <span style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;">1</span>
+            <div>
+              <strong style="color:var(--text);">Open any PDFree processing tool</strong>
+              <p style="margin:4px 0 0;">Go to <a href="../../merge-pdf/" style="color:var(--green);">Merge</a>, <a href="../../compress-pdf/" style="color:var(--green);">Compress</a>, <a href="../../split-pdf/" style="color:var(--green);">Split</a>, or <a href="../../rotate-pdf/" style="color:var(--green);">Rotate</a>. The watermark removal toggle is available in all four.</p>
+            </div>
+          </li>
+          <li style="display:flex;gap:16px;align-items:flex-start;">
+            <span style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;">2</span>
+            <div>
+              <strong style="color:var(--text);">Add your PDF</strong>
+              <p style="margin:4px 0 0;">Drop or select your PDF. Files stay in your browser — nothing is uploaded to a server.</p>
+            </div>
+          </li>
+          <li style="display:flex;gap:16px;align-items:flex-start;">
+            <span style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;">3</span>
+            <div>
+              <strong style="color:var(--text);">Enable "Remove watermarks"</strong>
+              <p style="margin:4px 0 0;">Look for the "Remove watermarks" toggle in the options panel. Enable it before processing.</p>
+            </div>
+          </li>
+          <li style="display:flex;gap:16px;align-items:flex-start;">
+            <span style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;">4</span>
+            <div>
+              <strong style="color:var(--text);">Process and download</strong>
+              <p style="margin:4px 0 0;">Run the tool (Merge, Compress, etc.) and download the result. Open it — annotation-based watermarks will be gone.</p>
+            </div>
+          </li>
+        </ol>
+
+        <div style="background:var(--green-light);border-left:4px solid var(--green);padding:18px 20px;border-radius:0 8px 8px 0;margin:0 0 32px;">
+          <p style="margin:0;font-size:14px;color:var(--text);"><strong>What gets removed:</strong> Annotations of type /Watermark and /Stamp — these include watermarks added by Acrobat's Watermark dialog, PDF tools, and most document management software.</p>
+          <p style="margin:8px 0 0;font-size:14px;color:var(--text)"><strong>What is preserved:</strong> Hyperlinks (/Link annotations), form fields (/Widget), comments (/Text), and all other annotation types remain untouched.</p>
+        </div>
+
+        <!-- CTA -->
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:28px;margin:0 0 40px;text-align:center;">
+          <p style="font-size:16px;font-weight:600;color:var(--text);margin:0 0 8px;">Try it now — free, no upload</p>
+          <p style="font-size:14px;color:var(--text2);margin:0 0 20px;">Enable "Remove watermarks" when you merge or compress your PDF.</p>
+          <a href="../../merge-pdf/" style="background:var(--green);color:#fff;padding:13px 28px;border-radius:10px;font-weight:600;font-size:15px;text-decoration:none;display:inline-block;margin-right:12px;">Merge PDF</a>
+          <a href="../../compress-pdf/" style="background:transparent;color:var(--green);padding:13px 28px;border-radius:10px;font-weight:600;font-size:15px;text-decoration:none;display:inline-block;border:1.5px solid var(--green);">Compress PDF</a>
+        </div>
+
+        <h2 style="font-size:22px;color:var(--text);margin:0 0 16px;font-weight:600;">What about image watermarks baked into content?</h2>
+        <p>If the watermark is drawn directly into the page as raster or vector content (not as a separate annotation layer), <strong>no browser-based tool can remove it cleanly</strong>. This includes:</p>
+        <ul style="margin:12px 0 24px;padding-left:24px;display:flex;flex-direction:column;gap:8px;">
+          <li>Watermarks applied during PDF export from stock photo services (Shutterstock, Getty)</li>
+          <li>Watermarks added by print-to-PDF drivers as page content</li>
+          <li>Draft/confidential text drawn into the page content stream rather than as annotations</li>
+        </ul>
+        <p>For these cases, options are limited:</p>
+        <ul style="margin:12px 0 24px;padding-left:24px;display:flex;flex-direction:column;gap:8px;">
+          <li><strong>Adobe Acrobat Pro</strong> — Has a "Edit PDF" mode that can select and delete content objects on individual pages. Expensive ($15–$25/month) but capable.</li>
+          <li><strong>Cover the watermark</strong> — Use PDFree's <a href="../../redact-pdf/" style="color:var(--green);">Redact tool</a> to place an opaque rectangle over each watermark occurrence. This hides rather than removes it, but works for sharing purposes.</li>
+          <li><strong>Recreate the document</strong> — If you have the source file (Word, InDesign), remove the watermark there and re-export as PDF.</li>
+        </ul>
+
+        <h2 style="font-size:22px;color:var(--text);margin:32px 0 16px;font-weight:600;">Is removing a watermark legal?</h2>
+        <p>It depends on the document and its terms. For documents you own or have created (your own company's branded PDF, your own draft watermarks, your own scans), removing a watermark is perfectly legal. For licensed content (stock images, purchased documents with "SAMPLE" watermarks), removing the watermark typically violates the license terms. Only remove watermarks from documents you are authorized to modify.</p>
+
+        <!-- Related -->
+        <div style="padding-top:24px;border-top:1px solid var(--border);margin-top:40px;">
+          <p style="font-size:12px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin:0 0 10px;">Related reading</p>
+          <ul style="margin:0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:6px;">
+            <li><a href="../../watermark-pdf/" style="color:var(--green);">Add watermark to PDF</a> — add your own watermarks or stamps</li>
+            <li><a href="../../redact-pdf/" style="color:var(--green);">Redact PDF</a> — cover content that can't be removed</li>
+            <li><a href="/blog/how-to-compress-pdf-for-email/" style="color:var(--green);">How to compress PDF for email</a> — reduce size after processing</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div style="display:flex;gap:48px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;font-size:13px;border-top:1px solid var(--border);padding-top:20px;">
+      <div>
+        <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Alternatives</div>
+        <a href="/ilovepdf-alternative/" style="display:block;color:var(--green);text-decoration:none;margin-bottom:4px;">iLovePDF Alternative</a>
+      </div>
+      <div>
+        <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Solutions</div>
+        <a href="/hipaa-pdf-tools/" style="display:block;color:var(--green);text-decoration:none;margin-bottom:4px;">HIPAA Compliant PDF</a>
+        <a href="/secure-pdf-tools/" style="display:block;color:var(--green);text-decoration:none;">Secure PDF Tools</a>
+      </div>
+    </div>
+    PDFree · <strong>All processing happens 100% in your browser</strong> · Files are <strong>never uploaded</strong><br>
+    <span style="color:var(--green)">🔒</span> Your documents never leave your device &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> Built to be free for everyone, forever<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
+      <a href="/privacy.html" style="color:var(--green)">Privacy</a> &nbsp;·&nbsp;
+      <a href="/terms.html" style="color:var(--green)">Terms</a> &nbsp;·&nbsp;
+      <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a> &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green)">GitHub</a>
+    </span>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script>
+</body>
+</html>

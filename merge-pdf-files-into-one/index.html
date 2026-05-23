@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src  'self' 'wasm-unsafe-eval' blob:
+                https://cdnjs.cloudflare.com https://esm.sh
+                https://plausible.io https://pagead2.googlesyndication.com
+                https://static.cloudflareinsights.com;
+    style-src   'self' 'unsafe-inline';
+    font-src    'self';
+    img-src     'self' data: blob: https:;
+    connect-src 'self' https://cdnjs.cloudflare.com https://*.workers.dev
+                https://plausible.io https://pagead2.googlesyndication.com
+                https://www.googletagservices.com https://*.doubleclick.net
+                https://cloudflareinsights.com;
+    frame-src   https://googleads.g.doubleclick.net https://tpc.googlesyndication.com;
+    worker-src  'self' blob:;
+    object-src  'none';
+  ">
+
+  <title>Merge PDF Files Into One — Free, No Upload Required | PDFree</title>
+  <meta name="description" content="Merge PDF files into one document free — no upload, no account, no file size limit. Combine and reorder PDFs entirely in your browser. Works on desktop and mobile.">
+
+  <meta property="og:title"       content="Merge PDF Files Into One — Free, No Upload | PDFree">
+  <meta property="og:description" content="Combine any number of PDFs into one file. Drag to reorder, no upload, no account, no limits. Free browser-based PDF merger.">
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://pdfree.io/merge-pdf-files-into-one/">
+  <meta property="og:site_name"   content="PDFree">
+  <meta property="og:image"       content="https://pdfree.io/icons/og-image.jpg">
+  <meta name="twitter:card"       content="summary_large_image">
+  <meta name="twitter:site"       content="@pdfree_io">
+  <meta name="twitter:image"      content="https://pdfree.io/icons/og-image.jpg">
+
+  <link rel="canonical" href="https://pdfree.io/merge-pdf-files-into-one/">
+  <link rel="alternate" hreflang="en"        href="https://pdfree.io/merge-pdf-files-into-one/">
+  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/merge-pdf-files-into-one/">
+
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="PDFree">
+  <link rel="apple-touch-icon" href="../icons/icon-192.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+  <link rel="stylesheet" href="../css/fonts.css">
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/animations.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Merge PDF Files Into One",
+    "description": "Combine multiple PDF files into one document. Drag to reorder. No upload, no file size limit, no account required.",
+    "url": "https://pdfree.io/merge-pdf-files-into-one/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "featureList": [
+      "Merge any number of PDF files",
+      "Drag-and-drop to reorder pages before merging",
+      "No file size limit",
+      "No upload — 100% private",
+      "Works on desktop and mobile",
+      "No account required"
+    ],
+    "provider": { "@type": "Organization", "name": "PDFree", "url": "https://pdfree.io" }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How many PDF files can I merge into one?",
+        "acceptedAnswer": { "@type": "Answer", "text": "There is no limit on the number of files. PDFree merges PDFs entirely in your browser using available RAM, so the practical limit is determined by your device's memory. Most users successfully merge 20–50 files. For very large batches, merge in groups if you encounter performance issues." }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I change the order of pages before merging?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes. After adding files, drag and drop them in the file list to reorder them before merging. The merged PDF will follow the order shown in the list. On mobile, use touch drag to reorder." }
+      },
+      {
+        "@type": "Question",
+        "name": "Does merging affect PDF quality?",
+        "acceptedAnswer": { "@type": "Answer", "text": "No. PDFree's merge operation assembles PDF pages without re-encoding them. Images, fonts, vector graphics, and text remain at their original quality — merging is lossless." }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I merge PDFs with different page sizes?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes. PDFree merges PDFs regardless of page size (A4, Letter, A3, custom). Each page retains its original dimensions. If you want a uniform page size, you would need to resize pages before merging, which is not currently supported in the merge tool." }
+      },
+      {
+        "@type": "Question",
+        "name": "Is my data private when merging PDFs?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes. All processing happens in your browser using JavaScript. No file is ever transmitted to a PDFree server. Confidential documents stay on your device throughout the merge process." }
+      }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "PDFree", "item": "https://pdfree.io/" },
+      { "@type": "ListItem", "position": 2, "name": "Merge PDF Files Into One", "item": "https://pdfree.io/merge-pdf-files-into-one/" }
+    ]
+  }
+  </script>
+</head>
+<body>
+
+  <nav>
+    <a href="../" class="logo" aria-label="Go to homepage" style="text-decoration:none">
+      <span class="logo-text">PDF<span>ree</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="../merge-pdf/"              class="nav-link" data-tool="merge">Merge</a>
+      <a href="../split-pdf/"              class="nav-link" data-tool="split">Split</a>
+      <a href="../compress-pdf/"           class="nav-link" data-tool="compress">Compress</a>
+      <a href="../jpg2pdf/"                class="nav-link" data-tool="jpg2pdf">JPG→PDF</a>
+      <a href="../pdf2jpg/"                class="nav-link" data-tool="pdf2jpg">PDF→JPG</a>
+      <a href="../watermark-pdf/"          class="nav-link" data-tool="watermark">Watermark</a>
+      <a href="../add-page-numbers-to-pdf/" class="nav-link" data-tool="pagenum">Page №</a>
+      <a href="../metadata-pdf/"           class="nav-link" data-tool="meta">Metadata</a>
+      <a href="../extract-pdf/"            class="nav-link" data-tool="extract">Extract</a>
+      <a href="../redact-pdf/"             class="nav-link" data-tool="redact">Redact</a>
+      <a href="../rotate-pdf/"             class="nav-link" data-tool="rotate">Rotate</a>
+      <a href="../protect-pdf/"            class="nav-link" data-tool="protect">Protect</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section style="background:var(--green-light);border-bottom:1px solid rgba(45,122,79,0.15);padding:52px 24px 44px;text-align:center;">
+    <div style="max-width:720px;margin:0 auto;">
+      <div style="display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid rgba(45,122,79,0.2);border-radius:24px;padding:6px 16px;font-size:13px;color:var(--green);font-weight:500;margin-bottom:20px;">
+        <span style="width:7px;height:7px;background:var(--green);border-radius:50%;display:inline-block;"></span>
+        No upload · Free · No file limit · Drag to reorder
+      </div>
+      <h1 style="font-size:clamp(28px,4.5vw,44px);font-weight:700;letter-spacing:-1px;line-height:1.15;color:var(--text);margin:0 0 16px;">Merge PDF Files Into One —<br>Free, No Upload Required</h1>
+      <p style="font-size:17px;color:var(--text2);max-width:600px;margin:0 auto 28px;line-height:1.6;">Combine any number of PDF files into a single document. Drag to reorder before merging. Everything runs in your browser — files are never uploaded to any server.</p>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <a href="../merge-pdf/" style="background:var(--green);color:#fff;padding:13px 28px;border-radius:10px;font-weight:600;font-size:15px;text-decoration:none;">Merge PDF Files — Free</a>
+        <a href="#how-it-works" style="background:#fff;color:var(--green);padding:13px 28px;border-radius:10px;font-weight:500;font-size:15px;text-decoration:none;border:1.5px solid rgba(45,122,79,0.3);">How it works ↓</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Badge bar -->
+  <section style="padding:16px 24px;border-bottom:1px solid var(--border);background:var(--surface);">
+    <div style="max-width:720px;margin:0 auto;display:flex;gap:24px;justify-content:center;flex-wrap:wrap;">
+      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">🔗 Unlimited files</span>
+      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">🔒 Files never uploaded</span>
+      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">↕️ Drag to reorder</span>
+      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">✓ Lossless quality</span>
+      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">✓ Free forever</span>
+    </div>
+  </section>
+
+  <!-- Content -->
+  <section class="seo-article">
+    <div class="seo-article__inner">
+      <div style="max-width:800px;margin:60px auto 40px;padding:0 24px;color:var(--text2);line-height:1.8;">
+
+        <!-- Use cases -->
+        <h2 style="font-size:26px;color:var(--text);margin:0 0 16px;font-weight:700;">When to Merge PDF Files Into One</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:16px 0 32px;">
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;">
+            <strong style="color:var(--text);display:block;margin-bottom:6px;">📑 Compile a report</strong>
+            <span style="font-size:13px;color:var(--text2);">Cover page, chapters, appendices, and references — separate PDFs from different authors, merged into one final document.</span>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;">
+            <strong style="color:var(--text);display:block;margin-bottom:6px;">🖨️ Combine scanned pages</strong>
+            <span style="font-size:13px;color:var(--text2);">Flatbed scanner produces one PDF per page. Merge all scanned pages into a single multi-page document.</span>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;">
+            <strong style="color:var(--text);display:block;margin-bottom:6px;">📂 Build a portfolio</strong>
+            <span style="font-size:13px;color:var(--text2);">Combine work samples, CV, and cover letter into one file for a cleaner job application submission.</span>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;">
+            <strong style="color:var(--text);display:block;margin-bottom:6px;">🧾 Bundle invoices or receipts</strong>
+            <span style="font-size:13px;color:var(--text2);">Monthly expenses as separate PDFs. Merge into one file per quarter for accountants or expense reports.</span>
+          </div>
+        </div>
+
+        <!-- How it works -->
+        <div id="how-it-works"></div>
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 16px;font-weight:700;">How PDFree Merges PDFs — Lossless, Browser-Only</h2>
+        <p>Unlike cloud PDF tools that upload your documents to a server for processing, PDFree uses pdf-lib — a JavaScript library that runs entirely in your browser. Your PDF pages are read from your device, assembled into a new PDF document in memory, and downloaded directly. No network request is made. No copy of your document ever exists outside your device.</p>
+        <p style="margin-top:16px;">The merge is <strong>lossless</strong>: images, fonts, vector graphics, bookmarks, and form fields are preserved at their original quality. No re-encoding happens during merging.</p>
+        <div style="background:var(--green-light);border-left:4px solid var(--green);padding:18px 20px;border-radius:0 8px 8px 0;margin:24px 0 32px;">
+          <p style="margin:0;font-size:14px;color:var(--text);">PDFree is open source (GNU AGPLv3) and has no server-side PDF processing infrastructure — it is architecturally incapable of storing your documents.</p>
+        </div>
+
+        <!-- Step by step -->
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 16px;font-weight:700;">How to Merge PDF Files Into One — 3 Steps</h2>
+        <ol style="margin:0 0 32px;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:16px;">
+          <li style="display:flex;gap:16px;align-items:flex-start;">
+            <span style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;">1</span>
+            <div>
+              <strong style="color:var(--text);">Open PDFree Merge</strong>
+              <p style="margin:4px 0 0;font-size:14px;">Go to <a href="../merge-pdf/" style="color:var(--green);">pdfree.io/merge-pdf/</a>. No account or login required.</p>
+            </div>
+          </li>
+          <li style="display:flex;gap:16px;align-items:flex-start;">
+            <span style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;">2</span>
+            <div>
+              <strong style="color:var(--text);">Add your PDF files</strong>
+              <p style="margin:4px 0 0;font-size:14px;">Drag and drop files onto the upload area, or click "Choose files" and select multiple PDFs at once. Drag the file list to reorder — the merge follows the order shown.</p>
+            </div>
+          </li>
+          <li style="display:flex;gap:16px;align-items:flex-start;">
+            <span style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;">3</span>
+            <div>
+              <strong style="color:var(--text);">Click Merge PDF and download</strong>
+              <p style="margin:4px 0 0;font-size:14px;">Click the "Merge PDF" button. The combined file downloads directly to your device. The original files are untouched.</p>
+            </div>
+          </li>
+        </ol>
+
+        <!-- CTA -->
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:28px;margin:0 0 48px;text-align:center;">
+          <p style="font-size:16px;font-weight:600;color:var(--text);margin:0 0 8px;">Merge your PDFs now</p>
+          <p style="font-size:14px;color:var(--text2);margin:0 0 20px;">Free, no upload, no account. Files stay on your device.</p>
+          <a href="../merge-pdf/" style="background:var(--green);color:#fff;padding:13px 28px;border-radius:10px;font-weight:600;font-size:15px;text-decoration:none;display:inline-block;">Merge PDF Files Into One</a>
+        </div>
+
+        <!-- Comparison -->
+        <h2 style="font-size:26px;color:var(--text);margin:0 0 16px;font-weight:700;">PDFree vs Other PDF Mergers</h2>
+        <div style="overflow-x:auto;margin:16px 0 32px;">
+          <table style="width:100%;border-collapse:collapse;font-size:14px;min-width:480px;">
+            <thead>
+              <tr style="border-bottom:2px solid var(--border);">
+                <th style="text-align:left;padding:10px 14px;color:var(--text);font-weight:600;"></th>
+                <th style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">PDFree</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text2);font-weight:600;">iLovePDF</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text2);font-weight:600;">Adobe Acrobat</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom:1px solid var(--border);background:var(--green-light);">
+                <td style="padding:10px 14px;color:var(--text);">Price</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">Free</td>
+                <td style="text-align:center;padding:10px 14px;">Free (limited)</td>
+                <td style="text-align:center;padding:10px 14px;">$14.99/mo</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 14px;color:var(--text);">File uploaded to server</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">Never</td>
+                <td style="text-align:center;padding:10px 14px;">Always</td>
+                <td style="text-align:center;padding:10px 14px;">Yes</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);background:var(--green-light);">
+                <td style="padding:10px 14px;color:var(--text);">File size limit</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">None</td>
+                <td style="text-align:center;padding:10px 14px;">100 MB (free)</td>
+                <td style="text-align:center;padding:10px 14px;">Unlimited (paid)</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 14px;color:var(--text);">Daily task limit</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">None</td>
+                <td style="text-align:center;padding:10px 14px;">2/day (free)</td>
+                <td style="text-align:center;padding:10px 14px;">Unlimited (paid)</td>
+              </tr>
+              <tr>
+                <td style="padding:10px 14px;color:var(--text);">Works offline</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">✓ Yes (PWA)</td>
+                <td style="text-align:center;padding:10px 14px;">✗ No</td>
+                <td style="text-align:center;padding:10px 14px;">Desktop app only</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- FAQ -->
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 20px;font-weight:700;">Frequently Asked Questions</h2>
+        <div style="display:flex;flex-direction:column;gap:20px;">
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">How many PDF files can I merge at once?</h3>
+            <p style="margin:0;font-size:14px;">There is no limit. PDFree merges entirely in your browser — the practical limit is your device's RAM. Most users successfully merge 20–50 files without issues.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Can I reorder files before merging?</h3>
+            <p style="margin:0;font-size:14px;">Yes. Drag and drop files in the list to reorder them. The merged PDF will follow the order shown. Touch drag is also supported on mobile.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Does merging reduce PDF quality?</h3>
+            <p style="margin:0;font-size:14px;">No. Merging is lossless — images, fonts, and vector graphics are preserved at original quality. No re-encoding happens.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Can I merge PDFs with different page sizes?</h3>
+            <p style="margin:0;font-size:14px;">Yes. A4, Letter, A3, and custom sizes all merge correctly. Each page retains its original dimensions in the output.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Is my data private?</h3>
+            <p style="margin:0;font-size:14px;">Completely. All processing happens in your browser. No file is ever transmitted to a server — your documents never leave your device.</p>
+          </div>
+        </div>
+
+        <!-- Related links -->
+        <div style="margin-top:48px;padding-top:24px;border-top:1px solid var(--border);">
+          <p style="font-size:12px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin:0 0 10px;">Related tools</p>
+          <ul style="margin:0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:6px;">
+            <li><a href="/merge-pdf-without-uploading/" style="color:var(--green);font-weight:500;">Merge PDF without uploading</a> — privacy-focused merge guide</li>
+            <li><a href="/merge-large-pdf-files/" style="color:var(--green);font-weight:500;">Merge large PDF files free</a> — no size restrictions</li>
+            <li><a href="/split-pdf-into-multiple-files/" style="color:var(--green);font-weight:500;">Split PDF into multiple files</a> — divide before merging</li>
+            <li><a href="/compress-pdf-for-email/" style="color:var(--green);font-weight:500;">Compress PDF for email</a> — reduce merged file size</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div style="display:flex;gap:48px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;font-size:13px;border-top:1px solid var(--border);padding-top:20px;">
+      <div>
+        <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Alternatives</div>
+        <a href="/ilovepdf-alternative/" style="display:block;color:var(--green);text-decoration:none;margin-bottom:4px;">iLovePDF Alternative</a>
+      </div>
+      <div>
+        <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Solutions</div>
+        <a href="/hipaa-pdf-tools/" style="display:block;color:var(--green);text-decoration:none;margin-bottom:4px;">HIPAA Compliant PDF</a>
+        <a href="/secure-pdf-tools/" style="display:block;color:var(--green);text-decoration:none;">Secure PDF Tools</a>
+      </div>
+    </div>
+    PDFree · <strong>All processing happens 100% in your browser</strong> · Files are <strong>never uploaded</strong><br>
+    <span style="color:var(--green)">🔒</span> Your documents never leave your device &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> Built to be free for everyone, forever<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
+      <a href="/privacy.html" style="color:var(--green)">Privacy</a> &nbsp;·&nbsp;
+      <a href="/terms.html" style="color:var(--green)">Terms</a> &nbsp;·&nbsp;
+      <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a> &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green)">GitHub</a>
+    </span>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script>
+</body>
+</html>

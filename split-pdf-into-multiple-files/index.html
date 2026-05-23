@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src  'self' 'wasm-unsafe-eval' blob:
+                https://cdnjs.cloudflare.com https://esm.sh
+                https://plausible.io https://pagead2.googlesyndication.com
+                https://static.cloudflareinsights.com;
+    style-src   'self' 'unsafe-inline';
+    font-src    'self';
+    img-src     'self' data: blob: https:;
+    connect-src 'self' https://cdnjs.cloudflare.com https://*.workers.dev
+                https://plausible.io https://pagead2.googlesyndication.com
+                https://www.googletagservices.com https://*.doubleclick.net
+                https://cloudflareinsights.com;
+    frame-src   https://googleads.g.doubleclick.net https://tpc.googlesyndication.com;
+    worker-src  'self' blob:;
+    object-src  'none';
+  ">
+
+  <title>Split PDF Into Multiple Files — Free, No Upload | PDFree</title>
+  <meta name="description" content="Split a PDF into multiple files or separate pages for free. Extract any page range, pick odd/even pages, or split every page — no upload, no account, instantly in your browser.">
+
+  <meta property="og:title"       content="Split PDF Into Multiple Files — Free, No Upload | PDFree">
+  <meta property="og:description" content="Divide any PDF into separate files by page range, individual pages, or odd/even. Free, private, no server upload.">
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://pdfree.io/split-pdf-into-multiple-files/">
+  <meta property="og:site_name"   content="PDFree">
+  <meta property="og:image"       content="https://pdfree.io/icons/og-image.jpg">
+  <meta name="twitter:card"       content="summary_large_image">
+  <meta name="twitter:site"       content="@pdfree_io">
+  <meta name="twitter:image"      content="https://pdfree.io/icons/og-image.jpg">
+
+  <link rel="canonical" href="https://pdfree.io/split-pdf-into-multiple-files/">
+  <link rel="alternate" hreflang="en"        href="https://pdfree.io/split-pdf-into-multiple-files/">
+  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/split-pdf-into-multiple-files/">
+
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="PDFree">
+  <link rel="apple-touch-icon" href="../icons/icon-192.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+  <link rel="stylesheet" href="../css/fonts.css">
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/animations.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Split PDF Into Multiple Files",
+    "description": "Split any PDF into separate files by page range, individual pages, or odd/even pages — free, entirely in your browser, with no upload.",
+    "url": "https://pdfree.io/split-pdf-into-multiple-files/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "featureList": [
+      "Split by custom page range (e.g. 1-5, 8, 12-20)",
+      "Extract individual pages as separate PDFs",
+      "Odd / even page split",
+      "Download as ZIP archive",
+      "No upload — 100% private",
+      "No file size limit"
+    ],
+    "provider": { "@type": "Organization", "name": "PDFree", "url": "https://pdfree.io" }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Can I split a PDF into individual pages?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes. Use the 'All pages' option to split every page into its own PDF file. The result downloads as a ZIP archive named with page numbers (page-1.pdf, page-2.pdf, and so on). There is no limit on the number of pages." }
+      },
+      {
+        "@type": "Question",
+        "name": "What page range format does PDFree support?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Enter comma-separated page numbers and ranges: for example '1, 3-7, 12, 15-20'. Spaces are optional. You can also click individual page thumbnails in the visual viewer to select or deselect them." }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the difference between Split and Extract in PDFree?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Split lets you select specific pages and choose whether to download them as one merged PDF or as separate files in a ZIP. Extract is a simpler tool for pulling a single page range into one new PDF. Use Split when you need multiple output files; use Extract when you need one." }
+      },
+      {
+        "@type": "Question",
+        "name": "Is there a page limit for splitting?",
+        "acceptedAnswer": { "@type": "Answer", "text": "No server-side limit. The practical limit is your browser's available RAM. PDFs with hundreds of pages and high-resolution images may take a few seconds to render thumbnails, but the split operation itself is fast." }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I split a password-protected PDF?",
+        "acceptedAnswer": { "@type": "Answer", "text": "PDFree can split owner-restricted PDFs (where the owner password enables editing but the file opens normally). AES-encrypted PDFs that require a user password to open cannot be split without first removing the password with a tool like qpdf." }
+      }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "PDFree", "item": "https://pdfree.io/" },
+      { "@type": "ListItem", "position": 2, "name": "Split PDF Into Multiple Files", "item": "https://pdfree.io/split-pdf-into-multiple-files/" }
+    ]
+  }
+  </script>
+</head>
+<body>
+
+  <nav>
+    <a href="../" class="logo" aria-label="Go to homepage" style="text-decoration:none">
+      <span class="logo-text">PDF<span>ree</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="../merge-pdf/"              class="nav-link" data-tool="merge">Merge</a>
+      <a href="../split-pdf/"              class="nav-link" data-tool="split">Split</a>
+      <a href="../compress-pdf/"           class="nav-link" data-tool="compress">Compress</a>
+      <a href="../jpg2pdf/"                class="nav-link" data-tool="jpg2pdf">JPG→PDF</a>
+      <a href="../pdf2jpg/"                class="nav-link" data-tool="pdf2jpg">PDF→JPG</a>
+      <a href="../watermark-pdf/"          class="nav-link" data-tool="watermark">Watermark</a>
+      <a href="../add-page-numbers-to-pdf/" class="nav-link" data-tool="pagenum">Page №</a>
+      <a href="../metadata-pdf/"           class="nav-link" data-tool="meta">Metadata</a>
+      <a href="../extract-pdf/"            class="nav-link" data-tool="extract">Extract</a>
+      <a href="../redact-pdf/"             class="nav-link" data-tool="redact">Redact</a>
+      <a href="../rotate-pdf/"             class="nav-link" data-tool="rotate">Rotate</a>
+      <a href="../protect-pdf/"            class="nav-link" data-tool="protect">Protect</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section style="background:var(--green-light);border-bottom:1px solid rgba(45,122,79,0.15);padding:52px 24px 44px;text-align:center;">
+    <div style="max-width:720px;margin:0 auto;">
+      <div style="display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid rgba(45,122,79,0.2);border-radius:24px;padding:6px 16px;font-size:13px;color:var(--green);font-weight:500;margin-bottom:20px;">
+        <span style="width:7px;height:7px;background:var(--green);border-radius:50%;display:inline-block;"></span>
+        No upload · Free · Pick any pages · Download as ZIP
+      </div>
+      <h1 style="font-size:clamp(28px,4.5vw,44px);font-weight:700;letter-spacing:-1px;line-height:1.15;color:var(--text);margin:0 0 16px;">Split PDF Into Multiple Files —<br>Free, No Upload</h1>
+      <p style="font-size:17px;color:var(--text2);max-width:600px;margin:0 auto 28px;line-height:1.6;">Divide any PDF into separate files by page range, extract individual pages, or split odd and even pages. All processing happens in your browser — your document never leaves your device.</p>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <a href="../split-pdf/" style="background:var(--green);color:#fff;padding:13px 28px;border-radius:10px;font-weight:600;font-size:15px;text-decoration:none;">Split PDF Now — Free</a>
+        <a href="#split-modes" style="background:#fff;color:var(--green);padding:13px 28px;border-radius:10px;font-weight:500;font-size:15px;text-decoration:none;border:1.5px solid rgba(45,122,79,0.3);">See split options ↓</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Badge bar -->
+  <section style="padding:16px 24px;border-bottom:1px solid var(--border);background:var(--surface);">
+    <div style="max-width:720px;margin:0 auto;display:flex;gap:24px;justify-content:center;flex-wrap:wrap;">
+      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">✂️ Custom page ranges</span>
+      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">📦 ZIP download</span>
+      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">🔒 Files never uploaded</span>
+      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">✓ No page limit</span>
+      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">✓ Free forever</span>
+    </div>
+  </section>
+
+  <!-- Content -->
+  <section class="seo-article">
+    <div class="seo-article__inner">
+      <div style="max-width:800px;margin:60px auto 40px;padding:0 24px;color:var(--text2);line-height:1.8;">
+
+        <!-- When to split -->
+        <h2 style="font-size:26px;color:var(--text);margin:0 0 16px;font-weight:700;">When You Need to Split a PDF Into Separate Files</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:16px 0 32px;">
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;">
+            <strong style="color:var(--text);display:block;margin-bottom:6px;">📋 Share only part of a document</strong>
+            <span style="font-size:13px;color:var(--text2);">A 60-page report with a 5-page executive summary. Extract those 5 pages and share without the rest.</span>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;">
+            <strong style="color:var(--text);display:block;margin-bottom:6px;">📧 Reduce file size for email</strong>
+            <span style="font-size:13px;color:var(--text2);">A 40 MB combined scan that's too large to email. Split into 4 × 10 MB files and send in parts.</span>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;">
+            <strong style="color:var(--text);display:block;margin-bottom:6px;">🖨️ Separate double-sided scans</strong>
+            <span style="font-size:13px;color:var(--text2);">Split odd and even pages from a batch scan to get front and back pages as separate files for reordering.</span>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;">
+            <strong style="color:var(--text);display:block;margin-bottom:6px;">📑 Split a compiled PDF portfolio</strong>
+            <span style="font-size:13px;color:var(--text2);">A PDF with multiple invoices, chapters, or forms merged together. Extract each section as its own file.</span>
+          </div>
+        </div>
+
+        <!-- Split modes -->
+        <div id="split-modes"></div>
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 16px;font-weight:700;">Split Modes Available in PDFree</h2>
+        <div style="display:flex;flex-direction:column;gap:16px;margin:0 0 32px;">
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;display:flex;gap:16px;align-items:flex-start;">
+            <span style="font-size:24px;flex-shrink:0;">🎯</span>
+            <div>
+              <strong style="color:var(--text);font-size:15px;">Custom page range</strong>
+              <p style="margin:6px 0 0;font-size:14px;">Enter comma-separated pages and ranges: <code style="background:var(--surface2);padding:2px 6px;border-radius:4px;font-size:13px;">1, 3-7, 12, 15-20</code>. Click individual page thumbnails to select visually. Download selected pages as one PDF or as separate files in a ZIP.</p>
+            </div>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;display:flex;gap:16px;align-items:flex-start;">
+            <span style="font-size:24px;flex-shrink:0;">📄</span>
+            <div>
+              <strong style="color:var(--text);font-size:15px;">Split all pages individually</strong>
+              <p style="margin:6px 0 0;font-size:14px;">Split every page into its own PDF file. Download as a ZIP archive. Files are named page-1.pdf, page-2.pdf, etc. No limit on page count.</p>
+            </div>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;display:flex;gap:16px;align-items:flex-start;">
+            <span style="font-size:24px;flex-shrink:0;">↕️</span>
+            <div>
+              <strong style="color:var(--text);font-size:15px;">Odd / Even pages</strong>
+              <p style="margin:6px 0 0;font-size:14px;">Select all odd-numbered or all even-numbered pages with one click. Useful for separating front and back sides from a flatbed scanner or duplex print job.</p>
+            </div>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;display:flex;gap:16px;align-items:flex-start;">
+            <span style="font-size:24px;flex-shrink:0;">⬛</span>
+            <div>
+              <strong style="color:var(--text);font-size:15px;">First half / Second half</strong>
+              <p style="margin:6px 0 0;font-size:14px;">Split the document into two equal halves with one click — useful for large reports or books you want to divide at the midpoint.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step by step -->
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 16px;font-weight:700;">How to Split a PDF Into Multiple Files</h2>
+        <ol style="margin:0 0 32px;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:16px;">
+          <li style="display:flex;gap:16px;align-items:flex-start;">
+            <span style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;">1</span>
+            <div>
+              <strong style="color:var(--text);">Open the Split tool</strong>
+              <p style="margin:4px 0 0;font-size:14px;">Go to <a href="../split-pdf/" style="color:var(--green);">pdfree.io/split-pdf/</a>. No account required — open directly in your browser.</p>
+            </div>
+          </li>
+          <li style="display:flex;gap:16px;align-items:flex-start;">
+            <span style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;">2</span>
+            <div>
+              <strong style="color:var(--text);">Upload your PDF</strong>
+              <p style="margin:4px 0 0;font-size:14px;">Drag and drop or click "Choose files". Page thumbnails render locally in your browser — nothing is sent to a server.</p>
+            </div>
+          </li>
+          <li style="display:flex;gap:16px;align-items:flex-start;">
+            <span style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;">3</span>
+            <div>
+              <strong style="color:var(--text);">Select your pages</strong>
+              <p style="margin:4px 0 0;font-size:14px;">Click thumbnails to select pages, or type a range like <code style="background:var(--surface2);padding:2px 6px;border-radius:4px;font-size:13px;">1-5, 9, 12-20</code>. Use quick-select buttons for odd/even pages or document halves.</p>
+            </div>
+          </li>
+          <li style="display:flex;gap:16px;align-items:flex-start;">
+            <span style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;">4</span>
+            <div>
+              <strong style="color:var(--text);">Choose output format and download</strong>
+              <p style="margin:4px 0 0;font-size:14px;">Select "Separate files (ZIP)" for multiple output files or "Single PDF" to combine selected pages into one file. Click "Split PDF" and download.</p>
+            </div>
+          </li>
+        </ol>
+
+        <!-- CTA -->
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:28px;margin:0 0 48px;text-align:center;">
+          <p style="font-size:16px;font-weight:600;color:var(--text);margin:0 0 8px;">Ready to split your PDF?</p>
+          <p style="font-size:14px;color:var(--text2);margin:0 0 20px;">Free, no upload, no account. Files stay on your device.</p>
+          <a href="../split-pdf/" style="background:var(--green);color:#fff;padding:13px 28px;border-radius:10px;font-weight:600;font-size:15px;text-decoration:none;display:inline-block;">Split PDF Into Multiple Files</a>
+        </div>
+
+        <!-- Comparison -->
+        <h2 style="font-size:26px;color:var(--text);margin:0 0 16px;font-weight:700;">PDFree vs Other PDF Splitters</h2>
+        <div style="overflow-x:auto;margin:16px 0 32px;">
+          <table style="width:100%;border-collapse:collapse;font-size:14px;min-width:480px;">
+            <thead>
+              <tr style="border-bottom:2px solid var(--border);">
+                <th style="text-align:left;padding:10px 14px;color:var(--text);font-weight:600;"></th>
+                <th style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">PDFree</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text2);font-weight:600;">iLovePDF</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text2);font-weight:600;">Smallpdf</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom:1px solid var(--border);background:var(--green-light);">
+                <td style="padding:10px 14px;color:var(--text);">Price</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">Free</td>
+                <td style="text-align:center;padding:10px 14px;">Free (2/day)</td>
+                <td style="text-align:center;padding:10px 14px;">Free (2/day)</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 14px;color:var(--text);">File uploaded to server</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">Never</td>
+                <td style="text-align:center;padding:10px 14px;">Always</td>
+                <td style="text-align:center;padding:10px 14px;">Always</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);background:var(--green-light);">
+                <td style="padding:10px 14px;color:var(--text);">Custom page ranges</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">✓</td>
+                <td style="text-align:center;padding:10px 14px;">✓ (paid)</td>
+                <td style="text-align:center;padding:10px 14px;">✓ (paid)</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 14px;color:var(--text);">Visual page picker</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">✓</td>
+                <td style="text-align:center;padding:10px 14px;">✓</td>
+                <td style="text-align:center;padding:10px 14px;">✓</td>
+              </tr>
+              <tr>
+                <td style="padding:10px 14px;color:var(--text);">Works offline</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">✓ Yes (PWA)</td>
+                <td style="text-align:center;padding:10px 14px;">✗ No</td>
+                <td style="text-align:center;padding:10px 14px;">✗ No</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- FAQ -->
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 20px;font-weight:700;">Frequently Asked Questions</h2>
+        <div style="display:flex;flex-direction:column;gap:20px;">
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Can I split a PDF into individual pages?</h3>
+            <p style="margin:0;font-size:14px;">Yes. Use the "All pages" option to split every page into its own PDF. Files download as a ZIP archive, named page-1.pdf, page-2.pdf, and so on.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">What page range format does PDFree accept?</h3>
+            <p style="margin:0;font-size:14px;">Enter comma-separated pages and ranges: <code style="background:var(--surface2);padding:2px 6px;border-radius:4px;">1, 3-7, 12, 15-20</code>. Spaces are optional. You can also click individual thumbnails to select pages visually.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">What is the difference between Split and Extract?</h3>
+            <p style="margin:0;font-size:14px;">Split lets you choose pages and download them as multiple separate files or as one combined PDF. Extract is simpler — it pulls a single page range into one new PDF. Use Split when you need multiple output files.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Is there a page limit when splitting?</h3>
+            <p style="margin:0;font-size:14px;">No server-side limit. The practical limit is your browser's RAM. PDFs with hundreds of pages and high-resolution images may take a few seconds to render thumbnails.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Is my document private when I split it?</h3>
+            <p style="margin:0;font-size:14px;">Completely. PDFree splits files using JavaScript in your browser. No data is transmitted to any server — your document never leaves your device.</p>
+          </div>
+        </div>
+
+        <!-- Related links -->
+        <div style="margin-top:48px;padding-top:24px;border-top:1px solid var(--border);">
+          <p style="font-size:12px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin:0 0 10px;">Related tools</p>
+          <ul style="margin:0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:6px;">
+            <li><a href="/merge-pdf-files-into-one/" style="color:var(--green);font-weight:500;">Merge PDF files into one</a> — combine the split parts back together</li>
+            <li><a href="/extract-pdf/" style="color:var(--green);font-weight:500;">Extract PDF pages</a> — simpler single-range extraction</li>
+            <li><a href="/compress-pdf-for-email/" style="color:var(--green);font-weight:500;">Compress PDF for email</a> — reduce size after splitting</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div style="display:flex;gap:48px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;font-size:13px;border-top:1px solid var(--border);padding-top:20px;">
+      <div>
+        <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Alternatives</div>
+        <a href="/ilovepdf-alternative/" style="display:block;color:var(--green);text-decoration:none;margin-bottom:4px;">iLovePDF Alternative</a>
+      </div>
+      <div>
+        <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Solutions</div>
+        <a href="/hipaa-pdf-tools/" style="display:block;color:var(--green);text-decoration:none;margin-bottom:4px;">HIPAA Compliant PDF</a>
+        <a href="/secure-pdf-tools/" style="display:block;color:var(--green);text-decoration:none;">Secure PDF Tools</a>
+      </div>
+    </div>
+    PDFree · <strong>All processing happens 100% in your browser</strong> · Files are <strong>never uploaded</strong><br>
+    <span style="color:var(--green)">🔒</span> Your documents never leave your device &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> Built to be free for everyone, forever<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
+      <a href="/privacy.html" style="color:var(--green)">Privacy</a> &nbsp;·&nbsp;
+      <a href="/terms.html" style="color:var(--green)">Terms</a> &nbsp;·&nbsp;
+      <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a> &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green)">GitHub</a>
+    </span>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script>
+</body>
+</html>

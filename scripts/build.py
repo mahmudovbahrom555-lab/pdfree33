@@ -197,9 +197,21 @@ SPECIALTY_PAGES = [
     'merge-pdf-without-uploading',
     'secure-pdf-tools',
     'sign',
+    'compress-large-pdf-free',
+    'merge-large-pdf-files',
+    'fill',
+    'extract-pdf',
+    # Specific-intent landing pages
+    'compress-pdf-for-email',
+    'split-pdf-into-multiple-files',
+    'merge-pdf-files-into-one',
+    # Blog posts
     'blog/how-to-annotate-pdf-on-mobile',
     'blog/how-to-fill-pdf-form',
     'blog/how-to-sign-pdf-free',
+    'blog/how-to-compress-pdf-for-email',
+    'blog/how-to-split-a-pdf',
+    'blog/how-to-remove-watermark-from-pdf',
 ]
 
 
