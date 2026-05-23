@@ -89,15 +89,17 @@ function progress(value, label) {
  * @param {(pdf: PDFDocument, pages: PDFPage[]) => Promise<void>} transform
  */
 async function pdfPipeline(buffer, opts, transform) {
+  const { PDFDocument } = PDFLib;
   const {
-    loadLabel    = 'Loading PDF…',
-    saveLabel    = 'Saving…',
-    saveValue    = 90,
-    objectStreams = true,
+    loadLabel        = 'Loading PDF…',
+    saveLabel        = 'Saving…',
+    saveValue        = 90,
+    objectStreams     = true,
+    ignoreEncryption = true,
   } = opts;
 
   progress(5, loadLabel);
-  const pdf   = await tryLoadPdf(buffer);
+  const pdf   = await PDFDocument.load(buffer, { ignoreEncryption });
   const pages = pdf.getPages();
 
   await transform(pdf, pages);
@@ -139,33 +141,6 @@ function _classifyError(err) {
   return 'UNKNOWN';
 }
 
-// ── Decrypt-aware PDF loader ──────────────────────────────────
-// Three-step fallback for owner-only encrypted PDFs (e.g. eMaktab, government):
-//   1. Plain load — fast path for normal PDFs.
-//   2. password:'' — decrypts owner-only PDFs that have no user password set.
-//      These files have a /Encrypt dict but open without a password in any viewer.
-//   3. ignoreEncryption:true — existing fallback; bypasses /Encrypt header but
-//      doesn't decrypt streams. Works for some PDFs, still throws on others.
-//   4. All three fail → throw Error('ENCRYPTED') so the UI shows a clear message.
-async function tryLoadPdf(bytes) {
-  const { PDFDocument } = PDFLib;
-  try {
-    return await PDFDocument.load(bytes);
-  } catch (e1) {
-    if (_classifyError(e1) !== 'ENCRYPTED') throw e1;
-  }
-  try {
-    return await PDFDocument.load(bytes, { password: '' });
-  } catch (e2) {
-    if (_classifyError(e2) !== 'ENCRYPTED') throw e2;
-  }
-  try {
-    return await PDFDocument.load(bytes, { ignoreEncryption: true });
-  } catch {
-    throw new Error('ENCRYPTED');
-  }
-}
-
 async function handleMerge(files, names) {
   const { PDFDocument } = PDFLib;
   const merged = await PDFDocument.create();
@@ -191,7 +166,7 @@ async function handleMerge(files, names) {
 
     let pdf;
     try {
-      pdf = await tryLoadPdf(files[i]);
+      pdf = await PDFDocument.load(files[i], { ignoreEncryption: true });
     } catch (err) {
       fileErrors.push({
         index:   i + 1,
@@ -241,7 +216,7 @@ async function handleMerge(files, names) {
 // ── Split handler ──
 async function handleSplit(fileBuffer, options) {
   const { PDFDocument } = PDFLib;
-  const srcDoc = await tryLoadPdf(fileBuffer);
+  const srcDoc = await PDFDocument.load(fileBuffer, { ignoreEncryption: true });
   const pageCount = srcDoc.getPageCount();
 
   // Фильтруем страницы которые реально существуют в документе
@@ -467,12 +442,12 @@ async function _recompressImages(pdf, jpegQuality) {
 }
 
 async function handleCompress(fileBuffer, options) {
-  const { PDFName } = PDFLib;
+  const { PDFDocument, PDFName } = PDFLib;
   const originalSize = fileBuffer.byteLength;
 
   self.postMessage({ type: 'progress', value: 5,  label: 'Loading PDF…' });
 
-  const pdf = await tryLoadPdf(fileBuffer);
+  const pdf = await PDFDocument.load(fileBuffer, { ignoreEncryption: true });
   const wasEncrypted = pdf.isEncrypted;
 
   self.postMessage({ type: 'progress', value: 18, label: 'Analyzing structure…' });
@@ -1215,8 +1190,10 @@ async function handleRedact(fileBuffer, options) {
 // truthy/falsy for checkboxes, string matching exportValue for radios.
 
 async function handleFill(fileBuffer, { fieldValues = {}, sigImages = {} } = {}) {
+  const { PDFDocument } = PDFLib;
+
   progress(10, 'Loading PDF…');
-  const pdfDoc = await tryLoadPdf(fileBuffer);
+  const pdfDoc = await PDFDocument.load(fileBuffer, { ignoreEncryption: true });
   const form   = pdfDoc.getForm();
   const fields = form.getFields();
 
