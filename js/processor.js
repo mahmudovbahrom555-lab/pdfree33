@@ -184,7 +184,7 @@ async function _runMerge(filesSnapshot, { removeWatermarks = false } = {}) {
 
 // ── Split ──────────────────────────────────────────────────────
 
-async function _runSplit(filesSnapshot, { pages, mode, removeWatermarks = false }) {
+async function _runSplit(filesSnapshot, { pages, mode, removeWatermarks = false } = {}) {
   if (!_checkSize(filesSnapshot[0], 200)) { isProcessing = false; setFilesLocked(false); hideCancelBtn(); return; }
   const _sf = filesSnapshot[0];
   const buffer = _sf._decryptedBuffer ? _sf._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await _sf.arrayBuffer());
