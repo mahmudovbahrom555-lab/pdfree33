@@ -99,6 +99,7 @@
   <script type="application/ld+json">
 {{ breadcrumb_schema }}
   </script>
+  <script src="{{ prefix }}js/theme.js"></script>
 </head>
 <body data-tool="{{ tool.toolKey }}">
 
@@ -114,6 +115,7 @@
         {% endif %}
       {% endfor %}
     </div>
+    <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode"></button>
   </nav>
 
   <nav aria-label="Breadcrumb" style="position:static;padding:8px 24px;border-bottom:1px solid var(--border);background:var(--surface);">

@@ -116,21 +116,19 @@ export function renderCompressionReport(data) {
   // gauge: visually shows before → after
   // Fill анимируется через JS ниже (CSS transition)
   div.innerHTML = `
-    <div class="compress-report__gauge" role="img" aria-label="Compression: ${pct}% saved">
+    <div class="compress-report__hero" aria-label="${fmtSize(originalSize)} compressed to ${fmtSize(compressedSize)}">
+      <span class="compress-report__hero-sizes">${fmtSize(originalSize)} → ${fmtSize(compressedSize)}</span>
+      <span class="compress-report__hero-badge${pct <= 0 ? ' compress-report__hero-badge--neutral' : ''}">
+        ${pct > 0 ? `−${pct}%` : 'No change'}
+      </span>
+    </div>
+    <div class="compress-report__gauge" role="img" aria-hidden="true">
       <div class="compress-report__gauge-track">
         <div
           class="compress-report__gauge-fill"
           style="width:0%"
           data-target="${Math.min(Math.max(pct, 0), 100)}"
-          aria-hidden="true"
         ></div>
-      </div>
-      <div class="compress-report__gauge-meta">
-        <span class="compress-report__size">${fmtSize(originalSize)}</span>
-        <span class="compress-report__pct ${pct > 0 ? 'compress-report__pct--saved' : ''}">
-          ${pct > 0 ? `−${pct}% smaller` : 'No change'}
-        </span>
-        <span class="compress-report__size">${fmtSize(compressedSize)}</span>
       </div>
     </div>
 

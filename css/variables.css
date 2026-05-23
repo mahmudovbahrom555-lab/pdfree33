@@ -36,6 +36,34 @@
   --transition-bounce: 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
+/* ── Dark mode ──────────────────────────────────────────────── */
+
+:root[data-theme="dark"] {
+  --bg:          #111412;
+  --surface:     #1B1E1C;
+  --surface2:    #232723;
+  --border:      rgba(255, 255, 255, 0.09);
+  --text:        #E4E4E0;
+  --text2:       #97978F;
+  --text3:       #606058;
+  --green-light: #192B20;
+  --shadow-lg:   0 8px 40px rgba(0, 0, 0, 0.50);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:          #111412;
+    --surface:     #1B1E1C;
+    --surface2:    #232723;
+    --border:      rgba(255, 255, 255, 0.09);
+    --text:        #E4E4E0;
+    --text2:       #97978F;
+    --text3:       #606058;
+    --green-light: #192B20;
+    --shadow-lg:   0 8px 40px rgba(0, 0, 0, 0.50);
+  }
+}
+
 /* Global reset */
 *, *::before, *::after {
   box-sizing: border-box;

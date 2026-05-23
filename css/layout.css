@@ -70,6 +70,24 @@ nav {
 
 .nav-links { display: flex; gap: 4px; }
 
+.theme-toggle {
+  width: 34px; height: 34px; padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface2);
+  cursor: pointer;
+  font-size: 16px; line-height: 34px; text-align: center;
+  flex-shrink: 0;
+  transition: background var(--transition-fast), border-color var(--transition-fast);
+  color: var(--text2);
+}
+.theme-toggle:hover { background: var(--surface); color: var(--text); }
+.theme-toggle::after { content: '🌙'; }
+:root[data-theme="dark"] .theme-toggle::after { content: '☀️'; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme-toggle::after { content: '☀️'; }
+}
+
 .nav-link {
   font-size: 13px;
   color: var(--text2);

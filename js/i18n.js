@@ -57,8 +57,8 @@ const EN = {
   // ── processor.js — success descriptions ───────────────────────
   desc_merged_partial:      'Merged {n} of {total} files · {pages} pages · {size}',
   desc_merged:              'Merged {total} files · {pages} pages · {size}',
-  desc_compress_saved:      '{pct}% smaller · processed locally',
-  desc_compress_optimized:  'File already optimized · processed locally',
+  desc_compress_saved:      'Compressed · processed locally · no upload',
+  desc_compress_optimized:  'Already optimized · processed locally · no upload',
   desc_watermark:           'Watermarked · {pages} pages · {size}',
   desc_pagenum:             'Page numbers added · {pages} pages · {size}',
   desc_meta:                'Metadata updated · {pages} pages · {size}',

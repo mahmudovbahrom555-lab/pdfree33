@@ -45,8 +45,8 @@ window.PDFREE_LOCALE = {
   // success descriptions
   desc_merged_partial:      '{n} sur {total} fichiers fusionnés · {pages} pages · {size}',
   desc_merged:              '{total} fichiers fusionnés · {pages} pages · {size}',
-  desc_compress_saved:      '{pct}% plus petit · traitement local',
-  desc_compress_optimized:  'Fichier déjà optimisé · traitement local',
+  desc_compress_saved:      'Compressé · traitement local · aucun envoi',
+  desc_compress_optimized:  'Déjà optimisé · traitement local · aucun envoi',
   desc_watermark:           'Filigrane ajouté · {pages} pages · {size}',
   desc_pagenum:             'Numéros de page ajoutés · {pages} pages · {size}',
   desc_meta:                'Métadonnées mises à jour · {pages} pages · {size}',
