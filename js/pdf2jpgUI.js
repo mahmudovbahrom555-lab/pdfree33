@@ -62,6 +62,7 @@ export async function initPdf2JpgOptions(file) {
     const rawBuf = await file.arrayBuffer();
     const doc = await window.pdfjsLib.getDocument({
       data:              new Uint8Array(rawBuf),
+      password:          '',    // auto-open owner-only encrypted PDFs (empty user password)
       useSystemFonts:    false,
       verbosity:         0,
       disableJavaScript: true,  // prevent PDF JS execution during rendering
