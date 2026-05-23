@@ -140,9 +140,27 @@
   animation: slideIn 0.2s ease;
   cursor: grab;
   user-select: none;
+  position: relative; /* needed for z-index during touch drag */
 }
-.file-item.dragging    { opacity: 0.4; border-style: dashed; }
-.file-item.drag-target { border-color: var(--green); background: var(--green-light); }
+.file-item.dragging      { opacity: 0.4; border-style: dashed; }
+.file-item.drag-target   { border-color: var(--green); background: var(--green-light); }
+.file-item.touch-dragging {
+  opacity: 0.88;
+  z-index: 10;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.14);
+  border-color: var(--green);
+  border-style: solid;
+  transition: box-shadow 0.1s;
+}
+.file-item-drag {
+  font-size: 16px;
+  color: var(--text3);
+  cursor: grab;
+  flex-shrink: 0;
+  letter-spacing: -1px;
+  touch-action: none;
+  padding: 0 1px;
+}
 
 .file-item-num {
   font-size: 11px;
