@@ -76,13 +76,43 @@ function progress(value, label) {
   self.postMessage({ type: 'progress', value, label });
 }
 
-// Phase 1 watermark removal: delete /Annots from every page.
-// Covers stamp-annotation watermarks (~30-40% of real-world cases).
+// Phase 1 watermark removal: filter /Annots, keeping everything except
+// /Stamp and /Watermark subtypes. Preserves hyperlinks (/Link), form
+// fields (/Widget), comments (/Text), highlights (/Highlight), etc.
 // Content-stream watermarks are unaffected (Phase 2, future work).
 function _stripAnnotations(pdf) {
-  const { PDFName } = PDFLib;
+  const { PDFName, PDFArray, PDFRef } = PDFLib;
+  const ctx = pdf.context;
+
   for (const page of pdf.getPages()) {
-    try { page.node.delete(PDFName.of('Annots')); } catch { /* skip unreadable pages */ }
+    const annotsVal = page.node.get(PDFName.of('Annots'));
+    if (!annotsVal) continue;
+
+    // /Annots may be a direct array or an indirect reference — resolve both
+    const annots = annotsVal instanceof PDFRef ? ctx.lookup(annotsVal) : annotsVal;
+    if (!(annots instanceof PDFArray)) continue;
+
+    const kept = [];
+    for (let i = 0; i < annots.size(); i++) {
+      const itemRef = annots.get(i);
+      const item    = itemRef instanceof PDFRef ? ctx.lookup(itemRef) : itemRef;
+
+      // If annotation is unreadable, keep it (safe default)
+      const subtype = item?.get?.(PDFName.of('Subtype'))?.toString() ?? '';
+      if (subtype !== '/Stamp' && subtype !== '/Watermark') {
+        kept.push(itemRef);
+      }
+    }
+
+    if (kept.length === annots.size()) continue;  // nothing matched, skip
+
+    if (kept.length === 0) {
+      page.node.delete(PDFName.of('Annots'));
+    } else {
+      const newAnnots = PDFArray.withContext(ctx);
+      kept.forEach(ref => newAnnots.push(ref));
+      page.node.set(PDFName.of('Annots'), newAnnots);
+    }
   }
 }
 
