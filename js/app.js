@@ -18,7 +18,7 @@ import { showHomePage, showToolPage,
          setButtonDisabled, hideCancelBtn,
          showToast, setDropHint }                 from './ui.js';
 import { initFileListeners, setCurrentTool,
-         clearFiles, selectedFiles }              from './files.js';
+         clearFiles, selectedFiles, addFiles }    from './files.js';
 import { doProcess, isProcessing,
          cancelProcess,
          getProcessStartMs }                      from './processor.js';
@@ -416,15 +416,43 @@ let _installPromptEvent = null;
 function _initPWA() {
   // Register service worker
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js')
-      .catch(err => console.warn('[SW] Registration failed:', err));
-    // No controllerchange reload — hash-versioned URLs (?v=HASH) on app.js and
-    // worker.js guarantee fresh assets on each deploy without a forced reload.
-    // The old reload caused a "flash": tool visible briefly then hidden after SW
-    // took control and called showHomePage() on the second load.
+    navigator.serviceWorker.register('/sw.js').then(reg => {
+      // ── Update-ready flow ──────────────────────────────────
+      // Show update banner when a waiting SW exists on first load
+      if (reg.waiting && navigator.serviceWorker.controller) {
+        _showUpdateBanner(reg);
+      }
+      // Also watch for future updates while the page is open
+      reg.addEventListener('updatefound', () => {
+        const worker = reg.installing;
+        worker?.addEventListener('statechange', () => {
+          if (worker.state === 'installed' && navigator.serviceWorker.controller) {
+            _showUpdateBanner(reg);
+          }
+        });
+      });
+
+      // ── Share Target: retrieve file sent via OS share sheet ─
+      const sharedUuid = new URL(location.href).searchParams.get('shared');
+      if (sharedUuid && navigator.serviceWorker.controller) {
+        history.replaceState(null, '', location.pathname);
+        _retrieveSharedFile(sharedUuid);
+      }
+    }).catch(err => console.warn('[SW] Registration failed:', err));
   }
 
-  // Capture the deferred prompt
+  // ── File Handler API (launchQueue) — open PDFs clicked in OS ─
+  if ('launchQueue' in window) {
+    window.launchQueue.setConsumer(async launchParams => {
+      if (!launchParams.files.length) return;
+      try {
+        const files = await Promise.all(launchParams.files.map(h => h.getFile()));
+        if (files.length) addFiles(files);
+      } catch { /* file handle revoked or permission denied */ }
+    });
+  }
+
+  // Capture the deferred install prompt
   window.addEventListener('beforeinstallprompt', e => {
     e.preventDefault();
     _installPromptEvent = e;
@@ -436,6 +464,39 @@ function _initPWA() {
     trackInstallPrompt('accepted');
     id('pwaPrompt')?.remove();
   });
+}
+
+// ── Update banner ─────────────────────────────────────────────
+
+function _showUpdateBanner(reg) {
+  const banner = id('swUpdateBanner');
+  if (!banner || banner.dataset.shown) return;
+  banner.dataset.shown = '1';
+  banner.style.display = 'flex';
+
+  id('swUpdateNow')?.addEventListener('click', () => {
+    banner.style.display = 'none';
+    reg.waiting.postMessage({ type: 'SKIP_WAITING' });
+    navigator.serviceWorker.addEventListener('controllerchange',
+      () => location.reload(), { once: true });
+  }, { once: true });
+
+  id('swUpdateLater')?.addEventListener('click', () => {
+    banner.style.display = 'none';
+  }, { once: true });
+}
+
+// ── Share Target file retrieval ───────────────────────────────
+
+function _retrieveSharedFile(uuid) {
+  const channel = new MessageChannel();
+  channel.port1.onmessage = ({ data }) => {
+    if (data.files?.length) addFiles(data.files);
+  };
+  navigator.serviceWorker.controller.postMessage(
+    { type: 'GET_SHARED_FILE', uuid },
+    [channel.port2]
+  );
 }
 
 // ── Global error handlers ────────────────────────────────────

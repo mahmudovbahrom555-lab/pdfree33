@@ -18,7 +18,7 @@
 //  the activate handler to clear the old cache.
 // ============================================================
 
-const CACHE_VERSION  = 'v68';   // bump: fix Share button hidden — 0-byte canShare check
+const CACHE_VERSION  = 'v69';   // bump: Share Target, File Handler, update banner, offline page
 const STATIC_CACHE   = `pdfree-static-${CACHE_VERSION}`;
 const CDN_CACHE      = `pdfree-cdn-${CACHE_VERSION}`;
 const ALL_CACHES     = [STATIC_CACHE, CDN_CACHE];
@@ -66,6 +66,8 @@ const STATIC_ASSETS = [
   '/js/vendor/pdf.worker.min.js',
   '/js/toolRegistrations.js',
   '/js/pdfEncrypt.js',
+  '/js/watermarkRemoveUI.js',
+  '/offline.html',
   '/fonts/dm-mono-400-latin-ext.woff2',
   '/fonts/dm-mono-400-latin.woff2',
   '/fonts/dm-mono-500-latin-ext.woff2',
@@ -89,10 +91,13 @@ const CDN_PREFIXES = [
   'https://cdnjs.cloudflare.com/',
 ];
 
+// Temp store for files received via Share Target (keyed by UUID, cleared after retrieval)
+const _sharedFiles = new Map();
+
 // ── Install: pre-cache all static assets ─────────────────────
 self.addEventListener('install', event => {
-  // Skip waiting so the new SW activates immediately
-  self.skipWaiting();
+  // Do NOT call skipWaiting() here — clients get a choice to update or stay.
+  // The page posts { type: 'SKIP_WAITING' } when the user clicks "Update".
   event.waitUntil(
     caches.open(STATIC_CACHE)
       .then(cache => cache.addAll(STATIC_ASSETS))
@@ -113,12 +118,37 @@ self.addEventListener('activate', event => {
   );
 });
 
+// ── Message handler ───────────────────────────────────────────
+self.addEventListener('message', event => {
+  // Client requests immediate activation (user clicked "Update now")
+  if (event.data?.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+    return;
+  }
+  // Client wants a file that arrived via Share Target
+  if (event.data?.type === 'GET_SHARED_FILE') {
+    const files = _sharedFiles.get(event.data.uuid);
+    if (files) {
+      _sharedFiles.delete(event.data.uuid);
+      event.ports[0]?.postMessage({ files });
+    } else {
+      event.ports[0]?.postMessage({ files: [] });
+    }
+  }
+});
+
 // ── Fetch: routing by strategy ────────────────────────────────
 self.addEventListener('fetch', event => {
   const { request } = event;
   const url = new URL(request.url);
 
-  // Only handle GET requests
+  // Share Target: POST to / with PDF files
+  if (request.method === 'POST' && url.pathname === '/') {
+    event.respondWith(handleShareTarget(request));
+    return;
+  }
+
+  // Only handle GET requests for everything else
   if (request.method !== 'GET') return;
 
   // Legal pages: let browser fetch directly from network — no SW caching.
@@ -176,10 +206,11 @@ async function navigateFallback(request) {
     if (response.ok) cache.put(request.url, response.clone());
     return response;
   }).catch(async () => {
-    // Network failed: use cached version or SPA shell.
+    // Network failed: cached version → SPA shell → branded offline page.
     return cached
         || await caches.match('/index.html')
         || await caches.match('/')
+        || await caches.match('/offline.html')
         || new Response('Offline', { status: 503 });
   });
 
@@ -246,4 +277,22 @@ async function networkFirst(request) {
     const cached = await caches.match(request);
     return cached ?? new Response('Offline', { status: 503 });
   }
+}
+
+// ── Share Target ──────────────────────────────────────────────
+async function handleShareTarget(request) {
+  try {
+    const formData = await request.formData();
+    const files = formData.getAll('pdf').filter(f => f instanceof File);
+    if (files.length) {
+      const uuid = crypto.randomUUID();
+      _sharedFiles.set(uuid, files);
+      // Auto-cleanup after 60s in case client never retrieves it
+      setTimeout(() => _sharedFiles.delete(uuid), 60_000);
+      return Response.redirect(`/?shared=${uuid}`, 303);
+    }
+  } catch (e) {
+    console.warn('[SW] Share Target error:', e);
+  }
+  return Response.redirect('/', 303);
 }

@@ -252,6 +252,13 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
+  <!-- SW update banner — shown when a new version is waiting -->
+  <div id="swUpdateBanner" role="alert" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:200;background:var(--green);color:#fff;padding:12px 20px;align-items:center;justify-content:center;gap:12px;font-size:14px;flex-wrap:wrap;">
+    <span>A new version of PDFree is ready.</span>
+    <button id="swUpdateNow" type="button" style="background:#fff;color:var(--green);border:none;border-radius:6px;padding:5px 16px;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit;">Update now</button>
+    <button id="swUpdateLater" type="button" style="background:transparent;color:#fff;border:1px solid rgba(255,255,255,.6);border-radius:6px;padding:5px 16px;font-size:13px;cursor:pointer;font-family:inherit;">Later</button>
+  </div>
+
   {% if lang != 'en' %}
   <script type="module" src="{{ prefix }}js/locales/{{ lang }}.js"></script>
   {% endif %}
