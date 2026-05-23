@@ -262,10 +262,52 @@ def _write_sitemap(config, out_dir):
         alts.append(('x-default', en_url))
         lines += _url_block(en_url, lastmod, alts)
 
-    # ── Specialty / SEO pages (EN only) ───────────────────────
+    # ── Specialty / SEO pages ──────────────────────────────────
+    # Localized alternates for the 3 specific-intent landing pages
+    _localized_specialty = {
+        'compress-pdf-for-email': {
+            'de': 'de/pdf-fuer-email-komprimieren',
+            'fr': 'fr/compresser-pdf-pour-email',
+            'es': 'es/comprimir-pdf-para-email',
+            'pt': 'pt/comprimir-pdf-para-email',
+        },
+        'split-pdf-into-multiple-files': {
+            'de': 'de/pdf-aufteilen-mehrere-dateien',
+            'fr': 'fr/diviser-pdf-plusieurs-fichiers',
+            'es': 'es/dividir-pdf-en-varios-archivos',
+            'pt': 'pt/dividir-pdf-em-varios-arquivos',
+        },
+        'merge-pdf-files-into-one': {
+            'de': 'de/pdf-dateien-zusammenfuehren',
+            'fr': 'fr/fusionner-pdfs-en-un',
+            'es': 'es/unir-pdfs-en-uno',
+            'pt': 'pt/juntar-pdfs-em-um',
+        },
+    }
+
     for slug in SPECIALTY_PAGES:
         url = f"{BASE_URL}/{slug}/"
-        lines += _url_block(url, _git_lastmod(f"{slug}/index.html"), [('en', url), ('x-default', url)])
+        loc_alts = _localized_specialty.get(slug)
+        if loc_alts:
+            alts = [('en', url)]
+            for lc, loc_slug in loc_alts.items():
+                alts.append((lc, f"{BASE_URL}/{loc_slug}/"))
+            alts.append(('x-default', url))
+        else:
+            alts = [('en', url), ('x-default', url)]
+        lines += _url_block(url, _git_lastmod(f"{slug}/index.html"), alts)
+
+    # ── Localized specialty pages ──────────────────────────────
+    for en_slug, loc_map in _localized_specialty.items():
+        en_url = f"{BASE_URL}/{en_slug}/"
+        for lc, loc_slug in loc_map.items():
+            loc_url = f"{BASE_URL}/{loc_slug}/"
+            # Build full alternates set (all locales + x-default)
+            alts = [('en', en_url)]
+            for lc2, ls2 in loc_map.items():
+                alts.append((lc2, f"{BASE_URL}/{ls2}/"))
+            alts.append(('x-default', en_url))
+            lines += _url_block(loc_url, _git_lastmod(f"{loc_slug}/index.html"), alts)
 
     lines.append('</urlset>')
 

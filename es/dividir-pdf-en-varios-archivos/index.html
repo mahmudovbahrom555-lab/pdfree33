@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self';
+    script-src  'self' 'wasm-unsafe-eval' blob:
+                https://cdnjs.cloudflare.com https://esm.sh
+                https://plausible.io https://pagead2.googlesyndication.com
+                https://static.cloudflareinsights.com;
+    style-src   'self' 'unsafe-inline';
+    font-src    'self';
+    img-src     'self' data: blob: https:;
+    connect-src 'self' https://cdnjs.cloudflare.com https://*.workers.dev
+                https://plausible.io https://pagead2.googlesyndication.com
+                https://www.googletagservices.com https://*.doubleclick.net
+                https://cloudflareinsights.com;
+    frame-src   https://googleads.g.doubleclick.net https://tpc.googlesyndication.com;
+    worker-src  'self' blob:;
+    object-src  'none';">
+
+  <title>Dividir PDF en varios archivos — gratis, sin subir archivos | PDFree</title>
+  <meta name="description" content="Divide un PDF en varios archivos o extrae páginas individuales gratis. Rango de páginas, páginas pares/impares o todas las páginas — sin upload, sin cuenta.">
+
+  <meta property="og:title"       content="Dividir PDF en varios archivos — gratis | PDFree">
+  <meta property="og:description" content="Extrae cualquier página o rango de páginas de un PDF. Gratis, sin upload, sin cuenta.">
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://pdfree.io/es/dividir-pdf-en-varios-archivos/">
+  <meta property="og:site_name"   content="PDFree">
+  <meta property="og:image"       content="https://pdfree.io/icons/og-image.jpg">
+  <meta name="twitter:card"       content="summary_large_image">
+  <meta name="twitter:site"       content="@pdfree_io">
+  <meta name="twitter:image"      content="https://pdfree.io/icons/og-image.jpg">
+
+  <link rel="canonical" href="https://pdfree.io/es/dividir-pdf-en-varios-archivos/">
+  <link rel="alternate" hreflang="en" href="https://pdfree.io/split-pdf-into-multiple-files/">
+  <link rel="alternate" hreflang="de" href="https://pdfree.io/de/pdf-aufteilen-mehrere-dateien/">
+  <link rel="alternate" hreflang="fr" href="https://pdfree.io/fr/diviser-pdf-plusieurs-fichiers/">
+  <link rel="alternate" hreflang="es" href="https://pdfree.io/es/dividir-pdf-en-varios-archivos/">
+  <link rel="alternate" hreflang="pt" href="https://pdfree.io/pt/dividir-pdf-em-varios-arquivos/">
+  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/split-pdf-into-multiple-files/">
+
+  <link rel="manifest" href="../../manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="PDFree">
+  <link rel="apple-touch-icon" href="../../icons/icon-192.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+  <link rel="stylesheet" href="../../css/fonts.css">
+  <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/animations.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/components.css">
+
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Dividir PDF en varios archivos",
+  "description": "Divide un PDF en varios archivos o extrae páginas individuales gratis. Rango de páginas, páginas pares/impares o todas las páginas — sin upload, sin cuenta.",
+  "url": "https://pdfree.io/es/dividir-pdf-en-varios-archivos/",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "featureList": [
+    "Benutzerdefinierte Seitenbereiche",
+    "Einzelne Seiten als separate PDFs",
+    "ZIP-Download",
+    "Kein Upload — 100% privat",
+    "Kein Seitenlimit"
+  ],
+  "provider": {
+    "@type": "Organization",
+    "name": "PDFree",
+    "url": "https://pdfree.io"
+  }
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "¿Puedo dividir un PDF en páginas individuales?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Sí. Usa la opción \"Todas las páginas\" para dividir cada página en su propio archivo PDF. Los archivos se descargan en un archivo ZIP, nombrados página-1.pdf, página-2.pdf, etc."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Qué formato de rango de páginas acepta PDFree?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Ingresa páginas y rangos separados por comas: por ejemplo \"1, 3-7, 12, 15-20\". Los espacios son opcionales. También puedes hacer clic en las miniaturas de páginas para seleccionarlas visualmente."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Cuál es la diferencia entre Dividir y Extraer?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Dividir te permite elegir páginas y descargarlas como múltiples archivos separados o como un solo PDF combinado. Extraer es más simple — extrae un único rango de páginas en un nuevo PDF. Usa Dividir cuando necesites múltiples archivos de salida."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Hay un límite de páginas al dividir?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Sin límite en el servidor. El límite práctico es la RAM disponible en tu navegador. Los PDFs con cientos de páginas e imágenes de alta resolución pueden tardar unos segundos en mostrar las miniaturas."
+      }
+    }
+  ]
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "PDFree",
+      "item": "https://pdfree.io/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "ES",
+      "item": "https://pdfree.io/es/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Dividir PDF en varios archivos",
+      "item": "https://pdfree.io/es/dividir-pdf-en-varios-archivos/"
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+
+  <nav>
+    <a href="../" class="logo" aria-label="Go to homepage" style="text-decoration:none">
+      <span class="logo-text">PDF<span>ree</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="../unir-pdf/" class="nav-link" data-tool="merge">Unir</a>
+      <a href="../dividir-pdf/" class="nav-link" data-tool="split">Dividir</a>
+      <a href="../comprimir-pdf/" class="nav-link" data-tool="compress">Comprimir</a>
+      <a href="../jpg-a-pdf/" class="nav-link" data-tool="jpg2pdf">JPG→PDF</a>
+      <a href="../pdf-a-jpg/" class="nav-link" data-tool="pdf2jpg">PDF→JPG</a>
+      <a href="../marca-de-agua-pdf/" class="nav-link" data-tool="watermark">Marca de agua</a>
+      <a href="../numeros-de-pagina-pdf/" class="nav-link" data-tool="pagenum">Nº de página</a>
+      <a href="../metadatos-pdf/" class="nav-link" data-tool="metadata">Metadatos</a>
+      <a href="../extraer-pdf/" class="nav-link" data-tool="extract">Extraer</a>
+      <a href="../censurar-pdf/" class="nav-link" data-tool="redact">Censurar</a>
+      <a href="../rotar-pdf/" class="nav-link" data-tool="rotate">Rotar</a>
+      <a href="../proteger-pdf/" class="nav-link" data-tool="protect">Proteger</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section style="background:var(--green-light);border-bottom:1px solid rgba(45,122,79,0.15);padding:52px 24px 44px;text-align:center;">
+    <div style="max-width:720px;margin:0 auto;">
+      <div style="display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid rgba(45,122,79,0.2);border-radius:24px;padding:6px 16px;font-size:13px;color:var(--green);font-weight:500;margin-bottom:20px;">
+        <span style="width:7px;height:7px;background:var(--green);border-radius:50%;display:inline-block;"></span>
+        Sin upload · Gratis · Descarga ZIP · Sin límite de páginas
+      </div>
+      <h1 style="font-size:clamp(26px,4vw,40px);font-weight:700;letter-spacing:-1px;line-height:1.15;color:var(--text);margin:0 0 16px;">Dividir PDF en varios archivos —<br>gratis, sin subir archivos</h1>
+      <p style="font-size:17px;color:var(--text2);max-width:600px;margin:0 auto 28px;line-height:1.6;">Divide cualquier PDF en archivos separados — por rango de páginas, páginas individuales o páginas pares/impares. Todo se procesa en tu navegador — tu documento nunca sale de tu dispositivo.</p>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <a href="../dividir-pdf/" style="background:var(--green);color:#fff;padding:13px 28px;border-radius:10px;font-weight:600;font-size:15px;text-decoration:none;">Dividir PDF ahora — gratis</a>
+        <a href="#faq" style="background:#fff;color:var(--green);padding:13px 28px;border-radius:10px;font-weight:500;font-size:15px;text-decoration:none;border:1.5px solid rgba(45,122,79,0.3);">Ver opciones ↓</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Content -->
+  <section class="seo-article">
+    <div class="seo-article__inner">
+      <div style="max-width:800px;margin:60px auto 40px;padding:0 24px;color:var(--text2);line-height:1.8;">
+
+        <!-- CTA block -->
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:28px;margin:0 0 48px;text-align:center;">
+          <a href="../dividir-pdf/" style="background:var(--green);color:#fff;padding:13px 28px;border-radius:10px;font-weight:600;font-size:15px;text-decoration:none;display:inline-block;">Dividir PDF ahora — gratis</a>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq"></div>
+        <h2 style="font-size:26px;color:var(--text);margin:0 0 20px;font-weight:700;">FAQ</h2>
+        <div style="display:flex;flex-direction:column;gap:20px;">
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">¿Puedo dividir un PDF en páginas individuales?</h3>
+            <p style="margin:0;font-size:14px;">Sí. Usa la opción "Todas las páginas" para dividir cada página en su propio archivo PDF. Los archivos se descargan en un archivo ZIP, nombrados página-1.pdf, página-2.pdf, etc.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">¿Qué formato de rango de páginas acepta PDFree?</h3>
+            <p style="margin:0;font-size:14px;">Ingresa páginas y rangos separados por comas: por ejemplo "1, 3-7, 12, 15-20". Los espacios son opcionales. También puedes hacer clic en las miniaturas de páginas para seleccionarlas visualmente.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">¿Cuál es la diferencia entre Dividir y Extraer?</h3>
+            <p style="margin:0;font-size:14px;">Dividir te permite elegir páginas y descargarlas como múltiples archivos separados o como un solo PDF combinado. Extraer es más simple — extrae un único rango de páginas en un nuevo PDF. Usa Dividir cuando necesites múltiples archivos de salida.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">¿Hay un límite de páginas al dividir?</h3>
+            <p style="margin:0;font-size:14px;">Sin límite en el servidor. El límite práctico es la RAM disponible en tu navegador. Los PDFs con cientos de páginas e imágenes de alta resolución pueden tardar unos segundos en mostrar las miniaturas.</p>
+          </div>
+        </div>
+
+        <!-- Related -->
+        <div style="margin-top:48px;padding-top:24px;border-top:1px solid var(--border);">
+          <p style="font-size:12px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin:0 0 10px;">Herramientas relacionadas</p>
+          <ul style="margin:0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:6px;">
+            <li><a href="/merge-pdf-files-into-one/" style="color:var(--green);font-weight:500;">Unir PDFs en uno</a> — recombinar después de extraer</li>
+            <li><a href="/extract-pdf/" style="color:var(--green);font-weight:500;">Extraer páginas PDF</a> — extracción simple de un rango</li>
+            <li><a href="/es/comprimir-pdf-para-email/" style="color:var(--green);font-weight:500;">Comprimir PDF para email</a> — reducir tamaño tras dividir</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div style="display:flex;gap:48px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;font-size:13px;border-top:1px solid var(--border);padding-top:20px;">
+      <div>
+        <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Alternatives</div>
+        <a href="/ilovepdf-alternative/" style="display:block;color:var(--green);text-decoration:none;margin-bottom:4px;">iLovePDF Alternative</a>
+      </div>
+      <div>
+        <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Solutions</div>
+        <a href="/hipaa-pdf-tools/" style="display:block;color:var(--green);text-decoration:none;margin-bottom:4px;">HIPAA PDF Tools</a>
+        <a href="/secure-pdf-tools/" style="display:block;color:var(--green);text-decoration:none;">Secure PDF Tools</a>
+      </div>
+    </div>
+    PDFree · <strong>100% privat · Kein Upload</strong><br>
+    <span style="color:var(--green)">🔒</span> Ihre Dokumente verlassen nie Ihr Gerät &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> Kostenlos für alle<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
+      <a href="/privacy.html" style="color:var(--green)">Privacy</a> &nbsp;·&nbsp;
+      <a href="/terms.html" style="color:var(--green)">Terms</a> &nbsp;·&nbsp;
+      <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a> &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green)">GitHub</a>
+    </span>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}' ></script>
+</body>
+</html>

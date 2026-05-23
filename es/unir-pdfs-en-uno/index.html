@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self';
+    script-src  'self' 'wasm-unsafe-eval' blob:
+                https://cdnjs.cloudflare.com https://esm.sh
+                https://plausible.io https://pagead2.googlesyndication.com
+                https://static.cloudflareinsights.com;
+    style-src   'self' 'unsafe-inline';
+    font-src    'self';
+    img-src     'self' data: blob: https:;
+    connect-src 'self' https://cdnjs.cloudflare.com https://*.workers.dev
+                https://plausible.io https://pagead2.googlesyndication.com
+                https://www.googletagservices.com https://*.doubleclick.net
+                https://cloudflareinsights.com;
+    frame-src   https://googleads.g.doubleclick.net https://tpc.googlesyndication.com;
+    worker-src  'self' blob:;
+    object-src  'none';">
+
+  <title>Unir PDFs en uno solo — gratis, sin subir archivos | PDFree</title>
+  <meta name="description" content="Une archivos PDF en un solo documento gratis — sin upload, sin cuenta, sin límite de tamaño. Reordena con arrastrar y soltar. Unión sin pérdida de calidad.">
+
+  <meta property="og:title"       content="Unir PDFs en uno solo — gratis, sin upload | PDFree">
+  <meta property="og:description" content="Combina tantos PDFs como quieras en un solo archivo. Arrastra para reordenar. Sin upload, sin cuenta.">
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://pdfree.io/es/unir-pdfs-en-uno/">
+  <meta property="og:site_name"   content="PDFree">
+  <meta property="og:image"       content="https://pdfree.io/icons/og-image.jpg">
+  <meta name="twitter:card"       content="summary_large_image">
+  <meta name="twitter:site"       content="@pdfree_io">
+  <meta name="twitter:image"      content="https://pdfree.io/icons/og-image.jpg">
+
+  <link rel="canonical" href="https://pdfree.io/es/unir-pdfs-en-uno/">
+  <link rel="alternate" hreflang="en" href="https://pdfree.io/merge-pdf-files-into-one/">
+  <link rel="alternate" hreflang="de" href="https://pdfree.io/de/pdf-dateien-zusammenfuehren/">
+  <link rel="alternate" hreflang="fr" href="https://pdfree.io/fr/fusionner-pdfs-en-un/">
+  <link rel="alternate" hreflang="es" href="https://pdfree.io/es/unir-pdfs-en-uno/">
+  <link rel="alternate" hreflang="pt" href="https://pdfree.io/pt/juntar-pdfs-em-um/">
+  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/merge-pdf-files-into-one/">
+
+  <link rel="manifest" href="../../manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="PDFree">
+  <link rel="apple-touch-icon" href="../../icons/icon-192.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+  <link rel="stylesheet" href="../../css/fonts.css">
+  <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/animations.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/components.css">
+
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Unir PDFs en uno solo",
+  "description": "Une archivos PDF en un solo documento gratis — sin upload, sin cuenta, sin límite de tamaño. Reordena con arrastrar y soltar. Unión sin pérdida de calidad.",
+  "url": "https://pdfree.io/es/unir-pdfs-en-uno/",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "featureList": [
+    "Beliebig viele PDF-Dateien",
+    "Drag-and-Drop zum Sortieren",
+    "Kein Dateigrößenlimit",
+    "Kein Upload — 100% privat",
+    "Verlustfreies Zusammenführen"
+  ],
+  "provider": {
+    "@type": "Organization",
+    "name": "PDFree",
+    "url": "https://pdfree.io"
+  }
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "¿Cuántos archivos PDF puedo unir a la vez?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Sin límite. PDFree une archivos completamente en tu navegador — el límite práctico es la RAM disponible en tu dispositivo. La mayoría de usuarios unen 20-50 archivos sin problemas."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Puedo cambiar el orden de los archivos antes de unirlos?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Sí. Arrastra los archivos en la lista para reordenarlos. El PDF unido seguirá el orden mostrado. También se admite arrastre táctil en dispositivos móviles."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿La unión reduce la calidad del PDF?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. La unión es sin pérdida — imágenes, fuentes y gráficos vectoriales se conservan con su calidad original. No se produce ninguna recodificación durante la unión."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Son privados mis datos al unir PDFs?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Completamente. Todo el procesamiento ocurre en tu navegador. Ningún archivo se transmite jamás a un servidor — tus documentos nunca salen de tu dispositivo."
+      }
+    }
+  ]
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "PDFree",
+      "item": "https://pdfree.io/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "ES",
+      "item": "https://pdfree.io/es/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Unir PDFs en uno solo",
+      "item": "https://pdfree.io/es/unir-pdfs-en-uno/"
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+
+  <nav>
+    <a href="../" class="logo" aria-label="Go to homepage" style="text-decoration:none">
+      <span class="logo-text">PDF<span>ree</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="../unir-pdf/" class="nav-link" data-tool="merge">Unir</a>
+      <a href="../dividir-pdf/" class="nav-link" data-tool="split">Dividir</a>
+      <a href="../comprimir-pdf/" class="nav-link" data-tool="compress">Comprimir</a>
+      <a href="../jpg-a-pdf/" class="nav-link" data-tool="jpg2pdf">JPG→PDF</a>
+      <a href="../pdf-a-jpg/" class="nav-link" data-tool="pdf2jpg">PDF→JPG</a>
+      <a href="../marca-de-agua-pdf/" class="nav-link" data-tool="watermark">Marca de agua</a>
+      <a href="../numeros-de-pagina-pdf/" class="nav-link" data-tool="pagenum">Nº de página</a>
+      <a href="../metadatos-pdf/" class="nav-link" data-tool="metadata">Metadatos</a>
+      <a href="../extraer-pdf/" class="nav-link" data-tool="extract">Extraer</a>
+      <a href="../censurar-pdf/" class="nav-link" data-tool="redact">Censurar</a>
+      <a href="../rotar-pdf/" class="nav-link" data-tool="rotate">Rotar</a>
+      <a href="../proteger-pdf/" class="nav-link" data-tool="protect">Proteger</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section style="background:var(--green-light);border-bottom:1px solid rgba(45,122,79,0.15);padding:52px 24px 44px;text-align:center;">
+    <div style="max-width:720px;margin:0 auto;">
+      <div style="display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid rgba(45,122,79,0.2);border-radius:24px;padding:6px 16px;font-size:13px;color:var(--green);font-weight:500;margin-bottom:20px;">
+        <span style="width:7px;height:7px;background:var(--green);border-radius:50%;display:inline-block;"></span>
+        Sin upload · Gratis · Sin límite de archivos · Sin pérdida de calidad
+      </div>
+      <h1 style="font-size:clamp(26px,4vw,40px);font-weight:700;letter-spacing:-1px;line-height:1.15;color:var(--text);margin:0 0 16px;">Unir PDFs en uno solo —<br>gratis, sin subir archivos</h1>
+      <p style="font-size:17px;color:var(--text2);max-width:600px;margin:0 auto 28px;line-height:1.6;">Combina tantos archivos PDF como necesites en un solo documento. Reordena arrastrando y soltando. Todo funciona en tu navegador — los archivos nunca se envían a ningún servidor.</p>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <a href="../unir-pdf/" style="background:var(--green);color:#fff;padding:13px 28px;border-radius:10px;font-weight:600;font-size:15px;text-decoration:none;">Unir PDFs ahora — gratis</a>
+        <a href="#faq" style="background:#fff;color:var(--green);padding:13px 28px;border-radius:10px;font-weight:500;font-size:15px;text-decoration:none;border:1.5px solid rgba(45,122,79,0.3);">Cómo funciona ↓</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Content -->
+  <section class="seo-article">
+    <div class="seo-article__inner">
+      <div style="max-width:800px;margin:60px auto 40px;padding:0 24px;color:var(--text2);line-height:1.8;">
+
+        <!-- CTA block -->
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:28px;margin:0 0 48px;text-align:center;">
+          <a href="../unir-pdf/" style="background:var(--green);color:#fff;padding:13px 28px;border-radius:10px;font-weight:600;font-size:15px;text-decoration:none;display:inline-block;">Unir PDFs ahora — gratis</a>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq"></div>
+        <h2 style="font-size:26px;color:var(--text);margin:0 0 20px;font-weight:700;">FAQ</h2>
+        <div style="display:flex;flex-direction:column;gap:20px;">
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">¿Cuántos archivos PDF puedo unir a la vez?</h3>
+            <p style="margin:0;font-size:14px;">Sin límite. PDFree une archivos completamente en tu navegador — el límite práctico es la RAM disponible en tu dispositivo. La mayoría de usuarios unen 20-50 archivos sin problemas.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">¿Puedo cambiar el orden de los archivos antes de unirlos?</h3>
+            <p style="margin:0;font-size:14px;">Sí. Arrastra los archivos en la lista para reordenarlos. El PDF unido seguirá el orden mostrado. También se admite arrastre táctil en dispositivos móviles.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">¿La unión reduce la calidad del PDF?</h3>
+            <p style="margin:0;font-size:14px;">No. La unión es sin pérdida — imágenes, fuentes y gráficos vectoriales se conservan con su calidad original. No se produce ninguna recodificación durante la unión.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">¿Son privados mis datos al unir PDFs?</h3>
+            <p style="margin:0;font-size:14px;">Completamente. Todo el procesamiento ocurre en tu navegador. Ningún archivo se transmite jamás a un servidor — tus documentos nunca salen de tu dispositivo.</p>
+          </div>
+        </div>
+
+        <!-- Related -->
+        <div style="margin-top:48px;padding-top:24px;border-top:1px solid var(--border);">
+          <p style="font-size:12px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin:0 0 10px;">Herramientas relacionadas</p>
+          <ul style="margin:0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:6px;">
+            <li><a href="/merge-pdf-without-uploading/" style="color:var(--green);font-weight:500;">Unir PDF sin subir archivos</a> — guía de privacidad</li>
+            <li><a href="/split-pdf-into-multiple-files/" style="color:var(--green);font-weight:500;">Dividir PDF en varios archivos</a> — dividir antes de unir</li>
+            <li><a href="/es/comprimir-pdf-para-email/" style="color:var(--green);font-weight:500;">Comprimir PDF para email</a> — reducir tamaño tras unir</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div style="display:flex;gap:48px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;font-size:13px;border-top:1px solid var(--border);padding-top:20px;">
+      <div>
+        <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Alternatives</div>
+        <a href="/ilovepdf-alternative/" style="display:block;color:var(--green);text-decoration:none;margin-bottom:4px;">iLovePDF Alternative</a>
+      </div>
+      <div>
+        <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Solutions</div>
+        <a href="/hipaa-pdf-tools/" style="display:block;color:var(--green);text-decoration:none;margin-bottom:4px;">HIPAA PDF Tools</a>
+        <a href="/secure-pdf-tools/" style="display:block;color:var(--green);text-decoration:none;">Secure PDF Tools</a>
+      </div>
+    </div>
+    PDFree · <strong>100% privat · Kein Upload</strong><br>
+    <span style="color:var(--green)">🔒</span> Ihre Dokumente verlassen nie Ihr Gerät &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> Kostenlos für alle<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
+      <a href="/privacy.html" style="color:var(--green)">Privacy</a> &nbsp;·&nbsp;
+      <a href="/terms.html" style="color:var(--green)">Terms</a> &nbsp;·&nbsp;
+      <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a> &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green)">GitHub</a>
+    </span>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}' ></script>
+</body>
+</html>

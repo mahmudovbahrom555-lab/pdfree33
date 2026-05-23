@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self';
+    script-src  'self' 'wasm-unsafe-eval' blob:
+                https://cdnjs.cloudflare.com https://esm.sh
+                https://plausible.io https://pagead2.googlesyndication.com
+                https://static.cloudflareinsights.com;
+    style-src   'self' 'unsafe-inline';
+    font-src    'self';
+    img-src     'self' data: blob: https:;
+    connect-src 'self' https://cdnjs.cloudflare.com https://*.workers.dev
+                https://plausible.io https://pagead2.googlesyndication.com
+                https://www.googletagservices.com https://*.doubleclick.net
+                https://cloudflareinsights.com;
+    frame-src   https://googleads.g.doubleclick.net https://tpc.googlesyndication.com;
+    worker-src  'self' blob:;
+    object-src  'none';">
+
+  <title>Compresser un PDF pour email — gratuit, sans upload | PDFree</title>
+  <meta name="description" content="Compressez votre PDF pour l'email en quelques secondes — gratuit, sans upload, sans compte. Passez sous la limite de 25 Mo de Gmail ou 20 Mo d'Outlook.">
+
+  <meta property="og:title"       content="Compresser PDF pour email — gratuit, sans upload | PDFree">
+  <meta property="og:description" content="Trop volumineux pour l'email ? Réduisez la taille de votre PDF instantanément dans le navigateur. Sans upload, sans compte.">
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://pdfree.io/fr/compresser-pdf-pour-email/">
+  <meta property="og:site_name"   content="PDFree">
+  <meta property="og:image"       content="https://pdfree.io/icons/og-image.jpg">
+  <meta name="twitter:card"       content="summary_large_image">
+  <meta name="twitter:site"       content="@pdfree_io">
+  <meta name="twitter:image"      content="https://pdfree.io/icons/og-image.jpg">
+
+  <link rel="canonical" href="https://pdfree.io/fr/compresser-pdf-pour-email/">
+  <link rel="alternate" hreflang="en" href="https://pdfree.io/compress-pdf-for-email/">
+  <link rel="alternate" hreflang="de" href="https://pdfree.io/de/pdf-fuer-email-komprimieren/">
+  <link rel="alternate" hreflang="fr" href="https://pdfree.io/fr/compresser-pdf-pour-email/">
+  <link rel="alternate" hreflang="es" href="https://pdfree.io/es/comprimir-pdf-para-email/">
+  <link rel="alternate" hreflang="pt" href="https://pdfree.io/pt/comprimir-pdf-para-email/">
+  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/compress-pdf-for-email/">
+
+  <link rel="manifest" href="../../manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="PDFree">
+  <link rel="apple-touch-icon" href="../../icons/icon-192.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+  <link rel="stylesheet" href="../../css/fonts.css">
+  <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/animations.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/components.css">
+
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Compresser PDF pour email",
+  "description": "Compressez votre PDF pour l'email en quelques secondes — gratuit, sans upload, sans compte. Passez sous la limite de 25 Mo de Gmail ou 20 Mo d'Outlook.",
+  "url": "https://pdfree.io/fr/compresser-pdf-pour-email/",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "featureList": [
+    "Kein Dateigrößenlimit",
+    "Kein Upload auf Server — 100% privat",
+    "Drei Qualitätsstufen",
+    "Kein Konto erforderlich",
+    "Offline verfügbar"
+  ],
+  "provider": {
+    "@type": "Organization",
+    "name": "PDFree",
+    "url": "https://pdfree.io"
+  }
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Quelles sont les limites de taille pour les pièces jointes email ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Gmail autorise jusqu'à 25 Mo, Outlook.com jusqu'à 20 Mo et Yahoo Mail jusqu'à 25 Mo par email. Les serveurs d'entreprise (Office 365, Exchange) fixent souvent des limites entre 10 et 20 Mo."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "De combien PDFree peut-il compresser un PDF ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Généralement 40 à 75 % pour les documents numérisés et les PDF riches en images. Les PDF à prédominance textuelle (exports Word, rapports) se compriment de 20 à 40 %. Le résultat exact dépend du contenu des images et du niveau de qualité choisi."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Est-il sécurisé de compresser des documents confidentiels ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Oui. PDFree compresse les fichiers entièrement dans votre navigateur — aucun fichier n'est jamais transmis à un serveur. Contrats, rapports financiers et dossiers médicaux restent sur votre appareil tout au long du processus."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "La compression affecte-t-elle la qualité du texte ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Non. Le texte dans les PDFs est des données vectorielles non affectées par la compression d'images. Seules les images incorporées sont compressées. Le texte reste net à n'importe quel niveau de zoom."
+      }
+    }
+  ]
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "PDFree",
+      "item": "https://pdfree.io/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "FR",
+      "item": "https://pdfree.io/fr/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Compresser PDF pour email",
+      "item": "https://pdfree.io/fr/compresser-pdf-pour-email/"
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+
+  <nav>
+    <a href="../" class="logo" aria-label="Go to homepage" style="text-decoration:none">
+      <span class="logo-text">PDF<span>ree</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="../fusionner-pdf/" class="nav-link" data-tool="merge">Fusionner</a>
+      <a href="../diviser-pdf/" class="nav-link" data-tool="split">Diviser</a>
+      <a href="../compresser-pdf/" class="nav-link" data-tool="compress">Compresser</a>
+      <a href="../jpg-en-pdf/" class="nav-link" data-tool="jpg2pdf">JPG→PDF</a>
+      <a href="../pdf-en-jpg/" class="nav-link" data-tool="pdf2jpg">PDF→JPG</a>
+      <a href="../filigrane-pdf/" class="nav-link" data-tool="watermark">Filigrane</a>
+      <a href="../numerotation-pdf/" class="nav-link" data-tool="pagenum">Numérotation</a>
+      <a href="../metadonnees-pdf/" class="nav-link" data-tool="metadata">Métadonnées</a>
+      <a href="../extraire-pdf/" class="nav-link" data-tool="extract">Extraire</a>
+      <a href="../censurer-pdf/" class="nav-link" data-tool="redact">Censurer</a>
+      <a href="../rotation-pdf/" class="nav-link" data-tool="rotate">Rotation</a>
+      <a href="../proteger-pdf/" class="nav-link" data-tool="protect">Protéger</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section style="background:var(--green-light);border-bottom:1px solid rgba(45,122,79,0.15);padding:52px 24px 44px;text-align:center;">
+    <div style="max-width:720px;margin:0 auto;">
+      <div style="display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid rgba(45,122,79,0.2);border-radius:24px;padding:6px 16px;font-size:13px;color:var(--green);font-weight:500;margin-bottom:20px;">
+        <span style="width:7px;height:7px;background:var(--green);border-radius:50%;display:inline-block;"></span>
+        Sans upload · Gratuit · Sans compte · Fonctionne hors ligne
+      </div>
+      <h1 style="font-size:clamp(26px,4vw,40px);font-weight:700;letter-spacing:-1px;line-height:1.15;color:var(--text);margin:0 0 16px;">Compresser un PDF pour l'email —<br>gratuit, sans upload</h1>
+      <p style="font-size:17px;color:var(--text2);max-width:600px;margin:0 auto 28px;line-height:1.6;">Réduisez votre PDF sous la limite de 25 Mo de Gmail ou 20 Mo d'Outlook — en quelques secondes, entièrement dans votre navigateur. Sans upload, sans compte, sans restriction de taille.</p>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <a href="../compresser-pdf/" style="background:var(--green);color:#fff;padding:13px 28px;border-radius:10px;font-weight:600;font-size:15px;text-decoration:none;">Compresser le PDF maintenant</a>
+        <a href="#faq" style="background:#fff;color:var(--green);padding:13px 28px;border-radius:10px;font-weight:500;font-size:15px;text-decoration:none;border:1.5px solid rgba(45,122,79,0.3);">Comment ça marche ↓</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Content -->
+  <section class="seo-article">
+    <div class="seo-article__inner">
+      <div style="max-width:800px;margin:60px auto 40px;padding:0 24px;color:var(--text2);line-height:1.8;">
+
+        <!-- CTA block -->
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:28px;margin:0 0 48px;text-align:center;">
+          <a href="../compresser-pdf/" style="background:var(--green);color:#fff;padding:13px 28px;border-radius:10px;font-weight:600;font-size:15px;text-decoration:none;display:inline-block;">Compresser le PDF maintenant</a>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq"></div>
+        <h2 style="font-size:26px;color:var(--text);margin:0 0 20px;font-weight:700;">FAQ</h2>
+        <div style="display:flex;flex-direction:column;gap:20px;">
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Quelles sont les limites de taille pour les pièces jointes email ?</h3>
+            <p style="margin:0;font-size:14px;">Gmail autorise jusqu'à 25 Mo, Outlook.com jusqu'à 20 Mo et Yahoo Mail jusqu'à 25 Mo par email. Les serveurs d'entreprise (Office 365, Exchange) fixent souvent des limites entre 10 et 20 Mo.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">De combien PDFree peut-il compresser un PDF ?</h3>
+            <p style="margin:0;font-size:14px;">Généralement 40 à 75 % pour les documents numérisés et les PDF riches en images. Les PDF à prédominance textuelle (exports Word, rapports) se compriment de 20 à 40 %. Le résultat exact dépend du contenu des images et du niveau de qualité choisi.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Est-il sécurisé de compresser des documents confidentiels ?</h3>
+            <p style="margin:0;font-size:14px;">Oui. PDFree compresse les fichiers entièrement dans votre navigateur — aucun fichier n'est jamais transmis à un serveur. Contrats, rapports financiers et dossiers médicaux restent sur votre appareil tout au long du processus.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">La compression affecte-t-elle la qualité du texte ?</h3>
+            <p style="margin:0;font-size:14px;">Non. Le texte dans les PDFs est des données vectorielles non affectées par la compression d'images. Seules les images incorporées sont compressées. Le texte reste net à n'importe quel niveau de zoom.</p>
+          </div>
+        </div>
+
+        <!-- Related -->
+        <div style="margin-top:48px;padding-top:24px;border-top:1px solid var(--border);">
+          <p style="font-size:12px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin:0 0 10px;">Outils associés</p>
+          <ul style="margin:0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:6px;">
+            <li><a href="/compress-large-pdf-free/" style="color:var(--green);font-weight:500;">Compresser un grand PDF gratuitement</a> — sans limite d'upload</li>
+            <li><a href="/split-pdf-into-multiple-files/" style="color:var(--green);font-weight:500;">Diviser un PDF en plusieurs fichiers</a> — avant l'envoi par email</li>
+            <li><a href="/fr/fusionner-pdfs-en-un/" style="color:var(--green);font-weight:500;">Fusionner des PDFs en un seul</a> — fusionner puis compresser</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div style="display:flex;gap:48px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;font-size:13px;border-top:1px solid var(--border);padding-top:20px;">
+      <div>
+        <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Alternatives</div>
+        <a href="/ilovepdf-alternative/" style="display:block;color:var(--green);text-decoration:none;margin-bottom:4px;">iLovePDF Alternative</a>
+      </div>
+      <div>
+        <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Solutions</div>
+        <a href="/hipaa-pdf-tools/" style="display:block;color:var(--green);text-decoration:none;margin-bottom:4px;">HIPAA PDF Tools</a>
+        <a href="/secure-pdf-tools/" style="display:block;color:var(--green);text-decoration:none;">Secure PDF Tools</a>
+      </div>
+    </div>
+    PDFree · <strong>100% privat · Kein Upload</strong><br>
+    <span style="color:var(--green)">🔒</span> Ihre Dokumente verlassen nie Ihr Gerät &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> Kostenlos für alle<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
+      <a href="/privacy.html" style="color:var(--green)">Privacy</a> &nbsp;·&nbsp;
+      <a href="/terms.html" style="color:var(--green)">Terms</a> &nbsp;·&nbsp;
+      <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a> &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green)">GitHub</a>
+    </span>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}' ></script>
+</body>
+</html>
