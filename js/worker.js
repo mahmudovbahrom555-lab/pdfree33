@@ -659,7 +659,7 @@ async function _recompressImages(pdf, jpegQuality, targetDpi, medianPageSize) {
   const totalImages = imageEntries.length;
   let imgIdx = 0;
 
-  for (const [ref, obj] of entries) {
+  for (const [, obj] of entries) {
     // Must be a raw stream
     if (!(obj instanceof PDFRawStream)) continue;
 
