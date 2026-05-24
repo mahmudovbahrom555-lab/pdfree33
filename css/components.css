@@ -1124,6 +1124,77 @@
   .compress-presets { grid-template-columns: 1fr; gap: 10px; }
 }
 
+/* ── Compress: DPI / resolution chips ───────────────────────── */
+
+.compress-dpi {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.compress-dpi__label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text2);
+  flex-shrink: 0;
+}
+
+.compress-dpi__chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.compress-dpi__chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 7px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface2);
+  cursor: pointer;
+  transition: border-color .15s, background .15s, color .15s;
+  user-select: none;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.3;
+  gap: 1px;
+}
+
+.compress-dpi__chip input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.compress-dpi__chip:hover {
+  border-color: var(--green);
+  background: var(--surface);
+}
+
+.compress-dpi__chip.active {
+  border-color: var(--green);
+  background: rgba(45, 122, 79, .08);
+  color: var(--green);
+}
+
+.compress-dpi__hint {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--text3);
+}
+
+.compress-dpi__chip.active .compress-dpi__hint {
+  color: var(--green);
+  opacity: .8;
+}
+
 /* ── Watermark: side-by-side controls + preview ──────────────── */
 
 .wm-row {

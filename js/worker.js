@@ -425,6 +425,24 @@ async function handleSplit(fileBuffer, options) {
 // Что НЕ делаем: не растеризуем страницы, не трогаем векторы/шрифты.
 // Для image-heavy PDF нужен Ghostscript-WASM (отложено).
 
+// ── DPI estimation ─────────────────────────────────────────────
+//
+// Estimates the effective DPI of a raster image placed on a PDF page,
+// assuming the image fills the page (good heuristic for scanned documents).
+//
+// Formula: DPI = (pixels / points) * 72  (1 pt = 1/72 inch)
+// Rotation: when page is rotated 90° or 270°, width/height swap.
+//
+// Returns estimated DPI (integer). Returns 0 if page size is unknown.
+function _estimateDpi(imgW, imgH, pageWPt, pageHPt, rotDeg) {
+  if (!pageWPt || !pageHPt) return 0;
+  const rot = ((rotDeg % 360) + 360) % 360;
+  const [pw, ph] = (rot === 90 || rot === 270) ? [pageHPt, pageWPt] : [pageWPt, pageHPt];
+  const dpiX = (imgW / pw) * 72;
+  const dpiY = (imgH / ph) * 72;
+  return Math.round((dpiX + dpiY) / 2);
+}
+
 // ── Image recompression (Phase 2.5 of handleCompress) ─────────
 //
 // Iterates ALL indirect objects, finds images (PDFRawStream + /Subtype /Image),
@@ -439,15 +457,20 @@ async function handleSplit(fileBuffer, options) {
 //   • Tiny images (<20×20 px) — overhead not worth it
 //   • Result is not ≥10% smaller — 10% savings rule
 //
+// DPI downsampling (when targetDpi is set):
+//   Uses median page size as reference. Safe for full-page scans (most common
+//   case). Small images (<600px on longest side) are not downsampled — they
+//   are unlikely to be full-page scans and the savings would be minimal.
+//
 // JPEG pipeline: obj.contents → Blob(image/jpeg) → createImageBitmap
-//   → OffscreenCanvas → convertToBlob(image/jpeg, quality) → obj.contents
+//   → OffscreenCanvas(tw, th) → convertToBlob(image/jpeg, quality) → obj.contents
 //
 // FlateDecode pipeline: decodePDFRawStream(obj).decode() → raw RGB pixels
-//   → ImageData → OffscreenCanvas → convertToBlob(image/jpeg, quality)
+//   → ImageData → OffscreenCanvas(tw, th) → convertToBlob(image/jpeg, quality)
 //   → obj.contents + update /Filter to DCTDecode + /ColorSpace to DeviceRGB
 //
 // Returns { recompressed, skipped, savedBytes }
-async function _recompressImages(pdf, jpegQuality) {
+async function _recompressImages(pdf, jpegQuality, targetDpi, medianPageSize) {
   const { PDFName, PDFNumber, PDFArray, PDFRawStream, decodePDFRawStream } = PDFLib;
   const ctx = pdf.context;
 
@@ -506,16 +529,38 @@ async function _recompressImages(pdf, jpegQuality) {
     try {
       let newBytes;
 
+      // ── DPI-aware target dimensions ───────────────────────────
+      // Compute target (tw, th): downsample if image is likely a full-page scan
+      // and its estimated DPI exceeds targetDpi. Small images (<600px longest
+      // side) are never downsampled — they are decorative, not full-page scans.
+      let tw = w, th = h;
+      if (targetDpi && medianPageSize && Math.max(w, h) >= 600) {
+        const rot = medianPageSize.rot ?? 0;
+        const estDpi = _estimateDpi(w, h, medianPageSize.w, medianPageSize.h, rot);
+        if (estDpi > targetDpi * 1.1) {       // 10% headroom — no pointless rescaling
+          const scale = targetDpi / estDpi;   // always <1 here
+          tw = Math.max(1, Math.round(w * scale));
+          th = Math.max(1, Math.round(h * scale));
+        }
+      }
+
       if (isJPEG) {
         // JPEG: obj.contents = raw JPEG bytes, feed directly to createImageBitmap
         const blob   = new Blob([obj.contents], { type: 'image/jpeg' });
         const bitmap = await createImageBitmap(blob);
-        const canvas = new OffscreenCanvas(bitmap.width, bitmap.height);
+        const canvas = new OffscreenCanvas(tw, th);
         const ctx2d  = canvas.getContext('2d');
-        ctx2d.drawImage(bitmap, 0, 0);
+        ctx2d.imageSmoothingEnabled = true;
+        ctx2d.imageSmoothingQuality = 'high';
+        ctx2d.drawImage(bitmap, 0, 0, tw, th);
         bitmap.close();
         const outBlob = await canvas.convertToBlob({ type: 'image/jpeg', quality: jpegQuality });
         newBytes = new Uint8Array(await outBlob.arrayBuffer());
+        // Update Width/Height in dict when dimensions changed
+        if (tw !== w || th !== h) {
+          dict.set(PDFName.of('Width'),  PDFNumber.of(tw));
+          dict.set(PDFName.of('Height'), PDFNumber.of(th));
+        }
 
       } else {
         // FlateDecode: decodePDFRawStream gives raw pixel bytes (zlib-inflated)
@@ -524,7 +569,6 @@ async function _recompressImages(pdf, jpegQuality) {
         const rawPixels = decodePDFRawStream(obj).decode();
         const cs        = colorSpace?.toString() ?? '';
         const isGray    = cs.includes('DeviceGray');
-        const channels  = isGray ? 1 : 3;
 
         // Build RGBA Uint8ClampedArray for ImageData
         const rgba = new Uint8ClampedArray(w * h * 4);
@@ -542,18 +586,28 @@ async function _recompressImages(pdf, jpegQuality) {
           rgba[i * 4 + 3] = 255;  // fully opaque
         }
 
-        const imageData = new ImageData(rgba, w, h);
-        const canvas    = new OffscreenCanvas(w, h);
-        const ctx2d     = canvas.getContext('2d');
-        ctx2d.putImageData(imageData, 0, 0);
+        // putImageData at full resolution, then drawImage to downsample
+        const srcCanvas = new OffscreenCanvas(w, h);
+        const srcCtx    = srcCanvas.getContext('2d');
+        srcCtx.putImageData(new ImageData(rgba, w, h), 0, 0);
+
+        const canvas = new OffscreenCanvas(tw, th);
+        const ctx2d  = canvas.getContext('2d');
+        ctx2d.imageSmoothingEnabled = true;
+        ctx2d.imageSmoothingQuality = 'high';
+        ctx2d.drawImage(srcCanvas, 0, 0, tw, th);
+
         const outBlob = await canvas.convertToBlob({ type: 'image/jpeg', quality: jpegQuality });
         newBytes = new Uint8Array(await outBlob.arrayBuffer());
 
         // Update filter to DCTDecode and color space to RGB (canvas always outputs sRGB)
         dict.set(PDFName.of('Filter'),     PDFName.of('DCTDecode'));
         dict.set(PDFName.of('ColorSpace'), PDFName.of('DeviceRGB'));
-        // Remove FlateDecode-specific entries if present
         dict.delete(PDFName.of('DecodeParms'));
+        if (tw !== w || th !== h) {
+          dict.set(PDFName.of('Width'),  PDFNumber.of(tw));
+          dict.set(PDFName.of('Height'), PDFNumber.of(th));
+        }
       }
 
       // 10% savings rule — only replace if meaningfully smaller
@@ -695,14 +749,32 @@ async function handleCompress(fileBuffer, options) {
   //   Medium (std)   → imageQuality 0.82 — good balance, minimal artifacts
   //   High (max)     → imageQuality 0.72 — aggressive, visible only on close inspection
   //
+  // DPI downsampling: targetDpi from UI (96 / 150 / null).
+  //   null = no downsampling (quality-only mode, current default for Low/legacy).
+  //   Uses median page size as the reference for full-page-scan detection.
+  //
   // OffscreenCanvas is available in Worker context (all modern browsers).
   // If not available (very old browser) we skip silently and continue.
   const qualityMap = { low: null, medium: 0.82, high: 0.72 };
   const jpegQuality = qualityMap[options.preset] ?? null;
+  const targetDpi   = options.targetDpi ?? null;   // null = no downsampling
+
+  // Compute median page size (width, height in points + rotation) for DPI estimation.
+  // Median is more robust than mean for documents with a cover page at a different size.
+  let medianPageSize = null;
+  if (targetDpi !== null && pages.length > 0) {
+    const sizes = pages.map(p => {
+      const { width, height } = p.getSize();
+      const rot = p.getRotation()?.angle ?? 0;
+      return { w: width, h: height, rot };
+    });
+    sizes.sort((a, b) => (a.w * a.h) - (b.w * b.h));
+    medianPageSize = sizes[Math.floor(sizes.length / 2)];
+  }
 
   if (jpegQuality !== null && typeof OffscreenCanvas !== 'undefined') {
     self.postMessage({ type: 'progress', value: 55, label: 'Recompressing images…' });
-    const imgResult = await _recompressImages(pdf, jpegQuality);
+    const imgResult = await _recompressImages(pdf, jpegQuality, targetDpi, medianPageSize);
     report.imagesRecompressed = imgResult.recompressed;
     report.imagesSkipped      = imgResult.skipped;
     report.imagesSavedBytes   = imgResult.savedBytes;

@@ -22,9 +22,13 @@ import { wmRemoveHtml, bindWmRemove, resetWmRemove } from './watermarkRemoveUI.j
 // ── State ──────────────────────────────────────────────────────
 let _preset       = 'medium';  // 'low' | 'medium' | 'high'
 let _preserveText = true;
+let _targetDpi    = 150;       // null = no downsampling | 96 | 150
+
+// Default DPI per preset (applied when user switches presets)
+const _dpiDefaults = { low: null, medium: 150, high: 96 };
 
 export function getCompressParams() {
-  return { preset: _preset, preserveText: _preserveText };
+  return { preset: _preset, preserveText: _preserveText, targetDpi: _targetDpi };
 }
 
 // ── Public API ─────────────────────────────────────────────────
@@ -74,6 +78,7 @@ export function hideCompressOptions() {
   container.innerHTML = '';
   _preset       = 'medium';
   _preserveText = true;
+  _targetDpi    = 150;
   resetWmRemove();
 }
 
@@ -222,6 +227,8 @@ function _render(file, scan) {
       ${_presetCard('high',   '🔥', 'Maximum',  'Aggressive image recompression (72%) + structure cleanup. Smallest file, minor quality loss.')}
     </div>
 
+    ${_dpiRow()}
+
     ${checkbox({
       id:       'preserveTextCheck',
       checked:  _preserveText,
@@ -272,6 +279,27 @@ function _presetCard(value, icon, label, desc) {
   `;
 }
 
+function _dpiRow() {
+  if (_preset === 'low') return '';
+  const opts = [
+    { value: 96,   label: 'Email',    hint: '96 DPI' },
+    { value: 150,  label: 'Web',      hint: '150 DPI' },
+    { value: null, label: 'Original', hint: 'no resize' },
+  ];
+  return `
+    <div class="compress-dpi" role="group" aria-label="Image resolution">
+      <span class="compress-dpi__label">Image resolution</span>
+      <div class="compress-dpi__chips">
+        ${opts.map(o => `
+          <label class="compress-dpi__chip ${_targetDpi === o.value ? 'active' : ''}" data-dpi="${o.value ?? 'null'}">
+            <input type="radio" name="compressDpi" value="${o.value ?? 'null'}" ${_targetDpi === o.value ? 'checked' : ''}>
+            <span>${o.label}</span>
+            <span class="compress-dpi__hint">${o.hint}</span>
+          </label>`).join('')}
+      </div>
+    </div>`;
+}
+
 // ── Events ─────────────────────────────────────────────────────
 // Примечание: безопасно вешать на container каждый раз, т.к.
 // _render() перезаписывает innerHTML → старые узлы уничтожаются.
@@ -290,6 +318,31 @@ function _bindEvents() {
       if (preserveLabel) {
         preserveLabel.classList.toggle('compress-preserve--inactive', _preset !== 'high');
       }
+      // Apply preset DPI default and update DPI row visibility
+      _targetDpi = _dpiDefaults[_preset] ?? null;
+      const dpiRow = document.querySelector('.compress-dpi');
+      if (_preset === 'low') {
+        if (dpiRow) dpiRow.style.display = 'none';
+      } else {
+        if (dpiRow) {
+          dpiRow.style.display = '';
+          // Sync chip active state to new DPI
+          dpiRow.querySelectorAll('.compress-dpi__chip').forEach(chip => {
+            const val = chip.dataset.dpi === 'null' ? null : Number(chip.dataset.dpi);
+            chip.classList.toggle('active', val === _targetDpi);
+          });
+          const matchingInput = dpiRow.querySelector(`input[value="${_targetDpi ?? 'null'}"]`);
+          if (matchingInput) matchingInput.checked = true;
+        }
+      }
+    }
+    if (e.target.name === 'compressDpi') {
+      const raw = e.target.value;
+      _targetDpi = raw === 'null' ? null : Number(raw);
+      document.querySelectorAll('.compress-dpi__chip').forEach(chip => {
+        const val = chip.dataset.dpi === 'null' ? null : Number(chip.dataset.dpi);
+        chip.classList.toggle('active', val === _targetDpi);
+      });
     }
     if (e.target.id === 'preserveTextCheck') {
       _preserveText = e.target.checked;

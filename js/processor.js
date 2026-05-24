@@ -270,7 +270,7 @@ async function _runSplit(filesSnapshot, { pages, mode, removeWatermarks = false 
 
 // ── Compress ───────────────────────────────────────────────────
 
-async function _runCompress(filesSnapshot, { preset = 'medium', preserveText = true, removeWatermarks = false } = {}) {
+async function _runCompress(filesSnapshot, { preset = 'medium', preserveText = true, removeWatermarks = false, targetDpi = null } = {}) {
   if (!_checkSize(filesSnapshot[0], 150)) { isProcessing = false; setFilesLocked(false); hideCancelBtn(); return; }
 
   const file   = filesSnapshot[0];
@@ -298,7 +298,7 @@ async function _runCompress(filesSnapshot, { preset = 'medium', preserveText = t
 
   // ⚠️  TRANSFERABLE: buffer detached after this call — worker owns it until done.
   _worker.postMessage(
-    { tool: 'compress', file: buffer, options: { preset, preserveText, removeWatermarks } },
+    { tool: 'compress', file: buffer, options: { preset, preserveText, removeWatermarks, targetDpi } },
     [buffer]
   );
 
