@@ -282,6 +282,10 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) .success-top { background: var(--green-light); }
 }
+:root[data-theme="dark"] { --green-dark: #6DC590; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --green-dark: #6DC590; }
+}
 .success-icon {
   width: 48px; height: 48px;
   background: var(--green);
