@@ -7,3 +7,6 @@
 /merge-pdf/ /merge-large-pdf-files/ 301
 /pagenum-pdf /add-page-numbers-to-pdf/ 301
 /pagenum-pdf/ /add-page-numbers-to-pdf/ 301
+
+# Catch-all: unknown URLs → proper 404 (prevents soft 404 / HTTP 200 on missing pages)
+/* /404.html 404
