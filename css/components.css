@@ -278,6 +278,10 @@
   gap: 16px;
   flex-wrap: wrap;
 }
+:root[data-theme="dark"] .success-top { background: var(--green-light); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .success-top { background: var(--green-light); }
+}
 .success-icon {
   width: 48px; height: 48px;
   background: var(--green);
@@ -1362,6 +1366,13 @@
 .compress-report__item-icon  { flex-shrink: 0; }
 .compress-report__item-label { flex: 1; min-width: 0; }
 .compress-report__item-check { flex-shrink: 0; color: var(--green); font-weight: 600; }
+
+.compress-report__note {
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.5;
+  padding-top: 4px;
+}
 
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(6px); }
