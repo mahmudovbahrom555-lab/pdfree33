@@ -111,14 +111,32 @@ export function hideCompressOptions() {
  * @param {{ originalSize, compressedSize, savedBytes, report }} data
  */
 export function renderCompressionReport(data) {
-  // Убираем предыдущий репорт если есть
   id('compressReport')?.remove();
 
   const { originalSize, compressedSize, savedBytes, report } = data;
   const pct = originalSize > 0 ? Math.round((savedBytes / originalSize) * 100) : 0;
-  const isOptimized = pct < 2;
 
-  // Собираем breakdown items
+  // Absolute threshold — % misleads on large files (1.9% of 100 MB = 1.9 MB = real savings)
+  const isOptimized = savedBytes < 50 * 1024;
+
+  // Classify WHY compression was limited — basis for actionable hints
+  // useObjectStreams=false → Light preset → image recompression was never attempted
+  const lightPreset = !report.useObjectStreams;
+  const noImages    = !lightPreset && report.imagesRecompressed === 0 && report.imagesSkipped === 0;
+  const allSkipped  = !lightPreset && report.imagesRecompressed === 0 && report.imagesSkipped > 0;
+
+  // Actionable hint — tells the user WHY and WHAT TO DO, not internal tech details.
+  // Shown in isOptimized note (replaces generic message) and in breakdown footer.
+  let whyNote = null;
+  if (lightPreset) {
+    whyNote = '💡 <strong>Switch to Standard preset</strong> to also recompress images — that\'s where most savings come from.';
+  } else if (noImages) {
+    whyNote = '📄 This PDF has no raster images — text and vectors don\'t compress much. Savings are from metadata and structure cleanup only.';
+  } else if (allSkipped) {
+    whyNote = '🎨 Images were found but use CMYK color profiles or transparency layers — the browser must preserve them to avoid color distortion. Metadata has been cleaned up.';
+  }
+
+  // Breakdown items
   const items = [];
   if (report.hasXMP)        items.push({ icon: '📋', label: 'XMP metadata stream removed' });
   if (report.thumbnails > 0) items.push({ icon: '🖼️', label: `${report.thumbnails} embedded thumbnail${report.thumbnails > 1 ? 's' : ''} removed` });
@@ -134,8 +152,6 @@ export function renderCompressionReport(data) {
   div.id        = 'compressReport';
   div.className = `compress-report${isOptimized ? ' compress-report--optimized' : ''}`;
 
-  // gauge: visually shows before → after
-  // Fill анимируется через JS ниже (CSS transition)
   div.innerHTML = `
     <div class="compress-report__hero" aria-label="${fmtSize(originalSize)} compressed to ${fmtSize(compressedSize)}">
       <span class="compress-report__hero-sizes">${fmtSize(originalSize)} → ${fmtSize(compressedSize)}</span>
@@ -155,9 +171,7 @@ export function renderCompressionReport(data) {
 
     ${isOptimized
       ? `<div class="compress-report__note">
-           ℹ️ This PDF is already well-optimized — not much left to remove.
-           For image-heavy PDFs, our upcoming <strong>Ghostscript engine</strong>
-           will deliver deeper compression.
+           ${whyNote ?? 'ℹ️ This PDF is already well-optimized — not much left to remove. For image-heavy PDFs, our upcoming <strong>Ghostscript engine</strong> will deliver deeper compression.'}
          </div>`
       : `<div class="compress-report__breakdown" aria-label="What was optimized">
            ${items.map((it, i) => `
@@ -167,14 +181,13 @@ export function renderCompressionReport(data) {
                <span class="compress-report__item-check" aria-hidden="true">✓</span>
              </div>
            `).join('')}
+           ${whyNote ? `<div class="compress-report__note" style="margin-top:8px">${whyNote}</div>` : ''}
          </div>`
     }
   `;
 
-  // Вставляем после successDesc
   id('successDesc')?.insertAdjacentElement('afterend', div);
 
-  // Анимируем gauge после двух rAF (браузер должен успеть отрисовать display:block)
   requestAnimationFrame(() => requestAnimationFrame(() => {
     const fill = div.querySelector('.compress-report__gauge-fill');
     if (fill) fill.style.width = fill.dataset.target + '%';
