@@ -1033,6 +1033,18 @@
   border: 1px solid rgba(180,83,9,.2);
 }
 
+.compress-scan--warn {
+  background: #fef2f2;
+  color: #991b1b;
+  border: 1px solid rgba(220,38,38,.2);
+}
+
+.compress-scan--info {
+  background: var(--surface2);
+  color: var(--text2);
+  border: 1px solid var(--border);
+}
+
 /* ── Compress: 3 large preset cards ──────────────────────────── */
 
 .compress-presets {

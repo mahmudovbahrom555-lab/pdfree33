@@ -43,13 +43,24 @@ export async function initCompressOptions(file) {
   const container = id('compressOptions');
   if (!container) return;
 
+  // Always show the panel immediately so stale data from a previous file never lingers.
+  container.style.display = 'block';
+
   if (file.size > 150 * 1024 * 1024) {
-    showToast(t('warn_file_too_large', { size: fmtSize(file.size), max: 150 }), 8000);
+    container.innerHTML = `
+      <div class="compress-info">
+        <span class="compress-info__name" title="${_esc(file.name)}">${_truncName(file.name)}</span>
+        <span class="compress-info__dot" aria-hidden="true">·</span>
+        <span class="compress-info__meta">${fmtSize(file.size)}</span>
+      </div>
+      <div class="compress-scan compress-scan--warn" role="alert">
+        ⚠️ File too large for browser compression (max 150 MB).
+        Try splitting it first, or use a desktop tool.
+      </div>`;
     return;
   }
 
   container.innerHTML = loadingRow('Scanning PDF…');
-  container.style.display = 'block';
 
   // Skip full PDFDocument.load for large files — it would consume 3–5× file size
   // in main thread heap (e.g. 25 MB file → ~120 MB RAM). Threshold: 25 MB.
