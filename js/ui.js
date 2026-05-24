@@ -59,6 +59,7 @@ export function showHomePage() {
   show('trustAlert');
   show('noLimitBar');
   show('toolsGrid');
+  show('privacyBar');
   hide('toolArea');
 }
 
@@ -68,6 +69,7 @@ export function showToolPage() {
   hide('trustAlert');
   hide('noLimitBar');
   hide('toolsGrid');
+  hide('privacyBar');
   show('toolArea');
 }
 
