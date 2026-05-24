@@ -45,7 +45,7 @@ export async function initSplitOptions(file) {
   try {
     await loadPdfLib();
     const { PDFDocument } = window.PDFLib;
-    const buf  = await file.arrayBuffer();
+    const buf  = file._decryptedBuffer ?? await file.arrayBuffer();
     const doc  = await PDFDocument.load(buf, { ignoreEncryption: true });
     _pageCount = doc.getPageCount();
 

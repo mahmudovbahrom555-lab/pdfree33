@@ -347,6 +347,12 @@ function initEvents() {
     initToolOptions(currentTool, [...selectedFiles]);
   });
 
+  // Re-init after silent owner-password decryption completes (files.js dispatches this).
+  // First init ran before WASM finished — decrypted bytes weren't available yet.
+  document.addEventListener('pdfree:file-decrypted', () => {
+    initToolOptions(currentTool, [...selectedFiles]);
+  });
+
   document.addEventListener('pdfree:success', e => _handleSuccess(e.detail));
 
   window.addEventListener('popstate', e => {

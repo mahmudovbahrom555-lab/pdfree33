@@ -203,6 +203,9 @@ export function addFiles(files) {
           if (decrypted) {
             f._decryptedBuffer = decrypted.buffer;  // cache for processor.js
             f._pdfMeta.isEncrypted = false;          // suppress lock badge
+            // Re-init tool options now that decrypted bytes are available —
+            // the first init ran before decryption and got 0 pages.
+            document.dispatchEvent(new CustomEvent('pdfree:file-decrypted'));
           }
         } catch { /* WASM init failure — keep isEncrypted = true */ }
         renderList();
