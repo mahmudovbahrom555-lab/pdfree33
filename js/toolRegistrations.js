@@ -18,7 +18,9 @@ import { initSplitOptions, hideSplitOptions,
          getSelectedPages, getSplitMode }   from './splitUI.js';
 import { initCompressOptions, hideCompressOptions,
          getCompressParams, getCompressScan,
-         renderCompressionReport }         from './compressUI.js';
+         renderCompressionReport,
+         initCompressEmailOptions, hideCompressEmailOptions,
+         renderEmailVerdict }              from './compressUI.js';
 import { initJpg2PdfOptions, hideJpg2PdfOptions,
          getJpg2PdfParams }               from './jpg2pdfUI.js';
 import { initPdf2JpgOptions, hidePdf2JpgOptions,
@@ -200,4 +202,19 @@ registerTool('fill', {
   validate:   p => p.loading    ? 'Reading PDF fields — please wait a moment…'
                 : !p.hasFields  ? 'No fillable fields found in this PDF'
                 : null,
+});
+
+// Email compression mode — same worker runner as 'compress' but with
+// fixed aggressive params and email-specific post-processing UI.
+registerTool('compress-email', {
+  runner:    'compress',
+  init:      initCompressEmailOptions,
+  hide:      hideCompressEmailOptions,
+  getParams: () => ({ preset: 'high', targetDpi: 96, quality: 0.60, preserveText: false, removeWatermarks: false }),
+  onSuccess: ({ compressionReport }) => {
+    if (compressionReport) {
+      renderCompressionReport(compressionReport);
+      renderEmailVerdict(compressionReport.compressedSize);
+    }
+  },
 });

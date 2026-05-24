@@ -225,4 +225,13 @@ export const TOOLS = {
     accept:      '.pdf',
     implemented: true,
   },
+  'compress-email': {
+    icon:        '📧',
+    title:       'Compress PDF for Email',
+    desc:        'Maximum compression — 96 DPI — optimized to fit Gmail and Outlook limits',
+    btn:         '📧 Compress for Email',
+    multi:       false,
+    accept:      '.pdf',
+    implemented: true,
+  },
 };

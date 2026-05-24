@@ -40,6 +40,7 @@ const TOOL_SLUGS = {
   meta:     '/meta-pdf/', redact:   '/redact-pdf/',
   rotate:   '/rotate-pdf/', protect: '/protect-pdf/',
   fill:     '/fill/',
+  'compress-email': '/compress-pdf-for-email/',
 };
 
 // Reverse map pathname → tool key (primary tool slug URLs).

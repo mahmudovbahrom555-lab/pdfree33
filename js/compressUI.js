@@ -450,6 +450,104 @@ function _bindEvents() {
   });
 }
 
+// ── Email mode ─────────────────────────────────────────────────
+// Dedicated init/hide/verdict for the /compress-pdf-for-email/ page.
+// Uses the same #compressOptions container and _scanFile() infrastructure.
+// getParams is fixed (no user controls) — always Maximum+96DPI+60%.
+
+/**
+ * Инициализирует email-режим сжатия: фиксированные настройки, нет слайдеров.
+ * @param {File} file
+ */
+export async function initCompressEmailOptions(file) {
+  const container = id('compressOptions');
+  if (!container) return;
+  container.style.display = 'block';
+
+  if (file.size > MAX_COMPRESS_MB * 1024 * 1024) {
+    container.innerHTML = `
+      <div class="compress-info">
+        <span class="compress-info__name" title="${_esc(file.name)}">${_truncName(file.name)}</span>
+        <span class="compress-info__dot" aria-hidden="true">·</span>
+        <span class="compress-info__meta">${fmtSize(file.size)}</span>
+      </div>
+      <div class="compress-scan compress-scan--warn" role="alert">
+        ⚠️ File too large for browser compression (max 150 MB).
+        Try splitting it first, or use a desktop tool.
+      </div>`;
+    return;
+  }
+
+  container.innerHTML = loadingRow('Scanning PDF…');
+
+  _lastScan = null;
+  if (file.size <= SCAN_LIMIT_MB * 1024 * 1024) {
+    try { _lastScan = await _scanFile(file); } catch { /* silent */ }
+  }
+
+  const meta = _lastScan
+    ? ` · ${_lastScan.pageCount} page${_lastScan.pageCount !== 1 ? 's' : ''}`
+    : '';
+
+  container.innerHTML = `
+    <div class="compress-info">
+      <span class="compress-info__name" title="${_esc(file.name)}">${_truncName(file.name)}</span>
+      <span class="compress-info__dot" aria-hidden="true">·</span>
+      <span class="compress-info__meta">${fmtSize(file.size)}${meta}</span>
+      ${_lastScan?.isEncrypted ? '<span class="compress-info__badge compress-info__badge--warn">🔒 encrypted</span>' : ''}
+    </div>
+
+    ${_lastScan ? _buildScanBanner(_lastScan) : ''}
+
+    <div class="compress-scan compress-scan--info" role="status" style="margin-top:8px">
+      📧 Email mode: <strong>Maximum preset</strong> · <strong>96 DPI</strong> · <strong>60% image quality</strong>
+      — preset locked for smallest possible output
+    </div>
+  `;
+}
+
+/** Скрывает email-панель (идентично hideCompressOptions) */
+export function hideCompressEmailOptions() {
+  const container = id('compressOptions');
+  if (!container) return;
+  container.style.display = 'none';
+  container.innerHTML = '';
+  _lastScan = null;
+}
+
+/**
+ * Показывает email-вердикт под compression report.
+ * Вставляется после renderCompressionReport() в onSuccess.
+ * @param {number} compressedSize — bytes
+ */
+export function renderEmailVerdict(compressedSize) {
+  id('emailVerdict')?.remove();
+
+  const mb    = compressedSize / (1024 * 1024);
+  let cls, msg;
+
+  if (mb < 20) {
+    cls = 'compress-scan--found';
+    msg = `✅ Email-ready — ${fmtSize(compressedSize)} fits Gmail (25 MB), Outlook (20 MB) and Yahoo (25 MB)`;
+  } else if (mb < 25) {
+    cls = 'compress-scan--warn';
+    msg = `⚠️ ${fmtSize(compressedSize)} — fits Gmail (25 MB) but may exceed Outlook's 20 MB limit`;
+  } else {
+    cls = 'compress-scan--warn';
+    msg = `⚠️ ${fmtSize(compressedSize)} — still exceeds Gmail's 25 MB limit. Try <a href="/split-pdf/" style="color:inherit;text-decoration:underline">splitting</a> the PDF first.`;
+  }
+
+  const div = document.createElement('div');
+  div.id        = 'emailVerdict';
+  div.className = `compress-scan ${cls}`;
+  div.setAttribute('role', 'status');
+  div.style.marginTop = '12px';
+  div.innerHTML = msg;
+
+  id('compressReport')?.insertAdjacentElement('afterend', div)
+    || id('successDesc')?.insertAdjacentElement('afterend', div);
+}
+
 // ── Helpers ────────────────────────────────────────────────────
 
 function _truncName(name) {

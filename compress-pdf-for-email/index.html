@@ -125,10 +125,10 @@
   </script>
   <script src="../js/theme.js"></script>
 </head>
-<body>
+<body data-tool="compress-email">
 
   <nav>
-    <a href="../" class="logo" aria-label="Go to homepage" style="text-decoration:none">
+    <a href="../" class="logo" id="logo" aria-label="Go to homepage" style="text-decoration:none">
       <span class="logo-text">PDF<span>ree</span></span>
     </a>
     <div class="nav-links">
@@ -148,32 +148,73 @@
     <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode"></button>
   </nav>
 
-  <!-- Hero -->
-  <section style="background:var(--green-light);border-bottom:1px solid rgba(45,122,79,0.15);padding:52px 24px 44px;text-align:center;">
+  <!-- Compact hero -->
+  <section style="background:var(--green-light);border-bottom:1px solid rgba(45,122,79,0.15);padding:24px 24px 20px;text-align:center;">
     <div style="max-width:720px;margin:0 auto;">
-      <div style="display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid rgba(45,122,79,0.2);border-radius:24px;padding:6px 16px;font-size:13px;color:var(--green);font-weight:500;margin-bottom:20px;">
-        <span style="width:7px;height:7px;background:var(--green);border-radius:50%;display:inline-block;"></span>
-        No upload · Free · No account · Works offline
-      </div>
-      <h1 style="font-size:clamp(28px,4.5vw,44px);font-weight:700;letter-spacing:-1px;line-height:1.15;color:var(--text);margin:0 0 16px;">Compress PDF for Email —<br>Reduce Size Instantly</h1>
-      <p style="font-size:17px;color:var(--text2);max-width:600px;margin:0 auto 28px;line-height:1.6;">Shrink your PDF below Gmail's 25 MB limit or Outlook's 20 MB cap — in seconds, entirely in your browser. No upload, no account, no file size restriction.</p>
-      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
-        <a href="../compress-large-pdf-free/" style="background:var(--green);color:#fff;padding:13px 28px;border-radius:10px;font-weight:600;font-size:15px;text-decoration:none;">Compress PDF Now — Free</a>
-        <a href="#how-it-works" style="background:#fff;color:var(--green);padding:13px 28px;border-radius:10px;font-weight:500;font-size:15px;text-decoration:none;border:1.5px solid rgba(45,122,79,0.3);">How it works ↓</a>
-      </div>
+      <h1 style="font-size:clamp(22px,3.5vw,34px);font-weight:700;letter-spacing:-0.5px;line-height:1.2;color:var(--text);margin:0 0 6px;">Compress PDF for Email — Reduce Size Instantly</h1>
+      <p style="font-size:14px;color:var(--green);margin:0;font-weight:500;">Get under Gmail's 25 MB limit. No upload, no account, no file size cap.</p>
     </div>
   </section>
 
-  <!-- Badge bar -->
-  <section style="padding:16px 24px;border-bottom:1px solid var(--border);background:var(--surface);">
-    <div style="max-width:720px;margin:0 auto;display:flex;gap:24px;justify-content:center;flex-wrap:wrap;">
-      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">⚡ 50–75% size reduction</span>
-      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">🔒 Files never uploaded</span>
-      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">✓ Text stays sharp</span>
-      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">✓ No file size limit</span>
-      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">✓ Free forever</span>
+  <!-- Tool widget -->
+  <div id="tool"></div>
+  <main id="toolArea" class="main-area" aria-busy="false">
+    <div class="tool-header">
+      <div class="tool-header-icon" id="toolIcon" aria-hidden="true">📧</div>
+      <div class="tool-header-text">
+        <h2 id="toolTitle">Compress PDF for Email</h2>
+        <p  id="toolDesc">Maximum compression — 96 DPI — optimized to fit Gmail and Outlook limits</p>
+      </div>
     </div>
-  </section>
+
+    <div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-label="Upload PDF file — click or drag and drop">
+      <input type="file" id="fileInput" accept=".pdf" aria-hidden="true">
+      <span class="drop-icon" aria-hidden="true">📂</span>
+      <div class="drop-title">Drop your PDF here</div>
+      <div class="drop-sub">Maximum compression preset — optimized for Gmail and Outlook</div>
+      <button class="drop-btn" id="chooseFilesBtn" type="button">Choose file</button>
+    </div>
+
+    <div id="fileList"    class="file-list" aria-live="polite"></div>
+    <div id="fileCount"   class="file-count"   style="display:none"></div>
+    <div id="reorderHint" class="reorder-hint" style="display:none"></div>
+
+    <div id="splitOptions"     style="display:none"></div>
+    <div id="compressOptions"  style="display:none"></div>
+    <div id="jpg2pdfOptions"   style="display:none"></div>
+    <div id="pdf2jpgOptions"   style="display:none"></div>
+    <div id="watermarkOptions" style="display:none"></div>
+    <div id="pageNumOptions"   style="display:none"></div>
+    <div id="metaOptions"      style="display:none"></div>
+    <div id="protectOptions"   style="display:none"></div>
+    <div id="redactOptions"    style="display:none"></div>
+    <div id="rotateOptions"    style="display:none"></div>
+
+    <button id="mergeBtn"  class="merge-btn"  type="button" disabled data-mode="process">📧 Compress for Email</button>
+    <button id="cancelBtn" class="cancel-btn" type="button" style="display:none">✕ Cancel</button>
+
+    <div id="progressBar"   class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+    <div id="progressLabel" class="progress-label"></div>
+
+    <div id="successCard" class="success-card" role="alert" aria-live="polite" style="display:none">
+      <div class="success-top">
+        <div class="success-icon">✓</div>
+        <div class="success-text">
+          <h3 id="successTitle">Done!</h3>
+          <p  id="successDesc"></p>
+        </div>
+        <button id="downloadBtn" class="download-btn" type="button">⬇ Download</button>
+        <button id="shareBtn" class="share-btn" type="button" style="display:none" aria-label="Send file via device apps"></button>
+      </div>
+      <div id="privacyCleared" class="privacy-cleared" aria-live="polite">
+        <span class="privacy-cleared__icon" aria-hidden="true">🛡️</span>
+        <div class="privacy-cleared__body">
+          <strong class="privacy-cleared__title">File cleared from memory</strong>
+          <span class="privacy-cleared__sub">Your document has left no trace on any server.</span>
+        </div>
+      </div>
+    </div>
+  </main>
 
   <!-- Content -->
   <section class="seo-article">
@@ -393,7 +434,13 @@
     </span>
   </footer>
 
-  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <div id="toast"      class="toast" role="status" aria-live="polite"></div>
+  <div id="hero"       style="display:none"></div>
+  <div id="trustAlert" style="display:none"></div>
+  <div id="toolsGrid"  style="display:none"></div>
+  <div id="pwaNudge"   style="display:none"></div>
+
+  <script type="module" src="../js/app.js"></script>
   <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script>
 </body>
 </html>
