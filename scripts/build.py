@@ -197,10 +197,6 @@ SPECIALTY_PAGES = [
     'merge-pdf-without-uploading',
     'secure-pdf-tools',
     'sign',
-    'compress-large-pdf-free',
-    'merge-large-pdf-files',
-    'fill',
-    'extract-pdf',
     # Specific-intent landing pages
     'compress-pdf-for-email',
     'split-pdf-into-multiple-files',
