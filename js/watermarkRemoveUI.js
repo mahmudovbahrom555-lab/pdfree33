@@ -29,8 +29,8 @@ export function wmRemoveHtml() {
   return checkbox({
     id:       WM_TOGGLE_ID,
     checked:  _active,
-    title:    'Try to remove watermarks',
-    subtitle: 'Removes stamp annotations. Embedded text watermarks may remain.',
+    title:    'Remove stamp & layer watermarks',
+    subtitle: 'Removes stamp annotations and hidden OCG layers. Watermarks drawn into page content cannot be removed.',
   });
 }
 

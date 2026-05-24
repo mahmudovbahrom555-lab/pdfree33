@@ -76,10 +76,15 @@ function progress(value, label) {
   self.postMessage({ type: 'progress', value, label });
 }
 
-// Phase 1 watermark removal: filter /Annots, keeping everything except
-// /Stamp and /Watermark subtypes. Preserves hyperlinks (/Link), form
-// fields (/Widget), comments (/Text), highlights (/Highlight), etc.
-// Content-stream watermarks are unaffected (Phase 2, future work).
+// ── Watermark removal ─────────────────────────────────────────
+//
+// Phase 1: annotation-based watermarks (/Stamp, /Watermark subtypes).
+// Phase 2: OCG-based watermarks (layer names matching wm patterns).
+// Content-stream watermarks (embedded text/images) are NOT handled —
+// that requires a full content-stream parser and risks false positives.
+//
+// Public entry point: _removeWatermarks(pdf) — calls both phases.
+
 function _stripAnnotations(pdf) {
   const { PDFName, PDFArray, PDFRef } = PDFLib;
   const ctx = pdf.context;
@@ -114,6 +119,102 @@ function _stripAnnotations(pdf) {
       page.node.set(PDFName.of('Annots'), newAnnots);
     }
   }
+}
+
+// Phase 2: disable OCGs (Optional Content Groups / layers) whose /Name
+// matches common watermark patterns. Modifies /OCProperties/D/OFF in the
+// catalog — never touches page content streams. Returns count disabled.
+function _stripOCGs(pdf) {
+  const { PDFName, PDFArray, PDFRef, PDFDict, PDFString, PDFHexString } = PDFLib;
+  const ctx = pdf.context;
+
+  const WM_NAMES = /watermark|wm\b|stamp|draft|confidential|background|bg\b|overlay|sample|do.not.copy/i;
+
+  const ocpVal = pdf.catalog.get(PDFName.of('OCProperties'));
+  if (!ocpVal) return 0;
+  const ocp = ocpVal instanceof PDFRef ? ctx.lookup(ocpVal) : ocpVal;
+  if (!(ocp instanceof PDFDict)) return 0;
+
+  const ocgsVal = ocp.get(PDFName.of('OCGs'));
+  if (!ocgsVal) return 0;
+  const ocgs = ocgsVal instanceof PDFRef ? ctx.lookup(ocgsVal) : ocgsVal;
+  if (!(ocgs instanceof PDFArray)) return 0;
+
+  // Collect refs of OCGs whose name matches watermark patterns
+  const toOff = [];
+  for (let i = 0; i < ocgs.size(); i++) {
+    const ref = ocgs.get(i);
+    const ocg = ref instanceof PDFRef ? ctx.lookup(ref) : ref;
+    if (!(ocg instanceof PDFDict)) continue;
+
+    const nameObj = ocg.get(PDFName.of('Name'));
+    let name = '';
+    if (nameObj instanceof PDFString || nameObj instanceof PDFHexString) {
+      name = nameObj.decodeText();
+    }
+    if (WM_NAMES.test(name)) toOff.push(ref);
+  }
+  if (toOff.length === 0) return 0;
+
+  // Get default view dictionary /D
+  const dVal = ocp.get(PDFName.of('D'));
+  if (!dVal) return 0;
+  const d = dVal instanceof PDFRef ? ctx.lookup(dVal) : dVal;
+  if (!(d instanceof PDFDict)) return 0;
+
+  const toOffNums = new Set(toOff.map(r => r instanceof PDFRef ? r.objectNumber : -1));
+  const baseState = d.get(PDFName.of('BaseState'))?.toString() ?? '/ON';
+
+  // Helper: rebuild /ON array excluding toOff targets
+  const _filterOn = () => {
+    const onVal = d.get(PDFName.of('ON'));
+    if (!onVal) return;
+    const on = onVal instanceof PDFRef ? ctx.lookup(onVal) : onVal;
+    if (!(on instanceof PDFArray)) return;
+    const kept = PDFArray.withContext(ctx);
+    for (let i = 0; i < on.size(); i++) {
+      const r = on.get(i);
+      if (!toOffNums.has(r instanceof PDFRef ? r.objectNumber : -1)) kept.push(r);
+    }
+    d.set(PDFName.of('ON'), kept);
+  };
+
+  if (baseState === '/OFF') {
+    // Default is OFF — just remove targets from /ON so they stay hidden
+    _filterOn();
+  } else {
+    // Default is ON — push targets into /OFF and remove from /ON
+    let offArray;
+    const offVal = d.get(PDFName.of('OFF'));
+    if (offVal) {
+      const existing = offVal instanceof PDFRef ? ctx.lookup(offVal) : offVal;
+      offArray = existing instanceof PDFArray ? existing : PDFArray.withContext(ctx);
+    } else {
+      offArray = PDFArray.withContext(ctx);
+      d.set(PDFName.of('OFF'), offArray);
+    }
+
+    const alreadyOff = new Set();
+    for (let i = 0; i < offArray.size(); i++) {
+      const r = offArray.get(i);
+      if (r instanceof PDFRef) alreadyOff.add(r.objectNumber);
+    }
+    for (const ref of toOff) {
+      if (ref instanceof PDFRef && !alreadyOff.has(ref.objectNumber)) {
+        offArray.push(ref);
+        alreadyOff.add(ref.objectNumber);
+      }
+    }
+    _filterOn();
+  }
+
+  return toOff.length;
+}
+
+// Combined entry point called by all handlers
+function _removeWatermarks(pdf) {
+  _stripAnnotations(pdf);
+  _stripOCGs(pdf);
 }
 
 /**
@@ -207,7 +308,7 @@ async function handleMerge(files, names, removeWatermarks = false) {
     let pdf;
     try {
       pdf = await PDFDocument.load(files[i], { ignoreEncryption: true });
-      if (removeWatermarks) _stripAnnotations(pdf);
+      if (removeWatermarks) _removeWatermarks(pdf);
     } catch (err) {
       fileErrors.push({
         index:   i + 1,
@@ -258,7 +359,7 @@ async function handleMerge(files, names, removeWatermarks = false) {
 async function handleSplit(fileBuffer, options) {
   const { PDFDocument } = PDFLib;
   const srcDoc = await PDFDocument.load(fileBuffer, { ignoreEncryption: true });
-  if (options.removeWatermarks) _stripAnnotations(srcDoc);
+  if (options.removeWatermarks) _removeWatermarks(srcDoc);
   const pageCount = srcDoc.getPageCount();
 
   // Фильтруем страницы которые реально существуют в документе
@@ -490,7 +591,7 @@ async function handleCompress(fileBuffer, options) {
   self.postMessage({ type: 'progress', value: 5,  label: 'Loading PDF…' });
 
   const pdf = await PDFDocument.load(fileBuffer, { ignoreEncryption: true });
-  if (options.removeWatermarks) _stripAnnotations(pdf);
+  if (options.removeWatermarks) _removeWatermarks(pdf);
   const wasEncrypted = pdf.isEncrypted;
 
   self.postMessage({ type: 'progress', value: 18, label: 'Analyzing structure…' });
@@ -1080,7 +1181,7 @@ async function handleRotate(fileBuffer, options) {
     fileBuffer,
     { loadLabel: 'Loading PDF…', saveValue: 90, objectStreams: false },
     async (pdf, pages) => {
-      if (options.removeWatermarks) _stripAnnotations(pdf);
+      if (options.removeWatermarks) _removeWatermarks(pdf);
       progress(40, 'Applying rotations…');
       for (const { index, angle } of rotations) {
         if (index >= 0 && index < pages.length) {
