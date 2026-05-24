@@ -947,7 +947,7 @@ async function handleCompress(fileBuffer, options) {
   }
 
   // ── Phase 3.4: Image deduplication ───────────────────────────
-  // Runs BEFORE recompressImages so we don't waste CPU perjatiya images we'll remove.
+  // Runs BEFORE recompressImages so we don't waste CPU recompressing images we'll remove.
   self.postMessage({ type: 'progress', value: 53, label: 'Deduplicating images…' });
   if (options.preset !== 'low') {
     const dedupResult         = _deduplicateImages(pdf);
