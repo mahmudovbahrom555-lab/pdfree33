@@ -134,6 +134,7 @@ function showTool(tool, pushHistory = true) {
 
   // Visual feedback — immediate so browser paints before heavy DOM work
   showToolPage();
+  window.scrollTo({ top: 0, behavior: 'instant' }); // scroll before first paint
   if (pushHistory) {
     history.pushState({ tool }, t.title, TOOL_SLUGS[tool] || `/${tool}-pdf/`);
   }
@@ -146,7 +147,6 @@ function showTool(tool, pushHistory = true) {
     id('fileInput').multiple = t.multi;
     id('fileInput').accept   = t.accept;
     resetState();   // already calls hideAllToolOptions internally
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 }
 

@@ -119,6 +119,9 @@
 }
 @media (max-width: 700px) {
   .drop-mobile-hint { display: block; }
+  .drop-zone        { padding: 28px 20px; }
+  .drop-icon        { font-size: 28px; margin-bottom: 8px; }
+  .tool-header      { margin-bottom: 12px; }
 }
 
 /* ── File list ── */
