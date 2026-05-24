@@ -76,7 +76,7 @@ export async function doProcess(currentTool, extraParams = {}) {
   const runnerMap = {
     merge:    () => _runMerge(filesSnapshot, extraParams),
     split:    () => _runSplit(filesSnapshot, extraParams),
-    compress: () => _runCompress(filesSnapshot, extraParams),
+    compress: () => _runCompress(filesSnapshot, extraParams, currentTool),
     jpg2pdf:  () => _runJpg2Pdf(filesSnapshot, extraParams),
     pdf2jpg:  () => _runPdf2Jpg(filesSnapshot, extraParams),
     worker:   () => _runWorkerTool(getWorkerTool(currentTool) ?? currentTool, filesSnapshot, extraParams),
@@ -280,7 +280,7 @@ async function _runSplit(filesSnapshot, { pages, mode, removeWatermarks = false 
 
 // ── Compress ───────────────────────────────────────────────────
 
-async function _runCompress(filesSnapshot, { preset = 'medium', preserveText = true, removeWatermarks = false, targetDpi = null } = {}) {
+async function _runCompress(filesSnapshot, { preset = 'medium', preserveText = true, removeWatermarks = false, targetDpi = null, quality = null } = {}, toolKey = 'compress') {
   if (!_checkSize(filesSnapshot[0], MAX_COMPRESS_MB)) { _abortUI(); return; }
 
   const file   = filesSnapshot[0];
@@ -308,7 +308,7 @@ async function _runCompress(filesSnapshot, { preset = 'medium', preserveText = t
 
   // ⚠️  TRANSFERABLE: buffer detached after this call — worker owns it until done.
   _worker.postMessage(
-    { tool: 'compress', file: buffer, options: { preset, preserveText, removeWatermarks, targetDpi } },
+    { tool: 'compress', file: buffer, options: { preset, preserveText, removeWatermarks, targetDpi, quality } },
     [buffer]
   );
 
@@ -346,7 +346,7 @@ async function _runCompress(filesSnapshot, { preset = 'medium', preserveText = t
 
       document.dispatchEvent(new CustomEvent('pdfree:success', {
         detail: {
-          tool: 'compress',
+          tool: toolKey,  // actual tool key (compress or compress-email) for registry dispatch
           blob,
           desc,
           filename,

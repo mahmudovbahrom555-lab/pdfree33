@@ -145,9 +145,17 @@ export function renderCompressionReport(data) {
   if (report.thumbnails > 0) items.push({ icon: '🖼️', label: `${report.thumbnails} embedded thumbnail${report.thumbnails > 1 ? 's' : ''} removed` });
   if (report.hasPieceInfo)  items.push({ icon: '🔧', label: 'Adobe PieceInfo metadata removed' });
   if (report.metadataFields > 0) items.push({ icon: '🏷️', label: `${report.metadataFields} metadata fields cleared` });
+  if (report.imagesDeduplicated > 0) {
+    const dedupSaved = report.dedupSavedBytes ?? 0;
+    items.push({ icon: '🔁', label: `${report.imagesDeduplicated} duplicate image${report.imagesDeduplicated > 1 ? 's' : ''} removed${dedupSaved > 0 ? ' (−' + fmtSize(dedupSaved) + ')' : ''}` });
+  }
   if (report.imagesRecompressed > 0) {
     const imgSaved = report.imagesSavedBytes ?? 0;
     items.push({ icon: '📸', label: `${report.imagesRecompressed} image${report.imagesRecompressed > 1 ? 's' : ''} recompressed${imgSaved > 0 ? ' (−' + fmtSize(imgSaved) + ')' : ''}` });
+  }
+  if (report.flateStreamsRepacked > 0) {
+    const flateSaved = report.flateSavedBytes ?? 0;
+    items.push({ icon: '🗄️', label: `${report.flateStreamsRepacked} font/content stream${report.flateStreamsRepacked > 1 ? 's' : ''} repacked${flateSaved > 0 ? ' (−' + fmtSize(flateSaved) + ')' : ''}` });
   }
   if (report.useObjectStreams) items.push({ icon: '📦', label: 'Object stream compression applied' });
 

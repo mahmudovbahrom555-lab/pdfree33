@@ -24,6 +24,7 @@ export default [
         // Worker-scope globals
         createImageBitmap: 'readonly', OffscreenCanvas: 'readonly',
         ImageData: 'readonly', ImageBitmap: 'readonly',
+        CompressionStream: 'readonly', DecompressionStream: 'readonly',
         // CDN globals loaded at runtime
         PDFLib: 'readonly', JSZip: 'readonly', pdfjsLib: 'readonly',
         // Standard browser/worker APIs
