@@ -201,7 +201,7 @@ export function renderCompressionReport(data) {
 
 async function _scanFile(file) {
   await loadPdfLib();
-  const { PDFDocument, PDFName } = window.PDFLib;
+  const { PDFDocument, PDFName, PDFRawStream } = window.PDFLib;
   const buf = await file.arrayBuffer();
   const pdf = await PDFDocument.load(buf, { ignoreEncryption: true });
 
@@ -217,7 +217,21 @@ async function _scanFile(file) {
     if (page.node.has(PDFName.of('PieceInfo'))) pageHasPieceInfo = true;
   }
 
-  // Сколько opportunities (0 = уже чистый)
+  // Count image bytes — heuristic for scan/photo PDF detection.
+  // obj.contents.length = compressed stream size (JPEG or FlateDecode).
+  // Ratio to file.size tells us how image-heavy this PDF is.
+  let imageBytes = 0;
+  let imageCount = 0;
+  pdf.context.enumerateIndirectObjects().forEach(([, obj]) => {
+    if (!(obj instanceof PDFRawStream)) return;
+    if (obj.dict.get(PDFName.of('Subtype'))?.toString() === '/Image') {
+      imageBytes += obj.contents.length;
+      imageCount++;
+    }
+  });
+  // >50% of file bytes are image data → scan or photo PDF
+  const imageDominant = imageCount > 0 && (imageBytes / file.size) > 0.5;
+
   let opportunities = 0;
   if (hasXMP)                              opportunities++;
   if (thumbCount > 0)                      opportunities++;
@@ -231,6 +245,8 @@ async function _scanFile(file) {
     isEncrypted,
     opportunities,
     fileSize: file.size,
+    imageCount,
+    imageDominant,
   };
 }
 
@@ -277,6 +293,16 @@ function _render(file, scan) {
 }
 
 function _buildScanBanner(scan) {
+  // imageDominant wins — it's the most actionable finding
+  if (scan.imageDominant) {
+    return `
+      <div class="compress-scan compress-scan--found" role="status">
+        🖼️ Scan or photo PDF — ${scan.imageCount} image${scan.imageCount !== 1 ? 's' : ''} make up most of the file.
+        <strong>Maximum preset</strong> will give the biggest reduction.
+      </div>
+    `;
+  }
+
   if (scan.opportunities === 0) {
     return `
       <div class="compress-scan compress-scan--clean" role="status">
@@ -286,9 +312,9 @@ function _buildScanBanner(scan) {
   }
 
   const found = [];
-  if (scan.hasXMP)                          found.push('XMP stream');
-  if (scan.thumbCount > 0)                  found.push(`${scan.thumbCount} thumbnail${scan.thumbCount > 1 ? 's' : ''}`);
-  if (scan.hasPieceInfo)                    found.push('PieceInfo metadata');
+  if (scan.hasXMP)        found.push('XMP stream');
+  if (scan.thumbCount > 0) found.push(`${scan.thumbCount} thumbnail${scan.thumbCount > 1 ? 's' : ''}`);
+  if (scan.hasPieceInfo)  found.push('PieceInfo metadata');
 
   return `
     <div class="compress-scan compress-scan--found" role="status">
