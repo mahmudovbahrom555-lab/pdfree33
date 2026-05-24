@@ -30,7 +30,7 @@ export function wmRemoveHtml() {
     id:       WM_TOGGLE_ID,
     checked:  _active,
     title:    'Remove stamp & layer watermarks',
-    subtitle: 'Removes stamp annotations and hidden OCG layers. Watermarks drawn into page content cannot be removed.',
+    subtitle: 'Works on stamp annotations and OCG layers. Results vary by watermark type.',
   });
 }
 
