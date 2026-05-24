@@ -11,7 +11,7 @@ import { setProgress, hideProgress, setButtonProcessing, setButtonReady,
          showCancelBtn, hideCancelBtn, showToast } from './ui.js';
 import { selectedFiles, setFilesLocked } from './files.js';
 import { trackToolError } from './analytics.js';
-import { TOOLS } from './config.js';
+import { TOOLS, MAX_COMPRESS_MB } from './config.js';
 import { getRunner, getWorkerTool } from './toolRegistry.js';
 import { loadJSZip } from './lazyLibs.js';
 import { preprocessPdfBuffer } from './decryptPdf.js';
@@ -281,7 +281,7 @@ async function _runSplit(filesSnapshot, { pages, mode, removeWatermarks = false 
 // ── Compress ───────────────────────────────────────────────────
 
 async function _runCompress(filesSnapshot, { preset = 'medium', preserveText = true, removeWatermarks = false, targetDpi = null } = {}) {
-  if (!_checkSize(filesSnapshot[0], 150)) { _abortUI(); return; }
+  if (!_checkSize(filesSnapshot[0], MAX_COMPRESS_MB)) { _abortUI(); return; }
 
   const file   = filesSnapshot[0];
   const buffer = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await file.arrayBuffer());

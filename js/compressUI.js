@@ -13,6 +13,7 @@
 // ============================================================
 
 import { id, fmtSize } from './utils.js';
+import { MAX_COMPRESS_MB, SCAN_LIMIT_MB } from './config.js';
 import { showToast } from './ui.js';
 import { t } from './i18n.js';
 import { chip, sliderRow, checkbox, loadingRow } from './uiComponents.js';
@@ -23,6 +24,7 @@ import { wmRemoveHtml, bindWmRemove, resetWmRemove } from './watermarkRemoveUI.j
 let _preset       = 'medium';  // 'low' | 'medium' | 'high'
 let _preserveText = true;
 let _targetDpi    = 150;       // null = no downsampling | 96 | 150
+let _lastScan     = null;      // result of _scanFile(), null if skipped or not yet run
 
 // Default DPI per preset (applied when user switches presets)
 const _dpiDefaults = { low: null, medium: 150, high: 96 };
@@ -30,6 +32,9 @@ const _dpiDefaults = { low: null, medium: 150, high: 96 };
 export function getCompressParams() {
   return { preset: _preset, preserveText: _preserveText, targetDpi: _targetDpi };
 }
+
+/** Returns the pre-scan result for the current file, or null if scan was skipped. */
+export function getCompressScan() { return _lastScan; }
 
 // ── Public API ─────────────────────────────────────────────────
 
@@ -46,7 +51,7 @@ export async function initCompressOptions(file) {
   // Always show the panel immediately so stale data from a previous file never lingers.
   container.style.display = 'block';
 
-  if (file.size > 150 * 1024 * 1024) {
+  if (file.size > MAX_COMPRESS_MB * 1024 * 1024) {
     container.innerHTML = `
       <div class="compress-info">
         <span class="compress-info__name" title="${_esc(file.name)}">${_truncName(file.name)}</span>
@@ -63,14 +68,13 @@ export async function initCompressOptions(file) {
   container.innerHTML = loadingRow('Scanning PDF…');
 
   // Skip full PDFDocument.load for large files — it would consume 3–5× file size
-  // in main thread heap (e.g. 25 MB file → ~120 MB RAM). Threshold: 25 MB.
-  const SCAN_LIMIT = 25 * 1024 * 1024;
-  let scan = null;
-  if (file.size <= SCAN_LIMIT) {
+  // in main thread heap (e.g. 25 MB file → ~120 MB RAM). Threshold: SCAN_LIMIT_MB.
+  _lastScan = null;
+  if (file.size <= SCAN_LIMIT_MB * 1024 * 1024) {
     try {
-      scan = await _scanFile(file);
+      _lastScan = await _scanFile(file);
     } catch {
-      // Scan failed silently — UI still shows with scan=null
+      // Scan failed silently — UI still shows with _lastScan=null
     }
   }
 
@@ -78,7 +82,7 @@ export async function initCompressOptions(file) {
     showToast(t('warn_compress_large', { size: fmtSize(file.size) }), 7000);
   }
 
-  _render(file, scan);
+  _render(file, _lastScan);
 }
 
 /** Скрывает и очищает панель */
@@ -90,6 +94,7 @@ export function hideCompressOptions() {
   _preset       = 'medium';
   _preserveText = true;
   _targetDpi    = 150;
+  _lastScan     = null;
   resetWmRemove();
 }
 
@@ -123,7 +128,7 @@ export function renderCompressionReport(data) {
     const imgSaved = report.imagesSavedBytes ?? 0;
     items.push({ icon: '📸', label: `${report.imagesRecompressed} image${report.imagesRecompressed > 1 ? 's' : ''} recompressed${imgSaved > 0 ? ' (−' + fmtSize(imgSaved) + ')' : ''}` });
   }
-  items.push({ icon: '📦', label: 'Object stream compression applied' });
+  if (report.useObjectStreams) items.push({ icon: '📦', label: 'Object stream compression applied' });
 
   const div = document.createElement('div');
   div.id        = 'compressReport';
@@ -230,10 +235,10 @@ function _render(file, scan) {
       ${scan?.isEncrypted ? '<span class="compress-info__badge compress-info__badge--warn">🔒 encrypted</span>' : ''}
     </div>
 
-    ${scan ? _buildScanBanner(scan) : file.size > 25 * 1024 * 1024 ? `<div class="compress-scan compress-scan--info" role="status">ℹ️ ${t('compress_scan_skipped')}</div>` : ''}
+    ${scan ? _buildScanBanner(scan) : file.size > SCAN_LIMIT_MB * 1024 * 1024 ? `<div class="compress-scan compress-scan--info" role="status">ℹ️ ${t('compress_scan_skipped')}</div>` : ''}
 
     <div class="compress-presets">
-      ${_presetCard('low',    '🪶', 'Light',    'Removes thumbnails and info fields only. No image recompression — maximum compatibility.')}
+      ${_presetCard('low',    '🪶', 'Light',    'Removes thumbnails and info fields only. No image recompression, no DPI change — maximum compatibility.')}
       ${_presetCard('medium', '⚡', 'Standard', 'Recommended. Removes metadata + recompresses images at 82% quality. Big win on photo PDFs.')}
       ${_presetCard('high',   '🔥', 'Maximum',  'Aggressive image recompression (72%) + structure cleanup. Smallest file, minor quality loss.')}
     </div>
@@ -281,7 +286,7 @@ function _buildScanBanner(scan) {
 
 function _presetCard(value, icon, label, desc) {
   return `
-    <label class="compress-preset ${_preset === value ? 'active' : ''}" data-preset="${value}">
+    <label class="compress-preset ${_preset === value ? 'j2p-chip--active' : ''}" data-preset="${value}">
       <input type="radio" name="compressPreset" value="${value}" ${_preset === value ? 'checked' : ''}>
       <span class="compress-preset__icon" aria-hidden="true">${icon}</span>
       <span class="compress-preset__label">${label}</span>

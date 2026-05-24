@@ -796,6 +796,7 @@ async function handleCompress(fileBuffer, options) {
   // medium and high comes from deeper structure cleanup above, not from save options.
   const useObjectStreams = options.preset !== 'low';
   const objectsPerTick  = options.preset === 'high' ? 100 : 50;
+  report.useObjectStreams = useObjectStreams;
 
   const compressed = await pdf.save({
     useObjectStreams,

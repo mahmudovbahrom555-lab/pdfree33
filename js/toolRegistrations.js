@@ -17,7 +17,7 @@ import { getWmRemove, wmRemoveHtml, bindWmRemove, resetWmRemove } from './waterm
 import { initSplitOptions, hideSplitOptions,
          getSelectedPages, getSplitMode }   from './splitUI.js';
 import { initCompressOptions, hideCompressOptions,
-         getCompressParams,
+         getCompressParams, getCompressScan,
          renderCompressionReport }         from './compressUI.js';
 import { initJpg2PdfOptions, hideJpg2PdfOptions,
          getJpg2PdfParams }               from './jpg2pdfUI.js';
@@ -88,6 +88,16 @@ registerTool('compress', {
   init:      initCompressOptions,
   hide:      hideCompressOptions,
   getParams: () => ({ ...getCompressParams(), removeWatermarks: getWmRemove() }),
+  validate:  (p) => {
+    const scan = getCompressScan();
+    // Hard block only when scan ran AND confirms Light preset is a near-no-op:
+    // Light does not recompress images or use object streams, so if pre-scan
+    // found zero removable items the operation will produce negligible results.
+    if (scan && p.preset === 'low' && scan.opportunities === 0) {
+      return '⚠️ Light preset found nothing to remove in this PDF. Try Standard for real savings.';
+    }
+    return null;
+  },
   onSuccess: ({ compressionReport }) => {
     if (compressionReport) renderCompressionReport(compressionReport);
   },
