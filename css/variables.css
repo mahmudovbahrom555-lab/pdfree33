@@ -50,6 +50,11 @@
   --shadow-lg:   0 8px 40px rgba(0, 0, 0, 0.50);
 }
 
+:root[data-theme="dark"] .success-top { background: var(--green-light); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .success-top { background: var(--green-light); }
+}
+
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --bg:          #111412;
