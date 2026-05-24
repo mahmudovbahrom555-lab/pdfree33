@@ -88,10 +88,16 @@ nav {
   :root:not([data-theme="light"]) .theme-toggle::after { content: '☀️'; }
 }
 
+.nav-link,
+.nav-link:visited,
+.nav-link:hover,
+.nav-link:focus,
+.nav-link:active {
+  text-decoration: none;
+}
 .nav-link {
   font-size: 13px;
   color: var(--text2);
-  text-decoration: none;
   padding: 6px 12px;
   border-radius: 20px;
   cursor: pointer;
@@ -99,6 +105,9 @@ nav {
   background: transparent;
   font-family: var(--font-sans);
   transition: all var(--transition-normal);
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
 }
 .nav-link:hover,
 .nav-link:focus {
@@ -358,14 +367,16 @@ footer a:hover { text-decoration: underline; }
 
 /* ── Responsive ── */
 @media (max-width: 700px) {
-  nav                   { padding: 0 16px; }
+  nav                   { padding: 0 12px; gap: 8px; }
   .nav-links            {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     min-width: 0;
+    gap: 2px;
   }
   .nav-links::-webkit-scrollbar { display: none; }
+  .nav-link             { padding: 8px 10px; font-size: 13px; white-space: nowrap; }
   .tools-section        { padding: 0 16px 60px; }
   .hero                 { padding: 48px 16px 36px; }
   .no-limit-bar         { gap: 14px; }
