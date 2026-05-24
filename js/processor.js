@@ -18,6 +18,7 @@ import { preprocessPdfBuffer } from './decryptPdf.js';
 
 let _worker = _createWorker();
 export let isProcessing = false;
+let _currentTool = '';
 let _processStartMs = null;
 export function getProcessStartMs() { return _processStartMs; }
 
@@ -46,9 +47,18 @@ export function cancelProcess(currentTool) {
 
 // ── Main entry point ──────────────────────────────────────────
 
+function _abortUI() {
+  isProcessing = false;
+  setFilesLocked(false);
+  hideCancelBtn();
+  hideProgress();
+  setButtonReady(TOOLS[_currentTool]?.btn || 'Try again');
+}
+
 export async function doProcess(currentTool, extraParams = {}) {
   if (isProcessing) return;
   isProcessing = true;
+  _currentTool = currentTool;
   _processStartMs = Date.now();
 
   const filesSnapshot = [...selectedFiles];
@@ -108,7 +118,7 @@ function _checkTotalSize(files, maxMb) {
 // ── Merge ──────────────────────────────────────────────────────
 
 async function _runMerge(filesSnapshot, { removeWatermarks = false } = {}) {
-  if (!_checkTotalSize(filesSnapshot, 300)) { isProcessing = false; setFilesLocked(false); hideCancelBtn(); return; }
+  if (!_checkTotalSize(filesSnapshot, 300)) { _abortUI(); return; }
   // Use pre-decrypted buffer when files.js already ran QPDF at file-add time.
   // .slice(0) copies so the cached buffer survives the postMessage transfer.
   const buffers = await Promise.all(filesSnapshot.map(async f =>
@@ -185,7 +195,7 @@ async function _runMerge(filesSnapshot, { removeWatermarks = false } = {}) {
 // ── Split ──────────────────────────────────────────────────────
 
 async function _runSplit(filesSnapshot, { pages, mode, removeWatermarks = false } = {}) {
-  if (!_checkSize(filesSnapshot[0], 200)) { isProcessing = false; setFilesLocked(false); hideCancelBtn(); return; }
+  if (!_checkSize(filesSnapshot[0], 200)) { _abortUI(); return; }
   const _sf = filesSnapshot[0];
   const buffer = _sf._decryptedBuffer ? _sf._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await _sf.arrayBuffer());
   setProgress(5, t('prog_loading_pdf'));
@@ -271,15 +281,15 @@ async function _runSplit(filesSnapshot, { pages, mode, removeWatermarks = false 
 // ── Compress ───────────────────────────────────────────────────
 
 async function _runCompress(filesSnapshot, { preset = 'medium', preserveText = true, removeWatermarks = false, targetDpi = null } = {}) {
-  if (!_checkSize(filesSnapshot[0], 150)) { isProcessing = false; setFilesLocked(false); hideCancelBtn(); return; }
+  if (!_checkSize(filesSnapshot[0], 150)) { _abortUI(); return; }
 
   const file   = filesSnapshot[0];
   const buffer = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await file.arrayBuffer());
   setProgress(5, t('prog_loading_pdf'));
 
-  // Watchdog: if the worker goes silent for 90s (OOM crash or freeze),
+  // Watchdog: if the worker goes silent for 45s (OOM crash or freeze),
   // browsers don't reliably fire onerror — detect it ourselves.
-  const WATCHDOG_MS = 90_000;
+  const WATCHDOG_MS = 45_000;
   let watchdog = setTimeout(() => {
     isProcessing = false;
     setFilesLocked(false);
@@ -466,7 +476,7 @@ const _FRAME_BUDGET_MS = 16;   // ≈ one 60 FPS frame
 
 async function _runPdf2Jpg(filesSnapshot, { pages, format, dpi, zip }) {
   const file   = filesSnapshot[0];
-  if (!_checkSize(file, 100)) { isProcessing = false; setFilesLocked(false); hideCancelBtn(); return; }
+  if (!_checkSize(file, 100)) { _abortUI(); return; }
   const scale  = dpi / 72;
   const mime   = format === 'png' ? 'image/png' : 'image/jpeg';
   const ext    = format === 'png' ? 'png' : 'jpg';
@@ -631,7 +641,7 @@ async function _runPdf2Jpg(filesSnapshot, { pages, format, dpi, zip }) {
 async function _runWorkerTool(tool, filesSnapshot, params) {
   const file   = filesSnapshot[0];
   const limits = { watermark: 200, pagenum: 200, meta: 200, protect: 200, rotate: 150, redact: 150, fill: 200 };
-  if (!_checkSize(file, limits[tool] ?? 200)) { isProcessing = false; setFilesLocked(false); hideCancelBtn(); return; }
+  if (!_checkSize(file, limits[tool] ?? 200)) { _abortUI(); return; }
   const buffer = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await file.arrayBuffer());
 
   const labelMap = {
