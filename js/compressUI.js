@@ -24,13 +24,15 @@ import { wmRemoveHtml, bindWmRemove, resetWmRemove } from './watermarkRemoveUI.j
 let _preset       = 'medium';  // 'low' | 'medium' | 'high'
 let _preserveText = true;
 let _targetDpi    = 150;       // null = no downsampling | 96 | 150
+let _quality      = 82;        // JPEG quality %, 60–95 (sent as 0–1 to worker)
 let _lastScan     = null;      // result of _scanFile(), null if skipped or not yet run
 
-// Default DPI per preset (applied when user switches presets)
-const _dpiDefaults = { low: null, medium: 150, high: 96 };
+// Defaults applied when user switches presets
+const _dpiDefaults     = { low: null, medium: 150, high: 96 };
+const _qualityDefaults = { medium: 82, high: 72 };
 
 export function getCompressParams() {
-  return { preset: _preset, preserveText: _preserveText, targetDpi: _targetDpi };
+  return { preset: _preset, preserveText: _preserveText, targetDpi: _targetDpi, quality: _quality / 100 };
 }
 
 /** Returns the pre-scan result for the current file, or null if scan was skipped. */
@@ -94,6 +96,7 @@ export function hideCompressOptions() {
   _preset       = 'medium';
   _preserveText = true;
   _targetDpi    = 150;
+  _quality      = 82;
   _lastScan     = null;
   resetWmRemove();
 }
@@ -268,9 +271,11 @@ function _render(file, scan) {
 
     <div class="compress-presets">
       ${_presetCard('low',    '🪶', 'Light',    'Removes thumbnails and info fields only. No image recompression, no DPI change — maximum compatibility.')}
-      ${_presetCard('medium', '⚡', 'Standard', 'Recommended. Removes metadata + recompresses images at 82% quality. Big win on photo PDFs.')}
-      ${_presetCard('high',   '🔥', 'Maximum',  'Aggressive image recompression (72%) + structure cleanup. Smallest file, minor quality loss.')}
+      ${_presetCard('medium', '⚡', 'Standard', 'Removes metadata + recompresses images. Adjust quality below.')}
+      ${_presetCard('high',   '🔥', 'Maximum',  'Aggressive structure cleanup + image recompression. Adjust quality below.')}
     </div>
+
+    ${_qualityRow()}
 
     ${_dpiRow()}
 
@@ -323,6 +328,23 @@ function _buildScanBanner(scan) {
   `;
 }
 
+function _qualityRow() {
+  if (_preset === 'low') return '';
+  return sliderRow({
+    id:          'qualitySlider',
+    containerId: 'qualityRow',
+    label:       'Image quality',
+    valId:       'qualityVal',
+    valText:     `${_quality}%`,
+    min:         60,
+    max:         95,
+    step:        1,
+    value:       _quality,
+    ariaLabel:   'JPEG image quality for recompression',
+    style:       'margin-bottom:18px',
+  });
+}
+
 function _presetCard(value, icon, label, desc) {
   return `
     <label class="compress-preset ${_preset === value ? 'j2p-chip--active' : ''}" data-preset="${value}">
@@ -373,6 +395,21 @@ function _bindEvents() {
       if (preserveLabel) {
         preserveLabel.classList.toggle('compress-preserve--inactive', _preset !== 'high');
       }
+      // Apply preset quality default and sync slider
+      const qualityRow = id('qualityRow');
+      if (_preset === 'low') {
+        if (qualityRow) qualityRow.style.display = 'none';
+      } else {
+        _quality = _qualityDefaults[_preset] ?? 82;
+        if (qualityRow) {
+          qualityRow.style.display = '';
+          const slider = id('qualitySlider');
+          if (slider) slider.value = _quality;
+          const val = id('qualityVal');
+          if (val) val.textContent = `${_quality}%`;
+        }
+      }
+
       // Apply preset DPI default and update DPI row visibility
       _targetDpi = _dpiDefaults[_preset] ?? null;
       const dpiRow = document.querySelector('.compress-dpi');
@@ -381,7 +418,6 @@ function _bindEvents() {
       } else {
         if (dpiRow) {
           dpiRow.style.display = '';
-          // Sync chip active state to new DPI
           dpiRow.querySelectorAll('.compress-dpi__chip').forEach(chip => {
             const val = chip.dataset.dpi === 'null' ? null : Number(chip.dataset.dpi);
             chip.classList.toggle('active', val === _targetDpi);
@@ -401,6 +437,15 @@ function _bindEvents() {
     }
     if (e.target.id === 'preserveTextCheck') {
       _preserveText = e.target.checked;
+    }
+  });
+
+  // Slider needs 'input' (fires while dragging), not 'change' (fires on release only)
+  id('compressOptions').addEventListener('input', e => {
+    if (e.target.id === 'qualitySlider') {
+      _quality = Number(e.target.value);
+      const val = id('qualityVal');
+      if (val) val.textContent = `${_quality}%`;
     }
   });
 }

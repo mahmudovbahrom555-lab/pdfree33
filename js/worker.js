@@ -755,8 +755,11 @@ async function handleCompress(fileBuffer, options) {
   //
   // OffscreenCanvas is available in Worker context (all modern browsers).
   // If not available (very old browser) we skip silently and continue.
-  const qualityMap = { low: null, medium: 0.82, high: 0.72 };
-  const jpegQuality = qualityMap[options.preset] ?? null;
+  // options.quality (0–1) comes from the UI slider; fall back to preset defaults
+  // so old callers without quality field still work correctly.
+  const _qualityFallback = { medium: 0.82, high: 0.72 };
+  const jpegQuality = options.preset === 'low' ? null
+    : (options.quality ?? _qualityFallback[options.preset] ?? 0.82);
   const targetDpi   = options.targetDpi ?? null;   // null = no downsampling
 
   // Compute median page size (width, height in points + rotation) for DPI estimation.
