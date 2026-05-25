@@ -307,11 +307,13 @@ function initEvents() {
   document.querySelectorAll('[data-tool]').forEach(el => {
     // <body data-tool> is for routing only — never a click target.
     if (el.tagName === 'BODY') return;
-    // On standalone tool pages, <a> nav links navigate normally via href.
+    // Nav links always navigate via href — on any page, for any tool.
+    // SPA interception is only for tool cards on the homepage.
+    if (el.classList.contains('nav-link')) return;
+    // On standalone tool pages, other <a> links also navigate via href.
     if (el.tagName === 'A' && _detectTool()) return;
     const handler = (e) => {
       if (e.type === 'keydown' && e.key !== 'Enter') return;
-      if (TOOLS[el.dataset.tool]?.standalone) return;   // let href navigate to standalone page
       e.preventDefault();
       showTool(el.dataset.tool, true);
     };

@@ -242,6 +242,5 @@ export const TOOLS = {
     multi:       false,
     accept:      '.pdf',
     implemented: true,
-    standalone:  true,   // has its own HTML page; needs full navigation, not SPA
   },
 };
