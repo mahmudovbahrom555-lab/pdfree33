@@ -307,11 +307,10 @@ function initEvents() {
   document.querySelectorAll('[data-tool]').forEach(el => {
     // <body data-tool> is for routing only — never a click target.
     if (el.tagName === 'BODY') return;
-    // Nav links always navigate via href — on any page, for any tool.
-    // SPA interception is only for tool cards on the homepage.
-    if (el.classList.contains('nav-link')) return;
-    // On standalone tool pages, other <a> links also navigate via href.
-    if (el.tagName === 'A' && _detectTool()) return;
+    // <a> elements navigate via their href — nav links and standalone tool
+    // cards that need their own page (draw-on-pdf, etc.). Only <div>/<button>
+    // tool cards do SPA navigation.
+    if (el.tagName === 'A') return;
     const handler = (e) => {
       if (e.type === 'keydown' && e.key !== 'Enter') return;
       e.preventDefault();
