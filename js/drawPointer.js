@@ -126,8 +126,10 @@ function _onDown(e) {
 
   clearRedoForCurrentPage();
 
-  if (tool === 'pen' || tool === 'erase') {
-    _current = { type: tool, points: [[x, y]], color: getColor(), width: getWidth() };
+  if (tool === 'pen') {
+    _current = { type: 'pen', points: [[x, y]], color: getColor(), width: getWidth() };
+  } else if (tool === 'erase') {
+    _current = { type: 'erase', points: [[x, y]], width: Math.max(20, getWidth() * 6) };
   } else if (tool === 'arrow' || tool === 'line') {
     _current = { type: tool, x1: x, y1: y, x2: x, y2: y, color: getColor(), width: getWidth() };
   } else if (tool === 'rect') {
