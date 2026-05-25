@@ -311,6 +311,7 @@ function initEvents() {
     if (el.tagName === 'A' && _detectTool()) return;
     const handler = (e) => {
       if (e.type === 'keydown' && e.key !== 'Enter') return;
+      if (TOOLS[el.dataset.tool]?.standalone) return;   // let href navigate to standalone page
       e.preventDefault();
       showTool(el.dataset.tool, true);
     };
