@@ -94,8 +94,8 @@ export async function loadPdfFile(file) {
   _redoStack    = new Map();
   _pageSize     = new Map();
 
-  _editorShell.hidden   = false;
-  id('dropZone').hidden = true;
+  _editorShell.hidden        = false;
+  id('preEditorArea').hidden = true;
   _downloadBtn.disabled = false;
 
   await _renderPage(1);
@@ -156,8 +156,8 @@ export function resetDraw() {
   if (_pageLabel)    _pageLabel.textContent = '1 / 1';
   if (_btnPrev)      _btnPrev.disabled = true;
   if (_btnNext)      _btnNext.disabled = true;
-  const dropZone = id('dropZone');
-  if (dropZone) dropZone.hidden = false;
+  const preEditorArea = id('preEditorArea');
+  if (preEditorArea) preEditorArea.hidden = false;
 }
 
 // ── Page rendering ─────────────────────────────────────────────
