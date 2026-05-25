@@ -297,17 +297,26 @@
   <button id="cancelBtn"   type="button" hidden></button>
 
   <!-- ── Tool area ───────────────────────────────────────────── -->
-  <main id="toolArea">
+  <main id="toolArea" class="main-area">
+
+    <div class="tool-header">
+      <div class="tool-header-icon" aria-hidden="true">✏️</div>
+      <div class="tool-header-text">
+        <h2>Draw on PDF</h2>
+        <p>Annotate PDFs with arrows, text and shapes — private, no upload</p>
+      </div>
+    </div>
 
     <!-- Drop zone (before file is loaded) -->
-    <div id="dropZone" class="drop-zone">
-      <p class="drop-hint">Drop a PDF here or</p>
-      <label class="btn-primary" for="fileInput">Choose file</label>
-      <input id="fileInput" type="file" accept=".pdf" style="display:none">
+    <div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-label="Drop a PDF here or choose file">
+      <input id="fileInput" type="file" accept=".pdf" aria-hidden="true">
+      <span class="drop-icon" aria-hidden="true">📂</span>
+      <div class="drop-title">Drop a PDF here</div>
+      <div class="drop-sub">or click to browse</div>
+      <button class="drop-btn" id="chooseFilesBtn" type="button">Choose file</button>
       <!-- Hidden stubs required by check_dom.py -->
-      <button id="chooseFilesBtn" type="button" hidden></button>
-      <ul    id="fileList"  hidden></ul>
-      <span  id="fileCount" hidden></span>
+      <ul   id="fileList"  hidden></ul>
+      <span id="fileCount" hidden></span>
       <button id="mergeBtn" type="button" hidden></button>
     </div>
 
