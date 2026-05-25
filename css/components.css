@@ -10,6 +10,8 @@
 .tool-card {
   background: var(--surface);
   border: 1.5px solid var(--border);
+  text-decoration: none;
+  color: inherit;
   border-radius: 18px;
   padding: 22px 20px 20px;
   cursor: pointer;
