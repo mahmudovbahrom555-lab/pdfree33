@@ -24,7 +24,7 @@ NAV_LINKS = [
     ("Page №",     "../pagenum-pdf/",   "pagenum"),
     ("Metadata",   "../metadata-pdf/",  "meta"),
     ("Extract",    "../extract-pdf/",   "extract"),
-    ("Redact",     "../redact-pdf/",    "redact"),
+    ("Draw",       "../draw-on-pdf/",   "draw-pdf"),
     ("Rotate",     "../rotate-pdf/",    "rotate"),
     ("Protect",    "../protect-pdf/",   "protect"),
 ]

@@ -61,6 +61,9 @@
       width: 100%;
       height: calc(100dvh - 56px);   /* explicit height for iOS sticky fix */
     }
+    /* Without this, CSS display:flex overrides the HTML hidden attribute —
+       editor shell would always be visible even before a file is loaded. */
+    #editorShell[hidden] { display: none; }
 
     /* ── Toolbar ─────────────────────────────────────────────── */
     #drawToolbar {
