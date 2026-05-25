@@ -48,6 +48,7 @@
   <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
 
   <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+  <script src="../js/theme.js"></script>
   <link rel="stylesheet" href="../css/fonts.css">
   <link rel="stylesheet" href="../css/variables.css">
   <link rel="stylesheet" href="../css/animations.css">
@@ -269,14 +270,23 @@
 </head>
 <body data-tool="draw-pdf">
 
-  <!-- Navigation -->
-  <nav class="site-nav">
-    <a id="logo" class="nav-logo" href="/">PDFree</a>
-    <ul class="nav-links">
-      <li><a href="/merge-large-pdf-files/">Merge</a></li>
-      <li><a href="/split-pdf/">Split</a></li>
-      <li><a href="/compress-large-pdf-free/">Compress</a></li>
-    </ul>
+  <nav>
+    <a href="../" class="logo" id="logo" aria-label="Go to homepage" style="text-decoration:none"><span class="logo-text">PDF<span>ree</span></span></a>
+    <div class="nav-links">
+      <a href="../merge-pdf/" class="nav-link" data-tool="merge">Merge</a>
+      <a href="../split-pdf/" class="nav-link" data-tool="split">Split</a>
+      <a href="../compress-pdf/" class="nav-link" data-tool="compress">Compress</a>
+      <a href="../jpg2pdf/" class="nav-link" data-tool="jpg2pdf">JPG→PDF</a>
+      <a href="../pdf2jpg/" class="nav-link" data-tool="pdf2jpg">PDF→JPG</a>
+      <a href="../watermark-pdf/" class="nav-link" data-tool="watermark">Watermark</a>
+      <a href="../pagenum-pdf/" class="nav-link" data-tool="pagenum">Page №</a>
+      <a href="../metadata-pdf/" class="nav-link" data-tool="meta">Metadata</a>
+      <a href="../extract-pdf/" class="nav-link" data-tool="extract">Extract</a>
+      <a href="../draw-on-pdf/" class="nav-link" data-tool="draw-pdf">Draw</a>
+      <a href="../rotate-pdf/" class="nav-link" data-tool="rotate">Rotate</a>
+      <a href="../protect-pdf/" class="nav-link" data-tool="protect">Protect</a>
+    </div>
+    <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode"></button>
   </nav>
 
   <!-- processor.js compatibility nodes (required IDs, hidden) -->
@@ -370,6 +380,35 @@
       <li>Click "Download Annotated PDF" to save your work</li>
     </ol>
   </section>
+
+  <!-- Footer: keep in sync with scripts/templates/tool-page.html -->
+  <footer>
+    <div style="display:flex;gap:48px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;font-size:13px;border-top:1px solid var(--border);padding-top:20px;">
+      <div>
+        <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Alternatives</div>
+        <a href="/ilovepdf-alternative/" style="display:block;color:var(--green);text-decoration:none;margin-bottom:4px;">iLovePDF Alternative</a>
+      </div>
+      <div>
+        <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Solutions</div>
+        <a href="/hipaa-pdf-tools/" style="display:block;color:var(--green);text-decoration:none;margin-bottom:4px;">HIPAA Compliant PDF</a>
+        <a href="/secure-pdf-tools/" style="display:block;color:var(--green);text-decoration:none;">Secure PDF Tools</a>
+      </div>
+    </div>
+    PDFree · <strong>All processing happens 100% in your browser</strong> · Files are <strong>never uploaded</strong><br>
+    <span style="color:var(--green)">🔒</span> Your documents never leave your device &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> Built to be free for everyone, forever<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
+      <a href="/privacy.html" style="color:var(--green)">Privacy</a>
+      &nbsp;·&nbsp;
+      <a href="/terms.html" style="color:var(--green)">Terms</a>
+      &nbsp;·&nbsp;
+      <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a>
+      &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green)">View source on GitHub</a>
+    </span>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
   <script type="module" src="../js/app.js"></script>
 </body>
