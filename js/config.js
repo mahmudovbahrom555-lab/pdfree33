@@ -234,4 +234,13 @@ export const TOOLS = {
     accept:      '.pdf',
     implemented: true,
   },
+  'draw-pdf': {
+    icon:        '✏️',
+    title:       'Draw on PDF',
+    desc:        'Annotate PDFs with arrows, text and shapes — private, no upload',
+    btn:         '✏️ Save PDF',
+    multi:       false,
+    accept:      '.pdf',
+    implemented: true,
+  },
 };

@@ -318,8 +318,9 @@ function _updateMeta() {
     countEl.style.display = 'block';
     countEl.textContent   = `${count} file${count > 1 ? 's' : ''} · ${fmtSize(total)}`;
 
+    const showHint = count > 1 && _currentTool === 'merge' && !_locked;
     const hint = id('reorderHint');
-    hint.style.display = count > 1 && _currentTool === 'merge' && !_locked ? 'block' : 'none';
+    if (hint) hint.hidden = !showHint;
 
     // Не снимаем disabled если идёт обработка
     if (!_locked) {

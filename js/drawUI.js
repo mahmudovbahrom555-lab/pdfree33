@@ -1,0 +1,475 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// Copyright (C) 2025 PDFree Contributors
+
+// ============================================================
+//  drawUI.js — Draw on PDF: canvas management & page navigation
+//
+//  Архитектурные решения:
+//  - Command-based history (не ImageData) — 34 МБ/снапшот → Safari OOM
+//  - Per-page Map<pageNum, Command[]> — multi-page без потерь
+//  - Overlay PNG поверх оригинала — сохраняем текст, ссылки, шрифты
+//  - MAX_DIMENSION = 4096 — guard от крашей на огромных страницах
+//  - _renderId — защита от race condition при быстром переключении страниц
+//
+//  ⚠️  Инвариант мутации: массивы в _pageCommands и _redoStack
+//  принадлежат только этому модулю. Внешний код не должен хранить
+//  долгосрочные ссылки на них — только читать snapshot через slice().
+// ============================================================
+
+import { loadPdfJs }  from './pdf2jpgUI.js';
+import { id }         from './utils.js';
+import { showToast }  from './ui.js';
+
+// ── Constants ──────────────────────────────────────────────────
+const MAX_DIMENSION            = 4096;   // internal: canvas pixel size guard
+export const HIGHLIGHT_OPACITY = 0.35;  // shared with drawPointer.js
+
+// ── State ──────────────────────────────────────────────────────
+let _pdfJsDoc     = null;
+let _currentPage  = 1;
+let _originalBuf  = null;        // ArrayBuffer — kept pristine for export
+let _renderId     = 0;           // incremented each _renderPage call; stale renders abort
+
+let _pageCommands = new Map();   // Map<pageNum, Command[]>
+let _redoStack    = new Map();   // Map<pageNum, Command[]>
+let _pageSize     = new Map();   // Map<pageNum, {width, height}> — canvas pixel dims for export
+
+let _activeTool   = 'pen';
+let _color        = '#e53e3e';
+let _width        = 3;
+
+// DOM refs — filled by initDraw()
+let _pdfCanvas, _drawCanvas, _canvasLoading;
+let _pageLabel, _btnPrev, _btnNext, _downloadBtn, _editorShell;
+
+// ── Public API ─────────────────────────────────────────────────
+
+export function initDraw() {
+  _pdfCanvas     = id('pdfCanvas');
+  _drawCanvas    = id('drawCanvas');
+  _canvasLoading = id('canvasLoading');
+  _pageLabel     = id('pageLabel');
+  _btnPrev       = id('btnPrev');
+  _btnNext       = id('btnNext');
+  _downloadBtn   = id('downloadPdfBtn');
+  _editorShell   = id('editorShell');
+
+  _bindToolbar();
+  _bindNavigation();
+  _downloadBtn.addEventListener('click', _exportToPdf);
+}
+
+export async function loadPdfFile(file) {
+  try {
+    await loadPdfJs();
+  } catch {
+    showToast('Failed to load PDF renderer. Check your internet connection.');
+    return;
+  }
+
+  let buf;
+  try {
+    buf = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await file.arrayBuffer();
+  } catch {
+    showToast('Could not read the file.');
+    return;
+  }
+
+  _originalBuf = buf.slice(0);   // pristine copy — never mutated
+
+  try {
+    _pdfJsDoc = await window.pdfjsLib.getDocument({
+      data:              new Uint8Array(buf),
+      useSystemFonts:    false,
+      verbosity:         0,
+      disableJavaScript: true,
+    }).promise;
+  } catch (err) {
+    showToast('Failed to open PDF: ' + err.message);
+    return;
+  }
+
+  _currentPage  = 1;
+  _pageCommands = new Map();
+  _redoStack    = new Map();
+  _pageSize     = new Map();
+
+  _editorShell.hidden   = false;
+  id('dropZone').hidden = true;
+  _downloadBtn.disabled = false;
+
+  await _renderPage(1);
+}
+
+// ── Getters (used by pointer-events step 4 and export step 6) ──
+
+export function getActiveTool()      { return _activeTool; }
+export function getColor()           { return _color; }
+export function getWidth()           { return _width; }
+export function getDrawCanvas()      { return _drawCanvas; }
+export function getCurrentPage()     { return _currentPage; }
+export function getPageCommandsRef() { return _pageCommands; }
+export function getRedoStackRef()    { return _redoStack; }
+export function getOriginalBuffer()  { return _originalBuf; }
+export function getPageCount()       { return _pdfJsDoc ? _pdfJsDoc.numPages : 0; }
+export function redrawPage(overlay = null) { _redrawPage(overlay); }
+
+// Called by pointer-events module on pointerdown — new stroke invalidates redo history
+export function clearRedoForCurrentPage() {
+  _redoStack.set(_currentPage, []);
+}
+
+// Called by toolRegistrations hide() — resets all state when switching away from draw-pdf.
+// toolRegistrations also calls resetPointer() from drawPointer.js (avoids circular import).
+export function resetDraw() {
+  _pdfJsDoc     = null;
+  _currentPage  = 1;
+  _originalBuf  = null;
+  _renderId     = 0;
+  _pageCommands = new Map();
+  _redoStack    = new Map();
+  _pageSize     = new Map();
+  _activeTool   = 'pen';
+  _color        = '#e53e3e';
+  _width        = 3;
+
+  // Clear canvas bitmaps — setting width=0 resets the bitmap and hints GC to release memory
+  for (const canvas of [_pdfCanvas, _drawCanvas]) {
+    if (!canvas) continue;
+    canvas.width  = 0;
+    canvas.height = 0;
+  }
+
+  // Sync toolbar UI: reset tool buttons, color picker, width slider
+  if (_drawCanvas) {
+    document.querySelectorAll('.tool-btn[data-draw-tool]').forEach(btn => {
+      btn.setAttribute('aria-pressed', btn.dataset.drawTool === 'pen' ? 'true' : 'false');
+    });
+    _drawCanvas.dataset.drawTool = 'pen';
+    const cp = id('colorPicker'); if (cp) cp.value = '#e53e3e';
+    const ws = id('widthSlider'); if (ws) ws.value = '3';
+  }
+
+  // Reset layout
+  if (_editorShell)  _editorShell.hidden = true;
+  if (_downloadBtn)  _downloadBtn.disabled = true;
+  if (_pageLabel)    _pageLabel.textContent = '1 / 1';
+  if (_btnPrev)      _btnPrev.disabled = true;
+  if (_btnNext)      _btnNext.disabled = true;
+  const dropZone = id('dropZone');
+  if (dropZone) dropZone.hidden = false;
+}
+
+// ── Page rendering ─────────────────────────────────────────────
+
+async function _renderPage(pageNum) {
+  // Buttons disabled here prevent nav spam during render;
+  // re-enabled at the end of _updateNavUI() only for the winning token.
+  _canvasLoading.hidden = false;
+  _btnPrev.disabled     = true;
+  _btnNext.disabled     = true;
+
+  const token = ++_renderId;   // stale renders detect token mismatch and abort
+
+  try {
+    const page   = await _pdfJsDoc.getPage(pageNum);
+    if (token !== _renderId) return;   // user switched page while we awaited getPage
+
+    const dpr    = window.devicePixelRatio || 1;
+    const baseVp = page.getViewport({ scale: 1 });
+
+    // Fit canvas to container width; scale with DPR for crisp rendering
+    const areaW    = (_drawCanvas.parentElement?.clientWidth || 800) - 32;
+    let scale      = (areaW / baseVp.width) * dpr;
+
+    // Guard 1: cap scale so no dimension exceeds MAX_DIMENSION
+    const maxScale = MAX_DIMENSION / Math.max(baseVp.width, baseVp.height);
+    if (scale > maxScale) scale = maxScale;
+
+    const vp = page.getViewport({ scale });
+
+    // Guard 2: clamp resulting pixel size (retina DPR can still exceed limit after Guard 1)
+    if (vp.width > MAX_DIMENSION || vp.height > MAX_DIMENSION) {
+      scale *= MAX_DIMENSION / Math.max(vp.width, vp.height);
+    }
+
+    const finalVp = page.getViewport({ scale });
+
+    for (const canvas of [_pdfCanvas, _drawCanvas]) {
+      canvas.width        = finalVp.width;
+      canvas.height       = finalVp.height;
+      canvas.style.width  = (finalVp.width  / dpr) + 'px';
+      canvas.style.height = (finalVp.height / dpr) + 'px';
+    }
+
+    // Note: renderTask.cancel() is not called on abort — pdf.js task runs to
+    // completion in background. Acceptable for MVP; add cancel() if heavy PDFs
+    // cause measurable lag during fast page switching.
+    await page.render({
+      canvasContext: _pdfCanvas.getContext('2d'),
+      viewport:      finalVp,
+    }).promise;
+
+    if (token !== _renderId) return;   // page switched while we were rendering
+
+    _currentPage = pageNum;
+    _pageSize.set(pageNum, { width: finalVp.width, height: finalVp.height });
+    _redrawPage();
+    _updateNavUI();
+
+  } catch (err) {
+    if (token === _renderId) showToast('Render error: ' + err.message);
+  } finally {
+    if (token === _renderId) _canvasLoading.hidden = true;
+  }
+}
+
+// Clears draw canvas and replays all commands for the current page.
+// overlay — optional in-progress command rendered after history (live preview).
+function _redrawPage(overlay = null) {
+  const ctx  = _drawCanvas.getContext('2d');
+  ctx.clearRect(0, 0, _drawCanvas.width, _drawCanvas.height);
+  const cmds = _pageCommands.get(_currentPage) ?? [];
+  cmds.forEach(cmd => renderCommand(ctx, cmd));
+  if (overlay) renderCommand(ctx, overlay);
+}
+
+// ── Command renderer ───────────────────────────────────────────
+// Exported so step 6 can replay commands on an OffscreenCanvas during PDF export.
+
+export function renderCommand(ctx, cmd) {
+  ctx.save();
+  ctx.strokeStyle = cmd.color ?? '#e53e3e';
+  ctx.fillStyle   = cmd.color ?? '#e53e3e';
+  ctx.lineWidth   = cmd.width ?? 3;
+  ctx.lineCap     = 'round';
+  ctx.lineJoin    = 'round';
+
+  switch (cmd.type) {
+    case 'pen': {
+      if (cmd.points.length < 2) break;
+      ctx.beginPath();
+      ctx.moveTo(cmd.points[0][0], cmd.points[0][1]);
+      for (let i = 1; i < cmd.points.length; i++) {
+        ctx.lineTo(cmd.points[i][0], cmd.points[i][1]);
+      }
+      ctx.stroke();
+      break;
+    }
+    case 'arrow': {
+      const dx = cmd.x2 - cmd.x1, dy = cmd.y2 - cmd.y1;
+      if (Math.hypot(dx, dy) < 5) break;
+      const angle = Math.atan2(dy, dx);
+      const head  = Math.max(12, cmd.width * 4);
+      ctx.beginPath();
+      ctx.moveTo(cmd.x1, cmd.y1);
+      ctx.lineTo(cmd.x2, cmd.y2);
+      ctx.moveTo(cmd.x2, cmd.y2);
+      ctx.lineTo(cmd.x2 - head * Math.cos(angle - Math.PI / 6),
+                 cmd.y2 - head * Math.sin(angle - Math.PI / 6));
+      ctx.moveTo(cmd.x2, cmd.y2);
+      ctx.lineTo(cmd.x2 - head * Math.cos(angle + Math.PI / 6),
+                 cmd.y2 - head * Math.sin(angle + Math.PI / 6));
+      ctx.stroke();
+      break;
+    }
+    case 'line': {
+      ctx.beginPath();
+      ctx.moveTo(cmd.x1, cmd.y1);
+      ctx.lineTo(cmd.x2, cmd.y2);
+      ctx.stroke();
+      break;
+    }
+    case 'rect': {
+      ctx.strokeRect(cmd.x, cmd.y, cmd.w, cmd.h);
+      break;
+    }
+    case 'oval': {
+      ctx.beginPath();
+      ctx.ellipse(cmd.x, cmd.y, Math.abs(cmd.rx), Math.abs(cmd.ry), 0, 0, Math.PI * 2);
+      ctx.stroke();
+      break;
+    }
+    case 'text': {
+      ctx.font = `${cmd.size ?? 20}px sans-serif`;
+      ctx.fillText(cmd.text, cmd.x, cmd.y);
+      break;
+    }
+    case 'highlight': {
+      ctx.save();
+      ctx.globalAlpha = cmd.opacity ?? HIGHLIGHT_OPACITY;
+      ctx.fillStyle   = cmd.color ?? '#facc15';
+      ctx.fillRect(cmd.x, cmd.y, cmd.w, cmd.h);
+      ctx.restore();
+      break;
+    }
+    case 'erase': {
+      ctx.save();
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.strokeStyle = 'rgba(0,0,0,1)';
+      ctx.lineWidth   = cmd.width ?? 20;
+      if (cmd.points.length < 2) break;
+      ctx.beginPath();
+      ctx.moveTo(cmd.points[0][0], cmd.points[0][1]);
+      for (let i = 1; i < cmd.points.length; i++) {
+        ctx.lineTo(cmd.points[i][0], cmd.points[i][1]);
+      }
+      ctx.stroke();
+      ctx.restore();
+      break;
+    }
+    default: break;
+  }
+
+  ctx.restore();
+}
+
+// ── Toolbar bindings ───────────────────────────────────────────
+
+function _bindToolbar() {
+  const toolBtns = document.querySelectorAll('.tool-btn[data-draw-tool]');
+  toolBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      _activeTool = btn.dataset.drawTool;
+      toolBtns.forEach(b => b.setAttribute('aria-pressed', 'false'));
+      btn.setAttribute('aria-pressed', 'true');
+      _drawCanvas.dataset.drawTool = _activeTool;
+    });
+  });
+
+  id('colorPicker').addEventListener('input', e => { _color = e.target.value; });
+  id('widthSlider').addEventListener('input', e => { _width = Number(e.target.value); });
+
+  id('btnUndo').addEventListener('click',  _undo);
+  id('btnRedo').addEventListener('click',  _redo);
+  id('btnClear').addEventListener('click', _clearPage);
+}
+
+// ── Navigation ─────────────────────────────────────────────────
+
+function _bindNavigation() {
+  _btnPrev.addEventListener('click', () => {
+    if (_currentPage > 1) _renderPage(_currentPage - 1);
+  });
+  _btnNext.addEventListener('click', () => {
+    if (_pdfJsDoc && _currentPage < _pdfJsDoc.numPages) _renderPage(_currentPage + 1);
+  });
+}
+
+function _updateNavUI() {
+  const total = _pdfJsDoc.numPages;
+  _pageLabel.textContent = `${_currentPage} / ${total}`;
+  _btnPrev.disabled = _currentPage <= 1;
+  _btnNext.disabled = _currentPage >= total;
+}
+
+// ── Undo / Redo / Clear ────────────────────────────────────────
+
+function _undo() {
+  const cmds = _pageCommands.get(_currentPage) ?? [];
+  if (!cmds.length) return;
+  const undone = cmds.pop();
+  _pageCommands.set(_currentPage, cmds);
+  const stack = _redoStack.get(_currentPage) ?? [];
+  stack.push(undone);
+  _redoStack.set(_currentPage, stack);
+  _redrawPage();
+}
+
+function _redo() {
+  const stack = _redoStack.get(_currentPage) ?? [];
+  if (!stack.length) return;
+  const cmd  = stack.pop();
+  _redoStack.set(_currentPage, stack);
+  const cmds = _pageCommands.get(_currentPage) ?? [];
+  cmds.push(cmd);
+  _pageCommands.set(_currentPage, cmds);
+  _redrawPage();
+}
+
+function _clearPage() {
+  _pageCommands.set(_currentPage, []);
+  _redoStack.set(_currentPage, []);   // clear is not undoable
+  _redrawPage();
+}
+
+// ── Export ─────────────────────────────────────────────────────
+
+async function _exportToPdf() {
+  if (!_pdfJsDoc || !_originalBuf) return;
+
+  const btn         = _downloadBtn;
+  const originalText = btn.textContent;
+  btn.disabled      = true;
+  btn.textContent   = 'Exporting…';
+
+  try {
+    const total  = _pdfJsDoc.numPages;
+    const layers = [];
+
+    for (let i = 1; i <= total; i++) {
+      const cmds = _pageCommands.get(i);
+      if (!cmds || cmds.length === 0) { layers.push(null); continue; }
+      const size = _pageSize.get(i);
+      if (!size) { layers.push(null); continue; }
+      layers.push(await _renderLayerToPng(cmds, size.width, size.height));
+    }
+
+    if (layers.every(l => l === null)) {
+      showToast('No annotations to save. Draw something first.');
+      return;
+    }
+
+    // Snapshot of pristine buffer — safe to transfer to worker
+    const original     = _originalBuf.slice(0);
+    const transferable = [original, ...layers.filter(Boolean)];
+
+    const resultBuf = await _runExportWorker(original, layers, transferable);
+
+    const blob = new Blob([resultBuf], { type: 'application/pdf' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = 'annotated.pdf';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 10000);
+
+  } catch (err) {
+    showToast('Export failed: ' + err.message);
+  } finally {
+    btn.disabled    = false;
+    btn.textContent = originalText;
+  }
+}
+
+async function _renderLayerToPng(cmds, w, h) {
+  if (typeof OffscreenCanvas !== 'undefined') {
+    const off  = new OffscreenCanvas(w, h);
+    const ctx  = off.getContext('2d');
+    cmds.forEach(cmd => renderCommand(ctx, cmd));
+    const blob = await off.convertToBlob({ type: 'image/png' });
+    return blob.arrayBuffer();
+  }
+  // DOM canvas fallback for Safari < 16.4
+  return new Promise(resolve => {
+    const tmp  = document.createElement('canvas');
+    tmp.width  = w;
+    tmp.height = h;
+    cmds.forEach(cmd => renderCommand(tmp.getContext('2d'), cmd));
+    tmp.toBlob(b => b.arrayBuffer().then(resolve), 'image/png');
+  });
+}
+
+function _runExportWorker(original, layers, transferable) {
+  return new Promise((resolve, reject) => {
+    const w = new Worker(new URL('./worker.js', import.meta.url));
+    w.onmessage = (e) => {
+      if (e.data.type === 'done')  { resolve(e.data.result); w.terminate(); }
+      if (e.data.type === 'error') { reject(new Error(e.data.message)); w.terminate(); }
+    };
+    w.onerror = (err) => { reject(new Error(err.message || 'Worker error')); w.terminate(); };
+    w.postMessage({ tool: 'draw', original, layers }, transferable);
+  });
+}

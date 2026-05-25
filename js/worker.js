@@ -52,6 +52,9 @@ self.onmessage = async function (e) {
       case 'fill':
         await handleFill(e.data.file, e.data.options);
         break;
+      case 'draw':
+        await handleDraw(e.data.original, e.data.layers);
+        break;
       default:
         throw new Error('Unknown tool: ' + tool);
     }
@@ -1706,4 +1709,31 @@ async function _embedSigImage(pdfDoc, pages, dataUrl, rect, pageIndex) {
     height: drawH,
     opacity: 1,
   });
+}
+
+// ============================================================
+//  handleDraw — embeds per-page drawing overlays into PDF
+//
+//  layers[i] — ArrayBuffer (PNG) for page i+1, or null if unmodified.
+//  The PNG is rendered at full page size so canvas coordinates align
+//  with PDF coordinates without any additional transformation.
+// ============================================================
+
+async function handleDraw(original, layers) {
+  progress(10, 'Loading PDF…');
+  const pdf   = await PDFLib.PDFDocument.load(original);
+  const pages = pdf.getPages();
+  const total = layers.length;
+
+  for (let i = 0; i < total; i++) {
+    if (!layers[i]) continue;
+    progress(10 + Math.round(80 * (i + 1) / total), `Embedding page ${i + 1} of ${total}…`);
+    const img              = await pdf.embedPng(layers[i]);
+    const { width, height } = pages[i].getSize();
+    pages[i].drawImage(img, { x: 0, y: 0, width, height });
+  }
+
+  progress(95, 'Saving…');
+  const bytes = await pdf.save();
+  self.postMessage({ type: 'done', result: bytes.buffer }, [bytes.buffer]);
 }

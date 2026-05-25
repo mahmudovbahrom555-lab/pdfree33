@@ -41,6 +41,8 @@ import { initRotateOptions, hideRotateOptions,
          getRotateParams }              from './rotateUI.js';
 import { initRedactOptions, hideRedactOptions,
          getRedactParams }                from './redactUI.js';
+import { initDraw, loadPdfFile, resetDraw } from './drawUI.js';
+import { initPointer, resetPointer }        from './drawPointer.js';
 
 // ── Merge options — inline (no separate mergeUI.js needed) ─────
 
@@ -202,6 +204,23 @@ registerTool('fill', {
   validate:   p => p.loading    ? 'Reading PDF fields — please wait a moment…'
                 : !p.hasFields  ? 'No fillable fields found in this PDF'
                 : null,
+});
+
+let _drawInitialized = false;
+
+registerTool('draw-pdf', {
+  async init(file) {
+    if (!_drawInitialized) {
+      initDraw();
+      initPointer();
+      _drawInitialized = true;
+    }
+    await loadPdfFile(file);
+  },
+  hide() {
+    resetPointer();
+    resetDraw();
+  },
 });
 
 // Email compression mode — same worker runner as 'compress' but with

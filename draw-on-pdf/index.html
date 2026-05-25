@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src  'self' 'wasm-unsafe-eval' blob:
+                https://cdnjs.cloudflare.com https://esm.sh
+                https://plausible.io https://pagead2.googlesyndication.com
+                https://static.cloudflareinsights.com;
+    style-src   'self' 'unsafe-inline';
+    font-src    'self';
+    img-src     'self' data: blob: https:;
+    connect-src 'self' https://cdnjs.cloudflare.com https://*.workers.dev
+                https://plausible.io https://pagead2.googlesyndication.com
+                https://www.googletagservices.com https://*.doubleclick.net
+                https://cloudflareinsights.com;
+    frame-src   https://googleads.g.doubleclick.net https://tpc.googlesyndication.com;
+    worker-src  'self' blob:;
+    object-src  'none';
+  ">
+
+  <title>Draw on PDF — Add Arrows, Text &amp; Shapes Free | PDFree</title>
+  <meta name="description" content="Draw on PDF free — add arrows, text, shapes and signatures. No upload, no account. Files stay in your browser.">
+
+  <meta property="og:title"       content="Draw on PDF — Free Annotation Tool | PDFree">
+  <meta property="og:description" content="Annotate PDFs with arrows, text and shapes. Private — files never leave your browser.">
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://pdfree.io/draw-on-pdf/">
+  <meta property="og:site_name"   content="PDFree">
+  <meta property="og:image"       content="https://pdfree.io/icons/og-image.jpg">
+  <meta name="twitter:card"       content="summary_large_image">
+  <meta name="twitter:site"       content="@pdfree_io">
+  <meta name="twitter:image"      content="https://pdfree.io/icons/og-image.jpg">
+
+  <link rel="canonical" href="https://pdfree.io/draw-on-pdf/">
+  <link rel="alternate" hreflang="en"        href="https://pdfree.io/draw-on-pdf/">
+  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/draw-on-pdf/">
+
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="PDFree">
+  <link rel="apple-touch-icon" href="../icons/icon-192.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+  <link rel="stylesheet" href="../css/fonts.css">
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/animations.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <style>
+    /* ── Editor shell ───────────────────────────────────────── */
+    #editorShell {
+      display: flex;
+      gap: 0;
+      width: 100%;
+      height: calc(100dvh - 56px);   /* explicit height for iOS sticky fix */
+    }
+
+    /* ── Toolbar ─────────────────────────────────────────────── */
+    #drawToolbar {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      width: 56px;
+      min-width: 56px;
+      padding: 8px 4px;
+      background: var(--bg-card, #fff);
+      border-right: 1px solid var(--border, #e5e7eb);
+      position: sticky;
+      top: 56px;
+      height: calc(100dvh - 56px);
+      overflow-y: auto;
+    }
+
+    .tool-btn {
+      width: 40px;
+      height: 40px;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      background: none;
+      cursor: pointer;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .tool-btn:hover                { background: var(--bg-secondary, #f5f5f5); }
+    .tool-btn[aria-pressed="true"] {
+      background: var(--accent-light, #d1fae5);
+      border-color: var(--accent, #2D7A4F);
+    }
+
+    .toolbar-sep {
+      width: 32px;
+      border: none;
+      border-top: 1px solid var(--border, #e5e7eb);
+      margin: 4px 0;
+    }
+
+    #colorPicker {
+      width: 36px;
+      height: 36px;
+      border: none;
+      border-radius: 50%;
+      padding: 0;
+      cursor: pointer;
+      background: none;
+    }
+
+    #widthSlider {
+      writing-mode: vertical-lr;
+      direction: rtl;
+      width: 6px;
+      height: 80px;
+      cursor: pointer;
+    }
+
+    /* ── Canvas area ─────────────────────────────────────────── */
+    #canvasArea {
+      flex: 1;
+      min-height: 0;                  /* flexbox fix: prevents overflow blowout */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px;
+      overflow: auto;
+      background: var(--bg-secondary, #f5f5f5);
+    }
+
+    #canvasWrap {
+      position: relative;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+      border-radius: 2px;
+    }
+
+    #pdfCanvas  { display: block; }
+
+    #drawCanvas {
+      position: absolute;
+      top: 0; left: 0;
+      touch-action: none;
+      cursor: crosshair;
+    }
+
+    /* Cursor changes per active tool — driven by data-draw-tool attribute on canvas */
+    #drawCanvas[data-draw-tool="text"]  { cursor: text; }
+    #drawCanvas[data-draw-tool="erase"] { cursor: cell; }
+
+    /* Loading overlay */
+    #canvasLoading {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.85);
+      font-size: 14px;
+      color: var(--text-secondary, #6b7280);
+      border-radius: 2px;
+    }
+    #canvasLoading[hidden] { display: none; }   /* must block pointer events when hidden */
+
+    /* ── Page navigation ─────────────────────────────────────── */
+    #pageNav {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 12px;
+      font-size: 14px;
+      color: var(--text-secondary, #6b7280);
+    }
+
+    .nav-btn {
+      width: 32px;
+      height: 32px;
+      border: 1px solid var(--border, #e5e7eb);
+      border-radius: 6px;
+      background: var(--bg-card, #fff);
+      cursor: pointer;
+      font-size: 16px;
+      line-height: 1;
+    }
+    .nav-btn:disabled { opacity: 0.35; cursor: default; }
+
+    /* ── Floating text input (text tool) ────────────────────── */
+    /* position:fixed so clientX/Y work directly without offset math */
+    #textInputOverlay {
+      position: fixed;
+      display: none;
+      z-index: 200;
+      background: #fff;
+      border: 2px solid var(--accent, #2D7A4F);
+      border-radius: 6px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+      padding: 8px;
+    }
+    #floatingTextInput {
+      display: block;
+      border: none;
+      outline: none;
+      font-size: 15px;
+      width: 160px;
+    }
+    .text-input-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 4px;
+      margin-top: 6px;
+    }
+    .text-input-actions button {
+      padding: 2px 10px;
+      cursor: pointer;
+      border-radius: 4px;
+      border: 1px solid var(--border, #e5e7eb);
+    }
+
+    /* ── Download button ─────────────────────────────────────── */
+    #downloadPdfBtn {
+      margin-top: 16px;
+      padding: 10px 28px;
+      background: var(--accent, #2D7A4F);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    #downloadPdfBtn:hover    { opacity: 0.9; }
+    #downloadPdfBtn:disabled { opacity: 0.4; cursor: default; }
+
+    /* ── Mobile: toolbar moves to bottom ─────────────────────── */
+    @media (max-width: 600px) {
+      #editorShell { flex-direction: column-reverse; height: auto; min-height: calc(100dvh - 56px); }
+      #drawToolbar {
+        flex-direction: row;
+        width: 100%;
+        min-width: unset;
+        height: auto;
+        position: sticky;
+        bottom: 0;
+        top: unset;
+        border-right: none;
+        border-top: 1px solid var(--border, #e5e7eb);
+        overflow-x: auto;
+        padding: 6px 8px;
+        gap: 6px;
+      }
+      #widthSlider {
+        writing-mode: horizontal-tb;
+        direction: ltr;
+        width: 80px;
+        height: 6px;
+      }
+      #canvasArea { padding: 8px; }
+    }
+  </style>
+</head>
+<body data-tool="draw-pdf">
+
+  <!-- Navigation -->
+  <nav class="site-nav">
+    <a id="logo" class="nav-logo" href="/">PDFree</a>
+    <ul class="nav-links">
+      <li><a href="/merge-large-pdf-files/">Merge</a></li>
+      <li><a href="/split-pdf/">Split</a></li>
+      <li><a href="/compress-large-pdf-free/">Compress</a></li>
+    </ul>
+  </nav>
+
+  <!-- processor.js compatibility nodes (required IDs, hidden) -->
+  <div  id="toast"         class="toast" hidden></div>
+  <div  id="progressBar"   hidden><div id="progressFill"></div></div>
+  <span id="progressLabel" hidden></span>
+  <div  id="successCard"   hidden><a id="downloadBtn" href="#"></a></div>
+  <button id="cancelBtn"   type="button" hidden></button>
+
+  <!-- ── Tool area ───────────────────────────────────────────── -->
+  <main id="toolArea">
+
+    <!-- Drop zone (before file is loaded) -->
+    <div id="dropZone" class="drop-zone">
+      <p class="drop-hint">Drop a PDF here or</p>
+      <label class="btn-primary" for="fileInput">Choose file</label>
+      <input id="fileInput" type="file" accept=".pdf" style="display:none">
+      <!-- Hidden stubs required by check_dom.py -->
+      <button id="chooseFilesBtn" type="button" hidden></button>
+      <ul    id="fileList"  hidden></ul>
+      <span  id="fileCount" hidden></span>
+      <button id="mergeBtn" type="button" hidden></button>
+    </div>
+
+    <!-- Floating text input — shown by text tool, hidden by default -->
+    <div id="textInputOverlay">
+      <input type="text" id="floatingTextInput" placeholder="Type text…">
+      <div class="text-input-actions">
+        <button id="textInputCancel">Cancel</button>
+        <button id="textInputOk">OK</button>
+      </div>
+    </div>
+
+    <!-- Editor (revealed by drawUI.js after file loads) -->
+    <div id="editorShell" hidden>
+
+      <!-- Toolbar -->
+      <aside id="drawToolbar" aria-label="Drawing tools">
+        <button type="button" class="tool-btn" id="btnPen"   data-draw-tool="pen"   title="Pen"       aria-pressed="true" >✏️</button>
+        <button type="button" class="tool-btn" id="btnArrow" data-draw-tool="arrow" title="Arrow"     aria-pressed="false">➡️</button>
+        <button type="button" class="tool-btn" id="btnLine"  data-draw-tool="line"  title="Line"      aria-pressed="false">╱</button>
+        <button type="button" class="tool-btn" id="btnRect"  data-draw-tool="rect"  title="Rectangle" aria-pressed="false">□</button>
+        <button type="button" class="tool-btn" id="btnOval"  data-draw-tool="oval"  title="Oval"      aria-pressed="false">○</button>
+        <button type="button" class="tool-btn" id="btnText"  data-draw-tool="text"  title="Text"      aria-pressed="false">T</button>
+        <button type="button" class="tool-btn" id="btnErase"     data-draw-tool="erase"     title="Eraser"    aria-pressed="false">⌫</button>
+        <button type="button" class="tool-btn" id="btnHighlight" data-draw-tool="highlight" title="Highlight" aria-pressed="false">🖍️</button>
+        <hr class="toolbar-sep">
+        <input  type="color" id="colorPicker" value="#e53e3e" title="Stroke color">
+        <input  type="range" id="widthSlider" min="1" max="20" value="3" title="Stroke width">
+        <hr class="toolbar-sep">
+        <button type="button" class="tool-btn" id="btnUndo"  title="Undo (Ctrl+Z)">↩</button>
+        <button type="button" class="tool-btn" id="btnRedo"  title="Redo (Ctrl+Y)">↪</button>
+        <button type="button" class="tool-btn" id="btnClear" title="Clear this page">🗑️</button>
+      </aside>
+
+      <!-- Canvas + navigation -->
+      <div id="canvasArea">
+        <div id="canvasWrap">
+          <canvas id="pdfCanvas"></canvas>
+          <canvas id="drawCanvas" data-draw-tool="pen"></canvas>
+          <div    id="canvasLoading">Loading PDF…</div>
+        </div>
+        <div id="pageNav">
+          <button type="button" class="nav-btn" id="btnPrev" title="Previous page" disabled>‹</button>
+          <span   id="pageLabel">1 / 1</span>
+          <button type="button" class="nav-btn" id="btnNext" title="Next page"     disabled>›</button>
+        </div>
+        <button type="button" id="downloadPdfBtn" disabled>✏️ Download Annotated PDF</button>
+      </div>
+
+    </div><!-- /editorShell -->
+  </main>
+
+  <!-- SEO content below fold -->
+  <section style="max-width:720px;margin:48px auto;padding:0 16px">
+    <h1>Draw on PDF Free — Add Arrows, Text &amp; Shapes</h1>
+    <p>Annotate any PDF directly in your browser. Add arrows to point out important details, draw shapes, write text notes, or erase mistakes. Your files never leave your device — everything happens locally.</p>
+    <h2>Why use PDFree Draw?</h2>
+    <ul>
+      <li><strong>Private by design</strong> — processing happens in your browser, nothing is uploaded</li>
+      <li><strong>Arrows &amp; shapes</strong> — perfect for creating visual instructions or marking up documents</li>
+      <li><strong>Free forever</strong> — no account, no watermarks, no limits</li>
+      <li><strong>Multi-page</strong> — annotate every page, then download as a single PDF</li>
+    </ul>
+    <h2>How to draw on a PDF</h2>
+    <ol>
+      <li>Drop your PDF onto the page or click "Choose file"</li>
+      <li>Select a tool — pen, arrow, line, rectangle, oval, text or eraser</li>
+      <li>Draw on the page. Use Undo / Redo as needed</li>
+      <li>Navigate between pages with the arrows below the canvas</li>
+      <li>Click "Download Annotated PDF" to save your work</li>
+    </ol>
+  </section>
+
+  <script type="module" src="../js/app.js"></script>
+</body>
+</html>
