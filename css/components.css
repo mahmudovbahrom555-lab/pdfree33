@@ -2799,3 +2799,19 @@
   }
 }
 
+
+/* ── All-tools pill links ── */
+.tool-pill {
+  display: inline-block;
+  padding: 6px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 999px;
+  font-size: 13px;
+  color: var(--text2);
+  text-decoration: none;
+  transition: border-color 0.15s, color 0.15s;
+}
+.tool-pill:hover {
+  border-color: var(--green);
+  color: var(--green);
+}
