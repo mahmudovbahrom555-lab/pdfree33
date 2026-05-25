@@ -175,45 +175,53 @@ async function _renderPage(pageNum) {
     const page   = await _pdfJsDoc.getPage(pageNum);
     if (token !== _renderId) return;   // user switched page while we awaited getPage
 
-    const dpr    = window.devicePixelRatio || 1;
-    const baseVp = page.getViewport({ scale: 1 });
+    const outputScale = window.devicePixelRatio || 1;
+    const baseVp      = page.getViewport({ scale: 1 });
 
-    // Fit canvas to container width; scale with DPR for crisp rendering
-    const areaW    = (_drawCanvas.parentElement?.clientWidth || 800) - 32;
-    let scale      = (areaW / baseVp.width) * dpr;
+    // cssScale: layout scale (CSS px). outputScale: DPR for sharp pixels.
+    // Kept separate — zoom only touches cssScale; coordinate mapping stays clean.
+    const areaW  = Math.max(320, (id('canvasArea')?.clientWidth || 800) - 32);
+    let cssScale = areaW / baseVp.width;
 
-    // Guard 1: cap scale so no dimension exceeds MAX_DIMENSION
-    const maxScale = MAX_DIMENSION / Math.max(baseVp.width, baseVp.height);
-    if (scale > maxScale) scale = maxScale;
+    // Guard: cap cssScale so canvas never exceeds MAX_DIMENSION at output resolution
+    const maxCss = MAX_DIMENSION / (Math.max(baseVp.width, baseVp.height) * outputScale);
+    if (cssScale > maxCss) cssScale = maxCss;
 
-    const vp = page.getViewport({ scale });
+    const cssW = Math.round(baseVp.width  * cssScale);
+    const cssH = Math.round(baseVp.height * cssScale);
 
-    // Guard 2: clamp resulting pixel size (retina DPR can still exceed limit after Guard 1)
-    if (vp.width > MAX_DIMENSION || vp.height > MAX_DIMENSION) {
-      scale *= MAX_DIMENSION / Math.max(vp.width, vp.height);
-    }
-
-    const finalVp = page.getViewport({ scale });
+    // Uniform pixel scale — preserves aspect ratio under MAX_DIMENSION cap
+    const pixelScale = Math.min(outputScale, MAX_DIMENSION / cssW, MAX_DIMENSION / cssH);
+    const pxW = Math.round(cssW * pixelScale);
+    const pxH = Math.round(cssH * pixelScale);
 
     for (const canvas of [_pdfCanvas, _drawCanvas]) {
-      canvas.width        = finalVp.width;
-      canvas.height       = finalVp.height;
-      canvas.style.width  = (finalVp.width  / dpr) + 'px';
-      canvas.style.height = (finalVp.height / dpr) + 'px';
+      canvas.width        = pxW;
+      canvas.height       = pxH;
+      canvas.style.width  = cssW + 'px';
+      canvas.style.height = cssH + 'px';
     }
+
+    const viewport = page.getViewport({ scale: cssScale });
+    const ctx      = _pdfCanvas.getContext('2d');
+    ctx.clearRect(0, 0, pxW, pxH);   // clear stale pixels (Safari canvas reuse, transparent pages)
+
+    const renderContext = {
+      canvasContext: ctx,
+      viewport,
+      transform: pixelScale !== 1 ? [pixelScale, 0, 0, pixelScale, 0, 0] : null,
+    };
 
     // Note: renderTask.cancel() is not called on abort — pdf.js task runs to
     // completion in background. Acceptable for MVP; add cancel() if heavy PDFs
     // cause measurable lag during fast page switching.
-    await page.render({
-      canvasContext: _pdfCanvas.getContext('2d'),
-      viewport:      finalVp,
-    }).promise;
+    await page.render(renderContext).promise;
 
     if (token !== _renderId) return;   // page switched while we were rendering
 
     _currentPage = pageNum;
-    _pageSize.set(pageNum, { width: finalVp.width, height: finalVp.height });
+    // Store canvas pixel dims — used by export to map draw-coords to PDF space
+    _pageSize.set(pageNum, { width: pxW, height: pxH });
     _redrawPage();
     _updateNavUI();
 
