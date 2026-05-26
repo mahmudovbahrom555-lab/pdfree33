@@ -16,10 +16,15 @@
 // ============================================================
 
 import {
+  // state
   getActiveTool, getColor, getWidth,
-  getDrawCanvas, getCurrentPage,
-  getPageCommandsRef,
-  clearRedoForCurrentPage, redrawPage,
+  // canvas
+  getDrawCanvas, getPdfCanvas,
+  // document
+  getCurrentPage, getPageCommandsRef,
+  // actions
+  clearRedoForCurrentPage, redrawPage, setColor, activatePrevTool,
+  // constants
   HIGHLIGHT_OPACITY,
 } from './drawUI.js';
 
@@ -111,6 +116,17 @@ function _onDown(e) {
 
   const tool = getActiveTool();
   const { x, y } = _coords(e);
+
+  // Eyedropper: sample composite color, update active color, return to prev tool
+  if (tool === 'eye') {
+    const { x, y } = _coords(e);
+    const ix = Math.round(x);
+    const iy = Math.round(y);
+    const hex = _sampleComposite(ix, iy);
+    if (hex) setColor(hex);
+    activatePrevTool();
+    return;
+  }
 
   // Text: show floating input at click position, no move/up stream needed
   if (tool === 'text') {
@@ -227,4 +243,36 @@ function _isMeaningful(cmd) {
     case 'oval':   return cmd.rx >= 3 && cmd.ry >= 3;
     default:       return true;
   }
+}
+
+// ── Eyedropper ─────────────────────────────────────────────────
+// Samples composite color at canvas pixel (ix, iy) by manually alpha-compositing
+// the PDF canvas (background) with the draw canvas (annotations).
+// No temp canvas — reads 4 bytes from each canvas directly.
+function _sampleComposite(ix, iy) {
+  const pdfCanvas  = getPdfCanvas();
+  const drawCanvas = getDrawCanvas();
+
+  if (
+    ix < 0 || iy < 0 ||
+    ix >= pdfCanvas.width  || iy >= pdfCanvas.height ||
+    ix >= drawCanvas.width || iy >= drawCanvas.height
+  ) return null;
+
+  const pdfCtx  = pdfCanvas.getContext('2d');
+  const drawCtx = drawCanvas.getContext('2d');
+  const pdf     = pdfCtx.getImageData(ix, iy, 1, 1).data;
+  const draw    = drawCtx.getImageData(ix, iy, 1, 1).data;
+
+  // source-over composite: draw layer on top of pdf layer
+  const srcA = draw[3] / 255;
+  const dstA = pdf[3]  / 255;
+  const outA = srcA + dstA * (1 - srcA);
+  if (outA === 0) return null;
+
+  const h = v => v.toString(16).padStart(2, '0');
+  const r = Math.round((draw[0] * srcA + pdf[0] * dstA * (1 - srcA)) / outA);
+  const g = Math.round((draw[1] * srcA + pdf[1] * dstA * (1 - srcA)) / outA);
+  const b = Math.round((draw[2] * srcA + pdf[2] * dstA * (1 - srcA)) / outA);
+  return `#${h(r)}${h(g)}${h(b)}`;
 }

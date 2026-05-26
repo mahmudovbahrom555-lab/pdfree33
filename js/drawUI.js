@@ -35,6 +35,7 @@ let _redoStack    = new Map();   // Map<pageNum, Command[]>
 let _pageSize     = new Map();   // Map<pageNum, {width, height}> — canvas pixel dims for export
 
 let _activeTool   = 'pen';
+let _prevTool     = 'pen';   // tool before eyedropper — for auto-return
 let _color        = '#e53e3e';
 let _width        = 3;
 
@@ -107,12 +108,29 @@ export function getActiveTool()      { return _activeTool; }
 export function getColor()           { return _color; }
 export function getWidth()           { return _width; }
 export function getDrawCanvas()      { return _drawCanvas; }
+export function getPdfCanvas()       { return _pdfCanvas; }
 export function getCurrentPage()     { return _currentPage; }
 export function getPageCommandsRef() { return _pageCommands; }
 export function getRedoStackRef()    { return _redoStack; }
 export function getOriginalBuffer()  { return _originalBuf; }
 export function getPageCount()       { return _pdfJsDoc ? _pdfJsDoc.numPages : 0; }
 export function redrawPage(overlay = null) { _redrawPage(overlay); }
+
+// Called by eyedropper after picking — updates color and syncs picker UI
+export function setColor(hex) {
+  _color = hex;
+  const cp = id('colorPicker');
+  if (cp && /^#[0-9a-f]{6}$/i.test(hex)) cp.value = hex;
+}
+
+// Returns to the tool that was active before eyedropper was selected
+export function activatePrevTool() {
+  _activeTool = _prevTool;
+  _drawCanvas.dataset.drawTool = _prevTool;
+  document.querySelectorAll('.tool-btn[data-draw-tool]').forEach(btn => {
+    btn.setAttribute('aria-pressed', btn.dataset.drawTool === _prevTool ? 'true' : 'false');
+  });
+}
 
 // Called by pointer-events module on pointerdown — new stroke invalidates redo history
 export function clearRedoForCurrentPage() {
@@ -339,7 +357,11 @@ function _bindToolbar() {
   const toolBtns = document.querySelectorAll('.tool-btn[data-draw-tool]');
   toolBtns.forEach(btn => {
     btn.addEventListener('click', () => {
-      _activeTool = btn.dataset.drawTool;
+      const next = btn.dataset.drawTool;
+      if (next === 'eye' && _activeTool !== 'eye') {
+        _prevTool = _activeTool;
+      }
+      _activeTool = next;
       toolBtns.forEach(b => b.setAttribute('aria-pressed', 'false'));
       btn.setAttribute('aria-pressed', 'true');
       _drawCanvas.dataset.drawTool = _activeTool;
