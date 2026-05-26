@@ -330,19 +330,16 @@ export function renderCommand(ctx, cmd) {
       break;
     }
     case 'erase': {
-      ctx.save();
-      ctx.globalCompositeOperation = 'destination-out';
-      ctx.strokeStyle = 'rgba(0,0,0,1)';
-      ctx.lineWidth   = cmd.width ?? 20;
-      if (cmd.points.length >= 2) {
-        ctx.beginPath();
-        ctx.moveTo(cmd.points[0][0], cmd.points[0][1]);
-        for (let i = 1; i < cmd.points.length; i++) {
-          ctx.lineTo(cmd.points[i][0], cmd.points[i][1]);
-        }
-        ctx.stroke();
+      // Whiteout: opaque white stroke covers both annotations and PDF content.
+      // Outer ctx.save()/restore() handles state cleanup — no nested pair needed.
+      ctx.strokeStyle = '#ffffff';
+      if (cmd.points.length < 2) break;
+      ctx.beginPath();
+      ctx.moveTo(cmd.points[0][0], cmd.points[0][1]);
+      for (let i = 1; i < cmd.points.length; i++) {
+        ctx.lineTo(cmd.points[i][0], cmd.points[i][1]);
       }
-      ctx.restore();
+      ctx.stroke();
       break;
     }
     default: break;
