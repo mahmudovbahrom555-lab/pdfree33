@@ -196,8 +196,12 @@ async function _renderPage(pageNum) {
     const outputScale = window.devicePixelRatio || 1;
     const baseVp      = page.getViewport({ scale: 1 });
 
+    // Normalize Rotate:180 — some PDFs carry this metadata; combined with
+    // Telegram Android WebView's GPU compositor it causes pages to render
+    // upside-down. Other angles (0, 90, 270) are passed through unchanged.
+    const rotation = baseVp.rotation === 180 ? 0 : baseVp.rotation;
+
     // cssScale: layout scale (CSS px). outputScale: DPR for sharp pixels.
-    // Kept separate — zoom only touches cssScale; coordinate mapping stays clean.
     const areaW  = Math.max(320, (id('canvasArea')?.clientWidth || 800) - 32);
     let cssScale = areaW / baseVp.width;
 
@@ -210,30 +214,37 @@ async function _renderPage(pageNum) {
 
     // Uniform pixel scale — preserves aspect ratio under MAX_DIMENSION cap
     const pixelScale = Math.min(outputScale, MAX_DIMENSION / cssW, MAX_DIMENSION / cssH);
-    const pxW = Math.round(cssW * pixelScale);
-    const pxH = Math.round(cssH * pixelScale);
+
+    // Bake pixelScale into the viewport instead of renderContext.transform.
+    // renderContext.transform calls ctx.transform() inside pdf.js — Telegram
+    // Android WebView's GPU compositor can double-apply this matrix, flipping
+    // the page. Viewport-scale is handled purely by pdf.js internals and is
+    // stable across all WebView versions.
+    const viewport = page.getViewport({ scale: cssScale * pixelScale, rotation });
+
+    // Derive canvas bitmap dimensions from viewport — correct for all rotation
+    // angles (90°/270° swap width and height; computing from baseVp.width would
+    // give wrong dims and shift annotation coordinates).
+    const pxW = Math.round(viewport.width);
+    const pxH = Math.round(viewport.height);
 
     for (const canvas of [_pdfCanvas, _drawCanvas]) {
       canvas.width        = pxW;
       canvas.height       = pxH;
-      canvas.style.width  = cssW + 'px';
-      canvas.style.height = cssH + 'px';
+      canvas.style.width  = `${Math.round(viewport.width  / pixelScale)}px`;
+      canvas.style.height = `${Math.round(viewport.height / pixelScale)}px`;
     }
 
-    const viewport = page.getViewport({ scale: cssScale });
-    const ctx      = _pdfCanvas.getContext('2d');
-    ctx.clearRect(0, 0, pxW, pxH);   // clear stale pixels (Safari canvas reuse, transparent pages)
-
-    const renderContext = {
-      canvasContext: ctx,
-      viewport,
-      transform: pixelScale !== 1 ? [pixelScale, 0, 0, pixelScale, 0, 0] : null,
-    };
+    const ctx = _pdfCanvas.getContext('2d');
+    // Reset to identity — guards against stale transform matrix from canvas
+    // recycling in Android WebView (different purpose from DPR scaling).
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.clearRect(0, 0, pxW, pxH);
 
     // Note: renderTask.cancel() is not called on abort — pdf.js task runs to
     // completion in background. Acceptable for MVP; add cancel() if heavy PDFs
     // cause measurable lag during fast page switching.
-    await page.render(renderContext).promise;
+    await page.render({ canvasContext: ctx, viewport }).promise;
 
     if (token !== _renderId) return;   // page switched while we were rendering
 
