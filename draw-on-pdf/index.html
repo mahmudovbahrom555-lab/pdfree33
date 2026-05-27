@@ -97,6 +97,7 @@
       transition: background 0.15s, border-color 0.15s;
     }
     .tool-btn:hover                { background: var(--bg-secondary, #f5f5f5); }
+    .tool-btn:active               { transform: scale(0.96); }
     .tool-btn[aria-pressed="true"] {
       background: var(--accent-light, #d1fae5);
       border-color: var(--accent, #2D7A4F);
@@ -107,6 +108,28 @@
       border: none;
       border-top: 1px solid var(--border, #e5e7eb);
       margin: 4px 0;
+    }
+
+    /* On desktop: transparent column wrapper — items stack in the vertical sidebar */
+    .toolbar-row {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      width: 100%;
+      min-width: 0;
+    }
+
+    /* Touch hardening for Android WebView / Telegram browser */
+    .tool-btn,
+    #colorPicker {
+      box-sizing: border-box;
+      flex-shrink: 0;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-user-drag: none;
     }
 
     #colorPicker {
@@ -249,26 +272,55 @@
     @media (max-width: 600px) {
       #editorShell { flex-direction: column-reverse; height: auto; min-height: calc(100dvh - 56px); }
       #drawToolbar {
-        flex-direction: row;
+        flex-direction: column;
         width: 100%;
         min-width: unset;
         height: auto;
         position: sticky;
         bottom: 0;
         top: unset;
+        z-index: 10;
         border-right: none;
         border-top: 1px solid var(--border, #e5e7eb);
+        background: var(--bg-card, #fff);
+        overflow: hidden;
+        overscroll-behavior: contain;
+        padding: 4px 6px max(4px, env(safe-area-inset-bottom));
+        gap: 2px;
+      }
+      /* Rows become horizontal strips; overflow-x:auto is a safety net
+         if a future tool or locale pushes the row over 360px */
+      .toolbar-row {
+        flex-direction: row;
+        align-items: center;
+        gap: 4px;
+        padding: 2px 0;
         overflow-x: auto;
-        padding: 6px 8px;
-        gap: 6px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+      }
+      .toolbar-row::-webkit-scrollbar { display: none; }
+      .primary-tools   { justify-content: center; }
+      .secondary-tools,
+      .settings-tools  { justify-content: flex-start; }
+      .toolbar-sep { display: none; }
+      .tool-btn { width: 36px; height: 36px; font-size: 16px; border-radius: 6px; }
+      #colorPicker {
+        width: 36px;
+        height: 36px;
+        border: 2px solid var(--border, #e5e7eb);
+        border-radius: 8px;
+        padding: 2px;
       }
       #widthSlider {
         writing-mode: horizontal-tb;
         direction: ltr;
-        width: 80px;
+        flex: 1;
+        min-width: 40px;
+        max-width: 120px;
         height: 6px;
       }
-      #canvasArea { padding: 8px; }
+      #canvasArea { padding: 8px; contain: layout paint; }
     }
   </style>
 </head>
@@ -340,22 +392,31 @@
 
       <!-- Toolbar -->
       <aside id="drawToolbar" aria-label="Drawing tools">
-        <button type="button" class="tool-btn" id="btnPen"   data-draw-tool="pen"   title="Pen"       aria-pressed="true" >✏️</button>
-        <button type="button" class="tool-btn" id="btnArrow" data-draw-tool="arrow" title="Arrow"     aria-pressed="false">➡️</button>
-        <button type="button" class="tool-btn" id="btnLine"  data-draw-tool="line"  title="Line"      aria-pressed="false">╱</button>
-        <button type="button" class="tool-btn" id="btnRect"  data-draw-tool="rect"  title="Rectangle" aria-pressed="false">□</button>
-        <button type="button" class="tool-btn" id="btnOval"  data-draw-tool="oval"  title="Oval"      aria-pressed="false">○</button>
-        <button type="button" class="tool-btn" id="btnText"  data-draw-tool="text"  title="Text"      aria-pressed="false">T</button>
-        <button type="button" class="tool-btn" id="btnEye" data-draw-tool="eye" title="Pick color" aria-label="Pick color" aria-pressed="false"><svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M13.354.646a1.207 1.207 0 0 0-1.708 0L8.5 3.793l-.646-.647a.5.5 0 1 0-.708.708L8.293 5l-7.146 7.146A.5.5 0 0 0 1 12.5v1.793l-.854.853a.5.5 0 1 0 .708.707L1.707 15H3.5a.5.5 0 0 0 .354-.146L11 7.707l1.146 1.147a.5.5 0 0 0 .708-.708l-.647-.646 3.147-3.146a1.207 1.207 0 0 0 0-1.708z"/></svg></button>
-        <button type="button" class="tool-btn" id="btnErase" data-draw-tool="erase" title="Eraser" aria-pressed="false"><svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8.086 2.207a2 2 0 0 1 2.828 0l3.879 3.879a2 2 0 0 1 0 2.828l-5.5 5.5A2 2 0 0 1 7.879 15H5.12a2 2 0 0 1-1.414-.586l-2.5-2.5a2 2 0 0 1 0-2.828zm.66 11.34L3.453 8.254 1.914 9.793a1 1 0 0 0 0 1.414l2.5 2.5a1 1 0 0 0 .707.293H7.88a1 1 0 0 0 .707-.293z"/></svg></button>
-        <button type="button" class="tool-btn" id="btnHighlight" data-draw-tool="highlight" title="Highlight" aria-pressed="false">🖍️</button>
+        <!-- Primary: most-used tools and actions — always visible on mobile -->
+        <div class="toolbar-row primary-tools">
+          <button type="button" class="tool-btn" id="btnPen"   data-draw-tool="pen"   title="Pen"    aria-label="Pen"    aria-pressed="true" >✏️</button>
+          <button type="button" class="tool-btn" id="btnErase" data-draw-tool="erase" title="Eraser" aria-label="Eraser" aria-pressed="false"><svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8.086 2.207a2 2 0 0 1 2.828 0l3.879 3.879a2 2 0 0 1 0 2.828l-5.5 5.5A2 2 0 0 1 7.879 15H5.12a2 2 0 0 1-1.414-.586l-2.5-2.5a2 2 0 0 1 0-2.828zm.66 11.34L3.453 8.254 1.914 9.793a1 1 0 0 0 0 1.414l2.5 2.5a1 1 0 0 0 .707.293H7.88a1 1 0 0 0 .707-.293z"/></svg></button>
+          <input  type="color" id="colorPicker" value="#e53e3e" title="Stroke color" aria-label="Stroke color">
+          <button type="button" class="tool-btn" id="btnUndo"  title="Undo (Ctrl+Z)"   aria-label="Undo">↩</button>
+          <button type="button" class="tool-btn" id="btnRedo"  title="Redo (Ctrl+Y)"   aria-label="Redo">↪</button>
+          <button type="button" class="tool-btn" id="btnClear" title="Clear this page" aria-label="Clear page">🗑️</button>
+        </div>
         <hr class="toolbar-sep">
-        <input  type="color" id="colorPicker" value="#e53e3e" title="Stroke color">
-        <input  type="range" id="widthSlider" min="1" max="20" value="3" title="Stroke width">
+        <!-- Secondary: shape and annotation tools -->
+        <div class="toolbar-row secondary-tools">
+          <button type="button" class="tool-btn" id="btnArrow"     data-draw-tool="arrow"     title="Arrow"     aria-label="Arrow"     aria-pressed="false">➡️</button>
+          <button type="button" class="tool-btn" id="btnLine"      data-draw-tool="line"      title="Line"      aria-label="Line"      aria-pressed="false">╱</button>
+          <button type="button" class="tool-btn" id="btnRect"      data-draw-tool="rect"      title="Rectangle" aria-label="Rectangle" aria-pressed="false">□</button>
+          <button type="button" class="tool-btn" id="btnOval"      data-draw-tool="oval"      title="Oval"      aria-label="Oval"      aria-pressed="false">○</button>
+          <button type="button" class="tool-btn" id="btnText"      data-draw-tool="text"      title="Text"      aria-label="Text"      aria-pressed="false">T</button>
+          <button type="button" class="tool-btn" id="btnHighlight" data-draw-tool="highlight" title="Highlight" aria-label="Highlight" aria-pressed="false">🖍️</button>
+        </div>
         <hr class="toolbar-sep">
-        <button type="button" class="tool-btn" id="btnUndo"  title="Undo (Ctrl+Z)">↩</button>
-        <button type="button" class="tool-btn" id="btnRedo"  title="Redo (Ctrl+Y)">↪</button>
-        <button type="button" class="tool-btn" id="btnClear" title="Clear this page">🗑️</button>
+        <!-- Settings: stroke width and eyedropper -->
+        <div class="toolbar-row settings-tools">
+          <button type="button" class="tool-btn" id="btnEye" data-draw-tool="eye" title="Pick color" aria-label="Pick color" aria-pressed="false"><svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M13.354.646a1.207 1.207 0 0 0-1.708 0L8.5 3.793l-.646-.647a.5.5 0 1 0-.708.708L8.293 5l-7.146 7.146A.5.5 0 0 0 1 12.5v1.793l-.854.853a.5.5 0 1 0 .708.707L1.707 15H3.5a.5.5 0 0 0 .354-.146L11 7.707l1.146 1.147a.5.5 0 0 0 .708-.708l-.647-.646 3.147-3.146a1.207 1.207 0 0 0 0-1.708z"/></svg></button>
+          <input  type="range" id="widthSlider" min="1" max="20" value="3" title="Stroke width" aria-label="Stroke width">
+        </div>
       </aside>
 
       <!-- Canvas + navigation -->
