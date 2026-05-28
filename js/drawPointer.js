@@ -38,6 +38,26 @@ let _textCallback = null;   // (text: string|null) => void
 let _fontSize     = 16;     // independent of widthSlider; persists between text clicks
 let _textCmdId    = 0;      // monotonic ID for text commands — required for drag-to-reposition
 
+// ── Mobile text sheet ─────────────────────────────────────────
+// DOM refs filled once in _initMobileSheet(); runtime fields via _resetMtsState().
+const _mts = {
+  // DOM refs (set once)
+  sheet: null, backdrop: null, textarea: null,
+  sizeLabel: null, color: null, ok: null, cancel: null, deleteBtn: null, title: null,
+  // Per-invocation state — reset on every open, cleared on close
+  callback:    null,    // ({ action: 'save'|'delete'|'cancel', text, fontSize, color }) => void
+  mode:        'insert', // 'insert' | 'edit'
+  editingId:   null,    // cmd.id when mode === 'edit'
+  insertPoint: null,    // { x, y } canvas coords saved on tap
+};
+
+function _resetMtsState() {
+  _mts.callback    = null;
+  _mts.mode        = 'insert';
+  _mts.editingId   = null;
+  _mts.insertPoint = null;
+}
+
 // ── Text selection state ───────────────────────────────────────
 let _selectedTextId  = null;   // id of selected text annotation — UI state only
 let _pendingTextHit  = null;   // { cmd, startX, startY, clientX, clientY } — awaiting tap vs drag
@@ -57,6 +77,8 @@ export function initPointer() {
 
   _initTextInput();
   _initSelToolbar();
+  _initMobileSheet();
+  _initMobileSheet();
 
   // Keyboard: Delete/Backspace deletes selected text; Escape dismisses selection
   document.addEventListener('keydown', (e) => {
@@ -200,7 +222,42 @@ function _initSelToolbar() {
 function _selectText(cmd, clientX, clientY) {
   _selectedTextId = cmd.id;
   setSelectedId(cmd.id);
-  _showSelToolbar(cmd, clientX, clientY);
+
+  if (_isTouchDevice()) {
+    const eff = getEffectiveCommands().find(c => c.id === cmd.id) ?? cmd;
+    _fontSize = eff.size ?? _fontSize;
+    _openMobileSheet({
+      mode: 'edit', editingId: cmd.id,
+      initialText:  eff.text  ?? '',
+      initialColor: eff.color ?? getColor(),
+      callback: ({ action, text, fontSize, color }) => {
+        if (action === 'cancel') { _dismissSelection(); return; }
+        if (action === 'delete' || !text?.trim()) {
+          // empty text = implicit delete (user cleared annotation)
+          clearRedoForCurrentPage();
+          _pushCommand({ type: 'delete', targetId: cmd.id });
+          _dismissSelection(); redrawPage(); return;
+        }
+        const effNow = getEffectiveCommands().find(c => c.id === cmd.id);
+        const patch  = {};
+        if (effNow) {
+          if (text     !== (effNow.text  ?? ''))        patch.text  = text;
+          if (fontSize !== (effNow.size  ?? 16))        patch.size  = fontSize;
+          if (color    !== (effNow.color ?? '#000000')) patch.color = color;
+        } else {
+          Object.assign(patch, { text, size: fontSize, color });
+        }
+        if (Object.keys(patch).length > 0) {
+          clearRedoForCurrentPage();
+          _pushCommand({ type: 'style', targetId: cmd.id, patch });
+        }
+        _dismissSelection(); redrawPage();
+      },
+    });
+  } else {
+    _showSelToolbar(cmd, clientX, clientY);
+  }
+
   redrawPage();
 }
 
@@ -254,6 +311,98 @@ function _showSelToolbar(cmd, screenX, screenY) {
 export function resetPointer() {
   _current = null;
   if (_rafId) { cancelAnimationFrame(_rafId); _rafId = 0; }
+  _closeMobileSheet({ action: 'cancel' });
+}
+
+function _isTouchDevice() {
+  return window.matchMedia('(pointer: coarse)').matches;
+}
+
+// ── Mobile text sheet lifecycle ────────────────────────────────
+
+function _initMobileSheet() {
+  if (_mts.sheet) return;
+  _mts.sheet = document.getElementById('mobileTextSheet');
+  if (!_mts.sheet) return;
+
+  _mts.backdrop  = document.getElementById('mtsBackdrop');
+  _mts.textarea  = document.getElementById('mtsTextarea');
+  _mts.sizeLabel = document.getElementById('mtsSizeLabel');
+  _mts.color     = document.getElementById('mtsColor');
+  _mts.ok        = document.getElementById('mtsOk');
+  _mts.cancel    = document.getElementById('mtsCancel');
+  _mts.deleteBtn = document.getElementById('mtsDelete');
+  _mts.title     = document.getElementById('mtsTitle');
+
+  const _stepSize = (delta) => {
+    let idx = SEL_SIZES.indexOf(_fontSize);
+    if (idx === -1) idx = Math.max(0, SEL_SIZES.findIndex(s => s >= _fontSize));
+    if (idx === -1) idx = SEL_SIZES.length - 1;
+    _fontSize = SEL_SIZES[Math.max(0, Math.min(SEL_SIZES.length - 1, idx + delta))];
+    _mts.sizeLabel.textContent = _fontSize + 'px';
+  };
+
+  document.getElementById('mtsSizeUp')  .addEventListener('click', () => _stepSize(+1));
+  document.getElementById('mtsSizeDown').addEventListener('click', () => _stepSize(-1));
+
+  _mts.ok.addEventListener('click', () => {
+    _closeMobileSheet({
+      action:   'save',
+      text:     _mts.textarea.value.replace(/\n+$/, ''),
+      fontSize: _fontSize,
+      color:    _mts.color.value,
+    });
+  });
+  _mts.cancel   .addEventListener('click', () => _closeMobileSheet({ action: 'cancel' }));
+  _mts.deleteBtn.addEventListener('click', () => _closeMobileSheet({ action: 'delete' }));
+  _mts.backdrop .addEventListener('click', () => _closeMobileSheet({ action: 'cancel' }));
+
+  window.addEventListener('orientationchange', () => {
+    if (_mts.sheet && !_mts.sheet.hidden) _closeMobileSheet({ action: 'cancel' });
+  });
+}
+
+function _openMobileSheet(opts) {
+  if (!_mts.sheet || !_mts.sheet.hidden) return;
+  _resetMtsState();
+
+  _mts.mode        = opts.mode        ?? 'insert';
+  _mts.editingId   = opts.editingId   ?? null;
+  _mts.insertPoint = opts.insertPoint ?? null;
+  _mts.callback    = opts.callback    ?? null;
+
+  _mts.title.textContent     = _mts.mode === 'edit' ? 'Edit text' : 'Add text';
+  _mts.ok.textContent        = _mts.mode === 'edit' ? 'Save' : 'Add';
+  _mts.deleteBtn.hidden      = _mts.mode !== 'edit';
+  _mts.textarea.value        = opts.initialText  ?? '';
+  _mts.sizeLabel.textContent = _fontSize + 'px';
+
+  const color = opts.initialColor ?? getColor();
+  if (/^#[0-9a-f]{6}$/i.test(color)) _mts.color.value = color;
+
+  _mts.sheet.hidden    = false;
+  _mts.backdrop.hidden = false;
+  document.body.classList.add('mts-open');
+  const canvas = getDrawCanvas();
+  if (canvas) canvas.style.pointerEvents = 'none';
+
+  requestAnimationFrame(() => _mts.textarea?.focus());
+}
+
+function _closeMobileSheet(result) {
+  if (!_mts.sheet || _mts.sheet.hidden) return;
+
+  const cb = _mts.callback;
+
+  _mts.sheet.hidden    = true;
+  _mts.backdrop.hidden = true;
+  document.body.classList.remove('mts-open');
+  _mts.textarea.blur();
+  const canvas = getDrawCanvas();
+  if (canvas) canvas.style.pointerEvents = '';
+  _resetMtsState();
+
+  if (cb && result) cb(result);
 }
 
 // ── Coordinate helper ──────────────────────────────────────────
@@ -303,19 +452,34 @@ function _onDown(e) {
         _longPressTimer = 0;
         _pendingTextHit = null;
         _selectText(hit, e.clientX, e.clientY);
-      }, 350);
+      }, _isTouchDevice() ? 450 : 350);
       return;
     }
-    _showTextInput(e.clientX, e.clientY, (text) => {
-      if (!text?.trim()) return;
-      clearRedoForCurrentPage();
-      _pushCommand({
-        type: 'text', id: ++_textCmdId, x, y, text,
-        color: getColor(), size: _fontSize,
-        fontWeight: 'normal', fontFamily: 'system-ui, sans-serif',
+    if (_isTouchDevice()) {
+      _openMobileSheet({
+        mode: 'insert', insertPoint: { x, y }, initialColor: getColor(),
+        callback: ({ action, text, fontSize, color }) => {
+          if (action !== 'save' || !text?.trim()) return;
+          clearRedoForCurrentPage();
+          _pushCommand({
+            type: 'text', id: ++_textCmdId, x, y, text,
+            color, size: fontSize, fontWeight: 'normal', fontFamily: 'system-ui, sans-serif',
+          });
+          redrawPage();
+        },
       });
-      redrawPage();
-    });
+    } else {
+      _showTextInput(e.clientX, e.clientY, (text) => {
+        if (!text?.trim()) return;
+        clearRedoForCurrentPage();
+        _pushCommand({
+          type: 'text', id: ++_textCmdId, x, y, text,
+          color: getColor(), size: _fontSize,
+          fontWeight: 'normal', fontFamily: 'system-ui, sans-serif',
+        });
+        redrawPage();
+      });
+    }
     return;
   }
 
@@ -495,7 +659,7 @@ function _hitTestText(x, y) {
     const widths = lines.map(l => ctx.measureText(l).width);
     const w      = widths.length ? Math.max(...widths) : 0;
     const h      = size * 1.25 * lines.length;
-    const pad    = 6;   // extra hit padding for easier tapping on mobile
+    const pad    = _isTouchDevice() ? 16 : 6;
     if (x >= c.x - pad && x <= c.x + w + pad &&
         y >= c.y - pad && y <= c.y + h + pad) {
       ctx.restore();

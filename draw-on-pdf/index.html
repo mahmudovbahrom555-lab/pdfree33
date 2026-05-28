@@ -433,7 +433,7 @@
       .secondary-tools,
       .settings-tools  { justify-content: flex-start; }
       .toolbar-sep { display: none; }
-      .tool-btn { width: 36px; height: 36px; font-size: 16px; border-radius: 6px; }
+      .tool-btn { width: 44px; height: 44px; font-size: 18px; border-radius: 8px; }
       #colorPicker {
         width: 36px;
         height: 36px;
@@ -510,6 +510,140 @@
       #fabUp, #fabDown { display: none; }   /* scroll assist is mobile-only */
       #fabStack #downloadPdfBtn { margin-top: 0; }
     }
+
+    /* ── Mobile text sheet ───────────────────────────────────────── */
+    #mtsBackdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 299;
+      touch-action: none;
+    }
+    #mtsBackdrop[hidden] { display: none; }
+
+    #mobileTextSheet {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 300;
+      max-height: 90vh;           /* landscape / small phones / huge Samsung keyboard */
+      overflow-y: auto;
+      background: var(--bg-card, #fff);
+      border-radius: 16px 16px 0 0;
+      box-shadow: 0 -4px 24px rgba(0,0,0,0.18);
+      padding: 0 16px max(16px, env(safe-area-inset-bottom));
+    }
+    #mobileTextSheet[hidden] { display: none; }
+
+    /* Scroll lock: prevents PDF from scrolling under open sheet */
+    body.mts-open { overflow: hidden; touch-action: none; }
+
+    .mts-bar {
+      width: 40px; height: 4px;
+      background: var(--border, #e5e7eb);
+      border-radius: 2px;
+      margin: 12px auto 10px;
+    }
+    .mts-header {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text, #111);
+      margin-bottom: 10px;
+    }
+    #mtsTextarea {
+      display: block;
+      width: 100%;
+      min-height: 80px;
+      max-height: 40vh;
+      border: 1px solid var(--border, #e5e7eb);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 16px;              /* prevents iOS auto-zoom */
+      font-family: system-ui, sans-serif;
+      line-height: 1.4;
+      resize: none;
+      box-sizing: border-box;
+      background: var(--bg-secondary, #f9f9f9);
+      color: var(--text, #111);
+      overflow-y: auto;
+      overscroll-behavior: contain; /* prevents textarea scroll from leaking to sheet */
+    }
+    #mtsTextarea:focus { outline: none; border-color: var(--accent, #2D7A4F); }
+
+    .mts-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 10px 0 8px;
+    }
+    .mts-size-btn {
+      width: 44px; height: 44px;
+      border: 1px solid var(--border, #e5e7eb);
+      border-radius: 8px;
+      background: none;
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--text, #111);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      flex-shrink: 0;
+    }
+    .mts-size-btn:active { background: var(--bg-secondary, #f5f5f5); }
+
+    #mtsSizeLabel {
+      min-width: 38px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-secondary, #6b7280);
+    }
+    #mtsColor {
+      width: 44px; height: 44px;
+      border: 2px solid var(--border, #e5e7eb);
+      border-radius: 8px;
+      padding: 3px;
+      cursor: pointer;
+      box-sizing: border-box;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      flex-shrink: 0;
+    }
+    .mts-delete-btn {
+      width: 44px; height: 44px;
+      border: 1px solid #fecaca;
+      border-radius: 8px;
+      background: none;
+      cursor: pointer;
+      color: #dc2626;
+      display: flex; align-items: center; justify-content: center;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      margin-left: auto;
+      flex-shrink: 0;
+    }
+    .mts-delete-btn[hidden] { display: none; }
+    .mts-delete-btn:active { background: #fef2f2; }
+
+    .mts-actions {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+    .mts-actions button {
+      flex: 1;
+      height: 44px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      border: 1px solid var(--border, #e5e7eb);
+    }
+    #mtsCancel { background: transparent; color: var(--text-secondary, #6b7280); }
+    #mtsOk     { background: var(--accent, #2D7A4F); color: #fff; border-color: var(--accent, #2D7A4F); }
   </style>
 </head>
 <body data-tool="draw-pdf">
@@ -590,6 +724,30 @@
       <button type="button" class="sel-btn" id="selSizeUp"   title="Larger"  aria-label="Increase text size">A+</button>
       <div class="sel-sep" aria-hidden="true"></div>
       <button type="button" class="sel-btn" id="selDelete" title="Delete" aria-label="Delete text"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/><path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/></svg></button>
+    </div>
+
+    <!-- Mobile text sheet — bottom sheet for text tool on touch devices.
+         Desktop uses #textInputOverlay (floating, position:fixed).
+         JS picks via _isTouchDevice(); both elements always present in DOM. -->
+    <div id="mtsBackdrop" hidden></div>
+    <div id="mobileTextSheet" hidden role="dialog" aria-label="Text annotation">
+      <div class="mts-bar" aria-hidden="true"></div>
+      <div class="mts-header"><span id="mtsTitle">Add text</span></div>
+      <textarea id="mtsTextarea" rows="3" placeholder="Type text…" aria-label="Text input"
+        autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
+      <div class="mts-controls">
+        <button type="button" class="mts-size-btn" id="mtsSizeDown" aria-label="Decrease font size">A−</button>
+        <span   id="mtsSizeLabel" aria-live="polite">16px</span>
+        <button type="button" class="mts-size-btn" id="mtsSizeUp"   aria-label="Increase font size">A+</button>
+        <input  type="color" id="mtsColor" aria-label="Text color">
+        <button type="button" id="mtsDelete" class="mts-delete-btn" hidden aria-label="Delete annotation">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/><path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/></svg>
+        </button>
+      </div>
+      <div class="mts-actions">
+        <button type="button" id="mtsCancel">Cancel</button>
+        <button type="button" id="mtsOk">Add</button>
+      </div>
     </div>
 
     <!-- Editor (revealed by drawUI.js after file loads) -->
