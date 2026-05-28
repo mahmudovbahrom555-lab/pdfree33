@@ -59,3 +59,18 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      - name: Smoke test — all nav pages return 200
+        run: |
+          sleep 15
+          FAIL=0
+          for path in / /merge-pdf/ /compress-pdf/ /pagenum-pdf/ /split-pdf/ /draw-on-pdf/ /rotate-pdf/ /protect-pdf/; do
+            CODE=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 "https://pdfree.io$path")
+            if [ "$CODE" = "200" ]; then
+              echo "✅ $path → $CODE"
+            else
+              echo "❌ $path → $CODE"
+              FAIL=1
+            fi
+          done
+          exit $FAIL
