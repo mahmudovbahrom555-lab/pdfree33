@@ -96,8 +96,9 @@ const _sharedFiles = new Map();
 
 // ── Install: pre-cache all static assets ─────────────────────
 self.addEventListener('install', event => {
-  // Do NOT call skipWaiting() here — clients get a choice to update or stay.
-  // The page posts { type: 'SKIP_WAITING' } when the user clicks "Update".
+  // skipWaiting() forces immediate activation so the activate handler can
+  // delete the broken v69 cache that caused ERR_FAILED on navigation.
+  self.skipWaiting();
   event.waitUntil(
     caches.open(STATIC_CACHE)
       .then(cache => cache.addAll(STATIC_ASSETS))
