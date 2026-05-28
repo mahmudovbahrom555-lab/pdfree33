@@ -18,7 +18,7 @@
 //  the activate handler to clear the old cache.
 // ============================================================
 
-const CACHE_VERSION  = 'v69';   // bump: Share Target, File Handler, update banner, offline page
+const CACHE_VERSION  = 'v70';   // bump: fix deploy-from-dist (wrangler.jsonc removed)
 const STATIC_CACHE   = `pdfree-static-${CACHE_VERSION}`;
 const CDN_CACHE      = `pdfree-cdn-${CACHE_VERSION}`;
 const ALL_CACHES     = [STATIC_CACHE, CDN_CACHE];

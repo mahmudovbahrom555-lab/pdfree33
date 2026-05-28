@@ -1,5 +1,8 @@
 name = "pdfree33"
-compatibility_date = "2025-01-01"
+compatibility_date = "2026-05-07"
+
+[placement]
+mode = "smart"
 
 [assets]
 directory = "./dist"

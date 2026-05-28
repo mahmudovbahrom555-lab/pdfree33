@@ -41,8 +41,15 @@ jobs:
       - name: Lint JavaScript
         run: npm run lint -- --quiet
 
+      - name: Verify SSG output (redirect targets must exist in dist)
+        run: |
+          for page in add-page-numbers-to-pdf merge-large-pdf-files compress-large-pdf-free merge-pdf-files-into-one; do
+            test -f "dist/$page/index.html" || { echo "MISSING: dist/$page/index.html"; exit 1; }
+          done
+          echo "All redirect targets present in dist/"
+
       - name: Deploy to Cloudflare Workers
-        run: npx wrangler@4 deploy
+        run: npx wrangler@4 deploy --config wrangler.toml
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
