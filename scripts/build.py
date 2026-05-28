@@ -45,10 +45,8 @@ BASE_URL = 'https://pdfree.io'
 SKIP_DIRS = {
     '.git', 'node_modules', '.wrangler', '.claude', '.husky',
     'dist', 'data', 'scripts',
-    # Short-slug source dirs superseded by keyword-rich SSG pages
-    'compress-pdf', 'merge-pdf',
-    # Old slugs — 301 redirects handled in _redirects, no HTML needed
-    'annotate', 'pagenum-pdf',
+    # Old slug — redirect handled in _redirects, no HTML needed in dist
+    'annotate',
 }
 SKIP_FILES = {
     'wrangler.toml', 'wrangler.jsonc', 'wrangler.json',  # deployment configs — never serve as static

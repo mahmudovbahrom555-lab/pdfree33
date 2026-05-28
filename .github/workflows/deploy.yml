@@ -47,12 +47,12 @@ jobs:
             test ! -f "$f" || { echo "ERROR: $f found — remove it to avoid config priority conflicts"; exit 1; }
           done
 
-      - name: Verify SSG output (redirect targets must exist in dist)
+      - name: Verify all nav pages present in dist
         run: |
-          for page in add-page-numbers-to-pdf merge-large-pdf-files compress-large-pdf-free merge-pdf-files-into-one; do
+          for page in merge-pdf compress-pdf pagenum-pdf split-pdf jpg2pdf pdf2jpg watermark-pdf metadata-pdf extract-pdf draw-on-pdf rotate-pdf protect-pdf; do
             test -f "dist/$page/index.html" || { echo "MISSING: dist/$page/index.html"; exit 1; }
           done
-          echo "All redirect targets present in dist/"
+          echo "All nav pages present in dist/"
 
       - name: Deploy to Cloudflare Workers
         run: npx wrangler@4 deploy --config wrangler.toml
