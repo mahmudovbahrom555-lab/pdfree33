@@ -66,6 +66,18 @@
        editor shell would always be visible even before a file is loaded. */
     #editorShell[hidden] { display: none; }
 
+    /* canvas-col fills remaining space beside toolbar.
+       Without flex:1 the div shrinks to ~300px and JS reads that
+       small clientWidth — PDF renders tiny on desktop. */
+    .canvas-col {
+      flex: 1;
+      min-width: 0;    /* horizontal: prevents flex-item overflow blowout */
+      min-height: 0;   /* vertical:   defensive guard for nested flex contexts */
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-secondary, #f5f5f5);
+    }
+
     /* ── Toolbar ─────────────────────────────────────────────── */
     #drawToolbar {
       display: flex;
@@ -154,11 +166,16 @@
     #canvasArea {
       flex: 1;
       min-height: 0;                  /* flexbox fix: prevents overflow blowout */
+      width: 100%;
+      max-width: 1100px;              /* reading-column cap; JS reads clientWidth from here */
+      margin-inline: auto;            /* centers reading column when .canvas-col is wider */
+      box-sizing: border-box;
       display: flex;
       flex-direction: column;
-      align-items: center;
+      align-items: center;            /* centers #canvasWrap so box-shadow wraps canvas, not the container */
       padding: 16px;
       overflow: auto;
+      scrollbar-gutter: stable;       /* Windows: reserves scrollbar space so clientWidth is stable */
       background: var(--bg-secondary, #f5f5f5);
     }
 
@@ -475,6 +492,23 @@
       }
       #fabUp.fab-edge-hidden,
       #fabDown.fab-edge-hidden { visibility: hidden; }
+    }
+
+    /* ── Desktop: #fabStack becomes a sticky footer bar ─────────── */
+    /* On desktop, #canvasArea fills .canvas-col with flex:1, which would push
+       #fabStack out of the viewport — give it a fixed footer slot instead. */
+    @media (min-width: 601px) {
+      #fabStack {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-shrink: 0;          /* never crushed by #canvasArea flex:1 */
+        padding: 10px 16px;
+        background: var(--bg-card, #fff);
+        border-top: 1px solid var(--border, #e5e7eb);
+      }
+      #fabUp, #fabDown { display: none; }   /* scroll assist is mobile-only */
+      #fabStack #downloadPdfBtn { margin-top: 0; }
     }
   </style>
 </head>
