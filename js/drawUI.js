@@ -110,7 +110,9 @@ export function getWidth()           { return _width; }
 export function getDrawCanvas()      { return _drawCanvas; }
 export function getPdfCanvas()       { return _pdfCanvas; }
 export function getCurrentPage()     { return _currentPage; }
-export function getPageCommandsRef() { return _pageCommands; }
+export function getPageCommandsRef()   { return _pageCommands; }
+// Returns commands for current page with move-overrides applied — use for hit-testing and rendering.
+export function getEffectiveCommands() { return _applyMoves(_pageCommands.get(_currentPage) ?? []); }
 export function getRedoStackRef()    { return _redoStack; }
 export function getOriginalBuffer()  { return _originalBuf; }
 export function getPageCount()       { return _pdfJsDoc ? _pdfJsDoc.numPages : 0; }
@@ -261,14 +263,38 @@ async function _renderPage(pageNum) {
   }
 }
 
+// Applies the latest 'move' override for each targeted text command.
+// Returns a clean array: move-commands removed, targets updated with new position.
+// Fast path when no moves exist (99% of pages) — skips map lookups and cloning.
+function _applyMoves(cmds) {
+  const hasMoves = cmds.some(c => c.type === 'move');
+  if (!hasMoves) return cmds;
+  const pos = new Map();
+  cmds.forEach(c => { if (c.type === 'move') pos.set(c.targetId, { x: c.x, y: c.y }); });
+  return cmds
+    .filter(c => c.type !== 'move')
+    .map(c => pos.has(c.id) ? { ...c, ...pos.get(c.id) } : c);
+}
+
 // Clears draw canvas and replays all commands for the current page.
 // overlay — optional in-progress command rendered after history (live preview).
 function _redrawPage(overlay = null) {
-  const ctx  = _drawCanvas.getContext('2d');
+  const ctx    = _drawCanvas.getContext('2d');
   ctx.clearRect(0, 0, _drawCanvas.width, _drawCanvas.height);
-  const cmds = _pageCommands.get(_currentPage) ?? [];
-  cmds.forEach(cmd => renderCommand(ctx, cmd));
-  if (overlay) renderCommand(ctx, overlay);
+  const cmds   = _applyMoves(_pageCommands.get(_currentPage) ?? []);
+  // During text drag: skip the dragged command, re-render it below at new position
+  const dragId = overlay?.type === 'text-drag' ? overlay.cmd.id : null;
+  for (const cmd of cmds) {
+    if (cmd.id === dragId) continue;
+    renderCommand(ctx, cmd);
+  }
+  if (overlay) {
+    if (overlay.type === 'text-drag') {
+      renderCommand(ctx, { ...overlay.cmd, x: overlay.x, y: overlay.y });
+    } else {
+      renderCommand(ctx, overlay);
+    }
+  }
 }
 
 // ── Command renderer ───────────────────────────────────────────
@@ -496,20 +522,27 @@ async function _exportToPdf() {
 }
 
 async function _renderLayerToPng(cmds, w, h) {
+  const effective = _applyMoves(cmds);   // resolve move-overrides before export
   if (typeof OffscreenCanvas !== 'undefined') {
-    const off  = new OffscreenCanvas(w, h);
-    const ctx  = off.getContext('2d');
-    cmds.forEach(cmd => renderCommand(ctx, cmd));
+    const off = new OffscreenCanvas(w, h);
+    const ctx = off.getContext('2d');
+    if (!ctx) throw new Error('2D context unavailable');
+    effective.forEach(cmd => renderCommand(ctx, cmd));
     const blob = await off.convertToBlob({ type: 'image/png' });
     return blob.arrayBuffer();
   }
   // DOM canvas fallback for Safari < 16.4
-  return new Promise(resolve => {
-    const tmp  = document.createElement('canvas');
+  return new Promise((resolve, reject) => {
+    const tmp = document.createElement('canvas');
     tmp.width  = w;
     tmp.height = h;
-    cmds.forEach(cmd => renderCommand(tmp.getContext('2d'), cmd));
-    tmp.toBlob(b => b.arrayBuffer().then(resolve), 'image/png');
+    const ctx  = tmp.getContext('2d');
+    if (!ctx) { reject(new Error('2D context unavailable')); return; }
+    effective.forEach(cmd => renderCommand(ctx, cmd));
+    tmp.toBlob(b => {
+      if (!b) { reject(new Error('PNG export failed')); return; }
+      b.arrayBuffer().then(resolve, reject);
+    }, 'image/png');
   });
 }
 

@@ -21,21 +21,22 @@ import {
   // canvas
   getDrawCanvas, getPdfCanvas,
   // document
-  getCurrentPage, getPageCommandsRef,
+  getCurrentPage, getPageCommandsRef, getEffectiveCommands,
   // actions
   clearRedoForCurrentPage, redrawPage, setColor, activatePrevTool,
   // constants
   HIGHLIGHT_OPACITY,
 } from './drawUI.js';
 
-let _current = null;   // команда в процессе рисования (null = не рисуем)
-let _rafId   = 0;      // pending requestAnimationFrame id
+let _current = null;   // { type, ...fields } | null — command in progress
+let _rafId   = 0;      // pending requestAnimationFrame id (0 = none)
 
 // ── Text input overlay state ───────────────────────────────────
 let _textOverlay  = null;
 let _textInput    = null;
 let _textCallback = null;   // (text: string|null) => void
 let _fontSize     = 16;     // independent of widthSlider; persists between text clicks
+let _textCmdId    = 0;      // monotonic ID for text commands — required for drag-to-reposition
 
 // ── Public API ─────────────────────────────────────────────────
 
@@ -182,13 +183,21 @@ function _onDown(e) {
     return;
   }
 
-  // Text: show floating input at click position, no move/up stream needed
+  // Text: tap existing text → drag it; tap empty area → place new text
   if (tool === 'text') {
+    const hit = _hitTestText(x, y);
+    if (hit) {
+      clearRedoForCurrentPage();
+      document.body.style.cursor = 'grabbing';
+      _current = { type: 'text-drag', cmd: hit,
+                   x: hit.x, y: hit.y, _ox: x - hit.x, _oy: y - hit.y };
+      return;
+    }
     _showTextInput(e.clientX, e.clientY, (text) => {
-      if (!text) return;
+      if (!text?.trim()) return;
       clearRedoForCurrentPage();
       _pushCommand({
-        type: 'text', x, y, text,
+        type: 'text', id: ++_textCmdId, x, y, text,
         color: getColor(), size: _fontSize,
         fontWeight: 'normal', fontFamily: 'system-ui, sans-serif',
       });
@@ -245,6 +254,9 @@ function _onMove(e) {
     _current.y  = (_current._oy + y) / 2;
     _current.rx = Math.abs(x - _current._ox) / 2;
     _current.ry = Math.abs(y - _current._oy) / 2;
+  } else if (type === 'text-drag') {
+    _current.x = x - _current._ox;
+    _current.y = y - _current._oy;
   }
 
   // RAF batching: один render pass на animation frame, не на каждый pointermove
@@ -255,11 +267,14 @@ function _onMove(e) {
   });
 }
 
-// ── Pointer up ─────────────────────────────────────────────────
+// ── Pointer up (also handles pointercancel via initPointer listener) ───────
 
 function _onUp(e) {
   if (!_current) return;
   e.preventDefault();
+
+  // Always reset — covers text-drag and pointercancel paths
+  document.body.style.cursor = '';
 
   // Симметричный lifecycle: явный release после явного capture
   const canvas = getDrawCanvas();
@@ -269,6 +284,17 @@ function _onUp(e) {
 
   // Отменяем pending RAF — финальный redraw делаем синхронно ниже
   if (_rafId) { cancelAnimationFrame(_rafId); _rafId = 0; }
+
+  // Text drag: commit a 'move' command if position actually changed; Undo pops it for free
+  if (_current.type === 'text-drag') {
+    const { cmd, x, y } = _current;
+    if (Math.hypot(x - cmd.x, y - cmd.y) >= 3) {
+      _pushCommand({ type: 'move', targetId: cmd.id, x, y });
+    }
+    _current = null;
+    redrawPage();
+    return;
+  }
 
   if (_isMeaningful(_current)) {
     const { type } = _current;
@@ -305,6 +331,33 @@ function _isMeaningful(cmd) {
     case 'oval':   return cmd.rx >= 3 && cmd.ry >= 3;
     default:       return true;
   }
+}
+
+// ── Text hit-test ──────────────────────────────────────────────
+// Returns the topmost text command whose bounding box contains (x, y).
+// ctx.save/restore prevents font assignment leaking into other canvas ops.
+function _hitTestText(x, y) {
+  const cmds = getEffectiveCommands();
+  const ctx  = getDrawCanvas().getContext('2d');
+  ctx.save();
+  for (let i = cmds.length - 1; i >= 0; i--) {
+    const c = cmds[i];
+    if (c.type !== 'text') continue;
+    const size   = c.size ?? 16;
+    const lines  = (c.text ?? '').replace(/\n+$/, '').split('\n');
+    ctx.font     = `${c.fontWeight ?? 'normal'} ${size}px ${c.fontFamily ?? 'system-ui, sans-serif'}`;
+    const widths = lines.map(l => ctx.measureText(l).width);
+    const w      = widths.length ? Math.max(...widths) : 0;
+    const h      = size * 1.25 * lines.length;
+    const pad    = 6;   // extra hit padding for easier tapping on mobile
+    if (x >= c.x - pad && x <= c.x + w + pad &&
+        y >= c.y - pad && y <= c.y + h + pad) {
+      ctx.restore();
+      return c;
+    }
+  }
+  ctx.restore();
+  return null;
 }
 
 // ── Eyedropper ─────────────────────────────────────────────────
