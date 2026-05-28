@@ -18,7 +18,7 @@
 //  the activate handler to clear the old cache.
 // ============================================================
 
-const CACHE_VERSION  = '__APP_HASH__';  // auto-set by build.py; never edit manually
+const CACHE_VERSION  = '__CACHE_VERSION__';  // auto-set by build.py; never edit manually
 const STATIC_CACHE   = `pdfree-static-${CACHE_VERSION}`;
 const CDN_CACHE      = `pdfree-cdn-${CACHE_VERSION}`;
 const ALL_CACHES     = [STATIC_CACHE, CDN_CACHE];
@@ -202,21 +202,29 @@ async function navigateFallback(request) {
   const cache  = await caches.open(STATIC_CACHE);
   const cached = await cache.match(request);
 
+  // A cached response that came from a redirect has response.url !== the cache
+  // key. Serving it for a navigate event causes ERR_FAILED in Chrome because
+  // the browser sees the response URL doesn't match the navigation URL.
+  // Treat such entries as a cache miss and always go to the network.
+  const validCached = (cached && cached.url === request.url) ? cached : undefined;
+
   // Background fetch — updates cache silently; always resolves to a Response.
   const fetchPromise = fetch(request.url).then(response => {
-    if (response.ok) cache.put(request.url, response.clone());
+    // Don't cache a response whose URL differs from what we fetched — it arrived
+    // via a redirect and would cause ERR_FAILED when served for navigation later.
+    if (response.ok && response.url === request.url) cache.put(request.url, response.clone());
     return response;
   }).catch(async () => {
     // Network failed: cached version → SPA shell → branded offline page.
-    return cached
+    return validCached
         || await caches.match('/index.html')
         || await caches.match('/')
         || await caches.match('/offline.html')
         || new Response('Offline', { status: 503 });
   });
 
-  // Return cached immediately (instant load); otherwise wait for network.
-  return cached ?? fetchPromise;
+  // Return valid cache immediately (instant load); otherwise wait for network.
+  return validCached ?? fetchPromise;
 }
 
 async function cacheFirst(request) {

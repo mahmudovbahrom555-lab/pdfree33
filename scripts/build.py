@@ -70,8 +70,18 @@ def _md5_short(path, length=8):
 
 
 def _compute_hashes():
+    app_hash = _md5_short(os.path.join(ROOT, 'js', 'app.js'))
+    # cache_version combines app.js + sw.js so the SW cache is busted whenever
+    # either file changes — not just when app.js changes.
+    combined = b''
+    for path in [os.path.join(ROOT, 'js', 'app.js'), os.path.join(ROOT, 'sw.js')]:
+        if os.path.exists(path):
+            with open(path, 'rb') as f:
+                combined += f.read()
+    cache_version = hashlib.md5(combined).hexdigest()[:8]
     return {
-        'app':           _md5_short(os.path.join(ROOT, 'js', 'app.js')),
+        'app':           app_hash,
+        'cache_version': cache_version,
         'worker':        _md5_short(os.path.join(ROOT, 'js', 'worker.js')),
         'components_css': _md5_short(os.path.join(ROOT, 'css', 'components.css')),
     }
@@ -323,9 +333,10 @@ def _inject_hashes(hashes, out_dir):
         os.path.join(out_dir, 'js', 'processor.js'),
     ]
     replacements = {
-        '__APP_HASH__':    hashes['app'],
-        '__WORKER_HASH__': hashes['worker'],
-        '__CSS_HASH__':    hashes['components_css'],
+        '__APP_HASH__':      hashes['app'],
+        '__CACHE_VERSION__': hashes['cache_version'],
+        '__WORKER_HASH__':   hashes['worker'],
+        '__CSS_HASH__':      hashes['components_css'],
     }
     for path in targets:
         if not os.path.exists(path):
