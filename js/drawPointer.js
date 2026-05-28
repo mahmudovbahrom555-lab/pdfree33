@@ -23,7 +23,7 @@ import {
   // document
   getCurrentPage, getPageCommandsRef, getEffectiveCommands,
   // actions
-  clearRedoForCurrentPage, redrawPage, setColor, activatePrevTool,
+  clearRedoForCurrentPage, redrawPage, setColor, activatePrevTool, setSelectedId,
   // constants
   HIGHLIGHT_OPACITY,
 } from './drawUI.js';
@@ -38,6 +38,14 @@ let _textCallback = null;   // (text: string|null) => void
 let _fontSize     = 16;     // independent of widthSlider; persists between text clicks
 let _textCmdId    = 0;      // monotonic ID for text commands — required for drag-to-reposition
 
+// ── Text selection state ───────────────────────────────────────
+let _selectedTextId  = null;   // id of selected text annotation — UI state only
+let _pendingTextHit  = null;   // { cmd, startX, startY, clientX, clientY } — awaiting tap vs drag
+let _longPressTimer  = 0;      // setTimeout id for long-press detection
+let _selToolbar      = null;   // #textSelectToolbar element
+let _selColorPicker  = null;   // #selColorPicker element
+const SEL_SIZES = [8, 10, 12, 14, 16, 18, 20, 24, 28, 32, 36, 48, 60, 72];
+
 // ── Public API ─────────────────────────────────────────────────
 
 export function initPointer() {
@@ -48,6 +56,18 @@ export function initPointer() {
   canvas.addEventListener('pointercancel', _onUp);
 
   _initTextInput();
+  _initSelToolbar();
+
+  // Keyboard: Delete/Backspace deletes selected text; Escape dismisses selection
+  document.addEventListener('keydown', (e) => {
+    if (!_selectedTextId) return;
+    if (e.key === 'Delete' || e.key === 'Backspace') {
+      e.preventDefault();
+      _deleteSelected();
+    } else if (e.key === 'Escape') {
+      _dismissSelection();
+    }
+  });
 }
 
 // ── Text input helpers ─────────────────────────────────────────
@@ -143,7 +163,94 @@ function _finalizeTextInput(cancel) {
   }
 }
 
-// Вызывается из toolRegistrations hide() — сбрасывает in-flight stroke и RAF
+// ── Text selection helpers ─────────────────────────────────────
+
+function _initSelToolbar() {
+  _selToolbar     = document.getElementById('textSelectToolbar');
+  _selColorPicker = document.getElementById('selColorPicker');
+  const sizeUp    = document.getElementById('selSizeUp');
+  const sizeDown  = document.getElementById('selSizeDown');
+  const delBtn    = document.getElementById('selDelete');
+
+  _selColorPicker.addEventListener('input', () => {
+    if (!_selectedTextId) return;
+    clearRedoForCurrentPage();
+    _pushCommand({ type: 'style', targetId: _selectedTextId, patch: { color: _selColorPicker.value } });
+    redrawPage();
+  });
+
+  const _stepSize = (delta) => {
+    if (!_selectedTextId) return;
+    const eff = getEffectiveCommands().find(c => c.id === _selectedTextId);
+    if (!eff) return;
+    let idx = SEL_SIZES.indexOf(eff.size ?? 16);
+    if (idx === -1) { idx = SEL_SIZES.findIndex(s => s >= (eff.size ?? 16)); }
+    if (idx === -1) idx = SEL_SIZES.length - 1;
+    const next = SEL_SIZES[Math.max(0, Math.min(SEL_SIZES.length - 1, idx + delta))];
+    clearRedoForCurrentPage();
+    _pushCommand({ type: 'style', targetId: _selectedTextId, patch: { size: next } });
+    redrawPage();
+  };
+
+  sizeUp  .addEventListener('pointerdown', (e) => { e.stopPropagation(); _stepSize(+1); });
+  sizeDown.addEventListener('pointerdown', (e) => { e.stopPropagation(); _stepSize(-1); });
+  delBtn  .addEventListener('pointerdown', (e) => { e.stopPropagation(); _deleteSelected(); });
+}
+
+function _selectText(cmd, clientX, clientY) {
+  _selectedTextId = cmd.id;
+  setSelectedId(cmd.id);
+  _showSelToolbar(cmd, clientX, clientY);
+  redrawPage();
+}
+
+function _dismissSelection() {
+  if (_longPressTimer) { clearTimeout(_longPressTimer); _longPressTimer = 0; }
+  _pendingTextHit = null;
+  const hadSelection = !!_selectedTextId;
+  _selectedTextId = null;
+  setSelectedId(null);
+  if (_selToolbar) _selToolbar.style.display = 'none';
+  if (hadSelection) redrawPage();  // skip redraw if nothing was selected
+}
+
+function _deleteSelected() {
+  if (!_selectedTextId) return;
+  clearRedoForCurrentPage();
+  _pushCommand({ type: 'delete', targetId: _selectedTextId });
+  _dismissSelection();
+}
+
+function _showSelToolbar(cmd, screenX, screenY) {
+  // Position toolbar just below the text in screen coordinates
+  const canvas  = getDrawCanvas();
+  const r       = canvas.getBoundingClientRect();
+  const scaleX  = r.width  / canvas.width;
+  const scaleY  = r.height / canvas.height;
+  const size    = cmd.size ?? 16;
+  const lines   = (cmd.text ?? '').replace(/\n+$/, '').split('\n');
+  const h       = size * 1.25 * lines.length;
+  const preferX = r.left + cmd.x * scaleX;
+  const preferY = r.top  + (cmd.y + h) * scaleY + 8;
+
+  _selToolbar.style.visibility = 'hidden';
+  _selToolbar.style.display    = 'flex';
+  const ow = _selToolbar.offsetWidth;
+  const oh = _selToolbar.offsetHeight;
+  const margin = 8;
+  _selToolbar.style.left       = Math.max(margin, Math.min(preferX, window.innerWidth  - ow - margin)) + 'px';
+  _selToolbar.style.top        = Math.max(margin, Math.min(preferY, window.innerHeight - oh - margin)) + 'px';
+  _selToolbar.style.visibility = '';
+
+  // Sync color picker to effective color of selected text
+  const eff = getEffectiveCommands().find(c => c.id === cmd.id);
+  if (eff) {
+    const color = eff.color ?? '#000000';
+    if (/^#[0-9a-f]{6}$/i.test(color)) _selColorPicker.value = color;
+  }
+}
+
+// ── Вызывается из toolRegistrations hide() — сбрасывает in-flight stroke и RAF ──
 export function resetPointer() {
   _current = null;
   if (_rafId) { cancelAnimationFrame(_rafId); _rafId = 0; }
@@ -183,14 +290,20 @@ function _onDown(e) {
     return;
   }
 
-  // Text: tap existing text → drag it; tap empty area → place new text
+  // Dismiss selection on any canvas tap (toolbar buttons use stopPropagation to prevent this)
+  if (_selectedTextId) _dismissSelection();
+
+  // Text: quick-tap existing text = select; drag existing text = move; tap empty area = place new
   if (tool === 'text') {
     const hit = _hitTestText(x, y);
     if (hit) {
-      clearRedoForCurrentPage();
-      document.body.style.cursor = 'grabbing';
-      _current = { type: 'text-drag', cmd: hit,
-                   x: hit.x, y: hit.y, _ox: x - hit.x, _oy: y - hit.y };
+      // Hold: resolve quick-tap vs drag in _onMove (threshold 8px) or _onUp (quick release)
+      _pendingTextHit = { cmd: hit, startX: x, startY: y, clientX: e.clientX, clientY: e.clientY };
+      _longPressTimer = setTimeout(() => {
+        _longPressTimer = 0;
+        _pendingTextHit = null;
+        _selectText(hit, e.clientX, e.clientY);
+      }, 350);
       return;
     }
     _showTextInput(e.clientX, e.clientY, (text) => {
@@ -226,6 +339,26 @@ function _onDown(e) {
 // ── Pointer move ───────────────────────────────────────────────
 
 function _onMove(e) {
+  // Handle pending text hit: if finger moved beyond threshold, promote to drag
+  if (_pendingTextHit) {
+    e.preventDefault();
+    const { x, y } = _coords(e);
+    if (Math.abs(x - _pendingTextHit.startX) > 8 || Math.abs(y - _pendingTextHit.startY) > 8) {
+      if (_longPressTimer) { clearTimeout(_longPressTimer); _longPressTimer = 0; }
+      const h = _pendingTextHit;
+      _pendingTextHit = null;
+      if (_selectedTextId) _dismissSelection();  // clear stale outline from another text
+      clearRedoForCurrentPage();
+      document.body.style.cursor = 'grabbing';
+      _current = { type: 'text-drag', cmd: h.cmd,
+                   x: h.cmd.x, y: h.cmd.y, _ox: h.startX - h.cmd.x, _oy: h.startY - h.cmd.y };
+      _current.x = x - _current._ox;
+      _current.y = y - _current._oy;
+      if (!_rafId) _rafId = requestAnimationFrame(() => { _rafId = 0; if (_current) redrawPage(_current); });
+    }
+    return;
+  }
+
   if (!_current) return;
   e.preventDefault();
 
@@ -270,6 +403,19 @@ function _onMove(e) {
 // ── Pointer up (also handles pointercancel via initPointer listener) ───────
 
 function _onUp(e) {
+  // Quick-tap on text (no drag in _onMove) → select it; pointercancel also clears pending state
+  if (_pendingTextHit) {
+    e.preventDefault();
+    if (_longPressTimer) { clearTimeout(_longPressTimer); _longPressTimer = 0; }
+    const h = _pendingTextHit;   // snapshot before clearing state
+    _pendingTextHit = null;
+    document.body.style.cursor = '';
+    const c = getDrawCanvas();
+    if (c.hasPointerCapture?.(e.pointerId)) c.releasePointerCapture(e.pointerId);
+    _selectText(h.cmd, h.clientX, h.clientY);
+    return;
+  }
+
   if (!_current) return;
   e.preventDefault();
 

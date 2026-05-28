@@ -38,6 +38,7 @@ let _activeTool   = 'pen';
 let _prevTool     = 'pen';   // tool before eyedropper — for auto-return
 let _color        = '#e53e3e';
 let _width        = 3;
+let _selectedId   = null;    // UI state only — selected text id; never stored as command
 
 // DOM refs — filled by initDraw()
 let _pdfCanvas, _drawCanvas, _canvasLoading;
@@ -112,7 +113,8 @@ export function getPdfCanvas()       { return _pdfCanvas; }
 export function getCurrentPage()     { return _currentPage; }
 export function getPageCommandsRef()   { return _pageCommands; }
 // Returns commands for current page with move-overrides applied — use for hit-testing and rendering.
-export function getEffectiveCommands() { return _applyMoves(_pageCommands.get(_currentPage) ?? []); }
+export function getEffectiveCommands() { return _resolveScene(_pageCommands.get(_currentPage) ?? []); }
+export function setSelectedId(id)      { _selectedId = id; }
 export function getRedoStackRef()    { return _redoStack; }
 export function getOriginalBuffer()  { return _originalBuf; }
 export function getPageCount()       { return _pdfJsDoc ? _pdfJsDoc.numPages : 0; }
@@ -263,30 +265,68 @@ async function _renderPage(pageNum) {
   }
 }
 
-// Applies the latest 'move' override for each targeted text command.
-// Returns a clean array: move-commands removed, targets updated with new position.
-// Fast path when no moves exist (99% of pages) — skips map lookups and cloning.
-function _applyMoves(cmds) {
-  const hasMoves = cmds.some(c => c.type === 'move');
-  if (!hasMoves) return cmds;
-  const pos = new Map();
-  cmds.forEach(c => { if (c.type === 'move') pos.set(c.targetId, { x: c.x, y: c.y }); });
+// Resolves the effective scene from raw command history.
+// Applies position (move), style (color/size/…), and delete overrides in one pass.
+// Fast path when no overrides exist — avoids all allocations on clean pages.
+function _resolveScene(cmds) {
+  const hasOverrides = cmds.some(
+    c => c.type === 'move' || c.type === 'style' || c.type === 'delete'
+  );
+  if (!hasOverrides) return cmds;
+  const deleted = new Set();
+  const pos     = new Map();   // id → { x, y }
+  const style   = new Map();   // id → merged patch (last style per id wins, partial ok)
+  cmds.forEach(c => {
+    if (c.type === 'delete') { deleted.add(c.targetId); return; }
+    if (c.type === 'move')   { pos.set(c.targetId, { x: c.x, y: c.y }); return; }
+    if (c.type === 'style')  { style.set(c.targetId, { ...style.get(c.targetId), ...c.patch }); }
+  });
   return cmds
-    .filter(c => c.type !== 'move')
-    .map(c => pos.has(c.id) ? { ...c, ...pos.get(c.id) } : c);
+    .filter(c => c.type !== 'move' && c.type !== 'style' && c.type !== 'delete' && !deleted.has(c.id))
+    .map(c => {
+      const p = pos.get(c.id)   ?? null;
+      const s = style.get(c.id) ?? null;
+      return (p || s) ? { ...c, ...p, ...s } : c;
+    });
+}
+
+// Draws a dashed selection outline around a text command using its effective bounds.
+// Always uses accent color — ignores text color to avoid invisible outlines on light text.
+function _drawSelectionOutline(ctx, cmd) {
+  const size   = cmd.size ?? 16;
+  const lines  = (cmd.text ?? '').replace(/\n+$/, '').split('\n');
+  ctx.save();
+  ctx.font     = `${cmd.fontWeight ?? 'normal'} ${size}px ${cmd.fontFamily ?? 'system-ui, sans-serif'}`;
+  const widths = lines.map(l => ctx.measureText(l).width);
+  const w      = widths.length ? Math.max(...widths) : 0;
+  const h      = size * 1.25 * lines.length;
+  const pad    = 5;
+  ctx.strokeStyle = '#2D7A4F';
+  ctx.lineWidth   = 1.5;
+  ctx.setLineDash([5, 3]);
+  ctx.beginPath();
+  ctx.roundRect(cmd.x - pad, cmd.y - pad, w + pad * 2, h + pad * 2, 3);
+  ctx.stroke();
+  ctx.restore();
 }
 
 // Clears draw canvas and replays all commands for the current page.
 // overlay — optional in-progress command rendered after history (live preview).
+// Render order: annotations → selection outline → live interaction overlay.
 function _redrawPage(overlay = null) {
   const ctx    = _drawCanvas.getContext('2d');
   ctx.clearRect(0, 0, _drawCanvas.width, _drawCanvas.height);
-  const cmds   = _applyMoves(_pageCommands.get(_currentPage) ?? []);
-  // During text drag: skip the dragged command, re-render it below at new position
+  const cmds   = _resolveScene(_pageCommands.get(_currentPage) ?? []);
+  // During text drag: skip dragged command, re-render below at new position
   const dragId = overlay?.type === 'text-drag' ? overlay.cmd.id : null;
   for (const cmd of cmds) {
     if (cmd.id === dragId) continue;
     renderCommand(ctx, cmd);
+  }
+  // Selection outline — after annotations, before live interaction
+  if (_selectedId) {
+    const sel = cmds.find(c => c.id === _selectedId);
+    if (sel) _drawSelectionOutline(ctx, sel);
   }
   if (overlay) {
     if (overlay.type === 'text-drag') {
@@ -522,7 +562,7 @@ async function _exportToPdf() {
 }
 
 async function _renderLayerToPng(cmds, w, h) {
-  const effective = _applyMoves(cmds);   // resolve move-overrides before export
+  const effective = _resolveScene(cmds);   // resolve move-overrides before export
   if (typeof OffscreenCanvas !== 'undefined') {
     const off = new OffscreenCanvas(w, h);
     const ctx = off.getContext('2d');

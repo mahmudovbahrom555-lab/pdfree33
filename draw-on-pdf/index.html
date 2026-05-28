@@ -311,6 +311,60 @@
     #textInputCancel { background: transparent; color: var(--text-secondary, #6b7280); }
     #textInputOk     { background: var(--accent, #2D7A4F); color: #fff; border-color: var(--accent, #2D7A4F); }
 
+    /* ── Text selection mini toolbar ────────────────────────── */
+    #textSelectToolbar {
+      position: fixed;
+      display: none;
+      z-index: 201;
+      background: var(--bg-card, #fff);
+      color: var(--text, #111);
+      border: 2px solid var(--accent, #2D7A4F);
+      border-radius: 6px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+      padding: 4px 6px;
+      max-width: calc(100vw - 24px);
+      overflow: hidden;
+      align-items: center;
+      gap: 4px;
+      contain: layout paint;
+    }
+    .sel-btn {
+      width: 32px;
+      height: 32px;
+      border: 1px solid var(--border, #e5e7eb);
+      border-radius: 4px;
+      background: none;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text, #111);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .sel-btn:hover  { background: var(--bg-secondary, #f5f5f5); }
+    .sel-btn:active { transform: scale(0.96); }
+    #selDelete      { color: #dc2626; border-color: #fecaca; }
+    #selDelete:hover { background: #fef2f2; }
+    #selColorPicker {
+      width: 32px;
+      height: 32px;
+      border: 2px solid var(--border, #e5e7eb);
+      border-radius: 4px;
+      padding: 2px;
+      cursor: pointer;
+      box-sizing: border-box;
+      background: transparent;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      flex-shrink: 0;
+    }
+    .sel-sep { width: 1px; height: 20px; background: var(--border, #e5e7eb); flex-shrink: 0; }
+
     /* ── Download button ─────────────────────────────────────── */
     #downloadPdfBtn {
       margin-top: 16px;
@@ -450,6 +504,16 @@
         <button type="button" id="textInputCancel">Cancel</button>
         <button type="button" id="textInputOk">OK</button>
       </div>
+    </div>
+
+    <!-- Text selection toolbar — shown on long-press of existing text annotation -->
+    <div id="textSelectToolbar" role="toolbar" aria-label="Text annotation options">
+      <input  type="color" id="selColorPicker" title="Change color" aria-label="Text color">
+      <div class="sel-sep" aria-hidden="true"></div>
+      <button type="button" class="sel-btn" id="selSizeDown" title="Smaller" aria-label="Decrease text size">A−</button>
+      <button type="button" class="sel-btn" id="selSizeUp"   title="Larger"  aria-label="Increase text size">A+</button>
+      <div class="sel-sep" aria-hidden="true"></div>
+      <button type="button" class="sel-btn" id="selDelete" title="Delete" aria-label="Delete text"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/><path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/></svg></button>
     </div>
 
     <!-- Editor (revealed by drawUI.js after file loads) -->
