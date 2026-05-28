@@ -227,18 +227,69 @@
       position: fixed;
       display: none;
       z-index: 200;
-      background: #fff;
+      background: var(--bg-card, #fff);
+      color: var(--text, #111);
       border: 2px solid var(--accent, #2D7A4F);
       border-radius: 6px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.18);
       padding: 8px;
+      min-width: 200px;
+      max-width: calc(100vw - 24px);
+      overflow: hidden;
+    }
+    .text-size-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+    .text-size-btn {
+      width: 28px;
+      height: 28px;
+      border: 1px solid var(--border, #e5e7eb);
+      border-radius: 4px;
+      background: none;
+      cursor: pointer;
+      font-weight: 700;
+      color: var(--text, #111);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .text-size-btn:hover { background: var(--bg-secondary, #f5f5f5); }
+    #textSizeLabel {
+      font-size: 12px;
+      min-width: 36px;
+      text-align: center;
+      color: var(--text-secondary, #6b7280);
     }
     #floatingTextInput {
       display: block;
-      border: none;
+      resize: none;
+      border: 1px solid var(--border, #e5e7eb);
+      border-radius: 4px;
       outline: none;
-      font-size: 15px;
-      width: 160px;
+      font-size: 16px;            /* 16px min — prevents iOS auto-zoom */
+      font-family: system-ui, sans-serif;
+      line-height: 1.25;          /* matches canvas lineHeight = size * 1.25 */
+      width: 180px;
+      height: 72px;
+      max-height: 160px;
+      overflow-y: auto;
+      padding: 4px 6px;
+      background: var(--bg-secondary, #f9f9f9);
+      color: var(--text, #111);
+      box-sizing: border-box;
+    }
+    #floatingTextInput:focus { border-color: var(--accent, #2D7A4F); }
+    .text-input-hint {
+      font-size: 11px;
+      color: var(--text-secondary, #9ca3af);
+      margin: 3px 0 0;
     }
     .text-input-actions {
       display: flex;
@@ -247,11 +298,18 @@
       margin-top: 6px;
     }
     .text-input-actions button {
-      padding: 2px 10px;
+      padding: 4px 12px;
       cursor: pointer;
       border-radius: 4px;
       border: 1px solid var(--border, #e5e7eb);
+      font-size: 13px;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      -webkit-user-select: none;
     }
+    #textInputCancel { background: transparent; color: var(--text-secondary, #6b7280); }
+    #textInputOk     { background: var(--accent, #2D7A4F); color: #fff; border-color: var(--accent, #2D7A4F); }
 
     /* ── Download button ─────────────────────────────────────── */
     #downloadPdfBtn {
@@ -380,10 +438,17 @@
 
     <!-- Floating text input — shown by text tool, hidden by default -->
     <div id="textInputOverlay">
-      <input type="text" id="floatingTextInput" placeholder="Type text…">
+      <div class="text-size-row">
+        <button type="button" class="text-size-btn" id="textSizeDown" title="Smaller" aria-label="Decrease font size">A−</button>
+        <span id="textSizeLabel" aria-live="polite">16px</span>
+        <button type="button" class="text-size-btn" id="textSizeUp"   title="Larger"  aria-label="Increase font size">A+</button>
+      </div>
+      <textarea id="floatingTextInput" rows="3" placeholder="Type text…" aria-label="Text input"
+        autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
+      <p class="text-input-hint">Enter — new line · Ctrl+Enter — confirm</p>
       <div class="text-input-actions">
-        <button id="textInputCancel">Cancel</button>
-        <button id="textInputOk">OK</button>
+        <button type="button" id="textInputCancel">Cancel</button>
+        <button type="button" id="textInputOk">OK</button>
       </div>
     </div>
 

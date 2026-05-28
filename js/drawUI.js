@@ -328,8 +328,20 @@ export function renderCommand(ctx, cmd) {
       break;
     }
     case 'text': {
-      ctx.font = `${cmd.size ?? 20}px sans-serif`;
-      ctx.fillText(cmd.text, cmd.x, cmd.y);
+      if (!cmd.text?.trim()) break;
+      ctx.save();
+      const size   = cmd.size ?? 16;
+      const weight = cmd.fontWeight ?? 'normal';
+      const family = cmd.fontFamily ?? 'system-ui, sans-serif';
+      ctx.font         = `${weight} ${size}px ${family}`;
+      ctx.fillStyle    = cmd.color ?? '#000';
+      ctx.textBaseline = 'top';    // text starts FROM click point, not below
+      ctx.textAlign    = 'left';   // explicit — prevents inherited canvas state
+      const lineHeight = size * 1.25;
+      cmd.text.replace(/\n+$/, '').split('\n').forEach((line, i) => {
+        ctx.fillText(line, cmd.x, cmd.y + i * lineHeight);
+      });
+      ctx.restore();
       break;
     }
     case 'highlight': {

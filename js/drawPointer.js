@@ -35,6 +35,7 @@ let _rafId   = 0;      // pending requestAnimationFrame id
 let _textOverlay  = null;
 let _textInput    = null;
 let _textCallback = null;   // (text: string|null) => void
+let _fontSize     = 16;     // independent of widthSlider; persists between text clicks
 
 // ── Public API ─────────────────────────────────────────────────
 
@@ -53,38 +54,91 @@ export function initPointer() {
 function _initTextInput() {
   _textOverlay = document.getElementById('textInputOverlay');
   _textInput   = document.getElementById('floatingTextInput');
-  const okBtn  = document.getElementById('textInputOk');
-  const cnBtn  = document.getElementById('textInputCancel');
+  const okBtn       = document.getElementById('textInputOk');
+  const cnBtn       = document.getElementById('textInputCancel');
+  const sizeUpBtn   = document.getElementById('textSizeUp');
+  const sizeDownBtn = document.getElementById('textSizeDown');
+  const sizeLabel   = document.getElementById('textSizeLabel');
 
   // stopPropagation prevents button clicks from reaching canvas _onDown
   okBtn.addEventListener('pointerdown', (e) => { e.stopPropagation(); _finalizeTextInput(false); });
   cnBtn.addEventListener('pointerdown', (e) => { e.stopPropagation(); _finalizeTextInput(true);  });
 
+  // A+ / A− step through preset sizes
+  const SIZES = [8, 10, 12, 14, 16, 18, 20, 24, 28, 32, 36, 48, 60, 72];
+  const _updateSize = (delta) => {
+    let idx = SIZES.indexOf(_fontSize);
+    if (idx === -1) {
+      idx = SIZES.findIndex(s => s >= _fontSize);
+      if (idx === -1) idx = SIZES.length - 1;
+    }
+    _fontSize = SIZES[Math.max(0, Math.min(SIZES.length - 1, idx + delta))];
+    sizeLabel.textContent = _fontSize + 'px';
+  };
+  sizeUpBtn  .addEventListener('pointerdown', (e) => { e.stopPropagation(); _updateSize(+1); });
+  sizeDownBtn.addEventListener('pointerdown', (e) => { e.stopPropagation(); _updateSize(-1); });
+
+  // textarea: Enter = newline, Ctrl/Shift+Enter = confirm, Escape = cancel
   _textInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter')  { e.preventDefault(); _finalizeTextInput(false); }
-    if (e.key === 'Escape') { _finalizeTextInput(true); }
+    if (e.key === 'Escape') { _finalizeTextInput(true); return; }
+    if (e.key === 'Enter' && (e.ctrlKey || e.metaKey || e.shiftKey)) {
+      e.preventDefault();
+      _finalizeTextInput(false);
+    }
+    // plain Enter falls through to textarea default (inserts newline)
   });
 }
 
 function _showTextInput(screenX, screenY, callback) {
   _textCallback = callback;
   _textInput.value = '';
-  _textOverlay.style.left    = screenX + 'px';
-  _textOverlay.style.top     = screenY + 'px';
-  _textOverlay.style.display = 'block';
-  // Defer focus: browser needs a tick after pointer event before focus works reliably
-  setTimeout(() => _textInput.focus(), 0);
-  // Block canvas during text entry so accidental pointer moves don't draw
+
+  // Measure overlay size before painting (visibility:hidden avoids flash)
+  _textOverlay.style.visibility = 'hidden';
+  _textOverlay.style.display    = 'block';
+  const ow = _textOverlay.offsetWidth;
+  const oh = _textOverlay.offsetHeight;
+
+  // Clamp to viewport so overlay never hides behind screen edges
+  const margin = 8;
+  const left = Math.max(margin, Math.min(screenX, window.innerWidth  - ow - margin));
+  const top  = Math.max(margin, Math.min(screenY, window.innerHeight - oh - margin));
+  _textOverlay.style.left       = left + 'px';
+  _textOverlay.style.top        = top  + 'px';
+  _textOverlay.style.visibility = '';
+
+  // Remove-before-add prevents duplicate listeners on rapid open/close
+  window.visualViewport?.removeEventListener('resize', _onViewportResize);
+  window.visualViewport?.addEventListener('resize', _onViewportResize);
+
   getDrawCanvas().style.pointerEvents = 'none';
+  setTimeout(() => _textInput.focus(), 0);
+}
+
+function _onViewportResize() {
+  if (!window.visualViewport || _textOverlay.style.display === 'none') return;
+  const margin   = 8;
+  const vvBottom = window.visualViewport.offsetTop + window.visualViewport.height;
+  const oh       = _textOverlay.offsetHeight;
+  const curTop   = parseInt(_textOverlay.style.top) || 0;
+  if (curTop + oh > vvBottom - margin) {
+    _textOverlay.style.top = Math.max(margin, vvBottom - oh - margin) + 'px';
+  }
 }
 
 function _finalizeTextInput(cancel) {
   _textOverlay.style.display = 'none';
+  _textOverlay.style.left    = '';
+  _textOverlay.style.top     = '';
+  _textInput.blur();   // dismiss mobile virtual keyboard
+  window.visualViewport?.removeEventListener('resize', _onViewportResize);
   getDrawCanvas().style.pointerEvents = '';
   if (_textCallback) {
     const cb  = _textCallback;
     _textCallback = null;
-    cb(cancel ? null : _textInput.value.trim());
+    // trim only trailing newlines — preserve intentional leading spaces / indentation
+    const text = _textInput.value.replace(/\n+$/, '');
+    cb(cancel ? null : text);
   }
 }
 
@@ -133,8 +187,11 @@ function _onDown(e) {
     _showTextInput(e.clientX, e.clientY, (text) => {
       if (!text) return;
       clearRedoForCurrentPage();
-      const size = Math.max(12, getWidth() * 6);
-      _pushCommand({ type: 'text', x, y, text, color: getColor(), size });
+      _pushCommand({
+        type: 'text', x, y, text,
+        color: getColor(), size: _fontSize,
+        fontWeight: 'normal', fontFamily: 'system-ui, sans-serif',
+      });
       redrawPage();
     });
     return;
@@ -171,8 +228,13 @@ function _onMove(e) {
     if (Math.hypot(x - last[0], y - last[1]) < 2) return;
     _current.points.push([x, y]);
   } else if (type === 'arrow' || type === 'line') {
-    _current.x2 = x;
-    _current.y2 = y;
+    const SNAP  = 15;
+    const adx   = Math.abs(x - _current.x1);
+    const ady   = Math.abs(y - _current.y1);
+    const snapX = adx < SNAP && adx < ady;   // snap to vertical axis
+    const snapY = ady < SNAP && ady < adx;   // snap to horizontal axis
+    _current.x2 = snapX ? _current.x1 : x;
+    _current.y2 = snapY ? _current.y1 : y;
   } else if (type === 'rect' || type === 'highlight') {
     _current.x = Math.min(_current._ox, x);
     _current.y = Math.min(_current._oy, y);
