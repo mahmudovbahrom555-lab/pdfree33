@@ -59,6 +59,44 @@ export function initDraw() {
   _bindToolbar();
   _bindNavigation();
   _downloadBtn.addEventListener('click', _exportToPdf);
+  _initFab();
+}
+
+function _initFab() {
+  const fab     = id('fabStack');
+  const fabUp   = id('fabUp');
+  const fabDown = id('fabDown');
+  if (!fab) return;
+
+  function _updateEdgeButtons() {
+    const scrollY   = window.scrollY;
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    fabUp  ?.classList.toggle('fab-edge-hidden', scrollY < 100);
+    fabDown?.classList.toggle('fab-edge-hidden', maxScroll > 0 && scrollY > maxScroll - 100);
+  }
+
+  // Scroll: hide FAB while scrolling; update edge buttons on every event
+  // so ↑/↓ are correct the moment FAB reappears after scroll stops
+  let _scrollTimer = 0;
+  window.addEventListener('scroll', () => {
+    if (!fab.classList.contains('is-hidden')) fab.classList.add('is-hidden');
+    _updateEdgeButtons();
+    clearTimeout(_scrollTimer);
+    _scrollTimer = setTimeout(() => fab.classList.remove('is-hidden'), 600);
+  }, { passive: true });
+
+  // Drawing: hide during pointer-on-canvas; restore on release anywhere on window
+  _drawCanvas.addEventListener('pointerdown', () => fab.classList.add('is-hidden'));
+  window.addEventListener('pointerup',     () => fab.classList.remove('is-hidden'));
+  window.addEventListener('pointercancel', () => fab.classList.remove('is-hidden'));
+
+  // ↑ / ↓ smooth-scroll 85% of viewport — feels like reading assist, not teleport
+  fabUp  ?.addEventListener('click', () =>
+    window.scrollBy({ top: -(window.innerHeight * 0.85), behavior: 'smooth' }));
+  fabDown?.addEventListener('click', () =>
+    window.scrollBy({ top:   window.innerHeight * 0.85,  behavior: 'smooth' }));
+
+  _updateEdgeButtons();   // set correct initial state
 }
 
 export async function loadPdfFile(file) {
