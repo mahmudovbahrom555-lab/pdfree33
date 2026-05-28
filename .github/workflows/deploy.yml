@@ -41,6 +41,12 @@ jobs:
       - name: Lint JavaScript
         run: npm run lint -- --quiet
 
+      - name: Guard — no conflicting wrangler configs
+        run: |
+          for f in wrangler.jsonc wrangler.json; do
+            test ! -f "$f" || { echo "ERROR: $f found — remove it to avoid config priority conflicts"; exit 1; }
+          done
+
       - name: Verify SSG output (redirect targets must exist in dist)
         run: |
           for page in add-page-numbers-to-pdf merge-large-pdf-files compress-large-pdf-free merge-pdf-files-into-one; do

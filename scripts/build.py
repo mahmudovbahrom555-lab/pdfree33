@@ -51,7 +51,8 @@ SKIP_DIRS = {
     'annotate', 'pagenum-pdf',
 }
 SKIP_FILES = {
-    'wrangler.toml', '.assetsignore', 'eslint.config.js',
+    'wrangler.toml', 'wrangler.jsonc', 'wrangler.json',  # deployment configs — never serve as static
+    '.assetsignore', 'eslint.config.js',
     'package-lock.json', '.gitignore', 'vercel.json',
     'CONTRIBUTING.md', 'LICENSE', 'README.md',
     '3c51839cdd6944c79259fdf6a0c383cc.txt',
