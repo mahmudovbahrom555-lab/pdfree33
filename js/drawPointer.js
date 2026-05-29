@@ -571,21 +571,20 @@ function _onMove(e) {
 // ── Pointer up (also handles pointercancel via initPointer listener) ───────
 
 function _onUp(e) {
-  // Quick-tap on text (no drag in _onMove) → select it; pointercancel also clears pending state
   if (_pendingTextHit) {
     e.preventDefault();
     if (_longPressTimer) { clearTimeout(_longPressTimer); _longPressTimer = 0; }
-    const h = _pendingTextHit;   // snapshot before clearing state
+    const h = _pendingTextHit;
     _pendingTextHit = null;
     document.body.style.cursor = '';
     const c = getDrawCanvas();
     if (c.hasPointerCapture?.(e.pointerId)) c.releasePointerCapture(e.pointerId);
+    if (e.type === 'pointercancel') return;   // system gesture cancelled — clear state, don't select
     _selectText(h.cmd, h.clientX, h.clientY);
     return;
   }
 
   if (!_current) return;
-  e.preventDefault();
 
   // Always reset — covers text-drag and pointercancel paths
   document.body.style.cursor = '';
@@ -598,6 +597,15 @@ function _onUp(e) {
 
   // Отменяем pending RAF — финальный redraw делаем синхронно ниже
   if (_rafId) { cancelAnimationFrame(_rafId); _rafId = 0; }
+
+  // pointercancel: system interrupted gesture — discard in-progress stroke without committing
+  if (e.type === 'pointercancel') {
+    _current = null;
+    redrawPage();
+    return;
+  }
+
+  e.preventDefault();
 
   // Text drag: commit a 'move' command if position actually changed; Undo pops it for free
   if (_current.type === 'text-drag') {
