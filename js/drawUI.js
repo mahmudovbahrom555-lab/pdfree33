@@ -315,11 +315,11 @@ function _resolveScene(cmds) {
   );
   if (!hasOverrides) return cmds;
   const deleted = new Set();
-  const pos     = new Map();   // id → { x, y }
+  const pos     = new Map();   // id → coordinate patch ({ x,y } for text; { x1,y1,x2,y2 } for shapes)
   const style   = new Map();   // id → merged patch (last style per id wins, partial ok)
   cmds.forEach(c => {
     if (c.type === 'delete') { deleted.add(c.targetId); return; }
-    if (c.type === 'move')   { pos.set(c.targetId, { x: c.x, y: c.y }); return; }
+    if (c.type === 'move')   { const { type: _t, targetId, ...coords } = c; pos.set(targetId, coords); return; }
     if (c.type === 'style')  { style.set(c.targetId, { ...style.get(c.targetId), ...c.patch }); }
   });
   return cmds
@@ -358,8 +358,9 @@ function _redrawPage(overlay = null) {
   const ctx    = _drawCanvas.getContext('2d');
   ctx.clearRect(0, 0, _drawCanvas.width, _drawCanvas.height);
   const cmds   = _resolveScene(_pageCommands.get(_currentPage) ?? []);
-  // During text drag: skip dragged command, re-render below at new position
-  const dragId = overlay?.type === 'text-drag' ? overlay.cmd.id : null;
+  // During drag: skip the dragged command, re-render below at new position
+  const dragId = (overlay?.type === 'text-drag' || overlay?.type === 'shape-drag')
+    ? overlay.cmd.id : null;
   for (const cmd of cmds) {
     if (cmd.id === dragId) continue;
     renderCommand(ctx, cmd);
@@ -372,10 +373,23 @@ function _redrawPage(overlay = null) {
   if (overlay) {
     if (overlay.type === 'text-drag') {
       renderCommand(ctx, { ...overlay.cmd, x: overlay.x, y: overlay.y });
+    } else if (overlay.type === 'shape-drag') {
+      const { cmd, dx = 0, dy = 0 } = overlay;
+      renderCommand(ctx, { ...cmd, x1: cmd.x1 + dx, y1: cmd.y1 + dy, x2: cmd.x2 + dx, y2: cmd.y2 + dy });
     } else {
       renderCommand(ctx, overlay);
     }
   }
+}
+
+// Returns black or white depending on background luminance (W3C approximation).
+// Input type="color" always produces #rrggbb; falls back to white for unexpected formats.
+function _contrastText(hex) {
+  if (!/^#[0-9a-f]{6}$/i.test(hex)) return '#ffffff';
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return (r * 299 + g * 587 + b * 114) / 1000 > 128 ? '#000000' : '#ffffff';
 }
 
 // ── Command renderer ───────────────────────────────────────────
@@ -401,12 +415,19 @@ export function renderCommand(ctx, cmd) {
       break;
     }
     case 'arrow': {
-      const dx = cmd.x2 - cmd.x1, dy = cmd.y2 - cmd.y1;
-      if (Math.hypot(dx, dy) < 5) break;
+      const dx   = cmd.x2 - cmd.x1, dy = cmd.y2 - cmd.y1;
+      const dist = Math.hypot(dx, dy);
+      if (dist < 5) break;
       const angle = Math.atan2(dy, dx);
       const head  = Math.max(12, cmd.width * 4);
+      // Circle radius at (x1,y1) for numbered arrows
+      const r = cmd.number != null ? Math.max(10, cmd.width * 3.5) : 0;
+      // Clamp offset to (dist-2) so the line never starts past the arrowhead on very short arrows
+      const lineOffset = r > 0 ? Math.min(r, dist - 2) : 0;
+      const lineX1 = cmd.x1 + lineOffset * Math.cos(angle);
+      const lineY1 = cmd.y1 + lineOffset * Math.sin(angle);
       ctx.beginPath();
-      ctx.moveTo(cmd.x1, cmd.y1);
+      ctx.moveTo(lineX1, lineY1);
       ctx.lineTo(cmd.x2, cmd.y2);
       ctx.moveTo(cmd.x2, cmd.y2);
       ctx.lineTo(cmd.x2 - head * Math.cos(angle - Math.PI / 6),
@@ -415,6 +436,19 @@ export function renderCommand(ctx, cmd) {
       ctx.lineTo(cmd.x2 - head * Math.cos(angle + Math.PI / 6),
                  cmd.y2 - head * Math.sin(angle + Math.PI / 6));
       ctx.stroke();
+      if (r > 0) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(cmd.x1, cmd.y1, r, 0, Math.PI * 2);
+        ctx.fillStyle = cmd.color ?? '#e53e3e';
+        ctx.fill();
+        ctx.font          = `bold ${Math.round(r * 1.2)}px system-ui, sans-serif`;
+        ctx.fillStyle     = _contrastText(cmd.color ?? '#e53e3e');
+        ctx.textAlign     = 'center';
+        ctx.textBaseline  = 'middle';
+        ctx.fillText(String(cmd.number), cmd.x1, cmd.y1);
+        ctx.restore();
+      }
       break;
     }
     case 'line': {

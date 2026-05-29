@@ -37,6 +37,8 @@ let _textInput    = null;
 let _textCallback = null;   // (text: string|null) => void
 let _fontSize     = 16;     // independent of widthSlider; persists between text clicks
 let _textCmdId    = 0;      // monotonic ID for text commands — required for drag-to-reposition
+let _shapeCmdId   = 0;      // monotonic ID for numbered arrows — required for drag-to-reposition
+                            // TODO: restore from max existing arrow id after document load (needed for future persistence)
 
 // ── Mobile text sheet ─────────────────────────────────────────
 // DOM refs filled once in _initMobileSheet(); runtime fields via _resetMtsState().
@@ -487,19 +489,33 @@ function _onDown(e) {
     return;
   }
 
-  clearRedoForCurrentPage();
-
   if (tool === 'pen') {
+    clearRedoForCurrentPage();
     _current = { type: 'pen', points: [[x, y]], color: getColor(), width: getWidth() };
   } else if (tool === 'erase') {
+    clearRedoForCurrentPage();
     _current = { type: 'erase', points: [[x, y]], width: Math.max(20, getWidth() * 6) };
   } else if (tool === 'arrow' || tool === 'line') {
-    _current = { type: tool, x1: x, y1: y, x2: x, y2: y, color: getColor(), width: getWidth() };
+    const hit = tool === 'arrow' ? _hitTestArrow(x, y) : null;
+    if (hit) {
+      // Drag existing arrow — redo cleared in _onUp only if position actually changed
+      _current = { type: 'shape-drag', cmd: hit, startX: x, startY: y, dx: 0, dy: 0 };
+    } else if (tool === 'arrow') {
+      clearRedoForCurrentPage();
+      _current = { type: 'arrow', id: ++_shapeCmdId, number: _nextArrowNumber(),
+                   x1: x, y1: y, x2: x, y2: y, color: getColor(), width: getWidth() };
+    } else {
+      clearRedoForCurrentPage();
+      _current = { type: 'line', x1: x, y1: y, x2: x, y2: y, color: getColor(), width: getWidth() };
+    }
   } else if (tool === 'rect') {
+    clearRedoForCurrentPage();
     _current = { type: 'rect', _ox: x, _oy: y, x, y, w: 0, h: 0, color: getColor(), width: getWidth() };
   } else if (tool === 'highlight') {
+    clearRedoForCurrentPage();
     _current = { type: 'highlight', _ox: x, _oy: y, x, y, w: 0, h: 0, color: getColor(), opacity: HIGHLIGHT_OPACITY };
   } else if (tool === 'oval') {
+    clearRedoForCurrentPage();
     _current = { type: 'oval', _ox: x, _oy: y, x, y, rx: 0, ry: 0, color: getColor(), width: getWidth() };
   }
 }
@@ -558,6 +574,9 @@ function _onMove(e) {
   } else if (type === 'text-drag') {
     _current.x = x - _current._ox;
     _current.y = y - _current._oy;
+  } else if (type === 'shape-drag') {
+    _current.dx = x - _current.startX;
+    _current.dy = y - _current.startY;
   }
 
   // RAF batching: один render pass на animation frame, не на каждый pointermove
@@ -618,6 +637,20 @@ function _onUp(e) {
     return;
   }
 
+  // Shape drag (numbered arrows): commit absolute positions so Undo restores original coords
+  if (_current.type === 'shape-drag') {
+    const { cmd, dx, dy } = _current;
+    if (Math.hypot(dx, dy) >= 3) {
+      clearRedoForCurrentPage();
+      _pushCommand({ type: 'move', targetId: cmd.id,
+                     x1: cmd.x1 + dx, y1: cmd.y1 + dy,
+                     x2: cmd.x2 + dx, y2: cmd.y2 + dy });
+    }
+    _current = null;
+    redrawPage();
+    return;
+  }
+
   if (_isMeaningful(_current)) {
     const { type } = _current;
     let cmd;
@@ -653,6 +686,40 @@ function _isMeaningful(cmd) {
     case 'oval':   return cmd.rx >= 3 && cmd.ry >= 3;
     default:       return true;
   }
+}
+
+// ── Arrow hit-test and geometry ───────────────────────────────
+// Returns the topmost numbered arrow whose line or start-circle contains (x, y).
+// Only arrows with an id are returned — required for shape-drag move command.
+function _hitTestArrow(x, y) {
+  const cmds = getEffectiveCommands();
+  const pad  = _isTouchDevice() ? 20 : 10;
+  for (let i = cmds.length - 1; i >= 0; i--) {
+    const c = cmds[i];
+    if (c.type !== 'arrow' || c.id == null) continue;
+    // Hit the start circle first (larger target)
+    const r = Math.max(10, (c.width ?? 3) * 3.5) + 4;
+    if (Math.hypot(x - c.x1, y - c.y1) <= r) return c;
+    // Hit the shaft
+    if (_distToSegment(x, y, c.x1, c.y1, c.x2, c.y2) <= pad) return c;
+  }
+  return null;
+}
+
+function _distToSegment(px, py, ax, ay, bx, by) {
+  const dx = bx - ax, dy = by - ay;
+  const lenSq = dx * dx + dy * dy;
+  if (lenSq === 0) return Math.hypot(px - ax, py - ay);
+  const t = Math.max(0, Math.min(1, ((px - ax) * dx + (py - ay) * dy) / lenSq));
+  return Math.hypot(px - (ax + t * dx), py - (ay + t * dy));
+}
+
+// Returns the next sequential number for a numbered arrow on the current page.
+// Uses max(existing visible numbers) + 1 so deleted arrows leave a gap (no renumbering).
+function _nextArrowNumber() {
+  return getEffectiveCommands()
+    .filter(c => c.type === 'arrow' && c.number != null)
+    .reduce((m, c) => Math.max(m, c.number), 0) + 1;
 }
 
 // ── Text hit-test ──────────────────────────────────────────────
