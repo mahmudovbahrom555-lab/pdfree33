@@ -179,6 +179,9 @@ export function clearRedoForCurrentPage() {
   _redoStack.set(_currentPage, []);
 }
 
+export function undo() { _undo(); }
+export function redo() { _redo(); }
+
 // Called by toolRegistrations hide() — resets all state when switching away from draw-pdf.
 // toolRegistrations also calls resetPointer() from drawPointer.js (avoids circular import).
 export function resetDraw() {

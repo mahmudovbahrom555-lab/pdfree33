@@ -23,7 +23,7 @@ import {
   // document
   getCurrentPage, getPageCommandsRef, getEffectiveCommands,
   // actions
-  clearRedoForCurrentPage, redrawPage, setColor, activatePrevTool, setSelectedId,
+  clearRedoForCurrentPage, redrawPage, setColor, activatePrevTool, setSelectedId, undo, redo,
   // constants
   HIGHLIGHT_OPACITY,
 } from './drawUI.js';
@@ -78,17 +78,21 @@ export function initPointer() {
   _initTextInput();
   _initSelToolbar();
   _initMobileSheet();
-  _initMobileSheet();
 
-  // Keyboard: Delete/Backspace deletes selected text; Escape dismisses selection
   document.addEventListener('keydown', (e) => {
+    const tag = document.activeElement?.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+
+    const key = e.key.toLowerCase();
+    const mod = e.ctrlKey || e.metaKey;
+
+    if (mod && key === 'z' && e.shiftKey) { e.preventDefault(); redo(); return; }
+    if (mod && key === 'z')               { e.preventDefault(); undo(); return; }
+    if (mod && key === 'y')               { e.preventDefault(); redo(); return; }
+
     if (!_selectedTextId) return;
-    if (e.key === 'Delete' || e.key === 'Backspace') {
-      e.preventDefault();
-      _deleteSelected();
-    } else if (e.key === 'Escape') {
-      _dismissSelection();
-    }
+    if (key === 'delete' || key === 'backspace') { e.preventDefault(); _deleteSelected(); }
+    else if (key === 'escape')                   { _dismissSelection(); }
   });
 }
 
