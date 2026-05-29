@@ -210,9 +210,18 @@ async function navigateFallback(request) {
 
   // Background fetch — updates cache silently; always resolves to a Response.
   const fetchPromise = fetch(request.url).then(response => {
-    // Don't cache a response whose URL differs from what we fetched — it arrived
-    // via a redirect and would cause ERR_FAILED when served for navigation later.
-    if (response.ok && response.url === request.url) cache.put(request.url, response.clone());
+    if (response.ok && response.url === request.url) {
+      // Clean non-redirected response — cache and serve.
+      cache.put(request.url, response.clone());
+      return response;
+    }
+    // Server redirected us (stale CDN cache or intentional redirect).
+    // Returning a "redirected" Response directly to a navigate event causes
+    // ERR_FAILED in Chrome. Convert it to a proper 302 so Chrome follows it
+    // cleanly instead.
+    if (response.redirected && response.url) {
+      return Response.redirect(response.url, 302);
+    }
     return response;
   }).catch(async () => {
     // Network failed: cached version → SPA shell → branded offline page.
