@@ -514,7 +514,7 @@ function _onDown(e) {
     _current = { type: 'pen', points: [[x, y]], color: getColor(), width: getWidth() };
   } else if (tool === 'marker') {
     clearRedoForCurrentPage();
-    _current = { type: 'marker', id: ++_shapeCmdId, points: [[x, y]], color: getColor(), width: Math.max(6, getWidth() * 3), opacity: MARKER_OPACITY, comment: '' };
+    _current = { type: 'marker', id: ++_shapeCmdId, points: [[x, y]], color: getColor(), width: Math.max(6, getWidth() * 3), opacity: MARKER_OPACITY };
   } else if (tool === 'erase') {
     clearRedoForCurrentPage();
     _current = { type: 'erase', points: [[x, y]], width: Math.max(20, getWidth() * 6) };
@@ -684,6 +684,7 @@ function _onUp(e) {
     let cmd;
     if (type === 'pen' || type === 'erase' || type === 'marker') {
       cmd = { ..._current, points: _current.points.slice() };
+      if (type === 'marker') cmd.comment = '';   // icon appears only after stroke is committed
     } else {
       const { _ox, _oy, ...rest } = _current;
       cmd = type === 'highlight' ? _buildHighlightCmd(rest) : rest;
