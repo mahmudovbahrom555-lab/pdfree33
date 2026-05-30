@@ -48,7 +48,7 @@ export function hideFillOptions() {
   const el = id('fillOptions');
   if (el) { el.style.display = 'none'; el.innerHTML = ''; }
   _closeSigPad();
-  _fields = []; _values = {}; _draftKey = null; _sigImages = {}; _loading = false; _eventsBound = false; _generation = 0;
+  _fields = []; _values = {}; _draftKey = null; _sigImages = {}; _loading = false; _eventsBound = false; _generation++;
 }
 
 export function getFillParams() {
