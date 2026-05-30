@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>pdfree.io — Strategic Market Research Report, May 2026</title>
+<style>
+body{font-family:Arial,sans-serif;max-width:900px;margin:40px auto;line-height:1.6}
+table{border-collapse:collapse;width:100%}
+td,th{border:1px solid #ccc;padding:8px;text-align:left}
+th{background:#f5f5f5}
+h1{color:#2D7A4F}
+h2{color:#333;border-bottom:2px solid #2D7A4F;padding-bottom:6px}
+h3{color:#555}
+.meta{color:#666;font-size:0.95em;margin-bottom:2em}
+.callout{background:#f0f8f3;border-left:4px solid #2D7A4F;padding:12px 16px;margin:16px 0}
+.warning{background:#fff8e1;border-left:4px solid #f9a825;padding:12px 16px;margin:16px 0}
+ul li{margin-bottom:4px}
+</style>
+</head>
+<body>
+
+<h1>pdfree.io — Strategic Market Research Report</h1>
+<div class="meta">
+  <strong>Date:</strong> May 2026 &nbsp;|&nbsp;
+  <strong>Prepared for:</strong> pdfree.io (solo developer, privacy-first in-browser PDF toolkit) &nbsp;|&nbsp;
+  <strong>Scope:</strong> Competitor analysis, user pain points, JTBD scoring, niche options, tool gaps, strategic roadmap
+</div>
+
+<!-- ============================================================ -->
+<h2>1. Executive Summary</h2>
+
+<div class="callout">
+<ul>
+  <li><strong>The privacy-first gap is real and growing.</strong> Major tools (iLovePDF at 229M monthly visits, Smallpdf at 50M) require all files to be uploaded to their servers. Corporate IT departments actively block them for compliance reasons. Healthcare, legal, and HR users are underserved, and no dominant brand owns this niche today.</li>
+  <li><strong>"Compress PDF" and "PDF to Word" are the two highest-volume entry points</strong> in the PDF tool space, with estimated 5M+ searches/month each. Any privacy-first tool that ranks on these keywords acquires a massive, monetizable audience at zero marginal cost.</li>
+  <li><strong>OCR in-browser is now technically feasible</strong> (Tesseract.js via WebAssembly) and represents the highest-value gap: high demand, high privacy sensitivity, and a strong differentiator that justifies both the privacy AND free positioning.</li>
+  <li><strong>Recommended niche:</strong> "The Private PDF Toolkit for Sensitive Work" — targeting lawyers, HR teams, medical staff, freelancers handling contracts, and privacy-conscious individuals. pdfree.io already has the architecture; the gap is messaging, tool completeness, and SEO.</li>
+  <li><strong>Top 3 tools to build next:</strong> (1) OCR / make-PDF-searchable (Tesseract.js, in-browser), (2) Flatten PDF forms (quick win, 1–2 days), (3) PDF to Word conversion (highest-volume keyword, plan for 60-day build).</li>
+</ul>
+</div>
+
+<!-- ============================================================ -->
+<h2>2. Competitor Landscape</h2>
+
+<h3>2.1 Competitor Comparison Table</h3>
+<table border="1">
+  <thead>
+    <tr>
+      <th>Competitor</th>
+      <th>Positioning</th>
+      <th>Upload Required?</th>
+      <th>Free Limits</th>
+      <th>Main Weakness</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>iLovePDF</strong></td>
+      <td>All-in-one, casual/prosumer</td>
+      <td>Yes (EU servers)</td>
+      <td>200MB/file; batch limited; 2-hr delete</td>
+      <td>All files uploaded; no BAA for HIPAA; corporate IT bans it; 229M visits but architectural privacy weakness</td>
+    </tr>
+    <tr>
+      <td><strong>Smallpdf</strong></td>
+      <td>Clean, professional, team-first</td>
+      <td>Yes (cloud-based)</td>
+      <td>~2 tasks/day on free; 5GB storage</td>
+      <td>Aggressively paywalled ($9–$15/mo Pro); heavy conversion funnel friction; users frequently complain about free limits</td>
+    </tr>
+    <tr>
+      <td><strong>Adobe Acrobat Online</strong></td>
+      <td>Enterprise gold standard</td>
+      <td>Yes (Adobe cloud; 5GB)</td>
+      <td>1 free task without account; 100MB; login required</td>
+      <td>Expensive ($15–23/mo); slow; overkill for simple tasks; account required frustrates casual users</td>
+    </tr>
+    <tr>
+      <td><strong>PDF24</strong></td>
+      <td>Free-forever all-in-one</td>
+      <td>Optional (desktop = local)</td>
+      <td>47+ tools; no limits claimed</td>
+      <td>Cluttered UI (47 tiles); desktop app feels dated; web version still uploads; not privacy-branded</td>
+    </tr>
+    <tr>
+      <td><strong>PDFgear</strong></td>
+      <td>Free, AI-powered, multi-platform</td>
+      <td>Mixed (desktop = local)</td>
+      <td>Fully free; no watermarks; no account needed</td>
+      <td>Web version requires upload for advanced features; AI co-pilot = cloud; OCR accuracy variable</td>
+    </tr>
+    <tr>
+      <td><strong>Xodo</strong></td>
+      <td>Cross-platform, annotation-focused</td>
+      <td>Yes (web version)</td>
+      <td>40+ tools free; OCR &amp; advanced text edit = paid ($9.99/mo)</td>
+      <td>Key tools paywalled; interface dated; upload required; premium required for OCR</td>
+    </tr>
+    <tr>
+      <td><strong>Sejda</strong></td>
+      <td>Clean editor, form-fill focused</td>
+      <td>Yes</td>
+      <td>3 tasks/hour; 50MB; 200 pages; OCR only paid</td>
+      <td>Heavy rate limiting; watermarks on some free tools; frustrating for regular users</td>
+    </tr>
+    <tr>
+      <td><strong>PDFescape</strong></td>
+      <td>Form-fill specialist, legacy</td>
+      <td>Yes</td>
+      <td>10MB / 100 pages; no text editing in free</td>
+      <td>Ancient UI; very restrictive 10MB limit; $6–9/mo for basic features; no longer competitive</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>2.2 What Nobody Does Well (Market Gaps)</h3>
+
+<p>No competitor has successfully claimed the <strong>"100% in-browser, privacy-first"</strong> identity as their primary brand promise at scale. PDF24 offers a local desktop app but does not strongly market it as a privacy solution. PDFgear processes locally for desktop but still uploads in its web version. LocalPDF.online and BentoPDF have emerged as niche competitors in this space but have minimal SEO presence and traffic.</p>
+
+<p>The key insight from iLovePDF's SEO playbook: they receive 229M monthly visitors by targeting verb+object keywords ("compress PDF," "merge PDF," "PDF to Word") with no-frills landing pages. <strong>Their architectural weakness — mandatory server upload — is pdfree.io's architectural strength.</strong> The opportunity is to rank on the same keywords with the additional differentiator of "zero upload, 100% private."</p>
+
+<p>Additional documented gaps:</p>
+<ul>
+  <li>No tool owns <strong>"HIPAA-safe PDF"</strong> with a clear, trustworthy brand at an accessible price point</li>
+  <li><strong>PDF comparison/diff</strong> without upload exists only at small-scale competitors (DiffGuru) or requires paid tools</li>
+  <li><strong>Flatten PDF forms</strong> is a relatively underserved keyword with low SEO competition</li>
+  <li><strong>E-signature with a legally valid audit trail</strong> remains paywalled across all free tools</li>
+  <li><strong>OCR without upload</strong> is emerging (ExactPDF, PDFJar, HCODX) but none have strong SEO presence</li>
+</ul>
+
+<!-- ============================================================ -->
+<h2>3. User Pain Analysis</h2>
+
+<h3>3.1 Top 5 Recurring Complaints from Reddit and Forums</h3>
+
+<ol>
+  <li>
+    <strong>"Smallpdf won't let me do anything for free anymore."</strong><br>
+    The free tier has been reduced to approximately 2 tasks per day. Users regularly express frustration that simple operations now require a subscription. Representative sentiment: <em>"Smallpdf used to be great but now it nags you to pay after every single operation."</em>
+  </li>
+  <li>
+    <strong>"My company IT blocked iLovePDF and I can't process my PDFs."</strong><br>
+    Documented in corporate IT/sysadmin communities. Companies with GDPR, HIPAA, or general data security policies (healthcare, legal, finance, government contractors) actively block upload-based PDF tools at the firewall level. This creates stranded users looking for alternatives.
+  </li>
+  <li>
+    <strong>"I'm nervous about uploading my tax returns / medical forms / contracts to random websites."</strong><br>
+    Privacy anxiety around PDF upload is a recurring theme across privacy, legal, and personal finance communities. Even when tools claim to delete files within 1–2 hours, the fundamental concern is that files leave the device. High-sensitivity documents create genuine hesitation.
+  </li>
+  <li>
+    <strong>"Adobe is overkill and way too expensive for what I need."</strong><br>
+    Adobe Acrobat Pro ($15–23/mo) is widely considered over-priced for casual or small-business use. The free online tools require an Adobe ID and limit you to one free task per session. Users repeatedly search for "free PDF tools that don't require login."
+  </li>
+  <li>
+    <strong>"OCR doesn't work offline / without uploading — I can't use it for sensitive scanned documents."</strong><br>
+    A niche but growing pain point: users with scanned medical records, legal documents, or financial statements want OCR but are uncomfortable uploading. Browser-based OCR via Tesseract.js is an emerging solution, but most users don't know it exists.
+  </li>
+</ol>
+
+<h3>3.2 What Users Say They Can't Find Anywhere</h3>
+<ul>
+  <li>A <strong>free, no-account PDF tool that works on work computers</strong> where corporate IT has blocked cloud uploads</li>
+  <li><strong>OCR that works without uploading</strong> the scanned file to a server</li>
+  <li><strong>Fill + Sign + Flatten</strong> in a single workflow with no account, no watermark, no upload</li>
+  <li>A tool that is <strong>genuinely usable on first visit</strong> without a paywall or account nag</li>
+  <li><strong>PDF to Word conversion</strong> that handles complex layouts without paying</li>
+</ul>
+
+<h3>3.3 Privacy / No-Upload Demand Signal Strength: <span style="color:#2D7A4F">HIGH</span></h3>
+
+<div class="callout">
+<strong>Evidence supporting high demand signal:</strong>
+<ul>
+  <li>PDFgear launched a "world-first local processing online PDF tools" press release specifically citing privacy as the key feature, validating that privacy-first is a marketable differentiator</li>
+  <li>LocalPDF.online, BentoPDF, ExactPDF, HCODX, and PDFJar have all launched as dedicated no-upload tools in 2024–2025, showing multiple teams independently identified the same market gap</li>
+  <li>A DEV.to post titled <em>"Why I'm building free PDF and image tools that never touch a server"</em> received notable developer community traction</li>
+  <li>edgedocs.co published a detailed article "Why Your Company Might Have Banned iLovePDF" targeting IT decision-makers actively looking for upload-free alternatives</li>
+  <li>72% of enterprise users cite security as a top PDF tool requirement (PDF market research, 2024)</li>
+  <li>Searches for "is iLovePDF safe" and "is Smallpdf safe" generate measurable traffic — a proxy signal for users who would prefer tools that make the question irrelevant</li>
+</ul>
+</div>
+
+<!-- ============================================================ -->
+<h2>4. JTBD Analysis Table</h2>
+
+<p>Each Job-to-be-Done rated 1–10 on four dimensions. <strong>Opportunity Score</strong> weighs Privacy Sensitivity × current market gap × pdfree.io's current fit and build difficulty.</p>
+
+<table border="1">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Job-to-be-Done</th>
+      <th>Market Size (1–10)</th>
+      <th>Privacy Sensitivity (1–10)</th>
+      <th>pdfree.io Current Fit (1–10)</th>
+      <th>Opportunity Score (1–10)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>Compress PDF for email/upload</td>
+      <td>10</td>
+      <td>6</td>
+      <td>9</td>
+      <td><strong>10</strong></td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>Merge documents</td>
+      <td>9</td>
+      <td>5</td>
+      <td>9</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>Sign contracts</td>
+      <td>8</td>
+      <td>9</td>
+      <td>7</td>
+      <td><strong>9</strong></td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>Fill PDF forms</td>
+      <td>8</td>
+      <td>9</td>
+      <td>8</td>
+      <td><strong>9</strong></td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>Annotate for feedback/review</td>
+      <td>7</td>
+      <td>7</td>
+      <td>8</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>Create visual instructions (numbered steps)</td>
+      <td>4</td>
+      <td>3</td>
+      <td>6</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td>Remove sensitive content (redact)</td>
+      <td>6</td>
+      <td>10</td>
+      <td>8</td>
+      <td><strong>9</strong></td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td>Convert format (PDF↔Word, PDF↔Excel)</td>
+      <td>9</td>
+      <td>7</td>
+      <td>3</td>
+      <td><strong>8</strong></td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td>OCR scanned documents</td>
+      <td>7</td>
+      <td>9</td>
+      <td>2</td>
+      <td><strong>9</strong></td>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td>Secure/password protect</td>
+      <td>7</td>
+      <td>9</td>
+      <td>8</td>
+      <td>8</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Key takeaways from the JTBD table:</strong></p>
+<ul>
+  <li><strong>Compress PDF</strong> (10/10): Highest-traffic keyword, tool already exists, strongest opportunity is SEO and trust messaging</li>
+  <li><strong>OCR</strong> (9/10): Biggest capability gap combined with high privacy sensitivity. pdfree.io's current fit of 2/10 means this is the highest ROI build</li>
+  <li><strong>Redact</strong> (9/10): Maximum privacy sensitivity — redacting users are by definition handling sensitive material and should not upload to strangers' servers</li>
+  <li><strong>Format conversion</strong> (8/10): Highest traffic volume gap, but high build difficulty. Plan for 60-day horizon</li>
+</ul>
+
+<!-- ============================================================ -->
+<h2>5. Niche Options</h2>
+
+<h3>Option A: "The Private PDF Toolkit" — Own Privacy-First</h3>
+<p><strong>Target user:</strong> Paralegals, HR administrators, medical staff, compliance officers, freelancers handling contracts, anyone whose employer has blocked upload-based tools.</p>
+<p><strong>Search demand evidence:</strong> "PDF tool no upload," "iLovePDF alternative no upload," "HIPAA safe PDF tool" — all emerging keywords with low competition and rising demand driven by corporate IT policies and post-GDPR awareness.</p>
+<p><strong>Main competitors in this space:</strong> LocalPDF.online (minimal SEO), BentoPDF (minimal SEO), ExactPDF (small), PDF24's desktop app (not marketed as web-privacy-first). No dominant brand.</p>
+<p><strong>What to build:</strong> Strengthen privacy messaging across all tool pages; add OCR; add flatten; add PDF-to-Word; create dedicated landing pages for legal, HR, and medical use cases.</p>
+<p><strong>6-month traffic potential:</strong> 50K–200K monthly organic visits with systematic SEO effort on privacy-modifier keywords.</p>
+<p><strong>Verdict: <span style="color:#2D7A4F">RECOMMENDED — Primary strategy.</span></strong></p>
+
+<h3>Option B: "The Instruction Creator" — Step-by-Step Visual Guides</h3>
+<p><strong>Target user:</strong> Customer support teams, technical writers, HR trainers, educators.</p>
+<p><strong>Search demand evidence:</strong> Weak. Non-search-driven market dominated by Scribe, Loom, Canva, and Notion. PDF-specific instruction creation is not a well-defined search intent.</p>
+<p><strong>6-month traffic potential:</strong> 5K–20K monthly visits.</p>
+<p><strong>Verdict: Low priority. Skip for now.</strong></p>
+
+<h3>Option C: "The Form &amp; Sign Suite" — Fill + Sign for Freelancers</h3>
+<p><strong>Target user:</strong> Freelancers, consultants, real estate agents, small agencies handling contracts.</p>
+<p><strong>Search demand evidence:</strong> "Sign PDF free" (~500K/month), "fill PDF form free" (~200K/month), "sign PDF free no account" (~50K–100K/month). E-signature usage up 320% since 2020.</p>
+<p><strong>Main competitors:</strong> DocuSign (freemium), Signeasy (free tier), DigiSigner (free, upload required), Sejda (rate limited).</p>
+<p><strong>6-month traffic potential:</strong> 30K–150K monthly visits.</p>
+<p><strong>Verdict: Medium-high priority as a feature bundle within Option A. Build unified fill+sign+flatten landing page.</strong></p>
+
+<h3>Option D: "The Offline PDF App" — PWA Without Internet</h3>
+<p><strong>Target user:</strong> Field workers, travelers, users on restricted/air-gapped networks.</p>
+<p><strong>Search demand evidence:</strong> Moderate. PWA market growing at 30%+ CAGR but this is not primarily a search-driven discovery path for PDF tools.</p>
+<p><strong>6-month traffic potential:</strong> 10K–40K monthly visits.</p>
+<p><strong>Verdict: Implement as a feature (strengthen existing sw.js PWA), not as primary strategy. Differentiator, not niche.</strong></p>
+
+<h3>Option E: "The HIPAA-Safe PDF Tool" — Healthcare/Legal Vertical</h3>
+<p><strong>Target user:</strong> Healthcare providers, medical billers, mental health professionals, healthcare administrators.</p>
+<p><strong>Search demand evidence:</strong> "HIPAA compliant PDF editor" (10K–50K/month high intent), "HIPAA safe PDF" (growing), "PDF for medical records." Extremely high conversion intent — users have a business reason to pay or switch.</p>
+<p><strong>Main competitors:</strong> pdfFiller ($20+/mo), DocHub (paid), Adobe Sign with BAA (enterprise). No free in-browser option exists.</p>
+<p><strong>6-month traffic potential:</strong> 15K–60K monthly visits, very high intent.</p>
+<p><strong>Verdict: High priority as a vertical within Option A. Add dedicated HIPAA landing page explaining why in-browser processing eliminates the need for a BAA.</strong></p>
+
+<!-- ============================================================ -->
+<h2>6. Tool Gap Analysis</h2>
+
+<table border="1">
+  <thead>
+    <tr>
+      <th>Missing Tool</th>
+      <th>In-Browser Feasible?</th>
+      <th>Est. Monthly Searches</th>
+      <th>Build Effort</th>
+      <th>Priority</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>OCR (make scanned PDF searchable)</strong></td>
+      <td>Yes — Tesseract.js via WASM, proven by ExactPDF, PDFJar, HCODX</td>
+      <td>200K–500K combined</td>
+      <td>Medium (3–7 days)</td>
+      <td><strong>P0 — Build immediately</strong></td>
+    </tr>
+    <tr>
+      <td><strong>Flatten PDF forms</strong></td>
+      <td>Yes — pdf-lib supports field flattening natively</td>
+      <td>50K–150K combined</td>
+      <td>Low (1–2 days)</td>
+      <td><strong>P0 — Quick win</strong></td>
+    </tr>
+    <tr>
+      <td><strong>PDF to Word (DOCX)</strong></td>
+      <td>Partial — basic layout doable; complex layouts need server</td>
+      <td>5M+ (top keyword)</td>
+      <td>High (2–4 weeks)</td>
+      <td><strong>P1 — Plan within 60 days</strong></td>
+    </tr>
+    <tr>
+      <td><strong>PDF to Excel (XLSX)</strong></td>
+      <td>Partial — table extraction is hard in-browser</td>
+      <td>300K–600K</td>
+      <td>High (requires AI/ML)</td>
+      <td>P2</td>
+    </tr>
+    <tr>
+      <td><strong>PDF Compare / Diff</strong></td>
+      <td>Yes — compare page renders via canvas</td>
+      <td>100K–200K</td>
+      <td>Medium (3–5 days)</td>
+      <td>P2</td>
+    </tr>
+    <tr>
+      <td><strong>E-signature with certificate/audit trail</strong></td>
+      <td>Partial — signing is in-browser; audit trail needs server</td>
+      <td>500K–1M</td>
+      <td>High (compliance layer)</td>
+      <td>P2</td>
+    </tr>
+    <tr>
+      <td><strong>Advanced text editing (edit existing PDF text)</strong></td>
+      <td>Limited — font embedding constraints in pdf-lib</td>
+      <td>1M+</td>
+      <td>Very High</td>
+      <td>P3</td>
+    </tr>
+    <tr>
+      <td><strong>PDF to PowerPoint (PPTX)</strong></td>
+      <td>No — complex layout detection required</td>
+      <td>200K–400K</td>
+      <td>Very High</td>
+      <td>P3</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>6.1 Technical Notes on Key Tools</h3>
+
+<p><strong>OCR:</strong> Tesseract.js 5.x with WASM workers is production-ready. Multiple small competitors (ExactPDF, HCODX, PDFJar, PDF-Lab) have already deployed it, proving viability. The output is a searchable PDF with an invisible text overlay. This is the most impactful missing tool given pdfree.io's privacy positioning — OCR is exactly the type of operation where users are most sensitive about upload (scanned medical forms, contracts, financial documents).</p>
+
+<p><strong>Flatten PDF:</strong> pdf-lib (already in use on pdfree.io) can flatten form fields and annotations. Use cases include: "lock your filled form before sending," "prevent form tampering," "make PDF non-editable." This is a 1–2 day build with clear SEO value.</p>
+
+<p><strong>PDF to Word:</strong> The honest privacy approach is to be transparent: "We process this server-side and delete immediately" — which is still better than iLovePDF because you can make it a conscious choice with a clear explanation. A hybrid model (attempt in-browser first, fall back to minimal server processing for complex docs) is ideal.</p>
+
+<!-- ============================================================ -->
+<h2>7. Strategic Recommendation</h2>
+
+<h3>7.1 Recommended Niche: Option A — "The Private PDF Toolkit"</h3>
+
+<p><strong>Why this positioning wins:</strong></p>
+<ol>
+  <li><strong>Architectural moat:</strong> pdfree.io already processes files in-browser. This is a genuine technical differentiator that cannot be replicated by iLovePDF or Smallpdf without rebuilding their infrastructure from scratch. It is an honest claim — not marketing language.</li>
+  <li><strong>Low SEO competition in the privacy sub-niche:</strong> iLovePDF dominates "compress PDF" and "merge PDF" as generic queries, but "compress PDF no upload," "merge PDF without uploading," "private PDF tool," and "HIPAA PDF tool" have far lower competition. A systematic effort is achievable for a solo developer.</li>
+  <li><strong>Multi-vertical appeal:</strong> Legal, healthcare, HR, freelancers, and corporate users on restricted networks all need the same thing. Same tool, same architecture, different landing pages.</li>
+  <li><strong>Validated category:</strong> The emergence of LocalPDF, BentoPDF, ExactPDF, PDFJar, and PDFgear's privacy PR announcement all in 2024–2025 confirms this is a recognized market category. pdfree.io needs to win the SEO race in it before one of these gains traction.</li>
+</ol>
+
+<h3>7.2 Top 3 Tools to Build Next</h3>
+
+<div class="callout">
+<h3 style="margin-top:0">Priority 1: OCR / Make Scanned PDF Searchable (3–7 days)</h3>
+<p><strong>Rationale:</strong> Highest opportunity score (9/10) among missing tools. Tesseract.js runs entirely in-browser via WebAssembly, supports 100+ languages, and is the single most-requested feature among privacy-conscious PDF users. Competitors charge for it (Smallpdf, Xodo) or require server upload (PDF24). pdfree.io offering in-browser OCR for free with no upload is a genuine headline feature.</p>
+<ul>
+  <li>Use Tesseract.js 5.x with WASM workers</li>
+  <li>Support multi-page PDFs (iterate pages, apply OCR, embed text layer)</li>
+  <li>Support at minimum: English, Spanish, French, German</li>
+  <li>Output: searchable PDF with invisible text overlay</li>
+  <li>SEO targets: "ocr pdf free," "make pdf searchable free," "ocr pdf no upload," "ocr scanned pdf browser"</li>
+  <li><strong>Estimated combined keyword volume: 200K–500K/month</strong></li>
+</ul>
+</div>
+
+<div class="callout">
+<h3 style="margin-top:0">Priority 2: Flatten PDF Forms (1–2 days)</h3>
+<p><strong>Rationale:</strong> pdfree.io already uses pdf-lib for form filling. Flattening is a natural extension with a clear keyword cluster and limited competition in the privacy-first space. Highest ROI relative to build time.</p>
+<ul>
+  <li>Accept PDF with fillable form fields</li>
+  <li>Flatten all fields and annotations into static content using pdf-lib</li>
+  <li>Messaging: "Lock your filled form," "Send non-editable PDF," "Prevent form tampering"</li>
+  <li>SEO targets: "flatten pdf online free," "lock pdf form fields," "make pdf non-editable"</li>
+  <li><strong>Estimated combined keyword volume: 50K–150K/month</strong></li>
+</ul>
+</div>
+
+<div class="callout">
+<h3 style="margin-top:0">Priority 3: PDF to Word Conversion (2–4 weeks)</h3>
+<p><strong>Rationale:</strong> The single highest-volume keyword in the PDF space (5M+ monthly searches for "pdf to word"). Even 0.01% capture = 500+ daily visitors. This alone could 10x monthly traffic.</p>
+<ul>
+  <li>Research: WebAssembly port of Poppler/LibreOffice for in-browser first attempt</li>
+  <li>For complex PDFs: accept server-side processing with strict zero-logging, immediate-deletion architecture</li>
+  <li>Be explicit in the UI: "This file is processed on our server and deleted within 60 seconds. No logs, no storage."</li>
+  <li>SEO targets: "pdf to word free," "pdf to word free no upload," "convert pdf to docx free online"</li>
+  <li><strong>Estimated keyword volume: 5M+/month</strong></li>
+</ul>
+</div>
+
+<h3>7.3 Quick Wins (1–2 Days Each)</h3>
+<ul>
+  <li><strong>Add a "Privacy Badge" to every tool page.</strong> A concise "Your file never leaves your browser" message with a brief technical explanation (WebAssembly, no server calls) will directly address the corporate IT and privacy-conscious user objection. Zero development time, immediate trust improvement.</li>
+  <li><strong>Strengthen existing landing pages for privacy-modifier keywords.</strong> The file listing shows these already exist: <code>/compress-pdf-without-uploading</code>, <code>/merge-pdf-without-uploading</code>, <code>/hipaa-pdf-tools</code>. Ensure each has a unique H1, meta description, and 200+ words of relevant content targeting the exact keyword.</li>
+  <li><strong>Create a <code>/sign-pdf-free-no-account</code> landing page</strong> targeting "sign pdf free" (~500K/month) and "esign pdf free no account" (~50K–100K/month). Pair with the existing sign tool.</li>
+  <li><strong>Audit all tool page SEO meta tags.</strong> Every page should have unique, keyword-targeted <code>&lt;title&gt;</code>, <code>&lt;meta description&gt;</code>, and H1. iLovePDF's secret is not tool quality — it is verb+object SEO targeting at scale.</li>
+</ul>
+
+<h3>7.4 6-Month Roadmap</h3>
+
+<table border="1">
+  <thead>
+    <tr>
+      <th>Month</th>
+      <th>Focus</th>
+      <th>Key Deliverables</th>
+      <th>Expected Outcome</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Month 1</strong></td>
+      <td>Foundation &amp; Quick Wins</td>
+      <td>Privacy badges on all pages; strengthen existing landing pages; build Flatten PDF; audit all SEO meta tags; set up Search Console</td>
+      <td>Better trust signals; new flatten keyword rankings; baseline traffic measurement</td>
+    </tr>
+    <tr>
+      <td><strong>Month 2</strong></td>
+      <td>OCR Launch</td>
+      <td>Build + deploy OCR tool (Tesseract.js); create dedicated landing page; write 2–3 supporting blog posts; target 5 OCR keyword clusters</td>
+      <td>First rankings for "ocr pdf free," "make pdf searchable," "ocr pdf no upload"</td>
+    </tr>
+    <tr>
+      <td><strong>Month 3</strong></td>
+      <td>Vertical Expansion</td>
+      <td>Build out /hipaa-pdf-tools as full landing page; create /legal-pdf-tools; outreach to privacy/legal tech/healthcare IT blogs</td>
+      <td>Backlinks from vertical-specific publications; HIPAA/legal keyword rankings</td>
+    </tr>
+    <tr>
+      <td><strong>Month 4</strong></td>
+      <td>Form &amp; Sign Unification</td>
+      <td>Build unified Fill + Sign + Flatten workflow; create combined landing page; target e-signature keywords</td>
+      <td>Rankings for "fill and sign pdf free," "esign pdf no account"</td>
+    </tr>
+    <tr>
+      <td><strong>Month 5</strong></td>
+      <td>PDF to Word Beta</td>
+      <td>Deploy PDF-to-Word (in-browser first; server fallback); create landing page targeting "pdf to word free"</td>
+      <td>Traffic potential 5-10x current from the highest-volume keyword in the space</td>
+    </tr>
+    <tr>
+      <td><strong>Month 6</strong></td>
+      <td>Scale &amp; Internationalize</td>
+      <td>Deploy PDF Compare/Diff; expand Spanish and French tool pages (existing /es, /fr dirs); blog content calendar; evaluate monetization layer</td>
+      <td>International traffic growth; additional tool keyword coverage; monetization foundation</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- ============================================================ -->
+<h2>Appendix: Key Data Points</h2>
+
+<table border="1">
+  <thead>
+    <tr>
+      <th>Metric</th>
+      <th>Value</th>
+      <th>Source</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>iLovePDF monthly traffic</td>
+      <td>229M visits (April 2026)</td>
+      <td>Semrush / Similarweb</td>
+    </tr>
+    <tr>
+      <td>Smallpdf monthly active users</td>
+      <td>30M</td>
+      <td>Market research, 2024</td>
+    </tr>
+    <tr>
+      <td>PDF software market size (2024)</td>
+      <td>$2.15B–$4.8B, growing 11–18% CAGR</td>
+      <td>Multiple market research firms</td>
+    </tr>
+    <tr>
+      <td>PDF editor software market (2024–2033)</td>
+      <td>$3.97B → $17.71B, 18.09% CAGR</td>
+      <td>businessresearchinsights.com</td>
+    </tr>
+    <tr>
+      <td>E-signature growth since 2020</td>
+      <td>+320%</td>
+      <td>PDF market statistics, 2024</td>
+    </tr>
+    <tr>
+      <td>"PDF to word" keyword volume</td>
+      <td>5M+ monthly searches</td>
+      <td>iLovePDF SEO case study</td>
+    </tr>
+    <tr>
+      <td>"Merge PDF" keyword volume</td>
+      <td>2.24M+ monthly searches</td>
+      <td>iLovePDF SEO case study</td>
+    </tr>
+    <tr>
+      <td>Adobe market share</td>
+      <td>32% of PDF software market</td>
+      <td>PDF software market research</td>
+    </tr>
+    <tr>
+      <td>Enterprise PDF security priority</td>
+      <td>72% use PDF tools specifically for security</td>
+      <td>PDF market research, 2024</td>
+    </tr>
+    <tr>
+      <td>Corporate collaborative PDF demand</td>
+      <td>64% of enterprises</td>
+      <td>PDF market research, 2024</td>
+    </tr>
+    <tr>
+      <td>iLovePDF free plan pricing</td>
+      <td>Free; Premium $4/mo; Business TBC</td>
+      <td>Tekpon / SoftwareWorld</td>
+    </tr>
+    <tr>
+      <td>Smallpdf Pro pricing</td>
+      <td>$9–$15/mo depending on plan/term</td>
+      <td>smallpdf.com/pricing</td>
+    </tr>
+    <tr>
+      <td>Sejda free limits</td>
+      <td>3 tasks/hour; 50MB; 200 pages</td>
+      <td>sejda.com/upgrade</td>
+    </tr>
+    <tr>
+      <td>Adobe Acrobat free limit</td>
+      <td>1 free task without account; 100MB max</td>
+      <td>Adobe Help Center</td>
+    </tr>
+  </tbody>
+</table>
+
+<p style="margin-top:2em;color:#888;font-size:0.9em"><em>Report compiled from web research conducted May 2026. Data sourced from Semrush, Similarweb, Trustpilot, Capterra, G2, PCWorld, TechRadar, market research reports, developer community discussions (DEV.to, Hacker News), and publicly available SEO case studies.</em></p>
+
+</body>
+</html>
