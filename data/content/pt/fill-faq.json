@@ -1,0 +1,34 @@
+[
+  {
+    "@type": "Question",
+    "name": "Meu PDF é enviado para algum servidor ao ser preenchido?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Não. Todo o processo de preenchimento é executado no seu navegador com pdf-lib e pdf.js. Seu documento nunca sai do seu dispositivo — o PDFree não tem acesso ao seu arquivo nem aos dados que você insere."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Quais tipos de campos de formulário PDF são suportados?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "O PDFree suporta todos os tipos de campo AcroForm padrão: campos de texto, caixas de seleção, botões de opção, listas suspensas e campos de assinatura. Os campos de assinatura abrem um bloco de desenho para você assinar com o dedo ou mouse."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso preencher um formulário PDF digitalizado?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Não com esta ferramenta — PDFs digitalizados são imagens sem campos interativos incorporados. O PDFree detecta apenas campos AcroForm. Para formulários digitalizados, você precisaria de um software OCR para converter a digitalização em um PDF preenchível."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "A assinatura desenhada tem validade jurídica?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Uma imagem de assinatura inserida em um PDF é uma assinatura eletrônica. Sua validade jurídica depende da sua jurisdição e do tipo de documento. Para muitos documentos do cotidiano — formulários de consentimento, aprovações internas, contratos de locação — ela é geralmente aceita. Para contextos jurídicos regulamentados, considere um serviço de assinatura eletrônica certificada com trilha de auditoria."
+    }
+  }
+]
