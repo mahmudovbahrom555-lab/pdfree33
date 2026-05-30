@@ -234,7 +234,7 @@
     <div id="fillOptions"      class="j2p-options"     style="display:none" aria-label="Fill PDF form options"></div>
     <div id="ocrOptions"       class="j2p-options"     style="display:none" aria-label="OCR options"></div>
 
-    <button id="mergeBtn"  class="merge-btn"  type="button" disabled data-mode="process">Extract Text</button>
+    <button id="mergeBtn"  class="merge-btn"  type="button" disabled data-mode="process">Make PDF Searchable</button>
     <button id="cancelBtn" class="cancel-btn" type="button" style="display:none" aria-label="Cancel">Cancel</button>
 
     <div id="progressBar"   class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
@@ -346,6 +346,8 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
+  <!-- pdf-lib needed for searchable PDF output (invisible text layer) -->
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
   <script>window.PDFREE_INITIAL_TOOL = 'ocr';</script>
   <script type="module" src="../js/app.js"></script>
 
