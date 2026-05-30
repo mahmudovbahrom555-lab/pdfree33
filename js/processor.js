@@ -291,6 +291,7 @@ async function _runCompress(filesSnapshot, { preset = 'medium', preserveText = t
   // browsers don't reliably fire onerror — detect it ourselves.
   const WATCHDOG_MS = 45_000;
   let watchdog = setTimeout(() => {
+    if (!isProcessing) return;   // already cancelled — don't fire phantom error
     isProcessing = false;
     setFilesLocked(false);
     hideCancelBtn();
@@ -299,6 +300,7 @@ async function _runCompress(filesSnapshot, { preset = 'medium', preserveText = t
   const _resetWatchdog = () => {
     clearTimeout(watchdog);
     watchdog = setTimeout(() => {
+      if (!isProcessing) return;   // already cancelled — don't fire phantom error
       isProcessing = false;
       setFilesLocked(false);
       hideCancelBtn();
