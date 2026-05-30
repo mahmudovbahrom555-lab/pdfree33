@@ -69,25 +69,51 @@ export function getOcrParams() {
   };
 }
 
+// ── Auto-load Tesseract for returning users ───────────────────────────────────
+async function _autoLoadIfInstalled() {
+  if (localStorage.getItem('pdfree_ocr_installed') !== '1') return;
+  if (window.Tesseract) { _ocrReady = true; return; }
+  try {
+    await new Promise((resolve, reject) => {
+      const s = document.createElement('script');
+      s.src     = 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';
+      s.onload  = resolve;
+      s.onerror = reject;
+      document.head.appendChild(s);
+    });
+    _ocrReady = true;
+  } catch {
+    // CDN unreachable — clear flag so install button shows normally
+    localStorage.removeItem('pdfree_ocr_installed');
+  }
+}
+
 // ── Analysis ─────────────────────────────────────────────────────────────────
 async function _analyse(file, container) {
   try {
-    await loadPdfJs();
+    // Load pdf.js and silently restore Tesseract for returning users in parallel
+    await Promise.all([loadPdfJs(), _autoLoadIfInstalled()]);
     const buf    = await file.arrayBuffer();
-    const pdfDoc = await window.pdfjsLib.getDocument({
-      data: new Uint8Array(buf), verbosity: 0, disableJavaScript: true,
-    }).promise;
+    let pdfDoc;
+    try {
+      pdfDoc = await window.pdfjsLib.getDocument({
+        data: new Uint8Array(buf), verbosity: 0, disableJavaScript: true, ignoreEncryption: true,
+      }).promise;
 
-    // Sample up to 3 pages — hybrid PDFs may have blank first page
-    const samplePages = Math.min(3, pdfDoc.numPages);
-    let totalTextItems = 0;
-    for (let p = 1; p <= samplePages; p++) {
-      const pg = await pdfDoc.getPage(p);
-      const tc = await pg.getTextContent();
-      totalTextItems += tc.items.filter(i => i.str.trim()).length;
+      // Sample up to 3 pages — hybrid PDFs may have blank first page
+      const samplePages = Math.min(3, pdfDoc.numPages);
+      let totalTextItems = 0;
+      for (let p = 1; p <= samplePages; p++) {
+        const pg = await pdfDoc.getPage(p);
+        const tc = await pg.getTextContent();
+        totalTextItems += tc.items.filter(i => i.str.trim()).length;
+      }
+      _isTextPdf = totalTextItems > 5;
+    } finally {
+      pdfDoc?.destroy();
     }
-    _isTextPdf = totalTextItems > 5;
-    _loading   = false;
+
+    _loading = false;
     _renderUI(container);
     _bindMergeBtn();
   } catch (err) {
@@ -154,9 +180,8 @@ function _renderUI(container) {
   }
 
   const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent.toLowerCase()) && !window.MSStream;
-  const alreadyInstalled = localStorage.getItem('pdfree_ocr_installed') === '1' && window.Tesseract;
 
-  if (alreadyInstalled) {
+  if (_ocrReady) {
     _ocrReady = true;
     container.innerHTML = `
       <div id="ocrInstallBlock" style="padding:16px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
@@ -311,10 +336,7 @@ function _bindMergeBtn() {
   if (!btn || btn._ocrBound) return;
   btn._ocrBound = true;
 
-  // Update button label to reflect the output type
-  if (!_isTextPdf) {
-    btn.textContent = 'Make PDF Searchable';
-  }
+  btn.textContent = _isTextPdf ? 'Extract Text' : 'Make PDF Searchable';
 
   // Capture phase so this fires before app.js bubble-phase listener,
   // allowing stopImmediatePropagation to prevent doProcess (stub runner).
@@ -375,9 +397,14 @@ const MAX_OCR_PX = 3000;
 async function _runOcr(file) {
   await loadPdfJs();
   const buf    = await file.arrayBuffer();
-  const pdfDoc = await window.pdfjsLib.getDocument({
-    data: new Uint8Array(buf), verbosity: 0, disableJavaScript: true, ignoreEncryption: true,
-  }).promise;
+  let pdfDoc;
+  try {
+    pdfDoc = await window.pdfjsLib.getDocument({
+      data: new Uint8Array(buf), verbosity: 0, disableJavaScript: true, ignoreEncryption: true,
+    }).promise;
+  } catch (err) {
+    throw new Error('Could not open PDF: ' + err.message, { cause: err });
+  }
 
   const langLabel = _getLangName(_selectedLang);
   const worker = await window.Tesseract.createWorker(_selectedLang, 1, {
@@ -445,6 +472,7 @@ async function _runOcr(file) {
   }
 
   await worker.terminate();
+  pdfDoc.destroy();
   _updateProgress(92, 'OCR complete');
 
   return { ocrPages, fullText: txtPages.join('\n\n') };
@@ -461,7 +489,7 @@ async function _extractTextDirect(file) {
   await loadPdfJs();
   const buf    = await file.arrayBuffer();
   const pdfDoc = await window.pdfjsLib.getDocument({
-    data: new Uint8Array(buf), verbosity: 0, disableJavaScript: true,
+    data: new Uint8Array(buf), verbosity: 0, disableJavaScript: true, ignoreEncryption: true,
   }).promise;
 
   const texts = [];
@@ -487,6 +515,7 @@ async function _extractTextDirect(file) {
     const text = lines.map(l => l.words.join(' ')).join('\n');
     texts.push(`--- Page ${p} ---\n${text.trim()}`);
   }
+  pdfDoc.destroy();
   _updateProgress(100, 'Done');
   return texts.join('\n\n');
 }
