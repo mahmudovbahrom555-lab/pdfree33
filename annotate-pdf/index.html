@@ -120,8 +120,8 @@
   {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  "name": "Redact PDF",
-  "description": "Annotate and mark up PDF files with colored boxes. 100% local, nothing uploaded.",
+  "name": "Annotate PDF",
+  "description": "Annotate and mark up PDF files with colored boxes and highlights. 100% local, nothing uploaded.",
   "url": "https://pdfree.io/annotate-pdf/",
   "applicationCategory": "UtilitiesApplication",
   "operatingSystem": "Any",
@@ -143,7 +143,7 @@
     "name": "PDFree",
     "url": "https://pdfree.io"
   },
-  "keywords": "redact pdf, remove text from pdf, pdf redaction, sensitive information, private"
+  "keywords": "annotate pdf, pdf markup, pdf annotation, highlight pdf, mark up pdf, colored boxes, free"
 }
   </script>
   <script type="application/ld+json">
@@ -153,34 +153,34 @@
   "mainEntity": [
     {
       "@type": "Question",
-      "name": "Is PDF redaction done locally or on a server?",
+      "name": "Does annotating a PDF upload my file?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "100% locally. PDFree processes redaction entirely in your browser — nothing is uploaded to any server."
+        "text": "No. PDFree processes all annotations entirely in your browser. Your PDF is never uploaded to any server or sent over the internet."
       }
     },
     {
       "@type": "Question",
-      "name": "Is the redacted content permanently removed?",
+      "name": "What types of annotations can I add?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes. PDFree draws opaque rectangles over the selected areas and flattens the PDF so the original content is not recoverable."
+        "text": "You can add colored boxes, highlights, and markup overlays. Each annotation supports custom colors and opacity settings."
       }
     },
     {
       "@type": "Question",
-      "name": "Does redacting a PDF also remove metadata?",
+      "name": "Will my annotations appear in other PDF readers?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "No. Visual redaction does not remove document metadata. Use the Metadata tool on the PDFree homepage separately to remove author names and creation dates."
+        "text": "Yes. PDFree saves annotations as standard PDF objects, visible in Adobe Acrobat, Chrome, Preview, and all compliant PDF readers."
       }
     },
     {
       "@type": "Question",
-      "name": "Can I redact multiple areas at once?",
+      "name": "Can I annotate multiple pages?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes. You can draw as many redaction boxes as needed before applying."
+        "text": "Yes. You can annotate any number of pages in a single session and download the complete annotated PDF."
       }
     }
   ]
@@ -294,67 +294,38 @@
     <div class="seo-content" style="max-width:800px; margin:60px auto 40px; padding:0 24px; color:var(--text2); line-height:1.7;">
   
   <h1 style="font-size:28px; color:var(--text); margin:0 0 20px; font-weight:700;">Annotate PDF Online — Draw, Highlight & Mark Up Any PDF</h1>
-  
-  <p>Permanently obscure sensitive information in PDF documents by drawing opaque rectangles over text, images, or data. PDFree's redaction tool covers content visually — perfect for sharing documents where certain information must remain confidential.</p>
-  
-  <h3 style="font-size:20px; color:var(--text); margin:32px 0 16px; font-weight:600;">How Redaction Works</h3>
-  
-  <p>Drag across the PDF preview to select areas to cover. PDFree draws black (or custom color) rectangles over those regions. The rectangles become part of the PDF content — they cannot be removed or hidden to reveal underlying text.</p>
-  
-  <p><strong>Important distinction:</strong> This is <em>visual coverage</em>, not cryptographic deletion. The original content remains in the PDF file structure but is visually obscured. For most use cases (legal compliance, public records requests, privacy protection), this is exactly what's needed — the content cannot be seen or copied, but the document structure remains intact.</p>
-  
-  <h3 style="font-size:20px; color:var(--text); margin:32px 0 16px; font-weight:600;">When to Use Redaction</h3>
-  
-  <p><strong>Legal Documents:</strong> Obscure names, addresses, social security numbers, or account numbers before filing public court documents or responding to FOIA requests.</p>
-  
-  <p><strong>Medical Records:</strong> Remove patient identifying information to create de-identified records for research or case studies (HIPAA compliance).</p>
-  
-  <p><strong>Financial Statements:</strong> Hide account numbers, transaction details, or balances when sharing bank statements for loan applications or background checks.</p>
-  
-  <p><strong>Business Contracts:</strong> Redact pricing, terms, or confidential clauses when sharing contract templates or portions with third parties.</p>
-  
-  <p><strong>Government Documents:</strong> Public records officers use redaction to protect privacy while releasing information under transparency laws.</p>
-  
-  <h3 style="font-size:20px; color:var(--text); margin:32px 0 16px; font-weight:600;">Usage Instructions</h3>
-  
+
+  <p>Add colored boxes, highlights, and markup to any PDF — all directly in your browser. No upload, no account, no limits. Your documents never leave your device.</p>
+
+  <h3 style="font-size:20px; color:var(--text); margin:32px 0 16px; font-weight:600;">How to Annotate a PDF</h3>
+
   <ol style="margin:16px 0; padding-left:24px;">
-    <li>Upload the PDF — a preview renders in your browser</li>
-    <li>Click and drag to draw a redaction rectangle over sensitive text or images</li>
-    <li>Repeat for all areas needing coverage (up to 5 areas per page to prevent accidental over-redaction)</li>
-    <li>Click "Clear all" if you need to start over</li>
-    <li>Download the redacted PDF — black rectangles are now permanent</li>
+    <li>Drop your PDF onto the page or click "Choose file" — rendering happens locally, no upload</li>
+    <li>Select an annotation tool: colored box, highlight, or markup overlay</li>
+    <li>Click and drag to place your annotation on the PDF page</li>
+    <li>Adjust color and opacity, then download the annotated PDF</li>
   </ol>
-  
-  <h3 style="font-size:20px; color:var(--text); margin:32px 0 16px; font-weight:600;">Security Considerations</h3>
-  
-  <p><strong>What Redaction Does:</strong></p>
-  <ul style="margin:16px 0; padding-left:24px;">
-    <li>✅ Prevents visual viewing of covered content</li>
-    <li>✅ Prevents text selection/copying of covered content</li>
-    <li>✅ Works in all PDF readers (rectangles are standard PDF drawing objects)</li>
-  </ul>
-  
-  <p><strong>What Redaction Does NOT Do:</strong></p>
-  <ul style="margin:16px 0; padding-left:24px;">
-    <li>❌ Does not delete content from the PDF file structure (forensic tools can extract underlying text)</li>
-    <li>❌ Does not remove metadata — use the Metadata tool on the <a href="/" style="color:var(--green);">PDFree homepage</a> separately</li>
-    <li>❌ Does not prevent determined adversaries with specialized software from accessing original content</li>
-  </ul>
-  
-  <div style="margin:40px 0; padding:20px; background:#fef3c7; border-left:4px solid #f59e0b; border-radius:8px;">
-    <p style="margin:0; font-size:14px; color:#78350f;"><strong>⚠️ Legal Redaction:</strong> For documents subject to legal proceedings or classified information, consult your compliance or legal team. Some jurisdictions require certified redaction tools that cryptographically delete content. PDFree provides visual coverage suitable for most business and privacy use cases but is not certified for classified government documents or high-security legal contexts.</p>
-  </div>
-  
-  <h3 style="font-size:20px; color:var(--text); margin:32px 0 16px; font-weight:600;">Privacy & Processing</h3>
-  
-  <p>Your PDF never leaves your browser. The redaction rectangles are drawn using pdf-lib's content stream API — all processing happens locally in JavaScript. No server sees your sensitive document or learns what you chose to redact.</p>
-  
+
+  <h3 style="font-size:20px; color:var(--text); margin:32px 0 16px; font-weight:600;">When to Annotate a PDF</h3>
+
+  <p><strong>Document Review:</strong> Draw boxes around figures or data points, highlight key sections, and mark areas that need revision before sharing with colleagues.</p>
+
+  <p><strong>Academic Use:</strong> Annotate research papers and textbooks with colored boxes to group related concepts or flag sections for further reading.</p>
+
+  <p><strong>Legal &amp; Contracts:</strong> Mark important clauses and deadlines with boxes or highlights before signing or presenting to stakeholders.</p>
+
+  <p><strong>Design Feedback:</strong> Add colored annotations to PDF mockups or layouts to communicate changes clearly without editing the original.</p>
+
+  <h3 style="font-size:20px; color:var(--text); margin:32px 0 16px; font-weight:600;">Is It Safe to Annotate PDFs Online?</h3>
+
+  <p>Yes. PDFree annotates your PDF entirely in your browser using pdf-lib. Nothing is uploaded to any server — no one sees your document or your annotations. This makes it safe for confidential business documents, legal files, and personal records.</p>
+
   <h3 style="font-size:20px; color:var(--text); margin:32px 0 16px; font-weight:600;">Related Tools</h3>
-  
+
   <ul style="margin:16px 0; padding-left:24px;">
-    <li><a href="/protect-pdf/" style="color:var(--green);">Password Protect PDF</a> — Add encryption after redacting</li>
-    <li><a href="/watermark-pdf/" style="color:var(--green);">Add Watermark</a> — Mark redacted documents as confidential</li>
-    <li><a href="/merge-large-pdf-files/" style="color:var(--green);">Merge PDF</a> — Combine redacted sections into one document</li>
+    <li><a href="/highlight-pdf/" style="color:var(--green);">Highlight PDF</a> — Mark important text with color highlights</li>
+    <li><a href="/draw-on-pdf/" style="color:var(--green);">Draw on PDF</a> — Add arrows, shapes, and freehand drawings</li>
+    <li><a href="/redact-pdf/" style="color:var(--green);">Redact PDF</a> — Permanently cover sensitive content</li>
   </ul>
   
 </div>
