@@ -23,7 +23,7 @@ import {
   // document
   getCurrentPage, getPageCommandsRef, getEffectiveCommands, getPageTextCache,
   // actions
-  clearRedoForCurrentPage, redrawPage, setColor, activatePrevTool, setSelectedId, undo, redo,
+  clearRedoForCurrentPage, redrawPage, setColor, activatePrevTool, setSelectedId, setSelectedHighlightId, undo, redo,
   // constants
   HIGHLIGHT_OPACITY,
 } from './drawUI.js';
@@ -60,6 +60,11 @@ function _resetMtsState() {
   _mts.insertPoint = null;
 }
 
+// ── Highlight selection state ──────────────────────────────────
+let _selectedHighlightId = null;   // id of selected highlight — UI state only
+let _hlToolbar           = null;   // #hlSelectToolbar element
+let _hlColorPicker       = null;   // #hlColorPicker element
+
 // ── Text selection state ───────────────────────────────────────
 let _selectedTextId  = null;   // id of selected text annotation — UI state only
 let _pendingTextHit  = null;   // { cmd, startX, startY, clientX, clientY } — awaiting tap vs drag
@@ -79,6 +84,7 @@ export function initPointer() {
 
   _initTextInput();
   _initSelToolbar();
+  _initHlToolbar();
   _initMobileSheet();
 
   document.addEventListener('keydown', (e) => {
@@ -323,6 +329,9 @@ export function resetPointer() {
   _selectedTextId = null;
   setSelectedId(null);
   if (_selToolbar) _selToolbar.style.display = 'none';
+  _selectedHighlightId = null;
+  setSelectedHighlightId(null);
+  if (_hlToolbar) _hlToolbar.style.display = 'none';
   _closeMobileSheet({ action: 'cancel' });
 }
 
@@ -455,8 +464,9 @@ function _onDown(e) {
     return;
   }
 
-  // Dismiss selection on any canvas tap (toolbar buttons use stopPropagation to prevent this)
-  if (_selectedTextId) _dismissSelection();
+  // Dismiss selections on any canvas tap (toolbar buttons use stopPropagation to prevent this)
+  if (_selectedTextId)      _dismissSelection();
+  if (_selectedHighlightId) _dismissHighlightSelection();
 
   // Text: quick-tap existing text = select; drag existing text = move; tap empty area = place new
   if (tool === 'text') {
@@ -502,6 +512,9 @@ function _onDown(e) {
   if (tool === 'pen') {
     clearRedoForCurrentPage();
     _current = { type: 'pen', points: [[x, y]], color: getColor(), width: getWidth() };
+  } else if (tool === 'marker') {
+    clearRedoForCurrentPage();
+    _current = { type: 'marker', points: [[x, y]], color: getColor(), width: Math.max(6, getWidth() * 3), opacity: 0.45 };
   } else if (tool === 'erase') {
     clearRedoForCurrentPage();
     _current = { type: 'erase', points: [[x, y]], width: Math.max(20, getWidth() * 6) };
@@ -522,6 +535,11 @@ function _onDown(e) {
     clearRedoForCurrentPage();
     _current = { type: 'rect', _ox: x, _oy: y, x, y, w: 0, h: 0, color: getColor(), width: getWidth() };
   } else if (tool === 'highlight') {
+    const hit = _hitTestHighlight(x, y);
+    if (hit) {
+      _selectHighlight(hit, e.clientX, e.clientY);
+      return;
+    }
     clearRedoForCurrentPage();
     _current = { type: 'highlight', _ox: x, _oy: y, x, y, w: 0, h: 0, color: getColor(), opacity: HIGHLIGHT_OPACITY };
   } else if (tool === 'oval') {
@@ -559,7 +577,7 @@ function _onMove(e) {
   const { x, y } = _coords(e);
   const { type } = _current;
 
-  if (type === 'pen' || type === 'erase') {
+  if (type === 'pen' || type === 'erase' || type === 'marker') {
     const last = _current.points[_current.points.length - 1];
     if (Math.hypot(x - last[0], y - last[1]) < 2) return;
     _current.points.push([x, y]);
@@ -664,7 +682,7 @@ function _onUp(e) {
   if (_isMeaningful(_current)) {
     const { type } = _current;
     let cmd;
-    if (type === 'pen' || type === 'erase') {
+    if (type === 'pen' || type === 'erase' || type === 'marker') {
       cmd = { ..._current, points: _current.points.slice() };
     } else {
       const { _ox, _oy, ...rest } = _current;
@@ -688,7 +706,8 @@ function _pushCommand(cmd) {
 function _isMeaningful(cmd) {
   switch (cmd.type) {
     case 'pen':
-    case 'erase':  return cmd.points.length >= 2;
+    case 'erase':
+    case 'marker': return cmd.points.length >= 2;
     case 'arrow':
     case 'line':   return Math.hypot(cmd.x2 - cmd.x1, cmd.y2 - cmd.y1) >= 3;
     case 'rect':
@@ -832,6 +851,78 @@ function _openCommentInput(cmd, screenX, screenY) {
     redrawPage();
   });
   _textInput.value = initialText;
+}
+
+// ── Highlight hit-test and selection ──────────────────────────
+
+function _hitTestHighlight(x, y) {
+  const cmds = getEffectiveCommands();
+  const pad  = _isTouchDevice() ? 10 : 4;
+  for (let i = cmds.length - 1; i >= 0; i--) {
+    const c = cmds[i];
+    if (c.type !== 'highlight') continue;
+    const rects = c.rects ?? [{ x: c.x, y: c.y, w: c.w, h: c.h }];
+    for (const r of rects) {
+      if (x >= r.x - pad && x <= r.x + r.w + pad &&
+          y >= r.y - pad && y <= r.y + r.h + pad) return c;
+    }
+  }
+  return null;
+}
+
+function _selectHighlight(cmd, clientX, clientY) {
+  _selectedHighlightId = cmd.id;
+  setSelectedHighlightId(cmd.id);
+  _showHlToolbar(cmd, clientX, clientY);
+  redrawPage();
+}
+
+function _dismissHighlightSelection() {
+  const had = !!_selectedHighlightId;
+  _selectedHighlightId = null;
+  setSelectedHighlightId(null);
+  if (_hlToolbar) _hlToolbar.style.display = 'none';
+  if (had) redrawPage();
+}
+
+function _deleteSelectedHighlight() {
+  if (!_selectedHighlightId) return;
+  clearRedoForCurrentPage();
+  _pushCommand({ type: 'delete', targetId: _selectedHighlightId });
+  _dismissHighlightSelection();
+}
+
+function _showHlToolbar(cmd, clientX, clientY) {
+  if (!_hlToolbar) return;
+  _hlToolbar.style.visibility = 'hidden';
+  _hlToolbar.style.display    = 'flex';
+  const ow     = _hlToolbar.offsetWidth;
+  const oh     = _hlToolbar.offsetHeight;
+  const margin = 8;
+  _hlToolbar.style.left       = Math.max(margin, Math.min(clientX, window.innerWidth  - ow - margin)) + 'px';
+  _hlToolbar.style.top        = Math.max(margin, Math.min(clientY + 8, window.innerHeight - oh - margin)) + 'px';
+  _hlToolbar.style.visibility = '';
+  const eff = getEffectiveCommands().find(c => c.id === cmd.id);
+  if (eff) {
+    const color = eff.color ?? '#facc15';
+    if (/^#[0-9a-f]{6}$/i.test(color)) _hlColorPicker.value = color;
+  }
+}
+
+function _initHlToolbar() {
+  _hlToolbar     = document.getElementById('hlSelectToolbar');
+  _hlColorPicker = document.getElementById('hlColorPicker');
+  const delBtn   = document.getElementById('hlDelete');
+  if (!_hlToolbar) return;
+
+  _hlColorPicker.addEventListener('input', () => {
+    if (!_selectedHighlightId) return;
+    clearRedoForCurrentPage();
+    _pushCommand({ type: 'style', targetId: _selectedHighlightId, patch: { color: _hlColorPicker.value } });
+    redrawPage();
+  });
+
+  delBtn.addEventListener('pointerdown', (e) => { e.stopPropagation(); _deleteSelectedHighlight(); });
 }
 
 // ── Eyedropper ─────────────────────────────────────────────────

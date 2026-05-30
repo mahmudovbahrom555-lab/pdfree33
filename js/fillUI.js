@@ -24,6 +24,17 @@ import { id }                from './utils.js';
 import { loadPdfJs }         from './pdf2jpgUI.js';
 import { setButtonDisabled } from './ui.js';
 
+// ── Saved signature ───────────────────────────────────────────
+const _SIG_STORAGE_KEY = 'pdfree_saved_sig';
+
+function _saveSignatureToStorage(dataUrl) {
+  try { localStorage.setItem(_SIG_STORAGE_KEY, dataUrl); } catch (_e) { /* storage unavailable */ }
+}
+
+function _loadSignatureFromStorage() {
+  try { return localStorage.getItem(_SIG_STORAGE_KEY); } catch { return null; }
+}
+
 // ── Module state ──────────────────────────────────────────────
 let _fields      = [];
 let _values      = {};
@@ -62,6 +73,7 @@ export function getFillParams() {
     fieldMeta:       Object.fromEntries(
       _fields.map(f => [f.name, { editable: !!f.editable }])
     ),
+    flatten:         document.getElementById('fillFlattenToggle')?.checked ?? true,
   };
 }
 
@@ -278,6 +290,17 @@ function _buildFormHTML(fields) {
 
     html += multiPage ? `</div></details>` : `</div>`;
   }
+
+  html += `
+    <div style="margin-top:16px;padding:12px 16px;background:var(--surface);
+      border:1px solid var(--border);border-radius:10px;display:flex;align-items:center;gap:10px;">
+      <input type="checkbox" id="fillFlattenToggle" checked
+        style="width:18px;height:18px;accent-color:var(--green);cursor:pointer;flex-shrink:0;">
+      <label for="fillFlattenToggle" style="font-size:13px;color:var(--text2);cursor:pointer;line-height:1.4;">
+        Flatten fields
+        <span style="color:var(--text3);font-size:12px;">(prevents editing after download)</span>
+      </label>
+    </div>`;
 
   html += `</div>`;
   return html;
@@ -522,6 +545,14 @@ function _openSigPad(fieldName, rect, pageIndex) {
   const logH   = isPortrait ?  window.innerWidth             :  window.innerHeight - CTRL_H;
   const dpr    = window.devicePixelRatio || 1;
 
+  const savedSig    = _loadSignatureFromStorage();
+  const useSavedBtn = savedSig ? `
+    <button data-sig-action="use-saved"
+      style="flex:1;padding:13px;background:#1a3a2a;color:#b6f5d0;border:none;border-radius:10px;
+             font-size:13px;font-weight:500;cursor:pointer;">
+      Use saved ↑
+    </button>` : '';
+
   _sigModal = document.createElement('div');
   _sigModal.style.cssText = 'position:fixed;inset:0;background:#111;z-index:10000;display:flex;flex-direction:column;touch-action:none;';
   _sigModal.innerHTML = `
@@ -540,6 +571,7 @@ function _openSigPad(fieldName, rect, pageIndex) {
       ${isPortrait ? '↻ Rotated canvas — sign naturally left to right' : 'Draw your signature'}
     </p>
     <div style="display:flex;gap:12px;padding:14px 20px;background:#1a1a1a;flex-shrink:0;">
+      ${useSavedBtn}
       <button data-sig-action="clear" style="flex:1;padding:13px;background:#333;color:#fff;border:none;border-radius:10px;font-size:15px;cursor:pointer;">Clear</button>
       <button data-sig-action="save"  style="flex:1;padding:13px;background:#2D7A4F;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;">Done ✓</button>
     </div>
@@ -605,9 +637,14 @@ function _openSigPad(fieldName, rect, pageIndex) {
     } else if (action === 'clear') {
       ctx.fillStyle = '#fff';
       ctx.fillRect(0, 0, logW, logH);
+    } else if (action === 'use-saved' && savedSig) {
+      _sigImages[fieldName] = { dataUrl: savedSig, rect, pageIndex };
+      _closeSigPad();
+      _updateSigBtn(fieldName, savedSig);
     } else if (action === 'save') {
       if (_isSigEmpty(ctx, logW * dpr, logH * dpr)) return;
       const dataUrl = _captureSig(canvas, logW * dpr, logH * dpr, isPortrait);
+      _saveSignatureToStorage(dataUrl);
       _sigImages[fieldName] = { dataUrl, rect, pageIndex };
       _closeSigPad();
       _updateSigBtn(fieldName, dataUrl);

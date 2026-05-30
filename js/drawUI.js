@@ -38,7 +38,8 @@ let _activeTool   = 'pen';
 let _prevTool     = 'pen';   // tool before eyedropper — for auto-return
 let _color        = '#e53e3e';
 let _width        = 3;
-let _selectedId   = null;    // UI state only — selected text id; never stored as command
+let _selectedId          = null;   // UI state only — selected text id; never stored as command
+let _selectedHighlightId = null;   // UI state only — selected highlight id; never stored as command
 let _pageTextCache = new Map(); // Map<pageNum, {x,y,w,h}[]> — canvas-space text rects for smart highlight
 
 // DOM refs — filled by initDraw()
@@ -154,7 +155,8 @@ export function getCurrentPage()     { return _currentPage; }
 export function getPageCommandsRef()   { return _pageCommands; }
 // Returns commands for current page with move-overrides applied — use for hit-testing and rendering.
 export function getEffectiveCommands() { return _resolveScene(_pageCommands.get(_currentPage) ?? []); }
-export function setSelectedId(id)      { _selectedId = id; }
+export function setSelectedId(id)           { _selectedId = id; }
+export function setSelectedHighlightId(id)  { _selectedHighlightId = id; }
 export function getRedoStackRef()    { return _redoStack; }
 export function getOriginalBuffer()  { return _originalBuf; }
 export function getPageCount()       { return _pdfJsDoc ? _pdfJsDoc.numPages : 0; }
@@ -196,9 +198,10 @@ export function resetDraw() {
   _redoStack     = new Map();
   _pageSize      = new Map();
   _pageTextCache = new Map();
-  _activeTool   = 'pen';
-  _color        = '#e53e3e';
-  _width        = 3;
+  _activeTool          = 'pen';
+  _color               = '#e53e3e';
+  _width               = 3;
+  _selectedHighlightId = null;
 
   // Clear canvas bitmaps — setting width=0 resets the bitmap and hints GC to release memory
   for (const canvas of [_pdfCanvas, _drawCanvas]) {
@@ -353,6 +356,22 @@ function _resolveScene(cmds) {
     });
 }
 
+// Draws a dashed border around every rect of a selected highlight command.
+function _drawHighlightSelectionOutline(ctx, cmd) {
+  const rects = cmd.rects ?? [{ x: cmd.x, y: cmd.y, w: cmd.w, h: cmd.h }];
+  ctx.save();
+  ctx.strokeStyle = '#2D7A4F';
+  ctx.lineWidth   = 1.5;
+  ctx.setLineDash([5, 3]);
+  const pad = 3;
+  for (const r of rects) {
+    ctx.beginPath();
+    ctx.roundRect(r.x - pad, r.y - pad, r.w + pad * 2, r.h + pad * 2, 2);
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
 // Draws a dashed selection outline around a text command using its effective bounds.
 // Always uses accent color — ignores text color to avoid invisible outlines on light text.
 function _drawSelectionOutline(ctx, cmd) {
@@ -392,6 +411,10 @@ function _redrawPage(overlay = null) {
     const sel = cmds.find(c => c.id === _selectedId);
     if (sel) _drawSelectionOutline(ctx, sel);
   }
+  if (_selectedHighlightId) {
+    const sel = cmds.find(c => c.id === _selectedHighlightId);
+    if (sel) _drawHighlightSelectionOutline(ctx, sel);
+  }
   if (overlay) {
     if (overlay.type === 'text-drag') {
       renderCommand(ctx, { ...overlay.cmd, x: overlay.x, y: overlay.y });
@@ -428,6 +451,17 @@ export function renderCommand(ctx, cmd) {
   switch (cmd.type) {
     case 'pen': {
       if (cmd.points.length < 2) break;
+      ctx.beginPath();
+      ctx.moveTo(cmd.points[0][0], cmd.points[0][1]);
+      for (let i = 1; i < cmd.points.length; i++) {
+        ctx.lineTo(cmd.points[i][0], cmd.points[i][1]);
+      }
+      ctx.stroke();
+      break;
+    }
+    case 'marker': {
+      if (cmd.points.length < 2) break;
+      ctx.globalAlpha = cmd.opacity ?? 0.45;
       ctx.beginPath();
       ctx.moveTo(cmd.points[0][0], cmd.points[0][1]);
       for (let i = 1; i < cmd.points.length; i++) {
