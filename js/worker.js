@@ -1724,7 +1724,7 @@ async function _embedSigImage(pdfDoc, pages, dataUrl, rect, pageIndex) {
 
 async function handleDraw(original, layers) {
   progress(10, 'Loading PDF…');
-  const pdf   = await PDFLib.PDFDocument.load(original);
+  const pdf   = await PDFLib.PDFDocument.load(original, { ignoreEncryption: true });
   const pages = pdf.getPages();
   const total = layers.length;
 
