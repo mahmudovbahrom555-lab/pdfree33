@@ -316,7 +316,7 @@
         "es": "Corrige la orientación de páginas en cualquier PDF. 100% privado — procesado localmente, sin subidas.",
         "pt": "Corrija a orientação das páginas em qualquer PDF. 100% privado — processado localmente, sem uploads.",
         "de": "PDF-Seiten um 90°, 180° oder 270° drehen. Verarbeitung im Browser — kein Upload, kein Server. Kostenlos, ohne Registrierung.",
-        "fr": "Faire pivoter les pages d"
+        "fr": "Faire pivoter les pages PDF en ligne — 90°, 180° ou 270°. 100 % privé — aucun envoi, sans inscription. Gratuit."
       },
       "ogTitles": {
         "en": "Rotate PDF Pages — Fix Sideways Scans in Seconds, No Upload",
@@ -330,7 +330,7 @@
         "es": "Corrige la orientación de páginas en cualquier PDF. 100% privado — procesado localmente, sin subidas.",
         "pt": "Corrija a orientação das páginas em qualquer PDF. 100% privado — processado localmente, sem uploads.",
         "de": "PDF-Seiten um 90°, 180° oder 270° drehen. Verarbeitung im Browser — kein Upload, kein Server. Kostenlos, ohne Registrierung.",
-        "fr": "Faire pivoter les pages d"
+        "fr": "Faire pivoter les pages PDF — 90°, 180° ou 270°. Traitement dans le navigateur, aucun fichier envoyé. Gratuit."
       }
     },
     {
@@ -389,21 +389,21 @@
       "metaDescs": {
         "en": "Add text or image watermarks to any PDF. Completely private — processed in your browser, nothing uploaded. Free forever.",
         "es": "Añade marcas de agua de texto personalizadas al PDF. 100% privado, sin subidas.",
-        "pt": "Adicione marcas d",
+        "pt": "Adicione marcas d'água de texto personalizadas ao PDF. 100% privado, sem uploads. Processado localmente no navegador.",
         "de": "Text- oder Bild-Wasserzeichen in PDF einfügen. Vollständig privat — im Browser verarbeitet, kein Upload. Kostenlos, für immer.",
         "fr": "Ajouter un filigrane à un PDF gratuitement en ligne. Texte ou image, diagonal ou en mosaïque. 100 % privé — aucun envoi, sans inscription."
       },
       "ogTitles": {
         "en": "Watermark Any PDF — Text, Opacity, Rotation — All Free, Private",
         "es": "Añadir Marca de Agua al PDF — Gratis, Privado | PDFree",
-        "pt": "Adicionar Marca d",
+        "pt": "Marca d'Água PDF Online — Grátis, Sem Upload | PDFree",
         "de": "Wasserzeichen in PDF Einfügen — Kostenlos, Kein Upload | PDFree",
         "fr": "Filigrane PDF en Ligne — Gratuit, Aucun Envoi | PDFree"
       },
       "ogDescs": {
         "en": "Add text or image watermarks to any PDF. Processed in your browser — nothing uploaded. Free forever.",
         "es": "Añade marcas de agua de texto personalizadas al PDF. 100% privado, sin subidas.",
-        "pt": "Adicione marcas d",
+        "pt": "Adicione marcas d'água de texto ao PDF. Processado no seu navegador — sem uploads. Grátis para sempre.",
         "de": "Text- oder Bild-Wasserzeichen in PDF einfügen. Vollständig privat — im Browser verarbeitet, kein Upload. Kostenlos, für immer.",
         "fr": "Ajouter un filigrane à un PDF gratuitement en ligne. Texte ou image, diagonal ou en mosaïque. 100 % privé — aucun envoi, sans inscription."
       }
@@ -691,7 +691,7 @@
         "es": "Extrae páginas específicas de un PDF. 100% privado — procesado localmente, sin subidas.",
         "pt": "Extraia páginas específicas de um PDF. 100% privado — processado localmente, sem uploads.",
         "de": "Bestimmte Seiten aus einem PDF extrahieren. Vollständige Browserverarbeitung — Dateien verlassen dein Gerät nie. Kostenlos, privat.",
-        "fr": "Extraire des pages d"
+        "fr": "Extraire des pages d'un PDF gratuitement en ligne. Pages individuelles ou plages. 100 % privé — aucun envoi, sans inscription."
       },
       "ogTitles": {
         "en": "Extract Any Pages from PDF — Precise Range, No Upload, Free",
@@ -705,7 +705,7 @@
         "es": "Extrae páginas específicas de un PDF. 100% privado — procesado localmente, sin subidas.",
         "pt": "Extraia páginas específicas de um PDF. 100% privado — processado localmente, sem uploads.",
         "de": "Bestimmte Seiten aus einem PDF extrahieren. Vollständige Browserverarbeitung — Dateien verlassen dein Gerät nie. Kostenlos, privat.",
-        "fr": "Extraire des pages d"
+        "fr": "Extraire des pages d'un PDF. Traitement dans le navigateur — aucun fichier envoyé. Gratuit."
       }
     },
     {
@@ -766,7 +766,7 @@
         "es": "Ver y editar metadatos del PDF: título, autor, asunto, palabras clave. Procesado localmente — sin subidas.",
         "pt": "Ver e editar metadados do PDF: título, autor, assunto, palavras-chave. Processado localmente — sem uploads.",
         "de": "PDF-Metadaten online bearbeiten oder entfernen. Im Browser verarbeitet — keine Uploads, keine Registrierung. Kostenlos, privat.",
-        "fr": "Modifier ou supprimer les métadonnées d"
+        "fr": "Modifier ou supprimer les métadonnées d'un PDF en ligne. 100 % privé — aucun envoi, sans inscription. Gratuit."
       },
       "ogTitles": {
         "en": "Remove Your Name from PDFs — Edit Metadata Privately, Free",
@@ -780,7 +780,7 @@
         "es": "Ver y editar metadatos del PDF: título, autor, asunto, palabras clave. Procesado localmente — sin subidas.",
         "pt": "Ver e editar metadados do PDF: título, autor, assunto, palavras-chave. Processado localmente — sem uploads.",
         "de": "PDF-Metadaten online bearbeiten oder entfernen. Im Browser verarbeitet — keine Uploads, keine Registrierung. Kostenlos, privat.",
-        "fr": "Modifier ou supprimer les métadonnées d"
+        "fr": "Modifier ou supprimer les métadonnées d'un PDF. Traitement dans le navigateur — aucun fichier envoyé. Gratuit."
       }
     },
     {
@@ -938,34 +938,74 @@
       "icon": "✍️",
       "toolKey": "fill",
       "slugs": {
-        "en": "fill"
+        "en": "fill",
+        "de": "pdf-formular-ausfuellen",
+        "es": "rellenar-pdf",
+        "fr": "remplir-pdf",
+        "pt": "preencher-pdf"
       },
       "titles": {
-        "en": "Fill PDF Form Online Free — No Upload, No Signup | PDFree"
+        "en": "Fill PDF Form Online Free — No Upload, No Signup | PDFree",
+        "de": "PDF Formular Ausfüllen — Kostenlos, Kein Upload | PDFree",
+        "es": "Rellenar PDF Online Gratis — Sin Subir Archivos | PDFree",
+        "fr": "Remplir un PDF en Ligne — Gratuit, Sans Envoi | PDFree",
+        "pt": "Preencher PDF Online Grátis — Sem Upload | PDFree"
       },
       "descs": {
-        "en": "Fill AcroForm fields and add signatures to PDFs. Processed 100% in your browser — files never leave your device."
+        "en": "Fill AcroForm fields and add signatures to PDFs. Processed 100% in your browser — files never leave your device.",
+        "de": "AcroForm-Felder ausfüllen und Unterschriften in PDFs hinzufügen. 100 % im Browser — Dateien verlassen dein Gerät nie.",
+        "es": "Rellena campos AcroForm y añade firmas en PDFs. Procesado 100% en tu navegador — los archivos nunca salen de tu dispositivo.",
+        "fr": "Remplir des champs AcroForm et ajouter des signatures aux PDF. Traitement 100 % dans votre navigateur — les fichiers ne quittent jamais votre appareil.",
+        "pt": "Preencher campos AcroForm e adicionar assinaturas em PDFs. Processado 100% no seu navegador — os arquivos nunca saem do seu dispositivo."
       },
       "navLabels": {
-        "en": "Fill PDF"
+        "en": "Fill PDF",
+        "de": "PDF Ausfüllen",
+        "es": "Rellenar PDF",
+        "fr": "Remplir PDF",
+        "pt": "Preencher PDF"
       },
       "cardNames": {
-        "en": "Fill PDF Form"
+        "en": "Fill PDF Form",
+        "de": "PDF Formular Ausfüllen",
+        "es": "Rellenar PDF",
+        "fr": "Remplir PDF",
+        "pt": "Preencher PDF"
       },
       "cardDescs": {
-        "en": "Fill form fields and sign PDFs locally"
+        "en": "Fill form fields and sign PDFs locally",
+        "de": "Formulare ausfüllen und PDFs lokal unterschreiben",
+        "es": "Rellena campos y firma PDFs localmente",
+        "fr": "Remplissez des champs de formulaire et signez des PDF localement",
+        "pt": "Preencha campos e assine PDFs localmente"
       },
       "breadcrumb": {
-        "en": "Fill PDF Form"
+        "en": "Fill PDF Form",
+        "de": "PDF Formular Ausfüllen",
+        "es": "Rellenar PDF",
+        "fr": "Remplir PDF",
+        "pt": "Preencher PDF"
       },
       "metaDescs": {
-        "en": "Fill PDF form fields online free. Text inputs, checkboxes, dropdowns, and signatures — all processed locally. No upload, no signup, no limits."
+        "en": "Fill PDF form fields online free. Text inputs, checkboxes, dropdowns, and signatures — all processed locally. No upload, no signup, no limits.",
+        "de": "PDF-Formularfelder online ausfüllen — kostenlos, ohne Upload. Texteingaben, Checkboxen, Unterschriften — alles lokal im Browser verarbeitet.",
+        "es": "Rellena campos de formulario PDF gratis sin subir archivos. Texto, casillas, listas y firmas — procesado localmente en tu navegador.",
+        "fr": "Remplir des champs de formulaire PDF en ligne gratuitement. Texte, cases à cocher, listes et signatures — traité localement. Sans envoi.",
+        "pt": "Preencher campos de formulário PDF grátis sem upload. Texto, caixas de seleção, listas e assinaturas — processado localmente no navegador."
       },
       "ogTitles": {
-        "en": "Fill PDF Forms Free Online — AcroForm Fields & Signatures, No Upload"
+        "en": "Fill PDF Forms Free Online — AcroForm Fields & Signatures, No Upload",
+        "de": "PDF Formular Ausfüllen — Kostenlos, Kein Upload, AcroForm & Unterschriften",
+        "es": "Rellenar PDF Gratis — Campos AcroForm y Firmas, Sin Subir Archivos",
+        "fr": "Remplir un PDF Gratuitement — Champs AcroForm et Signatures, Sans Envoi",
+        "pt": "Preencher PDF Grátis — Campos AcroForm e Assinaturas, Sem Upload"
       },
       "ogDescs": {
-        "en": "Fill PDF form fields and add signatures. 100% local — files never leave your browser. Free, no account required."
+        "en": "Fill PDF form fields and add signatures. 100% local — files never leave your browser. Free, no account required.",
+        "de": "PDF-Formularfelder ausfüllen und Unterschriften hinzufügen. 100 % lokal — Dateien verlassen deinen Browser nie. Kostenlos, kein Konto nötig.",
+        "es": "Rellena campos de formulario PDF y añade firmas. 100% local — los archivos no salen de tu navegador. Gratis, sin cuenta.",
+        "fr": "Remplissez des champs PDF et ajoutez des signatures. 100 % local — les fichiers ne quittent jamais votre navigateur. Gratuit, sans compte.",
+        "pt": "Preencha campos de formulário PDF e adicione assinaturas. 100% local — os arquivos nunca saem do seu navegador. Grátis, sem conta."
       }
     }
   ],

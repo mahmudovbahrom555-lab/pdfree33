@@ -1,0 +1,34 @@
+[
+  {
+    "@type": "Question",
+    "name": "Wird mein PDF beim Ausfüllen auf einen Server hochgeladen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nein. Der gesamte Ausfüllvorgang läuft in deinem Browser mit pdf-lib und pdf.js. Dein Dokument verlässt dein Gerät nie — PDFree hat keinen Zugriff auf deine Datei oder die Daten, die du eingibst."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Welche PDF-Formularfelder werden unterstützt?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree unterstützt alle Standard-AcroForm-Feldtypen: Texteingaben, Checkboxen, Optionsfelder, Dropdown-Listen und Unterschriftenfelder. Unterschriftenfelder öffnen ein Zeichenfeld, auf dem du mit dem Finger oder der Maus unterschreiben kannst."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann ich ein gescanntes PDF-Formular ausfüllen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nein — gescannte PDFs sind Bilder ohne eingebettete interaktive Felder. PDFree erkennt nur AcroForm-Felder. Für gescannte Formulare wird zuerst OCR-Software benötigt, um den Scan in ein ausfüllbares PDF umzuwandeln."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Ist die gezeichnete Unterschrift rechtsgültig?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Eine gezeichnete Unterschrift in einem PDF ist eine elektronische Unterschrift. Ihre Rechtsgültigkeit hängt von der Rechtsordnung und dem Dokumenttyp ab. Für viele alltägliche Dokumente wie Einwilligungen, interne Freigaben oder Mietverträge ist sie ausreichend. Für regulierte Rechtskontexte empfiehlt sich ein zertifizierter E-Signatur-Dienst mit Prüfpfad."
+    }
+  }
+]
