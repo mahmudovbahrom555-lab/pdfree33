@@ -78,9 +78,15 @@ async function _analyse(file, container) {
       data: new Uint8Array(buf), verbosity: 0, disableJavaScript: true,
     }).promise;
 
-    const page = await pdfDoc.getPage(1);
-    const tc   = await page.getTextContent();
-    _isTextPdf = tc.items.filter(i => i.str.trim()).length > 5;
+    // Sample up to 3 pages — hybrid PDFs may have blank first page
+    const samplePages = Math.min(3, pdfDoc.numPages);
+    let totalTextItems = 0;
+    for (let p = 1; p <= samplePages; p++) {
+      const pg = await pdfDoc.getPage(p);
+      const tc = await pg.getTextContent();
+      totalTextItems += tc.items.filter(i => i.str.trim()).length;
+    }
+    _isTextPdf = totalTextItems > 5;
     _loading   = false;
     _renderUI(container);
     _bindMergeBtn();
@@ -370,15 +376,17 @@ async function _runOcr(file) {
   await loadPdfJs();
   const buf    = await file.arrayBuffer();
   const pdfDoc = await window.pdfjsLib.getDocument({
-    data: new Uint8Array(buf), verbosity: 0, disableJavaScript: true,
+    data: new Uint8Array(buf), verbosity: 0, disableJavaScript: true, ignoreEncryption: true,
   }).promise;
 
   const langLabel = _getLangName(_selectedLang);
   const worker = await window.Tesseract.createWorker(_selectedLang, 1, {
     logger: m => {
       if (m.status === 'recognizing text') {
-        const pct = Math.round(m.progress * 100);
-        _updateProgress(pct, `Recognizing text (${langLabel})…`);
+        _updateProgress(Math.round(m.progress * 100), `Recognizing text (${langLabel})…`);
+      } else if (m.status && m.progress != null) {
+        // Shows download/init progress for language data
+        _updateProgress(Math.round(m.progress * 15), `Loading ${langLabel}…`);
       }
     },
   });
@@ -388,12 +396,12 @@ async function _runOcr(file) {
   const txtPages = [];
 
   for (let p = 1; p <= total; p++) {
-    const basePct = Math.round((p - 1) / total * 90);
+    const basePct = 15 + Math.round((p - 1) / total * 75);
     _updateProgress(basePct, `OCR page ${p} of ${total} · ${langLabel}`);
 
     const page = await pdfDoc.getPage(p);
 
-    // Adaptive scale — cap at MAX_OCR_PX to limit memory
+    // Adaptive scale — cap at MAX_OCR_PX to limit memory on mobile
     const vp0 = page.getViewport({ scale: 1 });
     let scale = 2;
     if (vp0.width * 2 > MAX_OCR_PX || vp0.height * 2 > MAX_OCR_PX) {
@@ -414,7 +422,13 @@ async function _runOcr(file) {
       bbox:       w.bbox,  // {x0, y0, x1, y1} in canvas coords
     }));
 
-    ocrPages.push({ pageNum: p, words, canvasW: canvas.width, canvasH: canvas.height });
+    // Store viewport transform — used in _buildSearchablePdf to map canvas→PDF coords
+    // correctly for any page rotation (0, 90, 180, 270°)
+    ocrPages.push({
+      pageNum: p, words,
+      canvasW: canvas.width, canvasH: canvas.height,
+      vpTransform: Array.from(vp.transform),
+    });
 
     // Build plain text from paragraph/line structure
     const paragraphs = result.data.paragraphs
@@ -456,7 +470,21 @@ async function _extractTextDirect(file) {
     _updateProgress(Math.round(p / total * 90), `Extracting page ${p} of ${total}…`);
     const page = await pdfDoc.getPage(p);
     const tc   = await page.getTextContent();
-    const text = tc.items.map(i => i.str).join(' ');
+    // Group items into lines by Y position (items within 2pt of same baseline → same line)
+    const lines = [];
+    for (const item of tc.items) {
+      if (!item.str.trim()) continue;
+      const iy = Math.round(item.transform[5]);
+      const last = lines[lines.length - 1];
+      if (last && Math.abs(last.y - iy) <= 2) {
+        last.words.push(item.str);
+      } else {
+        lines.push({ y: iy, words: [item.str] });
+      }
+    }
+    // Sort lines top-to-bottom (higher Y = higher on page in PDF coords)
+    lines.sort((a, b) => b.y - a.y);
+    const text = lines.map(l => l.words.join(' ')).join('\n');
     texts.push(`--- Page ${p} ---\n${text.trim()}`);
   }
   _updateProgress(100, 'Done');
@@ -464,6 +492,20 @@ async function _extractTextDirect(file) {
 }
 
 // ── Searchable PDF builder ────────────────────────────────────────────────────
+
+// Invert a 6-element affine transform [a,b,c,d,e,f].
+// Used to map canvas pixel coords back to PDF user-space coords — handles
+// any page rotation (0/90/180/270°) without special-casing each angle.
+function _invertTransform([a, b, c, d, e, f]) {
+  const det = a * d - b * c;
+  if (Math.abs(det) < 1e-10) return null;
+  return [d/det, -b/det, -c/det, a/det, (c*f - d*e)/det, (b*e - a*f)/det];
+}
+
+function _applyTransform([a, b, c, d, e, f], x, y) {
+  return { x: a*x + c*y + e, y: b*x + d*y + f };
+}
+
 async function _buildSearchablePdf(file, ocrPages) {
   if (!window.PDFLib) {
     throw new Error('pdf-lib not loaded — cannot build searchable PDF');
@@ -475,36 +517,39 @@ async function _buildSearchablePdf(file, ocrPages) {
   const font   = await pdfDoc.embedFont(StandardFonts.Helvetica);
   const pages  = pdfDoc.getPages();
 
-  for (const { pageNum, words, canvasW, canvasH } of ocrPages) {
+  for (const { pageNum, words, vpTransform } of ocrPages) {
     const page = pages[pageNum - 1];
     if (!page) continue;
-    const { width: pdfW, height: pdfH } = page.getSize();
 
-    const scaleX = pdfW / canvasW;
-    const scaleY = pdfH / canvasH;
+    // Invert the pdf.js viewport transform to map canvas px → PDF user-space.
+    // This is correct for rotation 0/90/180/270° without any special-casing.
+    const inv = vpTransform ? _invertTransform(vpTransform) : null;
+    if (!inv) continue;
 
     for (const w of words) {
       if (!w.text.trim() || w.confidence < 30) continue;
       const { x0, y0, x1, y1 } = w.bbox;
-      const wordW  = (x1 - x0) * scaleX;
-      const wordH  = (y1 - y0) * scaleY;
-      const fontSize = Math.max(4, Math.min(wordH * 0.85, 72));
 
-      // PDF Y-axis is bottom-up; canvas Y-axis is top-down
-      const pdfX = x0 * scaleX;
-      const pdfY = pdfH - y1 * scaleY;
+      // (x0, y1) = bottom-left of word in canvas (Y-down) → baseline in PDF (Y-up)
+      // (x1, y0) = top-right of word in canvas → used for sizing only
+      const origin = _applyTransform(inv, x0, y1);
+      const topRight = _applyTransform(inv, x1, y0);
+
+      const wordW    = Math.abs(topRight.x - origin.x);
+      const wordH    = Math.abs(topRight.y - origin.y);
+      const fontSize = Math.max(4, Math.min(wordH * 0.85, 72));
 
       try {
         page.drawText(w.text, {
-          x:        pdfX,
-          y:        pdfY,
+          x:        origin.x,
+          y:        origin.y,
           size:     fontSize,
           font,
-          opacity:  0,         // invisible but searchable/selectable
+          opacity:  0,         // invisible but searchable/selectable in PDF readers
           maxWidth: wordW + 2,
         });
       } catch {
-        // Skip words with malformed bbox or unsupported glyphs
+        // Skip words with unsupported glyphs or out-of-bounds coords
       }
     }
   }
