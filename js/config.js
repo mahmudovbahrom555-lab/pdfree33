@@ -243,4 +243,13 @@ export const TOOLS = {
     accept:      '.pdf',
     implemented: true,
   },
+  ocr: {
+    icon:        '🔍',
+    title:       'OCR PDF',
+    desc:        'Extract text from scanned PDFs — runs in your browser, no upload',
+    btn:         'Extract Text',
+    multi:       false,
+    accept:      '.pdf',
+    implemented: true,
+  },
 };

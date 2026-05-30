@@ -43,6 +43,8 @@ import { initRedactOptions, hideRedactOptions,
          getRedactParams }                from './redactUI.js';
 import { initDraw, loadPdfFile, resetDraw } from './drawUI.js';
 import { initPointer, resetPointer }        from './drawPointer.js';
+import { initOcrOptions, hideOcrOptions,
+         getOcrParams }                     from './ocrUI.js';
 
 // ── Merge options — inline (no separate mergeUI.js needed) ─────
 
@@ -224,6 +226,18 @@ registerTool('draw-pdf', {
   hide() {
     resetPointer();
     resetDraw();
+  },
+});
+
+registerTool('ocr', {
+  init:      initOcrOptions,
+  hide:      hideOcrOptions,
+  getParams: getOcrParams,
+  validate:  p => {
+    if (p.loading)                      return 'Analysing PDF…';
+    if (!p.hasFile)                     return null;
+    if (!p.isTextPdf && !p.isOcrReady) return 'Install OCR engine first';
+    return null;
   },
 });
 
