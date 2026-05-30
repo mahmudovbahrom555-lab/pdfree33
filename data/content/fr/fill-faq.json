@@ -1,0 +1,34 @@
+[
+  {
+    "@type": "Question",
+    "name": "Mon PDF est-il envoyé à un serveur lors du remplissage ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non. L'intégralité du traitement s'effectue dans votre navigateur avec pdf-lib et pdf.js. Votre document ne quitte jamais votre appareil — PDFree n'a aucun accès à votre fichier ni aux données que vous saisissez."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Quels types de champs de formulaire PDF sont pris en charge ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree prend en charge tous les types de champs AcroForm standard : zones de texte, cases à cocher, boutons radio, listes déroulantes et champs de signature. Les champs de signature ouvrent un bloc de dessin pour tracer votre signature avec le doigt ou la souris."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Puis-je remplir un formulaire PDF scanné ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non avec cet outil — les PDF scannés sont des images sans champs interactifs intégrés. PDFree détecte uniquement les champs AcroForm. Pour les formulaires scannés, un logiciel OCR est nécessaire pour convertir le scan en PDF remplissable."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "La signature tracée est-elle juridiquement valable ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Une image de signature insérée dans un PDF constitue une signature électronique. Sa valeur juridique dépend de votre juridiction et du type de document. Pour de nombreux documents courants — formulaires de consentement, validations internes, baux — elle est généralement acceptée. Pour les contextes juridiques réglementés, privilégiez un service de signature électronique certifié avec piste d'audit."
+    }
+  }
+]
