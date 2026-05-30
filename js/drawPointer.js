@@ -21,7 +21,7 @@ import {
   // canvas
   getDrawCanvas, getPdfCanvas,
   // document
-  getCurrentPage, getPageCommandsRef, getEffectiveCommands,
+  getCurrentPage, getPageCommandsRef, getEffectiveCommands, getPageTextCache,
   // actions
   clearRedoForCurrentPage, redrawPage, setColor, activatePrevTool, setSelectedId, undo, redo,
   // constants
@@ -284,7 +284,7 @@ function _deleteSelected() {
   _dismissSelection();
 }
 
-function _showSelToolbar(cmd, screenX, screenY) {
+function _showSelToolbar(cmd, _screenX, _screenY) {
   // Position toolbar just below the text in screen coordinates
   const canvas  = getDrawCanvas();
   const r       = canvas.getBoundingClientRect();
@@ -434,18 +434,22 @@ function _coords(e) {
 
 function _onDown(e) {
   e.preventDefault();
+  const { x, y } = _coords(e);
+
+  // Comment icon — check before pointer capture so click doesn't start a draw stroke
+  const commentHit = _hitTestCommentIcon(x, y);
+  if (commentHit) {
+    _openCommentInput(commentHit, e.clientX, e.clientY);
+    return;
+  }
+
   const canvas = getDrawCanvas();
   canvas.setPointerCapture(e.pointerId);
-
   const tool = getActiveTool();
-  const { x, y } = _coords(e);
 
   // Eyedropper: sample composite color, update active color, return to prev tool
   if (tool === 'eye') {
-    const { x, y } = _coords(e);
-    const ix = Math.round(x);
-    const iy = Math.round(y);
-    const hex = _sampleComposite(ix, iy);
+    const hex = _sampleComposite(Math.round(x), Math.round(y));
     if (hex) setColor(hex);
     activatePrevTool();
     return;
@@ -661,10 +665,10 @@ function _onUp(e) {
     const { type } = _current;
     let cmd;
     if (type === 'pen' || type === 'erase') {
-      cmd = { ..._current, points: _current.points.slice() };   // defensive copy
+      cmd = { ..._current, points: _current.points.slice() };
     } else {
-      const { _ox, _oy, ...rest } = _current;                   // strip internal fields
-      cmd = rest;
+      const { _ox, _oy, ...rest } = _current;
+      cmd = type === 'highlight' ? _buildHighlightCmd(rest) : rest;
     }
     _pushCommand(cmd);
   }
@@ -753,6 +757,81 @@ function _hitTestText(x, y) {
   }
   ctx.restore();
   return null;
+}
+
+// ── Smart highlight ────────────────────────────────────────────
+
+function _buildHighlightCmd(baseCmd) {
+  const textItems  = getPageTextCache().get(getCurrentPage()) ?? [];
+  const textRects  = textItems.length ? _textRectsFromDrag(textItems, baseCmd) : null;
+  const finalRects = textRects?.length
+    ? textRects
+    : [{ x: baseCmd.x, y: baseCmd.y, w: baseCmd.w, h: baseCmd.h }];
+  return {
+    type:    'highlight',
+    id:      ++_shapeCmdId,
+    rects:   finalRects,
+    color:   baseCmd.color,
+    opacity: baseCmd.opacity ?? HIGHLIGHT_OPACITY,
+    comment: '',
+  };
+}
+
+function _textRectsFromDrag(items, drag) {
+  const hit = items.filter(it =>
+    it.x < drag.x + drag.w && it.x + it.w > drag.x &&
+    it.y < drag.y + drag.h && it.y + it.h > drag.y
+  );
+  if (!hit.length) return null;
+
+  // Group items into lines: items whose top-y is within 70% of item height → same line
+  const lines = [];
+  for (const it of hit.sort((a, b) => a.y - b.y || a.x - b.x)) {
+    const last = lines[lines.length - 1];
+    if (last && Math.abs(it.y - last.refY) <= it.h * 0.7) {
+      last.items.push(it);
+    } else {
+      lines.push({ refY: it.y, items: [it] });
+    }
+  }
+
+  return lines.map(line => {
+    const xs = line.items.map(it => it.x);
+    const xe = line.items.map(it => it.x + it.w);
+    const ys = line.items.map(it => it.y);
+    const ye = line.items.map(it => it.y + it.h);
+    return {
+      x: Math.min(...xs), y: Math.min(...ys),
+      w: Math.max(...xe) - Math.min(...xs),
+      h: Math.max(...ye) - Math.min(...ys),
+    };
+  });
+}
+
+function _hitTestCommentIcon(x, y) {
+  const pad  = _isTouchDevice() ? 8 : 3;
+  const cmds = getEffectiveCommands();
+  for (let i = cmds.length - 1; i >= 0; i--) {
+    const c = cmds[i];
+    if (c.type !== 'highlight' || !c.rects || c.comment == null) continue;
+    const last = c.rects[c.rects.length - 1];
+    const ix = last.x + last.w + 3;
+    const iy = last.y;
+    if (x >= ix - pad && x <= ix + 14 + pad && y >= iy - pad && y <= iy + 14 + pad) return c;
+  }
+  return null;
+}
+
+function _openCommentInput(cmd, screenX, screenY) {
+  const cur         = getEffectiveCommands().find(c => c.id === cmd.id);
+  const initialText = cur?.comment ?? '';
+  _showTextInput(screenX, screenY, (text) => {
+    if (text === null) return;
+    clearRedoForCurrentPage();
+    _pushCommand({ type: 'style', targetId: cmd.id, patch: { comment: text } });
+    redrawPage();
+  });
+  _textInput.value = initialText;
 }
 
 // ── Eyedropper ─────────────────────────────────────────────────

@@ -39,6 +39,7 @@ let _prevTool     = 'pen';   // tool before eyedropper — for auto-return
 let _color        = '#e53e3e';
 let _width        = 3;
 let _selectedId   = null;    // UI state only — selected text id; never stored as command
+let _pageTextCache = new Map(); // Map<pageNum, {x,y,w,h}[]> — canvas-space text rects for smart highlight
 
 // DOM refs — filled by initDraw()
 let _pdfCanvas, _drawCanvas, _canvasLoading;
@@ -129,10 +130,11 @@ export async function loadPdfFile(file) {
     return;
   }
 
-  _currentPage  = 1;
-  _pageCommands = new Map();
-  _redoStack    = new Map();
-  _pageSize     = new Map();
+  _currentPage   = 1;
+  _pageCommands  = new Map();
+  _redoStack     = new Map();
+  _pageSize      = new Map();
+  _pageTextCache = new Map();
 
   _editorShell.hidden        = false;
   id('preEditorArea').hidden = true;
@@ -157,6 +159,7 @@ export function getRedoStackRef()    { return _redoStack; }
 export function getOriginalBuffer()  { return _originalBuf; }
 export function getPageCount()       { return _pdfJsDoc ? _pdfJsDoc.numPages : 0; }
 export function redrawPage(overlay = null) { _redrawPage(overlay); }
+export function getPageTextCache()   { return _pageTextCache; }
 
 // Called by eyedropper after picking — updates color and syncs picker UI
 export function setColor(hex) {
@@ -185,13 +188,14 @@ export function redo() { _redo(); }
 // Called by toolRegistrations hide() — resets all state when switching away from draw-pdf.
 // toolRegistrations also calls resetPointer() from drawPointer.js (avoids circular import).
 export function resetDraw() {
-  _pdfJsDoc     = null;
-  _currentPage  = 1;
-  _originalBuf  = null;
-  _renderId     = 0;
-  _pageCommands = new Map();
-  _redoStack    = new Map();
-  _pageSize     = new Map();
+  _pdfJsDoc      = null;
+  _currentPage   = 1;
+  _originalBuf   = null;
+  _renderId      = 0;
+  _pageCommands  = new Map();
+  _redoStack     = new Map();
+  _pageSize      = new Map();
+  _pageTextCache = new Map();
   _activeTool   = 'pen';
   _color        = '#e53e3e';
   _width        = 3;
@@ -294,8 +298,26 @@ async function _renderPage(pageNum) {
     if (token !== _renderId) return;   // page switched while we were rendering
 
     _currentPage = pageNum;
-    // Store canvas pixel dims — used by export to map draw-coords to PDF space
     _pageSize.set(pageNum, { width: pxW, height: pxH });
+
+    // Text layer cache for smart highlight — pre-transform to canvas coords so
+    // no viewport reference is needed later. Scanned/image PDFs have no text items.
+    try {
+      const tc = await page.getTextContent();
+      if (token === _renderId) {
+        const vscale = viewport.scale;
+        _pageTextCache.set(pageNum,
+          tc.items
+            .filter(it => it.str.trim() && it.width > 0)
+            .map(it => {
+              const [,,,, tx, ty] = window.pdfjsLib.Util.transform(viewport.transform, it.transform);
+              return { x: tx, y: ty - it.height * vscale, w: it.width * vscale, h: it.height * vscale };
+            })
+        );
+      }
+    } catch { /* text layer unavailable — smart highlight falls back to rect */ }
+
+    if (token !== _renderId) return;
     _redrawPage();
     _updateNavUI();
 
@@ -489,7 +511,30 @@ export function renderCommand(ctx, cmd) {
       ctx.save();
       ctx.globalAlpha = cmd.opacity ?? HIGHLIGHT_OPACITY;
       ctx.fillStyle   = cmd.color ?? '#facc15';
-      ctx.fillRect(cmd.x, cmd.y, cmd.w, cmd.h);
+      if (cmd.rects) {
+        for (const r of cmd.rects) ctx.fillRect(r.x, r.y, r.w, r.h);
+      } else {
+        ctx.fillRect(cmd.x, cmd.y, cmd.w, cmd.h);
+      }
+      // Comment icon — only on new-format highlights (cmd.comment != null)
+      if (cmd.rects && cmd.comment != null) {
+        const last = cmd.rects[cmd.rects.length - 1];
+        const ix   = last.x + last.w + 3;
+        const iy   = last.y;
+        ctx.globalAlpha  = 1;
+        ctx.fillStyle    = cmd.comment ? '#2D7A4F' : 'rgba(130,130,130,0.55)';
+        ctx.strokeStyle  = '#fff';
+        ctx.lineWidth    = 1;
+        ctx.beginPath();
+        ctx.roundRect(ix, iy, 14, 14, 3);
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle    = '#fff';
+        ctx.font         = 'bold 9px system-ui, sans-serif';
+        ctx.textAlign    = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('✎', ix + 7, iy + 7);
+      }
       ctx.restore();
       break;
     }
