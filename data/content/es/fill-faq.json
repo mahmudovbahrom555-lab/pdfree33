@@ -1,0 +1,34 @@
+[
+  {
+    "@type": "Question",
+    "name": "¿Se sube mi PDF a algún servidor al rellenarlo?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Todo el proceso de relleno se ejecuta en tu navegador con pdf-lib y pdf.js. Tu documento nunca sale de tu dispositivo — PDFree no tiene acceso a tu archivo ni a los datos que introduces."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Qué tipos de campos de formulario PDF son compatibles?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree es compatible con todos los tipos de campo AcroForm estándar: campos de texto, casillas de verificación, botones de opción, listas desplegables y campos de firma. Los campos de firma abren un panel de dibujo para que puedas firmar con el dedo o el ratón."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Puedo rellenar un formulario PDF escaneado?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No con esta herramienta — los PDFs escaneados son imágenes sin campos interactivos incrustados. PDFree detecta únicamente campos AcroForm. Para formularios escaneados necesitarías software OCR que convierta el escaneado en un PDF rellenable."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿La firma dibujada tiene validez legal?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Una imagen de firma insertada en un PDF es una firma electrónica. Su validez legal depende de la jurisdicción y del tipo de documento. Para muchos documentos cotidianos como formularios de consentimiento, aprobaciones internas o contratos de alquiler, es suficiente. Para contextos legales regulados, utiliza un servicio de firma electrónica certificada con registro de auditoría."
+    }
+  }
+]
