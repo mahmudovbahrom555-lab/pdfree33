@@ -1610,7 +1610,7 @@ async function handleRedact(fileBuffer, options) {
 // fieldValues: { fieldName: value } — strings for text/select,
 // truthy/falsy for checkboxes, string matching exportValue for radios.
 
-async function handleFill(fileBuffer, { fieldValues = {}, sigImages = {}, fieldMeta = {} } = {}) {
+async function handleFill(fileBuffer, { fieldValues = {}, sigImages = {}, fieldMeta = {}, flatten = true } = {}) {
   const {
     PDFDocument, PDFTextField, PDFCheckBox, PDFRadioGroup, PDFDropdown, PDFOptionList,
   } = PDFLib;
@@ -1661,7 +1661,9 @@ async function handleFill(fileBuffer, { fieldValues = {}, sigImages = {}, fieldM
     form.updateFieldAppearances(fillFont);
   } catch { /* PDF may already have valid font resources — proceed to flatten */ }
 
-  try { form.flatten(); } catch { /* flatten fails on some encrypted forms; skip */ }
+  if (flatten) {
+    try { form.flatten(); } catch { /* flatten fails on some encrypted forms; skip */ }
+  }
 
   // Embed signature images after flatten (visual, not cryptographic)
   const sigEntries = Object.values(sigImages);
