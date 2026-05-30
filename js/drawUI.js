@@ -23,6 +23,7 @@ import { showToast }  from './ui.js';
 // ── Constants ──────────────────────────────────────────────────
 const MAX_DIMENSION            = 4096;   // internal: canvas pixel size guard
 export const HIGHLIGHT_OPACITY = 0.35;  // shared with drawPointer.js
+export const MARKER_OPACITY    = 0.45;  // shared with drawPointer.js
 
 // ── State ──────────────────────────────────────────────────────
 let _pdfJsDoc     = null;
@@ -460,12 +461,23 @@ export function renderCommand(ctx, cmd) {
       break;
     }
     case 'marker': {
-      if (cmd.points.length < 2) break;
-      ctx.globalAlpha = cmd.opacity ?? 0.45;
+      const pts = cmd.points;
+      if (pts.length < 2) break;
+      ctx.globalAlpha = cmd.opacity ?? MARKER_OPACITY;
       ctx.beginPath();
-      ctx.moveTo(cmd.points[0][0], cmd.points[0][1]);
-      for (let i = 1; i < cmd.points.length; i++) {
-        ctx.lineTo(cmd.points[i][0], cmd.points[i][1]);
+      ctx.moveTo(pts[0][0], pts[0][1]);
+      if (pts.length === 2) {
+        ctx.lineTo(pts[1][0], pts[1][1]);
+      } else {
+        // Midpoint quadratic Bezier — same algorithm as signature pad,
+        // adapted for batch replay. Each recorded point is a control point;
+        // the path passes through the midpoints between them.
+        for (let i = 0; i < pts.length - 1; i++) {
+          const midX = (pts[i][0] + pts[i + 1][0]) / 2;
+          const midY = (pts[i][1] + pts[i + 1][1]) / 2;
+          ctx.quadraticCurveTo(pts[i][0], pts[i][1], midX, midY);
+        }
+        ctx.lineTo(pts[pts.length - 1][0], pts[pts.length - 1][1]);
       }
       ctx.stroke();
       break;

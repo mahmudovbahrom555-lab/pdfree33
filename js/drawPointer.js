@@ -25,7 +25,7 @@ import {
   // actions
   clearRedoForCurrentPage, redrawPage, setColor, activatePrevTool, setSelectedId, setSelectedHighlightId, undo, redo,
   // constants
-  HIGHLIGHT_OPACITY,
+  HIGHLIGHT_OPACITY, MARKER_OPACITY,
 } from './drawUI.js';
 
 let _current = null;   // { type, ...fields } | null — command in progress
@@ -514,7 +514,7 @@ function _onDown(e) {
     _current = { type: 'pen', points: [[x, y]], color: getColor(), width: getWidth() };
   } else if (tool === 'marker') {
     clearRedoForCurrentPage();
-    _current = { type: 'marker', points: [[x, y]], color: getColor(), width: Math.max(6, getWidth() * 3), opacity: 0.45 };
+    _current = { type: 'marker', points: [[x, y]], color: getColor(), width: Math.max(6, getWidth() * 3), opacity: MARKER_OPACITY };
   } else if (tool === 'erase') {
     clearRedoForCurrentPage();
     _current = { type: 'erase', points: [[x, y]], width: Math.max(20, getWidth() * 6) };
