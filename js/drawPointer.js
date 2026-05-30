@@ -514,7 +514,7 @@ function _onDown(e) {
     _current = { type: 'pen', points: [[x, y]], color: getColor(), width: getWidth() };
   } else if (tool === 'marker') {
     clearRedoForCurrentPage();
-    _current = { type: 'marker', points: [[x, y]], color: getColor(), width: Math.max(6, getWidth() * 3), opacity: MARKER_OPACITY };
+    _current = { type: 'marker', id: ++_shapeCmdId, points: [[x, y]], color: getColor(), width: Math.max(6, getWidth() * 3), opacity: MARKER_OPACITY, comment: '' };
   } else if (tool === 'erase') {
     clearRedoForCurrentPage();
     _current = { type: 'erase', points: [[x, y]], width: Math.max(20, getWidth() * 6) };
@@ -827,16 +827,28 @@ function _textRectsFromDrag(items, drag) {
   });
 }
 
+// Canvas-space position of the marker comment icon.
+// renderCommand in drawUI.js uses the same offsets (8, -20) — keep in sync.
+function _markerAnchor(cmd) {
+  const last = cmd.points[cmd.points.length - 1];
+  return { x: last[0] + 8, y: last[1] - 20 };
+}
+
 function _hitTestCommentIcon(x, y) {
+  // Touch pad=8 gives an effective hit area of 30×30 px (14 visual + 8 on each side).
   const pad  = _isTouchDevice() ? 8 : 3;
   const cmds = getEffectiveCommands();
   for (let i = cmds.length - 1; i >= 0; i--) {
     const c = cmds[i];
-    if (c.type !== 'highlight' || !c.rects || c.comment == null) continue;
-    const last = c.rects[c.rects.length - 1];
-    const ix = last.x + last.w + 3;
-    const iy = last.y;
-    if (x >= ix - pad && x <= ix + 14 + pad && y >= iy - pad && y <= iy + 14 + pad) return c;
+    if (c.type === 'highlight' && c.rects && c.comment != null) {
+      const last = c.rects[c.rects.length - 1];
+      const ix = last.x + last.w + 3, iy = last.y;
+      if (x >= ix - pad && x <= ix + 14 + pad && y >= iy - pad && y <= iy + 14 + pad) return c;
+    }
+    if (c.type === 'marker' && c.comment != null && c.points?.length) {
+      const { x: ax, y: ay } = _markerAnchor(c);
+      if (x >= ax - pad && x <= ax + 14 + pad && y >= ay - pad && y <= ay + 14 + pad) return c;
+    }
   }
   return null;
 }

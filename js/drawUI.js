@@ -480,6 +480,24 @@ export function renderCommand(ctx, cmd) {
         ctx.lineTo(pts[pts.length - 1][0], pts[pts.length - 1][1]);
       }
       ctx.stroke();
+      // Comment icon — offsets (8, -20) must match _markerAnchor() in drawPointer.js
+      if (cmd.comment != null) {
+        const last = pts[pts.length - 1];
+        const ax = last[0] + 8, ay = last[1] - 20;
+        ctx.globalAlpha  = 1;
+        ctx.fillStyle    = cmd.comment ? '#2D7A4F' : 'rgba(130,130,130,0.55)';
+        ctx.strokeStyle  = '#fff';
+        ctx.lineWidth    = 1;
+        ctx.beginPath();
+        ctx.roundRect(ax, ay, 14, 14, 3);
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle    = '#fff';
+        ctx.font         = 'bold 9px system-ui, sans-serif';
+        ctx.textAlign    = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('✎', ax + 7, ay + 7);
+      }
       break;
     }
     case 'arrow': {
