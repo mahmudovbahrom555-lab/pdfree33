@@ -54,10 +54,14 @@ export function hideFillOptions() {
 export function getFillParams() {
   _syncValuesFromDOM();
   return {
-    fieldValues: { ..._values },
-    hasFields:   _fields.length > 0,
-    sigImages:   { ..._sigImages },
-    loading:     _loading,
+    fieldValues:     { ..._values },
+    hasFields:       _fields.length > 0,
+    sigImages:       { ..._sigImages },
+    loading:         _loading,
+    missingRequired: _validateRequired(),
+    fieldMeta:       Object.fromEntries(
+      _fields.map(f => [f.name, { editable: !!f.editable }])
+    ),
   };
 }
 
@@ -84,7 +88,7 @@ async function _extractAndRender(file, container) {
       const page   = await pdfDoc.getPage(p);
       const annots = await page.getAnnotations();
       for (const a of annots) {
-        if (a.subtype === 'Widget' && !a.readOnly) raw.push({ ...a, _page: p });
+        if (a.subtype === 'Widget') raw.push({ ...a, _page: p });
       }
     }
 
@@ -100,7 +104,7 @@ async function _extractAndRender(file, container) {
     }
 
     _sigImages = {};
-    _draftKey = `pdfree_fill_${file.name}_${file.size}`;
+    _draftKey = `pdfree_fill_${file.name}_${file.size}_${file.lastModified}`;
     const draft = _loadDraft(_draftKey);
     _values = draft || _defaultValues(_fields);
 
@@ -127,6 +131,18 @@ function _processRawAnnotations(raw) {
   for (const a of raw) {
     const name  = a.fieldName || `_field_${fields.length + Object.keys(radioMap).length}`;
     const label = _humanizeLabel(a);
+
+    if (a.readOnly) {
+      const key = `${name}@${a._page}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      fields.push({
+        name, type: 'text', label, page: a._page,
+        readOnly: true, required: false,
+        value: a.fieldValue || a.defaultValue || '',
+      });
+      continue;
+    }
 
     if (a.radioButton) {
       if (!radioMap[name]) {
@@ -159,8 +175,9 @@ function _processRawAnnotations(raw) {
     if (a.fieldType === 'Ch') {
       fields.push({
         name, type: 'select', label, page: a._page, required: a.required || false,
-        value: a.fieldValue || '',
-        options: (a.options || []).map(o => ({
+        value:    a.fieldValue || '',
+        editable: !!(a.combo && a.editable),
+        options:  (a.options || []).map(o => ({
           value: o.exportValue || String(o),
           label: o.displayValue || o.exportValue || String(o),
         })),
@@ -225,9 +242,10 @@ function _buildFormHTML(fields) {
   }
   const pages      = Object.keys(byPage).map(Number).sort((a, b) => a - b);
   const multiPage  = pages.length > 1;
-  const fillable    = fields.filter(f => f.type !== 'sig');
+  const fillable    = fields.filter(f => f.type !== 'sig' && !f.readOnly);
   const totalFilled = fillable.filter(f => _values[f.name] !== undefined && _values[f.name] !== '').length
                     + Object.keys(_sigImages).length;
+  const totalCount  = fields.filter(f => !f.readOnly).length;
 
   let html = `
     <div class="fill-form" style="padding:0 0 16px;">
@@ -240,7 +258,7 @@ function _buildFormHTML(fields) {
           <div id="fillProgressFill" style="height:100%;background:var(--green);border-radius:3px;width:0%;transition:width .3s ease;"></div>
         </div>
         <span id="fillProgressLabel" style="white-space:nowrap;min-width:80px;text-align:right;">
-          <strong id="fillDone">${totalFilled}</strong> / ${fields.length} filled
+          <strong id="fillDone">${totalFilled}</strong> / ${totalCount} filled
         </span>
       </div>`;
 
@@ -267,6 +285,20 @@ function _buildFormHTML(fields) {
 
 function _fieldHTML(f) {
   const req = f.required ? '<span style="color:#dc2626;margin-left:3px;">*</span>' : '';
+
+  if (f.readOnly) {
+    const roBase = `width:100%;box-sizing:border-box;padding:11px 13px;
+      border:1.5px solid var(--border);border-radius:8px;
+      background:var(--bg-secondary,var(--surface));color:var(--text3);font-size:16px;
+      font-family:inherit;cursor:not-allowed;opacity:0.65;`;
+    return `<div>
+      <label style="display:block;font-size:11px;font-weight:600;text-transform:uppercase;
+        letter-spacing:.4px;color:var(--text3);margin-bottom:5px;">
+        ${_esc(f.label)}<span style="font-size:9px;margin-left:4px;opacity:0.6;text-transform:none;letter-spacing:0;">(read-only)</span>
+      </label>
+      <input type="text" disabled value="${_esc(f.value || '')}" style="${roBase}">
+    </div>`;
+  }
 
   const labelHTML = `<label for="fill_${_esc(f.name)}" style="
     display:block;font-size:11px;font-weight:600;text-transform:uppercase;
@@ -306,6 +338,19 @@ function _fieldHTML(f) {
 
   if (f.type === 'select') {
     const opts = f.options.map(o =>
+      `<option value="${_esc(o.value)}">`
+    ).join('');
+    if (f.editable) {
+      const listId = `fill_opts_${_esc(f.name)}`;
+      return `<div>
+        ${labelHTML}
+        <input type="text" id="fill_${_esc(f.name)}" data-field-name="${_esc(f.name)}"
+          list="${listId}" autocomplete="off"
+          style="${baseStyle}" placeholder="${_esc(f.label)}">
+        <datalist id="${listId}">${opts}</datalist>
+      </div>`;
+    }
+    const selectOpts = f.options.map(o =>
       `<option value="${_esc(o.value)}">${_esc(o.label)}</option>`
     ).join('');
     return `<div>
@@ -313,7 +358,7 @@ function _fieldHTML(f) {
       <select id="fill_${_esc(f.name)}" data-field-name="${_esc(f.name)}"
         style="${baseStyle}appearance:auto;">
         <option value="">— Select —</option>
-        ${opts}
+        ${selectOpts}
       </select>
     </div>`;
   }
@@ -424,15 +469,39 @@ function _syncValuesFromDOM() {
   });
 }
 
+function _validateRequired() {
+  const container = id('fillOptions');
+  const missing = [];
+  for (const f of _fields) {
+    if (!f.required || f.readOnly) continue;
+    const isEmpty = f.type === 'sig'
+      ? !_sigImages[f.name]
+      : !_values[f.name] || String(_values[f.name]).trim() === '';
+    if (isEmpty) missing.push(f.label);
+    if (!container) continue;
+    if (f.type === 'sig') {
+      container.querySelectorAll('[data-sig-field]').forEach(b => {
+        if (b.dataset.sigField === f.name) b.style.borderColor = isEmpty ? '#dc2626' : '';
+      });
+    } else if (f.type !== 'radio') {
+      try {
+        const el = container.querySelector(`#fill_${CSS.escape(f.name)}`);
+        if (el) el.style.borderColor = isEmpty ? '#dc2626' : '';
+      } catch { /* field name not valid CSS identifier — skip highlight */ }
+    }
+  }
+  return missing;
+}
+
 function _updateProgress(root) {
   if (!root) return;
   const fillBar   = document.getElementById('fillProgressFill');
   const fillLabel = document.getElementById('fillDone');
   if (!fillBar || !fillLabel) return;
-  const fillable = _fields.filter(f => f.type !== 'sig');
+  const fillable = _fields.filter(f => f.type !== 'sig' && !f.readOnly);
   const filled   = fillable.filter(f => _values[f.name] !== undefined && String(_values[f.name]).trim() !== '').length
                  + Object.keys(_sigImages).length;
-  const total    = _fields.length;
+  const total    = _fields.filter(f => !f.readOnly).length;
   const pct      = total > 0 ? Math.round((filled / total) * 100) : 0;
   fillBar.style.width   = `${pct}%`;
   fillLabel.textContent = String(filled);

@@ -1610,8 +1610,10 @@ async function handleRedact(fileBuffer, options) {
 // fieldValues: { fieldName: value } — strings for text/select,
 // truthy/falsy for checkboxes, string matching exportValue for radios.
 
-async function handleFill(fileBuffer, { fieldValues = {}, sigImages = {} } = {}) {
-  const { PDFDocument } = PDFLib;
+async function handleFill(fileBuffer, { fieldValues = {}, sigImages = {}, fieldMeta = {} } = {}) {
+  const {
+    PDFDocument, PDFTextField, PDFCheckBox, PDFRadioGroup, PDFDropdown, PDFOptionList,
+  } = PDFLib;
 
   progress(10, 'Loading PDF…');
   const pdfDoc = await PDFDocument.load(fileBuffer, { ignoreEncryption: true });
@@ -1626,19 +1628,20 @@ async function handleFill(fileBuffer, { fieldValues = {}, sigImages = {} } = {})
     if (value === undefined) continue;
 
     try {
-      const type = field.constructor.name;
-      if (type === 'PDFTextField') {
+      if (field instanceof PDFTextField) {
         field.setText(String(value));
-      } else if (type === 'PDFCheckBox') {
+      } else if (field instanceof PDFCheckBox) {
         value ? field.check() : field.uncheck();
-      } else if (type === 'PDFRadioGroup') {
+      } else if (field instanceof PDFRadioGroup) {
         if (value) field.select(String(value));
-      } else if (type === 'PDFDropdown') {
+      } else if (field instanceof PDFDropdown) {
         if (value) {
-          try { field.select(String(value)); }
-          catch { field.setText(String(value)); }
+          const opts = field.getOptions();
+          if (opts.includes(String(value)))        field.select(String(value));
+          else if (fieldMeta[name]?.editable)      field.setText(String(value));
+          // иначе — значение не в списке и поле не editable, молча пропустить
         }
-      } else if (type === 'PDFOptionList') {
+      } else if (field instanceof PDFOptionList) {
         if (value) field.select(String(value));
       }
     } catch { /* skip fields that reject their value */ }

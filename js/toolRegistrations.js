@@ -201,8 +201,12 @@ registerTool('fill', {
   init:       initFillOptions,
   hide:       hideFillOptions,
   getParams:  getFillParams,
-  validate:   p => p.loading    ? 'Reading PDF fields — please wait a moment…'
-                : !p.hasFields  ? 'No fillable fields found in this PDF'
+  validate:   p => p.loading
+                ? 'Reading PDF fields — please wait a moment…'
+                : !p.hasFields
+                ? 'No fillable fields found in this PDF'
+                : p.missingRequired?.length
+                ? `Required: ${p.missingRequired.slice(0, 3).join(', ')}${p.missingRequired.length > 3 ? '…' : ''}`
                 : null,
 });
 
