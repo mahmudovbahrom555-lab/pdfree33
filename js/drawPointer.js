@@ -317,6 +317,12 @@ function _showSelToolbar(cmd, screenX, screenY) {
 export function resetPointer() {
   _current = null;
   if (_rafId) { cancelAnimationFrame(_rafId); _rafId = 0; }
+  // Clear pending text interactions so stale long-press timers can't fire after reset
+  if (_longPressTimer) { clearTimeout(_longPressTimer); _longPressTimer = 0; }
+  _pendingTextHit = null;
+  _selectedTextId = null;
+  setSelectedId(null);
+  if (_selToolbar) _selToolbar.style.display = 'none';
   _closeMobileSheet({ action: 'cancel' });
 }
 
