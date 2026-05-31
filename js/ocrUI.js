@@ -3,11 +3,16 @@
 
 import { loadPdfJs } from './pdf2jpgUI.js';
 
+// ── Constants ─────────────────────────────────────────────────────────────────
+const TESSERACT_CDN       = 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';
+const TEXT_PDF_THRESHOLD  = 5;   // min non-empty text items across sampled pages → classified as text PDF
+
 // ── State ────────────────────────────────────────────────────────────────────
 let _file            = null;
 let _isTextPdf       = false;
 let _ocrReady        = false;
 let _loading         = false;
+let _generation      = 0;        // incremented on each new file; stale _analyse calls bail early
 let _deferredInstall = null;
 let _selectedLang    = 'eng';
 let _downloadAsTxt   = false;
@@ -76,7 +81,7 @@ async function _autoLoadIfInstalled() {
   try {
     await new Promise((resolve, reject) => {
       const s = document.createElement('script');
-      s.src     = 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';
+      s.src     = TESSERACT_CDN;
       s.onload  = resolve;
       s.onerror = reject;
       document.head.appendChild(s);
@@ -90,10 +95,12 @@ async function _autoLoadIfInstalled() {
 
 // ── Analysis ─────────────────────────────────────────────────────────────────
 async function _analyse(file, container) {
+  const myGen = ++_generation;
   try {
-    // Load pdf.js and silently restore Tesseract for returning users in parallel
-    await Promise.all([loadPdfJs(), _autoLoadIfInstalled()]);
-    const buf    = await file.arrayBuffer();
+    await loadPdfJs();
+    if (myGen !== _generation) return;
+
+    const buf = await file.arrayBuffer();
     let pdfDoc;
     try {
       pdfDoc = await window.pdfjsLib.getDocument({
@@ -108,15 +115,23 @@ async function _analyse(file, container) {
         const tc = await pg.getTextContent();
         totalTextItems += tc.items.filter(i => i.str.trim()).length;
       }
-      _isTextPdf = totalTextItems > 5;
+      _isTextPdf = totalTextItems > TEXT_PDF_THRESHOLD;
     } finally {
       pdfDoc?.destroy();
     }
+
+    if (myGen !== _generation) return;
+
+    // Auto-load Tesseract only for scanned PDFs — text PDFs never need it
+    if (!_isTextPdf) await _autoLoadIfInstalled();
+
+    if (myGen !== _generation) return;
 
     _loading = false;
     _renderUI(container);
     _bindMergeBtn();
   } catch (err) {
+    if (myGen !== _generation) return;
     _loading = false;
     container.innerHTML = _errorHTML(err.message);
   }
@@ -303,7 +318,7 @@ async function _loadTesseract() {
   try {
     await new Promise((resolve, reject) => {
       const s = document.createElement('script');
-      s.src = 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';
+      s.src = TESSERACT_CDN;
       s.onload  = resolve;
       s.onerror = () => reject(new Error('Failed to load Tesseract.js'));
       document.head.appendChild(s);
@@ -407,7 +422,9 @@ async function _runOcr(file) {
   }
 
   const langLabel = _getLangName(_selectedLang);
-  const worker = await window.Tesseract.createWorker(_selectedLang, 1, {
+  let worker;
+  try {
+  worker = await window.Tesseract.createWorker(_selectedLang, 1, {
     logger: m => {
       if (m.status === 'recognizing text') {
         _updateProgress(Math.round(m.progress * 100), `Recognizing text (${langLabel})…`);
@@ -471,11 +488,13 @@ async function _runOcr(file) {
     canvas.height = 0;
   }
 
-  await worker.terminate();
-  pdfDoc.destroy();
   _updateProgress(92, 'OCR complete');
-
   return { ocrPages, fullText: txtPages.join('\n\n') };
+  } finally {
+    // Always terminate — prevents thread leak if recognize() or render() throws
+    await worker?.terminate();
+    pdfDoc.destroy();
+  }
 }
 
 function _getLangName(code) {
