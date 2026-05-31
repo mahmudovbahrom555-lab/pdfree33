@@ -379,7 +379,7 @@ function _bindMergeBtn() {
         const { ocrPages, fullText } = await _runOcr(_file);
         // Build searchable PDF
         _updateProgress(95, 'Building searchable PDF…');
-        const pdfBytes = await _buildSearchablePdf(_file, ocrPages);
+        const pdfBytes = await _buildSearchablePdf(_file, ocrPages, _selectedLang);
         _downloadPdf(pdfBytes, _file.name);
         if (_downloadAsTxt && fullText) {
           _downloadText(fullText, _file.name);
@@ -541,6 +541,50 @@ async function _extractTextDirect(file) {
 
 // ── Searchable PDF builder ────────────────────────────────────────────────────
 
+// Languages whose scripts fall outside Latin-1 (Windows-1252).
+// Helvetica only covers codepoints 0-255; everything here starts at U+0400+.
+const NON_LATIN_LANGS = new Set(['ara', 'jpn', 'chi_sim', 'chi_tra', 'kor', 'hin', 'tha', 'rus', 'pol']);
+
+// TTF URLs from Google Fonts CDN (variable fonts; verified 2026-05).
+// pdf-lib requires TTF or OTF — WOFF/WOFF2 cannot be embedded.
+const NOTO_FONT_URLS = {
+  ara:     'https://fonts.gstatic.com/s/notosansarabic/v33/nwpPtLGrOAZMl5nJ_wfgRg3DrWFZQML36H986K0.ttf',
+  jpn:     'https://fonts.gstatic.com/s/notosansjp/v56/-F62fjtqLzI2JPCgQBnw7HFoxgIO2lZ9hg.ttf',
+  chi_sim: 'https://fonts.gstatic.com/s/notosanssc/v40/k3kXo84MPvpLmixcA63oeALhKYiJ-Q7m8w.ttf',
+  chi_tra: 'https://fonts.gstatic.com/s/notosanstc/v39/-nF7OG829Oofr2wohFbTp9iFPysLA_ZJ1g.ttf',
+  kor:     'https://fonts.gstatic.com/s/notosanskr/v39/PbykFmXiEBPT4ITbgNA5Cgm21nTs4JMMuA.ttf',
+  hin:     'https://fonts.gstatic.com/s/notosansdevanagari/v30/TuGOUUFzXI5FBtUq5a8bjKYTZjtRU6Sgv2lRdRhtCC4d.ttf',
+  tha:     'https://fonts.gstatic.com/s/notosansthai/v29/iJWdBXeUZi_OHPqn4wq6hQ2_hah-5c-dUX0x.ttf',
+  // Cyrillic (Russian, Polish use extended Latin too — Noto Sans covers both)
+  rus:     'https://fonts.gstatic.com/s/notosans/v42/o-0IIpQlx3QUlC5A4PNb4j5Ba_2c7A.ttf',
+  pol:     'https://fonts.gstatic.com/s/notosans/v42/o-0IIpQlx3QUlC5A4PNb4j5Ba_2c7A.ttf',
+};
+
+// Returns an embedded font suitable for the selected OCR language.
+// Latin languages: Helvetica (no network request).
+// Non-Latin: fetch the appropriate Noto Sans TTF from Google Fonts CDN
+// and embed it. Font is loaded once per export, not per word.
+async function _getFontForLang(pdfDoc, lang) {
+  const { StandardFonts } = window.PDFLib;
+
+  if (!NON_LATIN_LANGS.has(lang)) {
+    return pdfDoc.embedFont(StandardFonts.Helvetica);
+  }
+
+  const url = NOTO_FONT_URLS[lang];
+  try {
+    const resp  = await fetch(url);
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const bytes = await resp.arrayBuffer();
+    return pdfDoc.embedFont(bytes);
+  } catch {
+    // CDN unreachable or embed failed — fall back to Helvetica.
+    // The invisible text layer will not contain non-Latin glyphs,
+    // but the PDF itself will not be corrupted.
+    return pdfDoc.embedFont(StandardFonts.Helvetica);
+  }
+}
+
 // Invert a 6-element affine transform [a,b,c,d,e,f].
 // Used to map canvas pixel coords back to PDF user-space coords — handles
 // any page rotation (0/90/180/270°) without special-casing each angle.
@@ -554,15 +598,15 @@ function _applyTransform([a, b, c, d, e, f], x, y) {
   return { x: a*x + c*y + e, y: b*x + d*y + f };
 }
 
-async function _buildSearchablePdf(file, ocrPages) {
+async function _buildSearchablePdf(file, ocrPages, lang) {
   if (!window.PDFLib) {
     throw new Error('pdf-lib not loaded — cannot build searchable PDF');
   }
-  const { PDFDocument, StandardFonts, TextRenderingMode } = window.PDFLib;
+  const { PDFDocument, TextRenderingMode } = window.PDFLib;
 
   const buf    = await file.arrayBuffer();
   const pdfDoc = await PDFDocument.load(new Uint8Array(buf), { ignoreEncryption: true });
-  const font   = await pdfDoc.embedFont(StandardFonts.Helvetica);
+  const font   = await _getFontForLang(pdfDoc, lang ?? 'eng');
   const pages  = pdfDoc.getPages();
 
   for (const { pageNum, words, vpTransform } of ocrPages) {
