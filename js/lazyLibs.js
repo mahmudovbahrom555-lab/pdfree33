@@ -27,3 +27,8 @@ export function loadJSZip() {
   if (window.JSZip) return Promise.resolve();
   return _load('jsZip', 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js');
 }
+
+export function loadDocx() {
+  if (window.docx) return Promise.resolve();
+  return _load('docx', 'https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js');
+}
