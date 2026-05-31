@@ -539,7 +539,7 @@ async function _buildSearchablePdf(file, ocrPages) {
   if (!window.PDFLib) {
     throw new Error('pdf-lib not loaded — cannot build searchable PDF');
   }
-  const { PDFDocument, StandardFonts } = window.PDFLib;
+  const { PDFDocument, StandardFonts, TextRenderingMode } = window.PDFLib;
 
   const buf    = await file.arrayBuffer();
   const pdfDoc = await PDFDocument.load(new Uint8Array(buf), { ignoreEncryption: true });
@@ -570,12 +570,12 @@ async function _buildSearchablePdf(file, ocrPages) {
 
       try {
         page.drawText(w.text, {
-          x:        origin.x,
-          y:        origin.y,
-          size:     fontSize,
+          x:             origin.x,
+          y:             origin.y,
+          size:          fontSize,
           font,
-          opacity:  0,         // invisible but searchable/selectable in PDF readers
-          maxWidth: wordW + 2,
+          renderingMode: TextRenderingMode.Invisible,  // ISO 32000-1 Tr=3
+          maxWidth:      wordW + 2,
         });
       } catch {
         // Skip words with unsupported glyphs or out-of-bounds coords
