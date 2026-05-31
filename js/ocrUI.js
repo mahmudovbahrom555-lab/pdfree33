@@ -376,7 +376,8 @@ function _bindMergeBtn() {
         _downloadText(text, _file.name);
         _showSuccess('Text extracted and saved to your device.');
       } else {
-        const { ocrPages, fullText } = await _runOcr(_file);
+        const myGen = ++_generation;
+        const { ocrPages, fullText } = await _runOcr(_file, myGen);
         // Build searchable PDF
         _updateProgress(95, 'Building searchable PDF…');
         const pdfBytes = await _buildSearchablePdf(_file, ocrPages, _selectedLang);
@@ -407,9 +408,20 @@ function _showSuccess(desc) {
 }
 
 // ── OCR pipeline ─────────────────────────────────────────────────────────────
-const MAX_OCR_PX = 3000;
+const MAX_OCR_PX   = 3000;
+const MAX_FILE_MB  = 200;
+// Mobile Safari aggressively kills tabs under memory pressure.
+// Limit page count on iOS/iPadOS to prevent mid-job tab termination.
+// Users can still OCR longer documents by splitting the PDF first.
+const MAX_PAGES_IOS = 30;
 
-async function _runOcr(file) {
+async function _runOcr(file, gen) {
+  if (file.size > MAX_FILE_MB * 1024 * 1024) {
+    throw new Error(
+      `File is ${Math.round(file.size / 1024 / 1024)} MB — OCR is limited to ${MAX_FILE_MB} MB. ` +
+      `Split the PDF first to process it in parts.`
+    );
+  }
   await loadPdfJs();
   const buf    = await file.arrayBuffer();
   let pdfDoc;
@@ -419,6 +431,20 @@ async function _runOcr(file) {
     }).promise;
   } catch (err) {
     throw new Error('Could not open PDF: ' + err.message, { cause: err });
+  }
+
+  // Guard: warn and cap on Mobile Safari to avoid tab kill under memory pressure
+  const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream;
+  if (isIos && pdfDoc.numPages > MAX_PAGES_IOS) {
+    const proceed = window.confirm(
+      `This PDF has ${pdfDoc.numPages} pages. Mobile Safari may run out of memory on large documents.\n\n` +
+      `Only the first ${MAX_PAGES_IOS} pages will be processed. ` +
+      `Split the PDF first to process remaining pages.\n\nContinue?`
+    );
+    if (!proceed) {
+      pdfDoc.destroy();
+      throw new Error('Cancelled by user.');
+    }
   }
 
   const langLabel = _getLangName(_selectedLang);
@@ -435,7 +461,7 @@ async function _runOcr(file) {
     },
   });
 
-  const total    = pdfDoc.numPages;
+  const total    = isIos ? Math.min(pdfDoc.numPages, MAX_PAGES_IOS) : pdfDoc.numPages;
   const ocrPages = [];
   const txtPages = [];
 
@@ -460,11 +486,11 @@ async function _runOcr(file) {
     await page.render({ canvasContext: ctx, viewport: vp }).promise;
 
     const result = await worker.recognize(canvas);
-    const words  = result.data.words.map(w => ({
-      text:       w.text,
-      confidence: w.confidence,
-      bbox:       w.bbox,  // {x0, y0, x1, y1} in canvas coords
-    }));
+    const words  = result.data.words.flatMap(w => {
+      const text = w.text.normalize('NFC').trim();
+      if (!text) return [];
+      return [{ text, confidence: w.confidence, bbox: w.bbox }];
+    });
 
     // Store viewport transform — used in _buildSearchablePdf to map canvas→PDF coords
     // correctly for any page rotation (0, 90, 180, 270°)
@@ -486,6 +512,9 @@ async function _runOcr(file) {
     // Release canvas memory after each page
     canvas.width  = 0;
     canvas.height = 0;
+
+    // Bail early if user started a new OCR (new file selected or button re-clicked)
+    if (gen !== _generation) break;
   }
 
   _updateProgress(92, 'OCR complete');
@@ -560,10 +589,22 @@ const NOTO_FONT_URLS = {
   pol:     'https://fonts.gstatic.com/s/notosans/v42/o-0IIpQlx3QUlC5A4PNb4j5Ba_2c7A.ttf',
 };
 
+// Register fontkit with pdf-lib so that custom TTF fonts can be embedded
+// and subset (only used glyphs included — keeps file size small for CJK fonts).
+// fontkit.umd.js exposes window.fontkit; must be loaded before this runs.
+function _ensureFontkitRegistered(pdfDoc) {
+  if (window.fontkit && !pdfDoc._fontkitRegistered) {
+    pdfDoc.registerFontkit(window.fontkit);
+    pdfDoc._fontkitRegistered = true;
+  }
+}
+
 // Returns an embedded font suitable for the selected OCR language.
 // Latin languages: Helvetica (no network request).
-// Non-Latin: fetch the appropriate Noto Sans TTF from Google Fonts CDN
-// and embed it. Font is loaded once per export, not per word.
+// Non-Latin: fetch the appropriate Noto Sans TTF from Google Fonts CDN,
+// register fontkit, and embed with subset:true so only the glyphs that
+// actually appear in the document are included — prevents CJK fonts from
+// inflating the output PDF by 10–18 MB.
 async function _getFontForLang(pdfDoc, lang) {
   const { StandardFonts } = window.PDFLib;
 
@@ -576,7 +617,16 @@ async function _getFontForLang(pdfDoc, lang) {
     const resp  = await fetch(url);
     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
     const bytes = await resp.arrayBuffer();
-    return pdfDoc.embedFont(bytes);
+    // fontkit must be registered before embedFont can accept raw TTF bytes.
+    // subset:true keeps only the glyphs that appear in the document — critical
+    // for CJK fonts (Noto Sans SC is 17 MB full; a typical page uses <100 KB).
+    _ensureFontkitRegistered(pdfDoc);
+    if (!window.fontkit) {
+      // fontkit script not yet loaded — Noto cannot be embedded; use Helvetica.
+      // Invisible layer will lack non-Latin glyphs but PDF will not be corrupted.
+      return pdfDoc.embedFont(StandardFonts.Helvetica);
+    }
+    return pdfDoc.embedFont(bytes, { subset: true });
   } catch {
     // CDN unreachable or embed failed — fall back to Helvetica.
     // The invisible text layer will not contain non-Latin glyphs,
@@ -618,21 +668,27 @@ async function _buildSearchablePdf(file, ocrPages, lang) {
     const inv = vpTransform ? _invertTransform(vpTransform) : null;
     if (!inv) continue;
 
+    // Extract scale from the viewport transform (works for any rotation: 0/90/180/270°).
+    // vpTransform = [a,b,c,d,e,f]; scale = ||(a,b)||₂
+    const [vta, vtb] = vpTransform;
+    const vpScale = Math.sqrt(vta * vta + vtb * vtb) || 1;
+
     for (const w of words) {
-      if (!w.text.trim() || w.confidence < 30) continue;
+      if (!w.text.trim() || w.confidence < 20) continue;
       const { x0, y0, x1, y1 } = w.bbox;
 
       // (x0, y1) = bottom-left of word in canvas (Y-down) → baseline in PDF (Y-up)
-      // (x1, y0) = top-right of word in canvas → used for sizing only
       const origin = _applyTransform(inv, x0, y1);
-      const topRight = _applyTransform(inv, x1, y0);
 
-      const wordW    = Math.abs(topRight.x - origin.x);
-      const wordH    = Math.abs(topRight.y - origin.y);
+      // Word dimensions in PDF user-space points, correct for any rotation.
+      // Computing from canvas-pixel dimensions avoids swapped width/height on 90°/270° pages
+      // (the PDF user-space axes swap relative to screen axes on those rotations).
+      const wordW    = (x1 - x0) / vpScale;
+      const wordH    = (y1 - y0) / vpScale;
       const fontSize = Math.max(4, Math.min(wordH * 0.85, 72));
 
       try {
-        page.drawText(w.text, {
+        page.drawText(w.text.normalize('NFC'), {
           x:             origin.x,
           y:             origin.y,
           size:          fontSize,

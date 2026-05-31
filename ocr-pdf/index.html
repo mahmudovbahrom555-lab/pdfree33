@@ -348,6 +348,8 @@
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
   <!-- pdf-lib needed for searchable PDF output (invisible text layer) -->
+  <!-- fontkit enables custom font subsetting in pdf-lib (required for non-Latin scripts) -->
+  <script defer src="../js/vendor/fontkit.umd.js"></script>
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
   <script>window.PDFREE_INITIAL_TOOL = 'ocr';</script>
   <script type="module" src="../js/app.js"></script>
