@@ -43,6 +43,7 @@ const TOOL_SLUGS = {
   'compress-email': '/compress-pdf-for-email/',
   'draw-pdf':       '/draw-on-pdf/',
   'ocr':            '/ocr-pdf/',
+  flatten:          '/flatten-pdf/',
 };
 
 // Reverse map pathname → tool key (primary tool slug URLs).

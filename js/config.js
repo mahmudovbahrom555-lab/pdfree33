@@ -261,4 +261,13 @@ export const TOOLS = {
     accept:      '.pdf',
     implemented: true,
   },
+  flatten: {
+    icon:        '🔒',
+    title:       'Flatten PDF',
+    desc:        'Bake form fields into the page — make PDF non-editable',
+    btn:         '🔒 Lock PDF Form',
+    multi:       false,
+    accept:      '.pdf',
+    implemented: true,
+  },
 };
