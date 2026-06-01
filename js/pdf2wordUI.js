@@ -215,8 +215,7 @@ function _esc(str) {
 
 // ── Background table scanner ──────────────────────────────────────────────────
 // Runs detectTables() on first N pages after PDF loads.
-// Shows a compact debug badge in the UI and logs to console.
-// This is for TUNING ONLY — not yet wired into Word output.
+// Shows a compact info badge in the UI when tables are found.
 const SCAN_PAGES = 5;   // scan only first N pages to keep init snappy
 const YTOL       = 4;   // must match processor.js _p2wExtractText
 

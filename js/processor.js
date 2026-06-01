@@ -16,6 +16,7 @@ import { getRunner, getWorkerTool } from './toolRegistry.js';
 import { loadJSZip, loadDocx } from './lazyLibs.js';
 import { preprocessPdfBuffer } from './decryptPdf.js';
 import { detectTables } from './pdf2wordTables.js';
+import { detectTableGrids } from './pdf2wordBorders.js';
 
 // Hard cap for image mode — defined here to avoid coupling with pdf2wordUI.js.
 // Must match MAX_IMAGE_PAGES in pdf2wordUI.js.
@@ -841,24 +842,37 @@ async function _p2wExtractText(pdfDoc) {
                 `Reading page ${p}/${pdfDoc.numPages}…`);
 
     const page    = await pdfDoc.getPage(p);
-    const content = await page.getTextContent({ normalizeWhitespace: false });
-    const items   = content.items
+    const [content, borderGrids] = await Promise.all([
+      page.getTextContent({ normalizeWhitespace: false }),
+      detectTableGrids(page).catch(() => []),
+    ]);
+    const allMapped = content.items
       .filter(item => 'str' in item && item.str.trim())
       .map(item => {
-        const fontSize = (item.height > 0 ? item.height : Math.abs(item.transform[3])) || 10;
-        const style    = content.styles[item.fontName] || {};
-        const fam      = (style.fontFamily || '').toLowerCase();
+        const fontSize  = (item.height > 0 ? item.height : Math.abs(item.transform[3])) || 10;
+        const style     = content.styles[item.fontName] || {};
+        const fam       = (style.fontFamily || '').toLowerCase();
+        // Rotation detected when b-component dominates a-component in the transform matrix.
+        // Normal text: [a≈size, b≈0, …]. Rotated 90°: [a≈0, b≈size, …].
+        const isRotated = Math.abs(item.transform[1]) > Math.abs(item.transform[0]) * 0.5;
         return {
           str:      item.str,
           x:        item.transform[4],
           y:        item.transform[5],
+          width:    item.width || 0,
           fontSize,
+          rotated:  isRotated,
           bold:     /bold|heavy|black/.test(fam),
           italic:   /italic|oblique/.test(fam),
         };
       });
 
-    // Group into lines
+    // Rotated items (vertical column headers in tables) are processed separately
+    // so they don't pollute normal line-grouping.
+    const items        = allMapped.filter(i => !i.rotated);
+    const rotatedItems = allMapped.filter(i =>  i.rotated);
+
+    // Group normal items into lines
     const lines = [];
     for (const item of [...items].sort((a, b) => b.y - a.y)) {
       let merged = false;
@@ -870,7 +884,7 @@ async function _p2wExtractText(pdfDoc) {
     lines.forEach(ln => ln.items.sort((a, b) => a.x - b.x));
 
     allSizes.push(...items.map(i => i.fontSize).filter(s => s > 0));
-    pageData.push(lines);
+    pageData.push({ lines, rotatedItems, borderGrids });
   }
 
   const sorted = [...allSizes].sort((a, b) => a - b);
@@ -886,7 +900,7 @@ async function _p2wExtractText(pdfDoc) {
       paragraphs.push(new Paragraph({ children: [], pageBreakBefore: true }));
     }
 
-    const lines = pageData[pi];
+    const { lines, rotatedItems, borderGrids } = pageData[pi];
     if (!lines.length) continue;
 
     setProgress(50 + Math.round((pi / pageData.length) * 40),
@@ -903,14 +917,77 @@ async function _p2wExtractText(pdfDoc) {
       }
     }
 
-    let li = 0;
-    while (li < lines.length) {
-      const tbl = lineToTable.get(li);
+    // Match rotated column-header items to tables by Y-range overlap.
+    // rotatedHeaders: tableStartIdx → array of column label strings (left-to-right).
+    const rotatedHeaders = new Map();
+    if (rotatedItems.length > 0) {
+      const groups = _p2wGroupRotated(rotatedItems);
+      for (const t of tables) {
+        const tYBottom = lines[t.endIdx].y;
+        const tYTop    = lines[t.startIdx].y;
+        const matched  = groups.filter(g => {
+          const ys   = g.items.map(i => i.y);
+          const gMin = Math.min(...ys);
+          const gMax = Math.max(...ys);
+          return gMax >= tYBottom - 20 && gMin <= tYTop + 50;
+        });
+        if (matched.length >= 2) rotatedHeaders.set(t.startIdx, matched.map(g => g.text));
+      }
+    }
 
-      if (tbl && li === tbl.startIdx) {
-        // ── Emit docx Table ─────────────────────────────────────────────────
-        paragraphs.push(
-          new Table({
+    // ── Build combined event list: text lines + border-detected grids ─────────
+    // Text-based detector misses tables whose body rows are completely empty
+    // (no text content at all). Border grids fill that gap.
+
+    const events = lines.map((ln, lineIdx) => ({ type: 'line', y: ln.y, lineIdx }));
+
+    // Add border grids that aren't already covered by a text-detected table
+    const textYRanges = tables.map(t => ({
+      minY: lines[t.endIdx].y, maxY: lines[t.startIdx].y,
+    }));
+    for (const grid of borderGrids) {
+      const covered = textYRanges.some(r =>
+        (grid.y + grid.h) >= r.minY - 20 && grid.y <= r.maxY + 20
+      );
+      if (!covered) events.push({ type: 'grid', y: grid.y + grid.h, grid });
+    }
+
+    // Sort by Y descending (top of page first).
+    // At equal Y, grid events come before line events so header lines are
+    // consumed before being emitted as standalone paragraphs.
+    events.sort((a, b) => {
+      if (b.y !== a.y) return b.y - a.y;
+      if (a.type === 'grid' && b.type !== 'grid') return -1;
+      if (b.type === 'grid' && a.type !== 'grid') return  1;
+      return 0;
+    });
+
+    const consumedLines = new Set();
+
+    for (const event of events) {
+      if (!isProcessing) break;
+
+      if (event.type === 'line') {
+        const { lineIdx } = event;
+        if (consumedLines.has(lineIdx)) continue;
+
+        const tbl = lineToTable.get(lineIdx);
+
+        if (tbl && lineIdx === tbl.startIdx) {
+          // ── Emit rotated column headers (if any) above the table ──────────
+          const hdrTexts = rotatedHeaders.get(tbl.startIdx);
+          if (hdrTexts) {
+            paragraphs.push(new Paragraph({
+              children: hdrTexts.flatMap((txt, i) => [
+                ...(i > 0 ? [new TextRun({ text: ' │ ', color: 'AAAAAA' })] : []),
+                new TextRun({ text: txt, bold: true }),
+              ]),
+              spacing: { before: 60, after: 40 },
+            }));
+          }
+
+          // ── Emit docx Table ───────────────────────────────────────────────
+          paragraphs.push(new Table({
             width: { size: 100, type: WidthType.PERCENTAGE },
             rows: tbl.rows.map(row =>
               new TableRow({
@@ -924,44 +1001,143 @@ async function _p2wExtractText(pdfDoc) {
                 ),
               })
             ),
-          })
-        );
-        // Add spacing after table
-        paragraphs.push(new Paragraph({ children: [], spacing: { after: 120 } }));
-        li = tbl.endIdx + 1;
+          }));
+          paragraphs.push(new Paragraph({ children: [], spacing: { after: 120 } }));
 
-      } else if (tbl) {
-        // Line inside a table — already handled above, skip
-        li++;
+          // Mark all lines in this table consumed
+          for (let li2 = tbl.startIdx; li2 <= tbl.endIdx; li2++) consumedLines.add(li2);
+
+        } else if (tbl) {
+          consumedLines.add(lineIdx); // inner table line — already handled
+
+        } else {
+          // ── Emit regular Paragraph ─────────────────────────────────────────
+          const ln      = lines[lineIdx];
+          const maxSize = Math.max(...ln.items.map(i => i.fontSize));
+
+          let heading;
+          if      (maxSize >= median * 2.2) heading = HeadingLevel.HEADING_1;
+          else if (maxSize >= median * 1.7) heading = HeadingLevel.HEADING_2;
+          else if (maxSize >= median * 1.3) heading = HeadingLevel.HEADING_3;
+
+          const runs = ln.items.map((item, idx) => {
+            const prev = ln.items[idx - 1];
+            let text = item.str;
+            if (prev && !prev.str.endsWith(' ') && !item.str.startsWith(' ')) {
+              const gap = item.x - (prev.x + prev.width);
+              if (gap > item.fontSize * 0.2) text = ' ' + text;
+            }
+            return new TextRun({
+              text,
+              bold:    item.bold,
+              italics: item.italic,
+              size:    Math.max(16, Math.round(item.fontSize * 2)),
+            });
+          });
+
+          paragraphs.push(new Paragraph({
+            ...(heading !== undefined ? { heading } : {}),
+            children: runs,
+            spacing:  { after: 80 },
+          }));
+        }
 
       } else {
-        // ── Emit regular Paragraph ───────────────────────────────────────────
-        const ln      = lines[li];
-        const maxSize = Math.max(...ln.items.map(i => i.fontSize));
+        // ── 'grid' event: border-detected table (empty body rows) ─────────────
+        const { grid } = event;
 
-        let heading;
-        if      (maxSize >= median * 2.2) heading = HeadingLevel.HEADING_1;
-        else if (maxSize >= median * 1.7) heading = HeadingLevel.HEADING_2;
-        else if (maxSize >= median * 1.3) heading = HeadingLevel.HEADING_3;
+        // Consume text lines inside the grid's Y range → become header row(s)
+        const hdrLines = [];
+        for (let li2 = 0; li2 < lines.length; li2++) {
+          const ln = lines[li2];
+          if (!consumedLines.has(li2) && !lineToTable.has(li2) &&
+              ln.y >= grid.y - 10 && ln.y <= grid.y + grid.h + 10) {
+            hdrLines.push(ln);
+            consumedLines.add(li2);
+          }
+        }
+        hdrLines.sort((a, b) => b.y - a.y); // top first
 
-        const runs = ln.items.map(i => new TextRun({
-          text:    i.str,
-          bold:    i.bold,
-          italics: i.italic,
-          size:    Math.max(16, Math.round(i.fontSize * 2)),
-        }));
+        // Header rows — distribute items across columns by X position
+        const gridRows = hdrLines.map(ln =>
+          new TableRow({
+            children: _assignLineToGridCols(ln.items, grid.colXs).map(cellText =>
+              new TableCell({
+                children: [new Paragraph({
+                  children: [new TextRun({ text: cellText, bold: true })],
+                  spacing: { after: 0 },
+                })],
+              })
+            ),
+          })
+        );
 
-        paragraphs.push(new Paragraph({
-          ...(heading !== undefined ? { heading } : {}),
-          children: runs,
-          spacing:  { after: 80 },
-        }));
-        li++;
+        // Empty body rows
+        const emptyCount = Math.max(0, grid.rowCount - hdrLines.length);
+        for (let r = 0; r < emptyCount; r++) {
+          gridRows.push(new TableRow({
+            children: Array.from({ length: grid.colCount }, () =>
+              new TableCell({
+                children: [new Paragraph({ children: [new TextRun({ text: '' })], spacing: { after: 0 } })],
+              })
+            ),
+          }));
+        }
+
+        if (gridRows.length > 0) {
+          paragraphs.push(new Table({
+            width: { size: 100, type: WidthType.PERCENTAGE },
+            rows: gridRows,
+          }));
+          paragraphs.push(new Paragraph({ children: [], spacing: { after: 120 } }));
+        }
       }
     }
   }
 
   return paragraphs;
+}
+
+// Groups rotated text items (vertical column headers) by X-coordinate proximity.
+// Returns clusters sorted left-to-right; each cluster's items are sorted
+// top-to-bottom (descending Y) to reconstruct natural reading order.
+function _p2wGroupRotated(items, xTol = 20) {
+  const groups = [];
+  for (const item of items) {
+    let best = null, bestDist = Infinity;
+    for (const g of groups) {
+      const d = Math.abs(g.cx - item.x);
+      if (d < bestDist) { bestDist = d; best = g; }
+    }
+    if (best && bestDist <= xTol) {
+      best.items.push(item);
+      best.cx = best.items.reduce((s, i) => s + i.x, 0) / best.items.length;
+    } else {
+      groups.push({ cx: item.x, items: [item] });
+    }
+  }
+  groups.sort((a, b) => a.cx - b.cx);
+  for (const g of groups) {
+    g.items.sort((a, b) => b.y - a.y);
+    g.text = g.items.map(i => i.str).join('');
+  }
+  return groups;
+}
+
+// Distributes text items in a line across grid columns by X position.
+// colXs: sorted array of column boundary X values [x0, x1, x2, ...].
+// Returns string[] with one entry per column interval.
+function _assignLineToGridCols(items, colXs) {
+  const colCount = colXs.length - 1;
+  const cells = Array.from({ length: colCount }, () => []);
+  for (const item of items) {
+    let col = colCount - 1;
+    for (let c = 0; c < colCount; c++) {
+      if (item.x >= colXs[c] - 4 && item.x < colXs[c + 1] + 4) { col = c; break; }
+    }
+    cells[col].push(item.str);
+  }
+  return cells.map(parts => parts.join(' '));
 }
 
 // Image mode: render each page to canvas → embed JPEG in docx.
