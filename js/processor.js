@@ -885,6 +885,7 @@ async function _p2wExtractText(pdfDoc) {
 
     allSizes.push(...items.map(i => i.fontSize).filter(s => s > 0));
     pageData.push({ lines, rotatedItems, borderGrids });
+    page.cleanup?.();
   }
 
   const sorted = [...allSizes].sort((a, b) => a - b);
@@ -1051,7 +1052,7 @@ async function _p2wExtractText(pdfDoc) {
         for (let li2 = 0; li2 < lines.length; li2++) {
           const ln = lines[li2];
           if (!consumedLines.has(li2) && !lineToTable.has(li2) &&
-              ln.y >= grid.y - 10 && ln.y <= grid.y + grid.h + 10) {
+              ln.y >= grid.y - 4 && ln.y <= grid.y + grid.h + 4) {
             hdrLines.push(ln);
             consumedLines.add(li2);
           }

@@ -51,15 +51,12 @@ function _extractSegments(opList) {
   const hLines = []; // { x1, x2, y }
   const vLines = []; // { y1, y2, x }
 
-  // Minimal CTM stack — only track translation + uniform scale
+  // CTM stack — tracks graphics state transforms from q/Q/cm operators
   const ctmStack = [{ a: 1, b: 0, c: 0, d: 1, e: 0, f: 0 }];
   const ctm = () => ctmStack[ctmStack.length - 1];
 
   const tx = (x, y) => { const m = ctm(); return m.a * x + m.c * y + m.e; };
   const ty = (x, y) => { const m = ctm(); return m.b * x + m.d * y + m.f; };
-
-  let cx = 0, cy = 0; // current point
-  let pathStart = { x: 0, y: 0 };
 
   const addSeg = (x1, y1, x2, y2) => {
     const dy = Math.abs(y2 - y1);
@@ -71,20 +68,36 @@ function _extractSegments(opList) {
     }
   };
 
+  // pdfjs OPS enum values (pdfjs 3.x — these are NOT raw PDF spec op numbers)
+  const OPS_SAVE      = 10;
+  const OPS_RESTORE   = 11;
+  const OPS_TRANSFORM = 12;
+  // All path drawing ops are batched into a single constructPath call
+  const OPS_PATH      = 91;
+
+  // Sub-operation codes inside constructPath args[0]
+  const P_MOVETO   = 13; // [x, y]
+  const P_LINETO   = 14; // [x, y]
+  const P_CURVETO  = 15; // [x1,y1, x2,y2, x3,y3]
+  const P_CURVETO2 = 16; // [x1,y1, x3,y3]
+  const P_CURVETO3 = 17; // [x2,y2, x3,y3]
+  const P_CLOSE    = 18; // (no coords)
+  const P_RECT     = 19; // [x, y, w, h]
+
   for (let i = 0; i < fnArray.length; i++) {
     const fn   = fnArray[i];
     const args = argsArray[i];
 
     switch (fn) {
-      case 24: { // q — save
+      case OPS_SAVE: {
         ctmStack.push({ ...ctm() });
         break;
       }
-      case 25: { // Q — restore
+      case OPS_RESTORE: {
         if (ctmStack.length > 1) ctmStack.pop();
         break;
       }
-      case 26: { // cm — concat matrix [a b c d e f]
+      case OPS_TRANSFORM: {
         const [a, b, c, d, e, f] = args;
         const m = ctm();
         ctmStack[ctmStack.length - 1] = {
@@ -95,46 +108,51 @@ function _extractSegments(opList) {
         };
         break;
       }
-      case 4: { // m — moveto
-        cx = tx(args[0], args[1]);
-        cy = ty(args[0], args[1]);
-        pathStart = { x: cx, y: cy };
+      case OPS_PATH: {
+        // args = [[sub-op codes], [flat coord array], [minX,maxX,minY,maxY]]
+        const subOps = args[0];
+        const co     = args[1]; // flat coordinate values
+        let ci = 0;             // index into co[]
+        let px = 0, py = 0;    // current path position (PDF user space, pre-CTM)
+        let sx = 0, sy = 0;    // subpath start (for P_CLOSE)
+
+        for (const sub of subOps) {
+          switch (sub) {
+            case P_MOVETO: {
+              px = co[ci]; py = co[ci + 1]; ci += 2;
+              sx = px; sy = py;
+              break;
+            }
+            case P_LINETO: {
+              const nx = co[ci], ny = co[ci + 1]; ci += 2;
+              addSeg(tx(px, py), ty(px, py), tx(nx, ny), ty(nx, ny));
+              px = nx; py = ny;
+              break;
+            }
+            case P_CURVETO:  { ci += 6; px = co[ci-2]; py = co[ci-1]; break; }
+            case P_CURVETO2: { ci += 4; px = co[ci-2]; py = co[ci-1]; break; }
+            case P_CURVETO3: { ci += 4; px = co[ci-2]; py = co[ci-1]; break; }
+            case P_CLOSE: {
+              addSeg(tx(px, py), ty(px, py), tx(sx, sy), ty(sx, sy));
+              px = sx; py = sy;
+              break;
+            }
+            case P_RECT: {
+              const rx = co[ci], ry = co[ci+1], rw = co[ci+2], rh = co[ci+3]; ci += 4;
+              const bx = tx(rx, ry),          by = ty(rx, ry);
+              const ex = tx(rx + rw, ry + rh), ey = ty(rx + rw, ry + rh);
+              const left = Math.min(bx, ex), right = Math.max(bx, ex);
+              const bot  = Math.min(by, ey), top   = Math.max(by, ey);
+              hLines.push({ x1: left, x2: right, y: bot  });
+              hLines.push({ x1: left, x2: right, y: top  });
+              vLines.push({ y1: bot,  y2: top,   x: left });
+              vLines.push({ y1: bot,  y2: top,   x: right });
+              break;
+            }
+          }
+        }
         break;
       }
-      case 5: { // l — lineto
-        const nx = tx(args[0], args[1]);
-        const ny = ty(args[0], args[1]);
-        addSeg(cx, cy, nx, ny);
-        cx = nx; cy = ny;
-        break;
-      }
-      case 6:   // c — curveto (skip curves)
-      case 7:   // v
-      case 8: { // y
-        cx = tx(args[args.length - 2], args[args.length - 1]);
-        cy = ty(args[args.length - 2], args[args.length - 1]);
-        break;
-      }
-      case 9:   // h — closepath
-      case 11:  // W — clip
-      case 12:  // s — closepath+stroke
-      case 17: { // b — closepath+fill+stroke
-        addSeg(cx, cy, pathStart.x, pathStart.y);
-        break;
-      }
-      case 91: { // re — rectangle [x y w h]
-        const [rx, ry, rw, rh] = args;
-        const bx = tx(rx, ry),        by = ty(rx, ry);
-        const ex = tx(rx + rw, ry + rh), ey = ty(rx + rw, ry + rh);
-        const left = Math.min(bx, ex), right = Math.max(bx, ex);
-        const bot  = Math.min(by, ey), top   = Math.max(by, ey);
-        hLines.push({ x1: left, x2: right, y: bot  });
-        hLines.push({ x1: left, x2: right, y: top  });
-        vLines.push({ y1: bot,  y2: top,   x: left });
-        vLines.push({ y1: bot,  y2: top,   x: right });
-        break;
-      }
-      // All other ops ignored
     }
   }
 
