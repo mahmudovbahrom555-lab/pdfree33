@@ -71,13 +71,22 @@ def _md5_short(path, length=8):
 
 def _compute_hashes():
     app_hash = _md5_short(os.path.join(ROOT, 'js', 'app.js'))
-    # cache_version combines app.js + sw.js so the SW cache is busted whenever
-    # either file changes — not just when app.js changes.
+    # cache_version hashes ALL js/*.js files + sw.js so the SW cache is busted
+    # whenever ANY JS module changes — not just app.js.
+    # Previously only app.js+sw.js were hashed, so changes to processor.js,
+    # pdf2wordTables.js etc. kept the same cache_version → SW served stale files.
     combined = b''
-    for path in [os.path.join(ROOT, 'js', 'app.js'), os.path.join(ROOT, 'sw.js')]:
-        if os.path.exists(path):
-            with open(path, 'rb') as f:
-                combined += f.read()
+    js_dir = os.path.join(ROOT, 'js')
+    for fname in sorted(os.listdir(js_dir)):
+        if fname.endswith('.js') and fname != 'vendor':
+            fpath = os.path.join(js_dir, fname)
+            if os.path.isfile(fpath):
+                with open(fpath, 'rb') as f:
+                    combined += f.read()
+    sw_path = os.path.join(ROOT, 'sw.js')
+    if os.path.exists(sw_path):
+        with open(sw_path, 'rb') as f:
+            combined += f.read()
     cache_version = hashlib.md5(combined).hexdigest()[:8]
     return {
         'app':           app_hash,
