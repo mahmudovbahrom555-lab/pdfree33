@@ -620,4 +620,12 @@
     <xhtml:link rel="alternate" hreflang="en"        href="https://pdfree.io/pdf-to-word/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://pdfree.io/pdf-to-word/"/>
   </url>
+  <url>
+    <loc>https://pdfree.io/flatten-pdf/</loc>
+    <lastmod>2026-06-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://pdfree.io/flatten-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pdfree.io/flatten-pdf/"/>
+  </url>
 </urlset>

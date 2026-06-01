@@ -1007,6 +1007,41 @@
         "fr": "Remplissez des champs PDF et ajoutez des signatures. 100 % local — les fichiers ne quittent jamais votre navigateur. Gratuit, sans compte.",
         "pt": "Preencha campos de formulário PDF e adicione assinaturas. 100% local — os arquivos nunca saem do seu navegador. Grátis, sem conta."
       }
+    },
+    {
+      "id": "flatten",
+      "icon": "🔒",
+      "toolKey": "flatten",
+      "slugs": {
+        "en": "flatten-pdf"
+      },
+      "titles": {
+        "en": "Flatten PDF — Make PDF Non-Editable Online Free | PDFree"
+      },
+      "descs": {
+        "en": "Lock your filled PDF form so fields can't be edited. Bakes form data into the page — no upload, 100% private, free."
+      },
+      "navLabels": {
+        "en": "Lock PDF"
+      },
+      "cardNames": {
+        "en": "Flatten PDF"
+      },
+      "cardDescs": {
+        "en": "Bake form fields into the page — prevent editing"
+      },
+      "breadcrumb": {
+        "en": "Flatten PDF"
+      },
+      "metaDescs": {
+        "en": "Lock your filled PDF form so fields can't be edited. Bakes form data into the page. No upload, 100% private."
+      },
+      "ogTitles": {
+        "en": "Flatten PDF — Lock Fillable PDF Form Online, No Upload"
+      },
+      "ogDescs": {
+        "en": "Make a fillable PDF non-editable. Form fields baked into the page — processed in your browser, never uploaded. Free."
+      }
     }
   ],
   "ui": {

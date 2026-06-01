@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src  'self'
+                'wasm-unsafe-eval'
+                blob:
+                https://cdnjs.cloudflare.com
+                https://esm.sh
+                https://plausible.io
+                https://pagead2.googlesyndication.com
+                https://static.cloudflareinsights.com;
+    style-src   'self' 'unsafe-inline';
+    font-src    'self';
+    img-src     'self' data: blob: https:;
+    connect-src 'self'
+                https://cdnjs.cloudflare.com
+                https://*.workers.dev
+                https://plausible.io
+                https://pagead2.googlesyndication.com
+                https://www.googletagservices.com
+                https://*.doubleclick.net
+                https://cloudflareinsights.com;
+    frame-src   https://googleads.g.doubleclick.net
+                https://tpc.googlesyndication.com;
+    worker-src  'self' blob:;
+    object-src  'none';
+  ">
+  <title>Flatten PDF — Make PDF Non-Editable Online Free | PDFree</title>
+  <meta name="description" content="Lock your filled PDF form so fields can't be edited. Bakes form data into the page — no upload, 100% private, free.">
+  <meta property="og:title"       content="Flatten PDF — Lock Fillable PDF Form Online, No Upload">
+  <meta property="og:description" content="Make a fillable PDF non-editable. Form fields baked into the page — processed in your browser, never uploaded. Free.">
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://pdfree.io/flatten-pdf/">
+  <meta property="og:site_name"   content="PDFree">
+  <meta property="og:locale"      content="en_US">
+  <meta property="og:image"       content="https://pdfree.io/icons/og-image.jpg">
+  <meta property="og:image:width"  content="1200">
+  <meta property="og:image:height" content="633">
+  <meta name="twitter:card"        content="summary_large_image">
+  <meta name="twitter:site"        content="@pdfree_io">
+  <meta name="twitter:image"       content="https://pdfree.io/icons/og-image.jpg">
+
+  <link rel="canonical" href="https://pdfree.io/flatten-pdf/">
+  <link rel="alternate" hreflang="en" href="https://pdfree.io/flatten-pdf/">
+  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/flatten-pdf/">
+
+  <!-- PWA -->
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="PDFree">
+  <link rel="apple-touch-icon" href="../icons/icon-192.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+  <link rel="stylesheet" href="../css/fonts.css">
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/animations.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Flatten PDF",
+    "description": "Lock your filled PDF form so fields can't be edited. Bakes form data into the page — no upload, 100% private.",
+    "url": "https://pdfree.io/flatten-pdf/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "browserRequirements": "Requires a modern browser with JavaScript enabled",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": [
+      "No file upload required",
+      "100% private — files processed locally",
+      "No account or signup needed",
+      "No file size limits",
+      "Works offline"
+    ],
+    "provider": {
+      "@type": "Organization",
+      "name": "PDFree",
+      "url": "https://pdfree.io"
+    },
+    "keywords": "flatten pdf, make pdf non editable, lock pdf form, convert fillable pdf to regular pdf"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What does flattening a PDF mean?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Flattening bakes the filled-in form data directly into the page content. After flattening, form fields no longer exist as interactive elements — they become plain text or images, and cannot be edited by anyone."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is my file uploaded to a server?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. All processing happens entirely in your browser using JavaScript. Your PDF never leaves your device."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What happens if my PDF has no form fields?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "If the PDF has no editable fields (it's already flat), the file is returned to you unchanged. You'll see a notice confirming this."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does this work on XFA forms (older Adobe LiveCycle format)?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. XFA is a legacy format created by Adobe LiveCycle Designer and requires Adobe Acrobat to flatten. Our tool supports standard AcroForm PDFs, which covers the vast majority of modern fillable PDFs."
+        }
+      }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to Make a PDF Non-Editable",
+    "description": "Lock your filled PDF form by flattening it — fields become plain text, nobody can edit them.",
+    "totalTime": "PT1M",
+    "tool": [{"@type": "HowToTool", "name": "PDFree — free browser-based PDF tool"}],
+    "step": [
+      {
+        "@type": "HowToStep",
+        "position": 1,
+        "name": "Upload your filled PDF",
+        "text": "Go to pdfree.io/flatten-pdf/ and drop your filled PDF form into the drop zone.",
+        "url": "https://pdfree.io/flatten-pdf/#step1"
+      },
+      {
+        "@type": "HowToStep",
+        "position": 2,
+        "name": "Click Lock PDF Form",
+        "text": "Press the green button. The form fields are baked into the page in your browser — nothing is uploaded.",
+        "url": "https://pdfree.io/flatten-pdf/#step2"
+      },
+      {
+        "@type": "HowToStep",
+        "position": 3,
+        "name": "Download the locked PDF",
+        "text": "Your flattened PDF downloads instantly. Fields are now plain text — no one can change the values.",
+        "url": "https://pdfree.io/flatten-pdf/#step3"
+      }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "PDFree",
+        "item": "https://pdfree.io/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Flatten PDF",
+        "item": "https://pdfree.io/flatten-pdf/"
+      }
+    ]
+  }
+  </script>
+</head>
+<body data-tool="flatten">
+
+  <nav>
+    <a href="../" class="logo" id="logo" aria-label="Go to homepage" style="text-decoration:none"><span class="logo-text">PDF<span>ree</span></span></a>
+    <div class="nav-links">
+      <a href="../merge-pdf/" class="nav-link" data-tool="merge">Merge</a>
+      <a href="../split-pdf/" class="nav-link" data-tool="split">Split</a>
+      <a href="../compress-pdf/" class="nav-link" data-tool="compress">Compress</a>
+      <a href="../jpg2pdf/" class="nav-link" data-tool="jpg2pdf">JPG→PDF</a>
+      <a href="../pdf2jpg/" class="nav-link" data-tool="pdf2jpg">PDF→JPG</a>
+      <a href="../watermark-pdf/" class="nav-link" data-tool="watermark">Watermark</a>
+      <a href="../pagenum-pdf/" class="nav-link" data-tool="pagenum">Page №</a>
+      <a href="../metadata-pdf/" class="nav-link" data-tool="meta">Metadata</a>
+      <a href="../extract-pdf/" class="nav-link" data-tool="extract">Extract</a>
+      <a href="../draw-on-pdf/" class="nav-link" data-tool="draw-pdf">Draw</a>
+      <a href="../rotate-pdf/" class="nav-link" data-tool="rotate">Rotate</a>
+      <a href="../protect-pdf/" class="nav-link" data-tool="protect">Protect</a>
+      <a href="../pdf-to-word/" class="nav-link" data-tool="pdf2word">PDF→Word</a>
+    </div>
+  </nav>
+  <nav aria-label="Breadcrumb" style="position:static;padding:8px 24px;border-bottom:1px solid var(--border);background:var(--surface);">
+    <ol style="list-style:none;margin:0;padding:0;display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text3);"
+        itemscope itemtype="https://schema.org/BreadcrumbList">
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a href="/" itemprop="item" style="color:var(--green);text-decoration:none;font-weight:500;">
+          <span itemprop="name">PDFree</span>
+        </a>
+        <meta itemprop="position" content="1">
+      </li>
+      <li aria-hidden="true" style="color:var(--border);">›</li>
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a href="/flatten-pdf/" itemprop="item" style="color:var(--text2);text-decoration:none;" aria-current="page">
+          <span itemprop="name">Flatten PDF</span>
+        </a>
+        <meta itemprop="position" content="2">
+      </li>
+    </ol>
+  </nav>
+
+<!-- ── Tool workspace ── -->
+  <main id="toolArea" class="main-area" aria-busy="false">
+
+    <div class="tool-header">
+      <div class="tool-header-icon" id="toolIcon" aria-hidden="true">🔒</div>
+      <div class="tool-header-text">
+        <h2 id="toolTitle">Lock PDF Form — Make Non-Editable</h2>
+        <p  id="toolDesc">Bake filled form fields into the page. Fields become plain text — no one can edit them. 100% private, no upload.</p>
+      </div>
+    </div>
+
+    <div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-label="Upload PDF — click or drag and drop">
+      <input type="file" id="fileInput" accept=".pdf" aria-hidden="true">
+      <span class="drop-icon" aria-hidden="true">📂</span>
+      <div class="drop-title">Drop your PDF here</div>
+      <div class="drop-sub">or click to browse</div>
+      <button class="drop-btn" id="chooseFilesBtn" type="button">Choose file</button>
+    </div>
+
+    <div id="fileList"    class="file-list" aria-live="polite" aria-label="Selected file"></div>
+    <div id="fileCount"   class="file-count"   style="display:none"></div>
+
+    <button id="mergeBtn" class="merge-btn" type="button" disabled data-mode="process">Lock PDF Form</button>
+    <button id="cancelBtn" class="cancel-btn" type="button" style="display:none" aria-label="Cancel processing">✕ Cancel</button>
+
+    <div id="progressBar"   class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+    <div id="progressLabel" class="progress-label"></div>
+
+    <!-- Success card -->
+    <div id="successCard" class="success-card" role="alert" aria-live="polite" style="display:none">
+      <div class="success-top">
+        <div class="success-icon" aria-hidden="true">✓</div>
+        <div class="success-text">
+          <h3 id="successTitle">Done!</h3>
+          <p  id="successDesc"></p>
+        </div>
+        <button id="downloadBtn" class="download-btn" type="button">⬇ Download</button>
+        <button id="shareBtn" class="share-btn" type="button" style="display:none" aria-label="Send file via device apps"></button>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ── SEO Content (for indexing) ── -->
+  <hr style="border:none;border-top:2px solid var(--border);margin:48px 24px 0;" aria-hidden="true">
+  <section class="seo-article" aria-labelledby="seoH1_flatten-pdf">
+    <div class="seo-article__inner">
+      <div class="seo-content" style="max-width:800px;margin:60px auto 40px;padding:0 24px;color:var(--text2);line-height:1.75;">
+
+        <h1 id="seoH1_flatten-pdf" style="font-size:clamp(22px,3.5vw,30px);color:var(--text);margin:0 0 16px;font-weight:700;">Flatten PDF — Make Fillable PDF Non-Editable Online</h1>
+        <p style="font-size:15px;margin:0 0 40px;">Filled in a form and need to lock it before sending? Flattening bakes the values directly into the page — fields become plain text, no one can alter the data, and the document looks identical on every device and viewer.</p>
+
+        <!-- How to use -->
+        <h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">How to Lock a PDF Form in 3 Steps</h2>
+
+        <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
+          <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">1</div>
+          <div>
+            <strong style="color:var(--text);font-size:15px;">Upload your filled PDF</strong>
+            <p style="margin:6px 0 0;font-size:14px;">Click <strong>Choose file</strong> or drag your filled PDF into the drop zone. The file stays on your device — nothing is sent to any server.</p>
+          </div>
+        </div>
+        <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
+          <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">2</div>
+          <div>
+            <strong style="color:var(--text);font-size:15px;">Click Lock PDF Form</strong>
+            <p style="margin:6px 0 0;font-size:14px;">One button, no settings. The tool reads every form field, renders its current value as static page content, and removes the interactive layer.</p>
+          </div>
+        </div>
+        <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
+          <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">3</div>
+          <div>
+            <strong style="color:var(--text);font-size:15px;">Download the locked PDF</strong>
+            <p style="margin:6px 0 0;font-size:14px;">The file downloads with <code>_locked</code> added to the name. Open it and you'll find plain text where the form fields used to be.</p>
+          </div>
+        </div>
+
+        <!-- When to use -->
+        <h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">When You Need to Flatten a PDF</h2>
+
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">Government and court portals reject your upload</strong>
+          <p style="margin:6px 0 0;font-size:14px;">Systems like CM/ECF (US federal courts), NIH grants, and many government e-filing portals explicitly require a "flattened PDF." If the portal returns an error about form fields, this tool fixes it.</p>
+        </div>
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">Sending a contract or agreement</strong>
+          <p style="margin:6px 0 0;font-size:14px;">After both parties have filled in their details, flatten the document before final distribution. This prevents anyone from quietly editing a field value after the fact.</p>
+        </div>
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">Preparing for print or long-term archiving</strong>
+          <p style="margin:6px 0 0;font-size:14px;">Flattened PDFs render identically in every viewer, printer, and archival system. Form layers and transparency effects that cause printing glitches are eliminated.</p>
+        </div>
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">Recipient's PDF viewer shows empty fields</strong>
+          <p style="margin:6px 0 0;font-size:14px;">Some viewers (older Acrobat versions, built-in browser PDF viewers, iOS Preview) don't render AcroForm field content. Flattening bakes the values into the page so they appear everywhere.</p>
+        </div>
+
+        <!-- Comparison table -->
+        <h2 style="font-size:22px;color:var(--text);margin:48px 0 16px;font-weight:700;">PDFree vs Competitors</h2>
+        <div style="overflow-x:auto;margin:0 0 32px;">
+          <table style="width:100%;border-collapse:collapse;font-size:14px;min-width:520px;">
+            <thead>
+              <tr style="border-bottom:2px solid var(--border);">
+                <th style="text-align:left;padding:10px 14px;color:var(--text);font-weight:600;">Tool</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">Flatten PDF</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">File limit</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">Privacy</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom:1px solid var(--border);background:var(--green-light);">
+                <td style="padding:10px 14px;color:var(--green);font-weight:700;">PDFree</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">✓ AcroForm</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">No limit</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;">No upload</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Free forever</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 14px;color:var(--text);">Adobe Acrobat</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">✓ AcroForm + XFA</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">No limit</td>
+                <td style="text-align:center;padding:10px 14px;color:#b45309;">Local app</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">$19.99/mo</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 14px;color:var(--text);">Smallpdf</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">✓ AcroForm</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">2 tasks/day</td>
+                <td style="text-align:center;padding:10px 14px;color:#b45309;">Uploaded to servers</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Freemium</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 14px;color:var(--text);">iLovePDF</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">✓ AcroForm</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Daily limit</td>
+                <td style="text-align:center;padding:10px 14px;color:#b45309;">Uploaded to servers</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Freemium</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- FAQ -->
+        <h2 style="font-size:22px;color:var(--text);margin:48px 0 20px;font-weight:700;">Frequently Asked Questions</h2>
+
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">What exactly happens to the form fields?</h3>
+          <p style="margin:0;font-size:14px;">Each field's current value is rendered as static text or image directly on the page content stream. The interactive field annotation (the object that makes it editable) is then removed from the PDF. The result looks identical but contains no editable layer.</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Is this different from adding a password to a PDF?</h3>
+          <p style="margin:0;font-size:14px;">Yes. A password restricts access to the file. Flattening removes the form structure — the file stays fully readable but the fields are gone. For maximum protection, use <a href="/protect-pdf/" style="color:var(--green);">Protect PDF</a> to add a password after flattening.</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">What happens if my PDF has no form fields?</h3>
+          <p style="margin:0;font-size:14px;">If the PDF is already flat (no editable fields), the file is returned to you unchanged and a notice appears. This is not an error — the file is just already in the state you want.</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Does flattening reduce file size?</h3>
+          <p style="margin:0;font-size:14px;">Usually slightly, yes. Removing form annotations and their associated resources (fonts, appearance streams) can trim a few kilobytes. The difference is rarely significant for typical forms.</p>
+        </div>
+        <div style="margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">My form uses Adobe LiveCycle (XFA) — will this work?</h3>
+          <p style="margin:0;font-size:14px;">No. XFA is a proprietary Adobe format that requires Acrobat Pro to flatten. Our tool supports AcroForm, which is the standard format used by the vast majority of modern fillable PDFs (IRS forms, government forms, most legal templates). If you're unsure which format your PDF uses, try the tool — you'll get a clear message if XFA is detected.</p>
+        </div>
+
+        <!-- Related tools -->
+        <h2 style="font-size:22px;color:var(--text);margin:48px 0 12px;font-weight:700;">Related Tools</h2>
+        <ul style="margin:0 0 40px;padding-left:24px;display:flex;flex-direction:column;gap:8px;">
+          <li><a href="/fill/" style="color:var(--green);font-weight:500;">Fill PDF Form</a> — Fill and flatten in one step</li>
+          <li><a href="/protect-pdf/" style="color:var(--green);font-weight:500;">Protect PDF</a> — Add a password after flattening for extra security</li>
+          <li><a href="/redact-pdf/" style="color:var(--green);font-weight:500;">Redact PDF</a> — Permanently cover sensitive areas</li>
+          <li><a href="/merge-large-pdf-files/" style="color:var(--green);font-weight:500;">Merge PDF</a> — Combine flattened documents into one file</li>
+        </ul>
+
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    PDFree · <strong>All processing happens 100% in your browser</strong> · Files are <strong>never uploaded</strong><br>
+    <span style="color:var(--green)">🔒</span> Your documents never leave your device &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> Built to be free for everyone, forever<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
+      <a href="/privacy.html" style="color:var(--green)">Privacy</a>
+      &nbsp;·&nbsp;
+      <a href="/terms.html" style="color:var(--green)">Terms</a>
+      &nbsp;·&nbsp;
+      <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a>
+      &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green)">GitHub</a>
+    </span>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script>window.PDFREE_INITIAL_TOOL = 'flatten';</script>
+  <script type="module" src="../js/app.js"></script>
+
+<!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
