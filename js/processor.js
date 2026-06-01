@@ -15,6 +15,7 @@ import { TOOLS, MAX_COMPRESS_MB } from './config.js';
 import { getRunner, getWorkerTool } from './toolRegistry.js';
 import { loadJSZip, loadDocx } from './lazyLibs.js';
 import { preprocessPdfBuffer } from './decryptPdf.js';
+import { detectTables } from './pdf2wordTables.js';
 
 // Hard cap for image mode — defined here to avoid coupling with pdf2wordUI.js.
 // Must match MAX_IMAGE_PAGES in pdf2wordUI.js.
@@ -823,14 +824,20 @@ async function _runPdf2Word(filesSnapshot, { mode = 'text', dpi = 150 } = {}) {
 }
 
 // Text extraction: uses PDF.js getTextContent → builds docx paragraphs.
-// Groups items into lines by Y-proximity, detects headings by font size ratio.
+// Groups items into lines, runs table detection per page, emits docx.Table
+// for detected tables and docx.Paragraph for everything else.
 async function _p2wExtractText(pdfDoc) {
-  const { Paragraph, TextRun, HeadingLevel } = window.docx;
-  const pageItems   = [];
-  const allSizes    = [];
+  const { Paragraph, TextRun, HeadingLevel,
+          Table, TableRow, TableCell, WidthType } = window.docx;
+
+  const YTOL = 4;   // px — items within 4px on Y → same line
+
+  // ── Pass 1: collect all items + compute global median font size ────────────
+  const pageData = [];
+  const allSizes = [];
 
   for (let p = 1; p <= pdfDoc.numPages; p++) {
-    setProgress(10 + Math.round((p / pdfDoc.numPages) * 50),
+    setProgress(10 + Math.round((p / pdfDoc.numPages) * 40),
                 `Reading page ${p}/${pdfDoc.numPages}…`);
 
     const page    = await pdfDoc.getPage(p);
@@ -842,72 +849,115 @@ async function _p2wExtractText(pdfDoc) {
         const style    = content.styles[item.fontName] || {};
         const fam      = (style.fontFamily || '').toLowerCase();
         return {
-          str:    item.str,
-          x:      item.transform[4],
-          y:      item.transform[5],
+          str:      item.str,
+          x:        item.transform[4],
+          y:        item.transform[5],
           fontSize,
-          bold:   /bold|heavy|black/.test(fam),
-          italic: /italic|oblique/.test(fam),
+          bold:     /bold|heavy|black/.test(fam),
+          italic:   /italic|oblique/.test(fam),
         };
       });
 
+    // Group into lines
+    const lines = [];
+    for (const item of [...items].sort((a, b) => b.y - a.y)) {
+      let merged = false;
+      for (const ln of lines) {
+        if (Math.abs(ln.y - item.y) <= YTOL) { ln.items.push(item); merged = true; break; }
+      }
+      if (!merged) lines.push({ y: item.y, items: [item] });
+    }
+    lines.forEach(ln => ln.items.sort((a, b) => a.x - b.x));
+
     allSizes.push(...items.map(i => i.fontSize).filter(s => s > 0));
-    pageItems.push(items);
+    pageData.push(lines);
   }
 
   const sorted = [...allSizes].sort((a, b) => a - b);
   const median = sorted[Math.floor(sorted.length / 2)] || 10;
 
+  // ── Pass 2: build Word content ─────────────────────────────────────────────
   const paragraphs = [];
-  const YTOL = 4;   // px — items within 4px on Y axis → same line
 
-  for (let pi = 0; pi < pageItems.length; pi++) {
+  for (let pi = 0; pi < pageData.length; pi++) {
     if (!isProcessing) break;
 
     if (pi > 0) {
       paragraphs.push(new Paragraph({ children: [], pageBreakBefore: true }));
     }
 
-    const items = pageItems[pi];
-    if (!items.length) continue;
+    const lines = pageData[pi];
+    if (!lines.length) continue;
 
-    // Group into lines by Y proximity
-    const lines = [];
-    for (const item of [...items].sort((a, b) => b.y - a.y)) {
-      let merged = false;
-      for (const ln of lines) {
-        if (Math.abs(ln.y - item.y) <= YTOL) {
-          ln.items.push(item);
-          merged = true; break;
-        }
+    setProgress(50 + Math.round((pi / pageData.length) * 40),
+                `Building page ${pi + 1}/${pageData.length}…`);
+
+    // Detect tables on this page
+    const tables = detectTables(lines);
+
+    // Build set: lineIdx → table object (for O(1) lookup)
+    const lineToTable = new Map();
+    for (const t of tables) {
+      for (let li = t.startIdx; li <= t.endIdx; li++) {
+        lineToTable.set(li, t);
       }
-      if (!merged) lines.push({ y: item.y, items: [item] });
     }
 
-    setProgress(60 + Math.round((pi / pageItems.length) * 30),
-                `Building page ${pi + 1}/${pageItems.length}…`);
+    let li = 0;
+    while (li < lines.length) {
+      const tbl = lineToTable.get(li);
 
-    for (const ln of lines) {
-      ln.items.sort((a, b) => a.x - b.x);
-      const maxSize = Math.max(...ln.items.map(i => i.fontSize));
+      if (tbl && li === tbl.startIdx) {
+        // ── Emit docx Table ─────────────────────────────────────────────────
+        paragraphs.push(
+          new Table({
+            width: { size: 100, type: WidthType.PERCENTAGE },
+            rows: tbl.rows.map(row =>
+              new TableRow({
+                children: row.map(cellText =>
+                  new TableCell({
+                    children: [new Paragraph({
+                      children: [new TextRun({ text: cellText || '' })],
+                      spacing: { after: 0 },
+                    })],
+                  })
+                ),
+              })
+            ),
+          })
+        );
+        // Add spacing after table
+        paragraphs.push(new Paragraph({ children: [], spacing: { after: 120 } }));
+        li = tbl.endIdx + 1;
 
-      let heading;
-      if      (maxSize >= median * 2.2) heading = HeadingLevel.HEADING_1;
-      else if (maxSize >= median * 1.7) heading = HeadingLevel.HEADING_2;
-      else if (maxSize >= median * 1.3) heading = HeadingLevel.HEADING_3;
+      } else if (tbl) {
+        // Line inside a table — already handled above, skip
+        li++;
 
-      const runs = ln.items.map(i => new TextRun({
-        text:    i.str,
-        bold:    i.bold,
-        italics: i.italic,
-        size:    Math.max(16, Math.round(i.fontSize * 2)),  // half-points
-      }));
+      } else {
+        // ── Emit regular Paragraph ───────────────────────────────────────────
+        const ln      = lines[li];
+        const maxSize = Math.max(...ln.items.map(i => i.fontSize));
 
-      paragraphs.push(new Paragraph({
-        ...(heading !== undefined ? { heading } : {}),
-        children: runs,
-        spacing:  { after: 80 },
-      }));
+        let heading;
+        if      (maxSize >= median * 2.2) heading = HeadingLevel.HEADING_1;
+        else if (maxSize >= median * 1.7) heading = HeadingLevel.HEADING_2;
+        else if (maxSize >= median * 1.3) heading = HeadingLevel.HEADING_3;
+
+        const runs = ln.items.map(i => new TextRun({
+          text:    i.str,
+          bold:    i.bold,
+          italics: i.italic,
+          size:    Math.max(16, Math.round(i.fontSize * 2)),
+        }));
+
+        paragraphs.push(new Paragraph({
+          ...(heading !== undefined ? { heading } : {}),
+          children: runs,
+          spacing:  { after: 80 },
+        }));
+        li++;
+      }
     }
   }
 
@@ -958,8 +1008,10 @@ async function _p2wRenderImages(pdfDoc, dpi, pageLimit) {
       let h = Math.round(canvas.height * 96 / dpi);
       if (w > MAX_W) { h = Math.round(h * MAX_W / w); w = MAX_W; }
 
-      if (p > 1) paragraphs.push(new Paragraph({ children: [], pageBreakBefore: true }));
+      // pageBreakBefore on the image paragraph itself — avoids the separate
+      // empty paragraph that Word counts as content and renders as a blank page.
       paragraphs.push(new Paragraph({
+        pageBreakBefore: p > 1,
         children: [new ImageRun({ data: arrayBuffer, transformation: { width: w, height: h }, type: 'jpg' })],
       }));
 
