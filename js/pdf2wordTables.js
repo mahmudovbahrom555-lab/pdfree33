@@ -52,15 +52,39 @@ export function detectTables(lines, { debug = false } = {}) {
 
     // Extend forward while subsequent lines align with the base column pattern
     let j = i + 1;
+    // Track how many consecutive stub rows we've accepted.
+    // A stub row = exactly 1 item that is a positive sequential integer.
+    // This handles blank template tables (school forms, contracts) where
+    // only the № column contains text and all data cells are empty.
+    let stubSeq = 0;   // next expected stub row number (0 = none yet)
+
     while (j < lines.length) {
       const next = lines[j];
-      if (!next.items || next.items.length === 0) break;  // blank line = table end
+      if (!next.items || next.items.length === 0) break;
 
-      const nextCols  = _clusterColumns(next.items, COL_TOLERANCE);
-      const alignScore = _columnAlignScore(baseCols, nextCols, COL_TOLERANCE);
+      // Fast path: line has enough items — check column alignment
+      if (next.items.length >= MIN_COLS) {
+        const nextCols   = _clusterColumns(next.items, COL_TOLERANCE);
+        const alignScore = _columnAlignScore(baseCols, nextCols, COL_TOLERANCE);
+        if (alignScore >= ALIGN_THRESHOLD) {
+          // Reset stub sequence when we see a properly-filled row
+          stubSeq = 0;
+          j++;
+          continue;
+        }
+        break;
+      }
 
-      if (alignScore >= ALIGN_THRESHOLD) { j++; }
-      else                              { break; }
+      // Single-item line — check for stub row (empty template row with only №)
+      // Condition: single integer item ≥1, sequential (1, 2, 3…) or restarting at 1
+      const stubN = _stubRowNumber(next);
+      if (stubN !== null && (stubSeq === 0 ? stubN === 1 : stubN === stubSeq + 1)) {
+        stubSeq = stubN;
+        j++;
+        continue;
+      }
+
+      break;
     }
 
     const rowCount = j - i;
@@ -68,7 +92,11 @@ export function detectTables(lines, { debug = false } = {}) {
       const tableLines = lines.slice(i, j);
       const colBounds  = _detectColumnBoundaries(tableLines, COL_TOLERANCE);
       const rows       = tableLines.map(ln => _assignToCells(ln.items, colBounds));
-      const scores     = _computeScores(rows, colBounds.length);
+
+      // Stub rows lower fillScore — compensate by boosting alignScore weight
+      // when the table is mostly empty (template form pattern).
+      const stubFraction = rows.filter(r => r.filter(c => c.trim()).length <= 1).length / rows.length;
+      const scores       = _computeScores(rows, colBounds.length, stubFraction);
 
       if (scores.confidence >= CONF_THRESHOLD) {
         tables.push({
@@ -89,6 +117,23 @@ export function detectTables(lines, { debug = false } = {}) {
 
   if (debug) _debugPrint(tables, lines);
   return tables;
+}
+
+// ── Stub row detection ────────────────────────────────────────────────────────
+
+/**
+ * If a line contains exactly one text item that is a positive integer,
+ * return that integer. Otherwise return null.
+ *
+ * Used to detect blank template rows that only have a row number (№):
+ *   |  1  |       |            |                   |
+ *   |  2  |       |            |                   |
+ * These appear in school journals, government forms, blank contracts, etc.
+ */
+function _stubRowNumber(line) {
+  if (line.items.length !== 1) return null;
+  const n = parseInt(line.items[0].str.trim(), 10);
+  return (!isNaN(n) && n >= 1) ? n : null;
 }
 
 // ── Column clustering ─────────────────────────────────────────────────────────
@@ -180,18 +225,24 @@ function _assignToCells(items, colBounds) {
 /**
  * Compute two independent quality signals and derive a combined confidence.
  *
- * alignScore: fraction of rows that have ≥ceil(cols*0.6) non-empty cells.
- *             Measures structural regularity.
- * fillScore:  average cell occupancy across all rows.
- *             Measures data density — sparse grids are likely false positives.
+ * alignScore:    fraction of rows that have ≥ceil(cols*0.6) non-empty cells.
+ *                Measures structural regularity.
+ * fillScore:     average cell occupancy across all rows.
+ *                Measures data density — sparse grids are likely false positives.
+ * stubFraction:  fraction of rows that are numbered-only (template rows).
+ *                When high, fillScore is penalised less — blank forms ARE tables.
  *
  * confidence: weighted combination, capped at 1.0.
  *             Row count bonus: more evidence → higher confidence.
  */
-function _computeScores(rows, expectedCols) {
+function _computeScores(rows, expectedCols, stubFraction = 0) {
   if (!rows.length || !expectedCols) return { alignScore: 0, fillScore: 0, confidence: 0 };
 
-  const minFilled = Math.ceil(expectedCols * 0.6);  // at least 60% of cols non-empty
+  // For template tables, require only 1 non-empty cell (the row number).
+  // For data tables, require 60% of cells non-empty.
+  const minFilled = stubFraction > 0.5
+    ? 1
+    : Math.ceil(expectedCols * 0.6);
 
   let alignedRows  = 0;
   let totalFill    = 0;
@@ -206,9 +257,13 @@ function _computeScores(rows, expectedCols) {
   const fillScore  = totalFill  / rows.length;
 
   // Row count bonus: saturates at 0.15 for 10+ rows
-  const rowBonus   = Math.min(rows.length / 10, 1) * 0.15;
+  const rowBonus = Math.min(rows.length / 10, 1) * 0.15;
 
-  const confidence = Math.min(alignScore * 0.55 + fillScore * 0.30 + rowBonus, 1.0);
+  // For template tables: weight align heavily, fill less (empty cells are expected)
+  const wAlign = stubFraction > 0.5 ? 0.70 : 0.55;
+  const wFill  = stubFraction > 0.5 ? 0.15 : 0.30;
+
+  const confidence = Math.min(alignScore * wAlign + fillScore * wFill + rowBonus, 1.0);
 
   return { alignScore, fillScore, confidence };
 }
