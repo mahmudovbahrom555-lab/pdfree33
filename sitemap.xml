@@ -612,4 +612,12 @@
     <xhtml:link rel="alternate" hreflang="en"        href="https://pdfree.io/sign/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://pdfree.io/sign/"/>
   </url>
+  <url>
+    <loc>https://pdfree.io/pdf-to-word/</loc>
+    <lastmod>2026-05-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://pdfree.io/pdf-to-word/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pdfree.io/pdf-to-word/"/>
+  </url>
 </urlset>

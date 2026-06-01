@@ -41,6 +41,7 @@ window.PDFREE_LOCALE = {
   prog_meta:         'Metadaten werden aktualisiert...',
   prog_protect:      'PDF wird verschlüsselt...',
   prog_rotate:       'Drehungen werden angewendet...',
+  prog_flatten:      'Formularfelder werden fixiert...',
   prog_redact:       'Bereiche werden abgedeckt...',
 
   // success descriptions
@@ -55,6 +56,8 @@ window.PDFREE_LOCALE = {
   desc_rotate:              'Gedreht · {pages} Seiten · {size}',
   desc_redact:              'Bereiche abgedeckt · {pages} Seiten · {size}',
   desc_fill:                'Formular ausgefüllt · {pages} Seiten · {size}',
+  desc_flatten:             'Felder gesperrt · {pages} Seiten · {size}',
+  warn_xfa_form:            'ℹ️ Keine bearbeitbaren Felder gefunden — Datei unverändert zurückgegeben. XFA-Formulare erfordern Adobe Acrobat.',
   desc_split_single:        '{n} Seite extrahiert · {size}',
   desc_split_single_many:   '{n} Seiten extrahiert · {size}',
   desc_split_separate:      'In {n} Datei aufgeteilt · {size}',

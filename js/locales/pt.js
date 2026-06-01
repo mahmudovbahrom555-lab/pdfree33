@@ -40,6 +40,7 @@ window.PDFREE_LOCALE = {
   prog_meta:         'A atualizar metadados...',
   prog_protect:      'A cifrar PDF...',
   prog_rotate:       'A aplicar rotações...',
+  prog_flatten:      'Bloqueando campos do formulário...',
   prog_redact:       'A cobrir áreas...',
 
   // success descriptions
@@ -54,6 +55,8 @@ window.PDFREE_LOCALE = {
   desc_rotate:              'Rodado · {pages} páginas · {size}',
   desc_redact:              'Áreas cobertas · {pages} páginas · {size}',
   desc_fill:                'Formulário preenchido · {pages} páginas · {size}',
+  desc_flatten:             'Campos bloqueados · {pages} páginas · {size}',
+  warn_xfa_form:            'ℹ️ Nenhum campo editável encontrado — arquivo devolvido sem alterações. Formulários XFA requerem Adobe Acrobat.',
   desc_split_single:        '{n} página extraída · {size}',
   desc_split_single_many:   '{n} páginas extraídas · {size}',
   desc_split_separate:      'Dividido em {n} ficheiro · {size}',

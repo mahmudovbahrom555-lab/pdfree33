@@ -52,6 +52,9 @@ self.onmessage = async function (e) {
       case 'fill':
         await handleFill(e.data.file, e.data.options);
         break;
+      case 'flatten':
+        await handleFlatten(e.data.file);
+        break;
       case 'draw':
         await handleDraw(e.data.original, e.data.layers);
         break;
@@ -1714,6 +1717,43 @@ async function _embedSigImage(pdfDoc, pages, dataUrl, rect, pageIndex) {
     height: drawH,
     opacity: 1,
   });
+}
+
+async function handleFlatten(fileBuffer) {
+  const { PDFDocument, StandardFonts } = PDFLib;
+
+  progress(10, 'Loading PDF…');
+  const pdfDoc = await PDFDocument.load(fileBuffer, { ignoreEncryption: true });
+  const form   = pdfDoc.getForm();
+  const fields = form.getFields();
+
+  if (fields.length === 0) {
+    // No AcroForm fields — already flat or XFA-only (pdf-lib cannot handle XFA).
+    // Return the original buffer so the user always gets their file back.
+    self.postMessage(
+      { type: 'done', result: fileBuffer, pageCount: pdfDoc.getPageCount(), info: 'no_fields' },
+      [fileBuffer]
+    );
+    return;
+  }
+
+  progress(40, 'Rendering field appearances…');
+  try {
+    const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+    form.updateFieldAppearances(font);
+  } catch { /* form already has valid font resources */ }
+
+  progress(65, 'Flattening fields…');
+  try {
+    form.flatten();
+  } catch { /* partial flatten on complex form — save best effort */ }
+
+  progress(85, 'Saving…');
+  const bytes = await pdfDoc.save({ useObjectStreams: true });
+  self.postMessage(
+    { type: 'done', result: bytes.buffer, pageCount: pdfDoc.getPageCount() },
+    [bytes.buffer]
+  );
 }
 
 // ============================================================

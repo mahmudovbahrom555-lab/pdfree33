@@ -45,6 +45,8 @@ import { initDraw, loadPdfFile, resetDraw } from './drawUI.js';
 import { initPointer, resetPointer }        from './drawPointer.js';
 import { initOcrOptions, hideOcrOptions,
          getOcrParams }                     from './ocrUI.js';
+import { initPdf2WordOptions, hidePdf2WordOptions,
+         getPdf2WordParams }               from './pdf2wordUI.js';
 
 // ── Merge options — inline (no separate mergeUI.js needed) ─────
 
@@ -212,6 +214,12 @@ registerTool('fill', {
                 : null,
 });
 
+registerTool('flatten', {
+  runner:     'worker',
+  workerTool: 'flatten',
+  getParams:  () => ({}),
+});
+
 let _drawInitialized = false;
 
 registerTool('draw-pdf', {
@@ -237,6 +245,18 @@ registerTool('ocr', {
     if (p.loading)                      return 'Analysing PDF…';
     if (!p.hasFile)                     return null;
     if (!p.isTextPdf && !p.isOcrReady) return 'Install OCR engine first';
+    return null;
+  },
+});
+
+registerTool('pdf2word', {
+  runner:    'pdf2word',
+  init:      initPdf2WordOptions,
+  hide:      hidePdf2WordOptions,
+  getParams: getPdf2WordParams,
+  validate:  p => {
+    if (p.loading) return 'Analysing PDF…';
+    if (!p.pageCount) return null;
     return null;
   },
 });

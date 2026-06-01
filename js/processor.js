@@ -13,8 +13,12 @@ import { selectedFiles, setFilesLocked } from './files.js';
 import { trackToolError } from './analytics.js';
 import { TOOLS, MAX_COMPRESS_MB } from './config.js';
 import { getRunner, getWorkerTool } from './toolRegistry.js';
-import { loadJSZip } from './lazyLibs.js';
+import { loadJSZip, loadDocx } from './lazyLibs.js';
 import { preprocessPdfBuffer } from './decryptPdf.js';
+
+// Hard cap for image mode — defined here to avoid coupling with pdf2wordUI.js.
+// Must match MAX_IMAGE_PAGES in pdf2wordUI.js.
+const _P2W_IMAGE_CAP = 500;
 
 let _worker = _createWorker();
 export let isProcessing = false;
@@ -79,6 +83,7 @@ export async function doProcess(currentTool, extraParams = {}) {
     compress: () => _runCompress(filesSnapshot, extraParams, currentTool),
     jpg2pdf:  () => _runJpg2Pdf(filesSnapshot, extraParams),
     pdf2jpg:  () => _runPdf2Jpg(filesSnapshot, extraParams),
+    pdf2word: () => _runPdf2Word(filesSnapshot, extraParams),
     worker:   () => _runWorkerTool(getWorkerTool(currentTool) ?? currentTool, filesSnapshot, extraParams),
   };
 
@@ -642,7 +647,7 @@ async function _runPdf2Jpg(filesSnapshot, { pages, format, dpi, zip }) {
 
 async function _runWorkerTool(tool, filesSnapshot, params) {
   const file   = filesSnapshot[0];
-  const limits = { watermark: 200, pagenum: 200, meta: 200, protect: 200, rotate: 150, redact: 150, fill: 200 };
+  const limits = { watermark: 200, pagenum: 200, meta: 200, protect: 200, rotate: 150, redact: 150, fill: 200, flatten: 200 };
   if (!_checkSize(file, limits[tool] ?? 200)) { _abortUI(); return; }
   const buffer = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await file.arrayBuffer());
 
@@ -654,6 +659,7 @@ async function _runWorkerTool(tool, filesSnapshot, params) {
     rotate:    t('prog_rotate'),
     redact:    t('prog_redact'),
     fill:      'Filling PDF…',
+    flatten:   t('prog_flatten'),
   };
   setProgress(5, labelMap[tool] || t('prog_processing'));
 
@@ -678,7 +684,7 @@ async function _runWorkerTool(tool, filesSnapshot, params) {
 
       const blob = new Blob([data.result], { type: 'application/pdf' });
       const base = file.name.replace(/\.pdf$/i, '');
-      const suffixes = { watermark: '-watermarked', pagenum: '-numbered', meta: '-edited', protect: '-protected', rotate: '-rotated', redact: '-redacted', fill: '-filled' };
+      const suffixes = { watermark: '-watermarked', pagenum: '-numbered', meta: '-edited', protect: '-protected', rotate: '-rotated', redact: '-redacted', fill: '-filled', flatten: '-locked' };
       const filename = `${base}${suffixes[tool] || '-processed'}.pdf`;
 
       const pages = data.pageCount;
@@ -692,6 +698,7 @@ async function _runWorkerTool(tool, filesSnapshot, params) {
         rotate:    t('desc_rotate',    { pages, size }),
         redact:    t('desc_redact',    { pages, size }),
         fill:      t('desc_fill',      { pages, size }),
+        flatten:   t('desc_flatten',   { pages, size }),
       };
 
       document.dispatchEvent(new CustomEvent('pdfree:success', {
@@ -700,6 +707,9 @@ async function _runWorkerTool(tool, filesSnapshot, params) {
 
       if (tool === 'protect' && data.wasAlreadyProtected) {
         showToast(t('already_protected'), 4000);
+      }
+      if (tool === 'flatten' && data.info === 'no_fields') {
+        showToast(t('warn_xfa_form'), 6000);
       }
     } else if (data.type === 'error') {
       isProcessing = false; setFilesLocked(false); hideCancelBtn();
@@ -711,6 +721,262 @@ async function _runWorkerTool(tool, filesSnapshot, params) {
     isProcessing = false; setFilesLocked(false); hideCancelBtn();
     _handleError(tool, e.message || 'Worker error');
   };
+}
+
+// ── PDF → Word ────────────────────────────────────────────────
+// Runs entirely in main thread (like pdf2jpg): docx lib needs DOM
+// for Blob creation, and pdf.js rendering needs canvas.
+
+async function _runPdf2Word(filesSnapshot, { mode = 'text', dpi = 150 } = {}) {
+  const file = filesSnapshot[0];
+  if (!_checkSize(file, 150)) { _abortUI(); return; }
+
+  setProgress(5, 'Loading libraries…');
+
+  try {
+    await loadDocx();
+  } catch (err) {
+    isProcessing = false; setFilesLocked(false); hideCancelBtn();
+    _handleError('pdf2word', 'Word library unavailable — check your internet connection.');
+    return;
+  }
+
+  if (!window.pdfjsLib) {
+    isProcessing = false; setFilesLocked(false); hideCancelBtn();
+    _handleError('pdf2word', 'PDF engine not ready — reopen the tool.', 'renderer_not_loaded');
+    return;
+  }
+
+  setProgress(8, 'Loading PDF…');
+
+  let pdfDoc;
+  try {
+    const rawBuf = file._decryptedBuffer
+      ? file._decryptedBuffer.slice(0)
+      : await preprocessPdfBuffer(await file.arrayBuffer());
+    pdfDoc = await window.pdfjsLib.getDocument({
+      data:              new Uint8Array(rawBuf),
+      useSystemFonts:    false,
+      verbosity:         0,
+      disableJavaScript: true,
+    }).promise;
+  } catch (err) {
+    isProcessing = false; setFilesLocked(false); hideCancelBtn();
+    _handleError('pdf2word', err.message); return;
+  }
+
+  // Hard cap for image mode: rendering 500+ pages accumulates GB of ArrayBuffers
+  // in RAM before Packer.toBlob() can flush them into a ZIP stream.
+  const effectivePages = mode === 'image'
+    ? Math.min(pdfDoc.numPages, _P2W_IMAGE_CAP)
+    : pdfDoc.numPages;
+
+  if (mode === 'image' && pdfDoc.numPages > _P2W_IMAGE_CAP) {
+    showToast(
+      `Image mode is limited to ${_P2W_IMAGE_CAP} pages. Pages 1–${_P2W_IMAGE_CAP} will be exported.`,
+      7000
+    );
+  }
+
+  let paragraphs;
+  try {
+    if (mode === 'text') {
+      setProgress(10, 'Extracting text…');
+      paragraphs = await _p2wExtractText(pdfDoc);
+    } else {
+      setProgress(10, 'Rendering pages…');
+      paragraphs = await _p2wRenderImages(pdfDoc, dpi, effectivePages);
+    }
+  } catch (err) {
+    isProcessing = false; setFilesLocked(false); hideCancelBtn();
+    _handleError('pdf2word', err.message); return;
+  }
+
+  setProgress(92, 'Building Word document…');
+
+  const { Document, Packer } = window.docx;
+  const doc = new Document({
+    creator:     'PDFree',
+    description: 'Converted from PDF by PDFree.io',
+    sections: [{ children: paragraphs }],
+  });
+
+  // toBlob() uses JSZip type:"blob" — browser-native, no polyfill needed.
+  // toBuffer() uses type:"nodebuffer" which JSZip does not support in browsers.
+  const blob = await Packer.toBlob(doc);
+  const baseName = file.name.replace(/\.pdf$/i, '');
+  const filename = `${baseName}.docx`;
+  const modeTag  = mode === 'text' ? 'editable text' : 'page images';
+  const pageNote = effectivePages < pdfDoc.numPages
+    ? `${effectivePages} of ${pdfDoc.numPages} pages`
+    : `${effectivePages} page${effectivePages !== 1 ? 's' : ''}`;
+  const desc = `${pageNote} · ${modeTag} · ${fmtSize(blob.size)}`;
+
+  isProcessing = false;
+  setFilesLocked(false);
+  hideCancelBtn();
+  setProgress(100, t('prog_done'));
+
+  document.dispatchEvent(new CustomEvent('pdfree:success', {
+    detail: { tool: 'pdf2word', blob, desc, filename }
+  }));
+}
+
+// Text extraction: uses PDF.js getTextContent → builds docx paragraphs.
+// Groups items into lines by Y-proximity, detects headings by font size ratio.
+async function _p2wExtractText(pdfDoc) {
+  const { Paragraph, TextRun, HeadingLevel } = window.docx;
+  const pageItems   = [];
+  const allSizes    = [];
+
+  for (let p = 1; p <= pdfDoc.numPages; p++) {
+    setProgress(10 + Math.round((p / pdfDoc.numPages) * 50),
+                `Reading page ${p}/${pdfDoc.numPages}…`);
+
+    const page    = await pdfDoc.getPage(p);
+    const content = await page.getTextContent({ normalizeWhitespace: false });
+    const items   = content.items
+      .filter(item => 'str' in item && item.str.trim())
+      .map(item => {
+        const fontSize = (item.height > 0 ? item.height : Math.abs(item.transform[3])) || 10;
+        const style    = content.styles[item.fontName] || {};
+        const fam      = (style.fontFamily || '').toLowerCase();
+        return {
+          str:    item.str,
+          x:      item.transform[4],
+          y:      item.transform[5],
+          fontSize,
+          bold:   /bold|heavy|black/.test(fam),
+          italic: /italic|oblique/.test(fam),
+        };
+      });
+
+    allSizes.push(...items.map(i => i.fontSize).filter(s => s > 0));
+    pageItems.push(items);
+  }
+
+  const sorted = [...allSizes].sort((a, b) => a - b);
+  const median = sorted[Math.floor(sorted.length / 2)] || 10;
+
+  const paragraphs = [];
+  const YTOL = 4;   // px — items within 4px on Y axis → same line
+
+  for (let pi = 0; pi < pageItems.length; pi++) {
+    if (!isProcessing) break;
+
+    if (pi > 0) {
+      paragraphs.push(new Paragraph({ children: [], pageBreakBefore: true }));
+    }
+
+    const items = pageItems[pi];
+    if (!items.length) continue;
+
+    // Group into lines by Y proximity
+    const lines = [];
+    for (const item of [...items].sort((a, b) => b.y - a.y)) {
+      let merged = false;
+      for (const ln of lines) {
+        if (Math.abs(ln.y - item.y) <= YTOL) {
+          ln.items.push(item);
+          merged = true; break;
+        }
+      }
+      if (!merged) lines.push({ y: item.y, items: [item] });
+    }
+
+    setProgress(60 + Math.round((pi / pageItems.length) * 30),
+                `Building page ${pi + 1}/${pageItems.length}…`);
+
+    for (const ln of lines) {
+      ln.items.sort((a, b) => a.x - b.x);
+      const maxSize = Math.max(...ln.items.map(i => i.fontSize));
+
+      let heading;
+      if      (maxSize >= median * 2.2) heading = HeadingLevel.HEADING_1;
+      else if (maxSize >= median * 1.7) heading = HeadingLevel.HEADING_2;
+      else if (maxSize >= median * 1.3) heading = HeadingLevel.HEADING_3;
+
+      const runs = ln.items.map(i => new TextRun({
+        text:    i.str,
+        bold:    i.bold,
+        italics: i.italic,
+        size:    Math.max(16, Math.round(i.fontSize * 2)),  // half-points
+      }));
+
+      paragraphs.push(new Paragraph({
+        ...(heading !== undefined ? { heading } : {}),
+        children: runs,
+        spacing:  { after: 80 },
+      }));
+    }
+  }
+
+  return paragraphs;
+}
+
+// Image mode: render each page to canvas → embed JPEG in docx.
+// Uses same canvas yield strategy as _runPdf2Jpg.
+//
+// Memory note: all ImageRun buffers live in RAM simultaneously until
+// Packer.toBuffer() flushes them into the ZIP. The page cap (MAX_IMAGE_PAGES)
+// in _runPdf2Word prevents unbounded accumulation.
+// Quality is auto-reduced on large PDFs to minimise per-page buffer size.
+async function _p2wRenderImages(pdfDoc, dpi, pageLimit) {
+  const { Paragraph, ImageRun } = window.docx;
+  const scale = dpi / 72;
+
+  // Automatically lower JPEG quality for large page counts to reduce peak RAM.
+  // At 150 DPI: 0.85 → ~500 KB/page; 0.72 → ~360 KB/page; 0.60 → ~260 KB/page.
+  const quality = pageLimit > 300 ? 0.60
+                : pageLimit > 150 ? 0.72
+                : 0.85;
+
+  let canvas  = document.createElement('canvas');
+  const ctx   = canvas.getContext('2d');
+  const paragraphs = [];
+
+  try {
+    let frameStart = performance.now();
+
+    for (let p = 1; p <= pageLimit; p++) {
+      if (!isProcessing) break;
+      setProgress(10 + Math.round((p / pageLimit) * 80),
+                  `Rendering page ${p}/${pageLimit}…`);
+
+      const page     = await pdfDoc.getPage(p);
+      const viewport = page.getViewport({ scale });
+      canvas.width   = Math.round(viewport.width);
+      canvas.height  = Math.round(viewport.height);
+      await page.render({ canvasContext: ctx, viewport }).promise;
+
+      const blob        = await new Promise(res => canvas.toBlob(res, 'image/jpeg', quality));
+      const arrayBuffer = await blob.arrayBuffer();
+
+      // docx ImageRun.transformation: pixel dimensions at 96 DPI
+      const MAX_W = 700;   // ~7.3 inches at 96 DPI — fits within default Word margins
+      let w = Math.round(canvas.width  * 96 / dpi);
+      let h = Math.round(canvas.height * 96 / dpi);
+      if (w > MAX_W) { h = Math.round(h * MAX_W / w); w = MAX_W; }
+
+      if (p > 1) paragraphs.push(new Paragraph({ children: [], pageBreakBefore: true }));
+      paragraphs.push(new Paragraph({
+        children: [new ImageRun({ data: arrayBuffer, transformation: { width: w, height: h }, type: 'jpg' })],
+      }));
+
+      page.cleanup?.();
+
+      const now = performance.now();
+      if (now - frameStart >= _FRAME_BUDGET_MS) {
+        await _yieldToUI();
+        frameStart = performance.now();
+      }
+    }
+  } finally {
+    canvas.width = 0; canvas.height = 0;
+    canvas.remove(); canvas = null;
+  }
+
+  return paragraphs;
 }
 
 // ── Stub ──────────────────────────────────────────────────────

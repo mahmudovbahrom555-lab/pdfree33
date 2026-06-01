@@ -40,6 +40,7 @@ window.PDFREE_LOCALE = {
   prog_meta:         'Mise à jour des métadonnées...',
   prog_protect:      'Chiffrement du PDF...',
   prog_rotate:       'Application des rotations...',
+  prog_flatten:      'Verrouillage des champs du formulaire...',
   prog_redact:       'Masquage des zones...',
 
   // success descriptions
@@ -54,6 +55,8 @@ window.PDFREE_LOCALE = {
   desc_rotate:              'Pivoté · {pages} pages · {size}',
   desc_redact:              'Zones masquées · {pages} pages · {size}',
   desc_fill:                'Formulaire rempli · {pages} pages · {size}',
+  desc_flatten:             'Champs verrouillés · {pages} pages · {size}',
+  warn_xfa_form:            'ℹ️ Aucun champ modifiable trouvé — fichier retourné sans modification. Les formulaires XFA nécessitent Adobe Acrobat.',
   desc_split_single:        '{n} page extraite · {size}',
   desc_split_single_many:   '{n} pages extraites · {size}',
   desc_split_separate:      'Divisé en {n} fichier · {size}',

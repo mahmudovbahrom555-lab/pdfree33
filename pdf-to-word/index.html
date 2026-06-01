@@ -4,17 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!--
-    ════════════════════════════════════════════════════════════════
-    Content Security Policy — defence-in-depth against XSS
-    ════════════════════════════════════════════════════════════════
-  -->
   <meta http-equiv="Content-Security-Policy" content="
     default-src 'self';
     script-src  'self'
                 'wasm-unsafe-eval'
                 blob:
                 https://cdnjs.cloudflare.com
+                https://cdn.jsdelivr.net
                 https://esm.sh
                 https://plausible.io
                 https://pagead2.googlesyndication.com
@@ -24,6 +20,7 @@
     img-src     'self' data: blob: https:;
     connect-src 'self'
                 https://cdnjs.cloudflare.com
+                https://cdn.jsdelivr.net
                 https://*.workers.dev
                 https://plausible.io
                 https://pagead2.googlesyndication.com
@@ -36,13 +33,13 @@
     object-src  'none';
   ">
 
-  <title>Fill PDF Form Online Free — No Upload, No Sign Up | PDFree</title>
-  <meta name="description" content="Fill PDF forms online free — type text, check boxes, add dates in your browser. AcroForm fields detected automatically. Files never leave your device.">
+  <title>PDF to Word Free — Convert PDF to Editable .docx | PDFree</title>
+  <meta name="description" content="Convert PDF to Word (.docx) entirely in your browser. Files never uploaded — 100% private. No account needed. Free.">
   <meta name="robots" content="index, follow">
-  <meta property="og:title"       content="Fill PDF Form Online Free — No Upload, No Sign Up | PDFree">
-  <meta property="og:description" content="Fill PDF forms in your browser. No uploads, no account. 100% free and private.">
+  <meta property="og:title"       content="PDF to Word Free — Convert PDF to Editable .docx | PDFree">
+  <meta property="og:description" content="Convert PDF to Word (.docx) in your browser. No upload, no server, no account. 100% private and free.">
   <meta property="og:type"        content="website">
-  <meta property="og:url"         content="https://pdfree.io/fill/">
+  <meta property="og:url"         content="https://pdfree.io/pdf-to-word/">
   <meta property="og:site_name"   content="PDFree">
   <meta property="og:locale"      content="en_US">
   <meta property="og:image"       content="https://pdfree.io/icons/og-image.jpg">
@@ -52,9 +49,9 @@
   <meta name="twitter:site"        content="@pdfree_io">
   <meta name="twitter:image"       content="https://pdfree.io/icons/og-image.jpg">
 
-  <link rel="canonical" href="https://pdfree.io/fill/">
-  <link rel="alternate" hreflang="en"        href="https://pdfree.io/fill/">
-  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/fill/">
+  <link rel="canonical" href="https://pdfree.io/pdf-to-word/">
+  <link rel="alternate" hreflang="en"        href="https://pdfree.io/pdf-to-word/">
+  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/pdf-to-word/">
 
   <!-- PWA -->
   <link rel="manifest" href="../manifest.json">
@@ -68,7 +65,6 @@
   <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
   <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
 
-  <!-- Resource hints -->
   <link rel="preconnect" href="https://plausible.io">
   <link rel="preconnect" href="https://static.cloudflareinsights.com">
   <link rel="preload" href="../fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -84,26 +80,23 @@
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "Fill PDF Form Online — PDFree",
-    "url": "https://pdfree.io/fill/",
-    "description": "Fill PDF forms online for free. Type text, check boxes, and dropdowns directly in your browser. No file uploads, no account required.",
-    "applicationCategory": "UtilityApplication",
+    "@type": "WebApplication",
+    "name": "PDF to Word Converter",
+    "description": "Convert PDF files to editable Word (.docx) documents entirely in your browser. No file uploads, no server processing.",
+    "url": "https://pdfree.io/pdf-to-word/",
+    "applicationCategory": "UtilitiesApplication",
     "operatingSystem": "Any",
-    "browserRequirements": "Requires a modern browser with JavaScript enabled",
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
     "featureList": [
-      "Fill AcroForm text fields, checkboxes, dropdowns",
-      "Autofill support for name, email, address, phone",
-      "Draft auto-saved to localStorage",
-      "No file upload required",
-      "100% private — files processed locally",
-      "No account or signup needed"
+      "No file upload — files stay on your device",
+      "100% private — no server processing",
+      "Text mode — editable paragraphs",
+      "Image mode — pixel-perfect page layout",
+      "Works offline as a PWA"
     ],
     "provider": { "@type": "Organization", "name": "PDFree", "url": "https://pdfree.io" }
   }
   </script>
-
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -111,55 +104,45 @@
     "mainEntity": [
       {
         "@type": "Question",
-        "name": "Is filling PDF forms on PDFree really free?",
+        "name": "Does converting PDF to Word upload my file?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Yes, completely free. PDFree has no subscription, no premium tier, and no per-file charges. The tool runs entirely in your browser using open-source libraries."
+          "text": "No. The entire conversion happens inside your browser. Your PDF is never sent to any server."
         }
       },
       {
         "@type": "Question",
-        "name": "Do I need to create an account to fill a PDF form?",
+        "name": "What is the difference between Text mode and Image mode?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "No account required. Open the tool, upload your PDF, fill it in, and download the result — no signup, no email, no login."
+          "text": "Text mode extracts the text from your PDF and creates an editable Word document. Image mode renders each page as a high-resolution image and places it in the Word document — the visual layout is preserved exactly but the text cannot be edited."
         }
       },
       {
         "@type": "Question",
-        "name": "Is my PDF uploaded to a server when I fill it?",
+        "name": "Will the Word document look exactly like my PDF?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Never. All processing happens inside your browser using JavaScript. Your PDF file never leaves your device — no server ever receives it."
+          "text": "In text mode, simple layouts are reproduced well. Complex multi-column layouts and special fonts may differ. In image mode the layout is pixel-perfect but text is not editable."
         }
       },
       {
         "@type": "Question",
-        "name": "What types of PDF forms can I fill?",
+        "name": "Does this work offline?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Any PDF with AcroForm fields — text fields, checkboxes, radio buttons, and dropdowns are detected automatically. For scanned or flat PDFs without form fields, a clear message is shown."
+          "text": "Yes. Once the page has loaded, PDFree works fully offline as a Progressive Web App."
         }
       }
     ]
   }
   </script>
-
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      { "@type": "ListItem", "position": 1, "name": "PDFree", "item": "https://pdfree.io/" },
-      { "@type": "ListItem", "position": 2, "name": "Fill PDF Form", "item": "https://pdfree.io/fill/" }
-    ]
-  }
-  </script>
+  <script src="../js/theme.js"></script>
 </head>
-<body data-tool="fill">
+<body data-tool="pdf2word">
 
   <nav>
-    <a href="../" class="logo" id="logo" aria-label="Go to homepage" style="text-decoration:none"><span class="logo-text">PDF<span>ree</span></span></a>
+    <a href="../" class="logo" id="logo" aria-label="Go to homepage" style="text-decoration:none"><span class="logo-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></span><span class="logo-text">PDF<span>ree</span></span></a>
     <div class="nav-links">
       <a href="../merge-pdf/" class="nav-link" data-tool="merge">Merge</a>
       <a href="../split-pdf/" class="nav-link" data-tool="split">Split</a>
@@ -173,8 +156,10 @@
       <a href="../draw-on-pdf/" class="nav-link" data-tool="draw-pdf">Draw</a>
       <a href="../rotate-pdf/" class="nav-link" data-tool="rotate">Rotate</a>
       <a href="../protect-pdf/" class="nav-link" data-tool="protect">Protect</a>
+      <a href="../ocr-pdf/" class="nav-link" data-tool="ocr">OCR</a>
       <a href="../pdf-to-word/" class="nav-link" data-tool="pdf2word">PDF→Word</a>
     </div>
+    <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode"></button>
   </nav>
 
   <nav aria-label="Breadcrumb" style="position:static;padding:8px 24px;border-bottom:1px solid var(--border);background:var(--surface);">
@@ -188,8 +173,8 @@
       </li>
       <li aria-hidden="true" style="color:var(--border);">›</li>
       <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <a href="/fill/" itemprop="item" style="color:var(--text2);text-decoration:none;" aria-current="page">
-          <span itemprop="name">Fill PDF Form</span>
+        <a href="/pdf-to-word/" itemprop="item" style="color:var(--text2);text-decoration:none;" aria-current="page">
+          <span itemprop="name">PDF to Word</span>
         </a>
         <meta itemprop="position" content="2">
       </li>
@@ -200,17 +185,17 @@
   <main id="toolArea" class="main-area" aria-busy="false">
 
     <div class="tool-header">
-      <div class="tool-header-icon" id="toolIcon" aria-hidden="true">✏️</div>
+      <div class="tool-header-icon" id="toolIcon" aria-hidden="true">📝</div>
       <div class="tool-header-text">
-        <h2 id="toolTitle">Fill PDF Form</h2>
-        <p  id="toolDesc">Fill any PDF form — text fields, checkboxes, dropdowns. No upload.</p>
+        <h2 id="toolTitle">PDF to Word</h2>
+        <p  id="toolDesc">Convert PDF to editable .docx — runs in your browser, no upload.</p>
       </div>
     </div>
 
     <div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-label="Drop PDF here or choose file">
       <input type="file" id="fileInput" accept=".pdf" aria-hidden="true">
       <span class="drop-icon" aria-hidden="true">📂</span>
-      <div class="drop-title">Drop your PDF form here</div>
+      <div class="drop-title">Drop your PDF here</div>
       <div class="drop-sub">or click to choose a file</div>
       <button class="drop-btn" id="chooseFilesBtn" type="button">Choose PDF</button>
     </div>
@@ -230,9 +215,10 @@
     <div id="redactOptions"    class="j2p-options"     style="display:none" aria-label="Cover area options"></div>
     <div id="rotateOptions"    class="j2p-options"     style="display:none" aria-label="Rotate PDF options"></div>
     <div id="fillOptions"      class="j2p-options"     style="display:none" aria-label="Fill PDF form options"></div>
+    <div id="ocrOptions"       class="j2p-options"     style="display:none" aria-label="OCR options"></div>
     <div id="pdf2wordOptions"  class="j2p-options"     style="display:none" aria-label="PDF to Word options"></div>
 
-    <button id="mergeBtn"  class="merge-btn"  type="button" disabled data-mode="process">Fill &amp; Download PDF</button>
+    <button id="mergeBtn"  class="merge-btn"  type="button" disabled data-mode="process">📝 Convert to Word</button>
     <button id="cancelBtn" class="cancel-btn" type="button" style="display:none" aria-label="Cancel">Cancel</button>
 
     <div id="progressBar"   class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
@@ -245,75 +231,83 @@
           <h3 id="successTitle">Done!</h3>
           <p  id="successDesc"></p>
         </div>
-        <button id="downloadBtn" class="download-btn" type="button">Download</button>
+        <button id="downloadBtn" class="download-btn" type="button">⬇ Download .docx</button>
         <button id="shareBtn" class="share-btn" type="button" style="display:none" aria-label="Send file via device apps"></button>
       </div>
     </div>
 
   </main>
 
-  <!-- ── SEO Content (for indexing) ── -->
+  <!-- ── SEO Content ── -->
   <hr style="border:none;border-top:2px solid var(--border);margin:48px 24px 0;" aria-hidden="true">
-  <section class="seo-article" aria-label="Fill PDF Form">
+  <section class="seo-article" aria-label="PDF to Word Free">
     <div class="seo-article__inner">
 
-      <h1>Fill PDF Form Online Free</h1>
+      <h1>PDF to Word Free — Convert PDF to Editable .docx Online</h1>
 
-      <p>Fill out any PDF form directly in your browser — type names, dates, addresses, check boxes. No software to install, no account required, and your files <strong>never leave your device</strong>.</p>
+      <p>Convert any PDF to a Microsoft Word document (.docx) directly in your browser. No file uploads, no account, no server — your PDF never leaves your device. PDFree processes everything locally using PDF.js and the open-source docx library.</p>
 
-      <h2>How to fill a PDF form online</h2>
-
+      <h2>How to convert PDF to Word</h2>
       <ol>
-        <li>Upload your PDF form using the drop zone above.</li>
-        <li>Your form fields are detected automatically — text fields, checkboxes, radio buttons, and dropdowns appear as a native HTML form.</li>
-        <li>Fill in your information. On mobile, the right keyboard appears automatically (email, phone, date).</li>
-        <li>Click <strong>Fill &amp; Download PDF</strong> — your completed PDF saves to your device instantly.</li>
+        <li>Drop your PDF into the zone above or click <strong>Choose PDF</strong>.</li>
+        <li>Choose your output mode: <strong>Text (editable)</strong> extracts readable paragraphs; <strong>Pages as images</strong> preserves exact layout.</li>
+        <li>Click <strong>Convert to Word</strong> — your <code>.docx</code> file downloads automatically.</li>
       </ol>
 
-      <h2>Works with AcroForm PDF fields</h2>
+      <h2>Text mode vs. image mode</h2>
+      <p><strong>Text mode</strong> extracts all text from the PDF using PDF.js and builds structured Word paragraphs. Headings are detected by font size. Bold and italic formatting is preserved when the font name carries that information. This mode works best for simple to moderately complex PDFs — contracts, reports, articles.</p>
+      <p><strong>Image mode</strong> renders each page of the PDF to a canvas at 72, 150, or 300 DPI and embeds the result as a JPEG image inside the Word document. The visual layout is pixel-perfect, but the text in the document cannot be edited. Choose this mode for PDFs with complex layouts, tables, charts, or non-standard fonts.</p>
 
-      <p>PDFree detects <strong>AcroForm fields</strong> — the standard interactive form format used by Adobe Acrobat, government agencies, and HR departments. Text fields, checkboxes, radio buttons, dropdowns and list boxes are all supported. For scanned or flat PDFs without embedded form fields, a clear message is shown.</p>
-
-      <p>Your draft is automatically saved in your browser as you type, so you never lose progress if you accidentally close the tab.</p>
-
-      <h2>Privacy — your forms stay private</h2>
-
-      <p>PDF forms often contain sensitive personal information — SSNs, addresses, financial data. With PDFree, <strong>that data never leaves your browser</strong>. There are no servers processing your documents, no cloud storage, and nothing to breach. The entire tool runs as client-side JavaScript on your own device.</p>
+      <h2>Privacy — your files stay on your device</h2>
+      <p>Many PDF-to-Word services upload your documents to a remote server for conversion. PDFree does not. All processing — text extraction, page rendering, and .docx packaging — runs inside your browser tab. Nothing is ever sent to any server.</p>
 
       <h2>Frequently asked questions</h2>
 
       <div style="display:flex;flex-direction:column;gap:20px;margin-bottom:48px;">
-
         <div style="border:1px solid var(--border);border-radius:12px;padding:20px;">
-          <h3>Is filling PDF forms on PDFree really free?</h3>
-          <p>Yes, completely free. No subscription, no premium tier, no per-file charges. The tool runs in your browser using open-source libraries.</p>
+          <h3>Is this PDF to Word converter really free?</h3>
+          <p>Yes, completely free. No subscription, no watermarks, no per-page limits. The entire conversion happens in your browser using open-source libraries.</p>
         </div>
-
         <div style="border:1px solid var(--border);border-radius:12px;padding:20px;">
-          <h3>Do I need to create an account?</h3>
-          <p>No account required. Upload your PDF, fill it, download — no signup, no email, no login.</p>
+          <h3>Does my PDF get uploaded anywhere?</h3>
+          <p>Never. Your file is read by your browser locally. There is no server involved at any step of the conversion.</p>
         </div>
-
         <div style="border:1px solid var(--border);border-radius:12px;padding:20px;">
-          <h3>Is my PDF uploaded to a server?</h3>
-          <p>Never. All processing happens inside your browser. Your PDF never leaves your device — no server ever receives it.</p>
+          <h3>Will the formatting look the same in Word?</h3>
+          <p>In text mode, the text content and basic formatting (bold, italic, font size, headings) are preserved. Complex layouts like multi-column text, tables, and decorative elements may not match exactly. For exact layout preservation, use image mode.</p>
         </div>
-
         <div style="border:1px solid var(--border);border-radius:12px;padding:20px;">
-          <h3>What types of PDF forms can I fill?</h3>
-          <p>Any PDF with AcroForm fields — text fields, checkboxes, radio buttons, and dropdowns are detected automatically. Scanned or flat PDFs without form fields will show a message explaining the limitation.</p>
+          <h3>What is the maximum file size?</h3>
+          <p>There is no hard limit. However, very large PDFs (100+ MB) may take longer to process and require more memory. For best results keep files under 100 MB in text mode and under 50 MB in image mode at 300 DPI.</p>
         </div>
-
+        <div style="border:1px solid var(--border);border-radius:12px;padding:20px;">
+          <h3>Does it work offline?</h3>
+          <p>Yes. PDFree works fully offline as a Progressive Web App once the page has been loaded at least once.</p>
+        </div>
       </div>
 
-      <h2>Related tools</h2>
-      <ul>
-        <li><a href="../protect-pdf/">Protect PDF</a> — password-lock your completed form</li>
-        <li><a href="../compress-large-pdf-free/">Compress PDF</a> — reduce file size before sending</li>
-        <li><a href="../redact-pdf/">Cover Area</a> — hide sensitive data with an opaque block</li>
-        <li><a href="../merge-large-pdf-files/">Merge PDF</a> — combine your filled form with other documents</li>
-      </ul>
+    </div>
+  </section>
 
+  <section aria-label="All PDF tools" style="text-align:center;padding:32px 24px;border-top:1px solid var(--border);">
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:16px;">All PDF Tools</div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:800px;margin:0 auto;">
+      <a href="/merge-pdf/"               class="tool-pill">Merge PDF</a>
+      <a href="/split-pdf/"               class="tool-pill">Split PDF</a>
+      <a href="/compress-pdf/"            class="tool-pill">Compress PDF</a>
+      <a href="/jpg2pdf/"                 class="tool-pill">JPG to PDF</a>
+      <a href="/pdf2jpg/"                 class="tool-pill">PDF to JPG</a>
+      <a href="/extract-pdf/"             class="tool-pill">Extract Pages</a>
+      <a href="/watermark-pdf/"           class="tool-pill">Watermark PDF</a>
+      <a href="/pagenum-pdf/"             class="tool-pill">Page Numbers</a>
+      <a href="/metadata-pdf/"            class="tool-pill">Edit Metadata</a>
+      <a href="/redact-pdf/"              class="tool-pill">Redact PDF</a>
+      <a href="/rotate-pdf/"              class="tool-pill">Rotate PDF</a>
+      <a href="/protect-pdf/"             class="tool-pill">Protect PDF</a>
+      <a href="/draw-on-pdf/"             class="tool-pill">Draw on PDF</a>
+      <a href="/fill/"                    class="tool-pill">Fill PDF Form</a>
+      <a href="/ocr-pdf/"                 class="tool-pill">OCR PDF</a>
+      <a href="/pdf-to-word/"             class="tool-pill">PDF to Word</a>
     </div>
   </section>
 
@@ -329,9 +323,9 @@
         <a href="/secure-pdf-tools/" style="display:block;color:var(--green);text-decoration:none;">Secure PDF Tools</a>
       </div>
     </div>
-    PDFree · <strong>All processing happens 100% in your browser</strong> · Files are <strong>never uploaded</strong><br>
-    <span style="color:var(--green)">🔒</span> Your documents never leave your device &nbsp;·&nbsp;
-    <span style="color:var(--green)">♥</span> Built to be free for everyone, forever<br>
+    PDFree · <strong>100% free, no limits</strong> · No upload, no account<br>
+    <span style="color:var(--green)">🔒</span> Your files never leave your device &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> Free forever<br>
     <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
       <a href="/privacy.html" style="color:var(--green)">Privacy</a>
       &nbsp;·&nbsp;
@@ -345,9 +339,15 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-  <script>window.PDFREE_INITIAL_TOOL = 'fill';</script>
+  <div id="swUpdateBanner" role="alert" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:200;background:var(--green);color:#fff;padding:12px 20px;align-items:center;justify-content:center;gap:12px;font-size:14px;flex-wrap:wrap;">
+    <span>A new version of PDFree is ready.</span>
+    <button id="swUpdateNow" type="button" style="background:#fff;color:var(--green);border:none;border-radius:6px;padding:5px 16px;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit;">Update now</button>
+    <button id="swUpdateLater" type="button" style="background:transparent;color:#fff;border:1px solid rgba(255,255,255,.6);border-radius:6px;padding:5px 16px;font-size:13px;cursor:pointer;font-family:inherit;">Later</button>
+  </div>
+
+  <script>window.PDFREE_INITIAL_TOOL = 'pdf2word';</script>
   <script type="module" src="../js/app.js"></script>
 
-<!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script><!-- End Cloudflare Web Analytics -->
+  <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>

@@ -252,4 +252,13 @@ export const TOOLS = {
     accept:      '.pdf',
     implemented: true,
   },
+  'pdf2word': {
+    icon:        '📝',
+    title:       'PDF to Word',
+    desc:        'Convert PDF to editable .docx — runs in your browser, no upload',
+    btn:         '📝 Convert to Word',
+    multi:       false,
+    accept:      '.pdf',
+    implemented: true,
+  },
 };

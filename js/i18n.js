@@ -53,6 +53,7 @@ const EN = {
   prog_protect:      'Encrypting PDF...',
   prog_rotate:       'Applying rotations...',
   prog_redact:       'Covering areas...',
+  prog_flatten:      'Flattening form fields...',
 
   // ── processor.js — success descriptions ───────────────────────
   desc_merged_partial:      'Merged {n} of {total} files · {pages} pages · {size}',
@@ -66,6 +67,8 @@ const EN = {
   desc_rotate:              'Rotated · {pages} pages · {size}',
   desc_redact:              'Areas covered · {pages} pages · {size}',
   desc_fill:                'Form filled · {pages} pages · {size}',
+  desc_flatten:             'Fields locked · {pages} pages · {size}',
+  warn_xfa_form:            'ℹ️ No editable fields found — file returned unchanged. XFA forms require Adobe Acrobat.',
   desc_split_single:        'Extracted {n} page · {size}',
   desc_split_single_many:   'Extracted {n} pages · {size}',
   desc_split_separate:      'Split into {n} file · {size}',

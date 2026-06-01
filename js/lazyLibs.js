@@ -28,7 +28,38 @@ export function loadJSZip() {
   return _load('jsZip', 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js');
 }
 
+// docx uses a two-URL fallback chain (jsdelivr → unpkg).
+// If the first CDN is down/slow, the second is tried automatically.
+// On total failure the cached promise is cleared so the NEXT user
+// action retries from scratch rather than hitting a dead cached promise.
 export function loadDocx() {
   if (window.docx) return Promise.resolve();
-  return _load('docx', 'https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js');
+  if (_promises['docx']) return _promises['docx'];
+
+  _promises['docx'] = _loadDocxWithFallback().catch(err => {
+    delete _promises['docx'];  // allow retry on next call
+    throw err;
+  });
+  return _promises['docx'];
+}
+
+async function _loadDocxWithFallback() {
+  const CDNS = [
+    'https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js',
+    'https://unpkg.com/docx@8.5.0/build/index.umd.js',
+  ];
+  for (const url of CDNS) {
+    try {
+      await new Promise((resolve, reject) => {
+        if (document.querySelector(`script[src="${url}"]`)) { resolve(); return; }
+        const s = document.createElement('script');
+        s.src     = url;
+        s.onload  = resolve;
+        s.onerror = () => reject(new Error(`CDN unavailable: ${url}`));
+        document.head.appendChild(s);
+      });
+      if (window.docx) return;
+    } catch (_) { /* try next */ }
+  }
+  throw new Error('docx library unavailable — check your internet connection');
 }
