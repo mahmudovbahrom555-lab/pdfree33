@@ -5,6 +5,7 @@ import { id } from './utils.js';
 import { loadPdfJs } from './pdf2jpgUI.js';
 import { preprocessPdfBuffer } from './decryptPdf.js';
 import { chipGroup, group, loadingRow } from './uiComponents.js';
+import { detectTables } from './pdf2wordTables.js';
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 // JPEG compression ratio at quality 0.85 over typical PDF content
@@ -58,6 +59,10 @@ export async function initPdf2WordOptions(file) {
     _vpW = vp.width;
     _vpH = vp.height;
     firstPage.cleanup?.();
+
+    // Background table scan — runs on first 5 pages max to keep init fast.
+    // Results shown in UI for debug/tuning; doesn't block rendering.
+    _scanTablesBackground(doc).catch(() => {});
 
     _loading = false;
     _render(file);
@@ -206,6 +211,78 @@ function _onChange(e) {
 
 function _esc(str) {
   const d = document.createElement('div'); d.textContent = str; return d.innerHTML;
+}
+
+// ── Background table scanner ──────────────────────────────────────────────────
+// Runs detectTables() on first N pages after PDF loads.
+// Shows a compact debug badge in the UI and logs to console.
+// This is for TUNING ONLY — not yet wired into Word output.
+const SCAN_PAGES = 5;   // scan only first N pages to keep init snappy
+const YTOL       = 4;   // must match processor.js _p2wExtractText
+
+async function _scanTablesBackground(doc) {
+  const pageLimit = Math.min(doc.numPages, SCAN_PAGES);
+  let totalTables = 0;
+  const details   = [];
+
+  for (let p = 1; p <= pageLimit; p++) {
+    const page    = await doc.getPage(p);
+    const content = await page.getTextContent({ normalizeWhitespace: false });
+    page.cleanup?.();
+
+    // Build lines (identical logic to _p2wExtractText in processor.js)
+    const items = content.items
+      .filter(item => 'str' in item && item.str.trim())
+      .map(item => ({
+        str:      item.str,
+        x:        item.transform[4],
+        y:        item.transform[5],
+        fontSize: (item.height > 0 ? item.height : Math.abs(item.transform[3])) || 10,
+      }));
+
+    const lines = [];
+    for (const item of [...items].sort((a, b) => b.y - a.y)) {
+      let merged = false;
+      for (const ln of lines) {
+        if (Math.abs(ln.y - item.y) <= YTOL) { ln.items.push(item); merged = true; break; }
+      }
+      if (!merged) lines.push({ y: item.y, items: [item] });
+    }
+    lines.forEach(ln => ln.items.sort((a, b) => a.x - b.x));
+
+    const tables = detectTables(lines, { debug: true });
+    totalTables += tables.length;
+    if (tables.length) {
+      details.push(`p${p}: ${tables.length}×(${tables.map(t =>
+        `${t.rows.length}r×${t.colCount}c conf=${(t.confidence*100).toFixed(0)}%`
+      ).join(', ')})`);
+    }
+  }
+
+  // Update UI badge (only visible when tables found)
+  const el = id('pdf2wordOptions');
+  if (!el) return;
+  const badge = el.querySelector('#p2wTableBadge');
+  const scanned = pageLimit < doc.numPages ? `first ${pageLimit} pages` : 'all pages';
+
+  if (totalTables > 0) {
+    const msg = `🗂️ ${totalTables} table(s) detected in ${scanned} — ${details.join(' · ')}`;
+    if (badge) {
+      badge.textContent = msg;
+    } else {
+      const hint = id('p2wModeHint');
+      if (hint) {
+        const div = document.createElement('div');
+        div.id        = 'p2wTableBadge';
+        div.className = 'compress-scan';
+        div.style.cssText = 'margin-top:8px;font-size:12px;color:var(--text3);padding:6px 10px';
+        div.textContent   = msg;
+        hint.after(div);
+      }
+    }
+  } else if (badge) {
+    badge.remove();
+  }
 }
 
 // Export for processor.js (needs the cap value)
