@@ -881,7 +881,14 @@ async function _p2wExtractText(pdfDoc) {
       }
       if (!merged) lines.push({ y: item.y, items: [item] });
     }
-    lines.forEach(ln => ln.items.sort((a, b) => a.x - b.x));
+    lines.forEach(ln => {
+      const txt     = ln.items.map(i => i.str).join('');
+      const rtlCnt = (txt.match(/[\u0590-\u05FF\u0600-\u06FF\u0750-\u077F\uFB1D-\uFB4F\uFB50-\uFDFF\uFE70-\uFEFF]/g) || []).length;
+      const ltrCnt = (txt.match(/[A-Za-z\u00C0-\u024F]/g) || []).length;
+      ln.rtl     = rtlCnt > 0;              // any RTL chars → need bidirectional
+      ln.rtlSort = rtlCnt > ltrCnt;         // predominantly RTL → sort right-to-left
+      ln.items.sort((a, b) => ln.rtlSort ? b.x - a.x : a.x - b.x);
+    });
 
     allSizes.push(...items.map(i => i.fontSize).filter(s => s > 0));
     pageData.push({ lines, rotatedItems, borderGrids });
@@ -892,7 +899,55 @@ async function _p2wExtractText(pdfDoc) {
   const median = sorted[Math.floor(sorted.length / 2)] || 10;
 
   // ── Pass 2: build Word content ─────────────────────────────────────────────
-  const paragraphs = [];
+  const paragraphs  = [];
+  const _paraBuffer = [];   // accumulates lines that should be merged into one Paragraph
+
+  // Flushes the buffered lines as a single Paragraph, then clears the buffer.
+  // Called before tables, grids, and at end of each page's event loop.
+  const _flushPara = () => {
+    if (!_paraBuffer.length) return;
+
+    const allText = _paraBuffer.flatMap(ln => ln.items).map(i => i.str).join('');
+    const maxSize = Math.max(..._paraBuffer.flatMap(ln => ln.items.map(i => i.fontSize)));
+    const hasRtl  = _paraBuffer.some(ln => ln.rtl);
+
+    let heading;
+    if      (maxSize >= median * 2.2) heading = HeadingLevel.HEADING_1;
+    else if (maxSize >= median * 1.7) heading = HeadingLevel.HEADING_2;
+    else if (maxSize >= median * 1.3) heading = HeadingLevel.HEADING_3;
+
+    const runs = [];
+    for (const ln of _paraBuffer) {
+      for (let idx = 0; idx < ln.items.length; idx++) {
+        const item = ln.items[idx];
+        const prev = ln.items[idx - 1];
+        let text   = item.str;
+        // Space insertion: skip for RTL lines (word order handled by BiDi); for LTR use gap
+        if (prev && !ln.rtlSort && !prev.str.endsWith(' ') && !item.str.startsWith(' ')) {
+          const prevW = (prev.width > 0) ? prev.width : prev.fontSize * prev.str.length * 0.5;
+          const gap   = item.x - (prev.x + prevW);
+          // Devanagari (Hindi) spaces are narrower — use 10% of fontSize instead of 20%
+          const thr   = _isDevanagari(prev.str) ? item.fontSize * 0.1 : item.fontSize * 0.2;
+          if (gap > thr) text = ' ' + text;
+        }
+        runs.push(new TextRun({
+          text,
+          bold:    item.bold,
+          italics: item.italic,
+          size:    Math.max(16, Math.round(item.fontSize * 2)),
+        }));
+      }
+    }
+
+    paragraphs.push(new Paragraph({
+      ...(heading !== undefined ? { heading } : {}),
+      ...(hasRtl ? { bidirectional: true } : {}),
+      children: runs,
+      spacing:  { after: 80 },
+    }));
+
+    _paraBuffer.length = 0;
+  };
 
   for (let pi = 0; pi < pageData.length; pi++) {
     if (!isProcessing) break;
@@ -975,6 +1030,7 @@ async function _p2wExtractText(pdfDoc) {
         const tbl = lineToTable.get(lineIdx);
 
         if (tbl && lineIdx === tbl.startIdx) {
+          _flushPara();   // emit any buffered paragraph before the table
           // ── Emit rotated column headers (if any) above the table ──────────
           const hdrTexts = rotatedHeaders.get(tbl.startIdx);
           if (hdrTexts) {
@@ -1012,39 +1068,29 @@ async function _p2wExtractText(pdfDoc) {
           consumedLines.add(lineIdx); // inner table line — already handled
 
         } else {
-          // ── Emit regular Paragraph ─────────────────────────────────────────
+          // ── Buffer this line; flush when a paragraph break is detected ─────
+          // A paragraph break occurs when:
+          //   • the Y gap is larger than 1.5 × the previous line's font size
+          //     (blank line or section break in the original PDF), OR
+          //   • either the buffered or incoming line is a heading (large font)
+          //     — headings must never merge with adjacent body lines
           const ln      = lines[lineIdx];
-          const maxSize = Math.max(...ln.items.map(i => i.fontSize));
+          const maxFont = Math.max(...ln.items.map(i => i.fontSize));
+          const isHead  = maxFont >= median * 1.3;
 
-          let heading;
-          if      (maxSize >= median * 2.2) heading = HeadingLevel.HEADING_1;
-          else if (maxSize >= median * 1.7) heading = HeadingLevel.HEADING_2;
-          else if (maxSize >= median * 1.3) heading = HeadingLevel.HEADING_3;
-
-          const runs = ln.items.map((item, idx) => {
-            const prev = ln.items[idx - 1];
-            let text = item.str;
-            if (prev && !prev.str.endsWith(' ') && !item.str.startsWith(' ')) {
-              const gap = item.x - (prev.x + prev.width);
-              if (gap > item.fontSize * 0.2) text = ' ' + text;
-            }
-            return new TextRun({
-              text,
-              bold:    item.bold,
-              italics: item.italic,
-              size:    Math.max(16, Math.round(item.fontSize * 2)),
-            });
-          });
-
-          paragraphs.push(new Paragraph({
-            ...(heading !== undefined ? { heading } : {}),
-            children: runs,
-            spacing:  { after: 80 },
-          }));
+          if (_paraBuffer.length > 0) {
+            const lastLn      = _paraBuffer[_paraBuffer.length - 1];
+            const lastMaxFont = Math.max(...lastLn.items.map(i => i.fontSize));
+            const gap         = lastLn.y - ln.y;
+            const lastIsHead  = lastMaxFont >= median * 1.3;
+            if (isHead || lastIsHead || gap > lastMaxFont * 1.5) _flushPara();
+          }
+          _paraBuffer.push(ln);
         }
 
       } else {
         // ── 'grid' event: border-detected table (empty body rows) ─────────────
+        _flushPara();   // emit any buffered paragraph before the grid
         const { grid } = event;
 
         // Consume text lines inside the grid's Y range → become header row(s)
@@ -1094,6 +1140,7 @@ async function _p2wExtractText(pdfDoc) {
         }
       }
     }
+    _flushPara();   // flush last paragraph at end of each page's content
   }
 
   return paragraphs;
@@ -1206,6 +1253,24 @@ async function _p2wRenderImages(pdfDoc, dpi, pageLimit) {
   }
 
   return paragraphs;
+}
+
+// ── Script-detection helpers ──────────────────────────────────
+
+// RTL: Hebrew U+0590–05FF, Arabic U+0600–06FF / U+0750–077F / U+FB50–FDFF / U+FE70–FEFF,
+//      and associated presentation forms / extended blocks.
+function _isRtl(str) {
+  return /[\u0590-\u05FF\u0600-\u06FF\u0750-\u077F\uFB1D-\uFB4F\uFB50-\uFDFF\uFE70-\uFEFF]/.test(str);
+}
+
+// CJK: Hiragana/Katakana, CJK Unified Ideographs, Hangul syllables, CJK Extension A/B.
+function _isCjk(str) {
+  return /[\u3040-\u30FF\u4E00-\u9FFF\uAC00-\uD7AF\u3400-\u4DBF\uF900-\uFAFF]/.test(str);
+}
+
+// Devanagari: U+0900–097F (used for Hindi, Marathi, Sanskrit, Nepali …)
+function _isDevanagari(str) {
+  return /[\u0900-\u097F]/.test(str);
 }
 
 // ── Stub ──────────────────────────────────────────────────────
