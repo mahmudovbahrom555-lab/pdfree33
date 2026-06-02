@@ -918,14 +918,33 @@ async function _p2wExtractText(pdfDoc) {
     else if (maxSize >= median * 1.7) heading = HeadingLevel.HEADING_2;
     else if (maxSize >= median * 1.3) heading = HeadingLevel.HEADING_3;
 
+    // Debug: open browser DevTools and check console — shows what pdf.js returns for RTL lines.
+    // If you see 'العربية' (starts with ا) → logical order, reversal is NOT needed.
+    // If you see 'ةيبرعلا' (starts with ة) → visual order, reversal is needed (current default).
+    // To disable reversal: set REVERSE_RTL_ITEMS = false.
+    const REVERSE_RTL_ITEMS = true;
+    if (hasRtl) {
+      console.log('[pdf2word RTL debug] items:', _paraBuffer.flatMap(ln => ln.items.map(i => i.str)));
+    }
+
     const runs = [];
     for (const ln of _paraBuffer) {
       for (let idx = 0; idx < ln.items.length; idx++) {
         const item = ln.items[idx];
         const prev = ln.items[idx - 1];
-        let text   = item.str;
+
+        // Reverse characters within RTL items: pdf.js for many Arabic PDFs returns characters
+        // in visual order (left-to-right on screen = reversed Unicode logical order).
+        // Reversing converts visual order to logical order that Word + <w:bidi/> can display correctly.
+        const itemRtlCnt = (item.str.match(/[\u0590-\u05FF\u0600-\u06FF\u0750-\u077F\uFB1D-\uFB4F\uFB50-\uFDFF\uFE70-\uFEFF]/g) || []).length;
+        const itemIsRtl  = itemRtlCnt > (item.str.replace(/\s/g, '').length || 1) * 0.5;
+        const rawText = (ln.rtl && itemIsRtl && REVERSE_RTL_ITEMS)
+          ? [...item.str].reverse().join('')
+          : item.str;
+
+        let text = rawText;
         // Space insertion: skip for RTL lines (word order handled by BiDi); for LTR use gap
-        if (prev && !ln.rtlSort && !prev.str.endsWith(' ') && !item.str.startsWith(' ')) {
+        if (prev && !ln.rtl && !prev.str.endsWith(' ') && !rawText.startsWith(' ')) {
           const prevW = (prev.width > 0) ? prev.width : prev.fontSize * prev.str.length * 0.5;
           const gap   = item.x - (prev.x + prevW);
           // Devanagari (Hindi) spaces are narrower — use 10% of fontSize instead of 20%
