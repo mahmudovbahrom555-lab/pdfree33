@@ -831,7 +831,8 @@ async function _p2wExtractText(pdfDoc) {
   const { Paragraph, TextRun, HeadingLevel,
           Table, TableRow, TableCell, WidthType } = window.docx;
 
-  const YTOL = 4;   // px — items within 4px on Y → same line
+  const YTOL = 6;   // px — items within 6px on Y → same line (was 4; increased to group
+                   //  characters with slight baseline variation, e.g. Cyrillic in some PDFs)
 
   // ── Pass 1: collect all items + compute global median font size ────────────
   const pageData = [];
@@ -1093,8 +1094,9 @@ async function _p2wExtractText(pdfDoc) {
         } else {
           // ── Buffer this line; flush when a paragraph break is detected ─────
           // A paragraph break occurs when:
-          //   • the Y gap is larger than 1.5 × the previous line's font size
-          //     (blank line or section break in the original PDF), OR
+          //   • the Y gap is larger than 2.0 × the previous line's font size
+          //     (handles 1.5× line-spaced PDFs where gap ≈ 1.5×fontSize;
+          //      was 1.5× which caused word-wrapped Cyrillic lines to not merge)
           //   • either the buffered or incoming line is a heading (large font)
           //     — headings must never merge with adjacent body lines
           const ln      = lines[lineIdx];
@@ -1106,7 +1108,7 @@ async function _p2wExtractText(pdfDoc) {
             const lastMaxFont = Math.max(...lastLn.items.map(i => i.fontSize));
             const gap         = lastLn.y - ln.y;
             const lastIsHead  = lastMaxFont >= median * 1.3;
-            if (isHead || lastIsHead || gap > lastMaxFont * 1.5) _flushPara();
+            if (isHead || lastIsHead || gap > lastMaxFont * 2.0) _flushPara();
           }
           _paraBuffer.push(ln);
         }
