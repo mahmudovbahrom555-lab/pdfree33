@@ -882,12 +882,14 @@ async function _p2wExtractText(pdfDoc) {
       if (!merged) lines.push({ y: item.y, items: [item] });
     }
     lines.forEach(ln => {
-      const txt     = ln.items.map(i => i.str).join('');
+      const txt    = ln.items.map(i => i.str).join('');
       const rtlCnt = (txt.match(/[\u0590-\u05FF\u0600-\u06FF\u0750-\u077F\uFB1D-\uFB4F\uFB50-\uFDFF\uFE70-\uFEFF]/g) || []).length;
-      const ltrCnt = (txt.match(/[A-Za-z\u00C0-\u024F]/g) || []).length;
-      ln.rtl     = rtlCnt > 0;              // any RTL chars → need bidirectional
-      ln.rtlSort = rtlCnt > ltrCnt;         // predominantly RTL → sort right-to-left
-      ln.items.sort((a, b) => ln.rtlSort ? b.x - a.x : a.x - b.x);
+      ln.rtl = rtlCnt > 0;  // any RTL chars -> paragraph gets <w:bidi/>
+      // RTL lines: keep pdf.js content-stream order (logical Unicode order for well-formed PDFs).
+      // Sorting by X would reverse word order on pure-Arabic lines and break mixed
+      // lines like "Arabic (العربية)" where LTR words have lower X than RTL words.
+      // Word's built-in BiDi algorithm handles display when bidirectional:true is set.
+      if (rtlCnt === 0) ln.items.sort((a, b) => a.x - b.x);
     });
 
     allSizes.push(...items.map(i => i.fontSize).filter(s => s > 0));
@@ -939,11 +941,13 @@ async function _p2wExtractText(pdfDoc) {
       }
     }
 
+    const hasCjk = _isCjk(allText);
     paragraphs.push(new Paragraph({
       ...(heading !== undefined ? { heading } : {}),
       ...(hasRtl ? { bidirectional: true } : {}),
       children: runs,
-      spacing:  { after: 80 },
+      // CJK paragraphs: zero spacing so merged lines don't overflow DOCX pages
+      spacing:  { after: hasCjk ? 0 : 80 },
     }));
 
     _paraBuffer.length = 0;
