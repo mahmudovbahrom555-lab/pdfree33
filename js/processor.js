@@ -1108,7 +1108,20 @@ async function _p2wExtractText(pdfDoc) {
             const lastMaxFont = Math.max(...lastLn.items.map(i => i.fontSize));
             const gap         = lastLn.y - ln.y;
             const lastIsHead  = lastMaxFont >= median * 1.3;
-            if (isHead || lastIsHead || gap > lastMaxFont * 2.0) _flushPara();
+
+            // CJK PDFs often use 2.0×–2.5× line spacing, so a fixed 2.0× threshold
+            // incorrectly splits word-wrapped lines into separate paragraphs.
+            // Use a looser threshold when the previous CJK line does NOT end with
+            // sentence-ending punctuation (indicating word wrap, not a paragraph break).
+            // If it DOES end with 。！？ it's likely the last line of a paragraph → keep 2.0×.
+            const lastText       = lastLn.items.map(i => i.str).join('');
+            const lastIsCjk      = _isCjk(lastText);
+            const lastEndsSent   = /[。！？…]$/.test(lastText.trimEnd());
+            const mergeThreshold = (lastIsCjk && !lastEndsSent)
+              ? lastMaxFont * 3.5   // CJK continuation line — absorb generous leading
+              : lastMaxFont * 2.0;  // non-CJK or sentence-end — conservative merge
+
+            if (isHead || lastIsHead || gap > mergeThreshold) _flushPara();
           }
           _paraBuffer.push(ln);
         }
