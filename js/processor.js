@@ -920,20 +920,25 @@ async function _p2wExtractText(pdfDoc) {
     else if (maxSize >= median * 1.3) heading = HeadingLevel.HEADING_3;
 
     const runs = [];
-    for (const ln of _paraBuffer) {
+    for (let li = 0; li < _paraBuffer.length; li++) {
+      const ln = _paraBuffer[li];
       for (let idx = 0; idx < ln.items.length; idx++) {
         const item = ln.items[idx];
         const prev = ln.items[idx - 1];
 
-        // Use the string as-is from pdf.js: for well-formed Unicode PDFs, pdf.js returns
-        // Arabic/Hebrew text in Unicode LOGICAL order. Applying reverse() would corrupt it.
-        // bidirectional:true on the Paragraph tells Word to apply the Unicode BiDi algorithm
-        // at render time, which correctly handles logical-order RTL strings.
         const text0 = item.str;
-
         let text = text0;
-        // Space insertion: skip for RTL lines (word order handled by BiDi); for LTR use gap
-        if (prev && !ln.rtl && !prev.str.endsWith(' ') && !text0.startsWith(' ')) {
+
+        if (idx === 0 && li > 0) {
+          // First item of a continuation line: insert space at the boundary if neither
+          // side already has one (fixes word merging across RTL and LTR line wraps).
+          const prevLn  = _paraBuffer[li - 1];
+          const lastStr = prevLn.items[prevLn.items.length - 1]?.str ?? '';
+          if (!lastStr.endsWith(' ') && !text0.startsWith(' ')) {
+            text = ' ' + text;
+          }
+        } else if (prev && !ln.rtl && !prev.str.endsWith(' ') && !text0.startsWith(' ')) {
+          // LTR only: gap-based space insertion within the same line
           const prevW = (prev.width > 0) ? prev.width : prev.fontSize * prev.str.length * 0.5;
           const gap   = item.x - (prev.x + prevW);
           // Devanagari (Hindi) spaces are narrower — use 10% of fontSize instead of 20%
@@ -1104,10 +1109,14 @@ async function _p2wExtractText(pdfDoc) {
             // If it DOES end with 。！？ it's likely the last line of a paragraph → keep 2.0×.
             const lastText       = lastLn.items.map(i => i.str).join('');
             const lastIsCjk      = _isCjk(lastText);
+            const lastIsRtl      = lastLn.rtl;
             const lastEndsSent   = /[。！？…]$/.test(lastText.trimEnd());
             const mergeThreshold = (lastIsCjk && !lastEndsSent)
               ? lastMaxFont * 3.5   // CJK continuation line — absorb generous leading
-              : lastMaxFont * 2.0;  // non-CJK or sentence-end — conservative merge
+              : lastIsRtl
+              ? lastMaxFont * 1.3   // RTL (Arabic/Hebrew): paragraph gaps are typically
+                                    // 1.5×+ fontSize, line spacing ~1.0–1.2× — split earlier
+              : lastMaxFont * 2.0;  // LTR/Cyrillic — conservative merge
 
             if (isHead || lastIsHead || gap > mergeThreshold) _flushPara();
           }
