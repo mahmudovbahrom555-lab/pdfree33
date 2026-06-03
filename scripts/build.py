@@ -215,6 +215,10 @@ SPECIALTY_PAGES = [
     'merge-pdf-without-uploading',
     'secure-pdf-tools',
     'sign',
+    # Tools not in tools-config (standalone pages)
+    'ocr-pdf',
+    'pdf-to-word',
+    'draw-on-pdf',
     # Specific-intent landing pages
     'compress-pdf-for-email',
     'split-pdf-into-multiple-files',

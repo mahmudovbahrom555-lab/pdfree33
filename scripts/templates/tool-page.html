@@ -81,7 +81,7 @@
   <link rel="preload" href="{{ prefix }}fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="modulepreload" href="{{ prefix }}js/app.js?v={{ hashes.app }}">
 
-  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+  <script async src="https://plausible.io/js/pa-btw6hEg2RBvjsO2g74lcs.js"></script>
   <link rel="stylesheet" href="{{ prefix }}css/fonts.css">
   <link rel="stylesheet" href="{{ prefix }}css/variables.css">
   <link rel="stylesheet" href="{{ prefix }}css/animations.css">
@@ -294,7 +294,6 @@
   {% if lang != 'en' %}
   <script type="module" src="{{ prefix }}js/locales/{{ lang }}.js"></script>
   {% endif %}
-  <script>window.PDFREE_INITIAL_TOOL = '{{ tool.toolKey }}';</script>
   <script type="module" src="{{ prefix }}js/app.js?v={{ hashes.app }}"></script>
 
 <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script><!-- End Cloudflare Web Analytics -->

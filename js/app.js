@@ -28,7 +28,7 @@ import './toolRegistrations.js';                 // side-effect: registers all t
 import { trackToolStart, trackToolSuccess,
          trackToolCancel, trackFileAdded,
          trackToolOpen, trackInstallPrompt,
-         trackToolError }                         from './analytics.js';
+         trackToolError, trackDownload }           from './analytics.js';
 import { t }                                      from './i18n.js';
 
 // ── Module-level constants ────────────────────────────────────
@@ -214,6 +214,7 @@ function _handleSuccess({ tool, blob, desc, filename, compressionReport }) {
   setText('successDesc',  desc);
 
   id('downloadBtn').onclick = () => {
+    trackDownload(tool, blob.size);
     const a = document.createElement('a');
     a.href = _resultUrl; a.download = filename;
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
@@ -488,7 +489,7 @@ function _showUpdateBanner(reg) {
 
   id('swUpdateNow')?.addEventListener('click', () => {
     banner.style.display = 'none';
-    reg.waiting.postMessage({ type: 'SKIP_WAITING' });
+    reg.waiting?.postMessage({ type: 'SKIP_WAITING' });
     navigator.serviceWorker.addEventListener('controllerchange',
       () => location.reload(), { once: true });
   }, { once: true });

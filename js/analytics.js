@@ -31,6 +31,14 @@ function _roundDuration(ms) {
   return Math.round(s / 5) * 5;
 }
 
+// Plausible v2: set up event queue so events fired before the async
+// script loads are buffered and replayed once the script initialises.
+if (typeof window !== 'undefined') {
+  window.plausible = window.plausible || function() {
+    (window.plausible.q = window.plausible.q || []).push(arguments);
+  };
+}
+
 /** Plausible custom event wrapper — no-op if not loaded */
 function _track(eventName, props = {}) {
   try {
@@ -117,4 +125,9 @@ export function trackToolError(tool, errorType = 'unknown') {
 export function trackInstallPrompt(action) {
   // action: 'shown' | 'accepted' | 'dismissed'
   _track('PWA Install', { action });
+}
+
+/** Track file download — measures real conversion (processed → saved) */
+export function trackDownload(tool, outputSize = 0) {
+  _track('Download', { tool, output_size: _sizeBucket(outputSize) });
 }
