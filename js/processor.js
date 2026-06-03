@@ -730,6 +730,7 @@ async function _runWorkerTool(tool, filesSnapshot, params) {
 // for Blob creation, and pdf.js rendering needs canvas.
 
 async function _runPdf2Word(filesSnapshot, { mode = 'text', dpi = 150 } = {}) {
+  console.log('[RTL_TRACE] _runPdf2Word START — processor version: aad411d+1');
   const file = filesSnapshot[0];
   if (!_checkSize(file, 150)) { _abortUI(); return; }
 
