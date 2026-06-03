@@ -856,6 +856,8 @@ async function _p2wExtractText(pdfDoc) {
         // Rotation detected when b-component dominates a-component in the transform matrix.
         // Normal text: [a≈size, b≈0, …]. Rotated 90°: [a≈0, b≈size, …].
         const isRotated = Math.abs(item.transform[1]) > Math.abs(item.transform[0]) * 0.5;
+        if (/[؀-ۿ]/.test(item.str))
+          console.log('[RTL_TRACE] RAW', JSON.stringify(item.str), 'dir=', item.dir ?? 'n/a');
         return {
           str:      item.str,
           x:        item.transform[4],
@@ -922,6 +924,9 @@ async function _p2wExtractText(pdfDoc) {
     const runs = [];
     for (let li = 0; li < _paraBuffer.length; li++) {
       const ln = _paraBuffer[li];
+      if (ln.rtl)
+        console.log('[RTL_TRACE] LINE_ITEMS y=' + ln.y,
+          ln.items.map(i => ({ str: i.str, x: Math.round(i.x) })));
       for (let idx = 0; idx < ln.items.length; idx++) {
         const item = ln.items[idx];
         const prev = ln.items[idx - 1];
@@ -945,6 +950,8 @@ async function _p2wExtractText(pdfDoc) {
           const thr   = _isDevanagari(prev.str) ? item.fontSize * 0.1 : item.fontSize * 0.2;
           if (gap > thr) text = ' ' + text;
         }
+        if (/[؀-ۿ]/.test(text))
+          console.log('[RTL_TRACE] DOCX_WRITE', JSON.stringify(text));
         runs.push(new TextRun({
           text,
           bold:    item.bold,
