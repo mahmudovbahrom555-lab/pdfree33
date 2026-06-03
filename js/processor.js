@@ -730,7 +730,6 @@ async function _runWorkerTool(tool, filesSnapshot, params) {
 // for Blob creation, and pdf.js rendering needs canvas.
 
 async function _runPdf2Word(filesSnapshot, { mode = 'text', dpi = 150 } = {}) {
-  console.log('[RTL_TRACE] _runPdf2Word START — processor version: aad411d+1');
   const file = filesSnapshot[0];
   if (!_checkSize(file, 150)) { _abortUI(); return; }
 
@@ -857,10 +856,13 @@ async function _p2wExtractText(pdfDoc) {
         // Rotation detected when b-component dominates a-component in the transform matrix.
         // Normal text: [a≈size, b≈0, …]. Rotated 90°: [a≈0, b≈size, …].
         const isRotated = Math.abs(item.transform[1]) > Math.abs(item.transform[0]) * 0.5;
-        if (/[؀-ۿ]/.test(item.str))
-          console.log('[RTL_TRACE] RAW', JSON.stringify(item.str), 'dir=', item.dir ?? 'n/a');
+        // pdf.js returns dir:'rtl' items in visual left-to-right order (characters reversed).
+        // Reversing the whole string restores logical Unicode order that Word's BiDi expects.
+        const str = (item.dir === 'rtl')
+          ? [...item.str].reverse().join('')
+          : item.str;
         return {
-          str:      item.str,
+          str,
           x:        item.transform[4],
           y:        item.transform[5],
           width:    item.width || 0,
@@ -925,9 +927,6 @@ async function _p2wExtractText(pdfDoc) {
     const runs = [];
     for (let li = 0; li < _paraBuffer.length; li++) {
       const ln = _paraBuffer[li];
-      if (ln.rtl)
-        console.log('[RTL_TRACE] LINE_ITEMS y=' + ln.y,
-          ln.items.map(i => ({ str: i.str, x: Math.round(i.x) })));
       for (let idx = 0; idx < ln.items.length; idx++) {
         const item = ln.items[idx];
         const prev = ln.items[idx - 1];
@@ -951,8 +950,6 @@ async function _p2wExtractText(pdfDoc) {
           const thr   = _isDevanagari(prev.str) ? item.fontSize * 0.1 : item.fontSize * 0.2;
           if (gap > thr) text = ' ' + text;
         }
-        if (/[؀-ۿ]/.test(text))
-          console.log('[RTL_TRACE] DOCX_WRITE', JSON.stringify(text));
         runs.push(new TextRun({
           text,
           bold:    item.bold,
