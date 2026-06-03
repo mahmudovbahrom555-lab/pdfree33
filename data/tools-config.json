@@ -38,7 +38,7 @@
       "icon": "🔗",
       "toolKey": "merge",
       "slugs": {
-        "en": "merge-large-pdf-files",
+        "en": "merge-pdf",
         "es": "unir-pdf",
         "pt": "juntar-pdf",
         "de": "pdf-zusammenfuehren",
@@ -188,7 +188,7 @@
       "icon": "🗜️",
       "toolKey": "compress",
       "slugs": {
-        "en": "compress-large-pdf-free",
+        "en": "compress-pdf",
         "es": "comprimir-pdf",
         "pt": "comprimir-pdf",
         "de": "pdf-komprimieren",
@@ -563,7 +563,7 @@
       "icon": "🔢",
       "toolKey": "pagenum",
       "slugs": {
-        "en": "add-page-numbers-to-pdf",
+        "en": "pagenum-pdf",
         "es": "numeros-de-pagina-pdf",
         "pt": "numeros-de-pagina-pdf",
         "de": "seitenzahlen-pdf",
