@@ -861,6 +861,8 @@ async function _p2wExtractText(pdfDoc) {
         const str = (item.dir === 'rtl')
           ? [...item.str].reverse().join('')
           : item.str;
+        if (/[؀-ۿ]/.test(item.str))
+          console.log('[T]', JSON.stringify({raw: item.str, dir: item.dir, after: str, x: Math.round(item.transform[4])}));
         return {
           str,
           x:        item.transform[4],
