@@ -288,6 +288,77 @@ function _classifyError(err) {
   return 'UNKNOWN';
 }
 
+// Flattens inherited page-tree resources into each page's own /Resources dict.
+// pdf-lib copyPages() copies only objects reachable from the page node itself —
+// it never walks the /Parent chain to collect inherited resources (Font, XObject …).
+// Without this, pages whose resources live at the /Pages tree level come out blank
+// after copyPages. Calling this on the source PDF before copyPages() fixes that.
+function _flattenPageTreeResources(pdf) {
+  const { PDFName, PDFRef } = PDFLib;
+  const ctx = pdf.context;
+  const INHERITABLE = ['Font', 'XObject', 'ExtGState', 'ColorSpace', 'Pattern', 'Shading'];
+
+  function res(val) {
+    if (val == null) return null;
+    try { return val instanceof PDFRef ? ctx.lookup(val) : val; } catch { return null; }
+  }
+
+  for (let i = 0; i < pdf.getPageCount(); i++) {
+    const node = pdf.getPage(i).node;
+
+    // Walk up to root collecting resource dicts; page's own is index 0 (highest priority)
+    const dicts = [];
+    const own = res(node.get(PDFName.of('Resources')));
+    if (own) dicts.push(own);
+
+    const seen = new Set();
+    let parentVal = node.get(PDFName.of('Parent'));
+    while (parentVal) {
+      const key = String(parentVal);
+      if (seen.has(key)) break;  // cycle guard
+      seen.add(key);
+      const parent = res(parentVal);
+      if (!parent) break;
+      const parentRes = res(parent.get(PDFName.of('Resources')));
+      if (parentRes) dicts.push(parentRes);
+      parentVal = parent.get(PDFName.of('Parent'));
+    }
+
+    if (dicts.length <= 1) continue;  // no inherited resources — nothing to do
+
+    // Ensure page has its own /Resources dict
+    let pageRes = res(node.get(PDFName.of('Resources')));
+    if (!pageRes) {
+      pageRes = ctx.obj({});
+      node.set(PDFName.of('Resources'), pageRes);
+    }
+
+    // Merge parent resources into page (page entries take priority, j=0 is page)
+    for (const typeName of INHERITABLE) {
+      const key = PDFName.of(typeName);
+      let pageSection = res(pageRes.get(key));
+
+      for (let j = 1; j < dicts.length; j++) {
+        const inherited = res(dicts[j].get(key));
+        if (!inherited) continue;
+
+        if (!pageSection) {
+          // Page has no entry for this type — borrow the parent's value directly
+          pageRes.set(key, dicts[j].get(key));
+          pageSection = inherited;
+        } else {
+          // Merge: add entries from inherited that the page doesn't already have
+          try {
+            for (const [k, v] of inherited.entries()) {
+              if (!pageSection.get(k)) pageSection.set(k, v);
+            }
+          } catch { /* non-dict resource (e.g. ProcSet array) — skip */ }
+        }
+      }
+    }
+  }
+}
+
 async function handleMerge(files, names, removeWatermarks = false) {
   const { PDFDocument } = PDFLib;
   const merged = await PDFDocument.create();
@@ -314,7 +385,11 @@ async function handleMerge(files, names, removeWatermarks = false) {
     let pdf;
     try {
       pdf = await PDFDocument.load(files[i], { ignoreEncryption: true });
+      // AES-encrypted PDFs load without throwing but content streams stay encrypted →
+      // output pages are white. Detect via trailer /Encrypt and reject explicitly.
+      if (pdf.context.trailerInfo?.Encrypt) throw new Error('pdf-aes-encrypted');
       if (removeWatermarks) _removeWatermarks(pdf);
+      _flattenPageTreeResources(pdf);  // copy inherited tree-level resources into each page
     } catch (err) {
       fileErrors.push({
         index:   i + 1,
@@ -364,41 +439,53 @@ async function handleMerge(files, names, removeWatermarks = false) {
 // ── Split handler ──
 async function handleSplit(fileBuffer, options) {
   const { PDFDocument } = PDFLib;
-  const srcDoc = await PDFDocument.load(fileBuffer, { ignoreEncryption: true });
-  if (options.removeWatermarks) _removeWatermarks(srcDoc);
-  const pageCount = srcDoc.getPageCount();
 
-  // Фильтруем страницы которые реально существуют в документе
+  // Measure page count before consuming fileBuffer in any load call.
+  // We peek via a temporary load; fileBuffer itself is not detached by pdf-lib.
+  const peekDoc   = await PDFDocument.load(fileBuffer, { ignoreEncryption: true });
+  // AES-encrypted PDFs load without throwing (ignoreEncryption bypasses the header check)
+  // but their content streams remain encrypted → saved output has white/blank pages.
+  if (peekDoc.context.trailerInfo?.Encrypt) throw new Error('pdf-aes-encrypted');
+  const pageCount = peekDoc.getPageCount();
+
+  // Filter to pages that actually exist in the document
   const pages = (options.pages || []).filter(p => p >= 1 && p <= pageCount);
-
-  if (pages.length === 0) {
-    throw new Error('No valid pages selected');
-  }
+  if (pages.length === 0) throw new Error('No valid pages selected');
 
   self.postMessage({ type: 'progress', value: 5, label: 'Loading PDF...' });
 
   if (options.mode === 'single') {
-    // Режим: все выбранные страницы → один PDF
-    const newDoc = await PDFDocument.create();
-    const indices = pages.map(p => p - 1);
-    const copied  = await newDoc.copyPages(srcDoc, indices);
-    copied.forEach(p => newDoc.addPage(p));
+    // ── Extract: keep only selected pages, preserve all shared resources ──
+    // pdf-lib copyPages() misses inherited page-tree resources (fonts, XObjects
+    // referenced at the /Pages node level), producing blank pages for many PDFs.
+    // removePage() operates within the same document context so all inherited
+    // resources remain reachable by the kept pages.
+    const srcDoc = await PDFDocument.load(fileBuffer, { ignoreEncryption: true });
+    if (options.removeWatermarks) _removeWatermarks(srcDoc);
+    const keepSet = new Set(pages.map(p => p - 1)); // convert to 0-indexed
+    for (let i = pageCount - 1; i >= 0; i--) {
+      if (!keepSet.has(i)) srcDoc.removePage(i);
+    }
     self.postMessage({ type: 'progress', value: 90, label: 'Saving...' });
-    const bytes = await newDoc.save();
+    const bytes = await srcDoc.save();
     self.postMessage(
-      { type: 'done', result: bytes.buffer, mode: 'single', totalPages: copied.length },
+      { type: 'done', result: bytes.buffer, mode: 'single', totalPages: pages.length },
       [bytes.buffer]
     );
 
   } else {
-    // Режим: каждая страница → отдельный PDF
+    // ── Split: each selected page → individual PDF ──
+    // Same resource-preservation approach: load a fresh doc per page and remove
+    // all others. fileBuffer is not detached by pdf-lib loads, so multiple loads
+    // from the same ArrayBuffer are safe.
     const results = [];
     for (let i = 0; i < pages.length; i++) {
       const pageNum = pages[i];
-      const newDoc  = await PDFDocument.create();
-      const [p]     = await newDoc.copyPages(srcDoc, [pageNum - 1]);
-      newDoc.addPage(p);
-      const bytes = await newDoc.save();
+      const pageDoc = await PDFDocument.load(fileBuffer, { ignoreEncryption: true });
+      for (let j = pageCount - 1; j >= 0; j--) {
+        if (j !== pageNum - 1) pageDoc.removePage(j);
+      }
+      const bytes = await pageDoc.save();
       results.push({ name: `page_${pageNum}.pdf`, buffer: bytes.buffer });
       self.postMessage({
         type:  'progress',

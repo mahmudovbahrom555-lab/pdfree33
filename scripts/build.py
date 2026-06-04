@@ -96,6 +96,43 @@ def _compute_hashes():
     }
 
 
+# ── Nav items ────────────────────────────────────────────────────────────────
+
+# Tools that appear in the nav bar, in display order.
+# Specialty tools (draw, pdf2word) are appended manually below.
+_NAV_TOOL_IDS = [
+    'merge', 'split', 'compress', 'jpg2pdf', 'pdf2jpg',
+    'watermark', 'pagenum', 'metadata', 'extract',
+    # draw-on-pdf inserted here (specialty page, no localized version)
+    'rotate', 'protect',
+    # pdf-to-word appended at end (specialty page, no localized version)
+]
+
+def _build_nav_items(lang, all_tools):
+    """Return list of {href, label, tool_key} for the top nav bar.
+
+    hrefs use '../slug/' which resolves correctly from any tool page:
+      EN depth-1  /merge-pdf/        →  ../split-pdf/  =  /split-pdf/      ✓
+      PT depth-2  /pt/extrair-pdf/   →  ../juntar-pdf/ =  /pt/juntar-pdf/  ✓
+    Specialty pages (no localized slug) use absolute paths.
+    """
+    tool_map = {t['id']: t for t in all_tools}
+    items = []
+    for tool_id in _NAV_TOOL_IDS:
+        t = tool_map.get(tool_id)
+        if not t:
+            continue
+        slug  = t['slugs'].get(lang, t['slugs']['en'])
+        label = t['navLabels'].get(lang, t['navLabels']['en'])
+        items.append({'href': f'../{slug}/', 'label': label, 'tool_key': t['toolKey']})
+        if tool_id == 'extract':
+            # Insert Draw after Extract — specialty page, English only
+            items.append({'href': '/draw-on-pdf/', 'label': 'Draw', 'tool_key': 'draw-pdf'})
+    # PDF→Word — specialty page, English only
+    items.append({'href': '/pdf-to-word/', 'label': 'PDF→Word', 'tool_key': 'pdf2word'})
+    return items
+
+
 # ── Hreflang ─────────────────────────────────────────────────────────────────
 
 def _hreflang_links(tool, config):
@@ -472,6 +509,7 @@ def _generate_pages(config, hashes, env, out_dir, dry_run=False):
                 base_url       = BASE_URL,
                 hreflang_links = hreflang,
                 all_tools      = all_tools,
+                nav_items      = _build_nav_items(lang, all_tools),
                 ui             = ui_all[lang],
                 seo_content    = seo_content,
                 faq_items      = faq_items,
