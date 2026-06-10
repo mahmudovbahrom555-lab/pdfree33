@@ -124,6 +124,9 @@ const EN = {
   err_pdf_engine: 'PDF engine could not load. Check your internet connection — pdf.js is loaded from CDN.',
   retry:          '⟳ Try again',
 
+  // ── ocrUI.js ───────────────────────────────────────────────────
+  install_ocr_first:    'Install OCR engine first — click "Install OCR PDF"',
+
   // ── errors ────────────────────────────────────────────────────
   no_pages_selected:    'No valid pages selected',
   err_no_render:        'No pages were rendered successfully',

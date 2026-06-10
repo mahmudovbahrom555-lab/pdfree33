@@ -112,6 +112,9 @@ window.PDFREE_LOCALE = {
   err_pdf_engine: 'O motor PDF não pôde ser carregado. Verifique a sua ligação à internet.',
   retry:          '⟳ Tentar novamente',
 
+  // ocrUI
+  install_ocr_first:   'Instale primeiro o motor OCR — clique em "Instalar OCR PDF"',
+
   // errors
   no_pages_selected:   'Nenhuma página válida selecionada',
   err_no_render:       'Nenhuma página foi renderizada com sucesso',

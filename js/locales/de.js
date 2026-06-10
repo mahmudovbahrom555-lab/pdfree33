@@ -113,6 +113,9 @@ window.PDFREE_LOCALE = {
   err_pdf_engine: 'PDF-Engine konnte nicht geladen werden. Bitte Internetverbindung prüfen.',
   retry:          '⟳ Erneut versuchen',
 
+  // ocrUI
+  install_ocr_first:   'Bitte zuerst die OCR-Engine installieren — klicke auf „OCR PDF installieren"',
+
   // errors
   no_pages_selected:   'Keine gültigen Seiten ausgewählt',
   err_no_render:       'Keine Seiten konnten erfolgreich gerendert werden',

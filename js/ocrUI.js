@@ -2,6 +2,7 @@
 // Copyright (C) 2025 PDFree Contributors
 
 import { loadPdfJs } from './pdf2jpgUI.js';
+import { t } from './i18n.js';
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 const TESSERACT_CDN       = 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';
@@ -16,6 +17,10 @@ let _generation      = 0;        // incremented on each new file; stale _analyse
 let _deferredInstall = null;
 let _selectedLang    = 'eng';
 let _downloadAsTxt   = false;
+
+// ── Last result — stored so the download button in success card can re-trigger
+let _lastResultBlob  = null;   // Blob for re-download from success card
+let _lastResultName  = null;   // Download filename
 
 window.addEventListener('beforeinstallprompt', e => {
   e.preventDefault();
@@ -63,6 +68,7 @@ export function hideOcrOptions() {
   const el = document.getElementById('ocrOptions');
   if (el) { el.style.display = 'none'; el.innerHTML = ''; }
   _file = null; _isTextPdf = false; _loading = false;
+  _lastResultBlob = null; _lastResultName = null;
 }
 
 export function getOcrParams() {
@@ -362,8 +368,14 @@ function _bindMergeBtn() {
     const mode = btn.dataset.mode || 'process';
     if (mode === 'reset') return;
 
-    // Gate: only intercept when OCR is the active tool
-    if (!_isTextPdf && !_ocrReady) return;
+    // Gate: only intercept when OCR is the active tool.
+    // If OCR engine is not installed, show a toast and bail — do NOT fall through
+    // to the bubble-phase handler, which would call doProcess() on a stub runner.
+    if (!_isTextPdf && !_ocrReady) {
+      _showToast(t('install_ocr_first'));
+      e.stopImmediatePropagation();
+      return;
+    }
 
     e.stopImmediatePropagation();
 
@@ -375,6 +387,9 @@ function _bindMergeBtn() {
     try {
       if (_isTextPdf) {
         const text = await _extractTextDirect(_file);
+        // Store for re-download from success card
+        _lastResultBlob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+        _lastResultName = _file.name.replace(/\.pdf$/i, '.txt');
         _downloadText(text, _file.name);
         _showSuccess('Text extracted and saved to your device.');
       } else {
@@ -384,6 +399,9 @@ function _bindMergeBtn() {
         // Build searchable PDF
         _updateProgress(95, 'Building searchable PDF…');
         const pdfBytes = await _buildSearchablePdf(_file, ocrPages, _selectedLang);
+        // Store for re-download from success card
+        _lastResultBlob = new Blob([pdfBytes], { type: 'application/pdf' });
+        _lastResultName = _file.name.replace(/\.pdf$/i, '_searchable.pdf');
         _downloadPdf(pdfBytes, _file.name);
         if (_downloadAsTxt && fullText) {
           _downloadText(fullText, _file.name);
@@ -401,14 +419,38 @@ function _bindMergeBtn() {
 
 function _showSuccess(desc) {
   const sc = document.getElementById('successCard');
-  if (sc) {
-    sc.style.display = 'block';
-    const title = document.getElementById('successTitle');
-    if (title) title.textContent = 'Done!';
-    const descEl = document.getElementById('successDesc');
-    if (descEl) descEl.textContent = desc;
-    sc.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  if (!sc) return;
+
+  sc.style.display = 'block';
+  const title = document.getElementById('successTitle');
+  if (title) title.textContent = 'Done!';
+  const descEl = document.getElementById('successDesc');
+  if (descEl) descEl.textContent = desc;
+
+  // Wire the download button so user can re-download from the success card.
+  // app.js's _handleSuccess is never called by the OCR tool (no pdfree:success
+  // event is dispatched), so we wire the button directly here.
+  const dlBtn = document.getElementById('downloadBtn');
+  if (dlBtn && _lastResultBlob && _lastResultName) {
+    dlBtn.disabled = false;
+    dlBtn.style.opacity = '';
+    dlBtn.textContent = '⬇ Download';
+    dlBtn.onclick = () => {
+      const url = URL.createObjectURL(_lastResultBlob);
+      const a   = document.createElement('a');
+      a.href     = url;
+      a.download = _lastResultName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 10000);
+      dlBtn.textContent = t('saved_device');
+      dlBtn.disabled    = true;
+      dlBtn.style.opacity = '0.5';
+    };
   }
+
+  sc.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
 // ── OCR pipeline ─────────────────────────────────────────────────────────────
@@ -555,13 +597,14 @@ async function _extractTextDirect(file) {
     _updateProgress(Math.round(p / total * 90), `Extracting page ${p} of ${total}…`);
     const page = await pdfDoc.getPage(p);
     const tc   = await page.getTextContent();
-    // Group items into lines by Y position (items within 2pt of same baseline → same line)
+    // Group items into lines by Y position (items within 4pt of same baseline → same line).
+    // 4pt tolerance handles baseline variation in real PDFs without merging adjacent lines.
     const lines = [];
     for (const item of tc.items) {
       if (!item.str.trim()) continue;
       const iy = Math.round(item.transform[5]);
       const last = lines[lines.length - 1];
-      if (last && Math.abs(last.y - iy) <= 2) {
+      if (last && Math.abs(last.y - iy) <= 4) {
         last.words.push(item.str);
       } else {
         lines.push({ y: iy, words: [item.str] });
