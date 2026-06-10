@@ -8,6 +8,14 @@ import { t } from './i18n.js';
 const TESSERACT_CDN       = 'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js';
 const TEXT_CHAR_THRESHOLD = 100; // min chars across sampled pages → classified as text PDF (items-count was 5 — too low)
 
+// Non-Latin scripts where Tesseract confidence is structurally lower even for correct text.
+// Used for two purposes:
+//   1. Lower confidence threshold (45 vs 55) so valid glyphs aren't discarded.
+//   2. Skip OCR quality score display — calibrated Latin tiers (90/80/60%) mislead
+//      users of these scripts until per-language baselines are established from real data.
+// Note: kor (Korean) included — Hangul confidence patterns match other complex scripts.
+const COMPLEX_LANGS = new Set(['ara', 'jpn', 'chi_sim', 'chi_tra', 'kor', 'hin', 'tha']);
+
 // ── State ────────────────────────────────────────────────────────────────────
 let _file            = null;
 let _isTextPdf       = false;
@@ -408,7 +416,7 @@ function _bindMergeBtn() {
         if (_downloadAsTxt && fullText) {
           _downloadText(fullText, _file.name);
         }
-        const qualityLabel = _ocrQualityLabel(avgConfidence);
+        const qualityLabel = _ocrQualityLabel(avgConfidence, _selectedLang);
         _showSuccess(`Searchable PDF saved — you can now select and copy text in any PDF reader.${qualityLabel}`);
       }
     } catch (err) {
@@ -540,10 +548,11 @@ async function _runOcr(file, gen) {
       await page.render({ canvasContext: ctx, viewport: vp }).promise;
 
       const result = await worker.recognize(canvas);
-      // Confidence threshold: 45% — below this Tesseract is guessing; garbage in the
-      // invisible layer is worse than a gap (corrupt text breaks Ctrl+F for the whole line).
-      // 55%+ is too aggressive for non-Latin scripts where correct glyphs score 40-50%.
-      const MIN_CONF = 45;
+      // Adaptive confidence threshold — see COMPLEX_LANGS constant.
+      // Latin (eng/fra/…): 55% — Tesseract is reliable; below 55% is almost always garbage.
+      // Complex (ara/jpn/kor/hin/tha/…): 45% — correct glyphs routinely score 40–50%,
+      // so 55% would silently discard real text for these scripts.
+      const MIN_CONF = COMPLEX_LANGS.has(_selectedLang) ? 45 : 55;
       const words    = result.data.words.flatMap(w => {
         const text = w.text.normalize('NFC').trim();
         if (!text || w.confidence < MIN_CONF) return [];
@@ -604,8 +613,11 @@ function _getLangName(code) {
   return found ? found.name : code;
 }
 
-function _ocrQualityLabel(avgConf) {
-  if (avgConf === null) return '';
+function _ocrQualityLabel(avgConf, lang) {
+  // Complex-script confidence is structurally lower even for correct text — the Latin
+  // tiers (90/80/60%) would show "Poor" for valid Arabic/Japanese output and mislead
+  // users. Skip the label until per-language baselines are established from real data.
+  if (avgConf === null || COMPLEX_LANGS.has(lang)) return '';
   let tier;
   if (avgConf >= 90)      tier = `Excellent (${avgConf}%)`;
   else if (avgConf >= 80) tier = `Good (${avgConf}%)`;
