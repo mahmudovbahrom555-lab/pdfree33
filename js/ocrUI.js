@@ -5,8 +5,8 @@ import { loadPdfJs } from './pdf2jpgUI.js';
 import { t } from './i18n.js';
 
 // ── Constants ─────────────────────────────────────────────────────────────────
-const TESSERACT_CDN       = 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';
-const TEXT_PDF_THRESHOLD  = 5;   // min non-empty text items across sampled pages → classified as text PDF
+const TESSERACT_CDN       = 'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js';
+const TEXT_CHAR_THRESHOLD = 100; // min chars across sampled pages → classified as text PDF (items-count was 5 — too low)
 
 // ── State ────────────────────────────────────────────────────────────────────
 let _file            = null;
@@ -115,15 +115,17 @@ async function _analyse(file, container) {
         data: new Uint8Array(buf), verbosity: 0, disableJavaScript: true, ignoreEncryption: true,
       }).promise;
 
-      // Sample up to 3 pages — hybrid PDFs may have blank first page
+      // Sample up to 3 pages — hybrid PDFs may have blank first page.
+      // Count total characters (not items): a scanned PDF may have a few header
+      // items (<20 chars total) while a real text PDF has hundreds per page.
       const samplePages = Math.min(3, pdfDoc.numPages);
-      let totalTextItems = 0;
+      let totalChars = 0;
       for (let p = 1; p <= samplePages; p++) {
         const pg = await pdfDoc.getPage(p);
         const tc = await pg.getTextContent();
-        totalTextItems += tc.items.filter(i => i.str.trim()).length;
+        totalChars += tc.items.reduce((s, i) => s + i.str.trim().length, 0);
       }
-      _isTextPdf = totalTextItems > TEXT_PDF_THRESHOLD;
+      _isTextPdf = totalChars >= TEXT_CHAR_THRESHOLD;
     } finally {
       pdfDoc?.destroy();
     }
@@ -394,7 +396,7 @@ function _bindMergeBtn() {
         _showSuccess('Text extracted and saved to your device.');
       } else {
         const myGen = ++_generation;
-        const { ocrPages, fullText } = await _runOcr(_file, myGen);
+        const { ocrPages, fullText, avgConfidence } = await _runOcr(_file, myGen);
         if (myGen !== _generation) return;   // new file dropped mid-OCR — discard partial result
         // Build searchable PDF
         _updateProgress(95, 'Building searchable PDF…');
@@ -406,7 +408,8 @@ function _bindMergeBtn() {
         if (_downloadAsTxt && fullText) {
           _downloadText(fullText, _file.name);
         }
-        _showSuccess('Searchable PDF saved — you can now select and copy text in any PDF reader.');
+        const qualityLabel = _ocrQualityLabel(avgConfidence);
+        _showSuccess(`Searchable PDF saved — you can now select and copy text in any PDF reader.${qualityLabel}`);
       }
     } catch (err) {
       _showToast('Error: ' + err.message);
@@ -507,64 +510,87 @@ async function _runOcr(file, gen) {
     },
   });
 
-  const total    = isIos ? Math.min(pdfDoc.numPages, MAX_PAGES_IOS) : pdfDoc.numPages;
-  const ocrPages = [];
-  const txtPages = [];
+  const total      = isIos ? Math.min(pdfDoc.numPages, MAX_PAGES_IOS) : pdfDoc.numPages;
+  const ocrPages   = [];
+  const txtPages   = [];
+  const pageErrors = [];
+  let   confSum    = 0;
+  let   confCount  = 0;
 
   for (let p = 1; p <= total; p++) {
     const basePct = 15 + Math.round((p - 1) / total * 75);
     _updateProgress(basePct, `OCR page ${p} of ${total} · ${langLabel}`);
 
-    const page = await pdfDoc.getPage(p);
+    let canvas;
+    try {
+      const page = await pdfDoc.getPage(p);
 
-    // Adaptive scale — cap at MAX_OCR_PX to limit memory on mobile
-    const vp0 = page.getViewport({ scale: 1 });
-    let scale = 2;
-    if (vp0.width * 2 > MAX_OCR_PX || vp0.height * 2 > MAX_OCR_PX) {
-      scale = Math.min(MAX_OCR_PX / vp0.width, MAX_OCR_PX / vp0.height);
+      // Adaptive scale — cap at MAX_OCR_PX to limit memory on mobile
+      const vp0 = page.getViewport({ scale: 1 });
+      let scale = 2;
+      if (vp0.width * 2 > MAX_OCR_PX || vp0.height * 2 > MAX_OCR_PX) {
+        scale = Math.min(MAX_OCR_PX / vp0.width, MAX_OCR_PX / vp0.height);
+      }
+      const vp = page.getViewport({ scale });
+
+      canvas        = document.createElement('canvas');
+      canvas.width  = Math.round(vp.width);
+      canvas.height = Math.round(vp.height);
+      const ctx = canvas.getContext('2d');
+      await page.render({ canvasContext: ctx, viewport: vp }).promise;
+
+      const result = await worker.recognize(canvas);
+      // Confidence threshold: 45% — below this Tesseract is guessing; garbage in the
+      // invisible layer is worse than a gap (corrupt text breaks Ctrl+F for the whole line).
+      // 55%+ is too aggressive for non-Latin scripts where correct glyphs score 40-50%.
+      const MIN_CONF = 45;
+      const words    = result.data.words.flatMap(w => {
+        const text = w.text.normalize('NFC').trim();
+        if (!text || w.confidence < MIN_CONF) return [];
+        confSum += w.confidence;
+        confCount++;
+        return [{ text, confidence: w.confidence, bbox: w.bbox }];
+      });
+
+      // Store viewport transform — used in _buildSearchablePdf to map canvas→PDF coords
+      // correctly for any page rotation (0, 90, 180, 270°)
+      ocrPages.push({
+        pageNum: p, words,
+        canvasW: canvas.width, canvasH: canvas.height,
+        vpTransform: Array.from(vp.transform),
+      });
+
+      // Build plain text from paragraph/line structure
+      const paragraphs = result.data.paragraphs
+        .map(para => para.lines
+          .map(line => line.words.map(w => w.text).join(' ').trim())
+          .filter(Boolean)
+          .join('\n'))
+        .filter(Boolean);
+      txtPages.push(`--- Page ${p} ---\n${paragraphs.join('\n\n') || result.data.text.trim()}`);
+
+    } catch (pageErr) {
+      // One bad page must not kill the whole job — skip and continue
+      pageErrors.push({ page: p, error: pageErr.message });
+    } finally {
+      // Always release canvas memory regardless of success or error
+      if (canvas) { canvas.width = 0; canvas.height = 0; }
     }
-    const vp = page.getViewport({ scale });
-
-    const canvas  = document.createElement('canvas');
-    canvas.width  = Math.round(vp.width);
-    canvas.height = Math.round(vp.height);
-    const ctx = canvas.getContext('2d');
-    await page.render({ canvasContext: ctx, viewport: vp }).promise;
-
-    const result = await worker.recognize(canvas);
-    const words  = result.data.words.flatMap(w => {
-      const text = w.text.normalize('NFC').trim();
-      if (!text) return [];
-      return [{ text, confidence: w.confidence, bbox: w.bbox }];
-    });
-
-    // Store viewport transform — used in _buildSearchablePdf to map canvas→PDF coords
-    // correctly for any page rotation (0, 90, 180, 270°)
-    ocrPages.push({
-      pageNum: p, words,
-      canvasW: canvas.width, canvasH: canvas.height,
-      vpTransform: Array.from(vp.transform),
-    });
-
-    // Build plain text from paragraph/line structure
-    const paragraphs = result.data.paragraphs
-      .map(para => para.lines
-        .map(line => line.words.map(w => w.text).join(' ').trim())
-        .filter(Boolean)
-        .join('\n'))
-      .filter(Boolean);
-    txtPages.push(`--- Page ${p} ---\n${paragraphs.join('\n\n') || result.data.text.trim()}`);
-
-    // Release canvas memory after each page
-    canvas.width  = 0;
-    canvas.height = 0;
 
     // Bail early if user started a new OCR (new file selected or button re-clicked)
     if (gen !== _generation) break;
   }
 
   if (gen === _generation) _updateProgress(92, 'OCR complete');
-  return { ocrPages, fullText: txtPages.join('\n\n') };
+
+  // Surface per-page failures as a non-fatal warning toast
+  if (pageErrors.length > 0) {
+    const nums = pageErrors.map(e => e.page).join(', ');
+    _showToast(t('warn_page_fail', { page: nums, msg: pageErrors[0].error }));
+  }
+
+  const avgConfidence = confCount > 0 ? Math.round(confSum / confCount) : null;
+  return { ocrPages, fullText: txtPages.join('\n\n'), avgConfidence };
   } finally {
     // Always terminate — prevents thread leak if recognize() or render() throws
     await worker?.terminate();
@@ -576,6 +602,16 @@ function _getLangName(code) {
   const all = [...LANGUAGES.european, ...LANGUAGES.complex];
   const found = all.find(l => l.code === code);
   return found ? found.name : code;
+}
+
+function _ocrQualityLabel(avgConf) {
+  if (avgConf === null) return '';
+  let tier;
+  if (avgConf >= 90)      tier = `Excellent (${avgConf}%)`;
+  else if (avgConf >= 80) tier = `Good (${avgConf}%)`;
+  else if (avgConf >= 60) tier = `Fair (${avgConf}%)`;
+  else                    tier = `Poor (${avgConf}%) — consider rescanning at higher DPI`;
+  return ` · OCR quality: ${tier}`;
 }
 
 // ── Direct text extraction (text-layer PDFs) ─────────────────────────────────
