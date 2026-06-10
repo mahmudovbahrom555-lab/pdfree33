@@ -831,9 +831,14 @@ async function _runPdf2Word(filesSnapshot, { mode = 'text', dpi = 150 } = {}) {
 // the run order so the overall reading order is restored.
 function _visualRTLToLogical(s) {
   const BIDI_MIRROR = {'(':')',')':'(','[':']',']':'[','{':'}','}':'{','<':'>','>':'<'};
-  const isRTL = cp => (cp >= 0x0590 && cp <= 0x05FF) || (cp >= 0x0600 && cp <= 0x06FF) ||
-                      (cp >= 0x0750 && cp <= 0x077F) || (cp >= 0xFB1D && cp <= 0xFB4F) ||
-                      (cp >= 0xFB50 && cp <= 0xFDFF) || (cp >= 0xFE70 && cp <= 0xFEFF);
+  // Arabic-Indic digits (U+0660–0669) and Extended Arabic-Indic (U+06F0–06F9) have
+  // BiDi class AN — they run left-to-right even within RTL text, so exclude them
+  // from the RTL set to prevent reversal (e.g. "١٢٣" must not become "٣٢١").
+  const isRTL = cp =>
+    !((cp >= 0x0660 && cp <= 0x0669) || (cp >= 0x06F0 && cp <= 0x06F9)) &&
+    ((cp >= 0x0590 && cp <= 0x05FF) || (cp >= 0x0600 && cp <= 0x06FF) ||
+     (cp >= 0x0750 && cp <= 0x077F) || (cp >= 0xFB1D && cp <= 0xFB4F) ||
+     (cp >= 0xFB50 && cp <= 0xFDFF) || (cp >= 0xFE70 && cp <= 0xFEFF));
   const segs = [];
   for (const ch of [...s]) {
     const rtl = isRTL(ch.codePointAt(0));
@@ -979,7 +984,8 @@ async function _p2wExtractText(pdfDoc) {
           const prevW = (prev.width > 0) ? prev.width : prev.fontSize * prev.str.length * 0.5;
           const gap   = item.x - (prev.x + prevW);
           // Devanagari (Hindi) spaces are narrower — use 10% of fontSize instead of 20%
-          const thr   = _isDevanagari(prev.str) ? item.fontSize * 0.1 : item.fontSize * 0.2;
+          const thr   = (_isDevanagari(prev.str) || _isDevanagari(text0))
+            ? item.fontSize * 0.1 : item.fontSize * 0.2;
           if (gap > thr) text = ' ' + text;
         }
         runs.push(new TextRun({

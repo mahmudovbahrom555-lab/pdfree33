@@ -217,7 +217,7 @@ function _esc(str) {
 // Runs detectTables() on first N pages after PDF loads.
 // Shows a compact info badge in the UI when tables are found.
 const SCAN_PAGES = 5;   // scan only first N pages to keep init snappy
-const YTOL       = 4;   // must match processor.js _p2wExtractText
+const YTOL       = 6;   // must match processor.js _p2wExtractText (was 4; see processor.js:865)
 
 async function _scanTablesBackground(doc) {
   const pageLimit = Math.min(doc.numPages, SCAN_PAGES);
