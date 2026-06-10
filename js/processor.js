@@ -824,6 +824,37 @@ async function _runPdf2Word(filesSnapshot, { mode = 'text', dpi = 150 } = {}) {
   }));
 }
 
+// Converts a pdf.js RTL item string from visual (left-to-right screen) order to Unicode
+// logical order that Word's BiDi engine expects.  Character-level reverse() corrupts
+// embedded LTR words (e.g. "(Arabic)" → "(cibarA)"); this splits by run direction,
+// reverses only RTL runs, applies bidi mirroring to brackets in LTR runs, then reverses
+// the run order so the overall reading order is restored.
+function _visualRTLToLogical(s) {
+  const BIDI_MIRROR = {'(':')',')':'(','[':']',']':'[','{':'}','}':'{','<':'>','>':'<'};
+  const isRTL = cp => (cp >= 0x0590 && cp <= 0x05FF) || (cp >= 0x0600 && cp <= 0x06FF) ||
+                      (cp >= 0x0750 && cp <= 0x077F) || (cp >= 0xFB1D && cp <= 0xFB4F) ||
+                      (cp >= 0xFB50 && cp <= 0xFDFF) || (cp >= 0xFE70 && cp <= 0xFEFF);
+  const segs = [];
+  for (const ch of [...s]) {
+    const rtl = isRTL(ch.codePointAt(0));
+    if (!segs.length || segs[segs.length - 1].rtl !== rtl) segs.push({ rtl, chars: [ch] });
+    else segs[segs.length - 1].chars.push(ch);
+  }
+  // Move trailing spaces from an LTR run into the following RTL run so the space
+  // ends up between the Arabic text and the embedded LTR word after run-order reversal.
+  for (let i = 0; i < segs.length - 1; i++) {
+    if (!segs[i].rtl && segs[i + 1].rtl) {
+      while (segs[i].chars.length && segs[i].chars[segs[i].chars.length - 1] === ' ')
+        segs[i + 1].chars.unshift(segs[i].chars.pop());
+    }
+  }
+  return segs.reverse()
+    .map(seg => seg.rtl
+      ? seg.chars.reverse().join('')
+      : seg.chars.map(c => BIDI_MIRROR[c] ?? c).join(''))
+    .join('');
+}
+
 // Text extraction: uses PDF.js getTextContent → builds docx paragraphs.
 // Groups items into lines, runs table detection per page, emits docx.Table
 // for detected tables and docx.Paragraph for everything else.
@@ -856,13 +887,10 @@ async function _p2wExtractText(pdfDoc) {
         // Rotation detected when b-component dominates a-component in the transform matrix.
         // Normal text: [a≈size, b≈0, …]. Rotated 90°: [a≈0, b≈size, …].
         const isRotated = Math.abs(item.transform[1]) > Math.abs(item.transform[0]) * 0.5;
-        // pdf.js returns dir:'rtl' items in visual left-to-right order (characters reversed).
-        // Reversing the whole string restores logical Unicode order that Word's BiDi expects.
-        const str = (item.dir === 'rtl')
-          ? [...item.str].reverse().join('')
-          : item.str;
-        if (/[؀-ۿ]/.test(item.str))
-          console.log('[T]', JSON.stringify({raw: item.str, dir: item.dir, after: str, x: Math.round(item.transform[4])}));
+        // pdf.js returns dir:'rtl' items in visual (left-to-right screen) order.
+        // _visualRTLToLogical restores Unicode logical order while preserving embedded
+        // LTR words (plain reverse() would corrupt e.g. "(Arabic)" → "(cibarA)").
+        const str = (item.dir === 'rtl') ? _visualRTLToLogical(item.str) : item.str;
         return {
           str,
           x:        item.transform[4],
