@@ -879,7 +879,7 @@ async function _p2wExtractText(pdfDoc) {
       detectTableGrids(page).catch(() => []),
     ]);
     const allMapped = content.items
-      .filter(item => 'str' in item && item.str.trim())
+      .filter(item => 'str' in item && item.str.split('\u0000').join('').trim())
       .map(item => {
         const fontSize  = (item.height > 0 ? item.height : Math.abs(item.transform[3])) || 10;
         const style     = content.styles[item.fontName] || {};
@@ -890,7 +890,9 @@ async function _p2wExtractText(pdfDoc) {
         // pdf.js returns dir:'rtl' items in visual (left-to-right screen) order.
         // _visualRTLToLogical restores Unicode logical order while preserving embedded
         // LTR words (plain reverse() would corrupt e.g. "(Arabic)" → "(cibarA)").
-        const str = (item.dir === 'rtl') ? _visualRTLToLogical(item.str) : item.str;
+        // Strip NUL bytes produced by fonts without ToUnicode CMap — they corrupt DOCX XML.
+        const str = ((item.dir === 'rtl') ? _visualRTLToLogical(item.str) : item.str)
+          .split('\u0000').join('');
         return {
           str,
           x:        item.transform[4],

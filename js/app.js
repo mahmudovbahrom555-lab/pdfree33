@@ -29,6 +29,8 @@ import { trackToolStart, trackToolSuccess,
          trackToolCancel, trackFileAdded,
          trackToolOpen, trackInstallPrompt,
          trackToolError, trackDownload }           from './analytics.js';
+import { checkReturnVisit, recordDownload,
+         checkAndRecordConversion }                from './behavioralSignals.js';
 import { t }                                      from './i18n.js';
 
 // ── Module-level constants ────────────────────────────────────
@@ -215,6 +217,7 @@ function _handleSuccess({ tool, blob, desc, filename, compressionReport }) {
 
   id('downloadBtn').onclick = () => {
     trackDownload(tool, blob.size);
+    recordDownload(tool);
     const a = document.createElement('a');
     a.href = _resultUrl; a.download = filename;
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
@@ -295,6 +298,7 @@ function _onMergeBtnClick() {
   // Registry dispatch — no more if-else per tool
   const { params, error } = collectToolParams(currentTool);
   if (error) { showToast(error); return; }
+  checkAndRecordConversion(currentTool, selectedFiles[0]);  // fire-and-forget
   trackToolStart(currentTool);
   doProcess(currentTool, params);
 }
@@ -371,6 +375,7 @@ function initEvents() {
 // ── Initial routing ──────────────────────────────────────────
 
 document.addEventListener('DOMContentLoaded', () => {
+  checkReturnVisit();   // check if user returned shortly after downloading
   // Detect tool via data-tool attribute or URL — both CSP-safe.
   const requestedTool = _detectTool();
 

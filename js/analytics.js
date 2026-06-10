@@ -131,3 +131,21 @@ export function trackInstallPrompt(action) {
 export function trackDownload(tool, outputSize = 0) {
   _track('Download', { tool, output_size: _sizeBucket(outputSize) });
 }
+
+// ── Behavioral quality signals ────────────────────────────────
+// These fire without asking the user — behavior reveals satisfaction.
+
+/** Same file converted 2+ times this session → result was likely wrong */
+export function trackBehaviorRetry(tool, attempt) {
+  _track('Retry Conversion', { tool, attempt: String(attempt) });
+}
+
+/** New conversion <90s after previous download → user checked result and came back fast */
+export function trackBehaviorQuickRetry(tool, gapS) {
+  _track('Quick Retry', { tool, gap_s: String(_roundDuration(gapS * 1000)) });
+}
+
+/** Page opened within 5 min of last download → user checked result and returned */
+export function trackBehaviorReturnVisit(gapMin, tool) {
+  _track('Return Visit', { gap_min: String(gapMin), tool });
+}

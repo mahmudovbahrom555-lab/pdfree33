@@ -451,6 +451,13 @@
         <button id="shareBtn" class="share-btn" type="button" style="display:none" aria-label="Send file via device apps"></button>
       </div>
 
+      <!-- Feedback row — directly under download button -->
+      <div class="fb-row" id="fbRow">
+        <button type="button" class="fb-row-btn fb-row-btn--bug"  data-open-feedback data-fb-type="bug">🐛 Found a bug</button>
+        <button type="button" class="fb-row-btn fb-row-btn--idea" data-open-feedback data-fb-type="idea">💡 Have an idea</button>
+        <button type="button" class="fb-row-btn fb-row-btn--good" data-open-feedback data-fb-type="other">👍 All good!</button>
+      </div>
+
       <!-- Privacy cleared banner — shown 1.5s after download -->
       <div class="privacy-cleared" id="privacyCleared" aria-live="polite" aria-label="Document cleared from memory">
         <div class="privacy-cleared__shield" aria-hidden="true">🔒</div>
@@ -517,6 +524,8 @@
       <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a>
       &nbsp;·&nbsp;
       <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green)">GitHub</a>
+      &nbsp;·&nbsp;
+      <button type="button" data-open-feedback class="fb-footer-btn">💬 Feedback</button>
     </span>
   </footer>
 
@@ -533,6 +542,7 @@
   <!-- pdf-lib нужен в основном потоке для splitUI.js (window.PDFLib) -->
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script type="module" src="js/feedback.js"></script>
   <script type="module" src="js/app.js"></script>
 
 
