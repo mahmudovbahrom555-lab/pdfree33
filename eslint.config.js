@@ -33,7 +33,7 @@ export default [
         TextEncoder: 'readonly', crypto: 'readonly',
         structuredClone: 'readonly', queueMicrotask: 'readonly',
         btoa: 'readonly', atob: 'readonly', module: 'readonly',
-        localStorage: 'readonly', CSS: 'readonly',
+        localStorage: 'readonly', sessionStorage: 'readonly', CSS: 'readonly',
         MessageChannel: 'readonly',
         encryptPDF: 'readonly',
       },
