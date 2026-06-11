@@ -597,11 +597,27 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://pdfree.io/fill/"/>
   </url>
   <url>
+    <loc>https://pdfree.io/draw-on-pdf/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://pdfree.io/draw-on-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="de"        href="https://pdfree.io/de/pdf-zeichnen/"/>
+    <xhtml:link rel="alternate" hreflang="es"        href="https://pdfree.io/es/dibujar-en-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="fr"        href="https://pdfree.io/fr/dessiner-sur-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="pt"        href="https://pdfree.io/pt/desenhar-no-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pdfree.io/draw-on-pdf/"/>
+  </url>
+  <url>
     <loc>https://pdfree.io/ocr-pdf/</loc>
-    <lastmod>2026-05-31</lastmod>
+    <lastmod>2026-06-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
     <xhtml:link rel="alternate" hreflang="en"        href="https://pdfree.io/ocr-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="de"        href="https://pdfree.io/de/ocr-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="es"        href="https://pdfree.io/es/ocr-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="fr"        href="https://pdfree.io/fr/ocr-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="pt"        href="https://pdfree.io/pt/ocr-pdf/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://pdfree.io/ocr-pdf/"/>
   </url>
   <url>
@@ -614,18 +630,130 @@
   </url>
   <url>
     <loc>https://pdfree.io/pdf-to-word/</loc>
-    <lastmod>2026-05-31</lastmod>
+    <lastmod>2026-06-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
     <xhtml:link rel="alternate" hreflang="en"        href="https://pdfree.io/pdf-to-word/"/>
+    <xhtml:link rel="alternate" hreflang="de"        href="https://pdfree.io/de/pdf-zu-word/"/>
+    <xhtml:link rel="alternate" hreflang="es"        href="https://pdfree.io/es/pdf-a-word/"/>
+    <xhtml:link rel="alternate" hreflang="fr"        href="https://pdfree.io/fr/pdf-en-word/"/>
+    <xhtml:link rel="alternate" hreflang="pt"        href="https://pdfree.io/pt/pdf-para-word/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://pdfree.io/pdf-to-word/"/>
   </url>
   <url>
     <loc>https://pdfree.io/flatten-pdf/</loc>
-    <lastmod>2026-06-01</lastmod>
+    <lastmod>2026-06-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
     <xhtml:link rel="alternate" hreflang="en"        href="https://pdfree.io/flatten-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="de"        href="https://pdfree.io/de/pdf-abflachen/"/>
+    <xhtml:link rel="alternate" hreflang="es"        href="https://pdfree.io/es/aplanar-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="fr"        href="https://pdfree.io/fr/aplatir-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="pt"        href="https://pdfree.io/pt/nivelar-pdf/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://pdfree.io/flatten-pdf/"/>
+  </url>
+
+  <!-- ── DE new tool pages ── -->
+  <url>
+    <loc>https://pdfree.io/de/pdf-abflachen/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/de/pdf-zeichnen/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/de/ocr-pdf/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/de/pdf-zu-word/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- ── ES new tool pages ── -->
+  <url>
+    <loc>https://pdfree.io/es/aplanar-pdf/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/es/dibujar-en-pdf/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/es/ocr-pdf/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/es/pdf-a-word/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- ── FR new tool pages ── -->
+  <url>
+    <loc>https://pdfree.io/fr/aplatir-pdf/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/fr/dessiner-sur-pdf/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/fr/ocr-pdf/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/fr/pdf-en-word/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- ── PT new tool pages ── -->
+  <url>
+    <loc>https://pdfree.io/pt/nivelar-pdf/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/pt/desenhar-no-pdf/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/pt/ocr-pdf/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pdfree.io/pt/pdf-para-word/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
 </urlset>

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!--
+    ════════════════════════════════════════════════════════════════
+    Content Security Policy — defence-in-depth against XSS
+    ════════════════════════════════════════════════════════════════
+  -->
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src  'self'
+                'wasm-unsafe-eval'
+                blob:
+                https://cdnjs.cloudflare.com
+                https://esm.sh
+                https://plausible.io
+                https://pagead2.googlesyndication.com
+                https://static.cloudflareinsights.com;
+    style-src   'self' 'unsafe-inline';
+    font-src    'self';
+    img-src     'self' data: blob: https:;
+    connect-src 'self'
+                https://cdnjs.cloudflare.com
+                https://*.workers.dev
+                https://plausible.io
+                https://pagead2.googlesyndication.com
+                https://www.googletagservices.com
+                https://*.doubleclick.net
+                https://cloudflareinsights.com;
+    frame-src   https://googleads.g.doubleclick.net
+                https://tpc.googlesyndication.com;
+    worker-src  'self' blob:;
+    object-src  'none';
+  ">
+  <title>Desenhar no PDF Online — Anotar Gratuitamente | PDFree</title>
+  <meta name="description" content="Anote PDFs com setas, texto e formas — no navegador, sem upload, sem servidor.">
+  <meta property="og:title"       content="Desenhar no PDF Online — Anotar Gratuitamente | PDFree">
+  <meta property="og:description" content="Anote PDFs com setas, texto e formas — no navegador, sem upload, sem servidor.">
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://pdfree.io/pt/desenhar-no-pdf/">
+  <meta property="og:site_name"   content="PDFree">
+  <meta property="og:locale"      content="pt_BR">
+  <meta property="og:image"       content="https://pdfree.io/icons/og-image.jpg">
+  <meta property="og:image:width"  content="1200">
+  <meta property="og:image:height" content="633">
+  <meta name="twitter:card"        content="summary_large_image">
+  <meta name="twitter:site"        content="@pdfree_io">
+  <meta name="twitter:image"       content="https://pdfree.io/icons/og-image.jpg">
+  <link rel="canonical" href="https://pdfree.io/pt/desenhar-no-pdf/">
+  <link rel="alternate" hreflang="en" href="https://pdfree.io/draw-on-pdf/">
+  <link rel="alternate" hreflang="de" href="https://pdfree.io/de/pdf-zeichnen/">
+  <link rel="alternate" hreflang="es" href="https://pdfree.io/es/dibujar-en-pdf/">
+  <link rel="alternate" hreflang="fr" href="https://pdfree.io/fr/dessiner-sur-pdf/">
+  <link rel="alternate" hreflang="pt" href="https://pdfree.io/pt/desenhar-no-pdf/">
+  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/draw-on-pdf/">
+
+  <!-- PWA -->
+  <link rel="manifest" href="../../manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="PDFree">
+  <link rel="apple-touch-icon" href="../../icons/icon-192.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+  <link rel="stylesheet" href="../../css/fonts.css">
+  <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/animations.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/components.css">
+
+  <script type="application/ld+json">
+  {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Desenhar no PDF",
+  "description": "Anote PDFs com setas, texto e formas — no navegador, sem upload, sem servidor.",
+  "url": "https://pdfree.io/pt/desenhar-no-pdf/",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any",
+  "browserRequirements": "Requires a modern browser with JavaScript enabled",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "featureList": [
+    "No file upload required",
+    "100% private — files processed locally",
+    "No registration required",
+    "Free forever"
+  ]
+}
+  </script>
+  <script type="application/ld+json">
+  {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Meus arquivos são armazenados em seus servidores?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Não. PDFree funciona completamente no seu dispositivo. Não temos servidores que processem seus arquivos, garantindo 100% de privacidade."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Há limite de tamanho de arquivo ou número de páginas?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Não, não há limites artificiais. A única limitação é a memória RAM disponível no seu computador ou smartphone."
+      }
+    }
+  ]
+}
+  </script>
+  <script type="application/ld+json">
+  {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "PDFree",
+      "item": "https://pdfree.io/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "PT",
+      "item": "https://pdfree.io/pt/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Desenhar no PDF",
+      "item": "https://pdfree.io/pt/desenhar-no-pdf/"
+    }
+  ]
+}
+  </script>
+</head>
+<body data-tool="draw-pdf">
+
+  <nav>
+    <a href="../../pt/" class="logo" id="logo" aria-label="Go to homepage" style="text-decoration:none"><span class="logo-text">PDF<span>ree</span></span></a>
+    <div class="nav-links">
+      <a href="../merge-pdf/" class="nav-link" data-tool="merge">Merge</a>
+      <a href="../split-pdf/" class="nav-link" data-tool="split">Split</a>
+      <a href="../compress-pdf/" class="nav-link" data-tool="compress">Compress</a>
+      <a href="../jpg2pdf/" class="nav-link" data-tool="jpg2pdf">JPG→PDF</a>
+      <a href="../pdf2jpg/" class="nav-link" data-tool="pdf2jpg">PDF→JPG</a>
+      <a href="../watermark-pdf/" class="nav-link" data-tool="watermark">Watermark</a>
+      <a href="../pagenum-pdf/" class="nav-link" data-tool="pagenum">Page №</a>
+      <a href="../metadata-pdf/" class="nav-link" data-tool="meta">Metadata</a>
+      <a href="../extract-pdf/" class="nav-link" data-tool="extract">Extract</a>
+      <a href="../desenhar-no-pdf/" class="nav-link" data-tool="draw-pdf">Draw</a>
+      <a href="../girar-pdf/" class="nav-link" data-tool="rotate">Rotate</a>
+      <a href="../protect-pdf/" class="nav-link" data-tool="protect">Protect</a>
+      <a href="../ocr-pdf/" class="nav-link" data-tool="ocr">OCR</a>
+      <a href="../pdf-para-word/" class="nav-link" data-tool="pdf2word">PDF→Word</a>
+      <a href="../nivelar-pdf/" class="nav-link" data-tool="flatten">Flatten</a>
+    </div>
+  </nav>
+
+  <!-- ── Tool workspace ── -->
+  <main id="toolArea" class="main-area" aria-busy="false">
+
+    <div class="tool-header">
+      <div class="tool-header-icon" id="toolIcon" aria-hidden="true">✏️</div>
+      <div class="tool-header-text">
+        <h2 id="toolTitle">Desenhar no PDF Online</h2>
+        <p id="toolDesc">Anote PDFs com setas, texto e formas — privado, sem upload.</p>
+      </div>
+    </div>
+
+    <div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-label="Arraste seu PDF aqui">
+      <input type="file" id="fileInput" accept=".pdf" aria-hidden="true">
+      <span class="drop-icon" aria-hidden="true">📂</span>
+      <div class="drop-title">Arraste seu PDF aqui</div>
+      <div class="drop-sub">ou clique para procurar</div>
+      <button class="drop-btn" id="chooseFilesBtn" type="button">Escolher arquivo</button>
+    </div>
+
+    <div id="fileList" class="file-list" aria-live="polite"></div>
+    <div id="fileCount" class="file-count" style="display:none"></div>
+
+    <div id="splitOptions"     class="split-options"    style="display:none"></div>
+    <div id="compressOptions"  class="compress-options" style="display:none"></div>
+    <div id="watermarkOptions" class="j2p-options"      style="display:none"></div>
+    <div id="pageNumOptions"   class="j2p-options"      style="display:none"></div>
+    <div id="metaOptions"      class="j2p-options"      style="display:none"></div>
+    <div id="protectOptions"   class="j2p-options"      style="display:none"></div>
+    <div id="rotateOptions"    class="j2p-options"      style="display:none"></div>
+
+    <button id="mergeBtn" type="button" hidden></button>
+    <button id="cancelBtn" class="cancel-btn" type="button" style="display:none">✕</button>
+
+    <div id="progressBar" class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+    <div id="progressLabel" class="progress-label"></div>
+
+    <div id="successCard" class="success-card" role="alert" aria-live="polite" style="display:none">
+      <div class="success-top">
+        <div class="success-icon" aria-hidden="true">✓</div>
+        <div class="success-text">
+          <h3 id="successTitle">Pronto!</h3>
+          <p id="successDesc"></p>
+        </div>
+        <button id="downloadBtn" class="download-btn" type="button">⬇ Baixar</button>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- SEO article -->
+  <section class="seo-article" aria-labelledby="seoArticleTitle">
+    <div class="seo-article__inner">
+      <h1 id="seoArticleTitle" style="font-size:28px; color:var(--text); margin:0 0 20px; font-weight:700;">Desenhar no PDF Online — Anotar Gratuitamente</h1>
+      <p>PDFree permite anotar PDFs diretamente no navegador — com setas, texto, formas e desenho livre. Sem upload, sem servidor, sem registro.</p>
+
+      <h3 style="font-size:20px; color:var(--text); margin:32px 0 16px; font-weight:600;">Perguntas Frequentes</h3>
+      <dl class="seo-faq">
+        <dt>Meus arquivos são armazenados em seus servidores?</dt>
+        <dd>Não. PDFree funciona completamente no seu dispositivo. Não temos servidores que processem seus arquivos, garantindo 100% de privacidade.</dd>
+        <dt>Há limite de tamanho de arquivo ou número de páginas?</dt>
+        <dd>Não, não há limites artificiais. A única limitação é a memória RAM disponível no seu computador ou smartphone.</dd>
+      </dl>
+    </div>
+  </section>
+
+  <footer>
+    PDFree · <strong>Todo o processamento ocorre 100% no seu navegador</strong> · Os arquivos <strong>nunca são enviados</strong><br>
+    <span style="color:var(--green)">🔒</span> Seus documentos nunca saem do seu dispositivo &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> Gratuito para todos — para sempre<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
+      Código aberto sob licença
+      <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a>
+      &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/PDFree" target="_blank" rel="noopener" style="color:var(--green)">Código fonte no GitHub</a>
+    </span>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script type="module" src="../../js/locales/pt.js"></script>
+  <!-- tool detected via body data-tool attr — no inline script needed -->
+  <script type="module" src="../../js/app.js"></script>
+<!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

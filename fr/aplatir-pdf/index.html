@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!--
+    ════════════════════════════════════════════════════════════════
+    Content Security Policy — defence-in-depth against XSS
+    ════════════════════════════════════════════════════════════════
+  -->
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src  'self'
+                'wasm-unsafe-eval'
+                blob:
+                https://cdnjs.cloudflare.com
+                https://esm.sh
+                https://plausible.io
+                https://pagead2.googlesyndication.com
+                https://static.cloudflareinsights.com;
+    style-src   'self' 'unsafe-inline';
+    font-src    'self';
+    img-src     'self' data: blob: https:;
+    connect-src 'self'
+                https://cdnjs.cloudflare.com
+                https://*.workers.dev
+                https://plausible.io
+                https://pagead2.googlesyndication.com
+                https://www.googletagservices.com
+                https://*.doubleclick.net
+                https://cloudflareinsights.com;
+    frame-src   https://googleads.g.doubleclick.net
+                https://tpc.googlesyndication.com;
+    worker-src  'self' blob:;
+    object-src  'none';
+  ">
+  <title>Aplatir PDF en Ligne — Verrouiller les Champs de Formulaire Gratuit | PDFree</title>
+  <meta name="description" content="Verrouillez les champs de formulaire PDF remplis — ils deviennent du texte normal, non modifiable. Sans upload, 100% privé, gratuit.">
+  <meta property="og:title"       content="Aplatir PDF en Ligne — Verrouiller les Champs de Formulaire Gratuit | PDFree">
+  <meta property="og:description" content="Verrouillez les champs de formulaire PDF remplis — ils deviennent du texte normal, non modifiable. Sans upload, 100% privé, gratuit.">
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://pdfree.io/fr/aplatir-pdf/">
+  <meta property="og:site_name"   content="PDFree">
+  <meta property="og:locale"      content="fr_FR">
+  <meta property="og:image"       content="https://pdfree.io/icons/og-image.jpg">
+  <meta property="og:image:width"  content="1200">
+  <meta property="og:image:height" content="633">
+  <meta name="twitter:card"        content="summary_large_image">
+  <meta name="twitter:site"        content="@pdfree_io">
+  <meta name="twitter:image"       content="https://pdfree.io/icons/og-image.jpg">
+  <link rel="canonical" href="https://pdfree.io/fr/aplatir-pdf/">
+  <link rel="alternate" hreflang="en" href="https://pdfree.io/flatten-pdf/">
+  <link rel="alternate" hreflang="de" href="https://pdfree.io/de/pdf-abflachen/">
+  <link rel="alternate" hreflang="es" href="https://pdfree.io/es/aplanar-pdf/">
+  <link rel="alternate" hreflang="fr" href="https://pdfree.io/fr/aplatir-pdf/">
+  <link rel="alternate" hreflang="pt" href="https://pdfree.io/pt/nivelar-pdf/">
+  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/flatten-pdf/">
+
+  <!-- PWA -->
+  <link rel="manifest" href="../../manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="PDFree">
+  <link rel="apple-touch-icon" href="../../icons/icon-192.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+  <link rel="stylesheet" href="../../css/fonts.css">
+  <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/animations.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/components.css">
+
+  <script type="application/ld+json">
+  {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Aplatir PDF",
+  "description": "Verrouillez les champs de formulaire PDF remplis — ils deviennent du texte normal, non modifiable. Sans upload, 100% privé, gratuit.",
+  "url": "https://pdfree.io/fr/aplatir-pdf/",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any",
+  "browserRequirements": "Requires a modern browser with JavaScript enabled",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "featureList": [
+    "No file upload required",
+    "100% private — files processed locally",
+    "No registration required",
+    "Free forever"
+  ]
+}
+  </script>
+  <script type="application/ld+json">
+  {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Mes fichiers sont-ils stockés sur vos serveurs ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Non. PDFree fonctionne entièrement sur votre appareil. Nous n'avons pas de serveurs qui traitent vos fichiers, ce qui garantit 100% de confidentialité."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Y a-t-il une limite de taille de fichier ou de nombre de pages ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Non, il n'y a pas de limites artificielles. La seule limitation est la mémoire RAM disponible sur votre ordinateur ou smartphone."
+      }
+    }
+  ]
+}
+  </script>
+  <script type="application/ld+json">
+  {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "PDFree",
+      "item": "https://pdfree.io/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "FR",
+      "item": "https://pdfree.io/fr/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Aplatir PDF",
+      "item": "https://pdfree.io/fr/aplatir-pdf/"
+    }
+  ]
+}
+  </script>
+</head>
+<body data-tool="flatten">
+
+  <nav>
+    <a href="../../fr/" class="logo" id="logo" aria-label="Go to homepage" style="text-decoration:none"><span class="logo-text">PDF<span>ree</span></span></a>
+    <div class="nav-links">
+      <a href="../merge-pdf/" class="nav-link" data-tool="merge">Merge</a>
+      <a href="../split-pdf/" class="nav-link" data-tool="split">Split</a>
+      <a href="../compress-pdf/" class="nav-link" data-tool="compress">Compress</a>
+      <a href="../jpg2pdf/" class="nav-link" data-tool="jpg2pdf">JPG→PDF</a>
+      <a href="../pdf2jpg/" class="nav-link" data-tool="pdf2jpg">PDF→JPG</a>
+      <a href="../watermark-pdf/" class="nav-link" data-tool="watermark">Watermark</a>
+      <a href="../pagenum-pdf/" class="nav-link" data-tool="pagenum">Page №</a>
+      <a href="../metadata-pdf/" class="nav-link" data-tool="meta">Metadata</a>
+      <a href="../extract-pdf/" class="nav-link" data-tool="extract">Extract</a>
+      <a href="../dessiner-sur-pdf/" class="nav-link" data-tool="draw-pdf">Draw</a>
+      <a href="../rotation-pdf/" class="nav-link" data-tool="rotate">Rotate</a>
+      <a href="../protect-pdf/" class="nav-link" data-tool="protect">Protect</a>
+      <a href="../ocr-pdf/" class="nav-link" data-tool="ocr">OCR</a>
+      <a href="../pdf-en-word/" class="nav-link" data-tool="pdf2word">PDF→Word</a>
+      <a href="../aplatir-pdf/" class="nav-link" data-tool="flatten">Flatten</a>
+    </div>
+  </nav>
+
+  <!-- ── Tool workspace ── -->
+  <main id="toolArea" class="main-area" aria-busy="false">
+
+    <div class="tool-header">
+      <div class="tool-header-icon" id="toolIcon" aria-hidden="true">🔒</div>
+      <div class="tool-header-text">
+        <h2 id="toolTitle">Aplatir PDF en Ligne</h2>
+        <p id="toolDesc">Intégrer les champs de formulaire dans la page — les champs deviennent du texte simple, personne ne peut les modifier.</p>
+      </div>
+    </div>
+
+    <div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-label="Déposez votre PDF ici">
+      <input type="file" id="fileInput" accept=".pdf" aria-hidden="true">
+      <span class="drop-icon" aria-hidden="true">📂</span>
+      <div class="drop-title">Déposez votre PDF ici</div>
+      <div class="drop-sub">ou cliquez pour parcourir</div>
+      <button class="drop-btn" id="chooseFilesBtn" type="button">Choisir un fichier</button>
+    </div>
+
+    <div id="fileList" class="file-list" aria-live="polite"></div>
+    <div id="fileCount" class="file-count" style="display:none"></div>
+
+    <div id="splitOptions"     class="split-options"    style="display:none"></div>
+    <div id="compressOptions"  class="compress-options" style="display:none"></div>
+    <div id="watermarkOptions" class="j2p-options"      style="display:none"></div>
+    <div id="pageNumOptions"   class="j2p-options"      style="display:none"></div>
+    <div id="metaOptions"      class="j2p-options"      style="display:none"></div>
+    <div id="protectOptions"   class="j2p-options"      style="display:none"></div>
+    <div id="rotateOptions"    class="j2p-options"      style="display:none"></div>
+
+    <button id="mergeBtn" class="merge-btn" type="button" disabled data-mode="process">Verrouiller le Formulaire</button>
+    <button id="cancelBtn" class="cancel-btn" type="button" style="display:none">✕</button>
+
+    <div id="progressBar" class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+    <div id="progressLabel" class="progress-label"></div>
+
+    <div id="successCard" class="success-card" role="alert" aria-live="polite" style="display:none">
+      <div class="success-top">
+        <div class="success-icon" aria-hidden="true">✓</div>
+        <div class="success-text">
+          <h3 id="successTitle">Terminé !</h3>
+          <p id="successDesc"></p>
+        </div>
+        <button id="downloadBtn" class="download-btn" type="button">⬇ Télécharger</button>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- SEO article -->
+  <section class="seo-article" aria-labelledby="seoArticleTitle">
+    <div class="seo-article__inner">
+      <h1 id="seoArticleTitle" style="font-size:28px; color:var(--text); margin:0 0 20px; font-weight:700;">Aplatir PDF en Ligne — Verrouiller les Champs de Formulaire</h1>
+      <p>PDFree aplatit les formulaires PDF directement dans le navigateur — tous les champs de formulaire sont convertis en texte normal non modifiable. Sans upload, sans serveur, sans inscription.</p>
+
+      <h3 style="font-size:20px; color:var(--text); margin:32px 0 16px; font-weight:600;">Questions Fréquentes</h3>
+      <dl class="seo-faq">
+        <dt>Mes fichiers sont-ils stockés sur vos serveurs ?</dt>
+        <dd>Non. PDFree fonctionne entièrement sur votre appareil. Nous n'avons pas de serveurs qui traitent vos fichiers, ce qui garantit 100% de confidentialité.</dd>
+        <dt>Y a-t-il une limite de taille de fichier ou de nombre de pages ?</dt>
+        <dd>Non, il n'y a pas de limites artificielles. La seule limitation est la mémoire RAM disponible sur votre ordinateur ou smartphone.</dd>
+      </dl>
+    </div>
+  </section>
+
+  <footer>
+    PDFree · <strong>Tout le traitement se fait 100% dans votre navigateur</strong> · Les fichiers ne sont <strong>jamais envoyés</strong><br>
+    <span style="color:var(--green)">🔒</span> Vos documents ne quittent jamais votre appareil &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> Gratuit pour tous — pour toujours<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
+      Open source sous licence
+      <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a>
+      &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/PDFree" target="_blank" rel="noopener" style="color:var(--green)">Code source sur GitHub</a>
+    </span>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script type="module" src="../../js/locales/fr.js"></script>
+  <!-- tool detected via body data-tool attr — no inline script needed -->
+  <script type="module" src="../../js/app.js"></script>
+<!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
