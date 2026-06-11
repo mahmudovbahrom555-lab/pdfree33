@@ -82,7 +82,10 @@ def check_file(html_path: Path) -> tuple[list[str], list[str]]:
     if _is_tool_page(html_path) and 'data-tool=' not in text and 'PDFREE_INITIAL_TOOL' not in text:
         missing_tool = ['data-tool attribute not set on <body>']
     bad_cards = _check_div_tool_cards(text)
-    return missing_ids, missing_tool + bad_cards
+    missing_theme = []
+    if 'theme.js' not in text:
+        missing_theme = ['theme.js missing — page will always render with default (dark) theme, ignoring user preference']
+    return missing_ids, missing_tool + bad_cards + missing_theme
 
 def main():
     errors = []
@@ -92,6 +95,12 @@ def main():
     for path in html_files:
         parts = path.parts
         if any(p.startswith('.') or p in ('node_modules', 'dist', 'data') for p in parts):
+            continue
+        # Skip .template.html files and generated localized tool pages (de/slug/, es/slug/, etc.)
+        if path.name.endswith('.template.html'):
+            continue
+        rel_parts = path.relative_to(ROOT).parts
+        if len(rel_parts) == 3 and rel_parts[0] in LANG_CODES:
             continue
         missing_ids, missing_tool = check_file(path)
         issues = missing_ids + missing_tool
