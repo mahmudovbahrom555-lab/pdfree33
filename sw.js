@@ -47,7 +47,6 @@ const STATIC_ASSETS = [
   '/js/files.js',
   '/js/processor.js',
   '/js/worker.js?v=__WORKER_HASH__',
-  '/js/ads.js',
   '/js/pageSelectorUtils.js',
   '/js/splitUI.js',
   '/js/compressUI.js',
