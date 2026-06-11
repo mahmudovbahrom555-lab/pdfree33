@@ -57,6 +57,22 @@ def _is_tool_page(path: Path) -> bool:
         return False
     return True
 
+def _check_div_tool_cards(text: str) -> list[str]:
+    """Tool cards must be <a href>, never <div data-tool>.
+    A <div data-tool> card stops working silently when app.js fails to init
+    (SW cache miss, CSP error, etc.). <a href> cards work unconditionally.
+    Rule: any <div ...data-tool=...class="tool-card"...> or vice versa is an error.
+    """
+    import re
+    # Match <div ...> tags that contain both data-tool= and class="tool-card"
+    div_tags = re.findall(r'<div\b[^>]+>', text)
+    bad = []
+    for tag in div_tags:
+        if 'data-tool=' in tag and 'tool-card' in tag:
+            bad.append(f'<div> tool card found — use <a href> instead: {tag[:80]}')
+    return bad
+
+
 def check_file(html_path: Path) -> tuple[list[str], list[str]]:
     text = html_path.read_text(encoding='utf-8', errors='replace')
     if 'app.js' not in text:
@@ -65,7 +81,8 @@ def check_file(html_path: Path) -> tuple[list[str], list[str]]:
     missing_tool   = []
     if _is_tool_page(html_path) and 'data-tool=' not in text and 'PDFREE_INITIAL_TOOL' not in text:
         missing_tool = ['data-tool attribute not set on <body>']
-    return missing_ids, missing_tool
+    bad_cards = _check_div_tool_cards(text)
+    return missing_ids, missing_tool + bad_cards
 
 def main():
     errors = []
