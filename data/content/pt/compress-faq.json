@@ -1,18 +1,42 @@
 [
   {
     "@type": "Question",
-    "name": "Meus arquivos são armazenados em seus servidores?",
+    "name": "Meus arquivos são enviados para um servidor?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Não. O PDFree opera totalmente no seu dispositivo (no lado do cliente). Não temos servidores que processem seus arquivos, o que garante 100% de privacidade."
+      "text": "Não. O PDFree processa todos os arquivos inteiramente no seu navegador. Seus documentos nunca saem do seu dispositivo."
     }
   },
   {
     "@type": "Question",
-    "name": "Existe um limite para o tamanho do arquivo ou número de páginas?",
+    "name": "A compressão afeta o texto?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Não, não há limites artificiais. A única limitação é a memória RAM disponível no seu computador ou smartphone."
+      "text": "Não. A compressão do PDFree reduz principalmente a resolução das imagens incorporadas. O texto vetorial permanece intacto e perfeitamente legível em qualquer nível escolhido."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso comprimir um PDF protegido por senha?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Não. PDFs criptografados não podem ser processados diretamente. Remova a proteção primeiro, comprima e depois proteja novamente se necessário."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Existe um limite de tamanho ou número de páginas?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Não. O PDFree não tem limites artificiais. A única restrição é a memória RAM disponível no seu dispositivo."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "O PDFree funciona offline?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim. O PDFree é um Progressive Web App (PWA) e funciona completamente offline após o primeiro carregamento."
     }
   }
 ]

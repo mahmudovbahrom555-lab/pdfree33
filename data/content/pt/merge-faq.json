@@ -1,18 +1,42 @@
 [
   {
     "@type": "Question",
-    "name": "Meus arquivos são armazenados em seus servidores?",
+    "name": "Quantos arquivos PDF posso juntar de uma vez?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Não. O PDFree opera totalmente no seu dispositivo (no lado do cliente). Não temos servidores que processem seus arquivos, o que garante 100% de privacidade."
+      "text": "Não há limite fixo. O PDFree processa tudo na memória do navegador. Para lotes grandes (50+ arquivos), feche outras abas para liberar RAM."
     }
   },
   {
     "@type": "Question",
-    "name": "Existe um limite para o tamanho do arquivo ou número de páginas?",
+    "name": "A formatação será preservada após a junção?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Não, não há limites artificiais. A única limitação é a memória RAM disponível no seu computador ou smartphone."
+      "text": "Sim. O PDFree usa pdf-lib que copia as páginas no nível dos objetos PDF — fontes, imagens, gráficos vetoriais e formatação são preservados exatamente."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso juntar PDFs protegidos por senha?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Não. PDFs criptografados não podem ser lidos sem a senha. Remova a proteção primeiro, depois junte."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Meus arquivos são enviados para um servidor?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Não. Tudo é processado na memória do seu navegador. Nada é enviado para nenhum servidor. Feche a aba e os arquivos desaparecem completamente."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "O PDFree funciona offline?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim. O PDFree é um Progressive Web App (PWA) e funciona completamente offline após o primeiro carregamento."
     }
   }
 ]

@@ -1,18 +1,42 @@
 [
   {
     "@type": "Question",
-    "name": "Meus arquivos são armazenados em seus servidores?",
+    "name": "Meus arquivos são enviados para um servidor?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Não. O PDFree opera totalmente no seu dispositivo (no lado do cliente). Não temos servidores que processem seus arquivos, o que garante 100% de privacidade."
+      "text": "Não. O PDFree processa todos os arquivos inteiramente no seu navegador. Seus documentos nunca saem do seu dispositivo."
     }
   },
   {
     "@type": "Question",
-    "name": "Existe um limite para o tamanho do arquivo ou número de páginas?",
+    "name": "A marca d'água pode ser removida após a aplicação?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Não, não há limites artificiais. A única limitação é a memória RAM disponível no seu computador ou smartphone."
+      "text": "Não. A marca d'água é incorporada permanentemente no PDF. Se precisar de uma versão sem marca d'água, guarde o arquivo original antes de aplicar."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso controlar a opacidade da marca d'água?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim. A opacidade é ajustável de 0 a 100%. Uma opacidade de 20–30% cria uma marca d'água discreta que não obstrui o conteúdo principal."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "A marca d'água se aplica a todas as páginas?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim, por padrão a marca d'água se aplica a todas as páginas. Você também pode escolher aplicá-la apenas em certas páginas."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Existe um limite de tamanho ou número de páginas?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Não. O PDFree não tem limites artificiais. A única restrição é a memória RAM disponível no seu dispositivo."
     }
   }
 ]

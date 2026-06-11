@@ -1,18 +1,42 @@
 [
   {
     "@type": "Question",
-    "name": "Meus arquivos são armazenados em seus servidores?",
+    "name": "Meus arquivos são enviados para um servidor?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Não. O PDFree opera totalmente no seu dispositivo (no lado do cliente). Não temos servidores que processem seus arquivos, o que garante 100% de privacidade."
+      "text": "Não. O PDFree processa todos os arquivos inteiramente no seu navegador. Seus documentos nunca saem do seu dispositivo."
     }
   },
   {
     "@type": "Question",
-    "name": "Existe um limite para o tamanho do arquivo ou número de páginas?",
+    "name": "Todos os metadados são removidos?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Não, não há limites artificiais. A única limitação é a memória RAM disponível no seu computador ou smartphone."
+      "text": "O PDFree remove os metadados padrão (autor, título, assunto, palavras-chave, datas). Metadados XMP avançados incorporados podem não ser totalmente apagados."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso adicionar novos metadados além de remover os existentes?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim. Você pode editar, adicionar ou apagar qualquer campo. Por exemplo, adicione palavras-chave a um PDF que não tinha."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Editar metadados altera o conteúdo visível?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Não. Os metadados são informações invisíveis sobre o documento. O texto, imagens e layout permanecem inalterados."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Existe um limite de tamanho ou número de páginas?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Não. O PDFree não tem limites artificiais. A única restrição é a memória RAM disponível no seu dispositivo."
     }
   }
 ]

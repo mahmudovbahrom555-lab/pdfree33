@@ -1,18 +1,42 @@
 [
   {
     "@type": "Question",
-    "name": "Meus arquivos são armazenados em seus servidores?",
+    "name": "Meus arquivos são enviados para um servidor?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Não. O PDFree opera totalmente no seu dispositivo (no lado do cliente). Não temos servidores que processem seus arquivos, o que garante 100% de privacidade."
+      "text": "Não. O PDFree processa todos os arquivos inteiramente no seu navegador. Seus documentos nunca saem do seu dispositivo."
     }
   },
   {
     "@type": "Question",
-    "name": "Existe um limite para o tamanho do arquivo ou número de páginas?",
+    "name": "A censura é realmente irreversível?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Não, não há limites artificiais. A única limitação é a memória RAM disponível no seu computador ou smartphone."
+      "text": "Sim. As áreas censuradas são incorporadas como retângulos pretos permanentes. O conteúdo original não é mais acessível — nem nos metadados do arquivo PDF."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso censurar apenas certas páginas?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim. Você marca as áreas nas páginas que escolher — apenas as áreas explicitamente marcadas são censuradas."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "A censura remove também os metadados?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Não. Os metadados (autor, data) não são afetados pela censura. Use a ferramenta de metadados em complemento para uma limpeza completa."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Existe um limite de tamanho ou número de páginas?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Não. O PDFree não tem limites artificiais. A única restrição é a memória RAM disponível no seu dispositivo."
     }
   }
 ]
