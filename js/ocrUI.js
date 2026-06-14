@@ -798,28 +798,35 @@ async function _buildSearchablePdf(file, ocrPages, lang) {
   if (!window.PDFLib) {
     throw new Error('pdf-lib not loaded — cannot build searchable PDF');
   }
-  const { PDFDocument } = window.PDFLib;
+  const {
+    PDFDocument,
+    pushGraphicsState, popGraphicsState, setTextRenderingMode,
+    TextRenderingMode,
+  } = window.PDFLib;
+
+  // Tr=3 (ISO 32000-1 §9.3.6): "neither fill nor stroke" — text goes into content
+  // stream for search/copy but is never painted. We write it via pushOperators()
+  // because the bundled pdf-lib.min.js ignores the renderingMode option in drawText.
+  const TR_INVISIBLE = TextRenderingMode?.Invisible ?? 3;
 
   const buf    = await file.arrayBuffer();
   const pdfDoc = await PDFDocument.load(new Uint8Array(buf), { ignoreEncryption: true });
   const font   = await _getFontForLang(pdfDoc, lang ?? 'eng');
   const pages  = pdfDoc.getPages();
 
-  // DEBUG MARKER — remove after confirming code path
-  if (pages[0]) {
-    const { StandardFonts } = window.PDFLib;
-    const dbgFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
-    pages[0].drawText('PDFREE_DEBUG_v9', { x: 10, y: 10, size: 30, font: dbgFont });
-  }
-
   for (const { pageNum, words, vpTransform } of ocrPages) {
     const page = pages[pageNum - 1];
     if (!page) continue;
 
-    // Invert the pdf.js viewport transform to map canvas px → PDF user-space.
-    // This is correct for rotation 0/90/180/270° without any special-casing.
     const inv = vpTransform ? _invertTransform(vpTransform) : null;
     if (!inv) continue;
+
+    // Open one graphics state scope per page: save current state, set Tr=3.
+    // Every page.drawText() call below inherits Tr=3 through its own inner q/Q.
+    page.pushOperators(
+      pushGraphicsState(),
+      setTextRenderingMode(TR_INVISIBLE),
+    );
 
     for (const w of words) {
       if (!w.text.trim() || w.confidence < 20) continue;
@@ -828,8 +835,6 @@ async function _buildSearchablePdf(file, ocrPages, lang) {
       // Transform all four bbox corners to PDF user-space, then derive the
       // axis-aligned bounding box. This is rotation-agnostic: for 0°/180° pages
       // the canvas x-axis is the PDF x-axis; for 90°/270° they are swapped.
-      // Dividing canvas-pixel deltas by a scalar scale factor does NOT undo the
-      // axis swap — only the full matrix inverse does.
       const corners = [
         _applyTransform(inv, x0, y0),
         _applyTransform(inv, x0, y1),
@@ -844,21 +849,22 @@ async function _buildSearchablePdf(file, ocrPages, lang) {
       const wordW    = pdfX1 - pdfX0;
       const wordH    = pdfY1 - pdfY0;
       const fontSize = Math.max(4, Math.min(wordH * 0.85, 72));
-      const origin   = { x: pdfX0, y: pdfY0 };
 
       try {
         page.drawText(w.text, {
-          x:        origin.x,
-          y:        origin.y,
+          x:        pdfX0,
+          y:        pdfY0,
           size:     fontSize,
           font,
-          opacity:  0,         // alpha=0: transparent in rendering, present in content stream
           maxWidth: wordW + 2,
         });
       } catch {
         // Skip words with unsupported glyphs or out-of-bounds coords
       }
     }
+
+    // Restore graphics state — Tr resets to what it was before our q.
+    page.pushOperators(popGraphicsState());
   }
 
   _updateProgress(98, 'Saving PDF…');
