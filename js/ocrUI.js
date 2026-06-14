@@ -805,6 +805,13 @@ async function _buildSearchablePdf(file, ocrPages, lang) {
   const font   = await _getFontForLang(pdfDoc, lang ?? 'eng');
   const pages  = pdfDoc.getPages();
 
+  // DEBUG MARKER — remove after confirming code path
+  if (pages[0]) {
+    const { StandardFonts } = window.PDFLib;
+    const dbgFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
+    pages[0].drawText('PDFREE_DEBUG_v9', { x: 10, y: 10, size: 30, font: dbgFont });
+  }
+
   for (const { pageNum, words, vpTransform } of ocrPages) {
     const page = pages[pageNum - 1];
     if (!page) continue;
