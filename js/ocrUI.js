@@ -800,15 +800,6 @@ async function _buildSearchablePdf(file, ocrPages, lang) {
   }
   const { PDFDocument } = window.PDFLib;
 
-  // TextRenderingMode.Invisible = 3 per ISO 32000-1 §9.3.6 Table 106.
-  // Using ?. + numeric fallback because the bundled pdf-lib.min.js may be a
-  // build that does not export the TextRenderingMode enum. When the enum is
-  // absent, window.PDFLib.TextRenderingMode is undefined and accessing .Invisible
-  // on it throws — which the drawText try/catch silently swallows, causing every
-  // word to be skipped and defaulting to the fill (visible) rendering mode instead.
-  // Hard-coding 3 ensures invisible text regardless of pdf-lib build.
-  const INVISIBLE = window.PDFLib?.TextRenderingMode?.Invisible ?? 3;
-
   const buf    = await file.arrayBuffer();
   const pdfDoc = await PDFDocument.load(new Uint8Array(buf), { ignoreEncryption: true });
   const font   = await _getFontForLang(pdfDoc, lang ?? 'eng');
@@ -850,12 +841,12 @@ async function _buildSearchablePdf(file, ocrPages, lang) {
 
       try {
         page.drawText(w.text, {
-          x:             origin.x,
-          y:             origin.y,
-          size:          fontSize,
+          x:        origin.x,
+          y:        origin.y,
+          size:     fontSize,
           font,
-          renderingMode: INVISIBLE,   // Tr=3: invisible — text in stream but not painted
-          maxWidth:      wordW + 2,
+          opacity:  0,         // alpha=0: transparent in rendering, present in content stream
+          maxWidth: wordW + 2,
         });
       } catch {
         // Skip words with unsupported glyphs or out-of-bounds coords
