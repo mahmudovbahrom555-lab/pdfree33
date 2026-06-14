@@ -7,7 +7,7 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "node tests/utils.test.js && node tests/processor.logic.test.js && node tests/files.logic.test.js && node tests/splitUI.logic.test.js && node tests/toolRegistry.test.js && node tests/config.test.js",
+    "test": "node tests/utils.test.js && node tests/processor.logic.test.js && node tests/files.logic.test.js && node tests/splitUI.logic.test.js && node tests/toolRegistry.test.js && node tests/config.test.js && node tests/i18n.test.js && node tests/integration.test.js",
     "test:watch": "node --watch tests/splitUI.logic.test.js",
     "lint": "eslint js/*.js --ignore-pattern 'js/vendor/**'",
     "check:dom": "python3 scripts/check_dom.py",
