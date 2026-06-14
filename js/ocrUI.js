@@ -45,6 +45,7 @@ const LANGUAGES = {
     { code: 'ita', name: 'Italian',    size: '5 MB'  },
     { code: 'por', name: 'Portuguese', size: '5 MB'  },
     { code: 'rus', name: 'Russian',    size: '5 MB'  },
+    { code: 'uzb', name: 'Uzbek',      size: '3 MB'  },
     { code: 'nld', name: 'Dutch',      size: '5 MB'  },
     { code: 'pol', name: 'Polish',     size: '5 MB'  },
     { code: 'tur', name: 'Turkish',    size: '4 MB'  },
@@ -465,6 +466,12 @@ function _showSuccess(desc) {
 }
 
 // ── OCR pipeline ─────────────────────────────────────────────────────────────
+// Target resolution for OCR — Tesseract accuracy peaks at ~300 DPI.
+// CamScanner embeds pages at ~2480×3508px (300 DPI A4). With the old
+// scale=2 default, a 595pt-wide PDF page rendered to only 1190px —
+// downsampling the original scan by ~50% and losing thin strokes,
+// fraction bars, and small font detail before Tesseract even starts.
+// Now we aim for MAX_OCR_PX on the longest dimension (≈ 300 DPI for A4).
 const MAX_OCR_PX   = 3000;
 const MAX_FILE_MB  = 200;
 // Mobile Safari aggressively kills tabs under memory pressure.
@@ -533,12 +540,15 @@ async function _runOcr(file, gen) {
     try {
       const page = await pdfDoc.getPage(p);
 
-      // Adaptive scale — cap at MAX_OCR_PX to limit memory on mobile
+      // Adaptive scale — aim for MAX_OCR_PX on the longest side.
+      // Old logic (scale=2 default) downsampled high-DPI CamScanner pages
+      // from ~2480px to ~1190px before Tesseract, losing fraction bars and
+      // small text. New logic: scale up to the cap, never less than 2×.
       const vp0 = page.getViewport({ scale: 1 });
-      let scale = 2;
-      if (vp0.width * 2 > MAX_OCR_PX || vp0.height * 2 > MAX_OCR_PX) {
-        scale = Math.min(MAX_OCR_PX / vp0.width, MAX_OCR_PX / vp0.height);
-      }
+      const scale = Math.max(
+        2,
+        Math.min(MAX_OCR_PX / vp0.width, MAX_OCR_PX / vp0.height)
+      );
       const vp = page.getViewport({ scale });
 
       canvas        = document.createElement('canvas');
@@ -547,7 +557,7 @@ async function _runOcr(file, gen) {
       const ctx = canvas.getContext('2d');
       await page.render({ canvasContext: ctx, viewport: vp }).promise;
 
-      const result = await worker.recognize(canvas);
+      const result = await worker.recognize(_toGrayscale(canvas));
       // Adaptive confidence threshold — see COMPLEX_LANGS constant.
       // Latin (eng/fra/…): 55% — Tesseract is reliable; below 55% is almost always garbage.
       // Complex (ara/jpn/kor/hin/tha/…): 45% — correct glyphs routinely score 40–50%,
@@ -668,6 +678,34 @@ async function _extractTextDirect(file) {
   return texts.join('\n\n');
 }
 
+// ── Canvas preprocessing ──────────────────────────────────────────────────────
+
+// Convert rendered page to grayscale before passing to Tesseract.
+// Benefits:
+//   1. Removes color noise introduced by scanner or CamScanner processing.
+//   2. Eliminates colored backgrounds (bar charts, highlighted cells) that
+//      can reduce text/background contrast for the OCR engine.
+//   3. Slightly reduces memory pressure — grayscale data is the same size
+//      as RGBA, but the uniform channels help Tesseract's thresholding.
+// The source canvas is NOT modified — a new canvas is returned and released
+// by the caller immediately after recognize().
+function _toGrayscale(src) {
+  const dst = document.createElement('canvas');
+  dst.width  = src.width;
+  dst.height = src.height;
+  const ctx  = dst.getContext('2d');
+  ctx.drawImage(src, 0, 0);
+  const img = ctx.getImageData(0, 0, dst.width, dst.height);
+  const d   = img.data;
+  for (let i = 0; i < d.length; i += 4) {
+    // ITU-R BT.601 luminance weights (same as CSS grayscale filter)
+    const g = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2];
+    d[i] = d[i + 1] = d[i + 2] = g;
+  }
+  ctx.putImageData(img, 0, 0);
+  return dst;
+}
+
 // ── Searchable PDF builder ────────────────────────────────────────────────────
 
 // Languages whose scripts fall outside Latin-1 (Windows-1252).
@@ -760,7 +798,16 @@ async function _buildSearchablePdf(file, ocrPages, lang) {
   if (!window.PDFLib) {
     throw new Error('pdf-lib not loaded — cannot build searchable PDF');
   }
-  const { PDFDocument, TextRenderingMode } = window.PDFLib;
+  const { PDFDocument } = window.PDFLib;
+
+  // TextRenderingMode.Invisible = 3 per ISO 32000-1 §9.3.6 Table 106.
+  // Using ?. + numeric fallback because the bundled pdf-lib.min.js may be a
+  // build that does not export the TextRenderingMode enum. When the enum is
+  // absent, window.PDFLib.TextRenderingMode is undefined and accessing .Invisible
+  // on it throws — which the drawText try/catch silently swallows, causing every
+  // word to be skipped and defaulting to the fill (visible) rendering mode instead.
+  // Hard-coding 3 ensures invisible text regardless of pdf-lib build.
+  const INVISIBLE = window.PDFLib?.TextRenderingMode?.Invisible ?? 3;
 
   const buf    = await file.arrayBuffer();
   const pdfDoc = await PDFDocument.load(new Uint8Array(buf), { ignoreEncryption: true });
@@ -807,7 +854,7 @@ async function _buildSearchablePdf(file, ocrPages, lang) {
           y:             origin.y,
           size:          fontSize,
           font,
-          renderingMode: TextRenderingMode.Invisible,  // ISO 32000-1 Tr=3
+          renderingMode: INVISIBLE,   // Tr=3: invisible — text in stream but not painted
           maxWidth:      wordW + 2,
         });
       } catch {
