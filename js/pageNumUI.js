@@ -13,8 +13,8 @@
 // ============================================================
 
 import { id } from './utils.js';
-import { chip, chipGroup, sliderRow, checkbox, group, row } from './uiComponents.js';
-import { formatPageNumber, toRoman, toAlpha } from './pageNumUtils.js';
+import { chipGroup, sliderRow, checkbox, group, row } from './uiComponents.js';
+import { formatPageNumber } from './pageNumUtils.js';
 
 // ── State ──────────────────────────────────────────────────────
 let _position   = 'bottom-center'; // 'bottom-center'|'bottom-right'|'bottom-left'|'top-center'|'book'
@@ -106,7 +106,7 @@ function _previewHTML() {
   const ex1 = _formatNum(_startAt, _format);
   const ex2 = _formatNum(_startAt + 1, _format);
   const ex3 = _formatNum(_startAt + 2, _format);
-  const sfx = n => _showTotal ? ` / ${_formatNum(_startAt + 10, _format)}` : '';
+  const sfx = _n => _showTotal ? ` / ${_formatNum(_startAt + 10, _format)}` : '';
   return `<span class="pn-preview__label">Preview:</span>
     <span class="pn-preview__ex">${_skipFirst ? '—' : ex1 + sfx(1)}</span>
     <span class="pn-preview__ex">${ex2 + sfx(2)}</span>

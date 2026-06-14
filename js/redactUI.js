@@ -29,14 +29,13 @@
 
 import { id, esc }                  from './utils.js';
 import { showToast }                from './ui.js';
-import { loadingRow, infoBanner,
-         checkbox, group }          from './uiComponents.js';
+import { loadingRow, infoBanner } from './uiComponents.js';
 import { loadPdfJs }                from './pdf2jpgUI.js';
 
 // ── Constants ──────────────────────────────────────────────────
 
 const MAX_RECTS_PER_PAGE = 5;
-const MIN_DRAG_SIZE = 30;  // px — compromise: mouse precision vs finger
+const _MIN_DRAG_SIZE = 30;  // px — compromise: mouse precision vs finger
 
 // Color palette — 4 named colors with both hex (preview) and rgb (PDF output)
 const COLORS = {

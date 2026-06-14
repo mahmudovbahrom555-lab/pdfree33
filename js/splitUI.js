@@ -10,7 +10,7 @@
 //  - Экспорт selectedPages и splitMode для processor.js
 // ============================================================
 
-import { id, esc } from './utils.js';
+import { id } from './utils.js';
 import { showToast } from './ui.js';
 import { t, tp } from './i18n.js';
 import { trackToolError } from './analytics.js';

@@ -18,9 +18,9 @@ import { showToast } from './ui.js';
 import { t }         from './i18n.js';
 import { trackToolError } from './analytics.js';
 import { parseRange } from './splitUI.js';   // public re-export chain: splitUI → pageSelectorUtils
-import { pagesToRangeString, renderCheckboxes as _renderCheckboxesUtil,
+import { renderCheckboxes as _renderCheckboxesUtil,
          renderRangeInput } from './pageSelectorUtils.js';
-import { chip, chipGroup, checkbox, loadingRow, infoBanner, group, row } from './uiComponents.js';
+import { chipGroup, checkbox, loadingRow, group, row } from './uiComponents.js';
 import { preprocessPdfBuffer } from './decryptPdf.js';
 
 // ── State ──────────────────────────────────────────────────────

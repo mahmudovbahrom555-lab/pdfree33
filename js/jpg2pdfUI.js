@@ -15,8 +15,6 @@
 // ============================================================
 
 import { id }       from './utils.js';
-import { showToast } from './ui.js';
-import { chip, chipGroup, checkbox, sliderRow, group, row } from './uiComponents.js';
 
 // ── State ──────────────────────────────────────────────────────
 let _pageSize    = 'auto';      // 'auto' | 'a4' | 'letter' | 'fit'

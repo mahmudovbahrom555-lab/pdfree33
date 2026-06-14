@@ -5,7 +5,7 @@
 //  files.js — File management: add, remove, render, reorder
 // ============================================================
 
-import { esc, fmtSize, id, show, hide, isFileAccepted } from './utils.js';
+import { esc, fmtSize, id, hide, isFileAccepted } from './utils.js';
 import { showToast } from './ui.js';
 import { ACCEPTED_MIME } from './config.js';
 import { t, tp } from './i18n.js';

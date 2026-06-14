@@ -737,7 +737,7 @@ async function _runPdf2Word(filesSnapshot, { mode = 'text', dpi = 150 } = {}) {
 
   try {
     await loadDocx();
-  } catch (err) {
+  } catch {
     isProcessing = false; setFilesLocked(false); hideCancelBtn();
     _handleError('pdf2word', 'Word library unavailable — check your internet connection.');
     return;

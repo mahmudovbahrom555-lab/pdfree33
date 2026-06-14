@@ -13,8 +13,7 @@
 // ============================================================
 
 import { id }       from './utils.js';
-import { showToast } from './ui.js';
-import { chip, chipGroup, sliderRow, group, row } from './uiComponents.js';
+import { chipGroup, sliderRow, group } from './uiComponents.js';
 
 // ── State ──────────────────────────────────────────────────────
 let _text     = 'CONFIDENTIAL';

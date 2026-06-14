@@ -16,7 +16,7 @@ import { id, fmtSize } from './utils.js';
 import { MAX_COMPRESS_MB, SCAN_LIMIT_MB } from './config.js';
 import { showToast } from './ui.js';
 import { t } from './i18n.js';
-import { chip, sliderRow, checkbox, loadingRow } from './uiComponents.js';
+import { sliderRow, checkbox, loadingRow } from './uiComponents.js';
 import { loadPdfLib } from './lazyLibs.js';
 import { wmRemoveHtml, bindWmRemove, resetWmRemove } from './watermarkRemoveUI.js';
 

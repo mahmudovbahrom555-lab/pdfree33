@@ -270,7 +270,7 @@ function _computeScores(rows, expectedCols, stubFraction = 0) {
 
 // ── Debug output ──────────────────────────────────────────────────────────────
 
-function _debugPrint(tables, lines) {
+function _debugPrint(tables, _lines) {
   if (!tables.length) {
     console.log('[pdf2wordTables] No tables detected on this page');
     return;

@@ -284,7 +284,7 @@ function _cardHTML(i) {
 
 // ── Events ─────────────────────────────────────────────────────
 
-function _bindEvents(container) {
+function _bindEvents(_container) {
   bindWmRemove();
 
   // Rotation buttons
