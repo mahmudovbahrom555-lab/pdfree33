@@ -632,7 +632,7 @@ function initSearch() {
         ? `\u{1F4C4} ${_pendingFiles[0].name}`
         : `\u{1F4C4} ${_pendingFiles.length} PDFs`;
       if (srPendingFile) { srPendingFile.textContent = label; srPendingFile.hidden = false; }
-      if (srChooseBtn) srChooseBtn.textContent = t('search_start');
+      if (srChooseBtn) srChooseBtn.textContent = entry.btn || t('search_start');
       if (srDropHint)  srDropHint.hidden = true;
     } else {
       if (srPendingFile) srPendingFile.hidden = true;

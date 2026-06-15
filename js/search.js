@@ -22,6 +22,7 @@ export function buildIndex(tools, lang = 'en') {
       tags:       (t.tags || []).map(s => s.toLowerCase()),
       accept:     t.accept || '.pdf',
       multi:      t.multi  || false,
+      btn:        t.btns?.[lang] || t.btn || '',
     }));
 }
 
