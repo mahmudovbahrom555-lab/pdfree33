@@ -111,6 +111,28 @@
     <h1>Des outils PDF qui<br><em>fonctionnent vraiment</em></h1>
     <p>Fusionner, diviser, compresser, filigraner, convertir — tout fonctionne <strong>dans votre navigateur</strong>. Vos fichiers ne quittent jamais votre appareil. Aucun serveur. Aucun compte. Juste des résultats.</p>
 
+    <div class="search-hero" id="searchHero">
+      <div class="search-wrap">
+        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input id="toolSearch" type="search" autocomplete="off" spellcheck="false"
+               placeholder="fusionner PDF, compresser, PDF en Word…" aria-label="Rechercher des outils PDF">
+      </div>
+      <div class="search-popular" id="searchPopular" aria-label="Outils populaires"></div>
+      <div class="search-result" id="searchResult" hidden role="region" aria-label="Outil correspondant">
+        <div class="search-result__info">
+          <span class="search-result__icon" id="srIcon" aria-hidden="true"></span>
+          <strong id="srName"></strong>
+          <span class="search-result__desc" id="srDesc"></span>
+        </div>
+        <label class="search-result__cta">
+          <input type="file" id="srFileInput" accept=".pdf" hidden>
+          <span class="btn-primary" id="srChooseBtn">Choisir un fichier &rarr;</span>
+        </label>
+        <div class="search-result__drop" id="srDropHint" aria-hidden="true">ou déposez un PDF ici</div>
+      </div>
+      <p class="search-miss" id="searchMiss" hidden role="status"></p>
+    </div>
+
     <div class="hero-features">
       <div class="hero-feature">
         <div class="hero-feature__icon" aria-hidden="true">

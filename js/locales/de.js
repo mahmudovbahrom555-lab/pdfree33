@@ -127,4 +127,11 @@ window.PDFREE_LOCALE = {
   warn_compress_large:  '⚠️ Große Datei ({size}) — Komprimierung kann 1–2 Minuten dauern. Der Browser verarbeitet alles lokal im Arbeitsspeicher.',
   compress_scan_skipped: 'Große Datei — Vorabscan übersprungen, um Speicher zu sparen',
   error_msg:           'Fehler: {msg}',
+
+  // search
+  search_placeholder: 'PDF zusammenfügen, komprimieren, PDF zu Word…',
+  search_aria:        'PDF-Tools suchen',
+  search_drop:        'oder PDF hier ablegen',
+  search_choose:      'Datei wählen →',
+  search_miss:        'Kein Tool für „{q}" gefunden — versuche „zusammenfügen", „komprimieren" oder „aufteilen"',
 };

@@ -111,6 +111,28 @@
     <h1>Ferramentas PDF que<br><em>realmente funcionam</em></h1>
     <p>Juntar, dividir, comprimir, marca d'água, converter — tudo roda <strong>no seu navegador</strong>. Seus arquivos nunca saem do seu dispositivo. Sem servidor. Sem conta. Apenas resultados.</p>
 
+    <div class="search-hero" id="searchHero">
+      <div class="search-wrap">
+        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input id="toolSearch" type="search" autocomplete="off" spellcheck="false"
+               placeholder="juntar PDF, comprimir, PDF para Word…" aria-label="Pesquisar ferramentas PDF">
+      </div>
+      <div class="search-popular" id="searchPopular" aria-label="Ferramentas populares"></div>
+      <div class="search-result" id="searchResult" hidden role="region" aria-label="Ferramenta encontrada">
+        <div class="search-result__info">
+          <span class="search-result__icon" id="srIcon" aria-hidden="true"></span>
+          <strong id="srName"></strong>
+          <span class="search-result__desc" id="srDesc"></span>
+        </div>
+        <label class="search-result__cta">
+          <input type="file" id="srFileInput" accept=".pdf" hidden>
+          <span class="btn-primary" id="srChooseBtn">Escolher arquivo &rarr;</span>
+        </label>
+        <div class="search-result__drop" id="srDropHint" aria-hidden="true">ou solte um PDF aqui</div>
+      </div>
+      <p class="search-miss" id="searchMiss" hidden role="status"></p>
+    </div>
+
     <div class="hero-features">
       <div class="hero-feature">
         <div class="hero-feature__icon" aria-hidden="true">

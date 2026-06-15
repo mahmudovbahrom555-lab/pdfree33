@@ -126,4 +126,11 @@ window.PDFREE_LOCALE = {
   warn_compress_large:  '⚠️ Archivo grande ({size}) — la compresión puede tardar 1–2 minutos. El navegador lo procesa todo localmente en memoria.',
   compress_scan_skipped: 'Archivo grande — pre-escaneo omitido para ahorrar memoria',
   error_msg:           'Error: {msg}',
+
+  // search
+  search_placeholder: 'unir PDF, comprimir, PDF a Word…',
+  search_aria:        'Buscar herramientas PDF',
+  search_drop:        'o arrastra un PDF aquí',
+  search_choose:      'Elegir archivo →',
+  search_miss:        'No se encontró herramienta para "{q}" — prueba "unir", "comprimir" o "dividir"',
 };

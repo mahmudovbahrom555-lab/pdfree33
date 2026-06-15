@@ -126,4 +126,11 @@ window.PDFREE_LOCALE = {
   warn_compress_large:  '⚠️ Ficheiro grande ({size}) — a compressão pode demorar 1–2 minutos. O navegador processa tudo localmente na memória RAM.',
   compress_scan_skipped: 'Ficheiro grande — pré-análise ignorada para poupar memória',
   error_msg:           'Erro: {msg}',
+
+  // search
+  search_placeholder: 'juntar PDF, comprimir, PDF para Word…',
+  search_aria:        'Pesquisar ferramentas PDF',
+  search_drop:        'ou solte um PDF aqui',
+  search_choose:      'Escolher arquivo →',
+  search_miss:        'Nenhuma ferramenta encontrada para "{q}" — tente "juntar", "comprimir" ou "dividir"',
 };

@@ -138,6 +138,13 @@ const EN = {
   warn_compress_large:  '⚠️ Large file ({size}) — compression may take 1–2 minutes. The browser processes everything locally in RAM.',
   compress_scan_skipped: 'Large file — pre-scan skipped to save memory',
   error_msg:            'Error: {msg}',
+
+  // ── search (homepage intent search) ───────────────────────────
+  search_placeholder: 'merge pdf, compress, pdf to word…',
+  search_aria:        'Search PDF tools',
+  search_drop:        'or drop PDF here',
+  search_choose:      'Choose File →',
+  search_miss:        'No tool found for "{q}" — try "merge", "compress", or "split"',
 };
 
 const L = { ...EN, ...(window.PDFREE_LOCALE ?? {}) };

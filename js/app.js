@@ -390,8 +390,15 @@ function initSearch() {
   const srDesc      = id('srDesc');
   const srFileInput = id('srFileInput');
   const srDropHint  = id('srDropHint');
+  const srChooseBtn = id('srChooseBtn');
 
   if (!searchEl) return;
+
+  // Localize all user-visible strings from i18n
+  searchEl.placeholder = t('search_placeholder');
+  searchEl.setAttribute('aria-label', t('search_aria'));
+  if (srDropHint)  srDropHint.textContent  = t('search_drop');
+  if (srChooseBtn) srChooseBtn.textContent = t('search_choose');
 
   const lang  = document.documentElement.lang || 'en';
   const index = buildIndex(TOOLS, lang);
@@ -430,7 +437,7 @@ function initSearch() {
       trackSearchMiss(q);
       trackMiss(q);
       _clearResult();
-      missEl.textContent = `No tool found for "${q}" — try "merge", "compress", or "split"`;
+      missEl.textContent = t('search_miss', { q });
       missEl.hidden = false;
     }
   }

@@ -126,4 +126,11 @@ window.PDFREE_LOCALE = {
   warn_compress_large:  '⚠️ Fichier volumineux ({size}) — la compression peut prendre 1–2 minutes. Le navigateur traite tout localement en mémoire vive.',
   compress_scan_skipped: 'Fichier volumineux — pré-analyse ignorée pour économiser la mémoire',
   error_msg:           'Erreur : {msg}',
+
+  // search
+  search_placeholder: 'fusionner PDF, compresser, PDF en Word…',
+  search_aria:        'Rechercher des outils PDF',
+  search_drop:        'ou déposez un PDF ici',
+  search_choose:      'Choisir un fichier →',
+  search_miss:        'Aucun outil trouvé pour « {q} » — essaie « fusionner », « compresser » ou « diviser »',
 };
