@@ -3011,6 +3011,7 @@
 
 /* hide browser's default clear button — we have our own UX */
 #toolSearch::-webkit-search-cancel-button { display: none; }
+#toolSearch::-webkit-search-decoration      { display: none; }
 
 .search-popular {
   display: flex;
