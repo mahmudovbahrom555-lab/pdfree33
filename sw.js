@@ -79,6 +79,7 @@ const STATIC_ASSETS = [
   '/js/lazyLibs.js',
   '/js/theme.js',
   '/js/toolRegistry.js',
+  '/js/search.js',
   '/offline.html',
   '/fonts/dm-mono-400-latin-ext.woff2',
   '/fonts/dm-mono-400-latin.woff2',

@@ -149,3 +149,20 @@ export function trackBehaviorQuickRetry(tool, gapS) {
 export function trackBehaviorReturnVisit(gapMin, tool) {
   _track('Return Visit', { gap_min: String(gapMin), tool });
 }
+
+// ── Search funnel ─────────────────────────────────────────────
+
+/** User typed a query and got results */
+export function trackSearchQuery(query, hits) {
+  _track('Search Query', { query: query.slice(0, 50), hits: String(hits) });
+}
+
+/** User typed a query and got zero results */
+export function trackSearchMiss(query) {
+  _track('Search Miss', { query: query.slice(0, 50) });
+}
+
+/** User clicked a search result and launched that tool */
+export function trackSearchSelect(query, tool) {
+  _track('Search Select', { query: query.slice(0, 50), tool });
+}

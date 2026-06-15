@@ -28,7 +28,10 @@ import './toolRegistrations.js';                 // side-effect: registers all t
 import { trackToolStart, trackToolSuccess,
          trackToolCancel, trackFileAdded,
          trackToolOpen, trackInstallPrompt,
-         trackToolError, trackDownload }           from './analytics.js';
+         trackToolError, trackDownload,
+         trackSearchQuery, trackSearchMiss,
+         trackSearchSelect }                        from './analytics.js';
+import { buildIndex, search, trackMiss }           from './search.js';
 import { checkReturnVisit, recordDownload,
          checkAndRecordConversion }                from './behavioralSignals.js';
 import { t }                                      from './i18n.js';
@@ -126,7 +129,7 @@ function goHome() {
   requestAnimationFrame(() => hideAllToolOptions()); // heavy DOM — after paint
 }
 
-function showTool(tool, pushHistory = true) {
+function showTool(tool, pushHistory = true, preFiles = null) {
   if (!TOOLS[tool]) return;
   if (isProcessing) { showToast(t('wait_processing')); return; }
   if (!TOOLS[tool].implemented) {
@@ -153,6 +156,7 @@ function showTool(tool, pushHistory = true) {
     id('fileInput').multiple = t.multi;
     id('fileInput').accept   = t.accept;
     resetState();   // already calls hideAllToolOptions internally
+    if (preFiles) addFiles(preFiles);
   });
 }
 
@@ -372,6 +376,106 @@ function initEvents() {
   });
 }
 
+// ── Intent search ────────────────────────────────────────────
+
+const POPULAR_TOOLS = ['merge', 'compress', 'split', 'pdf2jpg', 'protect'];
+
+function initSearch() {
+  const searchEl    = id('toolSearch');
+  const resultEl    = id('searchResult');
+  const missEl      = id('searchMiss');
+  const popularEl   = id('searchPopular');
+  const srIcon      = id('srIcon');
+  const srName      = id('srName');
+  const srDesc      = id('srDesc');
+  const srFileInput = id('srFileInput');
+  const srDropHint  = id('srDropHint');
+
+  if (!searchEl) return;
+
+  const lang  = document.documentElement.lang || 'en';
+  const index = buildIndex(TOOLS, lang);
+
+  // Popular chips
+  POPULAR_TOOLS.forEach(key => {
+    const entry = index.find(e => e.key === key);
+    if (!entry) return;
+    const chip = document.createElement('button');
+    chip.className = 'search-chip';
+    chip.textContent = `${entry.icon} ${entry.displayName}`;
+    chip.addEventListener('click', () => {
+      searchEl.value = entry.displayName;
+      _applyResult(entry);
+    });
+    popularEl.appendChild(chip);
+  });
+
+  let _debounce = null;
+  let _activeResult = null;
+
+  searchEl.addEventListener('input', () => {
+    clearTimeout(_debounce);
+    _debounce = setTimeout(() => _runSearch(searchEl.value), 200);
+  });
+
+  function _runSearch(query) {
+    const q = query.trim();
+    if (q.length < 2) { _clearResult(); return; }
+
+    const results = search(q, index);
+    if (results.length) {
+      trackSearchQuery(q, results.length);
+      _applyResult(results[0]);
+    } else {
+      trackSearchMiss(q);
+      trackMiss(q);
+      _clearResult();
+      missEl.textContent = `No tool found for "${q}" — try "merge", "compress", or "split"`;
+      missEl.hidden = false;
+    }
+  }
+
+  function _applyResult(entry) {
+    _activeResult = entry;
+    srIcon.textContent    = entry.icon;
+    srName.textContent    = entry.displayName;
+    if (srDesc) srDesc.textContent = entry.desc || '';
+    srFileInput.accept    = entry.accept || '.pdf';
+    srFileInput.multiple  = !!entry.multi;
+    resultEl.hidden       = false;
+    missEl.hidden         = true;
+  }
+
+  function _clearResult() {
+    resultEl.hidden = true;
+    missEl.hidden   = true;
+    _activeResult   = null;
+  }
+
+  // File chosen via button
+  srFileInput.addEventListener('change', () => {
+    const files = Array.from(srFileInput.files);
+    if (!files.length || !_activeResult) return;
+    trackSearchSelect(searchEl.value.trim(), _activeResult.key);
+    showTool(_activeResult.key, true, files);
+  });
+
+  // Drag-and-drop on the result drop zone
+  srDropHint.addEventListener('dragover', e => {
+    e.preventDefault();
+    srDropHint.classList.add('drag-over');
+  });
+  srDropHint.addEventListener('dragleave', () => srDropHint.classList.remove('drag-over'));
+  srDropHint.addEventListener('drop', e => {
+    e.preventDefault();
+    srDropHint.classList.remove('drag-over');
+    const files = Array.from(e.dataTransfer.files).filter(f => f.type === 'application/pdf');
+    if (!files.length || !_activeResult) return;
+    trackSearchSelect(searchEl.value.trim(), _activeResult.key);
+    showTool(_activeResult.key, true, files);
+  });
+}
+
 // ── Initial routing ──────────────────────────────────────────
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -391,6 +495,7 @@ document.addEventListener('DOMContentLoaded', () => {
     showTool(requestedTool, false);
   } else {
     showHomePage();
+    initSearch();
   }
 });
 
