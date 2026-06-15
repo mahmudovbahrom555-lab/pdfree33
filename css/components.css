@@ -3073,6 +3073,19 @@
   margin-top: -4px;
 }
 
+.search-result__pending-file {
+  font-size: 13px;
+  color: var(--text2);
+  background: color-mix(in srgb, var(--green) 8%, var(--surface));
+  border: 1px solid color-mix(in srgb, var(--green) 20%, var(--border));
+  border-radius: 6px;
+  padding: 6px 10px;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .search-result__cta {
   display: inline-flex;
   cursor: pointer;

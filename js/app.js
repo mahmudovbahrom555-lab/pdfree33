@@ -392,10 +392,11 @@ function initSearch() {
   const srIcon      = id('srIcon');
   const srName      = id('srName');
   const srDesc      = id('srDesc');
-  const srFileInput = id('srFileInput');
-  const srDropHint  = id('srDropHint');
-  const srChooseBtn = id('srChooseBtn');
-  const srCtaLabel  = srChooseBtn ? srChooseBtn.parentElement : null;
+  const srFileInput   = id('srFileInput');
+  const srDropHint    = id('srDropHint');
+  const srChooseBtn   = id('srChooseBtn');
+  const srPendingFile = id('srPendingFile');
+  const srCtaLabel    = srChooseBtn ? srChooseBtn.parentElement : null;
 
   // Hero drop zone refs
   const heroDropZone    = id('heroDropZone');
@@ -625,11 +626,16 @@ function initSearch() {
     srFileInput.accept    = entry.accept || '.pdf';
     srFileInput.multiple  = !!entry.multi;
 
-    // If user already has a file in the hero zone: show "Open →" and skip file picker
+    // If user already has a file in the hero zone: show file name + "Start →"
     if (_pendingFiles) {
-      if (srChooseBtn) srChooseBtn.textContent = t('search_open');
+      const label = _pendingFiles.length === 1
+        ? `\u{1F4C4} ${_pendingFiles[0].name}`
+        : `\u{1F4C4} ${_pendingFiles.length} PDFs`;
+      if (srPendingFile) { srPendingFile.textContent = label; srPendingFile.hidden = false; }
+      if (srChooseBtn) srChooseBtn.textContent = t('search_start');
       if (srDropHint)  srDropHint.hidden = true;
     } else {
+      if (srPendingFile) srPendingFile.hidden = true;
       if (srChooseBtn) srChooseBtn.textContent = t('search_choose');
       if (srDropHint)  srDropHint.hidden = false;
     }
@@ -642,6 +648,7 @@ function initSearch() {
     resultEl.hidden = true;
     missEl.hidden   = true;
     _activeResult   = null;
+    if (srPendingFile) srPendingFile.hidden = true;
     if (srChooseBtn) srChooseBtn.textContent = t('search_choose');
     if (srDropHint)  srDropHint.hidden = false;
   }

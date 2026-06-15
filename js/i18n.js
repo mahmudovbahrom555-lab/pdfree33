@@ -144,7 +144,7 @@ const EN = {
   search_aria:        'Search PDF tools',
   search_drop:        'or drop PDF here',
   search_choose:      'Choose File →',
-  search_open:        'Open →',
+  search_start:       'Start →',
   search_miss:        'No tool found for "{q}" — try "merge", "compress", or "split"',
 
   // ── hero drop zone ────────────────────────────────────────────
