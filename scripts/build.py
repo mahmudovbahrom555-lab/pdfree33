@@ -155,12 +155,12 @@ def _hreflang_links(tool, config):
 def _webapp_schema(tool, lang, canonical_path):
     return json.dumps({
         "@context": "https://schema.org",
-        "@type": "WebApplication",
+        "@type": "SoftwareApplication",
         "name": tool['breadcrumb'][lang],
         "description": tool['metaDescs'].get(lang, tool['descs'][lang]),
         "url": f"{BASE_URL}/{canonical_path}",
-        "applicationCategory": "UtilitiesApplication",
-        "operatingSystem": "Any",
+        "applicationCategory": "UtilityApplication",
+        "operatingSystem": "Web",
         "browserRequirements": "Requires a modern browser with JavaScript enabled",
         "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
         "featureList": [
