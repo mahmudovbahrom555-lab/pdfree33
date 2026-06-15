@@ -3151,6 +3151,7 @@
   color: var(--text2);
   pointer-events: none;
 }
+.hero-drop-zone__idle[hidden] { display: none; }
 .hero-drop-zone__btn {
   pointer-events: auto;
   display: inline-block;
@@ -3175,6 +3176,7 @@
   color: var(--text1);
   flex-wrap: wrap;
 }
+.hero-drop-zone__ready[hidden] { display: none; }
 .hero-drop-zone__check { color: var(--green); font-weight: 700; font-size: 16px; }
 .hero-drop-zone__clear {
   background: none;
