@@ -1,0 +1,7 @@
+#!/bin/sh
+AHEAD=$(git rev-list origin/main..HEAD --count 2>/dev/null || echo 0)
+if [ "$AHEAD" -gt 0 ]; then
+  echo ""
+  echo "📤 $AHEAD commit(s) not pushed — run: git push origin main"
+  echo ""
+fi
