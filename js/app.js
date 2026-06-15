@@ -442,6 +442,13 @@ function initSearch() {
     if (!_heroHintEl) {
       _heroHintEl = document.createElement('p');
       _heroHintEl.className = 'hero-drop-zone__hint';
+      _heroHintEl.addEventListener('click', () => {
+        const key = _heroHintEl.dataset.toolKey;
+        if (key && _pendingFiles) {
+          trackChipClick(key, 'file-first');
+          showTool(key, true, _pendingFiles);
+        }
+      });
       heroDropZone.appendChild(_heroHintEl);
     }
     return _heroHintEl;
@@ -456,16 +463,19 @@ function initSearch() {
     heroDropReady.hidden = false;
     heroDropZone.classList.add('has-file');
 
-    // Recommendation hint for multi-file context
+    // Recommendation hint for multi-file context (clickable shortcut)
     const hintEl = _getHintEl();
     if (files.length > 1) {
       const mergeEntry = index.find(e => e.key === 'merge');
-      hintEl.textContent = mergeEntry
-        ? t('hero_hint_multi', { tool: `${mergeEntry.icon} ${mergeEntry.displayName}` })
-        : '';
-      hintEl.hidden = false;
+      if (mergeEntry) {
+        hintEl.textContent = t('hero_hint_multi', { tool: `${mergeEntry.icon} ${mergeEntry.displayName}` });
+        hintEl.dataset.toolKey = mergeEntry.key;
+        hintEl.style.cursor = 'pointer';
+        hintEl.hidden = false;
+      }
     } else {
       hintEl.hidden = true;
+      hintEl.dataset.toolKey = '';
     }
 
     trackHeroFileSelect(files.length, source);

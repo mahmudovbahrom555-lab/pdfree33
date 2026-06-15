@@ -3279,4 +3279,6 @@
   margin: 0;
   text-align: center;
   opacity: 0.85;
+  transition: opacity 0.12s;
 }
+.hero-drop-zone__hint:hover { opacity: 1; text-decoration: underline; }
