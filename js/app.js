@@ -395,6 +395,7 @@ function initSearch() {
   const srFileInput = id('srFileInput');
   const srDropHint  = id('srDropHint');
   const srChooseBtn = id('srChooseBtn');
+  const srCtaLabel  = srChooseBtn ? srChooseBtn.parentElement : null;
 
   // Hero drop zone refs
   const heroDropZone    = id('heroDropZone');
@@ -623,17 +624,40 @@ function initSearch() {
     if (srDesc) srDesc.textContent = entry.desc || '';
     srFileInput.accept    = entry.accept || '.pdf';
     srFileInput.multiple  = !!entry.multi;
-    resultEl.hidden       = false;
-    missEl.hidden         = true;
+
+    // If user already has a file in the hero zone: show "Open →" and skip file picker
+    if (_pendingFiles) {
+      if (srChooseBtn) srChooseBtn.textContent = t('search_open');
+      if (srDropHint)  srDropHint.hidden = true;
+    } else {
+      if (srChooseBtn) srChooseBtn.textContent = t('search_choose');
+      if (srDropHint)  srDropHint.hidden = false;
+    }
+
+    resultEl.hidden = false;
+    missEl.hidden   = true;
   }
 
   function _clearResult() {
     resultEl.hidden = true;
     missEl.hidden   = true;
     _activeResult   = null;
+    if (srChooseBtn) srChooseBtn.textContent = t('search_choose');
+    if (srDropHint)  srDropHint.hidden = false;
   }
 
-  // File chosen via search result card
+  // When file already selected: label click launches tool directly instead of opening picker
+  if (srCtaLabel) {
+    srCtaLabel.addEventListener('click', e => {
+      if (_pendingFiles && _activeResult) {
+        e.preventDefault();
+        trackChipClick(_activeResult.key, 'file-first');
+        showTool(_activeResult.key, true, _pendingFiles);
+      }
+    });
+  }
+
+  // File chosen via search result card (no pending file path)
   srFileInput.addEventListener('change', () => {
     const files = Array.from(srFileInput.files);
     if (!files.length || !_activeResult) return;

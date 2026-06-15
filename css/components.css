@@ -3051,6 +3051,8 @@
   box-shadow: 0 4px 20px color-mix(in srgb, var(--green) 12%, transparent);
   animation: srFadeIn 0.18s ease;
 }
+/* display:flex overrides the UA [hidden]{display:none} — must reset explicitly */
+.search-result[hidden] { display: none; }
 @keyframes srFadeIn {
   from { opacity: 0; transform: translateY(-6px); }
   to   { opacity: 1; transform: translateY(0); }
