@@ -134,4 +134,16 @@ window.PDFREE_LOCALE = {
   search_drop:        'oder PDF hier ablegen',
   search_choose:      'Datei wählen →',
   search_miss:        'Kein Tool für „{q}" gefunden — versuche „zusammenfügen", „komprimieren" oder „aufteilen"',
+
+  // hero drop zone
+  hero_drop:          'PDF hier ablegen',
+  hero_or:            'oder',
+  hero_drop_choose:   'Datei wählen',
+  hero_file_single:   '{name} ({size})',
+  hero_file_multi:    '{n} PDFs ausgewählt',
+  hero_or_search:     'oder nach Name suchen',
+  hero_pick_which:    'welche Datei?',
+  hero_pick_back:     '← Zurück',
+  hero_hint_multi:    'Empfohlen: {tool}',
+  hero_chip_one_file: '1 Datei',
 };

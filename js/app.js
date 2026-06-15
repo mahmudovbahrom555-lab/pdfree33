@@ -30,7 +30,8 @@ import { trackToolStart, trackToolSuccess,
          trackToolOpen, trackInstallPrompt,
          trackToolError, trackDownload,
          trackSearchQuery, trackSearchMiss,
-         trackSearchSelect }                        from './analytics.js';
+         trackSearchSelect,
+         trackHeroFileSelect, trackChipClick }      from './analytics.js';
 import { buildIndex, search, trackMiss }           from './search.js';
 import { checkReturnVisit, recordDownload,
          checkAndRecordConversion }                from './behavioralSignals.js';
@@ -378,7 +379,10 @@ function initEvents() {
 
 // ── Intent search ────────────────────────────────────────────
 
-const POPULAR_TOOLS = ['merge', 'compress', 'split', 'pdf2jpg', 'protect'];
+// Tool order for chips: first slot changes based on pending file count
+const CHIP_TOOLS_DEFAULT  = ['merge', 'compress', 'split', 'pdf2jpg', 'protect'];
+const CHIP_TOOLS_ONE_FILE = ['compress', 'split', 'pdf2jpg', 'protect', 'merge'];
+const CHIP_TOOLS_MULTI    = ['merge', 'compress', 'split', 'pdf2jpg', 'protect'];
 
 function initSearch() {
   const searchEl    = id('toolSearch');
@@ -392,31 +396,201 @@ function initSearch() {
   const srDropHint  = id('srDropHint');
   const srChooseBtn = id('srChooseBtn');
 
-  if (!searchEl) return;
+  // Hero drop zone refs
+  const heroDropZone    = id('heroDropZone');
+  const heroFileInput   = id('heroFileInput');
+  const heroDropIdle    = id('heroDropIdle');
+  const heroDropReady   = id('heroDropReady');
+  const heroFileName    = id('heroFileName');
+  const heroClearFile   = id('heroClearFile');
+  const heroDropLabel   = id('heroDropLabel');
+  const heroDropOr      = id('heroDropOr');
+  const heroDropChoose  = id('heroDropChooseBtn');
+  const searchOrLabel   = id('searchOrLabel');
 
-  // Localize all user-visible strings from i18n
+  if (!searchEl) return;
+  if (!heroDropZone) return;  // safety: only exists on homepage
+
+  // Localize search result card strings
   searchEl.placeholder = t('search_placeholder');
   searchEl.setAttribute('aria-label', t('search_aria'));
   if (srDropHint)  srDropHint.textContent  = t('search_drop');
   if (srChooseBtn) srChooseBtn.textContent = t('search_choose');
 
+  // Localize hero drop zone strings
+  if (heroDropLabel)  heroDropLabel.textContent  = t('hero_drop');
+  if (heroDropOr)     heroDropOr.textContent     = t('hero_or');
+  if (heroDropChoose) heroDropChoose.textContent = t('hero_drop_choose');
+  if (searchOrLabel)  searchOrLabel.textContent  = t('hero_or_search');
+
   const lang  = document.documentElement.lang || 'en';
   const index = buildIndex(TOOLS, lang);
 
-  // Popular chips
-  POPULAR_TOOLS.forEach(key => {
-    const entry = index.find(e => e.key === key);
-    if (!entry) return;
-    const chip = document.createElement('button');
-    chip.className = 'search-chip';
-    chip.textContent = `${entry.icon} ${entry.displayName}`;
-    chip.addEventListener('click', () => {
-      searchEl.value = entry.displayName;
-      _applyResult(entry);
-    });
-    popularEl.appendChild(chip);
+  // ── Hero drop zone ──────────────────────────────────────────────
+  let _pendingFiles = null;
+  let _heroHintEl   = null;  // created once, reused
+
+  function _fmtSize(bytes) {
+    return bytes < 1024 * 1024
+      ? `${(bytes / 1024).toFixed(0)} KB`
+      : `${(bytes / 1024 / 1024).toFixed(1)} MB`;
+  }
+
+  function _getHintEl() {
+    if (!_heroHintEl) {
+      _heroHintEl = document.createElement('p');
+      _heroHintEl.className = 'hero-drop-zone__hint';
+      heroDropZone.appendChild(_heroHintEl);
+    }
+    return _heroHintEl;
+  }
+
+  function _setHeroFiles(files, source = 'drop') {
+    _pendingFiles = files;
+    heroDropIdle.hidden = true;
+    heroFileName.textContent = files.length === 1
+      ? t('hero_file_single', { name: files[0].name, size: _fmtSize(files[0].size) })
+      : t('hero_file_multi',  { n: files.length });
+    heroDropReady.hidden = false;
+    heroDropZone.classList.add('has-file');
+
+    // Recommendation hint for multi-file context
+    const hintEl = _getHintEl();
+    if (files.length > 1) {
+      const mergeEntry = index.find(e => e.key === 'merge');
+      hintEl.textContent = mergeEntry
+        ? t('hero_hint_multi', { tool: `${mergeEntry.icon} ${mergeEntry.displayName}` })
+        : '';
+      hintEl.hidden = false;
+    } else {
+      hintEl.hidden = true;
+    }
+
+    trackHeroFileSelect(files.length, source);
+    _renderChips();
+    searchEl.focus();
+  }
+
+  function _clearHeroFiles() {
+    _pendingFiles = null;
+    heroDropIdle.hidden = false;
+    heroDropReady.hidden = true;
+    heroDropZone.classList.remove('has-file');
+    heroFileInput.value = '';
+    if (_heroHintEl) _heroHintEl.hidden = true;
+    _renderChips();
+  }
+
+  heroFileInput.addEventListener('change', () => {
+    // Trust the accept=".pdf" attribute — iOS PDFs may have empty MIME type
+    const files = Array.from(heroFileInput.files);
+    if (files.length) _setHeroFiles(files, 'button');
   });
 
+  heroClearFile.addEventListener('click', _clearHeroFiles);
+
+  heroDropZone.addEventListener('dragover', e => {
+    e.preventDefault();
+    heroDropZone.classList.add('drag-over');
+  });
+  heroDropZone.addEventListener('dragleave', e => {
+    if (!heroDropZone.contains(e.relatedTarget)) heroDropZone.classList.remove('drag-over');
+  });
+  heroDropZone.addEventListener('drop', e => {
+    e.preventDefault();
+    heroDropZone.classList.remove('drag-over');
+    const files = Array.from(e.dataTransfer.files).filter(f => f.type === 'application/pdf');
+    if (files.length) _setHeroFiles(files, 'drop');
+  });
+
+  // ── File picker (shown when multi-files + single-file tool clicked) ─
+  function _showFilePicker(entry) {
+    heroDropReady.hidden = true;
+
+    const pick = document.createElement('div');
+    pick.className = 'hero-drop-zone__pick';
+
+    const label = document.createElement('p');
+    label.className = 'hero-drop-zone__pick-label';
+    label.textContent = `${entry.icon} ${entry.displayName} — ${t('hero_pick_which')}`;
+    pick.appendChild(label);
+
+    const filesRow = document.createElement('div');
+    filesRow.className = 'hero-drop-zone__pick-files';
+    _pendingFiles.forEach(file => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'hero-drop-zone__pick-file';
+      btn.textContent = file.name;
+      btn.title = file.name;
+      btn.addEventListener('click', () => {
+        pick.remove();
+        heroDropReady.hidden = false;
+        trackChipClick(entry.key, 'file-first');
+        showTool(entry.key, true, [file]);
+      });
+      filesRow.appendChild(btn);
+    });
+    pick.appendChild(filesRow);
+
+    const backBtn = document.createElement('button');
+    backBtn.type = 'button';
+    backBtn.className = 'hero-drop-zone__pick-back';
+    backBtn.textContent = t('hero_pick_back');
+    backBtn.addEventListener('click', () => {
+      pick.remove();
+      heroDropReady.hidden = false;
+    });
+    pick.appendChild(backBtn);
+
+    heroDropZone.appendChild(pick);
+  }
+
+  // ── Chips (re-rendered on file state change) ─────────────────────
+  function _renderChips() {
+    popularEl.innerHTML = '';
+    const multiFiles = _pendingFiles && _pendingFiles.length > 1;
+    const toolOrder = _pendingFiles
+      ? (multiFiles ? CHIP_TOOLS_MULTI : CHIP_TOOLS_ONE_FILE)
+      : CHIP_TOOLS_DEFAULT;
+
+    toolOrder.forEach(key => {
+      const entry = index.find(e => e.key === key);
+      if (!entry) return;
+      const chip = document.createElement('button');
+
+      // Visual: when multi files, dim chips that don't support multi
+      let cls = 'search-chip';
+      if (_pendingFiles) cls += ' search-chip--active';
+      if (multiFiles && !entry.multi) cls += ' search-chip--single-only';
+      chip.className = cls;
+      const singleSuffix = (multiFiles && !entry.multi)
+        ? ` (${t('hero_chip_one_file')})`
+        : '';
+      chip.textContent = `${entry.icon} ${entry.displayName}${singleSuffix}`;
+
+      chip.addEventListener('click', () => {
+        if (_pendingFiles) {
+          if (!entry.multi && _pendingFiles.length > 1) {
+            // Single-file tool + multiple files → let user pick which file
+            _showFilePicker(entry);
+            return;
+          }
+          trackChipClick(key, 'file-first');
+          showTool(key, true, _pendingFiles);
+          return;
+        }
+        trackChipClick(key, 'search-first');
+        searchEl.value = entry.displayName;
+        _applyResult(entry);
+      });
+      popularEl.appendChild(chip);
+    });
+  }
+
+  _renderChips();
+
+  // ── Intent search ────────────────────────────────────────────────
   let _debounce = null;
   let _activeResult = null;
 
@@ -459,7 +633,7 @@ function initSearch() {
     _activeResult   = null;
   }
 
-  // File chosen via button
+  // File chosen via search result card
   srFileInput.addEventListener('change', () => {
     const files = Array.from(srFileInput.files);
     if (!files.length || !_activeResult) return;
@@ -467,7 +641,7 @@ function initSearch() {
     showTool(_activeResult.key, true, files);
   });
 
-  // Drag-and-drop on the result drop zone
+  // Drag-and-drop on search result card drop zone
   srDropHint.addEventListener('dragover', e => {
     e.preventDefault();
     srDropHint.classList.add('drag-over');

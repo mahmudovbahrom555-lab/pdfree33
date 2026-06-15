@@ -133,4 +133,16 @@ window.PDFREE_LOCALE = {
   search_drop:        'o arrastra un PDF aquí',
   search_choose:      'Elegir archivo →',
   search_miss:        'No se encontró herramienta para "{q}" — prueba "unir", "comprimir" o "dividir"',
+
+  // hero drop zone
+  hero_drop:          'Arrastra tu PDF aquí',
+  hero_or:            'o',
+  hero_drop_choose:   'Elegir archivo',
+  hero_file_single:   '{name} ({size})',
+  hero_file_multi:    '{n} PDFs seleccionados',
+  hero_or_search:     'o busca por nombre',
+  hero_pick_which:    '¿qué archivo?',
+  hero_pick_back:     '← Volver',
+  hero_hint_multi:    'Recomendado: {tool}',
+  hero_chip_one_file: '1 archivo',
 };

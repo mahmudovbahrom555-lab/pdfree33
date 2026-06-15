@@ -3099,3 +3099,163 @@
   color: var(--text3);
   text-align: center;
 }
+
+/* ── Hero drop zone ──────────────────────────────── */
+.hero-drop-zone {
+  width: 100%;
+  max-width: 520px;
+  border: 2px dashed var(--border);
+  border-radius: 14px;
+  padding: 22px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+.hero-drop-zone:hover,
+.hero-drop-zone.drag-over {
+  border-color: var(--green);
+  background: color-mix(in srgb, var(--green) 5%, var(--surface));
+}
+.hero-drop-zone.has-file {
+  border-style: solid;
+  border-color: var(--green);
+  background: color-mix(in srgb, var(--green) 5%, var(--surface));
+  cursor: default;
+}
+.hero-drop-zone__idle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 14px;
+  color: var(--text2);
+  pointer-events: none;
+}
+.hero-drop-zone__btn {
+  pointer-events: auto;
+  display: inline-block;
+  padding: 6px 16px;
+  background: var(--green);
+  color: #fff;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.12s;
+  user-select: none;
+}
+.hero-drop-zone__btn:hover { opacity: 0.88; }
+.hero-drop-zone__sep { color: var(--text3); font-size: 12px; }
+.hero-drop-zone__ready {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--text1);
+  flex-wrap: wrap;
+}
+.hero-drop-zone__check { color: var(--green); font-weight: 700; font-size: 16px; }
+.hero-drop-zone__clear {
+  background: none;
+  border: none;
+  color: var(--text3);
+  font-size: 20px;
+  line-height: 1;
+  padding: 0 4px;
+  cursor: pointer;
+  transition: color 0.12s;
+  flex-shrink: 0;
+}
+.hero-drop-zone__clear:hover { color: var(--text1); }
+
+/* ── Or divider ──────────────────────────────────── */
+.search-or-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 520px;
+  color: var(--text3);
+  font-size: 12px;
+}
+.search-or-divider::before,
+.search-or-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* Chips highlight when a file is pre-loaded */
+.search-chip--active {
+  border-color: var(--green);
+  color: var(--green);
+  background: color-mix(in srgb, var(--green) 6%, var(--surface));
+}
+/* Single-file chip when multiple files are selected — still clickable, less prominent */
+.search-chip--single-only {
+  opacity: 0.55;
+}
+.search-chip--single-only:hover {
+  opacity: 1;
+}
+
+/* ── File picker (inline, no modal) ─────────────────────────── */
+.hero-drop-zone__pick {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+.hero-drop-zone__pick-label {
+  font-size: 13px;
+  color: var(--text2);
+  margin: 0;
+}
+.hero-drop-zone__pick-files {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+.hero-drop-zone__pick-file {
+  padding: 6px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-size: 13px;
+  font-family: var(--font-sans);
+  background: var(--surface);
+  color: var(--text1);
+  cursor: pointer;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: border-color 0.12s, color 0.12s;
+}
+.hero-drop-zone__pick-file:hover {
+  border-color: var(--green);
+  color: var(--green);
+}
+.hero-drop-zone__pick-back {
+  background: none;
+  border: none;
+  font-size: 12px;
+  font-family: var(--font-sans);
+  color: var(--text3);
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.12s;
+}
+.hero-drop-zone__pick-back:hover { color: var(--text2); }
+
+/* Recommendation hint shown below file count when multiple files selected */
+.hero-drop-zone__hint {
+  font-size: 12px;
+  color: var(--green);
+  margin: 0;
+  text-align: center;
+  opacity: 0.85;
+}

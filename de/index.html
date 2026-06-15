@@ -112,6 +112,22 @@
     <p>Zusammenfügen, aufteilen, komprimieren, Wasserzeichen, konvertieren — alles läuft <strong>in deinem Browser</strong>. Deine Dateien verlassen nie dein Gerät. Kein Server. Kein Konto. Nur Ergebnisse.</p>
 
     <div class="search-hero" id="searchHero">
+      <div class="hero-drop-zone" id="heroDropZone">
+        <input type="file" id="heroFileInput" accept=".pdf" multiple hidden>
+        <div class="hero-drop-zone__idle" id="heroDropIdle">
+          <span class="hero-drop-zone__label" id="heroDropLabel">PDF hier ablegen</span>
+          <span class="hero-drop-zone__sep" id="heroDropOr">oder</span>
+          <label class="hero-drop-zone__btn" for="heroFileInput" id="heroDropChooseBtn">Datei wählen</label>
+        </div>
+        <div class="hero-drop-zone__ready" id="heroDropReady" hidden>
+          <span class="hero-drop-zone__check">✓</span>
+          <span id="heroFileName"></span>
+          <button class="hero-drop-zone__clear" id="heroClearFile" type="button" aria-label="Datei entfernen">×</button>
+        </div>
+      </div>
+      <div class="search-or-divider">
+        <span id="searchOrLabel">oder nach Name suchen</span>
+      </div>
       <div class="search-wrap">
         <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
         <input id="toolSearch" type="search" autocomplete="off" spellcheck="false"

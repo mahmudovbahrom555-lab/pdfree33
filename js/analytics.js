@@ -166,3 +166,25 @@ export function trackSearchMiss(query) {
 export function trackSearchSelect(query, tool) {
   _track('Search Select', { query: query.slice(0, 50), tool });
 }
+
+// ── Hero drop zone funnel ──────────────────────────────────────
+
+/**
+ * User selected file(s) in the hero drop zone.
+ * @param {number} fileCount
+ * @param {'drop'|'button'} source
+ */
+export function trackHeroFileSelect(fileCount, source) {
+  _track('Hero File Select', { count: String(fileCount), source });
+}
+
+/**
+ * User clicked a popular chip.
+ * @param {string} key   — tool key (e.g. 'merge', 'compress')
+ * @param {'file-first'|'search-first'} flow
+ *   file-first  = had a pending file → chip launches tool immediately
+ *   search-first = no file → chip opens result card for file selection
+ */
+export function trackChipClick(key, flow) {
+  _track('Chip Click', { tool: key, flow });
+}

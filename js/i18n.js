@@ -145,6 +145,18 @@ const EN = {
   search_drop:        'or drop PDF here',
   search_choose:      'Choose File →',
   search_miss:        'No tool found for "{q}" — try "merge", "compress", or "split"',
+
+  // ── hero drop zone ────────────────────────────────────────────
+  hero_drop:          'Drop PDF here',
+  hero_or:            'or',
+  hero_drop_choose:   'Choose File',
+  hero_file_single:   '{name} ({size})',
+  hero_file_multi:    '{n} PDFs selected',
+  hero_or_search:     'or search by name',
+  hero_pick_which:    'which file?',
+  hero_pick_back:     '← Back',
+  hero_hint_multi:    'Recommended: {tool}',
+  hero_chip_one_file: '1 file',
 };
 
 const L = { ...EN, ...(window.PDFREE_LOCALE ?? {}) };
