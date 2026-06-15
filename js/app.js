@@ -481,6 +481,8 @@ function initSearch() {
     heroFileInput.value = '';
     if (_heroHintEl) _heroHintEl.hidden = true;
     _renderChips();
+    // Re-render result card if open: remove file name, restore "Choose File →"
+    if (_activeResult) _applyResult(_activeResult);
   }
 
   heroFileInput.addEventListener('change', () => {
@@ -629,8 +631,8 @@ function initSearch() {
     // If user already has a file in the hero zone: show file name + "Start →"
     if (_pendingFiles) {
       const label = _pendingFiles.length === 1
-        ? `\u{1F4C4} ${_pendingFiles[0].name}`
-        : `\u{1F4C4} ${_pendingFiles.length} PDFs`;
+        ? `📄 ${_pendingFiles[0].name}`
+        : `📄 ${_pendingFiles.length} PDFs`;
       if (srPendingFile) { srPendingFile.textContent = label; srPendingFile.hidden = false; }
       if (srChooseBtn) srChooseBtn.textContent = (entry.btn || t('search_start')) + ' →';
       if (srDropHint)  srDropHint.hidden = true;
@@ -658,6 +660,10 @@ function initSearch() {
     srCtaLabel.addEventListener('click', e => {
       if (_pendingFiles && _activeResult) {
         e.preventDefault();
+        if (!_activeResult.multi && _pendingFiles.length > 1) {
+          _showFilePicker(_activeResult);
+          return;
+        }
         trackChipClick(_activeResult.key, 'file-first');
         showTool(_activeResult.key, true, _pendingFiles);
       }
