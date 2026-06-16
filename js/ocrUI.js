@@ -540,15 +540,17 @@ async function _runOcr(file, gen) {
     try {
       const page = await pdfDoc.getPage(p);
 
-      // Adaptive scale — aim for MAX_OCR_PX on the longest side.
-      // Old logic (scale=2 default) downsampled high-DPI CamScanner pages
-      // from ~2480px to ~1190px before Tesseract, losing fraction bars and
-      // small text. New logic: scale up to the cap, never less than 2×.
+      // Adaptive scale — aim for MAX_OCR_PX on the longest side, as a hard
+      // cap. Old logic (scale=2 default) downsampled high-DPI CamScanner
+      // pages from ~2480px to ~1190px before Tesseract, losing fraction bars
+      // and small text — fixed by scaling up to the cap. A `Math.max(2, ...)`
+      // floor was added at the same time to guarantee that minimum, but it
+      // let oversized physical pages (A2/A1 scans, posters — anything wider
+      // or taller than ~1500pt) blow past MAX_OCR_PX, risking a Mobile Safari
+      // tab kill under memory pressure. Removed: MAX_OCR_PX must stay a true
+      // cap, even at the cost of quality on rare oversized pages.
       const vp0 = page.getViewport({ scale: 1 });
-      const scale = Math.max(
-        2,
-        Math.min(MAX_OCR_PX / vp0.width, MAX_OCR_PX / vp0.height)
-      );
+      const scale = Math.min(MAX_OCR_PX / vp0.width, MAX_OCR_PX / vp0.height);
       const vp = page.getViewport({ scale });
 
       canvas        = document.createElement('canvas');
