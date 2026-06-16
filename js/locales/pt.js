@@ -146,4 +146,5 @@ window.PDFREE_LOCALE = {
   hero_pick_back:     '← Voltar',
   hero_hint_multi:    'Recomendado: {tool}',
   hero_chip_one_file: '1 arquivo',
+  hero_img_hint:      '🖼️ Tem uma imagem?',
 };

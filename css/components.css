@@ -3282,3 +3282,14 @@
   transition: opacity 0.12s;
 }
 .hero-drop-zone__hint:hover { opacity: 1; text-decoration: underline; }
+
+/* Escape hatch for image input (jpg2pdf) — hero zone itself only accepts PDF */
+.hero-drop-zone__img-link {
+  pointer-events: auto;
+  flex-basis: 100%;
+  font-size: 12px;
+  color: var(--text3);
+  text-decoration: none;
+  transition: color 0.12s;
+}
+.hero-drop-zone__img-link:hover { color: var(--green); text-decoration: underline; }

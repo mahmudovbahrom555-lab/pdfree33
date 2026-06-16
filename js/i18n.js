@@ -158,6 +158,7 @@ const EN = {
   hero_pick_back:     '← Back',
   hero_hint_multi:    'Recommended: {tool}',
   hero_chip_one_file: '1 file',
+  hero_img_hint:      '🖼️ Have an image instead?',
 };
 
 const L = { ...EN, ...(window.PDFREE_LOCALE ?? {}) };

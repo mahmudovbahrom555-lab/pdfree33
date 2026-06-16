@@ -408,6 +408,7 @@ function initSearch() {
   const heroDropLabel   = id('heroDropLabel');
   const heroDropOr      = id('heroDropOr');
   const heroDropChoose  = id('heroDropChooseBtn');
+  const heroImgHint     = id('heroImgHint');
   const searchOrLabel   = id('searchOrLabel');
 
   if (!searchEl) return;
@@ -423,7 +424,14 @@ function initSearch() {
   if (heroDropLabel)  heroDropLabel.textContent  = t('hero_drop');
   if (heroDropOr)     heroDropOr.textContent     = t('hero_or');
   if (heroDropChoose) heroDropChoose.textContent = t('hero_drop_choose');
+  if (heroImgHint)    heroImgHint.textContent    = t('hero_img_hint');
   if (searchOrLabel)  searchOrLabel.textContent  = t('hero_or_search');
+
+  // jpg2pdf is the only image-input tool — hero zone itself stays PDF-only,
+  // this link is the escape hatch for users who land here with a JPG/PNG.
+  if (heroImgHint) {
+    heroImgHint.addEventListener('click', () => trackChipClick('jpg2pdf', 'image-hint'));
+  }
 
   const lang  = document.documentElement.lang || 'en';
   const index = buildIndex(TOOLS, lang);
