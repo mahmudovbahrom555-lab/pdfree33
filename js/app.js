@@ -399,6 +399,7 @@ function initSearch() {
   const srCtaLabel    = srChooseBtn ? srChooseBtn.parentElement : null;
 
   // Hero drop zone refs
+  const heroSection     = id('hero');
   const heroDropZone    = id('heroDropZone');
   const heroFileInput   = id('heroFileInput');
   const heroDropIdle    = id('heroDropIdle');
@@ -470,6 +471,7 @@ function initSearch() {
       : t('hero_file_multi',  { n: files.length });
     heroDropReady.hidden = false;
     heroDropZone.classList.add('has-file');
+    if (heroSection) heroSection.classList.add('has-file');
 
     // Recommendation hint for multi-file context (clickable shortcut)
     const hintEl = _getHintEl();
@@ -496,6 +498,7 @@ function initSearch() {
     heroDropIdle.hidden = false;
     heroDropReady.hidden = true;
     heroDropZone.classList.remove('has-file');
+    if (heroSection) heroSection.classList.remove('has-file');
     heroFileInput.value = '';
     if (_heroHintEl) _heroHintEl.hidden = true;
     _renderChips();
