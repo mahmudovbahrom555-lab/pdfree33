@@ -434,6 +434,35 @@
   .privacy-cleared__sub  { font-size: 11px; }
 }
 
+/* ── Toast notification ── */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 28px;
+  z-index: 300;
+  max-width: calc(100vw - 32px);
+  width: max-content;
+  transform: translate(-50%, 12px);
+  background: var(--text);
+  color: var(--bg);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.45;
+  padding: 12px 20px;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.toast.show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+@media (max-width: 700px) {
+  .toast { max-width: calc(100vw - 24px); font-size: 12.5px; padding: 11px 16px; bottom: 18px; }
+}
+
 /* ── PWA install nudge ── */
 .pwa-nudge {
   display: none;
