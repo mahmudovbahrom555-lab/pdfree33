@@ -387,6 +387,9 @@ footer a:hover { text-decoration: underline; }
     scrollbar-width: none;
     min-width: 0;
     gap: 2px;
+    /* fade the trailing edge so it's clear the row scrolls */
+    mask-image: linear-gradient(to right, #000 calc(100% - 24px), transparent);
+    -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 24px), transparent);
   }
   .nav-links::-webkit-scrollbar { display: none; }
   .nav-link             { padding: 8px 10px; font-size: 13px; white-space: nowrap; }
