@@ -110,6 +110,10 @@ nav {
   color: var(--text);
   outline: none;
 }
+.nav-link:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 2px;
+}
 
 /* ── Hero ── */
 .hero {

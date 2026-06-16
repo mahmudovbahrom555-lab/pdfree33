@@ -314,7 +314,11 @@ function initEvents() {
   // Landing pages use <a class="logo"> without id="logo" — skip SPA handler,
   // let the <a href> navigate normally. Use ?. to avoid crash on null.
   id('logo')?.addEventListener('click',   goHome);
-  id('logo')?.addEventListener('keydown', e => e.key === 'Enter' && goHome());
+  id('logo')?.addEventListener('keydown', e => {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    e.preventDefault();
+    goHome();
+  });
 
   document.querySelectorAll('[data-tool]').forEach(el => {
     // <body data-tool> is for routing only — never a click target.
@@ -347,7 +351,11 @@ function initEvents() {
     if (e.target === id('fileInput')) return;
     id('fileInput').click();
   });
-  id('dropZone').addEventListener('keydown', e => e.key === 'Enter' && id('fileInput').click());
+  id('dropZone').addEventListener('keydown', e => {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    e.preventDefault();
+    id('fileInput').click();
+  });
   id('chooseFilesBtn').addEventListener('click', e => { e.stopPropagation(); id('fileInput').click(); });
 
   // Zone B: после первого файла

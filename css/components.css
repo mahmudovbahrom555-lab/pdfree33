@@ -92,6 +92,11 @@
   border-color: var(--green);
   background: var(--green-light);
 }
+.drop-zone:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 2px;
+  border-color: var(--green);
+}
 .drop-zone input  { display: none; }
 .drop-icon        { font-size: 40px; margin-bottom: 16px; display: block; }
 .drop-title       { font-size: 18px; font-weight: 500; margin-bottom: 6px; }
