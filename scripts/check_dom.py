@@ -93,13 +93,15 @@ def main():
     checked = 0
 
     for path in html_files:
-        parts = path.parts
-        if any(p.startswith('.') or p in ('node_modules', 'dist', 'data') for p in parts):
+        rel_parts = path.relative_to(ROOT).parts
+        # Only inspect path segments *inside* the repo — checking out the repo
+        # under a dot-prefixed directory (e.g. a .claude/worktrees/* worktree)
+        # must not cause every file to be skipped.
+        if any(p.startswith('.') or p in ('node_modules', 'dist', 'data') for p in rel_parts):
             continue
         # Skip .template.html files and generated localized tool pages (de/slug/, es/slug/, etc.)
         if path.name.endswith('.template.html'):
             continue
-        rel_parts = path.relative_to(ROOT).parts
         if len(rel_parts) == 3 and rel_parts[0] in LANG_CODES:
             continue
         missing_ids, missing_tool = check_file(path)
