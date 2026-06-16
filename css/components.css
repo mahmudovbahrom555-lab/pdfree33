@@ -6,6 +6,18 @@
    Каждый компонент изолирован — можно менять независимо
    ============================================================ */
 
+/* Snappier mobile taps on primary controls — skips the ~300ms double-tap-zoom
+   delay and treats a fast double-tap as two separate taps instead of a zoom. */
+button,
+[class*="-btn"],
+.search-chip,
+.drop-zone,
+.tool-card,
+.nav-link,
+.search-result__info {
+  touch-action: manipulation;
+}
+
 /* ── Tool card ── */
 .tool-card {
   background: var(--surface);
