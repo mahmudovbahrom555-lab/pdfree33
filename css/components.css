@@ -504,26 +504,6 @@
 }
 .pwa-nudge__skip:hover { color: var(--text); background: var(--border); }
 
-/* Three tier buttons */
-
-/* Heart icons — three shades */
-
-   /* rose-400 */
-
-   /* red-500 */
-
-   /* red-800 */
-
-/* Featured $5 */
-
-/* Counter: "+42" — social proof */
-
-@media (max-width: 480px) {
-
-}
-
-/* ad-fallback — shown when AdSense fails to load (localhost, ad-blockers) */
-
 /* ── Privacy trust bar ───────────────────────────────────────── */
 
 .privacy-bar {
