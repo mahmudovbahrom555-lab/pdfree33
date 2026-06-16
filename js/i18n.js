@@ -140,10 +140,9 @@ const EN = {
   error_msg:            'Error: {msg}',
 
   // ── search (homepage intent search) ───────────────────────────
-  search_placeholder: 'merge pdf, compress, pdf to word…',
+  search_placeholder: 'merge pdf, compress, rotate, watermark, pdf to word…',
   search_aria:        'Search PDF tools',
   search_drop:        'or drop PDF here',
-  search_choose:      'Choose File →',
   search_start:       'Start →',
   search_miss:        'No tool found for "{q}" — try "merge", "compress", or "split"',
 

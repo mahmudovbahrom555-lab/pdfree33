@@ -128,10 +128,9 @@ window.PDFREE_LOCALE = {
   error_msg:           'Erreur : {msg}',
 
   // search
-  search_placeholder: 'fusionner PDF, compresser, PDF en Word…',
+  search_placeholder: 'fusionner PDF, compresser, pivoter, filigrane, PDF en Word…',
   search_aria:        'Rechercher des outils PDF',
   search_drop:        'ou déposez un PDF ici',
-  search_choose:      'Choisir un fichier →',
   search_start:       'Démarrer →',
   search_miss:        'Aucun outil trouvé pour « {q} » — essaie « fusionner », « compresser » ou « diviser »',
 

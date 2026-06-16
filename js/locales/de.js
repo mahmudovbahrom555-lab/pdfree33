@@ -129,10 +129,9 @@ window.PDFREE_LOCALE = {
   error_msg:           'Fehler: {msg}',
 
   // search
-  search_placeholder: 'PDF zusammenfügen, komprimieren, PDF zu Word…',
+  search_placeholder: 'PDF zusammenfügen, komprimieren, drehen, Wasserzeichen, PDF zu Word…',
   search_aria:        'PDF-Tools suchen',
   search_drop:        'oder PDF hier ablegen',
-  search_choose:      'Datei wählen →',
   search_start:       'Starten →',
   search_miss:        'Kein Tool für „{q}" gefunden — versuche „zusammenfügen", „komprimieren" oder „aufteilen"',
 

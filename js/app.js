@@ -394,9 +394,8 @@ function initSearch() {
   const srDesc      = id('srDesc');
   const srFileInput   = id('srFileInput');
   const srDropHint    = id('srDropHint');
-  const srChooseBtn   = id('srChooseBtn');
+  const srInfoLabel   = id('srInfoLabel');
   const srPendingFile = id('srPendingFile');
-  const srCtaLabel    = srChooseBtn ? srChooseBtn.parentElement : null;
 
   // Hero drop zone refs
   const heroSection     = id('hero');
@@ -419,7 +418,6 @@ function initSearch() {
   searchEl.placeholder = t('search_placeholder');
   searchEl.setAttribute('aria-label', t('search_aria'));
   if (srDropHint)  srDropHint.textContent  = t('search_drop');
-  if (srChooseBtn) srChooseBtn.textContent = t('search_choose');
 
   // Localize hero drop zone strings
   if (heroDropLabel)  heroDropLabel.textContent  = t('hero_drop');
@@ -643,23 +641,25 @@ function initSearch() {
 
   function _applyResult(entry) {
     _activeResult = entry;
-    srIcon.textContent    = entry.icon;
-    srName.textContent    = entry.displayName;
     if (srDesc) srDesc.textContent = entry.desc || '';
     srFileInput.accept    = entry.accept || '.pdf';
     srFileInput.multiple  = !!entry.multi;
 
-    // If user already has a file in the hero zone: show file name + "Start →"
+    // If user already has a file in the hero zone: fold the CTA into the title
+    // itself (e.g. "🔄 Rotate PDF") — entry.btn already carries the icon prefix,
+    // so hide the separate icon span to avoid showing it twice.
     if (_pendingFiles) {
       const label = _pendingFiles.length === 1
         ? `📄 ${_pendingFiles[0].name}`
         : `📄 ${_pendingFiles.length} PDFs`;
       if (srPendingFile) { srPendingFile.textContent = label; srPendingFile.hidden = false; }
-      if (srChooseBtn) srChooseBtn.textContent = (entry.btn || t('search_start')) + ' →';
+      if (srIcon) srIcon.hidden = true;
+      srName.textContent = entry.btn || t('search_start');
       if (srDropHint)  srDropHint.hidden = true;
     } else {
       if (srPendingFile) srPendingFile.hidden = true;
-      if (srChooseBtn) srChooseBtn.textContent = t('search_choose');
+      if (srIcon) { srIcon.hidden = false; srIcon.textContent = entry.icon; }
+      srName.textContent = entry.displayName;
       if (srDropHint)  srDropHint.hidden = false;
     }
 
@@ -672,13 +672,14 @@ function initSearch() {
     missEl.hidden   = true;
     _activeResult   = null;
     if (srPendingFile) srPendingFile.hidden = true;
-    if (srChooseBtn) srChooseBtn.textContent = t('search_choose');
     if (srDropHint)  srDropHint.hidden = false;
   }
 
-  // When file already selected: label click launches tool directly instead of opening picker
-  if (srCtaLabel) {
-    srCtaLabel.addEventListener('click', e => {
+  // Whole info row (icon + name + desc) is a <label for="srFileInput"> — clicking
+  // it opens the native file picker by default. When a file is already pending,
+  // intercept and launch the tool directly instead of re-prompting for a file.
+  if (srInfoLabel) {
+    srInfoLabel.addEventListener('click', e => {
       if (_pendingFiles && _activeResult) {
         e.preventDefault();
         if (!_activeResult.multi && _pendingFiles.length > 1) {

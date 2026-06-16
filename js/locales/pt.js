@@ -128,10 +128,9 @@ window.PDFREE_LOCALE = {
   error_msg:           'Erro: {msg}',
 
   // search
-  search_placeholder: 'juntar PDF, comprimir, PDF para Word…',
+  search_placeholder: 'juntar PDF, comprimir, girar, marca de água, PDF para Word…',
   search_aria:        'Pesquisar ferramentas PDF',
   search_drop:        'ou solte um PDF aqui',
-  search_choose:      'Escolher arquivo →',
   search_start:       'Iniciar →',
   search_miss:        'Nenhuma ferramenta encontrada para "{q}" — tente "juntar", "comprimir" ou "dividir"',
 
