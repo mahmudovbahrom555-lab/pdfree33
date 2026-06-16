@@ -438,7 +438,7 @@
 .toast {
   position: fixed;
   left: 50%;
-  bottom: 28px;
+  bottom: calc(28px + env(safe-area-inset-bottom));
   z-index: 300;
   max-width: calc(100vw - 32px);
   width: max-content;
@@ -460,7 +460,7 @@
   transform: translate(-50%, 0);
 }
 @media (max-width: 700px) {
-  .toast { max-width: calc(100vw - 24px); font-size: 12.5px; padding: 11px 16px; bottom: 18px; }
+  .toast { max-width: calc(100vw - 24px); font-size: 12.5px; padding: 11px 16px; bottom: calc(18px + env(safe-area-inset-bottom)); }
 }
 
 /* ── PWA install nudge ── */
