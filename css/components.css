@@ -3019,10 +3019,10 @@ button,
 #toolSearch {
   width: 100%;
   box-sizing: border-box;
-  padding: 13px 16px 13px 42px;
+  padding: 17px 16px 17px 48px;
   border: 2px solid var(--border);
   border-radius: 12px;
-  font-size: 15px;
+  font-size: 16px;
   font-family: var(--font-sans);
   background: var(--surface);
   color: var(--text1);
