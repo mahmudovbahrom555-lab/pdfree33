@@ -71,15 +71,25 @@ def _md5_short(path, length=8):
 
 def _compute_hashes():
     app_hash = _md5_short(os.path.join(ROOT, 'js', 'app.js'))
-    # cache_version hashes ALL js/*.js files + sw.js so the SW cache is busted
-    # whenever ANY JS module changes — not just app.js.
-    # Previously only app.js+sw.js were hashed, so changes to processor.js,
-    # pdf2wordTables.js etc. kept the same cache_version → SW served stale files.
+    # cache_version hashes ALL js/*.js + css/*.css files + sw.js so the SW
+    # cache is busted whenever any JS module or CSS file changes — not just
+    # app.js. Previously only app.js+sw.js were hashed, so changes to
+    # processor.js, pdf2wordTables.js etc. kept the same cache_version → SW
+    # served stale files. CSS was added for the identical reason: a CSS-only
+    # deploy left cache_version unchanged, so the SW's cache-first strategy
+    # served already-visited users stale CSS indefinitely.
     combined = b''
     js_dir = os.path.join(ROOT, 'js')
     for fname in sorted(os.listdir(js_dir)):
         if fname.endswith('.js') and fname != 'vendor':
             fpath = os.path.join(js_dir, fname)
+            if os.path.isfile(fpath):
+                with open(fpath, 'rb') as f:
+                    combined += f.read()
+    css_dir = os.path.join(ROOT, 'css')
+    for fname in sorted(os.listdir(css_dir)):
+        if fname.endswith('.css'):
+            fpath = os.path.join(css_dir, fname)
             if os.path.isfile(fpath):
                 with open(fpath, 'rb') as f:
                     combined += f.read()
