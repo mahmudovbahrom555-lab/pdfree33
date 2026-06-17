@@ -514,7 +514,8 @@ async function _runOcr(file, gen) {
   const langLabel = _getLangName(_selectedLang);
   let worker;
   try {
-  worker = await window.Tesseract.createWorker(_selectedLang, 1, {
+  const tesseractLang = _selectedLang === 'jpn' ? 'jpn+jpn_vert' : _selectedLang;
+  worker = await window.Tesseract.createWorker(tesseractLang, 1, {
     logger: m => {
       if (m.status === 'recognizing text') {
         _updateProgress(Math.round(m.progress * 100), `Recognizing text (${langLabel})…`);
@@ -536,7 +537,7 @@ async function _runOcr(file, gen) {
     const basePct = 15 + Math.round((p - 1) / total * 75);
     _updateProgress(basePct, `OCR page ${p} of ${total} · ${langLabel}`);
 
-    let canvas;
+    let canvas, ocrCanvas;
     try {
       const page = await pdfDoc.getPage(p);
 
@@ -559,7 +560,14 @@ async function _runOcr(file, gen) {
       const ctx = canvas.getContext('2d');
       await page.render({ canvasContext: ctx, viewport: vp }).promise;
 
-      const result = await worker.recognize(_toGrayscale(canvas));
+      // Counter-rotate so Tesseract always receives an upright image.
+      // PDFs with /Rotate 180 or 270 would otherwise produce garbage confidence.
+      // _rotateBackBbox then maps word bboxes back to display-canvas space so
+      // _buildSearchablePdf can use vpTransform unchanged.
+      const pageRotation = page.rotate || 0;
+      ocrCanvas = pageRotation !== 0 ? _counterRotateCanvas(canvas, pageRotation) : canvas;
+
+      const result = await worker.recognize(_toGrayscale(ocrCanvas));
       // Adaptive confidence threshold — see COMPLEX_LANGS constant.
       // Latin (eng/fra/…): 55% — Tesseract is reliable; below 55% is almost always garbage.
       // Complex (ara/jpn/kor/hin/tha/…): 45% — correct glyphs routinely score 40–50%,
@@ -570,7 +578,10 @@ async function _runOcr(file, gen) {
         if (!text || w.confidence < MIN_CONF) return [];
         confSum += w.confidence;
         confCount++;
-        return [{ text, confidence: w.confidence, bbox: w.bbox }];
+        const bbox = pageRotation !== 0
+          ? _rotateBackBbox(w.bbox, pageRotation, canvas.width, canvas.height)
+          : w.bbox;
+        return [{ text, confidence: w.confidence, bbox }];
       });
 
       // Store viewport transform — used in _buildSearchablePdf to map canvas→PDF coords
@@ -595,6 +606,7 @@ async function _runOcr(file, gen) {
       pageErrors.push({ page: p, error: pageErr.message });
     } finally {
       // Always release canvas memory regardless of success or error
+      if (ocrCanvas && ocrCanvas !== canvas) { ocrCanvas.width = 0; ocrCanvas.height = 0; }
       if (canvas) { canvas.width = 0; canvas.height = 0; }
     }
 
@@ -706,6 +718,35 @@ function _toGrayscale(src) {
   }
   ctx.putImageData(img, 0, 0);
   return dst;
+}
+
+// ── Canvas rotation helpers ───────────────────────────────────────────────────
+
+// Rotate canvas by -R degrees so upside-down/sideways scans become upright
+// before being passed to Tesseract. A separate canvas is returned; caller must
+// release it (set width=0, height=0) after recognize() completes.
+function _counterRotateCanvas(src, R) {
+  const swap = R === 90 || R === 270;
+  const dst  = document.createElement('canvas');
+  dst.width  = swap ? src.height : src.width;
+  dst.height = swap ? src.width  : src.height;
+  const ctx  = dst.getContext('2d');
+  ctx.translate(dst.width / 2, dst.height / 2);
+  ctx.rotate(-R * Math.PI / 180);
+  ctx.drawImage(src, -src.width / 2, -src.height / 2);
+  return dst;
+}
+
+// Map a Tesseract bbox from counter-rotated (ocrCanvas) space back to the
+// original display canvas space so _buildSearchablePdf can apply vpTransform
+// without modification. Derivation: invert the affine applied by
+// _counterRotateCanvas for each of the four standard PDF rotation values.
+// W, H are the display canvas (pre-rotation) dimensions.
+function _rotateBackBbox({ x0, y0, x1, y1 }, R, W, H) {
+  if (R === 90)  return { x0: W - y1, y0: x0,     x1: W - y0, y1: x1     };
+  if (R === 180) return { x0: W - x1, y0: H - y1, x1: W - x0, y1: H - y0 };
+  if (R === 270) return { x0: y0,     y0: H - x1, x1: y1,     y1: H - x0 };
+  return { x0, y0, x1, y1 };
 }
 
 // ── Searchable PDF builder ────────────────────────────────────────────────────
