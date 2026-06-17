@@ -293,6 +293,17 @@ function _maybeShowPwaNudge() {
 
 // ── Button handler ────────────────────────────────────────────
 
+// Tools with a dedicated UI module that owns button, progress, and result
+// entirely on their own. app.js must NOT call doProcess for these — doing so
+// would fire _runStub (no registry runner) and show a "coming soon" toast.
+//
+// NOTE: registering in capture phase does NOT help when both listeners are on
+// the same element (#mergeBtn). Order is determined by registration time, not
+// phase. The guard below is the reliable fix.
+//
+// To add a new self-managed tool: append its key here + build its own UI module.
+const SELF_MANAGED_TOOLS = new Set(['ocr']);
+
 function _onMergeBtnClick() {
   const mode = id('mergeBtn').dataset.mode || 'process';
   if (mode === 'reset') {
@@ -300,8 +311,7 @@ function _onMergeBtnClick() {
     return;
   }
 
-  // ocrUI.js owns its own click flow end-to-end; let it handle everything.
-  if (currentTool === 'ocr') return;
+  if (SELF_MANAGED_TOOLS.has(currentTool)) return;
 
   // Registry dispatch — no more if-else per tool
   const { params, error } = collectToolParams(currentTool);

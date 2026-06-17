@@ -67,6 +67,16 @@ check('jpn+jpn_vert' in ocr or 'jpn_vert' in ocr,
       'ocrUI.js: jpn+jpn_vert язык настроен',
       'ocrUI.js: jpn_vert не настроен — вертикальный японский не будет читаться')
 
+# ── app.js: SELF_MANAGED_TOOLS guard ─────────────────────────────────────────
+# Prevents "coming soon" stub toast firing for tools that own their button flow.
+app_js = (ROOT / 'js' / 'app.js').read_text()
+check('SELF_MANAGED_TOOLS' in app_js,
+      'app.js: SELF_MANAGED_TOOLS guard присутствует',
+      'app.js: нет SELF_MANAGED_TOOLS — OCR и другие self-managed инструменты покажут "coming soon" тост')
+check("'ocr'" in app_js and 'SELF_MANAGED_TOOLS' in app_js,
+      "app.js: 'ocr' зарегистрирован в SELF_MANAGED_TOOLS",
+      "app.js: 'ocr' отсутствует в SELF_MANAGED_TOOLS")
+
 # ── git: нет незапушенных коммитов ────────────────────────────────────────────
 import subprocess
 result = subprocess.run(
