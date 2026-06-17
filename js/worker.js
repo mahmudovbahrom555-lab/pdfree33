@@ -1166,6 +1166,7 @@ async function handleJpg2Pdf(fileBuffers, options) {
     const buf    = normalizedBuffers[i];  // always Uint8Array — see normalisation above
     const angle  = exifAngles[i] || 0;   // EXIF correction degrees
     const isJpeg = _isJpeg(buf);
+    const isWebp = !isJpeg && _isWebp(buf);
 
     // 1. Decode image to ImageBitmap
     // Windows Chrome Worker uses DirectX/ANGLE backend — stricter than macOS Metal.
@@ -1187,7 +1188,7 @@ async function handleJpg2Pdf(fileBuffers, options) {
 
     let bitmap;
     try {
-      const mime   = isJpeg ? 'image/jpeg' : 'image/png';
+      const mime   = isJpeg ? 'image/jpeg' : isWebp ? 'image/webp' : 'image/png';
       const blobA  = new Blob([buf], { type: mime });
       try {
         bitmap = await createImageBitmap(blobA, { imageOrientation: 'none' });
@@ -1239,11 +1240,12 @@ async function handleJpg2Pdf(fileBuffers, options) {
         canvasH      = Math.round(realH * scale);
       }
 
-      if (!compress && normAngle === 0) {
+      if (!compress && normAngle === 0 && !isWebp) {
         // ── Fast path ───────────────────────────────────────────────────────
         // No compression, no rotation → embed bytes directly.
         // Bypasses OffscreenCanvas entirely → zero GPU involvement,
         // zero quality loss, and avoids Windows ANGLE driver bugs.
+        // WebP is excluded: pdf-lib cannot embed WebP natively; always goes via canvas.
         embedded = isJpeg
           ? await doc.embedJpg(buf)
           : await doc.embedPng(buf);
@@ -1252,7 +1254,11 @@ async function handleJpg2Pdf(fileBuffers, options) {
         // ── Safari < 16.4 fallback ──────────────────────────────────────────
         // OffscreenCanvas not available (Safari 15 and earlier).
         // Embed directly — no rotation or compression applied.
-        // Better to deliver an unrotated image than silently fail.
+        // WebP cannot be embedded; skip it when OffscreenCanvas is unavailable.
+        if (isWebp) {
+          self.postMessage({ type: 'warn', message: `Image #${i + 1}: WebP requires OffscreenCanvas (not available in this browser)` });
+          skipped.push(i + 1); continue;
+        }
         embedded = isJpeg
           ? await doc.embedJpg(buf)
           : await doc.embedPng(buf);
@@ -1273,7 +1279,7 @@ async function handleJpg2Pdf(fileBuffers, options) {
         }
         ctx.restore();
 
-        const exportType = (compress || isJpeg) ? 'image/jpeg' : 'image/png';
+        const exportType = (compress || isJpeg || isWebp) ? 'image/jpeg' : 'image/png';
         const exportOpts = { type: exportType };
         if (exportType === 'image/jpeg') {
           exportOpts.quality = (compress && quality !== undefined) ? quality : 0.92;
@@ -1356,10 +1362,19 @@ async function handleJpg2Pdf(fileBuffers, options) {
 /** Check JPEG magic bytes (FF D8 FF) */
 function _isJpeg(buf) {
   try {
-    // Normalise: Uint8Array is always safe; raw ArrayBuffer may be detached on Windows
     const bytes = buf instanceof Uint8Array ? buf : new Uint8Array(buf);
     return bytes.length >= 3 &&
       bytes[0] === 0xFF && bytes[1] === 0xD8 && bytes[2] === 0xFF;
+  } catch { return false; }
+}
+
+/** Check WebP magic bytes (RIFF....WEBP) */
+function _isWebp(buf) {
+  try {
+    const bytes = buf instanceof Uint8Array ? buf : new Uint8Array(buf);
+    return bytes.length >= 12 &&
+      bytes[0] === 0x52 && bytes[1] === 0x49 && bytes[2] === 0x46 && bytes[3] === 0x46 && // RIFF
+      bytes[8] === 0x57 && bytes[9] === 0x45 && bytes[10] === 0x42 && bytes[11] === 0x50;  // WEBP
   } catch { return false; }
 }
 

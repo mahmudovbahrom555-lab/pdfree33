@@ -40,7 +40,7 @@ export const IMAGE_DIM_PRESETS = {
  */
 export const ACCEPTED_MIME = {
   '.pdf': ['application/pdf'],
-  '.jpg,.jpeg,.png': ['image/jpeg', 'image/png'],
+  '.jpg,.jpeg,.png,.webp': ['image/jpeg', 'image/png', 'image/webp'],
 };
 
 /**
@@ -128,7 +128,7 @@ export const TOOLS = {
     descs:  { en: 'Convert images to PDF instantly', es: 'Convierte imágenes a PDF al instante', pt: 'Converta imagens em PDF instantaneamente', de: 'Bilder sofort in PDF umwandeln', fr: 'Convertir des images en PDF instantanément' },
     btns:   { en: '🖼️ Convert to PDF',  es: '🖼️ Convertir a PDF', pt: '🖼️ Converter para PDF', de: '🖼️ In PDF konvertieren', fr: '🖼️ Convertir en PDF' },
     multi:       true,
-    accept:      '.jpg,.jpeg,.png',
+    accept:      '.jpg,.jpeg,.png,.webp',
     implemented: true,
   },
   pdf2jpg: {
