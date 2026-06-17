@@ -300,6 +300,9 @@ function _onMergeBtnClick() {
     return;
   }
 
+  // ocrUI.js owns its own click flow end-to-end; let it handle everything.
+  if (currentTool === 'ocr') return;
+
   // Registry dispatch — no more if-else per tool
   const { params, error } = collectToolParams(currentTool);
   if (error) { showToast(error); return; }
