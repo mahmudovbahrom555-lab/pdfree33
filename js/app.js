@@ -804,21 +804,30 @@ let _installPromptEvent = null;
 function _initPWA() {
   // Register service worker
   if ('serviceWorker' in navigator) {
+    // Capture BEFORE registration — distinguishes first-install from update.
+    // On first install: controller is null → hadController = false → no reload.
+    // On update: controller already exists → hadController = true → reload.
+    const hadController = !!navigator.serviceWorker.controller;
+
+    // SW uses skipWaiting() so it activates immediately (no "waiting" phase).
+    // controllerchange fires when the new SW takes over all tabs via clients.claim().
+    // This is the reliable signal to reload and serve fresh files.
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (!hadController) return;  // first-time install, not an update
+      if (isProcessing) {
+        // User is mid-operation — show banner, let them choose when to reload
+        _showUpdateBanner(null);
+      } else {
+        window.location.reload();
+      }
+    });
+
     navigator.serviceWorker.register('/sw.js').then(reg => {
-      // ── Update-ready flow ──────────────────────────────────
-      // Show update banner when a waiting SW exists on first load
+      // Fallback: show banner if a waiting SW already exists on page load
+      // (can happen if skipWaiting() was not in the older SW version)
       if (reg.waiting && navigator.serviceWorker.controller) {
         _showUpdateBanner(reg);
       }
-      // Also watch for future updates while the page is open
-      reg.addEventListener('updatefound', () => {
-        const worker = reg.installing;
-        worker?.addEventListener('statechange', () => {
-          if (worker.state === 'installed' && navigator.serviceWorker.controller) {
-            _showUpdateBanner(reg);
-          }
-        });
-      });
 
       // ── Share Target: retrieve file sent via OS share sheet ─
       const sharedUuid = new URL(location.href).searchParams.get('shared');
@@ -864,9 +873,15 @@ function _showUpdateBanner(reg) {
 
   id('swUpdateNow')?.addEventListener('click', () => {
     banner.style.display = 'none';
-    reg.waiting?.postMessage({ type: 'SKIP_WAITING' });
-    navigator.serviceWorker.addEventListener('controllerchange',
-      () => location.reload(), { once: true });
+    if (reg?.waiting) {
+      // Older path: SW is waiting — tell it to skip waiting, then reload on controllerchange
+      reg.waiting.postMessage({ type: 'SKIP_WAITING' });
+      navigator.serviceWorker.addEventListener('controllerchange',
+        () => location.reload(), { once: true });
+    } else {
+      // New path: SW already activated (skipWaiting in install) — just reload
+      location.reload();
+    }
   }, { once: true });
 
   id('swUpdateLater')?.addEventListener('click', () => {
