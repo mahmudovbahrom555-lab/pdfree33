@@ -70,6 +70,7 @@ export function initOcrOptions(file) {
   _file    = file;
   _loading = true;
   el.innerHTML = _spinnerHTML('Analysing PDF…');
+  _bindMergeBtn();   // register listener immediately so loading-state clicks are handled
   _analyse(file, el);
 }
 
@@ -148,7 +149,7 @@ async function _analyse(file, container) {
 
     _loading = false;
     _renderUI(container);
-    _bindMergeBtn();
+    _syncBtnLabel();
   } catch (err) {
     if (myGen !== _generation) return;
     _loading = false;
@@ -209,7 +210,6 @@ function _renderUI(container) {
         ${_txtCheckboxHTML()}
       </div>`;
     _bindCheckbox();
-    _bindMergeBtn();
     return;
   }
 
@@ -365,12 +365,15 @@ function _showOcrReady() {
 }
 
 // ── Main button binding ──────────────────────────────────────────────────────
+function _syncBtnLabel() {
+  const btn = document.getElementById('mergeBtn');
+  if (btn && btn._ocrBound) btn.textContent = _isTextPdf ? 'Extract Text' : 'Make PDF Searchable';
+}
+
 function _bindMergeBtn() {
   const btn = document.getElementById('mergeBtn');
   if (!btn || btn._ocrBound) return;
   btn._ocrBound = true;
-
-  btn.textContent = _isTextPdf ? 'Extract Text' : 'Make PDF Searchable';
 
   // Capture phase so this fires before app.js bubble-phase listener,
   // allowing stopImmediatePropagation to prevent doProcess (stub runner).
@@ -379,9 +382,14 @@ function _bindMergeBtn() {
     const mode = btn.dataset.mode || 'process';
     if (mode === 'reset') return;
 
-    // Gate: only intercept when OCR is the active tool.
-    // If OCR engine is not installed, show a toast and bail — do NOT fall through
-    // to the bubble-phase handler, which would call doProcess() on a stub runner.
+    // Analysis still running — user clicked too early.
+    if (_loading) {
+      _showToast('Analysing PDF…');
+      e.stopImmediatePropagation();
+      return;
+    }
+
+    // Gate: OCR engine not installed.
     if (!_isTextPdf && !_ocrReady) {
       _showToast(t('install_ocr_first'));
       e.stopImmediatePropagation();

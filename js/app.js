@@ -311,13 +311,7 @@ function _onMergeBtnClick() {
     return;
   }
 
-  if (SELF_MANAGED_TOOLS.has(currentTool)) {
-    // Module owns its own click flow, but we still surface blocking states
-    // that the module can't show yet (listener not bound while _loading = true).
-    const { params } = collectToolParams(currentTool);
-    if (params?.loading) showToast('Analysing PDF…');
-    return;
-  }
+  if (SELF_MANAGED_TOOLS.has(currentTool)) return;
 
   // Registry dispatch — no more if-else per tool
   const { params, error } = collectToolParams(currentTool);
