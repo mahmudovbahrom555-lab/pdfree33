@@ -140,6 +140,8 @@ def _build_nav_items(lang, all_tools):
             items.append({'href': '/draw-on-pdf/', 'label': 'Draw', 'tool_key': 'draw-pdf'})
     # PDF→Word — specialty page, English only
     items.append({'href': '/pdf-to-word/', 'label': 'PDF→Word', 'tool_key': 'pdf2word'})
+    # Compare — specialty page, English only
+    items.append({'href': '/compare-pdf/', 'label': 'Compare', 'tool_key': 'compare'})
     return items
 
 
