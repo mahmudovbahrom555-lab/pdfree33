@@ -114,7 +114,14 @@ self.addEventListener('install', event => {
   self.skipWaiting();
   event.waitUntil(
     caches.open(STATIC_CACHE)
-      .then(cache => cache.addAll(STATIC_ASSETS))
+      .then(cache => cache.addAll(
+        // cache:'reload' bypasses the browser HTTP cache so we always fetch
+        // fresh files from the network. Without this, JS/CSS files served
+        // with Cache-Control: immutable would be pulled from the stale HTTP
+        // cache — causing the new SW to pre-cache the OLD file versions.
+        // This is why regular Chrome showed old UI while incognito worked fine.
+        STATIC_ASSETS.map(url => new Request(url, { cache: 'reload' }))
+      ))
       .catch(err => console.warn('[SW] Pre-cache partial failure:', err))
   );
 });

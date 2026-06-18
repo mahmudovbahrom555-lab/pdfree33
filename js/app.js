@@ -822,7 +822,7 @@ function _initPWA() {
       }
     });
 
-    navigator.serviceWorker.register('/sw.js').then(reg => {
+    navigator.serviceWorker.register('/sw.js', { updateViaCache: 'none' }).then(reg => {
       // Fallback: show banner if a waiting SW already exists on page load
       // (can happen if skipWaiting() was not in the older SW version)
       if (reg.waiting && navigator.serviceWorker.controller) {
