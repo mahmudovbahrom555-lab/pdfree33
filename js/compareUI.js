@@ -1,16 +1,18 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) 2025 PDFree Contributors
 
-import { loadPdfJs } from './pdf2jpgUI.js';
+import { loadPdfJs }  from './pdf2jpgUI.js';
+import { showToast }  from './ui.js';
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 const RENDER_SCALE = 1.5;   // scale for page rendering
 const DIFF_THRESHOLD = 15;  // per-channel pixel difference to count as "changed"
 
 // ── State ─────────────────────────────────────────────────────────────────────
-let _files    = [];   // [File, File]
-let _viewMode = 'diff'; // 'left' | 'right' | 'diff'
-let _pageData = [];   // [{ canvasLeft, canvasRight, canvasDiff, diffPct }]
+let _files       = [];   // [File, File]
+let _viewMode    = 'diff'; // 'left' | 'right' | 'diff'
+let _pageData    = [];   // [{ urlLeft, urlRight, urlDiff, diffPct, pageIndex }]
+let _clickHandler = null; // reference kept so we can removeEventListener on hide
 
 // ── Public API ────────────────────────────────────────────────────────────────
 
@@ -26,6 +28,13 @@ export function initCompareOptions(files) {
 export function hideCompareOptions() {
   const el = document.getElementById('compareOptions');
   if (el) { el.style.display = 'none'; el.innerHTML = ''; }
+  // Remove the capture-phase listener so it doesn't block other tools' buttons
+  const btn = document.getElementById('mergeBtn');
+  if (btn && _clickHandler) {
+    btn.removeEventListener('click', _clickHandler, true);
+    delete btn._compareBound;
+  }
+  _clickHandler = null;
   _files    = [];
   _viewMode = 'diff';
   _pageData = [];
@@ -74,11 +83,11 @@ function _bindCompareBtn() {
   if (!btn || btn._compareBound) return;
   btn._compareBound = true;
 
-  btn.addEventListener('click', async e => {
+  _clickHandler = async e => {
     const mode = btn.dataset.mode || 'process';
     if (mode === 'reset') return;
     if (_files.length < 2) {
-      _showToast('Please select two PDF files to compare.');
+      showToast('Please select two PDF files to compare.');
       e.stopImmediatePropagation();
       return;
     }
@@ -92,12 +101,14 @@ function _bindCompareBtn() {
     try {
       await _runCompare();
     } catch (err) {
-      _showToast('Error: ' + err.message);
+      showToast('Error: ' + err.message);
     } finally {
       btn.disabled = false;
       if (bar) bar.hidden = true;
     }
-  }, true);
+  };
+
+  btn.addEventListener('click', _clickHandler, true);
 }
 
 // ── Main comparison pipeline ──────────────────────────────────────────────────
@@ -134,7 +145,13 @@ async function _runCompare() {
       diffPct       = result.diffPct;
     }
 
-    _pageData.push({ canvasLeft, canvasRight, canvasDiff, diffPct, pageIndex: i });
+    // Cache data URLs now — avoids re-encoding on every mode switch
+    const urlLeft  = canvasLeft  ? canvasLeft.toDataURL()  : null;
+    const urlRight = canvasRight ? canvasRight.toDataURL() : null;
+    const urlDiff  = canvasDiff  ? canvasDiff.toDataURL()
+                   : (urlLeft ?? urlRight);
+
+    _pageData.push({ urlLeft, urlRight, urlDiff, diffPct, pageIndex: i });
   }
 
   doc1.destroy();
@@ -243,7 +260,8 @@ function _showResults(n1, n2) {
   if (!container) return;
 
   const maxPages = _pageData.length;
-  const totalChanged = _pageData.filter(p => p.diffPct !== null && p.diffPct > 0).length;
+  // Use same threshold as the page badge (0.05%) so summary matches card labels
+  const totalChanged = _pageData.filter(p => p.diffPct !== null && p.diffPct >= 0.05).length;
 
   // Header info
   let headerMsg = '';
@@ -299,9 +317,9 @@ function _showResults(n1, n2) {
   });
 }
 
-function _pageCardHTML({ canvasLeft, canvasRight, canvasDiff, diffPct, pageIndex }, n1, n2) {
-  const hasA = canvasLeft  !== null;
-  const hasB = canvasRight !== null;
+function _pageCardHTML({ urlLeft, urlRight, urlDiff, diffPct, pageIndex }, n1, n2) {
+  const hasA = urlLeft  !== null;
+  const hasB = urlRight !== null;
 
   let badge = '';
   if (!hasA)      badge = '<span style="font-size:11px;padding:2px 7px;background:#fef3c7;color:#92400e;border-radius:4px;font-weight:600;">Only in B</span>';
@@ -315,8 +333,7 @@ function _pageCardHTML({ canvasLeft, canvasRight, canvasDiff, diffPct, pageIndex
     }
   }
 
-  // Get the canvas URL for current mode
-  const dataUrl = _getCanvasUrl({ canvasLeft, canvasRight, canvasDiff, hasA, hasB });
+  const dataUrl = _getPageUrl({ urlLeft, urlRight, urlDiff, hasA, hasB });
 
   return `
     <div class="compare-page-card" data-page="${pageIndex}" style="
@@ -335,15 +352,10 @@ function _pageCardHTML({ canvasLeft, canvasRight, canvasDiff, diffPct, pageIndex
     </div>`;
 }
 
-function _getCanvasUrl({ canvasLeft, canvasRight, canvasDiff, hasA, hasB }) {
-  if (_viewMode === 'left')  return hasA ? canvasLeft.toDataURL()  : null;
-  if (_viewMode === 'right') return hasB ? canvasRight.toDataURL() : null;
-  // diff mode
-  if (canvasDiff) return canvasDiff.toDataURL();
-  // Only one side available in diff mode — show what we have
-  if (hasA) return canvasLeft.toDataURL();
-  if (hasB) return canvasRight.toDataURL();
-  return null;
+function _getPageUrl({ urlLeft, urlRight, urlDiff, hasA, hasB }) {
+  if (_viewMode === 'left')  return hasA ? urlLeft  : null;
+  if (_viewMode === 'right') return hasB ? urlRight : null;
+  return urlDiff ?? null;
 }
 
 function _refreshModeUI(container) {
@@ -354,15 +366,15 @@ function _refreshModeUI(container) {
     btn.style.color      = active ? '#fff' : 'var(--text2)';
   });
 
-  // Update each page canvas
+  // Update each page canvas using cached URLs (no toDataURL re-encoding)
   _pageData.forEach(p => {
     const card = container.querySelector(`[data-page="${p.pageIndex}"]`);
     if (!card) return;
     const wrap = card.querySelector('.compare-canvas-wrap');
     if (!wrap) return;
-    const hasA = p.canvasLeft  !== null;
-    const hasB = p.canvasRight !== null;
-    const url  = _getCanvasUrl({ ...p, hasA, hasB });
+    const hasA = p.urlLeft  !== null;
+    const hasB = p.urlRight !== null;
+    const url  = _getPageUrl({ ...p, hasA, hasB });
     wrap.innerHTML = url
       ? `<img src="${url}" alt="Page ${p.pageIndex}" style="max-width:100%;height:auto;border-radius:4px;">`
       : `<div style="padding:24px;color:var(--text3);font-size:13px;">Page not available in this PDF</div>`;
@@ -384,13 +396,6 @@ function _updateProgress(pct, label) {
   if (lbl)  lbl.textContent  = label;
 }
 
-function _showToast(msg) {
-  const toast = document.getElementById('toast');
-  if (!toast) return;
-  toast.textContent = msg;
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 4000);
-}
 
 function _truncName(name) {
   return name.length > 40 ? name.slice(0, 37) + '…' : name;
