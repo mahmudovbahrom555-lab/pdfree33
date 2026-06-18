@@ -79,9 +79,9 @@ registerTool('merge', {
 
 registerTool('split', {
   runner:    'split',
-  init:      initSplitOptions,
-  hide:      hideSplitOptions,
-  getParams: () => ({ pages: getSelectedPages(), mode: getSplitMode(), removeWatermarks: getWmRemove() }),
+  init:      file => initExtractOptions(file, 'separate'),
+  hide:      hideExtractOptions,
+  getParams: getExtractParams,
   validate:  p => p.pages.length === 0 ? 'Please select at least one page' : null,
 });
 

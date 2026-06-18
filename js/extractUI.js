@@ -39,13 +39,13 @@ export function getExtractParams() {
   };
 }
 
-export async function initExtractOptions(file) {
+export async function initExtractOptions(file, defaultMode = 'single') {
   _container = document.getElementById('splitOptions');
   if (!_container) return;
 
   _pageCount     = 0;
   _selectedPages = new Set();
-  _mode          = 'single';
+  _mode          = defaultMode;
   _reverse       = false;
   _thumbPage     = 0;
   _thumbsCache   = new Map();
@@ -109,13 +109,13 @@ function _panelHTML() {
             <span class="ext-step">1</span>Output format
           </div>
           <div class="ext-modes">
-            <label class="ext-mode ext-mode--active">
-              <input type="radio" name="extMode" value="single" checked>
+            <label class="ext-mode ${_mode === 'single' ? 'ext-mode--active' : ''}">
+              <input type="radio" name="extMode" value="single" ${_mode === 'single' ? 'checked' : ''}>
               <strong>Single file</strong>
               <small>All selected pages in one PDF</small>
             </label>
-            <label class="ext-mode">
-              <input type="radio" name="extMode" value="separate">
+            <label class="ext-mode ${_mode === 'separate' ? 'ext-mode--active' : ''}">
+              <input type="radio" name="extMode" value="separate" ${_mode === 'separate' ? 'checked' : ''}>
               <strong>Separate files</strong>
               <small>One PDF per selected page</small>
             </label>
