@@ -45,9 +45,9 @@
         "fr": "fusionner-pdf"
       },
       "titles": {
-        "en": "Merge PDF Without Uploading — Free, Private | PDFree",
-        "es": "Unir PDF Gratis Online — Sin Registro | PDFree",
-        "pt": "Juntar PDF Grátis Online — Sem Registro | PDFree",
+        "en": "Merge PDF Files Free — No Upload, No Account | PDFree",
+        "es": "Unir PDF Gratis Online — Sin Registro, Sin Subir | PDFree",
+        "pt": "Juntar PDF Grátis Online — Sem Upload, Sem Registro | PDFree",
         "de": "PDF Zusammenfügen Online — Kostenlos, Kein Upload | PDFree",
         "fr": "Fusionner PDF en Ligne — Gratuit, Aucun Envoi | PDFree"
       },
@@ -87,7 +87,7 @@
         "fr": "Fusionner PDF"
       },
       "metaDescs": {
-        "en": "Merge PDFs without uploading to any server. Files stay in your browser — 100% private. No signup, no limits, no watermarks.",
+        "en": "Merge PDF files free online. No upload, no account — files stay in your browser, 100% private. Unlimited files, no watermarks.",
         "es": "Combina archivos PDF ilimitados al instante. 100% privado, sin subir archivos, sin límites de tamaño.",
         "pt": "Combine arquivos PDF ilimitados instantaneamente. 100% privado, sem uploads, sem limites.",
         "de": "PDF-Dateien kostenlos online zusammenfügen. 100 % privat — Dateien verlassen deinen Browser nie. Kein Upload, keine Registrierung, keine Limits.",
@@ -195,11 +195,11 @@
         "fr": "compresser-pdf"
       },
       "titles": {
-        "en": "Compress PDF Without Uploading — Reduce File Size Free | PDFree",
-        "es": "Comprimir PDF Online — Reducir Tamaño Localmente | PDFree",
-        "pt": "Comprimir PDF Online — Reduzir Tamanho Localmente | PDFree",
-        "de": "PDF Komprimieren Online — Dateigröße Reduzieren | PDFree",
-        "fr": "Compresser PDF en Ligne — Gratuit, Aucun Envoi | PDFree"
+        "en": "Compress PDF Online Free — No Upload, Reduce File Size Instantly | PDFree",
+        "es": "Comprimir PDF Online Gratis — Sin Subir, Reducir Tamaño al Instante | PDFree",
+        "pt": "Comprimir PDF Online Grátis — Sem Upload, Reduzir Tamanho Instantaneamente | PDFree",
+        "de": "PDF Komprimieren Online — Kostenlos, Kein Upload, Sofort Verkleinern | PDFree",
+        "fr": "Compresser PDF en Ligne Gratuit — Sans Envoi, Réduire la Taille Instantanément | PDFree"
       },
       "descs": {
         "en": "Reduce PDF file size without losing quality. Processed locally in your browser — files never uploaded.",
@@ -237,7 +237,7 @@
         "fr": "Compresser PDF"
       },
       "metaDescs": {
-        "en": "Compress PDFs without uploading to any server. Reduce file size by up to 70% entirely in your browser — free, no limits.",
+        "en": "Compress PDF online free. Reduce file size instantly — processed in your browser, nothing uploaded. No account, no limits.",
         "es": "Reduce el tamaño del PDF sin perder calidad. Procesado en tu navegador — archivos nunca subidos. Gratis, sin límites.",
         "pt": "Reduza o tamanho do PDF sem perder qualidade. Processado localmente no seu navegador — sem uploads.",
         "de": "PDF-Dateigröße reduzieren ohne Qualitätsverlust. Vollständig im Browser verarbeitet — keine Uploads, keine Registrierung. Kostenlos.",
@@ -795,11 +795,11 @@
         "fr": "jpg-en-pdf"
       },
       "titles": {
-        "en": "Convert JPG to PDF Online — Free, No Upload | PDFree",
-        "es": "Convertir JPG a PDF — Gratis, Sin Subir | PDFree",
-        "pt": "Converter JPG para PDF — Grátis, Sem Upload | PDFree",
-        "de": "JPG in PDF Umwandeln — Kostenlos, Kein Upload | PDFree",
-        "fr": "JPG en PDF en Ligne — Gratuit, Aucun Envoi | PDFree"
+        "en": "JPG to PDF Free — Convert Images to PDF, No Upload | PDFree",
+        "es": "JPG a PDF Gratis — Convertir Imágenes a PDF, Sin Subir | PDFree",
+        "pt": "JPG para PDF Grátis — Converter Imagens em PDF, Sem Upload | PDFree",
+        "de": "JPG zu PDF Kostenlos — Bilder in PDF Umwandeln, Kein Upload | PDFree",
+        "fr": "JPG en PDF Gratuit — Convertir Images en PDF, Aucun Envoi | PDFree"
       },
       "descs": {
         "en": "Convert images to PDF instantly. Auto EXIF rotation. 100% private — processed locally, no uploads.",
@@ -837,7 +837,7 @@
         "fr": "JPG en PDF"
       },
       "metaDescs": {
-        "en": "Convert JPG images to PDF instantly. 100% private — files processed in your browser, never uploaded. Free, no limits.",
+        "en": "Convert JPG, PNG and WebP images to PDF free. No upload — processed in your browser, nothing sent to any server. Instant, no limits.",
         "es": "Convierte imágenes a PDF al instante. Corrección automática de rotación EXIF. 100% privado, sin subidas.",
         "pt": "Converta imagens em PDF instantaneamente. Correção automática de rotação EXIF. 100% privado, sem uploads.",
         "de": "JPG-Bilder in PDF umwandeln. 100 % privat — im Browser verarbeitet, kein Upload. Kostenlos, keine Limits.",
@@ -870,11 +870,11 @@
         "fr": "pdf-en-jpg"
       },
       "titles": {
-        "en": "Convert PDF to JPG Online — Free, No Upload | PDFree",
-        "es": "Convertir PDF a JPG — Gratis, Sin Subir | PDFree",
-        "pt": "Converter PDF para JPG — Grátis, Sem Upload | PDFree",
-        "de": "PDF in JPG Umwandeln — Kostenlos, Kein Upload | PDFree",
-        "fr": "PDF en JPG en Ligne — Gratuit, Aucun Envoi | PDFree"
+        "en": "PDF to JPG Free — Convert PDF Pages to Images, No Upload | PDFree",
+        "es": "PDF a JPG Gratis — Convertir Páginas a Imágenes, Sin Subir | PDFree",
+        "pt": "PDF para JPG Grátis — Converter Páginas em Imagens, Sem Upload | PDFree",
+        "de": "PDF zu JPG Kostenlos — Seiten als Bilder Exportieren, Kein Upload | PDFree",
+        "fr": "PDF en JPG Gratuit — Convertir Pages en Images, Aucun Envoi | PDFree"
       },
       "descs": {
         "en": "Extract PDF pages as high-quality JPG or PNG images. 100% private — processed locally, no uploads.",
@@ -912,7 +912,7 @@
         "fr": "PDF en JPG"
       },
       "metaDescs": {
-        "en": "Convert PDF pages to high-quality JPG images. Processed entirely in your browser — no uploads, no signup. Free.",
+        "en": "Convert PDF pages to high-quality JPG or PNG images free. No upload — processed entirely in your browser, nothing sent to any server.",
         "es": "Extrae páginas como imágenes JPG o PNG de alta calidad. 100% privado, procesado localmente.",
         "pt": "Extraia páginas como imagens JPG ou PNG de alta qualidade. 100% privado, processado localmente.",
         "de": "PDF-Seiten in hochwertige JPG-Bilder umwandeln. Im Browser verarbeitet — kein Upload, keine Registrierung. Kostenlos.",
