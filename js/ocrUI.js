@@ -115,6 +115,14 @@ async function _autoLoadIfInstalled() {
 async function _analyse(file, container) {
   const myGen = ++_generation;
   try {
+    // Yield a microtask so files.js _updateMeta() can enable the button first,
+    // then we re-disable it while analysis runs. Without this yield, the disable
+    // would fire before _updateMeta() and be immediately overridden.
+    await Promise.resolve();
+    if (myGen !== _generation) return;
+    const btn = document.getElementById('mergeBtn');
+    if (btn && btn._ocrBound) { btn.disabled = true; btn.textContent = 'Analysing…'; }
+
     await loadPdfJs();
     if (myGen !== _generation) return;
 
@@ -154,6 +162,8 @@ async function _analyse(file, container) {
     if (myGen !== _generation) return;
     _loading = false;
     container.innerHTML = _errorHTML(err.message);
+    const btn = document.getElementById('mergeBtn');
+    if (btn && btn._ocrBound) btn.disabled = false;
   }
 }
 
@@ -367,7 +377,9 @@ function _showOcrReady() {
 // ── Main button binding ──────────────────────────────────────────────────────
 function _syncBtnLabel() {
   const btn = document.getElementById('mergeBtn');
-  if (btn && btn._ocrBound) btn.textContent = _isTextPdf ? 'Extract Text' : 'Make PDF Searchable';
+  if (!btn || !btn._ocrBound) return;
+  btn.disabled = false;
+  btn.textContent = _isTextPdf ? 'Extract Text' : 'Make PDF Searchable';
 }
 
 function _bindMergeBtn() {
