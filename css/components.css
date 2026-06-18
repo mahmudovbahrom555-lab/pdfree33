@@ -266,6 +266,24 @@ button,
   box-shadow: none;
 }
 
+/* OCR processing state — green shimmer shows work is in progress */
+@keyframes ocr-shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+.merge-btn.ocr-btn--busy {
+  background: linear-gradient(
+    90deg,
+    var(--green) 0%,
+    #2d9e56 40%,
+    var(--green) 60%,
+    var(--green) 100%
+  );
+  background-size: 200% 100%;
+  animation: ocr-shimmer 1.6s linear infinite;
+  cursor: wait;
+}
+
 /* ── Progress ── */
 .progress-bar {
   width: 100%;

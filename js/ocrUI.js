@@ -411,14 +411,16 @@ function _bindMergeBtn() {
     e.stopImmediatePropagation();
 
     btn.disabled = true;
-    _updateProgress(5, 'Starting…');
+    btn.textContent = 'Processing…';
+    btn.classList.add('ocr-btn--busy');
     const bar = document.getElementById('progressBar');
     if (bar) bar.hidden = false;
+    _updateProgress(3, 'Starting…');
 
     try {
       if (_isTextPdf) {
+        _updateProgress(10, 'Extracting text…');
         const text = await _extractTextDirect(_file);
-        // Store for re-download from success card
         _lastResultBlob = new Blob([text], { type: 'text/plain;charset=utf-8' });
         _lastResultName = _file.name.replace(/\.pdf$/i, '.txt');
         _downloadText(text, _file.name);
@@ -426,11 +428,10 @@ function _bindMergeBtn() {
       } else {
         const myGen = ++_generation;
         const { ocrPages, fullText, avgConfidence } = await _runOcr(_file, myGen);
-        if (myGen !== _generation) return;   // new file dropped mid-OCR — discard partial result
-        // Build searchable PDF
+        if (myGen !== _generation) return;
         _updateProgress(95, 'Building searchable PDF…');
+        _setBtnProgress('Building PDF…');
         const pdfBytes = await _buildSearchablePdf(_file, ocrPages, _selectedLang);
-        // Store for re-download from success card
         _lastResultBlob = new Blob([pdfBytes], { type: 'application/pdf' });
         _lastResultName = _file.name.replace(/\.pdf$/i, '_searchable.pdf');
         _downloadPdf(pdfBytes, _file.name);
@@ -444,7 +445,9 @@ function _bindMergeBtn() {
       _showToast('Error: ' + err.message);
     } finally {
       btn.disabled = false;
+      btn.classList.remove('ocr-btn--busy');
       if (bar) bar.hidden = true;
+      _syncBtnLabel();
     }
   }, true);
 }
@@ -506,7 +509,12 @@ async function _runOcr(file, gen) {
       `Split the PDF first to process it in parts.`
     );
   }
+
+  _updateProgress(5, 'Loading PDF engine…');
+  _setBtnProgress('Loading…');
   await loadPdfJs();
+
+  _updateProgress(8, 'Reading PDF…');
   const buf    = await file.arrayBuffer();
   let pdfDoc;
   try {
@@ -516,6 +524,7 @@ async function _runOcr(file, gen) {
   } catch (err) {
     throw new Error('Could not open PDF: ' + err.message, { cause: err });
   }
+  _updateProgress(11, `PDF opened · ${pdfDoc.numPages} pages`);
 
   // Guard: warn and cap on Mobile Safari to avoid tab kill under memory pressure
   const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
@@ -534,6 +543,8 @@ async function _runOcr(file, gen) {
   const langLabel = _getLangName(_selectedLang);
   let worker;
   try {
+  _updateProgress(13, 'Initializing OCR engine…');
+  _setBtnProgress('Initializing…');
   const tesseractLang = _selectedLang === 'jpn' ? 'jpn+jpn_vert' : _selectedLang;
   worker = await window.Tesseract.createWorker(tesseractLang, 1, {
     logger: m => {
@@ -556,6 +567,7 @@ async function _runOcr(file, gen) {
   for (let p = 1; p <= total; p++) {
     const basePct = 15 + Math.round((p - 1) / total * 75);
     _updateProgress(basePct, `OCR page ${p} of ${total} · ${langLabel}`);
+    _setBtnProgress(`Page ${p} / ${total}`);
 
     let canvas, ocrCanvas;
     try {
@@ -962,6 +974,13 @@ function _downloadText(text, filename) {
 }
 
 // ── UI helpers ────────────────────────────────────────────────────────────────
+function _setBtnProgress(label) {
+  const btn = document.getElementById('mergeBtn');
+  if (btn && btn._ocrBound && btn.classList.contains('ocr-btn--busy')) {
+    btn.textContent = label;
+  }
+}
+
 function _updateProgress(pct, label) {
   const fill = document.getElementById('progressFill');
   const lbl  = document.getElementById('progressLabel');
