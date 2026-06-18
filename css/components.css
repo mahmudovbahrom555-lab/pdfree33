@@ -91,6 +91,7 @@ button,
 
 /* ── Drop zone ── */
 .drop-zone {
+  position: relative; /* needed to contain the visually-hidden input */
   border: 2px dashed rgba(45, 122, 79, 0.35);
   border-radius: var(--radius);
   background: var(--surface);
@@ -109,7 +110,17 @@ button,
   outline-offset: 2px;
   border-color: var(--green);
 }
-.drop-zone input  { display: none; }
+/* MUST NOT use display:none — iOS Safari blocks fileInput.click() on hidden
+   elements. Use visually-hidden so the input stays in the accessibility tree
+   and programmatic .click() remains a trusted user-gesture on all iOS versions. */
+.drop-zone input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
 .drop-icon        { font-size: 40px; margin-bottom: 16px; display: block; }
 .drop-title       { font-size: 18px; font-weight: 500; margin-bottom: 6px; }
 .drop-sub         { font-size: 13px; color: var(--text2); }

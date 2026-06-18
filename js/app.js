@@ -359,10 +359,12 @@ function initEvents() {
   });
 
   id('dropZone').addEventListener('click', e => {
-    // Skip if the click was synthetically dispatched by fileInput.click() itself —
-    // that call creates a bubbling event back up to dropZone, causing a double-open
-    // that immediately closes the file dialog (invisible to the user).
+    // Skip synthetic event from fileInput.click() itself bubbling back up.
     if (e.target === id('fileInput')) return;
+    // Skip clicks on the choose-files label — the native <label for> association
+    // already activated the input; calling .click() again causes a double-open
+    // that immediately closes the picker (invisible bug on iOS).
+    if (e.target.closest('#chooseFilesBtn')) return;
     id('fileInput').click();
   });
   id('dropZone').addEventListener('keydown', e => {
@@ -370,7 +372,8 @@ function initEvents() {
     e.preventDefault();
     id('fileInput').click();
   });
-  id('chooseFilesBtn').addEventListener('click', e => { e.stopPropagation(); id('fileInput').click(); });
+  // chooseFilesBtn is a <label for="fileInput"> — the browser opens the picker
+  // natively without any JS. No click handler needed here.
 
   // Zone B: после первого файла
   document.addEventListener('pdfree:files-added', () => {
