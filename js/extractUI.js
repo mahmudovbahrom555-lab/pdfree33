@@ -252,7 +252,12 @@ async function _renderThumbPage(gen) {
 
 async function _renderThumb(pageNum, card, gen) {
   if (_thumbsCache.has(pageNum)) {
-    _insertCanvas(card, _thumbsCache.get(pageNum).cloneNode(true));
+    const src    = _thumbsCache.get(pageNum);
+    const canvas = document.createElement('canvas');
+    canvas.width  = src.width;
+    canvas.height = src.height;
+    canvas.getContext('2d').drawImage(src, 0, 0);
+    _insertCanvas(card, canvas);
     return;
   }
   try {
