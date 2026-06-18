@@ -47,6 +47,8 @@ import { initOcrOptions, hideOcrOptions,
          getOcrParams }                     from './ocrUI.js';
 import { initPdf2WordOptions, hidePdf2WordOptions,
          getPdf2WordParams }               from './pdf2wordUI.js';
+import { initCompareOptions, hideCompareOptions,
+         getCompareParams }               from './compareUI.js';
 
 // ── Merge options — inline (no separate mergeUI.js needed) ─────
 
@@ -257,6 +259,18 @@ registerTool('pdf2word', {
   validate:  p => {
     if (p.loading) return 'Analysing PDF…';
     if (!p.pageCount) return null;
+    return null;
+  },
+});
+
+registerTool('compare', {
+  multiFile: true,
+  minFiles:  1,
+  init:      initCompareOptions,
+  hide:      hideCompareOptions,
+  getParams: getCompareParams,
+  validate:  p => {
+    if (!p.hasFiles) return 'Please select two PDF files to compare';
     return null;
   },
 });

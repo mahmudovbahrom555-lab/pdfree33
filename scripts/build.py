@@ -266,6 +266,7 @@ SPECIALTY_PAGES = [
     'ocr-pdf',
     'pdf-to-word',
     'draw-on-pdf',
+    'compare-pdf',
     # Specific-intent landing pages
     'compress-pdf-for-email',
     'split-pdf-into-multiple-files',

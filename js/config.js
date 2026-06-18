@@ -311,4 +311,15 @@ export const TOOLS = {
     accept:      '.pdf',
     implemented: true,
   },
+  compare: {
+    icon:        '⚖️',
+    title:       'Compare PDF',
+    desc:        'Compare two PDFs and highlight differences — 100% private, no upload',
+    tags:        ['compare', 'diff', 'difference', 'changes', 'compare pdfs', 'compare two pdfs',
+                  'find changes', 'document comparison', 'pdf diff', 'highlight differences'],
+    btn:         '⚖️ Compare PDFs',
+    multi:       true,
+    accept:      '.pdf',
+    implemented: true,
+  },
 };
