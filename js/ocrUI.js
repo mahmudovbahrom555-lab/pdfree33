@@ -358,7 +358,7 @@ async function _loadTesseract() {
     _showOcrReady();
   } catch (err) {
     if (btn) { btn.disabled = false; btn.textContent = 'Install OCR PDF · ~17 MB'; }
-    _showToast('Could not load OCR engine: ' + err.message);
+    _showToast('Download failed — check your connection and try again');
   }
 }
 
