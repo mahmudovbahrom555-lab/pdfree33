@@ -3337,3 +3337,333 @@ button,
   transition: color 0.12s;
 }
 .hero-drop-zone__img-link:hover { color: var(--green); text-decoration: underline; }
+
+/* ══════════════════════════════════════════════════════════════
+   EXTRACT — two-column redesign
+   ══════════════════════════════════════════════════════════════ */
+
+.ext-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+.ext-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.ext-section {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.ext-section:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.ext-section__title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ext-step {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--green);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* Mode cards */
+.ext-modes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.ext-mode {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 12px 14px;
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: border-color .15s, background .15s;
+}
+
+.ext-mode:hover {
+  border-color: var(--green-mid);
+  background: var(--green-light);
+}
+
+.ext-mode input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.ext-mode--active {
+  border-color: var(--green);
+  background: var(--green-light);
+}
+
+.ext-mode strong {
+  font-size: 12px;
+  color: var(--text);
+  line-height: 1.3;
+}
+
+.ext-mode small {
+  font-size: 11px;
+  color: var(--text3);
+  line-height: 1.3;
+}
+
+/* Range input row */
+.ext-range-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.ext-range-input {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-family: var(--font-mono, monospace);
+  font-size: 12px;
+  background: var(--surface);
+  color: var(--text);
+}
+
+.ext-range-input:focus {
+  outline: none;
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px rgba(45,122,79,.1);
+}
+
+.ext-apply-btn {
+  padding: 8px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  background: var(--green);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  white-space: nowrap;
+  font-family: var(--font-sans);
+  transition: background .15s;
+}
+
+.ext-apply-btn:hover { background: var(--green-dark, #1a6b3a); }
+
+/* Quick select buttons */
+.ext-quick-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.ext-quick-btn {
+  padding: 5px 10px;
+  font-size: 11px;
+  font-weight: 500;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: 6px;
+  color: var(--text2);
+  cursor: pointer;
+  font-family: var(--font-sans);
+  transition: background .15s, border-color .15s, color .15s;
+}
+
+.ext-quick-btn:hover {
+  background: var(--green-light);
+  border-color: var(--green-mid);
+  color: var(--green-dark, #1a6b3a);
+}
+
+/* Thumbnail column */
+.ext-thumbs-col {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
+.ext-thumbs-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+/* Thumbnail card */
+.ext-thumb-card {
+  position: relative;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  background: #fff;
+  transition: border-color .15s, transform .1s;
+  display: flex;
+  flex-direction: column;
+}
+
+.ext-thumb-card canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.ext-thumb-card:hover {
+  border-color: var(--green-mid);
+  transform: scale(1.03);
+  z-index: 1;
+}
+
+.ext-thumb-card--sel {
+  border-color: var(--green);
+}
+
+.ext-thumb-card--sel::after {
+  content: '✓';
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--green);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ext-thumb-placeholder {
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: var(--text3);
+  font-weight: 500;
+  background: var(--surface2);
+}
+
+.ext-thumb-label {
+  display: block;
+  text-align: center;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text2);
+  background: rgba(255,255,255,.9);
+  padding: 2px 0 3px;
+  line-height: 1.4;
+  border-top: 1px solid var(--border);
+}
+
+/* Pager */
+.ext-pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.ext-pager-btn {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--text2);
+  font-family: var(--font-sans);
+  transition: background .15s, border-color .15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ext-pager-btn:hover:not(:disabled) {
+  background: var(--green-light);
+  border-color: var(--green-mid);
+  color: var(--green-dark, #1a6b3a);
+}
+
+.ext-pager-btn:disabled { opacity: .4; cursor: not-allowed; }
+
+.ext-pager-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text2);
+  min-width: 48px;
+  text-align: center;
+}
+
+/* Selection bar */
+.ext-sel-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.ext-sel-count {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.ext-clear-btn {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text3);
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 10px;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  transition: color .15s, border-color .15s;
+}
+
+.ext-clear-btn:hover { color: #dc2626; border-color: #dc2626; }
+
+@media (max-width: 720px) {
+  .ext-layout {
+    grid-template-columns: 1fr;
+  }
+  .ext-thumbs-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
