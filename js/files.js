@@ -222,6 +222,11 @@ export function removeFile(index) {
   if (_locked) return; // (п.2) блокируем удаление во время обработки
   selectedFiles.splice(index, 1);
   renderList();
+  // Re-init the active tool so it picks up the new files[0] (single-source-of-truth).
+  // Without this, tools like OCR keep a stale _file reference to the removed file.
+  if (selectedFiles.length > 0) {
+    document.dispatchEvent(new CustomEvent('pdfree:file-removed'));
+  }
 }
 
 /** Очищает весь список файлов */

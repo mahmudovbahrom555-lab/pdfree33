@@ -388,6 +388,12 @@ function initEvents() {
     initToolOptions(currentTool, [...selectedFiles]);
   });
 
+  // Re-init after a file is removed so the active tool always uses the current files[0].
+  // Without this, tools like OCR keep a stale _file reference to the removed file.
+  document.addEventListener('pdfree:file-removed', () => {
+    initToolOptions(currentTool, [...selectedFiles]);
+  });
+
   // Re-init after silent owner-password decryption completes (files.js dispatches this).
   // First init ran before WASM finished — decrypted bytes weren't available yet.
   document.addEventListener('pdfree:file-decrypted', () => {
