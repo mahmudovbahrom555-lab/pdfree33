@@ -179,6 +179,8 @@ function resetState() {
   id('privacyCleared')?.classList.remove('visible');
   const dlBtn = id('downloadBtn');
   if (dlBtn) { dlBtn.textContent = '⬇ Download'; dlBtn.disabled = false; dlBtn.style.opacity = ''; }
+  const autoHint = id('successAutoHint');
+  if (autoHint) autoHint.style.display = 'none';
   const shareBtn = id('shareBtn');
   if (shareBtn) { shareBtn.style.display = 'none'; shareBtn.disabled = false; }
   hide('progressBar');
@@ -221,13 +223,25 @@ function _handleSuccess({ tool, blob, desc, filename, compressionReport }) {
   setText('successTitle', speedMsg);
   setText('successDesc',  desc);
 
+  // Auto-download: trigger immediately so user gets the file without an extra click.
+  // We do NOT revoke the blob here — the "Download again" button still needs it.
+  trackDownload(tool, blob.size);
+  recordDownload(tool);
+  const _autoA = document.createElement('a');
+  _autoA.href = _resultUrl; _autoA.download = filename;
+  document.body.appendChild(_autoA); _autoA.click(); document.body.removeChild(_autoA);
+
+  // Show hint + update button to "Download again" fallback
+  const _hint = id('successAutoHint');
+  if (_hint) _hint.style.display = '';
+  const _dlBtn = id('downloadBtn');
+  if (_dlBtn) _dlBtn.textContent = '⬇ Download again';
+
   id('downloadBtn').onclick = () => {
-    trackDownload(tool, blob.size);
-    recordDownload(tool);
     const a = document.createElement('a');
     a.href = _resultUrl; a.download = filename;
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
-    // Show privacy-cleared banner 1.5s after download, then revoke blob so file is truly gone
+    // Show privacy-cleared banner 1.5s after manual download, then revoke blob
     setTimeout(() => {
       const banner = id('privacyCleared');
       if (banner) banner.classList.add('visible');
