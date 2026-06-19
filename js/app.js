@@ -80,6 +80,7 @@ let currentTool    = 'merge';
 let _resultUrl     = null;
 let _resultBlob    = null;   // kept for Web Share API (not revoked after share)
 let _resultFilename = 'document.pdf';
+let _successGen    = 0;      // incremented on each success to cancel stale timeouts
 
 function _freeResultUrl() {
   if (_resultUrl) { URL.revokeObjectURL(_resultUrl); _resultUrl = null; }
@@ -223,12 +224,21 @@ function _handleSuccess({ tool, blob, desc, filename, compressionReport }) {
   setText('successTitle', speedMsg);
   setText('successDesc',  desc);
 
+  // Capture URL at wiring time — module-level _resultUrl changes on next conversion.
+  const _capturedUrl = _resultUrl;
+  // Generation token — prevents stale 1500ms timeout from corrupting the next result.
+  const _thisGen = ++_successGen;
+  // Track once: first of (auto-download, manual button click) wins.
+  // This avoids double-counting when user clicks "Download again" after a successful auto-download.
+  let _downloadTracked = false;
+
   // Auto-download: trigger immediately so user gets the file without an extra click.
   // We do NOT revoke the blob here — the "Download again" button still needs it.
   trackDownload(tool, blob.size);
   recordDownload(tool);
+  _downloadTracked = true;
   const _autoA = document.createElement('a');
-  _autoA.href = _resultUrl; _autoA.download = filename;
+  _autoA.href = _capturedUrl; _autoA.download = filename;
   document.body.appendChild(_autoA); _autoA.click(); document.body.removeChild(_autoA);
 
   // Show hint + update button to "Download again" fallback
@@ -238,14 +248,15 @@ function _handleSuccess({ tool, blob, desc, filename, compressionReport }) {
   if (_dlBtn) {
     _dlBtn.textContent = t('download_again');
     _dlBtn.onclick = () => {
-      // Track manual download — covers iOS where auto-download was silently blocked
-      trackDownload(tool, blob.size);
-      recordDownload(tool);
+      // Track only if auto-download was blocked (e.g. iOS Safari silently drops it)
+      if (!_downloadTracked) { trackDownload(tool, blob.size); recordDownload(tool); _downloadTracked = true; }
       const a = document.createElement('a');
-      a.href = _resultUrl; a.download = filename;
+      a.href = _capturedUrl; a.download = filename;
       document.body.appendChild(a); a.click(); document.body.removeChild(a);
-      // Show privacy-cleared banner 1.5s after manual download, then revoke blob
+      // Show privacy-cleared banner 1.5s after manual download, then revoke blob.
+      // Guard with generation token — if a new result arrived in < 1.5s, abort.
       setTimeout(() => {
+        if (_successGen !== _thisGen) return;
         const banner = id('privacyCleared');
         if (banner) banner.classList.add('visible');
         _freeResultUrl();

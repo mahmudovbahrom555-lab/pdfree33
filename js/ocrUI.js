@@ -423,7 +423,7 @@ function _bindMergeBtn() {
         const text = await _extractTextDirect(_file);
         _lastResultBlob = new Blob([text], { type: 'text/plain;charset=utf-8' });
         _lastResultName = _file.name.replace(/\.pdf$/i, '.txt');
-        _downloadText(text, _file.name);
+        // _showSuccess handles the auto-download via _lastResultBlob
         _showSuccess('Text extracted and saved to your device.');
       } else {
         const myGen = ++_generation;
@@ -434,10 +434,11 @@ function _bindMergeBtn() {
         const pdfBytes = await _buildSearchablePdf(_file, ocrPages, _selectedLang);
         _lastResultBlob = new Blob([pdfBytes], { type: 'application/pdf' });
         _lastResultName = _file.name.replace(/\.pdf$/i, '_searchable.pdf');
-        _downloadPdf(pdfBytes, _file.name);
+        // Secondary .txt alongside the searchable PDF — separate optional file
         if (_downloadAsTxt && fullText) {
           _downloadText(fullText, _file.name);
         }
+        // _showSuccess handles the main PDF auto-download via _lastResultBlob
         const qualityLabel = _ocrQualityLabel(avgConfidence, _selectedLang);
         _showSuccess(`Searchable PDF saved — you can now select and copy text in any PDF reader.${qualityLabel}`);
       }
@@ -489,6 +490,7 @@ function _showSuccess(desc) {
     dlBtn.style.opacity = '';
     dlBtn.textContent   = t('download_again');
     dlBtn.onclick = () => {
+      if (!_lastResultBlob) return;
       const url = URL.createObjectURL(_lastResultBlob);
       const a   = document.createElement('a');
       a.href     = url;
@@ -497,9 +499,15 @@ function _showSuccess(desc) {
       a.click();
       document.body.removeChild(a);
       setTimeout(() => URL.revokeObjectURL(url), 10000);
-      dlBtn.textContent   = t('saved_device');
-      dlBtn.disabled      = true;
-      dlBtn.style.opacity = '0.5';
+      // 1.5s grace period matches app.js — gives OS time to initiate the download
+      // before disabling the button and showing the privacy-cleared banner.
+      setTimeout(() => {
+        const banner = document.getElementById('privacyCleared');
+        if (banner) banner.classList.add('visible');
+        dlBtn.textContent   = t('saved_device');
+        dlBtn.disabled      = true;
+        dlBtn.style.opacity = '0.5';
+      }, 1500);
     };
   }
 
