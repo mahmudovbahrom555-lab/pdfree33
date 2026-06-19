@@ -3688,6 +3688,37 @@ button,
 
 /* ── PDF → JPG redesign ──────────────────────────────────────── */
 
+/* Loading state */
+.p2j-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 48px 16px;
+}
+
+.p2j-loading__spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid var(--border);
+  border-top-color: var(--green);
+  border-radius: 50%;
+  animation: p2j-spin 0.75s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes p2j-spin {
+  to { transform: rotate(360deg); }
+}
+
+.p2j-loading__msg {
+  font-size: 14px;
+  color: var(--text3);
+  text-align: center;
+  min-height: 1.4em;
+  transition: opacity 0.2s;
+}
+
 /* Top 3-column row: format | quality | summary */
 .p2j-top-row {
   display: grid;

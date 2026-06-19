@@ -33,17 +33,25 @@ export async function initPdf2JpgOptions(file) {
 
   container.style.display = 'block';
   container.innerHTML = `
-    <div style="padding:40px 16px;text-align:center;color:var(--text3);font-size:14px;">
-      <div style="font-size:28px;margin-bottom:10px;">&#x23F3;</div>Loading PDF…
+    <div class="p2j-loading">
+      <div class="p2j-loading__spinner"></div>
+      <div class="p2j-loading__msg" id="p2jLoadMsg">Loading PDF engine…</div>
     </div>`;
+
+  const _setMsg = msg => {
+    const el = id('p2jLoadMsg');
+    if (el) el.textContent = msg;
+  };
 
   try {
     await _ensurePdfJs();
+    _setMsg('Reading file…');
 
     const rawBuf = file._decryptedBuffer
       ? file._decryptedBuffer.slice(0)
       : await preprocessPdfBuffer(await file.arrayBuffer());
 
+    _setMsg('Parsing PDF…');
     _pdfDoc?.destroy();
     _pdfDoc = await window.pdfjsLib.getDocument({
       data:              new Uint8Array(rawBuf),
@@ -54,6 +62,7 @@ export async function initPdf2JpgOptions(file) {
 
     _pageCount     = _pdfDoc.numPages;
     _selectedPages = Array.from({ length: _pageCount }, (_, i) => i + 1);
+    _setMsg(`PDF opened · ${_pageCount} page${_pageCount !== 1 ? 's' : ''} · loading previews…`);
 
     const firstPage = await _pdfDoc.getPage(1);
     _viewport = firstPage.getViewport({ scale: 1 });
