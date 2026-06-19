@@ -44,6 +44,11 @@ export async function initPdf2JpgOptions(file) {
   };
 
   try {
+    if (file.size > 40 * 1024 * 1024) {
+      const mb = Math.round(file.size / 1024 / 1024);
+      showToast(`Large file (${mb} MB) — parsing may take 10–30 seconds, please wait`);
+    }
+
     await _ensurePdfJs();
     _setMsg('Reading file…');
 
