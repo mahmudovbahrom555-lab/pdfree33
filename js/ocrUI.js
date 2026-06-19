@@ -462,14 +462,32 @@ function _showSuccess(desc) {
   const descEl = document.getElementById('successDesc');
   if (descEl) descEl.textContent = desc;
 
-  // Wire the download button so user can re-download from the success card.
-  // app.js's _handleSuccess is never called by the OCR tool (no pdfree:success
-  // event is dispatched), so we wire the button directly here.
+  if (!_lastResultBlob || !_lastResultName) {
+    sc.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    return;
+  }
+
+  // Auto-download — consistent with all other tools.
+  // Blob URL is created fresh each time so re-downloads always work.
+  const autoUrl = URL.createObjectURL(_lastResultBlob);
+  const autoA   = document.createElement('a');
+  autoA.href     = autoUrl;
+  autoA.download = _lastResultName;
+  document.body.appendChild(autoA);
+  autoA.click();
+  document.body.removeChild(autoA);
+  setTimeout(() => URL.revokeObjectURL(autoUrl), 10000);
+
+  // Show auto-download hint
+  const hint = document.getElementById('successAutoHint');
+  if (hint) { hint.textContent = t('auto_download_hint'); hint.style.display = ''; }
+
+  // Wire "Download again" fallback button
   const dlBtn = document.getElementById('downloadBtn');
-  if (dlBtn && _lastResultBlob && _lastResultName) {
-    dlBtn.disabled = false;
+  if (dlBtn) {
+    dlBtn.disabled      = false;
     dlBtn.style.opacity = '';
-    dlBtn.textContent = '⬇ Download';
+    dlBtn.textContent   = t('download_again');
     dlBtn.onclick = () => {
       const url = URL.createObjectURL(_lastResultBlob);
       const a   = document.createElement('a');
@@ -479,8 +497,8 @@ function _showSuccess(desc) {
       a.click();
       document.body.removeChild(a);
       setTimeout(() => URL.revokeObjectURL(url), 10000);
-      dlBtn.textContent = t('saved_device');
-      dlBtn.disabled    = true;
+      dlBtn.textContent   = t('saved_device');
+      dlBtn.disabled      = true;
       dlBtn.style.opacity = '0.5';
     };
   }

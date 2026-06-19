@@ -235,28 +235,28 @@ function _handleSuccess({ tool, blob, desc, filename, compressionReport }) {
   const _hint = id('successAutoHint');
   if (_hint) { _hint.textContent = t('auto_download_hint'); _hint.style.display = ''; }
   const _dlBtn = id('downloadBtn');
-  if (_dlBtn) _dlBtn.textContent = t('download_again');
-
-  id('downloadBtn').onclick = () => {
-    const a = document.createElement('a');
-    a.href = _resultUrl; a.download = filename;
-    document.body.appendChild(a); a.click(); document.body.removeChild(a);
-    // Show privacy-cleared banner 1.5s after manual download, then revoke blob
-    setTimeout(() => {
-      const banner = id('privacyCleared');
-      if (banner) banner.classList.add('visible');
-      _freeResultUrl();                          // revoke blob URL — file now truly unreadable
-      const btn = id('downloadBtn');
-      if (btn) {
-        btn.textContent = t('saved_device');
-        btn.disabled    = true;
-        btn.style.opacity = '0.5';
-      }
-      // Share button is now useless — blob is gone
-      const shareBtn = id('shareBtn');
-      if (shareBtn) shareBtn.style.display = 'none';
-    }, 1500);
-  };
+  if (_dlBtn) {
+    _dlBtn.textContent = t('download_again');
+    _dlBtn.onclick = () => {
+      // Track manual download — covers iOS where auto-download was silently blocked
+      trackDownload(tool, blob.size);
+      recordDownload(tool);
+      const a = document.createElement('a');
+      a.href = _resultUrl; a.download = filename;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      // Show privacy-cleared banner 1.5s after manual download, then revoke blob
+      setTimeout(() => {
+        const banner = id('privacyCleared');
+        if (banner) banner.classList.add('visible');
+        _freeResultUrl();
+        _dlBtn.textContent    = t('saved_device');
+        _dlBtn.disabled       = true;
+        _dlBtn.style.opacity  = '0.5';
+        const shareBtn = id('shareBtn');
+        if (shareBtn) shareBtn.style.display = 'none';
+      }, 1500);
+    };
+  }
 
   // Wire share button — show only where Web Share API supports files
   const shareBtn = id('shareBtn');
