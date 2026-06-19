@@ -10,6 +10,8 @@ window.PDFREE_LOCALE = {
   saved_device:     '✓ Auf Gerät gespeichert',
   sent:             '✓ Gesendet',
   process_again:    '↺ Erneut verarbeiten',
+  download_again:      '⬇ Erneut herunterladen',
+  auto_download_hint:  'Ihr Download sollte automatisch starten.',
 
   // files
   split_one_only:  'Split funktioniert nur mit einer PDF. Bitte zuerst die aktuelle Datei entfernen.',

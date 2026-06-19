@@ -233,9 +233,9 @@ function _handleSuccess({ tool, blob, desc, filename, compressionReport }) {
 
   // Show hint + update button to "Download again" fallback
   const _hint = id('successAutoHint');
-  if (_hint) _hint.style.display = '';
+  if (_hint) { _hint.textContent = t('auto_download_hint'); _hint.style.display = ''; }
   const _dlBtn = id('downloadBtn');
-  if (_dlBtn) _dlBtn.textContent = '⬇ Download again';
+  if (_dlBtn) _dlBtn.textContent = t('download_again');
 
   id('downloadBtn').onclick = () => {
     const a = document.createElement('a');

@@ -21,6 +21,8 @@ const EN = {
   saved_device:        '✓ Saved to device',
   sent:                '✓ Sent',
   process_again:       '↺ Process again',
+  download_again:      '⬇ Download again',
+  auto_download_hint:  'Your download should start automatically.',
 
   // ── files.js ───────────────────────────────────────────────────
   split_one_only:  'Split works with one PDF only. Remove the current file first.',
