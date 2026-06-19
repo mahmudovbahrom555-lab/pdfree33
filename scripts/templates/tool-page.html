@@ -203,9 +203,19 @@
         <div class="success-text">
           <h3 id="successTitle">{{ ui.successTitle }}</h3>
           <p  id="successDesc"></p>
+          <p  id="successAutoHint" class="success-auto-hint" style="display:none"></p>
         </div>
         <button id="downloadBtn" class="download-btn" type="button">{{ ui.downloadBtn }}</button>
         <button id="shareBtn" class="share-btn" type="button" style="display:none" aria-label="Send file via device apps"></button>
+      </div>
+
+      <div class="privacy-cleared" id="privacyCleared" aria-live="polite" aria-label="Document cleared from memory">
+        <div class="privacy-cleared__shield" aria-hidden="true">🔒</div>
+        <div class="privacy-cleared__body">
+          <p class="privacy-cleared__title">Document cleared from memory</p>
+          <p class="privacy-cleared__sub">Processed locally &nbsp;·&nbsp; Never uploaded &nbsp;·&nbsp; No trace left</p>
+        </div>
+        <div class="privacy-cleared__check" aria-hidden="true">✓</div>
       </div>
     </div>
 

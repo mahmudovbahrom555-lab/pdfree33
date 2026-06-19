@@ -168,6 +168,7 @@ function showTool(tool, pushHistory = true, preFiles = null) {
 function resetState() {
   if (isProcessing) return;
 
+  ++_successGen;   // invalidate any in-flight 1500ms download timeout
   clearFiles();
   _freeResultUrl();
   hideAllToolOptions();
@@ -228,15 +229,11 @@ function _handleSuccess({ tool, blob, desc, filename, compressionReport }) {
   const _capturedUrl = _resultUrl;
   // Generation token — prevents stale 1500ms timeout from corrupting the next result.
   const _thisGen = ++_successGen;
-  // Track once: first of (auto-download, manual button click) wins.
-  // This avoids double-counting when user clicks "Download again" after a successful auto-download.
-  let _downloadTracked = false;
 
   // Auto-download: trigger immediately so user gets the file without an extra click.
   // We do NOT revoke the blob here — the "Download again" button still needs it.
   trackDownload(tool, blob.size);
   recordDownload(tool);
-  _downloadTracked = true;
   const _autoA = document.createElement('a');
   _autoA.href = _capturedUrl; _autoA.download = filename;
   document.body.appendChild(_autoA); _autoA.click(); document.body.removeChild(_autoA);
@@ -248,8 +245,8 @@ function _handleSuccess({ tool, blob, desc, filename, compressionReport }) {
   if (_dlBtn) {
     _dlBtn.textContent = t('download_again');
     _dlBtn.onclick = () => {
-      // Track only if auto-download was blocked (e.g. iOS Safari silently drops it)
-      if (!_downloadTracked) { trackDownload(tool, blob.size); recordDownload(tool); _downloadTracked = true; }
+      // Disable immediately to prevent double-download on rapid re-click.
+      _dlBtn.disabled = true;
       const a = document.createElement('a');
       a.href = _capturedUrl; a.download = filename;
       document.body.appendChild(a); a.click(); document.body.removeChild(a);
