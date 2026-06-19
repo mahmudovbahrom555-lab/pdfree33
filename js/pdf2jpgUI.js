@@ -255,7 +255,7 @@ function _bindEvents(useRange, viewport) {
 }
 
 function _syncCheckboxes() {
-  document.querySelectorAll('#pdf2jpgOptions input[type="checkbox"].split-checkboxes input').forEach(cb => {
+  document.querySelectorAll('#pdf2jpgOptions .split-checkboxes input[type="checkbox"]').forEach(cb => {
     const page = parseInt(cb.value);
     cb.checked = _selectedPages.includes(page);
     cb.closest('label')?.classList.toggle('checked', cb.checked);
