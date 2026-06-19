@@ -20,7 +20,7 @@ export default [
         history: 'readonly', location: 'readonly', caches: 'readonly',
         self: 'readonly', clients: 'readonly', importScripts: 'readonly',
         Response: 'readonly', Request: 'readonly', Event: 'readonly',
-        MutationObserver: 'readonly', ResizeObserver: 'readonly',
+        MutationObserver: 'readonly', ResizeObserver: 'readonly', IntersectionObserver: 'readonly',
         AbortController: 'readonly', TextDecoder: 'readonly',
         // Worker-scope globals
         createImageBitmap: 'readonly', OffscreenCanvas: 'readonly',
