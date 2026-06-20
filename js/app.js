@@ -581,12 +581,12 @@ function initSearch() {
         b.textContent = text;
         badgesEl.appendChild(b);
       };
+      _badge(isScanned ? 'Scanned PDF' : 'Text PDF', isScanned ? 'scan' : '');
       _badge(`${pages} page${pages !== 1 ? 's' : ''}`);
       _badge(isEncrypted ? '🔒 Protected' : 'No password', isEncrypted ? 'warn' : 'ok');
-      if (isScanned) {
-        _badge('Scanned', 'scan');
-      } else {
-        _badge(hasForms ? 'Has forms' : 'No forms', hasForms ? 'info' : 'ok');
+      if (!isScanned) {
+        _badge(hasForms ? 'Fillable form' : 'No forms', hasForms ? 'info' : 'ok');
+        _badge('Not scanned', 'ok');
       }
 
       // CTA recommendation — only for high-confidence signals
