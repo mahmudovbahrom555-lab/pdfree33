@@ -224,6 +224,22 @@ nav {
   transform: translateY(8px);
 }
 
+/* STATE 1: hide home-page sections once a file lands in the hero drop zone */
+body:has(.hero.has-file) #trustAlert,
+body:has(.hero.has-file) #noLimitBar,
+body:has(.hero.has-file) #toolsGrid,
+body:has(.hero.has-file) #privacyBar {
+  display: none;
+}
+
+/* Same for tool pages when files are loaded (body.has-files set by renderList) */
+body.has-files #trustAlert,
+body.has-files #noLimitBar,
+body.has-files #toolsGrid,
+body.has-files #privacyBar {
+  display: none;
+}
+
 .hero-feature {
   display: flex;
   align-items: flex-start;

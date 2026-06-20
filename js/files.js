@@ -310,6 +310,7 @@ export function renderList(keepSuccess = false) {
 
   _updateMeta();
   if (!keepSuccess) id('successCard').style.display = 'none';
+  document.body.classList.toggle('has-files', selectedFiles.length > 0);
 }
 
 /** Обновляет счётчик файлов, подсказку перетаскивания и состояние кнопки */
