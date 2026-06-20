@@ -33,6 +33,7 @@ import { trackToolStart, trackToolSuccess,
          trackSearchSelect,
          trackHeroFileSelect, trackChipClick }      from './analytics.js';
 import { buildIndex, search, trackMiss }           from './search.js';
+import { loadPdfLib }                              from './lazyLibs.js';
 import { checkReturnVisit, recordDownload,
          checkAndRecordConversion }                from './behavioralSignals.js';
 import { t }                                      from './i18n.js';
@@ -453,6 +454,7 @@ function initSearch() {
 
   // Hero drop zone refs
   const heroSection     = id('hero');
+  const heroDetected    = id('heroDetected');
   const heroDropZone    = id('heroDropZone');
   const heroFileInput   = id('heroFileInput');
   const heroDropIdle    = id('heroDropIdle');
@@ -499,6 +501,75 @@ function initSearch() {
       : `${(bytes / 1024 / 1024).toFixed(1)} MB`;
   }
 
+  function _showHeroDetected(files) {
+    if (!heroDetected) return;
+    if (files.length > 1) { heroDetected.hidden = true; return; }
+    const file = files[0];
+
+    const card = document.createElement('div');
+    card.className = 'hero-det-card';
+
+    const iconEl = document.createElement('span');
+    iconEl.className = 'hero-det-icon';
+    iconEl.textContent = '📄';
+
+    const metaEl = document.createElement('div');
+    metaEl.className = 'hero-det-meta';
+    const nameEl = document.createElement('span');
+    nameEl.className = 'hero-det-name';
+    nameEl.textContent = file.name;
+    const sizeEl = document.createElement('span');
+    sizeEl.className = 'hero-det-size';
+    sizeEl.textContent = _fmtSize(file.size);
+    metaEl.append(nameEl, sizeEl);
+
+    const badgesEl = document.createElement('div');
+    badgesEl.className = 'hero-det-badges';
+    const loadingBadge = document.createElement('span');
+    loadingBadge.className = 'hero-det-badge';
+    loadingBadge.textContent = 'Analyzing…';
+    badgesEl.appendChild(loadingBadge);
+
+    card.append(iconEl, metaEl, badgesEl);
+    heroDetected.innerHTML = '';
+    heroDetected.appendChild(card);
+    heroDetected.hidden = false;
+
+    _scanHeroFile(file, badgesEl);
+  }
+
+  async function _scanHeroFile(file, badgesEl) {
+    try {
+      await loadPdfLib();
+      const { PDFDocument, PDFName } = window.PDFLib;
+      const buf = await file.arrayBuffer();
+      const pdf = await PDFDocument.load(buf, { ignoreEncryption: true });
+      const pages = pdf.getPageCount();
+      const isEncrypted = pdf.isEncrypted;
+      const hasForms = pdf.catalog.has(PDFName.of('AcroForm'));
+
+      if (!badgesEl.isConnected) return;
+      badgesEl.innerHTML = '';
+
+      const _badge = (text, mod) => {
+        const b = document.createElement('span');
+        b.className = 'hero-det-badge' + (mod ? ' hero-det-badge--' + mod : '');
+        b.textContent = text;
+        badgesEl.appendChild(b);
+      };
+      _badge(`${pages} page${pages !== 1 ? 's' : ''}`);
+      _badge(isEncrypted ? '🔒 Protected' : 'No password', isEncrypted ? 'warn' : 'ok');
+      _badge(hasForms ? 'Has forms' : 'No forms', hasForms ? 'info' : 'ok');
+    } catch {
+      if (!badgesEl.isConnected) return;
+      badgesEl.innerHTML = '';
+      const b = document.createElement('span');
+      b.className = 'hero-det-badge';
+      b.textContent = 'Could not analyze';
+      badgesEl.appendChild(b);
+    }
+  }
+
   function _getHintEl() {
     if (!_heroHintEl) {
       _heroHintEl = document.createElement('p');
@@ -541,6 +612,7 @@ function initSearch() {
     }
 
     trackHeroFileSelect(files.length, source);
+    _showHeroDetected(files);
     _renderChips();
     searchEl.focus();
   }
@@ -551,6 +623,7 @@ function initSearch() {
     heroDropReady.hidden = true;
     heroDropZone.classList.remove('has-file');
     if (heroSection) heroSection.classList.remove('has-file');
+    if (heroDetected) heroDetected.hidden = true;
     heroFileInput.value = '';
     if (_heroHintEl) _heroHintEl.hidden = true;
     _renderChips();

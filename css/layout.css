@@ -224,6 +224,94 @@ nav {
   transform: translateY(8px);
 }
 
+/* ── Hero detected card (STATE 1) ── */
+.hero-detected {
+  max-width: 520px;
+  margin: 12px auto 0;
+}
+
+.hero-det-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.hero-det-icon {
+  font-size: 22px;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.hero-det-meta {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.hero-det-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hero-det-size {
+  font-size: 12px;
+  color: var(--text2);
+  margin-top: 1px;
+}
+
+.hero-det-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.hero-det-badge {
+  font-size: 11px;
+  font-weight: 500;
+  padding: 3px 8px;
+  border-radius: 20px;
+  background: var(--surface2);
+  color: var(--text2);
+  white-space: nowrap;
+}
+
+.hero-det-badge--ok {
+  background: var(--green-light);
+  color: var(--green);
+}
+
+.hero-det-badge--warn {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.hero-det-badge--info {
+  background: #e8f4fd;
+  color: #0a58ca;
+}
+
+@media (prefers-color-scheme: dark) {
+  .hero-det-badge--warn {
+    background: #3a2e10;
+    color: #ffc107;
+  }
+  .hero-det-badge--info {
+    background: #0d2237;
+    color: #5ba8e5;
+  }
+}
+
 /* STATE 1: hide home-page sections once a file lands in the hero drop zone */
 body:has(.hero.has-file) #trustAlert,
 body:has(.hero.has-file) #noLimitBar,
