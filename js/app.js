@@ -435,7 +435,7 @@ function initEvents() {
 // ── Intent search ────────────────────────────────────────────
 
 // Tool order for chips: first slot changes based on pending file count
-const CHIP_TOOLS_DEFAULT  = ['merge', 'compress', 'split', 'pdf2jpg', 'protect'];
+const CHIP_TOOLS_DEFAULT  = ['merge', 'compress', 'split', 'pdf2jpg', 'protect', 'pdf2word'];
 const CHIP_TOOLS_ONE_FILE = ['compress', 'split', 'pdf2jpg', 'protect', 'merge'];
 const CHIP_TOOLS_MULTI    = ['merge', 'compress', 'split', 'pdf2jpg', 'protect'];
 
