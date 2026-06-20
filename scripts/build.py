@@ -327,11 +327,13 @@ def _write_sitemap(config, out_dir):
         '        xmlns:xhtml="http://www.w3.org/1999/xhtml">',
     ]
 
-    def _url_block(loc, lastmod, alternates):
+    def _url_block(loc, lastmod, alternates, priority=None):
         """alternates: list of (hreflang, href)"""
         block = ['  <url>',
                  f'    <loc>{loc}</loc>',
                  f'    <lastmod>{lastmod}</lastmod>']
+        if priority:
+            block.append(f'    <priority>{priority}</priority>')
         for lang, href in alternates:
             block.append(f'    <xhtml:link rel="alternate" hreflang="{lang}" href="{href}"/>')
         block.append('  </url>')
@@ -341,14 +343,14 @@ def _write_sitemap(config, out_dir):
     homepage_alts = [(lc if lc != 'en' else 'en', f"{BASE_URL}/{cfg['dir']}/" if lc != 'en' else f"{BASE_URL}/")
                      for lc, cfg in langs.items()]
     homepage_alts.append(('x-default', f'{BASE_URL}/'))
-    lines += _url_block(f'{BASE_URL}/', _git_lastmod('index.html'), homepage_alts)
+    lines += _url_block(f'{BASE_URL}/', _git_lastmod('index.html'), homepage_alts, priority='1.0')
 
     # ── Language sub-homepages ─────────────────────────────────
     for lc, cfg in langs.items():
         if lc == 'en':
             continue  # already emitted above
         lang_url = f"{BASE_URL}/{cfg['dir']}/"
-        lines += _url_block(lang_url, _git_lastmod(f"{cfg['dir']}/index.html"), homepage_alts)
+        lines += _url_block(lang_url, _git_lastmod(f"{cfg['dir']}/index.html"), homepage_alts, priority='0.9')
 
     # ── Tool pages — one <url> per language variant ────────────
     for tool in config['tools']:
