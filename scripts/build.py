@@ -203,6 +203,10 @@ def _webapp_schema(tool, lang, canonical_path):
             "bestRating": "5",
             "worstRating": "1",
         },
+        "softwareVersion": "6.2",
+        "datePublished": "2023-01-01",
+        "downloadUrl": f"{BASE_URL}/{canonical_path}",
+        "softwareHelp": {"@type": "CreativeWork", "url": "https://pdfree.io/"},
         "provider": {"@type": "Organization", "name": "PDFree", "url": "https://pdfree.io"},
     }, indent=2, ensure_ascii=False)
 
@@ -327,11 +331,13 @@ def _write_sitemap(config, out_dir):
         '        xmlns:xhtml="http://www.w3.org/1999/xhtml">',
     ]
 
-    def _url_block(loc, lastmod, alternates, priority=None):
+    def _url_block(loc, lastmod, alternates, priority=None, changefreq=None):
         """alternates: list of (hreflang, href)"""
         block = ['  <url>',
                  f'    <loc>{loc}</loc>',
                  f'    <lastmod>{lastmod}</lastmod>']
+        if changefreq:
+            block.append(f'    <changefreq>{changefreq}</changefreq>')
         if priority:
             block.append(f'    <priority>{priority}</priority>')
         for lang, href in alternates:
@@ -343,14 +349,14 @@ def _write_sitemap(config, out_dir):
     homepage_alts = [(lc if lc != 'en' else 'en', f"{BASE_URL}/{cfg['dir']}/" if lc != 'en' else f"{BASE_URL}/")
                      for lc, cfg in langs.items()]
     homepage_alts.append(('x-default', f'{BASE_URL}/'))
-    lines += _url_block(f'{BASE_URL}/', _git_lastmod('index.html'), homepage_alts, priority='1.0')
+    lines += _url_block(f'{BASE_URL}/', _git_lastmod('index.html'), homepage_alts, priority='1.0', changefreq='weekly')
 
     # ── Language sub-homepages ─────────────────────────────────
     for lc, cfg in langs.items():
         if lc == 'en':
             continue  # already emitted above
         lang_url = f"{BASE_URL}/{cfg['dir']}/"
-        lines += _url_block(lang_url, _git_lastmod(f"{cfg['dir']}/index.html"), homepage_alts, priority='0.9')
+        lines += _url_block(lang_url, _git_lastmod(f"{cfg['dir']}/index.html"), homepage_alts, priority='0.9', changefreq='weekly')
 
     # ── Tool pages — one <url> per language variant ────────────
     for tool in config['tools']:
@@ -378,7 +384,7 @@ def _write_sitemap(config, out_dir):
                 continue
             loc = f"{BASE_URL}/{slug}/" if lc == 'en' else f"{BASE_URL}/{cfg['dir']}/{slug}/"
             lmod = lastmod if lc == 'en' else _git_lastmod(f"data/content/{lc}/{tool['id']}.html")
-            lines += _url_block(loc, lmod, alts)
+            lines += _url_block(loc, lmod, alts, priority='0.8', changefreq='weekly')
 
     # ── Specialty / SEO pages ──────────────────────────────────
     # Localized alternates for the 3 specific-intent landing pages
@@ -413,7 +419,14 @@ def _write_sitemap(config, out_dir):
             alts.append(('x-default', url))
         else:
             alts = [('en', url), ('x-default', url)]
-        lines += _url_block(url, _git_lastmod(f"{slug}/index.html"), alts)
+        # Determine priority & changefreq by page type
+        if slug.startswith('blog/'):
+            _sp_priority, _sp_freq = '0.6', 'monthly'
+        elif slug in ('privacy.html', 'terms.html'):
+            _sp_priority, _sp_freq = '0.3', 'yearly'
+        else:
+            _sp_priority, _sp_freq = '0.7', 'monthly'
+        lines += _url_block(url, _git_lastmod(f"{slug}/index.html"), alts, priority=_sp_priority, changefreq=_sp_freq)
 
     # ── Localized specialty pages ──────────────────────────────
     for en_slug, loc_map in _localized_specialty.items():
