@@ -1478,7 +1478,7 @@ async function _p2wRenderRegions(pdfDoc, pageNum, pageH, gaps, medianFontSize, I
 
 // Renders a PDF page that has no extractable text (diagram-only page) as a
 // single full-page ImageRun. Used when lines.length === 0 in text mode.
-async function _p2wRenderFullPage(pdfDoc, pageNum, pageH, ImageRun) {
+async function _p2wRenderFullPage(pdfDoc, pageNum, ImageRun) {
   const _RENDER_DPI = 150;
   const _MAX_W_PX   = 594;
 
@@ -1557,8 +1557,6 @@ async function _p2wRenderImages(pdfDoc, dpi, pageLimit) {
         pageBreakBefore: p > 1,
         children: [new ImageRun({ data: arrayBuffer, transformation: { width: w, height: h }, type: 'jpg' })],
       }));
-
-      page.cleanup?.();
 
       const now = performance.now();
       if (now - frameStart >= _FRAME_BUDGET_MS) {
