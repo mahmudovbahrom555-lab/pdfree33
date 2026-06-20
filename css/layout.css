@@ -236,6 +236,7 @@ nav {
 }
 
 /* ── Trust banner (STATE 1) ── */
+.hero-banner[hidden] { display: none; }
 .hero-banner {
   max-width: 520px;
   margin: 14px auto 0;
