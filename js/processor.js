@@ -867,7 +867,7 @@ function _visualRTLToLogical(s) {
 // for detected tables and docx.Paragraph for everything else.
 async function _p2wExtractText(pdfDoc) {
   const { Paragraph, TextRun, HeadingLevel,
-          Table, TableRow, TableCell, WidthType } = window.docx;
+          Table, TableRow, TableCell, WidthType, ImageRun } = window.docx;
 
   const YTOL = 6;   // px — items within 6px on Y → same line (was 4; increased to group
                    //  characters with slight baseline variation, e.g. Cyrillic in some PDFs)
@@ -882,6 +882,7 @@ async function _p2wExtractText(pdfDoc) {
                 `Reading page ${p}/${pdfDoc.numPages}…`);
 
     const page    = await pdfDoc.getPage(p);
+    const pageH   = page.getViewport({ scale: 1 }).height;
     const [content, borderGrids] = await Promise.all([
       page.getTextContent({ normalizeWhitespace: false }),
       detectTableGrids(page).catch(() => []),
@@ -939,7 +940,7 @@ async function _p2wExtractText(pdfDoc) {
     });
 
     allSizes.push(...items.map(i => i.fontSize).filter(s => s > 0));
-    pageData.push({ lines, rotatedItems, borderGrids });
+    pageData.push({ lines, rotatedItems, borderGrids, pageH });
     page.cleanup?.();
   }
 
@@ -1036,6 +1037,33 @@ async function _p2wExtractText(pdfDoc) {
       }
     }
 
+    // ── Gap detection: find vertical gaps between text lines that likely contain
+    // diagrams, grids, or other vector graphics not captured by text extraction.
+    // Lines are already sorted descending by Y (top of page first).
+    const _GAP_FACTOR    = 2.5;   // gap > N × medianFontSize triggers a region
+    const _MIN_GAP_PT    = 30;    // minimum gap in PDF points (~0.4 inch)
+    const gapThreshold   = Math.max(_MIN_GAP_PT, median * _GAP_FACTOR);
+    const visualGaps     = [];
+    for (let gi = 0; gi < lines.length - 1; gi++) {
+      if (lineToTable.has(gi) || lineToTable.has(gi + 1)) continue;
+      const gap = lines[gi].y - lines[gi + 1].y;
+      if (gap >= gapThreshold) {
+        visualGaps.push({ gi, yAbove: lines[gi].y, yBelow: lines[gi + 1].y });
+      }
+    }
+    // Render page once and crop image regions for all detected gaps
+    const giToImgRun = new Map();
+    if (visualGaps.length > 0 && isProcessing) {
+      setProgress(
+        50 + Math.round((pi / pageData.length) * 40),
+        `Capturing visuals on page ${pi + 1}/${pageData.length}…`,
+      );
+      const regionRuns = await _p2wRenderRegions(
+        pdfDoc, pi + 1, pageData[pi].pageH, visualGaps, median, ImageRun,
+      );
+      for (const { gi, imgRun } of regionRuns) giToImgRun.set(gi, imgRun);
+    }
+
     // Match rotated column-header items to tables by Y-range overlap.
     // rotatedHeaders: tableStartIdx → array of column label strings (left-to-right).
     const rotatedHeaders = new Map();
@@ -1069,6 +1097,13 @@ async function _p2wExtractText(pdfDoc) {
         (grid.y + grid.h) >= r.minY - 20 && grid.y <= r.maxY + 20
       );
       if (!covered) events.push({ type: 'grid', y: grid.y + grid.h, grid });
+    }
+
+    // Add visual region events for detected diagram/graphic gaps
+    for (const [gi, imgRun] of giToImgRun) {
+      // Insert just below lines[gi] so this fires after that line is processed
+      // but before lines[gi+1] is processed
+      events.push({ type: 'visual-region', y: lines[gi].y - 0.1, imgRun });
     }
 
     // Sort by Y descending (top of page first).
@@ -1169,6 +1204,14 @@ async function _p2wExtractText(pdfDoc) {
           _paraBuffer.push(ln);
         }
 
+      } else if (event.type === 'visual-region') {
+        // ── Visual region: diagram/graphic captured from canvas crop ──────────
+        _flushPara();
+        paragraphs.push(new Paragraph({
+          children: [event.imgRun],
+          spacing:  { before: 60, after: 60 },
+        }));
+
       } else {
         // ── 'grid' event: border-detected table (empty body rows) ─────────────
         _flushPara();   // emit any buffered paragraph before the grid
@@ -1267,6 +1310,73 @@ function _assignLineToGridCols(items, colXs) {
     cells[col].push(item.str);
   }
   return cells.map(parts => parts.join(' '));
+}
+
+// Renders a PDF page once at 150 DPI, crops the Y-bands corresponding to
+// detected visual gaps (diagrams, grids, graphics absent from text extraction),
+// and returns ImageRun objects for non-blank crops.
+// gaps: [{gi, yAbove, yBelow}] — yAbove/yBelow in PDF points (bottom-up coords)
+// Returns [{gi, imgRun}] — only for gaps that pass the ink-density check.
+async function _p2wRenderRegions(pdfDoc, pageNum, pageH, gaps, medianFontSize, ImageRun) {
+  const _RENDER_DPI  = 150;
+  const _MAX_W_PX    = 594;   // max width in px at 96 DPI (fits A4 and Letter margins)
+  const _INK_THRESH  = 0.02;  // skip region if < 2% sampled pixels are non-white
+  const _INK_STEP    = 8;     // sample every 8th pixel (200× faster than full scan)
+
+  const scale  = _RENDER_DPI / 72;
+  const page   = await pdfDoc.getPage(pageNum);
+  const vp     = page.getViewport({ scale });
+  const canvas = document.createElement('canvas');
+  canvas.width  = Math.round(vp.width);
+  canvas.height = Math.round(vp.height);
+  const ctx = canvas.getContext('2d');
+  await page.render({ canvasContext: ctx, viewport: vp }).promise;
+  page.cleanup?.();
+
+  const result = [];
+  for (const { gi, yAbove, yBelow } of gaps) {
+    // Convert PDF (bottom-up) gap bounds to canvas (top-down) crop coords.
+    // Add small margins so crop doesn't clip ascenders/descenders of adjacent text.
+    const pdfTop    = yAbove - medianFontSize * 0.5;   // just below the upper baseline
+    const pdfBottom = yBelow + medianFontSize * 1.2;   // just above the lower ascender
+    const cyTop     = Math.max(0,             Math.round((pageH - pdfTop)    * scale));
+    const cyBottom  = Math.min(canvas.height, Math.round((pageH - pdfBottom) * scale));
+    const cropH     = cyBottom - cyTop;
+    if (cropH <= 4) continue;
+
+    // Crop the Y-band into a temporary canvas
+    const tmp    = document.createElement('canvas');
+    tmp.width    = canvas.width;
+    tmp.height   = cropH;
+    const tCtx   = tmp.getContext('2d');
+    tCtx.drawImage(canvas, 0, cyTop, canvas.width, cropH, 0, 0, canvas.width, cropH);
+
+    // Ink-density check: sample pixels to detect nearly-blank crops (margins, etc.)
+    const d = tCtx.getImageData(0, 0, tmp.width, cropH).data;
+    let ink = 0, total = 0;
+    for (let i = 0; i < d.length; i += 4 * _INK_STEP) {
+      if (d[i] < 240 || d[i + 1] < 240 || d[i + 2] < 240) ink++;
+      total++;
+    }
+    if (total === 0 || ink / total < _INK_THRESH) continue;
+
+    // Convert to JPEG blob → ArrayBuffer → ImageRun
+    const blob = await new Promise(res => tmp.toBlob(res, 'image/jpeg', 0.85));
+    if (!blob) continue;
+    const buf = await blob.arrayBuffer();
+
+    // Scale to Word doc dimensions at 96 DPI
+    let w = Math.round(canvas.width * 96 / _RENDER_DPI);
+    let h = Math.round(cropH        * 96 / _RENDER_DPI);
+    if (w > _MAX_W_PX) { h = Math.round(h * _MAX_W_PX / w); w = _MAX_W_PX; }
+
+    result.push({ gi, imgRun: new ImageRun({ data: buf, transformation: { width: w, height: h }, type: 'jpg' }) });
+  }
+
+  // Release GPU texture memory
+  canvas.width = 0; canvas.height = 0;
+  canvas.remove();
+  return result;
 }
 
 // Image mode: render each page to canvas → embed JPEG in docx.
