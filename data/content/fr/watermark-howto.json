@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Ajouter un filigrane à un PDF",
+  "description": "Insérer des filigranes textuels sur chaque page d'un PDF — gratuit, traité localement.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Ouvrez votre PDF",
+      "text": "Cliquez sur « Choisir un fichier » ou faites glisser votre PDF dans la zone de dépôt."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Personnalisez le filigrane",
+      "text": "Saisissez votre texte, choisissez la taille, l'opacité, la couleur et l'angle. L'aperçu se met à jour en temps réel."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Téléchargez le PDF avec filigrane",
+      "text": "Cliquez sur « Ajouter le filigrane ». Chaque page contient le filigrane intégré définitivement."
+    }
+  ]
+}

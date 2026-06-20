@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Seitenzahlen zu PDF hinzufügen",
+  "description": "Seitenzahlen auf alle Seiten eines PDFs einfügen — kostenlos, kein Upload.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDF öffnen",
+      "text": "Klicke auf „Datei auswählen\" oder ziehe dein PDF in den Dropbereich."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Optionen wählen",
+      "text": "Wähle Position (oben/unten, links/mittig/rechts), Format und Startnummer."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Nummeriertes PDF herunterladen",
+      "text": "Klicke auf „Seitenzahlen hinzufügen\". Dein paginiertes Dokument ist bereit."
+    }
+  ]
+}

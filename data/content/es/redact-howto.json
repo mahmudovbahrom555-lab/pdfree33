@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Censurar un área de un PDF",
+  "description": "Ocultar contenido sensible permanentemente en un PDF — gratis, sin subir.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Abre tu PDF",
+      "text": "Haz clic en \"Elegir archivos\" o arrastra tu PDF a la zona de soltar."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Selecciona el área",
+      "text": "Arrastra un rectángulo sobre el área a ocultar. Elige opacidad y color de la censura."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Descarga el PDF censurado",
+      "text": "Haz clic en \"Ocultar área\". El área seleccionada queda permanentemente oculta."
+    }
+  ]
+}

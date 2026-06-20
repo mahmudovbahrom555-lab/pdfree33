@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Proteger um PDF com senha",
+  "description": "Criptografar um documento PDF com senha — grátis, sem upload.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Abra seu PDF",
+      "text": "Clique em \"Escolher arquivos\" ou arraste seu PDF para a zona de soltar."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Insira a senha",
+      "text": "Digite uma senha segura e confirme-a. Ela é aplicada localmente ao documento."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Baixe o PDF protegido",
+      "text": "Clique em \"Proteger PDF\". O documento criptografado estará pronto para download."
+    }
+  ]
+}

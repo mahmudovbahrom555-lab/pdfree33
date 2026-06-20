@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Ajouter des numéros de page à un PDF",
+  "description": "Insérer des numéros de page sur toutes les pages d'un PDF — gratuit, sans envoi.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Ouvrez votre PDF",
+      "text": "Cliquez sur « Choisir un fichier » ou faites glisser votre PDF dans la zone de dépôt."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Choisissez les options",
+      "text": "Sélectionnez la position (haut/bas, gauche/centre/droite), le format et le numéro de départ."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Téléchargez le PDF numéroté",
+      "text": "Cliquez sur « Ajouter les numéros de page ». Votre document paginé est prêt."
+    }
+  ]
+}

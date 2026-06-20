@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Editar metadados de um PDF",
+  "description": "Editar autor, título, assunto e palavras-chave de um PDF — grátis, sem upload.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Abra seu PDF",
+      "text": "Clique em \"Escolher arquivos\" ou arraste seu PDF. Os metadados atuais serão exibidos."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Edite os metadados",
+      "text": "Edite os campos desejados: título, autor, assunto, palavras-chave. Deixe em branco para remover."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Baixe o PDF atualizado",
+      "text": "Clique em \"Salvar metadados\". Seu documento com metadados atualizados será baixado."
+    }
+  ]
+}

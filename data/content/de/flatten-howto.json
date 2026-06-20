@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDF abflachen",
+  "description": "Formularfelder dauerhaft in den Seiteninhalt einbrennen — kostenlos, kein Upload.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDF öffnen",
+      "text": "Klicke auf „Datei auswählen\" oder ziehe dein ausgefülltes PDF in den Dropbereich."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "PDF abflachen",
+      "text": "Klicke auf „PDF abflachen\". Alle interaktiven Felder werden in statischen Seiteninhalt umgewandelt."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Abgeflachtes PDF herunterladen",
+      "text": "Das nicht mehr editierbare Dokument wird sofort heruntergeladen."
+    }
+  ]
+}

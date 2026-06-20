@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Remplir un formulaire PDF",
+  "description": "Remplir les champs PDF interactifs dans le navigateur — gratuit, sans envoi.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Ouvrez votre PDF",
+      "text": "Cliquez sur « Choisir un fichier » ou faites glisser votre PDF dans la zone de dépôt."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Remplissez les champs",
+      "text": "Cliquez sur les champs de texte et saisissez vos données. Les cases à cocher et menus déroulants sont également disponibles."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Téléchargez le PDF rempli",
+      "text": "Cliquez sur « Enregistrer le PDF ». Le formulaire rempli se télécharge sur votre appareil."
+    }
+  ]
+}

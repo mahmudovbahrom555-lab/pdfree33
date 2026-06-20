@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Modifier les métadonnées d'un PDF",
+  "description": "Modifier l'auteur, le titre, le sujet et les mots-clés d'un PDF — gratuit, sans envoi.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Ouvrez votre PDF",
+      "text": "Cliquez sur « Choisir un fichier » ou faites glisser votre PDF. Les métadonnées actuelles s'affichent."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Modifiez les métadonnées",
+      "text": "Modifiez les champs souhaités : titre, auteur, sujet, mots-clés. Laissez-les vides pour les supprimer."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Téléchargez le PDF mis à jour",
+      "text": "Cliquez sur « Enregistrer les métadonnées ». Votre document avec les métadonnées mises à jour se télécharge."
+    }
+  ]
+}

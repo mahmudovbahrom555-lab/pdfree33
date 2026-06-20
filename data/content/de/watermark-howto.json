@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Wasserzeichen zu PDF hinzufügen",
+  "description": "Benutzerdefinierte Textwasserzeichen auf jede PDF-Seite einbetten — kostenlos, lokal verarbeitet.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDF öffnen",
+      "text": "Klicke auf „Datei auswählen\" oder ziehe dein PDF in den Dropbereich."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Wasserzeichen anpassen",
+      "text": "Gib deinen Wasserzeichentext ein, wähle Schriftgröße, Opazität, Farbe und Winkel. Die Vorschau wird live aktualisiert."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Wasserzeichen-PDF herunterladen",
+      "text": "Klicke auf „Wasserzeichen hinzufügen\". Jede Seite hat das Wasserzeichen dauerhaft eingebettet."
+    }
+  ]
+}

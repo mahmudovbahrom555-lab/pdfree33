@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Extraer páginas de un PDF",
+  "description": "Extraer páginas específicas de un PDF a un nuevo archivo — gratis, sin subir.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Abre tu PDF",
+      "text": "Haz clic en \"Elegir archivos\" o arrastra tu PDF a la zona de soltar."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Selecciona las páginas",
+      "text": "Introduce los números o rangos de páginas a extraer (p. ej. 1-3, 5, 8-10)."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Descarga el PDF extraído",
+      "text": "Haz clic en \"Extraer páginas\". Las páginas seleccionadas se guardan en un nuevo PDF."
+    }
+  ]
+}

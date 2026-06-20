@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDF-Seiten drehen",
+  "description": "Seiten in einem PDF um 90°, 180° oder 270° drehen — kostenlos, kein Upload.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDF öffnen",
+      "text": "Klicke auf „Datei auswählen\" oder ziehe dein PDF in den Dropbereich."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Seiten und Rotation auswählen",
+      "text": "Wähle aus, welche Seiten gedreht werden sollen (alle oder bestimmte) und den Drehwinkel: 90°, 180° oder 270°."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Gedrehtes PDF herunterladen",
+      "text": "Klicke auf „PDF drehen\". Dein korrigiertes Dokument ist sofort zum Download bereit."
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDF-Seiten extrahieren",
+  "description": "Bestimmte Seiten aus einem PDF in eine neue Datei extrahieren — kostenlos, kein Upload.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDF öffnen",
+      "text": "Klicke auf „Datei auswählen\" oder ziehe dein PDF in den Dropbereich."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Seiten auswählen",
+      "text": "Gib die Seitennummern oder Bereiche ein, die extrahiert werden sollen (z. B. 1-3, 5, 8-10)."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Extrahiertes PDF herunterladen",
+      "text": "Klicke auf „Seiten extrahieren\". Die ausgewählten Seiten werden in einem neuen PDF gespeichert."
+    }
+  ]
+}

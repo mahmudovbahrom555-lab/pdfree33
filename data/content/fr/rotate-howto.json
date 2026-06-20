@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Faire pivoter les pages d'un PDF",
+  "description": "Faire pivoter les pages d'un PDF de 90°, 180° ou 270° — gratuit, sans envoi.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Ouvrez votre PDF",
+      "text": "Cliquez sur « Choisir un fichier » ou faites glisser votre PDF dans la zone de dépôt."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Sélectionnez les pages et la rotation",
+      "text": "Choisissez quelles pages faire pivoter (toutes ou spécifiques) et l'angle : 90°, 180° ou 270°."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Téléchargez le PDF pivoté",
+      "text": "Cliquez sur « Faire pivoter le PDF ». Votre document corrigé est prêt à télécharger instantanément."
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Añadir marca de agua a un PDF",
+  "description": "Insertar marcas de agua de texto en cada página del PDF — gratis, procesado localmente.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Abre tu PDF",
+      "text": "Haz clic en \"Elegir archivos\" o arrastra tu PDF a la zona de soltar."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Personaliza la marca de agua",
+      "text": "Escribe el texto, elige tamaño, opacidad, color y ángulo. La vista previa se actualiza en tiempo real."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Descarga el PDF con marca de agua",
+      "text": "Haz clic en \"Añadir marca de agua\". Cada página tiene la marca incrustada permanentemente."
+    }
+  ]
+}

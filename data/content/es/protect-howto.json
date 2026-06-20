@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Proteger un PDF con contraseña",
+  "description": "Cifrar un documento PDF con contraseña — gratis, sin subir.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Abre tu PDF",
+      "text": "Haz clic en \"Elegir archivos\" o arrastra tu PDF a la zona de soltar."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Introduce la contraseña",
+      "text": "Escribe una contraseña segura y confírmala. Se aplica localmente al documento."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Descarga el PDF protegido",
+      "text": "Haz clic en \"Proteger PDF\". El documento cifrado estará listo para descargar."
+    }
+  ]
+}

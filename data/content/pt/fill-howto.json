@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Preencher um formulário PDF",
+  "description": "Preencher campos PDF interativos no navegador — grátis, sem upload.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Abra seu PDF",
+      "text": "Clique em \"Escolher arquivos\" ou arraste seu PDF preenchível para a zona de soltar."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Preencha os campos",
+      "text": "Clique nos campos de texto e insira seus dados. Caixas de seleção e menus suspensos também estão disponíveis."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Baixe o PDF preenchido",
+      "text": "Clique em \"Salvar PDF\". O formulário preenchido é baixado para o seu dispositivo."
+    }
+  ]
+}

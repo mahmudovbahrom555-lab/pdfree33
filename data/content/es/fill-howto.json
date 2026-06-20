@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Rellenar un formulario PDF",
+  "description": "Rellenar campos PDF interactivos en el navegador — gratis, sin subir.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Abre tu PDF",
+      "text": "Haz clic en \"Elegir archivos\" o arrastra tu PDF rellenable a la zona de soltar."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Rellena los campos",
+      "text": "Haz clic en los campos de texto e introduce tus datos. Las casillas y menús desplegables también son seleccionables."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Descarga el PDF rellenado",
+      "text": "Haz clic en \"Guardar PDF\". El formulario rellenado se descarga a tu dispositivo."
+    }
+  ]
+}

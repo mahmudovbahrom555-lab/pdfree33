@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDF mit Passwort schützen",
+  "description": "PDF-Dokument mit einem Passwort verschlüsseln — kostenlos, kein Upload.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDF öffnen",
+      "text": "Klicke auf „Datei auswählen\" oder ziehe dein PDF in den Dropbereich."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Passwort eingeben",
+      "text": "Gib ein sicheres Passwort ein und bestätige es. Das Passwort wird lokal auf das Dokument angewendet."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Geschütztes PDF herunterladen",
+      "text": "Klicke auf „PDF schützen\". Das verschlüsselte Dokument ist sofort zum Download bereit."
+    }
+  ]
+}

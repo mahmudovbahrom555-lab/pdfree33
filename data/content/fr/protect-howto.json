@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Protéger un PDF par mot de passe",
+  "description": "Chiffrer un document PDF avec un mot de passe — gratuit, sans envoi.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Ouvrez votre PDF",
+      "text": "Cliquez sur « Choisir un fichier » ou faites glisser votre PDF dans la zone de dépôt."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Saisissez le mot de passe",
+      "text": "Entrez un mot de passe sécurisé et confirmez-le. Il est appliqué localement au document."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Téléchargez le PDF protégé",
+      "text": "Cliquez sur « Protéger le PDF ». Le document chiffré est prêt à télécharger."
+    }
+  ]
+}

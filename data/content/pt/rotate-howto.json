@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Girar páginas de um PDF",
+  "description": "Gire páginas em um PDF 90°, 180° ou 270° — grátis, sem upload.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Abra seu PDF",
+      "text": "Clique em \"Escolher arquivos\" ou arraste seu PDF para a zona de soltar."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Selecione páginas e rotação",
+      "text": "Escolha quais páginas girar (todas ou específicas) e o ângulo: 90°, 180° ou 270°."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Baixe o PDF girado",
+      "text": "Clique em \"Girar PDF\". Seu documento corrigido estará pronto para download instantaneamente."
+    }
+  ]
+}

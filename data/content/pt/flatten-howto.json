@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Nivelar um PDF",
+  "description": "Integrar permanentemente os campos de formulário no conteúdo da página — grátis, sem upload.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Abra seu PDF",
+      "text": "Clique em \"Escolher arquivos\" ou arraste seu PDF preenchido para a zona de soltar."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Nivele o PDF",
+      "text": "Clique em \"Nivelar PDF\". Todos os campos interativos são convertidos em conteúdo estático."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Baixe o PDF nivelado",
+      "text": "O documento não editável é baixado instantaneamente."
+    }
+  ]
+}
