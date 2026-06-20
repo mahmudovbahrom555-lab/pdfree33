@@ -2,6 +2,19 @@
 # JS/CSS/fonts: immutable + 1 year (HTML always loads versioned ?v=HASH URLs)
 # sw.js: no-cache (browsers cap SW anyway; explicit is safer)
 # icons/manifest: shorter TTL (no hash in filename, could update with branding)
+# HTML: short TTL with stale-while-revalidate (fast CDN serving with freshness)
+
+/*.html
+  Cache-Control: public, max-age=300, stale-while-revalidate=86400
+  X-Content-Type-Options: nosniff
+
+/sitemap.xml
+  Cache-Control: public, max-age=3600
+  Content-Type: application/xml; charset=utf-8
+
+/robots.txt
+  Cache-Control: public, max-age=86400
+
 
 /js/vendor/qpdf/lib/qpdf.wasm
   Cache-Control: public, max-age=31536000, immutable
