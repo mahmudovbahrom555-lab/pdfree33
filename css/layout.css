@@ -329,6 +329,25 @@ nav {
   margin-top: 1px;
 }
 
+.hero-det-replace {
+  flex-shrink: 0;
+  background: none;
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text2);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.hero-det-replace:hover {
+  border-color: var(--green);
+  color: var(--green);
+}
+
 .hero-det-badges {
   display: flex;
   flex-wrap: wrap;

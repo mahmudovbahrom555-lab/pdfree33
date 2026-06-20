@@ -542,7 +542,13 @@ function initSearch() {
     loadingBadge.textContent = 'Analyzing…';
     badgesEl.appendChild(loadingBadge);
 
-    row.append(iconEl, metaEl, badgesEl);
+    const replaceBtn = document.createElement('button');
+    replaceBtn.type = 'button';
+    replaceBtn.className = 'hero-det-replace';
+    replaceBtn.textContent = 'Replace';
+    replaceBtn.addEventListener('click', () => heroFileInput.click());
+
+    row.append(iconEl, metaEl, badgesEl, replaceBtn);
     card.appendChild(row);
     heroDetected.innerHTML = '';
     heroDetected.appendChild(card);
