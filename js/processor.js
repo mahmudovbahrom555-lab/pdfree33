@@ -1047,11 +1047,18 @@ async function _p2wExtractText(pdfDoc) {
     for (let gi = 0; gi < lines.length - 1; gi++) {
       if (lineToTable.has(gi) || lineToTable.has(gi + 1)) continue;
       const gap = lines[gi].y - lines[gi + 1].y;
-      if (gap >= gapThreshold) {
-        visualGaps.push({ gi, yAbove: lines[gi].y, yBelow: lines[gi + 1].y });
-      }
+      if (gap < gapThreshold) continue;
+      // Skip if a border grid already covers this gap — it will be rendered as a
+      // Word Table by the 'grid' event handler; inserting an ImageRun here too
+      // would duplicate the same content in the DOCX output.
+      const coveredByGrid = borderGrids.some(g =>
+        (g.y + g.h) <= lines[gi].y + 10 && g.y >= lines[gi + 1].y - 10
+      );
+      if (!coveredByGrid) visualGaps.push({ gi, yAbove: lines[gi].y, yBelow: lines[gi + 1].y });
     }
-    // Render page once and crop image regions for all detected gaps
+    // Render page once and crop image regions for all detected gaps.
+    // .catch(() => []) degrades gracefully if a page render fails — the rest of
+    // the document is still produced without the missing visual region.
     const giToImgRun = new Map();
     if (visualGaps.length > 0 && isProcessing) {
       setProgress(
@@ -1060,7 +1067,7 @@ async function _p2wExtractText(pdfDoc) {
       );
       const regionRuns = await _p2wRenderRegions(
         pdfDoc, pi + 1, pageData[pi].pageH, visualGaps, median, ImageRun,
-      );
+      ).catch(() => []);
       for (const { gi, imgRun } of regionRuns) giToImgRun.set(gi, imgRun);
     }
 
@@ -1360,8 +1367,9 @@ async function _p2wRenderRegions(pdfDoc, pageNum, pageH, gaps, medianFontSize, I
     }
     if (total === 0 || ink / total < _INK_THRESH) continue;
 
-    // Convert to JPEG blob → ArrayBuffer → ImageRun
+    // Convert to JPEG blob → ArrayBuffer → ImageRun; release crop canvas immediately
     const blob = await new Promise(res => tmp.toBlob(res, 'image/jpeg', 0.85));
+    tmp.width = 0; tmp.height = 0;
     if (!blob) continue;
     const buf = await blob.arrayBuffer();
 
