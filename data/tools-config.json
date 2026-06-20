@@ -106,6 +106,9 @@
         "pt": "Combine arquivos PDF ilimitados instantaneamente. 100% privado, sem uploads, sem limites.",
         "de": "PDF-Dateien kostenlos online zusammenfügen. 100 % privat — Dateien verlassen deinen Browser nie. Kein Upload, keine Registrierung, keine Limits.",
         "fr": "Fusionner des fichiers PDF gratuitement en ligne. 100 % privé — vos fichiers ne quittent jamais votre navigateur. Aucun envoi, sans inscription, sans limite."
+      },
+      "keywords": {
+        "en": "merge pdf, combine pdf files, join pdf, merge pdf files free, combine pdf online, merge pdf without uploading"
       }
     },
     {
@@ -181,6 +184,9 @@
         "pt": "Extraia páginas ou divida em arquivos separados. 100% privado, sem uploads, sem limites.",
         "de": "PDFs in einzelne Seiten aufteilen oder Seitenbereich extrahieren. 100 % privat — kein Upload. Kostenlos, ohne Registrierung.",
         "fr": "Diviser des fichiers PDF gratuitement en ligne. Extrayez des pages spécifiques ou séparez chaque page. 100 % privé — aucun envoi, sans inscription."
+      },
+      "keywords": {
+        "en": "split pdf, divide pdf, extract pages from pdf, split pdf online free, pdf splitter, split pdf without uploading"
       }
     },
     {
@@ -256,6 +262,9 @@
         "pt": "Reduza o tamanho do PDF sem perder qualidade. Processado localmente no seu navegador — sem uploads.",
         "de": "PDF-Dateigröße reduzieren ohne Qualitätsverlust. Vollständig im Browser verarbeitet — keine Uploads, keine Registrierung. Kostenlos.",
         "fr": "Compresser vos fichiers PDF gratuitement en ligne. Trois niveaux de qualité. 100 % privé — aucun envoi, sans inscription, sans limite."
+      },
+      "keywords": {
+        "en": "compress pdf, reduce pdf size, compress pdf online free, pdf compressor, shrink pdf, make pdf smaller"
       }
     },
     {
@@ -331,6 +340,9 @@
         "pt": "Corrija a orientação das páginas em qualquer PDF. 100% privado — processado localmente, sem uploads.",
         "de": "PDF-Seiten um 90°, 180° oder 270° drehen. Verarbeitung im Browser — kein Upload, kein Server. Kostenlos, ohne Registrierung.",
         "fr": "Faire pivoter les pages PDF — 90°, 180° ou 270°. Traitement dans le navigateur, aucun fichier envoyé. Gratuit."
+      },
+      "keywords": {
+        "en": "rotate pdf, rotate pdf pages, fix pdf orientation, rotate pdf online free, pdf rotation, flip pdf"
       }
     },
     {
@@ -406,6 +418,9 @@
         "pt": "Adicione marcas d'água de texto ao PDF. Processado no seu navegador — sem uploads. Grátis para sempre.",
         "de": "Text- oder Bild-Wasserzeichen in PDF einfügen. Vollständig privat — im Browser verarbeitet, kein Upload. Kostenlos, für immer.",
         "fr": "Ajouter un filigrane à un PDF gratuitement en ligne. Texte ou image, diagonal ou en mosaïque. 100 % privé — aucun envoi, sans inscription."
+      },
+      "keywords": {
+        "en": "watermark pdf, add watermark to pdf, pdf watermark online free, text watermark pdf, confidential watermark"
       }
     },
     {
@@ -481,6 +496,9 @@
         "pt": "Adicione senha e restrinja permissões. AES-256 no seu navegador — nunca enviado a um servidor.",
         "de": "PDF mit AES-256-Passwort schützen. Dateien bleiben auf deinem Gerät — werden nie hochgeladen. Kostenlos, ohne Registrierung.",
         "fr": "Protéger un PDF avec un mot de passe gratuitement en ligne. Chiffrement AES-256. 100 % privé — aucun envoi, sans inscription."
+      },
+      "keywords": {
+        "en": "protect pdf, password protect pdf, encrypt pdf, add password to pdf, pdf password free, pdf encryption"
       }
     },
     {
@@ -556,6 +574,9 @@
         "pt": "Oculte texto, assinaturas ou dados sensíveis com blocos opacos. 100% privado — processado localmente.",
         "de": "Sensible Texte und Bilder in PDFs dauerhaft schwärzen. 100 % lokale Verarbeitung — nichts verlässt dein Gerät. Kostenlos.",
         "fr": "Caviarder un PDF gratuitement en ligne. Suppression définitive et irrécupérable des zones sensibles. 100 % privé — aucun envoi, sans inscription."
+      },
+      "keywords": {
+        "en": "redact pdf, cover area pdf, hide text pdf, pdf redaction free, black out pdf text, pdf censor"
       }
     },
     {
@@ -631,6 +652,9 @@
         "pt": "Adicione números de página a qualquer PDF. Processado no navegador — sem uploads, sem registro, sem limites.",
         "de": "Seitenzahlen in beliebige PDFs einfügen. Im Browser verarbeitet — kein Upload, keine Registrierung, keine Limits. Kostenlos.",
         "fr": "Ajouter des numéros de page à un PDF gratuitement en ligne. Format arabe, romain ou alphabétique. 100 % privé — aucun envoi, sans inscription."
+      },
+      "keywords": {
+        "en": "add page numbers to pdf, number pdf pages, pdf page numbering free, pdf pagination online"
       }
     },
     {
@@ -706,6 +730,9 @@
         "pt": "Extraia páginas específicas de um PDF. 100% privado — processado localmente, sem uploads.",
         "de": "Bestimmte Seiten aus einem PDF extrahieren. Vollständige Browserverarbeitung — Dateien verlassen dein Gerät nie. Kostenlos, privat.",
         "fr": "Extraire des pages d'un PDF. Traitement dans le navigateur — aucun fichier envoyé. Gratuit."
+      },
+      "keywords": {
+        "en": "extract pages from pdf, pdf page extractor, extract pdf pages online free, select pages from pdf"
       }
     },
     {
@@ -781,6 +808,9 @@
         "pt": "Ver e editar metadados do PDF: título, autor, assunto, palavras-chave. Processado localmente — sem uploads.",
         "de": "PDF-Metadaten online bearbeiten oder entfernen. Im Browser verarbeitet — keine Uploads, keine Registrierung. Kostenlos, privat.",
         "fr": "Modifier ou supprimer les métadonnées d'un PDF. Traitement dans le navigateur — aucun fichier envoyé. Gratuit."
+      },
+      "keywords": {
+        "en": "pdf metadata editor, edit pdf metadata, pdf properties editor, remove pdf metadata, pdf author editor"
       }
     },
     {
@@ -856,6 +886,9 @@
         "pt": "Converta imagens em PDF instantaneamente. Correção automática de rotação EXIF. 100% privado, sem uploads.",
         "de": "JPG-Bilder in PDF umwandeln. 100 % privat — im Browser verarbeitet, kein Upload. Kostenlos, keine Limits.",
         "fr": "Convertir des images JPG en PDF gratuitement en ligne. Plusieurs images en un seul PDF. 100 % privé — aucun envoi, sans inscription."
+      },
+      "keywords": {
+        "en": "jpg to pdf, convert jpg to pdf, image to pdf, jpg to pdf free online, convert images to pdf, png to pdf"
       }
     },
     {
@@ -931,6 +964,9 @@
         "pt": "Extraia páginas como imagens JPG ou PNG de alta qualidade. 100% privado, processado localmente.",
         "de": "PDF-Seiten in hochwertige JPG-Bilder umwandeln. Im Browser verarbeitet — kein Upload, keine Registrierung. Kostenlos.",
         "fr": "Convertir un PDF en images JPG gratuitement en ligne. Toutes les pages ou une sélection. 100 % privé — aucun envoi, sans inscription."
+      },
+      "keywords": {
+        "en": "pdf to jpg, convert pdf to jpg, pdf to image, export pdf pages as images, pdf to jpg free, pdf to png"
       }
     },
     {
@@ -1006,6 +1042,9 @@
         "es": "Rellena campos de formulario PDF y añade firmas. 100% local — los archivos no salen de tu navegador. Gratis, sin cuenta.",
         "fr": "Remplissez des champs PDF et ajoutez des signatures. 100 % local — les fichiers ne quittent jamais votre navigateur. Gratuit, sans compte.",
         "pt": "Preencha campos de formulário PDF e adicione assinaturas. 100% local — os arquivos nunca saem do seu navegador. Grátis, sem conta."
+      },
+      "keywords": {
+        "en": "fill pdf form, fill pdf online free, fill out pdf, pdf form filler, complete pdf form online"
       }
     },
     {
@@ -1081,6 +1120,9 @@
         "es": "Hacer un PDF rellenable no editable. Campos integrados en la página — procesados en tu navegador, sin subir. Gratis.",
         "fr": "Rendre un PDF modifiable non éditable. Champs intégrés dans la page — traité dans votre navigateur, jamais envoyé. Gratuit.",
         "pt": "Tornar um PDF preenchível não editável. Campos integrados na página — processados no seu navegador, nunca enviados. Grátis."
+      },
+      "keywords": {
+        "en": "flatten pdf, make pdf non-editable, lock pdf form, flatten pdf fields, pdf flattening free"
       }
     }
   ],

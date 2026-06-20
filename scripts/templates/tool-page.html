@@ -44,6 +44,9 @@
   ">
   <title>{{ tool.titles[lang] }}</title>
   <meta name="description" content="{{ tool.metaDescs[lang] }}">
+  {% if tool.keywords and tool.keywords.get(lang, tool.keywords.get("en")) %}
+  <meta name="keywords" content="{{ tool.keywords.get(lang, tool.keywords.get('en')) }}">
+  {% endif %}
   <meta property="og:title"       content="{{ tool.ogTitles[lang] }}">
   <meta property="og:description" content="{{ tool.ogDescs[lang] }}">
   <meta property="og:type"        content="website">
