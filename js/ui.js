@@ -20,6 +20,7 @@ let _toastTimer = null;
  */
 export function showToast(message, duration = 3000) {
   const el = id('toast');
+  if (!el) return;
   el.textContent = message;
   el.classList.add('show');
   clearTimeout(_toastTimer);
@@ -37,6 +38,7 @@ export function setProgress(percent, label = '') {
   const bar  = id('progressBar');
   const fill = id('progressFill');
   const lbl  = id('progressLabel');
+  if (!bar || !fill || !lbl) return;
 
   bar.style.display = 'block';
   lbl.style.display = 'block';
@@ -93,6 +95,7 @@ export function renderToolHeader(tool) {
  */
 export function setButtonProcessing() {
   const btn = id('mergeBtn');
+  if (!btn) return;
   btn.disabled = true;
   btn.textContent = t('btn_processing');
 }

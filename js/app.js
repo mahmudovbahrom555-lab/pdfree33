@@ -310,6 +310,7 @@ function _maybeShowPwaNudge() {
 
   id('pwaNudgeSkip')?.addEventListener('click', () => {
     nudge.style.display = 'none';
+    _installPromptEvent = null;
   }, { once: true });
 }
 

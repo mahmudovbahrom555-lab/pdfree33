@@ -238,7 +238,7 @@ export function clearFiles() {
 // ── Render ─────────────────────────────────────────────────
 
 /** Перерисовывает список файлов и обновляет счётчик / кнопку */
-export function renderList() {
+export function renderList(keepSuccess = false) {
   const list = id('fileList');
   list.innerHTML = '';
 
@@ -309,7 +309,7 @@ export function renderList() {
   };
 
   _updateMeta();
-  id('successCard').style.display = 'none';
+  if (!keepSuccess) id('successCard').style.display = 'none';
 }
 
 /** Обновляет счётчик файлов, подсказку перетаскивания и состояние кнопки */
@@ -363,7 +363,7 @@ function _onDrop(e) {
 
   const [moved] = selectedFiles.splice(_dragFrom, 1);
   selectedFiles.splice(to, 0, moved);
-  renderList();
+  renderList(true); // reorder only — keep successCard visible
 }
 
 function _onDragEnd() {
@@ -465,7 +465,7 @@ function _onTouchEnd() {
     if (to !== _touchFrom) {
       const [moved] = selectedFiles.splice(_touchFrom, 1);
       selectedFiles.splice(to, 0, moved);
-      renderList();
+      renderList(true); // reorder only — keep successCard visible
     }
   } else if (_touchOverEl) {
     _touchOverEl.classList.remove('drag-target');

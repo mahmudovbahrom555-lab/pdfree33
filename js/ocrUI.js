@@ -390,6 +390,7 @@ function _bindMergeBtn() {
   // Capture phase so this fires before app.js bubble-phase listener,
   // allowing stopImmediatePropagation to prevent doProcess (stub runner).
   btn.addEventListener('click', async e => {
+    if (btn.disabled) return; // guard: absorb queued duplicate tap events
     if (!_file) return;
     const mode = btn.dataset.mode || 'process';
     if (mode === 'reset') return;
