@@ -794,6 +794,8 @@ async function _runPdf2Word(filesSnapshot, { mode = 'text', dpi = 150 } = {}) {
     _handleError('pdf2word', err.message); return;
   }
 
+  if (!isProcessing) { isProcessing = false; setFilesLocked(false); hideCancelBtn(); return; }
+
   setProgress(92, 'Building Word document…');
 
   const { Document, Packer } = window.docx;
@@ -875,6 +877,7 @@ async function _p2wExtractText(pdfDoc) {
   const allSizes = [];
 
   for (let p = 1; p <= pdfDoc.numPages; p++) {
+    if (!isProcessing) break;
     setProgress(10 + Math.round((p / pdfDoc.numPages) * 40),
                 `Reading page ${p}/${pdfDoc.numPages}…`);
 
@@ -1300,12 +1303,14 @@ async function _p2wRenderImages(pdfDoc, dpi, pageLimit) {
       canvas.width   = Math.round(viewport.width);
       canvas.height  = Math.round(viewport.height);
       await page.render({ canvasContext: ctx, viewport }).promise;
+      page.cleanup?.();
 
       const blob        = await new Promise(res => canvas.toBlob(res, 'image/jpeg', quality));
       const arrayBuffer = await blob.arrayBuffer();
 
       // docx ImageRun.transformation: pixel dimensions at 96 DPI
-      const MAX_W = 700;   // ~7.3 inches at 96 DPI — fits within default Word margins
+      // 594 px = 6.19 inches @ 96 DPI — fits A4 (6.27") and Letter (6.5") default margins
+      const MAX_W = 594;
       let w = Math.round(canvas.width  * 96 / dpi);
       let h = Math.round(canvas.height * 96 / dpi);
       if (w > MAX_W) { h = Math.round(h * MAX_W / w); w = MAX_W; }

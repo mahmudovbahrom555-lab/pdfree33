@@ -226,7 +226,6 @@ const YTOL       = 6;   // must match processor.js _p2wExtractText (was 4; see p
 async function _scanTablesBackground(doc, gen) {
   const pageLimit = Math.min(doc.numPages, SCAN_PAGES);
   let totalTables = 0;
-  const details   = [];
 
   for (let p = 1; p <= pageLimit; p++) {
     const page    = await doc.getPage(p);
@@ -253,13 +252,8 @@ async function _scanTablesBackground(doc, gen) {
     }
     lines.forEach(ln => ln.items.sort((a, b) => a.x - b.x));
 
-    const tables = detectTables(lines, { debug: true });
+    const tables = detectTables(lines);
     totalTables += tables.length;
-    if (tables.length) {
-      details.push(`p${p}: ${tables.length}×(${tables.map(t =>
-        `${t.rows.length}r×${t.colCount}c conf=${(t.confidence*100).toFixed(0)}%`
-      ).join(', ')})`);
-    }
   }
 
   // Abort if a newer file was loaded while we were scanning
@@ -269,10 +263,9 @@ async function _scanTablesBackground(doc, gen) {
   const el = id('pdf2wordOptions');
   if (!el) return;
   const badge = el.querySelector('#p2wTableBadge');
-  const scanned = pageLimit < doc.numPages ? `first ${pageLimit} pages` : 'all pages';
 
   if (totalTables > 0) {
-    const msg = `🗂️ ${totalTables} table(s) detected in ${scanned} — ${details.join(' · ')}`;
+    const msg = `🗂️ ${totalTables} table${totalTables !== 1 ? 's' : ''} detected — will be converted as Word tables`;
     if (badge) {
       badge.textContent = msg;
     } else {
