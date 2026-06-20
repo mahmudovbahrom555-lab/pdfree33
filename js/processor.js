@@ -581,7 +581,7 @@ async function _runPdf2Jpg(filesSnapshot, { pages, format, dpi, zip }) {
         const name     = `${baseName}-page${pageNum}.${ext}`;
 
         if (!zip || validPages.length === 1) {
-          singleResult = { name, buffer: buf };
+          if (!singleResult) singleResult = { name, buffer: buf }; // zip=false: first page only
         } else {
           if (!streamZip) streamZip = new (window.JSZip)();
           streamZip.file(name, buf);

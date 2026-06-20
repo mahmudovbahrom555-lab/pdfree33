@@ -482,6 +482,7 @@ async function handleSplit(fileBuffer, options) {
     for (let i = 0; i < pages.length; i++) {
       const pageNum = pages[i];
       const pageDoc = await PDFDocument.load(fileBuffer, { ignoreEncryption: true });
+      if (options.removeWatermarks) _removeWatermarks(pageDoc);
       for (let j = pageCount - 1; j >= 0; j--) {
         if (j !== pageNum - 1) pageDoc.removePage(j);
       }
