@@ -455,6 +455,7 @@ function initSearch() {
   // Hero drop zone refs
   const heroSection     = id('hero');
   const heroDetected    = id('heroDetected');
+  const heroBanner      = id('heroBanner');
   const heroDropZone    = id('heroDropZone');
   const heroFileInput   = id('heroFileInput');
   const heroDropIdle    = id('heroDropIdle');
@@ -492,8 +493,14 @@ function initSearch() {
   const index = buildIndex(TOOLS, lang);
 
   // ── Hero drop zone ──────────────────────────────────────────────
-  let _pendingFiles = null;
-  let _heroHintEl   = null;  // created once, reused
+  let _pendingFiles     = null;
+  let _heroHintEl       = null;   // created once, reused
+  let _bannerDismissed  = false;  // stays true once user closes banner this session
+
+  id('heroBannerClose')?.addEventListener('click', () => {
+    _bannerDismissed = true;
+    if (heroBanner) heroBanner.hidden = true;
+  });
 
   function _fmtSize(bytes) {
     return bytes < 1024 * 1024
@@ -648,6 +655,7 @@ function initSearch() {
     }
 
     trackHeroFileSelect(files.length, source);
+    if (heroBanner && !_bannerDismissed) heroBanner.hidden = false;
     _showHeroDetected(files);
     _renderChips();
     searchEl.focus();
@@ -659,6 +667,7 @@ function initSearch() {
     heroDropReady.hidden = true;
     heroDropZone.classList.remove('has-file');
     if (heroSection) heroSection.classList.remove('has-file');
+    if (heroBanner)  heroBanner.hidden  = true;
     if (heroDetected) heroDetected.hidden = true;
     heroFileInput.value = '';
     if (_heroHintEl) _heroHintEl.hidden = true;
