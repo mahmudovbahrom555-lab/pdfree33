@@ -996,7 +996,11 @@ async function _p2wExtractText(pdfDoc) {
         }
       }
     }
-    const minPages = Math.max(3, Math.ceil(pageData.length / 3));
+    // Text must appear on ≥ ⅔ of pages (min 3) to be treated as a watermark.
+    // Using ⅓ was too aggressive: on a 9-page doc a heading on 3 pages (33%)
+    // would be suppressed. ⅔ preserves legitimate section titles that happen to
+    // repeat while still catching CamScanner stamps (100% frequency).
+    const minPages = Math.max(3, Math.ceil(pageData.length * 2 / 3));
     for (const [t, cnt] of freq) {
       // Never suppress pure integers — those are handled separately as page numbers
       if (cnt >= minPages && !/^\d+$/.test(t)) _repeatTextSet.add(t);
@@ -1004,6 +1008,9 @@ async function _p2wExtractText(pdfDoc) {
   }
 
   // ── Pass 2: build Word content ─────────────────────────────────────────────
+  const _GAP_FACTOR = 2.5;   // gap > N × medianFontSize triggers a visual region
+  const _MIN_GAP_PT = 30;    // minimum gap in PDF points (~0.4 inch)
+
   const paragraphs  = [];
   const _paraBuffer = [];   // accumulates lines that should be merged into one Paragraph
 
@@ -1088,7 +1095,7 @@ async function _p2wExtractText(pdfDoc) {
     // render the full page as a single ImageRun so content is not lost.
     if (!lines.length) {
       if (isProcessing) {
-        const imgRun = await _p2wRenderFullPage(pdfDoc, pi + 1, _pageH, ImageRun).catch(() => null);
+        const imgRun = await _p2wRenderFullPage(pdfDoc, pi + 1, ImageRun).catch(() => null);
         if (imgRun) {
           paragraphs.push(new Paragraph({
             children: [imgRun],
@@ -1116,8 +1123,6 @@ async function _p2wExtractText(pdfDoc) {
     // ── Gap detection: find vertical gaps between text lines that likely contain
     // diagrams, grids, or other vector graphics not captured by text extraction.
     // Lines are already sorted descending by Y (top of page first).
-    const _GAP_FACTOR    = 2.5;   // gap > N × medianFontSize triggers a region
-    const _MIN_GAP_PT    = 30;    // minimum gap in PDF points (~0.4 inch)
     const gapThreshold   = Math.max(_MIN_GAP_PT, median * _GAP_FACTOR);
     const visualGaps     = [];
     for (let gi = 0; gi < lines.length - 1; gi++) {
