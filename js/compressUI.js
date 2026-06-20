@@ -26,6 +26,7 @@ let _preserveText = true;
 let _targetDpi    = 150;       // null = no downsampling | 96 | 150
 let _quality      = 82;        // JPEG quality %, 60–95 (sent as 0–1 to worker)
 let _lastScan     = null;      // result of _scanFile(), null if skipped or not yet run
+let _eventsBound  = false;     // listeners live on the persistent #compressOptions div — bind once
 
 // Defaults applied when user switches presets
 const _dpiDefaults     = { low: null, medium: 150, high: 96 };
@@ -386,11 +387,11 @@ function _dpiRow() {
 }
 
 // ── Events ─────────────────────────────────────────────────────
-// Примечание: безопасно вешать на container каждый раз, т.к.
-// _render() перезаписывает innerHTML → старые узлы уничтожаются.
 
 function _bindEvents() {
   bindWmRemove();
+  if (_eventsBound) return;
+  _eventsBound = true;
 
   id('compressOptions').addEventListener('change', e => {
     if (e.target.name === 'compressPreset') {

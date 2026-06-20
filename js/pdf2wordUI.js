@@ -132,6 +132,7 @@ function _render(file) {
     </div>
   `;
 
+  el.removeEventListener('change', _onChange);
   el.addEventListener('change', _onChange);
 }
 

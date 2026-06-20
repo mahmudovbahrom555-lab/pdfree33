@@ -42,7 +42,6 @@ let _draftKey    = null;
 let _sigImages   = {};   // fieldName → { dataUrl, rect, pageIndex }
 let _sigModal    = null; // active signature pad DOM node
 let _loading     = false; // true while _extractAndRender is in progress
-let _eventsBound = false; // prevent duplicate listeners on re-upload
 let _generation  = 0;    // incremented on each new extraction; stale calls bail early
 
 // ── Public API ────────────────────────────────────────────────
@@ -59,7 +58,7 @@ export function hideFillOptions() {
   const el = id('fillOptions');
   if (el) { el.style.display = 'none'; el.innerHTML = ''; }
   _closeSigPad();
-  _fields = []; _values = {}; _draftKey = null; _sigImages = {}; _loading = false; _eventsBound = false; _generation++;
+  _fields = []; _values = {}; _draftKey = null; _sigImages = {}; _loading = false; _generation++;
 }
 
 export function getFillParams() {
@@ -432,8 +431,9 @@ function _fieldHTML(f) {
 // ── Event binding ─────────────────────────────────────────────
 
 function _bindEvents(container) {
-  if (_eventsBound) return;
-  _eventsBound = true;
+  container.removeEventListener('input',  _onInput);
+  container.removeEventListener('change', _onInput);
+  container.removeEventListener('click',  _onSigClick);
   container.addEventListener('input',  _onInput);
   container.addEventListener('change', _onInput);
   container.addEventListener('click',  _onSigClick);

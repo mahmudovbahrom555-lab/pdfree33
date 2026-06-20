@@ -24,6 +24,7 @@ import { wmRemoveHtml, bindWmRemove, resetWmRemove } from './watermarkRemoveUI.j
 let _pageCount    = 0;
 let _selectedPages = [];   // массив номеров 1-indexed
 let _mode         = 'separate'; // 'separate' | 'single'
+let _eventsBound  = false;      // listeners live on the persistent #splitOptions div — bind once
 
 export function getSelectedPages() { return [..._selectedPages]; }
 export function getSplitMode()     { return _mode; }
@@ -142,12 +143,11 @@ function _renderRangeInput() {
 }
 
 // ── Events ────────────────────────────────────────────────────
-// Примечание: _bindEvents добавляет слушатели на container каждый раз при вызове _render().
-// Это безопасно, т.к. _render() полностью перезаписывает container.innerHTML,
-// что уничтожает старые DOM-узлы вместе с их слушателями.
 
 function _bindEvents(useRange) {
   bindWmRemove();
+  if (_eventsBound) return;
+  _eventsBound = true;
 
   // Mode switch
   id('splitOptions').addEventListener('change', e => {

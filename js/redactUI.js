@@ -93,6 +93,7 @@ let _activeRectIdx = -1;
 let _resizingHandle = null;
 let _resizeStartRect = null;
 let _moveHandler = null;
+let _eventsBound = false;  // listeners on persistent UI elements — bind once
 let _endHandler = null;
 let _zoomLevel = 1;
 let _currentTool = 'rect';
@@ -1043,6 +1044,9 @@ function _updateRectsList() {
 // ── Events ─────────────────────────────────────────────────────
 
 function _bindEvents(container) {
+  if (_eventsBound) return;
+  _eventsBound = true;
+
   // History buttons
   id('rdctUndoBtn')?.addEventListener('click', _undo);
   id('rdctRedoBtn')?.addEventListener('click', _redo);
