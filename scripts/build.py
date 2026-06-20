@@ -427,6 +427,48 @@ def _write_sitemap(config, out_dir):
             alts.append(('x-default', en_url))
             lines += _url_block(loc_url, _git_lastmod(f"{loc_slug}/index.html"), alts)
 
+    # ── Non-EN static specialty pages ──────────────────────────
+    # Static specialty pages that exist in language subdirs but aren't
+    # in tools-config (ocr, draw, pdf-to-word, flatten in each locale).
+    _lang_specialty = {
+        'ocr-pdf': {
+            'en': 'ocr-pdf',
+            'de': 'de/ocr-pdf',
+            'es': 'es/ocr-pdf',
+            'fr': 'fr/ocr-pdf',
+            'pt': 'pt/ocr-pdf',
+        },
+        'pdf-to-word': {
+            'en': 'pdf-to-word',
+            'de': 'de/pdf-zu-word',
+            'es': 'es/pdf-a-word',
+            'fr': 'fr/pdf-en-word',
+            'pt': 'pt/pdf-para-word',
+        },
+        'draw-on-pdf': {
+            'en': 'draw-on-pdf',
+            'de': 'de/pdf-zeichnen',
+            'es': 'es/dibujar-en-pdf',
+            'fr': 'fr/dessiner-sur-pdf',
+            'pt': 'pt/desenhar-no-pdf',
+        },
+        'flatten-pdf': {
+            'en': 'flatten-pdf',
+            'de': 'de/pdf-abflachen',
+            'es': 'es/aplanar-pdf',
+            'fr': 'fr/aplatir-pdf',
+            'pt': 'pt/nivelar-pdf',
+        },
+    }
+    for en_key, loc_map in _lang_specialty.items():
+        en_url = f"{BASE_URL}/{loc_map['en']}/"
+        alts = [(lc, f"{BASE_URL}/{slug}/") for lc, slug in loc_map.items()]
+        alts.append(('x-default', en_url))
+        # Emit a URL block for each language variant
+        for lc, slug in loc_map.items():
+            loc_url = f"{BASE_URL}/{slug}/"
+            lines += _url_block(loc_url, _git_lastmod(f"{slug}/index.html"), alts)
+
     lines.append('</urlset>')
 
     sitemap_path = os.path.join(out_dir, 'sitemap.xml')
