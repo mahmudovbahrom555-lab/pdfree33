@@ -472,7 +472,9 @@ nav {
 body:has(.hero.has-file) #trustAlert,
 body:has(.hero.has-file) #noLimitBar,
 body:has(.hero.has-file) #toolsGrid,
-body:has(.hero.has-file) #privacyBar {
+body:has(.hero.has-file) #privacyBar,
+body:has(.hero.has-file) #searchPopular,
+body:has(.hero.has-file) #heroChipsLabel {
   display: none;
 }
 

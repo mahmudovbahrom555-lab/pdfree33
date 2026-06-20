@@ -662,6 +662,11 @@ function initSearch() {
       protect:  'Protect',
       fill:     'Fill form',
     };
+    const wrapper = document.createElement('div');
+    const labelEl = document.createElement('p');
+    labelEl.className = 'hero-chips-label';
+    labelEl.textContent = "What's best to do with this file?";
+    wrapper.appendChild(labelEl);
     const grid = document.createElement('div');
     grid.className = 'hero-recs';
     tools.forEach(key => {
@@ -693,7 +698,8 @@ function initSearch() {
       });
       grid.appendChild(btn);
     });
-    return grid;
+    wrapper.appendChild(grid);
+    return wrapper;
   }
 
   function _getHintEl() {
@@ -739,7 +745,7 @@ function initSearch() {
 
     trackHeroFileSelect(files.length, source);
     if (heroBanner && !_bannerDismissed) heroBanner.hidden = false;
-    if (heroChipsLabel) heroChipsLabel.hidden = false;
+    if (heroChipsLabel) heroChipsLabel.hidden = true;
     _showHeroDetected(files);
     _renderChips();
     searchEl.focus();
