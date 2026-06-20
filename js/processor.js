@@ -947,6 +947,29 @@ async function _p2wExtractText(pdfDoc) {
   const sorted = [...allSizes].sort((a, b) => a - b);
   const median = sorted[Math.floor(sorted.length / 2)] || 10;
 
+  // ── Post-Pass-1: build watermark filter ───────────────────────────────────
+  // Short text appearing on ≥ ⅓ of pages (min 3) is treated as a repeated
+  // watermark / header / footer and suppressed in DOCX output.
+  const _repeatTextSet = new Set();
+  {
+    const freq = new Map();   // lineText → number of pages it appears on
+    for (const { lines } of pageData) {
+      const seenOnPage = new Set();
+      for (const ln of lines) {
+        const t = ln.items.map(i => i.str).join('').trim();
+        if (t.length > 0 && t.length <= 60 && !seenOnPage.has(t)) {
+          seenOnPage.add(t);
+          freq.set(t, (freq.get(t) || 0) + 1);
+        }
+      }
+    }
+    const minPages = Math.max(3, Math.ceil(pageData.length / 3));
+    for (const [t, cnt] of freq) {
+      // Never suppress pure integers — those are handled separately as page numbers
+      if (cnt >= minPages && !/^\d+$/.test(t)) _repeatTextSet.add(t);
+    }
+  }
+
   // ── Pass 2: build Word content ─────────────────────────────────────────────
   const paragraphs  = [];
   const _paraBuffer = [];   // accumulates lines that should be merged into one Paragraph
@@ -955,6 +978,12 @@ async function _p2wExtractText(pdfDoc) {
   // Called before tables, grids, and at end of each page's event loop.
   const _flushPara = () => {
     if (!_paraBuffer.length) return;
+
+    // Suppress repeated watermark / header / footer lines (e.g. "CamScanner")
+    if (_paraBuffer.length === 1) {
+      const t = _paraBuffer[0].items.map(i => i.str).join('').trim();
+      if (_repeatTextSet.has(t)) { _paraBuffer.length = 0; return; }
+    }
 
     const allText = _paraBuffer.flatMap(ln => ln.items).map(i => i.str).join('');
     const maxSize = Math.max(..._paraBuffer.flatMap(ln => ln.items.map(i => i.fontSize)));
@@ -1020,8 +1049,22 @@ async function _p2wExtractText(pdfDoc) {
       paragraphs.push(new Paragraph({ children: [], pageBreakBefore: true }));
     }
 
-    const { lines, rotatedItems, borderGrids } = pageData[pi];
-    if (!lines.length) continue;
+    const { lines, rotatedItems, borderGrids, pageH: _pageH } = pageData[pi];
+
+    // Pages with no extractable text (diagram-only pages in scanned PDFs):
+    // render the full page as a single ImageRun so content is not lost.
+    if (!lines.length) {
+      if (isProcessing) {
+        const imgRun = await _p2wRenderFullPage(pdfDoc, pi + 1, _pageH, ImageRun).catch(() => null);
+        if (imgRun) {
+          paragraphs.push(new Paragraph({
+            children: [imgRun],
+            spacing:  { before: 60, after: 60 },
+          }));
+        }
+      }
+      continue;
+    }
 
     setProgress(50 + Math.round((pi / pageData.length) * 40),
                 `Building page ${pi + 1}/${pageData.length}…`);
@@ -1181,6 +1224,14 @@ async function _p2wExtractText(pdfDoc) {
           //   • either the buffered or incoming line is a heading (large font)
           //     — headings must never merge with adjacent body lines
           const ln      = lines[lineIdx];
+
+          // Skip embedded page numbers: the bottommost line on a page that
+          // contains only a pure integer (e.g. "75", "76" in scanned books).
+          if (lineIdx === lines.length - 1 && ln.items.length === 1) {
+            const t = ln.items[0].str.trim();
+            if (/^\d+$/.test(t)) continue;
+          }
+
           const maxFont = Math.max(...ln.items.map(i => i.fontSize));
           const isHead  = maxFont >= median * 1.3;
 
@@ -1385,6 +1436,35 @@ async function _p2wRenderRegions(pdfDoc, pageNum, pageH, gaps, medianFontSize, I
   canvas.width = 0; canvas.height = 0;
   canvas.remove();
   return result;
+}
+
+// Renders a PDF page that has no extractable text (diagram-only page) as a
+// single full-page ImageRun. Used when lines.length === 0 in text mode.
+async function _p2wRenderFullPage(pdfDoc, pageNum, pageH, ImageRun) {
+  const _RENDER_DPI = 150;
+  const _MAX_W_PX   = 594;
+
+  const scale  = _RENDER_DPI / 72;
+  const page   = await pdfDoc.getPage(pageNum);
+  const vp     = page.getViewport({ scale });
+  const canvas = document.createElement('canvas');
+  canvas.width  = Math.round(vp.width);
+  canvas.height = Math.round(vp.height);
+  const ctx = canvas.getContext('2d');
+  await page.render({ canvasContext: ctx, viewport: vp }).promise;
+  page.cleanup?.();
+
+  const blob = await new Promise(res => canvas.toBlob(res, 'image/jpeg', 0.85));
+  canvas.width = 0; canvas.height = 0;
+  canvas.remove();
+  if (!blob) return null;
+
+  const buf = await blob.arrayBuffer();
+  let w = Math.round(vp.width  * 96 / _RENDER_DPI);
+  let h = Math.round(vp.height * 96 / _RENDER_DPI);
+  if (w > _MAX_W_PX) { h = Math.round(h * _MAX_W_PX / w); w = _MAX_W_PX; }
+
+  return new ImageRun({ data: buf, transformation: { width: w, height: h }, type: 'jpg' });
 }
 
 // Image mode: render each page to canvas → embed JPEG in docx.
