@@ -1,5 +1,9 @@
 User-agent: *
 Allow: /
 Disallow: /sw.js
+Disallow: /dist/
+
+# Crawl-delay hint for bots that respect it
+Crawl-delay: 1
 
 Sitemap: https://pdfree.io/sitemap.xml
