@@ -983,13 +983,25 @@ async function _p2wExtractText(pdfDoc) {
   // ── Post-Pass-1: build watermark filter ───────────────────────────────────
   // Short text appearing on ≥ ⅔ of pages (min 3) is treated as a repeated
   // watermark / header / footer and suppressed in DOCX output.
+
+  // CamScanner adds a stamp at the bottom of every scanned page. pdf.js
+  // sometimes extracts it as two separate items on the same line, so joining
+  // produces "CamScannerCamScanner" instead of "CamScanner". Normalise to
+  // a single canonical form so the frequency counter sees one string, not two.
+  // Also collapse the "cs]" logo abbreviation and bare "-" separator line.
+  const _normWatermark = t =>
+    t.replace(/^(CamScanner)+$/i, 'CamScanner')
+     .replace(/^[Cc][Ss]\]?$/, 'CamScanner')
+     .replace(/^-$/, '');
+
   const _repeatTextSet = new Set();
   {
     const freq = new Map();   // lineText → number of pages it appears on
     for (const { lines } of pageData) {
       const seenOnPage = new Set();
       for (const ln of lines) {
-        const t = ln.items.map(i => i.str).join('').trim();
+        const raw = ln.items.map(i => i.str).join('').trim();
+        const t   = _normWatermark(raw);
         if (t.length > 0 && t.length <= 60 && !seenOnPage.has(t)) {
           seenOnPage.add(t);
           freq.set(t, (freq.get(t) || 0) + 1);
@@ -1009,7 +1021,8 @@ async function _p2wExtractText(pdfDoc) {
 
   // ── Pass 2: build Word content ─────────────────────────────────────────────
   const _GAP_FACTOR = 2.5;   // gap > N × medianFontSize triggers a visual region
-  const _MIN_GAP_PT = 30;    // minimum gap in PDF points (~0.4 inch)
+  const _MIN_GAP_PT = 20;    // minimum gap in PDF points (~0.28 inch); was 30 but
+                              // CamScanner math PDFs have diagrams with tighter gaps
 
   const paragraphs  = [];
   const _paraBuffer = [];   // accumulates lines that should be merged into one Paragraph
@@ -1019,10 +1032,12 @@ async function _p2wExtractText(pdfDoc) {
   const _flushPara = () => {
     if (!_paraBuffer.length) return;
 
-    // Suppress repeated watermark / header / footer lines (e.g. "CamScanner")
+    // Suppress repeated watermark / header / footer lines (e.g. "CamScanner").
+    // Normalise with _normWatermark so that "CamScannerCamScanner" and "cs]"
+    // variants also match the canonical form stored in _repeatTextSet.
     if (_paraBuffer.length === 1) {
-      const t = _paraBuffer[0].items.map(i => i.str).join('').trim();
-      if (_repeatTextSet.has(t)) { _paraBuffer.length = 0; return; }
+      const t = _normWatermark(_paraBuffer[0].items.map(i => i.str).join('').trim());
+      if (t === '' || _repeatTextSet.has(t)) { _paraBuffer.length = 0; return; }
     }
 
     const allText = _paraBuffer.flatMap(ln => ln.items).map(i => i.str).join('');
@@ -1030,9 +1045,15 @@ async function _p2wExtractText(pdfDoc) {
     const hasRtl  = _paraBuffer.some(ln => ln.rtl);
 
     let heading;
-    if      (maxSize >= median * 2.2) heading = HeadingLevel.HEADING_1;
-    else if (maxSize >= median * 1.7) heading = HeadingLevel.HEADING_2;
-    else if (maxSize >= median * 1.3) heading = HeadingLevel.HEADING_3;
+    // Only promote to heading if the total text is long enough to be a real
+    // heading. CamScanner OCR noise ("EE", "cs]") sometimes carries a large
+    // fontSize on a 1–3 character fragment — that should stay as body text.
+    const allTextTrimmed = allText.replace(/\s+/g, '');
+    if (allTextTrimmed.length > 3) {
+      if      (maxSize >= median * 2.2) heading = HeadingLevel.HEADING_1;
+      else if (maxSize >= median * 1.7) heading = HeadingLevel.HEADING_2;
+      else if (maxSize >= median * 1.3) heading = HeadingLevel.HEADING_3;
+    }
 
     const runs = [];
     for (let li = 0; li < _paraBuffer.length; li++) {
@@ -1263,9 +1284,11 @@ async function _p2wExtractText(pdfDoc) {
           //     — headings must never merge with adjacent body lines
           const ln      = lines[lineIdx];
 
-          // Skip embedded page numbers: the bottommost line on a page that
-          // contains only a pure integer (e.g. "75", "76" in scanned books).
-          if (lineIdx === lines.length - 1 && ln.items.length === 1) {
+          // Skip embedded page numbers: a line in the bottom region of the page
+          // (last 3 lines) that contains only a pure integer. Checking only the
+          // very last line missed cases where the CamScanner watermark line is
+          // below the page number, making the number the second-to-last line.
+          if (lineIdx >= lines.length - 3 && ln.items.length === 1 && !lineToTable.has(lineIdx)) {
             const t = ln.items[0].str.trim();
             if (/^\d+$/.test(t)) continue;
           }
