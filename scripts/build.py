@@ -55,6 +55,8 @@ SKIP_FILES = {
     'CONTRIBUTING.md', 'LICENSE', 'README.md',
     '3c51839cdd6944c79259fdf6a0c383cc.txt',
     'qpdf-run-0.2.1.tgz',
+    'seo-content.html',   # legacy dev artifact — content now lives in data/content/
+    'test-dedup.pdf',      # test fixture — not a public asset
 }
 SKIP_EXTS = {'.py', '.toml', '.local'}
 
