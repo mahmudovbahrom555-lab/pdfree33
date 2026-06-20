@@ -416,7 +416,13 @@ def _write_sitemap(config, out_dir):
     }
 
     for slug in SPECIALTY_PAGES:
-        url = f"{BASE_URL}/{slug}/"
+        # .html files don't use trailing slashes; directories do
+        if slug.endswith('.html'):
+            url = f"{BASE_URL}/{slug}"
+            lastmod_path = slug
+        else:
+            url = f"{BASE_URL}/{slug}/"
+            lastmod_path = f"{slug}/index.html"
         loc_alts = _localized_specialty.get(slug)
         if loc_alts:
             alts = [('en', url)]
@@ -428,11 +434,11 @@ def _write_sitemap(config, out_dir):
         # Determine priority & changefreq by page type
         if slug.startswith('blog/'):
             _sp_priority, _sp_freq = '0.6', 'monthly'
-        elif slug in ('privacy.html', 'terms.html'):
+        elif slug.endswith('.html'):
             _sp_priority, _sp_freq = '0.3', 'yearly'
         else:
             _sp_priority, _sp_freq = '0.7', 'monthly'
-        lines += _url_block(url, _git_lastmod(f"{slug}/index.html"), alts, priority=_sp_priority, changefreq=_sp_freq)
+        lines += _url_block(url, _git_lastmod(lastmod_path), alts, priority=_sp_priority, changefreq=_sp_freq)
 
     # ── Localized specialty pages ──────────────────────────────
     for en_slug, loc_map in _localized_specialty.items():
