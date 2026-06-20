@@ -296,10 +296,8 @@ SPECIALTY_PAGES = [
     'compress-large-pdf-free',
     'secure-pdf-tools',
     'sign',
-    # Tools not in tools-config (standalone pages)
-    'ocr-pdf',
-    'pdf-to-word',
-    'draw-on-pdf',
+    # compare-pdf is EN-only so stays here; ocr-pdf/pdf-to-word/draw-on-pdf
+    # are handled by _lang_specialty below (with full locale alternates).
     'compare-pdf',
     # Specific-intent landing pages
     'compress-pdf-for-email',
@@ -465,13 +463,7 @@ def _write_sitemap(config, out_dir):
             'fr': 'fr/dessiner-sur-pdf',
             'pt': 'pt/desenhar-no-pdf',
         },
-        'flatten-pdf': {
-            'en': 'flatten-pdf',
-            'de': 'de/pdf-abflachen',
-            'es': 'es/aplanar-pdf',
-            'fr': 'fr/aplatir-pdf',
-            'pt': 'pt/nivelar-pdf',
-        },
+
     }
     for en_key, loc_map in _lang_specialty.items():
         en_url = f"{BASE_URL}/{loc_map['en']}/"
