@@ -1013,34 +1013,74 @@
       "icon": "🔒",
       "toolKey": "flatten",
       "slugs": {
-        "en": "flatten-pdf"
+        "en": "flatten-pdf",
+        "de": "pdf-abflachen",
+        "es": "aplanar-pdf",
+        "fr": "aplatir-pdf",
+        "pt": "nivelar-pdf"
       },
       "titles": {
-        "en": "Flatten PDF — Make PDF Non-Editable Online Free | PDFree"
+        "en": "Flatten PDF — Make PDF Non-Editable Online Free | PDFree",
+        "de": "PDF Abflachen — PDF nicht editierbar machen | PDFree",
+        "es": "Aplanar PDF — Hacer PDF No Editable Online Gratis | PDFree",
+        "fr": "Aplatir PDF — Rendre un PDF Non Modifiable en Ligne | PDFree",
+        "pt": "Nivelar PDF — Tornar PDF Não Editável Online Grátis | PDFree"
       },
       "descs": {
-        "en": "Lock your filled PDF form so fields can't be edited. Bakes form data into the page — no upload, 100% private, free."
+        "en": "Lock your filled PDF form so fields can't be edited. Bakes form data into the page — no upload, 100% private, free.",
+        "de": "PDF-Formular dauerhaft sperren — Felder werden in die Seite eingebrannt. Kein Upload, 100% privat, kostenlos.",
+        "es": "Bloquea tu formulario PDF relleno para que los campos no puedan editarse. Sin subir, 100% privado, gratis.",
+        "fr": "Verrouillez votre formulaire PDF rempli pour qu'il ne soit plus modifiable. Sans envoi, 100% privé, gratuit.",
+        "pt": "Bloqueie seu formulário PDF preenchido para que os campos não possam ser editados. Sem upload, 100% privado, grátis."
       },
       "navLabels": {
-        "en": "Lock PDF"
+        "en": "Lock PDF",
+        "de": "PDF Sperren",
+        "es": "Bloquear PDF",
+        "fr": "Verrouiller PDF",
+        "pt": "Bloquear PDF"
       },
       "cardNames": {
-        "en": "Flatten PDF"
+        "en": "Flatten PDF",
+        "de": "PDF Abflachen",
+        "es": "Aplanar PDF",
+        "fr": "Aplatir PDF",
+        "pt": "Nivelar PDF"
       },
       "cardDescs": {
-        "en": "Bake form fields into the page — prevent editing"
+        "en": "Bake form fields into the page — prevent editing",
+        "de": "Formularfelder dauerhaft einbrennen — Bearbeitung verhindern",
+        "es": "Fusionar campos de formulario en la página — evitar edición",
+        "fr": "Intégrer les champs de formulaire dans la page — empêcher la modification",
+        "pt": "Integrar campos de formulário na página — evitar edição"
       },
       "breadcrumb": {
-        "en": "Flatten PDF"
+        "en": "Flatten PDF",
+        "de": "PDF Abflachen",
+        "es": "Aplanar PDF",
+        "fr": "Aplatir PDF",
+        "pt": "Nivelar PDF"
       },
       "metaDescs": {
-        "en": "Flatten PDF online free — bake form fields into the page so the document cannot be edited. No upload, 100% private, processed in your browser. Instant download."
+        "en": "Flatten PDF online free — bake form fields into the page so the document cannot be edited. No upload, 100% private, processed in your browser. Instant download.",
+        "de": "PDF online kostenlos abflachen — Formularfelder dauerhaft in die Seite einbrennen. Kein Upload, 100% privat, im Browser verarbeitet. Sofortiger Download.",
+        "es": "Aplanar PDF online gratis — fusiona campos de formulario en la página para que el documento no pueda editarse. Sin subir, 100% privado. Descarga instantánea.",
+        "fr": "Aplatir un PDF en ligne gratuitement — intégrer les champs de formulaire dans la page pour que le document ne soit plus modifiable. Sans envoi, 100% privé.",
+        "pt": "Nivelar PDF online grátis — integre campos de formulário na página para que o documento não possa ser editado. Sem upload, 100% privado. Download instantâneo."
       },
       "ogTitles": {
-        "en": "Flatten PDF — Lock Fillable PDF Form Online, No Upload"
+        "en": "Flatten PDF — Lock Fillable PDF Form Online, No Upload",
+        "de": "PDF Abflachen — Ausfüllbares PDF Sperren, Kein Upload",
+        "es": "Aplanar PDF — Bloquear Formulario PDF Online, Sin Subir",
+        "fr": "Aplatir PDF — Verrouiller Formulaire PDF en Ligne, Sans Envoi",
+        "pt": "Nivelar PDF — Bloquear Formulário PDF Online, Sem Upload"
       },
       "ogDescs": {
-        "en": "Make a fillable PDF non-editable. Form fields baked into the page — processed in your browser, never uploaded. Free."
+        "en": "Make a fillable PDF non-editable. Form fields baked into the page — processed in your browser, never uploaded. Free.",
+        "de": "PDF-Formular nicht editierbar machen. Felder dauerhaft eingebrannt — im Browser verarbeitet, nie hochgeladen. Kostenlos.",
+        "es": "Hacer un PDF rellenable no editable. Campos integrados en la página — procesados en tu navegador, sin subir. Gratis.",
+        "fr": "Rendre un PDF modifiable non éditable. Champs intégrés dans la page — traité dans votre navigateur, jamais envoyé. Gratuit.",
+        "pt": "Tornar um PDF preenchível não editável. Campos integrados na página — processados no seu navegador, nunca enviados. Grátis."
       }
     }
   ],
