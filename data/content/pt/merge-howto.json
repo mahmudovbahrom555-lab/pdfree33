@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Juntar arquivos PDF",
+  "description": "Combine vários arquivos PDF em um único documento grátis — sem upload, 100% privado.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Selecione seus PDFs",
+      "text": "Clique em 'Escolher arquivos' ou arraste seus PDFs para a zona de upload. Sem limite de arquivos."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Ordene os arquivos",
+      "text": "Arraste os cards de arquivo para definir a ordem de combinação."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Baixe o PDF combinado",
+      "text": "Clique em 'Juntar PDF'. Seu documento combinado é gerado no seu navegador e baixado automaticamente."
+    }
+  ]
+}

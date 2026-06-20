@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Fusionner des fichiers PDF",
+  "description": "Combinez plusieurs fichiers PDF en un seul document — gratuit, sans envoi, 100 % privé.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Sélectionnez vos PDFs",
+      "text": "Cliquez sur 'Sélectionner les fichiers' ou déposez vos PDFs dans la zone. Nombre de fichiers illimité."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Ordonnez les fichiers",
+      "text": "Faites glisser les cartes de fichiers pour définir l'ordre de fusion."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Téléchargez le PDF fusionné",
+      "text": "Cliquez sur 'Fusionner PDF'. Votre document combiné est généré dans votre navigateur et téléchargé automatiquement."
+    }
+  ]
+}

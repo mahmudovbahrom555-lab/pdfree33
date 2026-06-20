@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDF aufteilen",
+  "description": "PDF in einzelne Seiten aufteilen oder Seitenbereich extrahieren — kostenlos, kein Upload.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDF öffnen",
+      "text": "Klicke auf 'Dateien auswählen' oder ziehe dein PDF in die Ablage."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Aufteilungsmodus wählen",
+      "text": "Wähle 'Seiten extrahieren' für bestimmte Seiten oder 'Alle aufteilen' für eine Datei pro Seite. Gib einen Seitenbereich wie 1-3,5 ein."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Aufgeteilte Dateien herunterladen",
+      "text": "Klicke auf 'PDF Aufteilen'. Deine Seiten werden als ZIP-Datei heruntergeladen."
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Comprimir um PDF",
+  "description": "Reduz o tamanho de um PDF sem perder qualidade — grátis, sem upload de arquivos.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Abra seu PDF",
+      "text": "Clique em 'Escolher arquivos' ou arraste seu PDF para a zona de upload."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Escolha o nível de compressão",
+      "text": "Selecione Baixo, Médio ou Alto conforme o equilíbrio desejado entre qualidade e tamanho."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Baixe o PDF comprimido",
+      "text": "Clique em 'Comprimir PDF'. A ferramenta mostra quanto espaço foi economizado."
+    }
+  ]
+}

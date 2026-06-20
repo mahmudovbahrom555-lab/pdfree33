@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDF-Dateien zusammenfügen",
+  "description": "Mehrere PDF-Dateien kostenlos zu einem Dokument zusammenfügen — kein Upload, 100% privat.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDF-Dateien auswählen",
+      "text": "Klicke auf 'Dateien auswählen' oder ziehe deine PDFs in die Ablage. Unbegrenzt viele Dateien möglich."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Reihenfolge festlegen",
+      "text": "Ziehe die Dateikarten in die gewünschte Reihenfolge."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Zusammengefügte PDF herunterladen",
+      "text": "Klicke auf 'PDF Zusammenfügen'. Dein kombiniertes Dokument wird direkt im Browser erstellt und heruntergeladen."
+    }
+  ]
+}

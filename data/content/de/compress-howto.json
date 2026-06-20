@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDF komprimieren",
+  "description": "PDF-Dateigröße ohne Qualitätsverlust reduzieren — kostenlos, kein Upload erforderlich.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDF öffnen",
+      "text": "Klicke auf 'Dateien auswählen' oder ziehe dein PDF in die Ablage."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Komprimierungsstufe wählen",
+      "text": "Wähle zwischen Niedrig, Mittel oder Hoch für die gewünschte Balance zwischen Qualität und Dateigröße."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Komprimiertes PDF herunterladen",
+      "text": "Klicke auf 'PDF Komprimieren'. Das Tool zeigt dir, wie viel Speicherplatz gespart wurde."
+    }
+  ]
+}

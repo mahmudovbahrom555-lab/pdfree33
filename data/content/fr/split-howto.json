@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Diviser un PDF",
+  "description": "Divisez un PDF en pages séparées ou extrayez une plage — gratuit, sans envoi.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Ouvrez votre PDF",
+      "text": "Cliquez sur 'Sélectionner les fichiers' ou déposez votre PDF dans la zone."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Choisissez le mode de division",
+      "text": "Sélectionnez 'Extraire des pages' pour des pages spécifiques ou 'Tout diviser' pour un fichier par page. Entrez une plage comme 1-3,5."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Téléchargez les fichiers divisés",
+      "text": "Cliquez sur 'Diviser PDF'. Vos pages sont téléchargées dans un fichier ZIP."
+    }
+  ]
+}

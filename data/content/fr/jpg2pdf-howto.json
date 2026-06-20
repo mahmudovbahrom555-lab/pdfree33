@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Convertir JPG en PDF",
+  "description": "Convertissez des images JPG, PNG et WebP en un PDF — gratuit, sans envoi.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Ajoutez vos images",
+      "text": "Cliquez sur 'Sélectionner les fichiers' ou déposez vos images. Plusieurs images sont combinées en un PDF."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Ordonnez les images",
+      "text": "Faites glisser les cartes pour définir l'ordre des pages. La rotation EXIF est appliquée automatiquement."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Téléchargez le PDF",
+      "text": "Cliquez sur 'Convertir en PDF'. Vos images sont regroupées en un PDF instantanément."
+    }
+  ]
+}

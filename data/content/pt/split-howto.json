@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Dividir um PDF",
+  "description": "Divida um PDF em páginas separadas ou extraia um intervalo — grátis, sem upload.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Abra seu PDF",
+      "text": "Clique em 'Escolher arquivos' ou arraste seu PDF para a zona de upload."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Escolha o modo de divisão",
+      "text": "Selecione 'Extrair páginas' para páginas específicas ou 'Dividir tudo' para um arquivo por página. Digite um intervalo como 1-3,5."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Baixe os arquivos divididos",
+      "text": "Clique em 'Dividir PDF'. Suas páginas são baixadas em um arquivo ZIP."
+    }
+  ]
+}
