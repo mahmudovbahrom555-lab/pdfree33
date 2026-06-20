@@ -55,7 +55,10 @@
   <meta property="og:image:height" content="633">
   <meta name="twitter:card"        content="summary_large_image">
   <meta name="twitter:site"        content="@pdfree_io">
+  <meta name="twitter:title"       content="{{ tool.ogTitles[lang] }}">
+  <meta name="twitter:description" content="{{ tool.ogDescs[lang] }}">
   <meta name="twitter:image"       content="{{ base_url }}/icons/og-image.jpg">
+  <meta name="twitter:image:alt"   content="{{ tool.cardNames[lang] }} — PDFree">
 
   <link rel="canonical" href="{{ base_url }}/{{ canonical_path }}">
   {% for hl_lang, hl_url in hreflang_links %}
