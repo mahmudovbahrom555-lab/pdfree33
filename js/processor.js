@@ -794,7 +794,7 @@ async function _runPdf2Word(filesSnapshot, { mode = 'text', dpi = 150 } = {}) {
     _handleError('pdf2word', err.message); return;
   }
 
-  if (!isProcessing) { isProcessing = false; setFilesLocked(false); hideCancelBtn(); return; }
+  if (!isProcessing) return;
 
   setProgress(92, 'Building Word document…');
 
