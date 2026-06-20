@@ -224,6 +224,17 @@ nav {
   transform: translateY(8px);
 }
 
+/* ── Chips section label (STATE 1 only) ── */
+.hero-chips-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text2);
+  text-align: center;
+  margin: 14px 0 6px;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+
 /* ── Trust banner (STATE 1) ── */
 .hero-banner {
   max-width: 520px;

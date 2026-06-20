@@ -456,6 +456,7 @@ function initSearch() {
   const heroSection     = id('hero');
   const heroDetected    = id('heroDetected');
   const heroBanner      = id('heroBanner');
+  const heroChipsLabel  = id('heroChipsLabel');
   const heroDropZone    = id('heroDropZone');
   const heroFileInput   = id('heroFileInput');
   const heroDropIdle    = id('heroDropIdle');
@@ -656,6 +657,7 @@ function initSearch() {
 
     trackHeroFileSelect(files.length, source);
     if (heroBanner && !_bannerDismissed) heroBanner.hidden = false;
+    if (heroChipsLabel) heroChipsLabel.hidden = false;
     _showHeroDetected(files);
     _renderChips();
     searchEl.focus();
@@ -667,8 +669,9 @@ function initSearch() {
     heroDropReady.hidden = true;
     heroDropZone.classList.remove('has-file');
     if (heroSection) heroSection.classList.remove('has-file');
-    if (heroBanner)  heroBanner.hidden  = true;
-    if (heroDetected) heroDetected.hidden = true;
+    if (heroBanner)     heroBanner.hidden     = true;
+    if (heroChipsLabel) heroChipsLabel.hidden = true;
+    if (heroDetected)   heroDetected.hidden   = true;
     heroFileInput.value = '';
     if (_heroHintEl) _heroHintEl.hidden = true;
     _renderChips();
