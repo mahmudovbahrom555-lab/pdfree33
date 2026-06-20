@@ -99,10 +99,11 @@ def _compute_hashes():
             combined += f.read()
     cache_version = hashlib.md5(combined).hexdigest()[:8]
     return {
-        'app':           app_hash,
-        'cache_version': cache_version,
-        'worker':        _md5_short(os.path.join(ROOT, 'js', 'worker.js')),
+        'app':            app_hash,
+        'cache_version':  cache_version,
+        'worker':         _md5_short(os.path.join(ROOT, 'js', 'worker.js')),
         'components_css': _md5_short(os.path.join(ROOT, 'css', 'components.css')),
+        'css':            cache_version,  # same combined hash busts all CSS at once
     }
 
 
@@ -433,6 +434,28 @@ def _inject_hashes(hashes, out_dir):
                     f.write(new_content)
                 html_count += 1
     print(f'  app.js?v={app_hash} injected into {html_count} HTML files')
+
+    # Inject version hash into every HTML file's CSS <link> tags.
+    # Without this, a CSS-only deploy leaves the browser cache serving stale
+    # stylesheets even after the SW updates its cache version.
+    css_hash = hashes['css']
+    css_count = 0
+    for root, _dirs, files in os.walk(out_dir):
+        for fname in files:
+            if not fname.endswith('.html'):
+                continue
+            path = os.path.join(root, fname)
+            content = open(path, encoding='utf-8').read()
+            new_content = re.sub(
+                r'(href="[^"]*\.css)(?:\?v=[^"]*)?(")',
+                rf'\g<1>?v={css_hash}\g<2>',
+                content,
+            )
+            if new_content != content:
+                with open(path, 'w', encoding='utf-8') as f:
+                    f.write(new_content)
+                css_count += 1
+    print(f'  css?v={css_hash} injected into {css_count} HTML files')
 
 
 # ── Static asset copy ─────────────────────────────────────────────────────────
