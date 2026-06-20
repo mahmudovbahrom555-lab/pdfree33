@@ -6,3 +6,30 @@
 /add-page-numbers-to-pdf/ /pagenum-pdf/ 301
 /meta-pdf/ /metadata-pdf/ 301
 /cover-area/ /redact-pdf/ 301
+
+# Common alternate spellings / search intent URLs
+/pdf-to-jpg/ /pdf2jpg/ 301
+/pdf-to-jpg /pdf2jpg/ 301
+/jpg-to-pdf/ /jpg2pdf/ 301
+/jpg-to-pdf /jpg2pdf/ 301
+/image-to-pdf/ /jpg2pdf/ 301
+/images-to-pdf/ /jpg2pdf/ 301
+/pdf-compress/ /compress-pdf/ 301
+/compress/ /compress-pdf/ 301
+/merge/ /merge-pdf/ 301
+/split/ /split-pdf/ 301
+/rotate/ /rotate-pdf/ 301
+/watermark/ /watermark-pdf/ 301
+/protect/ /protect-pdf/ 301
+/pdf-password/ /protect-pdf/ 301
+/add-password-to-pdf/ /protect-pdf/ 301
+/remove-password-from-pdf/ /protect-pdf/ 301
+/page-numbers/ /pagenum-pdf/ 301
+/add-page-numbers/ /pagenum-pdf/ 301
+/extract/ /extract-pdf/ 301
+/redact/ /redact-pdf/ 301
+/flatten/ /flatten-pdf/ 301
+/fill-pdf/ /fill/ 301
+/fill-pdf-form/ /fill/ 301
+/pdf-metadata/ /metadata-pdf/ 301
+/edit-metadata/ /metadata-pdf/ 301
