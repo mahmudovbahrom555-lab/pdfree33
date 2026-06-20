@@ -61,12 +61,14 @@ let _useThumbs        = false;
 
 /**
  * Returns the rotation params for the worker.
- * Only includes pages where the net rotation ≠ 0 (no-op pages skipped).
+ * Only includes pages where the user applied a delta — unmodified pages
+ * are skipped so the worker doesn't write unnecessary /Rotate entries.
  */
 export function getRotateParams() {
   const rotations = [];
   for (let i = 0; i < _pageCount; i++) {
-    const final = (_initialRotations[i] + _deltas[i]) % 360;
+    if (_deltas[i] === 0) continue;
+    const final = ((_initialRotations[i] + _deltas[i]) % 360 + 360) % 360;
     rotations.push({ index: i, angle: final });
   }
   return { rotations };
