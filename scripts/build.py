@@ -47,6 +47,8 @@ SKIP_DIRS = {
     'dist', 'data', 'scripts',
     # Old slug — redirect handled in _redirects, no HTML needed in dist
     'annotate',
+    # Internal research files — never serve publicly
+    'research',
 }
 SKIP_FILES = {
     'wrangler.toml', 'wrangler.jsonc', 'wrangler.json',  # deployment configs — never serve as static
@@ -57,6 +59,7 @@ SKIP_FILES = {
     'qpdf-run-0.2.1.tgz',
     'seo-content.html',   # legacy dev artifact — content now lives in data/content/
     'test-dedup.pdf',      # test fixture — not a public asset
+    'index.template.html',   # build template — not a user-facing page
 }
 SKIP_EXTS = {'.py', '.toml', '.local'}
 
