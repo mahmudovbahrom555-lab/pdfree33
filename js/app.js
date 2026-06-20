@@ -511,13 +511,46 @@ function initSearch() {
 
   function _showHeroDetected(files) {
     if (!heroDetected) return;
-    if (files.length > 1) { heroDetected.hidden = true; return; }
-    const file = files[0];
 
+    heroDetected.innerHTML = '';
+
+    // Multi-file: summary card + Merge-first grid
+    if (files.length > 1) {
+      const totalSize = files.reduce((s, f) => s + f.size, 0);
+      const summary = document.createElement('div');
+      summary.className = 'hero-det-card';
+      const row = document.createElement('div');
+      row.className = 'hero-det-row';
+      const iconEl = document.createElement('span');
+      iconEl.className = 'hero-det-icon';
+      iconEl.textContent = '📄';
+      const metaEl = document.createElement('div');
+      metaEl.className = 'hero-det-meta';
+      const nameEl = document.createElement('span');
+      nameEl.className = 'hero-det-name';
+      nameEl.textContent = `${files.length} PDF files`;
+      const sizeEl = document.createElement('span');
+      sizeEl.className = 'hero-det-size';
+      sizeEl.textContent = _fmtSize(totalSize);
+      metaEl.append(nameEl, sizeEl);
+      const changeBtn = document.createElement('button');
+      changeBtn.type = 'button';
+      changeBtn.className = 'hero-det-replace';
+      changeBtn.textContent = 'Change';
+      changeBtn.addEventListener('click', () => heroFileInput.click());
+      row.append(iconEl, metaEl, changeBtn);
+      summary.appendChild(row);
+      heroDetected.appendChild(summary);
+      heroDetected.appendChild(_buildRecsGrid(['merge', 'compress', 'protect', 'split'], 'merge'));
+      heroDetected.hidden = false;
+      return;
+    }
+
+    // Single file: card immediately, grid appended after scan
+    const file = files[0];
     const card = document.createElement('div');
     card.className = 'hero-det-card';
 
-    // Top row: icon + name/size + badges
     const row = document.createElement('div');
     row.className = 'hero-det-row';
 
@@ -550,7 +583,6 @@ function initSearch() {
 
     row.append(iconEl, metaEl, badgesEl, replaceBtn);
     card.appendChild(row);
-    heroDetected.innerHTML = '';
     heroDetected.appendChild(card);
     heroDetected.hidden = false;
 
@@ -595,21 +627,19 @@ function initSearch() {
         _badge('Not scanned', 'ok');
       }
 
-      // CTA recommendation — only for high-confidence signals
-      let recKey = null, recLabel = null;
-      if (isScanned)       { recKey = 'ocr';  recLabel = 'Extract text with OCR →'; }
-      else if (hasForms)   { recKey = 'fill'; recLabel = 'Fill this form →'; }
-
-      if (recKey) {
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'hero-det-rec';
-        btn.textContent = recLabel;
-        btn.addEventListener('click', () => {
-          if (_pendingFiles) showTool(recKey, true, _pendingFiles);
-        });
-        card.appendChild(btn);
+      // Contextual recommendations grid
+      let tools, bestMatch;
+      if (isScanned) {
+        tools = ['ocr', 'compress', 'split', 'pdf2jpg'];   bestMatch = 'ocr';
+      } else if (hasForms) {
+        tools = ['fill', 'protect', 'compress', 'pdf2word']; bestMatch = 'fill';
+      } else if (isEncrypted) {
+        tools = ['protect', 'compress', 'split', 'pdf2word']; bestMatch = null;
+      } else {
+        tools = ['compress', 'pdf2word', 'merge', 'split']; bestMatch = null;
       }
+
+      heroDetected.appendChild(_buildRecsGrid(tools, bestMatch));
     } catch {
       if (!card.isConnected) return;
       badgesEl.innerHTML = '';
@@ -617,7 +647,53 @@ function initSearch() {
       b.className = 'hero-det-badge';
       b.textContent = 'Could not analyze';
       badgesEl.appendChild(b);
+      heroDetected.appendChild(_buildRecsGrid(['compress', 'pdf2word', 'merge', 'split'], null));
     }
+  }
+
+  function _buildRecsGrid(tools, bestMatchKey) {
+    const REC_CTA = {
+      compress: 'Compress',
+      pdf2word: 'Convert to Word',
+      merge:    'Merge',
+      split:    'Split',
+      ocr:      'Extract text',
+      pdf2jpg:  'Export images',
+      protect:  'Protect',
+      fill:     'Fill form',
+    };
+    const grid = document.createElement('div');
+    grid.className = 'hero-recs';
+    tools.forEach(key => {
+      const tool = TOOLS[key];
+      if (!tool) return;
+      const isBest = key === bestMatchKey;
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'hero-rec-card' + (isBest ? ' hero-rec-card--best' : '');
+      const iconEl = document.createElement('span');
+      iconEl.className = 'hero-rec-icon';
+      iconEl.textContent = tool.icon || '📄';
+      const nameEl = document.createElement('span');
+      nameEl.className = 'hero-rec-name';
+      nameEl.textContent = tool.title;
+      btn.append(iconEl, nameEl);
+      if (isBest) {
+        const matchEl = document.createElement('span');
+        matchEl.className = 'hero-rec-match';
+        matchEl.textContent = '⭐ Best Match';
+        btn.appendChild(matchEl);
+      }
+      const ctaEl = document.createElement('span');
+      ctaEl.className = 'hero-rec-cta';
+      ctaEl.textContent = (REC_CTA[key] || tool.title) + ' →';
+      btn.appendChild(ctaEl);
+      btn.addEventListener('click', () => {
+        if (_pendingFiles) showTool(key, true, _pendingFiles);
+      });
+      grid.appendChild(btn);
+    });
+    return grid;
   }
 
   function _getHintEl() {

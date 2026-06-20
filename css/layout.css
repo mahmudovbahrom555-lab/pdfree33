@@ -386,26 +386,71 @@ nav {
   color: #856404;
 }
 
-.hero-det-rec {
-  display: block;
-  width: 100%;
+/* ── Recommendations grid ── */
+.hero-recs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
   margin-top: 10px;
-  padding: 9px 16px;
-  background: var(--green);
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  text-align: center;
-  transition: background 0.15s;
-  border-top: 1px solid var(--border);
-  padding-top: 10px;
 }
 
-.hero-det-rec:hover {
-  background: var(--green-dark);
+.hero-rec-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 11px 13px;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  min-height: 80px;
+}
+
+.hero-rec-card:hover {
+  border-color: var(--green);
+  box-shadow: 0 2px 8px rgba(45, 122, 79, 0.12);
+}
+
+.hero-rec-card--best {
+  border-color: rgba(45, 122, 79, 0.5);
+  background: var(--green-light);
+}
+
+.hero-rec-card--best:hover {
+  border-color: var(--green);
+}
+
+.hero-rec-icon { font-size: 18px; line-height: 1; }
+
+.hero-rec-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.3;
+  margin-top: 4px;
+}
+
+.hero-rec-match {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--green);
+  margin-top: 2px;
+}
+
+.hero-rec-cta {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text2);
+  margin-top: auto;
+  padding-top: 8px;
+}
+
+.hero-rec-card--best .hero-rec-cta {
+  color: var(--green);
+  font-weight: 600;
 }
 
 @media (prefers-color-scheme: dark) {
