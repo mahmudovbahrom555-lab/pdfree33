@@ -1,0 +1,34 @@
+[
+  {
+    "@type": "Question",
+    "name": "O que o nivelamento de um PDF realmente faz?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "O nivelamento mescla todas as camadas interativas — campos de formulário, anotações, assinaturas digitais e sobreposições — no conteúdo estático da página. O resultado é um PDF plano, não interativo, com aparência idêntica ao original, mas que não pode ser editado."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "É possível desfazer o nivelamento de um PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Não. O nivelamento é irreversível — os campos de formulário originais são permanentemente substituídos por conteúdo visual estático. Sempre mantenha um backup do seu PDF preenchido antes de nivelá-lo."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Meu PDF é enviado para algum servidor ao nivelar?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Não. Tudo é executado no seu navegador com pdf-lib. Nem o original nem o resultado nivelado é enviado a qualquer servidor. Seu documento permanece no seu dispositivo o tempo todo."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Por que nivelar em vez de simplesmente salvar o PDF preenchido?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Um PDF preenchido salvo ainda contém campos editáveis — um destinatário poderia apagar seus valores e preenchê-los novamente. O nivelamento bloqueia permanentemente o conteúdo na página, impede a edição e garante renderização consistente em todos os leitores de PDF."
+    }
+  }
+]

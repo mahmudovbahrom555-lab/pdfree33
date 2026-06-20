@@ -1,0 +1,34 @@
+[
+  {
+    "@type": "Question",
+    "name": "Que fait exactement l'aplatissement d'un PDF ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "L'aplatissement fusionne toutes les couches interactives — champs de formulaire, annotations, signatures numériques et superpositions — dans le contenu statique de la page. Le résultat est un PDF plat, non interactif, qui semble identique à l'original mais ne peut plus être modifié."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Peut-on annuler l'aplatissement d'un PDF ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non. L'aplatissement est irréversible — les champs de formulaire originaux sont définitivement remplacés par du contenu visuel statique. Conservez toujours une sauvegarde de votre PDF rempli avant de l'aplatir."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Mon PDF est-il envoyé à un serveur lors de l'aplatissement ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non. Tout s'exécute dans votre navigateur avec pdf-lib. Ni l'original ni le résultat aplati n'est jamais envoyé. Votre document reste sur votre appareil en permanence."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Pourquoi aplatir plutôt que simplement enregistrer le PDF rempli ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Un PDF rempli enregistré contient encore des champs modifiables — un destinataire pourrait effacer vos valeurs et les re-saisir. L'aplatissement verrouille définitivement le contenu dans la page, empêche la modification et garantit un rendu cohérent dans tous les lecteurs PDF."
+    }
+  }
+]

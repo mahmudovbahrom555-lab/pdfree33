@@ -1,0 +1,34 @@
+[
+  {
+    "@type": "Question",
+    "name": "¿Qué hace exactamente aplanar un PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Aplanar fusiona todas las capas interactivas — campos de formulario, anotaciones, firmas digitales y superposiciones — en el contenido estático de la página. El resultado es un PDF plano, no interactivo, que parece idéntico al original pero no puede editarse."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Puede revertirse un PDF aplanado?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. El aplanado es irreversible — los campos de formulario originales se reemplazan permanentemente por contenido visual estático. Guarda siempre una copia de seguridad de tu PDF rellenado antes de aplanarlo."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Se sube mi PDF a algún servidor al aplanarlo?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Todo se ejecuta en tu navegador con pdf-lib. Ni el original ni el resultado aplanado se envían nunca a ningún servidor. Tu documento permanece en tu dispositivo en todo momento."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Por qué aplanar en lugar de simplemente guardar el PDF rellenado?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Un PDF rellenado guardado sigue conteniendo campos editables — un destinatario podría borrar tus valores y volver a rellenarlos. Aplanar bloquea permanentemente el contenido en la página, evita la edición y garantiza una representación coherente en todos los visores de PDF."
+    }
+  }
+]

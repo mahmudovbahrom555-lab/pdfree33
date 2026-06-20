@@ -1,0 +1,34 @@
+[
+  {
+    "@type": "Question",
+    "name": "Was bewirkt das Abflachen eines PDFs?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Das Abflachen führt alle interaktiven Ebenen — Formularfelder, Anmerkungen, digitale Unterschriften und Overlays — in den statischen Seiteninhalt zusammen. Das Ergebnis ist ein flaches, nicht interaktives PDF, das identisch aussieht, aber nicht mehr bearbeitet werden kann."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann ein abgeflachtes PDF rückgängig gemacht werden?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nein. Das Abflachen ist irreversibel — die ursprünglichen Formularfelder werden dauerhaft durch statischen Inhalt ersetzt. Bewahre immer eine Sicherungskopie deines ausgefüllten PDFs auf, bevor du es abflachst."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Wird mein PDF beim Abflachen auf einen Server hochgeladen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nein. Alles läuft in deinem Browser mit pdf-lib. Weder das Original noch das abgeflachte Ergebnis wird jemals hochgeladen. Dein Dokument bleibt jederzeit auf deinem Gerät."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Warum abflachen statt das ausgefüllte PDF einfach zu speichern?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ein gespeichertes ausgefülltes PDF enthält noch bearbeitbare Felder — ein Empfänger könnte die Werte löschen und neu ausfüllen. Das Abflachen sperrt den Inhalt dauerhaft in die Seite, verhindert Bearbeitung und sorgt für konsistente Darstellung in allen PDF-Viewern."
+    }
+  }
+]
