@@ -130,7 +130,7 @@ function _render() {
     ${wmRemoveHtml()}
   `;
 
-  _bindEvents(useRange);
+  _bindEvents();
 }
 
 // Delegates to pageSelectorUtils — no duplication with pdf2jpgUI
@@ -144,49 +144,60 @@ function _renderRangeInput() {
 
 // ── Events ────────────────────────────────────────────────────
 
-function _bindEvents(useRange) {
+function _bindEvents() {
   bindWmRemove();
   if (_eventsBound) return;
   _eventsBound = true;
 
-  // Mode switch
-  id('splitOptions').addEventListener('change', e => {
+  const opts = id('splitOptions');
+
+  // Mode switch + checkboxes — both delegated to the persistent #splitOptions div
+  opts.addEventListener('change', e => {
     if (e.target.name === 'splitMode') {
       _mode = e.target.value;
-      // Обновляем active класс
       document.querySelectorAll('.split-mode__opt').forEach(el => {
         el.classList.toggle('j2p-chip--active', el.dataset.mode === _mode);
       });
       _updateBtn();
+      return;
+    }
+    if (e.target.type === 'checkbox') {
+      const page = parseInt(e.target.value);
+      if (e.target.checked) {
+        if (!_selectedPages.includes(page)) _selectedPages.push(page);
+      } else {
+        _selectedPages = _selectedPages.filter(p => p !== page);
+      }
+      _selectedPages.sort((a, b) => a - b);
+      e.target.closest('label')?.classList.toggle('checked', e.target.checked);
+      _updateCount();
+      _updateBtn();
     }
   });
 
-  // Select all / Deselect all
-  id('splitSelectAll')?.addEventListener('click', () => {
-    _selectedPages = Array.from({ length: _pageCount }, (_, i) => i + 1);
-    if (useRange) {
-      id('splitRangeInput').value = `1-${_pageCount}`;
-    } else {
-      _syncCheckboxes();
-    }
-    _updateCount();
-    _updateBtn();
-  });
-
-  id('splitDeselectAll')?.addEventListener('click', () => {
-    _selectedPages = [];
-    if (useRange) {
-      id('splitRangeInput').value = '';
-    } else {
-      _syncCheckboxes();
-    }
-    _updateCount();
-    _updateBtn();
-  });
-
-  if (useRange) {
-    // Apply кнопка
-    id('splitRangeApply')?.addEventListener('click', () => {
+  // SelectAll / DeselectAll / RangeApply — delegated because these elements are
+  // recreated by _render() on each file load; direct binding would lose the
+  // listener on the 2nd upload.
+  opts.addEventListener('click', e => {
+    if (e.target.id === 'splitSelectAll') {
+      _selectedPages = Array.from({ length: _pageCount }, (_, i) => i + 1);
+      if (_pageCount > 30) {
+        id('splitRangeInput').value = `1-${_pageCount}`;
+      } else {
+        _syncCheckboxes();
+      }
+      _updateCount();
+      _updateBtn();
+    } else if (e.target.id === 'splitDeselectAll') {
+      _selectedPages = [];
+      if (_pageCount > 30) {
+        id('splitRangeInput').value = '';
+      } else {
+        _syncCheckboxes();
+      }
+      _updateCount();
+      _updateBtn();
+    } else if (e.target.id === 'splitRangeApply') {
       const raw = id('splitRangeInput')?.value || '';
       const pages = _parseRange(raw, _pageCount);
       if (pages.length === 0 && raw.trim() !== '') {
@@ -196,28 +207,15 @@ function _bindEvents(useRange) {
       _selectedPages = pages;
       _updateCount();
       _updateBtn();
-    });
-    // Enter в поле
-    id('splitRangeInput')?.addEventListener('keydown', e => {
-      if (e.key === 'Enter') id('splitRangeApply')?.click();
-    });
-  } else {
-    // Чекбоксы
-    id('splitOptions').addEventListener('change', e => {
-      if (e.target.type === 'checkbox') {
-        const page = parseInt(e.target.value);
-        if (e.target.checked) {
-          if (!_selectedPages.includes(page)) _selectedPages.push(page);
-        } else {
-          _selectedPages = _selectedPages.filter(p => p !== page);
-        }
-        _selectedPages.sort((a, b) => a - b);
-        e.target.closest('label')?.classList.toggle('checked', e.target.checked);
-        _updateCount();
-        _updateBtn();
-      }
-    });
-  }
+    }
+  });
+
+  // Enter on range input — delegated for same reason as above
+  opts.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && e.target.id === 'splitRangeInput') {
+      id('splitRangeApply')?.click();
+    }
+  });
 }
 
 function _syncCheckboxes() {
