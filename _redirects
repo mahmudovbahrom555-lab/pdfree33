@@ -2,3 +2,7 @@
 /annotate /annotate-pdf/ 301
 /annotate/ /annotate-pdf/ 301
 
+
+/add-page-numbers-to-pdf/ /pagenum-pdf/ 301
+/meta-pdf/ /metadata-pdf/ 301
+/cover-area/ /redact-pdf/ 301
