@@ -45,7 +45,7 @@ import { wmRemoveHtml, bindWmRemove, resetWmRemove } from './watermarkRemoveUI.j
 // PDFs with ≤ THUMB_THRESHOLD pages get visual thumbnails.
 // Above this: numbered cards (rotation badge only, no pdf.js render).
 // Rationale: 20 thumb renders ≈ 1–2s, acceptable. 200 = death.
-const THUMB_THRESHOLD = 20;
+const THUMB_THRESHOLD = 44;
 
 // ── State ──────────────────────────────────────────────────────
 
