@@ -947,6 +947,39 @@ async function _p2wExtractText(pdfDoc) {
   const sorted = [...allSizes].sort((a, b) => a - b);
   const median = sorted[Math.floor(sorted.length / 2)] || 10;
 
+  // ── Post-Pass-1: Uzbek CamScanner OCR normalization ───────────────────────
+  // CamScanner's OCR maps the Uzbek modifier letters oʻ (U+02BB) and gʻ to
+  // the byte sequence that pdf.js decodes as "oâ" / "gâ".
+  // We fix this ONLY when the document is detected as Uzbek OCR:
+  //   ratio = count(oâ | gâ | Oâ | Gâ) / count(all â) > 0.75
+  // This keeps French/Portuguese/Romanian/Vietnamese â intact — in those
+  // languages â appears after many letters (b, c, ch, t, m, p…), so the
+  // oâ+gâ ratio stays well below 0.75.
+  {
+    let totalAcirc = 0, uzbekAcirc = 0;
+    for (const { lines } of pageData) {
+      for (const ln of lines) {
+        for (const item of ln.items) {
+          const all  = (item.str.match(/â/g)       || []).length;
+          const uz   = (item.str.match(/[oOgG]â/g) || []).length;
+          totalAcirc += all;
+          uzbekAcirc += uz;
+        }
+      }
+    }
+    if (totalAcirc >= 3 && uzbekAcirc / totalAcirc > 0.75) {
+      for (const { lines } of pageData) {
+        for (const ln of lines) {
+          for (const item of ln.items) {
+            item.str = item.str
+              .replace(/oâ/g, 'oʻ').replace(/Oâ/g, 'Oʻ')
+              .replace(/gâ/g, 'gʻ').replace(/Gâ/g, 'Gʻ');
+          }
+        }
+      }
+    }
+  }
+
   // ── Post-Pass-1: build watermark filter ───────────────────────────────────
   // Short text appearing on ≥ ⅓ of pages (min 3) is treated as a repeated
   // watermark / header / footer and suppressed in DOCX output.
