@@ -509,6 +509,10 @@ function initSearch() {
     const card = document.createElement('div');
     card.className = 'hero-det-card';
 
+    // Top row: icon + name/size + badges
+    const row = document.createElement('div');
+    row.className = 'hero-det-row';
+
     const iconEl = document.createElement('span');
     iconEl.className = 'hero-det-icon';
     iconEl.textContent = '📄';
@@ -530,25 +534,37 @@ function initSearch() {
     loadingBadge.textContent = 'Analyzing…';
     badgesEl.appendChild(loadingBadge);
 
-    card.append(iconEl, metaEl, badgesEl);
+    row.append(iconEl, metaEl, badgesEl);
+    card.appendChild(row);
     heroDetected.innerHTML = '';
     heroDetected.appendChild(card);
     heroDetected.hidden = false;
 
-    _scanHeroFile(file, badgesEl);
+    _scanHeroFile(file, card, badgesEl);
   }
 
-  async function _scanHeroFile(file, badgesEl) {
+  async function _scanHeroFile(file, card, badgesEl) {
     try {
       await loadPdfLib();
-      const { PDFDocument, PDFName } = window.PDFLib;
+      const { PDFDocument, PDFName, PDFRawStream } = window.PDFLib;
       const buf = await file.arrayBuffer();
       const pdf = await PDFDocument.load(buf, { ignoreEncryption: true });
-      const pages = pdf.getPageCount();
+      const pages       = pdf.getPageCount();
       const isEncrypted = pdf.isEncrypted;
-      const hasForms = pdf.catalog.has(PDFName.of('AcroForm'));
+      const hasForms    = pdf.catalog.has(PDFName.of('AcroForm'));
 
-      if (!badgesEl.isConnected) return;
+      // Detect scanned / image-dominant PDF (same heuristic as compressUI)
+      let imageBytes = 0, imageCount = 0;
+      pdf.context.enumerateIndirectObjects().forEach(([, obj]) => {
+        if (!(obj instanceof PDFRawStream)) return;
+        if (obj.dict.get(PDFName.of('Subtype'))?.toString() === '/Image') {
+          imageBytes += obj.contents.length;
+          imageCount++;
+        }
+      });
+      const isScanned = imageCount > 0 && (imageBytes / file.size) > 0.5;
+
+      if (!card.isConnected) return;
       badgesEl.innerHTML = '';
 
       const _badge = (text, mod) => {
@@ -559,9 +575,29 @@ function initSearch() {
       };
       _badge(`${pages} page${pages !== 1 ? 's' : ''}`);
       _badge(isEncrypted ? '🔒 Protected' : 'No password', isEncrypted ? 'warn' : 'ok');
-      _badge(hasForms ? 'Has forms' : 'No forms', hasForms ? 'info' : 'ok');
+      if (isScanned) {
+        _badge('Scanned', 'scan');
+      } else {
+        _badge(hasForms ? 'Has forms' : 'No forms', hasForms ? 'info' : 'ok');
+      }
+
+      // CTA recommendation — only for high-confidence signals
+      let recKey = null, recLabel = null;
+      if (isScanned)       { recKey = 'ocr';  recLabel = 'Extract text with OCR →'; }
+      else if (hasForms)   { recKey = 'fill'; recLabel = 'Fill this form →'; }
+
+      if (recKey) {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'hero-det-rec';
+        btn.textContent = recLabel;
+        btn.addEventListener('click', () => {
+          if (_pendingFiles) showTool(recKey, true, _pendingFiles);
+        });
+        card.appendChild(btn);
+      }
     } catch {
-      if (!badgesEl.isConnected) return;
+      if (!card.isConnected) return;
       badgesEl.innerHTML = '';
       const b = document.createElement('span');
       b.className = 'hero-det-badge';

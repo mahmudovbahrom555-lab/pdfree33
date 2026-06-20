@@ -232,13 +232,18 @@ nav {
 
 .hero-det-card {
   display: flex;
-  align-items: center;
-  gap: 12px;
+  flex-direction: column;
   background: var(--surface);
   border: 1.5px solid var(--border);
   border-radius: 12px;
   padding: 12px 16px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.hero-det-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .hero-det-icon {
@@ -301,8 +306,39 @@ nav {
   color: #0a58ca;
 }
 
+.hero-det-badge--scan {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.hero-det-rec {
+  display: block;
+  width: 100%;
+  margin-top: 10px;
+  padding: 9px 16px;
+  background: var(--green);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  transition: background 0.15s;
+  border-top: 1px solid var(--border);
+  padding-top: 10px;
+}
+
+.hero-det-rec:hover {
+  background: var(--green-dark);
+}
+
 @media (prefers-color-scheme: dark) {
   .hero-det-badge--warn {
+    background: #3a2e10;
+    color: #ffc107;
+  }
+  .hero-det-badge--scan {
     background: #3a2e10;
     color: #ffc107;
   }
