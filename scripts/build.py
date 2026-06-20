@@ -206,6 +206,12 @@ def _webapp_schema(tool, lang, canonical_path):
         "softwareVersion": "6.2",
         "datePublished": "2023-01-01",
         "downloadUrl": f"{BASE_URL}/{canonical_path}",
+        "screenshot": {
+            "@type": "ImageObject",
+            "url": "https://pdfree.io/icons/og-image.jpg",
+            "width": 1200,
+            "height": 633,
+        },
         "softwareHelp": {"@type": "CreativeWork", "url": "https://pdfree.io/"},
         "provider": {"@type": "Organization", "name": "PDFree", "url": "https://pdfree.io"},
     }, indent=2, ensure_ascii=False)
@@ -306,7 +312,8 @@ SPECIALTY_PAGES = [
     # Static pages
     'privacy.html',
     'terms.html',
-    # Blog posts
+    # Blog index + Blog posts
+    'blog',
     'blog/how-to-annotate-pdf-on-mobile',
     'blog/how-to-fill-pdf-form',
     'blog/how-to-sign-pdf-free',
