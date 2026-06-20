@@ -981,7 +981,7 @@ async function _p2wExtractText(pdfDoc) {
   }
 
   // ── Post-Pass-1: build watermark filter ───────────────────────────────────
-  // Short text appearing on ≥ ⅓ of pages (min 3) is treated as a repeated
+  // Short text appearing on ≥ ⅔ of pages (min 3) is treated as a repeated
   // watermark / header / footer and suppressed in DOCX output.
   const _repeatTextSet = new Set();
   {
@@ -1089,7 +1089,7 @@ async function _p2wExtractText(pdfDoc) {
       paragraphs.push(new Paragraph({ children: [], pageBreakBefore: true }));
     }
 
-    const { lines, rotatedItems, borderGrids, pageH: _pageH } = pageData[pi];
+    const { lines, rotatedItems, borderGrids } = pageData[pi];
 
     // Pages with no extractable text (diagram-only pages in scanned PDFs):
     // render the full page as a single ImageRun so content is not lost.
