@@ -222,5 +222,5 @@ function _drawPreview() {
 
 // Local alias — attribute-safe escaping for value= attributes
 function _escAttr(str) {
-  const d = document.createElement('div'); d.textContent = str; return d.innerHTML;
+  const d = document.createElement('div'); d.textContent = str; return d.innerHTML.replace(/"/g, '&quot;');
 }

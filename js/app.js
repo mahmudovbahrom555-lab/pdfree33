@@ -141,23 +141,23 @@ function showTool(tool, pushHistory = true, preFiles = null) {
   }
 
   currentTool = tool;
-  const t = getLocalizedTool(TOOLS[tool]);
+  const lt = getLocalizedTool(TOOLS[tool]);
   trackToolOpen(tool);
 
   // Visual feedback — immediate so browser paints before heavy DOM work
   showToolPage();
   window.scrollTo({ top: 0, behavior: 'instant' }); // scroll before first paint
   if (pushHistory) {
-    history.pushState({ tool }, t.title, TOOL_SLUGS[tool] || `/${tool}-pdf/`);
+    history.pushState({ tool }, lt.title, TOOL_SLUGS[tool] || `/${tool}-pdf/`);
   }
 
   // Heavy DOM work deferred to after first paint — keeps INP under 200ms
   requestAnimationFrame(() => {
-    renderToolHeader(t);
-    setCurrentTool(tool, t.accept);
-    setDropHint(t.accept);
-    id('fileInput').multiple = t.multi;
-    id('fileInput').accept   = t.accept;
+    renderToolHeader(lt);
+    setCurrentTool(tool, lt.accept);
+    setDropHint(lt.accept);
+    id('fileInput').multiple = lt.multi;
+    id('fileInput').accept   = lt.accept;
     resetState();   // already calls hideAllToolOptions internally
     if (preFiles) addFiles(preFiles);
   });

@@ -23,6 +23,7 @@ let _pageCount = 0;
 let _vpW       = 0;    // first page width in PDF points (for size estimation)
 let _vpH       = 0;    // first page height in PDF points
 let _loading   = false;
+let _scanGen   = 0;    // incremented on each new file — cancels stale background scans
 
 export function getPdf2WordParams() {
   return { mode: _mode, dpi: _dpi, pageCount: _pageCount, loading: _loading };
@@ -62,7 +63,8 @@ export async function initPdf2WordOptions(file) {
 
     // Background table scan — runs on first 5 pages max to keep init fast.
     // Results shown in UI for debug/tuning; doesn't block rendering.
-    _scanTablesBackground(doc).catch(() => {});
+    const _thisGen = ++_scanGen;
+    _scanTablesBackground(doc, _thisGen).catch(() => {});
 
     _loading = false;
     _render(file);
@@ -80,6 +82,7 @@ export function hidePdf2WordOptions() {
   if (el) { el.style.display = 'none'; el.innerHTML = ''; }
   _file = null; _mode = 'text'; _dpi = 150;
   _pageCount = 0; _vpW = 0; _vpH = 0; _loading = false;
+  ++_scanGen; // cancel any in-flight background scan
 }
 
 // ── Size estimation ───────────────────────────────────────────────────────────
@@ -210,7 +213,7 @@ function _onChange(e) {
 }
 
 function _esc(str) {
-  const d = document.createElement('div'); d.textContent = str; return d.innerHTML;
+  const d = document.createElement('div'); d.textContent = str; return d.innerHTML.replace(/"/g, '&quot;');
 }
 
 // ── Background table scanner ──────────────────────────────────────────────────
@@ -219,7 +222,7 @@ function _esc(str) {
 const SCAN_PAGES = 5;   // scan only first N pages to keep init snappy
 const YTOL       = 6;   // must match processor.js _p2wExtractText (was 4; see processor.js:865)
 
-async function _scanTablesBackground(doc) {
+async function _scanTablesBackground(doc, gen) {
   const pageLimit = Math.min(doc.numPages, SCAN_PAGES);
   let totalTables = 0;
   const details   = [];
@@ -257,6 +260,9 @@ async function _scanTablesBackground(doc) {
       ).join(', ')})`);
     }
   }
+
+  // Abort if a newer file was loaded while we were scanning
+  if (gen !== _scanGen) return;
 
   // Update UI badge (only visible when tables found)
   const el = id('pdf2wordOptions');

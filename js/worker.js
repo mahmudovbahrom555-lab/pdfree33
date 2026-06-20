@@ -1611,7 +1611,10 @@ async function handleRedact(fileBuffer, options) {
     for (const k in rectsByPage) total += rectsByPage[k].length;
   }
 
-  if (total === 0) return;
+  if (total === 0) {
+    self.postMessage({ type: 'error', message: 'No areas selected to redact.' });
+    return;
+  }
 
   const [fr, fg, fb] = fillColor;
   const color        = rgb(fr, fg, fb);

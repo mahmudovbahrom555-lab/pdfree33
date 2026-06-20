@@ -192,5 +192,5 @@ function _safe(v) {
 }
 
 function _esc(str) {
-  const d = document.createElement('div'); d.textContent = str; return d.innerHTML;
+  const d = document.createElement('div'); d.textContent = str; return d.innerHTML.replace(/"/g, '&quot;');
 }
