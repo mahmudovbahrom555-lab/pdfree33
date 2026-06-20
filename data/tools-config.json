@@ -87,9 +87,9 @@
         "fr": "Fusionner PDF"
       },
       "metaDescs": {
-        "en": "Merge PDF files free online. No upload, no account — files stay in your browser, 100% private. Unlimited files, no watermarks.",
-        "es": "Combina archivos PDF ilimitados al instante. 100% privado, sin subir archivos, sin límites de tamaño.",
-        "pt": "Combine arquivos PDF ilimitados instantaneamente. 100% privado, sem uploads, sem limites.",
+        "en": "Merge PDF files free online — no upload, no account, no file size limits. Files stay in your browser, 100% private. Combine unlimited PDFs with one click.",
+        "es": "Combina archivos PDF ilimitados al instante sin subirlos. 100% privado — todo ocurre en tu navegador. Sin registro, sin límites de tamaño, totalmente gratis.",
+        "pt": "Combine arquivos PDF ilimitados instantaneamente sem fazer upload. 100% privado — tudo processado no seu navegador. Sem registro, sem limites de tamanho.",
         "de": "PDF-Dateien kostenlos online zusammenfügen. 100 % privat — Dateien verlassen deinen Browser nie. Kein Upload, keine Registrierung, keine Limits.",
         "fr": "Fusionner des fichiers PDF gratuitement en ligne. 100 % privé — vos fichiers ne quittent jamais votre navigateur. Aucun envoi, sans inscription, sans limite."
       },
@@ -162,10 +162,10 @@
         "fr": "Diviser PDF"
       },
       "metaDescs": {
-        "en": "Split PDFs without uploading to any server. Extract pages or ranges entirely in your browser — 100% private. Free, no signup.",
-        "es": "Extrae páginas o divide en archivos separados. 100% privado, sin subidas, sin límites.",
-        "pt": "Extraia páginas ou divida em arquivos separados. 100% privado, sem uploads, sem limites.",
-        "de": "PDFs in einzelne Seiten aufteilen oder Seitenbereich extrahieren. 100 % privat — kein Upload. Kostenlos, ohne Registrierung.",
+        "en": "Split PDF online without uploading to any server. Extract exact pages or page ranges — all processed in your browser, 100% private. Free, no signup required.",
+        "es": "Extrae páginas o divide PDFs en archivos separados sin subirlos. 100% privado — procesado en tu navegador. Sin registro, sin límites. Completamente gratis.",
+        "pt": "Extraia páginas ou divida PDFs em arquivos separados sem upload. 100% privado — processado no navegador. Sem registro, sem limites de tamanho. Grátis.",
+        "de": "PDFs in Einzelseiten aufteilen oder Seitenbereiche extrahieren — alles im Browser, kein Upload nötig. 100 % privat. Kostenlos, ohne Registrierung, ohne Limits.",
         "fr": "Diviser des fichiers PDF gratuitement en ligne. Extrayez des pages spécifiques ou séparez chaque page. 100 % privé — aucun envoi, sans inscription."
       },
       "ogTitles": {
@@ -195,11 +195,11 @@
         "fr": "compresser-pdf"
       },
       "titles": {
-        "en": "Compress PDF Online Free — No Upload, Reduce File Size Instantly | PDFree",
-        "es": "Comprimir PDF Online Gratis — Sin Subir, Reducir Tamaño al Instante | PDFree",
-        "pt": "Comprimir PDF Online Grátis — Sem Upload, Reduzir Tamanho Instantaneamente | PDFree",
-        "de": "PDF Komprimieren Online — Kostenlos, Kein Upload, Sofort Verkleinern | PDFree",
-        "fr": "Compresser PDF en Ligne Gratuit — Sans Envoi, Réduire la Taille Instantanément | PDFree"
+        "en": "Compress PDF Online Free — Reduce File Size | PDFree",
+        "es": "Comprimir PDF Online Gratis — Reducir Tamaño | PDFree",
+        "pt": "Comprimir PDF Online Grátis — Reduzir Tamanho | PDFree",
+        "de": "PDF Komprimieren Online — Kostenlos, Kein Upload | PDFree",
+        "fr": "Compresser PDF en Ligne Gratuit — Réduire la Taille | PDFree"
       },
       "descs": {
         "en": "Reduce PDF file size without losing quality. Processed locally in your browser — files never uploaded.",
@@ -237,11 +237,11 @@
         "fr": "Compresser PDF"
       },
       "metaDescs": {
-        "en": "Compress PDF online free. Reduce file size instantly — processed in your browser, nothing uploaded. No account, no limits.",
-        "es": "Reduce el tamaño del PDF sin perder calidad. Procesado en tu navegador — archivos nunca subidos. Gratis, sin límites.",
-        "pt": "Reduza o tamanho do PDF sem perder qualidade. Processado localmente no seu navegador — sem uploads.",
-        "de": "PDF-Dateigröße reduzieren ohne Qualitätsverlust. Vollständig im Browser verarbeitet — keine Uploads, keine Registrierung. Kostenlos.",
-        "fr": "Compresser vos fichiers PDF gratuitement en ligne. Trois niveaux de qualité. 100 % privé — aucun envoi, sans inscription, sans limite."
+        "en": "Compress PDF online free — reduce file size instantly without losing quality. Processed in your browser, nothing uploaded to any server. No account, no limits.",
+        "es": "Reduce el tamaño del PDF sin perder calidad. Procesado en tu navegador — nada se sube a ningún servidor. Sin registro, sin límites. Completamente gratis.",
+        "pt": "Reduza o tamanho do PDF sem perder qualidade. Processado no seu navegador — sem uploads, sem perda de qualidade. Três níveis de compressão. Grátis e sem limites.",
+        "de": "PDF-Dateigröße reduzieren ohne Qualitätsverlust. Vollständig im Browser verarbeitet — kein Upload, keine Registrierung. Drei Qualitätsstufen. Kostenlos.",
+        "fr": "Compresser vos PDF gratuitement en ligne — trois niveaux de qualité. 100 % privé — aucun envoi, aucun serveur. Réduction immédiate de la taille. Sans inscription."
       },
       "ogTitles": {
         "en": "Compress PDF in Your Browser — Files Never Leave Your Device",
@@ -312,11 +312,11 @@
         "fr": "Rotation PDF"
       },
       "metaDescs": {
-        "en": "Rotate PDF pages 90° or 180°. All processing in your browser — files never uploaded to any server. Free, no signup.",
-        "es": "Corrige la orientación de páginas en cualquier PDF. 100% privado — procesado localmente, sin subidas.",
-        "pt": "Corrija a orientação das páginas em qualquer PDF. 100% privado — processado localmente, sem uploads.",
-        "de": "PDF-Seiten um 90°, 180° oder 270° drehen. Verarbeitung im Browser — kein Upload, kein Server. Kostenlos, ohne Registrierung.",
-        "fr": "Faire pivoter les pages PDF en ligne — 90°, 180° ou 270°. 100 % privé — aucun envoi, sans inscription. Gratuit."
+        "en": "Rotate PDF pages 90°, 180° or 270° online free. All processing in your browser — files never uploaded to any server. Fix sideways scans instantly. No signup.",
+        "es": "Rota páginas de PDF 90°, 180° o 270° sin subirlas a ningún servidor. 100% privado — procesado en tu navegador. Sin registro. Corrige scans torcidos al instante.",
+        "pt": "Gire páginas de PDF 90°, 180° ou 270° sem fazer upload. 100% privado — processado no seu navegador. Corrija scans tortos instantaneamente. Grátis e sem registro.",
+        "de": "PDF-Seiten um 90°, 180° oder 270° drehen — direkt im Browser ohne Upload. 100 % privat. Schiefe Scans sofort korrigieren. Kostenlos, ohne Registrierung, ohne Limits.",
+        "fr": "Faire pivoter les pages PDF en ligne — 90°, 180° ou 270°. 100 % privé — aucun envoi, aucun serveur. Corrigez vos scans de travers en quelques secondes. Gratuit."
       },
       "ogTitles": {
         "en": "Rotate PDF Pages — Fix Sideways Scans in Seconds, No Upload",
@@ -387,11 +387,11 @@
         "fr": "Filigrane PDF"
       },
       "metaDescs": {
-        "en": "Add text or image watermarks to any PDF. Completely private — processed in your browser, nothing uploaded. Free forever.",
-        "es": "Añade marcas de agua de texto personalizadas al PDF. 100% privado, sin subidas.",
-        "pt": "Adicione marcas d'água de texto personalizadas ao PDF. 100% privado, sem uploads. Processado localmente no navegador.",
-        "de": "Text- oder Bild-Wasserzeichen in PDF einfügen. Vollständig privat — im Browser verarbeitet, kein Upload. Kostenlos, für immer.",
-        "fr": "Ajouter un filigrane à un PDF gratuitement en ligne. Texte ou image, diagonal ou en mosaïque. 100 % privé — aucun envoi, sans inscription."
+        "en": "Add text or image watermarks to any PDF — custom opacity, angle and font. Completely private, processed in your browser, nothing uploaded. Free forever.",
+        "es": "Añade marcas de agua de texto personalizadas a cualquier PDF sin subirlo. 100% privado — procesado en tu navegador. Sin registro, sin límites. Gratis para siempre.",
+        "pt": "Adicione marcas d'água de texto ou imagem a qualquer PDF. 100% privado — processado no seu navegador, sem uploads. Opacidade e ângulo personalizáveis. Grátis.",
+        "de": "Text- oder Bild-Wasserzeichen in PDF einfügen. Vollständig privat — im Browser verarbeitet, kein Upload. Deckkraft und Winkel anpassbar. Kostenlos, für immer.",
+        "fr": "Ajouter un filigrane texte ou image à un PDF — opacité et angle personnalisés. 100 % privé — aucun envoi, aucun serveur. Diagonal ou mosaïque. Sans inscription."
       },
       "ogTitles": {
         "en": "Watermark Any PDF — Text, Opacity, Rotation — All Free, Private",
@@ -462,11 +462,11 @@
         "fr": "Protéger PDF"
       },
       "metaDescs": {
-        "en": "Password-protect your PDF with AES-256 encryption. Files stay on your device — never uploaded to any server. Free.",
-        "es": "Añade contraseña y restringe permisos. AES-256 en tu navegador — nunca se envía a un servidor.",
-        "pt": "Adicione senha e restrinja permissões. AES-256 no seu navegador — nunca enviado a um servidor.",
-        "de": "PDF mit AES-256-Passwort schützen. Dateien bleiben auf deinem Gerät — werden nie hochgeladen. Kostenlos, ohne Registrierung.",
-        "fr": "Protéger un PDF avec un mot de passe gratuitement en ligne. Chiffrement AES-256. 100 % privé — aucun envoi, sans inscription."
+        "en": "Password-protect your PDF with AES-256 encryption. Files stay on your device — never uploaded to any server. Add permissions too. Free, no signup required.",
+        "es": "Protege tu PDF con contraseña AES-256 sin subirlo. Todo ocurre en tu navegador — nunca se envía a ningún servidor. Restringe permisos también. Gratis y privado.",
+        "pt": "Proteja seu PDF com senha AES-256 sem fazer upload. Tudo processado no seu navegador — nunca enviado a nenhum servidor. Restrinja permissões também. Grátis.",
+        "de": "PDF mit AES-256-Passwort schützen ohne Upload. Dateien bleiben auf deinem Gerät — werden nie hochgeladen. Berechtigungen einschränken. Kostenlos, ohne Registrierung.",
+        "fr": "Protéger un PDF avec un mot de passe AES-256 sans envoi. Tout traité dans votre navigateur — aucun fichier transmis. Restreignez les permissions. Gratuit."
       },
       "ogTitles": {
         "en": "Encrypt PDF with AES-256 — Your Password Never Reaches Any Server",
@@ -499,7 +499,7 @@
         "es": "Ocultar PDF Online — Eliminar Info Sensible Localmente | PDFree",
         "pt": "Ocultar PDF Online — Remover Info Sensível Localmente | PDFree",
         "de": "PDF Schwärzen Online — Sensible Daten Entfernen | PDFree",
-        "fr": "Caviarder un PDF en Ligne — Gratuit, Suppression Définitive | PDFree"
+        "fr": "Caviarder un PDF en Ligne — Suppression Définitive | PDFree"
       },
       "descs": {
         "en": "Hide text, signatures, or sensitive data with opaque blocks. 100% local processing — files never uploaded.",
@@ -537,11 +537,11 @@
         "fr": "Caviarder PDF"
       },
       "metaDescs": {
-        "en": "Permanently redact sensitive text and images from PDFs. 100% local processing — nothing ever leaves your device. Free.",
-        "es": "Oculta texto, firmas o datos sensibles con bloques opacos. 100% privado — procesado localmente.",
-        "pt": "Oculte texto, assinaturas ou dados sensíveis com blocos opacos. 100% privado — processado localmente.",
-        "de": "Sensible Texte und Bilder in PDFs dauerhaft schwärzen. 100 % lokale Verarbeitung — nichts verlässt dein Gerät. Kostenlos.",
-        "fr": "Caviarder un PDF gratuitement en ligne. Suppression définitive et irrécupérable des zones sensibles. 100 % privé — aucun envoi, sans inscription."
+        "en": "Permanently redact sensitive text and images from PDFs. 100% local processing — nothing ever leaves your device. Opaque blocks baked in. Free, no signup needed.",
+        "es": "Oculta texto, firmas o datos sensibles en PDFs con bloques opacos. 100% privado — procesado localmente, nada se envía. Sin registro. Eliminación permanente.",
+        "pt": "Oculte texto, assinaturas ou dados sensíveis em PDFs com blocos opacos. 100% privado — processado localmente, nada é enviado. Grátis, sem registro.",
+        "de": "Sensible Texte und Bilder in PDFs dauerhaft schwärzen. 100 % lokale Verarbeitung — nichts verlässt dein Gerät. Dauerhafte Entfernung. Kostenlos, ohne Registrierung.",
+        "fr": "Caviarder un PDF gratuitement — suppression définitive des zones sensibles. 100 % privé — aucun envoi, aucun serveur. Traitement local immédiat. Sans inscription."
       },
       "ogTitles": {
         "en": "Redact PDF Permanently — True Content Removal, Not Just a Cover",
@@ -612,11 +612,11 @@
         "fr": "Numérotation PDF"
       },
       "metaDescs": {
-        "en": "Add page numbers to any PDF. Processed locally in your browser — no uploads, no signup, no limits. Free.",
-        "es": "Añade números de página a cualquier PDF. Procesado en el navegador — sin subidas, sin registro, sin límites.",
-        "pt": "Adicione números de página a qualquer PDF. Processado no navegador — sem uploads, sem registro, sem limites.",
-        "de": "Seitenzahlen in beliebige PDFs einfügen. Im Browser verarbeitet — kein Upload, keine Registrierung, keine Limits. Kostenlos.",
-        "fr": "Ajouter des numéros de page à un PDF gratuitement en ligne. Format arabe, romain ou alphabétique. 100 % privé — aucun envoi, sans inscription."
+        "en": "Add page numbers to any PDF — Arabic, Roman or alphabetic formats. Processed locally in your browser. No uploads, no signup, no limits. Free PDF tool.",
+        "es": "Añade números de página a cualquier PDF — formatos árabe, romano o alfabético. Procesado en tu navegador. Sin subidas, sin registro, sin límites. Gratis.",
+        "pt": "Adicione números de página a qualquer PDF — formatos árabe, romano ou alfabético. Processado no navegador. Sem uploads, sem registro, sem limites. Grátis.",
+        "de": "Seitenzahlen in beliebige PDFs einfügen — Arabisch, Römisch oder ABC. Im Browser verarbeitet — kein Upload, keine Registrierung, keine Limits. Kostenlos.",
+        "fr": "Ajouter des numéros de page à un PDF — arabe, romain ou alphabétique. 100 % privé — aucun envoi, sans inscription. Plusieurs formats disponibles. Gratuit."
       },
       "ogTitles": {
         "en": "Add Page Numbers to Any PDF — Arabic, Roman, ABC — Always Free",
@@ -687,11 +687,11 @@
         "fr": "Extraire PDF"
       },
       "metaDescs": {
-        "en": "Extract specific pages from any PDF. All processing in your browser — files never leave your device. Free, private.",
-        "es": "Extrae páginas específicas de un PDF. 100% privado — procesado localmente, sin subidas.",
-        "pt": "Extraia páginas específicas de um PDF. 100% privado — processado localmente, sem uploads.",
-        "de": "Bestimmte Seiten aus einem PDF extrahieren. Vollständige Browserverarbeitung — Dateien verlassen dein Gerät nie. Kostenlos, privat.",
-        "fr": "Extraire des pages d'un PDF gratuitement en ligne. Pages individuelles ou plages. 100 % privé — aucun envoi, sans inscription."
+        "en": "Extract specific pages from any PDF — pick individual pages or ranges. All processing in your browser, files never leave your device. Free, private, no signup.",
+        "es": "Extrae páginas específicas de un PDF — páginas individuales o rangos. 100% privado — procesado localmente, sin subidas. Sin registro. Completamente gratis.",
+        "pt": "Extraia páginas específicas de um PDF — individuais ou por intervalo. 100% privado — processado localmente, sem uploads. Sem registro. Completamente grátis.",
+        "de": "Bestimmte Seiten aus einem PDF extrahieren — Einzelseiten oder Seitenbereiche. 100 % privat — alles im Browser, keine Uploads. Kostenlos, ohne Registrierung.",
+        "fr": "Extraire des pages d'un PDF en ligne — pages individuelles ou plages de pages. 100 % privé — aucun envoi, sans inscription. Résultat immédiat. Gratuit."
       },
       "ogTitles": {
         "en": "Extract Any Pages from PDF — Precise Range, No Upload, Free",
@@ -724,7 +724,7 @@
         "es": "Editar Metadatos PDF Online — Gratis, Privado | PDFree",
         "pt": "Editar Metadados PDF Online — Grátis, Privado | PDFree",
         "de": "PDF Metadaten Bearbeiten — Kostenlos, Privat | PDFree",
-        "fr": "Métadonnées PDF en Ligne — Modifier ou Supprimer, Aucun Envoi | PDFree"
+        "fr": "Métadonnées PDF en Ligne — Modifier ou Supprimer | PDFree"
       },
       "descs": {
         "en": "View and edit PDF metadata: title, author, subject, keywords. Processed locally — files never uploaded.",
@@ -762,11 +762,11 @@
         "fr": "Métadonnées PDF"
       },
       "metaDescs": {
-        "en": "View and edit PDF metadata: title, author, subject, keywords. Processed locally in your browser — files never uploaded. Free, no signup, no limits.",
-        "es": "Ver y editar metadatos del PDF: título, autor, asunto, palabras clave. Procesado localmente — sin subidas.",
-        "pt": "Ver e editar metadados do PDF: título, autor, assunto, palavras-chave. Processado localmente — sem uploads.",
-        "de": "PDF-Metadaten online bearbeiten oder entfernen. Im Browser verarbeitet — keine Uploads, keine Registrierung. Kostenlos, privat.",
-        "fr": "Modifier ou supprimer les métadonnées d'un PDF en ligne. 100 % privé — aucun envoi, sans inscription. Gratuit."
+        "en": "View and edit PDF metadata — title, author, subject, keywords. Processed locally in your browser, files never uploaded. Remove personal info before sharing. Free.",
+        "es": "Ve y edita metadatos del PDF — título, autor, asunto, palabras clave. Procesado localmente, sin subidas. Elimina información personal antes de compartir. Gratis.",
+        "pt": "Visualize e edite metadados de PDF — título, autor, assunto, palavras-chave. Processado localmente, sem uploads. Remova dados pessoais antes de compartilhar. Grátis.",
+        "de": "PDF-Metadaten bearbeiten oder entfernen — Titel, Autor, Betreff, Schlüsselwörter. Im Browser verarbeitet, kein Upload. Persönliche Daten vor dem Teilen löschen.",
+        "fr": "Modifier ou supprimer les métadonnées d'un PDF — titre, auteur, sujet, mots-clés. 100 % privé — aucun envoi. Supprimez vos infos personnelles avant de partager."
       },
       "ogTitles": {
         "en": "Remove Your Name from PDFs — Edit Metadata Privately, Free",
@@ -797,9 +797,9 @@
       "titles": {
         "en": "JPG to PDF Free — Convert Images to PDF, No Upload | PDFree",
         "es": "JPG a PDF Gratis — Convertir Imágenes a PDF, Sin Subir | PDFree",
-        "pt": "JPG para PDF Grátis — Converter Imagens em PDF, Sem Upload | PDFree",
-        "de": "JPG zu PDF Kostenlos — Bilder in PDF Umwandeln, Kein Upload | PDFree",
-        "fr": "JPG en PDF Gratuit — Convertir Images en PDF, Aucun Envoi | PDFree"
+        "pt": "JPG para PDF Grátis — Converter Imagens, Sem Upload | PDFree",
+        "de": "JPG zu PDF Kostenlos — Bilder Umwandeln, Kein Upload | PDFree",
+        "fr": "JPG en PDF Gratuit — Convertir Images, Aucun Envoi | PDFree"
       },
       "descs": {
         "en": "Convert images to PDF instantly. Auto EXIF rotation. 100% private — processed locally, no uploads.",
@@ -837,11 +837,11 @@
         "fr": "JPG en PDF"
       },
       "metaDescs": {
-        "en": "Convert JPG, PNG and WebP images to PDF free. No upload — processed in your browser, nothing sent to any server. Instant, no limits.",
-        "es": "Convierte imágenes a PDF al instante. Corrección automática de rotación EXIF. 100% privado, sin subidas.",
-        "pt": "Converta imagens em PDF instantaneamente. Correção automática de rotação EXIF. 100% privado, sem uploads.",
-        "de": "JPG-Bilder in PDF umwandeln. 100 % privat — im Browser verarbeitet, kein Upload. Kostenlos, keine Limits.",
-        "fr": "Convertir des images JPG en PDF gratuitement en ligne. Plusieurs images en un seul PDF. 100 % privé — aucun envoi, sans inscription."
+        "en": "Convert JPG, PNG and WebP images to PDF free — no upload, processed in your browser. Combine multiple photos into one PDF instantly. EXIF rotation auto-fixed.",
+        "es": "Convierte imágenes JPG, PNG y WebP a PDF al instante sin subirlas. 100% privado — procesado en tu navegador. Rotación EXIF automática. Sin registro, sin límites.",
+        "pt": "Converta imagens JPG, PNG e WebP em PDF instantaneamente sem upload. 100% privado — processado no navegador. Rotação EXIF automática. Sem registro, sem limites.",
+        "de": "JPG-, PNG- und WebP-Bilder in PDF umwandeln — 100 % privat, kein Upload. Mehrere Bilder zu einem PDF kombinieren. EXIF-Rotation automatisch korrigiert. Kostenlos.",
+        "fr": "Convertir des images JPG, PNG et WebP en PDF gratuitement — sans envoi, traitement local. Plusieurs images en un PDF. Rotation EXIF automatique. Sans inscription."
       },
       "ogTitles": {
         "en": "JPG to PDF — Convert Multiple Photos into One File, No Upload",
@@ -871,10 +871,10 @@
       },
       "titles": {
         "en": "PDF to JPG Free — Convert PDF Pages to Images, No Upload | PDFree",
-        "es": "PDF a JPG Gratis — Convertir Páginas a Imágenes, Sin Subir | PDFree",
-        "pt": "PDF para JPG Grátis — Converter Páginas em Imagens, Sem Upload | PDFree",
-        "de": "PDF zu JPG Kostenlos — Seiten als Bilder Exportieren, Kein Upload | PDFree",
-        "fr": "PDF en JPG Gratuit — Convertir Pages en Images, Aucun Envoi | PDFree"
+        "es": "PDF a JPG Gratis — Convertir Páginas a Imágenes | PDFree",
+        "pt": "PDF para JPG Grátis — Converter Páginas em Imagens | PDFree",
+        "de": "PDF zu JPG Kostenlos — Seiten als Bilder Exportieren | PDFree",
+        "fr": "PDF en JPG Gratuit — Convertir Pages en Images | PDFree"
       },
       "descs": {
         "en": "Extract PDF pages as high-quality JPG or PNG images. 100% private — processed locally, no uploads.",
@@ -912,11 +912,11 @@
         "fr": "PDF en JPG"
       },
       "metaDescs": {
-        "en": "Convert PDF pages to high-quality JPG or PNG images free. No upload — processed entirely in your browser, nothing sent to any server.",
-        "es": "Extrae páginas como imágenes JPG o PNG de alta calidad. 100% privado, procesado localmente.",
-        "pt": "Extraia páginas como imagens JPG ou PNG de alta qualidade. 100% privado, processado localmente.",
-        "de": "PDF-Seiten in hochwertige JPG-Bilder umwandeln. Im Browser verarbeitet — kein Upload, keine Registrierung. Kostenlos.",
-        "fr": "Convertir un PDF en images JPG gratuitement en ligne. Toutes les pages ou une sélection. 100 % privé — aucun envoi, sans inscription."
+        "en": "Convert PDF pages to high-quality JPG or PNG images free — no upload, processed entirely in your browser. Choose resolution, export all pages or a selection.",
+        "es": "Extrae páginas PDF como imágenes JPG o PNG de alta calidad sin subirlas. 100% privado — procesado en tu navegador. Elige resolución. Sin registro, gratis.",
+        "pt": "Extraia páginas PDF como imagens JPG ou PNG de alta qualidade sem upload. 100% privado — processado no navegador. Escolha a resolução. Sem registro, grátis.",
+        "de": "PDF-Seiten in hochwertige JPG- oder PNG-Bilder umwandeln — kein Upload, alles im Browser. Auflösung wählen. Alle Seiten oder nur eine Auswahl. Kostenlos.",
+        "fr": "Convertir des pages PDF en images JPG ou PNG haute qualité — sans envoi, traitement local. Choisissez la résolution. Toutes les pages ou une sélection. Gratuit."
       },
       "ogTitles": {
         "en": "PDF to JPG — Export Every Page as a Sharp Image, No Upload",
@@ -987,11 +987,11 @@
         "pt": "Preencher PDF"
       },
       "metaDescs": {
-        "en": "Fill PDF form fields online free. Text inputs, checkboxes, dropdowns, and signatures — all processed locally. No upload, no signup, no limits.",
-        "de": "PDF-Formularfelder online ausfüllen — kostenlos, ohne Upload. Texteingaben, Checkboxen, Unterschriften — alles lokal im Browser verarbeitet.",
-        "es": "Rellena campos de formulario PDF gratis sin subir archivos. Texto, casillas, listas y firmas — procesado localmente en tu navegador.",
-        "fr": "Remplir des champs de formulaire PDF en ligne gratuitement. Texte, cases à cocher, listes et signatures — traité localement. Sans envoi.",
-        "pt": "Preencher campos de formulário PDF grátis sem upload. Texto, caixas de seleção, listas e assinaturas — processado localmente no navegador."
+        "en": "Fill PDF form fields online free — text inputs, checkboxes, dropdowns, and signatures. 100% processed in your browser, files never uploaded. No signup, no limits.",
+        "de": "PDF-Formularfelder online ausfüllen — kostenlos, ohne Upload. Texteingaben, Checkboxen, Unterschriften — alles lokal im Browser verarbeitet. Ohne Registrierung.",
+        "es": "Rellena campos de formulario PDF gratis sin subir archivos. Texto, casillas, listas y firmas — procesado localmente en tu navegador. Sin registro, sin límites.",
+        "fr": "Remplir des champs de formulaire PDF en ligne gratuitement. Texte, cases à cocher, listes et signatures — traité localement. Sans envoi, sans inscription.",
+        "pt": "Preencher campos de formulário PDF grátis sem upload. Texto, caixas de seleção, listas e assinaturas — processado localmente no navegador. Sem registro."
       },
       "ogTitles": {
         "en": "Fill PDF Forms Free Online — AcroForm Fields & Signatures, No Upload",
@@ -1034,7 +1034,7 @@
         "en": "Flatten PDF"
       },
       "metaDescs": {
-        "en": "Lock your filled PDF form so fields can't be edited. Bakes form data into the page. No upload, 100% private."
+        "en": "Flatten PDF online free — bake form fields into the page so the document cannot be edited. No upload, 100% private, processed in your browser. Instant download."
       },
       "ogTitles": {
         "en": "Flatten PDF — Lock Fillable PDF Form Online, No Upload"

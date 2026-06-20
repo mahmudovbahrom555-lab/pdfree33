@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "What does flattening a PDF actually do?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Flattening merges all interactive layers — form fields, annotations, digital signatures, and overlays — into the static page content. The result is a flat, non-interactive PDF that looks identical to the original but cannot be edited."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I reverse a flattened PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Flattening is irreversible — the original form fields are permanently replaced by static visual content. Always keep a backup of your original filled PDF before flattening if you think you might need to change values later."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Does flattening remove digital signatures?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Drawn signatures created with the Fill PDF tool (signature pad images) are flattened into the page. Cryptographic digital signatures from certified e-signature providers may be handled differently — the visual appearance is preserved but the cryptographic certificate may no longer validate after flattening."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is my PDF uploaded to any server when flattening?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Everything runs in your browser using pdf-lib. Neither your original PDF nor the flattened result is ever sent anywhere. Your document and its contents stay on your device at all times."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Why flatten instead of just saving the filled PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "A saved filled PDF still contains editable fields — a recipient could clear your values and re-fill them. Flattening permanently locks the content into the page, prevents editing, ensures consistent rendering across all PDF viewers, and removes hidden form metadata from the file."
+    }
+  }
+]

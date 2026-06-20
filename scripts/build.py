@@ -263,6 +263,8 @@ SPECIALTY_PAGES = [
     'hipaa-pdf-tools',
     'ilovepdf-alternative',
     'merge-pdf-without-uploading',
+    'merge-large-pdf-files',
+    'compress-large-pdf-free',
     'secure-pdf-tools',
     'sign',
     # Tools not in tools-config (standalone pages)
@@ -274,6 +276,9 @@ SPECIALTY_PAGES = [
     'compress-pdf-for-email',
     'split-pdf-into-multiple-files',
     'merge-pdf-files-into-one',
+    # Static pages
+    'privacy.html',
+    'terms.html',
     # Blog posts
     'blog/how-to-annotate-pdf-on-mobile',
     'blog/how-to-fill-pdf-form',
@@ -313,7 +318,14 @@ def _write_sitemap(config, out_dir):
     homepage_alts.append(('x-default', f'{BASE_URL}/'))
     lines += _url_block(f'{BASE_URL}/', _git_lastmod('index.html'), homepage_alts)
 
-    # ── Tool pages ─────────────────────────────────────────────
+    # ── Language sub-homepages ─────────────────────────────────
+    for lc, cfg in langs.items():
+        if lc == 'en':
+            continue  # already emitted above
+        lang_url = f"{BASE_URL}/{cfg['dir']}/"
+        lines += _url_block(lang_url, _git_lastmod(f"{cfg['dir']}/index.html"), homepage_alts)
+
+    # ── Tool pages — one <url> per language variant ────────────
     for tool in config['tools']:
         en_slug = tool['slugs'].get('en')
         if not en_slug:
@@ -321,6 +333,7 @@ def _write_sitemap(config, out_dir):
         en_url = f"{BASE_URL}/{en_slug}/"
         lastmod = _git_lastmod(f"data/content/en/{tool['id']}.html")
 
+        # Build the full alternates list (all locales)
         alts = []
         for lc, cfg in langs.items():
             slug = tool['slugs'].get(lc)
@@ -329,7 +342,16 @@ def _write_sitemap(config, out_dir):
             href = f"{BASE_URL}/{slug}/" if lc == 'en' else f"{BASE_URL}/{cfg['dir']}/{slug}/"
             alts.append((lc, href))
         alts.append(('x-default', en_url))
-        lines += _url_block(en_url, lastmod, alts)
+
+        # Emit a separate <url> block for every language variant so that
+        # Googlebot crawls and indexes each localised URL individually.
+        for lc, cfg in langs.items():
+            slug = tool['slugs'].get(lc)
+            if not slug:
+                continue
+            loc = f"{BASE_URL}/{slug}/" if lc == 'en' else f"{BASE_URL}/{cfg['dir']}/{slug}/"
+            lmod = lastmod if lc == 'en' else _git_lastmod(f"data/content/{lc}/{tool['id']}.html")
+            lines += _url_block(loc, lmod, alts)
 
     # ── Specialty / SEO pages ──────────────────────────────────
     # Localized alternates for the 3 specific-intent landing pages
