@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to Convert PDF to JPG",
+  "description": "Export every PDF page as a high-quality JPG or PNG image — free, no upload.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Open your PDF",
+      "text": "Click 'Choose files' or drag your PDF into the drop zone."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Choose format and quality",
+      "text": "Select JPG or PNG output format and choose your preferred resolution (72, 150 or 300 DPI)."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Download the images",
+      "text": "Click 'Convert to JPG'. Each page exports as a separate image file, bundled in a ZIP for easy download."
+    }
+  ]
+}

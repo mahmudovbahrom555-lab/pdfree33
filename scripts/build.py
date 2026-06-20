@@ -224,9 +224,10 @@ def _breadcrumb_schema(tool, lang, lang_cfg, canonical_path):
 # ── Content loading ───────────────────────────────────────────────────────────
 
 def _load_content(tool_id, lang):
-    """Load seo HTML + FAQ items for one tool/language pair."""
-    seo_path = os.path.join(CONTENT, lang, f'{tool_id}.html')
-    faq_path = os.path.join(CONTENT, lang, f'{tool_id}-faq.json')
+    """Load seo HTML + FAQ items + HowTo schema for one tool/language pair."""
+    seo_path   = os.path.join(CONTENT, lang, f'{tool_id}.html')
+    faq_path   = os.path.join(CONTENT, lang, f'{tool_id}-faq.json')
+    howto_path = os.path.join(CONTENT, lang, f'{tool_id}-howto.json')
 
     seo_html = ''
     if os.path.exists(seo_path):
@@ -236,7 +237,11 @@ def _load_content(tool_id, lang):
     if os.path.exists(faq_path):
         faq_items = json.load(open(faq_path, encoding='utf-8'))
 
-    return seo_html, faq_items
+    howto_schema = None
+    if os.path.exists(howto_path):
+        howto_schema = open(howto_path, encoding='utf-8').read().strip()
+
+    return seo_html, faq_items, howto_schema
 
 
 # ── Sitemap ───────────────────────────────────────────────────────────────────
@@ -555,7 +560,7 @@ def _generate_pages(config, hashes, env, out_dir, dry_run=False):
                 canonical_path = f"{lang_cfg['dir']}/{slug}/"
                 prefix = '../../'
 
-            seo_content, faq_items = _load_content(tool['id'], lang)
+            seo_content, faq_items, howto_schema = _load_content(tool['id'], lang)
             hreflang = _hreflang_links(tool, config)
 
             html = tmpl.render(
@@ -573,6 +578,7 @@ def _generate_pages(config, hashes, env, out_dir, dry_run=False):
                 faq_items      = faq_items,
                 webapp_schema  = _webapp_schema(tool, lang, canonical_path),
                 faq_schema     = _faq_schema(faq_items) if faq_items else '',
+                howto_schema   = howto_schema or '',
                 breadcrumb_schema = _breadcrumb_schema(tool, lang, lang_cfg, canonical_path),
                 hashes         = type('H', (), hashes)(),  # dict → attr access
             )

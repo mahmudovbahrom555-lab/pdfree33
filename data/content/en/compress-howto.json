@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to Compress a PDF",
+  "description": "Reduce PDF file size without losing quality — free, processed in your browser.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Open your PDF",
+      "text": "Click 'Choose files' or drag your PDF into the drop zone."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Choose compression level",
+      "text": "Select Low (minimal quality loss), Medium (balanced), or High (maximum reduction) compression."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Download the compressed PDF",
+      "text": "Click 'Compress PDF'. Your reduced file downloads automatically. The tool shows you how much size was saved."
+    }
+  ]
+}

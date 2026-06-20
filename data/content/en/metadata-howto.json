@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to Edit PDF Metadata",
+  "description": "View and change PDF title, author, subject and keywords — no upload needed.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Open your PDF",
+      "text": "Click 'Choose files' or drag your PDF into the drop zone. Current metadata is displayed immediately."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Edit or clear the metadata fields",
+      "text": "Update the title, author, subject and keywords fields. Leave fields blank to remove that metadata entirely."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Download the updated PDF",
+      "text": "Click 'Edit Metadata'. Your PDF downloads with the new metadata embedded — the file content is unchanged."
+    }
+  ]
+}

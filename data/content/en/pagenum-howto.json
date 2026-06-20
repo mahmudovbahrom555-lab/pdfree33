@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to Add Page Numbers to a PDF",
+  "description": "Stamp page numbers on every PDF page — Arabic, Roman or alphabetic formats.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Open your PDF",
+      "text": "Click 'Choose files' or drag your PDF into the drop zone."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Configure the numbering",
+      "text": "Choose format (1,2,3 / i,ii,iii / a,b,c), position (top or bottom), font size, and which page to start numbering from."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Download the numbered PDF",
+      "text": "Click 'Add Page Numbers'. Your document downloads with page numbers stamped on every page."
+    }
+  ]
+}

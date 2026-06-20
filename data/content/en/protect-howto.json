@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to Password-Protect a PDF",
+  "description": "Add AES-256 encryption to a PDF — processed in your browser, never uploaded.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Open your PDF",
+      "text": "Click 'Choose files' or drag your PDF into the drop zone."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Set a password and permissions",
+      "text": "Enter the password you want to use. Optionally restrict printing, copying or editing."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Download the protected PDF",
+      "text": "Click 'Protect PDF'. Your encrypted file downloads immediately — the password is never sent anywhere."
+    }
+  ]
+}

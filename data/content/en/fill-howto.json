@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to Fill a PDF Form",
+  "description": "Fill AcroForm fields and add signatures to any PDF — 100% in your browser.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Open your fillable PDF",
+      "text": "Click 'Choose files' or drag your PDF into the drop zone. All interactive fields are detected and rendered automatically."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Fill in the fields",
+      "text": "Type into text fields, toggle checkboxes, pick dropdown options. For signature fields tap 'Tap to sign' and draw with your finger or mouse."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Download the filled PDF",
+      "text": "Click 'Fill PDF Form'. Your completed document downloads directly to your device — no server involved."
+    }
+  ]
+}

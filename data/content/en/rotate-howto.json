@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to Rotate PDF Pages",
+  "description": "Rotate pages in a PDF by 90°, 180° or 270° — free, no upload required.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Open your PDF",
+      "text": "Click 'Choose files' or drag your PDF into the drop zone."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Select pages and rotation",
+      "text": "Choose which pages to rotate (all or specific pages) and the rotation angle: 90°, 180° or 270°."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Download the rotated PDF",
+      "text": "Click 'Rotate PDF'. Your corrected document is ready to download instantly."
+    }
+  ]
+}

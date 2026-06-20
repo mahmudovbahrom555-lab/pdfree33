@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to Add a Watermark to a PDF",
+  "description": "Add custom text watermarks to every PDF page — free, processed locally.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Open your PDF",
+      "text": "Click 'Choose files' or drag your PDF into the drop zone."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Customize the watermark",
+      "text": "Type your watermark text, choose font size, opacity, color, and angle (diagonal or tiled). Preview updates live."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Download the watermarked PDF",
+      "text": "Click 'Watermark PDF'. Every page of your document has the watermark baked in permanently."
+    }
+  ]
+}

@@ -53,6 +53,7 @@
   <meta property="og:image"       content="{{ base_url }}/icons/og-image.jpg">
   <meta property="og:image:width"  content="1200">
   <meta property="og:image:height" content="633">
+  <meta property="og:image:alt"    content="{{ tool.cardNames[lang] }} — PDFree">
   <meta name="twitter:card"        content="summary_large_image">
   <meta name="twitter:site"        content="@pdfree_io">
   <meta name="twitter:title"       content="{{ tool.ogTitles[lang] }}">
@@ -97,6 +98,11 @@
   {% if faq_items %}
   <script type="application/ld+json">
 {{ faq_schema }}
+  </script>
+  {% endif %}
+  {% if howto_schema %}
+  <script type="application/ld+json">
+{{ howto_schema }}
   </script>
   {% endif %}
   <script type="application/ld+json">
@@ -268,6 +274,12 @@
         <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Solutions</div>
         <a href="/hipaa-pdf-tools/" style="display:block;color:var(--green);text-decoration:none;margin-bottom:4px;">HIPAA Compliant PDF</a>
         <a href="/secure-pdf-tools/" style="display:block;color:var(--green);text-decoration:none;">Secure PDF Tools</a>
+      </div>
+      <div>
+        <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Guides</div>
+        <a href="/blog/how-to-fill-pdf-form/" style="display:block;color:var(--green);text-decoration:none;margin-bottom:4px;">How to Fill a PDF Form</a>
+        <a href="/blog/how-to-compress-pdf-for-email/" style="display:block;color:var(--green);text-decoration:none;margin-bottom:4px;">Compress PDF for Email</a>
+        <a href="/blog/how-to-split-a-pdf/" style="display:block;color:var(--green);text-decoration:none;">How to Split a PDF</a>
       </div>
     </div>
     {% endif %}

@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to Redact a PDF",
+  "description": "Permanently cover sensitive areas in a PDF — 100% local, nothing uploaded.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Open your PDF",
+      "text": "Click 'Choose files' or drag your PDF into the drop zone."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Draw redaction boxes",
+      "text": "Click and drag over any area you want to cover. A black opaque box covers the selected region permanently."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Download the redacted PDF",
+      "text": "Click 'Redact PDF'. The covered areas are baked into the page — they cannot be uncovered in any PDF viewer."
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to Merge PDF Files",
+  "description": "Combine multiple PDF files into one document free — no upload, 100% private.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Add your PDF files",
+      "text": "Click 'Choose files' or drag your PDF files into the drop zone. Add as many files as you need — there is no limit."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Reorder if needed",
+      "text": "Drag and drop the file cards to set the order you want them merged in."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Download the merged PDF",
+      "text": "Click 'Merge PDF'. Your combined file is generated in your browser in seconds and downloads automatically."
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to Extract Pages from a PDF",
+  "description": "Pull specific pages from a PDF into a new file — free, no upload required.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Open your PDF",
+      "text": "Click 'Choose files' or drag your PDF into the drop zone."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Enter the pages to extract",
+      "text": "Type a page range like 1,3-5,8 to extract individual pages or ranges from the document."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Download the extracted pages",
+      "text": "Click 'Extract Pages'. The selected pages are packaged into a new PDF and download immediately."
+    }
+  ]
+}
