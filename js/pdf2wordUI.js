@@ -225,7 +225,8 @@ const YTOL       = 6;   // must match processor.js _p2wExtractText (was 4; see p
 
 async function _scanTablesBackground(doc, gen) {
   const pageLimit = Math.min(doc.numPages, SCAN_PAGES);
-  let totalTables = 0;
+  let totalTables    = 0;
+  let totalTextItems = 0;  // track meaningful text items across scanned pages
 
   for (let p = 1; p <= pageLimit; p++) {
     const page    = await doc.getPage(p);
@@ -241,6 +242,8 @@ async function _scanTablesBackground(doc, gen) {
         y:        item.transform[5],
         fontSize: (item.height > 0 ? item.height : Math.abs(item.transform[3])) || 10,
       }));
+
+    totalTextItems += items.length;
 
     const lines = [];
     for (const item of [...items].sort((a, b) => b.y - a.y)) {
@@ -259,9 +262,36 @@ async function _scanTablesBackground(doc, gen) {
   // Abort if a newer file was loaded while we were scanning
   if (gen !== _scanGen) return;
 
-  // Update UI badge (only visible when tables found)
   const el = id('pdf2wordOptions');
   if (!el) return;
+
+  // ── OCR hint: pure-image PDF has no extractable text layer ───────────────
+  // Fewer than 3 meaningful text items per scanned page = scanned image only.
+  // Word output will be image-based; recommend OCR first.
+  const ocrHintEl  = el.querySelector('#p2wOcrHint');
+  const isPureImage = (totalTextItems / pageLimit) < 3;
+  if (isPureImage) {
+    if (!ocrHintEl) {
+      const hint = id('p2wModeHint');
+      if (hint) {
+        const div = document.createElement('div');
+        div.id        = 'p2wOcrHint';
+        div.className = 'compress-scan compress-scan--found';
+        div.style.cssText = 'margin-top:8px;font-size:13px;padding:10px 12px';
+        div.setAttribute('role', 'alert');
+        div.innerHTML =
+          '⚠️ No text layer detected — this PDF is a scanned image. ' +
+          'Word output will contain images only. ' +
+          '<a href="/ocr-pdf/" style="color:inherit;font-weight:600;white-space:nowrap">' +
+          'Run OCR first →</a> to get editable text in Word.';
+        hint.before(div);
+      }
+    }
+  } else if (ocrHintEl) {
+    ocrHintEl.remove();
+  }
+
+  // ── Table badge (only visible when tables found) ──────────────────────────
   const badge = el.querySelector('#p2wTableBadge');
 
   if (totalTables > 0) {
