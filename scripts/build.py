@@ -498,6 +498,19 @@ def _write_sitemap(config, out_dir):
             loc_url = f"{BASE_URL}/{slug}/"
             lines += _url_block(loc_url, _git_lastmod(f"{slug}/index.html"), alts)
 
+    # ── Non-EN blog index pages ──────────────────────────────
+    _locale_blog_indexes = [
+        {'lc': 'de', 'slug': 'de/blog', 'en_slug': 'blog'},
+        {'lc': 'es', 'slug': 'es/blog', 'en_slug': 'blog'},
+        {'lc': 'fr', 'slug': 'fr/blog', 'en_slug': 'blog'},
+        {'lc': 'pt', 'slug': 'pt/blog', 'en_slug': 'blog'},
+    ]
+    for bi in _locale_blog_indexes:
+        en_url = f"{BASE_URL}/{bi['en_slug']}/"
+        loc_url = f"{BASE_URL}/{bi['slug']}/"
+        alts = [('en', en_url), (bi['lc'], loc_url), ('x-default', en_url)]
+        lines += _url_block(loc_url, _git_lastmod(f"{bi['slug']}/index.html"), alts, priority='0.5', changefreq='monthly')
+
     # ── Non-EN blog posts ─────────────────────────────────────
     # Blog posts translated/localized for DE, ES, FR, PT.
     # Each maps a language-slug to its EN counterpart for hreflang cross-referencing.
