@@ -789,7 +789,7 @@
         "fr": "Métadonnées PDF"
       },
       "metaDescs": {
-        "en": "View and edit PDF metadata — title, author, subject, keywords. Processed locally in your browser, files never uploaded. Remove personal info before sharing. Free.",
+        "en": "View and edit PDF metadata — title, author, subject, keywords. Processed locally in your browser, never uploaded. Remove personal info before sharing. Free.",
         "es": "Ve y edita metadatos del PDF — título, autor, asunto, palabras clave. Procesado localmente, sin subidas. Elimina información personal antes de compartir. Gratis.",
         "pt": "Visualize e edite metadados de PDF — título, autor, assunto, palavras-chave. Processado localmente, sem uploads. Remova dados pessoais antes de compartilhar. Grátis.",
         "de": "PDF-Metadaten bearbeiten oder entfernen — Titel, Autor, Betreff, Schlüsselwörter. Im Browser verarbeitet, kein Upload. Persönliche Daten vor dem Teilen löschen.",
@@ -1023,7 +1023,7 @@
         "pt": "Preencher PDF"
       },
       "metaDescs": {
-        "en": "Fill PDF form fields online free — text inputs, checkboxes, dropdowns, and signatures. 100% processed in your browser, files never uploaded. No signup, no limits.",
+        "en": "Fill PDF form fields online free — text inputs, checkboxes, dropdowns, and signatures. 100% private, in-browser. Files never uploaded. No signup, no limits.",
         "de": "PDF-Formularfelder online ausfüllen — kostenlos, ohne Upload. Texteingaben, Checkboxen, Unterschriften — alles lokal im Browser verarbeitet. Ohne Registrierung.",
         "es": "Rellena campos de formulario PDF gratis sin subir archivos. Texto, casillas, listas y firmas — procesado localmente en tu navegador. Sin registro, sin límites.",
         "fr": "Remplir des champs de formulaire PDF en ligne gratuitement. Texte, cases à cocher, listes et signatures — traité localement. Sans envoi, sans inscription.",
