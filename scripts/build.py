@@ -321,7 +321,17 @@ SPECIALTY_PAGES = [
     'blog/how-to-compress-pdf-for-email',
     'blog/how-to-split-a-pdf',
     'blog/how-to-remove-watermark-from-pdf',
+    'blog/how-to-merge-pdf-files-for-free',
+    'blog/how-to-password-protect-a-pdf',
+    'blog/how-to-remove-pdf-password',
+    'blog/how-to-compress-pdf-without-losing-quality',
+    'blog/how-to-rotate-pdf-pages',
 ]
+
+# NOTE (Sitemap Index): If the site ever grows beyond 50,000 URLs, split the sitemap
+# into multiple files (e.g. sitemap-tools.xml, sitemap-blog.xml) and serve a
+# sitemap index at /sitemap.xml that references them. The Google limit is 50,000
+# URLs or 50 MB per sitemap file. Current URL count is well below this threshold.
 
 
 def _write_sitemap(config, out_dir):
