@@ -6,6 +6,9 @@
 //  Роутинг, состояние, склейка всех модулей
 // ============================================================
 
+// Prevent browser scroll restoration — always start at top of page
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+
 import { TOOLS, APP_VERSION, getLocalizedTool }   from './config.js';
 import { id, hide, setText }                      from './utils.js';
 
@@ -999,6 +1002,7 @@ document.addEventListener('DOMContentLoaded', () => {
   } else {
     showHomePage();
     initSearch();
+    window.scrollTo({ top: 0, behavior: 'instant' });
   }
 });
 
