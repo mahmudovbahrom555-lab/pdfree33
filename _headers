@@ -4,9 +4,16 @@
 # icons/manifest: shorter TTL (no hash in filename, could update with branding)
 # HTML: short TTL with stale-while-revalidate (fast CDN serving with freshness)
 
+# Global security headers applied to every response
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+
 /*.html
   Cache-Control: public, max-age=300, stale-while-revalidate=86400
-  X-Content-Type-Options: nosniff
 
 /sitemap.xml
   Cache-Control: public, max-age=3600

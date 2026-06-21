@@ -498,6 +498,54 @@ def _write_sitemap(config, out_dir):
             loc_url = f"{BASE_URL}/{slug}/"
             lines += _url_block(loc_url, _git_lastmod(f"{slug}/index.html"), alts)
 
+    # ── Non-EN blog posts ─────────────────────────────────────
+    # Blog posts translated/localized for DE, ES, FR, PT.
+    # Each maps a language-slug to its EN counterpart for hreflang cross-referencing.
+    _locale_blog_posts = [
+        {
+            'de': 'de/blog/pdf-zusammenfuehren-kostenlos',
+            'en': 'blog/how-to-merge-pdf-files-for-free',
+        },
+        {
+            'de': 'de/blog/pdf-verkleinern-ohne-qualitaetsverlust',
+            'en': 'blog/how-to-compress-pdf-without-losing-quality',
+        },
+        {
+            'es': 'es/blog/comprimir-pdf-sin-perder-calidad',
+            'en': 'blog/how-to-compress-pdf-without-losing-quality',
+        },
+        {
+            'es': 'es/blog/unir-archivos-pdf-gratis',
+            'en': 'blog/how-to-merge-pdf-files-for-free',
+        },
+        {
+            'fr': 'fr/blog/compresser-pdf-sans-perte-de-qualite',
+            'en': 'blog/how-to-compress-pdf-without-losing-quality',
+        },
+        {
+            'fr': 'fr/blog/fusionner-pdf-gratuitement',
+            'en': 'blog/how-to-merge-pdf-files-for-free',
+        },
+        {
+            'pt': 'pt/blog/comprimir-pdf-sem-perder-qualidade',
+            'en': 'blog/how-to-compress-pdf-without-losing-quality',
+        },
+        {
+            'pt': 'pt/blog/juntar-arquivos-pdf-gratis',
+            'en': 'blog/how-to-merge-pdf-files-for-free',
+        },
+    ]
+    for post_map in _locale_blog_posts:
+        en_slug = post_map['en']
+        en_url = f"{BASE_URL}/{en_slug}/"
+        alts = [('en', en_url), ('x-default', en_url)]
+        for lc, loc_slug in post_map.items():
+            if lc == 'en':
+                continue
+            alts.append((lc, f"{BASE_URL}/{loc_slug}/"))
+            loc_url = f"{BASE_URL}/{loc_slug}/"
+            lines += _url_block(loc_url, _git_lastmod(f"{loc_slug}/index.html"), alts, priority='0.5', changefreq='monthly')
+
     lines.append('</urlset>')
 
     sitemap_path = os.path.join(out_dir, 'sitemap.xml')
