@@ -62,6 +62,7 @@ export function showHomePage() {
   show('noLimitBar');
   show('toolsGrid');
   show('privacyBar');
+  show('faqSection');
   hide('toolArea');
 }
 
@@ -72,6 +73,7 @@ export function showToolPage() {
   hide('noLimitBar');
   hide('toolsGrid');
   hide('privacyBar');
+  hide('faqSection');
   show('toolArea');
 }
 
