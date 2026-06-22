@@ -37,6 +37,38 @@ function _createWorker() {
   return new Worker(new URL('./worker.js?v=__WORKER_HASH__', import.meta.url));
 }
 
+// ── Background compress pre-scan ─────────────────────────────
+// Runs when the user drops a file — scans PDF structure in the worker
+// before they click Compress, so recommendations appear immediately.
+// Returns the scan report, or null if scan was cancelled/skipped.
+
+let _scanResolve = null; // pending promise resolver
+
+export function startCompressScan(file) {
+  if (isProcessing) return Promise.resolve(null); // compression running — skip
+  cancelCompressScan(); // abort any previous in-flight scan
+
+  return new Promise(resolve => {
+    _scanResolve = resolve;
+    _worker.onmessage = (e) => {
+      if (e.data.type === 'scan-done') {
+        _scanResolve = null;
+        _worker.onmessage = null;
+        resolve(e.data.report);
+      }
+    };
+    // File is sent by structured clone (not Transferable) — stays accessible in main thread
+    _worker.postMessage({ tool: 'compress-scan', file });
+  });
+}
+
+export function cancelCompressScan() {
+  if (!_scanResolve) return;
+  _scanResolve(null);
+  _scanResolve      = null;
+  _worker.onmessage = null;
+}
+
 // ── Cancel ────────────────────────────────────────────────────
 
 export function cancelProcess(currentTool) {
@@ -63,6 +95,7 @@ function _abortUI() {
 
 export async function doProcess(currentTool, extraParams = {}) {
   if (isProcessing) return;
+  cancelCompressScan(); // abort any in-flight background scan before starting compression
   isProcessing = true;
   _currentTool = currentTool;
   _processStartMs = Date.now();
@@ -326,6 +359,11 @@ async function _runCompress(filesSnapshot, { preset = 'medium', preserveText = t
     if (data.type === 'progress') {
       _resetWatchdog();
       setProgress(data.value, data.label);
+    } else if (data.type === 'scan-report') {
+      _resetWatchdog();
+      document.dispatchEvent(new CustomEvent('pdfree:scan-report', {
+        detail: { toolKey, report: data.report },
+      }));
     } else if (data.type === 'done') {
       clearTimeout(watchdog);
       isProcessing = false;

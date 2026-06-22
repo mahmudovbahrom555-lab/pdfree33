@@ -28,6 +28,9 @@ self.onmessage = async function (e) {
       case 'compress':
         await handleCompress(e.data.file, e.data.options);
         break;
+      case 'compress-scan':
+        self.postMessage({ type: 'scan-done', report: await _runCompressScan(e.data.file) });
+        break;
       case 'jpg2pdf':
         await handleJpg2Pdf(e.data.files, e.data.options);
         break;
@@ -540,6 +543,17 @@ function _imageFingerprint(contents) {
   return `${n}:${h >>> 0}`;
 }
 
+// ── Private API adapter ────────────────────────────────────────
+// pdf.context.indirectObjects is used for image deduplication.
+// It is not part of pdf-lib's public API — this adapter centralises
+// the access so a version-change failure throws in ONE place and is
+// caught by the caller, which returns {unavailable:true} for UI warning.
+function _getPdfIndirectObjects(pdf) {
+  const map = pdf.context?.indirectObjects;
+  if (!(map instanceof Map)) throw new Error('pdf.context.indirectObjects unavailable');
+  return map;
+}
+
 // ── Image deduplication ────────────────────────────────────────
 // Finds identical XObject images across pages using _imageFingerprint.
 // Rewires duplicate entries in page Resources.XObject dicts to the
@@ -603,8 +617,7 @@ function _deduplicateImages(pdf) {
   // but publicly accessible in JS. Wrapped in try/catch: if the API ever changes,
   // we skip deletion gracefully (PDF stays valid; space savings are just lost).
   try {
-    const indObjs = pdf.context.indirectObjects;
-    if (!(indObjs instanceof Map)) throw new Error('unexpected type');
+    const indObjs = _getPdfIndirectObjects(pdf);
 
     const refByNum = new Map();
     for (const [ref] of indObjs) refByNum.set(ref.objectNumber, ref);
@@ -615,8 +628,8 @@ function _deduplicateImages(pdf) {
     }
   } catch {
     // API unavailable — resource dicts updated but objects not deleted.
-    // PDF is valid but no space is freed; report zeros to avoid false data.
-    return { count: 0, savedBytes: 0 };
+    // PDF is valid but no space is freed; flag so UI can show a warning.
+    return { count: 0, savedBytes: 0, unavailable: true };
   }
 
   return { count: toDelete.size, savedBytes };
@@ -903,8 +916,52 @@ async function _recompressImages(pdf, jpegQuality, targetDpi, medianPageSize) {
   return { recompressed, skipped, savedBytes };
 }
 
+// ── Background pre-scan ────────────────────────────────────────
+// Called via 'compress-scan' case when user drops a file — runs before
+// they click Compress so the UI can show recommendations immediately.
+// Result is cached in compressUI.js and passed back via options.preScan
+// to handleCompress, which skips re-analysis when the cached scan exists.
+async function _runCompressScan(file) {
+  const { PDFDocument, PDFName, PDFRawStream } = PDFLib;
+  const buf = await file.arrayBuffer();
+  const pdf = await PDFDocument.load(buf, { ignoreEncryption: true });
+  const cat = pdf.catalog;
+
+  let thumbnails = 0, hasPieceInfo = cat.has(PDFName.of('PieceInfo'));
+  for (const page of pdf.getPages()) {
+    if (page.node.has(PDFName.of('Thumb')))     thumbnails++;
+    if (page.node.has(PDFName.of('PieceInfo'))) hasPieceInfo = true;
+  }
+
+  let imgBytes = 0, imgCount = 0;
+  for (const [, obj] of pdf.context.enumerateIndirectObjects()) {
+    if (!(obj instanceof PDFRawStream)) continue;
+    if (obj.dict.get(PDFName.of('Subtype'))?.toString() === '/Image') {
+      imgBytes += obj.contents.length;
+      imgCount++;
+    }
+  }
+
+  const fileSize    = buf.byteLength;
+  const imageRatio  = imgCount > 0 && fileSize > 0 ? imgBytes / fileSize : 0;
+  const hasXMP      = cat.has(PDFName.of('Metadata'));
+
+  return {
+    pageCount:     pdf.getPageCount(),
+    hasXMP,
+    hasPieceInfo,
+    thumbnails,
+    isEncrypted:   pdf.isEncrypted,
+    imageCount:    imgCount,
+    imageRatio,
+    imageDominant: imageRatio > 0.5,
+    fileSize,
+    opportunities: (hasXMP ? 1 : 0) + (thumbnails > 0 ? 1 : 0) + (hasPieceInfo ? 1 : 0),
+  };
+}
+
 async function handleCompress(fileBuffer, options) {
-  const { PDFDocument, PDFName } = PDFLib;
+  const { PDFDocument, PDFName, PDFRawStream } = PDFLib;
   const originalSize = fileBuffer.byteLength;
 
   self.postMessage({ type: 'progress', value: 5,  label: 'Loading PDF…' });
@@ -926,14 +983,51 @@ async function handleCompress(fileBuffer, options) {
     metadataFields: 0,
   };
 
-  const cat = pdf.catalog;
-  report.hasXMP       = cat.has(PDFName.of('Metadata'));
-  report.hasPieceInfo = cat.has(PDFName.of('PieceInfo'));
-
+  const cat   = pdf.catalog;
   const pages = pdf.getPages();
-  for (const page of pages) {
-    if (page.node.has(PDFName.of('Thumb')))     report.thumbnails++;
-    if (page.node.has(PDFName.of('PieceInfo'))) report.hasPieceInfo = true;
+
+  if (options.preScan) {
+    // Background scan already ran — reuse its results to skip re-analysis.
+    // Saves ~100–300ms on large files by avoiding a second object enumeration.
+    report.hasXMP       = options.preScan.hasXMP;
+    report.hasPieceInfo = options.preScan.hasPieceInfo;
+    report.thumbnails   = options.preScan.thumbnails;
+    self.postMessage({ type: 'scan-report', report: { ...options.preScan, isEncrypted: report.wasEncrypted } });
+  } else {
+    // No cached scan (user clicked faster than background scan finished).
+    report.hasXMP       = cat.has(PDFName.of('Metadata'));
+    report.hasPieceInfo = cat.has(PDFName.of('PieceInfo'));
+
+    for (const page of pages) {
+      if (page.node.has(PDFName.of('Thumb')))     report.thumbnails++;
+      if (page.node.has(PDFName.of('PieceInfo'))) report.hasPieceInfo = true;
+    }
+
+    let _imgBytes = 0, _imgCount = 0;
+    for (const [, obj] of pdf.context.enumerateIndirectObjects()) {
+      if (!(obj instanceof PDFRawStream)) continue;
+      if (obj.dict.get(PDFName.of('Subtype'))?.toString() === '/Image') {
+        _imgBytes += obj.contents.length;
+        _imgCount++;
+      }
+    }
+
+    const _imageRatio = _imgCount > 0 ? _imgBytes / originalSize : 0;
+    self.postMessage({
+      type:   'scan-report',
+      report: {
+        pageCount:     pdf.getPageCount(),
+        hasXMP:        report.hasXMP,
+        hasPieceInfo:  report.hasPieceInfo,
+        thumbnails:    report.thumbnails,
+        isEncrypted:   report.wasEncrypted,
+        imageCount:    _imgCount,
+        imageRatio:    _imageRatio,
+        imageDominant: _imageRatio > 0.5,
+        fileSize:      originalSize,
+        opportunities: (report.hasXMP ? 1 : 0) + (report.thumbnails > 0 ? 1 : 0) + (report.hasPieceInfo ? 1 : 0),
+      },
+    });
   }
 
   // ── Phase 2: Metadata removal ─────────────────────────────
@@ -1047,6 +1141,9 @@ async function handleCompress(fileBuffer, options) {
     const dedupResult         = _deduplicateImages(pdf);
     report.imagesDeduplicated = dedupResult.count;
     report.dedupSavedBytes    = dedupResult.savedBytes;
+    if (dedupResult.unavailable) {
+      (report.warnings ??= []).push('Image dedup unavailable on current engine');
+    }
   } else {
     report.imagesDeduplicated = 0;
     report.dedupSavedBytes    = 0;

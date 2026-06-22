@@ -23,11 +23,13 @@ import { showHomePage, showToolPage,
 import { initFileListeners, setCurrentTool,
          clearFiles, selectedFiles, addFiles }    from './files.js';
 import { doProcess, isProcessing,
-         cancelProcess,
+         cancelProcess, cancelCompressScan,
+         startCompressScan,
          getProcessStartMs }                      from './processor.js';
 import { hideAllToolOptions, initToolOptions,
          collectToolParams, notifyToolSuccess }  from './toolRegistry.js';
 import './toolRegistrations.js';                 // side-effect: registers all tools
+import { renderWorkerScanReport }               from './compressUI.js';
 import { trackToolStart, trackToolSuccess,
          trackToolCancel, trackFileAdded,
          trackToolOpen, trackInstallPrompt,
@@ -419,6 +421,19 @@ function initEvents() {
   // Without this, tools like OCR keep a stale _file reference to the removed file.
   document.addEventListener('pdfree:file-removed', () => {
     initToolOptions(currentTool, [...selectedFiles]);
+    if (currentTool === 'compress' || currentTool === 'compress-email') {
+      cancelCompressScan();
+    }
+  });
+
+  // Background compress scan: runs in worker as soon as a file is dropped,
+  // so recommendations and preset auto-selection appear before the user clicks Compress.
+  document.addEventListener('pdfree:files-added', async () => {
+    if (currentTool !== 'compress' && currentTool !== 'compress-email') return;
+    const file = selectedFiles[0];
+    if (!file) return;
+    const report = await startCompressScan(file);
+    if (report) renderWorkerScanReport(report);
   });
 
   // Re-init after silent owner-password decryption completes (files.js dispatches this).
@@ -428,6 +443,12 @@ function initEvents() {
   });
 
   document.addEventListener('pdfree:success', e => _handleSuccess(e.detail));
+
+  // Compress scan findings arrive from worker mid-compression — update the
+  // scan banner in #compressOptions with real data instead of the placeholder.
+  document.addEventListener('pdfree:scan-report', e => {
+    renderWorkerScanReport(e.detail.report);
+  });
 
   window.addEventListener('popstate', e => {
     if (e.state?.tool) showTool(e.state.tool, false);

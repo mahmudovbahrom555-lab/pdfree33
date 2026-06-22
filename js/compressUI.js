@@ -13,11 +13,10 @@
 // ============================================================
 
 import { id, fmtSize } from './utils.js';
-import { MAX_COMPRESS_MB, SCAN_LIMIT_MB } from './config.js';
+import { MAX_COMPRESS_MB } from './config.js';
 import { showToast } from './ui.js';
 import { t } from './i18n.js';
-import { sliderRow, checkbox, loadingRow } from './uiComponents.js';
-import { loadPdfLib } from './lazyLibs.js';
+import { sliderRow, checkbox } from './uiComponents.js';
 import { wmRemoveHtml, bindWmRemove, resetWmRemove } from './watermarkRemoveUI.js';
 
 // ── State ──────────────────────────────────────────────────────
@@ -25,12 +24,67 @@ let _preset       = 'medium';  // 'low' | 'medium' | 'high'
 let _preserveText = true;
 let _targetDpi    = 150;       // null = no downsampling | 96 | 150
 let _quality      = 82;        // JPEG quality %, 60–95 (sent as 0–1 to worker)
-let _lastScan     = null;      // result of _scanFile(), null if skipped or not yet run
+let _lastScan     = null;      // scan report (background or worker), null until scan arrives
+let _presetAutoSelected = false; // true when we auto-selected a preset from scan data
 let _eventsBound  = false;     // listeners live on the persistent #compressOptions div — bind once
 
 // Defaults applied when user switches presets
 const _dpiDefaults     = { low: null, medium: 150, high: 96 };
 const _qualityDefaults = { medium: 82, high: 72 };
+
+// ── Recommendation logic ───────────────────────────────────────
+
+// Derive the recommended preset from scan data.
+// imageDominant (>50% image bytes) → Maximum for max savings.
+// All other cases → Standard: removes metadata + recompresses images.
+// Light is only recommended when PDF is provably clean (no opportunities,
+// no images) — avoids recommending it when object stream savings exist.
+function _recommendedPreset(scan) {
+  if (!scan) return 'medium';
+  if (scan.imageDominant || scan.imageRatio >= 0.5) return 'high';
+  if (scan.opportunities === 0 && scan.imageCount === 0)  return 'low';
+  return 'medium';
+}
+
+// Human-readable savings expectation + reason based on scan data.
+function _savingsTier(scan) {
+  if (!scan) return '';
+  if (scan.imageDominant || scan.imageRatio >= 0.5) return '🔥 High savings expected · Image-heavy PDF';
+  if (scan.imageCount > 0)                          return '⚡ Moderate savings expected · Mixed text and images';
+  if (scan.opportunities > 0)                       return '✅ Minor savings expected · Text-only PDF';
+  return '';
+}
+
+// Apply preset defaults to quality/DPI sliders without re-rendering the whole panel.
+function _syncPresetDefaults(preset) {
+  _quality   = _qualityDefaults[preset] ?? 82;
+  _targetDpi = _dpiDefaults[preset] ?? null;
+
+  const qualityRow = id('qualityRow');
+  const dpiRow     = document.querySelector('.compress-dpi');
+
+  if (preset === 'low') {
+    if (qualityRow) qualityRow.style.display = 'none';
+    if (dpiRow)     dpiRow.style.display     = 'none';
+  } else {
+    if (qualityRow) {
+      qualityRow.style.display = '';
+      const slider = id('qualitySlider');
+      if (slider) slider.value = _quality;
+      const valEl = id('qualityVal');
+      if (valEl) valEl.textContent = `${_quality}%`;
+    }
+    if (dpiRow) {
+      dpiRow.style.display = '';
+      dpiRow.querySelectorAll('.compress-dpi__chip').forEach(chip => {
+        const v = chip.dataset.dpi === 'null' ? null : Number(chip.dataset.dpi);
+        chip.classList.toggle('active', v === _targetDpi);
+      });
+      const matchingInput = dpiRow.querySelector(`input[value="${_targetDpi ?? 'null'}"]`);
+      if (matchingInput) matchingInput.checked = true;
+    }
+  }
+}
 
 export function getCompressParams() {
   return { preset: _preset, preserveText: _preserveText, targetDpi: _targetDpi, quality: _quality / 100 };
@@ -43,15 +97,14 @@ export function getCompressScan() { return _lastScan; }
 
 /**
  * Инициализирует панель сжатия для загруженного файла.
- * Сразу запускает pre-scan через window.PDFLib (уже загружен для splitUI)
- * и показывает что конкретно будет удалено.
+ * Отображает UI немедленно; scan запускается в worker при нажатии кнопки
+ * (Phase 0 handleCompress) — без ограничения по размеру файла.
  * @param {File} file
  */
-export async function initCompressOptions(file) {
+export function initCompressOptions(file) {
   const container = id('compressOptions');
   if (!container) return;
 
-  // Always show the panel immediately so stale data from a previous file never lingers.
   container.style.display = 'block';
 
   if (file.size > MAX_COMPRESS_MB * 1024 * 1024) {
@@ -68,24 +121,67 @@ export async function initCompressOptions(file) {
     return;
   }
 
-  container.innerHTML = loadingRow('Scanning PDF…');
-
-  // Skip full PDFDocument.load for large files — it would consume 3–5× file size
-  // in main thread heap (e.g. 25 MB file → ~120 MB RAM). Threshold: SCAN_LIMIT_MB.
-  _lastScan = null;
-  if (file.size <= SCAN_LIMIT_MB * 1024 * 1024) {
-    try {
-      _lastScan = await _scanFile(file);
-    } catch {
-      // Scan failed silently — UI still shows with _lastScan=null
-    }
-  }
-
   if (file.size > 40 * 1024 * 1024) {
     showToast(t('warn_compress_large', { size: fmtSize(file.size) }), 7000);
   }
 
-  _render(file, _lastScan);
+  _lastScan = null;
+  _render(file, null);
+}
+
+/**
+ * Обновляет scan-banner в compressOptions данными из worker scan-report.
+ * Вызывается из app.js по событию pdfree:scan-report во время сжатия.
+ * Заменяет placeholder "Analysis runs automatically…" реальными находками.
+ * @param {{ pageCount, hasXMP, hasPieceInfo, thumbnails, isEncrypted, imageCount, imageDominant, opportunities }} report
+ */
+export function renderWorkerScanReport(report) {
+  _lastScan = report;
+  const container = id('compressOptions');
+  if (!container || container.style.display === 'none') return;
+
+  // Update scan banner
+  const existing = id('compressScanBanner');
+  const bannerHtml = _buildScanBanner(report);
+  if (existing) {
+    existing.outerHTML = bannerHtml;
+  } else {
+    const info = container.querySelector('.compress-info');
+    if (info) info.insertAdjacentHTML('afterend', bannerHtml);
+    else container.insertAdjacentHTML('afterbegin', bannerHtml);
+  }
+
+  // Auto-select recommended preset if user hasn't manually changed it
+  const rec = _recommendedPreset(report);
+  if (!_presetAutoSelected && _preset === 'medium' && rec !== 'medium') {
+    _preset             = rec;
+    _presetAutoSelected = true;
+    document.querySelectorAll('.compress-preset').forEach(el => {
+      el.classList.toggle('j2p-chip--active', el.dataset.preset === _preset);
+      const input = el.querySelector('input[type="radio"]');
+      if (input) input.checked = input.value === _preset;
+    });
+    _syncPresetDefaults(_preset);
+  }
+
+  // Add/update ⭐ Recommended badge on the correct preset card
+  document.querySelectorAll('.compress-preset').forEach(el => {
+    const value = el.dataset.preset;
+    const label = el.querySelector('.compress-preset__label');
+    if (!label) return;
+    const existingBadge = label.querySelector('.compress-preset__rec');
+    if (value === rec) {
+      if (!existingBadge) {
+        label.insertAdjacentHTML('beforeend', ' <span class="compress-preset__rec" aria-label="Recommended">⭐</span>');
+      }
+    } else {
+      existingBadge?.remove();
+    }
+  });
+
+  if (report.isEncrypted) {
+    showToast('⚠️ Encrypted PDF — some content may not be fully optimized', 5000);
+  }
 }
 
 /** Скрывает и очищает панель */
@@ -94,11 +190,12 @@ export function hideCompressOptions() {
   if (!container) return;
   container.style.display = 'none';
   container.innerHTML = '';
-  _preset       = 'medium';
-  _preserveText = true;
-  _targetDpi    = 150;
-  _quality      = 82;
-  _lastScan     = null;
+  _preset             = 'medium';
+  _preserveText       = true;
+  _targetDpi          = 150;
+  _quality            = 82;
+  _lastScan           = null;
+  _presetAutoSelected = false;
   resetWmRemove();
 }
 
@@ -194,6 +291,7 @@ export function renderCompressionReport(data) {
              </div>
            `).join('')}
            ${whyNote ? `<div class="compress-report__note" style="margin-top:8px">${whyNote}</div>` : ''}
+           ${report.warnings?.length > 0 ? `<div class="compress-report__note" style="margin-top:8px;opacity:0.7">⚠️ ${report.warnings.join(' · ')}</div>` : ''}
          </div>`
     }
   `;
@@ -204,62 +302,6 @@ export function renderCompressionReport(data) {
     const fill = div.querySelector('.compress-report__gauge-fill');
     if (fill) fill.style.width = fill.dataset.target + '%';
   }));
-}
-
-// ── Pre-scan ──────────────────────────────────────────────────
-// Использует window.PDFLib (загружен в main thread для splitUI).
-// Читаем только структуру — не декомпрессируем контент.
-// Для 50 МБ файла это занимает ~200-500ms — приемлемо.
-
-async function _scanFile(file) {
-  await loadPdfLib();
-  const { PDFDocument, PDFName, PDFRawStream } = window.PDFLib;
-  const buf = await file.arrayBuffer();
-  const pdf = await PDFDocument.load(buf, { ignoreEncryption: true });
-
-  const cat = pdf.catalog;
-  const hasXMP       = cat.has(PDFName.of('Metadata'));
-  const hasPieceInfo = cat.has(PDFName.of('PieceInfo'));
-  const isEncrypted  = pdf.isEncrypted;
-
-  let thumbCount = 0;
-  let pageHasPieceInfo = false;
-  for (const page of pdf.getPages()) {
-    if (page.node.has(PDFName.of('Thumb')))    thumbCount++;
-    if (page.node.has(PDFName.of('PieceInfo'))) pageHasPieceInfo = true;
-  }
-
-  // Count image bytes — heuristic for scan/photo PDF detection.
-  // obj.contents.length = compressed stream size (JPEG or FlateDecode).
-  // Ratio to file.size tells us how image-heavy this PDF is.
-  let imageBytes = 0;
-  let imageCount = 0;
-  pdf.context.enumerateIndirectObjects().forEach(([, obj]) => {
-    if (!(obj instanceof PDFRawStream)) return;
-    if (obj.dict.get(PDFName.of('Subtype'))?.toString() === '/Image') {
-      imageBytes += obj.contents.length;
-      imageCount++;
-    }
-  });
-  // >50% of file bytes are image data → scan or photo PDF
-  const imageDominant = imageCount > 0 && (imageBytes / file.size) > 0.5;
-
-  let opportunities = 0;
-  if (hasXMP)                              opportunities++;
-  if (thumbCount > 0)                      opportunities++;
-  if (hasPieceInfo || pageHasPieceInfo)    opportunities++;
-
-  return {
-    pageCount:    pdf.getPageCount(),
-    hasXMP,
-    hasPieceInfo: hasPieceInfo || pageHasPieceInfo,
-    thumbCount,
-    isEncrypted,
-    opportunities,
-    fileSize: file.size,
-    imageCount,
-    imageDominant,
-  };
 }
 
 // ── Render ─────────────────────────────────────────────────────
@@ -276,12 +318,12 @@ function _render(file, scan) {
       ${scan?.isEncrypted ? '<span class="compress-info__badge compress-info__badge--warn">🔒 encrypted</span>' : ''}
     </div>
 
-    ${scan ? _buildScanBanner(scan) : file.size > SCAN_LIMIT_MB * 1024 * 1024 ? `<div class="compress-scan compress-scan--info" role="status">ℹ️ ${t('compress_scan_skipped')}</div>` : ''}
+    ${scan ? _buildScanBanner(scan) : '<div class="compress-scan compress-scan--info" id="compressScanBanner" role="status">🔍 Analysis runs automatically when you compress</div>'}
 
     <div class="compress-presets">
-      ${_presetCard('low',    '🪶', 'Light',    'Removes thumbnails and info fields only. No image recompression, no DPI change — maximum compatibility.')}
-      ${_presetCard('medium', '⚡', 'Standard', 'Removes metadata + recompresses images. Adjust quality below.')}
-      ${_presetCard('high',   '🔥', 'Maximum',  'Aggressive structure cleanup + image recompression. Adjust quality below.')}
+      ${_presetCard('low',    '🪶', 'Light',    'Removes thumbnails and info fields only. No image recompression, no DPI change — maximum compatibility.', _lastScan && _recommendedPreset(_lastScan) === 'low')}
+      ${_presetCard('medium', '⚡', 'Standard', 'Removes metadata + recompresses images. Adjust quality below.',                                            _lastScan && _recommendedPreset(_lastScan) === 'medium')}
+      ${_presetCard('high',   '🔥', 'Maximum',  'Aggressive structure cleanup + image recompression. Adjust quality below.',                                _lastScan && _recommendedPreset(_lastScan) === 'high')}
     </div>
 
     ${_qualityRow()}
@@ -307,34 +349,34 @@ function _render(file, scan) {
 }
 
 function _buildScanBanner(scan) {
-  // imageDominant wins — it's the most actionable finding
+  const thumbCount = scan.thumbnails ?? scan.thumbCount ?? 0;
+  const tier       = _savingsTier(scan);
+  const tierHtml   = tier ? `<br><span class="compress-scan__tier">${tier}</span>` : '';
+
   if (scan.imageDominant) {
-    return `
-      <div class="compress-scan compress-scan--found" role="status">
-        🖼️ Scan or photo PDF — ${scan.imageCount} image${scan.imageCount !== 1 ? 's' : ''} make up most of the file.
-        <strong>Maximum preset</strong> will give the biggest reduction.
-      </div>
-    `;
+    return `<div class="compress-scan compress-scan--found" id="compressScanBanner" role="status">
+        🖼️ Scan or photo PDF — ${scan.imageCount} image${scan.imageCount !== 1 ? 's' : ''} make up most of the file.${tierHtml}
+      </div>`;
   }
 
-  if (scan.opportunities === 0) {
-    return `
-      <div class="compress-scan compress-scan--clean" role="status">
+  if (scan.opportunities === 0 && scan.imageCount === 0) {
+    return `<div class="compress-scan compress-scan--clean" id="compressScanBanner" role="status">
         ✅ PDF looks clean — no redundant metadata detected
-      </div>
-    `;
+      </div>`;
   }
 
   const found = [];
-  if (scan.hasXMP)        found.push('XMP stream');
-  if (scan.thumbCount > 0) found.push(`${scan.thumbCount} thumbnail${scan.thumbCount > 1 ? 's' : ''}`);
-  if (scan.hasPieceInfo)  found.push('PieceInfo metadata');
+  if (scan.hasXMP)       found.push('XMP stream');
+  if (thumbCount > 0)    found.push(`${thumbCount} thumbnail${thumbCount > 1 ? 's' : ''}`);
+  if (scan.hasPieceInfo) found.push('PieceInfo metadata');
 
-  return `
-    <div class="compress-scan compress-scan--found" role="status">
-      🔍 Found: <strong>${found.join(' · ')}</strong> — will be removed automatically
-    </div>
-  `;
+  const foundPart = found.length > 0
+    ? `🔍 Found: <strong>${found.join(' · ')}</strong> — will be removed automatically.`
+    : `🔍 ${scan.imageCount} image${scan.imageCount !== 1 ? 's' : ''} found.`;
+
+  return `<div class="compress-scan compress-scan--found" id="compressScanBanner" role="status">
+      ${foundPart}${tierHtml}
+    </div>`;
 }
 
 function _qualityRow() {
@@ -354,12 +396,15 @@ function _qualityRow() {
   });
 }
 
-function _presetCard(value, icon, label, desc) {
+function _presetCard(value, icon, label, desc, isRecommended = false) {
+  const recBadge = isRecommended
+    ? ' <span class="compress-preset__rec" aria-label="Recommended">⭐</span>'
+    : '';
   return `
     <label class="compress-preset ${_preset === value ? 'j2p-chip--active' : ''}" data-preset="${value}">
       <input type="radio" name="compressPreset" value="${value}" ${_preset === value ? 'checked' : ''}>
       <span class="compress-preset__icon" aria-hidden="true">${icon}</span>
-      <span class="compress-preset__label">${label}</span>
+      <span class="compress-preset__label">${label}${recBadge}</span>
       <span class="compress-preset__desc">${desc}</span>
     </label>
   `;
@@ -395,7 +440,8 @@ function _bindEvents() {
 
   id('compressOptions').addEventListener('change', e => {
     if (e.target.name === 'compressPreset') {
-      _preset = e.target.value;
+      _preset             = e.target.value;
+      _presetAutoSelected = true; // user explicitly chose — don't override on next scan
       document.querySelectorAll('.compress-preset').forEach(el => {
         el.classList.toggle('j2p-chip--active', el.dataset.preset === _preset);
       });
@@ -461,14 +507,15 @@ function _bindEvents() {
 
 // ── Email mode ─────────────────────────────────────────────────
 // Dedicated init/hide/verdict for the /compress-pdf-for-email/ page.
-// Uses the same #compressOptions container and _scanFile() infrastructure.
+// Uses the same #compressOptions container and renderWorkerScanReport.
 // getParams is fixed (no user controls) — always Maximum+96DPI+60%.
 
 /**
  * Инициализирует email-режим сжатия: фиксированные настройки, нет слайдеров.
+ * Scan запускается в worker (как Phase 0 handleCompress) — без ограничения по размеру.
  * @param {File} file
  */
-export async function initCompressEmailOptions(file) {
+export function initCompressEmailOptions(file) {
   const container = id('compressOptions');
   if (!container) return;
   container.style.display = 'block';
@@ -487,26 +534,18 @@ export async function initCompressEmailOptions(file) {
     return;
   }
 
-  container.innerHTML = loadingRow('Scanning PDF…');
-
   _lastScan = null;
-  if (file.size <= SCAN_LIMIT_MB * 1024 * 1024) {
-    try { _lastScan = await _scanFile(file); } catch { /* silent */ }
-  }
-
-  const meta = _lastScan
-    ? ` · ${_lastScan.pageCount} page${_lastScan.pageCount !== 1 ? 's' : ''}`
-    : '';
 
   container.innerHTML = `
     <div class="compress-info">
       <span class="compress-info__name" title="${_esc(file.name)}">${_truncName(file.name)}</span>
       <span class="compress-info__dot" aria-hidden="true">·</span>
-      <span class="compress-info__meta">${fmtSize(file.size)}${meta}</span>
-      ${_lastScan?.isEncrypted ? '<span class="compress-info__badge compress-info__badge--warn">🔒 encrypted</span>' : ''}
+      <span class="compress-info__meta">${fmtSize(file.size)}</span>
     </div>
 
-    ${_lastScan ? _buildScanBanner(_lastScan) : ''}
+    <div class="compress-scan compress-scan--info" id="compressScanBanner" role="status">
+      🔍 Analysis runs automatically when you compress
+    </div>
 
     <div class="compress-scan compress-scan--info" role="status" style="margin-top:8px">
       📧 Email mode: <strong>Maximum preset</strong> · <strong>96 DPI</strong> · <strong>60% image quality</strong>
@@ -520,8 +559,9 @@ export function hideCompressEmailOptions() {
   const container = id('compressOptions');
   if (!container) return;
   container.style.display = 'none';
-  container.innerHTML = '';
-  _lastScan = null;
+  container.innerHTML     = '';
+  _lastScan           = null;
+  _presetAutoSelected = false;
 }
 
 /**

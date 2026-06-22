@@ -97,7 +97,7 @@ registerTool('compress', {
   runner:    'compress',
   init:      initCompressOptions,
   hide:      hideCompressOptions,
-  getParams: () => ({ ...getCompressParams(), removeWatermarks: getWmRemove() }),
+  getParams: () => ({ ...getCompressParams(), removeWatermarks: getWmRemove(), preScan: getCompressScan() }),
   validate:  (p) => {
     const scan = getCompressScan();
     // Hard block only when scan ran AND confirms Light preset is a near-no-op:
@@ -281,7 +281,7 @@ registerTool('compress-email', {
   runner:    'compress',
   init:      initCompressEmailOptions,
   hide:      hideCompressEmailOptions,
-  getParams: () => ({ preset: 'high', targetDpi: 96, quality: 0.60, preserveText: false, removeWatermarks: false }),
+  getParams: () => ({ preset: 'high', targetDpi: 96, quality: 0.60, preserveText: false, removeWatermarks: false, preScan: getCompressScan() }),
   onSuccess: ({ compressionReport }) => {
     if (compressionReport) {
       renderCompressionReport(compressionReport);
