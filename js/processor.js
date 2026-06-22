@@ -320,7 +320,7 @@ async function _runSplit(filesSnapshot, { pages, mode, removeWatermarks = false 
 
 // ── Compress ───────────────────────────────────────────────────
 
-async function _runCompress(filesSnapshot, { preset = 'medium', preserveText = true, removeWatermarks = false, targetDpi = null, quality = null } = {}, toolKey = 'compress') {
+async function _runCompress(filesSnapshot, { preset = 'medium', preserveText = true, removeWatermarks = false, targetDpi = null, quality = null, targetSizeMb = null } = {}, toolKey = 'compress') {
   if (!_checkSize(filesSnapshot[0], MAX_COMPRESS_MB)) { _abortUI(); return; }
 
   const file   = filesSnapshot[0];
@@ -403,6 +403,7 @@ async function _runCompress(filesSnapshot, { preset = 'medium', preserveText = t
             compressedSize: data.compressedSize,
             savedBytes:     data.savedBytes,
             report:         data.report,
+            targetSizeMb,
           },
         }
       }));

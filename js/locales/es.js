@@ -127,6 +127,31 @@ window.PDFREE_LOCALE = {
   err_compress_timeout: '⏱ Compresión cancelada — el archivo tiene demasiadas imágenes para el navegador. Prueba el preset Light o divide el PDF primero.',
   warn_compress_large:  '⚠️ Archivo grande ({size}) — la compresión puede tardar 1–2 minutos. El navegador lo procesa todo localmente en memoria.',
   compress_scan_skipped: 'Archivo grande — pre-escaneo omitido para ahorrar memoria',
+
+  compress_placeholder:      'El análisis se ejecuta automáticamente al comprimir',
+  compress_doc_scan:         'Documento escaneado',
+  compress_doc_mixed:        'Documento mixto',
+  compress_doc_text:         'Documento de texto',
+  compress_doc_clean:        'PDF ya bien optimizado',
+  compress_tier_high:        'Alta reducción esperada · PDF con muchas imágenes',
+  compress_tier_moderate:    'Reducción moderada esperada · Texto e imágenes',
+  compress_tier_minor:       'Reducción menor esperada · PDF solo texto',
+  compress_findings_found:   'encontrado',
+  compress_dpi_downsample:   'se reducirá a {dpi} DPI',
+  compress_time_est:         '⏱ ~{t}',
+  compress_img:              '{n} imagen',
+  compress_imgs:             '{n} imágenes',
+  compress_thumb:            '{n} miniatura',
+  compress_thumbs:           '{n} miniaturas',
+
+  compress_target_label:     'Comprimir a',
+  compress_target_best:      'Mejor calidad',
+  compress_target_email:     'Email',
+  compress_target_web:       'Web',
+  compress_target_small:     'Pequeño',
+  compress_target_met:       '✅ {size} — cabe en el límite de {target}',
+  compress_target_over:      '⚠️ {size} — sigue superando el límite de {target}. Prueba dividir el PDF primero.',
+
   error_msg:           'Error: {msg}',
 
   // search

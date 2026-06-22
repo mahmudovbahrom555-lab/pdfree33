@@ -15,7 +15,7 @@
 import { id, fmtSize } from './utils.js';
 import { MAX_COMPRESS_MB } from './config.js';
 import { showToast } from './ui.js';
-import { t } from './i18n.js';
+import { t, tp } from './i18n.js';
 import { sliderRow, checkbox } from './uiComponents.js';
 import { wmRemoveHtml, bindWmRemove, resetWmRemove } from './watermarkRemoveUI.js';
 
@@ -24,6 +24,7 @@ let _preset       = 'medium';  // 'low' | 'medium' | 'high'
 let _preserveText = true;
 let _targetDpi    = 150;       // null = no downsampling | 96 | 150
 let _quality      = 82;        // JPEG quality %, 60–95 (sent as 0–1 to worker)
+let _targetSizeMb = null;      // Target Size Mode: null | 25 | 10 | 5
 let _lastScan     = null;      // scan report (background or worker), null until scan arrives
 let _presetAutoSelected = false; // true when we auto-selected a preset from scan data
 let _eventsBound  = false;     // listeners live on the persistent #compressOptions div — bind once
@@ -31,6 +32,9 @@ let _eventsBound  = false;     // listeners live on the persistent #compressOpti
 // Defaults applied when user switches presets
 const _dpiDefaults     = { low: null, medium: 150, high: 96 };
 const _qualityDefaults = { medium: 82, high: 72 };
+
+// Quality targets per size limit (Maximum preset + 96 DPI assumed)
+const _targetQuality = { 25: 0.60, 10: 0.50, 5: 0.42 };
 
 // ── Document classification + recommendation logic ─────────────
 
@@ -58,10 +62,54 @@ function _recommendedPreset(scan) {
 function _savingsTier(scan) {
   if (!scan) return '';
   const doc = _docType(scan);
-  if (doc.type === 'scan')  return '🔥 High savings expected · Image-heavy PDF';
-  if (doc.type === 'mixed') return '⚡ Moderate savings expected · Mixed text and images';
-  if (scan.opportunities > 0) return '✅ Minor savings expected · Text-only PDF';
+  if (doc.type === 'scan')     return `🔥 ${t('compress_tier_high')}`;
+  if (doc.type === 'mixed')    return `⚡ ${t('compress_tier_moderate')}`;
+  if (scan.opportunities > 0) return `✅ ${t('compress_tier_minor')}`;
   return '';
+}
+
+// Rough compression time estimate (seconds) based on file size + preset.
+// Only shown for files > 3 MB where the wait is noticeable.
+function _timeEstimate(scan, preset) {
+  const mb = (scan?.fileSize ?? 0) / (1024 * 1024);
+  if (mb < 3) return null;
+  const imageDom = scan?.imageDominant ?? false;
+  const mult = imageDom
+    ? { low: 0.1, medium: 2.2, high: 3.5 }[preset] ?? 2.2
+    : { low: 0.08, medium: 0.25, high: 0.4 }[preset] ?? 0.25;
+  const sec = Math.round(mb * mult);
+  if (sec < 2) return null;
+  return sec < 60 ? `${sec}s` : `${Math.round(sec / 60)}min`;
+}
+
+// Target Size Mode chip row (shown below DPI row)
+function _targetSizeRow() {
+  const opts = [
+    { value: null, label: t('compress_target_best'), hint: '' },
+    { value: 25,   label: t('compress_target_email'), hint: '< 25 MB' },
+    { value: 10,   label: t('compress_target_web'),   hint: '< 10 MB' },
+    { value: 5,    label: t('compress_target_small'), hint: '< 5 MB'  },
+  ];
+  return `
+    <div class="compress-dpi compress-target" role="group" aria-label="${t('compress_target_label')}">
+      <span class="compress-dpi__label">${t('compress_target_label')}</span>
+      <div class="compress-dpi__chips">
+        ${opts.map(o => `
+          <label class="compress-dpi__chip ${_targetSizeMb === o.value ? 'active' : ''}" data-target="${o.value ?? 'null'}">
+            <input type="radio" name="compressTarget" value="${o.value ?? 'null'}" ${_targetSizeMb === o.value ? 'checked' : ''}>
+            <span>${o.label}</span>
+            ${o.hint ? `<span class="compress-dpi__hint">${o.hint}</span>` : ''}
+          </label>`).join('')}
+      </div>
+    </div>`;
+}
+
+// Update #compressTimeEst span based on current scan + preset.
+function _updateTimeEstimate() {
+  const el  = id('compressTimeEst');
+  if (!el) return;
+  const est = _timeEstimate(_lastScan, _preset);
+  el.textContent = est ? ` · ${t('compress_time_est', { t: est })}` : '';
 }
 
 // Apply preset defaults to quality/DPI sliders without re-rendering the whole panel.
@@ -93,10 +141,17 @@ function _syncPresetDefaults(preset) {
       if (matchingInput) matchingInput.checked = true;
     }
   }
+  _updateTimeEstimate();
 }
 
 export function getCompressParams() {
-  return { preset: _preset, preserveText: _preserveText, targetDpi: _targetDpi, quality: _quality / 100 };
+  return {
+    preset:       _preset,
+    preserveText: _preserveText,
+    targetDpi:    _targetDpi,
+    quality:      _quality / 100,
+    targetSizeMb: _targetSizeMb,
+  };
 }
 
 /** Returns the pre-scan result for the current file, or null if scan was skipped. */
@@ -149,9 +204,9 @@ export function renderWorkerScanReport(report) {
   const container = id('compressOptions');
   if (!container || container.style.display === 'none') return;
 
-  // Update scan banner
+  // Update scan banner (pass current targetDpi so DPI arrow shows immediately)
   const existing = id('compressScanBanner');
-  const bannerHtml = _buildScanBanner(report);
+  const bannerHtml = _buildScanBanner(report, _targetDpi);
   if (existing) {
     existing.outerHTML = bannerHtml;
   } else {
@@ -172,6 +227,10 @@ export function renderWorkerScanReport(report) {
     });
     _syncPresetDefaults(_preset);
   }
+
+  // Show time estimate in the tier span
+  _updateTimeEstimate();
+
 
   // Add/update ⭐ Recommended badge on the correct preset card
   document.querySelectorAll('.compress-preset').forEach(el => {
@@ -215,6 +274,7 @@ export function hideCompressOptions() {
   _preserveText       = true;
   _targetDpi          = 150;
   _quality            = 82;
+  _targetSizeMb       = null;
   _lastScan           = null;
   _presetAutoSelected = false;
   resetWmRemove();
@@ -235,7 +295,7 @@ export function hideCompressOptions() {
 export function renderCompressionReport(data) {
   id('compressReport')?.remove();
 
-  const { originalSize, compressedSize, savedBytes, report } = data;
+  const { originalSize, compressedSize, savedBytes, report, targetSizeMb } = data;
   const pct = originalSize > 0 ? Math.round((savedBytes / originalSize) * 100) : 0;
 
   // Absolute threshold — % misleads on large files (1.9% of 100 MB = 1.9 MB = real savings)
@@ -319,6 +379,22 @@ export function renderCompressionReport(data) {
 
   id('successDesc')?.insertAdjacentElement('afterend', div);
 
+  // Target Size verdict — show after the compression report
+  if (targetSizeMb) {
+    const targetBytes = targetSizeMb * 1024 * 1024;
+    const met         = compressedSize < targetBytes;
+    const targetLabel = `${targetSizeMb} MB`;
+    const verdictEl   = document.createElement('div');
+    verdictEl.id        = 'targetVerdict';
+    verdictEl.className = `compress-scan ${met ? 'compress-scan--found' : 'compress-scan--warn'}`;
+    verdictEl.setAttribute('role', 'status');
+    verdictEl.style.marginTop = '12px';
+    verdictEl.innerHTML = met
+      ? t('compress_target_met',  { size: fmtSize(compressedSize), target: targetLabel })
+      : t('compress_target_over', { size: fmtSize(compressedSize), target: targetLabel });
+    div.insertAdjacentElement('afterend', verdictEl);
+  }
+
   requestAnimationFrame(() => requestAnimationFrame(() => {
     const fill = div.querySelector('.compress-report__gauge-fill');
     if (fill) fill.style.width = fill.dataset.target + '%';
@@ -339,7 +415,7 @@ function _render(file, scan) {
       ${scan?.isEncrypted ? '<span class="compress-info__badge compress-info__badge--warn">🔒 encrypted</span>' : ''}
     </div>
 
-    ${scan ? _buildScanBanner(scan) : '<div class="compress-scan compress-scan--info" id="compressScanBanner" role="status">🔍 Analysis runs automatically when you compress</div>'}
+    ${scan ? _buildScanBanner(scan, _targetDpi) : `<div class="compress-scan compress-scan--info" id="compressScanBanner" role="status">🔍 ${t('compress_placeholder')}</div>`}
 
     <div class="compress-presets">
       ${_presetCard('low',    '🪶', 'Light',    'Removes thumbnails and info fields only. No image recompression, no DPI change — maximum compatibility.', _lastScan && _recommendedPreset(_lastScan) === 'low')}
@@ -350,6 +426,8 @@ function _render(file, scan) {
     ${_qualityRow()}
 
     ${_dpiRow()}
+
+    ${_targetSizeRow()}
 
     ${checkbox({
       id:       'preserveTextCheck',
@@ -369,38 +447,42 @@ function _render(file, scan) {
   }
 }
 
-function _buildScanBanner(scan) {
+function _buildScanBanner(scan, targetDpi = null) {
   const thumbCount = scan.thumbnails ?? scan.thumbCount ?? 0;
   const doc        = _docType(scan);
   const tier       = _savingsTier(scan);
-  const tierHtml   = tier ? `<br><span class="compress-scan__tier">${tier}</span>` : '';
+  const tierHtml   = tier ? `<br><span class="compress-scan__tier">${tier}<span id="compressTimeEst"></span></span>` : '';
 
-  // DPI suffix: only shown for scan docs where DPI is meaningful
-  const dpiSuffix = (doc.type === 'scan' && scan.medianDpi >= 72)
-    ? ` · ~${scan.medianDpi} DPI`
-    : '';
+  // DPI info + optional downsample arrow for scan docs
+  let dpiSuffix = '';
+  if (doc.type === 'scan' && scan.medianDpi >= 72) {
+    dpiSuffix = ` · ~${scan.medianDpi} DPI`;
+    if (targetDpi && targetDpi < scan.medianDpi) {
+      dpiSuffix += `<br><span class="compress-scan__dpi-arrow">→ ${t('compress_dpi_downsample', { dpi: targetDpi })}</span>`;
+    }
+  }
 
   const imgSuffix = scan.imageCount > 0
-    ? ` · ${scan.imageCount} image${scan.imageCount !== 1 ? 's' : ''}${dpiSuffix}`
+    ? ` · ${tp(scan.imageCount, 'compress_img', 'compress_imgs')}${dpiSuffix}`
     : '';
 
-  // Metadata findings (XMP, thumbnails, PieceInfo)
+  // Metadata findings
   const found = [];
   if (scan.hasXMP)       found.push('XMP stream');
-  if (thumbCount > 0)    found.push(`${thumbCount} thumbnail${thumbCount > 1 ? 's' : ''}`);
+  if (thumbCount > 0)    found.push(tp(thumbCount, 'compress_thumb', 'compress_thumbs'));
   if (scan.hasPieceInfo) found.push('PieceInfo');
   const findingsHtml = found.length > 0
-    ? ` · <strong>${found.join(', ')}</strong> found`
+    ? ` · <strong>${found.join(', ')}</strong> ${t('compress_findings_found')}`
     : '';
 
   if (scan.opportunities === 0 && scan.imageCount === 0) {
     return `<div class="compress-scan compress-scan--clean" id="compressScanBanner" role="status">
-      ${doc.icon} ${doc.label} · PDF looks well-optimized
+      ${doc.icon} ${t(`compress_doc_${doc.type}`)} · ${t('compress_doc_clean')}
     </div>`;
   }
 
   return `<div class="compress-scan compress-scan--found" id="compressScanBanner" role="status">
-    ${doc.icon} ${doc.label}${imgSuffix}${findingsHtml}${tierHtml}
+    ${doc.icon} ${t(`compress_doc_${doc.type}`)}${imgSuffix}${findingsHtml}${tierHtml}
   </div>`;
 }
 
@@ -467,6 +549,7 @@ function _bindEvents() {
     if (e.target.name === 'compressPreset') {
       _preset             = e.target.value;
       _presetAutoSelected = true; // user explicitly chose — don't override on next scan
+      _targetSizeMb       = null; // reset target size when preset changes manually
       document.querySelectorAll('.compress-preset').forEach(el => {
         el.classList.toggle('j2p-chip--active', el.dataset.preset === _preset);
       });
@@ -514,6 +597,34 @@ function _bindEvents() {
         const val = chip.dataset.dpi === 'null' ? null : Number(chip.dataset.dpi);
         chip.classList.toggle('active', val === _targetDpi);
       });
+    }
+    if (e.target.name === 'compressTarget') {
+      const raw = e.target.value;
+      _targetSizeMb = raw === 'null' ? null : Number(raw);
+      // When a target is selected, force Maximum preset + 96 DPI + appropriate quality
+      if (_targetSizeMb !== null) {
+        _preset    = 'high';
+        _targetDpi = 96;
+        _quality   = Math.round((_targetQuality[_targetSizeMb] ?? 0.60) * 100);
+        _presetAutoSelected = true;
+        // Sync preset cards visual
+        document.querySelectorAll('.compress-preset').forEach(el => {
+          el.classList.toggle('j2p-chip--active', el.dataset.preset === 'high');
+          const input = el.querySelector('input[type="radio"]');
+          if (input) input.checked = input.value === 'high';
+        });
+        _syncPresetDefaults('high');
+        _quality = Math.round((_targetQuality[_targetSizeMb] ?? 0.60) * 100);
+        const slider = id('qualitySlider');
+        if (slider) slider.value = _quality;
+        const valEl = id('qualityVal');
+        if (valEl) valEl.textContent = `${_quality}%`;
+      }
+      document.querySelectorAll('.compress-target .compress-dpi__chip').forEach(chip => {
+        const v = chip.dataset.target === 'null' ? null : Number(chip.dataset.target);
+        chip.classList.toggle('active', v === _targetSizeMb);
+      });
+      _updateTimeEstimate();
     }
     if (e.target.id === 'preserveTextCheck') {
       _preserveText = e.target.checked;

@@ -139,6 +139,33 @@ const EN = {
   err_compress_timeout: '⏱ Compression timed out — the file may be too image-heavy for the browser. Try the Light preset or split the PDF into smaller parts first.',
   warn_compress_large:  '⚠️ Large file ({size}) — compression may take 1–2 minutes. The browser processes everything locally in RAM.',
   compress_scan_skipped: 'Large file — pre-scan skipped to save memory',
+
+  // ── compressUI — scan banner & doc type ───────────────────────
+  compress_placeholder:      'Analysis runs automatically when you compress',
+  compress_doc_scan:         'Scanned document',
+  compress_doc_mixed:        'Mixed document',
+  compress_doc_text:         'Text document',
+  compress_doc_clean:        'PDF looks well-optimized',
+  compress_tier_high:        'High savings expected · Image-heavy PDF',
+  compress_tier_moderate:    'Moderate savings expected · Mixed text and images',
+  compress_tier_minor:       'Minor savings expected · Text-only PDF',
+  compress_findings_found:   'found',
+  compress_dpi_downsample:   'will downsample to {dpi} DPI',
+  compress_time_est:         '⏱ ~{t}',
+  compress_img:              '{n} image',
+  compress_imgs:             '{n} images',
+  compress_thumb:            '{n} thumbnail',
+  compress_thumbs:           '{n} thumbnails',
+
+  // ── compressUI — Target Size Mode ─────────────────────────────
+  compress_target_label:     'Compress to',
+  compress_target_best:      'Best quality',
+  compress_target_email:     'Email',
+  compress_target_web:       'Web',
+  compress_target_small:     'Small',
+  compress_target_met:       '✅ {size} — fits {target} limit',
+  compress_target_over:      '⚠️ {size} — still over {target} limit. Try splitting the PDF first.',
+
   error_msg:            'Error: {msg}',
 
   // ── search (homepage intent search) ───────────────────────────

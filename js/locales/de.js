@@ -128,6 +128,31 @@ window.PDFREE_LOCALE = {
   err_compress_timeout: '⏱ Komprimierung abgebrochen — die Datei enthält zu viele Bilder für den Browser. Versuche das Light-Preset oder teile die PDF zuerst auf.',
   warn_compress_large:  '⚠️ Große Datei ({size}) — Komprimierung kann 1–2 Minuten dauern. Der Browser verarbeitet alles lokal im Arbeitsspeicher.',
   compress_scan_skipped: 'Große Datei — Vorabscan übersprungen, um Speicher zu sparen',
+
+  compress_placeholder:      'Analyse startet automatisch beim Komprimieren',
+  compress_doc_scan:         'Scan-Dokument',
+  compress_doc_mixed:        'Gemischtes Dokument',
+  compress_doc_text:         'Textdokument',
+  compress_doc_clean:        'PDF bereits gut optimiert',
+  compress_tier_high:        'Hohe Einsparung erwartet · Bilddatei',
+  compress_tier_moderate:    'Mittlere Einsparung erwartet · Text und Bilder',
+  compress_tier_minor:       'Geringe Einsparung erwartet · Nur-Text-PDF',
+  compress_findings_found:   'gefunden',
+  compress_dpi_downsample:   'wird auf {dpi} DPI reduziert',
+  compress_time_est:         '⏱ ~{t}',
+  compress_img:              '{n} Bild',
+  compress_imgs:             '{n} Bilder',
+  compress_thumb:            '{n} Vorschaubild',
+  compress_thumbs:           '{n} Vorschaubilder',
+
+  compress_target_label:     'Komprimieren auf',
+  compress_target_best:      'Beste Qualität',
+  compress_target_email:     'E-Mail',
+  compress_target_web:       'Web',
+  compress_target_small:     'Klein',
+  compress_target_met:       '✅ {size} — passt ins {target}-Limit',
+  compress_target_over:      '⚠️ {size} — überschreitet noch das {target}-Limit. Versuche die PDF zuerst aufzuteilen.',
+
   error_msg:           'Fehler: {msg}',
 
   // search

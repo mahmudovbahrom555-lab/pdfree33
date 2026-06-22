@@ -1136,9 +1136,22 @@ async function handleCompress(fileBuffer, options) {
   // options.quality (0–1) comes from the UI slider; fall back to preset defaults
   // so old callers without quality field still work correctly.
   const _qualityFallback = { medium: 0.82, high: 0.72 };
-  const jpegQuality = options.preset === 'low' ? null
+  let jpegQuality = options.preset === 'low' ? null
     : (options.quality ?? _qualityFallback[options.preset] ?? 0.82);
-  const targetDpi   = options.targetDpi ?? null;   // null = no downsampling
+  const targetDpi = options.targetDpi ?? null;
+
+  // Target Size Mode: adjust quality down if output is likely to exceed the target.
+  // Single-pass heuristic using preScan imageRatio — avoids re-running compression.
+  // Formula: if imageBytes dominate, scaling quality proportionally scales output size.
+  if (options.targetSizeMb && jpegQuality !== null) {
+    const targetBytes = options.targetSizeMb * 1024 * 1024;
+    const imageRatio  = options.preScan?.imageRatio ?? 0;
+    if (imageRatio > 0.2 && originalSize > targetBytes) {
+      const ratio          = targetBytes / originalSize;
+      const adjustedQuality = Math.max(0.35, Math.min(jpegQuality, ratio * 1.3));
+      jpegQuality = adjustedQuality;
+    }
+  }
 
   // Compute median page size (width, height in points + rotation) for DPI estimation.
   // Median is more robust than mean for documents with a cover page at a different size.
