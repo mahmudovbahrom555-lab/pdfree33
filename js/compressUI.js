@@ -294,6 +294,7 @@ export function hideCompressOptions() {
  */
 export function renderCompressionReport(data) {
   id('compressReport')?.remove();
+  id('targetVerdict')?.remove();
 
   const { originalSize, compressedSize, savedBytes, report, targetSizeMb } = data;
   const pct = originalSize > 0 ? Math.round((savedBytes / originalSize) * 100) : 0;
