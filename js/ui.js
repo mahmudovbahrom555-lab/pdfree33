@@ -55,25 +55,19 @@ export function hideProgress() {
 
 // ── Page sections visibility ───────────────────────────────
 
+// Sections marked .js-home-only are automatically toggled by showHomePage/showToolPage.
+// To add a new homepage-only section: give it class="js-home-only" in index.html — no JS change needed.
+const _homeSections = () => document.querySelectorAll('.js-home-only');
+
 /** Показывает главную страницу (hero + grid) */
 export function showHomePage() {
-  show('hero');
-  show('trustAlert');
-  show('noLimitBar');
-  show('toolsGrid');
-  show('privacyBar');
-  show('faqSection');
+  _homeSections().forEach(el => { el.style.display = ''; });
   hide('toolArea');
 }
 
 /** Показывает страницу конкретного инструмента */
 export function showToolPage() {
-  hide('hero');
-  hide('trustAlert');
-  hide('noLimitBar');
-  hide('toolsGrid');
-  hide('privacyBar');
-  hide('faqSection');
+  _homeSections().forEach(el => { el.style.display = 'none'; });
   show('toolArea');
 }
 

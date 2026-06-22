@@ -31,9 +31,24 @@ Always run build + lint after any change. Commit only when both pass.
 **Rules:**
 - Never add visible content *above* or *between* the hero and the tool cards that could push the hero below the fold
 - Never add `id="faqSection"` anchor links from other pages (would cause scroll-jump to FAQ on load)
-- `history.scrollRestoration = 'manual'` is set in `js/app.js` — do not remove it
+- `history.scrollRestoration = 'manual'` is set in `js/theme.js` — do not remove it
 - SEO additions (FAQPage, HowTo, schema) belong in JSON-LD `<script type="application/ld+json">`, not as visible HTML sections above the hero
 - Visible FAQ/content sections are OK *below* the tool cards, never above
+
+## Homepage sections visibility — `js-home-only` pattern
+When a tool is opened, `showToolPage()` in `js/ui.js` hides all homepage sections and shows `#toolArea`.
+
+**Any new section added to `index.html` that should only be visible on the homepage MUST have `class="js-home-only"`.**
+
+```html
+<!-- ✅ correct — hidden automatically when a tool opens -->
+<section id="myNewSection" class="js-home-only">...</section>
+
+<!-- ❌ wrong — will stay visible when tools open, blocking the drop zone -->
+<section id="myNewSection">...</section>
+```
+
+`showToolPage()` and `showHomePage()` use `querySelectorAll('.js-home-only')` — no JS edits needed, just the class.
 
 ## Architecture patterns
 - **Tool Registry**: `js/toolRegistry.js` + `js/toolRegistrations.js`
