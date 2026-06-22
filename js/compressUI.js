@@ -32,26 +32,35 @@ let _eventsBound  = false;     // listeners live on the persistent #compressOpti
 const _dpiDefaults     = { low: null, medium: 150, high: 96 };
 const _qualityDefaults = { medium: 82, high: 72 };
 
-// ── Recommendation logic ───────────────────────────────────────
+// ── Document classification + recommendation logic ─────────────
 
-// Derive the recommended preset from scan data.
-// imageDominant (>50% image bytes) → Maximum for max savings.
-// All other cases → Standard: removes metadata + recompresses images.
-// Light is only recommended when PDF is provably clean (no opportunities,
-// no images) — avoids recommending it when object stream savings exist.
+// Classify PDF into one of three types based on image byte ratio.
+// imageRatio (image bytes / total bytes) is more reliable than imageCount
+// because a single 4K cover image in a 100-page text doc should not make
+// it "Mixed" — the imageRatio would be low and correctly classify as Text.
+function _docType(scan) {
+  const ratio = scan?.imageRatio ?? 0;
+  if (ratio >= 0.5) return { icon: '📷', label: 'Scanned document', type: 'scan' };
+  if (ratio >= 0.1) return { icon: '📚', label: 'Mixed document',   type: 'mixed' };
+  return              { icon: '📄', label: 'Text document',     type: 'text' };
+}
+
+// Derive the recommended preset from doc type.
 function _recommendedPreset(scan) {
   if (!scan) return 'medium';
-  if (scan.imageDominant || scan.imageRatio >= 0.5) return 'high';
-  if (scan.opportunities === 0 && scan.imageCount === 0)  return 'low';
+  const doc = _docType(scan);
+  if (doc.type === 'scan')  return 'high';
+  if (doc.type === 'text' && scan.opportunities === 0) return 'low';
   return 'medium';
 }
 
-// Human-readable savings expectation + reason based on scan data.
+// Savings expectation string derived from doc type.
 function _savingsTier(scan) {
   if (!scan) return '';
-  if (scan.imageDominant || scan.imageRatio >= 0.5) return '🔥 High savings expected · Image-heavy PDF';
-  if (scan.imageCount > 0)                          return '⚡ Moderate savings expected · Mixed text and images';
-  if (scan.opportunities > 0)                       return '✅ Minor savings expected · Text-only PDF';
+  const doc = _docType(scan);
+  if (doc.type === 'scan')  return '🔥 High savings expected · Image-heavy PDF';
+  if (doc.type === 'mixed') return '⚡ Moderate savings expected · Mixed text and images';
+  if (scan.opportunities > 0) return '✅ Minor savings expected · Text-only PDF';
   return '';
 }
 
@@ -179,7 +188,19 @@ export function renderWorkerScanReport(report) {
     }
   });
 
+  // Update page count in file info bar (was unavailable at render time)
+  const pcEl = id('compressPageCount');
+  if (pcEl && report.pageCount > 0 && !pcEl.textContent) {
+    pcEl.textContent = ` · ${report.pageCount} page${report.pageCount !== 1 ? 's' : ''}`;
+  }
+
+  // Show encrypted badge if discovered by scan
   if (report.isEncrypted) {
+    const infoDiv = container.querySelector('.compress-info');
+    if (infoDiv && !infoDiv.querySelector('.compress-info__badge--warn')) {
+      infoDiv.insertAdjacentHTML('beforeend',
+        '<span class="compress-info__badge compress-info__badge--warn">🔒 encrypted</span>');
+    }
     showToast('⚠️ Encrypted PDF — some content may not be fully optimized', 5000);
   }
 }
@@ -314,7 +335,7 @@ function _render(file, scan) {
     <div class="compress-info">
       <span class="compress-info__name" title="${_esc(file.name)}">${_truncName(file.name)}</span>
       <span class="compress-info__dot" aria-hidden="true">·</span>
-      <span class="compress-info__meta">${fmtSize(file.size)}${scan ? ` · ${scan.pageCount} page${scan.pageCount !== 1 ? 's' : ''}` : ''}</span>
+      <span class="compress-info__meta">${fmtSize(file.size)}<span id="compressPageCount">${scan ? ` · ${scan.pageCount} page${scan.pageCount !== 1 ? 's' : ''}` : ''}</span></span>
       ${scan?.isEncrypted ? '<span class="compress-info__badge compress-info__badge--warn">🔒 encrypted</span>' : ''}
     </div>
 
@@ -350,33 +371,37 @@ function _render(file, scan) {
 
 function _buildScanBanner(scan) {
   const thumbCount = scan.thumbnails ?? scan.thumbCount ?? 0;
+  const doc        = _docType(scan);
   const tier       = _savingsTier(scan);
   const tierHtml   = tier ? `<br><span class="compress-scan__tier">${tier}</span>` : '';
 
-  if (scan.imageDominant) {
-    return `<div class="compress-scan compress-scan--found" id="compressScanBanner" role="status">
-        🖼️ Scan or photo PDF — ${scan.imageCount} image${scan.imageCount !== 1 ? 's' : ''} make up most of the file.${tierHtml}
-      </div>`;
-  }
+  // DPI suffix: only shown for scan docs where DPI is meaningful
+  const dpiSuffix = (doc.type === 'scan' && scan.medianDpi >= 72)
+    ? ` · ~${scan.medianDpi} DPI`
+    : '';
 
-  if (scan.opportunities === 0 && scan.imageCount === 0) {
-    return `<div class="compress-scan compress-scan--clean" id="compressScanBanner" role="status">
-        ✅ PDF looks clean — no redundant metadata detected
-      </div>`;
-  }
+  const imgSuffix = scan.imageCount > 0
+    ? ` · ${scan.imageCount} image${scan.imageCount !== 1 ? 's' : ''}${dpiSuffix}`
+    : '';
 
+  // Metadata findings (XMP, thumbnails, PieceInfo)
   const found = [];
   if (scan.hasXMP)       found.push('XMP stream');
   if (thumbCount > 0)    found.push(`${thumbCount} thumbnail${thumbCount > 1 ? 's' : ''}`);
-  if (scan.hasPieceInfo) found.push('PieceInfo metadata');
+  if (scan.hasPieceInfo) found.push('PieceInfo');
+  const findingsHtml = found.length > 0
+    ? ` · <strong>${found.join(', ')}</strong> found`
+    : '';
 
-  const foundPart = found.length > 0
-    ? `🔍 Found: <strong>${found.join(' · ')}</strong> — will be removed automatically.`
-    : `🔍 ${scan.imageCount} image${scan.imageCount !== 1 ? 's' : ''} found.`;
+  if (scan.opportunities === 0 && scan.imageCount === 0) {
+    return `<div class="compress-scan compress-scan--clean" id="compressScanBanner" role="status">
+      ${doc.icon} ${doc.label} · PDF looks well-optimized
+    </div>`;
+  }
 
   return `<div class="compress-scan compress-scan--found" id="compressScanBanner" role="status">
-      ${foundPart}${tierHtml}
-    </div>`;
+    ${doc.icon} ${doc.label}${imgSuffix}${findingsHtml}${tierHtml}
+  </div>`;
 }
 
 function _qualityRow() {

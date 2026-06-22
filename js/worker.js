@@ -928,19 +928,37 @@ async function _runCompressScan(file) {
   const cat = pdf.catalog;
 
   let thumbnails = 0, hasPieceInfo = cat.has(PDFName.of('PieceInfo'));
-  for (const page of pdf.getPages()) {
+  const pages_ = pdf.getPages();
+  for (const page of pages_) {
     if (page.node.has(PDFName.of('Thumb')))     thumbnails++;
     if (page.node.has(PDFName.of('PieceInfo'))) hasPieceInfo = true;
   }
 
+  // Compute median page size for DPI estimation (same approach as handleCompress)
+  const sizes_ = pages_.map(p => {
+    const { width, height } = p.getSize();
+    const rot = p.getRotation()?.angle ?? 0;
+    return { w: width, h: height, rot };
+  }).sort((a, b) => (a.w * a.h) - (b.w * b.h));
+  const medPage = sizes_[Math.floor(sizes_.length / 2)] ?? null;
+
   let imgBytes = 0, imgCount = 0;
+  const dpiList = [];
   for (const [, obj] of pdf.context.enumerateIndirectObjects()) {
     if (!(obj instanceof PDFRawStream)) continue;
-    if (obj.dict.get(PDFName.of('Subtype'))?.toString() === '/Image') {
-      imgBytes += obj.contents.length;
-      imgCount++;
+    if (obj.dict.get(PDFName.of('Subtype'))?.toString() !== '/Image') continue;
+    imgBytes += obj.contents.length;
+    imgCount++;
+    // Estimate DPI for images >= 100px (skip tiny decorative images)
+    const w = obj.dict.get(PDFName.of('Width'))?.asNumber()  ?? 0;
+    const h = obj.dict.get(PDFName.of('Height'))?.asNumber() ?? 0;
+    if (w >= 100 && h >= 100 && medPage) {
+      const dpi = _estimateDpi(w, h, medPage.w, medPage.h, medPage.rot);
+      if (dpi > 0 && dpi < 2000) dpiList.push(dpi);
     }
   }
+  dpiList.sort((a, b) => a - b);
+  const medianDpi = dpiList.length > 0 ? dpiList[Math.floor(dpiList.length / 2)] : 0;
 
   const fileSize    = buf.byteLength;
   const imageRatio  = imgCount > 0 && fileSize > 0 ? imgBytes / fileSize : 0;
@@ -955,6 +973,7 @@ async function _runCompressScan(file) {
     imageCount:    imgCount,
     imageRatio,
     imageDominant: imageRatio > 0.5,
+    medianDpi,
     fileSize,
     opportunities: (hasXMP ? 1 : 0) + (thumbnails > 0 ? 1 : 0) + (hasPieceInfo ? 1 : 0),
   };
