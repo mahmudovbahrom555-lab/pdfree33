@@ -168,7 +168,7 @@
   </script>
   <script src="../../js/theme.js"></script>
 </head>
-<body>
+<body data-tool="compress-email">
 
   <nav>
     <a href="../" class="logo" aria-label="Go to homepage" style="text-decoration:none">
@@ -206,6 +206,59 @@
       </div>
     </div>
   </section>
+
+  <!-- ── Tool workspace ── -->
+  <main id="toolArea" class="main-area" aria-busy="false">
+
+    <div class="tool-header">
+      <div class="tool-header-icon" id="toolIcon" aria-hidden="true">📧</div>
+      <div class="tool-header-text">
+        <h2 id="toolTitle">Comprimir PDF para email</h2>
+        <p  id="toolDesc">Compressão máxima — 96 DPI — otimizada para Gmail e Outlook</p>
+      </div>
+    </div>
+
+    <div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-label="Solte um PDF aqui ou escolha arquivo">
+      <input type="file" id="fileInput" multiple accept=".pdf" aria-hidden="true">
+      <span class="drop-icon" aria-hidden="true">📂</span>
+      <div class="drop-title">Arraste os arquivos aqui</div>
+      <div class="drop-sub">ou clique para procurar — qualquer número de arquivos</div>
+      <label class="drop-btn" id="chooseFilesBtn" for="fileInput">Escolher arquivos</label>
+    </div>
+
+    <div id="fileList"     class="file-list"    aria-live="polite" aria-label="Solte um PDF aqui ou escolha arquivo"></div>
+    <div id="fileCount"    class="file-count"   style="display:none"></div>
+    <div id="reorderHint"  class="reorder-hint" style="display:none">↕ Arraste para reordenar os arquivos</div>
+
+    <div id="splitOptions"     class="split-options"    style="display:none"></div>
+    <div id="compressOptions"  class="compress-options" style="display:none"></div>
+    <div id="jpg2pdfOptions"   class="j2p-options"      style="display:none"></div>
+    <div id="pdf2jpgOptions"   class="j2p-options"      style="display:none"></div>
+    <div id="watermarkOptions" class="j2p-options"      style="display:none"></div>
+    <div id="pageNumOptions"   class="j2p-options"      style="display:none"></div>
+    <div id="metaOptions"      class="j2p-options"      style="display:none"></div>
+    <div id="protectOptions"   class="j2p-options"      style="display:none"></div>
+    <div id="redactOptions"    class="j2p-options"      style="display:none"></div>
+    <div id="rotateOptions"    class="j2p-options"      style="display:none"></div>
+
+    <button id="mergeBtn"  class="merge-btn"  type="button" disabled data-mode="process">🗜️ Comprimir para email</button>
+    <button id="cancelBtn" class="cancel-btn" type="button" style="display:none" aria-label="✕ Cancelar">✕ Cancelar</button>
+
+    <div id="progressBar"   class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+    <div id="progressLabel" class="progress-label"></div>
+
+    <div id="successCard" class="success-card" role="alert" aria-live="polite" style="display:none">
+      <div class="success-top">
+        <div class="success-icon" aria-hidden="true">✓</div>
+        <div class="success-text">
+          <h3 id="successTitle">Pronto!</h3>
+          <p  id="successDesc"></p>
+        </div>
+        <button id="downloadBtn" class="download-btn" type="button">⬇ Baixar</button>
+      </div>
+    </div>
+
+  </main>
 
   <!-- Content -->
   <section class="seo-article">
@@ -277,6 +330,8 @@
   </footer>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script type="module" src="../../js/locales/pt.js"></script>
+  <script type="module" src="../../js/app.js"></script>
   <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}' ></script>
 </body>
 </html>
