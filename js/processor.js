@@ -388,7 +388,7 @@ async function _runCompress(filesSnapshot, { preset = 'medium', preserveText = t
 
   // ⚠️  TRANSFERABLE: buffer detached after this call — worker owns it until done.
   _worker.postMessage(
-    { tool: 'compress', file: buffer, options: { preset, preserveText, removeWatermarks, targetDpi, quality } },
+    { tool: 'compress', file: buffer, options: { preset, preserveText, removeWatermarks, targetDpi, quality, targetSizeMb } },
     [buffer]
   );
 

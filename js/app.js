@@ -179,7 +179,8 @@ function resetState() {
   clearFiles();
   _freeResultUrl();
   hideAllToolOptions();
-  id('compressReport')?.remove();  // убираем breakdown из success card
+  id('compressReport')?.remove();   // убираем breakdown из success card
+  id('targetVerdict')?.remove();    // убираем target size verdict (Fix 3)
 
   id('fileList').innerHTML = '';
   hide('fileCount');
@@ -460,7 +461,8 @@ function initEvents() {
     if (unscanned.length === 0) return;
     const results = await startMergeBatchScan(unscanned);
     results.forEach(({ index, pageCount }) => {
-      if (pageCount > 0 && unscanned[index]) unscanned[index]._mergePageCount = pageCount;
+      // Store unconditionally so 0-page/corrupt files don't retry on every files-added event
+      if (unscanned[index]) unscanned[index]._mergePageCount = pageCount;
     });
     renderList(true);
   });

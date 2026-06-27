@@ -8,7 +8,7 @@
 import { esc, fmtSize, id, hide, isFileAccepted } from './utils.js';
 import { showToast } from './ui.js';
 import { ACCEPTED_MIME } from './config.js';
-import { t } from './i18n.js';
+import { t, tp } from './i18n.js';
 import { decryptOwnerOnly } from './decryptPdf.js';
 
 // ── PDF encryption preflight ──────────────────────────────────
@@ -151,8 +151,10 @@ export function addFiles(files) {
   }
 
   let invalid = 0;
+  let dupes   = 0;
   const added = [];
 
+  // Fingerprint includes lastModified so re-saved files with same name+size are admitted.
   const _fp = f => `${f.name}|${f.size}|${f.lastModified}`;
   const existingFPs = new Set(selectedFiles.map(_fp));
 
@@ -163,7 +165,7 @@ export function addFiles(files) {
       return;
     }
     if (existingFPs.has(_fp(f))) {
-      showToast(`⚠️ ${f.name} is already in the list`, 3000);
+      dupes++;
       return;
     }
     existingFPs.add(_fp(f));
@@ -177,6 +179,7 @@ export function addFiles(files) {
       : t('invalid_img');
     showToast(msg, 5000);
   }
+  if (dupes > 0) showToast(tp(dupes, 'dupe_skip_one', 'dupe_skip_many'));
 
   if (selectedFiles.length > 0) {
     document.dispatchEvent(new CustomEvent('pdfree:files-added'));

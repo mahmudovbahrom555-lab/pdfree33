@@ -64,7 +64,7 @@ self.onmessage = async function (e) {
       case 'merge-scan-batch': {
         const { PDFDocument } = PDFLib;
         const results = [];
-        for (const item of e.data.items) {
+        for (const item of (e.data.items ?? [])) {
           try {
             const buf = await item.file.arrayBuffer();
             const pdf = await PDFDocument.load(buf, { ignoreEncryption: true });

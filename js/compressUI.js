@@ -602,11 +602,10 @@ function _bindEvents() {
     if (e.target.name === 'compressTarget') {
       const raw = e.target.value;
       _targetSizeMb = raw === 'null' ? null : Number(raw);
-      // When a target is selected, force Maximum preset + 96 DPI + appropriate quality
+      // When a target is selected, force Maximum preset + 96 DPI + target quality
       if (_targetSizeMb !== null) {
-        _preset    = 'high';
-        _targetDpi = 96;
-        _quality   = Math.round((_targetQuality[_targetSizeMb] ?? 0.60) * 100);
+        _preset             = 'high';
+        _targetDpi          = 96;
         _presetAutoSelected = true;
         // Sync preset cards visual
         document.querySelectorAll('.compress-preset').forEach(el => {
@@ -614,6 +613,8 @@ function _bindEvents() {
           const input = el.querySelector('input[type="radio"]');
           if (input) input.checked = input.value === 'high';
         });
+        // _syncPresetDefaults overwrites _quality with the preset default (72%) —
+        // we re-apply the target quality after so the slider shows the right value.
         _syncPresetDefaults('high');
         _quality = Math.round((_targetQuality[_targetSizeMb] ?? 0.60) * 100);
         const slider = id('qualitySlider');
@@ -691,12 +692,17 @@ export function initCompressEmailOptions(file) {
   `;
 }
 
-/** Скрывает email-панель (идентично hideCompressOptions) */
+/** Скрывает email-панель — сбрасывает весь shared state как hideCompressOptions */
 export function hideCompressEmailOptions() {
   const container = id('compressOptions');
   if (!container) return;
   container.style.display = 'none';
   container.innerHTML     = '';
+  _preset             = 'medium';
+  _preserveText       = true;
+  _targetDpi          = 150;
+  _quality            = 82;
+  _targetSizeMb       = null;
   _lastScan           = null;
   _presetAutoSelected = false;
 }
