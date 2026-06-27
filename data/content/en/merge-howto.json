@@ -1,26 +1,28 @@
 {
   "@context": "https://schema.org",
   "@type": "HowTo",
-  "name": "How to Merge PDF Files",
-  "description": "Combine multiple PDF files into one document free — no upload, 100% private.",
+  "name": "How to Merge PDF Files Free",
+  "description": "Combine 2, 50, or 100+ PDF files into one document for free — no upload, no account, 100% private.",
+  "totalTime": "PT1M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — free browser-based PDF merger, no upload required" }],
   "step": [
     {
       "@type": "HowToStep",
       "position": 1,
       "name": "Add your PDF files",
-      "text": "Click 'Choose files' or drag your PDF files into the drop zone. Add as many files as you need — there is no limit."
+      "text": "Click 'Choose files' or drag your PDF files into the drop zone. Add as many files as you need — 2, 50, or 100+ — there is no file count limit."
     },
     {
       "@type": "HowToStep",
       "position": 2,
       "name": "Reorder if needed",
-      "text": "Drag and drop the file cards to set the order you want them merged in."
+      "text": "Drag and drop the file cards to set the exact order you want them merged in. Reorder as many times as you like before clicking Merge."
     },
     {
       "@type": "HowToStep",
       "position": 3,
-      "name": "Download the merged PDF",
-      "text": "Click 'Merge PDF'. Your combined file is generated in your browser in seconds and downloads automatically."
+      "name": "Merge and download",
+      "text": "Click 'Merge PDF files'. Processing takes seconds for small batches, up to a minute for 50+ large files. The merged PDF downloads automatically to your device — nothing is uploaded to any server."
     }
   ]
 }

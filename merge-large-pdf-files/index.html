@@ -17,8 +17,8 @@
     object-src  'none';
   ">
 
-  <title>Merge Large PDF Files Free — No Size Limit, No Upload | PDFree</title>
-  <meta name="description" content="Merge PDF files of any size — 100MB, 500MB, 1GB — completely free. No file size limit, no daily cap, no upload to servers. All processing happens in your browser.">
+  <title>Merge Large PDF Files Free — No Size Limit, No File Count Limit | PDFree</title>
+  <meta name="description" content="Merge 2, 50, or 100+ PDF files of any size — 100MB, 500MB, 1GB — completely free. No file size limit, no file count limit, no daily cap, no upload to servers.">
 
   <meta property="og:title"       content="Merge Large PDF Files Free — No Size Limit | PDFree">
   <meta property="og:description" content="Combine PDFs of any size for free. No 25MB limit. No daily cap. Processed locally in your browser.">
@@ -133,6 +133,16 @@
       },
       {
         "@type": "Question",
+        "name": "How many PDF files can I merge at once?",
+        "acceptedAnswer": { "@type": "Answer", "text": "There is no limit on file count. You can merge 2, 50, 100, or more PDF files in a single operation. PDFree processes everything in your browser's memory — your device's available RAM is the only practical constraint. Modern computers easily handle 100+ files totalling several hundred megabytes." }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I merge 50 or 100 PDF files at once for free?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes. PDFree has no limit on the number of files per merge and no daily usage cap. Drop all your files at once, arrange the order, and click Merge. The result downloads directly to your device — no upload to any server required." }
+      },
+      {
+        "@type": "Question",
         "name": "Why is merging large PDFs slow on iLovePDF but fast on PDFree?",
         "acceptedAnswer": { "@type": "Answer", "text": "iLovePDF requires uploading your file to their server, processing it there, and downloading the result — three network trips that add significant time for large files. PDFree processes everything locally in your browser with no network transfer, so the speed depends only on your device's CPU, not your internet connection." }
       }
@@ -182,8 +192,8 @@
   <!-- Hero — compact: just headline, tool follows immediately below the fold -->
   <section style="background:var(--green-light);border-bottom:1px solid rgba(45,122,79,0.15);padding:24px 24px 20px;text-align:center;">
     <div style="max-width:720px;margin:0 auto;">
-      <h1 style="font-size:clamp(22px,3.5vw,34px);font-weight:700;letter-spacing:-0.5px;line-height:1.2;color:var(--text);margin:0 0 6px;">Merge Large PDF Files Free — No File Size Limit</h1>
-      <p style="font-size:14px;color:var(--green);margin:0;font-weight:500;">100MB, 500MB, 1GB — any size. No upload, no account, no limits.</p>
+      <h1 style="font-size:clamp(22px,3.5vw,34px);font-weight:700;letter-spacing:-0.5px;line-height:1.2;color:var(--text);margin:0 0 6px;">Merge Large PDF Files Free — No Size Limit, No File Count Limit</h1>
+      <p style="font-size:14px;color:var(--green);margin:0;font-weight:500;">100MB, 500MB, 1GB — any size. 2, 50, 100+ files — any count. No upload, no account, no limits.</p>
     </div>
   </section>
 
@@ -201,8 +211,8 @@
     <div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-label="Upload files — click or drag and drop">
       <input type="file" id="fileInput" multiple accept=".pdf" aria-hidden="true">
       <span class="drop-icon" aria-hidden="true">📂</span>
-      <div class="drop-title">Drop large PDF files here</div>
-      <div class="drop-sub">Any file size accepted — 100MB, 500MB, 1GB and more</div>
+      <div class="drop-title">Drop PDF files here — any size, any count</div>
+      <div class="drop-sub">100MB, 500MB, 1GB+ files · 2, 50, 100+ files · no limits</div>
       <label class="drop-btn" id="chooseFilesBtn" for="fileInput">Choose files</label>
     </div>
 
@@ -315,6 +325,32 @@
           </table>
         </div>
 
+        <!-- Merging many files -->
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 16px;font-weight:700;">Merge 50, 100, or 500 PDF Files at Once</h2>
+        <p>PDFree has <strong>no limit on the number of files</strong> you can merge in a single operation. Whether you need to combine 3 PDFs or 300 scanned invoices, the process is identical: drop all files at once, reorder if needed, click Merge.</p>
+        <p>Common bulk-merge scenarios that PDFree handles without a limit:</p>
+        <div style="display:flex;flex-direction:column;gap:12px;margin:20px 0 32px;">
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <span style="font-size:20px;flex-shrink:0">🧾</span>
+            <div><strong style="color:var(--text);">Invoices &amp; receipts</strong> — scan 80 monthly invoices one page at a time, then merge them all into a single annual archive PDF.</div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <span style="font-size:20px;flex-shrink:0">📋</span>
+            <div><strong style="color:var(--text);">Legal &amp; compliance</strong> — combine 50–100 contract pages, exhibits, and signatures into one court-ready document.</div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <span style="font-size:20px;flex-shrink:0">📚</span>
+            <div><strong style="color:var(--text);">Report assembly</strong> — merge chapters, appendices, and data tables from multiple authors into one deliverable.</div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <span style="font-size:20px;flex-shrink:0">🗂️</span>
+            <div><strong style="color:var(--text);">Archive digitization</strong> — combine hundreds of scanned document pages into a searchable archive file.</div>
+          </div>
+        </div>
+        <div style="background:var(--green-light);border-left:4px solid var(--green);padding:18px 20px;border-radius:0 8px 8px 0;margin:0 0 32px;">
+          <p style="margin:0;font-size:14px;color:var(--text);"><strong>Tip for 50+ files:</strong> Hold <kbd style="background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:1px 5px;font-size:12px;">Ctrl</kbd> (or <kbd style="background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:1px 5px;font-size:12px;">⌘</kbd> on Mac) while clicking in the file picker to select multiple files at once, or drop an entire folder of PDFs into the drop zone. Your device's available RAM is the only practical limit.</p>
+        </div>
+
         <!-- Tips for large files -->
         <h2 style="font-size:26px;color:var(--text);margin:48px 0 16px;font-weight:700;">Tips for Merging Very Large PDF Files</h2>
         <div style="display:flex;flex-direction:column;gap:16px;margin:16px 0;">
@@ -355,6 +391,14 @@
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">How large a PDF can I merge?</h3>
             <p style="margin:0;font-size:14px;">The practical limit is your device's RAM. Most modern computers handle several hundred megabytes easily. For files over 500MB, close other tabs to free up memory.</p>
           </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">How many PDF files can I merge at once?</h3>
+            <p style="margin:0;font-size:14px;">There is no limit on the number of files. PDFree processes everything in your browser's memory, so you can merge 2, 50, or 100+ PDF files in a single operation. The only practical constraint is your device's available RAM — modern computers easily handle 100 files totalling several hundred megabytes.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Can I merge 50 or 100 PDF files at once for free?</h3>
+            <p style="margin:0;font-size:14px;">Yes, completely free with no daily cap. Unlike SmallPDF (2 tasks/day) or iLovePDF (daily limits), PDFree has no usage restrictions. Drop all 50 or 100 files at once, arrange the order, and click Merge — the result downloads directly to your device with no upload to any server.</p>
+          </div>
           <div>
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Do I need to create an account?</h3>
             <p style="margin:0;font-size:14px;">No. PDFree never requires an account, email, or registration. Open the tool and start merging immediately.</p>
@@ -364,12 +408,12 @@
         <!-- Related -->
         <h2 style="font-size:26px;color:var(--text);margin:52px 0 12px;font-weight:700;">More Free Tools — No Limits on Any of Them</h2>
         <ul style="margin:12px 0;padding-left:24px;display:flex;flex-direction:column;gap:8px;">
-          <li><a href="/compress-large-pdf-free/" style="color:var(--green);font-weight:500;">Compress large PDF files free</a> — reduce 500MB PDFs without uploading</li>
-          <li><a href="/split-pdf/" style="color:var(--green);font-weight:500;">Split PDF</a> — extract pages from any size PDF</li>
-          <li><a href="/compress-large-pdf-free/" style="color:var(--green);font-weight:500;">Compress PDF</a> — shrink file size before merging</li>
-          <li><a href="/protect-pdf/" style="color:var(--green);font-weight:500;">Protect PDF</a> — add password to large merged files</li>
+          <li><a href="/compress-large-pdf-free/" style="color:var(--green);font-weight:500;">Compress large PDF files free</a> — reduce the merged file size if it's too large to send</li>
+          <li><a href="/split-pdf/" style="color:var(--green);font-weight:500;">Split PDF</a> — extract specific pages from the merged document</li>
+          <li><a href="/merge-pdf-files-into-one/" style="color:var(--green);font-weight:500;">Merge PDF Files into One</a> — combine any number of PDFs into a single document</li>
+          <li><a href="/protect-pdf/" style="color:var(--green);font-weight:500;">Protect PDF</a> — add a password to the merged file</li>
           <li><a href="/merge-pdf-without-uploading/" style="color:var(--green);font-weight:500;">Merge PDF Without Uploading</a> — privacy guide for sensitive documents</li>
-          <li><a href="/blog/how-to-split-a-pdf/" style="color:var(--green);font-weight:500;">How to Split a PDF</a> — guide to managing large documents</li>
+          <li><a href="/blog/how-to-merge-pdf-files-for-free/" style="color:var(--green);font-weight:500;">How to Merge PDF Files for Free</a> — step-by-step guide with tips for large batches</li>
         </ul>
 
       </div>
