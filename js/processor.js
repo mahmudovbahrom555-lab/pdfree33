@@ -69,6 +69,41 @@ export function cancelCompressScan() {
   _worker.onmessage = null;
 }
 
+// ── Background merge page-count scan ─────────────────────────
+// Runs when the user adds files to the merge list — counts pages
+// in each file so the file list shows "contract.pdf · 2.4 MB · 12 pages".
+
+let _mergeScanResolve = null;
+
+export function startMergeBatchScan(files) {
+  if (isProcessing) return Promise.resolve([]);
+  cancelCompressScan();
+  cancelMergeScan();
+
+  return new Promise(resolve => {
+    _mergeScanResolve = resolve;
+    _worker.onmessage = (e) => {
+      if (e.data.type === 'merge-scan-done') {
+        _mergeScanResolve = null;
+        _worker.onmessage  = null;
+        resolve(e.data.results);
+      }
+    };
+    // Files are sent as structured clone (not Transferable) — originals stay accessible
+    _worker.postMessage({
+      tool:  'merge-scan-batch',
+      items: files.map((f, i) => ({ file: f, index: i })),
+    });
+  });
+}
+
+export function cancelMergeScan() {
+  if (!_mergeScanResolve) return;
+  _mergeScanResolve([]);
+  _mergeScanResolve  = null;
+  _worker.onmessage  = null;
+}
+
 // ── Cancel ────────────────────────────────────────────────────
 
 export function cancelProcess(currentTool) {
@@ -96,6 +131,7 @@ function _abortUI() {
 export async function doProcess(currentTool, extraParams = {}) {
   if (isProcessing) return;
   cancelCompressScan(); // abort any in-flight background scan before starting compression
+  cancelMergeScan();    // abort any in-flight merge page-count scan
   isProcessing = true;
   _currentTool = currentTool;
   _processStartMs = Date.now();

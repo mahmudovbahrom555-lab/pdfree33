@@ -61,6 +61,21 @@ self.onmessage = async function (e) {
       case 'draw':
         await handleDraw(e.data.original, e.data.layers);
         break;
+      case 'merge-scan-batch': {
+        const { PDFDocument } = PDFLib;
+        const results = [];
+        for (const item of e.data.items) {
+          try {
+            const buf = await item.file.arrayBuffer();
+            const pdf = await PDFDocument.load(buf, { ignoreEncryption: true });
+            results.push({ index: item.index, pageCount: pdf.getPageCount() });
+          } catch {
+            results.push({ index: item.index, pageCount: 0 });
+          }
+        }
+        self.postMessage({ type: 'merge-scan-done', results });
+        break;
+      }
       default:
         throw new Error('Unknown tool: ' + tool);
     }

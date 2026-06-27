@@ -259,6 +259,7 @@ export function renderList(keepSuccess = false) {
 
     const isDraggable = _currentTool === 'merge' && !_locked;
 
+    const pages = f._mergePageCount > 0 ? ` · ${f._mergePageCount}p` : '';
     el.innerHTML = `
       ${isDraggable ? '<span class="file-item-drag" aria-hidden="true">⠿</span>' : ''}
       <span style="font-size:16px;flex-shrink:0">${locked ? '🔒' : '📄'}</span>
@@ -270,7 +271,7 @@ export function renderList(keepSuccess = false) {
           <a class="file-item-enc-help" href="#" data-enc-help="${i}" tabindex="0">How to fix ↗</a>
         </span>` : ''}
       </div>
-      <span class="file-item-size">${fmtSize(f.size)}</span>
+      <span class="file-item-size">${fmtSize(f.size)}${pages}</span>
       <button class="file-item-del" data-i="${i}" aria-label="Remove ${esc(f.name)}" ${_locked ? 'disabled aria-disabled="true"' : ''}>×</button>
     `;
 

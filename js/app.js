@@ -21,10 +21,11 @@ import { showHomePage, showToolPage,
          setButtonDisabled, hideCancelBtn,
          showToast, setDropHint }                 from './ui.js';
 import { initFileListeners, setCurrentTool,
-         clearFiles, selectedFiles, addFiles }    from './files.js';
+         clearFiles, selectedFiles, addFiles,
+         renderList }                             from './files.js';
 import { doProcess, isProcessing,
-         cancelProcess, cancelCompressScan,
-         startCompressScan,
+         cancelProcess, cancelCompressScan, cancelMergeScan,
+         startCompressScan, startMergeBatchScan,
          getProcessStartMs }                      from './processor.js';
 import { hideAllToolOptions, initToolOptions,
          collectToolParams, notifyToolSuccess }  from './toolRegistry.js';
@@ -428,6 +429,9 @@ function initEvents() {
     if (currentTool === 'compress' || currentTool === 'compress-email') {
       cancelCompressScan();
     }
+    if (currentTool === 'merge') {
+      cancelMergeScan();
+    }
   });
 
   // Background compress scan: runs in worker as soon as a file is dropped,
@@ -438,6 +442,19 @@ function initEvents() {
     if (!file) return;
     const report = await startCompressScan(file);
     if (report) renderWorkerScanReport(report);
+  });
+
+  // Background merge page-count scan: runs as soon as files are added to the merge list,
+  // so "contract.pdf · 2.4 MB · 12p" appears in the file list before the user clicks Merge.
+  document.addEventListener('pdfree:files-added', async () => {
+    if (currentTool !== 'merge') return;
+    const unscanned = selectedFiles.filter(f => f._mergePageCount == null);
+    if (unscanned.length === 0) return;
+    const results = await startMergeBatchScan(unscanned);
+    results.forEach(({ index, pageCount }) => {
+      if (pageCount > 0 && unscanned[index]) unscanned[index]._mergePageCount = pageCount;
+    });
+    renderList(true);
   });
 
   // Re-init after silent owner-password decryption completes (files.js dispatches this).
