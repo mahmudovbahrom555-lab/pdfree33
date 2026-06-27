@@ -150,47 +150,58 @@ function _render() {
       <div class="pn-section-label">Numbering</div>
       ${chipGroup('pnFmt', fmtOpts, _format, 'Number format', { radius: '8px' })}
 
-      <!-- Auto start: shows hint + customize link -->
-      <div id="pnAutoStartRow" style="margin-top:12px;display:${_autoStart ? 'block' : 'none'}">
-        <div style="
-          display:flex;align-items:center;justify-content:space-between;gap:10px;
-          background:var(--green-light);border:1px solid rgba(45,122,79,0.25);
-          border-radius:8px;padding:10px 14px;
+      <!-- Start number card — compact, not dominant -->
+      <div style="
+        margin-top:12px;
+        background:var(--surface);border:1px solid var(--border);
+        border-radius:8px;padding:10px 14px;
+      ">
+        <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);margin-bottom:6px">
+          Start number
+        </div>
+
+        <!-- Auto body -->
+        <div id="pnAutoStartRow" style="
+          display:${_autoStart ? 'flex' : 'none'};
+          align-items:center;justify-content:space-between;gap:8px;
+          transition:opacity .15s;
         ">
-          <div>
-            <div style="font-size:12px;color:var(--green);font-weight:600;text-transform:uppercase;letter-spacing:.4px;margin-bottom:2px">
-              Start number
-            </div>
-            <div style="font-size:20px;font-weight:700;color:var(--text);line-height:1">
-              <span id="pnAutoStartHint">${_formatNum(_startAt, _format)}</span>
-            </div>
-            <div style="font-size:11px;color:var(--green);margin-top:2px">↑ linked to page range</div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="
+              font-size:11px;font-weight:600;
+              background:var(--green-light);color:var(--green);
+              padding:2px 8px;border-radius:10px;
+            ">Auto</span>
+            <span id="pnAutoStartHint" style="font-size:20px;font-weight:700;color:var(--text);line-height:1">
+              ${_formatNum(_startAt, _format)}
+            </span>
+            <span style="font-size:11px;color:var(--text3)">linked to page range</span>
           </div>
           <button type="button" id="pnCustomizeBtn"
-            style="
-              background:var(--surface);border:1px solid var(--border);
-              border-radius:6px;cursor:pointer;
-              font-size:12px;font-weight:500;color:var(--text);
-              padding:6px 12px;white-space:nowrap;flex-shrink:0;
-            ">
-            Customize →
+            style="background:none;border:none;cursor:pointer;font-size:12px;color:var(--text2);padding:0;white-space:nowrap;flex-shrink:0">
+            Set custom start…
           </button>
         </div>
-      </div>
 
-      <!-- Custom start: input + indicator + reset -->
-      <div id="pnCustomStartRow" style="margin-top:10px;display:${_autoStart ? 'none' : 'block'}">
-        <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;flex-wrap:wrap">
-          <span style="font-size:12px;color:var(--text3)">↑ custom numbering</span>
-          <button type="button" id="pnResetStartBtn"
-            style="background:none;border:none;cursor:pointer;font-size:12px;color:var(--green);padding:0;margin-left:auto">
-            ↺ Reset to auto
-          </button>
-        </div>
-        <div class="pn-row">
-          <button type="button" class="pn-stepper" id="pnStartMinus" aria-label="Decrease start">−</button>
-          ${_numInput('pnStartInput', _startAt)}
-          <button type="button" class="pn-stepper" id="pnStartPlus" aria-label="Increase start">+</button>
+        <!-- Custom body -->
+        <div id="pnCustomStartRow" style="display:${_autoStart ? 'none' : 'block'};transition:opacity .15s">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap">
+            <span style="
+              font-size:11px;font-weight:600;
+              background:var(--surface);color:var(--text2);
+              border:1px solid var(--border);
+              padding:2px 8px;border-radius:10px;
+            ">Custom</span>
+            <button type="button" id="pnResetStartBtn"
+              style="background:none;border:none;cursor:pointer;font-size:12px;color:var(--green);padding:0;margin-left:auto">
+              ↺ Reset to automatic
+            </button>
+          </div>
+          <div class="pn-row">
+            <button type="button" class="pn-stepper" id="pnStartMinus" aria-label="Decrease start">−</button>
+            ${_numInput('pnStartInput', _startAt)}
+            <button type="button" class="pn-stepper" id="pnStartPlus" aria-label="Increase start">+</button>
+          </div>
         </div>
       </div>
     </div>
@@ -323,26 +334,30 @@ function _bindEvents() {
   });
 
   // Progressive disclosure — Customize / Reset
-  id('pnCustomizeBtn')?.addEventListener('click', () => {
+  function _switchToCustom() {
     _autoStart = false;
     const autoRow   = id('pnAutoStartRow');
     const customRow = id('pnCustomStartRow');
-    if (autoRow)   autoRow.style.display   = 'none';
-    if (customRow) customRow.style.display = 'block';
+    if (autoRow)   { autoRow.style.opacity = '0'; setTimeout(() => { autoRow.style.display = 'none'; autoRow.style.opacity = '1'; }, 150); }
+    if (customRow) { customRow.style.opacity = '0'; customRow.style.display = 'block'; requestAnimationFrame(() => { customRow.style.opacity = '1'; }); }
     const input = id('pnStartInput');
-    if (input) { input.value = _startAt; input.focus(); input.select(); }
-  });
-  id('pnResetStartBtn')?.addEventListener('click', () => {
+    if (input) { input.value = _startAt; setTimeout(() => { input.focus(); input.select(); }, 160); }
+  }
+
+  function _switchToAuto() {
     _autoStart = true;
     _startAt   = _fromPage;
     const autoRow   = id('pnAutoStartRow');
     const customRow = id('pnCustomStartRow');
-    if (autoRow)   autoRow.style.display   = 'flex';
-    if (customRow) customRow.style.display = 'none';
+    if (customRow) { customRow.style.opacity = '0'; setTimeout(() => { customRow.style.display = 'none'; customRow.style.opacity = '1'; }, 150); }
+    if (autoRow)   { autoRow.style.opacity = '0'; autoRow.style.display = 'flex'; requestAnimationFrame(() => { autoRow.style.opacity = '1'; }); }
     const hint = id('pnAutoStartHint');
     if (hint) hint.textContent = _formatNum(_startAt, _format);
     _refreshPreview();
-  });
+  }
+
+  id('pnCustomizeBtn')?.addEventListener('click', _switchToCustom);
+  id('pnResetStartBtn')?.addEventListener('click', _switchToAuto);
 
   // Custom start number
   id('pnStartInput')?.addEventListener('input', e => {
