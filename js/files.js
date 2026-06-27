@@ -8,7 +8,7 @@
 import { esc, fmtSize, id, hide, isFileAccepted } from './utils.js';
 import { showToast } from './ui.js';
 import { ACCEPTED_MIME } from './config.js';
-import { t, tp } from './i18n.js';
+import { t } from './i18n.js';
 import { decryptOwnerOnly } from './decryptPdf.js';
 
 // ── PDF encryption preflight ──────────────────────────────────
@@ -150,9 +150,11 @@ export function addFiles(files) {
     return;
   }
 
-  let dupes   = 0;
   let invalid = 0;
   const added = [];
+
+  const _fp = f => `${f.name}|${f.size}|${f.lastModified}`;
+  const existingFPs = new Set(selectedFiles.map(_fp));
 
   files.forEach(f => {
     // п.5: валидация MIME / расширения
@@ -160,9 +162,13 @@ export function addFiles(files) {
       invalid++;
       return;
     }
-    const isDupe = selectedFiles.some(x => x.name === f.name && x.size === f.size);
-    if (!isDupe) { selectedFiles.push(f); added.push(f); }
-    else dupes++;
+    if (existingFPs.has(_fp(f))) {
+      showToast(`⚠️ ${f.name} is already in the list`, 3000);
+      return;
+    }
+    existingFPs.add(_fp(f));
+    selectedFiles.push(f);
+    added.push(f);
   });
 
   if (invalid > 0) {
@@ -171,7 +177,6 @@ export function addFiles(files) {
       : t('invalid_img');
     showToast(msg, 5000);
   }
-  if (dupes   > 0) showToast(tp(dupes, 'dupe_skip_one', 'dupe_skip_many'));
 
   if (selectedFiles.length > 0) {
     document.dispatchEvent(new CustomEvent('pdfree:files-added'));
