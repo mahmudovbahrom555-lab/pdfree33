@@ -171,8 +171,8 @@ function _render() {
             <div style="font-size:11px;color:var(--text3);margin-top:3px">${t('pn_auto_follows')}</div>
           </div>
           <button type="button" id="pnCustomizeBtn"
-            style="flex-shrink:0;margin-top:2px;border:1px solid var(--border);border-radius:6px;background:var(--surface);cursor:pointer;font-size:12px;color:var(--text2);padding:5px 10px;display:flex;align-items:center;gap:4px;white-space:nowrap">
-            <span style="font-size:15px;line-height:1">✏️</span>${t('pn_customize')}
+            style="flex-shrink:0;margin-top:2px;border:1px solid var(--border);border-radius:6px;background:var(--surface);cursor:pointer;font-size:13px;color:var(--text2);padding:6px 12px;display:flex;align-items:center;gap:5px;white-space:nowrap">
+            <span style="font-size:16px;line-height:1">📝</span>${t('pn_customize')}
           </button>
         </div>
 
