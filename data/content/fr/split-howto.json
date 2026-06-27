@@ -1,26 +1,38 @@
 {
   "@context": "https://schema.org",
   "@type": "HowTo",
-  "name": "Diviser un PDF",
-  "description": "Divisez un PDF en pages séparées ou extrayez une plage — gratuit, sans envoi.",
+  "name": "Comment diviser un PDF gratuitement",
+  "description": "Divisez un PDF en fichiers séparés ou extrayez des pages spécifiques — gratuitement, sans téléversement, traité localement dans votre navigateur.",
+  "totalTime": "PT1M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — outil de division PDF gratuit en ligne, aucun téléversement requis" }],
   "step": [
     {
       "@type": "HowToStep",
       "position": 1,
       "name": "Ouvrez votre PDF",
-      "text": "Cliquez sur 'Sélectionner les fichiers' ou déposez votre PDF dans la zone."
+      "text": "Cliquez sur \" Sélectionner les fichiers \" ou faites glisser votre PDF dans la zone de dépôt. Les miniatures de pages s'affichent dans votre navigateur — rien n'est téléversé sur un serveur.",
+      "url": "https://pdfree.io/split-pdf/#step1"
     },
     {
       "@type": "HowToStep",
       "position": 2,
-      "name": "Choisissez le mode de division",
-      "text": "Sélectionnez 'Extraire des pages' pour des pages spécifiques ou 'Tout diviser' pour un fichier par page. Entrez une plage comme 1-3,5."
+      "name": "Sélectionnez les pages souhaitées",
+      "text": "Cliquez sur les miniatures de pages individuelles pour les sélectionner ou les désélectionner, ou saisissez une plage comme \" 1-3, 5, 8-10 \". Utilisez les boutons de sélection rapide pour les pages impaires, paires ou les moitiés. Pour supprimer des pages, sélectionnez tout sauf ces pages.",
+      "url": "https://pdfree.io/split-pdf/#step2"
     },
     {
       "@type": "HowToStep",
       "position": 3,
-      "name": "Téléchargez les fichiers divisés",
-      "text": "Cliquez sur 'Diviser PDF'. Vos pages sont téléchargées dans un fichier ZIP."
+      "name": "Choisissez la sortie : un fichier ou des fichiers séparés",
+      "text": "Sélectionnez \" Extraire les pages \" pour obtenir vos pages sélectionnées en un seul PDF fusionné, ou \" Diviser toutes les pages \" pour obtenir chaque page dans son propre fichier PDF dans une archive ZIP.",
+      "url": "https://pdfree.io/split-pdf/#step3"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 4,
+      "name": "Téléchargez le résultat",
+      "text": "Cliquez sur \" Diviser PDF \". Vos pages extraites se téléchargent immédiatement — en un seul PDF ou un ZIP de pages individuelles.",
+      "url": "https://pdfree.io/split-pdf/#step4"
     }
   ]
 }

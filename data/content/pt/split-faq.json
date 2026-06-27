@@ -1,42 +1,50 @@
 [
   {
     "@type": "Question",
-    "name": "Meus arquivos são enviados para um servidor?",
+    "name": "Os meus ficheiros são enviados ao dividir um PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Não. O PDFree processa todos os arquivos inteiramente no seu navegador. Seus documentos nunca saem do seu dispositivo."
+      "text": "Não. O PDFree divide PDFs inteiramente no seu browser através de JavaScript. Os ficheiros nunca saem do seu dispositivo. Pode verificar por si mesmo: abra as DevTools do seu browser → separador \"Rede\" — não deverá ver o seu PDF a ser enviado para um servidor remoto durante o processamento."
     }
   },
   {
     "@type": "Question",
-    "name": "Qual a diferença entre Dividir e Extrair?",
+    "name": "Que formato de intervalo de páginas o PDFree aceita?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Dividir decompõe todo o documento em arquivos separados (um por página ou por intervalo). Extrair cria um único arquivo contendo apenas as páginas selecionadas — mais preciso para seleções não consecutivas."
+      "text": "Introduza páginas e intervalos separados por vírgulas: por exemplo 1, 3-7, 12, 15-20. Os espaços são opcionais. Também pode clicar em miniaturas de páginas individuais para as seleccionar ou desseleccionar visualmente, ou utilizar botões de selecção rápida para páginas ímpares, pares ou metades do documento."
     }
   },
   {
     "@type": "Question",
-    "name": "O PDF original é modificado?",
+    "name": "Posso extrair apenas páginas específicas de um PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Não. O PDFree cria novos arquivos a partir de cópias das páginas. O arquivo original permanece intacto no seu dispositivo."
+      "text": "Sim. Pode extrair um intervalo de páginas personalizado (p. ex. páginas 3–7) ou dividir cada página em ficheiros individuais. Introduza o intervalo como valores separados por vírgulas como \"1-5, 8, 11-15\", ou clique nas páginas visualmente na grelha de miniaturas."
     }
   },
   {
     "@type": "Question",
-    "name": "Existe um limite de tamanho ou número de páginas?",
+    "name": "Como elimino ou removo uma página específica de um PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Não. O PDFree não tem limites artificiais. A única restrição é a memória RAM disponível no seu dispositivo."
+      "text": "Seleccione todas as páginas excepto as que pretende remover e clique em \"Dividir PDF\" para extrair apenas as páginas que deseja manter. Por exemplo, para eliminar a página 3 de um PDF de 10 páginas, seleccione as páginas 1-2 e 4-10 e extraia-as. O resultado é o seu PDF sem as páginas removidas — qualidade original preservada."
     }
   },
   {
     "@type": "Question",
-    "name": "O PDFree funciona offline?",
+    "name": "Existe algum limite de páginas ao dividir?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sim. O PDFree é um Progressive Web App (PWA) e funciona completamente offline após o primeiro carregamento."
+      "text": "Não. O PDFree não tem limites de páginas nem de tamanho de ficheiro. O processamento depende da memória disponível do seu dispositivo. PDFs com centenas de páginas geram miniaturas em segundos num computador moderno."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso dividir um PDF sem ligação à internet?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim. O PDFree é uma Progressive Web App e funciona completamente offline após o carregamento no seu browser. Não é necessária ligação à internet para dividir ou extrair páginas."
     }
   }
 ]

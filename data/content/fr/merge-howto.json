@@ -1,26 +1,28 @@
 {
   "@context": "https://schema.org",
   "@type": "HowTo",
-  "name": "Fusionner des fichiers PDF",
-  "description": "Combinez plusieurs fichiers PDF en un seul document — gratuit, sans envoi, 100 % privé.",
+  "name": "Comment fusionner des fichiers PDF gratuitement",
+  "description": "Combinez 2, 50 ou plus de 100 fichiers PDF en un seul document gratuitement — sans téléversement, sans compte, 100% privé.",
+  "totalTime": "PT1M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — outil de fusion PDF gratuit en ligne, aucun téléversement requis" }],
   "step": [
     {
       "@type": "HowToStep",
       "position": 1,
-      "name": "Sélectionnez vos PDFs",
-      "text": "Cliquez sur 'Sélectionner les fichiers' ou déposez vos PDFs dans la zone. Nombre de fichiers illimité."
+      "name": "Ajoutez vos fichiers PDF",
+      "text": "Cliquez sur \" Sélectionner les fichiers \" ou faites glisser vos fichiers PDF dans la zone de dépôt. Ajoutez autant de fichiers que nécessaire — 2, 50 ou 100+ — il n'y a aucune limite de nombre de fichiers."
     },
     {
       "@type": "HowToStep",
       "position": 2,
-      "name": "Ordonnez les fichiers",
-      "text": "Faites glisser les cartes de fichiers pour définir l'ordre de fusion."
+      "name": "Réorganisez si nécessaire",
+      "text": "Glissez-déposez les cartes de fichiers pour définir l'ordre exact dans lequel vous souhaitez les fusionner. Réorganisez autant de fois que vous le souhaitez avant de cliquer sur Fusionner."
     },
     {
       "@type": "HowToStep",
       "position": 3,
-      "name": "Téléchargez le PDF fusionné",
-      "text": "Cliquez sur 'Fusionner PDF'. Votre document combiné est généré dans votre navigateur et téléchargé automatiquement."
+      "name": "Fusionner et télécharger",
+      "text": "Cliquez sur \" Fusionner les fichiers PDF \". Le traitement prend quelques secondes pour les petits lots, jusqu'à une minute pour 50+ fichiers volumineux. Le PDF fusionné se télécharge automatiquement sur votre appareil — rien n'est téléversé sur aucun serveur."
     }
   ]
 }

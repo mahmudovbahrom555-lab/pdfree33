@@ -1,18 +1,34 @@
 [
   {
     "@type": "Question",
-    "name": "Werden meine Dateien auf einem Server gespeichert?",
+    "name": "Werden meine Dateien beim Zusammenführen auf einen Server hochgeladen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nein. PDFree arbeitet vollständig auf deinem Gerät (clientseitig). Wir haben keine Server, die deine Dateien verarbeiten, was 100 % Privatsphäre garantiert."
+      "text": "Nein. PDFree führt PDF-Dateien vollständig in Ihrem Browser mit pdf-lib zusammen. Ihre Dateien verlassen Ihr Gerät nie und werden niemals an einen Server gesendet."
     }
   },
   {
     "@type": "Question",
-    "name": "Gibt es ein Limit für die Dateigröße oder Seitenanzahl?",
+    "name": "Gibt es ein Dateigrößenlimit beim Zusammenführen von PDFs?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nein, es gibt keine künstlichen Limits. Die einzige Begrenzung ist der verfügbare Arbeitsspeicher deines Computers oder Smartphones."
+      "text": "Nein. PDFree hat keine Dateigrößen- oder Seitenanzahllimits. Die Verarbeitung erfolgt lokal in Ihrem Browser, sodass die Limits nur vom verfügbaren Arbeitsspeicher Ihres Geräts abhängen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann ich mehr als zwei PDFs auf einmal zusammenführen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Sie können unbegrenzt viele PDF-Dateien in einem Vorgang zusammenführen. Fügen Sie einfach alle Dateien hinzu, die Sie kombinieren möchten."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Funktioniert das Zusammenführen von PDFs offline?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. PDFree ist eine Progressive Web App (PWA). Einmal geladen, funktioniert sie vollständig offline — keine Internetverbindung für die Verarbeitung erforderlich."
     }
   }
 ]

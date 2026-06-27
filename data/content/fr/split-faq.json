@@ -1,18 +1,50 @@
 [
   {
     "@type": "Question",
-    "name": "Mes fichiers sont-ils stockés sur vos serveurs ?",
+    "name": "Mes fichiers sont-ils téléversés lors de la division d'un PDF ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Non. PDFree fonctionne entièrement sur votre appareil (côté client). Nous n'avons pas de serveurs qui traitent vos fichiers, ce qui garantit 100 % de confidentialité."
+      "text": "Non. PDFree divise les PDFs entièrement dans votre navigateur grâce à JavaScript. Les fichiers ne quittent jamais votre appareil. Vous pouvez le vérifier vous-même : ouvrez les DevTools de votre navigateur → onglet \" Réseau \" — vous ne devriez pas voir votre PDF être envoyé vers un serveur distant pendant le traitement."
     }
   },
   {
     "@type": "Question",
-    "name": "Y a-t-il une limite de taille de fichier ou de nombre de pages ?",
+    "name": "Quel format de plage de pages PDFree accepte-t-il ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Non, il n'y a pas de limites artificielles. La seule limitation est la mémoire vive disponible sur votre ordinateur ou smartphone."
+      "text": "Saisissez des pages et des plages séparées par des virgules : par exemple 1, 3-7, 12, 15-20. Les espaces sont facultatifs. Vous pouvez également cliquer sur les miniatures de pages individuelles pour les sélectionner ou les désélectionner visuellement, ou utiliser les boutons de sélection rapide pour les pages impaires, paires ou les moitiés du document."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Puis-je extraire uniquement des pages spécifiques d'un PDF ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui. Vous pouvez extraire une plage de pages personnalisée (p. ex. pages 3–7) ou diviser chaque page en fichiers individuels. Saisissez la plage sous forme de valeurs séparées par des virgules comme \" 1-5, 8, 11-15 \", ou cliquez sur les pages visuellement dans la grille de miniatures."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Comment supprimer une page spécifique d'un PDF ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sélectionnez toutes les pages sauf celles que vous souhaitez supprimer, puis cliquez sur \" Diviser PDF \" pour n'extraire que les pages à conserver. Par exemple, pour supprimer la page 3 d'un PDF de 10 pages, sélectionnez les pages 1-2 et 4-10 et extrayez-les. Le résultat est votre PDF sans les pages supprimées — qualité d'origine préservée."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Y a-t-il une limite de pages lors de la division ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non. PDFree n'a aucune limite de pages ni de taille de fichier. Le traitement dépend de la mémoire disponible sur votre appareil. Les PDFs de centaines de pages génèrent des miniatures en quelques secondes sur un ordinateur moderne."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Puis-je diviser un PDF hors ligne ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui. PDFree est une application web progressive et fonctionne entièrement hors ligne une fois chargée dans votre navigateur. Aucune connexion internet n'est requise pour diviser ou extraire des pages."
     }
   }
 ]

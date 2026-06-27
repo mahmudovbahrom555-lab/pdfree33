@@ -1,26 +1,31 @@
 {
   "@context": "https://schema.org",
   "@type": "HowTo",
-  "name": "Comprimir um PDF",
-  "description": "Reduz o tamanho de um PDF sem perder qualidade — grátis, sem upload de arquivos.",
+  "name": "Como comprimir um PDF gratuitamente",
+  "description": "Reduza o tamanho de um PDF sem perder qualidade — gratuito, sem upload, processado inteiramente no seu browser.",
+  "totalTime": "PT1M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — compressor de PDF gratuito baseado no browser, sem necessidade de upload" }],
   "step": [
     {
       "@type": "HowToStep",
       "position": 1,
-      "name": "Abra seu PDF",
-      "text": "Clique em 'Escolher arquivos' ou arraste seu PDF para a zona de upload."
+      "name": "Abra o seu PDF",
+      "text": "Clique em \"Escolher ficheiros\" ou arraste o seu PDF para a zona de largada. Qualquer tamanho de ficheiro é aceite — o ficheiro é carregado no seu browser e nunca enviado para nenhum servidor.",
+      "url": "https://pdfree.io/compress-pdf/#step1"
     },
     {
       "@type": "HowToStep",
       "position": 2,
-      "name": "Escolha o nível de compressão",
-      "text": "Selecione Baixo, Médio ou Alto conforme o equilíbrio desejado entre qualidade e tamanho."
+      "name": "Escolha um nível de compressão",
+      "text": "Seleccione Light (remove apenas metadados, imagens sem alterações), Standard (remove metadados e recomprime imagens — o melhor para a maioria dos ficheiros) ou Maximum (o mais agressivo — o melhor para documentos digitalizados). O PDFree analisa o seu PDF e recomenda automaticamente o melhor nível.",
+      "url": "https://pdfree.io/compress-pdf/#step2"
     },
     {
       "@type": "HowToStep",
       "position": 3,
-      "name": "Baixe o PDF comprimido",
-      "text": "Clique em 'Comprimir PDF'. A ferramenta mostra quanto espaço foi economizado."
+      "name": "Comprimir e transferir",
+      "text": "Clique em \"Comprimir PDF\". O processamento demora segundos no seu browser. Um relatório de compressão mostra exactamente o que foi removido — metadados XMP, miniaturas, imagens duplicadas e fluxos recomprimidos. Transfira o PDF mais pequeno imediatamente.",
+      "url": "https://pdfree.io/compress-pdf/#step3"
     }
   ]
 }

@@ -1,18 +1,34 @@
 [
   {
     "@type": "Question",
-    "name": "¿Se almacenan mis archivos en sus servidores?",
+    "name": "¿Se suben mis archivos a un servidor al fusionarlos?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. PDFree opera completamente en tu dispositivo (del lado del cliente). No tenemos servidores que procesen tus archivos, lo que garantiza 100% de privacidad."
+      "text": "No. PDFree fusiona archivos PDF completamente en su navegador usando pdf-lib. Sus archivos nunca salen de su dispositivo y nunca se envían a ningún servidor."
     }
   },
   {
     "@type": "Question",
-    "name": "¿Hay un límite para el tamaño del archivo o número de páginas?",
+    "name": "¿Hay un límite de tamaño de archivo para fusionar PDFs?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No, no hay límites artificiales. La única limitación es la memoria RAM disponible en tu computadora o smartphone."
+      "text": "No. PDFree no tiene límites de tamaño de archivo ni de número de páginas. El procesamiento se realiza localmente en su navegador, por lo que los límites dependen únicamente de la memoria disponible de su dispositivo."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Puedo fusionar más de dos PDFs a la vez?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sí. Puede fusionar un número ilimitado de archivos PDF en una sola operación. Solo añada todos los archivos que desea combinar."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿La fusión de PDFs funciona sin conexión?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sí. PDFree es una Progressive Web App (PWA). Una vez cargada, funciona completamente sin conexión — no se requiere conexión a internet para el procesamiento."
     }
   }
 ]

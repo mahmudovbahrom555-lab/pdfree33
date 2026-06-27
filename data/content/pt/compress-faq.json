@@ -1,42 +1,50 @@
 [
   {
     "@type": "Question",
-    "name": "Meus arquivos são enviados para um servidor?",
+    "name": "A compressão de um PDF envia o meu ficheiro para um servidor?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Não. O PDFree processa todos os arquivos inteiramente no seu navegador. Seus documentos nunca saem do seu dispositivo."
+      "text": "Não. A compressão é realizada inteiramente no seu browser através de JavaScript. O seu PDF nunca é enviado para nenhum servidor nem transmitido pela internet. Pode verificar por si mesmo: abra as DevTools do seu browser → separador \"Rede\" durante a compressão — não deverá ver o seu PDF a ser enviado para um servidor remoto."
     }
   },
   {
     "@type": "Question",
-    "name": "A compressão afeta o texto?",
+    "name": "A compressão reduz a qualidade visual do meu PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Não. A compressão do PDFree reduz principalmente a resolução das imagens incorporadas. O texto vetorial permanece intacto e perfeitamente legível em qualquer nível escolhido."
+      "text": "O PDFree oferece três níveis. Light remove apenas metadados — o texto e as imagens ficam completamente intactos. Standard recomprime as imagens com 82 % de qualidade JPEG — a perda de qualidade é mínima e imperceptível na maioria dos documentos. Maximum recomprime a 72 % — apenas perceptível numa inspeção cuidadosa de PDFs com muitas fotografias."
     }
   },
   {
     "@type": "Question",
-    "name": "Posso comprimir um PDF protegido por senha?",
+    "name": "Quanto pode o PDFree reduzir o tamanho de um ficheiro PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Não. PDFs criptografados não podem ser processados diretamente. Remova a proteção primeiro, comprima e depois proteja novamente se necessário."
+      "text": "As reduções típicas são de 20–70 %. Os PDFs com imagens de alta resolução (documentos digitalizados, brochuras fotográficas) são os mais comprimidos — frequentemente 50–80 % de poupança. Os PDFs apenas com texto são menos reduzidos, uma vez que o texto já é armazenado eficientemente como vectores."
     }
   },
   {
     "@type": "Question",
-    "name": "Existe um limite de tamanho ou número de páginas?",
+    "name": "Por que motivo o PDF comprimido parece igual mas é mais pequeno?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Não. O PDFree não tem limites artificiais. A única restrição é a memória RAM disponível no seu dispositivo."
+      "text": "Os PDFs contêm frequentemente dados invisíveis: miniaturas de página geradas pelo Adobe Reader, tipos de letra incorporados duplicados, fluxos de metadados XMP, perfis de cor incorporados e dados privados PieceInfo de aplicações Adobe. O PDFree remove estes extras ocultos. O conteúdo visível — texto, imagens, esquema — permanece idêntico."
     }
   },
   {
     "@type": "Question",
-    "name": "O PDFree funciona offline?",
+    "name": "Posso comprimir um PDF protegido por palavra-passe?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sim. O PDFree é um Progressive Web App (PWA) e funciona completamente offline após o primeiro carregamento."
+      "text": "O PDFree tenta optimizar PDFs encriptados sempre que possível, mas ficheiros muito protegidos podem não ser comprimidos na totalidade. Para melhores resultados, remova primeiro a palavra-passe com a ferramenta PDFree Proteger PDF (que também pode remover palavras-passe existentes) e depois comprima."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "A compressão de PDF funciona sem ligação à internet?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim. O PDFree funciona completamente offline como uma Progressive Web App após o carregamento da página. Não é necessária ligação à internet — todo o processamento é efectuado no seu browser."
     }
   }
 ]

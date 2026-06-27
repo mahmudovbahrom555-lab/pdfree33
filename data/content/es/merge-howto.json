@@ -1,26 +1,28 @@
 {
   "@context": "https://schema.org",
   "@type": "HowTo",
-  "name": "Unir archivos PDF",
-  "description": "Combina múltiples archivos PDF en un solo documento gratis — sin subir, 100% privado.",
+  "name": "Cómo fusionar archivos PDF gratis",
+  "description": "Combina 2, 50 o más de 100 archivos PDF en un documento gratis — sin subir, sin cuenta, 100% privado.",
+  "totalTime": "PT1M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — fusionador de PDF gratuito basado en navegador, sin necesidad de subir archivos" }],
   "step": [
     {
       "@type": "HowToStep",
       "position": 1,
-      "name": "Selecciona tus PDFs",
-      "text": "Haz clic en 'Elegir archivos' o arrastra tus PDFs a la zona de carga. Sin límite de archivos."
+      "name": "Añada sus archivos PDF",
+      "text": "Haga clic en \"Elegir archivos\" o arrastre sus archivos PDF a la zona de carga. Añada tantos archivos como necesite — 2, 50 o 100+ — no hay límite de número de archivos."
     },
     {
       "@type": "HowToStep",
       "position": 2,
-      "name": "Ordena los archivos",
-      "text": "Arrastra las tarjetas de archivo para establecer el orden en que quieres combinarlos."
+      "name": "Reordene si es necesario",
+      "text": "Arrastre las tarjetas de archivo para establecer el orden exacto en que desea fusionarlos. Reordene las veces que quiera antes de hacer clic en Fusionar."
     },
     {
       "@type": "HowToStep",
       "position": 3,
-      "name": "Descarga el PDF combinado",
-      "text": "Haz clic en 'Unir PDF'. Tu documento combinado se genera en tu navegador y se descarga automáticamente."
+      "name": "Fusionar y descargar",
+      "text": "Haga clic en \"Fusionar archivos PDF\". El procesamiento tarda segundos para lotes pequeños, hasta un minuto para 50+ archivos grandes. El PDF fusionado se descarga automáticamente en su dispositivo — nada se sube a ningún servidor."
     }
   ]
 }

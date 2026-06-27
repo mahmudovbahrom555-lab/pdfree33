@@ -1,26 +1,28 @@
 {
   "@context": "https://schema.org",
   "@type": "HowTo",
-  "name": "Juntar arquivos PDF",
-  "description": "Combine vários arquivos PDF em um único documento grátis — sem upload, 100% privado.",
+  "name": "Como combinar ficheiros PDF gratuitamente",
+  "description": "Combine 2, 50 ou mais de 100 ficheiros PDF num único documento gratuitamente — sem upload, sem conta, 100% privado.",
+  "totalTime": "PT1M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — ferramenta de combinação de PDF gratuita baseada no browser, sem necessidade de upload" }],
   "step": [
     {
       "@type": "HowToStep",
       "position": 1,
-      "name": "Selecione seus PDFs",
-      "text": "Clique em 'Escolher arquivos' ou arraste seus PDFs para a zona de upload. Sem limite de arquivos."
+      "name": "Adicione os seus ficheiros PDF",
+      "text": "Clique em \"Escolher ficheiros\" ou arraste os seus ficheiros PDF para a zona de largada. Adicione tantos ficheiros quantos necessitar — 2, 50 ou 100+ — não existe limite de número de ficheiros."
     },
     {
       "@type": "HowToStep",
       "position": 2,
-      "name": "Ordene os arquivos",
-      "text": "Arraste os cards de arquivo para definir a ordem de combinação."
+      "name": "Reordene se necessário",
+      "text": "Arraste os cartões de ficheiro para definir a ordem exacta em que pretende combiná-los. Reordene as vezes que quiser antes de clicar em Combinar."
     },
     {
       "@type": "HowToStep",
       "position": 3,
-      "name": "Baixe o PDF combinado",
-      "text": "Clique em 'Juntar PDF'. Seu documento combinado é gerado no seu navegador e baixado automaticamente."
+      "name": "Combinar e transferir",
+      "text": "Clique em \"Combinar ficheiros PDF\". O processamento demora segundos para lotes pequenos, até um minuto para 50+ ficheiros grandes. O PDF combinado é transferido automaticamente para o seu dispositivo — nada é enviado para nenhum servidor."
     }
   ]
 }

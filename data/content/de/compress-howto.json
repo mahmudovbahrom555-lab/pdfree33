@@ -1,26 +1,36 @@
 {
   "@context": "https://schema.org",
   "@type": "HowTo",
-  "name": "PDF komprimieren",
-  "description": "PDF-Dateigröße ohne Qualitätsverlust reduzieren — kostenlos, kein Upload erforderlich.",
+  "name": "PDF kostenlos komprimieren",
+  "description": "PDF-Dateigröße ohne Qualitätsverlust reduzieren — kostenlos, kein Upload, vollständig in Ihrem Browser verarbeitet.",
+  "totalTime": "PT1M",
+  "tool": [
+    {
+      "@type": "HowToTool",
+      "name": "PDFree — kostenloser browserbasierter PDF-Kompressor, kein Upload erforderlich"
+    }
+  ],
   "step": [
     {
       "@type": "HowToStep",
       "position": 1,
       "name": "PDF öffnen",
-      "text": "Klicke auf 'Dateien auswählen' oder ziehe dein PDF in die Ablage."
+      "text": "Klicken Sie auf \"Dateien auswählen\" oder ziehen Sie Ihr PDF in die Ablagezone. Jede Dateigröße wird akzeptiert — die Datei wird in Ihrem Browser geladen und niemals hochgeladen.",
+      "url": "https://pdfree.io/compress-pdf/#step1"
     },
     {
       "@type": "HowToStep",
       "position": 2,
       "name": "Komprimierungsstufe wählen",
-      "text": "Wähle zwischen Niedrig, Mittel oder Hoch für die gewünschte Balance zwischen Qualität und Dateigröße."
+      "text": "Wählen Sie Leicht (entfernt nur Metadaten, Bilder unverändert), Standard (entfernt Metadaten und komprimiert Bilder neu — optimal für die meisten Dateien) oder Maximum (am aggressivsten — optimal für gescannte Dokumente). PDFree analysiert Ihr PDF und empfiehlt automatisch die beste Voreinstellung.",
+      "url": "https://pdfree.io/compress-pdf/#step2"
     },
     {
       "@type": "HowToStep",
       "position": 3,
-      "name": "Komprimiertes PDF herunterladen",
-      "text": "Klicke auf 'PDF Komprimieren'. Das Tool zeigt dir, wie viel Speicherplatz gespart wurde."
+      "name": "Komprimieren und herunterladen",
+      "text": "Klicken Sie auf \"PDF komprimieren\". Die Verarbeitung dauert Sekunden in Ihrem Browser. Ein Kompressionsbericht zeigt genau, was entfernt wurde — XMP-Metadaten, Vorschauen, doppelte Bilder und neu komprimierte Streams. Laden Sie das kleinere PDF sofort herunter.",
+      "url": "https://pdfree.io/compress-pdf/#step3"
     }
   ]
 }

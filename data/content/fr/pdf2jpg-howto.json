@@ -1,26 +1,31 @@
 {
   "@context": "https://schema.org",
   "@type": "HowTo",
-  "name": "Convertir un PDF en JPG",
-  "description": "Exportez des pages PDF en images JPG ou PNG haute qualité — gratuit, sans envoi.",
+  "name": "Comment convertir un PDF en JPG ou PNG gratuitement",
+  "description": "Exportez chaque page d'un PDF en image JPG ou PNG de haute qualité — gratuitement, sans téléversement, traité localement dans votre navigateur.",
+  "totalTime": "PT2M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — convertisseur PDF en image gratuit en ligne, aucun téléversement requis" }],
   "step": [
     {
       "@type": "HowToStep",
       "position": 1,
       "name": "Ouvrez votre PDF",
-      "text": "Cliquez sur 'Sélectionner les fichiers' ou déposez votre PDF dans la zone."
+      "text": "Cliquez sur \" Sélectionner les fichiers \" ou faites glisser votre PDF dans la zone de dépôt. Le fichier se charge dans votre navigateur — rien n'est téléversé sur un serveur.",
+      "url": "https://pdfree.io/pdf2jpg/#step1"
     },
     {
       "@type": "HowToStep",
       "position": 2,
       "name": "Choisissez le format et la résolution",
-      "text": "Sélectionnez JPG ou PNG et la résolution souhaitée (72, 150 ou 300 DPI)."
+      "text": "Sélectionnez le format de sortie JPG ou PNG. Choisissez votre résolution préférée : 72 DPI (écran/web), 150 DPI (équilibré) ou 300 DPI (qualité d'impression). Une résolution plus élevée produit des images plus nettes avec des fichiers plus volumineux.",
+      "url": "https://pdfree.io/pdf2jpg/#step2"
     },
     {
       "@type": "HowToStep",
       "position": 3,
-      "name": "Téléchargez les images",
-      "text": "Cliquez sur 'Convertir en JPG'. Chaque page est exportée en image séparée dans un ZIP."
+      "name": "Convertir et télécharger",
+      "text": "Cliquez sur \" Convertir en JPG \". Chaque page est rendue comme un fichier image séparé. Les pages multiples se téléchargent en une archive ZIP. Rien n'est envoyé à aucun serveur à aucune étape.",
+      "url": "https://pdfree.io/pdf2jpg/#step3"
     }
   ]
 }

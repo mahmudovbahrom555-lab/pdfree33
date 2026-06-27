@@ -1,18 +1,50 @@
 [
   {
     "@type": "Question",
-    "name": "¿Se almacenan mis archivos en sus servidores?",
+    "name": "¿Se sube mi archivo al convertir PDF a JPG?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. PDFree opera completamente en tu dispositivo (del lado del cliente). No tenemos servidores que procesen tus archivos, lo que garantiza 100% de privacidad."
+      "text": "No. PDFree convierte las páginas PDF en imágenes completamente en su navegador usando PDF.js (el renderizador PDF de código abierto de Mozilla). Nada se sube a ningún servidor. Puede verificarlo: abra DevTools → pestaña \"Red\" y no debería ver que su PDF se sube durante la conversión."
     }
   },
   {
     "@type": "Question",
-    "name": "¿Hay un límite para el tamaño del archivo o número de páginas?",
+    "name": "¿Qué calidad de imagen puedo esperar?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No, no hay límites artificiales. La única limitación es la memoria RAM disponible en tu computadora o smartphone."
+      "text": "PDFree renderiza las páginas PDF a 72, 150 o 300 DPI. A 300 DPI la salida es de calidad de impresión — el texto es nítido y legible a cualquier zoom. A 150 DPI las imágenes son claras para uso en pantalla y la mayoría de aplicaciones de oficina."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Puedo convertir PDF a PNG en lugar de JPG?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sí. PDFree admite salida en JPG y PNG. PNG es sin pérdidas y mejor para documentos con mucho texto o gráficos donde necesita nitidez perfecta al píxel. JPG produce archivos más pequeños y es mejor para páginas con muchas fotos. Seleccione el formato antes de convertir."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Puedo convertir solo páginas específicas a JPG?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "La herramienta actualmente convierte todas las páginas a la vez. Para exportar solo páginas específicas, primero use la herramienta PDFree Split PDF para extraer las páginas que necesita en un PDF separado, y luego convierta ese PDF a JPG. Ambos pasos son gratuitos y se ejecutan localmente en su navegador."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Un PDF de 10 páginas producirá 10 archivos JPG separados?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sí. Cada página se convierte en un archivo JPG o PNG. Si su PDF tiene más de una página, todas las imágenes se agrupan en un archivo ZIP para descargar con un solo clic."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Hay un límite de páginas para la conversión?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. No hay límites de número de páginas ni de tamaño de archivo. Los PDFs muy grandes (100+ páginas a 300 DPI) pueden tardar más en procesarse. Para mejores resultados con archivos grandes, cierre otras pestañas del navegador antes de convertir."
     }
   }
 ]

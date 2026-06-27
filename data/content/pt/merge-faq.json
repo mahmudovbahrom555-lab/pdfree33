@@ -1,42 +1,34 @@
 [
   {
     "@type": "Question",
-    "name": "Quantos arquivos PDF posso juntar de uma vez?",
+    "name": "Os meus ficheiros são enviados para um servidor ao combinar PDFs?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Não há limite fixo. O PDFree processa tudo na memória do navegador. Para lotes grandes (50+ arquivos), feche outras abas para liberar RAM."
+      "text": "Não. O PDFree combina ficheiros PDF inteiramente no seu browser utilizando pdf-lib. Os seus ficheiros nunca saem do seu dispositivo e nunca são enviados para nenhum servidor."
     }
   },
   {
     "@type": "Question",
-    "name": "A formatação será preservada após a junção?",
+    "name": "Existe algum limite de tamanho de ficheiro para combinar PDFs?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sim. O PDFree usa pdf-lib que copia as páginas no nível dos objetos PDF — fontes, imagens, gráficos vetoriais e formatação são preservados exatamente."
+      "text": "Não. O PDFree não tem limites de tamanho de ficheiro nem de número de páginas. O processamento é efectuado localmente no seu browser, pelo que os limites dependem apenas da memória disponível do seu dispositivo."
     }
   },
   {
     "@type": "Question",
-    "name": "Posso juntar PDFs protegidos por senha?",
+    "name": "Posso combinar mais de dois PDFs de uma vez?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Não. PDFs criptografados não podem ser lidos sem a senha. Remova a proteção primeiro, depois junte."
+      "text": "Sim. Pode combinar um número ilimitado de ficheiros PDF numa única operação. Basta adicionar todos os ficheiros que pretende combinar."
     }
   },
   {
     "@type": "Question",
-    "name": "Meus arquivos são enviados para um servidor?",
+    "name": "A combinação de PDFs funciona sem ligação à internet?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Não. Tudo é processado na memória do seu navegador. Nada é enviado para nenhum servidor. Feche a aba e os arquivos desaparecem completamente."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "O PDFree funciona offline?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Sim. O PDFree é um Progressive Web App (PWA) e funciona completamente offline após o primeiro carregamento."
+      "text": "Sim. O PDFree é uma Progressive Web App (PWA). Uma vez carregado, funciona completamente offline — não é necessária ligação à internet para o processamento."
     }
   }
 ]
