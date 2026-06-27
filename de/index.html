@@ -123,7 +123,7 @@
   </nav>
 
   <!-- ── Hero ── -->
-  <section id="hero" class="hero">
+  <section id="hero" class="hero js-home-only">
     <div class="hero-badge">🔒 100 % privat · kein Upload · kein Konto · keine Limits</div>
     <h1>PDF-Werkzeuge, die<br><em>wirklich funktionieren</em></h1>
     <p>Zusammenfügen, aufteilen, komprimieren, Wasserzeichen, konvertieren — alles läuft <strong>in deinem Browser</strong>. Deine Dateien verlassen nie dein Gerät. Kein Server. Kein Konto. Nur Ergebnisse.</p>
@@ -198,7 +198,7 @@
   </section>
 
   <!-- ── Trust alert block ── -->
-  <div class="trust-alert" id="trustAlert" aria-label="Datenschutzversprechen">
+  <div class="trust-alert js-home-only" id="trustAlert" aria-label="Datenschutzversprechen">
     <div class="trust-alert-icon" aria-hidden="true">
       <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
     </div>
@@ -209,7 +209,7 @@
   </div>
 
   <!-- ── No-limit bar ── -->
-  <div id="noLimitBar" class="no-limit-bar">
+  <div id="noLimitBar" class="no-limit-bar js-home-only">
     <div class="no-limit-item">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
       Keine Datei-Limits
@@ -229,7 +229,7 @@
   </div>
 
   <!-- ── Tools grid ── -->
-  <section id="toolsGrid" class="tools-section">
+  <section id="toolsGrid" class="tools-section js-home-only">
     <div class="section-label">Alle Werkzeuge</div>
     <div class="tools-grid">
       <a href="/merge-pdf/" class="tool-card featured" data-tool="merge" aria-label="PDF Zusammenfügen">
@@ -325,7 +325,7 @@
   </section>
 
   <!-- ── Privacy trust bar ── -->
-  <section class="privacy-bar" aria-label="Datenschutzgarantie">
+  <section class="privacy-bar js-home-only" aria-label="Datenschutzgarantie">
     <div class="privacy-bar__inner">
       <div class="privacy-bar__item">
         <div class="privacy-bar__icon" aria-hidden="true">
@@ -358,7 +358,7 @@
   </section>
 
   <!-- ── FAQ section (visible for SEO) ── -->
-  <section id="faqSection" style="max-width:760px;margin:0 auto;padding:48px 24px 0;" aria-label="Häufig gestellte Fragen">
+  <section id="faqSection" class="js-home-only" style="max-width:760px;margin:0 auto;padding:48px 24px 0;" aria-label="Häufig gestellte Fragen">
     <div class="section-label">FAQ</div>
     <h2 style="font-size:clamp(20px,3vw,26px);color:var(--text);margin:12px 0 32px;font-weight:700;">Häufig gestellte Fragen</h2>
     <dl style="display:flex;flex-direction:column;gap:0;">
@@ -465,10 +465,7 @@
   <!-- pdf-lib нужен в основном потоке для splitUI.js (window.PDFLib) -->
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-  <!-- Inline version check: runs before modules, shows cache diagnostic in console -->
-  <script>
-    console.info('[PDFree] v6.3 loaded. If rotate tool fails, open DevTools → Application → Service Workers → Unregister → hard reload (Ctrl+F5).');
-  </script>
+
   <script type="module" src="../js/locales/de.js"></script>
   <script type="module" src="../js/app.js"></script>
 
