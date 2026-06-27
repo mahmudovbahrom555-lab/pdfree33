@@ -319,25 +319,26 @@ export function renderCompressionReport(data) {
     whyNote = '🎨 Images were found but use CMYK color profiles or transparency layers — the browser must preserve them to avoid color distortion. Metadata has been cleaned up.';
   }
 
-  // Breakdown items
+  // Breakdown items — each has an optional href to the glossary explanation page
+  const G = '/pdf-compression-glossary/';
   const items = [];
-  if (report.hasXMP)        items.push({ icon: '📋', label: 'XMP metadata stream removed' });
-  if (report.thumbnails > 0) items.push({ icon: '🖼️', label: `${report.thumbnails} embedded thumbnail${report.thumbnails > 1 ? 's' : ''} removed` });
-  if (report.hasPieceInfo)  items.push({ icon: '🔧', label: 'Adobe PieceInfo metadata removed' });
-  if (report.metadataFields > 0) items.push({ icon: '🏷️', label: `${report.metadataFields} metadata fields cleared` });
+  if (report.hasXMP)        items.push({ icon: '📋', label: 'XMP metadata stream removed',          href: `${G}#xmp` });
+  if (report.thumbnails > 0) items.push({ icon: '🖼️', label: `${report.thumbnails} embedded thumbnail${report.thumbnails > 1 ? 's' : ''} removed`, href: `${G}#thumbnails` });
+  if (report.hasPieceInfo)  items.push({ icon: '🔧', label: 'Adobe PieceInfo metadata removed',     href: `${G}#pieceinfo` });
+  if (report.metadataFields > 0) items.push({ icon: '🏷️', label: `${report.metadataFields} metadata fields cleared`, href: `${G}#metadata-fields` });
   if (report.imagesDeduplicated > 0) {
     const dedupSaved = report.dedupSavedBytes ?? 0;
-    items.push({ icon: '🔁', label: `${report.imagesDeduplicated} duplicate image${report.imagesDeduplicated > 1 ? 's' : ''} removed${dedupSaved > 0 ? ' (−' + fmtSize(dedupSaved) + ')' : ''}` });
+    items.push({ icon: '🔁', label: `${report.imagesDeduplicated} duplicate image${report.imagesDeduplicated > 1 ? 's' : ''} removed${dedupSaved > 0 ? ' (−' + fmtSize(dedupSaved) + ')' : ''}`, href: `${G}#duplicate-images` });
   }
   if (report.imagesRecompressed > 0) {
     const imgSaved = report.imagesSavedBytes ?? 0;
-    items.push({ icon: '📸', label: `${report.imagesRecompressed} image${report.imagesRecompressed > 1 ? 's' : ''} recompressed${imgSaved > 0 ? ' (−' + fmtSize(imgSaved) + ')' : ''}` });
+    items.push({ icon: '📸', label: `${report.imagesRecompressed} image${report.imagesRecompressed > 1 ? 's' : ''} recompressed${imgSaved > 0 ? ' (−' + fmtSize(imgSaved) + ')' : ''}`, href: `${G}#image-recompression` });
   }
   if (report.flateStreamsRepacked > 0) {
     const flateSaved = report.flateSavedBytes ?? 0;
-    items.push({ icon: '🗄️', label: `${report.flateStreamsRepacked} font/content stream${report.flateStreamsRepacked > 1 ? 's' : ''} repacked${flateSaved > 0 ? ' (−' + fmtSize(flateSaved) + ')' : ''}` });
+    items.push({ icon: '🗄️', label: `${report.flateStreamsRepacked} font/content stream${report.flateStreamsRepacked > 1 ? 's' : ''} repacked${flateSaved > 0 ? ' (−' + fmtSize(flateSaved) + ')' : ''}`, href: `${G}#stream-repacking` });
   }
-  if (report.useObjectStreams) items.push({ icon: '📦', label: 'Object stream compression applied' });
+  if (report.useObjectStreams) items.push({ icon: '📦', label: 'Object stream compression applied', href: `${G}#object-streams` });
 
   const div = document.createElement('div');
   div.id        = 'compressReport';
@@ -368,7 +369,7 @@ export function renderCompressionReport(data) {
            ${items.map((it, i) => `
              <div class="compress-report__item" style="animation-delay:${i * 60}ms">
                <span class="compress-report__item-icon" aria-hidden="true">${it.icon}</span>
-               <span class="compress-report__item-label">${it.label}</span>
+               <span class="compress-report__item-label">${it.label}${it.href ? ` <a href="${it.href}" class="compress-report__explain" title="What does this mean?" aria-label="Learn what this means" style="font-size:11px;color:var(--green);text-decoration:none;opacity:0.7;vertical-align:middle">?</a>` : ''}</span>
                <span class="compress-report__item-check" aria-hidden="true">✓</span>
              </div>
            `).join('')}

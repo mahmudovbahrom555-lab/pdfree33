@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval' blob: https://cdnjs.cloudflare.com https://esm.sh https://plausible.io https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: blob: https:; connect-src 'self' https://cdnjs.cloudflare.com https://*.workers.dev https://plausible.io https://cloudflareinsights.com; worker-src 'self' blob:; object-src 'none';">
+
+  <title>What PDFree Removes During PDF Compression — Explained | PDFree</title>
+  <meta name="description" content="Plain-English explanations of XMP metadata, embedded thumbnails, duplicate images, PieceInfo, and object streams — what they are, why PDFs contain them, and how removing them reduces file size.">
+
+  <meta property="og:title"       content="What Gets Removed When You Compress a PDF — Explained | PDFree">
+  <meta property="og:description" content="What is XMP metadata? Why do PDFs have embedded thumbnails? What are duplicate images? Plain-English explanations of everything PDFree removes during compression.">
+  <meta property="og:type"        content="article">
+  <meta property="og:url"         content="https://pdfree.io/pdf-compression-glossary/">
+  <meta property="og:site_name"   content="PDFree">
+  <meta property="og:image"       content="https://pdfree.io/icons/og-image.jpg">
+  <meta name="twitter:card"       content="summary_large_image">
+  <meta name="twitter:title"      content="What Gets Removed When You Compress a PDF | PDFree">
+  <meta name="twitter:description" content="XMP metadata, thumbnails, duplicate images, PieceInfo — what are they and why are they in your PDF?">
+  <meta name="twitter:image"      content="https://pdfree.io/icons/og-image.jpg">
+
+  <link rel="canonical" href="https://pdfree.io/pdf-compression-glossary/">
+  <link rel="alternate" hreflang="en"        href="https://pdfree.io/pdf-compression-glossary/">
+  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/pdf-compression-glossary/">
+
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <link rel="apple-touch-icon" href="../icons/icon-192.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+  <link rel="preconnect" href="https://plausible.io">
+  <link rel="preload" href="../fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../css/fonts.css">
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/animations.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is XMP metadata in a PDF?",
+        "acceptedAnswer": { "@type": "Answer", "text": "XMP (Extensible Metadata Platform) is an XML-based metadata stream embedded inside the PDF file. It stores information like the document title, author, creation date, software used to create the PDF, and copyright strings. Adobe applications automatically add XMP streams when saving PDFs. The stream can range from 2 KB to 50 KB in size — invisible to the reader but adding weight to the file. Removing it does not affect any visible content." }
+      },
+      {
+        "@type": "Question",
+        "name": "Why do PDFs contain embedded page thumbnails?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Adobe Acrobat and Reader generate small preview images (thumbnails) of each page and store them inside the PDF file itself. These thumbnails are used for the page panel in Acrobat but are unnecessary in most other PDF viewers, which render their own previews. Each thumbnail is typically 2–10 KB; a 200-page document can have 400–2000 KB of thumbnail data. Removing them does not affect how the document displays or prints." }
+      },
+      {
+        "@type": "Question",
+        "name": "What is Adobe PieceInfo metadata?",
+        "acceptedAnswer": { "@type": "Answer", "text": "PieceInfo is a private metadata dictionary added by Adobe applications (InDesign, Illustrator, Photoshop) to store application-specific data about the document's last edit session. It may include layer information, placed image paths, or editorial notes used internally by the application. This data is meaningless outside the originating application and adds file size without any benefit to readers of the final PDF." }
+      },
+      {
+        "@type": "Question",
+        "name": "What are duplicate images in a PDF?",
+        "acceptedAnswer": { "@type": "Answer", "text": "When a PDF is created or assembled from multiple sources, the same image (like a logo or watermark) can be embedded multiple times as separate objects, even though the visual output is identical. For example, a 200-page report with a logo on every page may contain 200 copies of the same image object instead of one shared reference. PDFree identifies duplicate images by fingerprint and replaces all copies with a single shared reference, reducing size proportionally." }
+      },
+      {
+        "@type": "Question",
+        "name": "What happens when PDFree recompresses images?",
+        "acceptedAnswer": { "@type": "Answer", "text": "PDF files often contain images at higher resolution than needed for screen viewing or printing. A scanned document at 300 DPI may contain images that are 5–10 MB each. PDFree recompresses JPEG images using a lower JPEG quality setting (82% for Standard preset, 72% for Maximum) and optionally downsamples images to a lower DPI (150 DPI for Web, 96 DPI for Email). The visible difference is minimal — JPEG quality loss at 82% is not detectable by the human eye in standard reading conditions." }
+      },
+      {
+        "@type": "Question",
+        "name": "What is font and content stream repacking?",
+        "acceptedAnswer": { "@type": "Answer", "text": "PDF content streams (which describe page layout, text positions, and drawing instructions) and font data are compressed using the DEFLATE algorithm. Many PDF generators use a low compression level for speed, leaving the data more compressible than necessary. PDFree uses the browser's built-in CompressionStream API to repack these streams at a higher compression level, extracting additional savings without any change to the document content." }
+      },
+      {
+        "@type": "Question",
+        "name": "What are object streams in a PDF?",
+        "acceptedAnswer": { "@type": "Answer", "text": "A PDF file is made up of objects (fonts, images, page descriptions, metadata) that are normally stored with a cross-reference table listing each object's byte position. Object streams (a PDF 1.5 feature) pack multiple objects together and compress them as a group, replacing the per-object overhead with a more efficient indexed structure. Enabling object streams typically saves 10–30% on text-heavy documents where there are many small objects." }
+      }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "What PDFree Removes During PDF Compression — Explained",
+    "description": "Plain-English explanations of XMP metadata, embedded thumbnails, duplicate images, PieceInfo, and object streams.",
+    "url": "https://pdfree.io/pdf-compression-glossary/",
+    "datePublished": "2026-06-27",
+    "dateModified": "2026-06-27",
+    "publisher": { "@type": "Organization", "name": "PDFree", "url": "https://pdfree.io" },
+    "author":    { "@type": "Organization", "name": "PDFree" },
+    "image": { "@type": "ImageObject", "url": "https://pdfree.io/icons/og-image.jpg", "width": 1200, "height": 633 },
+    "keywords": "what is xmp metadata pdf, pdf embedded thumbnails, pieceinfo metadata pdf, duplicate images pdf, why is my pdf so large, pdf hidden bloat"
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "PDFree", "item": "https://pdfree.io/" },
+      { "@type": "ListItem", "position": 2, "name": "Compress PDF", "item": "https://pdfree.io/compress-pdf/" },
+      { "@type": "ListItem", "position": 3, "name": "Compression Glossary", "item": "https://pdfree.io/pdf-compression-glossary/" }
+    ]
+  }
+  </script>
+  <script src="../js/theme.js"></script>
+</head>
+<body>
+
+  <nav>
+    <a href="../" class="logo" id="logo" aria-label="Go to homepage" style="text-decoration:none">
+      <span class="logo-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></span>
+      <span class="logo-text">PDF<span>ree</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="../compress-pdf/" class="nav-link">Compress</a>
+      <a href="../merge-pdf/"    class="nav-link">Merge</a>
+      <a href="../split-pdf/"    class="nav-link">Split</a>
+      <a href="../pdf-to-word/"  class="nav-link">PDF→Word</a>
+    </div>
+    <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode"></button>
+  </nav>
+
+  <section class="seo-article" aria-labelledby="articleTitle">
+    <div class="seo-article__inner">
+      <div style="max-width:800px;margin:60px auto 40px;padding:0 24px;color:var(--text2);line-height:1.8;">
+
+        <p style="font-size:13px;color:var(--text3);margin:0 0 16px;">
+          <a href="../" style="color:var(--text3);text-decoration:none;">PDFree</a> ›
+          <a href="../compress-pdf/" style="color:var(--text3);text-decoration:none;">Compress PDF</a> ›
+          What gets removed
+        </p>
+
+        <h1 id="articleTitle" style="font-size:32px;color:var(--text);margin:0 0 16px;font-weight:700;line-height:1.25;">What PDFree Removes During PDF Compression</h1>
+        <p style="font-size:15px;color:var(--text3);margin:0 0 32px;">Plain-English explanations · Updated June 2026</p>
+
+        <p style="font-size:16px;margin:0 0 32px;color:var(--text);">When PDFree compresses your PDF, the compression report lists exactly what was found and removed. This page explains what each item is, why it exists in the PDF, and how much space removing it typically saves.</p>
+
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 20px;margin:0 0 48px;font-size:14px;">
+          <strong style="color:var(--text);">Quick navigation:</strong>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;">
+            <a href="#xmp"               style="color:var(--green);text-decoration:none;background:var(--bg);padding:4px 10px;border-radius:6px;border:1px solid var(--border);">XMP metadata</a>
+            <a href="#thumbnails"         style="color:var(--green);text-decoration:none;background:var(--bg);padding:4px 10px;border-radius:6px;border:1px solid var(--border);">Embedded thumbnails</a>
+            <a href="#pieceinfo"          style="color:var(--green);text-decoration:none;background:var(--bg);padding:4px 10px;border-radius:6px;border:1px solid var(--border);">PieceInfo metadata</a>
+            <a href="#metadata-fields"    style="color:var(--green);text-decoration:none;background:var(--bg);padding:4px 10px;border-radius:6px;border:1px solid var(--border);">Metadata fields</a>
+            <a href="#duplicate-images"   style="color:var(--green);text-decoration:none;background:var(--bg);padding:4px 10px;border-radius:6px;border:1px solid var(--border);">Duplicate images</a>
+            <a href="#image-recompression" style="color:var(--green);text-decoration:none;background:var(--bg);padding:4px 10px;border-radius:6px;border:1px solid var(--border);">Image recompression</a>
+            <a href="#stream-repacking"   style="color:var(--green);text-decoration:none;background:var(--bg);padding:4px 10px;border-radius:6px;border:1px solid var(--border);">Stream repacking</a>
+            <a href="#object-streams"     style="color:var(--green);text-decoration:none;background:var(--bg);padding:4px 10px;border-radius:6px;border:1px solid var(--border);">Object streams</a>
+          </div>
+        </div>
+
+        <!-- XMP -->
+        <h2 id="xmp" style="font-size:22px;color:var(--text);margin:0 0 8px;font-weight:700;">📋 XMP Metadata Stream</h2>
+        <p style="margin:0 0 12px;"><strong>What it is:</strong> XMP (Extensible Metadata Platform) is an XML document embedded inside the PDF that stores document properties — author, title, creation date, the software used to create the file, and copyright strings.</p>
+        <p style="margin:0 0 12px;"><strong>Why it exists:</strong> Adobe created XMP as a standard way for applications to embed rich metadata. InDesign, Acrobat, Illustrator, Word, and most PDF generators add it automatically when saving. A typical XMP stream is 5–50 KB of XML text — invisible in the document but present in the file.</p>
+        <p style="margin:0 0 32px;font-size:14px;background:var(--surface);border-left:3px solid var(--green);padding:10px 14px;border-radius:0 6px 6px 0;"><strong>Space saved:</strong> 5–50 KB per document. Small on its own, but meaningful when combined with other cleanup. PDFree removes XMP streams on Standard and Maximum presets; Light leaves them intact for maximum compatibility.</p>
+
+        <!-- Thumbnails -->
+        <h2 id="thumbnails" style="font-size:22px;color:var(--text);margin:0 0 8px;font-weight:700;">🖼️ Embedded Page Thumbnails</h2>
+        <p style="margin:0 0 12px;"><strong>What they are:</strong> Small preview images of each page, stored inside the PDF itself. They look like the page panel in Adobe Acrobat — miniature versions of your pages.</p>
+        <p style="margin:0 0 12px;"><strong>Why they exist:</strong> Adobe Acrobat generates and saves thumbnails to speed up its own page panel rendering. When you scroll through pages in Acrobat, it displays these pre-rendered images instead of rendering pages on the fly. Other PDF viewers (Chrome, Firefox, Preview, most mobile apps) render their own thumbnails and never read these embedded ones.</p>
+        <p style="margin:0 0 32px;font-size:14px;background:var(--surface);border-left:3px solid var(--green);padding:10px 14px;border-radius:0 6px 6px 0;"><strong>Space saved:</strong> 2–10 KB per page. A 100-page scanned document can carry 200–1000 KB of thumbnail data — 1 MB of invisible overhead. PDFree removes thumbnails on all presets including Light, since no viewer needs them from the file.</p>
+
+        <!-- PieceInfo -->
+        <h2 id="pieceinfo" style="font-size:22px;color:var(--text);margin:0 0 8px;font-weight:700;">🔧 Adobe PieceInfo Metadata</h2>
+        <p style="margin:0 0 12px;"><strong>What it is:</strong> A private dictionary added by Adobe applications (InDesign, Illustrator, Photoshop) that stores application-specific edit session data — placed image paths, layer information, or notes used internally by the software.</p>
+        <p style="margin:0 0 12px;"><strong>Why it exists:</strong> It allows Adobe applications to "remember" the last edit state of the document so they can re-open it and continue editing with full fidelity. Once the PDF is finalized for distribution, this data serves no purpose for anyone reading the document.</p>
+        <p style="margin:0 0 32px;font-size:14px;background:var(--surface);border-left:3px solid var(--green);padding:10px 14px;border-radius:0 6px 6px 0;"><strong>Space saved:</strong> 5–200 KB depending on document complexity. Documents produced by InDesign or Illustrator tend to carry the largest PieceInfo blocks. PDFree removes PieceInfo on Standard and Maximum presets.</p>
+
+        <!-- Metadata fields -->
+        <h2 id="metadata-fields" style="font-size:22px;color:var(--text);margin:0 0 8px;font-weight:700;">🏷️ Metadata Fields</h2>
+        <p style="margin:0 0 12px;"><strong>What they are:</strong> The PDF Info dictionary — a simpler, older form of metadata storing title, author, subject, keywords, creator, and producer strings. Every PDF has one.</p>
+        <p style="margin:0 0 12px;"><strong>Why they exist:</strong> The PDF specification includes a standard metadata dictionary so applications can tag documents with basic properties. Word, LibreOffice, Google Docs, and every PDF printer automatically populate these fields.</p>
+        <p style="margin:0 0 32px;font-size:14px;background:var(--surface);border-left:3px solid var(--green);padding:10px 14px;border-radius:0 6px 6px 0;"><strong>Space saved:</strong> Very small (under 1 KB). PDFree clears the text content but keeps the structure. The real value is reducing document fingerprinting — author names, software versions, and creation timestamps are cleared from the output.</p>
+
+        <!-- Duplicate images -->
+        <h2 id="duplicate-images" style="font-size:22px;color:var(--text);margin:0 0 8px;font-weight:700;">🔁 Duplicate Images</h2>
+        <p style="margin:0 0 12px;"><strong>What they are:</strong> Identical image data stored as multiple separate objects in the PDF, even though the visual output is the same image appearing in multiple places.</p>
+        <p style="margin:0 0 12px;"><strong>Why they exist:</strong> When PDFs are assembled from multiple sources — merged documents, combined chapter files, or repeatedly pasted images — the same logo, watermark, or diagram can be independently embedded each time it appears. A 200-page report with a company logo on every page might contain 200 separate copies of the same 50 KB JPEG instead of one shared reference.</p>
+        <p style="margin:0 0 32px;font-size:14px;background:var(--surface);border-left:3px solid var(--green);padding:10px 14px;border-radius:0 6px 6px 0;"><strong>Space saved:</strong> Proportional to image size × (count − 1). A 50 KB logo appearing 100 times = 4.95 MB of redundant data. PDFree identifies duplicates by content fingerprint and rewires all references to a single stored copy.</p>
+
+        <!-- Image recompression -->
+        <h2 id="image-recompression" style="font-size:22px;color:var(--text);margin:0 0 8px;font-weight:700;">📸 Image Recompression</h2>
+        <p style="margin:0 0 12px;"><strong>What it does:</strong> JPEG images inside PDFs often have higher quality settings than necessary for the intended use. PDFree recompresses them at a lower JPEG quality (82% for Standard, 72% for Maximum) and optionally downsamples to a lower DPI (150 for Web, 96 for Email).</p>
+        <p style="margin:0 0 12px;"><strong>What gets skipped:</strong> Images with CMYK color profiles (would shift colors), images with transparency (JPEG doesn't support alpha), 1-bit black-and-white images, and images where recompression would save less than 10% — all are left untouched.</p>
+        <p style="margin:0 0 32px;font-size:14px;background:var(--surface);border-left:3px solid var(--green);padding:10px 14px;border-radius:0 6px 6px 0;"><strong>Space saved:</strong> This is typically the largest single source of savings — 30–80% of image bytes. A scanned document with 20 MB of 300 DPI JPEG images can be recompressed to 4–6 MB at 150 DPI with minimal visible quality loss.</p>
+
+        <!-- Stream repacking -->
+        <h2 id="stream-repacking" style="font-size:22px;color:var(--text);margin:0 0 8px;font-weight:700;">🗄️ Font and Content Stream Repacking</h2>
+        <p style="margin:0 0 12px;"><strong>What it does:</strong> PDF content streams (which describe page layout, text positions, drawing instructions) and font data are compressed using the DEFLATE algorithm. Many PDF generators use the default compression level (level 6) or even a low level (level 1) for speed during export.</p>
+        <p style="margin:0 0 12px;"><strong>How PDFree improves this:</strong> PDFree uses the browser's native CompressionStream API to re-deflate these streams at a higher level. The data is first decompressed, then recompressed at the optimal level. Only streams that compress at least 5% more are replaced — the rest are left as-is.</p>
+        <p style="margin:0 0 32px;font-size:14px;background:var(--surface);border-left:3px solid var(--green);padding:10px 14px;border-radius:0 6px 6px 0;"><strong>Space saved:</strong> 3–15% of non-image stream data. Documents with many pages, complex layouts, or large embedded fonts benefit most. No content is changed — only the compression level.</p>
+
+        <!-- Object streams -->
+        <h2 id="object-streams" style="font-size:22px;color:var(--text);margin:0 0 8px;font-weight:700;">📦 Object Stream Compression</h2>
+        <p style="margin:0 0 12px;"><strong>What it does:</strong> Traditional PDFs store each object (font, image, page description, metadata) individually with a cross-reference table listing each object's byte position. PDF 1.5 introduced object streams, which pack multiple objects together and compress them as a group, replacing the per-object overhead.</p>
+        <p style="margin:0 0 12px;"><strong>Why it matters:</strong> Small objects (like metadata dictionaries and page tree nodes) have a high overhead-to-data ratio when stored individually. Grouping them in an object stream and compressing together lets DEFLATE find patterns across objects, typically achieving better compression than individual storage.</p>
+        <p style="margin:0 0 48px;font-size:14px;background:var(--surface);border-left:3px solid var(--green);padding:10px 14px;border-radius:0 6px 6px 0;"><strong>Space saved:</strong> 10–30% on top of other optimizations, particularly for text-heavy documents with many pages and shared resources. PDFree enables object streams on Standard and Maximum presets; Light skips them for maximum compatibility with older PDF readers.</p>
+
+        <div style="background:var(--green-light);border:1px solid rgba(45,122,79,0.2);border-radius:12px;padding:24px;text-align:center;margin:0 0 40px;">
+          <p style="font-size:15px;color:var(--text);font-weight:600;margin:0 0 8px;">See it in action</p>
+          <p style="font-size:14px;color:var(--text2);margin:0 0 16px;">After compressing your PDF, the report shows exactly which of these were found and removed.</p>
+          <a href="../compress-pdf/" style="display:inline-block;background:var(--green);color:#fff;padding:12px 28px;border-radius:8px;font-weight:600;text-decoration:none;font-size:15px;">Compress a PDF →</a>
+        </div>
+
+        <p style="font-size:13px;color:var(--text3);margin:0;">
+          ← <a href="../compress-pdf/" style="color:var(--green);">Back to Compress PDF</a>
+        </p>
+
+      </div>
+    </div>
+  </section>
+
+  <footer style="text-align:center;padding:24px;border-top:1px solid var(--border);font-size:13px;color:var(--text3);">
+    PDFree · <strong>100% free, no limits</strong> · No upload, no account<br>
+    <span style="color:var(--green)">🔒</span> Your files never leave your device &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> Free forever<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;">
+      <a href="/privacy.html" style="color:var(--green)">Privacy</a> &nbsp;·&nbsp;
+      <a href="/terms.html"   style="color:var(--green)">Terms</a> &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green)">GitHub</a>
+    </span>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
