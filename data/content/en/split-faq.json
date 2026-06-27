@@ -4,7 +4,15 @@
     "name": "Are my files uploaded when splitting a PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. PDFree splits PDFs entirely in your browser. Files never leave your device."
+      "text": "No. PDFree splits PDFs entirely in your browser using JavaScript. Files never leave your device. You can verify this yourself: open your browser's DevTools → Network tab — you should not see your PDF being uploaded to a remote server during processing."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "What page range format does PDFree accept?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Enter comma-separated pages and ranges: for example 1, 3-7, 12, 15-20. Spaces are optional. You can also click individual page thumbnails to select or deselect them visually, or use quick-select buttons for odd pages, even pages, or halves of the document."
     }
   },
   {
@@ -12,7 +20,15 @@
     "name": "Can I split only specific pages from a PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Yes. You can extract a custom page range (e.g. pages 3–7) or split every page into individual files."
+      "text": "Yes. You can extract a custom page range (e.g. pages 3-7) or split every page into individual files. Enter the range as comma-separated values like '1-5, 8, 11-15', or click pages visually in the thumbnail grid."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "How do I delete or remove a specific page from a PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Select all pages except the ones you want to remove, then click Split PDF to extract only the pages you want to keep. For example, to delete page 3 from a 10-page PDF, select pages 1-2 and 4-10 and extract them. The result is your PDF without the removed pages — original quality preserved."
     }
   },
   {
@@ -20,7 +36,7 @@
     "name": "Is there a page limit for splitting?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. PDFree has no page or file size limits. Processing depends on your device's memory."
+      "text": "No. PDFree has no page or file size limits. Processing depends on your device's available memory. PDFs with hundreds of pages render thumbnails in seconds on a modern computer."
     }
   },
   {
@@ -28,7 +44,7 @@
     "name": "Can I split a PDF offline?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Yes. PDFree is a PWA and works fully offline once loaded in your browser."
+      "text": "Yes. PDFree is a Progressive Web App and works fully offline once loaded in your browser. No internet connection is required to split or extract pages."
     }
   }
 ]
