@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval' blob: https://cdnjs.cloudflare.com https://esm.sh https://plausible.io https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: blob: https:; connect-src 'self' https://cdnjs.cloudflare.com https://*.workers.dev https://plausible.io https://cloudflareinsights.com; worker-src 'self' blob:; object-src 'none';">
+
+  <title>Free PDF Tools for Students — Convert, Merge, OCR Notes Without Uploading | PDFree</title>
+  <meta name="description" content="PDF workflows for students: convert scanned notes to Word, merge chapters for submission, extract text from textbooks — all in your browser. Free, no upload, no account.">
+
+  <meta property="og:title"       content="Free PDF Tools for Students — No Upload, No Account | PDFree">
+  <meta property="og:description" content="Merge thesis chapters, convert notes to Word, OCR scanned textbooks. Everything a student needs — processed locally, free forever.">
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://pdfree.io/for-students/">
+  <meta property="og:site_name"   content="PDFree">
+  <meta property="og:image"       content="https://pdfree.io/icons/og-image.jpg">
+  <meta name="twitter:card"       content="summary_large_image">
+  <meta name="twitter:title"      content="Free PDF Tools for Students | PDFree">
+  <meta name="twitter:description" content="Merge thesis, OCR notes, compress submissions — free, no upload.">
+  <meta name="twitter:image"      content="https://pdfree.io/icons/og-image.jpg">
+
+  <link rel="canonical" href="https://pdfree.io/for-students/">
+  <link rel="alternate" hreflang="en"        href="https://pdfree.io/for-students/">
+  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/for-students/">
+
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <link rel="apple-touch-icon" href="../icons/icon-192.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+  <link rel="preconnect" href="https://plausible.io">
+  <link rel="preload" href="../fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../css/fonts.css">
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/animations.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How do I merge multiple PDF chapters into one document for submission?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Use PDFree's Merge PDF tool. Drop all chapter PDFs at once, arrange them in the correct order by dragging, and click Merge. There is no file count limit and no file size cap. The merged document downloads to your device in seconds." }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I convert my scanned handwritten notes to editable Word text?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes, in two steps. First use the OCR PDF tool to add a searchable text layer to the scanned notes. Then use PDF to Word to convert to an editable .docx. Both steps run locally in your browser — no upload required. Note: OCR accuracy depends on the clarity of your handwriting and scan quality." }
+      },
+      {
+        "@type": "Question",
+        "name": "My university portal requires PDF under a certain file size. How do I reduce it?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Use the Compress PDF tool. Select Standard preset for most submissions, or Maximum if the file is still too large. For a thesis or dissertation with many images, Target Size mode lets you set a specific size limit (e.g. under 10 MB). Processing happens in your browser — nothing is uploaded." }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I extract text from a PDF textbook chapter?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Use PDF to Word in Text mode. If the textbook is a scanned image PDF with no text layer, use OCR PDF first. The converted Word document contains the text in editable paragraphs that you can quote, annotate, or reformat." }
+      }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "PDFree", "item": "https://pdfree.io/" },
+      { "@type": "ListItem", "position": 2, "name": "PDF Tools for Students", "item": "https://pdfree.io/for-students/" }
+    ]
+  }
+  </script>
+  <script src="../js/theme.js"></script>
+</head>
+<body>
+
+  <nav>
+    <a href="../" class="logo" id="logo" aria-label="Go to homepage" style="text-decoration:none">
+      <span class="logo-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></span>
+      <span class="logo-text">PDF<span>ree</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="../merge-pdf/"    class="nav-link">Merge</a>
+      <a href="../compress-pdf/" class="nav-link">Compress</a>
+      <a href="../pdf-to-word/"  class="nav-link">PDF→Word</a>
+      <a href="../ocr-pdf/"      class="nav-link">OCR</a>
+      <a href="../split-pdf/"    class="nav-link">Split</a>
+    </div>
+    <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode"></button>
+  </nav>
+
+  <section style="background:var(--green-light);border-bottom:1px solid rgba(45,122,79,0.15);padding:32px 24px 28px;text-align:center;">
+    <div style="max-width:720px;margin:0 auto;">
+      <p style="font-size:13px;font-weight:600;color:var(--green);text-transform:uppercase;letter-spacing:.5px;margin:0 0 10px;">🎓 For Students</p>
+      <h1 style="font-size:clamp(22px,3.5vw,34px);font-weight:700;line-height:1.2;color:var(--text);margin:0 0 10px;">Free PDF Tools for Students</h1>
+      <p style="font-size:15px;color:var(--text2);margin:0;">Merge thesis chapters, convert notes to Word, compress submissions — all in your browser. Free, no account, no upload. Deadlines wait for no one.</p>
+    </div>
+  </section>
+
+  <div style="max-width:800px;margin:0 auto;padding:48px 24px;">
+
+    <!-- Workflow 1: Thesis / dissertation assembly -->
+    <h2 style="font-size:22px;color:var(--text);margin:0 0 8px;font-weight:700;">Workflow 1 — Assemble a Thesis or Dissertation</h2>
+    <p style="font-size:14px;color:var(--text2);margin:0 0 20px;">Many university portals accept a single PDF. Combine all chapters, appendices, and the bibliography into one file, then compress it to fit the upload limit.</p>
+
+    <div style="display:flex;flex-direction:column;gap:3px;margin:0 0 48px;">
+      <a href="../merge-pdf/" style="display:flex;align-items:center;gap:14px;padding:16px 20px;border:2px solid var(--green);border-radius:10px;background:var(--green-light);text-decoration:none;">
+        <span style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">1</span>
+        <div>
+          <strong style="color:var(--text);display:block;">Merge PDF</strong>
+          <span style="font-size:13px;color:var(--text2);">Cover page + chapters + appendices + bibliography → one PDF. Drag to reorder, no file count limit.</span>
+        </div>
+        <span style="margin-left:auto;color:var(--green);font-weight:600;font-size:13px;">Open →</span>
+      </a>
+      <div style="padding-left:34px;font-size:12px;color:var(--text3);">↓</div>
+      <a href="../compress-pdf/" style="display:flex;align-items:center;gap:14px;padding:16px 20px;border:1px solid var(--border);border-radius:10px;text-decoration:none;background:var(--surface);">
+        <span style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">2</span>
+        <div>
+          <strong style="color:var(--text);display:block;">Compress PDF</strong>
+          <span style="font-size:13px;color:var(--text2);">If the portal has a file size limit (common: 10–25 MB), compress without losing text quality. Use Target Size mode to hit an exact limit.</span>
+        </div>
+        <span style="margin-left:auto;color:var(--green);font-weight:600;font-size:13px;">Open →</span>
+      </a>
+    </div>
+
+    <!-- Workflow 2: Scanned notes to Word -->
+    <h2 style="font-size:22px;color:var(--text);margin:0 0 8px;font-weight:700;">Workflow 2 — Convert Scanned Notes to Editable Text</h2>
+    <p style="font-size:14px;color:var(--text2);margin:0 0 20px;">Photographed lecture slides, scanned handouts, or image-only PDFs — convert them to searchable, quotable Word documents.</p>
+
+    <div style="display:flex;flex-direction:column;gap:3px;margin:0 0 48px;">
+      <a href="../ocr-pdf/" style="display:flex;align-items:center;gap:14px;padding:16px 20px;border:2px solid var(--green);border-radius:10px;background:var(--green-light);text-decoration:none;">
+        <span style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">1</span>
+        <div>
+          <strong style="color:var(--text);display:block;">OCR PDF</strong>
+          <span style="font-size:13px;color:var(--text2);">Add a text layer to scanned notes, slides, or textbook pages so text can be selected and extracted</span>
+        </div>
+        <span style="margin-left:auto;color:var(--green);font-weight:600;font-size:13px;">Open →</span>
+      </a>
+      <div style="padding-left:34px;font-size:12px;color:var(--text3);">↓</div>
+      <a href="../pdf-to-word/" style="display:flex;align-items:center;gap:14px;padding:16px 20px;border:1px solid var(--border);border-radius:10px;text-decoration:none;background:var(--surface);">
+        <span style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">2</span>
+        <div>
+          <strong style="color:var(--text);display:block;">PDF to Word</strong>
+          <span style="font-size:13px;color:var(--text2);">Convert to editable .docx — headings, tables, and paragraphs preserved. Open in Google Docs (free) or LibreOffice.</span>
+        </div>
+        <span style="margin-left:auto;color:var(--green);font-weight:600;font-size:13px;">Open →</span>
+      </a>
+    </div>
+
+    <!-- Workflow 3: Extract pages from a large textbook PDF -->
+    <h2 style="font-size:22px;color:var(--text);margin:0 0 8px;font-weight:700;">Workflow 3 — Extract Relevant Pages from a Textbook</h2>
+    <p style="font-size:14px;color:var(--text2);margin:0 0 20px;">Don't need the whole 800-page textbook PDF. Extract only the chapter or pages you need for an assignment.</p>
+
+    <div style="display:flex;flex-direction:column;gap:3px;margin:0 0 48px;">
+      <a href="../split-pdf/" style="display:flex;align-items:center;gap:14px;padding:16px 20px;border:2px solid var(--green);border-radius:10px;background:var(--green-light);text-decoration:none;">
+        <span style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">1</span>
+        <div>
+          <strong style="color:var(--text);display:block;">Split / Extract PDF</strong>
+          <span style="font-size:13px;color:var(--text2);">Select a page range (e.g. pages 120–180) and extract them as a separate PDF. No need to scroll through 800 pages in Word.</span>
+        </div>
+        <span style="margin-left:auto;color:var(--green);font-weight:600;font-size:13px;">Open →</span>
+      </a>
+      <div style="padding-left:34px;font-size:12px;color:var(--text3);">↓ optional: convert the extracted chapter to Word for annotation</div>
+      <a href="../pdf-to-word/" style="display:flex;align-items:center;gap:14px;padding:16px 20px;border:1px solid var(--border);border-radius:10px;text-decoration:none;background:var(--surface);">
+        <span style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">2</span>
+        <div>
+          <strong style="color:var(--text);display:block;">PDF to Word</strong>
+          <span style="font-size:13px;color:var(--text2);">Convert the extracted chapter to editable text for highlighting, note-taking, or quoting in your paper</span>
+        </div>
+        <span style="margin-left:auto;color:var(--green);font-weight:600;font-size:13px;">Open →</span>
+      </a>
+    </div>
+
+    <!-- FAQ -->
+    <h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">Frequently Asked Questions</h2>
+    <div style="display:flex;flex-direction:column;gap:16px;margin:0 0 48px;">
+      <div style="border:1px solid var(--border);border-radius:12px;padding:18px 20px;">
+        <h3 style="font-size:15px;color:var(--text);margin:0 0 8px;font-weight:600;">Is PDFree really free for students? No subscription?</h3>
+        <p style="margin:0;font-size:14px;">Yes, completely free. No subscription, no free tier with limits, no watermarks. All tools are free forever. Processing happens in your browser using open-source libraries — there are no server costs to recover, so there is nothing to charge for.</p>
+      </div>
+      <div style="border:1px solid var(--border);border-radius:12px;padding:18px 20px;">
+        <h3 style="font-size:15px;color:var(--text);margin:0 0 8px;font-weight:600;">My university has a 10 MB submission limit. How do I compress my thesis?</h3>
+        <p style="margin:0;font-size:14px;">Use the Compress PDF tool and select Target Size mode → Web (under 10 MB). For image-heavy theses, Maximum preset + 96 DPI gives the best reduction. If the thesis is mostly text with a few figures, Standard preset usually reduces size by 20–40% without visible quality loss.</p>
+      </div>
+      <div style="border:1px solid var(--border);border-radius:12px;padding:18px 20px;">
+        <h3 style="font-size:15px;color:var(--text);margin:0 0 8px;font-weight:600;">Does it support Chinese, Japanese, Arabic, or Cyrillic text?</h3>
+        <p style="margin:0;font-size:14px;">Yes. PDF to Word text mode correctly handles Latin, Cyrillic (Russian, Ukrainian), Arabic and Hebrew (right-to-left direction preserved), CJK (Chinese, Japanese, Korean), and Devanagari (Hindi). Most free converters fail on non-Latin scripts — PDFree handles them correctly.</p>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div style="background:var(--green-light);border:1px solid rgba(45,122,79,0.2);border-radius:12px;padding:28px;text-align:center;">
+      <p style="font-size:16px;color:var(--text);font-weight:600;margin:0 0 8px;">Everything is free. No deadline pressure.</p>
+      <p style="font-size:14px;color:var(--text2);margin:0 0 20px;">Process your PDFs now — no account, no upload, works offline.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;">
+        <a href="../merge-pdf/"    style="background:var(--green);color:#fff;padding:10px 20px;border-radius:8px;font-weight:600;text-decoration:none;font-size:14px;">Merge Chapters</a>
+        <a href="../compress-pdf/" style="background:var(--green);color:#fff;padding:10px 20px;border-radius:8px;font-weight:600;text-decoration:none;font-size:14px;">Compress for Submission</a>
+        <a href="../ocr-pdf/"      style="background:var(--green);color:#fff;padding:10px 20px;border-radius:8px;font-weight:600;text-decoration:none;font-size:14px;">OCR Notes</a>
+        <a href="../pdf-to-word/"  style="background:var(--green);color:#fff;padding:10px 20px;border-radius:8px;font-weight:600;text-decoration:none;font-size:14px;">PDF to Word</a>
+      </div>
+    </div>
+
+  </div>
+
+  <footer style="text-align:center;padding:24px;border-top:1px solid var(--border);font-size:13px;color:var(--text3);">
+    PDFree · <strong>100% free, no limits</strong> · No upload, no account<br>
+    <span style="color:var(--green)">🔒</span> Your files never leave your device &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> Free forever<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;">
+      <a href="/privacy.html" style="color:var(--green)">Privacy</a> &nbsp;·&nbsp;
+      <a href="/terms.html"   style="color:var(--green)">Terms</a> &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green)">GitHub</a>
+    </span>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

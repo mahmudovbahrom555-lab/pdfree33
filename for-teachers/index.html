@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval' blob: https://cdnjs.cloudflare.com https://esm.sh https://plausible.io https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: blob: https:; connect-src 'self' https://cdnjs.cloudflare.com https://*.workers.dev https://plausible.io https://cloudflareinsights.com; worker-src 'self' blob:; object-src 'none';">
+
+  <title>Free PDF Tools for Teachers — Merge Worksheets, OCR Papers, Annotate — No Upload | PDFree</title>
+  <meta name="description" content="PDF workflows for teachers: merge worksheets, OCR scanned student work, compress class materials, annotate PDFs — all in your browser. Free, no upload, no account.">
+
+  <meta property="og:title"       content="Free PDF Tools for Teachers — No Upload, No Account | PDFree">
+  <meta property="og:description" content="Merge worksheets, OCR student papers, compress class packs. Tools for teachers — processed locally, student data never uploaded.">
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://pdfree.io/for-teachers/">
+  <meta property="og:site_name"   content="PDFree">
+  <meta property="og:image"       content="https://pdfree.io/icons/og-image.jpg">
+  <meta name="twitter:card"       content="summary_large_image">
+  <meta name="twitter:title"      content="Free PDF Tools for Teachers | PDFree">
+  <meta name="twitter:description" content="Merge worksheets, OCR papers, compress class materials — free, no upload.">
+  <meta name="twitter:image"      content="https://pdfree.io/icons/og-image.jpg">
+
+  <link rel="canonical" href="https://pdfree.io/for-teachers/">
+  <link rel="alternate" hreflang="en"        href="https://pdfree.io/for-teachers/">
+  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/for-teachers/">
+
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <link rel="apple-touch-icon" href="../icons/icon-192.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+  <link rel="preconnect" href="https://plausible.io">
+  <link rel="preload" href="../fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../css/fonts.css">
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/animations.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Can I merge all student worksheets into one PDF for printing?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes. PDFree's Merge PDF tool has no file count limit. Drop all worksheet PDFs at once, arrange them in order, and click Merge. The combined PDF downloads to your device. There is no upload to any server, so student names and work stay private." }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I convert scanned student work to editable text?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Use OCR PDF to add a text layer to the scanned submission, then use PDF to Word to convert it to editable .docx format. You can then copy, quote, or grade the text directly. Both steps run locally in your browser — student data is not uploaded anywhere." }
+      },
+      {
+        "@type": "Question",
+        "name": "Is student data safe when I use a free online PDF tool?",
+        "acceptedAnswer": { "@type": "Answer", "text": "With PDFree, student names, grades, and submitted work are never uploaded to any server. All processing happens locally in your browser. You can verify this by opening your browser's DevTools → Network tab — you should not see any file upload request during processing. This is different from most free online tools which upload files to remote servers." }
+      }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "PDFree", "item": "https://pdfree.io/" },
+      { "@type": "ListItem", "position": 2, "name": "PDF Tools for Teachers", "item": "https://pdfree.io/for-teachers/" }
+    ]
+  }
+  </script>
+  <script src="../js/theme.js"></script>
+</head>
+<body>
+
+  <nav>
+    <a href="../" class="logo" id="logo" aria-label="Go to homepage" style="text-decoration:none">
+      <span class="logo-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></span>
+      <span class="logo-text">PDF<span>ree</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="../merge-pdf/"    class="nav-link">Merge</a>
+      <a href="../compress-pdf/" class="nav-link">Compress</a>
+      <a href="../pdf-to-word/"  class="nav-link">PDF→Word</a>
+      <a href="../ocr-pdf/"      class="nav-link">OCR</a>
+      <a href="../split-pdf/"    class="nav-link">Split</a>
+    </div>
+    <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode"></button>
+  </nav>
+
+  <section style="background:var(--green-light);border-bottom:1px solid rgba(45,122,79,0.15);padding:32px 24px 28px;text-align:center;">
+    <div style="max-width:720px;margin:0 auto;">
+      <p style="font-size:13px;font-weight:600;color:var(--green);text-transform:uppercase;letter-spacing:.5px;margin:0 0 10px;">📚 For Educators</p>
+      <h1 style="font-size:clamp(22px,3.5vw,34px);font-weight:700;line-height:1.2;color:var(--text);margin:0 0 10px;">Free PDF Tools for Teachers</h1>
+      <p style="font-size:15px;color:var(--text2);margin:0;">Merge worksheets, OCR student submissions, compress class packs, annotate PDFs — all free, all private, no upload. Student data stays on your device.</p>
+    </div>
+  </section>
+
+  <div style="max-width:800px;margin:0 auto;padding:48px 24px;">
+
+    <!-- Why no upload matters for teachers -->
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;margin:0 0 48px;">
+      <h2 style="font-size:18px;color:var(--text);margin:0 0 12px;font-weight:700;">Student data belongs on your device, not on a server</h2>
+      <p style="font-size:14px;color:var(--text2);margin:0 0 16px;">When you work with student documents, you handle information that requires careful handling:</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 16px;font-size:13px;">
+        <div style="padding:10px 12px;background:var(--bg);border-radius:8px;color:var(--text2);">Student names &amp; IDs</div>
+        <div style="padding:10px 12px;background:var(--bg);border-radius:8px;color:var(--text2);">Grades and assessment results</div>
+        <div style="padding:10px 12px;background:var(--bg);border-radius:8px;color:var(--text2);">Submitted assignments</div>
+        <div style="padding:10px 12px;background:var(--bg);border-radius:8px;color:var(--text2);">Attendance and records</div>
+      </div>
+      <p style="font-size:14px;color:var(--text2);margin:0;">PDFree is designed around local browser processing. Student documents are never uploaded to any server. You can verify this yourself: open your browser's DevTools → Network tab before processing — you should not see your PDF being uploaded to a remote server.</p>
+    </div>
+
+    <!-- Workflow 1: Class worksheet pack -->
+    <h2 style="font-size:22px;color:var(--text);margin:0 0 8px;font-weight:700;">Workflow 1 — Assemble a Class Worksheet Pack</h2>
+    <p style="font-size:14px;color:var(--text2);margin:0 0 20px;">Combine individual worksheet PDFs into a single class pack for printing or sharing on a learning platform.</p>
+
+    <div style="display:flex;flex-direction:column;gap:3px;margin:0 0 48px;">
+      <a href="../merge-pdf/" style="display:flex;align-items:center;gap:14px;padding:16px 20px;border:2px solid var(--green);border-radius:10px;background:var(--green-light);text-decoration:none;">
+        <span style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">1</span>
+        <div>
+          <strong style="color:var(--text);display:block;">Merge PDF</strong>
+          <span style="font-size:13px;color:var(--text2);">Drop all worksheet PDFs, drag to set order, merge into one print-ready document. No file count limit.</span>
+        </div>
+        <span style="margin-left:auto;color:var(--green);font-weight:600;font-size:13px;">Open →</span>
+      </a>
+      <div style="padding-left:34px;font-size:12px;color:var(--text3);">↓ optional</div>
+      <a href="../compress-pdf/" style="display:flex;align-items:center;gap:14px;padding:16px 20px;border:1px solid var(--border);border-radius:10px;text-decoration:none;background:var(--surface);">
+        <span style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">2</span>
+        <div>
+          <strong style="color:var(--text);display:block;">Compress PDF</strong>
+          <span style="font-size:13px;color:var(--text2);">Reduce the pack size before uploading to an LMS (Moodle, Canvas, Google Classroom) that has file size limits</span>
+        </div>
+        <span style="margin-left:auto;color:var(--green);font-weight:600;font-size:13px;">Open →</span>
+      </a>
+    </div>
+
+    <!-- Workflow 2: OCR submitted work -->
+    <h2 style="font-size:22px;color:var(--text);margin:0 0 8px;font-weight:700;">Workflow 2 — Process Scanned Student Submissions</h2>
+    <p style="font-size:14px;color:var(--text2);margin:0 0 20px;">Scanned handwritten essays or photographed exam papers — add searchable text so you can quote, annotate, and grade digitally.</p>
+
+    <div style="display:flex;flex-direction:column;gap:3px;margin:0 0 48px;">
+      <a href="../ocr-pdf/" style="display:flex;align-items:center;gap:14px;padding:16px 20px;border:2px solid var(--green);border-radius:10px;background:var(--green-light);text-decoration:none;">
+        <span style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">1</span>
+        <div>
+          <strong style="color:var(--text);display:block;">OCR PDF</strong>
+          <span style="font-size:13px;color:var(--text2);">Add a searchable text layer to scanned student submissions — enables text selection and copy-paste</span>
+        </div>
+        <span style="margin-left:auto;color:var(--green);font-weight:600;font-size:13px;">Open →</span>
+      </a>
+      <div style="padding-left:34px;font-size:12px;color:var(--text3);">↓ if you need fully editable text for feedback documents</div>
+      <a href="../pdf-to-word/" style="display:flex;align-items:center;gap:14px;padding:16px 20px;border:1px solid var(--border);border-radius:10px;text-decoration:none;background:var(--surface);">
+        <span style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">2</span>
+        <div>
+          <strong style="color:var(--text);display:block;">PDF to Word</strong>
+          <span style="font-size:13px;color:var(--text2);">Convert to .docx for tracked-changes feedback, inline comments, or quoting in a grade report</span>
+        </div>
+        <span style="margin-left:auto;color:var(--green);font-weight:600;font-size:13px;">Open →</span>
+      </a>
+    </div>
+
+    <!-- Workflow 3: Split and distribute -->
+    <h2 style="font-size:22px;color:var(--text);margin:0 0 8px;font-weight:700;">Workflow 3 — Split a Collected Assignment PDF</h2>
+    <p style="font-size:14px;color:var(--text2);margin:0 0 20px;">A combined PDF of all student answers (e.g. scanned together by a copier) — split it into individual student files.</p>
+
+    <div style="display:flex;flex-direction:column;gap:3px;margin:0 0 48px;">
+      <a href="../split-pdf/" style="display:flex;align-items:center;gap:14px;padding:16px 20px;border:2px solid var(--green);border-radius:10px;background:var(--green-light);text-decoration:none;">
+        <span style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">1</span>
+        <div>
+          <strong style="color:var(--text);display:block;">Split PDF</strong>
+          <span style="font-size:13px;color:var(--text2);">Select page ranges per student (e.g. pages 1-2 for Student A, pages 3-4 for Student B) and extract as separate files</span>
+        </div>
+        <span style="margin-left:auto;color:var(--green);font-weight:600;font-size:13px;">Open →</span>
+      </a>
+    </div>
+
+    <!-- FAQ -->
+    <h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">Frequently Asked Questions</h2>
+    <div style="display:flex;flex-direction:column;gap:16px;margin:0 0 48px;">
+      <div style="border:1px solid var(--border);border-radius:12px;padding:18px 20px;">
+        <h3 style="font-size:15px;color:var(--text);margin:0 0 8px;font-weight:600;">Is it safe to process student assignments with a free online tool?</h3>
+        <p style="margin:0;font-size:14px;">With PDFree, student data is never uploaded to any server. All processing happens in your browser's memory and disappears when you close the tab. This is different from most free PDF tools which upload files to remote servers. Whether this meets your school or district's specific data handling requirements depends on your local policies — consult your IT department if unsure.</p>
+      </div>
+      <div style="border:1px solid var(--border);border-radius:12px;padding:18px 20px;">
+        <h3 style="font-size:15px;color:var(--text);margin:0 0 8px;font-weight:600;">Can I merge 30 student worksheets into one class PDF?</h3>
+        <p style="margin:0;font-size:14px;">Yes. PDFree Merge has no file count limit. Drop all 30 worksheet files at once, arrange them in the order you want, and click Merge. The single combined PDF downloads directly to your device in seconds.</p>
+      </div>
+      <div style="border:1px solid var(--border);border-radius:12px;padding:18px 20px;">
+        <h3 style="font-size:15px;color:var(--text);margin:0 0 8px;font-weight:600;">Does OCR work for non-English student work?</h3>
+        <p style="margin:0;font-size:14px;">PDFree OCR supports many languages. PDF to Word text mode handles Arabic, Hebrew (right-to-left), Cyrillic (Russian, Ukrainian), CJK (Chinese, Japanese, Korean), and Devanagari (Hindi) — scripts that most free tools handle poorly. For best OCR results, the scan should be clear and high-contrast.</p>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div style="background:var(--green-light);border:1px solid rgba(45,122,79,0.2);border-radius:12px;padding:28px;text-align:center;">
+      <p style="font-size:16px;color:var(--text);font-weight:600;margin:0 0 8px;">All tools, completely free.</p>
+      <p style="font-size:14px;color:var(--text2);margin:0 0 20px;">Student data stays in your classroom, not on a server.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;">
+        <a href="../merge-pdf/"    style="background:var(--green);color:#fff;padding:10px 20px;border-radius:8px;font-weight:600;text-decoration:none;font-size:14px;">Merge Worksheets</a>
+        <a href="../ocr-pdf/"      style="background:var(--green);color:#fff;padding:10px 20px;border-radius:8px;font-weight:600;text-decoration:none;font-size:14px;">OCR Submissions</a>
+        <a href="../compress-pdf/" style="background:var(--green);color:#fff;padding:10px 20px;border-radius:8px;font-weight:600;text-decoration:none;font-size:14px;">Compress for LMS</a>
+        <a href="../split-pdf/"    style="background:var(--green);color:#fff;padding:10px 20px;border-radius:8px;font-weight:600;text-decoration:none;font-size:14px;">Split by Student</a>
+      </div>
+    </div>
+
+  </div>
+
+  <footer style="text-align:center;padding:24px;border-top:1px solid var(--border);font-size:13px;color:var(--text3);">
+    PDFree · <strong>100% free, no limits</strong> · No upload, no account<br>
+    <span style="color:var(--green)">🔒</span> Your files never leave your device &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> Free forever<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;">
+      <a href="/privacy.html" style="color:var(--green)">Privacy</a> &nbsp;·&nbsp;
+      <a href="/terms.html"   style="color:var(--green)">Terms</a> &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green)">GitHub</a>
+    </span>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

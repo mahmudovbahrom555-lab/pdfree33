@@ -70,7 +70,7 @@
       {
         "@type": "Question",
         "name": "Is it safe to use a free online PDF tool with confidential client documents?",
-        "acceptedAnswer": { "@type": "Answer", "text": "With PDFree — yes, because no file is ever uploaded to any server. All processing (PDF to Word conversion, redaction, protection) happens locally in your browser using JavaScript. Your client's data never leaves your device. With most other free PDF tools, documents are sent to remote servers, which may conflict with attorney-client privilege obligations and data protection regulations." }
+        "acceptedAnswer": { "@type": "Answer", "text": "With PDFree, no file is uploaded to any server — all processing happens locally in your browser. This means client data does not leave your device and is not transmitted to or stored by any third party. Whether this satisfies your specific professional obligations depends on your jurisdiction and your firm's internal policies. We recommend consulting your data protection officer or bar association guidelines for your context." }
       },
       {
         "@type": "Question",
@@ -84,8 +84,8 @@
       },
       {
         "@type": "Question",
-        "name": "Does PDFree comply with GDPR for legal document processing?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Since PDFree processes all files locally in the browser and never transmits data to any server, there is no data transfer to a third party and no data stored remotely. There is no 'controller-processor' relationship because no personal data is processed by PDFree's infrastructure. Consult your DPO for specific compliance advice, but local browser processing is inherently more privacy-preserving than cloud-based tools." }
+        "name": "How does local processing relate to GDPR obligations for legal documents?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Since no file data is transmitted to PDFree's servers or any third party, local processing avoids many of the data-transfer obligations that arise when using cloud-based tools. There is no controller-processor relationship with PDFree because personal data is not processed by our infrastructure. Whether this fully satisfies your GDPR or firm-specific compliance requirements depends on your context. Consult your DPO for specific guidance." }
       }
     ]
   }
@@ -143,7 +143,7 @@
         <div style="padding:10px 12px;background:var(--bg);border-radius:8px;color:var(--text2);">Financial disclosures</div>
         <div style="padding:10px 12px;background:var(--bg);border-radius:8px;color:var(--text2);">Passport &amp; personal data</div>
       </div>
-      <p style="font-size:14px;color:var(--text2);margin:0;">PDFree processes everything locally in your browser. Your files never leave your device — not to our servers, not to anyone's. The practical test: open browser DevTools → Network tab while using any PDFree tool — you will see no file upload request.</p>
+      <p style="font-size:14px;color:var(--text2);margin:0;">PDFree processes everything locally in your browser. Your files never leave your device — not to our servers, not to anyone's. You can verify this yourself: open your browser's DevTools → Network tab before using any PDFree tool. You should not see your PDF being uploaded to a remote server during processing.</p>
     </div>
 
     <!-- Workflow 1: Contract editing -->
@@ -242,15 +242,15 @@
     <div style="display:flex;flex-direction:column;gap:16px;margin:0 0 48px;">
       <div style="border:1px solid var(--border);border-radius:12px;padding:18px 20px;">
         <h3 style="font-size:15px;color:var(--text);margin:0 0 8px;font-weight:600;">Does using PDFree risk breaching attorney-client privilege?</h3>
-        <p style="margin:0;font-size:14px;">No file is transmitted to any server at any step. All processing happens locally in your browser. Since there is no third-party server involvement, there is no disclosure of privileged information to a third party. This is fundamentally different from cloud-based tools where your document travels to and is processed on external servers.</p>
+        <p style="margin:0;font-size:14px;">Local processing helps reduce exposure because no file is transmitted to any third-party server — the document remains on your device throughout. Whether this fully satisfies your privilege obligations depends on your jurisdiction and internal firm policies. What we can say with certainty: PDFree does not receive, store, or process your files on any server. Consult your bar association guidelines for specific advice.</p>
       </div>
       <div style="border:1px solid var(--border);border-radius:12px;padding:18px 20px;">
         <h3 style="font-size:15px;color:var(--text);margin:0 0 8px;font-weight:600;">Is PDFree redaction permanent?</h3>
         <p style="margin:0;font-size:14px;">Yes. The Cover Area tool overlays an opaque filled rectangle on the PDF content. The redacted PDF is reconstructed with the content permanently hidden — not just visually covered. The text underneath is not recoverable from the output file by selecting, copying, or examining the document structure.</p>
       </div>
       <div style="border:1px solid var(--border);border-radius:12px;padding:18px 20px;">
-        <h3 style="font-size:15px;color:var(--text);margin:0 0 8px;font-weight:600;">Does PDFree comply with GDPR for legal document processing?</h3>
-        <p style="margin:0;font-size:14px;">Since PDFree does not transmit or store any file data, there is no personal data transferred to a third party and no controller-processor relationship to manage. Local browser processing is inherently more privacy-preserving than any cloud-based alternative. Consult your DPO for firm-specific compliance advice.</p>
+        <h3 style="font-size:15px;color:var(--text);margin:0 0 8px;font-weight:600;">How does local processing relate to GDPR obligations?</h3>
+        <p style="margin:0;font-size:14px;">Since no file data is transmitted to PDFree's servers or any third party, local processing avoids many of the data-transfer obligations that arise when using cloud-based tools. Whether this fully satisfies your firm's GDPR compliance requirements depends on your context and internal policies. Consult your DPO for specific guidance.</p>
       </div>
     </div>
 
