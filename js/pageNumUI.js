@@ -20,6 +20,7 @@ let _format    = 'arabic';        // 'arabic'|'roman'|'alpha'
 let _fromPage  = 1;               // first PDF page to number (1-based)
 let _toPage    = null;            // last PDF page to number (null = last page)
 let _startAt   = 1;               // number shown on the first numbered page
+let _autoStart = true;            // true = startAt mirrors fromPage automatically
 let _fontSize  = 10;
 let _showTotal = false;           // show "1 / N" instead of just "1"
 
@@ -56,6 +57,7 @@ export function hidePageNumOptions() {
   _fromPage  = 1;
   _toPage    = null;
   _startAt   = 1;
+  _autoStart = true;
   _fontSize  = 10;
   _showTotal = false;
 }
@@ -147,8 +149,28 @@ function _render() {
     <div class="pn-section">
       <div class="pn-section-label">Numbering</div>
       ${chipGroup('pnFmt', fmtOpts, _format, 'Number format', { radius: '8px' })}
-      <div style="margin-top:12px">
-        <div class="pn-field-label" style="margin-bottom:4px">Start number</div>
+
+      <!-- Auto start: shows hint + customize link -->
+      <div id="pnAutoStartRow" style="margin-top:10px;display:${_autoStart ? 'block' : 'none'}">
+        <div style="font-size:13px;color:var(--text2);display:flex;align-items:baseline;gap:6px;flex-wrap:wrap">
+          <span>Start number: <strong id="pnAutoStartHint">${_formatNum(_startAt, _format)}</strong></span>
+          <span style="font-size:11px;color:var(--text3)">↑ linked to page range</span>
+        </div>
+        <button type="button" id="pnCustomizeBtn"
+          style="background:none;border:none;cursor:pointer;font-size:12px;color:var(--green);padding:2px 0 0;text-decoration:none;display:block;margin-top:2px">
+          Customize starting number →
+        </button>
+      </div>
+
+      <!-- Custom start: input + indicator + reset -->
+      <div id="pnCustomStartRow" style="margin-top:10px;display:${_autoStart ? 'none' : 'block'}">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;flex-wrap:wrap">
+          <span style="font-size:12px;color:var(--text3)">↑ custom numbering</span>
+          <button type="button" id="pnResetStartBtn"
+            style="background:none;border:none;cursor:pointer;font-size:12px;color:var(--green);padding:0;margin-left:auto">
+            ↺ Reset to auto
+          </button>
+        </div>
         <div class="pn-row">
           <button type="button" class="pn-stepper" id="pnStartMinus" aria-label="Decrease start">−</button>
           ${_numInput('pnStartInput', _startAt)}
@@ -232,26 +254,48 @@ function _bindEvents() {
       _format = e.target.value;
       container.querySelectorAll('[data-name="pnFmt"]').forEach(el =>
         el.classList.toggle('j2p-chip--active', el.dataset.value === _format));
+      // Update auto-start hint when format changes
+      const hint = id('pnAutoStartHint');
+      if (hint && _autoStart) hint.textContent = _formatNum(_startAt, _format);
       _refreshPreview();
     }
     if (e.target.id === 'pnShowTotal') { _showTotal = e.target.checked; _refreshPreview(); }
   });
 
-  // From page
-  _numStepper('pnFromInput', () => _fromPage, v => { _fromPage = v ?? 1; });
+  // Helper: sync startAt to fromPage when in auto mode
+  function _syncAutoStart() {
+    if (!_autoStart) return;
+    _startAt = _fromPage;
+    const hint = id('pnAutoStartHint');
+    if (hint) hint.textContent = _formatNum(_startAt, _format);
+  }
+
+  // From page — syncs startAt when auto mode
+  id('pnFromInput')?.addEventListener('input', e => {
+    const v = parseInt(e.target.value, 10);
+    if (!isNaN(v) && v >= 1 && v <= 9999) { _fromPage = v; _syncAutoStart(); _refreshPreview(); }
+  });
+  id('pnFromInput')?.addEventListener('change', e => {
+    const v = Math.max(1, Math.min(9999, parseInt(e.target.value, 10) || 1));
+    _fromPage = v; e.target.value = v; _syncAutoStart(); _refreshPreview();
+  });
   id('pnFromMinus')?.addEventListener('click', () => {
-    if (_fromPage > 1) { _fromPage--; const el = id('pnFromInput'); if (el) el.value = _fromPage; _refreshPreview(); }
+    if (_fromPage > 1) { _fromPage--; const el = id('pnFromInput'); if (el) el.value = _fromPage; _syncAutoStart(); _refreshPreview(); }
   });
   id('pnFromPlus')?.addEventListener('click', () => {
-    if (_fromPage < 9999) { _fromPage++; const el = id('pnFromInput'); if (el) el.value = _fromPage; _refreshPreview(); }
+    if (_fromPage < 9999) { _fromPage++; const el = id('pnFromInput'); if (el) el.value = _fromPage; _syncAutoStart(); _refreshPreview(); }
   });
 
   // To page
-  _numStepper('pnToInput', () => _toPage, v => { _toPage = v; });
   id('pnToInput')?.addEventListener('input', e => {
     const raw = e.target.value.trim();
     _toPage = (raw === '' || raw === '∞') ? null : Math.max(1, Math.min(9999, parseInt(raw, 10) || 1));
     _refreshPreview();
+  });
+  id('pnToInput')?.addEventListener('change', e => {
+    const raw = e.target.value.trim();
+    _toPage = (raw === '' || raw === '∞') ? null : Math.max(1, Math.min(9999, parseInt(raw, 10) || 1));
+    e.target.value = _toPage ?? ''; _refreshPreview();
   });
   id('pnToMinus')?.addEventListener('click', () => {
     const cur = _toPage ?? 2;
@@ -262,8 +306,37 @@ function _bindEvents() {
     const el = id('pnToInput'); if (el) el.value = _toPage; _refreshPreview();
   });
 
-  // Start number
-  _numStepper('pnStartInput', () => _startAt, v => { _startAt = v ?? 1; });
+  // Progressive disclosure — Customize / Reset
+  id('pnCustomizeBtn')?.addEventListener('click', () => {
+    _autoStart = false;
+    const autoRow   = id('pnAutoStartRow');
+    const customRow = id('pnCustomStartRow');
+    if (autoRow)   autoRow.style.display   = 'none';
+    if (customRow) customRow.style.display = 'block';
+    const input = id('pnStartInput');
+    if (input) { input.value = _startAt; input.focus(); input.select(); }
+  });
+  id('pnResetStartBtn')?.addEventListener('click', () => {
+    _autoStart = true;
+    _startAt   = _fromPage;
+    const autoRow   = id('pnAutoStartRow');
+    const customRow = id('pnCustomStartRow');
+    if (autoRow)   autoRow.style.display   = 'flex';
+    if (customRow) customRow.style.display = 'none';
+    const hint = id('pnAutoStartHint');
+    if (hint) hint.textContent = _formatNum(_startAt, _format);
+    _refreshPreview();
+  });
+
+  // Custom start number
+  id('pnStartInput')?.addEventListener('input', e => {
+    const v = parseInt(e.target.value, 10);
+    if (!isNaN(v) && v >= 1 && v <= 9999) { _startAt = v; _refreshPreview(); }
+  });
+  id('pnStartInput')?.addEventListener('change', e => {
+    const v = Math.max(1, Math.min(9999, parseInt(e.target.value, 10) || 1));
+    _startAt = v; e.target.value = v; _refreshPreview();
+  });
   id('pnStartMinus')?.addEventListener('click', () => {
     if (_startAt > 1) { _startAt--; const el = id('pnStartInput'); if (el) el.value = _startAt; _refreshPreview(); }
   });
