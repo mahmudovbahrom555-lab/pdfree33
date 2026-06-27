@@ -118,35 +118,48 @@
     "mainEntity": [
       {
         "@type": "Question",
+        "name": "Is this PDF to Word converter really free?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes, completely free. No subscription, no watermarks, no per-page limits. The entire conversion happens in your browser using open-source libraries." }
+      },
+      {
+        "@type": "Question",
         "name": "Does converting PDF to Word upload my file?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "No. The entire conversion happens inside your browser. Your PDF is never sent to any server."
-        }
+        "acceptedAnswer": { "@type": "Answer", "text": "No. The entire conversion happens inside your browser. Your PDF is never sent to any server — not even temporarily." }
       },
       {
         "@type": "Question",
         "name": "What is the difference between Text mode and Image mode?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Text mode extracts the text from your PDF and creates an editable Word document. Image mode renders each page as a high-resolution image and places it in the Word document — the visual layout is preserved exactly but the text cannot be edited."
-        }
+        "acceptedAnswer": { "@type": "Answer", "text": "Text mode extracts the text from your PDF and creates an editable Word document with paragraphs, headings, bold, italic, and tables. Image mode renders each page as a high-resolution image and places it in the Word document — the visual layout is preserved exactly but the text cannot be edited." }
       },
       {
         "@type": "Question",
-        "name": "Will the Word document look exactly like my PDF?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "In text mode, simple layouts are reproduced well. Complex multi-column layouts and special fonts may differ. In image mode the layout is pixel-perfect but text is not editable."
-        }
+        "name": "Will the formatting look the same in Word?",
+        "acceptedAnswer": { "@type": "Answer", "text": "In text mode, the text content and basic formatting (bold, italic, font size, headings, tables) are preserved. Complex multi-column layouts may not match exactly. For perfect layout fidelity, use image mode." }
       },
       {
         "@type": "Question",
-        "name": "Does this work offline?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Yes. Once the page has loaded, PDFree works fully offline as a Progressive Web App."
-        }
+        "name": "Can I convert a scanned PDF to Word?",
+        "acceptedAnswer": { "@type": "Answer", "text": "If your scanned PDF contains an embedded text layer (many modern scanners add one), text mode will extract it. If the PDF is image-only with no text layer, use image mode to get a Word document with page images, or use the OCR PDF tool first to add a text layer before converting." }
+      },
+      {
+        "@type": "Question",
+        "name": "Are tables converted correctly?",
+        "acceptedAnswer": { "@type": "Answer", "text": "PDFree detects tables in two ways: by aligning text items into columns (for data tables), and by detecting drawn border lines (for grid forms). Detected tables become proper Word tables — not plain text. Very complex or merged-cell layouts may not convert perfectly." }
+      },
+      {
+        "@type": "Question",
+        "name": "Do I need Microsoft Word to open the converted file?",
+        "acceptedAnswer": { "@type": "Answer", "text": "No. The .docx format is supported by Microsoft Word, Google Docs (upload to Drive and open), LibreOffice Writer (free, open-source), and Apple Pages. You do not need a paid Microsoft 365 subscription to open the file." }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the maximum file size for PDF to Word conversion?",
+        "acceptedAnswer": { "@type": "Answer", "text": "There is no hard limit. However, very large PDFs (100+ MB) may take longer and require more memory. For best results keep files under 100 MB in text mode and under 50 MB in image mode at 300 DPI." }
+      },
+      {
+        "@type": "Question",
+        "name": "Does it work offline?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes. Once the page has loaded, PDFree works fully offline as a Progressive Web App. No internet connection is required for conversion." }
       }
     ]
   }
@@ -176,26 +189,31 @@
 {
   "@context": "https://schema.org",
   "@type": "HowTo",
-  "name": "How to Convert PDF to Word",
-  "description": "Convert a PDF to an editable Word document (.docx) free — no upload, processed in your browser.",
+  "name": "How to Convert PDF to Word Free",
+  "description": "Convert a PDF to an editable Word document (.docx) free — no upload, no account, processed entirely in your browser.",
+  "totalTime": "PT2M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — free browser-based PDF to Word converter, no upload required" }],
   "step": [
     {
       "@type": "HowToStep",
       "position": 1,
       "name": "Open your PDF",
-      "text": "Click 'Choose files' or drag your PDF into the drop zone."
+      "text": "Click 'Choose PDF' or drag your file into the drop zone. The PDF loads in your browser — nothing is uploaded anywhere.",
+      "url": "https://pdfree.io/pdf-to-word/#step1"
     },
     {
       "@type": "HowToStep",
       "position": 2,
-      "name": "Convert to Word",
-      "text": "Click 'Convert to Word'. The tool extracts text, tables and formatting, preserving the document layout as closely as possible."
+      "name": "Choose Text or Image mode",
+      "text": "Text mode creates an editable Word document with paragraphs, headings, and tables. Image mode preserves the exact visual layout as page images — useful for complex or scanned PDFs.",
+      "url": "https://pdfree.io/pdf-to-word/#step2"
     },
     {
       "@type": "HowToStep",
       "position": 3,
       "name": "Download the .docx file",
-      "text": "Your Word document downloads immediately. Open it in Microsoft Word, Google Docs, or LibreOffice to edit."
+      "text": "Click 'Convert to Word'. The .docx downloads automatically. Open it in Microsoft Word, Google Docs, or LibreOffice — no paid software required.",
+      "url": "https://pdfree.io/pdf-to-word/#step3"
     }
   ]
 }
@@ -384,7 +402,7 @@
       </div>
       <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:32px;background:var(--surface);">
         <strong style="color:var(--text);font-size:15px;">Archive or translate multilingual documents</strong>
-        <p style="margin:6px 0 0;font-size:14px;">PDFree handles Arabic, Hebrew (with correct right-to-left paragraph direction), Cyrillic, Chinese, Japanese, Korean, and Devanagari (Hindi). The .docx preserves the script and text direction.</p>
+        <p style="margin:6px 0 0;font-size:14px;">PDFree handles Arabic and Hebrew (right-to-left direction preserved), Cyrillic (Russian, Ukrainian), Chinese, Japanese, Korean, and Devanagari (Hindi). The .docx output maintains the correct script and reading direction for each language.</p>
       </div>
 
       <!-- Comparison table -->
@@ -433,6 +451,45 @@
         </table>
       </div>
 
+      <!-- Scanned PDFs -->
+      <h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">Converting Scanned PDFs to Word</h2>
+      <p style="font-size:14px;margin:0 0 12px;">A scanned PDF is a photograph of a document — it looks like text but the content is stored as pixels, not characters. How well it converts depends on whether the PDF already contains a text layer:</p>
+      <div style="display:flex;flex-direction:column;gap:12px;margin:0 0 24px;">
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
+          <span style="font-size:18px;flex-shrink:0">✅</span>
+          <div><strong style="color:var(--text);">Scanned with OCR layer</strong> — many modern scanners and apps (Adobe Scan, Microsoft Lens) add an invisible text layer. Text mode extracts it correctly even though the PDF looks like an image.</div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
+          <span style="font-size:18px;flex-shrink:0">🖼️</span>
+          <div><strong style="color:var(--text);">Image-only scan (no text layer)</strong> — use <strong>Image mode</strong> to get a Word document where each page appears as a high-resolution image. The layout is preserved but text is not editable.</div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
+          <span style="font-size:18px;flex-shrink:0">🔍</span>
+          <div><strong style="color:var(--text);">Need editable text from a scan?</strong> — use the <a href="/ocr-pdf/" style="color:var(--green);">OCR PDF tool</a> first to add a searchable text layer, then convert to Word. Two steps, fully private, no upload.</div>
+        </div>
+      </div>
+
+      <!-- No Microsoft Word needed -->
+      <h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">Don't Have Microsoft Word? No Problem.</h2>
+      <p style="font-size:14px;margin:0 0 16px;">The .docx format is an open standard. You can open, edit, and save PDFree's output with any of these — all free:</p>
+      <ul style="font-size:14px;margin:0 0 32px;padding-left:24px;display:flex;flex-direction:column;gap:8px;">
+        <li><strong>Google Docs</strong> — upload the .docx to Google Drive, open it, edit online. Free.</li>
+        <li><strong>LibreOffice Writer</strong> — free, open-source, works on Windows, Mac, Linux. Excellent .docx compatibility.</li>
+        <li><strong>Apple Pages</strong> — built into macOS and iOS, opens .docx natively.</li>
+        <li><strong>Microsoft 365 Online</strong> — the browser version of Word is free at office.com.</li>
+      </ul>
+
+      <!-- Multilingual -->
+      <h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">Multilingual PDF to Word — Arabic, Russian, Chinese and More</h2>
+      <p style="font-size:14px;margin:0 0 16px;">PDFree text mode correctly handles scripts that most converters fail on:</p>
+      <ul style="font-size:14px;margin:0 0 32px;padding-left:24px;display:flex;flex-direction:column;gap:8px;">
+        <li><strong>Arabic &amp; Hebrew</strong> — right-to-left paragraph direction preserved in the .docx output</li>
+        <li><strong>Cyrillic</strong> — Russian, Ukrainian, Bulgarian, Serbian</li>
+        <li><strong>CJK</strong> — Chinese (Simplified &amp; Traditional), Japanese, Korean</li>
+        <li><strong>Devanagari</strong> — Hindi, Marathi, Sanskrit</li>
+        <li>Latin extended, Greek, Thai, Vietnamese — standard Unicode support</li>
+      </ul>
+
       <!-- Privacy -->
       <h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">Privacy — Your Files Stay on Your Device</h2>
       <p style="font-size:14px;margin:0 0 16px;">Most PDF-to-Word services upload your document to a remote server for OCR and conversion. That means your confidential contract, medical record, or financial report travels across the internet and is stored on someone else's computer — even temporarily.</p>
@@ -467,6 +524,14 @@
           <p style="margin:0;font-size:14px;">There is no hard limit. However, very large PDFs (100+ MB) may take longer to process and require more memory. For best results keep files under 100 MB in text mode and under 50 MB in image mode at 300 DPI.</p>
         </div>
         <div style="border:1px solid var(--border);border-radius:12px;padding:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Do I need Microsoft Word to open the file?</h3>
+          <p style="margin:0;font-size:14px;">No. The .docx format is an open standard supported by Google Docs (free), LibreOffice Writer (free, open-source), Apple Pages, and Microsoft 365 Online (browser-based, free). You do not need a paid Word subscription.</p>
+        </div>
+        <div style="border:1px solid var(--border);border-radius:12px;padding:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Can I convert a scanned PDF to editable Word?</h3>
+          <p style="margin:0;font-size:14px;">It depends. If the scan has an embedded text layer (added by Adobe Scan, Microsoft Lens, or a modern scanner), text mode extracts it correctly. If the PDF is purely image-based, use the <a href="/ocr-pdf/" style="color:var(--green);">OCR PDF tool</a> first to add a text layer, then convert to Word.</p>
+        </div>
+        <div style="border:1px solid var(--border);border-radius:12px;padding:20px;">
           <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Does it work offline?</h3>
           <p style="margin:0;font-size:14px;">Yes. PDFree works fully offline as a Progressive Web App once the page has been loaded at least once. No internet connection is required for conversion.</p>
         </div>
@@ -475,10 +540,11 @@
       <!-- Related tools -->
       <h2 style="font-size:22px;color:var(--text);margin:48px 0 12px;font-weight:700;">Related Tools</h2>
       <ul style="margin:0 0 40px;padding-left:24px;display:flex;flex-direction:column;gap:8px;font-size:14px;">
+        <li><a href="/ocr-pdf/" style="color:var(--green);font-weight:500;">OCR PDF</a> — Add a text layer to scanned PDFs before converting to Word</li>
         <li><a href="/compress-large-pdf-free/" style="color:var(--green);font-weight:500;">Compress PDF</a> — Reduce file size before or after converting</li>
         <li><a href="/merge-large-pdf-files/" style="color:var(--green);font-weight:500;">Merge PDF</a> — Combine multiple PDFs into one before converting to Word</li>
-        <li><a href="/split-pdf/" style="color:var(--green);font-weight:500;">Split PDF</a> — Extract the pages you need before converting</li>
-        <li><a href="/redact-pdf/" style="color:var(--green);font-weight:500;">Redact PDF</a> — Remove sensitive information before sharing</li>
+        <li><a href="/split-pdf/" style="color:var(--green);font-weight:500;">Split PDF</a> — Extract only the pages you need before converting</li>
+        <li><a href="/redact-pdf/" style="color:var(--green);font-weight:500;">Redact PDF</a> — Remove sensitive information before sharing the Word file</li>
       </ul>
 
       </div>
