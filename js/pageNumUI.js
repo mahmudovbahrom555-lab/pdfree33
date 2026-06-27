@@ -13,6 +13,7 @@
 import { id } from './utils.js';
 import { chipGroup, sliderRow, checkbox } from './uiComponents.js';
 import { formatPageNumber } from './pageNumUtils.js';
+import { t } from './i18n.js';
 
 // ── State ──────────────────────────────────────────────────────
 let _position  = 'bottom-center'; // 'bottom-center'|'bottom-right'|'bottom-left'|'top-center'|'book'
@@ -157,31 +158,31 @@ function _render() {
         border-radius:8px;padding:10px 14px;
       ">
         <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);margin-bottom:6px">
-          Start number
+          ${t('pn_start_label')}
         </div>
 
         <!-- Auto body -->
         <div id="pnAutoStartRow" style="display:${_autoStart ? 'flex' : 'none'};align-items:flex-start;justify-content:space-between;gap:8px;transition:opacity .15s">
           <div>
-            <span style="font-size:11px;font-weight:600;background:var(--green-light);color:var(--green);padding:2px 8px;border-radius:10px;display:inline-block;margin-bottom:4px">Auto</span>
+            <span style="font-size:11px;font-weight:600;background:var(--green-light);color:var(--green);padding:2px 8px;border-radius:10px;display:inline-block;margin-bottom:4px">${t('pn_auto_tag')}</span>
             <div id="pnAutoStartHint" style="font-size:22px;font-weight:700;color:var(--text);line-height:1.1;transition:opacity .15s">
               ${_formatNum(_startAt, _format)}
             </div>
-            <div style="font-size:11px;color:var(--text3);margin-top:3px">Automatically follows From page</div>
+            <div style="font-size:11px;color:var(--text3);margin-top:3px">${t('pn_auto_follows')}</div>
           </div>
           <button type="button" id="pnCustomizeBtn"
             style="flex-shrink:0;margin-top:2px;border:1px solid var(--border);border-radius:6px;background:var(--surface);cursor:pointer;font-size:12px;color:var(--text2);padding:5px 10px;display:flex;align-items:center;gap:4px;white-space:nowrap">
-            ✏ Customize
+            ${t('pn_customize')}
           </button>
         </div>
 
         <!-- Custom body -->
         <div id="pnCustomStartRow" style="display:${_autoStart ? 'none' : 'block'};transition:opacity .15s">
           <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px">
-            <span style="font-size:11px;font-weight:600;border:1px solid var(--border);color:var(--text2);padding:2px 8px;border-radius:10px">Custom</span>
+            <span style="font-size:11px;font-weight:600;border:1px solid var(--border);color:var(--text2);padding:2px 8px;border-radius:10px">${t('pn_custom_tag')}</span>
             <button type="button" id="pnResetStartBtn"
               style="border:1px solid var(--border);border-radius:6px;background:var(--surface);cursor:pointer;font-size:12px;color:var(--text2);padding:5px 10px;display:flex;align-items:center;gap:4px">
-              ↺ Back to auto
+              ${t('pn_back_auto')}
             </button>
           </div>
           <div class="pn-row">

@@ -1,26 +1,36 @@
 {
   "@context": "https://schema.org",
   "@type": "HowTo",
-  "name": "Añadir números de página a un PDF",
-  "description": "Insertar números de página en todas las páginas de un PDF — gratis, sin subir.",
+  "name": "Cómo añadir números de página a un PDF gratis",
+  "description": "Añade números de página arábigos, romanos o alfabéticos a cualquier PDF existente — gratis, sin subida, procesado localmente en tu navegador.",
+  "totalTime": "PT2M",
+  "tool": [
+    {
+      "@type": "HowToTool",
+      "name": "PDFree — herramienta gratuita para numerar páginas de PDF en el navegador, sin subida requerida"
+    }
+  ],
   "step": [
     {
       "@type": "HowToStep",
       "position": 1,
-      "name": "Abre tu PDF",
-      "text": "Haz clic en \"Elegir archivos\" o arrastra tu PDF a la zona de soltar."
+      "name": "Abrir el PDF",
+      "text": "Haz clic en \"Elegir archivos\" o arrastra tu PDF hasta la zona de soltar. El archivo se carga en tu navegador — nada se sube a ningún servidor.",
+      "url": "https://pdfree.io/pagenum-pdf/#step1"
     },
     {
       "@type": "HowToStep",
       "position": 2,
-      "name": "Elige las opciones",
-      "text": "Selecciona posición (arriba/abajo, izquierda/centro/derecha), formato y número de inicio."
+      "name": "Configurar la numeración",
+      "text": "Elige el formato de número (Arábigo 1,2,3 / Romano i,ii,iii / Alfabético A,B,C), la posición (arriba o abajo, izquierda/centro/derecha), el número inicial y si quieres omitir la primera página. Opcionalmente añade prefijo o sufijo para el estilo \"Página 1 de 20\".",
+      "url": "https://pdfree.io/pagenum-pdf/#step2"
     },
     {
       "@type": "HowToStep",
       "position": 3,
-      "name": "Descarga el PDF numerado",
-      "text": "Haz clic en \"Añadir números de página\". Tu documento paginado estará listo."
+      "name": "Aplicar y descargar",
+      "text": "Haz clic en \"Añadir números de página\". Los números se insertan como texto limpio en cada página. El PDF se descarga inmediatamente — el contenido original no se modifica.",
+      "url": "https://pdfree.io/pagenum-pdf/#step3"
     }
   ]
 }

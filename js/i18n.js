@@ -51,6 +51,14 @@ const EN = {
   prog_rendering:    'Rendering page {i} of {n}...',
   prog_watermark:    'Applying watermark...',
   prog_pagenum:      'Adding page numbers...',
+
+  // ── pageNumUI — start number card ────────────────────────────
+  pn_start_label:     'Start number',
+  pn_auto_tag:        'Auto',
+  pn_custom_tag:      'Custom',
+  pn_auto_follows:    'Automatically follows From page',
+  pn_customize:       '✏ Customize',
+  pn_back_auto:       '↺ Back to auto',
   prog_meta:         'Updating metadata...',
   prog_protect:      'Encrypting PDF...',
   prog_rotate:       'Applying rotations...',

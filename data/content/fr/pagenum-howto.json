@@ -1,26 +1,36 @@
 {
   "@context": "https://schema.org",
   "@type": "HowTo",
-  "name": "Ajouter des numéros de page à un PDF",
-  "description": "Insérer des numéros de page sur toutes les pages d'un PDF — gratuit, sans envoi.",
+  "name": "Comment ajouter des numéros de page à un PDF gratuitement",
+  "description": "Ajoutez des numéros de page arabes, romains ou alphabétiques à n'importe quel PDF existant — gratuitement, sans téléchargement, traité localement dans votre navigateur.",
+  "totalTime": "PT2M",
+  "tool": [
+    {
+      "@type": "HowToTool",
+      "name": "PDFree — outil gratuit de numérotation de pages PDF dans le navigateur, sans téléchargement requis"
+    }
+  ],
   "step": [
     {
       "@type": "HowToStep",
       "position": 1,
-      "name": "Ouvrez votre PDF",
-      "text": "Cliquez sur « Choisir un fichier » ou faites glisser votre PDF dans la zone de dépôt."
+      "name": "Ouvrir le PDF",
+      "text": "Cliquez sur \"Choisir des fichiers\" ou faites glisser votre PDF dans la zone de dépôt. Le fichier se charge dans votre navigateur — rien n'est téléchargé sur un serveur.",
+      "url": "https://pdfree.io/pagenum-pdf/#step1"
     },
     {
       "@type": "HowToStep",
       "position": 2,
-      "name": "Choisissez les options",
-      "text": "Sélectionnez la position (haut/bas, gauche/centre/droite), le format et le numéro de départ."
+      "name": "Configurer la numérotation",
+      "text": "Choisissez le format de numérotation (Arabe 1,2,3 / Romain i,ii,iii / Alphabétique A,B,C), la position (haut ou bas, gauche/centre/droite), le numéro de départ et si vous souhaitez ignorer la première page. Ajoutez optionnellement un préfixe ou suffixe pour le style \"Page 1 sur 20\".",
+      "url": "https://pdfree.io/pagenum-pdf/#step2"
     },
     {
       "@type": "HowToStep",
       "position": 3,
-      "name": "Téléchargez le PDF numéroté",
-      "text": "Cliquez sur « Ajouter les numéros de page ». Votre document paginé est prêt."
+      "name": "Appliquer et télécharger",
+      "text": "Cliquez sur \"Ajouter les numéros de page\". Les numéros sont intégrés sous forme de texte sur chaque page. Le PDF se télécharge immédiatement — le contenu original reste inchangé.",
+      "url": "https://pdfree.io/pagenum-pdf/#step3"
     }
   ]
 }

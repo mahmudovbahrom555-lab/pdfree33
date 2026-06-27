@@ -39,6 +39,14 @@ window.PDFREE_LOCALE = {
   prog_rendering:    'A renderizar página {i} de {n}...',
   prog_watermark:    'A aplicar marca de água...',
   prog_pagenum:      'A adicionar números de página...',
+
+  // ── pageNumUI — start number card ────────────────────────────
+  pn_start_label:     'Número inicial',
+  pn_auto_tag:     'Auto',
+  pn_custom_tag:     'Personalizado',
+  pn_auto_follows:     'Segue automaticamente a página inicial',
+  pn_customize:     '✏ Personalizar',
+  pn_back_auto:     '↺ Voltar para Auto',
   prog_meta:         'A atualizar metadados...',
   prog_protect:      'A cifrar PDF...',
   prog_rotate:       'A aplicar rotações...',

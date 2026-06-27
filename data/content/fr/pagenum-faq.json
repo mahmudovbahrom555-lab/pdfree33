@@ -1,18 +1,58 @@
 [
   {
     "@type": "Question",
-    "name": "Mes fichiers sont-ils stockés sur vos serveurs ?",
+    "name": "Mes fichiers sont-ils téléchargés lors de l'ajout de numéros de page ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Non. PDFree fonctionne entièrement sur votre appareil (côté client). Nous n'avons pas de serveurs qui traitent vos fichiers, ce qui garantit 100 % de confidentialité."
+      "text": "Non. L'ajout de numéros de page s'effectue entièrement dans votre navigateur avec JavaScript. Les fichiers ne quittent jamais votre appareil. Vous pouvez le vérifier : ouvrez DevTools → onglet Réseau — vous ne devriez pas voir votre PDF être téléchargé vers un serveur distant."
     }
   },
   {
     "@type": "Question",
-    "name": "Y a-t-il une limite de taille de fichier ou de nombre de pages ?",
+    "name": "Puis-je commencer la numérotation à partir d'un autre chiffre que 1 ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Non, il n'y a pas de limites artificielles. La seule limitation est la mémoire vive disponible sur votre ordinateur ou smartphone."
+      "text": "Oui. Entrez n'importe quel numéro de départ dans le champ 'Numéro de départ'. Utile pour les documents où la page de couverture est la page 0, ou pour les chapitres qui continuent la numérotation d'une section précédente."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Puis-je ignorer la première page (page de couverture) lors de la numérotation ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui. Activez l'option 'Ignorer la première page'. La page 1 (couverture) ne reçoit aucun numéro, et la numérotation commence à partir de la deuxième page."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Quels formats de numérotation sont disponibles ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Chiffres arabes (1, 2, 3), chiffres romains minuscules (i, ii, iii), chiffres romains majuscules (I, II, III), alphabétique minuscule (a, b, c) et alphabétique majuscule (A, B, C)."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Puis-je ajouter le format 'Page 1 sur 20' ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui. Utilisez le champ préfixe pour ajouter du texte avant le numéro (p. ex. 'Page ') et le champ suffixe pour ajouter du texte après (p. ex. ' sur 20'). Cela crée le format courant 'Page 1 sur 20' utilisé dans les documents professionnels imprimés."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Puis-je choisir où apparaissent les numéros de page ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui. Les options de position incluent : bas centre, bas gauche, bas droite, haut centre, haut gauche et haut droite."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Y a-t-il une limite de pages pour l'ajout de numéros ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non. PDFree n'a pas de limite de pages ni de taille de fichier. La seule contrainte pratique est la mémoire disponible sur votre appareil."
     }
   }
 ]

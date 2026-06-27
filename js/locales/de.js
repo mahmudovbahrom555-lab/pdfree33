@@ -40,6 +40,14 @@ window.PDFREE_LOCALE = {
   prog_rendering:    'Seite {i} von {n} wird gerendert...',
   prog_watermark:    'Wasserzeichen wird angewendet...',
   prog_pagenum:      'Seitenzahlen werden hinzugefügt...',
+
+  // ── pageNumUI — start number card ────────────────────────────
+  pn_start_label:     'Startnummer',
+  pn_auto_tag:     'Auto',
+  pn_custom_tag:     'Benutzerdefiniert',
+  pn_auto_follows:     'Folgt automatisch der Startseite',
+  pn_customize:     '✏ Anpassen',
+  pn_back_auto:     '↺ Zurück zu Auto',
   prog_meta:         'Metadaten werden aktualisiert...',
   prog_protect:      'PDF wird verschlüsselt...',
   prog_rotate:       'Drehungen werden angewendet...',

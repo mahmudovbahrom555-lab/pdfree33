@@ -1,18 +1,58 @@
 [
   {
     "@type": "Question",
-    "name": "Werden meine Dateien auf einem Server gespeichert?",
+    "name": "Werden meine Dateien hochgeladen, wenn Seitenzahlen hinzugefügt werden?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nein. PDFree arbeitet vollständig auf deinem Gerät (clientseitig). Wir haben keine Server, die deine Dateien verarbeiten, was 100 % Privatsphäre garantiert."
+      "text": "Nein. Das Hinzufügen von Seitenzahlen erfolgt vollständig in Ihrem Browser mit JavaScript. Dateien verlassen Ihr Gerät nie. Sie können dies selbst überprüfen: Öffnen Sie DevTools → Netzwerk-Tab — Sie sollten nicht sehen, dass Ihr PDF auf einen Remote-Server hochgeladen wird."
     }
   },
   {
     "@type": "Question",
-    "name": "Gibt es ein Limit für die Dateigröße oder Seitenanzahl?",
+    "name": "Kann ich mit einer anderen Zahl als 1 beginnen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nein, es gibt keine künstlichen Limits. Die einzige Begrenzung ist der verfügbare Arbeitsspeicher deines Computers oder Smartphones."
+      "text": "Ja. Geben Sie eine beliebige Startzahl in das Feld 'Startnummer' ein. Dies ist nützlich für Dokumente, bei denen eine Titelseite die Seite 0 ist, oder für Kapitel, die die Nummerierung aus einem vorherigen Abschnitt fortsetzen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann ich die erste Seite (Titelseite) bei der Nummerierung überspringen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Aktivieren Sie die Option 'Erste Seite überspringen'. Seite 1 (Titel) erhält keine Nummer, und die Nummerierung beginnt ab der zweiten Seite."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Welche Zahlenformate sind verfügbar?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Arabische Ziffern (1, 2, 3), römische Kleinbuchstaben (i, ii, iii), römische Großbuchstaben (I, II, III), alphabetisch klein (a, b, c) und alphabetisch groß (A, B, C)."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann ich das Format 'Seite 1 von 20' hinzufügen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Verwenden Sie das Präfix-Feld, um Text vor der Zahl einzufügen (z. B. 'Seite '), und das Suffix-Feld, um Text danach einzufügen (z. B. ' von 20'). Dies erzeugt das gebräuchliche Format 'Seite 1 von 20' für professionelle Druckdokumente."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann ich wählen, wo die Seitenzahlen erscheinen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Positionsoptionen: unten Mitte, unten links, unten rechts, oben Mitte, oben links und oben rechts."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Gibt es eine Seitenbeschränkung für das Hinzufügen von Seitenzahlen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nein. PDFree hat keine Seiten- oder Dateigrößenbeschränkungen. Die einzige praktische Einschränkung ist der verfügbare Arbeitsspeicher Ihres Geräts."
     }
   }
 ]

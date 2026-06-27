@@ -1,42 +1,58 @@
 [
   {
     "@type": "Question",
-    "name": "Meus arquivos são enviados para um servidor?",
+    "name": "Os meus ficheiros são enviados ao adicionar números de página?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Não. O PDFree processa todos os arquivos inteiramente no seu navegador. Seus documentos nunca saem do seu dispositivo."
+      "text": "Não. A adição de números de página é processada inteiramente no seu navegador com JavaScript. Os ficheiros nunca saem do seu dispositivo. Pode verificar: abra DevTools → separador Rede — não deverá ver o seu PDF a ser enviado para um servidor remoto."
     }
   },
   {
     "@type": "Question",
-    "name": "Posso excluir a página de rosto da numeração?",
+    "name": "Posso começar a numeração a partir de um número diferente de 1?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sim. Ajuste o número inicial para 0 ou comece a numeração a partir da página 2. A página de rosto ficará sem número."
+      "text": "Sim. Introduza qualquer número inicial no campo 'Número inicial'. Útil para documentos onde a capa é a página 0, ou para capítulos que continuam a numeração de uma secção anterior."
     }
   },
   {
     "@type": "Question",
-    "name": "Os números de página podem ser removidos após a aplicação?",
+    "name": "Posso ignorar a primeira página (capa) na numeração?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Não. Os números são incorporados permanentemente. Guarde o arquivo original se precisar de uma versão sem números."
+      "text": "Sim. Ative a opção 'Ignorar primeira página'. A página 1 (capa) não receberá número, e a numeração começa a partir da segunda página."
     }
   },
   {
     "@type": "Question",
-    "name": "O tamanho e a fonte dos números são personalizáveis?",
+    "name": "Que formatos de número estão disponíveis?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sim. Você pode ajustar o tamanho da fonte para que os números sejam discretos ou bem visíveis conforme suas necessidades."
+      "text": "Numerais arábicos (1, 2, 3), numerais romanos minúsculos (i, ii, iii), romanos maiúsculos (I, II, III), alfabético minúsculo (a, b, c) e alfabético maiúsculo (A, B, C)."
     }
   },
   {
     "@type": "Question",
-    "name": "Existe um limite de tamanho ou número de páginas?",
+    "name": "Posso adicionar o formato 'Página 1 de 20'?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Não. O PDFree não tem limites artificiais. A única restrição é a memória RAM disponível no seu dispositivo."
+      "text": "Sim. Use o campo de prefixo para adicionar texto antes do número (p. ex. 'Página ') e o campo de sufixo para adicionar texto depois (p. ex. ' de 20'). Isto cria o formato comum 'Página 1 de 20' usado em documentos profissionais impressos."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso escolher onde aparecem os números de página?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim. As opções de posição incluem: fundo centro, fundo esquerda, fundo direita, topo centro, topo esquerda e topo direita."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Existe um limite de páginas para adicionar números?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Não. O PDFree não tem limites de páginas nem de tamanho de ficheiro. A única limitação prática é a memória disponível no seu dispositivo."
     }
   }
 ]

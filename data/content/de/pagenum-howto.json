@@ -1,26 +1,36 @@
 {
   "@context": "https://schema.org",
   "@type": "HowTo",
-  "name": "Seitenzahlen zu PDF hinzufügen",
-  "description": "Seitenzahlen auf alle Seiten eines PDFs einfügen — kostenlos, kein Upload.",
+  "name": "Seitenzahlen zu einem PDF kostenlos hinzufügen",
+  "description": "Arabische, römische oder alphabetische Seitenzahlen zu einem bestehenden PDF hinzufügen — kostenlos, kein Upload, lokal im Browser verarbeitet.",
+  "totalTime": "PT2M",
+  "tool": [
+    {
+      "@type": "HowToTool",
+      "name": "PDFree — kostenloser browserbasierter PDF-Seitenzahlen-Dienst, kein Upload erforderlich"
+    }
+  ],
   "step": [
     {
       "@type": "HowToStep",
       "position": 1,
       "name": "PDF öffnen",
-      "text": "Klicke auf „Datei auswählen\" oder ziehe dein PDF in den Dropbereich."
+      "text": "Klicken Sie auf \"Dateien auswählen\" oder ziehen Sie Ihr PDF in die Ablage. Die Datei wird in Ihrem Browser geladen — nichts wird auf einen Server hochgeladen.",
+      "url": "https://pdfree.io/pagenum-pdf/#step1"
     },
     {
       "@type": "HowToStep",
       "position": 2,
-      "name": "Optionen wählen",
-      "text": "Wähle Position (oben/unten, links/mittig/rechts), Format und Startnummer."
+      "name": "Nummerierung konfigurieren",
+      "text": "Wählen Sie das Zahlenformat (Arabisch 1,2,3 / Römisch i,ii,iii / Alphabetisch A,B,C), die Position (oben oder unten, links/Mitte/rechts), die Startzahl und ob Sie die erste Seite überspringen möchten. Optional Präfix oder Suffix für das Format \"Seite 1 von 20\" hinzufügen.",
+      "url": "https://pdfree.io/pagenum-pdf/#step2"
     },
     {
       "@type": "HowToStep",
       "position": 3,
-      "name": "Nummeriertes PDF herunterladen",
-      "text": "Klicke auf „Seitenzahlen hinzufügen\". Dein paginiertes Dokument ist bereit."
+      "name": "Anwenden und herunterladen",
+      "text": "Klicken Sie auf \"Seitenzahlen hinzufügen\". Die Seitenzahlen werden als sauberer Text auf jeder Seite eingebettet. Das PDF wird sofort heruntergeladen — der Originalinhalt bleibt unverändert.",
+      "url": "https://pdfree.io/pagenum-pdf/#step3"
     }
   ]
 }
