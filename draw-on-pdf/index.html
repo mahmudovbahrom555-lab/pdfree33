@@ -72,14 +72,7 @@
     "No account or signup needed",
     "Works offline"
   ],
-  "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.9",
-      "ratingCount": "1243",
-      "bestRating": "5",
-      "worstRating": "1"
-    },
-    "provider": { "@type": "Organization", "name": "PDFree", "url": "https://pdfree.io" }
+  "provider": { "@type": "Organization", "name": "PDFree", "url": "https://pdfree.io" }
 }
   </script>
 
@@ -118,6 +111,22 @@
       "acceptedAnswer": {
         "@type": "Answer",
         "text": "Yes. Annotations are flattened into the PDF on download, so they appear in Adobe Acrobat, Chrome, Preview, and any standard PDF viewer."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What does 'flattened' mean for PDF annotations?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Flattening merges your drawings permanently into the PDF page content. After downloading, the annotations cannot be separately selected, moved, or deleted — they become part of the page itself, like text or images. This ensures every PDF reader displays them correctly. If you need to keep annotations editable, download a copy before making changes you want to preserve."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I annotate a PDF without installing Adobe Acrobat?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. PDFree Draw runs entirely in your browser — no software installation, no account, no Adobe Acrobat required. Open the page in Chrome, Firefox, Safari, or Edge and start annotating immediately. The tool works on Windows, Mac, Linux, Android, and iOS."
       }
     }
   ]
@@ -752,26 +761,38 @@
 {
   "@context": "https://schema.org",
   "@type": "HowTo",
-  "name": "How to Draw on a PDF",
-  "description": "Add freehand drawings, arrows, text and shapes to any PDF free — no upload, no account.",
+  "name": "How to Draw and Annotate a PDF Free",
+  "description": "Add freehand drawings, arrows, text, shapes and highlights to any PDF free — no upload, no software installation, no account.",
+  "totalTime": "PT2M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree Draw — free browser-based PDF annotation tool, no upload required" }],
   "step": [
     {
       "@type": "HowToStep",
       "position": 1,
       "name": "Open your PDF",
-      "text": "Click 'Choose files' or drag your PDF into the drop zone."
+      "text": "Click 'Choose file' or drag your PDF onto the page. The PDF renders in the browser canvas — nothing is uploaded to any server.",
+      "url": "https://pdfree.io/draw-on-pdf/#step1"
     },
     {
       "@type": "HowToStep",
       "position": 2,
-      "name": "Draw and annotate",
-      "text": "Select a drawing tool — pen, arrow, text box, or rectangle — from the toolbar. Click or drag to draw on the page. Change color and size as needed."
+      "name": "Select a drawing or annotation tool",
+      "text": "Choose from pen, marker, arrow, line, rectangle, oval, highlight, text, or eraser in the toolbar. Adjust color and stroke size. Works on desktop and mobile.",
+      "url": "https://pdfree.io/draw-on-pdf/#step2"
     },
     {
       "@type": "HowToStep",
       "position": 3,
+      "name": "Annotate and navigate pages",
+      "text": "Draw directly on the PDF canvas. Use Undo and Redo freely. Navigate between pages with the arrow buttons. Annotations are non-destructive until download.",
+      "url": "https://pdfree.io/draw-on-pdf/#step3"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 4,
       "name": "Download the annotated PDF",
-      "text": "Click 'Download PDF'. Your drawings are embedded permanently — viewable in any PDF reader."
+      "text": "Click 'Download Annotated PDF'. Drawings are flattened permanently into the PDF — visible in Adobe Acrobat, Chrome, Preview, and any standard PDF viewer.",
+      "url": "https://pdfree.io/draw-on-pdf/#step4"
     }
   ]
 }
@@ -964,15 +985,18 @@
     <div class="seo-article__inner">
       <div class="seo-content" style="max-width:800px;margin:60px auto 40px;padding:0 24px;color:var(--text2);line-height:1.75;">
 
-        <h2 style="font-size:clamp(22px,3.5vw,30px);color:var(--text);margin:0 0 16px;font-weight:700;">Draw on PDF Free — Add Arrows, Text &amp; Shapes</h2>
-        <p style="font-size:15px;margin:0 0 40px;">Annotate any PDF directly in your browser. Add arrows to point out important details, draw shapes, write text notes, or erase mistakes. Your files never leave your device — everything happens locally.</p>
+        <h2 style="font-size:clamp(22px,3.5vw,30px);color:var(--text);margin:0 0 16px;font-weight:700;">Draw &amp; Annotate PDF Free — Arrows, Text, Shapes, Highlights</h2>
+        <p style="font-size:15px;margin:0 0 20px;">Annotate any PDF directly in your browser — no Adobe Acrobat, no software to install, no upload. Add arrows, draw freehand lines, write text notes, highlight passages, or erase mistakes. Works on Windows, Mac, Linux, Android, and iOS.</p>
+        <p style="font-size:14px;color:var(--text2);margin:0 0 40px;">You can verify this yourself: open your browser's DevTools → Network tab while working on your PDF — you should not see your file being uploaded to a remote server at any point.</p>
 
         <h2 style="font-size:22px;color:var(--text);margin:0 0 16px;font-weight:700;">Why use PDFree Draw?</h2>
         <ul style="margin:0 0 40px;padding-left:24px;display:flex;flex-direction:column;gap:8px;">
-          <li><strong style="color:var(--text);">Private by design</strong> — processing happens in your browser, nothing is uploaded</li>
-          <li><strong style="color:var(--text);">Arrows &amp; shapes</strong> — perfect for creating visual instructions or marking up documents</li>
-          <li><strong style="color:var(--text);">Free forever</strong> — no account, no watermarks, no limits</li>
-          <li><strong style="color:var(--text);">Multi-page</strong> — annotate every page, then download as a single PDF</li>
+          <li><strong style="color:var(--text);">Private by design</strong> — your PDF is processed in your browser, nothing is uploaded to any server</li>
+          <li><strong style="color:var(--text);">No installation required</strong> — works in Chrome, Firefox, Safari, Edge without installing Adobe Acrobat or any software</li>
+          <li><strong style="color:var(--text);">Full toolkit</strong> — pen, marker, arrow, line, rectangle, oval, highlight, text, eraser with adjustable color and size</li>
+          <li><strong style="color:var(--text);">Free forever</strong> — no account, no watermarks, no daily limits</li>
+          <li><strong style="color:var(--text);">Multi-page</strong> — annotate every page, navigate with arrows, download as a single annotated PDF</li>
+          <li><strong style="color:var(--text);">Mobile-friendly</strong> — toolbar adapts to the bottom of the screen on phones, touch-optimized for iOS and Android</li>
         </ul>
 
         <h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">How to draw on a PDF</h2>
@@ -1004,11 +1028,58 @@
         <p style="font-size:15px;margin:0 0 16px;"><strong>Education:</strong> Teachers and students can mark up lecture slides, highlight exam questions, or annotate scientific figures directly on the PDF.</p>
         <p style="font-size:15px;margin:0 0 40px;"><strong>Design feedback:</strong> Draw on PDF mockups to indicate layout changes, point out spacing issues, or sketch alternative ideas — no design software needed.</p>
 
-        <h2 style="font-size:22px;color:var(--text);margin:0 0 16px;font-weight:700;">Is It Safe to Draw on PDFs Online?</h2>
-        <p style="font-size:15px;margin:0 0 40px;">Yes. PDFree Draw processes your PDF entirely in your browser — nothing is ever sent to a server. Whether your file contains sensitive business data or personal documents, it never leaves your device.</p>
+        <!-- Visible FAQ matching FAQPage schema -->
+        <h2 style="font-size:22px;color:var(--text);margin:48px 0 20px;font-weight:700;">Frequently Asked Questions</h2>
+        <div style="display:flex;flex-direction:column;gap:16px;margin:0 0 48px;">
+          <div style="border:1px solid var(--border);border-radius:12px;padding:18px 20px;">
+            <h3 style="font-size:15px;color:var(--text);margin:0 0 8px;font-weight:600;">Does drawing on a PDF upload my file?</h3>
+            <p style="margin:0;font-size:14px;">No. PDFree renders and annotates your PDF entirely in your browser. Your file is never uploaded to any server — not even temporarily.</p>
+          </div>
+          <div style="border:1px solid var(--border);border-radius:12px;padding:18px 20px;">
+            <h3 style="font-size:15px;color:var(--text);margin:0 0 8px;font-weight:600;">What does "flattened" mean for my annotations?</h3>
+            <p style="margin:0;font-size:14px;">Flattening merges your drawings permanently into the PDF page. After downloading, annotations cannot be separately selected, moved, or deleted — they become part of the page itself. This ensures every PDF reader displays them correctly. If you need to keep annotations editable, keep a backup copy of the original before downloading.</p>
+          </div>
+          <div style="border:1px solid var(--border);border-radius:12px;padding:18px 20px;">
+            <h3 style="font-size:15px;color:var(--text);margin:0 0 8px;font-weight:600;">What drawing tools are available?</h3>
+            <p style="margin:0;font-size:14px;">PDFree Draw includes pen, marker, arrow, line, rectangle, oval, highlight, text tool, and eraser. Each tool has adjustable color and stroke size.</p>
+          </div>
+          <div style="border:1px solid var(--border);border-radius:12px;padding:18px 20px;">
+            <h3 style="font-size:15px;color:var(--text);margin:0 0 8px;font-weight:600;">Can I annotate PDF without installing Adobe Acrobat?</h3>
+            <p style="margin:0;font-size:14px;">Yes. PDFree Draw runs entirely in your browser — no software installation required. Open the page in Chrome, Firefox, Safari, or Edge and start annotating immediately. Works on Windows, Mac, Linux, Android, and iOS.</p>
+          </div>
+          <div style="border:1px solid var(--border);border-radius:12px;padding:18px 20px;">
+            <h3 style="font-size:15px;color:var(--text);margin:0 0 8px;font-weight:600;">Can I draw on multi-page PDFs?</h3>
+            <p style="margin:0;font-size:14px;">Yes. You can annotate every page of a multi-page PDF and download the result as a single annotated document.</p>
+          </div>
+          <div style="border:1px solid var(--border);border-radius:12px;padding:18px 20px;">
+            <h3 style="font-size:15px;color:var(--text);margin:0 0 8px;font-weight:600;">Will my drawings be visible in all PDF readers?</h3>
+            <p style="margin:0;font-size:14px;">Yes. Annotations are flattened into the PDF on download, so they appear identically in Adobe Acrobat, Chrome, Preview (macOS), and any standard PDF viewer.</p>
+          </div>
+        </div>
+
+        <!-- Next in workflow -->
+        <h2 style="font-size:22px;color:var(--text);margin:0 0 12px;font-weight:700;">What to Do After Annotating</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:0 0 40px;">
+          <a href="/compress-pdf/" style="display:block;padding:16px;border:1px solid var(--border);border-radius:10px;text-decoration:none;background:var(--surface);">
+            <div style="font-weight:600;color:var(--text);margin:0 0 4px;font-size:14px;">→ Compress PDF</div>
+            <p style="margin:0;font-size:13px;color:var(--text2);">Reduce file size after annotations — drawings increase file size</p>
+          </a>
+          <a href="/protect-pdf/" style="display:block;padding:16px;border:1px solid var(--border);border-radius:10px;text-decoration:none;background:var(--surface);">
+            <div style="font-weight:600;color:var(--text);margin:0 0 4px;font-size:14px;">→ Protect PDF</div>
+            <p style="margin:0;font-size:13px;color:var(--text2);">Add a password before sharing the annotated document</p>
+          </a>
+          <a href="/merge-pdf/" style="display:block;padding:16px;border:1px solid var(--border);border-radius:10px;text-decoration:none;background:var(--surface);">
+            <div style="font-weight:600;color:var(--text);margin:0 0 4px;font-size:14px;">→ Merge PDF</div>
+            <p style="margin:0;font-size:13px;color:var(--text2);">Combine annotated pages with other documents</p>
+          </a>
+          <a href="/redact-pdf/" style="display:block;padding:16px;border:1px solid var(--border);border-radius:10px;text-decoration:none;background:var(--surface);">
+            <div style="font-weight:600;color:var(--text);margin:0 0 4px;font-size:14px;">→ Redact PDF</div>
+            <p style="margin:0;font-size:13px;color:var(--text2);">Permanently black out content instead of drawing over it</p>
+          </a>
+        </div>
 
         <!-- Related tools -->
-        <h2 style="font-size:22px;color:var(--text);margin:48px 0 12px;font-weight:700;">Related Tools</h2>
+        <h2 style="font-size:22px;color:var(--text);margin:0 0 12px;font-weight:700;">Related Tools</h2>
         <ul style="margin:0 0 40px;padding-left:24px;display:flex;flex-direction:column;gap:8px;">
           <li><a href="/fill/" style="color:var(--green);font-weight:500;">Fill PDF Form</a> — Fill and sign PDF forms without printing</li>
           <li><a href="/redact-pdf/" style="color:var(--green);font-weight:500;">Redact PDF</a> — Permanently black out sensitive content</li>
