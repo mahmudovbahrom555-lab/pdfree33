@@ -4,15 +4,15 @@
     "name": "Are my files uploaded when adding page numbers?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. Page numbering is processed entirely in your browser. Files never leave your device."
+      "text": "No. Page numbering is processed entirely in your browser using JavaScript. Files never leave your device. You can verify this: open DevTools → Network tab — you should not see your PDF being uploaded during processing."
     }
   },
   {
     "@type": "Question",
-    "name": "Can I customise the format of page numbers?",
+    "name": "Can I start page numbering from a number other than 1?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Yes. You can choose position (top/bottom, left/center/right), font size, starting number, and prefix/suffix text."
+      "text": "Yes. Set any starting number in the 'Start at' field. This is useful for documents where a cover page is page 0, or for chapters that continue numbering from a previous section."
     }
   },
   {
@@ -20,15 +20,39 @@
     "name": "Can I skip the first page (cover page) when numbering?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Yes. You can set the starting page and choose which pages to number."
+      "text": "Yes. Enable the 'Skip first page' option. Page 1 (the cover) receives no number, and numbering starts from the second page."
     }
   },
   {
     "@type": "Question",
-    "name": "Is there a page limit?",
+    "name": "What number formats are available?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. PDFree has no page or file size limits."
+      "text": "Arabic numerals (1, 2, 3), lowercase Roman numerals (i, ii, iii), uppercase Roman (I, II, III), lowercase alphabetic (a, b, c), and uppercase alphabetic (A, B, C)."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I add 'Page 1 of 20' format?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. Use the prefix field to add text before the number (e.g. 'Page ') and the suffix field to add text after (e.g. ' of 20'). This creates the common 'Page 1 of 20' format used in professional print documents and reports."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I choose where page numbers appear?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. Position options include bottom center, bottom left, bottom right, top center, top left, and top right."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is there a page limit for adding page numbers?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. PDFree has no page or file size limits. The only practical constraint is your device's available memory."
     }
   }
 ]
