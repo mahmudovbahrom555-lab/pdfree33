@@ -151,15 +151,31 @@ function _render() {
       ${chipGroup('pnFmt', fmtOpts, _format, 'Number format', { radius: '8px' })}
 
       <!-- Auto start: shows hint + customize link -->
-      <div id="pnAutoStartRow" style="margin-top:10px;display:${_autoStart ? 'block' : 'none'}">
-        <div style="font-size:13px;color:var(--text2);display:flex;align-items:baseline;gap:6px;flex-wrap:wrap">
-          <span>Start number: <strong id="pnAutoStartHint">${_formatNum(_startAt, _format)}</strong></span>
-          <span style="font-size:11px;color:var(--text3)">↑ linked to page range</span>
+      <div id="pnAutoStartRow" style="margin-top:12px;display:${_autoStart ? 'block' : 'none'}">
+        <div style="
+          display:flex;align-items:center;justify-content:space-between;gap:10px;
+          background:var(--green-light);border:1px solid rgba(45,122,79,0.25);
+          border-radius:8px;padding:10px 14px;
+        ">
+          <div>
+            <div style="font-size:12px;color:var(--green);font-weight:600;text-transform:uppercase;letter-spacing:.4px;margin-bottom:2px">
+              Start number
+            </div>
+            <div style="font-size:20px;font-weight:700;color:var(--text);line-height:1">
+              <span id="pnAutoStartHint">${_formatNum(_startAt, _format)}</span>
+            </div>
+            <div style="font-size:11px;color:var(--green);margin-top:2px">↑ linked to page range</div>
+          </div>
+          <button type="button" id="pnCustomizeBtn"
+            style="
+              background:var(--surface);border:1px solid var(--border);
+              border-radius:6px;cursor:pointer;
+              font-size:12px;font-weight:500;color:var(--text);
+              padding:6px 12px;white-space:nowrap;flex-shrink:0;
+            ">
+            Customize →
+          </button>
         </div>
-        <button type="button" id="pnCustomizeBtn"
-          style="background:none;border:none;cursor:pointer;font-size:12px;color:var(--green);padding:2px 0 0;text-decoration:none;display:block;margin-top:2px">
-          Customize starting number →
-        </button>
       </div>
 
       <!-- Custom start: input + indicator + reset -->
