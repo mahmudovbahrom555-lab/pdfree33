@@ -10,7 +10,7 @@
 if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 
 import { TOOLS, APP_VERSION, getLocalizedTool }   from './config.js';
-import { id, hide, setText }                      from './utils.js';
+import { id, hide, setText, fmtSize }              from './utils.js';
 
 // Fires on every load — open DevTools Console to confirm active version.
 // If you see an old version here after deploying, clear SW cache:
@@ -295,6 +295,10 @@ function _handleSuccess({ tool, blob, desc, filename, compressionReport }) {
   card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
   notifyToolSuccess(tool, { compressionReport });
+
+  if (tool === 'merge' && blob.size > 10 * 1024 * 1024) {
+    showToast(`📦 ${fmtSize(blob.size)} merged — consider compressing it to reduce size`, 6000);
+  }
 
   _maybeShowPwaNudge();
 }
