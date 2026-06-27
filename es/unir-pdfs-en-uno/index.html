@@ -168,7 +168,7 @@
   </script>
   <script src="../../js/theme.js"></script>
 </head>
-<body>
+<body data-tool="merge">
 
   <nav>
     <a href="../" class="logo" aria-label="Go to homepage" style="text-decoration:none">
@@ -253,6 +253,62 @@
     </div>
   </section>
 
+  <main id="toolArea" class="main-area" aria-busy="false">
+
+    <div class="tool-header">
+      <div class="tool-header-icon" id="toolIcon" aria-hidden="true"></div>
+      <div class="tool-header-text">
+        <h2 id="toolTitle">Unir PDFs en un solo archivo</h2>
+        <p  id="toolDesc">Combina archivos PDF ilimitados — sin restricciones</p>
+      </div>
+    </div>
+
+    <div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-label="Suelta los archivos aquí">
+      <input type="file" id="fileInput" multiple accept=".pdf" aria-hidden="true">
+      <span class="drop-icon" aria-hidden="true">📂</span>
+      <div class="drop-title">Suelta los archivos aquí</div>
+      <div class="drop-sub">o haz clic — cualquier número de archivos</div>
+      <label class="drop-btn" id="chooseFilesBtn" for="fileInput">Elegir archivos</label>
+    </div>
+
+    <div id="fileList"    class="file-list" aria-live="polite"></div>
+    <div id="fileCount"   class="file-count"   style="display:none"></div>
+    <div id="reorderHint" class="reorder-hint" style="display:none">↕ Arrastra para reordenar</div>
+
+    <div id="mergeOptions"     class="j2p-options"     style="display:none" aria-label="Merge options"></div>
+    <div id="splitOptions"     class="split-options"   style="display:none" aria-label="Split options"></div>
+    <div id="compressOptions"  class="compress-options" style="display:none" aria-label="Compression options"></div>
+    <div id="jpg2pdfOptions"   class="j2p-options"     style="display:none"></div>
+    <div id="pdf2jpgOptions"   class="j2p-options"     style="display:none"></div>
+    <div id="watermarkOptions" class="j2p-options"     style="display:none"></div>
+    <div id="pageNumOptions"   class="j2p-options"     style="display:none"></div>
+    <div id="metaOptions"      class="j2p-options"     style="display:none"></div>
+    <div id="protectOptions"   class="j2p-options"     style="display:none"></div>
+    <div id="redactOptions"    class="j2p-options"     style="display:none"></div>
+    <div id="rotateOptions"    class="j2p-options"     style="display:none"></div>
+    <div id="fillOptions"      class="j2p-options"     style="display:none"></div>
+    <div id="pdf2wordOptions"  class="j2p-options"     style="display:none"></div>
+
+    <button id="mergeBtn"  class="merge-btn"  type="button" disabled data-mode="process">🔗 Unir PDFs</button>
+    <button id="cancelBtn" class="cancel-btn" type="button" style="display:none" aria-label="Cancelar">✕ Cancelar</button>
+
+    <div id="progressBar"   class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+    <div id="progressLabel" class="progress-label"></div>
+
+    <div id="successCard" class="success-card" role="alert" aria-live="polite" style="display:none">
+      <div class="success-top">
+        <div class="success-icon" aria-hidden="true">✓</div>
+        <div class="success-text">
+          <h3 id="successTitle">¡Listo!</h3>
+          <p  id="successDesc"></p>
+        </div>
+        <button id="downloadBtn" class="download-btn" type="button">⬇ Descargar</button>
+        <button id="shareBtn" class="share-btn" type="button" style="display:none" aria-label="Compartir archivo"></button>
+      </div>
+    </div>
+
+  </main>
+
   <footer>
     <div style="display:flex;gap:48px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;font-size:13px;border-top:1px solid var(--border);padding-top:20px;">
       <div>
@@ -278,5 +334,7 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}' ></script>
+  <script type="module" src="../../js/locales/es.js"></script>
+  <script type="module" src="../../js/app.js"></script>
 </body>
 </html>
