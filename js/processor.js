@@ -194,8 +194,10 @@ async function _runMerge(filesSnapshot, { removeWatermarks = false } = {}) {
         ? t('desc_merged_partial', { n: mergedCount, total: filesSnapshot.length, pages: data.totalPages, size: fmtSize(blob.size) })
         : t('desc_merged', { total: filesSnapshot.length, pages: data.totalPages, size: fmtSize(blob.size) });
 
+      const baseName = filesSnapshot[0]?.name.replace(/\.pdf$/i, '') ?? 'merged_document';
+      const filename  = `${baseName}_merged.pdf`;
       document.dispatchEvent(new CustomEvent('pdfree:success', {
-        detail: { tool: 'merge', blob, desc, filename: 'merged_document.pdf' }
+        detail: { tool: 'merge', blob, desc, filename }
       }));
 
       // Consolidated toast for skipped files — one message beats five individual ones.
