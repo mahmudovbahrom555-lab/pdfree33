@@ -4,7 +4,7 @@
     "name": "Does converting PDF to JPG upload my file?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. PDFree converts PDF pages to images entirely in your browser using PDF.js. Nothing is uploaded."
+      "text": "No. PDFree converts PDF pages to images entirely in your browser using PDF.js (Mozilla's open-source PDF renderer). Nothing is uploaded to any server. You can verify this: open DevTools → Network tab and you should not see your PDF being uploaded during conversion."
     }
   },
   {
@@ -12,7 +12,15 @@
     "name": "What image quality can I expect?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree renders PDF pages at high resolution (150–300 DPI). You can select the output quality level."
+      "text": "PDFree renders PDF pages at 72, 150, or 300 DPI. At 300 DPI the output is print quality — text is sharp and readable at any zoom. At 150 DPI the images are clear for screen use and most office applications."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I convert PDF to PNG instead of JPG?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. PDFree supports both JPG and PNG output. PNG is lossless and better for text-heavy documents or charts where you need pixel-perfect sharpness. JPG produces smaller files and is better for photo-heavy pages. Select the format before converting."
     }
   },
   {
@@ -20,7 +28,15 @@
     "name": "Can I convert only specific pages to JPG?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Yes. You can select individual pages or a page range to convert."
+      "text": "The tool currently converts all pages at once. To export only specific pages, first use the PDFree Split PDF tool to extract the pages you need into a separate PDF, then convert that PDF to JPG. Both steps are free and run locally in your browser."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Will a 10-page PDF produce 10 separate JPG files?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. Each page becomes one JPG or PNG file. If your PDF has more than one page, all images are bundled into a ZIP archive for download in one click."
     }
   },
   {
@@ -28,7 +44,7 @@
     "name": "Is there a page limit for conversion?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. There are no page count or file size limits."
+      "text": "No. There are no page count or file size limits. Very large PDFs (100+ pages at 300 DPI) may take longer to process. For best results with large files, close other browser tabs before converting."
     }
   }
 ]

@@ -9,8 +9,8 @@
         <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
           <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">1</div>
           <div>
-            <strong style="color:var(--text);font-size:15px;">Upload your PDF</strong>
-            <p style="margin:6px 0 0;font-size:14px;">Click <strong>Choose files</strong> or drag your PDF into the drop zone. The file is loaded into browser memory — not sent to any server.</p>
+            <strong style="color:var(--text);font-size:15px;">Open your PDF</strong>
+            <p style="margin:6px 0 0;font-size:14px;">Click <strong>Choose files</strong> or drag your PDF into the drop zone. The file loads in your browser — not sent to any server. You can verify: open DevTools → Network tab and you should not see your PDF being uploaded during conversion.</p>
           </div>
         </div>
         <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
@@ -47,48 +47,74 @@
           <strong style="color:var(--text);font-size:15px;">Editing PDF content in an image editor</strong>
           <p style="margin:6px 0 0;font-size:14px;">PDFs can't be opened in Photoshop or GIMP directly. Convert to JPG, edit the image, then convert back to PDF with JPG to PDF.</p>
         </div>
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">Saving a certificate or diploma as an image</strong>
+          <p style="margin:6px 0 0;font-size:14px;">LinkedIn, company intranets, and portfolios accept images, not PDFs. Convert your certificate PDF to JPG to upload it as a credential image — no quality loss at 150 DPI or higher.</p>
+        </div>
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:32px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">Creating a cover image for a PDF document</strong>
+          <p style="margin:6px 0 0;font-size:14px;">Convert only the first page of a report, ebook, or brochure to JPG to use as a cover image or preview thumbnail on a website or email.</p>
+        </div>
 
-        <!-- Comparison table -->
-        <h2 style="font-size:22px;color:var(--text);margin:48px 0 16px;font-weight:700;">PDFree vs Competitors</h2>
+        <!-- JPG vs PNG -->
+        <h2 style="font-size:22px;color:var(--text);margin:0 0 16px;font-weight:700;">JPG or PNG — Which Format to Choose?</h2>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:0 0 32px;">
+          <div style="border:1px solid var(--border);border-radius:12px;padding:18px;">
+            <div style="font-weight:700;color:var(--text);margin-bottom:8px;font-size:15px;">📷 JPG</div>
+            <ul style="margin:0;padding-left:18px;font-size:14px;display:flex;flex-direction:column;gap:5px;">
+              <li>Smaller file size</li>
+              <li>Slight compression artifacts</li>
+              <li>Best for: photos, scanned pages, social media</li>
+              <li>Widely supported everywhere</li>
+            </ul>
+          </div>
+          <div style="border:1px solid var(--border);border-radius:12px;padding:18px;">
+            <div style="font-weight:700;color:var(--text);margin-bottom:8px;font-size:15px;">🖼️ PNG</div>
+            <ul style="margin:0;padding-left:18px;font-size:14px;display:flex;flex-direction:column;gap:5px;">
+              <li>Lossless — no compression artifacts</li>
+              <li>Larger file size</li>
+              <li>Best for: text-heavy pages, charts, line art</li>
+              <li>Ideal when sharpness is critical</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Comparison -->
+        <h2 style="font-size:22px;color:var(--text);margin:48px 0 16px;font-weight:700;">How PDFree Differs from Cloud-Based Converters</h2>
         <div style="overflow-x:auto;margin:0 0 32px;">
-          <table style="width:100%;border-collapse:collapse;font-size:14px;min-width:520px;">
+          <table style="width:100%;border-collapse:collapse;font-size:14px;min-width:440px;">
             <thead>
               <tr style="border-bottom:2px solid var(--border);">
-                <th style="text-align:left;padding:10px 14px;color:var(--text);font-weight:600;">Tool</th>
-                <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">Max output DPI (free)</th>
-                <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">Daily limit</th>
-                <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">Privacy</th>
-                <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">Price</th>
+                <th style="text-align:left;padding:10px 14px;color:var(--text);font-weight:600;">Feature</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">PDFree</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">Typical cloud tools</th>
               </tr>
             </thead>
             <tbody>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 14px;color:var(--text);font-weight:500;">Files uploaded</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;">No — stays on device</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Yes — sent to remote servers</td>
+              </tr>
               <tr style="border-bottom:1px solid var(--border);background:var(--green-light);">
-                <td style="padding:10px 14px;color:var(--green);font-weight:700;">PDFree</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">300 DPI</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">No limit</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;">No upload</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Free forever</td>
+                <td style="padding:10px 14px;color:var(--text);font-weight:500;">Max output resolution</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;">300 DPI (print quality)</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Often limited on free tier</td>
               </tr>
               <tr style="border-bottom:1px solid var(--border);">
-                <td style="padding:10px 14px;color:var(--text);">iLovePDF</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">150 DPI free</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Daily limit</td>
-                <td style="text-align:center;padding:10px 14px;color:#b45309;">Uploaded to servers</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Free / $6+/mo</td>
+                <td style="padding:10px 14px;color:var(--text);font-weight:500;">Output formats</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;">JPG and PNG</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Usually JPG only (free)</td>
               </tr>
-              <tr style="border-bottom:1px solid var(--border);">
-                <td style="padding:10px 14px;color:var(--text);">SmallPDF</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">150 DPI free</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">2 tasks/day</td>
-                <td style="text-align:center;padding:10px 14px;color:#b45309;">Uploaded to servers</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Free / $9+/mo</td>
+              <tr style="border-bottom:1px solid var(--border);background:var(--green-light);">
+                <td style="padding:10px 14px;color:var(--text);font-weight:500;">Daily usage limit</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;">None</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Often restricted on free tier</td>
               </tr>
-              <tr style="border-bottom:1px solid var(--border);">
-                <td style="padding:10px 14px;color:var(--text);">Adobe Acrobat</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">300 DPI</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">2/month free</td>
-                <td style="text-align:center;padding:10px 14px;color:#b45309;">Uploaded to servers</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">$19.99/mo</td>
+              <tr>
+                <td style="padding:10px 14px;color:var(--text);font-weight:500;">Price</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;">Free forever</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Free with limits / paid plans</td>
               </tr>
             </tbody>
           </table>
@@ -103,7 +129,7 @@
         </div>
         <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
           <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Does converting a PDF to JPG lose quality?</h3>
-          <p style="margin:0;font-size:14px;">Converting to JPG involves some compression. At 300 DPI the quality is very high and barely distinguishable from the original. Text remains readable. For lossless output, PNG is better — contact us if you need PNG support.</p>
+          <p style="margin:0;font-size:14px;">JPG uses lossy compression — at 300 DPI the quality is very high and text remains readable. For completely lossless output, use PNG format instead. PDFree supports both JPG and PNG — select the format before converting.</p>
         </div>
         <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
           <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Will a 10-page PDF produce 10 separate JPG files?</h3>
@@ -131,13 +157,33 @@
           <li><strong>Batch download</strong> — download all pages as a ZIP file in one click</li>
         </ul>
 
+        <!-- Next in workflow -->
+        <h2 style="font-size:22px;color:var(--text);margin:48px 0 12px;font-weight:700;">What to Do Before or After Converting</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:0 0 40px;">
+          <a href="/split-pdf/" style="display:block;padding:16px;border:1px solid var(--border);border-radius:10px;text-decoration:none;background:var(--surface);">
+            <div style="font-weight:600;color:var(--text);margin:0 0 4px;font-size:14px;">→ Split PDF first</div>
+            <p style="margin:0;font-size:13px;color:var(--text2);">Extract only the pages you need before converting to JPG</p>
+          </a>
+          <a href="/compress-pdf/" style="display:block;padding:16px;border:1px solid var(--border);border-radius:10px;text-decoration:none;background:var(--surface);">
+            <div style="font-weight:600;color:var(--text);margin:0 0 4px;font-size:14px;">→ Compress PDF first</div>
+            <p style="margin:0;font-size:13px;color:var(--text2);">Reduce PDF size before converting — faster rendering for large files</p>
+          </a>
+          <a href="/jpg2pdf/" style="display:block;padding:16px;border:1px solid var(--border);border-radius:10px;text-decoration:none;background:var(--surface);">
+            <div style="font-weight:600;color:var(--text);margin:0 0 4px;font-size:14px;">→ JPG to PDF</div>
+            <p style="margin:0;font-size:13px;color:var(--text2);">Convert the edited images back to a PDF document</p>
+          </a>
+          <a href="/merge-pdf/" style="display:block;padding:16px;border:1px solid var(--border);border-radius:10px;text-decoration:none;background:var(--surface);">
+            <div style="font-weight:600;color:var(--text);margin:0 0 4px;font-size:14px;">→ Merge PDFs</div>
+            <p style="margin:0;font-size:13px;color:var(--text2);">Combine multiple PDFs before converting pages to images</p>
+          </a>
+        </div>
+
         <!-- Related tools -->
-        <h2 style="font-size:22px;color:var(--text);margin:48px 0 12px;font-weight:700;">Related Tools</h2>
+        <h2 style="font-size:22px;color:var(--text);margin:0 0 12px;font-weight:700;">Related Tools</h2>
         <ul style="margin:0 0 40px;padding-left:24px;display:flex;flex-direction:column;gap:8px;">
-          
-        <li><a href="/jpg2pdf/" style="color:var(--green);font-weight:500;">JPG to PDF</a> — Reverse: convert JPG images back to PDF</li>
-        <li><a href="/split-pdf/" style="color:var(--green);font-weight:500;">Split PDF</a> — Extract specific pages before converting to JPG</li>
-        <li><a href="/compress-large-pdf-free/" style="color:var(--green);font-weight:500;">Compress PDF</a> — Reduce PDF size before exporting pages</li>
+          <li><a href="/jpg2pdf/" style="color:var(--green);font-weight:500;">JPG to PDF</a> — Reverse: convert JPG images back to PDF</li>
+          <li><a href="/split-pdf/" style="color:var(--green);font-weight:500;">Split PDF</a> — Extract specific pages before converting to JPG</li>
+          <li><a href="/compress-large-pdf-free/" style="color:var(--green);font-weight:500;">Compress PDF</a> — Reduce PDF size before exporting pages</li>
         </ul>
 
       </div>

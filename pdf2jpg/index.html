@@ -147,7 +147,7 @@
     "name": "PDFree",
     "url": "https://pdfree.io"
   },
-  "keywords": "pdf to jpg, pdf to image, extract images from pdf, no upload, private"
+  "keywords": "pdf to jpg, pdf to png, pdf to image, convert pdf page to jpg, export pdf as image, no upload, private"
 }
   </script>
   <script type="application/ld+json">
@@ -176,7 +176,15 @@
       "name": "Can I convert only specific pages to JPG?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes. You can select individual pages or a page range to convert."
+        "text": "The tool currently converts all pages at once. To export only specific pages, first use the Split PDF tool to extract the pages you need into a separate PDF, then convert that PDF to JPG. Both tools are free and process files locally in your browser."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I convert PDF to PNG instead of JPG?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. PDFree supports both JPG and PNG output. Select PNG in the format options before converting. PNG is lossless and better for documents with text or line art where you need pixel-perfect sharpness. JPG is smaller and better for photo-heavy pages."
       }
     },
     {
@@ -184,7 +192,7 @@
       "name": "Is there a page limit for conversion?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "No. There are no page count or file size limits."
+        "text": "No. There are no page count or file size limits. Very large PDFs (100+ pages at 300 DPI) may take longer to process and require more memory — for best results close other browser tabs before converting large files."
       }
     }
   ]
@@ -209,8 +217,8 @@
       {
         "@type": "HowToStep",
         "position": 2,
-        "name": "Upload your PDF",
-        "text": "Click 'Choose files' or drag and drop your PDF file.",
+        "name": "Load your PDF",
+        "text": "Click 'Choose files' or drag and drop your PDF. The file loads in your browser — nothing is uploaded to any server.",
         "url": "https://pdfree.io/pdf2jpg/#step2"
       },
       {
