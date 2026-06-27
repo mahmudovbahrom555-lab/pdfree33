@@ -4,29 +4,37 @@
 // ============================================================
 //  pageNumUI.js — Add Page Numbers options panel
 //
-//  🎯 Сверх ТЗ:
-//  1. Roman / Arabic / Alpha numeration (I II III vs 1 2 3 vs A B C)
-//  2. Skip first page — обложка остаётся без номера
-//  3. Odd/even side — номера справа на нечётных, слева на чётных
-//     (как в книгах) — одна опция заменяет сложную настройку
-//  4. Стартовый номер — нумерация с любого числа
+//  Two separate concerns, clearly separated in the UI:
+//  PAGE RANGE  — which PDF pages to number (fromPage / toPage)
+//  NUMBERING   — what numbers to show (format / startAt / showTotal)
+//  POSITION    — where on the page (position chips)
 // ============================================================
 
 import { id } from './utils.js';
-import { chipGroup, sliderRow, checkbox, group, row } from './uiComponents.js';
+import { chipGroup, sliderRow, checkbox } from './uiComponents.js';
 import { formatPageNumber } from './pageNumUtils.js';
 
 // ── State ──────────────────────────────────────────────────────
-let _position   = 'bottom-center'; // 'bottom-center'|'bottom-right'|'bottom-left'|'top-center'|'book'
-let _format     = 'arabic';        // 'arabic'|'roman'|'alpha'
-let _startAt    = 1;
-let _skipFirst  = false;
-let _fontSize   = 10;
-let _showTotal  = false;           // show "1 / N" instead of just "1"
+let _position  = 'bottom-center'; // 'bottom-center'|'bottom-right'|'bottom-left'|'top-center'|'book'
+let _format    = 'arabic';        // 'arabic'|'roman'|'alpha'
+let _fromPage  = 1;               // first PDF page to number (1-based)
+let _toPage    = null;            // last PDF page to number (null = last page)
+let _startAt   = 1;               // number shown on the first numbered page
+let _fontSize  = 10;
+let _showTotal = false;           // show "1 / N" instead of just "1"
 
 export function getPageNumParams() {
-  return { position: _position, format: _format, startAt: _startAt,
-           skipFirst: _skipFirst, fontSize: _fontSize, showTotal: _showTotal };
+  return {
+    position:  _position,
+    format:    _format,
+    fromPage:  _fromPage,
+    toPage:    _toPage,
+    startAt:   _startAt,
+    fontSize:  _fontSize,
+    showTotal: _showTotal,
+    // legacy compat: skipFirst = fromPage > 1
+    skipFirst: _fromPage > 1,
+  };
 }
 
 // ── Public API ─────────────────────────────────────────────────
@@ -45,24 +53,41 @@ export function hidePageNumOptions() {
   container.innerHTML = '';
   _position  = 'bottom-center';
   _format    = 'arabic';
+  _fromPage  = 1;
+  _toPage    = null;
   _startAt   = 1;
-  _skipFirst = false;
   _fontSize  = 10;
   _showTotal = false;
 }
 
 // ── Render ─────────────────────────────────────────────────────
 
+const INPUT_STYLE = `
+  width:64px;text-align:center;
+  border:1px solid var(--border);border-radius:6px;
+  padding:5px 6px;font-size:14px;font-weight:500;
+  background:var(--surface);color:var(--text);
+  -moz-appearance:textfield;
+`.replace(/\n\s*/g, '');
+
+function _numInput(id, value, placeholder = '') {
+  return `<input
+    type="number" id="${id}" min="1" max="9999" step="1"
+    value="${value ?? ''}" placeholder="${placeholder}"
+    style="${INPUT_STYLE}"
+    aria-label="${id}">`;
+}
+
 function _render() {
   const container = id('pageNumOptions');
   if (!container) return;
 
   const posOpts = [
-    { value: 'bottom-center', label: '↓ Bottom center'            },
-    { value: 'bottom-right',  label: '↘ Bottom right'             },
-    { value: 'bottom-left',   label: '↙ Bottom left'              },
-    { value: 'top-center',    label: '↑ Top center'               },
-    { value: 'book',          label: '📖 Book style (outer edge)'  },
+    { value: 'bottom-center', label: '↓ Bottom center'           },
+    { value: 'bottom-right',  label: '↘ Bottom right'            },
+    { value: 'bottom-left',   label: '↙ Bottom left'             },
+    { value: 'top-center',    label: '↑ Top center'              },
+    { value: 'book',          label: '📖 Book style (outer edge)' },
   ];
   const fmtOpts = [
     { value: 'arabic', label: '1  2  3'   },
@@ -71,29 +96,90 @@ function _render() {
   ];
 
   container.innerHTML = `
-    ${row(
-      group('Position', chipGroup('pnPos', posOpts, _position, 'Position', { vertical: true, radius: '8px' })),
-      group('Format', `
-        ${chipGroup('pnFmt', fmtOpts, _format, 'Numeration format', { vertical: true, radius: '8px' })}
-        <div class="j2p-label" style="margin-top:12px">Start at</div>
-        <div style="display:flex;align-items:center;gap:8px;margin-top:4px">
-          <button type="button" class="pn-stepper" id="pnStartMinus" aria-label="Decrease">−</button>
-          <span class="pn-start-val" id="pnStartVal" aria-live="polite">${_formatNum(_startAt, _format)}</span>
-          <button type="button" class="pn-stepper" id="pnStartPlus" aria-label="Increase">+</button>
-        </div>
-        <div class="j2p-label" style="margin-top:12px">Options</div>
-        ${checkbox({ id: 'pnSkipFirst', checked: _skipFirst, style: 'margin-top:4px',
-                     title: 'Skip first page', subtitle: "Don't number the cover / title page" })}
-        ${checkbox({ id: 'pnShowTotal', checked: _showTotal, style: 'margin-top:8px',
-                     title: 'Show total (1 / N)', subtitle: 'Displays current page out of total' })}
-      `)
-    )}
+    <style>
+      .pn-section { margin-bottom:18px; }
+      .pn-section-label {
+        font-size:11px;font-weight:700;text-transform:uppercase;
+        letter-spacing:.6px;color:var(--text3);margin-bottom:10px;
+      }
+      .pn-row { display:flex;align-items:center;gap:8px;flex-wrap:wrap; }
+      .pn-field { display:flex;flex-direction:column;gap:4px; }
+      .pn-field-label { font-size:12px;color:var(--text2); }
+      .pn-stepper {
+        width:30px;height:30px;border:1px solid var(--border);
+        border-radius:6px;background:var(--surface);color:var(--text);
+        font-size:16px;cursor:pointer;display:flex;align-items:center;
+        justify-content:center;flex-shrink:0;
+      }
+      .pn-stepper:hover { background:var(--border); }
+      .pn-divider { border:none;border-top:1px solid var(--border);margin:16px 0; }
+      input[type=number]::-webkit-inner-spin-button,
+      input[type=number]::-webkit-outer-spin-button { -webkit-appearance:none; }
+    </style>
 
+    <!-- ── PAGE RANGE ── -->
+    <div class="pn-section">
+      <div class="pn-section-label">Page range</div>
+      <div class="pn-row">
+        <div class="pn-field">
+          <span class="pn-field-label">From page</span>
+          <div class="pn-row">
+            <button type="button" class="pn-stepper" id="pnFromMinus" aria-label="Decrease from page">−</button>
+            ${_numInput('pnFromInput', _fromPage)}
+            <button type="button" class="pn-stepper" id="pnFromPlus" aria-label="Increase from page">+</button>
+          </div>
+        </div>
+        <div style="font-size:20px;color:var(--text3);padding-top:18px">→</div>
+        <div class="pn-field">
+          <span class="pn-field-label">To page <span style="opacity:.5;font-weight:400">(∞ = all)</span></span>
+          <div class="pn-row">
+            <button type="button" class="pn-stepper" id="pnToMinus" aria-label="Decrease to page">−</button>
+            ${_numInput('pnToInput', _toPage, '∞')}
+            <button type="button" class="pn-stepper" id="pnToPlus" aria-label="Increase to page">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="pn-divider">
+
+    <!-- ── NUMBERING ── -->
+    <div class="pn-section">
+      <div class="pn-section-label">Numbering</div>
+      ${chipGroup('pnFmt', fmtOpts, _format, 'Number format', { radius: '8px' })}
+      <div style="margin-top:12px">
+        <div class="pn-field-label" style="margin-bottom:4px">Start number</div>
+        <div class="pn-row">
+          <button type="button" class="pn-stepper" id="pnStartMinus" aria-label="Decrease start">−</button>
+          ${_numInput('pnStartInput', _startAt)}
+          <button type="button" class="pn-stepper" id="pnStartPlus" aria-label="Increase start">+</button>
+        </div>
+      </div>
+    </div>
+
+    <hr class="pn-divider">
+
+    <!-- ── POSITION ── -->
+    <div class="pn-section">
+      <div class="pn-section-label">Position</div>
+      ${chipGroup('pnPos', posOpts, _position, 'Position', { vertical: true, radius: '8px' })}
+    </div>
+
+    <hr class="pn-divider">
+
+    <!-- ── OPTIONS ── -->
+    <div class="pn-section">
+      <div class="pn-section-label">Options</div>
+      ${checkbox({ id: 'pnShowTotal', checked: _showTotal,
+                   title: 'Show total (1 / N)', subtitle: 'Displays current page out of total' })}
+    </div>
+
+    <!-- ── SIZE ── -->
     ${sliderRow({ id: 'pnFontSize', label: 'Size', valId: 'pnFontSizeVal',
                   valText: _fontSize + 'pt', min: 7, max: 16, step: 1,
-                  value: _fontSize, ariaLabel: `Font size ${_fontSize}pt`,
-                  style: 'margin-top:4px' })}
+                  value: _fontSize, ariaLabel: `Font size ${_fontSize}pt` })}
 
+    <!-- ── PREVIEW ── -->
     <div class="pn-preview" aria-hidden="true">
       ${_previewHTML()}
     </div>
@@ -103,18 +189,35 @@ function _render() {
 }
 
 function _previewHTML() {
-  const ex1 = _formatNum(_startAt, _format);
+  const ex1 = _formatNum(_startAt,     _format);
   const ex2 = _formatNum(_startAt + 1, _format);
   const ex3 = _formatNum(_startAt + 2, _format);
-  const sfx = _n => _showTotal ? ` / ${_formatNum(_startAt + 10, _format)}` : '';
+  const sfx = n => _showTotal ? ` / ${_formatNum(_startAt + 9, _format)}` : '';
+  const p1  = _fromPage > 1 ? '—' : ex1 + sfx(1);
+  const rangeHint = _toPage !== null
+    ? `<span class="pn-preview__label" style="margin-left:8px;opacity:.6">pages ${_fromPage}–${_toPage}</span>`
+    : (_fromPage > 1 ? `<span class="pn-preview__label" style="margin-left:8px;opacity:.6">from page ${_fromPage}</span>` : '');
   return `<span class="pn-preview__label">Preview:</span>
-    <span class="pn-preview__ex">${_skipFirst ? '—' : ex1 + sfx(1)}</span>
+    <span class="pn-preview__ex">${p1}</span>
     <span class="pn-preview__ex">${ex2 + sfx(2)}</span>
     <span class="pn-preview__ex">${ex3 + sfx(3)}</span>
-    <span class="pn-preview__dots">…</span>`;
+    <span class="pn-preview__dots">…</span>${rangeHint}`;
 }
 
 // ── Events ─────────────────────────────────────────────────────
+
+function _numStepper(inputId, getVal, setVal, min = 1, max = 9999) {
+  const input = id(inputId);
+  input?.addEventListener('input', e => {
+    const v = parseInt(e.target.value, 10);
+    if (!isNaN(v) && v >= min && v <= max) { setVal(v); _refreshPreview(); }
+  });
+  input?.addEventListener('change', e => {
+    const raw = e.target.value.trim();
+    const v   = raw === '' ? null : Math.max(min, Math.min(max, parseInt(raw, 10) || min));
+    setVal(v); e.target.value = v ?? ''; _refreshPreview();
+  });
+}
 
 function _bindEvents() {
   const container = id('pageNumOptions');
@@ -131,48 +234,56 @@ function _bindEvents() {
         el.classList.toggle('j2p-chip--active', el.dataset.value === _format));
       _refreshPreview();
     }
-    if (e.target.id === 'pnSkipFirst') {
-      _skipFirst = e.target.checked;
-      _refreshPreview();
-    }
-    if (e.target.id === 'pnShowTotal') {
-      _showTotal = e.target.checked;
-      _refreshPreview();
-    }
+    if (e.target.id === 'pnShowTotal') { _showTotal = e.target.checked; _refreshPreview(); }
   });
 
+  // From page
+  _numStepper('pnFromInput', () => _fromPage, v => { _fromPage = v ?? 1; });
+  id('pnFromMinus')?.addEventListener('click', () => {
+    if (_fromPage > 1) { _fromPage--; const el = id('pnFromInput'); if (el) el.value = _fromPage; _refreshPreview(); }
+  });
+  id('pnFromPlus')?.addEventListener('click', () => {
+    if (_fromPage < 9999) { _fromPage++; const el = id('pnFromInput'); if (el) el.value = _fromPage; _refreshPreview(); }
+  });
+
+  // To page
+  _numStepper('pnToInput', () => _toPage, v => { _toPage = v; });
+  id('pnToInput')?.addEventListener('input', e => {
+    const raw = e.target.value.trim();
+    _toPage = (raw === '' || raw === '∞') ? null : Math.max(1, Math.min(9999, parseInt(raw, 10) || 1));
+    _refreshPreview();
+  });
+  id('pnToMinus')?.addEventListener('click', () => {
+    const cur = _toPage ?? 2;
+    if (cur > 1) { _toPage = cur - 1; const el = id('pnToInput'); if (el) el.value = _toPage; _refreshPreview(); }
+  });
+  id('pnToPlus')?.addEventListener('click', () => {
+    _toPage = (_toPage ?? _fromPage) + 1;
+    const el = id('pnToInput'); if (el) el.value = _toPage; _refreshPreview();
+  });
+
+  // Start number
+  _numStepper('pnStartInput', () => _startAt, v => { _startAt = v ?? 1; });
   id('pnStartMinus')?.addEventListener('click', () => {
-    if (_startAt > 1) { _startAt--; _refreshPreview(); }
+    if (_startAt > 1) { _startAt--; const el = id('pnStartInput'); if (el) el.value = _startAt; _refreshPreview(); }
   });
   id('pnStartPlus')?.addEventListener('click', () => {
-    if (_startAt < 999) { _startAt++; _refreshPreview(); }
+    if (_startAt < 9999) { _startAt++; const el = id('pnStartInput'); if (el) el.value = _startAt; _refreshPreview(); }
   });
 
+  // Font size
   id('pnFontSize')?.addEventListener('input', e => {
-    _fontSize = parseInt(e.target.value);
+    _fontSize = parseInt(e.target.value, 10);
     const val = id('pnFontSizeVal');
     if (val) val.textContent = e.target.value + 'pt';
   });
 }
 
 function _refreshPreview() {
-  const el = id('pnStartVal');
-  if (el) el.textContent = _formatNum(_startAt, _format);
   const prev = id('pageNumOptions')?.querySelector('.pn-preview');
   if (prev) prev.innerHTML = _previewHTML();
 }
 
 // ── Numeral formatters ─────────────────────────────────────────
-// Implementations live in pageNumUtils.js (shared with tests).
-// worker.js keeps its own copy (can't use ES modules via importScripts).
-// Integration tests verify both produce identical output.
-
-// Re-export for callers who import formatPageNumber from this module
 export { formatPageNumber };
-
-// Local alias used by _render and _previewHTML
 function _formatNum(n, fmt) { return formatPageNumber(n, fmt); }
-
-// ── Helpers ────────────────────────────────────────────────────
-
-

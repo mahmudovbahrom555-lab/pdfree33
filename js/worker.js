@@ -1575,19 +1575,30 @@ async function handleWatermark(fileBuffer, options) {
 
 async function handlePageNum(fileBuffer, options) {
   const { rgb, StandardFonts } = PDFLib;
-  const { position = 'bottom-center', format = 'arabic', startAt = 1,
-          skipFirst = false, fontSize = 10, showTotal = false } = options;
+  const {
+    position = 'bottom-center', format = 'arabic',
+    fromPage = 1, toPage = null,
+    startAt = 1,
+    fontSize = 10, showTotal = false,
+    // legacy: skipFirst still supported but fromPage takes precedence
+    skipFirst = false,
+  } = options;
   const MARGIN = 24;
 
+  // Resolve page range (0-based indices)
   await pdfPipeline(fileBuffer, { saveValue: 93 }, async (pdf, pages) => {
     const font = await pdf.embedFont(StandardFonts.Helvetica);
-    const visibleTotal = pages.length - (skipFirst ? 1 : 0);
+    // from/to are 1-based; clamp to actual page count
+    const fromIdx = Math.max(0, (fromPage || 1) - 1 + (skipFirst && fromPage <= 1 ? 1 : 0));
+    const toIdx   = toPage !== null ? Math.min(toPage - 1, pages.length - 1) : pages.length - 1;
+    const visibleTotal = Math.max(0, toIdx - fromIdx + 1);
+
     for (let i = 0; i < pages.length; i++) {
-      if (skipFirst && i === 0) continue;
+      if (i < fromIdx || i > toIdx) continue;  // outside page range
       progress(10 + Math.round((i / pages.length) * 82), `Numbering page ${i + 1} of ${pages.length}…`);
       const page = pages[i];
       const { width, height } = page.getSize();
-      const pageNum   = i + startAt - (skipFirst ? 1 : 0);
+      const pageNum   = (i - fromIdx) + startAt;
       const baseLabel = _formatPageNum(pageNum, format);
       const label     = showTotal
         ? `${baseLabel} / ${_formatPageNum(startAt + visibleTotal - 1, format)}`
