@@ -233,7 +233,7 @@ async function _runMerge(filesSnapshot, { removeWatermarks = false } = {}) {
       const baseName = filesSnapshot[0]?.name.replace(/\.pdf$/i, '') ?? 'merged_document';
       const filename  = `${baseName}_merged.pdf`;
       document.dispatchEvent(new CustomEvent('pdfree:success', {
-        detail: { tool: 'merge', blob, desc, filename }
+        detail: { tool: 'merge', blob, desc, filename, pageCounts: data.pageCounts ?? null }
       }));
 
       // Consolidated toast for skipped files — one message beats five individual ones.

@@ -206,7 +206,7 @@ function resetState() {
 
 // ── Success handler ───────────────────────────────────────────
 
-function _handleSuccess({ tool, blob, desc, filename, compressionReport }) {
+function _handleSuccess({ tool, blob, desc, filename, compressionReport, pageCounts }) {
   _freeResultUrl();
   _resultUrl      = URL.createObjectURL(blob);
   _resultBlob     = blob;
@@ -296,6 +296,14 @@ function _handleSuccess({ tool, blob, desc, filename, compressionReport }) {
   card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
   notifyToolSuccess(tool, { compressionReport });
+
+  if (tool === 'merge' && pageCounts?.length > 1) {
+    const breakdown = pageCounts
+      .map(f => `${f.name.replace(/\.pdf$/i, '')} (${f.pages}p)`)
+      .join(' + ');
+    const existingDesc = id('successDesc');
+    if (existingDesc) existingDesc.textContent += ` — ${breakdown}`;
+  }
 
   if (tool === 'merge' && blob.size > 10 * 1024 * 1024) {
     showToast(`📦 ${fmtSize(blob.size)} merged — consider compressing it to reduce size`, 6000);

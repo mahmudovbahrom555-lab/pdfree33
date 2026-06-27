@@ -381,6 +381,7 @@ async function handleMerge(files, names, removeWatermarks = false) {
   const { PDFDocument } = PDFLib;
   const merged = await PDFDocument.create();
   let totalPages = 0;
+  const pageCounts = [];
 
   // ── Best Effort loading ───────────────────────────────────────
   // Policy: skip damaged files, merge the rest.
@@ -422,6 +423,7 @@ async function handleMerge(files, names, removeWatermarks = false) {
       const pages = await merged.copyPages(pdf, pdf.getPageIndices());
       pages.forEach(p => merged.addPage(p));
       totalPages += pages.length;
+      pageCounts.push({ name: names?.[i] ?? `file${i+1}.pdf`, pages: pages.length });
     } catch (err) {
       // copyPages can fail on PDFs with unsupported features (Type3 fonts, etc.)
       fileErrors.push({
@@ -449,6 +451,7 @@ async function handleMerge(files, names, removeWatermarks = false) {
       totalPages,
       fileErrors:  fileErrors.length > 0 ? fileErrors : null,
       mergedCount: files.length - fileErrors.length,
+      pageCounts,
     },
     [bytes.buffer]
   );
