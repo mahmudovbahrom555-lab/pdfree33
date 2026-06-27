@@ -496,9 +496,34 @@
       </ul>
 
       <!-- Privacy -->
-      <h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">Privacy — Your Files Stay on Your Device</h2>
-      <p style="font-size:14px;margin:0 0 16px;">Most PDF-to-Word services upload your document to a remote server for OCR and conversion. That means your confidential contract, medical record, or financial report travels across the internet and is stored on someone else's computer — even temporarily.</p>
-      <p style="font-size:14px;margin:0 0 32px;">PDFree never sends your file anywhere. All processing — text extraction, table detection, font analysis, and .docx packaging — happens in your browser tab using WebAssembly and JavaScript. Close the tab and your document is gone entirely.</p>
+      <h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">Why Local Processing Matters</h2>
+
+      <p style="font-size:14px;margin:0 0 20px;">Think about what PDF documents typically contain:</p>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:0 0 24px;">
+        <div style="padding:16px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
+          <div style="font-weight:600;color:var(--text);margin:0 0 6px;font-size:14px;">📋 Contracts &amp; NDAs</div>
+          <p style="margin:0;font-size:13px;color:var(--text2);">Passport numbers, salaries, home addresses, signatures, settlement terms</p>
+        </div>
+        <div style="padding:16px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
+          <div style="font-weight:600;color:var(--text);margin:0 0 6px;font-size:14px;">🏦 Bank statements</div>
+          <p style="margin:0;font-size:13px;color:var(--text2);">Account numbers, transaction history, balances, personal tax details</p>
+        </div>
+        <div style="padding:16px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
+          <div style="font-weight:600;color:var(--text);margin:0 0 6px;font-size:14px;">🏥 Medical records</div>
+          <p style="margin:0;font-size:13px;color:var(--text2);">Diagnoses, medications, test results, patient identifiers</p>
+        </div>
+        <div style="padding:16px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
+          <div style="font-weight:600;color:var(--text);margin:0 0 6px;font-size:14px;">👥 HR documents</div>
+          <p style="margin:0;font-size:13px;color:var(--text2);">Employee salaries, performance reviews, disciplinary records</p>
+        </div>
+      </div>
+
+      <p style="font-size:14px;margin:0 0 16px;">Cloud-based PDF tools upload your document to a remote server. Even with promises of "auto-delete after 24 hours", your file travels across networks and sits on someone else's infrastructure — even if temporarily.</p>
+
+      <p style="font-size:14px;margin:0 0 16px;">PDFree processes everything locally in your browser using JavaScript and WebAssembly. No file is sent anywhere. The practical test: open browser DevTools → Network tab while converting — you will see no file upload request at any step.</p>
+
+      <p style="font-size:14px;margin:0 0 32px;">Close the tab and the document is gone entirely. Nothing stored, nothing logged, nothing transmitted.</p>
 
       <!-- FAQ -->
       <h2 style="font-size:22px;color:var(--text);margin:48px 0 20px;font-weight:700;">Frequently Asked Questions</h2>
