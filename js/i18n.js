@@ -53,6 +53,7 @@ const EN = {
   prog_pagenum:      'Adding page numbers...',
 
   // ── pageNumUI — start number card ────────────────────────────
+  pn_apply_to_pages:  'Apply to pages',
   pn_start_label:     'Start number',
   pn_auto_tag:        'Auto',
   pn_custom_tag:      'Custom',

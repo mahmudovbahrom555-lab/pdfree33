@@ -122,7 +122,7 @@ function _render() {
 
     <!-- ── PAGE RANGE ── -->
     <div class="pn-section">
-      <div class="pn-section-label">Page range</div>
+      <div class="pn-section-label">${t('pn_apply_to_pages')}</div>
       <div class="pn-row">
         <div class="pn-field">
           <span class="pn-field-label">From page</span>

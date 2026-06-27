@@ -41,6 +41,7 @@ window.PDFREE_LOCALE = {
   prog_pagenum:      'Ajout des numéros de page...',
 
   // ── pageNumUI — start number card ────────────────────────────
+  pn_apply_to_pages:  'Appliquer aux pages',
   pn_start_label:     'Numéro de départ',
   pn_auto_tag:     'Auto',
   pn_custom_tag:     'Personnalisé',
