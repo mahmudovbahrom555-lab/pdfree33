@@ -58,7 +58,7 @@ const EN = {
   pn_auto_tag:        'Auto',
   pn_custom_tag:      'Custom',
   pn_auto_follows:    'Automatically follows From page',
-  pn_customize:       '✏️ Customize',
+  pn_customize:       'Customize',
   pn_back_auto:       '↺ Back to auto',
   prog_meta:         'Updating metadata...',
   prog_protect:      'Encrypting PDF...',

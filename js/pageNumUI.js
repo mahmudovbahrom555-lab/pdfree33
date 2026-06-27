@@ -172,7 +172,7 @@ function _render() {
           </div>
           <button type="button" id="pnCustomizeBtn"
             style="flex-shrink:0;margin-top:2px;border:1px solid var(--border);border-radius:6px;background:var(--surface);cursor:pointer;font-size:12px;color:var(--text2);padding:5px 10px;display:flex;align-items:center;gap:4px;white-space:nowrap">
-            ${t('pn_customize')}
+            <span style="font-size:15px;line-height:1">✏️</span>${t('pn_customize')}
           </button>
         </div>
 

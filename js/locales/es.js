@@ -46,7 +46,7 @@ window.PDFREE_LOCALE = {
   pn_auto_tag:     'Auto',
   pn_custom_tag:     'Personalizado',
   pn_auto_follows:     'Sigue automáticamente la página inicial',
-  pn_customize:     '✏️ Personalizar',
+  pn_customize:     'Personalizar',
   pn_back_auto:     '↺ Volver a Auto',
   prog_meta:         'Actualizando metadatos...',
   prog_protect:      'Cifrando PDF...',
