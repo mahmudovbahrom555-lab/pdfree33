@@ -324,7 +324,10 @@ async function _detectLanguage(pdfDoc, worker) {
     const layerText = tc.items.map(i => i.str).join('');
     if (layerText.trim().length >= 50) {
       const result = _detectScriptFromText(layerText, 100);
-      _lastDetectionMetrics = { source: 'text-layer', initial: result.lang, switched: false };
+      _lastDetectionMetrics = {
+        source: 'text-layer', initial: result.lang, suspicious: false,
+        tried: [], winner: result.lang, winnerConfidence: 100, switched: false,
+      };
       return result;
     }
 
@@ -343,15 +346,14 @@ async function _detectLanguage(pdfDoc, worker) {
     const conf = res?.data?.confidence ?? 0;
 
     if (txt.trim().length >= 20) {
-      const primary = _detectScriptFromText(txt, conf);
+      const primary    = _detectScriptFromText(txt, conf);
+      const suspicious = _isDetectionSuspicious(txt, conf);
+      const probes     = suspicious ? (FALLBACK_PROBES[_scriptGroupOf(primary.lang)] ?? []) : [];
+      const tried      = [];  // track every probe attempted
 
-      // 4. Multi-signal fallback: probe script-family candidates when suspicious.
-      //    Uses FALLBACK_PROBES keyed by script group, not individual language.
-      const probes = _isDetectionSuspicious(txt, conf)
-        ? (FALLBACK_PROBES[_scriptGroupOf(primary.lang)] ?? [])
-        : [];
-
+      // 4. Multi-signal fallback: try probes sequentially, stop on first gain ≥15%
       for (const { group, probe } of probes) {
+        tried.push(probe);
         await worker.reinitialize(probe);
         const fbRes  = await worker.recognize(cvs);
         const fbConf = fbRes?.data?.confidence ?? 0;
@@ -359,21 +361,23 @@ async function _detectLanguage(pdfDoc, worker) {
         if (fbConf > conf + 15) {
           cvs.width = 0; cvs.height = 0;
           _lastDetectionMetrics = {
-            source: 'ocr-fallback', initialGroup: _scriptGroupOf(primary.lang),
-            fallbackGroup: group, probe, switched: true,
-            confidenceInitial: conf, confidenceFallback: fbConf,
+            source: 'ocr-fallback',
+            initial: primary.lang, suspicious,
+            tried, winner: probe, winnerConfidence: fbConf,
+            switched: true, confidenceInitial: conf,
           };
           return { lang: probe, confident: fbConf >= 65 };
         }
-        // This probe didn't help — restore to initial lang before trying next
+        // Probe didn't win — restore to initial lang before trying next
         await worker.reinitialize(primary.lang);
       }
 
       cvs.width = 0; cvs.height = 0;
       _lastDetectionMetrics = {
-        source: 'ocr-primary', initial: primary.lang, switched: false,
-        confidenceInitial: conf,
-        ...(probes.length ? { fallbackTried: probes.map(p => p.probe), switched: false } : {}),
+        source: 'ocr-primary',
+        initial: primary.lang, suspicious,
+        tried, winner: primary.lang, winnerConfidence: conf,
+        switched: false,
       };
       return primary;
     }
@@ -382,7 +386,10 @@ async function _detectLanguage(pdfDoc, worker) {
     // Not enough text on this page — try next sample page
   }
 
-  _lastDetectionMetrics = { source: 'fallback-default', initial: 'eng', switched: false };
+  _lastDetectionMetrics = {
+    source: 'fallback-default', initial: 'eng', suspicious: false,
+    tried: [], winner: 'eng', winnerConfidence: 0, switched: false,
+  };
   return { lang: 'eng', confident: false };
 }
 
