@@ -259,8 +259,13 @@ const SCRIPT_GROUPS = {
 // each — downloading them during auto-detection would be too slow for most users.
 const FALLBACK_PROBES = {
   latin: [
-    { group: 'cyrillic', probe: 'rus' },  // Cyrillic → try Russian first
-    { group: 'rtl',      probe: 'ara' },  // Arabic/RTL → try Arabic second
+    { group: 'cyrillic', probe: 'rus' },  // 1st: Cyrillic (1–5 MB, fast)
+    { group: 'rtl',      probe: 'ara' },  // 2nd: Arabic/RTL (1.5 MB, fast)
+    { group: 'cjk',      probe: 'jpn' },  // 3rd: CJK — only reached when rus+ara
+                                          //   both fail (Arabic docs exit at step 2).
+                                          //   jpn model is ~10 MB; download is the
+                                          //   same cost the user pays at full OCR time
+                                          //   anyway, so detection is not extra work.
   ],
   cjk: [
     { group: 'cjk', probe: 'chi_sim' },   // jpn ↔ chi_sim disambiguation
