@@ -241,9 +241,24 @@ function _detectScriptFromText(text, ocrConf = 100) {
 // Sample pages [1, middle, last] — stop as soon as enough text is found.
 // Prefers the existing text layer (free) over a quick OCR pass (cheap).
 const DETECT_PX = 800;
+// Fallback candidates to try when primary detection is uncertain (low confidence).
+// Only pairs where misidentification is physically likely:
+//   eng → rus: Cyrillic glyphs look like Latin (Р→P, О→O, В→B) → eng produces
+//              Latin-looking garbage with low confidence on Russian scans.
+//   jpn ↔ chi_sim: share the CJK Unified Ideographs block (U+4E00–9FFF).
+// Latin-script pairs (deu, fra, spa vs eng) are omitted — eng OCR produces
+// readable output for Latin scripts, switch has negligible quality benefit.
+const DETECTION_FALLBACKS = {
+  eng:     ['rus'],
+  jpn:     ['chi_sim'],
+  chi_sim: ['jpn'],
+};
+
+// Last detection metrics — useful for debugging auto-detection behaviour.
+// Exposed on window in dev builds; read via browser console if needed.
+let _lastDetectionMetrics = null;
+
 // Returns { lang, confident } — samples pages [1, middle, last] to detect script.
-// Special case: eng model "latinizes" Cyrillic (Договор→Horosop), making unicode
-// analysis see Latin. We detect this via low eng confidence → try rus fallback.
 async function _detectLanguage(pdfDoc, worker) {
   const total = pdfDoc.numPages;
   const pages = [...new Set([1, Math.ceil(total / 2), total])];
@@ -254,7 +269,11 @@ async function _detectLanguage(pdfDoc, worker) {
     // 1. Check text layer first — zero cost, unicode analysis is accurate here
     const tc = await page.getTextContent();
     const layerText = tc.items.map(i => i.str).join('');
-    if (layerText.trim().length >= 50) return _detectScriptFromText(layerText, 100);
+    if (layerText.trim().length >= 50) {
+      const result = _detectScriptFromText(layerText, 100);
+      _lastDetectionMetrics = { source: 'text-layer', initial: result.lang, switched: false };
+      return result;
+    }
 
     // 2. Render low-res canvas — keep alive until ALL detection for this page is done
     const vp0  = page.getViewport({ scale: 1 });
@@ -265,42 +284,51 @@ async function _detectLanguage(pdfDoc, worker) {
     cvs.height = Math.round(vp.height);
     await page.render({ canvasContext: cvs.getContext('2d'), viewport: vp }).promise;
 
-    // 3. Quick OCR with eng model + get confidence
+    // 3. Quick OCR pass — primary detection
     const res  = await worker.recognize(cvs);
     const txt  = res?.data?.text ?? '';
     const conf = res?.data?.confidence ?? 0;
 
     if (txt.trim().length >= 20) {
-      const detection = _detectScriptFromText(txt, conf);
+      const primary = _detectScriptFromText(txt, conf);
 
-      // Cyrillic fallback: eng model maps Cyrillic to look-alike Latin letters
-      // (Р→P, О→O, В→B …) → unicode sees Latin → wrong detection.
-      // Signal: OCR confidence < 60 on a "Latin" result → suspect Cyrillic.
-      if (detection.lang === 'eng' && conf < 60) {
-        await worker.reinitialize('rus');
-        const rusRes  = await worker.recognize(cvs);
-        const rusConf = rusRes?.data?.confidence ?? 0;
+      // 4. Confidence-based fallback: if primary detection is uncertain,
+      //    try known misidentification candidates from the fallback table.
+      const candidates = (!primary.confident && conf < 60)
+        ? (DETECTION_FALLBACKS[primary.lang] ?? [])
+        : [];
 
-        cvs.width = 0; cvs.height = 0;
+      for (const fallbackLang of candidates) {
+        await worker.reinitialize(fallbackLang);
+        const fbRes  = await worker.recognize(cvs);
+        const fbConf = fbRes?.data?.confidence ?? 0;
 
-        if (rusConf > conf + 15) {
-          // Russian model is significantly more confident — this is Cyrillic
-          return { lang: 'rus', confident: rusConf >= 65 };
-          // Worker is now in 'rus' — caller's reinitialize('rus') will be a no-op
+        if (fbConf > conf + 15) {
+          cvs.width = 0; cvs.height = 0;
+          _lastDetectionMetrics = {
+            source: 'ocr-fallback', initial: primary.lang, fallback: fallbackLang,
+            switched: true, confidenceInitial: conf, confidenceFallback: fbConf,
+          };
+          return { lang: fallbackLang, confident: fbConf >= 65 };
         }
-        // Russian didn't help — restore to eng and continue
-        await worker.reinitialize('eng');
-        return { lang: 'eng', confident: false };
+        // Fallback didn't help — restore to initial lang before trying next candidate
+        await worker.reinitialize(primary.lang === 'eng' ? 'eng' : primary.lang);
       }
 
       cvs.width = 0; cvs.height = 0;
-      return detection;
+      _lastDetectionMetrics = {
+        source: 'ocr-primary', initial: primary.lang, switched: false,
+        confidenceInitial: conf,
+        ...(candidates.length ? { fallbackTried: candidates, switched: false } : {}),
+      };
+      return primary;
     }
 
     cvs.width = 0; cvs.height = 0;
     // Not enough text on this page — try next sample page
   }
 
+  _lastDetectionMetrics = { source: 'fallback-default', initial: 'eng', switched: false };
   return { lang: 'eng', confident: false };
 }
 
@@ -792,7 +820,10 @@ async function _runOcr(file, gen) {
       const t0 = Date.now();
       detection = await _detectLanguage(pdfDoc, worker);
       const elapsed = ((Date.now() - t0) / 1000).toFixed(1);
-      _updateProgress(15, `Detected: ${_getLangName(detection.lang)} in ${elapsed}s`);
+      const switchedNote = _lastDetectionMetrics?.switched
+        ? ` (switched from ${_getLangName(_lastDetectionMetrics.initial)})`
+        : '';
+      _updateProgress(15, `Detected: ${_getLangName(detection.lang)} in ${elapsed}s${switchedNote}`);
       if (cacheKey) _langCache.set(cacheKey, detection);
     }
     _detectedLang = detection.lang;
