@@ -201,34 +201,45 @@ async function _analyse(file, container) {
 
 // Analyse unicode codepoints of OCR text and return the most likely Tesseract
 // language code. Only dominant script is checked — mixing models degrades quality.
+// Returns { lang, confident } where confident=false means mixed/ambiguous content.
+// Confident when one script dominates by > 50% of non-space script chars.
 function _detectScriptFromText(text) {
-  if (!text || text.trim().length < 10) return 'eng';
+  if (!text || text.trim().length < 10) return { lang: 'eng', confident: false };
   let lat = 0, cyr = 0, ara = 0, jpnKana = 0, cjk = 0, han = 0, dev = 0, tha = 0;
   for (const ch of text) {
     const cp = ch.codePointAt(0);
     if (cp >= 0x0041 && cp <= 0x024F)       lat++;
     else if (cp >= 0x0400 && cp <= 0x04FF)  cyr++;
     else if (cp >= 0x0600 && cp <= 0x06FF)  ara++;
-    else if (cp >= 0x3040 && cp <= 0x30FF)  jpnKana++;  // hiragana + katakana
+    else if (cp >= 0x3040 && cp <= 0x30FF)  jpnKana++;
     else if (cp >= 0x4E00 && cp <= 0x9FFF)  cjk++;
-    else if (cp >= 0xAC00 && cp <= 0xD7A3)  han++;      // hangul
+    else if (cp >= 0xAC00 && cp <= 0xD7A3)  han++;
     else if (cp >= 0x0900 && cp <= 0x097F)  dev++;
     else if (cp >= 0x0E00 && cp <= 0x0E7F)  tha++;
   }
-  if (jpnKana > 3)              return 'jpn';      // kana = unambiguously Japanese
-  if (han > 5)                  return 'kor';
-  if (cjk > 10 && jpnKana > 0) return 'jpn';
-  if (cjk > 10)                 return 'chi_sim';
-  if (ara > 5)                  return 'ara';
-  if (dev > 5)                  return 'hin';
-  if (tha > 5)                  return 'tha';
-  if (cyr > lat * 0.25 && cyr > 5) return 'rus';
-  return 'eng';
+  const total = lat + cyr + ara + jpnKana + cjk + han + dev + tha || 1;
+
+  let lang = 'eng';
+  if (jpnKana > 3)                  lang = 'jpn';
+  else if (han > 5)                 lang = 'kor';
+  else if (cjk > 10 && jpnKana > 0) lang = 'jpn';
+  else if (cjk > 10)               lang = 'chi_sim';
+  else if (ara > 5)                 lang = 'ara';
+  else if (dev > 5)                 lang = 'hin';
+  else if (tha > 5)                 lang = 'tha';
+  else if (cyr > lat * 0.25 && cyr > 5) lang = 'rus';
+
+  // Confident when dominant script is > 50% of all script chars and sample is large enough
+  const dominant = { eng: lat, rus: cyr, ara, jpn: jpnKana + cjk, chi_sim: cjk, kor: han, hin: dev, tha }[lang] ?? lat;
+  const confident = total >= 30 && (dominant / total) > 0.5;
+
+  return { lang, confident };
 }
 
 // Sample pages [1, middle, last] — stop as soon as enough text is found.
 // Prefers the existing text layer (free) over a quick OCR pass (cheap).
 const DETECT_PX = 800;
+// Returns { lang, confident } — samples pages to detect dominant script.
 async function _detectLanguage(pdfDoc, worker) {
   const total = pdfDoc.numPages;
   const pages = [...new Set([1, Math.ceil(total / 2), total])];
@@ -252,7 +263,7 @@ async function _detectLanguage(pdfDoc, worker) {
     const txt = res?.data?.text ?? '';
     if (txt.trim().length >= 20) return _detectScriptFromText(txt);
   }
-  return 'eng';
+  return { lang: 'eng', confident: false };
 }
 
 // ── UI rendering ─────────────────────────────────────────────────────────────
@@ -734,23 +745,41 @@ async function _runOcr(file, gen) {
   // Auto-detection: sample document, detect dominant script, reinitialize if needed
   if (_selectedLang === 'auto') {
     const cacheKey = _file ? `${_file.name}:${_file.size}` : null;
-    let detected = cacheKey ? _langCache.get(cacheKey) : null;
-    if (!detected) {
+    let cached = cacheKey ? _langCache.get(cacheKey) : null;
+    let detection;
+    if (cached) {
+      detection = cached;
+    } else {
       _updateProgress(14, 'Detecting document language…');
-      detected = await _detectLanguage(pdfDoc, worker);
-      if (cacheKey) _langCache.set(cacheKey, detected);
+      const t0 = Date.now();
+      detection = await _detectLanguage(pdfDoc, worker);
+      const elapsed = ((Date.now() - t0) / 1000).toFixed(1);
+      _updateProgress(15, `Detected: ${_getLangName(detection.lang)} in ${elapsed}s`);
+      if (cacheKey) _langCache.set(cacheKey, detection);
     }
-    _detectedLang = detected;
-    resolvedLang  = detected;
-    // Update dropdown label to show detected language
+    _detectedLang = detection.lang;
+    resolvedLang  = detection.lang;
+    // Update dropdown: show detected lang + uncertainty warning if needed
     const sel = document.getElementById('ocrLangSelect');
     if (sel && sel.options[0]) {
-      sel.options[0].textContent = `Auto — Detected: ${_getLangName(detected)}`;
+      const uncertain = !detection.confident ? ' ⚠ uncertain' : '';
+      sel.options[0].textContent = `Auto — Detected: ${_getLangName(detection.lang)}${uncertain}`;
+    }
+    // Show hint below dropdown when detection is uncertain
+    const langBlock = document.getElementById('ocrLangBlock');
+    if (langBlock && !detection.confident) {
+      const hint = document.createElement('p');
+      hint.style.cssText = 'margin:6px 0 0;font-size:12px;color:var(--text3);';
+      hint.textContent = 'Low confidence detection — consider selecting the language manually.';
+      if (!langBlock.querySelector('.detect-hint')) {
+        hint.className = 'detect-hint';
+        langBlock.appendChild(hint);
+      }
     }
     // Reinitialize with correct model if detection found non-English script
-    if (detected !== 'eng') {
-      const detTsLang = detected === 'jpn' ? 'jpn+jpn_vert' : detected;
-      _updateProgress(15, `Loading ${_getLangName(detected)} language model…`);
+    if (detection.lang !== 'eng') {
+      const detTsLang = detection.lang === 'jpn' ? 'jpn+jpn_vert' : detection.lang;
+      _updateProgress(15, `Loading ${_getLangName(detection.lang)} language model…`);
       await worker.reinitialize(detTsLang);
     }
   }
