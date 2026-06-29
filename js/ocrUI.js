@@ -241,35 +241,58 @@ function _detectScriptFromText(text, ocrConf = 100) {
 // Sample pages [1, middle, last] — stop as soon as enough text is found.
 // Prefers the existing text layer (free) over a quick OCR pass (cheap).
 const DETECT_PX = 800;
-// Fallback candidates to try when primary detection is suspicious.
-// eng → rus: Cyrillic glyphs look like Latin (Р→P, О→O, В→B) → low confidence signal.
-// eng → ara: Arabic chars have no Latin equivalents → eng produces mostly numbers
-//            and punctuation with moderate confidence → low letter-ratio signal.
-// jpn ↔ chi_sim: share the CJK Unified Ideographs block (U+4E00–9FFF).
-// Latin-script pairs (deu/fra/spa) omitted — eng produces usable output for Latin.
-const DETECTION_FALLBACKS = {
-  eng:     ['rus', 'ara'],
-  jpn:     ['chi_sim'],
-  chi_sim: ['jpn'],
+// Script family classification. To add a new language, put it in the right group —
+// no other table needs updating.
+const SCRIPT_GROUPS = {
+  latin:      ['eng', 'fra', 'deu', 'spa', 'ita', 'por', 'nld', 'pol', 'tur', 'uzb'],
+  cyrillic:   ['rus'],
+  rtl:        ['ara'],
+  cjk:        ['jpn', 'chi_sim', 'chi_tra', 'kor'],
+  devanagari: ['hin'],
+  thai:       ['tha'],
 };
 
-// Multi-signal suspicion check — returns true when eng OCR output looks like
+// When detection of a script family looks suspicious, try these probe languages.
+// Each entry { group, probe } names the script family being tested and the single
+// representative language used for the confidence comparison.
+// cjk is intentionally omitted from latin fallbacks: jpn/chi_sim models are 10–15 MB
+// each — downloading them during auto-detection would be too slow for most users.
+const FALLBACK_PROBES = {
+  latin: [
+    { group: 'cyrillic', probe: 'rus' },  // Cyrillic → try Russian first
+    { group: 'rtl',      probe: 'ara' },  // Arabic/RTL → try Arabic second
+  ],
+  cjk: [
+    { group: 'cjk', probe: 'chi_sim' },   // jpn ↔ chi_sim disambiguation
+  ],
+};
+
+function _scriptGroupOf(lang) {
+  for (const [group, langs] of Object.entries(SCRIPT_GROUPS)) {
+    if (langs.includes(lang)) return group;
+  }
+  return 'latin';
+}
+
+// Multi-signal suspicion check — returns true when OCR output looks like
 // misidentification. Two independent signals:
 //
-//  1. Low confidence (< 60): catches Cyrillic — eng maps Ц→U, Г→T etc., word
-//     confidence drops because combinations don't match English dictionary.
+//  Signal A — low confidence (< 60): catches Cyrillic.
+//    eng model maps Ц→U, Г→T etc.; word confidence drops because combinations
+//    don't match English dictionary ("Horosop", "MockBa").
 //
-//  2. Low letter ratio: catches Arabic — Arabic chars have no Latin look-alikes
-//     so eng OCR produces mostly numbers (42, 2024, 50,000) and short garbage.
-//     Result: digits ≥ letters AND letter fraction of all non-space chars < 15%.
-//     Arabic confidence can be moderate (numbers recognized correctly) so the
-//     confidence-only check misses this entirely.
+//  Signal B — low letter ratio: catches Arabic (and potentially CJK).
+//    Arabic chars have no Latin look-alikes → eng OCR produces mostly numbers
+//    (42, 2024, 50,000). Ratio = letters / (letters + digits): spaces and
+//    punctuation are excluded from the denominator — a short invoice like
+//    "Invoice: Total: $500" has lots of colons/spaces that would otherwise
+//    dilute the signal and falsely trigger the fallback.
 function _isDetectionSuspicious(txt, conf) {
   if (conf < 60) return true;
-  const letters = (txt.match(/[a-zA-Z]/g) ?? []).length;
-  const digits  = (txt.match(/[0-9]/g)    ?? []).length;
-  const total   = txt.replace(/\s/g, '').length;
-  return total > 15 && (letters / (total || 1)) < 0.15 && digits >= letters;
+  const letters    = (txt.match(/[a-zA-Z]/g) ?? []).length;
+  const digits     = (txt.match(/[0-9]/g)    ?? []).length;
+  const meaningful = letters + digits;
+  return meaningful > 5 && (letters / (meaningful || 1)) < 0.25;
 }
 
 // Last detection metrics — useful for debugging auto-detection behaviour.
@@ -310,35 +333,35 @@ async function _detectLanguage(pdfDoc, worker) {
     if (txt.trim().length >= 20) {
       const primary = _detectScriptFromText(txt, conf);
 
-      // 4. Multi-signal fallback: try candidates when detection looks suspicious.
-      //    _isDetectionSuspicious covers both low-confidence (Cyrillic) and
-      //    low-letter-ratio (Arabic/CJK) cases — see function comment.
-      const candidates = _isDetectionSuspicious(txt, conf)
-        ? (DETECTION_FALLBACKS[primary.lang] ?? [])
+      // 4. Multi-signal fallback: probe script-family candidates when suspicious.
+      //    Uses FALLBACK_PROBES keyed by script group, not individual language.
+      const probes = _isDetectionSuspicious(txt, conf)
+        ? (FALLBACK_PROBES[_scriptGroupOf(primary.lang)] ?? [])
         : [];
 
-      for (const fallbackLang of candidates) {
-        await worker.reinitialize(fallbackLang);
+      for (const { group, probe } of probes) {
+        await worker.reinitialize(probe);
         const fbRes  = await worker.recognize(cvs);
         const fbConf = fbRes?.data?.confidence ?? 0;
 
         if (fbConf > conf + 15) {
           cvs.width = 0; cvs.height = 0;
           _lastDetectionMetrics = {
-            source: 'ocr-fallback', initial: primary.lang, fallback: fallbackLang,
-            switched: true, confidenceInitial: conf, confidenceFallback: fbConf,
+            source: 'ocr-fallback', initialGroup: _scriptGroupOf(primary.lang),
+            fallbackGroup: group, probe, switched: true,
+            confidenceInitial: conf, confidenceFallback: fbConf,
           };
-          return { lang: fallbackLang, confident: fbConf >= 65 };
+          return { lang: probe, confident: fbConf >= 65 };
         }
-        // Fallback didn't help — restore to initial lang before trying next candidate
-        await worker.reinitialize(primary.lang === 'eng' ? 'eng' : primary.lang);
+        // This probe didn't help — restore to initial lang before trying next
+        await worker.reinitialize(primary.lang);
       }
 
       cvs.width = 0; cvs.height = 0;
       _lastDetectionMetrics = {
         source: 'ocr-primary', initial: primary.lang, switched: false,
         confidenceInitial: conf,
-        ...(candidates.length ? { fallbackTried: candidates, switched: false } : {}),
+        ...(probes.length ? { fallbackTried: probes.map(p => p.probe), switched: false } : {}),
       };
       return primary;
     }
