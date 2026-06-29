@@ -202,8 +202,9 @@ async function _analyse(file, container) {
 // Analyse unicode codepoints of OCR text and return the most likely Tesseract
 // language code. Only dominant script is checked — mixing models degrades quality.
 // Returns { lang, confident } where confident=false means mixed/ambiguous content.
-// Confident when one script dominates by > 50% of non-space script chars.
-function _detectScriptFromText(text) {
+// ocrConf: Tesseract word confidence (0-100) from the quick OCR pass — used to
+// lower confidence when the OCR engine itself was uncertain about the text.
+function _detectScriptFromText(text, ocrConf = 100) {
   if (!text || text.trim().length < 10) return { lang: 'eng', confident: false };
   let lat = 0, cyr = 0, ara = 0, jpnKana = 0, cjk = 0, han = 0, dev = 0, tha = 0;
   for (const ch of text) {
@@ -220,18 +221,19 @@ function _detectScriptFromText(text) {
   const total = lat + cyr + ara + jpnKana + cjk + han + dev + tha || 1;
 
   let lang = 'eng';
-  if (jpnKana > 3)                  lang = 'jpn';
-  else if (han > 5)                 lang = 'kor';
+  if (jpnKana > 3)                   lang = 'jpn';
+  else if (han > 5)                  lang = 'kor';
   else if (cjk > 10 && jpnKana > 0) lang = 'jpn';
-  else if (cjk > 10)               lang = 'chi_sim';
-  else if (ara > 5)                 lang = 'ara';
-  else if (dev > 5)                 lang = 'hin';
-  else if (tha > 5)                 lang = 'tha';
+  else if (cjk > 10)                lang = 'chi_sim';
+  else if (ara > 5)                  lang = 'ara';
+  else if (dev > 5)                  lang = 'hin';
+  else if (tha > 5)                  lang = 'tha';
   else if (cyr > lat * 0.25 && cyr > 5) lang = 'rus';
 
-  // Confident when dominant script is > 50% of all script chars and sample is large enough
   const dominant = { eng: lat, rus: cyr, ara, jpn: jpnKana + cjk, chi_sim: cjk, kor: han, hin: dev, tha }[lang] ?? lat;
-  const confident = total >= 30 && (dominant / total) > 0.5;
+  // Confidence is also reduced when the OCR engine itself was uncertain (ocrConf < 55):
+  // a Russian scan processed with `eng` produces Latin-looking garbage with low OCR confidence.
+  const confident = total >= 30 && (dominant / total) > 0.5 && ocrConf >= 55;
 
   return { lang, confident };
 }
@@ -239,30 +241,66 @@ function _detectScriptFromText(text) {
 // Sample pages [1, middle, last] — stop as soon as enough text is found.
 // Prefers the existing text layer (free) over a quick OCR pass (cheap).
 const DETECT_PX = 800;
-// Returns { lang, confident } — samples pages to detect dominant script.
+// Returns { lang, confident } — samples pages [1, middle, last] to detect script.
+// Special case: eng model "latinizes" Cyrillic (Договор→Horosop), making unicode
+// analysis see Latin. We detect this via low eng confidence → try rus fallback.
 async function _detectLanguage(pdfDoc, worker) {
   const total = pdfDoc.numPages;
   const pages = [...new Set([1, Math.ceil(total / 2), total])];
+
   for (const p of pages) {
     const page = await pdfDoc.getPage(p);
-    // 1. Check text layer first — zero cost
+
+    // 1. Check text layer first — zero cost, unicode analysis is accurate here
     const tc = await page.getTextContent();
     const layerText = tc.items.map(i => i.str).join('');
-    if (layerText.trim().length >= 50) return _detectScriptFromText(layerText);
-    // 2. Quick low-res OCR pass
-    const vp0   = page.getViewport({ scale: 1 });
+    if (layerText.trim().length >= 50) return _detectScriptFromText(layerText, 100);
+
+    // 2. Render low-res canvas — keep alive until ALL detection for this page is done
+    const vp0  = page.getViewport({ scale: 1 });
     const scale = DETECT_PX / Math.max(vp0.width, vp0.height);
-    const vp    = page.getViewport({ scale });
-    const cvs   = document.createElement('canvas');
-    cvs.width   = Math.round(vp.width);
-    cvs.height  = Math.round(vp.height);
-    const ctx   = cvs.getContext('2d');
-    await page.render({ canvasContext: ctx, viewport: vp }).promise;
-    const res   = await worker.recognize(cvs);
+    const vp   = page.getViewport({ scale });
+    const cvs  = document.createElement('canvas');
+    cvs.width  = Math.round(vp.width);
+    cvs.height = Math.round(vp.height);
+    await page.render({ canvasContext: cvs.getContext('2d'), viewport: vp }).promise;
+
+    // 3. Quick OCR with eng model + get confidence
+    const res  = await worker.recognize(cvs);
+    const txt  = res?.data?.text ?? '';
+    const conf = res?.data?.confidence ?? 0;
+
+    if (txt.trim().length >= 20) {
+      const detection = _detectScriptFromText(txt, conf);
+
+      // Cyrillic fallback: eng model maps Cyrillic to look-alike Latin letters
+      // (Р→P, О→O, В→B …) → unicode sees Latin → wrong detection.
+      // Signal: OCR confidence < 60 on a "Latin" result → suspect Cyrillic.
+      if (detection.lang === 'eng' && conf < 60) {
+        await worker.reinitialize('rus');
+        const rusRes  = await worker.recognize(cvs);
+        const rusConf = rusRes?.data?.confidence ?? 0;
+
+        cvs.width = 0; cvs.height = 0;
+
+        if (rusConf > conf + 15) {
+          // Russian model is significantly more confident — this is Cyrillic
+          return { lang: 'rus', confident: rusConf >= 65 };
+          // Worker is now in 'rus' — caller's reinitialize('rus') will be a no-op
+        }
+        // Russian didn't help — restore to eng and continue
+        await worker.reinitialize('eng');
+        return { lang: 'eng', confident: false };
+      }
+
+      cvs.width = 0; cvs.height = 0;
+      return detection;
+    }
+
     cvs.width = 0; cvs.height = 0;
-    const txt = res?.data?.text ?? '';
-    if (txt.trim().length >= 20) return _detectScriptFromText(txt);
+    // Not enough text on this page — try next sample page
   }
+
   return { lang: 'eng', confident: false };
 }
 
