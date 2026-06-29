@@ -257,18 +257,25 @@ const SCRIPT_GROUPS = {
 // representative language used for the confidence comparison.
 // cjk is intentionally omitted from latin fallbacks: jpn/chi_sim models are 10–15 MB
 // each — downloading them during auto-detection would be too slow for most users.
+// Each probe entry: { group, probe, signal }
+//   group  — script family being tested
+//   probe  — representative language for the confidence comparison
+//   signal — which suspicion signal this probe is designed to catch
+//            (documentation only for now; all probes run when ANY signal fires)
+//
+// Lazy-loading: each probe only runs if the previous one didn't gain ≥15%.
+// Arabic docs exit at step 2; Japanese at step 3; Chinese at step 4.
+// CJK models (10–15 MB) are only downloaded when Cyrillic + RTL both fail,
+// and the download is reused for full OCR — no extra cost.
 const FALLBACK_PROBES = {
   latin: [
-    { group: 'cyrillic', probe: 'rus' },  // 1st: Cyrillic (1–5 MB, fast)
-    { group: 'rtl',      probe: 'ara' },  // 2nd: Arabic/RTL (1.5 MB, fast)
-    { group: 'cjk',      probe: 'jpn' },  // 3rd: CJK — only reached when rus+ara
-                                          //   both fail (Arabic docs exit at step 2).
-                                          //   jpn model is ~10 MB; download is the
-                                          //   same cost the user pays at full OCR time
-                                          //   anyway, so detection is not extra work.
+    { group: 'cyrillic', probe: 'rus',     signal: 'low_confidence' },
+    { group: 'rtl',      probe: 'ara',     signal: 'digit_heavy'    },
+    { group: 'cjk',      probe: 'jpn',     signal: 'no_letters'     },
+    { group: 'cjk',      probe: 'chi_sim', signal: 'no_letters'     },
   ],
   cjk: [
-    { group: 'cjk', probe: 'chi_sim' },   // jpn ↔ chi_sim disambiguation
+    { group: 'cjk', probe: 'chi_sim', signal: 'cjk_disambiguation' },
   ],
 };
 
