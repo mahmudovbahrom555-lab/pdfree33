@@ -67,13 +67,15 @@ const LANGUAGES = {
     { code: 'tur', name: 'Turkish',    size: '4 MB'  },
   ],
   complex: [
-    { code: 'ara',     name: 'Arabic',                size: '1.5 MB', rtl: true },
-    { code: 'jpn',     name: 'Japanese',              size: '10 MB'  },
-    { code: 'chi_sim', name: 'Chinese (Simplified)',  size: '15 MB'  },
-    { code: 'chi_tra', name: 'Chinese (Traditional)', size: '15 MB'  },
-    { code: 'kor',     name: 'Korean',                size: '5 MB'   },
-    { code: 'hin',     name: 'Hindi',                 size: '5 MB'   },
-    { code: 'tha',     name: 'Thai',                  size: '4 MB'   },
+    { code: 'ara',         name: 'Arabic',                        size: '1.5 MB', rtl: true },
+    { code: 'jpn',         name: 'Japanese',                      size: '10 MB'  },
+    { code: 'jpn+eng',     name: 'Japanese + English (bilingual)', size: '14 MB'  },
+    { code: 'chi_sim',     name: 'Chinese (Simplified)',           size: '15 MB'  },
+    { code: 'chi_sim+eng', name: 'Chinese + English (bilingual)',  size: '19 MB'  },
+    { code: 'chi_tra',     name: 'Chinese (Traditional)',          size: '15 MB'  },
+    { code: 'kor',         name: 'Korean',                        size: '5 MB'   },
+    { code: 'hin',         name: 'Hindi',                         size: '5 MB'   },
+    { code: 'tha',         name: 'Thai',                          size: '4 MB'   },
   ],
 };
 
@@ -286,6 +288,10 @@ function _scriptGroupOf(lang) {
   }
   return 'latin';
 }
+
+// For combined codes like 'jpn+eng' or 'chi_sim+eng', return the primary
+// (non-Latin) script so set lookups against COMPLEX_LANGS / CJK_LANGS work.
+function _primaryScript(lang) { return lang.split('+')[0]; }
 
 // Multi-signal suspicion check — returns true when OCR output looks like
 // misidentification. Two independent signals:
@@ -929,7 +935,10 @@ async function _runOcr(file, gen) {
   _updateProgress(13, 'Initializing OCR engine…');
   _setBtnProgress('Initializing…');
   // Always start with resolved lang (eng for auto); reinitialize after detection if needed
-  const initTsLang = resolvedLang === 'jpn' ? 'jpn+jpn_vert' : resolvedLang;
+  // Add jpn_vert for Japanese (horizontal + vertical recognition)
+  const initTsLang = resolvedLang === 'jpn'     ? 'jpn+jpn_vert'
+                   : resolvedLang === 'jpn+eng' ? 'jpn+jpn_vert+eng'
+                   : resolvedLang;
   worker = await window.Tesseract.createWorker(initTsLang, 1, {
     logger: m => {
       if (m.status === 'recognizing text') {
@@ -1028,8 +1037,9 @@ async function _runOcr(file, gen) {
       // tab kill under memory pressure. Removed: MAX_OCR_PX must stay a true
       // cap, even at the cost of quality on rare oversized pages.
       const vp0 = page.getViewport({ scale: 1 });
-      const maxPx = CJK_LANGS.has(resolvedLang) ? SCRIPT_PROFILE.cjk
-                  : COMPLEX_LANGS.has(resolvedLang) ? SCRIPT_PROFILE.complex
+      const ps    = _primaryScript(resolvedLang);
+      const maxPx = CJK_LANGS.has(ps)     ? SCRIPT_PROFILE.cjk
+                  : COMPLEX_LANGS.has(ps) ? SCRIPT_PROFILE.complex
                   : SCRIPT_PROFILE.latin;
       const scale = Math.min(maxPx / vp0.width, maxPx / vp0.height);
       const vp = page.getViewport({ scale });
@@ -1052,7 +1062,7 @@ async function _runOcr(file, gen) {
       // Latin (eng/fra/…): 55% — Tesseract is reliable; below 55% is almost always garbage.
       // Complex (ara/jpn/kor/hin/tha/…): 45% — correct glyphs routinely score 40–50%,
       // so 55% would silently discard real text for these scripts.
-      const MIN_CONF = COMPLEX_LANGS.has(resolvedLang) ? 45 : 55;
+      const MIN_CONF = COMPLEX_LANGS.has(_primaryScript(resolvedLang)) ? 45 : 55;
       const words    = result.data.words.flatMap(w => {
         const text = w.text.normalize('NFC').trim();
         if (!text || w.confidence < MIN_CONF) return [];
@@ -1119,7 +1129,7 @@ function _getLangName(code) {
 
 function _ocrQualityLabel(avgConf, lang) {
   if (avgConf === null) return '';
-  if (COMPLEX_LANGS.has(lang)) {
+  if (COMPLEX_LANGS.has(_primaryScript(lang))) {
     // Complex-script confidence is structurally lower even for correct text.
     // Show the raw number with an honest note so users aren't misled.
     return ` · OCR confidence: ${avgConf}% (${_getLangName(lang)} — lower scores are typical for this script and do not indicate poor accuracy)`;
