@@ -112,13 +112,6 @@
       "No account or signup needed",
       "Download result as .txt file"
     ],
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.9",
-      "ratingCount": "1243",
-      "bestRating": "5",
-      "worstRating": "1"
-    },
     "provider": { "@type": "Organization", "name": "PDFree", "url": "https://pdfree.io" }
   }
   </script>
@@ -149,7 +142,7 @@
         "name": "What languages does the OCR support?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "The current version uses Tesseract.js with the English language model. Additional language support may be added in future updates."
+          "text": "PDFree OCR supports 18 languages: English, French, German, Spanish, Italian, Portuguese, Russian, Uzbek, Dutch, Polish, Turkish, Arabic, Japanese, Chinese (Simplified), Chinese (Traditional), Korean, Hindi, and Thai. Select your language from the dropdown before clicking Run OCR."
         }
       },
       {
@@ -158,6 +151,30 @@
         "acceptedAnswer": {
           "@type": "Answer",
           "text": "Tesseract.js is about 17 MB. To keep the initial page load fast, it is only downloaded when you actually need OCR. Text-layer PDFs are extracted instantly without downloading anything extra."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Will the PDF look different after OCR?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. PDFree adds an invisible text layer over your original scanned pages. The appearance of the PDF does not change — images, layout, and formatting stay exactly as they were. The added text layer makes the document searchable and allows you to select and copy text in any PDF reader."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Why is my OCR quality rated Poor or Fair?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "OCR accuracy depends on the quality of the original scan. Low scan DPI (below 150 DPI), handwritten text, blurry or skewed pages, and colored or textured backgrounds all reduce accuracy. For best results, scan documents at 300 DPI or higher with good lighting and straight alignment."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the difference between the searchable PDF and the .txt file?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The searchable PDF keeps your original scanned images and adds an invisible text layer on top — useful for archiving, searching inside a PDF reader, or sharing. The .txt file contains only the extracted plain text with page separators — useful for editing in Word, importing into other tools, or copying content. You can download both at the same time using the 'Also download .txt copy' checkbox."
         }
       }
     ]
@@ -191,7 +208,7 @@
       "@type": "HowToStep",
       "position": 2,
       "name": "Select your language",
-      "text": "Choose the language of the text in your document from the language selector. PDFree supports 100+ languages."
+      "text": "Choose the language of the text in your document from the language selector. PDFree supports 18 languages including English, French, German, Spanish, Russian, Arabic, Japanese, Chinese, Korean, Hindi, and more."
     },
     {
       "@type": "HowToStep",
@@ -305,27 +322,47 @@
   <section class="seo-article" aria-label="OCR PDF Free">
     <div class="seo-article__inner">
 
-      <h1>OCR PDF Free — Extract Text from Scanned PDFs</h1>
+      <h1>OCR PDF Free — Make Scanned PDFs Searchable</h1>
 
-      <p>Extract text from scanned PDFs directly in your browser using OCR (Optical Character Recognition). No software to install, no account required, and your files <strong>never leave your device</strong>.</p>
+      <p>Extract text from scanned PDFs and make them searchable — directly in your browser using OCR (Optical Character Recognition). No software to install, no account required, and your files <strong>never leave your device</strong>.</p>
 
-      <h2>How to extract text from a scanned PDF</h2>
+      <h2>How to make a scanned PDF searchable</h2>
 
       <ol>
-        <li>Upload your scanned PDF using the drop zone above.</li>
-        <li>PDFree automatically checks whether your PDF has an existing text layer or is a scanned image.</li>
+        <li>Open your scanned PDF using the drop zone above — drag and drop or click Choose PDF.</li>
+        <li>PDFree automatically checks whether your PDF already has a text layer or is a pure scanned image.</li>
         <li>For text-layer PDFs: text is extracted instantly — no OCR engine needed.</li>
-        <li>For scanned PDFs: click <strong>Install OCR Engine</strong> to load Tesseract.js (~17 MB, one-time download).</li>
-        <li>Click <strong>Extract Text</strong> — your text file downloads automatically.</li>
+        <li>For scanned PDFs: click <strong>Install OCR Engine</strong> to load Tesseract.js (~17 MB, one-time download). Select your document language from the dropdown.</li>
+        <li>Click <strong>Make PDF Searchable</strong> — your searchable PDF downloads automatically. The original appearance is unchanged; only an invisible text layer is added.</li>
       </ol>
 
-      <h2>Text PDFs vs scanned PDFs</h2>
+      <h2>Text PDFs vs scanned PDFs — what's the difference?</h2>
 
-      <p>PDFree automatically detects which type of PDF you have uploaded. <strong>Text-layer PDFs</strong> (most PDFs created digitally) already contain machine-readable text embedded in the file — extraction is instant. <strong>Scanned PDFs</strong> (photos, fax documents, older archive scans) contain only images and require OCR to convert pixels into text.</p>
+      <p>PDFree automatically detects which type of PDF you have. <strong>Text-layer PDFs</strong> (most PDFs created digitally — from Word, Google Docs, or any modern application) already contain machine-readable text embedded in the file — extraction is instant and no OCR engine is needed. <strong>Scanned PDFs</strong> (photos of pages, fax documents, older archive scans, CamScanner exports) contain only images and require OCR to convert pixels into selectable, searchable text.</p>
 
-      <h2>Privacy — your files stay on your device</h2>
+      <h2>18 languages supported</h2>
 
-      <p>Scanned documents often contain sensitive content — contracts, medical records, personal letters. With PDFree, <strong>nothing is ever uploaded</strong>. The OCR engine (Tesseract.js) runs entirely inside your browser tab. There are no servers, no cloud storage, and no data collection.</p>
+      <p>PDFree uses Tesseract.js, a leading open-source OCR engine, and supports 18 languages: <strong>English, French, German, Spanish, Italian, Portuguese, Russian, Uzbek, Dutch, Polish, Turkish</strong> (European scripts) and <strong>Arabic, Japanese, Chinese Simplified, Chinese Traditional, Korean, Hindi, Thai</strong> (complex scripts). Select your language from the dropdown before running OCR — accuracy depends on choosing the correct language model.</p>
+
+      <h2>What affects OCR quality?</h2>
+
+      <p>After OCR, PDFree shows a quality score (Excellent / Good / Fair / Poor) based on Tesseract's word confidence. The main factors:</p>
+      <ul>
+        <li><strong>Scan resolution</strong> — 300 DPI or higher gives the best results. Below 150 DPI, thin strokes and small text become difficult to recognize.</li>
+        <li><strong>Page alignment</strong> — skewed or rotated pages reduce accuracy. PDFree auto-corrects PDF rotation (90°/180°/270°), but physical page tilt in the scan cannot be corrected.</li>
+        <li><strong>Print vs handwriting</strong> — printed text recognizes well; cursive handwriting is not supported by Tesseract.</li>
+        <li><strong>Background noise</strong> — colored backgrounds, shadows, or watermarks reduce contrast. PDFree converts pages to grayscale before OCR to improve results.</li>
+        <li><strong>Language match</strong> — always select the language that matches the document. Mixed-language documents (e.g., a form with English labels and Russian content) work best if you select the dominant language.</li>
+      </ul>
+
+      <h2>Searchable PDF vs plain text — which to download?</h2>
+
+      <p>The <strong>searchable PDF</strong> keeps your original scanned images exactly as they were and adds an invisible text layer on top. Open it in any PDF reader and you can select text, use Ctrl+F to search, and copy content — the visual appearance is unchanged. Use this for archiving, sharing, or long-term storage.</p>
+      <p>The <strong>.txt file</strong> contains only the extracted plain text with page separators. Use this when you need to edit the content in Word or Google Docs, feed text into another tool, or process it programmatically. Enable "Also download .txt copy" in the options to get both files at once.</p>
+
+      <h2>Privacy — your scanned documents stay private</h2>
+
+      <p>Scanned documents often contain sensitive content — contracts, medical records, personal letters, tax forms. With PDFree, <strong>nothing is ever uploaded</strong>. The OCR engine (Tesseract.js) is downloaded once and then runs entirely inside your browser tab. There are no servers receiving your files, no cloud storage, and no data collection of any kind. Open DevTools → Network tab while processing to verify: zero file uploads.</p>
 
       <h2>Frequently asked questions</h2>
 
@@ -337,26 +374,42 @@
         </div>
 
         <div style="border:1px solid var(--border);border-radius:12px;padding:20px;">
-          <h3>Does my file get uploaded?</h3>
-          <p>Never. All processing — including OCR — happens inside your browser. Your PDF never leaves your device.</p>
+          <h3>Does my file get uploaded to a server?</h3>
+          <p>Never. All processing — including OCR — happens inside your browser tab. Your PDF never leaves your device. The Tesseract.js engine is downloaded from a CDN once and cached; after that it runs fully offline.</p>
         </div>
 
         <div style="border:1px solid var(--border);border-radius:12px;padding:20px;">
-          <h3>Why does OCR take a moment to download?</h3>
-          <p>Tesseract.js is about 17 MB. To keep the page fast for everyone, it is only downloaded when you actually need it. Once downloaded, it is cached by the browser and works offline.</p>
+          <h3>Will the PDF look different after OCR?</h3>
+          <p>No. PDFree adds an invisible text layer (rendering mode Invisible, per the PDF specification) over your original scanned pages. The appearance does not change — images, layout, and formatting stay exactly as they were. You gain the ability to search, select, and copy text in any PDF reader.</p>
         </div>
 
         <div style="border:1px solid var(--border);border-radius:12px;padding:20px;">
-          <h3>What format is the output?</h3>
-          <p>Extracted text is saved as a plain .txt file with page separators. You can open it in any text editor, copy-paste it, or import it into Word or Google Docs.</p>
+          <h3>Why does the OCR engine need to be downloaded?</h3>
+          <p>Tesseract.js is about 17 MB. To keep the page fast for everyone, it is only downloaded when you actually need it. Once downloaded, it is cached by your browser and works offline on future visits.</p>
+        </div>
+
+        <div style="border:1px solid var(--border);border-radius:12px;padding:20px;">
+          <h3>What languages are supported?</h3>
+          <p>18 languages: English, French, German, Spanish, Italian, Portuguese, Russian, Uzbek, Dutch, Polish, Turkish, Arabic, Japanese, Chinese (Simplified), Chinese (Traditional), Korean, Hindi, and Thai. Select your document language from the dropdown before running OCR.</p>
+        </div>
+
+        <div style="border:1px solid var(--border);border-radius:12px;padding:20px;">
+          <h3>Why is my OCR quality rated Poor or Fair?</h3>
+          <p>OCR accuracy depends on the original scan quality. Low DPI (below 150), blurry or skewed pages, colored backgrounds, and handwritten text all reduce confidence scores. For best results: scan at 300 DPI or higher, good lighting, straight alignment, and select the correct language.</p>
+        </div>
+
+        <div style="border:1px solid var(--border);border-radius:12px;padding:20px;">
+          <h3>What is the file size limit?</h3>
+          <p>PDFree OCR supports files up to 200 MB. On mobile (iOS/iPadOS), processing is limited to the first 30 pages to prevent memory issues — split the PDF first to process the rest. There are no limits on desktop browsers.</p>
         </div>
 
       </div>
 
       <h2>Related tools</h2>
       <ul>
+        <li><a href="../split-pdf/">Split PDF</a> — split a large scanned document before OCR to stay within memory limits</li>
         <li><a href="../fill/">Fill PDF Form</a> — fill interactive form fields in text-layer PDFs</li>
-        <li><a href="../compress-large-pdf-free/">Compress PDF</a> — reduce file size of your scanned PDF</li>
+        <li><a href="../compress-large-pdf-free/">Compress PDF</a> — reduce the file size of your scanned PDF</li>
         <li><a href="../merge-large-pdf-files/">Merge PDF</a> — combine multiple scanned pages into one PDF</li>
         <li><a href="../redact-pdf/">Cover Area</a> — hide sensitive regions before sharing</li>
       </ul>
