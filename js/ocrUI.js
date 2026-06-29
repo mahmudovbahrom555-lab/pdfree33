@@ -241,18 +241,36 @@ function _detectScriptFromText(text, ocrConf = 100) {
 // Sample pages [1, middle, last] — stop as soon as enough text is found.
 // Prefers the existing text layer (free) over a quick OCR pass (cheap).
 const DETECT_PX = 800;
-// Fallback candidates to try when primary detection is uncertain (low confidence).
-// Only pairs where misidentification is physically likely:
-//   eng → rus: Cyrillic glyphs look like Latin (Р→P, О→O, В→B) → eng produces
-//              Latin-looking garbage with low confidence on Russian scans.
-//   jpn ↔ chi_sim: share the CJK Unified Ideographs block (U+4E00–9FFF).
-// Latin-script pairs (deu, fra, spa vs eng) are omitted — eng OCR produces
-// readable output for Latin scripts, switch has negligible quality benefit.
+// Fallback candidates to try when primary detection is suspicious.
+// eng → rus: Cyrillic glyphs look like Latin (Р→P, О→O, В→B) → low confidence signal.
+// eng → ara: Arabic chars have no Latin equivalents → eng produces mostly numbers
+//            and punctuation with moderate confidence → low letter-ratio signal.
+// jpn ↔ chi_sim: share the CJK Unified Ideographs block (U+4E00–9FFF).
+// Latin-script pairs (deu/fra/spa) omitted — eng produces usable output for Latin.
 const DETECTION_FALLBACKS = {
-  eng:     ['rus'],
+  eng:     ['rus', 'ara'],
   jpn:     ['chi_sim'],
   chi_sim: ['jpn'],
 };
+
+// Multi-signal suspicion check — returns true when eng OCR output looks like
+// misidentification. Two independent signals:
+//
+//  1. Low confidence (< 60): catches Cyrillic — eng maps Ц→U, Г→T etc., word
+//     confidence drops because combinations don't match English dictionary.
+//
+//  2. Low letter ratio: catches Arabic — Arabic chars have no Latin look-alikes
+//     so eng OCR produces mostly numbers (42, 2024, 50,000) and short garbage.
+//     Result: digits ≥ letters AND letter fraction of all non-space chars < 15%.
+//     Arabic confidence can be moderate (numbers recognized correctly) so the
+//     confidence-only check misses this entirely.
+function _isDetectionSuspicious(txt, conf) {
+  if (conf < 60) return true;
+  const letters = (txt.match(/[a-zA-Z]/g) ?? []).length;
+  const digits  = (txt.match(/[0-9]/g)    ?? []).length;
+  const total   = txt.replace(/\s/g, '').length;
+  return total > 15 && (letters / (total || 1)) < 0.15 && digits >= letters;
+}
 
 // Last detection metrics — useful for debugging auto-detection behaviour.
 // Exposed on window in dev builds; read via browser console if needed.
@@ -292,9 +310,10 @@ async function _detectLanguage(pdfDoc, worker) {
     if (txt.trim().length >= 20) {
       const primary = _detectScriptFromText(txt, conf);
 
-      // 4. Confidence-based fallback: if primary detection is uncertain,
-      //    try known misidentification candidates from the fallback table.
-      const candidates = (!primary.confident && conf < 60)
+      // 4. Multi-signal fallback: try candidates when detection looks suspicious.
+      //    _isDetectionSuspicious covers both low-confidence (Cyrillic) and
+      //    low-letter-ratio (Arabic/CJK) cases — see function comment.
+      const candidates = _isDetectionSuspicious(txt, conf)
         ? (DETECTION_FALLBACKS[primary.lang] ?? [])
         : [];
 
