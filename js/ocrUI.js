@@ -35,11 +35,12 @@ let _ocrReady        = false;
 let _loading         = false;
 let _generation      = 0;        // incremented on each new file; stale _analyse calls bail early
 let _deferredInstall = null;
-let _selectedLang    = 'auto';   // 'auto' or specific lang code
-let _detectedLang    = null;     // set after auto-detection; null when user chose manually
+let _selectedLang      = 'auto';  // 'auto' or specific lang code
+let _detectedLang      = null;    // set after auto-detection; null when user chose manually
+let _requiresManualLang = false;  // true when auto-detection was inconclusive — blocks OCR
 let _downloadAsTxt      = false;
 let _includeTxtHeader   = false;
-const _langCache     = new Map(); // "filename:size" → detected lang — avoids re-detection
+const _langCache       = new Map(); // "filename:size" → detected lang — avoids re-detection
 
 // ── Last result — stored so the download button in success card can re-trigger
 let _lastResultBlob  = null;   // Blob for re-download from success card
@@ -94,7 +95,7 @@ export function hideOcrOptions() {
   if (el) { el.style.display = 'none'; el.innerHTML = ''; }
   _file = null; _isTextPdf = false; _loading = false;
   _lastResultBlob = null; _lastResultName = null;
-  _includeTxtHeader = false; _detectedLang = null;
+  _includeTxtHeader = false; _detectedLang = null; _requiresManualLang = false;
 }
 
 export function getOcrParams() {
@@ -624,8 +625,65 @@ function _showOcrReady() {
 function _syncBtnLabel() {
   const btn = document.getElementById('mergeBtn');
   if (!btn || !btn._ocrBound) return;
+  if (_requiresManualLang) {
+    // Keep button disabled until user selects a language
+    btn.disabled = true;
+    btn.textContent = 'Select language to continue';
+    return;
+  }
   btn.disabled = false;
-  btn.textContent = _isTextPdf ? 'Extract Text' : 'Make PDF Searchable';
+  btn.textContent = _isTextPdf ? 'Extract Text' : '🔍 Make PDF Searchable';
+}
+
+// Called when auto-detection was inconclusive. Updates the language block to
+// show a prominent warning and disables the OCR button until the user picks
+// a language. "Continue anyway" link lets expert users bypass the block.
+function _showLangRequired(detectedLang) {
+  _requiresManualLang = true;
+  const langBlock = document.getElementById('ocrLangBlock');
+  if (!langBlock) return;
+
+  // Update dropdown label
+  const sel = document.getElementById('ocrLangSelect');
+  if (sel && sel.options[0]) {
+    sel.options[0].textContent = 'Auto — could not determine language';
+  }
+
+  // Remove any previous detect-hint and add prominent required warning
+  langBlock.querySelectorAll('.detect-hint').forEach(el => el.remove());
+  const warn = document.createElement('div');
+  warn.className = 'detect-hint';
+  warn.style.cssText = 'margin-top:10px;padding:10px 14px;background:rgba(234,179,8,0.08);border:1px solid rgba(234,179,8,0.45);border-radius:8px;font-size:13px;';
+  warn.innerHTML = `
+    <strong style="color:var(--text)">⚠ Could not determine the document language</strong>
+    <p style="margin:6px 0 0;font-size:12px;color:var(--text2);">Please select the language from the dropdown above to continue.</p>
+    <a id="ocrContinueAnyway" href="#" style="display:inline-block;margin-top:6px;font-size:11px;color:var(--text3);">
+      Continue anyway with ${_getLangName(detectedLang || 'eng')} (may produce poor results)
+    </a>`;
+  langBlock.appendChild(warn);
+
+  // "Continue anyway" — bypasses the block with the uncertain detection
+  document.getElementById('ocrContinueAnyway')?.addEventListener('click', e => {
+    e.preventDefault();
+    _requiresManualLang = false;
+    _selectedLang = detectedLang || 'eng';
+    const selEl = document.getElementById('ocrLangSelect');
+    if (selEl) selEl.value = _selectedLang;
+    warn.remove();
+    _syncBtnLabel();
+  });
+
+  // Re-enable button when user explicitly selects a language
+  sel?.addEventListener('change', function onLangChange() {
+    if (sel.value !== 'auto') {
+      _requiresManualLang = false;
+      warn.remove();
+      _syncBtnLabel();
+      sel.removeEventListener('change', onLangChange);
+    }
+  });
+
+  _syncBtnLabel(); // applies the disabled + new label
 }
 
 function _bindMergeBtn() {
@@ -694,9 +752,16 @@ function _bindMergeBtn() {
         _showSuccess(`Searchable PDF saved — you can now select and copy text in any PDF reader.${qualityLabel}`);
       }
     } catch (err) {
-      _showToast('Error: ' + err.message);
+      if (err.message === '__LANG_REQUIRED__') {
+        // Auto-detection was inconclusive — ask user to select language manually.
+        // _showLangRequired() disables the button via _requiresManualLang flag;
+        // the finally block calls _syncBtnLabel() which respects that flag.
+        _showLangRequired(_detectedLang);
+      } else {
+        _showToast('Error: ' + err.message);
+      }
     } finally {
-      btn.disabled = false;
+      // _syncBtnLabel() checks _requiresManualLang — if set, keeps button disabled
       btn.classList.remove('ocr-btn--busy');
       if (bar) bar.hidden = true;
       _syncBtnLabel();
@@ -889,22 +954,17 @@ async function _runOcr(file, gen) {
     }
     _detectedLang = detection.lang;
     resolvedLang  = detection.lang;
-    // Update dropdown: show detected lang + uncertainty warning if needed
+    // Update dropdown label to show detection result
     const sel = document.getElementById('ocrLangSelect');
     if (sel && sel.options[0]) {
       const uncertain = !detection.confident ? ' ⚠ uncertain' : '';
       sel.options[0].textContent = `Auto — Detected: ${_getLangName(detection.lang)}${uncertain}`;
     }
-    // Show hint below dropdown when detection is uncertain
-    const langBlock = document.getElementById('ocrLangBlock');
-    if (langBlock && !detection.confident) {
-      const hint = document.createElement('p');
-      hint.style.cssText = 'margin:6px 0 0;font-size:12px;color:var(--text3);';
-      hint.textContent = 'Low confidence detection — consider selecting the language manually.';
-      if (!langBlock.querySelector('.detect-hint')) {
-        hint.className = 'detect-hint';
-        langBlock.appendChild(hint);
-      }
+    // Low confidence → abort OCR and ask user to select language manually.
+    // Throwing here exits _runOcr(); the caller's catch block calls
+    // _showLangRequired() which disables the button and shows the prompt.
+    if (!detection.confident) {
+      throw new Error('__LANG_REQUIRED__');
     }
     // Reinitialize with correct model if detection found non-English script
     if (detection.lang !== 'eng') {
