@@ -332,50 +332,59 @@
   <hr style="border:none;border-top:2px solid var(--border);margin:48px 24px 0;" aria-hidden="true">
   <section class="seo-article" aria-label="OCR PDF Free">
     <div class="seo-article__inner">
+      <div class="seo-content" style="max-width:800px;margin:60px auto 40px;padding:0 24px;color:var(--text2);line-height:1.75;">
 
-      <h1>OCR PDF Free — Make Scanned PDFs Searchable</h1>
+      <h1 style="font-size:clamp(22px,3.5vw,30px);color:var(--text);margin:0 0 16px;font-weight:700;">OCR PDF Free — Make Scanned PDFs Searchable</h1>
 
-      <p>Extract text from scanned PDFs and make them searchable — directly in your browser using OCR (Optical Character Recognition). No software to install, no account required, and your files <strong>never leave your device</strong>.</p>
+      <p style="font-size:15px;margin:0 0 40px;">Extract text from scanned PDFs and make them searchable — directly in your browser using OCR (Optical Character Recognition). No software to install, no account required, and your files <strong>never leave your device</strong>.</p>
 
-      <h2>How to make a scanned PDF searchable</h2>
+      <h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">How to make a scanned PDF searchable</h2>
 
-      <ol>
-        <li>Open your scanned PDF using the drop zone above — drag and drop or click Choose PDF.</li>
-        <li>PDFree automatically checks whether your PDF already has a text layer or is a pure scanned image.</li>
-        <li>For text-layer PDFs: text is extracted instantly — no OCR engine needed.</li>
-        <li>For scanned PDFs: click <strong>Install OCR Engine</strong> to load Tesseract.js (~17 MB, one-time download). Select your document language from the dropdown.</li>
-        <li>Click <strong>Make PDF Searchable</strong> — your searchable PDF downloads automatically. The original appearance is unchanged; only an invisible text layer is added.</li>
-      </ol>
+      <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:20px;">
+        <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">1</div>
+        <div><strong style="color:var(--text);font-size:15px;">Open your scanned PDF</strong>
+        <p style="margin:6px 0 0;font-size:14px;">Drag and drop or click Choose PDF. PDFree automatically detects whether your PDF has a text layer or is a pure scanned image.</p></div>
+      </div>
+      <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:20px;">
+        <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">2</div>
+        <div><strong style="color:var(--text);font-size:15px;">Select your language and install OCR</strong>
+        <p style="margin:6px 0 0;font-size:14px;">For scanned PDFs: click <strong>Install OCR Engine</strong> to load Tesseract.js (~17 MB, one-time download). Select your document language from the dropdown. Text-layer PDFs skip this step entirely.</p></div>
+      </div>
+      <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:40px;">
+        <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">3</div>
+        <div><strong style="color:var(--text);font-size:15px;">Download your searchable PDF</strong>
+        <p style="margin:6px 0 0;font-size:14px;">Click <strong>Make PDF Searchable</strong> — your PDF downloads automatically. The original appearance is unchanged; only an invisible text layer is added.</p></div>
+      </div>
 
-      <h2>Text PDFs vs scanned PDFs — what's the difference?</h2>
+      <h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">Text PDFs vs scanned PDFs — what's the difference?</h2>
 
-      <p>PDFree automatically detects which type of PDF you have. <strong>Text-layer PDFs</strong> (most PDFs created digitally — from Word, Google Docs, or any modern application) already contain machine-readable text embedded in the file — extraction is instant and no OCR engine is needed. <strong>Scanned PDFs</strong> (photos of pages, fax documents, older archive scans, CamScanner exports) contain only images and require OCR to convert pixels into selectable, searchable text.</p>
+      <p style="font-size:15px;margin:0 0 24px;">PDFree automatically detects which type of PDF you have. <strong>Text-layer PDFs</strong> (most PDFs created digitally — from Word, Google Docs, or any modern application) already contain machine-readable text embedded in the file — extraction is instant and no OCR engine is needed. <strong>Scanned PDFs</strong> (photos of pages, fax documents, older archive scans, CamScanner exports) contain only images and require OCR to convert pixels into selectable, searchable text.</p>
 
-      <h2>18 languages supported</h2>
+      <h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">18 languages supported</h2>
 
-      <p>PDFree uses Tesseract.js, a leading open-source OCR engine, and supports 18 languages: <strong>English, French, German, Spanish, Italian, Portuguese, Russian, Uzbek, Dutch, Polish, Turkish</strong> (European scripts) and <strong>Arabic, Japanese, Chinese Simplified, Chinese Traditional, Korean, Hindi, Thai</strong> (complex scripts). Select your language from the dropdown before running OCR — accuracy depends on choosing the correct language model.</p>
+      <p style="font-size:15px;margin:0 0 24px;">PDFree uses Tesseract.js, a leading open-source OCR engine, and supports 18 languages: <strong>English, French, German, Spanish, Italian, Portuguese, Russian, Uzbek, Dutch, Polish, Turkish</strong> (European scripts) and <strong>Arabic, Japanese, Chinese Simplified, Chinese Traditional, Korean, Hindi, Thai</strong> (complex scripts). Select your language from the dropdown before running OCR — accuracy depends on choosing the correct language model.</p>
 
-      <h2>What affects OCR quality?</h2>
+      <h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">What affects OCR quality?</h2>
 
-      <p>After OCR, PDFree shows a quality score (Excellent / Good / Fair / Poor) based on Tesseract's word confidence. The main factors:</p>
-      <ul>
-        <li><strong>Scan resolution</strong> — 300 DPI or higher gives the best results. Below 150 DPI, thin strokes and small text become difficult to recognize.</li>
-        <li><strong>Page alignment</strong> — skewed or rotated pages reduce accuracy. PDFree auto-corrects PDF rotation (90°/180°/270°), but physical page tilt in the scan cannot be corrected.</li>
-        <li><strong>Print vs handwriting</strong> — printed text recognizes well; cursive handwriting is not supported by Tesseract.</li>
-        <li><strong>Background noise</strong> — colored backgrounds, shadows, or watermarks reduce contrast. PDFree converts pages to grayscale before OCR to improve results.</li>
-        <li><strong>Language match</strong> — always select the language that matches the document. Mixed-language documents (e.g., a form with English labels and Russian content) work best if you select the dominant language.</li>
+      <p style="font-size:15px;margin:0 0 16px;">After OCR, PDFree shows a quality score (Excellent / Good / Fair / Poor) based on Tesseract's word confidence. The main factors:</p>
+      <ul style="font-size:14px;margin:0 0 24px;padding-left:20px;">
+        <li style="margin-bottom:8px;"><strong>Scan resolution</strong> — 300 DPI or higher gives the best results. Below 150 DPI, thin strokes and small text become difficult to recognize.</li>
+        <li style="margin-bottom:8px;"><strong>Page alignment</strong> — skewed or rotated pages reduce accuracy. PDFree auto-corrects PDF rotation (90°/180°/270°), but physical page tilt in the scan cannot be corrected.</li>
+        <li style="margin-bottom:8px;"><strong>Print vs handwriting</strong> — printed text recognizes well; cursive handwriting is not supported by Tesseract.</li>
+        <li style="margin-bottom:8px;"><strong>Background noise</strong> — colored backgrounds, shadows, or watermarks reduce contrast. PDFree converts pages to grayscale before OCR to improve results.</li>
+        <li><strong>Language match</strong> — always select the language that matches the document. Mixed-language documents work best if you select the dominant language.</li>
       </ul>
 
-      <h2>Searchable PDF vs plain text — which to download?</h2>
+      <h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">Searchable PDF vs plain text — which to download?</h2>
 
-      <p>The <strong>searchable PDF</strong> keeps your original scanned images exactly as they were and adds an invisible text layer on top. Open it in any PDF reader and you can select text, use Ctrl+F to search, and copy content — the visual appearance is unchanged. Use this for archiving, sharing, or long-term storage.</p>
-      <p>The <strong>.txt file</strong> contains only the extracted plain text with page separators. Use this when you need to edit the content in Word or Google Docs, feed text into another tool, or process it programmatically. Enable "Also download .txt copy" in the options to get both files at once.</p>
+      <p style="font-size:15px;margin:0 0 12px;">The <strong>searchable PDF</strong> keeps your original scanned images exactly as they were and adds an invisible text layer on top. Open it in any PDF reader and you can select text, use Ctrl+F to search, and copy content — the visual appearance is unchanged. Use this for archiving, sharing, or long-term storage.</p>
+      <p style="font-size:15px;margin:0 0 24px;">The <strong>.txt file</strong> contains only the extracted plain text with page separators. Use this when you need to edit the content in Word or Google Docs, feed text into another tool, or process it programmatically. Enable "Also download .txt copy" in the options to get both files at once.</p>
 
-      <h2>Privacy — your scanned documents stay private</h2>
+      <h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">Privacy — your scanned documents stay private</h2>
 
-      <p>Scanned documents often contain sensitive content — contracts, medical records, personal letters, tax forms. With PDFree, <strong>nothing is ever uploaded</strong>. The OCR engine (Tesseract.js) is downloaded once and then runs entirely inside your browser tab. There are no servers receiving your files, no cloud storage, and no data collection of any kind. Open DevTools → Network tab while processing to verify: zero file uploads.</p>
+      <p style="font-size:15px;margin:0 0 24px;">Scanned documents often contain sensitive content — contracts, medical records, personal letters, tax forms. With PDFree, <strong>nothing is ever uploaded</strong>. The OCR engine (Tesseract.js) is downloaded once and then runs entirely inside your browser tab. There are no servers receiving your files, no cloud storage, and no data collection of any kind. Open DevTools → Network tab while processing to verify: zero file uploads.</p>
 
-      <h2>Frequently asked questions</h2>
+      <h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">Frequently asked questions</h2>
 
       <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:32px;">
 
@@ -499,16 +508,17 @@
         </tbody>
       </table>
 
-      <h2>Related tools</h2>
-      <ul>
-        <li><a href="../pdf-to-word/">PDF to Word</a> — natural next step: convert your searchable PDF into an editable Word document</li>
-        <li><a href="../split-pdf/">Split PDF</a> — split a large scanned document before OCR to stay within memory limits</li>
-        <li><a href="../compress-large-pdf-free/">Compress PDF</a> — reduce the file size of your scanned PDF before sharing or archiving</li>
-        <li><a href="../fill/">Fill PDF Form</a> — fill interactive form fields in text-layer PDFs</li>
-        <li><a href="../merge-large-pdf-files/">Merge PDF</a> — combine multiple scanned pages into one PDF</li>
+      <h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">Related tools</h2>
+      <ul style="font-size:14px;padding-left:20px;margin:0 0 40px;">
+        <li style="margin-bottom:8px;"><a href="../pdf-to-word/">PDF to Word</a> — natural next step: convert your searchable PDF into an editable Word document</li>
+        <li style="margin-bottom:8px;"><a href="../split-pdf/">Split PDF</a> — split a large scanned document before OCR to stay within memory limits</li>
+        <li style="margin-bottom:8px;"><a href="../compress-large-pdf-free/">Compress PDF</a> — reduce the file size of your scanned PDF before sharing or archiving</li>
+        <li style="margin-bottom:8px;"><a href="../fill/">Fill PDF Form</a> — fill interactive form fields in text-layer PDFs</li>
+        <li style="margin-bottom:8px;"><a href="../merge-large-pdf-files/">Merge PDF</a> — combine multiple scanned pages into one PDF</li>
         <li><a href="../redact-pdf/">Cover Area</a> — hide sensitive regions before sharing</li>
       </ul>
 
+      </div><!-- /.seo-content -->
     </div>
   </section>
 
