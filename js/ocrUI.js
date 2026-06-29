@@ -35,9 +35,11 @@ let _ocrReady        = false;
 let _loading         = false;
 let _generation      = 0;        // incremented on each new file; stale _analyse calls bail early
 let _deferredInstall = null;
-let _selectedLang    = 'eng';
+let _selectedLang    = 'auto';   // 'auto' or specific lang code
+let _detectedLang    = null;     // set after auto-detection; null when user chose manually
 let _downloadAsTxt      = false;
 let _includeTxtHeader   = false;
+const _langCache     = new Map(); // "filename:size" → detected lang — avoids re-detection
 
 // ── Last result — stored so the download button in success card can re-trigger
 let _lastResultBlob  = null;   // Blob for re-download from success card
@@ -92,7 +94,7 @@ export function hideOcrOptions() {
   if (el) { el.style.display = 'none'; el.innerHTML = ''; }
   _file = null; _isTextPdf = false; _loading = false;
   _lastResultBlob = null; _lastResultName = null;
-  _includeTxtHeader = false;
+  _includeTxtHeader = false; _detectedLang = null;
 }
 
 export function getOcrParams() {
@@ -195,13 +197,74 @@ async function _analyse(file, container) {
   }
 }
 
+// ── Auto language detection ───────────────────────────────────────────────────
+
+// Analyse unicode codepoints of OCR text and return the most likely Tesseract
+// language code. Only dominant script is checked — mixing models degrades quality.
+function _detectScriptFromText(text) {
+  if (!text || text.trim().length < 10) return 'eng';
+  let lat = 0, cyr = 0, ara = 0, jpnKana = 0, cjk = 0, han = 0, dev = 0, tha = 0;
+  for (const ch of text) {
+    const cp = ch.codePointAt(0);
+    if (cp >= 0x0041 && cp <= 0x024F)       lat++;
+    else if (cp >= 0x0400 && cp <= 0x04FF)  cyr++;
+    else if (cp >= 0x0600 && cp <= 0x06FF)  ara++;
+    else if (cp >= 0x3040 && cp <= 0x30FF)  jpnKana++;  // hiragana + katakana
+    else if (cp >= 0x4E00 && cp <= 0x9FFF)  cjk++;
+    else if (cp >= 0xAC00 && cp <= 0xD7A3)  han++;      // hangul
+    else if (cp >= 0x0900 && cp <= 0x097F)  dev++;
+    else if (cp >= 0x0E00 && cp <= 0x0E7F)  tha++;
+  }
+  if (jpnKana > 3)              return 'jpn';      // kana = unambiguously Japanese
+  if (han > 5)                  return 'kor';
+  if (cjk > 10 && jpnKana > 0) return 'jpn';
+  if (cjk > 10)                 return 'chi_sim';
+  if (ara > 5)                  return 'ara';
+  if (dev > 5)                  return 'hin';
+  if (tha > 5)                  return 'tha';
+  if (cyr > lat * 0.25 && cyr > 5) return 'rus';
+  return 'eng';
+}
+
+// Sample pages [1, middle, last] — stop as soon as enough text is found.
+// Prefers the existing text layer (free) over a quick OCR pass (cheap).
+const DETECT_PX = 800;
+async function _detectLanguage(pdfDoc, worker) {
+  const total = pdfDoc.numPages;
+  const pages = [...new Set([1, Math.ceil(total / 2), total])];
+  for (const p of pages) {
+    const page = await pdfDoc.getPage(p);
+    // 1. Check text layer first — zero cost
+    const tc = await page.getTextContent();
+    const layerText = tc.items.map(i => i.str).join('');
+    if (layerText.trim().length >= 50) return _detectScriptFromText(layerText);
+    // 2. Quick low-res OCR pass
+    const vp0   = page.getViewport({ scale: 1 });
+    const scale = DETECT_PX / Math.max(vp0.width, vp0.height);
+    const vp    = page.getViewport({ scale });
+    const cvs   = document.createElement('canvas');
+    cvs.width   = Math.round(vp.width);
+    cvs.height  = Math.round(vp.height);
+    const ctx   = cvs.getContext('2d');
+    await page.render({ canvasContext: ctx, viewport: vp }).promise;
+    const res   = await worker.recognize(cvs);
+    cvs.width = 0; cvs.height = 0;
+    const txt = res?.data?.text ?? '';
+    if (txt.trim().length >= 20) return _detectScriptFromText(txt);
+  }
+  return 'eng';
+}
+
 // ── UI rendering ─────────────────────────────────────────────────────────────
 function _langSelectHTML() {
+  const autoLabel = _detectedLang
+    ? `Auto — Detected: ${_getLangName(_detectedLang)}`
+    : 'Auto (Recommended)';
   const euOptions = LANGUAGES.european
-    .map(l => `<option value="${l.code}"${l.isDefault ? ' selected' : ''}>${l.name} &middot; ${l.size}</option>`)
+    .map(l => `<option value="${l.code}"${_selectedLang === l.code ? ' selected' : ''}>${l.name} &middot; ${l.size}</option>`)
     .join('\n        ');
   const cxOptions = LANGUAGES.complex
-    .map(l => `<option value="${l.code}">${l.name} &middot; ${l.size}</option>`)
+    .map(l => `<option value="${l.code}"${_selectedLang === l.code ? ' selected' : ''}>${l.name} &middot; ${l.size}</option>`)
     .join('\n        ');
 
   return `
@@ -210,6 +273,7 @@ function _langSelectHTML() {
       Document language
     </label>
     <select id="ocrLangSelect" style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text);font-size:15px;font-family:inherit;margin-bottom:0;cursor:pointer;">
+      <option value="auto"${_selectedLang === 'auto' ? ' selected' : ''}>${autoLabel}</option>
       <optgroup label="European languages">
         ${euOptions}
       </optgroup>
@@ -332,8 +396,12 @@ function _bindLangSelect() {
   sel.value = _selectedLang;
   sel.addEventListener('change', e => {
     const val = e.target.value;
-    _selectedLang = val;   // always set immediately so OCR uses the right model
-    const complexLang = LANGUAGES.complex.find(l => l.code === val);
+    _selectedLang = val;
+    if (val !== 'auto') {
+      // User explicitly chose a language — save preference for next visit
+      try { localStorage.setItem('pdfree_ocr_lang', val); } catch { /* private browsing */ }
+    }
+    const complexLang = val !== 'auto' && LANGUAGES.complex.find(l => l.code === val);
     if (complexLang) {
       _showComplexLangDownload(complexLang);
     } else {
@@ -474,7 +542,8 @@ function _bindMergeBtn() {
         if (myGen !== _generation) return;
         _updateProgress(95, 'Building searchable PDF…');
         _setBtnProgress('Building PDF…');
-        const pdfBytes = await _buildSearchablePdf(_file, ocrPages, _selectedLang);
+        const usedLang = _detectedLang ?? _selectedLang;
+        const pdfBytes = await _buildSearchablePdf(_file, ocrPages, usedLang);
         _lastResultBlob = new Blob([pdfBytes], { type: 'application/pdf' });
         _lastResultName = _file.name.replace(/\.pdf$/i, '_searchable.pdf');
         // Secondary .txt alongside the searchable PDF — separate optional file
@@ -483,7 +552,7 @@ function _bindMergeBtn() {
           _downloadText(txtWithHeader, _file.name);
         }
         // _showSuccess handles the main PDF auto-download via _lastResultBlob
-        const qualityLabel = _ocrQualityLabel(avgConfidence, _selectedLang);
+        const qualityLabel = _ocrQualityLabel(avgConfidence, usedLang);
         _showSuccess(`Searchable PDF saved — you can now select and copy text in any PDF reader.${qualityLabel}`);
       }
     } catch (err) {
@@ -643,22 +712,50 @@ async function _runOcr(file, gen) {
     }
   }
 
-  const langLabel = _getLangName(_selectedLang);
+  // Resolve language: auto-detection or user-chosen
+  let resolvedLang = _selectedLang === 'auto' ? 'eng' : _selectedLang;
+
   let worker;
   try {
   _updateProgress(13, 'Initializing OCR engine…');
   _setBtnProgress('Initializing…');
-  const tesseractLang = _selectedLang === 'jpn' ? 'jpn+jpn_vert' : _selectedLang;
-  worker = await window.Tesseract.createWorker(tesseractLang, 1, {
+  // Always start with resolved lang (eng for auto); reinitialize after detection if needed
+  const initTsLang = resolvedLang === 'jpn' ? 'jpn+jpn_vert' : resolvedLang;
+  worker = await window.Tesseract.createWorker(initTsLang, 1, {
     logger: m => {
       if (m.status === 'recognizing text') {
-        _updateProgress(Math.round(m.progress * 100), `Recognizing text (${langLabel})…`);
+        _updateProgress(Math.round(m.progress * 100), `Recognizing text (${_getLangName(resolvedLang)})…`);
       } else if (m.status && m.progress != null) {
-        // Shows download/init progress for language data
-        _updateProgress(Math.round(m.progress * 15), `Loading ${langLabel}…`);
+        _updateProgress(Math.round(m.progress * 15), `Loading ${_getLangName(resolvedLang)}…`);
       }
     },
   });
+
+  // Auto-detection: sample document, detect dominant script, reinitialize if needed
+  if (_selectedLang === 'auto') {
+    const cacheKey = _file ? `${_file.name}:${_file.size}` : null;
+    let detected = cacheKey ? _langCache.get(cacheKey) : null;
+    if (!detected) {
+      _updateProgress(14, 'Detecting document language…');
+      detected = await _detectLanguage(pdfDoc, worker);
+      if (cacheKey) _langCache.set(cacheKey, detected);
+    }
+    _detectedLang = detected;
+    resolvedLang  = detected;
+    // Update dropdown label to show detected language
+    const sel = document.getElementById('ocrLangSelect');
+    if (sel && sel.options[0]) {
+      sel.options[0].textContent = `Auto — Detected: ${_getLangName(detected)}`;
+    }
+    // Reinitialize with correct model if detection found non-English script
+    if (detected !== 'eng') {
+      const detTsLang = detected === 'jpn' ? 'jpn+jpn_vert' : detected;
+      _updateProgress(15, `Loading ${_getLangName(detected)} language model…`);
+      await worker.reinitialize(detTsLang);
+    }
+  }
+
+  const langLabel = _getLangName(resolvedLang);
 
   const total      = isIos ? Math.min(pdfDoc.numPages, MAX_PAGES_IOS) : pdfDoc.numPages;
   const ocrPages   = [];
@@ -706,8 +803,8 @@ async function _runOcr(file, gen) {
       // tab kill under memory pressure. Removed: MAX_OCR_PX must stay a true
       // cap, even at the cost of quality on rare oversized pages.
       const vp0 = page.getViewport({ scale: 1 });
-      const maxPx = CJK_LANGS.has(_selectedLang) ? SCRIPT_PROFILE.cjk
-                  : COMPLEX_LANGS.has(_selectedLang) ? SCRIPT_PROFILE.complex
+      const maxPx = CJK_LANGS.has(resolvedLang) ? SCRIPT_PROFILE.cjk
+                  : COMPLEX_LANGS.has(resolvedLang) ? SCRIPT_PROFILE.complex
                   : SCRIPT_PROFILE.latin;
       const scale = Math.min(maxPx / vp0.width, maxPx / vp0.height);
       const vp = page.getViewport({ scale });
@@ -730,7 +827,7 @@ async function _runOcr(file, gen) {
       // Latin (eng/fra/…): 55% — Tesseract is reliable; below 55% is almost always garbage.
       // Complex (ara/jpn/kor/hin/tha/…): 45% — correct glyphs routinely score 40–50%,
       // so 55% would silently discard real text for these scripts.
-      const MIN_CONF = COMPLEX_LANGS.has(_selectedLang) ? 45 : 55;
+      const MIN_CONF = COMPLEX_LANGS.has(resolvedLang) ? 45 : 55;
       const words    = result.data.words.flatMap(w => {
         const text = w.text.normalize('NFC').trim();
         if (!text || w.confidence < MIN_CONF) return [];
