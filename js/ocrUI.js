@@ -541,6 +541,28 @@ function _showSuccess(desc) {
     };
   }
 
+  // Next steps block — shown after every successful OCR
+  let nextSteps = sc.querySelector('.ocr-next-steps');
+  if (!nextSteps) {
+    nextSteps = document.createElement('div');
+    nextSteps.className = 'ocr-next-steps';
+    nextSteps.style.cssText = 'margin-top:16px;padding-top:14px;border-top:1px solid var(--border);font-size:13px;';
+    nextSteps.innerHTML = `
+      <div style="font-weight:600;color:var(--text2);margin-bottom:10px;">What to do next</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <a href="../pdf-to-word/" style="display:flex;align-items:center;gap:8px;color:var(--green);text-decoration:none;font-weight:500;">
+          <span style="font-size:16px">📝</span> Convert to Word — edit the content
+        </a>
+        <a href="../split-pdf/" style="display:flex;align-items:center;gap:8px;color:var(--green);text-decoration:none;font-weight:500;">
+          <span style="font-size:16px">✂️</span> Split PDF — extract specific pages
+        </a>
+        <a href="../compress-large-pdf-free/" style="display:flex;align-items:center;gap:8px;color:var(--green);text-decoration:none;font-weight:500;">
+          <span style="font-size:16px">🗜️</span> Compress PDF — reduce size before sharing
+        </a>
+      </div>`;
+    sc.appendChild(nextSteps);
+  }
+
   sc.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 

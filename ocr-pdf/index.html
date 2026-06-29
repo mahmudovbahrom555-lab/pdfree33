@@ -81,6 +81,9 @@
   <!-- Resource hints -->
   <link rel="preconnect" href="https://plausible.io">
   <link rel="preconnect" href="https://static.cloudflareinsights.com">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preload" href="../fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="modulepreload" href="../js/app.js">
 
@@ -104,13 +107,14 @@
     "browserRequirements": "Requires a modern browser with JavaScript enabled",
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
     "featureList": [
-      "OCR scanned PDFs — extract machine-readable text",
-      "Auto-detects text-layer PDFs — no OCR needed for those",
-      "Tesseract.js OCR engine — loaded only when needed",
-      "No file upload required",
-      "100% private — files processed locally",
+      "Create searchable PDFs — invisible text layer added over original scanned pages",
+      "Preserve original layout — images and formatting stay exactly as they were",
+      "Auto-detects text-layer PDFs — instant extraction, no OCR engine needed",
+      "18 languages supported — English, French, German, Spanish, Russian, Arabic, Japanese, Chinese, Korean, Hindi and more",
+      "No file upload required — all processing happens locally in your browser",
+      "100% private — files never leave your device",
       "No account or signup needed",
-      "Download result as .txt file"
+      "Optional plain text (.txt) export alongside the searchable PDF"
     ],
     "provider": { "@type": "Organization", "name": "PDFree", "url": "https://pdfree.io" }
   }
@@ -202,19 +206,19 @@
       "@type": "HowToStep",
       "position": 1,
       "name": "Open your scanned PDF",
-      "text": "Click 'Choose files' or drag your scanned PDF into the drop zone."
+      "text": "Click 'Choose PDF' or drag your scanned PDF into the drop zone. PDFree automatically detects whether your PDF is scanned or already has a text layer."
     },
     {
       "@type": "HowToStep",
       "position": 2,
-      "name": "Select your language",
+      "name": "Select your document language",
       "text": "Choose the language of the text in your document from the language selector. PDFree supports 18 languages including English, French, German, Spanish, Russian, Arabic, Japanese, Chinese, Korean, Hindi, and more."
     },
     {
       "@type": "HowToStep",
       "position": 3,
       "name": "Download the searchable PDF",
-      "text": "Click 'Run OCR'. Text is recognized and embedded as a transparent layer. Download the result — now fully searchable and copy-able."
+      "text": "Click 'Make PDF Searchable'. The OCR engine recognizes text and embeds it as an invisible layer — the original layout is unchanged. Download the result and search or copy text in any PDF reader."
     }
   ]
 }
@@ -405,8 +409,102 @@
 
       </div>
 
+      <h2>Who needs OCR?</h2>
+
+      <p>OCR is useful any time you have a document as an image and need to work with the text inside it:</p>
+
+      <table style="width:100%;border-collapse:collapse;margin-bottom:24px;font-size:14px;">
+        <thead>
+          <tr style="background:var(--surface);border-bottom:2px solid var(--border);">
+            <th style="text-align:left;padding:10px 12px;font-weight:600;">Who</th>
+            <th style="text-align:left;padding:10px 12px;font-weight:600;">Typical use</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:10px 12px;font-weight:500;">Legal</td>
+            <td style="padding:10px 12px;color:var(--text2);">Search old contracts and court documents scanned from paper</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border);background:var(--surface);">
+            <td style="padding:10px 12px;font-weight:500;">Students</td>
+            <td style="padding:10px 12px;color:var(--text2);">Copy text from scanned textbooks, highlight passages, import into notes</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:10px 12px;font-weight:500;">Accounting</td>
+            <td style="padding:10px 12px;color:var(--text2);">Make scanned invoices and receipts searchable for audit trails</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border);background:var(--surface);">
+            <td style="padding:10px 12px;font-weight:500;">Healthcare</td>
+            <td style="padding:10px 12px;color:var(--text2);">Digitize paper patient records while keeping files private — nothing leaves your device</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:10px 12px;font-weight:500;">Researchers</td>
+            <td style="padding:10px 12px;color:var(--text2);">Make scanned academic papers and archive documents searchable</td>
+          </tr>
+          <tr style="background:var(--surface);">
+            <td style="padding:10px 12px;font-weight:500;">Government / HR</td>
+            <td style="padding:10px 12px;color:var(--text2);">Archive paper forms and convert them to searchable digital records</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>PDFree OCR vs typical online OCR tools</h2>
+
+      <table style="width:100%;border-collapse:collapse;margin-bottom:24px;font-size:14px;">
+        <thead>
+          <tr style="background:var(--surface);border-bottom:2px solid var(--border);">
+            <th style="text-align:left;padding:10px 12px;font-weight:600;">Feature</th>
+            <th style="text-align:left;padding:10px 12px;font-weight:600;">PDFree</th>
+            <th style="text-align:left;padding:10px 12px;font-weight:600;">Typical online OCR</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:10px 12px;">File processing</td>
+            <td style="padding:10px 12px;color:var(--green);font-weight:500;">In your browser — local only</td>
+            <td style="padding:10px 12px;color:var(--text2);">File uploaded to a server</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border);background:var(--surface);">
+            <td style="padding:10px 12px;">Account required</td>
+            <td style="padding:10px 12px;color:var(--green);font-weight:500;">No</td>
+            <td style="padding:10px 12px;color:var(--text2);">Often required</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:10px 12px;">Output</td>
+            <td style="padding:10px 12px;color:var(--green);font-weight:500;">Searchable PDF + optional .txt</td>
+            <td style="padding:10px 12px;color:var(--text2);">.txt only in many tools</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border);background:var(--surface);">
+            <td style="padding:10px 12px;">Original layout</td>
+            <td style="padding:10px 12px;color:var(--green);font-weight:500;">Preserved exactly</td>
+            <td style="padding:10px 12px;color:var(--text2);">Often reformatted</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:10px 12px;">Price</td>
+            <td style="padding:10px 12px;color:var(--green);font-weight:500;">Free, no limits</td>
+            <td style="padding:10px 12px;color:var(--text2);">Free tier often page-limited</td>
+          </tr>
+          <tr style="background:var(--surface);">
+            <td style="padding:10px 12px;">Works offline</td>
+            <td style="padding:10px 12px;color:var(--green);font-weight:500;">Yes, after first load</td>
+            <td style="padding:10px 12px;color:var(--text2);">No</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>What to do after OCR</h2>
+
+      <p>Once your PDF is searchable, common next steps:</p>
+      <ul>
+        <li><a href="../pdf-to-word/"><strong>Convert to Word</strong></a> — turn the searchable PDF into an editable .docx file for further editing</li>
+        <li><a href="../split-pdf/"><strong>Split PDF</strong></a> — extract specific pages from a large scanned document</li>
+        <li><a href="../compress-large-pdf-free/"><strong>Compress PDF</strong></a> — reduce file size before sharing or archiving</li>
+        <li><a href="../redact-pdf/"><strong>Cover Area</strong></a> — hide sensitive regions (signatures, personal data) before sending</li>
+      </ul>
+
       <h2>Related tools</h2>
       <ul>
+        <li><a href="../pdf-to-word/">PDF to Word</a> — convert a searchable PDF to an editable Word document</li>
         <li><a href="../split-pdf/">Split PDF</a> — split a large scanned document before OCR to stay within memory limits</li>
         <li><a href="../fill/">Fill PDF Form</a> — fill interactive form fields in text-layer PDFs</li>
         <li><a href="../compress-large-pdf-free/">Compress PDF</a> — reduce the file size of your scanned PDF</li>
