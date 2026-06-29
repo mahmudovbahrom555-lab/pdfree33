@@ -16,7 +16,7 @@ const TEXT_CHAR_THRESHOLD = 100; // min chars across sampled pages → classifie
 const SCRIPT_PROFILE = {
   latin:   3000,
   complex: 3200,
-  cjk:     3500,
+  cjk:     4200,  // Japanese/Chinese kanji are dense — extra pixels improve stroke recognition
 };
 const CJK_LANGS = new Set(['jpn', 'chi_sim', 'chi_tra', 'kor']);
 
@@ -948,6 +948,13 @@ async function _runOcr(file, gen) {
       }
     },
   });
+
+  // PSM 11 (sparse text) works better for CJK invoice/table layouts than PSM 3 (auto).
+  // PSM 3 may group kanji blocks suboptimally; PSM 11 finds text anywhere on the page.
+  const ps0 = _primaryScript(resolvedLang);
+  if (CJK_LANGS.has(ps0)) {
+    await worker.setParameters({ tessedit_pageseg_mode: '11' });
+  }
 
   // Auto-detection: sample document, detect dominant script, reinitialize if needed
   if (_selectedLang === 'auto') {
