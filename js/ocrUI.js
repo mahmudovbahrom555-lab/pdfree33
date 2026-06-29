@@ -147,17 +147,21 @@ async function _analyse(file, container) {
         data: new Uint8Array(buf), verbosity: 0, disableJavaScript: true, ignoreEncryption: true,
       }).promise;
 
-      // Sample up to 3 pages — hybrid PDFs may have blank first page.
-      // Count total characters (not items): a scanned PDF may have a few header
-      // items (<20 chars total) while a real text PDF has hundreds per page.
+      // Sample up to 3 pages per-page to detect hybrid PDFs.
+      // A document-level total was wrong: a hybrid with a text page 1 (200 chars)
+      // and a scanned page 2 (0 chars) would sum ≥ 100 → wrongly classified as
+      // text PDF → page 2 scanned content silently lost.
+      // Now: _isTextPdf = true only when ALL sampled pages clear the threshold.
+      // Hybrid PDFs (mixed) → _isTextPdf = false → OCR path with per-page logic.
       const samplePages = Math.min(3, pdfDoc.numPages);
-      let totalChars = 0;
+      let allPagesHaveText = true;
       for (let p = 1; p <= samplePages; p++) {
         const pg = await pdfDoc.getPage(p);
         const tc = await pg.getTextContent();
-        totalChars += tc.items.reduce((s, i) => s + i.str.trim().length, 0);
+        const chars = tc.items.reduce((s, i) => s + i.str.trim().length, 0);
+        if (chars < TEXT_CHAR_THRESHOLD) { allPagesHaveText = false; break; }
       }
-      _isTextPdf = totalChars >= TEXT_CHAR_THRESHOLD;
+      _isTextPdf = allPagesHaveText;
     } finally {
       pdfDoc?.destroy();
     }
@@ -671,6 +675,26 @@ async function _runOcr(file, gen) {
     let canvas, ocrCanvas;
     try {
       const page = await pdfDoc.getPage(p);
+
+      // Per-page hybrid detection: if this page already has a text layer,
+      // extract it directly instead of running Tesseract. This handles hybrid
+      // PDFs (e.g. text cover page + scanned appendix) without losing content.
+      const tc = await page.getTextContent();
+      const pageChars = tc.items.reduce((s, i) => s + i.str.trim().length, 0);
+      if (pageChars >= TEXT_CHAR_THRESHOLD) {
+        const lines = [];
+        for (const item of tc.items) {
+          if (!item.str.trim()) continue;
+          const iy = Math.round(item.transform[5]);
+          const last = lines[lines.length - 1];
+          if (last && Math.abs(last.y - iy) <= 4) { last.words.push(item.str); }
+          else { lines.push({ y: iy, words: [item.str] }); }
+        }
+        lines.sort((a, b) => b.y - a.y);
+        txtPages.push(`--- Page ${p} ---\n${lines.map(l => l.words.join(' ')).join('\n').trim()}`);
+        // Don't add to ocrPages — page already has a text layer, leave it unchanged
+        continue;
+      }
 
       // Adaptive scale — aim for MAX_OCR_PX on the longest side, as a hard
       // cap. Old logic (scale=2 default) downsampled high-DPI CamScanner
