@@ -8,6 +8,18 @@ import { t } from './i18n.js';
 const TESSERACT_CDN       = 'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js';
 const TEXT_CHAR_THRESHOLD = 100; // min chars across sampled pages → classified as text PDF (items-count was 5 — too low)
 
+// Resolution profile per script family.
+// CJK ideographs are small and dense — need higher resolution for stroke preservation.
+// Arabic and Devanagari have connected ligatures that benefit from slightly more pixels.
+// Latin/Cyrillic are accurate at 3000px (~240 DPI on A4).
+// New languages should be added to the appropriate bucket; no per-lang if-chains needed.
+const SCRIPT_PROFILE = {
+  latin:   3000,
+  complex: 3200,
+  cjk:     3500,
+};
+const CJK_LANGS = new Set(['jpn', 'chi_sim', 'chi_tra', 'kor']);
+
 // Non-Latin scripts where Tesseract confidence is structurally lower even for correct text.
 // Used for two purposes:
 //   1. Lower confidence threshold (45 vs 55) so valid glyphs aren't discarded.
@@ -24,7 +36,8 @@ let _loading         = false;
 let _generation      = 0;        // incremented on each new file; stale _analyse calls bail early
 let _deferredInstall = null;
 let _selectedLang    = 'eng';
-let _downloadAsTxt   = false;
+let _downloadAsTxt      = false;
+let _includeTxtHeader   = false;
 
 // ── Last result — stored so the download button in success card can re-trigger
 let _lastResultBlob  = null;   // Blob for re-download from success card
@@ -79,6 +92,7 @@ export function hideOcrOptions() {
   if (el) { el.style.display = 'none'; el.innerHTML = ''; }
   _file = null; _isTextPdf = false; _loading = false;
   _lastResultBlob = null; _lastResultName = null;
+  _includeTxtHeader = false;
 }
 
 export function getOcrParams() {
@@ -204,9 +218,15 @@ function _langSelectHTML() {
 
 function _txtCheckboxHTML() {
   return `
-  <div style="margin-top:10px;display:flex;align-items:center;gap:8px;">
-    <input type="checkbox" id="ocrTxtCheck" style="width:16px;height:16px;cursor:pointer;accent-color:var(--green);">
-    <label for="ocrTxtCheck" style="font-size:13px;color:var(--text2);cursor:pointer;">Also download .txt copy</label>
+  <div style="margin-top:10px;display:flex;flex-direction:column;gap:8px;">
+    <div style="display:flex;align-items:center;gap:8px;">
+      <input type="checkbox" id="ocrTxtCheck" style="width:16px;height:16px;cursor:pointer;accent-color:var(--green);">
+      <label for="ocrTxtCheck" style="font-size:13px;color:var(--text2);cursor:pointer;">Also download .txt copy</label>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;margin-left:24px;">
+      <input type="checkbox" id="ocrHeaderCheck" style="width:14px;height:14px;cursor:pointer;accent-color:var(--green);">
+      <label for="ocrHeaderCheck" style="font-size:12px;color:var(--text3);cursor:pointer;">Include metadata header (filename, page count, date)</label>
+    </div>
   </div>`;
 }
 
@@ -281,9 +301,15 @@ function _renderUI(container) {
 
 function _bindCheckbox() {
   const cb = document.getElementById('ocrTxtCheck');
-  if (!cb) return;
-  cb.checked = _downloadAsTxt;
-  cb.addEventListener('change', () => { _downloadAsTxt = cb.checked; });
+  if (cb) {
+    cb.checked = _downloadAsTxt;
+    cb.addEventListener('change', () => { _downloadAsTxt = cb.checked; });
+  }
+  const cbH = document.getElementById('ocrHeaderCheck');
+  if (cbH) {
+    cbH.checked = _includeTxtHeader;
+    cbH.addEventListener('change', () => { _includeTxtHeader = cbH.checked; });
+  }
 }
 
 function _bindLangSelect() {
@@ -421,7 +447,9 @@ function _bindMergeBtn() {
     try {
       if (_isTextPdf) {
         _updateProgress(10, 'Extracting text…');
-        const text = await _extractTextDirect(_file);
+        const rawText = await _extractTextDirect(_file);
+        const pageCount = rawText.split('--- Page ').length - 1;
+        const text = _applyHeader(rawText, _file, pageCount);
         _lastResultBlob = new Blob([text], { type: 'text/plain;charset=utf-8' });
         _lastResultName = _file.name.replace(/\.pdf$/i, '.txt');
         // _showSuccess handles the auto-download via _lastResultBlob
@@ -437,7 +465,8 @@ function _bindMergeBtn() {
         _lastResultName = _file.name.replace(/\.pdf$/i, '_searchable.pdf');
         // Secondary .txt alongside the searchable PDF — separate optional file
         if (_downloadAsTxt && fullText) {
-          _downloadText(fullText, _file.name);
+          const txtWithHeader = _applyHeader(fullText, _file, ocrPages.length);
+          _downloadText(txtWithHeader, _file.name);
         }
         // _showSuccess handles the main PDF auto-download via _lastResultBlob
         const qualityLabel = _ocrQualityLabel(avgConfidence, _selectedLang);
@@ -515,14 +544,22 @@ function _showSuccess(desc) {
   sc.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
+// ── TXT header ───────────────────────────────────────────────────────────────
+function _buildTxtHeader(file, pageCount) {
+  const date = new Date().toISOString().slice(0, 10);
+  return `Extracted from: ${file.name}\nPages: ${pageCount}\nProcessed: ${date} (PDFree OCR — pdfree.io)\n\n`;
+}
+
+function _applyHeader(text, file, pageCount) {
+  if (!_includeTxtHeader) return text;
+  return _buildTxtHeader(file, pageCount) + text;
+}
+
 // ── OCR pipeline ─────────────────────────────────────────────────────────────
 // Target resolution for OCR — Tesseract accuracy peaks at ~300 DPI.
-// CamScanner embeds pages at ~2480×3508px (300 DPI A4). With the old
-// scale=2 default, a 595pt-wide PDF page rendered to only 1190px —
-// downsampling the original scan by ~50% and losing thin strokes,
-// fraction bars, and small font detail before Tesseract even starts.
-// Now we aim for MAX_OCR_PX on the longest dimension (≈ 300 DPI for A4).
-const MAX_OCR_PX   = 3000;
+// Resolution is chosen per script family via SCRIPT_PROFILE (see constants):
+// CJK needs 3500px for dense ideographs; Arabic/complex 3200px; Latin 3000px.
+// All values cap total canvas size to prevent Mobile Safari tab kills.
 const MAX_FILE_MB  = 200;
 // Mobile Safari aggressively kills tabs under memory pressure.
 // Limit page count on iOS/iPadOS to prevent mid-job tab termination.
@@ -610,7 +647,10 @@ async function _runOcr(file, gen) {
       // tab kill under memory pressure. Removed: MAX_OCR_PX must stay a true
       // cap, even at the cost of quality on rare oversized pages.
       const vp0 = page.getViewport({ scale: 1 });
-      const scale = Math.min(MAX_OCR_PX / vp0.width, MAX_OCR_PX / vp0.height);
+      const maxPx = CJK_LANGS.has(_selectedLang) ? SCRIPT_PROFILE.cjk
+                  : COMPLEX_LANGS.has(_selectedLang) ? SCRIPT_PROFILE.complex
+                  : SCRIPT_PROFILE.latin;
+      const scale = Math.min(maxPx / vp0.width, maxPx / vp0.height);
       const vp = page.getViewport({ scale });
 
       canvas        = document.createElement('canvas');
@@ -697,10 +737,12 @@ function _getLangName(code) {
 }
 
 function _ocrQualityLabel(avgConf, lang) {
-  // Complex-script confidence is structurally lower even for correct text — the Latin
-  // tiers (90/80/60%) would show "Poor" for valid Arabic/Japanese output and mislead
-  // users. Skip the label until per-language baselines are established from real data.
-  if (avgConf === null || COMPLEX_LANGS.has(lang)) return '';
+  if (avgConf === null) return '';
+  if (COMPLEX_LANGS.has(lang)) {
+    // Complex-script confidence is structurally lower even for correct text.
+    // Show the raw number with an honest note so users aren't misled.
+    return ` · OCR confidence: ${avgConf}% (${_getLangName(lang)} — lower scores are typical for this script and do not indicate poor accuracy)`;
+  }
   let tier;
   if (avgConf >= 90)      tier = `Excellent (${avgConf}%)`;
   else if (avgConf >= 80) tier = `Good (${avgConf}%)`;
