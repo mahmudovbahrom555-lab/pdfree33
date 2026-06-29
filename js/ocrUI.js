@@ -626,64 +626,70 @@ function _syncBtnLabel() {
   const btn = document.getElementById('mergeBtn');
   if (!btn || !btn._ocrBound) return;
   if (_requiresManualLang) {
-    // Keep button disabled until user selects a language
     btn.disabled = true;
-    btn.textContent = 'Select language to continue';
+    btn.textContent = '↑ Select a language first';
     return;
   }
   btn.disabled = false;
   btn.textContent = _isTextPdf ? 'Extract Text' : '🔍 Make PDF Searchable';
 }
 
-// Called when auto-detection was inconclusive. Updates the language block to
-// show a prominent warning and disables the OCR button until the user picks
-// a language. "Continue anyway" link lets expert users bypass the block.
+// Called when auto-detection was inconclusive. The select becomes the dominant
+// visual element (yellow validation border + action placeholder). Everything
+// else recedes — the button itself explains what to do next via its label.
 function _showLangRequired(detectedLang) {
   _requiresManualLang = true;
   const langBlock = document.getElementById('ocrLangBlock');
   if (!langBlock) return;
 
-  // Update dropdown label
   const sel = document.getElementById('ocrLangSelect');
-  if (sel && sel.options[0]) {
-    sel.options[0].textContent = 'Auto — could not determine language';
+
+  // 1. Select → yellow validation border (draws attention without extra text)
+  if (sel) {
+    if (sel.options[0]) sel.options[0].textContent = '⚠ Select document language…';
+    sel.value = 'auto';
+    sel.style.borderColor = 'rgba(202,138,4,0.85)';
+    sel.style.boxShadow   = '0 0 0 3px rgba(202,138,4,0.15)';
   }
 
-  // Remove any previous detect-hint and add prominent required warning
+  // 2. Minimal action hint below the select — no box, no heading, just the next step
   langBlock.querySelectorAll('.detect-hint').forEach(el => el.remove());
-  const warn = document.createElement('div');
-  warn.className = 'detect-hint';
-  warn.style.cssText = 'margin-top:10px;padding:10px 14px;background:rgba(234,179,8,0.08);border:1px solid rgba(234,179,8,0.45);border-radius:8px;font-size:13px;';
-  warn.innerHTML = `
-    <strong style="color:var(--text)">⚠ Could not determine the document language</strong>
-    <p style="margin:6px 0 0;font-size:12px;color:var(--text2);">Please select the language from the dropdown above to continue.</p>
-    <a id="ocrContinueAnyway" href="#" style="display:inline-block;margin-top:6px;font-size:11px;color:var(--text3);">
-      Continue anyway with ${_getLangName(detectedLang || 'eng')} (may produce poor results)
+  const hint = document.createElement('p');
+  hint.className = 'detect-hint';
+  hint.style.cssText = 'margin:8px 0 0;font-size:12px;color:var(--text2);';
+  hint.innerHTML = `Language detection was inconclusive — select the document language above to run OCR.
+    <br><a id="ocrContinueAnyway" href="#" style="color:var(--text3);font-size:11px;">
+      Skip — continue with ${_getLangName(detectedLang || 'eng')} (may produce poor results)
     </a>`;
-  langBlock.appendChild(warn);
+  langBlock.appendChild(hint);
 
-  // "Continue anyway" — bypasses the block with the uncertain detection
+  // "Continue anyway" — expert escape hatch, bypasses block
   document.getElementById('ocrContinueAnyway')?.addEventListener('click', e => {
     e.preventDefault();
     _requiresManualLang = false;
     _selectedLang = detectedLang || 'eng';
-    const selEl = document.getElementById('ocrLangSelect');
-    if (selEl) selEl.value = _selectedLang;
-    warn.remove();
+    if (sel) {
+      sel.value = _selectedLang;
+      sel.style.borderColor = '';
+      sel.style.boxShadow   = '';
+    }
+    hint.remove();
     _syncBtnLabel();
   });
 
-  // Re-enable button when user explicitly selects a language
+  // 3. Language selected → clear visual error state + re-enable button
   sel?.addEventListener('change', function onLangChange() {
     if (sel.value !== 'auto') {
       _requiresManualLang = false;
-      warn.remove();
+      sel.style.borderColor = '';
+      sel.style.boxShadow   = '';
+      hint.remove();
       _syncBtnLabel();
       sel.removeEventListener('change', onLangChange);
     }
   });
 
-  _syncBtnLabel(); // applies the disabled + new label
+  _syncBtnLabel();
 }
 
 function _bindMergeBtn() {
