@@ -175,9 +175,19 @@ async function _analyse(file, container) {
   } catch (err) {
     if (myGen !== _generation) return;
     _loading = false;
-    container.innerHTML = _errorHTML(err.message);
+    if (_isPasswordError(err)) {
+      container.innerHTML = _errorHTML(
+        'Please unlock the PDF first (remove the password in Acrobat or a trusted tool), then try again.',
+        '🔒 This PDF is password protected'
+      );
+    } else {
+      container.innerHTML = _errorHTML(err.message);
+    }
     const btn = document.getElementById('mergeBtn');
-    if (btn && btn._ocrBound) btn.disabled = false;
+    if (btn && btn._ocrBound) {
+      btn.disabled = false;
+      _syncBtnLabel();
+    }
   }
 }
 
@@ -608,6 +618,9 @@ async function _runOcr(file, gen) {
       data: new Uint8Array(buf), verbosity: 0, disableJavaScript: true, ignoreEncryption: true,
     }).promise;
   } catch (err) {
+    if (_isPasswordError(err)) {
+      throw new Error('🔒 This PDF is password protected — please unlock it first and try again.', { cause: err });
+    }
     throw new Error('Could not open PDF: ' + err.message, { cause: err });
   }
   _updateProgress(11, `PDF opened · ${pdfDoc.numPages} pages`);
@@ -1094,9 +1107,13 @@ function _spinnerHTML(msg) {
     <div style="font-size:24px;margin-bottom:8px;">&#x23F3;</div>${msg}</div>`;
 }
 
-function _errorHTML(msg) {
+function _isPasswordError(err) {
+  return err?.name === 'PasswordException' || /password/i.test(err?.message ?? '');
+}
+
+function _errorHTML(msg, title = 'Could not analyse PDF') {
   return `<div style="padding:16px;border:1px solid #fca5a5;border-radius:10px;background:#fff1f2;color:#dc2626;font-size:13px;">
-    Could not analyse PDF: ${msg}
+    <strong>${title}</strong><br>${msg}
   </div>`;
 }
 
