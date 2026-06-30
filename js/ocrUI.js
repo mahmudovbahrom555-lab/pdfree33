@@ -530,7 +530,8 @@ function _bindLangSelect() {
   const sel = document.getElementById('ocrLangSelect');
   if (!sel) return;
   sel.value = _selectedLang;
-  // Show info immediately if a complex lang is already selected (e.g. restored from localStorage)
+  // Show info immediately if a complex lang is already the active selection on this render
+  // (e.g. set by auto-detection or the "continue anyway" escape hatch before this binds)
   const initComplex = _selectedLang !== 'auto' && LANGUAGES.complex.find(l => l.code === _selectedLang);
   if (initComplex) _showLangInfo(initComplex);
   sel.addEventListener('change', e => {
@@ -885,6 +886,19 @@ const MAX_FILE_MB  = 200;
 // Users can still OCR longer documents by splitting the PDF first.
 const MAX_PAGES_IOS = 30;
 
+// OCR pipeline:
+//   open PDF → text-layer check (skip OCR if found) → resolve language
+//   (manual pick, or 'auto': sample pages → script detection → fallback probes
+//   if inconclusive, abort and ask user) → createWorker(initial lang)
+//   → set CJK params (PSM 11) if applicable → [auto only] reinitialize(detected
+//   lang) → re-set CJK params, since reinitialize() resets engine state →
+//   per-page: render canvas → counter-rotate if needed → grayscale → binarize
+//   (CJK only) → recognize() → confidence-gate (45% complex / 55% latin) →
+//   build searchable PDF (+ optional .txt export).
+// The "re-set params after reinitialize" step exists because Tesseract.js
+// resets engine parameters on reinitialize() — see the PSM-11 re-apply after
+// the 'auto' reinitialize() call below; any future reinitialize() call needs
+// the same treatment.
 async function _runOcr(file, gen) {
   if (file.size > MAX_FILE_MB * 1024 * 1024) {
     throw new Error(
@@ -992,6 +1006,11 @@ async function _runOcr(file, gen) {
       const detTsLang = detection.lang === 'jpn' ? 'jpn+jpn_vert' : detection.lang;
       _updateProgress(15, `Loading ${_getLangName(detection.lang)} language model…`);
       await worker.reinitialize(detTsLang);
+      // reinitialize() resets engine params — re-apply PSM 11 for CJK (set pre-detection
+      // against 'eng' above, so it never took effect for the auto-detect path until now).
+      if (CJK_LANGS.has(_primaryScript(detection.lang))) {
+        await worker.setParameters({ tessedit_pageseg_mode: '11' });
+      }
     }
   }
 
