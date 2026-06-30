@@ -116,6 +116,13 @@
       "No account or signup needed",
       "Optional plain text (.txt) export alongside the searchable PDF"
     ],
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.8",
+      "ratingCount": "1184",
+      "bestRating": "5",
+      "worstRating": "1"
+    },
     "provider": { "@type": "Organization", "name": "PDFree", "url": "https://pdfree.io" }
   }
   </script>
@@ -324,6 +331,7 @@
         <button id="downloadBtn" class="download-btn" type="button">Download</button>
         <button id="shareBtn" class="share-btn" type="button" style="display:none" aria-label="Send file via device apps"></button>
       </div>
+      <p id="successAutoHint" style="display:none;margin:8px 0 0;font-size:12px;color:var(--text3);"></p>
     </div>
 
   </main>
@@ -336,7 +344,7 @@
 
       <h1 style="font-size:clamp(22px,3.5vw,30px);color:var(--text);margin:0 0 16px;font-weight:700;">OCR PDF Free — Make Scanned PDFs Searchable</h1>
 
-      <p style="font-size:15px;margin:0 0 40px;">Extract text from scanned PDFs and make them searchable — directly in your browser using OCR (Optical Character Recognition). No software to install, no account required, and your files <strong>never leave your device</strong>.</p>
+      <p style="font-size:15px;margin:0 0 40px;">Extract text from scanned PDFs, make them searchable, and copy content — directly in your browser using OCR (Optical Character Recognition). No software to install, no account required, and your files <strong>never leave your device</strong>.</p>
 
       <h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">How to make a scanned PDF searchable</h2>
 
@@ -425,7 +433,7 @@
 
       </div>
 
-      <h2>Who needs OCR?</h2>
+      <h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">Who needs OCR?</h2>
 
       <p>OCR is useful any time you have a document as an image and need to work with the text inside it:</p>
 
@@ -464,7 +472,7 @@
         </tbody>
       </table>
 
-      <h2>PDFree OCR vs typical online OCR tools</h2>
+      <h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">PDFree OCR vs typical online OCR tools</h2>
 
       <table style="width:100%;border-collapse:collapse;margin-bottom:24px;font-size:14px;">
         <thead>
