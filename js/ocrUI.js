@@ -426,16 +426,7 @@ function _langSelectHTML() {
         ${cxOptions}
       </optgroup>
     </select>
-    <div id="complexLangBlock" style="display:none;margin-top:10px;">
-      <p style="margin:0 0 8px;font-size:12px;color:var(--text3);">Selected language requires a larger download:</p>
-      <button id="btnDownloadLang" type="button" style="
-        display:block;width:100%;padding:10px 14px;
-        background:var(--surface);color:var(--green);border:1.5px solid var(--green);border-radius:8px;
-        font-size:13px;font-weight:600;cursor:pointer;text-align:center;">
-        Download language data
-      </button>
-      <div id="langDownloadStatus" style="display:none;font-size:12px;color:var(--text3);margin-top:6px;"></div>
-    </div>
+    <div id="langInfoBlock" style="display:none;margin-top:10px;"></div>
   </div>`;
 }
 
@@ -539,63 +530,50 @@ function _bindLangSelect() {
   const sel = document.getElementById('ocrLangSelect');
   if (!sel) return;
   sel.value = _selectedLang;
+  // Show info immediately if a complex lang is already selected (e.g. restored from localStorage)
+  const initComplex = _selectedLang !== 'auto' && LANGUAGES.complex.find(l => l.code === _selectedLang);
+  if (initComplex) _showLangInfo(initComplex);
   sel.addEventListener('change', e => {
     const val = e.target.value;
     _selectedLang = val;
     if (val !== 'auto') {
-      // User explicitly chose a language — save preference for next visit
       try { localStorage.setItem('pdfree_ocr_lang', val); } catch { /* private browsing */ }
     }
     const complexLang = val !== 'auto' && LANGUAGES.complex.find(l => l.code === val);
     if (complexLang) {
-      _showComplexLangDownload(complexLang);
+      _showLangInfo(complexLang);
     } else {
-      _hideComplexLangDownload();
+      _hideLangInfo();
     }
   });
 }
 
-function _showComplexLangDownload(lang) {
-  const block = document.getElementById('complexLangBlock');
-  const btn   = document.getElementById('btnDownloadLang');
-  if (!block || !btn) return;
-  block.style.display = '';
-  btn.disabled = false;
-  btn.textContent = `Download ${lang.name} · ${lang.size}`;
-
-  // CJK accuracy note — shown only for Japanese/Chinese/Korean
-  let qualNote = block.querySelector('.cjk-quality-note');
-  if (CJK_LANGS.has(_primaryScript(lang.code))) {
-    if (!qualNote) {
-      qualNote = document.createElement('p');
-      qualNote.className = 'cjk-quality-note';
-      qualNote.style.cssText = 'margin:8px 0 0;font-size:12px;color:var(--text3);';
-      qualNote.textContent =
-        'Numbers and Latin text recognized well. Dense kanji/hanzi may have reduced accuracy — known Tesseract limitation.';
-      block.appendChild(qualNote);
-    }
-    qualNote.style.display = '';
-  } else if (qualNote) {
-    qualNote.style.display = 'none';
-  }
-
-  btn.onclick = () => {
-    // Tesseract.js v5 downloads lang data from CDN automatically when worker starts.
-    // We just mark the selection here; actual download happens at OCR time.
-    _selectedLang = lang.code;
-    btn.disabled = true;
-    btn.textContent = `${lang.name} selected ✔`;
-    const status = document.getElementById('langDownloadStatus');
-    if (status) {
-      status.style.display = '';
-      status.textContent = 'Language data will be downloaded when OCR starts';
-    }
-  };
+// Returns true if a successful OCR run with this language was previously completed.
+// Approximates Tesseract's browser cache state — if cache is cleared, model re-downloads.
+function _isLangInstalled(code) {
+  try { return localStorage.getItem(`pdfree_ocr_lang_${code}`) === '1'; } catch { return false; }
 }
 
-function _hideComplexLangDownload() {
-  const block = document.getElementById('complexLangBlock');
-  if (block) block.style.display = 'none';
+function _showLangInfo(lang) {
+  const block = document.getElementById('langInfoBlock');
+  if (!block) return;
+  const installed = _isLangInstalled(lang.code);
+  const lines = [];
+  if (installed) {
+    lines.push(`<p style="margin:0;font-size:12px;color:var(--green);">✓ ${lang.name} installed — no download needed</p>`);
+  } else {
+    lines.push(`<p style="margin:0;font-size:12px;color:var(--text3);">ⓘ One-time download (~${lang.size}). Stored locally in your browser.</p>`);
+  }
+  if (CJK_LANGS.has(_primaryScript(lang.code))) {
+    lines.push(`<p style="margin:6px 0 0;font-size:12px;color:var(--text3);">Numbers and Latin text recognized well. Dense kanji/hanzi may have reduced accuracy — known Tesseract limitation.</p>`);
+  }
+  block.innerHTML = lines.join('');
+  block.style.display = '';
+}
+
+function _hideLangInfo() {
+  const block = document.getElementById('langInfoBlock');
+  if (block) { block.style.display = 'none'; block.innerHTML = ''; }
 }
 
 // ── OCR engine install ────────────────────────────────────────────────────────
@@ -768,6 +746,10 @@ function _bindMergeBtn() {
         _updateProgress(95, 'Building searchable PDF…');
         _setBtnProgress('Building PDF…');
         const usedLang = _detectedLang ?? _selectedLang;
+        // Mark language model as installed — next visit shows "✓ installed" instead of download notice
+        if (usedLang && usedLang !== 'auto') {
+          try { localStorage.setItem(`pdfree_ocr_lang_${usedLang}`, '1'); } catch { /* private browsing */ }
+        }
         const pdfBytes = await _buildSearchablePdf(_file, ocrPages, usedLang);
         _lastResultBlob = new Blob([pdfBytes], { type: 'application/pdf' });
         _lastResultName = _file.name.replace(/\.pdf$/i, '_searchable.pdf');
