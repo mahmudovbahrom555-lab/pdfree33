@@ -562,6 +562,23 @@ function _showComplexLangDownload(lang) {
   block.style.display = '';
   btn.disabled = false;
   btn.textContent = `Download ${lang.name} · ${lang.size}`;
+
+  // CJK accuracy note — shown only for Japanese/Chinese/Korean
+  let qualNote = block.querySelector('.cjk-quality-note');
+  if (CJK_LANGS.has(_primaryScript(lang.code))) {
+    if (!qualNote) {
+      qualNote = document.createElement('p');
+      qualNote.className = 'cjk-quality-note';
+      qualNote.style.cssText = 'margin:8px 0 0;font-size:12px;color:var(--text3);';
+      qualNote.textContent =
+        'Numbers and Latin text recognized well. Dense kanji/hanzi may have reduced accuracy — known Tesseract limitation.';
+      block.appendChild(qualNote);
+    }
+    qualNote.style.display = '';
+  } else if (qualNote) {
+    qualNote.style.display = 'none';
+  }
+
   btn.onclick = () => {
     // Tesseract.js v5 downloads lang data from CDN automatically when worker starts.
     // We just mark the selection here; actual download happens at OCR time.
@@ -1064,7 +1081,9 @@ async function _runOcr(file, gen) {
       const pageRotation = page.rotate || 0;
       ocrCanvas = pageRotation !== 0 ? _counterRotateCanvas(canvas, pageRotation) : canvas;
 
-      const result = await worker.recognize(_toGrayscale(ocrCanvas));
+      const gray = _toGrayscale(ocrCanvas);
+      if (CJK_LANGS.has(_primaryScript(resolvedLang))) _binarizeInPlace(gray);
+      const result = await worker.recognize(gray);
       // Adaptive confidence threshold — see COMPLEX_LANGS constant.
       // Latin (eng/fra/…): 55% — Tesseract is reliable; below 55% is almost always garbage.
       // Complex (ara/jpn/kor/hin/tha/…): 45% — correct glyphs routinely score 40–50%,
@@ -1217,6 +1236,49 @@ function _toGrayscale(src) {
   }
   ctx.putImageData(img, 0, 0);
   return dst;
+}
+
+// Compute Otsu's optimal binarization threshold from grayscale image data.
+// Maximises between-class variance between foreground (dark text) and
+// background (light page) — adapts to each page's actual contrast level
+// rather than using a fixed cut-off.
+function _otsuThreshold(data) {
+  const hist  = new Array(256).fill(0);
+  for (let i = 0; i < data.length; i += 4) hist[data[i]]++;
+  const total = data.length / 4;
+  let sum = 0;
+  for (let i = 0; i < 256; i++) sum += i * hist[i];
+  let wB = 0, sumB = 0, varMax = 0, threshold = 128;
+  for (let t = 0; t < 256; t++) {
+    wB += hist[t];
+    if (!wB) continue;
+    const wF = total - wB;
+    if (!wF) break;
+    sumB += t * hist[t];
+    const mB = sumB / wB;
+    const mF = (sum - sumB) / wF;
+    const varBetween = wB * wF * (mB - mF) ** 2;
+    if (varBetween > varMax) { varMax = varBetween; threshold = t; }
+  }
+  return threshold;
+}
+
+// Apply Otsu binarization in-place on a grayscale canvas.
+// Only called for CJK scripts — kanji strokes are thin (1–3px) and benefit
+// from clean black/white separation; intermediate grey values confuse Tesseract
+// when a stroke is only slightly darker than the page background.
+// Latin/Cyrillic/Arabic glyphs are thicker and already handled well by
+// grayscale alone; binarizing them risks destroying anti-aliasing details.
+function _binarizeInPlace(canvas) {
+  const ctx = canvas.getContext('2d');
+  const img = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  const d   = img.data;
+  const t   = _otsuThreshold(d);
+  for (let i = 0; i < d.length; i += 4) {
+    const v = d[i] < t ? 0 : 255;
+    d[i] = d[i + 1] = d[i + 2] = v;
+  }
+  ctx.putImageData(img, 0, 0);
 }
 
 // ── Canvas rotation helpers ───────────────────────────────────────────────────
