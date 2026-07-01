@@ -102,6 +102,7 @@
     "name": "OCR PDF Free — PDFree",
     "url": "https://pdfree.io/ocr-pdf/",
     "image": "https://pdfree.io/icons/og-image.jpg",
+    "datePublished": "2024-01-15",
     "dateModified": "2026-07-02",
     "description": "Extract text from scanned PDFs using OCR. Runs entirely in your browser — no file upload, no account required.",
     "applicationCategory": "UtilityApplication",
@@ -136,7 +137,7 @@
     "mainEntity": [
       {
         "@type": "Question",
-        "name": "Is OCR PDF on PDFree really free?",
+        "name": "Is this OCR tool really free?",
         "acceptedAnswer": {
           "@type": "Answer",
           "text": "Yes, completely free. PDFree has no subscription, no premium tier, and no per-file charges. The OCR engine (Tesseract.js) runs entirely in your browser using open-source technology."
@@ -144,7 +145,7 @@
       },
       {
         "@type": "Question",
-        "name": "Does my PDF get uploaded to a server?",
+        "name": "Does my file get uploaded to a server?",
         "acceptedAnswer": {
           "@type": "Answer",
           "text": "Never. All processing happens inside your browser. Your PDF file never leaves your device — no server ever receives it."
@@ -152,7 +153,7 @@
       },
       {
         "@type": "Question",
-        "name": "What languages does the OCR support?",
+        "name": "What languages are supported?",
         "acceptedAnswer": {
           "@type": "Answer",
           "text": "PDFree OCR supports 18 languages: English, French, German, Spanish, Italian, Portuguese, Russian, Uzbek, Dutch, Polish, Turkish, Arabic, Japanese, Chinese (Simplified), Chinese (Traditional), Korean, Hindi, and Thai. Select your language from the dropdown before clicking Run OCR."
@@ -160,7 +161,7 @@
       },
       {
         "@type": "Question",
-        "name": "Why do I need to install the OCR engine?",
+        "name": "Why does the OCR engine need to be downloaded?",
         "acceptedAnswer": {
           "@type": "Answer",
           "text": "Tesseract.js is about 17 MB. To keep the initial page load fast, it is only downloaded when you actually need OCR. Text-layer PDFs are extracted instantly without downloading anything extra."
@@ -184,7 +185,7 @@
       },
       {
         "@type": "Question",
-        "name": "What is the difference between the searchable PDF and the .txt file?",
+        "name": "What's the difference between a searchable PDF and a .txt file?",
         "acceptedAnswer": {
           "@type": "Answer",
           "text": "The searchable PDF keeps your original scanned images and adds an invisible text layer on top — useful for archiving, searching inside a PDF reader, or sharing. The .txt file contains only the extracted plain text with page separators — useful for editing in Word, importing into other tools, or copying content. You can download both at the same time using the 'Also download .txt copy' checkbox."
@@ -218,7 +219,7 @@
   "@type": "HowTo",
   "name": "How to OCR a PDF",
   "description": "Make a scanned PDF searchable and extract text — free, processed in your browser.",
-  "totalTime": "PT2M",
+  "totalTime": "PT5M",
   "step": [
     {
       "@type": "HowToStep",
@@ -230,13 +231,19 @@
       "@type": "HowToStep",
       "position": 2,
       "name": "Select your document language",
-      "text": "Choose the language of the text in your document from the language selector. PDFree supports 18 languages including English, French, German, Spanish, Russian, Arabic, Japanese, Chinese, Korean, Hindi, and more."
+      "text": "Choose the language of the text in your document from the language selector. PDFree supports 18 languages including English, French, German, Spanish, Russian, Arabic, Japanese, Chinese, Korean, Hindi, and more. For text-layer PDFs this step is skipped automatically."
     },
     {
       "@type": "HowToStep",
       "position": 3,
+      "name": "Click Make PDF Searchable",
+      "text": "Click the 'Make PDF Searchable' button. The OCR engine (Tesseract.js) processes each page locally in your browser — nothing is uploaded. A progress bar shows estimated time remaining."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 4,
       "name": "Download the searchable PDF",
-      "text": "Click 'Make PDF Searchable'. The OCR engine recognizes text and embeds it as an invisible layer — the original layout is unchanged. Download the result and search or copy text in any PDF reader."
+      "text": "Your searchable PDF downloads automatically when OCR finishes. The original appearance is unchanged — only an invisible text layer is added so you can search, select, and copy text in any PDF reader."
     }
   ]
 }
@@ -532,12 +539,18 @@
         </tbody>
       </table>
 
+      <h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">How to convert a scanned PDF to text</h2>
+
+      <p style="font-size:15px;margin:0 0 24px;">To convert a scanned PDF to editable text, use PDFree in two steps: first run OCR to create a searchable PDF (above), then open the result in <a href="../pdf-to-word/" style="color:var(--green)">PDF to Word</a> — the tool converts the embedded text layer into a fully editable .docx file. The entire process runs locally; your document is never uploaded anywhere. For plain text output, enable the "Also download .txt copy" checkbox during OCR and skip the Word conversion entirely.</p>
+
       <h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">Related tools</h2>
       <ul style="font-size:14px;padding-left:20px;margin:0 0 40px;">
-        <li style="margin-bottom:8px;"><a href="../pdf-to-word/" style="color:var(--green)">PDF to Word</a> — natural next step: convert your searchable PDF into an editable Word document</li>
+        <li style="margin-bottom:8px;"><a href="../make-scanned-pdf-searchable/" style="color:var(--green)">Make scanned PDF searchable</a> — step-by-step guide for scanned documents specifically</li>
+        <li style="margin-bottom:8px;"><a href="../extract-text-from-scanned-pdf/" style="color:var(--green)">Extract text from scanned PDF</a> — copy raw text out of a scanned document</li>
+        <li style="margin-bottom:8px;"><a href="../ocr-pdf-no-upload/" style="color:var(--green)">OCR PDF without uploading</a> — how client-side OCR protects your privacy</li>
+        <li style="margin-bottom:8px;"><a href="../pdf-to-word/" style="color:var(--green)">PDF to Word</a> — convert your searchable PDF into an editable Word document</li>
         <li style="margin-bottom:8px;"><a href="../split-pdf/" style="color:var(--green)">Split PDF</a> — split a large scanned document before OCR to stay within memory limits</li>
         <li style="margin-bottom:8px;"><a href="../compress-large-pdf-free/" style="color:var(--green)">Compress PDF</a> — reduce the file size of your scanned PDF before sharing or archiving</li>
-        <li style="margin-bottom:8px;"><a href="../fill/" style="color:var(--green)">Fill PDF Form</a> — fill interactive form fields in text-layer PDFs</li>
         <li style="margin-bottom:8px;"><a href="../merge-large-pdf-files/" style="color:var(--green)">Merge PDF</a> — combine multiple scanned pages into one PDF</li>
         <li><a href="../redact-pdf/" style="color:var(--green)">Cover Area</a> — hide sensitive regions before sharing</li>
       </ul>
