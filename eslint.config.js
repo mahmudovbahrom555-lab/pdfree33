@@ -34,7 +34,7 @@ export default [
         structuredClone: 'readonly', queueMicrotask: 'readonly',
         btoa: 'readonly', atob: 'readonly', module: 'readonly',
         localStorage: 'readonly', sessionStorage: 'readonly', CSS: 'readonly',
-        MessageChannel: 'readonly',
+        MessageChannel: 'readonly', indexedDB: 'readonly',
         encryptPDF: 'readonly',
       },
     },

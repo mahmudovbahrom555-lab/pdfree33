@@ -1041,16 +1041,26 @@ async function _runOcr(file, gen) {
   const langLabel = _getLangName(resolvedLang);
 
   const total      = isIos ? Math.min(pdfDoc.numPages, MAX_PAGES_IOS) : pdfDoc.numPages;
-  const ocrPages   = [];
-  const txtPages   = [];
-  const pageErrors = [];
-  let   confSum    = 0;
-  let   confCount  = 0;
+  const ocrPages      = [];
+  const txtPages      = [];
+  const pageErrors    = [];
+  let   confSum       = 0;
+  let   confCount     = 0;
+  const pageDurationsMs = [];
 
   for (let p = 1; p <= total; p++) {
     const basePct = 15 + Math.round((p - 1) / total * 75);
-    _updateProgress(basePct, `OCR page ${p} of ${total} · ${langLabel}`);
+    let etaSuffix = '';
+    if (pageDurationsMs.length > 0) {
+      const avgMs = pageDurationsMs.reduce((s, t) => s + t, 0) / pageDurationsMs.length;
+      const remainMs = avgMs * (total - p + 1);
+      etaSuffix = remainMs >= 60000
+        ? ` · ~${Math.ceil(remainMs / 60000)} min left`
+        : ` · ~${Math.round(remainMs / 1000)}s left`;
+    }
+    _updateProgress(basePct, `OCR page ${p} of ${total} · ${langLabel}${etaSuffix}`);
     _setBtnProgress(`Page ${p} / ${total}`);
+    const _pageT0 = Date.now();
 
     let canvas, ocrCanvas;
     try {
@@ -1149,6 +1159,7 @@ async function _runOcr(file, gen) {
       // Always release canvas memory regardless of success or error
       if (ocrCanvas && ocrCanvas !== canvas) { ocrCanvas.width = 0; ocrCanvas.height = 0; }
       if (canvas) { canvas.width = 0; canvas.height = 0; }
+      pageDurationsMs.push(Date.now() - _pageT0);
     }
 
     // Bail early if user started a new OCR (new file selected or button re-clicked)
@@ -1360,6 +1371,41 @@ const NOTO_FONT_URLS = {
 // repeated exports within the same session (CJK fonts can be 10–17 MB).
 const _notoFontCache = new Map();
 
+// IndexedDB persistence for Noto fonts — survives page reloads.
+// CJK users currently re-download 17 MB every session; IDB makes it one-time.
+let _idbConn = null;
+function _openFontIdb() {
+  if (_idbConn) return _idbConn;
+  _idbConn = new Promise((resolve, reject) => {
+    const req = indexedDB.open('pdfree-ocr-fonts', 1);
+    req.onupgradeneeded = e => e.target.result.createObjectStore('fonts');
+    req.onsuccess    = e => resolve(e.target.result);
+    req.onerror      = () => { _idbConn = null; reject(req.error); };
+  });
+  return _idbConn;
+}
+async function _idbGetFont(lang) {
+  try {
+    const db = await _openFontIdb();
+    return new Promise(resolve => {
+      const req = db.transaction('fonts', 'readonly').objectStore('fonts').get(lang);
+      req.onsuccess = () => resolve(req.result ?? null);
+      req.onerror   = () => resolve(null);
+    });
+  } catch { return null; }
+}
+async function _idbSetFont(lang, bytes) {
+  try {
+    const db = await _openFontIdb();
+    return new Promise(resolve => {
+      const tx = db.transaction('fonts', 'readwrite');
+      tx.objectStore('fonts').put(bytes, lang);
+      tx.oncomplete = () => resolve();
+      tx.onerror    = () => resolve();
+    });
+  } catch { /* ignore — IDB write failure is non-fatal */ }
+}
+
 // Register fontkit with pdf-lib so that custom TTF fonts can be embedded
 // and subset (only used glyphs included — keeps file size small for CJK fonts).
 // fontkit.umd.js exposes window.fontkit; must be loaded before this runs.
@@ -1387,10 +1433,18 @@ async function _getFontForLang(pdfDoc, lang) {
   try {
     let bytes = _notoFontCache.get(lang);
     if (!bytes) {
+      // Try IndexedDB before hitting the network — one-time download per browser profile
+      bytes = await _idbGetFont(lang);
+      if (bytes) {
+        _notoFontCache.set(lang, bytes);
+      }
+    }
+    if (!bytes) {
       const resp = await fetch(url);
       if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
       bytes = await resp.arrayBuffer();
       _notoFontCache.set(lang, bytes);
+      _idbSetFont(lang, bytes); // fire-and-forget — failure is non-fatal
     }
     // fontkit must be registered before embedFont can accept raw TTF bytes.
     // subset:true keeps only the glyphs that appear in the document — critical
