@@ -185,7 +185,7 @@ const EN = {
   search_miss:        'No tool found for "{q}" — try "merge", "compress", or "split"',
 
   // ── hero drop zone ────────────────────────────────────────────
-  hero_drop:          'Drop PDF here',
+  hero_drop:          'Start with your PDF',
   hero_or:            'or',
   hero_drop_choose:   'Choose File',
   hero_file_single:   '{name} ({size})',

@@ -3073,7 +3073,7 @@ button,
 .hero-featured {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
+  gap: 14px;
   width: 100%;
   max-width: 560px;
 }
@@ -3255,11 +3255,12 @@ body:not(.has-files) #heroChipsLabel { display: none !important; }
 .hero-drop-zone {
   width: 100%;
   max-width: 520px;
-  border: 2px dashed var(--border);
+  border: 2px dashed color-mix(in srgb, var(--green) 40%, var(--border));
   border-radius: 14px;
-  padding: 22px 20px;
+  padding: 28px 24px;
   text-align: center;
   cursor: pointer;
+  background: color-mix(in srgb, var(--green) 1.5%, var(--surface));
   transition: border-color 0.15s, background 0.15s;
 }
 .hero-drop-zone:hover,
@@ -3275,15 +3276,23 @@ body:not(.has-files) #heroChipsLabel { display: none !important; }
 }
 .hero-drop-zone__idle {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
   gap: 10px;
-  flex-wrap: wrap;
-  font-size: 14px;
-  color: var(--text2);
   pointer-events: none;
 }
 .hero-drop-zone__idle[hidden] { display: none; }
+.hero-drop-zone__upload-icon { color: var(--text3); display: flex; margin-bottom: 2px; }
+.hero-drop-zone__label { font-size: 15px; font-weight: 600; color: var(--text1); }
+.hero-drop-zone__choose-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  pointer-events: auto;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.hero-drop-zone__drop-text { font-size: 13px; color: var(--text2); }
 .hero-drop-zone__btn {
   pointer-events: auto;
   display: inline-block;
