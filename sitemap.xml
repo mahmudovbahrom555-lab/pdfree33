@@ -68,6 +68,30 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://pdfree.io/ilovepdf-alternative/"/>
   </url>
   <url>
+    <loc>https://pdfree.io/make-scanned-pdf-searchable/</loc>
+    <lastmod>2026-07-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://pdfree.io/make-scanned-pdf-searchable/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pdfree.io/make-scanned-pdf-searchable/"/>
+  </url>
+  <url>
+    <loc>https://pdfree.io/extract-text-from-scanned-pdf/</loc>
+    <lastmod>2026-07-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://pdfree.io/extract-text-from-scanned-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pdfree.io/extract-text-from-scanned-pdf/"/>
+  </url>
+  <url>
+    <loc>https://pdfree.io/ocr-pdf-no-upload/</loc>
+    <lastmod>2026-07-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://pdfree.io/ocr-pdf-no-upload/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pdfree.io/ocr-pdf-no-upload/"/>
+  </url>
+  <url>
     <loc>https://pdfree.io/compress-pdf-for-email/</loc>
     <lastmod>2026-07-01</lastmod>
     <changefreq>monthly</changefreq>

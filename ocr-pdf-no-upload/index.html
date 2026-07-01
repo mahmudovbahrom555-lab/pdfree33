@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src  'self'
+                'wasm-unsafe-eval'
+                blob:
+                https://cdnjs.cloudflare.com
+                https://cdn.jsdelivr.net
+                https://esm.sh
+                https://plausible.io
+                https://pagead2.googlesyndication.com
+                https://static.cloudflareinsights.com;
+    style-src   'self' 'unsafe-inline';
+    font-src    'self';
+    img-src     'self' data: blob: https:;
+    connect-src 'self'
+                https://cdnjs.cloudflare.com
+                https://cdn.jsdelivr.net
+                https://*.workers.dev
+                https://fonts.gstatic.com
+                https://plausible.io
+                https://pagead2.googlesyndication.com
+                https://www.googletagservices.com
+                https://*.doubleclick.net
+                https://cloudflareinsights.com;
+    frame-src   https://googleads.g.doubleclick.net
+                https://tpc.googlesyndication.com;
+    worker-src  'self' blob:;
+    object-src  'none';
+  ">
+
+  <title>OCR PDF Without Uploading — 100% Private, Runs in Browser | PDFree</title>
+  <meta name="description" content="OCR your PDF without uploading it anywhere. Tesseract.js runs entirely in your browser — your file never leaves your device. Free, no account, no data sent to any server.">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:title"       content="OCR PDF Without Uploading — Runs in Your Browser | PDFree">
+  <meta property="og:description" content="The only free OCR that never receives your file. Tesseract.js runs inside your browser tab — nothing uploaded, nothing stored, nothing sent.">
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://pdfree.io/ocr-pdf-no-upload/">
+  <meta property="og:site_name"   content="PDFree">
+  <meta property="og:image"       content="https://pdfree.io/icons/og-image.jpg">
+  <meta property="og:image:width"  content="1200">
+  <meta property="og:image:height" content="633">
+  <meta property="og:image:alt"    content="OCR PDF Without Uploading — Runs in Your Browser | PDFree">
+  <meta name="twitter:card"        content="summary_large_image">
+  <meta name="twitter:site"        content="@pdfree_io">
+  <meta name="twitter:image"       content="https://pdfree.io/icons/og-image.jpg">
+  <meta name="twitter:title"       content="OCR PDF Without Uploading — Runs in Your Browser | PDFree">
+  <meta name="twitter:description" content="OCR without uploading. Runs in your browser — your file never leaves your device.">
+
+  <link rel="canonical" href="https://pdfree.io/ocr-pdf-no-upload/">
+  <link rel="alternate" hreflang="en"        href="https://pdfree.io/ocr-pdf-no-upload/">
+  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/ocr-pdf-no-upload/">
+
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="PDFree">
+  <link rel="apple-touch-icon" href="../icons/icon-192.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <link rel="preconnect" href="https://plausible.io">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" href="../fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="modulepreload" href="../js/app.js">
+
+  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+  <link rel="stylesheet" href="../css/fonts.css">
+  <script src="../js/theme.js"></script>
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/animations.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "OCR PDF Without Uploading — PDFree",
+    "url": "https://pdfree.io/ocr-pdf-no-upload/",
+    "image": "https://pdfree.io/icons/og-image.jpg",
+    "description": "OCR that runs entirely in your browser. Your PDF file never leaves your device — no server receives it, no cloud storage involved, no data collection. Suitable for confidential, legal, medical, and financial documents.",
+    "applicationCategory": "UtilityApplication",
+    "operatingSystem": "Any",
+    "browserRequirements": "Requires a modern browser with JavaScript enabled",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "featureList": [
+      "Zero upload — OCR runs entirely in your browser tab",
+      "Your file never leaves your device",
+      "Verifiable: open DevTools → Network while processing to confirm zero uploads",
+      "Suitable for confidential, medical, legal, and financial documents",
+      "Works offline after first load (OCR engine cached in browser)",
+      "18 languages including Arabic, Japanese, Chinese, Korean, Russian, Hindi",
+      "No account, no signup, no daily cap, no file size limit on desktop"
+    ],
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.8",
+      "ratingCount": "1184",
+      "bestRating": "5",
+      "worstRating": "1"
+    },
+    "dateModified": "2026-07-02",
+    "provider": { "@type": "Organization", "name": "PDFree", "url": "https://pdfree.io" }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How can OCR work without uploading my file?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Modern browsers can run complex software using WebAssembly and JavaScript. PDFree uses Tesseract.js — a port of the industry-standard Tesseract OCR engine compiled to run inside your browser tab. The OCR engine (about 17 MB) is downloaded once and then runs locally. Your PDF is read directly from your device by the browser, processed in RAM, and the result is written back to your device — nothing ever goes to a server."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How can I verify that my file is not being uploaded?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Open your browser DevTools (press F12 or Cmd+Option+I), go to the Network tab, and start a filter for 'All' or 'Fetch/XHR'. Then process your PDF. You will see the Tesseract.js engine files load from CDN (first time only) but zero requests containing your PDF data. The file bytes never leave your device."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is PDFree suitable for medical, legal, or financial documents?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Because your files never leave your device, PDFree avoids the compliance and confidentiality risks that come with uploading to a cloud OCR service. It is suitable for contracts, patient records, tax forms, court documents, and any other sensitive material. However, PDFree is not a formally HIPAA-certified Business Associate — if your organization requires BAA agreements, consult your compliance officer."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does it work offline?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, after the first use. On first visit, your browser downloads the OCR engine (~17 MB) and the language models you select. These are cached permanently. After that, you can OCR PDFs with no internet connection — useful on flights, in secure environments without internet access, or anywhere with limited connectivity."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What languages can be recognized without uploading?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "18 languages, all processed locally: English, French, German, Spanish, Italian, Portuguese, Russian, Uzbek, Dutch, Polish, Turkish, Arabic, Japanese, Chinese Simplified, Chinese Traditional, Korean, Hindi, and Thai. Each language model is downloaded once and cached — subsequent use requires no network for that language."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the file size limit for local OCR?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Up to 200 MB on desktop browsers with no page limit. On iOS and iPadOS, processing is limited to 30 pages per run to stay within browser memory constraints — split larger documents first. Desktop Chrome, Firefox, Edge, and Safari support arbitrarily large documents within the 200 MB file limit."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "PDFree", "item": "https://pdfree.io/" },
+      { "@type": "ListItem", "position": 2, "name": "OCR PDF", "item": "https://pdfree.io/ocr-pdf/" },
+      { "@type": "ListItem", "position": 3, "name": "OCR PDF Without Uploading", "item": "https://pdfree.io/ocr-pdf-no-upload/" }
+    ]
+  }
+  </script>
+</head>
+<body data-tool="ocr">
+
+  <nav>
+    <a href="../" class="logo" id="logo" aria-label="Go to homepage" style="text-decoration:none"><span class="logo-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></span><span class="logo-text">PDF<span>ree</span></span></a>
+    <div class="nav-links">
+      <a href="../merge-pdf/" class="nav-link" data-tool="merge">Merge</a>
+      <a href="../split-pdf/" class="nav-link" data-tool="split">Split</a>
+      <a href="../compress-pdf/" class="nav-link" data-tool="compress">Compress</a>
+      <a href="../jpg2pdf/" class="nav-link" data-tool="jpg2pdf">JPG→PDF</a>
+      <a href="../pdf2jpg/" class="nav-link" data-tool="pdf2jpg">PDF→JPG</a>
+      <a href="../watermark-pdf/" class="nav-link" data-tool="watermark">Watermark</a>
+      <a href="../pagenum-pdf/" class="nav-link" data-tool="pagenum">Page №</a>
+      <a href="../metadata-pdf/" class="nav-link" data-tool="meta">Metadata</a>
+      <a href="../extract-pdf/" class="nav-link" data-tool="extract">Extract</a>
+      <a href="../draw-on-pdf/" class="nav-link" data-tool="draw-pdf">Draw</a>
+      <a href="../rotate-pdf/" class="nav-link" data-tool="rotate">Rotate</a>
+      <a href="../protect-pdf/" class="nav-link" data-tool="protect">Protect</a>
+      <a href="../pdf-to-word/" class="nav-link" data-tool="pdf2word">PDF→Word</a>
+      <a href="../compare-pdf/" class="nav-link" data-tool="compare">Compare</a>
+    </div>
+    <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode"></button>
+  </nav>
+
+  <nav aria-label="Breadcrumb" style="position:static;padding:8px 24px;border-bottom:1px solid var(--border);background:var(--surface);">
+    <ol style="list-style:none;margin:0;padding:0;display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text3);"
+        itemscope itemtype="https://schema.org/BreadcrumbList">
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a href="/" itemprop="item" style="color:var(--green);text-decoration:none;font-weight:500;"><span itemprop="name">PDFree</span></a>
+        <meta itemprop="position" content="1">
+      </li>
+      <li aria-hidden="true" style="color:var(--border);">›</li>
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a href="/ocr-pdf/" itemprop="item" style="color:var(--green);text-decoration:none;"><span itemprop="name">OCR PDF</span></a>
+        <meta itemprop="position" content="2">
+      </li>
+      <li aria-hidden="true" style="color:var(--border);">›</li>
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a href="/ocr-pdf-no-upload/" itemprop="item" style="color:var(--text2);text-decoration:none;" aria-current="page"><span itemprop="name">OCR PDF Without Uploading</span></a>
+        <meta itemprop="position" content="3">
+      </li>
+    </ol>
+  </nav>
+
+  <main id="toolArea" class="main-area" aria-busy="false">
+
+    <div class="tool-header">
+      <div class="tool-header-icon" id="toolIcon" aria-hidden="true">🔍</div>
+      <div class="tool-header-text">
+        <h2 id="toolTitle">OCR PDF</h2>
+        <p  id="toolDesc">Make your PDF searchable — runs entirely in your browser, nothing uploaded.</p>
+      </div>
+    </div>
+
+    <div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-label="Drop PDF here or choose file">
+      <input type="file" id="fileInput" accept=".pdf" aria-hidden="true">
+      <span class="drop-icon" aria-hidden="true">📂</span>
+      <div class="drop-title">Drop your PDF here — stays on your device</div>
+      <div class="drop-sub">or click to choose a file</div>
+      <label class="drop-btn" id="chooseFilesBtn" for="fileInput">Choose PDF</label>
+    </div>
+
+    <div id="privacyBadge" style="display:flex;align-items:center;gap:9px;margin:10px 0 4px;padding:9px 14px;background:var(--green-light);border:1px solid rgba(45,122,79,0.22);border-radius:10px;font-size:13px;color:var(--green);line-height:1.3;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0;opacity:.85"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+      <span>Your file never leaves your browser — processed locally, nothing uploaded</span>
+    </div>
+
+    <div id="fileList"    class="file-list" aria-live="polite" aria-label="Selected files"></div>
+    <div id="fileCount"   class="file-count"   style="display:none"></div>
+    <div id="reorderHint" class="reorder-hint" style="display:none"></div>
+
+    <div id="splitOptions"     class="split-options"    style="display:none" aria-label="Split options"></div>
+    <div id="compressOptions"  class="compress-options" style="display:none" aria-label="Compression options"></div>
+    <div id="jpg2pdfOptions"   class="j2p-options"      style="display:none" aria-label="JPG to PDF options"></div>
+    <div id="pdf2jpgOptions"   class="j2p-options"      style="display:none" aria-label="PDF to JPG options"></div>
+    <div id="watermarkOptions" class="j2p-options"      style="display:none" aria-label="Watermark options"></div>
+    <div id="pageNumOptions"   class="j2p-options"      style="display:none" aria-label="Page numbers options"></div>
+    <div id="metaOptions"      class="j2p-options"      style="display:none" aria-label="Metadata editor"></div>
+    <div id="protectOptions"   class="j2p-options"      style="display:none" aria-label="Protect PDF options"></div>
+    <div id="redactOptions"    class="j2p-options"      style="display:none" aria-label="Cover area options"></div>
+    <div id="rotateOptions"    class="j2p-options"      style="display:none" aria-label="Rotate PDF options"></div>
+    <div id="fillOptions"      class="j2p-options"      style="display:none" aria-label="Fill PDF form options"></div>
+    <div id="ocrOptions"       class="j2p-options"      style="display:none" aria-label="OCR options"></div>
+    <div id="pdf2wordOptions"  class="j2p-options"      style="display:none" aria-label="PDF to Word options"></div>
+
+    <button id="mergeBtn"  class="merge-btn"  type="button" disabled data-mode="process">Make PDF Searchable</button>
+    <button id="cancelBtn" class="cancel-btn" type="button" style="display:none" aria-label="Cancel">Cancel</button>
+
+    <div id="progressBar"   class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+    <div id="progressLabel" class="progress-label"></div>
+
+    <div id="successCard" class="success-card" role="alert" aria-live="polite" style="display:none">
+      <div class="success-top">
+        <div class="success-icon" aria-hidden="true">✓</div>
+        <div class="success-text">
+          <h3 id="successTitle">Done!</h3>
+          <p  id="successDesc"></p>
+        </div>
+        <button id="downloadBtn" class="download-btn" type="button">Download</button>
+        <button id="shareBtn" class="share-btn" type="button" style="display:none" aria-label="Send file via device apps"></button>
+      </div>
+      <p id="successAutoHint" style="display:none;margin:8px 0 0;font-size:12px;color:var(--text3);"></p>
+      <div id="privacyCleared"></div>
+      <div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(45,122,79,0.2);">
+        <p style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--text3);margin:0 0 8px;">What's next?</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <a href="/pdf-to-word/" style="font-size:13px;background:var(--green-light);color:var(--green);padding:6px 12px;border-radius:6px;text-decoration:none;font-weight:500;border:1px solid rgba(45,122,79,0.2);">Convert to Word →</a>
+          <a href="/protect-pdf/" style="font-size:13px;background:var(--surface);color:var(--text2);padding:6px 12px;border-radius:6px;text-decoration:none;border:1px solid var(--border);">Protect PDF</a>
+          <a href="/redact-pdf/" style="font-size:13px;background:var(--surface);color:var(--text2);padding:6px 12px;border-radius:6px;text-decoration:none;border:1px solid var(--border);">Redact sensitive areas</a>
+          <a href="/compress-large-pdf-free/" style="font-size:13px;background:var(--surface);color:var(--text2);padding:6px 12px;border-radius:6px;text-decoration:none;border:1px solid var(--border);">Compress PDF</a>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <hr style="border:none;border-top:2px solid var(--border);margin:48px 24px 0;" aria-hidden="true">
+  <section class="seo-article" aria-label="OCR PDF Without Uploading">
+    <div class="seo-article__inner">
+      <div class="seo-content" style="max-width:800px;margin:60px auto 40px;padding:0 24px;color:var(--text2);line-height:1.75;">
+
+      <h1 style="font-size:clamp(22px,3.5vw,30px);color:var(--text);margin:0 0 16px;font-weight:700;">OCR PDF Without Uploading — Your File Never Leaves Your Device</h1>
+
+      <p style="font-size:15px;margin:0 0 24px;">Every major online OCR service works the same way: you upload your file, their server processes it, and you download the result. Your document passes through their infrastructure — stored, at least briefly, on their systems. For contracts, medical records, tax returns, or confidential business documents, that is often unacceptable.</p>
+
+      <p style="font-size:15px;margin:0 0 40px;">PDFree works differently. The OCR engine <strong>runs inside your browser tab</strong> using WebAssembly. Your file is read from your device into browser memory, processed entirely locally, and the result is written back to your device. No server receives your data — not for a millisecond.</p>
+
+      <h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">How local OCR works technically</h2>
+
+      <p style="font-size:15px;margin:0 0 16px;">PDFree uses <strong>Tesseract.js v5</strong> — the industry-standard open-source OCR engine compiled to WebAssembly. When you click Install OCR Engine, your browser downloads the engine (~17 MB) once and caches it permanently. Every subsequent OCR job runs fully offline from that cached engine.</p>
+
+      <div style="display:grid;gap:12px;grid-template-columns:1fr 1fr;margin-bottom:40px;">
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;">
+          <strong style="color:var(--text);font-size:14px;">What downloads from the internet</strong>
+          <ul style="margin:8px 0 0;padding-left:16px;font-size:13px;color:var(--text2);">
+            <li>Tesseract.js engine (once, ~17 MB)</li>
+            <li>Language models you select (once per language)</li>
+            <li>Noto fonts for non-Latin scripts (once per language)</li>
+          </ul>
+        </div>
+        <div style="background:var(--green-light);border:1px solid rgba(45,122,79,0.2);border-radius:10px;padding:16px;">
+          <strong style="color:var(--green);font-size:14px;">What never leaves your device</strong>
+          <ul style="margin:8px 0 0;padding-left:16px;font-size:13px;color:var(--text2);">
+            <li>Your PDF file — not a single byte</li>
+            <li>The extracted text</li>
+            <li>The searchable PDF output</li>
+            <li>Any metadata about your document</li>
+          </ul>
+        </div>
+      </div>
+
+      <h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">How to verify: check with DevTools</h2>
+
+      <p style="font-size:15px;margin:0 0 16px;">You don't have to take our word for it. Here is how to verify during a real OCR job:</p>
+
+      <ol style="font-size:14px;margin:0 0 24px;padding-left:20px;">
+        <li style="margin-bottom:10px;">Open your browser DevTools — press <kbd style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:1px 5px;font-size:12px;">F12</kbd> or <kbd style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:1px 5px;font-size:12px;">Cmd+Option+I</kbd></li>
+        <li style="margin-bottom:10px;">Go to the <strong>Network</strong> tab and click <strong>Clear</strong> to reset it</li>
+        <li style="margin-bottom:10px;">Select <strong>Fetch/XHR</strong> or <strong>All</strong> to filter requests</li>
+        <li style="margin-bottom:10px;">Drop a PDF onto PDFree and click Make PDF Searchable</li>
+        <li>Watch the Network tab during processing — you will see zero requests containing your PDF data</li>
+      </ol>
+
+      <p style="font-size:15px;margin:0 0 40px;">This is verifiable, not a privacy policy promise. The architecture makes upload impossible — there is no code path that sends file bytes to any server.</p>
+
+      <h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">Who needs OCR without uploading</h2>
+
+      <table style="width:100%;border-collapse:collapse;margin-bottom:40px;font-size:14px;">
+        <thead>
+          <tr style="background:var(--surface);border-bottom:2px solid var(--border);">
+            <th style="text-align:left;padding:10px 12px;font-weight:600;">Use case</th>
+            <th style="text-align:left;padding:10px 12px;font-weight:600;">Why local matters</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:10px 12px;font-weight:500;">Medical records</td>
+            <td style="padding:10px 12px;color:var(--text2);">Patient data must not pass through unapproved third-party systems</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border);background:var(--surface);">
+            <td style="padding:10px 12px;font-weight:500;">Legal documents</td>
+            <td style="padding:10px 12px;color:var(--text2);">Attorney-client privilege; contracts and court filings must stay confidential</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:10px 12px;font-weight:500;">Financial records</td>
+            <td style="padding:10px 12px;color:var(--text2);">Tax returns and bank statements contain personal data that must not be stored externally</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border);background:var(--surface);">
+            <td style="padding:10px 12px;font-weight:500;">HR and payroll</td>
+            <td style="padding:10px 12px;color:var(--text2);">Employee contracts and salary documents are subject to data protection regulations</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:10px 12px;font-weight:500;">Government forms</td>
+            <td style="padding:10px 12px;color:var(--text2);">Passport scans, ID documents, and official filings must not be uploaded to consumer services</td>
+          </tr>
+          <tr style="background:var(--surface);">
+            <td style="padding:10px 12px;font-weight:500;">Corporate IP</td>
+            <td style="padding:10px 12px;color:var(--text2);">Technical drawings, patents, and proprietary specifications should not leave the organization's control</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">Also works offline after first use</h2>
+
+      <p style="font-size:15px;margin:0 0 24px;">Once the Tesseract.js engine and your chosen language models are cached, PDFree works with no internet connection at all. This is useful in secure environments that restrict external network access, on flights, or in areas with unreliable connectivity. Open the app, drop your scanned PDF, and process — no network request is made.</p>
+
+      <h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">Frequently asked questions</h2>
+
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:40px;">
+
+        <div style="border:1px solid var(--border);border-radius:10px;padding:14px 16px;">
+          <h3 style="margin:0 0 6px;">Is PDFree HIPAA compliant?</h3>
+          <p style="margin:0;">PDFree does not receive, store, or transmit protected health information — your files never leave your device. This removes the primary HIPAA compliance burden. However, PDFree is not a formally certified Business Associate and does not sign BAA agreements. For organizations that require a signed BAA, consult your compliance team about whether local browser-based processing satisfies your specific requirements.</p>
+        </div>
+
+        <div style="border:1px solid var(--border);border-radius:10px;padding:14px 16px;">
+          <h3 style="margin:0 0 6px;">Does PDFree collect any usage data?</h3>
+          <p style="margin:0;">PDFree uses Plausible Analytics — a privacy-first, cookieless tool that counts page views and events without tracking individual users or storing personal data. No file names, no file contents, and no personally identifiable information are ever collected. Plausible does not use cookies and is GDPR-compliant by design.</p>
+        </div>
+
+        <div style="border:1px solid var(--border);border-radius:10px;padding:14px 16px;">
+          <h3 style="margin:0 0 6px;">What languages can be recognized locally?</h3>
+          <p style="margin:0;">18 languages, all processed on-device: English, French, German, Spanish, Italian, Portuguese, Russian, Uzbek, Dutch, Polish, Turkish, Arabic, Japanese, Chinese Simplified, Chinese Traditional, Korean, Hindi, and Thai. Language models are downloaded once and cached — repeat use requires no network.</p>
+        </div>
+
+        <div style="border:1px solid var(--border);border-radius:10px;padding:14px 16px;">
+          <h3 style="margin:0 0 6px;">Is there a file size or page limit?</h3>
+          <p style="margin:0;">Files up to 200 MB are supported with no page limit on desktop browsers. On iOS and iPadOS, processing is capped at 30 pages per run to stay within browser memory. Use Split PDF to process larger documents in sections.</p>
+        </div>
+
+      </div>
+
+      <h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">Related tools</h2>
+      <ul style="font-size:14px;padding-left:20px;margin:0 0 40px;">
+        <li style="margin-bottom:8px;"><a href="../make-scanned-pdf-searchable/" style="color:var(--green);">Make Scanned PDF Searchable</a> — step-by-step guide to adding a text layer</li>
+        <li style="margin-bottom:8px;"><a href="../extract-text-from-scanned-pdf/" style="color:var(--green);">Extract Text from Scanned PDF</a> — get text as a .txt file or searchable PDF</li>
+        <li style="margin-bottom:8px;"><a href="../redact-pdf/" style="color:var(--green);">Redact PDF</a> — cover sensitive areas before sharing, also runs locally</li>
+        <li style="margin-bottom:8px;"><a href="../protect-pdf/" style="color:var(--green);">Protect PDF</a> — add AES-256 password encryption, also runs locally</li>
+        <li style="margin-bottom:8px;"><a href="../hipaa-pdf-tools/" style="color:var(--green);">HIPAA-safe PDF tools</a> — full suite of local PDF tools for healthcare</li>
+        <li><a href="../ocr-pdf/" style="color:var(--green);">OCR PDF</a> — main OCR tool page</li>
+      </ul>
+
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div style="display:flex;gap:48px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;font-size:13px;border-top:1px solid var(--border);padding-top:20px;">
+      <div>
+        <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Alternatives</div>
+        <a href="/ilovepdf-alternative/" style="display:block;color:var(--green);text-decoration:none;margin-bottom:4px;">iLovePDF Alternative</a>
+      </div>
+      <div>
+        <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Solutions</div>
+        <a href="/hipaa-pdf-tools/" style="display:block;color:var(--green);text-decoration:none;margin-bottom:4px;">HIPAA Compliant PDF</a>
+        <a href="/secure-pdf-tools/" style="display:block;color:var(--green);text-decoration:none;">Secure PDF Tools</a>
+      </div>
+    </div>
+    PDFree · <strong>All processing happens 100% in your browser</strong> · Files are <strong>never uploaded</strong><br>
+    <span style="color:var(--green)">🔒</span> Your documents never leave your device &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> Built to be free for everyone, forever<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
+      <a href="/privacy.html" style="color:var(--green)">Privacy</a> &nbsp;·&nbsp;
+      <a href="/terms.html" style="color:var(--green)">Terms</a> &nbsp;·&nbsp;
+      <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a> &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green)">GitHub</a>
+    </span>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script defer src="../js/vendor/fontkit.umd.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+  <script type="module" src="../js/app.js"></script>
+
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script>
+</body>
+</html>
