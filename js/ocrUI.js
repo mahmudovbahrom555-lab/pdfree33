@@ -98,6 +98,7 @@ export function hideOcrOptions() {
   _file = null; _isTextPdf = false; _loading = false;
   _lastResultBlob = null; _lastResultName = null;
   _includeTxtHeader = false; _detectedLang = null; _requiresManualLang = false;
+  _selectedLang = 'auto';
 }
 
 export function getOcrParams() {
@@ -655,13 +656,7 @@ function _showLangRequired(detectedLang) {
   // Pre-select the best candidate so user can confirm with one click instead of
   // hunting through 18 options. Also set _selectedLang so OCR uses it directly —
   // user leaving the pre-selection unchanged counts as implicit confirmation.
-  const candidate = detectedLang || 'eng';
-  // Weak history signal: when detection fell back to 'eng' (inconclusive) and the
-  // user previously confirmed a different language, prefer their history — it's more
-  // likely correct than the default English fallback.
-  const lastLang = _readLastLang();
-  const finalCandidate = (candidate === 'eng' && lastLang && lastLang !== 'eng')
-    ? lastLang : candidate;
+  const finalCandidate = detectedLang || 'eng';
   _selectedLang = finalCandidate;
   sel.value     = finalCandidate;
 
@@ -669,7 +664,6 @@ function _showLangRequired(detectedLang) {
   sel.style.borderColor = 'rgba(202,138,4,0.85)';
   sel.style.boxShadow   = '0 0 0 3px rgba(202,138,4,0.15)';
 
-  // Show download/installed note if candidate is a complex language
   const complexLang = LANGUAGES.complex.find(l => l.code === finalCandidate);
   if (complexLang) _showLangInfo(complexLang);
 
@@ -679,7 +673,8 @@ function _showLangRequired(detectedLang) {
   const hint = document.createElement('p');
   hint.className = 'detect-hint';
   hint.style.cssText = 'margin:8px 0 0;font-size:12px;color:var(--text2);';
-  hint.textContent = `Language detection was inconclusive. We've pre-selected ${_getLangName(finalCandidate)} — choose the correct language above, then click Run OCR.`;
+  const langName = _getLangName(finalCandidate);
+  hint.textContent = `Language detection was inconclusive${finalCandidate !== 'eng' ? ` — script looks like ${langName}` : ''}. Choose the correct language above, then click Run OCR.`;
   langBlock.appendChild(hint);
 
   // When user picks a language, clear suggestion state and unblock OCR
