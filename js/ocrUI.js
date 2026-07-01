@@ -872,13 +872,13 @@ function _showSuccess(desc) {
     nextSteps.innerHTML = `
       <div style="font-weight:600;color:var(--text2);margin-bottom:10px;">What to do next</div>
       <div style="display:flex;flex-direction:column;gap:8px;">
-        <a href="../pdf-to-word/" style="display:flex;align-items:center;gap:8px;color:var(--green);text-decoration:none;font-weight:500;">
+        <a href="../pdf-to-word/" data-handoff style="display:flex;align-items:center;gap:8px;color:var(--green);text-decoration:none;font-weight:500;">
           <span style="font-size:16px">📝</span> Convert to Word — edit the content
         </a>
-        <a href="../split-pdf/" style="display:flex;align-items:center;gap:8px;color:var(--green);text-decoration:none;font-weight:500;">
+        <a href="../split-pdf/" data-handoff style="display:flex;align-items:center;gap:8px;color:var(--green);text-decoration:none;font-weight:500;">
           <span style="font-size:16px">✂️</span> Split PDF — extract specific pages
         </a>
-        <a href="../compress-large-pdf-free/" style="display:flex;align-items:center;gap:8px;color:var(--green);text-decoration:none;font-weight:500;">
+        <a href="../compress-large-pdf-free/" data-handoff style="display:flex;align-items:center;gap:8px;color:var(--green);text-decoration:none;font-weight:500;">
           <span style="font-size:16px">🗜️</span> Compress PDF — reduce size before sharing
         </a>
       </div>`;

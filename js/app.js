@@ -43,6 +43,7 @@ import { loadPdfLib }                              from './lazyLibs.js';
 import { checkReturnVisit, recordDownload,
          checkAndRecordConversion }                from './behavioralSignals.js';
 import { t }                                      from './i18n.js';
+import { saveHandoff, restoreHandoff }            from './handoff.js';
 
 // ── Module-level constants ────────────────────────────────────
 const TOOL_SLUGS = {
@@ -88,6 +89,13 @@ let _resultUrl     = null;
 let _resultBlob    = null;   // kept for Web Share API (not revoked after share)
 let _resultFilename = 'document.pdf';
 let _successGen    = 0;      // incremented on each success to cancel stale timeouts
+
+// Returns the current result blob if it is a PDF and still in memory.
+// Used by the handoff click interceptor before navigating to the next tool.
+function _getResultForHandoff() {
+  if (!_resultBlob || _resultBlob.type !== 'application/pdf') return null;
+  return { blob: _resultBlob, filename: _resultFilename };
+}
 
 function _freeResultUrl() {
   if (_resultUrl) { URL.revokeObjectURL(_resultUrl); _resultUrl = null; }
@@ -474,6 +482,20 @@ function initEvents() {
   });
 
   document.addEventListener('pdfree:success', e => _handleSuccess(e.detail));
+
+  // Cross-sell handoff: when user clicks a link with data-handoff and a result
+  // PDF is still in memory, save it to IndexedDB before navigating so the
+  // destination tool page can auto-load it without requiring a re-upload.
+  document.addEventListener('click', e => {
+    const link = e.target.closest('a[data-handoff]');
+    if (!link) return;
+    const result = _getResultForHandoff();
+    if (!result) return;              // blob already revoked → normal navigation
+    e.preventDefault();
+    saveHandoff(result.blob, result.filename, currentTool)
+      .catch(() => {})               // IDB failure → still navigate
+      .then(() => { location.href = link.href; });
+  });
 
   // Compress scan findings arrive from worker mid-compression — update the
   // scan banner in #compressOptions with real data instead of the placeholder.
@@ -1051,6 +1073,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (requestedTool && TOOLS[requestedTool]) {
     showTool(requestedTool, false);
+    // Restore a handoff blob from the previous tool page (if any).
+    // IDB resolves asynchronously — by then showTool's RAF has already run,
+    // so addFiles() fires into a fully-initialised tool UI.
+    restoreHandoff().then(handoff => {
+      if (!handoff) return;
+      const file = new File([handoff.blob], handoff.filename, { type: 'application/pdf' });
+      requestAnimationFrame(() => {
+        addFiles([file]);
+        const srcTitle = TOOLS[handoff.sourceTool]?.title ?? 'previous tool';
+        showToast(`📂 Loaded from ${srcTitle} — ready to process`);
+      });
+    }).catch(() => {});
   } else {
     showHomePage();
     initSearch();
