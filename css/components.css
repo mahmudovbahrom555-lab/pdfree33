@@ -3315,7 +3315,7 @@ body:not(.has-files) #heroChipsLabel { display: none !important; }
 .hero-drop-zone__btn {
   pointer-events: auto;
   display: inline-block;
-  padding: 6px 16px;
+  padding: 8px 24px;
   background: var(--green);
   color: #fff;
   border-radius: 8px;
