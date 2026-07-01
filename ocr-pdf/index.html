@@ -362,7 +362,11 @@
 
       <h1 style="font-size:clamp(22px,3.5vw,30px);color:var(--text);margin:0 0 16px;font-weight:700;">OCR PDF Free — Make Scanned PDFs Searchable</h1>
 
-      <p style="font-size:15px;margin:0 0 40px;">Extract text from scanned PDFs, make them searchable, and copy content — directly in your browser using OCR (Optical Character Recognition). No software to install, no account required, and your files <strong>never leave your device</strong>.</p>
+      <p style="font-size:15px;margin:0 0 20px;">Extract text from scanned PDFs, make them searchable, and copy content — directly in your browser using OCR (Optical Character Recognition). No software to install, no account required, and your files <strong>never leave your device</strong>.</p>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--green);border-radius:8px;padding:14px 16px;margin:0 0 40px;font-size:14px;line-height:1.6;">
+        <strong style="color:var(--text);">What is OCR?</strong> OCR (Optical Character Recognition) converts an image PDF — a scanned document where each page is a photo — into a searchable PDF by adding an invisible text layer over the original images. PDFree runs OCR entirely in your browser using Tesseract.js; your file is never uploaded to any server. The original appearance of the document is preserved exactly.
+      </div>
 
       <h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">How to make a scanned PDF searchable</h2>
 
@@ -409,6 +413,10 @@
       <h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">Privacy — your scanned documents stay private</h2>
 
       <p style="font-size:15px;margin:0 0 24px;">Scanned documents often contain sensitive content — contracts, medical records, personal letters, tax forms. With PDFree, <strong>nothing is ever uploaded</strong>. The OCR engine (Tesseract.js) is downloaded once and then runs entirely inside your browser tab. There are no servers receiving your files, no cloud storage, and no data collection of any kind. Open DevTools → Network tab while processing to verify: zero file uploads.</p>
+
+      <h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">Use PDFree OCR offline</h2>
+
+      <p style="font-size:15px;margin:0 0 24px;">Once the Tesseract.js engine is downloaded on your first OCR run (~17 MB, cached by your browser), PDFree OCR works completely offline. No internet connection is needed to process subsequent documents. This makes it suitable for environments with restricted network access — legal offices, medical facilities, classified document review, or anywhere you cannot send files to an external server. The service worker caches the application shell, so even the UI loads offline after the first visit.</p>
 
       <h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">Frequently asked questions</h2>
 
