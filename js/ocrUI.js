@@ -555,6 +555,12 @@ function _isLangInstalled(code) {
   try { return localStorage.getItem(`pdfree_ocr_lang_${code}`) === '1'; } catch { return false; }
 }
 
+// Returns the last language the user confirmed/used, or null.
+// Used as a weak heuristic when auto-detection falls back to 'eng' (inconclusive).
+function _readLastLang() {
+  try { return localStorage.getItem('pdfree_ocr_last_lang'); } catch { return null; }
+}
+
 function _showLangInfo(lang) {
   const block = document.getElementById('langInfoBlock');
   if (!block) return;
@@ -650,15 +656,21 @@ function _showLangRequired(detectedLang) {
   // hunting through 18 options. Also set _selectedLang so OCR uses it directly —
   // user leaving the pre-selection unchanged counts as implicit confirmation.
   const candidate = detectedLang || 'eng';
-  _selectedLang = candidate;
-  sel.value     = candidate;
+  // Weak history signal: when detection fell back to 'eng' (inconclusive) and the
+  // user previously confirmed a different language, prefer their history — it's more
+  // likely correct than the default English fallback.
+  const lastLang = _readLastLang();
+  const finalCandidate = (candidate === 'eng' && lastLang && lastLang !== 'eng')
+    ? lastLang : candidate;
+  _selectedLang = finalCandidate;
+  sel.value     = finalCandidate;
 
   // Amber border signals "please verify this" (not an error — just needs confirmation)
   sel.style.borderColor = 'rgba(202,138,4,0.85)';
   sel.style.boxShadow   = '0 0 0 3px rgba(202,138,4,0.15)';
 
   // Show download/installed note if candidate is a complex language
-  const complexLang = LANGUAGES.complex.find(l => l.code === candidate);
+  const complexLang = LANGUAGES.complex.find(l => l.code === finalCandidate);
   if (complexLang) _showLangInfo(complexLang);
 
   // Hint explains the situation without blocking — user sees what was detected and
@@ -667,7 +679,7 @@ function _showLangRequired(detectedLang) {
   const hint = document.createElement('p');
   hint.className = 'detect-hint';
   hint.style.cssText = 'margin:8px 0 0;font-size:12px;color:var(--text2);';
-  hint.textContent = `Language detection was inconclusive. We've pre-selected ${_getLangName(candidate)} — confirm by clicking Run OCR, or choose a different language above.`;
+  hint.textContent = `Language detection was inconclusive. We've pre-selected ${_getLangName(finalCandidate)} — confirm by clicking Run OCR, or choose a different language above.`;
   langBlock.appendChild(hint);
 
   // When user actively picks a different language, clear the suggestion state
@@ -717,6 +729,11 @@ function _bindMergeBtn() {
 
     e.stopImmediatePropagation();
 
+    // Clear any "suggest language" visual state — user committed to running OCR
+    const _selEl = document.getElementById('ocrLangSelect');
+    if (_selEl) { _selEl.style.borderColor = ''; _selEl.style.boxShadow = ''; }
+    document.querySelectorAll('.detect-hint').forEach(el => el.remove());
+
     btn.disabled = true;
     btn.textContent = 'Processing…';
     btn.classList.add('ocr-btn--busy');
@@ -744,6 +761,7 @@ function _bindMergeBtn() {
         // Mark language model as installed — next visit shows "✓ installed" instead of download notice
         if (usedLang && usedLang !== 'auto') {
           try { localStorage.setItem(`pdfree_ocr_lang_${usedLang}`, '1'); } catch { /* private browsing */ }
+          try { localStorage.setItem('pdfree_ocr_last_lang', usedLang); } catch { /* private browsing */ }
         }
         const pdfBytes = await _buildSearchablePdf(_file, ocrPages, usedLang);
         _lastResultBlob = new Blob([pdfBytes], { type: 'application/pdf' });
