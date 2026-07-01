@@ -487,12 +487,13 @@ function initEvents() {
   // PDF is still in memory, save it to IndexedDB before navigating so the
   // destination tool page can auto-load it without requiring a re-upload.
   document.addEventListener('click', e => {
+    if (e.ctrlKey || e.metaKey || e.shiftKey || e.button !== 0) return; // let new-tab intent through
     const link = e.target.closest('a[data-handoff]');
     if (!link) return;
     const result = _getResultForHandoff();
     if (!result) return;              // blob already revoked → normal navigation
     e.preventDefault();
-    saveHandoff(result.blob, result.filename, currentTool)
+    saveHandoff(result.blob, result.filename, currentTool, link.href)
       .catch(() => {})               // IDB failure → still navigate
       .then(() => { location.href = link.href; });
   });

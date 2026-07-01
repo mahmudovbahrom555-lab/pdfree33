@@ -3,6 +3,7 @@
 
 import { loadPdfJs } from './pdf2jpgUI.js';
 import { t } from './i18n.js';
+import { saveHandoff } from './handoff.js';
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 const TESSERACT_CDN       = 'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js';
@@ -882,6 +883,19 @@ function _showSuccess(desc) {
           <span style="font-size:16px">🗜️</span> Compress PDF — reduce size before sharing
         </a>
       </div>`;
+    // OCR is self-managed and never fires pdfree:success, so the global
+    // handoff click interceptor in app.js has no blob to save. We wire it
+    // here directly against _lastResultBlob (the searchable PDF only).
+    nextSteps.addEventListener('click', e => {
+      if (e.ctrlKey || e.metaKey || e.shiftKey || e.button !== 0) return;
+      const link = e.target.closest('a[data-handoff]');
+      if (!link || !_lastResultBlob) return;
+      e.preventDefault();
+      saveHandoff(_lastResultBlob, _lastResultName, 'ocr', link.href)
+        .catch(() => {})
+        .then(() => { location.href = link.href; });
+    });
+
     sc.appendChild(nextSteps);
   }
 
