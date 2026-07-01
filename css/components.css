@@ -3069,6 +3069,25 @@ button,
 #toolSearch::-webkit-search-cancel-button { display: none; }
 #toolSearch::-webkit-search-decoration      { display: none; }
 
+/* Section labels inside searchHero (Popular tools / Looking for another tool?) */
+.hero-section-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin: 0;
+  align-self: flex-start;
+}
+.hero-search-label {
+  margin-top: 6px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  width: 100%;
+  text-align: left;
+}
+.has-files .hero-section-label { display: none; }
+
 /* Featured tool cards — shown in hero when no file is loaded */
 .hero-featured {
   display: grid;
