@@ -1082,8 +1082,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const file = new File([handoff.blob], handoff.filename, { type: 'application/pdf' });
       requestAnimationFrame(() => {
         addFiles([file]);
-        const srcTitle = TOOLS[handoff.sourceTool]?.title ?? 'previous tool';
-        showToast(`📂 Loaded from ${srcTitle} — ready to process`);
+        showToast(`📂 PDF ready — continue without re-uploading`);
       });
     }).catch(() => {});
   } else {
