@@ -634,7 +634,7 @@ function _syncBtnLabel() {
   const btn = document.getElementById('mergeBtn');
   if (!btn || !btn._ocrBound) return;
   if (_requiresManualLang) {
-    btn.disabled = true;
+    btn.disabled = false; // keep clickable — click will open the language picker
     btn.textContent = '↑ Select a language first';
     return;
   }
@@ -679,14 +679,16 @@ function _showLangRequired(detectedLang) {
   const hint = document.createElement('p');
   hint.className = 'detect-hint';
   hint.style.cssText = 'margin:8px 0 0;font-size:12px;color:var(--text2);';
-  hint.textContent = `Language detection was inconclusive. We've pre-selected ${_getLangName(finalCandidate)} — confirm by clicking Run OCR, or choose a different language above.`;
+  hint.textContent = `Language detection was inconclusive. We've pre-selected ${_getLangName(finalCandidate)} — choose the correct language above, then click Run OCR.`;
   langBlock.appendChild(hint);
 
-  // When user actively picks a different language, clear the suggestion state
+  // When user picks a language, clear suggestion state and unblock OCR
   sel.addEventListener('change', function onLangChange() {
     sel.style.borderColor = '';
     sel.style.boxShadow   = '';
     hint.remove();
+    _requiresManualLang = false;
+    _syncBtnLabel();
     sel.removeEventListener('change', onLangChange);
   });
 
@@ -695,8 +697,8 @@ function _showLangRequired(detectedLang) {
   sel.focus();
   sel.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
-  // Pre-selection is a valid language choice — no longer blocking OCR
-  _requiresManualLang = false;
+  // Block OCR until user explicitly picks from the dropdown
+  _requiresManualLang = true;
   _syncBtnLabel();
 }
 
@@ -729,7 +731,19 @@ function _bindMergeBtn() {
 
     e.stopImmediatePropagation();
 
-    // Clear any "suggest language" visual state — user committed to running OCR
+    // If previous detection was inconclusive, open the language picker here —
+    // we're still in the synchronous user-gesture stack so showPicker() is allowed.
+    if (_requiresManualLang) {
+      const selEl = document.getElementById('ocrLangSelect');
+      if (selEl) {
+        try { selEl.showPicker(); } catch { /* unsupported / sandbox — visual fallback stays */ }
+        selEl.focus();
+        selEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      return;
+    }
+
+    // Clear any "suggest language" visual state — user is actually running OCR now
     const _selEl = document.getElementById('ocrLangSelect');
     if (_selEl) { _selEl.style.borderColor = ''; _selEl.style.boxShadow = ''; }
     document.querySelectorAll('.detect-hint').forEach(el => el.remove());
