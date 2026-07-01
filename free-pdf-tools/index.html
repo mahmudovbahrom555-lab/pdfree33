@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src  'self' 'wasm-unsafe-eval' blob:
+                https://cdnjs.cloudflare.com https://esm.sh
+                https://plausible.io https://static.cloudflareinsights.com;
+    style-src   'self' 'unsafe-inline';
+    font-src    'self';
+    img-src     'self' data: blob: https:;
+    connect-src 'self' https://cdnjs.cloudflare.com https://*.workers.dev
+                https://plausible.io https://cloudflareinsights.com;
+    worker-src  'self' blob:;
+    object-src  'none';
+  ">
+
+  <title>Free PDF Tools — 18 Browser-Based PDF Tools, No Upload | PDFree</title>
+  <meta name="description" content="All 18 free PDF tools in one place: merge, split, compress, convert, OCR, protect, watermark, and more. No upload to servers, no account, no file size limit. Everything runs in your browser.">
+
+  <meta property="og:title"       content="Free PDF Tools — 18 Tools, No Upload, No Account | PDFree">
+  <meta property="og:description" content="The complete list of free PDF tools at PDFree: merge, split, compress, PDF to Word, OCR, protect, watermark, rotate, and more. All browser-based, all free.">
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://pdfree.io/free-pdf-tools/">
+  <meta property="og:site_name"   content="PDFree">
+  <meta property="og:image"        content="https://pdfree.io/icons/og-image.jpg">
+  <meta property="og:image:width"  content="1200">
+  <meta property="og:image:height" content="633">
+  <meta property="og:image:alt"    content="Free PDF Tools — 18 Browser-Based Tools | PDFree">
+  <meta name="twitter:card"       content="summary_large_image">
+  <meta name="twitter:site"       content="@pdfree_io">
+  <meta name="twitter:title"      content="Free PDF Tools — 18 Tools, No Upload | PDFree">
+  <meta name="twitter:description" content="All free PDF tools in one place. Merge, split, compress, convert, OCR. No upload, no account.">
+  <meta name="twitter:image"       content="https://pdfree.io/icons/og-image.jpg">
+  <meta name="twitter:image:alt"   content="Free PDF Tools — 18 Browser-Based Tools | PDFree">
+
+  <link rel="canonical" href="https://pdfree.io/free-pdf-tools/">
+  <link rel="alternate" hreflang="en"        href="https://pdfree.io/free-pdf-tools/">
+  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/free-pdf-tools/">
+
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="PDFree">
+  <link rel="apple-touch-icon" href="../icons/icon-192.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+  <link rel="preconnect" href="https://plausible.io">
+  <link rel="preconnect" href="https://static.cloudflareinsights.com">
+  <link rel="preload" href="../fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../css/fonts.css">
+
+  <script src="../js/theme.js"></script>
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/animations.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "Free PDF Tools by PDFree",
+    "description": "Complete list of free browser-based PDF tools available at pdfree.io",
+    "url": "https://pdfree.io/free-pdf-tools/",
+    "numberOfItems": 18,
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Merge PDF", "url": "https://pdfree.io/merge-pdf/", "description": "Combine multiple PDF files into one document. No file count limit, no size limit." },
+      { "@type": "ListItem", "position": 2, "name": "Split PDF", "url": "https://pdfree.io/split-pdf/", "description": "Extract specific pages or split every page into a separate PDF file." },
+      { "@type": "ListItem", "position": 3, "name": "Compress PDF", "url": "https://pdfree.io/compress-pdf/", "description": "Reduce PDF file size without losing quality. Presets: Light, Balanced, Max." },
+      { "@type": "ListItem", "position": 4, "name": "PDF to Word", "url": "https://pdfree.io/pdf-to-word/", "description": "Convert PDF to editable .docx Word document. No upload, works offline." },
+      { "@type": "ListItem", "position": 5, "name": "OCR PDF", "url": "https://pdfree.io/ocr-pdf/", "description": "Make scanned PDFs searchable and selectable. Supports 100+ languages." },
+      { "@type": "ListItem", "position": 6, "name": "Protect PDF", "url": "https://pdfree.io/protect-pdf/", "description": "Add AES-256 password encryption to any PDF file." },
+      { "@type": "ListItem", "position": 7, "name": "Rotate PDF", "url": "https://pdfree.io/rotate-pdf/", "description": "Rotate individual pages or all pages 90°, 180°, or 270°." },
+      { "@type": "ListItem", "position": 8, "name": "Watermark PDF", "url": "https://pdfree.io/watermark-pdf/", "description": "Add a custom text watermark to every page of your PDF." },
+      { "@type": "ListItem", "position": 9, "name": "JPG to PDF", "url": "https://pdfree.io/jpg2pdf/", "description": "Convert JPG or PNG images to a PDF document." },
+      { "@type": "ListItem", "position": 10, "name": "PDF to JPG", "url": "https://pdfree.io/pdf2jpg/", "description": "Convert PDF pages to JPG or PNG images." },
+      { "@type": "ListItem", "position": 11, "name": "Draw on PDF", "url": "https://pdfree.io/draw-on-pdf/", "description": "Draw, annotate, and add text to PDF pages directly in your browser." },
+      { "@type": "ListItem", "position": 12, "name": "Redact PDF", "url": "https://pdfree.io/redact-pdf/", "description": "Permanently black out sensitive text and areas from PDF pages." },
+      { "@type": "ListItem", "position": 13, "name": "Extract PDF Pages", "url": "https://pdfree.io/extract-pdf/", "description": "Extract specific pages from a PDF into a new document." },
+      { "@type": "ListItem", "position": 14, "name": "Fill PDF Form", "url": "https://pdfree.io/fill/", "description": "Fill out PDF forms with text fields, checkboxes, and dropdowns." },
+      { "@type": "ListItem", "position": 15, "name": "Flatten PDF", "url": "https://pdfree.io/flatten-pdf/", "description": "Flatten form fields into static content to lock form values." },
+      { "@type": "ListItem", "position": 16, "name": "Page Numbers", "url": "https://pdfree.io/pagenum-pdf/", "description": "Add page numbers to any PDF in your chosen position and format." },
+      { "@type": "ListItem", "position": 17, "name": "PDF Metadata", "url": "https://pdfree.io/metadata-pdf/", "description": "Edit PDF title, author, subject, and keywords metadata." },
+      { "@type": "ListItem", "position": 18, "name": "Compare PDF", "url": "https://pdfree.io/compare-pdf/", "description": "Compare two PDF versions side by side to spot differences." }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Are all PDFree tools completely free?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes. All 18 tools are free with no file count limits, no daily task limits, no file size limits, and no paid plan required. PDFree is funded through optional donations and community support." }
+      },
+      {
+        "@type": "Question",
+        "name": "Do PDFree tools upload my files to a server?",
+        "acceptedAnswer": { "@type": "Answer", "text": "No. Every PDFree tool processes files entirely in your browser using JavaScript. Your files never leave your device and are never sent to any server. This makes PDFree safe for confidential documents." }
+      },
+      {
+        "@type": "Question",
+        "name": "Do PDFree tools work offline?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes, after the first load. PDFree is a Progressive Web App (PWA). Once you've visited the site, the tools and their libraries are cached locally and work without an internet connection." }
+      },
+      {
+        "@type": "Question",
+        "name": "Is there a file size limit?",
+        "acceptedAnswer": { "@type": "Answer", "text": "There is no software limit. The practical limit is your device's available RAM. Modern computers handle PDFs up to several hundred megabytes easily. Some tools like Merge and Split have been tested with files over 1GB." }
+      }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "PDFree", "item": "https://pdfree.io/" },
+      { "@type": "ListItem", "position": 2, "name": "Free PDF Tools", "item": "https://pdfree.io/free-pdf-tools/" }
+    ]
+  }
+  </script>
+</head>
+<body>
+
+  <nav>
+    <a href="../" class="logo" id="logo" aria-label="Go to homepage" style="text-decoration:none">
+      <div class="logo-icon" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+      </div>
+      <span class="logo-text">PDF<span>ree</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="../merge-pdf/" class="nav-link">Merge</a>
+      <a href="../split-pdf/" class="nav-link">Split</a>
+      <a href="../compress-pdf/" class="nav-link">Compress</a>
+      <a href="../pdf-to-word/" class="nav-link">PDF→Word</a>
+      <a href="../ocr-pdf/" class="nav-link">OCR</a>
+      <a href="../protect-pdf/" class="nav-link">Protect</a>
+    </div>
+    <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode"></button>
+  </nav>
+
+  <section style="background:var(--green-light);border-bottom:1px solid rgba(45,122,79,0.15);padding:40px 24px 36px;text-align:center;">
+    <div style="max-width:720px;margin:0 auto;">
+      <h1 style="font-size:clamp(24px,3.5vw,38px);font-weight:700;letter-spacing:-0.5px;line-height:1.2;color:var(--text);margin:0 0 10px;">18 Free PDF Tools — No Upload, No Account</h1>
+      <p style="font-size:15px;color:var(--text2);margin:0 0 16px;max-width:540px;margin:0 auto 16px;">Everything runs locally in your browser. Your files never leave your device — no server, no signup, no limits.</p>
+      <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+        <span style="font-size:12px;background:rgba(45,122,79,0.12);color:var(--green);padding:4px 12px;border-radius:20px;font-weight:600;">✓ No file size limit</span>
+        <span style="font-size:12px;background:rgba(45,122,79,0.12);color:var(--green);padding:4px 12px;border-radius:20px;font-weight:600;">✓ No daily cap</span>
+        <span style="font-size:12px;background:rgba(45,122,79,0.12);color:var(--green);padding:4px 12px;border-radius:20px;font-weight:600;">✓ No upload ever</span>
+        <span style="font-size:12px;background:rgba(45,122,79,0.12);color:var(--green);padding:4px 12px;border-radius:20px;font-weight:600;">✓ Works offline</span>
+      </div>
+    </div>
+  </section>
+
+  <main style="max-width:860px;margin:0 auto;padding:48px 24px 80px;">
+
+    <!-- Organize & Convert -->
+    <section style="margin-bottom:48px;">
+      <h2 style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text3);margin:0 0 16px;">Organize &amp; Convert</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;">
+
+        <a href="/merge-pdf/" style="display:flex;gap:14px;align-items:flex-start;padding:16px;border:1px solid var(--border);border-radius:10px;background:var(--surface);text-decoration:none;transition:border-color 0.15s,box-shadow 0.15s;" onmouseover="this.style.borderColor='var(--green)'" onmouseout="this.style.borderColor='var(--border)'">
+          <span style="font-size:24px;line-height:1;flex-shrink:0;">🔗</span>
+          <div><strong style="color:var(--text);display:block;margin:0 0 3px;">Merge PDF</strong><span style="font-size:13px;color:var(--text2);">Combine multiple PDFs into one document. No file count or size limit.</span></div>
+        </a>
+
+        <a href="/split-pdf/" style="display:flex;gap:14px;align-items:flex-start;padding:16px;border:1px solid var(--border);border-radius:10px;background:var(--surface);text-decoration:none;" onmouseover="this.style.borderColor='var(--green)'" onmouseout="this.style.borderColor='var(--border)'">
+          <span style="font-size:24px;line-height:1;flex-shrink:0;">✂️</span>
+          <div><strong style="color:var(--text);display:block;margin:0 0 3px;">Split PDF</strong><span style="font-size:13px;color:var(--text2);">Extract specific pages or split every page into a separate file.</span></div>
+        </a>
+
+        <a href="/compress-pdf/" style="display:flex;gap:14px;align-items:flex-start;padding:16px;border:1px solid var(--border);border-radius:10px;background:var(--surface);text-decoration:none;" onmouseover="this.style.borderColor='var(--green)'" onmouseout="this.style.borderColor='var(--border)'">
+          <span style="font-size:24px;line-height:1;flex-shrink:0;">📦</span>
+          <div><strong style="color:var(--text);display:block;margin:0 0 3px;">Compress PDF</strong><span style="font-size:13px;color:var(--text2);">Reduce file size without losing quality. Light, Balanced, or Max preset.</span></div>
+        </a>
+
+        <a href="/rotate-pdf/" style="display:flex;gap:14px;align-items:flex-start;padding:16px;border:1px solid var(--border);border-radius:10px;background:var(--surface);text-decoration:none;" onmouseover="this.style.borderColor='var(--green)'" onmouseout="this.style.borderColor='var(--border)'">
+          <span style="font-size:24px;line-height:1;flex-shrink:0;">🔄</span>
+          <div><strong style="color:var(--text);display:block;margin:0 0 3px;">Rotate PDF</strong><span style="font-size:13px;color:var(--text2);">Rotate individual or all pages 90°, 180°, or 270°.</span></div>
+        </a>
+
+        <a href="/extract-pdf/" style="display:flex;gap:14px;align-items:flex-start;padding:16px;border:1px solid var(--border);border-radius:10px;background:var(--surface);text-decoration:none;" onmouseover="this.style.borderColor='var(--green)'" onmouseout="this.style.borderColor='var(--border)'">
+          <span style="font-size:24px;line-height:1;flex-shrink:0;">📤</span>
+          <div><strong style="color:var(--text);display:block;margin:0 0 3px;">Extract Pages</strong><span style="font-size:13px;color:var(--text2);">Pull out specific pages into a new PDF document.</span></div>
+        </a>
+
+        <a href="/pdf-to-word/" style="display:flex;gap:14px;align-items:flex-start;padding:16px;border:1px solid var(--border);border-radius:10px;background:var(--surface);text-decoration:none;" onmouseover="this.style.borderColor='var(--green)'" onmouseout="this.style.borderColor='var(--border)'">
+          <span style="font-size:24px;line-height:1;flex-shrink:0;">📝</span>
+          <div><strong style="color:var(--text);display:block;margin:0 0 3px;">PDF to Word</strong><span style="font-size:13px;color:var(--text2);">Convert PDF to editable .docx. No upload, works offline.</span></div>
+        </a>
+
+        <a href="/jpg2pdf/" style="display:flex;gap:14px;align-items:flex-start;padding:16px;border:1px solid var(--border);border-radius:10px;background:var(--surface);text-decoration:none;" onmouseover="this.style.borderColor='var(--green)'" onmouseout="this.style.borderColor='var(--border)'">
+          <span style="font-size:24px;line-height:1;flex-shrink:0;">🖼️</span>
+          <div><strong style="color:var(--text);display:block;margin:0 0 3px;">JPG to PDF</strong><span style="font-size:13px;color:var(--text2);">Convert JPG or PNG images to a PDF document.</span></div>
+        </a>
+
+        <a href="/pdf2jpg/" style="display:flex;gap:14px;align-items:flex-start;padding:16px;border:1px solid var(--border);border-radius:10px;background:var(--surface);text-decoration:none;" onmouseover="this.style.borderColor='var(--green)'" onmouseout="this.style.borderColor='var(--border)'">
+          <span style="font-size:24px;line-height:1;flex-shrink:0;">📷</span>
+          <div><strong style="color:var(--text);display:block;margin:0 0 3px;">PDF to JPG</strong><span style="font-size:13px;color:var(--text2);">Convert PDF pages to JPG or PNG images.</span></div>
+        </a>
+
+      </div>
+    </section>
+
+    <!-- Security & Privacy -->
+    <section style="margin-bottom:48px;">
+      <h2 style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text3);margin:0 0 16px;">Security &amp; Privacy</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;">
+
+        <a href="/protect-pdf/" style="display:flex;gap:14px;align-items:flex-start;padding:16px;border:1px solid var(--border);border-radius:10px;background:var(--surface);text-decoration:none;" onmouseover="this.style.borderColor='var(--green)'" onmouseout="this.style.borderColor='var(--border)'">
+          <span style="font-size:24px;line-height:1;flex-shrink:0;">🔒</span>
+          <div><strong style="color:var(--text);display:block;margin:0 0 3px;">Protect PDF</strong><span style="font-size:13px;color:var(--text2);">Add AES-256 password encryption to any PDF file.</span></div>
+        </a>
+
+        <a href="/redact-pdf/" style="display:flex;gap:14px;align-items:flex-start;padding:16px;border:1px solid var(--border);border-radius:10px;background:var(--surface);text-decoration:none;" onmouseover="this.style.borderColor='var(--green)'" onmouseout="this.style.borderColor='var(--border)'">
+          <span style="font-size:24px;line-height:1;flex-shrink:0;">⬛</span>
+          <div><strong style="color:var(--text);display:block;margin:0 0 3px;">Redact PDF</strong><span style="font-size:13px;color:var(--text2);">Permanently black out sensitive text and image areas.</span></div>
+        </a>
+
+        <a href="/ocr-pdf/" style="display:flex;gap:14px;align-items:flex-start;padding:16px;border:1px solid var(--border);border-radius:10px;background:var(--surface);text-decoration:none;" onmouseover="this.style.borderColor='var(--green)'" onmouseout="this.style.borderColor='var(--border)'">
+          <span style="font-size:24px;line-height:1;flex-shrink:0;">🔍</span>
+          <div><strong style="color:var(--text);display:block;margin:0 0 3px;">OCR PDF</strong><span style="font-size:13px;color:var(--text2);">Make scanned PDFs searchable and selectable. 100+ languages.</span></div>
+        </a>
+
+      </div>
+    </section>
+
+    <!-- Edit & Annotate -->
+    <section style="margin-bottom:48px;">
+      <h2 style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text3);margin:0 0 16px;">Edit &amp; Annotate</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;">
+
+        <a href="/draw-on-pdf/" style="display:flex;gap:14px;align-items:flex-start;padding:16px;border:1px solid var(--border);border-radius:10px;background:var(--surface);text-decoration:none;" onmouseover="this.style.borderColor='var(--green)'" onmouseout="this.style.borderColor='var(--border)'">
+          <span style="font-size:24px;line-height:1;flex-shrink:0;">✏️</span>
+          <div><strong style="color:var(--text);display:block;margin:0 0 3px;">Draw on PDF</strong><span style="font-size:13px;color:var(--text2);">Draw, annotate, highlight, and add text directly on PDF pages.</span></div>
+        </a>
+
+        <a href="/watermark-pdf/" style="display:flex;gap:14px;align-items:flex-start;padding:16px;border:1px solid var(--border);border-radius:10px;background:var(--surface);text-decoration:none;" onmouseover="this.style.borderColor='var(--green)'" onmouseout="this.style.borderColor='var(--border)'">
+          <span style="font-size:24px;line-height:1;flex-shrink:0;">💧</span>
+          <div><strong style="color:var(--text);display:block;margin:0 0 3px;">Watermark PDF</strong><span style="font-size:13px;color:var(--text2);">Add a custom text watermark to every page.</span></div>
+        </a>
+
+        <a href="/pagenum-pdf/" style="display:flex;gap:14px;align-items:flex-start;padding:16px;border:1px solid var(--border);border-radius:10px;background:var(--surface);text-decoration:none;" onmouseover="this.style.borderColor='var(--green)'" onmouseout="this.style.borderColor='var(--border)'">
+          <span style="font-size:24px;line-height:1;flex-shrink:0;">🔢</span>
+          <div><strong style="color:var(--text);display:block;margin:0 0 3px;">Page Numbers</strong><span style="font-size:13px;color:var(--text2);">Add page numbers in your chosen position, font, and format.</span></div>
+        </a>
+
+        <a href="/fill/" style="display:flex;gap:14px;align-items:flex-start;padding:16px;border:1px solid var(--border);border-radius:10px;background:var(--surface);text-decoration:none;" onmouseover="this.style.borderColor='var(--green)'" onmouseout="this.style.borderColor='var(--border)'">
+          <span style="font-size:24px;line-height:1;flex-shrink:0;">📋</span>
+          <div><strong style="color:var(--text);display:block;margin:0 0 3px;">Fill PDF Form</strong><span style="font-size:13px;color:var(--text2);">Fill out interactive PDF forms with text fields, checkboxes, dropdowns.</span></div>
+        </a>
+
+        <a href="/flatten-pdf/" style="display:flex;gap:14px;align-items:flex-start;padding:16px;border:1px solid var(--border);border-radius:10px;background:var(--surface);text-decoration:none;" onmouseover="this.style.borderColor='var(--green)'" onmouseout="this.style.borderColor='var(--border)'">
+          <span style="font-size:24px;line-height:1;flex-shrink:0;">📌</span>
+          <div><strong style="color:var(--text);display:block;margin:0 0 3px;">Flatten PDF</strong><span style="font-size:13px;color:var(--text2);">Lock form fields into static content to prevent further editing.</span></div>
+        </a>
+
+        <a href="/metadata-pdf/" style="display:flex;gap:14px;align-items:flex-start;padding:16px;border:1px solid var(--border);border-radius:10px;background:var(--surface);text-decoration:none;" onmouseover="this.style.borderColor='var(--green)'" onmouseout="this.style.borderColor='var(--border)'">
+          <span style="font-size:24px;line-height:1;flex-shrink:0;">🏷️</span>
+          <div><strong style="color:var(--text);display:block;margin:0 0 3px;">PDF Metadata</strong><span style="font-size:13px;color:var(--text2);">Edit title, author, subject, and keyword metadata fields.</span></div>
+        </a>
+
+        <a href="/compare-pdf/" style="display:flex;gap:14px;align-items:flex-start;padding:16px;border:1px solid var(--border);border-radius:10px;background:var(--surface);text-decoration:none;" onmouseover="this.style.borderColor='var(--green)'" onmouseout="this.style.borderColor='var(--border)'">
+          <span style="font-size:24px;line-height:1;flex-shrink:0;">🔎</span>
+          <div><strong style="color:var(--text);display:block;margin:0 0 3px;">Compare PDF</strong><span style="font-size:13px;color:var(--text2);">View two PDF versions side by side and highlight differences.</span></div>
+        </a>
+
+      </div>
+    </section>
+
+    <!-- Why PDFree -->
+    <section style="background:var(--green-light);border:1px solid rgba(45,122,79,0.2);border-radius:12px;padding:32px;margin-bottom:48px;">
+      <h2 style="font-size:20px;font-weight:700;color:var(--text);margin:0 0 16px;">Why PDFree is Different</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;">
+        <div>
+          <strong style="color:var(--green);display:block;margin:0 0 4px;">🔒 True privacy</strong>
+          <p style="margin:0;font-size:14px;color:var(--text2);">Files never leave your device. No server ever sees your documents — not even temporarily.</p>
+        </div>
+        <div>
+          <strong style="color:var(--green);display:block;margin:0 0 4px;">⚡ No size limits</strong>
+          <p style="margin:0;font-size:14px;color:var(--text2);">Process PDFs of any size. The only limit is your device's RAM — not an artificial upload cap.</p>
+        </div>
+        <div>
+          <strong style="color:var(--green);display:block;margin:0 0 4px;">♾️ No usage caps</strong>
+          <p style="margin:0;font-size:14px;color:var(--text2);">No daily task limits. Unlike SmallPDF (2/day) or iLovePDF (daily cap), PDFree is unlimited.</p>
+        </div>
+        <div>
+          <strong style="color:var(--green);display:block;margin:0 0 4px;">📴 Works offline</strong>
+          <p style="margin:0;font-size:14px;color:var(--text2);">After the first visit, all tools work without internet. PDFree is a full Progressive Web App.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Popular long-tail pages -->
+    <section style="margin-bottom:48px;">
+      <h2 style="font-size:20px;font-weight:700;color:var(--text);margin:0 0 16px;">No-Limit Speciality Pages</h2>
+      <p style="font-size:14px;color:var(--text2);margin:0 0 20px;">Need to handle especially large files or specific use cases? These dedicated pages have detailed guides.</p>
+      <ul style="margin:0;padding-left:24px;display:flex;flex-direction:column;gap:10px;">
+        <li><a href="/merge-large-pdf-files/" style="color:var(--green);font-weight:500;">Merge large PDF files free</a> — combine 100MB, 500MB, 1GB+ PDFs without upload limits</li>
+        <li><a href="/compress-large-pdf-free/" style="color:var(--green);font-weight:500;">Compress large PDF files free</a> — shrink oversized PDFs for email or sharing</li>
+        <li><a href="/split-large-pdf/" style="color:var(--green);font-weight:500;">Split large PDF files free</a> — extract pages from 500MB+ PDFs without upload</li>
+        <li><a href="/compress-pdf-for-email/" style="color:var(--green);font-weight:500;">Compress PDF for email</a> — get under Gmail's 25MB or Outlook's 20MB limit</li>
+        <li><a href="/pdf-to-word-free/" style="color:var(--green);font-weight:500;">PDF to Word free</a> — convert to .docx with no upload and no account</li>
+        <li><a href="/merge-pdf-without-uploading/" style="color:var(--green);font-weight:500;">Merge PDF without uploading</a> — why local processing matters for confidential files</li>
+      </ul>
+    </section>
+
+    <!-- FAQ -->
+    <section>
+      <h2 style="font-size:22px;font-weight:700;color:var(--text);margin:0 0 20px;">Frequently Asked Questions</h2>
+      <div style="display:flex;flex-direction:column;gap:20px;">
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Are all PDFree tools completely free?</h3>
+          <p style="margin:0;font-size:14px;color:var(--text2);">Yes. All 18 tools are free with no file count limits, no daily task limits, no file size limits, and no paid plan. PDFree is an open-source project built for everyone.</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Do PDFree tools upload my files?</h3>
+          <p style="margin:0;font-size:14px;color:var(--text2);">No. Every tool processes files locally in your browser using JavaScript. Your files never leave your device and are never sent to any server — making PDFree safe for sensitive and confidential documents.</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Do the tools work offline?</h3>
+          <p style="margin:0;font-size:14px;color:var(--text2);">Yes. After your first visit, PDFree caches all tools locally as a Progressive Web App (PWA). You can process PDFs without an internet connection — even after installing it from your browser.</p>
+        </div>
+        <div>
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Is there a file size limit?</h3>
+          <p style="margin:0;font-size:14px;color:var(--text2);">No software limit. The practical limit is your device's available RAM. Most modern computers handle PDFs up to several hundred megabytes easily. Merge and Split have been tested with files over 1GB.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    PDFree · <strong>All processing happens 100% in your browser</strong> · Files are <strong>never uploaded</strong><br>
+    <span style="color:var(--green)">🔒</span> Your documents never leave your device &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> Built to be free for everyone, forever<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
+      <a href="/privacy.html" style="color:var(--green)">Privacy</a> &nbsp;·&nbsp;
+      <a href="/terms.html" style="color:var(--green)">Terms</a> &nbsp;·&nbsp;
+      <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a> &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green)">GitHub</a>
+    </span>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="../js/theme.js"></script>
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script>
+</body>
+</html>
