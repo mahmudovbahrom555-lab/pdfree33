@@ -85,8 +85,11 @@ export function initOcrOptions(file) {
   const el = document.getElementById('ocrOptions');
   if (!el) return;
   el.style.display = '';
-  _file    = file;
-  _loading = true;
+  _file              = file;
+  _loading           = true;
+  _selectedLang      = 'auto';
+  _detectedLang      = null;
+  _requiresManualLang = false;
   el.innerHTML = _spinnerHTML('Analysing PDF…');
   _bindMergeBtn();   // register listener immediately so loading-state clicks are handled
   _analyse(file, el);
