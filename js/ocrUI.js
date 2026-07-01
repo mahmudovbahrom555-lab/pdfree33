@@ -640,57 +640,51 @@ function _syncBtnLabel() {
 // visual element (yellow validation border + action placeholder). Everything
 // else recedes — the button itself explains what to do next via its label.
 function _showLangRequired(detectedLang) {
-  _requiresManualLang = true;
   const langBlock = document.getElementById('ocrLangBlock');
   if (!langBlock) return;
 
   const sel = document.getElementById('ocrLangSelect');
+  if (!sel) return;
 
-  // 1. Select → yellow validation border (draws attention without extra text)
-  if (sel) {
-    if (sel.options[0]) sel.options[0].textContent = '⚠ Select document language…';
-    sel.value = 'auto';
-    sel.style.borderColor = 'rgba(202,138,4,0.85)';
-    sel.style.boxShadow   = '0 0 0 3px rgba(202,138,4,0.15)';
-  }
+  // Pre-select the best candidate so user can confirm with one click instead of
+  // hunting through 18 options. Also set _selectedLang so OCR uses it directly —
+  // user leaving the pre-selection unchanged counts as implicit confirmation.
+  const candidate = detectedLang || 'eng';
+  _selectedLang = candidate;
+  sel.value     = candidate;
 
-  // 2. Minimal action hint below the select — no box, no heading, just the next step
+  // Amber border signals "please verify this" (not an error — just needs confirmation)
+  sel.style.borderColor = 'rgba(202,138,4,0.85)';
+  sel.style.boxShadow   = '0 0 0 3px rgba(202,138,4,0.15)';
+
+  // Show download/installed note if candidate is a complex language
+  const complexLang = LANGUAGES.complex.find(l => l.code === candidate);
+  if (complexLang) _showLangInfo(complexLang);
+
+  // Hint explains the situation without blocking — user sees what was detected and
+  // can either confirm by clicking Run OCR or switch to the correct language.
   langBlock.querySelectorAll('.detect-hint').forEach(el => el.remove());
   const hint = document.createElement('p');
   hint.className = 'detect-hint';
   hint.style.cssText = 'margin:8px 0 0;font-size:12px;color:var(--text2);';
-  hint.innerHTML = `Language detection was inconclusive — select the document language above to run OCR.
-    <br><a id="ocrContinueAnyway" href="#" style="color:var(--text3);font-size:11px;">
-      Skip — continue with ${_getLangName(detectedLang || 'eng')} (may produce poor results)
-    </a>`;
+  hint.textContent = `Language detection was inconclusive. We've pre-selected ${_getLangName(candidate)} — confirm by clicking Run OCR, or choose a different language above.`;
   langBlock.appendChild(hint);
 
-  // "Continue anyway" — expert escape hatch, bypasses block
-  document.getElementById('ocrContinueAnyway')?.addEventListener('click', e => {
-    e.preventDefault();
-    _requiresManualLang = false;
-    _selectedLang = detectedLang || 'eng';
-    if (sel) {
-      sel.value = _selectedLang;
-      sel.style.borderColor = '';
-      sel.style.boxShadow   = '';
-    }
+  // When user actively picks a different language, clear the suggestion state
+  sel.addEventListener('change', function onLangChange() {
+    sel.style.borderColor = '';
+    sel.style.boxShadow   = '';
     hint.remove();
-    _syncBtnLabel();
+    sel.removeEventListener('change', onLangChange);
   });
 
-  // 3. Language selected → clear visual error state + re-enable button
-  sel?.addEventListener('change', function onLangChange() {
-    if (sel.value !== 'auto') {
-      _requiresManualLang = false;
-      sel.style.borderColor = '';
-      sel.style.boxShadow   = '';
-      hint.remove();
-      _syncBtnLabel();
-      sel.removeEventListener('change', onLangChange);
-    }
-  });
+  // Move focus to the select and scroll it into view — user's attention lands
+  // immediately on the pre-selected candidate without any extra click needed.
+  sel.focus();
+  sel.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
+  // Pre-selection is a valid language choice — no longer blocking OCR
+  _requiresManualLang = false;
   _syncBtnLabel();
 }
 
