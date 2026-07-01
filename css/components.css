@@ -3069,6 +3069,75 @@ button,
 #toolSearch::-webkit-search-cancel-button { display: none; }
 #toolSearch::-webkit-search-decoration      { display: none; }
 
+/* Featured tool cards — shown in hero when no file is loaded */
+.hero-featured {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  width: 100%;
+  max-width: 560px;
+}
+.has-files .hero-featured { display: none; }
+
+.hero-fcard {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 11px;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  text-decoration: none;
+  color: var(--text1);
+  transition: border-color 0.15s, box-shadow 0.15s;
+  min-width: 0;
+}
+.hero-fcard:hover {
+  border-color: var(--green);
+  box-shadow: 0 2px 10px color-mix(in srgb, var(--green) 10%, transparent);
+  text-decoration: none;
+}
+.hero-fcard__icon { flex-shrink: 0; color: var(--text2); display: flex; }
+.hero-fcard__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.hero-fcard__name {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text1);
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.hero-fcard__desc {
+  font-size: 10.5px;
+  color: var(--text3);
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.hero-fcard__arrow {
+  font-size: 13px;
+  color: var(--text3);
+  flex-shrink: 0;
+  transition: transform 0.15s, color 0.15s;
+}
+.hero-fcard:hover .hero-fcard__arrow { transform: translateX(3px); color: var(--green); }
+
+@media (max-width: 500px) {
+  .hero-featured { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* Hide chips in default state; show only when file is loaded */
+body:not(.has-files) .search-popular { display: none; }
+body:not(.has-files) #heroChipsLabel { display: none !important; }
+
 .search-popular {
   display: flex;
   flex-wrap: wrap;
