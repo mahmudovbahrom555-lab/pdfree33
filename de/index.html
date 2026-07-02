@@ -12,7 +12,8 @@
                 https://cdnjs.cloudflare.com
                 https://plausible.io
                 https://pagead2.googlesyndication.com
-                https://static.cloudflareinsights.com;
+                https://static.cloudflareinsights.com
+                https://cdn.jsdelivr.net;
     style-src   'self' 'unsafe-inline';
     font-src    'self';
     img-src     'self' data: blob: https:;
@@ -30,7 +31,7 @@
     object-src  'none';
   ">
   <title>PDFree — Kostenlose PDF-Tools, Keine Limits</title>
-  <meta name="description" content="PDFs zusammenfügen, aufteilen, komprimieren, konvertieren — direkt im Browser. Keine Uploads, kein Konto, keine Limits. 16 PDF-Werkzeuge kostenlos.">
+  <meta name="description" content="PDFs zusammenfügen, aufteilen, komprimieren, konvertieren — direkt im Browser. Keine Uploads, kein Konto, keine Limits. 18 PDF-Werkzeuge kostenlos.">
   <meta name="keywords"    content="pdf zusammenfügen, pdf aufteilen, pdf komprimieren, kostenlose pdf-tools, pdf dateien zusammenführen, privates pdf, pdf ohne upload, client-side pdf, pdf wasserzeichen, pdf seitenzahlen, pdf-metadaten-editor">
   <meta property="og:title"       content="PDFree — Private PDF-Tools, für immer kostenlos">
   <meta property="og:description" content="PDFs zusammenfügen, aufteilen, komprimieren, Wasserzeichen. 100 % privat — Dateien verlassen nie dein Gerät. Keine Anmeldung, keine Limits.">
@@ -47,7 +48,7 @@
   <meta name="twitter:title"       content="PDFree — Private PDF-Werkzeuge, für immer kostenlos">
   <meta name="twitter:description" content="PDFs zusammenfügen, aufteilen, komprimieren — 100 % privat, Dateien verlassen nie deinen Browser. Kein Konto, keine Limits. Kostenlos.">
   <meta name="twitter:image"       content="https://pdfree.io/icons/og-image.jpg">
-  <meta name="twitter:image:alt"   content="PDFree — Herramientas PDF privadas en el navegador">
+  <meta name="twitter:image:alt"   content="PDFree — Private PDF-Werkzeuge direkt im Browser">
 
   <link rel="canonical" href="https://pdfree.io/de/">
   <link rel="alternate" hreflang="en" href="https://pdfree.io/">
@@ -104,21 +105,22 @@
       <span class="logo-text">PDF<span>ree</span></span>
     </div>
     <div class="nav-links">
-      <a href="../merge-pdf/" class="nav-link" data-tool="merge">Merge</a>
-      <a href="../split-pdf/" class="nav-link" data-tool="split">Split</a>
-      <a href="../compress-pdf/" class="nav-link" data-tool="compress">Compress</a>
-      <a href="../jpg2pdf/" class="nav-link" data-tool="jpg2pdf">JPG→PDF</a>
-      <a href="../pdf2jpg/" class="nav-link" data-tool="pdf2jpg">PDF→JPG</a>
-      <a href="../watermark-pdf/" class="nav-link" data-tool="watermark">Watermark</a>
-      <a href="../pagenum-pdf/" class="nav-link" data-tool="pagenum">Page №</a>
-      <a href="../metadata-pdf/" class="nav-link" data-tool="meta">Metadata</a>
-      <a href="../extract-pdf/" class="nav-link" data-tool="extract">Extract</a>
-      <a href="../draw-on-pdf/" class="nav-link" data-tool="draw-pdf">Draw</a>
-      <a href="../rotate-pdf/" class="nav-link" data-tool="rotate">Rotate</a>
-      <a href="../protect-pdf/" class="nav-link" data-tool="protect">Protect</a>
-      <a href="../ocr-pdf/" class="nav-link" data-tool="ocr">OCR</a>
-      <a href="../pdf-to-word/" class="nav-link" data-tool="pdf2word">PDF→Word</a>
-      <a href="../flatten-pdf/" class="nav-link" data-tool="flatten">Flatten</a>
+      <a href="/de/pdf-zusammenfuehren/" class="nav-link" data-tool="merge">Merge</a>
+      <a href="/de/pdf-aufteilen/" class="nav-link" data-tool="split">Split</a>
+      <a href="/de/pdf-komprimieren/" class="nav-link" data-tool="compress">Compress</a>
+      <a href="/de/jpg-zu-pdf/" class="nav-link" data-tool="jpg2pdf">JPG→PDF</a>
+      <a href="/de/pdf-zu-jpg/" class="nav-link" data-tool="pdf2jpg">PDF→JPG</a>
+      <a href="/de/wasserzeichen-pdf/" class="nav-link" data-tool="watermark">Watermark</a>
+      <a href="/de/seitenzahlen-pdf/" class="nav-link" data-tool="pagenum">Page №</a>
+      <a href="/de/pdf-metadaten/" class="nav-link" data-tool="meta">Metadata</a>
+      <a href="/de/seiten-extrahieren/" class="nav-link" data-tool="extract">Extract</a>
+      <a href="/de/pdf-zeichnen/" class="nav-link" data-tool="draw-pdf">Draw</a>
+      <a href="/de/pdf-drehen/" class="nav-link" data-tool="rotate">Rotate</a>
+      <a href="/de/pdf-schuetzen/" class="nav-link" data-tool="protect">Protect</a>
+      <a href="/de/ocr-pdf/" class="nav-link" data-tool="ocr">OCR</a>
+      <a href="/de/pdf-zu-word/" class="nav-link" data-tool="pdf2word">PDF→Word</a>
+      <a href="/de/pdf-abflachen/" class="nav-link" data-tool="flatten">Flatten</a>
+      <a href="/compare-pdf/" class="nav-link" data-tool="compare">Vergleichen</a>
     </div>
     <button id="themeToggle" class="theme-toggle" aria-label="Dunkelmodus umschalten" title="Dunkelmodus umschalten"></button>
   </nav>
@@ -134,13 +136,13 @@
         <input type="file" id="heroFileInput" accept=".pdf" multiple hidden>
         <div class="hero-drop-zone__idle" id="heroDropIdle">
           <span class="hero-drop-zone__upload-icon" aria-hidden="true"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></span>
-          <span class="hero-drop-zone__label" id="heroDropLabel">Starte mit deiner PDF</span>
+          <span class="hero-drop-zone__label" id="heroDropLabel">Starte mit deinem PDF</span>
           <div class="hero-drop-zone__choose-row">
             <span class="hero-drop-zone__drop-text">PDF hier ablegen</span>
             <span class="hero-drop-zone__sep" id="heroDropOr">oder</span>
             <label class="hero-drop-zone__btn" for="heroFileInput" id="heroDropChooseBtn">Datei wählen</label>
           </div>
-          <a href="../jpg2pdf/" class="hero-drop-zone__img-link" id="heroImgHint">Haben Sie ein Bild?</a>
+          <a href="/de/jpg-zu-pdf/" class="hero-drop-zone__img-link" id="heroImgHint">Hast du ein Bild?</a>
         </div>
         <div class="hero-drop-zone__ready" id="heroDropReady" hidden>
           <span class="hero-drop-zone__check">✓</span>
@@ -277,62 +279,62 @@
   <section id="toolsGrid" class="tools-section js-home-only">
     <div class="section-label">Alle Werkzeuge</div>
     <div class="tools-grid">
-      <a href="/merge-pdf/" class="tool-card featured" data-tool="merge" aria-label="PDF Zusammenfügen">
+      <a href="/de/pdf-zusammenfuehren/" class="tool-card featured" data-tool="merge" aria-label="PDF Zusammenfügen">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
         <div class="tool-name">PDF Zusammenfügen</div>
         <div class="tool-desc">Beliebig viele PDFs kombinieren — ohne Einschränkungen</div>
       </a>
-      <a href="/split-pdf/" class="tool-card" data-tool="split" aria-label="PDF Aufteilen">
+      <a href="/de/pdf-aufteilen/" class="tool-card" data-tool="split" aria-label="PDF Aufteilen">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg></div>
         <div class="tool-name">PDF Aufteilen</div>
         <div class="tool-desc">Seiten extrahieren oder in Einzeldateien aufteilen</div>
       </a>
-      <a href="/compress-pdf/" class="tool-card" data-tool="compress" aria-label="PDF Komprimieren">
+      <a href="/de/pdf-komprimieren/" class="tool-card" data-tool="compress" aria-label="PDF Komprimieren">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/><path d="M5 2h14"/><path d="M5 22h14"/></svg></div>
         <div class="tool-name">PDF Komprimieren</div>
         <div class="tool-desc">Dateigröße reduzieren ohne Qualitätsverlust — lokal</div>
       </a>
-      <a href="/jpg2pdf/" class="tool-card" data-tool="jpg2pdf" aria-label="JPG zu PDF">
+      <a href="/de/jpg-zu-pdf/" class="tool-card" data-tool="jpg2pdf" aria-label="JPG zu PDF">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
         <div class="tool-name">JPG zu PDF</div>
         <div class="tool-desc">Bilder sofort in ein PDF umwandeln</div>
       </a>
-      <a href="/pdf2jpg/" class="tool-card" data-tool="pdf2jpg" aria-label="PDF zu JPG">
+      <a href="/de/pdf-zu-jpg/" class="tool-card" data-tool="pdf2jpg" aria-label="PDF zu JPG">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg></div>
         <div class="tool-name">PDF zu JPG</div>
         <div class="tool-desc">Seiten als hochwertige Bilder exportieren</div>
       </a>
-      <a href="/extract-pdf/" class="tool-card" data-tool="extract" aria-label="Seiten Extrahieren">
+      <a href="/de/seiten-extrahieren/" class="tool-card" data-tool="extract" aria-label="Seiten Extrahieren">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="M12 12v6"/><path d="m9 15 3-3 3 3"/></svg></div>
         <div class="tool-name">Seiten Extrahieren</div>
         <div class="tool-desc">Ausgewählte Seiten als neues PDF speichern</div>
       </a>
-      <a href="/watermark-pdf/" class="tool-card" data-tool="watermark" aria-label="Wasserzeichen">
+      <a href="/de/wasserzeichen-pdf/" class="tool-card" data-tool="watermark" aria-label="Wasserzeichen">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg></div>
         <div class="tool-name">Wasserzeichen</div>
         <div class="tool-desc">Text auf jeder Seite stempeln — diagonal oder als Kachel</div>
       </a>
-      <a href="/pagenum-pdf/" class="tool-card" data-tool="pagenum" aria-label="Seitenzahlen">
+      <a href="/de/seitenzahlen-pdf/" class="tool-card" data-tool="pagenum" aria-label="Seitenzahlen">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 22h14a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v4"/><polyline points="14 2 14 8 20 8"/><path d="M2 15h4v4"/><path d="M4 15v6"/><path d="M10 15v6"/><path d="M14 15v6"/></svg></div>
         <div class="tool-name">Seitenzahlen</div>
         <div class="tool-desc">Seitenzahlen einfügen — arabisch, römisch oder alphabetisch</div>
       </a>
-      <a href="/metadata-pdf/" class="tool-card" data-tool="meta" aria-label="Metadaten Bearbeiten">
+      <a href="/de/pdf-metadaten/" class="tool-card" data-tool="meta" aria-label="Metadaten Bearbeiten">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"/><path d="M7 7h.01"/></svg></div>
         <div class="tool-name">Metadaten Bearbeiten</div>
         <div class="tool-desc">Titel, Autor und Schlüsselwörter ansehen und bearbeiten</div>
       </a>
-      <a href="/redact-pdf/" class="tool-card" data-tool="redact" aria-label="PDF Schwärzen">
+      <a href="/de/pdf-schwaerzen/" class="tool-card" data-tool="redact" aria-label="PDF Schwärzen">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 14l2 2 4-4"/></svg></div>
         <div class="tool-name">PDF Schwärzen</div>
         <div class="tool-desc">Wasserzeichen, Unterschriften oder sensible Daten lokal verbergen</div>
       </a>
-      <a href="/rotate-pdf/" class="tool-card" data-tool="rotate" aria-label="PDF Drehen">
+      <a href="/de/pdf-drehen/" class="tool-card" data-tool="rotate" aria-label="PDF Drehen">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg></div>
         <div class="tool-name">PDF Drehen</div>
         <div class="tool-desc">Seitenausrichtung in beliebigen PDFs korrigieren</div>
       </a>
-      <a href="/protect-pdf/" class="tool-card" data-tool="protect" aria-label="PDF Schützen">
+      <a href="/de/pdf-schuetzen/" class="tool-card" data-tool="protect" aria-label="PDF Schützen">
         <div class="tool-card-pulse" aria-hidden="true">
           <div class="tool-card-pulse__ring"></div>
           <div class="tool-card-pulse__dot"></div>
@@ -366,11 +368,16 @@
         <div class="tool-name">PDF Abflachen</div>
         <div class="tool-desc">Ausgefüllte Formularfelder fixieren — nicht editierbar machen</div>
       </a>
+      <a href="/compare-pdf/" class="tool-card" data-tool="compare" aria-label="PDF Vergleichen">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="8" height="18" rx="1"/><rect x="14" y="3" width="8" height="18" rx="1"/><path d="M10 8h4M10 12h4M10 16h4"/></svg></div>
+        <div class="tool-name">PDF Vergleichen</div>
+        <div class="tool-desc">Zwei PDFs vergleichen und Unterschiede hervorheben — kein Upload</div>
+      </a>
     </div>
   </section>
 
   <!-- ── Privacy trust bar ── -->
-  <section class="privacy-bar js-home-only" aria-label="Datenschutzgarantie">
+  <section id="privacyBar" class="privacy-bar js-home-only" aria-label="Datenschutzgarantie">
     <div class="privacy-bar__inner">
       <div class="privacy-bar__item">
         <div class="privacy-bar__icon" aria-hidden="true">
@@ -423,6 +430,10 @@
         <dt style="font-weight:600;color:var(--text);font-size:15px;margin-bottom:8px;">Funktioniert PDFree auf dem Smartphone?</dt>
         <dd style="color:var(--text2);font-size:14px;line-height:1.7;margin:0;">Ja. PDFree ist eine Progressive Web App (PWA) und funktioniert in jedem modernen Browser auf Desktop, Tablet und Smartphone.</dd>
       </div>
+      <div style="padding:20px 0;">
+        <dt style="font-weight:600;color:var(--text);font-size:15px;margin-bottom:8px;">Ist PDFree sicher für vertrauliche Dokumente?</dt>
+        <dd style="color:var(--text2);font-size:14px;line-height:1.7;margin:0;">Ja. Da deine Dateien dein Gerät nie verlassen, ist PDFree sicher für vertrauliche Dokumente, medizinische Unterlagen, Finanzberichte und juristische Dokumente. Die Verarbeitung erfolgt in einem isolierten WebAssembly-Thread — nichts wird protokolliert, gespeichert oder übermittelt.</dd>
+      </div>
     </dl>
   </section>
 
@@ -474,7 +485,7 @@
           <h3 id="successTitle">Fertig!</h3>
           <p  id="successDesc"></p>
         </div>
-        <button id="downloadBtn" class="download-btn" type="button">⬇ Download</button>
+        <button id="downloadBtn" class="download-btn" type="button">⬇ Herunterladen</button>
         <button id="shareBtn" class="share-btn" type="button" style="display:none" aria-label="Send file via device apps"></button>
       </div>
 
