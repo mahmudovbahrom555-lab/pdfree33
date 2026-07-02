@@ -120,6 +120,7 @@
       <a href="../pdf-to-word/" class="nav-link" data-tool="pdf2word">PDF→Word</a>
       <a href="../flatten-pdf/" class="nav-link" data-tool="flatten">Flatten</a>
     </div>
+    <button id="themeToggle" class="theme-toggle" aria-label="Alternar modo oscuro" title="Alternar modo oscuro"></button>
   </nav>
 
   <!-- ── Hero ── -->
@@ -132,9 +133,13 @@
       <div class="hero-drop-zone" id="heroDropZone">
         <input type="file" id="heroFileInput" accept=".pdf" multiple hidden>
         <div class="hero-drop-zone__idle" id="heroDropIdle">
-          <span class="hero-drop-zone__label" id="heroDropLabel">Arrastra tu PDF aquí</span>
-          <span class="hero-drop-zone__sep" id="heroDropOr">o</span>
-          <label class="hero-drop-zone__btn" for="heroFileInput" id="heroDropChooseBtn">Elegir archivo</label>
+          <span class="hero-drop-zone__upload-icon" aria-hidden="true"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></span>
+          <span class="hero-drop-zone__label" id="heroDropLabel">Empieza con tu PDF</span>
+          <div class="hero-drop-zone__choose-row">
+            <span class="hero-drop-zone__drop-text">Arrastra tu PDF aquí</span>
+            <span class="hero-drop-zone__sep" id="heroDropOr">o</span>
+            <label class="hero-drop-zone__btn" for="heroFileInput" id="heroDropChooseBtn">Elegir archivo</label>
+          </div>
           <a href="../jpg2pdf/" class="hero-drop-zone__img-link" id="heroImgHint">¿Tienes una imagen?</a>
         </div>
         <div class="hero-drop-zone__ready" id="heroDropReady" hidden>
@@ -143,15 +148,47 @@
           <button class="hero-drop-zone__clear" id="heroClearFile" type="button" aria-label="Quitar archivo">×</button>
         </div>
       </div>
-      <div class="search-or-divider">
-        <span id="searchOrLabel">o busca por nombre</span>
+      <p class="hero-section-label" id="heroFeaturedLabel">Herramientas populares</p>
+      <div class="hero-featured" id="heroFeatured">
+        <a href="/es/unir-pdf/" class="hero-fcard" data-tool="merge" onclick="window.plausible&&window.plausible('Card Click',{props:{tool:'merge'}})">
+          <span class="hero-fcard__icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span>
+          <span class="hero-fcard__body"><span class="hero-fcard__name">Unir PDF</span><span class="hero-fcard__desc">Combina varios PDFs en uno</span></span>
+          <span class="hero-fcard__arrow" aria-hidden="true">→</span>
+        </a>
+        <a href="/es/comprimir-pdf/" class="hero-fcard" data-tool="compress" onclick="window.plausible&&window.plausible('Card Click',{props:{tool:'compress'}})">
+          <span class="hero-fcard__icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/><path d="M5 2h14"/><path d="M5 22h14"/></svg></span>
+          <span class="hero-fcard__body"><span class="hero-fcard__name">Comprimir PDF</span><span class="hero-fcard__desc">Reduce el tamaño, mantén la calidad</span></span>
+          <span class="hero-fcard__arrow" aria-hidden="true">→</span>
+        </a>
+        <a href="/es/dividir-pdf/" class="hero-fcard" data-tool="split" onclick="window.plausible&&window.plausible('Card Click',{props:{tool:'split'}})">
+          <span class="hero-fcard__icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg></span>
+          <span class="hero-fcard__body"><span class="hero-fcard__name">Dividir PDF</span><span class="hero-fcard__desc">Extrae páginas o divide en archivos</span></span>
+          <span class="hero-fcard__arrow" aria-hidden="true">→</span>
+        </a>
+        <a href="/es/pdf-a-jpg/" class="hero-fcard" data-tool="pdf2jpg" onclick="window.plausible&&window.plausible('Card Click',{props:{tool:'pdf2jpg'}})">
+          <span class="hero-fcard__icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg></span>
+          <span class="hero-fcard__body"><span class="hero-fcard__name">PDF a JPG</span><span class="hero-fcard__desc">Convierte páginas PDF en imágenes</span></span>
+          <span class="hero-fcard__arrow" aria-hidden="true">→</span>
+        </a>
+        <a href="/es/proteger-pdf/" class="hero-fcard" data-tool="protect" onclick="window.plausible&&window.plausible('Card Click',{props:{tool:'protect'}})">
+          <span class="hero-fcard__icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+          <span class="hero-fcard__body"><span class="hero-fcard__name">Proteger PDF</span><span class="hero-fcard__desc">Protección con contraseña AES-256</span></span>
+          <span class="hero-fcard__arrow" aria-hidden="true">→</span>
+        </a>
+        <a href="/es/pdf-a-word/" class="hero-fcard" data-tool="pdf2word" onclick="window.plausible&&window.plausible('Card Click',{props:{tool:'pdf2word'}})">
+          <span class="hero-fcard__icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></span>
+          <span class="hero-fcard__body"><span class="hero-fcard__name">PDF a Word</span><span class="hero-fcard__desc">Convierte PDF a .docx editable</span></span>
+          <span class="hero-fcard__arrow" aria-hidden="true">→</span>
+        </a>
       </div>
+      <p class="hero-chips-label" id="heroChipsLabel" hidden>¿Qué es mejor hacer con este archivo?</p>
+      <div class="search-popular" id="searchPopular" aria-label="Herramientas populares"></div>
+      <p class="hero-section-label hero-search-label">¿Buscas otra herramienta?</p>
       <div class="search-wrap">
         <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
         <input id="toolSearch" type="search" autocomplete="off" spellcheck="false"
                placeholder="unir PDF, comprimir, rotar, marca de agua, PDF a Word…" aria-label="Buscar herramientas PDF">
       </div>
-      <div class="search-popular" id="searchPopular" aria-label="Herramientas populares"></div>
       <div class="search-result" id="searchResult" hidden role="region" aria-label="Herramienta encontrada">
         <label class="search-result__info" id="srInfoLabel" for="srFileInput">
           <input type="file" id="srFileInput" accept=".pdf" hidden>
@@ -165,6 +202,14 @@
       </div>
       <p class="search-miss" id="searchMiss" hidden role="status"></p>
     </div>
+
+    <div id="heroBanner" class="hero-banner" hidden>
+      <span class="hero-banner__icon" aria-hidden="true">🛡</span>
+      <span class="hero-banner__text">Procesado localmente en tu navegador · Tus archivos nunca salen de tu dispositivo</span>
+      <button class="hero-banner__close" id="heroBannerClose" type="button" aria-label="Cerrar">×</button>
+    </div>
+
+    <div id="heroDetected" class="hero-detected" hidden></div>
 
     <div class="hero-features">
       <div class="hero-feature">
