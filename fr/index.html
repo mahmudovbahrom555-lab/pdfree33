@@ -83,14 +83,101 @@
   <link rel="stylesheet" href="../css/layout.css">
   <link rel="stylesheet" href="../css/components.css">
 
+    <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "PDFree",
+    "url": "https://pdfree.io/fr/",
+    "inLanguage": "fr",
+    "description": "Outils PDF gratuits qui fonctionnent entièrement dans votre navigateur. Aucun téléchargement de fichiers, aucune inscription requise.",
+    "applicationCategory": "UtilityApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+  }
+  </script>
   <script type="application/ld+json">
-{
+  {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Les outils PDFree téléchargent-ils mes fichiers ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Non. Chaque outil sur PDFree fonctionne entièrement dans votre navigateur. Vos fichiers ne sont jamais envoyés à un serveur — ils ne quittent jamais votre appareil."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "PDFree est-il vraiment gratuit ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Oui. Tous les outils sont gratuits sans limites de taille de fichier, sans filigranes et sans compte requis — maintenant et toujours."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Quels outils PDF propose PDFree ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "PDFree propose : fusionner, diviser, compresser, faire pivoter, protéger, censurer, filigrane, numérotation, éditeur de métadonnées, JPG en PDF, PDF en JPG, extraire des pages, dessiner sur PDF, remplir des formulaires, comparer — tout gratuit et privé."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "PDFree fonctionne-t-il sur mobile ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Oui. PDFree est une Progressive Web App (PWA) qui fonctionne dans tout navigateur moderne sur ordinateur, tablette et mobile — y compris iOS et Android."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "PDFree est-il sûr pour les documents confidentiels ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Oui. Vos fichiers ne quittant jamais votre appareil, PDFree convient aux documents médicaux, financiers et juridiques."
+      }
+    }
+  ]
+}
+  </script>
+  <script type="application/ld+json">
+  {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "PDFree",
+  "url": "https://pdfree.io/",
+  "logo": "https://pdfree.io/icons/icon-192.png",
+  "description": "PDFree propose des outils PDF gratuits et privés qui fonctionnent entièrement dans votre navigateur — sans upload, sans compte, sans limites de taille de fichier.",
+  "sameAs": [
+    "https://github.com/mahmudovbahrom555-lab/pdfree33"
+  ],
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "contactType": "customer support",
+    "url": "https://pdfree.io/"
+  }
+}
+  </script>
+  <script type="application/ld+json">
+  {
   "@context": "https://schema.org",
   "@type": "WebSite",
   "name": "PDFree",
   "url": "https://pdfree.io/fr/",
   "inLanguage": "fr",
-  "description": "Outils PDF gratuits qui fonctionnent dans votre navigateur — aucun envoi, aucun compte, aucune limite."
+  "description": "Outils PDF gratuits qui fonctionnent dans votre navigateur — aucun envoi, aucun compte, aucune limite.",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "https://pdfree.io/fr/?q={search_term_string}"
+    },
+    "query-input": "required name=search_term_string"
+  }
 }
   </script>
 </head>
