@@ -255,6 +255,7 @@ export const TOOLS = {
     multi:       false,
     accept:      '.pdf',
     implemented: true,
+    inline:      false, // requires dedicated page HTML (fillOptions div)
   },
   'compress-email': {
     icon:        '📧',
@@ -280,6 +281,7 @@ export const TOOLS = {
     multi:       false,
     accept:      '.pdf',
     implemented: true,
+    inline:      false, // requires dedicated page HTML (pdfCanvas, drawCanvas, canvasArea)
   },
   ocr: {
     icon:        '🔍',
