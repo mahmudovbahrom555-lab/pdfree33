@@ -275,6 +275,34 @@ def _load_content(tool_id, lang):
     return seo_html, faq_items, howto_schema
 
 
+# ── Version manifest ─────────────────────────────────────────────────────────
+
+def _git_short_hash():
+    """Return short git commit hash of HEAD. Falls back to 'unknown'."""
+    try:
+        return subprocess.check_output(
+            ['git', 'rev-parse', '--short', 'HEAD'],
+            cwd=ROOT,
+            stderr=subprocess.DEVNULL,
+        ).decode().strip()
+    except Exception:
+        return 'unknown'
+
+
+def _write_version_json(hashes, dist):
+    """Write dist/version.json so smoke_prod.sh can verify production == local."""
+    from datetime import datetime, timezone
+    data = {
+        'version':       _git_short_hash(),
+        'date':          datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
+        'cache_version': hashes['cache_version'],
+    }
+    out = os.path.join(dist, 'version.json')
+    with open(out, 'w') as f:
+        json.dump(data, f)
+    print(f'  version.json  ({data["version"]})')
+
+
 # ── Sitemap ───────────────────────────────────────────────────────────────────
 
 def _git_lastmod(rel_path):
@@ -800,6 +828,10 @@ def main():
         # Generate sitemap
         print('Writing sitemap...')
         _write_sitemap(config, DIST)
+
+        # Write version manifest for production smoke testing
+        print('Writing version manifest...')
+        _write_version_json(hashes, DIST)
 
     print(f'\n{"DRY RUN OK" if dry_run else f"Build complete → dist/ ({n} tool pages)"}')
 
