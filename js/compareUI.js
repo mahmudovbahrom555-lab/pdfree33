@@ -7,15 +7,18 @@ import { showToast }  from './ui.js';
 // ── Constants ─────────────────────────────────────────────────────────────────
 const RENDER_SCALE   = 1.5;  // scale for page rendering
 const DIFF_THRESHOLD = 15;   // per-channel pixel difference to count as "changed"
-const PAGE_LIMIT     = 50;   // cap comparison here; show toast if exceeded
+const PAGE_LIMIT     = 50;   // show choice dialog above this many pages
 
 // ── State ─────────────────────────────────────────────────────────────────────
-let _files        = [];     // [File, File]
-let _viewMode     = 'diff'; // 'left' | 'right' | 'diff'
-let _pageData     = [];     // [{ urlLeft, urlRight, urlDiff, diffPct, pageIndex }]
-let _n1           = 0;      // page count of doc1 (set at start of _runCompare)
-let _n2           = 0;      // page count of doc2
-let _clickHandler = null;   // kept so we can removeEventListener on hide
+let _files         = [];
+let _viewMode      = 'diff'; // 'left' | 'right' | 'diff'
+let _pageData      = [];     // [{ urlLeft, urlRight, urlDiff, diffPct, pageIndex }]
+let _n1            = 0;      // page count of doc1 (set at start of _runCompare)
+let _n2            = 0;      // page count of doc2
+let _clickHandler  = null;   // kept so we can removeEventListener on hide
+let _cancelled     = false;  // set in hideCompareOptions to abort in-progress run
+let _resolveChoice = null;   // set during _showPageLimitChoice; resolved on hide to unblock
+let _startTime     = 0;      // set at loop start for time-remaining estimate
 
 // ── Public API ────────────────────────────────────────────────────────────────
 
@@ -29,15 +32,21 @@ export function initCompareOptions(files) {
 }
 
 export function hideCompareOptions() {
+  // Abort any in-progress comparison and unblock the page-limit choice dialog
+  _cancelled = true;
+  if (_resolveChoice) { _resolveChoice(0); _resolveChoice = null; }
+
   const el = document.getElementById('compareOptions');
   if (el) { el.style.display = 'none'; el.innerHTML = ''; }
-  // Remove the capture-phase listener so it doesn't block other tools' buttons
+
+  // Remove capture-phase listener so it doesn't block other tools' buttons
   const btn = document.getElementById('mergeBtn');
   if (btn && _clickHandler) {
     btn.removeEventListener('click', _clickHandler, true);
     delete btn._compareBound;
   }
   _clickHandler = null;
+  _revokePageData();  // free blob URLs before clearing _pageData
   _files    = [];
   _viewMode = 'diff';
   _pageData = [];
@@ -57,19 +66,16 @@ export function getCompareParams() {
 
 function _renderInitUI(container) {
   const count = _files.length;
-
   if (count === 0) {
     container.innerHTML = _infoBoxHTML('Drop two PDF files above to compare them.');
     return;
   }
-
   if (count === 1) {
     container.innerHTML = _infoBoxHTML(
       `<strong>${_esc(_files[0].name)}</strong> loaded — drop or add a second PDF to compare.`
     );
     return;
   }
-
   container.innerHTML = `
     <div style="padding:14px 16px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
       <p style="margin:0 0 8px;font-size:13px;color:var(--text2);font-weight:600;">Ready to compare:</p>
@@ -95,17 +101,14 @@ function _bindCompareBtn() {
       e.stopImmediatePropagation();
       return;
     }
-
     e.stopImmediatePropagation();
     btn.disabled = true;
-
     const bar = document.getElementById('progressBar');
     if (bar) bar.hidden = false;
-
     try {
       await _runCompare();
     } catch (err) {
-      showToast('Error: ' + err.message);
+      if (!_cancelled) showToast('Error: ' + err.message);
     } finally {
       btn.disabled = false;
       if (bar) bar.hidden = true;
@@ -118,6 +121,8 @@ function _bindCompareBtn() {
 // ── Main comparison pipeline ──────────────────────────────────────────────────
 
 async function _runCompare() {
+  _cancelled = false;
+
   _updateProgress(5, 'Loading PDF.js…');
   await loadPdfJs();
 
@@ -129,20 +134,22 @@ async function _runCompare() {
 
   _n1 = doc1.numPages;
   _n2 = doc2.numPages;
-  const rawMax   = Math.max(_n1, _n2);
-  const capped   = rawMax > PAGE_LIMIT;
-  const maxPages = capped ? PAGE_LIMIT : rawMax;
+  const rawMax = Math.max(_n1, _n2);
 
-  if (capped) {
-    showToast(`Large PDF: comparing first ${PAGE_LIMIT} of ${rawMax} pages.`, 4000);
+  // Ask user when PDF is large — don't silently cap
+  let maxPages = rawMax;
+  if (rawMax > PAGE_LIMIT) {
+    maxPages = await _showPageLimitChoice(rawMax);
+    if (_cancelled || maxPages === 0) { doc1.destroy(); doc2.destroy(); return; }
   }
 
-  _pageData = [];
-
-  // Build results container once — pages stream into it as each finishes
+  _pageData  = [];
+  _startTime = Date.now();
   _initResultsContainer();
 
   for (let i = 1; i <= maxPages; i++) {
+    if (_cancelled) break;
+
     const pct = 15 + Math.round((i - 1) / maxPages * 75);
     _updateProgress(pct, `Comparing page ${i} of ${maxPages}…`);
 
@@ -151,33 +158,50 @@ async function _runCompare() {
       i <= _n1 ? _renderPage(doc1, i) : Promise.resolve(null),
       i <= _n2 ? _renderPage(doc2, i) : Promise.resolve(null),
     ]);
+    if (_cancelled) { _freeCanvas(canvasLeft); _freeCanvas(canvasRight); break; }
 
     let canvasDiff = null;
     let diffPct    = null;
-
     if (canvasLeft && canvasRight) {
-      const result = _buildDiff(canvasLeft, canvasRight);
+      const result = _buildDiff(canvasLeft, canvasRight); // frees normalised copies internally
       canvasDiff   = result.canvas;
       diffPct      = result.diffPct;
     }
 
-    const urlLeft = canvasLeft  ? canvasLeft.toDataURL()  : null;
-    const urlRight = canvasRight ? canvasRight.toDataURL() : null;
-    const urlDiff  = canvasDiff  ? canvasDiff.toDataURL() : (urlLeft ?? urlRight);
+    // Blob URLs: JPEG-compressed, no base64 overhead — ~6× less RAM than toDataURL
+    const urlLeft  = canvasLeft  ? await _canvasToURL(canvasLeft)  : null;
+    const urlRight = canvasRight ? await _canvasToURL(canvasRight) : null;
+    const urlDiff  = canvasDiff  ? await _canvasToURL(canvasDiff)  : (urlLeft ?? urlRight);
+
+    // Release GPU textures immediately after extracting blob URLs
+    _freeCanvas(canvasLeft);
+    _freeCanvas(canvasRight);
+    _freeCanvas(canvasDiff);
 
     const pageEntry = { urlLeft, urlRight, urlDiff, diffPct, pageIndex: i };
     _pageData.push(pageEntry);
 
-    // Stream: append this page to the DOM immediately, don't wait for the rest
+    // Stream: show this page now, don't wait for the rest
     _appendPageCard(pageEntry);
+
+    // Update progress with elapsed-time estimate
+    const elapsed   = Date.now() - _startTime;
+    const remaining = Math.round((maxPages - i) * (elapsed / i) / 1000);
+    const timeHint  = maxPages > i && remaining > 0 ? ` · ~${remaining}s left` : '';
+    _updateProgress(15 + Math.round(i / maxPages * 75), `Compared ${i} of ${maxPages}${timeHint}`);
+
+    // Yield: let browser paint the new card before starting the next diff
+    await new Promise(r => setTimeout(r, 0));
   }
 
   doc1.destroy();
   doc2.destroy();
 
-  _updateProgress(95, 'Rendering results…');
-  _finalizeSummary();
-  _updateProgress(100, 'Done');
+  if (!_cancelled) {
+    _updateProgress(95, 'Finalising…');
+    _finalizeSummary();
+    _updateProgress(100, 'Done');
+  }
 }
 
 // ── PDF helpers ───────────────────────────────────────────────────────────────
@@ -193,22 +217,18 @@ async function _openPdf(file) {
 }
 
 async function _renderPage(doc, pageNum) {
-  const page = await doc.getPage(pageNum);
-  const vp   = page.getViewport({ scale: RENDER_SCALE });
-
+  const page    = await doc.getPage(pageNum);
+  const vp      = page.getViewport({ scale: RENDER_SCALE });
   const canvas  = document.createElement('canvas');
   canvas.width  = Math.round(vp.width);
   canvas.height = Math.round(vp.height);
-
-  const ctx = canvas.getContext('2d');
-  await page.render({ canvasContext: ctx, viewport: vp }).promise;
+  await page.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
   return canvas;
 }
 
 // ── Pixel diff ────────────────────────────────────────────────────────────────
 
 function _buildDiff(canvasA, canvasB) {
-  // Normalise dimensions — pad smaller canvas with white to match larger
   const w = Math.max(canvasA.width,  canvasB.width);
   const h = Math.max(canvasA.height, canvasB.height);
 
@@ -217,8 +237,13 @@ function _buildDiff(canvasA, canvasB) {
 
   const imgA = ctxA.getImageData(0, 0, w, h);
   const imgB = ctxB.getImageData(0, 0, w, h);
-  const dA   = imgA.data;
-  const dB   = imgB.data;
+
+  // Free normalised copies now that we have their pixel data
+  ctxA.canvas.width = 0; ctxA.canvas.height = 0;
+  ctxB.canvas.width = 0; ctxB.canvas.height = 0;
+
+  const dA    = imgA.data;
+  const dB    = imgB.data;
 
   const diffCanvas  = document.createElement('canvas');
   diffCanvas.width  = w;
@@ -234,17 +259,14 @@ function _buildDiff(canvasA, canvasB) {
     const dr = Math.abs(dA[i]   - dB[i]);
     const dg = Math.abs(dA[i+1] - dB[i+1]);
     const db = Math.abs(dA[i+2] - dB[i+2]);
-
     if (dr > DIFF_THRESHOLD || dg > DIFF_THRESHOLD || db > DIFF_THRESHOLD) {
-      // Highlight changed pixels in red
       dDiff[i]   = 220;
       dDiff[i+1] = 50;
       dDiff[i+2] = 50;
       dDiff[i+3] = 220;
       changed++;
     } else {
-      // Identical pixels — greyed out so diff highlights pop
-      const avg = Math.round((dA[i] * 0.299 + dA[i+1] * 0.587 + dA[i+2] * 0.114));
+      const avg  = Math.round(dA[i] * 0.299 + dA[i+1] * 0.587 + dA[i+2] * 0.114);
       dDiff[i]   = avg;
       dDiff[i+1] = avg;
       dDiff[i+2] = avg;
@@ -265,6 +287,68 @@ function _normaliseCanvas(src, w, h) {
   ctx.fillRect(0, 0, w, h);
   ctx.drawImage(src, 0, 0);
   return ctx;
+}
+
+// ── Canvas / URL helpers ──────────────────────────────────────────────────────
+
+function _canvasToURL(canvas) {
+  return new Promise(resolve =>
+    canvas.toBlob(blob => resolve(URL.createObjectURL(blob)), 'image/jpeg', 0.9)
+  );
+}
+
+function _freeCanvas(canvas) {
+  if (canvas) { canvas.width = 0; canvas.height = 0; }
+}
+
+function _revokePageData() {
+  // Use a Set to guard against revoking the same URL twice (urlDiff may equal urlLeft/urlRight)
+  const seen = new Set();
+  for (const p of _pageData) {
+    for (const url of [p.urlLeft, p.urlRight, p.urlDiff]) {
+      if (url && !seen.has(url)) { URL.revokeObjectURL(url); seen.add(url); }
+    }
+  }
+}
+
+// ── Page limit choice ─────────────────────────────────────────────────────────
+
+function _showPageLimitChoice(rawMax) {
+  return new Promise(resolve => {
+    _resolveChoice = resolve;
+    const container = document.getElementById('compareOptions');
+    if (!container) { resolve(PAGE_LIMIT); return; }
+
+    container.innerHTML = `
+      <div style="padding:16px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
+        <p style="margin:0 0 6px;font-size:14px;font-weight:600;color:var(--text);">Large document</p>
+        <p style="margin:0 0 14px;font-size:13px;color:var(--text2);">
+          This comparison has <strong>${rawMax} pages</strong>.
+          Comparing all pages may use significant memory and take several minutes.
+        </p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button id="cmpAll" type="button" style="
+            padding:8px 16px;border:1px solid var(--border);border-radius:8px;
+            background:var(--bg);color:var(--text);font-size:13px;font-weight:600;
+            cursor:pointer;font-family:inherit;">
+            Compare all ${rawMax} pages
+          </button>
+          <button id="cmpFirst" type="button" style="
+            padding:8px 16px;border:none;border-radius:8px;
+            background:var(--green);color:#fff;font-size:13px;font-weight:600;
+            cursor:pointer;font-family:inherit;">
+            Compare first ${PAGE_LIMIT} pages
+          </button>
+        </div>
+      </div>`;
+
+    container.querySelector('#cmpAll').addEventListener('click', () => {
+      _resolveChoice = null; resolve(rawMax);
+    });
+    container.querySelector('#cmpFirst').addEventListener('click', () => {
+      _resolveChoice = null; resolve(PAGE_LIMIT);
+    });
+  });
 }
 
 // ── Streaming result display ──────────────────────────────────────────────────
@@ -307,11 +391,11 @@ function _appendPageCard(pageEntry) {
 function _finalizeSummary() {
   const el = document.getElementById('compareSummary');
   if (!el) return;
-  const maxPages     = _pageData.length;
+  const total        = _pageData.length;
   const totalChanged = _pageData.filter(p => p.diffPct !== null && p.diffPct >= 0.05).length;
   el.innerHTML = `
     <div style="margin-bottom:16px;font-size:13px;color:var(--text2);">
-      <strong style="color:var(--text)">${maxPages} page${maxPages !== 1 ? 's' : ''} compared</strong>
+      <strong style="color:var(--text)">${total} page${total !== 1 ? 's' : ''} compared</strong>
       &nbsp;&middot;&nbsp;
       ${totalChanged === 0
         ? '<span style="color:#16a34a;">&#x2713; No differences found</span>'
@@ -382,8 +466,7 @@ function _refreshModeUI(container) {
     btn.style.background = active ? 'var(--green)' : 'transparent';
     btn.style.color      = active ? '#fff' : 'var(--text2)';
   });
-
-  // Swap images using cached URLs — no re-encoding
+  // Swap images using cached blob URLs — no re-encoding
   _pageData.forEach(p => {
     const card = container.querySelector(`[data-page="${p.pageIndex}"]`);
     if (!card) return;
