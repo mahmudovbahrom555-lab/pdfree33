@@ -132,10 +132,11 @@ async function _runCompare() {
   await loadPdfJs();
 
   _updateProgress(10, 'Opening PDFs…');
-  const [doc1, doc2] = await Promise.all([
-    _openPdf(_files[0]),
-    _openPdf(_files[1]),
-  ]);
+  // Sequential so password dialogs never overlap
+  const doc1 = await _openPdf(_files[0]);
+  if (_cancelled) return;
+  const doc2 = await _openPdf(_files[1]);
+  if (_cancelled) return;
 
   _n1 = doc1.numPages;
   _n2 = doc2.numPages;
@@ -211,12 +212,76 @@ async function _runCompare() {
 
 async function _openPdf(file) {
   const buf = await file.arrayBuffer();
-  return window.pdfjsLib.getDocument({
-    data: new Uint8Array(buf),
-    verbosity: 0,
-    disableJavaScript: true,
-    ignoreEncryption: true,
-  }).promise;
+  return new Promise((resolve, reject) => {
+    const task = window.pdfjsLib.getDocument({
+      data:              new Uint8Array(buf),
+      verbosity:         0,
+      disableJavaScript: true,
+      onPassword: (updateCallback, reason) => {
+        _promptPassword(file.name, reason,
+          pw  => updateCallback(pw),
+          ()  => {
+            _cancelled = true;
+            task.destroy();
+            reject(new Error('cancelled'));
+            const c = document.getElementById('compareOptions');
+            if (c) _renderInitUI(c);
+          }
+        );
+      },
+    });
+    task.promise.then(resolve).catch(err => {
+      if (_cancelled) { reject(new Error('cancelled')); return; }
+      reject(err);
+    });
+  });
+}
+
+function _promptPassword(filename, reason, onSubmit, onCancel) {
+  const container = document.getElementById('compareOptions');
+  if (!container) { onCancel(); return; }
+
+  // 1 = NEED_PASSWORD, 2 = INCORRECT_PASSWORD
+  const isRetry   = reason === 2;
+  const shortName = filename.length > 32 ? filename.slice(0, 29) + '…' : filename;
+
+  container.innerHTML = `
+    <div style="padding:24px 20px;border:1px solid var(--border);border-radius:12px;
+      background:var(--surface);max-width:380px;margin:0 auto;text-align:center;">
+      <div style="font-size:28px;margin-bottom:10px;">🔒</div>
+      <p style="margin:0 0 4px;font-size:15px;font-weight:700;color:var(--text);">Password protected</p>
+      <p style="margin:0 0 16px;font-size:12px;color:var(--text2);word-break:break-all;">${_esc(shortName)}</p>
+      ${isRetry ? `
+        <div style="margin:0 0 14px;padding:8px 10px;background:#fef2f2;
+          border:1px solid #fecaca;border-radius:6px;font-size:13px;color:#dc2626;">
+          Incorrect password — try again.
+        </div>` : ''}
+      <input id="pwInput" type="password" placeholder="Enter password…" autocomplete="current-password"
+        style="width:100%;box-sizing:border-box;padding:9px 12px;margin-bottom:12px;
+          border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;
+          background:var(--bg);color:var(--text);outline:none;text-align:left;">
+      <div style="display:flex;gap:8px;justify-content:flex-end;">
+        <button id="pwCancel" type="button" style="padding:8px 16px;border:1px solid var(--border);
+          border-radius:8px;background:var(--bg);color:var(--text);font-size:13px;font-weight:600;
+          cursor:pointer;font-family:inherit;">Cancel</button>
+        <button id="pwOpen" type="button" style="padding:8px 16px;border:none;border-radius:8px;
+          background:var(--green);color:#fff;font-size:13px;font-weight:600;
+          cursor:pointer;font-family:inherit;">Open</button>
+      </div>
+    </div>`;
+
+  const input = container.querySelector('#pwInput');
+  input.focus();
+
+  const submit = () => {
+    const pw = input.value;
+    if (!pw) { input.focus(); return; }
+    onSubmit(pw);
+  };
+
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') submit(); });
+  container.querySelector('#pwOpen').addEventListener('click', submit);
+  container.querySelector('#pwCancel').addEventListener('click', onCancel);
 }
 
 async function _renderPage(doc, pageNum) {
