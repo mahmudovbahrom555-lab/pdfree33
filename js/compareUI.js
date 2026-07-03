@@ -82,8 +82,8 @@ function _renderInitUI(container) {
     <div style="padding:14px 16px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
       <p style="margin:0 0 8px;font-size:13px;color:var(--text2);font-weight:600;">Ready to compare:</p>
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:4px;">
-        <span style="padding:4px 10px;background:var(--bg);border:1px solid var(--border);border-radius:6px;font-size:12px;color:var(--text);">Original: ${_esc(_truncName(_files[0].name))}</span>
-        <span style="padding:4px 10px;background:var(--bg);border:1px solid var(--border);border-radius:6px;font-size:12px;color:var(--text);">Modified: ${_esc(_truncName(_files[1].name))}</span>
+        <span style="padding:4px 10px;background:var(--bg);border:1px solid var(--border);border-radius:6px;font-size:12px;color:var(--text);">📄 ${_esc(_truncName(_files[0].name))}</span>
+        <span style="padding:4px 10px;background:var(--bg);border:1px solid var(--border);border-radius:6px;font-size:12px;color:var(--text);">📄 ${_esc(_truncName(_files[1].name))}</span>
       </div>
     </div>`;
 }
@@ -365,7 +365,7 @@ function _initResultsContainer() {
   let headerMsg = '';
   if (_n1 !== _n2) {
     headerMsg = `<div style="margin-bottom:12px;padding:10px 14px;background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;font-size:13px;color:#92400e;">
-      Page count differs: Original has ${_n1} page${_n1 !== 1 ? 's' : ''}, Modified has ${_n2} page${_n2 !== 1 ? 's' : ''}.
+      Page count differs: ${_esc(_truncName(_files[0].name))} has ${_n1} page${_n1 !== 1 ? 's' : ''}, ${_esc(_truncName(_files[1].name))} has ${_n2} page${_n2 !== 1 ? 's' : ''}.
     </div>`;
   }
 
@@ -415,8 +415,8 @@ function _finalizeSummary() {
   const parts = [`<strong style="color:var(--text)">${total} page${total !== 1 ? 's' : ''} compared</strong>`];
   if (identical > 0) parts.push(`<span style="color:#16a34a;">&#x2713; ${identical} identical</span>`);
   if (changed   > 0) parts.push(`<span style="color:#dc2626;">&#x26A0;&#xFE0E; ${changed} changed</span>`);
-  if (onlyA     > 0) parts.push(`<span style="color:#92400e;">${onlyA} only in Original</span>`);
-  if (onlyB     > 0) parts.push(`<span style="color:#92400e;">${onlyB} only in Modified</span>`);
+  if (onlyA     > 0) parts.push(`<span style="color:#92400e;">${onlyA} only in ${_esc(_tabLabel(0))}</span>`);
+  if (onlyB     > 0) parts.push(`<span style="color:#92400e;">${onlyB} only in ${_esc(_tabLabel(1))}</span>`);
 
   el.innerHTML = `<div style="margin-bottom:12px;font-size:13px;color:var(--text2);">${parts.join('&nbsp;&nbsp;·&nbsp;&nbsp;')}</div>`;
 }
@@ -513,7 +513,7 @@ function _modeSwitcherHTML() {
             ? 'background:var(--green);color:#fff;'
             : 'background:transparent;color:var(--text2);'
           }">
-          ${m === 'left' ? 'Original' : m === 'right' ? 'Modified' : 'Differences'}
+          ${m === 'left' ? _tabLabel(0) : m === 'right' ? _tabLabel(1) : 'Differences'}
         </button>`).join('')}
     </div>`;
 }
@@ -523,8 +523,8 @@ function _pageCardHTML({ urlLeft, urlRight, urlDiff, diffPct, pageIndex }) {
   const hasB = urlRight !== null;
 
   let badge = '';
-  if (!hasA)      badge = '<span style="font-size:11px;padding:2px 7px;background:#fef3c7;color:#92400e;border-radius:4px;font-weight:600;">Only in Modified</span>';
-  else if (!hasB) badge = '<span style="font-size:11px;padding:2px 7px;background:#fef3c7;color:#92400e;border-radius:4px;font-weight:600;">Only in Original</span>';
+  if (!hasA)      badge = `<span style="font-size:11px;padding:2px 7px;background:#fef3c7;color:#92400e;border-radius:4px;font-weight:600;">Only in ${_esc(_tabLabel(1))}</span>`;
+  else if (!hasB) badge = `<span style="font-size:11px;padding:2px 7px;background:#fef3c7;color:#92400e;border-radius:4px;font-weight:600;">Only in ${_esc(_tabLabel(0))}</span>`;
   else if (diffPct !== null) {
     const pctStr = diffPct < 0.1 ? '< 0.1' : diffPct.toFixed(1);
     badge = diffPct < 0.05
@@ -599,6 +599,11 @@ function _updateProgress(pct, label) {
 
 function _truncName(name) {
   return name.length > 40 ? name.slice(0, 37) + '…' : name;
+}
+
+function _tabLabel(idx) {
+  const name = _files[idx]?.name ?? `File ${idx + 1}`;
+  return name.length > 20 ? name.slice(0, 17) + '…' : name;
 }
 
 function _esc(str) {
