@@ -798,6 +798,7 @@ function initSearch() {
 
   function _setHeroFiles(files, source = 'drop') {
     _pendingFiles = files;
+    heroFileInput.value = ''; // reset so re-selecting the same file fires change
     heroDropIdle.hidden = true;
     heroFileName.textContent = files.length === 1
       ? t('hero_file_single', { name: files[0].name, size: _fmtSize(files[0].size) })
@@ -1055,6 +1056,19 @@ function initSearch() {
     trackSearchSelect(searchEl.value.trim(), _activeResult.key);
     showTool(_activeResult.key, true, files);
   });
+
+  // When files are loaded in the hero zone, intercept nav and featured-card
+  // clicks so the tool opens inline with the pending files instead of
+  // navigating away and losing them.
+  document.addEventListener('click', e => {
+    if (!_pendingFiles) return;
+    const anchor = e.target.closest('a[data-tool]');
+    if (!anchor) return;
+    const tool = anchor.dataset.tool;
+    if (!TOOLS[tool] || !TOOLS[tool].implemented) return;
+    e.preventDefault();
+    showTool(tool, true, _pendingFiles);
+  }, true); // capture phase: runs before inline onclick, after analytics
 }
 
 // ── Initial routing ──────────────────────────────────────────
