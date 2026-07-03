@@ -1037,6 +1037,7 @@ function initSearch() {
   // File chosen via search result card (no pending file path)
   srFileInput.addEventListener('change', () => {
     const files = Array.from(srFileInput.files);
+    srFileInput.value = ''; // reset so re-selecting the same file fires change again
     if (!files.length || !_activeResult) return;
     trackSearchSelect(searchEl.value.trim(), _activeResult.key);
     showTool(_activeResult.key, true, files);
@@ -1060,12 +1061,16 @@ function initSearch() {
   // When files are loaded in the hero zone, intercept nav and featured-card
   // clicks so the tool opens inline with the pending files instead of
   // navigating away and losing them.
+  // fill and draw-pdf are excluded: they need dedicated-page HTML
+  // (fillOptions div, canvas elements) that doesn't exist in index.html.
+  const NAVIGATE_ONLY_TOOLS = new Set(['fill', 'draw-pdf']);
   document.addEventListener('click', e => {
     if (!_pendingFiles) return;
     const anchor = e.target.closest('a[data-tool]');
     if (!anchor) return;
     const tool = anchor.dataset.tool;
     if (!TOOLS[tool] || !TOOLS[tool].implemented) return;
+    if (NAVIGATE_ONLY_TOOLS.has(tool)) return;
     e.preventDefault();
     showTool(tool, true, _pendingFiles);
   }, true); // capture phase: runs before inline onclick, after analytics
