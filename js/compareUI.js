@@ -5,14 +5,17 @@ import { loadPdfJs }  from './pdf2jpgUI.js';
 import { showToast }  from './ui.js';
 
 // ── Constants ─────────────────────────────────────────────────────────────────
-const RENDER_SCALE = 1.5;   // scale for page rendering
-const DIFF_THRESHOLD = 15;  // per-channel pixel difference to count as "changed"
+const RENDER_SCALE   = 1.5;  // scale for page rendering
+const DIFF_THRESHOLD = 15;   // per-channel pixel difference to count as "changed"
+const PAGE_LIMIT     = 50;   // cap comparison here; show toast if exceeded
 
 // ── State ─────────────────────────────────────────────────────────────────────
-let _files       = [];   // [File, File]
-let _viewMode    = 'diff'; // 'left' | 'right' | 'diff'
-let _pageData    = [];   // [{ urlLeft, urlRight, urlDiff, diffPct, pageIndex }]
-let _clickHandler = null; // reference kept so we can removeEventListener on hide
+let _files        = [];     // [File, File]
+let _viewMode     = 'diff'; // 'left' | 'right' | 'diff'
+let _pageData     = [];     // [{ urlLeft, urlRight, urlDiff, diffPct, pageIndex }]
+let _n1           = 0;      // page count of doc1 (set at start of _runCompare)
+let _n2           = 0;      // page count of doc2
+let _clickHandler = null;   // kept so we can removeEventListener on hide
 
 // ── Public API ────────────────────────────────────────────────────────────────
 
@@ -38,6 +41,8 @@ export function hideCompareOptions() {
   _files    = [];
   _viewMode = 'diff';
   _pageData = [];
+  _n1 = 0;
+  _n2 = 0;
 }
 
 export function getCompareParams() {
@@ -65,7 +70,6 @@ function _renderInitUI(container) {
     return;
   }
 
-  // Two files ready
   container.innerHTML = `
     <div style="padding:14px 16px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
       <p style="margin:0 0 8px;font-size:13px;color:var(--text2);font-weight:600;">Ready to compare:</p>
@@ -123,42 +127,56 @@ async function _runCompare() {
     _openPdf(_files[1]),
   ]);
 
-  const n1 = doc1.numPages;
-  const n2 = doc2.numPages;
-  const maxPages = Math.max(n1, n2);
+  _n1 = doc1.numPages;
+  _n2 = doc2.numPages;
+  const rawMax   = Math.max(_n1, _n2);
+  const capped   = rawMax > PAGE_LIMIT;
+  const maxPages = capped ? PAGE_LIMIT : rawMax;
+
+  if (capped) {
+    showToast(`Large PDF: comparing first ${PAGE_LIMIT} of ${rawMax} pages.`, 4000);
+  }
 
   _pageData = [];
+
+  // Build results container once — pages stream into it as each finishes
+  _initResultsContainer();
 
   for (let i = 1; i <= maxPages; i++) {
     const pct = 15 + Math.round((i - 1) / maxPages * 75);
     _updateProgress(pct, `Comparing page ${i} of ${maxPages}…`);
 
-    const canvasLeft  = i <= n1 ? await _renderPage(doc1, i) : null;
-    const canvasRight = i <= n2 ? await _renderPage(doc2, i) : null;
+    // Render both pages in parallel — ~2× faster than sequential await
+    const [canvasLeft, canvasRight] = await Promise.all([
+      i <= _n1 ? _renderPage(doc1, i) : Promise.resolve(null),
+      i <= _n2 ? _renderPage(doc2, i) : Promise.resolve(null),
+    ]);
 
     let canvasDiff = null;
     let diffPct    = null;
 
     if (canvasLeft && canvasRight) {
-      const result  = _buildDiff(canvasLeft, canvasRight);
-      canvasDiff    = result.canvas;
-      diffPct       = result.diffPct;
+      const result = _buildDiff(canvasLeft, canvasRight);
+      canvasDiff   = result.canvas;
+      diffPct      = result.diffPct;
     }
 
-    // Cache data URLs now — avoids re-encoding on every mode switch
-    const urlLeft  = canvasLeft  ? canvasLeft.toDataURL()  : null;
+    const urlLeft = canvasLeft  ? canvasLeft.toDataURL()  : null;
     const urlRight = canvasRight ? canvasRight.toDataURL() : null;
-    const urlDiff  = canvasDiff  ? canvasDiff.toDataURL()
-                   : (urlLeft ?? urlRight);
+    const urlDiff  = canvasDiff  ? canvasDiff.toDataURL() : (urlLeft ?? urlRight);
 
-    _pageData.push({ urlLeft, urlRight, urlDiff, diffPct, pageIndex: i });
+    const pageEntry = { urlLeft, urlRight, urlDiff, diffPct, pageIndex: i };
+    _pageData.push(pageEntry);
+
+    // Stream: append this page to the DOM immediately, don't wait for the rest
+    _appendPageCard(pageEntry);
   }
 
   doc1.destroy();
   doc2.destroy();
 
   _updateProgress(95, 'Rendering results…');
-  _showResults(n1, n2);
+  _finalizeSummary();
   _updateProgress(100, 'Done');
 }
 
@@ -190,7 +208,7 @@ async function _renderPage(doc, pageNum) {
 // ── Pixel diff ────────────────────────────────────────────────────────────────
 
 function _buildDiff(canvasA, canvasB) {
-  // Normalise dimensions — pad smaller canvas to match larger
+  // Normalise dimensions — pad smaller canvas with white to match larger
   const w = Math.max(canvasA.width,  canvasB.width);
   const h = Math.max(canvasA.height, canvasB.height);
 
@@ -202,7 +220,6 @@ function _buildDiff(canvasA, canvasB) {
   const dA   = imgA.data;
   const dB   = imgB.data;
 
-  // Diff canvas
   const diffCanvas  = document.createElement('canvas');
   diffCanvas.width  = w;
   diffCanvas.height = h;
@@ -219,14 +236,14 @@ function _buildDiff(canvasA, canvasB) {
     const db = Math.abs(dA[i+2] - dB[i+2]);
 
     if (dr > DIFF_THRESHOLD || dg > DIFF_THRESHOLD || db > DIFF_THRESHOLD) {
-      // Highlight changed pixels in red/pink
+      // Highlight changed pixels in red
       dDiff[i]   = 220;
       dDiff[i+1] = 50;
       dDiff[i+2] = 50;
       dDiff[i+3] = 220;
       changed++;
     } else {
-      // Keep identical pixels at reduced opacity (greyed out) so diff pops
+      // Identical pixels — greyed out so diff highlights pop
       const avg = Math.round((dA[i] * 0.299 + dA[i+1] * 0.587 + dA[i+2] * 0.114));
       dDiff[i]   = avg;
       dDiff[i+1] = avg;
@@ -236,12 +253,9 @@ function _buildDiff(canvasA, canvasB) {
   }
 
   diffCtx.putImageData(diffImg, 0, 0);
-
-  const diffPct = total > 0 ? (changed / total * 100) : 0;
-  return { canvas: diffCanvas, diffPct };
+  return { canvas: diffCanvas, diffPct: total > 0 ? (changed / total * 100) : 0 };
 }
 
-/** Draw srcCanvas into a new canvas of (w, h), padding with white. */
 function _normaliseCanvas(src, w, h) {
   const dst = document.createElement('canvas');
   dst.width  = w;
@@ -253,26 +267,61 @@ function _normaliseCanvas(src, w, h) {
   return ctx;
 }
 
-// ── Result display ────────────────────────────────────────────────────────────
+// ── Streaming result display ──────────────────────────────────────────────────
 
-function _showResults(n1, n2) {
+function _initResultsContainer() {
   const container = document.getElementById('compareOptions');
   if (!container) return;
 
-  const maxPages = _pageData.length;
-  // Use same threshold as the page badge (0.05%) so summary matches card labels
-  const totalChanged = _pageData.filter(p => p.diffPct !== null && p.diffPct >= 0.05).length;
-
-  // Header info
   let headerMsg = '';
-  if (n1 !== n2) {
+  if (_n1 !== _n2) {
     headerMsg = `<div style="margin-bottom:12px;padding:10px 14px;background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;font-size:13px;color:#92400e;">
-      Page count differs: PDF A has ${n1} page${n1 !== 1 ? 's' : ''}, PDF B has ${n2} page${n2 !== 1 ? 's' : ''}.
+      Page count differs: PDF A has ${_n1} page${_n1 !== 1 ? 's' : ''}, PDF B has ${_n2} page${_n2 !== 1 ? 's' : ''}.
     </div>`;
   }
 
-  // Mode switcher
-  const modeSwitcher = `
+  container.innerHTML = `
+    <div id="compareResults">
+      ${headerMsg}
+      ${_modeSwitcherHTML()}
+      <div id="compareSummary"></div>
+      <div id="comparePages"></div>
+    </div>`;
+
+  container.querySelectorAll('[data-cmode]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      _viewMode = btn.dataset.cmode;
+      _refreshModeUI(container);
+    });
+  });
+}
+
+function _appendPageCard(pageEntry) {
+  const pagesEl = document.getElementById('comparePages');
+  if (!pagesEl) return;
+  const div = document.createElement('div');
+  div.innerHTML = _pageCardHTML(pageEntry);
+  pagesEl.appendChild(div.firstElementChild);
+}
+
+function _finalizeSummary() {
+  const el = document.getElementById('compareSummary');
+  if (!el) return;
+  const maxPages     = _pageData.length;
+  const totalChanged = _pageData.filter(p => p.diffPct !== null && p.diffPct >= 0.05).length;
+  el.innerHTML = `
+    <div style="margin-bottom:16px;font-size:13px;color:var(--text2);">
+      <strong style="color:var(--text)">${maxPages} page${maxPages !== 1 ? 's' : ''} compared</strong>
+      &nbsp;&middot;&nbsp;
+      ${totalChanged === 0
+        ? '<span style="color:#16a34a;">&#x2713; No differences found</span>'
+        : `<span style="color:#dc2626;">${totalChanged} page${totalChanged !== 1 ? 's' : ''} with differences</span>`
+      }
+    </div>`;
+}
+
+function _modeSwitcherHTML() {
+  return `
     <div style="display:flex;gap:6px;margin-bottom:16px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:4px;">
       ${['left', 'right', 'diff'].map(m => `
         <button data-cmode="${m}" type="button" style="
@@ -285,39 +334,9 @@ function _showResults(n1, n2) {
           ${m === 'left' ? 'PDF A' : m === 'right' ? 'PDF B' : 'Diff'}
         </button>`).join('')}
     </div>`;
-
-  // Summary line
-  const summary = `
-    <div style="margin-bottom:16px;font-size:13px;color:var(--text2);">
-      <strong style="color:var(--text)">${maxPages} page${maxPages !== 1 ? 's' : ''} compared</strong>
-      &nbsp;&middot;&nbsp;
-      ${totalChanged === 0
-        ? '<span style="color:#16a34a;">&#x2713; No differences found</span>'
-        : `<span style="color:#dc2626;">${totalChanged} page${totalChanged !== 1 ? 's' : ''} with differences</span>`
-      }
-    </div>`;
-
-  // Pages
-  const pagesHTML = _pageData.map(p => _pageCardHTML(p, n1, n2)).join('');
-
-  container.innerHTML = `
-    <div id="compareResults">
-      ${headerMsg}
-      ${modeSwitcher}
-      ${summary}
-      <div id="comparePages">${pagesHTML}</div>
-    </div>`;
-
-  // Mode switcher events
-  container.querySelectorAll('[data-cmode]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      _viewMode = btn.dataset.cmode;
-      _refreshModeUI(container);
-    });
-  });
 }
 
-function _pageCardHTML({ urlLeft, urlRight, urlDiff, diffPct, pageIndex }, n1, n2) {
+function _pageCardHTML({ urlLeft, urlRight, urlDiff, diffPct, pageIndex }) {
   const hasA = urlLeft  !== null;
   const hasB = urlRight !== null;
 
@@ -326,11 +345,9 @@ function _pageCardHTML({ urlLeft, urlRight, urlDiff, diffPct, pageIndex }, n1, n
   else if (!hasB) badge = '<span style="font-size:11px;padding:2px 7px;background:#fef3c7;color:#92400e;border-radius:4px;font-weight:600;">Only in A</span>';
   else if (diffPct !== null) {
     const pctStr = diffPct < 0.1 ? '< 0.1' : diffPct.toFixed(1);
-    if (diffPct < 0.05) {
-      badge = '<span style="font-size:11px;padding:2px 7px;background:#dcfce7;color:#166534;border-radius:4px;font-weight:600;">Identical</span>';
-    } else {
-      badge = `<span style="font-size:11px;padding:2px 7px;background:#fee2e2;color:#991b1b;border-radius:4px;font-weight:600;">${pctStr}% changed</span>`;
-    }
+    badge = diffPct < 0.05
+      ? '<span style="font-size:11px;padding:2px 7px;background:#dcfce7;color:#166534;border-radius:4px;font-weight:600;">Identical</span>'
+      : `<span style="font-size:11px;padding:2px 7px;background:#fee2e2;color:#991b1b;border-radius:4px;font-weight:600;">${pctStr}% changed</span>`;
   }
 
   const dataUrl = _getPageUrl({ urlLeft, urlRight, urlDiff, hasA, hasB });
@@ -366,7 +383,7 @@ function _refreshModeUI(container) {
     btn.style.color      = active ? '#fff' : 'var(--text2)';
   });
 
-  // Update each page canvas using cached URLs (no toDataURL re-encoding)
+  // Swap images using cached URLs — no re-encoding
   _pageData.forEach(p => {
     const card = container.querySelector(`[data-page="${p.pageIndex}"]`);
     if (!card) return;
@@ -395,7 +412,6 @@ function _updateProgress(pct, label) {
   if (fill) fill.style.width = pct + '%';
   if (lbl)  lbl.textContent  = label;
 }
-
 
 function _truncName(name) {
   return name.length > 40 ? name.slice(0, 37) + '…' : name;
