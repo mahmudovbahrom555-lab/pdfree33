@@ -11,10 +11,26 @@ Static site. Vanilla JS ES Modules, no framework. Build: `python3 scripts/build.
 ## Build & test
 ```
 python3 scripts/build.py   # generates dist/ (70 pages)
-npm test                   # 174 assertions across 8 test files
+npm test                   # 203 assertions across 9 test files
 npm run lint               # ESLint — must stay at 0 errors
 ```
 Always run build + lint after any change. Commit only when both pass.
+
+## Bug fix workflow
+
+A bug is NOT considered fixed until it is verified on production.
+
+Required sequence:
+1. Fix
+2. `python3 scripts/build.py`
+3. `npm run lint`
+4. `npm test`
+5. `git push origin main`
+6. Verify fix on pdfree.io
+7. Close task
+
+**Never assume local success means production success.**
+Local tests passing ≠ production running the new code.
 
 ## Homepage UX — CRITICAL CONSTRAINT
 **The hero section (`#hero`) must always be the first thing a user sees.**
