@@ -5,20 +5,23 @@ import { loadPdfJs }  from './pdf2jpgUI.js';
 import { showToast }  from './ui.js';
 
 // ── Constants ─────────────────────────────────────────────────────────────────
-const RENDER_SCALE   = 1.5;  // scale for page rendering
-const DIFF_THRESHOLD = 15;   // per-channel pixel difference to count as "changed"
-const PAGE_LIMIT     = 50;   // show choice dialog above this many pages
+const RENDER_SCALE   = 1.5;
+const DIFF_THRESHOLD = 15;
+const PAGE_LIMIT     = 50;
 
 // ── State ─────────────────────────────────────────────────────────────────────
-let _files         = [];
-let _viewMode      = 'diff'; // 'left' | 'right' | 'diff'
-let _pageData      = [];     // [{ urlLeft, urlRight, urlDiff, diffPct, pageIndex }]
-let _n1            = 0;      // page count of doc1 (set at start of _runCompare)
-let _n2            = 0;      // page count of doc2
-let _clickHandler  = null;   // kept so we can removeEventListener on hide
-let _cancelled     = false;  // set in hideCompareOptions to abort in-progress run
-let _resolveChoice = null;   // set during _showPageLimitChoice; resolved on hide to unblock
-let _startTime     = 0;      // set at loop start for time-remaining estimate
+let _files              = [];
+let _viewMode           = 'diff'; // 'left' | 'right' | 'diff'
+let _pageData           = [];     // [{ urlLeft, urlRight, urlDiff, diffPct, pageIndex }]
+let _n1                 = 0;
+let _n2                 = 0;
+let _clickHandler       = null;
+let _cancelled          = false;
+let _resolveChoice      = null;
+let _startTime          = 0;
+let _changedPageIndices = []; // page indices with diffPct >= 0.05 or missing page
+let _navIdx             = -1; // current position in _changedPageIndices (−1 = not yet navigated)
+let _filterActive       = false;
 
 // ── Public API ────────────────────────────────────────────────────────────────
 
@@ -32,26 +35,25 @@ export function initCompareOptions(files) {
 }
 
 export function hideCompareOptions() {
-  // Abort any in-progress comparison and unblock the page-limit choice dialog
   _cancelled = true;
   if (_resolveChoice) { _resolveChoice(0); _resolveChoice = null; }
-
   const el = document.getElementById('compareOptions');
   if (el) { el.style.display = 'none'; el.innerHTML = ''; }
-
-  // Remove capture-phase listener so it doesn't block other tools' buttons
   const btn = document.getElementById('mergeBtn');
   if (btn && _clickHandler) {
     btn.removeEventListener('click', _clickHandler, true);
     delete btn._compareBound;
   }
-  _clickHandler = null;
-  _revokePageData();  // free blob URLs before clearing _pageData
-  _files    = [];
-  _viewMode = 'diff';
-  _pageData = [];
-  _n1 = 0;
-  _n2 = 0;
+  _clickHandler       = null;
+  _revokePageData();
+  _files              = [];
+  _viewMode           = 'diff';
+  _pageData           = [];
+  _n1                 = 0;
+  _n2                 = 0;
+  _changedPageIndices = [];
+  _navIdx             = -1;
+  _filterActive       = false;
 }
 
 export function getCompareParams() {
@@ -80,8 +82,8 @@ function _renderInitUI(container) {
     <div style="padding:14px 16px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
       <p style="margin:0 0 8px;font-size:13px;color:var(--text2);font-weight:600;">Ready to compare:</p>
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:4px;">
-        <span style="padding:4px 10px;background:var(--bg);border:1px solid var(--border);border-radius:6px;font-size:12px;color:var(--text);">A: ${_esc(_truncName(_files[0].name))}</span>
-        <span style="padding:4px 10px;background:var(--bg);border:1px solid var(--border);border-radius:6px;font-size:12px;color:var(--text);">B: ${_esc(_truncName(_files[1].name))}</span>
+        <span style="padding:4px 10px;background:var(--bg);border:1px solid var(--border);border-radius:6px;font-size:12px;color:var(--text);">Original: ${_esc(_truncName(_files[0].name))}</span>
+        <span style="padding:4px 10px;background:var(--bg);border:1px solid var(--border);border-radius:6px;font-size:12px;color:var(--text);">Modified: ${_esc(_truncName(_files[1].name))}</span>
       </div>
     </div>`;
 }
@@ -121,7 +123,10 @@ function _bindCompareBtn() {
 // ── Main comparison pipeline ──────────────────────────────────────────────────
 
 async function _runCompare() {
-  _cancelled = false;
+  _cancelled          = false;
+  _filterActive       = false;
+  _changedPageIndices = [];
+  _navIdx             = -1;
 
   _updateProgress(5, 'Loading PDF.js…');
   await loadPdfJs();
@@ -136,7 +141,6 @@ async function _runCompare() {
   _n2 = doc2.numPages;
   const rawMax = Math.max(_n1, _n2);
 
-  // Ask user when PDF is large — don't silently cap
   let maxPages = rawMax;
   if (rawMax > PAGE_LIMIT) {
     maxPages = await _showPageLimitChoice(rawMax);
@@ -153,7 +157,7 @@ async function _runCompare() {
     const pct = 15 + Math.round((i - 1) / maxPages * 75);
     _updateProgress(pct, `Comparing page ${i} of ${maxPages}…`);
 
-    // Render both pages in parallel — ~2× faster than sequential await
+    // Render both pages in parallel
     const [canvasLeft, canvasRight] = await Promise.all([
       i <= _n1 ? _renderPage(doc1, i) : Promise.resolve(null),
       i <= _n2 ? _renderPage(doc2, i) : Promise.resolve(null),
@@ -163,7 +167,7 @@ async function _runCompare() {
     let canvasDiff = null;
     let diffPct    = null;
     if (canvasLeft && canvasRight) {
-      const result = _buildDiff(canvasLeft, canvasRight); // frees normalised copies internally
+      const result = _buildDiff(canvasLeft, canvasRight);
       canvasDiff   = result.canvas;
       diffPct      = result.diffPct;
     }
@@ -173,24 +177,22 @@ async function _runCompare() {
     const urlRight = canvasRight ? await _canvasToURL(canvasRight) : null;
     const urlDiff  = canvasDiff  ? await _canvasToURL(canvasDiff)  : (urlLeft ?? urlRight);
 
-    // Release GPU textures immediately after extracting blob URLs
+    // Release GPU textures immediately
     _freeCanvas(canvasLeft);
     _freeCanvas(canvasRight);
     _freeCanvas(canvasDiff);
 
     const pageEntry = { urlLeft, urlRight, urlDiff, diffPct, pageIndex: i };
     _pageData.push(pageEntry);
-
-    // Stream: show this page now, don't wait for the rest
     _appendPageCard(pageEntry);
 
-    // Update progress with elapsed-time estimate
+    // Time estimate
     const elapsed   = Date.now() - _startTime;
     const remaining = Math.round((maxPages - i) * (elapsed / i) / 1000);
     const timeHint  = maxPages > i && remaining > 0 ? ` · ~${remaining}s left` : '';
     _updateProgress(15 + Math.round(i / maxPages * 75), `Compared ${i} of ${maxPages}${timeHint}`);
 
-    // Yield: let browser paint the new card before starting the next diff
+    // Yield: let browser paint the card before starting the next diff
     await new Promise(r => setTimeout(r, 0));
   }
 
@@ -200,6 +202,7 @@ async function _runCompare() {
   if (!_cancelled) {
     _updateProgress(95, 'Finalising…');
     _finalizeSummary();
+    _buildControls();
     _updateProgress(100, 'Done');
   }
 }
@@ -234,7 +237,6 @@ function _buildDiff(canvasA, canvasB) {
 
   const ctxA = _normaliseCanvas(canvasA, w, h);
   const ctxB = _normaliseCanvas(canvasB, w, h);
-
   const imgA = ctxA.getImageData(0, 0, w, h);
   const imgB = ctxB.getImageData(0, 0, w, h);
 
@@ -302,13 +304,16 @@ function _freeCanvas(canvas) {
 }
 
 function _revokePageData() {
-  // Use a Set to guard against revoking the same URL twice (urlDiff may equal urlLeft/urlRight)
   const seen = new Set();
   for (const p of _pageData) {
     for (const url of [p.urlLeft, p.urlRight, p.urlDiff]) {
       if (url && !seen.has(url)) { URL.revokeObjectURL(url); seen.add(url); }
     }
   }
+}
+
+function _isChangedPage(p) {
+  return p.diffPct === null || p.diffPct >= 0.05;
 }
 
 // ── Page limit choice ─────────────────────────────────────────────────────────
@@ -360,7 +365,7 @@ function _initResultsContainer() {
   let headerMsg = '';
   if (_n1 !== _n2) {
     headerMsg = `<div style="margin-bottom:12px;padding:10px 14px;background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;font-size:13px;color:#92400e;">
-      Page count differs: PDF A has ${_n1} page${_n1 !== 1 ? 's' : ''}, PDF B has ${_n2} page${_n2 !== 1 ? 's' : ''}.
+      Page count differs: Original has ${_n1} page${_n1 !== 1 ? 's' : ''}, Modified has ${_n2} page${_n2 !== 1 ? 's' : ''}.
     </div>`;
   }
 
@@ -368,7 +373,16 @@ function _initResultsContainer() {
     <div id="compareResults">
       ${headerMsg}
       ${_modeSwitcherHTML()}
+      <div id="compareLegend" style="display:flex;gap:14px;margin-bottom:10px;font-size:11px;color:var(--text2);">
+        <span style="display:flex;align-items:center;gap:4px;">
+          <span style="display:inline-block;width:12px;height:12px;border-radius:2px;flex-shrink:0;background:rgba(220,50,50,0.85);"></span>Changed pixels
+        </span>
+        <span style="display:flex;align-items:center;gap:4px;">
+          <span style="display:inline-block;width:12px;height:12px;border-radius:2px;flex-shrink:0;background:rgba(150,150,150,0.4);"></span>Identical content
+        </span>
+      </div>
       <div id="compareSummary"></div>
+      <div id="compareControls" style="display:none;margin-bottom:14px;"></div>
       <div id="comparePages"></div>
     </div>`;
 
@@ -390,23 +404,107 @@ function _appendPageCard(pageEntry) {
 
 function _finalizeSummary() {
   const el = document.getElementById('compareSummary');
-  if (!el) return;
-  const total        = _pageData.length;
-  const totalChanged = _pageData.filter(p => p.diffPct !== null && p.diffPct >= 0.05).length;
-  el.innerHTML = `
-    <div style="margin-bottom:16px;font-size:13px;color:var(--text2);">
-      <strong style="color:var(--text)">${total} page${total !== 1 ? 's' : ''} compared</strong>
-      &nbsp;&middot;&nbsp;
-      ${totalChanged === 0
-        ? '<span style="color:#16a34a;">&#x2713; No differences found</span>'
-        : `<span style="color:#dc2626;">${totalChanged} page${totalChanged !== 1 ? 's' : ''} with differences</span>`
-      }
-    </div>`;
+  if (!el || !_pageData.length) return;
+
+  const total     = _pageData.length;
+  const identical = _pageData.filter(p =>  p.urlLeft && p.urlRight && p.diffPct !== null && p.diffPct < 0.05).length;
+  const changed   = _pageData.filter(p =>  p.urlLeft && p.urlRight && p.diffPct !== null && p.diffPct >= 0.05).length;
+  const onlyA     = _pageData.filter(p =>  p.urlLeft && !p.urlRight).length;
+  const onlyB     = _pageData.filter(p => !p.urlLeft &&  p.urlRight).length;
+
+  const parts = [`<strong style="color:var(--text)">${total} page${total !== 1 ? 's' : ''} compared</strong>`];
+  if (identical > 0) parts.push(`<span style="color:#16a34a;">&#x2713; ${identical} identical</span>`);
+  if (changed   > 0) parts.push(`<span style="color:#dc2626;">&#x26A0;&#xFE0E; ${changed} changed</span>`);
+  if (onlyA     > 0) parts.push(`<span style="color:#92400e;">${onlyA} only in Original</span>`);
+  if (onlyB     > 0) parts.push(`<span style="color:#92400e;">${onlyB} only in Modified</span>`);
+
+  el.innerHTML = `<div style="margin-bottom:12px;font-size:13px;color:var(--text2);">${parts.join('&nbsp;&nbsp;·&nbsp;&nbsp;')}</div>`;
 }
+
+function _buildControls() {
+  const el = document.getElementById('compareControls');
+  if (!el) return;
+
+  _changedPageIndices = _pageData.filter(_isChangedPage).map(p => p.pageIndex);
+  const totalChanged  = _changedPageIndices.length;
+  const totalPages    = _pageData.length;
+  if (totalChanged === 0) return;
+
+  el.style.display = '';
+  const btnStyle = `padding:5px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;`;
+
+  el.innerHTML = `
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+      ${totalChanged < totalPages ? `
+        <button id="cmpFilterBtn" type="button" style="${btnStyle}border:1px solid var(--border);background:var(--bg);color:var(--text);">
+          Show changed only&nbsp;(${totalChanged})
+        </button>` : ''}
+      <div style="display:flex;gap:6px;align-items:center;margin-left:auto;">
+        <button id="cmpPrev" type="button" style="${btnStyle}border:1px solid var(--border);background:var(--bg);color:var(--text);" aria-label="Previous change">← Prev</button>
+        <span id="cmpNavPos" style="font-size:12px;color:var(--text2);min-width:48px;text-align:center;">– / ${totalChanged}</span>
+        <button id="cmpNext" type="button" style="${btnStyle}border:1px solid var(--border);background:var(--bg);color:var(--text);" aria-label="Next change">Next →</button>
+      </div>
+    </div>`;
+
+  const filterBtn = el.querySelector('#cmpFilterBtn');
+  if (filterBtn) {
+    filterBtn.addEventListener('click', () => {
+      _filterActive = !_filterActive;
+      filterBtn.textContent = _filterActive
+        ? `Show all (${totalPages})`
+        : `Show changed only (${totalChanged})`;
+      filterBtn.style.background = _filterActive ? 'var(--green)' : 'var(--bg)';
+      filterBtn.style.color      = _filterActive ? '#fff'         : 'var(--text)';
+      filterBtn.style.border     = _filterActive ? 'none'         : '1px solid var(--border)';
+      _applyFilter();
+    });
+  }
+
+  el.querySelector('#cmpPrev').addEventListener('click', () => {
+    _navIdx = _navIdx < 0
+      ? totalChanged - 1
+      : (_navIdx - 1 + totalChanged) % totalChanged;
+    _updateNavDisplay(totalChanged);
+    _scrollToChanged(_navIdx);
+  });
+
+  el.querySelector('#cmpNext').addEventListener('click', () => {
+    _navIdx = _navIdx < 0
+      ? 0
+      : (_navIdx + 1) % totalChanged;
+    _updateNavDisplay(totalChanged);
+    _scrollToChanged(_navIdx);
+  });
+}
+
+function _updateNavDisplay(total) {
+  const pos = document.getElementById('cmpNavPos');
+  if (!pos) return;
+  pos.textContent = _navIdx >= 0
+    ? `${_navIdx + 1} / ${total ?? _changedPageIndices.length}`
+    : `– / ${total ?? _changedPageIndices.length}`;
+}
+
+function _scrollToChanged(idx) {
+  const pageIndex = _changedPageIndices[idx];
+  if (pageIndex == null) return;
+  const card = document.querySelector(`[data-page="${pageIndex}"]`);
+  if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function _applyFilter() {
+  _pageData.forEach(p => {
+    const card = document.querySelector(`[data-page="${p.pageIndex}"]`);
+    if (!card) return;
+    card.style.display = _filterActive && !_isChangedPage(p) ? 'none' : '';
+  });
+}
+
+// ── Mode switcher & card rendering ───────────────────────────────────────────
 
 function _modeSwitcherHTML() {
   return `
-    <div style="display:flex;gap:6px;margin-bottom:16px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:4px;">
+    <div style="display:flex;gap:6px;margin-bottom:12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:4px;">
       ${['left', 'right', 'diff'].map(m => `
         <button data-cmode="${m}" type="button" style="
           flex:1;padding:6px 0;border:none;border-radius:6px;font-size:13px;font-weight:600;
@@ -415,7 +513,7 @@ function _modeSwitcherHTML() {
             ? 'background:var(--green);color:#fff;'
             : 'background:transparent;color:var(--text2);'
           }">
-          ${m === 'left' ? 'PDF A' : m === 'right' ? 'PDF B' : 'Diff'}
+          ${m === 'left' ? 'Original' : m === 'right' ? 'Modified' : 'Differences'}
         </button>`).join('')}
     </div>`;
 }
@@ -425,8 +523,8 @@ function _pageCardHTML({ urlLeft, urlRight, urlDiff, diffPct, pageIndex }) {
   const hasB = urlRight !== null;
 
   let badge = '';
-  if (!hasA)      badge = '<span style="font-size:11px;padding:2px 7px;background:#fef3c7;color:#92400e;border-radius:4px;font-weight:600;">Only in B</span>';
-  else if (!hasB) badge = '<span style="font-size:11px;padding:2px 7px;background:#fef3c7;color:#92400e;border-radius:4px;font-weight:600;">Only in A</span>';
+  if (!hasA)      badge = '<span style="font-size:11px;padding:2px 7px;background:#fef3c7;color:#92400e;border-radius:4px;font-weight:600;">Only in Modified</span>';
+  else if (!hasB) badge = '<span style="font-size:11px;padding:2px 7px;background:#fef3c7;color:#92400e;border-radius:4px;font-weight:600;">Only in Original</span>';
   else if (diffPct !== null) {
     const pctStr = diffPct < 0.1 ? '< 0.1' : diffPct.toFixed(1);
     badge = diffPct < 0.05
@@ -460,13 +558,16 @@ function _getPageUrl({ urlLeft, urlRight, urlDiff, hasA, hasB }) {
 }
 
 function _refreshModeUI(container) {
-  // Update button styles
   container.querySelectorAll('[data-cmode]').forEach(btn => {
     const active = btn.dataset.cmode === _viewMode;
     btn.style.background = active ? 'var(--green)' : 'transparent';
     btn.style.color      = active ? '#fff' : 'var(--text2)';
   });
-  // Swap images using cached blob URLs — no re-encoding
+
+  // Legend is only meaningful in Differences mode
+  const leg = document.getElementById('compareLegend');
+  if (leg) leg.style.display = _viewMode === 'diff' ? 'flex' : 'none';
+
   _pageData.forEach(p => {
     const card = container.querySelector(`[data-page="${p.pageIndex}"]`);
     if (!card) return;
