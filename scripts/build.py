@@ -327,6 +327,8 @@ SPECIALTY_PAGES = [
     # compare-pdf is EN-only so stays here; ocr-pdf/pdf-to-word/draw-on-pdf
     # are handled by _lang_specialty below (with full locale alternates).
     'compare-pdf',
+    # pdf-to-word-free is EN-only (no locale variants)
+    'pdf-to-word-free',
     # Specific-intent landing pages
     'compress-pdf-for-email',
     'split-pdf-into-multiple-files',
@@ -517,7 +519,7 @@ def _write_sitemap(config, out_dir):
         # Emit a URL block for each language variant
         for lc, slug in loc_map.items():
             loc_url = f"{BASE_URL}/{slug}/"
-            lines += _url_block(loc_url, _git_lastmod(f"{slug}/index.html"), alts)
+            lines += _url_block(loc_url, _git_lastmod(f"{slug}/index.html"), alts, priority='0.85', changefreq='monthly')
 
     # ── Non-EN blog index pages ──────────────────────────────
     _locale_blog_indexes = [
