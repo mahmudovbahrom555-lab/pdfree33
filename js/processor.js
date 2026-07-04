@@ -1523,6 +1523,44 @@ function _assignLineToGridCols(items, colXs) {
   return cells.map(parts => parts.join(' '));
 }
 
+// Classifies a canvas crop as diagram (→ PNG) or photo (→ JPEG) using a fast
+// flat-area ratio heuristic.  Diagrams/schematics are 70–90% uniform solid
+// areas (white background, thick lines); photos have near-zero flat pairs.
+// Downscales to ≤150px before analysis so cost is always ≤22 500 comparisons.
+// Returns 'png' or 'jpeg'.
+function _p2wDetectFormat(canvas) {
+  const _THUMB_MAX   = 150;   // max dimension of analysis thumbnail
+  const _FLAT_DIFF   = 15;    // Manhattan RGB diff threshold for "flat" pair
+  const _FLAT_THRESH = 0.65;  // flat-pair ratio above which we choose PNG
+
+  const scale = Math.min(1, _THUMB_MAX / canvas.width, _THUMB_MAX / canvas.height);
+  const w     = Math.max(1, Math.floor(canvas.width  * scale));
+  const h     = Math.max(1, Math.floor(canvas.height * scale));
+
+  const thumb = document.createElement('canvas');
+  thumb.width  = w;
+  thumb.height = h;
+  const tCtx  = thumb.getContext('2d', { willReadFrequently: true });
+  tCtx.drawImage(canvas, 0, 0, w, h);
+  const px = tCtx.getImageData(0, 0, w, h).data;
+  thumb.width = 0; thumb.height = 0;
+
+  // Compare each pixel with its right neighbor, respecting row boundaries.
+  let flat = 0, total = 0;
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w - 1; x++) {
+      const i = (y * w + x) * 4;
+      const diff = Math.abs(px[i]   - px[i + 4]) +
+                   Math.abs(px[i+1] - px[i + 5]) +
+                   Math.abs(px[i+2] - px[i + 6]);
+      if (diff < _FLAT_DIFF) flat++;
+      total++;
+    }
+  }
+
+  return total > 0 && flat / total > _FLAT_THRESH ? 'png' : 'jpeg';
+}
+
 // Renders a PDF page once at 150 DPI, crops the Y-bands corresponding to
 // detected visual gaps (diagrams, grids, graphics absent from text extraction),
 // and returns ImageRun objects for non-blank crops.
@@ -1584,7 +1622,9 @@ async function _p2wRenderAllVisuals(pdfDoc, pageNum, pageH, gaps, textItems, bor
     }
     if (total === 0 || ink / total < _INK_THRESH) { tmp.width = 0; tmp.height = 0; continue; }
 
-    const blob = await new Promise(res => tmp.toBlob(res, 'image/jpeg', 0.92));
+    const fmt  = _p2wDetectFormat(tmp);
+    const blob = await new Promise(res =>
+      tmp.toBlob(res, `image/${fmt}`, fmt === 'jpeg' ? 0.92 : undefined));
     tmp.width = 0; tmp.height = 0;
     if (!blob) continue;
     const buf = await blob.arrayBuffer();
@@ -1593,7 +1633,7 @@ async function _p2wRenderAllVisuals(pdfDoc, pageNum, pageH, gaps, textItems, bor
     let h = Math.round(cropH        * 96 / _RENDER_DPI);
     if (w > _MAX_W_PX) { h = Math.round(h * _MAX_W_PX / w); w = _MAX_W_PX; }
 
-    gapRuns.push({ gi, imgRun: new ImageRun({ data: buf, transformation: { width: w, height: h }, type: 'jpg' }) });
+    gapRuns.push({ gi, imgRun: new ImageRun({ data: buf, transformation: { width: w, height: h }, type: fmt === 'png' ? 'png' : 'jpg' }) });
   }
 
   // ── Part 2: inline visual runs (render-and-subtract) ───────────────────────
@@ -1669,18 +1709,19 @@ async function _p2wRenderAllVisuals(pdfDoc, pageNum, pageH, gaps, textItems, bor
       tmp.height = cropH;
       tmp.getContext('2d').drawImage(canvas, 0, cyTop, canvas.width, cropH, 0, 0, canvas.width, cropH);
 
-      const blob = await new Promise(res => tmp.toBlob(res, 'image/jpeg', 0.92));
+      const fmt  = _p2wDetectFormat(tmp);
+      const blob = await new Promise(res =>
+        tmp.toBlob(res, `image/${fmt}`, fmt === 'jpeg' ? 0.92 : undefined));
       tmp.width = 0; tmp.height = 0;
       if (blob) {
         const buf = await blob.arrayBuffer();
         let w = Math.round(canvas.width * 96 / _RENDER_DPI);
         let h = Math.round(cropH        * 96 / _RENDER_DPI);
         if (w > _MAX_W_PX) { h = Math.round(h * _MAX_W_PX / w); w = _MAX_W_PX; }
-        // pdfY = top of the visual band in PDF coords (higher Y = higher on page)
         const pdfY = pageH - cyTop / scale;
         inlineRuns.push({
           pdfY,
-          imgRun: new ImageRun({ data: buf, transformation: { width: w, height: h }, type: 'jpg' }),
+          imgRun: new ImageRun({ data: buf, transformation: { width: w, height: h }, type: fmt === 'png' ? 'png' : 'jpg' }),
         });
       }
     }
@@ -1708,7 +1749,9 @@ async function _p2wRenderFullPage(pdfDoc, pageNum, ImageRun) {
   await page.render({ canvasContext: ctx, viewport: vp }).promise;
   page.cleanup?.();
 
-  const blob = await new Promise(res => canvas.toBlob(res, 'image/jpeg', 0.92));
+  const fmt  = _p2wDetectFormat(canvas);
+  const blob = await new Promise(res =>
+    canvas.toBlob(res, `image/${fmt}`, fmt === 'jpeg' ? 0.92 : undefined));
   canvas.width = 0; canvas.height = 0;
   canvas.remove();
   if (!blob) return null;
@@ -1718,7 +1761,7 @@ async function _p2wRenderFullPage(pdfDoc, pageNum, ImageRun) {
   let h = Math.round(vp.height * 96 / _RENDER_DPI);
   if (w > _MAX_W_PX) { h = Math.round(h * _MAX_W_PX / w); w = _MAX_W_PX; }
 
-  return new ImageRun({ data: buf, transformation: { width: w, height: h }, type: 'jpg' });
+  return new ImageRun({ data: buf, transformation: { width: w, height: h }, type: fmt === 'png' ? 'png' : 'jpg' });
 }
 
 // Image mode: render each page to canvas → embed JPEG in docx.
