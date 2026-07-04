@@ -162,6 +162,7 @@ window.PDFREE_LOCALE = {
   compress_target_over:      '⚠️ {size} — sigue superando el límite de {target}. Prueba dividir el PDF primero.',
 
   error_msg:           'Error: {msg}',
+  still_working:       'Trabajando… Los documentos grandes pueden tardar unos minutos.',
 
   // search
   search_placeholder: 'unir PDF, comprimir, rotar, marca de agua, PDF a Word…',

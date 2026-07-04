@@ -162,6 +162,7 @@ window.PDFREE_LOCALE = {
   compress_target_over:      '⚠️ {size} — dépasse encore la limite {target}. Essayez de diviser le PDF d\'abord.',
 
   error_msg:           'Erreur : {msg}',
+  still_working:       'En cours… Les documents volumineux peuvent prendre quelques minutes.',
 
   // search
   search_placeholder: 'fusionner PDF, compresser, pivoter, filigrane, PDF en Word…',

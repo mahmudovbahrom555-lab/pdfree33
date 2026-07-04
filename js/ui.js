@@ -51,6 +51,30 @@ export function hideProgress() {
   hide('progressBar');
   hide('progressLabel');
   id('progressFill').style.width = '0%';
+  clearLongOpHint();
+}
+
+// ── Long-operation hint ────────────────────────────────────
+
+let _slowTimer = null;
+
+/** Starts a timer; after delayMs shows "Still working…" below the progress bar */
+export function startLongOpHint(delayMs = 12000) {
+  clearLongOpHint();
+  _slowTimer = setTimeout(() => {
+    const el = id('slowHint');
+    if (!el) return;
+    el.textContent = t('still_working');
+    el.style.display = 'block';
+  }, delayMs);
+}
+
+/** Clears the hint timer and hides the hint element */
+export function clearLongOpHint() {
+  clearTimeout(_slowTimer);
+  _slowTimer = null;
+  const el = id('slowHint');
+  if (el) { el.style.display = 'none'; el.textContent = ''; }
 }
 
 // ── Page sections visibility ───────────────────────────────

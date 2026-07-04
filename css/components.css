@@ -319,6 +319,14 @@ button,
   font-family: var(--font-mono);
 }
 
+.slow-hint {
+  font-size: 11px;
+  color: var(--text3);
+  margin-top: 4px;
+  text-align: center;
+  opacity: 0.75;
+}
+
 /* ── Success card ── */
 .success-card {
   display: none;

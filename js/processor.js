@@ -8,7 +8,7 @@
 import { fmtSize } from './utils.js';
 import { t, tp } from './i18n.js';
 import { setProgress, hideProgress, setButtonProcessing, setButtonReady,
-         showCancelBtn, hideCancelBtn, showToast } from './ui.js';
+         showCancelBtn, hideCancelBtn, showToast, startLongOpHint } from './ui.js';
 import { selectedFiles, setFilesLocked } from './files.js';
 import { trackToolError } from './analytics.js';
 import { TOOLS, MAX_COMPRESS_MB } from './config.js';
@@ -141,6 +141,7 @@ export async function doProcess(currentTool, extraParams = {}) {
   setFilesLocked(true);
   setButtonProcessing();
   setProgress(5, t('prog_reading'));
+  startLongOpHint(12000);
   showCancelBtn();
 
   // ── Runner dispatch ────────────────────────────────────────────

@@ -176,6 +176,7 @@ const EN = {
   compress_target_over:      '⚠️ {size} — still over {target} limit. Try splitting the PDF first.',
 
   error_msg:            'Error: {msg}',
+  still_working:        'Still working… Large documents can take a few minutes.',
 
   // ── search (homepage intent search) ───────────────────────────
   search_placeholder: 'merge pdf, compress, rotate, watermark, pdf to word…',
