@@ -33,3 +33,21 @@
 /fill-pdf-form/ /fill/ 301
 /pdf-metadata/ /metadata-pdf/ 301
 /edit-metadata/ /metadata-pdf/ 301
+
+# Locale slugs at root → correct locale URL (no-prefix URLs 404 without these)
+/nivelar-pdf    /pt/nivelar-pdf/    301
+/nivelar-pdf/   /pt/nivelar-pdf/    301
+/pdf-abflachen  /de/pdf-abflachen/  301
+/pdf-abflachen/ /de/pdf-abflachen/  301
+/aplanar-pdf    /es/aplanar-pdf/    301
+/aplanar-pdf/   /es/aplanar-pdf/    301
+/aplatir-pdf    /fr/aplatir-pdf/    301
+/aplatir-pdf/   /fr/aplatir-pdf/    301
+/pdf-zu-word    /de/pdf-zu-word/    301
+/pdf-zu-word/   /de/pdf-zu-word/    301
+/pdf-a-word     /es/pdf-a-word/     301
+/pdf-a-word/    /es/pdf-a-word/     301
+/pdf-en-word    /fr/pdf-en-word/    301
+/pdf-en-word/   /fr/pdf-en-word/    301
+/pdf-para-word  /pt/pdf-para-word/  301
+/pdf-para-word/ /pt/pdf-para-word/  301
