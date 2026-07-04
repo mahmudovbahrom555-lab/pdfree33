@@ -46,7 +46,8 @@ import { initPointer, resetPointer }        from './drawPointer.js';
 import { initOcrOptions, hideOcrOptions,
          getOcrParams }                     from './ocrUI.js';
 import { initPdf2WordOptions, hidePdf2WordOptions,
-         getPdf2WordParams }               from './pdf2wordUI.js';
+         getPdf2WordParams,
+         renderP2wConfidence, clearP2wConfidence } from './pdf2wordUI.js';
 import { initCompareOptions, hideCompareOptions,
          getCompareParams }               from './compareUI.js';
 
@@ -345,6 +346,9 @@ registerTool('pdf2word', {
     if (p.loading) return 'Analysing PDF…';
     if (!p.pageCount) return null;
     return null;
+  },
+  onSuccess: ({ confidence }) => {
+    if (confidence) renderP2wConfidence(confidence);
   },
 });
 

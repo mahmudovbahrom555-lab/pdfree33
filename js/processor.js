@@ -859,10 +859,11 @@ async function _runPdf2Word(filesSnapshot, { mode = 'text', dpi = 150 } = {}) {
   }
 
   let paragraphs;
+  let confidence = null;
   try {
     if (mode === 'text') {
       setProgress(10, 'Extracting text…');
-      paragraphs = await _p2wExtractText(pdfDoc);
+      ({ paragraphs, confidence } = await _p2wExtractText(pdfDoc));
     } else {
       setProgress(10, 'Rendering pages…');
       paragraphs = await _p2wRenderImages(pdfDoc, dpi, effectivePages);
@@ -900,7 +901,7 @@ async function _runPdf2Word(filesSnapshot, { mode = 'text', dpi = 150 } = {}) {
   setProgress(100, t('prog_done'));
 
   document.dispatchEvent(new CustomEvent('pdfree:success', {
-    detail: { tool: 'pdf2word', blob, desc, filename }
+    detail: { tool: 'pdf2word', blob, desc, filename, confidence }
   }));
 }
 
@@ -953,6 +954,19 @@ async function _p2wExtractText(pdfDoc) {
   // ── Pass 1: collect all items + compute global median font size ────────────
   const pageData = [];
   const allSizes = [];
+
+  // Confidence stats — accumulated across both passes
+  const _cs = {
+    totalPages:         pdfDoc.numPages,
+    fullPageFallbacks:  0,   // pages with no text layer (scanned)
+    totalLines:         0,
+    rtlLines:           0,
+    mathChars:          0,
+    totalChars:         0,
+    totalTables:        0,   // filled in Pass 2
+    totalGapVisuals:    0,   // filled in Pass 2
+    totalInlineVisuals: 0,   // filled in Pass 2
+  };
 
   for (let p = 1; p <= pdfDoc.numPages; p++) {
     if (!isProcessing) break;
@@ -1019,6 +1033,23 @@ async function _p2wExtractText(pdfDoc) {
 
     allSizes.push(...items.map(i => i.fontSize).filter(s => s > 0));
     pageData.push({ lines, rotatedItems, borderGrids, pageH, items });
+
+    // Accumulate confidence stats from this page
+    _cs.totalLines += lines.length;
+    _cs.rtlLines   += lines.filter(ln => ln.rtl).length;
+    if (!lines.length) _cs.fullPageFallbacks++;
+    for (const item of items) {
+      const s = item.str;
+      _cs.totalChars += s.length;
+      // Math Unicode blocks: operators (2200-22FF), arrows (2190-21FF),
+      // letterlike (2100-214F), Greek (0370-03FF as formula proxy)
+      for (const ch of s) {
+        const cp = ch.codePointAt(0);
+        if ((cp >= 0x2190 && cp <= 0x22FF) || (cp >= 0x2100 && cp <= 0x214F) ||
+            (cp >= 0x0370 && cp <= 0x03FF)) _cs.mathChars++;
+      }
+    }
+
     page.cleanup?.();
   }
 
@@ -1267,6 +1298,11 @@ async function _p2wExtractText(pdfDoc) {
       inlineVisuals.push(...inlineRuns);
     }
 
+    // Accumulate confidence stats from Pass 2
+    _cs.totalTables        += tables.length;
+    _cs.totalGapVisuals    += gapRunsArr.length;
+    _cs.totalInlineVisuals += inlineVisuals.length;
+
     // Match rotated column-header items to tables by Y-range overlap.
     // rotatedHeaders: tableStartIdx → array of column label strings (left-to-right).
     const rotatedHeaders = new Map();
@@ -1485,7 +1521,57 @@ async function _p2wExtractText(pdfDoc) {
     _flushPara();   // flush last paragraph at end of each page's content
   }
 
-  return paragraphs;
+  return { paragraphs, confidence: _p2wConfidence(_cs, median) };
+}
+
+// Computes a confidence score from accumulated conversion stats.
+// Returns { score, level, detected, warnings } for UI display.
+function _p2wConfidence(cs, medianFontSize) {
+  let score = 100;
+  const detected = [];
+  const warnings = [];
+
+  // Positive findings (shown regardless of score)
+  detected.push(`${cs.totalPages} page${cs.totalPages !== 1 ? 's' : ''}`);
+  if (cs.totalTables > 0)
+    detected.push(`${cs.totalTables} table${cs.totalTables !== 1 ? 's' : ''}`);
+  const totalVisuals = cs.totalGapVisuals + cs.totalInlineVisuals;
+  if (totalVisuals > 0)
+    detected.push(`${totalVisuals} diagram${totalVisuals !== 1 ? 's' : ''}/image${totalVisuals !== 1 ? 's' : ''}`);
+
+  // Penalty: scanned pages (no text layer)
+  if (cs.fullPageFallbacks > 0) {
+    score -= Math.round(Math.min(50, (cs.fullPageFallbacks / cs.totalPages) * 60));
+    warnings.push('Scanned pages — text layer missing');
+  }
+
+  // Penalty: mathematical formulas (Greek + math operator Unicode blocks)
+  if (cs.totalChars > 0 && cs.mathChars / cs.totalChars > 0.03) {
+    score -= 25;
+    warnings.push('Mathematical formulas may not convert accurately');
+  }
+
+  // Penalty: very small fonts → unreliable line grouping
+  if (medianFontSize < 9) {
+    score -= 10;
+    warnings.push('Small fonts — text grouping may be imprecise');
+  }
+
+  // Penalty: heavy RTL content (BiDi is handled but not perfectly)
+  if (cs.totalLines > 0 && cs.rtlLines / cs.totalLines > 0.3) {
+    score -= 10;
+    warnings.push('Right-to-left text — layout may vary in Word');
+  }
+
+  // Penalty: dense inline visuals (strip-scan may produce false positives)
+  if (cs.totalInlineVisuals > 5) {
+    score -= 5;
+    warnings.push('Dense visual content — some elements may shift');
+  }
+
+  score = Math.max(0, Math.min(100, score));
+  const level = score >= 80 ? 'high' : score >= 55 ? 'medium' : 'low';
+  return { score, level, detected, warnings };
 }
 
 // Groups rotated text items (vertical column headers) by X-coordinate proximity.

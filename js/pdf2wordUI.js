@@ -83,6 +83,7 @@ export function hidePdf2WordOptions() {
   _file = null; _mode = 'text'; _dpi = 150;
   _pageCount = 0; _vpW = 0; _vpH = 0; _loading = false;
   ++_scanGen; // cancel any in-flight background scan
+  clearP2wConfidence();
 }
 
 // ── Size estimation ───────────────────────────────────────────────────────────
@@ -316,3 +317,34 @@ async function _scanTablesBackground(doc, gen) {
 
 // Export for processor.js (needs the cap value)
 export { MAX_IMAGE_PAGES };
+
+// ── Confidence report ─────────────────────────────────────────────────────────
+
+export function renderP2wConfidence({ score, level, detected, warnings }) {
+  const el = id('p2wConfidence');
+  if (!el) return;
+
+  const levelLabel = level === 'high' ? 'Good' : level === 'medium' ? 'Fair' : 'Limited';
+
+  let html = `<div class="p2w-confidence__row">
+    <span class="p2w-confidence__label">Detected</span>
+    <span class="p2w-confidence__items">${detected.map(d => `<span>${d}</span>`).join('')}</span>
+    <span class="p2w-confidence__badge p2w-confidence__badge--${level}">${score}% ${levelLabel}</span>
+  </div>`;
+
+  if (warnings.length > 0) {
+    html += `<div class="p2w-confidence__warnings">${
+      warnings.map(w => `<span class="p2w-confidence__warn-item">${w}</span>`).join(' &nbsp;·&nbsp; ')
+    }</div>`;
+  }
+
+  el.innerHTML    = html;
+  el.style.display = '';
+}
+
+export function clearP2wConfidence() {
+  const el = id('p2wConfidence');
+  if (!el) return;
+  el.innerHTML    = '';
+  el.style.display = 'none';
+}

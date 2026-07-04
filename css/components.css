@@ -2874,6 +2874,68 @@ button,
 
 
 /* ── Feedback row (inside success card) ── */
+/* ── PDF→Word Confidence panel ─────────────────────────────────────────── */
+.p2w-confidence {
+  padding: 10px 20px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  line-height: 1.6;
+}
+.p2w-confidence__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  align-items: baseline;
+}
+.p2w-confidence__label {
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text3);
+  min-width: 64px;
+}
+.p2w-confidence__items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  color: var(--text2);
+}
+.p2w-confidence__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 1px 7px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.p2w-confidence__badge--high   { background: #dcfce7; color: #15803d; }
+.p2w-confidence__badge--medium { background: #fef9c3; color: #854d0e; }
+.p2w-confidence__badge--low    { background: #fee2e2; color: #b91c1c; }
+
+:root[data-theme="dark"] .p2w-confidence__badge--high,
+:root:not([data-theme="light"]) @media (prefers-color-scheme: dark) {
+  .p2w-confidence__badge--high   { background: #14532d; color: #86efac; }
+  .p2w-confidence__badge--medium { background: #713f12; color: #fde68a; }
+  .p2w-confidence__badge--low    { background: #7f1d1d; color: #fca5a5; }
+}
+:root[data-theme="dark"] .p2w-confidence__badge--high   { background: #14532d; color: #86efac; }
+:root[data-theme="dark"] .p2w-confidence__badge--medium { background: #713f12; color: #fde68a; }
+:root[data-theme="dark"] .p2w-confidence__badge--low    { background: #7f1d1d; color: #fca5a5; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .p2w-confidence__badge--high   { background: #14532d; color: #86efac; }
+  :root:not([data-theme="light"]) .p2w-confidence__badge--medium { background: #713f12; color: #fde68a; }
+  :root:not([data-theme="light"]) .p2w-confidence__badge--low    { background: #7f1d1d; color: #fca5a5; }
+}
+.p2w-confidence__warnings {
+  margin-top: 5px;
+  color: var(--text3);
+  font-size: 11px;
+}
+.p2w-confidence__warn-item::before { content: '⚠ '; }
+
 .fb-row {
   display: flex;
   gap: 8px;
