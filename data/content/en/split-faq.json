@@ -46,5 +46,29 @@
       "@type": "Answer",
       "text": "Yes. PDFree is a Progressive Web App and works fully offline once loaded in your browser. No internet connection is required to split or extract pages."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I split a password-protected PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes, if you know the password. When you open a protected PDF, PDFree will prompt you to enter it. Once unlocked, you can select and extract pages normally. PDFree cannot bypass or crack a password — it can only open files you are authorised to open."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "How do I split a PDF on iPhone, iPad, or Mac without Adobe Acrobat?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Open PDFree in Safari (iPhone/iPad) or any browser on Mac — no app download or Adobe Acrobat required. The tool runs entirely in the browser: load your PDF, select pages, tap Split PDF. The result saves to your Files app on iOS or your Downloads folder on Mac."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I split multiple PDF files at once?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Not in a single batch — PDFree processes one PDF at a time. Open the tool in a new tab to split a second file in parallel. PDFree also works offline as a Progressive Web App, so there is no network wait between files."
+    }
   }
 ]
