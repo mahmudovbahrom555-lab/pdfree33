@@ -1098,7 +1098,14 @@ async function _p2wExtractText(pdfDoc) {
   }
 
   // ── Pass 2: build Word content ─────────────────────────────────────────────
-  const _GAP_FACTOR = 2.0;   // gap > N × medianFontSize triggers a visual region
+  // Adaptive gap factor: linearly interpolates from 1.6 (small fonts / dense technical
+  // PDFs) to 2.5 (large fonts / presentations) over the 8–14pt range.
+  // Smaller factor → more sensitive gap detection for tight-spaced documents;
+  // larger factor → avoids false positives on double-spaced or large-font layouts.
+  const _GAP_FACTOR = (() => {
+    const t = Math.min(1, Math.max(0, (median - 8) / (14 - 8)));
+    return 1.6 + t * (2.5 - 1.6);
+  })();
   const _MIN_GAP_PT = 20;    // minimum gap in PDF points (~0.28 inch); was 30 but
                               // CamScanner math PDFs have diagrams with tighter gaps
 
