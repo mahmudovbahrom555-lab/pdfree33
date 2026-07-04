@@ -488,6 +488,8 @@ def _write_sitemap(config, out_dir):
     # ── Non-EN static specialty pages ──────────────────────────
     # Static specialty pages that exist in language subdirs but aren't
     # in tools-config (ocr, draw, pdf-to-word, flatten in each locale).
+    # pdf-to-word EN is now in tools-config → its EN URL block comes from
+    # the tools section above; skip EN here to avoid a duplicate sitemap entry.
     _lang_specialty = {
         'ocr-pdf': {
             'en': 'ocr-pdf',
@@ -512,12 +514,18 @@ def _write_sitemap(config, out_dir):
         },
 
     }
+    # Tools whose EN slug is now in tools-config — EN URL block is emitted by
+    # the tools loop above; skip EN here so it doesn't appear twice.
+    _ssg_migrated_en = {'pdf-to-word'}
+
     for en_key, loc_map in _lang_specialty.items():
         en_url = f"{BASE_URL}/{loc_map['en']}/"
         alts = [(lc, f"{BASE_URL}/{slug}/") for lc, slug in loc_map.items()]
         alts.append(('x-default', en_url))
         # Emit a URL block for each language variant
         for lc, slug in loc_map.items():
+            if lc == 'en' and en_key in _ssg_migrated_en:
+                continue
             loc_url = f"{BASE_URL}/{slug}/"
             lines += _url_block(loc_url, _git_lastmod(f"{slug}/index.html"), alts, priority='0.85', changefreq='monthly')
 

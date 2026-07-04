@@ -1124,6 +1124,41 @@
       "keywords": {
         "en": "flatten pdf, make pdf non-editable, lock pdf form, flatten pdf fields, pdf flattening free"
       }
+    },
+    {
+      "id": "pdf2word",
+      "icon": "📝",
+      "toolKey": "pdf2word",
+      "slugs": {
+        "en": "pdf-to-word"
+      },
+      "titles": {
+        "en": "Convert PDF to Word Without Uploading — Free & Private | PDFree"
+      },
+      "descs": {
+        "en": "Convert PDF to editable .docx — runs in your browser, no upload."
+      },
+      "navLabels": {
+        "en": "PDF→Word"
+      },
+      "cardNames": {
+        "en": "PDF to Word"
+      },
+      "cardDescs": {
+        "en": "Convert PDF to editable .docx — no upload, 100% private"
+      },
+      "breadcrumb": {
+        "en": "PDF to Word"
+      },
+      "metaDescs": {
+        "en": "Convert PDF to editable Word (.docx) in your browser — nothing uploaded, nothing stored. Tables, RTL text, and 15+ languages supported. Free, no account, works offline."
+      },
+      "ogTitles": {
+        "en": "Convert PDF to Word Without Uploading — Free & Private | PDFree"
+      },
+      "ogDescs": {
+        "en": "PDF to Word conversion that runs entirely in your browser. No upload, no server, no account. Tables, Arabic, Chinese, and more. 100% private."
+      }
     }
   ],
   "ui": {
