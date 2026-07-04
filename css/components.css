@@ -86,6 +86,7 @@ button,
   font-size: 22px;
   flex-shrink: 0;
 }
+.tool-header-text h1,
 .tool-header-text h2  { font-size: 20px; font-weight: 500; letter-spacing: -0.3px; }
 .tool-header-text p   { font-size: 13px; color: var(--text2); margin-top: 2px; }
 
