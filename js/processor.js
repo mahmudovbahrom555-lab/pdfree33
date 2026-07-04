@@ -1018,7 +1018,7 @@ async function _p2wExtractText(pdfDoc) {
     });
 
     allSizes.push(...items.map(i => i.fontSize).filter(s => s > 0));
-    pageData.push({ lines, rotatedItems, borderGrids, pageH });
+    pageData.push({ lines, rotatedItems, borderGrids, pageH, items });
     page.cleanup?.();
   }
 
@@ -1098,7 +1098,7 @@ async function _p2wExtractText(pdfDoc) {
   }
 
   // ── Pass 2: build Word content ─────────────────────────────────────────────
-  const _GAP_FACTOR = 2.5;   // gap > N × medianFontSize triggers a visual region
+  const _GAP_FACTOR = 2.0;   // gap > N × medianFontSize triggers a visual region
   const _MIN_GAP_PT = 20;    // minimum gap in PDF points (~0.28 inch); was 30 but
                               // CamScanner math PDFs have diagrams with tighter gaps
 
@@ -1188,7 +1188,7 @@ async function _p2wExtractText(pdfDoc) {
       paragraphs.push(new Paragraph({ children: [], pageBreakBefore: true }));
     }
 
-    const { lines, rotatedItems, borderGrids } = pageData[pi];
+    const { lines, rotatedItems, borderGrids, items: textItems } = pageData[pi];
 
     // Pages with no extractable text (diagram-only pages in scanned PDFs):
     // render the full page as a single ImageRun so content is not lost.
@@ -1236,19 +1236,21 @@ async function _p2wExtractText(pdfDoc) {
       );
       if (!coveredByGrid) visualGaps.push({ gi, yAbove: lines[gi].y, yBelow: lines[gi + 1].y });
     }
-    // Render page once and crop image regions for all detected gaps.
-    // .catch(() => []) degrades gracefully if a page render fails — the rest of
-    // the document is still produced without the missing visual region.
+    // Render page once and crop image regions for detected gaps and inline visuals.
+    // .catch() degrades gracefully — rest of the document is still produced.
     const giToImgRun = new Map();
+    const inlineVisuals = [];
     if (visualGaps.length > 0 && isProcessing) {
       setProgress(
         50 + Math.round((pi / pageData.length) * 40),
         `Capturing visuals on page ${pi + 1}/${pageData.length}…`,
       );
-      const regionRuns = await _p2wRenderRegions(
-        pdfDoc, pi + 1, pageData[pi].pageH, visualGaps, median, ImageRun,
-      ).catch(() => []);
-      for (const { gi, imgRun } of regionRuns) giToImgRun.set(gi, imgRun);
+      const { gapRuns, inlineRuns } = await _p2wRenderAllVisuals(
+        pdfDoc, pi + 1, pageData[pi].pageH, visualGaps, textItems,
+        borderGrids, median, ImageRun,
+      ).catch(() => ({ gapRuns: [], inlineRuns: [] }));
+      for (const { gi, imgRun } of gapRuns) giToImgRun.set(gi, imgRun);
+      inlineVisuals.push(...inlineRuns);
     }
 
     // Match rotated column-header items to tables by Y-range overlap.
@@ -1291,6 +1293,11 @@ async function _p2wExtractText(pdfDoc) {
       // Insert just below lines[gi] so this fires after that line is processed
       // but before lines[gi+1] is processed
       events.push({ type: 'visual-region', y: lines[gi].y - 0.1, imgRun });
+    }
+    // Add inline visual events (render-and-subtract regions — catches raster
+    // XObjects AND vector charts not separated by large enough gaps)
+    for (const { pdfY, imgRun } of inlineVisuals) {
+      events.push({ type: 'visual-region', y: pdfY, imgRun });
     }
 
     // Sort by Y descending (top of page first).
@@ -1514,11 +1521,22 @@ function _assignLineToGridCols(items, colXs) {
 // and returns ImageRun objects for non-blank crops.
 // gaps: [{gi, yAbove, yBelow}] — yAbove/yBelow in PDF points (bottom-up coords)
 // Returns [{gi, imgRun}] — only for gaps that pass the ink-density check.
-async function _p2wRenderRegions(pdfDoc, pageNum, pageH, gaps, medianFontSize, ImageRun) {
-  const _RENDER_DPI  = 150;
-  const _MAX_W_PX    = 594;   // max width in px at 96 DPI (fits A4 and Letter margins)
-  const _INK_THRESH  = 0.02;  // skip region if < 2% sampled pixels are non-white
-  const _INK_STEP    = 8;     // sample every 8th pixel (200× faster than full scan)
+// Renders one page to canvas (once) and returns:
+//   gapRuns    — ImageRuns for inter-line gaps (replaces _p2wRenderRegions)
+//   inlineRuns — ImageRuns for inline visual regions detected via render-and-subtract
+//                (catches raster XObjects AND vector charts with low text coverage)
+async function _p2wRenderAllVisuals(pdfDoc, pageNum, pageH, gaps, textItems, borderGrids, medianFontSize, ImageRun) {
+  const _RENDER_DPI = 150;
+  const _MAX_W_PX   = 594;    // max width in px at 96 DPI (fits A4 and Letter margins)
+  const _INK_THRESH = 0.02;   // gap crop: skip if < 2% pixels are non-white
+  const _INK_STEP   = 8;      // gap crop: sample every 8th pixel
+  // Inline visual detection
+  const _STRIP_H         = 20;    // strip height in canvas px (~10pt at 150 DPI)
+  const _TEXT_COV_THRESH = 0.60;  // strip is >60% covered by text bboxes → skip
+  const _INK_THRESH_INL  = 0.07;  // strip needs >7% ink to qualify as visual
+  const _INK_STEP_INL    = 4;     // sample every 4th pixel in strip scan
+  const _MIN_VIS_H_PX    = 60;    // merged region must be at least 60 canvas px tall
+  const _BG_AREA_THRESH  = 0.65;  // skip inline regions covering >65% of page height (background/scan)
 
   const scale  = _RENDER_DPI / 72;
   const page   = await pdfDoc.getPage(pageNum);
@@ -1530,51 +1548,141 @@ async function _p2wRenderRegions(pdfDoc, pageNum, pageH, gaps, medianFontSize, I
   await page.render({ canvasContext: ctx, viewport: vp }).promise;
   page.cleanup?.();
 
-  const result = [];
+  // ── Part 1: gap runs ────────────────────────────────────────────────────────
+  const gapRuns = [];
+  // Track gap canvas Y ranges so inline scanner skips them (already captured)
+  const gapCanvasRanges = [];
+
   for (const { gi, yAbove, yBelow } of gaps) {
-    // Convert PDF (bottom-up) gap bounds to canvas (top-down) crop coords.
-    // Add small margins so crop doesn't clip ascenders/descenders of adjacent text.
-    const pdfTop    = yAbove - medianFontSize * 0.5;   // just below the upper baseline
-    const pdfBottom = yBelow + medianFontSize * 1.2;   // just above the lower ascender
+    const pdfTop    = yAbove - medianFontSize * 0.5;
+    const pdfBottom = yBelow + medianFontSize * 1.2;
     const cyTop     = Math.max(0,             Math.round((pageH - pdfTop)    * scale));
     const cyBottom  = Math.min(canvas.height, Math.round((pageH - pdfBottom) * scale));
     const cropH     = cyBottom - cyTop;
     if (cropH <= 4) continue;
 
-    // Crop the Y-band into a temporary canvas
-    const tmp    = document.createElement('canvas');
-    tmp.width    = canvas.width;
-    tmp.height   = cropH;
-    const tCtx   = tmp.getContext('2d');
+    gapCanvasRanges.push({ cyTop, cyBottom });
+
+    const tmp  = document.createElement('canvas');
+    tmp.width  = canvas.width;
+    tmp.height = cropH;
+    const tCtx = tmp.getContext('2d');
     tCtx.drawImage(canvas, 0, cyTop, canvas.width, cropH, 0, 0, canvas.width, cropH);
 
-    // Ink-density check: sample pixels to detect nearly-blank crops (margins, etc.)
     const d = tCtx.getImageData(0, 0, tmp.width, cropH).data;
     let ink = 0, total = 0;
     for (let i = 0; i < d.length; i += 4 * _INK_STEP) {
       if (d[i] < 240 || d[i + 1] < 240 || d[i + 2] < 240) ink++;
       total++;
     }
-    if (total === 0 || ink / total < _INK_THRESH) continue;
+    if (total === 0 || ink / total < _INK_THRESH) { tmp.width = 0; tmp.height = 0; continue; }
 
-    // Convert to JPEG blob → ArrayBuffer → ImageRun; release crop canvas immediately
-    const blob = await new Promise(res => tmp.toBlob(res, 'image/jpeg', 0.85));
+    const blob = await new Promise(res => tmp.toBlob(res, 'image/jpeg', 0.92));
     tmp.width = 0; tmp.height = 0;
     if (!blob) continue;
     const buf = await blob.arrayBuffer();
 
-    // Scale to Word doc dimensions at 96 DPI
     let w = Math.round(canvas.width * 96 / _RENDER_DPI);
     let h = Math.round(cropH        * 96 / _RENDER_DPI);
     if (w > _MAX_W_PX) { h = Math.round(h * _MAX_W_PX / w); w = _MAX_W_PX; }
 
-    result.push({ gi, imgRun: new ImageRun({ data: buf, transformation: { width: w, height: h }, type: 'jpg' }) });
+    gapRuns.push({ gi, imgRun: new ImageRun({ data: buf, transformation: { width: w, height: h }, type: 'jpg' }) });
   }
 
-  // Release GPU texture memory
+  // ── Part 2: inline visual runs (render-and-subtract) ───────────────────────
+  // Build exclusion zones in canvas Y coords: gap bands + border grid bands.
+  // Strips inside these zones are skipped to avoid duplicating already-captured content.
+  const exclusions = [...gapCanvasRanges];
+  for (const g of borderGrids) {
+    exclusions.push({
+      cyTop:    Math.max(0,             Math.round((pageH - (g.y + g.h)) * scale)),
+      cyBottom: Math.min(canvas.height, Math.round((pageH - g.y)          * scale)),
+    });
+  }
+
+  const numStrips = Math.ceil(canvas.height / _STRIP_H);
+
+  // Pre-compute text coverage per strip from PDF text item bboxes.
+  // Each item occupies [x, x+width] in X and [y, y+fontSize] in Y (PDF coords).
+  const stripTextCov = new Float32Array(numStrips).fill(0);
+  for (const item of textItems) {
+    if (!item.width || item.width <= 0) continue;
+    const cyItemTop    = Math.round((pageH - (item.y + item.fontSize)) * scale);
+    const cyItemBottom = Math.round((pageH - item.y)                   * scale);
+    const itemW        = Math.round(item.width * scale);
+    const s0 = Math.max(0,           Math.floor(cyItemTop    / _STRIP_H));
+    const s1 = Math.min(numStrips-1, Math.floor(cyItemBottom / _STRIP_H));
+    for (let s = s0; s <= s1; s++) stripTextCov[s] += itemW;
+  }
+  for (let s = 0; s < numStrips; s++) {
+    stripTextCov[s] = Math.min(1, stripTextCov[s] / Math.max(1, canvas.width));
+  }
+
+  // Compute ink density per strip from the already-rendered canvas.
+  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  const px = imageData.data;
+
+  const isVisual = new Uint8Array(numStrips);
+  for (let s = 0; s < numStrips; s++) {
+    // Skip strips in exclusion zones
+    const stripTop = s * _STRIP_H;
+    const stripBot = Math.min(canvas.height, stripTop + _STRIP_H);
+    const excluded = exclusions.some(e => stripTop < e.cyBottom && stripBot > e.cyTop);
+    if (excluded) continue;
+    if (stripTextCov[s] >= _TEXT_COV_THRESH) continue;
+
+    const yEnd = Math.min(canvas.height, (s + 1) * _STRIP_H);
+    let ink = 0, total = 0;
+    for (let y = stripTop; y < yEnd; y++) {
+      for (let x = 0; x < canvas.width; x += _INK_STEP_INL) {
+        const idx = (y * canvas.width + x) * 4;
+        if (px[idx] < 240 || px[idx+1] < 240 || px[idx+2] < 240) ink++;
+        total++;
+      }
+    }
+    if (total > 0 && ink / total >= _INK_THRESH_INL) isVisual[s] = 1;
+  }
+
+  // Merge adjacent visual strips; filter by minimum height; crop and encode.
+  const inlineRuns = [];
+  let s = 0;
+  while (s < numStrips) {
+    if (!isVisual[s]) { s++; continue; }
+    let sEnd = s;
+    while (sEnd + 1 < numStrips && isVisual[sEnd + 1]) sEnd++;
+
+    const cyTop  = s    * _STRIP_H;
+    const cyBot  = Math.min(canvas.height, (sEnd + 1) * _STRIP_H);
+    const cropH  = cyBot - cyTop;
+
+    // Skip regions covering >65% of page height — background image or full-page scan.
+    if (cropH >= _MIN_VIS_H_PX && cropH / canvas.height < _BG_AREA_THRESH) {
+      const tmp  = document.createElement('canvas');
+      tmp.width  = canvas.width;
+      tmp.height = cropH;
+      tmp.getContext('2d').drawImage(canvas, 0, cyTop, canvas.width, cropH, 0, 0, canvas.width, cropH);
+
+      const blob = await new Promise(res => tmp.toBlob(res, 'image/jpeg', 0.92));
+      tmp.width = 0; tmp.height = 0;
+      if (blob) {
+        const buf = await blob.arrayBuffer();
+        let w = Math.round(canvas.width * 96 / _RENDER_DPI);
+        let h = Math.round(cropH        * 96 / _RENDER_DPI);
+        if (w > _MAX_W_PX) { h = Math.round(h * _MAX_W_PX / w); w = _MAX_W_PX; }
+        // pdfY = top of the visual band in PDF coords (higher Y = higher on page)
+        const pdfY = pageH - cyTop / scale;
+        inlineRuns.push({
+          pdfY,
+          imgRun: new ImageRun({ data: buf, transformation: { width: w, height: h }, type: 'jpg' }),
+        });
+      }
+    }
+    s = sEnd + 1;
+  }
+
   canvas.width = 0; canvas.height = 0;
   canvas.remove();
-  return result;
+  return { gapRuns, inlineRuns };
 }
 
 // Renders a PDF page that has no extractable text (diagram-only page) as a
@@ -1593,7 +1701,7 @@ async function _p2wRenderFullPage(pdfDoc, pageNum, ImageRun) {
   await page.render({ canvasContext: ctx, viewport: vp }).promise;
   page.cleanup?.();
 
-  const blob = await new Promise(res => canvas.toBlob(res, 'image/jpeg', 0.85));
+  const blob = await new Promise(res => canvas.toBlob(res, 'image/jpeg', 0.92));
   canvas.width = 0; canvas.height = 0;
   canvas.remove();
   if (!blob) return null;
