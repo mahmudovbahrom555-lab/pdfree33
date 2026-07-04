@@ -230,6 +230,16 @@ button,
   font-family: var(--font-sans);
 }
 .file-item-del:hover { background: #fee; color: #c00; }
+.file-item-dup {
+  display: inline-block;
+  font-size: 11px;
+  padding: 1px 6px;
+  background: #fef3c7;
+  color: #92400e;
+  border-radius: 4px;
+  font-weight: 600;
+  margin-top: 2px;
+}
 
 .file-count    { font-size: 12px; color: var(--text2); margin: 8px 0 0 2px; }
 .reorder-hint  { font-size: 11px; color: var(--text3); margin: 4px 0 0 2px; }

@@ -29,7 +29,7 @@ import { doProcess, isProcessing,
          getProcessStartMs }                      from './processor.js';
 import { hideAllToolOptions, initToolOptions,
          collectToolParams, notifyToolSuccess }  from './toolRegistry.js';
-import './toolRegistrations.js';                 // side-effect: registers all tools
+import { updateMergeDefaultFilename } from './toolRegistrations.js';
 import { renderWorkerScanReport }               from './compressUI.js';
 import { trackToolStart, trackToolSuccess,
          trackToolCancel, trackFileAdded,
@@ -465,6 +465,7 @@ function initEvents() {
   // so "contract.pdf · 2.4 MB · 12p" appears in the file list before the user clicks Merge.
   document.addEventListener('pdfree:files-added', async () => {
     if (currentTool !== 'merge') return;
+    updateMergeDefaultFilename([...selectedFiles]);
     const unscanned = selectedFiles.filter(f => f._mergePageCount == null);
     if (unscanned.length === 0) return;
     const results = await startMergeBatchScan(unscanned);

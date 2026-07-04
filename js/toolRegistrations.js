@@ -10,7 +10,7 @@
 // ============================================================
 
 import { registerTool } from './toolRegistry.js';
-import { id }           from './utils.js';
+import { id, esc }      from './utils.js';
 import { getWmRemove, wmRemoveHtml, bindWmRemove, resetWmRemove } from './watermarkRemoveUI.js';
 
 // ── UI modules ─────────────────────────────────────────────────
@@ -50,20 +50,105 @@ import { initPdf2WordOptions, hidePdf2WordOptions,
 import { initCompareOptions, hideCompareOptions,
          getCompareParams }               from './compareUI.js';
 
+// ── Merge filename ─────────────────────────────────────────────
+
+let _outputStem        = '';
+let _outputNameTouched = false;
+let _lastFiles         = [];
+
+// Camera rolls: IMG_0001, DSC_1234, DSCN0001, P1010001, R0010234, scan001, Scan_001
+const _CAMERA  = /^[a-z]{1,5}[-_]?\d{3,}/i;
+// OS / app defaults: document, file, new, untitled, page, temp, draft, copy, screenshot…
+const _GENERIC = /^(document|doc|file|new|untitled|page|pages|output|temp|tmp|draft|copy|unnamed|noname|image|picture|photo|screenshot|capture)[\s\-_\d]*$/i;
+
+function _isGenericStem(stem) {
+  const s = stem.trim();
+  return _CAMERA.test(s) || _GENERIC.test(s);
+}
+
+function _dateStem() {
+  const d = new Date();
+  return `merged-${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function _computeDefaultStem(files) {
+  if (!files || files.length === 0) return _dateStem();
+  const first = files[0].name.replace(/\.pdf$/i, '');
+  return _isGenericStem(first) ? _dateStem() : `${first}_merged`;
+}
+
+export function updateMergeDefaultFilename(files) {
+  _lastFiles = files || [];
+  if (_outputNameTouched) return;
+  _outputStem = _computeDefaultStem(_lastFiles);
+  const input = document.getElementById('mergeFilenameInput');
+  if (input) input.value = _outputStem;
+}
+
+export function getMergeFilename() {
+  return (_outputStem.trim() || _dateStem()) + '.pdf';
+}
+
+function _filenameHtml() {
+  return `
+    <div style="margin-bottom:14px;">
+      <label for="mergeFilenameInput" style="display:block;font-size:12px;font-weight:600;
+        color:var(--text2);margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em;">
+        Output filename
+      </label>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <input id="mergeFilenameInput" type="text" spellcheck="false" autocomplete="off"
+          value="${esc(_outputStem)}"
+          style="flex:1;min-width:0;padding:7px 10px;border:1px solid var(--border);
+            border-radius:8px;font-size:13px;font-family:inherit;
+            background:var(--bg);color:var(--text);outline:none;box-sizing:border-box;">
+        <span style="font-size:13px;color:var(--text2);white-space:nowrap;flex-shrink:0;">.pdf</span>
+      </div>
+    </div>`;
+}
+
+function _bindFilenameInput() {
+  const input = document.getElementById('mergeFilenameInput');
+  if (!input) return;
+  input.addEventListener('input', () => {
+    _outputStem        = input.value;
+    _outputNameTouched = input.value.trim().length > 0;
+  });
+  input.addEventListener('blur', () => {
+    // Strip .pdf if user pastes "report.pdf" into the field
+    const clean = input.value.replace(/\.pdf$/i, '').trim();
+    if (clean.length === 0) {
+      // Field cleared → restore auto-generated default
+      _outputNameTouched = false;
+      _outputStem        = _computeDefaultStem(_lastFiles);
+      input.value        = _outputStem;
+    } else {
+      input.value = clean;
+      _outputStem = clean;
+    }
+  });
+}
+
 // ── Merge options — inline (no separate mergeUI.js needed) ─────
 
-function _initMerge() {
+function _initMerge(files) {
   const c = id('mergeOptions');
   if (!c) return;
-  c.innerHTML      = wmRemoveHtml();
-  c.style.display  = 'block';
+  // Compute default only if not yet touched by user
+  if (!_outputNameTouched) _outputStem = _computeDefaultStem(files || _lastFiles);
+  c.innerHTML     = _filenameHtml() + wmRemoveHtml();
+  c.style.display = 'block';
   bindWmRemove();
+  _bindFilenameInput();
 }
 
 function _hideMerge() {
   const c = id('mergeOptions');
   if (c) { c.style.display = 'none'; c.innerHTML = ''; }
   resetWmRemove();
+  _outputStem        = '';
+  _outputNameTouched = false;
+  _lastFiles         = [];
 }
 
 // ── Registrations ──────────────────────────────────────────────
@@ -74,7 +159,7 @@ registerTool('merge', {
   minFiles:  1,
   init:      _initMerge,
   hide:      _hideMerge,
-  getParams: () => ({ removeWatermarks: getWmRemove() }),
+  getParams: () => ({ removeWatermarks: getWmRemove(), outputFilename: getMergeFilename() }),
 });
 
 registerTool('split', {

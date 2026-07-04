@@ -193,7 +193,7 @@ function _checkTotalSize(files, maxMb) {
 
 // ── Merge ──────────────────────────────────────────────────────
 
-async function _runMerge(filesSnapshot, { removeWatermarks = false } = {}) {
+async function _runMerge(filesSnapshot, { removeWatermarks = false, outputFilename = '' } = {}) {
   if (!_checkTotalSize(filesSnapshot, 300)) { _abortUI(); return; }
   // Use pre-decrypted buffer when files.js already ran QPDF at file-add time.
   // .slice(0) copies so the cached buffer survives the postMessage transfer.
@@ -230,8 +230,8 @@ async function _runMerge(filesSnapshot, { removeWatermarks = false } = {}) {
         ? t('desc_merged_partial', { n: mergedCount, total: filesSnapshot.length, pages: data.totalPages, size: fmtSize(blob.size) })
         : t('desc_merged', { total: filesSnapshot.length, pages: data.totalPages, size: fmtSize(blob.size) });
 
-      const baseName = filesSnapshot[0]?.name.replace(/\.pdf$/i, '') ?? 'merged_document';
-      const filename  = `${baseName}_merged.pdf`;
+      const filename = outputFilename ||
+        `${filesSnapshot[0]?.name.replace(/\.pdf$/i, '') ?? 'merged_document'}_merged.pdf`;
       document.dispatchEvent(new CustomEvent('pdfree:success', {
         detail: { tool: 'merge', blob, desc, filename, pageCounts: data.pageCounts ?? null }
       }));

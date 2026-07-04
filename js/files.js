@@ -266,6 +266,8 @@ export function renderList(keepSuccess = false) {
       : '';
 
     const isDraggable = _currentTool === 'merge' && !_locked;
+    const isDuplicate = _currentTool === 'merge' &&
+      selectedFiles.some((g, j) => j !== i && g.name === f.name);
 
     const pages = f._mergePageCount > 0 ? ` · ${f._mergePageCount}p` : '';
     el.innerHTML = `
@@ -274,6 +276,7 @@ export function renderList(keepSuccess = false) {
       <span class="file-item-num">${i + 1}</span>
       <div class="file-item-info">
         <span class="file-item-name" title="${esc(f.name)}">${esc(f.name)}</span>
+        ${isDuplicate ? '<span class="file-item-dup">⚠ Duplicate</span>' : ''}
         ${locked ? `<span class="file-item-enc-warn" title="${esc(lockTip)}">
           🔒 ${meta.aesVersion || 'AES'}-encrypted — editing blocked.
           <a class="file-item-enc-help" href="#" data-enc-help="${i}" tabindex="0">How to fix ↗</a>
@@ -331,7 +334,14 @@ function _updateMeta() {
   if (count > 0) {
     const countEl = id('fileCount');
     countEl.style.display = 'block';
-    countEl.textContent   = `${count} file${count > 1 ? 's' : ''} · ${fmtSize(total)}`;
+    let metaStr = `${count} file${count !== 1 ? 's' : ''}`;
+    if (_currentTool === 'merge') {
+      const scanned   = selectedFiles.filter(f => f._mergePageCount != null);
+      const pageTotal = scanned.reduce((s, f) => s + (f._mergePageCount || 0), 0);
+      if (scanned.length > 0) metaStr += ` · ${pageTotal} page${pageTotal !== 1 ? 's' : ''}`;
+    }
+    metaStr += ` · ${fmtSize(total)}`;
+    countEl.textContent = metaStr;
 
     const showHint = count > 1 && _currentTool === 'merge' && !_locked;
     const hint = id('reorderHint');
