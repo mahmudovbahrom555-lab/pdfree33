@@ -1,0 +1,31 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Wie man PDF kostenlos in Word konvertiert",
+  "description": "PDF in ein bearbeitbares Word-Dokument (.docx) konvertieren — kostenlos, ohne Upload, vollständig im Browser verarbeitet.",
+  "totalTime": "PT2M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — kostenloser PDF-zu-Word-Konverter im Browser, kein Upload erforderlich" }],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDF öffnen",
+      "text": "Klicke auf 'Datei auswählen' oder ziehe deine Datei in den Ablagebereich. Die PDF lädt in deinem Browser — es wird nichts hochgeladen.",
+      "url": "https://pdfree.io/de/pdf-zu-word/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Text- oder Bildmodus wählen",
+      "text": "Der Textmodus erstellt ein bearbeitbares Word-Dokument mit Absätzen, Überschriften und Tabellen. Der Bildmodus erhält das exakte visuelle Layout als Seitenbilder — nützlich für komplexe oder gescannte PDFs.",
+      "url": "https://pdfree.io/de/pdf-zu-word/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": ".docx-Datei herunterladen",
+      "text": "Klicke auf 'In Word konvertieren'. Die .docx wird automatisch heruntergeladen. Öffne sie in Microsoft Word, Google Docs oder LibreOffice — keine kostenpflichtige Software erforderlich.",
+      "url": "https://pdfree.io/de/pdf-zu-word/#step3"
+    }
+  ]
+}

@@ -1130,34 +1130,74 @@
       "icon": "📝",
       "toolKey": "pdf2word",
       "slugs": {
-        "en": "pdf-to-word"
+        "en": "pdf-to-word",
+        "de": "pdf-zu-word",
+        "es": "pdf-a-word",
+        "fr": "pdf-en-word",
+        "pt": "pdf-para-word"
       },
       "titles": {
-        "en": "Convert PDF to Word Without Uploading — Free & Private | PDFree"
+        "en": "Convert PDF to Word Without Uploading — Free & Private | PDFree",
+        "de": "PDF zu Word ohne Upload — Kostenlos & Privat | PDFree",
+        "es": "Convertir PDF a Word sin Subir Archivos — Gratis & Privado | PDFree",
+        "fr": "Convertir PDF en Word sans Télécharger — Gratuit & Privé | PDFree",
+        "pt": "Converter PDF para Word sem Upload — Grátis & Privado | PDFree"
       },
       "descs": {
-        "en": "Convert PDF to editable .docx — runs in your browser, no upload."
+        "en": "Convert PDF to editable .docx — runs in your browser, no upload.",
+        "de": "PDF in bearbeitbares .docx konvertieren — läuft im Browser, kein Upload.",
+        "es": "Convierte PDF a .docx editable — funciona en tu navegador, sin subida.",
+        "fr": "Convertir PDF en .docx éditable — dans votre navigateur, sans envoi.",
+        "pt": "Converta PDF para .docx editável — no seu navegador, sem upload."
       },
       "navLabels": {
-        "en": "PDF→Word"
+        "en": "PDF→Word",
+        "de": "PDF→Word",
+        "es": "PDF→Word",
+        "fr": "PDF→Word",
+        "pt": "PDF→Word"
       },
       "cardNames": {
-        "en": "PDF to Word"
+        "en": "PDF to Word",
+        "de": "PDF zu Word",
+        "es": "PDF a Word",
+        "fr": "PDF en Word",
+        "pt": "PDF para Word"
       },
       "cardDescs": {
-        "en": "Convert PDF to editable .docx — no upload, 100% private"
+        "en": "Convert PDF to editable .docx — no upload, 100% private",
+        "de": "PDF in bearbeitbares .docx konvertieren — kein Upload, 100 % privat",
+        "es": "Convierte PDF a .docx editable — sin subida, 100% privado",
+        "fr": "Convertir PDF en .docx éditable — sans envoi, 100 % privé",
+        "pt": "Converta PDF para .docx editável — sem upload, 100% privado"
       },
       "breadcrumb": {
-        "en": "PDF to Word"
+        "en": "PDF to Word",
+        "de": "PDF zu Word",
+        "es": "PDF a Word",
+        "fr": "PDF en Word",
+        "pt": "PDF para Word"
       },
       "metaDescs": {
-        "en": "Convert PDF to editable Word (.docx) in your browser — nothing uploaded, nothing stored. Tables, RTL text, and 15+ languages supported. Free, no account, works offline."
+        "en": "Convert PDF to editable Word (.docx) in your browser — nothing uploaded, nothing stored. Tables, RTL text, and 15+ languages supported. Free, no account, works offline.",
+        "de": "PDF in bearbeitbares Word (.docx) konvertieren — direkt im Browser, kein Upload, keine Speicherung. Tabellen, RTL-Schriften und 15+ Sprachen. Kostenlos, kein Konto, offline nutzbar.",
+        "es": "Convierte PDF a Word (.docx) editable en tu navegador — sin subir archivos, sin almacenamiento. Tablas, texto RTL y más de 15 idiomas. Gratis, sin cuenta, funciona sin conexión.",
+        "fr": "Convertissez PDF en Word (.docx) éditable dans votre navigateur — rien n'est envoyé ni stocké. Tableaux, texte RTL et 15+ langues pris en charge. Gratuit, sans compte, fonctionne hors ligne.",
+        "pt": "Converta PDF para Word (.docx) editável no seu navegador — sem upload, sem armazenamento. Tabelas, texto RTL e 15+ idiomas. Grátis, sem conta, funciona offline."
       },
       "ogTitles": {
-        "en": "Convert PDF to Word Without Uploading — Free & Private | PDFree"
+        "en": "Convert PDF to Word Without Uploading — Free & Private | PDFree",
+        "de": "PDF zu Word ohne Upload — Im Browser, kein Server | PDFree",
+        "es": "PDF a Word sin Subir Archivos — En tu navegador, sin servidor | PDFree",
+        "fr": "PDF en Word sans Télécharger — Dans votre navigateur, sans serveur | PDFree",
+        "pt": "PDF para Word sem Upload — No seu navegador, sem servidor | PDFree"
       },
       "ogDescs": {
-        "en": "PDF to Word conversion that runs entirely in your browser. No upload, no server, no account. Tables, Arabic, Chinese, and more. 100% private."
+        "en": "PDF to Word conversion that runs entirely in your browser. No upload, no server, no account. Tables, Arabic, Chinese, and more. 100% private.",
+        "de": "PDF-zu-Word-Konvertierung vollständig in deinem Browser. Kein Upload, kein Server, kein Konto. Tabellen, Arabisch, Chinesisch und mehr. 100 % privat.",
+        "es": "Conversión de PDF a Word que se ejecuta en tu navegador. Sin subida, sin servidor, sin cuenta. Tablas, árabe, chino y más. 100% privado.",
+        "fr": "Conversion PDF en Word entièrement dans votre navigateur. Sans envoi, sans serveur, sans compte. Tableaux, arabe, chinois et plus. 100 % privé.",
+        "pt": "Conversão de PDF para Word que acontece no seu navegador. Sem upload, sem servidor, sem conta. Tabelas, árabe, chinês e mais. 100% privado."
       }
     }
   ],

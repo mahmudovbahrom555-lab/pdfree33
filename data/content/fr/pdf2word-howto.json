@@ -1,0 +1,31 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Comment convertir un PDF en Word gratuitement",
+  "description": "Convertissez un PDF en document Word éditable (.docx) gratuitement — sans télécharger le fichier, sans compte, traitement entièrement dans votre navigateur.",
+  "totalTime": "PT2M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — convertisseur PDF en Word gratuit dans le navigateur, sans envoi de fichier" }],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Ouvrez votre PDF",
+      "text": "Cliquez sur 'Choisir un PDF' ou faites glisser votre fichier dans la zone de dépôt. Le PDF se charge dans votre navigateur — rien n'est envoyé nulle part.",
+      "url": "https://pdfree.io/fr/pdf-en-word/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Choisissez le mode texte ou image",
+      "text": "Le mode texte crée un document Word éditable avec paragraphes, titres et tableaux. Le mode image conserve la mise en page visuelle exacte sous forme d'images de page — utile pour les PDFs complexes ou numérisés.",
+      "url": "https://pdfree.io/fr/pdf-en-word/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Téléchargez le fichier .docx",
+      "text": "Cliquez sur 'Convertir en Word'. Le fichier .docx se télécharge automatiquement. Ouvrez-le dans Microsoft Word, Google Docs ou LibreOffice — aucun logiciel payant n'est requis.",
+      "url": "https://pdfree.io/fr/pdf-en-word/#step3"
+    }
+  ]
+}

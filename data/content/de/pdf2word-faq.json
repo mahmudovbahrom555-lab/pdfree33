@@ -1,0 +1,57 @@
+[
+  {
+    "@type": "Question",
+    "name": "Ist dieser PDF-zu-Word-Konverter wirklich kostenlos?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Ja, vollständig kostenlos. Kein Abonnement, kein Wasserzeichen, keine Seitenlimits. Die gesamte Konvertierung findet in deinem Browser mit Open-Source-Bibliotheken statt." }
+  },
+  {
+    "@type": "Question",
+    "name": "Wird meine PDF beim Konvertieren hochgeladen?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Nein. Die gesamte Konvertierung findet in deinem Browser statt. Deine PDF wird nie an einen Server gesendet — auch nicht vorübergehend." }
+  },
+  {
+    "@type": "Question",
+    "name": "Was ist der Unterschied zwischen Textmodus und Bildmodus?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Der Textmodus extrahiert den Text aus deiner PDF und erstellt ein bearbeitbares Word-Dokument mit Absätzen, Überschriften, Fett, Kursiv und Tabellen. Der Bildmodus rendert jede Seite als hochauflösendes Bild und fügt es in das Word-Dokument ein — das visuelle Layout bleibt exakt erhalten, aber der Text ist nicht bearbeitbar." }
+  },
+  {
+    "@type": "Question",
+    "name": "Sieht die Formatierung in Word genauso aus?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Im Textmodus werden Textinhalt und grundlegende Formatierung (Fett, Kursiv, Schriftgröße, Überschriften, Tabellen) erhalten. Komplexe mehrspaltige Layouts stimmen möglicherweise nicht exakt überein. Für perfekte Layouttreue verwende den Bildmodus." }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann ich eine gescannte PDF in Word konvertieren?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Wenn deine gescannte PDF eine eingebettete Textebene enthält (viele moderne Scanner fügen eine hinzu), extrahiert der Textmodus diese korrekt. Ist die PDF rein bildbasiert ohne Textebene, verwende den Bildmodus oder nutze zuerst das OCR-PDF-Tool, um eine Textebene hinzuzufügen." }
+  },
+  {
+    "@type": "Question",
+    "name": "Werden Tabellen korrekt konvertiert?",
+    "acceptedAnswer": { "@type": "Answer", "text": "PDFree erkennt Tabellen auf zwei Arten: durch Ausrichten von Textelementen in Spalten (für Datentabellen) und durch Erkennen gezeichneter Rahmenlinien (für Formulare). Erkannte Tabellen werden zu echten Word-Tabellen — kein Klartext. Sehr komplexe Layouts mit verbundenen Zellen werden möglicherweise nicht perfekt übertragen." }
+  },
+  {
+    "@type": "Question",
+    "name": "Brauche ich Microsoft Word, um die konvertierte Datei zu öffnen?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Nein. Das .docx-Format wird von Microsoft Word, Google Docs (in Drive hochladen und öffnen), LibreOffice Writer (kostenlos, Open Source) und Apple Pages unterstützt. Du benötigst kein bezahltes Microsoft 365-Abonnement." }
+  },
+  {
+    "@type": "Question",
+    "name": "Gibt es eine maximale Dateigröße?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Es gibt keine feste Grenze. Sehr große PDFs (100+ MB) können jedoch länger dauern und mehr Arbeitsspeicher benötigen. Für beste Ergebnisse empfehlen wir Dateien unter 100 MB im Textmodus und unter 50 MB im Bildmodus bei 300 DPI." }
+  },
+  {
+    "@type": "Question",
+    "name": "Funktioniert es offline?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Ja. Sobald die Seite einmal geladen wurde, funktioniert PDFree vollständig offline als Progressive Web App. Für die Konvertierung ist keine Internetverbindung erforderlich." }
+  },
+  {
+    "@type": "Question",
+    "name": "Wie funktioniert die Konvertierungsqualitätsbewertung?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Nach der Konvertierung zeigt PDFree einen Konfidenzwert (0–100 %) basierend auf dem, was erkannt wurde: Textebenenabdeckung, Tabellen, Diagramme und Schriftkomplexität. Hoch (80 %+) bedeutet vollständig bearbeitbare Ausgabe. Mittel (55–79 %) bedeutet, dass einige Seiten bildbasiert sein könnten. Gering (unter 55 %) bedeutet meist eine überwiegend gescannte PDF — zuerst OCR ausführen." }
+  },
+  {
+    "@type": "Question",
+    "name": "Gibt es einen PDF-zu-Word-Konverter ohne Upload?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Ja — PDFree. Die gesamte Konvertierung läuft in deinem Browser mit PDF.js und WebAssembly. Deine PDF wird nie an einen Server gesendet. Du kannst das selbst überprüfen: DevTools → Netzwerk-Tab öffnen und beobachten, dass kein Upload-Request während der Konvertierung stattfindet." }
+  }
+]
