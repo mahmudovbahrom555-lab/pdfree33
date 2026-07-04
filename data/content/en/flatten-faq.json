@@ -38,5 +38,29 @@
       "@type": "Answer",
       "text": "A saved filled PDF still contains editable fields — a recipient could clear your values and re-fill them. Flattening permanently locks the content into the page, prevents editing, ensures consistent rendering across all PDF viewers, and removes hidden form metadata from the file."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "How do I flatten a PDF on Mac or Windows without Adobe Acrobat?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree Flatten runs in any modern browser — Chrome, Safari, Firefox, Edge — on Mac, Windows, and Linux. No download or installation is required. Open the Flatten PDF tool, load your PDF, click Flatten, and the result downloads directly to your device. Adobe Acrobat is not needed at any step."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Does flattening a PDF reduce the file size?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Often slightly. Flattening removes interactive form widget data and JavaScript, which reduces file size for forms with many fields. However, images and embedded fonts are unaffected by flattening. For significant size reduction, run the flattened output through a PDF compressor after flattening."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "What is the difference between flattening a PDF and password-protecting it?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "They solve different problems. Flattening removes the interactive form structure entirely — no fields exist to edit, regardless of permissions. Password protection restricts access or editing rights but leaves form fields intact; someone with the password could still modify a fillable form. For maximum security, flatten first to lock the content, then add a password."
+    }
   }
 ]
