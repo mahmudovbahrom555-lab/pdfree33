@@ -1228,24 +1228,31 @@ async function _p2wExtractText(pdfDoc) {
 
     // ── Gap detection: find vertical gaps between text lines that likely contain
     // diagrams, grids, or other vector graphics not captured by text extraction.
-    // Lines are already sorted descending by Y (top of page first).
-    const gapThreshold   = Math.max(_MIN_GAP_PT, median * _GAP_FACTOR);
-    const visualGaps     = [];
-    for (let gi = 0; gi < lines.length - 1; gi++) {
-      if (lineToTable.has(gi) || lineToTable.has(gi + 1)) continue;
-      const gap = lines[gi].y - lines[gi + 1].y;
-      if (gap < gapThreshold) continue;
+    // Sentinel nodes at pageH (top) and 0 (bottom) extend the same gap logic to
+    // diagrams at page edges without special-casing — classic sentinel pattern.
+    const gapThreshold = Math.max(_MIN_GAP_PT, median * _GAP_FACTOR);
+    const visualGaps   = [];
+    const gapLines     = [{ y: pageData[pi].pageH }, ...lines, { y: 0 }];
+    for (let si = 0; si < gapLines.length - 1; si++) {
+      const yAbove = gapLines[si].y;
+      const yBelow = gapLines[si + 1].y;
+      // si maps to original line index as: liA = si-1, liB = si
+      // (si=0 is the top sentinel → liA=-1; si=N+1 is bottom → liB=N)
+      const liA = si - 1;
+      const liB = si;
+      if ((liA >= 0 && lineToTable.has(liA)) || (liB < lines.length && lineToTable.has(liB))) continue;
+      if (yAbove - yBelow < gapThreshold) continue;
       // Skip if a border grid already covers this gap — it will be rendered as a
       // Word Table by the 'grid' event handler; inserting an ImageRun here too
       // would duplicate the same content in the DOCX output.
       const coveredByGrid = borderGrids.some(g =>
-        (g.y + g.h) <= lines[gi].y + 10 && g.y >= lines[gi + 1].y - 10
+        (g.y + g.h) <= yAbove + 10 && g.y >= yBelow - 10
       );
-      if (!coveredByGrid) visualGaps.push({ gi, yAbove: lines[gi].y, yBelow: lines[gi + 1].y });
+      if (!coveredByGrid) visualGaps.push({ yAbove, yBelow });
     }
     // Render page once and crop image regions for detected gaps and inline visuals.
     // .catch() degrades gracefully — rest of the document is still produced.
-    const giToImgRun = new Map();
+    const gapRunsArr  = [];
     const inlineVisuals = [];
     if (visualGaps.length > 0 && isProcessing) {
       setProgress(
@@ -1256,7 +1263,7 @@ async function _p2wExtractText(pdfDoc) {
         pdfDoc, pi + 1, pageData[pi].pageH, visualGaps, textItems,
         borderGrids, median, ImageRun,
       ).catch(() => ({ gapRuns: [], inlineRuns: [] }));
-      for (const { gi, imgRun } of gapRuns) giToImgRun.set(gi, imgRun);
+      gapRunsArr.push(...gapRuns);
       inlineVisuals.push(...inlineRuns);
     }
 
@@ -1295,11 +1302,11 @@ async function _p2wExtractText(pdfDoc) {
       if (!covered) events.push({ type: 'grid', y: grid.y + grid.h, grid });
     }
 
-    // Add visual region events for detected diagram/graphic gaps
-    for (const [gi, imgRun] of giToImgRun) {
-      // Insert just below lines[gi] so this fires after that line is processed
-      // but before lines[gi+1] is processed
-      events.push({ type: 'visual-region', y: lines[gi].y - 0.1, imgRun });
+    // Add visual region events for detected diagram/graphic gaps.
+    // Event Y = yAbove - 0.1: fires just after the text line above the gap
+    // (or at pageH - 0.1 for top-of-page sentinel gaps).
+    for (const { yAbove, imgRun } of gapRunsArr) {
+      events.push({ type: 'visual-region', y: yAbove - 0.1, imgRun });
     }
     // Add inline visual events (render-and-subtract regions — catches raster
     // XObjects AND vector charts not separated by large enough gaps)
@@ -1598,7 +1605,7 @@ async function _p2wRenderAllVisuals(pdfDoc, pageNum, pageH, gaps, textItems, bor
   // Track gap canvas Y ranges so inline scanner skips them (already captured)
   const gapCanvasRanges = [];
 
-  for (const { gi, yAbove, yBelow } of gaps) {
+  for (const { yAbove, yBelow } of gaps) {
     const pdfTop    = yAbove - medianFontSize * 0.5;
     const pdfBottom = yBelow + medianFontSize * 1.2;
     const cyTop     = Math.max(0,             Math.round((pageH - pdfTop)    * scale));
@@ -1633,7 +1640,7 @@ async function _p2wRenderAllVisuals(pdfDoc, pageNum, pageH, gaps, textItems, bor
     let h = Math.round(cropH        * 96 / _RENDER_DPI);
     if (w > _MAX_W_PX) { h = Math.round(h * _MAX_W_PX / w); w = _MAX_W_PX; }
 
-    gapRuns.push({ gi, imgRun: new ImageRun({ data: buf, transformation: { width: w, height: h }, type: fmt === 'png' ? 'png' : 'jpg' }) });
+    gapRuns.push({ yAbove, imgRun: new ImageRun({ data: buf, transformation: { width: w, height: h }, type: fmt === 'png' ? 'png' : 'jpg' }) });
   }
 
   // ── Part 2: inline visual runs (render-and-subtract) ───────────────────────
