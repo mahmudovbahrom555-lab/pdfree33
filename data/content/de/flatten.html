@@ -3,6 +3,33 @@
         <h1 id="seoH1_flatten" style="font-size:clamp(22px,3.5vw,30px);color:var(--text);margin:0 0 16px;font-weight:700;">PDF Abflachen — Formularfelder dauerhaft sperren, kostenlos</h1>
         <p style="font-size:15px;margin:0 0 40px;">Ein PDF abflachen bedeutet, alle Formularfelder, Anmerkungen und interaktive Elemente dauerhaft in den Seiteninhalt einzubrennen. Das fertige Dokument kann nicht mehr bearbeitet werden — ideal für finale Versionen, die exakt so bleiben sollen, wie sie ausgefüllt wurden. Kein Upload, 100 % privat, kostenlos.</p>
 
+        <!-- Before / After visual -->
+        <div style="overflow-x:auto;margin:0 0 48px;">
+          <div style="display:grid;grid-template-columns:1fr 48px 1fr;min-width:460px;align-items:stretch;">
+            <div style="border:2px solid var(--border);border-radius:10px 0 0 10px;padding:20px 24px;background:var(--surface);">
+              <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text2);margin:0 0 14px;">Vor dem Abflachen</div>
+              <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px;font-size:14px;color:var(--text2);">
+                <li>✏️&nbsp; Bearbeitbare Formularfelder</li>
+                <li>☑️&nbsp; Interaktive Checkboxen</li>
+                <li>💬&nbsp; Kommentare &amp; Anmerkungen</li>
+                <li>🖊️&nbsp; Unterschriften-Widgets</li>
+                <li>⚠️&nbsp; Versteckte Feldmetadaten</li>
+              </ul>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--green);font-weight:700;background:var(--surface);border-top:2px solid var(--border);border-bottom:2px solid var(--border);">→</div>
+            <div style="border:2px solid var(--green);border-radius:0 10px 10px 0;padding:20px 24px;background:var(--green-light);">
+              <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--green);margin:0 0 14px;">Nach dem Abflachen</div>
+              <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px;font-size:14px;color:var(--text);">
+                <li>✅&nbsp; Statischer, dauerhafter Inhalt</li>
+                <li>✅&nbsp; Kann nicht mehr bearbeitet werden</li>
+                <li>✅&nbsp; Druckt überall identisch</li>
+                <li>✅&nbsp; In jedem PDF-Viewer nutzbar</li>
+                <li>✅&nbsp; Keine versteckten Felddaten</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
         <h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">PDF in 3 Schritten abflachen</h2>
 
         <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
@@ -46,6 +73,18 @@
           <p style="margin:6px 0 0;font-size:14px;">Nicht jedes PDF-Programm zeigt Formularfelder korrekt an. Durch Abflachen wird das Dokument in jedem Viewer identisch dargestellt.</p>
         </div>
 
+        <!-- Common document types -->
+        <h2 style="font-size:22px;color:var(--text);margin:48px 0 16px;font-weight:700;">Typische Dokumente zum Abflachen</h2>
+        <p style="font-size:14px;margin:0 0 16px;">Das Abflachen ist immer dann sinnvoll, wenn du ein ausgefülltes Dokument weitergibst, das vom Empfänger nicht verändert werden soll:</p>
+        <ul style="margin:0 0 32px;padding-left:24px;font-size:14px;line-height:1.85;color:var(--text2);">
+          <li><strong style="color:var(--text);">Steuererklärungen und Steuerformulare</strong> — vor dem Versand an den Steuerberater oder die Behörde abflachen, damit keine Werte verändert werden können.</li>
+          <li><strong style="color:var(--text);">Behörden- und Visaanträge</strong> — viele Ämter verlangen ein abgeflachtes PDF für die digitale Einreichung oder den Ausdruck.</li>
+          <li><strong style="color:var(--text);">Mietverträge und Verträge</strong> — die unterschriebene Version sperren, damit keine Partei nachträglich Felder ändern kann.</li>
+          <li><strong style="color:var(--text);">Versicherungsformulare und -anträge</strong> — alle Werte einbrennen, bevor das Formular beim Versicherer eingereicht wird.</li>
+          <li><strong style="color:var(--text);">Medizinische Aufnahme- und Einwilligungsformulare</strong> — persönliche Gesundheitsdaten in statischem Inhalt können nicht per Feldinspektion ausgelesen werden.</li>
+          <li><strong style="color:var(--text);">Kommentierte PDFs mit Markierungen, Stempeln oder Anmerkungen</strong> — abflachen, damit Anmerkungen in jedem Viewer korrekt erscheinen.</li>
+        </ul>
+
         <!-- Privacy section -->
         <h2 style="font-size:22px;color:var(--text);margin:48px 0 16px;font-weight:700;">100 % Privat — Kein Upload erforderlich</h2>
         <p style="font-size:14px;margin:0 0 16px;">Jeder Schritt des Abflachens läuft vollständig in deinem Browser — mithilfe von <strong>pdf-lib</strong>, einer bewährten Open-Source-Bibliothek. Dein PDF — mit allen sensiblen Formulardaten, die es enthält — erreicht niemals einen Server. Nicht die Server von PDFree, nicht irgendein Drittanbieter.</p>
@@ -65,11 +104,26 @@
           <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Werden meine Dateien auf einen Server hochgeladen?</h3>
           <p style="margin:0;font-size:14px;">Nein. Das gesamte Abflachen erfolgt lokal in deinem Browser. Deine Dateien verlassen dein Gerät zu keiner Zeit.</p>
         </div>
-        <div style="margin-bottom:20px;">
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
           <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Wird die visuelle Qualität beeinträchtigt?</h3>
           <p style="margin:0;font-size:14px;">Nein. Text und Vektorinhalt bleibt identisch. Nur die Interaktivität entfällt — das Aussehen des Dokuments ändert sich nicht.</p>
         </div>
-
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Warum abflachen statt das ausgefüllte PDF einfach zu speichern?</h3>
+          <p style="margin:0;font-size:14px;">Ein gespeichertes, ausgefülltes PDF enthält noch immer bearbeitbare Felder — ein Empfänger könnte die Werte löschen und neu eingeben. Das Abflachen sperrt den Inhalt dauerhaft in die Seite, verhindert jede Bearbeitung und sorgt für konsistente Darstellung in allen PDF-Viewern.</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Wie kann ich ein PDF auf dem Mac oder Windows ohne Adobe Acrobat abflachen?</h3>
+          <p style="margin:0;font-size:14px;">PDFree Flatten läuft in jedem modernen Browser — Chrome, Safari, Firefox, Edge — auf Mac, Windows und Linux. Keine Installation erforderlich. Tool öffnen, PDF laden, auf „PDF abflachen" klicken — das Ergebnis lädt direkt auf dein Gerät. Adobe Acrobat wird nicht benötigt.</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Reduziert das Abflachen die Dateigröße?</h3>
+          <p style="margin:0;font-size:14px;">Oft leicht. Das Abflachen entfernt interaktive Widget-Daten und JavaScript, was die Dateigröße bei Formularen mit vielen Feldern reduziert. Bilder und eingebettete Schriften sind nicht betroffen. Für eine deutliche Verkleinerung das Ergebnis anschließend mit <a href="/de/pdf-komprimieren/" style="color:var(--green);">PDF Komprimieren</a> verarbeiten.</p>
+        </div>
+        <div style="margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Was ist der Unterschied zwischen Abflachen und Passwortschutz?</h3>
+          <p style="margin:0;font-size:14px;">Beides löst unterschiedliche Probleme. Das Abflachen entfernt die interaktive Formularstruktur vollständig — es gibt keine Felder mehr, die bearbeitet werden könnten. Passwortschutz schränkt Zugriff oder Bearbeitungsrechte ein, lässt die Formularfelder aber intakt. Für maximale Sicherheit erst abflachen, dann mit <a href="/de/pdf-schuetzen/" style="color:var(--green);">PDF Schützen</a> ein Passwort hinzufügen.</p>
+        </div>
 
         <h2 style="font-size:22px;color:var(--text);margin:48px 0 20px;font-weight:700;">PDFree im Vergleich</h2>
         <div style="overflow-x:auto;margin:0 0 24px;">

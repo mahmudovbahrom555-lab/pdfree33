@@ -38,5 +38,29 @@
       "@type": "Answer",
       "text": "Un PDF rellenado guardado sigue conteniendo campos editables — un destinatario podría borrar tus valores y volver a rellenarlos. Aplanar bloquea permanentemente el contenido en la página, evita la edición y garantiza una representación coherente en todos los visores de PDF."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Cómo aplanar un PDF en Mac o Windows sin Adobe Acrobat?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree Flatten funciona en cualquier navegador moderno — Chrome, Safari, Firefox, Edge — en Mac, Windows y Linux. No se requiere instalación. Abre la herramienta, carga tu PDF, haz clic en «Aplanar PDF» y el resultado se descarga directamente a tu dispositivo. No necesitas Adobe Acrobat en ningún paso."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Aplanar un PDF reduce el tamaño del archivo?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "A menudo, ligeramente. Aplanar elimina los datos de los widgets interactivos y el JavaScript, lo que reduce el tamaño en formularios con muchos campos. Las imágenes y fuentes incrustadas no se ven afectadas. Para una reducción significativa, procesa el resultado aplanado con un compresor de PDF."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Cuál es la diferencia entre aplanar y proteger con contraseña un PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Resuelven problemas distintos. Aplanar elimina por completo la estructura de formulario interactivo — no existen campos que editar, sin importar los permisos. La protección por contraseña restringe el acceso o los derechos de edición pero deja los campos intactos. Para mayor seguridad, aplana primero y luego añade una contraseña."
+    }
   }
 ]

@@ -30,5 +30,29 @@
       "@type": "Answer",
       "text": "Ein gespeichertes ausgefülltes PDF enthält noch bearbeitbare Felder — ein Empfänger könnte die Werte löschen und neu ausfüllen. Das Abflachen sperrt den Inhalt dauerhaft in die Seite, verhindert Bearbeitung und sorgt für konsistente Darstellung in allen PDF-Viewern."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Wie kann ich ein PDF auf dem Mac oder Windows ohne Adobe Acrobat abflachen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree Flatten läuft in jedem modernen Browser — Chrome, Safari, Firefox, Edge — auf Mac, Windows und Linux. Keine Installation erforderlich. Tool öffnen, PDF laden, auf »PDF abflachen« klicken — das Ergebnis lädt direkt auf dein Gerät. Adobe Acrobat wird nicht benötigt."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Reduziert das Abflachen die Dateigröße des PDFs?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oft leicht. Das Abflachen entfernt interaktive Widget-Daten und JavaScript, was die Dateigröße bei Formularen mit vielen Feldern reduziert. Bilder und eingebettete Schriften sind davon nicht betroffen. Für eine deutliche Verkleinerung das Ergebnis anschließend durch ein PDF-Komprimierungstool laufen lassen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Was ist der Unterschied zwischen Abflachen und Passwortschutz?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Beides löst unterschiedliche Probleme. Das Abflachen entfernt die interaktive Formularstruktur vollständig — es gibt keine Felder mehr, die bearbeitet werden könnten, unabhängig von Berechtigungen. Passwortschutz schränkt Zugriff oder Bearbeitungsrechte ein, lässt die Formularfelder aber intakt. Für maximale Sicherheit erst abflachen, dann ein Passwort hinzufügen."
+    }
   }
 ]

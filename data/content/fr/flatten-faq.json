@@ -38,5 +38,29 @@
       "@type": "Answer",
       "text": "Un PDF rempli enregistré contient encore des champs modifiables — un destinataire pourrait effacer vos valeurs et les re-saisir. L'aplatissement verrouille définitivement le contenu dans la page, empêche la modification et garantit un rendu cohérent dans tous les lecteurs PDF."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Comment aplatir un PDF sur Mac ou Windows sans Adobe Acrobat ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree Flatten fonctionne dans n'importe quel navigateur moderne — Chrome, Safari, Firefox, Edge — sur Mac, Windows et Linux. Aucune installation n'est requise. Ouvrez l'outil, chargez votre PDF, cliquez sur « Aplatir le PDF » et le résultat se télécharge directement sur votre appareil. Adobe Acrobat n'est pas nécessaire."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "L'aplatissement réduit-il la taille du fichier PDF ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Souvent légèrement. L'aplatissement supprime les données des widgets interactifs et le JavaScript, ce qui réduit la taille des fichiers comportant de nombreux champs. Les images et polices intégrées ne sont pas affectées. Pour une réduction significative, traitez le résultat aplati avec un compresseur PDF."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Quelle est la différence entre aplatir un PDF et le protéger par mot de passe ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ils résolvent des problèmes différents. L'aplatissement supprime entièrement la structure du formulaire interactif — aucun champ n'existe plus pour être modifié, quelles que soient les autorisations. La protection par mot de passe restreint l'accès ou les droits de modification mais laisse les champs intacts. Pour une sécurité maximale, aplatissez d'abord puis ajoutez un mot de passe."
+    }
   }
 ]

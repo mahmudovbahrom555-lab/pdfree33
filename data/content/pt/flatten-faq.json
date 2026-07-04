@@ -38,5 +38,29 @@
       "@type": "Answer",
       "text": "Um PDF preenchido salvo ainda contém campos editáveis — um destinatário poderia apagar seus valores e preenchê-los novamente. O nivelamento bloqueia permanentemente o conteúdo na página, impede a edição e garante renderização consistente em todos os leitores de PDF."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Como nivelar um PDF no Mac ou Windows sem o Adobe Acrobat?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "O PDFree Nivelar funciona em qualquer navegador moderno — Chrome, Safari, Firefox, Edge — no Mac, Windows e Linux. Nenhuma instalação é necessária. Abra a ferramenta, carregue seu PDF, clique em «Nivelar PDF» e o resultado é baixado diretamente para o seu dispositivo. O Adobe Acrobat não é necessário em nenhuma etapa."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Nivelar um PDF reduz o tamanho do arquivo?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Frequentemente, um pouco. Nivelar remove os dados dos widgets interativos e o JavaScript, reduzindo o tamanho em formulários com muitos campos. Imagens e fontes incorporadas não são afetadas. Para uma redução significativa, processe o resultado nivelado com um compressor de PDF."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Qual é a diferença entre nivelar e proteger um PDF com senha?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Eles resolvem problemas diferentes. Nivelar remove completamente a estrutura de formulário interativo — nenhum campo existe para ser editado, independentemente das permissões. A proteção por senha restringe o acesso ou os direitos de edição, mas deixa os campos intactos. Para máxima segurança, nivele primeiro e depois adicione uma senha."
+    }
   }
 ]
