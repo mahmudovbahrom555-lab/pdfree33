@@ -12,7 +12,7 @@
     "name": "¿Hay un límite de tamaño de archivo para fusionar PDFs?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. PDFree no tiene límites de tamaño de archivo ni de número de páginas. El procesamiento se realiza localmente en su navegador, por lo que los límites dependen únicamente de la memoria disponible de su dispositivo."
+      "text": "No hay límites artificiales ni muros de pago. PDFree procesa los archivos localmente en su navegador — sin suscripción. Para mejor rendimiento, recomendamos mantener el total por debajo de 300 MB; lotes más grandes pueden ser más lentos en dispositivos con poca memoria."
     }
   },
   {
@@ -20,7 +20,7 @@
     "name": "¿Puedo fusionar más de dos PDFs a la vez?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sí. Puede fusionar un número ilimitado de archivos PDF en una sola operación. Solo añada todos los archivos que desea combinar."
+      "text": "Sí. Puede fusionar un número ilimitado de archivos PDF en una sola operación — 2, 10, 50 o más de 100. Solo añada todos los archivos que desea combinar."
     }
   },
   {
@@ -29,6 +29,22 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Sí. PDFree es una Progressive Web App (PWA). Una vez cargada, funciona completamente sin conexión — no se requiere conexión a internet para el procesamiento."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Hay un límite diario en el número de fusiones que puedo realizar?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. A diferencia de SmallPDF (2 tareas/día gratis) o iLovePDF (límites diarios), PDFree no tiene restricciones de uso diario. Fusione tantos PDFs como necesite, con la frecuencia que desee."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Puedo fusionar PDFs en un teléfono o tableta?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sí. PDFree funciona en navegadores móviles — Chrome para Android y Safari para iOS. La selección de archivos usa el selector de archivos nativo y puede reordenarlos con los botones en pantalla."
     }
   }
 ]

@@ -12,7 +12,7 @@
     "name": "Is there a file size limit for merging PDFs?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. PDFree has no file size or page count limits. Processing is done locally in your browser, so limits depend only on your device's available memory."
+      "text": "There are no artificial paywall limits. PDFree processes files locally in your browser — no subscription required. For the best experience, keep the total batch under 300 MB; larger batches may be slower on low-memory devices."
     }
   },
   {
@@ -20,7 +20,7 @@
     "name": "Can I merge more than two PDFs at once?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Yes. You can merge unlimited PDF files in one operation. Just add all the files you want to combine."
+      "text": "Yes. You can merge unlimited PDF files in one operation. Just add all the files you want to combine — 2, 10, 50, or 100+."
     }
   },
   {
@@ -29,6 +29,22 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Yes. PDFree is a Progressive Web App (PWA). Once loaded, it works fully offline — no internet connection required for processing."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is there a daily limit on how many merges I can do?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Unlike SmallPDF (2 tasks/day free) or iLovePDF (daily limits), PDFree has no daily usage cap. Merge as many PDFs as you want, as often as you need."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I merge PDFs on a phone or tablet?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. PDFree works in mobile browsers — Chrome for Android and Safari for iOS. File selection uses the native file picker, and you can reorder files using the on-screen buttons."
     }
   }
 ]

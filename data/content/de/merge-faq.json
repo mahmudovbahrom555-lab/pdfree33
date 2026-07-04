@@ -12,7 +12,7 @@
     "name": "Gibt es ein Dateigrößenlimit beim Zusammenführen von PDFs?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nein. PDFree hat keine Dateigrößen- oder Seitenanzahllimits. Die Verarbeitung erfolgt lokal in Ihrem Browser, sodass die Limits nur vom verfügbaren Arbeitsspeicher Ihres Geräts abhängen."
+      "text": "Es gibt keine künstlichen Limits oder Bezahlschranken. PDFree verarbeitet Dateien lokal in Ihrem Browser — kein Abonnement erforderlich. Für beste Ergebnisse empfehlen wir, die Gesamtgröße unter 300 MB zu halten; größere Batches können auf speicherarmen Geräten langsamer sein."
     }
   },
   {
@@ -20,7 +20,7 @@
     "name": "Kann ich mehr als zwei PDFs auf einmal zusammenführen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ja. Sie können unbegrenzt viele PDF-Dateien in einem Vorgang zusammenführen. Fügen Sie einfach alle Dateien hinzu, die Sie kombinieren möchten."
+      "text": "Ja. Sie können unbegrenzt viele PDF-Dateien in einem Vorgang zusammenführen — 2, 10, 50 oder 100+. Fügen Sie einfach alle gewünschten Dateien hinzu."
     }
   },
   {
@@ -29,6 +29,22 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Ja. PDFree ist eine Progressive Web App (PWA). Einmal geladen, funktioniert sie vollständig offline — keine Internetverbindung für die Verarbeitung erforderlich."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Gibt es ein tägliches Limit für die Anzahl der Zusammenführungen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nein. Im Gegensatz zu SmallPDF (2 Aufgaben/Tag kostenlos) oder iLovePDF (tägliche Limits) hat PDFree keine täglichen Nutzungsbeschränkungen. Führen Sie so viele PDFs zusammen, wie Sie möchten."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann ich PDFs auf einem Smartphone oder Tablet zusammenführen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. PDFree funktioniert in mobilen Browsern — Chrome für Android und Safari für iOS. Die Dateiauswahl erfolgt über den nativen Datei-Picker und die Reihenfolge lässt sich über die Schaltflächen auf dem Bildschirm anpassen."
     }
   }
 ]

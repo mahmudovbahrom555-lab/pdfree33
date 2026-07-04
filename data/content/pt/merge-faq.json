@@ -12,7 +12,7 @@
     "name": "Existe algum limite de tamanho de ficheiro para combinar PDFs?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Não. O PDFree não tem limites de tamanho de ficheiro nem de número de páginas. O processamento é efectuado localmente no seu browser, pelo que os limites dependem apenas da memória disponível do seu dispositivo."
+      "text": "Não existem limites artificiais nem subscrições obrigatórias. O PDFree processa os ficheiros localmente no seu browser. Para melhor desempenho, recomendamos manter o total abaixo de 300 MB; lotes maiores podem ser mais lentos em dispositivos com pouca memória."
     }
   },
   {
@@ -20,7 +20,7 @@
     "name": "Posso combinar mais de dois PDFs de uma vez?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sim. Pode combinar um número ilimitado de ficheiros PDF numa única operação. Basta adicionar todos os ficheiros que pretende combinar."
+      "text": "Sim. Pode combinar um número ilimitado de ficheiros PDF numa única operação — 2, 10, 50 ou mais de 100. Basta adicionar todos os ficheiros que pretende combinar."
     }
   },
   {
@@ -29,6 +29,22 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Sim. O PDFree é uma Progressive Web App (PWA). Uma vez carregado, funciona completamente offline — não é necessária ligação à internet para o processamento."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Existe algum limite diário no número de combinações que posso realizar?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Não. Ao contrário do SmallPDF (2 tarefas/dia grátis) ou do iLovePDF (limites diários), o PDFree não tem restrições de uso diário. Combine tantos PDFs quantos precisar, com a frequência que desejar."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso combinar PDFs num telemóvel ou tablet?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim. O PDFree funciona em browsers móveis — Chrome para Android e Safari para iOS. A seleção de ficheiros usa o seletor nativo e pode reordenar os ficheiros com os botões no ecrã."
     }
   }
 ]

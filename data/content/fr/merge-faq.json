@@ -12,7 +12,7 @@
     "name": "Y a-t-il une limite de taille de fichier pour la fusion de PDFs ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Non. PDFree n'a aucune limite de taille de fichier ni de nombre de pages. Le traitement s'effectue localement dans votre navigateur, les limites ne dépendent donc que de la mémoire disponible de votre appareil."
+      "text": "Il n'y a aucune limite artificielle ni abonnement requis. PDFree traite les fichiers localement dans votre navigateur. Pour de meilleures performances, nous recommandons de garder la taille totale sous 300 Mo ; les lots plus importants peuvent être plus lents sur les appareils à mémoire limitée."
     }
   },
   {
@@ -20,7 +20,7 @@
     "name": "Puis-je fusionner plus de deux PDFs à la fois ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Oui. Vous pouvez fusionner un nombre illimité de fichiers PDF en une seule opération. Ajoutez simplement tous les fichiers que vous souhaitez combiner."
+      "text": "Oui. Vous pouvez fusionner un nombre illimité de fichiers PDF en une seule opération — 2, 10, 50 ou plus de 100. Ajoutez simplement tous les fichiers que vous souhaitez combiner."
     }
   },
   {
@@ -29,6 +29,22 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Oui. PDFree est une application web progressive (PWA). Une fois chargée, elle fonctionne entièrement hors ligne — aucune connexion internet n'est requise pour le traitement."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Y a-t-il une limite quotidienne sur le nombre de fusions ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non. Contrairement à SmallPDF (2 tâches/jour gratuit) ou iLovePDF (limites quotidiennes), PDFree n'a aucun plafond d'utilisation journalier. Fusionnez autant de PDFs que vous le souhaitez, aussi souvent que nécessaire."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Puis-je fusionner des PDFs sur un téléphone ou une tablette ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui. PDFree fonctionne dans les navigateurs mobiles — Chrome pour Android et Safari pour iOS. La sélection des fichiers utilise le sélecteur natif et vous pouvez réorganiser les fichiers à l'aide des boutons à l'écran."
     }
   }
 ]
