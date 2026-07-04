@@ -17,6 +17,14 @@
   },
   {
     "@type": "Question",
+    "name": "O nivelamento remove as assinaturas digitais?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Assinaturas desenhadas com a ferramenta Preencher PDF (imagens do painel de assinatura) são niveladas na página. Assinaturas digitais criptográficas de provedores certificados de assinatura eletrônica podem ser tratadas de forma diferente — a aparência visual é preservada, mas o certificado criptográfico pode não ser mais válido após o nivelamento."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "Meu PDF é enviado para algum servidor ao nivelar?",
     "acceptedAnswer": {
       "@type": "Answer",

@@ -17,6 +17,14 @@
   },
   {
     "@type": "Question",
+    "name": "L'aplatissement supprime-t-il les signatures numériques ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Les signatures dessinées avec l'outil Remplir PDF (images du pavé de signature) sont aplaties dans la page. Les signatures numériques cryptographiques issues de fournisseurs de signature électronique certifiés peuvent être traitées différemment — l'apparence visuelle est préservée, mais le certificat cryptographique peut ne plus être valide après l'aplatissement."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "Mon PDF est-il envoyé à un serveur lors de l'aplatissement ?",
     "acceptedAnswer": {
       "@type": "Answer",

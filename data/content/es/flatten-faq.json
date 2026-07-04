@@ -17,6 +17,14 @@
   },
   {
     "@type": "Question",
+    "name": "¿El aplanado elimina las firmas digitales?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Las firmas dibujadas con la herramienta Rellenar PDF (imágenes del panel de firmas) se aplanan en la página. Las firmas digitales criptográficas de proveedores certificados de firma electrónica pueden tratarse de forma diferente — la apariencia visual se conserva, pero el certificado criptográfico puede dejar de validarse después del aplanado."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "¿Se sube mi PDF a algún servidor al aplanarlo?",
     "acceptedAnswer": {
       "@type": "Answer",
