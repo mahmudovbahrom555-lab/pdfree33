@@ -134,26 +134,50 @@
   "mainEntity": [
     {
       "@type": "Question",
-      "name": "Does my file get uploaded to a server?",
+      "name": "Will my files stay private when comparing PDFs?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Never. All processing happens inside your browser. Your PDFs never leave your device."
+        "text": "Yes. PDFree runs entirely in your browser. Neither PDF is ever uploaded to a server — not to PDFree's servers, not to any third party. All rendering and comparison happens locally inside your browser tab. You can verify this by opening DevTools → Network tab: you will not see your files being transmitted anywhere."
       }
     },
     {
       "@type": "Question",
-      "name": "Can I compare PDFs with different page counts?",
+      "name": "Can I compare password-protected PDFs?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes. PDFree compares pages that exist in both files. Pages that only appear in one PDF are shown with a badge indicating which document they belong to."
+        "text": "Yes, if you know the password. PDFree will prompt you to enter it when you open a protected file. Once unlocked, the comparison proceeds normally. PDFree cannot bypass or crack a password — it can only open files you are authorised to open."
       }
     },
     {
       "@type": "Question",
-      "name": "Is this tool really free?",
+      "name": "Can I compare PDFs on iPhone or Mac without Adobe Acrobat?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes, completely free. No subscription, no premium tier, no per-file charges. PDFree is open-source and runs entirely in your browser."
+        "text": "Yes. Open PDFree in Safari (iPhone/iPad) or any browser on Mac — no app download or Adobe Acrobat required. The tool runs entirely in the browser: drop both PDFs, tap Compare PDFs, and scroll through the diff. No installation needed."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I compare scanned PDFs?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. PDFree performs a visual comparison at the pixel level, so it works on scanned pages just as well as digital PDFs. Any visible difference — a stamp, a handwritten note, a misaligned scan — will be highlighted in the diff view."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I check if two PDFs are identical?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. After comparing, pages with no differences show a 0% changed badge. If all pages show 0% and the page counts match, the two PDFs are visually identical. This is useful for verifying that a copy or a signed version matches the original."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is a PDF redline?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A redline is a version of a document — typically a contract or legal brief — that shows tracked changes compared to an earlier draft. The term comes from the practice of marking changes in red ink. PDFree highlights those same differences visually: drop the original and the revised version, and the diff view shows every change in red."
       }
     },
     {
@@ -161,7 +185,23 @@
       "name": "Does it detect text changes or only visual differences?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "This tool performs a pixel-level visual comparison — it shows any visible difference, whether from text edits, formatting changes, added images, or layout shifts. For text-only diff, use a dedicated text-diff tool after extracting text."
+        "text": "PDFree performs a visual comparison — it highlights any pixel that differs between the two PDFs. This covers text edits, formatting changes, added images, stamps, and layout shifts. It does not do text-only diffing. If you need extracted text compared as strings, use OCR PDF first to get the text, then a text-diff tool."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I compare PDFs with different page counts?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. PDFree compares all pages that exist in both files. Pages that only appear in one PDF are shown with an 'Only in A' or 'Only in B' badge so you immediately see which document has extra content."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I export or download the comparison result?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The comparison is a visual browser view — there is no downloadable diff report file. To capture a result, use your browser or OS screenshot tool (Cmd+Shift+4 on Mac, Windows+Shift+S on Windows). After comparing, you can use Redact PDF to cover sensitive areas, or Protect PDF to password-protect the document before sharing."
       }
     }
   ]
@@ -299,66 +339,214 @@
   <!-- ── SEO Content (for indexing) ── -->
   <hr style="border:none;border-top:2px solid var(--border);margin:48px 24px 0;" aria-hidden="true">
   <section class="seo-article" aria-label="Compare PDF">
-    <div class="seo-article__inner">
+    <div class="seo-article__inner" style="max-width:800px;margin:0 auto;padding:0 24px 60px;color:var(--text2);line-height:1.75;">
 
-      <h1>Compare PDF Files Online — Free Visual Diff Tool</h1>
+      <h1 style="font-size:clamp(22px,3.5vw,30px);color:var(--text);margin:40px 0 16px;font-weight:700;">Compare PDF Files Online — Find Differences Between Two PDFs</h1>
 
-      <p>Compare two PDF files instantly and see exactly what changed — highlighted directly on the page. Works entirely in your browser. Your files <strong>never leave your device</strong>.</p>
+      <p style="font-size:15px;margin:0 0 20px;">Did someone send back a contract with changes? Need to check whether a document was altered after signing? Comparing two versions of a report or specification? PDFree lets you drop both PDFs and see every difference highlighted — no upload, no account, no Adobe Acrobat required.</p>
+      <p style="font-size:15px;margin:0 0 40px;">Whether you need to <strong>redline a contract</strong>, <strong>verify two PDFs are identical</strong>, <strong>check a scanned copy against the original</strong>, <strong>find unauthorized changes</strong>, or <strong>proof-check a print-ready file</strong> — the diff view shows every changed area in seconds, 100% private.</p>
 
-      <h2>How to compare two PDFs</h2>
-
-      <ol>
-        <li>Drop both PDF files into the drop zone above (or click to choose them).</li>
-        <li>Click <strong>Compare PDFs</strong> — each page is rendered and compared pixel by pixel.</li>
-        <li>Use the <strong>PDF A / PDF B / Diff</strong> buttons to switch between views.</li>
-        <li>Diff view highlights changed pixels in red so differences are immediately visible.</li>
-        <li>Each page shows the percentage of pixels that changed.</li>
-      </ol>
-
-      <h2>What the diff view shows</h2>
-
-      <p>The Diff mode renders both PDFs at the same scale and compares every pixel. Pixels that differ by more than a small threshold are highlighted in red. Unchanged pixels are shown in greyscale so the red highlights pop out. Each page card also shows a "% changed" badge — useful for spotting which pages were edited.</p>
-
-      <h2>Handling different page counts</h2>
-
-      <p>If the two PDFs have different numbers of pages, PDFree compares all pages that exist in both files. Pages that only appear in one PDF are shown with an "Only in A" or "Only in B" badge.</p>
-
-      <h2>Privacy — your files stay on your device</h2>
-
-      <p>PDF comparison often involves confidential documents — legal agreements, financial reports, draft contracts. With PDFree, <strong>nothing is ever uploaded</strong>. All rendering and pixel comparison happens inside your browser tab using PDF.js. No server ever receives your files.</p>
-
-      <h2>Frequently asked questions</h2>
-
-      <div style="display:flex;flex-direction:column;gap:20px;margin-bottom:48px;">
-
-        <div style="border:1px solid var(--border);border-radius:12px;padding:20px;">
-          <h3>Does my file get uploaded to a server?</h3>
-          <p>Never. All processing happens inside your browser. Your PDFs never leave your device.</p>
+      <!-- Before / After -->
+      <div style="overflow-x:auto;margin:0 0 48px;">
+        <div style="display:grid;grid-template-columns:1fr 40px 1fr;min-width:380px;align-items:stretch;">
+          <div style="border:2px solid var(--border);border-radius:10px 0 0 10px;padding:18px 22px;background:var(--surface);">
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text2);margin:0 0 12px;">Input</div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <div style="font-size:14px;color:var(--text);font-weight:600;">📄 contract-v1.pdf</div>
+              <div style="font-size:13px;color:var(--text2);">+</div>
+              <div style="font-size:14px;color:var(--text);font-weight:600;">📄 contract-v2.pdf</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--green);font-weight:700;background:var(--surface);border-top:2px solid var(--border);border-bottom:2px solid var(--border);">→</div>
+          <div style="border:2px solid var(--green);border-radius:0 10px 10px 0;padding:18px 22px;background:var(--green-light);">
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--green);margin:0 0 12px;">Result</div>
+            <div style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--text);">
+              <div>✓ 6 pages compared</div>
+              <div>✓ 11 differences found</div>
+              <div>✓ Changed areas highlighted in red</div>
+            </div>
+          </div>
         </div>
-
-        <div style="border:1px solid var(--border);border-radius:12px;padding:20px;">
-          <h3>Can I compare PDFs with different page counts?</h3>
-          <p>Yes. PDFree compares pages that exist in both files. Pages that only appear in one PDF are shown with a badge indicating which document they belong to.</p>
-        </div>
-
-        <div style="border:1px solid var(--border);border-radius:12px;padding:20px;">
-          <h3>Is this tool really free?</h3>
-          <p>Yes, completely free. No subscription, no premium tier, no per-file charges. PDFree is open-source and runs entirely in your browser.</p>
-        </div>
-
-        <div style="border:1px solid var(--border);border-radius:12px;padding:20px;">
-          <h3>Does it detect text changes or only visual differences?</h3>
-          <p>This tool performs a pixel-level visual comparison — it shows any visible difference, whether from text edits, formatting changes, added images, or layout shifts. For text-only diff, use a dedicated text-diff tool after extracting text.</p>
-        </div>
-
       </div>
 
-      <h2>Related tools</h2>
-      <ul>
-        <li><a href="../redact-pdf/">Cover Area</a> — hide sensitive regions before sharing PDFs</li>
-        <li><a href="../ocr-pdf/">OCR PDF</a> — extract text from scanned PDFs</li>
-        <li><a href="../merge-pdf/">Merge PDF</a> — combine multiple PDFs into one</li>
-        <li><a href="../split-pdf/">Split PDF</a> — extract individual pages from a PDF</li>
+      <!-- When to compare -->
+      <h2 style="font-size:22px;color:var(--text);margin:0 0 16px;font-weight:700;">When should you compare PDFs?</h2>
+
+      <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+        <strong style="color:var(--text);font-size:15px;">Check if a contract was altered after signing</strong>
+        <p style="margin:6px 0 0;font-size:14px;">A counterparty returned a signed PDF. Before relying on it, compare it against the version you sent. Any added clause, changed number, or removed paragraph shows up immediately in the diff view.</p>
+      </div>
+      <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+        <strong style="color:var(--text);font-size:15px;">Review a lawyer's redline — find every change</strong>
+        <p style="margin:6px 0 0;font-size:14px;">Drop the draft you sent and the marked-up version that came back. PDFree highlights every revision in red so you can review the redline without toggling between tabs or printed copies.</p>
+      </div>
+      <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+        <strong style="color:var(--text);font-size:15px;">Verify two PDFs are identical</strong>
+        <p style="margin:6px 0 0;font-size:14px;">Confirm a copy or certified duplicate matches the original before archiving. If every page shows 0% changed, the files are visually identical — useful for compliance, auditing, and document management workflows.</p>
+      </div>
+      <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+        <strong style="color:var(--text);font-size:15px;">Compare document revisions (V1 vs V2)</strong>
+        <p style="margin:6px 0 0;font-size:14px;">Technical specifications, engineering drawings, policy documents — when a new version lands, compare it against the previous one to understand exactly what changed without reading both in full.</p>
+      </div>
+      <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+        <strong style="color:var(--text);font-size:15px;">Proof-check a print-ready PDF</strong>
+        <p style="margin:6px 0 0;font-size:14px;">Compare the press-ready export against the design source to catch last-minute layout shifts, font substitutions, or colour changes before sending to print. The diff view catches what the eye misses.</p>
+      </div>
+      <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+        <strong style="color:var(--text);font-size:15px;">Compare a scanned copy to the digital original</strong>
+        <p style="margin:6px 0 0;font-size:14px;">Check that a physical scan matches the source file — useful when verifying certified copies, checking that a faxed document arrived intact, or confirming no pages were added or removed during scanning.</p>
+      </div>
+
+      <!-- How to -->
+      <h2 style="font-size:22px;color:var(--text);margin:48px 0 20px;font-weight:700;">How to compare two PDFs in 3 steps</h2>
+
+      <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
+        <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">1</div>
+        <div>
+          <strong style="color:var(--text);font-size:15px;">Drop both PDFs</strong>
+          <p style="margin:6px 0 0;font-size:14px;">The original goes as <strong>PDF A</strong>, the revised version as <strong>PDF B</strong>. Both files are rendered locally in your browser — nothing is uploaded.</p>
+        </div>
+      </div>
+      <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
+        <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">2</div>
+        <div>
+          <strong style="color:var(--text);font-size:15px;">Click Compare PDFs</strong>
+          <p style="margin:6px 0 0;font-size:14px;">Each page is rendered at the same scale and compared. A <strong>% changed</strong> badge appears on each page so you immediately spot which pages were edited.</p>
+        </div>
+      </div>
+      <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
+        <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">3</div>
+        <div>
+          <strong style="color:var(--text);font-size:15px;">Switch views to pinpoint every change</strong>
+          <p style="margin:6px 0 0;font-size:14px;">Use <strong>PDF A</strong> / <strong>PDF B</strong> / <strong>Diff</strong> buttons to switch between the original, the revision, and the highlighted overlay. Diff view shows changed areas in red; unchanged areas in greyscale.</p>
+        </div>
+      </div>
+
+      <!-- Privacy -->
+      <h2 style="font-size:22px;color:var(--text);margin:48px 0 16px;font-weight:700;">100% Private — Your Files Never Leave Your Device</h2>
+      <p style="font-size:14px;margin:0 0 16px;">PDF comparison frequently involves the most sensitive documents you handle: contracts, NDAs, financial reports, legal briefs, medical records. With PDFree, <strong>neither file is ever uploaded to any server</strong>. All rendering and comparison happens inside your browser tab using PDF.js. No cloud service, no third party, no server ever receives your documents.</p>
+      <p style="font-size:14px;margin:0 0 32px;">To verify: open browser DevTools → Network tab while comparing. You will not see your PDFs being transmitted anywhere during processing.</p>
+
+      <!-- Why PDFree -->
+      <h2 style="font-size:22px;color:var(--text);margin:0 0 16px;font-weight:700;">Why use PDFree to compare PDFs?</h2>
+      <ul style="margin:0 0 32px;padding-left:24px;display:flex;flex-direction:column;gap:8px;font-size:14px;">
+        <li><strong>Free forever</strong> — no subscription, no daily limits, no per-file charges</li>
+        <li><strong>No registration</strong> — open the tool and start immediately</li>
+        <li><strong>100% private</strong> — files processed locally, never uploaded</li>
+        <li><strong>Works on any file</strong> — digital PDFs, scanned documents, password-protected files</li>
+        <li><strong>Handles page count differences</strong> — extra pages shown with "Only in A / Only in B" badges</li>
+        <li><strong>Works on mobile</strong> — compare PDFs in Safari (iPhone/iPad) or any desktop browser</li>
+      </ul>
+
+      <!-- Comparison table -->
+      <h2 style="font-size:22px;color:var(--text);margin:0 0 16px;font-weight:700;">PDFree vs. cloud-based PDF comparison tools</h2>
+      <div style="overflow-x:auto;margin:0 0 48px;">
+        <table style="width:100%;border-collapse:collapse;font-size:14px;min-width:440px;">
+          <thead>
+            <tr style="border-bottom:2px solid var(--border);">
+              <th style="text-align:left;padding:10px 14px;color:var(--text);font-weight:600;">Feature</th>
+              <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">PDFree</th>
+              <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">Typical cloud tools</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:10px 14px;color:var(--text);font-weight:500;">Files uploaded to server</td>
+              <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;">No — stays in browser</td>
+              <td style="text-align:center;padding:10px 14px;color:var(--text2);">Yes — sent to remote servers</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);background:var(--green-light);">
+              <td style="padding:10px 14px;color:var(--text);font-weight:500;">File size limit</td>
+              <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;">None</td>
+              <td style="text-align:center;padding:10px 14px;color:var(--text2);">Usually capped on free tier</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:10px 14px;color:var(--text);font-weight:500;">Daily usage limit</td>
+              <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;">None</td>
+              <td style="text-align:center;padding:10px 14px;color:var(--text2);">Often restricted</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);background:var(--green-light);">
+              <td style="padding:10px 14px;color:var(--text);font-weight:500;">Registration required</td>
+              <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;">Never</td>
+              <td style="text-align:center;padding:10px 14px;color:var(--text2);">Often required</td>
+            </tr>
+            <tr>
+              <td style="padding:10px 14px;color:var(--text);font-weight:500;">Price</td>
+              <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;">Free forever</td>
+              <td style="text-align:center;padding:10px 14px;color:var(--text2);">Free with limits / paid plans</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- FAQ -->
+      <h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">Frequently asked questions</h2>
+
+      <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+        <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Will my files stay private?</h3>
+        <p style="margin:0;font-size:14px;">Yes. PDFree runs entirely in your browser. Neither PDF is ever uploaded — not to PDFree's servers, not to any third party. Open DevTools → Network tab while comparing and you will not see your files being transmitted anywhere.</p>
+      </div>
+      <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+        <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Can I compare password-protected PDFs?</h3>
+        <p style="margin:0;font-size:14px;">Yes, if you know the password. PDFree prompts you to enter it when you open a protected file. Once unlocked, the comparison proceeds normally. PDFree cannot bypass or crack a password — it only opens files you are authorised to open.</p>
+      </div>
+      <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+        <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Can I compare PDFs on iPhone or Mac without Adobe Acrobat?</h3>
+        <p style="margin:0;font-size:14px;">Yes. Open PDFree in Safari (iPhone/iPad) or any browser on Mac — no app download or Adobe Acrobat required. Drop both PDFs, tap Compare PDFs, and scroll through the diff. Works entirely in the browser.</p>
+      </div>
+      <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+        <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Can I compare scanned PDFs?</h3>
+        <p style="margin:0;font-size:14px;">Yes. PDFree compares at the pixel level, so it works on scanned pages as well as digital PDFs. Any visible difference — a stamp, a handwritten note, a misaligned scan — is highlighted in the diff view.</p>
+      </div>
+      <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+        <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Can I check if two PDFs are identical?</h3>
+        <p style="margin:0;font-size:14px;">Yes. After comparing, pages with no differences show a 0% changed badge. If all pages show 0% and the page counts match, the files are visually identical — useful for compliance verification, certified copies, and archiving workflows.</p>
+      </div>
+      <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+        <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">What is a PDF redline?</h3>
+        <p style="margin:0;font-size:14px;">A redline is a marked-up version of a document — typically a contract or legal agreement — that shows tracked changes compared to an earlier draft. The term comes from marking changes in red ink. PDFree's diff view serves the same purpose: drop the original and the revised version, and changed areas are highlighted in red.</p>
+      </div>
+      <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+        <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Does it detect text changes or only visual differences?</h3>
+        <p style="margin:0;font-size:14px;">PDFree performs a visual comparison — it highlights any pixel that differs between the two PDFs. This covers text edits, formatting changes, added images, stamps, and layout shifts. If you need text-only diffing, use <a href="../ocr-pdf/" style="color:var(--green);">OCR PDF</a> first to extract the text, then a text-diff tool.</p>
+      </div>
+      <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+        <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Can I compare PDFs with different page counts?</h3>
+        <p style="margin:0;font-size:14px;">Yes. PDFree compares all pages that exist in both files. Pages that only appear in one PDF are shown with an "Only in A" or "Only in B" badge so you immediately see which document has extra content.</p>
+      </div>
+      <div style="margin-bottom:20px;">
+        <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Can I export or download the comparison result?</h3>
+        <p style="margin:0;font-size:14px;">The comparison is a visual browser view — there is no downloadable diff report. To capture a result, use your OS screenshot tool (Cmd+Shift+4 on Mac, Windows+Shift+S on Windows). After reviewing, use <a href="../redact-pdf/" style="color:var(--green);">Redact PDF</a> to cover sensitive areas or <a href="../protect-pdf/" style="color:var(--green);">Protect PDF</a> to add a password before sharing.</p>
+      </div>
+
+      <!-- What to do after -->
+      <h2 style="font-size:22px;color:var(--text);margin:48px 0 12px;font-weight:700;">What to do after comparing</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:0 0 40px;">
+        <a href="../redact-pdf/" style="display:block;padding:16px;border:1px solid var(--border);border-radius:10px;text-decoration:none;background:var(--surface);">
+          <div style="font-weight:600;color:var(--text);margin:0 0 4px;font-size:14px;">→ Redact PDF</div>
+          <p style="margin:0;font-size:13px;color:var(--text2);">Cover sensitive areas you found during comparison before sharing</p>
+        </a>
+        <a href="../protect-pdf/" style="display:block;padding:16px;border:1px solid var(--border);border-radius:10px;text-decoration:none;background:var(--surface);">
+          <div style="font-weight:600;color:var(--text);margin:0 0 4px;font-size:14px;">→ Protect PDF</div>
+          <p style="margin:0;font-size:13px;color:var(--text2);">Password-protect the reviewed document before sending</p>
+        </a>
+        <a href="../flatten-pdf/" style="display:block;padding:16px;border:1px solid var(--border);border-radius:10px;text-decoration:none;background:var(--surface);">
+          <div style="font-weight:600;color:var(--text);margin:0 0 4px;font-size:14px;">→ Flatten PDF</div>
+          <p style="margin:0;font-size:13px;color:var(--text2);">Lock the final version so form fields and annotations can't be edited</p>
+        </a>
+        <a href="../ocr-pdf/" style="display:block;padding:16px;border:1px solid var(--border);border-radius:10px;text-decoration:none;background:var(--surface);">
+          <div style="font-weight:600;color:var(--text);margin:0 0 4px;font-size:14px;">→ OCR PDF</div>
+          <p style="margin:0;font-size:13px;color:var(--text2);">Extract searchable text from scanned pages found during comparison</p>
+        </a>
+      </div>
+
+      <!-- Related tools -->
+      <h2 style="font-size:22px;color:var(--text);margin:0 0 12px;font-weight:700;">Related tools</h2>
+      <ul style="margin:0 0 40px;padding-left:24px;display:flex;flex-direction:column;gap:8px;font-size:14px;">
+        <li><a href="../redact-pdf/" style="color:var(--green);font-weight:500;">Redact PDF</a> — permanently hide sensitive regions before sharing</li>
+        <li><a href="../split-pdf/" style="color:var(--green);font-weight:500;">Split PDF</a> — extract specific pages from either document</li>
+        <li><a href="../ocr-pdf/" style="color:var(--green);font-weight:500;">OCR PDF</a> — make scanned PDFs text-searchable before or after comparing</li>
+        <li><a href="../protect-pdf/" style="color:var(--green);font-weight:500;">Protect PDF</a> — add a password to the final version</li>
       </ul>
 
     </div>
