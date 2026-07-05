@@ -46,5 +46,29 @@
       "@type": "Answer",
       "text": "Oui. PDFree est une application web progressive et fonctionne entièrement hors ligne une fois chargée dans votre navigateur. Aucune connexion internet n'est requise pour diviser ou extraire des pages."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Puis-je diviser un PDF protégé par mot de passe ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui, si vous connaissez le mot de passe. Lorsque vous ouvrez un fichier protégé, PDFree vous invite à le saisir. Une fois déverrouillé, vous pouvez sélectionner et extraire les pages normalement. PDFree ne peut pas contourner ni craquer un mot de passe — il ouvre uniquement les fichiers auxquels vous êtes autorisé à accéder."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Comment diviser un PDF sur iPhone, iPad ou Mac sans Adobe Acrobat ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ouvrez PDFree dans Safari (iPhone/iPad) ou n'importe quel navigateur sur Mac — aucun téléchargement d'app ni Adobe Acrobat requis. L'outil fonctionne entièrement dans le navigateur : chargez le PDF, sélectionnez les pages, appuyez sur Diviser le PDF. Le résultat est enregistré dans l'app Fichiers (iOS) ou dans le dossier Téléchargements (Mac)."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Puis-je diviser plusieurs PDFs à la fois ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Pas en traitement par lot — PDFree traite un PDF à la fois. Ouvrez l'outil dans un nouvel onglet pour diviser un second fichier en parallèle. PDFree fonctionne aussi hors ligne en tant que Progressive Web App, sans attente réseau entre les fichiers."
+    }
   }
 ]

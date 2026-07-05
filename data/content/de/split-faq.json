@@ -46,5 +46,29 @@
       "@type": "Answer",
       "text": "Ja. PDFree ist eine Progressive Web App und funktioniert vollständig offline, sobald die Seite in Ihrem Browser geladen wurde. Es ist keine Internetverbindung erforderlich, um Seiten zu teilen oder zu extrahieren."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann ich ein passwortgeschütztes PDF aufteilen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja, wenn du das Passwort kennst. PDFree fordert beim Öffnen einer geschützten Datei zur Passworteingabe auf. Nach der Entsperrung können Seiten normal ausgewählt und extrahiert werden. PDFree kann kein Passwort umgehen — es öffnet nur Dateien, zu denen du berechtigt bist."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Wie teile ich ein PDF auf iPhone, iPad oder Mac ohne Adobe auf?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree in Safari (iPhone/iPad) oder einem beliebigen Browser auf dem Mac öffnen — kein App-Download oder Adobe Acrobat erforderlich. Das Tool läuft vollständig im Browser: PDF laden, Seiten auswählen, auf PDF aufteilen tippen. Das Ergebnis wird in der Dateien-App (iOS) oder im Download-Ordner (Mac) gespeichert."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann ich mehrere PDFs gleichzeitig aufteilen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nicht als Batch — PDFree verarbeitet jeweils eine Datei. Das Tool kann in einem neuen Tab geöffnet werden, um eine zweite Datei parallel zu teilen. PDFree funktioniert auch offline als Progressive Web App, sodass kein Warten auf das Netzwerk nötig ist."
+    }
   }
 ]

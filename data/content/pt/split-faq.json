@@ -46,5 +46,29 @@
       "@type": "Answer",
       "text": "Sim. O PDFree é uma Progressive Web App e funciona completamente offline após o carregamento no seu browser. Não é necessária ligação à internet para dividir ou extrair páginas."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso dividir um PDF protegido por palavra-passe?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim, se conhecer a palavra-passe. Quando abre um ficheiro protegido, o PDFree pede-lhe que a introduza. Após o desbloqueio, pode selecionar e extrair páginas normalmente. O PDFree não consegue contornar nem quebrar uma palavra-passe — apenas abre ficheiros a que está autorizado a aceder."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Como divido um PDF no iPhone, iPad ou Mac sem Adobe Acrobat?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Abra o PDFree no Safari (iPhone/iPad) ou em qualquer navegador no Mac — não é necessário transferir nenhuma app nem o Adobe Acrobat. A ferramenta funciona completamente no navegador: carregue o PDF, selecione páginas, toque em Dividir PDF. O resultado é guardado na app Ficheiros (iOS) ou na pasta Transferências (Mac)."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso dividir vários PDFs ao mesmo tempo?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Não em lote — o PDFree processa um PDF de cada vez. Abra a ferramenta num novo separador para dividir um segundo ficheiro em paralelo. O PDFree também funciona offline como Progressive Web App, sem esperar pela rede entre ficheiros."
+    }
   }
 ]
