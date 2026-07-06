@@ -525,7 +525,7 @@ function _onDown(e) {
       _current = { type: 'shape-drag', cmd: hit, startX: x, startY: y, dx: 0, dy: 0 };
     } else if (tool === 'arrow') {
       clearRedoForCurrentPage();
-      _current = { type: 'arrow', id: ++_shapeCmdId, number: _nextArrowNumber(),
+      _current = { type: 'arrow', id: ++_shapeCmdId,
                    x1: x, y1: y, x2: x, y2: y, color: getColor(), width: getWidth() };
     } else {
       clearRedoForCurrentPage();

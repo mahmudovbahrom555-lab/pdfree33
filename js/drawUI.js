@@ -505,23 +505,36 @@ export function renderCommand(ctx, cmd) {
       const dist = Math.hypot(dx, dy);
       if (dist < 5) break;
       const angle = Math.atan2(dy, dx);
-      const head  = Math.max(12, cmd.width * 4);
-      // Circle radius at (x1,y1) for numbered arrows
+      const head  = Math.max(14, cmd.width * 5);
+
+      // Circle radius at (x1,y1) for numbered arrows (legacy — only when number stored)
       const r = cmd.number != null ? Math.max(10, cmd.width * 3.5) : 0;
-      // Clamp offset to (dist-2) so the line never starts past the arrowhead on very short arrows
       const lineOffset = r > 0 ? Math.min(r, dist - 2) : 0;
       const lineX1 = cmd.x1 + lineOffset * Math.cos(angle);
       const lineY1 = cmd.y1 + lineOffset * Math.sin(angle);
+
+      // Arrowhead: filled triangle — tip at (x2,y2), two base corners at ±30°
+      const hx1 = cmd.x2 - head * Math.cos(angle - Math.PI / 6);
+      const hy1 = cmd.y2 - head * Math.sin(angle - Math.PI / 6);
+      const hx2 = cmd.x2 - head * Math.cos(angle + Math.PI / 6);
+      const hy2 = cmd.y2 - head * Math.sin(angle + Math.PI / 6);
+
+      // Shaft ends at base of triangle so it doesn't protrude through the filled head
+      const lineX2 = cmd.x2 - head * Math.cos(angle);
+      const lineY2 = cmd.y2 - head * Math.sin(angle);
+
       ctx.beginPath();
       ctx.moveTo(lineX1, lineY1);
-      ctx.lineTo(cmd.x2, cmd.y2);
-      ctx.moveTo(cmd.x2, cmd.y2);
-      ctx.lineTo(cmd.x2 - head * Math.cos(angle - Math.PI / 6),
-                 cmd.y2 - head * Math.sin(angle - Math.PI / 6));
-      ctx.moveTo(cmd.x2, cmd.y2);
-      ctx.lineTo(cmd.x2 - head * Math.cos(angle + Math.PI / 6),
-                 cmd.y2 - head * Math.sin(angle + Math.PI / 6));
+      ctx.lineTo(lineX2, lineY2);
       ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(cmd.x2, cmd.y2);
+      ctx.lineTo(hx1, hy1);
+      ctx.lineTo(hx2, hy2);
+      ctx.closePath();
+      ctx.fill();
+
       if (r > 0) {
         ctx.save();
         ctx.beginPath();
