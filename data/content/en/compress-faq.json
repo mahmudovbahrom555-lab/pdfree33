@@ -46,5 +46,21 @@
       "@type": "Answer",
       "text": "Yes. PDFree works fully offline as a Progressive Web App once the page has loaded. No internet connection is required — all processing runs in your browser."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I compress a PDF to send by email?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes — that is the most common use case. Most email providers cap attachments at 25MB. Choose the Standard preset to compress your PDF for email: it typically reduces file size 30–50% with no visible quality loss. If the file is still too large, try the Maximum preset, which can cut size by 50–80% at the cost of some image sharpness."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is this PDF compressor completely free?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. PDFree is a completely free PDF compressor — no subscription, no sign up, no watermarks on the output. Compress as many PDFs as you need with no daily limit and no file size cap."
+    }
   }
 ]
