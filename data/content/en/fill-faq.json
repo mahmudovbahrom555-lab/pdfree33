@@ -30,5 +30,21 @@
       "@type": "Answer",
       "text": "A drawn signature image is an electronic signature. Its legal weight depends on your jurisdiction and the document type. For everyday forms, consent documents, and internal approvals it is widely accepted. For regulated legal contexts, use a certified e-signature service with an audit trail."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Is this a free PDF form filler with no sign up?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. PDFree is a completely free PDF form filler with no sign up, no account, and no installation. Open the tool, load your PDF, fill out the fields, and download the completed form — no email address required."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I fill and sign a PDF form online for free?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. PDFree supports both filling and signing in one step. Fill in text fields and checkboxes, then tap any signature field to open a drawing pad. Sign with your finger on mobile or your mouse on desktop. The signature is embedded in the downloaded PDF."
+    }
   }
 ]
