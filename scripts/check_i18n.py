@@ -20,6 +20,8 @@ def main():
         "es": ROOT / "js/locales/es.js",
         "fr": ROOT / "js/locales/fr.js",
         "pt": ROOT / "js/locales/pt.js",
+        "id": ROOT / "js/locales/id.js",
+        "vi": ROOT / "js/locales/vi.js",
     }
 
     errors = []

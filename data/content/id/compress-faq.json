@@ -1,0 +1,50 @@
+[
+  {
+    "@type": "Question",
+    "name": "Apakah mengompres PDF mengunggah file saya?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak. Kompresi terjadi sepenuhnya di browser Anda menggunakan JavaScript. PDF Anda tidak pernah diunggah ke server mana pun atau dikirim melalui internet. Anda dapat memverifikasi ini sendiri: buka DevTools browser Anda → tab Network selama kompresi — Anda tidak akan melihat PDF Anda diunggah ke server jarak jauh."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah kompresi akan mengurangi kualitas visual PDF saya?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree menawarkan tiga preset. Ringan hanya menghapus metadata — teks dan gambar tidak tersentuh sama sekali. Standar mengompres ulang gambar pada kualitas JPEG 82% — kehilangan kualitas minimal dan tidak terlihat di sebagian besar dokumen. Maksimum mengompres pada 72% — terlihat hanya pada inspeksi dekat PDF yang banyak gambarnya."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Berapa besar PDFree dapat mengurangi ukuran file PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Pengurangan tipikal adalah 20–70%. PDF dengan gambar resolusi tinggi (dokumen scan, brosur foto) mengompres paling banyak — sering penghematan 50–80%. PDF hanya teks mengalami pengurangan lebih sedikit karena teks sudah disimpan secara efisien sebagai vektor."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Mengapa PDF yang dikompres terlihat sama tetapi lebih kecil?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDF sering mengandung bloat tak terlihat: thumbnail halaman yang dihasilkan oleh Adobe Reader, font duplikat yang disematkan, aliran metadata XMP, profil warna yang disematkan, dan data pribadi PieceInfo dari aplikasi Adobe. PDFree menghapus tambahan tersembunyi ini. Konten visual — teks, gambar, tata letak — tetap identik."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah mengompres PDF yang dilindungi kata sandi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree mencoba mengoptimalkan PDF terenkripsi jika memungkinkan, tetapi file yang dilindungi kuat mungkin tidak dapat dikompres sepenuhnya. Untuk hasil terbaik, hapus kata sandi terlebih dahulu menggunakan alat Lindungi PDF PDFree, kemudian kompres."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah kompresi PDF berfungsi tanpa koneksi internet?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ya. PDFree berfungsi sepenuhnya offline sebagai Progressive Web App setelah halaman dimuat. Tidak diperlukan koneksi internet — semua pemrosesan berjalan di browser Anda."
+    }
+  }
+]

@@ -30,6 +30,18 @@
       "locale": "fr_FR",
       "dir": "fr",
       "depth": 2
+    },
+    "id": {
+      "code": "id",
+      "locale": "id_ID",
+      "dir": "id",
+      "depth": 2
+    },
+    "vi": {
+      "code": "vi",
+      "locale": "vi_VN",
+      "dir": "vi",
+      "depth": 2
     }
   },
   "tools": [
@@ -42,70 +54,90 @@
         "es": "unir-pdf",
         "pt": "juntar-pdf",
         "de": "pdf-zusammenfuehren",
-        "fr": "fusionner-pdf"
+        "fr": "fusionner-pdf",
+        "id": "gabung-pdf",
+        "vi": "gop-pdf"
       },
       "titles": {
         "en": "Merge PDF Files Free — No Upload, No Account | PDFree",
         "es": "Unir PDF Gratis Online — Sin Registro, Sin Subir | PDFree",
         "pt": "Juntar PDF Grátis Online — Sem Upload, Sem Registro | PDFree",
         "de": "PDF Zusammenfügen Online — Kostenlos, Kein Upload | PDFree",
-        "fr": "Fusionner PDF en Ligne — Gratuit, Aucun Envoi | PDFree"
+        "fr": "Fusionner PDF en Ligne — Gratuit, Aucun Envoi | PDFree",
+        "id": "Gabungkan PDF Online Gratis — Tanpa Upload, Tanpa Akun | PDFree",
+        "vi": "Ghép PDF Trực Tuyến Miễn Phí — Không Tải Lên, Không Cần Tài Khoản | PDFree"
       },
       "descs": {
         "en": "Combine unlimited PDF files instantly. 100% private, no uploads, no file size limits.",
         "es": "Combina archivos PDF ilimitados al instante. 100% privado, sin subir archivos, sin límites de tamaño.",
         "pt": "Combine arquivos PDF ilimitados instantaneamente. 100% privado, sem uploads, sem limites.",
         "de": "PDF-Dateien kostenlos online zusammenfügen. 100 % privat — Dateien verlassen deinen Browser nie. Kein Upload, keine Registrierung, keine Limits.",
-        "fr": "Fusionner des fichiers PDF gratuitement en ligne. 100 % privé — vos fichiers ne quittent jamais votre navigateur. Aucun envoi, sans inscription, sans limite."
+        "fr": "Fusionner des fichiers PDF gratuitement en ligne. 100 % privé — vos fichiers ne quittent jamais votre navigateur. Aucun envoi, sans inscription, sans limite.",
+        "id": "Gabungkan file PDF tanpa batas secara instan. 100% pribadi, tanpa upload, tanpa batas ukuran file.",
+        "vi": "Ghép không giới hạn file PDF tức thì. 100% riêng tư, không tải lên, không giới hạn dung lượng."
       },
       "navLabels": {
         "en": "Merge",
         "es": "Unir",
         "pt": "Juntar",
         "de": "Zusammenfügen",
-        "fr": "Fusionner"
+        "fr": "Fusionner",
+        "id": "Gabung",
+        "vi": "Ghép"
       },
       "cardNames": {
         "en": "Merge PDF files",
         "es": "Unir PDF",
         "pt": "Juntar PDF",
         "de": "PDF Zusammenfügen",
-        "fr": "Fusionner PDF"
+        "fr": "Fusionner PDF",
+        "id": "Gabungkan PDF",
+        "vi": "Ghép PDF"
       },
       "cardDescs": {
         "en": "Combine unlimited PDF files — no restrictions",
         "es": "Combina archivos PDF ilimitados — sin restricciones",
         "pt": "Combine arquivos PDF ilimitados — sem restrições",
         "de": "Beliebig viele PDF-Dateien zusammenfügen — keine Einschränkungen",
-        "fr": "Fusionner un nombre illimité de fichiers PDF — sans restrictions"
+        "fr": "Fusionner un nombre illimité de fichiers PDF — sans restrictions",
+        "id": "Gabungkan file PDF tanpa batas — tanpa batasan",
+        "vi": "Ghép không giới hạn file PDF — không hạn chế"
       },
       "breadcrumb": {
         "en": "Merge PDF",
         "es": "Unir PDF",
         "pt": "Juntar PDF",
         "de": "PDF Zusammenfügen",
-        "fr": "Fusionner PDF"
+        "fr": "Fusionner PDF",
+        "id": "Gabungkan PDF",
+        "vi": "Ghép PDF"
       },
       "metaDescs": {
         "en": "Merge PDF files free online — no upload, no account, no file size limits. Files stay in your browser, 100% private. Combine unlimited PDFs with one click.",
         "es": "Combina archivos PDF ilimitados al instante sin subirlos. 100% privado — todo ocurre en tu navegador. Sin registro, sin límites de tamaño, totalmente gratis.",
         "pt": "Combine arquivos PDF ilimitados instantaneamente sem fazer upload. 100% privado — tudo processado no seu navegador. Sem registro, sem limites de tamanho.",
         "de": "PDF-Dateien kostenlos online zusammenfügen. 100 % privat — Dateien verlassen deinen Browser nie. Kein Upload, keine Registrierung, keine Limits.",
-        "fr": "Fusionner des fichiers PDF gratuitement en ligne. 100 % privé — vos fichiers ne quittent jamais votre navigateur. Aucun envoi, sans inscription, sans limite."
+        "fr": "Fusionner des fichiers PDF gratuitement en ligne. 100 % privé — vos fichiers ne quittent jamais votre navigateur. Aucun envoi, sans inscription, sans limite.",
+        "id": "Gabungkan file PDF online gratis — tanpa upload, tanpa akun, tanpa batas ukuran. File tetap di browser Anda, 100% pribadi. Gabungkan PDF tanpa batas hanya dengan satu klik.",
+        "vi": "Ghép file PDF trực tuyến miễn phí — không tải lên, không tài khoản, không giới hạn dung lượng. File ở lại trình duyệt, 100% riêng tư. Gộp PDF không giới hạn chỉ một cú nhấp."
       },
       "ogTitles": {
         "en": "Merge Unlimited PDFs Free — No Size Limit, No Server Upload",
         "es": "Unir PDF Gratis Online — Sin Registro | PDFree",
         "pt": "Juntar PDF Grátis Online — Sem Registro | PDFree",
         "de": "PDF Zusammenfügen Online — Kostenlos, Kein Upload | PDFree",
-        "fr": "Fusionner PDF en Ligne — Gratuit, Aucun Envoi | PDFree"
+        "fr": "Fusionner PDF en Ligne — Gratuit, Aucun Envoi | PDFree",
+        "id": "Gabungkan PDF Tanpa Batas — Tanpa Upload ke Server | PDFree",
+        "vi": "Ghép PDF Không Giới Hạn — Không Upload Lên Server | PDFree"
       },
       "ogDescs": {
         "en": "Combine unlimited PDFs instantly. 100% private — files never leave your browser. No signup, no limits.",
         "es": "Combina archivos PDF ilimitados al instante. 100% privado, sin subir archivos, sin límites de tamaño.",
         "pt": "Combine arquivos PDF ilimitados instantaneamente. 100% privado, sem uploads, sem limites.",
         "de": "PDF-Dateien kostenlos online zusammenfügen. 100 % privat — Dateien verlassen deinen Browser nie. Kein Upload, keine Registrierung, keine Limits.",
-        "fr": "Fusionner des fichiers PDF gratuitement en ligne. 100 % privé — vos fichiers ne quittent jamais votre navigateur. Aucun envoi, sans inscription, sans limite."
+        "fr": "Fusionner des fichiers PDF gratuitement en ligne. 100 % privé — vos fichiers ne quittent jamais votre navigateur. Aucun envoi, sans inscription, sans limite.",
+        "id": "Gabungkan file PDF tanpa batas secara instan. 100% pribadi — file tidak pernah diunggah. Tanpa akun, tanpa batasan.",
+        "vi": "Ghép không giới hạn file PDF tức thì. 100% riêng tư — file không bao giờ được tải lên. Không tài khoản, không hạn chế."
       },
       "keywords": {
         "en": "merge pdf, combine pdf files, join pdf, merge pdf files free, combine pdf online, merge pdf without uploading"
@@ -120,70 +152,90 @@
         "es": "dividir-pdf",
         "pt": "dividir-pdf",
         "de": "pdf-aufteilen",
-        "fr": "diviser-pdf"
+        "fr": "diviser-pdf",
+        "id": "pisah-pdf",
+        "vi": "tach-pdf"
       },
       "titles": {
         "en": "Split PDF Without Uploading — Extract Pages Free | PDFree",
         "es": "Dividir PDF Online — Extraer Páginas, Sin Subir | PDFree",
         "pt": "Dividir PDF Online — Extrair Páginas, Sem Upload | PDFree",
         "de": "PDF Aufteilen Online — Seiten Extrahieren, Kein Upload | PDFree",
-        "fr": "Diviser PDF en Ligne — Gratuit, Aucun Envoi | PDFree"
+        "fr": "Diviser PDF en Ligne — Gratuit, Aucun Envoi | PDFree",
+        "id": "Pisahkan PDF Online — Ekstrak Halaman Tanpa Upload | PDFree",
+        "vi": "Tách PDF Trực Tuyến — Trích Xuất Trang Không Cần Upload | PDFree"
       },
       "descs": {
         "en": "Extract pages or split PDF into separate files. 100% private, no uploads, no limits.",
         "es": "Extrae páginas o divide en archivos separados. 100% privado, sin subidas, sin límites.",
         "pt": "Extraia páginas ou divida em arquivos separados. 100% privado, sem uploads, sem limites.",
         "de": "PDFs in einzelne Seiten aufteilen oder Seitenbereich extrahieren. 100 % privat — kein Upload. Kostenlos, ohne Registrierung.",
-        "fr": "Diviser des fichiers PDF gratuitement en ligne. Extrayez des pages spécifiques ou séparez chaque page. 100 % privé — aucun envoi, sans inscription."
+        "fr": "Diviser des fichiers PDF gratuitement en ligne. Extrayez des pages spécifiques ou séparez chaque page. 100 % privé — aucun envoi, sans inscription.",
+        "id": "Ekstrak halaman atau pisahkan PDF menjadi file terpisah. 100% pribadi, tanpa upload, tanpa batas.",
+        "vi": "Trích xuất trang hoặc tách PDF thành các file riêng lẻ. 100% riêng tư, không tải lên, không giới hạn."
       },
       "navLabels": {
         "en": "Split",
         "es": "Dividir",
         "pt": "Dividir",
         "de": "Aufteilen",
-        "fr": "Diviser"
+        "fr": "Diviser",
+        "id": "Pisah",
+        "vi": "Tách"
       },
       "cardNames": {
         "en": "Split PDF",
         "es": "Dividir PDF",
         "pt": "Dividir PDF",
         "de": "PDF Aufteilen",
-        "fr": "Diviser PDF"
+        "fr": "Diviser PDF",
+        "id": "Pisahkan PDF",
+        "vi": "Tách PDF"
       },
       "cardDescs": {
         "en": "Extract pages or split into separate files",
         "es": "Extrae páginas o divide en archivos separados",
         "pt": "Extraia páginas ou divida em arquivos separados",
         "de": "Seiten extrahieren oder in einzelne Dateien aufteilen",
-        "fr": "Extraire des pages ou diviser en fichiers séparés"
+        "fr": "Extraire des pages ou diviser en fichiers séparés",
+        "id": "Ekstrak halaman atau pisahkan menjadi file terpisah",
+        "vi": "Trích xuất trang hoặc chia thành các file riêng lẻ"
       },
       "breadcrumb": {
         "en": "Split PDF",
         "es": "Dividir PDF",
         "pt": "Dividir PDF",
         "de": "PDF Aufteilen",
-        "fr": "Diviser PDF"
+        "fr": "Diviser PDF",
+        "id": "Pisahkan PDF",
+        "vi": "Tách PDF"
       },
       "metaDescs": {
         "en": "Split PDF online without uploading to any server. Extract exact pages or page ranges — all processed in your browser, 100% private. Free, no signup required.",
         "es": "Extrae páginas o divide PDFs en archivos separados sin subirlos. 100% privado — procesado en tu navegador. Sin registro, sin límites. Completamente gratis.",
         "pt": "Extraia páginas ou divida PDFs em arquivos separados sem upload. 100% privado — processado no navegador. Sem registro, sem limites de tamanho. Grátis.",
         "de": "PDFs in Einzelseiten aufteilen oder Seitenbereiche extrahieren — alles im Browser, kein Upload nötig. 100 % privat. Kostenlos, ohne Registrierung, ohne Limits.",
-        "fr": "Diviser des fichiers PDF gratuitement en ligne. Extrayez des pages spécifiques ou séparez chaque page. 100 % privé — aucun envoi, sans inscription."
+        "fr": "Diviser des fichiers PDF gratuitement en ligne. Extrayez des pages spécifiques ou séparez chaque page. 100 % privé — aucun envoi, sans inscription.",
+        "id": "Pisahkan PDF online tanpa upload ke server mana pun. Ekstrak halaman atau rentang halaman — semua diproses di browser Anda, 100% pribadi. Gratis, tanpa pendaftaran.",
+        "vi": "Tách PDF trực tuyến không cần tải lên bất kỳ server nào. Trích xuất trang chính xác — xử lý trong trình duyệt, 100% riêng tư. Miễn phí, không cần đăng ký."
       },
       "ogTitles": {
         "en": "Split PDF & Extract Any Pages — 100% Private, Always Free",
         "es": "Dividir PDF Online — Extraer Páginas, Sin Subir | PDFree",
         "pt": "Dividir PDF Online — Extrair Páginas, Sem Upload | PDFree",
         "de": "PDF Aufteilen Online — Seiten Extrahieren, Kein Upload | PDFree",
-        "fr": "Diviser PDF en Ligne — Gratuit, Aucun Envoi | PDFree"
+        "fr": "Diviser PDF en Ligne — Gratuit, Aucun Envoi | PDFree",
+        "id": "Pisahkan PDF & Ekstrak Halaman Apa Pun — 100% Pribadi, Selalu Gratis",
+        "vi": "Tách PDF & Trích Xuất Trang — 100% Riêng Tư, Luôn Miễn Phí"
       },
       "ogDescs": {
         "en": "Split PDFs into separate pages or extract a page range. 100% private — files never uploaded. Free.",
         "es": "Extrae páginas o divide en archivos separados. 100% privado, sin subidas, sin límites.",
         "pt": "Extraia páginas ou divida em arquivos separados. 100% privado, sem uploads, sem limites.",
         "de": "PDFs in einzelne Seiten aufteilen oder Seitenbereich extrahieren. 100 % privat — kein Upload. Kostenlos, ohne Registrierung.",
-        "fr": "Diviser des fichiers PDF gratuitement en ligne. Extrayez des pages spécifiques ou séparez chaque page. 100 % privé — aucun envoi, sans inscription."
+        "fr": "Diviser des fichiers PDF gratuitement en ligne. Extrayez des pages spécifiques ou séparez chaque page. 100 % privé — aucun envoi, sans inscription.",
+        "id": "Pisahkan PDF menjadi halaman terpisah atau ekstrak rentang halaman. 100% pribadi — file tidak pernah diunggah. Gratis.",
+        "vi": "Tách PDF thành các trang riêng lẻ hoặc trích xuất phạm vi trang. 100% riêng tư — file không bao giờ được tải lên. Miễn phí."
       },
       "keywords": {
         "en": "split pdf, divide pdf, extract pages from pdf, split pdf online free, pdf splitter, split pdf without uploading"
@@ -198,70 +250,90 @@
         "es": "comprimir-pdf",
         "pt": "comprimir-pdf",
         "de": "pdf-komprimieren",
-        "fr": "compresser-pdf"
+        "fr": "compresser-pdf",
+        "id": "kompres-pdf",
+        "vi": "nen-pdf"
       },
       "titles": {
         "en": "Compress PDF Online Free — Reduce File Size | PDFree",
         "es": "Comprimir PDF Online Gratis — Reducir Tamaño | PDFree",
         "pt": "Comprimir PDF Online Grátis — Reduzir Tamanho | PDFree",
         "de": "PDF Komprimieren Online — Kostenlos, Kein Upload | PDFree",
-        "fr": "Compresser PDF en Ligne Gratuit — Réduire la Taille | PDFree"
+        "fr": "Compresser PDF en Ligne Gratuit — Réduire la Taille | PDFree",
+        "id": "Kompres PDF Online Gratis — Perkecil Ukuran File Tanpa Upload | PDFree",
+        "vi": "Nén PDF Trực Tuyến Miễn Phí — Giảm Dung Lượng File Không Tải Lên | PDFree"
       },
       "descs": {
         "en": "Reduce PDF file size without losing quality. Processed locally in your browser — files never uploaded.",
         "es": "Reduce el tamaño del PDF sin perder calidad. Procesado en tu navegador — archivos nunca subidos. Gratis, sin límites.",
         "pt": "Reduza o tamanho do PDF sem perder qualidade. Processado localmente no seu navegador — sem uploads.",
         "de": "PDF-Dateigröße reduzieren ohne Qualitätsverlust. Vollständig im Browser verarbeitet — keine Uploads, keine Registrierung. Kostenlos.",
-        "fr": "Compresser vos fichiers PDF gratuitement en ligne. Trois niveaux de qualité. 100 % privé — aucun envoi, sans inscription, sans limite."
+        "fr": "Compresser vos fichiers PDF gratuitement en ligne. Trois niveaux de qualité. 100 % privé — aucun envoi, sans inscription, sans limite.",
+        "id": "Kurangi ukuran file PDF tanpa kehilangan kualitas. Diproses lokal di browser Anda — file tidak pernah diunggah.",
+        "vi": "Giảm dung lượng file PDF mà không mất chất lượng. Xử lý ngay trong trình duyệt — file không bao giờ được tải lên."
       },
       "navLabels": {
         "en": "Compress",
         "es": "Comprimir",
         "pt": "Comprimir",
         "de": "Komprimieren",
-        "fr": "Compresser"
+        "fr": "Compresser",
+        "id": "Kompres",
+        "vi": "Nén"
       },
       "cardNames": {
         "en": "Compress PDF",
         "es": "Comprimir PDF",
         "pt": "Comprimir PDF",
         "de": "PDF Komprimieren",
-        "fr": "Compresser PDF"
+        "fr": "Compresser PDF",
+        "id": "Kompres PDF",
+        "vi": "Nén PDF"
       },
       "cardDescs": {
         "en": "Reduce file size without losing quality",
         "es": "Reduce el tamaño sin perder calidad",
         "pt": "Reduza o tamanho sem perder qualidade",
         "de": "Dateigröße ohne Qualitätsverlust reduzieren",
-        "fr": "Réduire la taille sans perte de qualité"
+        "fr": "Réduire la taille sans perte de qualité",
+        "id": "Perkecil ukuran file tanpa kehilangan kualitas",
+        "vi": "Giảm dung lượng mà không mất chất lượng"
       },
       "breadcrumb": {
         "en": "Compress PDF",
         "es": "Comprimir PDF",
         "pt": "Comprimir PDF",
         "de": "PDF Komprimieren",
-        "fr": "Compresser PDF"
+        "fr": "Compresser PDF",
+        "id": "Kompres PDF",
+        "vi": "Nén PDF"
       },
       "metaDescs": {
         "en": "Compress PDF online free — reduce file size instantly without losing quality. Processed in your browser, nothing uploaded to any server. No account, no limits.",
         "es": "Reduce el tamaño del PDF sin perder calidad. Procesado en tu navegador — nada se sube a ningún servidor. Sin registro, sin límites. Completamente gratis.",
         "pt": "Reduza o tamanho do PDF sem perder qualidade. Processado no seu navegador — sem uploads, sem perda de qualidade. Três níveis de compressão. Grátis e sem limites.",
         "de": "PDF-Dateigröße reduzieren ohne Qualitätsverlust. Vollständig im Browser verarbeitet — kein Upload, keine Registrierung. Drei Qualitätsstufen. Kostenlos.",
-        "fr": "Compresser vos PDF gratuitement en ligne — trois niveaux de qualité. 100 % privé — aucun envoi, aucun serveur. Réduction immédiate de la taille. Sans inscription."
+        "fr": "Compresser vos PDF gratuitement en ligne — trois niveaux de qualité. 100 % privé — aucun envoi, aucun serveur. Réduction immédiate de la taille. Sans inscription.",
+        "id": "Kompres PDF online gratis — kurangi ukuran file secara instan tanpa kehilangan kualitas. Diproses di browser, tidak ada yang diunggah. Tanpa akun, tanpa batasan.",
+        "vi": "Nén PDF trực tuyến miễn phí — giảm dung lượng ngay tức thì mà không mất chất lượng. Xử lý trong trình duyệt, không có gì được tải lên. Không cần tài khoản, không giới hạn."
       },
       "ogTitles": {
         "en": "Compress PDF in Your Browser — Files Never Leave Your Device",
         "es": "Comprimir PDF Online — Reducir Tamaño Localmente | PDFree",
         "pt": "Comprimir PDF Online — Reduzir Tamanho Localmente | PDFree",
         "de": "PDF Komprimieren Online — Dateigröße Reduzieren | PDFree",
-        "fr": "Compresser PDF en Ligne — Gratuit, Aucun Envoi | PDFree"
+        "fr": "Compresser PDF en Ligne — Gratuit, Aucun Envoi | PDFree",
+        "id": "Kompres PDF di Browser Anda — File Tidak Pernah Meninggalkan Perangkat",
+        "vi": "Nén PDF Trong Trình Duyệt — File Không Bao Giờ Rời Thiết Bị Của Bạn"
       },
       "ogDescs": {
         "en": "Reduce PDF file size without losing quality. Processed in your browser — files never uploaded. Free.",
         "es": "Reduce el tamaño del PDF sin perder calidad. Procesado en tu navegador — archivos nunca subidos. Gratis, sin límites.",
         "pt": "Reduza o tamanho do PDF sem perder qualidade. Processado localmente no seu navegador — sem uploads.",
         "de": "PDF-Dateigröße reduzieren ohne Qualitätsverlust. Vollständig im Browser verarbeitet — keine Uploads, keine Registrierung. Kostenlos.",
-        "fr": "Compresser vos fichiers PDF gratuitement en ligne. Trois niveaux de qualité. 100 % privé — aucun envoi, sans inscription, sans limite."
+        "fr": "Compresser vos fichiers PDF gratuitement en ligne. Trois niveaux de qualité. 100 % privé — aucun envoi, sans inscription, sans limite.",
+        "id": "Kurangi ukuran file PDF tanpa kehilangan kualitas. Diproses di browser — file tidak pernah diunggah. Gratis.",
+        "vi": "Giảm dung lượng file PDF mà không mất chất lượng. Xử lý trong trình duyệt — file không bao giờ được tải lên. Miễn phí."
       },
       "keywords": {
         "en": "compress pdf, reduce pdf size, compress pdf online free, pdf compressor, shrink pdf, make pdf smaller"
@@ -1436,6 +1508,100 @@
       "faqA1": "Non. PDFree fonctionne entièrement sur votre appareil (côté client). Nous n'avons pas de serveurs qui traitent vos fichiers, ce qui garantit 100 % de confidentialité.",
       "faqQ2": "Y a-t-il une limite de taille de fichier ou de nombre de pages ?",
       "faqA2": "Non, il n'y a pas de limites artificielles. La seule limitation est la mémoire vive disponible sur votre ordinateur ou smartphone."
+    },
+    "id": {
+      "heroBadge": "🔒 100% pribadi · tanpa upload · tanpa akun · tanpa batasan",
+      "heroH1": "Alat PDF yang<br><em>benar-benar bekerja</em>",
+      "heroP": "Gabung, pisah, kompres, beri tanda air, konversi — semuanya berjalan <strong>di browser Anda</strong>. File Anda tidak pernah meninggalkan perangkat. Tanpa server. Tanpa akun. Hanya hasil.",
+      "privacyBannerStrong": "File Anda tetap di perangkat Anda.",
+      "privacyBannerText": "Kami menggunakan Web Workers dan pustaka sisi klien — tidak ada yang pernah dikirim ke server.",
+      "noLimit": [
+        "Tanpa batas file",
+        "Tanpa tanda air",
+        "Tanpa pendaftaran",
+        "File tidak pernah meninggalkan perangkat"
+      ],
+      "sectionLabel": "Semua alat",
+      "privacy1Title": "100% pribadi berdasarkan desain",
+      "privacy1Desc": "File Anda diproses sepenuhnya di browser Anda. Nol upload — selamanya.",
+      "privacy2Title": "Berjalan di perangkat Anda",
+      "privacy2Desc": "Semua operasi PDF berjalan di dalam Web Worker — thread yang terisolasi di perangkat keras Anda sendiri.",
+      "privacy3Title": "Langsung terhapus",
+      "privacy3Desc": "File hanya ada di RAM. Tutup tab dan file hilang — tidak ada log, tidak ada jejak.",
+      "dropTitle": "Letakkan file di sini",
+      "dropSub": "atau klik untuk menelusuri — berapa pun jumlah file",
+      "chooseBtn": "Pilih file",
+      "reorderHint": "↕ Seret untuk mengubah urutan file sebelum digabungkan",
+      "cancelBtn": "✕ Batal",
+      "successTitle": "Selesai!",
+      "downloadBtn": "⬇ Unduh",
+      "footerLine1": "Semua pemrosesan terjadi 100% di browser Anda",
+      "footerLine2": "File <strong>tidak pernah diunggah</strong>",
+      "footerGuarantee": "Dokumen Anda tidak pernah meninggalkan perangkat Anda",
+      "footerFree": "Dibuat untuk gratis bagi semua orang, selamanya",
+      "footerOpenSource": "Open source di bawah lisensi",
+      "footerGitHub": "Lihat kode sumber di GitHub",
+      "privacyBadge": "File Anda tidak pernah meninggalkan browser — diproses secara lokal, tidak ada yang diunggah",
+      "privacyClearedTitle": "Dokumen dihapus dari memori",
+      "privacyClearedSub": "Diproses secara lokal · Tidak pernah diunggah · Tidak ada jejak",
+      "swUpdateMsg": "Versi baru PDFree siap.",
+      "swUpdateNow": "Perbarui sekarang",
+      "swUpdateLater": "Nanti",
+      "seoH2": "Alat PDF gratis terbaik untuk keamanan dan privasi",
+      "seoP1": "PDFree dirancang untuk menyediakan manipulasi PDF tingkat profesional tanpa risiko yang terkait dengan unggahan cloud. Saat Anda menggunakan alat kami, pemrosesan terjadi langsung di dalam browser web Anda menggunakan WebAssembly. Ini berarti dokumen sensitif Anda — seperti kontrak hukum, laporan keuangan, atau scan KTP — tidak pernah dikirimkan melalui internet.",
+      "seoP2": "Kami percaya bahwa alat penting harus dapat diakses oleh semua orang. Itulah mengapa PDFree tidak memiliki batas ukuran file, tidak ada batasan penggunaan harian, dan tidak ada tanda air wajib. Ini adalah utilitas yang sepenuhnya gratis dan tidak terbatas yang dibuat untuk mahasiswa, profesional, dan siapa pun yang menghargai privasi digital.",
+      "faqTitle": "Pertanyaan yang Sering Diajukan",
+      "faqQ1": "Apakah file saya disimpan di server Anda?",
+      "faqA1": "Tidak. PDFree beroperasi sepenuhnya di perangkat Anda (sisi klien). Kami tidak memiliki server yang memproses file Anda, yang menjamin privasi 100%.",
+      "faqQ2": "Apakah ada batasan ukuran file atau jumlah halaman?",
+      "faqA2": "Tidak, tidak ada batasan buatan. Satu-satunya batasan adalah RAM (memori) yang tersedia di komputer atau smartphone Anda."
+    },
+    "vi": {
+      "heroBadge": "🔒 100% riêng tư · không tải lên · không tài khoản · không giới hạn",
+      "heroH1": "Công cụ PDF<br><em>thực sự hiệu quả</em>",
+      "heroP": "Ghép, tách, nén, đóng dấu mờ, chuyển đổi — tất cả chạy <strong>trong trình duyệt của bạn</strong>. File của bạn không bao giờ rời thiết bị. Không server. Không tài khoản. Chỉ kết quả.",
+      "privacyBannerStrong": "File của bạn ở lại trên thiết bị của bạn.",
+      "privacyBannerText": "Chúng tôi sử dụng Web Workers và thư viện phía client — không có gì được gửi đến bất kỳ server nào.",
+      "noLimit": [
+        "Không giới hạn file",
+        "Không có watermark",
+        "Không đăng ký",
+        "File không bao giờ rời thiết bị"
+      ],
+      "sectionLabel": "Tất cả công cụ",
+      "privacy1Title": "100% riêng tư theo thiết kế",
+      "privacy1Desc": "File của bạn được xử lý hoàn toàn trong trình duyệt. Không upload — không bao giờ.",
+      "privacy2Title": "Chạy trên thiết bị của bạn",
+      "privacy2Desc": "Tất cả thao tác PDF chạy trong Web Worker — luồng được sandbox trên phần cứng của bạn.",
+      "privacy3Title": "Bị quên ngay lập tức",
+      "privacy3Desc": "File chỉ tồn tại trong RAM. Đóng tab và chúng biến mất — không log, không dấu vết.",
+      "dropTitle": "Thả file vào đây",
+      "dropSub": "hoặc nhấp để duyệt — bao nhiêu file cũng được",
+      "chooseBtn": "Chọn file",
+      "reorderHint": "↕ Kéo để sắp xếp lại file trước khi ghép",
+      "cancelBtn": "✕ Hủy",
+      "successTitle": "Xong!",
+      "downloadBtn": "⬇ Tải về",
+      "footerLine1": "Tất cả xử lý diễn ra 100% trong trình duyệt của bạn",
+      "footerLine2": "File <strong>không bao giờ được tải lên</strong>",
+      "footerGuarantee": "Tài liệu của bạn không bao giờ rời thiết bị",
+      "footerFree": "Được xây dựng để miễn phí cho tất cả mọi người, mãi mãi",
+      "footerOpenSource": "Mã nguồn mở theo giấy phép",
+      "footerGitHub": "Xem mã nguồn trên GitHub",
+      "privacyBadge": "File của bạn không bao giờ rời trình duyệt — xử lý cục bộ, không tải lên gì cả",
+      "privacyClearedTitle": "Tài liệu đã được xóa khỏi bộ nhớ",
+      "privacyClearedSub": "Xử lý cục bộ · Không bao giờ tải lên · Không để lại dấu vết",
+      "swUpdateMsg": "Phiên bản mới của PDFree đã sẵn sàng.",
+      "swUpdateNow": "Cập nhật ngay",
+      "swUpdateLater": "Để sau",
+      "seoH2": "Công cụ PDF miễn phí tốt nhất cho bảo mật và quyền riêng tư",
+      "seoP1": "PDFree được thiết kế để cung cấp khả năng thao tác PDF chuyên nghiệp mà không có rủi ro liên quan đến việc tải lên đám mây. Khi bạn sử dụng các công cụ của chúng tôi, quá trình xử lý diễn ra trực tiếp trong trình duyệt web của bạn bằng WebAssembly. Điều này có nghĩa là các tài liệu nhạy cảm của bạn — như hợp đồng pháp lý, báo cáo tài chính, hay ảnh quét CMND — không bao giờ được truyền qua internet.",
+      "seoP2": "Chúng tôi tin rằng các công cụ thiết yếu phải có thể tiếp cận được với tất cả mọi người. Đó là lý do tại sao PDFree hoàn toàn không có giới hạn dung lượng file, không có giới hạn sử dụng hàng ngày, và không có watermark bắt buộc. Đây là một tiện ích hoàn toàn miễn phí, không giới hạn, được xây dựng cho sinh viên, chuyên gia, và bất kỳ ai coi trọng quyền riêng tư kỹ thuật số.",
+      "faqTitle": "Câu Hỏi Thường Gặp",
+      "faqQ1": "File của tôi có được lưu trữ trên server của bạn không?",
+      "faqA1": "Không. PDFree hoạt động hoàn toàn trên thiết bị của bạn (phía client). Chúng tôi không có server xử lý file của bạn, đảm bảo quyền riêng tư 100%.",
+      "faqQ2": "Có giới hạn về dung lượng file hoặc số trang không?",
+      "faqA2": "Không, không có giới hạn nhân tạo nào. Giới hạn duy nhất là RAM (bộ nhớ) có sẵn trên máy tính hoặc điện thoại thông minh của bạn."
     }
   }
 }

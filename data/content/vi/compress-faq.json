@@ -1,0 +1,50 @@
+[
+  {
+    "@type": "Question",
+    "name": "Nén PDF có tải file của tôi lên không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không. Nén xảy ra hoàn toàn trong trình duyệt của bạn bằng JavaScript. PDF của bạn không bao giờ được tải lên bất kỳ server nào hoặc gửi qua internet. Bạn có thể tự xác minh: mở DevTools của trình duyệt → tab Network trong khi nén — bạn sẽ không thấy PDF được tải lên server từ xa."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Nén có làm giảm chất lượng hình ảnh của PDF không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree cung cấp ba preset. Nhẹ chỉ xóa metadata — văn bản và hình ảnh hoàn toàn không bị ảnh hưởng. Tiêu chuẩn nén lại hình ảnh ở chất lượng JPEG 82% — mất chất lượng tối thiểu và không nhận thấy trong hầu hết tài liệu. Tối đa nén ở 72% — chỉ nhận thấy khi kiểm tra kỹ PDF nhiều ảnh."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFree có thể giảm kích thước file PDF bao nhiêu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Mức giảm thông thường là 20–70%. PDF với hình ảnh độ phân giải cao (tài liệu scan, tờ rơi ảnh) nén nhiều nhất — thường tiết kiệm 50–80%. PDF chỉ có văn bản thấy giảm ít hơn vì văn bản đã được lưu trữ hiệu quả dưới dạng vector."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Tại sao PDF đã nén trông giống nhau nhưng nhỏ hơn?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDF thường chứa bloat vô hình: hình thu nhỏ trang được tạo bởi Adobe Reader, font nhúng trùng lặp, luồng metadata XMP, hồ sơ màu nhúng và dữ liệu riêng tư PieceInfo từ các ứng dụng Adobe. PDFree xóa những phần bổ sung ẩn này. Nội dung hiển thị — văn bản, hình ảnh, bố cục — vẫn giống hệt nhau."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Có thể nén PDF được bảo vệ bằng mật khẩu không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree cố gắng tối ưu hóa PDF được mã hóa khi có thể, nhưng file được bảo vệ mạnh có thể không nén đầy đủ. Để có kết quả tốt nhất, hãy xóa mật khẩu trước bằng công cụ Bảo Vệ PDF của PDFree, sau đó nén."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Nén PDF có hoạt động ngoại tuyến không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có. PDFree hoạt động hoàn toàn ngoại tuyến như Progressive Web App sau khi trang được tải. Không cần kết nối internet — tất cả xử lý chạy trong trình duyệt của bạn."
+    }
+  }
+]

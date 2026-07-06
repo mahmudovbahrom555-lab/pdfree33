@@ -1,0 +1,74 @@
+[
+  {
+    "@type": "Question",
+    "name": "Apakah file saya diunggah saat memisahkan PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak. PDFree memisahkan PDF sepenuhnya di browser Anda menggunakan JavaScript. File tidak pernah meninggalkan perangkat Anda. Anda dapat memverifikasi ini sendiri: buka DevTools browser Anda → tab Network — Anda tidak akan melihat PDF Anda diunggah ke server jarak jauh selama pemrosesan."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Format rentang halaman apa yang diterima PDFree?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Masukkan halaman dan rentang yang dipisahkan koma: misalnya 1, 3-7, 12, 15-20. Spasi bersifat opsional. Anda juga dapat mengklik thumbnail halaman individual untuk memilih atau membatalkan pilihan secara visual, atau menggunakan tombol pilih cepat untuk halaman ganjil, genap, atau setengah dokumen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah memisahkan halaman tertentu saja dari PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ya. Anda dapat mengekstrak rentang halaman kustom (misalnya halaman 3-7) atau memisahkan setiap halaman menjadi file individual. Masukkan rentang sebagai nilai yang dipisahkan koma seperti '1-5, 8, 11-15', atau klik halaman secara visual di kisi thumbnail."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bagaimana cara menghapus halaman tertentu dari PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Pilih semua halaman kecuali yang ingin Anda hapus, kemudian klik Pisah PDF untuk mengekstrak hanya halaman yang ingin Anda simpan. Misalnya, untuk menghapus halaman 3 dari PDF 10 halaman, pilih halaman 1-2 dan 4-10 lalu ekstrak. Hasilnya adalah PDF Anda tanpa halaman yang dihapus — kualitas asli dipertahankan."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah ada batasan halaman untuk pemisahan?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak. PDFree tidak memiliki batasan halaman atau ukuran file. Pemrosesan bergantung pada memori yang tersedia di perangkat Anda. PDF dengan ratusan halaman merender thumbnail dalam hitungan detik di komputer modern."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah memisahkan PDF secara offline?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ya. PDFree adalah Progressive Web App dan berfungsi sepenuhnya offline setelah dimuat di browser Anda. Tidak diperlukan koneksi internet untuk memisahkan atau mengekstrak halaman."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah memisahkan PDF yang dilindungi kata sandi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ya, jika Anda tahu kata sandinya. Saat Anda membuka PDF yang dilindungi, PDFree akan meminta Anda memasukkannya. Setelah dibuka kuncinya, Anda dapat memilih dan mengekstrak halaman seperti biasa. PDFree tidak dapat melewati atau membobol kata sandi — hanya dapat membuka file yang Anda berwenang untuk membukanya."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bagaimana cara memisahkan PDF di iPhone atau Android tanpa Adobe Acrobat?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Buka PDFree di Safari (iPhone/iPad) atau browser apa pun di Android — tidak diperlukan unduhan aplikasi atau Adobe Acrobat. Alat ini berjalan sepenuhnya di browser: muat PDF Anda, pilih halaman, ketuk Pisah PDF. Hasilnya tersimpan ke aplikasi File di iOS atau folder Unduhan di Android."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah memisahkan beberapa file PDF sekaligus?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak dalam satu batch — PDFree memproses satu PDF pada satu waktu. Buka alat di tab baru untuk memisahkan file kedua secara paralel. PDFree juga berfungsi offline sebagai Progressive Web App, sehingga tidak ada waktu tunggu jaringan antar file."
+    }
+  }
+]

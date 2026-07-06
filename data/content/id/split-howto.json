@@ -1,0 +1,38 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Cara Memisahkan PDF Gratis",
+  "description": "Pisahkan PDF menjadi file terpisah atau ekstrak halaman tertentu — gratis, tanpa upload, diproses secara lokal di browser Anda.",
+  "totalTime": "PT1M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — pemisah PDF gratis berbasis browser, tanpa upload" }],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Buka PDF Anda",
+      "text": "Klik 'Pilih file' atau seret PDF Anda ke area drop. Thumbnail halaman dirender di browser Anda — tidak ada yang diunggah ke server mana pun.",
+      "url": "https://pdfree.io/id/pisah-pdf/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Pilih halaman yang Anda butuhkan",
+      "text": "Klik thumbnail halaman individual untuk memilih atau membatalkan pilihan, atau masukkan rentang seperti '1-3, 5, 8-10'. Gunakan tombol pilih cepat untuk halaman ganjil, genap, atau setengah. Untuk menghapus halaman, pilih semuanya kecuali halaman yang ingin dihapus.",
+      "url": "https://pdfree.io/id/pisah-pdf/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Pilih output: satu file atau file terpisah",
+      "text": "Pilih 'Ekstrak halaman' untuk mendapatkan halaman yang dipilih sebagai satu PDF gabungan, atau 'Pisah semua halaman' untuk mendapatkan setiap halaman sebagai file PDF sendiri dalam arsip ZIP.",
+      "url": "https://pdfree.io/id/pisah-pdf/#step3"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 4,
+      "name": "Unduh hasilnya",
+      "text": "Klik 'Pisah PDF'. Halaman yang diekstrak langsung diunduh — sebagai satu PDF atau ZIP dari halaman individual.",
+      "url": "https://pdfree.io/id/pisah-pdf/#step4"
+    }
+  ]
+}

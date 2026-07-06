@@ -1,0 +1,31 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Cara Mengompres PDF Gratis",
+  "description": "Perkecil ukuran file PDF tanpa kehilangan kualitas — gratis, tanpa upload, diproses sepenuhnya di browser Anda.",
+  "totalTime": "PT1M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — kompressor PDF gratis berbasis browser, tanpa upload" }],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Buka PDF Anda",
+      "text": "Klik 'Pilih file' atau seret PDF Anda ke area drop. Ukuran file berapa pun diterima — file dimuat di browser Anda dan tidak pernah diunggah.",
+      "url": "https://pdfree.io/id/kompres-pdf/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Pilih tingkat kompresi",
+      "text": "Pilih Ringan (hanya menghapus metadata, gambar tidak berubah), Standar (menghapus metadata dan mengompres ulang gambar — terbaik untuk sebagian besar file), atau Maksimum (paling agresif — terbaik untuk dokumen scan). PDFree menganalisis PDF Anda dan merekomendasikan preset terbaik secara otomatis.",
+      "url": "https://pdfree.io/id/kompres-pdf/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Kompres dan unduh",
+      "text": "Klik 'Kompres PDF'. Pemrosesan memerlukan beberapa detik di browser Anda. Laporan kompresi menunjukkan tepat apa yang dihapus — metadata XMP, thumbnail, gambar duplikat, dan aliran yang dikompres ulang. Unduh PDF yang lebih kecil segera.",
+      "url": "https://pdfree.io/id/kompres-pdf/#step3"
+    }
+  ]
+}

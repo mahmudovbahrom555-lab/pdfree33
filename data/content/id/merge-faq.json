@@ -1,0 +1,50 @@
+[
+  {
+    "@type": "Question",
+    "name": "Apakah file saya diunggah ke server saat menggabungkan?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak. PDFree menggabungkan file PDF sepenuhnya di browser Anda menggunakan pdf-lib. File Anda tidak pernah meninggalkan perangkat dan tidak pernah dikirim ke server mana pun."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah ada batas ukuran file untuk menggabungkan PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak ada batasan buatan. PDFree memproses file secara lokal di browser Anda — tidak diperlukan langganan. Untuk pengalaman terbaik, pertahankan total batch di bawah 300 MB; batch yang lebih besar mungkin lebih lambat pada perangkat dengan memori rendah."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah menggabungkan lebih dari dua PDF sekaligus?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ya. Anda dapat menggabungkan file PDF tanpa batas dalam satu operasi. Cukup tambahkan semua file yang ingin Anda gabungkan — 2, 10, 50, atau 100+."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah penggabungan PDF berfungsi secara offline?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ya. PDFree adalah Progressive Web App (PWA). Setelah dimuat, aplikasi ini berfungsi sepenuhnya offline — tidak diperlukan koneksi internet untuk pemrosesan."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah ada batasan harian untuk penggabungan?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak. PDFree tidak memiliki batasan penggunaan harian. Gabungkan sebanyak PDF yang Anda inginkan, sesering yang Anda butuhkan."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah menggabungkan PDF di ponsel atau tablet?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ya. PDFree berfungsi di browser mobile — Chrome untuk Android dan Safari untuk iOS. Pemilihan file menggunakan pemilih file bawaan, dan Anda dapat mengubah urutan file menggunakan tombol di layar."
+    }
+  }
+]

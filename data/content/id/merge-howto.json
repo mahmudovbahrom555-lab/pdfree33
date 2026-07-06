@@ -1,0 +1,28 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Cara Menggabungkan File PDF Gratis",
+  "description": "Gabungkan 2, 50, atau 100+ file PDF menjadi satu dokumen secara gratis — tanpa upload, tanpa akun, 100% pribadi.",
+  "totalTime": "PT1M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — penggabung PDF gratis berbasis browser, tanpa upload" }],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Tambahkan file PDF Anda",
+      "text": "Klik 'Pilih file' atau seret file PDF ke area drop. Tambahkan file sebanyak yang Anda butuhkan — 2, 50, atau 100+ — tidak ada batasan jumlah file."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Atur ulang urutan jika perlu",
+      "text": "Seret dan lepas kartu file untuk mengatur urutan yang Anda inginkan. Urutkan ulang sebanyak yang Anda suka sebelum mengklik Gabungkan."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Gabungkan dan unduh",
+      "text": "Klik 'Gabungkan PDF'. Pemrosesan memerlukan beberapa detik untuk batch kecil, hingga satu menit untuk 50+ file besar. PDF yang digabungkan akan otomatis diunduh ke perangkat Anda — tidak ada yang diunggah ke server mana pun."
+    }
+  ]
+}

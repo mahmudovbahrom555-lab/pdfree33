@@ -1,0 +1,28 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Cách Ghép File PDF Miễn Phí",
+  "description": "Ghép 2, 50 hoặc 100+ file PDF thành một tài liệu miễn phí — không tải lên, không cần tài khoản, 100% riêng tư.",
+  "totalTime": "PT1M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — công cụ ghép PDF miễn phí dựa trên trình duyệt, không cần tải lên" }],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Thêm file PDF của bạn",
+      "text": "Nhấp 'Chọn file' hoặc kéo file PDF vào vùng thả. Thêm bao nhiêu file tùy ý — 2, 50 hoặc 100+ — không có giới hạn số lượng file."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Sắp xếp lại nếu cần",
+      "text": "Kéo và thả thẻ file để đặt thứ tự bạn muốn ghép. Sắp xếp lại bao nhiêu lần tùy thích trước khi nhấp Ghép."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Ghép và tải về",
+      "text": "Nhấp 'Ghép PDF'. Xử lý mất vài giây cho lô nhỏ, đến một phút cho 50+ file lớn. PDF đã ghép tự động tải về thiết bị của bạn — không có gì được tải lên bất kỳ server nào."
+    }
+  ]
+}
