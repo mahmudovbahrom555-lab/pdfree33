@@ -4,7 +4,7 @@
     "name": "Werden meine Dateien auf einem Server gespeichert?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nein. PDFree arbeitet vollständig auf deinem Gerät (clientseitig). Wir haben keine Server, die deine Dateien verarbeiten, was 100 % Privatsphäre garantiert."
+      "text": "Nein. PDFree arbeitet vollständig auf deinem Gerät (clientseitig). Alle Verarbeitungsschritte finden im Browser statt — deine Dateien verlassen dein Gerät nie."
     }
   },
   {
@@ -13,6 +13,30 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Nein, es gibt keine künstlichen Limits. Die einzige Begrenzung ist der verfügbare Arbeitsspeicher deines Computers oder Smartphones."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Ist das Wasserzeichen-Tool kostenlos?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. PDFree ist vollständig kostenlos — kein Abo, keine Registrierung, kein Software-Wasserzeichen im Ergebnis. Du kannst beliebig viele PDFs ohne Tageslimit mit Wasserzeichen versehen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Was ist der Unterschied zwischen Wasserzeichen und Stempel?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Die Begriffe werden oft gleichbedeutend verwendet. Ein Wasserzeichen ist typischerweise ein halbtransparenter Text diagonal über alle Seiten (z. B. ENTWURF mit 30 % Deckkraft). Ein Stempel ist meist ein undurchsichtiges Etikett an einer festen Position (z. B. GENEHMIGT in einer Ecke). Mit PDFree erreichst du beide Varianten durch Anpassen von Deckkraft und Position."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann ich ein Logo als Bild-Wasserzeichen einfügen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Noch nicht. PDFree unterstützt derzeit ausschließlich Text-Wasserzeichen. Bild- und Logo-Wasserzeichen sind für ein zukünftiges Update geplant."
     }
   }
 ]

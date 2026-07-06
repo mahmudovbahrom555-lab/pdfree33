@@ -347,6 +347,7 @@ SPECIALTY_PAGES = [
     'blog/how-to-remove-pdf-password',
     'blog/how-to-compress-pdf-without-losing-quality',
     'blog/how-to-rotate-pdf-pages',
+    'blog/free-pdf-tools-without-daily-limits',
 ]
 
 # NOTE (Sitemap Index): If the site ever grows beyond 50,000 URLs, split the sitemap
