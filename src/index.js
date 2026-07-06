@@ -84,7 +84,13 @@ export default {
     const url = new URL(request.url);
     const target = REDIRECTS[url.pathname];
     if (target) {
-      return Response.redirect(new URL(target, url.origin).href, 301);
+      return new Response(null, {
+        status: 301,
+        headers: {
+          Location: new URL(target, url.origin).href,
+          'Cache-Control': 'no-store',
+        },
+      });
     }
     return env.ASSETS.fetch(request);
   },
