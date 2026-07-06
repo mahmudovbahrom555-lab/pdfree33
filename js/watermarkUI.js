@@ -37,6 +37,7 @@ export function initWatermarkOptions() {
 }
 
 export function hideWatermarkOptions() {
+  clearTimeout(_previewTimer);  // cancel any pending debounced redraw
   const container = id('watermarkOptions');
   if (!container) return;
   container.style.display = 'none';
@@ -139,7 +140,7 @@ function _bindEvents() {
   });
 
   id('wmFontSize')?.addEventListener('input', e => {
-    _fontSize = parseInt(e.target.value);
+    _fontSize = parseInt(e.target.value, 10) || 40;
     const val = id('wmFontSizeVal');
     if (val) val.textContent = e.target.value + 'pt';
     _schedulePreview();  // debounced — continuous drag
@@ -174,11 +175,13 @@ function _drawPreview() {
   ctx.fillStyle = '#fff';
   ctx.fillRect(0, 0, W, H);
 
-  // Fake content lines
+  // Fake content lines — fixed widths so preview doesn't jitter on slider drag
   ctx.fillStyle = '#e8e8e8';
+  const LINE_WIDTHS = [110, 140, 85, 130, 70, 150, 95, 125, 60, 140, 80, 120, 100, 145, 75, 135, 90, 115];
+  let li = 0;
   for (let y = 20; y < H - 20; y += 14) {
-    const lw = 30 + Math.random() * 120;
-    ctx.fillRect(16, y, lw, 5);
+    ctx.fillRect(16, y, LINE_WIDTHS[li % LINE_WIDTHS.length], 5);
+    li++;
   }
 
   // Watermark
@@ -220,7 +223,13 @@ function _drawPreview() {
 
 // ── Helpers ────────────────────────────────────────────────────
 
-// Local alias — attribute-safe escaping for value= attributes
+// Attribute-safe escaping — pure string, no DOM dependency.
+// Handles &, ", <, > so the result is safe inside value="…".
 function _escAttr(str) {
-  const d = document.createElement('div'); d.textContent = str; return d.innerHTML.replace(/"/g, '&quot;');
+  if (str == null) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
 }
