@@ -4,16 +4,20 @@
 // ============================================================
 //  watermarkUI.js — Watermark PDF options panel
 //
-//  🎯 Сверх ТЗ:
-//  1. Live preview — canvas показывает как будет выглядеть
-//     водяной знак на странице до обработки.
-//  2. Tile mode — повторяет водяной знак сеткой по всей странице
-//     (в ТЗ только центр/верх/низ — мы добавляем ещё один режим).
-//  3. Размер шрифта — ползунок 20–80pt, не фиксированный 40pt.
+//  Live preview design:
+//  • Renders the real first page via pdfjsLib (progressive — falls
+//    back to fake content lines while loading or if unavailable).
+//  • _drawWatermarkLayer() mirrors worker.js handleWatermark()
+//    exactly — same tileGapX, tileGapY, stagger, fontSize*0.7 in
+//    tile mode, same top/bottom/center y-positions.  Preview = PDF.
+//  • DPR-aware canvas — crisp on Retina/HiDPI displays.
+//  • Slider debounce — only redraws watermark layer over cached
+//    ImageData; never re-renders the PDF page on drag.
 // ============================================================
 
 import { id }       from './utils.js';
 import { chipGroup, sliderRow, group } from './uiComponents.js';
+import { loadPdfJs } from './pdf2jpgUI.js';
 
 // ── State ──────────────────────────────────────────────────────
 let _text     = 'CONFIDENTIAL';
@@ -22,6 +26,11 @@ let _position = 'center';       // 'center' | 'top' | 'bottom' | 'tile'
 let _fontSize = 40;
 let _color    = 'gray';         // 'gray' | 'red' | 'blue'
 
+// Preview state — reset on each initWatermarkOptions() call
+let _pageW       = 595;   // actual page width in PDF pts (A4 default)
+let _pageH       = 842;   // actual page height in PDF pts (A4 default)
+let _bgImageData = null;  // cached first-page render (physical canvas pixels)
+
 export function getWatermarkParams() {
   return { text: _text, opacity: _opacity, position: _position,
            fontSize: _fontSize, color: _color };
@@ -29,19 +38,24 @@ export function getWatermarkParams() {
 
 // ── Public API ─────────────────────────────────────────────────
 
-export function initWatermarkOptions() {
+export function initWatermarkOptions(file) {
+  _bgImageData = null;
+  _pageW = 595;
+  _pageH = 842;
   const container = id('watermarkOptions');
   if (!container) return;
   container.style.display = 'block';
   _render();
+  if (file) _loadPageBackground(file);
 }
 
 export function hideWatermarkOptions() {
-  clearTimeout(_previewTimer);  // cancel any pending debounced redraw
+  clearTimeout(_previewTimer);
   const container = id('watermarkOptions');
   if (!container) return;
   container.style.display = 'none';
   container.innerHTML = '';
+  _bgImageData = null;
 }
 
 // ── Render ─────────────────────────────────────────────────────
@@ -51,6 +65,7 @@ function _render() {
   if (!container) return;
 
   const pctOpacity = Math.round(_opacity * 100);
+  const displayH   = Math.round(200 * _pageH / _pageW);
 
   container.innerHTML = `
     <div class="wm-row">
@@ -96,7 +111,8 @@ function _render() {
 
       <!-- Live preview -->
       <div class="wm-preview-wrap" aria-label="Watermark preview" role="img">
-        <canvas id="wmPreview" class="wm-preview" width="200" height="260"
+        <canvas id="wmPreview" class="wm-preview"
+                style="width:200px;height:${displayH}px"
                 aria-label="Preview of watermark placement"></canvas>
         <div class="wm-preview__label">Preview</div>
       </div>
@@ -122,7 +138,7 @@ function _bindEvents() {
       _position = e.target.value;
       container.querySelectorAll('[data-name="wmPos"]').forEach(el =>
         el.classList.toggle('j2p-chip--active', el.dataset.value === _position));
-      _drawPreview();  // immediate — discrete choice, not continuous
+      _drawPreview();  // immediate — discrete choice
     }
     if (e.target.name === 'wmColor') {
       _color = e.target.value;
@@ -147,6 +163,61 @@ function _bindEvents() {
   });
 }
 
+// ── Canvas size helper ─────────────────────────────────────────
+
+function _setCanvasSize(canvas, displayW, displayH) {
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width        = Math.round(displayW * dpr);
+  canvas.height       = Math.round(displayH * dpr);
+  canvas.style.width  = displayW + 'px';
+  canvas.style.height = displayH + 'px';
+}
+
+// ── Background: render real first page ────────────────────────
+
+async function _loadPageBackground(file) {
+  let doc;
+  try {
+    await loadPdfJs();
+    if (!window.pdfjsLib) return;
+
+    const buf  = await file.arrayBuffer();
+    doc        = await window.pdfjsLib.getDocument({ data: new Uint8Array(buf) }).promise;
+    const page = await doc.getPage(1);
+    const vp1  = page.getViewport({ scale: 1 });
+    _pageW = vp1.width;
+    _pageH = vp1.height;
+
+    const canvas = id('wmPreview');
+    if (!canvas) return;
+
+    const dpr      = window.devicePixelRatio || 1;
+    const displayW = 200;
+    const displayH = Math.round(displayW * _pageH / _pageW);
+    _setCanvasSize(canvas, displayW, displayH);
+
+    // Render at physical pixel resolution
+    const renderScale = canvas.width / _pageW;
+    const renderVP    = page.getViewport({ scale: renderScale });
+    const ctx         = canvas.getContext('2d');
+    await page.render({ canvasContext: ctx, viewport: renderVP }).promise;
+
+    // Cache so slider drags skip the expensive pdf.js render
+    _bgImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+    // Watermark layer in logical CSS pixel space
+    ctx.save();
+    ctx.scale(dpr, dpr);
+    _drawWatermarkLayer(ctx, displayW, displayH);
+    ctx.restore();
+  } catch (_e) {
+    _bgImageData = null;
+    _drawPreview();
+  } finally {
+    if (doc) doc.destroy().catch(() => {});
+  }
+}
+
 // ── Live canvas preview ────────────────────────────────────────
 
 const COLOR_MAP = {
@@ -155,9 +226,9 @@ const COLOR_MAP = {
   blue: 'rgba(0,60,200,',
 };
 
-// Debounce: slider fast-drag fires dozens of events/second.
-// We only redraw 60ms after the last event — imperceptible to user,
-// saves ~10× redraws during a typical slider drag.
+// Fake content lines — deterministic widths so preview doesn't jitter on drag
+const LINE_WIDTHS = [110, 140, 85, 130, 70, 150, 95, 125, 60, 140, 80, 120, 100, 145, 75, 135, 90, 115];
+
 let _previewTimer = null;
 function _schedulePreview() {
   clearTimeout(_previewTimer);
@@ -167,53 +238,103 @@ function _schedulePreview() {
 function _drawPreview() {
   const canvas = id('wmPreview');
   if (!canvas) return;
+
+  const dpr      = window.devicePixelRatio || 1;
+  const displayW = 200;
+  const displayH = Math.round(displayW * _pageH / _pageW);
+  _setCanvasSize(canvas, displayW, displayH);
+
   const ctx = canvas.getContext('2d');
-  const W = 200, H = 260;
 
-  // Page background
-  ctx.clearRect(0, 0, W, H);
-  ctx.fillStyle = '#fff';
-  ctx.fillRect(0, 0, W, H);
-
-  // Fake content lines — fixed widths so preview doesn't jitter on slider drag
-  ctx.fillStyle = '#e8e8e8';
-  const LINE_WIDTHS = [110, 140, 85, 130, 70, 150, 95, 125, 60, 140, 80, 120, 100, 145, 75, 135, 90, 115];
-  let li = 0;
-  for (let y = 20; y < H - 20; y += 14) {
-    ctx.fillRect(16, y, LINE_WIDTHS[li % LINE_WIDTHS.length], 5);
-    li++;
+  if (_bgImageData) {
+    // Restore cached page render — putImageData writes to physical pixels
+    // and bypasses the current transform, so no scale() needed here.
+    ctx.putImageData(_bgImageData, 0, 0);
+  } else {
+    // Fallback: white page + placeholder content lines
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.save();
+    ctx.scale(dpr, dpr);
+    ctx.fillStyle = '#e8e8e8';
+    let li = 0;
+    for (let y = 20; y < displayH - 20; y += 14) {
+      ctx.fillRect(16, y, LINE_WIDTHS[li % LINE_WIDTHS.length], 5);
+      li++;
+    }
+    ctx.restore();
   }
 
-  // Watermark
-  const text    = _text || 'WATERMARK';
-  const scale   = W / 595;              // A4 scale to preview
-  const fs      = Math.round(_fontSize * scale * 2.2);
-  const color   = (COLOR_MAP[_color] || COLOR_MAP.gray) + _opacity + ')';
+  // Watermark layer in logical CSS pixel space
+  ctx.save();
+  ctx.scale(dpr, dpr);
+  _drawWatermarkLayer(ctx, displayW, displayH);
+  ctx.restore();
+}
+
+// Watermark drawing — mirrors worker.js handleWatermark() exactly.
+//
+// worker.js uses PDF coordinates (y=0 at bottom of page).
+// Canvas uses CSS coordinates (y=0 at top).  We flip the y-axis:
+//   canvasY = displayH - (pdfY / pageH) * displayH
+//
+// Scale: all PDF point values are multiplied by scaleX = displayW / _pageW
+// (= scaleY for aspect-ratio-preserving canvas, guaranteed by _setCanvasSize).
+function _drawWatermarkLayer(ctx, W, H) {
+  const text     = _text || 'WATERMARK';
+  const scaleX   = W / _pageW;
+  const scaleY   = H / _pageH;
+  const colorStr = (COLOR_MAP[_color] || COLOR_MAP.gray) + _opacity + ')';
 
   ctx.save();
-  ctx.globalAlpha = 1; // already baked into color
-  ctx.font        = `bold ${fs}px sans-serif`;
-  ctx.fillStyle   = color;
-  ctx.textAlign   = 'center';
+  ctx.fillStyle    = colorStr;
   ctx.textBaseline = 'middle';
 
   if (_position === 'tile') {
-    // Draw 3×4 grid
-    for (let row = 0; row < 4; row++) {
-      for (let col = 0; col < 2; col++) {
+    // Mirror worker.js exactly:
+    //   tileGapX = width / 2.5
+    //   tileGapY = 120  (fixed, matching worker)
+    //   row loop: -1 .. rows-1    col loop: -1 .. cols-1
+    //   x = col * tileGapX + (row % 2) * (tileGapX / 2)  [stagger every other row]
+    //   y = row * tileGapY   (PDF bottom-origin)
+    //   size = fontSize * 0.7   (worker applies 0.7 in tile mode)
+    const tileGapX = _pageW / 2.5;
+    const tileGapY = 120;
+    const cols     = Math.ceil(_pageW / tileGapX) + 2;
+    const rows     = Math.ceil(_pageH / tileGapY) + 2;
+    const fs       = _fontSize * 0.7 * scaleX;
+    ctx.font      = `bold ${Math.round(fs)}px sans-serif`;
+    ctx.textAlign = 'center';
+
+    for (let row = -1; row < rows; row++) {
+      for (let col = -1; col < cols; col++) {
+        const pdfX = col * tileGapX + (row % 2) * (tileGapX / 2);
+        const pdfY = row * tileGapY;       // PDF: y=0 at bottom
+        const cx   = pdfX * scaleX;
+        const cy   = H - pdfY * scaleY;   // flip to canvas: y=0 at top
         ctx.save();
-        ctx.translate(50 + col * 100, 40 + row * 60);
+        ctx.translate(cx, cy);
         ctx.rotate(-25 * Math.PI / 180);
         ctx.fillText(text, 0, 0);
         ctx.restore();
       }
     }
   } else {
-    let x = W / 2, y = H / 2;
-    if (_position === 'top')    y = 30;
-    if (_position === 'bottom') y = H - 30;
+    // Mirror worker.js positions (converting PDF bottom-origin y to canvas top-origin y):
+    //   center: PDF y = height/2   → canvas y = H/2
+    //   top:    PDF y = height-50  → canvas y = 50 * scaleY
+    //   bottom: PDF y = 30         → canvas y = H - 30 * scaleY
+    const fs = _fontSize * scaleX;
+    ctx.font      = `bold ${Math.round(fs)}px sans-serif`;
+    ctx.textAlign = 'center';
+
+    let cy;
+    if      (_position === 'top')    cy = 50 * scaleY;
+    else if (_position === 'bottom') cy = H - 30 * scaleY;
+    else                             cy = H / 2;
+
     const angle = _position === 'center' ? -25 * Math.PI / 180 : 0;
-    ctx.translate(x, y);
+    ctx.translate(W / 2, cy);
     ctx.rotate(angle);
     ctx.fillText(text, 0, 0);
   }
@@ -224,7 +345,6 @@ function _drawPreview() {
 // ── Helpers ────────────────────────────────────────────────────
 
 // Attribute-safe escaping — pure string, no DOM dependency.
-// Handles &, ", <, > so the result is safe inside value="…".
 function _escAttr(str) {
   if (str == null) return '';
   return String(str)
