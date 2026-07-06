@@ -4,7 +4,7 @@
     "name": "Does adding a watermark upload my PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. Watermarking is done entirely in your browser using pdf-lib. Nothing is uploaded."
+      "text": "No. Watermarking is done entirely in your browser using pdf-lib. Nothing is uploaded to any server."
     }
   },
   {
@@ -12,7 +12,7 @@
     "name": "Can I add an image as a watermark instead of text?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Yes. PDFree supports both text watermarks and image watermarks (PNG/JPG)."
+      "text": "Not yet. PDFree currently supports text watermarks only. Image and logo watermark support is planned for a future update."
     }
   },
   {
@@ -20,7 +20,7 @@
     "name": "Can I control watermark opacity and position?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Yes. You can adjust opacity, size, position, and rotation angle."
+      "text": "Yes. You can adjust opacity (10–100%), font size, color, and rotation angle. Preview updates in real time before you apply the watermark."
     }
   },
   {
@@ -28,7 +28,23 @@
     "name": "Will the watermark be permanent?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Yes. The watermark is embedded into the PDF and cannot be easily removed."
+      "text": "Yes. The watermark is embedded into the PDF as page content and cannot be easily removed by standard tools."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is this PDF watermark tool completely free?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. PDFree is a completely free PDF watermark tool — no subscription, no sign up, no watermarks or credits added to your output. Watermark as many PDFs as you need with no daily limit."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "What is the difference between a watermark and a stamp on a PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "The terms are often used interchangeably. A watermark is typically a semi-transparent text that repeats diagonally across every page (e.g. DRAFT at 30% opacity). A stamp is usually an opaque label placed once in a fixed position (e.g. APPROVED in a corner). PDFree lets you achieve either look by adjusting the opacity and position of the text watermark."
     }
   }
 ]
