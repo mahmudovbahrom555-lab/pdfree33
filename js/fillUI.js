@@ -254,7 +254,7 @@ function _buildFormHTML(fields) {
   const pages      = Object.keys(byPage).map(Number).sort((a, b) => a - b);
   const multiPage  = pages.length > 1;
   const fillable    = fields.filter(f => f.type !== 'sig' && !f.readOnly);
-  const totalFilled = fillable.filter(f => _values[f.name] !== undefined && _values[f.name] !== '').length
+  const totalFilled = fillable.filter(f => _values[f.name] !== undefined && String(_values[f.name]).trim() !== '').length
                     + Object.keys(_sigImages).length;
   const totalCount  = fields.filter(f => !f.readOnly).length;
 
@@ -352,7 +352,7 @@ function _fieldHTML(f) {
           style="width:20px;height:20px;min-width:20px;accent-color:var(--green);">
         ${_esc(o.label)}
       </label>`).join('');
-    return `<div>
+    return `<div data-radio-group="${_esc(f.name)}" style="padding:6px 0 4px;border-radius:8px;transition:outline .15s;">
       ${labelHTML}
       <div style="display:flex;flex-direction:column;gap:4px;padding:4px 0;">${opts}</div>
     </div>`;
@@ -506,7 +506,12 @@ function _validateRequired() {
       container.querySelectorAll('[data-sig-field]').forEach(b => {
         if (b.dataset.sigField === f.name) b.style.borderColor = isEmpty ? '#dc2626' : '';
       });
-    } else if (f.type !== 'radio') {
+    } else if (f.type === 'radio') {
+      try {
+        const el = container.querySelector(`[data-radio-group="${CSS.escape(f.name)}"]`);
+        if (el) el.style.outline = isEmpty ? '2px solid #dc2626' : '';
+      } catch { /* field name not valid CSS selector — skip highlight */ }
+    } else {
       try {
         const el = container.querySelector(`#fill_${CSS.escape(f.name)}`);
         if (el) el.style.borderColor = isEmpty ? '#dc2626' : '';
@@ -642,7 +647,11 @@ function _openSigPad(fieldName, rect, pageIndex) {
       _closeSigPad();
       _updateSigBtn(fieldName, savedSig);
     } else if (action === 'save') {
-      if (_isSigEmpty(ctx, logW * dpr, logH * dpr)) return;
+      if (_isSigEmpty(ctx, logW * dpr, logH * dpr)) {
+        canvas.style.outline = '3px solid #dc2626';
+        setTimeout(() => { if (canvas) canvas.style.outline = ''; }, 900);
+        return;
+      }
       const dataUrl = _captureSig(canvas, logW * dpr, logH * dpr, isPortrait);
       _saveSignatureToStorage(dataUrl);
       _sigImages[fieldName] = { dataUrl, rect, pageIndex };
