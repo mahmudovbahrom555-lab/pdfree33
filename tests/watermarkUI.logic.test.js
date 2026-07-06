@@ -135,8 +135,8 @@ function buildColor(colorName, opacity) {
 
 const PAGE_W    = 595;    // A4 width in PDF pts
 const PAGE_H    = 842;    // A4 height in PDF pts
-const DISPLAY_W = 200;    // preview CSS width (px)
-const DISPLAY_H = Math.round(DISPLAY_W * PAGE_H / PAGE_W);  // 283 for A4
+const DISPLAY_W = 280;    // preview CSS width (px) — matches PREVIEW_W in watermarkUI.js
+const DISPLAY_H = Math.round(DISPLAY_W * PAGE_H / PAGE_W);  // 396 for A4
 
 // ── Preview font size ──────────────────────────────────────────
 // Non-tile: fontSize * (displayW / pageW)           [no extra multiplier]
@@ -370,8 +370,8 @@ test('color string ends with )', () => {
 console.log('\nPreview font size (worker-accurate scaling):');
 
 // Non-tile: scale = displayW / pageW  (no 2.2 — matches what user sees in PDF)
-test('center fontSize 40, A4 → 40*(200/595)', () => {
-  expect(previewFontSizeCenter(40)).toBeCloseTo(40 * (200 / 595), 3);
+test('center fontSize 40, A4 → 40*(280/595)', () => {
+  expect(previewFontSizeCenter(40)).toBeCloseTo(40 * (DISPLAY_W / 595), 3);
 });
 test('center fontSize 16 (min) → positive value', () => {
   expect(previewFontSizeCenter(16)).toBeGreaterThan(0);
@@ -402,7 +402,7 @@ test('tile fontSize 80 still positive', () => {
 
 console.log('\nPosition coordinates (worker-accurate, canvas y=0 at top):');
 
-// A4 display: DISPLAY_H = 283, scaleY = 283/842 ≈ 0.3361
+// A4 display: DISPLAY_H = 396, scaleY = 396/842 ≈ 0.4703
 const SCALE_Y = DISPLAY_H / PAGE_H;
 
 test('center: x = displayW/2 = 100', () => {
@@ -419,7 +419,7 @@ test('bottom: y = DISPLAY_H - 30*scaleY (near bottom of canvas)', () => {
 });
 test('all positions have x = DISPLAY_W/2', () => {
   for (const pos of ['center', 'top', 'bottom']) {
-    expect(positionCoords(pos).x).toBe(100);
+    expect(positionCoords(pos).x).toBe(DISPLAY_W / 2);
   }
 });
 test('bottom y > center y > top y', () => {
@@ -638,8 +638,8 @@ test('tile font size is 70% of center font size (same fontSize)', () => {
   const tile   = previewFontSizeTile(40);
   expect(tile / center).toBeCloseTo(0.7, 5);
 });
-test('DISPLAY_H = round(200 * 842/595) = 283', () => {
-  expect(DISPLAY_H).toBe(283);
+test('DISPLAY_H = round(280 * 842/595) = 396', () => {
+  expect(DISPLAY_H).toBe(396);
 });
 test('tile covers entire visible canvas width with some margin', () => {
   // Total canvas width covered by cols (including overflow): cols * tileGapX * scaleX

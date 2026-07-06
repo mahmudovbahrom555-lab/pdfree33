@@ -19,6 +19,9 @@ import { chipGroup, sliderRow, group } from './uiComponents.js';
 import { loadPdfJs } from './pdf2jpgUI.js';
 import { computeWatermarkLayout } from './watermarkLayout.js';
 
+// ── Constants ──────────────────────────────────────────────────
+const PREVIEW_W = 280;  // preview canvas CSS width in px
+
 // ── State ──────────────────────────────────────────────────────
 let _text     = 'CONFIDENTIAL';
 let _opacity  = 0.3;
@@ -65,7 +68,7 @@ function _render() {
   if (!container) return;
 
   const pctOpacity = Math.round(_opacity * 100);
-  const displayH   = Math.round(200 * _pageH / _pageW);
+  const displayH   = Math.round(PREVIEW_W * _pageH / _pageW);
 
   container.innerHTML = `
     <div class="wm-row">
@@ -112,7 +115,7 @@ function _render() {
       <!-- Live preview -->
       <div class="wm-preview-wrap" aria-label="Watermark preview" role="img">
         <canvas id="wmPreview" class="wm-preview"
-                style="width:200px;height:${displayH}px"
+                style="width:${PREVIEW_W}px;height:${displayH}px"
                 aria-label="Preview of watermark placement"></canvas>
         <div class="wm-preview__label">Preview</div>
       </div>
@@ -192,7 +195,7 @@ async function _loadPageBackground(file) {
     if (!canvas) return;
 
     const dpr      = window.devicePixelRatio || 1;
-    const displayW = 200;
+    const displayW = PREVIEW_W;
     const displayH = Math.round(displayW * _pageH / _pageW);
     _setCanvasSize(canvas, displayW, displayH);
 
