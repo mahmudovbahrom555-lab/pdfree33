@@ -7,9 +7,8 @@
 //  Live preview design:
 //  • Renders the real first page via pdfjsLib (progressive — falls
 //    back to fake content lines while loading or if unavailable).
-//  • _drawWatermarkLayer() mirrors worker.js handleWatermark()
-//    exactly — same tileGapX, tileGapY, stagger, fontSize*0.7 in
-//    tile mode, same top/bottom/center y-positions.  Preview = PDF.
+//  • _drawWatermarkLayer() delegates to computeWatermarkLayout()
+//    from watermarkLayout.js — the canonical source of tile math.
 //  • DPR-aware canvas — crisp on Retina/HiDPI displays.
 //  • Slider debounce — only redraws watermark layer over cached
 //    ImageData; never re-renders the PDF page on drag.
@@ -18,6 +17,7 @@
 import { id }       from './utils.js';
 import { chipGroup, sliderRow, group } from './uiComponents.js';
 import { loadPdfJs } from './pdf2jpgUI.js';
+import { computeWatermarkLayout } from './watermarkLayout.js';
 
 // ── State ──────────────────────────────────────────────────────
 let _text     = 'CONFIDENTIAL';
@@ -272,71 +272,36 @@ function _drawPreview() {
   ctx.restore();
 }
 
-// Watermark drawing — mirrors worker.js handleWatermark() exactly.
-//
-// worker.js uses PDF coordinates (y=0 at bottom of page).
-// Canvas uses CSS coordinates (y=0 at top).  We flip the y-axis:
-//   canvasY = displayH - (pdfY / pageH) * displayH
-//
-// Scale: all PDF point values are multiplied by scaleX = displayW / _pageW
-// (= scaleY for aspect-ratio-preserving canvas, guaranteed by _setCanvasSize).
+// Watermark drawing — uses computeWatermarkLayout() from watermarkLayout.js.
+// Positions are returned in PDF coordinate space (y=0 at bottom); we flip
+// the y-axis when converting to canvas (y=0 at top):
+//   canvasX = x * scaleX
+//   canvasY = H - y * scaleY
 function _drawWatermarkLayer(ctx, W, H) {
   const text     = _text || 'WATERMARK';
   const scaleX   = W / _pageW;
   const scaleY   = H / _pageH;
   const colorStr = (COLOR_MAP[_color] || COLOR_MAP.gray) + _opacity + ')';
 
+  const items = computeWatermarkLayout({
+    pageWidth:  _pageW,
+    pageHeight: _pageH,
+    fontSize:   _fontSize,
+    position:   _position,
+  });
+
   ctx.save();
   ctx.fillStyle    = colorStr;
   ctx.textBaseline = 'middle';
+  ctx.textAlign    = 'center';
 
-  if (_position === 'tile') {
-    // Mirror worker.js exactly:
-    //   tileGapX = width / 2.5
-    //   tileGapY = 120  (fixed, matching worker)
-    //   row loop: -1 .. rows-1    col loop: -1 .. cols-1
-    //   x = col * tileGapX + (row % 2) * (tileGapX / 2)  [stagger every other row]
-    //   y = row * tileGapY   (PDF bottom-origin)
-    //   size = fontSize * 0.7   (worker applies 0.7 in tile mode)
-    const tileGapX = _pageW / 2.5;
-    const tileGapY = 120;
-    const cols     = Math.ceil(_pageW / tileGapX) + 2;
-    const rows     = Math.ceil(_pageH / tileGapY) + 2;
-    const fs       = _fontSize * 0.7 * scaleX;
-    ctx.font      = `bold ${Math.round(fs)}px sans-serif`;
-    ctx.textAlign = 'center';
-
-    for (let row = -1; row < rows; row++) {
-      for (let col = -1; col < cols; col++) {
-        const pdfX = col * tileGapX + (row % 2) * (tileGapX / 2);
-        const pdfY = row * tileGapY;       // PDF: y=0 at bottom
-        const cx   = pdfX * scaleX;
-        const cy   = H - pdfY * scaleY;   // flip to canvas: y=0 at top
-        ctx.save();
-        ctx.translate(cx, cy);
-        ctx.rotate(-25 * Math.PI / 180);
-        ctx.fillText(text, 0, 0);
-        ctx.restore();
-      }
-    }
-  } else {
-    // Mirror worker.js positions (converting PDF bottom-origin y to canvas top-origin y):
-    //   center: PDF y = height/2   → canvas y = H/2
-    //   top:    PDF y = height-50  → canvas y = 50 * scaleY
-    //   bottom: PDF y = 30         → canvas y = H - 30 * scaleY
-    const fs = _fontSize * scaleX;
-    ctx.font      = `bold ${Math.round(fs)}px sans-serif`;
-    ctx.textAlign = 'center';
-
-    let cy;
-    if      (_position === 'top')    cy = 50 * scaleY;
-    else if (_position === 'bottom') cy = H - 30 * scaleY;
-    else                             cy = H / 2;
-
-    const angle = _position === 'center' ? -25 * Math.PI / 180 : 0;
-    ctx.translate(W / 2, cy);
-    ctx.rotate(angle);
+  for (const { x, y, angle, size } of items) {
+    ctx.save();
+    ctx.font = `bold ${Math.round(size * scaleX)}px sans-serif`;
+    ctx.translate(x * scaleX, H - y * scaleY);
+    ctx.rotate(-angle);  // y-axis flip (PDF y-up → canvas y-down) reverses rotation
     ctx.fillText(text, 0, 0);
+    ctx.restore();
   }
 
   ctx.restore();

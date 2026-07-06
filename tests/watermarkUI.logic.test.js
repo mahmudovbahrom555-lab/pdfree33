@@ -4,20 +4,21 @@
 // ============================================================
 //  tests/watermarkUI.logic.test.js
 //
-//  Pure-logic tests for watermarkUI.js.  All tested functions
-//  are copied verbatim (or as thin wrappers) from the source so
-//  the suite runs in Node.js without a DOM.
+//  Pure-logic tests for watermarkUI.js and watermarkLayout.js.
+//  All tested functions are copied verbatim (or as thin wrappers)
+//  so the suite runs in Node.js without a DOM or ES module loader.
 //
 //  Covers:
+//    • computeWatermarkLayout — canonical layout engine (watermarkLayout.js)
 //    • _escAttr       — attribute-safe HTML escaping
 //    • opacityNorm    — slider value (0-100) → PDF opacity (0-1)
 //    • opacityDisplay — opacity (0-1) → display string (e.g. "30%")
 //    • colorConstruct — COLOR_MAP + opacity → rgba() string
 //    • previewScale   — worker-accurate font size scaling (no 2.2 multiplier)
 //    • positionCoords — position label → (x, y) on preview canvas
-//                       (matches worker.js y-positions, flipped to canvas coords)
+//                       (matches watermarkLayout.js y-positions, flipped to canvas)
 //    • rotationAngle  — position label → rotation in radians
-//    • tileLayout     — tile mode parameters mirroring worker.js
+//    • tileLayout     — canvas-coord tile grid mirroring computeWatermarkLayout
 //    • validation     — getParams.validate from toolRegistrations
 //    • defaultParams  — shape of getWatermarkParams() return value
 //    • fontSizeParse  — parseInt with radix + NaN fallback
@@ -57,6 +58,41 @@ function expect(actual) {
     toBeLessThanOrEqualTo: (n) => { if (actual > n) throw new Error(`Expected ${actual} <= ${n}`); },
     toBeGreaterThanOrEqualTo: (n) => { if (actual < n) throw new Error(`Expected ${actual} >= ${n}`); },
   };
+}
+
+// ── computeWatermarkLayout — copied from watermarkLayout.js ───
+// Inline copy so the suite runs in Node.js without ES module loader.
+
+const TILE_GAP_Y = 120;
+
+function computeWatermarkLayout({ pageWidth, pageHeight, fontSize, position }) {
+  if (position === 'tile') {
+    const tileGapX = pageWidth / 2.5;
+    const cols     = Math.ceil(pageWidth  / tileGapX) + 2;
+    const rows     = Math.ceil(pageHeight / TILE_GAP_Y) + 2;
+    const size     = fontSize * 0.7;
+    const cells    = [];
+    for (let row = -1; row < rows; row++) {
+      for (let col = -1; col < cols; col++) {
+        cells.push({
+          x:     col * tileGapX + (row % 2) * (tileGapX / 2),
+          y:     row * TILE_GAP_Y,
+          angle: -25 * Math.PI / 180,
+          size,
+        });
+      }
+    }
+    return cells;
+  }
+  const y = position === 'top'    ? pageHeight - 50
+          : position === 'bottom' ? 30
+          :                         pageHeight / 2;
+  return [{
+    x:     pageWidth / 2,
+    y,
+    angle: position === 'center' ? -25 * Math.PI / 180 : 0,
+    size:  fontSize,
+  }];
 }
 
 // ── Pure copies from watermarkUI.js ───────────────────────────
@@ -136,17 +172,11 @@ function positionRotation(position) {
   return (position === 'center') ? -25 * Math.PI / 180 : 0;
 }
 
-// ── Tile layout ────────────────────────────────────────────────
-// Mirrors worker.js tile algorithm:
-//   tileGapX = pageW / 2.5
-//   tileGapY = 120  (fixed)
-//   cols = Math.ceil(pageW / tileGapX) + 2
-//   rows = Math.ceil(pageH / tileGapY) + 2
-//   loop row = -1..<rows, col = -1..<cols
-//   pdfX = col * tileGapX + (row % 2) * (tileGapX / 2)
-//   pdfY = row * tileGapY   (PDF bottom-origin)
-//   canvasX = pdfX * scaleX
-//   canvasY = displayH - pdfY * scaleY   (flipped y-axis)
+// ── Tile layout canvas coords ──────────────────────────────────
+// Tests how watermarkUI.js converts computeWatermarkLayout() PDF coords
+// to canvas coords (x * scaleX, H - y * scaleY).  The tileLayout()
+// helper below is the combined PDF→canvas transform, not a copy of
+// computeWatermarkLayout itself (see the computeWatermarkLayout section above).
 
 function tileLayout(pageW = PAGE_W, pageH = PAGE_H, displayW = DISPLAY_W, displayH = DISPLAY_H) {
   const scaleX   = displayW / pageW;
@@ -190,6 +220,71 @@ function defaultParams() {
     color:    'gray',
   };
 }
+
+// ── computeWatermarkLayout ────────────────────────────────────
+
+console.log('\ncomputeWatermarkLayout (watermarkLayout.js — canonical layout engine):');
+
+test('tile A4: returns 66 cells (11 rows × 6 cols)', () => {
+  const items = computeWatermarkLayout({ pageWidth: PAGE_W, pageHeight: PAGE_H, fontSize: 40, position: 'tile' });
+  expect(items).toHaveLength(66);
+});
+test('tile: each item has x, y, angle, size fields', () => {
+  const [first] = computeWatermarkLayout({ pageWidth: PAGE_W, pageHeight: PAGE_H, fontSize: 40, position: 'tile' });
+  expect(typeof first.x).toBe('number');
+  expect(typeof first.y).toBe('number');
+  expect(typeof first.angle).toBe('number');
+  expect(typeof first.size).toBe('number');
+});
+test('tile: size = fontSize * 0.7', () => {
+  const [first] = computeWatermarkLayout({ pageWidth: PAGE_W, pageHeight: PAGE_H, fontSize: 40, position: 'tile' });
+  expect(first.size).toBeCloseTo(40 * 0.7, 5);
+});
+test('tile: every cell has angle = -25° (PDF convention — canvas negates this)', () => {
+  const items = computeWatermarkLayout({ pageWidth: PAGE_W, pageHeight: PAGE_H, fontSize: 40, position: 'tile' });
+  const DEG25_PDF = -25 * Math.PI / 180;  // canvas applies ctx.rotate(-angle) = +25°
+  items.forEach(it => expect(it.angle).toBeCloseTo(DEG25_PDF, 5));
+});
+test('tile: y coords are in PDF space (y=0 at bottom — row -1 has y < 0)', () => {
+  const items = computeWatermarkLayout({ pageWidth: PAGE_W, pageHeight: PAGE_H, fontSize: 40, position: 'tile' });
+  const row_minus1 = items.find((_, i) => i < 6);  // first 6 cells are row=-1
+  expect(row_minus1.y).toBeLessThan(0);
+});
+test('center: returns exactly 1 item', () => {
+  const items = computeWatermarkLayout({ pageWidth: PAGE_W, pageHeight: PAGE_H, fontSize: 40, position: 'center' });
+  expect(items).toHaveLength(1);
+});
+test('center: x = pageWidth/2, y = pageHeight/2', () => {
+  const [item] = computeWatermarkLayout({ pageWidth: PAGE_W, pageHeight: PAGE_H, fontSize: 40, position: 'center' });
+  expect(item.x).toBeCloseTo(PAGE_W / 2, 5);
+  expect(item.y).toBeCloseTo(PAGE_H / 2, 5);
+});
+test('center: angle = -25° (PDF convention — canvas negates to +25°)', () => {
+  const [item] = computeWatermarkLayout({ pageWidth: PAGE_W, pageHeight: PAGE_H, fontSize: 40, position: 'center' });
+  expect(item.angle).toBeCloseTo(-25 * Math.PI / 180, 5);
+});
+test('top: y = pageHeight - 50, angle = 0', () => {
+  const [item] = computeWatermarkLayout({ pageWidth: PAGE_W, pageHeight: PAGE_H, fontSize: 40, position: 'top' });
+  expect(item.y).toBeCloseTo(PAGE_H - 50, 5);
+  expect(item.angle).toBe(0);
+});
+test('bottom: y = 30, angle = 0', () => {
+  const [item] = computeWatermarkLayout({ pageWidth: PAGE_W, pageHeight: PAGE_H, fontSize: 40, position: 'bottom' });
+  expect(item.y).toBeCloseTo(30, 5);
+  expect(item.angle).toBe(0);
+});
+test('non-tile: size = fontSize (no 0.7 factor)', () => {
+  for (const position of ['center', 'top', 'bottom']) {
+    const [item] = computeWatermarkLayout({ pageWidth: PAGE_W, pageHeight: PAGE_H, fontSize: 40, position });
+    expect(item.size).toBe(40);
+  }
+});
+test('non-tile: x = pageWidth/2 for all positions (semantic center)', () => {
+  for (const position of ['center', 'top', 'bottom']) {
+    const [item] = computeWatermarkLayout({ pageWidth: PAGE_W, pageHeight: PAGE_H, fontSize: 40, position });
+    expect(item.x).toBeCloseTo(PAGE_W / 2, 5);
+  }
+});
 
 // ── _escAttr ──────────────────────────────────────────────────
 
