@@ -46,5 +46,29 @@
       "@type": "Answer",
       "text": "No. There are no page count or file size limits. Very large PDFs (100+ pages at 300 DPI) may take longer to process. For best results with large files, close other browser tabs before converting."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Is the PDF to JPG converter completely free?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. PDFree is free with no subscription, no signup, and no watermarks on the output. There are no daily limits or file size restrictions."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Does PDFree support JPEG output?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. JPG and JPEG are the same format — JPEG is the full name, JPG is the common file extension. PDFree exports .jpg files that open in any image viewer, editor, or app on any device."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "What is the maximum output resolution?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree exports up to 300 DPI, which is standard print-quality resolution. PDF text and vector graphics render sharply at 300 DPI — the output looks identical to the original document."
+    }
   }
 ]
