@@ -54,5 +54,21 @@
       "@type": "Answer",
       "text": "No. PDFree has no page or file size limits. The only practical constraint is your device's available memory."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "What does it mean to paginate a PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Paginating a PDF means adding visible page numbers to each page of the document. Pagination makes long documents easier to navigate, reference, and print. PDFree paginates PDFs online free — choose the number format, position, and starting number, then download the paginated PDF instantly."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is the PDF page numbering tool free?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. PDFree is completely free — no subscription, no sign up, no watermarks on the output. There are no limits on file size or number of pages."
+    }
   }
 ]
