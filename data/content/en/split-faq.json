@@ -70,5 +70,21 @@
       "@type": "Answer",
       "text": "Not in a single batch — PDFree processes one PDF at a time. Open the tool in a new tab to split a second file in parallel. PDFree also works offline as a Progressive Web App, so there is no network wait between files."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Is this PDF splitter completely free?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. PDFree is a completely free PDF splitter — no subscription, no sign up, no watermarks on the output, and no daily limits. Split or separate as many PDFs as you need."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I unmerge a PDF back into separate files?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. Select the page ranges that correspond to each original document and extract them as separate PDFs. This unmerges the combined file back into its individual parts — same operation as splitting, applied in reverse."
+    }
   }
 ]
