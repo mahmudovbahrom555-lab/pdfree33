@@ -1,6 +1,14 @@
 [
   {
     "@type": "Question",
+    "name": "É completamente gratuito adicionar marca d'água ao PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim. O PDFree é totalmente gratuito — sem assinatura, sem cadastro, sem limite diário. Você pode adicionar marcas d'água em quantos PDFs precisar, sem nenhum custo."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "Meus arquivos são enviados para um servidor?",
     "acceptedAnswer": {
       "@type": "Answer",
@@ -9,10 +17,18 @@
   },
   {
     "@type": "Question",
+    "name": "Qual é a diferença entre marca d'água e carimbo?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Os termos são frequentemente usados de forma intercambiável. Uma marca d'água é tipicamente um texto semitransparente na diagonal em todas as páginas (ex. RASCUNHO a 30% de opacidade). Um carimbo é geralmente um rótulo opaco em uma posição fixa (ex. APROVADO em um canto). Com o PDFree, você consegue os dois efeitos ajustando a opacidade e a posição."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "A marca d'água pode ser removida após a aplicação?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Não. A marca d'água é incorporada permanentemente no PDF. Se precisar de uma versão sem marca d'água, guarde o arquivo original antes de aplicar."
+      "text": "Não. A marca d'água é incorporada permanentemente no PDF. Guarde sempre o arquivo original antes de aplicar se precisar de uma versão sem marca d'água."
     }
   },
   {
@@ -20,23 +36,15 @@
     "name": "Posso controlar a opacidade da marca d'água?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sim. A opacidade é ajustável de 0 a 100%. Uma opacidade de 20–30% cria uma marca d'água discreta que não obstrui o conteúdo principal."
+      "text": "Sim. A opacidade é ajustável de 0 a 100%. Uma opacidade de 20–30% cria uma marca d'água discreta que não obstrui o conteúdo principal do documento."
     }
   },
   {
     "@type": "Question",
-    "name": "A marca d'água se aplica a todas as páginas?",
+    "name": "Posso adicionar um logo como marca d'água de imagem?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sim, por padrão a marca d'água se aplica a todas as páginas. Você também pode escolher aplicá-la apenas em certas páginas."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "Existe um limite de tamanho ou número de páginas?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Não. O PDFree não tem limites artificiais. A única restrição é a memória RAM disponível no seu dispositivo."
+      "text": "Ainda não. O PDFree suporta atualmente apenas marcas d'água de texto. O suporte a imagens e logos está planejado para uma atualização futura."
     }
   }
 ]

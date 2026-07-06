@@ -1,10 +1,26 @@
 [
   {
     "@type": "Question",
+    "name": "¿Es completamente gratis añadir una marca de agua al PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sí. PDFree es totalmente gratuito — sin suscripción, sin registro, sin límite diario. Puedes añadir marcas de agua a tantos PDFs como necesites, sin coste alguno."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "¿Se almacenan mis archivos en sus servidores?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. PDFree opera completamente en tu dispositivo (del lado del cliente). No tenemos servidores que procesen tus archivos, lo que garantiza 100% de privacidad."
+      "text": "No. PDFree opera completamente en tu dispositivo (del lado del cliente). Todo el procesamiento tiene lugar en el navegador — tus documentos nunca salen de tu dispositivo."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Cuál es la diferencia entre una marca de agua y un sello?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Los términos se usan a menudo indistintamente. Una marca de agua suele ser un texto semitransparente en diagonal sobre todas las páginas (por ejemplo, BORRADOR al 30% de opacidad). Un sello es normalmente una etiqueta opaca en una posición fija (por ejemplo, APROBADO en una esquina). Con PDFree puedes conseguir ambos efectos ajustando la opacidad y la posición."
     }
   },
   {
@@ -13,6 +29,22 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "No, no hay límites artificiales. La única limitación es la memoria RAM disponible en tu computadora o smartphone."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Puedo añadir un logo como imagen de marca de agua?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Actualmente PDFree admite solo marcas de agua de texto. La compatibilidad con imágenes y logos está planificada para una actualización futura."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿La marca de agua es permanente?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sí. Se incrusta de forma permanente en el PDF y no puede eliminarse fácilmente sin herramientas especializadas. Guarda siempre el original antes de aplicarla."
     }
   }
 ]

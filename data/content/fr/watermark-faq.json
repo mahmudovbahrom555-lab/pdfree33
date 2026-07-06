@@ -1,10 +1,26 @@
 [
   {
     "@type": "Question",
+    "name": "Est-ce complètement gratuit d'ajouter un filigrane à un PDF ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui. PDFree est entièrement gratuit — sans abonnement, sans inscription, sans limite quotidienne. Vous pouvez ajouter des filigranes à autant de PDF que vous le souhaitez, sans aucun coût."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "Mes fichiers sont-ils stockés sur vos serveurs ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Non. PDFree fonctionne entièrement sur votre appareil (côté client). Nous n'avons pas de serveurs qui traitent vos fichiers, ce qui garantit 100 % de confidentialité."
+      "text": "Non. PDFree fonctionne entièrement sur votre appareil (côté client). Tout le traitement s'effectue dans le navigateur — vos documents ne quittent jamais votre appareil."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Quelle est la différence entre un filigrane et un tampon ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Les termes sont souvent utilisés de façon interchangeable. Un filigrane est typiquement un texte semi-transparent en diagonale sur toutes les pages (ex. BROUILLON à 30 % d'opacité). Un tampon est généralement une étiquette opaque à une position fixe (ex. APPROUVÉ dans un coin). Avec PDFree, vous obtenez les deux effets en ajustant l'opacité et la position."
     }
   },
   {
@@ -13,6 +29,22 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Non, il n'y a pas de limites artificielles. La seule limitation est la mémoire vive disponible sur votre ordinateur ou smartphone."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Puis-je ajouter un logo comme filigrane image ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Pas encore. PDFree prend actuellement en charge uniquement les filigranes texte. La prise en charge des images et logos est prévue dans une prochaine mise à jour."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Puis-je contrôler l'opacité du filigrane ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui. L'opacité est réglable de 0 à 100 %. Une opacité de 20–30 % donne un filigrane discret qui n'obstrue pas le contenu principal du document."
     }
   }
 ]
