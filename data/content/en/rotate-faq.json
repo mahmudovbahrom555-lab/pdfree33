@@ -30,5 +30,21 @@
       "@type": "Answer",
       "text": "No. There are no file size or page count limits."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Is the PDF rotator completely free?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. PDFree is free with no subscription, no daily limits, and no signup. No watermarks are added to the output."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Does the rotation save permanently to my PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. Clicking Rotate PDF generates a new PDF file that downloads to your device with the rotation permanently applied. It will display in the corrected orientation in any PDF viewer."
+    }
   }
 ]
