@@ -1,0 +1,31 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Come comprimere PDF gratis",
+  "description": "Riduci le dimensioni del tuo PDF senza caricare file su un server — gratis, elaborazione completamente nel browser.",
+  "totalTime": "PT1M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — strumento gratuito per comprimere PDF nel browser, senza upload" }],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Aggiungi il PDF",
+      "text": "Clicca su 'Scegli file' o trascina il PDF nell'area di caricamento.",
+      "url": "https://pdfree.io/it/comprimi-pdf/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Scegli il livello di compressione",
+      "text": "Seleziona il preset: Email, Web o Piccolo. PDFree stima automaticamente la riduzione del file.",
+      "url": "https://pdfree.io/it/comprimi-pdf/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Comprimi e scarica",
+      "text": "Clicca su 'Comprimi PDF'. Il file compresso viene scaricato direttamente sul tuo dispositivo — nessun file ha lasciato il browser.",
+      "url": "https://pdfree.io/it/comprimi-pdf/#step3"
+    }
+  ]
+}

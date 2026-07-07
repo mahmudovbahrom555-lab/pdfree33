@@ -1,0 +1,31 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Come convertire PDF in JPG gratis",
+  "description": "Estrai pagine da un PDF come immagini JPG o PNG senza caricarle su un server — gratis, elaborazione nel browser.",
+  "totalTime": "PT1M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — strumento gratuito per convertire PDF in immagini nel browser, senza upload" }],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Carica il PDF",
+      "text": "Clicca su 'Scegli file' o trascina il PDF nell'area di caricamento.",
+      "url": "https://pdfree.io/it/pdf-in-jpg/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Scegli la qualità",
+      "text": "Seleziona la risoluzione DPI desiderata per le immagini esportate (72, 150 o 300 DPI).",
+      "url": "https://pdfree.io/it/pdf-in-jpg/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Converti e scarica",
+      "text": "Clicca su 'Converti in JPG'. Scarica le immagini come ZIP o singolarmente — nessun file ha lasciato il browser.",
+      "url": "https://pdfree.io/it/pdf-in-jpg/#step3"
+    }
+  ]
+}

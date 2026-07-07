@@ -1,0 +1,31 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Come aggiungere filigrana al PDF gratis",
+  "description": "Aggiungi timbri di testo a ogni pagina del tuo PDF senza caricarlo su un server — gratis, elaborazione nel browser.",
+  "totalTime": "PT1M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — strumento gratuito per aggiungere filigrane PDF nel browser, senza upload" }],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Carica il PDF",
+      "text": "Clicca su 'Scegli file' o trascina il PDF nell'area di caricamento.",
+      "url": "https://pdfree.io/it/filigrana-pdf/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Configura la filigrana",
+      "text": "Inserisci il testo (es. BOZZA, RISERVATO), scegli orientamento diagonale o orizzontale, regola dimensione e opacità.",
+      "url": "https://pdfree.io/it/filigrana-pdf/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Aggiungi e scarica",
+      "text": "Clicca su 'Aggiungi Filigrana'. Scarica il PDF con la filigrana — nessun file ha lasciato il tuo dispositivo.",
+      "url": "https://pdfree.io/it/filigrana-pdf/#step3"
+    }
+  ]
+}

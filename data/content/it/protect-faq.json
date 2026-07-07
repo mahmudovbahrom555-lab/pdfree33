@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "Che tipo di crittografia viene usata?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "AES-256 — lo stesso standard usato dalle banche e dai servizi governativi. È la crittografia più sicura disponibile per i PDF."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Il file viene caricato su un server?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. La crittografia avviene interamente nel browser usando JavaScript. Il file non lascia mai il tuo dispositivo."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso proteggere PDF di grandi dimensioni?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. Non c'è limite di dimensione. L'elaborazione avviene nella memoria del browser."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso rimuovere la password in seguito?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. Usa il nostro strumento Sblocca PDF (coming soon) o un lettore PDF inserendo la password."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "È conforme al GDPR?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì — i file non lasciano mai il browser. Nessun dato viene inviato a server. Completamente conforme al GDPR."
+    }
+  }
+]

@@ -1,0 +1,31 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Come convertire JPG in PDF gratis",
+  "description": "Converti immagini JPG, PNG o WEBP in PDF senza caricarle su un server — gratis, elaborazione nel browser.",
+  "totalTime": "PT1M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — strumento gratuito per convertire immagini in PDF nel browser, senza upload" }],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Aggiungi le immagini",
+      "text": "Clicca su 'Scegli file' o trascina immagini JPG, PNG o WEBP nell'area di caricamento.",
+      "url": "https://pdfree.io/it/jpg-in-pdf/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Imposta l'ordine",
+      "text": "Trascina le immagini nell'ordine desiderato per il PDF finale.",
+      "url": "https://pdfree.io/it/jpg-in-pdf/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Converti e scarica",
+      "text": "Clicca su 'Converti in PDF'. Scarica il PDF sul tuo dispositivo — nessuna immagine ha lasciato il browser.",
+      "url": "https://pdfree.io/it/jpg-in-pdf/#step3"
+    }
+  ]
+}

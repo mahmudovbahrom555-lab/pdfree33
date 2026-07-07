@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "Che risoluzione hanno le immagini esportate?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Puoi scegliere tra 72, 150 e 300 DPI. Per la stampa usa 300 DPI, per il web usa 72 o 150 DPI."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Il PDF viene caricato su un server?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. La conversione avviene interamente nel browser."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso estrarre solo alcune pagine?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. Seleziona le pagine specifiche che vuoi convertire."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "C'è un limite al numero di pagine?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. PDFree converte tutte le pagine che vuoi."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Funziona su iPhone?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. Apri Safari su iPhone, vai su pdfree.io/it/pdf-in-jpg/ e segui le istruzioni."
+    }
+  }
+]

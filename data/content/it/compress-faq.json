@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "Di quanto si riduce il file?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Dipende dal contenuto. PDF con molte immagini si riducono tipicamente del 30–70%. PDF solo testo si riducono poco (5–15%) — sono già ottimizzati. PDFree mostra una stima prima della compressione."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Perderò qualità comprimendo?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "La compressione riduce la risoluzione delle immagini incorporate. Il testo e la grafica vettoriale rimangono nitidi. Per la stampa usa il preset 'Miglior qualità', per l'email usa 'Email' o 'Web'."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "C'è un limite di dimensione del file?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree accetta PDF fino a 150 MB. Per file più grandi, dividili prima con lo strumento Dividi PDF, comprimi ogni parte, poi uniscile di nuovo."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "I miei file vengono caricati su un server?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. La compressione avviene interamente nella memoria del browser. Nessun file viene inviato a nessun server."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "È conforme al GDPR?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì — i file non lasciano mai il browser. Nessun dato viene inviato a server. Nessun cookie di tracciamento. Completamente conforme al GDPR."
+    }
+  }
+]

@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "Quanti file PDF posso unire in una volta?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nessun limite. PDFree elabora tutto nella memoria del browser — puoi unire 2, 50 o 100+ file in un'unica operazione. Per lotti grandi (50+ file o più di 500 MB), chiudi altre schede per liberare RAM."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "La formattazione verrà preservata dopo l'unione?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. PDFree usa pdf-lib che copia le pagine a livello di oggetti PDF — font, immagini, grafica vettoriale e formattazione vengono preservati esattamente come negli originali."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso unire PDF protetti da password?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. I PDF cifrati non possono essere letti senza la password. Rimuovi prima la protezione, poi unisci."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "C'è un limite giornaliero per unire PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. PDFree non ha restrizioni d'uso. Unisci quanti PDF vuoi, con la frequenza che desideri — senza limite giornaliero, senza limite di operazioni, senza limite di file."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "I miei file vengono caricati su un server?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Tutto viene elaborato nella memoria del tuo browser. Nessun file viene inviato a nessun server. Chiudi la scheda e i file scompaiono completamente dalla memoria."
+    }
+  }
+]

@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "Quali formati immagine sono supportati?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "JPG, PNG e WEBP. Non sono supportati BMP, TIFF o GIF."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Le immagini vengono caricate su un server?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. La conversione avviene interamente nel tuo browser."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "La qualità dell'immagine viene ridotta?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree usa un preset da 2400px per ottenere alta qualità con dimensioni ragionevoli. Puoi scegliere Alta qualità per la massima risoluzione."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso convertire più immagini in un unico PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. Aggiungi tutte le immagini che vuoi — ogni immagine diventa una pagina nel PDF finale."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Funziona su iPhone?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. Apri Safari su iPhone, vai su pdfree.io, clicca su JPG in PDF, seleziona le immagini dall'app Foto o File."
+    }
+  }
+]

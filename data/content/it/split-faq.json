@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "Posso estrarre pagine specifiche?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. Puoi selezionare pagine singole, intervalli come '1-3, 5, 7-9' o tutte le pagine come file separati."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Il PDF viene caricato su un server?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Tutto avviene nel tuo browser. Nessun file lascia il tuo dispositivo."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso dividere PDF di grandi dimensioni?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. PDFree gestisce PDF di grandi dimensioni nel browser. Per file molto grandi (500+ MB), assicurati di avere RAM sufficiente."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "C'è un limite giornaliero?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. PDFree non ha restrizioni d'uso. Dividi quanti PDF vuoi."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Le pagine estratte mantengono la qualità originale?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. PDFree estrae le pagine a livello di oggetti PDF — qualità, font e immagini rimangono identici all'originale."
+    }
+  }
+]

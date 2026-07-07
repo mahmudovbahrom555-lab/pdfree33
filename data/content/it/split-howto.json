@@ -1,0 +1,31 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Come dividere PDF gratis",
+  "description": "Dividi un PDF in più file o estrai pagine specifiche senza caricarli su un server — gratis, elaborazione nel browser.",
+  "totalTime": "PT1M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — strumento gratuito per dividere PDF nel browser, senza upload" }],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Carica il PDF",
+      "text": "Clicca su 'Scegli file' o trascina il PDF nell'area di caricamento.",
+      "url": "https://pdfree.io/it/dividi-pdf/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Seleziona le pagine",
+      "text": "Scegli pagine singole, intervalli (es. 1-3, 5, 7-9) o tutte le pagine come file separati.",
+      "url": "https://pdfree.io/it/dividi-pdf/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Dividi e scarica",
+      "text": "Clicca su 'Dividi PDF'. Scarica le pagine estratte — nessun file ha lasciato il tuo dispositivo.",
+      "url": "https://pdfree.io/it/dividi-pdf/#step3"
+    }
+  ]
+}

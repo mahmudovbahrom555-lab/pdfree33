@@ -1,0 +1,31 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Come proteggere PDF con password gratis",
+  "description": "Aggiungi una password al tuo PDF con crittografia AES-256 senza caricarlo su un server — gratis, elaborazione nel browser.",
+  "totalTime": "PT1M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — strumento gratuito per proteggere PDF con password nel browser, senza upload" }],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Carica il PDF",
+      "text": "Clicca su 'Scegli file' o trascina il PDF nell'area di caricamento.",
+      "url": "https://pdfree.io/it/proteggi-pdf/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Inserisci la password",
+      "text": "Digita la password con cui vuoi proteggere il documento.",
+      "url": "https://pdfree.io/it/proteggi-pdf/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Proteggi e scarica",
+      "text": "Clicca su 'Proteggi PDF'. Scarica il PDF protetto con crittografia AES-256 — il file non ha mai lasciato il browser.",
+      "url": "https://pdfree.io/it/proteggi-pdf/#step3"
+    }
+  ]
+}

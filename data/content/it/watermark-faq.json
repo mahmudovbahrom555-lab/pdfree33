@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "Posso aggiungere una filigrana diagonale?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. Scegli l'orientamento 'Diagonale (45°)' nelle impostazioni. Per timbri BOZZA/RISERVATO usa opacità 25-35% e dimensione 80-100pt."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Che opacità usare per la filigrana?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Per timbri visibili ma non invasivi (BOZZA, RISERVATO) usa 25-35%. Per timbri chiari in angolo (APPROVATO) usa 80-100%."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "I miei file vengono caricati?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. La filigrana viene aggiunta interamente nel browser. Nessun file lascia il tuo dispositivo."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Funziona su tutti i PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì, su tutti i PDF standard. I PDF cifrati devono essere sbloccati prima."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "È conforme al GDPR?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì — nessun file viene mai inviato a server. Tutto avviene nel tuo browser."
+    }
+  }
+]
