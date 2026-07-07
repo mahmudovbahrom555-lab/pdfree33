@@ -1,0 +1,50 @@
+[
+  {
+    "@type": "Question",
+    "name": "Apakah menambah tanda air mengupload file ke server?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak. Semua pemrosesan terjadi di browser menggunakan pdf-lib. File tidak pernah dikirim ke server mana pun."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apa saja yang bisa dikustomisasi pada tanda air?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Anda dapat mengatur teks, opasitas, warna, ukuran font, sudut rotasi, dan pola (diagonal tunggal atau berulang)."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah tanda air bisa dihapus setelah ditambahkan?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tanda air PDFree dibakar ke dalam konten halaman. Simpan salinan asli tanpa tanda air sebelum menerapkannya."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah ada batasan jumlah halaman yang bisa diberi tanda air?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak ada. Tambahkan tanda air ke PDF dengan jumlah halaman berapa pun — gratis tanpa batasan."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah bisa menambah tanda air ke PDF yang dilindungi kata sandi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak. PDF terenkripsi harus dibuka kunci terlebih dahulu sebelum tanda air dapat ditambahkan."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah ada biaya untuk menggunakan fitur tanda air PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak. PDFree gratis selamanya — tidak ada langganan, tidak ada batasan harian, tidak ada batas ukuran file."
+    }
+  }
+]

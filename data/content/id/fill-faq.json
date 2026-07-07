@@ -1,0 +1,50 @@
+[
+  {
+    "@type": "Question",
+    "name": "Apakah mengisi formulir PDF mengupload file ke server?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak. Semua pemrosesan terjadi 100% di browser. File formulir dan data yang Anda masukkan tidak pernah dikirim ke server mana pun."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Jenis kolom formulir apa saja yang didukung?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree mendukung kolom teks, kotak centang, tombol radio, menu dropdown, dan kolom tanda tangan (AcroForm standar)."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah menambahkan tanda tangan ke formulir?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ya. Gambar tanda tangan langsung di kolom tanda tangan menggunakan mouse atau layar sentuh di ponsel."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah ada biaya untuk mengisi formulir PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak ada. PDFree gratis selamanya — tidak ada langganan, tidak ada batasan harian, tidak ada batas ukuran file."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah mengisi PDF yang dilindungi kata sandi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak langsung. PDF terenkripsi harus dibuka kunci terlebih dahulu sebelum kolom formulir dapat diisi."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah bisa menyimpan formulir yang sudah diisi untuk diedit ulang?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ya. Unduh PDF yang sudah diisi, lalu buka kembali di PDFree kapan saja untuk mengubah nilai kolom sebelum menyimpan ulang."
+    }
+  }
+]

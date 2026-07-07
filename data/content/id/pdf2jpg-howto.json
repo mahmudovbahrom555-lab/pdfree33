@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Cara Mengonversi PDF ke JPG",
+  "description": "Konversi halaman PDF menjadi gambar JPG atau PNG berkualitas tinggi — gratis, tanpa upload.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Buka file PDF",
+      "text": "Klik 'Pilih file' atau seret file PDF ke area drop. PDF dirender secara otomatis di browser."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Pilih resolusi dan format",
+      "text": "Pilih DPI (72, 150, atau 300) dan format output (JPG atau PNG) sesuai kebutuhan."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Unduh gambar",
+      "text": "Unduh halaman satu per satu atau klik 'Unduh Semua (ZIP)' untuk mendapatkan semua halaman dalam satu file ZIP."
+    }
+  ]
+}

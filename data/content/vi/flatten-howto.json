@@ -1,0 +1,23 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Cách Làm Phẳng PDF",
+  "description": "Khóa biểu mẫu và chú thích PDF vĩnh viễn ngay trong trình duyệt — không tải lên server, không cần đăng ký, miễn phí.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "name": "Mở file PDF đã điền",
+      "text": "Nhấp Chọn file hoặc kéo PDF đã điền vào khu vực thả. File được tải vào trình duyệt — không có gì được tải lên server."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Xem trước và xác nhận",
+      "text": "Kiểm tra tất cả giá trị biểu mẫu đã đúng chưa. Làm phẳng là vĩnh viễn — giữ bản sao lưu nếu cần."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Làm phẳng và tải về",
+      "text": "Nhấp Làm Phẳng PDF. PDF tĩnh không thể chỉnh sửa tải xuống ngay lập tức."
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+[
+  {
+    "@type": "Question",
+    "name": "PDF của tôi có bị tải lên server khi mã hóa không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không. Mã hóa được thực hiện hoàn toàn trong trình duyệt bằng PDF-Lib. File không bao giờ rời khỏi thiết bị. Bạn có thể kiểm tra bằng DevTools → tab Network — không có yêu cầu upload nào xuất hiện trong quá trình xử lý."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFree sử dụng tiêu chuẩn mã hóa nào?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree sử dụng mã hóa AES-256 — tiêu chuẩn tương tự được ngân hàng và cơ quan chính phủ sử dụng."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Tôi có thể đặt mật khẩu riêng để mở và chỉnh sửa không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có. Bạn có thể đặt mật khẩu owner (để hạn chế chỉnh sửa/in ấn) riêng biệt với mật khẩu user (để mở file)."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Mật khẩu có thể bị đoán hoặc bẻ khóa không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "AES-256 thực tế không thể bị bẻ bằng brute force. Hãy dùng mật khẩu mạnh — tối thiểu 12 ký tự, kết hợp chữ hoa/thường, số và ký hiệu."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Có giới hạn kích thước file không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không. PDFree không giới hạn kích thước file hay số trang. Giới hạn thực tế duy nhất là bộ nhớ thiết bị của bạn."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFree có lưu mật khẩu của tôi không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hoàn toàn không. Mật khẩu được xử lý trong trình duyệt và không bao giờ được gửi đến máy chủ PDFree hay bất kỳ máy chủ nào. PDFree không có quyền truy cập vào mật khẩu hay file của bạn."
+    }
+  }
+]

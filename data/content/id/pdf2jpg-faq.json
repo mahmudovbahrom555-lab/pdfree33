@@ -1,0 +1,50 @@
+[
+  {
+    "@type": "Question",
+    "name": "Apakah konversi PDF ke JPG mengupload file saya?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak. Semua rendering terjadi di browser Anda menggunakan PDF.js. File tidak pernah dikirim ke server mana pun."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Resolusi DPI berapa yang tersedia?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree menawarkan 72 DPI (web), 150 DPI (umum), dan 300 DPI (kualitas cetak). Pilih sesuai kebutuhan Anda."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah mengunduh semua halaman sekaligus?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ya. Gunakan tombol 'Unduh Semua (ZIP)' untuk mengunduh semua halaman yang dikonversi dalam satu file ZIP."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Format apa yang didukung — JPG atau PNG?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Keduanya. Pilih JPG untuk file yang lebih kecil atau PNG untuk latar belakang transparan dan kualitas lossless."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah ada batasan jumlah halaman?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak ada. PDFree dapat mengonversi PDF dengan jumlah halaman berapa pun. Gratis tanpa batas."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah mengonversi PDF yang dilindungi kata sandi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak. PDF terenkripsi tidak bisa dibuka untuk dirender. Hapus kata sandi terlebih dahulu menggunakan alat yang sesuai."
+    }
+  }
+]

@@ -1,0 +1,50 @@
+[
+  {
+    "@type": "Question",
+    "name": "File của tôi có bị tải lên khi chỉnh sửa metadata không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không. Chỉnh sửa metadata được xử lý hoàn toàn trong trình duyệt bằng pdf-lib. File không bao giờ rời khỏi thiết bị của bạn."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Có thể chỉnh sửa những trường metadata nào?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Bạn có thể xem và chỉnh sửa các trường metadata PDF chuẩn: Tiêu đề, Tác giả, Chủ đề, Từ khóa, Trình tạo và Nhà sản xuất."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Tôi có thể xóa toàn bộ metadata khỏi PDF không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có. Bạn có thể để trống bất kỳ hoặc tất cả các trường trước khi lưu. Hữu ích để xóa thông tin cá nhân trước khi chia sẻ tài liệu."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Có giới hạn kích thước file không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không. PDFree không giới hạn kích thước file hay số trang."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Chỉnh sửa metadata có thay đổi nội dung PDF không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không. Nội dung trang, văn bản, hình ảnh và bố cục không thay đổi. Chỉ các trường metadata tài liệu được cập nhật."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Metadata PDF được lưu ở đâu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Metadata được lưu trong phần header của tài liệu PDF, không phải trên các trang hiển thị. Trình đọc PDF hiển thị metadata này trong Thuộc tính Tài liệu (Ctrl+D / Cmd+D)."
+    }
+  }
+]

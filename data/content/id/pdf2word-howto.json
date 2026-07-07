@@ -1,0 +1,23 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Cara Mengonversi PDF ke Word",
+  "description": "Konversi PDF ke dokumen DOCX yang dapat diedit langsung di browser — tanpa upload, tanpa daftar, gratis.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "name": "Buka file PDF",
+      "text": "Klik Pilih file atau seret PDF ke area drop. File dimuat di browser — tidak ada yang diunggah ke server."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Pilih mode konversi",
+      "text": "Pilih Mode Teks untuk dokumen Word yang dapat diedit dengan teks dan tabel, atau Mode Gambar untuk tata letak visual sempurna di mana setiap halaman menjadi gambar."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Konversi dan unduh",
+      "text": "Klik Konversi ke Word. File DOCX diunduh langsung ke perangkat. Buka di Microsoft Word, Google Docs, LibreOffice, atau Apple Pages."
+    }
+  ]
+}

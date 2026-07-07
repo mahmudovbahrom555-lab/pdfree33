@@ -1,0 +1,23 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Cara Meratakan PDF",
+  "description": "Kunci formulir dan anotasi PDF secara permanen langsung di browser — tanpa upload, tanpa daftar, gratis.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "name": "Buka file PDF yang sudah diisi",
+      "text": "Klik Pilih file atau seret PDF yang sudah diisi ke area drop. File dimuat di browser — tidak ada yang diunggah ke server."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Tinjau dan konfirmasi",
+      "text": "Periksa pratinjau untuk memastikan semua nilai formulir sudah benar. Perataan bersifat permanen — simpan salinan cadangan jika diperlukan."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Ratakan dan unduh",
+      "text": "Klik Ratakan PDF. PDF statis yang tidak dapat diedit langsung diunduh ke perangkat Anda."
+    }
+  ]
+}

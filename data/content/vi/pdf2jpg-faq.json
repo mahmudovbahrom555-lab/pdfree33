@@ -1,0 +1,50 @@
+[
+  {
+    "@type": "Question",
+    "name": "Chuyển PDF sang JPG có tải file lên không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không. Tất cả rendering diễn ra trong trình duyệt của bạn bằng PDF.js. File không bao giờ được gửi đến bất kỳ server nào."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Có những độ phân giải DPI nào?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree cung cấp 72 DPI (web), 150 DPI (thông thường) và 300 DPI (chất lượng in). Chọn theo nhu cầu của bạn."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Có thể tải về tất cả trang cùng lúc không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có. Dùng nút 'Tải tất cả (ZIP)' để tải về tất cả trang đã chuyển đổi trong một file ZIP."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Hỗ trợ định dạng nào — JPG hay PNG?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Cả hai. Chọn JPG cho file nhỏ hơn hoặc PNG cho nền trong suốt và chất lượng không mất dữ liệu."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Có giới hạn số trang không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không có. PDFree có thể chuyển đổi PDF với bất kỳ số trang nào. Miễn phí không giới hạn."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Có thể chuyển PDF được bảo vệ bằng mật khẩu không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không. PDF được mã hóa không thể mở để render. Hãy xóa mật khẩu trước bằng công cụ phù hợp."
+    }
+  }
+]

@@ -1,0 +1,50 @@
+[
+  {
+    "@type": "Question",
+    "name": "Điền form PDF có tải file lên server không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không. Tất cả xử lý diễn ra 100% trong trình duyệt. File form và dữ liệu bạn nhập không bao giờ được gửi đến bất kỳ server nào."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Những loại trường form nào được hỗ trợ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree hỗ trợ trường văn bản, hộp kiểm, nút radio, danh sách thả xuống và trường chữ ký (AcroForm tiêu chuẩn)."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Có thể thêm chữ ký vào form không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có. Vẽ chữ ký trực tiếp vào trường chữ ký bằng chuột hoặc màn hình cảm ứng trên điện thoại."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Điền form PDF có mất phí không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không có. PDFree miễn phí mãi mãi — không có đăng ký, không giới hạn hàng ngày, không giới hạn kích thước file."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Có thể điền PDF được bảo vệ bằng mật khẩu không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không trực tiếp. PDF được mã hóa phải được mở khóa trước khi có thể điền các trường form."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Có thể lưu form đã điền để chỉnh sửa lại không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có. Tải về PDF đã điền, rồi mở lại trong PDFree bất cứ lúc nào để thay đổi giá trị các trường trước khi lưu lại."
+    }
+  }
+]

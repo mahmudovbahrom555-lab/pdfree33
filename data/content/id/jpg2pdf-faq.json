@@ -1,0 +1,50 @@
+[
+  {
+    "@type": "Question",
+    "name": "Apakah konversi JPG ke PDF mengupload gambar saya?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak. Konversi terjadi sepenuhnya di browser Anda. File gambar tidak pernah dikirim ke server mana pun."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah mengonversi beberapa gambar JPG menjadi satu PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ya. Anda dapat menambahkan beberapa gambar dan semuanya akan digabungkan menjadi satu PDF multi-halaman."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Format gambar apa saja yang didukung?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "JPG dan PNG sepenuhnya didukung, begitu juga WebP. Setiap gambar menjadi satu halaman dalam PDF yang dihasilkan."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah ada batasan ukuran file?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak ada. PDFree tidak memiliki batasan ukuran file atau jumlah gambar. Gratis selamanya."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah kualitas gambar berkurang setelah dikonversi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak. Gambar disematkan pada resolusi aslinya tanpa kompresi ulang. Kualitas gambar dipertahankan 100%."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah bisa digunakan di ponsel?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ya. PDFree berfungsi di browser mobile — Chrome untuk Android dan Safari untuk iOS. Pilih file dari galeri ponsel dan konversi langsung."
+    }
+  }
+]

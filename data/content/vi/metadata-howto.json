@@ -1,0 +1,23 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Cách Chỉnh Sửa Metadata PDF",
+  "description": "Xem và chỉnh sửa metadata PDF ngay trong trình duyệt — không tải lên server, không cần đăng ký, miễn phí.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "name": "Mở file PDF",
+      "text": "Nhấp Chọn file hoặc kéo PDF vào khu vực thả. Metadata hiện có hiển thị ngay trong biểu mẫu — không có gì được tải lên server."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Chỉnh sửa hoặc xóa các trường metadata",
+      "text": "Cập nhật tiêu đề, tác giả, chủ đề, từ khóa, trình tạo hoặc nhà sản xuất. Để trống bất kỳ trường nào để xóa thông tin đó khỏi tài liệu."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Lưu và tải về",
+      "text": "Nhấp Lưu Metadata. PDF với metadata được cập nhật tải xuống ngay lập tức."
+    }
+  ]
+}

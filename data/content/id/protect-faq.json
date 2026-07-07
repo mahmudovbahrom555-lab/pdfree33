@@ -1,0 +1,50 @@
+[
+  {
+    "@type": "Question",
+    "name": "Apakah PDF saya diunggah ke server saat dienkripsi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak. Enkripsi dilakukan sepenuhnya di browser menggunakan PDF-Lib. File Anda tidak pernah meninggalkan perangkat. Anda bisa memverifikasi ini dengan membuka DevTools → tab Network — tidak ada permintaan upload yang muncul selama proses berlangsung."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Standar enkripsi apa yang digunakan PDFree?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree menggunakan enkripsi AES-256 — standar yang sama yang digunakan oleh perbankan dan sistem pemerintahan."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah saya menetapkan kata sandi berbeda untuk membuka dan mengedit?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ya. Anda bisa menetapkan kata sandi owner (untuk membatasi pengeditan/pencetakan) secara terpisah dari kata sandi user (untuk membuka file)."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah kata sandi bisa ditebak atau diretas?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "AES-256 secara praktis tidak bisa dipecahkan dengan brute force. Gunakan kata sandi yang kuat — minimal 12 karakter, kombinasi huruf besar/kecil, angka, dan simbol."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah ada batasan ukuran file?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak. PDFree tidak memiliki batas ukuran file atau jumlah halaman. Satu-satunya batasan praktis adalah memori perangkat Anda."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah PDFree menyimpan kata sandi saya?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak sama sekali. Kata sandi diproses di browser Anda dan tidak pernah dikirim ke server PDFree atau server mana pun. PDFree tidak memiliki akses ke kata sandi atau file Anda."
+    }
+  }
+]

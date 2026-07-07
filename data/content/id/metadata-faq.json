@@ -1,0 +1,50 @@
+[
+  {
+    "@type": "Question",
+    "name": "Apakah file saya diunggah saat mengedit metadata?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak. Pengeditan metadata diproses sepenuhnya di browser menggunakan pdf-lib. File tidak pernah meninggalkan perangkat Anda."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bidang metadata apa saja yang bisa diedit?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Anda bisa melihat dan mengedit bidang metadata PDF standar: Judul, Penulis, Subjek, Kata Kunci, Pembuat, dan Produsen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah saya menghapus semua metadata dari PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ya. Anda bisa mengosongkan bidang apa pun atau semua bidang sebelum menyimpan. Berguna untuk menghapus informasi pribadi sebelum berbagi dokumen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah ada batas ukuran file?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak. PDFree tidak memiliki batas ukuran file atau jumlah halaman."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah mengedit metadata mengubah konten PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak. Konten halaman, teks, gambar, dan tata letak tidak berubah. Hanya bidang metadata dokumen yang diperbarui."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Di mana metadata PDF disimpan?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Metadata disimpan di header dokumen PDF, bukan di halaman yang terlihat. Pembaca PDF menampilkan metadata ini di Properti Dokumen (Ctrl+D / Cmd+D)."
+    }
+  }
+]

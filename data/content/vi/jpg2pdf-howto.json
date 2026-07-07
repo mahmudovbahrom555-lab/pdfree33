@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Cách Chuyển JPG sang PDF",
+  "description": "Chuyển đổi ảnh JPG, PNG và WebP thành một PDF — miễn phí, không tải lên.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Thêm ảnh của bạn",
+      "text": "Nhấp 'Chọn file' hoặc kéo ảnh JPG, PNG hoặc WebP vào vùng thả. Nhiều ảnh được gộp thành một PDF."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Sắp xếp lại các ảnh",
+      "text": "Kéo thẻ ảnh để đặt thứ tự trang trong PDF kết quả. Xoay EXIF được áp dụng tự động."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Tải về PDF",
+      "text": "Nhấp 'Chuyển sang PDF'. Ảnh được đóng gói thành một PDF và tải về ngay lập tức vào thiết bị của bạn."
+    }
+  ]
+}

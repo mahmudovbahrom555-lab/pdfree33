@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Cách Chuyển PDF sang JPG",
+  "description": "Chuyển đổi trang PDF thành ảnh JPG hoặc PNG chất lượng cao — miễn phí, không tải lên.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Mở file PDF",
+      "text": "Nhấp 'Chọn file' hoặc kéo file PDF vào vùng thả. PDF được render tự động trong trình duyệt."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Chọn độ phân giải và định dạng",
+      "text": "Chọn DPI (72, 150 hoặc 300) và định dạng đầu ra (JPG hoặc PNG) theo nhu cầu."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Tải về ảnh",
+      "text": "Tải về từng trang riêng lẻ hoặc nhấp 'Tải tất cả (ZIP)' để nhận tất cả trang trong một file ZIP."
+    }
+  ]
+}

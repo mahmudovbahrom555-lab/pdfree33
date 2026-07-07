@@ -1,0 +1,23 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Cách Chuyển PDF Sang Word",
+  "description": "Chuyển đổi PDF sang tài liệu DOCX có thể chỉnh sửa ngay trong trình duyệt — không tải lên server, không cần đăng ký, miễn phí.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "name": "Mở file PDF",
+      "text": "Nhấp Chọn file hoặc kéo PDF vào khu vực thả. File được tải vào trình duyệt — không có gì được tải lên server."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Chọn chế độ chuyển đổi",
+      "text": "Chọn Chế Độ Văn Bản để có tài liệu Word có thể chỉnh sửa với văn bản và bảng, hoặc Chế Độ Hình Ảnh để giữ nguyên bố cục hoàn hảo."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Chuyển đổi và tải về",
+      "text": "Nhấp Chuyển Sang Word. File DOCX tải xuống ngay lập tức. Mở trong Microsoft Word, Google Docs, LibreOffice hoặc Apple Pages."
+    }
+  ]
+}

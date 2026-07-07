@@ -1,0 +1,50 @@
+[
+  {
+    "@type": "Question",
+    "name": "Làm phẳng PDF thực sự làm gì?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Làm phẳng gộp tất cả các lớp tương tác — trường biểu mẫu, chú thích, chữ ký số và overlay — vào nội dung trang tĩnh. Kết quả là PDF phẳng, không tương tác nhưng trông giống hệt bản gốc."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Có thể hoàn tác việc làm phẳng không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không. Làm phẳng là vĩnh viễn — các trường biểu mẫu gốc bị thay thế vĩnh viễn bằng nội dung hình ảnh tĩnh. Luôn giữ bản sao lưu PDF gốc đã điền nếu bạn nghĩ cần thay đổi giá trị sau này."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDF của tôi có bị tải lên khi làm phẳng không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không. Mọi thứ chạy trong trình duyệt bằng pdf-lib. Cả PDF gốc lẫn kết quả làm phẳng đều không bao giờ được gửi đi đâu cả. Tài liệu của bạn luôn ở lại trên thiết bị."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Tại sao làm phẳng thay vì chỉ lưu PDF đã điền?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDF đã lưu vẫn chứa các trường có thể chỉnh sửa — người nhận có thể xóa giá trị của bạn và điền lại. Làm phẳng khóa nội dung vĩnh viễn vào trang, ngăn chỉnh sửa, đảm bảo hiển thị nhất quán và xóa metadata biểu mẫu ẩn."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Làm phẳng có giảm kích thước file không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Thường giảm một chút. Làm phẳng xóa dữ liệu widget biểu mẫu tương tác và JavaScript. Hình ảnh và font nhúng không bị ảnh hưởng bởi làm phẳng."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Sự khác biệt giữa làm phẳng và bảo vệ bằng mật khẩu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Làm phẳng xóa hoàn toàn cấu trúc biểu mẫu tương tác — không có trường nào để chỉnh sửa. Bảo vệ mật khẩu hạn chế quyền truy cập nhưng để nguyên các trường biểu mẫu. Để bảo mật tối đa, làm phẳng trước rồi thêm mật khẩu."
+    }
+  }
+]

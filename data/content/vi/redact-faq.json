@@ -1,0 +1,50 @@
+[
+  {
+    "@type": "Question",
+    "name": "Xóa văn bản PDF được thực hiện cục bộ hay trên server?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "100% cục bộ. PDFree xử lý việc xóa hoàn toàn trong trình duyệt — không có gì được tải lên server."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Nội dung bị xóa có bị xóa vĩnh viễn không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có. PDFree vẽ hình chữ nhật đục lên vùng được chọn và làm phẳng PDF để nội dung gốc không thể khôi phục."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Xóa văn bản PDF có xóa luôn metadata không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không. Xóa trực quan không xóa metadata tài liệu. Dùng công cụ Metadata trên PDFree riêng biệt để xóa tên tác giả và ngày tạo."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Tôi có thể xóa nhiều vùng cùng lúc không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có. Bạn có thể vẽ bao nhiêu hộp xóa tùy ý trước khi áp dụng. Tất cả hộp được áp dụng trong một lần nhấp."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Tôi có thể xóa hình ảnh trong PDF không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có. Hộp xóa có thể vẽ lên bất kỳ vùng nào trên trang — bao gồm hình ảnh, đồ họa, ảnh và văn bản. Tất cả nội dung bên dưới hộp đen sẽ bị che vĩnh viễn."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Có giới hạn kích thước file không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không. PDFree không giới hạn kích thước file hay số trang. Giới hạn thực tế duy nhất là bộ nhớ thiết bị của bạn."
+    }
+  }
+]

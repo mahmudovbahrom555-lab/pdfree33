@@ -1,0 +1,50 @@
+[
+  {
+    "@type": "Question",
+    "name": "Xoay PDF có tải file lên server không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không. Tất cả xử lý diễn ra trong trình duyệt bằng pdf-lib. File không bao giờ được gửi đến bất kỳ server nào."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Có thể xoay chỉ một số trang cụ thể không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có. Mỗi trang có thể được xoay độc lập bằng cách nhấp nút xoay trên thumbnail của trang đó."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Những góc xoay nào được hỗ trợ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree hỗ trợ xoay 90° theo chiều kim đồng hồ, 180° (lật ngược) và 270° (90° ngược chiều kim đồng hồ)."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Chất lượng PDF có giảm sau khi xoay không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không. Xoay PDF là thao tác không mất dữ liệu — chỉ metadata hướng thay đổi, không phải nội dung trang."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Có giới hạn số trang có thể xoay không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không có. Xoay PDF với bất kỳ số trang nào — miễn phí không giới hạn."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFree có thể dùng trên điện thoại để xoay PDF không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có. PDFree hoạt động trên trình duyệt di động (Chrome Android, Safari iOS). Chạm vào nút xoay để xoay trang."
+    }
+  }
+]

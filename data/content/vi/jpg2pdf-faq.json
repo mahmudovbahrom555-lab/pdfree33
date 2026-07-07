@@ -1,0 +1,50 @@
+[
+  {
+    "@type": "Question",
+    "name": "Chuyển JPG sang PDF có tải ảnh lên không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không. Quá trình chuyển đổi diễn ra hoàn toàn trong trình duyệt. File ảnh không bao giờ được gửi đến bất kỳ server nào."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Có thể chuyển nhiều ảnh JPG thành một PDF không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có. Bạn có thể thêm nhiều ảnh và tất cả sẽ được gộp thành một PDF nhiều trang."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Những định dạng ảnh nào được hỗ trợ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "JPG và PNG được hỗ trợ đầy đủ, cũng như WebP. Mỗi ảnh trở thành một trang trong PDF kết quả."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Có giới hạn kích thước file không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không có. PDFree không có giới hạn kích thước file hay số lượng ảnh. Miễn phí mãi mãi."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Chất lượng ảnh có bị giảm sau khi chuyển đổi không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không. Ảnh được nhúng với độ phân giải gốc mà không nén lại. Chất lượng ảnh được bảo toàn 100%."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Có thể dùng trên điện thoại không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có. PDFree hoạt động trên trình duyệt di động — Chrome cho Android và Safari cho iOS. Chọn file từ thư viện điện thoại và chuyển đổi trực tiếp."
+    }
+  }
+]

@@ -1,0 +1,50 @@
+[
+  {
+    "@type": "Question",
+    "name": "Trích xuất trang PDF có tải file lên server không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không. Tất cả xử lý diễn ra trong trình duyệt bằng pdf-lib. File không bao giờ được gửi đến bất kỳ server nào."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Có thể chọn các trang không liền nhau không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có. Chọn trang riêng lẻ (ví dụ: 1, 3, 7) hoặc kết hợp phạm vi và trang đơn (ví dụ: 1-3, 5, 8-10) trong một thao tác."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Có giới hạn số trang có thể trích xuất không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không có. Trích xuất bao nhiêu trang từ PDF bao nhiêu trang tùy thích — miễn phí không giới hạn."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Font và hình ảnh có được bảo toàn khi trích xuất không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có. PDFree dùng pdf-lib sao chép trang ở cấp độ đối tượng PDF. Tất cả font, hình ảnh và định dạng được bảo toàn chính xác như bản gốc."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Sự khác nhau giữa trích xuất và tách PDF là gì?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Trích xuất tạo ra một PDF mới chứa các trang đã chọn. Tách PDF thường tạo nhiều file riêng lẻ — một file mỗi trang hoặc một file mỗi nhóm."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Có thể trích xuất từ PDF được bảo vệ bằng mật khẩu không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không. PDF được mã hóa phải được mở khóa trước khi có thể trích xuất trang."
+    }
+  }
+]

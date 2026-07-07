@@ -1,0 +1,50 @@
+[
+  {
+    "@type": "Question",
+    "name": "File của tôi có bị tải lên khi thêm số trang không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không. Đánh số trang được xử lý hoàn toàn trong trình duyệt bằng JavaScript. File không bao giờ rời khỏi thiết bị. Bạn có thể kiểm tra bằng DevTools → tab Network — không có yêu cầu upload PDF nào trong quá trình xử lý."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Tôi có thể bắt đầu đánh số từ số khác 1 không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có. Đặt bất kỳ số bắt đầu nào trong trường 'Bắt đầu từ'. Hữu ích cho tài liệu có trang bìa là trang 0, hoặc cho các chương tiếp nối số trang từ phần trước."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Tôi có thể bỏ qua trang đầu tiên khi đánh số không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có. Bật tùy chọn 'Bỏ qua trang đầu'. Trang 1 (bìa) không có số, và đánh số bắt đầu từ trang thứ hai."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Có những định dạng số nào?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Chữ số Ả Rập (1, 2, 3), La Mã thường (i, ii, iii), La Mã hoa (I, II, III), chữ cái thường (a, b, c) và chữ cái hoa (A, B, C)."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Tôi có thể thêm định dạng 'Trang 1 / 20' không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có. Dùng trường tiền tố để thêm văn bản trước số (ví dụ: 'Trang ') và trường hậu tố để thêm văn bản sau số (ví dụ: ' / 20'). Điều này tạo ra định dạng 'Trang 1 / 20' thông dụng trong tài liệu in chuyên nghiệp."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Có giới hạn số trang không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không. PDFree không giới hạn số trang hay kích thước file. Giới hạn thực tế duy nhất là bộ nhớ thiết bị của bạn."
+    }
+  }
+]

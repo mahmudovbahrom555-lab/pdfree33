@@ -1,0 +1,23 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Cách Thêm Số Trang vào PDF",
+  "description": "Thêm số trang vào PDF ngay trong trình duyệt — không tải lên server, không cần đăng ký, miễn phí.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "name": "Mở file PDF",
+      "text": "Nhấp Chọn file hoặc kéo PDF vào khu vực thả. File được tải vào trình duyệt — không có gì được tải lên server."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Cấu hình đánh số",
+      "text": "Chọn định dạng (Ả Rập / La Mã / Chữ cái), vị trí (dưới/trên giữa, trái hoặc phải), số bắt đầu, và tùy chọn tiền tố/hậu tố như 'Trang ' hoặc ' / 20'."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Áp dụng và tải về",
+      "text": "Nhấp Thêm Số Trang. PDF có số trang được nhúng tải xuống ngay lập tức."
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+[
+  {
+    "@type": "Question",
+    "name": "Apakah redaksi PDF dilakukan secara lokal atau di server?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "100% lokal. PDFree memproses redaksi sepenuhnya di browser Anda — tidak ada yang diunggah ke server mana pun."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah konten yang diredaksi dihapus secara permanen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ya. PDFree menggambar persegi panjang buram di atas area yang dipilih dan meratakan PDF sehingga konten asli tidak bisa dipulihkan."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah meredaksi PDF juga menghapus metadata?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak. Redaksi visual tidak menghapus metadata dokumen. Gunakan alat Metadata di PDFree secara terpisah untuk menghapus nama penulis dan tanggal pembuatan."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah saya meredaksi beberapa area sekaligus?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ya. Anda bisa menggambar kotak redaksi sebanyak yang dibutuhkan sebelum menerapkan. Semua kotak diterapkan dalam sekali klik."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah saya meredaksi gambar dalam PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ya. Kotak redaksi bisa digambar di atas area apa pun di halaman — termasuk gambar, grafik, foto, dan teks. Semua yang berada di bawah kotak hitam akan ditutupi secara permanen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah ada batas ukuran file?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak. PDFree tidak memiliki batas ukuran file atau jumlah halaman. Satu-satunya batasan praktis adalah memori perangkat Anda."
+    }
+  }
+]

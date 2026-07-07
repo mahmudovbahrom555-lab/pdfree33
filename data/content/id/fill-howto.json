@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Cara Mengisi Formulir PDF",
+  "description": "Isi kolom AcroForm, kotak centang, dan tanda tangan di PDF — gratis, tanpa upload.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Buka formulir PDF",
+      "text": "Klik 'Pilih file' atau seret file PDF ke area drop. Kolom formulir terdeteksi dan ditampilkan secara otomatis."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Isi kolom dan tanda tangani",
+      "text": "Klik kolom teks dan ketik. Centang kotak yang diperlukan, pilih dari dropdown, atau gambar tanda tangan di kolom tanda tangan."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Unduh PDF yang sudah diisi",
+      "text": "Klik 'Simpan PDF'. Formulir yang sudah diisi langsung diunduh ke perangkat Anda."
+    }
+  ]
+}

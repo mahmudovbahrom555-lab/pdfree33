@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Cara Memutar Halaman PDF",
+  "description": "Perbaiki orientasi halaman PDF 90°, 180° atau 270° — gratis, tanpa upload.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Buka file PDF",
+      "text": "Klik 'Pilih file' atau seret PDF ke area drop. Halaman ditampilkan sebagai thumbnail yang dapat diklik."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Pilih rotasi",
+      "text": "Klik tombol rotasi pada halaman individual atau gunakan 'Putar Semua' untuk memutar semua sekaligus. Pilih 90°, 180°, atau 270°."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Unduh PDF",
+      "text": "Klik 'Terapkan Rotasi'. PDF baru dengan orientasi yang diperbaiki langsung diunduh ke perangkat Anda."
+    }
+  ]
+}

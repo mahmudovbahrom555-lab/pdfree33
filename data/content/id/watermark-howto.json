@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Cara Menambahkan Tanda Air ke PDF",
+  "description": "Tambahkan tanda air teks kustom ke semua halaman PDF — gratis, tanpa upload.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Buka file PDF",
+      "text": "Klik 'Pilih file' atau seret PDF ke area drop."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Atur tanda air",
+      "text": "Ketik teks tanda air dan sesuaikan opasitas, warna, ukuran font, dan sudut rotasi. Pratinjau ditampilkan secara langsung."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Unduh PDF",
+      "text": "Klik 'Tambah Tanda Air'. PDF baru dengan tanda air di semua halaman langsung diunduh ke perangkat Anda."
+    }
+  ]
+}

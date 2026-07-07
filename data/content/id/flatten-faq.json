@@ -1,0 +1,50 @@
+[
+  {
+    "@type": "Question",
+    "name": "Apa yang terjadi saat PDF diratakan?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Perataan menggabungkan semua lapisan interaktif — bidang formulir, anotasi, tanda tangan digital, dan overlay — ke dalam konten halaman statis. Hasilnya adalah PDF datar yang tidak dapat diedit namun tampak identik dengan aslinya."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah perataan dibatalkan?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak. Perataan bersifat permanen — bidang formulir asli digantikan secara permanen oleh konten visual statis. Selalu simpan cadangan PDF asli yang sudah diisi jika Anda pikir perlu mengubah nilai nantinya."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah PDF saya diunggah saat diratakan?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak. Semuanya berjalan di browser menggunakan pdf-lib. PDF asli maupun hasil perataan tidak pernah dikirim ke mana pun. Dokumen Anda tetap di perangkat setiap saat."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Mengapa meratakan daripada hanya menyimpan PDF yang sudah diisi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDF yang disimpan masih berisi bidang yang bisa diedit — penerima bisa menghapus nilai Anda dan mengisi ulang. Perataan mengunci konten secara permanen, mencegah pengeditan, memastikan rendering konsisten di semua pembaca PDF, dan menghapus metadata formulir tersembunyi dari file."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah meratakan mengurangi ukuran file?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sering sedikit berkurang. Perataan menghapus data widget formulir interaktif dan JavaScript, yang mengurangi ukuran file untuk formulir dengan banyak bidang. Gambar dan font tertanam tidak terpengaruh."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apa perbedaan meratakan PDF dan melindunginya dengan kata sandi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Perataan menghapus struktur formulir interaktif sepenuhnya — tidak ada bidang yang bisa diedit. Proteksi kata sandi membatasi akses tetapi membiarkan bidang formulir tetap ada. Untuk keamanan maksimal, ratakan dulu lalu tambahkan kata sandi."
+    }
+  }
+]

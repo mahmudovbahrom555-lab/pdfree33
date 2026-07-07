@@ -1,0 +1,23 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Cách Xóa Văn Bản PDF",
+  "description": "Xóa văn bản và nội dung nhạy cảm khỏi PDF vĩnh viễn ngay trong trình duyệt — không tải lên server, không cần đăng ký, miễn phí.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "name": "Mở file PDF",
+      "text": "Nhấp Chọn file hoặc kéo PDF vào khu vực thả. Trang được hiển thị trong trình duyệt — không có gì được tải lên server."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Vẽ hộp xóa",
+      "text": "Kéo để vẽ hộp đen lên văn bản hoặc vùng cần xóa. Vẽ bao nhiêu hộp tùy ý trên nhiều trang."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Áp dụng và tải về",
+      "text": "Nhấp Áp Dụng Xóa. PDF được làm phẳng với vùng bị xóa bị che vĩnh viễn. Tải xuống ngay lập tức."
+    }
+  ]
+}

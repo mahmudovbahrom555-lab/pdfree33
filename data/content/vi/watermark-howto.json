@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Cách Thêm Watermark vào PDF",
+  "description": "Thêm watermark văn bản tùy chỉnh vào tất cả trang PDF — miễn phí, không tải lên.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Mở file PDF",
+      "text": "Nhấp 'Chọn file' hoặc kéo PDF vào vùng thả."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Cài đặt watermark",
+      "text": "Nhập văn bản watermark và điều chỉnh độ mờ, màu sắc, cỡ chữ và góc xoay. Xem trước được hiển thị ngay lập tức."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Tải về PDF",
+      "text": "Nhấp 'Thêm Watermark'. PDF mới với watermark trên tất cả trang sẽ được tải về ngay lập tức vào thiết bị của bạn."
+    }
+  ]
+}

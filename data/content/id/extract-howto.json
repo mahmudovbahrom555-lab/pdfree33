@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Cara Mengekstrak Halaman PDF",
+  "description": "Ekstrak halaman individual atau rentang halaman dari PDF — gratis, tanpa upload.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Buka file PDF",
+      "text": "Klik 'Pilih file' atau seret PDF ke area drop. Halaman ditampilkan sebagai thumbnail yang dapat diklik."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Pilih halaman",
+      "text": "Klik thumbnail halaman yang ingin diekstrak, atau masukkan nomor dan rentang halaman (misalnya: 1, 3-5, 8) di kolom input."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Unduh PDF hasil ekstrak",
+      "text": "Klik 'Ekstrak Halaman'. PDF baru dengan hanya halaman yang dipilih langsung diunduh ke perangkat Anda."
+    }
+  ]
+}

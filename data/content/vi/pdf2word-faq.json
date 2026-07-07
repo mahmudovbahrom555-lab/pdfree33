@@ -1,0 +1,50 @@
+[
+  {
+    "@type": "Question",
+    "name": "Công cụ chuyển PDF sang Word này có thực sự miễn phí không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có, hoàn toàn miễn phí. Không đăng ký, không watermark, không giới hạn số trang. Toàn bộ quá trình chuyển đổi diễn ra trong trình duyệt bằng thư viện mã nguồn mở."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Chuyển PDF sang Word có tải lên file không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không. Toàn bộ quá trình chuyển đổi diễn ra trong trình duyệt. PDF của bạn không bao giờ được gửi đến bất kỳ máy chủ nào — dù chỉ tạm thời."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Sự khác biệt giữa Chế Độ Văn Bản và Chế Độ Hình Ảnh?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Chế Độ Văn Bản trích xuất văn bản từ PDF và tạo tài liệu Word có thể chỉnh sửa với đoạn văn, tiêu đề, in đậm, in nghiêng và bảng. Chế Độ Hình Ảnh hiển thị mỗi trang dưới dạng hình ảnh độ phân giải cao — bố cục được giữ nguyên hoàn hảo nhưng văn bản không thể chỉnh sửa."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Định dạng có giống nhau trong Word không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ở chế độ văn bản, nội dung văn bản và định dạng cơ bản (in đậm, in nghiêng, cỡ font, tiêu đề, bảng) được giữ nguyên. Bố cục đa cột phức tạp có thể không khớp hoàn toàn. Để bố cục chính xác hoàn hảo, dùng chế độ hình ảnh."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Tôi có cần Microsoft Word để mở file đã chuyển đổi không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không. Định dạng .docx được hỗ trợ bởi Microsoft Word, Google Docs, LibreOffice Writer (miễn phí) và Apple Pages. Bạn không cần đăng ký Microsoft 365 trả phí để mở file."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Có hoạt động offline không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có. Sau khi trang đã tải, PDFree hoạt động hoàn toàn offline như một Progressive Web App. Không cần kết nối internet để chuyển đổi."
+    }
+  }
+]
