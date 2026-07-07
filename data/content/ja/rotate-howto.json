@@ -1,0 +1,31 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDFを無料で回転させる方法",
+  "description": "PDFページを90°・180°・270°回転させます。アップロード不要、完全無料、すべてブラウザ内で処理されます。",
+  "totalTime": "PT1M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — ブラウザ上で動作する無料PDF回転ツール" }],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDFを選択",
+      "text": "「ファイルを選択」をクリックするか、PDFをドロップエリアにドラッグしてください。ファイルはブラウザ内でローカルに処理されます。",
+      "url": "https://pdfree.io/ja/pdf-kaiten/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "ページと角度を選択",
+      "text": "すべてのページを一括回転するか、特定のページのみを選んで回転させてください。角度は90°・180°・270°から選択できます。",
+      "url": "https://pdfree.io/ja/pdf-kaiten/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "回転済みPDFをダウンロード",
+      "text": "「PDFを保存」をクリックしてください。回転後のPDFがすぐにダウンロードできます。",
+      "url": "https://pdfree.io/ja/pdf-kaiten/#step3"
+    }
+  ]
+}

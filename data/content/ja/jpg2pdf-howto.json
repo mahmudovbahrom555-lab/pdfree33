@@ -1,0 +1,31 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "JPGを無料でPDFに変換する方法",
+  "description": "JPG、PNG、WebP画像をPDFに変換します。アップロード不要、完全無料、すべてブラウザ内で処理されます。",
+  "totalTime": "PT1M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — ブラウザ上で動作する無料JPG→PDF変換ツール" }],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "画像を追加",
+      "text": "「ファイルを選択」をクリックするか、JPG、PNG、WebP画像をドロップエリアにドラッグしてください。複数ファイルを同時に選択できます。",
+      "url": "https://pdfree.io/ja/jpg-pdf-henkan/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "順番を並び替え",
+      "text": "ドラッグ&ドロップで画像を並び替えてページ順を決めてください。EXIFの向き情報は自動的に補正されます。",
+      "url": "https://pdfree.io/ja/jpg-pdf-henkan/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "PDFを作成してダウンロード",
+      "text": "「PDFを作成」をクリックしてください。完成したPDFがすぐにダウンロードできます。画像はデバイスから外部に送られませんでした。",
+      "url": "https://pdfree.io/ja/jpg-pdf-henkan/#step3"
+    }
+  ]
+}

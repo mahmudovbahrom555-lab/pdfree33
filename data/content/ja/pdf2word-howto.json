@@ -1,0 +1,31 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDFを無料でWordに変換する方法",
+  "description": "PDFを編集可能なWord文書（.docx）に変換します。アップロード不要、完全無料、すべてブラウザ内で処理されます。",
+  "totalTime": "PT1M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — ブラウザ上で動作する無料PDF→Word変換ツール、アップロード不要" }],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDFを開く",
+      "text": "「ファイルを選択」をクリックするか、PDFをドロップエリアにドラッグしてください。変換はブラウザ内で始まります。ファイルはデバイス上に留まります。",
+      "url": "https://pdfree.io/ja/pdf-word-henkan/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "処理を待つ",
+      "text": "PDFreeはPDFを解析し、テキスト、表、フォントなどの構造を保持しながら変換処理を行います。すべてローカルで処理されます。",
+      "url": "https://pdfree.io/ja/pdf-word-henkan/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": ".docxをダウンロード",
+      "text": "「Wordに変換」をクリックしてください。Microsoft Word、Google Docs、LibreOfficeで編集可能な.docxファイルをダウンロードできます。",
+      "url": "https://pdfree.io/ja/pdf-word-henkan/#step3"
+    }
+  ]
+}

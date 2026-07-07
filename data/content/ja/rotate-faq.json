@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "PDFを回転させる際にファイルは外部に送信されますか？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "いいえ。回転処理はすべてブラウザ内でJavaScriptを使って行われます。ファイルはお使いのデバイスから一切送信されません。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFの特定のページだけ回転させることはできますか？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "はい。ページのサムネイルをクリックして個別に選択し、選択したページのみを回転させることができます。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFを回転できる角度はいくつですか？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "90°（右90°回転）、180°（上下反転）、270°（左90°回転）から選択できます。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "回転後にPDFの品質は低下しますか？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "いいえ。PDFの回転はページのメタデータを変更するだけで、コンテンツ自体は再レンダリングされないため、品質は完全に保たれます。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "パスワード付きPDFのページを回転させることはできますか？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "はい。パスワード付きPDFを読み込む際にパスワードを入力すれば、回転処理を行うことができます。"
+    }
+  }
+]

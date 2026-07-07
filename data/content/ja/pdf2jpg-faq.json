@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "PDFをJPGに変換する際にファイルは外部に送信されますか？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "いいえ。変換処理はすべてブラウザ内でJavaScriptを使って行われます。ファイルはお使いのデバイスから一切送信されません。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFをJPGに変換する際にどの解像度を選べばよいですか？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "72 DPI — Web公開・プレビュー用。150 DPI — ほとんどの用途に最適なバランス。300 DPI — 印刷・プロ向け高品質用。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "複数ページのPDFをJPGに変換してまとめてダウンロードできますか？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "はい。複数ページのPDFを変換する場合、すべての画像が自動的にZIPファイルにまとめられ、一度にダウンロードできます。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "特定のページだけJPGに変換できますか？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "はい。PDFページ抽出ツールで必要なページを抽出してからJPGに変換することができます。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "JPGとPNG、どちらを選べばよいですか？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "JPG — ファイルサイズが小さく、写真や複雑な画像に適しています。PNG — 可逆圧縮で透明度をサポート、テキスト・図・ロゴに最適です。"
+    }
+  }
+]

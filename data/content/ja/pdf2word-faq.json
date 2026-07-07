@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "PDFをWordに変換する際にファイルは外部に送信されますか？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "いいえ。変換処理はすべてブラウザ内でJavaScriptを使って行われます。文書の内容が外部のサーバーに送信されることは一切ありません。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFをWordに変換後にフォーマットは保持されますか？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFreeはフォント、フォントサイズ、見出し、表、箇条書きリストを保持します。複雑なレイアウト（複数列、埋め込み画像）は.docx形式の範囲内で保持されます。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "日本語のPDFも正しくWordに変換できますか？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "はい。PDFreeは日本語を含む15以上の言語に対応しています。テキストは正しいエンコーディングで抽出・保存されます。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "スキャンしたPDFもWordに変換できますか？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "スキャン文書（テキストレイヤーのない画像のみのPDF）は変換が制限されます。最良の結果を得るには、テキストが埋め込まれているPDFをご使用ください。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "変換後の.docxファイルはどのソフトで開けますか？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": ".docxファイルはMicrosoft Word、Google Docs（アップロードして開く）、LibreOffice Writer、Office Open XMLをサポートする任意のエディターで開くことができます。"
+    }
+  }
+]

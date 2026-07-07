@@ -42,6 +42,18 @@
       "locale": "vi_VN",
       "dir": "vi",
       "depth": 2
+    },
+    "ru": {
+      "code": "ru",
+      "locale": "ru_RU",
+      "dir": "ru",
+      "depth": 2
+    },
+    "ja": {
+      "code": "ja",
+      "locale": "ja_JP",
+      "dir": "ja",
+      "depth": 2
     }
   },
   "tools": [
@@ -56,7 +68,9 @@
         "de": "pdf-zusammenfuehren",
         "fr": "fusionner-pdf",
         "id": "gabung-pdf",
-        "vi": "gop-pdf"
+        "vi": "gop-pdf",
+        "ru": "objedinit-pdf",
+        "ja": "pdf-ketsugou"
       },
       "titles": {
         "en": "Merge PDF Files Free — No Size Limit, No Upload | PDFree",
@@ -65,7 +79,9 @@
         "de": "PDF Zusammenfügen Online — Kostenlos, Kein Upload | PDFree",
         "fr": "Fusionner PDF en Ligne — Gratuit, Aucun Envoi | PDFree",
         "id": "Gabungkan PDF Online Gratis — Tanpa Upload, Tanpa Akun | PDFree",
-        "vi": "Ghép PDF Trực Tuyến Miễn Phí — Không Tải Lên, Không Cần Tài Khoản | PDFree"
+        "vi": "Ghép PDF Trực Tuyến Miễn Phí — Không Tải Lên, Không Cần Tài Khoản | PDFree",
+        "ru": "Объединить PDF файлы бесплатно — без загрузки, без регистрации | PDFree",
+        "ja": "PDFを無料で結合 — アップロード不要・登録不要 | PDFree"
       },
       "descs": {
         "en": "Combine unlimited PDF files instantly. 100% private, no uploads, no file size limits.",
@@ -74,7 +90,9 @@
         "de": "PDF-Dateien kostenlos online zusammenfügen. 100 % privat — Dateien verlassen deinen Browser nie. Kein Upload, keine Registrierung, keine Limits.",
         "fr": "Fusionner des fichiers PDF gratuitement en ligne. 100 % privé — vos fichiers ne quittent jamais votre navigateur. Aucun envoi, sans inscription, sans limite.",
         "id": "Gabungkan file PDF tanpa batas secara instan. 100% pribadi, tanpa upload, tanpa batas ukuran file.",
-        "vi": "Ghép không giới hạn file PDF tức thì. 100% riêng tư, không tải lên, không giới hạn dung lượng."
+        "vi": "Ghép không giới hạn file PDF tức thì. 100% riêng tư, không tải lên, không giới hạn dung lượng.",
+        "ru": "Объединяйте неограниченное количество PDF файлов мгновенно. Полная конфиденциальность — файлы обрабатываются в браузере.",
+        "ja": "PDFファイルをブラウザ内で結合します。ファイルが外部に送信されることはありません。登録不要、完全無料。"
       },
       "navLabels": {
         "en": "Merge",
@@ -83,7 +101,9 @@
         "de": "Zusammenfügen",
         "fr": "Fusionner",
         "id": "Gabung",
-        "vi": "Ghép"
+        "vi": "Ghép",
+        "ru": "Объединить",
+        "ja": "結合"
       },
       "cardNames": {
         "en": "Merge PDF files",
@@ -92,7 +112,9 @@
         "de": "PDF Zusammenfügen",
         "fr": "Fusionner PDF",
         "id": "Gabungkan PDF",
-        "vi": "Ghép PDF"
+        "vi": "Ghép PDF",
+        "ru": "Объединить PDF",
+        "ja": "PDFを結合"
       },
       "cardDescs": {
         "en": "Combine unlimited PDF files — no restrictions",
@@ -101,7 +123,9 @@
         "de": "Beliebig viele PDF-Dateien zusammenfügen — keine Einschränkungen",
         "fr": "Fusionner un nombre illimité de fichiers PDF — sans restrictions",
         "id": "Gabungkan file PDF tanpa batas — tanpa batasan",
-        "vi": "Ghép không giới hạn file PDF — không hạn chế"
+        "vi": "Ghép không giới hạn file PDF — không hạn chế",
+        "ru": "Объединяйте неограниченное количество PDF файлов — без ограничений",
+        "ja": "無制限のPDFファイルを結合 — 制限なし"
       },
       "breadcrumb": {
         "en": "Merge PDF",
@@ -110,7 +134,9 @@
         "de": "PDF Zusammenfügen",
         "fr": "Fusionner PDF",
         "id": "Gabungkan PDF",
-        "vi": "Ghép PDF"
+        "vi": "Ghép PDF",
+        "ru": "Объединить PDF",
+        "ja": "PDFを結合"
       },
       "metaDescs": {
         "en": "Merge PDF files free — no size limit, no daily limit, no upload. Combine large PDFs or 100+ files at once in your browser. 100% private. No signup.",
@@ -119,7 +145,9 @@
         "de": "PDF-Dateien kostenlos online zusammenfügen. 100 % privat — Dateien verlassen deinen Browser nie. Kein Upload, keine Registrierung, keine Limits.",
         "fr": "Fusionner des fichiers PDF gratuitement en ligne. 100 % privé — vos fichiers ne quittent jamais votre navigateur. Aucun envoi, sans inscription, sans limite.",
         "id": "Gabungkan file PDF online gratis — tanpa upload, tanpa akun, tanpa batas ukuran. File tetap di browser Anda, 100% pribadi. Gabungkan PDF tanpa batas hanya dengan satu klik.",
-        "vi": "Ghép file PDF trực tuyến miễn phí — không tải lên, không tài khoản, không giới hạn dung lượng. File ở lại trình duyệt, 100% riêng tư. Gộp PDF không giới hạn chỉ một cú nhấp."
+        "vi": "Ghép file PDF trực tuyến miễn phí — không tải lên, không tài khoản, không giới hạn dung lượng. File ở lại trình duyệt, 100% riêng tư. Gộp PDF không giới hạn chỉ một cú nhấp.",
+        "ru": "Объединяйте PDF файлы бесплатно — без ограничений по размеру, без загрузки. Все обрабатывается в браузере, 100% конфиденциально. Без регистрации.",
+        "ja": "PDFを無料で結合 — サイズ制限なし、利用回数制限なし、アップロード不要。ブラウザ内で処理、100%プライベート。登録不要。"
       },
       "ogTitles": {
         "en": "Merge PDF Free — No Size Limit, Combine Large Files, No Upload",
@@ -128,7 +156,9 @@
         "de": "PDF Zusammenfügen Online — Kostenlos, Kein Upload | PDFree",
         "fr": "Fusionner PDF en Ligne — Gratuit, Aucun Envoi | PDFree",
         "id": "Gabungkan PDF Tanpa Batas — Tanpa Upload ke Server | PDFree",
-        "vi": "Ghép PDF Không Giới Hạn — Không Upload Lên Server | PDFree"
+        "vi": "Ghép PDF Không Giới Hạn — Không Upload Lên Server | PDFree",
+        "ru": "Объединить PDF бесплатно — без ограничений по размеру | PDFree",
+        "ja": "PDF結合 無制限 — サーバーへのアップロードなし | PDFree"
       },
       "ogDescs": {
         "en": "Combine unlimited PDFs instantly. 100% private — files never leave your browser. No signup, no limits.",
@@ -137,7 +167,9 @@
         "de": "PDF-Dateien kostenlos online zusammenfügen. 100 % privat — Dateien verlassen deinen Browser nie. Kein Upload, keine Registrierung, keine Limits.",
         "fr": "Fusionner des fichiers PDF gratuitement en ligne. 100 % privé — vos fichiers ne quittent jamais votre navigateur. Aucun envoi, sans inscription, sans limite.",
         "id": "Gabungkan file PDF tanpa batas secara instan. 100% pribadi — file tidak pernah diunggah. Tanpa akun, tanpa batasan.",
-        "vi": "Ghép không giới hạn file PDF tức thì. 100% riêng tư — file không bao giờ được tải lên. Không tài khoản, không hạn chế."
+        "vi": "Ghép không giới hạn file PDF tức thì. 100% riêng tư — file không bao giờ được tải lên. Không tài khoản, không hạn chế.",
+        "ru": "Объединяйте неограниченное количество PDF мгновенно. 100% конфиденциально — файлы не покидают браузер. Без регистрации, без ограничений.",
+        "ja": "PDFを無制限に即座に結合します。100%プライベート — ファイルはブラウザから出ません。登録不要、制限なし。"
       },
       "keywords": {
         "en": "merge pdf, combine pdf files, join pdf, merge pdf files free, combine pdf online, merge pdf without uploading"
@@ -154,7 +186,9 @@
         "de": "pdf-aufteilen",
         "fr": "diviser-pdf",
         "id": "pisah-pdf",
-        "vi": "tach-pdf"
+        "vi": "tach-pdf",
+        "ru": "razdelit-pdf",
+        "ja": "pdf-bunkatsu"
       },
       "titles": {
         "en": "Split PDF Free — Separate Pages Online, No Upload | PDFree",
@@ -163,7 +197,9 @@
         "de": "PDF Aufteilen Online — Seiten Extrahieren, Kein Upload | PDFree",
         "fr": "Diviser PDF en Ligne — Gratuit, Aucun Envoi | PDFree",
         "id": "Pisahkan PDF Online — Ekstrak Halaman Tanpa Upload | PDFree",
-        "vi": "Tách PDF Trực Tuyến — Trích Xuất Trang Không Cần Upload | PDFree"
+        "vi": "Tách PDF Trực Tuyến — Trích Xuất Trang Không Cần Upload | PDFree",
+        "ru": "Разделить PDF бесплатно — извлечение страниц, без загрузки | PDFree",
+        "ja": "PDFを無料で分割 — ページを個別ファイルに、アップロード不要 | PDFree"
       },
       "descs": {
         "en": "Extract pages or split PDF into separate files. 100% private, no uploads, no limits.",
@@ -172,7 +208,9 @@
         "de": "PDFs in einzelne Seiten aufteilen oder Seitenbereich extrahieren. 100 % privat — kein Upload. Kostenlos, ohne Registrierung.",
         "fr": "Diviser des fichiers PDF gratuitement en ligne. Extrayez des pages spécifiques ou séparez chaque page. 100 % privé — aucun envoi, sans inscription.",
         "id": "Ekstrak halaman atau pisahkan PDF menjadi file terpisah. 100% pribadi, tanpa upload, tanpa batas.",
-        "vi": "Trích xuất trang hoặc tách PDF thành các file riêng lẻ. 100% riêng tư, không tải lên, không giới hạn."
+        "vi": "Trích xuất trang hoặc tách PDF thành các file riêng lẻ. 100% riêng tư, không tải lên, không giới hạn.",
+        "ru": "Извлечение страниц или разделение PDF на отдельные файлы. 100% конфиденциально — обработка в браузере, без загрузки.",
+        "ja": "PDFのページを抽出するか個別ファイルに分割します。100%プライベート — ブラウザ内で処理、アップロード不要。"
       },
       "navLabels": {
         "en": "Split",
@@ -181,7 +219,9 @@
         "de": "Aufteilen",
         "fr": "Diviser",
         "id": "Pisah",
-        "vi": "Tách"
+        "vi": "Tách",
+        "ru": "Разделить",
+        "ja": "分割"
       },
       "cardNames": {
         "en": "Split PDF",
@@ -190,7 +230,9 @@
         "de": "PDF Aufteilen",
         "fr": "Diviser PDF",
         "id": "Pisahkan PDF",
-        "vi": "Tách PDF"
+        "vi": "Tách PDF",
+        "ru": "Разделить PDF",
+        "ja": "PDFを分割"
       },
       "cardDescs": {
         "en": "Extract pages or split into separate files",
@@ -199,7 +241,9 @@
         "de": "Seiten extrahieren oder in einzelne Dateien aufteilen",
         "fr": "Extraire des pages ou diviser en fichiers séparés",
         "id": "Ekstrak halaman atau pisahkan menjadi file terpisah",
-        "vi": "Trích xuất trang hoặc chia thành các file riêng lẻ"
+        "vi": "Trích xuất trang hoặc chia thành các file riêng lẻ",
+        "ru": "Извлекайте страницы или разделяйте на отдельные файлы",
+        "ja": "ページを抽出するか個別ファイルに分割する"
       },
       "breadcrumb": {
         "en": "Split PDF",
@@ -208,7 +252,9 @@
         "de": "PDF Aufteilen",
         "fr": "Diviser PDF",
         "id": "Pisahkan PDF",
-        "vi": "Tách PDF"
+        "vi": "Tách PDF",
+        "ru": "Разделить PDF",
+        "ja": "PDFを分割"
       },
       "metaDescs": {
         "en": "Free PDF splitter — split, separate, or divide PDF pages online with no upload, no signup. Extract exact pages or page ranges, all processed in your browser. No limits.",
@@ -217,7 +263,9 @@
         "de": "PDFs in Einzelseiten aufteilen oder Seitenbereiche extrahieren — alles im Browser, kein Upload nötig. 100 % privat. Kostenlos, ohne Registrierung, ohne Limits.",
         "fr": "Diviser des fichiers PDF gratuitement en ligne. Extrayez des pages spécifiques ou séparez chaque page. 100 % privé — aucun envoi, sans inscription.",
         "id": "Pisahkan PDF online tanpa upload ke server mana pun. Ekstrak halaman atau rentang halaman — semua diproses di browser Anda, 100% pribadi. Gratis, tanpa pendaftaran.",
-        "vi": "Tách PDF trực tuyến không cần tải lên bất kỳ server nào. Trích xuất trang chính xác — xử lý trong trình duyệt, 100% riêng tư. Miễn phí, không cần đăng ký."
+        "vi": "Tách PDF trực tuyến không cần tải lên bất kỳ server nào. Trích xuất trang chính xác — xử lý trong trình duyệt, 100% riêng tư. Miễn phí, không cần đăng ký.",
+        "ru": "Разделяйте PDF без загрузки на сервер. Извлекайте страницы или диапазоны страниц — всё обрабатывается в браузере, 100% конфиденциально. Бесплатно, без регистрации.",
+        "ja": "PDFをサーバーにアップロードせずに分割できます。ページや範囲を抽出 — すべてブラウザ内で処理、100%プライベート。無料、登録不要。"
       },
       "ogTitles": {
         "en": "Split PDF Free — Separate, Divide, or Extract Pages, No Upload",
@@ -226,7 +274,9 @@
         "de": "PDF Aufteilen Online — Seiten Extrahieren, Kein Upload | PDFree",
         "fr": "Diviser PDF en Ligne — Gratuit, Aucun Envoi | PDFree",
         "id": "Pisahkan PDF & Ekstrak Halaman Apa Pun — 100% Pribadi, Selalu Gratis",
-        "vi": "Tách PDF & Trích Xuất Trang — 100% Riêng Tư, Luôn Miễn Phí"
+        "vi": "Tách PDF & Trích Xuất Trang — 100% Riêng Tư, Luôn Miễn Phí",
+        "ru": "Разделить PDF — разбить на страницы или извлечь диапазон, без загрузки",
+        "ja": "PDF分割 — ページを分離・抽出 — 100%プライベート、常に無料"
       },
       "ogDescs": {
         "en": "Split PDFs into separate pages or extract a page range. 100% private — files never uploaded. Free.",
@@ -235,7 +285,9 @@
         "de": "PDFs in einzelne Seiten aufteilen oder Seitenbereich extrahieren. 100 % privat — kein Upload. Kostenlos, ohne Registrierung.",
         "fr": "Diviser des fichiers PDF gratuitement en ligne. Extrayez des pages spécifiques ou séparez chaque page. 100 % privé — aucun envoi, sans inscription.",
         "id": "Pisahkan PDF menjadi halaman terpisah atau ekstrak rentang halaman. 100% pribadi — file tidak pernah diunggah. Gratis.",
-        "vi": "Tách PDF thành các trang riêng lẻ hoặc trích xuất phạm vi trang. 100% riêng tư — file không bao giờ được tải lên. Miễn phí."
+        "vi": "Tách PDF thành các trang riêng lẻ hoặc trích xuất phạm vi trang. 100% riêng tư — file không bao giờ được tải lên. Miễn phí.",
+        "ru": "Разделяйте PDF на отдельные страницы или извлекайте диапазон страниц. 100% конфиденциально — файлы не загружаются. Бесплатно.",
+        "ja": "PDFをページごとに分割するか範囲を抽出します。100%プライベート — ファイルはアップロードされません。無料。"
       },
       "keywords": {
         "en": "split pdf, divide pdf, extract pages from pdf, split pdf online free, pdf splitter, split pdf without uploading"
@@ -252,7 +304,9 @@
         "de": "pdf-komprimieren",
         "fr": "compresser-pdf",
         "id": "kompres-pdf",
-        "vi": "nen-pdf"
+        "vi": "nen-pdf",
+        "ru": "szhat-pdf",
+        "ja": "pdf-atsuryoku"
       },
       "titles": {
         "en": "Compress PDF Free Online — Reduce Size for Email, No Upload | PDFree",
@@ -261,7 +315,9 @@
         "de": "PDF Komprimieren Online — Kostenlos, Kein Upload | PDFree",
         "fr": "Compresser PDF en Ligne Gratuit — Réduire la Taille | PDFree",
         "id": "Kompres PDF Online Gratis — Perkecil Ukuran File Tanpa Upload | PDFree",
-        "vi": "Nén PDF Trực Tuyến Miễn Phí — Giảm Dung Lượng File Không Tải Lên | PDFree"
+        "vi": "Nén PDF Trực Tuyến Miễn Phí — Giảm Dung Lượng File Không Tải Lên | PDFree",
+        "ru": "Сжать PDF бесплатно — уменьшить размер файла, без загрузки | PDFree",
+        "ja": "PDFを無料で圧縮 — ファイルサイズを削減、アップロード不要 | PDFree"
       },
       "descs": {
         "en": "Reduce PDF file size without losing quality. Processed locally in your browser — files never uploaded.",
@@ -270,7 +326,9 @@
         "de": "PDF-Dateigröße reduzieren ohne Qualitätsverlust. Vollständig im Browser verarbeitet — keine Uploads, keine Registrierung. Kostenlos.",
         "fr": "Compresser vos fichiers PDF gratuitement en ligne. Trois niveaux de qualité. 100 % privé — aucun envoi, sans inscription, sans limite.",
         "id": "Kurangi ukuran file PDF tanpa kehilangan kualitas. Diproses lokal di browser Anda — file tidak pernah diunggah.",
-        "vi": "Giảm dung lượng file PDF mà không mất chất lượng. Xử lý ngay trong trình duyệt — file không bao giờ được tải lên."
+        "vi": "Giảm dung lượng file PDF mà không mất chất lượng. Xử lý ngay trong trình duyệt — file không bao giờ được tải lên.",
+        "ru": "Уменьшайте размер PDF файла без потери качества. Обрабатывается локально в браузере — файлы не загружаются.",
+        "ja": "PDFのファイルサイズを品質を落とさずに削減します。ブラウザ内でローカルに処理 — ファイルはアップロードされません。"
       },
       "navLabels": {
         "en": "Compress",
@@ -279,7 +337,9 @@
         "de": "Komprimieren",
         "fr": "Compresser",
         "id": "Kompres",
-        "vi": "Nén"
+        "vi": "Nén",
+        "ru": "Сжать",
+        "ja": "圧縮"
       },
       "cardNames": {
         "en": "Compress PDF",
@@ -288,7 +348,9 @@
         "de": "PDF Komprimieren",
         "fr": "Compresser PDF",
         "id": "Kompres PDF",
-        "vi": "Nén PDF"
+        "vi": "Nén PDF",
+        "ru": "Сжать PDF",
+        "ja": "PDF圧縮"
       },
       "cardDescs": {
         "en": "Reduce file size without losing quality",
@@ -297,7 +359,9 @@
         "de": "Dateigröße ohne Qualitätsverlust reduzieren",
         "fr": "Réduire la taille sans perte de qualité",
         "id": "Perkecil ukuran file tanpa kehilangan kualitas",
-        "vi": "Giảm dung lượng mà không mất chất lượng"
+        "vi": "Giảm dung lượng mà không mất chất lượng",
+        "ru": "Уменьшайте размер файла без потери качества",
+        "ja": "品質を落とさずにファイルサイズを削減する"
       },
       "breadcrumb": {
         "en": "Compress PDF",
@@ -306,7 +370,9 @@
         "de": "PDF Komprimieren",
         "fr": "Compresser PDF",
         "id": "Kompres PDF",
-        "vi": "Nén PDF"
+        "vi": "Nén PDF",
+        "ru": "Сжать PDF",
+        "ja": "PDF圧縮"
       },
       "metaDescs": {
         "en": "Compress PDF for email or web upload — free PDF compressor that reduces file size 20–80% without losing quality. Runs in your browser, nothing uploaded, no signup.",
@@ -315,7 +381,9 @@
         "de": "PDF-Dateigröße reduzieren ohne Qualitätsverlust. Vollständig im Browser verarbeitet — kein Upload, keine Registrierung. Drei Qualitätsstufen. Kostenlos.",
         "fr": "Compresser vos PDF gratuitement en ligne — trois niveaux de qualité. 100 % privé — aucun envoi, aucun serveur. Réduction immédiate de la taille. Sans inscription.",
         "id": "Kompres PDF online gratis — kurangi ukuran file secara instan tanpa kehilangan kualitas. Diproses di browser, tidak ada yang diunggah. Tanpa akun, tanpa batasan.",
-        "vi": "Nén PDF trực tuyến miễn phí — giảm dung lượng ngay tức thì mà không mất chất lượng. Xử lý trong trình duyệt, không có gì được tải lên. Không cần tài khoản, không giới hạn."
+        "vi": "Nén PDF trực tuyến miễn phí — giảm dung lượng ngay tức thì mà không mất chất lượng. Xử lý trong trình duyệt, không có gì được tải lên. Không cần tài khoản, không giới hạn.",
+        "ru": "Сжать PDF бесплатно — уменьшить размер файла на 20–80% без потери качества. Обрабатывается в браузере, ничего не загружается. Без аккаунта, без ограничений.",
+        "ja": "PDFを無料で圧縮 — ファイルサイズを20〜80%削減、品質を落とさず。ブラウザ内で処理、アップロードなし。アカウント不要、制限なし。"
       },
       "ogTitles": {
         "en": "Compress PDF Free — Reduce for Email, No Upload, No Quality Loss",
@@ -324,7 +392,9 @@
         "de": "PDF Komprimieren Online — Dateigröße Reduzieren | PDFree",
         "fr": "Compresser PDF en Ligne — Gratuit, Aucun Envoi | PDFree",
         "id": "Kompres PDF di Browser Anda — File Tidak Pernah Meninggalkan Perangkat",
-        "vi": "Nén PDF Trong Trình Duyệt — File Không Bao Giờ Rời Thiết Bị Của Bạn"
+        "vi": "Nén PDF Trong Trình Duyệt — File Không Bao Giờ Rời Thiết Bị Của Bạn",
+        "ru": "Сжать PDF бесплатно — файл уменьшается на 20–80%, ничего не загружается",
+        "ja": "PDF圧縮 無料 — 20〜80%サイズ削減、アップロード不要、品質ロスなし"
       },
       "ogDescs": {
         "en": "Free PDF compressor — reduce file size for email, web forms, or storage. 20–80% smaller. Runs in your browser, files never uploaded. No signup.",
@@ -333,7 +403,9 @@
         "de": "PDF-Dateigröße reduzieren ohne Qualitätsverlust. Vollständig im Browser verarbeitet — keine Uploads, keine Registrierung. Kostenlos.",
         "fr": "Compresser vos fichiers PDF gratuitement en ligne. Trois niveaux de qualité. 100 % privé — aucun envoi, sans inscription, sans limite.",
         "id": "Kurangi ukuran file PDF tanpa kehilangan kualitas. Diproses di browser — file tidak pernah diunggah. Gratis.",
-        "vi": "Giảm dung lượng file PDF mà không mất chất lượng. Xử lý trong trình duyệt — file không bao giờ được tải lên. Miễn phí."
+        "vi": "Giảm dung lượng file PDF mà không mất chất lượng. Xử lý trong trình duyệt — file không bao giờ được tải lên. Miễn phí.",
+        "ru": "Уменьшайте размер PDF без потери качества. Обрабатывается в браузере — файлы не загружаются. Бесплатно.",
+        "ja": "品質を落とさずにPDFのサイズを削減します。ブラウザ内で処理 — ファイルはアップロードされません。無料。"
       },
       "keywords": {
         "en": "compress pdf, reduce pdf size, compress pdf online free, pdf compressor, shrink pdf, make pdf smaller"
@@ -350,7 +422,9 @@
         "de": "pdf-drehen",
         "fr": "rotation-pdf",
         "id": "putar-pdf",
-        "vi": "xoay-pdf"
+        "vi": "xoay-pdf",
+        "ru": "povernut-pdf",
+        "ja": "pdf-kaiten"
       },
       "titles": {
         "en": "Rotate PDF Free Online — No Upload, No Signup | PDFree",
@@ -359,7 +433,9 @@
         "de": "PDF Drehen Online — Seitenausrichtung Korrigieren | PDFree",
         "fr": "Rotation PDF en Ligne — Gratuit, Aucun Envoi | PDFree",
         "id": "Putar Halaman PDF Online Gratis — Tanpa Upload | PDFree",
-        "vi": "Xoay Trang PDF Trực Tuyến Miễn Phí — Không Tải Lên | PDFree"
+        "vi": "Xoay Trang PDF Trực Tuyến Miễn Phí — Không Tải Lên | PDFree",
+        "ru": "Повернуть PDF бесплатно — исправить ориентацию страниц, без загрузки | PDFree",
+        "ja": "PDFを無料で回転 — 向きを修正、アップロード不要 | PDFree"
       },
       "descs": {
         "en": "Fix page orientation in any PDF. 100% private — processed locally, no uploads, no signup.",
@@ -368,7 +444,9 @@
         "de": "PDF-Seiten um 90°, 180° oder 270° drehen. Verarbeitung im Browser — kein Upload, kein Server. Kostenlos, ohne Registrierung.",
         "fr": "Faire pivoter les pages d'un PDF gratuitement en ligne. 90°, 180° ou 270°. 100 % privé — aucun envoi, sans inscription.",
         "id": "Perbaiki orientasi halaman PDF. 100% pribadi — diproses lokal, tanpa upload, tanpa daftar.",
-        "vi": "Sửa hướng trang PDF. 100% riêng tư — xử lý cục bộ, không tải lên, không đăng ký."
+        "vi": "Sửa hướng trang PDF. 100% riêng tư — xử lý cục bộ, không tải lên, không đăng ký.",
+        "ru": "Исправляйте ориентацию страниц в любом PDF. 100% конфиденциально — локальная обработка, без загрузки.",
+        "ja": "PDFのページの向きを修正します。100%プライベート — ローカルで処理、アップロード不要。"
       },
       "navLabels": {
         "en": "Rotate",
@@ -377,7 +455,9 @@
         "de": "Drehen",
         "fr": "Rotation",
         "id": "Putar",
-        "vi": "Xoay"
+        "vi": "Xoay",
+        "ru": "Повернуть",
+        "ja": "回転"
       },
       "cardNames": {
         "en": "Rotate PDF",
@@ -386,7 +466,9 @@
         "de": "PDF Drehen",
         "fr": "Rotation PDF",
         "id": "Putar PDF",
-        "vi": "Xoay PDF"
+        "vi": "Xoay PDF",
+        "ru": "Повернуть PDF",
+        "ja": "PDFを回転"
       },
       "cardDescs": {
         "en": "Fix page orientation in any PDF",
@@ -395,7 +477,9 @@
         "de": "Seitenausrichtung in beliebigen PDFs korrigieren",
         "fr": "Corriger l'orientation des pages dans n'importe quel PDF",
         "id": "Perbaiki orientasi halaman di PDF mana pun",
-        "vi": "Sửa hướng trang trong bất kỳ PDF nào"
+        "vi": "Sửa hướng trang trong bất kỳ PDF nào",
+        "ru": "Исправляйте ориентацию страниц в любом PDF",
+        "ja": "どのPDFでもページの向きを修正する"
       },
       "breadcrumb": {
         "en": "Rotate PDF",
@@ -404,7 +488,9 @@
         "de": "PDF Drehen",
         "fr": "Rotation PDF",
         "id": "Putar PDF",
-        "vi": "Xoay PDF"
+        "vi": "Xoay PDF",
+        "ru": "Повернуть PDF",
+        "ja": "PDFを回転"
       },
       "metaDescs": {
         "en": "Rotate PDF pages 90°, 180°, or 270° free — processed in your browser, nothing uploaded. Fix sideways scans, portrait/landscape mix, or wrong orientation. Saves instantly. No signup.",
@@ -413,7 +499,9 @@
         "de": "PDF-Seiten um 90°, 180° oder 270° drehen — direkt im Browser ohne Upload. 100 % privat. Schiefe Scans sofort korrigieren. Kostenlos, ohne Registrierung, ohne Limits.",
         "fr": "Faire pivoter les pages PDF en ligne — 90°, 180° ou 270°. 100 % privé — aucun envoi, aucun serveur. Corrigez vos scans de travers en quelques secondes. Gratuit.",
         "id": "Putar halaman PDF 90°, 180°, atau 270° gratis — diproses di browser, tidak ada yang diunggah. Perbaiki scan miring, campuran potret/lanskap. Tanpa akun, tanpa daftar.",
-        "vi": "Xoay trang PDF 90°, 180° hoặc 270° miễn phí — xử lý trong trình duyệt, không tải lên. Sửa scan nghiêng, hỗn hợp dọc/ngang. Không cần tài khoản, không đăng ký."
+        "vi": "Xoay trang PDF 90°, 180° hoặc 270° miễn phí — xử lý trong trình duyệt, không tải lên. Sửa scan nghiêng, hỗn hợp dọc/ngang. Không cần tài khoản, không đăng ký.",
+        "ru": "Поворачивайте страницы PDF на 90°, 180° или 270° бесплатно — обработка в браузере, ничего не загружается. Без аккаунта, без регистрации.",
+        "ja": "PDFページを90°・180°・270°無料で回転 — ブラウザ内で処理、アップロードなし。アカウント不要、登録不要。"
       },
       "ogTitles": {
         "en": "Rotate PDF Free Online — Fix Orientation, Saves Instantly",
@@ -422,7 +510,9 @@
         "de": "PDF Drehen Online — Seitenausrichtung Korrigieren | PDFree",
         "fr": "Rotation PDF en Ligne — Gratuit, Aucun Envoi | PDFree",
         "id": "Putar PDF Gratis — Perbaiki Orientasi Halaman Tanpa Upload",
-        "vi": "Xoay PDF Miễn Phí — Sửa Hướng Trang Không Tải Lên"
+        "vi": "Xoay PDF Miễn Phí — Sửa Hướng Trang Không Tải Lên",
+        "ru": "Повернуть PDF бесплатно — исправить ориентацию страниц, без загрузки",
+        "ja": "PDF回転 無料 — ページの向きを修正、アップロード不要"
       },
       "ogDescs": {
         "en": "Rotate PDF pages 90°, 180°, or 270°. Runs in your browser — nothing uploaded, nothing saved on a server. Free forever, no signup.",
@@ -431,7 +521,9 @@
         "de": "PDF-Seiten um 90°, 180° oder 270° drehen. Verarbeitung im Browser — kein Upload, kein Server. Kostenlos, ohne Registrierung.",
         "fr": "Faire pivoter les pages PDF — 90°, 180° ou 270°. Traitement dans le navigateur, aucun fichier envoyé. Gratuit.",
         "id": "Putar halaman PDF 90°, 180°, atau 270°. Berjalan di browser — tidak ada yang diunggah. Gratis selamanya, tanpa daftar.",
-        "vi": "Xoay trang PDF 90°, 180° hoặc 270°. Chạy trong trình duyệt — không có gì được tải lên. Miễn phí mãi mãi, không đăng ký."
+        "vi": "Xoay trang PDF 90°, 180° hoặc 270°. Chạy trong trình duyệt — không có gì được tải lên. Miễn phí mãi mãi, không đăng ký.",
+        "ru": "Поворачивайте страницы PDF на 90°, 180° или 270°. Работает в браузере — ничего не загружается. Бесплатно, без регистрации.",
+        "ja": "PDFページを90°・180°・270°回転します。ブラウザ内で動作 — アップロードなし。永久無料、登録不要。"
       },
       "keywords": {
         "en": "rotate pdf, rotate pdf pages, fix pdf orientation, rotate pdf online free, pdf rotation, flip pdf"
@@ -448,7 +540,9 @@
         "de": "wasserzeichen-pdf",
         "fr": "filigrane-pdf",
         "id": "tanda-air-pdf",
-        "vi": "them-watermark-pdf"
+        "vi": "them-watermark-pdf",
+        "ru": "vodnoy-znak-pdf",
+        "ja": "pdf-sukashi"
       },
       "titles": {
         "en": "Watermark PDF Free Online — Add Text Stamp, No Upload | PDFree",
@@ -457,7 +551,9 @@
         "de": "Wasserzeichen in PDF Einfügen Online — Kostenlos, Kein Upload | PDFree",
         "fr": "Filigrane PDF en Ligne — Gratuit, Aucun Envoi | PDFree",
         "id": "Tambah Tanda Air PDF Online Gratis — Tanpa Upload | PDFree",
-        "vi": "Thêm Watermark PDF Trực Tuyến Miễn Phí — Không Tải Lên | PDFree"
+        "vi": "Thêm Watermark PDF Trực Tuyến Miễn Phí — Không Tải Lên | PDFree",
+        "ru": "Добавить водяной знак в PDF бесплатно — текстовый штамп, без загрузки | PDFree",
+        "ja": "PDFに透かしを追加 無料 — テキスト透かし、アップロード不要 | PDFree"
       },
       "descs": {
         "en": "Add custom text watermarks to every PDF page. 100% private — processed locally, no uploads.",
@@ -466,7 +562,9 @@
         "de": "Text-Wasserzeichen in PDF einfügen. Vollständig privat — im Browser verarbeitet, kein Upload. Kostenlos, für immer.",
         "fr": "Ajouter un filigrane texte à un PDF gratuitement en ligne. Diagonal ou en mosaïque. 100 % privé — aucun envoi, sans inscription.",
         "id": "Tambahkan tanda air teks ke setiap halaman PDF. 100% pribadi — diproses lokal, tanpa upload.",
-        "vi": "Thêm watermark văn bản vào mọi trang PDF. 100% riêng tư — xử lý cục bộ, không tải lên."
+        "vi": "Thêm watermark văn bản vào mọi trang PDF. 100% riêng tư — xử lý cục bộ, không tải lên.",
+        "ru": "Добавляйте текстовые водяные знаки на каждую страницу PDF. 100% конфиденциально — локальная обработка, без загрузки.",
+        "ja": "すべてのPDFページにテキスト透かしを追加します。100%プライベート — ローカルで処理、アップロード不要。"
       },
       "navLabels": {
         "en": "Watermark",
@@ -475,7 +573,9 @@
         "de": "Wasserzeichen",
         "fr": "Filigrane",
         "id": "Tanda Air",
-        "vi": "Watermark"
+        "vi": "Watermark",
+        "ru": "Водяной знак",
+        "ja": "透かし"
       },
       "cardNames": {
         "en": "Watermark",
@@ -484,7 +584,9 @@
         "de": "Wasserzeichen",
         "fr": "Filigrane PDF",
         "id": "Tanda Air PDF",
-        "vi": "Thêm Watermark"
+        "vi": "Thêm Watermark",
+        "ru": "Водяной знак PDF",
+        "ja": "透かし追加"
       },
       "cardDescs": {
         "en": "Stamp text on every page — diagonal or tiled",
@@ -493,7 +595,9 @@
         "de": "Text auf jeder Seite stempeln — diagonal oder gekachelt",
         "fr": "Tamponner du texte sur chaque page — diagonal ou en mosaïque",
         "id": "Cetak teks di setiap halaman — diagonal atau berulang",
-        "vi": "Đóng dấu văn bản trên mỗi trang — chéo hoặc lưới"
+        "vi": "Đóng dấu văn bản trên mỗi trang — chéo hoặc lưới",
+        "ru": "Ставьте текстовый штамп на каждой странице — диагонально или плиткой",
+        "ja": "すべてのページにテキストを押す — 斜めまたはタイル状"
       },
       "breadcrumb": {
         "en": "Watermark PDF",
@@ -502,7 +606,9 @@
         "de": "Wasserzeichen PDF",
         "fr": "Filigrane PDF",
         "id": "Tanda Air PDF",
-        "vi": "Watermark PDF"
+        "vi": "Watermark PDF",
+        "ru": "Водяной знак PDF",
+        "ja": "透かしPDF"
       },
       "metaDescs": {
         "en": "Watermark a PDF free online — add a text stamp (DRAFT, CONFIDENTIAL, your name) with custom opacity, color, and rotation. No upload, no signup. Free forever.",
@@ -511,7 +617,9 @@
         "de": "Wasserzeichen kostenlos in PDF einfügen — Text, Stempel oder Firmenname mit einstellbarer Deckkraft, Farbe und Winkel. Kein Upload, keine Registrierung. Im Browser, 100 % privat.",
         "fr": "Ajouter un filigrane texte à un PDF — opacité et angle personnalisés, tampon CONFIDENTIEL ou BROUILLON. 100 % privé — aucun envoi, aucun serveur. Sans inscription.",
         "id": "Tambahkan tanda air teks ke PDF gratis online — teks DRAFT, RAHASIA, atau nama Anda dengan opasitas, warna, dan rotasi kustom. Tanpa upload, tanpa daftar. Gratis selamanya.",
-        "vi": "Thêm watermark văn bản vào PDF miễn phí trực tuyến — DRAFT, BÍ MẬT, hoặc tên của bạn với độ mờ, màu sắc và góc tùy chỉnh. Không tải lên, không đăng ký. Miễn phí mãi mãi."
+        "vi": "Thêm watermark văn bản vào PDF miễn phí trực tuyến — DRAFT, BÍ MẬT, hoặc tên của bạn với độ mờ, màu sắc và góc tùy chỉnh. Không tải lên, không đăng ký. Miễn phí mãi mãi.",
+        "ru": "Добавьте текстовый водяной знак в PDF бесплатно — текст «ЧЕРНОВИК», «КОНФИДЕНЦИАЛЬНО» или ваше имя с настройкой прозрачности, цвета и угла. Без загрузки, без регистрации.",
+        "ja": "PDFに透かしを無料で追加 — 「下書き」「社外秘」またはあなたの名前、透明度・色・角度をカスタマイズ可能。アップロード不要、登録不要。"
       },
       "ogTitles": {
         "en": "Watermark PDF Free — Add Text Stamp, Custom Opacity, No Upload",
@@ -520,7 +628,9 @@
         "de": "Wasserzeichen PDF kostenlos — Text-Stempel, Deckkraft, kein Upload",
         "fr": "Filigrane PDF en Ligne — Gratuit, Aucun Envoi | PDFree",
         "id": "Tambah Tanda Air PDF Gratis — Teks Kustom, Opasitas, Tanpa Upload",
-        "vi": "Thêm Watermark PDF Miễn Phí — Văn Bản Tùy Chỉnh, Không Tải Lên"
+        "vi": "Thêm Watermark PDF Miễn Phí — Văn Bản Tùy Chỉnh, Không Tải Lên",
+        "ru": "Добавить водяной знак в PDF бесплатно — пользовательский текст, прозрачность, без загрузки",
+        "ja": "PDF透かし 無料 — テキストスタンプ、カスタム透明度、アップロード不要"
       },
       "ogDescs": {
         "en": "Add a text watermark or stamp to any PDF. Custom opacity, color, rotation — processed in your browser, nothing uploaded. Free forever.",
@@ -529,7 +639,9 @@
         "de": "Text-Wasserzeichen in PDF einfügen. Vollständig privat — im Browser verarbeitet, kein Upload. Kostenlos, für immer.",
         "fr": "Ajouter un filigrane texte à un PDF gratuitement en ligne. Diagonal ou en mosaïque. 100 % privé — aucun envoi, sans inscription.",
         "id": "Tambahkan tanda air teks atau stempel ke PDF mana pun. Opasitas, warna, rotasi kustom — diproses di browser, tidak ada yang diunggah. Gratis selamanya.",
-        "vi": "Thêm watermark văn bản hoặc dấu vào bất kỳ PDF nào. Độ mờ, màu sắc, góc tùy chỉnh — xử lý trong trình duyệt, không có gì được tải lên. Miễn phí mãi mãi."
+        "vi": "Thêm watermark văn bản hoặc dấu vào bất kỳ PDF nào. Độ mờ, màu sắc, góc tùy chỉnh — xử lý trong trình duyệt, không có gì được tải lên. Miễn phí mãi mãi.",
+        "ru": "Добавляйте текстовый водяной знак или штамп в любой PDF. Прозрачность, цвет, угол — обработка в браузере, ничего не загружается. Бесплатно.",
+        "ja": "任意のPDFにテキスト透かしやスタンプを追加します。透明度・色・角度をカスタマイズ — ブラウザ内で処理、アップロードなし。永久無料。"
       },
       "keywords": {
         "en": "watermark pdf, add watermark to pdf, pdf watermark online free, text watermark pdf, confidential watermark"
@@ -546,7 +658,9 @@
         "de": "pdf-schuetzen",
         "fr": "proteger-pdf",
         "id": "lindungi-pdf",
-        "vi": "bao-ve-pdf"
+        "vi": "bao-ve-pdf",
+        "ru": "zaschitit-pdf",
+        "ja": "pdf-password"
       },
       "titles": {
         "en": "Protect PDF with Password — AES-256, No Upload | PDFree",
@@ -555,7 +669,9 @@
         "de": "PDF Schützen — AES-256 Verschlüsselung, Kein Upload | PDFree",
         "fr": "Protéger PDF en Ligne — Chiffrement AES-256, Aucun Envoi | PDFree",
         "id": "Lindungi PDF dengan Kata Sandi — AES-256, Tanpa Upload | PDFree",
-        "vi": "Bảo Vệ PDF bằng Mật Khẩu — AES-256, Không Tải Lên | PDFree"
+        "vi": "Bảo Vệ PDF bằng Mật Khẩu — AES-256, Không Tải Lên | PDFree",
+        "ru": "Защитить PDF паролем — шифрование AES-256, без загрузки | PDFree",
+        "ja": "PDFにパスワードをかける — AES-256、アップロード不要 | PDFree"
       },
       "descs": {
         "en": "Add password and restrict permissions. AES-256 encrypted in your browser — files never sent to a server.",
@@ -564,7 +680,9 @@
         "de": "PDF mit AES-256-Passwort schützen. Dateien bleiben auf deinem Gerät — werden nie hochgeladen. Kostenlos, ohne Registrierung.",
         "fr": "Protéger un PDF avec un mot de passe gratuitement en ligne. Chiffrement AES-256. 100 % privé — aucun envoi, sans inscription.",
         "id": "Tambahkan kata sandi dan batasi izin. Terenkripsi AES-256 di browser — file tidak pernah dikirim ke server.",
-        "vi": "Thêm mật khẩu và giới hạn quyền. Mã hóa AES-256 trong trình duyệt — file không bao giờ được gửi đến server."
+        "vi": "Thêm mật khẩu và giới hạn quyền. Mã hóa AES-256 trong trình duyệt — file không bao giờ được gửi đến server.",
+        "ru": "Добавляйте пароль и ограничивайте права. AES-256 шифрование в браузере — файлы никогда не отправляются на сервер.",
+        "ja": "パスワードを追加してアクセス権を制限します。AES-256でブラウザ内で暗号化 — ファイルはサーバーに送られません。"
       },
       "navLabels": {
         "en": "Protect",
@@ -573,7 +691,9 @@
         "de": "Schützen",
         "fr": "Protéger",
         "id": "Lindungi",
-        "vi": "Bảo Vệ"
+        "vi": "Bảo Vệ",
+        "ru": "Защитить",
+        "ja": "保護"
       },
       "cardNames": {
         "en": "Protect PDF",
@@ -582,7 +702,9 @@
         "de": "PDF Schützen",
         "fr": "Protéger PDF",
         "id": "Lindungi PDF",
-        "vi": "Bảo Vệ PDF"
+        "vi": "Bảo Vệ PDF",
+        "ru": "Защитить PDF",
+        "ja": "PDFを保護"
       },
       "cardDescs": {
         "en": "AES-256 password & permissions — 100% private",
@@ -591,7 +713,9 @@
         "de": "AES-256-Passwort und Berechtigungen — 100 % privat",
         "fr": "Mot de passe AES-256 et permissions — 100 % privé",
         "id": "Kata sandi AES-256 & izin — 100% pribadi",
-        "vi": "Mật khẩu AES-256 & quyền — 100% riêng tư"
+        "vi": "Mật khẩu AES-256 & quyền — 100% riêng tư",
+        "ru": "Пароль AES-256 и права — 100% конфиденциально",
+        "ja": "AES-256パスワード & アクセス権 — 100%プライベート"
       },
       "breadcrumb": {
         "en": "Protect PDF",
@@ -600,7 +724,9 @@
         "de": "PDF Schützen",
         "fr": "Protéger PDF",
         "id": "Lindungi PDF",
-        "vi": "Bảo Vệ PDF"
+        "vi": "Bảo Vệ PDF",
+        "ru": "Защитить PDF",
+        "ja": "PDFを保護"
       },
       "metaDescs": {
         "en": "Password-protect your PDF with AES-256 encryption. Files stay on your device — never uploaded to any server. Add permissions too. Free, no signup required.",
@@ -609,7 +735,9 @@
         "de": "PDF mit AES-256-Passwort schützen ohne Upload. Dateien bleiben auf deinem Gerät — werden nie hochgeladen. Berechtigungen einschränken. Kostenlos, ohne Registrierung.",
         "fr": "Protéger un PDF avec un mot de passe AES-256 sans envoi. Tout traité dans votre navigateur — aucun fichier transmis. Restreignez les permissions. Gratuit.",
         "id": "Lindungi PDF dengan kata sandi AES-256 tanpa upload. File tetap di perangkat — tidak pernah diunggah ke server mana pun. Tambahkan izin juga. Gratis, tanpa daftar.",
-        "vi": "Bảo vệ PDF bằng mật khẩu AES-256 mà không cần tải lên. File ở lại thiết bị — không bao giờ được gửi đến bất kỳ server nào. Thêm quyền cũng được. Miễn phí, không đăng ký."
+        "vi": "Bảo vệ PDF bằng mật khẩu AES-256 mà không cần tải lên. File ở lại thiết bị — không bao giờ được gửi đến bất kỳ server nào. Thêm quyền cũng được. Miễn phí, không đăng ký.",
+        "ru": "Защитите PDF паролем AES-256 без загрузки. Файлы остаются на устройстве — никогда не отправляются на сервер. Ограничьте права. Бесплатно, без регистрации.",
+        "ja": "PDFをアップロードせずにAES-256パスワードで保護します。ファイルはデバイスに残ります — どのサーバーにも送信されません。アクセス権も制限できます。無料、登録不要。"
       },
       "ogTitles": {
         "en": "Encrypt PDF with AES-256 — Your Password Never Reaches Any Server",
@@ -618,7 +746,9 @@
         "de": "PDF Schützen — AES-256 Verschlüsselung, Kein Upload | PDFree",
         "fr": "Protéger PDF en Ligne — Chiffrement AES-256, Aucun Envoi | PDFree",
         "id": "Enkripsi PDF dengan AES-256 — Kata Sandi Tidak Pernah ke Server",
-        "vi": "Mã Hóa PDF bằng AES-256 — Mật Khẩu Không Bao Giờ Đến Server"
+        "vi": "Mã Hóa PDF bằng AES-256 — Mật Khẩu Không Bao Giờ Đến Server",
+        "ru": "Зашифровать PDF с AES-256 — ваш пароль никогда не покидает устройство",
+        "ja": "AES-256でPDFを暗号化 — パスワードはサーバーに届きません"
       },
       "ogDescs": {
         "en": "Password-protect your PDF with AES-256 encryption. Files never uploaded. Free, no signup.",
@@ -627,7 +757,9 @@
         "de": "PDF mit AES-256-Passwort schützen. Dateien bleiben auf deinem Gerät — werden nie hochgeladen. Kostenlos, ohne Registrierung.",
         "fr": "Protéger un PDF avec un mot de passe gratuitement en ligne. Chiffrement AES-256. 100 % privé — aucun envoi, sans inscription.",
         "id": "Lindungi PDF dengan enkripsi AES-256. File tidak pernah diunggah. Gratis, tanpa daftar.",
-        "vi": "Bảo vệ PDF bằng mã hóa AES-256. File không bao giờ được tải lên. Miễn phí, không đăng ký."
+        "vi": "Bảo vệ PDF bằng mã hóa AES-256. File không bao giờ được tải lên. Miễn phí, không đăng ký.",
+        "ru": "Защитите PDF паролем AES-256. Файлы никогда не загружаются. Бесплатно, без регистрации.",
+        "ja": "AES-256暗号化でPDFをパスワード保護します。ファイルはアップロードされません。無料、登録不要。"
       },
       "keywords": {
         "en": "protect pdf, password protect pdf, encrypt pdf, add password to pdf, pdf password free, pdf encryption"
@@ -840,7 +972,9 @@
         "de": "seiten-extrahieren",
         "fr": "extraire-pdf",
         "id": "ekstrak-pdf",
-        "vi": "trich-xuat-pdf"
+        "vi": "trich-xuat-pdf",
+        "ru": "izvlech-stranitsy-pdf",
+        "ja": "pdf-chushutsu"
       },
       "titles": {
         "en": "Extract PDF Pages Online — Free, No Upload | PDFree",
@@ -849,7 +983,9 @@
         "de": "Seiten aus PDF Extrahieren — Kostenlos, Kein Upload | PDFree",
         "fr": "Extraire des Pages PDF en Ligne — Gratuit, Aucun Envoi | PDFree",
         "id": "Ekstrak Halaman PDF Online — Gratis, Tanpa Upload | PDFree",
-        "vi": "Trích Xuất Trang PDF Trực Tuyến — Miễn Phí, Không Tải Lên | PDFree"
+        "vi": "Trích Xuất Trang PDF Trực Tuyến — Miễn Phí, Không Tải Lên | PDFree",
+        "ru": "Извлечь страницы из PDF — бесплатно, без загрузки | PDFree",
+        "ja": "PDFのページを抽出 — 無料、アップロード不要 | PDFree"
       },
       "descs": {
         "en": "Extract specific pages from a PDF. 100% private — processed locally, no uploads, no signup.",
@@ -858,7 +994,9 @@
         "de": "Bestimmte Seiten aus einem PDF extrahieren. Vollständige Browserverarbeitung — Dateien verlassen dein Gerät nie. Kostenlos, privat.",
         "fr": "Extraire des pages d'un PDF gratuitement en ligne. Pages individuelles ou plages de pages. 100 % privé — aucun envoi, sans inscription.",
         "id": "Ekstrak halaman tertentu dari PDF. 100% pribadi — diproses lokal, tanpa upload, tanpa daftar.",
-        "vi": "Trích xuất các trang cụ thể từ PDF. 100% riêng tư — xử lý cục bộ, không tải lên, không đăng ký."
+        "vi": "Trích xuất các trang cụ thể từ PDF. 100% riêng tư — xử lý cục bộ, không tải lên, không đăng ký.",
+        "ru": "Извлекайте конкретные страницы из PDF. 100% конфиденциально — локальная обработка, без загрузки.",
+        "ja": "PDFから特定のページを抽出します。100%プライベート — ローカルで処理、アップロード不要。"
       },
       "navLabels": {
         "en": "Extract",
@@ -867,7 +1005,9 @@
         "de": "Extrahieren",
         "fr": "Extraire",
         "id": "Ekstrak",
-        "vi": "Trích Xuất"
+        "vi": "Trích Xuất",
+        "ru": "Извлечь",
+        "ja": "抽出"
       },
       "cardNames": {
         "en": "Extract Pages",
@@ -876,7 +1016,9 @@
         "de": "Seiten Extrahieren",
         "fr": "Extraire Pages",
         "id": "Ekstrak Halaman",
-        "vi": "Trích Xuất Trang"
+        "vi": "Trích Xuất Trang",
+        "ru": "Извлечь страницы",
+        "ja": "ページを抽出"
       },
       "cardDescs": {
         "en": "Pull selected pages into a new PDF",
@@ -885,7 +1027,9 @@
         "de": "Ausgewählte Seiten in ein neues PDF extrahieren",
         "fr": "Extraire des pages sélectionnées dans un nouveau PDF",
         "id": "Ambil halaman terpilih ke PDF baru",
-        "vi": "Lấy các trang được chọn vào PDF mới"
+        "vi": "Lấy các trang được chọn vào PDF mới",
+        "ru": "Извлекайте выбранные страницы в новый PDF",
+        "ja": "選択したページを新しいPDFにまとめる"
       },
       "breadcrumb": {
         "en": "Extract Pages PDF",
@@ -894,7 +1038,9 @@
         "de": "Seiten Extrahieren",
         "fr": "Extraire PDF",
         "id": "Ekstrak Halaman PDF",
-        "vi": "Trích Xuất Trang PDF"
+        "vi": "Trích Xuất Trang PDF",
+        "ru": "Извлечь страницы PDF",
+        "ja": "PDFページ抽出"
       },
       "metaDescs": {
         "en": "Extract specific pages from any PDF — pick individual pages or ranges. All processing in your browser, files never leave your device. Free, private, no signup.",
@@ -903,7 +1049,9 @@
         "de": "Bestimmte Seiten aus einem PDF extrahieren — Einzelseiten oder Seitenbereiche. 100 % privat — alles im Browser, keine Uploads. Kostenlos, ohne Registrierung.",
         "fr": "Extraire des pages d'un PDF en ligne — pages individuelles ou plages de pages. 100 % privé — aucun envoi, sans inscription. Résultat immédiat. Gratuit.",
         "id": "Ekstrak halaman tertentu dari PDF mana pun — pilih halaman individual atau rentang. Semua diproses di browser, file tidak pernah meninggalkan perangkat. Gratis, pribadi, tanpa daftar.",
-        "vi": "Trích xuất các trang cụ thể từ bất kỳ PDF nào — chọn trang riêng lẻ hoặc phạm vi. Tất cả xử lý trong trình duyệt, file không bao giờ rời thiết bị. Miễn phí, riêng tư, không đăng ký."
+        "vi": "Trích xuất các trang cụ thể từ bất kỳ PDF nào — chọn trang riêng lẻ hoặc phạm vi. Tất cả xử lý trong trình duyệt, file không bao giờ rời thiết bị. Miễn phí, riêng tư, không đăng ký.",
+        "ru": "Извлекайте конкретные страницы из любого PDF — выбирайте отдельные страницы или диапазоны. Всё обрабатывается в браузере, файлы не покидают устройство. Бесплатно, конфиденциально.",
+        "ja": "任意のPDFから特定のページを抽出 — 個別ページや範囲を選択。すべてブラウザ内で処理、ファイルはデバイスから出ません。無料、プライベート、登録不要。"
       },
       "ogTitles": {
         "en": "Extract Any Pages from PDF — Precise Range, No Upload, Free",
@@ -912,7 +1060,9 @@
         "de": "Seiten aus PDF Extrahieren — Kostenlos, Kein Upload | PDFree",
         "fr": "Extraire des Pages PDF en Ligne — Gratuit, Aucun Envoi | PDFree",
         "id": "Ekstrak Halaman PDF — Rentang Tepat, Tanpa Upload, Gratis",
-        "vi": "Trích Xuất Trang PDF — Phạm Vi Chính Xác, Không Tải Lên, Miễn Phí"
+        "vi": "Trích Xuất Trang PDF — Phạm Vi Chính Xác, Không Tải Lên, Miễn Phí",
+        "ru": "Извлечь страницы из PDF — точный диапазон, без загрузки, бесплатно",
+        "ja": "PDFからページを抽出 — 正確な範囲指定、アップロード不要、無料"
       },
       "ogDescs": {
         "en": "Extract specific pages from any PDF. Processed in your browser — files never leave your device. Free.",
@@ -921,7 +1071,9 @@
         "de": "Bestimmte Seiten aus einem PDF extrahieren. Vollständige Browserverarbeitung — Dateien verlassen dein Gerät nie. Kostenlos, privat.",
         "fr": "Extraire des pages d'un PDF. Traitement dans le navigateur — aucun fichier envoyé. Gratuit.",
         "id": "Ekstrak halaman tertentu dari PDF mana pun. Diproses di browser — file tidak pernah meninggalkan perangkat Anda. Gratis.",
-        "vi": "Trích xuất các trang cụ thể từ bất kỳ PDF nào. Xử lý trong trình duyệt — file không bao giờ rời thiết bị của bạn. Miễn phí."
+        "vi": "Trích xuất các trang cụ thể từ bất kỳ PDF nào. Xử lý trong trình duyệt — file không bao giờ rời thiết bị của bạn. Miễn phí.",
+        "ru": "Извлекайте конкретные страницы из любого PDF. Обрабатывается в браузере — файлы не покидают устройство. Бесплатно.",
+        "ja": "任意のPDFから特定のページを抽出します。ブラウザ内で処理 — ファイルはデバイスから出ません。無料。"
       },
       "keywords": {
         "en": "extract pages from pdf, pdf page extractor, extract pdf pages online free, select pages from pdf"
@@ -1036,7 +1188,9 @@
         "de": "jpg-zu-pdf",
         "fr": "jpg-en-pdf",
         "id": "jpg-ke-pdf",
-        "vi": "jpg-sang-pdf"
+        "vi": "jpg-sang-pdf",
+        "ru": "jpg-v-pdf",
+        "ja": "jpg-pdf-henkan"
       },
       "titles": {
         "en": "JPG to PDF Free — Convert Images to PDF, No Upload | PDFree",
@@ -1045,7 +1199,9 @@
         "de": "JPG zu PDF Kostenlos — Bilder Umwandeln, Kein Upload | PDFree",
         "fr": "JPG en PDF Gratuit — Convertir Images, Aucun Envoi | PDFree",
         "id": "JPG ke PDF Gratis — Konversi Gambar ke PDF Tanpa Upload | PDFree",
-        "vi": "JPG sang PDF Miễn Phí — Chuyển Ảnh sang PDF Không Tải Lên | PDFree"
+        "vi": "JPG sang PDF Miễn Phí — Chuyển Ảnh sang PDF Không Tải Lên | PDFree",
+        "ru": "JPG в PDF бесплатно — конвертировать изображения в PDF, без загрузки | PDFree",
+        "ja": "JPGをPDFに変換 無料 — 画像をPDFに変換、アップロード不要 | PDFree"
       },
       "descs": {
         "en": "Convert images to PDF instantly. Auto EXIF rotation. 100% private — processed locally, no uploads.",
@@ -1054,7 +1210,9 @@
         "de": "JPG-Bilder in PDF umwandeln. 100 % privat — im Browser verarbeitet, kein Upload. Kostenlos, keine Limits.",
         "fr": "Convertir des images JPG en PDF gratuitement en ligne. Plusieurs images en un seul PDF. 100 % privé — aucun envoi, sans inscription.",
         "id": "Konversi gambar ke PDF secara instan. Koreksi rotasi EXIF otomatis. 100% pribadi — diproses lokal, tanpa upload.",
-        "vi": "Chuyển đổi ảnh sang PDF tức thì. Tự động sửa xoay EXIF. 100% riêng tư — xử lý cục bộ, không tải lên."
+        "vi": "Chuyển đổi ảnh sang PDF tức thì. Tự động sửa xoay EXIF. 100% riêng tư — xử lý cục bộ, không tải lên.",
+        "ru": "Конвертируйте изображения в PDF мгновенно. Автоматическое исправление ориентации EXIF. 100% конфиденциально — локальная обработка.",
+        "ja": "画像を瞬時にPDFに変換します。EXIFの向きを自動補正。100%プライベート — ローカルで処理、アップロード不要。"
       },
       "navLabels": {
         "en": "JPG→PDF",
@@ -1063,7 +1221,9 @@
         "de": "JPG→PDF",
         "fr": "JPG→PDF",
         "id": "JPG→PDF",
-        "vi": "JPG→PDF"
+        "vi": "JPG→PDF",
+        "ru": "JPG→PDF",
+        "ja": "JPG→PDF"
       },
       "cardNames": {
         "en": "JPG to PDF",
@@ -1072,7 +1232,9 @@
         "de": "JPG zu PDF",
         "fr": "JPG en PDF",
         "id": "JPG ke PDF",
-        "vi": "JPG sang PDF"
+        "vi": "JPG sang PDF",
+        "ru": "JPG в PDF",
+        "ja": "JPGをPDFに"
       },
       "cardDescs": {
         "en": "Convert images to PDF instantly",
@@ -1081,7 +1243,9 @@
         "de": "Bilder sofort in PDF umwandeln",
         "fr": "Convertir des images en PDF instantanément",
         "id": "Konversi gambar ke PDF secara instan",
-        "vi": "Chuyển đổi ảnh sang PDF tức thì"
+        "vi": "Chuyển đổi ảnh sang PDF tức thì",
+        "ru": "Конвертируйте изображения в PDF мгновенно",
+        "ja": "画像を瞬時にPDFに変換する"
       },
       "breadcrumb": {
         "en": "JPG to PDF",
@@ -1090,7 +1254,9 @@
         "de": "JPG zu PDF",
         "fr": "JPG en PDF",
         "id": "JPG ke PDF",
-        "vi": "JPG sang PDF"
+        "vi": "JPG sang PDF",
+        "ru": "JPG в PDF",
+        "ja": "JPGをPDFに"
       },
       "metaDescs": {
         "en": "Convert JPG, PNG and WebP images to PDF free — no upload, processed in your browser. Combine multiple photos into one PDF instantly. EXIF rotation auto-fixed.",
@@ -1099,7 +1265,9 @@
         "de": "JPG-, PNG- und WebP-Bilder in PDF umwandeln — 100 % privat, kein Upload. Mehrere Bilder zu einem PDF kombinieren. EXIF-Rotation automatisch korrigiert. Kostenlos.",
         "fr": "Convertir des images JPG, PNG et WebP en PDF gratuitement — sans envoi, traitement local. Plusieurs images en un PDF. Rotation EXIF automatique. Sans inscription.",
         "id": "Konversi gambar JPG, PNG dan WebP ke PDF gratis — tanpa upload, diproses di browser. Gabungkan beberapa foto menjadi satu PDF secara instan. Rotasi EXIF otomatis diperbaiki.",
-        "vi": "Chuyển đổi ảnh JPG, PNG và WebP sang PDF miễn phí — không tải lên, xử lý trong trình duyệt. Kết hợp nhiều ảnh thành một PDF ngay lập tức. Tự động sửa xoay EXIF."
+        "vi": "Chuyển đổi ảnh JPG, PNG và WebP sang PDF miễn phí — không tải lên, xử lý trong trình duyệt. Kết hợp nhiều ảnh thành một PDF ngay lập tức. Tự động sửa xoay EXIF.",
+        "ru": "Конвертируйте JPG, PNG и WebP в PDF бесплатно — без загрузки, обработка в браузере. Объединяйте несколько фото в один PDF. Автоматическое исправление EXIF.",
+        "ja": "JPG、PNG、WebP画像を無料でPDFに変換 — アップロード不要、ブラウザ内で処理。複数の画像を1つのPDFにまとめられます。EXIFの向きを自動補正。"
       },
       "ogTitles": {
         "en": "JPG to PDF — Convert Multiple Photos into One File, No Upload",
@@ -1108,7 +1276,9 @@
         "de": "JPG in PDF Umwandeln — Kostenlos, Kein Upload | PDFree",
         "fr": "JPG en PDF en Ligne — Gratuit, Aucun Envoi | PDFree",
         "id": "JPG ke PDF — Konversi Beberapa Foto ke Satu File, Tanpa Upload",
-        "vi": "JPG sang PDF — Chuyển Nhiều Ảnh Thành Một File, Không Tải Lên"
+        "vi": "JPG sang PDF — Chuyển Nhiều Ảnh Thành Một File, Không Tải Lên",
+        "ru": "JPG в PDF — конвертировать несколько фото в один файл, без загрузки",
+        "ja": "JPGをPDFに変換 — 複数の写真を1つのファイルに、アップロード不要"
       },
       "ogDescs": {
         "en": "Convert JPG to PDF instantly. Files processed in your browser — never uploaded. Free, no limits.",
@@ -1117,7 +1287,9 @@
         "de": "JPG-Bilder in PDF umwandeln. 100 % privat — im Browser verarbeitet, kein Upload. Kostenlos, keine Limits.",
         "fr": "Convertir des images JPG en PDF gratuitement en ligne. Plusieurs images en un seul PDF. 100 % privé — aucun envoi, sans inscription.",
         "id": "Konversi JPG ke PDF secara instan. File diproses di browser — tidak pernah diunggah. Gratis, tanpa batas.",
-        "vi": "Chuyển đổi JPG sang PDF tức thì. File xử lý trong trình duyệt — không bao giờ được tải lên. Miễn phí, không giới hạn."
+        "vi": "Chuyển đổi JPG sang PDF tức thì. File xử lý trong trình duyệt — không bao giờ được tải lên. Miễn phí, không giới hạn.",
+        "ru": "Конвертируйте JPG в PDF мгновенно. Файлы обрабатываются в браузере — никогда не загружаются. Бесплатно, без ограничений.",
+        "ja": "JPGを瞬時にPDFに変換します。ファイルはブラウザ内で処理 — アップロードされません。無料、制限なし。"
       },
       "keywords": {
         "en": "jpg to pdf, convert jpg to pdf, image to pdf, jpg to pdf free online, convert images to pdf, png to pdf"
@@ -1134,7 +1306,9 @@
         "de": "pdf-zu-jpg",
         "fr": "pdf-en-jpg",
         "id": "pdf-ke-jpg",
-        "vi": "pdf-sang-jpg"
+        "vi": "pdf-sang-jpg",
+        "ru": "pdf-v-jpg",
+        "ja": "pdf-jpg-henkan"
       },
       "titles": {
         "en": "Convert PDF to JPG — Free, No Upload, 300 DPI | PDFree",
@@ -1143,7 +1317,9 @@
         "de": "PDF zu JPG Kostenlos — Seiten als Bilder Exportieren | PDFree",
         "fr": "PDF en JPG Gratuit — Convertir Pages en Images | PDFree",
         "id": "Konversi PDF ke JPG — Gratis, Tanpa Upload, 300 DPI | PDFree",
-        "vi": "Chuyển Đổi PDF sang JPG — Miễn Phí, Không Tải Lên, 300 DPI | PDFree"
+        "vi": "Chuyển Đổi PDF sang JPG — Miễn Phí, Không Tải Lên, 300 DPI | PDFree",
+        "ru": "Конвертировать PDF в JPG — бесплатно, без загрузки, 300 DPI | PDFree",
+        "ja": "PDFをJPGに変換 — 無料、アップロード不要、300 DPI | PDFree"
       },
       "descs": {
         "en": "Extract PDF pages as high-quality JPG or PNG images. 100% private — processed locally, no uploads.",
@@ -1152,7 +1328,9 @@
         "de": "PDF-Seiten in hochwertige JPG-Bilder umwandeln. Im Browser verarbeitet — kein Upload, keine Registrierung. Kostenlos.",
         "fr": "Convertir un PDF en images JPG gratuitement en ligne. Toutes les pages ou une sélection. 100 % privé — aucun envoi, sans inscription.",
         "id": "Ekstrak halaman PDF sebagai gambar JPG atau PNG berkualitas tinggi. 100% pribadi — diproses lokal, tanpa upload.",
-        "vi": "Trích xuất trang PDF dưới dạng ảnh JPG hoặc PNG chất lượng cao. 100% riêng tư — xử lý cục bộ, không tải lên."
+        "vi": "Trích xuất trang PDF dưới dạng ảnh JPG hoặc PNG chất lượng cao. 100% riêng tư — xử lý cục bộ, không tải lên.",
+        "ru": "Извлекайте страницы PDF как высококачественные изображения JPG или PNG. 100% конфиденциально — локальная обработка, без загрузки.",
+        "ja": "PDFのページを高品質なJPGまたはPNG画像として書き出します。100%プライベート — ローカルで処理、アップロード不要。"
       },
       "navLabels": {
         "en": "PDF→JPG",
@@ -1161,7 +1339,9 @@
         "de": "PDF→JPG",
         "fr": "PDF→JPG",
         "id": "PDF→JPG",
-        "vi": "PDF→JPG"
+        "vi": "PDF→JPG",
+        "ru": "PDF→JPG",
+        "ja": "PDF→JPG"
       },
       "cardNames": {
         "en": "PDF to JPG",
@@ -1170,7 +1350,9 @@
         "de": "PDF zu JPG",
         "fr": "PDF en JPG",
         "id": "PDF ke JPG",
-        "vi": "PDF sang JPG"
+        "vi": "PDF sang JPG",
+        "ru": "PDF в JPG",
+        "ja": "PDFをJPGに"
       },
       "cardDescs": {
         "en": "Extract pages as high-quality images",
@@ -1179,7 +1361,9 @@
         "de": "Seiten als hochwertige Bilder exportieren",
         "fr": "Exporter les pages en images haute qualité",
         "id": "Ekstrak halaman sebagai gambar berkualitas tinggi",
-        "vi": "Trích xuất trang dưới dạng ảnh chất lượng cao"
+        "vi": "Trích xuất trang dưới dạng ảnh chất lượng cao",
+        "ru": "Извлекайте страницы как высококачественные изображения",
+        "ja": "ページを高品質な画像として書き出す"
       },
       "breadcrumb": {
         "en": "PDF to JPG",
@@ -1188,7 +1372,9 @@
         "de": "PDF zu JPG",
         "fr": "PDF en JPG",
         "id": "PDF ke JPG",
-        "vi": "PDF sang JPG"
+        "vi": "PDF sang JPG",
+        "ru": "PDF в JPG",
+        "ja": "PDFをJPGに"
       },
       "metaDescs": {
         "en": "Convert PDF pages to JPG or PNG in your browser — no upload ever. Choose 72, 150, or 300 DPI. Multiple pages export as a ZIP. Free, no account required.",
@@ -1197,7 +1383,9 @@
         "de": "PDF-Seiten in hochwertige JPG- oder PNG-Bilder umwandeln — kein Upload, alles im Browser. Auflösung wählen. Alle Seiten oder nur eine Auswahl. Kostenlos.",
         "fr": "Convertir des pages PDF en images JPG ou PNG haute qualité — sans envoi, traitement local. Choisissez la résolution. Toutes les pages ou une sélection. Gratuit.",
         "id": "Konversi halaman PDF ke JPG atau PNG di browser — tidak pernah diunggah. Pilih 72, 150, atau 300 DPI. Beberapa halaman diekspor sebagai ZIP. Gratis, tanpa akun diperlukan.",
-        "vi": "Chuyển đổi trang PDF sang JPG hoặc PNG trong trình duyệt — không bao giờ tải lên. Chọn 72, 150 hoặc 300 DPI. Nhiều trang xuất thành ZIP. Miễn phí, không cần tài khoản."
+        "vi": "Chuyển đổi trang PDF sang JPG hoặc PNG trong trình duyệt — không bao giờ tải lên. Chọn 72, 150 hoặc 300 DPI. Nhiều trang xuất thành ZIP. Miễn phí, không cần tài khoản.",
+        "ru": "Конвертируйте страницы PDF в JPG или PNG в браузере — никогда не загружается. Выберите 72, 150 или 300 DPI. Несколько страниц экспортируются в ZIP. Бесплатно, без аккаунта.",
+        "ja": "PDFページをブラウザ内でJPGまたはPNGに変換 — アップロードなし。72・150・300 DPIから選択。複数ページはZIPで書き出し。無料、アカウント不要。"
       },
       "ogTitles": {
         "en": "Convert PDF to JPG Free — No Upload, 300 DPI Quality",
@@ -1206,7 +1394,9 @@
         "de": "PDF in JPG Umwandeln — Kostenlos, Kein Upload | PDFree",
         "fr": "PDF en JPG en Ligne — Gratuit, Aucun Envoi | PDFree",
         "id": "Konversi PDF ke JPG Gratis — Tanpa Upload, Kualitas 300 DPI",
-        "vi": "Chuyển PDF sang JPG Miễn Phí — Không Tải Lên, Chất Lượng 300 DPI"
+        "vi": "Chuyển PDF sang JPG Miễn Phí — Không Tải Lên, Chất Lượng 300 DPI",
+        "ru": "Конвертировать PDF в JPG бесплатно — без загрузки, качество 300 DPI",
+        "ja": "PDFをJPGに変換 無料 — アップロード不要、300 DPI品質"
       },
       "ogDescs": {
         "en": "Turn any PDF page into a sharp JPG or PNG. Runs in your browser — nothing uploaded. Choose 72, 150, or 300 DPI. Download all pages as ZIP. No account.",
@@ -1215,7 +1405,9 @@
         "de": "PDF-Seiten in hochwertige JPG-Bilder umwandeln. Im Browser verarbeitet — kein Upload, keine Registrierung. Kostenlos.",
         "fr": "Convertir un PDF en images JPG gratuitement en ligne. Toutes les pages ou une sélection. 100 % privé — aucun envoi, sans inscription.",
         "id": "Ubah halaman PDF menjadi JPG atau PNG tajam. Berjalan di browser — tidak ada yang diunggah. Pilih 72, 150, atau 300 DPI. Unduh semua halaman sebagai ZIP. Tanpa akun.",
-        "vi": "Chuyển bất kỳ trang PDF nào thành JPG hoặc PNG sắc nét. Chạy trong trình duyệt — không có gì được tải lên. Chọn 72, 150 hoặc 300 DPI. Tải tất cả trang dưới dạng ZIP. Không cần tài khoản."
+        "vi": "Chuyển bất kỳ trang PDF nào thành JPG hoặc PNG sắc nét. Chạy trong trình duyệt — không có gì được tải lên. Chọn 72, 150 hoặc 300 DPI. Tải tất cả trang dưới dạng ZIP. Không cần tài khoản.",
+        "ru": "Конвертируйте страницы PDF в чёткие JPG или PNG. Работает в браузере — ничего не загружается. Выберите 72, 150 или 300 DPI. Скачайте все страницы в ZIP. Без аккаунта.",
+        "ja": "PDFのページをシャープなJPGまたはPNGに変換します。ブラウザ内で動作 — アップロードなし。72・150・300 DPIから選択。すべてのページをZIPでダウンロード。アカウント不要。"
       },
       "keywords": {
         "en": "pdf to jpg, convert pdf to jpg, pdf to image, export pdf pages as images, pdf to jpg free, pdf to png"
@@ -1428,7 +1620,9 @@
         "fr": "pdf-en-word",
         "pt": "pdf-para-word",
         "id": "pdf-ke-word",
-        "vi": "pdf-sang-word"
+        "vi": "pdf-sang-word",
+        "ru": "pdf-v-word",
+        "ja": "pdf-word-henkan"
       },
       "titles": {
         "en": "Convert PDF to Word Without Uploading — Free & Private | PDFree",
@@ -1437,7 +1631,9 @@
         "fr": "Convertir PDF en Word sans Télécharger — Gratuit & Privé | PDFree",
         "pt": "Converter PDF para Word sem Upload — Grátis & Privado | PDFree",
         "id": "Konversi PDF ke Word Tanpa Upload — Gratis & Pribadi | PDFree",
-        "vi": "Chuyển Đổi PDF sang Word Không Cần Tải Lên — Miễn Phí & Riêng Tư | PDFree"
+        "vi": "Chuyển Đổi PDF sang Word Không Cần Tải Lên — Miễn Phí & Riêng Tư | PDFree",
+        "ru": "Конвертировать PDF в Word без загрузки — бесплатно и приватно | PDFree",
+        "ja": "PDFをWordに変換 アップロード不要 — 無料・プライベート | PDFree"
       },
       "descs": {
         "en": "Convert PDF to editable .docx — runs in your browser, no upload.",
@@ -1446,7 +1642,9 @@
         "fr": "Convertir PDF en .docx éditable — dans votre navigateur, sans envoi.",
         "pt": "Converta PDF para .docx editável — no seu navegador, sem upload.",
         "id": "Konversi PDF ke .docx yang dapat diedit — berjalan di browser, tanpa upload.",
-        "vi": "Chuyển đổi PDF sang .docx có thể chỉnh sửa — chạy trong trình duyệt, không tải lên."
+        "vi": "Chuyển đổi PDF sang .docx có thể chỉnh sửa — chạy trong trình duyệt, không tải lên.",
+        "ru": "Конвертируйте PDF в редактируемый .docx — работает в браузере, без загрузки.",
+        "ja": "PDFを編集可能な.docxに変換 — ブラウザ内で動作、アップロード不要。"
       },
       "navLabels": {
         "en": "PDF→Word",
@@ -1455,7 +1653,9 @@
         "fr": "PDF→Word",
         "pt": "PDF→Word",
         "id": "PDF→Word",
-        "vi": "PDF→Word"
+        "vi": "PDF→Word",
+        "ru": "PDF→Word",
+        "ja": "PDF→Word"
       },
       "cardNames": {
         "en": "PDF to Word",
@@ -1464,7 +1664,9 @@
         "fr": "PDF en Word",
         "pt": "PDF para Word",
         "id": "PDF ke Word",
-        "vi": "PDF sang Word"
+        "vi": "PDF sang Word",
+        "ru": "PDF в Word",
+        "ja": "PDFをWordに"
       },
       "cardDescs": {
         "en": "Convert PDF to editable .docx — no upload, 100% private",
@@ -1473,7 +1675,9 @@
         "fr": "Convertir PDF en .docx éditable — sans envoi, 100 % privé",
         "pt": "Converta PDF para .docx editável — sem upload, 100% privado",
         "id": "Konversi PDF ke .docx yang dapat diedit — tanpa upload, 100% pribadi",
-        "vi": "Chuyển đổi PDF sang .docx có thể chỉnh sửa — không tải lên, 100% riêng tư"
+        "vi": "Chuyển đổi PDF sang .docx có thể chỉnh sửa — không tải lên, 100% riêng tư",
+        "ru": "Конвертируйте PDF в редактируемый .docx — без загрузки, 100% конфиденциально",
+        "ja": "PDFを編集可能な.docxに変換 — アップロード不要、100%プライベート"
       },
       "breadcrumb": {
         "en": "PDF to Word",
@@ -1482,7 +1686,9 @@
         "fr": "PDF en Word",
         "pt": "PDF para Word",
         "id": "PDF ke Word",
-        "vi": "PDF sang Word"
+        "vi": "PDF sang Word",
+        "ru": "PDF в Word",
+        "ja": "PDFをWordに"
       },
       "metaDescs": {
         "en": "Convert PDF to editable Word (.docx) in your browser — nothing uploaded, nothing stored. Tables, RTL text, and 15+ languages supported. Free, no account, works offline.",
@@ -1491,7 +1697,9 @@
         "fr": "Convertissez PDF en Word (.docx) éditable dans votre navigateur — rien n'est envoyé ni stocké. Tableaux, texte RTL et 15+ langues pris en charge. Gratuit, sans compte, fonctionne hors ligne.",
         "pt": "Converta PDF para Word (.docx) editável no seu navegador — sem upload, sem armazenamento. Tabelas, texto RTL e 15+ idiomas. Grátis, sem conta, funciona offline.",
         "id": "Konversi PDF ke Word (.docx) yang dapat diedit di browser — tidak ada yang diunggah, tidak ada yang disimpan. Tabel, teks RTL, dan 15+ bahasa didukung. Gratis, tanpa akun, bekerja offline.",
-        "vi": "Chuyển đổi PDF sang Word (.docx) có thể chỉnh sửa trong trình duyệt — không có gì được tải lên hay lưu trữ. Hỗ trợ bảng, văn bản RTL và 15+ ngôn ngữ. Miễn phí, không cần tài khoản, hoạt động offline."
+        "vi": "Chuyển đổi PDF sang Word (.docx) có thể chỉnh sửa trong trình duyệt — không có gì được tải lên hay lưu trữ. Hỗ trợ bảng, văn bản RTL và 15+ ngôn ngữ. Miễn phí, không cần tài khoản, hoạt động offline.",
+        "ru": "Конвертируйте PDF в редактируемый Word (.docx) прямо в браузере — ничего не загружается и не хранится. Поддержка таблиц, RTL-текста и 15+ языков. Бесплатно, без аккаунта, работает офлайн.",
+        "ja": "PDFをブラウザ内で編集可能なWord(.docx)に変換 — アップロードなし、保存なし。表・RTLテキスト・15以上の言語対応。無料、アカウント不要、オフライン対応。"
       },
       "ogTitles": {
         "en": "Convert PDF to Word Without Uploading — Free & Private | PDFree",
@@ -1500,7 +1708,9 @@
         "fr": "PDF en Word sans Télécharger — Dans votre navigateur, sans serveur | PDFree",
         "pt": "PDF para Word sem Upload — No seu navegador, sem servidor | PDFree",
         "id": "Konversi PDF ke Word Tanpa Upload — Di Browser, Tanpa Server | PDFree",
-        "vi": "Chuyển PDF sang Word Không Tải Lên — Trong Trình Duyệt, Không Server | PDFree"
+        "vi": "Chuyển PDF sang Word Không Tải Lên — Trong Trình Duyệt, Không Server | PDFree",
+        "ru": "Конвертировать PDF в Word без загрузки — в браузере, без сервера | PDFree",
+        "ja": "PDFをWordに変換 アップロードなし — ブラウザ内、サーバーなし | PDFree"
       },
       "ogDescs": {
         "en": "PDF to Word conversion that runs entirely in your browser. No upload, no server, no account. Tables, Arabic, Chinese, and more. 100% private.",
@@ -1509,7 +1719,9 @@
         "fr": "Conversion PDF en Word entièrement dans votre navigateur. Sans envoi, sans serveur, sans compte. Tableaux, arabe, chinois et plus. 100 % privé.",
         "pt": "Conversão de PDF para Word que acontece no seu navegador. Sem upload, sem servidor, sem conta. Tabelas, árabe, chinês e mais. 100% privado.",
         "id": "Konversi PDF ke Word yang berjalan sepenuhnya di browser. Tanpa upload, tanpa server, tanpa akun. Tabel, Arab, Cina, dan lainnya. 100% pribadi.",
-        "vi": "Chuyển đổi PDF sang Word chạy hoàn toàn trong trình duyệt. Không tải lên, không server, không tài khoản. Bảng, Ả Rập, Trung Quốc và nhiều hơn. 100% riêng tư."
+        "vi": "Chuyển đổi PDF sang Word chạy hoàn toàn trong trình duyệt. Không tải lên, không server, không tài khoản. Bảng, Ả Rập, Trung Quốc và nhiều hơn. 100% riêng tư.",
+        "ru": "Конвертация PDF в Word, которая работает полностью в браузере. Без загрузки, без сервера, без аккаунта. Таблицы, арабский, китайский и многое другое. 100% конфиденциально.",
+        "ja": "PDFをWordに変換する処理はすべてブラウザ内で実行されます。アップロードなし、サーバーなし、アカウントなし。表・アラビア語・中国語など対応。100%プライベート。"
       }
     }
   ],
@@ -1842,6 +2054,100 @@
       "faqA1": "Không. PDFree hoạt động hoàn toàn trên thiết bị của bạn (phía client). Chúng tôi không có server xử lý file của bạn, đảm bảo quyền riêng tư 100%.",
       "faqQ2": "Có giới hạn về dung lượng file hoặc số trang không?",
       "faqA2": "Không, không có giới hạn nhân tạo nào. Giới hạn duy nhất là RAM (bộ nhớ) có sẵn trên máy tính hoặc điện thoại thông minh của bạn."
+    },
+    "ru": {
+      "heroBadge": "🔒 100% конфиденциально · без загрузки · без регистрации · без ограничений",
+      "heroH1": "PDF-инструменты, которые<br><em>действительно работают</em>",
+      "heroP": "Объединяйте, разделяйте, сжимайте, добавляйте водяные знаки, конвертируйте — всё работает <strong>в вашем браузере</strong>. Ваши файлы никогда не покидают устройство. Без серверов. Без аккаунтов. Только результат.",
+      "privacyBannerStrong": "Ваши файлы остаются на вашем устройстве.",
+      "privacyBannerText": "Мы используем Web Workers и клиентские библиотеки — ничего никогда не отправляется на сервер.",
+      "noLimit": [
+        "Без ограничений по файлам",
+        "Без водяных знаков",
+        "Без регистрации",
+        "Файлы никогда не покидают устройство"
+      ],
+      "sectionLabel": "Все инструменты",
+      "privacy1Title": "100% конфиденциально по дизайну",
+      "privacy1Desc": "Ваши файлы обрабатываются полностью в браузере. Ноль загрузок — никогда.",
+      "privacy2Title": "Работает на вашем устройстве",
+      "privacy2Desc": "Все операции PDF выполняются внутри Web Worker — изолированного потока на вашем собственном оборудовании.",
+      "privacy3Title": "Мгновенно забытые",
+      "privacy3Desc": "Файлы живут только в ОЗУ. Закройте вкладку — и они исчезнут. Никаких журналов, никаких следов.",
+      "dropTitle": "Перетащите файлы сюда",
+      "dropSub": "или нажмите для выбора — любое количество файлов",
+      "chooseBtn": "Выбрать файлы",
+      "reorderHint": "↕ Перетаскивайте для изменения порядка файлов перед объединением",
+      "cancelBtn": "✕ Отмена",
+      "successTitle": "Готово!",
+      "downloadBtn": "⬇ Скачать",
+      "footerLine1": "Вся обработка происходит 100% в вашем браузере",
+      "footerLine2": "Файлы <strong>никогда не загружаются</strong>",
+      "footerGuarantee": "Ваши документы никогда не покидают устройство",
+      "footerFree": "Создан бесплатным для всех — навсегда",
+      "footerOpenSource": "Открытый исходный код под лицензией",
+      "footerGitHub": "Исходный код на GitHub",
+      "privacyBadge": "Ваш файл никогда не покидает браузер — обрабатывается локально, ничего не загружается",
+      "privacyClearedTitle": "Документ удалён из памяти",
+      "privacyClearedSub": "Обработано локально · Никогда не загружалось · Следов не осталось",
+      "swUpdateMsg": "Доступна новая версия PDFree.",
+      "swUpdateNow": "Обновить сейчас",
+      "swUpdateLater": "Позже",
+      "seoH2": "Лучший бесплатный PDF-инструмент для безопасности и конфиденциальности",
+      "seoP1": "PDFree создан для профессиональной работы с PDF без рисков, связанных с облачными загрузками. Когда вы используете наши инструменты, обработка происходит непосредственно в вашем браузере с помощью WebAssembly. Это означает, что ваши конфиденциальные документы никогда не передаются через интернет.",
+      "seoP2": "Мы считаем, что основные инструменты должны быть доступны каждому. Поэтому PDFree не имеет ограничений по размеру файлов, суточных лимитов использования и обязательных водяных знаков. Это полностью бесплатная и неограниченная утилита.",
+      "faqTitle": "Часто задаваемые вопросы",
+      "faqQ1": "Хранятся ли мои файлы на ваших серверах?",
+      "faqA1": "Нет. PDFree работает полностью на вашем устройстве (на стороне клиента). У нас нет серверов, обрабатывающих ваши файлы, что гарантирует 100% конфиденциальность.",
+      "faqQ2": "Есть ли ограничения по размеру файла или количеству страниц?",
+      "faqA2": "Нет, искусственных ограничений нет. Единственное ограничение — это ОЗУ (память), доступная на вашем компьютере или смартфоне."
+    },
+    "ja": {
+      "heroBadge": "🔒 100%プライベート · アップロード不要 · 登録不要 · 制限なし",
+      "heroH1": "本当に使えるPDFツール",
+      "heroP": "結合、分割、圧縮、透かし、変換 — すべて<strong>ブラウザ内</strong>で処理されます。ファイルはデバイスから出ません。サーバーなし。アカウントなし。結果だけ。",
+      "privacyBannerStrong": "ファイルはあなたのデバイスに留まります。",
+      "privacyBannerText": "Web Workersとクライアントサイドライブラリを使用しています — サーバーには何も送信されません。",
+      "noLimit": [
+        "ファイル数の制限なし",
+        "透かしなし",
+        "登録不要",
+        "ファイルはデバイスから出ません"
+      ],
+      "sectionLabel": "すべてのツール",
+      "privacy1Title": "設計上100%プライベート",
+      "privacy1Desc": "ファイルはすべてブラウザ内で処理されます。アップロードは一切ありません。",
+      "privacy2Title": "あなたのデバイスで動作",
+      "privacy2Desc": "すべてのPDF操作はWeb Worker内で実行されます — あなた自身のハードウェア上の安全なスレッドです。",
+      "privacy3Title": "即座に消去",
+      "privacy3Desc": "ファイルはRAMにのみ存在します。タブを閉じると消えます — ログも痕跡も残りません。",
+      "dropTitle": "ここにファイルをドロップ",
+      "dropSub": "またはクリックして参照 — ファイル数に制限なし",
+      "chooseBtn": "ファイルを選択",
+      "reorderHint": "↕ 結合前にファイルをドラッグして並び替え",
+      "cancelBtn": "✕ キャンセル",
+      "successTitle": "完了！",
+      "downloadBtn": "⬇ ダウンロード",
+      "footerLine1": "すべての処理はブラウザ内で100%行われます",
+      "footerLine2": "ファイルは<strong>アップロードされません</strong>",
+      "footerGuarantee": "文書はデバイスから出ることはありません",
+      "footerFree": "すべての人に永久無料で提供",
+      "footerOpenSource": "オープンソース（ライセンス：",
+      "footerGitHub": "GitHubでソースを見る",
+      "privacyBadge": "ファイルはブラウザから出ません — ローカルで処理、アップロードなし",
+      "privacyClearedTitle": "文書がメモリから削除されました",
+      "privacyClearedSub": "ローカルで処理 · アップロードなし · 痕跡なし",
+      "swUpdateMsg": "PDFreeの新しいバージョンが利用可能です。",
+      "swUpdateNow": "今すぐ更新",
+      "swUpdateLater": "後で",
+      "seoH2": "セキュリティとプライバシーのための最高の無料PDFツール",
+      "seoP1": "PDFreeは、クラウドへのアップロードに伴うリスクなしに、プロ品質のPDF操作を提供するために設計されています。ツールを使用すると、処理はWebAssemblyを使用してブラウザ内で直接行われます。法的契約書、財務報告書、個人IDスキャンなどの機密文書がインターネット経由で送信されることはありません。",
+      "seoP2": "私たちは、必要不可欠なツールはすべての人が利用できるべきだと考えています。そのため、PDFreeにはファイルサイズの制限も、1日の使用上限も、必須の透かしもありません。学生、専門家、デジタルプライバシーを大切にするすべての方のための完全無料・無制限のツールです。",
+      "faqTitle": "よくある質問",
+      "faqQ1": "ファイルはサーバーに保存されますか？",
+      "faqA1": "いいえ。PDFreeはすべてお使いのデバイス上（クライアントサイド）で動作します。ファイルを処理するサーバーは存在しないため、100%のプライバシーが保証されます。",
+      "faqQ2": "ファイルサイズやページ数に制限はありますか？",
+      "faqA2": "いいえ、人工的な制限はありません。唯一の制限は、お使いのコンピューターまたはスマートフォンで利用可能なRAM（メモリ）のみです。"
     }
   }
 }

@@ -1,0 +1,31 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDFから無料でページを抽出する方法",
+  "description": "PDFから必要なページを選んで新しいPDFを作成します。アップロード不要、完全無料、すべてブラウザ内で処理されます。",
+  "totalTime": "PT1M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — ブラウザ上で動作する無料PDFページ抽出ツール" }],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDFを選択",
+      "text": "「ファイルを選択」をクリックするか、PDFをドロップエリアにドラッグしてください。ファイルはブラウザ内でローカルに処理されます。",
+      "url": "https://pdfree.io/ja/pdf-chushutsu/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "抽出するページを選択",
+      "text": "ページのサムネイルをクリックして個別に選択するか、「1,3,5-8」のようにページ番号や範囲を入力してください。",
+      "url": "https://pdfree.io/ja/pdf-chushutsu/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "抽出済みPDFをダウンロード",
+      "text": "「ページを抽出」をクリックしてください。選択したページのみを含む新しいPDFがすぐにダウンロードできます。",
+      "url": "https://pdfree.io/ja/pdf-chushutsu/#step3"
+    }
+  ]
+}

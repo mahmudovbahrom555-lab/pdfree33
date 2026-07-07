@@ -1,0 +1,31 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDFを無料で結合する方法",
+  "description": "複数のPDFを1つにまとめます。アップロード不要、完全無料、すべてブラウザ内で処理されます。",
+  "totalTime": "PT1M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — ブラウザ上で動作する無料PDF結合ツール、アップロード不要" }],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDFファイルを追加",
+      "text": "「ファイルを選択」をクリックするか、PDFをドロップエリアにドラッグしてください。複数ファイルを同時に選択できます。ファイル数に制限はありません。",
+      "url": "https://pdfree.io/ja/pdf-ketsugou/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "順番を並び替え",
+      "text": "ドラッグ&ドロップでファイルを並び替えてください。不要なファイルを削除したり、新しいファイルを追加することもできます。",
+      "url": "https://pdfree.io/ja/pdf-ketsugou/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "結合してダウンロード",
+      "text": "「PDF結合」をクリックしてください。処理はブラウザ内で数秒で完了します。結合されたPDFをすぐにダウンロードできます。",
+      "url": "https://pdfree.io/ja/pdf-ketsugou/#step3"
+    }
+  ]
+}

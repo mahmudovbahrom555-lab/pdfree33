@@ -1,0 +1,31 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDFを無料でJPGに変換する方法",
+  "description": "PDFのページをJPGまたはPNG画像として書き出します。アップロード不要、完全無料、すべてブラウザ内で処理されます。",
+  "totalTime": "PT1M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — ブラウザ上で動作する無料PDF→JPG変換ツール" }],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDFを開く",
+      "text": "「ファイルを選択」をクリックするか、PDFをドロップエリアにドラッグしてください。ファイルはブラウザ内でローカルに処理されます。",
+      "url": "https://pdfree.io/ja/pdf-jpg-henkan/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "形式と解像度を選択",
+      "text": "形式（JPGまたはPNG）と解像度を選択してください。72 DPI（Web用）、150 DPI（一般用途）、300 DPI（印刷用）から選べます。",
+      "url": "https://pdfree.io/ja/pdf-jpg-henkan/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "変換してダウンロード",
+      "text": "「JPGに変換」をクリックしてください。1ページ = 1ファイル。複数ページの場合はZIPファイルでダウンロードできます。",
+      "url": "https://pdfree.io/ja/pdf-jpg-henkan/#step3"
+    }
+  ]
+}

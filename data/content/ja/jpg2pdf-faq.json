@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "JPGをPDFに変換する際に画像は外部サーバーに送信されますか？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "いいえ。すべての画像はブラウザ内でローカルに処理されます。ファイルはお使いのデバイスから一切送信されません。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "対応している画像形式を教えてください。",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFreeはJPG/JPEG、PNG、WebPに対応しています。スマートフォンで撮影した写真はいずれの形式でも正しく変換されます。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "写真の向きは自動的に修正されますか？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "はい。PDFreeはEXIFデータを自動的に読み取り、向きを補正します。スマートフォンで撮影した写真も手動で回転させることなく正しく表示されます。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "何枚の画像まで1つのPDFにまとめられますか？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "枚数に制限はありません。必要なだけ画像を追加でき、各画像がPDFの1ページになります。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "JPGをPDFに変換後に画質は低下しますか？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "いいえ。画像は元の品質のままPDFに埋め込まれます。最終的なPDFのサイズは元の画像の合計サイズとほぼ同じになります。"
+    }
+  }
+]

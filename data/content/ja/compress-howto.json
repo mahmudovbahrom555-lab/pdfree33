@@ -1,0 +1,31 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDFを無料で圧縮する方法",
+  "description": "PDFのファイルサイズを品質を落とさずに削減します。完全無料、アップロード不要、すべてブラウザ内で処理されます。",
+  "totalTime": "PT1M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — ブラウザ上で動作する無料PDFコンプレッサー、アップロード不要" }],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDFを開く",
+      "text": "「ファイルを選択」をクリックするか、PDFをドロップエリアにドラッグしてください。ファイルはブラウザに読み込まれるだけで、外部に送信されることはありません。",
+      "url": "https://pdfree.io/ja/pdf-atsuryoku/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "圧縮レベルを選択",
+      "text": "軽い（メタデータのみ削除、画像は変化なし）、標準（メタデータ削除＋画像をJPEG 82%で再圧縮 — ほとんどのファイルに最適）、最大（最も積極的な圧縮 — スキャン文書に最適）から選択してください。",
+      "url": "https://pdfree.io/ja/pdf-atsuryoku/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "圧縮してダウンロード",
+      "text": "「PDF圧縮」をクリックしてください。ブラウザ内で数秒で処理が完了します。削除されたXMPメタデータ、サムネイル、再圧縮された画像などの詳細が表示されます。すぐにダウンロードできます。",
+      "url": "https://pdfree.io/ja/pdf-atsuryoku/#step3"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDFを無料で分割する方法",
+  "description": "PDFをページ範囲ごとに分割または特定のページを抽出します。アップロード不要、完全無料。",
+  "totalTime": "PT1M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — ブラウザ上で動作する無料PDF分割ツール" }],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDFを開く",
+      "text": "「ファイルを選択」をクリックするか、PDFをドロップエリアにドラッグしてください。ファイルはローカルで読み込まれます。",
+      "url": "https://pdfree.io/ja/pdf-bunkatsu/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "分割方法を選択",
+      "text": "1ページずつ分割、ページ範囲で分割（例：1-3, 5, 7-9）、またはページを選択して分割から選択してください。",
+      "url": "https://pdfree.io/ja/pdf-bunkatsu/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "分割してダウンロード",
+      "text": "「PDF分割」をクリックしてください。複数ファイルになる場合はZIPでダウンロードできます。処理はすべてブラウザ内で行われます。",
+      "url": "https://pdfree.io/ja/pdf-bunkatsu/#step3"
+    }
+  ]
+}

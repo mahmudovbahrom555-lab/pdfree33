@@ -1,0 +1,31 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Как конвертировать PDF в Word бесплатно",
+  "description": "Конвертируйте PDF в редактируемый документ Word (.docx) без загрузки на сервер — бесплатно, обработка в браузере.",
+  "totalTime": "PT1M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — бесплатный конвертер PDF в Word на основе браузера, без загрузки" }],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Откройте PDF",
+      "text": "Нажмите «Выбрать файл» или перетащите PDF в область загрузки. Конвертация начинается в браузере — файл остаётся на вашем устройстве.",
+      "url": "https://pdfree.io/ru/pdf-v-word/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Дождитесь обработки",
+      "text": "PDFree анализирует PDF: извлекает текст, сохраняет таблицы, шрифты и списки. Весь процесс происходит локально без загрузки на сервер.",
+      "url": "https://pdfree.io/ru/pdf-v-word/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Скачайте .docx",
+      "text": "Нажмите «Конвертировать в Word». Скачайте готовый файл .docx для редактирования в Microsoft Word, Google Docs или LibreOffice.",
+      "url": "https://pdfree.io/ru/pdf-v-word/#step3"
+    }
+  ]
+}
