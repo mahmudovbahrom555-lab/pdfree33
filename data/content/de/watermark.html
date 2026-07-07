@@ -53,6 +53,31 @@
         </table>
       </div>
 
+      <h2 style="font-size:20px; color:var(--text); margin:32px 0 16px; font-weight:600;">Empfohlene Einstellungen für typische Wasserzeichen</h2>
+      <p style="font-size:14px;margin:0 0 12px;">Zwei häufige Varianten — und welche Werte in der Praxis am besten funktionieren:</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin:0 0 32px;">
+        <div style="border:1px solid var(--border);border-radius:8px;padding:16px;">
+          <strong style="color:var(--text);display:block;margin-bottom:8px;">Diagonaler Textstempel (ENTWURF / VERTRAULICH)</strong>
+          <ul style="margin:0;padding-left:18px;font-size:14px;line-height:1.8;">
+            <li>Text: <em>ENTWURF</em> oder <em>VERTRAULICH</em></li>
+            <li>Drehwinkel: 45°</li>
+            <li>Deckkraft: 25–35 %</li>
+            <li>Schriftgröße: 80–100 pt</li>
+          </ul>
+          <p style="margin:10px 0 0;font-size:13px;color:var(--text2);">Erkennbar, ohne den Seiteninhalt zu überlagern.</p>
+        </div>
+        <div style="border:1px solid var(--border);border-radius:8px;padding:16px;">
+          <strong style="color:var(--text);display:block;margin-bottom:8px;">Positions-Stempel (GENEHMIGT / MUSTER)</strong>
+          <ul style="margin:0;padding-left:18px;font-size:14px;line-height:1.8;">
+            <li>Text: <em>GENEHMIGT</em> oder <em>MUSTER</em></li>
+            <li>Drehwinkel: 0°</li>
+            <li>Deckkraft: 80–100 %</li>
+            <li>Schriftgröße: 36–48 pt</li>
+          </ul>
+          <p style="margin:10px 0 0;font-size:13px;color:var(--text2);">Gut lesbar in einer Ecke, ohne den Haupttext zu verdecken.</p>
+        </div>
+      </div>
+
       <h2 style="font-size:20px; color:var(--text); margin:32px 0 16px; font-weight:600;">Häufig gestellte Fragen</h2>
       <dl class="seo-faq">
         <dt>Ist das Wasserzeichen dauerhaft eingebettet?</dt>
@@ -67,6 +92,10 @@
         <dd>Die Begriffe werden oft gleichbedeutend verwendet. Ein Wasserzeichen ist typischerweise ein halbtransparenter Text, der diagonal über alle Seiten gelegt wird (z. B. ENTWURF mit 30 % Deckkraft). Ein Stempel ist meist ein undurchsichtiges Etikett an einer festen Position (z. B. GENEHMIGT in einer Ecke). Mit PDFree erreichst du beide Varianten durch Anpassen von Deckkraft und Position.</dd>
         <dt>Kann ich ein Logo als Wasserzeichen einfügen?</dt>
         <dd>Noch nicht. PDFree unterstützt derzeit ausschließlich Text-Wasserzeichen. Bild- und Logo-Wasserzeichen sind für ein zukünftiges Update geplant.</dd>
+        <dt>Wie füge ich ein diagonales Wasserzeichen ein?</dt>
+        <dd>Stelle den Drehwinkel auf 45° (oder −45°) ein. Die Echtzeit-Vorschau zeigt dir das Ergebnis sofort — bevor du das fertige PDF herunterlädst. Für den klassischen Diagonal-Stempel empfehlen sich zusätzlich eine Deckkraft von 25–35 % und eine Schriftgröße von 80–100 pt.</dd>
+        <dt>Welche Deckkraft ist optimal für ein Wasserzeichen?</dt>
+        <dd>Das hängt vom Zweck ab. Für Textstempel wie ENTWURF oder VERTRAULICH quer über die Seite sind 25–35 % ideal — erkennbar, aber ohne den Inhalt zu überlagern. Für feste Stempel in einer Ecke (z. B. GENEHMIGT) eignen sich 70–100 %. Passe den Wert einfach in der Vorschau an, bis das Ergebnis passt.</dd>
       </dl>
 
       <h2 style="font-size:20px; color:var(--text); margin:32px 0 16px; font-weight:600;">Warum PDFree für Wasserzeichen?</h2>

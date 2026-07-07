@@ -38,5 +38,21 @@
       "@type": "Answer",
       "text": "Noch nicht. PDFree unterstützt derzeit ausschließlich Text-Wasserzeichen. Bild- und Logo-Wasserzeichen sind für ein zukünftiges Update geplant."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Wie füge ich ein diagonales Wasserzeichen ein?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Stelle den Drehwinkel auf 45° (oder −45°) ein. Die Echtzeit-Vorschau zeigt dir das Ergebnis sofort — bevor du das fertige PDF herunterlädst. Für den klassischen Diagonal-Stempel empfehlen sich zusätzlich eine Deckkraft von 25–35 % und eine Schriftgröße von 80–100 pt."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Welche Deckkraft ist optimal für ein Wasserzeichen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Das hängt vom Zweck ab. Für Textstempel wie ENTWURF oder VERTRAULICH quer über die Seite sind 25–35 % ideal — erkennbar, aber ohne den Inhalt zu überlagern. Für feste Stempel in einer Ecke (z. B. GENEHMIGT) eignen sich 70–100 %. Passe den Wert einfach in der Vorschau an, bis das Ergebnis passt."
+    }
   }
 ]
