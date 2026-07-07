@@ -243,7 +243,7 @@ function _drawPreview() {
   if (!canvas) return;
 
   const dpr      = window.devicePixelRatio || 1;
-  const displayW = 200;
+  const displayW = PREVIEW_W;
   const displayH = Math.round(displayW * _pageH / _pageW);
   _setCanvasSize(canvas, displayW, displayH);
 
