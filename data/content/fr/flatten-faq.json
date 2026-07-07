@@ -41,10 +41,10 @@
   },
   {
     "@type": "Question",
-    "name": "Comment aplatir un PDF sur Mac ou Windows sans Adobe Acrobat ?",
+    "name": "Comment aplatir un PDF directement dans mon navigateur ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree Flatten fonctionne dans n'importe quel navigateur moderne — Chrome, Safari, Firefox, Edge — sur Mac, Windows et Linux. Aucune installation n'est requise. Ouvrez l'outil, chargez votre PDF, cliquez sur « Aplatir le PDF » et le résultat se télécharge directement sur votre appareil. Adobe Acrobat n'est pas nécessaire."
+      "text": "PDFree Flatten fonctionne dans n'importe quel navigateur moderne — Chrome, Safari, Firefox, Edge — sur Mac, Windows et Linux. Aucune installation n'est requise. Ouvrez l'outil, chargez votre PDF, cliquez sur « Aplatir le PDF » et le résultat se télécharge directement sur votre appareil. Aucun logiciel de bureau n'est nécessaire."
     }
   },
   {

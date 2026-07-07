@@ -67,7 +67,7 @@ window.PDFREE_LOCALE = {
   desc_redact:              'Áreas cobertas · {pages} páginas · {size}',
   desc_fill:                'Formulário preenchido · {pages} páginas · {size}',
   desc_flatten:             'Campos bloqueados · {pages} páginas · {size}',
-  warn_xfa_form:            'ℹ️ Nenhum campo editável encontrado — arquivo devolvido sem alterações. Formulários XFA requerem Adobe Acrobat.',
+  warn_xfa_form:            'ℹ️ Nenhum campo editável encontrado — arquivo devolvido sem alterações. Formulários XFA usam um formato não suportado por ferramentas PDF baseadas em navegador.',
   desc_split_single:        '{n} página extraída · {size}',
   desc_split_single_many:   '{n} páginas extraídas · {size}',
   desc_split_separate:      'Dividido em {n} ficheiro · {size}',

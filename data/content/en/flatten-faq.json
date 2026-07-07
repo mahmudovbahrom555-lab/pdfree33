@@ -41,10 +41,10 @@
   },
   {
     "@type": "Question",
-    "name": "How do I flatten a PDF on Mac or Windows without Adobe Acrobat?",
+    "name": "How do I flatten a PDF in my browser?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree Flatten runs in any modern browser — Chrome, Safari, Firefox, Edge — on Mac, Windows, and Linux. No download or installation is required. Open the Flatten PDF tool, load your PDF, click Flatten, and the result downloads directly to your device. Adobe Acrobat is not needed at any step."
+      "text": "PDFree Flatten runs in any modern browser — Chrome, Safari, Firefox, Edge — on Mac, Windows, and Linux. No download or installation is required. Open the Flatten PDF tool, load your PDF, click Flatten, and the result downloads directly to your device. No desktop software needed at any step."
     }
   },
   {

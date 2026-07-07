@@ -68,7 +68,7 @@ window.PDFREE_LOCALE = {
   desc_redact:              'Area ditutup · {pages} halaman · {size}',
   desc_fill:                'Formulir diisi · {pages} halaman · {size}',
   desc_flatten:             'Bidang dikunci · {pages} halaman · {size}',
-  warn_xfa_form:            'ℹ️ Tidak ada bidang yang dapat diedit — file dikembalikan tanpa perubahan. Formulir XFA memerlukan Adobe Acrobat.',
+  warn_xfa_form:            'ℹ️ Tidak ada bidang yang dapat diedit — file dikembalikan tanpa perubahan. Formulir XFA menggunakan format yang tidak didukung oleh alat PDF berbasis browser.',
   desc_split_single:        '{n} halaman diekstrak · {size}',
   desc_split_single_many:   '{n} halaman diekstrak · {size}',
   desc_split_separate:      'Dibagi menjadi {n} file · {size}',

@@ -68,7 +68,7 @@ window.PDFREE_LOCALE = {
   desc_redact:              'Bereiche abgedeckt · {pages} Seiten · {size}',
   desc_fill:                'Formular ausgefüllt · {pages} Seiten · {size}',
   desc_flatten:             'Felder gesperrt · {pages} Seiten · {size}',
-  warn_xfa_form:            'ℹ️ Keine bearbeitbaren Felder gefunden — Datei unverändert zurückgegeben. XFA-Formulare erfordern Adobe Acrobat.',
+  warn_xfa_form:            'ℹ️ Keine bearbeitbaren Felder gefunden — Datei unverändert zurückgegeben. XFA-Formulare verwenden ein Format, das von browserbasierten PDF-Tools nicht unterstützt wird.',
   desc_split_single:        '{n} Seite extrahiert · {size}',
   desc_split_single_many:   '{n} Seiten extrahiert · {size}',
   desc_split_separate:      'In {n} Datei aufgeteilt · {size}',

@@ -33,10 +33,10 @@
   },
   {
     "@type": "Question",
-    "name": "Wie kann ich ein PDF auf dem Mac oder Windows ohne Adobe Acrobat abflachen?",
+    "name": "Wie kann ich ein PDF direkt im Browser abflachen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree Flatten läuft in jedem modernen Browser — Chrome, Safari, Firefox, Edge — auf Mac, Windows und Linux. Keine Installation erforderlich. Tool öffnen, PDF laden, auf »PDF abflachen« klicken — das Ergebnis lädt direkt auf dein Gerät. Adobe Acrobat wird nicht benötigt."
+      "text": "PDFree Flatten läuft in jedem modernen Browser — Chrome, Safari, Firefox, Edge — auf Mac, Windows und Linux. Keine Installation erforderlich. Tool öffnen, PDF laden, auf »PDF abflachen« klicken — das Ergebnis lädt direkt auf dein Gerät. Keine Desktop-Software nötig."
     }
   },
   {

@@ -67,7 +67,7 @@ window.PDFREE_LOCALE = {
   desc_redact:              'Zones masquées · {pages} pages · {size}',
   desc_fill:                'Formulaire rempli · {pages} pages · {size}',
   desc_flatten:             'Champs verrouillés · {pages} pages · {size}',
-  warn_xfa_form:            'ℹ️ Aucun champ modifiable trouvé — fichier retourné sans modification. Les formulaires XFA nécessitent Adobe Acrobat.',
+  warn_xfa_form:            'ℹ️ Aucun champ modifiable trouvé — fichier retourné sans modification. Les formulaires XFA utilisent un format non pris en charge par les outils PDF basés sur navigateur.',
   desc_split_single:        '{n} page extraite · {size}',
   desc_split_single_many:   '{n} pages extraites · {size}',
   desc_split_separate:      'Divisé en {n} fichier · {size}',

@@ -79,7 +79,7 @@ const EN = {
   desc_redact:              'Areas covered · {pages} pages · {size}',
   desc_fill:                'Form filled · {pages} pages · {size}',
   desc_flatten:             'Fields locked · {pages} pages · {size}',
-  warn_xfa_form:            'ℹ️ No editable fields found — file returned unchanged. XFA forms require Adobe Acrobat.',
+  warn_xfa_form:            'ℹ️ No editable fields found — file returned unchanged. XFA forms use a format that isn\'t supported by browser-based PDF tools.',
   desc_split_single:        'Extracted {n} page · {size}',
   desc_split_single_many:   'Extracted {n} pages · {size}',
   desc_split_separate:      'Split into {n} file · {size}',

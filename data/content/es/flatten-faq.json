@@ -41,10 +41,10 @@
   },
   {
     "@type": "Question",
-    "name": "¿Cómo aplanar un PDF en Mac o Windows sin Adobe Acrobat?",
+    "name": "¿Cómo aplanar un PDF directamente en el navegador?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree Flatten funciona en cualquier navegador moderno — Chrome, Safari, Firefox, Edge — en Mac, Windows y Linux. No se requiere instalación. Abre la herramienta, carga tu PDF, haz clic en «Aplanar PDF» y el resultado se descarga directamente a tu dispositivo. No necesitas Adobe Acrobat en ningún paso."
+      "text": "PDFree Flatten funciona en cualquier navegador moderno — Chrome, Safari, Firefox, Edge — en Mac, Windows y Linux. No se requiere instalación. Abre la herramienta, carga tu PDF, haz clic en «Aplanar PDF» y el resultado se descarga directamente a tu dispositivo. No necesitas ningún software de escritorio."
     }
   },
   {

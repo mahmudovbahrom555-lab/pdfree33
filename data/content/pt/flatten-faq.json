@@ -41,10 +41,10 @@
   },
   {
     "@type": "Question",
-    "name": "Como nivelar um PDF no Mac ou Windows sem o Adobe Acrobat?",
+    "name": "Como nivelar um PDF diretamente no meu navegador?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "O PDFree Nivelar funciona em qualquer navegador moderno — Chrome, Safari, Firefox, Edge — no Mac, Windows e Linux. Nenhuma instalação é necessária. Abra a ferramenta, carregue seu PDF, clique em «Nivelar PDF» e o resultado é baixado diretamente para o seu dispositivo. O Adobe Acrobat não é necessário em nenhuma etapa."
+      "text": "O PDFree Nivelar funciona em qualquer navegador moderno — Chrome, Safari, Firefox, Edge — no Mac, Windows e Linux. Nenhuma instalação é necessária. Abra a ferramenta, carregue seu PDF, clique em «Nivelar PDF» e o resultado é baixado diretamente para o seu dispositivo. Nenhum software de desktop é necessário."
     }
   },
   {
