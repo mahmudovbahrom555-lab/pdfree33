@@ -36,7 +36,7 @@
     "name": "Y a-t-il une limite quotidienne sur le nombre de fusions ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Non. Contrairement à SmallPDF (2 tâches/jour gratuit) ou iLovePDF (limites quotidiennes), PDFree n'a aucun plafond d'utilisation journalier. Fusionnez autant de PDFs que vous le souhaitez, aussi souvent que nécessaire."
+      "text": "Non. PDFree n'a aucun plafond d'utilisation quotidien. Fusionnez autant de PDFs que vous le souhaitez, aussi souvent que nécessaire — sans limite de tâches ni limite quotidienne."
     }
   },
   {
