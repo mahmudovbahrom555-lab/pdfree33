@@ -139,9 +139,11 @@ def _build_nav_items(lang, all_tools):
         t = tool_map.get(tool_id)
         if not t:
             continue
-        slug  = t['slugs'].get(lang, t['slugs']['en'])
+        slug  = t['slugs'].get(lang)
         label = t['navLabels'].get(lang, t['navLabels']['en'])
-        items.append({'href': f'../{slug}/', 'label': label, 'tool_key': t['toolKey']})
+        # If no locale slug exists, point to absolute EN path (avoids /ru/metadata-pdf/ dead URLs)
+        href  = f'../{slug}/' if slug is not None else f'/{t["slugs"]["en"]}/'
+        items.append({'href': href, 'label': label, 'tool_key': t['toolKey']})
         if tool_id == 'extract':
             # Insert Draw after Extract — EN-only, no locale slugs
             items.append({'href': '/draw-on-pdf/', 'label': 'Draw', 'tool_key': 'draw-pdf'})
