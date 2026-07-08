@@ -1,0 +1,33 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Watermerk toevoegen aan PDF — in de browser",
+  "description": "Voeg een tekst-watermerk toe aan een PDF zonder uploaden, direct in de browser.",
+  "totalTime": "PT1M",
+  "tool": [
+    { "@type": "HowToTool", "name": "PDFree.io — gratis PDF-tools" }
+  ],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDF uploaden",
+      "text": "Open pdfree.io/nl/watermerk-pdf/, klik op Bestand kiezen of sleep de PDF.",
+      "url": "https://pdfree.io/nl/watermerk-pdf/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Watermerk instellen",
+      "text": "Voer de watermerktekst in en kies richting (diagonaal of horizontaal), lettergrootte en dekking.",
+      "url": "https://pdfree.io/nl/watermerk-pdf/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Toevoegen en downloaden",
+      "text": "Klik op Watermerk toevoegen. De PDF met watermerk wordt gedownload.",
+      "url": "https://pdfree.io/nl/watermerk-pdf/#step3"
+    }
+  ]
+}

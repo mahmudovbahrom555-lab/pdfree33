@@ -1,0 +1,50 @@
+[
+  {
+    "@type": "Question",
+    "name": "Is PDF samenvoegen gratis?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja, volledig gratis. Geen gebruikslimieten, geen verborgen kosten."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Worden bestanden geüpload naar een server?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. Alles vindt plaats in de browser. Bestanden verlaten je apparaat niet."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Hoeveel PDF's kan ik samenvoegen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Zoveel als je wilt, zonder limiet. Zorg voor voldoende browsergeheugen bij grote bestanden."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik de volgorde van de pagina's aanpassen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Sleep de bestanden in de gewenste volgorde voor het samenvoegen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik beveiligde PDF's samenvoegen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Als een PDF een wachtwoord heeft, wordt gevraagd dit in te voeren."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Werkt het op iPhone?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Open Safari op iPhone, ga naar pdfree.io, klik op PDF samenvoegen en selecteer de bestanden via de Bestanden-app."
+    }
+  }
+]

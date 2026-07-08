@@ -1,0 +1,50 @@
+[
+  {
+    "@type": "Question",
+    "name": "Hoeveel wordt het bestand kleiner?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDF's met veel afbeeldingen worden typisch 30–70% kleiner. Alleen-tekst PDF's 5–15%. PDFree toont een schatting voor het comprimeren."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Verlies ik kwaliteit bij het comprimeren?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Comprimeren verlaagt de resolutie van ingesloten afbeeldingen. Tekst en vectorafbeeldingen blijven scherp."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is er een bestandsgrootte limiet?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree accepteert PDF's tot 150 MB. Voor grotere bestanden: eerst splitsen, dan comprimeren en daarna samenvoegen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Worden mijn bestanden geüpload?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. Het comprimeren vindt volledig plaats in het browsergeheugen. Geen bestanden worden naar een server gestuurd."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Werkt het op Mac?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. PDFree werkt in Safari, Chrome en Firefox op elk besturingssysteem."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is het AVG/GDPR-conform?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja — bestanden verlaten nooit de browser. Geen gegevens worden naar servers gestuurd. Volledig AVG-conform."
+    }
+  }
+]

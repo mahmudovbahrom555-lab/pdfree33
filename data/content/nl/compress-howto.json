@@ -1,0 +1,33 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDF Comprimeren — in de browser",
+  "description": "Comprimeer een PDF zonder uploaden. Bestandsgrootte verkleinen direct in de browser.",
+  "totalTime": "PT1M",
+  "tool": [
+    { "@type": "HowToTool", "name": "PDFree.io — gratis PDF-tools" }
+  ],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDF toevoegen",
+      "text": "Open pdfree.io/nl/pdf-comprimeren/, klik op Bestand kiezen of sleep de PDF.",
+      "url": "https://pdfree.io/nl/pdf-comprimeren/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Compressieniveau kiezen",
+      "text": "Selecteer E-mail, Web of Klein als compressieniveau.",
+      "url": "https://pdfree.io/nl/pdf-comprimeren/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Comprimeren en downloaden",
+      "text": "Klik op PDF comprimeren. Het gecomprimeerde bestand wordt direct gedownload.",
+      "url": "https://pdfree.io/nl/pdf-comprimeren/#step3"
+    }
+  ]
+}

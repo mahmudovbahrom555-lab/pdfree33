@@ -1,0 +1,33 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDF Splitsen — in de browser",
+  "description": "Splits een PDF of extraheer specifieke pagina's zonder uploaden, direct in de browser.",
+  "totalTime": "PT1M",
+  "tool": [
+    { "@type": "HowToTool", "name": "PDFree.io — gratis PDF-tools" }
+  ],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDF uploaden",
+      "text": "Open pdfree.io/nl/pdf-splitsen/, klik op Bestand kiezen of sleep de PDF.",
+      "url": "https://pdfree.io/nl/pdf-splitsen/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Pagina's selecteren",
+      "text": "Kies afzonderlijke pagina's, bereiken (bijv. 1-3, 5) of alle pagina's als afzonderlijke bestanden.",
+      "url": "https://pdfree.io/nl/pdf-splitsen/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Splitsen en downloaden",
+      "text": "Klik op PDF splitsen. Download de geëxtraheerde pagina's als afzonderlijke bestanden of als één PDF.",
+      "url": "https://pdfree.io/nl/pdf-splitsen/#step3"
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "Welke afbeeldingsformaten worden ondersteund?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "JPG, PNG en WEBP. BMP, TIFF en GIF worden niet ondersteund."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Worden de afbeeldingen geüpload naar een server?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. De conversie vindt volledig in je browser plaats."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Vermindert de afbeeldingskwaliteit?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree gebruikt een resolutie van 2400px voor hoge kwaliteit met redelijke bestandsgrootte. Kies Hoge kwaliteit voor maximale resolutie."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik meerdere afbeeldingen samenvoegen tot één PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Voeg zoveel afbeeldingen toe als je wilt — elke afbeelding wordt een pagina in de PDF."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Werkt het op iPhone?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Open Safari op iPhone, ga naar pdfree.io, klik op JPG naar PDF en selecteer afbeeldingen via de Foto's- of Bestanden-app."
+    }
+  }
+]

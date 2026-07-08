@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "Kan ik specifieke pagina's extraheren?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Je kunt afzonderlijke pagina's, bereiken zoals '1-3, 5, 7-9' of alle pagina's als afzonderlijke bestanden selecteren."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Wordt de PDF geüpload naar een server?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. Alles vindt plaats in je browser. Bestanden verlaten je apparaat niet."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik grote PDF's splitsen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. PDFree verwerkt grote PDF's in de browser. Voor bestanden groter dan 500 MB is voldoende RAM aanbevolen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is er een dagelijks limiet?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. PDFree heeft geen gebruiksbeperkingen. Splits zoveel PDF's als je wilt."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Behoudt de kwaliteit van de geëxtraheerde pagina's?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. PDFree extraheert pagina's op PDF-objectniveau — kwaliteit, lettertypen en afbeeldingen blijven identiek aan het origineel."
+    }
+  }
+]

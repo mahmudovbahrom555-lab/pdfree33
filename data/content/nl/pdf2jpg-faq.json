@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "Welke resolutie hebben de geëxporteerde afbeeldingen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Je kunt kiezen tussen 72, 150 en 300 DPI. Gebruik 300 DPI voor printen, 72 of 150 DPI voor digitaal gebruik."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Wordt de PDF geüpload naar een server?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. De conversie vindt volledig in de browser plaats."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik alleen bepaalde pagina's extraheren?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Selecteer de specifieke pagina's die je wilt converteren."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is er een limiet op het aantal pagina's?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. PDFree converteert zoveel pagina's als je wilt."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Werkt het op iPhone?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Open Safari op iPhone en ga naar pdfree.io/nl/pdf-naar-jpg/."
+    }
+  }
+]

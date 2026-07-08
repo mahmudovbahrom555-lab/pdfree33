@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "Welk type versleuteling wordt gebruikt?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree gebruikt AES-256-versleuteling — de industriestandaard die ook door banken en overheden wordt gebruikt."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Wordt de PDF geüpload naar een server?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. De versleuteling vindt volledig in de browser plaats. Je PDF verlaat je apparaat niet."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Werkt het met grote PDF's?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. PDFree beveiligt PDF's tot 150 MB zonder beperkingen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik het wachtwoord later verwijderen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja — de functie om wachtwoorden te verwijderen is binnenkort beschikbaar in PDFree."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is het AVG/GDPR-conform?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Bestanden verlaten nooit de browser. Geen data wordt opgeslagen of naar servers gestuurd. Volledig AVG-conform."
+    }
+  }
+]

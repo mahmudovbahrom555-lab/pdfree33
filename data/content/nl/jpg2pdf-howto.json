@@ -1,0 +1,33 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "JPG naar PDF — in de browser",
+  "description": "Converteer JPG, PNG of WEBP-afbeeldingen naar PDF zonder uploaden, direct in de browser.",
+  "totalTime": "PT1M",
+  "tool": [
+    { "@type": "HowToTool", "name": "PDFree.io — gratis PDF-tools" }
+  ],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Afbeeldingen toevoegen",
+      "text": "Open pdfree.io/nl/jpg-naar-pdf/, klik op Bestand kiezen of sleep JPG, PNG of WEBP-afbeeldingen.",
+      "url": "https://pdfree.io/nl/jpg-naar-pdf/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Volgorde instellen",
+      "text": "Sleep de afbeeldingen in de gewenste volgorde voor de uiteindelijke PDF.",
+      "url": "https://pdfree.io/nl/jpg-naar-pdf/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Converteren en downloaden",
+      "text": "Klik op Converteren naar PDF. Download de PDF naar je apparaat.",
+      "url": "https://pdfree.io/nl/jpg-naar-pdf/#step3"
+    }
+  ]
+}

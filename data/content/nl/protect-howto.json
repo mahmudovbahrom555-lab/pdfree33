@@ -1,0 +1,33 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDF beveiligen met Wachtwoord — in de browser",
+  "description": "Beveilig een PDF met AES-256-versleuteling zonder uploaden, direct in de browser.",
+  "totalTime": "PT1M",
+  "tool": [
+    { "@type": "HowToTool", "name": "PDFree.io — gratis PDF-tools" }
+  ],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDF uploaden",
+      "text": "Open pdfree.io/nl/pdf-beveiligen/, klik op Bestand kiezen of sleep de PDF.",
+      "url": "https://pdfree.io/nl/pdf-beveiligen/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Wachtwoord invoeren",
+      "text": "Voer het gewenste wachtwoord in. Gebruik een sterk wachtwoord voor maximale beveiliging.",
+      "url": "https://pdfree.io/nl/pdf-beveiligen/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Beveiligen en downloaden",
+      "text": "Klik op PDF beveiligen. De beveiligde PDF wordt gedownload.",
+      "url": "https://pdfree.io/nl/pdf-beveiligen/#step3"
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDF naar JPG — in de browser",
+  "description": "Converteer PDF-pagina's naar JPG of PNG zonder uploaden, direct in de browser.",
+  "totalTime": "PT1M",
+  "tool": [
+    { "@type": "HowToTool", "name": "PDFree.io — gratis PDF-tools" }
+  ],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDF uploaden",
+      "text": "Open pdfree.io/nl/pdf-naar-jpg/, klik op Bestand kiezen of sleep de PDF.",
+      "url": "https://pdfree.io/nl/pdf-naar-jpg/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Kwaliteit kiezen",
+      "text": "Selecteer de gewenste resolutie (72, 150 of 300 DPI) voor de geëxporteerde afbeeldingen.",
+      "url": "https://pdfree.io/nl/pdf-naar-jpg/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Converteren en downloaden",
+      "text": "Klik op Converteren naar JPG. Download de afbeeldingen als ZIP of afzonderlijk.",
+      "url": "https://pdfree.io/nl/pdf-naar-jpg/#step3"
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDF Samenvoegen — in de browser",
+  "description": "Voeg meerdere PDF's samen zonder uploaden. Alles verloopt lokaal in de browser.",
+  "totalTime": "PT1M",
+  "tool": [
+    { "@type": "HowToTool", "name": "PDFree.io — gratis PDF-tools" }
+  ],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDF's toevoegen",
+      "text": "Open pdfree.io/nl/pdf-samenvoegen/, klik op Bestand kiezen of sleep de PDF's.",
+      "url": "https://pdfree.io/nl/pdf-samenvoegen/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Volgorde instellen",
+      "text": "Sleep de bestanden in de gewenste volgorde voor de uiteindelijke PDF.",
+      "url": "https://pdfree.io/nl/pdf-samenvoegen/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Samenvoegen en downloaden",
+      "text": "Klik op PDF samenvoegen. Het samengevoegde bestand wordt direct naar je apparaat gedownload.",
+      "url": "https://pdfree.io/nl/pdf-samenvoegen/#step3"
+    }
+  ]
+}

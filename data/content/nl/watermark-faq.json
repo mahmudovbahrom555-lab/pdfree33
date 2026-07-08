@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "Kan ik een diagonaal watermerk toevoegen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Kies de diagonale richting voor een watermerk op 45°. Een dekking van 25–35% werkt goed — zichtbaar maar niet storend."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Welke dekking moet ik kiezen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Voor CONCEPT of VERTROUWELIJK is 25–35% een goede keuze. Gebruik 50–70% als het watermerk prominenter moet zijn."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Wordt de PDF geüpload naar een server?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. Het watermerk wordt toegevoegd in de browser. Je bestand verlaat je apparaat niet."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Werkt het op alle PDF's?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. PDFree voegt watermerken toe aan elke PDF, ongeacht het aantal pagina's of de inhoud."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is het AVG/GDPR-conform?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Bestanden verlaten nooit de browser. Geen data wordt opgeslagen of naar servers gestuurd. Volledig AVG-conform."
+    }
+  }
+]
