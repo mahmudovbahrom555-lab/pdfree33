@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "Jakiego szyfrowania używa PDFree?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "AES-256 — ten sam standard, co banki i służby rządowe. Najsilniejsze dostępne szyfrowanie dla PDF-ów."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy plik jest przesyłany na serwer?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie. Szyfrowanie odbywa się całkowicie w przeglądarce za pomocą JavaScript. Plik nigdy nie opuszcza Twojego urządzenia."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy mogę zabezpieczyć duże pliki PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. Nie ma limitu rozmiaru. Przetwarzanie odbywa się w pamięci przeglądarki."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy mogę później usunąć hasło?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. Możesz użyć narzędzia PDF odblokuj (wkrótce dostępne) lub innego programu do PDF z podaniem hasła."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy jest zgodny z RODO?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak — pliki nigdy nie opuszczają przeglądarki. Żadne dane nie są wysyłane na serwery. W pełni zgodny z RODO."
+    }
+  }
+]

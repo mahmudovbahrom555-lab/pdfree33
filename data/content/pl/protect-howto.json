@@ -1,0 +1,13 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Zabezpiecz PDF hasłem za darmo",
+  "description": "Dodaj hasło do PDF z szyfrowaniem AES-256 bez przesyłania na serwer — za darmo, całkowicie przetwarzane w przeglądarce.",
+  "totalTime": "PT1M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — darmowe narzędzie do zabezpieczania PDF w przeglądarce, bez przesyłania" }],
+  "step": [
+    { "@type": "HowToStep", "position": 1, "name": "Prześlij PDF", "text": "Kliknij 'Wybierz plik' lub przeciągnij PDF do obszaru przesyłania.", "url": "https://pdfree.io/pl/zabezpiecz-pdf/#step1" },
+    { "@type": "HowToStep", "position": 2, "name": "Wpisz hasło", "text": "Wpisz hasło, którym chcesz zabezpieczyć dokument.", "url": "https://pdfree.io/pl/zabezpiecz-pdf/#step2" },
+    { "@type": "HowToStep", "position": 3, "name": "Zabezpiecz i pobierz", "text": "Kliknij 'Zabezpiecz PDF'. Pobierz zabezpieczony PDF — plik nigdy nie opuścił Twojego urządzenia.", "url": "https://pdfree.io/pl/zabezpiecz-pdf/#step3" }
+  ]
+}

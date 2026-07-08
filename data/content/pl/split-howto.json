@@ -1,0 +1,13 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Podziel PDF za darmo",
+  "description": "Podziel plik PDF lub wyodrębnij konkretne strony bez przesyłania na serwer — za darmo, całkowicie przetwarzane w przeglądarce.",
+  "totalTime": "PT1M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — darmowe narzędzie do podziału PDF w przeglądarce, bez przesyłania" }],
+  "step": [
+    { "@type": "HowToStep", "position": 1, "name": "Prześlij PDF", "text": "Kliknij 'Wybierz plik' lub przeciągnij PDF do obszaru przesyłania.", "url": "https://pdfree.io/pl/podziel-pdf/#step1" },
+    { "@type": "HowToStep", "position": 2, "name": "Wybierz strony", "text": "Wybierz poszczególne strony, zakresy (np. 1-3, 5) lub wszystkie strony jako osobne pliki.", "url": "https://pdfree.io/pl/podziel-pdf/#step2" },
+    { "@type": "HowToStep", "position": 3, "name": "Podziel i pobierz", "text": "Kliknij 'Podziel PDF'. Pobierz wyodrębnione strony — żaden plik nie opuścił Twojego urządzenia.", "url": "https://pdfree.io/pl/podziel-pdf/#step3" }
+  ]
+}

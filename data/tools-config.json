@@ -72,6 +72,12 @@
       "locale": "nl_NL",
       "dir": "nl",
       "depth": 2
+    },
+    "pl": {
+      "code": "pl",
+      "locale": "pl_PL",
+      "dir": "pl",
+      "depth": 2
     }
   },
   "tools": [
@@ -91,7 +97,8 @@
         "ja": "pdf-ketsugou",
         "it": "unisci-pdf",
         "ko": "pdf-hapchigi",
-        "nl": "pdf-samenvoegen"
+        "nl": "pdf-samenvoegen",
+        "pl": "polacz-pdf"
       },
       "titles": {
         "en": "Merge PDF Files Free — No Size Limit, No Upload | PDFree",
@@ -105,7 +112,8 @@
         "ja": "PDFを無料で結合 — アップロード不要・登録不要 | PDFree",
         "it": "Unisci PDF Gratis Online — Senza Caricare File | PDFree",
         "ko": "PDF 합치기 — 무료, 업로드 없이, 회원가입 없이 | PDFree",
-        "nl": "PDF samenvoegen — Gratis, Zonder Uploaden | PDFree"
+        "nl": "PDF samenvoegen — Gratis, Zonder Uploaden | PDFree",
+        "pl": "Połącz PDF — Darmowy, Bez Przesyłania Plików | PDFree"
       },
       "descs": {
         "en": "Combine unlimited PDF files instantly. 100% private, no uploads, no file size limits.",
@@ -119,7 +127,8 @@
         "ja": "PDFファイルをブラウザ内で結合します。ファイルが外部に送信されることはありません。登録不要、完全無料。",
         "it": "Unisci file PDF illimitati all'istante. 100% privato — i file rimangono nel tuo browser. Senza upload, senza registrazione.",
         "ko": "PDF 파일을 즉시 무제한으로 합칩니다. 100% 비공개 — 파일이 브라우저에 그대로 남아 있습니다. 업로드 없음, 회원가입 없음.",
-        "nl": "Voeg onbeperkt PDF-bestanden direct samen. 100% privé — bestanden blijven in je browser. Zonder uploaden, zonder registratie."
+        "nl": "Voeg onbeperkt PDF-bestanden direct samen. 100% privé — bestanden blijven in je browser. Zonder uploaden, zonder registratie.",
+        "pl": "Połącz nieograniczoną liczbę plików PDF bezpośrednio w przeglądarce. 100% prywatne — pliki pozostają na urządzeniu. Bez przesyłania, bez rejestracji."
       },
       "navLabels": {
         "en": "Merge",
@@ -133,7 +142,8 @@
         "ja": "結合",
         "it": "Unisci",
         "ko": "합치기",
-        "nl": "Samenvoegen"
+        "nl": "Samenvoegen",
+        "pl": "Połącz PDF"
       },
       "cardNames": {
         "en": "Merge PDF files",
@@ -147,7 +157,8 @@
         "ja": "PDFを結合",
         "it": "Unisci PDF",
         "ko": "PDF 합치기",
-        "nl": "PDF samenvoegen"
+        "nl": "PDF samenvoegen",
+        "pl": "Połącz PDF"
       },
       "cardDescs": {
         "en": "Combine unlimited PDF files — no restrictions",
@@ -161,7 +172,8 @@
         "ja": "無制限のPDFファイルを結合 — 制限なし",
         "it": "Combina file PDF illimitati — senza restrizioni",
         "ko": "PDF 파일을 무제한으로 합치기 — 제한 없음",
-        "nl": "Combineer onbeperkte PDF-bestanden — zonder beperkingen"
+        "nl": "Combineer onbeperkte PDF-bestanden — zonder beperkingen",
+        "pl": "Łącz nieograniczone pliki PDF — bez ograniczeń"
       },
       "breadcrumb": {
         "en": "Merge PDF",
@@ -175,7 +187,8 @@
         "ja": "PDFを結合",
         "it": "Unisci PDF",
         "ko": "PDF 합치기",
-        "nl": "PDF samenvoegen"
+        "nl": "PDF samenvoegen",
+        "pl": "Połącz PDF"
       },
       "metaDescs": {
         "en": "Merge PDF files free — no size limit, no daily limit, no upload. Combine large PDFs or 100+ files at once in your browser. 100% private. No signup.",
@@ -189,7 +202,8 @@
         "ja": "PDFを無料で結合 — サイズ制限なし、利用回数制限なし、アップロード不要。ブラウザ内で処理、100%プライベート。登録不要。",
         "it": "Unisci PDF gratis online — senza caricare file, senza registrazione. Combina 2, 50 o 100+ PDF con un clic. 100% privato, elaborato nel browser. Nessun limite.",
         "ko": "PDF 파일을 무료로 합치기 — 파일 크기 제한 없음, 일일 제한 없음, 업로드 없음. 브라우저에서 처리, 100% 비공개. 회원가입 불필요.",
-        "nl": "PDF samenvoegen gratis online — zonder uploaden, zonder registratie. Combineer 2, 50 of 100+ PDF's met één klik. 100% privé, verwerkt in de browser. Zonder limieten."
+        "nl": "PDF samenvoegen gratis online — zonder uploaden, zonder registratie. Combineer 2, 50 of 100+ PDF's met één klik. 100% privé, verwerkt in de browser. Zonder limieten.",
+        "pl": "Połącz PDF za darmo online — bez przesyłania, bez rejestracji. Połącz 2, 50 lub 100+ plików PDF jednym kliknięciem. 100% prywatne, przetwarzane w przeglądarce. Bez limitów."
       },
       "ogTitles": {
         "en": "Merge PDF Free — No Size Limit, Combine Large Files, No Upload",
@@ -203,7 +217,8 @@
         "ja": "PDF結合 無制限 — サーバーへのアップロードなし | PDFree",
         "it": "Unisci PDF Gratis — Senza Upload, Senza Registrazione | PDFree",
         "ko": "PDF 합치기 무료 — 업로드 없이, 회원가입 불필요 | PDFree",
-        "nl": "PDF samenvoegen Gratis — Zonder Uploaden, Zonder Registratie | PDFree"
+        "nl": "PDF samenvoegen Gratis — Zonder Uploaden, Zonder Registratie | PDFree",
+        "pl": "Połącz PDF Za Darmo — Bez Przesyłania, Bez Rejestracji | PDFree"
       },
       "ogDescs": {
         "en": "Combine unlimited PDFs instantly. 100% private — files never leave your browser. No signup, no limits.",
@@ -217,7 +232,8 @@
         "ja": "PDFを無制限に即座に結合します。100%プライベート — ファイルはブラウザから出ません。登録不要、制限なし。",
         "it": "Combina PDF illimitati all'istante. 100% privato — i file non lasciano mai il tuo browser. Senza account, senza limiti.",
         "ko": "PDF를 즉시 무제한으로 합칩니다. 100% 비공개 — 파일이 브라우저를 절대 벗어나지 않습니다. 계정 없음, 제한 없음.",
-        "nl": "Combineer onbeperkte PDF's direct. 100% privé — bestanden verlaten nooit je browser. Geen account, geen limieten."
+        "nl": "Combineer onbeperkte PDF's direct. 100% privé — bestanden verlaten nooit je browser. Geen account, geen limieten.",
+        "pl": "Połącz nieograniczone pliki PDF bezpośrednio. 100% prywatne — pliki nigdy nie opuszczają przeglądarki. Bez konta, bez limitów."
       },
       "keywords": {
         "en": "merge pdf, combine pdf files, join pdf, merge pdf files free, combine pdf online, merge pdf without uploading"
@@ -239,7 +255,8 @@
         "ja": "pdf-bunkatsu",
         "it": "dividi-pdf",
         "ko": "pdf-bunhal",
-        "nl": "pdf-splitsen"
+        "nl": "pdf-splitsen",
+        "pl": "podziel-pdf"
       },
       "titles": {
         "en": "Split PDF Free — Separate Pages Online, No Upload | PDFree",
@@ -253,7 +270,8 @@
         "ja": "PDFを無料で分割 — ページを個別ファイルに、アップロード不要 | PDFree",
         "it": "Dividi PDF Gratis Online — Senza Caricare File | PDFree",
         "ko": "PDF 분할 — 무료, 업로드 없이 | PDFree",
-        "nl": "PDF splitsen — Gratis, Zonder Uploaden | PDFree"
+        "nl": "PDF splitsen — Gratis, Zonder Uploaden | PDFree",
+        "pl": "Podziel PDF — Darmowy, Bez Przesyłania | PDFree"
       },
       "descs": {
         "en": "Extract pages or split PDF into separate files. 100% private, no uploads, no limits.",
@@ -267,7 +285,8 @@
         "ja": "PDFのページを抽出するか個別ファイルに分割します。100%プライベート — ブラウザ内で処理、アップロード不要。",
         "it": "Dividi un PDF in più file o estrai pagine specifiche. Tutto nel browser, nessun upload.",
         "ko": "PDF를 여러 파일로 나누거나 특정 페이지를 추출합니다. 브라우저에서 처리, 업로드 없음.",
-        "nl": "Splits een PDF in meerdere bestanden of extraheer specifieke pagina's. Verwerkt in de browser, geen upload."
+        "nl": "Splits een PDF in meerdere bestanden of extraheer specifieke pagina's. Verwerkt in de browser, geen upload.",
+        "pl": "Podziel PDF na wiele plików lub wyodrębnij konkretne strony. Przetwarzane w przeglądarce, bez przesyłania."
       },
       "navLabels": {
         "en": "Split",
@@ -281,7 +300,8 @@
         "ja": "分割",
         "it": "Dividi",
         "ko": "분할",
-        "nl": "Splitsen"
+        "nl": "Splitsen",
+        "pl": "Podziel PDF"
       },
       "cardNames": {
         "en": "Split PDF",
@@ -295,7 +315,8 @@
         "ja": "PDFを分割",
         "it": "Dividi PDF",
         "ko": "PDF 분할",
-        "nl": "PDF splitsen"
+        "nl": "PDF splitsen",
+        "pl": "Podziel PDF"
       },
       "cardDescs": {
         "en": "Extract pages or split into separate files",
@@ -309,7 +330,8 @@
         "ja": "ページを抽出するか個別ファイルに分割する",
         "it": "Dividi PDF o estrai pagine specifiche — senza restrizioni",
         "ko": "PDF 분할 또는 특정 페이지 추출 — 제한 없음",
-        "nl": "PDF splitsen of specifieke pagina's extraheren — zonder beperkingen"
+        "nl": "PDF splitsen of specifieke pagina's extraheren — zonder beperkingen",
+        "pl": "Podziel PDF lub wyodrębnij strony — bez ograniczeń"
       },
       "breadcrumb": {
         "en": "Split PDF",
@@ -323,7 +345,8 @@
         "ja": "PDFを分割",
         "it": "Dividi PDF",
         "ko": "PDF 분할",
-        "nl": "PDF splitsen"
+        "nl": "PDF splitsen",
+        "pl": "Podziel PDF"
       },
       "metaDescs": {
         "en": "Free PDF splitter — split, separate, or divide PDF pages online with no upload, no signup. Extract exact pages or page ranges, all processed in your browser. No limits.",
@@ -337,7 +360,8 @@
         "ja": "PDFをサーバーにアップロードせずに分割できます。ページや範囲を抽出 — すべてブラウザ内で処理、100%プライベート。無料、登録不要。",
         "it": "Dividi PDF gratis — separa pagine o estrai sezioni specifiche. Elaborato nel browser, nessun upload. 100% privato, senza registrazione.",
         "ko": "PDF를 무료로 나누기 — 페이지 분리 또는 특정 섹션 추출. 브라우저에서 처리, 업로드 없음. 100% 비공개.",
-        "nl": "PDF splitsen gratis — pagina's scheiden of specifieke secties extraheren. Verwerkt in de browser, geen upload. 100% privé."
+        "nl": "PDF splitsen gratis — pagina's scheiden of specifieke secties extraheren. Verwerkt in de browser, geen upload. 100% privé.",
+        "pl": "Podziel PDF za darmo — oddziel strony lub wyodrębnij konkretne sekcje. Przetwarzane w przeglądarce, bez przesyłania. 100% prywatne."
       },
       "ogTitles": {
         "en": "Split PDF Free — Separate, Divide, or Extract Pages, No Upload",
@@ -351,7 +375,8 @@
         "ja": "PDF分割 — ページを分離・抽出 — 100%プライベート、常に無料",
         "it": "Dividi PDF Gratis — Senza Upload | PDFree",
         "ko": "PDF 나누기 무료 — 업로드 없이 | PDFree",
-        "nl": "PDF splitsen Gratis — Zonder Uploaden | PDFree"
+        "nl": "PDF splitsen Gratis — Zonder Uploaden | PDFree",
+        "pl": "Podziel PDF Za Darmo — Bez Przesyłania | PDFree"
       },
       "ogDescs": {
         "en": "Split PDFs into separate pages or extract a page range. 100% private — files never uploaded. Free.",
@@ -365,7 +390,8 @@
         "ja": "PDFをページごとに分割するか範囲を抽出します。100%プライベート — ファイルはアップロードされません。無料。",
         "it": "Dividi PDF o estrai pagine all'istante. 100% privato — i file non lasciano mai il tuo browser.",
         "ko": "PDF를 즉시 나눕니다. 100% 비공개 — 파일이 브라우저를 절대 벗어나지 않습니다.",
-        "nl": "Splits PDF's direct. 100% privé — bestanden verlaten nooit je browser."
+        "nl": "Splits PDF's direct. 100% privé — bestanden verlaten nooit je browser.",
+        "pl": "Podziel PDF bezpośrednio. 100% prywatne — pliki nigdy nie opuszczają przeglądarki."
       },
       "keywords": {
         "en": "split pdf, divide pdf, extract pages from pdf, split pdf online free, pdf splitter, split pdf without uploading"
@@ -387,7 +413,8 @@
         "ja": "pdf-atsuryoku",
         "it": "comprimi-pdf",
         "ko": "pdf-apchuk",
-        "nl": "pdf-comprimeren"
+        "nl": "pdf-comprimeren",
+        "pl": "kompresuj-pdf"
       },
       "titles": {
         "en": "Compress PDF Free Online — Reduce Size for Email, No Upload | PDFree",
@@ -401,7 +428,8 @@
         "ja": "PDFを無料で圧縮 — ファイルサイズを削減、アップロード不要 | PDFree",
         "it": "Comprimi PDF Gratis Online — Senza Caricare File | PDFree",
         "ko": "PDF 압축 — 무료, 업로드 없이 | PDFree",
-        "nl": "PDF Comprimeren — Gratis, Zonder Uploaden | PDFree"
+        "nl": "PDF Comprimeren — Gratis, Zonder Uploaden | PDFree",
+        "pl": "Kompresuj PDF — Darmowy, Bez Przesyłania | PDFree"
       },
       "descs": {
         "en": "Reduce PDF file size without losing quality. Processed locally in your browser — files never uploaded.",
@@ -415,7 +443,8 @@
         "ja": "PDFのファイルサイズを品質を落とさずに削減します。ブラウザ内でローカルに処理 — ファイルはアップロードされません。",
         "it": "Riduci le dimensioni del PDF senza perdita di qualità. Elaborato nel browser, nessun upload.",
         "ko": "품질 손실 없이 PDF 파일 크기를 줄입니다. 브라우저에서 처리, 업로드 없음.",
-        "nl": "Comprimeer je PDF-bestand zonder kwaliteitsverlies. Verwerkt in de browser, geen upload."
+        "nl": "Comprimeer je PDF-bestand zonder kwaliteitsverlies. Verwerkt in de browser, geen upload.",
+        "pl": "Kompresuj plik PDF bez utraty jakości. Przetwarzane w przeglądarce, bez przesyłania."
       },
       "navLabels": {
         "en": "Compress",
@@ -429,7 +458,8 @@
         "ja": "圧縮",
         "it": "Comprimi",
         "ko": "압축",
-        "nl": "Comprimeren"
+        "nl": "Comprimeren",
+        "pl": "Kompresuj PDF"
       },
       "cardNames": {
         "en": "Compress PDF",
@@ -443,7 +473,8 @@
         "ja": "PDF圧縮",
         "it": "Comprimi PDF",
         "ko": "PDF 압축",
-        "nl": "PDF comprimeren"
+        "nl": "PDF comprimeren",
+        "pl": "Kompresuj PDF"
       },
       "cardDescs": {
         "en": "Reduce file size without losing quality",
@@ -457,7 +488,8 @@
         "ja": "品質を落とさずにファイルサイズを削減する",
         "it": "Riduci le dimensioni del PDF — senza perdita di qualità",
         "ko": "품질 손실 없이 PDF 용량 줄이기 — 업로드 없음",
-        "nl": "PDF comprimeren in je browser — geen upload"
+        "nl": "PDF comprimeren in je browser — geen upload",
+        "pl": "Kompresuj PDF bez utraty jakości — bez przesyłania"
       },
       "breadcrumb": {
         "en": "Compress PDF",
@@ -471,7 +503,8 @@
         "ja": "PDF圧縮",
         "it": "Comprimi PDF",
         "ko": "PDF 압축",
-        "nl": "PDF comprimeren"
+        "nl": "PDF comprimeren",
+        "pl": "Kompresuj PDF"
       },
       "metaDescs": {
         "en": "Compress PDF for email or web upload — free PDF compressor that reduces file size 20–80% without losing quality. Runs in your browser, nothing uploaded, no signup.",
@@ -485,7 +518,8 @@
         "ja": "PDFを無料で圧縮 — ファイルサイズを20〜80%削減、品質を落とさず。ブラウザ内で処理、アップロードなし。アカウント不要、制限なし。",
         "it": "Comprimi PDF gratis — riduci la dimensione del file senza perdita di qualità. Elaborato nel browser, nessun upload. 100% privato, senza registrazione.",
         "ko": "PDF를 무료로 압축 — 품질 손실 없이 파일 크기 감소. 브라우저에서 처리, 업로드 없음. 100% 비공개, 회원가입 불필요.",
-        "nl": "PDF comprimeren gratis online — zonder uploaden, zonder registratie. Verklein je PDF direct in de browser. 100% privé."
+        "nl": "PDF comprimeren gratis online — zonder uploaden, zonder registratie. Verklein je PDF direct in de browser. 100% privé.",
+        "pl": "Kompresuj PDF za darmo — zmniejsz rozmiar pliku bez utraty jakości. Przetwarzane w przeglądarce, bez przesyłania. 100% prywatne, bez rejestracji."
       },
       "ogTitles": {
         "en": "Compress PDF Free — Reduce for Email, No Upload, No Quality Loss",
@@ -499,7 +533,8 @@
         "ja": "PDF圧縮 無料 — 20〜80%サイズ削減、アップロード不要、品質ロスなし",
         "it": "Comprimi PDF Gratis — Senza Upload | PDFree",
         "ko": "PDF 압축 무료 — 업로드 없이 | PDFree",
-        "nl": "PDF Comprimeren Gratis — Zonder Uploaden | PDFree"
+        "nl": "PDF Comprimeren Gratis — Zonder Uploaden | PDFree",
+        "pl": "Kompresuj PDF Za Darmo — Bez Przesyłania | PDFree"
       },
       "ogDescs": {
         "en": "Free PDF compressor — reduce file size for email, web forms, or storage. 20–80% smaller. Runs in your browser, files never uploaded. No signup.",
@@ -513,7 +548,8 @@
         "ja": "品質を落とさずにPDFのサイズを削減します。ブラウザ内で処理 — ファイルはアップロードされません。無料。",
         "it": "Riduci le dimensioni del PDF all'istante. 100% privato — i file non lasciano mai il tuo browser.",
         "ko": "PDF 파일 크기를 즉시 줄입니다. 100% 비공개 — 파일이 브라우저를 절대 벗어나지 않습니다.",
-        "nl": "Comprimeer je PDF direct. 100% privé — bestanden verlaten nooit je browser."
+        "nl": "Comprimeer je PDF direct. 100% privé — bestanden verlaten nooit je browser.",
+        "pl": "Kompresuj PDF bezpośrednio. 100% prywatne — pliki nigdy nie opuszczają przeglądarki."
       },
       "keywords": {
         "en": "compress pdf, reduce pdf size, compress pdf online free, pdf compressor, shrink pdf, make pdf smaller"
@@ -653,7 +689,8 @@
         "ja": "pdf-sukashi",
         "it": "filigrana-pdf",
         "ko": "pdf-watermark",
-        "nl": "watermerk-pdf"
+        "nl": "watermerk-pdf",
+        "pl": "znak-wodny-pdf"
       },
       "titles": {
         "en": "Watermark PDF Free Online — Add Text Stamp, No Upload | PDFree",
@@ -667,7 +704,8 @@
         "ja": "PDFに透かしを追加 無料 — テキスト透かし、アップロード不要 | PDFree",
         "it": "Aggiungi Filigrana PDF Gratis — Senza Upload | PDFree",
         "ko": "PDF 워터마크 추가 무료 — 텍스트 도장, 업로드 없이 | PDFree",
-        "nl": "Watermerk toevoegen aan PDF — Gratis, Zonder Uploaden | PDFree"
+        "nl": "Watermerk toevoegen aan PDF — Gratis, Zonder Uploaden | PDFree",
+        "pl": "Dodaj Znak Wodny do PDF — Darmowy, Bez Przesyłania | PDFree"
       },
       "descs": {
         "en": "Add custom text watermarks to every PDF page. 100% private — processed locally, no uploads.",
@@ -681,7 +719,8 @@
         "ja": "すべてのPDFページにテキスト透かしを追加します。100%プライベート — ローカルで処理、アップロード不要。",
         "it": "Aggiungi timbri di testo a ogni pagina PDF. Elaborato nel browser, nessun upload.",
         "ko": "PDF의 모든 페이지에 텍스트 워터마크를 추가합니다. 브라우저에서 처리, 업로드 없음.",
-        "nl": "Voeg tekststempels toe aan elke PDF-pagina. Verwerkt in de browser, geen upload."
+        "nl": "Voeg tekststempels toe aan elke PDF-pagina. Verwerkt in de browser, geen upload.",
+        "pl": "Dodaj tekstowe stemple do każdej strony PDF. Przetwarzane w przeglądarce, bez przesyłania."
       },
       "navLabels": {
         "en": "Watermark",
@@ -695,7 +734,8 @@
         "ja": "透かし",
         "it": "Filigrana",
         "ko": "워터마크",
-        "nl": "Watermerk"
+        "nl": "Watermerk",
+        "pl": "Znak wodny"
       },
       "cardNames": {
         "en": "Watermark",
@@ -709,7 +749,8 @@
         "ja": "透かし追加",
         "it": "Filigrana PDF",
         "ko": "PDF 워터마크",
-        "nl": "Watermerk PDF"
+        "nl": "Watermerk PDF",
+        "pl": "Znak wodny PDF"
       },
       "cardDescs": {
         "en": "Stamp text on every page — diagonal or tiled",
@@ -723,7 +764,8 @@
         "ja": "すべてのページにテキストを押す — 斜めまたはタイル状",
         "it": "Aggiungi timbri di testo al PDF — senza upload",
         "ko": "PDF에 텍스트 도장 추가 — 업로드 없음",
-        "nl": "Tekststempels toevoegen aan PDF — geen upload"
+        "nl": "Tekststempels toevoegen aan PDF — geen upload",
+        "pl": "Dodaj tekstowe stemple do PDF — bez przesyłania"
       },
       "breadcrumb": {
         "en": "Watermark PDF",
@@ -737,7 +779,8 @@
         "ja": "透かしPDF",
         "it": "Filigrana PDF",
         "ko": "PDF 워터마크",
-        "nl": "Watermerk PDF"
+        "nl": "Watermerk PDF",
+        "pl": "Znak wodny PDF"
       },
       "metaDescs": {
         "en": "Watermark a PDF free online — add a text stamp (DRAFT, CONFIDENTIAL, your name) with custom opacity, color, and rotation. No upload, no signup. Free forever.",
@@ -751,7 +794,8 @@
         "ja": "PDFに透かしを無料で追加 — 「下書き」「社外秘」またはあなたの名前、透明度・色・角度をカスタマイズ可能。アップロード不要、登録不要。",
         "it": "Aggiungi filigrana al PDF gratis — timbri di testo diagonali o orizzontali. Elaborato nel browser, nessun upload. 100% privato, senza registrazione.",
         "ko": "PDF 워터마크 무료 추가 — 대각선 또는 수평 텍스트 도장. 브라우저에서 처리, 업로드 없음. 100% 비공개.",
-        "nl": "Watermerk toevoegen aan PDF gratis — diagonale of horizontale tekststempels. Verwerkt in de browser, geen upload. 100% privé."
+        "nl": "Watermerk toevoegen aan PDF gratis — diagonale of horizontale tekststempels. Verwerkt in de browser, geen upload. 100% privé.",
+        "pl": "Dodaj znak wodny do PDF za darmo — ukośne lub poziome stemple tekstowe. Przetwarzane w przeglądarce, bez przesyłania. 100% prywatne."
       },
       "ogTitles": {
         "en": "Watermark PDF Free — Add Text Stamp, Custom Opacity, No Upload",
@@ -765,7 +809,8 @@
         "ja": "PDF透かし 無料 — テキストスタンプ、カスタム透明度、アップロード不要",
         "it": "Aggiungi Filigrana PDF Gratis — Senza Upload | PDFree",
         "ko": "PDF 워터마크 추가 무료 — 업로드 없이 | PDFree",
-        "nl": "Watermerk toevoegen aan PDF Gratis — Zonder Uploaden | PDFree"
+        "nl": "Watermerk toevoegen aan PDF Gratis — Zonder Uploaden | PDFree",
+        "pl": "Dodaj Znak Wodny do PDF Za Darmo — Bez Przesyłania | PDFree"
       },
       "ogDescs": {
         "en": "Add a text watermark or stamp to any PDF. Custom opacity, color, rotation — processed in your browser, nothing uploaded. Free forever.",
@@ -779,7 +824,8 @@
         "ja": "任意のPDFにテキスト透かしやスタンプを追加します。透明度・色・角度をカスタマイズ — ブラウザ内で処理、アップロードなし。永久無料。",
         "it": "Aggiungi filigrana al PDF all'istante. 100% privato — i file non lasciano mai il tuo browser.",
         "ko": "PDF에 즉시 워터마크를 추가합니다. 100% 비공개 — 파일이 브라우저를 절대 벗어나지 않습니다.",
-        "nl": "Voeg direct een watermerk toe aan je PDF. 100% privé — bestanden verlaten nooit je browser."
+        "nl": "Voeg direct een watermerk toe aan je PDF. 100% privé — bestanden verlaten nooit je browser.",
+        "pl": "Dodaj znak wodny do PDF bezpośrednio. 100% prywatne — pliki nigdy nie opuszczają przeglądarki."
       },
       "keywords": {
         "en": "watermark pdf, add watermark to pdf, pdf watermark online free, text watermark pdf, confidential watermark"
@@ -801,7 +847,8 @@
         "ja": "pdf-password",
         "it": "proteggi-pdf",
         "ko": "pdf-amho",
-        "nl": "pdf-beveiligen"
+        "nl": "pdf-beveiligen",
+        "pl": "zabezpiecz-pdf"
       },
       "titles": {
         "en": "Protect PDF with Password — AES-256, No Upload | PDFree",
@@ -815,7 +862,8 @@
         "ja": "PDFにパスワードをかける — AES-256、アップロード不要 | PDFree",
         "it": "Proteggi PDF con Password Gratis — Senza Upload | PDFree",
         "ko": "PDF 비밀번호 설정 무료 — AES-256 암호화, 업로드 없이 | PDFree",
-        "nl": "PDF beveiligen met Wachtwoord — Gratis, AES-256, Zonder Uploaden | PDFree"
+        "nl": "PDF beveiligen met Wachtwoord — Gratis, AES-256, Zonder Uploaden | PDFree",
+        "pl": "Zabezpiecz PDF Hasłem — Darmowy, AES-256, Bez Przesyłania | PDFree"
       },
       "descs": {
         "en": "Add password and restrict permissions. AES-256 encrypted in your browser — files never sent to a server.",
@@ -829,7 +877,8 @@
         "ja": "パスワードを追加してアクセス権を制限します。AES-256でブラウザ内で暗号化 — ファイルはサーバーに送られません。",
         "it": "Proteggi il tuo PDF con crittografia AES-256. Elaborato nel browser, nessun upload.",
         "ko": "AES-256 암호화로 PDF에 비밀번호를 설정합니다. 브라우저에서 처리, 업로드 없음.",
-        "nl": "Beveilig je PDF met AES-256-versleuteling. Verwerkt in de browser, geen upload."
+        "nl": "Beveilig je PDF met AES-256-versleuteling. Verwerkt in de browser, geen upload.",
+        "pl": "Zabezpiecz PDF szyfrowaniem AES-256. Przetwarzane w przeglądarce, bez przesyłania."
       },
       "navLabels": {
         "en": "Protect",
@@ -843,7 +892,8 @@
         "ja": "保護",
         "it": "Proteggi",
         "ko": "암호 설정",
-        "nl": "Beveiligen"
+        "nl": "Beveiligen",
+        "pl": "Zabezpiecz"
       },
       "cardNames": {
         "en": "Protect PDF",
@@ -857,7 +907,8 @@
         "ja": "PDFを保護",
         "it": "Proteggi PDF",
         "ko": "PDF 보호",
-        "nl": "PDF beveiligen"
+        "nl": "PDF beveiligen",
+        "pl": "Zabezpiecz PDF"
       },
       "cardDescs": {
         "en": "AES-256 password & permissions — 100% private",
@@ -871,7 +922,8 @@
         "ja": "AES-256パスワード & アクセス権 — 100%プライベート",
         "it": "Proteggi PDF con password AES-256 — nessun upload",
         "ko": "AES-256로 PDF에 비밀번호 설정 — 업로드 없음",
-        "nl": "PDF beveiligen met AES-256-wachtwoord — geen upload"
+        "nl": "PDF beveiligen met AES-256-wachtwoord — geen upload",
+        "pl": "Zabezpiecz PDF hasłem AES-256 — bez przesyłania"
       },
       "breadcrumb": {
         "en": "Protect PDF",
@@ -885,7 +937,8 @@
         "ja": "PDFを保護",
         "it": "Proteggi PDF",
         "ko": "PDF 암호 설정",
-        "nl": "PDF beveiligen"
+        "nl": "PDF beveiligen",
+        "pl": "Zabezpiecz PDF"
       },
       "metaDescs": {
         "en": "Password-protect your PDF with AES-256 encryption. Files stay on your device — never uploaded to any server. Add permissions too. Free, no signup required.",
@@ -899,7 +952,8 @@
         "ja": "PDFをアップロードせずにAES-256パスワードで保護します。ファイルはデバイスに残ります — どのサーバーにも送信されません。アクセス権も制限できます。無料、登録不要。",
         "it": "Proteggi PDF con password gratis — crittografia AES-256, elaborata nel browser. Nessun upload, 100% privato, senza registrazione.",
         "ko": "PDF 비밀번호 설정 무료 — AES-256 암호화, 브라우저에서 처리. 업로드 없음, 100% 비공개, 회원가입 불필요.",
-        "nl": "PDF beveiligen gratis — AES-256-versleuteling, verwerkt in de browser. Geen upload, 100% privé, zonder registratie."
+        "nl": "PDF beveiligen gratis — AES-256-versleuteling, verwerkt in de browser. Geen upload, 100% privé, zonder registratie.",
+        "pl": "Zabezpiecz PDF za darmo — szyfrowanie AES-256, przetwarzane w przeglądarce. Bez przesyłania, 100% prywatne, bez rejestracji."
       },
       "ogTitles": {
         "en": "Encrypt PDF with AES-256 — Your Password Never Reaches Any Server",
@@ -913,7 +967,8 @@
         "ja": "AES-256でPDFを暗号化 — パスワードはサーバーに届きません",
         "it": "Proteggi PDF con Password Gratis — Senza Upload | PDFree",
         "ko": "PDF 비밀번호 설정 무료 — 업로드 없이 | PDFree",
-        "nl": "PDF beveiligen Gratis — Zonder Uploaden | PDFree"
+        "nl": "PDF beveiligen Gratis — Zonder Uploaden | PDFree",
+        "pl": "Zabezpiecz PDF Za Darmo — Bez Przesyłania | PDFree"
       },
       "ogDescs": {
         "en": "Password-protect your PDF with AES-256 encryption. Files never uploaded. Free, no signup.",
@@ -927,7 +982,8 @@
         "ja": "AES-256暗号化でPDFをパスワード保護します。ファイルはアップロードされません。無料、登録不要。",
         "it": "Crittografa PDF con AES-256 all'istante. 100% privato — i file non lasciano mai il tuo browser.",
         "ko": "AES-256로 즉시 PDF를 암호화합니다. 100% 비공개 — 파일이 브라우저를 절대 벗어나지 않습니다.",
-        "nl": "Versleutel PDF direct met AES-256. 100% privé — bestanden verlaten nooit je browser."
+        "nl": "Versleutel PDF direct met AES-256. 100% privé — bestanden verlaten nooit je browser.",
+        "pl": "Zaszyfruj PDF AES-256 bezpośrednio. 100% prywatne — pliki nigdy nie opuszczają przeglądarki."
       },
       "keywords": {
         "en": "protect pdf, password protect pdf, encrypt pdf, add password to pdf, pdf password free, pdf encryption"
@@ -1361,7 +1417,8 @@
         "ja": "jpg-pdf-henkan",
         "it": "jpg-in-pdf",
         "ko": "jpg-pdf-byeonhwan",
-        "nl": "jpg-naar-pdf"
+        "nl": "jpg-naar-pdf",
+        "pl": "jpg-do-pdf"
       },
       "titles": {
         "en": "JPG to PDF Free — Convert Images to PDF, No Upload | PDFree",
@@ -1375,7 +1432,8 @@
         "ja": "JPGをPDFに変換 無料 — 画像をPDFに変換、アップロード不要 | PDFree",
         "it": "JPG in PDF Gratis — Converti Immagini in PDF Online | PDFree",
         "ko": "JPG를 PDF로 변환 무료 — 이미지를 PDF로 온라인 변환 | PDFree",
-        "nl": "JPG naar PDF — Gratis, Afbeelding naar PDF Online | PDFree"
+        "nl": "JPG naar PDF — Gratis, Afbeelding naar PDF Online | PDFree",
+        "pl": "JPG do PDF — Darmowy, Obraz do PDF Online | PDFree"
       },
       "descs": {
         "en": "Convert images to PDF instantly. Auto EXIF rotation. 100% private — processed locally, no uploads.",
@@ -1389,7 +1447,8 @@
         "ja": "画像を瞬時にPDFに変換します。EXIFの向きを自動補正。100%プライベート — ローカルで処理、アップロード不要。",
         "it": "Converti immagini JPG, PNG, WEBP in PDF. Nessun upload, elaborato nel browser.",
         "ko": "JPG, PNG, WEBP 이미지를 PDF로 변환합니다. 업로드 없음, 브라우저에서 처리.",
-        "nl": "Converteer JPG, PNG, WEBP-afbeeldingen naar PDF. Geen upload, verwerkt in de browser."
+        "nl": "Converteer JPG, PNG, WEBP-afbeeldingen naar PDF. Geen upload, verwerkt in de browser.",
+        "pl": "Konwertuj obrazy JPG, PNG, WEBP do PDF. Bez przesyłania, przetwarzane w przeglądarce."
       },
       "navLabels": {
         "en": "JPG→PDF",
@@ -1403,7 +1462,8 @@
         "ja": "JPG→PDF",
         "it": "JPG → PDF",
         "ko": "JPG → PDF",
-        "nl": "JPG → PDF"
+        "nl": "JPG → PDF",
+        "pl": "JPG → PDF"
       },
       "cardNames": {
         "en": "JPG to PDF",
@@ -1417,7 +1477,8 @@
         "ja": "JPGをPDFに",
         "it": "JPG in PDF",
         "ko": "JPG를 PDF로",
-        "nl": "JPG naar PDF"
+        "nl": "JPG naar PDF",
+        "pl": "JPG do PDF"
       },
       "cardDescs": {
         "en": "Convert images to PDF instantly",
@@ -1431,7 +1492,8 @@
         "ja": "画像を瞬時にPDFに変換する",
         "it": "Converti immagini in PDF — nessun upload",
         "ko": "이미지를 PDF로 변환 — 업로드 없음",
-        "nl": "Afbeeldingen naar PDF converteren — geen upload"
+        "nl": "Afbeeldingen naar PDF converteren — geen upload",
+        "pl": "Konwertuj obrazy do PDF — bez przesyłania"
       },
       "breadcrumb": {
         "en": "JPG to PDF",
@@ -1445,7 +1507,8 @@
         "ja": "JPGをPDFに",
         "it": "JPG in PDF",
         "ko": "JPG를 PDF로",
-        "nl": "JPG naar PDF"
+        "nl": "JPG naar PDF",
+        "pl": "JPG do PDF"
       },
       "metaDescs": {
         "en": "Convert JPG, PNG and WebP images to PDF free — no upload, processed in your browser. Combine multiple photos into one PDF instantly. EXIF rotation auto-fixed.",
@@ -1459,7 +1522,8 @@
         "ja": "JPG、PNG、WebP画像を無料でPDFに変換 — アップロード不要、ブラウザ内で処理。複数の画像を1つのPDFにまとめられます。EXIFの向きを自動補正。",
         "it": "Converti JPG in PDF gratis — senza caricare file. Supporta JPG, PNG, WEBP. Elaborato nel browser, 100% privato, senza registrazione.",
         "ko": "JPG를 PDF로 무료 변환 — 업로드 없이. JPG, PNG, WEBP 지원. 브라우저에서 처리, 100% 비공개.",
-        "nl": "JPG naar PDF converteren gratis — zonder uploaden. Ondersteunt JPG, PNG, WEBP. Verwerkt in de browser, 100% privé."
+        "nl": "JPG naar PDF converteren gratis — zonder uploaden. Ondersteunt JPG, PNG, WEBP. Verwerkt in de browser, 100% privé.",
+        "pl": "JPG do PDF za darmo — bez przesyłania. Obsługuje JPG, PNG, WEBP. Przetwarzane w przeglądarce, 100% prywatne."
       },
       "ogTitles": {
         "en": "JPG to PDF — Convert Multiple Photos into One File, No Upload",
@@ -1473,7 +1537,8 @@
         "ja": "JPGをPDFに変換 — 複数の写真を1つのファイルに、アップロード不要",
         "it": "JPG in PDF Gratis — Senza Upload | PDFree",
         "ko": "JPG를 PDF로 변환 무료 — 업로드 없이 | PDFree",
-        "nl": "JPG naar PDF Gratis — Zonder Uploaden | PDFree"
+        "nl": "JPG naar PDF Gratis — Zonder Uploaden | PDFree",
+        "pl": "JPG do PDF Za Darmo — Bez Przesyłania | PDFree"
       },
       "ogDescs": {
         "en": "Convert JPG to PDF instantly. Files processed in your browser — never uploaded. Free, no limits.",
@@ -1487,7 +1552,8 @@
         "ja": "JPGを瞬時にPDFに変換します。ファイルはブラウザ内で処理 — アップロードされません。無料、制限なし。",
         "it": "Converti immagini in PDF all'istante. 100% privato — i file non lasciano mai il tuo browser.",
         "ko": "이미지를 즉시 PDF로 변환합니다. 100% 비공개 — 파일이 브라우저를 절대 벗어나지 않습니다.",
-        "nl": "Converteer afbeeldingen direct naar PDF. 100% privé — bestanden verlaten nooit je browser."
+        "nl": "Converteer afbeeldingen direct naar PDF. 100% privé — bestanden verlaten nooit je browser.",
+        "pl": "Konwertuj obrazy do PDF bezpośrednio. 100% prywatne — pliki nigdy nie opuszczają przeglądarki."
       },
       "keywords": {
         "en": "jpg to pdf, convert jpg to pdf, image to pdf, jpg to pdf free online, convert images to pdf, png to pdf"
@@ -1509,7 +1575,8 @@
         "ja": "pdf-jpg-henkan",
         "it": "pdf-in-jpg",
         "ko": "pdf-jpg-byeonhwan",
-        "nl": "pdf-naar-jpg"
+        "nl": "pdf-naar-jpg",
+        "pl": "pdf-do-jpg"
       },
       "titles": {
         "en": "Convert PDF to JPG — Free, No Upload, 300 DPI | PDFree",
@@ -1523,7 +1590,8 @@
         "ja": "PDFをJPGに変換 — 無料、アップロード不要、300 DPI | PDFree",
         "it": "PDF in JPG Gratis — Converti PDF in Immagini Online | PDFree",
         "ko": "PDF를 JPG로 변환 무료 — 온라인, 업로드 없이 | PDFree",
-        "nl": "PDF naar JPG — Gratis, PDF naar Afbeelding Online | PDFree"
+        "nl": "PDF naar JPG — Gratis, PDF naar Afbeelding Online | PDFree",
+        "pl": "PDF do JPG — Darmowy, PDF do Obrazu Online | PDFree"
       },
       "descs": {
         "en": "Extract PDF pages as high-quality JPG or PNG images. 100% private — processed locally, no uploads.",
@@ -1537,7 +1605,8 @@
         "ja": "PDFのページを高品質なJPGまたはPNG画像として書き出します。100%プライベート — ローカルで処理、アップロード不要。",
         "it": "Converti pagine PDF in immagini JPG o PNG ad alta qualità. Nessun upload, elaborato nel browser.",
         "ko": "PDF 페이지를 고화질 JPG 또는 PNG 이미지로 변환합니다. 업로드 없음, 브라우저에서 처리.",
-        "nl": "Converteer PDF-pagina's naar hoge kwaliteit JPG of PNG afbeeldingen. Geen upload, verwerkt in de browser."
+        "nl": "Converteer PDF-pagina's naar hoge kwaliteit JPG of PNG afbeeldingen. Geen upload, verwerkt in de browser.",
+        "pl": "Konwertuj strony PDF do wysokiej jakości obrazów JPG lub PNG. Bez przesyłania, przetwarzane w przeglądarce."
       },
       "navLabels": {
         "en": "PDF→JPG",
@@ -1551,7 +1620,8 @@
         "ja": "PDF→JPG",
         "it": "PDF → JPG",
         "ko": "PDF → JPG",
-        "nl": "PDF → JPG"
+        "nl": "PDF → JPG",
+        "pl": "PDF → JPG"
       },
       "cardNames": {
         "en": "PDF to JPG",
@@ -1565,7 +1635,8 @@
         "ja": "PDFをJPGに",
         "it": "PDF in JPG",
         "ko": "PDF를 JPG로",
-        "nl": "PDF naar JPG"
+        "nl": "PDF naar JPG",
+        "pl": "PDF do JPG"
       },
       "cardDescs": {
         "en": "Extract pages as high-quality images",
@@ -1579,7 +1650,8 @@
         "ja": "ページを高品質な画像として書き出す",
         "it": "Converti pagine PDF in immagini JPG — nessun upload",
         "ko": "PDF 페이지를 JPG 이미지로 변환 — 업로드 없음",
-        "nl": "PDF-pagina's converteren naar JPG afbeeldingen — geen upload"
+        "nl": "PDF-pagina's converteren naar JPG afbeeldingen — geen upload",
+        "pl": "Konwertuj strony PDF do obrazów JPG — bez przesyłania"
       },
       "breadcrumb": {
         "en": "PDF to JPG",
@@ -1593,7 +1665,8 @@
         "ja": "PDFをJPGに",
         "it": "PDF in JPG",
         "ko": "PDF를 JPG로",
-        "nl": "PDF naar JPG"
+        "nl": "PDF naar JPG",
+        "pl": "PDF do JPG"
       },
       "metaDescs": {
         "en": "Convert PDF pages to JPG or PNG in your browser — no upload ever. Choose 72, 150, or 300 DPI. Multiple pages export as a ZIP. Free, no account required.",
@@ -1607,7 +1680,8 @@
         "ja": "PDFページをブラウザ内でJPGまたはPNGに変換 — アップロードなし。72・150・300 DPIから選択。複数ページはZIPで書き出し。無料、アカウント不要。",
         "it": "Converti PDF in JPG gratis — estrai pagine come immagini ad alta qualità. Elaborato nel browser, 100% privato, senza registrazione.",
         "ko": "PDF를 JPG로 무료 변환 — 고화질 이미지 추출. 브라우저에서 처리, 업로드 없음. 100% 비공개.",
-        "nl": "PDF naar JPG converteren gratis — hoge kwaliteit afbeeldingen extraheren. Verwerkt in de browser, geen upload. 100% privé."
+        "nl": "PDF naar JPG converteren gratis — hoge kwaliteit afbeeldingen extraheren. Verwerkt in de browser, geen upload. 100% privé.",
+        "pl": "PDF do JPG za darmo — wyodrębnij obrazy wysokiej jakości. Przetwarzane w przeglądarce, bez przesyłania. 100% prywatne."
       },
       "ogTitles": {
         "en": "Convert PDF to JPG Free — No Upload, 300 DPI Quality",
@@ -1621,7 +1695,8 @@
         "ja": "PDFをJPGに変換 無料 — アップロード不要、300 DPI品質",
         "it": "PDF in JPG Gratis — Senza Upload | PDFree",
         "ko": "PDF를 JPG로 변환 무료 — 업로드 없이 | PDFree",
-        "nl": "PDF naar JPG Gratis — Zonder Uploaden | PDFree"
+        "nl": "PDF naar JPG Gratis — Zonder Uploaden | PDFree",
+        "pl": "PDF do JPG Za Darmo — Bez Przesyłania | PDFree"
       },
       "ogDescs": {
         "en": "Turn any PDF page into a sharp JPG or PNG. Runs in your browser — nothing uploaded. Choose 72, 150, or 300 DPI. Download all pages as ZIP. No account.",
@@ -1635,7 +1710,8 @@
         "ja": "PDFのページをシャープなJPGまたはPNGに変換します。ブラウザ内で動作 — アップロードなし。72・150・300 DPIから選択。すべてのページをZIPでダウンロード。アカウント不要。",
         "it": "Converti PDF in immagini all'istante. 100% privato — i file non lasciano mai il tuo browser.",
         "ko": "PDF를 즉시 이미지로 변환합니다. 100% 비공개 — 파일이 브라우저를 절대 벗어나지 않습니다.",
-        "nl": "Converteer PDF direct naar afbeeldingen. 100% privé — bestanden verlaten nooit je browser."
+        "nl": "Converteer PDF direct naar afbeeldingen. 100% privé — bestanden verlaten nooit je browser.",
+        "pl": "Konwertuj PDF do obrazów bezpośrednio. 100% prywatne — pliki nigdy nie opuszczają przeglądarki."
       },
       "keywords": {
         "en": "pdf to jpg, convert pdf to jpg, pdf to image, export pdf pages as images, pdf to jpg free, pdf to png"
@@ -2517,6 +2593,53 @@
       "faqA1": "Nee. PDFree werkt volledig op je apparaat (client-side). We hebben geen servers die je bestanden verwerken, wat 100% privacy garandeert.",
       "faqQ2": "Is er een limiet op bestandsgrootte of aantal pagina's?",
       "faqA2": "Nee, er zijn geen kunstmatige limieten. De enige beperking is het beschikbare RAM op je computer of smartphone."
+    },
+    "pl": {
+      "heroBadge": "🔒 100% prywatne · bez przesyłania · bez rejestracji · bez limitów",
+      "heroH1": "Narzędzia PDF, które<br><em>po prostu działają</em>",
+      "heroP": "Łącz, dziel, kompresuj, dodawaj znak wodny, konwertuj — wszystko odbywa się <strong>w Twojej przeglądarce</strong>. Pliki nigdy nie opuszczają Twojego urządzenia. Bez serwera. Bez konta. Tylko wyniki.",
+      "privacyBannerStrong": "Twoje pliki pozostają na urządzeniu.",
+      "privacyBannerText": "Używamy Web Workers i lokalnych bibliotek — nic nigdy nie jest wysyłane na serwer.",
+      "noLimit": [
+        "Bez limitu plików",
+        "Bez znaku wodnego",
+        "Bez rejestracji",
+        "Pliki nie opuszczają urządzenia"
+      ],
+      "sectionLabel": "Wszystkie narzędzia",
+      "privacy1Title": "100% prywatne by design",
+      "privacy1Desc": "Pliki są przetwarzane całkowicie w przeglądarce. Zero przesyłania — nigdy.",
+      "privacy2Title": "Działa na Twoim urządzeniu",
+      "privacy2Desc": "Wszystkie operacje PDF działają w Web Workerze — izolowanym wątku na Twoim sprzęcie.",
+      "privacy3Title": "Natychmiast usuwane",
+      "privacy3Desc": "Pliki żyją tylko w RAM. Zamknij kartę i znikają — bez logów, bez śladów.",
+      "dropTitle": "Przeciągnij pliki tutaj",
+      "dropSub": "lub kliknij, aby przeglądać — nieograniczona liczba plików",
+      "chooseBtn": "Wybierz plik",
+      "reorderHint": "↕ Przeciągnij, aby zmienić kolejność plików przed łączeniem",
+      "cancelBtn": "✕ Anuluj",
+      "successTitle": "Gotowe!",
+      "downloadBtn": "⬇ Pobierz",
+      "footerLine1": "Całe przetwarzanie odbywa się 100% w Twojej przeglądarce",
+      "footerLine2": "Pliki są <strong>nigdy nie przesyłane</strong>",
+      "footerGuarantee": "Twoje dokumenty nigdy nie opuszczają urządzenia",
+      "footerFree": "Darmowe dla wszystkich, na zawsze",
+      "footerOpenSource": "Licencja open source",
+      "footerGitHub": "Kod źródłowy na GitHub",
+      "privacyBadge": "Twój plik nigdy nie opuszcza przeglądarki — przetwarzanie lokalne, bez przesyłania",
+      "privacyClearedTitle": "Dokument usunięty z pamięci",
+      "privacyClearedSub": "Przetworzono lokalnie · Nigdy nie przesłano · Brak śladów",
+      "swUpdateMsg": "Dostępna jest nowa wersja PDFree.",
+      "swUpdateNow": "Aktualizuj teraz",
+      "swUpdateLater": "Później",
+      "seoH2": "Najlepsze darmowe narzędzie PDF dla bezpieczeństwa i prywatności",
+      "seoP1": "PDFree zostało zaprojektowane, aby zapewnić profesjonalną edycję PDF bez ryzyka związanego z przesyłaniem do chmury. Gdy korzystasz z naszych narzędzi, przetwarzanie odbywa się bezpośrednio w przeglądarce za pomocą WebAssembly. Wrażliwe dokumenty — umowy prawne, raporty finansowe, zeskanowane dokumenty osobiste — nigdy nie są wysyłane przez internet.",
+      "seoP2": "Wierzymy, że podstawowe narzędzia powinny być dostępne dla wszystkich. Dlatego PDFree nie ma limitów rozmiaru pliku, dziennych limitów użytkowania ani obowiązkowych znaków wodnych. Całkowicie darmowe i bez ograniczeń narzędzie dla studentów, profesjonalistów i wszystkich, którzy cenią prywatność cyfrową.",
+      "faqTitle": "Często zadawane pytania",
+      "faqQ1": "Czy moje pliki są przechowywane na Waszych serwerach?",
+      "faqA1": "Nie. PDFree działa całkowicie na Twoim urządzeniu (po stronie klienta). Nie mamy serwerów przetwarzających Twoje pliki, co gwarantuje 100% prywatności.",
+      "faqQ2": "Czy jest limit rozmiaru pliku lub liczby stron?",
+      "faqA2": "Nie, nie ma sztucznych limitów. Jedynym ograniczeniem jest dostępna pamięć RAM na Twoim komputerze lub smartfonie."
     }
   }
 }

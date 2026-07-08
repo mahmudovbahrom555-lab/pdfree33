@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "Czy mogę dodać ukośny znak wodny?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. Wybierz kierunek 'Ukośny (45°)' w ustawieniach. Do stempli PROJEKT/POUFNE użyj przezroczystości 25–35% i rozmiaru 80–100pt."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Jakiej przezroczystości użyć?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Do widocznych, ale nie natrętnych stempli (PROJEKT, POUFNE) użyj 25–35%. Do subtelnych stempli narożnych (ZATWIERDZONE) użyj 80–100%."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy moje pliki są przesyłane?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie. Znak wodny jest dodawany całkowicie w przeglądarce. Żadne pliki nie opuszczają Twojego urządzenia."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy działa na wszystkich PDF-ach?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak, na wszystkich standardowych PDF-ach. Zaszyfrowane PDF-y muszą być najpierw odblokowane."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy jest zgodny z RODO?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak — żadne pliki nigdy nie są wysyłane na serwery. Wszystko odbywa się w Twojej przeglądarce. Zgodny z RODO."
+    }
+  }
+]

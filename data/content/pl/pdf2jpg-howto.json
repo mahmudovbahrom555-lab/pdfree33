@@ -1,0 +1,13 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Konwertuj PDF do JPG za darmo",
+  "description": "Wyodrębnij strony PDF jako wysokiej jakości obrazy JPG lub PNG bez przesyłania na serwer — za darmo, całkowicie przetwarzane w przeglądarce.",
+  "totalTime": "PT1M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — darmowe narzędzie do konwersji PDF do obrazów w przeglądarce, bez przesyłania" }],
+  "step": [
+    { "@type": "HowToStep", "position": 1, "name": "Prześlij PDF", "text": "Kliknij 'Wybierz plik' lub przeciągnij PDF do obszaru przesyłania.", "url": "https://pdfree.io/pl/pdf-do-jpg/#step1" },
+    { "@type": "HowToStep", "position": 2, "name": "Wybierz jakość", "text": "Wybierz rozdzielczość (DPI) dla eksportowanych obrazów: 72, 150 lub 300 DPI.", "url": "https://pdfree.io/pl/pdf-do-jpg/#step2" },
+    { "@type": "HowToStep", "position": 3, "name": "Konwertuj i pobierz", "text": "Kliknij 'Konwertuj do JPG'. Pobierz obrazy jako ZIP lub osobno — żaden plik nie opuścił Twojego urządzenia.", "url": "https://pdfree.io/pl/pdf-do-jpg/#step3" }
+  ]
+}

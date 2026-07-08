@@ -1,0 +1,13 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Kompresuj PDF za darmo",
+  "description": "Zmniejsz rozmiar pliku PDF bez przesyłania na serwer — za darmo, całkowicie przetwarzane w przeglądarce.",
+  "totalTime": "PT1M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — darmowe narzędzie do kompresji PDF w przeglądarce, bez przesyłania" }],
+  "step": [
+    { "@type": "HowToStep", "position": 1, "name": "Dodaj PDF", "text": "Kliknij 'Wybierz plik' lub przeciągnij PDF do obszaru przesyłania.", "url": "https://pdfree.io/pl/kompresuj-pdf/#step1" },
+    { "@type": "HowToStep", "position": 2, "name": "Wybierz poziom kompresji", "text": "Wybierz ustawienie E-mail, Web lub Mały. PDFree automatycznie analizuje plik.", "url": "https://pdfree.io/pl/kompresuj-pdf/#step2" },
+    { "@type": "HowToStep", "position": 3, "name": "Kompresuj i pobierz", "text": "Kliknij 'Kompresuj PDF'. Skompresowany plik zostanie automatycznie pobrany na Twoje urządzenie.", "url": "https://pdfree.io/pl/kompresuj-pdf/#step3" }
+  ]
+}

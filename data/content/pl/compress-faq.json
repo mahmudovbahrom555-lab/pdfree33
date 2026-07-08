@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "O ile zostanie zmniejszony plik?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Zależy od zawartości. PDF-y z dużą ilością obrazów zazwyczaj zmniejszają się o 30–70%. PDF-y tylko tekstowe zmniejszają się nieznacznie (5–15%) — są już zoptymalizowane. PDFree pokazuje szacunek przed kompresją."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy stracę jakość po kompresji?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Kompresja zmniejsza rozdzielczość osadzonych obrazów. Tekst i grafika wektorowa pozostają ostre. Użyj ustawienia 'Najlepsza jakość' do drukowania, 'E-mail' lub 'Web' do użytku cyfrowego."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy jest limit rozmiaru pliku?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree akceptuje pliki PDF do 150 MB. W przypadku większych plików najpierw podziel za pomocą Podziel PDF, skompresuj każdą część i połącz je z powrotem."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy moje pliki są przesyłane?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie. Kompresja odbywa się całkowicie w pamięci przeglądarki. Żadne pliki nie są wysyłane na serwer."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy jest zgodny z RODO?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak — pliki nigdy nie opuszczają przeglądarki. Żadne dane nie są wysyłane na serwery. W pełni zgodny z RODO."
+    }
+  }
+]

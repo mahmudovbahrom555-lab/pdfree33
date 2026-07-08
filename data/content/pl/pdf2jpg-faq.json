@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "Jaką rozdzielczość mają eksportowane obrazy?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Możesz wybrać między 72, 150 i 300 DPI. Użyj 300 DPI do drukowania, 72 lub 150 DPI do użytku cyfrowego."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy PDF jest przesyłany na serwer?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie. Konwersja odbywa się całkowicie w przeglądarce."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy mogę wyodrębnić tylko określone strony?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. Wybierz konkretne strony, które chcesz konwertować."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy jest limit liczby stron?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie. PDFree konwertuje tyle stron, ile chcesz."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy działa na iPhonie?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. Otwórz Safari na iPhonie i przejdź do pdfree.io/pl/pdf-do-jpg/."
+    }
+  }
+]

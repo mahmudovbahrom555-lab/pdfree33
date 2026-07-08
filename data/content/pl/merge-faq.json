@@ -1,0 +1,50 @@
+[
+  {
+    "@type": "Question",
+    "name": "Ile plików PDF mogę połączyć naraz?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Bez limitu. PDFree przetwarza wszystko w pamięci przeglądarki — możesz połączyć 2, 50 lub 100+ plików w jednej operacji. W przypadku dużych partii (50+ plików lub ponad 500 MB) zamknij inne karty, aby zwolnić RAM."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy formatowanie zostanie zachowane po połączeniu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. PDFree używa pdf-lib, który kopiuje strony na poziomie obiektów PDF — czcionki, obrazy, grafika wektorowa i formatowanie zostają zachowane dokładnie tak jak w oryginałach."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy mogę połączyć chronione hasłem pliki PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie. Zaszyfrowane pliki PDF nie mogą być odczytane bez hasła. Najpierw usuń zabezpieczenie, a następnie połącz."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy jest dzienny limit łączenia PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie. PDFree nie ma żadnych ograniczeń użytkowania. Łącz tyle plików PDF, ile chcesz, tak często jak chcesz — bez dziennego limitu, bez limitu zadań, bez limitu plików."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy moje pliki są przesyłane na serwer?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie. Wszystko jest przetwarzane w pamięci przeglądarki. Nic nie jest wysyłane na serwer. Zamknij kartę, a pliki całkowicie znikną z pamięci."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy działa na Macu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. PDFree działa we wszystkich nowoczesnych przeglądarkach — Safari na Macu i iPhonie, Chrome na Macu, Windowsie i Androidzie. Nie trzeba nic instalować."
+    }
+  }
+]

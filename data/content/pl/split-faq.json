@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "Czy mogę wyodrębnić konkretne strony?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. Możesz wybrać pojedyncze strony, zakresy jak '1-3, 5, 7-9' lub wszystkie strony jako osobne pliki."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy PDF jest przesyłany na serwer?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie. Wszystko odbywa się w przeglądarce. Pliki nie opuszczają Twojego urządzenia."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy mogę dzielić duże pliki PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. PDFree przetwarza duże PDF-y w przeglądarce. W przypadku bardzo dużych plików (500+ MB) upewnij się, że masz wystarczająco dużo RAM."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy jest dzienny limit?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie. PDFree nie ma żadnych ograniczeń użytkowania. Dziel tyle PDF-ów, ile chcesz."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy jakość wyodrębnionych stron zostanie zachowana?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. PDFree wyodrębnia strony na poziomie obiektów PDF — jakość, czcionki i obrazy pozostają identyczne z oryginałem."
+    }
+  }
+]

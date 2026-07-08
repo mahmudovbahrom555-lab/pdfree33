@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "Jakie formaty obrazów są obsługiwane?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "JPG, PNG i WEBP. BMP, TIFF i GIF nie są obsługiwane."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy obrazy są przesyłane na serwer?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie. Konwersja odbywa się całkowicie w przeglądarce."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy jakość obrazu zmniejszy się?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree używa ustawienia 2400px dla wysokiej jakości przy rozsądnym rozmiarze pliku. Możesz wybrać Wysoką jakość dla maksymalnej rozdzielczości."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy mogę połączyć wiele obrazów w jeden PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. Dodaj tyle obrazów, ile chcesz — każdy obraz stanie się stroną w końcowym PDF."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy działa na iPhonie?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. Otwórz Safari na iPhonie, przejdź do pdfree.io, kliknij JPG do PDF, wybierz obrazy z aplikacji Zdjęcia lub Pliki."
+    }
+  }
+]

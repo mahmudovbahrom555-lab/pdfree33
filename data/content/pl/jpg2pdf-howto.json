@@ -1,0 +1,13 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Konwertuj JPG do PDF za darmo",
+  "description": "Konwertuj obrazy JPG, PNG lub WEBP do PDF bez przesyłania na serwer — za darmo, całkowicie przetwarzane w przeglądarce.",
+  "totalTime": "PT1M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — darmowe narzędzie do konwersji obrazów do PDF w przeglądarce, bez przesyłania" }],
+  "step": [
+    { "@type": "HowToStep", "position": 1, "name": "Dodaj obrazy", "text": "Kliknij 'Wybierz plik' lub przeciągnij obrazy JPG, PNG lub WEBP do obszaru przesyłania.", "url": "https://pdfree.io/pl/jpg-do-pdf/#step1" },
+    { "@type": "HowToStep", "position": 2, "name": "Ustaw kolejność", "text": "Przeciągnij obrazy w żądanej kolejności dla końcowego PDF.", "url": "https://pdfree.io/pl/jpg-do-pdf/#step2" },
+    { "@type": "HowToStep", "position": 3, "name": "Konwertuj i pobierz", "text": "Kliknij 'Konwertuj do PDF'. Pobierz PDF na swoje urządzenie — żaden plik nie opuścił Twojego urządzenia.", "url": "https://pdfree.io/pl/jpg-do-pdf/#step3" }
+  ]
+}
