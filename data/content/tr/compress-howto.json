@@ -1,0 +1,13 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDF'yi ücretsiz sıkıştır",
+  "description": "PDF dosyanızı sunucuya yüklemeden sıkıştırın — ücretsiz, tamamen tarayıcıda işlenir.",
+  "totalTime": "PT1M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — ücretsiz, yükleme yapmadan tarayıcıda PDF sıkıştırma aracı" }],
+  "step": [
+    { "@type": "HowToStep", "position": 1, "name": "PDF Ekleyin", "text": "Dosya Seç'e tıklayın veya PDF'yi yükleme alanına sürükleyin.", "url": "https://pdfree.io/tr/pdf-sikistir/#step1" },
+    { "@type": "HowToStep", "position": 2, "name": "Sıkıştırma Seviyesi Seçin", "text": "E-posta, Web veya Küçük ayarlarından birini seçin. PDFree dosyayı otomatik analiz eder.", "url": "https://pdfree.io/tr/pdf-sikistir/#step2" },
+    { "@type": "HowToStep", "position": 3, "name": "Sıkıştırın ve İndirin", "text": "PDF Sıkıştır'a tıklayın. Sıkıştırılmış dosya otomatik olarak cihazınıza indirilir — hiçbir şey sunucuya yüklenmedi.", "url": "https://pdfree.io/tr/pdf-sikistir/#step3" }
+  ]
+}

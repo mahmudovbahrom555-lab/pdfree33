@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "Dosya ne kadar küçülür?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "İçeriğe bağlıdır. Çok resimli PDF'ler genellikle %30–70 küçülür. Yalnızca metin PDF'ler çok az küçülür (%5–15) — zaten optimize edilmişlerdir. PDFree sıkıştırmadan önce tahmini gösterir."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Sıkıştırmadan sonra kalite kaybolur mu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sıkıştırma, gömülü resimlerin çözünürlüğünü düşürür. Metin ve vektör grafikler keskin kalır. Baskı için 'En İyi Kalite', dijital kullanım için 'E-posta' veya 'Web' ayarını kullanın."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Dosya boyutu limiti var mı?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree 150 MB'a kadar PDF kabul eder. Daha büyük dosyalar için önce PDF Böl ile bölün, her parçayı sıkıştırın ve tekrar birleştirin."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Dosyalarım yükleniyor mu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. Sıkıştırma tamamen tarayıcı belleğinde gerçekleşir. Sunucuya hiçbir dosya gönderilmez."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "KVKK uyumlu mu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet — dosyalar hiçbir zaman tarayıcıyı terk etmez. Sunuculara hiçbir veri gönderilmez. Tamamen KVKK uyumludur."
+    }
+  }
+]

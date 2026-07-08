@@ -1,0 +1,50 @@
+[
+  {
+    "@type": "Question",
+    "name": "Aynı anda kaç PDF birleştirebilirim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sınır yok. PDFree her şeyi tarayıcı belleğinde işler — tek işlemde 2, 50 veya 100+ dosyayı birleştirebilirsiniz. Büyük toplu işlemler (50+ dosya veya 500 MB üzeri) için RAM'i boşaltmak amacıyla diğer sekmeleri kapatın."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Birleştirmeden sonra biçimlendirme korunacak mı?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. PDFree sayfaları PDF nesne düzeyinde kopyalayan pdf-lib kullanır — yazı tipleri, resimler, vektör grafikler ve biçimlendirme orijinallerle birebir aynı kalır."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Parola korumalı PDF'leri birleştirebilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. Şifreli PDF'ler parola olmadan okunamaz. Önce korumayı kaldırın, ardından birleştirin."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDF birleştirme için günlük limit var mı?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. PDFree'nin hiçbir kullanım kısıtlaması yoktur. İstediğiniz kadar PDF'yi istediğiniz sıklıkta birleştirin — günlük limit yok, görev limiti yok, dosya limiti yok."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Dosyalarım sunucuya yükleniyor mu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. Her şey tarayıcı belleğinde işlenir. Sunucuya hiçbir şey gönderilmez. Sekmeyi kapatın, dosyalar bellekten tamamen silinir."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Mac'te çalışıyor mu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. PDFree tüm modern tarayıcılarda çalışır — Mac ve iPhone'da Safari, Mac, Windows ve Android'de Chrome. Kurulum gerekmez."
+    }
+  }
+]

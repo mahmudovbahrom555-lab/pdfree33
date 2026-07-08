@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "Belirli sayfaları çıkarabilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. Tek tek sayfalar, '1-3, 5, 7-9' gibi aralıklar veya tüm sayfaları ayrı dosyalar olarak seçebilirsiniz."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDF sunucuya yükleniyor mu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. Her şey tarayıcınızda gerçekleşir. Dosyalar cihazınızdan ayrılmaz."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Büyük PDF dosyalarını bölebilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. PDFree büyük PDF'leri tarayıcıda işler. Çok büyük dosyalar (500 MB+) için yeterli RAM olduğundan emin olun."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Günlük limit var mı?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. PDFree'nin hiçbir kullanım kısıtlaması yoktur. İstediğiniz kadar PDF bölün."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Çıkarılan sayfaların kalitesi korunacak mı?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. PDFree sayfaları PDF nesne düzeyinde çıkarır — kalite, yazı tipleri ve resimler orijinalle birebir aynıdır."
+    }
+  }
+]

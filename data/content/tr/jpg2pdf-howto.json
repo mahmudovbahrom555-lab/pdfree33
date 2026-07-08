@@ -1,0 +1,13 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "JPG'yi ücretsiz PDF'ye dönüştür",
+  "description": "JPG ve diğer görüntüleri sunucuya yüklemeden PDF'ye dönüştürün — ücretsiz, tamamen tarayıcıda işlenir.",
+  "totalTime": "PT1M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — ücretsiz, yükleme yapmadan tarayıcıda JPG'den PDF'ye dönüştürme aracı" }],
+  "step": [
+    { "@type": "HowToStep", "position": 1, "name": "Görüntüleri Ekleyin", "text": "Dosya Seç'e tıklayın veya JPG/PNG dosyalarını sürükleyin. Birden fazla görüntü seçilebilir.", "url": "https://pdfree.io/tr/jpg-den-pdf-ye/#step1" },
+    { "@type": "HowToStep", "position": 2, "name": "Sırayı Ayarlayın", "text": "Görüntüleri istenen sayfa sırasına göre düzenleyin.", "url": "https://pdfree.io/tr/jpg-den-pdf-ye/#step2" },
+    { "@type": "HowToStep", "position": 3, "name": "PDF Oluşturun ve İndirin", "text": "PDF Oluştur'a tıklayın. Tüm görüntüler tek PDF belgesinde birleştirilir ve otomatik indirilir.", "url": "https://pdfree.io/tr/jpg-den-pdf-ye/#step3" }
+  ]
+}

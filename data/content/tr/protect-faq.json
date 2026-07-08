@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "Hangi şifreleme standardı kullanılıyor?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree, endüstri standardı AES-256 şifrelemesi kullanır. Bu, bankacılık ve hükümet belgeleri için kullanılan şifreleme seviyesidir."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Parolam sunucuya gönderiliyor mu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. Parola ve şifreleme tamamen tarayıcıda gerçekleşir. Hiçbir veri cihazınızı terk etmez."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Parolamı unutursam ne olur?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree parolayı saklamamaktadır. Parolayı unutursanız şifreli PDF'yi açmak mümkün olmaz. Parolayı güvenli bir yerde saklayın."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "KVKK uyumlu mu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. Dosyalar ve parola tarayıcıyı asla terk etmez. Tamamen KVKK uyumludur."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Zaten parola korumalı PDF'yi yeniden şifreleyebilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet, ancak önce mevcut parolayı kaldırmanız gerekebilir. Açık PDF'yi yükleyip yeni parola ile şifreleyin."
+    }
+  }
+]

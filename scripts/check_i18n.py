@@ -26,6 +26,7 @@ def main():
         "ko": ROOT / "js/locales/ko.js",
         "nl": ROOT / "js/locales/nl.js",
         "pl": ROOT / "js/locales/pl.js",
+        "tr": ROOT / "js/locales/tr.js",
     }
 
     errors = []

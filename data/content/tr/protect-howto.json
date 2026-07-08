@@ -1,0 +1,13 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDF'yi ücretsiz parolayla koru",
+  "description": "PDF'yi sunucuya yüklemeden AES-256 şifresiyle koruyun — ücretsiz, tamamen tarayıcıda işlenir.",
+  "totalTime": "PT1M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — ücretsiz, yükleme yapmadan tarayıcıda PDF şifreleme aracı" }],
+  "step": [
+    { "@type": "HowToStep", "position": 1, "name": "PDF Ekleyin", "text": "Dosya Seç'e tıklayın veya PDF'yi yükleme alanına sürükleyin.", "url": "https://pdfree.io/tr/pdf-koru/#step1" },
+    { "@type": "HowToStep", "position": 2, "name": "Parola Belirleyin", "text": "Güçlü bir parola girin. PDFree, güçlü parola önerileri sunar.", "url": "https://pdfree.io/tr/pdf-koru/#step2" },
+    { "@type": "HowToStep", "position": 3, "name": "Şifreleyin ve İndirin", "text": "PDF'yi Şifrele'ye tıklayın. Parola korumalı PDF otomatik indirilir — hiçbir şey sunucuya yüklenmedi.", "url": "https://pdfree.io/tr/pdf-koru/#step3" }
+  ]
+}

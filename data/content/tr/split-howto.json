@@ -1,0 +1,13 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDF'yi ücretsiz böl",
+  "description": "PDF dosyasını sunucuya yüklemeden bölün ve belirli sayfaları çıkarın — ücretsiz, tamamen tarayıcıda işlenir.",
+  "totalTime": "PT1M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — ücretsiz, yükleme yapmadan tarayıcıda PDF bölme aracı" }],
+  "step": [
+    { "@type": "HowToStep", "position": 1, "name": "PDF Yükleyin", "text": "Dosya Seç'e tıklayın veya PDF'yi sürükleyin.", "url": "https://pdfree.io/tr/pdf-bol/#step1" },
+    { "@type": "HowToStep", "position": 2, "name": "Sayfaları Seçin", "text": "Tek tek sayfalar, aralıklar (örn. 1-3, 5, 7-9) veya tüm sayfaları ayrı dosyalar olarak seçin.", "url": "https://pdfree.io/tr/pdf-bol/#step2" },
+    { "@type": "HowToStep", "position": 3, "name": "Bölün ve İndirin", "text": "PDF Böl'e tıklayın. Çıkarılan sayfaları ayrı dosyalar veya tek PDF olarak indirin — hiçbir şey sunucuya yüklenmedi.", "url": "https://pdfree.io/tr/pdf-bol/#step3" }
+  ]
+}

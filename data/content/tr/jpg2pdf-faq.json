@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "Hangi görüntü formatları desteklenmektedir?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree, JPG, PNG, WEBP ve BMP formatlarını destekler."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Görüntüler sunucuya yükleniyor mu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. Dönüşüm tamamen tarayıcıda gerçekleşir. Dosyalarınız cihazınızdan ayrılmaz."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Görüntü kalitesi korunacak mı?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. PDFree görüntüleri tam çözünürlükle PDF'ye gömer. Kalite kaybı olmaz."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kaç görüntüyü birleştirebilirim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Dilediğiniz kadar. PDFree'nin dosya sayısı sınırı yoktur."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Sayfa sıralamasını değiştirebilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. Görüntüleri PDF'ye eklemeden önce sürükleyerek yeniden sıralayabilirsiniz."
+    }
+  }
+]
