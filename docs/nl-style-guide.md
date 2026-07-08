@@ -7,13 +7,13 @@ Reference glossary for all Dutch content, FAQ, UI strings, and future articles.
 | English | Dutch | Notes |
 |---------|-------|-------|
 | Merge PDF | PDF samenvoegen | ⭐⭐⭐⭐⭐ most searched |
-| Compress PDF | PDF verkleinen | ⭐⭐⭐⭐⭐ NOT "comprimeren" — "verkleinen" is what users search |
+| Compress PDF | PDF comprimeren | ⭐⭐⭐⭐⭐ standard; NOT "verkleinen" |
 | Split PDF | PDF splitsen | standard |
-| Rotate PDF | PDF roteren | standard |
-| Watermark PDF | Watermerk PDF | or "watermerk toevoegen aan PDF" |
+| Rotate PDF | PDF draaien | NOT "roteren" |
+| Watermark PDF | Watermerk toevoegen aan PDF | full form; short: "watermerk-pdf" slug |
 | Protect PDF | PDF beveiligen | "beveiligen" = secure/protect |
 | Fill PDF | PDF invullen | natural for forms |
-| Extract Pages | Pagina's extraheren | |
+| Extract Pages | PDF-pagina's extraheren | |
 | Page Numbers | Paginanummers toevoegen | |
 | Compare PDF | PDF vergelijken | |
 | Flatten PDF | PDF afvlakken | technical term |
@@ -27,33 +27,36 @@ Reference glossary for all Dutch content, FAQ, UI strings, and future articles.
 | English | Dutch | Notes |
 |---------|-------|-------|
 | Free | Gratis | Same as IT/ES — never "kosteloos" in H1 |
-| No upload | Zonder upload | Standard |
-| No registration | Zonder registratie | Never "zonder aanmelding" |
+| No upload | Zonder uploaden | NOT "zonder upload" (noun); "uploaden" sounds more natural |
+| No registration | Zonder registratie | Also: "Geen registratie nodig" |
 | Without limits | Zonder beperkingen | Never "onbeperkt" (sounds like a pricing tier) |
-| Processed in browser | Verwerkt in je browser. | Full sentence |
-| Files never leave your device | Je bestanden verlaten nooit je apparaat. | Natural, full sentence |
+| Processed in browser | Wordt verwerkt in je browser. | Or: "Direct in je browser verwerkt." |
+| Files never leave your device | Je bestanden verlaten je apparaat nooit. | Natural, full sentence |
 | Also natural | Bestanden blijven op je apparaat. | Shorter alternative |
-| Private/Privacy | Je bestanden verlaten je browser nooit. | Better than just "privé" |
+| Processed locally | Alles wordt direct in je browser verwerkt. | NOT "Lokale verwerking" in SEO text |
 | Online | Online | Keep as-is |
 | Safe | Veilig | |
 | Fast | Snel | |
 | Choose file | Bestand kiezen | |
-| Drag here | Sleep je PDF hier naartoe | Natural |
+| Drag here | Of sleep je PDF hierheen | Natural CTA |
 | Download | Downloaden | |
 | Cancel | Annuleren | |
+| Start free | Gratis starten | CTA variant |
+| Download again | Opnieuw downloaden | |
+| Process again | Opnieuw verwerken | |
 
 ## H1 Pattern
 
 ```
-{Tool name} — Gratis, Zonder Upload
+{Tool name} — Gratis, Zonder Uploaden
 ```
 
 Examples:
-- PDF samenvoegen — Gratis, Zonder Upload
-- PDF verkleinen — Gratis, Zonder Upload
-- PDF splitsen — Gratis, Zonder Upload
-- PDF beveiligen — Gratis, Zonder Upload
-- JPG naar PDF — Gratis, Zonder Upload
+- PDF Samenvoegen — Gratis, Zonder Uploaden
+- PDF Comprimeren — Gratis, Zonder Uploaden
+- PDF Splitsen — Gratis, Zonder Uploaden
+- PDF Beveiligen — Gratis, Zonder Uploaden
+- JPG naar PDF — Gratis, Zonder Uploaden
 
 ## SEO Keywords by Tool
 
@@ -62,16 +65,16 @@ Examples:
 PDF samenvoegen
 PDF samenvoegen gratis
 PDF samenvoegen online
-PDF samenvoegen zonder upload
+PDF samenvoegen zonder uploaden
 PDF samenvoegen zonder registratie
 ```
 
 ### Compress
 ```
-PDF verkleinen
-PDF verkleinen gratis
-PDF verkleinen online
-PDF bestand verkleinen
+PDF comprimeren
+PDF comprimeren gratis
+PDF comprimeren online
+PDF bestand comprimeren
 ```
 
 ### Split
@@ -114,10 +117,16 @@ PDF invullen
 PDF formulier invullen
 ```
 
+### Rotate
+```
+PDF draaien
+PDF draaien gratis
+```
+
 ### Extract Pages
 ```
+PDF-pagina's extraheren
 Pagina's extraheren uit PDF
-PDF pagina's extraheren
 ```
 
 ### OCR
@@ -129,16 +138,17 @@ Do not translate OCR.
 
 ## FAQ Style
 
-Short, natural Dutch questions:
+Short, natural Dutch questions (keep concise):
 - Is het gratis?
 - Moet ik me registreren?
-- Worden mijn bestanden geüpload naar een server?
+- Worden mijn bestanden geüpload?
 - Werkt het op iPhone?
 - Werkt het op Mac?
 - Kan ik meer dan 100 PDF's samenvoegen?
 - Blijft de opmaak bewaard?
-- Kan ik wachtwoordbeveiligde PDF's samenvoegen?
+- Werkt het met beveiligde PDF's?
 - Is er een dagelijks limiet?
+- Is het AVG-conform?
 
 ## Do Not Translate
 
@@ -151,13 +161,13 @@ These stay in Latin script:
 
 ## Content Style
 
-Direct, practical Dutch. Short sentences:
+Direct, practical Dutch. Short sentences — modern Dutch SaaS style:
 
 ✅ Correct:
 ```
-PDF's samenvoegen in je browser.
-Zonder upload.
-Zonder registratie.
+Voeg PDF's direct samen in je browser.
+Geen upload.
+Geen registratie.
 Je bestanden blijven op je apparaat.
 ```
 
@@ -177,7 +187,7 @@ Anonymous label (never name competitors):
 | Tool | Nav Label |
 |------|-----------|
 | merge | Samenvoegen |
-| compress | Verkleinen |
+| compress | Comprimeren |
 | split | Splitsen |
 | watermark | Watermerk |
 | protect | Beveiligen |
@@ -189,7 +199,7 @@ Anonymous label (never name competitors):
 | Tool | Dutch Slug |
 |------|-----------|
 | merge | pdf-samenvoegen |
-| compress | pdf-verkleinen |
+| compress | pdf-comprimeren |
 | split | pdf-splitsen |
 | jpg2pdf | jpg-naar-pdf |
 | pdf2jpg | pdf-naar-jpg |
@@ -198,7 +208,9 @@ Anonymous label (never name competitors):
 
 ## Special Notes for Dutch Audience
 
-- **"verkleinen" beats "comprimeren"**: Dutch users search "PDF verkleinen" far more than "PDF comprimeren". Always use "verkleinen" in H1 and content.
+- **"comprimeren" is the standard term**: Dutch users search "PDF comprimeren". Use this in H1, slug, and content.
+- **"draaien" beats "roteren"**: For rotate, Dutch users say "PDF draaien" more naturally than "PDF roteren".
 - **Direct tone**: Dutch communication is direct and practical. No fluff. Get to the point.
 - **"onbeperkt" = pricing tier**: Like Korean 무제한, avoid "onbeperkt" for feature descriptions. Use "zonder beperkingen" instead.
-- **GDPR**: Netherlands is very GDPR-aware (AVG in Dutch = Algemene Verordening Gegevensbescherming). "AVG-conform" or "GDPR-conform" resonates.
+- **"uploaden" not "upload"**: "Zonder uploaden" sounds more natural than "zonder upload" in flowing text.
+- **AVG/GDPR**: Netherlands is very GDPR-aware (AVG = Algemene Verordening Gegevensbescherming). "AVG-conform" resonates strongly.
