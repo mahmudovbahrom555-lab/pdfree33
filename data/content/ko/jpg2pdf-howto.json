@@ -1,0 +1,33 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "JPG를 PDF로 변환 — 브라우저에서",
+  "description": "JPG, PNG, WEBP 이미지를 업로드 없이 브라우저에서 PDF로 변환하세요.",
+  "totalTime": "PT1M",
+  "tool": [
+    { "@type": "HowToTool", "name": "PDFree.io — 무료 PDF 도구" }
+  ],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "이미지 추가",
+      "text": "pdfree.io/ko/jpg-pdf-byeonhwan/를 열고 파일 선택을 클릭하거나 JPG, PNG, WEBP 이미지를 드래그하세요.",
+      "url": "https://pdfree.io/ko/jpg-pdf-byeonhwan/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "순서 설정",
+      "text": "최종 PDF의 원하는 순서로 이미지를 드래그하세요.",
+      "url": "https://pdfree.io/ko/jpg-pdf-byeonhwan/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "변환 및 다운로드",
+      "text": "PDF로 변환을 클릭하세요. PDF를 기기에 다운로드하세요.",
+      "url": "https://pdfree.io/ko/jpg-pdf-byeonhwan/#step3"
+    }
+  ]
+}

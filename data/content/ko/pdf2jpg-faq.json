@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "파일이 서버로 업로드되나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "아니요. 변환이 완전히 브라우저에서 이루어집니다. 파일은 기기를 떠나지 않습니다."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "모든 페이지를 한 번에 변환할 수 있나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "예. 특정 페이지 또는 전체 PDF를 변환할 수 있습니다. 여러 이미지는 ZIP으로 다운로드할 수 있습니다."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "출력 이미지 품질은 어떻게 되나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree는 최대 300 DPI로 변환합니다 — 인쇄 및 화면 표시에 충분한 품질입니다."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "암호로 보호된 PDF도 변환할 수 있나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "예. PDF 비밀번호를 입력하면 변환이 진행됩니다."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "아이폰에서도 사용할 수 있나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "예. iPhone Safari에서 pdfree.io를 열고, PDF를 JPG로 도구를 선택하고, 파일 앱에서 PDF를 선택하면 됩니다."
+    }
+  }
+]

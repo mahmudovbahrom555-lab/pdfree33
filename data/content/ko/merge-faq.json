@@ -1,0 +1,50 @@
+[
+  {
+    "@type": "Question",
+    "name": "PDF 합치기가 무료인가요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "예, 완전히 무료입니다. 사용 제한도 없고 숨겨진 비용도 없습니다."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "파일이 서버로 업로드되나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "아니요. 모든 작업이 브라우저에서 이루어집니다. 파일은 기기를 떠나지 않습니다."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "몇 개의 PDF를 합칠 수 있나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "제한 없이 원하는 만큼 PDF를 합칠 수 있습니다. 다만, 브라우저 메모리가 충분해야 합니다."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "합쳐진 PDF의 페이지 순서를 바꿀 수 있나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "예. 파일을 드래그하여 원하는 순서로 재정렬할 수 있습니다."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "암호가 있는 PDF도 합칠 수 있나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "예. 암호가 있는 PDF를 추가하면 비밀번호를 입력하라는 메시지가 표시됩니다."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "아이폰에서도 사용할 수 있나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "예. iPhone Safari에서 pdfree.io를 열고, PDF 합치기를 선택하고, 파일 앱에서 PDF를 선택하면 됩니다."
+    }
+  }
+]

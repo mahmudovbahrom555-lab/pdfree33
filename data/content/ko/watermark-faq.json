@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "파일이 서버로 업로드되나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "아니요. 워터마크 추가가 완전히 브라우저에서 이루어집니다. 파일은 기기를 떠나지 않습니다."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "이미지를 워터마크로 사용할 수 있나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "예. 로고나 이미지를 업로드하여 워터마크로 사용할 수 있습니다. PNG(투명 배경 지원), JPG, WEBP 형식을 지원합니다."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "대각선 워터마크를 만들 수 있나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "예. 워터마크 각도를 0°에서 360°까지 조절할 수 있습니다. 일반적인 대각선은 45°를 사용하세요."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "모든 페이지에 워터마크를 추가할 수 있나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "예. 전체 페이지 또는 특정 페이지 범위를 선택할 수 있습니다."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "워터마크를 추가한 PDF를 다시 편집할 수 있나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree로 추가한 워터마크는 PDF에 고정됩니다. 원본 파일은 변경되지 않으므로 항상 원본을 보관하세요."
+    }
+  }
+]

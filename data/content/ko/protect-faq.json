@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "어떤 암호화 방식을 사용하나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree는 AES-256 암호화를 사용합니다 — 현재 은행 및 정부 기관에서 사용하는 가장 강력한 표준입니다."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "파일이 서버로 업로드되나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "아니요. 암호화가 완전히 브라우저에서 이루어집니다. 파일은 기기를 떠나지 않습니다."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "비밀번호를 잊어버리면 어떻게 되나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "비밀번호를 분실하면 파일을 복구할 수 없습니다. PDFree는 비밀번호를 저장하지 않습니다. 반드시 비밀번호를 별도로 보관하세요."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "기존에 보호된 PDF에 비밀번호를 추가할 수 있나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "예. 먼저 기존 비밀번호를 입력한 후 새 비밀번호를 설정하면 됩니다."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "아이폰에서도 사용할 수 있나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "예. iPhone Safari에서 pdfree.io를 열고, PDF 암호 설정을 선택하고, 파일 앱에서 PDF를 선택하세요."
+    }
+  }
+]

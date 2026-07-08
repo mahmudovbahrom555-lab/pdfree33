@@ -1,0 +1,33 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDF 암호 설정 — 브라우저에서",
+  "description": "PDF에 비밀번호를 추가하여 AES-256 암호화로 보호하세요. 업로드 없이 브라우저에서 처리됩니다.",
+  "totalTime": "PT1M",
+  "tool": [
+    { "@type": "HowToTool", "name": "PDFree.io — 무료 PDF 도구" }
+  ],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDF 추가",
+      "text": "pdfree.io/ko/pdf-amho/를 열고 파일 선택을 클릭하거나 PDF를 드래그하세요.",
+      "url": "https://pdfree.io/ko/pdf-amho/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "비밀번호 설정",
+      "text": "비밀번호를 입력하고 선택적으로 권한(인쇄, 복사, 수정)을 설정하세요.",
+      "url": "https://pdfree.io/ko/pdf-amho/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "암호화 및 다운로드",
+      "text": "PDF 암호화를 클릭하세요. 보호된 PDF를 기기에 다운로드하세요.",
+      "url": "https://pdfree.io/ko/pdf-amho/#step3"
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+[
+  {
+    "@type": "Question",
+    "name": "파일이 얼마나 줄어드나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "내용에 따라 다릅니다. 이미지가 많은 PDF는 일반적으로 30~70% 줄어듭니다. PDFree는 압축 전에 추정치를 보여줍니다."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "파일이 서버로 업로드되나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "아니요. 압축이 완전히 브라우저에서 이루어집니다. 아무 파일도 서버로 전송되지 않습니다."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "압축하면 품질이 떨어지나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "압축은 내장된 이미지의 해상도를 줄입니다. 텍스트와 벡터 그래픽은 선명하게 유지됩니다. 용도에 맞는 프리셋을 선택하세요."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "파일 크기 제한이 있나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree는 최대 150MB의 PDF를 처리합니다. 더 큰 파일은 먼저 분할한 후 각 부분을 압축하세요."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Mac에서도 사용할 수 있나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "예. PDFree는 모든 운영 체제에서 Safari, Chrome, Firefox에서 작동합니다."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "하루 사용 횟수 제한이 있나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "아니요. 회원가입 없이 제한 없이 사용할 수 있습니다."
+    }
+  }
+]

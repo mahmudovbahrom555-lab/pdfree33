@@ -1,0 +1,33 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDF 워터마크 추가 — 브라우저에서",
+  "description": "텍스트 또는 이미지 워터마크를 PDF에 업로드 없이 브라우저에서 추가하세요.",
+  "totalTime": "PT1M",
+  "tool": [
+    { "@type": "HowToTool", "name": "PDFree.io — 무료 PDF 도구" }
+  ],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDF 추가",
+      "text": "pdfree.io/ko/pdf-watermark/를 열고 파일 선택을 클릭하거나 PDF를 드래그하세요.",
+      "url": "https://pdfree.io/ko/pdf-watermark/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "워터마크 설정",
+      "text": "텍스트 또는 이미지 워터마크를 입력하고, 위치, 불투명도, 크기, 각도를 설정하세요.",
+      "url": "https://pdfree.io/ko/pdf-watermark/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "적용 및 다운로드",
+      "text": "워터마크 추가를 클릭하세요. 워터마크가 추가된 PDF를 다운로드하세요.",
+      "url": "https://pdfree.io/ko/pdf-watermark/#step3"
+    }
+  ]
+}

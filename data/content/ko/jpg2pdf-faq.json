@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "어떤 이미지 형식이 지원되나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "JPG, PNG, WEBP를 지원합니다. BMP, TIFF, GIF는 지원되지 않습니다."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "파일이 서버로 업로드되나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "아니요. 변환이 완전히 브라우저에서 이루어집니다. 파일은 기기를 떠나지 않습니다."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "이미지 품질이 저하되나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree는 합리적인 크기로 높은 품질을 위해 2400px 프리셋을 사용합니다. 최대 해상도를 위해 고품질을 선택할 수 있습니다."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "여러 이미지를 하나의 PDF로 변환할 수 있나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "예. 원하는 만큼 이미지를 추가하세요 — 각 이미지가 최종 PDF의 한 페이지가 됩니다."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "아이폰에서도 사용할 수 있나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "예. iPhone Safari에서 pdfree.io를 열고, JPG를 PDF로 클릭하고, 사진 또는 파일 앱에서 이미지를 선택하세요."
+    }
+  }
+]
