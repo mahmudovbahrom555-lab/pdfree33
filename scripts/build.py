@@ -332,7 +332,18 @@ SPECIALTY_PAGES = [
     # Specific-intent landing pages
     'compress-pdf-for-email',
     'split-pdf-into-multiple-files',
+    'split-large-pdf',
     'merge-pdf-files-into-one',
+    'extract-text-from-scanned-pdf',
+    'make-scanned-pdf-searchable',
+    'ocr-pdf-no-upload',
+    'pdf-compression-glossary',
+    # Audience landing pages
+    'free-pdf-tools',
+    'for-accountants',
+    'for-lawyers',
+    'for-students',
+    'for-teachers',
     # Static pages
     'privacy.html',
     'terms.html',
