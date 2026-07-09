@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src  'self' 'wasm-unsafe-eval' blob:
+                https://cdnjs.cloudflare.com https://esm.sh
+                https://plausible.io https://pagead2.googlesyndication.com
+                https://static.cloudflareinsights.com;
+    style-src   'self' 'unsafe-inline';
+    font-src    'self';
+    img-src     'self' data: blob: https:;
+    connect-src 'self' https://cdnjs.cloudflare.com https://*.workers.dev
+                https://plausible.io https://pagead2.googlesyndication.com
+                https://www.googletagservices.com https://*.doubleclick.net
+                https://cloudflareinsights.com;
+    frame-src   https://googleads.g.doubleclick.net https://tpc.googlesyndication.com;
+    worker-src  'self' blob:;
+    object-src  'none';
+  ">
+
+  <title>How to Fill a PDF and Add a Signature — Free, No Upload | PDFree</title>
+  <meta name="description" content="Fill a PDF form and add your signature free — complete text fields, checkboxes, and dropdowns, then sign in the same session. No upload, no account, runs in your browser.">
+
+  <meta property="og:title"       content="How to Fill a PDF and Add a Signature — Free, No Upload | PDFree">
+  <meta property="og:description" content="Fill every field in a PDF form and add your signature in one session — free, no upload, no account. Runs entirely in your browser.">
+  <meta property="og:type"        content="article">
+  <meta property="og:url"         content="https://pdfree.io/blog/how-to-fill-pdf-with-signature/">
+  <meta property="og:site_name"   content="PDFree">
+  <meta property="og:image"        content="https://pdfree.io/icons/og-image.jpg">
+  <meta property="og:image:width"  content="1200">
+  <meta property="og:image:height" content="633">
+  <meta property="og:image:alt"    content="How to Fill a PDF and Add a Signature — PDFree">
+  <meta name="twitter:card"        content="summary_large_image">
+  <meta name="twitter:site"        content="@pdfree_io">
+  <meta name="twitter:title"       content="How to Fill a PDF and Add a Signature Free | PDFree">
+  <meta name="twitter:description" content="Complete PDF form fields and add a drawn, typed, or uploaded signature — free, no upload, in your browser.">
+  <meta name="twitter:image"       content="https://pdfree.io/icons/og-image.jpg">
+  <meta name="twitter:image:alt"   content="How to Fill a PDF and Add a Signature — PDFree">
+
+  <link rel="canonical" href="https://pdfree.io/blog/how-to-fill-pdf-with-signature/">
+  <link rel="alternate" hreflang="en"        href="https://pdfree.io/blog/how-to-fill-pdf-with-signature/">
+  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/blog/how-to-fill-pdf-with-signature/">
+
+  <link rel="manifest" href="../../manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="PDFree">
+  <link rel="apple-touch-icon" href="../../icons/icon-192.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+  <link rel="preconnect" href="https://plausible.io">
+  <link rel="preconnect" href="https://static.cloudflareinsights.com">
+  <link rel="preload" href="../../fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../css/fonts.css">
+  <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/animations.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/components.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to Fill a PDF and Add a Signature",
+    "description": "Fill PDF form fields and add a signature in one session — free, without uploading to any server.",
+    "totalTime": "PT3M",
+    "tool": { "@type": "HowToTool", "name": "PDFree — free browser-based PDF form filler and signer" },
+    "step": [
+      {
+        "@type": "HowToStep", "position": 1,
+        "name": "Open the PDFree Fill PDF tool",
+        "text": "Go to pdfree.io/fill/ in any browser. No account or sign-up required. The tool runs entirely in your browser."
+      },
+      {
+        "@type": "HowToStep", "position": 2,
+        "name": "Load your PDF form",
+        "text": "Click 'Choose files' or drag your PDF onto the drop zone. The form loads in your browser — nothing is uploaded to any server."
+      },
+      {
+        "@type": "HowToStep", "position": 3,
+        "name": "Fill in all the form fields",
+        "text": "Click any text field and type your answer. Click checkboxes to tick them. Select from dropdown menus. Use radio buttons as needed. All field types are supported."
+      },
+      {
+        "@type": "HowToStep", "position": 4,
+        "name": "Add your signature",
+        "text": "Click the signature field (or place a signature anywhere on the page). Choose to draw your signature with your mouse or finger, type your name in a signature style, or upload an image of your handwritten signature."
+      },
+      {
+        "@type": "HowToStep", "position": 5,
+        "name": "Download the completed, signed PDF",
+        "text": "Click 'Apply' or 'Download'. Your completed and signed PDF downloads instantly to your device. The filled data and signature are permanently embedded in the file."
+      }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "How to Fill a PDF and Add a Signature — Free, No Upload",
+    "description": "Fill a PDF form and add your signature free — complete text fields, checkboxes, and dropdowns, then sign in the same session. No upload, no account.",
+    "url": "https://pdfree.io/blog/how-to-fill-pdf-with-signature/",
+    "datePublished": "2026-07-09",
+    "dateModified": "2026-07-09",
+    "publisher": {
+      "@type": "Organization",
+      "name": "PDFree",
+      "url": "https://pdfree.io"
+    },
+    "author": {
+      "@type": "Organization",
+      "name": "PDFree"
+    },
+    "image": {
+      "@type": "ImageObject",
+      "url": "https://pdfree.io/icons/og-image.jpg",
+      "width": 1200,
+      "height": 633
+    },
+    "keywords": "fill pdf with signature, fill and sign pdf free, how to fill pdf form and sign, add signature to pdf form, sign pdf form online free, fill pdf without uploading"
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How do I fill a PDF form and add my signature for free?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Open pdfree.io/fill/ in your browser. Load your PDF, click each field to fill it in, then click the signature field or use the signature tool to draw, type, or upload your signature. Click Download when done. No upload, no account required."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I fill a PDF that doesn't have form fields?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. PDFree lets you place text boxes and signatures anywhere on any PDF page — even flat PDFs with no interactive fields. Use the annotation/text tool to click anywhere and type. This works for any PDF, not just forms with built-in fields."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What signature types are supported?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "PDFree supports three signature methods: (1) Draw — use your mouse, trackpad, or finger on a touchscreen to draw your handwritten signature. (2) Type — type your name and choose a signature-style font. (3) Upload — upload an image of your handwritten signature (PNG with transparent background works best)."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is my signature saved or stored anywhere?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. Your signature is created and embedded entirely within your browser session. It is never uploaded to any server, never stored in a database, and never transmitted over the network. Once you close the tab, no trace of your signature remains in PDFree's systems — because nothing was ever sent there."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is a drawn PDF signature legally valid?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "In most countries, an electronic signature on a PDF is legally valid for the majority of everyday documents — job applications, rental agreements, consent forms, NDAs, and internal company documents. Laws such as eIDAS (EU), ESIGN (US), and similar legislation in the UK, Canada, and Australia recognise electronic signatures. For high-stakes legal filings or notarised documents, check the specific requirements with a legal professional."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "PDFree", "item": "https://pdfree.io/" },
+      { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://pdfree.io/blog/" },
+      { "@type": "ListItem", "position": 3, "name": "How to Fill a PDF With a Signature", "item": "https://pdfree.io/blog/how-to-fill-pdf-with-signature/" }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <nav class="nav" role="navigation" aria-label="Main navigation">
+    <a href="../../" class="nav-logo" aria-label="PDFree home">
+      <span class="nav-logo__icon">📄</span>
+      <span class="nav-logo__text">PDFree</span>
+    </a>
+    <div class="nav-links" role="list">
+      <a href="/merge-pdf/" class="nav-link" data-tool="merge">Merge</a>
+      <a href="/split-pdf/" class="nav-link" data-tool="split">Split</a>
+      <a href="/compress-pdf/" class="nav-link" data-tool="compress">Compress</a>
+      <a href="/pdf2jpg/" class="nav-link" data-tool="pdf2jpg">PDF→JPG</a>
+      <a href="/jpg2pdf/" class="nav-link" data-tool="jpg2pdf">JPG→PDF</a>
+      <a href="/rotate-pdf/" class="nav-link" data-tool="rotate">Rotate</a>
+      <a href="/watermark-pdf/" class="nav-link" data-tool="watermark">Watermark</a>
+      <a href="/protect-pdf/" class="nav-link" data-tool="protect">Protect</a>
+      <a href="/annotate-pdf/" class="nav-link" data-tool="annotate">Annotate</a>
+      <a href="/sign-pdf/" class="nav-link" data-tool="sign">Sign</a>
+      <a href="/fill-pdf/" class="nav-link" data-tool="fill">Fill</a>
+      <a href="/redact-pdf/" class="nav-link" data-tool="redact">Redact</a>
+      <a href="/extract-pdf/" class="nav-link" data-tool="extract">Extract</a>
+      <a href="/pagenum-pdf/" class="nav-link" data-tool="pagenum">Page №</a>
+      <a href="/metadata-pdf/" class="nav-link" data-tool="meta">Metadata</a>
+      <a href="/draw-on-pdf/" class="nav-link" data-tool="draw-pdf">Draw</a>
+    </div>
+    <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode"></button>
+  </nav>
+
+  <section class="seo-article" aria-labelledby="articleTitle">
+    <div class="seo-article__inner">
+      <div style="max-width:800px;margin:60px auto 40px;padding:0 24px;color:var(--text2);line-height:1.8;">
+
+        <p style="font-size:13px;color:var(--text3);margin:0 0 16px;">
+          <a href="../../" style="color:var(--text3);text-decoration:none;">PDFree</a> ›
+          <a href="../" style="color:var(--text3);text-decoration:none;">Blog</a> ›
+          How to Fill a PDF With a Signature
+        </p>
+
+        <h1 id="articleTitle" style="font-size:32px;color:var(--text);margin:0 0 16px;font-weight:700;line-height:1.25;">How to Fill a PDF and Add a Signature<br>(Free, No Upload, One Session)</h1>
+
+        <p style="font-size:15px;color:var(--text3);margin:0 0 32px;">4-minute read · Updated July 2026</p>
+
+        <p style="font-size:18px;margin:0 0 24px;color:var(--text);">Got a PDF form that needs to be filled in and signed — a job application, rental agreement, consent form, or tax document? Here's how to complete the form fields and add your signature in one session, for free, without uploading your file anywhere.</p>
+
+        <!-- Inline CTA -->
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:28px;margin:0 0 40px;text-align:center;">
+          <p style="font-size:16px;font-weight:600;color:var(--text);margin:0 0 8px;">Fill and sign your PDF right now</p>
+          <p style="font-size:14px;color:var(--text2);margin:0 0 20px;">No account. No upload. File stays on your device.</p>
+          <a href="../../fill/" style="background:var(--green);color:#fff;padding:13px 28px;border-radius:10px;font-weight:600;font-size:15px;text-decoration:none;display:inline-block;">Fill &amp; Sign PDF — Free</a>
+        </div>
+
+        <h2 style="font-size:22px;color:var(--text);margin:0 0 16px;font-weight:600;">Step-by-step: fill a PDF and add your signature</h2>
+
+        <ol style="margin:0 0 32px;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:20px;">
+          <li style="display:flex;gap:16px;align-items:flex-start;">
+            <span style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;">1</span>
+            <div>
+              <strong style="color:var(--text);">Open the PDFree Fill PDF tool</strong>
+              <p style="margin:4px 0 0;">Go to <a href="../../fill/" style="color:var(--green);">pdfree.io/fill/</a>. No installation, no sign-up required.</p>
+            </div>
+          </li>
+          <li style="display:flex;gap:16px;align-items:flex-start;">
+            <span style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;">2</span>
+            <div>
+              <strong style="color:var(--text);">Load your PDF form</strong>
+              <p style="margin:4px 0 0;">Click "Choose files" or drag your PDF onto the page. The form loads in your browser — <strong>nothing is uploaded to any server</strong>.</p>
+            </div>
+          </li>
+          <li style="display:flex;gap:16px;align-items:flex-start;">
+            <span style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;">3</span>
+            <div>
+              <strong style="color:var(--text);">Fill in the form fields</strong>
+              <p style="margin:4px 0 0;">Click any <strong>text field</strong> and type your answer. Click <strong>checkboxes</strong> to tick them. Select options in <strong>dropdowns</strong>. Click <strong>radio buttons</strong> to choose. All standard PDF form field types are supported.</p>
+            </div>
+          </li>
+          <li style="display:flex;gap:16px;align-items:flex-start;">
+            <span style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;">4</span>
+            <div>
+              <strong style="color:var(--text);">Add your signature</strong>
+              <p style="margin:4px 0 0;">Click the signature field or place a signature anywhere on the page. Choose your method:</p>
+              <ul style="margin:8px 0 0;padding-left:20px;font-size:14px;display:flex;flex-direction:column;gap:4px;">
+                <li><strong>Draw</strong> — use your mouse, trackpad, or finger on a touchscreen</li>
+                <li><strong>Type</strong> — type your name in a cursive signature style</li>
+                <li><strong>Upload</strong> — upload a PNG image of your handwritten signature</li>
+              </ul>
+            </div>
+          </li>
+          <li style="display:flex;gap:16px;align-items:flex-start;">
+            <span style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;">5</span>
+            <div>
+              <strong style="color:var(--text);">Download your completed, signed PDF</strong>
+              <p style="margin:4px 0 0;">Click "Download". Your filled and signed PDF downloads instantly. The form data and signature are permanently embedded — ready to send or submit.</p>
+            </div>
+          </li>
+        </ol>
+
+        <h2 style="font-size:22px;color:var(--text);margin:0 0 16px;font-weight:600;">Three ways to add your signature</h2>
+
+        <div style="display:grid;gap:12px;margin:0 0 32px;">
+          <div style="border-left:3px solid var(--green);padding:16px 18px;background:var(--surface);">
+            <strong style="color:var(--text);display:block;margin:0 0 6px;">Draw your signature</strong>
+            <p style="margin:0;font-size:14px;">Use your mouse or trackpad to draw your signature freehand in the signature box. On a phone or tablet, use your finger or stylus. This produces the most natural-looking result and closely matches a pen-and-paper signature.</p>
+            <p style="margin:8px 0 0;font-size:13px;color:var(--text3);">Best for: any device, most natural appearance</p>
+          </div>
+          <div style="border-left:3px solid var(--green);padding:16px 18px;background:var(--surface);">
+            <strong style="color:var(--text);display:block;margin:0 0 6px;">Type your name</strong>
+            <p style="margin:0;font-size:14px;">Type your name and PDFree renders it in a cursive signature-style font. Quick and consistent — the same signature every time. Legally equivalent to a drawn signature in most jurisdictions.</p>
+            <p style="margin:8px 0 0;font-size:13px;color:var(--text3);">Best for: speed and consistency</p>
+          </div>
+          <div style="border-left:3px solid var(--green);padding:16px 18px;background:var(--surface);">
+            <strong style="color:var(--text);display:block;margin:0 0 6px;">Upload a signature image</strong>
+            <p style="margin:0;font-size:14px;">Sign your name on paper, take a photo or scan it, and upload it as a PNG with a transparent background. This gives the most authentic appearance if you need your signature to match exactly what's on file with a bank or institution.</p>
+            <p style="margin:8px 0 0;font-size:13px;color:var(--text3);">Best for: matching an existing institutional signature</p>
+          </div>
+        </div>
+
+        <h2 style="font-size:22px;color:var(--text);margin:0 0 16px;font-weight:600;">What if the PDF has no form fields?</h2>
+        <p style="margin:0 0 16px;">Some PDFs look like forms but are actually flat — printed forms scanned or exported as images, with no interactive fields. You can still fill them in PDFree by placing text boxes manually:</p>
+        <ol style="margin:0 0 32px;padding-left:24px;font-size:15px;display:flex;flex-direction:column;gap:8px;">
+          <li>Load the PDF in the Fill tool</li>
+          <li>Click the "Text" tool to add a text box anywhere on the page</li>
+          <li>Click where the blank line is and type your answer</li>
+          <li>Position the text box precisely over the field using drag</li>
+          <li>Add your signature the same way — click to place, then drag to position</li>
+        </ol>
+
+        <h2 style="font-size:22px;color:var(--text);margin:0 0 16px;font-weight:600;">Common documents people fill and sign as PDFs</h2>
+        <div style="display:grid;gap:10px;margin:0 0 32px;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));">
+          <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;">
+            <strong style="color:var(--text);font-size:14px;">Employment</strong>
+            <p style="margin:6px 0 0;font-size:13px;">Job applications, offer letters, tax forms (W-4, P45), direct deposit authorization, onboarding paperwork</p>
+          </div>
+          <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;">
+            <strong style="color:var(--text);font-size:14px;">Housing &amp; legal</strong>
+            <p style="margin:6px 0 0;font-size:13px;">Rental agreements, lease renewals, NDAs, service contracts, consent forms</p>
+          </div>
+          <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;">
+            <strong style="color:var(--text);font-size:14px;">Healthcare</strong>
+            <p style="margin:6px 0 0;font-size:13px;">Patient intake forms, consent for treatment, insurance authorization, HIPAA acknowledgements</p>
+          </div>
+          <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;">
+            <strong style="color:var(--text);font-size:14px;">Finance</strong>
+            <p style="margin:6px 0 0;font-size:13px;">Bank account applications, loan applications, investment forms, expense reports</p>
+          </div>
+        </div>
+
+        <!-- Second CTA -->
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:28px;margin:0 0 40px;text-align:center;">
+          <p style="font-size:16px;font-weight:600;color:var(--text);margin:0 0 8px;">Ready to fill and sign your PDF?</p>
+          <p style="font-size:14px;color:var(--text2);margin:0 0 20px;">Free, instant, private — no account required.</p>
+          <a href="../../fill/" style="background:var(--green);color:#fff;padding:13px 28px;border-radius:10px;font-weight:600;font-size:15px;text-decoration:none;display:inline-block;">Fill &amp; Sign PDF — Free</a>
+        </div>
+
+        <!-- FAQ -->
+        <h2 style="font-size:22px;color:var(--text);margin:0 0 16px;font-weight:600;">Frequently asked questions</h2>
+        <div style="display:flex;flex-direction:column;gap:8px;margin:0 0 40px;">
+
+          <details style="border:1px solid var(--border);border-radius:10px;padding:0;">
+            <summary style="padding:14px 18px;font-weight:600;color:var(--text);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;">
+              How do I fill a PDF form and add my signature for free?
+            </summary>
+            <p style="padding:0 18px 14px;margin:0;font-size:14px;">Open <a href="../../fill/" style="color:var(--green);">pdfree.io/fill/</a>, load your PDF, click each field to fill it, then use the signature tool to draw, type, or upload your signature. Click Download when done. No account, no upload.</p>
+          </details>
+
+          <details style="border:1px solid var(--border);border-radius:10px;padding:0;">
+            <summary style="padding:14px 18px;font-weight:600;color:var(--text);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;">
+              Can I fill a PDF that has no interactive fields?
+            </summary>
+            <p style="padding:0 18px 14px;margin:0;font-size:14px;">Yes — use the text tool to click anywhere on the page and type. Works on flat PDFs, scanned forms, and any PDF without built-in form fields.</p>
+          </details>
+
+          <details style="border:1px solid var(--border);border-radius:10px;padding:0;">
+            <summary style="padding:14px 18px;font-weight:600;color:var(--text);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;">
+              Is my signature saved or stored?
+            </summary>
+            <p style="padding:0 18px 14px;margin:0;font-size:14px;">No. Your signature is created and embedded entirely in your browser session — never sent to any server. Once you close the tab, no trace of it remains anywhere outside your downloaded file.</p>
+          </details>
+
+          <details style="border:1px solid var(--border);border-radius:10px;padding:0;">
+            <summary style="padding:14px 18px;font-weight:600;color:var(--text);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;">
+              Is an electronic signature legally valid?
+            </summary>
+            <p style="padding:0 18px 14px;margin:0;font-size:14px;">In most countries, yes — for everyday documents like employment forms, rental agreements, and consent forms. eIDAS (EU), ESIGN (US), and equivalent laws in the UK, Canada, and Australia recognise electronic signatures. For high-stakes filings or notarised documents, verify the specific requirements.</p>
+          </details>
+
+          <details style="border:1px solid var(--border);border-radius:10px;padding:0;">
+            <summary style="padding:14px 18px;font-weight:600;color:var(--text);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;">
+              Can I sign without printing and scanning?
+            </summary>
+            <p style="padding:0 18px 14px;margin:0;font-size:14px;">Yes — that is exactly what this tool is for. Draw your signature with a mouse or finger, type your name in signature style, or upload a photo of your handwritten signature. No printing, no scanning, no fax required.</p>
+          </details>
+
+        </div>
+
+        <!-- Related -->
+        <div style="padding-top:24px;border-top:1px solid var(--border);">
+          <p style="font-size:12px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin:0 0 10px;">Related tools</p>
+          <ul style="margin:0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:6px;">
+            <li><a href="../../fill/" style="color:var(--green);">Fill PDF</a> — fill form fields and add a signature in one session</li>
+            <li><a href="../../sign-pdf/" style="color:var(--green);">Sign PDF</a> — add a signature to any PDF without form fields</li>
+            <li><a href="../../annotate-pdf/" style="color:var(--green);">Annotate PDF</a> — add comments, highlights, and text notes</li>
+            <li><a href="../../protect-pdf/" style="color:var(--green);">Protect PDF</a> — add a password to your signed document</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer" role="contentinfo">
+    <div class="footer__inner">
+      <p class="footer__copy">© 2026 PDFree · <a href="../../privacy/">Privacy</a> · <a href="../../terms/">Terms</a></p>
+    </div>
+  </footer>
+
+  <script type="module" src="../../js/theme.js"></script>
+</body>
+</html>
