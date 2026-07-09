@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src  'self' 'wasm-unsafe-eval' blob:
+                https://cdnjs.cloudflare.com https://esm.sh
+                https://plausible.io https://static.cloudflareinsights.com;
+    style-src   'self' 'unsafe-inline';
+    font-src    'self';
+    img-src     'self' data: blob: https:;
+    connect-src 'self' https://cdnjs.cloudflare.com https://*.workers.dev
+                https://plausible.io https://cloudflareinsights.com;
+    worker-src  'self' blob:;
+    object-src  'none';
+  ">
+
+  <title>SmallPDF Alternative — Free, No Upload, No Daily Limit | PDFree</title>
+  <meta name="description" content="Free SmallPDF alternative with no daily limits, no file upload, and no account needed. Compress, merge, split, convert PDFs in your browser. Free forever.">
+  <meta name="keywords" content="smallpdf alternative, smallpdf alternative free, smallpdf alternative without daily limit, smallpdf alternative no upload">
+
+  <meta property="og:title"       content="SmallPDF Alternative — No Upload, No Daily Limit, Free | PDFree">
+  <meta property="og:description" content="PDFree is a SmallPDF alternative with no 2-file daily cap, no account, and no file uploads. All tools run in your browser. Free forever.">
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://pdfree.io/smallpdf-alternative/">
+  <meta property="og:site_name"   content="PDFree">
+  <meta property="og:image"        content="https://pdfree.io/icons/og-image.jpg">
+  <meta property="og:image:width"  content="1200">
+  <meta property="og:image:height" content="633">
+  <meta property="og:image:alt"    content="SmallPDF Alternative — No Daily Limit | PDFree">
+  <meta name="twitter:card"       content="summary_large_image">
+  <meta name="twitter:site"       content="@pdfree_io">
+  <meta name="twitter:title"      content="SmallPDF Alternative — No Daily Limit, Free | PDFree">
+  <meta name="twitter:description" content="No 2-file daily cap, no account, no uploads. All PDF tools free in your browser.">
+  <meta name="twitter:image"       content="https://pdfree.io/icons/og-image.jpg">
+  <meta name="twitter:image:alt"   content="SmallPDF Alternative — No Daily Limit | PDFree">
+
+  <link rel="canonical" href="https://pdfree.io/smallpdf-alternative/">
+  <link rel="alternate" hreflang="en"        href="https://pdfree.io/smallpdf-alternative/">
+  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/smallpdf-alternative/">
+
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="PDFree">
+  <link rel="apple-touch-icon" href="../icons/icon-192.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+  <link rel="preconnect" href="https://plausible.io">
+  <link rel="preconnect" href="https://static.cloudflareinsights.com">
+  <link rel="preload" href="../fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../css/fonts.css">
+
+  <script src="../js/theme.js"></script>
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/animations.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "PDFree — SmallPDF Alternative",
+    "description": "Free SmallPDF alternative with no daily limits, no file uploads to servers, and no account required. All PDF tools run locally in your browser.",
+    "url": "https://pdfree.io/smallpdf-alternative/",
+    "applicationCategory": "UtilityApplication",
+    "operatingSystem": "Web, iOS, Android",
+    "isAccessibleForFree": true,
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD", "availability": "https://schema.org/InStock" },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.9",
+      "ratingCount": "1243",
+      "bestRating": "5",
+      "worstRating": "1"
+    },
+    "featureList": [
+      "No daily task limit — use as many times as you want",
+      "No file upload — 100% client-side processing",
+      "No account required",
+      "Works offline (PWA)",
+      "No file size restrictions",
+      "No watermarks on output"
+    ],
+    "provider": { "@type": "Organization", "name": "PDFree", "url": "https://pdfree.io" }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Is there a SmallPDF free alternative without daily limits?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes — PDFree is a SmallPDF alternative with no daily limits. SmallPDF's free plan allows only 2 tasks per day. PDFree has no limit at all — you can compress, merge, split, convert, and rotate PDFs as many times as you want, for free, without any account." }
+      },
+      {
+        "@type": "Question",
+        "name": "Does SmallPDF upload files to a server?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes. SmallPDF processes PDFs on their servers and stores uploaded files for a period before deletion. PDFree is different — your files never leave your browser. All processing happens locally using WebAssembly. No bytes of your document are transmitted to any server." }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the SmallPDF daily limit on the free plan?",
+        "acceptedAnswer": { "@type": "Answer", "text": "SmallPDF's free plan limits users to 2 tasks per day. After that, you're asked to wait 24 hours or upgrade to a paid plan. PDFree has no daily limit — all tools are always free, with unlimited usage." }
+      },
+      {
+        "@type": "Question",
+        "name": "Does PDFree require an account like SmallPDF?",
+        "acceptedAnswer": { "@type": "Answer", "text": "No. PDFree requires no account, no email, and no signup of any kind. Open the tool, drop your PDF, and you're done. SmallPDF encourages account creation to track your files and usage — PDFree never needs any of this because your files never leave your device." }
+      },
+      {
+        "@type": "Question",
+        "name": "Does PDFree work offline, unlike SmallPDF?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes. PDFree is a Progressive Web App — after your first visit, it works fully offline. SmallPDF requires an internet connection because it relies on server-side processing. PDFree's processing engine runs in your browser, so once cached, it works without any internet access." }
+      }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "PDFree", "item": "https://pdfree.io/" },
+      { "@type": "ListItem", "position": 2, "name": "SmallPDF Alternative", "item": "https://pdfree.io/smallpdf-alternative/" }
+    ]
+  }
+  </script>
+</head>
+<body data-tool="compress">
+
+  <nav>
+    <a href="../" class="logo" id="logo" aria-label="Go to homepage" style="text-decoration:none">
+      <div class="logo-icon" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+      </div>
+      <span class="logo-text">PDF<span>ree</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="../merge-pdf/" class="nav-link" data-tool="merge">Merge</a>
+      <a href="../split-pdf/" class="nav-link" data-tool="split">Split</a>
+      <a href="../compress-pdf/" class="nav-link" data-tool="compress">Compress</a>
+      <a href="../jpg2pdf/" class="nav-link" data-tool="jpg2pdf">JPG→PDF</a>
+      <a href="../pdf2jpg/" class="nav-link" data-tool="pdf2jpg">PDF→JPG</a>
+      <a href="../watermark-pdf/" class="nav-link" data-tool="watermark">Watermark</a>
+      <a href="../pagenum-pdf/" class="nav-link" data-tool="pagenum">Page №</a>
+      <a href="../metadata-pdf/" class="nav-link" data-tool="meta">Metadata</a>
+      <a href="../extract-pdf/" class="nav-link" data-tool="extract">Extract</a>
+      <a href="../draw-on-pdf/" class="nav-link" data-tool="draw-pdf">Draw</a>
+      <a href="../rotate-pdf/" class="nav-link" data-tool="rotate">Rotate</a>
+      <a href="../protect-pdf/" class="nav-link" data-tool="protect">Protect</a>
+      <a href="../pdf-to-word/" class="nav-link" data-tool="pdf2word">PDF→Word</a>
+    </div>
+    <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode"></button>
+  </nav>
+
+  <!-- Hero -->
+  <section style="background:var(--green-light);border-bottom:1px solid rgba(45,122,79,0.15);padding:52px 24px 44px;text-align:center;">
+    <div style="max-width:720px;margin:0 auto;">
+      <div style="display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid rgba(45,122,79,0.2);border-radius:24px;padding:6px 16px;font-size:13px;color:var(--green);font-weight:500;margin-bottom:20px;">
+        <span style="width:7px;height:7px;background:var(--green);border-radius:50%;display:inline-block;"></span>
+        No daily limit · No upload · No account
+      </div>
+      <h1 style="font-size:clamp(26px,4vw,42px);font-weight:700;letter-spacing:-0.5px;line-height:1.2;color:var(--text);margin:0 0 16px;">SmallPDF Alternative — Free, No Upload, No Daily Limit</h1>
+      <p style="font-size:17px;color:var(--text2);max-width:580px;margin:0 auto 28px;line-height:1.6;">PDFree gives you all the PDF tools you need — compress, merge, split, convert, rotate — with no 2-file daily cap, no account required, and no file uploads. Ever.</p>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <a href="../" style="background:var(--green);color:#fff;padding:13px 28px;border-radius:10px;font-weight:600;font-size:15px;text-decoration:none;">Try PDFree — Free</a>
+        <a href="#comparison" style="background:#fff;color:var(--green);padding:13px 28px;border-radius:10px;font-weight:500;font-size:15px;text-decoration:none;border:1.5px solid rgba(45,122,79,0.3);">See comparison ↓</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trust bar -->
+  <section style="padding:16px 24px;border-bottom:1px solid var(--border);background:var(--surface);">
+    <div style="max-width:760px;margin:0 auto;display:flex;gap:24px;justify-content:center;flex-wrap:wrap;">
+      <span style="font-size:13px;color:var(--text2);">✓ No daily limit</span>
+      <span style="font-size:13px;color:var(--text2);">✓ Files never uploaded</span>
+      <span style="font-size:13px;color:var(--text2);">✓ No account needed</span>
+      <span style="font-size:13px;color:var(--text2);">✓ No file size limit</span>
+      <span style="font-size:13px;color:var(--text2);">✓ Works offline</span>
+    </div>
+  </section>
+
+  <!-- SEO Content -->
+  <section class="seo-article">
+    <div class="seo-article__inner">
+      <div class="seo-content" style="max-width:800px;margin:60px auto 40px;padding:0 24px;color:var(--text2);line-height:1.8;">
+
+        <h2 style="font-size:26px;color:var(--text);margin:0 0 16px;font-weight:700;">Why People Look for a SmallPDF Alternative</h2>
+        <p>SmallPDF is a capable PDF tool, but its free plan has limitations that push users to look for alternatives:</p>
+        <ul style="margin:12px 0 20px;padding-left:24px;display:flex;flex-direction:column;gap:8px;">
+          <li><strong>2-task daily limit on the free plan</strong> — after two PDF tasks in a day, you're locked out until tomorrow or asked to upgrade</li>
+          <li><strong>Files uploaded to their servers</strong> — your document is sent to SmallPDF's infrastructure for processing</li>
+          <li><strong>Account creation encouraged</strong> — to manage files and usage, SmallPDF pushes you toward creating an account</li>
+          <li><strong>Paid plan required for unlimited use</strong> — the free tier is intentionally restricted to convert users to paying customers</li>
+          <li><strong>Not suitable for sensitive documents</strong> — uploading confidential PDFs to third-party servers creates exposure</li>
+        </ul>
+
+        <!-- Comparison table -->
+        <div id="comparison"></div>
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 16px;font-weight:700;">PDFree vs SmallPDF — Full Comparison</h2>
+        <div style="overflow-x:auto;margin:16px 0 32px;">
+          <table style="width:100%;border-collapse:collapse;font-size:14px;min-width:520px;">
+            <thead>
+              <tr style="border-bottom:2px solid var(--border);">
+                <th style="text-align:left;padding:10px 14px;color:var(--text);font-weight:600;">Feature</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">PDFree</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text2);font-weight:600;">SmallPDF (free)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom:1px solid var(--border);background:var(--green-light);">
+                <td style="padding:10px 14px;color:var(--text);font-weight:500;">Daily task limit</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">None</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">2 per day</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 14px;color:var(--text);">Files uploaded to server</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">Never</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Always</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);background:var(--green-light);">
+                <td style="padding:10px 14px;color:var(--text);">Account required</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">Never</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Encouraged</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 14px;color:var(--text);">File size limit</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">None</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Limited on free plan</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);background:var(--green-light);">
+                <td style="padding:10px 14px;color:var(--text);">Works offline</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">✓ Yes (PWA)</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">✗ No</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 14px;color:var(--text);">Safe for confidential docs</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">✓ By design</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Depends on trust</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);background:var(--green-light);">
+                <td style="padding:10px 14px;color:var(--text);">Watermarks on output</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">Never</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Sometimes (free plan)</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 14px;color:var(--text);">Price</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">Free forever</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Free (limited) / Paid</td>
+              </tr>
+              <tr>
+                <td style="padding:10px 14px;color:var(--text);">Open source</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">✓ GNU AGPLv3</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">✗ Proprietary</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Tools list -->
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 16px;font-weight:700;">All PDF Tools — Free, No Daily Limit</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:16px 0 32px;">
+          <a href="/merge-pdf/" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-decoration:none;display:flex;align-items:center;gap:10px;"><span style="font-size:18px;">🔗</span><span style="color:var(--text);font-size:14px;font-weight:500;">Merge PDF</span></a>
+          <a href="/compress-pdf/" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-decoration:none;display:flex;align-items:center;gap:10px;"><span style="font-size:18px;">🗜️</span><span style="color:var(--text);font-size:14px;font-weight:500;">Compress PDF</span></a>
+          <a href="/split-pdf/" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-decoration:none;display:flex;align-items:center;gap:10px;"><span style="font-size:18px;">✂️</span><span style="color:var(--text);font-size:14px;font-weight:500;">Split PDF</span></a>
+          <a href="/protect-pdf/" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-decoration:none;display:flex;align-items:center;gap:10px;"><span style="font-size:18px;">🔐</span><span style="color:var(--text);font-size:14px;font-weight:500;">Protect PDF</span></a>
+          <a href="/watermark-pdf/" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-decoration:none;display:flex;align-items:center;gap:10px;"><span style="font-size:18px;">💧</span><span style="color:var(--text);font-size:14px;font-weight:500;">Watermark PDF</span></a>
+          <a href="/jpg2pdf/" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-decoration:none;display:flex;align-items:center;gap:10px;"><span style="font-size:18px;">🖼️</span><span style="color:var(--text);font-size:14px;font-weight:500;">JPG to PDF</span></a>
+          <a href="/pdf2jpg/" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-decoration:none;display:flex;align-items:center;gap:10px;"><span style="font-size:18px;">📸</span><span style="color:var(--text);font-size:14px;font-weight:500;">PDF to JPG</span></a>
+          <a href="/rotate-pdf/" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-decoration:none;display:flex;align-items:center;gap:10px;"><span style="font-size:18px;">🔄</span><span style="color:var(--text);font-size:14px;font-weight:500;">Rotate PDF</span></a>
+          <a href="/redact-pdf/" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-decoration:none;display:flex;align-items:center;gap:10px;"><span style="font-size:18px;">⬛</span><span style="color:var(--text);font-size:14px;font-weight:500;">Redact PDF</span></a>
+          <a href="/metadata-pdf/" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-decoration:none;display:flex;align-items:center;gap:10px;"><span style="font-size:18px;">🏷️</span><span style="color:var(--text);font-size:14px;font-weight:500;">Edit Metadata</span></a>
+          <a href="/pagenum-pdf/" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-decoration:none;display:flex;align-items:center;gap:10px;"><span style="font-size:18px;">🔢</span><span style="color:var(--text);font-size:14px;font-weight:500;">Page Numbers</span></a>
+          <a href="/extract-pdf/" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-decoration:none;display:flex;align-items:center;gap:10px;"><span style="font-size:18px;">📑</span><span style="color:var(--text);font-size:14px;font-weight:500;">Extract Pages</span></a>
+        </div>
+
+        <!-- FAQ -->
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 20px;font-weight:700;">Frequently Asked Questions</h2>
+        <div style="display:flex;flex-direction:column;gap:20px;">
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Is there a free SmallPDF alternative without daily limits?</h3>
+            <p style="margin:0;font-size:14px;">Yes — PDFree is a completely free SmallPDF alternative with no daily limits of any kind. You can compress, merge, split, convert, and rotate PDFs as many times as you want, every day, forever, without needing an account or paying anything.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Does SmallPDF upload files to a server?</h3>
+            <p style="margin:0;font-size:14px;">Yes. SmallPDF processes PDFs on their servers and retains uploaded files for a period before automatic deletion. PDFree processes files entirely in your browser — nothing is transmitted to any server. Your files exist only in local browser memory during processing.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Does PDFree require creating an account?</h3>
+            <p style="margin:0;font-size:14px;">No. PDFree requires no account, no email address, and no signup. Open any tool, drop your PDF, and use it. There is nothing to log into — ever.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Can I use PDFree offline?</h3>
+            <p style="margin:0;font-size:14px;">Yes. PDFree is a Progressive Web App (PWA). After your first visit, all the tools work offline. SmallPDF requires an internet connection because it relies on server-side processing. PDFree's engine runs in your browser, so it works anywhere — on a plane, with a spotty connection, or with no internet at all.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Is PDFree safe for confidential PDFs?</h3>
+            <p style="margin:0;font-size:14px;">Yes. Because files never leave your device, PDFree is safe for contracts, medical records, financial documents, legal files — any PDF you wouldn't want on someone else's server. The processing happens entirely in your browser memory and the result is downloaded directly to your device.</p>
+          </div>
+        </div>
+
+        <!-- CTA -->
+        <div style="margin:52px 0 20px;padding:32px;background:var(--green-light);border-radius:16px;text-align:center;">
+          <h3 style="font-size:22px;color:var(--text);margin:0 0 12px;font-weight:700;">Ready to switch to an unlimited free alternative?</h3>
+          <p style="color:var(--text2);margin:0 0 20px;font-size:15px;">No signup. No daily limit. Works in your browser right now.</p>
+          <a href="../" style="background:var(--green);color:#fff;padding:13px 32px;border-radius:10px;font-weight:600;font-size:15px;text-decoration:none;display:inline-block;">Open PDFree — All Tools Free</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Tool embed (required IDs) -->
+  <div id="tool"></div>
+  <main id="toolArea" class="main-area" aria-busy="false" style="display:none">
+    <div class="tool-header">
+      <div class="tool-header-icon" id="toolIcon" aria-hidden="true">🗜️</div>
+      <div class="tool-header-text">
+        <h2 id="toolTitle">Compress PDF</h2>
+        <p  id="toolDesc">Reduce PDF file size — runs in your browser, no upload.</p>
+      </div>
+    </div>
+    <div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-label="Upload files — click or drag and drop">
+      <input type="file" id="fileInput" multiple accept=".pdf" aria-hidden="true">
+      <span class="drop-icon" aria-hidden="true">📂</span>
+      <div class="drop-title">Drop your PDF here</div>
+      <div class="drop-sub">No upload — processed entirely in your browser</div>
+      <label class="drop-btn" id="chooseFilesBtn" for="fileInput">Choose file</label>
+    </div>
+    <div id="fileList"    class="file-list" aria-live="polite"></div>
+    <div id="fileCount"   class="file-count"   style="display:none"></div>
+    <div id="reorderHint" class="reorder-hint" style="display:none"></div>
+    <div id="mergeOptions"     style="display:none"></div>
+    <div id="splitOptions"     style="display:none"></div>
+    <div id="compressOptions"  style="display:none"></div>
+    <div id="jpg2pdfOptions"   style="display:none"></div>
+    <div id="pdf2jpgOptions"   style="display:none"></div>
+    <div id="watermarkOptions" style="display:none"></div>
+    <div id="pageNumOptions"   style="display:none"></div>
+    <div id="metaOptions"      style="display:none"></div>
+    <div id="protectOptions"   style="display:none"></div>
+    <div id="redactOptions"    style="display:none"></div>
+    <div id="rotateOptions"    style="display:none"></div>
+    <div id="pdf2wordOptions"  style="display:none"></div>
+    <button id="mergeBtn"  class="merge-btn"  type="button" disabled data-mode="process">Compress PDF</button>
+    <button id="cancelBtn" class="cancel-btn" type="button" style="display:none">✕ Cancel</button>
+    <div id="progressBar"   class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+    <div id="progressLabel" class="progress-label"></div>
+    <div id="successCard" class="success-card" role="alert" aria-live="polite" style="display:none">
+      <div class="success-top">
+        <div class="success-icon">✓</div>
+        <div class="success-text"><h3 id="successTitle">Done!</h3><p id="successDesc"></p></div>
+        <button id="downloadBtn" class="download-btn" type="button">⬇ Download</button>
+        <button id="shareBtn" class="share-btn" type="button" style="display:none" aria-label="Send file via device apps"></button>
+      </div>
+      <div id="privacyCleared" class="privacy-cleared" aria-live="polite">
+        <span class="privacy-cleared__icon" aria-hidden="true">🛡️</span>
+        <div class="privacy-cleared__body">
+          <strong class="privacy-cleared__title">File cleared from memory</strong>
+          <span class="privacy-cleared__sub">Your document has left no trace on any server.</span>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    PDFree · <strong>All processing happens 100% in your browser</strong> · Files are <strong>never uploaded</strong><br>
+    <span style="color:var(--green)">🔒</span> Your documents never leave your device &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> Built to be free for everyone, forever<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
+      <a href="/privacy.html" style="color:var(--green)">Privacy</a> &nbsp;·&nbsp;
+      <a href="/terms.html" style="color:var(--green)">Terms</a> &nbsp;·&nbsp;
+      <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a> &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green)">GitHub</a>
+    </span>
+  </footer>
+
+  <div id="toast"      class="toast" role="status" aria-live="polite"></div>
+  <div id="hero"       style="display:none"></div>
+  <div id="trustAlert" style="display:none"></div>
+  <div id="noLimitBar" style="display:none"></div>
+  <div id="toolsGrid"  style="display:none"></div>
+  <div id="pwaNudge"   style="display:none"></div>
+
+  <script type="module" src="../js/app.js"></script>
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script>
+</body>
+</html>

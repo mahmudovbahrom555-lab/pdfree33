@@ -348,6 +348,10 @@ SPECIALTY_PAGES = [
     'pdf-compression-glossary',
     # No-upload hub page
     'pdf-tools-no-upload',
+    # Competitor alternative pages
+    'smallpdf-alternative',
+    'pdf24-alternative',
+    'adobe-acrobat-alternative',
     # Audience landing pages
     'free-pdf-tools',
     'for-accountants',
