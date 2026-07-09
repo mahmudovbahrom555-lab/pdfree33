@@ -611,7 +611,7 @@ function _openSigPad(fieldName, rect, pageIndex) {
     </div>
 
     <p id="_sigHint" style="text-align:center;color:#555;font-size:11px;padding:4px 0;margin:0;flex-shrink:0;">
-      ${isPortrait ? '↻ Rotated canvas — sign naturally left to right' : 'Draw your signature'}
+      ${isPortrait ? 'Sign along the dashed line — draw left to right' : 'Sign along the dashed line'}
     </p>
     <div style="display:flex;gap:10px;padding:14px 20px;background:#1a1a1a;flex-shrink:0;">
       ${useSavedBtn}
@@ -635,6 +635,24 @@ function _openSigPad(fieldName, rect, pageIndex) {
   ctx.lineWidth   = 2.5;
   ctx.lineCap     = 'round';
   ctx.lineJoin    = 'round';
+
+  // Baseline guide — draw once on blank canvas
+  const _baselineY = Math.round(logH * 0.68);
+  function _drawBaseline() {
+    ctx.save();
+    ctx.strokeStyle = '#d0d0d0';
+    ctx.lineWidth   = 1;
+    ctx.setLineDash([6, 4]);
+    ctx.beginPath();
+    ctx.moveTo(Math.round(logW * 0.06), _baselineY);
+    ctx.lineTo(Math.round(logW * 0.94), _baselineY);
+    ctx.stroke();
+    ctx.restore();
+    ctx.strokeStyle = '#111';
+    ctx.lineWidth   = 2.5;
+    ctx.setLineDash([]);
+  }
+  _drawBaseline();
 
   let drawing = false, lastX = 0, lastY = 0, lastMidX = 0, lastMidY = 0;
 
@@ -727,11 +745,10 @@ function _openSigPad(fieldName, rect, pageIndex) {
       }
     }
     if (_hint) {
-      _hint.textContent = tab === 'draw' && isPortrait
-        ? '↻ Rotated canvas — sign naturally left to right'
+      _hint.textContent = tab === 'draw'
+        ? 'Sign along the dashed line'
         : tab === 'type'   ? 'Type your name — preview updates live'
-        : tab === 'upload' ? 'Upload a PNG, JPG, or SVG image of your signature'
-        : 'Draw your signature';
+        : 'Upload a PNG, JPG, or SVG image of your signature';
     }
     if (tab === 'type') setTimeout(() => typeInput.focus(), 50);
   }
@@ -751,6 +768,7 @@ function _openSigPad(fieldName, rect, pageIndex) {
       if (_activeTab === 'draw') {
         ctx.fillStyle = '#fff';
         ctx.fillRect(0, 0, logW, logH);
+        _drawBaseline();
       } else if (_activeTab === 'type') {
         typeInput.value = '';
         _renderType('');
