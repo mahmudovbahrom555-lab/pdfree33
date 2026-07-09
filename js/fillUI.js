@@ -540,14 +540,18 @@ function _updateProgress(root) {
 function _openSigPad(fieldName, rect, pageIndex) {
   if (_sigModal) return;
 
+  let _activeTab    = 'draw';
+  let _uploadDataUrl = null;
+
   const isPortrait = window.innerHeight > window.innerWidth;
 
   // Canvas logical dimensions: always landscape (wide × short)
   // On portrait: W = screen height minus controls, H = screen width
   // CSS rotate(-90deg) makes this fill the portrait screen naturally
-  const CTRL_H = 150;
+  const CTRL_H = 200;
   const logW   = isPortrait ? (window.innerHeight - CTRL_H) : (window.innerWidth  - CTRL_H);
   const logH   = isPortrait ?  window.innerWidth             :  window.innerHeight - CTRL_H;
+  const typeH  = Math.max(80, Math.min(120, Math.round(logH * 0.45)));
   const dpr    = window.devicePixelRatio || 1;
 
   const savedSig    = _loadSignatureFromStorage();
@@ -558,33 +562,68 @@ function _openSigPad(fieldName, rect, pageIndex) {
       Use saved ↑
     </button>` : '';
 
+  const _tabBtn = (t, active) =>
+    `<button data-sig-tab="${t}" style="flex:1;padding:10px 4px;border:none;font-size:13px;` +
+    `font-weight:${active ? '600' : '400'};cursor:pointer;` +
+    `background:${active ? '#2D7A4F' : 'transparent'};color:${active ? '#fff' : '#888'};` +
+    `transition:background .15s,color .15s;">${t.charAt(0).toUpperCase() + t.slice(1)}</button>`;
+
   _sigModal = document.createElement('div');
-  _sigModal.style.cssText = 'position:fixed;inset:0;background:#111;z-index:10000;display:flex;flex-direction:column;touch-action:none;';
+  _sigModal.style.cssText = 'position:fixed;inset:0;background:#111;z-index:10000;display:flex;flex-direction:column;touch-action:none;overflow:hidden;';
   _sigModal.innerHTML = `
     <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 20px;background:#1a1a1a;flex-shrink:0;">
       <span style="color:#fff;font-size:15px;font-weight:600;">✍️ Sign here</span>
       <button data-sig-action="cancel" style="color:#aaa;background:none;border:none;font-size:22px;padding:4px 8px;cursor:pointer;line-height:1;">✕</button>
     </div>
-    <div style="flex:1;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+    <div style="display:flex;background:#1a1a1a;border-top:1px solid #2a2a2a;flex-shrink:0;">
+      ${_tabBtn('draw', true)}${_tabBtn('type', false)}${_tabBtn('upload', false)}
+    </div>
+
+    <!-- Draw panel -->
+    <div id="_sigPanelDraw" style="flex:1;display:flex;align-items:center;justify-content:center;overflow:hidden;">
       <canvas id="_fillSigCanvas"
         style="background:#fff;border-radius:8px;touch-action:none;cursor:crosshair;display:block;
                ${isPortrait ? 'transform:rotate(-90deg);' : ''}
                width:${logW}px;height:${logH}px;">
       </canvas>
     </div>
-    <p style="text-align:center;color:#555;font-size:11px;padding:4px 0;margin:0;flex-shrink:0;">
+
+    <!-- Type panel -->
+    <div id="_sigPanelType" style="display:none;flex:1;flex-direction:column;align-items:center;justify-content:center;padding:20px;gap:16px;overflow:hidden;">
+      <input id="_sigTypeInput" type="text" placeholder="Type your name"
+        style="width:100%;max-width:480px;padding:14px 16px;font-size:20px;border:none;border-radius:10px;
+               text-align:center;background:#222;color:#fff;outline:none;box-sizing:border-box;">
+      <canvas id="_fillSigTypeCanvas"
+        style="background:#fff;border-radius:8px;display:block;max-width:100%;"
+        width="${Math.round(logW * dpr)}" height="${Math.round(typeH * dpr)}">
+      </canvas>
+    </div>
+
+    <!-- Upload panel -->
+    <div id="_sigPanelUpload" style="display:none;flex:1;flex-direction:column;align-items:center;justify-content:center;padding:20px;gap:16px;overflow:hidden;">
+      <label id="_sigUploadLabel" style="width:100%;max-width:480px;border:2px dashed #444;border-radius:12px;
+             padding:28px 20px;text-align:center;cursor:pointer;color:#888;font-size:14px;line-height:1.6;box-sizing:border-box;">
+        Tap to choose a signature image
+        <br><span style="font-size:12px;color:#555;">PNG, JPG, SVG</span>
+        <input type="file" id="_sigUploadInput" accept="image/*" style="display:none;">
+      </label>
+      <img id="_sigUploadPreview" style="display:none;max-height:120px;max-width:100%;border-radius:8px;background:#fff;padding:8px;" alt="Signature preview">
+    </div>
+
+    <p id="_sigHint" style="text-align:center;color:#555;font-size:11px;padding:4px 0;margin:0;flex-shrink:0;">
       ${isPortrait ? '↻ Rotated canvas — sign naturally left to right' : 'Draw your signature'}
     </p>
-    <div style="display:flex;gap:12px;padding:14px 20px;background:#1a1a1a;flex-shrink:0;">
+    <div style="display:flex;gap:10px;padding:14px 20px;background:#1a1a1a;flex-shrink:0;">
       ${useSavedBtn}
       <button data-sig-action="clear" style="flex:1;padding:13px;background:#333;color:#fff;border:none;border-radius:10px;font-size:15px;cursor:pointer;">Clear</button>
       <button data-sig-action="save"  style="flex:1;padding:13px;background:#2D7A4F;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;">Done ✓</button>
     </div>
     <p style="text-align:center;color:#444;font-size:10px;padding:0 20px 12px;margin:0;line-height:1.5;flex-shrink:0;">
-      Visual signature only — not a PKI digital signature. For legally binding e-signatures use Adobe Acrobat.
+      Visual signature only — not a PKI digital signature.
     </p>`;
   document.body.appendChild(_sigModal);
 
+  // ── Draw canvas ───────────────────────────────────────────────
   const canvas = document.getElementById('_fillSigCanvas');
   canvas.width  = logW * dpr;
   canvas.height = logH * dpr;
@@ -600,13 +639,10 @@ function _openSigPad(fieldName, rect, pageIndex) {
   let drawing = false, lastX = 0, lastY = 0, lastMidX = 0, lastMidY = 0;
 
   function _coords(e) {
-    const px   = e.clientX, py = e.clientY;
-    const rect = canvas.getBoundingClientRect();
-    if (isPortrait) {
-      // CSS rotate(-90deg): lx = logW - (py - rect.top), ly = px - rect.left
-      return { x: logW - (py - rect.top), y: px - rect.left };
-    }
-    return { x: px - rect.left, y: py - rect.top };
+    const px = e.clientX, py = e.clientY;
+    const r  = canvas.getBoundingClientRect();
+    if (isPortrait) return { x: logW - (py - r.top), y: px - r.left };
+    return { x: px - r.left, y: py - r.top };
   }
 
   canvas.addEventListener('pointerdown', e => {
@@ -618,7 +654,6 @@ function _openSigPad(fieldName, rect, pageIndex) {
     ctx.fillStyle = '#111';
     ctx.fill();
   });
-
   canvas.addEventListener('pointermove', e => {
     if (!drawing) return;
     e.preventDefault();
@@ -631,28 +666,136 @@ function _openSigPad(fieldName, rect, pageIndex) {
     lastMidX = mx; lastMidY = my;
     lastX = x;     lastY = y;
   });
-
   canvas.addEventListener('pointerup',     () => { drawing = false; });
   canvas.addEventListener('pointercancel', () => { drawing = false; });
 
+  // ── Type canvas ───────────────────────────────────────────────
+  const typeCanvas = document.getElementById('_fillSigTypeCanvas');
+  const typeCtx    = typeCanvas.getContext('2d');
+  const typeW      = Math.round(logW * dpr);
+  const typeH_px   = Math.round(typeH * dpr);
+  typeCanvas.style.width  = `${logW}px`;
+  typeCanvas.style.height = `${typeH}px`;
+
+  function _renderType(text) {
+    typeCtx.fillStyle = '#fff';
+    typeCtx.fillRect(0, 0, typeW, typeH_px);
+    if (!text.trim()) return;
+    typeCtx.fillStyle    = '#111';
+    typeCtx.font         = `italic ${Math.min(typeH_px * 0.55, 72)}px "Segoe Script","Brush Script MT","Apple Chancery","Comic Sans MS",cursive`;
+    typeCtx.textBaseline = 'middle';
+    typeCtx.textAlign    = 'center';
+    typeCtx.fillText(text, typeW / 2, typeH_px / 2);
+  }
+  _renderType('');
+
+  const typeInput = document.getElementById('_sigTypeInput');
+  typeInput.addEventListener('input', () => _renderType(typeInput.value));
+
+  // ── Upload panel ──────────────────────────────────────────────
+  const uploadInput   = document.getElementById('_sigUploadInput');
+  const uploadPreview = document.getElementById('_sigUploadPreview');
+  const uploadLabel   = document.getElementById('_sigUploadLabel');
+
+  uploadInput.addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      _uploadDataUrl            = ev.target.result;
+      uploadPreview.src         = _uploadDataUrl;
+      uploadPreview.style.display = 'block';
+      uploadLabel.style.borderColor = '#2D7A4F';
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // ── Tab switching ─────────────────────────────────────────────
+  const _hint = document.getElementById('_sigHint');
+
+  function _switchTab(tab) {
+    _activeTab = tab;
+    for (const t of ['draw', 'type', 'upload']) {
+      const panel  = document.getElementById(`_sigPanel${t.charAt(0).toUpperCase() + t.slice(1)}`);
+      const btn    = _sigModal.querySelector(`[data-sig-tab="${t}"]`);
+      const active = t === tab;
+      if (panel) panel.style.display = active ? 'flex' : 'none';
+      if (btn) {
+        btn.style.background = active ? '#2D7A4F' : 'transparent';
+        btn.style.color      = active ? '#fff'    : '#888';
+        btn.style.fontWeight = active ? '600'     : '400';
+      }
+    }
+    if (_hint) {
+      _hint.textContent = tab === 'draw' && isPortrait
+        ? '↻ Rotated canvas — sign naturally left to right'
+        : tab === 'type'   ? 'Type your name — preview updates live'
+        : tab === 'upload' ? 'Upload a PNG, JPG, or SVG image of your signature'
+        : 'Draw your signature';
+    }
+    if (tab === 'type') setTimeout(() => typeInput.focus(), 50);
+  }
+
+  // ── Event delegation ──────────────────────────────────────────
   _sigModal.addEventListener('click', e => {
+    const tab    = e.target.closest('[data-sig-tab]')?.dataset.sigTab;
     const action = e.target.closest('[data-sig-action]')?.dataset.sigAction;
+
+    if (tab) { _switchTab(tab); return; }
+    if (!action) return;
+
     if (action === 'cancel') {
       _closeSigPad();
+
     } else if (action === 'clear') {
-      ctx.fillStyle = '#fff';
-      ctx.fillRect(0, 0, logW, logH);
+      if (_activeTab === 'draw') {
+        ctx.fillStyle = '#fff';
+        ctx.fillRect(0, 0, logW, logH);
+      } else if (_activeTab === 'type') {
+        typeInput.value = '';
+        _renderType('');
+        typeInput.focus();
+      } else {
+        _uploadDataUrl              = null;
+        uploadPreview.style.display = 'none';
+        uploadPreview.src           = '';
+        uploadLabel.style.borderColor = '#444';
+        uploadInput.value           = '';
+      }
+
     } else if (action === 'use-saved' && savedSig) {
       _sigImages[fieldName] = { dataUrl: savedSig, rect, pageIndex };
       _closeSigPad();
       _updateSigBtn(fieldName, savedSig);
+
     } else if (action === 'save') {
-      if (_isSigEmpty(ctx, logW * dpr, logH * dpr)) {
-        canvas.style.outline = '3px solid #dc2626';
-        setTimeout(() => { if (canvas) canvas.style.outline = ''; }, 900);
-        return;
+      let dataUrl = null;
+
+      if (_activeTab === 'draw') {
+        if (_isSigEmpty(ctx, logW * dpr, logH * dpr)) {
+          canvas.style.outline = '3px solid #dc2626';
+          setTimeout(() => { if (canvas) canvas.style.outline = ''; }, 900);
+          return;
+        }
+        dataUrl = _captureSig(canvas, logW * dpr, logH * dpr, isPortrait);
+
+      } else if (_activeTab === 'type') {
+        if (!typeInput.value.trim()) {
+          typeInput.style.outline = '3px solid #dc2626';
+          setTimeout(() => { if (typeInput) typeInput.style.outline = ''; }, 900);
+          return;
+        }
+        dataUrl = typeCanvas.toDataURL('image/png');
+
+      } else {
+        if (!_uploadDataUrl) {
+          uploadLabel.style.borderColor = '#dc2626';
+          setTimeout(() => { if (uploadLabel) uploadLabel.style.borderColor = '#444'; }, 900);
+          return;
+        }
+        dataUrl = _uploadDataUrl;
       }
-      const dataUrl = _captureSig(canvas, logW * dpr, logH * dpr, isPortrait);
+
       _saveSignatureToStorage(dataUrl);
       _sigImages[fieldName] = { dataUrl, rect, pageIndex };
       _closeSigPad();
