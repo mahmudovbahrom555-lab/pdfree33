@@ -351,6 +351,7 @@ SPECIALTY_PAGES = [
     'blog/how-to-rotate-pdf-pages',
     'blog/free-pdf-tools-without-daily-limits',
     'blog/how-to-convert-pdf-to-jpg',
+    'blog/how-to-add-watermark-to-pdf',
 ]
 
 # NOTE (Sitemap Index): If the site ever grows beyond 50,000 URLs, split the sitemap
