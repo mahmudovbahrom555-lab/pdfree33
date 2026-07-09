@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src  'self' 'wasm-unsafe-eval' blob:
+                https://cdnjs.cloudflare.com https://esm.sh
+                https://plausible.io https://pagead2.googlesyndication.com
+                https://static.cloudflareinsights.com;
+    style-src   'self' 'unsafe-inline';
+    font-src    'self';
+    img-src     'self' data: blob: https:;
+    connect-src 'self' https://cdnjs.cloudflare.com https://*.workers.dev
+                https://plausible.io https://pagead2.googlesyndication.com
+                https://www.googletagservices.com https://*.doubleclick.net
+                https://cloudflareinsights.com;
+    frame-src   https://googleads.g.doubleclick.net https://tpc.googlesyndication.com;
+    worker-src  'self' blob:;
+    object-src  'none';
+  ">
+
+  <title>How to Merge PDF Files Offline — No Internet Required | PDFree</title>
+  <meta name="description" content="Merge PDF files offline — no internet connection required after first load. PDFree runs entirely in your browser using WebAssembly. Works on planes, in restricted networks, and without uploading anything.">
+
+  <meta property="og:title"       content="How to Merge PDF Files Offline — No Internet Required | PDFree">
+  <meta property="og:description" content="Merge PDFs without an internet connection. PDFree runs in your browser using WebAssembly — load it once, use it forever offline.">
+  <meta property="og:type"        content="article">
+  <meta property="og:url"         content="https://pdfree.io/blog/merge-pdf-offline/">
+  <meta property="og:site_name"   content="PDFree">
+  <meta property="og:image"        content="https://pdfree.io/icons/og-image.jpg">
+  <meta property="og:image:width"  content="1200">
+  <meta property="og:image:height" content="633">
+  <meta property="og:image:alt"    content="Merge PDF Files Offline — PDFree">
+  <meta name="twitter:card"        content="summary_large_image">
+  <meta name="twitter:site"        content="@pdfree_io">
+  <meta name="twitter:title"       content="How to Merge PDF Files Offline | PDFree">
+  <meta name="twitter:description" content="Merge PDFs with no internet connection. PDFree's PDF engine runs in your browser — load once, use offline forever.">
+  <meta name="twitter:image"       content="https://pdfree.io/icons/og-image.jpg">
+  <meta name="twitter:image:alt"   content="Merge PDF Files Offline — PDFree">
+
+  <link rel="canonical" href="https://pdfree.io/blog/merge-pdf-offline/">
+  <link rel="alternate" hreflang="en"        href="https://pdfree.io/blog/merge-pdf-offline/">
+  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/blog/merge-pdf-offline/">
+
+  <link rel="manifest" href="../../manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="PDFree">
+  <link rel="apple-touch-icon" href="../../icons/icon-192.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+  <link rel="preconnect" href="https://plausible.io">
+  <link rel="preconnect" href="https://static.cloudflareinsights.com">
+  <link rel="preload" href="../../fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../css/fonts.css">
+  <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/animations.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/components.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to Merge PDF Files Offline",
+    "description": "Merge PDF files without an internet connection using PDFree — load the tool once, then use it offline anytime.",
+    "totalTime": "PT2M",
+    "tool": { "@type": "HowToTool", "name": "PDFree — browser-based PDF merger with offline support" },
+    "step": [
+      {
+        "@type": "HowToStep", "position": 1,
+        "name": "Load PDFree once while connected",
+        "text": "Visit pdfree.io/merge-pdf/ while you have an internet connection. The PDF engine (a WebAssembly file) downloads and caches in your browser automatically. This only needs to happen once."
+      },
+      {
+        "@type": "HowToStep", "position": 2,
+        "name": "Go offline",
+        "text": "Disconnect from the internet — switch to airplane mode, or simply close your Wi-Fi. PDFree's service worker serves the app from your local cache."
+      },
+      {
+        "@type": "HowToStep", "position": 3,
+        "name": "Add your PDF files",
+        "text": "Open pdfree.io/merge-pdf/ (from your browser history or a bookmark). Drop your PDF files onto the page. Everything runs locally — no network request is made."
+      },
+      {
+        "@type": "HowToStep", "position": 4,
+        "name": "Merge and download",
+        "text": "Click 'Merge PDF files'. Processing completes in your browser and the merged file downloads to your device — with zero internet required."
+      }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "How to Merge PDF Files Offline — No Internet Required",
+    "description": "Merge PDF files without an internet connection. PDFree runs entirely in your browser using WebAssembly — load it once, use it offline forever.",
+    "url": "https://pdfree.io/blog/merge-pdf-offline/",
+    "datePublished": "2026-07-09",
+    "dateModified": "2026-07-09",
+    "publisher": {
+      "@type": "Organization",
+      "name": "PDFree",
+      "url": "https://pdfree.io"
+    },
+    "author": {
+      "@type": "Organization",
+      "name": "PDFree"
+    },
+    "image": {
+      "@type": "ImageObject",
+      "url": "https://pdfree.io/icons/og-image.jpg",
+      "width": 1200,
+      "height": 633
+    },
+    "keywords": "merge pdf offline, merge pdf without internet, combine pdf files offline, merge pdf no internet connection, pdf merger offline free"
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Can I merge PDF files without an internet connection?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes — PDFree works offline after the first load. Visit pdfree.io/merge-pdf/ once while connected to cache the app, then use it anytime without internet. The PDF engine runs as WebAssembly in your browser, so no network connection is needed to merge files."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does PDFree work offline?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "PDFree uses a service worker to cache the application files — HTML, CSS, JavaScript, and the WebAssembly PDF engine — on your device after the first visit. When you return without internet, the browser loads everything from the local cache instead of the network. Your PDF files never leave your device in either case."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do I need to install anything to use PDFree offline?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No installation is required. PDFree runs as a Progressive Web App (PWA) in any modern browser. Simply visit pdfree.io once while connected and the app caches itself automatically. You can optionally install it to your home screen or taskbar for quicker offline access."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does offline merging work on a plane or without Wi-Fi?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Once cached, PDFree works in airplane mode, on a train without signal, or on any device with no active internet connection. This makes it ideal for working with confidential documents while traveling or in environments with restricted network access."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What other PDF tools work offline in PDFree?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "All PDFree tools work offline after the first load: Merge, Split, Compress, Rotate, Watermark, Extract Pages, PDF to JPG, JPG to PDF, Protect, and more. The entire toolset is cached as part of the PWA, so switching tools doesn't require a network request."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "PDFree", "item": "https://pdfree.io/" },
+      { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://pdfree.io/blog/" },
+      { "@type": "ListItem", "position": 3, "name": "Merge PDF Offline", "item": "https://pdfree.io/blog/merge-pdf-offline/" }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <nav class="nav" role="navigation" aria-label="Main navigation">
+    <a href="../../" class="nav-logo" aria-label="PDFree home">
+      <span class="nav-logo__icon">📄</span>
+      <span class="nav-logo__text">PDFree</span>
+    </a>
+    <div class="nav-links" role="list">
+      <a href="/merge-pdf/" class="nav-link" data-tool="merge">Merge</a>
+      <a href="/split-pdf/" class="nav-link" data-tool="split">Split</a>
+      <a href="/compress-pdf/" class="nav-link" data-tool="compress">Compress</a>
+      <a href="/pdf2jpg/" class="nav-link" data-tool="pdf2jpg">PDF→JPG</a>
+      <a href="/jpg2pdf/" class="nav-link" data-tool="jpg2pdf">JPG→PDF</a>
+      <a href="/rotate-pdf/" class="nav-link" data-tool="rotate">Rotate</a>
+      <a href="/watermark-pdf/" class="nav-link" data-tool="watermark">Watermark</a>
+      <a href="/protect-pdf/" class="nav-link" data-tool="protect">Protect</a>
+      <a href="/annotate-pdf/" class="nav-link" data-tool="annotate">Annotate</a>
+      <a href="/sign-pdf/" class="nav-link" data-tool="sign">Sign</a>
+      <a href="/fill-pdf/" class="nav-link" data-tool="fill">Fill</a>
+      <a href="/redact-pdf/" class="nav-link" data-tool="redact">Redact</a>
+      <a href="/extract-pdf/" class="nav-link" data-tool="extract">Extract</a>
+      <a href="/pagenum-pdf/" class="nav-link" data-tool="pagenum">Page №</a>
+      <a href="/metadata-pdf/" class="nav-link" data-tool="meta">Metadata</a>
+      <a href="/draw-on-pdf/" class="nav-link" data-tool="draw-pdf">Draw</a>
+    </div>
+    <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode"></button>
+  </nav>
+
+  <section class="seo-article" aria-labelledby="articleTitle">
+    <div class="seo-article__inner">
+      <div style="max-width:800px;margin:60px auto 40px;padding:0 24px;color:var(--text2);line-height:1.8;">
+
+        <p style="font-size:13px;color:var(--text3);margin:0 0 16px;">
+          <a href="../../" style="color:var(--text3);text-decoration:none;">PDFree</a> ›
+          <a href="../" style="color:var(--text3);text-decoration:none;">Blog</a> ›
+          Merge PDF Offline
+        </p>
+
+        <h1 id="articleTitle" style="font-size:32px;color:var(--text);margin:0 0 16px;font-weight:700;line-height:1.25;">How to Merge PDF Files Offline<br>(No Internet Required)</h1>
+
+        <p style="font-size:15px;color:var(--text3);margin:0 0 32px;">4-minute read · Updated July 2026</p>
+
+        <p style="font-size:18px;margin:0 0 24px;color:var(--text);">Most PDF tools require a live internet connection — they upload your files to a server, process them remotely, and stream the result back. PDFree works differently: the entire PDF engine runs in your browser using WebAssembly. Load it once while connected, and it works offline forever after.</p>
+
+        <!-- Inline CTA -->
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:28px;margin:0 0 40px;text-align:center;">
+          <p style="font-size:16px;font-weight:600;color:var(--text);margin:0 0 8px;">Merge PDFs now — works offline after first load</p>
+          <p style="font-size:14px;color:var(--text2);margin:0 0 20px;">No account. No upload. No internet needed after caching.</p>
+          <a href="../../merge-pdf/" style="background:var(--green);color:#fff;padding:13px 28px;border-radius:10px;font-weight:600;font-size:15px;text-decoration:none;display:inline-block;">Open Merge PDF Tool</a>
+        </div>
+
+        <h2 style="font-size:22px;color:var(--text);margin:0 0 16px;font-weight:600;">How to merge PDFs offline — step by step</h2>
+
+        <ol style="margin:0 0 32px;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:20px;">
+          <li style="display:flex;gap:16px;align-items:flex-start;">
+            <span style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;">1</span>
+            <div>
+              <strong style="color:var(--text);">Load PDFree once while connected</strong>
+              <p style="margin:4px 0 0;">Visit <a href="../../merge-pdf/" style="color:var(--green);">pdfree.io/merge-pdf/</a> with an internet connection. The PDF engine (a WebAssembly binary) downloads and caches in your browser automatically. <strong>This only needs to happen once.</strong></p>
+            </div>
+          </li>
+          <li style="display:flex;gap:16px;align-items:flex-start;">
+            <span style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;">2</span>
+            <div>
+              <strong style="color:var(--text);">Go offline</strong>
+              <p style="margin:4px 0 0;">Switch to airplane mode, disconnect Wi-Fi, or simply work in a location with no internet. PDFree's service worker serves the full app from your local device cache.</p>
+            </div>
+          </li>
+          <li style="display:flex;gap:16px;align-items:flex-start;">
+            <span style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;">3</span>
+            <div>
+              <strong style="color:var(--text);">Open the tool from your browser history or bookmark</strong>
+              <p style="margin:4px 0 0;">Navigate to <code style="background:var(--surface);padding:2px 6px;border-radius:4px;font-size:13px;">pdfree.io/merge-pdf/</code> — the app loads from cache instantly. Drop your PDF files onto the page.</p>
+            </div>
+          </li>
+          <li style="display:flex;gap:16px;align-items:flex-start;">
+            <span style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;">4</span>
+            <div>
+              <strong style="color:var(--text);">Merge and download — no network needed</strong>
+              <p style="margin:4px 0 0;">Click "Merge PDF files". The entire operation runs in your browser. The merged PDF downloads directly to your device. Zero network requests are made.</p>
+            </div>
+          </li>
+        </ol>
+
+        <h2 style="font-size:22px;color:var(--text);margin:0 0 16px;font-weight:600;">Why PDFree works offline when other tools don't</h2>
+
+        <p style="margin:0 0 16px;">Server-based PDF tools process your files remotely — your document travels to a data centre, gets merged there, and is sent back to you. This requires a constant internet connection for every step.</p>
+
+        <p style="margin:0 0 16px;">PDFree uses a fundamentally different architecture:</p>
+
+        <div style="display:grid;gap:12px;margin:0 0 32px;">
+          <div style="border-left:3px solid var(--green);padding:12px 16px;background:var(--surface);">
+            <strong style="color:var(--text);">WebAssembly PDF engine</strong>
+            <p style="margin:4px 0 0;font-size:14px;">The PDF processing code (based on PDF-lib and PDF.js) is compiled to WebAssembly and runs directly in your browser's JavaScript engine. No server is involved in the merge operation itself.</p>
+          </div>
+          <div style="border-left:3px solid var(--green);padding:12px 16px;background:var(--surface);">
+            <strong style="color:var(--text);">Service Worker caching</strong>
+            <p style="margin:4px 0 0;font-size:14px;">A service worker intercepts all requests and serves the app files from a local cache after the first visit. This is the same technology that powers offline-capable apps like Google Maps and Spotify.</p>
+          </div>
+          <div style="border-left:3px solid var(--green);padding:12px 16px;background:var(--surface);">
+            <strong style="color:var(--text);">Progressive Web App (PWA)</strong>
+            <p style="margin:4px 0 0;font-size:14px;">PDFree is a certified PWA — it meets the browser criteria for offline capability and can be installed to your home screen or taskbar for one-click offline access, with no app store download required.</p>
+          </div>
+        </div>
+
+        <h2 style="font-size:22px;color:var(--text);margin:0 0 16px;font-weight:600;">When offline PDF merging is essential</h2>
+
+        <div style="display:grid;gap:12px;margin:0 0 32px;">
+          <div style="border-left:3px solid var(--green);padding:12px 16px;background:var(--surface);">
+            <strong style="color:var(--text);">Traveling by plane</strong>
+            <p style="margin:4px 0 0;font-size:14px;">Inflight Wi-Fi is slow, unreliable, and often blocked for "cloud services." PDFree works in airplane mode — load it before boarding and merge documents at 35,000 feet.</p>
+          </div>
+          <div style="border-left:3px solid var(--green);padding:12px 16px;background:var(--surface);">
+            <strong style="color:var(--text);">Restricted corporate networks</strong>
+            <p style="margin:4px 0 0;font-size:14px;">Many organizations block access to cloud PDF tools on their networks — both for security reasons and to prevent data leaving the perimeter. PDFree doesn't upload anything, so it works even on locked-down corporate networks where upload-based tools are blocked.</p>
+          </div>
+          <div style="border-left:3px solid var(--green);padding:12px 16px;background:var(--surface);">
+            <strong style="color:var(--text);">Handling confidential documents</strong>
+            <p style="margin:4px 0 0;font-size:14px;">Legal contracts, medical records, financial filings — documents that must never leave your device. Working offline with PDFree provides a technical guarantee: there is no network path by which the file can be transmitted.</p>
+          </div>
+          <div style="border-left:3px solid var(--green);padding:12px 16px;background:var(--surface);">
+            <strong style="color:var(--text);">Poor or metered connections</strong>
+            <p style="margin:4px 0 0;font-size:14px;">On a slow connection or mobile data, uploading a 100 MB PDF to a server and downloading the result can take minutes. PDFree processes everything locally — speed depends only on your device, not your bandwidth.</p>
+          </div>
+        </div>
+
+        <h2 style="font-size:22px;color:var(--text);margin:0 0 16px;font-weight:600;">Install PDFree for instant offline access</h2>
+
+        <p style="margin:0 0 16px;">You can install PDFree as a PWA for one-click access — no app store, no download beyond what's already cached:</p>
+
+        <div style="display:grid;gap:10px;margin:0 0 32px;">
+          <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;">
+            <strong style="color:var(--text);display:block;margin:0 0 4px;">Chrome / Edge (desktop)</strong>
+            <p style="margin:0;font-size:14px;">Look for the install icon (⊕) in the address bar, or open the browser menu → "Install PDFree". It adds a shortcut that launches the app instantly, even without internet.</p>
+          </div>
+          <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;">
+            <strong style="color:var(--text);display:block;margin:0 0 4px;">Safari (iPhone / iPad)</strong>
+            <p style="margin:0;font-size:14px;">Tap the Share button → "Add to Home Screen". The app appears on your home screen and opens in standalone mode with offline support.</p>
+          </div>
+          <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;">
+            <strong style="color:var(--text);display:block;margin:0 0 4px;">Chrome (Android)</strong>
+            <p style="margin:0;font-size:14px;">Tap the three-dot menu → "Add to Home Screen" or "Install app". Same offline capability as the desktop version.</p>
+          </div>
+        </div>
+
+        <!-- Second CTA -->
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:28px;margin:0 0 40px;text-align:center;">
+          <p style="font-size:16px;font-weight:600;color:var(--text);margin:0 0 8px;">Merge PDFs offline — load once, use forever</p>
+          <p style="font-size:14px;color:var(--text2);margin:0 0 20px;">No account. No upload. Works in airplane mode.</p>
+          <a href="../../merge-pdf/" style="background:var(--green);color:#fff;padding:13px 28px;border-radius:10px;font-weight:600;font-size:15px;text-decoration:none;display:inline-block;">Merge PDF Files — Free</a>
+        </div>
+
+        <!-- FAQ -->
+        <h2 style="font-size:22px;color:var(--text);margin:0 0 16px;font-weight:600;">Frequently asked questions</h2>
+        <div style="display:flex;flex-direction:column;gap:8px;margin:0 0 40px;">
+
+          <details style="border:1px solid var(--border);border-radius:10px;padding:0;">
+            <summary style="padding:14px 18px;font-weight:600;color:var(--text);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;">
+              Can I merge PDFs without an internet connection?
+            </summary>
+            <p style="padding:0 18px 14px;margin:0;font-size:14px;">Yes. Visit <a href="../../merge-pdf/" style="color:var(--green);">pdfree.io/merge-pdf/</a> once while connected, then use it anytime offline. The service worker caches the full app — including the WebAssembly PDF engine — on your device after the first load.</p>
+          </details>
+
+          <details style="border:1px solid var(--border);border-radius:10px;padding:0;">
+            <summary style="padding:14px 18px;font-weight:600;color:var(--text);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;">
+              Does offline mode work in all browsers?
+            </summary>
+            <p style="padding:0 18px 14px;margin:0;font-size:14px;">Yes — Chrome, Firefox, Edge, and Safari all support service workers and WebAssembly. Offline support works across all these browsers on desktop and mobile. Private/Incognito mode may limit caching in some browsers.</p>
+          </details>
+
+          <details style="border:1px solid var(--border);border-radius:10px;padding:0;">
+            <summary style="padding:14px 18px;font-weight:600;color:var(--text);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;">
+              How long does the cache last?
+            </summary>
+            <p style="padding:0 18px 14px;margin:0;font-size:14px;">The service worker cache persists until the browser clears its storage (rare) or you clear site data manually. In practice, PDFree stays cached indefinitely. When a new version is deployed, the service worker updates silently on your next online visit.</p>
+          </details>
+
+          <details style="border:1px solid var(--border);border-radius:10px;padding:0;">
+            <summary style="padding:14px 18px;font-weight:600;color:var(--text);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;">
+              Which PDFree tools work offline?
+            </summary>
+            <p style="padding:0 18px 14px;margin:0;font-size:14px;">All of them. Merge, Split, Compress, Rotate, Watermark, Extract Pages, PDF to JPG, JPG to PDF, Protect, Annotate, Sign, Fill, Redact — every tool in PDFree is cached by the service worker and works offline after the first load.</p>
+          </details>
+
+          <details style="border:1px solid var(--border);border-radius:10px;padding:0;">
+            <summary style="padding:14px 18px;font-weight:600;color:var(--text);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;">
+              Are my files safe when working offline?
+            </summary>
+            <p style="padding:0 18px 14px;margin:0;font-size:14px;">Yes — and offline mode actually adds an extra layer of certainty. Without a network connection, it is technically impossible for any file data to leave your device. Even when online, PDFree never uploads files; offline mode just makes that guarantee provable.</p>
+          </details>
+
+        </div>
+
+        <!-- Related -->
+        <div style="padding-top:24px;border-top:1px solid var(--border);">
+          <p style="font-size:12px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin:0 0 10px;">Related tools</p>
+          <ul style="margin:0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:6px;">
+            <li><a href="../../merge-pdf/" style="color:var(--green);">Merge PDF</a> — combine multiple PDFs into one, works offline</li>
+            <li><a href="../../split-pdf/" style="color:var(--green);">Split PDF</a> — divide a PDF into pages or sections, works offline</li>
+            <li><a href="../../compress-pdf/" style="color:var(--green);">Compress PDF</a> — reduce file size without uploading, works offline</li>
+            <li><a href="../../merge-pdf-without-uploading/" style="color:var(--green);">Merge PDF Without Uploading</a> — more on PDFree's privacy-first approach</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer" role="contentinfo">
+    <div class="footer__inner">
+      <p class="footer__copy">© 2026 PDFree · <a href="../../privacy/">Privacy</a> · <a href="../../terms/">Terms</a></p>
+    </div>
+  </footer>
+
+  <script type="module" src="../../js/theme.js"></script>
+</body>
+</html>

@@ -372,6 +372,7 @@ SPECIALTY_PAGES = [
     'blog/how-to-convert-pdf-to-jpg',
     'blog/how-to-add-watermark-to-pdf',
     'blog/how-to-extract-pages-from-pdf',
+    'blog/merge-pdf-offline',
 ]
 
 # NOTE (Sitemap Index): If the site ever grows beyond 50,000 URLs, split the sitemap
