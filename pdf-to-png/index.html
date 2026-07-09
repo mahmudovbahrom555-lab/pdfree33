@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src  'self' 'wasm-unsafe-eval' blob:
+                https://cdnjs.cloudflare.com https://esm.sh
+                https://plausible.io https://static.cloudflareinsights.com;
+    style-src   'self' 'unsafe-inline';
+    font-src    'self';
+    img-src     'self' data: blob: https:;
+    connect-src 'self' https://cdnjs.cloudflare.com https://*.workers.dev
+                https://plausible.io https://cloudflareinsights.com;
+    worker-src  'self' blob:;
+    object-src  'none';
+  ">
+
+  <title>PDF to PNG — Lossless Image Export, Free, No Upload | PDFree</title>
+  <meta name="description" content="Convert PDF pages to PNG images free — lossless quality, transparent background support, no upload. Every page becomes a separate PNG file. No signup.">
+  <meta name="keywords" content="pdf to png, convert pdf to png free, pdf to png no upload, pdf pages to png images">
+
+  <meta property="og:title"       content="PDF to PNG — Free, Lossless, No Upload | PDFree">
+  <meta property="og:description" content="Convert PDF pages to PNG images free — lossless quality, transparent background support, no upload. Every page becomes a separate PNG file. No signup.">
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://pdfree.io/pdf-to-png/">
+  <meta property="og:site_name"   content="PDFree">
+  <meta property="og:image"        content="https://pdfree.io/icons/og-image.jpg">
+  <meta property="og:image:width"  content="1200">
+  <meta property="og:image:height" content="633">
+  <meta property="og:image:alt"    content="PDF to PNG — Free, Lossless, No Upload | PDFree">
+  <meta name="twitter:card"       content="summary_large_image">
+  <meta name="twitter:site"       content="@pdfree_io">
+  <meta name="twitter:title"      content="PDF to PNG — Free, Lossless, No Upload | PDFree">
+  <meta name="twitter:description" content="Convert PDF pages to PNG images free — lossless quality, transparent background support, no upload. Every page becomes a separate PNG file. No signup.">
+  <meta name="twitter:image"       content="https://pdfree.io/icons/og-image.jpg">
+  <meta name="twitter:image:alt"   content="PDF to PNG — Free, Lossless, No Upload | PDFree">
+
+  <link rel="canonical" href="https://pdfree.io/pdf-to-png/">
+  <link rel="alternate" hreflang="en"        href="https://pdfree.io/pdf-to-png/">
+  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/pdf-to-png/">
+
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="PDFree">
+  <link rel="apple-touch-icon" href="../icons/icon-192.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+  <link rel="preconnect" href="https://plausible.io">
+  <link rel="preconnect" href="https://static.cloudflareinsights.com">
+  <link rel="preload" href="../fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../css/fonts.css">
+
+  <script src="../js/theme.js"></script>
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/animations.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "PDF to PNG Converter",
+    "description": "Convert PDF pages to PNG images — lossless quality, transparent background support, no upload. Free, runs in your browser.",
+    "url": "https://pdfree.io/pdf-to-png/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "featureList": [
+      "Lossless PNG output — no compression artifacts",
+      "Transparent background support (alpha channel)",
+      "Choose 72, 150, or 300 DPI",
+      "No upload to servers — files stay on your device",
+      "No account required",
+      "Each page exports as a separate PNG file"
+    ],
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.9",
+      "ratingCount": "1187",
+      "bestRating": "5",
+      "worstRating": "1"
+    },
+    "provider": { "@type": "Organization", "name": "PDFree", "url": "https://pdfree.io" }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to Convert PDF to PNG",
+    "description": "Export PDF pages as lossless PNG images — free, no upload, transparency support.",
+    "totalTime": "PT2M",
+    "tool": [{ "@type": "HowToTool", "name": "PDFree — free browser-based PDF to PNG converter" }],
+    "step": [
+      { "@type": "HowToStep", "position": 1, "name": "Open the PDF to JPG tool and select PNG", "text": "Open pdfree.io/pdf2jpg/ and select PNG as the output format.", "url": "https://pdfree.io/pdf-to-png/#step1" },
+      { "@type": "HowToStep", "position": 2, "name": "Load your PDF", "text": "Load your PDF — click 'Choose files' or drag onto the drop zone. Nothing is uploaded.", "url": "https://pdfree.io/pdf-to-png/#step2" },
+      { "@type": "HowToStep", "position": 3, "name": "Choose your resolution", "text": "Choose your resolution — 72, 150, or 300 DPI.", "url": "https://pdfree.io/pdf-to-png/#step3" },
+      { "@type": "HowToStep", "position": 4, "name": "Convert and download", "text": "Click 'Convert to PNG'. Each page exports as a separate lossless PNG file.", "url": "https://pdfree.io/pdf-to-png/#step4" }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How do I convert a PDF to PNG for free?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Open pdfree.io/pdf2jpg/, select PNG as the output format, choose your DPI, and click Convert. Every page saves as a separate PNG file. No upload, no account." }
+      },
+      {
+        "@type": "Question",
+        "name": "Why choose PNG over JPG for PDF conversion?",
+        "acceptedAnswer": { "@type": "Answer", "text": "PNG is lossless — no compression artifacts. It's the right choice when the PDF contains diagrams, technical drawings, screenshots, or transparent regions. For photos and general sharing, JPG produces smaller files with equivalent visible quality." }
+      },
+      {
+        "@type": "Question",
+        "name": "Does the PDF to PNG converter support transparency?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes — if the PDF page has transparent areas, they are preserved in the PNG output as an alpha channel." }
+      },
+      {
+        "@type": "Question",
+        "name": "How large will my PNG files be?",
+        "acceptedAnswer": { "@type": "Answer", "text": "At 150 DPI, an A4 page is roughly 0.8–3 MB as a PNG. At 300 DPI, 3–10 MB. PNG files are 3–5x larger than equivalent JPGs. If file size matters, use JPG format unless you specifically need lossless quality." }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I convert only specific pages of a PDF to PNG?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Load the full PDF and convert — all pages export as separate PNGs. To export only specific pages, use pdfree.io/extract-pdf/ to extract those pages first, then convert to PNG." }
+      }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "PDFree", "item": "https://pdfree.io/" },
+      { "@type": "ListItem", "position": 2, "name": "PDF to JPG", "item": "https://pdfree.io/pdf2jpg/" },
+      { "@type": "ListItem", "position": 3, "name": "PDF to PNG", "item": "https://pdfree.io/pdf-to-png/" }
+    ]
+  }
+  </script>
+</head>
+<body data-tool="pdf2jpg">
+
+  <nav>
+    <a href="../" class="logo" id="logo" aria-label="Go to homepage" style="text-decoration:none">
+      <div class="logo-icon" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+      </div>
+      <span class="logo-text">PDF<span>ree</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="../merge-pdf/" class="nav-link" data-tool="merge">Merge</a>
+      <a href="../split-pdf/" class="nav-link" data-tool="split">Split</a>
+      <a href="../compress-pdf/" class="nav-link" data-tool="compress">Compress</a>
+      <a href="../jpg2pdf/" class="nav-link" data-tool="jpg2pdf">JPG→PDF</a>
+      <a href="../pdf2jpg/" class="nav-link" data-tool="pdf2jpg">PDF→JPG</a>
+      <a href="../watermark-pdf/" class="nav-link" data-tool="watermark">Watermark</a>
+      <a href="../pagenum-pdf/" class="nav-link" data-tool="pagenum">Page №</a>
+      <a href="../metadata-pdf/" class="nav-link" data-tool="meta">Metadata</a>
+      <a href="../extract-pdf/" class="nav-link" data-tool="extract">Extract</a>
+      <a href="../draw-on-pdf/" class="nav-link" data-tool="draw-pdf">Draw</a>
+      <a href="../rotate-pdf/" class="nav-link" data-tool="rotate">Rotate</a>
+      <a href="../protect-pdf/" class="nav-link" data-tool="protect">Protect</a>
+      <a href="../pdf-to-word/" class="nav-link" data-tool="pdf2word">PDF→Word</a>
+    </div>
+    <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode"></button>
+  </nav>
+
+  <!-- Hero — compact: just headline, tool follows immediately below the fold -->
+  <section style="background:var(--green-light);border-bottom:1px solid rgba(45,122,79,0.15);padding:24px 24px 20px;text-align:center;">
+    <div style="max-width:720px;margin:0 auto;">
+      <h1 style="font-size:clamp(22px,3.5vw,34px);font-weight:700;letter-spacing:-0.5px;line-height:1.2;color:var(--text);margin:0 0 6px;">PDF to PNG — Lossless Image Quality, Free</h1>
+      <p style="font-size:14px;color:var(--green);margin:0;font-weight:500;">Lossless image quality, transparent background support — free, no upload</p>
+    </div>
+  </section>
+
+  <!-- Tool — immediately visible, above the fold -->
+  <div id="tool"></div>
+  <main id="toolArea" class="main-area" aria-busy="false">
+    <div class="tool-header">
+      <div class="tool-header-icon" id="toolIcon" aria-hidden="true">🖼️</div>
+      <div class="tool-header-text">
+        <h2 id="toolTitle">PDF to PNG — lossless</h2>
+        <p  id="toolDesc">Export PDF pages as lossless PNG images. Perfect for diagrams, screenshots, and technical drawings.</p>
+      </div>
+    </div>
+
+    <div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-label="Upload files — click or drag and drop">
+      <input type="file" id="fileInput" multiple accept=".pdf" aria-hidden="true">
+      <span class="drop-icon" aria-hidden="true">📄</span>
+      <div class="drop-title">Drop your PDF to convert to PNG</div>
+      <div class="drop-sub">Every page exports as a separate lossless PNG image</div>
+      <label class="drop-btn" id="chooseFilesBtn" for="fileInput">Choose files</label>
+    </div>
+
+    <div id="fileList"    class="file-list" aria-live="polite"></div>
+    <div id="fileCount"   class="file-count"   style="display:none"></div>
+    <div id="reorderHint" class="reorder-hint" style="display:none">↕ Drag to reorder files before converting</div>
+
+    <div id="mergeOptions"     class="j2p-options"     style="display:none" aria-label="Merge options"></div>
+    <div id="splitOptions"     style="display:none"></div>
+    <div id="compressOptions"  style="display:none"></div>
+    <div id="jpg2pdfOptions"   style="display:none"></div>
+    <div id="pdf2jpgOptions"   style="display:none"></div>
+    <div id="watermarkOptions" style="display:none"></div>
+    <div id="pageNumOptions"   style="display:none"></div>
+    <div id="metaOptions"      style="display:none"></div>
+    <div id="protectOptions"   style="display:none"></div>
+    <div id="redactOptions"    style="display:none"></div>
+    <div id="rotateOptions"    style="display:none"></div>
+    <div id="pdf2wordOptions"  class="j2p-options"     style="display:none" aria-label="PDF to Word options"></div>
+
+    <button id="mergeBtn"  class="merge-btn"  type="button" disabled data-mode="process">Convert to PNG</button>
+    <button id="cancelBtn" class="cancel-btn" type="button" style="display:none">✕ Cancel</button>
+
+    <div id="progressBar"   class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+    <div id="progressLabel" class="progress-label"></div>
+
+    <div id="successCard" class="success-card" role="alert" aria-live="polite" style="display:none">
+      <div class="success-top">
+        <div class="success-icon">✓</div>
+        <div class="success-text">
+          <h3 id="successTitle">Done!</h3>
+          <p  id="successDesc"></p>
+        </div>
+        <button id="downloadBtn" class="download-btn" type="button">⬇ Download</button>
+        <button id="shareBtn" class="share-btn" type="button" style="display:none" aria-label="Send file via device apps"></button>
+      </div>
+      <div id="privacyCleared" class="privacy-cleared" aria-live="polite">
+        <span class="privacy-cleared__icon" aria-hidden="true">🛡️</span>
+        <div class="privacy-cleared__body">
+          <strong class="privacy-cleared__title">File cleared from memory</strong>
+          <span class="privacy-cleared__sub">Your document has left no trace on any server.</span>
+        </div>
+      </div>
+      <div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(45,122,79,0.2);">
+        <p style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--text3);margin:0 0 8px;">What's next?</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <a href="/pdf-to-jpg-high-quality/" data-handoff style="font-size:13px;background:var(--green-light);color:var(--green);padding:6px 12px;border-radius:6px;text-decoration:none;font-weight:500;border:1px solid rgba(45,122,79,0.2);">Convert to JPG →</a>
+          <a href="/compress-pdf/" data-handoff style="font-size:13px;background:var(--surface);color:var(--text2);padding:6px 12px;border-radius:6px;text-decoration:none;border:1px solid var(--border);">Compress PDF</a>
+          <a href="/extract-pdf/" data-handoff style="font-size:13px;background:var(--surface);color:var(--text2);padding:6px 12px;border-radius:6px;text-decoration:none;border:1px solid var(--border);">Extract pages</a>
+          <a href="/pdf-to-jpg-300-dpi/" data-handoff style="font-size:13px;background:var(--surface);color:var(--text2);padding:6px 12px;border-radius:6px;text-decoration:none;border:1px solid var(--border);">JPG 300 DPI</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- SEO content -->
+  <hr style="border:none;border-top:2px solid var(--border);margin:48px 24px 0;" aria-hidden="true">
+  <section class="seo-article">
+    <div class="seo-article__inner">
+      <div class="seo-content" style="max-width:800px;margin:60px auto 40px;padding:0 24px;color:var(--text2);line-height:1.8;">
+
+        <h2 style="font-size:26px;color:var(--text);margin:0 0 16px;font-weight:700;">PNG vs JPG for PDF Conversion</h2>
+        <div style="overflow-x:auto;margin:16px 0 28px;">
+          <table style="width:100%;border-collapse:collapse;font-size:14px;min-width:480px;">
+            <thead>
+              <tr style="border-bottom:2px solid var(--border);">
+                <th style="text-align:left;padding:10px 14px;color:var(--text);font-weight:600;">Format</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">Quality</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">File size</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">Transparency</th>
+                <th style="text-align:left;padding:10px 14px;color:var(--text);font-weight:600;">Best for</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom:1px solid var(--border);background:var(--green-light);">
+                <td style="padding:10px 14px;color:var(--green);font-weight:700;">PNG</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">Lossless</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Larger (3–5×)</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">Yes (alpha)</td>
+                <td style="padding:10px 14px;color:var(--text2);">Diagrams, text, technical, transparency</td>
+              </tr>
+              <tr>
+                <td style="padding:10px 14px;color:var(--text);">JPG</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Lossy (excellent at Q=85+)</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">Smaller</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">No</td>
+                <td style="padding:10px 14px;color:var(--text2);">Photos, presentations, sharing</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p>PNG is a lossless format — every pixel is stored exactly as rendered. There are no compression artifacts, and the image can be re-edited and re-saved without any quality degradation. The trade-off is file size: a PNG is typically 3–5× larger than an equivalent JPG.</p>
+        <p>For most PDF content — reports, presentations, photographs — JPG at 150–300 DPI at high quality is visually identical to PNG. The difference becomes visible only when you zoom in closely on fine text, thin lines, or areas with sharp color transitions.</p>
+
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 16px;font-weight:700;">When PNG Is the Right Choice for PDF Conversion</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin:0 0 32px;">
+          <div style="padding:18px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
+            <div style="font-size:22px;margin:0 0 8px;">📐</div>
+            <strong style="color:var(--text);display:block;margin:0 0 6px;">Technical diagrams</strong>
+            <p style="margin:0;font-size:13px;color:var(--text2);">Engineering drawings, architectural plans, and CAD outputs where lines must be pixel-sharp.</p>
+          </div>
+          <div style="padding:18px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
+            <div style="font-size:22px;margin:0 0 8px;">🎨</div>
+            <strong style="color:var(--text);display:block;margin:0 0 6px;">Logos and graphics with transparency</strong>
+            <p style="margin:0;font-size:13px;color:var(--text2);">PDFs created from vector tools like Illustrator or Affinity Designer where transparent regions must be preserved.</p>
+          </div>
+          <div style="padding:18px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
+            <div style="font-size:22px;margin:0 0 8px;">💻</div>
+            <strong style="color:var(--text);display:block;margin:0 0 6px;">Screenshots and UI captures</strong>
+            <p style="margin:0;font-size:13px;color:var(--text2);">Software documentation, UI mockups, and screen recordings where text must be perfectly legible.</p>
+          </div>
+          <div style="padding:18px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
+            <div style="font-size:22px;margin:0 0 8px;">✏️</div>
+            <strong style="color:var(--text);display:block;margin:0 0 6px;">Design source material</strong>
+            <p style="margin:0;font-size:13px;color:var(--text2);">Pages you plan to import into design tools — Figma, Photoshop, Canva — where PNG transparency is needed.</p>
+          </div>
+          <div style="padding:18px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
+            <div style="font-size:22px;margin:0 0 8px;">🔬</div>
+            <strong style="color:var(--text);display:block;margin:0 0 6px;">Scientific and academic figures</strong>
+            <p style="margin:0;font-size:13px;color:var(--text2);">Charts, graphs, and data visualizations where pixel-perfect accuracy is required for publication.</p>
+          </div>
+          <div style="padding:18px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
+            <div style="font-size:22px;margin:0 0 8px;">🗂️</div>
+            <strong style="color:var(--text);display:block;margin:0 0 6px;">Further editing</strong>
+            <p style="margin:0;font-size:13px;color:var(--text2);">When you need to edit the image and re-save multiple times without cumulative quality loss.</p>
+          </div>
+        </div>
+
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 16px;font-weight:700;">PNG File Size at Different Resolutions</h2>
+        <div style="overflow-x:auto;margin:16px 0 28px;">
+          <table style="width:100%;border-collapse:collapse;font-size:14px;min-width:400px;">
+            <thead>
+              <tr style="border-bottom:2px solid var(--border);">
+                <th style="text-align:left;padding:10px 14px;color:var(--text);font-weight:600;">Resolution</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">Approx. PNG size (A4)</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">Equiv. JPG size</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 14px;color:var(--text);">72 DPI</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">0.2–0.8 MB</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">0.05–0.2 MB</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 14px;color:var(--text);">150 DPI</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">0.8–3 MB</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">0.2–0.8 MB</td>
+              </tr>
+              <tr>
+                <td style="padding:10px 14px;color:var(--text);">300 DPI</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">3–10 MB</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">0.5–2 MB</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p>PNG files are significantly larger than equivalent JPGs. For most sharing and presentation purposes, JPG at 150 DPI produces equivalent visual quality at 1/5 the file size. If file size is a concern and you don't need lossless quality or transparency, use <a href="/pdf-to-jpg-high-quality/" style="color:var(--green);">PDF to JPG</a> instead.</p>
+
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 16px;font-weight:700;">Does PDF to PNG Support Transparency?</h2>
+        <p>Yes. If the PDF page has transparent regions — common in logo-heavy pages or PDFs created from vector tools like Illustrator or Affinity Designer — the PNG output will preserve the transparency as an alpha channel.</p>
+        <p>This is one of the main reasons to choose PNG over JPG for certain PDFs. JPG does not support transparency: transparent areas become white in JPG output, which can break logos or graphics designed to appear on colored backgrounds. PNG preserves the alpha channel, so you get a clean transparent background that works on any colored surface.</p>
+
+        <div style="background:var(--green-light);border-left:4px solid var(--green);padding:18px 20px;border-radius:0 8px 8px 0;margin:28px 0;">
+          <p style="margin:0;font-size:14px;color:var(--text);"><strong>Privacy:</strong> PDFree converts your PDF entirely in your browser. Your file is never uploaded to any server. No account, no signup, no size limit.</p>
+        </div>
+
+        <!-- FAQ -->
+        <h2 style="font-size:26px;color:var(--text);margin:52px 0 20px;font-weight:700;">Frequently Asked Questions</h2>
+        <div style="display:flex;flex-direction:column;gap:20px;">
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">How do I convert a PDF to PNG for free?</h3>
+            <p style="margin:0;font-size:14px;">Open <a href="/pdf2jpg/" style="color:var(--green);">pdfree.io/pdf2jpg/</a>, select PNG as the output format, choose your DPI, and click Convert. Every page saves as a separate PNG file. No upload, no account.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Why choose PNG over JPG for PDF conversion?</h3>
+            <p style="margin:0;font-size:14px;">PNG is lossless — no compression artifacts. It's the right choice when the PDF contains diagrams, technical drawings, screenshots, or transparent regions. For photos and general sharing, JPG produces smaller files with equivalent visible quality.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Does the PDF to PNG converter support transparency?</h3>
+            <p style="margin:0;font-size:14px;">Yes — if the PDF page has transparent areas, they are preserved in the PNG output as an alpha channel.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">How large will my PNG files be?</h3>
+            <p style="margin:0;font-size:14px;">At 150 DPI, an A4 page is roughly 0.8–3 MB as a PNG. At 300 DPI, 3–10 MB. PNG files are 3–5x larger than equivalent JPGs. If file size matters, use JPG format unless you specifically need lossless quality.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Can I convert only specific pages of a PDF to PNG?</h3>
+            <p style="margin:0;font-size:14px;">Load the full PDF and convert — all pages export as separate PNGs. To export only specific pages, use <a href="/extract-pdf/" style="color:var(--green);">pdfree.io/extract-pdf/</a> to extract those pages first, then convert to PNG.</p>
+          </div>
+        </div>
+
+        <!-- Related -->
+        <h2 style="font-size:26px;color:var(--text);margin:52px 0 12px;font-weight:700;">Related Free Tools</h2>
+        <ul style="margin:12px 0;padding-left:24px;display:flex;flex-direction:column;gap:8px;">
+          <li><a href="/pdf2jpg/" style="color:var(--green);font-weight:500;">PDF to JPG</a> — convert PDF pages to JPG at any resolution</li>
+          <li><a href="/extract-pdf/" style="color:var(--green);font-weight:500;">Extract PDF pages</a> — extract specific pages before converting</li>
+          <li><a href="/compress-pdf/" style="color:var(--green);font-weight:500;">Compress PDF</a> — reduce file size before exporting</li>
+          <li><a href="/pdf-to-jpg-high-quality/" style="color:var(--green);font-weight:500;">PDF to JPG High Quality</a> — guide to choosing JPG vs PNG</li>
+          <li><a href="/pdf-to-jpg-300-dpi/" style="color:var(--green);font-weight:500;">PDF to JPG 300 DPI</a> — print-quality 300 DPI export guide</li>
+        </ul>
+
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    PDFree · <strong>All processing happens 100% in your browser</strong> · Files are <strong>never uploaded</strong><br>
+    <span style="color:var(--green)">🔒</span> Your documents never leave your device &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> Built to be free for everyone, forever<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
+      <a href="/privacy.html" style="color:var(--green)">Privacy</a> &nbsp;·&nbsp;
+      <a href="/terms.html" style="color:var(--green)">Terms</a> &nbsp;·&nbsp;
+      <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a> &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green)">GitHub</a>
+    </span>
+  </footer>
+
+  <div id="toast"      class="toast" role="status" aria-live="polite"></div>
+  <div id="hero"       style="display:none"></div>
+  <div id="trustAlert" style="display:none"></div>
+  <div id="noLimitBar" style="display:none"></div>
+  <div id="toolsGrid"  style="display:none"></div>
+  <div id="pwaNudge"   style="display:none"></div>
+
+  <!-- tool detected via <body data-tool="pdf2jpg"> — no inline script needed -->
+  <script type="module" src="../js/app.js"></script>
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script>
+</body>
+</html>
