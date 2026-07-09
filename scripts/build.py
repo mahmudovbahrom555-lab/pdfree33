@@ -352,6 +352,13 @@ SPECIALTY_PAGES = [
     'smallpdf-alternative',
     'pdf24-alternative',
     'adobe-acrobat-alternative',
+    # Stage 5 long-tail landing pages
+    'merge-pdf-no-size-limit',
+    'free-pdf-tools-no-signup',
+    'split-pdf-free-no-watermark',
+    'compress-pdf-without-account',
+    'convert-pdf-to-jpg-free-no-watermark',
+    'rotate-pdf-free-permanently',
     # Audience landing pages
     'free-pdf-tools',
     'for-accountants',

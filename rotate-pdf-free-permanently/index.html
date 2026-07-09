@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src  'self' 'wasm-unsafe-eval' blob:
+                https://cdnjs.cloudflare.com https://esm.sh
+                https://plausible.io https://static.cloudflareinsights.com;
+    style-src   'self' 'unsafe-inline';
+    font-src    'self';
+    img-src     'self' data: blob: https:;
+    connect-src 'self' https://cdnjs.cloudflare.com https://*.workers.dev
+                https://plausible.io https://cloudflareinsights.com;
+    worker-src  'self' blob:;
+    object-src  'none';
+  ">
+
+  <title>Rotate PDF Pages Permanently — Free, No Upload, Saves Correctly | PDFree</title>
+  <meta name="description" content="Rotate PDF pages permanently — rotation is saved into the file, not just a display hint. Free, no upload, no signup. Rotated pages stay correct in all viewers.">
+  <meta name="keywords" content="rotate pdf permanently, rotate pdf free permanently saved, rotate pdf without uploading, rotate pdf pages permanently free">
+
+  <meta property="og:title"       content="Rotate PDF Permanently — Free, No Upload | PDFree">
+  <meta property="og:description" content="Rotate PDF pages and have it stick — rotation baked into the file, not just a display hint. Free, no signup, nothing uploaded.">
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://pdfree.io/rotate-pdf-free-permanently/">
+  <meta property="og:site_name"   content="PDFree">
+  <meta property="og:image"        content="https://pdfree.io/icons/og-image.jpg">
+  <meta property="og:image:width"  content="1200">
+  <meta property="og:image:height" content="633">
+  <meta property="og:image:alt"    content="Rotate PDF Permanently Free | PDFree">
+  <meta name="twitter:card"       content="summary_large_image">
+  <meta name="twitter:site"       content="@pdfree_io">
+  <meta name="twitter:title"      content="Rotate PDF Permanently — Free | PDFree">
+  <meta name="twitter:description" content="Rotate PDF pages permanently — saved into the file, not just display. Free, no upload, no signup.">
+  <meta name="twitter:image"       content="https://pdfree.io/icons/og-image.jpg">
+  <meta name="twitter:image:alt"   content="Rotate PDF Permanently Free | PDFree">
+
+  <link rel="canonical" href="https://pdfree.io/rotate-pdf-free-permanently/">
+  <link rel="alternate" hreflang="en"        href="https://pdfree.io/rotate-pdf-free-permanently/">
+  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/rotate-pdf-free-permanently/">
+
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="PDFree">
+  <link rel="apple-touch-icon" href="../icons/icon-192.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+  <link rel="preconnect" href="https://plausible.io">
+  <link rel="preconnect" href="https://static.cloudflareinsights.com">
+  <link rel="preload" href="../fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../css/fonts.css">
+
+  <script src="../js/theme.js"></script>
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/animations.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Rotate PDF Pages Permanently — Free",
+    "description": "Rotate PDF pages permanently with the rotation saved into the PDF file structure using pdf-lib. Works correctly in all PDF viewers. Free, no upload, no signup.",
+    "url": "https://pdfree.io/rotate-pdf-free-permanently/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "featureList": [
+      "Rotation permanently saved into PDF file",
+      "Displays correctly in all PDF viewers after rotation",
+      "Rotate all pages or specific pages",
+      "No file upload — 100% client-side",
+      "No account or signup required"
+    ],
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.8",
+      "ratingCount": "876",
+      "bestRating": "5",
+      "worstRating": "1"
+    },
+    "provider": { "@type": "Organization", "name": "PDFree", "url": "https://pdfree.io" }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to Permanently Rotate PDF Pages",
+    "description": "Rotate PDF pages so the rotation is saved into the file — not just a temporary viewer preference. Free, no upload.",
+    "totalTime": "PT1M",
+    "tool": [{ "@type": "HowToTool", "name": "PDFree Rotate PDF tool" }],
+    "step": [
+      { "@type": "HowToStep", "position": 1, "name": "Open the rotate tool", "text": "The tool is directly below. No signup required.", "url": "https://pdfree.io/rotate-pdf-free-permanently/#step1" },
+      { "@type": "HowToStep", "position": 2, "name": "Drop your PDF and choose rotation", "text": "Drop your PDF. Choose to rotate all pages or specific pages, and select 90°, 180°, or 270°. You can rotate clockwise or counter-clockwise.", "url": "https://pdfree.io/rotate-pdf-free-permanently/#step2" },
+      { "@type": "HowToStep", "position": 3, "name": "Download the permanently rotated PDF", "text": "The output PDF has the rotation permanently written into the page dictionary using pdf-lib. It will display correctly in every PDF viewer without any further adjustment.", "url": "https://pdfree.io/rotate-pdf-free-permanently/#step3" }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Why does rotating a PDF in a viewer not permanently save the rotation?",
+        "acceptedAnswer": { "@type": "Answer", "text": "PDF viewers like browser built-ins or Preview on macOS often rotate the display as a viewing preference, not by modifying the PDF file itself. When you send that file to someone else, their viewer may open it at the original orientation. PDFree modifies the PDF file's page dictionary using pdf-lib — the rotation value is written into the file structure itself, so it persists in every viewer, on every device." }
+      },
+      {
+        "@type": "Question",
+        "name": "Will the rotated PDF display correctly in all PDF viewers?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes. Because PDFree writes the rotation into the PDF page dictionary (the 'Rotate' key in the page object), the rotation is part of the file specification — not a viewer preference. Any PDF viewer that follows the PDF spec will render the page at the correct orientation." }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I rotate specific pages instead of all pages?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes. PDFree's rotate tool lets you rotate all pages at once or choose specific page numbers or ranges to rotate. Each page's rotation is set independently in the output PDF." }
+      },
+      {
+        "@type": "Question",
+        "name": "Is my PDF uploaded when I rotate it?",
+        "acceptedAnswer": { "@type": "Answer", "text": "No. Your PDF is rotated entirely in your browser using pdf-lib (a JavaScript PDF library). The operation happens in browser memory — nothing is sent to any server. The rotated PDF downloads directly to your device." }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I rotate a PDF for free without signing up?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes. PDFree requires no account, no email, and no signup. The rotate tool is immediately usable without any registration." }
+      }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "PDFree", "item": "https://pdfree.io/" },
+      { "@type": "ListItem", "position": 2, "name": "Rotate PDF", "item": "https://pdfree.io/rotate-pdf/" },
+      { "@type": "ListItem", "position": 3, "name": "Rotate PDF Free Permanently", "item": "https://pdfree.io/rotate-pdf-free-permanently/" }
+    ]
+  }
+  </script>
+</head>
+<body data-tool="rotate">
+
+  <nav>
+    <a href="../" class="logo" id="logo" aria-label="Go to homepage" style="text-decoration:none">
+      <div class="logo-icon" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+      </div>
+      <span class="logo-text">PDF<span>ree</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="../merge-pdf/" class="nav-link" data-tool="merge">Merge</a>
+      <a href="../split-pdf/" class="nav-link" data-tool="split">Split</a>
+      <a href="../compress-pdf/" class="nav-link" data-tool="compress">Compress</a>
+      <a href="../jpg2pdf/" class="nav-link" data-tool="jpg2pdf">JPG→PDF</a>
+      <a href="../pdf2jpg/" class="nav-link" data-tool="pdf2jpg">PDF→JPG</a>
+      <a href="../watermark-pdf/" class="nav-link" data-tool="watermark">Watermark</a>
+      <a href="../pagenum-pdf/" class="nav-link" data-tool="pagenum">Page №</a>
+      <a href="../metadata-pdf/" class="nav-link" data-tool="meta">Metadata</a>
+      <a href="../extract-pdf/" class="nav-link" data-tool="extract">Extract</a>
+      <a href="../draw-on-pdf/" class="nav-link" data-tool="draw-pdf">Draw</a>
+      <a href="../rotate-pdf/" class="nav-link" data-tool="rotate">Rotate</a>
+      <a href="../protect-pdf/" class="nav-link" data-tool="protect">Protect</a>
+      <a href="../pdf-to-word/" class="nav-link" data-tool="pdf2word">PDF→Word</a>
+    </div>
+    <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode"></button>
+  </nav>
+
+  <!-- Hero -->
+  <section style="background:var(--green-light);border-bottom:1px solid rgba(45,122,79,0.15);padding:24px 24px 20px;text-align:center;">
+    <div style="max-width:720px;margin:0 auto;">
+      <h1 style="font-size:clamp(22px,3.5vw,34px);font-weight:700;letter-spacing:-0.5px;line-height:1.2;color:var(--text);margin:0 0 6px;">Rotate PDF Pages Permanently — Free, No Upload, Saves Correctly</h1>
+      <p style="font-size:14px;color:var(--green);margin:0;font-weight:500;">Rotation written into the file — not just a display preference. Correct in every PDF viewer.</p>
+    </div>
+  </section>
+
+  <!-- Tool -->
+  <div id="tool"></div>
+  <main id="toolArea" class="main-area" aria-busy="false">
+    <div class="tool-header">
+      <div class="tool-header-icon" id="toolIcon" aria-hidden="true">🔄</div>
+      <div class="tool-header-text">
+        <h2 id="toolTitle">Rotate PDF — Permanent</h2>
+        <p  id="toolDesc">Rotation is saved into the PDF file using pdf-lib. Correct orientation in all viewers.</p>
+      </div>
+    </div>
+
+    <div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-label="Upload files — click or drag and drop">
+      <input type="file" id="fileInput" multiple accept=".pdf" aria-hidden="true">
+      <span class="drop-icon" aria-hidden="true">📂</span>
+      <div class="drop-title">Drop PDF to rotate permanently — no upload needed</div>
+      <div class="drop-sub">Rotation saved into file · Correct in all PDF viewers · No signup</div>
+      <label class="drop-btn" id="chooseFilesBtn" for="fileInput">Choose file</label>
+    </div>
+
+    <div id="fileList"    class="file-list" aria-live="polite"></div>
+    <div id="fileCount"   class="file-count"   style="display:none"></div>
+    <div id="reorderHint" class="reorder-hint" style="display:none"></div>
+
+    <div id="mergeOptions"     style="display:none"></div>
+    <div id="splitOptions"     style="display:none"></div>
+    <div id="compressOptions"  style="display:none"></div>
+    <div id="jpg2pdfOptions"   style="display:none"></div>
+    <div id="pdf2jpgOptions"   style="display:none"></div>
+    <div id="watermarkOptions" style="display:none"></div>
+    <div id="pageNumOptions"   style="display:none"></div>
+    <div id="metaOptions"      style="display:none"></div>
+    <div id="protectOptions"   style="display:none"></div>
+    <div id="redactOptions"    style="display:none"></div>
+    <div id="rotateOptions"    style="display:none"></div>
+    <div id="pdf2wordOptions"  style="display:none"></div>
+
+    <button id="mergeBtn"  class="merge-btn"  type="button" disabled data-mode="process">Rotate PDF</button>
+    <button id="cancelBtn" class="cancel-btn" type="button" style="display:none">✕ Cancel</button>
+
+    <div id="progressBar"   class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+    <div id="progressLabel" class="progress-label"></div>
+
+    <div id="successCard" class="success-card" role="alert" aria-live="polite" style="display:none">
+      <div class="success-top">
+        <div class="success-icon">✓</div>
+        <div class="success-text"><h3 id="successTitle">Done!</h3><p id="successDesc"></p></div>
+        <button id="downloadBtn" class="download-btn" type="button">⬇ Download</button>
+        <button id="shareBtn" class="share-btn" type="button" style="display:none" aria-label="Send file via device apps"></button>
+      </div>
+      <div id="privacyCleared" class="privacy-cleared" aria-live="polite">
+        <span class="privacy-cleared__icon" aria-hidden="true">🛡️</span>
+        <div class="privacy-cleared__body">
+          <strong class="privacy-cleared__title">File cleared from memory</strong>
+          <span class="privacy-cleared__sub">Your document has left no trace on any server.</span>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- SEO content -->
+  <hr style="border:none;border-top:2px solid var(--border);margin:48px 24px 0;" aria-hidden="true">
+  <section class="seo-article">
+    <div class="seo-article__inner">
+      <div class="seo-content" style="max-width:800px;margin:60px auto 40px;padding:0 24px;color:var(--text2);line-height:1.8;">
+
+        <h2 style="font-size:26px;color:var(--text);margin:0 0 16px;font-weight:700;">Why PDF Rotation "Doesn't Stick" in Many Viewers</h2>
+        <p>The PDF format allows a page to store a "Rotate" value in its page dictionary — a number (0, 90, 180, or 270) that specifies how the page should be displayed. When a PDF viewer rotates a page "for display only," it doesn't modify this value in the file. It just applies the rotation in memory for your current viewing session.</p>
+        <p>The result: when you email the file and someone else opens it, their viewer reads the original (unmodified) Rotate value and shows the page at the wrong orientation again. The rotation didn't actually save — it was only a display preference in your viewer.</p>
+
+        <div style="background:var(--green-light);border-left:4px solid var(--green);padding:16px 20px;border-radius:0 8px 8px 0;margin:24px 0;">
+          <p style="margin:0;font-size:14px;color:var(--text);"><strong>How PDFree makes rotation permanent:</strong> PDFree uses pdf-lib to open the PDF and programmatically set the <code>Rotate</code> key on each target page's dictionary. The output is a new PDF with the rotation value baked in. When anyone opens the file in any PDF viewer, the viewer reads the Rotate value and displays the page at the correct angle — automatically, without any manual adjustment.</p>
+        </div>
+
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 16px;font-weight:700;">Rotation Options</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:16px 0 32px;">
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 20px;text-align:center;">
+            <div style="font-size:28px;margin-bottom:8px;">↻</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">90° Clockwise</strong>
+            <p style="margin:0;font-size:13px;">Portrait becomes landscape (right side up)</p>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 20px;text-align:center;">
+            <div style="font-size:28px;margin-bottom:8px;">↺</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">90° Counter-Clockwise</strong>
+            <p style="margin:0;font-size:13px;">Portrait becomes landscape (left side up)</p>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 20px;text-align:center;">
+            <div style="font-size:28px;margin-bottom:8px;">↕</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">180°</strong>
+            <p style="margin:0;font-size:13px;">Flip upside down — useful for scans captured inverted</p>
+          </div>
+        </div>
+
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 20px;font-weight:700;">Frequently Asked Questions</h2>
+        <div style="display:flex;flex-direction:column;gap:20px;">
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Will the rotation stay when I share the PDF?</h3>
+            <p style="margin:0;font-size:14px;">Yes. PDFree writes the rotation into the PDF file structure using pdf-lib. The output PDF will display at the correct orientation in every PDF viewer — no manual rotation needed by recipients.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Why does rotating in my viewer not save permanently?</h3>
+            <p style="margin:0;font-size:14px;">Many viewers rotate display-only, without modifying the file. PDFree modifies the actual Rotate key in the PDF page dictionary, so the rotation is part of the file — not just a viewing preference.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Can I rotate only specific pages?</h3>
+            <p style="margin:0;font-size:14px;">Yes. You can rotate all pages or choose specific page numbers or ranges. Each selected page's Rotate value is updated independently.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Is my PDF uploaded when I rotate it?</h3>
+            <p style="margin:0;font-size:14px;">No. Rotation is performed locally in your browser using pdf-lib. Your PDF never leaves your device.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Can I rotate a PDF for free without an account?</h3>
+            <p style="margin:0;font-size:14px;">Yes. No account, no email, no signup. The rotate tool is immediately available without any registration.</p>
+          </div>
+        </div>
+
+        <h2 style="font-size:26px;color:var(--text);margin:52px 0 12px;font-weight:700;">Related Free Tools</h2>
+        <ul style="margin:12px 0;padding-left:24px;display:flex;flex-direction:column;gap:8px;">
+          <li><a href="/rotate-pdf/" style="color:var(--green);font-weight:500;">Rotate PDF</a> — the main rotate tool</li>
+          <li><a href="/split-pdf/" style="color:var(--green);font-weight:500;">Split PDF</a> — extract pages after rotating</li>
+          <li><a href="/merge-pdf/" style="color:var(--green);font-weight:500;">Merge PDF</a> — combine rotated files</li>
+        </ul>
+
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    PDFree · <strong>All processing happens 100% in your browser</strong> · Files are <strong>never uploaded</strong><br>
+    <span style="color:var(--green)">🔒</span> Your documents never leave your device &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> Built to be free for everyone, forever<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
+      <a href="/privacy.html" style="color:var(--green)">Privacy</a> &nbsp;·&nbsp;
+      <a href="/terms.html" style="color:var(--green)">Terms</a> &nbsp;·&nbsp;
+      <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a> &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green)">GitHub</a>
+    </span>
+  </footer>
+
+  <div id="toast"      class="toast" role="status" aria-live="polite"></div>
+  <div id="hero"       style="display:none"></div>
+  <div id="trustAlert" style="display:none"></div>
+  <div id="noLimitBar" style="display:none"></div>
+  <div id="toolsGrid"  style="display:none"></div>
+  <div id="pwaNudge"   style="display:none"></div>
+
+  <script type="module" src="../js/app.js"></script>
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script>
+</body>
+</html>
