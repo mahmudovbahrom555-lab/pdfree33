@@ -204,7 +204,7 @@
         "tr": "PDF Birleştir"
       },
       "metaDescs": {
-        "en": "Merge PDF files free — no size limit, no daily limit, no upload. Combine large PDFs or 100+ files at once in your browser. 100% private. No signup.",
+        "en": "Merge PDF files free — no size limit, no daily limit, no upload. Combine large PDFs or 100+ files at once in your browser. Works offline. No signup.",
         "es": "Combina archivos PDF ilimitados al instante sin subirlos. 100% privado — todo ocurre en tu navegador. Sin registro, sin límites de tamaño, totalmente gratis.",
         "pt": "Combine arquivos PDF ilimitados instantaneamente sem fazer upload. 100% privado — tudo processado no seu navegador. Sem registro, sem limites de tamanho.",
         "de": "PDF-Dateien kostenlos online zusammenfügen. 100 % privat — Dateien verlassen deinen Browser nie. Kein Upload, keine Registrierung, keine Limits.",
@@ -826,7 +826,7 @@
         "tr": "PDF Filigran"
       },
       "metaDescs": {
-        "en": "Add CONFIDENTIAL, DRAFT, or any custom watermark to PDF free — set opacity, color, and angle. Runs in your browser, nothing uploaded. No signup. Free forever.",
+        "en": "Add CONFIDENTIAL, DRAFT, or any custom watermark to PDF free — set opacity, color, and angle. Runs in your browser, nothing uploaded. Works offline, free.",
         "es": "Añade un sello de texto (BORRADOR, CONFIDENCIAL, tu nombre) a cualquier PDF sin subirlo. Opacidad, color y ángulo configurables. Sin registro, sin límites. Gratis para siempre.",
         "pt": "Adicione uma marca d'água de texto a qualquer PDF — carimbo CONFIDENCIAL, RASCUNHO ou seu nome, com opacidade e ângulo personalizáveis. Sem upload, sem cadastro. Grátis.",
         "de": "Wasserzeichen kostenlos in PDF einfügen — Text, Stempel oder Firmenname mit einstellbarer Deckkraft, Farbe und Winkel. Kein Upload, keine Registrierung. Im Browser, 100 % privat.",
@@ -994,7 +994,7 @@
         "tr": "PDF Koru"
       },
       "metaDescs": {
-        "en": "Password-protect your PDF with AES-256 encryption. Files stay on your device — never uploaded to any server. Add permissions too. Free, no signup required.",
+        "en": "Password-protect your PDF with AES-256 encryption. Files stay on your device — never uploaded to any server. Add permissions too. Works offline, no signup.",
         "es": "Protege tu PDF con contraseña AES-256 sin subirlo. Todo ocurre en tu navegador — nunca se envía a ningún servidor. Restringe permisos también. Gratis y privado.",
         "pt": "Proteja seu PDF com senha AES-256 sem fazer upload. Tudo processado no seu navegador — nunca enviado a nenhum servidor. Restrinja permissões também. Grátis.",
         "de": "PDF mit AES-256-Passwort schützen ohne Upload. Dateien bleiben auf deinem Gerät — werden nie hochgeladen. Berechtigungen einschränken. Kostenlos, ohne Registrierung.",
@@ -1113,7 +1113,7 @@
         "vi": "Xóa Văn Bản PDF"
       },
       "metaDescs": {
-        "en": "Permanently redact sensitive text and images from PDFs. 100% local processing — nothing ever leaves your device. Opaque blocks baked in. Free, no signup needed.",
+        "en": "Permanently redact sensitive text and images from PDFs. 100% local processing — nothing ever leaves your device. Opaque blocks baked in. Works offline.",
         "es": "Oculta texto, firmas o datos sensibles en PDFs con bloques opacos. 100% privado — procesado localmente, nada se envía. Sin registro. Eliminación permanente.",
         "pt": "Oculte texto, assinaturas ou dados sensíveis em PDFs com blocos opacos. 100% privado — processado localmente, nada é enviado. Grátis, sem registro.",
         "de": "Sensible Texte und Bilder in PDFs dauerhaft schwärzen. 100 % lokale Verarbeitung — nichts verlässt dein Gerät. Dauerhafte Entfernung. Kostenlos, ohne Registrierung.",
@@ -1427,7 +1427,7 @@
         "vi": "Metadata PDF"
       },
       "metaDescs": {
-        "en": "View and edit PDF metadata — title, author, subject, keywords. Processed locally in your browser, never uploaded. Remove personal info before sharing. Free.",
+        "en": "View and edit PDF metadata — title, author, subject, keywords. Works offline in your browser, never uploaded. Remove personal info before sharing. Free.",
         "es": "Ve y edita metadatos del PDF — título, autor, asunto, palabras clave. Procesado localmente, sin subidas. Elimina información personal antes de compartir. Gratis.",
         "pt": "Visualize e edite metadados de PDF — título, autor, assunto, palavras-chave. Processado localmente, sem uploads. Remova dados pessoais antes de compartilhar. Grátis.",
         "de": "PDF-Metadaten bearbeiten oder entfernen — Titel, Autor, Betreff, Schlüsselwörter. Im Browser verarbeitet, kein Upload. Persönliche Daten vor dem Teilen löschen.",
@@ -1574,7 +1574,7 @@
         "tr": "JPG'den PDF'ye"
       },
       "metaDescs": {
-        "en": "Convert JPG, PNG and WebP images to PDF free — no upload, processed in your browser. Combine multiple photos into one PDF instantly. EXIF rotation auto-fixed.",
+        "en": "Convert JPG, PNG and WebP images to PDF free — no upload, processed in your browser. Combine multiple photos into one PDF instantly. Works offline.",
         "es": "Junta JPG, PNG o WebP en un PDF gratis — sin registro, sin subir archivos. Convierte una o varias fotos en un PDF multipágina al instante. Rotación EXIF automática.",
         "pt": "Converta imagens JPG, PNG e WebP em PDF instantaneamente sem upload. 100% privado — processado no navegador. Rotação EXIF automática. Sem registro, sem limites.",
         "de": "JPG-, PNG- und WebP-Bilder in PDF umwandeln — 100 % privat, kein Upload. Mehrere Bilder zu einem PDF kombinieren. EXIF-Rotation automatisch korrigiert. Kostenlos.",
@@ -1742,7 +1742,7 @@
         "tr": "PDF'den JPG'ye"
       },
       "metaDescs": {
-        "en": "Convert PDF pages to JPG or PNG in your browser — no upload ever. Choose 72, 150, or 300 DPI. Multiple pages export as a ZIP. Free, no account required.",
+        "en": "Convert PDF pages to JPG or PNG in your browser — no upload ever. Choose 72, 150, or 300 DPI. Multiple pages export as a ZIP. Works offline, no account.",
         "es": "Extrae páginas PDF como imágenes JPG o PNG de alta calidad sin subirlas. 100% privado — procesado en tu navegador. Elige resolución. Sin registro, gratis.",
         "pt": "Extraia páginas PDF como imagens JPG ou PNG de alta qualidade sem upload. 100% privado — processado no navegador. Escolha a resolução. Sem registro, grátis.",
         "de": "PDF-Seiten in hochwertige JPG- oder PNG-Bilder umwandeln — kein Upload, alles im Browser. Auflösung wählen. Alle Seiten oder nur eine Auswahl. Kostenlos.",
@@ -1861,7 +1861,7 @@
         "vi": "Điền Form PDF"
       },
       "metaDescs": {
-        "en": "Fill and sign any PDF form free — type in text fields, tick checkboxes, add your signature, and download. Runs in your browser, nothing uploaded. No account needed.",
+        "en": "Fill and sign any PDF form free — type in text fields, tick checkboxes, add your signature, and download. Runs in your browser, nothing uploaded. Works offline.",
         "de": "PDF-Formularfelder online ausfüllen — kostenlos, ohne Upload. Texteingaben, Checkboxen, Unterschriften — alles lokal im Browser verarbeitet. Ohne Registrierung.",
         "es": "Rellena campos de formulario PDF gratis sin subir archivos. Texto, casillas, listas y firmas — procesado localmente en tu navegador. Sin registro, sin límites.",
         "fr": "Remplir des champs de formulaire PDF en ligne gratuitement. Texte, cases à cocher, listes et signatures — traité localement. Sans envoi, sans inscription.",

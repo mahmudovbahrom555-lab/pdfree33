@@ -346,6 +346,8 @@ SPECIALTY_PAGES = [
     'make-scanned-pdf-searchable',
     'ocr-pdf-no-upload',
     'pdf-compression-glossary',
+    # No-upload hub page
+    'pdf-tools-no-upload',
     # Audience landing pages
     'free-pdf-tools',
     'for-accountants',
