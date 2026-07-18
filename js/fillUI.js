@@ -553,6 +553,8 @@ function _openSigPad(fieldName, rect, pageIndex) {
   const logH   = isPortrait ?  window.innerWidth             :  window.innerHeight - CTRL_H;
   const typeH  = Math.max(80, Math.min(120, Math.round(logH * 0.45)));
   const dpr    = window.devicePixelRatio || 1;
+  const baselineY = Math.round(logH * 0.68);
+  const baselineInsetX = Math.round(logW * 0.06);
 
   const savedSig    = _loadSignatureFromStorage();
   const useSavedBtn = savedSig ? `
@@ -581,11 +583,15 @@ function _openSigPad(fieldName, rect, pageIndex) {
 
     <!-- Draw panel -->
     <div id="_sigPanelDraw" style="flex:1;display:flex;align-items:center;justify-content:center;overflow:hidden;">
-      <canvas id="_fillSigCanvas"
-        style="background:#fff;border-radius:8px;touch-action:none;cursor:crosshair;display:block;
-               ${isPortrait ? 'transform:rotate(-90deg);' : ''}
-               width:${logW}px;height:${logH}px;">
-      </canvas>
+      <div id="_sigCanvasWrap" style="position:relative;overflow:hidden;background:#fff;border-radius:8px;
+             width:${logW}px;height:${logH}px;
+             ${isPortrait ? 'transform:rotate(-90deg);' : ''}">
+        <div style="position:absolute;left:${baselineInsetX}px;right:${baselineInsetX}px;top:${baselineY}px;
+               border-top:1px dashed #d0d0d0;pointer-events:none;"></div>
+        <canvas id="_fillSigCanvas"
+          style="position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:crosshair;display:block;">
+        </canvas>
+      </div>
     </div>
 
     <!-- Type panel -->
@@ -629,30 +635,13 @@ function _openSigPad(fieldName, rect, pageIndex) {
   canvas.height = logH * dpr;
   const ctx = canvas.getContext('2d');
   ctx.scale(dpr, dpr);
-  ctx.fillStyle = '#fff';
-  ctx.fillRect(0, 0, logW, logH);
   ctx.strokeStyle = '#111';
   ctx.lineWidth   = 2.5;
   ctx.lineCap     = 'round';
   ctx.lineJoin    = 'round';
-
-  // Baseline guide — draw once on blank canvas
-  const _baselineY = Math.round(logH * 0.68);
-  function _drawBaseline() {
-    ctx.save();
-    ctx.strokeStyle = '#d0d0d0';
-    ctx.lineWidth   = 1;
-    ctx.setLineDash([6, 4]);
-    ctx.beginPath();
-    ctx.moveTo(Math.round(logW * 0.06), _baselineY);
-    ctx.lineTo(Math.round(logW * 0.94), _baselineY);
-    ctx.stroke();
-    ctx.restore();
-    ctx.strokeStyle = '#111';
-    ctx.lineWidth   = 2.5;
-    ctx.setLineDash([]);
-  }
-  _drawBaseline();
+  // Canvas stays transparent — the baseline guide lives on a CSS layer
+  // behind it (see _sigCanvasWrap above), so ink capture and the
+  // empty-signature check only ever see actual strokes.
 
   let drawing = false, lastX = 0, lastY = 0, lastMidX = 0, lastMidY = 0;
 
@@ -766,9 +755,7 @@ function _openSigPad(fieldName, rect, pageIndex) {
 
     } else if (action === 'clear') {
       if (_activeTab === 'draw') {
-        ctx.fillStyle = '#fff';
-        ctx.fillRect(0, 0, logW, logH);
-        _drawBaseline();
+        ctx.clearRect(0, 0, logW, logH);
       } else if (_activeTab === 'type') {
         typeInput.value = '';
         _renderType('');
@@ -827,24 +814,34 @@ function _closeSigPad() {
 }
 
 function _isSigEmpty(ctx, physW, physH) {
+  // Canvas is transparent except for actual ink strokes — any drawn
+  // pixel has non-zero alpha, so scanning alpha is sufficient (and
+  // unlike a color threshold, it isn't tripped by the CSS baseline
+  // guide, which lives outside the canvas).
   const d = ctx.getImageData(0, 0, physW, physH).data;
-  for (let i = 0; i < d.length; i += 4) {
-    if (d[i] < 240 || d[i + 1] < 240 || d[i + 2] < 240) return false;
+  for (let i = 3; i < d.length; i += 4) {
+    if (d[i] > 10) return false;
   }
   return true;
 }
 
 function _captureSig(canvas, physW, physH, rotate90) {
-  // If canvas was CSS-rotated, the logical pixel data is also rotated.
-  // Rotate captured image +90deg (clockwise) to restore natural orientation.
-  if (!rotate90) return canvas.toDataURL('image/png');
+  // Composite onto an opaque white background — the source canvas is
+  // transparent (baseline guide lives on a CSS layer, not the bitmap).
+  // If CSS-rotated, also rotate +90deg (clockwise) to restore natural orientation.
   const off = document.createElement('canvas');
-  off.width  = physH;
-  off.height = physW;
+  off.width  = rotate90 ? physH : physW;
+  off.height = rotate90 ? physW : physH;
   const offCtx = off.getContext('2d');
-  offCtx.translate(physH / 2, physW / 2);
-  offCtx.rotate(Math.PI / 2);
-  offCtx.drawImage(canvas, -physW / 2, -physH / 2);
+  offCtx.fillStyle = '#fff';
+  offCtx.fillRect(0, 0, off.width, off.height);
+  if (rotate90) {
+    offCtx.translate(physH / 2, physW / 2);
+    offCtx.rotate(Math.PI / 2);
+    offCtx.drawImage(canvas, -physW / 2, -physH / 2);
+  } else {
+    offCtx.drawImage(canvas, 0, 0);
+  }
   return off.toDataURL('image/png');
 }
 
