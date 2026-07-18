@@ -86,5 +86,21 @@
       "@type": "Answer",
       "text": "Yes. Select the page ranges that correspond to each original document and extract them as separate PDFs. This unmerges the combined file back into its individual parts — same operation as splitting, applied in reverse."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "How are the individual page files named?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Files are named page-001.pdf, page-002.pdf, etc. with leading zeros for correct alphabetical sort order."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Does PDFree add a watermark when splitting PDFs?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. PDFree never adds watermarks to output files. The split pages are the exact content from your original PDF — no logo, no 'Created with PDFree' stamp, no advertising mark. Many free online PDF tools add watermarks to encourage upgrades; PDFree doesn't because there is no paid plan to upgrade to."
+    }
   }
 ]

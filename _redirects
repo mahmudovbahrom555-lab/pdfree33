@@ -7,6 +7,11 @@
 /meta-pdf/ /metadata-pdf/ 301
 /cover-area/ /redact-pdf/ 301
 
+# Consolidated into /split-pdf/ — near-zero organic visibility as standalone
+# pages, unique content merged into the hub (see data/content/en/split.html)
+/split-pdf-every-page/ /split-pdf/ 301
+/split-pdf-free-no-watermark/ /split-pdf/ 301
+
 # Common alternate spellings / search intent URLs
 /pdf-to-jpg/ /pdf2jpg/ 301
 /pdf-to-jpg /pdf2jpg/ 301

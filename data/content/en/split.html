@@ -170,9 +170,17 @@
           <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Is this PDF splitter completely free?</h3>
           <p style="margin:0;font-size:14px;">Yes. PDFree is a completely free PDF splitter — no subscription, no sign up, no watermarks on the output, and no daily limits. Split or separate as many PDFs as you need.</p>
         </div>
-        <div style="margin-bottom:20px;">
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
           <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Can I unmerge a PDF back into separate files?</h3>
           <p style="margin:0;font-size:14px;">Yes. If you previously merged several PDFs into one, use the split tool to unmerge it — select the page ranges that correspond to each original document and extract them as separate PDFs. This is exactly the same operation as splitting, applied in reverse.</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">How are the individual page files named?</h3>
+          <p style="margin:0;font-size:14px;">Files are named <code>page-001.pdf</code>, <code>page-002.pdf</code>, etc. with leading zeros for correct alphabetical sort order.</p>
+        </div>
+        <div style="margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Does PDFree add a watermark when splitting PDFs?</h3>
+          <p style="margin:0;font-size:14px;">No. PDFree never adds watermarks to output files — no logo, no "Created with PDFree" stamp, no advertising mark. Many free online PDF tools add watermarks to encourage upgrades; PDFree doesn't, because there is no paid plan to upgrade to.</p>
         </div>
 
 
@@ -209,15 +217,20 @@
           </a>
         </div>
 
+        <!-- Merged from split-pdf-every-page/ and split-pdf-free-no-watermark/ (redirected here — see _redirects) -->
+        <h2 style="font-size:22px;color:var(--text);margin:48px 0 16px;font-weight:700;">Splitting Every Page: What You Get</h2>
+        <p>Choose "Split every page" and PDFree turns each page into its own single-page PDF. Because browsers can't download dozens of separate files at once, they're packaged into one ZIP archive, named <code style="background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:1px 5px;font-size:13px;">page-001.pdf</code>, <code style="background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:1px 5px;font-size:13px;">page-002.pdf</code>, and so on — the leading zeros keep files sorting in the correct order in any file manager, even past page 99. There's no page limit: a 500-page PDF produces a ZIP with 500 individual files, limited only by your device's CPU.</p>
+
+        <h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">No Watermarks, Ever</h2>
+        <p>Split pages are the exact content from your original PDF — no logo, no "Created with PDFree" stamp, no advertising mark. Many free online splitters add watermarks to push you toward a paid plan; PDFree doesn't, because there is no paid plan to upgrade to.</p>
+
         <!-- Related tools -->
         <h2 style="font-size:22px;color:var(--text);margin:0 0 12px;font-weight:700;">Related Tools</h2>
         <ul style="margin:0 0 40px;padding-left:24px;display:flex;flex-direction:column;gap:8px;">
-          <li><a href="/split-pdf-every-page/" style="color:var(--green);font-weight:500;">Split Into Separate Pages</a> — Turn every page into its own PDF file in one click</li>
           <li><a href="/split-pdf-by-range/" style="color:var(--green);font-weight:500;">Split by Page Range</a> — Pick custom ranges like 1-5, 8, 11-13</li>
           <li><a href="/split-pdf-into-multiple-files/" style="color:var(--green);font-weight:500;">Split Into Multiple Files</a> — Break one PDF into several smaller documents</li>
           <li><a href="/split-pdf-odd-even/" style="color:var(--green);font-weight:500;">Split Odd and Even Pages</a> — Separate two-sided scans into two files</li>
           <li><a href="/split-large-pdf/" style="color:var(--green);font-weight:500;">Split Large PDF Files</a> — Dedicated guide for files over 100MB</li>
-          <li><a href="/split-pdf-free-no-watermark/" style="color:var(--green);font-weight:500;">Split PDF, No Watermark</a> — Same tool, page framed around no-signup/no-watermark use cases</li>
           <li><a href="/extract-pdf/" style="color:var(--green);font-weight:500;">Extract Pages</a> — Simpler tool for pulling out a specific page range into one PDF</li>
           <li><a href="/rotate-pdf/" style="color:var(--green);font-weight:500;">Rotate PDF</a> — Fix page orientation before or after splitting</li>
           <li><a href="/blog/how-to-split-a-pdf/" style="color:var(--green);font-weight:500;">How to Split a PDF</a> — Complete guide to splitting PDFs for different use cases</li>

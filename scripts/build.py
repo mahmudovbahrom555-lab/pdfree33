@@ -373,7 +373,11 @@ SPECIALTY_PAGES = [
     'compress-pdf-for-email',
     'split-pdf-into-multiple-files',
     'split-large-pdf',
-    'split-pdf-every-page',
+    # split-pdf-every-page and split-pdf-free-no-watermark were redirected
+    # into /split-pdf/ (301s in _redirects) — both had near-zero organic
+    # visibility (GSC: 0-1 impressions/3mo) and were pure marketing-angle
+    # duplicates of the hub; their unique content (ZIP naming, watermark FAQ)
+    # was merged into data/content/en/split.html instead of left orphaned.
     'split-pdf-by-range',
     'split-pdf-odd-even',
     'merge-pdf-files-into-one',
@@ -397,7 +401,6 @@ SPECIALTY_PAGES = [
     # Stage 5 long-tail landing pages
     'merge-pdf-no-size-limit',
     'free-pdf-tools-no-signup',
-    'split-pdf-free-no-watermark',
     'compress-pdf-without-account',
     'convert-pdf-to-jpg-free-no-watermark',
     'rotate-pdf-free-permanently',
