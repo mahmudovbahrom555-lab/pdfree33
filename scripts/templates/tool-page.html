@@ -126,7 +126,17 @@
       <a href="{{ item.href }}" class="nav-link" data-tool="{{ item.tool_key }}">{{ item.label }}</a>
       {% endfor %}
     </div>
-    <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode"></button>
+    <div class="nav-right">
+      <details class="lang-switch" id="langSwitch">
+        <summary aria-label="Change language">🌐 {{ lang_cfg.code | upper }}</summary>
+        <div class="lang-switch__menu" role="menu">
+          {% for hl_lang, hl_url in hreflang_links %}
+          <a href="{{ hl_url }}" role="menuitem"{% if hl_lang == lang %} aria-current="true"{% endif %}>{{ lang_names.get(hl_lang, hl_lang | upper) }}</a>
+          {% endfor %}
+        </div>
+      </details>
+      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode"></button>
+    </div>
   </nav>
 
   <nav aria-label="Breadcrumb" style="position:static;padding:8px 24px;border-bottom:1px solid var(--border);background:var(--surface);">

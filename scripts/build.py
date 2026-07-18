@@ -345,6 +345,14 @@ def _git_lastmod(rel_path):
 # entries need to stay out of the sitemap/hreflang set.
 HOMEPAGE_LANGS = {'en', 'de', 'es', 'fr', 'pt'}
 
+# Native display names for the language switcher.
+LANG_NAMES = {
+    'en': 'English', 'es': 'Español', 'pt': 'Português', 'de': 'Deutsch',
+    'fr': 'Français', 'id': 'Bahasa Indonesia', 'vi': 'Tiếng Việt',
+    'ru': 'Русский', 'ja': '日本語', 'it': 'Italiano', 'ko': '한국어',
+    'nl': 'Nederlands', 'pl': 'Polski', 'tr': 'Türkçe',
+}
+
 SPECIALTY_PAGES = [
     'annotate-pdf',
     # highlight-pdf and sign are noindex,nofollow (doorway content referencing
@@ -840,6 +848,7 @@ def _generate_pages(config, hashes, env, out_dir, dry_run=False):
                 howto_schema   = howto_schema or '',
                 breadcrumb_schema = _breadcrumb_schema(tool, lang, lang_cfg, canonical_path),
                 hashes         = type('H', (), hashes)(),  # dict → attr access
+                lang_names     = LANG_NAMES,
             )
 
             if not dry_run:
