@@ -39,7 +39,7 @@ REQUIRED_IDS = [
 # Tool pages must declare PDFREE_INITIAL_TOOL.
 # Excludes: root index.html, language homepages (de/index.html etc.),
 # and placeholder pages for unimplemented tools.
-LANG_CODES = {'de', 'es', 'fr', 'pt'}
+LANG_CODES = {'de', 'es', 'fr', 'pt', 'id'}
 PLACEHOLDER_DIRS = {'annotate-pdf', 'highlight-pdf', 'sign', 'annotate'}
 
 def _is_tool_page(path: Path) -> bool:

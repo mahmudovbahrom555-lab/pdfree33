@@ -343,7 +343,7 @@ def _git_lastmod(rel_path):
 # "Alternate page with proper canonical tag". Their tool sub-pages (e.g.
 # /ru/objedinit-pdf/) are real files and unaffected — only the homepage-level
 # entries need to stay out of the sitemap/hreflang set.
-HOMEPAGE_LANGS = {'en', 'de', 'es', 'fr', 'pt'}
+HOMEPAGE_LANGS = {'en', 'de', 'es', 'fr', 'pt', 'id'}
 
 # Native display names for the language switcher.
 LANG_NAMES = {
