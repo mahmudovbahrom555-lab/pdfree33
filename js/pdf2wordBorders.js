@@ -69,11 +69,27 @@ function _extractSegments(opList) {
   };
 
   // pdfjs OPS enum values (pdfjs 3.x — these are NOT raw PDF spec op numbers)
-  const OPS_SAVE      = 10;
-  const OPS_RESTORE   = 11;
-  const OPS_TRANSFORM = 12;
+  const OPS_SAVE        = 10;
+  const OPS_RESTORE     = 11;
+  const OPS_TRANSFORM   = 12;
+  // Form XObject content is flattened into the page's operator list by pdf.js,
+  // bracketed by these two ops. paintFormXObjectBegin carries its own [matrix, bbox]
+  // placement matrix (applied on top of the current CTM, like an implicit q + cm),
+  // and paintFormXObjectEnd restores the CTM (like Q). Table borders drawn inside a
+  // Form XObject (letterheads, stamps, content wrapped by some PDF generators) need
+  // this matrix applied, or their coordinates land in the wrong space entirely.
+  const OPS_FORM_BEGIN  = 74;
+  const OPS_FORM_END    = 75;
   // All path drawing ops are batched into a single constructPath call
-  const OPS_PATH      = 91;
+  const OPS_PATH        = 91;
+
+  // Composes CTM `m` with a PDF matrix [a,b,c,d,e,f] the same way `cm` does.
+  const _composeMatrix = (m, [a, b, c, d, e, f]) => ({
+    a: m.a * a + m.c * b,  b: m.b * a + m.d * b,
+    c: m.a * c + m.c * d,  d: m.b * c + m.d * d,
+    e: m.a * e + m.c * f + m.e,
+    f: m.b * e + m.d * f + m.f,
+  });
 
   // Sub-operation codes inside constructPath args[0]
   const P_MOVETO   = 13; // [x, y]
@@ -98,14 +114,19 @@ function _extractSegments(opList) {
         break;
       }
       case OPS_TRANSFORM: {
-        const [a, b, c, d, e, f] = args;
-        const m = ctm();
-        ctmStack[ctmStack.length - 1] = {
-          a: m.a * a + m.c * b,  b: m.b * a + m.d * b,
-          c: m.a * c + m.c * d,  d: m.b * c + m.d * d,
-          e: m.a * e + m.c * f + m.e,
-          f: m.b * e + m.d * f + m.f,
-        };
+        ctmStack[ctmStack.length - 1] = _composeMatrix(ctm(), args);
+        break;
+      }
+      case OPS_FORM_BEGIN: {
+        ctmStack.push({ ...ctm() });
+        const matrix = args[0];
+        if (Array.isArray(matrix) && matrix.length === 6) {
+          ctmStack[ctmStack.length - 1] = _composeMatrix(ctm(), matrix);
+        }
+        break;
+      }
+      case OPS_FORM_END: {
+        if (ctmStack.length > 1) ctmStack.pop();
         break;
       }
       case OPS_PATH: {
