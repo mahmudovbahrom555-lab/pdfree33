@@ -332,12 +332,15 @@ def _git_lastmod(rel_path):
 
 SPECIALTY_PAGES = [
     'annotate-pdf',
-    'highlight-pdf',
+    # highlight-pdf and sign are noindex,nofollow (doorway content referencing
+    # a non-existent annotation UI — see commit 8178b68) — excluded from the
+    # sitemap so we don't submit a page for indexing that tells Google not to
+    # index it. Re-add once their copy is rewritten around a real tool and the
+    # noindex tag is removed.
     'hipaa-pdf-tools',
     'ilovepdf-alternative',
     'compress-large-pdf-free',
     'secure-pdf-tools',
-    'sign',
     # compare-pdf is EN-only so stays here; ocr-pdf/pdf-to-word/draw-on-pdf
     # are handled by _lang_specialty below (with full locale alternates).
     'compare-pdf',
