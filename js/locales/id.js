@@ -133,7 +133,7 @@ window.PDFREE_LOCALE = {
   err_no_renderer:     'Renderer PDF tidak dimuat — silakan buka ulang alat ini',
   err_enc_unavailable: 'Pustaka enkripsi tidak dapat dimuat. Silakan muat ulang halaman.',
   err_enc_failed:      'Enkripsi gagal. Format PDF mungkin tidak didukung.',
-  err_encrypted_pdf:   'PDF ini dilindungi kata sandi atau memiliki pembatasan pengeditan. Hapus kata sandi terlebih dahulu (menggunakan Acrobat) lalu coba lagi.',
+  err_encrypted_pdf:   'PDF ini memiliki struktur yang tidak biasa atau rusak (ini juga bisa terjadi pada file yang dilindungi kata sandi). Coba simpan ulang dari aplikasi PDF lain, atau hapus kata sandinya, lalu coba lagi.',
   err_compress_timeout: '⏱ Kompresi dibatalkan — file mengandung terlalu banyak gambar untuk browser. Coba preset Ringan atau pisahkan PDF terlebih dahulu.',
   warn_compress_large:  '⚠️ File besar ({size}) — kompresi dapat memerlukan 1–2 menit. Browser memproses semuanya secara lokal di memori.',
   compress_scan_skipped: 'File besar — pemindaian awal dilewati untuk menghemat memori',

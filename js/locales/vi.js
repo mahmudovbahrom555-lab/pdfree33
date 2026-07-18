@@ -133,7 +133,7 @@ window.PDFREE_LOCALE = {
   err_no_renderer:     'Bộ kết xuất PDF chưa được tải — vui lòng mở lại công cụ này',
   err_enc_unavailable: 'Không thể tải thư viện mã hóa. Vui lòng tải lại trang.',
   err_enc_failed:      'Mã hóa thất bại. Định dạng PDF có thể không được hỗ trợ.',
-  err_encrypted_pdf:   'PDF này được bảo vệ bằng mật khẩu hoặc có hạn chế chỉnh sửa. Vui lòng xóa mật khẩu trước (bằng Acrobat) rồi thử lại.',
+  err_encrypted_pdf:   'PDF này có cấu trúc bất thường hoặc bị hỏng (điều này cũng có thể xảy ra với các tệp được bảo vệ bằng mật khẩu). Hãy thử lưu lại tệp bằng một ứng dụng PDF khác, hoặc xóa mật khẩu, rồi thử lại.',
   err_compress_timeout: '⏱ Nén bị hủy — file chứa quá nhiều ảnh cho trình duyệt. Thử preset Nhẹ hoặc tách PDF trước.',
   warn_compress_large:  '⚠️ File lớn ({size}) — nén có thể mất 1–2 phút. Trình duyệt xử lý tất cả cục bộ trong bộ nhớ.',
   compress_scan_skipped: 'File lớn — bỏ qua quét sơ bộ để tiết kiệm bộ nhớ',

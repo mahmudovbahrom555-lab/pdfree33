@@ -132,7 +132,7 @@ window.PDFREE_LOCALE = {
   err_no_renderer:      'Renderer PDF nie załadowany — otwórz narzędzie ponownie',
   err_enc_unavailable:  'Nie można załadować biblioteki szyfrowania. Odśwież stronę.',
   err_enc_failed:       'Szyfrowanie nie powiodło się. PDF może mieć nieobsługiwany format.',
-  err_encrypted_pdf:    'Ten PDF jest chroniony hasłem lub ma ograniczenia edycji. Najpierw usuń hasło i spróbuj ponownie.',
+  err_encrypted_pdf:    'Ten plik PDF ma nietypową lub uszkodzoną strukturę (może się tak zdarzyć również w przypadku plików chronionych hasłem). Spróbuj zapisać go ponownie w innej aplikacji PDF lub usuń hasło, a następnie spróbuj ponownie.',
   err_compress_timeout: '⏱ Kompresja anulowana — plik ma zbyt wiele obrazów dla przeglądarki. Wypróbuj ustawienie Lekkie lub najpierw podziel PDF.',
   warn_compress_large:  '⚠️ Duży plik ({size}) — kompresja może potrwać 1–2 minuty. Przeglądarka przetwarza wszystko lokalnie w pamięci.',
   compress_scan_skipped: 'Duży plik — wstępne skanowanie pominięte, aby zaoszczędzić pamięć',
