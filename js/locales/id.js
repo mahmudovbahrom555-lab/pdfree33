@@ -163,6 +163,7 @@ window.PDFREE_LOCALE = {
   compress_target_over:      '⚠️ {size} — masih melebihi batas {target}. Coba pisahkan PDF terlebih dahulu.',
 
   error_msg:           'Kesalahan: {msg}',
+  error_report_hint:   ' — ketuk untuk melaporkan',
   still_working:       'Masih memproses… Dokumen besar dapat memerlukan beberapa menit.',
 
   // search

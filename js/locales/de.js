@@ -163,6 +163,7 @@ window.PDFREE_LOCALE = {
   compress_target_over:      '⚠️ {size} — überschreitet noch das {target}-Limit. Versuche die PDF zuerst aufzuteilen.',
 
   error_msg:           'Fehler: {msg}',
+  error_report_hint:   ' — zum Melden tippen',
   still_working:       'Wird noch verarbeitet… Große Dokumente können einige Minuten dauern.',
 
   // search

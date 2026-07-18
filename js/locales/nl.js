@@ -162,6 +162,7 @@ window.PDFREE_LOCALE = {
   compress_target_over:      '⚠️ {size} — overschrijdt nog steeds de limiet van {target}. Probeer de PDF eerst te splitsen.',
 
   error_msg:      'Fout: {msg}',
+  error_report_hint: ' — tik om te melden',
   still_working:  'Bezig… Grote documenten kunnen een paar minuten duren.',
 
   // search

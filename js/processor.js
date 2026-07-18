@@ -17,6 +17,7 @@ import { loadJSZip, loadDocx } from './lazyLibs.js';
 import { preprocessPdfBuffer } from './decryptPdf.js';
 import { detectTables } from './pdf2wordTables.js';
 import { detectTableGrids } from './pdf2wordBorders.js';
+import { openFeedback } from './feedback.js';
 
 // Hard cap for image mode — defined here to avoid coupling with pdf2wordUI.js.
 // Must match MAX_IMAGE_PAGES in pdf2wordUI.js.
@@ -1988,5 +1989,12 @@ function _handleError(tool, message, errorType = null) {
   }
 
   trackToolError(tool, errorType ?? 'unknown');
-  showToast(t('error_msg', { msg: friendly }), 8000);
+  // Clickable toast: the moment of an actual failure is the highest-signal
+  // point to hear from a user — opens the same feedback modal used on
+  // success, pre-filled with the tool + error as read-only context.
+  showToast(
+    t('error_msg', { msg: friendly }) + t('error_report_hint'),
+    8000,
+    () => openFeedback('error', { tool, message: friendly }),
+  );
 }

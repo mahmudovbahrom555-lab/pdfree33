@@ -4,12 +4,17 @@
 // ============================================================
 //  feedback.js — Lightweight feedback modal
 //
-//  Handles [data-open-feedback] buttons (🐛 Found a bug, 💡 Have an idea, 👍 All good!)
-//  and the 💬 Feedback button in the footer.
+//  Handles [data-open-feedback] buttons (🐛 Found a bug, 💡 Have an idea,
+//  👍 All good!) on the success card, the 💬 Feedback button in the footer,
+//  and the "Report this" prompt openErrorFeedback() wires up from a failed
+//  tool run (see processor.js _handleError).
 //
 //  The modal is injected once on first open and reused.
-//  Feedback text is sent as a Plausible custom event — free, no server needed.
-//  Privacy: no PII, no file data, text is truncated to 500 chars before sending.
+//  Submissions POST to /api/feedback (same-origin Cloudflare Worker route),
+//  which relays them to Telegram — no database, nothing stored on our side.
+//  A lightweight aggregate event also goes to Plausible for trend counts
+//  (type only, never the message text).
+//  Email is optional and only used if the user wants a reply.
 // ============================================================
 
 const MODAL_ID = 'fbModal';
@@ -18,13 +23,17 @@ const _TYPE_TITLES = {
   bug:   '🐛 Report a bug',
   idea:  '💡 Share an idea',
   other: '💬 Share feedback',
+  error: '⚠️ What went wrong?',
 };
 
 const _TYPE_PLACEHOLDERS = {
   bug:   'What went wrong? Which file type or tool?',
   idea:  'What feature would help you most?',
   other: 'Anything you\'d like to tell us?',
+  error: 'A few details help us fix it faster (optional)',
 };
+
+let _context = { tool: 'unknown', message: '' };
 
 // ── Modal lifecycle ───────────────────────────────────────────
 
@@ -42,8 +51,14 @@ function _getOrCreateModal() {
     <div class="fb-modal__card">
       <button type="button" class="fb-modal__close" aria-label="Close">✕</button>
       <p class="fb-modal__title" id="fbModalTitle">Feedback</p>
+      <p class="fb-modal__context" id="fbModalContext" style="display:none"></p>
       <textarea class="fb-modal__textarea" id="fbModalText"
                 placeholder="Tell us what happened…" maxlength="1000" rows="4"></textarea>
+      <input class="fb-modal__email" id="fbModalEmail" type="email"
+             placeholder="Email (optional — only if you'd like a reply)" maxlength="200" autocomplete="email">
+      <!-- Honeypot — hidden from real users via CSS, bots that fill every field trip it -->
+      <input class="fb-modal__hp" id="fbModalHp" type="text" name="website" tabindex="-1"
+             autocomplete="off" aria-hidden="true">
       <div class="fb-modal__actions">
         <button type="button" class="fb-modal__send" id="fbModalSend">Send feedback</button>
       </div>
@@ -56,19 +71,40 @@ function _getOrCreateModal() {
   return modal;
 }
 
-export function openFeedback(type = 'other') {
-  const modal  = _getOrCreateModal();
-  const title  = modal.querySelector('#fbModalTitle');
-  const text   = modal.querySelector('#fbModalText');
-  const thanks = modal.querySelector('#fbModalThanks');
-  const send   = modal.querySelector('#fbModalSend');
+/**
+ * @param {string} type 'bug' | 'idea' | 'other' | 'error'
+ * @param {{tool?: string, message?: string}} [context] — tool key + (for
+ *   type='error') the error message shown as read-only context, not
+ *   something the user has to retype.
+ */
+export function openFeedback(type = 'other', context = {}) {
+  const modal   = _getOrCreateModal();
+  const title   = modal.querySelector('#fbModalTitle');
+  const ctxEl   = modal.querySelector('#fbModalContext');
+  const text    = modal.querySelector('#fbModalText');
+  const email   = modal.querySelector('#fbModalEmail');
+  const hp      = modal.querySelector('#fbModalHp');
+  const thanks  = modal.querySelector('#fbModalThanks');
+  const send    = modal.querySelector('#fbModalSend');
 
-  title.textContent    = _TYPE_TITLES[type]  || _TYPE_TITLES.other;
-  text.placeholder     = _TYPE_PLACEHOLDERS[type] || _TYPE_PLACEHOLDERS.other;
-  text.value           = '';
+  _context = { tool: context.tool || document.body.dataset.tool || 'unknown', message: context.message || '' };
+
+  title.textContent = _TYPE_TITLES[type] || _TYPE_TITLES.other;
+  text.placeholder  = _TYPE_PLACEHOLDERS[type] || _TYPE_PLACEHOLDERS.other;
+  text.value        = '';
+  email.value       = '';
+  hp.value          = '';
+
+  if (type === 'error' && _context.message) {
+    ctxEl.textContent   = `"${_context.message}"`;
+    ctxEl.style.display = '';
+  } else {
+    ctxEl.style.display = 'none';
+  }
+
   thanks.style.display = 'none';
   send.style.display   = '';
-  send.disabled        = false;
+  send.disabled         = false;
 
   modal.dataset.fbType = type;
   modal.style.display  = 'flex';
@@ -86,12 +122,14 @@ function _closeFeedback() {
   }, { once: true });
 }
 
-function _sendFeedback(modal) {
-  const type = modal.dataset.fbType || 'other';
-  const text = modal.querySelector('#fbModalText')?.value?.trim() || '';
-  const send = modal.querySelector('#fbModalSend');
+async function _sendFeedback(modal) {
+  const type  = modal.dataset.fbType || 'other';
+  const text  = modal.querySelector('#fbModalText')?.value?.trim()  || '';
+  const email = modal.querySelector('#fbModalEmail')?.value?.trim() || '';
+  const hp    = modal.querySelector('#fbModalHp')?.value            || '';
+  const send  = modal.querySelector('#fbModalSend');
 
-  // Require at least 3 chars for bug/idea reports; allow empty for "All good"
+  // Require at least 3 chars for bug/idea/error reports; allow empty for "All good"
   if (type !== 'other' && text.length < 3) {
     const ta = modal.querySelector('#fbModalText');
     ta?.focus();
@@ -104,14 +142,28 @@ function _sendFeedback(modal) {
 
   try {
     if (typeof window.plausible === 'function') {
-      window.plausible('Feedback', {
-        props: { type, has_text: text.length > 0 ? 'yes' : 'no' },
-      });
-    }
-    if (window._pdfreeDevMode) {
-      console.info('[Feedback]', { type, text: text.slice(0, 80) });
+      window.plausible('Feedback', { props: { type, tool: _context.tool } });
     }
   } catch { /* never fail */ }
+
+  try {
+    await fetch('/api/feedback', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type, text, email, hp,
+        tool: _context.tool,
+        url:  location.href,
+      }),
+    });
+  } catch {
+    // Network/offline failure — still thank the user, don't punish them
+    // for something out of their control. window._pdfreeDevMode logs below
+    // help catch this during development.
+  }
+  if (window._pdfreeDevMode) {
+    console.info('[Feedback]', { type, text: text.slice(0, 80), tool: _context.tool });
+  }
 
   const thanks = modal.querySelector('#fbModalThanks');
   if (send)   send.style.display   = 'none';

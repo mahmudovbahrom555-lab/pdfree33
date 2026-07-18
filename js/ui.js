@@ -17,12 +17,16 @@ let _toastTimer = null;
  * Показывает уведомление внизу экрана (не блокирует UI)
  * @param {string} message
  * @param {number} [duration=3000]
+ * @param {Function} [onClick] — when given, the toast becomes clickable
+ *   (pointer-events auto, dotted underline) and dismisses on click.
  */
-export function showToast(message, duration = 3000) {
+export function showToast(message, duration = 3000, onClick = null) {
   const el = id('toast');
   if (!el) return;
   el.textContent = message;
   el.classList.add('show');
+  el.classList.toggle('toast--clickable', !!onClick);
+  el.onclick = onClick ? () => { el.classList.remove('show'); onClick(); } : null;
   clearTimeout(_toastTimer);
   _toastTimer = setTimeout(() => el.classList.remove('show'), duration);
 }

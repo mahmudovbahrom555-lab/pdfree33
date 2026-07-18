@@ -162,6 +162,7 @@ window.PDFREE_LOCALE = {
   compress_target_over:      '⚠️ {size} — {target} 한도를 초과합니다. 먼저 PDF를 분할해 보세요.',
 
   error_msg:      '오류: {msg}',
+  error_report_hint: ' — 신고하려면 탭하세요',
   still_working:  '처리 중… 대용량 문서는 몇 분이 걸릴 수 있습니다.',
 
   // search

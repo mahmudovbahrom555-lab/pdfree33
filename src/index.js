@@ -79,9 +79,94 @@ const REDIRECTS = {
   '/edit-metadata/': '/metadata-pdf/',
 };
 
+// ── Feedback relay — POST /api/feedback → Telegram ─────────────────────────
+// No database: each submission is forwarded as a Telegram message via the
+// Bot API. TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID are Cloudflare secrets
+// (wrangler secret put), never committed to the repo.
+//
+// Spam mitigation without persistent storage (Workers are stateless across
+// requests, so no reliable in-memory rate-limit — see honeypot + heuristics
+// below instead):
+//   - hp (honeypot) field: real users never fill a hidden input; if it has
+//     a value, silently accept-and-drop so bots don't learn to avoid it.
+//   - length caps + minimum length for types that require explanation.
+//   - reject messages containing more than one URL (spam link-drop pattern).
+//   - reject digit-only or heavily-repeated-character junk.
+const _FEEDBACK_TYPES = new Set(['bug', 'idea', 'other', 'error']);
+const _TYPE_LABEL = { bug: '🐛 Bug', idea: '💡 Idea', other: '💬 Feedback', error: '⚠️ Error' };
+
+function _looksLikeSpam(text) {
+  if (!text) return false;
+  const urlCount = (text.match(/https?:\/\//gi) || []).length;
+  if (urlCount > 1) return true;
+  if (/^\d+$/.test(text)) return true;
+  if (/(.)\1{9,}/.test(text)) return true; // 10+ repeated chars
+  return false;
+}
+
+async function handleFeedback(request, env) {
+  if (request.method !== 'POST') {
+    return new Response('Method not allowed', { status: 405 });
+  }
+
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return new Response('Bad request', { status: 400 });
+  }
+
+  // Honeypot tripped — pretend success, don't tip the bot off.
+  if (body.hp) return new Response('OK', { status: 200 });
+
+  const type = _FEEDBACK_TYPES.has(body.type) ? body.type : 'other';
+  const text  = typeof body.text  === 'string' ? body.text.trim().slice(0, 1000)  : '';
+  const email = typeof body.email === 'string' ? body.email.trim().slice(0, 200)  : '';
+  const tool  = typeof body.tool  === 'string' ? body.tool.trim().slice(0, 50)    : 'unknown';
+  const pageUrl = typeof body.url === 'string' ? body.url.trim().slice(0, 300)    : '';
+
+  // "All good" (type=other, no text) is valid; every other type needs a real message.
+  if (type !== 'other' && text.length < 3) {
+    return new Response('Bad request', { status: 400 });
+  }
+  if (_looksLikeSpam(text)) return new Response('OK', { status: 200 }); // silently drop
+
+  if (!env.TELEGRAM_BOT_TOKEN || !env.TELEGRAM_CHAT_ID) {
+    return new Response('OK', { status: 200 }); // not configured yet — no-op, don't break the client
+  }
+
+  const parts = [`${_TYPE_LABEL[type] || type} — ${tool}`];
+  if (text)    parts.push(text);
+  if (email)   parts.push(`📧 ${email}`);
+  if (pageUrl) parts.push(`🔗 ${pageUrl}`);
+
+  try {
+    await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      // No parse_mode — plain text, so user-supplied text can't break
+      // Telegram's Markdown/HTML formatting or inject unintended entities.
+      body: JSON.stringify({
+        chat_id: env.TELEGRAM_CHAT_ID,
+        text: parts.join('\n\n'),
+        disable_web_page_preview: true,
+      }),
+    });
+  } catch {
+    // Telegram delivery failure shouldn't surface as an error to the user.
+  }
+
+  return new Response('OK', { status: 200 });
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+
+    if (url.pathname === '/api/feedback') {
+      return handleFeedback(request, env);
+    }
+
     const target = REDIRECTS[url.pathname];
     if (target) {
       return new Response(null, {

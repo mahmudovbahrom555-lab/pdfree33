@@ -588,6 +588,12 @@ button,
   opacity: 1;
   transform: translate(-50%, 0);
 }
+.toast.toast--clickable {
+  pointer-events: auto;
+  cursor: pointer;
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+}
 @media (max-width: 700px) {
   .toast { max-width: calc(100vw - 24px); font-size: 12.5px; padding: 11px 16px; bottom: calc(18px + env(safe-area-inset-bottom)); }
 }
@@ -3105,6 +3111,18 @@ button,
   margin: 0 0 14px;
 }
 
+.fb-modal__context {
+  font-size: 12px;
+  font-style: italic;
+  color: var(--text3);
+  background: var(--surface2);
+  border-radius: 8px;
+  padding: 8px 10px;
+  margin: 0 0 10px;
+  max-height: 60px;
+  overflow-y: auto;
+}
+
 .fb-modal__textarea {
   width: 100%;
   box-sizing: border-box;
@@ -3122,6 +3140,34 @@ button,
 }
 .fb-modal__textarea:focus { border-color: var(--green); }
 .fb-modal__textarea--error { border-color: #e05252 !important; }
+
+.fb-modal__email {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 9px 12px;
+  font-size: 13px;
+  font-family: var(--font-sans);
+  color: var(--text);
+  background: var(--surface2);
+  margin-top: 8px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.fb-modal__email:focus { border-color: var(--green); }
+
+/* Honeypot — invisible to real users, present in the DOM for bots that
+   fill every input. Not display:none (some bots skip those); off-screen
+   instead so it's still "visible" to naive form-fillers. */
+.fb-modal__hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
 
 .fb-modal__actions {
   display: flex;

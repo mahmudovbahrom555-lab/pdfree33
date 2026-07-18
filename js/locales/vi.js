@@ -163,6 +163,7 @@ window.PDFREE_LOCALE = {
   compress_target_over:      '⚠️ {size} — vẫn vượt giới hạn {target}. Thử tách PDF trước.',
 
   error_msg:           'Lỗi: {msg}',
+  error_report_hint:   ' — chạm để báo cáo',
   still_working:       'Vẫn đang xử lý… Tài liệu lớn có thể mất vài phút.',
 
   // search

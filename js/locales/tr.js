@@ -162,6 +162,7 @@ window.PDFREE_LOCALE = {
   compress_target_over:      '⚠️ {size} — {target} limitini hâlâ aşıyor. PDF\'yi önce bölmeyi deneyin.',
 
   error_msg:      'Hata: {msg}',
+  error_report_hint: ' — bildirmek için dokun',
   still_working:  'İşleniyor… Büyük belgeler birkaç dakika sürebilir.',
 
   // search

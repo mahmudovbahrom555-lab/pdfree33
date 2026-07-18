@@ -163,6 +163,7 @@ window.PDFREE_LOCALE = {
   compress_target_over:      '⚠️ {size} — まだ「{target}」の上限を超えています。先にPDFを分割してみてください。',
 
   error_msg:           'エラー: {msg}',
+  error_report_hint:   '（タップして報告）',
   still_working:       'まだ処理中です… 大きな文書は数分かかる場合があります。',
 
   // search
