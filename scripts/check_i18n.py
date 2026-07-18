@@ -22,6 +22,8 @@ def main():
         "pt": ROOT / "js/locales/pt.js",
         "id": ROOT / "js/locales/id.js",
         "vi": ROOT / "js/locales/vi.js",
+        "ru": ROOT / "js/locales/ru.js",
+        "ja": ROOT / "js/locales/ja.js",
         "it": ROOT / "js/locales/it.js",
         "ko": ROOT / "js/locales/ko.js",
         "nl": ROOT / "js/locales/nl.js",
