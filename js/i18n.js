@@ -198,6 +198,20 @@ const EN = {
   hero_hint_multi:    'Recommended: {tool}',
   hero_chip_one_file: '1 file',
   hero_img_hint:      '🖼️ Have an image instead?',
+
+  // ── feedback.js — personalized modal ──────────────────────────
+  fb_intro:              'Goes straight to Murod on Telegram — no tickets, no CRM. I read every message myself.',
+  fb_title_bug:          '🐛 Report a bug',
+  fb_title_idea:         '💡 Share an idea',
+  fb_title_other:        '💬 Tell me what you think',
+  fb_title_error:        '⚠️ What went wrong?',
+  fb_placeholder_bug:    'What went wrong? Which file type or tool?',
+  fb_placeholder_idea:   'What feature would help you most?',
+  fb_placeholder_other:  'What\'s on your mind?',
+  fb_placeholder_error:  'A few details help me fix it faster (optional)',
+  fb_email_placeholder:  'Email (optional — only if you\'d like a reply)',
+  fb_send:               'Send to Murod',
+  fb_thanks:             'Thank you — I read this myself.',
 };
 
 const L = { ...EN, ...(window.PDFREE_LOCALE ?? {}) };

@@ -184,4 +184,17 @@ window.PDFREE_LOCALE = {
   hero_hint_multi:    'Aanbevolen: {tool}',
   hero_chip_one_file: '1 bestand',
   hero_img_hint:      '🖼️ Heb je een afbeelding?',
+
+  fb_intro:              'Gaat rechtstreeks naar Murod op Telegram — geen ticketsysteem, geen CRM. Ik lees elk bericht persoonlijk.',
+  fb_title_bug:          '🐛 Bug melden',
+  fb_title_idea:         '💡 Idee delen',
+  fb_title_other:        '💬 Vertel me wat je denkt',
+  fb_title_error:        '⚠️ Wat ging er mis?',
+  fb_placeholder_bug:    'Wat ging er mis? Welk bestandstype of welke tool?',
+  fb_placeholder_idea:   'Welke functie zou je het meest helpen?',
+  fb_placeholder_other:  'Wat heb je op je hart?',
+  fb_placeholder_error:  'Een paar details helpen me het sneller op te lossen (optioneel)',
+  fb_email_placeholder:  'E-mail (optioneel — alleen als je een antwoord wilt)',
+  fb_send:               'Verstuur naar Murod',
+  fb_thanks:             'Bedankt — ik lees dit zelf.',
 };

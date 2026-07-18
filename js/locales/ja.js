@@ -185,4 +185,17 @@ window.PDFREE_LOCALE = {
   hero_hint_multi:    'おすすめ: {tool}',
   hero_chip_one_file: '1件のファイル',
   hero_img_hint:      '🖼️ 画像をお持ちですか？',
+
+  fb_intro:              'TelegramでMurodに直接届きます — チケット制度もCRMもありません。すべて私自身が読みます。',
+  fb_title_bug:          '🐛 不具合を報告',
+  fb_title_idea:         '💡 アイデアを共有',
+  fb_title_other:        '💬 ご意見をお聞かせください',
+  fb_title_error:        '⚠️ 何が起きましたか？',
+  fb_placeholder_bug:    '何が起きましたか？ファイルの種類やツールは？',
+  fb_placeholder_idea:   'どんな機能があれば一番助かりますか？',
+  fb_placeholder_other:  '気になっていることは？',
+  fb_placeholder_error:  '詳細を教えていただけると早く直せます（任意）',
+  fb_email_placeholder:  'メールアドレス（任意 — 返信をご希望の場合のみ）',
+  fb_send:               'Murodに送信',
+  fb_thanks:             'ありがとうございます — 私自身が読みます。',
 };

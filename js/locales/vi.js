@@ -185,4 +185,17 @@ window.PDFREE_LOCALE = {
   hero_hint_multi:    'Gợi ý: {tool}',
   hero_chip_one_file: '1 file',
   hero_img_hint:      '🖼️ Bạn có ảnh không?',
+
+  fb_intro:              'Gửi thẳng đến Murod trên Telegram — không hệ thống ticket, không CRM. Tôi tự đọc từng tin nhắn.',
+  fb_title_bug:          '🐛 Báo lỗi',
+  fb_title_idea:         '💡 Chia sẻ ý tưởng',
+  fb_title_other:        '💬 Cho tôi biết bạn nghĩ gì',
+  fb_title_error:        '⚠️ Đã xảy ra lỗi gì?',
+  fb_placeholder_bug:    'Đã xảy ra lỗi gì? Loại tệp hoặc công cụ nào?',
+  fb_placeholder_idea:   'Tính năng nào sẽ giúp ích cho bạn nhất?',
+  fb_placeholder_other:  'Bạn đang nghĩ gì?',
+  fb_placeholder_error:  'Vài chi tiết giúp tôi sửa nhanh hơn (không bắt buộc)',
+  fb_email_placeholder:  'Email (không bắt buộc — chỉ khi bạn muốn được phản hồi)',
+  fb_send:               'Gửi cho Murod',
+  fb_thanks:             'Cảm ơn — tôi tự đọc tin này.',
 };

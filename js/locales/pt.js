@@ -184,4 +184,17 @@ window.PDFREE_LOCALE = {
   hero_hint_multi:    'Recomendado: {tool}',
   hero_chip_one_file: '1 arquivo',
   hero_img_hint:      '🖼️ Tem uma imagem?',
+
+  fb_intro:              'Vai direto para o Murod no Telegram — sem sistema de tickets, sem CRM. Leio cada mensagem pessoalmente.',
+  fb_title_bug:          '🐛 Reportar um bug',
+  fb_title_idea:         '💡 Compartilhar uma ideia',
+  fb_title_other:        '💬 Me diga o que você acha',
+  fb_title_error:        '⚠️ O que deu errado?',
+  fb_placeholder_bug:    'O que deu errado? Qual tipo de arquivo ou ferramenta?',
+  fb_placeholder_idea:   'Qual recurso mais ajudaria você?',
+  fb_placeholder_other:  'O que você tem em mente?',
+  fb_placeholder_error:  'Alguns detalhes me ajudam a corrigir mais rápido (opcional)',
+  fb_email_placeholder:  'Email (opcional — só se quiser uma resposta)',
+  fb_send:               'Enviar para o Murod',
+  fb_thanks:             'Obrigado — eu mesmo leio isso.',
 };

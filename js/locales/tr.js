@@ -184,4 +184,17 @@ window.PDFREE_LOCALE = {
   hero_hint_multi:    'Önerilen: {tool}',
   hero_chip_one_file: '1 dosya',
   hero_img_hint:      '🖼️ Bir resminiz mi var?',
+
+  fb_intro:              'Doğrudan Telegram\'da Murod\'a gider — bilet sistemi yok, CRM yok. Her mesajı kişisel olarak okuyorum.',
+  fb_title_bug:          '🐛 Hata bildir',
+  fb_title_idea:         '💡 Fikir paylaş',
+  fb_title_other:        '💬 Ne düşündüğünü söyle',
+  fb_title_error:        '⚠️ Ne yanlış gitti?',
+  fb_placeholder_bug:    'Ne yanlış gitti? Hangi dosya türü veya araç?',
+  fb_placeholder_idea:   'Hangi özellik sana en çok yardımcı olur?',
+  fb_placeholder_other:  'Aklında ne var?',
+  fb_placeholder_error:  'Birkaç detay daha hızlı düzeltmeme yardımcı olur (isteğe bağlı)',
+  fb_email_placeholder:  'E-posta (isteğe bağlı — sadece yanıt istiyorsan)',
+  fb_send:               'Murod\'a gönder',
+  fb_thanks:             'Teşekkürler — bunu kendim okuyorum.',
 };

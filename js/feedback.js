@@ -2,12 +2,12 @@
 // Copyright (C) 2025 PDFree Contributors  https://github.com/mahmudovbahrom555-lab/pdfree33
 
 // ============================================================
-//  feedback.js — Lightweight feedback modal
+//  feedback.js — Lightweight, personal feedback modal
 //
 //  Handles [data-open-feedback] buttons (🐛 Found a bug, 💡 Have an idea,
 //  👍 All good!) on the success card, the 💬 Feedback button in the footer,
-//  and the "Report this" prompt openErrorFeedback() wires up from a failed
-//  tool run (see processor.js _handleError).
+//  and the "tap to report" prompt processor.js's _handleError() wires up
+//  on a failed tool run.
 //
 //  The modal is injected once on first open and reused.
 //  Submissions POST to /api/feedback (same-origin Cloudflare Worker route),
@@ -15,23 +15,18 @@
 //  A lightweight aggregate event also goes to Plausible for trend counts
 //  (type only, never the message text).
 //  Email is optional and only used if the user wants a reply.
+//
+//  Copy is intentionally personal (real name, "I read this myself") rather
+//  than corporate "Feedback" language — the goal is to lower the barrier
+//  to writing, not just collect submissions. See the fb_* keys in i18n.js.
 // ============================================================
+
+import { t } from './i18n.js';
 
 const MODAL_ID = 'fbModal';
 
-const _TYPE_TITLES = {
-  bug:   '🐛 Report a bug',
-  idea:  '💡 Share an idea',
-  other: '💬 Share feedback',
-  error: '⚠️ What went wrong?',
-};
-
-const _TYPE_PLACEHOLDERS = {
-  bug:   'What went wrong? Which file type or tool?',
-  idea:  'What feature would help you most?',
-  other: 'Anything you\'d like to tell us?',
-  error: 'A few details help us fix it faster (optional)',
-};
+const _TYPE_TITLE_KEYS       = { bug: 'fb_title_bug',       idea: 'fb_title_idea',       other: 'fb_title_other',       error: 'fb_title_error' };
+const _TYPE_PLACEHOLDER_KEYS = { bug: 'fb_placeholder_bug', idea: 'fb_placeholder_idea', other: 'fb_placeholder_other', error: 'fb_placeholder_error' };
 
 let _context = { tool: 'unknown', message: '' };
 
@@ -51,19 +46,20 @@ function _getOrCreateModal() {
     <div class="fb-modal__card">
       <button type="button" class="fb-modal__close" aria-label="Close">✕</button>
       <p class="fb-modal__title" id="fbModalTitle">Feedback</p>
+      <p class="fb-modal__intro" id="fbModalIntro">${t('fb_intro')}</p>
       <p class="fb-modal__context" id="fbModalContext" style="display:none"></p>
       <textarea class="fb-modal__textarea" id="fbModalText"
-                placeholder="Tell us what happened…" maxlength="1000" rows="4"></textarea>
+                placeholder="" maxlength="1000" rows="4"></textarea>
       <input class="fb-modal__email" id="fbModalEmail" type="email"
-             placeholder="Email (optional — only if you'd like a reply)" maxlength="200" autocomplete="email">
+             placeholder="${t('fb_email_placeholder')}" maxlength="200" autocomplete="email">
       <!-- Honeypot — hidden from real users via CSS, bots that fill every field trip it -->
       <input class="fb-modal__hp" id="fbModalHp" type="text" name="website" tabindex="-1"
              autocomplete="off" aria-hidden="true">
       <div class="fb-modal__actions">
-        <button type="button" class="fb-modal__send" id="fbModalSend">Send feedback</button>
+        <button type="button" class="fb-modal__send" id="fbModalSend">${t('fb_send')}</button>
       </div>
       <p class="fb-modal__thanks" id="fbModalThanks" style="display:none">
-        Thank you! Your feedback helps us improve.
+        ${t('fb_thanks')}
       </p>
     </div>
   `;
@@ -89,8 +85,8 @@ export function openFeedback(type = 'other', context = {}) {
 
   _context = { tool: context.tool || document.body.dataset.tool || 'unknown', message: context.message || '' };
 
-  title.textContent = _TYPE_TITLES[type] || _TYPE_TITLES.other;
-  text.placeholder  = _TYPE_PLACEHOLDERS[type] || _TYPE_PLACEHOLDERS.other;
+  title.textContent = t(_TYPE_TITLE_KEYS[type] || _TYPE_TITLE_KEYS.other);
+  text.placeholder  = t(_TYPE_PLACEHOLDER_KEYS[type] || _TYPE_PLACEHOLDER_KEYS.other);
   text.value        = '';
   email.value       = '';
   hp.value          = '';

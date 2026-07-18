@@ -185,4 +185,17 @@ window.PDFREE_LOCALE = {
   hero_hint_multi:    'Disarankan: {tool}',
   hero_chip_one_file: '1 file',
   hero_img_hint:      '🖼️ Punya gambar?',
+
+  fb_intro:              'Langsung ke Murod di Telegram — tanpa sistem tiket, tanpa CRM. Saya membaca setiap pesan sendiri.',
+  fb_title_bug:          '🐛 Laporkan bug',
+  fb_title_idea:         '💡 Bagikan ide',
+  fb_title_other:        '💬 Beri tahu saya pendapat Anda',
+  fb_title_error:        '⚠️ Apa yang salah?',
+  fb_placeholder_bug:    'Apa yang salah? Jenis file atau alat apa?',
+  fb_placeholder_idea:   'Fitur apa yang paling membantu Anda?',
+  fb_placeholder_other:  'Apa yang ada di pikiran Anda?',
+  fb_placeholder_error:  'Beberapa detail membantu saya memperbaikinya lebih cepat (opsional)',
+  fb_email_placeholder:  'Email (opsional — hanya jika ingin balasan)',
+  fb_send:               'Kirim ke Murod',
+  fb_thanks:             'Terima kasih — saya membacanya sendiri.',
 };

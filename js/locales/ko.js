@@ -184,4 +184,17 @@ window.PDFREE_LOCALE = {
   hero_hint_multi:    '추천: {tool}',
   hero_chip_one_file: '파일 1개',
   hero_img_hint:      '🖼️ 이미지가 있나요?',
+
+  fb_intro:              '텔레그램으로 Murod에게 직접 전달됩니다 — 티켓 시스템도 CRM도 없어요. 제가 직접 모든 메시지를 읽습니다.',
+  fb_title_bug:          '🐛 버그 신고',
+  fb_title_idea:         '💡 아이디어 공유',
+  fb_title_other:        '💬 어떻게 생각하는지 알려주세요',
+  fb_title_error:        '⚠️ 무엇이 잘못되었나요?',
+  fb_placeholder_bug:    '무엇이 잘못되었나요? 어떤 파일 형식이나 도구인가요?',
+  fb_placeholder_idea:   '어떤 기능이 가장 도움이 될까요?',
+  fb_placeholder_other:  '무슨 생각을 하고 계신가요?',
+  fb_placeholder_error:  '몇 가지 세부사항이 있으면 더 빨리 고칠 수 있어요 (선택)',
+  fb_email_placeholder:  '이메일 (선택 — 답장을 원하실 때만)',
+  fb_send:               'Murod에게 보내기',
+  fb_thanks:             '감사합니다 — 제가 직접 읽어요.',
 };

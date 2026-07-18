@@ -235,6 +235,13 @@
         <button id="shareBtn" class="share-btn" type="button" style="display:none" aria-label="Send file via device apps"></button>
       </div>
 
+      <!-- Feedback row — directly under download button -->
+      <div class="fb-row" id="fbRow">
+        <button type="button" class="fb-row-btn fb-row-btn--bug"  data-open-feedback data-fb-type="bug">{{ ui.fbBugBtn }}</button>
+        <button type="button" class="fb-row-btn fb-row-btn--idea" data-open-feedback data-fb-type="idea">{{ ui.fbIdeaBtn }}</button>
+        <button type="button" class="fb-row-btn fb-row-btn--good" data-open-feedback data-fb-type="other">{{ ui.fbGoodBtn }}</button>
+      </div>
+
       <div class="privacy-cleared" id="privacyCleared" aria-live="polite" aria-label="{{ ui.privacyClearedTitle }}">
         <div class="privacy-cleared__shield" aria-hidden="true">🔒</div>
         <div class="privacy-cleared__body">

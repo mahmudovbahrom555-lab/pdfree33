@@ -185,4 +185,17 @@ window.PDFREE_LOCALE = {
   hero_hint_multi:    'Рекомендуем: {tool}',
   hero_chip_one_file: '1 файл',
   hero_img_hint:      '🖼️ Есть изображение вместо PDF?',
+
+  fb_intro:              'Идёт напрямую Муроду в Telegram — без тикет-системы, без CRM. Я лично читаю каждое сообщение.',
+  fb_title_bug:          '🐛 Сообщить об ошибке',
+  fb_title_idea:         '💡 Поделиться идеей',
+  fb_title_other:        '💬 Расскажите, что думаете',
+  fb_title_error:        '⚠️ Что пошло не так?',
+  fb_placeholder_bug:    'Что пошло не так? Какой файл или инструмент?',
+  fb_placeholder_idea:   'Какая функция помогла бы вам больше всего?',
+  fb_placeholder_other:  'Что у вас на уме?',
+  fb_placeholder_error:  'Пара деталей поможет мне быстрее исправить (необязательно)',
+  fb_email_placeholder:  'Email (необязательно — только если хотите получить ответ)',
+  fb_send:               'Отправить Муроду',
+  fb_thanks:             'Спасибо — я сам это читаю.',
 };
