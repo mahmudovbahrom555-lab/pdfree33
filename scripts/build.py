@@ -330,6 +330,21 @@ def _git_lastmod(rel_path):
     return date.today().isoformat()
 
 
+# Locales that have a real homepage file (index.html at their dir root).
+# The other languages in config['languages'] (id/vi/ru/ja/it/ko/nl/pl/tr) only
+# have individual tool pages — no {dir}/index.html exists for them. Cloudflare
+# Workers Assets is configured with not_found_handling = "single-page-application"
+# (wrangler.toml), so a request to e.g. /ru/ 200s with the EN homepage's HTML
+# instead of a real 404 — including its self-canonical pointing at
+# https://pdfree.io/. Submitting /ru/ in the sitemap with hreflang="ru" tells
+# Google "here is Russian content" while the page itself tells Google "actually
+# I'm a duplicate of the English homepage" — Google resolves that by folding
+# /ru/ into the EN canonical, which is exactly what Search Console reports as
+# "Alternate page with proper canonical tag". Their tool sub-pages (e.g.
+# /ru/objedinit-pdf/) are real files and unaffected — only the homepage-level
+# entries need to stay out of the sitemap/hreflang set.
+HOMEPAGE_LANGS = {'en', 'de', 'es', 'fr', 'pt'}
+
 SPECIALTY_PAGES = [
     'annotate-pdf',
     # highlight-pdf and sign are noindex,nofollow (doorway content referencing
@@ -442,15 +457,17 @@ def _write_sitemap(config, out_dir):
         return block
 
     # ── Homepages ──────────────────────────────────────────────
+    # Only locales in HOMEPAGE_LANGS have a real homepage file — see the
+    # comment on HOMEPAGE_LANGS for why the rest must not appear here.
     homepage_alts = [(lc if lc != 'en' else 'en', f"{BASE_URL}/{cfg['dir']}/" if lc != 'en' else f"{BASE_URL}/")
-                     for lc, cfg in langs.items()]
+                     for lc, cfg in langs.items() if lc in HOMEPAGE_LANGS]
     homepage_alts.append(('x-default', f'{BASE_URL}/'))
     lines += _url_block(f'{BASE_URL}/', _git_lastmod('index.html'), homepage_alts, priority='1.0', changefreq='weekly')
 
     # ── Language sub-homepages ─────────────────────────────────
     for lc, cfg in langs.items():
-        if lc == 'en':
-            continue  # already emitted above
+        if lc == 'en' or lc not in HOMEPAGE_LANGS:
+            continue  # already emitted above, or has no real homepage file
         lang_url = f"{BASE_URL}/{cfg['dir']}/"
         lines += _url_block(lang_url, _git_lastmod(f"{cfg['dir']}/index.html"), homepage_alts, priority='0.9', changefreq='weekly')
 
