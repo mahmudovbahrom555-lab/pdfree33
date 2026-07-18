@@ -67,6 +67,8 @@ window.PDFREE_LOCALE = {
   desc_rotate:              '回転しました · {pages}ページ · {size}',
   desc_redact:              '範囲を塗りつぶしました · {pages}ページ · {size}',
   desc_fill:                'フォームに入力しました · {pages}ページ · {size}',
+  warn_fill_skip_one:       '{n}件のフィールドに入力できず、スキップされました — ダウンロードしたPDFをご確認ください。',
+  warn_fill_skip_many:      '{n}件のフィールドに入力できず、スキップされました — ダウンロードしたPDFをご確認ください。',
   desc_flatten:             'フィールドを固定しました · {pages}ページ · {size}',
   warn_xfa_form:            'ℹ️ 編集可能なフィールドが見つかりませんでした — ファイルは変更されずに返されました。XFAフォームはブラウザ上のPDFツールが対応していない形式です。',
   desc_split_single:        '{n}ページを抽出しました · {size}',

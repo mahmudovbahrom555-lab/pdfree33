@@ -66,6 +66,8 @@ window.PDFREE_LOCALE = {
   desc_rotate:              'Ruotato · {pages} pagine · {size}',
   desc_redact:              'Aree oscurate · {pages} pagine · {size}',
   desc_fill:                'Modulo compilato · {pages} pagine · {size}',
+  warn_fill_skip_one:       '{n} campo non è stato compilato ed è stato saltato — controlla il PDF scaricato.',
+  warn_fill_skip_many:      '{n} campi non sono stati compilati e sono stati saltati — controlla il PDF scaricato.',
   desc_flatten:             'Campi bloccati · {pages} pagine · {size}',
   warn_xfa_form:            'ℹ️ Nessun campo modificabile trovato — file restituito invariato. I moduli XFA usano un formato non compatibile con gli strumenti PDF basati su browser.',
   desc_split_single:        '{n} pagina estratta · {size}',

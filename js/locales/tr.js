@@ -66,6 +66,8 @@ window.PDFREE_LOCALE = {
   desc_rotate:              'Döndürüldü · {pages} sayfa · {size}',
   desc_redact:              'Alanlar gizlendi · {pages} sayfa · {size}',
   desc_fill:                'Form dolduruldu · {pages} sayfa · {size}',
+  warn_fill_skip_one:       "{n} alan doldurulamadı ve atlandı — lütfen indirilen PDF'yi kontrol edin.",
+  warn_fill_skip_many:      "{n} alan doldurulamadı ve atlandı — lütfen indirilen PDF'yi kontrol edin.",
   desc_flatten:             'Alanlar kilitlendi · {pages} sayfa · {size}',
   warn_xfa_form:            'ℹ️ Düzenlenebilir alan bulunamadı — dosya değiştirilmeden döndürüldü. XFA formları, tarayıcı tabanlı PDF araçlarıyla uyumlu olmayan bir format kullanır.',
   desc_split_single:        '{n} sayfa çıkarıldı · {size}',

@@ -67,6 +67,8 @@ window.PDFREE_LOCALE = {
   desc_rotate:              'Diputar · {pages} halaman · {size}',
   desc_redact:              'Area ditutup · {pages} halaman · {size}',
   desc_fill:                'Formulir diisi · {pages} halaman · {size}',
+  warn_fill_skip_one:       '{n} kolom tidak dapat diisi dan dilewati — silakan periksa PDF yang diunduh.',
+  warn_fill_skip_many:      '{n} kolom tidak dapat diisi dan dilewati — silakan periksa PDF yang diunduh.',
   desc_flatten:             'Bidang dikunci · {pages} halaman · {size}',
   warn_xfa_form:            'ℹ️ Tidak ada bidang yang dapat diedit — file dikembalikan tanpa perubahan. Formulir XFA menggunakan format yang tidak didukung oleh alat PDF berbasis browser.',
   desc_split_single:        '{n} halaman diekstrak · {size}',

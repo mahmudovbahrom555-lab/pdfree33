@@ -66,6 +66,8 @@ window.PDFREE_LOCALE = {
   desc_rotate:              '회전됨 · {pages}페이지 · {size}',
   desc_redact:              '영역 가려짐 · {pages}페이지 · {size}',
   desc_fill:                '양식 작성됨 · {pages}페이지 · {size}',
+  warn_fill_skip_one:       '{n}개 필드를 채우지 못해 건너뛰었습니다 — 다운로드한 PDF를 확인해 주세요.',
+  warn_fill_skip_many:      '{n}개 필드를 채우지 못해 건너뛰었습니다 — 다운로드한 PDF를 확인해 주세요.',
   desc_flatten:             '필드 잠금됨 · {pages}페이지 · {size}',
   warn_xfa_form:            'ℹ️ 편집 가능한 필드를 찾을 수 없습니다 — 변경 없이 파일을 반환합니다. XFA 양식은 브라우저 기반 PDF 도구에서 지원하지 않는 형식을 사용합니다.',
   desc_split_single:        '{n}페이지 추출됨 · {size}',

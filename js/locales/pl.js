@@ -66,6 +66,8 @@ window.PDFREE_LOCALE = {
   desc_rotate:              'Obrócono · {pages} stron · {size}',
   desc_redact:              'Ukryto obszary · {pages} stron · {size}',
   desc_fill:                'Wypełniono formularz · {pages} stron · {size}',
+  warn_fill_skip_one:       '{n} pole nie mogło zostać wypełnione i zostało pominięte — sprawdź pobrany plik PDF.',
+  warn_fill_skip_many:      '{n} pola nie mogły zostać wypełnione i zostały pominięte — sprawdź pobrany plik PDF.',
   desc_flatten:             'Zablokowano pola · {pages} stron · {size}',
   warn_xfa_form:            'ℹ️ Nie znaleziono edytowalnych pól — plik zwrócony bez zmian. Formularze XFA używają formatu niezgodnego z narzędziami PDF opartymi na przeglądarce.',
   desc_split_single:        'Wyodrębniono {n} stronę · {size}',

@@ -66,6 +66,8 @@ window.PDFREE_LOCALE = {
   desc_rotate:              'Geroteerd · {pages} pagina\'s · {size}',
   desc_redact:              'Gebieden verborgen · {pages} pagina\'s · {size}',
   desc_fill:                'Formulier ingevuld · {pages} pagina\'s · {size}',
+  warn_fill_skip_one:       '{n} veld kon niet worden ingevuld en is overgeslagen — controleer de gedownloade PDF.',
+  warn_fill_skip_many:      '{n} velden konden niet worden ingevuld en zijn overgeslagen — controleer de gedownloade PDF.',
   desc_flatten:             'Velden vergrendeld · {pages} pagina\'s · {size}',
   warn_xfa_form:            'ℹ️ Geen bewerkbare velden gevonden — bestand ongewijzigd geretourneerd. XFA-formulieren gebruiken een indeling die niet compatibel is met browsergebaseerde PDF-tools.',
   desc_split_single:        '{n} pagina geëxtraheerd · {size}',

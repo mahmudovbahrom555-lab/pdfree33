@@ -792,6 +792,9 @@ async function _runWorkerTool(tool, filesSnapshot, params) {
       if (tool === 'flatten' && data.info === 'no_fields') {
         showToast(t('warn_xfa_form'), 6000);
       }
+      if (tool === 'fill' && data.skippedFields > 0) {
+        showToast(tp(data.skippedFields, 'warn_fill_skip_one', 'warn_fill_skip_many'), 6000);
+      }
     } else if (data.type === 'error') {
       isProcessing = false; setFilesLocked(false); hideCancelBtn();
       _handleError(tool, data.message);

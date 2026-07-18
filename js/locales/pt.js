@@ -66,6 +66,8 @@ window.PDFREE_LOCALE = {
   desc_rotate:              'Rodado · {pages} páginas · {size}',
   desc_redact:              'Áreas cobertas · {pages} páginas · {size}',
   desc_fill:                'Formulário preenchido · {pages} páginas · {size}',
+  warn_fill_skip_one:       '{n} campo não pôde ser preenchido e foi ignorado — verifique o PDF baixado.',
+  warn_fill_skip_many:      '{n} campos não puderam ser preenchidos e foram ignorados — verifique o PDF baixado.',
   desc_flatten:             'Campos bloqueados · {pages} páginas · {size}',
   warn_xfa_form:            'ℹ️ Nenhum campo editável encontrado — arquivo devolvido sem alterações. Formulários XFA usam um formato não suportado por ferramentas PDF baseadas em navegador.',
   desc_split_single:        '{n} página extraída · {size}',

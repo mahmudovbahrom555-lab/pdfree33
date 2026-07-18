@@ -1889,8 +1889,20 @@ async function handleFill(fileBuffer, { fieldValues = {}, sigImages = {}, fieldM
 
   progress(40, 'Filling fields…');
 
+  // skippedFields counts any field whose name couldn't be resolved or whose
+  // value was rejected by pdf-lib — reported back so the UI can warn the
+  // user instead of silently dropping data (see e.g. radio groups whose
+  // pdf.js-reported exportValue doesn't match pdf-lib's own option list).
+  let skippedFields = 0;
+
   for (const field of fields) {
-    const name  = field.getName();
+    let name;
+    try {
+      name = field.getName();
+    } catch {
+      skippedFields++;
+      continue; // unreadable field name — skip just this field, not the whole document
+    }
     const value = fieldValues[name];
     if (value === undefined) continue;
 
@@ -1911,13 +1923,22 @@ async function handleFill(fileBuffer, { fieldValues = {}, sigImages = {}, fieldM
       } else if (field instanceof PDFOptionList) {
         if (value) field.select(String(value));
       }
-    } catch { /* skip fields that reject their value */ }
+    } catch { skippedFields++; /* field rejected its value */ }
   }
 
   // Flatten first: bakes field appearances into page content stream.
   // Signature PNG is drawn AFTER flatten so it renders on top of the
   // (now-empty) Sig widget appearance — prevents white background covering PNG.
   progress(70, 'Saving filled PDF…');
+
+  // Multiline fields whose /DA has no explicit font size (size 0 = auto)
+  // can get a wildly oversized auto-computed size from updateFieldAppearances()
+  // below, overflowing the field's box. Force a fixed, sane size first.
+  for (const field of fields) {
+    if (field instanceof PDFTextField && field.isMultiline()) {
+      try { field.setFontSize(11); } catch { /* leave as-is if rejected */ }
+    }
+  }
 
   // Many PDFs lack embedded fonts in their AcroForm resources, which causes
   // pdf-lib's flatten() to silently skip appearance generation — the output
@@ -1947,7 +1968,7 @@ async function handleFill(fileBuffer, { fieldValues = {}, sigImages = {}, fieldM
 
   const bytes = await pdfDoc.save({ useObjectStreams: true, addDefaultPage: false });
   self.postMessage(
-    { type: 'done', result: bytes.buffer, pageCount: pdfDoc.getPageCount() },
+    { type: 'done', result: bytes.buffer, pageCount: pdfDoc.getPageCount(), skippedFields },
     [bytes.buffer]
   );
 }

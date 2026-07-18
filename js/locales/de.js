@@ -67,6 +67,8 @@ window.PDFREE_LOCALE = {
   desc_rotate:              'Gedreht · {pages} Seiten · {size}',
   desc_redact:              'Bereiche abgedeckt · {pages} Seiten · {size}',
   desc_fill:                'Formular ausgefüllt · {pages} Seiten · {size}',
+  warn_fill_skip_one:       '{n} Feld konnte nicht ausgefüllt werden und wurde übersprungen — bitte die heruntergeladene PDF prüfen.',
+  warn_fill_skip_many:      '{n} Felder konnten nicht ausgefüllt werden und wurden übersprungen — bitte die heruntergeladene PDF prüfen.',
   desc_flatten:             'Felder gesperrt · {pages} Seiten · {size}',
   warn_xfa_form:            'ℹ️ Keine bearbeitbaren Felder gefunden — Datei unverändert zurückgegeben. XFA-Formulare verwenden ein Format, das von browserbasierten PDF-Tools nicht unterstützt wird.',
   desc_split_single:        '{n} Seite extrahiert · {size}',

@@ -78,6 +78,8 @@ const EN = {
   desc_rotate:              'Rotated · {pages} pages · {size}',
   desc_redact:              'Areas covered · {pages} pages · {size}',
   desc_fill:                'Form filled · {pages} pages · {size}',
+  warn_fill_skip_one:       "{n} field couldn't be filled and was skipped — please check the downloaded PDF.",
+  warn_fill_skip_many:      "{n} fields couldn't be filled and were skipped — please check the downloaded PDF.",
   desc_flatten:             'Fields locked · {pages} pages · {size}',
   warn_xfa_form:            'ℹ️ No editable fields found — file returned unchanged. XFA forms use a format that isn\'t supported by browser-based PDF tools.',
   desc_split_single:        'Extracted {n} page · {size}',

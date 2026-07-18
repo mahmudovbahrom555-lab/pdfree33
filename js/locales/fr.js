@@ -66,6 +66,8 @@ window.PDFREE_LOCALE = {
   desc_rotate:              'Pivoté · {pages} pages · {size}',
   desc_redact:              'Zones masquées · {pages} pages · {size}',
   desc_fill:                'Formulaire rempli · {pages} pages · {size}',
+  warn_fill_skip_one:       "{n} champ n'a pas pu être rempli et a été ignoré — vérifiez le PDF téléchargé.",
+  warn_fill_skip_many:      "{n} champs n'ont pas pu être remplis et ont été ignorés — vérifiez le PDF téléchargé.",
   desc_flatten:             'Champs verrouillés · {pages} pages · {size}',
   warn_xfa_form:            'ℹ️ Aucun champ modifiable trouvé — fichier retourné sans modification. Les formulaires XFA utilisent un format non pris en charge par les outils PDF basés sur navigateur.',
   desc_split_single:        '{n} page extraite · {size}',

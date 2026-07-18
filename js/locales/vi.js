@@ -67,6 +67,8 @@ window.PDFREE_LOCALE = {
   desc_rotate:              'Đã xoay · {pages} trang · {size}',
   desc_redact:              'Đã che vùng · {pages} trang · {size}',
   desc_fill:                'Đã điền biểu mẫu · {pages} trang · {size}',
+  warn_fill_skip_one:       'Có {n} trường không thể điền và đã bị bỏ qua — vui lòng kiểm tra PDF đã tải xuống.',
+  warn_fill_skip_many:      'Có {n} trường không thể điền và đã bị bỏ qua — vui lòng kiểm tra PDF đã tải xuống.',
   desc_flatten:             'Đã khóa trường · {pages} trang · {size}',
   warn_xfa_form:            'ℹ️ Không tìm thấy trường có thể chỉnh sửa — file được trả về không thay đổi. Biểu mẫu XFA sử dụng định dạng không được hỗ trợ bởi các công cụ PDF trên trình duyệt.',
   desc_split_single:        'Đã trích xuất {n} trang · {size}',
