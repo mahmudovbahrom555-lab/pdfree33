@@ -77,13 +77,20 @@ def _md5_short(path, length=8):
 
 def _compute_hashes():
     app_hash = _md5_short(os.path.join(ROOT, 'js', 'app.js'))
-    # cache_version hashes ALL js/*.js + css/*.css files + sw.js so the SW
-    # cache is busted whenever any JS module or CSS file changes — not just
-    # app.js. Previously only app.js+sw.js were hashed, so changes to
-    # processor.js, pdf2wordTables.js etc. kept the same cache_version → SW
-    # served stale files. CSS was added for the identical reason: a CSS-only
-    # deploy left cache_version unchanged, so the SW's cache-first strategy
-    # served already-visited users stale CSS indefinitely.
+    # cache_version hashes ALL js/*.js + css/*.css files + sw.js + the static
+    # homepage shells + the tool-page template so the SW cache is busted
+    # whenever any of these change — not just app.js. Previously only
+    # app.js+sw.js were hashed, so changes to processor.js, pdf2wordTables.js
+    # etc. kept the same cache_version → SW served stale files. CSS was added
+    # for the identical reason: a CSS-only deploy left cache_version
+    # unchanged, so the SW's cache-first strategy served already-visited
+    # users stale CSS indefinitely. HTML shells were added after the same bug
+    # hit an HTML-only fix (CSP script-src in index.html /
+    # scripts/templates/tool-page.html): cache_version stayed unchanged, so
+    # already-visited/installed users' SW never reinstalled and kept serving
+    # the old cached HTML — self-healing only after a 2nd navigation via
+    # stale-while-revalidate — instead of getting the immediate reload/
+    # update-banner that JS/CSS changes trigger.
     combined = b''
     js_dir = os.path.join(ROOT, 'js')
     for fname in sorted(os.listdir(js_dir)):
@@ -103,6 +110,15 @@ def _compute_hashes():
     if os.path.exists(sw_path):
         with open(sw_path, 'rb') as f:
             combined += f.read()
+    html_shells = [
+        'index.html', 'de/index.html', 'es/index.html', 'fr/index.html', 'pt/index.html',
+        os.path.join('scripts', 'templates', 'tool-page.html'),
+    ]
+    for rel in html_shells:
+        fpath = os.path.join(ROOT, rel)
+        if os.path.isfile(fpath):
+            with open(fpath, 'rb') as f:
+                combined += f.read()
     cache_version = hashlib.md5(combined).hexdigest()[:8]
     return {
         'app':            app_hash,
