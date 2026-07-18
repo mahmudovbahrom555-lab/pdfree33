@@ -37,7 +37,8 @@ import { trackToolStart, trackToolSuccess,
          trackToolError, trackDownload,
          trackSearchQuery, trackSearchMiss,
          trackSearchSelect,
-         trackHeroFileSelect, trackChipClick }      from './analytics.js';
+         trackHeroFileSelect, trackChipClick,
+         trackShareTool }                           from './analytics.js';
 import { buildIndex, search, trackMiss }           from './search.js';
 import { loadPdfLib }                              from './lazyLibs.js';
 import { checkReturnVisit, recordDownload,
@@ -137,6 +138,90 @@ async function _doShare() {
   }
 }
 
+// ── Share this tool (referral link, not the output file) ──────
+// Separate from _doShare()/#shareBtn above — that shares the converted
+// PDF via Web Share API's file support. This shares a link to the tool
+// itself so the recipient lands on the exact page that was used.
+
+function _closeShareFallback() {
+  const menu = id('shareFallbackMenu');
+  const btn  = id('shareToolBtn');
+  if (menu) { menu.hidden = true; menu.innerHTML = ''; }
+  if (btn)  btn.setAttribute('aria-expanded', 'false');
+  document.removeEventListener('click', _onShareFallbackOutsideClick);
+}
+
+function _onShareFallbackOutsideClick(e) {
+  const wrap = id('shareToolBtn')?.closest('.share-tool-menu-wrap');
+  if (wrap && !wrap.contains(e.target)) _closeShareFallback();
+}
+
+function _openShareFallback(tool, url, msg, copyLabel, copiedLabel) {
+  const menu = id('shareFallbackMenu');
+  const btn  = id('shareToolBtn');
+  if (!menu || !btn) return;
+
+  trackShareTool('fallback_open', tool);
+
+  const encodedText = encodeURIComponent(`${msg} ${url}`);
+  const encodedUrl  = encodeURIComponent(url);
+  menu.innerHTML = `
+    <button type="button" class="share-fallback-item" id="shareCopyLink" role="menuitem">${copyLabel}</button>
+    <a class="share-fallback-item" role="menuitem" target="_blank" rel="noopener" href="https://wa.me/?text=${encodedText}">WhatsApp</a>
+    <a class="share-fallback-item" role="menuitem" target="_blank" rel="noopener" href="https://t.me/share/url?url=${encodedUrl}&text=${encodeURIComponent(msg)}">Telegram</a>
+    <a class="share-fallback-item" role="menuitem" href="mailto:?subject=${encodeURIComponent('PDFree')}&body=${encodedText}">Email</a>
+  `;
+  menu.querySelector('#shareCopyLink').onclick = async () => {
+    trackShareTool('copy_link', tool);
+    try {
+      await navigator.clipboard.writeText(url);
+      const item = menu.querySelector('#shareCopyLink');
+      item.textContent = copiedLabel;
+      setTimeout(_closeShareFallback, 900);
+    } catch { /* clipboard unavailable — leave menu open */ }
+  };
+  menu.querySelectorAll('a.share-fallback-item').forEach(a => {
+    a.addEventListener('click', () => {
+      const channel = a.href.includes('wa.me') ? 'whatsapp'
+                    : a.href.includes('t.me')   ? 'telegram'
+                    :                              'email';
+      trackShareTool(channel, tool);
+    });
+  });
+
+  menu.hidden = false;
+  btn.setAttribute('aria-expanded', 'true');
+  // Defer so this click doesn't immediately trigger the outside-click listener.
+  setTimeout(() => document.addEventListener('click', _onShareFallbackOutsideClick), 0);
+}
+
+async function _doShareTool(tool) {
+  const btn = id('shareToolBtn');
+  if (!btn) return;
+
+  trackShareTool('open', tool);
+
+  const url          = location.href.split('#')[0].split('?')[0];
+  const msg           = btn.dataset.msg || 'PDFree';
+  const copyLabel     = btn.dataset.copy   || 'Copy link';
+  const copiedLabel   = btn.dataset.copied || 'Link copied!';
+
+  if (navigator.share) {
+    try {
+      await navigator.share({ title: 'PDFree', text: msg, url });
+      trackShareTool('success', tool);
+    } catch (err) {
+      if (err.name === 'AbortError') {
+        trackShareTool('cancel', tool);
+      } else {
+        _openShareFallback(tool, url, msg, copyLabel, copiedLabel);
+      }
+    }
+  } else {
+    _openShareFallback(tool, url, msg, copyLabel, copiedLabel);
+  }
+}
+
 // ── Navigation ────────────────────────────────────────────────
 
 function goHome() {
@@ -201,6 +286,7 @@ function resetState() {
   if (autoHint) autoHint.style.display = 'none';
   const shareBtn = id('shareBtn');
   if (shareBtn) { shareBtn.style.display = 'none'; shareBtn.disabled = false; }
+  _closeShareFallback();
   hide('progressBar');
   hide('progressLabel');
   id('progressFill').style.width = '0%';
@@ -293,6 +379,13 @@ function _handleSuccess({ tool, blob, desc, filename, compressionReport, pageCou
     } else {
       shareBtn.style.display = 'none';
     }
+  }
+
+  // Wire "Share this tool" — always shown on real success, closed/reset on each new run.
+  const shareToolBtn = id('shareToolBtn');
+  if (shareToolBtn) {
+    _closeShareFallback();
+    shareToolBtn.onclick = () => _doShareTool(tool);
   }
 
   const btn        = id('mergeBtn');

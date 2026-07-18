@@ -642,6 +642,21 @@
         <div class="privacy-cleared__check" aria-hidden="true">✓</div>
       </div>
 
+      <!-- Share this tool — shown after every successful conversion -->
+      <div class="share-tool-row" id="shareToolRow">
+        <span class="share-tool-label">Know someone who works with PDFs?</span>
+        <div class="share-tool-menu-wrap">
+          <button type="button" class="share-tool-btn" id="shareToolBtn"
+                  data-msg="I used PDFree to work with a PDF — free, private, works entirely in your browser."
+                  data-copy="Copy link" data-copied="Link copied!"
+                  aria-haspopup="true" aria-expanded="false">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.5" x2="15.4" y2="6.5"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/></svg>
+            Share this tool
+          </button>
+          <div class="share-fallback-menu" id="shareFallbackMenu" role="menu" hidden></div>
+        </div>
+      </div>
+
       <!-- Install PWA nudge — shown only when browser supports it -->
       <div class="pwa-nudge" id="pwaNudge" style="display:none">
         <span class="pwa-nudge__text">⚡ Install for instant access — works offline</span>

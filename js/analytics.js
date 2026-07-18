@@ -132,6 +132,17 @@ export function trackDownload(tool, outputSize = 0) {
   _track('Download', { tool, output_size: _sizeBucket(outputSize) });
 }
 
+/**
+ * Track the "Share this tool" flow — separate from Download/Send (file sharing).
+ * action: 'open' (button clicked) | 'success' (native share completed) |
+ *         'cancel' (native share dismissed) | 'fallback_open' (no navigator.share —
+ *         custom menu shown) | 'copy_link' | 'whatsapp' | 'telegram' | 'email'
+ * (the last four are fallback-menu channel clicks)
+ */
+export function trackShareTool(action, tool) {
+  _track('Share Tool', { action, tool });
+}
+
 // ── Behavioral quality signals ────────────────────────────────
 // These fire without asking the user — behavior reveals satisfaction.
 
