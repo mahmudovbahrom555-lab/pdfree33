@@ -28,6 +28,7 @@ export default [
         CompressionStream: 'readonly', DecompressionStream: 'readonly',
         // CDN globals loaded at runtime
         PDFLib: 'readonly', JSZip: 'readonly', pdfjsLib: 'readonly',
+        DOMParser: 'readonly',
         // Standard browser/worker APIs
         Image: 'readonly', prompt: 'readonly', alert: 'readonly',
         TextEncoder: 'readonly', crypto: 'readonly',
