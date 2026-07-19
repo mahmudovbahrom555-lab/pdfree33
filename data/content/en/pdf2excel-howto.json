@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to Convert PDF to Excel",
+  "description": "Extract tables from a PDF into a real .xlsx spreadsheet — 100% in your browser.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Open your PDF",
+      "text": "Click 'Choose file' or drag your PDF into the drop zone. PDFree scans the document and shows how many tables it found."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Review the table count",
+      "text": "A badge shows how many tables were detected before you convert."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Download the .xlsx file",
+      "text": "Click 'Convert to Excel'. Each detected table becomes its own sheet; everything else goes to a 'Text' sheet."
+    }
+  ]
+}

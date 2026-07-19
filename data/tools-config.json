@@ -2173,6 +2173,44 @@
         "ru": "Конвертация PDF в Word, которая работает полностью в браузере. Без загрузки, без сервера, без аккаунта. Таблицы, арабский, китайский и многое другое. 100% конфиденциально.",
         "ja": "PDFをWordに変換する処理はすべてブラウザ内で実行されます。アップロードなし、サーバーなし、アカウントなし。表・アラビア語・中国語など対応。100%プライベート。"
       }
+    },
+    {
+      "id": "pdf2excel",
+      "icon": "📊",
+      "toolKey": "pdf2excel",
+      "slugs": {
+        "en": "pdf-to-excel"
+      },
+      "titles": {
+        "en": "Convert PDF to Excel Without Uploading — Free & Private | PDFree"
+      },
+      "descs": {
+        "en": "Extract tables from PDF into an .xlsx spreadsheet — runs in your browser, no upload."
+      },
+      "navLabels": {
+        "en": "PDF to Excel"
+      },
+      "cardNames": {
+        "en": "PDF to Excel"
+      },
+      "cardDescs": {
+        "en": "Extract tables from PDF into a spreadsheet locally"
+      },
+      "breadcrumb": {
+        "en": "PDF→Excel"
+      },
+      "metaDescs": {
+        "en": "Convert PDF to Excel free — detected tables become separate sheets in a real .xlsx file. Runs in your browser, nothing uploaded. No account, no limits."
+      },
+      "ogTitles": {
+        "en": "Convert PDF to Excel Free — Table Extraction, No Upload"
+      },
+      "ogDescs": {
+        "en": "PDF to Excel conversion that runs entirely in your browser. Detected tables become separate worksheets. No upload, no server, no account. 100% private."
+      },
+      "keywords": {
+        "en": "pdf to excel, pdf to xlsx, convert pdf to excel, extract table from pdf, pdf table extractor, pdf to spreadsheet"
+      }
     }
   ],
   "ui": {

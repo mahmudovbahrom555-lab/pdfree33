@@ -13,7 +13,7 @@ import { selectedFiles, setFilesLocked } from './files.js';
 import { trackToolError } from './analytics.js';
 import { TOOLS, MAX_COMPRESS_MB } from './config.js';
 import { getRunner, getWorkerTool } from './toolRegistry.js';
-import { loadJSZip, loadDocx } from './lazyLibs.js';
+import { loadJSZip, loadDocx, loadExcelJs } from './lazyLibs.js';
 import { preprocessPdfBuffer } from './decryptPdf.js';
 import { detectTables } from './pdf2wordTables.js';
 import { detectTableGrids } from './pdf2wordBorders.js';
@@ -157,6 +157,7 @@ export async function doProcess(currentTool, extraParams = {}) {
     jpg2pdf:  () => _runJpg2Pdf(filesSnapshot, extraParams),
     pdf2jpg:  () => _runPdf2Jpg(filesSnapshot, extraParams),
     pdf2word: () => _runPdf2Word(filesSnapshot, extraParams),
+    pdf2excel: () => _runPdf2Excel(filesSnapshot, extraParams),
     worker:   () => _runWorkerTool(getWorkerTool(currentTool) ?? currentTool, filesSnapshot, extraParams),
   };
 
@@ -907,6 +908,186 @@ async function _runPdf2Word(filesSnapshot, { mode = 'text', dpi = 150 } = {}) {
   document.dispatchEvent(new CustomEvent('pdfree:success', {
     detail: { tool: 'pdf2word', blob, desc, filename, confidence }
   }));
+}
+
+// ── PDF → Excel ──────────────────────────────────────────────────
+// Reuses detectTables() (js/pdf2wordTables.js) — the same X-coordinate
+// column-clustering engine pdf2word uses — since its rows: string[][]
+// output is already Excel's native cell model. Deliberately does NOT
+// reuse detectTableGrids() (border-only grids with no text): those are
+// visually meaningful in a Word document but carry zero cell data, so
+// they'd only produce empty worksheets — not useful in a spreadsheet.
+// Each detected table becomes its own worksheet; any line not captured
+// by a table is appended to a catch-all "Text" sheet so nothing is
+// silently dropped, even on documents that turn out not to be
+// spreadsheet-like.
+
+async function _runPdf2Excel(filesSnapshot) {
+  const file = filesSnapshot[0];
+  if (!_checkSize(file, 150)) { _abortUI(); return; }
+
+  setProgress(5, 'Loading libraries…');
+
+  try {
+    await loadExcelJs();
+  } catch {
+    isProcessing = false; setFilesLocked(false); hideCancelBtn();
+    _handleError('pdf2excel', 'Excel library unavailable — check your internet connection.');
+    return;
+  }
+
+  if (!window.pdfjsLib) {
+    isProcessing = false; setFilesLocked(false); hideCancelBtn();
+    _handleError('pdf2excel', 'PDF engine not ready — reopen the tool.', 'renderer_not_loaded');
+    return;
+  }
+
+  setProgress(8, 'Loading PDF…');
+
+  let pdfDoc;
+  try {
+    const rawBuf = file._decryptedBuffer
+      ? file._decryptedBuffer.slice(0)
+      : await preprocessPdfBuffer(await file.arrayBuffer());
+    pdfDoc = await window.pdfjsLib.getDocument({
+      data:              new Uint8Array(rawBuf),
+      useSystemFonts:    false,
+      verbosity:         0,
+      disableJavaScript: true,
+    }).promise;
+  } catch (err) {
+    isProcessing = false; setFilesLocked(false); hideCancelBtn();
+    _handleError('pdf2excel', err.message); return;
+  }
+
+  let extracted;
+  try {
+    extracted = await _p2eExtractTables(pdfDoc);
+  } catch (err) {
+    isProcessing = false; setFilesLocked(false); hideCancelBtn();
+    _handleError('pdf2excel', err.message); return;
+  }
+
+  if (!isProcessing) return;
+
+  setProgress(90, 'Building spreadsheet…');
+
+  const { tables, textRows } = extracted;
+  const workbook = new window.ExcelJS.Workbook();
+  workbook.creator = 'PDFree';
+
+  tables.forEach((tbl, i) => {
+    const sheet = workbook.addWorksheet(`Table ${i + 1}`.slice(0, 31));
+    tbl.rows.forEach(row => sheet.addRow(row));
+    sheet.getRow(1).font = { bold: true };
+    sheet.columns.forEach(col => {
+      let maxLen = 10;
+      col.eachCell({ includeEmpty: true }, cell => {
+        maxLen = Math.max(maxLen, String(cell.value ?? '').length);
+      });
+      col.width = Math.min(maxLen + 2, 60);
+    });
+  });
+
+  if (textRows.length) {
+    const sheet = workbook.addWorksheet('Text');
+    textRows.forEach(r => sheet.addRow([r.text]));
+    sheet.getColumn(1).width = 100;
+  }
+
+  if (!tables.length && !textRows.length) {
+    const sheet = workbook.addWorksheet('Sheet1');
+    sheet.addRow(['No extractable text or tables were found in this PDF.']);
+  }
+
+  const buffer = await workbook.xlsx.writeBuffer();
+  const blob = new Blob([buffer], {
+    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  });
+
+  const baseName = file.name.replace(/\.pdf$/i, '');
+  const filename = `${baseName}.xlsx`;
+  const confidence = _p2eConfidence(extracted);
+  const tableNote = tables.length
+    ? `${tables.length} table${tables.length !== 1 ? 's' : ''} found`
+    : 'no tables found';
+  const desc = `${extracted.totalPages} page${extracted.totalPages !== 1 ? 's' : ''} · ${tableNote} · ${fmtSize(blob.size)}`;
+
+  isProcessing = false;
+  setFilesLocked(false);
+  hideCancelBtn();
+  setProgress(100, t('prog_done'));
+
+  document.dispatchEvent(new CustomEvent('pdfree:success', {
+    detail: { tool: 'pdf2excel', blob, desc, filename, confidence }
+  }));
+}
+
+// Simplified line-grouping (no heading/RTL-paragraph/rotated-header handling —
+// none of that matters for cell data) + detectTables() per page. Lines not
+// consumed by a detected table are returned separately as fallback rows.
+async function _p2eExtractTables(pdfDoc) {
+  const YTOL = 6;
+  const tables = [];
+  const textRows = [];
+  let pagesWithNoText = 0;
+
+  for (let p = 1; p <= pdfDoc.numPages; p++) {
+    if (!isProcessing) break;
+    setProgress(10 + Math.round((p / pdfDoc.numPages) * 75),
+                `Reading page ${p}/${pdfDoc.numPages}…`);
+
+    const page    = await pdfDoc.getPage(p);
+    const content = await page.getTextContent({ normalizeWhitespace: false });
+    const items = content.items
+      .filter(item => 'str' in item && item.str.split(' ').join('').trim())
+      .map(item => ({
+        str: ((item.dir === 'rtl') ? _visualRTLToLogical(item.str) : item.str)
+          .split(' ').join(''),
+        x: item.transform[4],
+        y: item.transform[5],
+        fontSize: (item.height > 0 ? item.height : Math.abs(item.transform[3])) || 10,
+      }));
+
+    const lines = [];
+    for (const item of [...items].sort((a, b) => b.y - a.y)) {
+      let merged = false;
+      for (const ln of lines) {
+        if (Math.abs(ln.y - item.y) <= YTOL) { ln.items.push(item); merged = true; break; }
+      }
+      if (!merged) lines.push({ y: item.y, items: [item] });
+    }
+    lines.forEach(ln => ln.items.sort((a, b) => a.x - b.x));
+
+    if (!lines.length) { pagesWithNoText++; page.cleanup?.(); continue; }
+
+    const pageTables = detectTables(lines);
+    const consumed    = new Set();
+    for (const tbl of pageTables) {
+      for (let li = tbl.startIdx; li <= tbl.endIdx; li++) consumed.add(li);
+      tables.push({ page: p, rows: tbl.rows, confidence: tbl.confidence });
+    }
+    lines.forEach((ln, li) => {
+      if (consumed.has(li)) return;
+      const text = ln.items.map(i => i.str).join(' ').trim();
+      if (text) textRows.push({ page: p, text });
+    });
+
+    page.cleanup?.();
+  }
+
+  return { tables, textRows, totalPages: pdfDoc.numPages, pagesWithNoText };
+}
+
+function _p2eConfidence({ tables, totalPages, pagesWithNoText }) {
+  if (!tables.length) {
+    return { score: 0, level: 'none', tableCount: 0, pagesWithNoText, totalPages };
+  }
+  const avgConf      = tables.reduce((sum, t) => sum + t.confidence, 0) / tables.length;
+  const pageCoverage = Math.max(0.5, 1 - (pagesWithNoText / totalPages));
+  const score        = Math.round(avgConf * 100 * pageCoverage);
+  const level        = score >= 80 ? 'high' : score >= 55 ? 'medium' : 'low';
+  return { score, level, tableCount: tables.length, pagesWithNoText, totalPages };
 }
 
 // Converts a pdf.js RTL item string from visual (left-to-right screen) order to Unicode

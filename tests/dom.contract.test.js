@@ -90,6 +90,7 @@ const INLINE_OPTIONS_DIVS = [
   'rotateOptions',
   'ocrOptions',
   'pdf2wordOptions',
+  'pdf2excelOptions',
   'compareOptions',
   // splitOptions doubles as extractOptions container
 ];

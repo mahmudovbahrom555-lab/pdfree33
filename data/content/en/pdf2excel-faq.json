@@ -1,0 +1,50 @@
+[
+  {
+    "@type": "Question",
+    "name": "Is my PDF uploaded anywhere to convert it?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Table detection and spreadsheet generation both run in your browser using pdf.js and exceljs. Your PDF and the extracted data never leave your device."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "What happens if my PDF has no tables?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree tells you before you convert — the pre-scan badge shows the table count. If none are found, every line of text still gets saved into a single 'Text' sheet, but for prose-heavy documents, PDF to Word is usually a better fit."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I convert a scanned PDF to Excel?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Not directly — a scanned PDF is an image with no text layer, so there's no data to detect a table in. Run OCR PDF first to add a text layer, then convert the result to Excel."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "How does PDFree know what's a table and what isn't?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "It checks whether text lines line up into consistent columns across at least 3 rows. Each candidate gets a confidence score; low-confidence guesses are rejected rather than shown as a broken table."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is this a free PDF to Excel converter with no sign up?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. PDFree is completely free — no sign up, no account, no installation. Open the tool, load your PDF, and download the .xlsx file."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I edit the formulas or recalculate after converting?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "The extracted values are plain numbers and text, not formulas — a PDF has no underlying formulas to recover, only rendered results. Once in Excel, you can add your own formulas over the extracted data as usual."
+    }
+  }
+]

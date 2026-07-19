@@ -63,3 +63,36 @@ async function _loadDocxWithFallback() {
   }
   throw new Error('docx library unavailable — check your internet connection');
 }
+
+// Same two-URL fallback pattern as loadDocx() — see comment above.
+export function loadExcelJs() {
+  if (window.ExcelJS) return Promise.resolve();
+  if (_promises['excelJs']) return _promises['excelJs'];
+
+  _promises['excelJs'] = _loadExcelJsWithFallback().catch(err => {
+    delete _promises['excelJs'];
+    throw err;
+  });
+  return _promises['excelJs'];
+}
+
+async function _loadExcelJsWithFallback() {
+  const CDNS = [
+    'https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js',
+    'https://unpkg.com/exceljs@4.4.0/dist/exceljs.min.js',
+  ];
+  for (const url of CDNS) {
+    try {
+      await new Promise((resolve, reject) => {
+        if (document.querySelector(`script[src="${url}"]`)) { resolve(); return; }
+        const s = document.createElement('script');
+        s.src     = url;
+        s.onload  = resolve;
+        s.onerror = () => reject(new Error(`CDN unavailable: ${url}`));
+        document.head.appendChild(s);
+      });
+      if (window.ExcelJS) return;
+    } catch (_) { /* try next */ }
+  }
+  throw new Error('Excel library unavailable — check your internet connection');
+}

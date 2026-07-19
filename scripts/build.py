@@ -134,11 +134,13 @@ def _compute_hashes():
 # Tools that appear in the nav bar, in display order.
 # draw, compare have no locale slugs → appended manually with absolute EN paths.
 # pdf2word is in this list because it has locale slugs in tools-config.
+# pdf2excel is EN-only for now — falls back to the absolute EN path on every
+# other language, same mechanism already used for draw/compare.
 _NAV_TOOL_IDS = [
     'merge', 'split', 'compress', 'jpg2pdf', 'pdf2jpg',
     'watermark', 'pagenum', 'metadata', 'extract',
     # draw-on-pdf inserted here (EN-only, no locale slugs)
-    'rotate', 'protect', 'pdf2word',
+    'rotate', 'protect', 'pdf2word', 'pdf2excel',
 ]
 
 def _build_nav_items(lang, all_tools):

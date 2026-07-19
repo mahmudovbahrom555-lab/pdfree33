@@ -48,6 +48,9 @@ import { initOcrOptions, hideOcrOptions,
 import { initPdf2WordOptions, hidePdf2WordOptions,
          getPdf2WordParams,
          renderP2wConfidence, clearP2wConfidence } from './pdf2wordUI.js';
+import { initPdf2ExcelOptions, hidePdf2ExcelOptions,
+         getPdf2ExcelParams,
+         renderP2eConfidence } from './pdf2excelUI.js';
 import { initCompareOptions, hideCompareOptions,
          getCompareParams }               from './compareUI.js';
 
@@ -349,6 +352,21 @@ registerTool('pdf2word', {
   },
   onSuccess: ({ confidence }) => {
     if (confidence) renderP2wConfidence(confidence);
+  },
+});
+
+registerTool('pdf2excel', {
+  runner:    'pdf2excel',
+  init:      initPdf2ExcelOptions,
+  hide:      hidePdf2ExcelOptions,
+  getParams: getPdf2ExcelParams,
+  validate:  p => {
+    if (p.loading) return 'Analysing PDF…';
+    if (!p.pageCount) return null;
+    return null;
+  },
+  onSuccess: ({ confidence }) => {
+    if (confidence) renderP2eConfidence(confidence);
   },
 });
 
