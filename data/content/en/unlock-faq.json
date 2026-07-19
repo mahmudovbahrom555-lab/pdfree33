@@ -1,0 +1,50 @@
+[
+  {
+    "@type": "Question",
+    "name": "Is my PDF or password uploaded anywhere?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Password removal happens entirely in your browser using QPDF (WebAssembly). Neither your file nor your password is sent to any server."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can this recover or crack a password I don't know?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. You must know the PDF's correct password. PDFree removes protection from files you're already authorized to open — it does not guess, recover, or bypass unknown passwords."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "What if my PDF says \"no password needed\"?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Some PDFs only have owner-level restrictions (like disabled printing or copying) with no password required to open them. PDFree detects this automatically and lets you remove those restrictions without typing anything."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "I entered the password but it says incorrect. What now?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Double-check for typos, extra spaces, or caps lock. Passwords are case-sensitive. Your file stays selected, so you can simply try again."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is this a free PDF password remover with no sign up?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. PDFree is completely free — no sign up, no account, no installation. Open the tool, enter the password, and download the unlocked PDF."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I re-add a password later?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes — use Protect PDF to add a new password or restrictions to the unlocked file."
+    }
+  }
+]

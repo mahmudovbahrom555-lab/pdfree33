@@ -14,7 +14,7 @@ import { trackToolError } from './analytics.js';
 import { TOOLS, MAX_COMPRESS_MB } from './config.js';
 import { getRunner, getWorkerTool } from './toolRegistry.js';
 import { loadJSZip, loadDocx, loadExcelJs, loadPptxGenJs } from './lazyLibs.js';
-import { preprocessPdfBuffer } from './decryptPdf.js';
+import { preprocessPdfBuffer, decryptWithPassword } from './decryptPdf.js';
 import { detectTables } from './pdf2wordTables.js';
 import { detectTableGrids } from './pdf2wordBorders.js';
 import { openFeedback } from './feedback.js';
@@ -160,6 +160,7 @@ export async function doProcess(currentTool, extraParams = {}) {
     pdf2excel: () => _runPdf2Excel(filesSnapshot, extraParams),
     pdf2ppt:  () => _runPdf2Ppt(filesSnapshot, extraParams),
     pdf2md:   () => _runPdf2Md(filesSnapshot, extraParams),
+    unlock:   () => _runUnlock(filesSnapshot, extraParams),
     worker:   () => _runWorkerTool(getWorkerTool(currentTool) ?? currentTool, filesSnapshot, extraParams),
   };
 
@@ -1562,6 +1563,64 @@ function _p2mdRender(blocks) {
   }
 
   return lines.join('\n') + '\n';
+}
+
+// ── Unlock PDF ───────────────────────────────────────────────────
+// Reuses the same QPDF WASM pipeline decryptPdf.js already runs silently
+// (empty password) for every uploaded PDF — decryptWithPassword() ends up
+// being the identical call with a user-supplied password. No new WASM
+// module, no new dependency, no worker.js changes.
+
+async function _runUnlock(filesSnapshot, { password } = {}) {
+  const file = filesSnapshot[0];
+  if (!_checkSize(file, 150)) { _abortUI(); return; }
+
+  setProgress(20, 'Checking password…');
+
+  let decrypted;
+  try {
+    if (file._decryptedBuffer) {
+      // Already unlocked earlier (silent owner-only preflight in files.js,
+      // or a prior Unlock run on this same file) — reuse it instead of a
+      // redundant WASM round-trip.
+      decrypted = new Uint8Array(file._decryptedBuffer.slice(0));
+    } else {
+      const bytes = new Uint8Array(await file.arrayBuffer());
+      decrypted = await decryptWithPassword(bytes, password ?? '');
+    }
+  } catch (err) {
+    isProcessing = false; setFilesLocked(false); hideCancelBtn();
+    _handleError('unlock', err.message); return;
+  }
+
+  if (!decrypted) {
+    isProcessing = false; setFilesLocked(false); hideCancelBtn();
+    _handleError('unlock', 'The password is incorrect. Please try again.', 'wrong_password');
+    return;
+  }
+
+  if (!isProcessing) return;
+
+  setProgress(95, 'Finalising…');
+
+  // Cache onto the file object so switching to another tool (Compress,
+  // Merge, OCR…) on this same file doesn't prompt for the password again.
+  file._decryptedBuffer = decrypted.buffer;
+  if (file._pdfMeta) file._pdfMeta.isEncrypted = false;
+
+  const blob     = new Blob([decrypted], { type: 'application/pdf' });
+  const baseName = file.name.replace(/\.pdf$/i, '');
+  const filename = `${baseName}-unlocked.pdf`;
+  const desc     = `Password removed · ${fmtSize(blob.size)}`;
+
+  isProcessing = false;
+  setFilesLocked(false);
+  hideCancelBtn();
+  setProgress(100, t('prog_done'));
+
+  document.dispatchEvent(new CustomEvent('pdfree:success', {
+    detail: { tool: 'unlock', blob, desc, filename }
+  }));
 }
 
 // Converts a pdf.js RTL item string from visual (left-to-right screen) order to Unicode

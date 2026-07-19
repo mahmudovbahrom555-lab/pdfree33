@@ -2287,6 +2287,44 @@
       "keywords": {
         "en": "pdf to markdown, pdf to md, convert pdf to markdown, pdf to md converter, extract pdf text as markdown"
       }
+    },
+    {
+      "id": "unlock",
+      "icon": "🔓",
+      "toolKey": "unlock",
+      "slugs": {
+        "en": "unlock-pdf"
+      },
+      "titles": {
+        "en": "Unlock PDF — Remove Password Protection, No Upload | PDFree"
+      },
+      "descs": {
+        "en": "Remove PDF password protection — runs in your browser, no upload."
+      },
+      "navLabels": {
+        "en": "Unlock PDF"
+      },
+      "cardNames": {
+        "en": "Unlock PDF"
+      },
+      "cardDescs": {
+        "en": "Remove password protection locally"
+      },
+      "breadcrumb": {
+        "en": "Unlock PDF"
+      },
+      "metaDescs": {
+        "en": "Remove PDF password protection free — enter the correct password and download an unlocked file. Runs in your browser, nothing uploaded. No account, no limits."
+      },
+      "ogTitles": {
+        "en": "Unlock PDF Free — Remove Password Protection, No Upload"
+      },
+      "ogDescs": {
+        "en": "PDF password removal that runs entirely in your browser. No upload, no server, no account. 100% private."
+      },
+      "keywords": {
+        "en": "unlock pdf, remove pdf password, remove password from pdf, open protected pdf, decrypt pdf, pdf password remover"
+      }
     }
   ],
   "ui": {

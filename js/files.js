@@ -211,11 +211,14 @@ export function addFiles(files) {
           if (decrypted) {
             f._decryptedBuffer = decrypted.buffer;  // cache for processor.js
             f._pdfMeta.isEncrypted = false;          // suppress lock badge
-            // Re-init tool options now that decrypted bytes are available —
-            // the first init ran before decryption and got 0 pages.
-            document.dispatchEvent(new CustomEvent('pdfree:file-decrypted'));
           }
         } catch { /* WASM init failure — keep isEncrypted = true */ }
+        // Re-init tool options either way — the first init ran before this
+        // resolved and saw no _pdfMeta at all. Owner-only success clears the
+        // lock (tools can now process the file); a real password staying
+        // required also needs a re-render (e.g. Unlock's password field
+        // must appear, not default to "no password needed").
+        document.dispatchEvent(new CustomEvent('pdfree:file-decrypted'));
         renderList();
       }
     });

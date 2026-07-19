@@ -91,14 +91,17 @@ function _looksEncrypted(bytes) {
 }
 
 /**
- * Tries to strip owner-only encryption from a PDF.
- * Equivalent to: pikepdf.open(path, password='')
+ * Runs `qpdf --decrypt --password=<password>` against raw PDF bytes.
+ * Shared by decryptOwnerOnly() (empty password) and decryptWithPassword()
+ * (user-supplied password) — same WASM call, only the password differs.
+ * Args are passed as an array straight to Emscripten's callMain, not through
+ * a shell, so arbitrary characters in `password` (including "=") are safe.
  *
- * @param {Uint8Array} bytes - Raw PDF bytes
- * @returns {Promise<Uint8Array|null>}
- *   Decrypted bytes on success, null if a real user password is required.
+ * @param {Uint8Array} bytes
+ * @param {string} password
+ * @returns {Promise<Uint8Array|null>} Decrypted bytes on success, null on failure.
  */
-export async function decryptOwnerOnly(bytes) {
+async function _qpdfDecrypt(bytes, password) {
   await _init();
 
   // qpdf-run worker transfers input bytes — make an owned copy first
@@ -110,15 +113,40 @@ export async function decryptOwnerOnly(bytes) {
       {
         type:    'run',
         inputs:  { 'in.pdf': input },
-        args:    ['--decrypt', '--password=', 'in.pdf', 'out.pdf'],
+        args:    ['--decrypt', `--password=${password}`, 'in.pdf', 'out.pdf'],
         outputs: ['out.pdf'],
       },
       [input.buffer]
     );
     return result.outputs['out.pdf'];  // Uint8Array
   } catch {
-    return null;  // real password → caller falls back to ENCRYPTED error
+    return null;  // wrong/missing password → caller decides how to react
   }
+}
+
+/**
+ * Tries to strip owner-only encryption from a PDF.
+ * Equivalent to: pikepdf.open(path, password='')
+ *
+ * @param {Uint8Array} bytes - Raw PDF bytes
+ * @returns {Promise<Uint8Array|null>}
+ *   Decrypted bytes on success, null if a real user password is required.
+ */
+export async function decryptOwnerOnly(bytes) {
+  return _qpdfDecrypt(bytes, '');
+}
+
+/**
+ * Decrypts a PDF using a real, user-supplied open password — for the
+ * Unlock PDF tool. Unlike decryptOwnerOnly(), a null result here typically
+ * means the password was simply wrong, not that decryption is impossible.
+ *
+ * @param {Uint8Array} bytes - Raw PDF bytes
+ * @param {string} password - User-entered password
+ * @returns {Promise<Uint8Array|null>} Decrypted bytes on success, null on wrong password.
+ */
+export async function decryptWithPassword(bytes, password) {
+  return _qpdfDecrypt(bytes, password);
 }
 
 /**

@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to Unlock a PDF",
+  "description": "Remove password protection from a PDF using its correct password — 100% in your browser.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Upload your PDF",
+      "text": "Click 'Choose files' or drag your PDF into the drop zone."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Enter the password",
+      "text": "Type the PDF's current password, if one is required."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Download the unlocked PDF",
+      "text": "Click 'Remove Password Protection'. An unlocked copy downloads immediately."
+    }
+  ]
+}

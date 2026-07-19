@@ -55,6 +55,8 @@ import { initPdf2PptOptions, hidePdf2PptOptions,
          getPdf2PptParams }                 from './pdf2pptUI.js';
 import { initPdf2MdOptions, hidePdf2MdOptions,
          getPdf2MdParams }                  from './pdf2mdUI.js';
+import { initUnlockOptions, hideUnlockOptions,
+         getUnlockParams }                  from './unlockUI.js';
 import { initCompareOptions, hideCompareOptions,
          getCompareParams }               from './compareUI.js';
 
@@ -392,6 +394,14 @@ registerTool('pdf2md', {
   hide:      hidePdf2MdOptions,
   getParams: getPdf2MdParams,
   validate:  p => p.loading ? 'Analysing PDF…' : null,
+});
+
+registerTool('unlock', {
+  runner:    'unlock',
+  init:      initUnlockOptions,
+  hide:      hideUnlockOptions,
+  getParams: getUnlockParams,
+  validate:  p => (p.needsPassword && !p.password) ? 'Enter the PDF password' : null,
 });
 
 registerTool('compare', {

@@ -31,7 +31,7 @@ const EN = {
   dupe_skip_one:   '{n} duplicate skipped',
   dupe_skip_many:  '{n} duplicates skipped',
   not_valid_pdf:   '⚠️ "{name}" is not a valid PDF file',
-  aes_help:        '🔒 {ver}-encrypted PDF — cannot be processed without the owner password. {restricted} To fix: 1) Open in Adobe Acrobat. 2) File → Properties → Security. 3) Set Security Method: No Security → Save. Then re-upload here.',
+  aes_help:        '🔒 {ver}-encrypted PDF — cannot be processed without the owner password. {restricted} Use Unlock PDF to remove the password (if you know it), then re-upload the unlocked file here.',
 
   // ── ui.js ──────────────────────────────────────────────────────
   btn_processing:   '⏳ Processing...',
