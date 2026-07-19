@@ -410,6 +410,8 @@ SPECIALTY_PAGES = [
     'for-lawyers',
     'for-students',
     'for-teachers',
+    # Research / benchmark project page (EN-only for now)
+    'atlas',
     # Static pages
     'privacy.html',
     'terms.html',
