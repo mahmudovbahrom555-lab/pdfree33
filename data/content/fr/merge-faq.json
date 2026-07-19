@@ -46,5 +46,29 @@
       "@type": "Answer",
       "text": "Oui. PDFree fonctionne dans les navigateurs mobiles — Chrome pour Android et Safari pour iOS. La sélection des fichiers utilise le sélecteur natif et vous pouvez réorganiser les fichiers à l'aide des boutons à l'écran."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Quelle est la différence entre fusionner, combiner et assembler des PDF ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Aucune — ce sont trois façons de dire la même chose. Que vous cherchiez à fusionner, combiner ou assembler plusieurs PDF en un seul fichier, PDFree fait exactement ça, sans installer de logiciel et sans envoyer vos fichiers sur un serveur."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Puis-je fusionner et compresser un PDF en même temps ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Pas en une seule étape, mais en deux clics : fusionnez d'abord vos fichiers, puis ouvrez le résultat dans l'outil Compresser PDF pour réduire sa taille avant de l'envoyer par e-mail."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Existe-t-il un PDF joiner gratuit sans inscription ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui, c'est exactement ce qu'est PDFree : un joiner de PDF gratuit, sans compte à créer et sans logiciel à installer. Glissez vos fichiers, réorganisez-les, puis téléchargez le PDF assemblé."
+    }
   }
 ]
