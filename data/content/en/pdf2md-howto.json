@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to Convert PDF to Markdown",
+  "description": "Extract text, headings and lists from a PDF into a clean .md file — 100% in your browser.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Open your PDF",
+      "text": "Click 'Choose file' or drag your PDF into the drop zone."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Let PDFree detect structure",
+      "text": "Headings, bullet lists, numbered lists and bold/italic text are detected automatically."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Download the .md file",
+      "text": "Click 'Convert to Markdown'. A plain-text Markdown file downloads immediately."
+    }
+  ]
+}

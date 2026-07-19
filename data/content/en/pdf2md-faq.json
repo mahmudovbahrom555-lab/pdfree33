@@ -1,0 +1,50 @@
+[
+  {
+    "@type": "Question",
+    "name": "Is my PDF uploaded anywhere to convert it?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. The text is read and structured into Markdown entirely in your browser using pdf.js. Your PDF never leaves your device."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Does it preserve tables and images?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No — this tool focuses on text, headings and lists. Tables and images are not converted to Markdown syntax. Use PDF to Excel for tables, or PDF to Word for a fully editable document with images."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "How are headings detected?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree compares each line's font size to the document's typical body-text size. Noticeably larger text becomes a Markdown heading (#, ##, or ### depending on how much larger)."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "What kinds of lists are recognized?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Bulleted lines (•, ◦, ▪ and similar markers) and numbered lines (\"1.\", \"2)\") are converted to Markdown list syntax. Letter or roman-numeral lists (a., iv.) are left as plain text, since those markers are too easy to confuse with real content."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is this a free PDF to Markdown converter with no sign up?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. PDFree is completely free — no sign up, no account, no installation. Open the tool, load your PDF, and download the .md file."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Will scanned PDFs work?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Only if the PDF already has a text layer. Scanned, image-only PDFs have no extractable text — run OCR PDF first, then convert the result."
+    }
+  }
+]

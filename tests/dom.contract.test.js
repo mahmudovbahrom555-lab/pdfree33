@@ -92,6 +92,7 @@ const INLINE_OPTIONS_DIVS = [
   'pdf2wordOptions',
   'pdf2excelOptions',
   'pdf2pptOptions',
+  'pdf2mdOptions',
   'compareOptions',
   // splitOptions doubles as extractOptions container
 ];

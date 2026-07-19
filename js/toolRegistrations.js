@@ -53,6 +53,8 @@ import { initPdf2ExcelOptions, hidePdf2ExcelOptions,
          renderP2eConfidence } from './pdf2excelUI.js';
 import { initPdf2PptOptions, hidePdf2PptOptions,
          getPdf2PptParams }                 from './pdf2pptUI.js';
+import { initPdf2MdOptions, hidePdf2MdOptions,
+         getPdf2MdParams }                  from './pdf2mdUI.js';
 import { initCompareOptions, hideCompareOptions,
          getCompareParams }               from './compareUI.js';
 
@@ -382,6 +384,14 @@ registerTool('pdf2ppt', {
     if (!p.pageCount) return null;
     return null;
   },
+});
+
+registerTool('pdf2md', {
+  runner:    'pdf2md',
+  init:      initPdf2MdOptions,
+  hide:      hidePdf2MdOptions,
+  getParams: getPdf2MdParams,
+  validate:  p => p.loading ? 'Analysing PDF…' : null,
 });
 
 registerTool('compare', {

@@ -2249,6 +2249,44 @@
       "keywords": {
         "en": "pdf to powerpoint, pdf to pptx, convert pdf to powerpoint, pdf to ppt, pdf to slides, pdf to presentation"
       }
+    },
+    {
+      "id": "pdf2md",
+      "icon": "📝",
+      "toolKey": "pdf2md",
+      "slugs": {
+        "en": "pdf-to-markdown"
+      },
+      "titles": {
+        "en": "Convert PDF to Markdown Without Uploading — Free & Private | PDFree"
+      },
+      "descs": {
+        "en": "Convert PDF text, headings and lists into Markdown — runs in your browser, no upload."
+      },
+      "navLabels": {
+        "en": "PDF to Markdown"
+      },
+      "cardNames": {
+        "en": "PDF to Markdown"
+      },
+      "cardDescs": {
+        "en": "Turn PDF text into clean .md files locally"
+      },
+      "breadcrumb": {
+        "en": "PDF→Markdown"
+      },
+      "metaDescs": {
+        "en": "Convert PDF to Markdown free — headings, bullet/numbered lists and bold/italic text become clean .md syntax. Runs in your browser, nothing uploaded. No account, no limits."
+      },
+      "ogTitles": {
+        "en": "Convert PDF to Markdown Free — Headings & Lists, No Upload"
+      },
+      "ogDescs": {
+        "en": "PDF to Markdown conversion that runs entirely in your browser. No upload, no server, no account. 100% private."
+      },
+      "keywords": {
+        "en": "pdf to markdown, pdf to md, convert pdf to markdown, pdf to md converter, extract pdf text as markdown"
+      }
     }
   ],
   "ui": {

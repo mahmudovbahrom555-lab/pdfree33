@@ -159,6 +159,7 @@ export async function doProcess(currentTool, extraParams = {}) {
     pdf2word: () => _runPdf2Word(filesSnapshot, extraParams),
     pdf2excel: () => _runPdf2Excel(filesSnapshot, extraParams),
     pdf2ppt:  () => _runPdf2Ppt(filesSnapshot, extraParams),
+    pdf2md:   () => _runPdf2Md(filesSnapshot, extraParams),
     worker:   () => _runWorkerTool(getWorkerTool(currentTool) ?? currentTool, filesSnapshot, extraParams),
   };
 
@@ -1267,6 +1268,300 @@ async function _runPdf2Ppt(filesSnapshot, { dpi = 150 } = {}) {
   document.dispatchEvent(new CustomEvent('pdfree:success', {
     detail: { tool: 'pdf2ppt', blob, desc, filename }
   }));
+}
+
+// ── PDF → Markdown ───────────────────────────────────────────────
+// Lightest of the four PDF→Office/text tools: Markdown is plain text, so
+// there is no binary container to build and no CDN library to load.
+// Reuses _p2wExtractText's line-grouping + font-size-ratio heading
+// classifier (2.2×/1.7×/1.3× of median font size → H1/H2/H3) and its
+// watermark/page-number suppression. The one genuinely new piece is
+// bullet/numbered list-line detection. Scoped to text, headings and
+// lists — tables/images fall through as plain text lines rather than
+// Markdown table syntax.
+
+async function _runPdf2Md(filesSnapshot) {
+  const file = filesSnapshot[0];
+  if (!_checkSize(file, 150)) { _abortUI(); return; }
+
+  if (!window.pdfjsLib) {
+    isProcessing = false; setFilesLocked(false); hideCancelBtn();
+    _handleError('pdf2md', 'PDF engine not ready — reopen the tool.', 'renderer_not_loaded');
+    return;
+  }
+
+  setProgress(8, 'Loading PDF…');
+
+  let pdfDoc;
+  try {
+    const rawBuf = file._decryptedBuffer
+      ? file._decryptedBuffer.slice(0)
+      : await preprocessPdfBuffer(await file.arrayBuffer());
+    pdfDoc = await window.pdfjsLib.getDocument({
+      data:              new Uint8Array(rawBuf),
+      useSystemFonts:    false,
+      verbosity:         0,
+      disableJavaScript: true,
+    }).promise;
+  } catch (err) {
+    isProcessing = false; setFilesLocked(false); hideCancelBtn();
+    _handleError('pdf2md', err.message); return;
+  }
+
+  let blocks;
+  try {
+    blocks = await _p2mdExtractText(pdfDoc);
+  } catch (err) {
+    isProcessing = false; setFilesLocked(false); hideCancelBtn();
+    _handleError('pdf2md', err.message); return;
+  }
+
+  if (!isProcessing) return;
+
+  setProgress(92, 'Building Markdown…');
+
+  const md       = _p2mdRender(blocks);
+  const blob     = new Blob([md], { type: 'text/markdown' });
+  const baseName = file.name.replace(/\.pdf$/i, '');
+  const filename = `${baseName}.md`;
+  const desc     = `${pdfDoc.numPages} page${pdfDoc.numPages !== 1 ? 's' : ''} · ${fmtSize(blob.size)}`;
+
+  isProcessing = false;
+  setFilesLocked(false);
+  hideCancelBtn();
+  setProgress(100, t('prog_done'));
+
+  document.dispatchEvent(new CustomEvent('pdfree:success', {
+    detail: { tool: 'pdf2md', blob, desc, filename }
+  }));
+}
+
+// Pass 1: identical line-grouping technique to _p2wExtractText (YTOL=6,
+// gap-based inline space insertion, RTL visual→logical reorder). Pass 2
+// classifies each line as list / heading / body and buffers consecutive
+// body lines into paragraphs using the same gap-based merge threshold
+// (CJK/RTL-aware) _p2wExtractText uses for docx paragraph breaks.
+async function _p2mdExtractText(pdfDoc) {
+  const YTOL = 6;
+  const pageData = [];
+  const allSizes = [];
+
+  for (let p = 1; p <= pdfDoc.numPages; p++) {
+    if (!isProcessing) break;
+    setProgress(10 + Math.round((p / pdfDoc.numPages) * 70),
+                `Reading page ${p}/${pdfDoc.numPages}…`);
+
+    const page    = await pdfDoc.getPage(p);
+    const content = await page.getTextContent({ normalizeWhitespace: false });
+    const items = content.items
+      .filter(item => 'str' in item && item.str.split(' ').join('').trim())
+      .map(item => {
+        const fontSize = (item.height > 0 ? item.height : Math.abs(item.transform[3])) || 10;
+        const style    = content.styles[item.fontName] || {};
+        const fam      = (style.fontFamily || '').toLowerCase();
+        const str = ((item.dir === 'rtl') ? _visualRTLToLogical(item.str) : item.str)
+          .split(' ').join('');
+        return {
+          str, x: item.transform[4], y: item.transform[5], width: item.width || 0,
+          fontSize, bold: /bold|heavy|black/.test(fam), italic: /italic|oblique/.test(fam),
+        };
+      });
+
+    const lines = [];
+    for (const item of [...items].sort((a, b) => b.y - a.y)) {
+      let merged = false;
+      for (const ln of lines) {
+        if (Math.abs(ln.y - item.y) <= YTOL) { ln.items.push(item); merged = true; break; }
+      }
+      if (!merged) lines.push({ y: item.y, items: [item] });
+    }
+    lines.forEach(ln => {
+      const txt    = ln.items.map(i => i.str).join('');
+      const rtlCnt = (txt.match(/[\u0590-\u05FF\u0600-\u06FF\u0750-\u077F\uFB1D-\uFB4F\uFB50-\uFDFF\uFE70-\uFEFF]/g) || []).length;
+      ln.rtl = rtlCnt > 0;
+      if (rtlCnt === 0) ln.items.sort((a, b) => a.x - b.x);
+    });
+
+    allSizes.push(...items.map(i => i.fontSize).filter(s => s > 0));
+    pageData.push({ lines });
+    page.cleanup?.();
+  }
+
+  const sorted = [...allSizes].sort((a, b) => a - b);
+  const median = sorted[Math.floor(sorted.length / 2)] || 10;
+
+  // Gap-based inline space insertion — same technique _flushPara() uses when
+  // building docx TextRuns: items on a line don't always carry their own
+  // spaces, so an X-gap larger than ~20% of the font size implies a word break.
+  const _lineText = ln => {
+    let text = '';
+    for (let idx = 0; idx < ln.items.length; idx++) {
+      const item = ln.items[idx];
+      const prev = ln.items[idx - 1];
+      let s = item.str;
+      if (prev && !ln.rtl && !prev.str.endsWith(' ') && !s.startsWith(' ')) {
+        const prevW = (prev.width > 0) ? prev.width : prev.fontSize * prev.str.length * 0.5;
+        const gap   = item.x - (prev.x + prevW);
+        if (gap > item.fontSize * 0.2) s = ' ' + s;
+      }
+      text += s;
+    }
+    return text;
+  };
+
+  // Repeated header/footer/page-number suppression — same technique as
+  // _p2wExtractText: short text on ≥⅔ of pages (min 3) is a watermark.
+  const _normWatermark = t =>
+    t.replace(/^(CamScanner)+$/i, 'CamScanner')
+     .replace(/^[Cc][Ss]\]?$/, 'CamScanner')
+     .replace(/^-$/, '');
+  const _repeatTextSet = new Set();
+  {
+    const freq = new Map();
+    for (const { lines } of pageData) {
+      const seenOnPage = new Set();
+      for (const ln of lines) {
+        const t = _normWatermark(_lineText(ln).trim());
+        if (t.length > 0 && t.length <= 60 && !seenOnPage.has(t)) {
+          seenOnPage.add(t);
+          freq.set(t, (freq.get(t) || 0) + 1);
+        }
+      }
+    }
+    const minPages = Math.max(3, Math.ceil(pageData.length * 2 / 3));
+    for (const [t, cnt] of freq) {
+      if (cnt >= minPages && !/^\d+$/.test(t)) _repeatTextSet.add(t);
+    }
+  }
+
+  // List-line detection — the one piece of logic not present anywhere else
+  // in the codebase. Bullet glyphs are unambiguous; numbered markers require
+  // a "N." / "N)" prefix followed by whitespace (excludes decimals like
+  // "3.14"). Letter/roman enumeration ("a.", "iv.") is deliberately excluded
+  // — too easy to confuse with initials or headers, and detectTables()'s own
+  // "prefer false negatives" philosophy applies here too.
+  const BULLET_RE   = /^[•◦▪‣●○]\s*/;
+  const NUMBERED_RE = /^\d{1,3}[.)]\s+/;
+
+  const blocks      = [];
+  const _paraBuffer = [];
+
+  const _flushPara = () => {
+    if (!_paraBuffer.length) return;
+    const linesCopy = _paraBuffer.slice();
+    _paraBuffer.length = 0;
+
+    if (linesCopy.length === 1) {
+      const t = _normWatermark(_lineText(linesCopy[0]).trim());
+      if (t === '' || _repeatTextSet.has(t)) return;
+    }
+
+    const text = linesCopy.map(_lineText).join(' ').replace(/\s+/g, ' ').trim();
+    if (!text) return;
+
+    const allItems = linesCopy.flatMap(ln => ln.items);
+    const bold   = allItems.every(i => i.bold);
+    const italic = allItems.every(i => i.italic);
+    blocks.push({ type: 'para', text, bold, italic });
+  };
+
+  for (const { lines } of pageData) {
+    for (let li = 0; li < lines.length; li++) {
+      const ln = lines[li];
+
+      // Skip embedded page numbers: bottom-region line that's a bare integer
+      // (same heuristic _p2wExtractText uses).
+      if (li >= lines.length - 3 && ln.items.length === 1) {
+        const t = ln.items[0].str.trim();
+        if (/^\d+$/.test(t)) continue;
+      }
+
+      const rawText  = _lineText(ln).trim();
+      const normText = _normWatermark(rawText);
+      if (!normText || _repeatTextSet.has(normText)) continue;
+
+      const bulletMatch   = BULLET_RE.test(rawText);
+      const numberedMatch = !bulletMatch && NUMBERED_RE.test(rawText);
+
+      if (bulletMatch || numberedMatch) {
+        _flushPara();
+        const text = bulletMatch ? `- ${rawText.replace(BULLET_RE, '').trim()}` : rawText;
+        if (text.replace(/^[-\d.)\s]+/, '').trim()) blocks.push({ type: 'list', text });
+        continue;
+      }
+
+      const maxFont = Math.max(...ln.items.map(i => i.fontSize));
+      const isHead  = maxFont >= median * 1.3 && rawText.replace(/\s+/g, '').length > 3;
+
+      if (isHead) {
+        _flushPara();
+        let level = 3;
+        if      (maxFont >= median * 2.2) level = 1;
+        else if (maxFont >= median * 1.7) level = 2;
+        blocks.push({ type: 'heading', level, text: rawText });
+        continue;
+      }
+
+      if (_paraBuffer.length > 0) {
+        const lastLn      = _paraBuffer[_paraBuffer.length - 1];
+        const lastMaxFont = Math.max(...lastLn.items.map(i => i.fontSize));
+        const gap         = lastLn.y - ln.y;
+        const lastText    = _lineText(lastLn);
+        const lastIsCjk    = _isCjk(lastText);
+        const lastIsRtl    = lastLn.rtl;
+        const lastEndsSent = /[。！？…]$/.test(lastText.trimEnd());
+        const mergeThreshold = (lastIsCjk && !lastEndsSent)
+          ? lastMaxFont * 3.5
+          : lastIsRtl
+          ? lastMaxFont * 1.3
+          : lastMaxFont * 2.0;
+        if (gap > mergeThreshold) _flushPara();
+      }
+      _paraBuffer.push(ln);
+    }
+    _flushPara();
+  }
+
+  if (!blocks.length) {
+    blocks.push({
+      type: 'para', bold: false, italic: false,
+      text: 'No extractable text was found in this PDF. It may be a scanned/image-only document — try OCR first, then convert the result.',
+    });
+  }
+
+  return blocks;
+}
+
+// Pure string builder: heading/list/para blocks → Markdown text. Whole-block
+// bold/italic wrapping only (no per-character run tracking) — headings are
+// left unwrapped since the '#' prefix already conveys emphasis; list items
+// are left unwrapped to keep list syntax unambiguous.
+function _p2mdRender(blocks) {
+  const wrap = (text, bold, italic) => {
+    if (bold && italic) return `***${text}***`;
+    if (bold)            return `**${text}**`;
+    if (italic)           return `*${text}*`;
+    return text;
+  };
+
+  const lines = [];
+  let prevType = null;
+
+  for (const b of blocks) {
+    if (b.type === 'heading') {
+      if (lines.length) lines.push('');
+      lines.push(`${'#'.repeat(b.level)} ${b.text}`);
+    } else if (b.type === 'list') {
+      if (prevType !== 'list' && lines.length) lines.push('');
+      lines.push(b.text);
+    } else {
+      if (lines.length) lines.push('');
+      lines.push(wrap(b.text, b.bold, b.italic));
+    }
+    prevType = b.type;
+  }
+
+  return lines.join('\n') + '\n';
 }
 
 // Converts a pdf.js RTL item string from visual (left-to-right screen) order to Unicode
