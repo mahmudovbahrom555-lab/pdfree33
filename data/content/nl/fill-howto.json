@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Een PDF-formulier invullen",
+  "description": "Vul AcroForm-velden in en voeg handtekeningen toe aan elke PDF — 100% in je browser.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Open je invulbare PDF",
+      "text": "Klik op 'Bestand kiezen' of sleep je PDF naar het uploadvak. Alle interactieve velden worden automatisch gedetecteerd en weergegeven."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Vul de velden in",
+      "text": "Typ in tekstvelden, vink selectievakjes aan, kies dropdown-opties. Voor handtekeningvelden: teken, typ of upload een afbeelding."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Download het ingevulde PDF",
+      "text": "Klik op 'PDF Invullen'. Je ingevulde document wordt direct naar je apparaat gedownload — geen server nodig."
+    }
+  ]
+}

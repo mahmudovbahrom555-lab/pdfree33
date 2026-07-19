@@ -1804,7 +1804,14 @@
         "fr": "remplir-pdf",
         "pt": "preencher-pdf",
         "id": "isi-formulir-pdf",
-        "vi": "dien-form-pdf"
+        "vi": "dien-form-pdf",
+        "ru": "zapolnit-pdf",
+        "ja": "pdf-kinyuu",
+        "it": "compila-pdf",
+        "ko": "pdf-jakseong",
+        "nl": "pdf-invullen",
+        "pl": "wypelnij-pdf",
+        "tr": "pdf-doldur"
       },
       "titles": {
         "en": "Fill and Sign PDF Free — Forms, Checkboxes, Signature, No Upload | PDFree",
@@ -1813,7 +1820,14 @@
         "fr": "Remplir et Signer PDF Gratuit — Formulaires, sans Envoi | PDFree",
         "pt": "Preencher e Assinar PDF Grátis — Formulários, sem Upload | PDFree",
         "id": "Isi Formulir PDF Online Gratis — Tanpa Upload, Tanpa Daftar | PDFree",
-        "vi": "Điền Form PDF Trực Tuyến Miễn Phí — Không Tải Lên, Không Đăng Ký | PDFree"
+        "vi": "Điền Form PDF Trực Tuyến Miễn Phí — Không Tải Lên, Không Đăng Ký | PDFree",
+        "ru": "Заполнить и подписать PDF бесплатно — без загрузки, без регистрации | PDFree",
+        "ja": "PDFに無料で記入・署名 — アップロード不要・登録不要 | PDFree",
+        "it": "Compila e Firma PDF Gratis — Senza Caricare File, Senza Registrazione | PDFree",
+        "ko": "PDF 양식 작성 및 서명 무료 — 업로드 없이, 회원가입 없이 | PDFree",
+        "nl": "PDF Invullen & Ondertekenen — Gratis, Zonder Uploaden | PDFree",
+        "pl": "Wypełnij i Podpisz PDF — Darmowy, Bez Przesyłania Plików | PDFree",
+        "tr": "PDF Doldur ve İmzala — Ücretsiz, Yükleme Yapmadan | PDFree"
       },
       "descs": {
         "en": "Fill AcroForm fields and add signatures to PDFs. Processed 100% in your browser — files never leave your device.",
@@ -1822,7 +1836,14 @@
         "fr": "Remplir des champs AcroForm et ajouter des signatures aux PDF. Traitement 100 % dans votre navigateur — les fichiers ne quittent jamais votre appareil.",
         "pt": "Preencher campos AcroForm e adicionar assinaturas em PDFs. Processado 100% no seu navegador — os arquivos nunca saem do seu dispositivo.",
         "id": "Isi kolom AcroForm dan tambahkan tanda tangan ke PDF. Diproses 100% di browser — file tidak pernah meninggalkan perangkat.",
-        "vi": "Điền các trường AcroForm và thêm chữ ký vào PDF. Xử lý 100% trong trình duyệt — file không bao giờ rời thiết bị."
+        "vi": "Điền các trường AcroForm và thêm chữ ký vào PDF. Xử lý 100% trong trình duyệt — file không bao giờ rời thiết bị.",
+        "ru": "Заполняйте поля AcroForm и добавляйте подпись в PDF. Обработка на 100% в браузере — файлы не покидают ваше устройство.",
+        "ja": "AcroFormフィールドに入力し、PDFに署名を追加します。処理はすべてブラウザ内で完結 — ファイルが端末から出ることはありません。",
+        "it": "Compila i campi AcroForm e aggiungi firme ai PDF. Elaborato al 100% nel browser — i file non lasciano mai il tuo dispositivo.",
+        "ko": "AcroForm 필드를 채우고 PDF에 서명을 추가하세요. 100% 브라우저에서 처리 — 파일이 기기를 벗어나지 않습니다.",
+        "nl": "Vul AcroForm-velden in en voeg handtekeningen toe aan PDF's. 100% verwerkt in de browser — bestanden verlaten je apparaat nooit.",
+        "pl": "Wypełniaj pola AcroForm i dodawaj podpisy w plikach PDF. Przetwarzane w 100% w przeglądarce — pliki nigdy nie opuszczają Twojego urządzenia.",
+        "tr": "AcroForm alanlarını doldurun ve PDF'lere imza ekleyin. %100 tarayıcıda işlenir — dosyalar cihazınızdan asla ayrılmaz."
       },
       "navLabels": {
         "en": "Fill PDF",
@@ -1831,7 +1852,14 @@
         "fr": "Remplir PDF",
         "pt": "Preencher PDF",
         "id": "Isi PDF",
-        "vi": "Điền PDF"
+        "vi": "Điền PDF",
+        "ru": "Заполнить PDF",
+        "ja": "PDFに記入",
+        "it": "Compila PDF",
+        "ko": "PDF 작성",
+        "nl": "PDF Invullen",
+        "pl": "Wypełnij PDF",
+        "tr": "PDF Doldur"
       },
       "cardNames": {
         "en": "Fill PDF Form",
@@ -1840,7 +1868,14 @@
         "fr": "Remplir PDF",
         "pt": "Preencher PDF",
         "id": "Isi Formulir PDF",
-        "vi": "Điền Form PDF"
+        "vi": "Điền Form PDF",
+        "ru": "Заполнить PDF",
+        "ja": "PDFに記入",
+        "it": "Compila PDF",
+        "ko": "PDF 양식 작성",
+        "nl": "PDF Invullen",
+        "pl": "Wypełnij PDF",
+        "tr": "PDF Doldur"
       },
       "cardDescs": {
         "en": "Fill form fields and sign PDFs locally",
@@ -1849,7 +1884,14 @@
         "fr": "Remplissez des champs de formulaire et signez des PDF localement",
         "pt": "Preencha campos e assine PDFs localmente",
         "id": "Isi kolom formulir dan tanda tangani PDF secara lokal",
-        "vi": "Điền trường biểu mẫu và ký PDF cục bộ"
+        "vi": "Điền trường biểu mẫu và ký PDF cục bộ",
+        "ru": "Заполняйте поля и подписывайте PDF локально",
+        "ja": "フォームに入力してPDFにローカルで署名",
+        "it": "Compila campi modulo e firma PDF localmente",
+        "ko": "양식을 채우고 PDF에 로컬에서 서명",
+        "nl": "Vul formuliervelden in en onderteken PDF's lokaal",
+        "pl": "Wypełniaj pola formularza i podpisuj PDF lokalnie",
+        "tr": "Form alanlarını doldurun ve PDF'leri yerel olarak imzalayın"
       },
       "breadcrumb": {
         "en": "Fill PDF Form",
@@ -1858,7 +1900,14 @@
         "fr": "Remplir PDF",
         "pt": "Preencher PDF",
         "id": "Isi Formulir PDF",
-        "vi": "Điền Form PDF"
+        "vi": "Điền Form PDF",
+        "ru": "Заполнить PDF",
+        "ja": "PDFに記入",
+        "it": "Compila PDF",
+        "ko": "PDF 양식 작성",
+        "nl": "PDF Invullen",
+        "pl": "Wypełnij PDF",
+        "tr": "PDF Doldur"
       },
       "metaDescs": {
         "en": "Fill and sign any PDF form free — type in text fields, tick checkboxes, add your signature, and download. Runs in your browser, nothing uploaded. Works offline.",
@@ -1867,7 +1916,14 @@
         "fr": "Remplissez et signez un formulaire PDF gratuitement — champs texte, cases à cocher, signature, puis téléchargez. Aucun envoi. Sans compte.",
         "pt": "Preencha e assine formulários PDF grátis — campos de texto, caixas, assinatura e download. Sem envio ao servidor. Sem conta.",
         "id": "Pengisi formulir PDF gratis — isi formulir PDF mana pun online tanpa daftar, tanpa upload. Kolom teks, kotak centang, menu dropdown, dan tanda tangan didukung. Unduh dalam hitungan detik.",
-        "vi": "Công cụ điền form PDF miễn phí — điền vào bất kỳ form PDF nào trực tuyến không cần đăng ký, không tải lên. Hỗ trợ trường văn bản, hộp kiểm, danh sách thả xuống và chữ ký. Tải về trong vài giây."
+        "vi": "Công cụ điền form PDF miễn phí — điền vào bất kỳ form PDF nào trực tuyến không cần đăng ký, không tải lên. Hỗ trợ trường văn bản, hộp kiểm, danh sách thả xuống và chữ ký. Tải về trong vài giây.",
+        "ru": "Заполните и подпишите любую PDF-форму бесплатно — текстовые поля, флажки, подпись, скачивание. Всё в браузере, ничего не загружается. Без регистрации.",
+        "ja": "PDFフォームに無料で記入・署名 — テキスト入力、チェックボックス、署名に対応してダウンロード。ブラウザ内処理、アップロードなし。登録不要。",
+        "it": "Compila e firma qualsiasi modulo PDF gratis — campi di testo, caselle di controllo, firma e download. Tutto nel browser, nessun upload. Senza registrazione.",
+        "ko": "모든 PDF 양식을 무료로 작성하고 서명하세요 — 텍스트 필드 입력, 체크박스 선택, 서명 추가 후 다운로드. 브라우저에서 처리, 업로드 없음. 회원가입 불필요.",
+        "nl": "Vul en onderteken elk PDF-formulier gratis — tekstvelden, selectievakjes, handtekening en download. Alles in de browser, niets geüpload. Zonder registratie.",
+        "pl": "Wypełnij i podpisz dowolny formularz PDF za darmo — pola tekstowe, checkboxy, podpis i pobieranie. Wszystko w przeglądarce, bez przesyłania. Bez rejestracji.",
+        "tr": "Herhangi bir PDF formunu ücretsiz doldurun ve imzalayın — metin alanları, onay kutuları, imza ve indirme. Her şey tarayıcıda, hiçbir şey yüklenmez. Kayıt olmadan."
       },
       "ogTitles": {
         "en": "Fill and Sign PDF Free — Text Fields, Checkboxes, Signature, No Upload",
@@ -1876,7 +1932,14 @@
         "fr": "Remplir et Signer PDF Gratuit — Formulaires, Cases, Signature, sans Envoi",
         "pt": "Preencher e Assinar PDF Grátis — Formulários, Caixas, Assinatura, sem Upload",
         "id": "Isi Formulir PDF Online Gratis — Tanpa Daftar, Isi atau Tanda Tangan di Browser",
-        "vi": "Điền Form PDF Trực Tuyến Miễn Phí — Không Đăng Ký, Điền hoặc Ký trong Trình Duyệt"
+        "vi": "Điền Form PDF Trực Tuyến Miễn Phí — Không Đăng Ký, Điền hoặc Ký trong Trình Duyệt",
+        "ru": "Заполнить и подписать PDF бесплатно — текстовые поля, флажки, подпись, без загрузки",
+        "ja": "PDFに無料で記入・署名 — テキストフィールド、チェックボックス、署名、アップロード不要",
+        "it": "Compila e Firma PDF Gratis — Campi di Testo, Caselle, Firma, Senza Upload",
+        "ko": "PDF 양식 작성 및 서명 무료 — 텍스트 필드, 체크박스, 서명, 업로드 없이",
+        "nl": "PDF Invullen & Ondertekenen Gratis — Tekstvelden, Selectievakjes, Handtekening, Zonder Uploaden",
+        "pl": "Wypełnij i Podpisz PDF za Darmo — Pola Tekstowe, Checkboxy, Podpis, Bez Przesyłania",
+        "tr": "PDF Doldur ve İmzala Ücretsiz — Metin Alanları, Onay Kutuları, İmza, Yükleme Yapmadan"
       },
       "ogDescs": {
         "en": "Fill out or fill in PDF forms and sign — runs entirely in your browser, nothing uploaded. Free, no sign up, no limits.",
@@ -1885,7 +1948,14 @@
         "fr": "Remplissez des champs PDF et ajoutez des signatures. 100 % local — les fichiers ne quittent jamais votre navigateur. Gratuit, sans compte.",
         "pt": "Preencha campos de formulário PDF e adicione assinaturas. 100% local — os arquivos nunca saem do seu navegador. Grátis, sem conta.",
         "id": "Isi atau lengkapi formulir PDF dan tanda tangan — berjalan sepenuhnya di browser, tidak ada yang diunggah. Gratis, tanpa daftar, tanpa batas.",
-        "vi": "Điền hoặc hoàn thành form PDF và ký — chạy hoàn toàn trong trình duyệt, không có gì được tải lên. Miễn phí, không đăng ký, không giới hạn."
+        "vi": "Điền hoặc hoàn thành form PDF và ký — chạy hoàn toàn trong trình duyệt, không có gì được tải lên. Miễn phí, không đăng ký, không giới hạn.",
+        "ru": "Заполняйте поля PDF-формы и добавляйте подпись. 100% локально — файлы не покидают браузер. Бесплатно, без регистрации.",
+        "ja": "PDFフォームのフィールドに入力し、署名を追加。100%ローカル処理 — ファイルはブラウザの外に出ません。無料、登録不要。",
+        "it": "Compila i campi del modulo PDF e aggiungi la firma. 100% locale — i file non lasciano mai il browser. Gratis, senza registrazione.",
+        "ko": "PDF 양식 필드를 채우고 서명을 추가하세요. 100% 로컬 처리 — 파일이 브라우저를 벗어나지 않습니다. 무료, 회원가입 불필요.",
+        "nl": "Vul PDF-formuliervelden in en voeg een handtekening toe. 100% lokaal — bestanden verlaten je browser nooit. Gratis, zonder registratie.",
+        "pl": "Wypełniaj pola formularza PDF i dodawaj podpis. 100% lokalnie — pliki nigdy nie opuszczają przeglądarki. Za darmo, bez rejestracji.",
+        "tr": "PDF form alanlarını doldurun ve imza ekleyin. %100 yerel — dosyalar tarayıcınızdan asla ayrılmaz. Ücretsiz, kayıt olmadan."
       },
       "keywords": {
         "en": "fill pdf form, fill pdf online free, fill out pdf, pdf form filler, complete pdf form online"

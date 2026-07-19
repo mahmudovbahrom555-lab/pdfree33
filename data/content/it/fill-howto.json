@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Come compilare un modulo PDF",
+  "description": "Compila i campi AcroForm e aggiungi firme a qualsiasi PDF — 100% nel browser.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Apri il tuo PDF compilabile",
+      "text": "Clicca su 'Scegli file' o trascina il tuo PDF nell'area di caricamento. Tutti i campi interattivi vengono rilevati e mostrati automaticamente."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Compila i campi",
+      "text": "Digita nei campi di testo, seleziona le caselle di controllo, scegli le opzioni dai menu a tendina. Per la firma: disegna, digita o carica un'immagine."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Scarica il PDF compilato",
+      "text": "Clicca su 'Compila PDF'. Il documento completato viene scaricato direttamente sul tuo dispositivo — nessun server coinvolto."
+    }
+  ]
+}

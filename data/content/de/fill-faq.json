@@ -12,7 +12,7 @@
     "name": "Welche PDF-Formularfelder werden unterstützt?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree unterstützt alle Standard-AcroForm-Feldtypen: Texteingaben, Checkboxen, Optionsfelder, Dropdown-Listen und Unterschriftenfelder. Unterschriftenfelder öffnen ein Zeichenfeld, auf dem du mit dem Finger oder der Maus unterschreiben kannst."
+      "text": "PDFree unterstützt alle Standard-AcroForm-Feldtypen: Texteingaben, Checkboxen, Optionsfelder, Dropdown-Listen und Unterschriftenfelder. Unterschriftenfelder öffnen ein Unterschriften-Pad, auf dem du mit dem Finger oder der Maus zeichnen, den Namen in Schreibschrift eintippen oder ein Bild deiner Unterschrift hochladen kannst."
     }
   },
   {
@@ -29,6 +29,14 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Eine gezeichnete Unterschrift in einem PDF ist eine elektronische Unterschrift. Ihre Rechtsgültigkeit hängt von der Rechtsordnung und dem Dokumenttyp ab. Für viele alltägliche Dokumente wie Einwilligungen, interne Freigaben oder Mietverträge ist sie ausreichend. Für regulierte Rechtskontexte empfiehlt sich ein zertifizierter E-Signatur-Dienst mit Prüfpfad."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Füllt das Tool wirklich meine echten Formularfelder aus, oder muss ich Text manuell platzieren?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree erkennt die echten AcroForm-Felder deines PDFs — Textfelder, Checkboxen, Optionsfelder, Dropdowns und Unterschriftenfelder — und stellt sie als echtes ausfüllbares Formular dar. Du zeichnest keine Textfelder per Hand und musst keine Position schätzen. Hat dein PDF keine eingebetteten Felder, sagt dir PDFree das direkt."
     }
   }
 ]

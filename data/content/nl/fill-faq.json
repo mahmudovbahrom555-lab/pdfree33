@@ -1,0 +1,58 @@
+[
+  {
+    "@type": "Question",
+    "name": "Wordt mijn PDF geüpload om hem in te vullen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. Het hele invulproces gebeurt in je browser met pdf-lib en pdf.js. Je document verlaat je apparaat nooit — PDFree heeft geen toegang tot je bestand of de gegevens die je invoert."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Welke soorten PDF-formuliervelden worden ondersteund?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree ondersteunt alle standaard AcroForm-veldtypen: tekstvelden, selectievakjes, keuzerondjes, dropdownlijsten en handtekeningvelden. Handtekeningvelden openen een tekenveld waar je met je vinger of muis kunt tekenen, je naam in een cursief lettertype kunt typen, of een afbeelding van je handtekening kunt uploaden."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik een gescand PDF-formulier invullen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Niet met deze tool — gescande PDF's zijn afbeeldingen zonder ingebedde interactieve velden. PDFree detecteert alleen AcroForm-velden. Voor gescande formulieren heb je eerst OCR-software nodig om de scan om te zetten naar een invulbaar PDF."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is de getekende handtekening juridisch geldig?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Een getekende handtekeningafbeelding is een elektronische handtekening. De juridische waarde hangt af van je rechtsgebied en het documenttype. Voor alledaagse documenten zoals toestemmingsformulieren, interne goedkeuringen of huurcontracten is dit meestal voldoende. Gebruik voor gereguleerde juridische contexten een gecertificeerde e-handtekeningdienst met audittrail."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is dit een gratis PDF-formulierinvuller zonder registratie?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. PDFree is een volledig gratis PDF-formulierinvuller — geen registratie, geen account, geen installatie. Open de tool, laad je PDF, vul de velden in en download het ingevulde formulier."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik een PDF-formulier gratis online invullen en ondertekenen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. PDFree ondersteunt invullen en ondertekenen in één stap. Vul tekstvelden en selectievakjes in, tik dan op een handtekeningveld om een tekenveld te openen. De handtekening wordt in het gedownloade PDF ingebed."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Vult deze tool echt de echte velden van mijn formulier in, of moet ik tekst handmatig plaatsen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree detecteert de echte AcroForm-velden van je PDF — tekstvelden, selectievakjes, keuzerondjes, dropdowns en handtekeningvelden — en toont ze als een echt invulbaar formulier, zonder tekstvakken met de hand te tekenen. Heeft je PDF geen ingebedde velden, dan laat PDFree dat direct weten."
+    }
+  }
+]

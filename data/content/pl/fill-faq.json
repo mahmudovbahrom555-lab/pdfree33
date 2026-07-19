@@ -1,0 +1,58 @@
+[
+  {
+    "@type": "Question",
+    "name": "Czy mój PDF jest przesyłany na serwer podczas wypełniania?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie. Cały proces wypełniania odbywa się w Twojej przeglądarce dzięki pdf-lib i pdf.js. Twój dokument nigdy nie opuszcza urządzenia — PDFree nie ma dostępu ani do pliku, ani do danych, które wpisujesz."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Jakie typy pól formularza PDF są obsługiwane?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree obsługuje wszystkie standardowe typy pól AcroForm: pola tekstowe, checkboxy, przyciski opcji, listy rozwijane i pola podpisu. Pola podpisu otwierają panel, w którym możesz narysować podpis palcem lub myszą, wpisać imię i nazwisko czcionką odręczną, lub przesłać obraz swojego podpisu."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy mogę wypełnić zeskanowany formularz PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie tym narzędziem — zeskanowane pliki PDF to obrazy bez osadzonych pól interaktywnych. PDFree wykrywa tylko pola AcroForm. Dla zeskanowanych formularzy potrzebne jest najpierw oprogramowanie OCR, aby zamienić skan na wypełnialny PDF."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy narysowany podpis jest ważny prawnie?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Obraz podpisu wstawiony do PDF to podpis elektroniczny. Jego moc prawna zależy od jurysdykcji i rodzaju dokumentu. W przypadku wielu codziennych dokumentów — formularzy zgody, wewnętrznych akceptacji, umów najmu — jest zwykle wystarczający. W regulowanych kontekstach prawnych skorzystaj z certyfikowanej usługi podpisu elektronicznego ze śladem audytowym."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy to darmowy program do wypełniania PDF bez rejestracji?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. PDFree to całkowicie darmowe narzędzie do wypełniania formularzy PDF — bez rejestracji, bez konta, bez instalacji. Otwórz narzędzie, wczytaj PDF, wypełnij pola i pobierz gotowy formularz."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy mogę wypełnić i podpisać formularz PDF online za darmo?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. PDFree obsługuje wypełnianie i podpisywanie w jednym kroku. Wypełnij pola tekstowe i checkboxy, a następnie dotknij dowolnego pola podpisu, aby otworzyć panel rysowania. Podpis zostaje osadzony w pobranym pliku PDF."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy to narzędzie naprawdę wypełnia rzeczywiste pola mojego formularza, czy muszę umieszczać tekst ręcznie?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree wykrywa rzeczywiste pola AcroForm w Twoim PDF i wyświetla je jako naprawdę wypełnialny formularz, bez ręcznego rysowania pól tekstowych. Jeśli Twój PDF nie ma osadzonych pól, PDFree poinformuje Cię o tym wprost."
+    }
+  }
+]

@@ -20,7 +20,7 @@
     "name": "Có thể thêm chữ ký vào form không?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Có. Vẽ chữ ký trực tiếp vào trường chữ ký bằng chuột hoặc màn hình cảm ứng trên điện thoại."
+      "text": "Có. Với trường chữ ký, bạn có thể vẽ bằng chuột hoặc màn hình cảm ứng, gõ tên bằng phông chữ viết tay, hoặc tải lên hình ảnh chữ ký của bạn."
     }
   },
   {
@@ -45,6 +45,14 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Có. Tải về PDF đã điền, rồi mở lại trong PDFree bất cứ lúc nào để thay đổi giá trị các trường trước khi lưu lại."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Công cụ này có thực sự điền vào các trường thực của form, hay tôi phải đặt văn bản thủ công?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree phát hiện các trường AcroForm thực của PDF — trường văn bản, hộp kiểm, nút radio, danh sách thả xuống và trường chữ ký — và hiển thị chúng như một form thực sự có thể điền được, không vẽ ô văn bản thủ công. Nếu PDF của bạn không có trường form, PDFree sẽ báo trực tiếp."
     }
   }
 ]

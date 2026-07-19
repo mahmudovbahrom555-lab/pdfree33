@@ -1,0 +1,58 @@
+[
+  {
+    "@type": "Question",
+    "name": "PDF'im doldurulurken bir sunucuya yükleniyor mu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. Tüm doldurma işlemi pdf-lib ve pdf.js kullanılarak tarayıcınızda gerçekleşir. Belgeniz cihazınızdan asla ayrılmaz — PDFree'nin dosyanıza veya girdiğiniz verilere erişimi yoktur."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Hangi PDF form alanı türleri destekleniyor?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree tüm standart AcroForm alan türlerini destekler: metin girişleri, onay kutuları, radyo düğmeleri, açılır listeler ve imza alanları. İmza alanları, parmağınızla veya fareyle çizebileceğiniz, adınızı el yazısı bir yazı tipiyle yazabileceğiniz veya imzanızın bir görselini yükleyebileceğiniz bir imza paneli açar."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Taranmış bir PDF formunu doldurabilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Bu araçla değil — taranmış PDF'ler gömülü etkileşimli alanlar içermeyen görsellerdir. PDFree yalnızca AcroForm alanlarını algılar. Taranmış formlar için önce taramayı doldurulabilir bir PDF'ye dönüştürecek OCR yazılımına ihtiyacınız olur."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Çizilen imza yasal olarak geçerli mi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Bir PDF'ye eklenen imza görseli, elektronik bir imzadır. Yasal geçerliliği yargı bölgenize ve belge türüne bağlıdır. Onay formları, dahili onaylar veya kira sözleşmeleri gibi günlük belgeler için genellikle yeterlidir. Düzenlemeye tabi hukuki bağlamlarda, denetim izi bulunan sertifikalı bir e-imza hizmeti kullanın."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bu, kayıt gerektirmeyen ücretsiz bir PDF form doldurucu mu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. PDFree tamamen ücretsiz bir PDF form doldurucudur — kayıt yok, hesap yok, kurulum yok. Aracı açın, PDF'nizi yükleyin, alanları doldurun ve tamamlanan formu indirin."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bir PDF formunu çevrimiçi olarak ücretsiz doldurup imzalayabilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. PDFree, doldurma ve imzalamayı tek adımda destekler. Metin alanlarını ve onay kutularını doldurun, ardından bir çizim paneli açmak için herhangi bir imza alanına dokunun. İmza, indirilen PDF'ye gömülür."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bu araç gerçekten formumun gerçek alanlarını mı dolduruyor, yoksa metni elle mi yerleştirmem gerekiyor?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree, PDF'nizin gerçek AcroForm alanlarını algılar ve bunları gerçekten doldurulabilir bir form olarak gösterir; metin kutularını elle çizmez. PDF'nizde gömülü alan yoksa, PDFree bunu doğrudan size bildirir."
+    }
+  }
+]

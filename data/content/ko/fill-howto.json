@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDF 양식 작성 방법",
+  "description": "AcroForm 필드를 채우고 어떤 PDF에도 서명을 추가하세요 — 100% 브라우저에서 처리.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "작성 가능한 PDF 열기",
+      "text": "'파일 선택'을 클릭하거나 PDF를 드롭 영역으로 드래그하세요. 모든 상호작용 필드가 자동으로 감지되어 표시됩니다."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "필드 채우기",
+      "text": "텍스트 필드에 입력하고, 체크박스를 선택하고, 드롭다운에서 옵션을 고르세요. 서명은 그리기, 입력, 이미지 업로드 중 선택할 수 있습니다."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "작성된 PDF 다운로드",
+      "text": "'PDF 작성'을 클릭하세요. 완성된 문서가 서버 없이 바로 기기로 다운로드됩니다."
+    }
+  ]
+}

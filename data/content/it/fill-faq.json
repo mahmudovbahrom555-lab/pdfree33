@@ -1,0 +1,58 @@
+[
+  {
+    "@type": "Question",
+    "name": "Il mio PDF viene caricato su un server per compilarlo?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. L'intero processo di compilazione avviene nel tuo browser con pdf-lib e pdf.js. Il tuo documento non lascia mai il tuo dispositivo — PDFree non ha accesso al tuo file né ai dati che inserisci."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Quali tipi di campi modulo PDF sono supportati?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree supporta tutti i tipi di campo AcroForm standard: campi di testo, caselle di controllo, pulsanti di opzione, menu a tendina e campi firma. I campi firma aprono un pad dove puoi disegnare con il dito o il mouse, digitare il tuo nome in un font corsivo, oppure caricare un'immagine della tua firma."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso compilare un modulo PDF scansionato?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non con questo strumento — i PDF scansionati sono immagini senza campi interattivi incorporati. PDFree rileva solo campi AcroForm. Per i moduli scansionati serve prima un software OCR per convertire la scansione in un PDF compilabile."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "La firma disegnata ha validità legale?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Un'immagine di firma inserita in un PDF è una firma elettronica. La sua validità legale dipende dalla giurisdizione e dal tipo di documento. Per molti documenti quotidiani — moduli di consenso, approvazioni interne, contratti d'affitto — è generalmente sufficiente. Per contesti legali regolamentati, usa un servizio di firma elettronica certificata con audit trail."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "È un compilatore di PDF gratuito senza registrazione?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. PDFree è un compilatore di moduli PDF completamente gratuito — senza registrazione, senza account, senza installazione. Apri lo strumento, carica il tuo PDF, compila i campi e scarica il modulo completato."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso compilare e firmare un modulo PDF online gratuitamente?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. PDFree supporta compilazione e firma in un solo passaggio. Compila campi di testo e caselle di controllo, poi tocca qualsiasi campo firma per aprire un pad di disegno. La firma viene incorporata nel PDF scaricato."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Questo strumento compila davvero i campi reali del mio modulo, o devo posizionare il testo manualmente?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree rileva i campi AcroForm reali del tuo PDF e li visualizza come un modulo realmente compilabile, senza disegnare campi di testo a mano. Se il tuo PDF non ha campi incorporati, PDFree te lo dice direttamente."
+    }
+  }
+]

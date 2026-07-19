@@ -20,7 +20,7 @@
     "name": "Bisakah menambahkan tanda tangan ke formulir?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ya. Gambar tanda tangan langsung di kolom tanda tangan menggunakan mouse atau layar sentuh di ponsel."
+      "text": "Ya. Untuk kolom tanda tangan, Anda bisa menggambar dengan mouse atau layar sentuh, mengetik nama dengan font tulisan tangan, atau mengunggah gambar tanda tangan Anda."
     }
   },
   {
@@ -45,6 +45,14 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Ya. Unduh PDF yang sudah diisi, lalu buka kembali di PDFree kapan saja untuk mengubah nilai kolom sebelum menyimpan ulang."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah alat ini benar-benar mengisi kolom asli formulir saya, atau saya harus menempatkan teks secara manual?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree mendeteksi kolom AcroForm asli PDF Anda — kolom teks, kotak centang, tombol radio, dropdown, dan kolom tanda tangan — dan menampilkannya sebagai formulir yang benar-benar bisa diisi, tanpa menggambar kotak teks secara manual. Jika PDF Anda tidak memiliki kolom formulir, PDFree akan memberi tahu Anda secara langsung."
     }
   }
 ]

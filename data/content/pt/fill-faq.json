@@ -12,7 +12,7 @@
     "name": "Quais tipos de campos de formulário PDF são suportados?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "O PDFree suporta todos os tipos de campo AcroForm padrão: campos de texto, caixas de seleção, botões de opção, listas suspensas e campos de assinatura. Os campos de assinatura abrem um bloco de desenho para você assinar com o dedo ou mouse."
+      "text": "O PDFree suporta todos os tipos de campo AcroForm padrão: campos de texto, caixas de seleção, botões de opção, listas suspensas e campos de assinatura. Os campos de assinatura abrem um painel onde você pode desenhar com o dedo ou mouse, digitar seu nome em uma fonte cursiva, ou enviar uma imagem da sua assinatura."
     }
   },
   {
@@ -29,6 +29,14 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Uma imagem de assinatura inserida em um PDF é uma assinatura eletrônica. Sua validade jurídica depende da sua jurisdição e do tipo de documento. Para muitos documentos do cotidiano — formulários de consentimento, aprovações internas, contratos de locação — ela é geralmente aceita. Para contextos jurídicos regulamentados, considere um serviço de assinatura eletrônica certificada com trilha de auditoria."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "A ferramenta realmente preenche os campos reais do meu formulário, ou tenho que posicionar o texto manualmente?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "O PDFree detecta os campos AcroForm reais do seu PDF — caixas de texto, caixas de seleção, botões de opção, listas suspensas e campos de assinatura — e os renderiza como um formulário realmente preenchível, sem desenhar caixas de texto à mão. Se o seu PDF não tiver campos incorporados, o PDFree informa isso diretamente."
     }
   }
 ]

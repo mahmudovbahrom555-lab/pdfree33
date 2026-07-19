@@ -12,7 +12,7 @@
     "name": "Quels types de champs de formulaire PDF sont pris en charge ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree prend en charge tous les types de champs AcroForm standard : zones de texte, cases à cocher, boutons radio, listes déroulantes et champs de signature. Les champs de signature ouvrent un bloc de dessin pour tracer votre signature avec le doigt ou la souris."
+      "text": "PDFree prend en charge tous les types de champs AcroForm standard : zones de texte, cases à cocher, boutons radio, listes déroulantes et champs de signature. Les champs de signature ouvrent un bloc-signature où vous pouvez tracer avec le doigt ou la souris, taper votre nom dans une police manuscrite, ou importer une image de votre signature."
     }
   },
   {
@@ -29,6 +29,14 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Une image de signature insérée dans un PDF constitue une signature électronique. Sa valeur juridique dépend de votre juridiction et du type de document. Pour de nombreux documents courants — formulaires de consentement, validations internes, baux — elle est généralement acceptée. Pour les contextes juridiques réglementés, privilégiez un service de signature électronique certifié avec piste d'audit."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "L'outil remplit-il vraiment les champs réels de mon formulaire, ou dois-je placer le texte manuellement ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree détecte les champs AcroForm réels de votre PDF — zones de texte, cases à cocher, boutons radio, listes déroulantes et champs de signature — et les affiche comme un véritable formulaire remplissable, sans dessiner de zones de texte à la main. Si votre PDF n'a pas de champs intégrés, PDFree vous le signale directement."
     }
   }
 ]

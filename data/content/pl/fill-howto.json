@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Jak wypełnić formularz PDF",
+  "description": "Wypełnij pola AcroForm i dodaj podpis do dowolnego PDF — 100% w przeglądarce.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Otwórz wypełnialny PDF",
+      "text": "Kliknij 'Wybierz plik' lub przeciągnij PDF do obszaru wgrywania. Wszystkie interaktywne pola są wykrywane i wyświetlane automatycznie."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Wypełnij pola",
+      "text": "Wpisuj tekst w polach, zaznaczaj checkboxy, wybieraj opcje z list rozwijanych. Podpis: narysuj, wpisz lub prześlij obraz."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Pobierz wypełniony PDF",
+      "text": "Kliknij 'Wypełnij PDF'. Gotowy dokument jest pobierany bezpośrednio na Twoje urządzenie — bez udziału serwera."
+    }
+  ]
+}

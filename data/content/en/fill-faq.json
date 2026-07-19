@@ -12,7 +12,7 @@
     "name": "What types of PDF form fields are supported?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree supports all standard AcroForm field types: text inputs, checkboxes, radio buttons, dropdown lists, and signature fields. Signature fields open a drawing pad so you can sign with your finger or mouse."
+      "text": "PDFree supports all standard AcroForm field types: text inputs, checkboxes, radio buttons, dropdown lists, and signature fields. Signature fields open a signing pad where you can draw with your finger or mouse, type your name in a cursive font, or upload an image of your signature."
     }
   },
   {
@@ -45,6 +45,14 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Yes. PDFree supports both filling and signing in one step. Fill in text fields and checkboxes, then tap any signature field to open a drawing pad. Sign with your finger on mobile or your mouse on desktop. The signature is embedded in the downloaded PDF."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Does this actually fill in my form's real fields, or do I have to place text manually?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree detects your PDF's real AcroForm fields — text boxes, checkboxes, radio buttons, dropdowns, and signature fields — and renders them as an actual fillable form. You are not drawing text boxes by hand or guessing at positioning. If your PDF has no embedded fields, PDFree tells you directly instead of pretending to detect fields that aren't there."
     }
   }
 ]
