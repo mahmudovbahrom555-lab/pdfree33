@@ -1,0 +1,50 @@
+[
+  {
+    "@type": "Question",
+    "name": "Is my PDF uploaded anywhere to convert it?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Every slide is rendered and packaged in your browser using pdf.js and PptxGenJS. Your PDF never leaves your device."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I edit the text on the slides after converting?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Not directly — each slide is an image of the original PDF page, which preserves the exact layout but means text isn't a separate, editable PowerPoint object. This is the same approach virtually all PDF-to-PowerPoint tools use. If you need editable text, use PDF to Word instead."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "What size will my slides be?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "The slide size matches your PDF's page dimensions and aspect ratio exactly — no letterboxing or stretched margins."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Which quality setting should I choose?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Balanced (150 dpi) is a good default for most decks. Choose High quality for dense text or fine print; choose Compact if you're emailing the file and want a smaller size."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is this a free PDF to PowerPoint converter with no sign up?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. PDFree is completely free — no sign up, no account, no installation. Open the tool, load your PDF, and download the .pptx file."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Will this work with a large PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes, though very large page counts automatically use a lower image quality to keep your browser from running out of memory. For huge decks, Compact quality is the most reliable choice."
+    }
+  }
+]

@@ -13,7 +13,7 @@ import { selectedFiles, setFilesLocked } from './files.js';
 import { trackToolError } from './analytics.js';
 import { TOOLS, MAX_COMPRESS_MB } from './config.js';
 import { getRunner, getWorkerTool } from './toolRegistry.js';
-import { loadJSZip, loadDocx, loadExcelJs } from './lazyLibs.js';
+import { loadJSZip, loadDocx, loadExcelJs, loadPptxGenJs } from './lazyLibs.js';
 import { preprocessPdfBuffer } from './decryptPdf.js';
 import { detectTables } from './pdf2wordTables.js';
 import { detectTableGrids } from './pdf2wordBorders.js';
@@ -158,6 +158,7 @@ export async function doProcess(currentTool, extraParams = {}) {
     pdf2jpg:  () => _runPdf2Jpg(filesSnapshot, extraParams),
     pdf2word: () => _runPdf2Word(filesSnapshot, extraParams),
     pdf2excel: () => _runPdf2Excel(filesSnapshot, extraParams),
+    pdf2ppt:  () => _runPdf2Ppt(filesSnapshot, extraParams),
     worker:   () => _runWorkerTool(getWorkerTool(currentTool) ?? currentTool, filesSnapshot, extraParams),
   };
 
@@ -1145,6 +1146,127 @@ function _p2eCellValue(str) {
   }
 
   return { value: str };
+}
+
+// ── PDF → PowerPoint ─────────────────────────────────────────────
+// Simplest of the three PDF→Office tools: no text extraction or table
+// detection, since reconstructing arbitrary PDF layouts as *editable*
+// PowerPoint text boxes is unreliable — the industry-standard approach
+// (Adobe included) is one full-bleed image per slide. Reuses
+// _p2wDetectFormat() (the same adaptive PNG/JPEG heuristic PDF to Word's
+// image fallback uses) and the same large-deck quality tiering
+// _p2wRenderImages() already applies for memory safety.
+
+async function _runPdf2Ppt(filesSnapshot, { dpi = 150 } = {}) {
+  const file = filesSnapshot[0];
+  if (!_checkSize(file, 150)) { _abortUI(); return; }
+
+  setProgress(5, 'Loading libraries…');
+
+  try {
+    await loadPptxGenJs();
+  } catch {
+    isProcessing = false; setFilesLocked(false); hideCancelBtn();
+    _handleError('pdf2ppt', 'PowerPoint library unavailable — check your internet connection.');
+    return;
+  }
+
+  if (!window.pdfjsLib) {
+    isProcessing = false; setFilesLocked(false); hideCancelBtn();
+    _handleError('pdf2ppt', 'PDF engine not ready — reopen the tool.', 'renderer_not_loaded');
+    return;
+  }
+
+  setProgress(8, 'Loading PDF…');
+
+  let pdfDoc;
+  try {
+    const rawBuf = file._decryptedBuffer
+      ? file._decryptedBuffer.slice(0)
+      : await preprocessPdfBuffer(await file.arrayBuffer());
+    pdfDoc = await window.pdfjsLib.getDocument({
+      data:              new Uint8Array(rawBuf),
+      useSystemFonts:    false,
+      verbosity:         0,
+      disableJavaScript: true,
+    }).promise;
+  } catch (err) {
+    isProcessing = false; setFilesLocked(false); hideCancelBtn();
+    _handleError('pdf2ppt', err.message); return;
+  }
+
+  const pageCount = pdfDoc.numPages;
+
+  // Slide size is fixed for the whole deck (.pptx format constraint) — derive
+  // it from page 1 so the common case (uniform page size) renders at exact
+  // source aspect ratio with no letterboxing.
+  const firstPage = await pdfDoc.getPage(1);
+  const vp1       = firstPage.getViewport({ scale: 1 });
+  firstPage.cleanup?.();
+  const layoutW = vp1.width  / 72;  // PDF points → inches
+  const layoutH = vp1.height / 72;
+
+  const pptx = new window.PptxGenJS();
+  pptx.defineLayout({ name: 'PDF_PAGE', width: layoutW, height: layoutH });
+  pptx.layout = 'PDF_PAGE';
+
+  // Same quality tiering _p2wRenderImages() uses — lower JPEG quality on
+  // large decks keeps peak RAM in check (pptxgenjs holds every slide's
+  // image in memory until write()).
+  const quality = pageCount > 300 ? 0.60 : pageCount > 150 ? 0.72 : 0.85;
+  const scale   = dpi / 72;
+
+  let canvas = document.createElement('canvas');
+  const ctx  = canvas.getContext('2d', { willReadFrequently: true });
+
+  try {
+    let frameStart = performance.now();
+
+    for (let p = 1; p <= pageCount; p++) {
+      if (!isProcessing) break;
+      setProgress(10 + Math.round((p / pageCount) * 80), `Rendering slide ${p}/${pageCount}…`);
+
+      const page     = await pdfDoc.getPage(p);
+      const viewport = page.getViewport({ scale });
+      canvas.width   = Math.round(viewport.width);
+      canvas.height  = Math.round(viewport.height);
+      await page.render({ canvasContext: ctx, viewport }).promise;
+      page.cleanup?.();
+
+      const fmt     = _p2wDetectFormat(canvas);
+      const dataUrl = canvas.toDataURL(`image/${fmt}`, fmt === 'jpeg' ? quality : undefined);
+
+      const slide = pptx.addSlide();
+      slide.addImage({ data: dataUrl, x: 0, y: 0, w: layoutW, h: layoutH });
+
+      const now = performance.now();
+      if (now - frameStart >= _FRAME_BUDGET_MS) {
+        await _yieldToUI();
+        frameStart = performance.now();
+      }
+    }
+  } finally {
+    canvas.width = 0; canvas.height = 0;
+    canvas.remove(); canvas = null;
+  }
+
+  if (!isProcessing) return;
+
+  setProgress(92, 'Building presentation…');
+
+  const blob = await pptx.write({ outputType: 'blob' });
+  const baseName = file.name.replace(/\.pdf$/i, '');
+  const filename = `${baseName}.pptx`;
+  const desc = `${pageCount} slide${pageCount !== 1 ? 's' : ''} · ${fmtSize(blob.size)}`;
+
+  isProcessing = false;
+  setFilesLocked(false);
+  hideCancelBtn();
+  setProgress(100, t('prog_done'));
+
+  document.dispatchEvent(new CustomEvent('pdfree:success', {
+    detail: { tool: 'pdf2ppt', blob, desc, filename }
+  }));
 }
 
 // Converts a pdf.js RTL item string from visual (left-to-right screen) order to Unicode

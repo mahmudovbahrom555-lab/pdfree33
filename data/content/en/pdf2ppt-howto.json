@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to Convert PDF to PowerPoint",
+  "description": "Turn each page of a PDF into a slide in a real .pptx file — 100% in your browser.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Open your PDF",
+      "text": "Click 'Choose file' or drag your PDF into the drop zone."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Choose a slide quality",
+      "text": "Pick Compact, Balanced, or High quality depending on your needs."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Download the .pptx file",
+      "text": "Click 'Convert to PowerPoint'. Every page becomes one slide in the original order."
+    }
+  ]
+}

@@ -2211,6 +2211,44 @@
       "keywords": {
         "en": "pdf to excel, pdf to xlsx, convert pdf to excel, extract table from pdf, pdf table extractor, pdf to spreadsheet"
       }
+    },
+    {
+      "id": "pdf2ppt",
+      "icon": "📽️",
+      "toolKey": "pdf2ppt",
+      "slugs": {
+        "en": "pdf-to-powerpoint"
+      },
+      "titles": {
+        "en": "Convert PDF to PowerPoint Without Uploading — Free & Private | PDFree"
+      },
+      "descs": {
+        "en": "Convert PDF pages into PowerPoint slides — runs in your browser, no upload."
+      },
+      "navLabels": {
+        "en": "PDF to PowerPoint"
+      },
+      "cardNames": {
+        "en": "PDF to PowerPoint"
+      },
+      "cardDescs": {
+        "en": "Turn PDF pages into a slide deck locally"
+      },
+      "breadcrumb": {
+        "en": "PDF→PowerPoint"
+      },
+      "metaDescs": {
+        "en": "Convert PDF to PowerPoint free — each page becomes a slide in a real .pptx file. Runs in your browser, nothing uploaded. No account, no limits."
+      },
+      "ogTitles": {
+        "en": "Convert PDF to PowerPoint Free — One Slide Per Page, No Upload"
+      },
+      "ogDescs": {
+        "en": "PDF to PowerPoint conversion that runs entirely in your browser. No upload, no server, no account. 100% private."
+      },
+      "keywords": {
+        "en": "pdf to powerpoint, pdf to pptx, convert pdf to powerpoint, pdf to ppt, pdf to slides, pdf to presentation"
+      }
     }
   ],
   "ui": {

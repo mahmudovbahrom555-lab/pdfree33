@@ -96,3 +96,40 @@ async function _loadExcelJsWithFallback() {
   }
   throw new Error('Excel library unavailable — check your internet connection');
 }
+
+// Same two-URL fallback pattern as loadDocx()/loadExcelJs() — see comment above
+// loadDocx(). Unlike those two, pptxgenjs's browser build does NOT bundle its
+// own JSZip — it expects window.JSZip to already exist, so loadJSZip() (already
+// used elsewhere for merge/split zip output) runs first as a prerequisite.
+export function loadPptxGenJs() {
+  if (window.PptxGenJS) return Promise.resolve();
+  if (_promises['pptxGenJs']) return _promises['pptxGenJs'];
+
+  _promises['pptxGenJs'] = _loadPptxGenJsWithFallback().catch(err => {
+    delete _promises['pptxGenJs'];
+    throw err;
+  });
+  return _promises['pptxGenJs'];
+}
+
+async function _loadPptxGenJsWithFallback() {
+  await loadJSZip();
+  const CDNS = [
+    'https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.min.js',
+    'https://unpkg.com/pptxgenjs@3.12.0/dist/pptxgen.min.js',
+  ];
+  for (const url of CDNS) {
+    try {
+      await new Promise((resolve, reject) => {
+        if (document.querySelector(`script[src="${url}"]`)) { resolve(); return; }
+        const s = document.createElement('script');
+        s.src     = url;
+        s.onload  = resolve;
+        s.onerror = () => reject(new Error(`CDN unavailable: ${url}`));
+        document.head.appendChild(s);
+      });
+      if (window.PptxGenJS) return;
+    } catch (_) { /* try next */ }
+  }
+  throw new Error('PowerPoint library unavailable — check your internet connection');
+}

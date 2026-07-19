@@ -140,7 +140,7 @@ _NAV_TOOL_IDS = [
     'merge', 'split', 'compress', 'jpg2pdf', 'pdf2jpg',
     'watermark', 'pagenum', 'metadata', 'extract',
     # draw-on-pdf inserted here (EN-only, no locale slugs)
-    'rotate', 'protect', 'pdf2word', 'pdf2excel',
+    'rotate', 'protect', 'pdf2word', 'pdf2excel', 'pdf2ppt',
 ]
 
 def _build_nav_items(lang, all_tools):
