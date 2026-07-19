@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src  'self' 'wasm-unsafe-eval' blob:
+                https://cdnjs.cloudflare.com https://esm.sh
+                https://plausible.io https://static.cloudflareinsights.com;
+    style-src   'self' 'unsafe-inline';
+    font-src    'self';
+    img-src     'self' data: blob: https:;
+    connect-src 'self' https://cdnjs.cloudflare.com https://*.workers.dev
+                https://plausible.io https://cloudflareinsights.com;
+    worker-src  'self' blob:;
+    object-src  'none';
+  ">
+
+  <title>Atlas — Measuring Real Editability of PDF-to-Word Conversion | PDFree</title>
+  <meta name="description" content="Atlas is PDFree's open benchmark for PDF-to-Word conversion quality — scoring whether a converted document is actually editable, not just visually similar to the original.">
+
+  <meta property="og:title"       content="Atlas — Measuring Real Editability of PDF-to-Word Conversion | PDFree">
+  <meta property="og:description" content="An open benchmark that scores whether a converted document can actually be edited — real tables, real paragraphs, correct reading order — not just whether it looks right.">
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://pdfree.io/atlas/">
+  <meta property="og:site_name"   content="PDFree">
+  <meta property="og:image"       content="https://pdfree.io/icons/og-image.jpg">
+  <meta name="twitter:card"       content="summary_large_image">
+  <meta name="twitter:title"      content="Atlas — Measuring Real Editability of PDF-to-Word Conversion">
+  <meta name="twitter:description" content="An open benchmark scoring whether converted documents are actually editable — not just visually similar.">
+  <meta name="twitter:image"      content="https://pdfree.io/icons/og-image.jpg">
+
+  <link rel="canonical" href="https://pdfree.io/atlas/">
+  <link rel="alternate" hreflang="en"        href="https://pdfree.io/atlas/">
+  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/atlas/">
+
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <link rel="apple-touch-icon" href="../icons/icon-192.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
+  <link rel="icon" type="image/svg+xml" href="../icons/favicon.svg">
+
+  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+  <link rel="preconnect" href="https://plausible.io">
+  <link rel="preload" href="../fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../css/fonts.css">
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/animations.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Atlas — PDF-to-Word Editability Benchmark",
+    "description": "Atlas is PDFree's open benchmark for scoring whether a converted PDF-to-Word document is actually editable, not just visually similar to the source.",
+    "url": "https://pdfree.io/atlas/",
+    "provider": { "@type": "Organization", "name": "PDFree", "url": "https://pdfree.io" }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is Atlas?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Atlas is an open benchmark PDFree is building to measure PDF-to-Word conversion quality in terms of real editability — can you actually select, retype, and reformat the content — rather than just how close the page looks to the original." }
+      },
+      {
+        "@type": "Question",
+        "name": "Is Atlas's score (the ERI) already proven accurate?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Not yet, and we say so plainly. The scoring engine is built and tested against a hand-built document corpus, but independent human validation — real people rating real documents without knowing the score in advance — is in progress and not complete. We are not publishing comparative claims about any converter until that validation finishes." }
+      },
+      {
+        "@type": "Question",
+        "name": "How can I help?",
+        "acceptedAnswer": { "@type": "Answer", "text": "We're looking for a small number of volunteers to rate a handful of anonymized converted documents by hand — opening them in Word, LibreOffice, or Google Docs and judging how much rework each needs. It takes about 15-20 minutes. Use the button on this page to volunteer." }
+      }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "PDFree", "item": "https://pdfree.io/" },
+      { "@type": "ListItem", "position": 2, "name": "Atlas", "item": "https://pdfree.io/atlas/" }
+    ]
+  }
+  </script>
+  <script src="../js/theme.js"></script>
+</head>
+<body data-tool="atlas">
+
+  <nav>
+    <a href="../" class="logo" id="logo" aria-label="Go to homepage" style="text-decoration:none">
+      <span class="logo-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></span>
+      <span class="logo-text">PDF<span>ree</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="../merge-pdf/"     class="nav-link">Merge</a>
+      <a href="../split-pdf/"     class="nav-link">Split</a>
+      <a href="../compress-pdf/"  class="nav-link">Compress</a>
+      <a href="../pdf-to-word/"   class="nav-link">PDF→Word</a>
+      <a href="../redact-pdf/"    class="nav-link">Redact</a>
+      <a href="../protect-pdf/"   class="nav-link">Protect</a>
+    </div>
+    <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode"></button>
+  </nav>
+
+  <section style="background:var(--green-light);border-bottom:1px solid rgba(45,122,79,0.15);padding:32px 24px 28px;text-align:center;">
+    <div style="max-width:720px;margin:0 auto;">
+      <p style="font-size:13px;font-weight:600;color:var(--green);text-transform:uppercase;letter-spacing:.5px;margin:0 0 10px;">🔬 Research project</p>
+      <h1 style="font-size:clamp(22px,3.5vw,34px);font-weight:700;line-height:1.2;color:var(--text);margin:0 0 10px;">Atlas — Measuring Real Editability, Not Just Looks</h1>
+      <p style="font-size:15px;color:var(--text2);margin:0;">A PDF-to-Word converter can produce a page that looks perfect and is still unusable — text trapped in boxes, tables that aren't tables, paragraphs in the wrong order. Atlas is our attempt to score that honestly.</p>
+    </div>
+  </section>
+
+  <div style="max-width:800px;margin:0 auto;padding:48px 24px;">
+
+    <!-- What is Atlas -->
+    <h2 style="font-size:22px;color:var(--text);margin:0 0 8px;font-weight:700;">What Atlas actually measures</h2>
+    <p style="font-size:14px;color:var(--text2);margin:0 0 20px;">Most conversion quality checks are visual: does the exported page look like the source PDF? Atlas asks a different question: <strong style="color:var(--text);">if you had to actually edit this document, how much work would it take?</strong></p>
+    <p style="font-size:14px;color:var(--text2);margin:0 0 20px;">The underlying metric — the Editing Readiness Index (ERI) — inspects the actual document structure (a .docx is a zip of XML) and checks things a rendered screenshot can't show you:</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 48px;font-size:13px;">
+      <div style="padding:10px 12px;background:var(--bg);border-radius:8px;color:var(--text2);">Is the text in a real, editable paragraph — or trapped in a fixed text box?</div>
+      <div style="padding:10px 12px;background:var(--bg);border-radius:8px;color:var(--text2);">Is a table a real table you can resize — or a flattened image?</div>
+      <div style="padding:10px 12px;background:var(--bg);border-radius:8px;color:var(--text2);">Does reading order top-to-bottom actually make sense?</div>
+      <div style="padding:10px 12px;background:var(--bg);border-radius:8px;color:var(--text2);">Is any text visibly garbled, reversed, or duplicated?</div>
+    </div>
+
+    <!-- Honesty section -->
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;margin:0 0 48px;">
+      <h2 style="font-size:18px;color:var(--text);margin:0 0 12px;font-weight:700;">Where this stands today</h2>
+      <p style="font-size:14px;color:var(--text2);margin:0 0 12px;">The scoring engine exists and is tested against a hand-built corpus of documents with known, injected defects. What it is <strong style="color:var(--text);">not</strong> yet: independently validated against real human judgment.</p>
+      <p style="font-size:14px;color:var(--text2);margin:0;">We're currently running that validation — recruiting people to rate anonymized converted documents by hand, without knowing the score in advance, and comparing their ratings to Atlas's. Until that's done, we're not publishing converter comparisons or accuracy claims. This page will be updated with real results, not projected ones.</p>
+    </div>
+
+    <!-- Help us test -->
+    <div style="background:var(--green-light);border:1px solid rgba(45,122,79,0.2);border-radius:12px;padding:28px;text-align:center;">
+      <p style="font-size:16px;color:var(--text);font-weight:600;margin:0 0 8px;">🙋 Help us validate Atlas</p>
+      <p style="font-size:14px;color:var(--text2);margin:0 0 20px;max-width:520px;margin-left:auto;margin-right:auto;">
+        We're looking for a few volunteers to rate a small set of anonymized documents by hand — open each one in Word, LibreOffice, or Google Docs, do a short edit, and rate how much rework it needs. About 15-20 minutes total. Click below, tell us your email and what language you're comfortable working in, and we'll send you the sample set and instructions.
+      </p>
+      <button type="button" class="fb-modal__send" data-open-feedback data-fb-type="other" style="background:var(--green);color:#fff;padding:12px 24px;border:none;border-radius:8px;font-weight:600;font-size:14px;cursor:pointer;">I'd like to help test</button>
+    </div>
+
+  </div>
+
+  <footer style="text-align:center;padding:24px;border-top:1px solid var(--border);font-size:13px;color:var(--text3);">
+    PDFree · <strong>100% free, no limits</strong> · No upload, no account<br>
+    <span style="color:var(--green)">🔒</span> Your files never leave your device &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> Free forever<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;">
+      <a href="/privacy.html" style="color:var(--green)">Privacy</a> &nbsp;·&nbsp;
+      <a href="/terms.html"   style="color:var(--green)">Terms</a> &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green)">GitHub</a>
+    </span>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script type="module" src="../js/feedback.js"></script>
+</body>
+</html>
