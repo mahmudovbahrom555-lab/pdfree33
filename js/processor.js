@@ -978,8 +978,33 @@ async function _runPdf2Excel(filesSnapshot) {
 
   tables.forEach((tbl, i) => {
     const sheet = workbook.addWorksheet(`Table ${i + 1}`.slice(0, 31));
-    tbl.rows.forEach(row => sheet.addRow(row));
-    sheet.getRow(1).font = { bold: true };
+
+    tbl.rows.forEach((row, ri) => {
+      if (ri === 0) { sheet.addRow(row); return; } // header stays plain text
+      const parsed    = row.map(_p2eCellValue);
+      const excelRow  = sheet.addRow(parsed.map(p => p.value));
+      parsed.forEach((p, ci) => {
+        if (p.numFmt) excelRow.getCell(ci + 1).numFmt = p.numFmt;
+      });
+    });
+
+    // Only assert "this looks like a header" visually when the detector
+    // itself was confident — CONF_THRESHOLD in pdf2wordTables.js already
+    // gates emission at 0.72, so 0.8 marks the genuinely high-confidence tier
+    // (same cutoff pdf2word's own document-level score uses for "high").
+    if (tbl.confidence >= 0.8) {
+      sheet.getRow(1).font = { bold: true };
+    }
+
+    const colCount = tbl.rows[0]?.length || 0;
+    if (tbl.rows.length > 1 && colCount > 0) {
+      sheet.views = [{ state: 'frozen', ySplit: 1 }];
+      sheet.autoFilter = {
+        from: { row: 1, column: 1 },
+        to:   { row: tbl.rows.length, column: colCount },
+      };
+    }
+
     sheet.columns.forEach(col => {
       let maxLen = 10;
       col.eachCell({ includeEmpty: true }, cell => {
@@ -1088,6 +1113,38 @@ function _p2eConfidence({ tables, totalPages, pagesWithNoText }) {
   const score        = Math.round(avgConf * 100 * pageCoverage);
   const level        = score >= 80 ? 'high' : score >= 55 ? 'medium' : 'low';
   return { score, level, tableCount: tables.length, pagesWithNoText, totalPages };
+}
+
+// Parses a table cell's text into a typed Excel value where it's unambiguous
+// to do so, so sums/charts/sorting work without the user retyping numbers.
+// Conservative by design (same philosophy as detectTables() itself — prefer
+// leaving a cell as text over silently mis-parsing it):
+//   • numbers: optional currency symbol / thousands separators, then a plain
+//     integer or decimal — "$1,234.56" and "1234.56" both become a Number
+//   • percentages: "12.5%" → 0.125 with a percent display format
+//   • dates: ISO (YYYY-MM-DD) only. Slash/dot formats (01/02/2026) are
+//     deliberately left as text — JS's Date parser assumes MM/DD/YYYY
+//     regardless of the source locale, so guessing would risk silently
+//     swapping day and month rather than just failing to format.
+function _p2eCellValue(str) {
+  const s = (str ?? '').trim();
+  if (!s) return { value: str };
+
+  if (/^-?\d{1,3}(,\d{3})*(\.\d+)?%$/.test(s) || /^-?\d+(\.\d+)?%$/.test(s)) {
+    return { value: parseFloat(s.replace(/,/g, '').replace('%', '')) / 100, numFmt: '0.00%' };
+  }
+
+  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) {
+    const d = new Date(s);
+    if (!isNaN(d.getTime())) return { value: d, numFmt: 'yyyy-mm-dd' };
+  }
+
+  const numCandidate = s.replace(/^[$€£¥]\s?/, '').replace(/,/g, '');
+  if (/^-?\d+(\.\d+)?$/.test(numCandidate)) {
+    return { value: parseFloat(numCandidate) };
+  }
+
+  return { value: str };
 }
 
 // Converts a pdf.js RTL item string from visual (left-to-right screen) order to Unicode
