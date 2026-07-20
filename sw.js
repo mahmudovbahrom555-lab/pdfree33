@@ -61,6 +61,7 @@ const STATIC_ASSETS = [
   '/js/protectUI.js',
   '/js/rotateUI.js',
   '/js/redactUI.js',
+  '/js/redact-worker.js',
   '/js/behavioralSignals.js',
   '/js/feedback.js',
   '/js/pageNumUtils.js',

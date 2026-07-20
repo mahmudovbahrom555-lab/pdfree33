@@ -251,17 +251,18 @@ registerTool('meta', {
 });
 
 registerTool('redact', {
-  runner:     'worker',
+  // True redact (/redact-pdf/ route) uses canvas-flatten via dedicated worker.
+  // Visual cover (/annotate-pdf/, /cover-pdf/, /highlight-pdf/) keeps worker runner.
+  runner:     window.location.pathname.includes('/redact-pdf/') ? 'redact-true' : 'worker',
   workerTool: 'redact',
   init:       initRedactOptions,
   hide:       hideRedactOptions,
-  getParams:  getRedactParams,  // now returns { rects, rectsByPage, applyAll, fillColor, opacity }
+  getParams:  () => ({ ...getRedactParams(), removeMetadata: !!document.getElementById('rdctRemoveMeta')?.checked }),
   validate:   p => {
-    // Count total rects across all pages (supports both applyAll and per-page mode)
     const total = p.applyAll
       ? (p.rects?.length || 0)
       : Object.values(p.rectsByPage || {}).reduce((sum, arr) => sum + arr.length, 0);
-    return total === 0 ? 'Draw at least one area to cover' : null;
+    return total === 0 ? 'Draw at least one area to redact' : null;
   },
 });
 

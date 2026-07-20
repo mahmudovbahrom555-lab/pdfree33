@@ -14,6 +14,7 @@ import { trackToolError } from './analytics.js';
 import { TOOLS, MAX_COMPRESS_MB } from './config.js';
 import { getRunner, getWorkerTool } from './toolRegistry.js';
 import { loadJSZip, loadDocx, loadExcelJs, loadPptxGenJs } from './lazyLibs.js';
+import { loadPdfJs } from './pdf2jpgUI.js';
 import { preprocessPdfBuffer, decryptWithPassword } from './decryptPdf.js';
 import { detectTables } from './pdf2wordTables.js';
 import { detectTableGrids } from './pdf2wordBorders.js';
@@ -160,8 +161,9 @@ export async function doProcess(currentTool, extraParams = {}) {
     pdf2excel: () => _runPdf2Excel(filesSnapshot, extraParams),
     pdf2ppt:  () => _runPdf2Ppt(filesSnapshot, extraParams),
     pdf2md:   () => _runPdf2Md(filesSnapshot, extraParams),
-    unlock:   () => _runUnlock(filesSnapshot, extraParams),
-    worker:   () => _runWorkerTool(getWorkerTool(currentTool) ?? currentTool, filesSnapshot, extraParams),
+    unlock:       () => _runUnlock(filesSnapshot, extraParams),
+    worker:       () => _runWorkerTool(getWorkerTool(currentTool) ?? currentTool, filesSnapshot, extraParams),
+    'redact-true': () => _runRedactTrue(filesSnapshot, extraParams),
   };
 
   try {
@@ -2714,4 +2716,147 @@ function _handleError(tool, message, errorType = null) {
     8000,
     () => openFeedback('error', { tool, message: friendly }),
   );
+}
+
+// ── True PDF Redaction ─────────────────────────────────────────
+// Renders redacted pages to canvas (text physically removed) and
+// assembles final PDF in a dedicated worker. Non-redacted pages
+// are copied from the original, preserving text layer and quality.
+
+async function _runRedactTrue(filesSnapshot, params) {
+  const file = filesSnapshot[0];
+  if (!file) { _abortUI(); return; }
+
+  const { rectsByPage = {}, applyAll = false, fillColor = [0,0,0], opacity = 1, removeMetadata = false } = params;
+
+  setProgress(8, 'Reading PDF…');
+  const pdfBytes = await (file._decryptedBuffer ? file._decryptedBuffer.slice(0) : file.arrayBuffer());
+
+  // ── Build set of page indices that have redactions (0-based) ──
+  let redactedPageSet = new Set();
+  if (applyAll) {
+    const rects = params.rects || [];
+    if (rects.length > 0) {
+      // Will apply to all pages — we find out count from PDF.js
+      redactedPageSet = 'all';
+    }
+  } else {
+    for (const k in rectsByPage) {
+      if (rectsByPage[k]?.length > 0) redactedPageSet.add(parseInt(k, 10) - 1); // 0-based
+    }
+  }
+
+  if (redactedPageSet !== 'all' && redactedPageSet.size === 0) {
+    showToast('Draw at least one area to redact');
+    _abortUI();
+    return;
+  }
+
+  setProgress(15, 'Loading PDF renderer…');
+  await loadPdfJs();
+
+  const pdfDoc = await window.pdfjsLib.getDocument({
+    data: new Uint8Array(pdfBytes.slice(0)),
+    disableWorker: true,
+  }).promise;
+
+  const pageCount = pdfDoc.numPages;
+  if (redactedPageSet === 'all') {
+    redactedPageSet = new Set(Array.from({ length: pageCount }, (_, i) => i));
+  }
+
+  // ── Render each redacted page to canvas ───────────────────────
+  setProgress(20, 'Rendering redacted pages…');
+
+  const redactedImages = {};
+  const RENDER_SCALE = 2; // 2× for good print quality
+
+  const [fr, fg, fb] = fillColor;
+  const fillHex = `rgba(${Math.round(fr*255)},${Math.round(fg*255)},${Math.round(fb*255)},${opacity})`;
+
+  for (const pageIdx of redactedPageSet) {
+    const pageNum = pageIdx + 1; // pdf.js is 1-based
+    if (pageNum < 1 || pageNum > pageCount) continue;
+
+    const progressVal = 20 + Math.round((pageIdx / pageCount) * 35);
+    setProgress(progressVal, `Rendering page ${pageNum} of ${pageCount}…`);
+
+    const page = await pdfDoc.getPage(pageNum);
+    const vp0  = page.getViewport({ scale: 1 });
+    const vp   = page.getViewport({ scale: RENDER_SCALE });
+
+    const canvas = typeof OffscreenCanvas !== 'undefined'
+      ? new OffscreenCanvas(vp.width, vp.height)  // eslint-disable-line compat/compat
+      : Object.assign(document.createElement('canvas'), { width: vp.width, height: vp.height });
+    const ctx = canvas.getContext('2d');
+    await page.render({ canvasContext: ctx, viewport: vp }).promise;
+
+    // Draw redaction rectangles — coordinates are in PDF points (scale=1)
+    const rects = applyAll ? (params.rects || []) : (rectsByPage[pageNum] || []);
+    ctx.fillStyle = fillHex;
+    for (const r of rects) {
+      if (r.type && r.type !== 'rect') continue; // only rect shapes are true redaction
+      // PDF coords: origin bottom-left; canvas origin top-left
+      const cx = r.x * RENDER_SCALE;
+      const cy = (vp0.height - r.y - r.h) * RENDER_SCALE;
+      const cw = r.w * RENDER_SCALE;
+      const ch = r.h * RENDER_SCALE;
+      ctx.fillRect(cx, cy, cw, ch);
+    }
+
+    const blob = canvas.convertToBlob
+      ? await canvas.convertToBlob({ type: 'image/png' })
+      : await new Promise(r => canvas.toBlob(r, 'image/png'));
+    const dataUrl = await _blobToDataUrl(blob);
+    redactedImages[pageIdx] = { dataUrl, width: vp.width, height: vp.height };
+  }
+
+  // ── Launch redact-worker.js ────────────────────────────────────
+  setProgress(60, 'Permanently removing content…');
+
+  await new Promise((resolve, reject) => {
+    const worker = new Worker(new URL('./redact-worker.js', import.meta.url));
+
+    worker.onmessage = (ev) => {
+      const data = ev.data;
+      if (data.type === 'progress') {
+        setProgress(data.value, data.label);
+      } else if (data.type === 'done') {
+        worker.terminate();
+        isProcessing = false;
+        setFilesLocked(false);
+        hideCancelBtn();
+        setProgress(100, t('prog_done'));
+
+        const blob = new Blob([data.result], { type: 'application/pdf' });
+        const baseName = file.name.replace(/\.pdf$/i, '');
+        const redactedCount = Object.keys(redactedImages).length;
+        const desc = `${redactedCount} page${redactedCount !== 1 ? 's' : ''} permanently redacted${removeMetadata ? ' · metadata removed' : ''}`;
+
+        document.dispatchEvent(new CustomEvent('pdfree:success', {
+          detail: { tool: 'redact', blob, desc, filename: `${baseName}_redacted.pdf` }
+        }));
+        resolve();
+      } else if (data.type === 'error') {
+        worker.terminate();
+        reject(new Error(data.message));
+      }
+    };
+
+    worker.onerror = (ev) => {
+      worker.terminate();
+      reject(new Error(ev.message || 'redact-worker crashed'));
+    };
+
+    worker.postMessage({ pdfBytes: pdfBytes.slice(0), redactedImages, removeMetadata });
+  });
+}
+
+function _blobToDataUrl(blob) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload  = () => resolve(reader.result);
+    reader.onerror = () => reject(new Error('FileReader failed'));
+    reader.readAsDataURL(blob);
+  });
 }

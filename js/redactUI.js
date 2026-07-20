@@ -275,14 +275,19 @@ export function hideRedactOptions() {
 function _render(container, fileName, preset) {
   const tone = preset.tone;
 
-  const bannerText = tone === 'privacy'
-    ? '🛡️ <strong>Cover Area</strong> — draws an opaque rectangle over the selected region. ' +
-      'The content underneath is hidden visually but <em>not cryptographically deleted</em>. ' +
-      'For legal redaction of sensitive data use dedicated redaction software.'
-    : '✏️ <strong>Annotate PDF</strong> — draw colored boxes, highlights, or covers on any page. ' +
-      'Everything runs locally in your browser — your PDF never leaves your device.';
+  const isTrueRedact = window.location.pathname.includes('/redact-pdf/');
 
-  const bannerType = tone === 'privacy' ? 'warn' : 'info';
+  const bannerText = isTrueRedact
+    ? '🔒 <strong>True PDF Redaction</strong> — permanently removes content from the document. ' +
+      'Redacted pages are converted to images so underlying text cannot be recovered. Files never leave your device.'
+    : tone === 'privacy'
+      ? '🛡️ <strong>Cover Area</strong> — draws an opaque rectangle over the selected region. ' +
+        'The content underneath is hidden visually but <em>not cryptographically deleted</em>. ' +
+        'For legal redaction use the <a href="/redact-pdf/" style="color:var(--green)">Redact PDF</a> tool.'
+      : '✏️ <strong>Annotate PDF</strong> — draw colored boxes, highlights, or covers on any page. ' +
+        'Everything runs locally in your browser — your PDF never leaves your device.';
+
+  const bannerType = isTrueRedact ? 'info' : (tone === 'privacy' ? 'warn' : 'info');
 
   // Build color swatches dynamically (4 colors)
   const swatchesHtml = Object.entries(COLORS).map(([key, c]) => {
@@ -415,10 +420,48 @@ function _render(container, fileName, preset) {
           </label>
         </div>` : ''}
 
+        ${isTrueRedact ? `
+        <!-- Text search redaction -->
+        <div class="rdct-tools" id="rdctSearchWrap">
+          <div class="rdct-tool-label">Search &amp; Redact</div>
+          <div style="display:flex;gap:6px;">
+            <input type="text" id="rdctSearchInput" placeholder="Type text to find…"
+              style="flex:1;padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:var(--surface2);color:var(--text);font-size:13px;">
+            <button type="button" id="rdctSearchBtn"
+              style="padding:6px 10px;background:var(--green);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600;white-space:nowrap;">Find</button>
+          </div>
+          <div id="rdctSearchHint" style="font-size:11px;color:var(--text3);margin-top:4px;"></div>
+        </div>
+
+        <!-- View toggle + Metadata -->
+        <div class="rdct-opts" style="display:flex;flex-direction:column;gap:8px;">
+          <label class="compress-preserve" style="cursor:pointer;">
+            <input type="checkbox" id="rdctHideRedactions">
+            <span class="compress-preserve__box" aria-hidden="true"></span>
+            <div class="compress-preserve__text">
+              <strong>👁 Hide redaction boxes</strong>
+              <small>Temporarily show document without black boxes to review context</small>
+            </div>
+          </label>
+          <label class="compress-preserve" style="cursor:pointer;">
+            <input type="checkbox" id="rdctRemoveMeta" checked>
+            <span class="compress-preserve__box" aria-hidden="true"></span>
+            <div class="compress-preserve__text">
+              <strong>Remove metadata</strong>
+              <small>Strip Author, Creator, keywords and other hidden fields from PDF</small>
+            </div>
+          </label>
+        </div>` : ''}
+
       </div>
     </div>
 
-    ${infoBanner('🔒 Processed entirely in your browser · Files never leave your device', 'info')}
+    ${infoBanner(
+      isTrueRedact
+        ? '🔒 Processed entirely in your browser · Files never leave your device · Content permanently removed'
+        : '🔒 Processed entirely in your browser · Files never leave your device',
+      'info'
+    )}
   `;
 
   _bindEvents(container);
@@ -1170,6 +1213,20 @@ function _bindEvents(container) {
       return;
     }
   });
+
+  // ── True-redact-only controls ──────────────────────────────────
+  const searchBtn = id('rdctSearchBtn');
+  if (searchBtn) {
+    searchBtn.addEventListener('click', _runTextSearch);
+    id('rdctSearchInput')?.addEventListener('keydown', e => {
+      if (e.key === 'Enter') _runTextSearch();
+    });
+  }
+
+  id('rdctHideRedactions')?.addEventListener('change', e => {
+    const overlay = id('rdctOverlay');
+    if (overlay) overlay.style.opacity = e.target.checked ? '0' : '1';
+  });
 }
 
 async function _goToPage(pageNum) {
@@ -1182,13 +1239,70 @@ async function _goToPage(pageNum) {
 
 // ── Merge button state ─────────────────────────────────────────
 
+// ── Text Search Redaction (Phase 2) ───────────────────────────
+
+async function _runTextSearch() {
+  const input = id('rdctSearchInput');
+  const hint  = id('rdctSearchHint');
+  if (!input || !_pdfDoc) return;
+
+  const query = input.value.trim();
+  if (!query) { if (hint) hint.textContent = 'Enter text to search.'; return; }
+
+  if (hint) hint.textContent = 'Searching…';
+
+  let matchCount = 0;
+
+  for (let p = 1; p <= _pageCount; p++) {
+    const page    = await _pdfDoc.getPage(p);
+    const content = await page.getTextContent();
+
+    const items  = content.items;
+    const qLower = query.toLowerCase();
+
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      const str  = item.str;
+      const strLower = str.toLowerCase();
+      let pos = strLower.indexOf(qLower);
+      while (pos !== -1) {
+        // item.transform: [scaleX, skewX, skewY, scaleY, translateX, translateY]
+        // Width/height from item.width and item.height in PDF user units
+        const [,, , scaleY, tx, ty] = item.transform;
+        const charW = item.width / (str.length || 1);
+        const x = tx + pos * charW;
+        const w = query.length * charW;
+        const h = Math.abs(scaleY);
+        const y = ty - h * 0.1; // small padding
+
+        const rect = { type: 'rect', x, y, w: Math.max(w, 4), h: Math.max(h, 4) };
+        const existing = _rectsByPage[p] || [];
+        if (existing.length < MAX_RECTS_PER_PAGE * 4) { // higher limit for search
+          existing.push(rect);
+          _rectsByPage[p] = existing;
+          matchCount++;
+        }
+
+        pos = strLower.indexOf(qLower, pos + 1);
+      }
+    }
+  }
+
+  _applyAll = false;
+  if (hint) hint.textContent = matchCount > 0 ? `Found ${matchCount} match${matchCount !== 1 ? 'es' : ''} — boxes added to pages` : 'No matches found.';
+  if (_currentPage) { _redrawOverlay(); _updateRectsList(); }
+  _updateMergeBtn();
+  if (matchCount > 0) _saveHistory();
+}
+
 function _updateMergeBtn() {
   const btn = id('mergeBtn');
   if (!btn) return;
 
+  const isTrueRedact = window.location.pathname.includes('/redact-pdf/');
   const preset = _detectPreset();
-  const verb = preset.tone === 'privacy' ? 'Cover' : 'Apply';
-  const icon = preset.tone === 'privacy' ? '🛡️' : '✏️';
+  const verb = isTrueRedact ? 'Redact' : (preset.tone === 'privacy' ? 'Cover' : 'Apply');
+  const icon = isTrueRedact ? '🔒' : (preset.tone === 'privacy' ? '🛡️' : '✏️');
 
   const total = _totalRectCount();
 
