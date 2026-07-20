@@ -2179,34 +2179,74 @@
       "icon": "📊",
       "toolKey": "pdf2excel",
       "slugs": {
-        "en": "pdf-to-excel"
+        "en": "pdf-to-excel",
+        "de": "pdf-zu-excel",
+        "es": "pdf-a-excel",
+        "fr": "pdf-en-excel",
+        "pt": "pdf-para-excel"
       },
       "titles": {
-        "en": "Convert PDF to Excel Without Uploading — Free & Private | PDFree"
+        "en": "Convert PDF to Excel Without Uploading — Free & Private | PDFree",
+        "de": "PDF zu Excel Konvertieren — Kostenlos & Privat | PDFree",
+        "es": "Convertir PDF a Excel Sin Subir Archivos — Gratis | PDFree",
+        "fr": "Convertir PDF en Excel — Gratuit, Sans Envoi | PDFree",
+        "pt": "Converter PDF para Excel Grátis — Sem Upload | PDFree"
       },
       "descs": {
-        "en": "Extract tables from PDF into an .xlsx spreadsheet — runs in your browser, no upload."
+        "en": "Extract tables from PDF into an .xlsx spreadsheet — runs in your browser, no upload.",
+        "de": "Tabellen aus PDF in eine .xlsx-Datei extrahieren — läuft im Browser, kein Upload.",
+        "es": "Extrae tablas de PDF a una hoja de cálculo .xlsx — funciona en tu navegador, sin subida.",
+        "fr": "Extrayez les tableaux d'un PDF vers une feuille .xlsx — s'exécute dans votre navigateur, aucun envoi.",
+        "pt": "Extraia tabelas do PDF para uma planilha .xlsx — funciona no seu navegador, sem upload."
       },
       "navLabels": {
-        "en": "PDF to Excel"
+        "en": "PDF to Excel",
+        "de": "PDF zu Excel",
+        "es": "PDF a Excel",
+        "fr": "PDF en Excel",
+        "pt": "PDF para Excel"
       },
       "cardNames": {
-        "en": "PDF to Excel"
+        "en": "PDF to Excel",
+        "de": "PDF zu Excel",
+        "es": "PDF a Excel",
+        "fr": "PDF en Excel",
+        "pt": "PDF para Excel"
       },
       "cardDescs": {
-        "en": "Extract tables from PDF into a spreadsheet locally"
+        "en": "Extract tables from PDF into a spreadsheet locally",
+        "de": "Tabellen aus PDF in eine Tabellenkalkulation extrahieren",
+        "es": "Extrae tablas de PDF a una hoja de cálculo localmente",
+        "fr": "Extraire les tableaux d'un PDF vers une feuille de calcul",
+        "pt": "Extraia tabelas do PDF para uma planilha localmente"
       },
       "breadcrumb": {
-        "en": "PDF→Excel"
+        "en": "PDF→Excel",
+        "de": "PDF→Excel",
+        "es": "PDF→Excel",
+        "fr": "PDF→Excel",
+        "pt": "PDF→Excel"
       },
       "metaDescs": {
-        "en": "Convert PDF to Excel free — detected tables become separate sheets in a real .xlsx file. Runs in your browser, nothing uploaded. No account, no limits."
+        "en": "Convert PDF to Excel free — detected tables become separate sheets in a real .xlsx file. Runs in your browser, nothing uploaded. No account, no limits.",
+        "de": "PDF zu Excel kostenlos umwandeln — Tabellen werden zu Blättern in einer echten .xlsx-Datei. Läuft im Browser, kein Upload. Ohne Anmeldung, ohne Limits.",
+        "es": "Convertir PDF a Excel gratis — las tablas detectadas se convierten en hojas en un archivo .xlsx real. En tu navegador, sin subir. Sin registro, sin límites.",
+        "fr": "Convertir PDF en Excel gratuit — les tableaux détectés deviennent des feuilles .xlsx. Dans votre navigateur, sans envoi. Sans inscription, sans limites.",
+        "pt": "Converter PDF para Excel grátis — tabelas detectadas viram planilhas em um arquivo .xlsx real. No seu navegador, sem upload. Sem cadastro, sem limites."
       },
       "ogTitles": {
-        "en": "Convert PDF to Excel Free — Table Extraction, No Upload"
+        "en": "Convert PDF to Excel Free — Table Extraction, No Upload",
+        "de": "PDF zu Excel Konvertieren Kostenlos — Tabellenextraktion, Kein Upload",
+        "es": "Convertir PDF a Excel Gratis — Extracción de Tablas, Sin Subir",
+        "fr": "Convertir PDF en Excel Gratuit — Extraction de Tableaux, Sans Envoi",
+        "pt": "Converter PDF para Excel Grátis — Extração de Tabelas, Sem Upload"
       },
       "ogDescs": {
-        "en": "PDF to Excel conversion that runs entirely in your browser. Detected tables become separate worksheets. No upload, no server, no account. 100% private."
+        "en": "PDF to Excel conversion that runs entirely in your browser. Detected tables become separate worksheets. No upload, no server, no account. 100% private.",
+        "de": "PDF zu Excel Konvertierung läuft vollständig im Browser. Erkannte Tabellen werden zu separaten Blättern. Kein Upload, kein Server, kein Konto. 100 % privat.",
+        "es": "La conversión de PDF a Excel se ejecuta completamente en tu navegador. Sin subida, sin servidor, sin cuenta. 100% privado.",
+        "fr": "La conversion PDF en Excel s'exécute entièrement dans votre navigateur. Sans envoi, sans serveur, sans compte. 100 % privé.",
+        "pt": "A conversão de PDF para Excel é executada inteiramente no seu navegador. Sem upload, sem servidor, sem conta. 100% privado."
       },
       "keywords": {
         "en": "pdf to excel, pdf to xlsx, convert pdf to excel, extract table from pdf, pdf table extractor, pdf to spreadsheet"
@@ -2217,34 +2257,74 @@
       "icon": "📽️",
       "toolKey": "pdf2ppt",
       "slugs": {
-        "en": "pdf-to-powerpoint"
+        "en": "pdf-to-powerpoint",
+        "de": "pdf-zu-powerpoint",
+        "es": "pdf-a-powerpoint",
+        "fr": "pdf-en-powerpoint",
+        "pt": "pdf-para-powerpoint"
       },
       "titles": {
-        "en": "Convert PDF to PowerPoint Without Uploading — Free & Private | PDFree"
+        "en": "Convert PDF to PowerPoint Without Uploading — Free & Private | PDFree",
+        "de": "PDF zu PowerPoint Konvertieren — Kostenlos & Privat | PDFree",
+        "es": "Convertir PDF a PowerPoint Sin Subir — Gratis | PDFree",
+        "fr": "Convertir PDF en PowerPoint — Gratuit & Privé | PDFree",
+        "pt": "Converter PDF para PowerPoint Grátis — Sem Upload | PDFree"
       },
       "descs": {
-        "en": "Convert PDF pages into PowerPoint slides — runs in your browser, no upload."
+        "en": "Convert PDF pages into PowerPoint slides — runs in your browser, no upload.",
+        "de": "PDF-Seiten in PowerPoint-Folien umwandeln — läuft im Browser, kein Upload.",
+        "es": "Convierte páginas PDF en diapositivas de PowerPoint — funciona en tu navegador, sin subida.",
+        "fr": "Convertissez des pages PDF en diapositives PowerPoint — s'exécute dans votre navigateur, aucun envoi.",
+        "pt": "Converta páginas PDF em slides do PowerPoint — funciona no seu navegador, sem upload."
       },
       "navLabels": {
-        "en": "PDF to PowerPoint"
+        "en": "PDF to PowerPoint",
+        "de": "PDF zu PPT",
+        "es": "PDF a PPT",
+        "fr": "PDF en PPT",
+        "pt": "PDF para PPT"
       },
       "cardNames": {
-        "en": "PDF to PowerPoint"
+        "en": "PDF to PowerPoint",
+        "de": "PDF zu PowerPoint",
+        "es": "PDF a PowerPoint",
+        "fr": "PDF en PowerPoint",
+        "pt": "PDF para PowerPoint"
       },
       "cardDescs": {
-        "en": "Turn PDF pages into a slide deck locally"
+        "en": "Turn PDF pages into a slide deck locally",
+        "de": "PDF-Seiten lokal in eine Präsentation umwandeln",
+        "es": "Convierte páginas PDF en una presentación localmente",
+        "fr": "Convertir les pages PDF en diaporama localement",
+        "pt": "Converta páginas PDF em uma apresentação localmente"
       },
       "breadcrumb": {
-        "en": "PDF→PowerPoint"
+        "en": "PDF→PowerPoint",
+        "de": "PDF→PowerPoint",
+        "es": "PDF→PowerPoint",
+        "fr": "PDF→PowerPoint",
+        "pt": "PDF→PowerPoint"
       },
       "metaDescs": {
-        "en": "Convert PDF to PowerPoint free — each page becomes a slide in a real .pptx file. Runs in your browser, nothing uploaded. No account, no limits."
+        "en": "Convert PDF to PowerPoint free — each page becomes a slide in a real .pptx file. Runs in your browser, nothing uploaded. No account, no limits.",
+        "de": "PDF in PowerPoint umwandeln kostenlos — jede Seite wird eine Folie in einer .pptx-Datei. Im Browser, kein Upload. Ohne Anmeldung, keine Limits.",
+        "es": "Convertir PDF a PowerPoint gratis — cada página se convierte en una diapositiva .pptx. En tu navegador, sin subir. Sin registro, sin límites.",
+        "fr": "Convertir PDF en PowerPoint gratuit — chaque page devient une diapositive .pptx. Dans votre navigateur, sans envoi. Sans inscription, sans limites.",
+        "pt": "Converter PDF para PowerPoint grátis — cada página vira um slide em arquivo .pptx real. No navegador, sem upload. Sem cadastro, sem limites."
       },
       "ogTitles": {
-        "en": "Convert PDF to PowerPoint Free — One Slide Per Page, No Upload"
+        "en": "Convert PDF to PowerPoint Free — One Slide Per Page, No Upload",
+        "de": "PDF zu PowerPoint Kostenlos — Eine Folie pro Seite, Kein Upload",
+        "es": "Convertir PDF a PowerPoint Gratis — Una Diapositiva por Página, Sin Subir",
+        "fr": "Convertir PDF en PowerPoint Gratuit — Une Diapositive par Page, Sans Envoi",
+        "pt": "Converter PDF para PowerPoint Grátis — Um Slide por Página, Sem Upload"
       },
       "ogDescs": {
-        "en": "PDF to PowerPoint conversion that runs entirely in your browser. No upload, no server, no account. 100% private."
+        "en": "PDF to PowerPoint conversion that runs entirely in your browser. No upload, no server, no account. 100% private.",
+        "de": "PDF zu PowerPoint Konvertierung läuft vollständig im Browser. Kein Upload, kein Server, kein Konto. 100 % privat.",
+        "es": "La conversión de PDF a PowerPoint se ejecuta completamente en tu navegador. Sin subida, sin servidor, sin cuenta. 100% privado.",
+        "fr": "La conversion PDF en PowerPoint s'exécute entièrement dans votre navigateur. Sans envoi, sans serveur, sans compte. 100 % privé.",
+        "pt": "A conversão de PDF para PowerPoint é executada inteiramente no seu navegador. Sem upload, sem servidor, sem conta. 100% privado."
       },
       "keywords": {
         "en": "pdf to powerpoint, pdf to pptx, convert pdf to powerpoint, pdf to ppt, pdf to slides, pdf to presentation"
@@ -2255,34 +2335,74 @@
       "icon": "📝",
       "toolKey": "pdf2md",
       "slugs": {
-        "en": "pdf-to-markdown"
+        "en": "pdf-to-markdown",
+        "de": "pdf-zu-markdown",
+        "es": "pdf-a-markdown",
+        "fr": "pdf-en-markdown",
+        "pt": "pdf-para-markdown"
       },
       "titles": {
-        "en": "Convert PDF to Markdown Without Uploading — Free & Private | PDFree"
+        "en": "Convert PDF to Markdown Without Uploading — Free & Private | PDFree",
+        "de": "PDF zu Markdown Konvertieren — Kostenlos & Privat | PDFree",
+        "es": "Convertir PDF a Markdown — Gratis, Sin Registro | PDFree",
+        "fr": "Convertir PDF en Markdown — Gratuit & Privé | PDFree",
+        "pt": "Converter PDF para Markdown Grátis — Sem Upload | PDFree"
       },
       "descs": {
-        "en": "Convert PDF text, headings and lists into Markdown — runs in your browser, no upload."
+        "en": "Convert PDF text, headings and lists into Markdown — runs in your browser, no upload.",
+        "de": "PDF-Text, Überschriften und Listen in Markdown umwandeln — läuft im Browser, kein Upload.",
+        "es": "Convierte texto, encabezados y listas de PDF a Markdown — funciona en tu navegador, sin subida.",
+        "fr": "Convertissez le texte, les titres et les listes PDF en Markdown — s'exécute dans votre navigateur, sans envoi.",
+        "pt": "Converta texto, títulos e listas do PDF para Markdown — funciona no seu navegador, sem upload."
       },
       "navLabels": {
-        "en": "PDF to Markdown"
+        "en": "PDF to Markdown",
+        "de": "PDF zu MD",
+        "es": "PDF a MD",
+        "fr": "PDF en MD",
+        "pt": "PDF para MD"
       },
       "cardNames": {
-        "en": "PDF to Markdown"
+        "en": "PDF to Markdown",
+        "de": "PDF zu Markdown",
+        "es": "PDF a Markdown",
+        "fr": "PDF en Markdown",
+        "pt": "PDF para Markdown"
       },
       "cardDescs": {
-        "en": "Turn PDF text into clean .md files locally"
+        "en": "Turn PDF text into clean .md files locally",
+        "de": "PDF-Text lokal in saubere .md-Dateien umwandeln",
+        "es": "Convierte texto PDF en archivos .md limpios localmente",
+        "fr": "Convertir le texte PDF en fichiers .md propres localement",
+        "pt": "Converta texto PDF em arquivos .md limpos localmente"
       },
       "breadcrumb": {
-        "en": "PDF→Markdown"
+        "en": "PDF→Markdown",
+        "de": "PDF→Markdown",
+        "es": "PDF→Markdown",
+        "fr": "PDF→Markdown",
+        "pt": "PDF→Markdown"
       },
       "metaDescs": {
-        "en": "Convert PDF to Markdown free — headings, bullet/numbered lists and bold/italic text become clean .md syntax. Runs in your browser, nothing uploaded. No account, no limits."
+        "en": "Convert PDF to Markdown free — headings, bullet/numbered lists and bold/italic text become clean .md syntax. Runs in your browser, nothing uploaded. No account, no limits.",
+        "de": "PDF zu Markdown kostenlos umwandeln — Überschriften, Listen und Fettschrift werden zu .md-Syntax. Im Browser, kein Upload. Ohne Anmeldung, keine Limits.",
+        "es": "Convertir PDF a Markdown gratis — títulos, listas y texto en negrita se convierten en sintaxis .md. En tu navegador, sin subir. Sin registro, sin límites.",
+        "fr": "Convertir PDF en Markdown gratuit — titres, listes et gras deviennent une syntaxe .md propre. Sans envoi au navigateur, sans inscription, sans limites.",
+        "pt": "Converter PDF para Markdown grátis — títulos, listas e negrito viram sintaxe .md limpa. No navegador, sem upload. Sem cadastro, sem limites."
       },
       "ogTitles": {
-        "en": "Convert PDF to Markdown Free — Headings & Lists, No Upload"
+        "en": "Convert PDF to Markdown Free — Headings & Lists, No Upload",
+        "de": "PDF zu Markdown Kostenlos — Überschriften & Listen, Kein Upload",
+        "es": "Convertir PDF a Markdown Gratis — Títulos y Listas, Sin Subir",
+        "fr": "Convertir PDF en Markdown Gratuit — Titres et Listes, Sans Envoi",
+        "pt": "Converter PDF para Markdown Grátis — Títulos e Listas, Sem Upload"
       },
       "ogDescs": {
-        "en": "PDF to Markdown conversion that runs entirely in your browser. No upload, no server, no account. 100% private."
+        "en": "PDF to Markdown conversion that runs entirely in your browser. No upload, no server, no account. 100% private.",
+        "de": "PDF zu Markdown Konvertierung läuft vollständig im Browser. Kein Upload, kein Server, kein Konto. 100 % privat.",
+        "es": "La conversión de PDF a Markdown se ejecuta completamente en tu navegador. Sin subida, sin servidor, sin cuenta. 100% privado.",
+        "fr": "La conversion PDF en Markdown s'exécute entièrement dans votre navigateur. Sans envoi, sans serveur, sans compte. 100 % privé.",
+        "pt": "A conversão de PDF para Markdown é executada inteiramente no seu navegador. Sem upload, sem servidor, sem conta. 100% privado."
       },
       "keywords": {
         "en": "pdf to markdown, pdf to md, convert pdf to markdown, pdf to md converter, extract pdf text as markdown"
@@ -2293,34 +2413,74 @@
       "icon": "🔓",
       "toolKey": "unlock",
       "slugs": {
-        "en": "unlock-pdf"
+        "en": "unlock-pdf",
+        "de": "pdf-entsperren",
+        "es": "desbloquear-pdf",
+        "fr": "deverrouiller-pdf",
+        "pt": "desbloquear-pdf"
       },
       "titles": {
-        "en": "Unlock PDF — Remove Password Protection, No Upload | PDFree"
+        "en": "Unlock PDF — Remove Password Protection, No Upload | PDFree",
+        "de": "PDF Passwort Entfernen — Kostenlos, Kein Upload | PDFree",
+        "es": "Desbloquear PDF — Quitar Contraseña, Sin Subir | PDFree",
+        "fr": "Déverrouiller PDF — Supprimer le Mot de Passe | PDFree",
+        "pt": "Desbloquear PDF — Remover Senha, Sem Upload | PDFree"
       },
       "descs": {
-        "en": "Remove PDF password protection — runs in your browser, no upload."
+        "en": "Remove PDF password protection — runs in your browser, no upload.",
+        "de": "PDF-Passwortschutz entfernen — läuft im Browser, kein Upload.",
+        "es": "Elimina la protección por contraseña del PDF — funciona en tu navegador, sin subida.",
+        "fr": "Supprimez la protection par mot de passe du PDF — s'exécute dans votre navigateur, sans envoi.",
+        "pt": "Remova a proteção por senha do PDF — funciona no seu navegador, sem upload."
       },
       "navLabels": {
-        "en": "Unlock PDF"
+        "en": "Unlock PDF",
+        "de": "PDF entsperren",
+        "es": "Desbloquear PDF",
+        "fr": "Déverrouiller PDF",
+        "pt": "Desbloquear PDF"
       },
       "cardNames": {
-        "en": "Unlock PDF"
+        "en": "Unlock PDF",
+        "de": "PDF entsperren",
+        "es": "Desbloquear PDF",
+        "fr": "Déverrouiller PDF",
+        "pt": "Desbloquear PDF"
       },
       "cardDescs": {
-        "en": "Remove password protection locally"
+        "en": "Remove password protection locally",
+        "de": "Passwortschutz lokal entfernen",
+        "es": "Elimina la protección por contraseña localmente",
+        "fr": "Supprimer la protection par mot de passe localement",
+        "pt": "Remova a proteção por senha localmente"
       },
       "breadcrumb": {
-        "en": "Unlock PDF"
+        "en": "Unlock PDF",
+        "de": "PDF entsperren",
+        "es": "Desbloquear PDF",
+        "fr": "Déverrouiller PDF",
+        "pt": "Desbloquear PDF"
       },
       "metaDescs": {
-        "en": "Remove PDF password protection free — enter the correct password and download an unlocked file. Runs in your browser, nothing uploaded. No account, no limits."
+        "en": "Remove PDF password protection free — enter the correct password and download an unlocked file. Runs in your browser, nothing uploaded. No account, no limits.",
+        "de": "PDF Passwortschutz kostenlos entfernen — richtiges Passwort eingeben, entsperrte Datei herunterladen. Im Browser, kein Upload. Ohne Anmeldung, keine Limits.",
+        "es": "Eliminar contraseña PDF gratis — ingresa la contraseña correcta y descarga un archivo desbloqueado. En tu navegador, sin subir. Sin registro, sin límites.",
+        "fr": "Supprimer mot de passe PDF gratuit — entrez le bon mot de passe et téléchargez le fichier déverrouillé. Sans envoi, sans inscription, sans limites.",
+        "pt": "Remover senha do PDF grátis — digite a senha correta e baixe o arquivo desbloqueado. No seu navegador, sem upload. Sem cadastro, sem limites."
       },
       "ogTitles": {
-        "en": "Unlock PDF Free — Remove Password Protection, No Upload"
+        "en": "Unlock PDF Free — Remove Password Protection, No Upload",
+        "de": "PDF entsperren Kostenlos — Passwortschutz Entfernen, Kein Upload",
+        "es": "Desbloquear PDF Gratis — Eliminar Contraseña, Sin Subir",
+        "fr": "Déverrouiller PDF Gratuit — Supprimer Mot de Passe, Sans Envoi",
+        "pt": "Desbloquear PDF Grátis — Remover Proteção por Senha, Sem Upload"
       },
       "ogDescs": {
-        "en": "PDF password removal that runs entirely in your browser. No upload, no server, no account. 100% private."
+        "en": "PDF password removal that runs entirely in your browser. No upload, no server, no account. 100% private.",
+        "de": "PDF-Passwortentfernung läuft vollständig im Browser. Kein Upload, kein Server, kein Konto. 100 % privat.",
+        "es": "La eliminación de contraseña PDF se ejecuta completamente en tu navegador. Sin subida, sin servidor, sin cuenta. 100% privado.",
+        "fr": "La suppression du mot de passe PDF s'exécute entièrement dans votre navigateur. Sans envoi, sans serveur, sans compte. 100 % privé.",
+        "pt": "A remoção de senha do PDF é executada inteiramente no seu navegador. Sem upload, sem servidor, sem conta. 100% privado."
       },
       "keywords": {
         "en": "unlock pdf, remove pdf password, remove password from pdf, open protected pdf, decrypt pdf, pdf password remover"
