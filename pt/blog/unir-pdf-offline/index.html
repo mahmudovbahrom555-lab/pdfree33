@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval' blob: https://cdnjs.cloudflare.com https://esm.sh https://plausible.io https://pagead2.googlesyndication.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: blob: https:; connect-src 'self' https://cdnjs.cloudflare.com https://*.workers.dev https://plausible.io https://pagead2.googlesyndication.com https://www.googletagservices.com https://*.doubleclick.net https://cloudflareinsights.com; frame-src https://googleads.g.doubleclick.net https://tpc.googlesyndication.com; worker-src 'self' blob:; object-src 'none';">
+
+  <title>Unir PDF offline — Sem internet, no navegador | PDFree</title>
+  <meta name="description" content="Una PDFs offline — o PDFree processa tudo localmente no navegador sem conexão à internet. Sem envio, sem conta, sem conexão com servidor.">
+  <meta name="keywords" content="unir PDF offline, unir PDF sem internet, combinar PDF offline, juntar PDF navegador local">
+
+  <meta property="og:title"       content="Unir PDF offline — Sem internet, no navegador | PDFree">
+  <meta property="og:description" content="Una PDFs offline sem conexão à internet. PDFree processa tudo localmente. Sem envio, sem conta.">
+  <meta property="og:type"        content="article">
+  <meta property="og:url"         content="https://pdfree.io/pt/blog/unir-pdf-offline/">
+  <meta property="og:site_name"   content="PDFree">
+  <meta property="og:image"        content="https://pdfree.io/icons/og-image.jpg">
+  <meta property="og:image:width"  content="1200">
+  <meta property="og:image:height" content="633">
+  <meta property="og:image:alt"    content="Unir PDF offline — PDFree">
+  <meta property="og:locale"       content="pt_BR">
+  <meta name="twitter:card"       content="summary_large_image">
+  <meta name="twitter:site"       content="@pdfree_io">
+  <meta name="twitter:title"      content="Unir PDF offline | PDFree">
+  <meta name="twitter:description" content="Una PDFs sem conexão à internet. Localmente no navegador, sem envio.">
+  <meta name="twitter:image"      content="https://pdfree.io/icons/og-image.jpg">
+  <meta name="twitter:image:alt"  content="Unir PDF offline — PDFree">
+
+  <link rel="canonical" href="https://pdfree.io/pt/blog/unir-pdf-offline/">
+  <link rel="alternate" hreflang="pt"        href="https://pdfree.io/pt/blog/unir-pdf-offline/">
+  <link rel="alternate" hreflang="en"        href="https://pdfree.io/blog/merge-pdf-offline/">
+  <link rel="alternate" hreflang="de"        href="https://pdfree.io/de/blog/pdf-offline-zusammenfuehren/">
+  <link rel="alternate" hreflang="es"        href="https://pdfree.io/es/blog/unir-pdf-sin-internet/">
+  <link rel="alternate" hreflang="fr"        href="https://pdfree.io/fr/blog/fusionner-pdf-hors-ligne/">
+  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/blog/merge-pdf-offline/">
+
+  <link rel="manifest" href="../../../manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="PDFree">
+  <link rel="apple-touch-icon" href="../../../icons/icon-192.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+  <link rel="preconnect" href="https://plausible.io">
+  <link rel="preconnect" href="https://static.cloudflareinsights.com">
+  <link rel="preload" href="../../../fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../../css/fonts.css">
+  <link rel="stylesheet" href="../../../css/variables.css">
+  <link rel="stylesheet" href="../../../css/animations.css">
+  <link rel="stylesheet" href="../../../css/layout.css">
+  <link rel="stylesheet" href="../../../css/components.css">
+
+  <script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"Unir PDFs offline — Sem internet, localmente no navegador","description":"Guia para unir PDFs offline sem conexão à internet — tudo localmente no navegador, sem envio, sem conta.","url":"https://pdfree.io/pt/blog/unir-pdf-offline/","datePublished":"2026-07-21","dateModified":"2026-07-21","inLanguage":"pt","publisher":{"@type":"Organization","name":"PDFree","url":"https://pdfree.io"},"author":{"@type":"Organization","name":"PDFree"},"image":{"@type":"ImageObject","url":"https://pdfree.io/icons/og-image.jpg","width":1200,"height":633},"keywords":"unir PDF offline, unir PDF sem internet, combinar PDF offline"}
+  </script>
+  <script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"PDFree","item":"https://pdfree.io/"},{"@type":"ListItem","position":2,"name":"Português","item":"https://pdfree.io/pt/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pdfree.io/pt/blog/"},{"@type":"ListItem","position":4,"name":"Unir PDF offline","item":"https://pdfree.io/pt/blog/unir-pdf-offline/"}]}
+  </script>
+  <script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"O PDFree pode realmente unir PDFs sem conexão à internet?","acceptedAnswer":{"@type":"Answer","text":"Sim. Uma vez que o PDFree é carregado no navegador, não é necessária uma conexão ativa para unir PDFs. Todo o processamento ocorre localmente. Para a primeira visita, uma conexão é necessária."}},{"@type":"Question","name":"Quantos PDFs posso unir de uma vez?","acceptedAnswer":{"@type":"Answer","text":"Com o PDFree você pode unir quantos PDFs quiser em uma única operação. Não há um limite fixo de arquivos — o limite prático é determinado pela memória RAM do seu dispositivo."}},{"@type":"Question","name":"A qualidade é preservada ao unir os PDFs?","acceptedAnswer":{"@type":"Answer","text":"Sim. O PDFree une os PDFs sem re-renderizá-los. Imagens, fontes e todo o layout são preservados exatamente como no original. A qualidade não é afetada."}}]}
+  </script>
+  <script src="../../../js/theme.js"></script>
+</head>
+<body>
+
+  <nav>
+    <a href="../../../" class="logo" id="logo" aria-label="Ir para o início" style="text-decoration:none"><span class="logo-text">PDF<span>ree</span></span></a>
+    <div class="nav-links">
+      <a href="../../juntar-pdf/" class="nav-link">Juntar</a>
+      <a href="../../dividir-pdf/" class="nav-link">Dividir</a>
+      <a href="../../comprimir-pdf/" class="nav-link">Comprimir</a>
+      <a href="../../jpg-para-pdf/" class="nav-link">JPG→PDF</a>
+      <a href="../../pdf-para-jpg/" class="nav-link">PDF→JPG</a>
+      <a href="../../marca-dagua-pdf/" class="nav-link">Marca d'água</a>
+      <a href="../../girar-pdf/" class="nav-link">Girar</a>
+      <a href="../../proteger-pdf/" class="nav-link">Proteger</a>
+    </div>
+    <button id="themeToggle" class="theme-toggle" aria-label="Alternar modo escuro" title="Alternar modo escuro"></button>
+  </nav>
+
+  <section class="seo-article" aria-labelledby="articleTitle">
+    <div class="seo-article__inner">
+      <div style="max-width:800px;margin:60px auto 40px;padding:0 24px;color:var(--text2);line-height:1.8;">
+
+        <p style="font-size:13px;color:var(--text3);margin:0 0 16px;">
+          <a href="../../../" style="color:var(--text3);text-decoration:none;">PDFree</a> ›
+          <a href="../../" style="color:var(--text3);text-decoration:none;">Português</a> ›
+          Unir PDF offline
+        </p>
+
+        <h1 id="articleTitle" style="font-size:32px;color:var(--text);margin:0 0 16px;font-weight:700;line-height:1.25;">Como unir PDFs offline — Sem internet, localmente no navegador</h1>
+        <p style="font-size:15px;color:var(--text3);margin:0 0 32px;">4 minutos de leitura · Atualizado julho 2026</p>
+
+        <p style="font-size:18px;margin:0 0 24px;color:var(--text);">Às vezes você precisa unir PDFs sem conexão estável à internet — no trem, no avião ou em um prédio com WiFi ruim. O PDFree torna isso possível: una PDFs offline, diretamente no navegador, sem enviar nada a nenhum servidor.</p>
+
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:28px;margin:0 0 40px;text-align:center;">
+          <p style="font-size:16px;font-weight:600;color:var(--text);margin:0 0 8px;">Una seus PDFs agora — mesmo offline</p>
+          <p style="font-size:14px;color:var(--text2);margin:0 0 20px;">Sem envio. Sem conta. Sem conexão com servidor.</p>
+          <a href="../../juntar-pdf/" style="background:var(--green);color:#fff;padding:13px 28px;border-radius:10px;font-weight:600;font-size:15px;text-decoration:none;display:inline-block;">Juntar PDF — Grátis</a>
+        </div>
+
+        <h2 style="font-size:22px;color:var(--text);margin:0 0 16px;font-weight:600;">Como o PDFree funciona offline</h2>
+        <p>O PDFree é uma Progressive Web App (PWA). Isso significa que na primeira visita ao site, todos os arquivos necessários — HTML, CSS, JavaScript, bibliotecas PDF — são armazenados no cache do navegador. No próximo acesso, mesmo sem internet, esses arquivos são carregados localmente.</p>
+        <p style="margin-top:16px;">O processamento de PDFs sempre ocorre localmente no navegador. Não há nenhum servidor que receba ou processe os arquivos — a união acontece no seu dispositivo. Offline ou online não faz diferença alguma na qualidade do resultado.</p>
+
+        <h2 style="font-size:22px;color:var(--text);margin:32px 0 16px;font-weight:600;">Unir PDFs offline — Passo a passo</h2>
+        <ol style="margin:0 0 32px;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:20px;">
+          <li style="display:flex;gap:16px;align-items:flex-start;">
+            <span style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;">1</span>
+            <div><strong style="color:var(--text);">Abra o PDFree uma vez com internet</strong>
+            <p style="margin:4px 0 0;"><a href="../../juntar-pdf/" style="color:var(--green);">pdfree.io/pt/juntar-pdf/</a> — na primeira visita, todos os recursos são armazenados em cache.</p></div>
+          </li>
+          <li style="display:flex;gap:16px;align-items:flex-start;">
+            <span style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;">2</span>
+            <div><strong style="color:var(--text);">Selecione os arquivos PDF</strong>
+            <p style="margin:4px 0 0;">Clique em «Escolher arquivos» ou arraste vários PDFs para a área de upload. Você pode reordenar por arrastar e soltar.</p></div>
+          </li>
+          <li style="display:flex;gap:16px;align-items:flex-start;">
+            <span style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;">3</span>
+            <div><strong style="color:var(--text);">Defina a ordem</strong>
+            <p style="margin:4px 0 0;">Organize os documentos na ordem desejada. O PDF combinado seguirá esse arranjo.</p></div>
+          </li>
+          <li style="display:flex;gap:16px;align-items:flex-start;">
+            <span style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;">4</span>
+            <div><strong style="color:var(--text);">Baixe o PDF</strong>
+            <p style="margin:4px 0 0;">Clique em «Juntar». O PDF combinado é baixado imediatamente — sem contato com nenhum servidor.</p></div>
+          </li>
+        </ol>
+
+        <h2 style="font-size:22px;color:var(--text);margin:0 0 16px;font-weight:600;">Vantagens de unir PDFs offline</h2>
+        <ul style="margin:16px 0 24px;padding-left:24px;">
+          <li><strong>Sem risco de privacidade</strong> — Seus arquivos não saem do seu dispositivo</li>
+          <li><strong>Sem dependência de servidor</strong> — Sem esperar upload ou download</li>
+          <li><strong>Mais rápido</strong> — O processamento local costuma ser mais rápido que o upload na nuvem</li>
+          <li><strong>Sempre disponível</strong> — Funciona mesmo com má conexão</li>
+          <li><strong>Sem limite de tamanho</strong> — Sem restrições de servidor</li>
+        </ul>
+
+        <h2 style="font-size:22px;color:var(--text);margin:32px 0 16px;font-weight:600;">Perguntas frequentes</h2>
+        <dl style="margin:0 0 32px;">
+          <dt style="font-weight:600;color:var(--text);margin:0 0 8px;">O PDFree pode realmente unir PDFs sem conexão à internet?</dt>
+          <dd style="margin:0 0 20px;padding-left:16px;border-left:3px solid var(--border);">Sim. Uma vez que o PDFree é carregado no navegador, não é necessária uma conexão ativa. Todo o processamento ocorre localmente. Para a primeira visita, uma conexão é necessária.</dd>
+          <dt style="font-weight:600;color:var(--text);margin:0 0 8px;">Quantos PDFs posso unir de uma vez?</dt>
+          <dd style="margin:0 0 20px;padding-left:16px;border-left:3px solid var(--border);">Com o PDFree você pode unir quantos PDFs quiser em uma única operação. Não há limite fixo — o limite prático é a memória RAM do seu dispositivo.</dd>
+          <dt style="font-weight:600;color:var(--text);margin:0 0 8px;">A qualidade é preservada ao unir os PDFs?</dt>
+          <dd style="margin:0 0 20px;padding-left:16px;border-left:3px solid var(--border);">Sim. O PDFree une os PDFs sem re-renderizá-los. Imagens, fontes e todo o layout são preservados exatamente como no original.</dd>
+        </dl>
+
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:28px;margin:40px 0;text-align:center;">
+          <p style="font-size:16px;font-weight:600;color:var(--text);margin:0 0 8px;">Una PDFs — offline e grátis</p>
+          <p style="font-size:14px;color:var(--text2);margin:0 0 20px;">Sem envio. Sem conta. Sem espera.</p>
+          <a href="../../juntar-pdf/" style="background:var(--green);color:#fff;padding:13px 28px;border-radius:10px;font-weight:600;font-size:15px;text-decoration:none;display:inline-block;">Juntar PDF</a>
+        </div>
+
+        <div style="padding-top:24px;border-top:1px solid var(--border);">
+          <p style="font-size:12px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin:0 0 10px;">Guias relacionados</p>
+          <ul style="margin:0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:6px;">
+            <li><a href="../../juntar-pdf/" style="color:var(--green);">Juntar PDF</a> — Combine vários PDFs em um só</li>
+            <li><a href="../../dividir-pdf/" style="color:var(--green);">Dividir PDF</a> — Extraia páginas de um PDF</li>
+            <li><a href="../../comprimir-pdf/" style="color:var(--green);">Comprimir PDF</a> — Reduza o tamanho do arquivo</li>
+            <li><a href="../juntar-arquivos-pdf-gratis/" style="color:var(--green);">Juntar arquivos PDF grátis</a> — Guia completo</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div style="display:flex;gap:48px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;font-size:13px;border-top:1px solid var(--border);padding-top:20px;">
+      <div>
+        <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Alternativas</div>
+        <a href="/ilovepdf-alternative/" style="display:block;color:var(--green);text-decoration:none;margin-bottom:4px;">Alternativa ao iLovePDF</a>
+      </div>
+      <div>
+        <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Soluções</div>
+        <a href="/hipaa-pdf-tools/" style="display:block;color:var(--green);text-decoration:none;margin-bottom:4px;">PDF compatível com HIPAA</a>
+        <a href="/secure-pdf-tools/" style="display:block;color:var(--green);text-decoration:none;">Ferramentas PDF Seguras</a>
+      </div>
+    </div>
+    PDFree · <strong>Todo o processamento acontece 100% no seu navegador</strong> · Arquivos <strong>nunca são enviados</strong><br>
+    <span style="color:var(--green)">🔒</span> Seus documentos nunca saem do seu dispositivo &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> Grátis para todos, para sempre<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
+      <a href="/privacy.html" style="color:var(--green)">Privacidade</a> &nbsp;·&nbsp;
+      <a href="/terms.html" style="color:var(--green)">Termos</a> &nbsp;·&nbsp;
+      <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a> &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green)">GitHub</a>
+    </span>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script>
+</body>
+</html>

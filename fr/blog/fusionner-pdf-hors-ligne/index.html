@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval' blob: https://cdnjs.cloudflare.com https://esm.sh https://plausible.io https://pagead2.googlesyndication.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: blob: https:; connect-src 'self' https://cdnjs.cloudflare.com https://*.workers.dev https://plausible.io https://pagead2.googlesyndication.com https://www.googletagservices.com https://*.doubleclick.net https://cloudflareinsights.com; frame-src https://googleads.g.doubleclick.net https://tpc.googlesyndication.com; worker-src 'self' blob:; object-src 'none';">
+
+  <title>Fusionner PDF hors ligne — Sans internet, dans le navigateur | PDFree</title>
+  <meta name="description" content="Fusionnez des PDFs hors ligne — PDFree traite tout localement dans le navigateur sans connexion internet. Sans envoi, sans compte, sans connexion serveur.">
+  <meta name="keywords" content="fusionner PDF hors ligne, fusionner PDF sans internet, combiner PDF offline, fusionner PDF navigateur local">
+
+  <meta property="og:title"       content="Fusionner PDF hors ligne — Sans internet, dans le navigateur | PDFree">
+  <meta property="og:description" content="Fusionnez des PDFs hors ligne sans connexion internet. PDFree traite tout localement. Sans envoi, sans compte.">
+  <meta property="og:type"        content="article">
+  <meta property="og:url"         content="https://pdfree.io/fr/blog/fusionner-pdf-hors-ligne/">
+  <meta property="og:site_name"   content="PDFree">
+  <meta property="og:image"        content="https://pdfree.io/icons/og-image.jpg">
+  <meta property="og:image:width"  content="1200">
+  <meta property="og:image:height" content="633">
+  <meta property="og:image:alt"    content="Fusionner PDF hors ligne — PDFree">
+  <meta property="og:locale"       content="fr_FR">
+  <meta name="twitter:card"       content="summary_large_image">
+  <meta name="twitter:site"       content="@pdfree_io">
+  <meta name="twitter:title"      content="Fusionner PDF hors ligne | PDFree">
+  <meta name="twitter:description" content="Fusionnez des PDFs sans connexion internet. Localement dans le navigateur, sans envoi.">
+  <meta name="twitter:image"      content="https://pdfree.io/icons/og-image.jpg">
+  <meta name="twitter:image:alt"  content="Fusionner PDF hors ligne — PDFree">
+
+  <link rel="canonical" href="https://pdfree.io/fr/blog/fusionner-pdf-hors-ligne/">
+  <link rel="alternate" hreflang="fr"        href="https://pdfree.io/fr/blog/fusionner-pdf-hors-ligne/">
+  <link rel="alternate" hreflang="en"        href="https://pdfree.io/blog/merge-pdf-offline/">
+  <link rel="alternate" hreflang="de"        href="https://pdfree.io/de/blog/pdf-offline-zusammenfuehren/">
+  <link rel="alternate" hreflang="es"        href="https://pdfree.io/es/blog/unir-pdf-sin-internet/">
+  <link rel="alternate" hreflang="pt"        href="https://pdfree.io/pt/blog/unir-pdf-offline/">
+  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/blog/merge-pdf-offline/">
+
+  <link rel="manifest" href="../../../manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="PDFree">
+  <link rel="apple-touch-icon" href="../../../icons/icon-192.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+  <link rel="preconnect" href="https://plausible.io">
+  <link rel="preconnect" href="https://static.cloudflareinsights.com">
+  <link rel="preload" href="../../../fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../../css/fonts.css">
+  <link rel="stylesheet" href="../../../css/variables.css">
+  <link rel="stylesheet" href="../../../css/animations.css">
+  <link rel="stylesheet" href="../../../css/layout.css">
+  <link rel="stylesheet" href="../../../css/components.css">
+
+  <script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"Fusionner des PDFs hors ligne — Sans internet, localement dans le navigateur","description":"Guide pour fusionner des PDFs offline sans connexion internet — tout localement dans le navigateur, sans envoi, sans compte.","url":"https://pdfree.io/fr/blog/fusionner-pdf-hors-ligne/","datePublished":"2026-07-21","dateModified":"2026-07-21","inLanguage":"fr","publisher":{"@type":"Organization","name":"PDFree","url":"https://pdfree.io"},"author":{"@type":"Organization","name":"PDFree"},"image":{"@type":"ImageObject","url":"https://pdfree.io/icons/og-image.jpg","width":1200,"height":633},"keywords":"fusionner PDF hors ligne, fusionner PDF sans internet, combiner PDF offline"}
+  </script>
+  <script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"PDFree","item":"https://pdfree.io/"},{"@type":"ListItem","position":2,"name":"Français","item":"https://pdfree.io/fr/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pdfree.io/fr/blog/"},{"@type":"ListItem","position":4,"name":"Fusionner PDF hors ligne","item":"https://pdfree.io/fr/blog/fusionner-pdf-hors-ligne/"}]}
+  </script>
+  <script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"PDFree peut-il vraiment fusionner des PDFs sans connexion internet ?","acceptedAnswer":{"@type":"Answer","text":"Oui. Une fois PDFree chargé dans le navigateur, aucune connexion internet active n'est nécessaire pour fusionner des PDFs. Tout le traitement s'effectue localement. Une connexion est nécessaire pour la première visite."}},{"@type":"Question","name":"Combien de PDFs puis-je fusionner à la fois ?","acceptedAnswer":{"@type":"Answer","text":"Avec PDFree, vous pouvez fusionner autant de fichiers PDF que vous le souhaitez en une seule opération. Il n'y a pas de limite fixe — la limite pratique est déterminée par la mémoire RAM de votre appareil."}},{"@type":"Question","name":"La qualité est-elle préservée lors de la fusion des PDFs ?","acceptedAnswer":{"@type":"Answer","text":"Oui. PDFree fusionne les PDFs sans les re-rendre. Les images, les polices et l'ensemble de la mise en page sont conservés exactement comme dans l'original. La qualité n'est pas affectée."}}]}
+  </script>
+  <script src="../../../js/theme.js"></script>
+</head>
+<body>
+
+  <nav>
+    <a href="../../../" class="logo" id="logo" aria-label="Aller à l'accueil" style="text-decoration:none"><span class="logo-text">PDF<span>ree</span></span></a>
+    <div class="nav-links">
+      <a href="../../fusionner-pdf/" class="nav-link">Fusionner</a>
+      <a href="../../diviser-pdf/" class="nav-link">Diviser</a>
+      <a href="../../compresser-pdf/" class="nav-link">Compresser</a>
+      <a href="../../jpg-en-pdf/" class="nav-link">JPG→PDF</a>
+      <a href="../../pdf-en-jpg/" class="nav-link">PDF→JPG</a>
+      <a href="../../filigrane-pdf/" class="nav-link">Filigrane</a>
+      <a href="../../rotation-pdf/" class="nav-link">Pivoter</a>
+      <a href="../../proteger-pdf/" class="nav-link">Protéger</a>
+    </div>
+    <button id="themeToggle" class="theme-toggle" aria-label="Basculer le mode sombre" title="Basculer le mode sombre"></button>
+  </nav>
+
+  <section class="seo-article" aria-labelledby="articleTitle">
+    <div class="seo-article__inner">
+      <div style="max-width:800px;margin:60px auto 40px;padding:0 24px;color:var(--text2);line-height:1.8;">
+
+        <p style="font-size:13px;color:var(--text3);margin:0 0 16px;">
+          <a href="../../../" style="color:var(--text3);text-decoration:none;">PDFree</a> ›
+          <a href="../../" style="color:var(--text3);text-decoration:none;">Français</a> ›
+          Fusionner PDF hors ligne
+        </p>
+
+        <h1 id="articleTitle" style="font-size:32px;color:var(--text);margin:0 0 16px;font-weight:700;line-height:1.25;">Comment fusionner des PDFs hors ligne — Sans internet, localement dans le navigateur</h1>
+        <p style="font-size:15px;color:var(--text3);margin:0 0 32px;">4 minutes de lecture · Mis à jour juillet 2026</p>
+
+        <p style="font-size:18px;margin:0 0 24px;color:var(--text);">Parfois, vous devez fusionner des PDFs sans connexion internet stable — dans le train, l'avion ou un bâtiment avec une mauvaise connexion WiFi. PDFree le rend possible : fusionnez des PDFs hors ligne, directement dans le navigateur, sans rien envoyer à un serveur.</p>
+
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:28px;margin:0 0 40px;text-align:center;">
+          <p style="font-size:16px;font-weight:600;color:var(--text);margin:0 0 8px;">Fusionnez vos PDFs maintenant — même hors ligne</p>
+          <p style="font-size:14px;color:var(--text2);margin:0 0 20px;">Sans envoi. Sans compte. Sans connexion serveur.</p>
+          <a href="../../fusionner-pdf/" style="background:var(--green);color:#fff;padding:13px 28px;border-radius:10px;font-weight:600;font-size:15px;text-decoration:none;display:inline-block;">Fusionner PDF — Gratuit</a>
+        </div>
+
+        <h2 style="font-size:22px;color:var(--text);margin:0 0 16px;font-weight:600;">Comment PDFree fonctionne hors ligne</h2>
+        <p>PDFree est une Progressive Web App (PWA). Cela signifie que lors de la première visite, tous les fichiers nécessaires — HTML, CSS, JavaScript, bibliothèques PDF — sont mis en cache dans le navigateur. Lors de la prochaine ouverture, même sans internet, ces fichiers sont chargés localement.</p>
+        <p style="margin-top:16px;">Le traitement des PDFs s'effectue toujours localement dans le navigateur. Il n'y a pas de serveur qui reçoit ou traite les fichiers — la fusion a lieu sur votre appareil. Hors ligne ou en ligne ne fait aucune différence sur la qualité du résultat.</p>
+
+        <h2 style="font-size:22px;color:var(--text);margin:32px 0 16px;font-weight:600;">Fusionner des PDFs hors ligne — Étape par étape</h2>
+        <ol style="margin:0 0 32px;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:20px;">
+          <li style="display:flex;gap:16px;align-items:flex-start;">
+            <span style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;">1</span>
+            <div><strong style="color:var(--text);">Ouvrez PDFree une fois avec internet</strong>
+            <p style="margin:4px 0 0;"><a href="../../fusionner-pdf/" style="color:var(--green);">pdfree.io/fr/fusionner-pdf/</a> — lors de la première visite, toutes les ressources sont mises en cache.</p></div>
+          </li>
+          <li style="display:flex;gap:16px;align-items:flex-start;">
+            <span style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;">2</span>
+            <div><strong style="color:var(--text);">Sélectionnez les fichiers PDF</strong>
+            <p style="margin:4px 0 0;">Cliquez sur « Choisir des fichiers » ou glissez plusieurs PDFs dans la zone de dépôt. Vous pouvez réorganiser l'ordre par glisser-déposer.</p></div>
+          </li>
+          <li style="display:flex;gap:16px;align-items:flex-start;">
+            <span style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;">3</span>
+            <div><strong style="color:var(--text);">Définissez l'ordre</strong>
+            <p style="margin:4px 0 0;">Arrangez les documents dans l'ordre souhaité. Le PDF combiné suivra cet arrangement.</p></div>
+          </li>
+          <li style="display:flex;gap:16px;align-items:flex-start;">
+            <span style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;">4</span>
+            <div><strong style="color:var(--text);">Téléchargez le PDF</strong>
+            <p style="margin:4px 0 0;">Cliquez sur « Fusionner ». Le PDF combiné est téléchargé immédiatement — sans aucun contact avec un serveur.</p></div>
+          </li>
+        </ol>
+
+        <h2 style="font-size:22px;color:var(--text);margin:0 0 16px;font-weight:600;">Avantages de la fusion hors ligne</h2>
+        <ul style="margin:16px 0 24px;padding-left:24px;">
+          <li><strong>Aucun risque pour la vie privée</strong> — Vos fichiers ne quittent pas votre appareil</li>
+          <li><strong>Aucune dépendance au serveur</strong> — Pas d'attente pour l'envoi ou le téléchargement</li>
+          <li><strong>Plus rapide</strong> — Le traitement local est souvent plus rapide que le téléchargement cloud</li>
+          <li><strong>Toujours disponible</strong> — Fonctionne même avec une mauvaise connexion</li>
+          <li><strong>Aucune limite de taille</strong> — Pas de restrictions de serveur</li>
+        </ul>
+
+        <h2 style="font-size:22px;color:var(--text);margin:32px 0 16px;font-weight:600;">Foire aux questions</h2>
+        <dl style="margin:0 0 32px;">
+          <dt style="font-weight:600;color:var(--text);margin:0 0 8px;">PDFree peut-il vraiment fusionner des PDFs sans connexion internet ?</dt>
+          <dd style="margin:0 0 20px;padding-left:16px;border-left:3px solid var(--border);">Oui. Une fois PDFree chargé dans le navigateur, aucune connexion active n'est nécessaire. Tout le traitement s'effectue localement. Une connexion est nécessaire pour la première visite.</dd>
+          <dt style="font-weight:600;color:var(--text);margin:0 0 8px;">Combien de PDFs puis-je fusionner à la fois ?</dt>
+          <dd style="margin:0 0 20px;padding-left:16px;border-left:3px solid var(--border);">Avec PDFree, vous pouvez fusionner autant de PDFs que vous le souhaitez en une seule opération. Il n'y a pas de limite fixe — la limite pratique est la mémoire RAM de votre appareil.</dd>
+          <dt style="font-weight:600;color:var(--text);margin:0 0 8px;">La qualité est-elle préservée lors de la fusion des PDFs ?</dt>
+          <dd style="margin:0 0 20px;padding-left:16px;border-left:3px solid var(--border);">Oui. PDFree fusionne les PDFs sans les re-rendre. Les images, les polices et la mise en page sont conservées exactement comme dans l'original.</dd>
+        </dl>
+
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:28px;margin:40px 0;text-align:center;">
+          <p style="font-size:16px;font-weight:600;color:var(--text);margin:0 0 8px;">Fusionnez des PDFs — hors ligne et gratuitement</p>
+          <p style="font-size:14px;color:var(--text2);margin:0 0 20px;">Sans envoi. Sans compte. Sans attente.</p>
+          <a href="../../fusionner-pdf/" style="background:var(--green);color:#fff;padding:13px 28px;border-radius:10px;font-weight:600;font-size:15px;text-decoration:none;display:inline-block;">Fusionner PDF</a>
+        </div>
+
+        <div style="padding-top:24px;border-top:1px solid var(--border);">
+          <p style="font-size:12px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin:0 0 10px;">Guides associés</p>
+          <ul style="margin:0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:6px;">
+            <li><a href="../../fusionner-pdf/" style="color:var(--green);">Fusionner PDF</a> — Combinez plusieurs PDFs en un seul</li>
+            <li><a href="../../diviser-pdf/" style="color:var(--green);">Diviser PDF</a> — Extrayez des pages d'un PDF</li>
+            <li><a href="../../compresser-pdf/" style="color:var(--green);">Compresser PDF</a> — Réduisez la taille du fichier</li>
+            <li><a href="../fusionner-pdf-gratuitement/" style="color:var(--green);">Fusionner PDF gratuitement</a> — Guide complet</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div style="display:flex;gap:48px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;font-size:13px;border-top:1px solid var(--border);padding-top:20px;">
+      <div>
+        <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Alternatives</div>
+        <a href="/ilovepdf-alternative/" style="display:block;color:var(--green);text-decoration:none;margin-bottom:4px;">Alternatives aux outils cloud</a>
+      </div>
+      <div>
+        <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Solutions</div>
+        <a href="/hipaa-pdf-tools/" style="display:block;color:var(--green);text-decoration:none;margin-bottom:4px;">PDF conforme HIPAA</a>
+        <a href="/secure-pdf-tools/" style="display:block;color:var(--green);text-decoration:none;">Outils PDF sécurisés</a>
+      </div>
+    </div>
+    PDFree · <strong>Tout le traitement s'effectue 100% dans votre navigateur</strong> · Les fichiers ne sont <strong>jamais envoyés</strong><br>
+    <span style="color:var(--green)">🔒</span> Vos documents ne quittent jamais votre appareil &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> Gratuit pour tous, pour toujours<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
+      <a href="/privacy.html" style="color:var(--green)">Confidentialité</a> &nbsp;·&nbsp;
+      <a href="/terms.html" style="color:var(--green)">Conditions</a> &nbsp;·&nbsp;
+      <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a> &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green)">GitHub</a>
+    </span>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script>
+</body>
+</html>

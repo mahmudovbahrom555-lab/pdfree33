@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval' blob: https://cdnjs.cloudflare.com https://esm.sh https://plausible.io https://pagead2.googlesyndication.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: blob: https:; connect-src 'self' https://cdnjs.cloudflare.com https://*.workers.dev https://plausible.io https://pagead2.googlesyndication.com https://www.googletagservices.com https://*.doubleclick.net https://cloudflareinsights.com; frame-src https://googleads.g.doubleclick.net https://tpc.googlesyndication.com; worker-src 'self' blob:; object-src 'none';">
+
+  <title>PDF offline zusammenführen — Ohne Internet, im Browser | PDFree</title>
+  <meta name="description" content="PDFs offline zusammenführen — PDFree verarbeitet alles lokal im Browser ohne Internetverbindung. Kein Upload, kein Konto, keine Serververbindung nötig.">
+  <meta name="keywords" content="PDF offline zusammenführen, PDF ohne Internet zusammenfügen, PDF lokal zusammenführen, PDF Browser offline">
+
+  <meta property="og:title"       content="PDF offline zusammenführen — Ohne Internet, im Browser | PDFree">
+  <meta property="og:description" content="PDFs offline zusammenführen ohne Internetverbindung. PDFree verarbeitet alles lokal im Browser. Kein Upload, kein Konto.">
+  <meta property="og:type"        content="article">
+  <meta property="og:url"         content="https://pdfree.io/de/blog/pdf-offline-zusammenfuehren/">
+  <meta property="og:site_name"   content="PDFree">
+  <meta property="og:image"        content="https://pdfree.io/icons/og-image.jpg">
+  <meta property="og:image:width"  content="1200">
+  <meta property="og:image:height" content="633">
+  <meta property="og:image:alt"    content="PDF offline zusammenführen — PDFree">
+  <meta property="og:locale"       content="de_DE">
+  <meta name="twitter:card"       content="summary_large_image">
+  <meta name="twitter:site"       content="@pdfree_io">
+  <meta name="twitter:title"      content="PDF offline zusammenführen | PDFree">
+  <meta name="twitter:description" content="PDFs ohne Internetverbindung zusammenführen. Lokal im Browser, kein Upload.">
+  <meta name="twitter:image"      content="https://pdfree.io/icons/og-image.jpg">
+  <meta name="twitter:image:alt"  content="PDF offline zusammenführen — PDFree">
+
+  <link rel="canonical" href="https://pdfree.io/de/blog/pdf-offline-zusammenfuehren/">
+  <link rel="alternate" hreflang="de"        href="https://pdfree.io/de/blog/pdf-offline-zusammenfuehren/">
+  <link rel="alternate" hreflang="en"        href="https://pdfree.io/blog/merge-pdf-offline/">
+  <link rel="alternate" hreflang="es"        href="https://pdfree.io/es/blog/unir-pdf-sin-internet/">
+  <link rel="alternate" hreflang="fr"        href="https://pdfree.io/fr/blog/fusionner-pdf-hors-ligne/">
+  <link rel="alternate" hreflang="pt"        href="https://pdfree.io/pt/blog/unir-pdf-offline/">
+  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/blog/merge-pdf-offline/">
+
+  <link rel="manifest" href="../../../manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="PDFree">
+  <link rel="apple-touch-icon" href="../../../icons/icon-192.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+  <link rel="preconnect" href="https://plausible.io">
+  <link rel="preconnect" href="https://static.cloudflareinsights.com">
+  <link rel="preload" href="../../../fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../../css/fonts.css">
+  <link rel="stylesheet" href="../../../css/variables.css">
+  <link rel="stylesheet" href="../../../css/animations.css">
+  <link rel="stylesheet" href="../../../css/layout.css">
+  <link rel="stylesheet" href="../../../css/components.css">
+
+  <script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"PDF offline zusammenführen — Ohne Internet, lokal im Browser","description":"Anleitung zum Zusammenführen von PDF-Dateien offline ohne Internetverbindung — alles lokal im Browser, kein Upload, kein Konto.","url":"https://pdfree.io/de/blog/pdf-offline-zusammenfuehren/","datePublished":"2026-07-21","dateModified":"2026-07-21","inLanguage":"de","publisher":{"@type":"Organization","name":"PDFree","url":"https://pdfree.io"},"author":{"@type":"Organization","name":"PDFree"},"image":{"@type":"ImageObject","url":"https://pdfree.io/icons/og-image.jpg","width":1200,"height":633},"keywords":"PDF offline zusammenführen, PDF ohne Internet zusammenfügen, PDF lokal zusammenführen"}
+  </script>
+  <script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"PDFree","item":"https://pdfree.io/"},{"@type":"ListItem","position":2,"name":"Deutsch","item":"https://pdfree.io/de/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pdfree.io/de/blog/"},{"@type":"ListItem","position":4,"name":"PDF offline zusammenführen","item":"https://pdfree.io/de/blog/pdf-offline-zusammenfuehren/"}]}
+  </script>
+  <script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Kann PDFree PDFs wirklich ohne Internetverbindung zusammenführen?","acceptedAnswer":{"@type":"Answer","text":"Ja. Sobald PDFree einmal im Browser geladen ist, wird keine aktive Internetverbindung mehr benötigt, um PDFs zusammenzuführen. Die gesamte Verarbeitung findet lokal statt. Für den ersten Seitenaufruf ist eine Verbindung notwendig."}},{"@type":"Question","name":"Wie viele PDFs kann ich auf einmal zusammenführen?","acceptedAnswer":{"@type":"Answer","text":"Mit PDFree kannst du beliebig viele PDF-Dateien in einem Schritt zusammenführen. Es gibt keine festgelegte Dateianzahl-Begrenzung — die praktische Grenze liegt im Arbeitsspeicher deines Geräts."}},{"@type":"Question","name":"Bleibt die Qualität beim Zusammenführen erhalten?","acceptedAnswer":{"@type":"Answer","text":"Ja. PDFree fügt PDFs zusammen, ohne sie neu zu rendern. Bilder, Schriften und das gesamte Layout bleiben exakt wie im Original erhalten. Die Qualität leidet nicht."}}]}
+  </script>
+  <script src="../../../js/theme.js"></script>
+</head>
+<body>
+
+  <nav>
+    <a href="../../../" class="logo" id="logo" aria-label="Zur Startseite" style="text-decoration:none"><span class="logo-text">PDF<span>ree</span></span></a>
+    <div class="nav-links">
+      <a href="../../pdf-zusammenfuehren/" class="nav-link">Zusammenführen</a>
+      <a href="../../pdf-aufteilen/" class="nav-link">Aufteilen</a>
+      <a href="../../pdf-komprimieren/" class="nav-link">Komprimieren</a>
+      <a href="../../jpg-zu-pdf/" class="nav-link">JPG→PDF</a>
+      <a href="../../pdf-zu-jpg/" class="nav-link">PDF→JPG</a>
+      <a href="../../wasserzeichen-pdf/" class="nav-link">Wasserzeichen</a>
+      <a href="../../pdf-drehen/" class="nav-link">Drehen</a>
+      <a href="../../pdf-schuetzen/" class="nav-link">Schützen</a>
+    </div>
+    <button id="themeToggle" class="theme-toggle" aria-label="Dark Mode umschalten" title="Dark Mode umschalten"></button>
+  </nav>
+
+  <section class="seo-article" aria-labelledby="articleTitle">
+    <div class="seo-article__inner">
+      <div style="max-width:800px;margin:60px auto 40px;padding:0 24px;color:var(--text2);line-height:1.8;">
+
+        <p style="font-size:13px;color:var(--text3);margin:0 0 16px;">
+          <a href="../../../" style="color:var(--text3);text-decoration:none;">PDFree</a> ›
+          <a href="../../" style="color:var(--text3);text-decoration:none;">Deutsch</a> ›
+          PDF offline zusammenführen
+        </p>
+
+        <h1 id="articleTitle" style="font-size:32px;color:var(--text);margin:0 0 16px;font-weight:700;line-height:1.25;">PDF offline zusammenführen — Ohne Internet, lokal im Browser</h1>
+        <p style="font-size:15px;color:var(--text3);margin:0 0 32px;">4 Minuten Lesezeit · Aktualisiert Juli 2026</p>
+
+        <p style="font-size:18px;margin:0 0 24px;color:var(--text);">Manchmal müssen PDFs zusammengefügt werden, wenn gerade keine stabile Internetverbindung vorhanden ist — im Zug, im Flugzeug oder in einem Gebäude mit schlechtem WLAN. PDFree macht genau das möglich: PDFs offline zusammenführen, direkt im Browser, ohne Upload auf einen Server.</p>
+
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:28px;margin:0 0 40px;text-align:center;">
+          <p style="font-size:16px;font-weight:600;color:var(--text);margin:0 0 8px;">PDFs jetzt zusammenführen — auch offline</p>
+          <p style="font-size:14px;color:var(--text2);margin:0 0 20px;">Kein Upload. Kein Konto. Keine Serververbindung.</p>
+          <a href="../../pdf-zusammenfuehren/" style="background:var(--green);color:#fff;padding:13px 28px;border-radius:10px;font-weight:600;font-size:15px;text-decoration:none;display:inline-block;">PDF zusammenführen — Kostenlos</a>
+        </div>
+
+        <h2 style="font-size:22px;color:var(--text);margin:0 0 16px;font-weight:600;">Wie PDFree offline funktioniert</h2>
+        <p>PDFree ist eine Progressive Web App (PWA). Das bedeutet: Beim ersten Besuch der Website werden alle notwendigen Dateien — HTML, CSS, JavaScript, PDF-Bibliotheken — im Browser-Cache gespeichert. Beim nächsten Aufruf, auch ohne Internet, werden diese Dateien lokal geladen.</p>
+        <p style="margin-top:16px;">Die PDF-Verarbeitung selbst findet von Anfang an lokal im Browser statt. Es gibt keinen Server, der die Dateien empfängt oder verarbeitet — das Zusammenführen geschieht auf deinem Gerät. Offline oder online macht für die Qualität des Ergebnisses keinen Unterschied.</p>
+
+        <h2 style="font-size:22px;color:var(--text);margin:32px 0 16px;font-weight:600;">PDFs offline zusammenführen — Schritt für Schritt</h2>
+        <ol style="margin:0 0 32px;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:20px;">
+          <li style="display:flex;gap:16px;align-items:flex-start;">
+            <span style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;">1</span>
+            <div><strong style="color:var(--text);">PDFree einmal mit Internet öffnen</strong>
+            <p style="margin:4px 0 0;"><a href="../../pdf-zusammenfuehren/" style="color:var(--green);">pdfree.io/de/pdf-zusammenfuehren/</a> — beim ersten Aufruf werden alle Ressourcen gecacht.</p></div>
+          </li>
+          <li style="display:flex;gap:16px;align-items:flex-start;">
+            <span style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;">2</span>
+            <div><strong style="color:var(--text);">PDF-Dateien auswählen</strong>
+            <p style="margin:4px 0 0;">Klicke auf „Dateien auswählen" oder ziehe mehrere PDFs in den Dropbereich. Die Reihenfolge lässt sich per Drag-and-drop anpassen.</p></div>
+          </li>
+          <li style="display:flex;gap:16px;align-items:flex-start;">
+            <span style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;">3</span>
+            <div><strong style="color:var(--text);">Reihenfolge festlegen</strong>
+            <p style="margin:4px 0 0;">Sortiere die Dokumente in der gewünschten Reihenfolge. Das kombinierte PDF folgt dieser Anordnung.</p></div>
+          </li>
+          <li style="display:flex;gap:16px;align-items:flex-start;">
+            <span style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;">4</span>
+            <div><strong style="color:var(--text);">PDF herunterladen</strong>
+            <p style="margin:4px 0 0;">Klicke auf „Zusammenführen". Das kombinierte PDF wird sofort heruntergeladen — ohne Serverberührung.</p></div>
+          </li>
+        </ol>
+
+        <h2 style="font-size:22px;color:var(--text);margin:0 0 16px;font-weight:600;">Vorteile des Offline-Zusammenführens</h2>
+        <ul style="margin:16px 0 24px;padding-left:24px;">
+          <li><strong>Kein Datenschutzrisiko</strong> — Deine Dateien verlassen dein Gerät nicht</li>
+          <li><strong>Keine Serverabhängigkeit</strong> — Kein Warten auf Upload oder Download</li>
+          <li><strong>Schneller</strong> — Lokale Verarbeitung ist oft schneller als Cloud-Upload</li>
+          <li><strong>Immer verfügbar</strong> — Funktioniert auch bei schlechter Verbindung</li>
+          <li><strong>Keine Dateigrößenbegrenzung</strong> — Keine Server-Limits</li>
+        </ul>
+
+        <h2 style="font-size:22px;color:var(--text);margin:0 0 16px;font-weight:600;">Wann ist Offline-Zusammenführen besonders nützlich?</h2>
+        <p>Typische Anwendungsfälle: Auf Reisen mehrere Reisedokumente, Buchungsbestätigungen und Tickets zu einem PDF zusammenführen. Im Büro ohne stabile Verbindung mehrere Abteilungsberichte zu einem Dokument verbinden. Zu Hause vertrauliche Verträge lokal ohne Upload zusammenführen.</p>
+
+        <h2 style="font-size:22px;color:var(--text);margin:32px 0 16px;font-weight:600;">Häufig gestellte Fragen</h2>
+        <dl style="margin:0 0 32px;">
+          <dt style="font-weight:600;color:var(--text);margin:0 0 8px;">Kann PDFree PDFs wirklich ohne Internetverbindung zusammenführen?</dt>
+          <dd style="margin:0 0 20px;padding-left:16px;border-left:3px solid var(--border);">Ja. Sobald PDFree einmal geladen ist, wird keine aktive Internetverbindung mehr benötigt. Die gesamte Verarbeitung findet lokal statt. Für den ersten Aufruf ist eine Verbindung notwendig.</dd>
+          <dt style="font-weight:600;color:var(--text);margin:0 0 8px;">Wie viele PDFs kann ich auf einmal zusammenführen?</dt>
+          <dd style="margin:0 0 20px;padding-left:16px;border-left:3px solid var(--border);">Mit PDFree kannst du beliebig viele PDFs zusammenführen. Es gibt keine festgelegte Dateianzahl-Begrenzung — die praktische Grenze liegt im Arbeitsspeicher deines Geräts.</dd>
+          <dt style="font-weight:600;color:var(--text);margin:0 0 8px;">Bleibt die Qualität beim Zusammenführen erhalten?</dt>
+          <dd style="margin:0 0 20px;padding-left:16px;border-left:3px solid var(--border);">Ja. PDFree fügt PDFs zusammen, ohne sie neu zu rendern. Bilder, Schriften und das gesamte Layout bleiben exakt wie im Original.</dd>
+        </dl>
+
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:28px;margin:40px 0;text-align:center;">
+          <p style="font-size:16px;font-weight:600;color:var(--text);margin:0 0 8px;">PDFs zusammenführen — offline &amp; kostenlos</p>
+          <p style="font-size:14px;color:var(--text2);margin:0 0 20px;">Kein Upload. Kein Konto. Keine Wartezeit.</p>
+          <a href="../../pdf-zusammenfuehren/" style="background:var(--green);color:#fff;padding:13px 28px;border-radius:10px;font-weight:600;font-size:15px;text-decoration:none;display:inline-block;">PDF zusammenführen</a>
+        </div>
+
+        <div style="padding-top:24px;border-top:1px solid var(--border);">
+          <p style="font-size:12px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin:0 0 10px;">Verwandte Anleitungen</p>
+          <ul style="margin:0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:6px;">
+            <li><a href="../../pdf-zusammenfuehren/" style="color:var(--green);">PDF zusammenführen</a> — Mehrere PDFs zu einem Dokument verbinden</li>
+            <li><a href="../../pdf-aufteilen/" style="color:var(--green);">PDF aufteilen</a> — Seiten aus einem PDF extrahieren</li>
+            <li><a href="../../pdf-komprimieren/" style="color:var(--green);">PDF komprimieren</a> — Dateigröße reduzieren</li>
+            <li><a href="../pdf-zusammenfuehren-kostenlos/" style="color:var(--green);">PDF zusammenführen kostenlos</a> — Ausführliche Anleitung</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div style="display:flex;gap:48px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;font-size:13px;border-top:1px solid var(--border);padding-top:20px;">
+      <div>
+        <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Alternativen</div>
+        <a href="/ilovepdf-alternative/" style="display:block;color:var(--green);text-decoration:none;margin-bottom:4px;">iLovePDF Alternative</a>
+      </div>
+      <div>
+        <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Lösungen</div>
+        <a href="/hipaa-pdf-tools/" style="display:block;color:var(--green);text-decoration:none;margin-bottom:4px;">HIPAA-konforme PDF-Tools</a>
+        <a href="/secure-pdf-tools/" style="display:block;color:var(--green);text-decoration:none;">Sichere PDF-Tools</a>
+      </div>
+    </div>
+    PDFree · <strong>Alle Verarbeitungsschritte finden 100% in deinem Browser statt</strong> · Dateien werden <strong>nie hochgeladen</strong><br>
+    <span style="color:var(--green)">🔒</span> Deine Dokumente verlassen dein Gerät nie &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> Kostenlos für alle, für immer<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
+      <a href="/privacy.html" style="color:var(--green)">Datenschutz</a> &nbsp;·&nbsp;
+      <a href="/terms.html" style="color:var(--green)">Nutzungsbedingungen</a> &nbsp;·&nbsp;
+      <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a> &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green)">GitHub</a>
+    </span>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script>
+</body>
+</html>
