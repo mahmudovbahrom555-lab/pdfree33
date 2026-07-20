@@ -39,6 +39,7 @@ import { loadingRow, infoBanner } from './uiComponents.js';
 import { loadPdfJs } from './pdf2jpgUI.js';  // reuse CDN loader with retry logic
 import { loadPdfLib } from './lazyLibs.js';
 import { wmRemoveHtml, bindWmRemove, resetWmRemove } from './watermarkRemoveUI.js';
+import { t, tp } from './i18n.js';
 
 // ── Constants ─────────────────────────────────────────────────
 
@@ -78,7 +79,7 @@ export async function initRotateOptions(file) {
   const container = id('rotateOptions');
   if (!container) return;
 
-  container.innerHTML = loadingRow('Loading PDF…');
+  container.innerHTML = loadingRow(t('rot_loading'));
   container.style.display = 'block';
 
   try {
@@ -89,7 +90,7 @@ export async function initRotateOptions(file) {
     const doc = await PDFDocument.load(buf, { ignoreEncryption: true });
 
     _pageCount = doc.getPageCount();
-    if (_pageCount === 0) { showToast('This PDF has no pages'); _hide(container); return; }
+    if (_pageCount === 0) { showToast(t('no_pages_pdf')); _hide(container); return; }
 
     // Read existing rotation for each page — critical for scanned docs
     const pages = doc.getPages();
@@ -122,7 +123,7 @@ export async function initRotateOptions(file) {
     _render(file);
 
   } catch (err) {
-    showToast('Could not read PDF: ' + err.message, 5000);
+    showToast(t('rot_err_load', { msg: err.message }), 5000);
     _hide(container);
   }
 }
@@ -186,49 +187,47 @@ function _render(file) {
     <div class="compress-info">
       <span class="compress-info__name" title="${esc(file.name)}">${_truncName(file.name)}</span>
       <span class="compress-info__dot">·</span>
-      <span class="compress-info__meta">${_pageCount} page${_pageCount !== 1 ? 's' : ''}</span>
+      <span class="compress-info__meta">${tp(_pageCount, 'split_info_page', 'split_info_pages', { n: _pageCount })}</span>
     </div>
 
     <!-- Controls -->
     <div class="rot-controls">
-      <div class="rot-btns" role="toolbar" aria-label="Rotation">
-        <button type="button" class="rot-btn" id="rotLeft"  title="Rotate 90° counter-clockwise">↺ 90°</button>
-        <button type="button" class="rot-btn" id="rot180"   title="Rotate 180°">↔ 180°</button>
-        <button type="button" class="rot-btn" id="rotRight" title="Rotate 90° clockwise">↻ 90°</button>
+      <div class="rot-btns" role="toolbar" aria-label="${t('rot_toolbar_aria')}">
+        <button type="button" class="rot-btn" id="rotLeft"  title="${t('rot_ccw_title')}">↺ 90°</button>
+        <button type="button" class="rot-btn" id="rot180"   title="${t('rot_180_title')}">↔ 180°</button>
+        <button type="button" class="rot-btn" id="rotRight" title="${t('rot_cw_title')}">↻ 90°</button>
       </div>
 
-      <div class="rot-quick" role="toolbar" aria-label="Quick select">
-        <span class="rot-quick__label">Select:</span>
-        <button type="button" class="split-action-btn" id="rotSelAll">All</button>
-        <button type="button" class="split-action-btn" id="rotSelOdd">Odd</button>
-        <button type="button" class="split-action-btn" id="rotSelEven">Even</button>
-        <button type="button" class="split-action-btn" id="rotSelNone">None</button>
+      <div class="rot-quick" role="toolbar" aria-label="${t('rot_quick_aria')}">
+        <span class="rot-quick__label">${t('rot_select_label')}</span>
+        <button type="button" class="split-action-btn" id="rotSelAll">${t('select_all_short')}</button>
+        <button type="button" class="split-action-btn" id="rotSelOdd">${t('rot_odd')}</button>
+        <button type="button" class="split-action-btn" id="rotSelEven">${t('rot_even')}</button>
+        <button type="button" class="split-action-btn" id="rotSelNone">${t('deselect_all_short')}</button>
       </div>
 
       <div class="rot-history">
         <button type="button" class="split-action-btn" id="rotUndo"
-                ${_prevDeltas ? '' : 'disabled'}>↩ Undo</button>
+                ${_prevDeltas ? '' : 'disabled'}>${t('rot_undo')}</button>
         <button type="button" class="split-action-btn" id="rotReset"
-                ${anyChanged ? '' : 'disabled'}>⊘ Reset all</button>
+                ${anyChanged ? '' : 'disabled'}>${t('rot_reset')}</button>
       </div>
     </div>
 
     <!-- Selection hint -->
     <div class="rot-hint" id="rotHint" aria-live="polite">
-      ${_selected.size === 0
-        ? 'Click pages to select, then rotate'
-        : `${_selected.size} page${_selected.size !== 1 ? 's' : ''} selected`}
+      ${_hintText()}
     </div>
 
     <!-- Page grid -->
     <div class="rot-grid ${_useThumbs ? 'rot-grid--thumbs' : 'rot-grid--numbers'}"
-         id="rotGrid" role="list" aria-label="PDF pages">
+         id="rotGrid" role="list" aria-label="${t('rot_grid_aria')}">
       ${_renderGrid()}
     </div>
 
     ${wmRemoveHtml()}
 
-    ${infoBanner('🔒 Processed entirely in your browser · No upload', 'info')}
+    ${infoBanner(t('rot_banner'), 'info')}
   `;
 
   _bindEvents(container);
@@ -253,17 +252,21 @@ function _cardHTML(i) {
   const chgClass = changed  ? ' rot-card--changed'  : '';
 
   const badgeHTML = changed
-    ? `<span class="rot-badge" aria-label="Rotated ${delta}°">${delta > 0 ? '+' : ''}${delta}°</span>`
+    ? `<span class="rot-badge" aria-label="${t('rot_badge_aria', { delta })}">${delta > 0 ? '+' : ''}${delta}°</span>`
     : '';
+
+  const ariaLabel = t('rot_page_aria', { n: i + 1 })
+    + (selected ? t('rot_selected_suffix') : '')
+    + (changed  ? t('rot_rotated_suffix', { delta }) : '');
 
   if (_useThumbs) {
     const url = _thumbnailURLs[i];
     return `
       <div class="rot-card${selClass}${chgClass}" data-idx="${i}"
            role="listitem button" tabindex="0"
-           aria-label="Page ${i + 1}${selected ? ' (selected)' : ''}${changed ? ` rotated ${delta}°` : ''}">
+           aria-label="${esc(ariaLabel)}">
         <div class="rot-thumb">
-          <img src="${esc(url)}" alt="Page ${i + 1}"
+          <img src="${esc(url)}" alt="${t('rot_page_alt', { n: i + 1 })}"
                style="transform:rotate(${visual}deg)"
                loading="lazy">
           ${badgeHTML}
@@ -274,7 +277,7 @@ function _cardHTML(i) {
     return `
       <div class="rot-card rot-card--num${selClass}${chgClass}" data-idx="${i}"
            role="listitem button" tabindex="0"
-           aria-label="Page ${i + 1}${selected ? ' (selected)' : ''}${changed ? ` rotated ${delta}°` : ''}">
+           aria-label="${esc(ariaLabel)}">
         <div class="rot-numbox">
           <span class="rot-numbox__n" style="transform:rotate(${visual}deg)">${i + 1}</span>
           ${badgeHTML}
@@ -331,7 +334,7 @@ function _bindEvents(_container) {
 
 function _applyRotation(angle) {
   if (_selected.size === 0) {
-    showToast('Select pages first, then rotate');
+    showToast(t('rot_select_first'));
     return;
   }
 
@@ -394,12 +397,16 @@ function _refreshAllCards() {
   if (grid) grid.innerHTML = _renderGrid();
 }
 
+function _hintText() {
+  return _selected.size === 0
+    ? t('rot_hint_click')
+    : tp(_selected.size, 'rot_hint_selected_one', 'rot_hint_selected_many', { n: _selected.size });
+}
+
 function _updateHint() {
   const el = id('rotHint');
   if (!el) return;
-  el.textContent = _selected.size === 0
-    ? 'Click pages to select, then rotate'
-    : `${_selected.size} page${_selected.size !== 1 ? 's' : ''} selected`;
+  el.textContent = _hintText();
 }
 
 function _updateHistoryButtons() {
@@ -415,10 +422,10 @@ function _updateMergeBtn() {
   const changed = _deltas.filter(d => d !== 0).length;
   if (changed > 0) {
     btn.disabled    = false;
-    btn.textContent = `🔄 Rotate ${changed} page${changed !== 1 ? 's' : ''}`;
+    btn.textContent = tp(changed, 'rot_btn_one', 'rot_btn_many', { n: changed });
   } else {
     btn.disabled    = true;
-    btn.textContent = '🔄 Select and rotate pages';
+    btn.textContent = t('rot_btn_disabled');
   }
 }
 

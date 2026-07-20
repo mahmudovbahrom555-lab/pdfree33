@@ -14,5 +14,37 @@
       "@type": "Answer",
       "text": "Nein, es gibt keine künstlichen Limits. Die einzige Begrenzung ist der verfügbare Arbeitsspeicher deines Computers oder Smartphones."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann ich nur bestimmte Seiten drehen, nicht das ganze PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Du kannst alle Seiten drehen oder einzelne Seiten zum Drehen auswählen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Welche Drehwinkel werden unterstützt?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree unterstützt Drehungen um 90°, 180° und 270° für jede beliebige Seitenauswahl."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Ist der PDF-Dreher komplett kostenlos?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. PDFree ist kostenlos, ohne Abo, ohne Tageslimit und ohne Registrierung. Der Ausgabedatei werden keine Wasserzeichen hinzugefügt."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Wird die Drehung dauerhaft in meinem PDF gespeichert?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Ein Klick auf „PDF drehen“ erzeugt eine neue PDF-Datei, die mit dauerhaft angewendeter Drehung heruntergeladen wird. Sie erscheint in jedem PDF-Betrachter in der korrigierten Ausrichtung."
+    }
   }
 ]

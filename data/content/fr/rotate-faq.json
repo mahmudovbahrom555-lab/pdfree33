@@ -14,5 +14,37 @@
       "@type": "Answer",
       "text": "Non, il n'y a pas de limites artificielles. La seule limitation est la mémoire vive disponible sur votre ordinateur ou smartphone."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Puis-je faire pivoter seulement certaines pages, pas tout le PDF ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui. Vous pouvez faire pivoter toutes les pages ou sélectionner des pages individuelles à pivoter."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Quels angles de rotation sont pris en charge ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree prend en charge la rotation à 90°, 180° et 270° pour n'importe quelle sélection de pages."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Le rotateur PDF est-il entièrement gratuit ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui. PDFree est gratuit, sans abonnement, sans limite quotidienne et sans inscription. Aucun filigrane n'est ajouté au résultat."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "La rotation est-elle enregistrée de façon permanente dans mon PDF ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui. Cliquer sur « Rotation PDF » génère un nouveau fichier PDF téléchargé sur votre appareil avec la rotation appliquée de façon permanente. Il s'affichera dans l'orientation corrigée dans n'importe quelle visionneuse PDF."
+    }
   }
 ]
