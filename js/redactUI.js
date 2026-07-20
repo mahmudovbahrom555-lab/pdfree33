@@ -45,13 +45,40 @@ const COLORS = {
   white: { hex: '#FFFFFF', rgb: [1, 1, 1],          label: 'White' },
 };
 
+// ── Luhn algorithm (credit card validation) ───────────────────
+// Strips non-digits, then verifies the Luhn check digit.
+// Returns false for purely sequential numbers, IDs, etc.
+function _luhnCheck(str) {
+  const digits = str.replace(/\D/g, '');
+  if (digits.length < 13 || digits.length > 19) return false;
+  let sum = 0, alt = false;
+  for (let i = digits.length - 1; i >= 0; i--) {
+    let n = parseInt(digits[i], 10);
+    if (alt) { n *= 2; if (n > 9) n -= 9; }
+    sum += n;
+    alt = !alt;
+  }
+  return sum % 10 === 0;
+}
+
 // ── PII Pattern Library ────────────────────────────────────────
+// Each entry may have an optional `validate(matchStr) → bool` fn.
+// When present, regex candidates that fail validation are skipped.
 const PII_PATTERNS = [
-  { id: 'email',  label: '📧 Email',       regex: /[a-zA-Z0-9._%+\w]+@[a-zA-Z0-9.]+\.[a-zA-Z]{2,}/gi },
-  { id: 'phone',  label: '📞 Phone',       regex: /(\+?\d[\d\s().]{6,}\d)/g },
-  { id: 'cc',     label: '💳 Credit Card', regex: /\b\d{4}[\s]?\d{4}[\s]?\d{4}[\s]?\d{4}\b/g },
-  { id: 'iban',   label: '🏦 IBAN',        regex: /\b[A-Z]{2}\d{2}[A-Z0-9]{1,30}\b/g },
-  { id: 'url',    label: '🌐 URL',         regex: /https?:\/\/[^\s]+/gi },
+  { id: 'email', label: '📧 Email',
+    regex: /[a-zA-Z0-9._%+\w]+@[a-zA-Z0-9.]+\.[a-zA-Z]{2,}/gi },
+  // Phone: require at least one separator between digit groups to avoid
+  // matching bare numeric sequences like employee IDs or serial numbers.
+  { id: 'phone', label: '📞 Phone',
+    regex: /(?:\+\d{1,3}[\s]?)?\(?\d{2,4}\)?[\s.]\d{2,4}[\s.]\d{2,9}/g },
+  // Credit card: regex finds 16-digit candidates; Luhn filters false positives.
+  { id: 'cc', label: '💳 Credit Card',
+    regex: /\b\d{4}[\s]?\d{4}[\s]?\d{4}[\s]?\d{4}\b/g,
+    validate: _luhnCheck },
+  { id: 'iban', label: '🏦 IBAN',
+    regex: /\b[A-Z]{2}\d{2}[A-Z0-9]{1,30}\b/g },
+  { id: 'url', label: '🌐 URL',
+    regex: /https?:\/\/[^\s]+/gi },
 ];
 
 // SEO routing — page-level presets based on URL path
@@ -1256,7 +1283,7 @@ function _bindEvents(container) {
   document.querySelectorAll('.rdct-pii-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const pii = PII_PATTERNS.find(p => p.id === btn.dataset.pii);
-      if (pii) _runPatternSearch(new RegExp(pii.regex.source, pii.regex.flags), pii.id);
+      if (pii) _runPatternSearch(new RegExp(pii.regex.source, pii.regex.flags), pii.id, pii.validate || null);
     });
   });
 
@@ -1286,7 +1313,7 @@ async function _runTextSearch(query) {
   await _runPatternSearch(rx, 'text');
 }
 
-async function _runPatternSearch(regex, source) {
+async function _runPatternSearch(regex, source, validateFn = null) {
   if (!_pdfDoc) return;
   const hint = id('rdctSearchHint');
   if (hint) hint.textContent = 'Searching…';
@@ -1304,6 +1331,9 @@ async function _runPatternSearch(regex, source) {
       regex.lastIndex = 0;
       let m;
       while ((m = regex.exec(str)) !== null) {
+        // Skip if a validator rejects this match (e.g. Luhn check for CC)
+        if (validateFn && !validateFn(m[0])) continue;
+
         const [,, , scaleY, tx, ty] = item.transform;
         const charW = item.width / (str.length || 1);
         const x = tx + m.index * charW;
