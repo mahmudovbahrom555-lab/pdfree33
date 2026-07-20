@@ -163,8 +163,12 @@ def _build_nav_items(lang, all_tools):
         href  = f'../{slug}/' if slug is not None else f'/{t["slugs"]["en"]}/'
         items.append({'href': href, 'label': label, 'tool_key': t['toolKey']})
         if tool_id == 'extract':
-            # Insert Draw after Extract — EN-only, no locale slugs
-            items.append({'href': '/draw-on-pdf/', 'label': 'Draw', 'tool_key': 'draw-pdf'})
+            # Draw: use locale slug when available, fall back to EN
+            _draw_slugs = {'en': 'draw-on-pdf', 'de': 'de/pdf-zeichnen', 'es': 'es/dibujar-en-pdf', 'fr': 'fr/dessiner-sur-pdf', 'pt': 'pt/desenhar-no-pdf'}
+            _draw_labels = {'en': 'Draw', 'de': 'Zeichnen', 'es': 'Dibujar', 'fr': 'Dessiner', 'pt': 'Desenhar'}
+            _draw_slug = _draw_slugs.get(lang, _draw_slugs['en'])
+            _draw_href = f'../{_draw_slug}/' if lang != 'en' else f'/{_draw_slug}/'
+            items.append({'href': _draw_href, 'label': _draw_labels.get(lang, 'Draw'), 'tool_key': 'draw-pdf'})
     # Compare — EN-only, no locale slugs
     items.append({'href': '/compare-pdf/', 'label': 'Compare', 'tool_key': 'compare'})
     return items
