@@ -45,6 +45,15 @@ const COLORS = {
   white: { hex: '#FFFFFF', rgb: [1, 1, 1],          label: 'White' },
 };
 
+// ── PII Pattern Library ────────────────────────────────────────
+const PII_PATTERNS = [
+  { id: 'email',  label: '📧 Email',       regex: /[a-zA-Z0-9._%+\w]+@[a-zA-Z0-9.]+\.[a-zA-Z]{2,}/gi },
+  { id: 'phone',  label: '📞 Phone',       regex: /(\+?\d[\d\s().]{6,}\d)/g },
+  { id: 'cc',     label: '💳 Credit Card', regex: /\b\d{4}[\s]?\d{4}[\s]?\d{4}[\s]?\d{4}\b/g },
+  { id: 'iban',   label: '🏦 IBAN',        regex: /\b[A-Z]{2}\d{2}[A-Z0-9]{1,30}\b/g },
+  { id: 'url',    label: '🌐 URL',         regex: /https?:\/\/[^\s]+/gi },
+];
+
 // SEO routing — page-level presets based on URL path
 const PRESETS = {
   '/redact-pdf/':    { color: 'black', opacity: 1.0, tone: 'privacy' },
@@ -421,16 +430,20 @@ function _render(container, fileName, preset) {
         </div>` : ''}
 
         ${isTrueRedact ? `
-        <!-- Text search redaction -->
+        <!-- Search & Redact + PII patterns -->
         <div class="rdct-tools" id="rdctSearchWrap">
           <div class="rdct-tool-label">Search &amp; Redact</div>
-          <div style="display:flex;gap:6px;">
-            <input type="text" id="rdctSearchInput" placeholder="Type text to find…"
+          <div style="display:flex;gap:6px;margin-bottom:6px;">
+            <input type="text" id="rdctSearchInput" placeholder="Type text or /regex/…"
               style="flex:1;padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:var(--surface2);color:var(--text);font-size:13px;">
             <button type="button" id="rdctSearchBtn"
-              style="padding:6px 10px;background:var(--green);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600;white-space:nowrap;">Find</button>
+              style="padding:6px 10px;background:var(--green);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600;white-space:nowrap;">Find &amp; Mark</button>
           </div>
-          <div id="rdctSearchHint" style="font-size:11px;color:var(--text3);margin-top:4px;"></div>
+          <div style="display:flex;flex-wrap:wrap;gap:5px;">
+            ${PII_PATTERNS.map(p => `<button type="button" class="rdct-pii-btn" data-pii="${p.id}"
+              style="padding:4px 8px;border:1px solid var(--border);border-radius:5px;background:var(--surface2);color:var(--text);font-size:11px;cursor:pointer;white-space:nowrap;">${p.label}</button>`).join('')}
+          </div>
+          <div id="rdctSearchHint" style="font-size:11px;color:var(--text3);margin-top:5px;"></div>
         </div>
 
         <!-- View toggle + Metadata -->
@@ -443,11 +456,13 @@ function _render(container, fileName, preset) {
               <small>Temporarily show document without black boxes to review context</small>
             </div>
           </label>
-          <label class="compress-preserve" style="cursor:pointer;">
+          <label class="compress-preserve" style="cursor:pointer;position:relative;">
             <input type="checkbox" id="rdctRemoveMeta" checked>
             <span class="compress-preserve__box" aria-hidden="true"></span>
             <div class="compress-preserve__text">
-              <strong>Remove metadata</strong>
+              <strong>Remove metadata
+                <span id="rdctMetaTip" title="Removes Author, Creator, Producer, Keywords and other hidden fields embedded in the PDF" style="cursor:help;margin-left:3px;color:var(--text3);font-weight:400;">ⓘ</span>
+              </strong>
               <small>Strip Author, Creator, keywords and other hidden fields from PDF</small>
             </div>
           </label>
@@ -1217,11 +1232,33 @@ function _bindEvents(container) {
   // ── True-redact-only controls ──────────────────────────────────
   const searchBtn = id('rdctSearchBtn');
   if (searchBtn) {
-    searchBtn.addEventListener('click', _runTextSearch);
+    searchBtn.addEventListener('click', () => {
+      const input = id('rdctSearchInput');
+      if (!input) return;
+      const raw = input.value.trim();
+      // Support /regex/ syntax
+      const regexMatch = raw.match(/^\/(.+)\/([gimu]*)$/);
+      if (regexMatch) {
+        try {
+          const rx = new RegExp(regexMatch[1], regexMatch[2] || 'gi');
+          _runPatternSearch(rx, 'regex');
+        } catch { showToast('Invalid regex pattern'); }
+      } else {
+        _runTextSearch(raw);
+      }
+    });
     id('rdctSearchInput')?.addEventListener('keydown', e => {
-      if (e.key === 'Enter') _runTextSearch();
+      if (e.key === 'Enter') searchBtn.click();
     });
   }
+
+  // PII pattern buttons
+  document.querySelectorAll('.rdct-pii-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const pii = PII_PATTERNS.find(p => p.id === btn.dataset.pii);
+      if (pii) _runPatternSearch(new RegExp(pii.regex.source, pii.regex.flags), pii.id);
+    });
+  });
 
   id('rdctHideRedactions')?.addEventListener('change', e => {
     const overlay = id('rdctOverlay');
@@ -1239,16 +1276,19 @@ async function _goToPage(pageNum) {
 
 // ── Merge button state ─────────────────────────────────────────
 
-// ── Text Search Redaction (Phase 2) ───────────────────────────
+// ── Search & Redact (Phase 2) ──────────────────────────────────
+// _runTextSearch: plain text (case-insensitive substring)
+// _runPatternSearch: regex + source tag for the redaction report
 
-async function _runTextSearch() {
-  const input = id('rdctSearchInput');
-  const hint  = id('rdctSearchHint');
-  if (!input || !_pdfDoc) return;
+async function _runTextSearch(query) {
+  if (!query) { const h = id('rdctSearchHint'); if (h) h.textContent = 'Enter text to search.'; return; }
+  const rx = new RegExp(query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+  await _runPatternSearch(rx, 'text');
+}
 
-  const query = input.value.trim();
-  if (!query) { if (hint) hint.textContent = 'Enter text to search.'; return; }
-
+async function _runPatternSearch(regex, source) {
+  if (!_pdfDoc) return;
+  const hint = id('rdctSearchHint');
   if (hint) hint.textContent = 'Searching…';
 
   let matchCount = 0;
@@ -1256,40 +1296,34 @@ async function _runTextSearch() {
   for (let p = 1; p <= _pageCount; p++) {
     const page    = await _pdfDoc.getPage(p);
     const content = await page.getTextContent();
+    const items   = content.items;
 
-    const items  = content.items;
-    const qLower = query.toLowerCase();
-
-    for (let i = 0; i < items.length; i++) {
-      const item = items[i];
-      const str  = item.str;
-      const strLower = str.toLowerCase();
-      let pos = strLower.indexOf(qLower);
-      while (pos !== -1) {
-        // item.transform: [scaleX, skewX, skewY, scaleY, translateX, translateY]
-        // Width/height from item.width and item.height in PDF user units
+    for (const item of items) {
+      const str = item.str;
+      if (!str) continue;
+      regex.lastIndex = 0;
+      let m;
+      while ((m = regex.exec(str)) !== null) {
         const [,, , scaleY, tx, ty] = item.transform;
         const charW = item.width / (str.length || 1);
-        const x = tx + pos * charW;
-        const w = query.length * charW;
-        const h = Math.abs(scaleY);
-        const y = ty - h * 0.1; // small padding
+        const x = tx + m.index * charW;
+        const w = Math.max(m[0].length * charW, 4);
+        const h = Math.max(Math.abs(scaleY) * 1.2, 4);
+        const y = ty - h * 0.1;
 
-        const rect = { type: 'rect', x, y, w: Math.max(w, 4), h: Math.max(h, 4) };
         const existing = _rectsByPage[p] || [];
-        if (existing.length < MAX_RECTS_PER_PAGE * 4) { // higher limit for search
-          existing.push(rect);
-          _rectsByPage[p] = existing;
-          matchCount++;
-        }
-
-        pos = strLower.indexOf(qLower, pos + 1);
+        existing.push({ type: 'rect', x, y, w, h, source });
+        _rectsByPage[p] = existing;
+        matchCount++;
       }
     }
   }
 
   _applyAll = false;
-  if (hint) hint.textContent = matchCount > 0 ? `Found ${matchCount} match${matchCount !== 1 ? 'es' : ''} — boxes added to pages` : 'No matches found.';
+  const piiLabel = PII_PATTERNS.find(p => p.id === source)?.label || source;
+  if (hint) hint.textContent = matchCount > 0
+    ? `${piiLabel !== source ? piiLabel + ': ' : ''}Found ${matchCount} match${matchCount !== 1 ? 'es' : ''} — marked on pages`
+    : 'No matches found.';
   if (_currentPage) { _redrawOverlay(); _updateRectsList(); }
   _updateMergeBtn();
   if (matchCount > 0) _saveHistory();

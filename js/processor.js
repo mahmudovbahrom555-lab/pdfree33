@@ -2830,8 +2830,32 @@ async function _runRedactTrue(filesSnapshot, params) {
 
         const blob = new Blob([data.result], { type: 'application/pdf' });
         const baseName = file.name.replace(/\.pdf$/i, '');
-        const redactedCount = Object.keys(redactedImages).length;
-        const desc = `${redactedCount} page${redactedCount !== 1 ? 's' : ''} permanently redacted${removeMetadata ? ' · metadata removed' : ''}`;
+        const redactedPageCount = Object.keys(redactedImages).length;
+        const preservedCount    = pageCount - redactedPageCount;
+
+        // Count rects by source tag for the report
+        const sourceCounts = {};
+        for (const pageIdx of redactedPageSet) {
+          const pageNum = pageIdx + 1;
+          const rects = applyAll ? (params.rects || []) : (rectsByPage[pageNum] || []);
+          for (const r of rects) {
+            const src = r.source || 'area';
+            sourceCounts[src] = (sourceCounts[src] || 0) + 1;
+          }
+        }
+        const totalAreas = Object.values(sourceCounts).reduce((a, b) => a + b, 0);
+
+        const SOURCE_LABELS = { email: 'email', phone: 'phone number', cc: 'credit card number', iban: 'IBAN', url: 'URL', text: 'text match', regex: 'pattern match', area: 'area' };
+        const sourceLines = Object.entries(sourceCounts)
+          .map(([src, n]) => `${n} ${SOURCE_LABELS[src] || src}${n !== 1 && !SOURCE_LABELS[src]?.endsWith('s') ? 's' : ''}`)
+          .join(', ');
+
+        const desc = [
+          `${redactedPageCount} page${redactedPageCount !== 1 ? 's' : ''} redacted`,
+          `${preservedCount} preserved`,
+          totalAreas > 0 ? sourceLines : null,
+          removeMetadata ? 'metadata removed' : null,
+        ].filter(Boolean).join(' · ');
 
         document.dispatchEvent(new CustomEvent('pdfree:success', {
           detail: { tool: 'redact', blob, desc, filename: `${baseName}_redacted.pdf` }
