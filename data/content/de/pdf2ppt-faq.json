@@ -1,0 +1,50 @@
+[
+  {
+    "@type": "Question",
+    "name": "Wird meine PDF irgendwo hochgeladen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nein. Jede Folie wird im Browser gerendert und mit pdf.js und PptxGenJS verpackt. Deine PDF verlässt dein Gerät nie."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann ich den Text auf den Folien bearbeiten?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nicht direkt — jede Folie ist ein Bild der ursprünglichen PDF-Seite, das das exakte Layout beibehält, aber den Text nicht als separates PowerPoint-Objekt enthält. Dasselbe Verfahren verwenden praktisch alle PDF-zu-PowerPoint-Tools. Falls du bearbeitbaren Text benötigst, verwende stattdessen PDF zu Word."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Welche Foliengröße wird erzeugt?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Die Foliengröße entspricht exakt dem Seitenformat und Seitenverhältnis deiner PDF — kein Letterboxing, keine gestreckten Ränder."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Welche Qualitätsstufe soll ich wählen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ausgewogen (150 dpi) ist für die meisten Präsentationen eine gute Wahl. Hohe Qualität empfiehlt sich für dichten Text oder Feindrucke; Kompakt ist sinnvoll, wenn du die Datei per E-Mail verschicken und eine kleine Dateigröße bevorzugst."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Ist das ein kostenloser PDF zu PowerPoint Konverter ohne Anmeldung?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. PDFree ist vollständig kostenlos — ohne Anmeldung, ohne Konto, ohne Installation. Öffne das Tool, lade deine PDF und lade die .pptx-Datei herunter."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Funktioniert das auch mit großen PDFs?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja, sehr große PDFs verwenden automatisch eine niedrigere Bildqualität, um einen Speicherüberlauf im Browser zu verhindern. Für sehr viele Seiten ist Kompakt die zuverlässigste Wahl."
+    }
+  }
+]

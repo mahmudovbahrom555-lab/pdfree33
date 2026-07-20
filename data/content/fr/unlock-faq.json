@@ -1,0 +1,50 @@
+[
+  {
+    "@type": "Question",
+    "name": "Mon PDF ou mon mot de passe est-il envoyé quelque part ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non. La suppression du mot de passe s'effectue entièrement dans votre navigateur avec QPDF (WebAssembly). Ni le fichier ni le mot de passe ne sont envoyés à un serveur."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFree peut-il récupérer ou deviner un mot de passe inconnu ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non. Vous devez connaître le bon mot de passe du PDF. PDFree supprime uniquement la protection des fichiers que vous êtes déjà autorisé à ouvrir ; il ne devine pas, ne récupère pas et ne contourne pas les mots de passe inconnus."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Que faire si mon PDF indique qu'aucun mot de passe n'est requis ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Certains PDFs ont uniquement des restrictions propriétaire (impression ou copie désactivées) sans nécessiter de mot de passe pour les ouvrir. PDFree le détecte automatiquement et vous permet de supprimer ces restrictions sans rien saisir."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "J'ai saisi le mot de passe mais il est indiqué comme incorrect. Que faire ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Vérifiez les fautes de frappe, les espaces avant ou après le mot de passe, et si le verrou majuscules est activé. Les mots de passe sont sensibles à la casse. Le fichier reste sélectionné pour que vous puissiez réessayer facilement."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Est-ce un suppresseur de mot de passe PDF gratuit sans inscription ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui. PDFree est entièrement gratuit — sans inscription, sans compte, sans installation. Ouvrez l'outil, saisissez le mot de passe et téléchargez le PDF déverrouillé."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Puis-je ajouter un nouveau mot de passe ensuite ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui — utilisez l'outil Protéger le PDF pour ajouter un nouveau mot de passe ou de nouvelles restrictions au fichier déverrouillé."
+    }
+  }
+]

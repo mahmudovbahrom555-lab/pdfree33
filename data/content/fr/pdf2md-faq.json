@@ -1,0 +1,50 @@
+[
+  {
+    "@type": "Question",
+    "name": "Mon PDF est-il envoyé quelque part ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non. Le texte est lu et structuré en Markdown entièrement dans votre navigateur avec pdf.js. Votre PDF ne quitte jamais votre appareil."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Les tableaux et les images sont-ils convertis ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non — cet outil se concentre sur le texte, les titres et les listes. Les tableaux ne sont pas convertis en syntaxe Markdown ; les images ne sont pas intégrées. Pour les tableaux, utilisez PDF en Excel ; pour les documents complets avec images, utilisez PDF en Word."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Comment les titres sont-ils détectés ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree compare la taille de police de chaque ligne avec la taille typique du corps du texte du document. Le texte nettement plus grand devient un titre Markdown (#, ## ou ### selon l'écart de taille)."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Quels types de listes sont reconnus ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Les lignes à puces (•, ◦, ▪ et marqueurs similaires) et les lignes numérotées (1., 2.) sont converties en syntaxe de liste Markdown. Les listes avec lettres ou chiffres romains (a., iv.) sont laissées en texte normal, car ces marqueurs sont trop facilement confondus avec du vrai contenu."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Est-ce un convertisseur PDF en Markdown gratuit sans inscription ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui. PDFree est entièrement gratuit — sans inscription, sans compte, sans installation. Ouvrez l'outil, chargez votre PDF et téléchargez le fichier .md."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Fonctionne-t-il avec des PDFs scannés ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Uniquement si le PDF a déjà une couche de texte. Les PDFs scannés basés sur des images n'ont pas de texte extractible — appliquez d'abord l'OCR, puis convertissez le résultat."
+    }
+  }
+]

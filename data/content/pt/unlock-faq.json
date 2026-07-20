@@ -1,0 +1,50 @@
+[
+  {
+    "@type": "Question",
+    "name": "Meu PDF ou senha são enviados para algum servidor?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Não. A remoção da senha ocorre inteiramente no seu navegador com QPDF (WebAssembly). Nem o arquivo nem a senha são enviados a nenhum servidor."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "O PDFree pode recuperar ou adivinhar uma senha desconhecida?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Não. Você precisa conhecer a senha correta do PDF. O PDFree apenas remove a proteção de arquivos que você já está autorizado a abrir; ele não adivinha, recupera nem contorna senhas desconhecidas."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "O que fazer se meu PDF diz que não precisa de senha?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Alguns PDFs têm apenas restrições de proprietário (como impressão ou cópia desativadas) sem exigir senha para abrir. O PDFree detecta isso automaticamente e permite remover essas restrições sem digitar nada."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Digitei a senha, mas ela diz que está incorreta. O que fazer?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Verifique erros de digitação, espaços extras ou se o caps lock está ativado. As senhas diferenciam maiúsculas de minúsculas. O arquivo permanece selecionado para que você possa tentar novamente facilmente."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Este é um removedor de senha PDF gratuito sem cadastro?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim. O PDFree é completamente gratuito — sem cadastro, sem conta, sem instalação. Abra a ferramenta, digite a senha e baixe o PDF desbloqueado."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso adicionar uma nova senha depois?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim — use a ferramenta Proteger PDF para adicionar uma nova senha ou restrições ao arquivo desbloqueado."
+    }
+  }
+]

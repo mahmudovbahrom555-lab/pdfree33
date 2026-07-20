@@ -1,0 +1,50 @@
+[
+  {
+    "@type": "Question",
+    "name": "¿Se sube mi PDF a algún servidor?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Cada diapositiva se renderiza y empaqueta en tu navegador usando pdf.js y PptxGenJS. Tu PDF nunca sale de tu dispositivo."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Puedo editar el texto de las diapositivas después de convertir?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No directamente — cada diapositiva es una imagen de la página PDF original, lo que conserva el diseño exacto pero significa que el texto no es un objeto de PowerPoint editable por separado. Este es el mismo enfoque que utilizan prácticamente todas las herramientas de PDF a PowerPoint. Si necesitas texto editable, usa PDF a Word."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Qué tamaño tendrán las diapositivas?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "El tamaño de la diapositiva coincide exactamente con las dimensiones y la relación de aspecto de la página de tu PDF, sin letterboxing ni márgenes estirados."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Qué nivel de calidad debo elegir?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Equilibrado (150 dpi) es una buena opción predeterminada para la mayoría de presentaciones. Elige Alta calidad para texto denso o impresión fina; elige Compacto si quieres enviar el archivo por correo y prefieres un tamaño más pequeño."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Es este un conversor PDF a PowerPoint gratuito sin registro?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sí. PDFree es completamente gratuito — sin registro, sin cuenta, sin instalación. Abre la herramienta, carga tu PDF y descarga el archivo .pptx."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Funciona con PDFs grandes?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sí, aunque los PDFs muy grandes utilizan automáticamente una calidad de imagen más baja para evitar que el navegador se quede sin memoria. Para un gran número de páginas, Compacto es la opción más fiable."
+    }
+  }
+]

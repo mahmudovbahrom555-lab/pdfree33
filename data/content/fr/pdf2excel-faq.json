@@ -1,0 +1,50 @@
+[
+  {
+    "@type": "Question",
+    "name": "Mon PDF est-il envoyé quelque part pour la conversion ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non. La détection de tableaux et la génération du fichier Excel s'effectuent entièrement dans votre navigateur avec pdf.js et exceljs. Votre PDF et les données extraites ne quittent jamais votre appareil."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Que se passe-t-il si mon PDF ne contient pas de tableau ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree vous indique avant la conversion combien de tableaux ont été détectés. Si aucun n'est trouvé, tout le texte est exporté dans une seule feuille appelée « Texte ». Pour les documents très textuels, PDF en Word est souvent plus adapté."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Puis-je convertir un PDF scanné en Excel ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Pas directement — un PDF scanné est une image sans couche de texte, donc il n'y a aucune donnée de tableau à détecter. Appliquez d'abord l'OCR pour ajouter une couche de texte, puis convertissez le résultat en Excel."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Comment PDFree détecte-t-il les tableaux ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree vérifie si les lignes de texte s'alignent en colonnes cohérentes sur au moins 3 lignes. Chaque candidate reçoit un score de confiance ; les scores faibles sont rejetés plutôt que d'être affichés comme un tableau cassé."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Est-ce un convertisseur PDF en Excel gratuit sans inscription ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui. PDFree est entièrement gratuit — sans inscription, sans compte, sans installation. Ouvrez l'outil, chargez votre PDF et téléchargez le fichier .xlsx."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Puis-je modifier les formules ou recalculer après la conversion ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Les valeurs extraites sont des chiffres et du texte ordinaires, pas des formules — un PDF ne stocke pas les calculs sous-jacents, seulement les résultats affichés. Une fois dans Excel, vous pouvez ajouter vos propres formules sur les données extraites normalement."
+    }
+  }
+]

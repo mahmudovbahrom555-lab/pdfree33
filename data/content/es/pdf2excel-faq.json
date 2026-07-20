@@ -1,0 +1,50 @@
+[
+  {
+    "@type": "Question",
+    "name": "¿Se sube mi PDF a algún servidor para la conversión?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. La detección de tablas y la generación del archivo Excel se realizan completamente en tu navegador usando pdf.js y exceljs. Tu PDF y los datos extraídos nunca salen de tu dispositivo."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Qué ocurre si mi PDF no tiene tablas?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree te informa antes de convertir cuántas tablas detectó. Si no se encuentra ninguna, todo el texto se guarda en una sola hoja llamada \"Texto\". Para documentos con mucho texto, PDF a Word suele ser mejor opción."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Puedo convertir un PDF escaneado a Excel?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No directamente — un PDF escaneado es una imagen sin capa de texto, por lo que no hay datos de tabla para detectar. Aplica primero OCR para añadir una capa de texto y luego convierte el resultado a Excel."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Cómo detecta PDFree las tablas?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree comprueba si las líneas de texto se alinean en columnas consistentes en al menos 3 filas. Cada candidata recibe una puntuación de confianza; las puntuaciones bajas se descartan en lugar de mostrarse como una tabla rota."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Es este un conversor PDF a Excel gratuito sin registro?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sí. PDFree es completamente gratuito — sin registro, sin cuenta, sin instalación. Abre la herramienta, carga tu PDF y descarga el archivo .xlsx."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Puedo editar fórmulas o recalcular después de convertir?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Los valores extraídos son números y texto ordinarios, no fórmulas — un PDF no almacena cálculos subyacentes, solo resultados renderizados. Una vez en Excel, puedes añadir tus propias fórmulas sobre los datos extraídos con normalidad."
+    }
+  }
+]

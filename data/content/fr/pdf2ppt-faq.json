@@ -1,0 +1,50 @@
+[
+  {
+    "@type": "Question",
+    "name": "Mon PDF est-il envoyé quelque part ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non. Chaque diapositive est rendue et packagée dans votre navigateur avec pdf.js et PptxGenJS. Votre PDF ne quitte jamais votre appareil."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Puis-je modifier le texte sur les diapositives après la conversion ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Pas directement — chaque diapositive est une image de la page PDF originale, ce qui préserve la mise en page exacte mais signifie que le texte n'est pas un objet PowerPoint modifiable séparé. C'est la même approche qu'utilisent pratiquement tous les outils PDF en PowerPoint. Si vous avez besoin de texte éditable, utilisez plutôt PDF en Word."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Quelle sera la taille de mes diapositives ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "La taille de la diapositive correspond exactement aux dimensions et au format de votre PDF, sans letterboxing ni marges étirées."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Quel niveau de qualité dois-je choisir ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Équilibré (150 dpi) est un bon choix par défaut pour la plupart des présentations. Choisissez Haute qualité pour du texte dense ou de l'impression fine ; choisissez Compact si vous envoyez le fichier par e-mail et préférez une taille réduite."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Est-ce un convertisseur PDF en PowerPoint gratuit sans inscription ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui. PDFree est entièrement gratuit — sans inscription, sans compte, sans installation. Ouvrez l'outil, chargez votre PDF et téléchargez le fichier .pptx."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Fonctionne-t-il avec de grands PDFs ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui, mais les PDFs très volumineux utilisent automatiquement une qualité d'image plus basse pour éviter que le navigateur manque de mémoire. Pour un très grand nombre de pages, Compact est le choix le plus fiable."
+    }
+  }
+]

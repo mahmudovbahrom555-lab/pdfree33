@@ -1,0 +1,50 @@
+[
+  {
+    "@type": "Question",
+    "name": "¿Se sube mi PDF a algún servidor?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. El texto se lee y se estructura en Markdown completamente en tu navegador usando pdf.js. Tu PDF nunca sale de tu dispositivo."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Se convierten tablas e imágenes?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No — esta herramienta se centra en texto, encabezados y listas. Las tablas no se convierten a sintaxis Markdown; las imágenes no se incrustan. Para tablas, usa PDF a Excel; para documentos completos con imágenes, usa PDF a Word."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Cómo se detectan los encabezados?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree compara el tamaño de fuente de cada línea con el tamaño típico del cuerpo del documento. El texto notablemente más grande se convierte en un encabezado Markdown (#, ## o ### según cuánto más grande sea)."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Qué tipos de listas se reconocen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Las líneas con viñetas (•, ◦, ▪ y marcadores similares) y las líneas numeradas (1., 2.) se convierten a sintaxis de lista Markdown. Las listas con letras o números romanos (a., iv.) se dejan como texto normal, ya que esos marcadores son demasiado fáciles de confundir con contenido real."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Es este un conversor PDF a Markdown gratuito sin registro?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sí. PDFree es completamente gratuito — sin registro, sin cuenta, sin instalación. Abre la herramienta, carga tu PDF y descarga el archivo .md."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Funcionará con PDFs escaneados?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Solo si el PDF ya tiene una capa de texto. Los PDFs escaneados basados solo en imágenes no tienen texto extraíble — aplica primero OCR y luego convierte el resultado."
+    }
+  }
+]

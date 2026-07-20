@@ -1,0 +1,50 @@
+[
+  {
+    "@type": "Question",
+    "name": "Meu PDF é enviado para algum servidor?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Não. O texto é lido e estruturado em Markdown inteiramente no seu navegador com pdf.js. Seu PDF nunca sai do seu dispositivo."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Tabelas e imagens são convertidas?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Não — esta ferramenta foca em texto, títulos e listas. As tabelas não são convertidas para sintaxe Markdown; as imagens não são incorporadas. Para tabelas, use PDF para Excel; para documentos completos com imagens, use PDF para Word."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Como os títulos são detectados?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "O PDFree compara o tamanho da fonte de cada linha com o tamanho típico do corpo do texto do documento. O texto notavelmente maior vira um título Markdown (#, ## ou ### dependendo do quanto maior)."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Quais tipos de listas são reconhecidas?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Linhas com marcadores (•, ◦, ▪ e similares) e linhas numeradas (1., 2.) são convertidas para sintaxe de lista Markdown. Listas com letras ou números romanos (a., iv.) são deixadas como texto normal, pois esses marcadores são facilmente confundidos com conteúdo real."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Este é um conversor PDF para Markdown gratuito sem cadastro?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim. O PDFree é completamente gratuito — sem cadastro, sem conta, sem instalação. Abra a ferramenta, carregue seu PDF e baixe o arquivo .md."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Funciona com PDFs digitalizados?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Somente se o PDF já tiver uma camada de texto. PDFs digitalizados baseados apenas em imagens não têm texto extraível — aplique primeiro o OCR e depois converta o resultado."
+    }
+  }
+]

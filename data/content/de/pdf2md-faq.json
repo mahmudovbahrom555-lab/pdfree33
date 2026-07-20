@@ -1,0 +1,50 @@
+[
+  {
+    "@type": "Question",
+    "name": "Wird meine PDF irgendwo hochgeladen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nein. Der Text wird vollständig im Browser mithilfe von pdf.js gelesen und in Markdown strukturiert. Deine PDF verlässt dein Gerät nie."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Werden Tabellen und Bilder konvertiert?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nein — das Tool konzentriert sich auf Text, Überschriften und Listen. Tabellen werden nicht in Markdown-Tabellen umgewandelt; Bilder werden nicht eingebettet. Für Tabellen empfehlen wir PDF zu Excel, für vollständige Dokumente mit Bildern PDF zu Word."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Wie werden Überschriften erkannt?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree vergleicht die Schriftgröße jeder Zeile mit der typischen Textkörpergröße des Dokuments. Deutlich größere Texte werden als Markdown-Überschrift (#, ## oder ###) ausgegeben, je nach Größenverhältnis."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Welche Listen werden erkannt?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Aufzählungszeilen (•, ◦, ▪ und ähnliche Marker) und nummerierte Zeilen (1., 2.) werden in Markdown-Listensyntax umgewandelt. Buchstaben- oder römische Nummerierungen (a., iv.) bleiben als normaler Text erhalten, da diese Marker zu leicht mit echtem Inhalt zu verwechseln sind."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Ist das ein kostenloser PDF zu Markdown Konverter ohne Anmeldung?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. PDFree ist vollständig kostenlos — ohne Anmeldung, ohne Konto, ohne Installation. Öffne das Tool, lade deine PDF und lade die .md-Datei herunter."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Funktioniert das auch mit gescannten PDFs?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nur wenn die PDF bereits eine Textebene hat. Rein bildbasierte gescannte PDFs enthalten keinen extrahierbaren Text — führe zuerst OCR durch und konvertiere dann das Ergebnis."
+    }
+  }
+]

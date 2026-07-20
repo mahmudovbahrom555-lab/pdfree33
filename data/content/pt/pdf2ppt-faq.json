@@ -1,0 +1,50 @@
+[
+  {
+    "@type": "Question",
+    "name": "Meu PDF é enviado para algum servidor?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Não. Cada slide é renderizado e empacotado no seu navegador com pdf.js e PptxGenJS. Seu PDF nunca sai do seu dispositivo."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso editar o texto nos slides após a conversão?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Não diretamente — cada slide é uma imagem da página PDF original, o que preserva o layout exato, mas significa que o texto não é um objeto PowerPoint editável separado. Esta é a mesma abordagem que praticamente todas as ferramentas de PDF para PowerPoint utilizam. Se precisar de texto editável, use PDF para Word."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Qual será o tamanho dos slides?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "O tamanho do slide corresponde exatamente às dimensões e proporção de aspecto da página do seu PDF, sem letterboxing ou margens esticadas."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Qual nível de qualidade devo escolher?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Equilibrado (150 dpi) é uma boa escolha padrão para a maioria das apresentações. Escolha Alta qualidade para texto denso ou impressão fina; escolha Compacto se quiser enviar o arquivo por e-mail e preferir um tamanho menor."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Este é um conversor PDF para PowerPoint gratuito sem cadastro?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim. O PDFree é completamente gratuito — sem cadastro, sem conta, sem instalação. Abra a ferramenta, carregue seu PDF e baixe o arquivo .pptx."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Funciona com PDFs grandes?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim, mas PDFs muito grandes usam automaticamente uma qualidade de imagem mais baixa para evitar que o navegador fique sem memória. Para um número muito grande de páginas, Compacto é a escolha mais confiável."
+    }
+  }
+]

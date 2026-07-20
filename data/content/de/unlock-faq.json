@@ -1,0 +1,50 @@
+[
+  {
+    "@type": "Question",
+    "name": "Werden meine PDF oder mein Passwort irgendwo hochgeladen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nein. Die Passwortentfernung erfolgt vollständig im Browser mit QPDF (WebAssembly). Weder die Datei noch das Passwort werden an einen Server gesendet."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann PDFree ein unbekanntes Passwort knacken oder erraten?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nein. Du musst das korrekte Passwort der PDF kennen. PDFree entfernt nur den Schutz bei Dateien, die du bereits berechtigt bist zu öffnen — das Tool rät keine Passwörter, umgeht keine Verschlüsselung und stellt keine Passwörter wieder her."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Was, wenn meine PDF sagt: 'Kein Passwort erforderlich'?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Manche PDFs haben nur Eigentümerbeschränkungen (z. B. Drucken oder Kopieren deaktiviert), ohne ein Öffnungspasswort zu benötigen. PDFree erkennt das automatisch und entfernt diese Einschränkungen, ohne dass du etwas eingeben musst."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Ich habe das Passwort eingegeben, aber es sagt 'Falsch'. Was nun?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Überprüfe auf Tippfehler, Leerzeichen vor oder nach dem Passwort sowie die Feststelltaste. Passwörter sind Groß-/Kleinschreibung-sensitiv. Die Datei bleibt ausgewählt, sodass du einfach erneut versuchen kannst."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Ist das ein kostenloser PDF Passwortentferner ohne Anmeldung?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. PDFree ist vollständig kostenlos — ohne Anmeldung, ohne Konto, ohne Installation. Öffne das Tool, gib das Passwort ein und lade die entsperrte PDF herunter."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann ich danach ein neues Passwort hinzufügen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja — verwende das Tool PDF schützen, um der entsperrten Datei ein neues Passwort oder neue Einschränkungen hinzuzufügen."
+    }
+  }
+]

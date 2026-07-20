@@ -1,0 +1,50 @@
+[
+  {
+    "@type": "Question",
+    "name": "¿Se sube mi PDF o contraseña a algún servidor?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. La eliminación de la contraseña ocurre completamente en tu navegador usando QPDF (WebAssembly). Ni el archivo ni la contraseña se envían a ningún servidor."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Puede PDFree recuperar o adivinar una contraseña desconocida?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Debes conocer la contraseña correcta del PDF. PDFree solo elimina la protección de archivos que ya tienes autorización para abrir; no adivina, recupera ni evita contraseñas desconocidas."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Qué pasa si mi PDF dice que no necesita contraseña?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Algunos PDFs solo tienen restricciones de propietario (como impresión o copia desactivadas) sin requerir contraseña para abrirlos. PDFree detecta esto automáticamente y permite eliminar esas restricciones sin escribir nada."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Ingresé la contraseña pero dice que es incorrecta. ¿Qué hago?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Verifica si hay errores tipográficos, espacios adicionales o si el bloqueo de mayúsculas está activado. Las contraseñas distinguen entre mayúsculas y minúsculas. El archivo permanece seleccionado para que puedas intentarlo de nuevo fácilmente."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Es este un eliminador de contraseñas PDF gratuito sin registro?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sí. PDFree es completamente gratuito — sin registro, sin cuenta, sin instalación. Abre la herramienta, introduce la contraseña y descarga el PDF desbloqueado."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Puedo añadir una contraseña nueva después?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sí — usa la herramienta Proteger PDF para añadir una nueva contraseña o restricciones al archivo desbloqueado."
+    }
+  }
+]
