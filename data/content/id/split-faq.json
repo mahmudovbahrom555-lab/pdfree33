@@ -4,7 +4,7 @@
     "name": "Apakah file saya diunggah saat memisahkan PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Tidak. PDFree memisahkan PDF sepenuhnya di browser Anda menggunakan JavaScript. File tidak pernah meninggalkan perangkat Anda. Anda dapat memverifikasi ini sendiri: buka DevTools browser Anda → tab Network — Anda tidak akan melihat PDF Anda diunggah ke server jarak jauh selama pemrosesan."
+      "text": "Tidak. PDFree memisahkan PDF sepenuhnya di browser Anda menggunakan JavaScript. File tidak pernah meninggalkan perangkat Anda."
     }
   },
   {
@@ -69,6 +69,14 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Tidak dalam satu batch — PDFree memproses satu PDF pada satu waktu. Buka alat di tab baru untuk memisahkan file kedua secara paralel. PDFree juga berfungsi offline sebagai Progressive Web App, sehingga tidak ada waktu tunggu jaringan antar file."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah pemisahan memengaruhi kualitas PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak. Halaman disalin pada tingkat objek PDF — gambar, font, dan grafik vektor dipertahankan secara identik. Pemisahan tidak merender ulang atau mengompresi ulang apa pun."
     }
   }
 ]

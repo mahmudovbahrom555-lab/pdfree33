@@ -9,7 +9,7 @@
   },
   {
     "@type": "Question",
-    "name": "Resolusi DPI berapa yang tersedia?",
+    "name": "Resolusi DPI mana yang harus dipilih?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "PDFree menawarkan 72 DPI (web), 150 DPI (umum), dan 300 DPI (kualitas cetak). Pilih sesuai kebutuhan Anda."

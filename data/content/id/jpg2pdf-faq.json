@@ -17,10 +17,10 @@
   },
   {
     "@type": "Question",
-    "name": "Format gambar apa saja yang didukung?",
+    "name": "Format gambar apa yang bisa dikonversi ke PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "JPG dan PNG sepenuhnya didukung, begitu juga WebP. Setiap gambar menjadi satu halaman dalam PDF yang dihasilkan."
+      "text": "PDFree mendukung JPG/JPEG, PNG, dan WebP. Setiap gambar menjadi satu halaman dalam PDF yang dihasilkan."
     }
   },
   {
@@ -45,6 +45,22 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Ya. PDFree berfungsi di browser mobile — Chrome untuk Android dan Safari untuk iOS. Pilih file dari galeri ponsel dan konversi langsung."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah menggabungkan JPG dan PNG dalam satu PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ya. Tambahkan kombinasi file JPG, PNG, dan WebP. Masing-masing menjadi halaman dalam PDF akhir terlepas dari formatnya."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Ukuran halaman apa yang akan digunakan PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Setiap halaman berukuran persis sesuai dimensi piksel gambar sumber pada 96 DPI. Gambar 2480×3508 (A4 pada 300 DPI) menghasilkan halaman berukuran A4 standar."
     }
   }
 ]

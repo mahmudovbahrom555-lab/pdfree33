@@ -46,5 +46,13 @@
       "@type": "Answer",
       "text": "Tidak. PDFree tidak memiliki batas halaman atau ukuran file. Satu-satunya batasan praktis adalah memori perangkat Anda."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah saya memilih posisi nomor halaman?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ya. Pilihan posisi meliputi: bawah tengah, bawah kiri, bawah kanan, atas tengah, atas kiri, dan atas kanan."
+    }
   }
 ]

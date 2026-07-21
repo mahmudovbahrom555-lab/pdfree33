@@ -9,10 +9,10 @@
   },
   {
     "@type": "Question",
-    "name": "Apa saja yang bisa dikustomisasi pada tanda air?",
+    "name": "Bisakah menyesuaikan tampilan tanda air?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Anda dapat mengatur teks, opasitas, warna, ukuran font, sudut rotasi, dan pola (diagonal tunggal atau berulang)."
+      "text": "Ya. Anda dapat mengatur teks, opasitas, warna, ukuran font, sudut rotasi, dan pola (diagonal tunggal atau berulang)."
     }
   },
   {

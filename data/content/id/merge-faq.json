@@ -12,15 +12,15 @@
     "name": "Apakah ada batas ukuran file untuk menggabungkan PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Tidak ada batasan buatan. PDFree memproses file secara lokal di browser Anda — tidak diperlukan langganan. Untuk pengalaman terbaik, pertahankan total batch di bawah 300 MB; batch yang lebih besar mungkin lebih lambat pada perangkat dengan memori rendah."
+      "text": "Tidak ada batasan buatan. PDFree memproses file secara lokal di browser Anda — tidak diperlukan langganan. Untuk pengalaman terbaik, pertahankan total batch di bawah 300 MB."
     }
   },
   {
     "@type": "Question",
-    "name": "Bisakah menggabungkan lebih dari dua PDF sekaligus?",
+    "name": "Berapa banyak file PDF yang bisa digabungkan sekaligus?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ya. Anda dapat menggabungkan file PDF tanpa batas dalam satu operasi. Cukup tambahkan semua file yang ingin Anda gabungkan — 2, 10, 50, atau 100+."
+      "text": "Tidak ada batasan. PDFree memproses semuanya di memori browser Anda, sehingga Anda dapat menggabungkan 2, 50, atau 100+ file dalam satu operasi. Untuk batch besar (50+ file atau total 500 MB+), tutup tab browser lain untuk membebaskan RAM."
     }
   },
   {
@@ -45,6 +45,22 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Ya. PDFree berfungsi di browser mobile — Chrome untuk Android dan Safari untuk iOS. Pemilihan file menggunakan pemilih file bawaan, dan Anda dapat mengubah urutan file menggunakan tombol di layar."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah PDF yang dilindungi kata sandi bisa digabungkan?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak. PDF terenkripsi tidak dapat dibaca atau dimodifikasi tanpa kata sandi. Hapus kata sandi terlebih dahulu menggunakan alat PDF, kemudian gabungkan."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah format dan font akan dipertahankan setelah penggabungan?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ya. PDFree menggunakan pdf-lib yang menyalin halaman di tingkat objek PDF — font, gambar, grafik vektor, dan format dipertahankan persis seperti aslinya."
     }
   }
 ]

@@ -9,7 +9,7 @@
   },
   {
     "@type": "Question",
-    "name": "Apakah kompresi akan mengurangi kualitas visual PDF saya?",
+    "name": "Apakah kompresi mengurangi kualitas visual PDF saya?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "PDFree menawarkan tiga preset. Ringan hanya menghapus metadata — teks dan gambar tidak tersentuh sama sekali. Standar mengompres ulang gambar pada kualitas JPEG 82% — kehilangan kualitas minimal dan tidak terlihat di sebagian besar dokumen. Maksimum mengompres pada 72% — terlihat hanya pada inspeksi dekat PDF yang banyak gambarnya."

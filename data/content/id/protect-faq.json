@@ -1,10 +1,10 @@
 [
   {
     "@type": "Question",
-    "name": "Apakah PDF saya diunggah ke server saat dienkripsi?",
+    "name": "Apakah kata sandi saya dikirim ke server PDFree?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Tidak. Enkripsi dilakukan sepenuhnya di browser menggunakan PDF-Lib. File Anda tidak pernah meninggalkan perangkat. Anda bisa memverifikasi ini dengan membuka DevTools → tab Network — tidak ada permintaan upload yang muncul selama proses berlangsung."
+      "text": "Tidak pernah. Enkripsi dilakukan sepenuhnya di browser menggunakan pdf-lib. Kata sandi dan file tidak pernah meninggalkan perangkat Anda."
     }
   },
   {
@@ -25,10 +25,10 @@
   },
   {
     "@type": "Question",
-    "name": "Apakah kata sandi bisa ditebak atau diretas?",
+    "name": "Seberapa kuat enkripsi AES-256?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "AES-256 secara praktis tidak bisa dipecahkan dengan brute force. Gunakan kata sandi yang kuat — minimal 12 karakter, kombinasi huruf besar/kecil, angka, dan simbol."
+      "text": "AES-256 adalah standar enkripsi tertinggi yang digunakan oleh perbankan, pemerintah, dan militer. Ini adalah enkripsi terkuat yang tersedia untuk PDF, secara praktis tidak bisa dipecahkan dengan brute force."
     }
   },
   {
@@ -45,6 +45,30 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Tidak sama sekali. Kata sandi diproses di browser Anda dan tidak pernah dikirim ke server PDFree atau server mana pun. PDFree tidak memiliki akses ke kata sandi atau file Anda."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah membatasi pencetakan atau penyalinan?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ya. Selain kata sandi buka, Anda dapat mengatur izin pemilik untuk melarang pencetakan, penyalinan teks, atau pengeditan dokumen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah membuka kunci PDF yang dilindungi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree tidak memiliki alat untuk menghapus kata sandi dari PDF terenkripsi. Untuk membuka kunci, Anda harus mengetahui kata sandi aslinya."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah PDF yang dilindungi kompatibel dengan semua pembaca PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ya. PDF terenkripsi AES-256 yang dihasilkan kompatibel dengan Adobe Acrobat, Foxit Reader, dan semua pembaca PDF modern."
     }
   }
 ]
