@@ -1,10 +1,10 @@
 [
   {
     "@type": "Question",
-    "name": "Does PDFree upload my PDF to fill it?",
+    "name": "Is my filled PDF uploaded anywhere?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. The entire filling process runs in your browser using pdf-lib and pdf.js. Your document never leaves your device — PDFree has no access to your file or the data you type into it."
+      "text": "No. Everything runs in your browser using pdf-lib and pdf.js. Neither your original PDF nor the filled version is ever sent to a server. PDFree does not have access to your document."
     }
   },
   {
@@ -53,6 +53,14 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "PDFree detects your PDF's real AcroForm fields — text boxes, checkboxes, radio buttons, dropdowns, and signature fields — and renders them as an actual fillable form. You are not drawing text boxes by hand or guessing at positioning. If your PDF has no embedded fields, PDFree tells you directly instead of pretending to detect fields that aren't there."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "What if my PDF has no fillable fields?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree detects AcroForm interactive fields. If the PDF is a scanned image or a flat document without embedded form fields, you will see a 'No fillable fields found' message. For flat PDFs you can use the Annotate or Watermark tools to add text overlays."
     }
   }
 ]

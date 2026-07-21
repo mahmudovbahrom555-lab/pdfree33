@@ -102,5 +102,21 @@
       "@type": "Answer",
       "text": "No. PDFree never adds watermarks to output files. The split pages are the exact content from your original PDF — no logo, no 'Created with PDFree' stamp, no advertising mark. Many free online PDF tools add watermarks to encourage upgrades; PDFree doesn't because there is no paid plan to upgrade to."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "What is the difference between Split and Extract?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Split is designed for selecting and downloading multiple page groups. Extract is a simpler tool focused on pulling out a specific page range into one new PDF. Both do similar things — use whichever fits your workflow."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Does splitting affect PDF quality?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Pages are copied at the PDF object level — images, fonts, and vector graphics are preserved identically. Splitting does not re-render or re-compress anything."
+    }
   }
 ]

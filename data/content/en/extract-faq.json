@@ -25,10 +25,42 @@
   },
   {
     "@type": "Question",
-    "name": "Is there a page limit?",
+    "name": "Is there a limit on how many pages I can extract?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. There are no file size or page count limits."
+      "text": "No. You can extract any number of pages from a PDF of any size, as long as your browser has enough memory to hold the file."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "What is the page range format?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Enter pages and ranges separated by commas: 1, 3-7, 12, 15-20. Spaces are optional. Ranges are inclusive — 3-7 extracts pages 3, 4, 5, 6, and 7."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Will the extracted pages preserve formatting exactly?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. Pages are copied at the PDF object level — fonts, images, links, and formatting are identical to the originals."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "How do I extract a single page from a PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Type the page number in the range field — for example 5 to extract only page 5. The result is a new PDF containing just that one page. All formatting, images, and links are preserved exactly as they appear in the original."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I extract pages from a password-protected PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Encrypted PDFs cannot be modified without the password. Remove the password first, then extract the pages."
     }
   }
 ]

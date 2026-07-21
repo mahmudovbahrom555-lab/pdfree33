@@ -1,10 +1,10 @@
 [
   {
     "@type": "Question",
-    "name": "Does PDFree send my PDF to a server to encrypt it?",
+    "name": "Is it safe to set the password on PDFree's website?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. Encryption is performed entirely in your browser using the PDF-Lib library. Your file never leaves your device."
+      "text": "Yes. The entire encryption process runs in your browser using pdf-lib. Your password and document are never transmitted to any server — PDFree literally cannot see them."
     }
   },
   {
@@ -29,6 +29,22 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "AES-256 is practically uncrackable by brute force. Use a strong, unique password for best security."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Will the password-protected PDF open in Adobe Reader?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. PDFree produces standard-compliant encrypted PDFs that open in Adobe Acrobat, Adobe Reader, macOS Preview, and all modern PDF viewers."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I remove the password from a protected PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes — upload the encrypted PDF, enter the current password, leave the new password field empty, and save. This produces an unprotected version of the file."
     }
   }
 ]

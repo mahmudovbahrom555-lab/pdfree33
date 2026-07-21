@@ -46,5 +46,37 @@
       "@type": "Answer",
       "text": "The terms are often used interchangeably. A watermark is typically a semi-transparent text that repeats diagonally across every page (e.g. DRAFT at 30% opacity). A stamp is usually an opaque label placed once in a fixed position (e.g. APPROVED in a corner). PDFree lets you achieve either look by adjusting the opacity and position of the text watermark."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I remove a watermark from a PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree adds watermarks but does not remove them from existing PDFs. Watermarks added by PDFree are embedded as page content and cannot be automatically removed by basic tools."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "What does opacity control?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Opacity of 100% makes the watermark fully opaque (solid, dark). Opacity of 20–30% creates the classic 'ghost' watermark that is visible but doesn't obscure the content underneath. Most use cases work well at 20–40%."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Will the watermark appear on every page?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. The watermark is applied to all pages of the PDF by default."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I set the watermark color?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. You can set any hex color or choose from common presets. Light grey (#CCCCCC at 30% opacity) gives a professional, unobtrusive result."
+    }
   }
 ]

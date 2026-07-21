@@ -9,10 +9,10 @@
   },
   {
     "@type": "Question",
-    "name": "Which metadata fields can I edit?",
+    "name": "What metadata fields does PDFree show and edit?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "You can view and edit the standard PDF metadata fields: Title, Author, Subject, Keywords, Creator, and Producer."
+      "text": "PDFree reads and writes the standard PDF document information dictionary: Title, Author, Subject, Keywords, Creator (application that created the PDF), and Producer (PDF library used). Modification date is updated automatically on save."
     }
   },
   {
@@ -25,10 +25,34 @@
   },
   {
     "@type": "Question",
-    "name": "Is there a file size limit?",
+    "name": "Does editing metadata change the PDF content or appearance?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. PDFree has no file size or page count limits."
+      "text": "No. Metadata is stored separately from page content. Editing or clearing metadata fields has zero effect on text, images, layout, or any visible element of the document."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Does removing metadata reduce file size?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Slightly — metadata is a small part of the PDF structure. The size reduction is negligible for most files but may be a few kilobytes."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I see all the metadata currently in my PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. When you upload a PDF, PDFree reads and displays all existing metadata values in the form fields. Empty fields mean that data is not present in the file."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is there metadata that PDFree cannot edit?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. XMP metadata packets (extended metadata embedded by some Adobe products) and custom application-specific metadata may not be editable. PDFree edits the standard PDF info dictionary which covers the most common fields."
     }
   }
 ]

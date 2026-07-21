@@ -1,18 +1,18 @@
 [
   {
     "@type": "Question",
-    "name": "Does compressing a PDF upload my file?",
+    "name": "Does PDFree upload my file to compress it?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. Compression happens entirely in your browser using JavaScript. Your PDF is never uploaded to any server or sent over the internet. You can verify this yourself: open your browser's DevTools → Network tab during compression — you should not see your PDF being uploaded to a remote server."
+      "text": "No. Compression runs entirely in your browser using JavaScript. Your PDF is loaded into browser memory, processed locally, and the result is offered as a download. No data is sent to any server."
     }
   },
   {
     "@type": "Question",
-    "name": "Will compression reduce the visual quality of my PDF?",
+    "name": "Will compression damage the text quality?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree offers three presets. Light removes only metadata — text and images are completely untouched. Standard recompresses images at 82% JPEG quality — quality loss is minimal and not visible in most documents. Maximum recompresses at 72% — noticeable only on close inspection of photo-heavy PDFs."
+      "text": "No. Text in PDFs is vector-based and is not affected by image compression. Only raster images embedded in the PDF are recompressed. On the 'Light' setting even images are untouched — only metadata and hidden redundant objects are removed."
     }
   },
   {
@@ -61,6 +61,14 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Yes. PDFree is a completely free PDF compressor — no subscription, no sign up, no watermarks on the output. Compress as many PDFs as you need with no daily limit and no file size cap."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is there a file size limit for compression?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. PDFree has no upload limit because nothing is uploaded. The only practical limit is your device's available RAM. Most computers comfortably handle PDFs up to several hundred megabytes."
     }
   }
 ]

@@ -9,10 +9,10 @@
   },
   {
     "@type": "Question",
-    "name": "Is the redacted content permanently removed?",
+    "name": "Is the redaction permanent?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Yes. PDFree draws opaque rectangles over the selected areas and flattens the PDF so the original content is not recoverable."
+      "text": "Yes. PDFree replaces the content under the redaction boxes with a black rectangle at the PDF object level. The original text or image data is not stored elsewhere in the file and cannot be recovered."
     }
   },
   {
@@ -29,6 +29,30 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Yes. You can draw as many redaction boxes as needed before applying."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "What is the difference between redaction and a black rectangle overlay?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Some tools draw a black image on top of text but leave the original text accessible in the PDF's underlying data. PDFree removes the content — a security reviewer who extracts the PDF's text stream would find nothing under the redaction box."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Does PDFree redact text search content too?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. The redaction removes the PDF content stream data for the covered area, including any searchable text within the box bounds."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I undo a redaction after downloading?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Redaction is a one-way operation — that is what makes it secure. If you need to undo, work from the original unredacted file. Keep the original in a secure location until the redacted version is verified correct."
     }
   }
 ]

@@ -6,8 +6,8 @@
   },
   {
     "@type": "Question",
-    "name": "Does converting PDF to Word upload my file?",
-    "acceptedAnswer": { "@type": "Answer", "text": "No. The entire conversion happens inside your browser. Your PDF is never sent to any server — not even temporarily." }
+    "name": "Does my PDF get uploaded anywhere?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Never. Your file is read by your browser locally. There is no server involved at any step of the conversion." }
   },
   {
     "@type": "Question",
@@ -53,5 +53,10 @@
     "@type": "Question",
     "name": "Is there a PDF to Word converter that doesn't upload files?",
     "acceptedAnswer": { "@type": "Answer", "text": "Yes — PDFree. The entire conversion runs inside your browser using PDF.js and WebAssembly. Your PDF is never sent to any server. You can verify this by opening DevTools → Network tab and watching that no file upload request is made during conversion. Most online converters upload your file to their servers; PDFree does not." }
+  },
+  {
+    "@type": "Question",
+    "name": "Does it support Arabic, Hebrew, Cyrillic, or Chinese text?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Yes. Text mode supports Latin, Cyrillic (Russian, Ukrainian, Bulgarian), Arabic and Hebrew (with correct right-to-left paragraph direction), CJK (Chinese, Japanese, Korean), Devanagari (Hindi), and most Unicode scripts used in standard PDFs." }
   }
 ]

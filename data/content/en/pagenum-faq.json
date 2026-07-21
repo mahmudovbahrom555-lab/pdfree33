@@ -70,5 +70,21 @@
       "@type": "Answer",
       "text": "Yes. PDFree is completely free — no subscription, no sign up, no watermarks on the output. There are no limits on file size or number of pages."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Will adding page numbers change the existing content?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Page numbers are added as a new text layer on top of the existing content. The original text, images, and layout underneath are unchanged."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I add page numbers to a scanned PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. Scanned PDFs are treated identically to any other PDF — the page number is overlaid on each page as a text element. The underlying scan image is not changed."
+    }
   }
 ]

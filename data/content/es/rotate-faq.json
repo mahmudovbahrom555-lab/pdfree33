@@ -1,50 +1,34 @@
 [
   {
     "@type": "Question",
-    "name": "¿Se almacenan mis archivos en sus servidores?",
+    "name": "¿Se suben mis archivos a un servidor?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. PDFree opera completamente en tu dispositivo (del lado del cliente). No tenemos servidores que procesen tus archivos, lo que garantiza 100% de privacidad."
+      "text": "No. Todo el procesamiento se realiza en tu navegador. Tus documentos nunca salen de tu dispositivo."
     }
   },
   {
     "@type": "Question",
-    "name": "¿Hay un límite para el tamaño del archivo o número de páginas?",
+    "name": "¿Pierdo calidad al rotar?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No, no hay límites artificiales. La única limitación es la memoria RAM disponible en tu computadora o smartphone."
+      "text": "No. Las páginas se rotan a nivel de objeto PDF — sin recompresión ni pérdida de calidad en imágenes o texto."
     }
   },
   {
     "@type": "Question",
-    "name": "¿Puedo rotar solo páginas específicas, no todo el PDF?",
+    "name": "¿Puedo rotar solo algunas páginas?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sí. Puedes rotar todas las páginas o seleccionar páginas individuales para rotar."
+      "text": "Sí. Puedes seleccionar páginas específicas y rotar solo esas."
     }
   },
   {
     "@type": "Question",
-    "name": "¿Qué ángulos de rotación son compatibles?",
+    "name": "¿Hay un límite de páginas?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree admite rotación de 90°, 180° y 270° para cualquier selección de páginas."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "¿El rotador de PDF es completamente gratis?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Sí. PDFree es gratis, sin suscripción, sin límites diarios y sin registro. No se añaden marcas de agua al resultado."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "¿La rotación se guarda de forma permanente en mi PDF?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Sí. Al hacer clic en Rotar PDF se genera un nuevo archivo PDF que se descarga a tu dispositivo con la rotación aplicada de forma permanente. Se mostrará en la orientación corregida en cualquier visor de PDF."
+      "text": "No. La única limitación es la memoria RAM disponible en tu dispositivo."
     }
   }
 ]

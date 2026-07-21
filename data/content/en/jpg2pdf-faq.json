@@ -1,10 +1,10 @@
 [
   {
     "@type": "Question",
-    "name": "Does converting JPG to PDF upload my images?",
+    "name": "Does the tool upload my images anywhere?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. Conversion happens entirely in your browser. Your image files are never sent to any server."
+      "text": "No. All processing happens in your browser using the pdf-lib JavaScript library. Images are loaded into browser memory and never transmitted."
     }
   },
   {
@@ -17,10 +17,10 @@
   },
   {
     "@type": "Question",
-    "name": "What image formats are supported?",
+    "name": "What image formats can I convert to PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "JPG and PNG are fully supported. Each image becomes one page in the resulting PDF."
+      "text": "PDFree supports JPG/JPEG, PNG, and WebP. Each image becomes one page in the output PDF."
     }
   },
   {
@@ -29,6 +29,30 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "No. PDFree has no file size or image count limits."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Will the image quality be reduced?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Images are embedded at their original resolution. The PDF page size is set to match the image dimensions, so there is no scaling or re-compression."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "What page size will the PDF use?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Each page is sized to exactly match its source image's pixel dimensions at 96 DPI. A 2480×3508 image (A4 at 300 DPI) produces a standard A4-sized page."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is there a limit on how many images I can convert?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Add as many images as you need. Processing time scales with total image size — dozens of photos may take 10–20 seconds on slower devices."
     }
   }
 ]

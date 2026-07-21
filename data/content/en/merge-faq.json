@@ -17,10 +17,10 @@
   },
   {
     "@type": "Question",
-    "name": "Can I merge more than two PDFs at once?",
+    "name": "How many PDF files can I merge at once?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Yes. You can merge unlimited PDF files in one operation. Just add all the files you want to combine — 2, 10, 50, or 100+."
+      "text": "There is no limit. PDFree processes everything in your browser's memory, so you can merge 2, 50, or 100+ files in a single operation. For large batches (50+ files or 500MB+ total), close other browser tabs to free up RAM."
     }
   },
   {
@@ -45,6 +45,22 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Yes. PDFree works in mobile browsers — Chrome for Android and Safari for iOS. File selection uses the native file picker, and you can reorder files using the on-screen buttons."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Will the formatting and fonts be preserved after merging?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. PDFree uses pdf-lib, which copies pages at the PDF object level — fonts, images, vector graphics, and formatting are preserved exactly as in the originals."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I merge password-protected PDFs?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Encrypted PDFs cannot be read or modified without the password. Remove the password first using a PDF tool, then merge."
     }
   }
 ]
