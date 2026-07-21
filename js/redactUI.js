@@ -138,6 +138,9 @@ let _currentTool = 'rect';
 let _history = [];
 let _historyIdx = -1;
 
+// Pending search matches — populated by _runPatternSearch, committed by _applySelectedMatches
+let _pendingMatches = [];  // [{idx, text, pageNum, rect, source, checked}]
+
 function _saveHistory() {
   _history = _history.slice(0, _historyIdx + 1);
   _history.push({
@@ -471,6 +474,24 @@ function _render(container, fileName, preset) {
               style="padding:4px 8px;border:1px solid var(--border);border-radius:5px;background:var(--surface2);color:var(--text);font-size:11px;cursor:pointer;white-space:nowrap;">${p.label}</button>`).join('')}
           </div>
           <div id="rdctSearchHint" style="font-size:11px;color:var(--text3);margin-top:5px;"></div>
+
+          <!-- Match preview panel — shown after search, hidden until search runs -->
+          <div id="rdctMatchPanel" style="display:none;border:1px solid var(--border);border-radius:8px;padding:8px;margin-top:8px;background:var(--surface);">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+              <span id="rdctMatchSummary" style="font-size:12px;font-weight:600;color:var(--text);"></span>
+              <div style="display:flex;gap:4px;">
+                <button type="button" id="rdctMatchAll"
+                  style="font-size:10px;padding:2px 7px;border:1px solid var(--border);border-radius:4px;background:var(--surface2);color:var(--text);cursor:pointer;">All</button>
+                <button type="button" id="rdctMatchNone"
+                  style="font-size:10px;padding:2px 7px;border:1px solid var(--border);border-radius:4px;background:var(--surface2);color:var(--text);cursor:pointer;">None</button>
+              </div>
+            </div>
+            <ul id="rdctMatchList" style="list-style:none;padding:0;margin:0 0 8px;max-height:180px;overflow-y:auto;"></ul>
+            <button type="button" id="rdctApplyMatches" disabled
+              style="width:100%;padding:7px;background:var(--green);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600;opacity:1;transition:opacity 0.15s;">
+              No matches selected
+            </button>
+          </div>
         </div>
 
         <!-- View toggle + Metadata -->
@@ -1291,6 +1312,30 @@ function _bindEvents(container) {
     const overlay = id('rdctOverlay');
     if (overlay) overlay.style.opacity = e.target.checked ? '0' : '1';
   });
+
+  // Match panel: select all / none / apply
+  id('rdctMatchAll')?.addEventListener('click', () => {
+    _pendingMatches.forEach(m => { m.checked = true; });
+    document.querySelectorAll('#rdctMatchList [data-match-idx]').forEach(cb => { cb.checked = true; });
+    _updateMatchPanelBtn();
+  });
+  id('rdctMatchNone')?.addEventListener('click', () => {
+    _pendingMatches.forEach(m => { m.checked = false; });
+    document.querySelectorAll('#rdctMatchList [data-match-idx]').forEach(cb => { cb.checked = false; });
+    _updateMatchPanelBtn();
+  });
+  id('rdctApplyMatches')?.addEventListener('click', _applySelectedMatches);
+
+  // Individual match checkboxes (event delegation)
+  id('rdctMatchList')?.addEventListener('change', e => {
+    const cb = e.target.closest('[data-match-idx]');
+    if (!cb) return;
+    const idx = parseInt(cb.dataset.matchIdx, 10);
+    if (_pendingMatches[idx] !== undefined) {
+      _pendingMatches[idx].checked = cb.checked;
+      _updateMatchPanelBtn();
+    }
+  });
 }
 
 async function _goToPage(pageNum) {
@@ -1318,7 +1363,7 @@ async function _runPatternSearch(regex, source, validateFn = null) {
   const hint = id('rdctSearchHint');
   if (hint) hint.textContent = 'Searching…';
 
-  let matchCount = 0;
+  _pendingMatches = [];
 
   for (let p = 1; p <= _pageCount; p++) {
     const page    = await _pdfDoc.getPage(p);
@@ -1331,7 +1376,6 @@ async function _runPatternSearch(regex, source, validateFn = null) {
       regex.lastIndex = 0;
       let m;
       while ((m = regex.exec(str)) !== null) {
-        // Skip if a validator rejects this match (e.g. Luhn check for CC)
         if (validateFn && !validateFn(m[0])) continue;
 
         const [,, , scaleY, tx, ty] = item.transform;
@@ -1341,22 +1385,97 @@ async function _runPatternSearch(regex, source, validateFn = null) {
         const h = Math.max(Math.abs(scaleY) * 1.2, 4);
         const y = ty - h * 0.1;
 
-        const existing = _rectsByPage[p] || [];
-        existing.push({ type: 'rect', x, y, w, h, source });
-        _rectsByPage[p] = existing;
-        matchCount++;
+        _pendingMatches.push({
+          idx: _pendingMatches.length,
+          text: m[0],
+          pageNum: p,
+          rect: { type: 'rect', x, y, w, h, source },
+          source,
+          checked: true,
+        });
       }
     }
   }
 
+  if (hint) hint.textContent = '';
+  _showMatchPanel(source);
+}
+
+function _showMatchPanel(source) {
+  const panel = id('rdctMatchPanel');
+  const hint  = id('rdctSearchHint');
+
+  if (_pendingMatches.length === 0) {
+    if (panel) panel.style.display = 'none';
+    const piiLabel = PII_PATTERNS.find(p => p.id === source)?.label || source;
+    if (hint) hint.textContent = `${piiLabel !== source ? piiLabel + ': ' : ''}No matches found.`;
+    return;
+  }
+
+  if (hint) hint.textContent = '';
+  if (!panel) return;
+
+  panel.style.display = 'block';
+
+  const summary = id('rdctMatchSummary');
+  if (summary) summary.textContent =
+    `${_pendingMatches.length} match${_pendingMatches.length !== 1 ? 'es' : ''} — choose which to redact:`;
+
+  const list = id('rdctMatchList');
+  if (list) {
+    list.innerHTML = _pendingMatches.map(m => {
+      const emoji = PII_PATTERNS.find(p => p.id === m.source)?.label?.split(' ')[0] || '';
+      const displayText = m.text.length > 28 ? m.text.slice(0, 25) + '…' : m.text;
+      return `<li style="display:flex;align-items:center;padding:3px 0;border-bottom:1px solid var(--border);">
+        <label style="display:flex;align-items:center;gap:6px;width:100%;cursor:pointer;font-size:12px;min-width:0;">
+          <input type="checkbox" checked data-match-idx="${m.idx}"
+            style="flex-shrink:0;accent-color:var(--green);">
+          <span style="opacity:0.65;flex-shrink:0;line-height:1;">${emoji}</span>
+          <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:monospace;font-size:11px;"
+            title="${esc(m.text)}">${esc(displayText)}</span>
+          <span style="flex-shrink:0;color:var(--text3);font-size:11px;padding-left:4px;">p.${m.pageNum}</span>
+        </label>
+      </li>`;
+    }).join('');
+  }
+
+  _updateMatchPanelBtn();
+}
+
+function _updateMatchPanelBtn() {
+  const n   = _pendingMatches.filter(m => m.checked).length;
+  const btn = id('rdctApplyMatches');
+  if (!btn) return;
+  btn.disabled  = n === 0;
+  btn.style.opacity = n === 0 ? '0.45' : '1';
+  btn.textContent = n > 0
+    ? `Mark ${n} match${n !== 1 ? 'es' : ''} for redaction`
+    : 'No matches selected';
+}
+
+function _applySelectedMatches() {
+  const selected = _pendingMatches.filter(m => m.checked);
+  for (const m of selected) {
+    const existing = _rectsByPage[m.pageNum] || [];
+    existing.push(m.rect);
+    _rectsByPage[m.pageNum] = existing;
+  }
+
   _applyAll = false;
-  const piiLabel = PII_PATTERNS.find(p => p.id === source)?.label || source;
-  if (hint) hint.textContent = matchCount > 0
-    ? `${piiLabel !== source ? piiLabel + ': ' : ''}Found ${matchCount} match${matchCount !== 1 ? 'es' : ''} — marked on pages`
-    : 'No matches found.';
-  if (_currentPage) { _redrawOverlay(); _updateRectsList(); }
+  _pendingMatches = [];
+
+  const panel = id('rdctMatchPanel');
+  if (panel) panel.style.display = 'none';
+
+  const hint = id('rdctSearchHint');
+  if (hint) hint.textContent = selected.length > 0
+    ? `${selected.length} area${selected.length !== 1 ? 's' : ''} marked for redaction`
+    : '';
+
+  _redrawOverlay();
+  _updateRectsList();
   _updateMergeBtn();
-  if (matchCount > 0) _saveHistory();
+  if (selected.length > 0) _saveHistory();
 }
 
 function _updateMergeBtn() {
@@ -1394,6 +1513,7 @@ function _cleanup() {
   _pageSizes = [];
   _sharedRects = [];
   _rectsByPage = {};
+  _pendingMatches = [];
   _currentPage = 1;
   _dragging  = false;
   _dragStart = null;
