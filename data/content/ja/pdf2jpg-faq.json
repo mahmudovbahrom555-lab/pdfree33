@@ -9,7 +9,7 @@
   },
   {
     "@type": "Question",
-    "name": "PDFをJPGに変換する際にどの解像度を選べばよいですか？",
+    "name": "どの解像度を選べばよいですか？",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "72 DPI — Web公開・プレビュー用。150 DPI — ほとんどの用途に最適なバランス。300 DPI — 印刷・プロ向け高品質用。"
@@ -17,7 +17,7 @@
   },
   {
     "@type": "Question",
-    "name": "複数ページのPDFをJPGに変換してまとめてダウンロードできますか？",
+    "name": "複数ページのPDFをまとめてダウンロードできますか？",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "はい。複数ページのPDFを変換する場合、すべての画像が自動的にZIPファイルにまとめられ、一度にダウンロードできます。"
