@@ -1,18 +1,34 @@
 [
   {
     "@type": "Question",
-    "name": "¿Se almacenan mis archivos en sus servidores?",
+    "name": "¿Qué cifrado se utiliza?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. PDFree opera completamente en tu dispositivo (del lado del cliente). No tenemos servidores que procesen tus archivos, lo que garantiza 100% de privacidad."
+      "text": "PDFree utiliza AES-256 — el estándar actual de cifrado PDF, también usado por bancos y software de seguridad."
     }
   },
   {
     "@type": "Question",
-    "name": "¿Hay un límite para el tamaño del archivo o número de páginas?",
+    "name": "¿Se suben mis archivos a un servidor?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No, no hay límites artificiales. La única limitación es la memoria RAM disponible en tu computadora o smartphone."
+      "text": "No. Todo el procesamiento, incluida la contraseña, se realiza exclusivamente en tu navegador."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Puedo eliminar la contraseña después?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sí — con PDFree u otra herramienta PDF, siempre que conozcas la contraseña."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Hay un límite de tamaño de archivo?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. La única limitación es la memoria RAM disponible en tu dispositivo."
     }
   }
 ]

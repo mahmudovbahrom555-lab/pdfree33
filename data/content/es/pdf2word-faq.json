@@ -6,8 +6,8 @@
   },
   {
     "@type": "Question",
-    "name": "¿Al convertir PDF a Word se sube el archivo?",
-    "acceptedAnswer": { "@type": "Answer", "text": "No. La conversión ocurre dentro de tu navegador. Tu PDF nunca se envía a ningún servidor — ni siquiera de forma temporal." }
+    "name": "¿Se sube mi PDF a algún servidor?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Nunca. Tu archivo es leído localmente por tu navegador. No hay ningún servidor involucrado en ningún paso de la conversión." }
   },
   {
     "@type": "Question",
@@ -53,5 +53,10 @@
     "@type": "Question",
     "name": "¿Existe un conversor de PDF a Word que no suba archivos?",
     "acceptedAnswer": { "@type": "Answer", "text": "Sí — PDFree. La conversión se ejecuta en tu navegador con PDF.js y WebAssembly. Tu PDF nunca se envía a ningún servidor. Puedes verificarlo abriendo DevTools → pestaña Red y comprobando que no hay solicitud de subida durante la conversión. La mayoría de conversores en línea sí suben el archivo; PDFree no lo hace." }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Es compatible con árabe, hebreo, cirílico o chino?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Sí. El modo texto es compatible con latín, cirílico (ruso, ucraniano, búlgaro), árabe y hebreo (con dirección de párrafo de derecha a izquierda correcta), CJK (chino, japonés, coreano), devanagari (hindi) y la mayoría de escrituras Unicode en PDFs estándar." }
   }
 ]

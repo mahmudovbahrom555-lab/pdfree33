@@ -1,18 +1,18 @@
 [
   {
     "@type": "Question",
-    "name": "¿Se sube mi archivo al comprimir un PDF?",
+    "name": "¿Se suben mis archivos a un servidor?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. La compresión ocurre completamente en su navegador usando JavaScript. Su PDF nunca se sube a ningún servidor ni se transmite por internet. Puede verificarlo usted mismo: abra las DevTools de su navegador → pestaña \"Red\" durante la compresión — no debería ver que su PDF se sube a un servidor remoto."
+      "text": "No. Todo funciona en tu navegador. Tus documentos nunca salen de tu dispositivo."
     }
   },
   {
     "@type": "Question",
-    "name": "¿La compresión reduce la calidad visual de mi PDF?",
+    "name": "¿Pierdo contenido al comprimir?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree ofrece tres niveles. Light elimina solo los metadatos — el texto y las imágenes permanecen completamente intactos. Standard recomprime las imágenes al 82 % de calidad JPEG — la pérdida de calidad es mínima e imperceptible en la mayoría de documentos. Maximum recomprime al 72 % — solo perceptible en la inspección minuciosa de PDFs con muchas fotos."
+      "text": "No. El texto y los gráficos vectoriales se conservan. Solo las imágenes se comprimen según el nivel elegido."
     }
   },
   {
@@ -45,6 +45,14 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Sí. PDFree funciona completamente sin conexión como una Progressive Web App una vez que la página ha cargado. No se requiere conexión a internet — todo el procesamiento se ejecuta en su navegador."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Hay un límite de tamaño de archivo?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. La única limitación es la memoria RAM disponible en tu dispositivo."
     }
   }
 ]

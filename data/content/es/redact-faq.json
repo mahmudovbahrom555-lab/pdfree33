@@ -1,18 +1,42 @@
 [
   {
     "@type": "Question",
-    "name": "¿Se almacenan mis archivos en sus servidores?",
+    "name": "¿El tachado es realmente permanente?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. PDFree opera completamente en tu dispositivo (del lado del cliente). No tenemos servidores que procesen tus archivos, lo que garantiza 100% de privacidad."
+      "text": "Sí. Las áreas tachadas se incrustan como rectángulos negros permanentes. El contenido original ya no es accesible."
     }
   },
   {
     "@type": "Question",
-    "name": "¿Hay un límite para el tamaño del archivo o número de páginas?",
+    "name": "¿Se suben mis archivos a un servidor?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No, no hay límites artificiales. La única limitación es la memoria RAM disponible en tu computadora o smartphone."
+      "text": "No. Todo el procesamiento se realiza en tu navegador. Tus documentos nunca salen de tu dispositivo."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿El tachado elimina también los metadatos?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Los metadatos (autor, fecha) permanecen. Usa además la herramienta de metadatos para una limpieza completa."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Puedo tachar solo páginas concretas?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sí. Puedes marcar áreas en cualquier página — solo las áreas marcadas se tachan."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Hay un límite de tamaño o número de páginas para tachar un PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. No hay límites artificiales. La única limitación es la memoria RAM disponible en tu computadora o smartphone."
     }
   }
 ]

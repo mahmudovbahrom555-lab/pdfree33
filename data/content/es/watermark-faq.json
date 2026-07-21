@@ -1,18 +1,26 @@
 [
   {
     "@type": "Question",
-    "name": "¿Es completamente gratis añadir una marca de agua al PDF?",
+    "name": "¿Es completamente gratis?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sí. PDFree es totalmente gratuito — sin suscripción, sin registro, sin límite diario. Puedes añadir marcas de agua a tantos PDFs como necesites, sin coste alguno."
+      "text": "Sí. PDFree es totalmente gratuito — sin suscripción, sin registro, sin límite diario. Puedes añadir marcas de agua a tantos PDFs como necesites."
     }
   },
   {
     "@type": "Question",
-    "name": "¿Se almacenan mis archivos en sus servidores?",
+    "name": "¿La marca de agua es permanente?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. PDFree opera completamente en tu dispositivo (del lado del cliente). Todo el procesamiento tiene lugar en el navegador — tus documentos nunca salen de tu dispositivo."
+      "text": "Sí. Se incrusta de forma permanente en el PDF y no puede eliminarse fácilmente sin herramientas especializadas. Guarda siempre el original antes de aplicarla."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Se suben mis archivos a un servidor?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Todo el procesamiento se realiza en tu navegador. Tus documentos nunca salen de tu dispositivo."
     }
   },
   {
@@ -25,10 +33,10 @@
   },
   {
     "@type": "Question",
-    "name": "¿Hay un límite para el tamaño del archivo o número de páginas?",
+    "name": "¿Puedo aplicar la marca de agua solo a algunas páginas?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No, no hay límites artificiales. La única limitación es la memoria RAM disponible en tu computadora o smartphone."
+      "text": "Por defecto se aplica a todas las páginas. La opción para páginas específicas está disponible en la configuración avanzada."
     }
   },
   {
@@ -41,10 +49,10 @@
   },
   {
     "@type": "Question",
-    "name": "¿La marca de agua es permanente?",
+    "name": "¿Hay un límite de tamaño de archivo para añadir una marca de agua?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sí. Se incrusta de forma permanente en el PDF y no puede eliminarse fácilmente sin herramientas especializadas. Guarda siempre el original antes de aplicarla."
+      "text": "No. No hay límites artificiales. La única limitación es la memoria RAM disponible en tu computadora o smartphone."
     }
   }
 ]

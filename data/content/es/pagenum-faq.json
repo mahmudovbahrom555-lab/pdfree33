@@ -17,10 +17,10 @@
   },
   {
     "@type": "Question",
-    "name": "¿Puedo omitir la primera página (portada) al numerar?",
+    "name": "¿Puedo excluir la portada de la numeración?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sí. Activa la opción 'Omitir primera página'. La página 1 (portada) no recibirá número, y la numeración comenzará desde la segunda página."
+      "text": "Sí. Ajusta el número inicial a 0 o comienza la numeración desde la página 2. La portada queda sin número."
     }
   },
   {
@@ -53,6 +53,14 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "No. PDFree no tiene límites de páginas ni de tamaño de archivo. La única limitación práctica es la memoria disponible en tu dispositivo."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Puedo eliminar los números de página después?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Los números se incrustan permanentemente. Guarda el archivo original por separado si lo necesitas sin números."
     }
   }
 ]

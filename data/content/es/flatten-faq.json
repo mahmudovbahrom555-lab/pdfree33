@@ -9,7 +9,7 @@
   },
   {
     "@type": "Question",
-    "name": "¿Puede revertirse un PDF aplanado?",
+    "name": "¿Se puede deshacer el aplanado?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "No. El aplanado es irreversible — los campos de formulario originales se reemplazan permanentemente por contenido visual estático. Guarda siempre una copia de seguridad de tu PDF rellenado antes de aplanarlo."
@@ -25,7 +25,7 @@
   },
   {
     "@type": "Question",
-    "name": "¿Se sube mi PDF a algún servidor al aplanarlo?",
+    "name": "¿Se suben mis archivos a un servidor?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "No. Todo se ejecuta en tu navegador con pdf-lib. Ni el original ni el resultado aplanado se envían nunca a ningún servidor. Tu documento permanece en tu dispositivo en todo momento."

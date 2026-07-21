@@ -1,18 +1,34 @@
 [
   {
     "@type": "Question",
-    "name": "¿Se almacenan mis archivos en sus servidores?",
+    "name": "¿Se suben mis archivos a un servidor?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. PDFree opera completamente en tu dispositivo (del lado del cliente). No tenemos servidores que procesen tus archivos, lo que garantiza 100% de privacidad."
+      "text": "No. Todo el procesamiento se realiza en tu navegador. Tus documentos y metadatos nunca salen de tu dispositivo."
     }
   },
   {
     "@type": "Question",
-    "name": "¿Hay un límite para el tamaño del archivo o número de páginas?",
+    "name": "¿Se eliminan todos los metadatos?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No, no hay límites artificiales. La única limitación es la memoria RAM disponible en tu computadora o smartphone."
+      "text": "PDFree elimina los metadatos estándar (autor, título, asunto, palabras clave, fecha). Los metadatos XMP incrustados pueden no eliminarse completamente."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Puedo añadir metadatos además de eliminarlos?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sí. Puedes editar los existentes, añadir nuevos o borrar todos los campos."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Editar metadatos cambia el contenido visible?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Los metadatos son información invisible sobre el documento. El texto, imágenes y diseño permanecen sin cambios."
     }
   }
 ]

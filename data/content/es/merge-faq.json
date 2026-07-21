@@ -17,10 +17,10 @@
   },
   {
     "@type": "Question",
-    "name": "¿Puedo fusionar más de dos PDFs a la vez?",
+    "name": "¿Cuántos archivos PDF puedo unir a la vez?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sí. Puede fusionar un número ilimitado de archivos PDF en una sola operación — 2, 10, 50 o más de 100. Solo añada todos los archivos que desea combinar."
+      "text": "No hay límite. PDFree procesa todo en la memoria del navegador — puedes unir 2, 50 o 100+ archivos en una sola operación. Para lotes grandes (50+ archivos o más de 500 MB), cierra otras pestañas del navegador para liberar RAM."
     }
   },
   {
@@ -33,18 +33,34 @@
   },
   {
     "@type": "Question",
-    "name": "¿Hay un límite diario en el número de fusiones que puedo realizar?",
+    "name": "¿Hay un límite diario para unir PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. PDFree no tiene restricciones de uso diario. Fusione tantos PDFs como necesite, con la frecuencia que desee — sin límite de tareas ni límite diario."
+      "text": "No. PDFree no tiene restricciones de uso. Une tantos PDF como necesites, con la frecuencia que quieras — sin límite diario, sin límite de tareas, sin límite de archivos."
     }
   },
   {
     "@type": "Question",
-    "name": "¿Puedo fusionar PDFs en un teléfono o tableta?",
+    "name": "¿Puedo unir PDF en el móvil o tableta?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sí. PDFree funciona en navegadores móviles — Chrome para Android y Safari para iOS. La selección de archivos usa el selector de archivos nativo y puede reordenarlos con los botones en pantalla."
+      "text": "Sí. PDFree funciona en navegadores móviles (Chrome para Android, Safari para iOS). El arrastrar y soltar se reemplaza por un selector de archivos, y la reordenación se hace con los botones arriba/abajo."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Puedo unir PDFs protegidos con contraseña?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Los PDF cifrados no se pueden leer sin la contraseña. Elimina primero la contraseña y luego únelos."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Se conservará el formato tras unir los PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sí. PDFree usa pdf-lib, que copia páginas a nivel de objeto PDF — fuentes, imágenes, gráficos vectoriales y formato se conservan exactamente como en los originales."
     }
   }
 ]

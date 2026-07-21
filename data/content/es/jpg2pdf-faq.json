@@ -25,10 +25,10 @@
   },
   {
     "@type": "Question",
-    "name": "¿Hay un límite de tamaño o número de imágenes?",
+    "name": "¿Cuántas imágenes puedo convertir a la vez?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No, no hay límites artificiales. La única limitación es la memoria RAM disponible en tu computadora o smartphone."
+      "text": "No hay límite fijo. Puedes añadir tantas imágenes como necesites — la única restricción es la memoria RAM de tu dispositivo."
     }
   },
   {
