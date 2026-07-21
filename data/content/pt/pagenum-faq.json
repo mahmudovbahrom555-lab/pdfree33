@@ -1,10 +1,10 @@
 [
   {
     "@type": "Question",
-    "name": "Os meus ficheiros são enviados ao adicionar números de página?",
+    "name": "Meus arquivos são enviados para um servidor?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Não. A adição de números de página é processada inteiramente no seu navegador com JavaScript. Os ficheiros nunca saem do seu dispositivo. Pode verificar: abra DevTools → separador Rede — não deverá ver o seu PDF a ser enviado para um servidor remoto."
+      "text": "Não. A adição de números de página é processada inteiramente no seu navegador com JavaScript. Os ficheiros nunca saem do seu dispositivo."
     }
   },
   {
@@ -17,10 +17,10 @@
   },
   {
     "@type": "Question",
-    "name": "Posso ignorar a primeira página (capa) na numeração?",
+    "name": "Posso excluir a página de rosto da numeração?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sim. Ative a opção 'Ignorar primeira página'. A página 1 (capa) não receberá número, e a numeração começa a partir da segunda página."
+      "text": "Sim. Ajuste o número inicial para 0 ou comece a numeração a partir da página 2. A página de rosto ficará sem número."
     }
   },
   {
@@ -49,10 +49,18 @@
   },
   {
     "@type": "Question",
-    "name": "Existe um limite de páginas para adicionar números?",
+    "name": "Os números de página podem ser removidos após a aplicação?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Não. O PDFree não tem limites de páginas nem de tamanho de ficheiro. A única limitação prática é a memória disponível no seu dispositivo."
+      "text": "Não. Os números são incorporados permanentemente. Guarde o arquivo original se precisar de uma versão sem números."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "O tamanho e a fonte dos números são personalizáveis?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim. Você pode ajustar o tamanho da fonte para que os números sejam discretos ou bem visíveis conforme suas necessidades."
     }
   }
 ]

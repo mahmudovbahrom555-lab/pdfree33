@@ -38,5 +38,13 @@
       "@type": "Answer",
       "text": "O PDFree detecta os campos AcroForm reais do seu PDF — caixas de texto, caixas de seleção, botões de opção, listas suspensas e campos de assinatura — e os renderiza como um formulário realmente preenchível, sem desenhar caixas de texto à mão. Se o seu PDF não tiver campos incorporados, o PDFree informa isso diretamente."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "E se meu PDF não tiver campos preenchíveis?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "O PDFree detecta campos interativos AcroForm. Se o PDF for uma imagem digitalizada ou um documento plano sem campos incorporados, você verá a mensagem \"Nenhum campo preenchível encontrado\". Para PDFs planos, você pode usar as ferramentas de anotação ou marca d'água para adicionar sobreposições de texto."
+    }
   }
 ]

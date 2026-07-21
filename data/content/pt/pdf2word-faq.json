@@ -27,7 +27,7 @@
   {
     "@type": "Question",
     "name": "As tabelas são convertidas corretamente?",
-    "acceptedAnswer": { "@type": "Answer", "text": "O PDFree detecta tabelas de duas formas: alinhando elementos de texto em colunas (para tabelas de dados) e detectando linhas de borda desenhadas (para formulários). As tabelas detectadas se tornam tabelas Word reais, não texto simples. Layouts muito complexos com células mescladas podem não ser convertidos perfeitamente." }
+    "acceptedAnswer": { "@type": "Answer", "text": "O PDFree detecta tabelas de duas formas: alinhando elementos de texto em colunas (para tabelas de dados) e detectando linhas de borda desenhadas (para formulários). As tabelas detectadas se tornam tabelas Word reais, não texto simples." }
   },
   {
     "@type": "Question",
@@ -52,6 +52,11 @@
   {
     "@type": "Question",
     "name": "Existe um conversor de PDF para Word sem upload de arquivo?",
-    "acceptedAnswer": { "@type": "Answer", "text": "Sim — PDFree. A conversão é executada no seu navegador com PDF.js e WebAssembly. Seu PDF nunca é enviado a nenhum servidor. Você pode verificar abrindo DevTools → aba Rede e confirmando que não há nenhuma requisição de upload de arquivo durante a conversão. A maioria dos conversores online faz o upload; o PDFree não." }
+    "acceptedAnswer": { "@type": "Answer", "text": "Sim — PDFree. A conversão é executada no seu navegador com PDF.js e WebAssembly. Seu PDF nunca é enviado a nenhum servidor. Você pode verificar abrindo DevTools → aba Rede e confirmando que não há nenhuma requisição de upload de arquivo durante a conversão." }
+  },
+  {
+    "@type": "Question",
+    "name": "Árabe, hebraico, cirílico e chinês são suportados?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Sim. O modo texto suporta latino, cirílico (russo, ucraniano, búlgaro), árabe e hebraico (com direção de parágrafo correta da direita para a esquerda), CJK (chinês, japonês, coreano), devanágari (hindi) e a maioria dos alfabetos Unicode de PDFs padrão." }
   }
 ]

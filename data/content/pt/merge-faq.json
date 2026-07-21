@@ -12,15 +12,15 @@
     "name": "Existe algum limite de tamanho de ficheiro para combinar PDFs?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Não existem limites artificiais nem subscrições obrigatórias. O PDFree processa os ficheiros localmente no seu browser. Para melhor desempenho, recomendamos manter o total abaixo de 300 MB; lotes maiores podem ser mais lentos em dispositivos com pouca memória."
+      "text": "Não existem limites artificiais nem subscrições obrigatórias. O PDFree processa os ficheiros localmente no seu browser. Para melhor desempenho, recomendamos manter o total abaixo de 300 MB."
     }
   },
   {
     "@type": "Question",
-    "name": "Posso combinar mais de dois PDFs de uma vez?",
+    "name": "Quantos arquivos PDF posso juntar de uma vez?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sim. Pode combinar um número ilimitado de ficheiros PDF numa única operação — 2, 10, 50 ou mais de 100. Basta adicionar todos os ficheiros que pretende combinar."
+      "text": "Não há limite. O PDFree processa tudo na memória do navegador — você pode juntar 2, 50 ou 100+ arquivos em uma única operação. Para lotes grandes (50+ arquivos ou mais de 500 MB), feche outras abas para liberar RAM."
     }
   },
   {
@@ -33,10 +33,10 @@
   },
   {
     "@type": "Question",
-    "name": "Existe algum limite diário no número de combinações que posso realizar?",
+    "name": "Há um limite diário para juntar PDFs?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Não. O PDFree não tem restrições de uso diário. Combine tantos PDFs quantos precisar, com a frequência que desejar — sem limite de tarefas nem limite diário."
+      "text": "Não. O PDFree não tem restrições de uso. Combine quantos PDFs precisar, com a frequência que desejar — sem limite diário, sem limite de tarefas, sem limite de arquivos."
     }
   },
   {
@@ -45,6 +45,22 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Sim. O PDFree funciona em browsers móveis — Chrome para Android e Safari para iOS. A seleção de ficheiros usa o seletor nativo e pode reordenar os ficheiros com os botões no ecrã."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso juntar PDFs protegidos por senha?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Não. PDFs criptografados não podem ser lidos sem a senha. Remova a proteção primeiro e depois junte."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "A formatação será preservada após juntar os PDFs?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim. O PDFree usa pdf-lib que copia as páginas no nível dos objetos PDF — fontes, imagens, gráficos vetoriais e formatação são preservados exatamente como nos originais."
     }
   }
 ]

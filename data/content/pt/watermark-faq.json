@@ -1,7 +1,7 @@
 [
   {
     "@type": "Question",
-    "name": "É completamente gratuito adicionar marca d'água ao PDF?",
+    "name": "É completamente gratuito?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Sim. O PDFree é totalmente gratuito — sem assinatura, sem cadastro, sem limite diário. Você pode adicionar marcas d'água em quantos PDFs precisar, sem nenhum custo."

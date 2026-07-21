@@ -9,7 +9,7 @@
   },
   {
     "@type": "Question",
-    "name": "É possível desfazer o nivelamento de um PDF?",
+    "name": "O nivelamento pode ser desfeito?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Não. O nivelamento é irreversível — os campos de formulário originais são permanentemente substituídos por conteúdo visual estático. Sempre mantenha um backup do seu PDF preenchido antes de nivelá-lo."
@@ -25,10 +25,10 @@
   },
   {
     "@type": "Question",
-    "name": "Meu PDF é enviado para algum servidor ao nivelar?",
+    "name": "Meus arquivos são enviados para um servidor?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Não. Tudo é executado no seu navegador com pdf-lib. Nem o original nem o resultado nivelado é enviado a qualquer servidor. Seu documento permanece no seu dispositivo o tempo todo."
+      "text": "Não. Todo o processamento ocorre localmente no seu navegador. Seus arquivos nunca saem do seu dispositivo."
     }
   },
   {
@@ -61,6 +61,14 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Eles resolvem problemas diferentes. Nivelar remove completamente a estrutura de formulário interativo — nenhum campo existe para ser editado, independentemente das permissões. A proteção por senha restringe o acesso ou os direitos de edição, mas deixa os campos intactos. Para máxima segurança, nivele primeiro e depois adicione uma senha."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "A qualidade visual é afetada?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Não. O texto e o conteúdo vetorial permanecem idênticos. Apenas a interatividade desaparece — a aparência do documento não muda."
     }
   }
 ]

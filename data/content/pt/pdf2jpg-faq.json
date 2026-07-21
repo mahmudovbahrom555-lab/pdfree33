@@ -1,26 +1,10 @@
 [
   {
     "@type": "Question",
-    "name": "A conversão de PDF para JPG envia o meu ficheiro para um servidor?",
+    "name": "Meus arquivos são enviados para um servidor?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Não. O PDFree converte páginas PDF em imagens inteiramente no seu browser utilizando PDF.js (o renderizador PDF open source da Mozilla). Nada é enviado para nenhum servidor. Pode verificar: abra as DevTools → separador \"Rede\" e não deverá ver o seu PDF a ser enviado durante a conversão."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "Que qualidade de imagem posso esperar?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "O PDFree renderiza páginas PDF a 72, 150 ou 300 DPI. A 300 DPI o resultado é de qualidade de impressão — o texto é nítido e legível em qualquer zoom. A 150 DPI as imagens são claras para utilização em ecrã e na maioria das aplicações de escritório."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "Posso converter PDF para PNG em vez de JPG?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Sim. O PDFree suporta saída em JPG e PNG. O PNG é sem perdas e mais adequado para documentos com muito texto ou gráficos onde necessita de nitidez perfeita ao pixel. O JPG produz ficheiros mais pequenos e é mais adequado para páginas com muitas fotografias. Seleccione o formato antes de converter."
+      "text": "Não. O PDFree converte páginas PDF em imagens inteiramente no seu browser utilizando PDF.js (o renderizador PDF open source da Mozilla). Nada é enviado para nenhum servidor."
     }
   },
   {
@@ -28,7 +12,7 @@
     "name": "Posso converter apenas páginas específicas para JPG?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "A ferramenta converte actualmente todas as páginas de uma vez. Para exportar apenas páginas específicas, utilize primeiro a ferramenta PDFree Dividir PDF para extrair as páginas necessárias para um PDF separado, e depois converta esse PDF para JPG. Ambos os passos são gratuitos e executam localmente no seu browser."
+      "text": "A ferramenta converte actualmente todas as páginas de uma vez. Para exportar apenas páginas específicas, utilize primeiro a ferramenta PDFree Dividir PDF para extrair as páginas necessárias para um PDF separado, e depois converta esse PDF para JPG."
     }
   },
   {
@@ -36,7 +20,7 @@
     "name": "Um PDF de 10 páginas irá produzir 10 ficheiros JPG separados?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sim. Cada página torna-se num ficheiro JPG ou PNG. Se o seu PDF tiver mais de uma página, todas as imagens são agrupadas num arquivo ZIP para transferência com um único clique."
+      "text": "Sim. Cada página torna-se num ficheiro JPG. Se o seu PDF tiver mais de uma página, todas as imagens são agrupadas num arquivo ZIP para transferência com um único clique."
     }
   },
   {
@@ -44,7 +28,23 @@
     "name": "Existe algum limite de páginas para a conversão?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Não. Não existem limites de número de páginas nem de tamanho de ficheiro. PDFs muito grandes (100+ páginas a 300 DPI) podem demorar mais a processar. Para melhores resultados com ficheiros grandes, feche outros separadores do browser antes de converter."
+      "text": "Não. Não existem limites de número de páginas nem de tamanho de ficheiro. PDFs muito grandes podem demorar mais a processar."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "O formato de saída é apenas JPG?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim, o PDFree exporta em JPG. Este formato é universalmente compatível e oferece o melhor equilíbrio tamanho/qualidade para documentos."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "A qualidade do texto é preservada nas imagens?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim, em alta resolução. Em qualidade padrão, textos muito pequenos podem perder um pouco de nitidez — escolha alta qualidade para documentos técnicos."
     }
   }
 ]
