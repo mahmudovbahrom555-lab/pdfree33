@@ -17,10 +17,10 @@
   },
   {
     "@type": "Question",
-    "name": "Taranmış bir PDF formunu doldurabilir miyim?",
+    "name": "PDF'imde doldurulabilir alan yoksa ne olur?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Bu araçla değil — taranmış PDF'ler gömülü etkileşimli alanlar içermeyen görsellerdir. PDFree yalnızca AcroForm alanlarını algılar. Taranmış formlar için önce taramayı doldurulabilir bir PDF'ye dönüştürecek OCR yazılımına ihtiyacınız olur."
+      "text": "PDFree etkileşimli AcroForm alanlarını algılar. PDF taranmış bir görselse veya gömülü form alanı olmayan düz bir belgeyse, \"Doldurulabilir alan bulunamadı\" mesajını görürsünüz."
     }
   },
   {
@@ -29,6 +29,14 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Bir PDF'ye eklenen imza görseli, elektronik bir imzadır. Yasal geçerliliği yargı bölgenize ve belge türüne bağlıdır. Onay formları, dahili onaylar veya kira sözleşmeleri gibi günlük belgeler için genellikle yeterlidir. Düzenlemeye tabi hukuki bağlamlarda, denetim izi bulunan sertifikalı bir e-imza hizmeti kullanın."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Parola korumalı bir PDF'yi doldurabilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yalnızca sahip parolasına sahipseniz. Düzenleme kısıtlaması olan şifrelenmiş PDF'ler, kimlik bilgileri olmadan doldurulamaz. Önce PDF'yi Koru aracıyla parolayı kaldırın."
     }
   },
   {
