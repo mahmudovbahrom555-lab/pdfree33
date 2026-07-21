@@ -38,5 +38,13 @@
       "@type": "Answer",
       "text": "No. Tutto viene elaborato nella memoria del tuo browser. Nessun file viene inviato a nessun server. Chiudi la scheda e i file scompaiono completamente dalla memoria."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Funziona su Mac?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. PDFree funziona su tutti i browser moderni — Safari su Mac e iPhone, Chrome su Mac, Windows e Android. Nessuna app da installare."
+    }
   }
 ]

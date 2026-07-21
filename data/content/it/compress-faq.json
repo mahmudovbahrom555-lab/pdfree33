@@ -33,6 +33,14 @@
   },
   {
     "@type": "Question",
+    "name": "Funziona su Mac?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. PDFree funziona su Safari (Mac e iPhone), Chrome e Firefox su qualsiasi sistema operativo."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "È conforme al GDPR?",
     "acceptedAnswer": {
       "@type": "Answer",

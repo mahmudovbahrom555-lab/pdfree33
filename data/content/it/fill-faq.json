@@ -1,7 +1,7 @@
 [
   {
     "@type": "Question",
-    "name": "Il mio PDF viene caricato su un server per compilarlo?",
+    "name": "Il mio PDF compilato viene caricato da qualche parte?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "No. L'intero processo di compilazione avviene nel tuo browser con pdf-lib e pdf.js. Il tuo documento non lascia mai il tuo dispositivo — PDFree non ha accesso al tuo file né ai dati che inserisci."
@@ -17,10 +17,10 @@
   },
   {
     "@type": "Question",
-    "name": "Posso compilare un modulo PDF scansionato?",
+    "name": "Cosa succede se il mio PDF non ha campi compilabili?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Non con questo strumento — i PDF scansionati sono immagini senza campi interattivi incorporati. PDFree rileva solo campi AcroForm. Per i moduli scansionati serve prima un software OCR per convertire la scansione in un PDF compilabile."
+      "text": "PDFree rileva i campi interattivi AcroForm. Se il PDF è un'immagine scansionata o un documento piatto senza campi incorporati, vedrai il messaggio \"Nessun campo compilabile trovato\"."
     }
   },
   {
@@ -29,6 +29,14 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Un'immagine di firma inserita in un PDF è una firma elettronica. La sua validità legale dipende dalla giurisdizione e dal tipo di documento. Per molti documenti quotidiani — moduli di consenso, approvazioni interne, contratti d'affitto — è generalmente sufficiente. Per contesti legali regolamentati, usa un servizio di firma elettronica certificata con audit trail."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso compilare un PDF protetto da password?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Solo se hai la password proprietaria. I PDF crittografati con restrizioni di modifica non possono essere compilati senza le credenziali. Rimuovi prima la password con lo strumento Proteggi PDF."
     }
   },
   {
