@@ -1,18 +1,42 @@
 [
   {
     "@type": "Question",
-    "name": "Mes fichiers sont-ils stockés sur vos serveurs ?",
+    "name": "Mes fichiers sont-ils envoyés à un serveur ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Non. PDFree fonctionne entièrement sur votre appareil (côté client). Nous n'avons pas de serveurs qui traitent vos fichiers, ce qui garantit 100 % de confidentialité."
+      "text": "Non. PDFree traite tous les fichiers entièrement dans votre navigateur. Vos documents ne quittent jamais votre appareil."
     }
   },
   {
     "@type": "Question",
-    "name": "Y a-t-il une limite de taille de fichier ou de nombre de pages ?",
+    "name": "Y a-t-il des limites de taille ou de nombre de pages ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Non, il n'y a pas de limites artificielles. La seule limitation est la mémoire vive disponible sur votre ordinateur ou smartphone."
+      "text": "Non. PDFree n'a pas de limites artificielles. La seule contrainte est la mémoire vive disponible sur votre appareil."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Toutes les métadonnées sont-elles supprimées ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree supprime les métadonnées standard (titre, auteur, sujet, mots-clés, dates). Les métadonnées XMP avancées intégrées peuvent ne pas être totalement effacées."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Puis-je ajouter de nouvelles métadonnées en plus de modifier les existantes ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui. Vous pouvez modifier, ajouter ou supprimer n'importe quel champ. Par exemple, ajoutez des mots-clés à un PDF qui n'en avait pas."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "La modification des métadonnées change-t-elle le contenu visible ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non. Les métadonnées sont des informations invisibles sur le document. Le texte, les images et la mise en page restent inchangés."
     }
   }
 ]

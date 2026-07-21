@@ -1,26 +1,10 @@
 [
   {
     "@type": "Question",
-    "name": "La conversion PDF en JPG téléverse-t-elle mon fichier ?",
+    "name": "Mes fichiers sont-ils envoyés à un serveur ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Non. PDFree convertit les pages PDF en images entièrement dans votre navigateur grâce à PDF.js (le moteur PDF open source de Mozilla). Rien n'est téléversé sur un serveur. Vous pouvez le vérifier : ouvrez DevTools → onglet \" Réseau \" et vous ne devriez pas voir votre PDF être envoyé pendant la conversion."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "Quelle qualité d'image puis-je attendre ?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "PDFree affiche les pages PDF à 72, 150 ou 300 DPI. À 300 DPI, le résultat est d'une qualité d'impression — le texte est net et lisible à n'importe quel zoom. À 150 DPI, les images sont claires pour une utilisation à l'écran et la plupart des applications bureautiques."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "Puis-je convertir un PDF en PNG plutôt qu'en JPG ?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Oui. PDFree prend en charge la sortie en JPG et en PNG. Le PNG est sans perte et préférable pour les documents très textuels ou les graphiques où vous avez besoin d'une netteté parfaite au pixel près. Le JPG produit des fichiers plus petits et convient mieux aux pages riches en photos. Sélectionnez le format avant la conversion."
+      "text": "Non. PDFree convertit les pages PDF en images entièrement dans votre navigateur grâce à PDF.js (le moteur PDF open source de Mozilla). Rien n'est téléversé sur un serveur."
     }
   },
   {
@@ -28,7 +12,7 @@
     "name": "Puis-je convertir uniquement des pages spécifiques en JPG ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "L'outil convertit actuellement toutes les pages en même temps. Pour n'exporter que des pages spécifiques, utilisez d'abord l'outil PDFree Diviser PDF pour extraire les pages souhaitées dans un PDF séparé, puis convertissez ce PDF en JPG. Les deux étapes sont gratuites et s'exécutent localement dans votre navigateur."
+      "text": "L'outil convertit actuellement toutes les pages en même temps. Pour n'exporter que des pages spécifiques, utilisez d'abord l'outil PDFree Diviser PDF pour extraire les pages souhaitées dans un PDF séparé, puis convertissez ce PDF en JPG."
     }
   },
   {
@@ -36,7 +20,7 @@
     "name": "Un PDF de 10 pages produira-t-il 10 fichiers JPG séparés ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Oui. Chaque page devient un fichier JPG ou PNG. Si votre PDF comporte plus d'une page, toutes les images sont regroupées dans une archive ZIP à télécharger en un seul clic."
+      "text": "Oui. Chaque page devient un fichier JPG. Si votre PDF comporte plus d'une page, toutes les images sont regroupées dans une archive ZIP à télécharger en un seul clic."
     }
   },
   {
@@ -44,7 +28,23 @@
     "name": "Y a-t-il une limite de pages pour la conversion ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Non. Il n'y a aucune limite de nombre de pages ni de taille de fichier. Les très grands PDFs (100+ pages à 300 DPI) peuvent prendre plus de temps. Pour de meilleurs résultats avec des fichiers volumineux, fermez les autres onglets du navigateur avant la conversion."
+      "text": "Non. Il n'y a aucune limite de nombre de pages ni de taille de fichier. Les très grands PDFs (100+ pages) peuvent prendre plus de temps."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Le format de sortie est-il uniquement JPG ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui, PDFree exporte en JPG. Ce format est universellement compatible et offre le meilleur compromis taille/qualité pour les documents."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "La qualité du texte est-elle préservée dans les images ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui, pour une haute résolution. En qualité standard, le texte très petit peut légèrement perdre en netteté — choisissez la haute qualité pour les documents techniques."
     }
   }
 ]

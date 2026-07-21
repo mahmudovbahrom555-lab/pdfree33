@@ -9,10 +9,10 @@
   },
   {
     "@type": "Question",
-    "name": "Mes fichiers sont-ils stockés sur vos serveurs ?",
+    "name": "Mes fichiers sont-ils envoyés à un serveur ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Non. PDFree fonctionne entièrement sur votre appareil (côté client). Tout le traitement s'effectue dans le navigateur — vos documents ne quittent jamais votre appareil."
+      "text": "Non. PDFree traite tous les fichiers entièrement dans votre navigateur. Vos documents ne quittent jamais votre appareil."
     }
   },
   {
@@ -45,6 +45,14 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Oui. L'opacité est réglable de 0 à 100 %. Une opacité de 20–30 % donne un filigrane discret qui n'obstrue pas le contenu principal du document."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Le filigrane peut-il être supprimé après application ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non. Le filigrane est intégré définitivement dans le PDF. Conservez toujours le fichier original avant d'appliquer un filigrane si vous en avez besoin sans."
     }
   }
 ]

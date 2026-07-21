@@ -12,7 +12,7 @@
     "name": "Y a-t-il une limite de taille de fichier pour la fusion de PDFs ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Il n'y a aucune limite artificielle ni abonnement requis. PDFree traite les fichiers localement dans votre navigateur. Pour de meilleures performances, nous recommandons de garder la taille totale sous 300 Mo ; les lots plus importants peuvent être plus lents sur les appareils à mémoire limitée."
+      "text": "Il n'y a aucune limite artificielle ni abonnement requis. PDFree traite les fichiers localement dans votre navigateur. Pour de meilleures performances, nous recommandons de garder la taille totale sous 300 Mo."
     }
   },
   {
@@ -69,6 +69,22 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Oui, c'est exactement ce qu'est PDFree : un joiner de PDF gratuit, sans compte à créer et sans logiciel à installer. Glissez vos fichiers, réorganisez-les, puis téléchargez le PDF assemblé."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "La mise en forme sera-t-elle conservée après la fusion ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui. PDFree utilise pdf-lib qui copie les pages au niveau des objets PDF — polices, images, graphiques vectoriels et mise en forme sont conservés exactement comme dans les originaux."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Puis-je fusionner des PDF protégés par mot de passe ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non. Les PDF chiffrés ne peuvent pas être lus sans le mot de passe. Supprimez d'abord la protection, puis fusionnez."
     }
   }
 ]

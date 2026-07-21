@@ -1,7 +1,7 @@
 [
   {
     "@type": "Question",
-    "name": "Que fait exactement l'aplatissement d'un PDF ?",
+    "name": "Qu'est-ce qu'aplatir un PDF ?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "L'aplatissement fusionne toutes les couches interactives — champs de formulaire, annotations, signatures numériques et superpositions — dans le contenu statique de la page. Le résultat est un PDF plat, non interactif, qui semble identique à l'original mais ne peut plus être modifié."
@@ -9,7 +9,7 @@
   },
   {
     "@type": "Question",
-    "name": "Peut-on annuler l'aplatissement d'un PDF ?",
+    "name": "L'aplatissement peut-il être annulé ?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Non. L'aplatissement est irréversible — les champs de formulaire originaux sont définitivement remplacés par du contenu visuel statique. Conservez toujours une sauvegarde de votre PDF rempli avant de l'aplatir."
@@ -25,10 +25,10 @@
   },
   {
     "@type": "Question",
-    "name": "Mon PDF est-il envoyé à un serveur lors de l'aplatissement ?",
+    "name": "Mes fichiers sont-ils envoyés à un serveur ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Non. Tout s'exécute dans votre navigateur avec pdf-lib. Ni l'original ni le résultat aplati n'est jamais envoyé. Votre document reste sur votre appareil en permanence."
+      "text": "Non. Tout le traitement se fait localement dans votre navigateur. Vos fichiers ne quittent jamais votre appareil."
     }
   },
   {
@@ -61,6 +61,14 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Ils résolvent des problèmes différents. L'aplatissement supprime entièrement la structure du formulaire interactif — aucun champ n'existe plus pour être modifié, quelles que soient les autorisations. La protection par mot de passe restreint l'accès ou les droits de modification mais laisse les champs intacts. Pour une sécurité maximale, aplatissez d'abord puis ajoutez un mot de passe."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "La qualité visuelle est-elle affectée ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non. Le texte et le contenu vectoriel reste identique. Seule l'interactivité disparaît — l'apparence du document ne change pas."
     }
   }
 ]

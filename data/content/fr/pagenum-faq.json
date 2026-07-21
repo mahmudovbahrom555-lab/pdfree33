@@ -1,10 +1,10 @@
 [
   {
     "@type": "Question",
-    "name": "Mes fichiers sont-ils téléchargés lors de l'ajout de numéros de page ?",
+    "name": "Mes fichiers sont-ils envoyés à un serveur ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Non. L'ajout de numéros de page s'effectue entièrement dans votre navigateur avec JavaScript. Les fichiers ne quittent jamais votre appareil. Vous pouvez le vérifier : ouvrez DevTools → onglet Réseau — vous ne devriez pas voir votre PDF être téléchargé vers un serveur distant."
+      "text": "Non. L'ajout de numéros de page s'effectue entièrement dans votre navigateur avec JavaScript. Les fichiers ne quittent jamais votre appareil."
     }
   },
   {
@@ -49,10 +49,26 @@
   },
   {
     "@type": "Question",
-    "name": "Y a-t-il une limite de pages pour l'ajout de numéros ?",
+    "name": "Y a-t-il des limites de taille ou de nombre de pages ?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Non. PDFree n'a pas de limite de pages ni de taille de fichier. La seule contrainte pratique est la mémoire disponible sur votre appareil."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "La police et la taille des numéros sont-elles personnalisables ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui. Vous pouvez ajuster la taille de la police pour que les numéros soient discrets ou bien visibles selon vos besoins."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Les numéros de page peuvent-ils être supprimés après application ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non. Les numéros sont intégrés définitivement. Conservez le fichier original si vous pensez avoir besoin d'une version sans numéros."
     }
   }
 ]

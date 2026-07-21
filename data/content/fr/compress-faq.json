@@ -1,18 +1,18 @@
 [
   {
     "@type": "Question",
-    "name": "La compression d'un PDF envoie-t-elle mon fichier en ligne ?",
+    "name": "Mes fichiers sont-ils envoyés à un serveur ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Non. La compression s'effectue entièrement dans votre navigateur grâce à JavaScript. Votre PDF n'est jamais téléversé sur un serveur ni transmis sur internet. Vous pouvez le vérifier vous-même : ouvrez les DevTools de votre navigateur → onglet \" Réseau \" pendant la compression — vous ne devriez pas voir votre PDF être envoyé vers un serveur distant."
+      "text": "Non. PDFree traite tous les fichiers entièrement dans votre navigateur. Vos documents ne quittent jamais votre appareil."
     }
   },
   {
     "@type": "Question",
-    "name": "La compression réduit-elle la qualité visuelle de mon PDF ?",
+    "name": "La compression affecte-t-elle le texte ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree propose trois niveaux. Light supprime uniquement les métadonnées — le texte et les images restent totalement intacts. Standard recompresse les images à 82 % de qualité JPEG — la perte de qualité est minimale et imperceptible dans la plupart des documents. Maximum recompresse à 72 % — visible uniquement lors d'une inspection minutieuse des PDFs riches en photos."
+      "text": "Non. La compression PDFree réduit principalement la résolution des images intégrées. Le texte vectoriel reste intact et parfaitement lisible quel que soit le niveau choisi."
     }
   },
   {
@@ -28,7 +28,7 @@
     "name": "Pourquoi le PDF compressé semble identique mais est plus petit ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Les PDFs contiennent souvent des données invisibles : des miniatures de pages générées par Adobe Reader, des polices incorporées en double, des flux de métadonnées XMP, des profils de couleur incorporés et des données privées PieceInfo des applications Adobe. PDFree supprime ces données cachées. Le contenu visible — texte, images, mise en page — reste identique."
+      "text": "Les PDFs contiennent souvent des données invisibles : des miniatures de pages générées par Adobe Reader, des polices incorporées en double, des flux de métadonnées XMP et des profils de couleur incorporés. PDFree supprime ces données cachées. Le contenu visible reste identique."
     }
   },
   {
@@ -36,15 +36,23 @@
     "name": "Puis-je compresser un PDF protégé par mot de passe ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree tente d'optimiser les PDFs chiffrés lorsque c'est possible, mais les fichiers très protégés pourraient ne pas être compressés entièrement. Pour de meilleurs résultats, supprimez d'abord le mot de passe à l'aide de l'outil PDFree Protéger PDF (qui peut également supprimer les mots de passe existants), puis compressez."
+      "text": "PDFree tente d'optimiser les PDFs chiffrés lorsque c'est possible, mais les fichiers très protégés pourraient ne pas être compressés entièrement. Supprimez d'abord le mot de passe à l'aide de l'outil Protéger PDF, puis compressez."
     }
   },
   {
     "@type": "Question",
-    "name": "La compression PDF fonctionne-t-elle sans connexion internet ?",
+    "name": "PDFree fonctionne-t-il hors ligne ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Oui. PDFree fonctionne entièrement hors ligne en tant qu'application web progressive une fois la page chargée. Aucune connexion internet n'est requise — tout le traitement s'effectue dans votre navigateur."
+      "text": "Oui. PDFree est une Progressive Web App (PWA) et fonctionne entièrement hors ligne après le premier chargement."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Y a-t-il des limites de taille ou de nombre de pages ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non. PDFree n'a pas de limites artificielles. La seule contrainte est la mémoire vive disponible sur votre appareil."
     }
   }
 ]

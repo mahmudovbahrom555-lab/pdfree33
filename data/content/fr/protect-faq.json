@@ -1,18 +1,42 @@
 [
   {
     "@type": "Question",
-    "name": "Mes fichiers sont-ils stockés sur vos serveurs ?",
+    "name": "Mes fichiers sont-ils envoyés à un serveur ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Non. PDFree fonctionne entièrement sur votre appareil (côté client). Nous n'avons pas de serveurs qui traitent vos fichiers, ce qui garantit 100 % de confidentialité."
+      "text": "Non. PDFree traite tous les fichiers entièrement dans votre navigateur. Vos documents ne quittent jamais votre appareil."
     }
   },
   {
     "@type": "Question",
-    "name": "Y a-t-il une limite de taille de fichier ou de nombre de pages ?",
+    "name": "Y a-t-il des limites de taille ou de nombre de pages ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Non, il n'y a pas de limites artificielles. La seule limitation est la mémoire vive disponible sur votre ordinateur ou smartphone."
+      "text": "Non. PDFree n'a pas de limites artificielles. La seule contrainte est la mémoire vive disponible sur votre appareil."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Quel niveau de chiffrement est utilisé ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree utilise AES-256, le standard de chiffrement utilisé par les gouvernements et les institutions financières. C'est le niveau maximal prévu par la spécification PDF."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Puis-je supprimer le mot de passe d'un PDF que j'ai protégé ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui, si vous connaissez le mot de passe. Ouvrez le PDF dans Adobe Reader ou un autre lecteur, entrez le mot de passe, et utilisez \"Enregistrer sous\" sans protection — ou utilisez un outil en ligne dédié."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Le mot de passe est-il stocké quelque part par PDFree ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non. Le chiffrement s'effectue localement dans votre navigateur. PDFree ne voit jamais votre mot de passe ni votre fichier."
     }
   }
 ]

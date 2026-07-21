@@ -1,18 +1,42 @@
 [
   {
     "@type": "Question",
-    "name": "Mes fichiers sont-ils stockés sur vos serveurs ?",
+    "name": "Mes fichiers sont-ils envoyés à un serveur ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Non. PDFree fonctionne entièrement sur votre appareil (côté client). Nous n'avons pas de serveurs qui traitent vos fichiers, ce qui garantit 100 % de confidentialité."
+      "text": "Non. PDFree traite tous les fichiers entièrement dans votre navigateur. Vos documents ne quittent jamais votre appareil."
     }
   },
   {
     "@type": "Question",
-    "name": "Y a-t-il une limite de taille de fichier ou de nombre de pages ?",
+    "name": "Y a-t-il des limites de taille ou de nombre de pages ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Non, il n'y a pas de limites artificielles. La seule limitation est la mémoire vive disponible sur votre ordinateur ou smartphone."
+      "text": "Non. PDFree n'a pas de limites artificielles. La seule contrainte est la mémoire vive disponible sur votre appareil."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Le caviardage est-il vraiment irréversible ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui. Les zones caviardées sont intégrées comme des rectangles noirs permanents. Le contenu original n'est plus accessible — même dans les métadonnées du fichier PDF."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Puis-je caviarder uniquement certaines pages ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui. Vous marquez les zones sur les pages de votre choix — seules les zones explicitement marquées sont caviardées."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Le caviardage supprime-t-il aussi les métadonnées ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non. Les métadonnées (auteur, date) ne sont pas affectées par le caviardage. Utilisez l'outil Métadonnées en complément pour une suppression complète."
     }
   }
 ]

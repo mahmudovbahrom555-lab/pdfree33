@@ -1,18 +1,34 @@
 [
   {
     "@type": "Question",
-    "name": "Mes fichiers sont-ils stockés sur vos serveurs ?",
+    "name": "Mes fichiers sont-ils envoyés à un serveur ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Non. PDFree fonctionne entièrement sur votre appareil (côté client). Nous n'avons pas de serveurs qui traitent vos fichiers, ce qui garantit 100 % de confidentialité."
+      "text": "Non. PDFree traite tous les fichiers entièrement dans votre navigateur. Vos documents ne quittent jamais votre appareil."
     }
   },
   {
     "@type": "Question",
-    "name": "Y a-t-il une limite de taille de fichier ou de nombre de pages ?",
+    "name": "Puis-je extraire des pages non consécutives ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Non, il n'y a pas de limites artificielles. La seule limitation est la mémoire vive disponible sur votre ordinateur ou smartphone."
+      "text": "Oui. Vous pouvez spécifier n'importe quelle combinaison de pages, par exemple 1, 4, 7–9, 12."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Le PDF original est-il modifié lors de l'extraction ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non. PDFree crée un nouveau fichier avec les pages sélectionnées. Le fichier original reste intact et inchangé sur votre appareil."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "La qualité est-elle préservée lors de l'extraction ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui. Les pages sont extraites au niveau des objets PDF — sans recompression ni perte de qualité. Textes, images et graphiques vectoriels sont identiques à l'original."
     }
   }
 ]
