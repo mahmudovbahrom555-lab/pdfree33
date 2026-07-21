@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Como desbloquear um PDF",
+  "description": "Remova a proteção por senha de um PDF com a senha correta — 100% no seu navegador.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Carregar arquivo",
+      "text": "Clique em 'Selecionar arquivo' ou arraste o PDF protegido para a área de soltar."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Digitar a senha",
+      "text": "Insira a senha correta. O PDFree verifica localmente no navegador; a senha nunca é enviada a nenhum servidor."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Baixar",
+      "text": "Clique em 'Desbloquear PDF'. O arquivo desbloqueado é baixado diretamente no seu dispositivo."
+    }
+  ]
+}

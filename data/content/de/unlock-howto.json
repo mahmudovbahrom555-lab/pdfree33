@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "So entsperrst du eine PDF",
+  "description": "Entferne den Passwortschutz einer PDF mit dem richtigen Passwort — 100 % im Browser.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Datei laden",
+      "text": "Klicke auf 'Datei auswählen' oder ziehe die passwortgeschützte PDF in den Dropbereich."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Passwort eingeben",
+      "text": "Gib das korrekte Passwort ein. PDFree überprüft es lokal im Browser — das Passwort wird nie an einen Server übermittelt."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Herunterladen",
+      "text": "Klicke auf 'PDF entsperren'. Die entsperrte Datei wird direkt auf dein Gerät heruntergeladen."
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Como converter PDF para PowerPoint",
+  "description": "Transforme cada página de um PDF em um slide de um arquivo .pptx real — 100% no seu navegador.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Carregar arquivo",
+      "text": "Clique em 'Selecionar arquivo' ou arraste o PDF para a área de soltar. Qualquer tamanho de arquivo é aceito."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Escolher qualidade",
+      "text": "Selecione Compacto (72 dpi, menor tamanho), Equilibrado (150 dpi, bom para a maioria dos usos) ou Alta qualidade (220 dpi, para texto denso ou impressão fina)."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Baixar",
+      "text": "Clique em 'Converter para PowerPoint'. O arquivo .pptx é baixado diretamente no seu dispositivo, sem envio para nenhum servidor."
+    }
+  ]
+}

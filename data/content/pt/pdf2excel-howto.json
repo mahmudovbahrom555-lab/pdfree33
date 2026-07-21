@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Como converter PDF para Excel",
+  "description": "Extraia tabelas de um PDF para uma planilha .xlsx real — 100% no seu navegador.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Carregar arquivo",
+      "text": "Clique em 'Selecionar arquivo' ou arraste o PDF para a área de soltar. Qualquer tamanho de arquivo é aceito."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Verificar tabelas",
+      "text": "O PDFree analisa o PDF automaticamente e mostra quantas tabelas foram detectadas. Você verá o número de abas que serão geradas."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Baixar",
+      "text": "Clique em 'Converter PDF para Excel'. O arquivo .xlsx é baixado diretamente no seu dispositivo, sem envio para nenhum servidor."
+    }
+  ]
+}

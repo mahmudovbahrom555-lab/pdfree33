@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Como converter PDF para Markdown",
+  "description": "Extraia texto, títulos e listas de um PDF para um arquivo .md limpo — 100% no seu navegador.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Carregar arquivo",
+      "text": "Clique em 'Selecionar arquivo' ou arraste o PDF para a área de soltar."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Análise automática",
+      "text": "O PDFree detecta títulos pelo tamanho da fonte e listas pelos marcadores típicos (•, ◦, 1., 2., etc.)."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Baixar",
+      "text": "Clique em 'Converter para Markdown'. O arquivo .md é baixado diretamente no seu dispositivo."
+    }
+  ]
+}

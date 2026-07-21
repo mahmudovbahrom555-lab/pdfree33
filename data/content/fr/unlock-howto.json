@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Comment déverrouiller un PDF",
+  "description": "Supprimez la protection par mot de passe d'un PDF avec le bon mot de passe — 100 % dans votre navigateur.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Charger le fichier",
+      "text": "Cliquez sur 'Choisir un fichier' ou faites glisser le PDF protégé dans la zone de dépôt."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Saisir le mot de passe",
+      "text": "Entrez le mot de passe correct. PDFree le vérifie localement dans le navigateur ; le mot de passe n'est jamais envoyé à un serveur."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Télécharger",
+      "text": "Cliquez sur 'Déverrouiller le PDF'. Le fichier déverrouillé est téléchargé directement sur votre appareil."
+    }
+  ]
+}

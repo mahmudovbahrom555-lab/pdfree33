@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Cómo desbloquear un PDF",
+  "description": "Elimina la protección por contraseña de un PDF con la contraseña correcta — 100 % en tu navegador.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Cargar archivo",
+      "text": "Haz clic en 'Seleccionar archivo' o arrastra el PDF protegido al área de soltar."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Introducir contraseña",
+      "text": "Escribe la contraseña correcta. PDFree la verifica localmente en el navegador; la contraseña nunca se envía a ningún servidor."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Descargar",
+      "text": "Haz clic en 'Desbloquear PDF'. El archivo desbloqueado se descarga directamente en tu dispositivo."
+    }
+  ]
+}
