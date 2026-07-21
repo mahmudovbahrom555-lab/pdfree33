@@ -1596,13 +1596,21 @@ async function _handleClick(cx, cy) {
     return;
   }
 
+  // Flash confirmation: green outline for 160ms before the rect turns black
+  const hoverBox = id('rdctHoverBox');
+  if (hoverBox) {
+    hoverBox.style.left   = `${token.x / _canvasScale}px`;
+    hoverBox.style.top    = `${_canvasOffsetY - (token.y + token.h) / _canvasScale}px`;
+    hoverBox.style.width  = `${token.w / _canvasScale}px`;
+    hoverBox.style.height = `${token.h / _canvasScale}px`;
+    hoverBox.style.display = 'block';
+    await new Promise(r => setTimeout(r, 160));
+    hoverBox.style.display = 'none';
+  }
+
   rects.push({ type: 'rect', x: token.x, y: token.y, w: token.w, h: token.h, source: token.source });
   _setCurrentRects(rects);
   _activeRectIdx = rects.length - 1;
-
-  // Hide hover highlight — the rect covers it now
-  const hoverBox = id('rdctHoverBox');
-  if (hoverBox) hoverBox.style.display = 'none';
 
   _redrawOverlay();
   _updateRectsList();
