@@ -49,6 +49,14 @@
   },
   {
     "@type": "Question",
+    "name": "Có thể dùng trên điện thoại không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có. PDFree hoạt động trên trình duyệt di động. Chạm vào trường để điền, và dùng ngón tay để vẽ chữ ký."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "Công cụ này có thực sự điền vào các trường thực của form, hay tôi phải đặt văn bản thủ công?",
     "acceptedAnswer": {
       "@type": "Answer",

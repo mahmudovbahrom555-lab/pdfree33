@@ -70,5 +70,21 @@
       "@type": "Answer",
       "text": "Không theo một lô duy nhất — PDFree xử lý một PDF tại một thời điểm. Mở công cụ trong tab mới để tách file thứ hai song song. PDFree cũng hoạt động ngoại tuyến như Progressive Web App, vì vậy không có thời gian chờ mạng giữa các file."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Việc tách có ảnh hưởng đến chất lượng PDF không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không. Các trang được sao chép ở cấp độ đối tượng PDF — hình ảnh, font và đồ họa vector được bảo toàn giống hệt nhau. Tách không kết xuất lại hoặc nén lại bất cứ thứ gì."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Có giới hạn về kích thước PDF hoặc số trang không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không có giới hạn phía server. Giới hạn thực tế là bộ nhớ khả dụng trong trình duyệt của bạn. PDF với hàng trăm trang và hình ảnh độ phân giải cao có thể mất vài giây để kết xuất hình thu nhỏ."
+    }
   }
 ]

@@ -46,5 +46,13 @@
       "@type": "Answer",
       "text": "Không. PDFree không giới hạn số trang hay kích thước file. Giới hạn thực tế duy nhất là bộ nhớ thiết bị của bạn."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Thêm số trang có thay đổi nội dung hiện có không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không. Số trang được thêm dưới dạng lớp văn bản mới trên nội dung hiện có. Văn bản gốc, hình ảnh và bố cục bên dưới không thay đổi."
+    }
   }
 ]

@@ -1,7 +1,7 @@
 [
   {
     "@type": "Question",
-    "name": "Chuyển JPG sang PDF có tải ảnh lên không?",
+    "name": "Ảnh của tôi có bị tải lên đâu đó không?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Không. Quá trình chuyển đổi diễn ra hoàn toàn trong trình duyệt. File ảnh không bao giờ được gửi đến bất kỳ server nào."
@@ -17,7 +17,7 @@
   },
   {
     "@type": "Question",
-    "name": "Những định dạng ảnh nào được hỗ trợ?",
+    "name": "Định dạng ảnh nào có thể chuyển sang PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "JPG và PNG được hỗ trợ đầy đủ, cũng như WebP. Mỗi ảnh trở thành một trang trong PDF kết quả."
@@ -45,6 +45,30 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Có. PDFree hoạt động trên trình duyệt di động — Chrome cho Android và Safari cho iOS. Chọn file từ thư viện điện thoại và chuyển đổi trực tiếp."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Có giới hạn số ảnh có thể chuyển không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không. Thêm bao nhiêu ảnh tùy thích. Thời gian xử lý tỉ lệ với tổng kích thước ảnh — hàng chục ảnh có thể mất 10–20 giây trên thiết bị chậm hơn."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDF sẽ dùng kích thước trang nào?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Mỗi trang có kích thước khớp chính xác với kích thước pixel của ảnh nguồn ở 96 DPI. Ảnh 2480×3508 (A4 ở 300 DPI) tạo ra trang chuẩn A4."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Có thể trộn JPG và PNG trong một PDF không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có. Thêm bất kỳ kết hợp nào của file JPG, PNG và WebP. Mỗi file trở thành một trang trong PDF cuối cùng bất kể định dạng."
     }
   }
 ]

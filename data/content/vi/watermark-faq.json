@@ -46,5 +46,13 @@
       "@type": "Answer",
       "text": "Không. PDFree miễn phí mãi mãi — không có đăng ký, không giới hạn hàng ngày, không giới hạn kích thước file."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Có thể dùng hình ảnh làm watermark không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hiện tại PDFree hỗ trợ watermark văn bản. Để watermark dạng hình ảnh, cần dùng công cụ khác."
+    }
   }
 ]
