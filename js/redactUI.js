@@ -31,6 +31,7 @@ import { id, esc }                  from './utils.js';
 import { showToast }                from './ui.js';
 import { loadingRow, infoBanner } from './uiComponents.js';
 import { loadPdfJs }                from './pdf2jpgUI.js';
+import { t, tp }                    from './i18n.js';
 
 // ── Constants ──────────────────────────────────────────────────
 
@@ -260,7 +261,7 @@ export async function initRedactOptions(file) {
   _opacity      = preset.opacity;
   _isTrueRedact = window.location.pathname.includes('/redact-pdf/');
 
-  container.innerHTML = loadingRow('Loading PDF…');
+  container.innerHTML = loadingRow(t('rdct_loading'));
   container.style.display = 'block';
 
   try {
@@ -302,7 +303,7 @@ export async function initRedactOptions(file) {
     }
 
   } catch (err) {
-    showToast('Could not read PDF: ' + err.message, 5000);
+    showToast(t('rdct_err_read', {msg: err.message}), 5000);
     _collapse(container);
   }
 }
@@ -323,14 +324,10 @@ function _render(container, fileName, preset) {
   const isTrueRedact = window.location.pathname.includes('/redact-pdf/');
 
   const bannerText = isTrueRedact
-    ? '🔒 <strong>True PDF Redaction</strong> — permanently removes content from the document. ' +
-      'Redacted pages are converted to images so underlying text cannot be recovered. Files never leave your device.'
+    ? t('rdct_banner_true')
     : tone === 'privacy'
-      ? '🛡️ <strong>Cover Area</strong> — draws an opaque rectangle over the selected region. ' +
-        'The content underneath is hidden visually but <em>not cryptographically deleted</em>. ' +
-        'For legal redaction use the <a href="/redact-pdf/" style="color:var(--green)">Redact PDF</a> tool.'
-      : '✏️ <strong>Annotate PDF</strong> — draw colored boxes, highlights, or covers on any page. ' +
-        'Everything runs locally in your browser — your PDF never leaves your device.';
+      ? t('rdct_banner_cover')
+      : t('rdct_banner_annotate');
 
   const bannerType = isTrueRedact ? 'info' : (tone === 'privacy' ? 'warn' : 'info');
 
@@ -349,18 +346,18 @@ function _render(container, fileName, preset) {
   const pageNavHtml = _pageCount > 1 ? `
     <div class="rdct-page-nav" role="group" aria-label="Page navigation">
       <button type="button" class="rdct-page-btn" id="rdctPrevPage"
-              aria-label="Previous page" disabled>‹</button>
+              aria-label="${t('rdct_prev_page')}" disabled>‹</button>
       <span class="rdct-page-info">
-        Page <strong id="rdctPageCurrent">1</strong> of <strong>${_pageCount}</strong>
+        <strong id="rdctPageCurrent">1</strong> / <strong>${_pageCount}</strong>
       </span>
       <button type="button" class="rdct-page-btn" id="rdctNextPage"
-              aria-label="Next page" ${_pageCount === 1 ? 'disabled' : ''}>›</button>
+              aria-label="${t('rdct_next_page')}" ${_pageCount === 1 ? 'disabled' : ''}>›</button>
     </div>
   ` : '';
 
   const zoomCtrlHtml = `
     <div class="rdct-zoom-ctrl">
-      <label>Zoom:</label>
+      <label>${t('rdct_zoom')}</label>
       <input type="range" id="rdctZoomSlider" min="1" max="4" step="0.5" value="${_zoomLevel}">
       <span id="rdctZoomValue">${_zoomLevel}x</span>
     </div>
@@ -380,7 +377,7 @@ function _render(container, fileName, preset) {
       <!-- Left: canvas preview with page navigation -->
       <div class="rdct-preview-wrap">
         <div class="rdct-preview-label">
-          <span id="rdctPreviewLabel">Drag to draw a shape on page 1</span>
+          <span id="rdctPreviewLabel">${t('rdct_drag_hint_page', {n: 1})}</span>
         </div>
         <div class="rdct-canvas-wrap" id="rdctCanvasWrap">
           <canvas id="rdctCanvas" class="rdct-canvas"></canvas>
@@ -389,7 +386,7 @@ function _render(container, fileName, preset) {
           <div id="rdctHoverBox"
                style="display:none;position:absolute;pointer-events:none;border:2px solid rgba(34,197,94,0.55);border-radius:2px;background:rgba(34,197,94,0.10);box-sizing:border-box;"></div>
           <div id="rdctNoPreview" class="rdct-no-preview" style="display:none">
-            Preview unavailable.<br>Use the options below to cover all pages.
+            ${t('rdct_no_preview')}<br>${t('rdct_no_preview_hint')}
           </div>
         </div>
         ${pageNavHtml}
@@ -402,28 +399,29 @@ function _render(container, fileName, preset) {
         <!-- Tool picker -->
         <div class="rdct-tools">
           <div class="rdct-tool-label" style="display:flex; justify-content:space-between; align-items:center;">
-            <span>Shape Tool</span>
+            <span>${t('rdct_shape_tool')}</span>
             <div style="display:flex; gap:4px;">
-              <button class="rdct-history-btn" id="rdctUndoBtn" disabled title="Undo (Cmd+Z)">
+              <button class="rdct-history-btn" id="rdctUndoBtn" disabled title="${t('rdct_undo_title')}">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3l-3 2.7"/></svg>
               </button>
-              <button class="rdct-history-btn" id="rdctRedoBtn" disabled title="Redo (Cmd+Shift+Z)">
+              <button class="rdct-history-btn" id="rdctRedoBtn" disabled title="${t('rdct_redo_title')}">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3l3 2.7"/></svg>
               </button>
             </div>
           </div>
           <div class="rdct-tool-picker" id="rdctToolPicker">
-            ${Object.entries(TOOL_ICONS).map(([key, svg]) => `
-              <button class="rdct-shape-btn ${key === _currentTool ? 'active' : ''}" data-tool="${key}" title="${key.charAt(0).toUpperCase() + key.slice(1)}">
-                ${svg} ${key === 'rect' ? 'Box' : key.charAt(0).toUpperCase() + key.slice(1)}
-              </button>
-            `).join('')}
+            ${Object.entries(TOOL_ICONS).map(([key, svg]) => {
+              const lbl = t('rdct_tool_' + (key === 'rect' ? 'box' : key));
+              return `<button class="rdct-shape-btn ${key === _currentTool ? 'active' : ''}" data-tool="${key}" title="${lbl}">
+                ${svg} ${lbl}
+              </button>`;
+            }).join('')}
           </div>
         </div>
 
         <!-- Color picker -->
         <div class="rdct-tools">
-          <div class="rdct-tool-label">Color</div>
+          <div class="rdct-tool-label">${t('rdct_color')}</div>
           <div class="rdct-fill-swatches" role="group" aria-label="Fill colour">
             ${swatchesHtml}
           </div>
@@ -432,7 +430,7 @@ function _render(container, fileName, preset) {
         <!-- Opacity slider -->
         <div class="rdct-tools">
           <div class="rdct-tool-label">
-            Opacity
+            ${t('rdct_opacity')}
             <span class="rdct-opacity-val" id="rdctOpacityVal">${Math.round(_opacity * 100)}%</span>
           </div>
           <input type="range" id="rdctOpacity"
@@ -445,14 +443,14 @@ function _render(container, fileName, preset) {
         <!-- Selected areas list -->
         <div class="rdct-rects-wrap">
           <div class="rdct-rects-label">
-            <span id="rdctCountText">No areas yet</span>
+            <span id="rdctCountText">${t('rdct_no_areas')}</span>
             <span class="rdct-rects-count" id="rdctCount">0 / ${MAX_RECTS_PER_PAGE}</span>
           </div>
           <ul class="rdct-rects-list" id="rdctRectsList">
-            <li class="rdct-rects-empty" id="rdctEmpty">Drag on the preview to add areas</li>
+            <li class="rdct-rects-empty" id="rdctEmpty">${t('rdct_drag_empty')}</li>
           </ul>
           <button type="button" class="rdct-clear-btn" id="rdctClearAll"
-                  disabled>✕ Remove all</button>
+                  disabled>${t('rdct_remove_all')}</button>
         </div>
 
         ${_pageCount > 1 ? `
@@ -461,8 +459,8 @@ function _render(container, fileName, preset) {
             <input type="checkbox" id="rdctApplyAll" checked>
             <span class="compress-preserve__box" aria-hidden="true"></span>
             <div class="compress-preserve__text">
-              <strong>Repeat on every page</strong>
-              <small>Same position on all ${_pageCount} pages — ideal for diagonal DRAFT stamps</small>
+              <strong>${t('rdct_apply_all')}</strong>
+              <small>${t('rdct_apply_all_desc', {n: _pageCount})}</small>
             </div>
           </label>
         </div>` : ''}
@@ -470,16 +468,16 @@ function _render(container, fileName, preset) {
         ${isTrueRedact ? `
         <!-- Search & Redact + PII patterns -->
         <div class="rdct-tools" id="rdctSearchWrap">
-          <div class="rdct-tool-label">Search &amp; Redact</div>
+          <div class="rdct-tool-label">${t('rdct_search_title')}</div>
           <div style="display:flex;gap:6px;margin-bottom:6px;">
-            <input type="text" id="rdctSearchInput" placeholder="Type text or /regex/…"
+            <input type="text" id="rdctSearchInput" placeholder="${t('rdct_search_placeholder')}"
               style="flex:1;padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:var(--surface2);color:var(--text);font-size:13px;">
             <button type="button" id="rdctSearchBtn"
-              style="padding:6px 10px;background:var(--green);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600;white-space:nowrap;">Find &amp; Mark</button>
+              style="padding:6px 10px;background:var(--green);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600;white-space:nowrap;">${t('rdct_search_btn')}</button>
           </div>
           <div style="display:flex;flex-wrap:wrap;gap:5px;">
             ${PII_PATTERNS.map(p => `<button type="button" class="rdct-pii-btn" data-pii="${p.id}"
-              style="padding:4px 8px;border:1px solid var(--border);border-radius:5px;background:var(--surface2);color:var(--text);font-size:11px;cursor:pointer;white-space:nowrap;">${p.label}</button>`).join('')}
+              style="padding:4px 8px;border:1px solid var(--border);border-radius:5px;background:var(--surface2);color:var(--text);font-size:11px;cursor:pointer;white-space:nowrap;">${t('rdct_pii_' + p.id)}</button>`).join('')}
           </div>
           <div id="rdctSearchHint" style="font-size:11px;color:var(--text3);margin-top:5px;"></div>
 
@@ -497,7 +495,7 @@ function _render(container, fileName, preset) {
             <ul id="rdctMatchList" style="list-style:none;padding:0;margin:0 0 8px;max-height:180px;overflow-y:auto;"></ul>
             <button type="button" id="rdctApplyMatches" disabled
               style="width:100%;padding:7px;background:var(--green);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600;opacity:1;transition:opacity 0.15s;">
-              No matches selected
+              ${t('rdct_mark_empty')}
             </button>
           </div>
         </div>
@@ -508,18 +506,18 @@ function _render(container, fileName, preset) {
             <input type="checkbox" id="rdctHideRedactions">
             <span class="compress-preserve__box" aria-hidden="true"></span>
             <div class="compress-preserve__text">
-              <strong>👁 Hide redaction boxes</strong>
-              <small>Temporarily show document without black boxes to review context</small>
+              <strong>${t('rdct_hide_boxes')}</strong>
+              <small>${t('rdct_hide_boxes_desc')}</small>
             </div>
           </label>
           <label class="compress-preserve" style="cursor:pointer;position:relative;">
             <input type="checkbox" id="rdctRemoveMeta" checked>
             <span class="compress-preserve__box" aria-hidden="true"></span>
             <div class="compress-preserve__text">
-              <strong>Remove metadata
-                <span id="rdctMetaTip" title="Removes Author, Creator, Producer, Keywords and other hidden fields embedded in the PDF" style="cursor:help;margin-left:3px;color:var(--text3);font-weight:400;">ⓘ</span>
+              <strong>${t('rdct_remove_meta')}
+                <span id="rdctMetaTip" title="${t('rdct_remove_meta_tip')}" style="cursor:help;margin-left:3px;color:var(--text3);font-weight:400;">ⓘ</span>
               </strong>
-              <small>Strip Author, Creator, keywords and other hidden fields from PDF</small>
+              <small>${t('rdct_remove_meta_desc')}</small>
             </div>
           </label>
         </div>` : ''}
@@ -527,12 +525,7 @@ function _render(container, fileName, preset) {
       </div>
     </div>
 
-    ${infoBanner(
-      isTrueRedact
-        ? '🔒 Processed entirely in your browser · Files never leave your device · Content permanently removed'
-        : '🔒 Processed entirely in your browser · Files never leave your device',
-      'info'
-    )}
+    ${infoBanner(isTrueRedact ? t('rdct_footer_true') : t('rdct_footer'), 'info')}
   `;
 
   _bindEvents(container);
@@ -624,11 +617,11 @@ function _updatePreviewLabel() {
   const lbl = id('rdctPreviewLabel');
   if (!lbl) return;
   if (_pageCount === 1) {
-    lbl.textContent = 'Drag to draw a shape';
+    lbl.textContent = t('rdct_drag_hint_single');
   } else if (_applyAll) {
-    lbl.textContent = `Drag on page ${_currentPage} — applies to all pages`;
+    lbl.textContent = t('rdct_drag_hint_all', {n: _currentPage});
   } else {
-    lbl.textContent = `Drag on page ${_currentPage} — only this page`;
+    lbl.textContent = t('rdct_drag_hint_perpage', {n: _currentPage});
   }
 }
 
@@ -826,7 +819,7 @@ function _onMouseDown(e) {
 
 function _dragStartAt(x, y) {
   if (_currentRects().length >= MAX_RECTS_PER_PAGE) {
-    showToast(`Maximum ${MAX_RECTS_PER_PAGE} areas per page — remove some first`);
+    showToast(t('rdct_max_areas', {n: MAX_RECTS_PER_PAGE}));
     return;
   }
   _dragging  = true;
@@ -1129,19 +1122,19 @@ function _updateRectsList() {
   if (countText) {
     if (_applyAll) {
       if (rects.length === 0) {
-        countText.textContent = 'No areas yet';
+        countText.textContent = t('rdct_no_areas');
       } else if (rects.length === 1) {
-        countText.textContent = '1 area · all pages';
+        countText.textContent = t('rdct_areas_all_one');
       } else {
-        countText.textContent = `${rects.length} areas · all pages`;
+        countText.textContent = t('rdct_areas_all_many', {n: rects.length});
       }
     } else {
       if (rects.length === 0) {
-        countText.textContent = `No areas on page ${_currentPage}`;
+        countText.textContent = t('rdct_no_areas_page', {n: _currentPage});
       } else if (rects.length === 1) {
-        countText.textContent = `1 area on page ${_currentPage}`;
+        countText.textContent = t('rdct_areas_page_one', {n: _currentPage});
       } else {
-        countText.textContent = `${rects.length} areas on page ${_currentPage}`;
+        countText.textContent = t('rdct_areas_page_many', {n: rects.length, page: _currentPage});
       }
     }
   }
@@ -1151,7 +1144,7 @@ function _updateRectsList() {
   if (!list) return;
 
   list.innerHTML = rects.length === 0
-    ? '<li class="rdct-rects-empty" id="rdctEmpty">Drag on the preview to add areas</li>'
+    ? `<li class="rdct-rects-empty" id="rdctEmpty">${t('rdct_drag_empty')}</li>`
     : rects.map((r, i) => {
         const position = _humanPosition(r);
         const size = _sizeDescription(r);
@@ -1307,7 +1300,7 @@ function _bindEvents(container) {
         try {
           const rx = new RegExp(regexMatch[1], regexMatch[2] || 'gi');
           _runPatternSearch(rx, 'regex');
-        } catch { showToast('Invalid regex pattern'); }
+        } catch { showToast(t('rdct_invalid_regex')); }
       } else {
         _runTextSearch(raw);
       }
@@ -1386,7 +1379,7 @@ async function _goToPage(pageNum) {
 // _runPatternSearch: regex + source tag for the redaction report
 
 async function _runTextSearch(query) {
-  if (!query) { const h = id('rdctSearchHint'); if (h) h.textContent = 'Enter text to search.'; return; }
+  if (!query) { const h = id('rdctSearchHint'); if (h) h.textContent = t('rdct_search_empty'); return; }
   const rx = new RegExp(query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
   await _runPatternSearch(rx, 'text');
 }
@@ -1394,7 +1387,7 @@ async function _runTextSearch(query) {
 async function _runPatternSearch(regex, source, validateFn = null) {
   if (!_pdfDoc) return;
   const hint = id('rdctSearchHint');
-  if (hint) hint.textContent = 'Searching…';
+  if (hint) hint.textContent = t('rdct_searching');
 
   _pendingMatches = [];
 
@@ -1440,8 +1433,9 @@ function _showMatchPanel(source) {
 
   if (_pendingMatches.length === 0) {
     if (panel) panel.style.display = 'none';
-    const piiLabel = PII_PATTERNS.find(p => p.id === source)?.label || source;
-    if (hint) hint.textContent = `${piiLabel !== source ? piiLabel + ': ' : ''}No matches found.`;
+    const piiKey = 'rdct_pii_' + source;
+    const piiLabel = t(piiKey) !== piiKey ? t(piiKey) : source;
+    if (hint) hint.textContent = `${piiLabel !== source ? piiLabel + ': ' : ''}${t('rdct_no_matches')}`;
     return;
   }
 
@@ -1451,13 +1445,12 @@ function _showMatchPanel(source) {
   panel.style.display = 'block';
 
   const summary = id('rdctMatchSummary');
-  if (summary) summary.textContent =
-    `${_pendingMatches.length} match${_pendingMatches.length !== 1 ? 'es' : ''} — choose which to redact:`;
+  if (summary) summary.textContent = tp(_pendingMatches.length, 'rdct_matches_found', 'rdct_matches_found_many', {n: _pendingMatches.length});
 
   const list = id('rdctMatchList');
   if (list) {
     list.innerHTML = _pendingMatches.map(m => {
-      const emoji = PII_PATTERNS.find(p => p.id === m.source)?.label?.split(' ')[0] || '';
+      const emoji = t('rdct_pii_' + m.source).split(' ')[0] || '';
       const displayText = m.text.length > 28 ? m.text.slice(0, 25) + '…' : m.text;
       return `<li style="display:flex;align-items:center;padding:3px 0;border-bottom:1px solid var(--border);">
         <label style="display:flex;align-items:center;gap:6px;width:100%;cursor:pointer;font-size:12px;min-width:0;">
@@ -1482,8 +1475,8 @@ function _updateMatchPanelBtn() {
   btn.disabled  = n === 0;
   btn.style.opacity = n === 0 ? '0.45' : '1';
   btn.textContent = n > 0
-    ? `Mark ${n} match${n !== 1 ? 'es' : ''} for redaction`
-    : 'No matches selected';
+    ? tp(n, 'rdct_mark_one', 'rdct_mark_many', {n})
+    : t('rdct_mark_empty');
 }
 
 function _applySelectedMatches() {
@@ -1502,7 +1495,7 @@ function _applySelectedMatches() {
 
   const hint = id('rdctSearchHint');
   if (hint) hint.textContent = selected.length > 0
-    ? `${selected.length} area${selected.length !== 1 ? 's' : ''} marked for redaction`
+    ? tp(selected.length, 'rdct_marked_one', 'rdct_marked_many', {n: selected.length})
     : '';
 
   _redrawOverlay();
@@ -1592,7 +1585,7 @@ async function _handleClick(cx, cy) {
 
   const rects = _currentRects();
   if (rects.length >= MAX_RECTS_PER_PAGE) {
-    showToast(`Maximum ${MAX_RECTS_PER_PAGE} areas per page — remove some first`);
+    showToast(t('rdct_max_areas', {n: MAX_RECTS_PER_PAGE}));
     return;
   }
 
@@ -1651,25 +1644,24 @@ function _updateMergeBtn() {
 
   const isTrueRedact = window.location.pathname.includes('/redact-pdf/');
   const preset = _detectPreset();
-  const verb = isTrueRedact ? 'Redact' : (preset.tone === 'privacy' ? 'Cover' : 'Apply');
-  const icon = isTrueRedact ? '🔒' : (preset.tone === 'privacy' ? '🛡️' : '✏️');
+  const tone = preset.tone;
+  const btnKey = isTrueRedact ? 'rdct_btn_redact' : (tone === 'privacy' ? 'rdct_btn_cover' : 'rdct_btn_apply');
 
   const total = _totalRectCount();
 
   if (total > 0) {
     btn.disabled = false;
-    const plural = total !== 1 ? 's' : '';
     let suffix = '';
     if (_applyAll && _pageCount > 1) {
-      suffix = ' · all pages';
+      suffix = t('rdct_suffix_all_pages');
     } else if (!_applyAll) {
       const pageCount = Object.keys(_rectsByPage).filter(k => _rectsByPage[k].length > 0).length;
-      if (pageCount > 1) suffix = ` · ${pageCount} pages`;
+      if (pageCount > 1) suffix = t('rdct_suffix_pages', {n: pageCount});
     }
-    btn.textContent = `${icon} ${verb} ${total} area${plural}${suffix}`;
+    btn.textContent = tp(total, btnKey + '_one', btnKey + '_many', {n: total}) + suffix;
   } else {
     btn.disabled = true;
-    btn.textContent = `${icon} Draw areas to ${verb.toLowerCase()}`;
+    btn.textContent = t(btnKey + '_dis');
   }
 }
 

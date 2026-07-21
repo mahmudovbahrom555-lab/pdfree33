@@ -242,6 +242,111 @@ const EN = {
   fb_email_placeholder:  'Email (optional — only if you\'d like a reply)',
   fb_send:               'Send to Murod',
   fb_thanks:             'Thank you — I read this myself.',
+
+  // ── redactUI.js ────────────────────────────────────────────────
+  rdct_loading:            'Loading PDF…',
+  rdct_err_read:           'Could not read PDF: {msg}',
+
+  // Banners
+  rdct_banner_true:        '🔒 <strong>True PDF Redaction</strong> — permanently removes content from the document. Redacted pages are converted to images so underlying text cannot be recovered. Files never leave your device.',
+  rdct_banner_cover:       '🛡️ <strong>Cover Area</strong> — draws an opaque rectangle over the selected region. The content underneath is hidden visually but <em>not cryptographically deleted</em>. For legal redaction use the <a href="/redact-pdf/" style="color:var(--green)">Redact PDF</a> tool.',
+  rdct_banner_annotate:    '✏️ <strong>Annotate PDF</strong> — draw colored boxes, highlights, or covers on any page. Everything runs locally in your browser — your PDF never leaves your device.',
+  rdct_footer_true:        '🔒 Processed entirely in your browser · Files never leave your device · Content permanently removed',
+  rdct_footer:             '🔒 Processed entirely in your browser · Files never leave your device',
+
+  // Shape tool
+  rdct_shape_tool:         'Shape Tool',
+  rdct_undo_title:         'Undo (Cmd+Z)',
+  rdct_redo_title:         'Redo (Cmd+Shift+Z)',
+  rdct_tool_box:           'Box',
+  rdct_tool_arrow:         'Arrow',
+  rdct_tool_cross:         'Cross',
+  rdct_tool_check:         'Check',
+  rdct_tool_plus:          'Plus',
+  rdct_tool_minus:         'Minus',
+  rdct_tool_text:          'Text',
+
+  // Controls
+  rdct_color:              'Color',
+  rdct_opacity:            'Opacity',
+  rdct_zoom:               'Zoom:',
+
+  // Canvas drag hints
+  rdct_drag_hint_single:   'Drag to draw a shape',
+  rdct_drag_hint_page:     'Drag to draw a shape on page {n}',
+  rdct_drag_hint_all:      'Drag on page {n} — applies to all pages',
+  rdct_drag_hint_perpage:  'Drag on page {n} — only this page',
+
+  // Page navigation
+  rdct_page_of:            'Page {cur} of {total}',
+  rdct_prev_page:          'Previous page',
+  rdct_next_page:          'Next page',
+
+  // Areas list
+  rdct_no_areas:           'No areas yet',
+  rdct_areas_all_one:      '1 area · all pages',
+  rdct_areas_all_many:     '{n} areas · all pages',
+  rdct_no_areas_page:      'No areas on page {n}',
+  rdct_areas_page_one:     '1 area on page {n}',
+  rdct_areas_page_many:    '{n} areas on page {page}',
+  rdct_drag_empty:         'Drag on the preview to add areas',
+  rdct_remove_all:         '✕ Remove all',
+
+  // Apply-all
+  rdct_apply_all:          'Repeat on every page',
+  rdct_apply_all_desc:     'Same position on all {n} pages — ideal for diagonal DRAFT stamps',
+
+  // Search & Redact
+  rdct_search_title:       'Search & Redact',
+  rdct_search_placeholder: 'Type text or /regex/…',
+  rdct_search_btn:         'Find & Mark',
+  rdct_searching:          'Searching…',
+  rdct_search_empty:       'Enter text to search.',
+  rdct_no_matches:         'No matches found.',
+
+  // Match preview panel
+  rdct_matches_found:      '{n} match — choose which to redact:',
+  rdct_matches_found_many: '{n} matches — choose which to redact:',
+  rdct_mark_one:           'Mark {n} match for redaction',
+  rdct_mark_many:          'Mark {n} matches for redaction',
+  rdct_mark_empty:         'No matches selected',
+  rdct_marked_one:         '1 area marked for redaction',
+  rdct_marked_many:        '{n} areas marked for redaction',
+
+  // Hide boxes / metadata
+  rdct_hide_boxes:         'Hide redaction boxes',
+  rdct_hide_boxes_desc:    'Temporarily show document without black boxes to review context',
+  rdct_remove_meta:        'Remove metadata',
+  rdct_remove_meta_tip:    'Removes Author, Creator, Producer, Keywords and other hidden fields embedded in the PDF',
+  rdct_remove_meta_desc:   'Strip Author, Creator, keywords and other hidden fields from PDF',
+
+  // No-preview fallback
+  rdct_no_preview:         'Preview unavailable.',
+  rdct_no_preview_hint:    'Use the options below to cover all pages.',
+
+  // Toasts
+  rdct_max_areas:          'Maximum {n} areas per page — remove some first',
+  rdct_invalid_regex:      'Invalid regex pattern',
+
+  // Merge button
+  rdct_btn_redact_one:     '🔒 Redact {n} area',
+  rdct_btn_redact_many:    '🔒 Redact {n} areas',
+  rdct_btn_redact_dis:     '🔒 Draw areas to redact',
+  rdct_btn_cover_one:      '🛡️ Cover {n} area',
+  rdct_btn_cover_many:     '🛡️ Cover {n} areas',
+  rdct_btn_cover_dis:      '🛡️ Draw areas to cover',
+  rdct_btn_apply_one:      '✏️ Apply {n} area',
+  rdct_btn_apply_many:     '✏️ Apply {n} areas',
+  rdct_btn_apply_dis:      '✏️ Draw areas to apply',
+  rdct_suffix_all_pages:   ' · all pages',
+  rdct_suffix_pages:       ' · {n} pages',
+
+  // PII pattern button labels
+  rdct_pii_email:          '📧 Email',
+  rdct_pii_phone:          '📞 Phone',
+  rdct_pii_cc:             '💳 Credit Card',
+  rdct_pii_iban:           '🏦 IBAN',
+  rdct_pii_url:            '🌐 URL',
 };
 
 const L = { ...EN, ...(window.PDFREE_LOCALE ?? {}) };
