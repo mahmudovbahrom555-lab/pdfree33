@@ -1,18 +1,10 @@
 [
   {
     "@type": "Question",
-    "name": "Wird meine Datei beim Konvertieren von PDF zu JPG hochgeladen?",
+    "name": "Werden meine Dateien auf einen Server hochgeladen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nein. PDFree konvertiert PDF-Seiten vollständig in Ihrem Browser mit PDF.js (Mozillas Open-Source-PDF-Renderer) in Bilder. Nichts wird auf einen Server hochgeladen. Sie können dies überprüfen: Öffnen Sie DevTools → Registerkarte \"Netzwerk\" und Sie sollten nicht sehen, dass Ihr PDF während der Konvertierung hochgeladen wird."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "Welche Bildqualität kann ich erwarten?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "PDFree rendert PDF-Seiten mit 72, 150 oder 300 DPI. Bei 300 DPI ist die Ausgabe druckqualität — Text ist scharf und bei jeder Vergrößerung lesbar. Bei 150 DPI sind die Bilder für die Bildschirmnutzung und die meisten Büroanwendungen klar."
+      "text": "Nein. PDFree konvertiert PDF-Seiten vollständig in Ihrem Browser mit PDF.js (Mozillas Open-Source-PDF-Renderer) in Bilder. Nichts wird auf einen Server hochgeladen."
     }
   },
   {
@@ -25,10 +17,10 @@
   },
   {
     "@type": "Question",
-    "name": "Kann ich nur bestimmte Seiten in JPG konvertieren?",
+    "name": "Kann ich einzelne Seiten auswählen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Das Tool konvertiert derzeit alle Seiten auf einmal. Um nur bestimmte Seiten zu exportieren, verwenden Sie zuerst das PDFree-Tool \"PDF teilen\", um die benötigten Seiten in ein separates PDF zu extrahieren, und konvertieren Sie dann dieses PDF in JPG. Beide Schritte sind kostenlos und laufen lokal in Ihrem Browser."
+      "text": "Ja. Du kannst bestimmte Seiten oder das gesamte Dokument konvertieren."
     }
   },
   {
@@ -45,6 +37,22 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Nein. Es gibt keine Seitenanzahl- oder Dateigrößenlimits. Sehr große PDFs (100+ Seiten bei 300 DPI) können länger dauern. Schließen Sie bei großen Dateien für beste Ergebnisse andere Browser-Tabs, bevor Sie konvertieren."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Wie hoch ist die Auflösung der exportierten Bilder?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Je nach gewählter Qualitätsstufe 72, 150 oder 300 DPI. Für professionellen Druck empfehlen wir 300 DPI."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "In welchem Format werden die Bilder gespeichert?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Als JPG (JPEG). Bei mehreren Seiten erhältst du eine ZIP-Datei mit allen Bildern."
     }
   }
 ]

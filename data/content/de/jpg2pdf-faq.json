@@ -9,10 +9,34 @@
   },
   {
     "@type": "Question",
-    "name": "Gibt es ein Limit für die Dateigröße oder Seitenanzahl?",
+    "name": "Wie viele Bilder kann ich auf einmal konvertieren?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nein, es gibt keine künstlichen Limits. Die einzige Begrenzung ist der verfügbare Arbeitsspeicher deines Computers oder Smartphones."
+      "text": "Es gibt kein festes Limit. Du kannst beliebig viele Bilder hinzufügen — jedes wird zu einer Seite im fertigen PDF."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bleibt die Bildqualität beim Konvertieren erhalten?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Bilder werden direkt in das PDF eingebettet, ohne zusätzliche Komprimierung oder Qualitätseinbußen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann ich auch PNG-Dateien konvertieren?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. JPG und PNG werden beide unterstützt. Transparente PNG-Hintergründe erscheinen im PDF als weiß."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Funktioniert das auch auf dem Smartphone?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. PDFree funktioniert in mobilen Browsern auf iOS und Android. Du kannst direkt Fotos aus deiner Galerie auswählen."
     }
   }
 ]

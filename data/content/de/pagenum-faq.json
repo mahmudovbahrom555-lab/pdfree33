@@ -17,7 +17,7 @@
   },
   {
     "@type": "Question",
-    "name": "Kann ich die erste Seite (Titelseite) bei der Nummerierung überspringen?",
+    "name": "Kann ich das Deckblatt von der Nummerierung ausschließen?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Ja. Aktivieren Sie die Option 'Erste Seite überspringen'. Seite 1 (Titel) erhält keine Nummer, und die Nummerierung beginnt ab der zweiten Seite."
@@ -49,10 +49,18 @@
   },
   {
     "@type": "Question",
-    "name": "Gibt es eine Seitenbeschränkung für das Hinzufügen von Seitenzahlen?",
+    "name": "Gibt es ein Seitenlimit?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Nein. PDFree hat keine Seiten- oder Dateigrößenbeschränkungen. Die einzige praktische Einschränkung ist der verfügbare Arbeitsspeicher Ihres Geräts."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann ich Seitenzahlen nach dem Einfügen entfernen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nein. Seitenzahlen werden fest eingebettet. Speichere die Originaldatei separat, falls du sie später ohne Seitenzahlen benötigst."
     }
   }
 ]

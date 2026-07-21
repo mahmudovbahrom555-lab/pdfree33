@@ -1,26 +1,26 @@
 [
   {
     "@type": "Question",
-    "name": "Wird meine Datei beim Komprimieren eines PDFs hochgeladen?",
+    "name": "Werden meine Dateien auf einen Server hochgeladen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nein. Die Komprimierung erfolgt vollständig in Ihrem Browser mit JavaScript. Ihre PDF-Datei wird niemals auf einen Server hochgeladen oder über das Internet übertragen. Sie können dies selbst überprüfen: Öffnen Sie die DevTools Ihres Browsers → Registerkarte \"Netzwerk\" während der Komprimierung — Sie sollten nicht sehen, dass Ihr PDF auf einen Remoteserver hochgeladen wird."
+      "text": "Nein. Alles läuft ausschließlich in deinem Browser. Deine Dokumente verlassen dein Gerät zu keinem Zeitpunkt."
     }
   },
   {
     "@type": "Question",
-    "name": "Verringert die Komprimierung die visuelle Qualität meines PDFs?",
+    "name": "Verliere ich Inhalte durch die Komprimierung?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree bietet drei Voreinstellungen. Leicht entfernt nur Metadaten — Text und Bilder bleiben vollständig unberührt. Standard komprimiert Bilder mit 82 % JPEG-Qualität neu — der Qualitätsverlust ist minimal und in den meisten Dokumenten nicht sichtbar. Maximum komprimiert mit 72 % — nur bei genauer Betrachtung von bildreichen PDFs bemerkbar."
+      "text": "Nein. Text, Vektorgrafiken und Struktur bleiben vollständig erhalten. Nur eingebettete Bilder werden je nach Qualitätsstufe stärker komprimiert."
     }
   },
   {
     "@type": "Question",
-    "name": "Um wie viel kann PDFree die Dateigröße eines PDFs reduzieren?",
+    "name": "Wie viel kleiner wird meine PDF-Datei?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Typische Reduzierungen liegen bei 20–70 %. PDFs mit hochauflösenden Bildern (gescannte Dokumente, Fotobroschüren) werden am stärksten komprimiert — oft 50–80 % Einsparung. Reine Textdokumente werden weniger reduziert, da Text bereits effizient als Vektoren gespeichert ist."
+      "text": "Das hängt vom Inhalt ab. Bild-lastige PDFs können um 50–70 % reduziert werden. Reine Text-PDFs lassen sich typischerweise um 10–30 % komprimieren."
     }
   },
   {
@@ -45,6 +45,22 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Ja. PDFree funktioniert als Progressive Web App vollständig offline, sobald die Seite geladen wurde. Es ist keine Internetverbindung erforderlich — die gesamte Verarbeitung erfolgt in Ihrem Browser."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Gibt es ein Dateigrößenlimit?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nein. PDFree hat keine künstlichen Limits. Die einzige Begrenzung ist der verfügbare Arbeitsspeicher deines Geräts."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann ich mehrere PDFs auf einmal komprimieren?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Aktuell wird eine Datei pro Vorgang verarbeitet. Nach dem Download kannst du sofort die nächste Datei laden."
     }
   }
 ]

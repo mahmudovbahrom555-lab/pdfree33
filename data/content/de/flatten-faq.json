@@ -1,10 +1,10 @@
 [
   {
     "@type": "Question",
-    "name": "Was bewirkt das Abflachen eines PDFs?",
+    "name": "Was bedeutet es, ein PDF abzuflachen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Das Abflachen führt alle interaktiven Ebenen — Formularfelder, Anmerkungen, digitale Unterschriften und Overlays — in den statischen Seiteninhalt zusammen. Das Ergebnis ist ein flaches, nicht interaktives PDF, das identisch aussieht, aber nicht mehr bearbeitet werden kann."
+      "text": "Beim Abflachen werden alle interaktiven Elemente (Formularfelder, Checkboxen, Unterschriften, Anmerkungen) dauerhaft in den statischen Seiteninhalt eingebrannt. Das Ergebnis ist ein normales PDF ohne editierbare Elemente."
     }
   },
   {
@@ -17,10 +17,10 @@
   },
   {
     "@type": "Question",
-    "name": "Wird mein PDF beim Abflachen auf einen Server hochgeladen?",
+    "name": "Werden meine Dateien auf einen Server hochgeladen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nein. Alles läuft in deinem Browser mit pdf-lib. Weder das Original noch das abgeflachte Ergebnis wird jemals hochgeladen. Dein Dokument bleibt jederzeit auf deinem Gerät."
+      "text": "Nein. Das gesamte Abflachen erfolgt lokal in deinem Browser. Deine Dateien verlassen dein Gerät zu keiner Zeit."
     }
   },
   {
@@ -53,6 +53,14 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Beides löst unterschiedliche Probleme. Das Abflachen entfernt die interaktive Formularstruktur vollständig — es gibt keine Felder mehr, die bearbeitet werden könnten, unabhängig von Berechtigungen. Passwortschutz schränkt Zugriff oder Bearbeitungsrechte ein, lässt die Formularfelder aber intakt. Für maximale Sicherheit erst abflachen, dann ein Passwort hinzufügen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Wird die visuelle Qualität beeinträchtigt?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nein. Text und Vektorinhalt bleibt identisch. Nur die Interaktivität entfällt — das Aussehen des Dokuments ändert sich nicht."
     }
   }
 ]

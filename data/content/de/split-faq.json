@@ -33,7 +33,7 @@
   },
   {
     "@type": "Question",
-    "name": "Gibt es ein Seitenlimit beim Teilen?",
+    "name": "Gibt es ein Limit für Seitenanzahl oder Dateigröße?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Nein. PDFree hat keine Seiten- oder Dateigrößenlimits. Die Verarbeitung hängt vom verfügbaren Arbeitsspeicher Ihres Geräts ab. PDFs mit Hunderten von Seiten rendern Vorschauen in Sekunden auf einem modernen Computer."

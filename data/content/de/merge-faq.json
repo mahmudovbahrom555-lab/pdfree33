@@ -17,10 +17,10 @@
   },
   {
     "@type": "Question",
-    "name": "Kann ich mehr als zwei PDFs auf einmal zusammenführen?",
+    "name": "Wie viele PDF-Dateien kann ich auf einmal zusammenfügen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ja. Sie können unbegrenzt viele PDF-Dateien in einem Vorgang zusammenführen — 2, 10, 50 oder 100+. Fügen Sie einfach alle gewünschten Dateien hinzu."
+      "text": "Es gibt kein Limit. PDFree verarbeitet alles im Arbeitsspeicher deines Browsers — du kannst 2, 50 oder 100+ Dateien in einem Vorgang zusammenfügen. Bei großen Stapeln (50+ Dateien oder über 500 MB) schließe andere Browser-Tabs, um RAM freizugeben."
     }
   },
   {
@@ -33,10 +33,10 @@
   },
   {
     "@type": "Question",
-    "name": "Gibt es ein tägliches Limit für die Anzahl der Zusammenführungen?",
+    "name": "Gibt es ein Tageslimit für das Zusammenfügen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nein. PDFree hat keinerlei Nutzungsbeschränkungen. Führen Sie so viele PDF-Zusammenführungen durch, wie Sie möchten — ohne Tageslimit, ohne Aufgabenlimit."
+      "text": "Nein. PDFree hat keinerlei Nutzungsbeschränkungen. Füge so viele PDFs zusammen, wie du möchtest, so oft du es brauchst — kein Tageslimit, kein Aufgabenlimit, kein Dateianzahl-Limit."
     }
   },
   {
@@ -45,6 +45,22 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Ja. PDFree funktioniert in mobilen Browsern — Chrome für Android und Safari für iOS. Die Dateiauswahl erfolgt über den nativen Datei-Picker und die Reihenfolge lässt sich über die Schaltflächen auf dem Bildschirm anpassen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bleibt die Formatierung nach dem Zusammenfügen erhalten?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. PDFree nutzt pdf-lib, das Seiten auf PDF-Objektebene kopiert — Schriftarten, Bilder, Vektorgrafiken und Formatierung bleiben exakt wie im Original."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann ich passwortgeschützte PDFs zusammenfügen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nein. Verschlüsselte PDFs können ohne Passwort weder gelesen noch bearbeitet werden. Entferne zunächst den Passwortschutz und füge die Dateien danach zusammen."
     }
   }
 ]

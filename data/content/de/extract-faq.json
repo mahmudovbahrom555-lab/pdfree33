@@ -1,18 +1,42 @@
 [
   {
     "@type": "Question",
-    "name": "Werden meine Dateien auf einem Server gespeichert?",
+    "name": "Werden meine Dateien auf einen Server hochgeladen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nein. PDFree arbeitet vollständig auf deinem Gerät (clientseitig). Wir haben keine Server, die deine Dateien verarbeiten, was 100 % Privatsphäre garantiert."
+      "text": "Nein. Alle Verarbeitungsschritte finden ausschließlich in deinem Browser statt. Deine Dokumente verlassen dein Gerät nie."
     }
   },
   {
     "@type": "Question",
-    "name": "Gibt es ein Limit für die Dateigröße oder Seitenanzahl?",
+    "name": "Gibt es ein Limit für die Anzahl der Seiten, die ich extrahieren kann?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Nein, es gibt keine künstlichen Limits. Die einzige Begrenzung ist der verfügbare Arbeitsspeicher deines Computers oder Smartphones."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann ich nicht zusammenhängende Seiten extrahieren?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Du kannst beliebige Seitenkombinationen angeben, z. B. Seiten 1, 4, 7–9. Die Seiten werden in der angegebenen Reihenfolge gespeichert."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Wird das Original-PDF verändert?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nein. Das Original bleibt vollständig unverändert. PDFree erstellt eine neue Datei mit den ausgewählten Seiten."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bleibt die Qualität beim Extrahieren erhalten?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Seiten werden auf PDF-Objektebene extrahiert — keine Neukomprimierung, keine Qualitätseinbußen."
     }
   }
 ]

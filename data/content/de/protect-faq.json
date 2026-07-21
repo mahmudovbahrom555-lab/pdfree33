@@ -1,10 +1,10 @@
 [
   {
     "@type": "Question",
-    "name": "Werden meine Dateien auf einem Server gespeichert?",
+    "name": "Werden meine Dateien auf einen Server hochgeladen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nein. PDFree arbeitet vollständig auf deinem Gerät (clientseitig). Wir haben keine Server, die deine Dateien verarbeiten, was 100 % Privatsphäre garantiert."
+      "text": "Nein. Alle Verarbeitungsschritte finden ausschließlich in deinem Browser statt. Weder deine Originaldatei noch das Passwort verlassen dein Gerät."
     }
   },
   {
@@ -13,6 +13,30 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Nein, es gibt keine künstlichen Limits. Die einzige Begrenzung ist der verfügbare Arbeitsspeicher deines Computers oder Smartphones."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Welche Verschlüsselung wird verwendet?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree verwendet AES-256 — den aktuellen Industriestandard für PDF-Verschlüsselung. Dieser Standard ist auch bei Banken, Behörden und Sicherheitssoftware im Einsatz."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Was ist der Unterschied zwischen Öffnungs- und Berechtigungspasswort?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Das Öffnungspasswort sperrt den Zugriff auf das gesamte Dokument. Das Berechtigungspasswort erlaubt das Öffnen, schränkt aber Aktionen wie Drucken oder Kopieren ein."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann ich ein Passwort nachträglich entfernen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja — mit PDFree oder einem anderen PDF-Tool, sofern du das Passwort kennst."
     }
   }
 ]

@@ -1,18 +1,34 @@
 [
   {
     "@type": "Question",
-    "name": "Werden meine Dateien auf einem Server gespeichert?",
+    "name": "Werden meine Dateien auf einen Server hochgeladen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nein. PDFree arbeitet vollständig auf deinem Gerät (clientseitig). Wir haben keine Server, die deine Dateien verarbeiten, was 100 % Privatsphäre garantiert."
+      "text": "Nein. Alle Verarbeitungsschritte finden ausschließlich in deinem Browser statt. Deine Dokumente und Metadaten verlassen dein Gerät nie."
     }
   },
   {
     "@type": "Question",
-    "name": "Gibt es ein Limit für die Dateigröße oder Seitenanzahl?",
+    "name": "Werden alle Metadaten entfernt?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nein, es gibt keine künstlichen Limits. Die einzige Begrenzung ist der verfügbare Arbeitsspeicher deines Computers oder Smartphones."
+      "text": "PDFree entfernt Standard-Metadaten (Autor, Titel, Thema, Schlüsselwörter, Datum). Eingebettete XMP-Metadaten und versteckte Informationen in Bildern (EXIF) werden möglicherweise nicht vollständig entfernt."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann ich Metadaten auch hinzufügen oder nur entfernen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Beides. Du kannst bestehende Metadaten bearbeiten, neue hinzufügen oder alle vorhandenen Felder löschen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Ändert das Bearbeiten von Metadaten den sichtbaren Inhalt?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nein. Metadaten sind unsichtbare Informationen über das Dokument. Text, Bilder und Layout bleiben unverändert."
     }
   }
 ]

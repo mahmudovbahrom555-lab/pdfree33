@@ -1,10 +1,10 @@
 [
   {
     "@type": "Question",
-    "name": "Werden meine Dateien auf einem Server gespeichert?",
+    "name": "Werden meine Dateien auf einen Server hochgeladen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nein. PDFree arbeitet vollständig auf deinem Gerät (clientseitig). Wir haben keine Server, die deine Dateien verarbeiten, was 100 % Privatsphäre garantiert."
+      "text": "Nein. Alle Verarbeitungsschritte finden ausschließlich in deinem Browser statt. Deine Dokumente verlassen dein Gerät nie."
     }
   },
   {
@@ -13,6 +13,30 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Nein, es gibt keine künstlichen Limits. Die einzige Begrenzung ist der verfügbare Arbeitsspeicher deines Computers oder Smartphones."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Ist die Schwärzung wirklich dauerhaft?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Die geschwärzten Bereiche werden als schwarze Rechtecke fest eingebettet. Der ursprüngliche Inhalt ist nicht mehr zugänglich."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann ich nur bestimmte Seiten schwärzen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Du kannst Bereiche auf beliebigen Seiten markieren — nur die markierten Bereiche werden geschwärzt."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Entfernt die Schwärzung auch Metadaten?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nein. Metadaten (Autor, Erstellungsdatum) bleiben erhalten. Nutze zusätzlich das Metadaten-Tool für eine vollständige Bereinigung."
     }
   }
 ]
