@@ -1,26 +1,10 @@
 [
   {
     "@type": "Question",
-    "name": "PDF 합치기가 무료인가요?",
+    "name": "100개 이상의 PDF도 합칠 수 있나요?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "예, 완전히 무료입니다. 사용 제한도 없고 숨겨진 비용도 없습니다."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "파일이 서버로 업로드되나요?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "아니요. 모든 작업이 브라우저에서 이루어집니다. 파일은 기기를 떠나지 않습니다."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "몇 개의 PDF를 합칠 수 있나요?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "제한 없이 원하는 만큼 PDF를 합칠 수 있습니다. 다만, 브라우저 메모리가 충분해야 합니다."
+      "text": "제한이 없습니다. PDFree는 브라우저 메모리에서 모두 처리합니다 — 한 번의 작업으로 2개, 50개, 100개 이상의 파일을 합칠 수 있습니다. 대용량 묶음(파일 50개 이상 또는 500MB 초과)의 경우, RAM 확보를 위해 다른 탭을 닫으세요."
     }
   },
   {
@@ -33,18 +17,50 @@
   },
   {
     "@type": "Question",
-    "name": "암호가 있는 PDF도 합칠 수 있나요?",
+    "name": "서식이 그대로 유지되나요?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "예. 암호가 있는 PDF를 추가하면 비밀번호를 입력하라는 메시지가 표시됩니다."
+      "text": "예. PDFree는 PDF 객체 수준에서 페이지를 복사하는 pdf-lib를 사용합니다 — 글꼴, 이미지, 벡터 그래픽, 서식이 원본과 동일하게 유지됩니다."
     }
   },
   {
     "@type": "Question",
-    "name": "아이폰에서도 사용할 수 있나요?",
+    "name": "암호가 있는 PDF도 지원하나요?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "예. iPhone Safari에서 pdfree.io를 열고, PDF 합치기를 선택하고, 파일 앱에서 PDF를 선택하면 됩니다."
+      "text": "아니요. 암호화된 PDF는 비밀번호 없이 읽을 수 없습니다. 먼저 보호를 해제한 후 합치세요."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "하루 사용 횟수 제한이 있나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "아니요. PDFree는 사용 제한이 없습니다. 원하는 만큼 PDF를 합치세요 — 일일 제한 없음, 작업 제한 없음, 파일 제한 없음."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDF 합치기가 무료인가요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "예, 완전히 무료입니다. 사용 제한도 없고 숨겨진 비용도 없습니다."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "파일이 서버로 업로드되나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "아니요. 모든 처리는 브라우저 메모리에서 이루어집니다. 아무것도 서버로 전송되지 않습니다. 탭을 닫으면 파일이 메모리에서 완전히 사라집니다."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Mac에서도 사용할 수 있나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "예. PDFree는 모든 최신 브라우저에서 작동합니다 — Mac과 iPhone의 Safari, Mac, Windows, Android의 Chrome. 설치할 앱이 없습니다."
     }
   }
 ]
