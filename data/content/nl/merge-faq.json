@@ -1,26 +1,10 @@
 [
   {
     "@type": "Question",
-    "name": "Is PDF samenvoegen gratis?",
+    "name": "Hoeveel PDF's kan ik tegelijk samenvoegen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ja, volledig gratis. Geen gebruikslimieten, geen verborgen kosten."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "Worden bestanden geüpload naar een server?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Nee. Alles vindt plaats in de browser. Bestanden verlaten je apparaat niet."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "Hoeveel PDF's kan ik samenvoegen?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Zoveel als je wilt, zonder limiet. Zorg voor voldoende browsergeheugen bij grote bestanden."
+      "text": "Geen limiet. PDFree verwerkt alles in het browsergeheugen — je kunt 2, 50 of 100+ bestanden in één handeling samenvoegen. Voor grote batches (50+ bestanden of meer dan 500 MB) sluit andere tabbladen om RAM vrij te maken."
     }
   },
   {
@@ -33,18 +17,50 @@
   },
   {
     "@type": "Question",
-    "name": "Kan ik beveiligde PDF's samenvoegen?",
+    "name": "Blijft de opmaak bewaard na het samenvoegen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ja. Als een PDF een wachtwoord heeft, wordt gevraagd dit in te voeren."
+      "text": "Ja. PDFree gebruikt pdf-lib dat pagina's op PDF-objectniveau kopieert — lettertypen, afbeeldingen, vectorafbeeldingen en opmaak worden exact bewaard zoals in de originelen."
     }
   },
   {
     "@type": "Question",
-    "name": "Werkt het op iPhone?",
+    "name": "Kan ik wachtwoordbeveiligde PDF's samenvoegen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ja. Open Safari op iPhone, ga naar pdfree.io, klik op PDF samenvoegen en selecteer de bestanden via de Bestanden-app."
+      "text": "Nee. Versleutelde PDF's kunnen niet worden gelezen zonder het wachtwoord. Verwijder eerst de beveiliging en voeg daarna samen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is er een dagelijks limiet voor PDF samenvoegen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. PDFree heeft geen gebruiksbeperkingen. Voeg zoveel PDF's samen als je wilt, zo vaak als je wilt — geen dagelijks limiet, geen taaklimiet, geen bestandslimiet."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is PDF samenvoegen gratis?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja, volledig gratis. Geen gebruikslimieten, geen verborgen kosten."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Worden mijn bestanden geüpload naar een server?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. Alles wordt verwerkt in het geheugen van je browser. Er wordt niets naar een server gestuurd. Sluit het tabblad en de bestanden verdwijnen volledig uit het geheugen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Werkt het op Mac?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. PDFree werkt in alle moderne browsers — Safari op Mac en iPhone, Chrome op Mac, Windows en Android. Geen app om te installeren."
     }
   }
 ]

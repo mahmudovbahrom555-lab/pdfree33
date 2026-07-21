@@ -1,7 +1,7 @@
 [
   {
     "@type": "Question",
-    "name": "Wordt mijn PDF geüpload om hem in te vullen?",
+    "name": "Wordt mijn ingevulde PDF ergens geüpload?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Nee. Het hele invulproces gebeurt in je browser met pdf-lib en pdf.js. Je document verlaat je apparaat nooit — PDFree heeft geen toegang tot je bestand of de gegevens die je invoert."
@@ -17,10 +17,10 @@
   },
   {
     "@type": "Question",
-    "name": "Kan ik een gescand PDF-formulier invullen?",
+    "name": "Wat als mijn PDF geen invulbare velden heeft?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Niet met deze tool — gescande PDF's zijn afbeeldingen zonder ingebedde interactieve velden. PDFree detecteert alleen AcroForm-velden. Voor gescande formulieren heb je eerst OCR-software nodig om de scan om te zetten naar een invulbaar PDF."
+      "text": "PDFree detecteert interactieve AcroForm-velden. Als de PDF een gescande afbeelding of een plat document zonder ingebedde formuliervelden is, zie je het bericht \"Geen invulbare velden gevonden\"."
     }
   },
   {
@@ -29,6 +29,14 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Een getekende handtekeningafbeelding is een elektronische handtekening. De juridische waarde hangt af van je rechtsgebied en het documenttype. Voor alledaagse documenten zoals toestemmingsformulieren, interne goedkeuringen of huurcontracten is dit meestal voldoende. Gebruik voor gereguleerde juridische contexten een gecertificeerde e-handtekeningdienst met audittrail."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik een met een wachtwoord beveiligde PDF invullen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Alleen als je het eigenaarswachtwoord hebt. Versleutelde PDF's met bewerkingsbeperkingen kunnen niet worden ingevuld zonder de inloggegevens. Verwijder eerst het wachtwoord met de tool PDF Beveiligen."
     }
   },
   {
