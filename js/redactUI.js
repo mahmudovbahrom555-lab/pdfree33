@@ -141,6 +141,11 @@ let _historyIdx = -1;
 // Pending search matches — populated by _runPatternSearch, committed by _applySelectedMatches
 let _pendingMatches = [];  // [{idx, text, pageNum, rect, source, checked}]
 
+// Text content cache per page — populated lazily on first click, used for click-to-redact
+let _pageTextCache = {};   // {pageNum: TextContent}
+let _isTrueRedact  = false;
+let _hoverRaf      = null;
+
 function _saveHistory() {
   _history = _history.slice(0, _historyIdx + 1);
   _history.push({
@@ -251,8 +256,9 @@ export async function initRedactOptions(file) {
 
   // Apply SEO preset BEFORE rendering
   const preset = _detectPreset();
-  _colorKey = preset.color;
-  _opacity  = preset.opacity;
+  _colorKey     = preset.color;
+  _opacity      = preset.opacity;
+  _isTrueRedact = window.location.pathname.includes('/redact-pdf/');
 
   container.innerHTML = loadingRow('Loading PDF…');
   container.style.display = 'block';
@@ -380,6 +386,8 @@ function _render(container, fileName, preset) {
           <canvas id="rdctCanvas" class="rdct-canvas"></canvas>
           <div id="rdctOverlay" class="rdct-overlay"></div>
           <canvas id="rdctMagnifier" class="rdct-magnifier"></canvas>
+          <div id="rdctHoverBox"
+               style="display:none;position:absolute;pointer-events:none;border:2px solid rgba(34,197,94,0.55);border-radius:2px;background:rgba(34,197,94,0.10);box-sizing:border-box;"></div>
           <div id="rdctNoPreview" class="rdct-no-preview" style="display:none">
             Preview unavailable.<br>Use the options below to cover all pages.
           </div>
@@ -588,6 +596,11 @@ async function _renderPage(pageNum) {
     _redrawOverlay();
     _updatePageNav();
     _updatePreviewLabel();
+
+    // Pre-fetch text content for click-to-redact / hover (background — no await)
+    if (_isTrueRedact && !_pageTextCache[pageNum]) {
+      page.getTextContent().then(tc => { _pageTextCache[pageNum] = tc; }).catch(() => {});
+    }
   })();
 
   try {
@@ -833,15 +846,19 @@ function _dragEndAt(endX, endY) {
 
   if (!_dragStart) return;
 
+  // Click vs drag: use Euclidean distance so diagonal micro-drags are also caught
+  const clickThreshold = _isTouch ? 14 : 6;
+  if (Math.hypot(endX - _dragStart.x, endY - _dragStart.y) < clickThreshold) {
+    const sx = _dragStart.x, sy = _dragStart.y;
+    _dragStart = null;
+    if (_isTrueRedact && _currentTool === 'rect') _handleClick(sx, sy);
+    return;
+  }
+
   let cx = Math.min(_dragStart.x, endX);
   let cy = Math.min(_dragStart.y, endY);
   let cw = Math.abs(endX - _dragStart.x);
   let ch = Math.abs(endY - _dragStart.y);
-
-  if (cw < 5 || ch < 5) {
-    _dragStart = null;
-    return;
-  }
 
   const minSize = _isTouch ? 24 : 6;
   if (cw < minSize) { cx -= (minSize - cw) / 2; cw = minSize; }
@@ -1336,6 +1353,22 @@ function _bindEvents(container) {
       _updateMatchPanelBtn();
     }
   });
+
+  // Hover highlight on canvas (RAF-throttled; uses pre-fetched text cache)
+  const canvasWrap = id('rdctCanvasWrap');
+  canvasWrap?.addEventListener('mousemove', e => {
+    if (_hoverRaf) cancelAnimationFrame(_hoverRaf);
+    _hoverRaf = requestAnimationFrame(() => {
+      const canvas = id('rdctCanvas');
+      if (!canvas) return;
+      const c = _toCanvasCoords(e.clientX, e.clientY, canvas);
+      _updateHover(c.x, c.y);
+    });
+  });
+  canvasWrap?.addEventListener('mouseleave', () => {
+    const box = id('rdctHoverBox');
+    if (box) box.style.display = 'none';
+  });
 }
 
 async function _goToPage(pageNum) {
@@ -1478,6 +1511,132 @@ function _applySelectedMatches() {
   if (selected.length > 0) _saveHistory();
 }
 
+// ── Click-to-redact (Phase 3) ──────────────────────────────────
+//
+// _findTokenAtPos: shared by _handleClick and _updateHover.
+//   Scans cached text items for the point (pdfX, pdfY).
+//   Returns a {x,y,w,h,source} rect in PDF coords, or null.
+//   PII patterns are tried first; falls back to whitespace-delimited token.
+//
+function _findTokenAtPos(items, pdfX, pdfY) {
+  for (const item of items) {
+    if (!item.str || !item.width) continue;
+
+    const [,, , scaleY, tx, ty] = item.transform;
+    const fh = Math.abs(scaleY);
+
+    // Hit-test bounding box (generous vertical range around text baseline)
+    if (pdfX < tx - 1 || pdfX > tx + item.width + 1) continue;
+    if (pdfY < ty - fh * 0.3 || pdfY > ty + fh * 1.1) continue;
+
+    const str  = item.str;
+    const charW = item.width / (str.length || 1);
+    const charIdx = Math.max(0, Math.min(str.length - 1, Math.floor((pdfX - tx) / charW)));
+
+    // PII-first: check each pattern — if the clicked char falls inside a match, cover the whole match
+    for (const pii of PII_PATTERNS) {
+      const rx = new RegExp(pii.regex.source, pii.regex.flags);
+      rx.lastIndex = 0;
+      let m;
+      while ((m = rx.exec(str)) !== null) {
+        if (pii.validate && !pii.validate(m[0])) continue;
+        if (charIdx >= m.index && charIdx < m.index + m[0].length) {
+          const rh = Math.max(fh * 1.3, 6);
+          return {
+            x: tx + m.index * charW,
+            y: ty - rh * 0.15,
+            w: Math.max(m[0].length * charW, 6),
+            h: rh,
+            source: pii.id,
+          };
+        }
+      }
+    }
+
+    // Word fallback: only whitespace breaks the token (dots, dashes, @ etc. stay inside)
+    let wordStart = charIdx;
+    while (wordStart > 0 && !/\s/.test(str[wordStart - 1])) wordStart--;
+    let wordEnd = charIdx + 1;
+    while (wordEnd < str.length && !/\s/.test(str[wordEnd])) wordEnd++;
+
+    if (wordEnd <= wordStart) return null;
+
+    const rh = Math.max(fh * 1.3, 6);
+    return {
+      x: tx + wordStart * charW,
+      y: ty - rh * 0.15,
+      w: Math.max((wordEnd - wordStart) * charW, 6),
+      h: rh,
+      source: 'area',
+    };
+  }
+  return null;
+}
+
+async function _handleClick(cx, cy) {
+  if (!_pdfDoc) return;
+
+  const pdfX = cx * _canvasScale;
+  const pdfY = (_canvasOffsetY - cy) * _canvasScale;
+
+  // Fetch and cache text content for this page if not yet available
+  if (!_pageTextCache[_currentPage]) {
+    try {
+      const page = await _pdfDoc.getPage(_currentPage);
+      _pageTextCache[_currentPage] = await page.getTextContent();
+    } catch { return; }
+  }
+
+  const token = _findTokenAtPos(_pageTextCache[_currentPage].items, pdfX, pdfY);
+  if (!token) return;
+
+  const rects = _currentRects();
+  if (rects.length >= MAX_RECTS_PER_PAGE) {
+    showToast(`Maximum ${MAX_RECTS_PER_PAGE} areas per page — remove some first`);
+    return;
+  }
+
+  rects.push({ type: 'rect', x: token.x, y: token.y, w: token.w, h: token.h, source: token.source });
+  _setCurrentRects(rects);
+  _activeRectIdx = rects.length - 1;
+
+  // Hide hover highlight — the rect covers it now
+  const hoverBox = id('rdctHoverBox');
+  if (hoverBox) hoverBox.style.display = 'none';
+
+  _redrawOverlay();
+  _updateRectsList();
+  _updateMergeBtn();
+  _saveHistory();
+}
+
+// Hover highlight — called from mousemove on canvas wrap (RAF-throttled)
+// Only runs when text content cache is warm (pre-fetched by _renderPage).
+function _updateHover(cx, cy) {
+  const box = id('rdctHoverBox');
+  if (!box) return;
+  if (_dragging || !_isTrueRedact || _currentTool !== 'rect') {
+    box.style.display = 'none';
+    return;
+  }
+
+  const cache = _pageTextCache[_currentPage];
+  if (!cache) { box.style.display = 'none'; return; }
+
+  const pdfX = cx * _canvasScale;
+  const pdfY = (_canvasOffsetY - cy) * _canvasScale;
+  const token = _findTokenAtPos(cache.items, pdfX, pdfY);
+
+  if (!token) { box.style.display = 'none'; return; }
+
+  // Convert PDF coords back to canvas overlay pixel coords
+  box.style.display = 'block';
+  box.style.left    = `${token.x / _canvasScale}px`;
+  box.style.top     = `${_canvasOffsetY - (token.y + token.h) / _canvasScale}px`;
+  box.style.width   = `${token.w / _canvasScale}px`;
+  box.style.height  = `${token.h / _canvasScale}px`;
+}
+
 function _updateMergeBtn() {
   const btn = id('mergeBtn');
   if (!btn) return;
@@ -1513,7 +1672,10 @@ function _cleanup() {
   _pageSizes = [];
   _sharedRects = [];
   _rectsByPage = {};
-  _pendingMatches = [];
+  _pendingMatches  = [];
+  _pageTextCache   = {};
+  _isTrueRedact    = false;
+  if (_hoverRaf) { cancelAnimationFrame(_hoverRaf); _hoverRaf = null; }
   _currentPage = 1;
   _dragging  = false;
   _dragStart = null;
