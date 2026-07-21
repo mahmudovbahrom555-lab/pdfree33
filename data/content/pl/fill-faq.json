@@ -17,10 +17,10 @@
   },
   {
     "@type": "Question",
-    "name": "Czy mogę wypełnić zeskanowany formularz PDF?",
+    "name": "Co jeśli mój PDF nie ma pól do wypełnienia?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nie tym narzędziem — zeskanowane pliki PDF to obrazy bez osadzonych pól interaktywnych. PDFree wykrywa tylko pola AcroForm. Dla zeskanowanych formularzy potrzebne jest najpierw oprogramowanie OCR, aby zamienić skan na wypełnialny PDF."
+      "text": "PDFree wykrywa interaktywne pola AcroForm. Jeśli PDF jest zeskanowanym obrazem lub płaskim dokumentem bez osadzonych pól, zobaczysz komunikat \"Nie znaleziono pól do wypełnienia\"."
     }
   },
   {
@@ -29,6 +29,14 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Obraz podpisu wstawiony do PDF to podpis elektroniczny. Jego moc prawna zależy od jurysdykcji i rodzaju dokumentu. W przypadku wielu codziennych dokumentów — formularzy zgody, wewnętrznych akceptacji, umów najmu — jest zwykle wystarczający. W regulowanych kontekstach prawnych skorzystaj z certyfikowanej usługi podpisu elektronicznego ze śladem audytowym."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy mogę wypełnić PDF chroniony hasłem?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tylko jeśli znasz hasło właściciela. Zaszyfrowanych plików PDF z ograniczeniami edycji nie można wypełnić bez danych uwierzytelniających. Najpierw usuń hasło narzędziem Zabezpiecz PDF."
     }
   },
   {
