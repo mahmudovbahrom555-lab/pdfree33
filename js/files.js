@@ -174,7 +174,7 @@ export function addFiles(files) {
   });
 
   if (invalid > 0) {
-    const msg = _currentAccept === '.pdf'
+    const msg = _currentAccept.startsWith('.pdf')
       ? t('invalid_pdf')
       : t('invalid_img');
     showToast(msg, 5000);

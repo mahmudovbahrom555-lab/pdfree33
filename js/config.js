@@ -39,8 +39,8 @@ export const IMAGE_DIM_PRESETS = {
  * (атрибут accept на инпуте не защищает от D&D сторонних файлов).
  */
 export const ACCEPTED_MIME = {
-  '.pdf': ['application/pdf'],
-  '.jpg,.jpeg,.png,.webp': ['image/jpeg', 'image/png', 'image/webp'],
+  '.pdf,application/pdf': ['application/pdf'],
+  '.jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp': ['image/jpeg', 'image/png', 'image/webp'],
 };
 
 /**
@@ -84,7 +84,7 @@ export const TOOLS = {
     descs:  { en: 'Combine unlimited PDF files — no restrictions', es: 'Combina archivos PDF ilimitados — sin restricciones', pt: 'Combine arquivos PDF ilimitados — sem restrições', de: 'Beliebig viele PDF-Dateien zusammenfügen — keine Einschränkungen', fr: 'Fusionner un nombre illimité de fichiers PDF — sans restrictions' },
     btns:   { en: '🔗 Merge PDF files', es: '🔗 Unir PDF',     pt: '🔗 Juntar PDF',    de: '🔗 PDF zusammenführen', fr: '🔗 Fusionner les PDF' },
     multi:       true,
-    accept:      '.pdf',
+    accept:      '.pdf,application/pdf',
     implemented: true,
   },
   split: {
@@ -98,7 +98,7 @@ export const TOOLS = {
     descs:  { en: 'Extract pages or split into separate files', es: 'Extrae páginas o divide en archivos separados', pt: 'Extraia páginas ou divida em arquivos separados', de: 'Seiten extrahieren oder in einzelne Dateien aufteilen', fr: 'Extraire des pages ou diviser en fichiers séparés' },
     btns:   { en: '✂️ Split PDF', es: '✂️ Dividir PDF', pt: '✂️ Dividir PDF', de: '✂️ PDF aufteilen', fr: '✂️ Diviser le PDF' },
     multi:       false,
-    accept:      '.pdf',
+    accept:      '.pdf,application/pdf',
     implemented: true,
   },
   compress: {
@@ -113,7 +113,7 @@ export const TOOLS = {
     descs:  { en: 'Reduce file size without losing quality', es: 'Reduce el tamaño sin perder calidad', pt: 'Reduza o tamanho sem perder qualidade', de: 'Dateigröße ohne Qualitätsverlust reduzieren', fr: 'Réduire la taille sans perte de qualité' },
     btns:   { en: '🗜️ Compress PDF', es: '🗜️ Comprimir PDF', pt: '🗜️ Comprimir PDF', de: '🗜️ PDF komprimieren', fr: '🗜️ Compresser le PDF' },
     multi:         false,
-    accept:        '.pdf',
+    accept:        '.pdf,application/pdf',
     implemented:   true,
     defaultPreset: 'medium',
   },
@@ -128,7 +128,7 @@ export const TOOLS = {
     descs:  { en: 'Convert images to PDF instantly', es: 'Convierte imágenes a PDF al instante', pt: 'Converta imagens em PDF instantaneamente', de: 'Bilder sofort in PDF umwandeln', fr: 'Convertir des images en PDF instantanément' },
     btns:   { en: '🖼️ Convert to PDF',  es: '🖼️ Convertir a PDF', pt: '🖼️ Converter para PDF', de: '🖼️ In PDF konvertieren', fr: '🖼️ Convertir en PDF' },
     multi:       true,
-    accept:      '.jpg,.jpeg,.png,.webp',
+    accept:      '.jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp',
     implemented: true,
   },
   pdf2jpg: {
@@ -142,7 +142,7 @@ export const TOOLS = {
     descs:  { en: 'Extract pages as high-quality images', es: 'Extrae páginas como imágenes de alta calidad', pt: 'Extraia páginas como imagens de alta qualidade', de: 'Seiten als hochwertige Bilder exportieren', fr: 'Exporter les pages en images haute qualité' },
     btns:   { en: '📸 Export images', es: '📸 Exportar imágenes', pt: '📸 Exportar imagens', de: '📸 Bilder exportieren', fr: '📸 Exporter les images' },
     multi:       false,
-    accept:      '.pdf',
+    accept:      '.pdf,application/pdf',
     implemented: true,
   },
   redact: {
@@ -157,7 +157,7 @@ export const TOOLS = {
     descs:  { en: 'Hide watermarks, signatures or sensitive data locally', es: 'Ocultar marcas de agua, firmas o datos sensibles localmente', pt: "Ocultar marcas d'água, assinaturas ou dados sensíveis localmente", de: 'Wasserzeichen, Unterschriften oder sensible Daten lokal ausblenden', fr: 'Masquer filigranes, signatures ou données sensibles localement' },
     btns:   { en: '🖌️ Cover Area', es: '🖌️ Ocultar área', pt: '🖌️ Ocultar área', de: '🖌️ Bereich abdecken', fr: '🖌️ Caviarder la zone' },
     multi:       false,
-    accept:      '.pdf',
+    accept:      '.pdf,application/pdf',
     implemented: true,
   },
   rotate: {
@@ -171,7 +171,7 @@ export const TOOLS = {
     descs:  { en: 'Fix page orientation in any PDF', es: 'Arregla la orientación de páginas en cualquier PDF', pt: 'Corrija a orientação das páginas em qualquer PDF', de: 'Seitenausrichtung in beliebigen PDFs korrigieren', fr: "Corriger l'orientation des pages dans n'importe quel PDF" },
     btns:   { en: '🔄 Rotate PDF', es: '🔄 Rotar PDF', pt: '🔄 Girar PDF', de: '🔄 PDF drehen', fr: '🔄 Faire pivoter' },
     multi:       false,
-    accept:      '.pdf',
+    accept:      '.pdf,application/pdf',
     implemented: true,
   },
   extract: {
@@ -185,7 +185,7 @@ export const TOOLS = {
     descs:  { en: 'Pull selected pages into a new PDF', es: 'Extrae páginas seleccionadas a un nuevo PDF', pt: 'Extraia páginas selecionadas para um novo PDF', de: 'Ausgewählte Seiten in ein neues PDF extrahieren', fr: 'Extraire des pages sélectionnées dans un nouveau PDF' },
     btns:   { en: '📑 Extract Pages', es: '📑 Extraer páginas', pt: '📑 Extrair páginas', de: '📑 Seiten extrahieren', fr: '📑 Extraire les pages' },
     multi:       false,
-    accept:      '.pdf',
+    accept:      '.pdf,application/pdf',
     implemented: true,
   },
   watermark: {
@@ -199,7 +199,7 @@ export const TOOLS = {
     descs:  { en: 'Stamp text on every page — diagonal or tiled', es: 'Estampa texto en cada página — diagonal o en mosaico', pt: 'Estampe texto em cada página — diagonal ou em mosaico', de: 'Text auf jeder Seite stempeln — diagonal oder gekachelt', fr: 'Tamponner du texte sur chaque page — diagonal ou en mosaïque' },
     btns:   { en: '💧 Apply Watermark', es: '💧 Aplicar marca de agua', pt: "💧 Aplicar marca d'água", de: '💧 Wasserzeichen einfügen', fr: '💧 Appliquer le filigrane' },
     multi:       false,
-    accept:      '.pdf',
+    accept:      '.pdf,application/pdf',
     implemented: true,
   },
   pagenum: {
@@ -213,7 +213,7 @@ export const TOOLS = {
     descs:  { en: 'Add numbered footers — Arabic, Roman or ABC', es: 'Añade números de página en el pie — Arábigos, Romanos o ABC', pt: 'Adicione números de página no rodapé — Arábicos, Romanos ou ABC', de: 'Nummerierte Fußzeilen hinzufügen — Arabisch, Römisch oder ABC', fr: 'Ajouter des pieds de page numérotés — arabe, romain ou alphabétique' },
     btns:   { en: '🔢 Add Numbers', es: '🔢 Añadir números', pt: '🔢 Adicionar números', de: '🔢 Nummern hinzufügen', fr: '🔢 Ajouter la numérotation' },
     multi:       false,
-    accept:      '.pdf',
+    accept:      '.pdf,application/pdf',
     implemented: true,
   },
   meta: {
@@ -227,7 +227,7 @@ export const TOOLS = {
     descs:  { en: 'View and edit title, author, keywords', es: 'Ver y editar título, autor, palabras clave', pt: 'Ver e editar título, autor, palavras-chave', de: 'Titel, Autor, Schlüsselwörter anzeigen und bearbeiten', fr: 'Afficher et modifier titre, auteur, mots-clés' },
     btns:   { en: '🏷️ Save Metadata', es: '🏷️ Guardar metadatos', pt: '🏷️ Salvar metadados', de: '🏷️ Metadaten speichern', fr: '🏷️ Enregistrer les métadonnées' },
     multi:       false,
-    accept:      '.pdf',
+    accept:      '.pdf,application/pdf',
     implemented: true,
   },
   protect: {
@@ -241,7 +241,7 @@ export const TOOLS = {
     descs:  { en: 'AES-256 password & permissions — 100% private', es: 'Contraseña AES-256 y permisos — 100% privado', pt: 'Senha AES-256 e permissões — 100% privado', de: 'AES-256-Passwort und Berechtigungen — 100 % privat', fr: 'Mot de passe AES-256 et permissions — 100 % privé' },
     btns:   { en: '🔒 Protect PDF', es: '🔒 Proteger PDF', pt: '🔒 Proteger PDF', de: '🔒 PDF schützen', fr: '🔒 Protéger le PDF' },
     multi:       false,
-    accept:      '.pdf',
+    accept:      '.pdf,application/pdf',
     implemented: true,
   },
   fill: {
@@ -253,7 +253,7 @@ export const TOOLS = {
                   'sign', 'signature', 'sign pdf', 'esign'],
     btn:         '✏️ Fill & Download PDF',
     multi:       false,
-    accept:      '.pdf',
+    accept:      '.pdf,application/pdf',
     implemented: true,
     inline:      false, // requires dedicated page HTML (fillOptions div)
   },
@@ -265,7 +265,7 @@ export const TOOLS = {
                   'compress for email', 'email pdf', 'too large for email'],
     btn:         '📧 Compress for Email',
     multi:       false,
-    accept:      '.pdf',
+    accept:      '.pdf,application/pdf',
     implemented: true,
   },
   'draw-pdf': {
@@ -279,7 +279,7 @@ export const TOOLS = {
     btns:   { en: '✏️ Save PDF', es: '✏️ Guardar PDF', pt: '✏️ Salvar PDF', de: '✏️ PDF speichern', fr: '✏️ Enregistrer le PDF' },
     btn:         '✏️ Save PDF',
     multi:       false,
-    accept:      '.pdf',
+    accept:      '.pdf,application/pdf',
     implemented: true,
     inline:      false, // requires dedicated page HTML (pdfCanvas, drawCanvas, canvasArea)
   },
@@ -294,7 +294,7 @@ export const TOOLS = {
     btns:   { en: '🔍 Make PDF Searchable', es: '🔍 Hacer PDF buscable', pt: '🔍 Tornar PDF pesquisável', de: '🔍 PDF durchsuchbar machen', fr: '🔍 Rendre le PDF cherchable' },
     btn:         '🔍 Make PDF Searchable',
     multi:       false,
-    accept:      '.pdf',
+    accept:      '.pdf,application/pdf',
     implemented: true,
   },
   'pdf2word': {
@@ -308,7 +308,7 @@ export const TOOLS = {
     btns:   { en: '📝 Convert to Word', es: '📝 Convertir a Word', pt: '📝 Converter para Word', de: '📝 In Word konvertieren', fr: '📝 Convertir en Word' },
     btn:         '📝 Convert to Word',
     multi:       false,
-    accept:      '.pdf',
+    accept:      '.pdf,application/pdf',
     implemented: true,
   },
   'pdf2excel': {
@@ -322,7 +322,7 @@ export const TOOLS = {
     btns:   { en: '📊 Convert to Excel', es: '📊 Convertir a Excel', pt: '📊 Converter para Excel', de: '📊 In Excel konvertieren', fr: '📊 Convertir en Excel' },
     btn:         '📊 Convert to Excel',
     multi:       false,
-    accept:      '.pdf',
+    accept:      '.pdf,application/pdf',
     implemented: true,
   },
   'pdf2ppt': {
@@ -336,7 +336,7 @@ export const TOOLS = {
     btns:   { en: '📽️ Convert to PowerPoint' },
     btn:         '📽️ Convert to PowerPoint',
     multi:       false,
-    accept:      '.pdf',
+    accept:      '.pdf,application/pdf',
     implemented: true,
   },
   'pdf2md': {
@@ -350,7 +350,7 @@ export const TOOLS = {
     btns:   { en: '📝 Convert to Markdown' },
     btn:         '📝 Convert to Markdown',
     multi:       false,
-    accept:      '.pdf',
+    accept:      '.pdf,application/pdf',
     implemented: true,
   },
   unlock: {
@@ -364,7 +364,7 @@ export const TOOLS = {
     btns:   { en: '🔓 Remove Password Protection' },
     btn:         '🔓 Remove Password Protection',
     multi:       false,
-    accept:      '.pdf',
+    accept:      '.pdf,application/pdf',
     implemented: true,
   },
   flatten: {
@@ -378,7 +378,7 @@ export const TOOLS = {
     btns:   { en: '🔒 Lock PDF Form', es: '🔒 Bloquear formulario', pt: '🔒 Bloquear formulário', de: '🔒 Formular sperren', fr: '🔒 Verrouiller le formulaire' },
     btn:         '🔒 Lock PDF Form',
     multi:       false,
-    accept:      '.pdf',
+    accept:      '.pdf,application/pdf',
     implemented: true,
   },
   compare: {
@@ -389,7 +389,7 @@ export const TOOLS = {
                   'find changes', 'document comparison', 'pdf diff', 'highlight differences'],
     btn:         '⚖️ Compare PDFs',
     multi:       true,
-    accept:      '.pdf',
+    accept:      '.pdf,application/pdf',
     implemented: true,
   },
 };

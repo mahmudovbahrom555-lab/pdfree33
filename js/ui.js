@@ -163,7 +163,7 @@ export function setDropHint(accept) {
   const zone = id('dropZone');
   if (!zone) return;
   let hint = zone.querySelector('.drop-mobile-hint');
-  if (accept === '.pdf') {
+  if (accept.startsWith('.pdf')) {
     if (!hint) {
       hint = document.createElement('p');
       hint.className = 'drop-mobile-hint';

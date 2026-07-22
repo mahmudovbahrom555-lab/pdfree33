@@ -137,7 +137,7 @@ test('значения — непустые массивы строк', () => {
 });
 
 test('.pdf → application/pdf', () => {
-  expect(ACCEPTED_MIME['.pdf']).toEqual(['application/pdf']);
+  expect(ACCEPTED_MIME['.pdf,application/pdf']).toEqual(['application/pdf']);
 });
 
 // ── Summary ────────────────────────────────────────────────

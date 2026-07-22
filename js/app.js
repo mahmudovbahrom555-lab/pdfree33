@@ -1078,7 +1078,7 @@ function initSearch() {
   function _applyResult(entry) {
     _activeResult = entry;
     if (srDesc) srDesc.textContent = entry.desc || '';
-    srFileInput.accept    = entry.accept || '.pdf';
+    srFileInput.accept    = entry.accept || '.pdf,application/pdf';
     srFileInput.multiple  = !!entry.multi;
 
     // If user already has a file in the hero zone: fold the CTA into the title
