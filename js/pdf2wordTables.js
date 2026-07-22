@@ -119,6 +119,26 @@ export function detectTables(lines, { debug = false } = {}) {
   return tables;
 }
 
+// Groups flat PDF text items into lines[] (the format detectTables() expects),
+// clustering by Y-position and sorting each line's items by X.
+// Single source of truth: pdf2excel's pre-conversion preview scan
+// (pdf2excelUI.js) and its real conversion pass (processor.js's
+// _p2eExtractTables) both call this so the two can never drift apart.
+const DEFAULT_LINE_YTOL = 6; // px — items within this Y-distance → same line
+
+export function groupItemsIntoLines(items, ytol = DEFAULT_LINE_YTOL) {
+  const lines = [];
+  for (const item of [...items].sort((a, b) => b.y - a.y)) {
+    let merged = false;
+    for (const ln of lines) {
+      if (Math.abs(ln.y - item.y) <= ytol) { ln.items.push(item); merged = true; break; }
+    }
+    if (!merged) lines.push({ y: item.y, items: [item] });
+  }
+  lines.forEach(ln => ln.items.sort((a, b) => a.x - b.x));
+  return lines;
+}
+
 // ── Stub row detection ────────────────────────────────────────────────────────
 
 /**

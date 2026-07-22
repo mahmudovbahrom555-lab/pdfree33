@@ -16,7 +16,7 @@ import { getRunner, getWorkerTool } from './toolRegistry.js';
 import { loadJSZip, loadDocx, loadExcelJs, loadPptxGenJs } from './lazyLibs.js';
 import { loadPdfJs } from './pdf2jpgUI.js';
 import { preprocessPdfBuffer, decryptWithPassword } from './decryptPdf.js';
-import { detectTables } from './pdf2wordTables.js';
+import { detectTables, groupItemsIntoLines } from './pdf2wordTables.js';
 import { detectTableGrids } from './pdf2wordBorders.js';
 import { openFeedback } from './feedback.js';
 
@@ -1057,7 +1057,6 @@ async function _runPdf2Excel(filesSnapshot) {
 // none of that matters for cell data) + detectTables() per page. Lines not
 // consumed by a detected table are returned separately as fallback rows.
 async function _p2eExtractTables(pdfDoc) {
-  const YTOL = 6;
   const tables = [];
   const textRows = [];
   let pagesWithNoText = 0;
@@ -1079,15 +1078,7 @@ async function _p2eExtractTables(pdfDoc) {
         fontSize: (item.height > 0 ? item.height : Math.abs(item.transform[3])) || 10,
       }));
 
-    const lines = [];
-    for (const item of [...items].sort((a, b) => b.y - a.y)) {
-      let merged = false;
-      for (const ln of lines) {
-        if (Math.abs(ln.y - item.y) <= YTOL) { ln.items.push(item); merged = true; break; }
-      }
-      if (!merged) lines.push({ y: item.y, items: [item] });
-    }
-    lines.forEach(ln => ln.items.sort((a, b) => a.x - b.x));
+    const lines = groupItemsIntoLines(items);
 
     if (!lines.length) { pagesWithNoText++; page.cleanup?.(); continue; }
 

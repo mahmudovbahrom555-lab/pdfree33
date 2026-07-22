@@ -5,7 +5,7 @@ import { id } from './utils.js';
 import { loadPdfJs } from './pdf2jpgUI.js';
 import { preprocessPdfBuffer } from './decryptPdf.js';
 import { loadingRow } from './uiComponents.js';
-import { detectTables } from './pdf2wordTables.js';
+import { detectTables, groupItemsIntoLines } from './pdf2wordTables.js';
 
 // ── State ─────────────────────────────────────────────────────────────────────
 let _file      = null;
@@ -95,7 +95,6 @@ function _esc(str) {
 // as pdf2wordUI.js's _scanTablesBackground (kept separate rather than shared
 // since the two tools' UI markup/hint text genuinely differ).
 const SCAN_PAGES = 5;   // scan only first N pages to keep init snappy
-const YTOL       = 6;   // must match processor.js _p2eExtractTables
 
 async function _scanTablesBackground(doc, gen) {
   const pageLimit = Math.min(doc.numPages, SCAN_PAGES);
@@ -118,15 +117,7 @@ async function _scanTablesBackground(doc, gen) {
 
     totalTextItems += items.length;
 
-    const lines = [];
-    for (const item of [...items].sort((a, b) => b.y - a.y)) {
-      let merged = false;
-      for (const ln of lines) {
-        if (Math.abs(ln.y - item.y) <= YTOL) { ln.items.push(item); merged = true; break; }
-      }
-      if (!merged) lines.push({ y: item.y, items: [item] });
-    }
-    lines.forEach(ln => ln.items.sort((a, b) => a.x - b.x));
+    const lines = groupItemsIntoLines(items);
 
     totalTables += detectTables(lines).length;
   }

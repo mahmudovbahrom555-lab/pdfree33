@@ -20,7 +20,7 @@ global.window    = globalThis;
 global.Worker    = class { postMessage() {} terminate() {} addEventListener() {} };
 
 const { _p2eCellValue, _p2eConfidence } = await import('../js/processor.js');
-const { detectTables } = await import('../js/pdf2wordTables.js');
+const { detectTables, groupItemsIntoLines } = await import('../js/pdf2wordTables.js');
 
 let passed = 0, failed = 0;
 
@@ -163,6 +163,46 @@ test('pageCoverage не опускается ниже 0.5 (минимальны�
     pagesWithNoText: 10, // 100% страниц без текста
   });
   expect(result.score).toBe(50); // 1 * 100 * 0.5
+});
+
+// ── groupItemsIntoLines (общая для preview-скана и реальной конвертации) ────
+console.log('\ngroupItemsIntoLines:');
+
+test('items на одной Y-высоте группируются в одну строку, отсортированную по X', () => {
+  const items = [
+    { str: 'B', x: 50, y: 700 },
+    { str: 'A', x: 10, y: 700 },
+  ];
+  const lines = groupItemsIntoLines(items);
+  expect(lines.length).toBe(1);
+  expect(lines[0].items.map(i => i.str)).toEqual(['A', 'B']);
+});
+
+test('items за пределами допуска YTOL попадают в разные строки', () => {
+  const items = [
+    { str: 'Top',    x: 0, y: 700 },
+    { str: 'Bottom', x: 0, y: 680 }, // разница 20px >> YTOL=6
+  ];
+  const lines = groupItemsIntoLines(items);
+  expect(lines.length).toBe(2);
+});
+
+test('items в пределах допуска YTOL сливаются в одну строку', () => {
+  const items = [
+    { str: 'Base',    x: 0, y: 700 },
+    { str: 'Baseline', x: 10, y: 704 }, // разница 4px < YTOL=6
+  ];
+  const lines = groupItemsIntoLines(items);
+  expect(lines.length).toBe(1);
+});
+
+test('строки идут в порядке убывания Y (сверху вниз по странице)', () => {
+  const items = [
+    { str: 'Bottom', x: 0, y: 100 },
+    { str: 'Top',    x: 0, y: 700 },
+  ];
+  const lines = groupItemsIntoLines(items);
+  expect(lines.map(l => l.items[0].str)).toEqual(['Top', 'Bottom']);
 });
 
 // ── detectTables (используется и pdf2word, и pdf2excel) ─────
