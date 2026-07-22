@@ -1109,7 +1109,7 @@ async function _p2eExtractTables(pdfDoc) {
   return { tables, textRows, totalPages: pdfDoc.numPages, pagesWithNoText };
 }
 
-function _p2eConfidence({ tables, totalPages, pagesWithNoText }) {
+export function _p2eConfidence({ tables, totalPages, pagesWithNoText }) {
   if (!tables.length) {
     return { score: 0, level: 'none', tableCount: 0, pagesWithNoText, totalPages };
   }
@@ -1131,7 +1131,7 @@ function _p2eConfidence({ tables, totalPages, pagesWithNoText }) {
 //     deliberately left as text — JS's Date parser assumes MM/DD/YYYY
 //     regardless of the source locale, so guessing would risk silently
 //     swapping day and month rather than just failing to format.
-function _p2eCellValue(str) {
+export function _p2eCellValue(str) {
   const s = (str ?? '').trim();
   if (!s) return { value: str };
 
