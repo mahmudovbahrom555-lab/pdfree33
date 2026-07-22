@@ -186,14 +186,12 @@
       </div>
     </div>
 
-    {% if lang == 'en' %}
     <div style="display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 2px;" aria-label="Key features">
-      <span style="display:inline-flex;align-items:center;gap:4px;padding:4px 11px;background:var(--green-light);border:1px solid rgba(45,122,79,.18);border-radius:20px;font-size:12px;color:var(--green);font-weight:500;line-height:1.4;">✓ No file size limit</span>
-      <span style="display:inline-flex;align-items:center;gap:4px;padding:4px 11px;background:var(--green-light);border:1px solid rgba(45,122,79,.18);border-radius:20px;font-size:12px;color:var(--green);font-weight:500;line-height:1.4;">✓ No account required</span>
-      <span style="display:inline-flex;align-items:center;gap:4px;padding:4px 11px;background:var(--green-light);border:1px solid rgba(45,122,79,.18);border-radius:20px;font-size:12px;color:var(--green);font-weight:500;line-height:1.4;">✓ No watermark</span>
-      <span style="display:inline-flex;align-items:center;gap:4px;padding:4px 11px;background:var(--green-light);border:1px solid rgba(45,122,79,.18);border-radius:20px;font-size:12px;color:var(--green);font-weight:500;line-height:1.4;">✓ Free forever</span>
+      <span style="display:inline-flex;align-items:center;gap:4px;padding:4px 11px;background:var(--green-light);border:1px solid rgba(45,122,79,.18);border-radius:20px;font-size:12px;color:var(--green);font-weight:500;line-height:1.4;">✓ {{ ui.whyNoSizeLimit }}</span>
+      <span style="display:inline-flex;align-items:center;gap:4px;padding:4px 11px;background:var(--green-light);border:1px solid rgba(45,122,79,.18);border-radius:20px;font-size:12px;color:var(--green);font-weight:500;line-height:1.4;">✓ {{ ui.whyNoAccount }}</span>
+      <span style="display:inline-flex;align-items:center;gap:4px;padding:4px 11px;background:var(--green-light);border:1px solid rgba(45,122,79,.18);border-radius:20px;font-size:12px;color:var(--green);font-weight:500;line-height:1.4;">✓ {{ ui.whyNoWatermark }}</span>
+      <span style="display:inline-flex;align-items:center;gap:4px;padding:4px 11px;background:var(--green-light);border:1px solid rgba(45,122,79,.18);border-radius:20px;font-size:12px;color:var(--green);font-weight:500;line-height:1.4;">✓ {{ ui.whyFree }}</span>
     </div>
-    {% endif %}
 
     <div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-label="{{ ui.dropTitle }}">
       <input type="file" id="fileInput" multiple accept=".pdf" aria-hidden="true">
@@ -288,57 +286,57 @@
     </div>
   </section>
 
-  {% if lang == 'en' %}
-  <section aria-label="Why PDFree" style="padding:40px 24px;border-top:1px solid var(--border);background:var(--surface);">
+  <section aria-label="{{ ui.whySectionTitle }}" style="padding:40px 24px;border-top:1px solid var(--border);background:var(--surface);">
     <div style="max-width:800px;margin:0 auto;">
-      <h2 style="font-size:18px;font-weight:700;color:var(--text);margin:0 0 24px;text-align:center;">Why use PDFree instead of other PDF tools?</h2>
+      <h2 style="font-size:18px;font-weight:700;color:var(--text);margin:0 0 24px;text-align:center;">{{ ui.whySectionTitle }}</h2>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;">
         <div style="display:flex;gap:12px;align-items:flex-start;">
           <span style="font-size:18px;flex-shrink:0;margin-top:1px;">📁</span>
           <div>
-            <strong style="display:block;color:var(--text);font-size:14px;margin-bottom:3px;">No file size limit</strong>
-            <span style="font-size:13px;color:var(--text2);">Merge, compress or convert PDF files of any size — 500 MB, 1 GB, no restrictions.</span>
+            <strong style="display:block;color:var(--text);font-size:14px;margin-bottom:3px;">{{ ui.whyNoSizeLimit }}</strong>
+            <span style="font-size:13px;color:var(--text2);">{{ ui.whyNoSizeLimitDesc }}</span>
           </div>
         </div>
         <div style="display:flex;gap:12px;align-items:flex-start;">
           <span style="font-size:18px;flex-shrink:0;margin-top:1px;">🔒</span>
           <div>
-            <strong style="display:block;color:var(--text);font-size:14px;margin-bottom:3px;">Files never leave your device</strong>
-            <span style="font-size:13px;color:var(--text2);">Everything runs in your browser. No upload, no server, no data exposure — works offline too.</span>
+            <strong style="display:block;color:var(--text);font-size:14px;margin-bottom:3px;">{{ ui.whyNoUpload }}</strong>
+            <span style="font-size:13px;color:var(--text2);">{{ ui.whyNoUploadDesc }}</span>
           </div>
         </div>
         <div style="display:flex;gap:12px;align-items:flex-start;">
           <span style="font-size:18px;flex-shrink:0;margin-top:1px;">👤</span>
           <div>
-            <strong style="display:block;color:var(--text);font-size:14px;margin-bottom:3px;">No account required</strong>
-            <span style="font-size:13px;color:var(--text2);">No registration, no email, no login. Open the page and use the tool — that's it.</span>
+            <strong style="display:block;color:var(--text);font-size:14px;margin-bottom:3px;">{{ ui.whyNoAccount }}</strong>
+            <span style="font-size:13px;color:var(--text2);">{{ ui.whyNoAccountDesc }}</span>
           </div>
         </div>
         <div style="display:flex;gap:12px;align-items:flex-start;">
           <span style="font-size:18px;flex-shrink:0;margin-top:1px;">🚫</span>
           <div>
-            <strong style="display:block;color:var(--text);font-size:14px;margin-bottom:3px;">No watermark added</strong>
-            <span style="font-size:13px;color:var(--text2);">Your output files are clean. No branding, no watermark stamps, no hidden text layers.</span>
+            <strong style="display:block;color:var(--text);font-size:14px;margin-bottom:3px;">{{ ui.whyNoWatermark }}</strong>
+            <span style="font-size:13px;color:var(--text2);">{{ ui.whyNoWatermarkDesc }}</span>
           </div>
         </div>
         <div style="display:flex;gap:12px;align-items:flex-start;">
           <span style="font-size:18px;flex-shrink:0;margin-top:1px;">♾️</span>
           <div>
-            <strong style="display:block;color:var(--text);font-size:14px;margin-bottom:3px;">No daily limits</strong>
-            <span style="font-size:13px;color:var(--text2);">Use as many times as you need. No per-day quotas, no monthly caps, no premium upsell.</span>
+            <strong style="display:block;color:var(--text);font-size:14px;margin-bottom:3px;">{{ ui.whyNoDailyLimit }}</strong>
+            <span style="font-size:13px;color:var(--text2);">{{ ui.whyNoDailyLimitDesc }}</span>
           </div>
         </div>
         <div style="display:flex;gap:12px;align-items:flex-start;">
           <span style="font-size:18px;flex-shrink:0;margin-top:1px;">🆓</span>
           <div>
-            <strong style="display:block;color:var(--text);font-size:14px;margin-bottom:3px;">Free forever</strong>
-            <span style="font-size:13px;color:var(--text2);">No free trial, no freemium tier. PDFree is completely free — open source under AGPLv3.</span>
+            <strong style="display:block;color:var(--text);font-size:14px;margin-bottom:3px;">{{ ui.whyFree }}</strong>
+            <span style="font-size:13px;color:var(--text2);">{{ ui.whyFreeDesc }}</span>
           </div>
         </div>
       </div>
     </div>
   </section>
 
+  {% if lang == 'en' %}
   <section aria-label="All PDF tools" style="text-align:center;padding:32px 24px;border-top:1px solid var(--border);">
     <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:16px;">All PDF Tools</div>
     <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:800px;margin:0 auto;">
