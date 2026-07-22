@@ -1238,14 +1238,14 @@
         "tr": "Sayfa Numarası Ekle"
       },
       "metaDescs": {
-        "en": "Paginate PDF online free — add page numbers to any PDF with Arabic, Roman, or alphabetic formats. Custom position, prefix/suffix, skip cover page.",
-        "es": "Añade números de página a cualquier PDF gratis — elige posición, tamaño de fuente y número inicial. Sin subir archivos. Sin registro.",
-        "pt": "Adicione números de página a qualquer PDF grátis — escolha o canto, o tamanho da fonte e o número inicial. Funciona no browser, sem envio. Sem registo.",
-        "de": "Seitenzahlen zu beliebigen PDFs hinzufügen kostenlos — Ecke, Schriftgröße und Startnummer wählen. Im Browser, kein Upload. Keine Registrierung.",
-        "fr": "Ajoutez des numéros de page à un PDF gratuitement — choisissez la position, la taille et le numéro de départ. Aucun envoi. Sans inscription.",
-        "id": "Paginasi PDF online gratis — tambahkan nomor halaman dengan format Arab, Romawi, atau abjad. Posisi kustom, awalan/akhiran, lewati halaman sampul.",
-        "vi": "Đánh số trang PDF trực tuyến miễn phí — định dạng Ả Rập, La Mã hoặc chữ cái. Vị trí tùy chỉnh, tiền tố/hậu tố, bỏ qua trang bìa.",
-        "tr": "PDF'ye ücretsiz sayfa numarası ekleyin — konum, stil ve başlangıç numarasını seçin. Yükleme yok, kayıt gerekmez."
+        "en": "Add page numbers to PDF free — no upload, runs in browser, no account needed. Arabic, Roman or alphabetic formats. Custom position, prefix/suffix, skip cover.",
+        "es": "Añade números de página a PDF gratis — sin subir archivos, sin cuenta. Formatos árabe, romano o alfabético. Posición personalizada, omitir portada.",
+        "pt": "Adicionar números de página ao PDF grátis — sem upload, sem conta. Formatos árabe, romano ou alfabético. Posição personalizada, pular capa.",
+        "de": "Seitenzahlen zu PDF hinzufügen — kostenlos, kein Upload, kein Konto. Arabische, römische oder alphabetische Nummerierung, individuelle Position, Deckblatt überspringen.",
+        "fr": "Ajouter des numéros de page à un PDF gratuitement — sans envoi de fichier, sans compte. Formats arabe, romain ou alphabétique. Position personnalisée, ignorer la couverture.",
+        "id": "Tambahkan nomor halaman ke PDF gratis — tanpa unggah, tanpa akun. Format Arab, Romawi, atau alfabetik. Posisi kustom, lewati halaman sampul.",
+        "vi": "Thêm số trang vào PDF miễn phí — không tải lên, không cần tài khoản. Định dạng Ả Rập, La Mã hoặc chữ cái. Vị trí tùy chỉnh, bỏ qua trang bìa.",
+        "tr": "PDF'e sayfa numarası ekle — ücretsiz, yükleme yok, hesap gerekmez. Arap, Roma veya alfabetik format. Özel konum, kapak sayfasını atla."
       },
       "ogTitles": {
         "en": "Paginate PDF Free — Add Page Numbers Online, No Upload",
