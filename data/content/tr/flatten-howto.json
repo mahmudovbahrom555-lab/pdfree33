@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDF'i düzleştirme",
+  "description": "PDF form alanlarını ve açıklamalarını kalıcı olarak sayfa içeriğine gömün.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDF ekleyin",
+      "text": "Dolu formu veya açıklamalı PDF'i sürükleyin ya da seçin."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Düzleştirme seçeneklerini belirleyin",
+      "text": "Form alanları, açıklamalar veya her ikisini düzleştirin."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "İndirin",
+      "text": "Düzleştir ve İndir'e tıklayın. Değiştirilemez PDF indirilir."
+    }
+  ]
+}

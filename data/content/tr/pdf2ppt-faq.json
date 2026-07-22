@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "Her PDF sayfası bir slayt mı olur?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. Her PDF sayfası ayrı bir .pptx slaytına dönüşür."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Dosyalarım yükleniyor mu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. İşlem tamamen tarayıcınızda gerçekleşir."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Hangi programlarla açabilirim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Microsoft PowerPoint, Google Slaytlar ve LibreOffice Impress ile açılabilir."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Görseller slaytlara aktarılır mı?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. PDF sayfaları slayt arka planı olarak içe aktarılır."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bu araç ücretsiz mi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet, sonsuza kadar tamamen ücretsizdir."
+    }
+  }
+]

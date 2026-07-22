@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDF'den sayfa çıkarma",
+  "description": "PDF belgelerinden belirli sayfaları veya sayfa aralıklarını yeni bir PDF olarak çıkarın.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDF ekleyin",
+      "text": "Dosyayı sürükleyin veya Dosya Seç'e tıklayın."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Sayfaları seçin",
+      "text": "Küçük resimlerden sayfaları seçin veya sayfa aralığı girin (örn. 1-3, 5, 7-9)."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "İndirin",
+      "text": "Sayfaları Çıkar'a tıklayın. Seçilen sayfalar yeni bir PDF olarak indirilir."
+    }
+  ]
+}

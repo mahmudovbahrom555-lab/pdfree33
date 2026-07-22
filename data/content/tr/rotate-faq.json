@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "Dosyalarım yükleniyor mu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. Tüm işlemler yalnızca tarayıcınızda gerçekleşir. Dosyalarınız cihazınızı asla terk etmez."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Döndürmek kalite kaybına yol açar mı?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. Sayfalar PDF nesne düzeyinde döndürülür — yeniden sıkıştırma yapılmaz, görsel veya metin kalitesi bozulmaz."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Yalnızca belirli sayfaları döndürebilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. Küçük resimlere tıklayarak istediğiniz sayfaları seçin ve döndürme açısını uygulayın. Diğer sayfalar değişmez."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Hangi döndürme açıları destekleniyor?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "90° (saat yönü), 180° ve 270° (saat yönünün tersi) desteklenmektedir."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bu araç ücretsiz mi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet, sonsuza kadar tamamen ücretsizdir. Kayıt, abonelik veya gizli ücret yoktur."
+    }
+  }
+]

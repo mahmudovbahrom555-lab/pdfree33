@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "Meta veriler neden önemlidir?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDF'ler gizli yazar bilgisi, şirket adı veya oluşturma tarihi içerebilir. Bu veriler paylaşmadan önce temizlenmelidir."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Hangi meta veri alanları düzenlenebilir?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Başlık, yazar, konu, anahtar kelimeler, oluşturucu ve üretici alanları düzenlenebilir veya tamamen silinebilir."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Dosyalarım yükleniyor mu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. Tüm işlem tarayıcınızda gerçekleşir. Verileriniz cihazınızdan çıkmaz."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Meta veri silme kalıcı mı?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "İndirilen PDF'de evet. Orijinal dosyanız değişmez."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bu araç ücretsiz mi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet, sonsuza kadar tamamen ücretsizdir."
+    }
+  }
+]

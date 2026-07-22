@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "Birbirinden ayrı sayfaları seçebilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. Küçük resimlere tıklayarak veya virgülle ayrılmış sayfa numaraları girerek (örn. 1, 3, 5-8) seçim yapabilirsiniz."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Orijinal PDF bozulur mu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. Yalnızca seçtiğiniz sayfaları içeren yeni bir PDF oluşturulur. Orijinal dosya değişmez."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Dosyalarım yükleniyor mu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. İşlem tamamen tarayıcınızda gerçekleşir."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Çıkarılan sayfalar ayrı dosyalara kaydedilir mi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Seçilen tüm sayfalar tek bir yeni PDF olarak indirilir. Her sayfayı ayrı kaydetmek için PDF Böl aracını kullanın."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bu araç ücretsiz mi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet, sonsuza kadar tamamen ücretsizdir."
+    }
+  }
+]

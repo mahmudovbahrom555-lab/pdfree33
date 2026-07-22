@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "Tablo yapısı doğru aktarılır mı?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Düzenli tablo yapılı PDF'lerde büyük ölçüde evet. Birleştirilmiş hücreler veya karmaşık tablolar manuel düzenleme gerektirebilir."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Dosyalarım yükleniyor mu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. İşlem tamamen tarayıcınızda gerçekleşir."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Hangi programlarla açabilirim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Microsoft Excel, Google Sheets ve LibreOffice Calc ile açılabilir."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Birden fazla sayfalık tablolar destekleniyor mu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. Her PDF sayfası ayrı bir Excel çalışma sayfasına (sheet) dönüştürülür."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bu araç ücretsiz mi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet, sonsuza kadar tamamen ücretsizdir."
+    }
+  }
+]

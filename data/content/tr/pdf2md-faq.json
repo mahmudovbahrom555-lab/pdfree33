@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "Hangi Markdown öğeleri destekleniyor?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Başlıklar (# H1, ## H2), listeler, kalın ve italik metin ve paragraflar desteklenir."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Dosyalarım yükleniyor mu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. İşlem tamamen tarayıcınızda gerçekleşir."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Hangi uygulamalar .md dosyalarını açar?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "VS Code, Obsidian, Notion, Zettlr ve herhangi bir metin editörü .md dosyalarını açabilir."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Taranmış PDF'lerde çalışır mı?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. Taranmış PDF'ler görüntü tabanlıdır ve metin içermediklerinden Markdown'a dönüştürülemezler."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bu araç ücretsiz mi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet, sonsuza kadar tamamen ücretsizdir."
+    }
+  }
+]

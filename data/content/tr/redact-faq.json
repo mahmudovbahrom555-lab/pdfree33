@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "Gizleme gerçekten kalıcı mı?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Gerçek gizleme modunda evet — ham metin PDF'den tamamen silinir. Yalnızca siyah dikdörtgen kalır ve içerik kurtarılamaz."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Dosyalarım sunucuya yükleniyor mu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. İşlem tamamen tarayıcınızda gerçekleşir. Belgeleriniz asla sunucuya gönderilmez."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Otomatik algılama hangi bilgileri bulur?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "E-posta adresleri, telefon numaraları, tarihler ve kimlik numarası gibi kişisel veri kalıplarını otomatik olarak algılar."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Taranmış PDF'lerde de çalışır mı?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Manuel alan işaretleme ile evet. Otomatik metin algılama taranmış (görüntü tabanlı) PDF'lerde OCR gerektirdiğinden çalışmaz."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bu araç ücretsiz mi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet, sonsuza kadar tamamen ücretsizdir. Kayıt, abonelik veya gizli ücret yoktur."
+    }
+  }
+]

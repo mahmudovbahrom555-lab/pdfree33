@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDF'yi Excel'e dönüştürme",
+  "description": "PDF'deki tabloları ve sayısal verileri düzenlenebilir .xlsx formatına dönüştürün.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDF ekleyin",
+      "text": "Tablo içeren PDF'yi sürükleyin veya seçin."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Dönüştürün",
+      "text": "Excel'e Dönüştür düğmesine tıklayın."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "İndirin",
+      "text": ".xlsx dosyasını indirin ve Excel veya Google Sheets ile açın."
+    }
+  ]
+}

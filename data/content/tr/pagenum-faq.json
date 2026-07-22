@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "Hangi numaralandırma formatları destekleniyor?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Arap rakamları (1, 2, 3), küçük Romen (i, ii, iii), büyük Romen (I, II, III) ve alfabetik (a, b, c) formatları desteklenmektedir."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kapak sayfasını numara dışında bırakabilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. Numaralandırmanın hangi sayfadan başlayacağını ve ilk numaranın ne olacağını ayarlayabilirsiniz."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Sayfa numarasının konumunu değiştirebilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. Alt orta, alt sağ, alt sol, üst orta ve diğer konumlar desteklenmektedir."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Dosyalarım yükleniyor mu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. Tüm işlem tarayıcınızda gerçekleşir."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bu araç ücretsiz mi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet, sonsuza kadar tamamen ücretsizdir."
+    }
+  }
+]

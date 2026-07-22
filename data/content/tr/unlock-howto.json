@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDF şifresini kaldırma",
+  "description": "Bildiğiniz şifreyle kilitli PDF'yi açın ve korumayı kalıcı olarak kaldırın.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDF ekleyin",
+      "text": "Kilitli PDF'yi sürükleyin veya seçin."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Şifreyi girin",
+      "text": "Bildiğiniz şifreyi girin. İşlem tarayıcınızda gerçekleşir."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "İndirin",
+      "text": "Kilidi Kaldır ve İndir'e tıklayın. Şifresiz PDF cihazınıza kaydedilir."
+    }
+  ]
+}

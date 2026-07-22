@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDF'yi Word'e dönüştürme",
+  "description": "PDF belgelerini düzenlenebilir .docx formatına dönüştürün — ücretsiz, yükleme yok.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDF ekleyin",
+      "text": "Dosyayı sürükleyin veya Dosya Seç'e tıklayın."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Dönüştürün",
+      "text": "Word'e Dönüştür düğmesine tıklayın."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "İndirin",
+      "text": ".docx dosyasını indirin ve Word, Google Docs veya LibreOffice ile açın."
+    }
+  ]
+}

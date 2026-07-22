@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDF'yi Markdown'a dönüştürme",
+  "description": "PDF içeriğini düz metin Markdown formatına dönüştürün.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDF ekleyin",
+      "text": "Dosyayı sürükleyin veya seçin."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Dönüştürün",
+      "text": "Markdown'a Dönüştür'e tıklayın."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "İndirin",
+      "text": ".md dosyasını indirin ve metin editörünüzle açın."
+    }
+  ]
+}

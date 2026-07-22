@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDF'e sayfa numarası ekleme",
+  "description": "PDF belgelerine özelleştirilebilir sayfa numaraları ekleyin — ücretsiz, yükleme yok.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDF ekleyin",
+      "text": "Dosyayı sürükleyin veya Dosya Seç'e tıklayın."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Seçenekleri ayarlayın",
+      "text": "Konum, yazı boyutu, renk, başlangıç numarası ve format (1, i, I, a, A) seçin."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "İndirin",
+      "text": "Numaralandır ve İndir'e tıklayın. PDF otomatik olarak indirilir."
+    }
+  ]
+}

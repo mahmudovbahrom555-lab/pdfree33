@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "Düzleştirme geri alınabilir mi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. Düzleştirme kalıcıdır. Orijinal dosyanızı yedekleyin — araç indirmeden önce önizleme yapmanıza olanak tanır."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Neden PDF düzleştirmeliyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Düzleştirme form alanlarını kilitler, evrensel uyumluluğu garanti eder ve arşivleme için belgeyi değiştirilemez hale getirir."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Dijital imzalar da düzleştirilir mi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "İmzalar görsel olarak gömülür; ancak kriptografik doğrulama kaldırılır."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Dosyalarım yükleniyor mu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. Tüm işlem tarayıcınızda gerçekleşir."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bu araç ücretsiz mi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet, sonsuza kadar tamamen ücretsizdir."
+    }
+  }
+]

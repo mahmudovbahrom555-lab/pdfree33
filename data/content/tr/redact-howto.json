@@ -1,0 +1,32 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDF'deki hassas bilgileri gizleme",
+  "description": "PDF belgelerindeki kişisel verileri kalıcı olarak gizleyin — ücretsiz, yükleme yok.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDF ekleyin",
+      "text": "Dosya Seç'e tıklayın veya PDF'yi yükleme alanına sürükleyin."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Gizlenecek alanları seçin",
+      "text": "Farenizle gizlemek istediğiniz metni veya alanı işaretleyin. Otomatik algılama ile e-posta, telefon gibi verileri hızlıca bulun."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Gizleme modunu seçin",
+      "text": "Siyah kutu (gerçek gizleme), beyaz kutu veya bulanıklaştırma arasından seçin."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 4,
+      "name": "İndirin",
+      "text": "Gizle ve İndir'e tıklayın. Gizlenmiş PDF cihazınıza kaydedilir."
+    }
+  ]
+}

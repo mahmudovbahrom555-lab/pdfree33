@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "Bu araç şifreyi kırmaya çalışır mı?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. PDFree yalnızca bildiğiniz şifreyle kilitli PDF'leri açar. Şifre kırma veya brute-force saldırısı yapılmaz."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Şifrem sunucuya gönderilir mi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. Şifreniz ve belgeniz yalnızca tarayıcı belleğinde işlenir."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Hangi kısıtlamalar kaldırılır?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Açma şifresi, yazdırma kısıtlaması, kopyalama kısıtlaması ve düzenleme kısıtlaması kaldırılabilir."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Şifremi unuttuysam ne yapabilirim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree yalnızca bildiğiniz şifreyle çalışır. Şifreni bilmediğiniz belgelerin korumasını kaldırmak mümkün değildir."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bu araç ücretsiz mi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet, sonsuza kadar tamamen ücretsizdir."
+    }
+  }
+]

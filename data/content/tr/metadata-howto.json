@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDF meta verilerini düzenleme veya silme",
+  "description": "PDF belgelerinin başlık, yazar ve diğer meta verilerini görüntüleyin, düzenleyin veya tamamen silin.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDF ekleyin",
+      "text": "Dosyayı sürükleyin veya seçin. Mevcut meta veriler hemen görüntülenir."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Düzenleyin veya temizleyin",
+      "text": "Alanları düzenleyin veya Tümünü Temizle ile tüm meta verileri silin."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "İndirin",
+      "text": "Kaydet ve İndir'e tıklayın. Güncellenmiş PDF cihazınıza kaydedilir."
+    }
+  ]
+}

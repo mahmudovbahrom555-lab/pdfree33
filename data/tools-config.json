@@ -604,7 +604,8 @@
         "id": "putar-pdf",
         "vi": "xoay-pdf",
         "ru": "povernut-pdf",
-        "ja": "pdf-kaiten"
+        "ja": "pdf-kaiten",
+        "tr": "pdf-dondur"
       },
       "titles": {
         "en": "Rotate PDF Free — Fix Sideways & Upside-Down Pages | PDFree",
@@ -615,7 +616,8 @@
         "id": "Putar Halaman PDF Online Gratis — Tanpa Upload | PDFree",
         "vi": "Xoay Trang PDF Trực Tuyến Miễn Phí — Không Tải Lên | PDFree",
         "ru": "Повернуть PDF бесплатно — без загрузки на сервер | PDFree",
-        "ja": "PDFを無料で回転 — 向きを修正、アップロード不要 | PDFree"
+        "ja": "PDFを無料で回転 — 向きを修正、アップロード不要 | PDFree",
+        "tr": "PDF Döndür — Ücretsiz, Yükleme Yapmadan | PDFree"
       },
       "descs": {
         "en": "Fix page orientation in any PDF. 100% private — processed locally, no uploads, no signup.",
@@ -626,7 +628,8 @@
         "id": "Perbaiki orientasi halaman PDF. 100% pribadi — diproses lokal, tanpa upload, tanpa daftar.",
         "vi": "Sửa hướng trang PDF. 100% riêng tư — xử lý cục bộ, không tải lên, không đăng ký.",
         "ru": "Исправляйте ориентацию страниц в любом PDF. 100% конфиденциально — локальная обработка, без загрузки.",
-        "ja": "PDFのページの向きを修正します。100%プライベート — ローカルで処理、アップロード不要。"
+        "ja": "PDFのページの向きを修正します。100%プライベート — ローカルで処理、アップロード不要。",
+        "tr": "PDF sayfalarını 90°, 180° veya 270° döndürün. Tarayıcıda işleme — yükleme yok, sunucu yok. Ücretsiz, kayıt gerekmez."
       },
       "navLabels": {
         "en": "Rotate",
@@ -637,7 +640,8 @@
         "id": "Putar",
         "vi": "Xoay",
         "ru": "Повернуть",
-        "ja": "回転"
+        "ja": "回転",
+        "tr": "PDF Döndür"
       },
       "cardNames": {
         "en": "Rotate PDF",
@@ -648,7 +652,8 @@
         "id": "Putar PDF",
         "vi": "Xoay PDF",
         "ru": "Повернуть PDF",
-        "ja": "PDFを回転"
+        "ja": "PDFを回転",
+        "tr": "PDF Döndür"
       },
       "cardDescs": {
         "en": "Fix page orientation in any PDF",
@@ -659,7 +664,8 @@
         "id": "Perbaiki orientasi halaman di PDF mana pun",
         "vi": "Sửa hướng trang trong bất kỳ PDF nào",
         "ru": "Исправляйте ориентацию страниц в любом PDF",
-        "ja": "どのPDFでもページの向きを修正する"
+        "ja": "どのPDFでもページの向きを修正する",
+        "tr": "PDF sayfalarının yönünü düzeltin"
       },
       "breadcrumb": {
         "en": "Rotate PDF",
@@ -670,7 +676,8 @@
         "id": "Putar PDF",
         "vi": "Xoay PDF",
         "ru": "Повернуть PDF",
-        "ja": "PDFを回転"
+        "ja": "PDFを回転",
+        "tr": "PDF Döndür"
       },
       "metaDescs": {
         "en": "Fix sideways or upside-down PDF pages instantly — rotate 90°, 180°, or 270° free. Runs in your browser, nothing uploaded. No signup, no limits.",
@@ -681,7 +688,8 @@
         "id": "Putar halaman PDF 90°, 180°, atau 270° gratis — diproses di browser, tidak ada yang diunggah. Perbaiki scan miring.",
         "vi": "Xoay trang PDF 90°, 180° hoặc 270° miễn phí — xử lý trong trình duyệt, không tải lên. Sửa scan nghiêng.",
         "ru": "Поворачивайте страницы PDF на 90°, 180° или 270° бесплатно — обработка в браузере, ничего не загружается.",
-        "ja": "PDFページを90°・180°・270°無料で回転 — ブラウザ内で処理、アップロードなし。アカウント不要、登録不要。"
+        "ja": "PDFページを90°・180°・270°無料で回転 — ブラウザ内で処理、アップロードなし。アカウント不要、登録不要。",
+        "tr": "PDF sayfalarını ücretsiz döndürün — 90°, 180° veya 270°. Tarayıcıda işleme, yükleme yok, kayıt gerekmez."
       },
       "ogTitles": {
         "en": "Rotate PDF Free — Fix Sideways or Upside-Down Pages",
@@ -692,7 +700,8 @@
         "id": "Putar PDF Gratis — Perbaiki Orientasi Halaman Tanpa Upload",
         "vi": "Xoay PDF Miễn Phí — Sửa Hướng Trang Không Tải Lên",
         "ru": "Повернуть PDF бесплатно — исправить ориентацию страниц, без загрузки",
-        "ja": "PDF回転 無料 — ページの向きを修正、アップロード不要"
+        "ja": "PDF回転 無料 — ページの向きを修正、アップロード不要",
+        "tr": "PDF Döndür Ücretsiz — Yükleme Yok, Kayıt Yok | PDFree"
       },
       "ogDescs": {
         "en": "Rotate PDF pages 90°, 180°, or 270°. Runs in your browser — nothing uploaded, nothing saved on a server. Free forever, no signup.",
@@ -703,7 +712,8 @@
         "id": "Putar halaman PDF 90°, 180°, atau 270°. Berjalan di browser — tidak ada yang diunggah. Gratis selamanya, tanpa daftar.",
         "vi": "Xoay trang PDF 90°, 180° hoặc 270°. Chạy trong trình duyệt — không có gì được tải lên. Miễn phí mãi mãi, không đăng ký.",
         "ru": "Поворачивайте страницы PDF на 90°, 180° или 270°. Работает в браузере — ничего не загружается. Бесплатно, без регистрации.",
-        "ja": "PDFページを90°・180°・270°回転します。ブラウザ内で動作 — アップロードなし。永久無料、登録不要。"
+        "ja": "PDFページを90°・180°・270°回転します。ブラウザ内で動作 — アップロードなし。永久無料、登録不要。",
+        "tr": "PDF sayfalarını döndürün. Tarayıcıda işleme — yükleme yok, sunucu yok."
       },
       "keywords": {
         "en": "rotate pdf, rotate pdf pages, fix pdf orientation, rotate pdf online free, pdf rotation, flip pdf"
@@ -1056,7 +1066,8 @@
         "de": "pdf-schwaerzen",
         "fr": "censurer-pdf",
         "id": "hapus-teks-pdf",
-        "vi": "xoa-van-ban-pdf"
+        "vi": "xoa-van-ban-pdf",
+        "tr": "pdf-gizle"
       },
       "titles": {
         "en": "Redact PDF Online — Cover Sensitive Data, No Upload | PDFree",
@@ -1065,7 +1076,8 @@
         "de": "PDF Schwärzen — Sensible Daten dauerhaft entfernen | PDFree",
         "fr": "Caviarder PDF Gratuit — Supprimer Données Sensibles | PDFree",
         "id": "Hapus Teks PDF Online — Sembunyikan Data Sensitif Tanpa Upload | PDFree",
-        "vi": "Xóa Văn Bản PDF Trực Tuyến — Ẩn Dữ Liệu Nhạy Cảm Không Tải Lên | PDFree"
+        "vi": "Xóa Văn Bản PDF Trực Tuyến — Ẩn Dữ Liệu Nhạy Cảm Không Tải Lên | PDFree",
+        "tr": "PDF Gizle — Hassas Bilgileri Kalıcı Olarak Sil | PDFree"
       },
       "descs": {
         "en": "Hide text, signatures, or sensitive data with opaque blocks. 100% local processing — files never uploaded.",
@@ -1074,7 +1086,8 @@
         "de": "Sensible Texte und Bilder in PDFs dauerhaft schwärzen. 100 % lokale Verarbeitung — nichts verlässt dein Gerät. Kostenlos.",
         "fr": "Caviarder un PDF gratuitement en ligne. Suppression définitive et irrécupérable des zones sensibles. 100 % privé — aucun envoi, sans inscription.",
         "id": "Sembunyikan teks, tanda tangan, atau data sensitif dengan blok buram. 100% lokal — file tidak pernah diunggah.",
-        "vi": "Ẩn văn bản, chữ ký hoặc dữ liệu nhạy cảm với các khối đục mờ. 100% cục bộ — file không bao giờ được tải lên."
+        "vi": "Ẩn văn bản, chữ ký hoặc dữ liệu nhạy cảm với các khối đục mờ. 100% cục bộ — file không bao giờ được tải lên.",
+        "tr": "PDF'deki hassas bilgileri kalıcı olarak gizleyin. Gizlenen sayfalar görüntüye dönüştürülür — metin kurtarılamaz. Yükleme yok, sunucu yok."
       },
       "navLabels": {
         "en": "Redact",
@@ -1083,7 +1096,8 @@
         "de": "Schwärzen",
         "fr": "Caviarder",
         "id": "Hapus Teks",
-        "vi": "Xóa Vùng"
+        "vi": "Xóa Vùng",
+        "tr": "PDF Gizle"
       },
       "cardNames": {
         "en": "Cover Area",
@@ -1092,7 +1106,8 @@
         "de": "Bereich Abdecken",
         "fr": "Caviarder Zone",
         "id": "Hapus Area",
-        "vi": "Xóa Vùng"
+        "vi": "Xóa Vùng",
+        "tr": "PDF Gizle"
       },
       "cardDescs": {
         "en": "Hide watermarks, signatures or sensitive data locally",
@@ -1101,7 +1116,8 @@
         "de": "Wasserzeichen, Unterschriften oder sensible Daten lokal ausblenden",
         "fr": "Masquer filigranes, signatures ou données sensibles localement",
         "id": "Sembunyikan tanda air, tanda tangan atau data sensitif secara lokal",
-        "vi": "Ẩn watermark, chữ ký hoặc dữ liệu nhạy cảm cục bộ"
+        "vi": "Ẩn watermark, chữ ký hoặc dữ liệu nhạy cảm cục bộ",
+        "tr": "PDF'den hassas bilgileri kalıcı olarak kaldırın"
       },
       "breadcrumb": {
         "en": "Redact PDF",
@@ -1110,7 +1126,8 @@
         "de": "PDF Schwärzen",
         "fr": "Caviarder PDF",
         "id": "Hapus Teks PDF",
-        "vi": "Xóa Văn Bản PDF"
+        "vi": "Xóa Văn Bản PDF",
+        "tr": "PDF Gizle"
       },
       "metaDescs": {
         "en": "Permanently redact sensitive text and images from PDFs. 100% local processing — nothing ever leaves your device. Opaque blocks baked in. Works offline.",
@@ -1119,7 +1136,8 @@
         "de": "Texte und Bilder dauerhaft aus PDFs schwärzen — kostenlos, kein Upload. Sensible Infos unwiederbringlich entfernen. Keine Registrierung.",
         "fr": "Caviardez définitivement les données sensibles d'un PDF gratuitement — aucun envoi. Suppression permanente et irrécupérable. Sans inscription.",
         "id": "Hapus teks dan gambar sensitif dari PDF secara permanen — 100% lokal, tidak meninggalkan perangkat Anda. Blok buram permanen.",
-        "vi": "Xóa vĩnh viễn văn bản và hình ảnh nhạy cảm khỏi PDF. 100% xử lý cục bộ — không có gì rời khỏi thiết bị của bạn. Khối đục bám vào vĩnh viễn."
+        "vi": "Xóa vĩnh viễn văn bản và hình ảnh nhạy cảm khỏi PDF. 100% xử lý cục bộ — không có gì rời khỏi thiết bị của bạn. Khối đục bám vào vĩnh viễn.",
+        "tr": "PDF'deki hassas metni kalıcı olarak gizleyin. Sayfalar görüntüye dönüştürülür — içerik kurtarılamaz. Ücretsiz, yükleme yok."
       },
       "ogTitles": {
         "en": "Redact PDF Permanently — True Content Removal, Not Just a Cover",
@@ -1128,7 +1146,8 @@
         "de": "PDF Schwärzen Kostenlos — Sensible Daten dauerhaft Entfernen, kein Upload",
         "fr": "Caviarder PDF Gratuit — Suppression Définitive de Données Sensibles",
         "id": "Hapus Teks PDF Permanen — Penghapusan Konten Nyata, Tanpa Upload",
-        "vi": "Xóa Văn Bản PDF Vĩnh Viễn — Xóa Nội Dung Thực Sự, Không Tải Lên"
+        "vi": "Xóa Văn Bản PDF Vĩnh Viễn — Xóa Nội Dung Thực Sự, Không Tải Lên",
+        "tr": "PDF Gizle Ücretsiz — Hassas Bilgileri Kalıcı Sil | PDFree"
       },
       "ogDescs": {
         "en": "Permanently redact sensitive text from PDFs. 100% local — nothing leaves your device. Free, no signup.",
@@ -1137,7 +1156,8 @@
         "de": "Sensible Texte und Bilder in PDFs dauerhaft schwärzen. 100 % lokale Verarbeitung — nichts verlässt dein Gerät. Kostenlos.",
         "fr": "Caviarder un PDF gratuitement en ligne. Suppression définitive et irrécupérable des zones sensibles. 100 % privé — aucun envoi, sans inscription.",
         "id": "Hapus teks sensitif dari PDF secara permanen. 100% lokal — tidak ada yang meninggalkan perangkat Anda. Gratis, tanpa daftar.",
-        "vi": "Xóa vĩnh viễn văn bản nhạy cảm khỏi PDF. 100% cục bộ — không có gì rời khỏi thiết bị của bạn. Miễn phí, không đăng ký."
+        "vi": "Xóa vĩnh viễn văn bản nhạy cảm khỏi PDF. 100% cục bộ — không có gì rời khỏi thiết bị của bạn. Miễn phí, không đăng ký.",
+        "tr": "PDF'deki hassas bilgileri kalıcı olarak gizleyin. Tarayıcıda işleme — dosyalar cihazınızı terk etmez."
       },
       "keywords": {
         "en": "redact pdf, cover area pdf, hide text pdf, pdf redaction free, black out pdf text, pdf censor"
@@ -1154,7 +1174,8 @@
         "de": "seitenzahlen-pdf",
         "fr": "numerotation-pdf",
         "id": "nomor-halaman-pdf",
-        "vi": "danh-so-trang-pdf"
+        "vi": "danh-so-trang-pdf",
+        "tr": "sayfa-numarasi-ekle"
       },
       "titles": {
         "en": "Add Page Numbers to PDF Free — Paginate PDF Online | PDFree",
@@ -1163,7 +1184,8 @@
         "de": "Seitenzahlen PDF — Position & Stil wählen, Kostenlos | PDFree",
         "fr": "Numérotation PDF Gratuit — Position et Style, sans Envoi | PDFree",
         "id": "Tambah Nomor Halaman PDF Gratis — Paginasi Online | PDFree",
-        "vi": "Thêm Số Trang PDF Miễn Phí — Đánh Số Trang Trực Tuyến | PDFree"
+        "vi": "Thêm Số Trang PDF Miễn Phí — Đánh Số Trang Trực Tuyến | PDFree",
+        "tr": "PDF'ye Sayfa Numarası Ekle — Ücretsiz, Yükleme Yapmadan | PDFree"
       },
       "descs": {
         "en": "Add page numbers to any PDF. Processed locally in your browser — no uploads, no signup, no limits. Free.",
@@ -1172,7 +1194,8 @@
         "de": "Seitenzahlen in beliebige PDFs einfügen. Im Browser verarbeitet — kein Upload, keine Registrierung, keine Limits. Kostenlos.",
         "fr": "Ajouter des numéros de page à un PDF gratuitement en ligne. Format arabe, romain ou alphabétique. 100 % privé — aucun envoi, sans inscription.",
         "id": "Tambahkan nomor halaman ke PDF mana pun. Diproses lokal di browser — tanpa upload, tanpa daftar, tanpa batas. Gratis.",
-        "vi": "Thêm số trang vào bất kỳ PDF nào. Xử lý cục bộ trong trình duyệt — không tải lên, không đăng ký, không giới hạn. Miễn phí."
+        "vi": "Thêm số trang vào bất kỳ PDF nào. Xử lý cục bộ trong trình duyệt — không tải lên, không đăng ký, không giới hạn. Miễn phí.",
+        "tr": "PDF'ye sayfa numarası ekleyin. Konum, stil ve başlangıç numarasını özelleştirin. Tarayıcıda işleme — yükleme yok."
       },
       "navLabels": {
         "en": "Page Nos",
@@ -1181,7 +1204,8 @@
         "de": "Seitenzahlen",
         "fr": "Numérotation",
         "id": "No. Halaman",
-        "vi": "Số Trang"
+        "vi": "Số Trang",
+        "tr": "Sayfa Numarası"
       },
       "cardNames": {
         "en": "Page Numbers",
@@ -1190,7 +1214,8 @@
         "de": "Seitenzahlen",
         "fr": "Numérotation PDF",
         "id": "Nomor Halaman",
-        "vi": "Số Trang PDF"
+        "vi": "Số Trang PDF",
+        "tr": "Sayfa Numarası Ekle"
       },
       "cardDescs": {
         "en": "Add numbered footers — Arabic, Roman or ABC",
@@ -1199,7 +1224,8 @@
         "de": "Nummerierte Fußzeilen hinzufügen — Arabisch, Römisch oder ABC",
         "fr": "Ajouter des pieds de page numérotés — arabe, romain ou alphabétique",
         "id": "Tambah footer bernomor — Arab, Romawi atau ABC",
-        "vi": "Thêm chân trang có số — Ả Rập, La Mã hoặc ABC"
+        "vi": "Thêm chân trang có số — Ả Rập, La Mã hoặc ABC",
+        "tr": "PDF'ye özelleştirilebilir sayfa numaraları ekleyin"
       },
       "breadcrumb": {
         "en": "Page Numbers PDF",
@@ -1208,7 +1234,8 @@
         "de": "Seitenzahlen PDF",
         "fr": "Numérotation PDF",
         "id": "Nomor Halaman PDF",
-        "vi": "Số Trang PDF"
+        "vi": "Số Trang PDF",
+        "tr": "Sayfa Numarası Ekle"
       },
       "metaDescs": {
         "en": "Paginate PDF online free — add page numbers to any PDF with Arabic, Roman, or alphabetic formats. Custom position, prefix/suffix, skip cover page.",
@@ -1217,7 +1244,8 @@
         "de": "Seitenzahlen zu beliebigen PDFs hinzufügen kostenlos — Ecke, Schriftgröße und Startnummer wählen. Im Browser, kein Upload. Keine Registrierung.",
         "fr": "Ajoutez des numéros de page à un PDF gratuitement — choisissez la position, la taille et le numéro de départ. Aucun envoi. Sans inscription.",
         "id": "Paginasi PDF online gratis — tambahkan nomor halaman dengan format Arab, Romawi, atau abjad. Posisi kustom, awalan/akhiran, lewati halaman sampul.",
-        "vi": "Đánh số trang PDF trực tuyến miễn phí — định dạng Ả Rập, La Mã hoặc chữ cái. Vị trí tùy chỉnh, tiền tố/hậu tố, bỏ qua trang bìa."
+        "vi": "Đánh số trang PDF trực tuyến miễn phí — định dạng Ả Rập, La Mã hoặc chữ cái. Vị trí tùy chỉnh, tiền tố/hậu tố, bỏ qua trang bìa.",
+        "tr": "PDF'ye ücretsiz sayfa numarası ekleyin — konum, stil ve başlangıç numarasını seçin. Yükleme yok, kayıt gerekmez."
       },
       "ogTitles": {
         "en": "Paginate PDF Free — Add Page Numbers Online, No Upload",
@@ -1226,7 +1254,8 @@
         "de": "Seitenzahlen PDF — Position, Schriftgröße und Startnummer wählen, kein Upload",
         "fr": "Numérotation PDF Gratuit — Position et Style, sans Envoi",
         "id": "Paginasi PDF Gratis — Tambah Nomor Halaman, Tanpa Upload",
-        "vi": "Đánh Số Trang PDF Miễn Phí — Thêm Số Trang, Không Tải Lên"
+        "vi": "Đánh Số Trang PDF Miễn Phí — Thêm Số Trang, Không Tải Lên",
+        "tr": "PDF'ye Sayfa Numarası Ekle Ücretsiz | PDFree"
       },
       "ogDescs": {
         "en": "Paginate any PDF online — add page numbers with custom format, position, and prefix. Runs in your browser, nothing uploaded. Free, no signup.",
@@ -1235,7 +1264,8 @@
         "de": "Seitenzahlen in beliebige PDFs einfügen. Im Browser verarbeitet — kein Upload, keine Registrierung, keine Limits. Kostenlos.",
         "fr": "Ajouter des numéros de page à un PDF gratuitement en ligne. Format arabe, romain ou alphabétique. 100 % privé — aucun envoi, sans inscription.",
         "id": "Paginasi PDF mana pun online — tambahkan nomor halaman dengan format, posisi, dan awalan kustom. Berjalan di browser, tidak ada yang diunggah. Gratis, tanpa daftar.",
-        "vi": "Đánh số trang bất kỳ PDF nào trực tuyến — thêm số trang với định dạng, vị trí và tiền tố tùy chỉnh. Chạy trong trình duyệt, không có gì được tải lên. Miễn phí, không đăng ký."
+        "vi": "Đánh số trang bất kỳ PDF nào trực tuyến — thêm số trang với định dạng, vị trí và tiền tố tùy chỉnh. Chạy trong trình duyệt, không có gì được tải lên. Miễn phí, không đăng ký.",
+        "tr": "PDF'ye sayfa numarası ekleyin. Tarayıcıda işleme — dosyalar cihazınızı terk etmez."
       },
       "keywords": {
         "en": "add page numbers to pdf, number pdf pages, pdf page numbering free, pdf pagination online"
@@ -1254,7 +1284,8 @@
         "id": "ekstrak-pdf",
         "vi": "trich-xuat-pdf",
         "ru": "izvlech-stranitsy-pdf",
-        "ja": "pdf-chushutsu"
+        "ja": "pdf-chushutsu",
+        "tr": "sayfa-cikar"
       },
       "titles": {
         "en": "Extract Pages from PDF Free — Pick Any Pages or Range | PDFree",
@@ -1265,7 +1296,8 @@
         "id": "Ekstrak Halaman PDF Online — Gratis, Tanpa Upload | PDFree",
         "vi": "Trích Xuất Trang PDF Trực Tuyến — Miễn Phí, Không Tải Lên | PDFree",
         "ru": "Извлечь страницы из PDF — бесплатно, без загрузки | PDFree",
-        "ja": "PDFのページを抽出 — 無料、アップロード不要 | PDFree"
+        "ja": "PDFのページを抽出 — 無料、アップロード不要 | PDFree",
+        "tr": "PDF'den Sayfa Çıkar — Ücretsiz, Yükleme Yapmadan | PDFree"
       },
       "descs": {
         "en": "Extract specific pages from a PDF. 100% private — processed locally, no uploads, no signup.",
@@ -1276,7 +1308,8 @@
         "id": "Ekstrak halaman tertentu dari PDF. 100% pribadi — diproses lokal, tanpa upload, tanpa daftar.",
         "vi": "Trích xuất các trang cụ thể từ PDF. 100% riêng tư — xử lý cục bộ, không tải lên, không đăng ký.",
         "ru": "Извлекайте конкретные страницы из PDF. 100% конфиденциально — локальная обработка, без загрузки.",
-        "ja": "PDFから特定のページを抽出します。100%プライベート — ローカルで処理、アップロード不要。"
+        "ja": "PDFから特定のページを抽出します。100%プライベート — ローカルで処理、アップロード不要。",
+        "tr": "PDF'den belirli sayfaları çıkarın. Tek sayfa veya aralık seçin, yeni bir PDF olarak indirin. Tarayıcıda işleme — yükleme yok."
       },
       "navLabels": {
         "en": "Extract",
@@ -1287,7 +1320,8 @@
         "id": "Ekstrak",
         "vi": "Trích Xuất",
         "ru": "Извлечь",
-        "ja": "抽出"
+        "ja": "抽出",
+        "tr": "Sayfa Çıkar"
       },
       "cardNames": {
         "en": "Extract Pages",
@@ -1298,7 +1332,8 @@
         "id": "Ekstrak Halaman",
         "vi": "Trích Xuất Trang",
         "ru": "Извлечь страницы",
-        "ja": "ページを抽出"
+        "ja": "ページを抽出",
+        "tr": "Sayfa Çıkar"
       },
       "cardDescs": {
         "en": "Pull selected pages into a new PDF",
@@ -1309,7 +1344,8 @@
         "id": "Ambil halaman terpilih ke PDF baru",
         "vi": "Lấy các trang được chọn vào PDF mới",
         "ru": "Извлекайте выбранные страницы в новый PDF",
-        "ja": "選択したページを新しいPDFにまとめる"
+        "ja": "選択したページを新しいPDFにまとめる",
+        "tr": "PDF'den belirli sayfaları çıkarın"
       },
       "breadcrumb": {
         "en": "Extract Pages PDF",
@@ -1320,7 +1356,8 @@
         "id": "Ekstrak Halaman PDF",
         "vi": "Trích Xuất Trang PDF",
         "ru": "Извлечь страницы PDF",
-        "ja": "PDFページ抽出"
+        "ja": "PDFページ抽出",
+        "tr": "Sayfa Çıkar"
       },
       "metaDescs": {
         "en": "Save any pages or page range from a PDF as a new file — pick individual pages or ranges. Runs in your browser, files never leave your device.",
@@ -1331,7 +1368,8 @@
         "id": "Ekstrak halaman tertentu dari PDF mana pun — pilih halaman individual atau rentang. Diproses di browser, file tidak pernah meninggalkan perangkat.",
         "vi": "Trích xuất các trang cụ thể từ bất kỳ PDF nào — chọn trang riêng lẻ hoặc phạm vi. Xử lý trong trình duyệt, file không bao giờ rời thiết bị.",
         "ru": "Извлекайте страницы из PDF — отдельные страницы или диапазоны. Обрабатывается в браузере, файлы не покидают устройство.",
-        "ja": "任意のPDFから特定のページを抽出 — 個別ページや範囲を選択。ブラウザ内で処理、ファイルはデバイスから出ません。"
+        "ja": "任意のPDFから特定のページを抽出 — 個別ページや範囲を選択。ブラウザ内で処理、ファイルはデバイスから出ません。",
+        "tr": "PDF'den sayfa çıkarın ücretsiz — tek sayfa veya aralık seçin. Tarayıcıda işleme, yükleme yok."
       },
       "ogTitles": {
         "en": "Extract Pages from PDF Free — Individual Pages or Ranges, No Upload",
@@ -1342,7 +1380,8 @@
         "id": "Ekstrak Halaman PDF — Rentang Tepat, Tanpa Upload, Gratis",
         "vi": "Trích Xuất Trang PDF — Phạm Vi Chính Xác, Không Tải Lên, Miễn Phí",
         "ru": "Извлечь страницы из PDF — точный диапазон, без загрузки, бесплатно",
-        "ja": "PDFからページを抽出 — 正確な範囲指定、アップロード不要、無料"
+        "ja": "PDFからページを抽出 — 正確な範囲指定、アップロード不要、無料",
+        "tr": "PDF'den Sayfa Çıkar Ücretsiz — Yükleme Yok | PDFree"
       },
       "ogDescs": {
         "en": "Extract specific pages from any PDF. Processed in your browser — files never leave your device. Free.",
@@ -1353,7 +1392,8 @@
         "id": "Ekstrak halaman tertentu dari PDF mana pun. Diproses di browser — file tidak pernah meninggalkan perangkat Anda. Gratis.",
         "vi": "Trích xuất các trang cụ thể từ bất kỳ PDF nào. Xử lý trong trình duyệt — file không bao giờ rời thiết bị của bạn. Miễn phí.",
         "ru": "Извлекайте конкретные страницы из любого PDF. Обрабатывается в браузере — файлы не покидают устройство. Бесплатно.",
-        "ja": "任意のPDFから特定のページを抽出します。ブラウザ内で処理 — ファイルはデバイスから出ません。無料。"
+        "ja": "任意のPDFから特定のページを抽出します。ブラウザ内で処理 — ファイルはデバイスから出ません。無料。",
+        "tr": "PDF'den belirli sayfaları çıkarın. Tarayıcıda işleme — dosyalar cihazınızı terk etmez."
       },
       "keywords": {
         "en": "extract pages from pdf, pdf page extractor, extract pdf pages online free, select pages from pdf"
@@ -1370,7 +1410,8 @@
         "de": "pdf-metadaten",
         "fr": "metadonnees-pdf",
         "id": "metadata-pdf",
-        "vi": "chinh-sua-metadata-pdf"
+        "vi": "chinh-sua-metadata-pdf",
+        "tr": "pdf-meta-veri"
       },
       "titles": {
         "en": "Edit PDF Metadata Online — Free, No Upload | PDFree",
@@ -1379,7 +1420,8 @@
         "de": "PDF Metadaten Bearbeiten — Titel, Autor, Datum ändern | PDFree",
         "fr": "Modifier Métadonnées PDF Gratuit — Titre, Auteur, sans Envoi | PDFree",
         "id": "Edit Metadata PDF Online — Gratis, Tanpa Upload | PDFree",
-        "vi": "Chỉnh Sửa Metadata PDF Trực Tuyến — Miễn Phí, Không Tải Lên | PDFree"
+        "vi": "Chỉnh Sửa Metadata PDF Trực Tuyến — Miễn Phí, Không Tải Lên | PDFree",
+        "tr": "PDF Meta Verilerini Düzenle — Yazar, Başlık, Anahtar Kelimeler | PDFree"
       },
       "descs": {
         "en": "View and edit PDF metadata: title, author, subject, keywords. Processed locally — files never uploaded.",
@@ -1388,7 +1430,8 @@
         "de": "PDF-Metadaten online bearbeiten oder entfernen. Im Browser verarbeitet — keine Uploads, keine Registrierung. Kostenlos, privat.",
         "fr": "Modifier ou supprimer les métadonnées d'un PDF gratuitement en ligne. 100 % privé — aucun envoi, sans inscription.",
         "id": "Lihat dan edit metadata PDF: judul, penulis, subjek, kata kunci. Diproses lokal — file tidak pernah diunggah.",
-        "vi": "Xem và chỉnh sửa metadata PDF: tiêu đề, tác giả, chủ đề, từ khóa. Xử lý cục bộ — file không bao giờ được tải lên."
+        "vi": "Xem và chỉnh sửa metadata PDF: tiêu đề, tác giả, chủ đề, từ khóa. Xử lý cục bộ — file không bao giờ được tải lên.",
+        "tr": "PDF meta verilerini düzenleyin veya temizleyin: Yazar, Başlık, Konu, Anahtar Kelimeler. Tarayıcıda işleme — yükleme yok."
       },
       "navLabels": {
         "en": "Metadata",
@@ -1397,7 +1440,8 @@
         "de": "Metadaten",
         "fr": "Métadonnées",
         "id": "Metadata",
-        "vi": "Metadata"
+        "vi": "Metadata",
+        "tr": "Meta Veri"
       },
       "cardNames": {
         "en": "Edit Metadata",
@@ -1406,7 +1450,8 @@
         "de": "Metadaten Bearbeiten",
         "fr": "Métadonnées PDF",
         "id": "Edit Metadata",
-        "vi": "Chỉnh Sửa Metadata"
+        "vi": "Chỉnh Sửa Metadata",
+        "tr": "PDF Meta Verisi"
       },
       "cardDescs": {
         "en": "View and edit title, author, keywords",
@@ -1415,7 +1460,8 @@
         "de": "Titel, Autor, Schlüsselwörter anzeigen und bearbeiten",
         "fr": "Afficher et modifier titre, auteur, mots-clés",
         "id": "Lihat dan edit judul, penulis, kata kunci",
-        "vi": "Xem và chỉnh sửa tiêu đề, tác giả, từ khóa"
+        "vi": "Xem và chỉnh sửa tiêu đề, tác giả, từ khóa",
+        "tr": "PDF'nin Yazar, Başlık ve anahtar kelimelerini düzenleyin"
       },
       "breadcrumb": {
         "en": "Edit PDF Metadata",
@@ -1424,7 +1470,8 @@
         "de": "PDF Metadaten",
         "fr": "Métadonnées PDF",
         "id": "Edit Metadata PDF",
-        "vi": "Metadata PDF"
+        "vi": "Metadata PDF",
+        "tr": "PDF Meta Verisi"
       },
       "metaDescs": {
         "en": "View and edit PDF metadata — title, author, subject, keywords. Works offline in your browser, never uploaded. Remove personal info before sharing. Free.",
@@ -1433,7 +1480,8 @@
         "de": "PDF-Metadaten bearbeiten oder entfernen — Titel, Autor, Schlüsselwörter, Erstellungsdatum. Im Browser, kein Upload. Keine Registrierung.",
         "fr": "Modifiez ou supprimez les métadonnées d'un PDF gratuitement — titre, auteur, sujet, mots-clés, date de création. Aucun envoi. Sans inscription.",
         "id": "Lihat dan edit metadata PDF — judul, penulis, subjek, kata kunci. Diproses lokal di browser, tidak pernah diunggah. Hapus info pribadi sebelum berbagi.",
-        "vi": "Xem và chỉnh sửa metadata PDF — tiêu đề, tác giả, chủ đề, từ khóa. Xử lý cục bộ, không bao giờ tải lên. Xóa thông tin cá nhân trước khi chia sẻ."
+        "vi": "Xem và chỉnh sửa metadata PDF — tiêu đề, tác giả, chủ đề, từ khóa. Xử lý cục bộ, không bao giờ tải lên. Xóa thông tin cá nhân trước khi chia sẻ.",
+        "tr": "PDF meta verilerini ücretsiz düzenleyin — Yazar, Başlık, Konu, Anahtar Kelimeler. Yükleme yok, kayıt gerekmez."
       },
       "ogTitles": {
         "en": "Remove Your Name from PDFs — Edit Metadata Privately, Free",
@@ -1442,7 +1490,8 @@
         "de": "PDF Metadaten Bearbeiten — Titel, Autor, versteckte Daten entfernen",
         "fr": "Modifier Métadonnées PDF Gratuit — Titre, Auteur, Données Cachées",
         "id": "Hapus Nama Anda dari PDF — Edit Metadata Secara Pribadi, Gratis",
-        "vi": "Xóa Tên Bạn Khỏi PDF — Chỉnh Sửa Metadata Riêng Tư, Miễn Phí"
+        "vi": "Xóa Tên Bạn Khỏi PDF — Chỉnh Sửa Metadata Riêng Tư, Miễn Phí",
+        "tr": "PDF Meta Verilerini Düzenle Ücretsiz | PDFree"
       },
       "ogDescs": {
         "en": "View and edit PDF metadata: title, author, subject, keywords. Processed in your browser — files never uploaded. Free.",
@@ -1451,7 +1500,8 @@
         "de": "PDF-Metadaten online bearbeiten oder entfernen. Im Browser verarbeitet — keine Uploads, keine Registrierung. Kostenlos, privat.",
         "fr": "Modifier ou supprimer les métadonnées d'un PDF. Traitement dans le navigateur — aucun fichier envoyé. Gratuit.",
         "id": "Lihat dan edit metadata PDF: judul, penulis, subjek, kata kunci. Diproses di browser — file tidak pernah diunggah. Gratis.",
-        "vi": "Xem và chỉnh sửa metadata PDF: tiêu đề, tác giả, chủ đề, từ khóa. Xử lý trong trình duyệt — file không bao giờ được tải lên. Miễn phí."
+        "vi": "Xem và chỉnh sửa metadata PDF: tiêu đề, tác giả, chủ đề, từ khóa. Xử lý trong trình duyệt — file không bao giờ được tải lên. Miễn phí.",
+        "tr": "PDF meta verilerini düzenleyin veya temizleyin. Tarayıcıda işleme — dosyalar cihazınızı terk etmez."
       },
       "keywords": {
         "en": "pdf metadata editor, edit pdf metadata, pdf properties editor, remove pdf metadata, pdf author editor"
@@ -1972,7 +2022,8 @@
         "fr": "aplatir-pdf",
         "pt": "nivelar-pdf",
         "id": "ratakan-pdf",
-        "vi": "lam-phang-pdf"
+        "vi": "lam-phang-pdf",
+        "tr": "pdf-duzlestir"
       },
       "titles": {
         "en": "Flatten PDF — Make PDF Non-Editable Online Free | PDFree",
@@ -1981,7 +2032,8 @@
         "fr": "Aplatir PDF Gratuit — Rendre un PDF Non Modifiable en Ligne | PDFree",
         "pt": "Nivelar PDF — Tornar PDF Não Editável Online Grátis | PDFree",
         "id": "Ratakan PDF — Buat PDF Tidak Dapat Diedit Online Gratis | PDFree",
-        "vi": "Làm Phẳng PDF — Làm PDF Không Thể Chỉnh Sửa Trực Tuyến Miễn Phí | PDFree"
+        "vi": "Làm Phẳng PDF — Làm PDF Không Thể Chỉnh Sửa Trực Tuyến Miễn Phí | PDFree",
+        "tr": "PDF Form Alanlarını Kilitle — Ücretsiz, Yükleme Yapmadan | PDFree"
       },
       "descs": {
         "en": "Lock your filled PDF form so fields can't be edited. Bakes form data into the page — no upload, 100% private, free.",
@@ -1990,7 +2042,8 @@
         "fr": "Verrouillez votre formulaire PDF rempli pour qu'il ne soit plus modifiable. Sans envoi, 100% privé, gratuit.",
         "pt": "Bloqueie seu formulário PDF preenchido para que os campos não possam ser editados. Sem upload, 100% privado, grátis.",
         "id": "Kunci formulir PDF yang sudah diisi agar kolom tidak dapat diedit. Tanam data formulir ke halaman — tanpa upload, 100% pribadi, gratis.",
-        "vi": "Khóa form PDF đã điền để các trường không thể chỉnh sửa. Nhúng dữ liệu form vào trang — không tải lên, 100% riêng tư, miễn phí."
+        "vi": "Khóa form PDF đã điền để các trường không thể chỉnh sửa. Nhúng dữ liệu form vào trang — không tải lên, 100% riêng tư, miễn phí.",
+        "tr": "PDF form alanlarını kalıcı olarak kilitleyin. Doldurulmuş veriler düz metin haline gelir ve değiştirilemez. Tarayıcıda işleme — yükleme yok."
       },
       "navLabels": {
         "en": "Lock PDF",
@@ -1999,7 +2052,8 @@
         "fr": "Verrouiller PDF",
         "pt": "Bloquear PDF",
         "id": "Kunci PDF",
-        "vi": "Khóa PDF"
+        "vi": "Khóa PDF",
+        "tr": "Form Kilitle"
       },
       "cardNames": {
         "en": "Flatten PDF",
@@ -2008,7 +2062,8 @@
         "fr": "Aplatir PDF",
         "pt": "Nivelar PDF",
         "id": "Ratakan PDF",
-        "vi": "Làm Phẳng PDF"
+        "vi": "Làm Phẳng PDF",
+        "tr": "PDF Düzleştir"
       },
       "cardDescs": {
         "en": "Bake form fields into the page — prevent editing",
@@ -2017,7 +2072,8 @@
         "fr": "Intégrer les champs de formulaire dans la page — empêcher la modification",
         "pt": "Integrar campos de formulário na página — evitar edição",
         "id": "Tanam kolom formulir ke halaman — cegah pengeditan",
-        "vi": "Nhúng trường biểu mẫu vào trang — ngăn chỉnh sửa"
+        "vi": "Nhúng trường biểu mẫu vào trang — ngăn chỉnh sửa",
+        "tr": "PDF form alanlarını kalıcı olarak kilitleyin"
       },
       "breadcrumb": {
         "en": "Flatten PDF",
@@ -2026,7 +2082,8 @@
         "fr": "Aplatir PDF",
         "pt": "Nivelar PDF",
         "id": "Ratakan PDF",
-        "vi": "Làm Phẳng PDF"
+        "vi": "Làm Phẳng PDF",
+        "tr": "PDF Düzleştir"
       },
       "metaDescs": {
         "en": "Flatten a filled PDF form free — lock fields permanently so no one can edit your document. Runs in your browser, no upload, 100% private. Instant download.",
@@ -2035,7 +2092,8 @@
         "fr": "Aplatir un PDF en ligne gratuitement — intégrer les champs de formulaire dans la page pour que le document ne soit plus modifiable. Sans envoi, 100% privé.",
         "pt": "Nivelar PDF online grátis — integre campos de formulário na página para que não possa ser editado. Sem upload, 100% privado.",
         "id": "Ratakan formulir PDF yang sudah diisi gratis — kunci kolom permanen agar dokumen tidak bisa diedit. Di browser, tanpa upload, 100% pribadi.",
-        "vi": "Làm phẳng form PDF đã điền miễn phí — khóa các trường vĩnh viễn để không ai chỉnh sửa được. Trong trình duyệt, không tải lên, 100% riêng tư."
+        "vi": "Làm phẳng form PDF đã điền miễn phí — khóa các trường vĩnh viễn để không ai chỉnh sửa được. Trong trình duyệt, không tải lên, 100% riêng tư.",
+        "tr": "PDF form alanlarını ücretsiz kilitleyin — doldurulmuş veriler kalıcı hale gelir. Yükleme yok, kayıt gerekmez."
       },
       "ogTitles": {
         "en": "Flatten PDF — Lock Fillable PDF Form Online, No Upload",
@@ -2044,7 +2102,8 @@
         "fr": "Aplatir PDF — Verrouiller Formulaire PDF en Ligne, Sans Envoi",
         "pt": "Nivelar PDF — Bloquear Formulário PDF Online, Sem Upload",
         "id": "Ratakan PDF — Kunci Formulir PDF yang Dapat Diisi Online, Tanpa Upload",
-        "vi": "Làm Phẳng PDF — Khóa Form PDF Có Thể Điền Trực Tuyến, Không Tải Lên"
+        "vi": "Làm Phẳng PDF — Khóa Form PDF Có Thể Điền Trực Tuyến, Không Tải Lên",
+        "tr": "PDF Form Alanlarını Kilitle Ücretsiz | PDFree"
       },
       "ogDescs": {
         "en": "Make a fillable PDF non-editable. Form fields baked into the page — processed in your browser, never uploaded. Free.",
@@ -2053,7 +2112,8 @@
         "fr": "Rendre un PDF modifiable non éditable. Champs intégrés dans la page — traité dans votre navigateur, jamais envoyé. Gratuit.",
         "pt": "Tornar um PDF preenchível não editável. Campos integrados na página — processados no seu navegador, nunca enviados. Grátis.",
         "id": "Buat PDF yang dapat diisi tidak dapat diedit. Kolom formulir ditanam ke halaman — diproses di browser, tidak pernah diunggah. Gratis.",
-        "vi": "Làm cho PDF có thể điền không thể chỉnh sửa. Trường form nhúng vào trang — xử lý trong trình duyệt, không bao giờ được tải lên. Miễn phí."
+        "vi": "Làm cho PDF có thể điền không thể chỉnh sửa. Trường form nhúng vào trang — xử lý trong trình duyệt, không bao giờ được tải lên. Miễn phí.",
+        "tr": "PDF form alanlarını kalıcı olarak kilitleyin. Tarayıcıda işleme — dosyalar cihazınızı terk etmez."
       },
       "keywords": {
         "en": "flatten pdf, flatten filled pdf, make pdf non-editable, lock pdf form fields, flatten pdf online free, flatten pdf without uploading, how to flatten a pdf, make pdf not fillable, flatten pdf annotations, flatten pdf for printing, flatten pdf without adobe"
@@ -2072,7 +2132,8 @@
         "id": "pdf-ke-word",
         "vi": "pdf-sang-word",
         "ru": "pdf-v-word",
-        "ja": "pdf-word-henkan"
+        "ja": "pdf-word-henkan",
+        "tr": "pdf-word-donustur"
       },
       "titles": {
         "en": "Convert PDF to Word Without Uploading — Free & Private | PDFree",
@@ -2083,7 +2144,8 @@
         "id": "Konversi PDF ke Word Tanpa Upload — Gratis & Pribadi | PDFree",
         "vi": "Chuyển Đổi PDF sang Word Không Cần Tải Lên — Miễn Phí & Riêng Tư | PDFree",
         "ru": "Конвертировать PDF в Word без загрузки — бесплатно и приватно | PDFree",
-        "ja": "PDFをWordに変換 アップロード不要 — 無料・プライベート | PDFree"
+        "ja": "PDFをWordに変換 アップロード不要 — 無料・プライベート | PDFree",
+        "tr": "PDF'yi Word'e Dönüştür — Ücretsiz, Yükleme Yapmadan | PDFree"
       },
       "descs": {
         "en": "Convert PDF to editable .docx — runs in your browser, no upload.",
@@ -2094,7 +2156,8 @@
         "id": "Konversi PDF ke .docx yang dapat diedit — berjalan di browser, tanpa upload.",
         "vi": "Chuyển đổi PDF sang .docx có thể chỉnh sửa — chạy trong trình duyệt, không tải lên.",
         "ru": "Конвертируйте PDF в редактируемый .docx — работает в браузере, без загрузки.",
-        "ja": "PDFを編集可能な.docxに変換 — ブラウザ内で動作、アップロード不要。"
+        "ja": "PDFを編集可能な.docxに変換 — ブラウザ内で動作、アップロード不要。",
+        "tr": "PDF'yi düzenlenebilir Word belgesine dönüştürün. Tarayıcıda işleme — yükleme yok, sunucu yok. Ücretsiz, kayıt gerekmez."
       },
       "navLabels": {
         "en": "PDF→Word",
@@ -2105,7 +2168,8 @@
         "id": "PDF→Word",
         "vi": "PDF→Word",
         "ru": "PDF→Word",
-        "ja": "PDF→Word"
+        "ja": "PDF→Word",
+        "tr": "PDF'den Word'e"
       },
       "cardNames": {
         "en": "PDF to Word",
@@ -2116,7 +2180,8 @@
         "id": "PDF ke Word",
         "vi": "PDF sang Word",
         "ru": "PDF в Word",
-        "ja": "PDFをWordに"
+        "ja": "PDFをWordに",
+        "tr": "PDF'den Word'e"
       },
       "cardDescs": {
         "en": "Convert PDF to editable .docx — no upload, 100% private",
@@ -2127,7 +2192,8 @@
         "id": "Konversi PDF ke .docx yang dapat diedit — tanpa upload, 100% pribadi",
         "vi": "Chuyển đổi PDF sang .docx có thể chỉnh sửa — không tải lên, 100% riêng tư",
         "ru": "Конвертируйте PDF в редактируемый .docx — без загрузки, 100% конфиденциально",
-        "ja": "PDFを編集可能な.docxに変換 — アップロード不要、100%プライベート"
+        "ja": "PDFを編集可能な.docxに変換 — アップロード不要、100%プライベート",
+        "tr": "PDF'yi düzenlenebilir Word belgesine dönüştürün"
       },
       "breadcrumb": {
         "en": "PDF to Word",
@@ -2138,7 +2204,8 @@
         "id": "PDF ke Word",
         "vi": "PDF sang Word",
         "ru": "PDF в Word",
-        "ja": "PDFをWordに"
+        "ja": "PDFをWordに",
+        "tr": "PDF'den Word'e"
       },
       "metaDescs": {
         "en": "Convert PDF to Word (.docx) in your browser — nothing uploaded, nothing stored. Tables, RTL text, and 15+ languages supported.",
@@ -2149,7 +2216,8 @@
         "id": "Konversi PDF ke Word (.docx) di browser — tidak diunggah, tidak disimpan. Tabel, teks RTL, dan 15+ bahasa didukung.",
         "vi": "Chuyển đổi PDF sang Word (.docx) trong trình duyệt — không tải lên, không lưu trữ. Hỗ trợ bảng, văn bản RTL và 15+ ngôn ngữ.",
         "ru": "Конвертируйте PDF в Word (.docx) в браузере — ничего не загружается. Поддержка таблиц, RTL-текста и 15+ языков.",
-        "ja": "PDFをブラウザ内で編集可能なWordに変換 — アップロードなし。表・RTLテキスト・15以上の言語に対応。"
+        "ja": "PDFをブラウザ内で編集可能なWordに変換 — アップロードなし。表・RTLテキスト・15以上の言語に対応。",
+        "tr": "PDF'yi Word'e ücretsiz dönüştürün. Tarayıcıda işleme, yükleme yok, kayıt gerekmez."
       },
       "ogTitles": {
         "en": "Convert PDF to Word Without Uploading — Free & Private | PDFree",
@@ -2160,7 +2228,8 @@
         "id": "Konversi PDF ke Word Tanpa Upload — Di Browser, Tanpa Server | PDFree",
         "vi": "Chuyển PDF sang Word Không Tải Lên — Trong Trình Duyệt, Không Server | PDFree",
         "ru": "Конвертировать PDF в Word без загрузки — в браузере, без сервера | PDFree",
-        "ja": "PDFをWordに変換 アップロードなし — ブラウザ内、サーバーなし | PDFree"
+        "ja": "PDFをWordに変換 アップロードなし — ブラウザ内、サーバーなし | PDFree",
+        "tr": "PDF'yi Word'e Dönüştür Ücretsiz — Yükleme Yok | PDFree"
       },
       "ogDescs": {
         "en": "PDF to Word conversion that runs entirely in your browser. No upload, no server, no account. Tables, Arabic, Chinese, and more. 100% private.",
@@ -2171,7 +2240,8 @@
         "id": "Konversi PDF ke Word yang berjalan sepenuhnya di browser. Tanpa upload, tanpa server, tanpa akun. Tabel, Arab, Cina, dan lainnya. 100% pribadi.",
         "vi": "Chuyển đổi PDF sang Word chạy hoàn toàn trong trình duyệt. Không tải lên, không server, không tài khoản. Bảng, Ả Rập, Trung Quốc và nhiều hơn. 100% riêng tư.",
         "ru": "Конвертация PDF в Word, которая работает полностью в браузере. Без загрузки, без сервера, без аккаунта. Таблицы, арабский, китайский и многое другое. 100% конфиденциально.",
-        "ja": "PDFをWordに変換する処理はすべてブラウザ内で実行されます。アップロードなし、サーバーなし、アカウントなし。表・アラビア語・中国語など対応。100%プライベート。"
+        "ja": "PDFをWordに変換する処理はすべてブラウザ内で実行されます。アップロードなし、サーバーなし、アカウントなし。表・アラビア語・中国語など対応。100%プライベート。",
+        "tr": "PDF'yi Word belgesine dönüştürün. Tarayıcıda işleme — dosyalar cihazınızı terk etmez."
       }
     },
     {
@@ -2183,70 +2253,80 @@
         "de": "pdf-zu-excel",
         "es": "pdf-a-excel",
         "fr": "pdf-en-excel",
-        "pt": "pdf-para-excel"
+        "pt": "pdf-para-excel",
+        "tr": "pdf-excel-donustur"
       },
       "titles": {
         "en": "Convert PDF to Excel Without Uploading — Free & Private | PDFree",
         "de": "PDF zu Excel Konvertieren — Kostenlos & Privat | PDFree",
         "es": "Convertir PDF a Excel Sin Subir Archivos — Gratis | PDFree",
         "fr": "Convertir PDF en Excel — Gratuit, Sans Envoi | PDFree",
-        "pt": "Converter PDF para Excel Grátis — Sem Upload | PDFree"
+        "pt": "Converter PDF para Excel Grátis — Sem Upload | PDFree",
+        "tr": "PDF'yi Excel'e Dönüştür — Ücretsiz, Yükleme Yapmadan | PDFree"
       },
       "descs": {
         "en": "Extract tables from PDF into an .xlsx spreadsheet — runs in your browser, no upload.",
         "de": "Tabellen aus PDF in eine .xlsx-Datei extrahieren — läuft im Browser, kein Upload.",
         "es": "Extrae tablas de PDF a una hoja de cálculo .xlsx — funciona en tu navegador, sin subida.",
         "fr": "Extrayez les tableaux d'un PDF vers une feuille .xlsx — s'exécute dans votre navigateur, aucun envoi.",
-        "pt": "Extraia tabelas do PDF para uma planilha .xlsx — funciona no seu navegador, sem upload."
+        "pt": "Extraia tabelas do PDF para uma planilha .xlsx — funciona no seu navegador, sem upload.",
+        "tr": "PDF tablolarını ve verilerini Excel'e dönüştürün. Tarayıcıda işleme — yükleme yok, sunucu yok. Ücretsiz, kayıt gerekmez."
       },
       "navLabels": {
         "en": "PDF to Excel",
         "de": "PDF zu Excel",
         "es": "PDF a Excel",
         "fr": "PDF en Excel",
-        "pt": "PDF para Excel"
+        "pt": "PDF para Excel",
+        "tr": "PDF'den Excel'e"
       },
       "cardNames": {
         "en": "PDF to Excel",
         "de": "PDF zu Excel",
         "es": "PDF a Excel",
         "fr": "PDF en Excel",
-        "pt": "PDF para Excel"
+        "pt": "PDF para Excel",
+        "tr": "PDF'den Excel'e"
       },
       "cardDescs": {
         "en": "Extract tables from PDF into a spreadsheet locally",
         "de": "Tabellen aus PDF in eine Tabellenkalkulation extrahieren",
         "es": "Extrae tablas de PDF a una hoja de cálculo localmente",
         "fr": "Extraire les tableaux d'un PDF vers une feuille de calcul",
-        "pt": "Extraia tabelas do PDF para uma planilha localmente"
+        "pt": "Extraia tabelas do PDF para uma planilha localmente",
+        "tr": "PDF tablolarını Excel'e dönüştürün"
       },
       "breadcrumb": {
         "en": "PDF→Excel",
         "de": "PDF→Excel",
         "es": "PDF→Excel",
         "fr": "PDF→Excel",
-        "pt": "PDF→Excel"
+        "pt": "PDF→Excel",
+        "tr": "PDF'den Excel'e"
       },
       "metaDescs": {
         "en": "Convert PDF to Excel free — detected tables become separate sheets in a real .xlsx file. Runs in your browser, nothing uploaded. No account, no limits.",
         "de": "PDF zu Excel kostenlos umwandeln — Tabellen werden zu Blättern in einer echten .xlsx-Datei. Läuft im Browser, kein Upload. Ohne Anmeldung, ohne Limits.",
         "es": "Convertir PDF a Excel gratis — las tablas detectadas se convierten en hojas en un archivo .xlsx real. En tu navegador, sin subir. Sin registro, sin límites.",
         "fr": "Convertir PDF en Excel gratuit — les tableaux détectés deviennent des feuilles .xlsx. Dans votre navigateur, sans envoi. Sans inscription, sans limites.",
-        "pt": "Converter PDF para Excel grátis — tabelas detectadas viram planilhas em um arquivo .xlsx real. No seu navegador, sem upload. Sem cadastro, sem limites."
+        "pt": "Converter PDF para Excel grátis — tabelas detectadas viram planilhas em um arquivo .xlsx real. No seu navegador, sem upload. Sem cadastro, sem limites.",
+        "tr": "PDF'yi Excel'e ücretsiz dönüştürün. Tablolar ve veriler korunur. Yükleme yok."
       },
       "ogTitles": {
         "en": "Convert PDF to Excel Free — Table Extraction, No Upload",
         "de": "PDF zu Excel Konvertieren Kostenlos — Tabellenextraktion, Kein Upload",
         "es": "Convertir PDF a Excel Gratis — Extracción de Tablas, Sin Subir",
         "fr": "Convertir PDF en Excel Gratuit — Extraction de Tableaux, Sans Envoi",
-        "pt": "Converter PDF para Excel Grátis — Extração de Tabelas, Sem Upload"
+        "pt": "Converter PDF para Excel Grátis — Extração de Tabelas, Sem Upload",
+        "tr": "PDF'yi Excel'e Dönüştür Ücretsiz — Yükleme Yok | PDFree"
       },
       "ogDescs": {
         "en": "PDF to Excel conversion that runs entirely in your browser. Detected tables become separate worksheets. No upload, no server, no account. 100% private.",
         "de": "PDF zu Excel Konvertierung läuft vollständig im Browser. Erkannte Tabellen werden zu separaten Blättern. Kein Upload, kein Server, kein Konto. 100 % privat.",
         "es": "La conversión de PDF a Excel se ejecuta completamente en tu navegador. Sin subida, sin servidor, sin cuenta. 100% privado.",
         "fr": "La conversion PDF en Excel s'exécute entièrement dans votre navigateur. Sans envoi, sans serveur, sans compte. 100 % privé.",
-        "pt": "A conversão de PDF para Excel é executada inteiramente no seu navegador. Sem upload, sem servidor, sem conta. 100% privado."
+        "pt": "A conversão de PDF para Excel é executada inteiramente no seu navegador. Sem upload, sem servidor, sem conta. 100% privado.",
+        "tr": "PDF tablolarını Excel'e dönüştürün. Tarayıcıda işleme — dosyalar cihazınızı terk etmez."
       },
       "keywords": {
         "en": "pdf to excel, pdf to xlsx, convert pdf to excel, extract table from pdf, pdf table extractor, pdf to spreadsheet"
@@ -2261,70 +2341,80 @@
         "de": "pdf-zu-powerpoint",
         "es": "pdf-a-powerpoint",
         "fr": "pdf-en-powerpoint",
-        "pt": "pdf-para-powerpoint"
+        "pt": "pdf-para-powerpoint",
+        "tr": "pdf-powerpoint-donustur"
       },
       "titles": {
         "en": "Convert PDF to PowerPoint Without Uploading — Free & Private | PDFree",
         "de": "PDF zu PowerPoint Konvertieren — Kostenlos & Privat | PDFree",
         "es": "Convertir PDF a PowerPoint Sin Subir — Gratis | PDFree",
         "fr": "Convertir PDF en PowerPoint — Gratuit & Privé | PDFree",
-        "pt": "Converter PDF para PowerPoint Grátis — Sem Upload | PDFree"
+        "pt": "Converter PDF para PowerPoint Grátis — Sem Upload | PDFree",
+        "tr": "PDF'yi PowerPoint'e Dönüştür — Ücretsiz, Yükleme Yapmadan | PDFree"
       },
       "descs": {
         "en": "Convert PDF pages into PowerPoint slides — runs in your browser, no upload.",
         "de": "PDF-Seiten in PowerPoint-Folien umwandeln — läuft im Browser, kein Upload.",
         "es": "Convierte páginas PDF en diapositivas de PowerPoint — funciona en tu navegador, sin subida.",
         "fr": "Convertissez des pages PDF en diapositives PowerPoint — s'exécute dans votre navigateur, aucun envoi.",
-        "pt": "Converta páginas PDF em slides do PowerPoint — funciona no seu navegador, sem upload."
+        "pt": "Converta páginas PDF em slides do PowerPoint — funciona no seu navegador, sem upload.",
+        "tr": "PDF'yi PowerPoint sunumuna dönüştürün. Tarayıcıda işleme — yükleme yok, sunucu yok. Ücretsiz, kayıt gerekmez."
       },
       "navLabels": {
         "en": "PDF to PowerPoint",
         "de": "PDF zu PPT",
         "es": "PDF a PPT",
         "fr": "PDF en PPT",
-        "pt": "PDF para PPT"
+        "pt": "PDF para PPT",
+        "tr": "PDF'den PowerPoint'e"
       },
       "cardNames": {
         "en": "PDF to PowerPoint",
         "de": "PDF zu PowerPoint",
         "es": "PDF a PowerPoint",
         "fr": "PDF en PowerPoint",
-        "pt": "PDF para PowerPoint"
+        "pt": "PDF para PowerPoint",
+        "tr": "PDF'den PowerPoint'e"
       },
       "cardDescs": {
         "en": "Turn PDF pages into a slide deck locally",
         "de": "PDF-Seiten lokal in eine Präsentation umwandeln",
         "es": "Convierte páginas PDF en una presentación localmente",
         "fr": "Convertir les pages PDF en diaporama localement",
-        "pt": "Converta páginas PDF em uma apresentação localmente"
+        "pt": "Converta páginas PDF em uma apresentação localmente",
+        "tr": "PDF'yi PowerPoint sunumuna dönüştürün"
       },
       "breadcrumb": {
         "en": "PDF→PowerPoint",
         "de": "PDF→PowerPoint",
         "es": "PDF→PowerPoint",
         "fr": "PDF→PowerPoint",
-        "pt": "PDF→PowerPoint"
+        "pt": "PDF→PowerPoint",
+        "tr": "PDF'den PowerPoint'e"
       },
       "metaDescs": {
         "en": "Convert PDF to PowerPoint free — each page becomes a slide in a real .pptx file. Runs in your browser, nothing uploaded. No account, no limits.",
         "de": "PDF in PowerPoint umwandeln kostenlos — jede Seite wird eine Folie in einer .pptx-Datei. Im Browser, kein Upload. Ohne Anmeldung, keine Limits.",
         "es": "Convertir PDF a PowerPoint gratis — cada página se convierte en una diapositiva .pptx. En tu navegador, sin subir. Sin registro, sin límites.",
         "fr": "Convertir PDF en PowerPoint gratuit — chaque page devient une diapositive .pptx. Dans votre navigateur, sans envoi. Sans inscription, sans limites.",
-        "pt": "Converter PDF para PowerPoint grátis — cada página vira um slide em arquivo .pptx real. No navegador, sem upload. Sem cadastro, sem limites."
+        "pt": "Converter PDF para PowerPoint grátis — cada página vira um slide em arquivo .pptx real. No navegador, sem upload. Sem cadastro, sem limites.",
+        "tr": "PDF'yi PowerPoint'e ücretsiz dönüştürün. Yükleme yok, kayıt gerekmez."
       },
       "ogTitles": {
         "en": "Convert PDF to PowerPoint Free — One Slide Per Page, No Upload",
         "de": "PDF zu PowerPoint Kostenlos — Eine Folie pro Seite, Kein Upload",
         "es": "Convertir PDF a PowerPoint Gratis — Una Diapositiva por Página, Sin Subir",
         "fr": "Convertir PDF en PowerPoint Gratuit — Une Diapositive par Page, Sans Envoi",
-        "pt": "Converter PDF para PowerPoint Grátis — Um Slide por Página, Sem Upload"
+        "pt": "Converter PDF para PowerPoint Grátis — Um Slide por Página, Sem Upload",
+        "tr": "PDF'yi PowerPoint'e Dönüştür Ücretsiz — Yükleme Yok | PDFree"
       },
       "ogDescs": {
         "en": "PDF to PowerPoint conversion that runs entirely in your browser. No upload, no server, no account. 100% private.",
         "de": "PDF zu PowerPoint Konvertierung läuft vollständig im Browser. Kein Upload, kein Server, kein Konto. 100 % privat.",
         "es": "La conversión de PDF a PowerPoint se ejecuta completamente en tu navegador. Sin subida, sin servidor, sin cuenta. 100% privado.",
         "fr": "La conversion PDF en PowerPoint s'exécute entièrement dans votre navigateur. Sans envoi, sans serveur, sans compte. 100 % privé.",
-        "pt": "A conversão de PDF para PowerPoint é executada inteiramente no seu navegador. Sem upload, sem servidor, sem conta. 100% privado."
+        "pt": "A conversão de PDF para PowerPoint é executada inteiramente no seu navegador. Sem upload, sem servidor, sem conta. 100% privado.",
+        "tr": "PDF'yi PowerPoint sunumuna dönüştürün. Tarayıcıda işleme — dosyalar cihazınızı terk etmez."
       },
       "keywords": {
         "en": "pdf to powerpoint, pdf to pptx, convert pdf to powerpoint, pdf to ppt, pdf to slides, pdf to presentation"
@@ -2339,70 +2429,80 @@
         "de": "pdf-zu-markdown",
         "es": "pdf-a-markdown",
         "fr": "pdf-en-markdown",
-        "pt": "pdf-para-markdown"
+        "pt": "pdf-para-markdown",
+        "tr": "pdf-markdown-donustur"
       },
       "titles": {
         "en": "Convert PDF to Markdown Without Uploading — Free & Private | PDFree",
         "de": "PDF zu Markdown Konvertieren — Kostenlos & Privat | PDFree",
         "es": "Convertir PDF a Markdown — Gratis, Sin Registro | PDFree",
         "fr": "Convertir PDF en Markdown — Gratuit & Privé | PDFree",
-        "pt": "Converter PDF para Markdown Grátis — Sem Upload | PDFree"
+        "pt": "Converter PDF para Markdown Grátis — Sem Upload | PDFree",
+        "tr": "PDF'yi Markdown'a Dönüştür — Ücretsiz, Yükleme Yapmadan | PDFree"
       },
       "descs": {
         "en": "Convert PDF text, headings and lists into Markdown — runs in your browser, no upload.",
         "de": "PDF-Text, Überschriften und Listen in Markdown umwandeln — läuft im Browser, kein Upload.",
         "es": "Convierte texto, encabezados y listas de PDF a Markdown — funciona en tu navegador, sin subida.",
         "fr": "Convertissez le texte, les titres et les listes PDF en Markdown — s'exécute dans votre navigateur, sans envoi.",
-        "pt": "Converta texto, títulos e listas do PDF para Markdown — funciona no seu navegador, sem upload."
+        "pt": "Converta texto, títulos e listas do PDF para Markdown — funciona no seu navegador, sem upload.",
+        "tr": "PDF'yi Markdown formatına dönüştürün. Başlıklar, listeler ve tablo yapısı korunur. Tarayıcıda işleme — yükleme yok."
       },
       "navLabels": {
         "en": "PDF to Markdown",
         "de": "PDF zu MD",
         "es": "PDF a MD",
         "fr": "PDF en MD",
-        "pt": "PDF para MD"
+        "pt": "PDF para MD",
+        "tr": "PDF'den Markdown'a"
       },
       "cardNames": {
         "en": "PDF to Markdown",
         "de": "PDF zu Markdown",
         "es": "PDF a Markdown",
         "fr": "PDF en Markdown",
-        "pt": "PDF para Markdown"
+        "pt": "PDF para Markdown",
+        "tr": "PDF'den Markdown'a"
       },
       "cardDescs": {
         "en": "Turn PDF text into clean .md files locally",
         "de": "PDF-Text lokal in saubere .md-Dateien umwandeln",
         "es": "Convierte texto PDF en archivos .md limpios localmente",
         "fr": "Convertir le texte PDF en fichiers .md propres localement",
-        "pt": "Converta texto PDF em arquivos .md limpos localmente"
+        "pt": "Converta texto PDF em arquivos .md limpos localmente",
+        "tr": "PDF'yi Markdown formatına dönüştürün"
       },
       "breadcrumb": {
         "en": "PDF→Markdown",
         "de": "PDF→Markdown",
         "es": "PDF→Markdown",
         "fr": "PDF→Markdown",
-        "pt": "PDF→Markdown"
+        "pt": "PDF→Markdown",
+        "tr": "PDF'den Markdown'a"
       },
       "metaDescs": {
         "en": "Convert PDF to Markdown free — headings, bullet/numbered lists and bold/italic text become clean .md syntax. Runs in your browser, nothing uploaded.",
         "de": "PDF zu Markdown kostenlos umwandeln — Überschriften, Listen und Fettschrift werden zu .md-Syntax. Im Browser, kein Upload.",
         "es": "Convertir PDF a Markdown gratis — títulos, listas y texto en negrita se convierten en sintaxis .md. En tu navegador, sin subir. Sin registro, sin límites.",
         "fr": "Convertir PDF en Markdown gratuit — titres, listes et gras deviennent une syntaxe .md propre. Sans envoi au navigateur, sans inscription, sans limites.",
-        "pt": "Converter PDF para Markdown grátis — títulos, listas e negrito viram sintaxe .md limpa. No navegador, sem upload. Sem cadastro, sem limites."
+        "pt": "Converter PDF para Markdown grátis — títulos, listas e negrito viram sintaxe .md limpa. No navegador, sem upload. Sem cadastro, sem limites.",
+        "tr": "PDF'yi Markdown'a ücretsiz dönüştürün. Başlıklar ve yapı korunur. Yükleme yok."
       },
       "ogTitles": {
         "en": "Convert PDF to Markdown Free — Headings & Lists, No Upload",
         "de": "PDF zu Markdown Kostenlos — Überschriften & Listen, Kein Upload",
         "es": "Convertir PDF a Markdown Gratis — Títulos y Listas, Sin Subir",
         "fr": "Convertir PDF en Markdown Gratuit — Titres et Listes, Sans Envoi",
-        "pt": "Converter PDF para Markdown Grátis — Títulos e Listas, Sem Upload"
+        "pt": "Converter PDF para Markdown Grátis — Títulos e Listas, Sem Upload",
+        "tr": "PDF'yi Markdown'a Dönüştür Ücretsiz — Yükleme Yok | PDFree"
       },
       "ogDescs": {
         "en": "PDF to Markdown conversion that runs entirely in your browser. No upload, no server, no account. 100% private.",
         "de": "PDF zu Markdown Konvertierung läuft vollständig im Browser. Kein Upload, kein Server, kein Konto. 100 % privat.",
         "es": "La conversión de PDF a Markdown se ejecuta completamente en tu navegador. Sin subida, sin servidor, sin cuenta. 100% privado.",
         "fr": "La conversion PDF en Markdown s'exécute entièrement dans votre navigateur. Sans envoi, sans serveur, sans compte. 100 % privé.",
-        "pt": "A conversão de PDF para Markdown é executada inteiramente no seu navegador. Sem upload, sem servidor, sem conta. 100% privado."
+        "pt": "A conversão de PDF para Markdown é executada inteiramente no seu navegador. Sem upload, sem servidor, sem conta. 100% privado.",
+        "tr": "PDF'yi Markdown'a dönüştürün. Tarayıcıda işleme — dosyalar cihazınızı terk etmez."
       },
       "keywords": {
         "en": "pdf to markdown, pdf to md, convert pdf to markdown, pdf to md converter, extract pdf text as markdown"
@@ -2417,70 +2517,80 @@
         "de": "pdf-entsperren",
         "es": "desbloquear-pdf",
         "fr": "deverrouiller-pdf",
-        "pt": "desbloquear-pdf"
+        "pt": "desbloquear-pdf",
+        "tr": "pdf-sifre-kaldir"
       },
       "titles": {
         "en": "Unlock PDF — Remove Password Protection, No Upload | PDFree",
         "de": "PDF Passwort Entfernen — Kostenlos, Kein Upload | PDFree",
         "es": "Desbloquear PDF — Quitar Contraseña, Sin Subir | PDFree",
         "fr": "Déverrouiller PDF — Supprimer le Mot de Passe | PDFree",
-        "pt": "Desbloquear PDF — Remover Senha, Sem Upload | PDFree"
+        "pt": "Desbloquear PDF — Remover Senha, Sem Upload | PDFree",
+        "tr": "PDF Şifresini Kaldır — Ücretsiz, Yükleme Yapmadan | PDFree"
       },
       "descs": {
         "en": "Remove PDF password protection — runs in your browser, no upload.",
         "de": "PDF-Passwortschutz entfernen — läuft im Browser, kein Upload.",
         "es": "Elimina la protección por contraseña del PDF — funciona en tu navegador, sin subida.",
         "fr": "Supprimez la protection par mot de passe du PDF — s'exécute dans votre navigateur, sans envoi.",
-        "pt": "Remova a proteção por senha do PDF — funciona no seu navegador, sem upload."
+        "pt": "Remova a proteção por senha do PDF — funciona no seu navegador, sem upload.",
+        "tr": "PDF'den parola korumasını kaldırın. Kullanıcı kısıtlamalarını ve şifreyi tek tıkla kaldırın. Tarayıcıda işleme — yükleme yok."
       },
       "navLabels": {
         "en": "Unlock PDF",
         "de": "PDF entsperren",
         "es": "Desbloquear PDF",
         "fr": "Déverrouiller PDF",
-        "pt": "Desbloquear PDF"
+        "pt": "Desbloquear PDF",
+        "tr": "PDF Kilidi Aç"
       },
       "cardNames": {
         "en": "Unlock PDF",
         "de": "PDF entsperren",
         "es": "Desbloquear PDF",
         "fr": "Déverrouiller PDF",
-        "pt": "Desbloquear PDF"
+        "pt": "Desbloquear PDF",
+        "tr": "PDF Kilidi Aç"
       },
       "cardDescs": {
         "en": "Remove password protection locally",
         "de": "Passwortschutz lokal entfernen",
         "es": "Elimina la protección por contraseña localmente",
         "fr": "Supprimer la protection par mot de passe localement",
-        "pt": "Remova a proteção por senha localmente"
+        "pt": "Remova a proteção por senha localmente",
+        "tr": "PDF'den parola ve kısıtlamaları kaldırın"
       },
       "breadcrumb": {
         "en": "Unlock PDF",
         "de": "PDF entsperren",
         "es": "Desbloquear PDF",
         "fr": "Déverrouiller PDF",
-        "pt": "Desbloquear PDF"
+        "pt": "Desbloquear PDF",
+        "tr": "PDF Kilidi Aç"
       },
       "metaDescs": {
         "en": "Remove PDF password protection free — enter the correct password and download an unlocked file. Runs in your browser, nothing uploaded.",
         "de": "PDF Passwortschutz kostenlos entfernen — richtiges Passwort eingeben, entsperrte Datei herunterladen. Im Browser, kein Upload.",
         "es": "Eliminar contraseña PDF gratis — ingresa la contraseña correcta y descarga un archivo desbloqueado. En tu navegador, sin subir. Sin registro, sin límites.",
         "fr": "Supprimer mot de passe PDF gratuit — entrez le bon mot de passe et téléchargez le fichier déverrouillé. Sans envoi, sans inscription, sans limites.",
-        "pt": "Remover senha do PDF grátis — digite a senha correta e baixe o arquivo desbloqueado. No seu navegador, sem upload. Sem cadastro, sem limites."
+        "pt": "Remover senha do PDF grátis — digite a senha correta e baixe o arquivo desbloqueado. No seu navegador, sem upload. Sem cadastro, sem limites.",
+        "tr": "PDF şifresini kaldırın ücretsiz. Parola korumasını ve kısıtlamaları kaldırın. Yükleme yok."
       },
       "ogTitles": {
         "en": "Unlock PDF Free — Remove Password Protection, No Upload",
         "de": "PDF entsperren Kostenlos — Passwortschutz Entfernen, Kein Upload",
         "es": "Desbloquear PDF Gratis — Eliminar Contraseña, Sin Subir",
         "fr": "Déverrouiller PDF Gratuit — Supprimer Mot de Passe, Sans Envoi",
-        "pt": "Desbloquear PDF Grátis — Remover Proteção por Senha, Sem Upload"
+        "pt": "Desbloquear PDF Grátis — Remover Proteção por Senha, Sem Upload",
+        "tr": "PDF Şifresini Kaldır Ücretsiz — Yükleme Yok | PDFree"
       },
       "ogDescs": {
         "en": "PDF password removal that runs entirely in your browser. No upload, no server, no account. 100% private.",
         "de": "PDF-Passwortentfernung läuft vollständig im Browser. Kein Upload, kein Server, kein Konto. 100 % privat.",
         "es": "La eliminación de contraseña PDF se ejecuta completamente en tu navegador. Sin subida, sin servidor, sin cuenta. 100% privado.",
         "fr": "La suppression du mot de passe PDF s'exécute entièrement dans votre navigateur. Sans envoi, sans serveur, sans compte. 100 % privé.",
-        "pt": "A remoção de senha do PDF é executada inteiramente no seu navegador. Sem upload, sem servidor, sem conta. 100% privado."
+        "pt": "A remoção de senha do PDF é executada inteiramente no seu navegador. Sem upload, sem servidor, sem conta. 100% privado.",
+        "tr": "PDF'den parola korumasını kaldırın. Tarayıcıda işleme — dosyalar cihazınızı terk etmez."
       },
       "keywords": {
         "en": "unlock pdf, remove pdf password, remove password from pdf, open protected pdf, decrypt pdf, pdf password remover"

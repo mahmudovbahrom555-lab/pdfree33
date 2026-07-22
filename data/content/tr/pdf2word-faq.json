@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "Biçimlendirme korunur mu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Temel paragraf ve başlık yapısı korunur. Karmaşık çok sütunlu düzenler manuel düzenleme gerektirebilir."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Taranmış PDF'yi Word'e dönüştürebilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Taranmış PDF'ler görüntü tabanlıdır ve metin içermediklerinden dönüştürülemezler. OCR aracı gereklidir."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Dosyalarım yükleniyor mu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. İşlem tamamen tarayıcınızda gerçekleşir."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Hangi programlarla açabilirim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Microsoft Word, Google Docs ve LibreOffice Writer ile açılabilir."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bu araç ücretsiz mi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet, sonsuza kadar tamamen ücretsizdir."
+    }
+  }
+]
