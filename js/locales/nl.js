@@ -135,6 +135,7 @@ window.PDFREE_LOCALE = {
   err_enc_unavailable:  'Versleutelingsbibliotheek kon niet worden geladen. Vernieuw de pagina.',
   err_enc_failed:       'Versleuteling mislukt. De PDF heeft mogelijk een niet-ondersteund formaat.',
   err_encrypted_pdf:    'Deze PDF heeft een ongebruikelijke of beschadigde structuur (dit kan ook gebeuren bij met een wachtwoord beveiligde bestanden). Probeer het opnieuw op te slaan vanuit een andere PDF-app, of verwijder het wachtwoord, en probeer het opnieuw.',
+  err_cdn_lib_unavailable: '{lib}-bibliotheek niet beschikbaar — controleer je internetverbinding',
   err_compress_timeout: '⏱ Comprimeren geannuleerd — het bestand heeft te veel afbeeldingen voor de browser. Probeer de Light-instelling of splits de PDF eerst.',
   warn_compress_large:  '⚠️ Groot bestand ({size}) — comprimeren kan 1–2 minuten duren. De browser verwerkt alles lokaal in geheugen.',
   compress_scan_skipped: 'Groot bestand — voorafgaande scan overgeslagen om geheugen te besparen',

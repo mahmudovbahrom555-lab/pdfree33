@@ -135,6 +135,7 @@ window.PDFREE_LOCALE = {
   err_enc_unavailable: "La bibliothèque de chiffrement n'a pas pu être chargée. Veuillez recharger la page.",
   err_enc_failed:      "Chiffrement échoué. Le PDF est peut-être dans un format non pris en charge.",
   err_encrypted_pdf:   "Ce PDF a une structure inhabituelle ou corrompue (cela peut aussi arriver avec des fichiers protégés par mot de passe). Essayez de le réenregistrer depuis une autre application PDF, ou de supprimer le mot de passe, puis réessayez.",
+  err_cdn_lib_unavailable: "Bibliothèque {lib} indisponible — vérifiez votre connexion internet",
   err_compress_timeout: "⏱ Compression annulée — le fichier contient trop d'images pour le navigateur. Essayez le preset Light ou divisez le PDF en parties plus petites.",
   warn_compress_large:  '⚠️ Fichier volumineux ({size}) — la compression peut prendre 1–2 minutes. Le navigateur traite tout localement en mémoire vive.',
   compress_scan_skipped: 'Fichier volumineux — pré-analyse ignorée pour économiser la mémoire',

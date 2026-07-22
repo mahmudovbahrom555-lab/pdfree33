@@ -136,6 +136,7 @@ window.PDFREE_LOCALE = {
   err_enc_unavailable: 'Verschlüsselungsbibliothek konnte nicht geladen werden. Bitte Seite neu laden.',
   err_enc_failed:      'Verschlüsselung fehlgeschlagen. Das PDF-Format wird möglicherweise nicht unterstützt.',
   err_encrypted_pdf:   'Diese PDF hat eine ungewöhnliche oder beschädigte Struktur (das kann auch bei passwortgeschützten Dateien vorkommen). Speichere sie in einer anderen PDF-App neu oder entferne ein eventuelles Passwort und versuche es erneut.',
+  err_cdn_lib_unavailable: '{lib}-Bibliothek nicht verfügbar — bitte Internetverbindung prüfen',
   err_compress_timeout: '⏱ Komprimierung abgebrochen — die Datei enthält zu viele Bilder für den Browser. Versuche das Light-Preset oder teile die PDF zuerst auf.',
   warn_compress_large:  '⚠️ Große Datei ({size}) — Komprimierung kann 1–2 Minuten dauern. Der Browser verarbeitet alles lokal im Arbeitsspeicher.',
   compress_scan_skipped: 'Große Datei — Vorabscan übersprungen, um Speicher zu sparen',

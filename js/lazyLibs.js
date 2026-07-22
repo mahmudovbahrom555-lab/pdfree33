@@ -4,6 +4,8 @@
 // Lazy script loader — loads CDN libraries on demand (not on page load).
 // Handles both SPA (home page preloads them) and direct landing (no preload).
 
+import { t } from './i18n.js';
+
 const _promises = {};
 
 function _load(key, url) {
@@ -61,7 +63,7 @@ async function _loadDocxWithFallback() {
       if (window.docx) return;
     } catch (_) { /* try next */ }
   }
-  throw new Error('docx library unavailable — check your internet connection');
+  throw new Error(t('err_cdn_lib_unavailable', { lib: 'Word' }));
 }
 
 // Same two-URL fallback pattern as loadDocx() — see comment above.
@@ -94,7 +96,7 @@ async function _loadExcelJsWithFallback() {
       if (window.ExcelJS) return;
     } catch (_) { /* try next */ }
   }
-  throw new Error('Excel library unavailable — check your internet connection');
+  throw new Error(t('err_cdn_lib_unavailable', { lib: 'Excel' }));
 }
 
 // Same two-URL fallback pattern as loadDocx()/loadExcelJs() — see comment above
@@ -131,5 +133,5 @@ async function _loadPptxGenJsWithFallback() {
       if (window.PptxGenJS) return;
     } catch (_) { /* try next */ }
   }
-  throw new Error('PowerPoint library unavailable — check your internet connection');
+  throw new Error(t('err_cdn_lib_unavailable', { lib: 'PowerPoint' }));
 }
