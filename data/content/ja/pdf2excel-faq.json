@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "Excelで本当に編集できますか？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "はい。PDFreeは本物のテキストデータを抽出します — 画像ではありません。セルの編集、並び替え、数式の使用など、Excelのすべての機能が使えます。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "ファイルはサーバーにアップロードされますか？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "いいえ。すべての処理はブラウザ内で行われます。PDFreeのサーバーには何も送信されません。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "ファイルサイズの制限はありますか？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "いいえ。PDFreeにはファイルサイズの制限がありません。大きなPDFもブラウザのメモリで直接処理されます。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "いくつの表を変換できますか？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDF内のすべての表です。検出された各表が.xlsxファイルの個別シートに書き出されます。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "このツールは無料ですか？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "はい、永久に完全無料です。有料プランなし、1日の制限なし。"
+    }
+  }
+]

@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "Le tabelle sono davvero modificabili in Excel?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. PDFree estrae dati di testo reali — non immagini. Puoi modificare le celle, ordinare, usare formule e fare tutto ciò che fai normalmente in Excel."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Il mio file viene caricato su un server?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. L'intero processo avviene nel tuo browser. Nulla viene inviato ai server di PDFree."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "C'è un limite di dimensione del file?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. PDFree non ha limiti di dimensione. I PDF grandi vengono elaborati direttamente nella memoria del browser."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Quante tabelle posso convertire?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tutte le tabelle nel PDF. Ogni tabella rilevata viene scritta in un foglio separato nel file .xlsx."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Questo strumento è gratuito?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì, completamente gratuito per sempre. Nessun piano a pagamento, nessun limite giornaliero."
+    }
+  }
+]

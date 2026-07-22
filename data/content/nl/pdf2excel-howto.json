@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDF naar Excel converteren",
+  "description": "Extraheer tabellen uit PDF naar een bewerkbaar .xlsx-bestand, zonder upload.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Voeg PDF toe",
+      "text": "Sleep het PDF-bestand of klik om te selecteren van je apparaat."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Converteer",
+      "text": "Klik op Converteren naar Excel. Tabellen worden in de browser gedetecteerd en verwerkt."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Download",
+      "text": "Download het .xlsx-bestand. Elke tabel wordt een apart werkblad."
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Cách chuyển PDF sang Excel",
+  "description": "Trích xuất bảng từ PDF sang file .xlsx có thể chỉnh sửa, không tải lên.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Tải lên PDF",
+      "text": "Kéo file PDF hoặc nhấp để chọn từ thiết bị của bạn."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Chuyển đổi",
+      "text": "Nhấp Chuyển sang Excel. Bảng được phát hiện và xử lý trong trình duyệt."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Tải xuống",
+      "text": "Tải xuống file .xlsx. Mỗi bảng trở thành sheet riêng."
+    }
+  ]
+}

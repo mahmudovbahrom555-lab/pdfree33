@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDFをExcelに変換する方法",
+  "description": "PDFから表を編集可能な.xlsxファイルに抽出します。アップロード不要。",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDFを追加",
+      "text": "PDFファイルをドラッグするか、クリックして選択します。"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "変換",
+      "text": "「Excelに変換」をクリックします。表がブラウザ内で検出・処理されます。"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "ダウンロード",
+      "text": ".xlsxファイルをダウンロードします。各表が個別シートになります。"
+    }
+  ]
+}

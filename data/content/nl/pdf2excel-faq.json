@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "Zijn de tabellen echt bewerkbaar in Excel?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. PDFree extraheert echte tekstdata — geen afbeeldingen. Je kunt cellen bewerken, sorteren, formules gebruiken en alles doen wat je normaal in Excel doet."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Wordt mijn bestand naar een server geüpload?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. Het hele proces verloopt in je browser. Er wordt niets verzonden naar servers van PDFree."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is er een limiet op de bestandsgrootte?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. PDFree heeft geen bestandsgroottelimiet. Grote PDF's worden direct in het browsergeheugen verwerkt."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Hoeveel tabellen kan ik converteren?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Alle tabellen in de PDF. Elke gedetecteerde tabel wordt als apart werkblad in het .xlsx-bestand geschreven."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is dit hulpmiddel gratis?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja, volledig gratis voor altijd. Geen betaalde abonnementen, geen dagelijkse limieten."
+    }
+  }
+]

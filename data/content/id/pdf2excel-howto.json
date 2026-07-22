@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Cara mengkonversi PDF ke Excel",
+  "description": "Ekstrak tabel dari PDF ke file .xlsx yang bisa diedit, tanpa unggah.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Unggah PDF",
+      "text": "Seret file PDF atau klik untuk memilih dari perangkat Anda."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Konversi",
+      "text": "Klik Konversi ke Excel. Tabel dideteksi dan diproses di browser."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Unduh",
+      "text": "Unduh file .xlsx. Setiap tabel menjadi sheet terpisah."
+    }
+  ]
+}

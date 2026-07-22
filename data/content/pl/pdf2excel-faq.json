@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "Czy tabele są naprawdę edytowalne w Excelu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. PDFree wyodrębnia prawdziwe dane tekstowe — nie obrazy. Możesz edytować komórki, sortować, używać formuł i robić wszystko, co normalnie w Excelu."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy mój plik jest przesyłany na serwer?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie. Cały proces odbywa się w Twojej przeglądarce. Nic nie jest wysyłane na serwery PDFree."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy jest limit rozmiaru pliku?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie. PDFree nie ma limitu rozmiaru pliku. Duże pliki PDF są przetwarzane bezpośrednio w pamięci przeglądarki."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Ile tabel mogę konwertować?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Wszystkie tabele w PDF. Każda wykryta tabela jest zapisywana na osobnym arkuszu w pliku .xlsx."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy to narzędzie jest darmowe?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak, całkowicie darmowe na zawsze. Bez płatnych planów, bez dziennych limitów."
+    }
+  }
+]

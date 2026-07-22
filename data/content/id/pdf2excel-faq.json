@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "Apakah tabel benar-benar bisa diedit di Excel?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ya. PDFree mengekstrak data teks nyata — bukan gambar. Anda bisa mengedit sel, mengurutkan, menggunakan rumus, dan melakukan semua yang bisa dilakukan di Excel."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah file saya diunggah ke server?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak. Seluruh proses berjalan di browser Anda. Tidak ada yang dikirim ke server PDFree."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah ada batas ukuran file?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak. PDFree tidak membatasi ukuran file. PDF besar diproses langsung di memori browser Anda."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Berapa banyak tabel yang bisa dikonversi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Semua tabel dalam PDF. Setiap tabel yang terdeteksi ditulis ke sheet terpisah di file .xlsx."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah alat ini gratis?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ya, sepenuhnya gratis selamanya. Tidak ada paket berbayar, tidak ada batas harian."
+    }
+  }
+]

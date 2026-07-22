@@ -2254,7 +2254,15 @@
         "es": "pdf-a-excel",
         "fr": "pdf-en-excel",
         "pt": "pdf-para-excel",
-        "tr": "pdf-excel-donustur"
+        "tr": "pdf-excel-donustur",
+        "id": "pdf-ke-excel",
+        "vi": "pdf-sang-excel",
+        "ru": "pdf-v-excel",
+        "ja": "pdf-excel-henkan",
+        "it": "pdf-in-excel",
+        "ko": "pdf-excel-byeonhwan",
+        "nl": "pdf-naar-excel",
+        "pl": "pdf-do-excel"
       },
       "titles": {
         "en": "Convert PDF to Excel Without Uploading — Free & Private | PDFree",
@@ -2262,7 +2270,15 @@
         "es": "Convertir PDF a Excel Sin Subir Archivos — Gratis | PDFree",
         "fr": "Convertir PDF en Excel — Gratuit, Sans Envoi | PDFree",
         "pt": "Converter PDF para Excel Grátis — Sem Upload | PDFree",
-        "tr": "PDF'yi Excel'e Dönüştür — Ücretsiz, Yükleme Yapmadan | PDFree"
+        "tr": "PDF'yi Excel'e Dönüştür — Ücretsiz, Yükleme Yapmadan | PDFree",
+        "id": "Konversi PDF ke Excel — Gratis, Tanpa Unggah | PDFree",
+        "vi": "Chuyển PDF sang Excel — Miễn phí, Không tải lên | PDFree",
+        "ru": "PDF в Excel — Бесплатно, Без загрузки | PDFree",
+        "ja": "PDFをExcelに変換 — 無料・アップロード不要 | PDFree",
+        "it": "Convertire PDF in Excel — Gratis, Senza Caricamento | PDFree",
+        "ko": "PDF를 Excel로 변환 — 무료, 업로드 없음 | PDFree",
+        "nl": "PDF naar Excel Converteren — Gratis, Zonder Upload | PDFree",
+        "pl": "PDF do Excel — Za Darmo, Bez Przesyłania | PDFree"
       },
       "descs": {
         "en": "Extract tables from PDF into an .xlsx spreadsheet — runs in your browser, no upload.",
@@ -2270,7 +2286,15 @@
         "es": "Extrae tablas de PDF a una hoja de cálculo .xlsx — funciona en tu navegador, sin subida.",
         "fr": "Extrayez les tableaux d'un PDF vers une feuille .xlsx — s'exécute dans votre navigateur, aucun envoi.",
         "pt": "Extraia tabelas do PDF para uma planilha .xlsx — funciona no seu navegador, sem upload.",
-        "tr": "PDF tablolarını ve verilerini Excel'e dönüştürün. Tarayıcıda işleme — yükleme yok, sunucu yok. Ücretsiz, kayıt gerekmez."
+        "tr": "PDF tablolarını ve verilerini Excel'e dönüştürün. Tarayıcıda işleme — yükleme yok, sunucu yok. Ücretsiz, kayıt gerekmez.",
+        "id": "Ekstrak tabel dari PDF ke spreadsheet .xlsx — diproses di browser, tanpa unggah.",
+        "vi": "Trích xuất bảng từ PDF sang file .xlsx — chạy trong trình duyệt, không tải lên.",
+        "ru": "Извлеките таблицы из PDF в файл .xlsx — работает в браузере, без загрузки.",
+        "ja": "PDFの表を.xlsxスプレッドシートに抽出 — ブラウザで動作、アップロードなし。",
+        "it": "Estrai tabelle da PDF in un foglio .xlsx — funziona nel browser, senza caricamento.",
+        "ko": "PDF의 표를 .xlsx 스프레드시트로 추출 — 브라우저에서 실행, 업로드 없음.",
+        "nl": "Extraheer tabellen uit PDF naar een .xlsx-bestand — werkt in de browser, geen upload.",
+        "pl": "Wyodrębnij tabele z PDF do pliku .xlsx — działa w przeglądarce, bez przesyłania."
       },
       "navLabels": {
         "en": "PDF to Excel",
@@ -2278,7 +2302,15 @@
         "es": "PDF a Excel",
         "fr": "PDF en Excel",
         "pt": "PDF para Excel",
-        "tr": "PDF'den Excel'e"
+        "tr": "PDF'den Excel'e",
+        "id": "PDF ke Excel",
+        "vi": "PDF sang Excel",
+        "ru": "PDF в Excel",
+        "ja": "PDFからExcel",
+        "it": "PDF in Excel",
+        "ko": "PDF to Excel",
+        "nl": "PDF naar Excel",
+        "pl": "PDF do Excel"
       },
       "cardNames": {
         "en": "PDF to Excel",
@@ -2286,7 +2318,15 @@
         "es": "PDF a Excel",
         "fr": "PDF en Excel",
         "pt": "PDF para Excel",
-        "tr": "PDF'den Excel'e"
+        "tr": "PDF'den Excel'e",
+        "id": "PDF ke Excel",
+        "vi": "PDF sang Excel",
+        "ru": "PDF в Excel",
+        "ja": "PDFからExcel",
+        "it": "PDF in Excel",
+        "ko": "PDF to Excel",
+        "nl": "PDF naar Excel",
+        "pl": "PDF do Excel"
       },
       "cardDescs": {
         "en": "Extract tables from PDF into a spreadsheet locally",
@@ -2294,7 +2334,15 @@
         "es": "Extrae tablas de PDF a una hoja de cálculo localmente",
         "fr": "Extraire les tableaux d'un PDF vers une feuille de calcul",
         "pt": "Extraia tabelas do PDF para uma planilha localmente",
-        "tr": "PDF tablolarını Excel'e dönüştürün"
+        "tr": "PDF tablolarını Excel'e dönüştürün",
+        "id": "Konversi tabel PDF ke file .xlsx nyata. Tanpa unggah, tanpa akun.",
+        "vi": "Chuyển bảng PDF thành file .xlsx thực sự. Không tải lên, không cần tài khoản.",
+        "ru": "Конвертируйте таблицы PDF в настоящий .xlsx файл. Без загрузки, без аккаунта.",
+        "ja": "PDFの表を本物の.xlsxファイルに変換。アップロードなし、アカウント不要。",
+        "it": "Converti le tabelle PDF in un vero file .xlsx. Senza caricamento, senza account.",
+        "ko": "PDF 표를 실제 .xlsx 파일로 변환. 업로드 없음, 계정 불필요.",
+        "nl": "Converteer PDF-tabellen naar een echt .xlsx-bestand. Zonder upload, zonder account.",
+        "pl": "Konwertuj tabele PDF do prawdziwego pliku .xlsx. Bez przesyłania, bez konta."
       },
       "breadcrumb": {
         "en": "PDF→Excel",
@@ -2302,7 +2350,15 @@
         "es": "PDF→Excel",
         "fr": "PDF→Excel",
         "pt": "PDF→Excel",
-        "tr": "PDF'den Excel'e"
+        "tr": "PDF'den Excel'e",
+        "id": "PDF ke Excel",
+        "vi": "PDF sang Excel",
+        "ru": "PDF в Excel",
+        "ja": "PDFからExcel",
+        "it": "PDF in Excel",
+        "ko": "PDF를 Excel로",
+        "nl": "PDF naar Excel",
+        "pl": "PDF do Excel"
       },
       "metaDescs": {
         "en": "Convert PDF to Excel free — detected tables become separate sheets in a real .xlsx file. Runs in your browser, nothing uploaded. No account, no limits.",
@@ -2310,7 +2366,15 @@
         "es": "Convertir PDF a Excel gratis — las tablas detectadas se convierten en hojas en un archivo .xlsx real. En tu navegador, sin subir. Sin registro, sin límites.",
         "fr": "Convertir PDF en Excel gratuit — les tableaux détectés deviennent des feuilles .xlsx. Dans votre navigateur, sans envoi. Sans inscription, sans limites.",
         "pt": "Converter PDF para Excel grátis — tabelas detectadas viram planilhas em um arquivo .xlsx real. No seu navegador, sem upload. Sem cadastro, sem limites.",
-        "tr": "PDF'yi Excel'e ücretsiz dönüştürün. Tablolar ve veriler korunur. Yükleme yok."
+        "tr": "PDF'yi Excel'e ücretsiz dönüştürün — tablolar ayrı sayfalara aktarılır, gerçek .xlsx dosyası oluşturulur. Tarayıcıda çalışır, yükleme yok, hesap gerekmez, limit yok.",
+        "id": "Konversi PDF ke Excel gratis — tabel terdeteksi menjadi sheet terpisah di file .xlsx nyata. Berjalan di browser, tidak ada unggahan. Tanpa akun, tanpa batas.",
+        "vi": "Chuyển PDF sang Excel miễn phí — bảng được phát hiện thành các sheet riêng trong file .xlsx thực. Chạy trong trình duyệt, không tải lên. Không cần tài khoản, không giới hạn.",
+        "ru": "Конвертировать PDF в Excel бесплатно — каждая таблица становится отдельным листом в настоящем .xlsx файле. Работает в браузере, ничего не загружается. Без аккаунта, без лимитов.",
+        "ja": "PDFをExcelに無料変換 — 検出された表が本物の.xlsxファイルの個別シートになります。ブラウザで動作、アップロードなし。アカウント不要、制限なし。",
+        "it": "Convertire PDF in Excel gratis — le tabelle rilevate diventano fogli separati in un vero file .xlsx. Funziona nel browser, nessun caricamento. Nessun account, nessun limite.",
+        "ko": "PDF를 Excel로 무료 변환 — 감지된 표가 실제 .xlsx 파일의 개별 시트가 됩니다. 브라우저에서 실행, 업로드 없음. 계정 불필요, 제한 없음.",
+        "nl": "PDF naar Excel converteren gratis — gedetecteerde tabellen worden aparte sheets in een echt .xlsx-bestand. Werkt in je browser, geen upload. Geen account, geen limieten.",
+        "pl": "PDF do Excel za darmo — wykryte tabele stają się osobnymi arkuszami w prawdziwym pliku .xlsx. Działa w przeglądarce, bez przesyłania. Bez konta, bez limitów."
       },
       "ogTitles": {
         "en": "Convert PDF to Excel Free — Table Extraction, No Upload",
@@ -2318,7 +2382,15 @@
         "es": "Convertir PDF a Excel Gratis — Extracción de Tablas, Sin Subir",
         "fr": "Convertir PDF en Excel Gratuit — Extraction de Tableaux, Sans Envoi",
         "pt": "Converter PDF para Excel Grátis — Extração de Tabelas, Sem Upload",
-        "tr": "PDF'yi Excel'e Dönüştür Ücretsiz — Yükleme Yok | PDFree"
+        "tr": "PDF'yi Excel'e Dönüştür Ücretsiz — Yükleme Yok | PDFree",
+        "id": "PDF ke Excel Gratis — Tanpa Unggah | PDFree",
+        "vi": "Chuyển PDF sang Excel Miễn phí — Không tải lên | PDFree",
+        "ru": "PDF в Excel Бесплатно — Без загрузки | PDFree",
+        "ja": "PDFをExcelに無料変換 — アップロード不要 | PDFree",
+        "it": "PDF in Excel Gratis — Senza Caricamento | PDFree",
+        "ko": "PDF를 Excel로 무료 변환 — 업로드 없음 | PDFree",
+        "nl": "PDF naar Excel Gratis — Zonder Upload | PDFree",
+        "pl": "PDF do Excel Za Darmo — Bez Przesyłania | PDFree"
       },
       "ogDescs": {
         "en": "PDF to Excel conversion that runs entirely in your browser. Detected tables become separate worksheets. No upload, no server, no account. 100% private.",
@@ -2326,7 +2398,15 @@
         "es": "La conversión de PDF a Excel se ejecuta completamente en tu navegador. Sin subida, sin servidor, sin cuenta. 100% privado.",
         "fr": "La conversion PDF en Excel s'exécute entièrement dans votre navigateur. Sans envoi, sans serveur, sans compte. 100 % privé.",
         "pt": "A conversão de PDF para Excel é executada inteiramente no seu navegador. Sem upload, sem servidor, sem conta. 100% privado.",
-        "tr": "PDF tablolarını Excel'e dönüştürün. Tarayıcıda işleme — dosyalar cihazınızı terk etmez."
+        "tr": "PDF tablolarını Excel'e dönüştürün. Tarayıcıda işleme — dosyalar cihazınızı terk etmez.",
+        "id": "Konversi tabel PDF ke spreadsheet .xlsx nyata. Diproses di browser — tidak ada yang diunggah ke server.",
+        "vi": "Chuyển bảng PDF sang bảng tính .xlsx. Xử lý trong trình duyệt — không có gì được tải lên máy chủ.",
+        "ru": "Таблицы PDF преобразуются в настоящую .xlsx таблицу. Обработка в браузере — файлы не загружаются на сервер.",
+        "ja": "PDFの表を本物の.xlsxスプレッドシートに変換。ブラウザ内処理 — サーバーへのアップロードなし。",
+        "it": "Le tabelle PDF diventano un foglio .xlsx reale. Elaborazione nel browser — nessun file inviato al server.",
+        "ko": "PDF 표를 실제 .xlsx 스프레드시트로 변환. 브라우저 처리 — 서버에 업로드되지 않습니다.",
+        "nl": "PDF-tabellen worden een echt .xlsx-spreadsheet. Verwerking in de browser — niets geüpload naar een server.",
+        "pl": "Tabele PDF stają się prawdziwym arkuszem .xlsx. Przetwarzanie w przeglądarce — nic nie jest wysyłane na serwer."
       },
       "keywords": {
         "en": "pdf to excel, pdf to xlsx, convert pdf to excel, extract table from pdf, pdf table extractor, pdf to spreadsheet"

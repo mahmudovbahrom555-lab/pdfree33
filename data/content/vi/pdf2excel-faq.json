@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "Bảng có thực sự chỉnh sửa được trong Excel không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có. PDFree trích xuất dữ liệu văn bản thực — không phải hình ảnh. Bạn có thể chỉnh sửa ô, sắp xếp, dùng công thức và làm mọi thứ trong Excel."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "File của tôi có được tải lên máy chủ không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không. Toàn bộ quá trình chạy trong trình duyệt của bạn. Không có gì được gửi đến máy chủ PDFree."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Có giới hạn kích thước file không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không. PDFree không giới hạn kích thước file. PDF lớn được xử lý trực tiếp trong bộ nhớ trình duyệt của bạn."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Có thể chuyển đổi bao nhiêu bảng?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tất cả các bảng trong PDF. Mỗi bảng được phát hiện sẽ được ghi vào sheet riêng trong file .xlsx."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Công cụ này có miễn phí không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có, hoàn toàn miễn phí mãi mãi. Không có gói trả phí, không giới hạn hàng ngày."
+    }
+  }
+]
