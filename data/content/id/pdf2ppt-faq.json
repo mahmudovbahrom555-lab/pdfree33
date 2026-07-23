@@ -9,6 +9,14 @@
   },
   {
     "@type": "Question",
+    "name": "Apakah PDFree menyimpan atau mencatat file saya setelah diproses?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak. PDFree berjalan sepenuhnya di browser Anda — tidak ada server backend yang menerima file Anda. Karena tidak ada yang diunggah, tidak ada yang bisa disimpan, dicatat, atau dipertahankan. Dokumen Anda hanya ada di memori browser selama sesi berlangsung dan dihapus saat Anda menutup tab."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "Apakah teks di slide bisa diedit?",
     "acceptedAnswer": {
       "@type": "Answer",

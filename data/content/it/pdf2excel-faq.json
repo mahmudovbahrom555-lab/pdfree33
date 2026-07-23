@@ -9,6 +9,14 @@
   },
   {
     "@type": "Question",
+    "name": "PDFree conserva o registra i miei file dopo l'elaborazione?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. PDFree funziona interamente nel tuo browser — non esiste alcun server backend che riceva i tuoi file. Poiché nulla viene caricato, nulla può essere conservato, registrato o trattenuto. Il tuo documento esiste solo nella memoria del browser per la durata della sessione e viene eliminato alla chiusura della scheda."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "Il mio file viene caricato su un server?",
     "acceptedAnswer": {
       "@type": "Answer",
