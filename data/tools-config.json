@@ -2952,6 +2952,7 @@
   ],
   "ui": {
     "en": {
+      "moreNav": "More",
       "heroBadge": "🔒 100% private · no upload · no signup · no limits",
       "heroH1": "PDF tools that<br><em>actually work</em>",
       "heroP": "Merge, split, compress, watermark, convert — everything runs <strong>in your browser</strong>. Your files never leave your device. No server. No account. Just results.",
@@ -3020,6 +3021,7 @@
       "whyFreeDesc": "No free trial, no freemium tier. PDFree is completely free — open source under AGPLv3."
     },
     "es": {
+      "moreNav": "Más",
       "heroBadge": "🔒 100% privado · sin subidas · sin registro · sin límites",
       "heroH1": "Herramientas PDF que<br><em>realmente funcionan</em>",
       "heroP": "Une, divide, comprime, marca y convierte — todo ocurre <strong>en tu navegador</strong>. Tus archivos nunca salen de tu dispositivo. Sin servidores. Sin cuentas. Solo resultados.",
@@ -3088,6 +3090,7 @@
       "whyFreeDesc": "Sin prueba gratuita, sin freemium. PDFree es completamente gratis — código abierto bajo AGPLv3."
     },
     "pt": {
+      "moreNav": "Mais",
       "heroBadge": "🔒 100% privado · sem uploads · sem registro · sem limites",
       "heroH1": "Ferramentas PDF que<br><em>realmente funcionam</em>",
       "heroP": "Junte, divida, comprima, marque e converta — tudo roda <strong>no seu navegador</strong>. Seus arquivos nunca saem do seu dispositivo. Sem servidores. Sem contas. Apenas resultados.",
@@ -3156,6 +3159,7 @@
       "whyFreeDesc": "Sem versão de teste, sem freemium. PDFree é completamente gratuito — código aberto sob AGPLv3."
     },
     "de": {
+      "moreNav": "Mehr",
       "heroBadge": "🔒 100 % privat · kein Upload · kein Konto · keine Limits",
       "heroH1": "PDF-Werkzeuge, die<br><em>wirklich funktionieren</em>",
       "heroP": "Zusammenfügen, aufteilen, komprimieren, konvertieren — alles läuft <strong>in deinem Browser</strong>. Deine Dateien verlassen dein Gerät nie. Kein Server. Kein Konto. Nur Ergebnisse.",
@@ -3224,6 +3228,7 @@
       "whyFreeDesc": "Keine Testversion, kein Freemium. PDFree ist komplett kostenlos — Open Source unter AGPLv3."
     },
     "fr": {
+      "moreNav": "Plus",
       "heroBadge": "🔒 100 % privé · aucun envoi · aucun compte · aucune limite",
       "heroH1": "Des outils PDF qui<br><em>fonctionnent vraiment</em>",
       "heroP": "Fusionner, diviser, compresser, convertir — tout s'exécute <strong>dans votre navigateur</strong>. Vos fichiers ne quittent jamais votre appareil. Aucun serveur. Aucun compte. Rien que des résultats.",
@@ -3292,6 +3297,7 @@
       "whyFreeDesc": "Sans essai gratuit, sans freemium. PDFree est entièrement gratuit — open source sous AGPLv3."
     },
     "id": {
+      "moreNav": "Lainnya",
       "heroBadge": "🔒 100% pribadi · tanpa upload · tanpa akun · tanpa batasan",
       "heroH1": "Alat PDF yang<br><em>benar-benar bekerja</em>",
       "heroP": "Gabung, pisah, kompres, beri tanda air, konversi — semuanya berjalan <strong>di browser Anda</strong>. File Anda tidak pernah meninggalkan perangkat. Tanpa server. Tanpa akun. Hanya hasil.",
@@ -3360,6 +3366,7 @@
       "whyFreeDesc": "Tanpa uji coba gratis, tanpa freemium. PDFree sepenuhnya gratis — open source di bawah AGPLv3."
     },
     "vi": {
+      "moreNav": "Thêm",
       "heroBadge": "🔒 100% riêng tư · không tải lên · không tài khoản · không giới hạn",
       "heroH1": "Công cụ PDF<br><em>thực sự hiệu quả</em>",
       "heroP": "Ghép, tách, nén, đóng dấu mờ, chuyển đổi — tất cả chạy <strong>trong trình duyệt của bạn</strong>. File của bạn không bao giờ rời thiết bị. Không server. Không tài khoản. Chỉ kết quả.",
@@ -3428,6 +3435,7 @@
       "whyFreeDesc": "Không dùng thử, không freemium. PDFree hoàn toàn miễn phí — mã nguồn mở theo AGPLv3."
     },
     "ru": {
+      "moreNav": "Ещё",
       "heroBadge": "🔒 100% конфиденциально · без загрузки · без регистрации · без ограничений",
       "heroH1": "PDF-инструменты, которые<br><em>действительно работают</em>",
       "heroP": "Объединяйте, разделяйте, сжимайте, добавляйте водяные знаки, конвертируйте — всё работает <strong>в вашем браузере</strong>. Ваши файлы никогда не покидают устройство. Без серверов. Без аккаунтов. Только результат.",
@@ -3496,6 +3504,7 @@
       "whyFreeDesc": "Без пробного периода, без freemium. PDFree полностью бесплатен — открытый код под AGPLv3."
     },
     "ja": {
+      "moreNav": "その他",
       "heroBadge": "🔒 100%プライベート · アップロード不要 · 登録不要 · 制限なし",
       "heroH1": "本当に使えるPDFツール",
       "heroP": "結合、分割、圧縮、透かし、変換 — すべて<strong>ブラウザ内</strong>で処理されます。ファイルはデバイスから出ません。サーバーなし。アカウントなし。結果だけ。",
@@ -3564,6 +3573,7 @@
       "whyFreeDesc": "無料トライアルもフリーミアムも不要。PDFreeは完全無料 — AGPLv3のオープンソース。"
     },
     "it": {
+      "moreNav": "Altro",
       "heroBadge": "🔒 100% privato · nessun upload · senza registrazione · senza limiti",
       "heroH1": "Strumenti PDF che<br><em>funzionano davvero</em>",
       "heroP": "Unisci, dividi, comprimi, aggiungi filigrana, converti — tutto avviene <strong>nel tuo browser</strong>. I tuoi file non lasciano mai il dispositivo. Nessun server. Nessun account. Solo risultati.",
@@ -3632,6 +3642,7 @@
       "whyFreeDesc": "Nessuna prova gratuita, nessun freemium. PDFree è completamente gratuito — open source sotto AGPLv3."
     },
     "ko": {
+      "moreNav": "더보기",
       "heroBadge": "🔒 100% 비공개 · 업로드 없음 · 회원가입 없이 · 무제한",
       "heroH1": "브라우저에서 바로 쓰는<br><em>PDF 도구</em>",
       "heroP": "합치기, 나누기, 압축, 워터마크, 변환 — 모든 작업이 <strong>브라우저에서</strong> 이루어집니다. 파일이 기기를 절대 벗어나지 않습니다. 서버 없음. 계정 없음. 결과만 있습니다.",
@@ -3700,6 +3711,7 @@
       "whyFreeDesc": "무료 체험판도 프리미엄도 없습니다. PDFree는 완전 무료 — AGPLv3 오픈소스."
     },
     "nl": {
+      "moreNav": "Meer",
       "heroBadge": "🔒 100% privé · geen upload · zonder registratie · zonder limieten",
       "heroH1": "PDF-tools die<br><em>gewoon werken</em>",
       "heroP": "Samenvoegen, splitsen, comprimeren, watermerk toevoegen, converteren — alles gebeurt <strong>in je browser</strong>. Je bestanden verlaten nooit je apparaat. Geen server. Geen account. Alleen resultaten.",
@@ -3768,6 +3780,7 @@
       "whyFreeDesc": "Geen gratis proefversie, geen freemium. PDFree is volledig gratis — open source onder AGPLv3."
     },
     "pl": {
+      "moreNav": "Więcej",
       "heroBadge": "🔒 100% prywatne · bez przesyłania · bez rejestracji · bez limitów",
       "heroH1": "Narzędzia PDF, które<br><em>po prostu działają</em>",
       "heroP": "Łącz, dziel, kompresuj, dodawaj znak wodny, konwertuj — wszystko odbywa się <strong>w Twojej przeglądarce</strong>. Pliki nigdy nie opuszczają Twojego urządzenia. Bez serwera. Bez konta. Tylko wyniki.",
@@ -3836,6 +3849,7 @@
       "whyFreeDesc": "Bez okresu próbnego, bez freemium. PDFree jest całkowicie darmowy — open source na licencji AGPLv3."
     },
     "tr": {
+      "moreNav": "Diğer",
       "heroBadge": "🔒 100% gizli · yükleme yok · kayıt yok · limit yok",
       "heroH1": "PDF araçları, <br><em>gerçekten işe yarayan</em>",
       "heroP": "Birleştir, böl, sıkıştır, filigran ekle, dönüştür — her şey <strong>tarayıcınızda</strong> gerçekleşir. Dosyalarınız cihazınızdan ayrılmaz. Sunucu yok. Hesap yok. Sadece sonuçlar.",

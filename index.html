@@ -179,6 +179,7 @@
 }
   </script>
   <script src="js/theme.js"></script>
+  <script defer src="js/priorityNav.js"></script>
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -225,7 +226,7 @@
       </div>
       <span class="logo-text">PDF<span>ree</span></span>
     </div>
-    <div class="nav-links">
+    <div class="nav-links" id="navLinks">
       <a href="../merge-pdf/" class="nav-link" data-tool="merge">Merge</a>
       <a href="../split-pdf/" class="nav-link" data-tool="split">Split</a>
       <a href="../compress-pdf/" class="nav-link" data-tool="compress">Compress</a>
@@ -244,6 +245,10 @@
       <a href="../compare-pdf/" class="nav-link" data-tool="compare">Compare</a>
     </div>
     <div class="nav-right">
+      <details class="nav-more" id="navMore">
+        <summary aria-label="More tools">More <span class="nav-more__badge"></span></summary>
+        <div class="nav-more__menu"></div>
+      </details>
       <details class="lang-switch" id="langSwitch">
         <summary aria-label="Change language">🌐 EN</summary>
         <div class="lang-switch__menu" role="menu">

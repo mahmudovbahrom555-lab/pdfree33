@@ -80,6 +80,7 @@
   <link rel="stylesheet" href="../css/fonts.css">
   
   <script src="../js/theme.js"></script>
+  <script defer src="../js/priorityNav.js"></script>
   <link rel="stylesheet" href="../css/variables.css">
   <link rel="stylesheet" href="../css/animations.css">
   <link rel="stylesheet" href="../css/layout.css">
@@ -193,7 +194,7 @@
       </div>
       <span class="logo-text">PDF<span>ree</span></span>
     </div>
-    <div class="nav-links">
+    <div class="nav-links" id="navLinks">
       <a href="/de/pdf-zusammenfuehren/" class="nav-link" data-tool="merge">Zusammenfügen</a>
       <a href="/de/pdf-aufteilen/" class="nav-link" data-tool="split">Aufteilen</a>
       <a href="/de/pdf-komprimieren/" class="nav-link" data-tool="compress">Komprimieren</a>
@@ -212,6 +213,10 @@
       <a href="/compare-pdf/" class="nav-link" data-tool="compare">Vergleichen</a>
     </div>
     <div class="nav-right">
+      <details class="nav-more" id="navMore">
+        <summary aria-label="Weitere Werkzeuge">Mehr <span class="nav-more__badge"></span></summary>
+        <div class="nav-more__menu"></div>
+      </details>
       <details class="lang-switch" id="langSwitch">
         <summary aria-label="Sprache ändern">🌐 DE</summary>
         <div class="lang-switch__menu" role="menu">
