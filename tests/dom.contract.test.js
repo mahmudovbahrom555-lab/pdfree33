@@ -42,6 +42,7 @@ const PAGES = {
   es: readPage('es/index.html'),
   fr: readPage('fr/index.html'),
   pt: readPage('pt/index.html'),
+  id: readPage('id/index.html'),
 };
 
 // ── 1. Hero file-input contract ───────────────────────────────────

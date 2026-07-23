@@ -12,7 +12,7 @@
 // t(key, vars?)        — translate key, interpolate {var} placeholders
 // tp(n, one, many, vars?) — choose singular/plural key, then translate
 
-const EN = {
+export const EN = {
   // ── app.js ─────────────────────────────────────────────────────
   wait_processing:     '⏳ Please wait for processing to finish',
   coming_soon:         '🚧 Coming soon!',
