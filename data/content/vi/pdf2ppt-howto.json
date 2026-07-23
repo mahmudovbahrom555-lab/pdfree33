@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Cách chuyển PDF sang PowerPoint",
+  "description": "Chuyển trang PDF thành slide .pptx không tải lên.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Tải lên PDF",
+      "text": "Kéo file PDF hoặc nhấp để chọn."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Chuyển đổi",
+      "text": "Nhấp Chuyển sang PowerPoint. Các trang được xử lý trong trình duyệt."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Tải xuống",
+      "text": "Tải xuống file .pptx và mở trong PowerPoint hoặc Google Slides."
+    }
+  ]
+}

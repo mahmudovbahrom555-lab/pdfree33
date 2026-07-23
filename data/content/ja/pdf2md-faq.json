@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "ファイルはアップロードされますか？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "いいえ。すべての処理はブラウザ内で行われます。サーバーには何も送信されません。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "どのMarkdown要素がサポートされますか？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "見出し（# H1、## H2）、リスト、太字と斜体のテキスト、段落。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "スキャンされたPDFに使えますか？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "いいえ。スキャンされたPDFは読み取れるテキストのない画像です。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "どのアプリが.mdファイルを開きますか？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "VS Code、Obsidian、Notion、Zettlr、および任意のテキストエディタ。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "このツールは無料ですか？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "はい、永久に完全無料です。"
+    }
+  }
+]

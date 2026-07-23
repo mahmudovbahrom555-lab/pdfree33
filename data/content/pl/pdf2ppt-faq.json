@@ -1,0 +1,34 @@
+[
+  {
+    "@type": "Question",
+    "name": "Czy mój plik jest przesyłany na serwer?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie. Wszystko odbywa się w przeglądarce. Nic nie jest wysyłane na serwery PDFree."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy tekst na slajdach jest edytowalny?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tekst z PDF jest zachowywany jako tekst na slajdzie, jeśli PDF ma warstwę tekstową. Zeskanowane PDF-y dają tylko slajdy-obrazy."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Ile stron mogę konwertować?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Wszystkie strony. Brak limitu stron ani rozmiaru pliku."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy to narzędzie jest darmowe?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak, całkowicie darmowe na zawsze. Bez płatnych planów."
+    }
+  }
+]

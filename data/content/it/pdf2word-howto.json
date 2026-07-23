@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Convertire PDF in Word",
+  "description": "Converti PDF in documento .docx modificabile senza caricamento.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Aggiungi il PDF",
+      "text": "Trascina il PDF o clicca per selezionarlo."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Converti",
+      "text": "Clicca Converti in Word. Il testo viene estratto nel browser."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Scarica",
+      "text": "Scarica il file .docx e aprilo in Word o Google Docs."
+    }
+  ]
+}

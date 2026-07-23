@@ -2206,7 +2206,11 @@
         "vi": "pdf-sang-word",
         "ru": "pdf-v-word",
         "ja": "pdf-word-henkan",
-        "tr": "pdf-word-donustur"
+        "tr": "pdf-word-donustur",
+        "it": "pdf-in-word",
+        "ko": "pdf-word-byeonhwan",
+        "nl": "pdf-naar-word",
+        "pl": "pdf-do-word"
       },
       "titles": {
         "en": "Convert PDF to Word Without Uploading — Free & Private | PDFree",
@@ -2218,7 +2222,11 @@
         "vi": "Chuyển Đổi PDF sang Word Không Cần Tải Lên — Miễn Phí & Riêng Tư | PDFree",
         "ru": "Конвертировать PDF в Word без загрузки — бесплатно и приватно | PDFree",
         "ja": "PDFをWordに変換 アップロード不要 — 無料・プライベート | PDFree",
-        "tr": "PDF'yi Word'e Dönüştür — Ücretsiz, Yükleme Yapmadan | PDFree"
+        "tr": "PDF'yi Word'e Dönüştür — Ücretsiz, Yükleme Yapmadan | PDFree",
+        "it": "Convertire PDF in Word — Gratis, Senza Caricamento | PDFree",
+        "ko": "PDF를 Word로 변환 — 무료, 업로드 없음 | PDFree",
+        "nl": "PDF naar Word Converteren — Gratis, Zonder Upload | PDFree",
+        "pl": "PDF do Word — Za Darmo, Bez Przesyłania | PDFree"
       },
       "descs": {
         "en": "Convert PDF to editable .docx — runs in your browser, no upload.",
@@ -2230,7 +2238,11 @@
         "vi": "Chuyển đổi PDF sang .docx có thể chỉnh sửa — chạy trong trình duyệt, không tải lên.",
         "ru": "Конвертируйте PDF в редактируемый .docx — работает в браузере, без загрузки.",
         "ja": "PDFを編集可能な.docxに変換 — ブラウザ内で動作、アップロード不要。",
-        "tr": "PDF'yi düzenlenebilir Word belgesine dönüştürün. Tarayıcıda işleme — yükleme yok, sunucu yok. Ücretsiz, kayıt gerekmez."
+        "tr": "PDF'yi düzenlenebilir Word belgesine dönüştürün. Tarayıcıda işleme — yükleme yok, sunucu yok. Ücretsiz, kayıt gerekmez.",
+        "it": "Converti PDF in .docx modificabile. Funziona nel browser, senza caricamento.",
+        "ko": "PDF를 편집 가능한 .docx로 변환. 브라우저에서 실행, 업로드 없음.",
+        "nl": "Converteer PDF naar bewerkbaar .docx. Werkt in de browser, geen upload.",
+        "pl": "Konwertuj PDF do edytowalnego .docx. Działa w przeglądarce, bez przesyłania."
       },
       "navLabels": {
         "en": "PDF→Word",
@@ -2242,7 +2254,11 @@
         "vi": "PDF→Word",
         "ru": "PDF→Word",
         "ja": "PDF→Word",
-        "tr": "PDF'den Word'e"
+        "tr": "PDF'den Word'e",
+        "it": "PDF in Word",
+        "ko": "PDF to Word",
+        "nl": "PDF naar Word",
+        "pl": "PDF do Word"
       },
       "cardNames": {
         "en": "PDF to Word",
@@ -2254,7 +2270,11 @@
         "vi": "PDF sang Word",
         "ru": "PDF в Word",
         "ja": "PDFをWordに",
-        "tr": "PDF'den Word'e"
+        "tr": "PDF'den Word'e",
+        "it": "PDF in Word",
+        "ko": "PDF to Word",
+        "nl": "PDF naar Word",
+        "pl": "PDF do Word"
       },
       "cardDescs": {
         "en": "Convert PDF to editable .docx — no upload, 100% private",
@@ -2266,7 +2286,11 @@
         "vi": "Chuyển đổi PDF sang .docx có thể chỉnh sửa — không tải lên, 100% riêng tư",
         "ru": "Конвертируйте PDF в редактируемый .docx — без загрузки, 100% конфиденциально",
         "ja": "PDFを編集可能な.docxに変換 — アップロード不要、100%プライベート",
-        "tr": "PDF'yi düzenlenebilir Word belgesine dönüştürün"
+        "tr": "PDF'yi düzenlenebilir Word belgesine dönüştürün",
+        "it": "Converti PDF in documento .docx modificabile. Senza caricamento, senza account.",
+        "ko": "PDF를 편집 가능한 .docx 문서로 변환. 업로드 없음, 계정 불필요.",
+        "nl": "Converteer PDF naar bewerkbaar .docx-document. Zonder upload, zonder account.",
+        "pl": "Konwertuj PDF do edytowalnego dokumentu .docx. Bez przesyłania, bez konta."
       },
       "breadcrumb": {
         "en": "PDF to Word",
@@ -2278,7 +2302,11 @@
         "vi": "PDF sang Word",
         "ru": "PDF в Word",
         "ja": "PDFをWordに",
-        "tr": "PDF'den Word'e"
+        "tr": "PDF'den Word'e",
+        "it": "PDF in Word",
+        "ko": "PDF를 Word로",
+        "nl": "PDF naar Word",
+        "pl": "PDF do Word"
       },
       "metaDescs": {
         "en": "Convert PDF to Word (.docx) in your browser — nothing uploaded, nothing stored. Tables, RTL text, and 15+ languages supported.",
@@ -2290,7 +2318,11 @@
         "vi": "Chuyển đổi PDF sang Word (.docx) trong trình duyệt — không tải lên, không lưu trữ. Hỗ trợ bảng, văn bản RTL và 15+ ngôn ngữ.",
         "ru": "Конвертируйте PDF в Word (.docx) в браузере — ничего не загружается. Поддержка таблиц, RTL-текста и 15+ языков.",
         "ja": "PDFをブラウザ内で編集可能なWordに変換 — アップロードなし。表・RTLテキスト・15以上の言語に対応。",
-        "tr": "PDF'yi Word'e ücretsiz dönüştürün. Tarayıcıda işleme, yükleme yok, kayıt gerekmez."
+        "tr": "PDF'yi Word'e ücretsiz dönüştürün. Tarayıcıda işleme, yükleme yok, kayıt gerekmez.",
+        "it": "Convertire PDF in Word gratis — testo e layout preservati in un .docx reale. Funziona nel browser, nessun caricamento. Nessun account, nessun limite, nessuna filigrana.",
+        "ko": "PDF를 Word로 무료 변환 — 텍스트와 레이아웃이 실제 .docx 파일에 보존됩니다. 브라우저에서 실행, 업로드 없음. 계정 불필요, 제한 없음, 워터마크 없음.",
+        "nl": "PDF naar Word converteren gratis — tekst en opmaak bewaard in een echt .docx-bestand. Werkt in je browser, geen upload. Geen account, geen limieten, geen watermerk.",
+        "pl": "PDF do Word za darmo — tekst i układ zachowany w prawdziwym pliku .docx. Działa w przeglądarce, bez przesyłania. Bez konta, bez limitów, bez znaku wodnego."
       },
       "ogTitles": {
         "en": "Convert PDF to Word Without Uploading — Free & Private | PDFree",
@@ -2302,7 +2334,11 @@
         "vi": "Chuyển PDF sang Word Không Tải Lên — Trong Trình Duyệt, Không Server | PDFree",
         "ru": "Конвертировать PDF в Word без загрузки — в браузере, без сервера | PDFree",
         "ja": "PDFをWordに変換 アップロードなし — ブラウザ内、サーバーなし | PDFree",
-        "tr": "PDF'yi Word'e Dönüştür Ücretsiz — Yükleme Yok | PDFree"
+        "tr": "PDF'yi Word'e Dönüştür Ücretsiz — Yükleme Yok | PDFree",
+        "it": "PDF in Word Gratis — Senza Caricamento | PDFree",
+        "ko": "PDF를 Word로 무료 변환 — 업로드 없음 | PDFree",
+        "nl": "PDF naar Word Gratis — Zonder Upload | PDFree",
+        "pl": "PDF do Word Za Darmo — Bez Przesyłania | PDFree"
       },
       "ogDescs": {
         "en": "PDF to Word conversion that runs entirely in your browser. No upload, no server, no account. Tables, Arabic, Chinese, and more. 100% private.",
@@ -2314,7 +2350,11 @@
         "vi": "Chuyển đổi PDF sang Word chạy hoàn toàn trong trình duyệt. Không tải lên, không server, không tài khoản. Bảng, Ả Rập, Trung Quốc và nhiều hơn. 100% riêng tư.",
         "ru": "Конвертация PDF в Word, которая работает полностью в браузере. Без загрузки, без сервера, без аккаунта. Таблицы, арабский, китайский и многое другое. 100% конфиденциально.",
         "ja": "PDFをWordに変換する処理はすべてブラウザ内で実行されます。アップロードなし、サーバーなし、アカウントなし。表・アラビア語・中国語など対応。100%プライベート。",
-        "tr": "PDF'yi Word belgesine dönüştürün. Tarayıcıda işleme — dosyalar cihazınızı terk etmez."
+        "tr": "PDF'yi Word belgesine dönüştürün. Tarayıcıda işleme — dosyalar cihazınızı terk etmez.",
+        "it": "Converti PDF in documento .docx modificabile. Elaborazione nel browser — nessun file inviato al server.",
+        "ko": "PDF를 편집 가능한 .docx 문서로 변환. 브라우저 처리 — 서버에 업로드되지 않습니다.",
+        "nl": "Converteer PDF naar bewerkbaar .docx-document. Verwerking in de browser — niets geüpload naar een server.",
+        "pl": "Konwertuj PDF do edytowalnego dokumentu .docx. Przetwarzanie w przeglądarce — nic nie jest wysyłane na serwer."
       }
     },
     {
@@ -2495,7 +2535,15 @@
         "es": "pdf-a-powerpoint",
         "fr": "pdf-en-powerpoint",
         "pt": "pdf-para-powerpoint",
-        "tr": "pdf-powerpoint-donustur"
+        "tr": "pdf-powerpoint-donustur",
+        "id": "pdf-ke-powerpoint",
+        "vi": "pdf-sang-powerpoint",
+        "ru": "pdf-v-powerpoint",
+        "ja": "pdf-powerpoint-henkan",
+        "it": "pdf-in-powerpoint",
+        "ko": "pdf-powerpoint-byeonhwan",
+        "nl": "pdf-naar-powerpoint",
+        "pl": "pdf-do-powerpoint"
       },
       "titles": {
         "en": "Convert PDF to PowerPoint Without Uploading — Free & Private | PDFree",
@@ -2503,7 +2551,15 @@
         "es": "Convertir PDF a PowerPoint Sin Subir — Gratis | PDFree",
         "fr": "Convertir PDF en PowerPoint — Gratuit & Privé | PDFree",
         "pt": "Converter PDF para PowerPoint Grátis — Sem Upload | PDFree",
-        "tr": "PDF'yi PowerPoint'e Dönüştür — Ücretsiz, Yükleme Yapmadan | PDFree"
+        "tr": "PDF'yi PowerPoint'e Dönüştür — Ücretsiz, Yükleme Yapmadan | PDFree",
+        "id": "Konversi PDF ke PowerPoint — Gratis, Tanpa Unggah | PDFree",
+        "vi": "Chuyển PDF sang PowerPoint — Miễn phí, Không tải lên | PDFree",
+        "ru": "PDF в PowerPoint — Бесплатно, Без загрузки | PDFree",
+        "ja": "PDFをPowerPointに変換 — 無料・アップロード不要 | PDFree",
+        "it": "Convertire PDF in PowerPoint — Gratis, Senza Caricamento | PDFree",
+        "ko": "PDF를 PowerPoint로 변환 — 무료, 업로드 없음 | PDFree",
+        "nl": "PDF naar PowerPoint Converteren — Gratis, Zonder Upload | PDFree",
+        "pl": "PDF do PowerPoint — Za Darmo, Bez Przesyłania | PDFree"
       },
       "descs": {
         "en": "Convert PDF pages into PowerPoint slides — runs in your browser, no upload.",
@@ -2511,7 +2567,15 @@
         "es": "Convierte páginas PDF en diapositivas de PowerPoint — funciona en tu navegador, sin subida.",
         "fr": "Convertissez des pages PDF en diapositives PowerPoint — s'exécute dans votre navigateur, aucun envoi.",
         "pt": "Converta páginas PDF em slides do PowerPoint — funciona no seu navegador, sem upload.",
-        "tr": "PDF'yi PowerPoint sunumuna dönüştürün. Tarayıcıda işleme — yükleme yok, sunucu yok. Ücretsiz, kayıt gerekmez."
+        "tr": "PDF'yi PowerPoint sunumuna dönüştürün. Tarayıcıda işleme — yükleme yok, sunucu yok. Ücretsiz, kayıt gerekmez.",
+        "id": "Ubah PDF menjadi slide .pptx. Diproses di browser, tanpa unggah.",
+        "vi": "Chuyển PDF thành slide .pptx. Chạy trong trình duyệt, không tải lên.",
+        "ru": "Конвертируйте PDF в слайды .pptx. Работает в браузере, без загрузки.",
+        "ja": "PDFをスライド.pptxに変換。ブラウザで動作、アップロードなし。",
+        "it": "Converti PDF in slide .pptx. Funziona nel browser, senza caricamento.",
+        "ko": "PDF를 슬라이드 .pptx로 변환. 브라우저에서 실행, 업로드 없음.",
+        "nl": "Converteer PDF naar slides .pptx. Werkt in de browser, geen upload.",
+        "pl": "Konwertuj PDF do slajdów .pptx. Działa w przeglądarce, bez przesyłania."
       },
       "navLabels": {
         "en": "PDF to PowerPoint",
@@ -2519,7 +2583,15 @@
         "es": "PDF a PPT",
         "fr": "PDF en PPT",
         "pt": "PDF para PPT",
-        "tr": "PDF'den PowerPoint'e"
+        "tr": "PDF'den PowerPoint'e",
+        "id": "PDF ke PowerPoint",
+        "vi": "PDF sang PowerPoint",
+        "ru": "PDF в PowerPoint",
+        "ja": "PDFからPowerPoint",
+        "it": "PDF in PowerPoint",
+        "ko": "PDF to PowerPoint",
+        "nl": "PDF naar PowerPoint",
+        "pl": "PDF do PowerPoint"
       },
       "cardNames": {
         "en": "PDF to PowerPoint",
@@ -2527,7 +2599,15 @@
         "es": "PDF a PowerPoint",
         "fr": "PDF en PowerPoint",
         "pt": "PDF para PowerPoint",
-        "tr": "PDF'den PowerPoint'e"
+        "tr": "PDF'den PowerPoint'e",
+        "id": "PDF ke PowerPoint",
+        "vi": "PDF sang PowerPoint",
+        "ru": "PDF в PowerPoint",
+        "ja": "PDFからPowerPoint",
+        "it": "PDF in PowerPoint",
+        "ko": "PDF to PowerPoint",
+        "nl": "PDF naar PowerPoint",
+        "pl": "PDF do PowerPoint"
       },
       "cardDescs": {
         "en": "Turn PDF pages into a slide deck locally",
@@ -2535,7 +2615,15 @@
         "es": "Convierte páginas PDF en una presentación localmente",
         "fr": "Convertir les pages PDF en diaporama localement",
         "pt": "Converta páginas PDF em uma apresentação localmente",
-        "tr": "PDF'yi PowerPoint sunumuna dönüştürün"
+        "tr": "PDF'yi PowerPoint sunumuna dönüştürün",
+        "id": "Konversi halaman PDF ke slide .pptx. Tanpa unggah, tanpa akun.",
+        "vi": "Chuyển trang PDF thành slide .pptx. Không tải lên, không cần tài khoản.",
+        "ru": "Конвертируйте страницы PDF в слайды .pptx. Без загрузки, без аккаунта.",
+        "ja": "PDFページを.pptxスライドに変換。アップロードなし、アカウント不要。",
+        "it": "Converti pagine PDF in slide .pptx. Senza caricamento, senza account.",
+        "ko": "PDF 페이지를 .pptx 슬라이드로 변환. 업로드 없음, 계정 불필요.",
+        "nl": "Converteer PDF-pagina's naar .pptx-slides. Zonder upload, zonder account.",
+        "pl": "Konwertuj strony PDF do slajdów .pptx. Bez przesyłania, bez konta."
       },
       "breadcrumb": {
         "en": "PDF→PowerPoint",
@@ -2543,7 +2631,15 @@
         "es": "PDF→PowerPoint",
         "fr": "PDF→PowerPoint",
         "pt": "PDF→PowerPoint",
-        "tr": "PDF'den PowerPoint'e"
+        "tr": "PDF'den PowerPoint'e",
+        "id": "PDF ke PowerPoint",
+        "vi": "PDF sang PowerPoint",
+        "ru": "PDF в PowerPoint",
+        "ja": "PDFからPowerPoint",
+        "it": "PDF in PowerPoint",
+        "ko": "PDF를 PowerPoint로",
+        "nl": "PDF naar PowerPoint",
+        "pl": "PDF do PowerPoint"
       },
       "metaDescs": {
         "en": "Convert PDF to PowerPoint free — each page becomes a slide in a real .pptx file. Runs in your browser, nothing uploaded. No account, no limits.",
@@ -2551,7 +2647,15 @@
         "es": "Convertir PDF a PowerPoint gratis — cada página se convierte en una diapositiva .pptx. En tu navegador, sin subir. Sin registro, sin límites.",
         "fr": "Convertir PDF en PowerPoint gratuit — chaque page devient une diapositive .pptx. Dans votre navigateur, sans envoi. Sans inscription, sans limites.",
         "pt": "Converter PDF para PowerPoint grátis — cada página vira um slide em arquivo .pptx real. No navegador, sem upload. Sem cadastro, sem limites.",
-        "tr": "PDF'yi PowerPoint'e ücretsiz dönüştürün. Yükleme yok, kayıt gerekmez."
+        "tr": "PDF'yi PowerPoint'e ücretsiz dönüştürün. Yükleme yok, kayıt gerekmez.",
+        "id": "Konversi PDF ke PowerPoint gratis — setiap halaman menjadi slide .pptx. Berjalan di browser, tidak ada unggahan ke server. Tanpa akun, tanpa batas.",
+        "vi": "Chuyển PDF sang PowerPoint miễn phí — mỗi trang thành slide .pptx. Chạy trong trình duyệt, không tải lên. Không cần tài khoản, không giới hạn.",
+        "ru": "Конвертировать PDF в PowerPoint бесплатно — каждая страница становится слайдом .pptx. Работает в браузере, ничего не загружается. Без аккаунта, без лимитов.",
+        "ja": "PDFをPowerPointに無料変換 — 各ページが.pptxスライドになります。ブラウザで動作、アップロードなし。アカウント不要、制限なし。",
+        "it": "Convertire PDF in PowerPoint gratis — ogni pagina diventa una slide .pptx. Funziona nel browser, nessun caricamento. Nessun account, nessun limite.",
+        "ko": "PDF를 PowerPoint로 무료 변환 — 각 페이지가 .pptx 슬라이드가 됩니다. 브라우저에서 실행, 업로드 없음. 계정 불필요, 제한 없음.",
+        "nl": "PDF naar PowerPoint converteren gratis — elke pagina wordt een .pptx-slide. Werkt in je browser, geen upload. Geen account, geen limieten.",
+        "pl": "PDF do PowerPoint za darmo — każda strona staje się slajdem .pptx. Działa w przeglądarce, bez przesyłania. Bez konta, bez limitów."
       },
       "ogTitles": {
         "en": "Convert PDF to PowerPoint Free — One Slide Per Page, No Upload",
@@ -2559,7 +2663,15 @@
         "es": "Convertir PDF a PowerPoint Gratis — Una Diapositiva por Página, Sin Subir",
         "fr": "Convertir PDF en PowerPoint Gratuit — Une Diapositive par Page, Sans Envoi",
         "pt": "Converter PDF para PowerPoint Grátis — Um Slide por Página, Sem Upload",
-        "tr": "PDF'yi PowerPoint'e Dönüştür Ücretsiz — Yükleme Yok | PDFree"
+        "tr": "PDF'yi PowerPoint'e Dönüştür Ücretsiz — Yükleme Yok | PDFree",
+        "id": "PDF ke PowerPoint Gratis — Tanpa Unggah | PDFree",
+        "vi": "Chuyển PDF sang PowerPoint Miễn phí — Không tải lên | PDFree",
+        "ru": "PDF в PowerPoint Бесплатно — Без загрузки | PDFree",
+        "ja": "PDFをPowerPointに無料変換 — アップロード不要 | PDFree",
+        "it": "PDF in PowerPoint Gratis — Senza Caricamento | PDFree",
+        "ko": "PDF를 PowerPoint로 무료 변환 — 업로드 없음 | PDFree",
+        "nl": "PDF naar PowerPoint Gratis — Zonder Upload | PDFree",
+        "pl": "PDF do PowerPoint Za Darmo — Bez Przesyłania | PDFree"
       },
       "ogDescs": {
         "en": "PDF to PowerPoint conversion that runs entirely in your browser. No upload, no server, no account. 100% private.",
@@ -2567,7 +2679,15 @@
         "es": "La conversión de PDF a PowerPoint se ejecuta completamente en tu navegador. Sin subida, sin servidor, sin cuenta. 100% privado.",
         "fr": "La conversion PDF en PowerPoint s'exécute entièrement dans votre navigateur. Sans envoi, sans serveur, sans compte. 100 % privé.",
         "pt": "A conversão de PDF para PowerPoint é executada inteiramente no seu navegador. Sem upload, sem servidor, sem conta. 100% privado.",
-        "tr": "PDF'yi PowerPoint sunumuna dönüştürün. Tarayıcıda işleme — dosyalar cihazınızı terk etmez."
+        "tr": "PDF'yi PowerPoint sunumuna dönüştürün. Tarayıcıda işleme — dosyalar cihazınızı terk etmez.",
+        "id": "Ubah halaman PDF menjadi slide presentasi .pptx. Diproses di browser.",
+        "vi": "Chuyển trang PDF thành slide trình bày .pptx. Xử lý trong trình duyệt.",
+        "ru": "Страницы PDF превращаются в слайды .pptx. Обработка в браузере — файлы не загружаются на сервер.",
+        "ja": "PDFページをプレゼンテーションスライド.pptxに変換。ブラウザ内処理。",
+        "it": "Converti pagine PDF in slide di presentazione .pptx. Elaborazione nel browser.",
+        "ko": "PDF 페이지를 프레젠테이션 슬라이드 .pptx로 변환. 브라우저 처리.",
+        "nl": "Converteer PDF-pagina's naar presentatieslides .pptx. Verwerking in de browser.",
+        "pl": "Konwertuj strony PDF do slajdów prezentacji .pptx. Przetwarzanie w przeglądarce."
       },
       "keywords": {
         "en": "pdf to powerpoint, pdf to pptx, convert pdf to powerpoint, pdf to ppt, pdf to slides, pdf to presentation"
@@ -2583,7 +2703,15 @@
         "es": "pdf-a-markdown",
         "fr": "pdf-en-markdown",
         "pt": "pdf-para-markdown",
-        "tr": "pdf-markdown-donustur"
+        "tr": "pdf-markdown-donustur",
+        "id": "pdf-ke-markdown",
+        "vi": "pdf-sang-markdown",
+        "ru": "pdf-v-markdown",
+        "ja": "pdf-markdown-henkan",
+        "it": "pdf-in-markdown",
+        "ko": "pdf-markdown-byeonhwan",
+        "nl": "pdf-naar-markdown",
+        "pl": "pdf-do-markdown"
       },
       "titles": {
         "en": "Convert PDF to Markdown Without Uploading — Free & Private | PDFree",
@@ -2591,7 +2719,15 @@
         "es": "Convertir PDF a Markdown — Gratis, Sin Registro | PDFree",
         "fr": "Convertir PDF en Markdown — Gratuit & Privé | PDFree",
         "pt": "Converter PDF para Markdown Grátis — Sem Upload | PDFree",
-        "tr": "PDF'yi Markdown'a Dönüştür — Ücretsiz, Yükleme Yapmadan | PDFree"
+        "tr": "PDF'yi Markdown'a Dönüştür — Ücretsiz, Yükleme Yapmadan | PDFree",
+        "id": "Konversi PDF ke Markdown — Gratis, Tanpa Unggah | PDFree",
+        "vi": "Chuyển PDF sang Markdown — Miễn phí, Không tải lên | PDFree",
+        "ru": "PDF в Markdown — Бесплатно, Без загрузки | PDFree",
+        "ja": "PDFをMarkdownに変換 — 無料・アップロード不要 | PDFree",
+        "it": "Convertire PDF in Markdown — Gratis, Senza Caricamento | PDFree",
+        "ko": "PDF를 Markdown으로 변환 — 무료, 업로드 없음 | PDFree",
+        "nl": "PDF naar Markdown Converteren — Gratis, Zonder Upload | PDFree",
+        "pl": "PDF do Markdown — Za Darmo, Bez Przesyłania | PDFree"
       },
       "descs": {
         "en": "Convert PDF text, headings and lists into Markdown — runs in your browser, no upload.",
@@ -2599,7 +2735,15 @@
         "es": "Convierte texto, encabezados y listas de PDF a Markdown — funciona en tu navegador, sin subida.",
         "fr": "Convertissez le texte, les titres et les listes PDF en Markdown — s'exécute dans votre navigateur, sans envoi.",
         "pt": "Converta texto, títulos e listas do PDF para Markdown — funciona no seu navegador, sem upload.",
-        "tr": "PDF'yi Markdown formatına dönüştürün. Başlıklar, listeler ve tablo yapısı korunur. Tarayıcıda işleme — yükleme yok."
+        "tr": "PDF'yi Markdown formatına dönüştürün. Başlıklar, listeler ve tablo yapısı korunur. Tarayıcıda işleme — yükleme yok.",
+        "id": "Ubah PDF menjadi teks .md. Diproses di browser, tanpa unggah.",
+        "vi": "Chuyển PDF thành văn bản .md. Chạy trong trình duyệt, không tải lên.",
+        "ru": "Конвертируйте PDF в текст .md. Работает в браузере, без загрузки.",
+        "ja": "PDFをテキスト.mdに変換。ブラウザで動作、アップロードなし。",
+        "it": "Converti PDF in testo .md. Funziona nel browser, senza caricamento.",
+        "ko": "PDF를 텍스트 .md로 변환. 브라우저에서 실행, 업로드 없음.",
+        "nl": "Converteer PDF naar tekst .md. Werkt in de browser, geen upload.",
+        "pl": "Konwertuj PDF do tekstu .md. Działa w przeglądarce, bez przesyłania."
       },
       "navLabels": {
         "en": "PDF to Markdown",
@@ -2607,7 +2751,15 @@
         "es": "PDF a MD",
         "fr": "PDF en MD",
         "pt": "PDF para MD",
-        "tr": "PDF'den Markdown'a"
+        "tr": "PDF'den Markdown'a",
+        "id": "PDF ke Markdown",
+        "vi": "PDF sang Markdown",
+        "ru": "PDF в Markdown",
+        "ja": "PDFからMarkdown",
+        "it": "PDF in Markdown",
+        "ko": "PDF to Markdown",
+        "nl": "PDF naar Markdown",
+        "pl": "PDF do Markdown"
       },
       "cardNames": {
         "en": "PDF to Markdown",
@@ -2615,7 +2767,15 @@
         "es": "PDF a Markdown",
         "fr": "PDF en Markdown",
         "pt": "PDF para Markdown",
-        "tr": "PDF'den Markdown'a"
+        "tr": "PDF'den Markdown'a",
+        "id": "PDF ke Markdown",
+        "vi": "PDF sang Markdown",
+        "ru": "PDF в Markdown",
+        "ja": "PDFからMarkdown",
+        "it": "PDF in Markdown",
+        "ko": "PDF to Markdown",
+        "nl": "PDF naar Markdown",
+        "pl": "PDF do Markdown"
       },
       "cardDescs": {
         "en": "Turn PDF text into clean .md files locally",
@@ -2623,7 +2783,15 @@
         "es": "Convierte texto PDF en archivos .md limpios localmente",
         "fr": "Convertir le texte PDF en fichiers .md propres localement",
         "pt": "Converta texto PDF em arquivos .md limpos localmente",
-        "tr": "PDF'yi Markdown formatına dönüştürün"
+        "tr": "PDF'yi Markdown formatına dönüştürün",
+        "id": "Konversi PDF ke teks Markdown yang ringan. Tanpa unggah, tanpa akun.",
+        "vi": "Chuyển PDF sang văn bản Markdown nhẹ. Không tải lên, không cần tài khoản.",
+        "ru": "Конвертируйте PDF в лёгкий текст Markdown. Без загрузки, без аккаунта.",
+        "ja": "PDFを軽量Markdownテキストに変換。アップロードなし、アカウント不要。",
+        "it": "Converti PDF in testo Markdown leggero. Senza caricamento, senza account.",
+        "ko": "PDF를 가벼운 Markdown 텍스트로 변환. 업로드 없음, 계정 불필요.",
+        "nl": "Converteer PDF naar lichte Markdown-tekst. Zonder upload, zonder account.",
+        "pl": "Konwertuj PDF do lekkiego tekstu Markdown. Bez przesyłania, bez konta."
       },
       "breadcrumb": {
         "en": "PDF→Markdown",
@@ -2631,7 +2799,15 @@
         "es": "PDF→Markdown",
         "fr": "PDF→Markdown",
         "pt": "PDF→Markdown",
-        "tr": "PDF'den Markdown'a"
+        "tr": "PDF'den Markdown'a",
+        "id": "PDF ke Markdown",
+        "vi": "PDF sang Markdown",
+        "ru": "PDF в Markdown",
+        "ja": "PDFからMarkdown",
+        "it": "PDF in Markdown",
+        "ko": "PDF를 Markdown으로",
+        "nl": "PDF naar Markdown",
+        "pl": "PDF do Markdown"
       },
       "metaDescs": {
         "en": "Convert PDF to Markdown free — headings, bullet/numbered lists and bold/italic text become clean .md syntax. Runs in your browser, nothing uploaded.",
@@ -2639,7 +2815,15 @@
         "es": "Convertir PDF a Markdown gratis — títulos, listas y texto en negrita se convierten en sintaxis .md. En tu navegador, sin subir. Sin registro, sin límites.",
         "fr": "Convertir PDF en Markdown gratuit — titres, listes et gras deviennent une syntaxe .md propre. Sans envoi au navigateur, sans inscription, sans limites.",
         "pt": "Converter PDF para Markdown grátis — títulos, listas e negrito viram sintaxe .md limpa. No navegador, sem upload. Sem cadastro, sem limites.",
-        "tr": "PDF'yi Markdown'a ücretsiz dönüştürün. Başlıklar ve yapı korunur. Yükleme yok."
+        "tr": "PDF'yi Markdown'a ücretsiz dönüştürün. Başlıklar ve yapı korunur. Yükleme yok.",
+        "id": "Konversi PDF ke Markdown gratis — teks diekstrak ke file .md. Berjalan di browser, tidak ada unggahan. Tanpa akun, tanpa batas.",
+        "vi": "Chuyển PDF sang Markdown miễn phí — văn bản được trích xuất thành file .md. Chạy trong trình duyệt, không tải lên. Không cần tài khoản, không giới hạn.",
+        "ru": "Конвертировать PDF в Markdown бесплатно — текст извлекается в .md файл. Работает в браузере, ничего не загружается. Без аккаунта, без лимитов.",
+        "ja": "PDFをMarkdownに無料変換 — テキストが.mdファイルに抽出されます。ブラウザで動作、アップロードなし。アカウント不要、制限なし。",
+        "it": "Convertire PDF in Markdown gratis — il testo viene estratto in un file .md. Funziona nel browser, nessun caricamento. Nessun account, nessun limite.",
+        "ko": "PDF를 Markdown으로 무료 변환 — 텍스트가 .md 파일로 추출됩니다. 브라우저에서 실행, 업로드 없음. 계정 불필요, 제한 없음.",
+        "nl": "PDF naar Markdown converteren gratis — tekst wordt geëxtraheerd naar een .md-bestand. Werkt in je browser, geen upload. Geen account, geen limieten.",
+        "pl": "PDF do Markdown za darmo — tekst ekstrahowany do pliku .md. Działa w przeglądarce, bez przesyłania. Bez konta, bez limitów."
       },
       "ogTitles": {
         "en": "Convert PDF to Markdown Free — Headings & Lists, No Upload",
@@ -2647,7 +2831,15 @@
         "es": "Convertir PDF a Markdown Gratis — Títulos y Listas, Sin Subir",
         "fr": "Convertir PDF en Markdown Gratuit — Titres et Listes, Sans Envoi",
         "pt": "Converter PDF para Markdown Grátis — Títulos e Listas, Sem Upload",
-        "tr": "PDF'yi Markdown'a Dönüştür Ücretsiz — Yükleme Yok | PDFree"
+        "tr": "PDF'yi Markdown'a Dönüştür Ücretsiz — Yükleme Yok | PDFree",
+        "id": "PDF ke Markdown Gratis — Tanpa Unggah | PDFree",
+        "vi": "Chuyển PDF sang Markdown Miễn phí — Không tải lên | PDFree",
+        "ru": "PDF в Markdown Бесплатно — Без загрузки | PDFree",
+        "ja": "PDFをMarkdownに無料変換 — アップロード不要 | PDFree",
+        "it": "PDF in Markdown Gratis — Senza Caricamento | PDFree",
+        "ko": "PDF를 Markdown으로 무료 변환 — 업로드 없음 | PDFree",
+        "nl": "PDF naar Markdown Gratis — Zonder Upload | PDFree",
+        "pl": "PDF do Markdown Za Darmo — Bez Przesyłania | PDFree"
       },
       "ogDescs": {
         "en": "PDF to Markdown conversion that runs entirely in your browser. No upload, no server, no account. 100% private.",
@@ -2655,7 +2847,15 @@
         "es": "La conversión de PDF a Markdown se ejecuta completamente en tu navegador. Sin subida, sin servidor, sin cuenta. 100% privado.",
         "fr": "La conversion PDF en Markdown s'exécute entièrement dans votre navigateur. Sans envoi, sans serveur, sans compte. 100 % privé.",
         "pt": "A conversão de PDF para Markdown é executada inteiramente no seu navegador. Sem upload, sem servidor, sem conta. 100% privado.",
-        "tr": "PDF'yi Markdown'a dönüştürün. Tarayıcıda işleme — dosyalar cihazınızı terk etmez."
+        "tr": "PDF'yi Markdown'a dönüştürün. Tarayıcıda işleme — dosyalar cihazınızı terk etmez.",
+        "id": "Ubah konten PDF menjadi teks Markdown .md. Diproses di browser.",
+        "vi": "Chuyển nội dung PDF thành văn bản Markdown .md. Xử lý trong trình duyệt.",
+        "ru": "Содержимое PDF превращается в текст Markdown .md. Обработка в браузере.",
+        "ja": "PDFのコンテンツをMarkdownテキスト.mdに変換。ブラウザ内処理。",
+        "it": "Converti il contenuto PDF in testo Markdown .md. Elaborazione nel browser.",
+        "ko": "PDF 콘텐츠를 Markdown 텍스트 .md로 변환. 브라우저 처리.",
+        "nl": "Converteer PDF-inhoud naar Markdown-tekst .md. Verwerking in de browser.",
+        "pl": "Konwertuj zawartość PDF do tekstu Markdown .md. Przetwarzanie w przeglądarce."
       },
       "keywords": {
         "en": "pdf to markdown, pdf to md, convert pdf to markdown, pdf to md converter, extract pdf text as markdown"

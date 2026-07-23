@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Jak konwertować PDF do Word",
+  "description": "Konwertuj PDF do edytowalnego dokumentu .docx bez przesyłania.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Dodaj PDF",
+      "text": "Przeciągnij plik PDF lub kliknij, żeby wybrać."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Konwertuj",
+      "text": "Kliknij Konwertuj do Word. Tekst jest wyodrębniany w przeglądarce."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Pobierz",
+      "text": "Pobierz plik .docx i otwórz w Word lub Google Docs."
+    }
+  ]
+}

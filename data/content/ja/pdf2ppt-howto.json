@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDFをPowerPointに変換する方法",
+  "description": "PDFページをアップロードなしで.pptxスライドに変換します。",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDFを追加",
+      "text": "PDFファイルをドラッグするか、クリックして選択します。"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "変換",
+      "text": "「PowerPointに変換」をクリックします。ページがブラウザで処理されます。"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "ダウンロード",
+      "text": ".pptxファイルをダウンロードし、PowerPointまたはGoogle Slidesで開きます。"
+    }
+  ]
+}

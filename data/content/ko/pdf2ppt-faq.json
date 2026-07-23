@@ -1,0 +1,34 @@
+[
+  {
+    "@type": "Question",
+    "name": "파일이 서버에 업로드되나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "아니요. 모든 처리가 브라우저에서 이루어집니다. PDFree 서버로 아무것도 전송되지 않습니다."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "슬라이드의 텍스트가 편집 가능한가요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDF에 텍스트 레이어가 있으면 텍스트가 슬라이드의 텍스트로 유지됩니다. 스캔된 PDF는 이미지 슬라이드만 생성합니다."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "몇 페이지를 변환할 수 있나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "모든 페이지입니다. 페이지 수나 파일 크기 제한이 없습니다."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "이 도구는 무료인가요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "네, 영원히 완전 무료입니다. 유료 요금제 없음."
+    }
+  }
+]

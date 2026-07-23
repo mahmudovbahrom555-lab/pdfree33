@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDF naar PowerPoint converteren",
+  "description": "Converteer PDF-pagina's naar .pptx-slides zonder upload.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Voeg PDF toe",
+      "text": "Sleep het PDF-bestand of klik om te selecteren."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Converteer",
+      "text": "Klik op Converteren naar PowerPoint. Pagina's worden in de browser verwerkt."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Download",
+      "text": "Download het .pptx-bestand en open het in PowerPoint of Google Slides."
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "파일이 서버에 업로드되나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "아니요. 모든 처리가 브라우저에서 이루어집니다. PDFree 서버로 아무것도 전송되지 않습니다."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "스캔된 PDF를 변환할 수 있나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "직접 변환은 불가합니다. 스캔된 PDF는 텍스트가 없는 이미지입니다. 먼저 OCR을 적용하여 텍스트 레이어를 추가하세요."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "서식이 보존되나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "기본 텍스트 구조는 보존됩니다. 다중 열이나 그래픽 요소가 있는 복잡한 레이아웃은 수동 조정이 필요할 수 있습니다."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "파일 크기 제한이 있나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "아니요. PDFree에는 파일 크기 제한이나 일일 사용 제한이 없습니다."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "이 도구는 무료인가요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "네, 영원히 완전 무료입니다. 유료 요금제 없음, 일일 한도 없음."
+    }
+  }
+]

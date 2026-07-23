@@ -1,0 +1,34 @@
+[
+  {
+    "@type": "Question",
+    "name": "Il mio file viene caricato su un server?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Tutto avviene nel browser. Nessun file viene inviato ai server di PDFree."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Il testo nelle slide è modificabile?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Il testo del PDF viene mantenuto come testo nella slide se il PDF ha uno strato di testo. I PDF scansionati producono solo slide immagine."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Quante pagine posso convertire?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tutte le pagine. Nessun limite di pagine o dimensione file."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Questo strumento è gratuito?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì, completamente gratuito per sempre. Nessun piano a pagamento."
+    }
+  }
+]

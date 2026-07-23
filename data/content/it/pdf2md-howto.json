@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Convertire PDF in Markdown",
+  "description": "Estrai il testo PDF in un file .md senza caricamento.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Aggiungi il PDF",
+      "text": "Trascina o clicca per selezionare il PDF."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Converti",
+      "text": "Clicca Converti in Markdown. Il testo viene estratto nel browser."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Scarica",
+      "text": "Scarica il file .md e aprilo nel tuo editor preferito."
+    }
+  ]
+}

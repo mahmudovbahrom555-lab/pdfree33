@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDF를 PowerPoint로 변환하는 방법",
+  "description": "업로드 없이 PDF 페이지를 .pptx 슬라이드로 변환합니다.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDF 추가",
+      "text": "PDF 파일을 드래그하거나 클릭하여 선택합니다."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "변환",
+      "text": "PowerPoint로 변환을 클릭합니다. 페이지가 브라우저에서 처리됩니다."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "다운로드",
+      "text": ".pptx 파일을 다운로드하여 PowerPoint나 Google Slides에서 엽니다."
+    }
+  ]
+}

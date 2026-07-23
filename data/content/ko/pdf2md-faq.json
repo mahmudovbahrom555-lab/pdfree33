@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "파일이 업로드되나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "아니요. 모든 처리가 브라우저에서 이루어집니다. 서버로 아무것도 전송되지 않습니다."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "어떤 Markdown 요소가 지원되나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "제목(# H1, ## H2), 목록, 굵은 글씨와 기울임꼴 텍스트, 단락."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "스캔된 PDF에 작동하나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "아니요. 스캔된 PDF는 읽을 수 있는 텍스트가 없는 이미지입니다."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "어떤 앱이 .md 파일을 여나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "VS Code, Obsidian, Notion, Zettlr 및 모든 텍스트 편집기."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "이 도구는 무료인가요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "네, 영원히 완전 무료입니다."
+    }
+  }
+]

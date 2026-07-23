@@ -1,0 +1,34 @@
+[
+  {
+    "@type": "Question",
+    "name": "File của tôi có được tải lên máy chủ không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không. Toàn bộ quá trình chạy trong trình duyệt. Không có gì được gửi đến máy chủ PDFree."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Văn bản trong slide có thể chỉnh sửa được không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Văn bản từ PDF được giữ nguyên nếu PDF có lớp văn bản. PDF được quét chỉ tạo ra slide hình ảnh."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Có thể chuyển đổi bao nhiêu trang?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tất cả các trang. Không có giới hạn trang hay kích thước file."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Công cụ này có miễn phí không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có, hoàn toàn miễn phí mãi mãi."
+    }
+  }
+]

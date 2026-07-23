@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDF를 Markdown으로 변환하는 방법",
+  "description": "업로드 없이 PDF 텍스트를 .md 파일로 추출합니다.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDF 추가",
+      "text": "PDF 파일을 드래그하거나 클릭하여 선택합니다."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "변환",
+      "text": "Markdown으로 변환을 클릭합니다. 텍스트가 브라우저에서 추출됩니다."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "다운로드",
+      "text": ".md 파일을 다운로드하여 편집기에서 엽니다."
+    }
+  ]
+}

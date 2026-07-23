@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "File của tôi có được tải lên không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không. Toàn bộ quá trình chạy trong trình duyệt. Không có gì được gửi đến máy chủ."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Những phần tử Markdown nào được hỗ trợ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tiêu đề (# H1, ## H2), danh sách, văn bản đậm và nghiêng, và đoạn văn."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Có thể dùng cho PDF được quét không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không. PDF được quét là hình ảnh không có văn bản có thể đọc được."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Ứng dụng nào mở file .md?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "VS Code, Obsidian, Notion, Zettlr và bất kỳ trình soạn thảo văn bản nào."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Có miễn phí không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có, hoàn toàn miễn phí mãi mãi."
+    }
+  }
+]

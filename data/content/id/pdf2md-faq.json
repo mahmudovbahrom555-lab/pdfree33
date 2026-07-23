@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "Apakah file saya diunggah?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak. Seluruh proses berjalan di browser. Tidak ada yang dikirim ke server."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Elemen Markdown apa yang didukung?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Judul (# H1, ## H2), daftar, teks tebal dan miring, dan paragraf."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah bisa untuk PDF yang dipindai?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak. PDF yang dipindai adalah gambar tanpa teks yang dapat dibaca."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Aplikasi apa yang membuka file .md?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "VS Code, Obsidian, Notion, Zettlr, dan editor teks apapun."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah gratis?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ya, sepenuhnya gratis selamanya."
+    }
+  }
+]

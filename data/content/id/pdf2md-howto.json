@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Cara mengkonversi PDF ke Markdown",
+  "description": "Ekstrak teks PDF ke file .md tanpa unggah.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Unggah PDF",
+      "text": "Seret atau klik untuk memilih file PDF."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Konversi",
+      "text": "Klik Konversi ke Markdown. Teks diekstrak di browser."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Unduh",
+      "text": "Unduh file .md dan buka di editor pilihan Anda."
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+[
+  {
+    "@type": "Question",
+    "name": "Apakah file saya diunggah ke server?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak. Seluruh proses berjalan di browser. Tidak ada yang dikirim ke server PDFree."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah teks di slide bisa diedit?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Teks dari PDF dipertahankan sebagai teks di slide jika PDF memiliki lapisan teks. PDF yang dipindai hanya menghasilkan slide gambar."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Berapa banyak halaman yang bisa dikonversi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Semua halaman. Tidak ada batas halaman atau ukuran file."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah alat ini gratis?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ya, sepenuhnya gratis selamanya. Tidak ada paket berbayar."
+    }
+  }
+]

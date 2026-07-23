@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "Czy mój plik jest przesyłany na serwer?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie. Wszystko odbywa się w przeglądarce. Nic nie jest wysyłane na serwery PDFree."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy zeskanowane PDF-y mogą być konwertowane?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie bezpośrednio. Zeskanowane PDF-y to obrazy bez tekstu. Najpierw zastosuj OCR, aby dodać warstwę tekstową."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy formatowanie jest zachowywane?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Podstawowy tekst i struktura są zachowywane. Złożone układy z wieloma kolumnami mogą wymagać ręcznych poprawek."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy jest limit rozmiaru pliku?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie. PDFree nie ma limitów rozmiaru pliku ani dziennego użytkowania."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy to narzędzie jest darmowe?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak, całkowicie darmowe na zawsze. Bez płatnych planów, bez dziennych limitów."
+    }
+  }
+]

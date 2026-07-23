@@ -1,0 +1,34 @@
+[
+  {
+    "@type": "Question",
+    "name": "ファイルはサーバーにアップロードされますか？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "いいえ。すべての処理はブラウザ内で行われます。PDFreeのサーバーには何も送信されません。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "スライドのテキストは編集できますか？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFにテキストレイヤーがある場合、テキストはスライド上のテキストとして保持されます。スキャンされたPDFは画像スライドのみになります。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "何ページ変換できますか？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "すべてのページです。ページ数やファイルサイズの制限はありません。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "このツールは無料ですか？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "はい、永久に完全無料です。有料プランはありません。"
+    }
+  }
+]

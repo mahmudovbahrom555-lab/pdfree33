@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "Czy mój plik jest przesyłany?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie. Wszystko odbywa się w przeglądarce. Nic nie jest wysyłane na serwer."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Jakie elementy Markdown są obsługiwane?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nagłówki (# H1, ## H2), listy, pogrubiony i kursywowy tekst, akapity."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy działa ze zeskanowanymi PDF-ami?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie. Zeskanowane PDF-y to obrazy bez czytelnego tekstu."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Jakie aplikacje otwierają pliki .md?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "VS Code, Obsidian, Notion, Zettlr i dowolny edytor tekstu."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy to narzędzie jest darmowe?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak, całkowicie darmowe na zawsze."
+    }
+  }
+]

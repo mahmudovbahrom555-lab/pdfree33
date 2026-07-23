@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Cara mengkonversi PDF ke PowerPoint",
+  "description": "Ubah halaman PDF menjadi slide .pptx tanpa unggah.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Unggah PDF",
+      "text": "Seret file PDF atau klik untuk memilih."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Konversi",
+      "text": "Klik Konversi ke PowerPoint. Halaman diproses di browser."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Unduh",
+      "text": "Unduh file .pptx dan buka di PowerPoint atau Google Slides."
+    }
+  ]
+}

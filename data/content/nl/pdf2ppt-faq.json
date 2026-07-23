@@ -1,0 +1,34 @@
+[
+  {
+    "@type": "Question",
+    "name": "Wordt mijn bestand naar een server geüpload?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. Alles verloopt in de browser. Er wordt niets verzonden naar servers van PDFree."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is de tekst in slides bewerkbaar?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tekst uit de PDF wordt als tekst in de slide bewaard als de PDF een tekstlaag heeft. Gescande PDF's leveren alleen afbeeldingsslides op."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Hoeveel pagina's kan ik converteren?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Alle pagina's. Geen limiet op pagina's of bestandsgrootte."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is dit hulpmiddel gratis?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja, volledig gratis voor altijd. Geen betaalde abonnementen."
+    }
+  }
+]

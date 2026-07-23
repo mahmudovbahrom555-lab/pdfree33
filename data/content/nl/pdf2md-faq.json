@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "Wordt mijn bestand geüpload?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. Alles verloopt in de browser. Er wordt niets naar een server verstuurd."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Welke Markdown-elementen worden ondersteund?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Koppen (# H1, ## H2), lijsten, vetgedrukte en cursieve tekst, alinea's."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Werkt het met gescande PDF's?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. Gescande PDF's zijn afbeeldingen zonder leesbare tekst."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Welke apps openen .md-bestanden?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "VS Code, Obsidian, Notion, Zettlr en elke teksteditor."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is dit hulpmiddel gratis?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja, volledig gratis voor altijd."
+    }
+  }
+]

@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "Il mio file viene caricato?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Tutto avviene nel browser. Nessun file viene inviato al server."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Quali elementi Markdown sono supportati?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Titoli (# H1, ## H2), liste, testo in grassetto e corsivo, paragrafi."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Funziona con PDF scansionati?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. I PDF scansionati sono immagini senza testo leggibile."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Quali app aprono i file .md?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "VS Code, Obsidian, Notion, Zettlr e qualsiasi editor di testo."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Questo strumento è gratuito?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì, completamente gratuito per sempre."
+    }
+  }
+]

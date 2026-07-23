@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDF naar Word converteren",
+  "description": "Converteer PDF naar bewerkbaar .docx-document zonder upload.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Voeg PDF toe",
+      "text": "Sleep het PDF-bestand of klik om te selecteren."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Converteer",
+      "text": "Klik op Converteren naar Word. Tekst wordt in de browser geëxtraheerd."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Download",
+      "text": "Download het .docx-bestand en open het in Word of Google Docs."
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "Il mio file viene caricato su un server?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Tutto avviene nel browser. Nessun file viene inviato ai server di PDFree."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "I PDF scansionati possono essere convertiti?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non direttamente. I PDF scansionati sono immagini senza testo. Applica prima l'OCR per aggiungere un livello di testo."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Il formato viene preservato?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Il testo e la struttura di base vengono preservati. Layout complessi con colonne multiple o elementi grafici possono richiedere aggiustamenti manuali."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "C'è un limite di dimensione?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. PDFree non ha limiti di dimensione o di utilizzo giornaliero."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Questo strumento è gratuito?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì, completamente gratuito per sempre. Nessun piano a pagamento, nessun limite giornaliero."
+    }
+  }
+]

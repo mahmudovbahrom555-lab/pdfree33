@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "Wordt mijn bestand naar een server geüpload?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. Alles verloopt in de browser. Er wordt niets verzonden naar servers van PDFree."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kunnen gescande PDF's worden geconverteerd?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Niet rechtstreeks. Gescande PDF's zijn afbeeldingen zonder tekst. Pas eerst OCR toe om een tekstlaag toe te voegen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Wordt de opmaak bewaard?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Basistekst en structuur worden bewaard. Complexe lay-outs met meerdere kolommen kunnen handmatige aanpassingen vereisen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is er een limiet op de bestandsgrootte?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. PDFree heeft geen limieten op bestandsgrootte of dagelijks gebruik."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is dit hulpmiddel gratis?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja, volledig gratis voor altijd. Geen betaalde abonnementen, geen dagelijkse limieten."
+    }
+  }
+]

@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "Файл загружается?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Нет. Всё обрабатывается в браузере. Ничего не отправляется на сервер."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Какие элементы Markdown поддерживаются?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Заголовки (# H1, ## H2), списки, жирный и курсивный текст, абзацы."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Работает ли со сканированными PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Нет. Сканированные PDF — это изображения без читаемого текста."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Какие приложения открывают .md?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "VS Code, Obsidian, Notion, Zettlr и любой текстовый редактор."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Инструмент бесплатный?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Да, полностью бесплатный навсегда."
+    }
+  }
+]
