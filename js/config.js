@@ -267,6 +267,14 @@ export const TOOLS = {
     tags:        ['email', 'gmail', 'outlook', 'send pdf', 'attach', 'small file',
                   'compress for email', 'email pdf', 'too large for email'],
     btn:         '📧 Compress for Email',
+    // This tool's pages are hand-maintained static HTML (not generated from
+    // tools-config.json — see scripts/build.py's SPECIALTY_PAGES), so these
+    // translations are copied verbatim from the actual SSR'd #toolTitle/
+    // #toolDesc/#mergeBtn text in de/es/pt/fr's compress-for-email pages,
+    // not derived from cardNames/cardDescs like the tools-config-backed ones.
+    titles: { de: 'PDF für E-Mail komprimieren', es: 'Comprimir PDF para email', pt: 'Comprimir PDF para email', fr: 'Compresser PDF pour email' },
+    descs:  { de: 'Maximale Komprimierung — 96 DPI — optimiert für Gmail und Outlook', es: 'Compresión máxima — 96 DPI — optimizado para Gmail y Outlook', pt: 'Compressão máxima — 96 DPI — otimizada para Gmail e Outlook', fr: 'Compression maximale — 96 DPI — optimisé pour Gmail et Outlook' },
+    btns:   { de: '📧 Für E-Mail komprimieren', es: '📧 Comprimir para email', pt: '🗜️ Comprimir para email', fr: '📧 Compresser pour email' },
     multi:       false,
     accept:      '.pdf,application/pdf',
     implemented: true,
