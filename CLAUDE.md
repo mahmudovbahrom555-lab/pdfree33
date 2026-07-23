@@ -1,7 +1,7 @@
 # PDFree — Claude Code Instructions
 
 ## Stack
-Static site. Vanilla JS ES Modules, no framework. Build: `python3 scripts/build.py` (Jinja2 templates → `dist/`). Deploy: Cloudflare Workers via GitHub Actions. 5 languages: EN/DE/ES/FR/PT.
+Static site. Vanilla JS ES Modules, no framework. Build: `python3 scripts/build.py` (Jinja2 templates → `dist/`). Deploy: Cloudflare Workers via GitHub Actions. 6 languages: EN/DE/ES/FR/PT/ID (Bahasa Indonesia).
 
 ## OFF-LIMITS — never modify
 - `js/vendor/` — bundled third-party libraries
@@ -77,8 +77,8 @@ When a tool is opened, `showToolPage()` in `js/ui.js` hides all homepage section
 
 ## SEO — what's already done (don't redo)
 - JSON-LD schemas: SoftwareApplication, HowTo, FAQPage, BreadcrumbList, AggregateRating, Organization, WebSite, Article — on all pages
-- Sitemap: 141 URLs, all 5 locales, changefreq + priority
-- hreflang: all tool pages + blog posts, 6 alternates per page (en/de/es/fr/pt/x-default)
+- Sitemap: 141 URLs, all 6 locales, changefreq + priority
+- hreflang: all tool pages + blog posts, 7 alternates per page (en/de/es/fr/pt/id/x-default)
 - OG tags + Twitter Cards: 100% coverage
 - LCP font preloads on all pages
 - Security headers: HSTS, X-Frame-Options, Referrer-Policy in `_headers`
