@@ -1,42 +1,58 @@
 [
   {
     "@type": "Question",
+    "name": "PDF dönüştürme için dosyam yükleniyor mu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. Tablo algılama ve .xlsx dosyası oluşturma işlemleri tamamen tarayıcınızda gerçekleşir — pdf.js ve exceljs kütüphaneleri kullanılır. PDF'niz ve çıkarılan veriler hiçbir zaman cihazınızı terk etmez."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDF'imde tablo yoksa ne olur?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree dönüştürmeden önce kaç tablo tespit ettiğini gösterir. Hiç tablo bulunamazsa tüm metin \"Metin\" adlı tek bir sayfaya aktarılır. Metin ağırlıklı belgeler için PDF'den Word'e dönüştürme daha uygun olabilir."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Taranmış PDF'yi Excel'e dönüştürebilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Doğrudan değil — taranmış PDF, metin katmanı olmayan bir görüntüdür. Önce OCR uygulayarak metin katmanı ekleyin, ardından sonucu Excel'e dönüştürün."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFree tabloları nasıl algılar?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree, metin satırlarının en az 3 satır boyunca tutarlı sütunlara hizalanıp hizalanmadığını kontrol eder. Her tablo adayına bir güven puanı verilir — düşük puanlı adaylar hatalı tablo olarak gösterilmek yerine filtrelenir."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bu kayıtsız ücretsiz bir PDF'den Excel'e dönüştürücü mü?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. PDFree tamamen ücretsizdir — kayıt yok, hesap yok, kurulum yok. Aracı açın, PDF'nizi yükleyin ve .xlsx dosyasını indirin."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Dönüştürme sonrası formül ekleyebilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. Çıkarılan değerler normal sayı ve metin verisidir — formül değil (PDF yalnızca görüntülenen sonuçları saklar, hesaplamaları değil). Excel'de çıkarılan verilerin üzerine istediğiniz formülleri ekleyebilirsiniz."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "Tablo yapısı doğru aktarılır mı?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Düzenli tablo yapılı PDF'lerde büyük ölçüde evet. Birleştirilmiş hücreler veya karmaşık tablolar manuel düzenleme gerektirebilir."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "Dosyalarım yükleniyor mu?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Hayır. İşlem tamamen tarayıcınızda gerçekleşir."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "Hangi programlarla açabilirim?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Microsoft Excel, Google Sheets ve LibreOffice Calc ile açılabilir."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "Birden fazla sayfalık tablolar destekleniyor mu?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Evet. Her PDF sayfası ayrı bir Excel çalışma sayfasına (sheet) dönüştürülür."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "Bu araç ücretsiz mi?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Evet, sonsuza kadar tamamen ücretsizdir."
+      "text": "Düzenli çizgi yapısına sahip tablolarda büyük ölçüde evet. Birleştirilmiş hücreler veya iç içe geçmiş karmaşık tablolar dönüştürme sonrası manuel düzenleme gerektirebilir."
     }
   }
 ]
