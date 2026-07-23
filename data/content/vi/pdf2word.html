@@ -28,6 +28,32 @@
           </div>
         </div>
 
+        <!-- Text vs Image mode -->
+        <h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">Chế Độ Văn Bản vs Chế Độ Hình Ảnh — Nên Chọn Cái Nào</h2>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:32px;">
+          <div style="border:1px solid var(--border);border-radius:12px;padding:20px;">
+            <div style="font-weight:700;color:var(--text);margin-bottom:8px;font-size:15px;">📝 Chế Độ Văn Bản</div>
+            <ul style="margin:0;padding-left:20px;font-size:14px;display:flex;flex-direction:column;gap:6px;">
+              <li>Văn bản hoàn toàn có thể chỉnh sửa trong Word</li>
+              <li>Tiêu đề được phát hiện theo cỡ font</li>
+              <li>Giữ nguyên in đậm, in nghiêng, cỡ font</li>
+              <li>Bảng được trích xuất thành bảng Word</li>
+              <li>Hoạt động với chữ Latin, Kirin, Ả Rập, Do Thái, CJK</li>
+              <li>Tốt nhất cho: hợp đồng, báo cáo, bài viết</li>
+            </ul>
+          </div>
+          <div style="border:1px solid var(--border);border-radius:12px;padding:20px;">
+            <div style="font-weight:700;color:var(--text);margin-bottom:8px;font-size:15px;">🖼️ Chế Độ Hình Ảnh</div>
+            <ul style="margin:0;padding-left:20px;font-size:14px;display:flex;flex-direction:column;gap:6px;">
+              <li>Giữ nguyên bố cục từng pixel</li>
+              <li>Chọn DPI: 72 / 150 / 300</li>
+              <li>Văn bản trong Word không thể chỉnh sửa</li>
+              <li>Hoạt động với mọi PDF, kể cả bản quét</li>
+              <li>Tốt nhất cho: bố cục phức tạp, biểu đồ, biểu mẫu</li>
+            </ul>
+          </div>
+        </div>
+
         <!-- Khi nào dùng -->
         <h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">Khi Nào Cần Chuyển PDF Sang Word</h2>
 
@@ -88,6 +114,34 @@
             </tbody>
           </table>
         </div>
+
+        <!-- Scanned PDFs -->
+        <h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">Chuyển Đổi PDF Đã Quét Sang Word</h2>
+        <p style="font-size:14px;margin:0 0 12px;">PDF đã quét là ảnh chụp của một tài liệu — trông giống văn bản nhưng nội dung được lưu dưới dạng pixel, không phải ký tự. Chất lượng chuyển đổi phụ thuộc vào việc PDF đã có sẵn lớp văn bản hay chưa:</p>
+        <div style="display:flex;flex-direction:column;gap:12px;margin:0 0 24px;">
+          <div style="display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
+            <span style="font-size:18px;flex-shrink:0">✅</span>
+            <div><strong style="color:var(--text);">Quét có lớp OCR</strong> — nhiều máy quét và ứng dụng hiện đại (Adobe Scan, Microsoft Lens) tự động thêm lớp văn bản ẩn. Chế Độ Văn Bản trích xuất chính xác dù PDF trông giống hình ảnh.</div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
+            <span style="font-size:18px;flex-shrink:0">🖼️</span>
+            <div><strong style="color:var(--text);">Bản quét chỉ có hình ảnh (không có lớp văn bản)</strong> — dùng Chế Độ Hình Ảnh để nhận tài liệu Word với mỗi trang hiển thị dưới dạng ảnh độ phân giải cao. Bố cục được giữ nguyên nhưng văn bản không thể chỉnh sửa.</div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
+            <span style="font-size:18px;flex-shrink:0">🔍</span>
+            <div><strong style="color:var(--text);">Cần văn bản có thể chỉnh sửa từ bản quét?</strong> — trước tiên dùng phần mềm OCR để thêm lớp văn bản có thể tìm kiếm, rồi chuyển sang Word. Hai bước, hoàn toàn riêng tư, không tải lên.</div>
+          </div>
+        </div>
+
+        <!-- No Microsoft Word needed -->
+        <h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">Không Có Microsoft Word? Không Sao Cả.</h2>
+        <p style="font-size:14px;margin:0 0 16px;">Định dạng .docx là chuẩn mở. Bạn có thể mở, chỉnh sửa và lưu kết quả của PDFree bằng bất kỳ công cụ nào sau đây — đều miễn phí:</p>
+        <ul style="font-size:14px;margin:0 0 32px;padding-left:24px;display:flex;flex-direction:column;gap:8px;">
+          <li><strong>Google Docs</strong> — tải file .docx lên Google Drive, mở và chỉnh sửa trực tuyến. Miễn phí.</li>
+          <li><strong>LibreOffice Writer</strong> — miễn phí, mã nguồn mở, chạy trên Windows, Mac, Linux. Tương thích .docx rất tốt.</li>
+          <li><strong>Apple Pages</strong> — có sẵn trên macOS và iOS, mở .docx trực tiếp.</li>
+          <li><strong>Microsoft 365 Online</strong> — phiên bản trình duyệt của Word miễn phí tại office.com.</li>
+        </ul>
 
         <!-- FAQ -->
         <h2 style="font-size:22px;color:var(--text);margin:48px 0 20px;font-weight:700;">Câu Hỏi Thường Gặp</h2>

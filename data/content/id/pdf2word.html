@@ -28,6 +28,32 @@
           </div>
         </div>
 
+        <!-- Text vs Image mode -->
+        <h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">Mode Teks vs. Mode Gambar — Mana yang Harus Dipilih</h2>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:32px;">
+          <div style="border:1px solid var(--border);border-radius:12px;padding:20px;">
+            <div style="font-weight:700;color:var(--text);margin-bottom:8px;font-size:15px;">📝 Mode Teks</div>
+            <ul style="margin:0;padding-left:20px;font-size:14px;display:flex;flex-direction:column;gap:6px;">
+              <li>Teks sepenuhnya dapat diedit di Word</li>
+              <li>Judul terdeteksi berdasarkan ukuran font</li>
+              <li>Tebal, miring, ukuran font dipertahankan</li>
+              <li>Tabel diekstrak sebagai tabel Word</li>
+              <li>Berfungsi untuk Latin, Sirilik, Arab, Ibrani, CJK</li>
+              <li>Terbaik untuk: kontrak, laporan, artikel</li>
+            </ul>
+          </div>
+          <div style="border:1px solid var(--border);border-radius:12px;padding:20px;">
+            <div style="font-weight:700;color:var(--text);margin-bottom:8px;font-size:15px;">🖼️ Mode Gambar</div>
+            <ul style="margin:0;padding-left:20px;font-size:14px;display:flex;flex-direction:column;gap:6px;">
+              <li>Tata letak dipertahankan piksel demi piksel</li>
+              <li>Pilih DPI: 72 / 150 / 300</li>
+              <li>Teks tidak dapat diedit di Word</li>
+              <li>Berfungsi untuk PDF apa pun, termasuk hasil pindaian</li>
+              <li>Terbaik untuk: tata letak kompleks, grafik, formulir</li>
+            </ul>
+          </div>
+        </div>
+
         <!-- Kapan digunakan -->
         <h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">Kapan Perlu Mengonversi PDF ke Word</h2>
 
@@ -88,6 +114,34 @@
             </tbody>
           </table>
         </div>
+
+        <!-- Scanned PDFs -->
+        <h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">Mengonversi PDF Hasil Pindaian ke Word</h2>
+        <p style="font-size:14px;margin:0 0 12px;">PDF hasil pindaian adalah foto dokumen — terlihat seperti teks, tetapi kontennya tersimpan sebagai piksel, bukan karakter. Seberapa baik hasilnya tergantung apakah PDF sudah memiliki lapisan teks:</p>
+        <div style="display:flex;flex-direction:column;gap:12px;margin:0 0 24px;">
+          <div style="display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
+            <span style="font-size:18px;flex-shrink:0">✅</span>
+            <div><strong style="color:var(--text);">Dipindai dengan lapisan OCR</strong> — banyak pemindai dan aplikasi modern (Adobe Scan, Microsoft Lens) menambahkan lapisan teks tersembunyi. Mode Teks mengekstraknya dengan benar meskipun PDF terlihat seperti gambar.</div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
+            <span style="font-size:18px;flex-shrink:0">🖼️</span>
+            <div><strong style="color:var(--text);">Hasil pindaian gambar saja (tanpa lapisan teks)</strong> — gunakan <strong>Mode Gambar</strong> untuk mendapatkan dokumen Word di mana setiap halaman muncul sebagai gambar beresolusi tinggi. Tata letak dipertahankan, tetapi teks tidak bisa diedit.</div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
+            <span style="font-size:18px;flex-shrink:0">🔍</span>
+            <div><strong style="color:var(--text);">Butuh teks yang bisa diedit dari hasil pindaian?</strong> — gunakan software OCR terlebih dahulu untuk menambahkan lapisan teks yang bisa dicari, lalu konversi ke Word. Dua langkah, sepenuhnya privat, tanpa upload.</div>
+          </div>
+        </div>
+
+        <!-- No Microsoft Word needed -->
+        <h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">Tidak Punya Microsoft Word? Tidak Masalah.</h2>
+        <p style="font-size:14px;margin:0 0 16px;">Format .docx adalah standar terbuka. Anda bisa membuka, mengedit, dan menyimpan hasil PDFree dengan salah satu dari ini — semuanya gratis:</p>
+        <ul style="font-size:14px;margin:0 0 32px;padding-left:24px;display:flex;flex-direction:column;gap:8px;">
+          <li><strong>Google Docs</strong> — unggah file .docx ke Google Drive, buka, edit online. Gratis.</li>
+          <li><strong>LibreOffice Writer</strong> — gratis, sumber terbuka, berfungsi di Windows, Mac, Linux. Kompatibilitas .docx sangat baik.</li>
+          <li><strong>Apple Pages</strong> — sudah terpasang di macOS dan iOS, membuka .docx secara native.</li>
+          <li><strong>Microsoft 365 Online</strong> — versi browser dari Word gratis di office.com.</li>
+        </ul>
 
         <!-- FAQ -->
         <h2 style="font-size:22px;color:var(--text);margin:48px 0 20px;font-weight:700;">Pertanyaan yang Sering Diajukan</h2>

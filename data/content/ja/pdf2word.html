@@ -28,6 +28,32 @@
           </div>
         </div>
 
+        <!-- Text vs Image mode -->
+        <h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">テキストモード vs 画像モード — どちらを選ぶべきか</h2>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:32px;">
+          <div style="border:1px solid var(--border);border-radius:12px;padding:20px;">
+            <div style="font-weight:700;color:var(--text);margin-bottom:8px;font-size:15px;">📝 テキストモード</div>
+            <ul style="margin:0;padding-left:20px;font-size:14px;display:flex;flex-direction:column;gap:6px;">
+              <li>Wordで完全に編集可能なテキスト</li>
+              <li>フォントサイズから見出しを自動検出</li>
+              <li>太字・斜体・フォントサイズを保持</li>
+              <li>表はWordの表として抽出</li>
+              <li>ラテン文字、キリル文字、アラビア語、ヘブライ語、CJKに対応</li>
+              <li>最適な用途：契約書、レポート、記事</li>
+            </ul>
+          </div>
+          <div style="border:1px solid var(--border);border-radius:12px;padding:20px;">
+            <div style="font-weight:700;color:var(--text);margin-bottom:8px;font-size:15px;">🖼️ 画像モード</div>
+            <ul style="margin:0;padding-left:20px;font-size:14px;display:flex;flex-direction:column;gap:6px;">
+              <li>レイアウトをピクセル単位で保持</li>
+              <li>DPIを選択：72 / 150 / 300</li>
+              <li>Word内のテキストは編集不可</li>
+              <li>スキャンPDFを含むあらゆるPDFに対応</li>
+              <li>最適な用途：複雑なレイアウト、図表、フォーム</li>
+            </ul>
+          </div>
+        </div>
+
         <!-- 使い所 -->
         <h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">PDFをWordに変換する場面</h2>
 
@@ -88,6 +114,34 @@
             </tbody>
           </table>
         </div>
+
+        <!-- Scanned PDFs -->
+        <h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">スキャンしたPDFをWordに変換する</h2>
+        <p style="font-size:14px;margin:0 0 12px;">スキャンしたPDFは文書を撮影した画像です — テキストのように見えますが、内容は文字ではなくピクセルとして保存されています。変換結果の質は、PDFに既にテキストレイヤーが含まれているかどうかによって決まります。</p>
+        <div style="display:flex;flex-direction:column;gap:12px;margin:0 0 24px;">
+          <div style="display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
+            <span style="font-size:18px;flex-shrink:0">✅</span>
+            <div><strong style="color:var(--text);">OCRレイヤー付きスキャン</strong> — Adobe ScanやMicrosoft Lensなど多くの最新スキャナー・アプリは、見えないテキストレイヤーを自動的に追加します。PDFが画像に見えても、テキストモードで正しく抽出できます。</div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
+            <span style="font-size:18px;flex-shrink:0">🖼️</span>
+            <div><strong style="color:var(--text);">画像のみのスキャン（テキストレイヤーなし）</strong> — 画像モードを使うと、各ページが高解像度画像として表示されるWord文書が得られます。レイアウトは保持されますが、テキストは編集できません。</div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
+            <span style="font-size:18px;flex-shrink:0">🔍</span>
+            <div><strong style="color:var(--text);">スキャンから編集可能なテキストが必要な場合は？</strong> — まずOCRソフトでテキストレイヤーを追加してから、Wordに変換してください。2ステップで、完全にプライベート、アップロードも不要です。</div>
+          </div>
+        </div>
+
+        <!-- No Microsoft Word needed -->
+        <h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">Microsoft Wordをお持ちでない場合も問題ありません</h2>
+        <p style="font-size:14px;margin:0 0 16px;">.docx形式はオープン標準です。PDFreeの出力結果は、以下のいずれでも無料で開いて編集・保存できます：</p>
+        <ul style="font-size:14px;margin:0 0 32px;padding-left:24px;display:flex;flex-direction:column;gap:8px;">
+          <li><strong>Google Docs</strong> — .docxファイルをGoogleドライブにアップロードして開き、オンラインで編集。無料。</li>
+          <li><strong>LibreOffice Writer</strong> — 無料・オープンソース、Windows/Mac/Linuxで動作。優れた.docx互換性。</li>
+          <li><strong>Apple Pages</strong> — macOSとiOSに標準搭載、.docxをネイティブに開けます。</li>
+          <li><strong>Microsoft 365 Online</strong> — ブラウザ版Wordはoffice.comで無料利用可能。</li>
+        </ul>
 
         <!-- よくある質問 -->
         <h2 style="font-size:22px;color:var(--text);margin:48px 0 20px;font-weight:700;">よくある質問</h2>

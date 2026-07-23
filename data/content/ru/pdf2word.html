@@ -28,6 +28,32 @@
           </div>
         </div>
 
+        <!-- Text vs Image mode -->
+        <h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">Текстовый режим vs режим изображения — что выбрать</h2>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:32px;">
+          <div style="border:1px solid var(--border);border-radius:12px;padding:20px;">
+            <div style="font-weight:700;color:var(--text);margin-bottom:8px;font-size:15px;">📝 Текстовый режим</div>
+            <ul style="margin:0;padding-left:20px;font-size:14px;display:flex;flex-direction:column;gap:6px;">
+              <li>Полностью редактируемый текст в Word</li>
+              <li>Заголовки определяются по размеру шрифта</li>
+              <li>Жирный, курсив, размер шрифта сохраняются</li>
+              <li>Таблицы извлекаются как таблицы Word</li>
+              <li>Работает с латиницей, кириллицей, арабским, ивритом, CJK</li>
+              <li>Лучше всего для: контрактов, отчётов, статей</li>
+            </ul>
+          </div>
+          <div style="border:1px solid var(--border);border-radius:12px;padding:20px;">
+            <div style="font-weight:700;color:var(--text);margin-bottom:8px;font-size:15px;">🖼️ Режим изображения</div>
+            <ul style="margin:0;padding-left:20px;font-size:14px;display:flex;flex-direction:column;gap:6px;">
+              <li>Макет сохраняется попиксельно</li>
+              <li>Выбор DPI: 72 / 150 / 300</li>
+              <li>Текст в Word не редактируется</li>
+              <li>Работает с любым PDF, включая сканы</li>
+              <li>Лучше всего для: сложных макетов, диаграмм, форм</li>
+            </ul>
+          </div>
+        </div>
+
         <!-- Когда использовать -->
         <h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">Когда стоит конвертировать PDF в Word</h2>
 
@@ -88,6 +114,34 @@
             </tbody>
           </table>
         </div>
+
+        <!-- Scanned PDFs -->
+        <h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">Конвертация сканированных PDF в Word</h2>
+        <p style="font-size:14px;margin:0 0 12px;">Сканированный PDF — это фотография документа: он выглядит как текст, но содержимое хранится в виде пикселей, а не символов. Качество конвертации зависит от того, есть ли в PDF уже текстовый слой:</p>
+        <div style="display:flex;flex-direction:column;gap:12px;margin:0 0 24px;">
+          <div style="display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
+            <span style="font-size:18px;flex-shrink:0">✅</span>
+            <div><strong style="color:var(--text);">Скан с OCR-слоем</strong> — многие современные сканеры и приложения (Adobe Scan, Microsoft Lens) добавляют невидимый текстовый слой. Текстовый режим корректно извлекает его, даже если PDF выглядит как изображение.</div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
+            <span style="font-size:18px;flex-shrink:0">🖼️</span>
+            <div><strong style="color:var(--text);">Скан только с изображением (без текстового слоя)</strong> — используйте режим изображения, чтобы получить документ Word, в котором каждая страница отображается как изображение высокого разрешения. Макет сохраняется, но текст нельзя редактировать.</div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
+            <span style="font-size:18px;flex-shrink:0">🔍</span>
+            <div><strong style="color:var(--text);">Нужен редактируемый текст из скана?</strong> — сначала используйте программу OCR, чтобы добавить текстовый слой с возможностью поиска, а затем конвертируйте в Word. Два шага, полностью приватно, без загрузки.</div>
+          </div>
+        </div>
+
+        <!-- No Microsoft Word needed -->
+        <h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">Нет Microsoft Word? Не проблема.</h2>
+        <p style="font-size:14px;margin:0 0 16px;">Формат .docx — открытый стандарт. Вы можете открывать, редактировать и сохранять результат PDFree с помощью любого из этих инструментов — все бесплатно:</p>
+        <ul style="font-size:14px;margin:0 0 32px;padding-left:24px;display:flex;flex-direction:column;gap:8px;">
+          <li><strong>Google Docs</strong> — загрузите .docx на Google Диск, откройте, редактируйте онлайн. Бесплатно.</li>
+          <li><strong>LibreOffice Writer</strong> — бесплатно, с открытым исходным кодом, работает на Windows, Mac, Linux. Отличная совместимость с .docx.</li>
+          <li><strong>Apple Pages</strong> — встроен в macOS и iOS, открывает .docx нативно.</li>
+          <li><strong>Microsoft 365 Online</strong> — браузерная версия Word бесплатна на office.com.</li>
+        </ul>
 
         <!-- FAQ -->
         <h2 style="font-size:22px;color:var(--text);margin:48px 0 20px;font-weight:700;">Часто задаваемые вопросы</h2>
