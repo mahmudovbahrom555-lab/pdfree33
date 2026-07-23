@@ -208,7 +208,10 @@ async function _doShareTool(tool) {
 
   if (navigator.share) {
     try {
-      await navigator.share({ title: 'PDFree', text: msg, url });
+      // Some share targets (WhatsApp, SMS, etc.) only surface `text` and
+      // silently drop the separate `url` field — fold the link into the
+      // text so the recipient always gets it.
+      await navigator.share({ title: 'PDFree', text: `${msg} ${url}` });
       trackShareTool('success', tool);
     } catch (err) {
       if (err.name === 'AbortError') {
