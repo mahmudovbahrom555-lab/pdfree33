@@ -2,25 +2,12 @@
   "@context": "https://schema.org",
   "@type": "HowTo",
   "name": "PDF'e sayfa numarası ekleme",
-  "description": "PDF belgelerine özelleştirilebilir sayfa numaraları ekleyin — ücretsiz, yükleme yok.",
+  "description": "PDF belgelerine özelleştirilebilir sayfa numaraları ekleyin — ücretsiz, yükleme yok, tamamen tarayıcıda işlenir.",
+  "totalTime": "PT1M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — ücretsiz, yükleme yapmadan tarayıcıda PDF sayfa numaralandırma aracı" }],
   "step": [
-    {
-      "@type": "HowToStep",
-      "position": 1,
-      "name": "PDF ekleyin",
-      "text": "Dosyayı sürükleyin veya Dosya Seç'e tıklayın."
-    },
-    {
-      "@type": "HowToStep",
-      "position": 2,
-      "name": "Seçenekleri ayarlayın",
-      "text": "Konum, yazı boyutu, renk, başlangıç numarası ve format (1, i, I, a, A) seçin."
-    },
-    {
-      "@type": "HowToStep",
-      "position": 3,
-      "name": "İndirin",
-      "text": "Numaralandır ve İndir'e tıklayın. PDF otomatik olarak indirilir."
-    }
+    { "@type": "HowToStep", "position": 1, "name": "PDF ekleyin", "text": "Dosyayı sürükleyin veya Dosya Seç'e tıklayın. Dosya tarayıcınızda açılır — sunucuya hiçbir şey yüklenmez.", "url": "https://pdfree.io/tr/sayfa-numarasi-ekle/#step1" },
+    { "@type": "HowToStep", "position": 2, "name": "Seçenekleri ayarlayın", "text": "Konumu (alt orta, alt sağ vb.), yazı boyutu ve rengini, başlangıç numarasını ve formatı (1, i, I, a, A) seçin. İsteğe bağlı olarak \"Sayfa 1 / 20\" gibi bir görünüm için önek veya sonek ekleyin.", "url": "https://pdfree.io/tr/sayfa-numarasi-ekle/#step2" },
+    { "@type": "HowToStep", "position": 3, "name": "İndirin", "text": "Numaralandır ve İndir'e tıklayın. PDF otomatik olarak indirilir — orijinal içerik değişmeden kalır.", "url": "https://pdfree.io/tr/sayfa-numarasi-ekle/#step3" }
   ]
 }

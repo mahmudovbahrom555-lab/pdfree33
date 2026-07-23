@@ -9,10 +9,18 @@
   },
   {
     "@type": "Question",
+    "name": "Numaralandırmaya 1 dışında bir sayıyla başlayabilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. \"Başlangıç numarası\" alanına istediğiniz sayıyı girin. Kapak sayfasının 0. sayfa sayıldığı belgeler veya önceki bölümden devam eden bölümler için kullanışlıdır."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "Kapak sayfasını numara dışında bırakabilir miyim?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Evet. Numaralandırmanın hangi sayfadan başlayacağını ve ilk numaranın ne olacağını ayarlayabilirsiniz."
+      "text": "Evet. Numaralandırmanın hangi sayfadan başlayacağını ve ilk numaranın ne olacağını ayarlayabilirsiniz. Kapak sayfası numara almadan kalır."
     }
   },
   {
@@ -20,7 +28,31 @@
     "name": "Sayfa numarasının konumunu değiştirebilir miyim?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Evet. Alt orta, alt sağ, alt sol, üst orta ve diğer konumlar desteklenmektedir."
+      "text": "Evet. Alt orta, alt sağ, alt sol, üst orta, üst sağ ve üst sol konumlar desteklenmektedir."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "\"Sayfa 1 / 20\" formatını ekleyebilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. Sayının önüne metin eklemek için önek alanını (örneğin \"Sayfa \"), sonrasına eklemek için sonek alanını (örneğin \" / 20\") kullanın."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Numaraların renk ve boyutunu değiştirebilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. Yazı boyutu, rengi ve konumu tam olarak özelleştirilebilir."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Sayfa numaralarını ekledikten sonra kaldırabilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. Sayfa numaraları belgeye kalıcı olarak yerleştirilir. Daha sonra numarasız bir sürüme ihtiyaç duyarsanız orijinal dosyayı ayrıca saklayın."
     }
   },
   {
@@ -28,15 +60,7 @@
     "name": "Dosyalarım yükleniyor mu?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Hayır. Tüm işlem tarayıcınızda gerçekleşir."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "Bu araç ücretsiz mi?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Evet, sonsuza kadar tamamen ücretsizdir."
+      "text": "Hayır. Tüm işlem tarayıcınızda gerçekleşir. Belgeleriniz cihazınızdan asla ayrılmaz."
     }
   }
 ]
