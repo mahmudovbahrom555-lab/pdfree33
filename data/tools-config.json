@@ -1313,10 +1313,10 @@
       },
       "ogDescs": {
         "en": "Paginate any PDF online — add page numbers with custom format, position, and prefix. Runs in your browser, nothing uploaded. Free, no signup.",
-        "es": "Añade números de página a cualquier PDF. Procesado en el navegador — sin subidas, sin registro, sin límites.",
-        "pt": "Adicione números de página a qualquer PDF. Processado no navegador — sem uploads, sem registro, sem limites.",
-        "de": "Seitenzahlen in beliebige PDFs einfügen. Im Browser verarbeitet — kein Upload, keine Registrierung, keine Limits. Kostenlos.",
-        "fr": "Ajouter des numéros de page à un PDF gratuitement en ligne. Format arabe, romain ou alphabétique. 100 % privé — aucun envoi, sans inscription.",
+        "es": "Pagina cualquier PDF online — añade números de página con formato, posición y prefijo personalizados. Funciona en tu navegador, nada se sube. Gratis, sin registro.",
+        "pt": "Numere qualquer PDF online — adicione números de página com formato, posição e prefixo personalizados. Funciona no seu navegador, nada é enviado. Grátis, sem cadastro.",
+        "de": "Paginiere jedes PDF online — füge Seitenzahlen mit individuellem Format, Position und Präfix hinzu. Läuft in deinem Browser, nichts wird hochgeladen. Kostenlos, ohne Anmeldung.",
+        "fr": "Paginez n'importe quel PDF en ligne — ajoutez des numéros de page avec un format, une position et un préfixe personnalisés. Fonctionne dans votre navigateur, rien n'est envoyé. Gratuit, sans inscription.",
         "id": "Paginasi PDF mana pun online — tambahkan nomor halaman dengan format, posisi, dan awalan kustom. Berjalan di browser, tidak ada yang diunggah. Gratis, tanpa daftar.",
         "vi": "Đánh số trang bất kỳ PDF nào trực tuyến — thêm số trang với định dạng, vị trí và tiền tố tùy chỉnh. Chạy trong trình duyệt, không có gì được tải lên. Miễn phí, không đăng ký.",
         "ru": "Пронумеруйте любой PDF онлайн — добавьте номера страниц с настраиваемым форматом, позицией и префиксом. Работает в браузере, ничего не загружается. Бесплатно, без регистрации.",
@@ -1329,12 +1329,19 @@
       },
       "keywords": {
         "en": "add page numbers to pdf, number pdf pages, pdf page numbering free, pdf pagination online",
+        "es": "añadir números de página a pdf, numerar páginas pdf, numeración de páginas pdf gratis, paginación pdf online",
+        "pt": "adicionar números de página ao pdf, numerar páginas pdf, numeração de páginas pdf grátis, paginação pdf online",
+        "de": "seitenzahlen zu pdf hinzufügen, pdf seiten nummerieren, pdf seitennummerierung kostenlos, pdf paginierung online",
+        "fr": "ajouter des numéros de page à un pdf, numéroter les pages pdf, numérotation pdf gratuite, pagination pdf en ligne",
+        "id": "tambah nomor halaman ke pdf, beri nomor halaman pdf, penomoran halaman pdf gratis, paginasi pdf online",
+        "vi": "thêm số trang vào pdf, đánh số trang pdf, đánh số trang pdf miễn phí, phân trang pdf trực tuyến",
         "ru": "добавить номера страниц в pdf, нумерация страниц pdf, пронумеровать pdf бесплатно, пагинация pdf онлайн",
         "ja": "pdfにページ番号を追加, pdfページ番号, pdf ページ付け 無料, pdf ページネーション オンライン",
         "it": "aggiungere numeri di pagina al pdf, numerazione pagine pdf, impaginare pdf gratis, numerazione pdf online",
         "ko": "pdf 페이지 번호 추가, pdf 페이지 번호 매기기, pdf 페이지 번호 무료, pdf 페이지 매기기 온라인",
         "nl": "paginanummers toevoegen aan pdf, pdf paginanummering, pdf gratis pagineren, pdf paginering online",
-        "pl": "dodaj numery stron do pdf, numeracja stron pdf, ponumeruj pdf za darmo, paginacja pdf online"
+        "pl": "dodaj numery stron do pdf, numeracja stron pdf, ponumeruj pdf za darmo, paginacja pdf online",
+        "tr": "pdf'ye sayfa numarası ekle, pdf sayfa numaralama, ücretsiz pdf sayfa numaralama, pdf sayfalama online"
       }
     },
     {
