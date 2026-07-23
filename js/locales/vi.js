@@ -241,6 +241,7 @@ window.PDFREE_LOCALE = {
   hero_hint_multi:    'Gợi ý: {tool}',
   hero_chip_one_file: '1 file',
   hero_img_hint:      '🖼️ Bạn có ảnh không?',
+  home_title:         'PDFree — Công Cụ PDF Miễn Phí, Không Giới Hạn',
 
   fb_intro:              'Gửi thẳng đến Murod trên Telegram — không hệ thống ticket, không CRM. Tôi tự đọc từng tin nhắn.',
   fb_title_bug:          '🐛 Báo lỗi',

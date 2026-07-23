@@ -253,7 +253,8 @@ export const EN = {
   hero_pick_back:     '← Back',
   hero_hint_multi:    'Recommended: {tool}',
   hero_chip_one_file: '1 file',
-  hero_img_hint:      '🖼️ Have an image instead?',
+  hero_img_hint:      'Have an image instead?',
+  home_title:         'PDFree — Free PDF Tools, No Limits',
 
   // ── feedback.js — personalized modal ──────────────────────────
   fb_intro:              'Goes straight to Murod on Telegram — no tickets, no CRM. I read every message myself.',

@@ -240,6 +240,7 @@ window.PDFREE_LOCALE = {
   hero_hint_multi:    'Zalecane: {tool}',
   hero_chip_one_file: '1 plik',
   hero_img_hint:      '🖼️ Masz obraz?',
+  home_title:         'PDFree — Darmowe Narzędzia PDF, Bez Limitów',
 
   fb_intro:              'Trafia bezpośrednio do Muroda na Telegramie — bez systemu zgłoszeń, bez CRM. Osobiście czytam każdą wiadomość.',
   fb_title_bug:          '🐛 Zgłoś błąd',

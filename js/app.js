@@ -228,7 +228,7 @@ function goHome() {
   if (isProcessing) { showToast(t('wait_processing')); return; }
   showHomePage();                                    // visual feedback — immediate
   history.pushState({}, 'PDFree', location.pathname);
-  document.title = 'PDFree — Free PDF Tools, No Limits';
+  document.title = t('home_title');
   requestAnimationFrame(() => hideAllToolOptions()); // heavy DOM — after paint
 }
 

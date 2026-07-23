@@ -241,6 +241,7 @@ window.PDFREE_LOCALE = {
   hero_hint_multi:    'おすすめ: {tool}',
   hero_chip_one_file: '1件のファイル',
   hero_img_hint:      '🖼️ 画像をお持ちですか？',
+  home_title:         'PDFree — 無料のPDFツール、無制限',
 
   fb_intro:              'TelegramでMurodに直接届きます — チケット制度もCRMもありません。すべて私自身が読みます。',
   fb_title_bug:          '🐛 不具合を報告',

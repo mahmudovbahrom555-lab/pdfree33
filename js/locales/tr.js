@@ -240,6 +240,7 @@ window.PDFREE_LOCALE = {
   hero_hint_multi:    'Önerilen: {tool}',
   hero_chip_one_file: '1 dosya',
   hero_img_hint:      '🖼️ Bir resminiz mi var?',
+  home_title:         'PDFree — Ücretsiz PDF Araçları, Sınırsız',
 
   fb_intro:              'Doğrudan Telegram\'da Murod\'a gider — bilet sistemi yok, CRM yok. Her mesajı kişisel olarak okuyorum.',
   fb_title_bug:          '🐛 Hata bildir',

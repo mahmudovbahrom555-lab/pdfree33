@@ -230,7 +230,7 @@ window.PDFREE_LOCALE = {
   search_miss:        'Tidak ada alat untuk „{q}" — coba „gabung", „kompres", atau „pisah"',
 
   // hero drop zone
-  hero_drop:          'Letakkan PDF di sini',
+  hero_drop:          'Mulai dengan PDF Anda',
   hero_or:            'atau',
   hero_drop_choose:   'Pilih file',
   hero_file_single:   '{name} ({size})',
@@ -240,7 +240,8 @@ window.PDFREE_LOCALE = {
   hero_pick_back:     '← Kembali',
   hero_hint_multi:    'Disarankan: {tool}',
   hero_chip_one_file: '1 file',
-  hero_img_hint:      '🖼️ Punya gambar?',
+  hero_img_hint:      'Punya gambar?',
+  home_title:         'PDFree — Alat PDF Gratis, Tanpa Batasan',
 
   fb_intro:              'Langsung ke Murod di Telegram — tanpa sistem tiket, tanpa CRM. Saya membaca setiap pesan sendiri.',
   fb_title_bug:          '🐛 Laporkan bug',

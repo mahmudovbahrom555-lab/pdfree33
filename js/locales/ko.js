@@ -240,6 +240,7 @@ window.PDFREE_LOCALE = {
   hero_hint_multi:    '추천: {tool}',
   hero_chip_one_file: '파일 1개',
   hero_img_hint:      '🖼️ 이미지가 있나요?',
+  home_title:         'PDFree — 무료 PDF 도구, 제한 없음',
 
   fb_intro:              '텔레그램으로 Murod에게 직접 전달됩니다 — 티켓 시스템도 CRM도 없어요. 제가 직접 모든 메시지를 읽습니다.',
   fb_title_bug:          '🐛 버그 신고',

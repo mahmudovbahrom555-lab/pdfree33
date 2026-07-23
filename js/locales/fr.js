@@ -229,7 +229,7 @@ window.PDFREE_LOCALE = {
   search_miss:        'Aucun outil trouvé pour « {q} » — essaie « fusionner », « compresser » ou « diviser »',
 
   // hero drop zone
-  hero_drop:          'Déposez votre PDF ici',
+  hero_drop:          'Commencez avec votre PDF',
   hero_or:            'ou',
   hero_drop_choose:   'Choisir un fichier',
   hero_file_single:   '{name} ({size})',
@@ -239,7 +239,8 @@ window.PDFREE_LOCALE = {
   hero_pick_back:     '← Retour',
   hero_hint_multi:    'Recommandé : {tool}',
   hero_chip_one_file: '1 fichier',
-  hero_img_hint:      '🖼️ Vous avez une image ?',
+  hero_img_hint:      'Vous avez une image ?',
+  home_title:         'PDFree — Outils PDF Gratuits, Sans Limites',
 
   fb_intro:              'Va directement à Murod sur Telegram — pas de ticket, pas de CRM. Je lis chaque message personnellement.',
   fb_title_bug:          '🐛 Signaler un bug',

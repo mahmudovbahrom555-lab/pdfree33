@@ -241,6 +241,7 @@ window.PDFREE_LOCALE = {
   hero_hint_multi:    'Рекомендуем: {tool}',
   hero_chip_one_file: '1 файл',
   hero_img_hint:      '🖼️ Есть изображение вместо PDF?',
+  home_title:         'PDFree — Бесплатные PDF-инструменты, Без ограничений',
 
   fb_intro:              'Идёт напрямую Муроду в Telegram — без тикет-системы, без CRM. Я лично читаю каждое сообщение.',
   fb_title_bug:          '🐛 Сообщить об ошибке',
