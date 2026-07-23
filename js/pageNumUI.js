@@ -86,11 +86,11 @@ function _render() {
   if (!container) return;
 
   const posOpts = [
-    { value: 'bottom-center', label: '↓ Bottom center'           },
-    { value: 'bottom-right',  label: '↘ Bottom right'            },
-    { value: 'bottom-left',   label: '↙ Bottom left'             },
-    { value: 'top-center',    label: '↑ Top center'              },
-    { value: 'book',          label: '📖 Book style (outer edge)' },
+    { value: 'bottom-center', label: t('pn_pos_bottom_center') },
+    { value: 'bottom-right',  label: t('pn_pos_bottom_right')  },
+    { value: 'bottom-left',   label: t('pn_pos_bottom_left')   },
+    { value: 'top-center',    label: t('pn_pos_top_center')    },
+    { value: 'book',          label: t('pn_pos_book')          },
   ];
   const fmtOpts = [
     { value: 'arabic', label: '1  2  3'   },
@@ -125,20 +125,20 @@ function _render() {
       <div class="pn-section-label">${t('pn_apply_to_pages')}</div>
       <div class="pn-row">
         <div class="pn-field">
-          <span class="pn-field-label">From page</span>
+          <span class="pn-field-label">${t('pn_from_page')}</span>
           <div class="pn-row">
-            <button type="button" class="pn-stepper" id="pnFromMinus" aria-label="Decrease from page">−</button>
+            <button type="button" class="pn-stepper" id="pnFromMinus" aria-label="${t('pn_aria_dec_from')}">−</button>
             ${_numInput('pnFromInput', _fromPage)}
-            <button type="button" class="pn-stepper" id="pnFromPlus" aria-label="Increase from page">+</button>
+            <button type="button" class="pn-stepper" id="pnFromPlus" aria-label="${t('pn_aria_inc_from')}">+</button>
           </div>
         </div>
         <div style="font-size:20px;color:var(--text3);padding-top:18px">→</div>
         <div class="pn-field">
-          <span class="pn-field-label">To page <span style="opacity:.5;font-weight:400">(∞ = all)</span></span>
+          <span class="pn-field-label">${t('pn_to_page')} <span style="opacity:.5;font-weight:400">${t('pn_to_page_all')}</span></span>
           <div class="pn-row">
-            <button type="button" class="pn-stepper" id="pnToMinus" aria-label="Decrease to page">−</button>
+            <button type="button" class="pn-stepper" id="pnToMinus" aria-label="${t('pn_aria_dec_to')}">−</button>
             ${_numInput('pnToInput', _toPage, '∞')}
-            <button type="button" class="pn-stepper" id="pnToPlus" aria-label="Increase to page">+</button>
+            <button type="button" class="pn-stepper" id="pnToPlus" aria-label="${t('pn_aria_inc_to')}">+</button>
           </div>
         </div>
       </div>
@@ -148,8 +148,8 @@ function _render() {
 
     <!-- ── NUMBERING ── -->
     <div class="pn-section">
-      <div class="pn-section-label">Numbering</div>
-      ${chipGroup('pnFmt', fmtOpts, _format, 'Number format', { radius: '8px' })}
+      <div class="pn-section-label">${t('pn_section_numbering')}</div>
+      ${chipGroup('pnFmt', fmtOpts, _format, t('pn_aria_number_format'), { radius: '8px' })}
 
       <!-- Start number card — compact, not dominant -->
       <div style="
@@ -186,9 +186,9 @@ function _render() {
             </button>
           </div>
           <div class="pn-row">
-            <button type="button" class="pn-stepper" id="pnStartMinus" aria-label="Decrease start">−</button>
+            <button type="button" class="pn-stepper" id="pnStartMinus" aria-label="${t('pn_aria_dec_start')}">−</button>
             ${_numInput('pnStartInput', _startAt)}
-            <button type="button" class="pn-stepper" id="pnStartPlus" aria-label="Increase start">+</button>
+            <button type="button" class="pn-stepper" id="pnStartPlus" aria-label="${t('pn_aria_inc_start')}">+</button>
           </div>
         </div>
       </div>
@@ -198,23 +198,23 @@ function _render() {
 
     <!-- ── POSITION ── -->
     <div class="pn-section">
-      <div class="pn-section-label">Position</div>
-      ${chipGroup('pnPos', posOpts, _position, 'Position', { vertical: true, radius: '8px' })}
+      <div class="pn-section-label">${t('pn_section_position')}</div>
+      ${chipGroup('pnPos', posOpts, _position, t('pn_section_position'), { vertical: true, radius: '8px' })}
     </div>
 
     <hr class="pn-divider">
 
     <!-- ── OPTIONS ── -->
     <div class="pn-section">
-      <div class="pn-section-label">Options</div>
+      <div class="pn-section-label">${t('pn_section_options')}</div>
       ${checkbox({ id: 'pnShowTotal', checked: _showTotal,
-                   title: 'Show total (1 / N)', subtitle: 'Displays current page out of total' })}
+                   title: t('pn_show_total_title'), subtitle: t('pn_show_total_subtitle') })}
     </div>
 
     <!-- ── SIZE ── -->
-    ${sliderRow({ id: 'pnFontSize', label: 'Size', valId: 'pnFontSizeVal',
+    ${sliderRow({ id: 'pnFontSize', label: t('pn_size_label'), valId: 'pnFontSizeVal',
                   valText: _fontSize + 'pt', min: 7, max: 16, step: 1,
-                  value: _fontSize, ariaLabel: `Font size ${_fontSize}pt` })}
+                  value: _fontSize, ariaLabel: t('pn_aria_font_size', { size: _fontSize }) })}
 
     <!-- ── PREVIEW ── -->
     <div class="pn-preview" aria-hidden="true">
@@ -232,9 +232,9 @@ function _previewHTML() {
   const sfx = n => _showTotal ? ` / ${_formatNum(_startAt + 9, _format)}` : '';
   const p1  = _fromPage > 1 ? '—' : ex1 + sfx(1);
   const rangeHint = _toPage !== null
-    ? `<span class="pn-preview__label" style="margin-left:8px;opacity:.6">pages ${_fromPage}–${_toPage}</span>`
-    : (_fromPage > 1 ? `<span class="pn-preview__label" style="margin-left:8px;opacity:.6">from page ${_fromPage}</span>` : '');
-  return `<span class="pn-preview__label">Preview:</span>
+    ? `<span class="pn-preview__label" style="margin-left:8px;opacity:.6">${t('pn_preview_range', { from: _fromPage, to: _toPage })}</span>`
+    : (_fromPage > 1 ? `<span class="pn-preview__label" style="margin-left:8px;opacity:.6">${t('pn_preview_from', { from: _fromPage })}</span>` : '');
+  return `<span class="pn-preview__label">${t('pn_preview_label')}</span>
     <span class="pn-preview__ex">${p1}</span>
     <span class="pn-preview__ex">${ex2 + sfx(2)}</span>
     <span class="pn-preview__ex">${ex3 + sfx(3)}</span>
