@@ -1,0 +1,66 @@
+[
+  {
+    "@type": "Question",
+    "name": "Worden mijn bestanden ergens geüpload bij het toevoegen van paginanummers?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. Het toevoegen van paginanummers gebeurt volledig in je browser met JavaScript. Bestanden verlaten je apparaat nooit. Je kunt dit zelf controleren: open DevTools → tabblad Netwerk — je zult niet zien dat je PDF naar een externe server wordt geüpload."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik beginnen met een ander nummer dan 1?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Voer een willekeurig startnummer in bij het veld 'Startnummer'. Dit is handig voor documenten waarbij een titelpagina als pagina 0 telt, of voor hoofdstukken die de nummering van een vorige sectie voortzetten."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik de omslag uitsluiten van de nummering?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Schakel de optie 'Eerste pagina overslaan' in. Pagina 1 (de omslag) krijgt geen nummer en de nummering begint vanaf de tweede pagina."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Welke nummerformaten zijn beschikbaar?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Arabische cijfers (1, 2, 3), kleine Romeinse cijfers (i, ii, iii), hoofdletter Romeinse cijfers (I, II, III), kleine letters (a, b, c) en hoofdletters (A, B, C)."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik het formaat 'Pagina 1 van 20' toevoegen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Gebruik het voorvoegselveld om tekst vóór het nummer te plaatsen (bijv. 'Pagina ') en het achtervoegselveld voor tekst erna (bijv. ' van 20'). Dit creëert het gangbare formaat 'Pagina 1 van 20' voor professionele gedrukte documenten."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik kiezen waar de paginanummers verschijnen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Positieopties: onder gecentreerd, onder links, onder rechts, boven gecentreerd, boven links en boven rechts."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is er een limiet aan het aantal pagina's?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. PDFree heeft geen limieten voor het aantal pagina's of de bestandsgrootte. De enige praktische beperking is het beschikbare werkgeheugen van je apparaat."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik paginanummers verwijderen na het toevoegen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. Paginanummers worden permanent ingesloten. Bewaar het originele bestand apart als je later een versie zonder nummers nodig hebt."
+    }
+  }
+]

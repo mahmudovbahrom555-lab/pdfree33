@@ -1,0 +1,36 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Gratis paginanummers toevoegen aan een PDF",
+  "description": "Voeg Arabische, Romeinse of alfabetische paginanummers toe aan een bestaande PDF — gratis, geen upload, lokaal verwerkt in de browser.",
+  "totalTime": "PT2M",
+  "tool": [
+    {
+      "@type": "HowToTool",
+      "name": "PDFree — gratis browsergebaseerde dienst voor PDF-paginanummers, geen upload vereist"
+    }
+  ],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDF openen",
+      "text": "Klik op \"Bestanden kiezen\" of sleep je PDF naar het upload-vak. Het bestand wordt in je browser geladen — er wordt niets naar een server verzonden.",
+      "url": "https://pdfree.io/pagenum-pdf/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Nummering instellen",
+      "text": "Kies het cijferformaat (Arabisch 1,2,3 / Romeins i,ii,iii / alfabetisch A,B,C), de positie (boven of onder, links/midden/rechts), het startnummer en of je de eerste pagina wilt overslaan. Voeg optioneel een voorvoegsel of achtervoegsel toe voor het formaat \"Pagina 1 van 20\".",
+      "url": "https://pdfree.io/pagenum-pdf/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Toepassen en downloaden",
+      "text": "Klik op \"Paginanummers toevoegen\". De paginanummers worden als nette tekst op elke pagina ingesloten. De PDF wordt direct gedownload — de originele inhoud blijft ongewijzigd.",
+      "url": "https://pdfree.io/pagenum-pdf/#step3"
+    }
+  ]
+}

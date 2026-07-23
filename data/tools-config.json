@@ -1175,6 +1175,12 @@
         "fr": "numerotation-pdf",
         "id": "nomor-halaman-pdf",
         "vi": "danh-so-trang-pdf",
+        "ru": "numeratsiya-stranits-pdf",
+        "ja": "pdf-page-bango",
+        "it": "numerazione-pagine-pdf",
+        "ko": "pdf-peiji-beonho",
+        "nl": "paginanummers-pdf",
+        "pl": "numeracja-stron-pdf",
         "tr": "sayfa-numarasi-ekle"
       },
       "titles": {
@@ -1185,6 +1191,12 @@
         "fr": "Numérotation PDF Gratuit — Position et Style, sans Envoi | PDFree",
         "id": "Tambah Nomor Halaman PDF Gratis — Paginasi Online | PDFree",
         "vi": "Thêm Số Trang PDF Miễn Phí — Đánh Số Trang Trực Tuyến | PDFree",
+        "ru": "Пронумеровать Страницы PDF Бесплатно — Без Загрузки | PDFree",
+        "ja": "PDFにページ番号を追加 無料 — オンラインでページ付け | PDFree",
+        "it": "Aggiungere Numeri di Pagina al PDF Gratis — Impaginazione Online | PDFree",
+        "ko": "PDF 페이지 번호 추가 무료 — 온라인 페이지 매기기 | PDFree",
+        "nl": "Paginanummers Toevoegen aan PDF Gratis — Online Pagineren | PDFree",
+        "pl": "Dodaj Numery Stron do PDF Za Darmo — Paginacja Online | PDFree",
         "tr": "PDF'ye Sayfa Numarası Ekle — Ücretsiz, Yükleme Yapmadan | PDFree"
       },
       "descs": {
@@ -1195,6 +1207,12 @@
         "fr": "Ajouter des numéros de page à un PDF gratuitement en ligne. Format arabe, romain ou alphabétique. 100 % privé — aucun envoi, sans inscription.",
         "id": "Tambahkan nomor halaman ke PDF mana pun. Diproses lokal di browser — tanpa upload, tanpa daftar, tanpa batas. Gratis.",
         "vi": "Thêm số trang vào bất kỳ PDF nào. Xử lý cục bộ trong trình duyệt — không tải lên, không đăng ký, không giới hạn. Miễn phí.",
+        "ru": "Добавьте номера страниц в любой PDF. Обработка в браузере — без загрузки на сервер, без регистрации, без ограничений. Бесплатно.",
+        "ja": "PDFにページ番号を追加。ブラウザ内で処理 — アップロードなし、登録不要、制限なし。無料。",
+        "it": "Aggiungi numeri di pagina a qualsiasi PDF. Elaborato nel browser — nessun caricamento, nessuna registrazione, nessun limite. Gratis.",
+        "ko": "모든 PDF에 페이지 번호를 추가하세요. 브라우저에서 처리 — 업로드 없음, 가입 불필요, 제한 없음. 무료.",
+        "nl": "Voeg paginanummers toe aan elke PDF. Verwerkt in de browser — geen upload, geen registratie, geen limieten. Gratis.",
+        "pl": "Dodaj numery stron do dowolnego PDF. Przetwarzanie w przeglądarce — bez przesyłania, bez rejestracji, bez limitów. Za darmo.",
         "tr": "PDF'ye sayfa numarası ekleyin. Konum, stil ve başlangıç numarasını özelleştirin. Tarayıcıda işleme — yükleme yok."
       },
       "navLabels": {
@@ -1205,6 +1223,12 @@
         "fr": "Numérotation",
         "id": "No. Halaman",
         "vi": "Số Trang",
+        "ru": "Нумерация",
+        "ja": "ページ番号",
+        "it": "Num. Pagina",
+        "ko": "페이지 번호",
+        "nl": "Paginanr.",
+        "pl": "Nr Strony",
         "tr": "Sayfa Numarası"
       },
       "cardNames": {
@@ -1215,6 +1239,12 @@
         "fr": "Numérotation PDF",
         "id": "Nomor Halaman",
         "vi": "Số Trang PDF",
+        "ru": "Номера страниц",
+        "ja": "ページ番号",
+        "it": "Numeri di Pagina",
+        "ko": "페이지 번호",
+        "nl": "Paginanummers",
+        "pl": "Numery Stron",
         "tr": "Sayfa Numarası Ekle"
       },
       "cardDescs": {
@@ -1225,6 +1255,12 @@
         "fr": "Ajouter des pieds de page numérotés — arabe, romain ou alphabétique",
         "id": "Tambah footer bernomor — Arab, Romawi atau ABC",
         "vi": "Thêm chân trang có số — Ả Rập, La Mã hoặc ABC",
+        "ru": "Добавьте нумерованные колонтитулы — арабские, римские цифры или буквы",
+        "ja": "番号付きフッターを追加 — アラビア数字、ローマ数字、またはABC",
+        "it": "Aggiungi piè di pagina numerati — arabo, romano o ABC",
+        "ko": "번호가 매겨진 바닥글 추가 — 아라비아, 로마 숫자 또는 ABC",
+        "nl": "Genummerde voettekst toevoegen — Arabisch, Romeins of ABC",
+        "pl": "Dodaj numerowane stopki — arabskie, rzymskie lub ABC",
         "tr": "PDF'ye özelleştirilebilir sayfa numaraları ekleyin"
       },
       "breadcrumb": {
@@ -1235,6 +1271,12 @@
         "fr": "Numérotation PDF",
         "id": "Nomor Halaman PDF",
         "vi": "Số Trang PDF",
+        "ru": "Номера страниц PDF",
+        "ja": "PDFページ番号",
+        "it": "Numeri di Pagina PDF",
+        "ko": "PDF 페이지 번호",
+        "nl": "Paginanummers PDF",
+        "pl": "Numery Stron PDF",
         "tr": "Sayfa Numarası Ekle"
       },
       "metaDescs": {
@@ -1245,6 +1287,12 @@
         "fr": "Ajouter des numéros de page à un PDF gratuitement — sans envoi de fichier, sans compte. Formats arabe, romain ou alphabétique. Position personnalisée, ignorer la couverture.",
         "id": "Tambahkan nomor halaman ke PDF gratis — tanpa unggah, tanpa akun. Format Arab, Romawi, atau alfabetik. Posisi kustom, lewati halaman sampul.",
         "vi": "Thêm số trang vào PDF miễn phí — không tải lên, không cần tài khoản. Định dạng Ả Rập, La Mã hoặc chữ cái. Vị trí tùy chỉnh, bỏ qua trang bìa.",
+        "ru": "Добавьте номера страниц в PDF бесплатно — без загрузки, работает в браузере, аккаунт не нужен. Арабские, римские или буквенные форматы. Своя позиция, префикс/суффикс, пропуск обложки.",
+        "ja": "PDFにページ番号を無料で追加 — アップロード不要、ブラウザで動作、アカウント不要。アラビア数字、ローマ数字、アルファベット形式に対応。位置のカスタマイズ、接頭辞/接尾辞、表紙をスキップ。",
+        "it": "Aggiungi numeri di pagina al PDF gratis — senza caricamento, funziona nel browser, nessun account necessario. Formati arabo, romano o alfabetico. Posizione personalizzata, salta copertina.",
+        "ko": "PDF에 페이지 번호를 무료로 추가 — 업로드 없음, 브라우저에서 실행, 계정 불필요. 아라비아 숫자, 로마 숫자, 알파벳 형식 지원. 위치 사용자 지정, 접두사/접미사, 표지 건너뛰기.",
+        "nl": "Paginanummers toevoegen aan PDF gratis — geen upload, werkt in de browser, geen account nodig. Arabische, Romeinse of alfabetische indeling. Aangepaste positie, voorvoegsel/achtervoegsel, omslag overslaan.",
+        "pl": "Dodaj numery stron do PDF za darmo — bez przesyłania, działa w przeglądarce, konto niepotrzebne. Formaty arabskie, rzymskie lub alfabetyczne. Własna pozycja, prefiks/sufiks, pomiń okładkę.",
         "tr": "PDF'e sayfa numarası ekle — ücretsiz, yükleme yok, hesap gerekmez. Arap, Roma veya alfabetik format. Özel konum, kapak sayfasını atla."
       },
       "ogTitles": {
@@ -1255,6 +1303,12 @@
         "fr": "Numérotation PDF Gratuit — Position et Style, sans Envoi",
         "id": "Paginasi PDF Gratis — Tambah Nomor Halaman, Tanpa Upload",
         "vi": "Đánh Số Trang PDF Miễn Phí — Thêm Số Trang, Không Tải Lên",
+        "ru": "Нумерация Страниц PDF Бесплатно — Добавить Номера Онлайн, Без Загрузки",
+        "ja": "PDFページ付け 無料 — オンラインでページ番号を追加、アップロードなし",
+        "it": "Impaginazione PDF Gratis — Aggiungi Numeri di Pagina Online, Senza Caricamento",
+        "ko": "PDF 페이지 매기기 무료 — 온라인으로 페이지 번호 추가, 업로드 없음",
+        "nl": "PDF Pagineren Gratis — Paginanummers Online Toevoegen, Zonder Upload",
+        "pl": "Paginacja PDF Za Darmo — Dodaj Numery Stron Online, Bez Przesyłania",
         "tr": "PDF'ye Sayfa Numarası Ekle Ücretsiz | PDFree"
       },
       "ogDescs": {
@@ -1265,10 +1319,22 @@
         "fr": "Ajouter des numéros de page à un PDF gratuitement en ligne. Format arabe, romain ou alphabétique. 100 % privé — aucun envoi, sans inscription.",
         "id": "Paginasi PDF mana pun online — tambahkan nomor halaman dengan format, posisi, dan awalan kustom. Berjalan di browser, tidak ada yang diunggah. Gratis, tanpa daftar.",
         "vi": "Đánh số trang bất kỳ PDF nào trực tuyến — thêm số trang với định dạng, vị trí và tiền tố tùy chỉnh. Chạy trong trình duyệt, không có gì được tải lên. Miễn phí, không đăng ký.",
+        "ru": "Пронумеруйте любой PDF онлайн — добавьте номера страниц с настраиваемым форматом, позицией и префиксом. Работает в браузере, ничего не загружается. Бесплатно, без регистрации.",
+        "ja": "PDFにオンラインでページ番号を追加 — 形式、位置、接頭辞をカスタマイズ。ブラウザで動作、何もアップロードされません。無料、登録不要。",
+        "it": "Impagina qualsiasi PDF online — aggiungi numeri di pagina con formato, posizione e prefisso personalizzati. Funziona nel browser, nulla viene caricato. Gratis, senza registrazione.",
+        "ko": "온라인으로 모든 PDF에 페이지를 매기세요 — 형식, 위치, 접두사를 사용자 지정. 브라우저에서 실행되며 아무것도 업로드되지 않습니다. 무료, 가입 불필요.",
+        "nl": "Pagineer elke PDF online — voeg paginanummers toe met aangepaste indeling, positie en voorvoegsel. Werkt in je browser, niets wordt geüpload. Gratis, zonder registratie.",
+        "pl": "Ponumeruj dowolny PDF online — dodaj numery stron z niestandardowym formatem, pozycją i prefiksem. Działa w przeglądarce, nic nie jest przesyłane. Za darmo, bez rejestracji.",
         "tr": "PDF'ye sayfa numarası ekleyin. Tarayıcıda işleme — dosyalar cihazınızı terk etmez."
       },
       "keywords": {
-        "en": "add page numbers to pdf, number pdf pages, pdf page numbering free, pdf pagination online"
+        "en": "add page numbers to pdf, number pdf pages, pdf page numbering free, pdf pagination online",
+        "ru": "добавить номера страниц в pdf, нумерация страниц pdf, пронумеровать pdf бесплатно, пагинация pdf онлайн",
+        "ja": "pdfにページ番号を追加, pdfページ番号, pdf ページ付け 無料, pdf ページネーション オンライン",
+        "it": "aggiungere numeri di pagina al pdf, numerazione pagine pdf, impaginare pdf gratis, numerazione pdf online",
+        "ko": "pdf 페이지 번호 추가, pdf 페이지 번호 매기기, pdf 페이지 번호 무료, pdf 페이지 매기기 온라인",
+        "nl": "paginanummers toevoegen aan pdf, pdf paginanummering, pdf gratis pagineren, pdf paginering online",
+        "pl": "dodaj numery stron do pdf, numeracja stron pdf, ponumeruj pdf za darmo, paginacja pdf online"
       }
     },
     {

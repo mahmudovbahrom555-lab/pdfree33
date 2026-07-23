@@ -1,0 +1,66 @@
+[
+  {
+    "@type": "Question",
+    "name": "I miei file vengono caricati da qualche parte quando aggiungo i numeri di pagina?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. L'aggiunta dei numeri di pagina avviene interamente nel tuo browser tramite JavaScript. I file non lasciano mai il tuo dispositivo. Puoi verificarlo tu stesso: apri gli Strumenti per sviluppatori → scheda Rete — non vedrai il tuo PDF caricato su un server remoto."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso iniziare la numerazione da un numero diverso da 1?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. Inserisci qualsiasi numero iniziale nel campo 'Numero iniziale'. Utile per documenti in cui il frontespizio è considerato pagina 0, oppure per capitoli che proseguono la numerazione di una sezione precedente."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso escludere la copertina dalla numerazione?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. Attiva l'opzione 'Salta la prima pagina'. La pagina 1 (copertina) non riceverà un numero e la numerazione partirà dalla seconda pagina."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Quali formati numerici sono disponibili?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Cifre arabe (1, 2, 3), numeri romani minuscoli (i, ii, iii), numeri romani maiuscoli (I, II, III), lettere minuscole (a, b, c) e lettere maiuscole (A, B, C)."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso aggiungere il formato 'Pagina 1 di 20'?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. Usa il campo prefisso per inserire testo prima del numero (es. 'Pagina ') e il campo suffisso per il testo dopo (es. ' di 20'). Questo crea il comune formato 'Pagina 1 di 20' usato nei documenti stampati professionali."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso scegliere dove appaiono i numeri di pagina?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. Opzioni di posizione: in basso al centro, in basso a sinistra, in basso a destra, in alto al centro, in alto a sinistra e in alto a destra."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "C'è un limite al numero di pagine?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. PDFree non ha limiti sul numero di pagine o sulla dimensione del file. L'unico limite pratico è la memoria disponibile sul tuo dispositivo."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso rimuovere i numeri di pagina dopo averli aggiunti?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. I numeri di pagina vengono incorporati in modo permanente. Conserva il file originale separatamente se in seguito ti serve una versione senza numeri."
+    }
+  }
+]

@@ -1,0 +1,36 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDF에 무료로 페이지 번호 추가하기",
+  "description": "기존 PDF에 아라비아, 로마 또는 알파벳 페이지 번호를 추가하세요 — 무료, 업로드 없음, 브라우저에서 로컬로 처리됩니다.",
+  "totalTime": "PT2M",
+  "tool": [
+    {
+      "@type": "HowToTool",
+      "name": "PDFree — 업로드가 필요 없는 무료 브라우저 기반 PDF 페이지 번호 서비스"
+    }
+  ],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDF 열기",
+      "text": "\"파일 선택\"을 클릭하거나 PDF를 업로드 영역으로 드래그하세요. 파일은 브라우저에서 로드되며 서버로 전송되지 않습니다.",
+      "url": "https://pdfree.io/pagenum-pdf/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "번호 매기기 설정",
+      "text": "번호 형식(아라비아 1,2,3 / 로마 i,ii,iii / 알파벳 A,B,C), 위치(위 또는 아래, 왼쪽/가운데/오른쪽), 시작 번호, 첫 페이지 건너뛰기 여부를 선택하세요. 선택적으로 \"페이지 1 / 20\" 형식을 위한 접두사나 접미사를 추가할 수 있습니다.",
+      "url": "https://pdfree.io/pagenum-pdf/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "적용 및 다운로드",
+      "text": "\"페이지 번호 추가\"를 클릭하세요. 페이지 번호가 각 페이지에 깔끔한 텍스트로 삽입됩니다. PDF가 즉시 다운로드되며 원본 내용은 변경되지 않습니다.",
+      "url": "https://pdfree.io/pagenum-pdf/#step3"
+    }
+  ]
+}

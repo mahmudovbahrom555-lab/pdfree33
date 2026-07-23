@@ -1,0 +1,36 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Aggiungere numeri di pagina a un PDF gratuitamente",
+  "description": "Aggiungi numeri di pagina arabi, romani o alfabetici a un PDF esistente — gratis, senza caricamento, elaborato localmente nel browser.",
+  "totalTime": "PT2M",
+  "tool": [
+    {
+      "@type": "HowToTool",
+      "name": "PDFree — servizio gratuito nel browser per numerare le pagine dei PDF, nessun caricamento richiesto"
+    }
+  ],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Apri il PDF",
+      "text": "Clicca su \"Scegli file\" oppure trascina il tuo PDF nell'area di caricamento. Il file viene caricato nel tuo browser — nulla viene inviato a un server.",
+      "url": "https://pdfree.io/pagenum-pdf/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Configura la numerazione",
+      "text": "Scegli il formato numerico (arabo 1,2,3 / romano i,ii,iii / alfabetico A,B,C), la posizione (in alto o in basso, sinistra/centro/destra), il numero iniziale e se saltare la prima pagina. Facoltativamente aggiungi un prefisso o un suffisso per il formato \"Pagina 1 di 20\".",
+      "url": "https://pdfree.io/pagenum-pdf/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Applica e scarica",
+      "text": "Clicca su \"Aggiungi numeri di pagina\". I numeri vengono incorporati come testo pulito su ogni pagina. Il PDF viene scaricato immediatamente — il contenuto originale resta invariato.",
+      "url": "https://pdfree.io/pagenum-pdf/#step3"
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Bezpłatnie dodaj numery stron do PDF",
+  "description": "Dodaj arabskie, rzymskie lub alfabetyczne numery stron do istniejącego PDF — za darmo, bez przesyłania, przetwarzane lokalnie w przeglądarce.",
+  "totalTime": "PT2M",
+  "tool": [
+    {
+      "@type": "HowToTool",
+      "name": "PDFree — darmowa usługa numeracji stron PDF działająca w przeglądarce, bez konieczności przesyłania"
+    }
+  ],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Otwórz PDF",
+      "text": "Kliknij \"Wybierz pliki\" lub przeciągnij PDF do obszaru wczytywania. Plik jest wczytywany w Twojej przeglądarce — nic nie jest wysyłane na serwer.",
+      "url": "https://pdfree.io/pagenum-pdf/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Skonfiguruj numerację",
+      "text": "Wybierz format liczb (arabski 1,2,3 / rzymski i,ii,iii / alfabetyczny A,B,C), pozycję (góra lub dół, lewo/środek/prawo), numer początkowy oraz czy pominąć pierwszą stronę. Opcjonalnie dodaj prefiks lub sufiks dla formatu \"Strona 1 z 20\".",
+      "url": "https://pdfree.io/pagenum-pdf/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Zastosuj i pobierz",
+      "text": "Kliknij \"Dodaj numery stron\". Numery stron są osadzane jako czysty tekst na każdej stronie. PDF jest pobierany natychmiast — oryginalna zawartość pozostaje niezmieniona.",
+      "url": "https://pdfree.io/pagenum-pdf/#step3"
+    }
+  ]
+}
