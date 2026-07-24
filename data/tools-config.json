@@ -605,6 +605,10 @@
         "vi": "xoay-pdf",
         "ru": "povernut-pdf",
         "ja": "pdf-kaiten",
+        "it": "ruota-pdf",
+        "ko": "pdf-hoejeon",
+        "nl": "pdf-draaien",
+        "pl": "obroc-pdf",
         "tr": "pdf-dondur"
       },
       "titles": {
@@ -617,6 +621,10 @@
         "vi": "Xoay Trang PDF Trực Tuyến Miễn Phí — Không Tải Lên | PDFree",
         "ru": "Повернуть PDF бесплатно — без загрузки на сервер | PDFree",
         "ja": "PDFを無料で回転 — 向きを修正、アップロード不要 | PDFree",
+        "it": "Ruotare PDF Gratis — Correggi Pagine Storte o Capovolte | PDFree",
+        "ko": "PDF 회전 무료 — 옆으로 눕거나 뒤집힌 페이지 수정 | PDFree",
+        "nl": "PDF Draaien Gratis — Scheve of Ondersteboven Pagina's Fixen | PDFree",
+        "pl": "Obróć PDF Za Darmo — Popraw Przekrzywione Strony Online | PDFree",
         "tr": "PDF Döndür — Ücretsiz, Yükleme Yapmadan | PDFree"
       },
       "descs": {
@@ -629,6 +637,10 @@
         "vi": "Sửa hướng trang PDF. 100% riêng tư — xử lý cục bộ, không tải lên, không đăng ký.",
         "ru": "Исправляйте ориентацию страниц в любом PDF. 100% конфиденциально — локальная обработка, без загрузки.",
         "ja": "PDFのページの向きを修正します。100%プライベート — ローカルで処理、アップロード不要。",
+        "it": "Correggi l'orientamento delle pagine in qualsiasi PDF. 100% privato — elaborato localmente, nessun caricamento, nessuna registrazione.",
+        "ko": "모든 PDF의 페이지 방향을 수정하세요. 100% 비공개 — 로컬에서 처리, 업로드 없음, 가입 불필요.",
+        "nl": "Corrigeer de pagina-oriëntatie in elke PDF. 100% privé — lokaal verwerkt, geen upload, geen registratie.",
+        "pl": "Popraw orientację stron w dowolnym pliku PDF. 100% prywatności — przetwarzanie lokalne, bez przesyłania, bez rejestracji.",
         "tr": "PDF sayfalarını 90°, 180° veya 270° döndürün. Tarayıcıda işleme — yükleme yok, sunucu yok. Ücretsiz, kayıt gerekmez."
       },
       "navLabels": {
@@ -641,6 +653,10 @@
         "vi": "Xoay",
         "ru": "Повернуть",
         "ja": "回転",
+        "it": "Ruota",
+        "ko": "회전",
+        "nl": "Draaien",
+        "pl": "Obróć",
         "tr": "PDF Döndür"
       },
       "cardNames": {
@@ -653,6 +669,10 @@
         "vi": "Xoay PDF",
         "ru": "Повернуть PDF",
         "ja": "PDFを回転",
+        "it": "Ruota PDF",
+        "ko": "PDF 회전",
+        "nl": "PDF Draaien",
+        "pl": "Obróć PDF",
         "tr": "PDF Döndür"
       },
       "cardDescs": {
@@ -665,6 +685,10 @@
         "vi": "Sửa hướng trang trong bất kỳ PDF nào",
         "ru": "Исправляйте ориентацию страниц в любом PDF",
         "ja": "どのPDFでもページの向きを修正する",
+        "it": "Correggi l'orientamento delle pagine in qualsiasi PDF",
+        "ko": "모든 PDF의 페이지 방향을 수정하세요",
+        "nl": "Corrigeer de pagina-oriëntatie in elke PDF",
+        "pl": "Popraw orientację stron w dowolnym pliku PDF",
         "tr": "PDF sayfalarının yönünü düzeltin"
       },
       "breadcrumb": {
@@ -677,6 +701,10 @@
         "vi": "Xoay PDF",
         "ru": "Повернуть PDF",
         "ja": "PDFを回転",
+        "it": "Ruota PDF",
+        "ko": "PDF 회전",
+        "nl": "PDF Draaien",
+        "pl": "Obróć PDF",
         "tr": "PDF Döndür"
       },
       "metaDescs": {
@@ -705,6 +733,10 @@
         "vi": "Xoay PDF Miễn Phí — Sửa Hướng Trang Không Tải Lên",
         "ru": "Повернуть PDF бесплатно — исправить ориентацию страниц, без загрузки",
         "ja": "PDF回転 無料 — ページの向きを修正、アップロード不要",
+        "it": "Ruotare PDF Gratis — Correggi Pagine Storte o Capovolte",
+        "ko": "PDF 회전 무료 — 옆으로 눕거나 뒤집힌 페이지 수정",
+        "nl": "PDF Draaien Gratis — Scheve of Ondersteboven Pagina's Corrigeren",
+        "pl": "Obróć PDF Za Darmo — Popraw Przekrzywione lub Odwrócone Strony",
         "tr": "PDF Döndür Ücretsiz — Yükleme Yok, Kayıt Yok | PDFree"
       },
       "ogDescs": {
@@ -717,10 +749,27 @@
         "vi": "Xoay trang PDF 90°, 180° hoặc 270°. Chạy trong trình duyệt — không có gì được tải lên. Miễn phí mãi mãi, không đăng ký.",
         "ru": "Поворачивайте страницы PDF на 90°, 180° или 270°. Работает в браузере — ничего не загружается. Бесплатно, без регистрации.",
         "ja": "PDFページを90°・180°・270°回転します。ブラウザ内で動作 — アップロードなし。永久無料、登録不要。",
+        "it": "Ruota le pagine PDF di 90°, 180° o 270°. Funziona nel browser — niente caricato, niente salvato su un server. Gratis per sempre, senza registrazione.",
+        "ko": "PDF 페이지를 90°, 180°, 270° 회전하세요. 브라우저에서 실행 — 아무것도 업로드되거나 서버에 저장되지 않습니다. 영구 무료, 가입 불필요.",
+        "nl": "Draai PDF-pagina's 90°, 180° of 270°. Werkt in je browser — niets geüpload, niets opgeslagen op een server. Voor altijd gratis, geen registratie.",
+        "pl": "Obróć strony PDF o 90°, 180° lub 270°. Działa w przeglądarce — nic nie jest przesyłane ani zapisywane na serwerze. Za darmo na zawsze, bez rejestracji.",
         "tr": "PDF sayfalarını döndürün. Tarayıcıda işleme — yükleme yok, sunucu yok."
       },
       "keywords": {
-        "en": "rotate pdf, rotate pdf pages, fix pdf orientation, rotate pdf online free, pdf rotation, flip pdf"
+        "en": "rotate pdf, rotate pdf pages, fix pdf orientation, rotate pdf online free, pdf rotation, flip pdf",
+        "es": "rotar pdf, girar pdf online, corregir orientación pdf, rotar páginas pdf gratis, voltear pdf",
+        "pt": "girar pdf, rotacionar pdf online, corrigir orientação pdf, girar páginas pdf grátis, virar pdf",
+        "de": "pdf drehen, pdf seiten drehen, pdf ausrichtung korrigieren, pdf drehen kostenlos online, pdf rotieren",
+        "fr": "rotation pdf, faire pivoter pdf, corriger orientation pdf, pivoter pdf en ligne gratuit, tourner pdf",
+        "id": "putar pdf, rotasi pdf online, perbaiki orientasi pdf, putar halaman pdf gratis, balik pdf",
+        "vi": "xoay pdf, xoay trang pdf online, sửa hướng pdf, xoay pdf miễn phí, lật pdf",
+        "ru": "повернуть pdf, поворот страниц pdf, исправить ориентацию pdf, повернуть pdf онлайн бесплатно, перевернуть pdf",
+        "ja": "pdf 回転, pdf ページ回転, pdf 向き修正, pdf回転 無料 オンライン, pdf 反転",
+        "it": "ruotare pdf, ruota pagine pdf, correggere orientamento pdf, ruotare pdf online gratis, girare pdf",
+        "ko": "pdf 회전, pdf 페이지 회전, pdf 방향 수정, pdf 회전 무료 온라인, pdf 돌리기",
+        "nl": "pdf draaien, pdf pagina's draaien, pdf oriëntatie corrigeren, pdf draaien gratis online, pdf roteren",
+        "pl": "obróć pdf, obracanie stron pdf, popraw orientację pdf, obróć pdf online za darmo, odwróć pdf",
+        "tr": "pdf döndür, pdf sayfa döndürme, pdf yön düzeltme, pdf döndürme ücretsiz online, pdf çevir"
       }
     },
     {
