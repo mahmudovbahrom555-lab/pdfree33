@@ -9,6 +9,14 @@
   },
   {
     "@type": "Question",
+    "name": "PDFree, dosyalarımı işledikten sonra depoluyor veya kaydediyor mu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. PDFree tamamen tarayıcınızda çalışır — dosyalarınızı alan bir arka uç sunucusu yoktur. Hiçbir şey yüklenmediğinden, hiçbir şey depolanamaz, kaydedilemez veya saklanamaz. Belgeniz yalnızca oturum süresince tarayıcı belleğinde bulunur ve sekmeyi kapattığınızda silinir."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "Dosyalarım yükleniyor mu?",
     "acceptedAnswer": {
       "@type": "Answer",
