@@ -30,5 +30,29 @@
       "@type": "Answer",
       "text": "Nein. PDFree hat keine künstlichen Limits. Die einzige Begrenzung ist der verfügbare Arbeitsspeicher deines Geräts."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Ist das PDF-Drehen komplett kostenlos?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. PDFree ist kostenlos, ohne Tageslimits und ohne Registrierung. Der Ausgabedatei werden keine Wasserzeichen hinzugefügt."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann ich dieses Tool auf dem Handy nutzen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. PDFree funktioniert in Safari für iOS und Chrome für Android. Wähle deine Datei aus und wende die Drehung direkt im mobilen Browser an."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Speichert oder protokolliert PDFree meine Dateien nach der Verarbeitung?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nein. PDFree läuft vollständig in deinem Browser — es gibt keinen Backend-Server, der deine Dateien empfängt. Da nichts hochgeladen wird, kann auch nichts gespeichert, protokolliert oder aufbewahrt werden. Dein Dokument existiert nur im Arbeitsspeicher deines Browsers während der Sitzung und wird gelöscht, wenn du den Tab schließt."
+    }
   }
 ]

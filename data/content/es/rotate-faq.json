@@ -30,5 +30,29 @@
       "@type": "Answer",
       "text": "No. La única limitación es la memoria RAM disponible en tu dispositivo."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Es completamente gratis rotar PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sí. PDFree es gratis, sin límites diarios ni registro. No se añaden marcas de agua al archivo resultante."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Puedo usar esta herramienta en el móvil?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sí. PDFree funciona en Safari para iOS y Chrome para Android. Selecciona tu archivo y aplica la rotación directamente desde el navegador de tu teléfono."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿PDFree almacena o registra mis archivos después de procesarlos?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. PDFree se ejecuta completamente en tu navegador — no hay ningún servidor backend que reciba tus archivos. Como nada se sube, nada puede ser almacenado, registrado ni retenido. Tu documento existe solo en la memoria de tu navegador durante la sesión y se elimina al cerrar la pestaña."
+    }
   }
 ]

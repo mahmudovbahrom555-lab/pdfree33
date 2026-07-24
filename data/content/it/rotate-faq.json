@@ -49,10 +49,10 @@
   },
   {
     "@type": "Question",
-    "name": "La rotazione viene salvata permanentemente nel mio PDF?",
+    "name": "PDFree memorizza o registra i miei file dopo l'elaborazione?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sì. Cliccando su Ruota PDF viene generato un nuovo file PDF che si scarica sul tuo dispositivo con la rotazione applicata in modo permanente. Si aprirà con l'orientamento corretto in qualsiasi visualizzatore PDF."
+      "text": "No. PDFree funziona interamente nel tuo browser — non esiste un server backend che riceve i tuoi file. Poiché nulla viene caricato, nulla può essere memorizzato, registrato o conservato. Il tuo documento esiste solo nella memoria del browser per la durata della sessione e viene eliminato quando chiudi la scheda."
     }
   }
 ]

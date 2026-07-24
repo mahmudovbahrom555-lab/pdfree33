@@ -49,10 +49,10 @@
   },
   {
     "@type": "Question",
-    "name": "Czy obrót zapisuje się trwale w moim pliku PDF?",
+    "name": "Czy PDFree przechowuje lub rejestruje moje pliki po przetworzeniu?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Tak. Kliknięcie Obróć PDF generuje nowy plik PDF, który zostaje pobrany na Twoje urządzenie z trwale zastosowanym obrotem. Będzie wyświetlany w poprawionej orientacji w każdej przeglądarce PDF."
+      "text": "Nie. PDFree działa w całości w Twojej przeglądarce — nie ma serwera backendowego, który odbierałby Twoje pliki. Ponieważ nic nie jest przesyłane, nic nie może być przechowywane, rejestrowane ani zatrzymywane. Twój dokument istnieje tylko w pamięci przeglądarki przez czas trwania sesji i jest usuwany po zamknięciu karty."
     }
   }
 ]

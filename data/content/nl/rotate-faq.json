@@ -49,10 +49,10 @@
   },
   {
     "@type": "Question",
-    "name": "Wordt de rotatie permanent opgeslagen in mijn PDF?",
+    "name": "Bewaart of registreert PDFree mijn bestanden na verwerking?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ja. Als je op PDF draaien klikt, wordt een nieuw PDF-bestand gegenereerd dat naar je apparaat wordt gedownload met de rotatie permanent toegepast. Het wordt in elke PDF-viewer in de gecorrigeerde oriëntatie weergegeven."
+      "text": "Nee. PDFree draait volledig in je browser — er is geen backend-server die je bestanden ontvangt. Omdat niets wordt geüpload, kan niets worden opgeslagen, geregistreerd of bewaard. Je document bestaat alleen in het geheugen van je browser gedurende de sessie en wordt gewist zodra je het tabblad sluit."
     }
   }
 ]
