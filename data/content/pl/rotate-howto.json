@@ -1,0 +1,36 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Jak obrócić strony PDF",
+  "description": "Obróć strony PDF o 90°, 180° lub 270° — za darmo, bez przesyłania, przetwarzane lokalnie w przeglądarce.",
+  "totalTime": "PT1M",
+  "tool": [
+    {
+      "@type": "HowToTool",
+      "name": "PDFree — darmowe narzędzie przeglądarkowe do obracania PDF, bez przesyłania plików"
+    }
+  ],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Otwórz swój PDF",
+      "text": "Kliknij \"Wybierz plik\" lub przeciągnij PDF do obszaru wczytywania. Miniatury stron ładują się w przeglądarce — plik nigdy nie jest wysyłany na serwer.",
+      "url": "https://pdfree.io/pl/obroc-pdf/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Wybierz strony i obrót",
+      "text": "Wybierz, które strony obrócić (wszystkie lub konkretne) oraz kąt obrotu: 90°, 180° lub 270°.",
+      "url": "https://pdfree.io/pl/obroc-pdf/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Pobierz obrócony PDF",
+      "text": "Kliknij \"Obróć PDF\". Poprawiony dokument jest gotowy do natychmiastowego pobrania.",
+      "url": "https://pdfree.io/pl/obroc-pdf/#step3"
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Hoe je PDF-pagina's draait",
+  "description": "Draai PDF-pagina's 90°, 180° of 270° — gratis, geen upload nodig, lokaal verwerkt in je browser.",
+  "totalTime": "PT1M",
+  "tool": [
+    {
+      "@type": "HowToTool",
+      "name": "PDFree — gratis browsergebaseerde tool om PDF's te draaien, geen upload vereist"
+    }
+  ],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Open je PDF",
+      "text": "Klik op 'Bestand kiezen' of sleep je PDF naar het upload-vak. Paginaminiaturen laden in je browser — het bestand wordt nooit naar een server gestuurd.",
+      "url": "https://pdfree.io/nl/pdf-draaien/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Kies pagina's en rotatie",
+      "text": "Kies welke pagina's je wilt draaien (alle of specifieke pagina's) en de rotatiehoek: 90°, 180° of 270°.",
+      "url": "https://pdfree.io/nl/pdf-draaien/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Download de gedraaide PDF",
+      "text": "Klik op 'PDF draaien'. Je gecorrigeerde document is direct klaar om te downloaden.",
+      "url": "https://pdfree.io/nl/pdf-draaien/#step3"
+    }
+  ]
+}

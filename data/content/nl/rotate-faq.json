@@ -1,0 +1,58 @@
+[
+  {
+    "@type": "Question",
+    "name": "Wordt mijn bestand geüpload naar een server als ik een PDF draai?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. Het draaien wordt volledig in je browser verwerkt. Je bestanden worden nooit ergens naartoe gestuurd."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik alleen specifieke pagina's draaien, niet de hele PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Je kunt alle pagina's draaien of individuele pagina's selecteren om te draaien."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Welke rotatiehoeken worden ondersteund?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree ondersteunt rotatie van 90°, 180° en 270° voor elke paginaselectie."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Vermindert het draaien van een PDF de beeldkwaliteit?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. Rotatie verandert alleen de oriëntatiemetadata van de pagina. De inhoud (afbeeldingen, tekst, vectorafbeeldingen) wordt niet opnieuw gerenderd of gecomprimeerd."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is er een bestandsgrootte-limiet voor het draaien van PDF's?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. Er zijn geen limieten voor bestandsgrootte of aantal pagina's."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is de PDF-draaitool volledig gratis?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. PDFree is gratis, zonder abonnement, zonder dagelijkse limieten en zonder registratie. Er worden geen watermerken aan de output toegevoegd."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Wordt de rotatie permanent opgeslagen in mijn PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Als je op PDF draaien klikt, wordt een nieuw PDF-bestand gegenereerd dat naar je apparaat wordt gedownload met de rotatie permanent toegepast. Het wordt in elke PDF-viewer in de gecorrigeerde oriëntatie weergegeven."
+    }
+  }
+]

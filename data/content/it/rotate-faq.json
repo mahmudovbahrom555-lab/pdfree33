@@ -1,0 +1,58 @@
+[
+  {
+    "@type": "Question",
+    "name": "Ruotare un PDF carica il mio file su un server?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. La rotazione viene elaborata interamente nel tuo browser. I tuoi file non vengono mai inviati da nessuna parte."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso ruotare solo alcune pagine, non tutto il PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. Puoi scegliere di ruotare tutte le pagine oppure selezionare singole pagine da ruotare."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Quali angoli di rotazione sono supportati?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree supporta la rotazione di 90°, 180° e 270° per qualsiasi selezione di pagine."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Ruotare il PDF riduce la qualità delle immagini?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. La rotazione modifica solo il metadato di orientamento della pagina. Il contenuto (immagini, testo, grafica vettoriale) non viene ricompresso o ridisegnato."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "C'è un limite di dimensione del file per ruotare i PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Non ci sono limiti di dimensione del file o di numero di pagine."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Il ruotatore di PDF è completamente gratuito?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. PDFree è gratuito, senza abbonamento, senza limiti giornalieri e senza registrazione. Non vengono aggiunte filigrane al file risultante."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "La rotazione viene salvata permanentemente nel mio PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. Cliccando su Ruota PDF viene generato un nuovo file PDF che si scarica sul tuo dispositivo con la rotazione applicata in modo permanente. Si aprirà con l'orientamento corretto in qualsiasi visualizzatore PDF."
+    }
+  }
+]

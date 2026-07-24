@@ -1,0 +1,58 @@
+[
+  {
+    "@type": "Question",
+    "name": "PDF를 회전하면 파일이 서버에 업로드되나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "아니요. 회전은 전적으로 브라우저에서 처리됩니다. 파일이 어디로도 전송되지 않습니다."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "전체가 아니라 특정 페이지만 회전할 수 있나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "네. 모든 페이지를 회전하거나 개별 페이지를 선택해서 회전할 수 있습니다."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "어떤 회전 각도를 지원하나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree는 어떤 페이지 선택에도 90°, 180°, 270° 회전을 지원합니다."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDF를 회전하면 이미지 품질이 떨어지나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "아니요. 회전은 페이지 방향 메타데이터만 변경합니다. 이미지, 텍스트, 벡터 그래픽 등 콘텐츠는 다시 렌더링되거나 압축되지 않습니다."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDF 회전에 파일 크기 제한이 있나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "아니요. 파일 크기나 페이지 수 제한이 없습니다."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "이 PDF 회전 도구는 완전히 무료인가요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "네. PDFree는 구독, 일일 제한, 가입 없이 무료입니다. 결과물에는 워터마크가 추가되지 않습니다."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "회전한 내용이 PDF에 영구적으로 저장되나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "네. 'PDF 회전'을 클릭하면 회전이 영구적으로 적용된 새 PDF 파일이 기기에 다운로드됩니다. 어떤 PDF 뷰어에서 열어도 수정된 방향으로 표시됩니다."
+    }
+  }
+]

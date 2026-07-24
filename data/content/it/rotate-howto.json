@@ -1,0 +1,36 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Come ruotare le pagine di un PDF",
+  "description": "Ruota le pagine di un PDF di 90°, 180° o 270° — gratis, senza caricamento, elaborato localmente nel browser.",
+  "totalTime": "PT1M",
+  "tool": [
+    {
+      "@type": "HowToTool",
+      "name": "PDFree — servizio gratuito nel browser per ruotare PDF, nessun caricamento richiesto"
+    }
+  ],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Apri il PDF",
+      "text": "Clicca su \"Scegli file\" oppure trascina il tuo PDF nell'area di caricamento. Le anteprime delle pagine si caricano nel browser — il file non viene mai inviato a un server.",
+      "url": "https://pdfree.io/it/ruota-pdf/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Scegli pagine e rotazione",
+      "text": "Seleziona quali pagine ruotare (tutte o solo alcune) e l'angolo di rotazione: 90°, 180° o 270°.",
+      "url": "https://pdfree.io/it/ruota-pdf/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Scarica il PDF ruotato",
+      "text": "Clicca su \"Ruota PDF\". Il documento corretto è pronto per il download immediato.",
+      "url": "https://pdfree.io/it/ruota-pdf/#step3"
+    }
+  ]
+}

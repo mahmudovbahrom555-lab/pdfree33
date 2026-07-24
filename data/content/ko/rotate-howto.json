@@ -1,0 +1,36 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDF 페이지 회전하는 방법",
+  "description": "PDF 페이지를 90°, 180° 또는 270° 회전하세요 — 무료, 업로드 없음, 브라우저에서 로컬 처리.",
+  "totalTime": "PT1M",
+  "tool": [
+    {
+      "@type": "HowToTool",
+      "name": "PDFree — 업로드가 필요 없는 무료 브라우저 기반 PDF 회전 도구"
+    }
+  ],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDF 열기",
+      "text": "'파일 선택'을 클릭하거나 PDF를 드롭 영역으로 드래그하세요. 페이지 미리보기가 브라우저에서 로드됩니다 — 파일이 서버로 전송되지 않습니다.",
+      "url": "https://pdfree.io/ko/pdf-hoejeon/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "페이지와 회전 각도 선택",
+      "text": "회전할 페이지(전체 또는 특정 페이지)와 회전 각도(90°, 180°, 270°)를 선택하세요.",
+      "url": "https://pdfree.io/ko/pdf-hoejeon/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "회전된 PDF 다운로드",
+      "text": "'PDF 회전'을 클릭하세요. 수정된 문서를 즉시 다운로드할 수 있습니다.",
+      "url": "https://pdfree.io/ko/pdf-hoejeon/#step3"
+    }
+  ]
+}

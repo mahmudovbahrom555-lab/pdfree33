@@ -1,0 +1,58 @@
+[
+  {
+    "@type": "Question",
+    "name": "Czy obracanie PDF przesyła mój plik na serwer?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie. Obracanie jest przetwarzane w całości w Twojej przeglądarce. Twoje pliki nigdy nigdzie nie są wysyłane."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy mogę obrócić tylko wybrane strony, a nie cały PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. Możesz obrócić wszystkie strony naraz albo wybrać pojedyncze strony do obrócenia."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Jakie kąty obrotu są obsługiwane?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree obsługuje obrót o 90°, 180° i 270° dla dowolnego wyboru stron."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy obracanie PDF obniża jakość obrazów?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie. Obrót zmienia jedynie metadane orientacji strony. Zawartość (obrazy, tekst, grafika wektorowa) nie jest ponownie renderowana ani kompresowana."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy istnieje limit rozmiaru pliku dla obracania PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie. Nie ma limitów rozmiaru pliku ani liczby stron."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy narzędzie do obracania PDF jest całkowicie darmowe?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. PDFree jest darmowe — bez abonamentu, bez dziennych limitów i bez rejestracji. Do wyniku nie są dodawane żadne znaki wodne."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy obrót zapisuje się trwale w moim pliku PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. Kliknięcie Obróć PDF generuje nowy plik PDF, który zostaje pobrany na Twoje urządzenie z trwale zastosowanym obrotem. Będzie wyświetlany w poprawionej orientacji w każdej przeglądarce PDF."
+    }
+  }
+]
