@@ -98,8 +98,9 @@ const REDIRECTS = {
 //   - length caps + minimum length for types that require explanation.
 //   - reject messages containing more than one URL (spam link-drop pattern).
 //   - reject digit-only or heavily-repeated-character junk.
-const _FEEDBACK_TYPES = new Set(['bug', 'idea', 'other', 'error']);
-const _TYPE_LABEL = { bug: '🐛 Bug', idea: '💡 Idea', other: '💬 Feedback', error: '⚠️ Error' };
+const _FEEDBACK_TYPES = new Set(['bug', 'idea', 'other', 'error', 'waitlist']);
+const _TYPE_LABEL = { bug: '🐛 Bug', idea: '💡 Idea', other: '💬 Feedback', error: '⚠️ Error', waitlist: '📋 SDK waitlist' };
+const _EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function _looksLikeSpam(text) {
   if (!text) return false;
@@ -132,7 +133,11 @@ async function handleFeedback(request, env) {
   const pageUrl = typeof body.url === 'string' ? body.url.trim().slice(0, 300)    : '';
 
   // "All good" (type=other, no text) is valid; every other type needs a real message.
-  if (type !== 'other' && text.length < 3) {
+  if (type !== 'other' && type !== 'waitlist' && text.length < 3) {
+    return new Response('Bad request', { status: 400 });
+  }
+  // Waitlist signups don't need a message, but a real-looking email is required.
+  if (type === 'waitlist' && !_EMAIL_RE.test(email)) {
     return new Response('Bad request', { status: 400 });
   }
   if (_looksLikeSpam(text)) return new Response('OK', { status: 200 }); // silently drop

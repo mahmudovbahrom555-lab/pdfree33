@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src  'self' 'wasm-unsafe-eval' blob:
+                https://cdnjs.cloudflare.com https://esm.sh
+                https://plausible.io https://static.cloudflareinsights.com;
+    style-src   'self' 'unsafe-inline';
+    font-src    'self';
+    img-src     'self' data: blob: https:;
+    connect-src 'self' https://cdnjs.cloudflare.com https://*.workers.dev
+                https://plausible.io https://cloudflareinsights.com;
+    worker-src  'self' blob:;
+    object-src  'none';
+  ">
+
+  <title>PDFree SDK — A Privacy-First PDF Toolkit for Developers</title>
+  <meta name="description" content="A high-level PDF SDK that runs entirely in the browser — merge, compress, watermark, redact. No server ever touches your users' files. Join the waitlist.">
+
+  <meta property="og:title"       content="PDFree SDK — Privacy-First PDF Processing for Developers">
+  <meta property="og:description" content="Your users' files never leave their browser. A high-level SDK on top of proven client-side PDF processing — no server, no upload, compliance by architecture.">
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://pdfree.io/pdf-sdk/">
+  <meta property="og:site_name"   content="PDFree">
+  <meta property="og:image"        content="https://pdfree.io/icons/og-image.jpg">
+  <meta property="og:image:width"  content="1200">
+  <meta property="og:image:height" content="633">
+  <meta property="og:image:alt"    content="PDFree SDK — Privacy-First PDF Processing for Developers">
+  <meta name="twitter:card"       content="summary_large_image">
+  <meta name="twitter:site"       content="@pdfree_io">
+  <meta name="twitter:title"      content="PDFree SDK — Privacy-First PDF Processing for Developers">
+  <meta name="twitter:description" content="Your users' files never leave their browser. No server, no upload, compliance by architecture.">
+  <meta name="twitter:image"       content="https://pdfree.io/icons/og-image.jpg">
+  <meta name="twitter:image:alt"   content="PDFree SDK — Privacy-First PDF Processing for Developers">
+
+  <link rel="canonical" href="https://pdfree.io/pdf-sdk/">
+
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="PDFree">
+  <link rel="apple-touch-icon" href="../icons/icon-192.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+  <link rel="preconnect" href="https://plausible.io">
+  <link rel="preload" href="../fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../css/fonts.css">
+
+  <script src="../js/theme.js"></script>
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/animations.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "PDFree SDK",
+    "url": "https://pdfree.io/pdf-sdk/",
+    "description": "A privacy-first PDF SDK that processes files entirely in the browser — no server, no upload.",
+    "isPartOf": { "@type": "WebSite", "name": "PDFree", "url": "https://pdfree.io" }
+  }
+  </script>
+</head>
+<body>
+
+  <nav>
+    <a href="../" class="logo" aria-label="Go to homepage" style="text-decoration:none">
+      <div class="logo-icon" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+      </div>
+      <span class="logo-text">PDF<span>ree</span></span>
+    </a>
+    <div class="nav-links">
+      <span class="nav-link" style="cursor:default;color:var(--text);font-weight:600;">SDK for Developers</span>
+    </div>
+    <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode"></button>
+  </nav>
+
+  <!-- Hero -->
+  <section style="background:var(--green-light);border-bottom:1px solid rgba(45,122,79,0.15);padding:56px 24px 40px;text-align:center;">
+    <div style="max-width:720px;margin:0 auto;">
+      <div style="display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid rgba(45,122,79,0.2);border-radius:24px;padding:6px 16px;font-size:13px;color:var(--green);font-weight:500;margin-bottom:20px;">
+        <span style="width:7px;height:7px;background:var(--green);border-radius:50%;display:inline-block;"></span>
+        Coming soon · in early design · shaped by this waitlist
+      </div>
+      <h1 style="font-size:clamp(28px,4.5vw,44px);font-weight:700;letter-spacing:-1px;line-height:1.15;color:var(--text);margin:0 0 16px;">A PDF SDK Where Your<br>Users' Files Never Leave the Browser</h1>
+      <p style="font-size:17px;color:var(--text2);max-width:600px;margin:0 auto 28px;line-height:1.6;">Every PDF API on the market works the same way: your users' documents get uploaded to someone else's server. PDFree's engine has processed files entirely client-side since day one — we're now shaping a high-level SDK so any product can embed that same guarantee, with none of the low-level plumbing.</p>
+    </div>
+  </section>
+
+  <!-- Code example -->
+  <section style="padding:44px 24px;border-bottom:1px solid var(--border);background:var(--surface);">
+    <div style="max-width:640px;margin:0 auto;">
+      <div style="background:#1a1a18;border-radius:12px;padding:24px 28px;overflow-x:auto;">
+        <pre style="margin:0;font-family:'SFMono-Regular',Consolas,Menlo,monospace;font-size:14px;line-height:1.7;color:#e4e4e0;"><code><span style="color:#7ec9a3;">import</span> { PDFree } <span style="color:#7ec9a3;">from</span> <span style="color:#e0b96a;">'@pdfree/sdk'</span>;
+
+<span style="color:#8a8a82;">// Runs in your user's browser. Nothing is uploaded.</span>
+<span style="color:#7ec9a3;">const</span> merged = <span style="color:#7ec9a3;">await</span> PDFree.merge(files);
+<span style="color:#7ec9a3;">const</span> smaller = <span style="color:#7ec9a3;">await</span> PDFree.compress(file);
+<span style="color:#7ec9a3;">const</span> redacted = <span style="color:#7ec9a3;">await</span> PDFree.redact(file, areas);</code></pre>
+      </div>
+      <p style="text-align:center;font-size:13px;color:var(--text3);margin-top:14px;">Browser → WebAssembly → Browser. No server in between, ever.</p>
+    </div>
+  </section>
+
+  <!-- Why -->
+  <section style="padding:48px 24px;border-bottom:1px solid var(--border);">
+    <div style="max-width:760px;margin:0 auto;">
+      <h2 style="font-size:24px;font-weight:700;color:var(--text);margin:0 0 28px;text-align:center;">Why this is a different kind of PDF SDK</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:24px;">
+        <div>
+          <div style="font-size:20px;margin-bottom:8px;">🔒</div>
+          <h3 style="font-size:15px;font-weight:600;color:var(--text);margin:0 0 6px;">No upload, ever</h3>
+          <p style="font-size:14px;color:var(--text2);line-height:1.6;margin:0;">Most PDF APIs — however good — receive your users' files on a server by design. This one doesn't have a server in the file's path at all.</p>
+        </div>
+        <div>
+          <div style="font-size:20px;margin-bottom:8px;">⚖️</div>
+          <h3 style="font-size:15px;font-weight:600;color:var(--text);margin:0 0 6px;">Compliance by architecture</h3>
+          <p style="font-size:14px;color:var(--text2);line-height:1.6;margin:0;">If a file never leaves the browser, "where is the data processed" stops being a hard question for healthcare, legal, and fintech products.</p>
+        </div>
+        <div>
+          <div style="font-size:20px;margin-bottom:8px;">💸</div>
+          <h3 style="font-size:15px;font-weight:600;color:var(--text);margin:0 0 6px;">No per-request billing</h3>
+          <p style="font-size:14px;color:var(--text2);line-height:1.6;margin:0;">Processing runs on your user's device, not on infrastructure you pay for by the call. Pricing is about the SDK license, not metered compute.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Who -->
+  <section style="padding:48px 24px;border-bottom:1px solid var(--border);background:var(--surface);">
+    <div style="max-width:640px;margin:0 auto;">
+      <h2 style="font-size:22px;font-weight:700;color:var(--text);margin:0 0 20px;text-align:center;">Built for products that can't send documents to a third-party server</h2>
+      <ul style="margin:0;padding-left:20px;color:var(--text2);font-size:15px;line-height:2;">
+        <li>CRMs letting users merge or watermark attachments</li>
+        <li>Healthcare portals handling patient records</li>
+        <li>Legal / HR tools that redact before sharing</li>
+        <li>Internal tools where "it never left the browser" is the whole pitch to security review</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Waitlist -->
+  <section style="padding:56px 24px;">
+    <div style="max-width:480px;margin:0 auto;text-align:center;">
+      <h2 style="font-size:22px;font-weight:700;color:var(--text);margin:0 0 10px;">Get notified when it ships</h2>
+      <p style="font-size:14px;color:var(--text2);margin:0 0 24px;">No spam, no drip campaign — one email when the SDK is ready to try.</p>
+      <form id="waitlistForm" style="display:flex;flex-direction:column;gap:10px;">
+        <input type="text" id="waitlistHp" name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;" aria-hidden="true">
+        <input type="email" id="waitlistEmail" required placeholder="you@company.com" style="padding:12px 14px;border:1px solid var(--border);border-radius:10px;font-size:15px;background:var(--surface);color:var(--text);font-family:var(--font-sans);">
+        <input type="text" id="waitlistText" maxlength="300" placeholder="What would you build with it? (optional)" style="padding:12px 14px;border:1px solid var(--border);border-radius:10px;font-size:15px;background:var(--surface);color:var(--text);font-family:var(--font-sans);">
+        <button type="submit" id="waitlistSubmit" style="background:var(--green);color:#fff;padding:13px 28px;border-radius:10px;font-weight:600;font-size:15px;border:none;cursor:pointer;font-family:var(--font-sans);">Join the waitlist</button>
+        <p id="waitlistStatus" role="status" aria-live="polite" style="font-size:13px;margin:4px 0 0;min-height:18px;"></p>
+      </form>
+    </div>
+  </section>
+
+  <footer>
+    PDFree · <strong>All processing happens 100% in your browser</strong> · Files are <strong>never uploaded</strong><br>
+    <span style="color:var(--green)">🔒</span> Your documents never leave your device &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> Built to be free for everyone, forever<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
+      <a href="/privacy.html" style="color:var(--green)">Privacy</a> &nbsp;·&nbsp;
+      <a href="/terms.html" style="color:var(--green)">Terms</a> &nbsp;·&nbsp;
+      <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a> &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green)">GitHub</a>
+    </span>
+  </footer>
+
+  <script src="../js/sdk-waitlist.js"></script>
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script>
+</body>
+</html>

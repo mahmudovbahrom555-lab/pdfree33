@@ -419,6 +419,8 @@ SPECIALTY_PAGES = [
     'for-teachers',
     # Research / benchmark project page (EN-only for now)
     'atlas',
+    # Developer SDK waitlist landing page (validation experiment, EN-only)
+    'pdf-sdk',
     # Static pages
     'privacy.html',
     'terms.html',
