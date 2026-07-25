@@ -77,6 +77,18 @@ window.PDFREE_LOCALE = {
   prog_protect:      'Szyfrowanie PDF...',
   prog_rotate:       'Stosowanie rotacji...',
   prog_flatten:      'Blokowanie pól formularza...',
+
+  // ── processor.js — batch queue (compress/watermark/rotate, 2+ files) ──
+  prog_batch_file: 'Przetwarzanie pliku {i} z {n}...',
+  desc_batch_done: 'Przetworzono {n} plików · {size}',
+  desc_batch_partial: 'Przetworzono {ok} z {total} plików · {size}',
+  warn_batch_failed_one: '⚠️ {n} plik nie powiódł się i został pominięty: {names}',
+  warn_batch_failed_many: '⚠️ {n} plików nie powiodło się i zostało pominiętych: {names}',
+  err_batch_all_failed: 'Przetwarzanie wszystkich plików nie powiodło się — nic do pobrania.',
+  batch_status_pending: 'Oczekuje',
+  batch_status_processing: 'Przetwarzanie…',
+  batch_status_done: 'Gotowe',
+  batch_status_error: 'Niepowodzenie',
   prog_redact:       'Ukrywanie obszarów...',
 
   // success descriptions

@@ -78,6 +78,18 @@ window.PDFREE_LOCALE = {
   prog_protect:      'PDFを暗号化しています...',
   prog_rotate:       '回転を適用しています...',
   prog_flatten:      'フォームフィールドを固定しています...',
+
+  // ── processor.js — batch queue (compress/watermark/rotate, 2+ files) ──
+  prog_batch_file: 'ファイル {i}/{n} を処理しています...',
+  desc_batch_done: '{n}件のファイルを処理しました · {size}',
+  desc_batch_partial: '{total}件中{ok}件を処理しました · {size}',
+  warn_batch_failed_one: '⚠️ {n}件のファイルが失敗しスキップされました: {names}',
+  warn_batch_failed_many: '⚠️ {n}件のファイルが失敗しスキップされました: {names}',
+  err_batch_all_failed: 'すべてのファイルの処理に失敗しました — ダウンロードできるものがありません。',
+  batch_status_pending: '待機中',
+  batch_status_processing: '処理中…',
+  batch_status_done: '完了',
+  batch_status_error: '失敗',
   prog_redact:       '範囲を塗りつぶしています...',
 
   // success descriptions

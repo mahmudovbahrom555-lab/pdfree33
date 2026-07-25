@@ -78,6 +78,18 @@ window.PDFREE_LOCALE = {
   prog_protect:      'Шифрование PDF...',
   prog_rotate:       'Применение поворота...',
   prog_flatten:      'Блокировка полей формы...',
+
+  // ── processor.js — batch queue (compress/watermark/rotate, 2+ files) ──
+  prog_batch_file: 'Обработка файла {i} из {n}...',
+  desc_batch_done: 'Обработано файлов: {n} · {size}',
+  desc_batch_partial: 'Обработано {ok} из {total} файлов · {size}',
+  warn_batch_failed_one: '⚠️ {n} файл не обработан и пропущен: {names}',
+  warn_batch_failed_many: '⚠️ {n} файлов не обработано и пропущено: {names}',
+  err_batch_all_failed: 'Не удалось обработать ни один файл — нечего скачивать.',
+  batch_status_pending: 'В очереди',
+  batch_status_processing: 'Обработка…',
+  batch_status_done: 'Готово',
+  batch_status_error: 'Ошибка',
   prog_redact:       'Закрашивание областей...',
 
   // success descriptions

@@ -77,6 +77,18 @@ window.PDFREE_LOCALE = {
   prog_protect:      'PDF şifreleniyor...',
   prog_rotate:       'Rotasyonlar uygulanıyor...',
   prog_flatten:      'Form alanları kilitleniyor...',
+
+  // ── processor.js — batch queue (compress/watermark/rotate, 2+ files) ──
+  prog_batch_file: '{n} dosyadan {i}. işleniyor...',
+  desc_batch_done: '{n} dosya işlendi · {size}',
+  desc_batch_partial: '{total} dosyadan {ok} tanesi işlendi · {size}',
+  warn_batch_failed_one: '⚠️ {n} dosya başarısız oldu ve atlandı: {names}',
+  warn_batch_failed_many: '⚠️ {n} dosya başarısız oldu ve atlandı: {names}',
+  err_batch_all_failed: 'Tüm dosyaların işlenmesi başarısız oldu — indirilecek bir şey yok.',
+  batch_status_pending: 'Bekliyor',
+  batch_status_processing: 'İşleniyor…',
+  batch_status_done: 'Tamamlandı',
+  batch_status_error: 'Başarısız',
   prog_redact:       'Alanlar gizleniyor...',
 
   // success descriptions

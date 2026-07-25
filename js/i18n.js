@@ -91,6 +91,18 @@ export const EN = {
   prog_redact:       'Covering areas...',
   prog_flatten:      'Flattening form fields...',
 
+  // ── processor.js — batch queue (compress/watermark/rotate, 2+ files) ──
+  prog_batch_file:        'Processing file {i} of {n}...',
+  desc_batch_done:        'Processed {n} files · {size}',
+  desc_batch_partial:     '{ok} of {total} files processed · {size}',
+  warn_batch_failed_one:  '⚠️ {n} file failed and was skipped: {names}',
+  warn_batch_failed_many: '⚠️ {n} files failed and were skipped: {names}',
+  err_batch_all_failed:   'All files failed to process — nothing to download.',
+  batch_status_pending:    'Waiting',
+  batch_status_processing: 'Processing…',
+  batch_status_done:       'Done',
+  batch_status_error:      'Failed',
+
   // ── processor.js — success descriptions ───────────────────────
   desc_merged_partial:      'Merged {n} of {total} files · {pages} pages · {size}',
   desc_merged:              'Merged {total} files · {pages} pages · {size}',

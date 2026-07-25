@@ -78,6 +78,18 @@ window.PDFREE_LOCALE = {
   prog_protect:      'Mengenkripsi PDF...',
   prog_rotate:       'Menerapkan rotasi...',
   prog_flatten:      'Mengunci bidang formulir...',
+
+  // ── processor.js — batch queue (compress/watermark/rotate, 2+ files) ──
+  prog_batch_file: 'Memproses file {i} dari {n}...',
+  desc_batch_done: '{n} file diproses · {size}',
+  desc_batch_partial: '{ok} dari {total} file diproses · {size}',
+  warn_batch_failed_one: '⚠️ {n} file gagal dan dilewati: {names}',
+  warn_batch_failed_many: '⚠️ {n} file gagal dan dilewati: {names}',
+  err_batch_all_failed: 'Semua file gagal diproses — tidak ada yang bisa diunduh.',
+  batch_status_pending: 'Menunggu',
+  batch_status_processing: 'Memproses…',
+  batch_status_done: 'Selesai',
+  batch_status_error: 'Gagal',
   prog_redact:       'Menutup area...',
 
   // success descriptions

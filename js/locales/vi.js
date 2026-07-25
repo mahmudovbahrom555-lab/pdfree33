@@ -78,6 +78,18 @@ window.PDFREE_LOCALE = {
   prog_protect:      'Đang mã hóa PDF...',
   prog_rotate:       'Đang áp dụng xoay...',
   prog_flatten:      'Đang khóa trường biểu mẫu...',
+
+  // ── processor.js — batch queue (compress/watermark/rotate, 2+ files) ──
+  prog_batch_file: 'Đang xử lý file {i} / {n}...',
+  desc_batch_done: 'Đã xử lý {n} file · {size}',
+  desc_batch_partial: 'Đã xử lý {ok}/{total} file · {size}',
+  warn_batch_failed_one: '⚠️ {n} file lỗi và đã bị bỏ qua: {names}',
+  warn_batch_failed_many: '⚠️ {n} file lỗi và đã bị bỏ qua: {names}',
+  err_batch_all_failed: 'Tất cả file đều xử lý thất bại — không có gì để tải xuống.',
+  batch_status_pending: 'Đang chờ',
+  batch_status_processing: 'Đang xử lý…',
+  batch_status_done: 'Xong',
+  batch_status_error: 'Thất bại',
   prog_redact:       'Đang che vùng...',
 
   // success descriptions

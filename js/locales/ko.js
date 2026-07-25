@@ -77,6 +77,18 @@ window.PDFREE_LOCALE = {
   prog_protect:      'PDF 암호화 중...',
   prog_rotate:       '회전 적용 중...',
   prog_flatten:      '양식 필드 잠금 중...',
+
+  // ── processor.js — batch queue (compress/watermark/rotate, 2+ files) ──
+  prog_batch_file: '{n}개 중 {i}번째 파일 처리 중...',
+  desc_batch_done: '{n}개 파일 처리됨 · {size}',
+  desc_batch_partial: '{total}개 중 {ok}개 파일 처리됨 · {size}',
+  warn_batch_failed_one: '⚠️ {n}개 파일 실패로 건너뜀: {names}',
+  warn_batch_failed_many: '⚠️ {n}개 파일 실패로 건너뜀: {names}',
+  err_batch_all_failed: '모든 파일 처리에 실패했습니다 — 다운로드할 항목이 없습니다.',
+  batch_status_pending: '대기 중',
+  batch_status_processing: '처리 중…',
+  batch_status_done: '완료',
+  batch_status_error: '실패',
   prog_redact:       '영역 가리는 중...',
 
   // success descriptions

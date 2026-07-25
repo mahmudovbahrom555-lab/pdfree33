@@ -77,6 +77,18 @@ window.PDFREE_LOCALE = {
   prog_protect:      'Chiffrement du PDF...',
   prog_rotate:       'Application des rotations...',
   prog_flatten:      'Verrouillage des champs du formulaire...',
+
+  // ── processor.js — batch queue (compress/watermark/rotate, 2+ files) ──
+  prog_batch_file: 'Traitement du fichier {i} sur {n}...',
+  desc_batch_done: '{n} fichiers traités · {size}',
+  desc_batch_partial: '{ok} fichiers sur {total} traités · {size}',
+  warn_batch_failed_one: '⚠️ {n} fichier a échoué et a été ignoré : {names}',
+  warn_batch_failed_many: '⚠️ {n} fichiers ont échoué et ont été ignorés : {names}',
+  err_batch_all_failed: 'Tous les fichiers ont échoué — rien à télécharger.',
+  batch_status_pending: 'En attente',
+  batch_status_processing: 'Traitement…',
+  batch_status_done: 'Terminé',
+  batch_status_error: 'Échoué',
   prog_redact:       'Masquage des zones...',
 
   // success descriptions

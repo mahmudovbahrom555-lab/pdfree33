@@ -78,6 +78,18 @@ window.PDFREE_LOCALE = {
   prog_protect:      'PDF wird verschlüsselt...',
   prog_rotate:       'Drehungen werden angewendet...',
   prog_flatten:      'Formularfelder werden fixiert...',
+
+  // ── processor.js — batch queue (compress/watermark/rotate, 2+ files) ──
+  prog_batch_file: 'Datei {i} von {n} wird verarbeitet...',
+  desc_batch_done: '{n} Dateien verarbeitet · {size}',
+  desc_batch_partial: '{ok} von {total} Dateien verarbeitet · {size}',
+  warn_batch_failed_one: '⚠️ {n} Datei fehlgeschlagen und übersprungen: {names}',
+  warn_batch_failed_many: '⚠️ {n} Dateien fehlgeschlagen und übersprungen: {names}',
+  err_batch_all_failed: 'Alle Dateien konnten nicht verarbeitet werden — nichts zum Herunterladen.',
+  batch_status_pending: 'Wartet',
+  batch_status_processing: 'Wird verarbeitet…',
+  batch_status_done: 'Fertig',
+  batch_status_error: 'Fehlgeschlagen',
   prog_redact:       'Bereiche werden abgedeckt...',
 
   // success descriptions
