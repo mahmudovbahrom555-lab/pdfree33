@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src  'self'
+                'wasm-unsafe-eval'
+                blob:
+                https://cdnjs.cloudflare.com
+                https://esm.sh
+                https://plausible.io
+                https://pagead2.googlesyndication.com
+                https://static.cloudflareinsights.com;
+    style-src   'self' 'unsafe-inline';
+    font-src    'self';
+    img-src     'self' data: blob: https:;
+    connect-src 'self'
+                https://cdnjs.cloudflare.com
+                https://*.workers.dev
+                https://plausible.io
+                https://pagead2.googlesyndication.com
+                https://www.googletagservices.com
+                https://*.doubleclick.net
+                https://cloudflareinsights.com;
+    frame-src   https://googleads.g.doubleclick.net
+                https://tpc.googlesyndication.com;
+    worker-src  'self' blob:;
+    object-src  'none';
+  ">
+
+  <title>Juntar PDF Sem Upload — 100% Privado, Grátis | PDFree</title>
+  <meta name="description" content="Junte arquivos PDF sem enviá-los a nenhum servidor. Todo o processamento acontece no seu navegador — seus arquivos nunca saem do seu dispositivo. Grátis, sem cadastro, sem limite de tamanho.">
+
+  <meta property="og:title"       content="Juntar PDF Sem Enviar a um Servidor | PDFree">
+  <meta property="og:description" content="Junte PDFs inteiramente no seu navegador. Os arquivos nunca são enviados, nunca são armazenados. Grátis, privado, sem limites.">
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://pdfree.io/pt/juntar-pdf-sem-upload/">
+  <meta property="og:site_name"   content="PDFree">
+  <meta property="og:locale"      content="pt_BR">
+  <meta property="og:image"        content="https://pdfree.io/icons/og-image.jpg">
+  <meta property="og:image:width"  content="1200">
+  <meta property="og:image:height" content="633">
+  <meta property="og:image:alt"    content="Juntar PDF Sem Enviar a um Servidor | PDFree">
+  <meta name="twitter:card"  content="summary_large_image">
+  <meta name="twitter:site"  content="@pdfree_io">
+  <meta name="twitter:title" content="Juntar PDF Sem Enviar a um Servidor | PDFree">
+  <meta name="twitter:description" content="Junte PDFs inteiramente no seu navegador. Os arquivos nunca são enviados, nunca são armazenados. Grátis, privado, sem limites.">
+  <meta name="twitter:image" content="https://pdfree.io/icons/og-image.jpg">
+  <meta name="twitter:image:alt" content="Juntar PDF Sem Enviar a um Servidor | PDFree">
+
+  <link rel="canonical" href="https://pdfree.io/pt/juntar-pdf-sem-upload/">
+  <link rel="alternate" hreflang="en"        href="https://pdfree.io/merge-pdf-without-uploading/">
+  <link rel="alternate" hreflang="de"        href="https://pdfree.io/de/pdf-zusammenfuehren-ohne-upload/">
+  <link rel="alternate" hreflang="es"        href="https://pdfree.io/es/unir-pdf-sin-subir/">
+  <link rel="alternate" hreflang="fr"        href="https://pdfree.io/fr/fusionner-pdf-sans-upload/">
+  <link rel="alternate" hreflang="pt"        href="https://pdfree.io/pt/juntar-pdf-sem-upload/">
+  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/merge-pdf-without-uploading/">
+
+  <link rel="manifest" href="../../manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="PDFree">
+  <link rel="apple-touch-icon" href="../../icons/icon-192.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+  <link rel="preconnect" href="https://plausible.io">
+  <link rel="preconnect" href="https://static.cloudflareinsights.com">
+  <link rel="preload" href="../../fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../css/fonts.css">
+
+  <script src="../../js/theme.js"></script>
+  <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/animations.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/components.css">
+
+  <!-- WebApplication schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Juntar PDF Sem Upload",
+    "description": "Junte arquivos PDF sem enviá-los a nenhum servidor. 100% baseado no navegador — os arquivos ficam no seu dispositivo.",
+    "url": "https://pdfree.io/pt/juntar-pdf-sem-upload/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "featureList": [
+      "Nenhum upload de arquivo — nunca saem do seu dispositivo",
+      "Sem limite de tamanho de arquivo",
+      "Não requer conta",
+      "Funciona offline",
+      "Seguro para LGPD e HIPAA por design"
+    ],
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.9",
+      "ratingCount": "1243",
+      "bestRating": "5",
+      "worstRating": "1"
+    },
+    "provider": { "@type": "Organization", "name": "PDFree", "url": "https://pdfree.io" }
+  }
+  </script>
+
+  <!-- HowTo schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "Como Juntar Arquivos PDF Sem Enviá-los a um Servidor",
+    "description": "Junte vários arquivos PDF em um só sem enviá-los a nenhum servidor. Todo o processamento acontece localmente no seu navegador.",
+    "totalTime": "PT1M",
+    "tool": [{ "@type": "HowToTool", "name": "PDFree — combinador de PDF baseado no navegador" }],
+    "step": [
+      {
+        "@type": "HowToStep",
+        "position": 1,
+        "name": "Abra o PDFree",
+        "text": "Acesse pdfree.io/pt/juntar-pdf-sem-upload/ em qualquer navegador moderno. Não precisa de conta nem instalação.",
+        "url": "https://pdfree.io/pt/juntar-pdf-sem-upload/#step1"
+      },
+      {
+        "@type": "HowToStep",
+        "position": 2,
+        "name": "Adicione seus arquivos PDF",
+        "text": "Clique em \"Escolher arquivos\" ou arraste e solte seus PDFs na área de upload. Adicione quantos precisar — sem limites.",
+        "url": "https://pdfree.io/pt/juntar-pdf-sem-upload/#step2"
+      },
+      {
+        "@type": "HowToStep",
+        "position": 3,
+        "name": "Organize a ordem",
+        "text": "Arraste os arquivos para definir a ordem em que aparecerão no documento final.",
+        "url": "https://pdfree.io/pt/juntar-pdf-sem-upload/#step3"
+      },
+      {
+        "@type": "HowToStep",
+        "position": 4,
+        "name": "Junte e baixe",
+        "text": "Clique em \"Juntar arquivos PDF\". O processamento acontece instantaneamente no seu navegador — nada é enviado a um servidor. Baixe seu PDF unificado.",
+        "url": "https://pdfree.io/pt/juntar-pdf-sem-upload/#step4"
+      }
+    ]
+  }
+  </script>
+
+  <!-- FAQPage schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "O PDFree envia meus arquivos PDF a um servidor?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Não. O PDFree junta arquivos PDF inteiramente no seu navegador usando pdf-lib — uma biblioteca JavaScript que roda localmente. Seus arquivos nunca são enviados pela internet. Você pode verificar isso abrindo as DevTools do seu navegador (F12), indo até a aba Rede e juntando um arquivo — você não verá nenhuma requisição com os dados do seu PDF."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "É seguro para documentos confidenciais como registros médicos ou contratos jurídicos?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Sim. Como o PDFree nunca envia seus arquivos, ele é seguro para documentos confidenciais. Registros médicos, contratos jurídicos, demonstrações financeiras e documentos de identificação são processados inteiramente no seu dispositivo e nunca são transmitidos a nenhum servidor. Os arquivos existem apenas na memória RAM do seu navegador e desaparecem ao fechar a aba."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Qual a diferença entre o PDFree e o iLovePDF ou SmallPDF?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "O iLovePDF e o SmallPDF enviam seus arquivos para os servidores deles para processá-los e os excluem após 1-2 horas. O PDFree processa tudo localmente no seu navegador — seus arquivos nunca saem do seu dispositivo. Isso torna o PDFree inerentemente mais seguro para documentos sensíveis e utilizável sem conexão com a internet depois de carregado."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Existe um limite de tamanho de arquivo para juntar PDFs sem enviá-los?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Não. O PDFree não tem limites de tamanho de arquivo porque o processamento acontece localmente — a memória disponível do seu dispositivo é o único limite. A maioria dos dispositivos modernos lida com PDFs de várias centenas de megabytes sem problemas."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Posso juntar PDFs offline, sem enviá-los?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Sim. O PDFree é um Progressive Web App (PWA). Após sua primeira visita, o app fica em cache no seu navegador e funciona totalmente offline. Você pode juntar PDFs sem nenhuma conexão com a internet."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "O PDFree é compatível com HIPAA?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A arquitetura do PDFree é segura para HIPAA por design: nenhuma informação de saúde protegida (PHI) é transmitida aos nossos servidores porque nenhum arquivo é enviado. Não há processamento do lado do servidor, armazenamento ou logs. Profissionais de saúde podem juntar com segurança PDFs relacionados a pacientes usando o PDFree."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- BreadcrumbList schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "PDFree", "item": "https://pdfree.io/" },
+      { "@type": "ListItem", "position": 2, "name": "Juntar PDF", "item": "https://pdfree.io/pt/juntar-pdf/" },
+      { "@type": "ListItem", "position": 3, "name": "Juntar Sem Upload", "item": "https://pdfree.io/pt/juntar-pdf-sem-upload/" }
+    ]
+  }
+  </script>
+</head>
+<body data-tool="merge">
+
+  <nav>
+    <a href="/pt/" class="logo" id="logo" aria-label="Ir para a página inicial" style="text-decoration:none">
+      <div class="logo-icon" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+      </div>
+      <span class="logo-text">PDF<span>ree</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="/pt/juntar-pdf/" class="nav-link" data-tool="merge">Juntar</a>
+      <a href="/pt/dividir-pdf/" class="nav-link" data-tool="split">Dividir</a>
+      <a href="/pt/comprimir-pdf/" class="nav-link" data-tool="compress">Comprimir</a>
+      <a href="/pt/jpg-para-pdf/" class="nav-link" data-tool="jpg2pdf">JPG→PDF</a>
+      <a href="/pt/pdf-para-jpg/" class="nav-link" data-tool="pdf2jpg">PDF→JPG</a>
+      <a href="/pt/marca-dagua-pdf/" class="nav-link" data-tool="watermark">Marca d'água</a>
+      <a href="/pt/numeros-de-pagina-pdf/" class="nav-link" data-tool="pagenum">Núm. página</a>
+      <a href="/pt/metadados-pdf/" class="nav-link" data-tool="meta">Metadados</a>
+      <a href="/pt/extrair-pdf/" class="nav-link" data-tool="extract">Extrair</a>
+      <a href="/pt/desenhar-no-pdf/" class="nav-link" data-tool="draw-pdf">Desenhar</a>
+      <a href="/pt/girar-pdf/" class="nav-link" data-tool="rotate">Girar</a>
+      <a href="/pt/proteger-pdf/" class="nav-link" data-tool="protect">Proteger</a>
+      <a href="/pt/pdf-para-word/" class="nav-link" data-tool="pdf2word">PDF→Word</a>
+    </div>
+    <button id="themeToggle" class="theme-toggle" aria-label="Alternar modo escuro" title="Alternar modo escuro"></button>
+  </nav>
+
+  <!-- ── Banner compacto — a ferramenta aparece logo abaixo ── -->
+  <section style="background:var(--green-light);border-bottom:1px solid rgba(45,122,79,0.15);padding:24px 24px 20px;text-align:center;">
+    <div style="max-width:720px;margin:0 auto;">
+      <h1 style="font-size:clamp(22px,3.5vw,34px);font-weight:700;letter-spacing:-0.5px;line-height:1.2;color:var(--text);margin:0 0 6px;">Juntar PDF Sem Enviar a um Servidor</h1>
+      <p style="font-size:14px;color:var(--green);margin:0;font-weight:500;">100% privado — seus arquivos nunca saem do seu dispositivo. Sem upload, sem conta, sem limites.</p>
+    </div>
+  </section>
+
+  <!-- ── Ferramenta ── -->
+  <div id="tool"></div>
+  <main id="toolArea" class="main-area" aria-busy="false">
+    <div class="tool-header">
+      <div class="tool-header-icon" id="toolIcon" aria-hidden="true">🔗</div>
+      <div class="tool-header-text">
+        <h2 id="toolTitle">Juntar arquivos PDF — sem upload, sem servidor</h2>
+        <p  id="toolDesc">Adicione seus PDFs, organize a ordem, clique em Juntar. Tudo acontece no seu navegador.</p>
+      </div>
+    </div>
+
+    <div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-label="Enviar arquivos — clique ou arraste e solte">
+      <input type="file" id="fileInput" multiple accept=".pdf" aria-hidden="true">
+      <span class="drop-icon" aria-hidden="true">📂</span>
+      <div class="drop-title">Solte os arquivos PDF aqui</div>
+      <div class="drop-sub">ou clique para procurar — arquivos ilimitados, qualquer tamanho</div>
+      <label class="drop-btn" id="chooseFilesBtn" for="fileInput">Escolher arquivos</label>
+    </div>
+
+    <div id="fileList"    class="file-list" aria-live="polite" aria-label="Arquivos selecionados"></div>
+    <div id="fileCount"   class="file-count"   style="display:none"></div>
+    <div id="reorderHint" class="reorder-hint" style="display:none">↕ Arraste para reordenar os arquivos antes de juntar</div>
+
+    <div id="mergeOptions"    class="j2p-options"      style="display:none" aria-label="Merge options"></div>
+    <div id="splitOptions"    class="split-options"    style="display:none"></div>
+    <div id="compressOptions" class="compress-options"  style="display:none"></div>
+    <div id="jpg2pdfOptions"  class="j2p-options"      style="display:none"></div>
+    <div id="pdf2jpgOptions"  class="j2p-options"      style="display:none"></div>
+    <div id="watermarkOptions" class="j2p-options"     style="display:none"></div>
+    <div id="pageNumOptions"  class="j2p-options"      style="display:none"></div>
+    <div id="metaOptions"     class="j2p-options"      style="display:none"></div>
+    <div id="protectOptions"  class="j2p-options"      style="display:none"></div>
+    <div id="redactOptions"   class="j2p-options"      style="display:none"></div>
+    <div id="rotateOptions"   class="j2p-options"      style="display:none"></div>
+    <div id="pdf2wordOptions"  class="j2p-options"     style="display:none" aria-label="PDF to Word options"></div>
+
+    <button id="mergeBtn"  class="merge-btn"  type="button" disabled data-mode="process">Juntar arquivos PDF</button>
+    <button id="cancelBtn" class="cancel-btn" type="button" style="display:none" aria-label="Cancelar processamento">✕ Cancelar</button>
+
+    <div id="progressBar"   class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+    <div id="progressLabel" class="progress-label"></div>
+
+    <div id="successCard" class="success-card" role="alert" aria-live="polite" style="display:none">
+      <div class="success-top">
+        <div class="success-icon" aria-hidden="true">✓</div>
+        <div class="success-text">
+          <h3 id="successTitle">Pronto!</h3>
+          <p  id="successDesc"></p>
+        </div>
+        <button id="downloadBtn" class="download-btn" type="button">⬇ Baixar</button>
+        <button id="shareBtn" class="share-btn" type="button" style="display:none" aria-label="Enviar arquivo pelos apps do dispositivo"></button>
+      </div>
+      <div id="privacyCleared" class="privacy-cleared" aria-live="polite">
+        <span class="privacy-cleared__icon" aria-hidden="true">🛡️</span>
+        <div class="privacy-cleared__body">
+          <strong class="privacy-cleared__title">Arquivo apagado da memória</strong>
+          <span class="privacy-cleared__sub">Seu documento não deixou rastros — nem nos nossos servidores, nem no seu navegador.</span>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ── Conteúdo SEO ── -->
+  <hr style="border:none;border-top:2px solid var(--border);margin:48px 24px 0;" aria-hidden="true">
+  <section class="seo-article" aria-labelledby="seoArticleTitle">
+    <div class="seo-article__inner">
+      <div class="seo-content" style="max-width:800px;margin:60px auto 40px;padding:0 24px;color:var(--text2);line-height:1.8;">
+
+        <!-- How it works -->
+        <div id="how-it-works"></div>
+        <h2 style="font-size:26px;color:var(--text);margin:0 0 12px;font-weight:700;">Por Que "Sem Upload" Importa</h2>
+        <p>Quando você usa ferramentas como iLovePDF ou SmallPDF, seus arquivos viajam pela internet até um servidor remoto. Esse servidor os processa, os armazena temporariamente (por 1-2 horas) e depois os exclui. Durante essa janela, seus documentos existem no computador de outra pessoa.</p>
+        <p>Para arquivos do dia a dia, como pautas de reunião, isso não é problema. Mas para <strong>extratos bancários, registros médicos, contratos jurídicos, declarações de impostos ou documentos de identificação</strong> — enviá-los para um servidor de terceiros cria exposição desnecessária. Uma violação de servidor, uma permissão mal configurada ou uma intimação judicial podem expor seus documentos.</p>
+
+        <div style="background:var(--green-light);border-left:4px solid var(--green);padding:18px 20px;border-radius:0 8px 8px 0;margin:28px 0;">
+          <p style="margin:0;font-size:14px;color:var(--text);">
+            <strong>A abordagem do PDFree:</strong> Seus arquivos são carregados na memória RAM do seu navegador, unidos usando uma biblioteca JavaScript (pdf-lib), e o resultado é gerado localmente. Feche a aba — os arquivos desaparecem. Não há servidor. Não há nada para violar.
+          </p>
+        </div>
+
+        <!-- Steps -->
+        <h2 id="step1" style="font-size:26px;color:var(--text);margin:48px 0 12px;font-weight:700;">Como Juntar PDF Sem Enviar — Passo a Passo</h2>
+
+        <div style="display:flex;flex-direction:column;gap:16px;margin:24px 0;">
+          <div style="display:flex;gap:16px;align-items:flex-start;">
+            <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;" id="step2">1</div>
+            <div><strong style="color:var(--text);">Abra o PDFree no seu navegador</strong><br>Sem download, sem instalação, sem conta. Funciona no Chrome, Safari, Firefox, Edge.</div>
+          </div>
+          <div style="display:flex;gap:16px;align-items:flex-start;">
+            <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;" id="step3">2</div>
+            <div><strong style="color:var(--text);">Adicione seus arquivos PDF</strong><br>Clique em "Escolher arquivos" ou arraste e solte. Adicione quantos precisar — sem limites de quantidade ou tamanho.</div>
+          </div>
+          <div style="display:flex;gap:16px;align-items:flex-start;">
+            <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">3</div>
+            <div><strong style="color:var(--text);">Organize a ordem</strong><br>Arraste os arquivos para cima ou para baixo para definir a ordem em que aparecerão no documento final.</div>
+          </div>
+          <div style="display:flex;gap:16px;align-items:flex-start;" id="step4">
+            <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">4</div>
+            <div><strong style="color:var(--text);">Clique em Juntar — depois Baixar</strong><br>O processamento leva segundos. Seu PDF unificado é baixado diretamente para o seu dispositivo. Nada foi enviado a um servidor.</div>
+          </div>
+        </div>
+
+        <!-- Comparison table -->
+        <h2 style="font-size:26px;color:var(--text);margin:52px 0 16px;font-weight:700;">PDFree vs. Ferramentas PDF na Nuvem</h2>
+        <div style="overflow-x:auto;margin:20px 0;">
+          <table style="width:100%;border-collapse:collapse;font-size:14px;min-width:500px;">
+            <thead>
+              <tr style="border-bottom:2px solid var(--border);">
+                <th style="text-align:left;padding:10px 14px;color:var(--text);font-weight:600;">Recurso</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">PDFree</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text2);font-weight:600;">iLovePDF</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text2);font-weight:600;">SmallPDF</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom:1px solid var(--border);background:var(--green-light);">
+                <td style="padding:10px 14px;color:var(--text);font-weight:500;">Arquivos enviados ao servidor</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">Nunca</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Sempre</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Sempre</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 14px;color:var(--text);">Arquivos excluídos do servidor</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">N/A — nunca armazenados</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Após 2 horas</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Após 1 hora</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);background:var(--green-light);">
+                <td style="padding:10px 14px;color:var(--text);">Funciona offline</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">✓ Sim (PWA)</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">✗ Não</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">✗ Não</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 14px;color:var(--text);">Limite de tamanho de arquivo</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">Nenhum</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Limitado (grátis)</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Limitado (grátis)</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);background:var(--green-light);">
+                <td style="padding:10px 14px;color:var(--text);">Limite de uso diário</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">Nenhum</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Limitado (grátis)</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">2 tarefas/dia (grátis)</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 14px;color:var(--text);">Conta necessária</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">✓ Nunca</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Opcional</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Opcional</td>
+              </tr>
+              <tr>
+                <td style="padding:10px 14px;color:var(--text);">Seguro para documentos confidenciais</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">✓ Por design</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Depende da confiança</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Depende da confiança</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Verify section -->
+        <h2 style="font-size:26px;color:var(--text);margin:52px 0 12px;font-weight:700;">Como Verificar Que Seus Arquivos Não São Enviados</h2>
+        <p>Não confie apenas na nossa palavra — verifique você mesmo em 30 segundos:</p>
+        <ol style="margin:16px 0;padding-left:24px;display:flex;flex-direction:column;gap:8px;">
+          <li>Abra o PDFree no Chrome ou Firefox</li>
+          <li>Pressione <kbd style="background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:2px 7px;font-size:13px;">F12</kbd> para abrir as DevTools</li>
+          <li>Clique na aba <strong>Rede</strong></li>
+          <li>Adicione seus arquivos PDF e clique em Juntar</li>
+          <li>Procure por requisições com o nome do seu arquivo ou dados do PDF — <strong>você não encontrará nenhuma</strong></li>
+        </ol>
+        <p>As únicas requisições de rede que você verá são as que carregam o JavaScript e CSS do app. Seus arquivos PDF nunca aparecem no log de rede porque nunca saem do seu navegador.</p>
+
+        <!-- Use cases -->
+        <h2 style="font-size:26px;color:var(--text);margin:52px 0 12px;font-weight:700;">Quem Deveria Usar um Combinador de PDF Sem Upload</h2>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin:20px 0;">
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;">
+            <div style="font-size:24px;margin-bottom:8px;">⚖️</div>
+            <strong style="color:var(--text);">Advogados e Profissionais Jurídicos</strong>
+            <p style="font-size:13px;margin:8px 0 0;color:var(--text2);">Contratos de clientes, documentos de casos e provas são confidenciais. Não os envie para ninguém.</p>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;">
+            <div style="font-size:24px;margin-bottom:8px;">🏥</div>
+            <strong style="color:var(--text);">Profissionais de Saúde</strong>
+            <p style="font-size:13px;margin:8px 0 0;color:var(--text2);">Registros de pacientes exigem proteção rigorosa. O PDFree é seguro por design — zero dados de saúde transmitidos.</p>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;">
+            <div style="font-size:24px;margin-bottom:8px;">💼</div>
+            <strong style="color:var(--text);">Contadores e Finanças</strong>
+            <p style="font-size:13px;margin:8px 0 0;color:var(--text2);">Declarações de impostos, extratos bancários e dados de folha de pagamento pertencem ao seu dispositivo — não ao servidor de uma startup.</p>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;">
+            <div style="font-size:24px;margin-bottom:8px;">🏢</div>
+            <strong style="color:var(--text);">RH e Recrutadores</strong>
+            <p style="font-size:13px;margin:8px 0 0;color:var(--text2);">Registros de funcionários e dados de candidatos são sensíveis. Processe-os localmente, sem deixar rastros.</p>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <h2 style="font-size:26px;color:var(--text);margin:52px 0 20px;font-weight:700;">Perguntas Frequentes</h2>
+
+        <div style="display:flex;flex-direction:column;gap:20px;">
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">O PDFree envia meus arquivos PDF a um servidor?</h3>
+            <p style="margin:0;font-size:14px;">Não. O PDFree junta PDFs inteiramente no seu navegador usando pdf-lib. Seus arquivos nunca são enviados pela internet. Você pode verificar abrindo DevTools → Rede — verá zero requisições com os dados do seu PDF.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">É seguro para registros médicos e documentos jurídicos?</h3>
+            <p style="margin:0;font-size:14px;">Sim. Como os arquivos nunca saem do seu dispositivo, o PDFree é seguro para registros médicos protegidos, documentos jurídicos confidenciais e qualquer outro conteúdo sensível. Não há servidor que possa ser comprometido.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Qual a diferença em relação ao iLovePDF ou SmallPDF?</h3>
+            <p style="margin:0;font-size:14px;">O iLovePDF e o SmallPDF enviam seus arquivos para os servidores deles, processam-nos lá e os excluem após 1-2 horas. O PDFree processa tudo localmente — seus arquivos nunca viajam até um servidor. Você também não tem limites de tamanho de arquivo nem limites de uso diário.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Existe um limite de tamanho de arquivo?</h3>
+            <p style="margin:0;font-size:14px;">Não. O PDFree não tem limites de tamanho porque o processamento é local. A memória RAM do seu dispositivo é a única restrição — dispositivos modernos lidam com PDFs de várias centenas de megabytes sem problemas.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Posso juntar PDFs completamente offline?</h3>
+            <p style="margin:0;font-size:14px;">Sim. Após sua primeira visita, o PDFree fica em cache como PWA e funciona totalmente offline — nenhuma conexão com a internet é necessária para o processamento.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">O PDFree é compatível com HIPAA?</h3>
+            <p style="margin:0;font-size:14px;">O PDFree é seguro para HIPAA pela sua arquitetura: nenhuma informação de saúde protegida é transmitida aos nossos servidores porque não há processamento do lado do servidor. Profissionais de saúde podem usar o PDFree com segurança para documentos relacionados a pacientes.</p>
+          </div>
+        </div>
+
+        <!-- Related tools -->
+        <h2 style="font-size:26px;color:var(--text);margin:52px 0 12px;font-weight:700;">Mais Ferramentas PDF Privadas</h2>
+        <p>Todas as ferramentas do PDFree funcionam da mesma forma — tudo fica no seu navegador:</p>
+        <ul style="margin:16px 0;padding-left:24px;display:flex;flex-direction:column;gap:8px;">
+          <li><a href="/pt/comprimir-pdf/" style="color:var(--green);text-decoration:none;font-weight:500;">Comprimir PDF sem upload</a> — Reduza o tamanho localmente, sem precisar de servidor</li>
+          <li><a href="/pt/dividir-pdf/"    style="color:var(--green);text-decoration:none;font-weight:500;">Dividir PDF sem upload</a> — Extraia páginas de forma privada no seu navegador</li>
+          <li><a href="/pt/proteger-pdf/" style="color:var(--green);text-decoration:none;font-weight:500;">Proteger PDF com senha</a> — Adicione criptografia localmente, sem acesso do servidor à sua chave</li>
+          <li><a href="/pt/censurar-pdf/"  style="color:var(--green);text-decoration:none;font-weight:500;">Censurar PDF</a> — Cubra conteúdo sensível antes de compartilhar, totalmente offline</li>
+        </ul>
+
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div style="display:flex;gap:48px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;font-size:13px;border-top:1px solid var(--border);padding-top:20px;">
+      <div>
+        <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Alternativas</div>
+        <a href="/ilovepdf-alternative/" style="display:block;color:var(--green);text-decoration:none;margin-bottom:4px;">Alternativa ao iLovePDF</a>
+      </div>
+      <div>
+        <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Soluções</div>
+        <a href="/hipaa-pdf-tools/" style="display:block;color:var(--green);text-decoration:none;margin-bottom:4px;">PDF Compatível com HIPAA</a>
+        <a href="/pt/ferramentas-pdf-seguras/" style="display:block;color:var(--green);text-decoration:none;">Ferramentas PDF Seguras</a>
+      </div>
+    </div>
+    PDFree · <strong>Todo o processamento acontece 100% no seu navegador</strong> · Os arquivos <strong>nunca são enviados</strong><br>
+    <span style="color:var(--green)">🔒</span> Seus documentos nunca saem do seu dispositivo &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> Feito para ser grátis para todos, sempre<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
+      <a href="/privacy.html" style="color:var(--green)">Privacidade</a>
+      &nbsp;·&nbsp;
+      <a href="/terms.html" style="color:var(--green)">Termos</a>
+      &nbsp;·&nbsp;
+      <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a>
+      &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green)">GitHub</a>
+    </span>
+  </footer>
+
+  <div id="toast"         class="toast"        role="status" aria-live="polite"></div>
+  <div id="hero"          style="display:none"></div>
+  <div id="trustAlert"    style="display:none"></div>
+  <div id="noLimitBar"    style="display:none"></div>
+  <div id="toolsGrid"     style="display:none"></div>
+  <div id="pwaNudge"      style="display:none"></div>
+
+  <script type="module" src="../../js/locales/pt.js"></script>
+  <script type="module" src="../../js/app.js"></script>
+
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script>
+</body>
+</html>
