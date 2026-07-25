@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src  'self'
+                'wasm-unsafe-eval'
+                blob:
+                https://cdnjs.cloudflare.com
+                https://plausible.io
+                https://pagead2.googlesyndication.com
+                https://static.cloudflareinsights.com
+                https://cdn.jsdelivr.net
+                https://unpkg.com;
+    style-src   'self' 'unsafe-inline';
+    font-src    'self';
+    img-src     'self' data: blob: https:;
+    connect-src 'self'
+                https://cdnjs.cloudflare.com
+                https://*.workers.dev
+                https://plausible.io
+                https://pagead2.googlesyndication.com
+                https://www.googletagservices.com
+                https://*.doubleclick.net
+                https://cloudflareinsights.com;
+    frame-src   https://googleads.g.doubleclick.net
+                https://tpc.googlesyndication.com;
+    worker-src  'self' blob:;
+    object-src  'none';
+  ">
+  <title>PDFree — Ücretsiz PDF Araçları, Sınır Yok</title>
+  <meta name="description" content="PDF'leri birleştirin, bölün, sıkıştırın, dönüştürün — doğrudan tarayıcınızda. Yükleme yok, hesap yok, sınır yok. 19 ücretsiz PDF aracı.">
+  <meta name="keywords"    content="pdf birleştir, pdf böl, pdf sıkıştır, ücretsiz pdf araçları, pdf dosyalarını birleştir, gizli pdf, yükleme yapmadan pdf, pdf filigran, sayfa numarası ekle, pdf meta veri düzenleyici">
+  <meta property="og:title"       content="PDFree — Gizli PDF Araçları, Sonsuza Kadar Ücretsiz">
+  <meta property="og:description" content="Birleştir, böl, sıkıştır, filigran ekle. %100 gizli — dosyalarınız cihazınızdan asla ayrılmaz. Kayıt yok, sınır yok.">
+  <meta property="og:type"        content="website">
+  <meta property="og:url"       content="https://pdfree.io/tr/">
+  <meta property="og:site_name" content="PDFree">
+  <meta property="og:locale"    content="tr_TR">
+  <meta property="og:image"     content="https://pdfree.io/icons/og-image.jpg">
+  <meta property="og:image:width"  content="1200">
+  <meta property="og:image:height" content="633">
+  <meta property="og:image:alt"    content="PDFree — Gizli PDF Araçları, Sonsuza Kadar Ücretsiz">
+  <meta name="twitter:card"        content="summary_large_image">
+  <meta name="twitter:site"        content="@pdfree_io">
+  <meta name="twitter:title"       content="PDFree — Gizli PDF Araçları, Sonsuza Kadar Ücretsiz">
+  <meta name="twitter:description" content="Birleştir, böl, sıkıştır — %100 gizli, dosyalarınız tarayıcınızdan hiç ayrılmaz. Hesap yok, sınır yok. Ücretsiz.">
+  <meta name="twitter:image"       content="https://pdfree.io/icons/og-image.jpg">
+  <meta name="twitter:image:alt"   content="PDFree — Tarayıcınızda çalışan gizli PDF araçları">
+
+  <link rel="canonical" href="https://pdfree.io/tr/">
+  <link rel="alternate" hreflang="en" href="https://pdfree.io/">
+  <link rel="alternate" hreflang="es" href="https://pdfree.io/es/">
+  <link rel="alternate" hreflang="pt" href="https://pdfree.io/pt/">
+  <link rel="alternate" hreflang="de" href="https://pdfree.io/de/">
+  <link rel="alternate" hreflang="fr" href="https://pdfree.io/fr/">
+  <link rel="alternate" hreflang="id" href="https://pdfree.io/id/">
+  <link rel="alternate" hreflang="tr" href="https://pdfree.io/tr/">
+  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/">
+
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="PDFree">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <!-- Privacy-first analytics (no cookies, GDPR compliant) -->
+  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+  <link rel="preconnect" href="https://plausible.io">
+  <link rel="preconnect" href="https://static.cloudflareinsights.com">
+  <link rel="preload" href="../fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../css/fonts.css">
+
+  <script src="../js/theme.js"></script>
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/animations.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "PDFree",
+    "url": "https://pdfree.io/tr/",
+    "inLanguage": "tr",
+    "description": "Tamamen tarayıcıda çalışan ücretsiz PDF araçları. Dosya yükleme yok, hesap gerekmez.",
+    "applicationCategory": "UtilityApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Dosyalarım sunucularınızda saklanıyor mu?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Hayır. PDFree tamamen cihazınızda (istemci tarafında) çalışır. Dosyalarınızı işleyen sunucularımız yoktur, bu da %100 gizlilik sağlar."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Gerçekten ücretsiz mi — gizli ücret var mı?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Evet. 19 aracın tamamı dosya boyutu sınırı, filigran, günlük limit ve hesap olmadan ücretsizdir. Kredi kartı gerekmez, abonelik yok. Sonsuza kadar ücretsiz."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "PDFree hangi PDF araçlarını sunuyor?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "PDFree; PDF birleştirme, bölme, sıkıştırma, döndürme, parolayla koruma, filigran ekleme, JPG'den PDF'ye dönüştürme ve daha fazlasını sunar — hepsi ücretsiz ve gizli."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Dosya boyutu veya sayfa sayısı sınırı var mı?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Hayır, yapay limit yoktur. Tek sınırlama bilgisayarınızda veya akıllı telefonunuzda mevcut RAM miktarıdır."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Gizli belgeler için güvenli mi? KVKK uyumlu mu?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Evet. Dosyalarınız cihazınızdan hiç ayrılmadığı için PDFree; gizli belgeler, tıbbi kayıtlar, mali raporlar ve hukuki evraklar için güvenlidir. İşlemler izole bir WebAssembly iş parçacığında gerçekleşir — hiçbir şey kaydedilmez, saklanmaz veya gönderilmez. KVKK uyumludur."
+      }
+    }
+  ]
+}
+  </script>
+  <script type="application/ld+json">
+  {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "PDFree",
+  "url": "https://pdfree.io/",
+  "logo": "https://pdfree.io/icons/icon-192.png",
+  "description": "PDFree, tamamen tarayıcıda çalışan ücretsiz ve gizli PDF araçları sunar — yükleme yok, hesap yok, dosya boyutu sınırı yok.",
+  "sameAs": [
+    "https://github.com/mahmudovbahrom555-lab/pdfree33"
+  ],
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "contactType": "customer support",
+    "url": "https://pdfree.io/"
+  }
+}
+  </script>
+  <script type="application/ld+json">
+  {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "PDFree",
+  "url": "https://pdfree.io/tr/",
+  "inLanguage": "tr",
+  "description": "Tarayıcınızda doğrudan çalışan ücretsiz PDF araçları — yükleme yok, hesap yok, sınır yok.",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "https://pdfree.io/tr/?q={search_term_string}"
+    },
+    "query-input": "required name=search_term_string"
+  }
+}
+  </script>
+</head>
+<body>
+
+  <!-- ── Navigation ── -->
+  <nav>
+    <div class="logo" id="logo" tabindex="0" role="button" aria-label="Ana sayfaya git">
+      <div class="logo-icon" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+      </div>
+      <span class="logo-text">PDF<span>ree</span></span>
+    </div>
+    <div class="nav-links">
+      <a href="/tr/pdf-birlestir/" class="nav-link" data-tool="merge">PDF Birleştir</a>
+      <a href="/tr/pdf-bol/" class="nav-link" data-tool="split">PDF Böl</a>
+      <a href="/tr/pdf-sikistir/" class="nav-link" data-tool="compress">PDF Sıkıştır</a>
+      <a href="/tr/jpg-den-pdf-ye/" class="nav-link" data-tool="jpg2pdf">JPG → PDF</a>
+      <a href="/tr/pdf-den-jpg-ye/" class="nav-link" data-tool="pdf2jpg">PDF → JPG</a>
+      <a href="/tr/pdf-filigran/" class="nav-link" data-tool="watermark">Filigran Ekle</a>
+      <a href="/tr/sayfa-numarasi-ekle/" class="nav-link" data-tool="pagenum">Sayfa Numarası</a>
+      <a href="/tr/pdf-meta-veri/" class="nav-link" data-tool="meta">Meta Veri</a>
+      <a href="/tr/sayfa-cikar/" class="nav-link" data-tool="extract">Sayfa Çıkar</a>
+      <a href="/tr/pdf-dondur/" class="nav-link" data-tool="rotate">PDF Döndür</a>
+      <a href="/tr/pdf-koru/" class="nav-link" data-tool="protect">PDF Koru</a>
+      <a href="/tr/pdf-word-donustur/" class="nav-link" data-tool="pdf2word">PDF'den Word'e</a>
+      <a href="/tr/pdf-duzlestir/" class="nav-link" data-tool="flatten">Form Kilitle</a>
+      <a href="/compare-pdf/" class="nav-link" data-tool="compare">Karşılaştır</a>
+    </div>
+    <div class="nav-right">
+      <details class="lang-switch" id="langSwitch">
+        <summary aria-label="Dili değiştir">🌐 TR</summary>
+        <div class="lang-switch__menu" role="menu">
+          <a href="/" role="menuitem">English</a>
+          <a href="/es/" role="menuitem">Español</a>
+          <a href="/pt/" role="menuitem">Português</a>
+          <a href="/de/" role="menuitem">Deutsch</a>
+          <a href="/fr/" role="menuitem">Français</a>
+          <a href="/id/" role="menuitem">Bahasa Indonesia</a>
+          <a href="/tr/" role="menuitem" aria-current="true">Türkçe</a>
+        </div>
+      </details>
+      <button id="themeToggle" class="theme-toggle" aria-label="Karanlık modu değiştir" title="Karanlık modu değiştir"></button>
+    </div>
+  </nav>
+
+  <!-- ── Hero ── -->
+  <section id="hero" class="hero js-home-only">
+    <div class="hero-badge">🔒 100% gizli · yükleme yok · kayıt yok · limit yok</div>
+    <h1>PDF araçları, <br><em>gerçekten işe yarayan</em></h1>
+    <p>Birleştir, böl, sıkıştır, filigran ekle, dönüştür — her şey <strong>tarayıcınızda</strong> gerçekleşir. Dosyalarınız cihazınızdan ayrılmaz. Sunucu yok. Hesap yok. Sadece sonuçlar.</p>
+
+    <div class="search-hero" id="searchHero">
+      <div class="hero-drop-zone" id="heroDropZone">
+        <input type="file" id="heroFileInput" accept=".pdf" multiple hidden>
+        <div class="hero-drop-zone__idle" id="heroDropIdle">
+          <span class="hero-drop-zone__upload-icon" aria-hidden="true"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></span>
+          <span class="hero-drop-zone__label" id="heroDropLabel">PDF'inizle başlayın</span>
+          <div class="hero-drop-zone__choose-row">
+            <span class="hero-drop-zone__drop-text">PDF'inizi buraya bırakın</span>
+            <span class="hero-drop-zone__sep" id="heroDropOr">veya</span>
+            <label class="hero-drop-zone__btn" for="heroFileInput" id="heroDropChooseBtn">Dosya Seç</label>
+          </div>
+          <a href="/tr/jpg-den-pdf-ye/" class="hero-drop-zone__img-link" id="heroImgHint">Resminiz mi var?</a>
+        </div>
+        <div class="hero-drop-zone__ready" id="heroDropReady" hidden>
+          <span class="hero-drop-zone__check">✓</span>
+          <span id="heroFileName"></span>
+          <button class="hero-drop-zone__clear" id="heroClearFile" type="button" aria-label="Dosyayı kaldır">×</button>
+        </div>
+      </div>
+      <p class="hero-section-label" id="heroFeaturedLabel">Popüler Araçlar</p>
+      <div class="hero-featured" id="heroFeatured">
+        <a href="/tr/pdf-birlestir/" class="hero-fcard" data-tool="merge" onclick="window.plausible&&window.plausible('Card Click',{props:{tool:'merge'}})">
+          <span class="hero-fcard__icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span>
+          <span class="hero-fcard__body"><span class="hero-fcard__name">PDF Birleştir</span><span class="hero-fcard__desc">Birden çok PDF'i tek dosyada birleştirin</span></span>
+          <span class="hero-fcard__arrow" aria-hidden="true">→</span>
+        </a>
+        <a href="/tr/pdf-sikistir/" class="hero-fcard" data-tool="compress" onclick="window.plausible&&window.plausible('Card Click',{props:{tool:'compress'}})">
+          <span class="hero-fcard__icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/><path d="M5 2h14"/><path d="M5 22h14"/></svg></span>
+          <span class="hero-fcard__body"><span class="hero-fcard__name">PDF Sıkıştır</span><span class="hero-fcard__desc">Kaliteyi koruyarak dosya boyutunu küçültün</span></span>
+          <span class="hero-fcard__arrow" aria-hidden="true">→</span>
+        </a>
+        <a href="/tr/pdf-bol/" class="hero-fcard" data-tool="split" onclick="window.plausible&&window.plausible('Card Click',{props:{tool:'split'}})">
+          <span class="hero-fcard__icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg></span>
+          <span class="hero-fcard__body"><span class="hero-fcard__name">PDF Böl</span><span class="hero-fcard__desc">Sayfaları çıkarın veya ayırın</span></span>
+          <span class="hero-fcard__arrow" aria-hidden="true">→</span>
+        </a>
+        <a href="/tr/pdf-den-jpg-ye/" class="hero-fcard" data-tool="pdf2jpg" onclick="window.plausible&&window.plausible('Card Click',{props:{tool:'pdf2jpg'}})">
+          <span class="hero-fcard__icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg></span>
+          <span class="hero-fcard__body"><span class="hero-fcard__name">PDF'den JPG'ye</span><span class="hero-fcard__desc">PDF sayfalarını resme dönüştürün</span></span>
+          <span class="hero-fcard__arrow" aria-hidden="true">→</span>
+        </a>
+        <a href="/tr/pdf-koru/" class="hero-fcard" data-tool="protect" onclick="window.plausible&&window.plausible('Card Click',{props:{tool:'protect'}})">
+          <span class="hero-fcard__icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+          <span class="hero-fcard__body"><span class="hero-fcard__name">PDF Koru</span><span class="hero-fcard__desc">AES-256 parola koruması</span></span>
+          <span class="hero-fcard__arrow" aria-hidden="true">→</span>
+        </a>
+        <a href="/tr/pdf-word-donustur/" class="hero-fcard" data-tool="pdf2word" onclick="window.plausible&&window.plausible('Card Click',{props:{tool:'pdf2word'}})">
+          <span class="hero-fcard__icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></span>
+          <span class="hero-fcard__body"><span class="hero-fcard__name">PDF'den Word'e</span><span class="hero-fcard__desc">Düzenlenebilir Word belgesine dönüştürün</span></span>
+          <span class="hero-fcard__arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+      <p class="hero-chips-label" id="heroChipsLabel" hidden>Ne yapmak istiyorsunuz?</p>
+      <div class="search-popular" id="searchPopular" aria-label="Popüler Araçlar"></div>
+      <p class="hero-section-label hero-search-label">Başka bir araç mı arıyorsunuz?</p>
+      <div class="search-wrap">
+        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input id="toolSearch" type="search" autocomplete="off" spellcheck="false"
+               placeholder="PDF birleştir, sıkıştır, döndür, filigran, PDF'den Word'e…" aria-label="PDF aracı ara">
+      </div>
+      <div class="search-result" id="searchResult" hidden role="region" aria-label="Eşleşen araçlar">
+        <label class="search-result__info" id="srInfoLabel" for="srFileInput">
+          <input type="file" id="srFileInput" accept=".pdf" hidden>
+          <span class="search-result__icon" id="srIcon" aria-hidden="true"></span>
+          <strong id="srName"></strong>
+          <span class="search-result__go" id="srGo" aria-hidden="true">&rarr;</span>
+          <span class="search-result__desc" id="srDesc"></span>
+        </label>
+        <div class="search-result__pending-file" id="srPendingFile" hidden></div>
+        <div class="search-result__drop" id="srDropHint" aria-hidden="true">veya PDF'inizi buraya bırakın</div>
+      </div>
+      <p class="search-miss" id="searchMiss" hidden role="status"></p>
+    </div>
+
+    <div id="heroBanner" class="hero-banner" hidden>
+      <span class="hero-banner__icon" aria-hidden="true">🛡</span>
+      <span class="hero-banner__text">Tarayıcınızda yerel olarak işlenir · Dosyalarınız cihazınızdan asla ayrılmaz</span>
+      <button class="hero-banner__close" id="heroBannerClose" type="button" aria-label="Kapat">×</button>
+    </div>
+
+    <div id="heroDetected" class="hero-detected" hidden></div>
+
+    <div class="hero-features">
+      <div class="hero-feature">
+        <div class="hero-feature__icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <div>
+          <strong>%100 gizli</strong>
+          <span>Dosyalar cihazınızdan asla ayrılmaz</span>
+        </div>
+      </div>
+      <div class="hero-feature">
+        <div class="hero-feature__icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        </div>
+        <div>
+          <strong>Hızlı</strong>
+          <span>Anında hazır olur, çevrimdışı çalışır</span>
+        </div>
+      </div>
+      <div class="hero-feature">
+        <div class="hero-feature__icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+        <div>
+          <strong>Sınır yok</strong>
+          <span>Dosya boyutu veya günlük kullanım sınırı yok</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Trust alert block ── -->
+  <div class="trust-alert js-home-only" id="trustAlert" aria-label="Gizlilik garantisi">
+    <div class="trust-alert-icon" aria-hidden="true">
+      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
+    </div>
+    <div class="trust-alert-text">
+      <strong>Dosyalarınız cihazınızda kalır.</strong>
+      <span>Web Worker'lar ve yerel kütüphaneler kullanıyoruz — hiçbir şey sunucuya gönderilmez.</span>
+    </div>
+  </div>
+
+  <!-- ── No-limit bar ── -->
+  <div id="noLimitBar" class="no-limit-bar js-home-only">
+    <div class="no-limit-item">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+      Dosya sayısı sınırı yok
+    </div>
+    <div class="no-limit-item">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+      Filigran yok
+    </div>
+    <div class="no-limit-item">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+      Kayıt gerekmez
+    </div>
+    <div class="no-limit-item">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      Dosyalar cihazınızdan çıkmaz
+    </div>
+  </div>
+
+  <!-- ── Tools grid ── -->
+  <section id="toolsGrid" class="tools-section js-home-only">
+    <div class="section-label">Tüm Araçlar</div>
+    <div class="tools-grid">
+      <a href="/tr/pdf-birlestir/" class="tool-card featured" data-tool="merge" aria-label="PDF Birleştir">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
+        <div class="tool-name">PDF Birleştir</div>
+        <div class="tool-desc">Sınırsız PDF dosyasını birleştirin — limit yok</div>
+      </a>
+      <a href="/tr/pdf-bol/" class="tool-card" data-tool="split" aria-label="PDF Böl">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg></div>
+        <div class="tool-name">PDF Böl</div>
+        <div class="tool-desc">PDF'i böl veya sayfa çıkar — limit yok</div>
+      </a>
+      <a href="/tr/pdf-sikistir/" class="tool-card" data-tool="compress" aria-label="PDF Sıkıştır">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/><path d="M5 2h14"/><path d="M5 22h14"/></svg></div>
+        <div class="tool-name">PDF Sıkıştır</div>
+        <div class="tool-desc">PDF'i kalite kaybetmeden sıkıştır — yükleme yok</div>
+      </a>
+      <a href="/tr/jpg-den-pdf-ye/" class="tool-card" data-tool="jpg2pdf" aria-label="JPG'den PDF'ye">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
+        <div class="tool-name">JPG'den PDF'ye</div>
+        <div class="tool-desc">Resimleri PDF'ye dönüştür — yükleme yok</div>
+      </a>
+      <a href="/tr/pdf-den-jpg-ye/" class="tool-card" data-tool="pdf2jpg" aria-label="PDF'den JPG'ye">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg></div>
+        <div class="tool-name">PDF'den JPG'ye</div>
+        <div class="tool-desc">PDF sayfalarını JPG resimlerine dönüştür — yükleme yok</div>
+      </a>
+      <a href="/tr/sayfa-cikar/" class="tool-card" data-tool="extract" aria-label="Sayfa Çıkar">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="M12 12v6"/><path d="m9 15 3-3 3 3"/></svg></div>
+        <div class="tool-name">Sayfa Çıkar</div>
+        <div class="tool-desc">PDF'den belirli sayfaları çıkarın</div>
+      </a>
+      <a href="/tr/pdf-filigran/" class="tool-card" data-tool="watermark" aria-label="PDF Filigran">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg></div>
+        <div class="tool-name">PDF Filigran</div>
+        <div class="tool-desc">PDF'e metin damgası ekle — yükleme yok</div>
+      </a>
+      <a href="/tr/sayfa-numarasi-ekle/" class="tool-card" data-tool="pagenum" aria-label="Sayfa Numarası Ekle">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 22h14a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v4"/><polyline points="14 2 14 8 20 8"/><path d="M2 15h4v4"/><path d="M4 15v6"/><path d="M10 15v6"/><path d="M14 15v6"/></svg></div>
+        <div class="tool-name">Sayfa Numarası Ekle</div>
+        <div class="tool-desc">PDF'ye özelleştirilebilir sayfa numaraları ekleyin</div>
+      </a>
+      <a href="/tr/pdf-meta-veri/" class="tool-card" data-tool="meta" aria-label="PDF Meta Verisi">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"/><path d="M7 7h.01"/></svg></div>
+        <div class="tool-name">PDF Meta Verisi</div>
+        <div class="tool-desc">PDF'nin Yazar, Başlık ve anahtar kelimelerini düzenleyin</div>
+      </a>
+      <a href="/tr/pdf-gizle/" class="tool-card" data-tool="redact" aria-label="PDF Gizle">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 14l2 2 4-4"/></svg></div>
+        <div class="tool-name">PDF Gizle</div>
+        <div class="tool-desc">PDF'den hassas bilgileri kalıcı olarak kaldırın</div>
+      </a>
+      <a href="/tr/pdf-dondur/" class="tool-card" data-tool="rotate" aria-label="PDF Döndür">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg></div>
+        <div class="tool-name">PDF Döndür</div>
+        <div class="tool-desc">PDF sayfalarının yönünü düzeltin</div>
+      </a>
+      <a href="/tr/pdf-koru/" class="tool-card" data-tool="protect" aria-label="PDF Koru">
+        <div class="tool-card-pulse" aria-hidden="true">
+          <div class="tool-card-pulse__ring"></div>
+          <div class="tool-card-pulse__dot"></div>
+        </div>
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div class="tool-name">PDF Koru</div>
+        <div class="tool-desc">PDF'i AES-256 parolayla koru — yükleme yok</div>
+      </a>
+      <a href="/tr/pdf-doldur/" class="tool-card" data-tool="fill" aria-label="PDF Doldur">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg></div>
+        <div class="tool-name">PDF Doldur</div>
+        <div class="tool-desc">Form alanlarını doldurun ve PDF'leri yerel olarak imzalayın</div>
+      </a>
+      <a href="/draw-on-pdf/" class="tool-card" data-tool="draw-pdf" aria-label="PDF Üzerine Çiz">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></div>
+        <div class="tool-name">PDF Üzerine Çiz</div>
+        <div class="tool-desc">PDF'i okla, metinle ve şekillerle işaretleyin — gizli, yükleme yok</div>
+      </a>
+      <a href="/ocr-pdf/" class="tool-card" data-tool="ocr" aria-label="OCR PDF">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M11 8v6"/><path d="M8 11h6"/></svg></div>
+        <div class="tool-name">OCR PDF</div>
+        <div class="tool-desc">Taranmış PDF'lerden metin çıkarın — yükleme yok</div>
+      </a>
+      <a href="/tr/pdf-word-donustur/" class="tool-card" data-tool="pdf2word" aria-label="PDF'den Word'e">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div>
+        <div class="tool-name">PDF'den Word'e</div>
+        <div class="tool-desc">PDF'yi düzenlenebilir Word belgesine dönüştürün — yükleme yok</div>
+      </a>
+      <a href="/tr/pdf-duzlestir/" class="tool-card" data-tool="flatten" aria-label="PDF Düzleştir">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><line x1="8" y1="15" x2="16" y2="15"/></svg></div>
+        <div class="tool-name">PDF Düzleştir</div>
+        <div class="tool-desc">PDF form alanlarını kalıcı olarak kilitleyin</div>
+      </a>
+      <a href="/compare-pdf/" class="tool-card" data-tool="compare" aria-label="PDF Karşılaştır">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="8" height="18" rx="1"/><rect x="14" y="3" width="8" height="18" rx="1"/><path d="M10 8h4M10 12h4M10 16h4"/></svg></div>
+        <div class="tool-name">PDF Karşılaştır</div>
+        <div class="tool-desc">İki PDF'i karşılaştırın ve farkları vurgulayın — yükleme yok</div>
+      </a>
+      <a href="/tr/pdf-excel-donustur/" class="tool-card" data-tool="pdf2excel" aria-label="PDF'den Excel'e">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg></div>
+        <div class="tool-name">PDF'den Excel'e</div>
+        <div class="tool-desc">PDF tablolarını Excel'e dönüştürün</div>
+      </a>
+      <a href="/tr/pdf-powerpoint-donustur/" class="tool-card" data-tool="pdf2ppt" aria-label="PDF'den PowerPoint'e">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+        <div class="tool-name">PDF'den PowerPoint'e</div>
+        <div class="tool-desc">PDF'yi PowerPoint sunumuna dönüştürün</div>
+      </a>
+      <a href="/tr/pdf-markdown-donustur/" class="tool-card" data-tool="pdf2md" aria-label="PDF'den Markdown'a">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg></div>
+        <div class="tool-name">PDF'den Markdown'a</div>
+        <div class="tool-desc">PDF'yi Markdown formatına dönüştürün</div>
+      </a>
+      <a href="/tr/pdf-sifre-kaldir/" class="tool-card" data-tool="unlock" aria-label="PDF Kilidi Aç">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg></div>
+        <div class="tool-name">PDF Kilidi Aç</div>
+        <div class="tool-desc">PDF'den parola ve kısıtlamaları kaldırın</div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ── Privacy trust bar ── -->
+  <section id="privacyBar" class="privacy-bar js-home-only" aria-label="Gizlilik garantisi">
+    <div class="privacy-bar__inner">
+      <div class="privacy-bar__item">
+        <div class="privacy-bar__icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <div>
+          <strong>Tasarımdan gelen %100 gizlilik</strong>
+          <p>Dosyalarınız tamamen tarayıcıda işlenir. Hiç yükleme olmaz — asla.</p>
+        </div>
+      </div>
+      <div class="privacy-bar__item">
+        <div class="privacy-bar__icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </div>
+        <div>
+          <strong>Cihazınızda çalışır</strong>
+          <p>Tüm PDF işlemleri Web Worker'da çalışır — kendi donanımınızdaki izole bir iş parçacığında.</p>
+        </div>
+      </div>
+      <div class="privacy-bar__item">
+        <div class="privacy-bar__icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+        </div>
+        <div>
+          <strong>Anında silinir</strong>
+          <p>Dosyalar yalnızca RAM'de yaşar. Sekmeyi kapatın, kaybolurlar — log yok, iz yok.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FAQ section (visible for SEO) ── -->
+  <section id="faqSection" class="js-home-only" style="max-width:760px;margin:0 auto;padding:48px 24px 0;" aria-label="Sıkça Sorulan Sorular">
+    <div class="section-label">SSS</div>
+    <h2 style="font-size:clamp(20px,3vw,26px);color:var(--text);margin:12px 0 32px;font-weight:700;">Sıkça Sorulan Sorular</h2>
+    <dl style="display:flex;flex-direction:column;gap:0;">
+      <div style="border-bottom:1px solid var(--border);padding:20px 0;">
+        <dt style="font-weight:600;color:var(--text);font-size:15px;margin-bottom:8px;">Dosyalarım sunucularınızda saklanıyor mu?</dt>
+        <dd style="color:var(--text2);font-size:14px;line-height:1.7;margin:0;">Hayır. PDFree tamamen cihazınızda (istemci tarafında) çalışır. Dosyalarınızı işleyen sunucularımız yoktur, bu da %100 gizlilik sağlar.</dd>
+      </div>
+      <div style="border-bottom:1px solid var(--border);padding:20px 0;">
+        <dt style="font-weight:600;color:var(--text);font-size:15px;margin-bottom:8px;">Gerçekten ücretsiz mi — gizli ücret var mı?</dt>
+        <dd style="color:var(--text2);font-size:14px;line-height:1.7;margin:0;">Evet. 19 aracın tamamı dosya boyutu sınırı, filigran, günlük limit ve hesap olmadan ücretsizdir. Kredi kartı gerekmez, abonelik yok. Sonsuza kadar ücretsiz.</dd>
+      </div>
+      <div style="border-bottom:1px solid var(--border);padding:20px 0;">
+        <dt style="font-weight:600;color:var(--text);font-size:15px;margin-bottom:8px;">PDFree hangi PDF araçlarını sunuyor?</dt>
+        <dd style="color:var(--text2);font-size:14px;line-height:1.7;margin:0;">PDFree; <a href="/tr/pdf-birlestir/" style="color:var(--green);">PDF birleştirme</a>, <a href="/tr/pdf-bol/" style="color:var(--green);">bölme</a>, <a href="/tr/pdf-sikistir/" style="color:var(--green);">sıkıştırma</a>, <a href="/tr/pdf-dondur/" style="color:var(--green);">döndürme</a>, <a href="/tr/pdf-koru/" style="color:var(--green);">parolayla koruma</a>, <a href="/tr/pdf-filigran/" style="color:var(--green);">filigran ekleme</a>, <a href="/tr/jpg-den-pdf-ye/" style="color:var(--green);">JPG'den PDF'ye dönüştürme</a> ve daha fazlasını sunar — hepsi ücretsiz ve gizli.</dd>
+      </div>
+      <div style="padding:20px 0;">
+        <dt style="font-weight:600;color:var(--text);font-size:15px;margin-bottom:8px;">Dosya boyutu veya sayfa sayısı sınırı var mı?</dt>
+        <dd style="color:var(--text2);font-size:14px;line-height:1.7;margin:0;">Hayır, yapay limit yoktur. Tek sınırlama bilgisayarınızda veya akıllı telefonunuzda mevcut RAM miktarıdır.</dd>
+      </div>
+      <div style="padding:20px 0;">
+        <dt style="font-weight:600;color:var(--text);font-size:15px;margin-bottom:8px;">Gizli belgeler için güvenli mi? KVKK uyumlu mu?</dt>
+        <dd style="color:var(--text2);font-size:14px;line-height:1.7;margin:0;">Evet. Dosyalarınız cihazınızdan hiç ayrılmadığı için PDFree; gizli belgeler, tıbbi kayıtlar, mali raporlar ve hukuki evraklar için güvenlidir. İşlemler izole bir WebAssembly iş parçacığında gerçekleşir — hiçbir şey kaydedilmez, saklanmaz veya gönderilmez. KVKK uyumludur.</dd>
+      </div>
+    </dl>
+  </section>
+
+  <!-- ── Tool workspace ── -->
+  <main id="toolArea" class="main-area" style="display:none" aria-busy="false">
+
+    <div class="tool-header">
+      <div class="tool-header-icon" id="toolIcon" aria-hidden="true">🔗</div>
+      <div class="tool-header-text">
+        <h2 id="toolTitle">PDF Birleştir</h2>
+        <p  id="toolDesc">Sınırsız PDF dosyasını birleştirin — limit yok</p>
+      </div>
+    </div>
+
+    <div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-label="Dosya yükle — tıklayın veya sürükleyip bırakın">
+      <input type="file" id="fileInput" multiple accept=".pdf" aria-hidden="true">
+      <span class="drop-icon" aria-hidden="true">📂</span>
+      <div class="drop-title">Dosyalarınızı buraya sürükleyin</div>
+      <div class="drop-sub">veya göz atmak için tıklayın — sınırsız sayıda dosya</div>
+      <label class="drop-btn" id="chooseFilesBtn" for="fileInput">Dosya Seç</label>
+    </div>
+
+    <div id="fileList"    class="file-list" aria-live="polite" aria-label="Selected files"></div>
+    <div id="fileCount"   class="file-count"   style="display:none"></div>
+    <div id="reorderHint" class="reorder-hint" style="display:none">↕ Birleştirmeden önce sıralamak için sürükleyin</div>
+
+    <div id="splitOptions"    class="split-options"   style="display:none" aria-label="Split options"></div>
+    <div id="compressOptions" class="compress-options" style="display:none" aria-label="Compression options"></div>
+    <div id="jpg2pdfOptions"  class="j2p-options"     style="display:none" aria-label="JPG to PDF options"></div>
+    <div id="pdf2jpgOptions"  class="j2p-options"     style="display:none" aria-label="PDF to JPG options"></div>
+    <div id="watermarkOptions" class="j2p-options"    style="display:none" aria-label="Watermark options"></div>
+    <div id="pageNumOptions"  class="j2p-options"     style="display:none" aria-label="Page numbers options"></div>
+    <div id="metaOptions"     class="j2p-options"     style="display:none" aria-label="Metadata editor"></div>
+    <div id="protectOptions"  class="j2p-options"     style="display:none" aria-label="Protect PDF options"></div>
+    <div id="redactOptions"   class="j2p-options"     style="display:none" aria-label="Cover Area options"></div>
+    <div id="rotateOptions"   class="j2p-options"     style="display:none" aria-label="Rotate PDF options"></div>
+    <div id="mergeOptions"    class="j2p-options"     style="display:none" aria-label="Merge options"></div>
+    <div id="pdf2wordOptions"  class="j2p-options"     style="display:none" aria-label="PDF to Word options"></div>
+    <div id="ocrOptions"       class="j2p-options"     style="display:none" aria-label="OCR options"></div>
+    <div id="compareOptions"   class="j2p-options"     style="display:none" aria-label="Compare PDF options"></div>
+    <div id="pdf2excelOptions" class="j2p-options"     style="display:none" aria-label="PDF to Excel options"></div>
+    <div id="pdf2pptOptions"   class="j2p-options"     style="display:none" aria-label="PDF to PowerPoint options"></div>
+    <div id="pdf2mdOptions"    class="j2p-options"     style="display:none" aria-label="PDF to Markdown options"></div>
+    <div id="unlockOptions"    class="j2p-options"     style="display:none" aria-label="Unlock PDF options"></div>
+
+    <button id="mergeBtn"  class="merge-btn"  type="button" disabled data-mode="process">🔗 PDF Dosyalarını Birleştir</button>
+    <button id="cancelBtn" class="cancel-btn" type="button" style="display:none" aria-label="İşlemi iptal et">✕ İptal</button>
+
+    <div id="progressBar"   class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+    <div id="progressLabel" class="progress-label"></div>
+
+    <!-- Success card -->
+    <div id="successCard" class="success-card" role="alert" aria-live="polite" style="display:none">
+      <div class="success-top">
+        <div class="success-icon" aria-hidden="true">✓</div>
+        <div class="success-text">
+          <h3 id="successTitle">Tamamlandı!</h3>
+          <p  id="successDesc"></p>
+        </div>
+        <button id="downloadBtn" class="download-btn" type="button">⬇ İndir</button>
+        <button id="shareBtn" class="share-btn" type="button" style="display:none" aria-label="Cihaz uygulamaları üzerinden dosya gönder"></button>
+      </div>
+
+      <!-- Feedback row — directly under download button -->
+      <div class="fb-row" id="fbRow">
+        <button type="button" class="fb-row-btn fb-row-btn--bug"  data-open-feedback data-fb-type="bug">🐛 Hata buldum</button>
+        <button type="button" class="fb-row-btn fb-row-btn--idea" data-open-feedback data-fb-type="idea">💡 Fikrim var</button>
+        <button type="button" class="fb-row-btn fb-row-btn--good" data-open-feedback data-fb-type="other">👍 Her şey iyi!</button>
+      </div>
+
+      <!-- Share this tool — shown after every successful conversion -->
+      <div class="share-tool-row" id="shareToolRow">
+        <span class="share-tool-label">PDF ile uğraşan biri var mı çevrende?</span>
+        <div class="share-tool-menu-wrap">
+          <button type="button" class="share-tool-btn" id="shareToolBtn"
+                  data-msg="PDFree ile bir PDF üzerinde çalıştım — ücretsiz, gizli, tamamen tarayıcıda çalışıyor."
+                  data-copy="Bağlantıyı kopyala" data-copied="Bağlantı kopyalandı!"
+                  aria-haspopup="true" aria-expanded="false">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.5" x2="15.4" y2="6.5"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/></svg>
+            Bu aracı paylaş
+          </button>
+          <div class="share-fallback-menu" id="shareFallbackMenu" role="menu" hidden></div>
+        </div>
+      </div>
+
+      <!-- Install PWA nudge — shown only when browser supports it -->
+      <div class="pwa-nudge" id="pwaNudge" style="display:none">
+        <span class="pwa-nudge__text">⚡ Anında erişim için yükleyin — çevrimdışı çalışır</span>
+        <button type="button" class="pwa-nudge__btn" id="pwaNudgeBtn">Uygulamayı Yükle</button>
+        <button type="button" class="pwa-nudge__skip" id="pwaNudgeSkip" aria-label="Kapat">✕</button>
+      </div>
+
+    </div>
+
+  </main>
+
+  <footer>
+    PDFree · <strong>Tüm işlemler tarayıcınızda %100 gerçekleşir</strong> · <strong>asla yüklenmez</strong><br>
+    <span style="color:var(--green)">🔒</span> Belgeleriniz cihazınızdan hiç ayrılmaz &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> Herkes için sonsuza kadar ücretsiz<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
+      <a href="/privacy.html" style="color:var(--green)">Gizlilik</a>
+      &nbsp;·&nbsp;
+      <a href="/terms.html" style="color:var(--green)">Koşullar</a>
+      &nbsp;·&nbsp;
+      <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a>
+      &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green)">GitHub</a>
+    </span>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <!-- JSZip for creating a ZIP archive on Split PDF -->
+  <!-- pdf-lib is required on the main thread for splitUI.js (window.PDFLib) -->
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+  <script type="module" src="../js/locales/tr.js"></script>
+  <script type="module" src="../js/app.js"></script>
+
+
+<!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

@@ -344,19 +344,16 @@ def _git_lastmod(rel_path):
 
 
 # Locales that have a real homepage file (index.html at their dir root).
-# The other languages in config['languages'] (id/vi/ru/ja/it/ko/nl/pl/tr) only
+# The other languages in config['languages'] (vi/ru/ja/it/ko/nl/pl) only
 # have individual tool pages — no {dir}/index.html exists for them. Cloudflare
-# Workers Assets is configured with not_found_handling = "single-page-application"
-# (wrangler.toml), so a request to e.g. /ru/ 200s with the EN homepage's HTML
-# instead of a real 404 — including its self-canonical pointing at
-# https://pdfree.io/. Submitting /ru/ in the sitemap with hreflang="ru" tells
-# Google "here is Russian content" while the page itself tells Google "actually
-# I'm a duplicate of the English homepage" — Google resolves that by folding
-# /ru/ into the EN canonical, which is exactly what Search Console reports as
-# "Alternate page with proper canonical tag". Their tool sub-pages (e.g.
-# /ru/objedinit-pdf/) are real files and unaffected — only the homepage-level
-# entries need to stay out of the sitemap/hreflang set.
-HOMEPAGE_LANGS = {'en', 'de', 'es', 'fr', 'pt', 'id'}
+# Workers Assets 404s a request to e.g. /ru/ when no matching asset exists
+# (see wrangler.toml's not_found_handling), so those locales must stay out of
+# the sitemap/hreflang set — submitting /ru/ with hreflang="ru" would tell
+# Google "here is Russian content" for a URL that 404s. Their tool sub-pages
+# (e.g. /ru/objedinit-pdf/) are real files and unaffected — only the
+# homepage-level entries need to stay out of the sitemap/hreflang set.
+# id and tr both have real homepage files (id/index.html, tr/index.html).
+HOMEPAGE_LANGS = {'en', 'de', 'es', 'fr', 'pt', 'id', 'tr'}
 
 # Native display names for the language switcher.
 LANG_NAMES = {
