@@ -1,7 +1,11 @@
 // Cloudflare Worker entry point.
 // Handles 301 redirects before passing to static assets.
-// Required because not_found_handling = "single-page-application" intercepts
-// unmatched paths before _redirects can process them.
+// not_found_handling = "404-page" means any unmatched path — including
+// stray locale roots (/ru/, /ja/, etc. with no dedicated homepage) and
+// garbage URLs — now gets a real dist/404.html with a genuine 404 status,
+// instead of the old "single-page-application" fallback that silently
+// 200'd literally any path with the English homepage (a soft-404 that
+// was polluting Search Console with duplicate-content noise).
 
 const REDIRECTS = {
   // Locale slugs at root → correct locale URL
