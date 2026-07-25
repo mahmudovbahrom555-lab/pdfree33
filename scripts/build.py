@@ -353,7 +353,7 @@ def _git_lastmod(rel_path):
 # (e.g. /ru/objedinit-pdf/) are real files and unaffected — only the
 # homepage-level entries need to stay out of the sitemap/hreflang set.
 # id and tr both have real homepage files (id/index.html, tr/index.html).
-HOMEPAGE_LANGS = {'en', 'de', 'es', 'fr', 'pt', 'id', 'tr'}
+HOMEPAGE_LANGS = {'en', 'de', 'es', 'fr', 'pt', 'id', 'tr', 'vi'}
 
 # Native display names for the language switcher.
 LANG_NAMES = {
