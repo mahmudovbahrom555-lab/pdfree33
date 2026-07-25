@@ -369,9 +369,9 @@ SPECIALTY_PAGES = [
     'hipaa-pdf-tools',
     'ilovepdf-alternative',
     'compress-large-pdf-free',
-    'secure-pdf-tools',
-    # compare-pdf is EN-only so stays here; ocr-pdf/pdf-to-word/draw-on-pdf
-    # are handled by _lang_specialty below (with full locale alternates).
+    # compare-pdf is EN-only so stays here; ocr-pdf/pdf-to-word/draw-on-pdf/
+    # secure-pdf-tools/merge-pdf-without-uploading/pdf-tools-no-upload are
+    # handled by _lang_specialty below (with full locale alternates).
     'compare-pdf',
     # pdf-to-word-free is EN-only (no locale variants)
     'pdf-to-word-free',
@@ -388,7 +388,6 @@ SPECIALTY_PAGES = [
     'split-pdf-odd-even',
     'merge-pdf-files-into-one',
     'merge-large-pdf-files',
-    'merge-pdf-without-uploading',
     'merge-password-protected-pdf',
     'merge-scanned-pdf',
     'pdf-to-jpg-300-dpi',
@@ -398,8 +397,6 @@ SPECIALTY_PAGES = [
     'make-scanned-pdf-searchable',
     'ocr-pdf-no-upload',
     'pdf-compression-glossary',
-    # No-upload hub page
-    'pdf-tools-no-upload',
     # Competitor alternative pages
     'smallpdf-alternative',
     'pdf24-alternative',
@@ -604,6 +601,27 @@ def _write_sitemap(config, out_dir):
             'es': 'es/dibujar-en-pdf',
             'fr': 'fr/dessiner-sur-pdf',
             'pt': 'pt/desenhar-no-pdf',
+        },
+        'pdf-tools-no-upload': {
+            'en': 'pdf-tools-no-upload',
+            'de': 'de/pdf-tools-ohne-upload',
+            'es': 'es/herramientas-pdf-sin-subir',
+            'fr': 'fr/outils-pdf-sans-upload',
+            'pt': 'pt/ferramentas-pdf-sem-upload',
+        },
+        'merge-pdf-without-uploading': {
+            'en': 'merge-pdf-without-uploading',
+            'de': 'de/pdf-zusammenfuehren-ohne-upload',
+            'es': 'es/unir-pdf-sin-subir',
+            'fr': 'fr/fusionner-pdf-sans-upload',
+            'pt': 'pt/juntar-pdf-sem-upload',
+        },
+        'secure-pdf-tools': {
+            'en': 'secure-pdf-tools',
+            'de': 'de/sichere-pdf-tools',
+            'es': 'es/herramientas-pdf-seguras',
+            'fr': 'fr/outils-pdf-securises',
+            'pt': 'pt/ferramentas-pdf-seguras',
         },
 
     }

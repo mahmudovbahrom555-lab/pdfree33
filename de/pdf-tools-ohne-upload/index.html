@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src  'self' 'wasm-unsafe-eval' blob:
+                https://cdnjs.cloudflare.com https://esm.sh
+                https://plausible.io https://pagead2.googlesyndication.com
+                https://static.cloudflareinsights.com;
+    style-src   'self' 'unsafe-inline';
+    font-src    'self';
+    img-src     'self' data: blob: https:;
+    connect-src 'self' https://cdnjs.cloudflare.com https://*.workers.dev
+                https://plausible.io https://pagead2.googlesyndication.com
+                https://www.googletagservices.com https://*.doubleclick.net
+                https://cloudflareinsights.com;
+    frame-src   https://googleads.g.doubleclick.net https://tpc.googlesyndication.com;
+    worker-src  'self' blob:;
+    object-src  'none';
+  ">
+
+  <title>Kostenlose PDF-Tools ohne Upload — Alles läuft in deinem Browser | PDFree</title>
+  <meta name="description" content="16+ kostenlose PDF-Tools, die deine Dateien nie hochladen. Zusammenführen, Aufteilen, Komprimieren, Konvertieren, Drehen und mehr — alles läuft im Browser per WebAssembly. Funktioniert offline.">
+  <meta name="keywords" content="pdf tools ohne upload, pdf werkzeuge ohne hochladen, offline pdf tools, browser pdf tools, pdf ohne server, private pdf tools">
+
+  <meta property="og:title"       content="Kostenlose PDF-Tools ohne Upload | PDFree">
+  <meta property="og:description" content="16+ kostenlose PDF-Tools, die deine Dateien nie hochladen. Alles läuft im Browser. Funktioniert offline nach dem ersten Besuch.">
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://pdfree.io/de/pdf-tools-ohne-upload/">
+  <meta property="og:site_name"   content="PDFree">
+  <meta property="og:locale"      content="de_DE">
+  <meta property="og:image"        content="https://pdfree.io/icons/og-image.jpg">
+  <meta property="og:image:width"  content="1200">
+  <meta property="og:image:height" content="633">
+  <meta property="og:image:alt"    content="Kostenlose PDF-Tools ohne Upload | PDFree">
+  <meta name="twitter:card"       content="summary_large_image">
+  <meta name="twitter:site"       content="@pdfree_io">
+  <meta name="twitter:title"      content="Kostenlose PDF-Tools ohne Upload | PDFree">
+  <meta name="twitter:description" content="16+ kostenlose PDF-Tools, die deine Dateien nie hochladen. Alles läuft im Browser. Funktioniert offline nach dem ersten Besuch.">
+  <meta name="twitter:image"       content="https://pdfree.io/icons/og-image.jpg">
+  <meta name="twitter:image:alt"   content="Kostenlose PDF-Tools ohne Upload | PDFree">
+
+  <link rel="canonical" href="https://pdfree.io/de/pdf-tools-ohne-upload/">
+  <link rel="alternate" hreflang="en"        href="https://pdfree.io/pdf-tools-no-upload/">
+  <link rel="alternate" hreflang="de"        href="https://pdfree.io/de/pdf-tools-ohne-upload/">
+  <link rel="alternate" hreflang="es"        href="https://pdfree.io/es/herramientas-pdf-sin-subir/">
+  <link rel="alternate" hreflang="fr"        href="https://pdfree.io/fr/outils-pdf-sans-upload/">
+  <link rel="alternate" hreflang="pt"        href="https://pdfree.io/pt/ferramentas-pdf-sem-upload/">
+  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/pdf-tools-no-upload/">
+
+  <link rel="manifest" href="../../manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="PDFree">
+  <link rel="apple-touch-icon" href="../../icons/icon-192.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+  <link rel="preconnect" href="https://plausible.io">
+  <link rel="preconnect" href="https://static.cloudflareinsights.com">
+  <link rel="preload" href="../../fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../css/fonts.css">
+
+  <script src="../../js/theme.js"></script>
+  <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/animations.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/components.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "PDFree — PDF-Tools ohne Upload",
+    "description": "16+ kostenlose PDF-Tools, die deine Dateien niemals auf einen Server hochladen. Die gesamte Verarbeitung erfolgt lokal in deinem Browser per WebAssembly. Funktioniert offline nach dem ersten Besuch.",
+    "url": "https://pdfree.io/de/pdf-tools-ohne-upload/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "featureList": [
+      "Kein Datei-Upload — 100 % clientseitige Verarbeitung per WebAssembly",
+      "Funktioniert offline nach dem ersten Besuch (PWA / Service Worker)",
+      "Kein Konto oder Registrierung erforderlich",
+      "Keine Tageslimits oder Dateigrößenbeschränkungen",
+      "Keine Wasserzeichen im Ergebnis",
+      "Kein DSGVO-Risiko — Dateien erreichen nie einen Server"
+    ],
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.9",
+      "ratingCount": "1243",
+      "bestRating": "5",
+      "worstRating": "1"
+    },
+    "provider": { "@type": "Organization", "name": "PDFree", "url": "https://pdfree.io" }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "So verwendest du PDF-Tools ohne Upload",
+    "description": "Nutze jedes PDF-Tool auf PDFree, ohne deine Datei auf einen Server hochzuladen — die gesamte Verarbeitung erfolgt in deinem Browser.",
+    "totalTime": "PT1M",
+    "tool": [{ "@type": "HowToTool", "name": "PDFree — browserbasierte PDF-Tools" }],
+    "step": [
+      { "@type": "HowToStep", "position": 1, "name": "Ein Tool öffnen", "text": "Gehe zu pdfree.io und wähle das PDF-Tool, das du brauchst — Zusammenführen, Aufteilen, Komprimieren, Drehen, Konvertieren und mehr.", "url": "https://pdfree.io/de/pdf-tools-ohne-upload/#step1" },
+      { "@type": "HowToStep", "position": 2, "name": "PDF-Datei ablegen", "text": "Ziehe deine PDF-Datei in die Ablagezone des Tools oder klicke zum Durchsuchen. Deine Datei wird lokal vom Browser gelesen — nichts wird irgendwohin gesendet.", "url": "https://pdfree.io/de/pdf-tools-ohne-upload/#step2" },
+      { "@type": "HowToStep", "position": 3, "name": "Verarbeiten und herunterladen", "text": "Klicke auf die Aktionsschaltfläche. Das Tool verarbeitet deine PDF vollständig in deinem Browser per WebAssembly. Lade das Ergebnis direkt auf dein Gerät herunter.", "url": "https://pdfree.io/de/pdf-tools-ohne-upload/#step3" }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Kann ich PDFree-Tools ohne Internetverbindung nutzen?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Ja. Nach deinem ersten Besuch funktioniert PDFree vollständig offline. Ein Service Worker speichert das gesamte JavaScript, alle WebAssembly-Module und Schriftarten zwischen, die zum Ausführen der Tools nötig sind. Bei späteren Besuchen — selbst ohne Internet — laden die Tools aus dem Cache und verarbeiten PDFs weiterhin. Das macht PDFree nützlich im Flugzeug, in Gebieten mit schlechter Verbindung oder in abgeschotteten Firmennetzwerken." }
+      },
+      {
+        "@type": "Question",
+        "name": "Wird meine PDF-Datei bei PDFree tatsächlich hochgeladen?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Nein. Deine PDF-Datei wird niemals an einen Server gesendet. Wenn du eine Datei in PDFree ablegst, liest der Browser sie über die File API direkt von deiner lokalen Festplatte. Die gesamte Verarbeitung — Zusammenführen, Komprimieren, Aufteilen, Konvertieren — erfolgt in deinem Browser per WebAssembly (pdf-lib und PDF.js). Das Ergebnis wird direkt aus dem Arbeitsspeicher auf dein Gerät heruntergeladen. Kein einziges Byte deiner Datei berührt einen Server." }
+      },
+      {
+        "@type": "Question",
+        "name": "Wie unterscheidet sich das von cloudbasierten PDF-Tools?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Cloudbasierte PDF-Tools laden deine Datei auf ihre Server hoch, verarbeiten sie dort und senden dir das Ergebnis zurück. Das bedeutet, dein Dokument reist durchs Internet, wird (zumindest vorübergehend) auf fremder Infrastruktur gespeichert und unterliegt deren Datenrichtlinien. PDFree ist das Gegenteil: Deine Datei verlässt dein Gerät nie. Die Verarbeitungs-Engine läuft in deinem Browser. Es gibt keinen Server, der mit deinem Dokument in Berührung kommt." }
+      },
+      {
+        "@type": "Question",
+        "name": "Funktioniert PDFree auf dem Handy ohne Upload?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Ja. PDFree funktioniert in iOS Safari, Android Chrome und allen modernen mobilen Browsern — ohne Upload. Dieselbe WebAssembly-basierte Verarbeitung läuft auch auf Mobilgeräten. Du kannst PDFree außerdem über die Option „Zum Startbildschirm hinzufügen“ deines Browsers als PWA installieren und erhältst so app-ähnlichen Offline-Zugriff." }
+      },
+      {
+        "@type": "Question",
+        "name": "Ist PDFree wirklich kostenlos, ohne versteckte Limits?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Ja. PDFree ist komplett kostenlos, ohne tägliche Aufgabenlimits, ohne Dateigrößenbeschränkung, ohne Kontopflicht und ohne Wasserzeichen im Ergebnis. Es gibt keinen kostenpflichtigen Plan freizuschalten — alle Tools sind für immer kostenlos. Das Projekt ist Open Source unter der GNU AGPLv3." }
+      }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "PDFree", "item": "https://pdfree.io/" },
+      { "@type": "ListItem", "position": 2, "name": "DE", "item": "https://pdfree.io/de/" },
+      { "@type": "ListItem", "position": 3, "name": "PDF-Tools ohne Upload", "item": "https://pdfree.io/de/pdf-tools-ohne-upload/" }
+    ]
+  }
+  </script>
+</head>
+<body data-tool="merge">
+
+  <nav>
+    <a href="/de/" class="logo" id="logo" aria-label="Zur Startseite" style="text-decoration:none">
+      <div class="logo-icon" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+      </div>
+      <span class="logo-text">PDF<span>ree</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="/de/pdf-zusammenfuehren/" class="nav-link" data-tool="merge">Zusammenfügen</a>
+      <a href="/de/pdf-aufteilen/" class="nav-link" data-tool="split">Aufteilen</a>
+      <a href="/de/pdf-komprimieren/" class="nav-link" data-tool="compress">Komprimieren</a>
+      <a href="/de/jpg-zu-pdf/" class="nav-link" data-tool="jpg2pdf">JPG→PDF</a>
+      <a href="/de/pdf-zu-jpg/" class="nav-link" data-tool="pdf2jpg">PDF→JPG</a>
+      <a href="/de/wasserzeichen-pdf/" class="nav-link" data-tool="watermark">Wasserzeichen</a>
+      <a href="/de/seitenzahlen-pdf/" class="nav-link" data-tool="pagenum">Seitenzahlen</a>
+      <a href="/de/pdf-metadaten/" class="nav-link" data-tool="meta">Metadaten</a>
+      <a href="/de/seiten-extrahieren/" class="nav-link" data-tool="extract">Extrahieren</a>
+      <a href="/de/pdf-zeichnen/" class="nav-link" data-tool="draw-pdf">Zeichnen</a>
+      <a href="/de/pdf-drehen/" class="nav-link" data-tool="rotate">Drehen</a>
+      <a href="/de/pdf-schuetzen/" class="nav-link" data-tool="protect">Schützen</a>
+      <a href="/de/pdf-zu-word/" class="nav-link" data-tool="pdf2word">PDF→Word</a>
+    </div>
+    <button id="themeToggle" class="theme-toggle" aria-label="Dunkelmodus umschalten" title="Dunkelmodus umschalten"></button>
+  </nav>
+
+  <!-- Hero -->
+  <section style="background:var(--green-light);border-bottom:1px solid rgba(45,122,79,0.15);padding:52px 24px 44px;text-align:center;">
+    <div style="max-width:720px;margin:0 auto;">
+      <div style="display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid rgba(45,122,79,0.2);border-radius:24px;padding:6px 16px;font-size:13px;color:var(--green);font-weight:500;margin-bottom:20px;">
+        <span style="width:7px;height:7px;background:var(--green);border-radius:50%;display:inline-block;"></span>
+        Dateien verlassen dein Gerät nie · Funktioniert offline
+      </div>
+      <h1 style="font-size:clamp(26px,4vw,42px);font-weight:700;letter-spacing:-0.5px;line-height:1.2;color:var(--text);margin:0 0 16px;">Kostenlose PDF-Tools ohne Upload — Alles läuft in deinem Browser</h1>
+      <p style="font-size:17px;color:var(--text2);max-width:600px;margin:0 auto 28px;line-height:1.6;">Jedes PDF-Tool auf PDFree läuft vollständig in deinem Browser per WebAssembly. Deine Dateien berühren nie einen Server. Funktioniert offline nach deinem ersten Besuch.</p>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <a href="/de/" style="background:var(--green);color:#fff;padding:13px 28px;border-radius:10px;font-weight:600;font-size:15px;text-decoration:none;">Jedes Tool ausprobieren — Kostenlos</a>
+        <a href="#tools" style="background:#fff;color:var(--green);padding:13px 28px;border-radius:10px;font-weight:500;font-size:15px;text-decoration:none;border:1.5px solid rgba(45,122,79,0.3);">Alle Tools durchsuchen ↓</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trust bar -->
+  <section style="padding:16px 24px;border-bottom:1px solid var(--border);background:var(--surface);">
+    <div style="max-width:760px;margin:0 auto;display:flex;gap:24px;justify-content:center;flex-wrap:wrap;">
+      <span style="font-size:13px;color:var(--text2);">✓ Null Uploads — niemals</span>
+      <span style="font-size:13px;color:var(--text2);">✓ Funktioniert offline (PWA)</span>
+      <span style="font-size:13px;color:var(--text2);">✓ Kein Konto nötig</span>
+      <span style="font-size:13px;color:var(--text2);">✓ Keine Dateigrößenbeschränkung</span>
+      <span style="font-size:13px;color:var(--text2);">✓ Kein Tageslimit</span>
+      <span style="font-size:13px;color:var(--text2);">✓ Keine Wasserzeichen</span>
+    </div>
+  </section>
+
+  <!-- Tool — embed with merge as default -->
+  <div id="tool"></div>
+  <main id="toolArea" class="main-area" aria-busy="false" style="display:none">
+    <div class="tool-header">
+      <div class="tool-header-icon" id="toolIcon" aria-hidden="true">🔗</div>
+      <div class="tool-header-text">
+        <h2 id="toolTitle">PDF Zusammenführen</h2>
+        <p  id="toolDesc">Mehrere PDFs zu einer Datei zusammenführen — läuft vollständig in deinem Browser.</p>
+      </div>
+    </div>
+
+    <div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-label="Dateien hochladen — klicken oder per Drag & Drop">
+      <input type="file" id="fileInput" multiple accept=".pdf" aria-hidden="true">
+      <span class="drop-icon" aria-hidden="true">📂</span>
+      <div class="drop-title">PDF-Dateien hier ablegen</div>
+      <div class="drop-sub">Nichts wird hochgeladen — Dateien bleiben auf deinem Gerät</div>
+      <label class="drop-btn" id="chooseFilesBtn" for="fileInput">Dateien auswählen</label>
+    </div>
+
+    <div id="fileList"    class="file-list" aria-live="polite"></div>
+    <div id="fileCount"   class="file-count"   style="display:none"></div>
+    <div id="reorderHint" class="reorder-hint" style="display:none">↕ Zum Neuanordnen der Dateien vor dem Zusammenführen ziehen</div>
+
+    <div id="mergeOptions"     class="j2p-options"     style="display:none" aria-label="Merge options"></div>
+    <div id="splitOptions"     style="display:none"></div>
+    <div id="compressOptions"  style="display:none"></div>
+    <div id="jpg2pdfOptions"   style="display:none"></div>
+    <div id="pdf2jpgOptions"   style="display:none"></div>
+    <div id="watermarkOptions" style="display:none"></div>
+    <div id="pageNumOptions"   style="display:none"></div>
+    <div id="metaOptions"      style="display:none"></div>
+    <div id="protectOptions"   style="display:none"></div>
+    <div id="redactOptions"    style="display:none"></div>
+    <div id="rotateOptions"    style="display:none"></div>
+    <div id="pdf2wordOptions"  class="j2p-options"     style="display:none" aria-label="PDF to Word options"></div>
+
+    <button id="mergeBtn"  class="merge-btn"  type="button" disabled data-mode="process">PDF-Dateien zusammenführen</button>
+    <button id="cancelBtn" class="cancel-btn" type="button" style="display:none">✕ Abbrechen</button>
+
+    <div id="progressBar"   class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+    <div id="progressLabel" class="progress-label"></div>
+
+    <div id="successCard" class="success-card" role="alert" aria-live="polite" style="display:none">
+      <div class="success-top">
+        <div class="success-icon">✓</div>
+        <div class="success-text">
+          <h3 id="successTitle">Fertig!</h3>
+          <p  id="successDesc"></p>
+        </div>
+        <button id="downloadBtn" class="download-btn" type="button">⬇ Herunterladen</button>
+        <button id="shareBtn" class="share-btn" type="button" style="display:none" aria-label="Datei über Geräte-Apps senden"></button>
+      </div>
+      <div id="privacyCleared" class="privacy-cleared" aria-live="polite">
+        <span class="privacy-cleared__icon" aria-hidden="true">🛡️</span>
+        <div class="privacy-cleared__body">
+          <strong class="privacy-cleared__title">Datei aus dem Speicher gelöscht</strong>
+          <span class="privacy-cleared__sub">Dein Dokument hat auf keinem Server Spuren hinterlassen.</span>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- SEO content -->
+  <section class="seo-article">
+    <div class="seo-article__inner">
+      <div class="seo-content" style="max-width:800px;margin:60px auto 40px;padding:0 24px;color:var(--text2);line-height:1.8;">
+
+        <h2 style="font-size:26px;color:var(--text);margin:0 0 16px;font-weight:700;">Warum PDF-Tools ohne Upload anders sind</h2>
+        <p>Die meisten PDF-Tools im Internet funktionieren alle gleich: Du lädst deine Datei auf deren Server hoch, der Server verarbeitet sie, und du lädst das Ergebnis herunter. Das bedeutet, dass dein Dokument — das möglicherweise Verträge, medizinische Unterlagen, Finanzdaten oder persönliche Informationen enthält — durchs Internet reist und vorübergehend auf der Infrastruktur eines Fremden liegt.</p>
+        <p>PDFree ist anders aufgebaut. Die PDF-Verarbeitungs-Engine läuft in deinem Browser per WebAssembly. Wenn du eine Datei in PDFree ablegst, liest der Browser sie direkt von deiner Festplatte. Kein Byte deines Dokuments wird irgendwohin übertragen. Die Ausgabe wird im Arbeitsspeicher erzeugt und direkt auf dein Gerät heruntergeladen.</p>
+
+        <div style="background:var(--green-light);border-left:4px solid var(--green);padding:18px 20px;border-radius:0 8px 8px 0;margin:28px 0;">
+          <p style="margin:0;font-size:14px;color:var(--text);"><strong>So funktioniert clientseitige Verarbeitung:</strong> Deine PDF wird über die File API des Browsers gelesen (nur lokaler Festplattenzugriff). WebAssembly-Module (pdf-lib, PDF.js) verarbeiten die Datei vollständig im Arbeitsspeicher. Das Ergebnis wird in eine Blob-URL geschrieben und heruntergeladen — es berührt nie einen Netzwerk-Socket.</p>
+        </div>
+
+        <!-- Tool grid -->
+        <div id="tools"></div>
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 16px;font-weight:700;">Alle PDF-Tools — Kostenlos, Kein Upload, Keine Limits</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:16px 0 36px;">
+          <a href="/de/pdf-zusammenfuehren/" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;display:flex;flex-direction:column;gap:6px;">
+            <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:20px;">🔗</span><strong style="color:var(--text);font-size:14px;">PDF Zusammenführen</strong></div>
+            <p style="margin:0;font-size:12px;color:var(--text2);">Beliebig viele PDFs zu einer Datei zusammenführen — kein Limit, kein Upload</p>
+          </a>
+          <a href="/de/pdf-aufteilen/" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;display:flex;flex-direction:column;gap:6px;">
+            <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:20px;">✂️</span><strong style="color:var(--text);font-size:14px;">PDF Aufteilen</strong></div>
+            <p style="margin:0;font-size:12px;color:var(--text2);">Seiten extrahieren oder in mehrere Dateien aufteilen — lokal</p>
+          </a>
+          <a href="/de/pdf-komprimieren/" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;display:flex;flex-direction:column;gap:6px;">
+            <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:20px;">🗜️</span><strong style="color:var(--text);font-size:14px;">PDF Komprimieren</strong></div>
+            <p style="margin:0;font-size:12px;color:var(--text2);">Dateigröße um 20–80 % reduzieren, ohne Qualitätsverlust, im Browser</p>
+          </a>
+          <a href="/de/pdf-drehen/" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;display:flex;flex-direction:column;gap:6px;">
+            <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:20px;">🔄</span><strong style="color:var(--text);font-size:14px;">PDF Drehen</strong></div>
+            <p style="margin:0;font-size:12px;color:var(--text2);">Seitenausrichtung korrigieren — dauerhaft eingebettet</p>
+          </a>
+          <a href="/de/wasserzeichen-pdf/" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;display:flex;flex-direction:column;gap:6px;">
+            <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:20px;">💧</span><strong style="color:var(--text);font-size:14px;">Wasserzeichen</strong></div>
+            <p style="margin:0;font-size:12px;color:var(--text2);">CONFIDENTIAL, ENTWURF oder beliebigen Textstempel hinzufügen — kein Upload</p>
+          </a>
+          <a href="/de/pdf-schuetzen/" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;display:flex;flex-direction:column;gap:6px;">
+            <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:20px;">🔐</span><strong style="color:var(--text);font-size:14px;">PDF Schützen</strong></div>
+            <p style="margin:0;font-size:12px;color:var(--text2);">AES-256-Passwortverschlüsselung — Schlüssel verlässt dein Gerät nie</p>
+          </a>
+          <a href="/de/jpg-zu-pdf/" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;display:flex;flex-direction:column;gap:6px;">
+            <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:20px;">🖼️</span><strong style="color:var(--text);font-size:14px;">JPG zu PDF</strong></div>
+            <p style="margin:0;font-size:12px;color:var(--text2);">Fotos und Bilder in PDF umwandeln — lokal verarbeitet</p>
+          </a>
+          <a href="/de/pdf-zu-jpg/" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;display:flex;flex-direction:column;gap:6px;">
+            <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:20px;">📸</span><strong style="color:var(--text);font-size:14px;">PDF zu JPG</strong></div>
+            <p style="margin:0;font-size:12px;color:var(--text2);">PDF-Seiten als hochwertige Bilder exportieren — kein Upload</p>
+          </a>
+          <a href="/de/seiten-extrahieren/" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;display:flex;flex-direction:column;gap:6px;">
+            <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:20px;">📑</span><strong style="color:var(--text);font-size:14px;">Seiten Extrahieren</strong></div>
+            <p style="margin:0;font-size:12px;color:var(--text2);">Bestimmte Seiten in ein neues PDF übernehmen — nur im Browser</p>
+          </a>
+          <a href="/de/seitenzahlen-pdf/" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;display:flex;flex-direction:column;gap:6px;">
+            <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:20px;">🔢</span><strong style="color:var(--text);font-size:14px;">Seitenzahlen</strong></div>
+            <p style="margin:0;font-size:12px;color:var(--text2);">Seitenzahlen hinzufügen — arabisch, römisch oder ABC-Format</p>
+          </a>
+          <a href="/de/pdf-metadaten/" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;display:flex;flex-direction:column;gap:6px;">
+            <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:20px;">🏷️</span><strong style="color:var(--text);font-size:14px;">Metadaten Bearbeiten</strong></div>
+            <p style="margin:0;font-size:12px;color:var(--text2);">Titel, Autor, Schlagwörter anzeigen und bearbeiten — alles lokal</p>
+          </a>
+          <a href="/de/pdf-schwaerzen/" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;display:flex;flex-direction:column;gap:6px;">
+            <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:20px;">⬛</span><strong style="color:var(--text);font-size:14px;">PDF Schwärzen</strong></div>
+            <p style="margin:0;font-size:12px;color:var(--text2);">Sensible Texte und Bilder dauerhaft abdecken — offline sicher</p>
+          </a>
+          <a href="/de/pdf-zu-word/" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;display:flex;flex-direction:column;gap:6px;">
+            <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:20px;">📝</span><strong style="color:var(--text);font-size:14px;">PDF zu Word</strong></div>
+            <p style="margin:0;font-size:12px;color:var(--text2);">PDF in editierbares .docx umwandeln — im Browser verarbeitet</p>
+          </a>
+          <a href="/de/pdf-zeichnen/" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;display:flex;flex-direction:column;gap:6px;">
+            <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:20px;">🖊️</span><strong style="color:var(--text);font-size:14px;">Auf PDF Zeichnen</strong></div>
+            <p style="margin:0;font-size:12px;color:var(--text2);">PDF-Seiten annotieren, markieren und bezeichnen — lokal</p>
+          </a>
+          <a href="/de/pdf-abflachen/" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;display:flex;flex-direction:column;gap:6px;">
+            <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:20px;">🔒</span><strong style="color:var(--text);font-size:14px;">PDF Abflachen</strong></div>
+            <p style="margin:0;font-size:12px;color:var(--text2);">Formularfelder dauerhaft fixieren — lokal, ohne Upload</p>
+          </a>
+          <a href="/de/ocr-pdf/" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;display:flex;flex-direction:column;gap:6px;">
+            <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:20px;">🔍</span><strong style="color:var(--text);font-size:14px;">OCR PDF</strong></div>
+            <p style="margin:0;font-size:12px;color:var(--text2);">Text aus gescannten PDFs erkennen — über 100 Sprachen</p>
+          </a>
+        </div>
+
+        <!-- How it works -->
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 16px;font-weight:700;">So funktioniert es — WebAssembly + pdf-lib + PDF.js</h2>
+        <p>PDFree nutzt drei Technologien, um PDFs ganz ohne Server zu verarbeiten:</p>
+        <div style="display:flex;flex-direction:column;gap:16px;margin:20px 0 32px;">
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px 20px;">
+            <strong style="color:var(--text);display:block;margin-bottom:6px;">WebAssembly (Wasm)</strong>
+            <p style="margin:0;font-size:14px;">WebAssembly ist ein binäres Befehlsformat, das in allen modernen Browsern nahezu nativ schnell läuft. PDFree nutzt Wasm, um PDF-Verarbeitungscode direkt in deinem Browser auszuführen — derselbe Code, der sonst auf einem Server laufen würde, läuft jetzt auf deinem Gerät.</p>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px 20px;">
+            <strong style="color:var(--text);display:block;margin-bottom:6px;">pdf-lib (Bearbeitung)</strong>
+            <p style="margin:0;font-size:14px;">pdf-lib ist eine JavaScript-Bibliothek zum Erstellen und Bearbeiten von PDF-Dokumenten. PDFree nutzt sie für Vorgänge wie Zusammenführen, Aufteilen, Drehen, Wasserzeichen und Seitenzahlen. Die gesamte Bearbeitung erfolgt im Arbeitsspeicher des Browsers.</p>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px 20px;">
+            <strong style="color:var(--text);display:block;margin-bottom:6px;">PDF.js (Rendering)</strong>
+            <p style="margin:0;font-size:14px;">PDF.js ist Mozillas PDF-Lese- und Rendering-Engine, ebenfalls vollständig in JavaScript geschrieben. PDFree nutzt sie für Vorgänge, die das Rendern von Seiten erfordern — etwa das Umwandeln von PDF-Seiten in JPG-Bilder. Sie läuft komplett clientseitig.</p>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px 20px;">
+            <strong style="color:var(--text);display:block;margin-bottom:6px;">Service Worker (Offline)</strong>
+            <p style="margin:0;font-size:14px;">Ein Service Worker speichert bei deinem ersten Besuch alle Skripte, WebAssembly-Module und Schriftarten zwischen. Bei späteren Besuchen — selbst ganz ohne Internetverbindung — laden die Tools aus dem Cache und verarbeiten PDFs vollständig offline. Das ist dieselbe Technologie, die native-app-ähnliche Progressive Web Apps (PWAs) nutzen.</p>
+          </div>
+        </div>
+
+        <!-- Privacy angle -->
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 16px;font-weight:700;">Datenschutz: Kein Server = kein Datenrisiko</h2>
+        <p>Wenn ein Tool deine PDF auf einem Server verarbeitet, passiert Folgendes: Deine Datei wird übers Internet übertragen (verschlüsselt, aber trotzdem), landet auf fremder Infrastruktur, wird auf Festplatte oder in den Arbeitsspeicher geschrieben, und fremder Code verarbeitet sie. Selbst wenn ein Anbieter Dateien nach der Verarbeitung löscht, gibt es ein Zeitfenster der Exposition.</p>
+        <p>PDFree beseitigt dieses Risiko vollständig. Weil kein Server beteiligt ist:</p>
+        <ul style="margin:12px 0 20px;padding-left:24px;display:flex;flex-direction:column;gap:8px;">
+          <li><strong>Kein DSGVO-Risiko</strong> — es werden keine personenbezogenen Daten an einen externen Verantwortlichen außerhalb deines Geräts gesendet</li>
+          <li><strong>Keine Datenspeicherung</strong> — es gibt nichts zu speichern; Dateien existieren nur während der Verarbeitung im Arbeitsspeicher deines Browsers</li>
+          <li><strong>Kein Datenleck-Risiko</strong> — ein Server kann kompromittiert werden; auf deinen Browser-Arbeitsspeicher kann niemand aus der Ferne zugreifen</li>
+          <li><strong>Sicher für vertrauliche Dokumente</strong> — Verträge, medizinische Unterlagen, Finanzdokumente und juristische Akten lassen sich alle sicher verarbeiten</li>
+          <li><strong>Funktioniert in air-gapped Netzwerken</strong> — während der PDF-Verarbeitung werden keine ausgehenden Verbindungen aufgebaut</li>
+        </ul>
+
+        <!-- FAQ -->
+        <h2 style="font-size:26px;color:var(--text);margin:52px 0 20px;font-weight:700;">Häufig gestellte Fragen</h2>
+        <div style="display:flex;flex-direction:column;gap:20px;">
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Kann ich diese PDF-Tools ohne Internetverbindung nutzen?</h3>
+            <p style="margin:0;font-size:14px;">Ja. Nach deinem ersten Besuch funktioniert PDFree vollständig offline. Ein Service Worker speichert die gesamte Anwendung zwischen — Skripte, WebAssembly-Module und Schriftarten. Bei jedem späteren Besuch, selbst ohne Internet, laden alle Tools aus dem Cache und verarbeiten PDFs ohne Netzwerkverbindung.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Wird meine PDF-Datei bei PDFree tatsächlich hochgeladen?</h3>
+            <p style="margin:0;font-size:14px;">Nein. Deine PDF wird über die File API des Browsers von deiner lokalen Festplatte gelesen und im Arbeitsspeicher des Browsers verarbeitet. Kein Byte deiner Datei wird über eine Netzwerkverbindung gesendet. Du kannst das selbst überprüfen: Öffne die DevTools deines Browsers → Tab „Netzwerk“ und beobachte, ob irgendwelche Datei-Upload-Anfragen auftauchen — es gibt keine.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Wie unterscheidet sich das von cloudbasierten PDF-Tools?</h3>
+            <p style="margin:0;font-size:14px;">Cloudbasierte Tools laden deine Datei auf ihre Server hoch, verarbeiten sie remote und senden dir das Ergebnis zurück. Dein Dokument befindet sich währenddessen vorübergehend auf fremder Infrastruktur. PDFree ist das Gegenteil — die Verarbeitungs-Engine läuft in deinem Browser. Deine Datei verlässt dein Gerät nie. Das macht PDFree grundsätzlich sicherer für sensible Dokumente und nutzbar ohne Internet nach dem ersten Laden.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Funktioniert PDFree auf dem Handy ohne Upload?</h3>
+            <p style="margin:0;font-size:14px;">Ja. PDFree funktioniert in iOS Safari, Android Chrome und allen modernen mobilen Browsern. Die WebAssembly-basierte Verarbeitung funktioniert auf Mobilgeräten genauso — kein Upload, kein Server. Du kannst PDFree auch über das Menü deines Browsers als PWA installieren, für schnellen Offline-Zugriff vom Startbildschirm aus.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Ist es wirklich kostenlos, ohne versteckten Haken?</h3>
+            <p style="margin:0;font-size:14px;">Ja. PDFree hat keinen kostenpflichtigen Plan, keine Tageslimits, keine Dateigrößenbeschränkung, keine Wasserzeichen im Ergebnis und keine Kontopflicht. Alle Tools sind für immer kostenlos. Das Projekt ist Open Source unter der GNU AGPLv3 — du kannst den Quellcode einsehen, um genau zu prüfen, wie es funktioniert.</p>
+          </div>
+        </div>
+
+        <!-- CTA -->
+        <div style="margin:52px 0 20px;padding:32px;background:var(--green-light);border-radius:16px;text-align:center;">
+          <h3 style="font-size:22px;color:var(--text);margin:0 0 12px;font-weight:700;">Bereit, ein PDF-Tool auszuprobieren, das deine Datei nie hochlädt?</h3>
+          <p style="color:var(--text2);margin:0 0 20px;font-size:15px;">Keine Registrierung. Kein Download. Läuft sofort in deinem Browser — und offline nach dem ersten Besuch.</p>
+          <a href="/de/" style="background:var(--green);color:#fff;padding:13px 32px;border-radius:10px;font-weight:600;font-size:15px;text-decoration:none;display:inline-block;">PDFree öffnen — Alle Tools kostenlos</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    PDFree · <strong>Die gesamte Verarbeitung erfolgt 100 % in deinem Browser</strong> · Dateien werden <strong>niemals hochgeladen</strong><br>
+    <span style="color:var(--green)">🔒</span> Deine Dokumente verlassen dein Gerät nie &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> Kostenlos für alle, für immer<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
+      <a href="/privacy.html" style="color:var(--green)">Datenschutz</a> &nbsp;·&nbsp;
+      <a href="/terms.html" style="color:var(--green)">AGB</a> &nbsp;·&nbsp;
+      <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a> &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green)">GitHub</a>
+    </span>
+  </footer>
+
+  <div id="toast"      class="toast" role="status" aria-live="polite"></div>
+  <div id="hero"       style="display:none"></div>
+  <div id="trustAlert" style="display:none"></div>
+  <div id="noLimitBar" style="display:none"></div>
+  <div id="toolsGrid"  style="display:none"></div>
+  <div id="pwaNudge"   style="display:none"></div>
+
+  <script type="module" src="../../js/locales/de.js"></script>
+  <script type="module" src="../../js/app.js"></script>
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script>
+</body>
+</html>
