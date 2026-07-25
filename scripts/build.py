@@ -163,11 +163,18 @@ def _build_nav_items(lang, all_tools):
         href  = f'../{slug}/' if slug is not None else f'/{t["slugs"]["en"]}/'
         items.append({'href': href, 'label': label, 'tool_key': t['toolKey']})
         if tool_id == 'extract':
-            # Draw: use locale slug when available, fall back to EN
+            # Draw: use locale slug when available, fall back to EN.
+            # _draw_slugs values for de/es/fr/pt already embed the lang
+            # prefix (e.g. 'de/pdf-zeichnen') because draw has no entry in
+            # tools-config.json's slugs — so the href must always be
+            # absolute. A relative '../' here double-prefixes the locale
+            # (e.g. /fr/ + ../fr/dessiner-sur-pdf/ = /fr/fr/dessiner-sur-pdf/,
+            # or for langs with no draw page at all, resolves under the
+            # wrong locale instead of falling back to the EN absolute path).
             _draw_slugs = {'en': 'draw-on-pdf', 'de': 'de/pdf-zeichnen', 'es': 'es/dibujar-en-pdf', 'fr': 'fr/dessiner-sur-pdf', 'pt': 'pt/desenhar-no-pdf'}
             _draw_labels = {'en': 'Draw', 'de': 'Zeichnen', 'es': 'Dibujar', 'fr': 'Dessiner', 'pt': 'Desenhar'}
             _draw_slug = _draw_slugs.get(lang, _draw_slugs['en'])
-            _draw_href = f'../{_draw_slug}/' if lang != 'en' else f'/{_draw_slug}/'
+            _draw_href = f'/{_draw_slug}/'
             items.append({'href': _draw_href, 'label': _draw_labels.get(lang, 'Draw'), 'tool_key': 'draw-pdf'})
     # Compare — EN-only, no locale slugs
     items.append({'href': '/compare-pdf/', 'label': 'Compare', 'tool_key': 'compare'})
@@ -864,6 +871,7 @@ def _generate_pages(config, hashes, env, out_dir, dry_run=False):
                 lang           = lang,
                 lang_cfg       = lang_cfg,
                 prefix         = prefix,
+                has_homepage   = lang in HOMEPAGE_LANGS,
                 canonical_path = canonical_path,
                 base_url       = BASE_URL,
                 hreflang_links = hreflang,
