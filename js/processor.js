@@ -9,7 +9,7 @@ import { fmtSize } from './utils.js';
 import { t, tp } from './i18n.js';
 import { setProgress, hideProgress, setButtonProcessing, setButtonReady,
          showCancelBtn, hideCancelBtn, showToast, startLongOpHint } from './ui.js';
-import { selectedFiles, setFilesLocked } from './files.js';
+import { selectedFiles, setFilesLocked, renderList } from './files.js';
 import { trackToolError } from './analytics.js';
 import { TOOLS, MAX_COMPRESS_MB } from './config.js';
 import { getRunner, getWorkerTool } from './toolRegistry.js';
@@ -108,8 +108,18 @@ export function cancelMergeScan() {
 
 // ── Cancel ────────────────────────────────────────────────────
 
+// Set only while a batch job (see "Batch processing" section below) is
+// awaiting a postMessage round-trip. Lets cancelProcess() unstick the
+// sequential await loop instead of leaving it hung on a terminated worker.
+let _batchCancelReject = null;
+
 export function cancelProcess(currentTool) {
   if (!isProcessing) return;
+  if (_batchCancelReject) {
+    const reject = _batchCancelReject;
+    _batchCancelReject = null;
+    reject(new _BatchCancelled());
+  }
   _worker.terminate();
   _worker      = _createWorker();
   isProcessing = false;
@@ -118,7 +128,21 @@ export function cancelProcess(currentTool) {
   hideCancelBtn();
   setButtonReady(TOOLS[currentTool].btn);
   showToast(t('cancelled'));
+
+  // A batch queue (see "Batch processing" section) may have left per-row
+  // pending/processing/done/error badges on selectedFiles — clear them so a
+  // cancelled run doesn't look like a stale partial result on next render.
+  if (selectedFiles.some(f => f._batchStatus)) {
+    selectedFiles.forEach(f => { delete f._batchStatus; });
+    renderList();
+  }
 }
+
+// Sentinel error — signals _runBatch's loop to unwind quietly because
+// cancelProcess() already performed all UI cleanup (button, progress,
+// toast). Distinguished from a real per-file failure, which should mark
+// that row as errored and continue with the rest of the queue.
+class _BatchCancelled extends Error {}
 
 // ── Main entry point ──────────────────────────────────────────
 
@@ -145,6 +169,24 @@ export async function doProcess(currentTool, extraParams = {}) {
   setProgress(5, t('prog_reading'));
   startLongOpHint(12000);
   showCancelBtn();
+
+  // ── Batch dispatch ──────────────────────────────────────────────
+  // 2+ files for compress/watermark/rotate route into the sequential
+  // queue + ZIP flow (see "Batch processing" section below) instead of
+  // the single-file runnerMap. Exactly one file for ANY tool (including
+  // these three) always falls through to the unchanged code below —
+  // single-file behavior is byte-for-byte identical to before this existed.
+  if (BATCH_TOOLS.has(currentTool) && filesSnapshot.length > 1) {
+    try {
+      await _runBatch(currentTool, filesSnapshot, extraParams);
+    } catch (err) {
+      isProcessing = false;
+      setFilesLocked(false);
+      hideCancelBtn();
+      _handleError(currentTool, err.message);
+    }
+    return;
+  }
 
   // ── Runner dispatch ────────────────────────────────────────────
   // Registry maps each tool to a runner key (e.g. 'merge', 'worker').
@@ -811,6 +853,188 @@ async function _runWorkerTool(tool, filesSnapshot, params) {
     isProcessing = false; setFilesLocked(false); hideCancelBtn();
     _handleError(tool, e.message || 'Worker error');
   };
+}
+
+// ── Batch processing (compress / watermark / rotate, 2+ files) ─
+//
+// Scope is intentionally narrow: only these 3 tools. merge/jpg2pdf are
+// already N-inputs→1-output; split already has its own separate-files
+// zip flow. Everything else stays 1-file-in.
+//
+// Design: reuse the SAME shared `_worker` instance, one postMessage per
+// file, awaited sequentially — never concurrent (the shared worker's
+// onmessage/onerror are reassigned per call, so parallel calls would
+// clobber each other's callbacks; see processor.js module docs). Each
+// file's ArrayBuffer result is collected, then all successful outputs
+// are bundled into one ZIP via the exact loadJSZip()/JSZip() pattern
+// already used by _runSplit's separate-files mode and _runPdf2Jpg.
+const BATCH_TOOLS = new Set(['compress', 'watermark', 'rotate']);
+
+// worker.js's rotate handler already ignores out-of-range page indices
+// (`if (index >= 0 && index < pages.length)`) — so applying file[0]'s
+// rotation selection to shorter/longer files in the batch is safe, just
+// imprecise if page counts differ. Documented product decision, not a bug:
+// the options panel is inherently single-file (built from files[0]), so
+// batch mode applies whatever the panel currently holds to every file.
+const _BATCH_SIZE_LIMITS = { compress: MAX_COMPRESS_MB, watermark: 200, rotate: 150 };
+const _BATCH_SUFFIX      = { watermark: '-watermarked', rotate: '-rotated' };
+const _BATCH_WATCHDOG_MS = 45_000; // same silent-hang guard as _runCompress's single-file watchdog
+
+/**
+ * postMessage → onmessage/onerror, wrapped as a promise for the batch
+ * loop's sequential await. Mirrors the exact worker contract every other
+ * runner in this file uses (progress/done/error message types, Transferable
+ * buffer handoff) — just resolves/rejects instead of driving UI directly.
+ */
+function _postToWorkerForBatch(msg, transfer, onProgress) {
+  return new Promise((resolve, reject) => {
+    let watchdog;
+    const arm = () => {
+      clearTimeout(watchdog);
+      watchdog = setTimeout(() => settle(reject, new Error(t('err_compress_timeout'))), _BATCH_WATCHDOG_MS);
+    };
+    const settle = (fn, val) => {
+      clearTimeout(watchdog);
+      _batchCancelReject = null;
+      fn(val);
+    };
+
+    _worker.onmessage = (e) => {
+      const data = e.data;
+      if (data.type === 'progress') { arm(); onProgress?.(data.value, data.label); return; }
+      if (data.type === 'done')     { settle(resolve, data); return; }
+      if (data.type === 'error')    { settle(reject, new Error(data.message)); return; }
+    };
+    _worker.onerror = (e) => settle(reject, new Error(e.message || 'Worker error'));
+
+    _batchCancelReject = reject;
+    arm();
+    _worker.postMessage(msg, transfer);
+  });
+}
+
+/** One file through the compress runner — returns { name, buffer } for the zip. */
+async function _batchCompressOne(file, params, onProgress) {
+  const buffer = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await file.arrayBuffer());
+  const { preset = 'medium', preserveText = true, removeWatermarks = false, targetDpi = null, quality = null, targetSizeMb = null } = params;
+  const data = await _postToWorkerForBatch(
+    { tool: 'compress', file: buffer, options: { preset, preserveText, removeWatermarks, targetDpi, quality, targetSizeMb } },
+    [buffer],
+    onProgress
+  );
+  if (!(data.result instanceof ArrayBuffer)) throw new Error('Unexpected result type from worker');
+  const baseName = file.name.replace(/\.pdf$/i, '');
+  return { name: `${baseName}-compressed.pdf`, buffer: data.result };
+}
+
+/** One file through a generic worker tool (watermark/rotate) — returns { name, buffer }. */
+async function _batchWorkerToolOne(tool, file, params, onProgress) {
+  const buffer = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await file.arrayBuffer());
+  const data = await _postToWorkerForBatch({ tool, file: buffer, options: params }, [buffer], onProgress);
+  if (!(data.result instanceof ArrayBuffer)) throw new Error('Unexpected result from worker');
+  const base = file.name.replace(/\.pdf$/i, '');
+  return { name: `${base}${_BATCH_SUFFIX[tool] || '-processed'}.pdf`, buffer: data.result };
+}
+
+async function _runBatch(tool, filesSnapshot, extraParams) {
+  const total = filesSnapshot.length;
+
+  // Fresh queue — reset any stale status left over from a previous failed
+  // "process again" attempt on the same file objects.
+  filesSnapshot.forEach(f => { f._batchStatus = 'pending'; });
+  renderList(true);
+
+  const zipEntries   = [];
+  const failedNames  = [];
+  let succeeded = 0;
+
+  for (let i = 0; i < total; i++) {
+    // cancelProcess() rejects the CURRENT file's in-flight worker promise via
+    // _BatchCancelled (caught below), but a cancel click landing in the gap
+    // between two files — after file i's promise settles and clears
+    // _batchCancelReject, before file i+1 re-arms it — would otherwise go
+    // undetected and let the loop run to completion. This check closes that gap.
+    if (!isProcessing) return;
+
+    const file = filesSnapshot[i];
+    file._batchStatus = 'processing';
+    renderList(true);
+
+    const fileLabel = t('prog_batch_file', { i: i + 1, n: total });
+    const base  = Math.round((i / total) * 100);
+    const band  = 100 / total;
+    setProgress(base, fileLabel);
+
+    try {
+      if (!_checkSize(file, _BATCH_SIZE_LIMITS[tool] ?? 200)) {
+        throw new Error('File too large'); // _checkSize already toasted specifics
+      }
+
+      const onProgress = (value) => {
+        setProgress(Math.min(99, Math.round(base + (value / 100) * band)), fileLabel);
+      };
+
+      const result = tool === 'compress'
+        ? await _batchCompressOne(file, extraParams, onProgress)
+        : await _batchWorkerToolOne(getWorkerTool(tool) ?? tool, file, extraParams, onProgress);
+
+      zipEntries.push(result);
+      file._batchStatus = 'done';
+      succeeded++;
+    } catch (err) {
+      if (err instanceof _BatchCancelled) return; // cancelProcess() already cleaned up the UI
+      file._batchStatus = 'error';
+      failedNames.push(file.name);
+      trackToolError(tool, 'batch_item_failed');
+    }
+    renderList(true);
+  }
+
+  // Cancel has no in-flight worker promise to reject once the loop above has
+  // finished (every file already got its 'done'/'error' response) — check the
+  // flag directly so a cancel landing in the zip-building tail doesn't let a
+  // "cancelled" run finish anyway and hand the user an unexpected download.
+  if (!isProcessing) return;
+
+  if (zipEntries.length === 0) {
+    isProcessing = false;
+    setFilesLocked(false);
+    hideCancelBtn();
+    _handleError(tool, t('err_batch_all_failed'));
+    return;
+  }
+
+  setProgress(96, t('prog_zip'));
+  await loadJSZip();
+  const JSZip = window.JSZip;
+  const zip = new JSZip();
+  for (const entry of zipEntries) zip.file(entry.name, entry.buffer);
+  const blob = await zip.generateAsync(
+    { type: 'blob', compression: 'DEFLATE' },
+    meta => setProgress(96 + Math.round(meta.percent / 100 * 4), t('prog_compressing'))
+  );
+
+  if (!isProcessing) return; // cancelled while zipping — don't finish/download a cancelled run
+
+  isProcessing = false;
+  setFilesLocked(false);
+  hideCancelBtn();
+  setProgress(100, t('prog_done'));
+
+  const failed = total - succeeded;
+  const desc = failed > 0
+    ? t('desc_batch_partial', { ok: succeeded, total, size: fmtSize(blob.size) })
+    : t('desc_batch_done', { n: succeeded, size: fmtSize(blob.size) });
+  const filename = `${tool}-batch-${succeeded}-files.zip`;
+
+  document.dispatchEvent(new CustomEvent('pdfree:success', {
+    detail: { tool, blob, desc, filename }
+  }));
+
+  if (failed > 0) {
+    const names = failedNames.slice(0, 5).join(', ');
+    showToast(tp(failed, 'warn_batch_failed_one', 'warn_batch_failed_many', { n: failed, names }), 7000);
+  }
 }
 
 // ── PDF → Word ────────────────────────────────────────────────

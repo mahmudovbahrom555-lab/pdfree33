@@ -169,6 +169,7 @@ export function addFiles(files) {
       return;
     }
     existingFPs.add(_fp(f));
+    delete f._batchStatus; // defensive: clear any stale batch queue status from a prior tool/run
     selectedFiles.push(f);
     added.push(f);
   });
@@ -286,6 +287,7 @@ export function renderList(keepSuccess = false) {
         </span>` : ''}
       </div>
       <span class="file-item-size">${fmtSize(f.size)}${pages}</span>
+      ${_batchStatusBadge(f._batchStatus)}
       <button class="file-item-del" data-i="${i}" aria-label="Remove ${esc(f.name)}" ${_locked ? 'disabled aria-disabled="true"' : ''}>×</button>
     `;
 
@@ -326,6 +328,27 @@ export function renderList(keepSuccess = false) {
   _updateMeta();
   if (!keepSuccess) id('successCard').style.display = 'none';
   document.body.classList.toggle('has-files', selectedFiles.length > 0);
+}
+
+// ── Batch queue status badge ───────────────────────────────
+//
+// Set on individual File objects (f._batchStatus) only by processor.js's
+// _runBatch(), for the compress/watermark/rotate multi-file queue flow.
+// Absent on every other tool and on single-file selections — this renders
+// nothing for those, so single-file row markup is unchanged.
+
+const _BATCH_STATUS_ICON = { pending: '⏳', processing: '⚙️', done: '✓', error: '✗' };
+const _BATCH_STATUS_KEY  = {
+  pending:    'batch_status_pending',
+  processing: 'batch_status_processing',
+  done:       'batch_status_done',
+  error:      'batch_status_error',
+};
+
+function _batchStatusBadge(status) {
+  if (!status || !_BATCH_STATUS_ICON[status]) return '';
+  const label = t(_BATCH_STATUS_KEY[status]);
+  return `<span class="file-item-batch-status file-item-batch-status--${status}" title="${esc(label)}" aria-label="${esc(label)}">${_BATCH_STATUS_ICON[status]}</span>`;
 }
 
 /** Обновляет счётчик файлов, подсказку перетаскивания и состояние кнопки */

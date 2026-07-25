@@ -231,6 +231,17 @@ button,
   font-family: var(--font-sans);
 }
 .file-item-del:hover { background: #fee; color: #c00; }
+.file-item-batch-status {
+  font-size: 13px;
+  line-height: 1;
+  flex-shrink: 0;
+  width: 18px;
+  text-align: center;
+}
+.file-item-batch-status--pending    { opacity: 0.5; }
+.file-item-batch-status--processing { display: inline-block; animation: spin 1s linear infinite; }
+.file-item-batch-status--done       { color: var(--green); }
+.file-item-batch-status--error      { color: #c00; }
 .file-item-dup {
   display: inline-block;
   font-size: 11px;
