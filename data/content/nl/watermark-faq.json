@@ -9,6 +9,14 @@
   },
   {
     "@type": "Question",
+    "name": "Slaat PDFree mijn bestanden op of registreert het ze na verwerking?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. PDFree draait volledig in je browser — er is geen backend-server die je bestanden ontvangt. Omdat er niets wordt geüpload, kan er ook niets worden opgeslagen, geregistreerd of bewaard. Je document bestaat alleen in het geheugen van je browser tijdens de sessie en wordt gewist wanneer je het tabblad sluit."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "Welke dekking moet ik kiezen?",
     "acceptedAnswer": {
       "@type": "Answer",

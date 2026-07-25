@@ -9,6 +9,14 @@
   },
   {
     "@type": "Question",
+    "name": "¿PDFree almacena o registra mis archivos después de procesarlos?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. PDFree se ejecuta completamente en tu navegador — no hay ningún servidor backend que reciba tus archivos. Como nada se sube, nada puede ser almacenado, registrado ni retenido. Tu documento existe solo en la memoria de tu navegador durante la sesión y se elimina al cerrar la pestaña."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "¿Se suben mis archivos a un servidor?",
     "acceptedAnswer": {
       "@type": "Answer",

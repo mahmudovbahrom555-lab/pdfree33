@@ -2,61 +2,105 @@
   {
     "@type": "Question",
     "name": "Is this PDF to Word converter really free?",
-    "acceptedAnswer": { "@type": "Answer", "text": "Yes, completely free. No subscription, no watermarks, no per-page limits. The entire conversion happens in your browser using open-source libraries." }
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes, completely free. No subscription, no watermarks, no per-page limits. The entire conversion happens in your browser using open-source libraries."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Does PDFree store or log my files after processing?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. PDFree runs entirely in your browser — there is no backend server that receives your files. Because nothing is uploaded, nothing can be stored, logged, or retained. Your document exists only in your browser's memory for the duration of the session and is cleared when you close the tab."
+    }
   },
   {
     "@type": "Question",
     "name": "Does my PDF get uploaded anywhere?",
-    "acceptedAnswer": { "@type": "Answer", "text": "Never. Your file is read by your browser locally. There is no server involved at any step of the conversion." }
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Never. Your file is read by your browser locally. There is no server involved at any step of the conversion."
+    }
   },
   {
     "@type": "Question",
     "name": "What is the difference between Text mode and Image mode?",
-    "acceptedAnswer": { "@type": "Answer", "text": "Text mode extracts the text from your PDF and creates an editable Word document with paragraphs, headings, bold, italic, and tables. Image mode renders each page as a high-resolution image and places it in the Word document — the visual layout is preserved exactly but the text cannot be edited." }
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Text mode extracts the text from your PDF and creates an editable Word document with paragraphs, headings, bold, italic, and tables. Image mode renders each page as a high-resolution image and places it in the Word document — the visual layout is preserved exactly but the text cannot be edited."
+    }
   },
   {
     "@type": "Question",
     "name": "Will the formatting look the same in Word?",
-    "acceptedAnswer": { "@type": "Answer", "text": "In text mode, the text content and basic formatting (bold, italic, font size, headings, tables) are preserved. Complex multi-column layouts may not match exactly. For perfect layout fidelity, use image mode." }
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "In text mode, the text content and basic formatting (bold, italic, font size, headings, tables) are preserved. Complex multi-column layouts may not match exactly. For perfect layout fidelity, use image mode."
+    }
   },
   {
     "@type": "Question",
     "name": "Can I convert a scanned PDF to Word?",
-    "acceptedAnswer": { "@type": "Answer", "text": "If your scanned PDF contains an embedded text layer (many modern scanners add one), text mode will extract it. If the PDF is image-only with no text layer, use image mode to get a Word document with page images, or use the OCR PDF tool first to add a text layer before converting." }
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "If your scanned PDF contains an embedded text layer (many modern scanners add one), text mode will extract it. If the PDF is image-only with no text layer, use image mode to get a Word document with page images, or use the OCR PDF tool first to add a text layer before converting."
+    }
   },
   {
     "@type": "Question",
     "name": "Are tables converted correctly?",
-    "acceptedAnswer": { "@type": "Answer", "text": "PDFree detects tables in two ways: by aligning text items into columns (for data tables), and by detecting drawn border lines (for grid forms). Detected tables become proper Word tables — not plain text. Very complex or merged-cell layouts may not convert perfectly." }
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree detects tables in two ways: by aligning text items into columns (for data tables), and by detecting drawn border lines (for grid forms). Detected tables become proper Word tables — not plain text. Very complex or merged-cell layouts may not convert perfectly."
+    }
   },
   {
     "@type": "Question",
     "name": "Do I need Microsoft Word to open the converted file?",
-    "acceptedAnswer": { "@type": "Answer", "text": "No. The .docx format is supported by Microsoft Word, Google Docs (upload to Drive and open), LibreOffice Writer (free, open-source), and Apple Pages. You do not need a paid Microsoft 365 subscription to open the file." }
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. The .docx format is supported by Microsoft Word, Google Docs (upload to Drive and open), LibreOffice Writer (free, open-source), and Apple Pages. You do not need a paid Microsoft 365 subscription to open the file."
+    }
   },
   {
     "@type": "Question",
     "name": "What is the maximum file size for PDF to Word conversion?",
-    "acceptedAnswer": { "@type": "Answer", "text": "There is no hard limit. However, very large PDFs (100+ MB) may take longer and require more memory. For best results keep files under 100 MB in text mode and under 50 MB in image mode at 300 DPI." }
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "There is no hard limit. However, very large PDFs (100+ MB) may take longer and require more memory. For best results keep files under 100 MB in text mode and under 50 MB in image mode at 300 DPI."
+    }
   },
   {
     "@type": "Question",
     "name": "Does it work offline?",
-    "acceptedAnswer": { "@type": "Answer", "text": "Yes. Once the page has loaded, PDFree works fully offline as a Progressive Web App. No internet connection is required for conversion." }
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. Once the page has loaded, PDFree works fully offline as a Progressive Web App. No internet connection is required for conversion."
+    }
   },
   {
     "@type": "Question",
     "name": "How does the conversion quality score work?",
-    "acceptedAnswer": { "@type": "Answer", "text": "After converting, PDFree shows a confidence score (0–100%) based on what was detected in your document: text layer coverage, tables, diagrams, and script complexity. High (80%+) means fully editable output. Fair (55–79%) means some pages may be image-only. Limited (under 55%) usually means the PDF is mostly scanned — run OCR first for editable Word output." }
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "After converting, PDFree shows a confidence score (0–100%) based on what was detected in your document: text layer coverage, tables, diagrams, and script complexity. High (80%+) means fully editable output. Fair (55–79%) means some pages may be image-only. Limited (under 55%) usually means the PDF is mostly scanned — run OCR first for editable Word output."
+    }
   },
   {
     "@type": "Question",
     "name": "Is there a PDF to Word converter that doesn't upload files?",
-    "acceptedAnswer": { "@type": "Answer", "text": "Yes — PDFree. The entire conversion runs inside your browser using PDF.js and WebAssembly. Your PDF is never sent to any server. You can verify this by opening DevTools → Network tab and watching that no file upload request is made during conversion. Most online converters upload your file to their servers; PDFree does not." }
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes — PDFree. The entire conversion runs inside your browser using PDF.js and WebAssembly. Your PDF is never sent to any server. You can verify this by opening DevTools → Network tab and watching that no file upload request is made during conversion. Most online converters upload your file to their servers; PDFree does not."
+    }
   },
   {
     "@type": "Question",
     "name": "Does it support Arabic, Hebrew, Cyrillic, or Chinese text?",
-    "acceptedAnswer": { "@type": "Answer", "text": "Yes. Text mode supports Latin, Cyrillic (Russian, Ukrainian, Bulgarian), Arabic and Hebrew (with correct right-to-left paragraph direction), CJK (Chinese, Japanese, Korean), Devanagari (Hindi), and most Unicode scripts used in standard PDFs." }
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. Text mode supports Latin, Cyrillic (Russian, Ukrainian, Bulgarian), Arabic and Hebrew (with correct right-to-left paragraph direction), CJK (Chinese, Japanese, Korean), Devanagari (Hindi), and most Unicode scripts used in standard PDFs."
+    }
   }
 ]

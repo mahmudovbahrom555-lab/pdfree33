@@ -9,6 +9,14 @@
   },
   {
     "@type": "Question",
+    "name": "Does PDFree store or log my files after processing?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. PDFree runs entirely in your browser — there is no backend server that receives your files. Because nothing is uploaded, nothing can be stored, logged, or retained. Your document exists only in your browser's memory for the duration of the session and is cleared when you close the tab."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "What encryption standard does PDFree use?",
     "acceptedAnswer": {
       "@type": "Answer",

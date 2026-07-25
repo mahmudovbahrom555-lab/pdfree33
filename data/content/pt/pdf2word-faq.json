@@ -2,61 +2,105 @@
   {
     "@type": "Question",
     "name": "Este conversor de PDF para Word é realmente gratuito?",
-    "acceptedAnswer": { "@type": "Answer", "text": "Sim, totalmente gratuito. Sem assinatura, sem marca d'água, sem limite de páginas. A conversão acontece no seu navegador usando bibliotecas open source." }
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim, totalmente gratuito. Sem assinatura, sem marca d'água, sem limite de páginas. A conversão acontece no seu navegador usando bibliotecas open source."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "O PDFree armazena ou registra meus arquivos após o processamento?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Não. O PDFree funciona inteiramente no seu navegador — não há servidor de back-end que receba seus arquivos. Como nada é enviado, nada pode ser armazenado, registrado ou retido. Seu documento existe apenas na memória do navegador durante a sessão e é apagado ao fechar a aba."
+    }
   },
   {
     "@type": "Question",
     "name": "Meu PDF é enviado para algum lugar na conversão?",
-    "acceptedAnswer": { "@type": "Answer", "text": "Não. A conversão ocorre inteiramente dentro do seu navegador. Seu PDF nunca é enviado a nenhum servidor — nem mesmo temporariamente." }
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Não. A conversão ocorre inteiramente dentro do seu navegador. Seu PDF nunca é enviado a nenhum servidor — nem mesmo temporariamente."
+    }
   },
   {
     "@type": "Question",
     "name": "Qual é a diferença entre o modo texto e o modo imagem?",
-    "acceptedAnswer": { "@type": "Answer", "text": "O modo texto extrai o texto do seu PDF e cria um documento Word editável com parágrafos, títulos, negrito, itálico e tabelas. O modo imagem renderiza cada página como imagem de alta resolução e a insere no documento Word — o layout visual é preservado exatamente, mas o texto não é editável." }
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "O modo texto extrai o texto do seu PDF e cria um documento Word editável com parágrafos, títulos, negrito, itálico e tabelas. O modo imagem renderiza cada página como imagem de alta resolução e a insere no documento Word — o layout visual é preservado exatamente, mas o texto não é editável."
+    }
   },
   {
     "@type": "Question",
     "name": "A formatação ficará igual no Word?",
-    "acceptedAnswer": { "@type": "Answer", "text": "No modo texto, o conteúdo e a formatação básica (negrito, itálico, tamanho de fonte, títulos, tabelas) são preservados. Layouts multicoluna complexos podem não corresponder exatamente. Para fidelidade perfeita de layout, use o modo imagem." }
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No modo texto, o conteúdo e a formatação básica (negrito, itálico, tamanho de fonte, títulos, tabelas) são preservados. Layouts multicoluna complexos podem não corresponder exatamente. Para fidelidade perfeita de layout, use o modo imagem."
+    }
   },
   {
     "@type": "Question",
     "name": "Posso converter um PDF digitalizado em Word editável?",
-    "acceptedAnswer": { "@type": "Answer", "text": "Depende. Se o PDF digitalizado tiver uma camada de texto incorporada (muitos scanners modernos a adicionam), o modo texto a extrai corretamente. Se o PDF for apenas imagem sem camada de texto, use o modo imagem ou use primeiro a ferramenta OCR PDF para adicionar uma camada de texto antes de converter para Word." }
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Depende. Se o PDF digitalizado tiver uma camada de texto incorporada (muitos scanners modernos a adicionam), o modo texto a extrai corretamente. Se o PDF for apenas imagem sem camada de texto, use o modo imagem ou use primeiro a ferramenta OCR PDF para adicionar uma camada de texto antes de converter para Word."
+    }
   },
   {
     "@type": "Question",
     "name": "As tabelas são convertidas corretamente?",
-    "acceptedAnswer": { "@type": "Answer", "text": "O PDFree detecta tabelas de duas formas: alinhando elementos de texto em colunas (para tabelas de dados) e detectando linhas de borda desenhadas (para formulários). As tabelas detectadas se tornam tabelas Word reais, não texto simples." }
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "O PDFree detecta tabelas de duas formas: alinhando elementos de texto em colunas (para tabelas de dados) e detectando linhas de borda desenhadas (para formulários). As tabelas detectadas se tornam tabelas Word reais, não texto simples."
+    }
   },
   {
     "@type": "Question",
     "name": "Preciso do Microsoft Word para abrir o arquivo convertido?",
-    "acceptedAnswer": { "@type": "Answer", "text": "Não. O formato .docx é compatível com Microsoft Word, Google Docs (faça upload no Drive e abra), LibreOffice Writer (gratuito, open source) e Apple Pages. Você não precisa de uma assinatura paga do Microsoft 365 para abrir o arquivo." }
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Não. O formato .docx é compatível com Microsoft Word, Google Docs (faça upload no Drive e abra), LibreOffice Writer (gratuito, open source) e Apple Pages. Você não precisa de uma assinatura paga do Microsoft 365 para abrir o arquivo."
+    }
   },
   {
     "@type": "Question",
     "name": "Qual é o tamanho máximo de arquivo para converter PDF para Word?",
-    "acceptedAnswer": { "@type": "Answer", "text": "Não há um limite fixo. PDFs muito grandes (mais de 100 MB) podem demorar mais e exigir mais memória. Para melhores resultados, fique abaixo de 100 MB no modo texto e 50 MB no modo imagem a 300 DPI." }
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Não há um limite fixo. PDFs muito grandes (mais de 100 MB) podem demorar mais e exigir mais memória. Para melhores resultados, fique abaixo de 100 MB no modo texto e 50 MB no modo imagem a 300 DPI."
+    }
   },
   {
     "@type": "Question",
     "name": "Funciona offline?",
-    "acceptedAnswer": { "@type": "Answer", "text": "Sim. Uma vez que a página foi carregada, o PDFree funciona totalmente offline como Progressive Web App. Nenhuma conexão com a internet é necessária para a conversão." }
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim. Uma vez que a página foi carregada, o PDFree funciona totalmente offline como Progressive Web App. Nenhuma conexão com a internet é necessária para a conversão."
+    }
   },
   {
     "@type": "Question",
     "name": "Como funciona a pontuação de qualidade de conversão?",
-    "acceptedAnswer": { "@type": "Answer", "text": "Após a conversão, o PDFree exibe uma pontuação de confiança (0–100%) com base no que foi detectado: cobertura da camada de texto, tabelas, diagramas e complexidade de alfabeto. Alta (80%+) significa saída totalmente editável. Média (55–79%) indica que algumas páginas podem ser apenas imagens. Baixa (menos de 55%) geralmente significa PDF majoritariamente digitalizado — execute OCR primeiro." }
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Após a conversão, o PDFree exibe uma pontuação de confiança (0–100%) com base no que foi detectado: cobertura da camada de texto, tabelas, diagramas e complexidade de alfabeto. Alta (80%+) significa saída totalmente editável. Média (55–79%) indica que algumas páginas podem ser apenas imagens. Baixa (menos de 55%) geralmente significa PDF majoritariamente digitalizado — execute OCR primeiro."
+    }
   },
   {
     "@type": "Question",
     "name": "Existe um conversor de PDF para Word sem upload de arquivo?",
-    "acceptedAnswer": { "@type": "Answer", "text": "Sim — PDFree. A conversão é executada no seu navegador com PDF.js e WebAssembly. Seu PDF nunca é enviado a nenhum servidor. Você pode verificar abrindo DevTools → aba Rede e confirmando que não há nenhuma requisição de upload de arquivo durante a conversão." }
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim — PDFree. A conversão é executada no seu navegador com PDF.js e WebAssembly. Seu PDF nunca é enviado a nenhum servidor. Você pode verificar abrindo DevTools → aba Rede e confirmando que não há nenhuma requisição de upload de arquivo durante a conversão."
+    }
   },
   {
     "@type": "Question",
     "name": "Árabe, hebraico, cirílico e chinês são suportados?",
-    "acceptedAnswer": { "@type": "Answer", "text": "Sim. O modo texto suporta latino, cirílico (russo, ucraniano, búlgaro), árabe e hebraico (com direção de parágrafo correta da direita para a esquerda), CJK (chinês, japonês, coreano), devanágari (hindi) e a maioria dos alfabetos Unicode de PDFs padrão." }
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim. O modo texto suporta latino, cirílico (russo, ucraniano, búlgaro), árabe e hebraico (com direção de parágrafo correta da direita para a esquerda), CJK (chinês, japonês, coreano), devanágari (hindi) e a maioria dos alfabetos Unicode de PDFs padrão."
+    }
   }
 ]

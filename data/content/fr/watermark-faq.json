@@ -9,6 +9,14 @@
   },
   {
     "@type": "Question",
+    "name": "PDFree stocke-t-il ou enregistre-t-il mes fichiers après traitement ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non. PDFree fonctionne entièrement dans votre navigateur — il n'y a pas de serveur backend qui reçoit vos fichiers. Comme rien n'est téléchargé, rien ne peut être stocké, enregistré ou conservé. Votre document n'existe que dans la mémoire de votre navigateur le temps de la session et disparaît à la fermeture de l'onglet."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "Mes fichiers sont-ils envoyés à un serveur ?",
     "acceptedAnswer": {
       "@type": "Answer",

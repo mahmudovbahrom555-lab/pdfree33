@@ -9,6 +9,14 @@
   },
   {
     "@type": "Question",
+    "name": "O PDFree armazena ou registra meus arquivos após o processamento?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Não. O PDFree funciona inteiramente no seu navegador — não há servidor de back-end que receba seus arquivos. Como nada é enviado, nada pode ser armazenado, registrado ou retido. Seu documento existe apenas na memória do navegador durante a sessão e é apagado ao fechar a aba."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "Qual nível de criptografia é usado?",
     "acceptedAnswer": {
       "@type": "Answer",

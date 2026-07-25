@@ -9,6 +9,14 @@
   },
   {
     "@type": "Question",
+    "name": "PDFree có lưu trữ hoặc ghi lại file của tôi sau khi xử lý không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không. PDFree chạy hoàn toàn trong trình duyệt của bạn — không có máy chủ backend nào nhận file của bạn. Vì không có gì được tải lên, không có gì có thể được lưu trữ, ghi lại hoặc giữ lại. Tài liệu của bạn chỉ tồn tại trong bộ nhớ trình duyệt trong suốt phiên và bị xóa khi bạn đóng tab."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "Tôi có thể bắt đầu đánh số từ số khác 1 không?",
     "acceptedAnswer": {
       "@type": "Answer",

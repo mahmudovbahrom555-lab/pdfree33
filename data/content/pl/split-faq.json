@@ -9,6 +9,14 @@
   },
   {
     "@type": "Question",
+    "name": "Czy PDFree przechowuje lub rejestruje moje pliki po przetworzeniu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie. PDFree działa całkowicie w przeglądarce — nie ma serwera backend, który odbierałby Twoje pliki. Ponieważ nic nie jest przesyłane, nic nie może być przechowywane, rejestrowane ani zatrzymywane. Twój dokument istnieje tylko w pamięci przeglądarki przez czas trwania sesji i jest usuwany po zamknięciu karty."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "Czy PDF jest przesyłany na serwer?",
     "acceptedAnswer": {
       "@type": "Answer",
