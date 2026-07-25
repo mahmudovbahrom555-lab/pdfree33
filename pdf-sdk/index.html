@@ -19,6 +19,7 @@
 
   <title>PDFree SDK — A Privacy-First PDF Toolkit for Developers</title>
   <meta name="description" content="A high-level PDF SDK that runs entirely in the browser — merge, compress, watermark, redact. No server ever touches your users' files. Join the waitlist.">
+  <meta name="keywords" content="client-side PDF SDK, browser PDF library, PDF SDK JavaScript, PDF processing no server, embed PDF tools, privacy-first PDF API, HIPAA compliant PDF SDK, npm PDF library">
 
   <meta property="og:title"       content="PDFree SDK — Privacy-First PDF Processing for Developers">
   <meta property="og:description" content="Your users' files never leave their browser. A high-level SDK on top of proven client-side PDF processing — no server, no upload, compliance by architecture.">
@@ -66,6 +67,39 @@
     "url": "https://pdfree.io/pdf-sdk/",
     "description": "A privacy-first PDF SDK that processes files entirely in the browser — no server, no upload.",
     "isPartOf": { "@type": "WebSite", "name": "PDFree", "url": "https://pdfree.io" }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Is this a hosted API, or does it really run client-side?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Client-side only. There's no endpoint that receives your users' files — the SDK ships WebAssembly/JS that runs in the browser tab, the same engine already powering pdfree.io's own tools." }
+      },
+      {
+        "@type": "Question",
+        "name": "How is this different from just using pdf-lib directly?",
+        "acceptedAnswer": { "@type": "Answer", "text": "pdf-lib is a great low-level library, but it doesn't ship ready-made compress/watermark/redact operations — teams build and maintain that layer themselves. PDFree SDK aims to be the finished, high-level version of that layer." }
+      },
+      {
+        "@type": "Question",
+        "name": "Does this help with HIPAA/GDPR compliance?",
+        "acceptedAnswer": { "@type": "Answer", "text": "If a file never leaves the browser, whether the vendor receives PHI or personal data is off the table for that step of the pipeline. It doesn't replace a full compliance review, but it removes one entire category of risk." }
+      },
+      {
+        "@type": "Question",
+        "name": "Will the PDFree SDK be free, like the website?",
+        "acceptedAnswer": { "@type": "Answer", "text": "pdfree.io stays free for individual use. The SDK is being scoped as a licensed product for teams embedding it in their own software — exact pricing isn't set yet." }
+      },
+      {
+        "@type": "Question",
+        "name": "When does the PDFree SDK ship?",
+        "acceptedAnswer": { "@type": "Answer", "text": "There's no date yet — this page is the first signal-gathering step. Joining the waitlist and describing what you'd build directly shapes what gets built first." }
+      }
+    ]
   }
   </script>
 </head>
@@ -145,6 +179,82 @@
         <li>Legal / HR tools that redact before sharing</li>
         <li>Internal tools where "it never left the browser" is the whole pitch to security review</li>
       </ul>
+    </div>
+  </section>
+
+  <!-- Comparison -->
+  <section style="padding:48px 24px;border-bottom:1px solid var(--border);">
+    <div style="max-width:820px;margin:0 auto;">
+      <h2 style="font-size:22px;font-weight:700;color:var(--text);margin:0 0 8px;text-align:center;">How this compares to what's out there today</h2>
+      <p style="font-size:14px;color:var(--text2);text-align:center;max-width:600px;margin:0 auto 28px;line-height:1.6;">There's no shortage of PDF tooling for developers — the honest comparison is about where each one sits, not which is "best."</p>
+      <div style="overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;font-size:13.5px;">
+          <thead>
+            <tr style="border-bottom:2px solid var(--border);">
+              <th style="text-align:left;padding:10px 12px;color:var(--text2);font-weight:600;">Approach</th>
+              <th style="text-align:left;padding:10px 12px;color:var(--text2);font-weight:600;">Where files are processed</th>
+              <th style="text-align:left;padding:10px 12px;color:var(--text2);font-weight:600;">Level</th>
+              <th style="text-align:left;padding:10px 12px;color:var(--text2);font-weight:600;">Pricing shape</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="background:var(--green-light);border-bottom:1px solid var(--border);">
+              <td style="padding:10px 12px;font-weight:600;color:var(--green);">PDFree SDK</td>
+              <td style="padding:10px 12px;">Browser only — never leaves the device</td>
+              <td style="padding:10px 12px;">High-level (merge/compress/redact as one call)</td>
+              <td style="padding:10px 12px;">SDK license, no per-request metering</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:10px 12px;">pdf-lib (open source)</td>
+              <td style="padding:10px 12px;">Browser or Node — genuinely no server required</td>
+              <td style="padding:10px 12px;">Low-level — you assemble merge/compress/redact yourself</td>
+              <td style="padding:10px 12px;">Free, MIT-licensed</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:10px 12px;">Nutrient / PSPDFKit Web SDK</td>
+              <td style="padding:10px 12px;">Client-side deployment is one option among several (also cloud/on-prem)</td>
+              <td style="padding:10px 12px;">Full document viewer/editor platform</td>
+              <td style="padding:10px 12px;">Component-based annual license, custom quote</td>
+            </tr>
+            <tr>
+              <td style="padding:10px 12px;">pdfRest self-hosted container</td>
+              <td style="padding:10px 12px;">Your own server/Docker — stays in your infra, but is still a server</td>
+              <td style="padding:10px 12px;">Full HTTP API (SOC2/HIPAA/GDPR audited)</td>
+              <td style="padding:10px 12px;">Self-hosted licensing</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:12px;color:var(--text3);margin-top:14px;">Based on public pricing/docs pages as of 2026; verify current details directly with each vendor before deciding. pdf-lib is free and open source — the gap it leaves is the high-level, ready-to-call operations layer PDFree SDK is aiming to be.</p>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section style="padding:48px 24px;border-bottom:1px solid var(--border);background:var(--surface);">
+    <div style="max-width:680px;margin:0 auto;">
+      <h2 style="font-size:22px;font-weight:700;color:var(--text);margin:0 0 24px;text-align:center;">Questions developers ask first</h2>
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div>
+          <h3 style="font-size:15px;font-weight:600;color:var(--text);margin:0 0 4px;">Is this a hosted API, or does it really run client-side?</h3>
+          <p style="font-size:14px;color:var(--text2);line-height:1.6;margin:0;">Client-side only. There's no endpoint that receives your users' files — the SDK ships WebAssembly/JS that runs in the browser tab, the same engine already powering pdfree.io's own tools.</p>
+        </div>
+        <div>
+          <h3 style="font-size:15px;font-weight:600;color:var(--text);margin:0 0 4px;">How is this different from just using pdf-lib directly?</h3>
+          <p style="font-size:14px;color:var(--text2);line-height:1.6;margin:0;">pdf-lib is a great low-level library, but it doesn't ship ready-made compress/watermark/redact operations — teams build and maintain that layer themselves. PDFree SDK aims to be the finished, high-level version of that layer.</p>
+        </div>
+        <div>
+          <h3 style="font-size:15px;font-weight:600;color:var(--text);margin:0 0 4px;">Does this help with HIPAA/GDPR compliance?</h3>
+          <p style="font-size:14px;color:var(--text2);line-height:1.6;margin:0;">If a file never leaves the browser, "does this vendor receive PHI/personal data" is off the table for that step of your pipeline. It doesn't replace a full compliance review of your own product, but it removes one entire category of risk.</p>
+        </div>
+        <div>
+          <h3 style="font-size:15px;font-weight:600;color:var(--text);margin:0 0 4px;">Will it be free, like the website?</h3>
+          <p style="font-size:14px;color:var(--text2);line-height:1.6;margin:0;">pdfree.io stays free for individual use. The SDK is being scoped as a licensed product for teams embedding it in their own software — exact pricing isn't set yet, which is part of why this page exists.</p>
+        </div>
+        <div>
+          <h3 style="font-size:15px;font-weight:600;color:var(--text);margin:0 0 4px;">When does it ship?</h3>
+          <p style="font-size:14px;color:var(--text2);line-height:1.6;margin:0;">There's no date yet — this page is the first real signal-gathering step. Join the waitlist below and tell us what you'd build; that shapes what gets built first.</p>
+        </div>
+      </div>
     </div>
   </section>
 
