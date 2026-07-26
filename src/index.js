@@ -123,10 +123,14 @@ async function handleFeedback(request, env) {
     return new Response('Bad request', { status: 400 });
   }
 
-  // Honeypot tripped — pretend success, don't tip the bot off.
-  if (body.hp) return new Response('OK', { status: 200 });
-
   const type = _FEEDBACK_TYPES.has(body.type) ? body.type : 'other';
+
+  // Honeypot tripped — pretend success, don't tip the bot off.
+  if (body.hp) {
+    console.log(`[feedback] honeypot tripped, type=${type}`);
+    return new Response('OK', { status: 200 });
+  }
+
   const text  = typeof body.text  === 'string' ? body.text.trim().slice(0, 1000)  : '';
   const email = typeof body.email === 'string' ? body.email.trim().slice(0, 200)  : '';
   const tool  = typeof body.tool  === 'string' ? body.tool.trim().slice(0, 50)    : 'unknown';
@@ -138,11 +142,16 @@ async function handleFeedback(request, env) {
   }
   // Waitlist signups don't need a message, but a real-looking email is required.
   if (type === 'waitlist' && !_EMAIL_RE.test(email)) {
+    console.log(`[feedback] waitlist rejected, invalid email format`);
     return new Response('Bad request', { status: 400 });
   }
-  if (_looksLikeSpam(text)) return new Response('OK', { status: 200 }); // silently drop
+  if (_looksLikeSpam(text)) {
+    console.log(`[feedback] spam heuristic tripped, type=${type}`);
+    return new Response('OK', { status: 200 }); // silently drop
+  }
 
   if (!env.TELEGRAM_BOT_TOKEN || !env.TELEGRAM_CHAT_ID) {
+    console.log(`[feedback] TELEGRAM secrets missing, type=${type} — message dropped`);
     return new Response('OK', { status: 200 }); // not configured yet — no-op, don't break the client
   }
 
@@ -152,7 +161,7 @@ async function handleFeedback(request, env) {
   if (pageUrl) parts.push(`🔗 ${pageUrl}`);
 
   try {
-    await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
+    const tgRes = await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       // No parse_mode — plain text, so user-supplied text can't break
@@ -163,8 +172,18 @@ async function handleFeedback(request, env) {
         disable_web_page_preview: true,
       }),
     });
-  } catch {
-    // Telegram delivery failure shouldn't surface as an error to the user.
+    // fetch() only throws on network failure — a non-2xx from Telegram
+    // itself (bad chat_id, bot blocked, rate limit) resolves normally and
+    // was previously invisible. Log it so a silent delivery gap shows up
+    // in `wrangler tail` instead of just "the user says it never arrived".
+    if (!tgRes.ok) {
+      const body = await tgRes.text().catch(() => '');
+      console.log(`[feedback] Telegram API rejected sendMessage: ${tgRes.status} ${body}`);
+    } else {
+      console.log(`[feedback] delivered to Telegram, type=${type}`);
+    }
+  } catch (err) {
+    console.log(`[feedback] Telegram fetch threw: ${err && err.message}`);
   }
 
   return new Response('OK', { status: 200 });
