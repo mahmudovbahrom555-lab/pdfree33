@@ -1,0 +1,66 @@
+[
+  {
+    "@type": "Question",
+    "name": "Worden mijn bestanden geüpload bij het bewerken van metadata?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. Het bewerken van metadata gebeurt volledig in je browser met pdf-lib. Bestanden verlaten nooit je apparaat."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bewaart of registreert PDFree mijn bestanden na verwerking?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. PDFree draait volledig in je browser — er is geen backendserver die je bestanden ontvangt. Omdat er niets wordt geüpload, kan er ook niets worden opgeslagen of gelogd. Het document bestaat alleen in het browsergeheugen tijdens de sessie en wordt gewist zodra je het tabblad sluit."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Welke metadatavelden toont en bewerkt PDFree?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree leest en schrijft het standaard PDF-documentinformatiewoordenboek: Titel, Auteur, Onderwerp, Trefwoorden, Maker (toepassing die de PDF heeft gemaakt) en Producent (gebruikte PDF-bibliotheek). De wijzigingsdatum wordt automatisch bijgewerkt bij het opslaan."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik alle metadata uit een PDF verwijderen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Je kunt elk of alle metadatavelden wissen voordat je opslaat. Handig om persoonlijke informatie te verwijderen voordat je een document deelt."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Verandert het bewerken van metadata de inhoud of het uiterlijk van de PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. Metadata wordt apart van de paginainhoud opgeslagen. Het bewerken of wissen van metadatavelden heeft geen enkel effect op tekst, afbeeldingen, lay-out of enig zichtbaar element van het document."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Vermindert het verwijderen van metadata de bestandsgrootte?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Een beetje — metadata is een klein onderdeel van de PDF-structuur. De vermindering in grootte is voor de meeste bestanden verwaarloosbaar, maar kan enkele kilobytes zijn."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik alle metadata zien die momenteel in mijn PDF staat?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Wanneer je een PDF uploadt, leest en toont PDFree alle bestaande metadatawaarden in de formuliervelden. Lege velden betekenen dat die gegevens niet in het bestand aanwezig zijn."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is er metadata die PDFree niet kan bewerken?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. XMP-metadatapakketten (uitgebreide metadata ingebed door sommige Adobe-producten) en aangepaste toepassingsspecifieke metadata zijn mogelijk niet bewerkbaar. PDFree bewerkt het standaard PDF-informatiewoordenboek, dat de meest voorkomende velden dekt."
+    }
+  }
+]

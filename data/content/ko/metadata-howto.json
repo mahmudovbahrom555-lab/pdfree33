@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDF 메타데이터 편집 방법",
+  "description": "PDF의 제목, 작성자, 주제, 키워드를 보고 변경하세요 — 업로드 불필요.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDF 열기",
+      "text": "'파일 선택'을 클릭하거나 PDF를 업로드 영역으로 드래그하세요. 현재 메타데이터가 즉시 표시됩니다."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "메타데이터 필드 편집 또는 삭제",
+      "text": "제목, 작성자, 주제, 키워드 필드를 업데이트하세요. 필드를 비워두면 해당 메타데이터가 완전히 제거됩니다."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "업데이트된 PDF 다운로드",
+      "text": "'메타데이터 편집'을 클릭하세요. 새 메타데이터가 포함된 PDF가 다운로드됩니다 — 파일 내용은 변경되지 않습니다."
+    }
+  ]
+}

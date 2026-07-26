@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Hoe je PDF-metadata bewerkt",
+  "description": "Bekijk en wijzig de titel, auteur, onderwerp en trefwoorden van een PDF — geen upload nodig.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Open je PDF",
+      "text": "Klik op 'Kies bestanden' of sleep je PDF naar het uploadvak. De huidige metadata wordt meteen getoond."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Bewerk of wis de metadatavelden",
+      "text": "Werk de velden titel, auteur, onderwerp en trefwoorden bij. Laat velden leeg om die metadata volledig te verwijderen."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Download de bijgewerkte PDF",
+      "text": "Klik op 'Metadata Bewerken'. Je PDF wordt gedownload met de nieuwe metadata ingebed — de inhoud van het bestand blijft ongewijzigd."
+    }
+  ]
+}

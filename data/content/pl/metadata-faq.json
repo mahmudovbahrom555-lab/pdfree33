@@ -1,0 +1,66 @@
+[
+  {
+    "@type": "Question",
+    "name": "Czy moje pliki są przesyłane podczas edycji metadanych?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie. Edycja metadanych odbywa się całkowicie w Twojej przeglądarce za pomocą pdf-lib. Pliki nigdy nie opuszczają Twojego urządzenia."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy PDFree przechowuje lub rejestruje moje pliki po przetworzeniu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie. PDFree działa całkowicie w Twojej przeglądarce — nie ma serwera zaplecza, który otrzymywałby Twoje pliki. Ponieważ nic nie jest przesyłane, nic nie może być przechowywane ani rejestrowane. Dokument istnieje wyłącznie w pamięci przeglądarki przez czas trwania sesji i jest usuwany po zamknięciu karty."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Jakie pola metadanych pokazuje i edytuje PDFree?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree odczytuje i zapisuje standardowy słownik informacji o dokumencie PDF: Tytuł, Autor, Temat, Słowa kluczowe, Twórca (aplikacja, która utworzyła PDF) i Producent (użyta biblioteka PDF). Data modyfikacji jest aktualizowana automatycznie przy zapisie."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy mogę usunąć wszystkie metadane z PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. Możesz wyczyścić dowolne lub wszystkie pola metadanych przed zapisaniem. Jest to przydatne do usuwania danych osobowych przed udostępnieniem dokumentu."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy edycja metadanych zmienia treść lub wygląd PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie. Metadane są przechowywane oddzielnie od treści strony. Edycja lub czyszczenie pól metadanych nie ma żadnego wpływu na tekst, obrazy, układ ani żaden widoczny element dokumentu."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy usunięcie metadanych zmniejsza rozmiar pliku?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nieznacznie — metadane to niewielka część struktury PDF. Zmniejszenie rozmiaru jest znikome dla większości plików, ale może wynieść kilka kilobajtów."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy mogę zobaczyć wszystkie metadane obecnie zawarte w moim PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. Po przesłaniu pliku PDF PDFree odczytuje i wyświetla wszystkie istniejące wartości metadanych w polach formularza. Puste pola oznaczają, że dane te nie występują w pliku."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy istnieją metadane, których PDFree nie może edytować?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. Pakiety metadanych XMP (rozszerzone metadane osadzane przez niektóre produkty Adobe) oraz niestandardowe metadane specyficzne dla aplikacji mogą być nieedytowalne. PDFree edytuje standardowy słownik informacji PDF obejmujący najczęściej używane pola."
+    }
+  }
+]

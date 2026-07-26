@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Come modificare i metadati PDF",
+  "description": "Visualizza e cambia titolo, autore, oggetto e parole chiave del PDF — senza upload necessario.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Apri il tuo PDF",
+      "text": "Clicca su 'Scegli file' oppure trascina il PDF nell'area di caricamento. I metadati attuali vengono mostrati immediatamente."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Modifica o svuota i campi dei metadati",
+      "text": "Aggiorna i campi titolo, autore, oggetto e parole chiave. Lascia i campi vuoti per rimuovere completamente quei metadati."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Scarica il PDF aggiornato",
+      "text": "Clicca su 'Modifica Metadati'. Il tuo PDF viene scaricato con i nuovi metadati incorporati — il contenuto del file resta invariato."
+    }
+  ]
+}

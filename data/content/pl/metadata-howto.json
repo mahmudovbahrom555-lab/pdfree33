@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Jak edytować metadane PDF",
+  "description": "Wyświetlaj i zmieniaj tytuł, autora, temat i słowa kluczowe pliku PDF — bez konieczności przesyłania.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Otwórz swój PDF",
+      "text": "Kliknij 'Wybierz pliki' lub przeciągnij PDF do obszaru przesyłania. Bieżące metadane są wyświetlane natychmiast."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Edytuj lub wyczyść pola metadanych",
+      "text": "Zaktualizuj pola tytułu, autora, tematu i słów kluczowych. Pozostaw pola puste, aby całkowicie usunąć te metadane."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Pobierz zaktualizowany PDF",
+      "text": "Kliknij 'Edytuj Metadane'. Twój PDF zostanie pobrany z osadzonymi nowymi metadanymi — zawartość pliku pozostaje niezmieniona."
+    }
+  ]
+}

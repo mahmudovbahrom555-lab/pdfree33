@@ -1688,6 +1688,12 @@
         "fr": "metadonnees-pdf",
         "id": "metadata-pdf",
         "vi": "chinh-sua-metadata-pdf",
+        "ru": "metadannye-pdf",
+        "ja": "pdf-metadeta",
+        "it": "metadati-pdf",
+        "ko": "pdf-metadeiteo",
+        "nl": "pdf-metadata",
+        "pl": "metadane-pdf",
         "tr": "pdf-meta-veri"
       },
       "titles": {
@@ -1698,6 +1704,12 @@
         "fr": "Modifier Métadonnées PDF Gratuit — Titre, Auteur, sans Envoi | PDFree",
         "id": "Edit Metadata PDF Online — Gratis, Tanpa Upload | PDFree",
         "vi": "Chỉnh Sửa Metadata PDF Trực Tuyến — Miễn Phí, Không Tải Lên | PDFree",
+        "ru": "Редактировать Метаданные PDF Онлайн — Бесплатно, Без Загрузки | PDFree",
+        "ja": "PDFメタデータをオンラインで編集 — 無料、アップロード不要 | PDFree",
+        "it": "Modifica Metadati PDF Online — Gratis, Senza Upload | PDFree",
+        "ko": "PDF 메타데이터 온라인 편집 — 무료, 업로드 없음 | PDFree",
+        "nl": "PDF Metadata Online Bewerken — Gratis, Geen Upload | PDFree",
+        "pl": "Edytuj Metadane PDF Online — Za Darmo, Bez Przesyłania | PDFree",
         "tr": "PDF Meta Verilerini Düzenle — Yazar, Başlık, Anahtar Kelimeler | PDFree"
       },
       "descs": {
@@ -1708,6 +1720,12 @@
         "fr": "Modifier ou supprimer les métadonnées d'un PDF gratuitement en ligne. 100 % privé — aucun envoi, sans inscription.",
         "id": "Lihat dan edit metadata PDF: judul, penulis, subjek, kata kunci. Diproses lokal — file tidak pernah diunggah.",
         "vi": "Xem và chỉnh sửa metadata PDF: tiêu đề, tác giả, chủ đề, từ khóa. Xử lý cục bộ — file không bao giờ được tải lên.",
+        "ru": "Просматривайте и редактируйте метаданные PDF: заголовок, автор, тема, ключевые слова. Обработка локально — файлы никогда не загружаются.",
+        "ja": "PDFのメタデータ（タイトル、作成者、件名、キーワード）を表示・編集します。ローカル処理 — ファイルは一切アップロードされません。",
+        "it": "Visualizza e modifica i metadati PDF: titolo, autore, oggetto, parole chiave. Elaborazione locale — i file non vengono mai caricati.",
+        "ko": "PDF 메타데이터(제목, 작성자, 주제, 키워드)를 보고 편집하세요. 로컬 처리 — 파일이 업로드되지 않습니다.",
+        "nl": "Bekijk en bewerk PDF-metadata: titel, auteur, onderwerp, trefwoorden. Lokaal verwerkt — bestanden worden nooit geüpload.",
+        "pl": "Wyświetlaj i edytuj metadane PDF: tytuł, autor, temat, słowa kluczowe. Przetwarzanie lokalne — pliki nigdy nie są przesyłane.",
         "tr": "PDF meta verilerini düzenleyin veya temizleyin: Yazar, Başlık, Konu, Anahtar Kelimeler. Tarayıcıda işleme — yükleme yok."
       },
       "navLabels": {
@@ -1718,6 +1736,12 @@
         "fr": "Métadonnées",
         "id": "Metadata",
         "vi": "Metadata",
+        "ru": "Метаданные",
+        "ja": "メタデータ",
+        "it": "Metadati",
+        "ko": "메타데이터",
+        "nl": "Metadata",
+        "pl": "Metadane",
         "tr": "Meta Veri"
       },
       "cardNames": {
@@ -1728,6 +1752,12 @@
         "fr": "Métadonnées PDF",
         "id": "Edit Metadata",
         "vi": "Chỉnh Sửa Metadata",
+        "ru": "Редактировать метаданные",
+        "ja": "メタデータを編集",
+        "it": "Modifica Metadati",
+        "ko": "메타데이터 편집",
+        "nl": "Metadata Bewerken",
+        "pl": "Edytuj Metadane",
         "tr": "PDF Meta Verisi"
       },
       "cardDescs": {
@@ -1738,6 +1768,12 @@
         "fr": "Afficher et modifier titre, auteur, mots-clés",
         "id": "Lihat dan edit judul, penulis, kata kunci",
         "vi": "Xem và chỉnh sửa tiêu đề, tác giả, từ khóa",
+        "ru": "Просматривайте и редактируйте заголовок, автора, ключевые слова",
+        "ja": "タイトル、作成者、キーワードを表示・編集",
+        "it": "Visualizza e modifica titolo, autore, parole chiave",
+        "ko": "제목, 작성자, 키워드 보기 및 편집",
+        "nl": "Titel, auteur, trefwoorden bekijken en bewerken",
+        "pl": "Wyświetlaj i edytuj tytuł, autora, słowa kluczowe",
         "tr": "PDF'nin Yazar, Başlık ve anahtar kelimelerini düzenleyin"
       },
       "breadcrumb": {
@@ -1748,6 +1784,12 @@
         "fr": "Métadonnées PDF",
         "id": "Edit Metadata PDF",
         "vi": "Metadata PDF",
+        "ru": "Метаданные PDF",
+        "ja": "PDFメタデータ",
+        "it": "Metadati PDF",
+        "ko": "PDF 메타데이터",
+        "nl": "PDF Metadata",
+        "pl": "Metadane PDF",
         "tr": "PDF Meta Verisi"
       },
       "metaDescs": {
@@ -1758,6 +1800,12 @@
         "fr": "Modifiez ou supprimez les métadonnées d'un PDF gratuitement — titre, auteur, sujet, mots-clés, date de création. Aucun envoi. Sans inscription.",
         "id": "Lihat dan edit metadata PDF — judul, penulis, subjek, kata kunci. Diproses lokal di browser, tidak pernah diunggah. Hapus info pribadi sebelum berbagi.",
         "vi": "Xem và chỉnh sửa metadata PDF — tiêu đề, tác giả, chủ đề, từ khóa. Xử lý cục bộ, không bao giờ tải lên. Xóa thông tin cá nhân trước khi chia sẻ.",
+        "ru": "Просматривайте и редактируйте метаданные PDF — заголовок, автор, тема, ключевые слова. Работает офлайн в браузере, файлы никогда не загружаются. Удаляйте личные данные перед публикацией. Бесплатно.",
+        "ja": "PDFのメタデータ（タイトル、作成者、件名、キーワード）を表示・編集。ブラウザでオフライン動作、アップロードなし。共有前に個人情報を削除。無料。",
+        "it": "Visualizza e modifica i metadati PDF — titolo, autore, oggetto, parole chiave. Funziona offline nel browser, mai caricato. Rimuovi informazioni personali prima di condividere. Gratis.",
+        "ko": "PDF 메타데이터(제목, 작성자, 주제, 키워드)를 보고 편집하세요. 브라우저에서 오프라인으로 작동, 업로드 없음. 공유 전에 개인정보 삭제. 무료.",
+        "nl": "Bekijk en bewerk PDF-metadata — titel, auteur, onderwerp, trefwoorden. Werkt offline in je browser, nooit geüpload. Verwijder persoonlijke info voor het delen. Gratis.",
+        "pl": "Wyświetlaj i edytuj metadane PDF — tytuł, autor, temat, słowa kluczowe. Działa offline w przeglądarce, nigdy nie przesyłane. Usuń dane osobowe przed udostępnieniem. Za darmo.",
         "tr": "PDF meta verilerini ücretsiz düzenleyin — Yazar, Başlık, Konu, Anahtar Kelimeler. Yükleme yok, kayıt gerekmez."
       },
       "ogTitles": {
@@ -1768,6 +1816,12 @@
         "fr": "Modifier Métadonnées PDF Gratuit — Titre, Auteur, Données Cachées",
         "id": "Hapus Nama Anda dari PDF — Edit Metadata Secara Pribadi, Gratis",
         "vi": "Xóa Tên Bạn Khỏi PDF — Chỉnh Sửa Metadata Riêng Tư, Miễn Phí",
+        "ru": "Удалите Своё Имя из PDF — Редактируйте Метаданные Приватно, Бесплатно",
+        "ja": "PDFからあなたの名前を削除 — メタデータをプライベートに編集、無料",
+        "it": "Rimuovi il Tuo Nome dai PDF — Modifica i Metadati in Privato, Gratis",
+        "ko": "PDF에서 이름 삭제 — 메타데이터를 비공개로 편집, 무료",
+        "nl": "Verwijder Je Naam uit PDF's — Bewerk Metadata Privé, Gratis",
+        "pl": "Usuń Swoje Imię z PDF-ów — Edytuj Metadane Prywatnie, Za Darmo",
         "tr": "PDF Meta Verilerini Düzenle Ücretsiz | PDFree"
       },
       "ogDescs": {
@@ -1778,6 +1832,12 @@
         "fr": "Modifier ou supprimer les métadonnées d'un PDF. Traitement dans le navigateur — aucun fichier envoyé. Gratuit.",
         "id": "Lihat dan edit metadata PDF: judul, penulis, subjek, kata kunci. Diproses di browser — file tidak pernah diunggah. Gratis.",
         "vi": "Xem và chỉnh sửa metadata PDF: tiêu đề, tác giả, chủ đề, từ khóa. Xử lý trong trình duyệt — file không bao giờ được tải lên. Miễn phí.",
+        "ru": "Просматривайте и редактируйте метаданные PDF: заголовок, автор, тема, ключевые слова. Обработка в браузере — файлы никогда не загружаются. Бесплатно.",
+        "ja": "PDFのメタデータ（タイトル、作成者、件名、キーワード）を表示・編集。ブラウザで処理 — ファイルは一切アップロードされません。無料。",
+        "it": "Visualizza e modifica i metadati PDF: titolo, autore, oggetto, parole chiave. Elaborato nel browser — i file non vengono mai caricati. Gratis.",
+        "ko": "PDF 메타데이터(제목, 작성자, 주제, 키워드)를 보고 편집하세요. 브라우저에서 처리 — 파일이 업로드되지 않습니다. 무료.",
+        "nl": "Bekijk en bewerk PDF-metadata: titel, auteur, onderwerp, trefwoorden. Verwerkt in je browser — bestanden worden nooit geüpload. Gratis.",
+        "pl": "Wyświetlaj i edytuj metadane PDF: tytuł, autor, temat, słowa kluczowe. Przetwarzane w przeglądarce — pliki nigdy nie są przesyłane. Za darmo.",
         "tr": "PDF meta verilerini düzenleyin veya temizleyin. Tarayıcıda işleme — dosyalar cihazınızı terk etmez."
       },
       "keywords": {
@@ -1788,6 +1848,12 @@
         "fr": "métadonnées pdf, modifier les métadonnées d'un pdf, propriétés pdf, supprimer les métadonnées pdf, éditeur d'auteur pdf",
         "id": "metadata pdf, edit metadata pdf, properti pdf, hapus metadata pdf, ubah pengarang pdf",
         "vi": "metadata pdf, chỉnh sửa metadata pdf, thuộc tính pdf, xóa metadata pdf, chỉnh sửa tác giả pdf",
+        "ru": "метаданные pdf, редактировать метаданные pdf, свойства pdf, удалить метаданные pdf, редактор автора pdf",
+        "ja": "pdf メタデータ編集, pdf メタデータ, pdf プロパティ編集, pdf メタデータ削除, pdf 作成者編集",
+        "it": "editor metadati pdf, modificare metadati pdf, proprietà pdf, rimuovere metadati pdf, editor autore pdf",
+        "ko": "pdf 메타데이터 편집기, pdf 메타데이터 편집, pdf 속성 편집기, pdf 메타데이터 삭제, pdf 작성자 편집",
+        "nl": "pdf metadata editor, pdf metadata bewerken, pdf eigenschappen editor, pdf metadata verwijderen, pdf auteur bewerken",
+        "pl": "edytor metadanych pdf, edytuj metadane pdf, właściwości pdf, usuń metadane pdf, edytor autora pdf",
         "tr": "pdf meta verisi, pdf meta verisini düzenle, pdf özellikleri, pdf meta verisini kaldır, pdf yazar düzenleyici"
       }
     },
