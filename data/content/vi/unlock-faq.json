@@ -1,0 +1,58 @@
+[
+  {
+    "@type": "Question",
+    "name": "PDF hoặc mật khẩu của tôi có bị tải lên đâu không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không. Việc xóa mật khẩu diễn ra hoàn toàn trong trình duyệt của bạn bằng QPDF (WebAssembly). Cả file lẫn mật khẩu của bạn đều không được gửi đến bất kỳ máy chủ nào."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFree có lưu trữ hay ghi lại file của tôi sau khi xử lý không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không. PDFree chạy hoàn toàn trong trình duyệt của bạn — không có máy chủ backend nào nhận file của bạn. Vì không có gì được tải lên nên không có gì có thể được lưu trữ, ghi lại. Tài liệu của bạn chỉ tồn tại trong bộ nhớ trình duyệt trong phiên làm việc và bị xóa khi bạn đóng tab."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Công cụ này có thể khôi phục hoặc bẻ khóa mật khẩu tôi không biết không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không. Bạn phải biết mật khẩu đúng của PDF. PDFree xóa bảo vệ khỏi các file bạn đã được phép mở — nó không đoán, khôi phục hay vượt qua mật khẩu chưa biết."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Nếu PDF của tôi báo \"không cần mật khẩu\" thì sao?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Một số PDF chỉ có hạn chế cấp chủ sở hữu (như tắt in hoặc sao chép) mà không cần mật khẩu để mở. PDFree tự động phát hiện điều này và cho phép bạn xóa các hạn chế đó mà không cần gõ gì cả."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Tôi đã nhập mật khẩu nhưng báo sai. Giờ phải làm sao?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Kiểm tra lại lỗi gõ, khoảng trắng thừa, hoặc caps lock. Mật khẩu phân biệt chữ hoa/thường. File của bạn vẫn được chọn, nên bạn có thể thử lại ngay."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Đây có phải công cụ mở khóa PDF miễn phí, không cần đăng ký?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Đúng vậy. PDFree hoàn toàn miễn phí — không đăng ký, không tài khoản, không cài đặt. Mở công cụ, nhập mật khẩu, và tải xuống PDF đã mở khóa."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Tôi có thể đặt lại mật khẩu sau này không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có — dùng Bảo Vệ PDF để thêm mật khẩu hoặc hạn chế mới cho file đã mở khóa."
+    }
+  }
+]

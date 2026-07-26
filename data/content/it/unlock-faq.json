@@ -1,0 +1,58 @@
+[
+  {
+    "@type": "Question",
+    "name": "Il mio PDF o la mia password vengono caricati da qualche parte?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. La rimozione della password avviene interamente nel tuo browser usando QPDF (WebAssembly). Né il file né la password vengono inviati a nessun server."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFree memorizza o registra i miei file dopo l'elaborazione?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. PDFree funziona interamente nel tuo browser — non esiste un server backend che riceve i tuoi file. Poiché niente viene caricato, niente può essere memorizzato, registrato o conservato. Il tuo documento esiste solo nella memoria del browser per la durata della sessione e viene cancellato quando chiudi la scheda."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Può recuperare o decifrare una password che non conosco?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Devi conoscere la password corretta del PDF. PDFree rimuove la protezione da file che sei già autorizzato ad aprire — non indovina, recupera o aggira password sconosciute."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Cosa succede se il mio PDF dice \"nessuna password necessaria\"?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Alcuni PDF hanno solo restrizioni a livello proprietario (come stampa o copia disabilitate) senza password richiesta per aprirli. PDFree lo rileva automaticamente e ti permette di rimuovere quelle restrizioni senza digitare nulla."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Ho inserito la password ma dice che è errata. Cosa faccio?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Controlla eventuali errori di battitura, spazi extra o il tasto maiuscolo. Le password distinguono maiuscole e minuscole. Il tuo file resta selezionato, quindi puoi semplicemente riprovare."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "È un rimozione password PDF gratuito senza registrazione?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. PDFree è completamente gratuito — nessuna registrazione, nessun account, nessuna installazione. Apri lo strumento, inserisci la password e scarica il PDF sbloccato."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso aggiungere di nuovo una password in seguito?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì — usa Proteggi PDF per aggiungere una nuova password o restrizioni al file sbloccato."
+    }
+  }
+]

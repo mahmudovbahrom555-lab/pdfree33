@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Come sbloccare un PDF",
+  "description": "Rimuovi la protezione con password da un PDF usando la password corretta — al 100% nel tuo browser.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Carica il tuo PDF",
+      "text": "Clicca su 'Scegli file' oppure trascina il PDF nell'area di caricamento."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Inserisci la password",
+      "text": "Digita la password attuale del PDF, se richiesta."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Scarica il PDF sbloccato",
+      "text": "Clicca su 'Rimuovi Protezione Password'. La copia sbloccata viene scaricata immediatamente."
+    }
+  ]
+}

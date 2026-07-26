@@ -1,0 +1,58 @@
+[
+  {
+    "@type": "Question",
+    "name": "Apakah PDF atau kata sandi saya diunggah ke suatu tempat?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak. Penghapusan kata sandi terjadi sepenuhnya di browser Anda menggunakan QPDF (WebAssembly). Baik file maupun kata sandi Anda tidak dikirim ke server mana pun."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah PDFree menyimpan atau mencatat file saya setelah diproses?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak. PDFree berjalan sepenuhnya di browser Anda — tidak ada server backend yang menerima file Anda. Karena tidak ada yang diunggah, tidak ada yang bisa disimpan, dicatat, atau dipertahankan. Dokumen Anda hanya ada di memori browser selama sesi berlangsung dan terhapus saat Anda menutup tab."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah ini memulihkan atau membobol kata sandi yang tidak saya ketahui?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak. Anda harus tahu kata sandi PDF yang benar. PDFree menghapus proteksi dari file yang sudah Anda punya izin untuk membukanya — bukan menebak, memulihkan, atau melewati kata sandi yang tidak diketahui."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bagaimana jika PDF saya bilang \"tidak perlu kata sandi\"?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Beberapa PDF hanya memiliki pembatasan level pemilik (seperti cetak atau salin dinonaktifkan) tanpa kata sandi untuk membukanya. PDFree mendeteksi ini otomatis dan membiarkan Anda menghapus pembatasan tersebut tanpa mengetik apa pun."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Saya sudah masukkan kata sandi tapi katanya salah. Bagaimana?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Periksa kembali kesalahan ketik, spasi tambahan, atau caps lock. Kata sandi peka huruf besar/kecil. File Anda tetap terpilih, jadi Anda bisa mencoba lagi."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah ini pembuka kunci PDF gratis tanpa pendaftaran?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ya. PDFree sepenuhnya gratis — tanpa pendaftaran, tanpa akun, tanpa instalasi. Buka alatnya, masukkan kata sandi, dan unduh PDF yang sudah terbuka."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah saya menambahkan kata sandi lagi nanti?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Bisa — gunakan Lindungi PDF untuk menambahkan kata sandi atau pembatasan baru ke file yang sudah terbuka."
+    }
+  }
+]

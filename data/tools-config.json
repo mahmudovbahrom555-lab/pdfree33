@@ -3123,6 +3123,14 @@
         "es": "desbloquear-pdf",
         "fr": "deverrouiller-pdf",
         "pt": "desbloquear-pdf",
+        "id": "buka-kunci-pdf",
+        "vi": "mo-khoa-pdf",
+        "ru": "razblokirovat-pdf",
+        "ja": "pdf-kaijo",
+        "it": "sblocca-pdf",
+        "ko": "pdf-jamgeum-haeje",
+        "nl": "pdf-ontgrendelen",
+        "pl": "odblokuj-pdf",
         "tr": "pdf-sifre-kaldir"
       },
       "titles": {
@@ -3131,6 +3139,14 @@
         "es": "Desbloquear PDF — Quitar Contraseña, Sin Subir | PDFree",
         "fr": "Déverrouiller PDF — Supprimer le Mot de Passe | PDFree",
         "pt": "Desbloquear PDF — Remover Senha, Sem Upload | PDFree",
+        "id": "Buka Kunci PDF — Hapus Proteksi Kata Sandi, Tanpa Upload | PDFree",
+        "vi": "Mở Khóa PDF — Xóa Bảo Vệ Mật Khẩu, Không Tải Lên | PDFree",
+        "ru": "Разблокировать PDF — Снять Защиту Паролем, Без Загрузки | PDFree",
+        "ja": "PDFのロック解除 — パスワード保護を削除、アップロード不要 | PDFree",
+        "it": "Sblocca PDF — Rimuovi Protezione Password, Senza Upload | PDFree",
+        "ko": "PDF 잠금 해제 — 비밀번호 보호 제거, 업로드 없음 | PDFree",
+        "nl": "PDF Ontgrendelen — Wachtwoordbeveiliging Verwijderen, Geen Upload | PDFree",
+        "pl": "Odblokuj PDF — Usuń Zabezpieczenie Hasłem, Bez Przesyłania | PDFree",
         "tr": "PDF Şifresini Kaldır — Ücretsiz, Yükleme Yapmadan | PDFree"
       },
       "descs": {
@@ -3139,6 +3155,14 @@
         "es": "Elimina la protección por contraseña del PDF — funciona en tu navegador, sin subida.",
         "fr": "Supprimez la protection par mot de passe du PDF — s'exécute dans votre navigateur, sans envoi.",
         "pt": "Remova a proteção por senha do PDF — funciona no seu navegador, sem upload.",
+        "id": "Hapus proteksi kata sandi PDF — berjalan di browser Anda, tanpa upload.",
+        "vi": "Xóa bảo vệ mật khẩu PDF — chạy trong trình duyệt của bạn, không tải lên.",
+        "ru": "Снимите защиту паролем с PDF — работает в вашем браузере, без загрузки.",
+        "ja": "PDFのパスワード保護を削除 — ブラウザ内で動作、アップロード不要。",
+        "it": "Rimuovi la protezione con password dal PDF — funziona nel tuo browser, senza upload.",
+        "ko": "PDF 비밀번호 보호를 제거하세요 — 브라우저에서 실행, 업로드 없음.",
+        "nl": "Verwijder PDF-wachtwoordbeveiliging — werkt in je browser, geen upload.",
+        "pl": "Usuń zabezpieczenie hasłem z PDF — działa w przeglądarce, bez przesyłania.",
         "tr": "PDF'den parola korumasını kaldırın. Kullanıcı kısıtlamalarını ve şifreyi tek tıkla kaldırın. Tarayıcıda işleme — yükleme yok."
       },
       "navLabels": {
@@ -3147,6 +3171,14 @@
         "es": "Desbloquear PDF",
         "fr": "Déverrouiller PDF",
         "pt": "Desbloquear PDF",
+        "id": "Buka Kunci PDF",
+        "vi": "Mở Khóa PDF",
+        "ru": "Разблокировать PDF",
+        "ja": "PDFのロック解除",
+        "it": "Sblocca PDF",
+        "ko": "PDF 잠금 해제",
+        "nl": "PDF Ontgrendelen",
+        "pl": "Odblokuj PDF",
         "tr": "PDF Kilidi Aç"
       },
       "cardNames": {
@@ -3155,6 +3187,14 @@
         "es": "Desbloquear PDF",
         "fr": "Déverrouiller PDF",
         "pt": "Desbloquear PDF",
+        "id": "Buka Kunci PDF",
+        "vi": "Mở Khóa PDF",
+        "ru": "Разблокировать PDF",
+        "ja": "PDFのロック解除",
+        "it": "Sblocca PDF",
+        "ko": "PDF 잠금 해제",
+        "nl": "PDF Ontgrendelen",
+        "pl": "Odblokuj PDF",
         "tr": "PDF Kilidi Aç"
       },
       "cardDescs": {
@@ -3163,6 +3203,14 @@
         "es": "Elimina la protección por contraseña localmente",
         "fr": "Supprimer la protection par mot de passe localement",
         "pt": "Remova a proteção por senha localmente",
+        "id": "Hapus proteksi kata sandi secara lokal",
+        "vi": "Xóa bảo vệ mật khẩu cục bộ",
+        "ru": "Снимите защиту паролем локально",
+        "ja": "パスワード保護をローカルで削除",
+        "it": "Rimuovi la protezione password localmente",
+        "ko": "로컬에서 비밀번호 보호 제거",
+        "nl": "Verwijder wachtwoordbeveiliging lokaal",
+        "pl": "Usuń zabezpieczenie hasłem lokalnie",
         "tr": "PDF'den parola ve kısıtlamaları kaldırın"
       },
       "breadcrumb": {
@@ -3171,6 +3219,14 @@
         "es": "Desbloquear PDF",
         "fr": "Déverrouiller PDF",
         "pt": "Desbloquear PDF",
+        "id": "Buka Kunci PDF",
+        "vi": "Mở Khóa PDF",
+        "ru": "Разблокировать PDF",
+        "ja": "PDFのロック解除",
+        "it": "Sblocca PDF",
+        "ko": "PDF 잠금 해제",
+        "nl": "PDF Ontgrendelen",
+        "pl": "Odblokuj PDF",
         "tr": "PDF Kilidi Aç"
       },
       "metaDescs": {
@@ -3195,6 +3251,14 @@
         "es": "Desbloquear PDF Gratis — Eliminar Contraseña, Sin Subir",
         "fr": "Déverrouiller PDF Gratuit — Supprimer Mot de Passe, Sans Envoi",
         "pt": "Desbloquear PDF Grátis — Remover Proteção por Senha, Sem Upload",
+        "id": "Buka Kunci PDF Gratis — Hapus Proteksi Kata Sandi, Tanpa Upload",
+        "vi": "Mở Khóa PDF Miễn Phí — Xóa Bảo Vệ Mật Khẩu, Không Tải Lên",
+        "ru": "Разблокировать PDF Бесплатно — Снять Защиту Паролем, Без Загрузки",
+        "ja": "PDFのロック解除 無料 — パスワード保護を削除、アップロード不要",
+        "it": "Sblocca PDF Gratis — Rimuovi Protezione Password, Senza Upload",
+        "ko": "PDF 잠금 해제 무료 — 비밀번호 보호 제거, 업로드 없음",
+        "nl": "PDF Ontgrendelen Gratis — Wachtwoordbeveiliging Verwijderen, Geen Upload",
+        "pl": "Odblokuj PDF Za Darmo — Usuń Zabezpieczenie Hasłem, Bez Przesyłania",
         "tr": "PDF Şifresini Kaldır Ücretsiz — Yükleme Yok | PDFree"
       },
       "ogDescs": {
@@ -3203,6 +3267,14 @@
         "es": "La eliminación de contraseña PDF se ejecuta completamente en tu navegador. Sin subida, sin servidor, sin cuenta. 100% privado.",
         "fr": "La suppression du mot de passe PDF s'exécute entièrement dans votre navigateur. Sans envoi, sans serveur, sans compte. 100 % privé.",
         "pt": "A remoção de senha do PDF é executada inteiramente no seu navegador. Sem upload, sem servidor, sem conta. 100% privado.",
+        "id": "Penghapusan kata sandi PDF yang berjalan sepenuhnya di browser Anda. Tanpa upload, tanpa server, tanpa akun. 100% pribadi.",
+        "vi": "Xóa mật khẩu PDF chạy hoàn toàn trong trình duyệt của bạn. Không tải lên, không máy chủ, không tài khoản. 100% riêng tư.",
+        "ru": "Удаление пароля PDF полностью в вашем браузере. Без загрузки, без сервера, без аккаунта. 100% конфиденциально.",
+        "ja": "PDFのパスワード削除は完全にブラウザ内で実行されます。アップロードなし、サーバーなし、アカウント不要。100%プライベート。",
+        "it": "La rimozione della password PDF avviene interamente nel tuo browser. Nessun upload, nessun server, nessun account. 100% privato.",
+        "ko": "PDF 비밀번호 제거는 브라우저에서 완전히 실행됩니다. 업로드 없음, 서버 없음, 계정 불필요. 100% 비공개.",
+        "nl": "Het verwijderen van het PDF-wachtwoord gebeurt volledig in je browser. Geen upload, geen server, geen account. 100% privé.",
+        "pl": "Usuwanie hasła PDF odbywa się całkowicie w przeglądarce. Bez przesyłania, bez serwera, bez konta. 100% prywatności.",
         "tr": "PDF'den parola korumasını kaldırın. Tarayıcıda işleme — dosyalar cihazınızı terk etmez."
       },
       "keywords": {
@@ -3211,6 +3283,14 @@
         "pt": "desbloquear pdf, remover senha do pdf, tirar senha do pdf, abrir pdf protegido, desencriptar pdf online",
         "de": "pdf entsperren, pdf passwort entfernen, pdf passwort löschen, geschütztes pdf öffnen, pdf online entschlüsseln",
         "fr": "déverrouiller pdf, supprimer le mot de passe d'un pdf, retirer mot de passe pdf, ouvrir pdf protégé, décrypter pdf en ligne",
+        "id": "buka kunci pdf, hapus password pdf, hapus kata sandi dari pdf, buka pdf terkunci, dekripsi pdf online",
+        "vi": "mở khóa pdf, xóa mật khẩu pdf, gỡ mật khẩu khỏi pdf, mở pdf bị khóa, giải mã pdf trực tuyến",
+        "ru": "разблокировать pdf, снять пароль с pdf, удалить пароль из pdf, открыть защищенный pdf, расшифровать pdf онлайн",
+        "ja": "pdf ロック解除, pdf パスワード削除, pdf パスワードを外す, 保護されたpdfを開く, pdf 復号 オンライン",
+        "it": "sbloccare pdf, rimuovere password da pdf, togliere password pdf, aprire pdf protetto, decrittare pdf online",
+        "ko": "pdf 잠금 해제, pdf 비밀번호 제거, pdf에서 암호 삭제, 보호된 pdf 열기, pdf 복호화 온라인",
+        "nl": "pdf ontgrendelen, wachtwoord verwijderen van pdf, pdf wachtwoord weghalen, beveiligde pdf openen, pdf online decoderen",
+        "pl": "odblokuj pdf, usuń hasło z pdf, skasuj hasło pdf, otwórz zabezpieczony pdf, odszyfruj pdf online",
         "tr": "pdf kilidini aç, pdf şifresini kaldır, pdf şifresini sil, korumalı pdf aç, pdf şifre çöz online"
       }
     }

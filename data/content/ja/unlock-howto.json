@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDFのロックを解除する方法",
+  "description": "正しいパスワードを使ってPDFのパスワード保護を削除します — 100%ブラウザ内で処理。",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDFをアップロード",
+      "text": "「ファイルを選択」をクリックするか、PDFをドロップ領域にドラッグします。"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "パスワードを入力",
+      "text": "必要であれば、PDFの現在のパスワードを入力します。"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "ロック解除したPDFをダウンロード",
+      "text": "「パスワード保護を削除」をクリックします。ロック解除したコピーがすぐにダウンロードされます。"
+    }
+  ]
+}

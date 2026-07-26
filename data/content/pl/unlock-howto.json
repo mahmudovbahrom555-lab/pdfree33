@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Jak odblokować PDF",
+  "description": "Usuń zabezpieczenie hasłem z pliku PDF przy użyciu poprawnego hasła — w 100% w Twojej przeglądarce.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Prześlij swój PDF",
+      "text": "Kliknij 'Wybierz pliki' lub przeciągnij PDF do obszaru przesyłania."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Wprowadź hasło",
+      "text": "Wpisz aktualne hasło pliku PDF, jeśli jest wymagane."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Pobierz odblokowany PDF",
+      "text": "Kliknij 'Usuń Zabezpieczenie Hasłem'. Odblokowana kopia zostanie pobrana natychmiast."
+    }
+  ]
+}

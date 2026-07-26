@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Cara Membuka Kunci PDF",
+  "description": "Hapus proteksi kata sandi dari PDF menggunakan kata sandi yang benar — 100% di browser Anda.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Unggah PDF Anda",
+      "text": "Klik 'Pilih file' atau seret PDF ke area unggah."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Masukkan kata sandi",
+      "text": "Ketik kata sandi PDF saat ini, jika diperlukan."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Unduh PDF yang terbuka",
+      "text": "Klik 'Hapus Proteksi Kata Sandi'. Salinan yang terbuka langsung diunduh."
+    }
+  ]
+}

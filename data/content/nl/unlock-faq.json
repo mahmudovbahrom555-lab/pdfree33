@@ -1,0 +1,58 @@
+[
+  {
+    "@type": "Question",
+    "name": "Wordt mijn PDF of wachtwoord ergens geüpload?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. Het verwijderen van het wachtwoord gebeurt volledig in je browser met QPDF (WebAssembly). Noch je bestand, noch je wachtwoord wordt naar een server gestuurd."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bewaart of registreert PDFree mijn bestanden na verwerking?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. PDFree draait volledig in je browser — er is geen backendserver die je bestanden ontvangt. Omdat er niets wordt geüpload, kan er ook niets worden opgeslagen, gelogd of bewaard. Je document bestaat alleen in het browsergeheugen tijdens de sessie en wordt gewist zodra je het tabblad sluit."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan dit een wachtwoord herstellen of kraken dat ik niet ken?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. Je moet het juiste wachtwoord van de PDF kennen. PDFree verwijdert beveiliging van bestanden die je al mag openen — het raadt, herstelt of omzeilt geen onbekende wachtwoorden."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Wat als mijn PDF zegt dat er geen wachtwoord nodig is?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sommige PDF's hebben alleen beperkingen op eigenaarsniveau (zoals uitgeschakeld printen of kopiëren) zonder dat er een wachtwoord nodig is om ze te openen. PDFree detecteert dit automatisch en laat je die beperkingen verwijderen zonder iets te typen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Ik heb het wachtwoord ingevoerd, maar het is onjuist. Wat nu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Controleer op typefouten, extra spaties of caps lock. Wachtwoorden zijn hoofdlettergevoelig. Je bestand blijft geselecteerd, dus je kunt het gewoon opnieuw proberen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is dit een gratis PDF-wachtwoordverwijderaar zonder registratie?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. PDFree is volledig gratis — geen registratie, geen account, geen installatie. Open de tool, voer het wachtwoord in en download de ontgrendelde PDF."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik later weer een wachtwoord toevoegen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja — gebruik PDF Beveiligen om een nieuw wachtwoord of nieuwe beperkingen aan het ontgrendelde bestand toe te voegen."
+    }
+  }
+]

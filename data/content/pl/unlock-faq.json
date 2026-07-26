@@ -1,0 +1,58 @@
+[
+  {
+    "@type": "Question",
+    "name": "Czy mój PDF lub hasło są gdziekolwiek przesyłane?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie. Usuwanie hasła odbywa się całkowicie w Twojej przeglądarce za pomocą QPDF (WebAssembly). Ani plik, ani hasło nie są wysyłane na żaden serwer."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy PDFree przechowuje lub rejestruje moje pliki po przetworzeniu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie. PDFree działa całkowicie w Twojej przeglądarce — nie ma serwera zaplecza, który otrzymywałby Twoje pliki. Ponieważ nic nie jest przesyłane, nic nie może być przechowywane, rejestrowane ani zachowywane. Twój dokument istnieje wyłącznie w pamięci przeglądarki przez czas trwania sesji i jest usuwany po zamknięciu karty."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy może to odzyskać lub złamać hasło, którego nie znam?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie. Musisz znać poprawne hasło do PDF-a. PDFree usuwa zabezpieczenie z plików, które już masz prawo otworzyć — nie zgaduje, nie odzyskuje ani nie omija nieznanych haseł."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Co jeśli mój PDF mówi „hasło niepotrzebne”?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Niektóre pliki PDF mają tylko ograniczenia na poziomie właściciela (np. wyłączony druk lub kopiowanie) bez hasła wymaganego do otwarcia. PDFree wykrywa to automatycznie i pozwala usunąć te ograniczenia bez wpisywania czegokolwiek."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Wpisałem hasło, ale system mówi, że jest błędne. Co teraz?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sprawdź literówki, dodatkowe spacje lub caps lock. Hasła rozróżniają wielkość liter. Twój plik pozostaje wybrany, więc możesz po prostu spróbować ponownie."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy to darmowe narzędzie do usuwania hasła PDF bez rejestracji?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. PDFree jest całkowicie darmowe — bez rejestracji, bez konta, bez instalacji. Otwórz narzędzie, wprowadź hasło i pobierz odblokowany PDF."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy mogę później ponownie dodać hasło?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak — użyj Zabezpiecz PDF, aby dodać nowe hasło lub ograniczenia do odblokowanego pliku."
+    }
+  }
+]

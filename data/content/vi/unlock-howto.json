@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Cách Mở Khóa PDF",
+  "description": "Xóa bảo vệ mật khẩu khỏi PDF bằng mật khẩu đúng — 100% trong trình duyệt của bạn.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Tải lên PDF của bạn",
+      "text": "Nhấp 'Chọn file' hoặc kéo PDF vào khu vực tải lên."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Nhập mật khẩu",
+      "text": "Gõ mật khẩu hiện tại của PDF, nếu cần."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Tải xuống PDF đã mở khóa",
+      "text": "Nhấp 'Xóa Bảo Vệ Mật Khẩu'. Bản sao đã mở khóa được tải xuống ngay."
+    }
+  ]
+}
