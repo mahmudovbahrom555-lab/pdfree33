@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Hoe je een PDF afvlakt",
+  "description": "Bak formuliervelden permanent in de PDF-pagina — gratis, geen upload vereist.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Open je ingevulde PDF",
+      "text": "Klik op 'Kies bestanden' of sleep je ingevulde PDF naar het uploadvak."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Klik op PDF Afvlakken",
+      "text": "Druk op de knop PDF Afvlakken. Alle interactieve elementen worden in je browser samengevoegd met de statische pagina-inhoud."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Download de vergrendelde PDF",
+      "text": "Je afgevlakte PDF wordt direct gedownload. Velden zijn nu permanent — het document kan door geen enkele ontvanger worden bewerkt."
+    }
+  ]
+}

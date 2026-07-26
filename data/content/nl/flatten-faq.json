@@ -1,0 +1,66 @@
+[
+  {
+    "@type": "Question",
+    "name": "Wat doet het afvlakken van een PDF eigenlijk?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Afvlakken combineert alle interactieve lagen — formuliervelden, annotaties, digitale handtekeningen en overlays — met de statische pagina-inhoud. Het resultaat is een platte, niet-interactieve PDF die er identiek uitziet als het origineel maar niet kan worden bewerkt."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bewaart of registreert PDFree mijn bestanden na verwerking?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. PDFree draait volledig in je browser — er is geen backendserver die je bestanden ontvangt. Omdat er niets wordt geüpload, kan er ook niets worden opgeslagen of gelogd. Het document bestaat alleen in het browsergeheugen tijdens de sessie en wordt gewist zodra je het tabblad sluit."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik een afgevlakte PDF terugdraaien?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. Afvlakken is onomkeerbaar — de originele formuliervelden worden permanent vervangen door statische visuele inhoud. Bewaar altijd een back-up van je originele ingevulde PDF voordat je afvlakt, als je denkt dat je later waarden moet wijzigen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Verwijdert afvlakken digitale handtekeningen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Getekende handtekeningen gemaakt met de PDF Invullen-tool (afbeeldingen van het handtekeningveld) worden in de pagina afgevlakt. Cryptografische digitale handtekeningen van gecertificeerde e-handtekeningaanbieders kunnen anders worden behandeld — het visuele uiterlijk blijft behouden, maar het cryptografische certificaat kan na afvlakken mogelijk niet meer worden gevalideerd."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Wordt mijn PDF naar een server geüpload tijdens het afvlakken?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. Alles gebeurt in je browser met pdf-lib. Noch je originele PDF, noch het afgevlakte resultaat wordt ooit ergens naartoe gestuurd. Je document en de inhoud ervan blijven altijd op je apparaat."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Waarom afvlakken in plaats van de ingevulde PDF gewoon op te slaan?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Een opgeslagen ingevulde PDF bevat nog steeds bewerkbare velden — een ontvanger kan je waarden wissen en opnieuw invullen. Afvlakken vergrendelt de inhoud permanent in de pagina, voorkomt bewerking, zorgt voor consistente weergave in alle PDF-viewers en verwijdert verborgen formuliermetadata uit het bestand."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Vermindert het afvlakken van een PDF de bestandsgrootte?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Vaak een beetje. Afvlakken verwijdert interactieve formulierwidgetgegevens en JavaScript, wat de bestandsgrootte vermindert voor formulieren met veel velden. Afbeeldingen en ingesloten lettertypen blijven echter ongewijzigd door afvlakken. Voor een aanzienlijke vermindering, gebruik na het afvlakken een PDF-compressietool."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Wat is het verschil tussen een PDF afvlakken en met een wachtwoord beveiligen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ze lossen verschillende problemen op. Afvlakken verwijdert de interactieve formulierstructuur volledig — er zijn geen velden om te bewerken, ongeacht rechten. Wachtwoordbeveiliging beperkt toegang of bewerkingsrechten, maar laat formuliervelden intact; iemand met het wachtwoord kan een invulbaar formulier nog steeds wijzigen. Voor maximale beveiliging vlak je eerst af om de inhoud vast te leggen, en voeg je daarna een wachtwoord toe."
+    }
+  }
+]

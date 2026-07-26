@@ -1,0 +1,66 @@
+[
+  {
+    "@type": "Question",
+    "name": "Cosa fa realmente l'appiattimento di un PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "L'appiattimento unisce tutti i livelli interattivi — campi modulo, annotazioni, firme digitali e sovrapposizioni — nel contenuto statico della pagina. Il risultato è un PDF piatto e non interattivo che appare identico all'originale ma non può essere modificato."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFree memorizza o registra i miei file dopo l'elaborazione?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. PDFree funziona interamente nel tuo browser — non esiste un server backend che riceve i tuoi file. Poiché niente viene caricato, niente può essere memorizzato o registrato. Il documento esiste solo nella memoria del browser per la durata della sessione e viene cancellato quando chiudi la scheda."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso annullare l'appiattimento di un PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. L'appiattimento è irreversibile — i campi modulo originali vengono sostituiti permanentemente da contenuto visivo statico. Conserva sempre una copia di backup del tuo PDF compilato originale prima di appiattirlo, se pensi che potresti aver bisogno di cambiare i valori in seguito."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "L'appiattimento rimuove le firme digitali?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Le firme disegnate create con lo strumento Compila PDF (immagini del riquadro firma) vengono appiattite nella pagina. Le firme digitali crittografiche di fornitori di firma elettronica certificati potrebbero essere gestite diversamente — l'aspetto visivo viene preservato ma il certificato crittografico potrebbe non essere più valido dopo l'appiattimento."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Il mio PDF viene caricato su qualche server durante l'appiattimento?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Tutto avviene nel tuo browser usando pdf-lib. Né il tuo PDF originale né il risultato appiattito vengono mai inviati da nessuna parte. Il tuo documento e i suoi contenuti restano sempre sul tuo dispositivo."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Perché appiattire invece di salvare semplicemente il PDF compilato?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Un PDF compilato salvato contiene ancora campi modificabili — un destinatario potrebbe cancellare i tuoi valori e ricompilarlo. L'appiattimento blocca permanentemente il contenuto nella pagina, impedisce la modifica, garantisce un rendering coerente in tutti i visualizzatori PDF e rimuove i metadati nascosti del modulo dal file."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Appiattire un PDF riduce la dimensione del file?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Spesso leggermente. L'appiattimento rimuove i dati dei widget modulo interattivi e il JavaScript, il che riduce la dimensione del file per moduli con molti campi. Tuttavia, immagini e font incorporati non vengono influenzati dall'appiattimento. Per una riduzione significativa della dimensione, esegui l'output attraverso uno strumento di compressione PDF dopo l'appiattimento."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Qual è la differenza tra appiattire un PDF e proteggerlo con password?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Risolvono problemi diversi. L'appiattimento rimuove completamente la struttura del modulo interattivo — non esistono campi da modificare, indipendentemente dai permessi. La protezione con password limita l'accesso o i diritti di modifica ma lascia intatti i campi modulo; chi ha la password potrebbe comunque modificare un modulo compilabile. Per la massima sicurezza, appiattisci prima per bloccare il contenuto, poi aggiungi una password."
+    }
+  }
+]

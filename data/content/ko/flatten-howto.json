@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDF 평면화 방법",
+  "description": "양식 필드를 PDF 페이지에 영구적으로 반영하세요 — 무료, 업로드 불필요.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "작성된 PDF 열기",
+      "text": "'파일 선택'을 클릭하거나 작성된 PDF를 업로드 영역으로 드래그하세요."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "PDF 평면화 클릭",
+      "text": "PDF 평면화 버튼을 누르세요. 모든 대화형 요소가 브라우저에서 정적 페이지 콘텐츠로 병합됩니다."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "잠긴 PDF 다운로드",
+      "text": "평면화된 PDF가 즉시 다운로드됩니다. 필드는 이제 영구적이며 어떤 받는 사람도 문서를 편집할 수 없습니다."
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Jak spłaszczyć PDF",
+  "description": "Wpisz pola formularza na stałe w stronę PDF — za darmo, bez konieczności przesyłania.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Otwórz wypełniony PDF",
+      "text": "Kliknij 'Wybierz pliki' lub przeciągnij wypełniony PDF do obszaru przesyłania."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Kliknij Spłaszcz PDF",
+      "text": "Naciśnij przycisk Spłaszcz PDF. Wszystkie elementy interaktywne są łączone ze statyczną treścią strony w Twojej przeglądarce."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Pobierz zablokowany PDF",
+      "text": "Spłaszczony PDF zostanie pobrany natychmiast. Pola są teraz trwałe — dokument nie może być edytowany przez żadnego odbiorcę."
+    }
+  ]
+}

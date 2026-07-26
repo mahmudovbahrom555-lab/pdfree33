@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Come appiattire un PDF",
+  "description": "Incorpora permanentemente i campi modulo nella pagina PDF — gratis, nessun caricamento richiesto.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Apri il tuo PDF compilato",
+      "text": "Clicca su 'Scegli file' oppure trascina il PDF compilato nell'area di caricamento."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Clicca su Appiattisci PDF",
+      "text": "Premi il pulsante Appiattisci PDF. Tutti gli elementi interattivi vengono uniti al contenuto statico della pagina nel tuo browser."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Scarica il PDF bloccato",
+      "text": "Il tuo PDF appiattito viene scaricato immediatamente. I campi sono ora permanenti — il documento non può essere modificato da nessun destinatario."
+    }
+  ]
+}

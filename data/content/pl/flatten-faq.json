@@ -1,0 +1,66 @@
+[
+  {
+    "@type": "Question",
+    "name": "Co właściwie robi spłaszczanie PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Spłaszczanie łączy wszystkie interaktywne warstwy — pola formularza, adnotacje, podpisy cyfrowe i nakładki — w statyczną treść strony. Wynikiem jest płaski, nieinteraktywny PDF, który wygląda identycznie jak oryginał, ale nie może być edytowany."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy PDFree przechowuje lub rejestruje moje pliki po przetworzeniu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie. PDFree działa całkowicie w Twojej przeglądarce — nie ma serwera zaplecza, który otrzymywałby Twoje pliki. Ponieważ nic nie jest przesyłane, nic nie może być przechowywane ani rejestrowane. Dokument istnieje wyłącznie w pamięci przeglądarki przez czas trwania sesji i jest usuwany po zamknięciu karty."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy mogę cofnąć spłaszczenie PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie. Spłaszczanie jest nieodwracalne — oryginalne pola formularza są trwale zastępowane statyczną treścią wizualną. Zawsze zachowaj kopię zapasową oryginalnego wypełnionego PDF przed spłaszczeniem, jeśli sądzisz, że możesz później potrzebować zmienić wartości."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy spłaszczanie usuwa podpisy cyfrowe?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Odręczne podpisy utworzone za pomocą narzędzia Wypełnij PDF (obrazy pola podpisu) są spłaszczane na stronie. Kryptograficzne podpisy cyfrowe od certyfikowanych dostawców podpisu elektronicznego mogą być traktowane inaczej — wygląd wizualny jest zachowany, ale certyfikat kryptograficzny może przestać być ważny po spłaszczeniu."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy mój PDF jest przesyłany na jakiś serwer podczas spłaszczania?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie. Wszystko odbywa się w Twojej przeglądarce za pomocą pdf-lib. Ani oryginalny PDF, ani spłaszczony wynik nigdy nie są nigdzie wysyłane. Twój dokument i jego zawartość zawsze pozostają na Twoim urządzeniu."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Dlaczego spłaszczać zamiast po prostu zapisać wypełniony PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Zapisany wypełniony PDF nadal zawiera edytowalne pola — odbiorca mógłby wyczyścić Twoje wartości i wypełnić je ponownie. Spłaszczanie trwale blokuje treść na stronie, zapobiega edycji, zapewnia spójne renderowanie we wszystkich przeglądarkach PDF i usuwa ukryte metadane formularza z pliku."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy spłaszczenie PDF zmniejsza rozmiar pliku?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Często nieznacznie. Spłaszczanie usuwa dane interaktywnych widżetów formularza i JavaScript, co zmniejsza rozmiar pliku dla formularzy z wieloma polami. Jednak obrazy i osadzone czcionki nie są dotknięte spłaszczaniem. Aby znacząco zmniejszyć rozmiar, użyj narzędzia do kompresji PDF po spłaszczeniu."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Jaka jest różnica między spłaszczeniem PDF a zabezpieczeniem go hasłem?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Rozwiązują różne problemy. Spłaszczanie całkowicie usuwa interaktywną strukturę formularza — nie ma pól do edycji, niezależnie od uprawnień. Zabezpieczenie hasłem ogranicza dostęp lub prawa do edycji, ale pozostawia pola formularza nienaruszone; ktoś znający hasło nadal może zmodyfikować wypełnialny formularz. Dla maksymalnego bezpieczeństwa najpierw spłaszcz, aby zablokować treść, a następnie dodaj hasło."
+    }
+  }
+]
