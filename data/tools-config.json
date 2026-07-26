@@ -1604,7 +1604,16 @@
         "tr": "PDF'den belirli sayfaları çıkarın. Tarayıcıda işleme — dosyalar cihazınızı terk etmez."
       },
       "keywords": {
-        "en": "extract pages from pdf, pdf page extractor, extract pdf pages online free, select pages from pdf"
+        "en": "extract pages from pdf, pdf page extractor, extract pdf pages online free, select pages from pdf",
+        "es": "extraer páginas de pdf, extractor de páginas pdf, extraer páginas pdf online gratis, seleccionar páginas de un pdf",
+        "pt": "extrair páginas de pdf, extrator de páginas pdf, extrair páginas pdf online grátis, selecionar páginas de um pdf",
+        "de": "pdf seiten extrahieren, pdf seiten extraktor, pdf seiten online kostenlos extrahieren, seiten aus pdf auswählen",
+        "fr": "extraire des pages d'un pdf, extracteur de pages pdf, extraire des pages pdf gratuit en ligne, sélectionner des pages dans un pdf",
+        "id": "ekstrak halaman pdf, ekstraktor halaman pdf, ekstrak halaman pdf online gratis, pilih halaman dari pdf",
+        "vi": "trích xuất trang pdf, công cụ trích trang pdf, trích xuất trang pdf trực tuyến miễn phí, chọn trang từ pdf",
+        "ru": "извлечь страницы из pdf, экстрактор страниц pdf, извлечь страницы pdf онлайн бесплатно, выбрать страницы из pdf",
+        "ja": "pdf ページ抽出, pdf ページ抽出ツール, pdf ページ抽出 無料 オンライン, pdfからページを選択",
+        "tr": "pdf sayfa çıkar, pdf sayfa çıkarma aracı, ücretsiz online pdf sayfa çıkarma, pdf'den sayfa seç"
       }
     },
     {
@@ -1712,7 +1721,14 @@
         "tr": "PDF meta verilerini düzenleyin veya temizleyin. Tarayıcıda işleme — dosyalar cihazınızı terk etmez."
       },
       "keywords": {
-        "en": "pdf metadata editor, edit pdf metadata, pdf properties editor, remove pdf metadata, pdf author editor"
+        "en": "pdf metadata editor, edit pdf metadata, pdf properties editor, remove pdf metadata, pdf author editor",
+        "es": "metadatos pdf, editar metadatos de pdf, propiedades de pdf, eliminar metadatos pdf, editor de autor pdf",
+        "pt": "metadados pdf, editar metadados do pdf, propriedades do pdf, remover metadados pdf, editor de autor pdf",
+        "de": "pdf metadaten, pdf metadaten bearbeiten, pdf eigenschaften, pdf metadaten entfernen, pdf autor bearbeiten",
+        "fr": "métadonnées pdf, modifier les métadonnées d'un pdf, propriétés pdf, supprimer les métadonnées pdf, éditeur d'auteur pdf",
+        "id": "metadata pdf, edit metadata pdf, properti pdf, hapus metadata pdf, ubah pengarang pdf",
+        "vi": "metadata pdf, chỉnh sửa metadata pdf, thuộc tính pdf, xóa metadata pdf, chỉnh sửa tác giả pdf",
+        "tr": "pdf meta verisi, pdf meta verisini düzenle, pdf özellikleri, pdf meta verisini kaldır, pdf yazar düzenleyici"
       }
     },
     {
@@ -2363,7 +2379,14 @@
         "tr": "PDF form alanlarını kalıcı olarak kilitleyin. Tarayıcıda işleme — dosyalar cihazınızı terk etmez."
       },
       "keywords": {
-        "en": "flatten pdf, flatten filled pdf, make pdf non-editable, lock pdf form fields, flatten pdf online free, flatten pdf without uploading, how to flatten a pdf, make pdf not fillable, flatten pdf annotations, flatten pdf for printing, flatten pdf without adobe"
+        "en": "flatten pdf, flatten filled pdf, make pdf non-editable, lock pdf form fields, flatten pdf online free, flatten pdf without uploading, how to flatten a pdf, make pdf not fillable, flatten pdf annotations, flatten pdf for printing, flatten pdf without adobe",
+        "es": "aplanar pdf, aplanar pdf rellenado, hacer pdf no editable, bloquear campos de formulario pdf, aplanar pdf online gratis",
+        "pt": "nivelar pdf, achatar pdf preenchido, tornar pdf não editável, bloquear campos de formulário pdf, nivelar pdf online grátis",
+        "de": "pdf abflachen, ausgefülltes pdf abflachen, pdf nicht bearbeitbar machen, pdf formularfelder sperren, pdf online kostenlos abflachen",
+        "fr": "aplatir pdf, aplatir un pdf rempli, rendre un pdf non modifiable, verrouiller les champs de formulaire pdf, aplatir pdf gratuit en ligne",
+        "id": "ratakan pdf, flatten pdf yang terisi, buat pdf tidak bisa diedit, kunci kolom formulir pdf, ratakan pdf online gratis",
+        "vi": "làm phẳng pdf, flatten pdf đã điền, làm pdf không thể chỉnh sửa, khóa trường biểu mẫu pdf, làm phẳng pdf trực tuyến miễn phí",
+        "tr": "pdf düzleştir, doldurulmuş pdf'yi düzleştir, pdf'yi düzenlenemez yap, pdf form alanlarını kilitle, ücretsiz online pdf düzleştirme"
       }
     },
     {
