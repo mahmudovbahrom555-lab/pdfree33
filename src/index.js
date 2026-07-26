@@ -126,7 +126,16 @@ async function handleFeedback(request, env) {
   const type = _FEEDBACK_TYPES.has(body.type) ? body.type : 'other';
 
   // Honeypot tripped — pretend success, don't tip the bot off.
-  if (body.hp) {
+  //
+  // Confirmed via a real user's DevTools payload: Chrome's autofill can
+  // duplicate the email field's value into the very next text input on
+  // the page regardless of its name/autocomplete attributes, which lands
+  // straight in this hidden field and silently swallowed every legitimate
+  // submission from autofill-enabled browsers. A real spam bot fills the
+  // honeypot with its own junk, not a byte-for-byte copy of another field
+  // it just filled in correctly — so only treat it as tripped when it
+  // holds something that ISN'T simply the email autofill echoed back.
+  if (body.hp && body.hp !== body.email) {
     console.log(`[feedback] honeypot tripped, type=${type}`);
     return new Response('OK', { status: 200 });
   }
