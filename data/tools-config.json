@@ -252,7 +252,20 @@
         "tr": "Sınırsız PDF'yi doğrudan birleştirin. %100 gizli — dosyalar tarayıcıyı asla terk etmez. Hesap yok, limit yok."
       },
       "keywords": {
-        "en": "merge pdf, combine pdf files, join pdf, merge pdf files free, combine pdf online, merge pdf without uploading"
+        "en": "merge pdf, combine pdf files, join pdf, merge pdf files free, combine pdf online, merge pdf without uploading",
+        "es": "unir pdf, combinar archivos pdf, juntar pdf online, unir pdf gratis, combinar pdf sin subir archivos",
+        "pt": "juntar pdf, combinar arquivos pdf, unir pdf online, juntar pdf grátis, combinar pdf sem enviar arquivos",
+        "de": "pdf zusammenführen, pdf dateien verbinden, pdf online zusammenfügen, pdf kostenlos zusammenführen, mehrere pdf zusammenfügen",
+        "fr": "fusionner pdf, combiner fichiers pdf, joindre pdf en ligne, fusionner pdf gratuit, fusionner plusieurs pdf",
+        "id": "gabung pdf, gabungkan file pdf, satukan pdf online, gabung pdf gratis, gabungkan pdf tanpa upload",
+        "vi": "ghép pdf, gộp file pdf, nối pdf trực tuyến, ghép pdf miễn phí, gộp nhiều pdf thành một",
+        "ru": "объединить pdf, слияние pdf файлов, соединить pdf онлайн, объединить pdf бесплатно, склеить несколько pdf",
+        "ja": "pdf 結合, pdf ファイル 統合, pdf 結合 オンライン, pdf 結合 無料, 複数のpdfを結合",
+        "it": "unire pdf, combinare file pdf, unisci pdf online, unire pdf gratis, unire più pdf in uno",
+        "ko": "pdf 합치기, pdf 파일 병합, pdf 온라인 합치기, pdf 무료 합치기, 여러 pdf 하나로 합치기",
+        "nl": "pdf samenvoegen, pdf bestanden combineren, pdf online samenvoegen, pdf gratis samenvoegen, meerdere pdf's samenvoegen",
+        "pl": "łączenie plików pdf, scal pdf, połącz pdf online, scal pdf za darmo, połącz kilka plików pdf",
+        "tr": "pdf birleştir, pdf dosyalarını birleştir, pdf birleştirme online, ücretsiz pdf birleştir, birden fazla pdf'yi birleştir"
       }
     },
     {
@@ -420,7 +433,20 @@
         "tr": "PDF'i doğrudan bölün. %100 gizli — dosyalar tarayıcıyı asla terk etmez."
       },
       "keywords": {
-        "en": "split pdf, divide pdf, extract pages from pdf, split pdf online free, pdf splitter, split pdf without uploading"
+        "en": "split pdf, divide pdf, extract pages from pdf, split pdf online free, pdf splitter, split pdf without uploading",
+        "es": "dividir pdf, separar páginas pdf, dividir pdf online, dividir pdf gratis, extraer páginas de un pdf",
+        "pt": "dividir pdf, separar páginas pdf, dividir pdf online, dividir pdf grátis, extrair páginas de um pdf",
+        "de": "pdf aufteilen, pdf seiten trennen, pdf online teilen, pdf kostenlos aufteilen, pdf seiten extrahieren",
+        "fr": "diviser pdf, séparer pages pdf, diviser pdf en ligne, diviser pdf gratuit, extraire des pages d'un pdf",
+        "id": "pisah pdf, pisahkan halaman pdf, pisah pdf online, pisah pdf gratis, ekstrak halaman dari pdf",
+        "vi": "tách pdf, tách trang pdf, tách pdf trực tuyến, tách pdf miễn phí, trích trang từ file pdf",
+        "ru": "разделить pdf, разбить pdf на страницы, разделить pdf онлайн, разделить pdf бесплатно, извлечь страницы из pdf",
+        "ja": "pdf 分割, pdf ページ 分割, pdf 分割 オンライン, pdf 分割 無料, pdfからページを抽出",
+        "it": "dividere pdf, separare pagine pdf, dividere pdf online, dividere pdf gratis, estrarre pagine da un pdf",
+        "ko": "pdf 분할, pdf 페이지 나누기, pdf 온라인 분할, pdf 무료 분할, pdf에서 페이지 추출",
+        "nl": "pdf splitsen, pdf pagina's scheiden, pdf online splitsen, pdf gratis splitsen, pagina's uit pdf halen",
+        "pl": "podziel pdf, rozdziel strony pdf, podziel pdf online, podziel pdf za darmo, wyodrębnij strony z pdf",
+        "tr": "pdf böl, pdf sayfalarını ayır, pdf bölme online, ücretsiz pdf böl, pdf'den sayfa çıkar"
       }
     },
     {
@@ -588,7 +614,20 @@
         "tr": "PDF'i doğrudan sıkıştırın. %100 gizli — dosyalar tarayıcıyı asla terk etmez."
       },
       "keywords": {
-        "en": "compress pdf, reduce pdf size, compress pdf online free, pdf compressor, shrink pdf, make pdf smaller"
+        "en": "compress pdf, reduce pdf size, compress pdf online free, pdf compressor, shrink pdf, make pdf smaller",
+        "es": "comprimir pdf, reducir tamaño de pdf, comprimir pdf online, comprimir pdf gratis, reducir peso de un pdf",
+        "pt": "comprimir pdf, reduzir tamanho do pdf, comprimir pdf online, comprimir pdf grátis, diminuir peso de um pdf",
+        "de": "pdf komprimieren, pdf größe verkleinern, pdf online komprimieren, pdf kostenlos verkleinern, pdf datei verkleinern",
+        "fr": "compresser pdf, réduire taille pdf, compresser pdf en ligne, compresser pdf gratuit, réduire le poids d'un pdf",
+        "id": "kompres pdf, perkecil ukuran pdf, kompres pdf online, kompres pdf gratis, perkecil file pdf",
+        "vi": "nén pdf, giảm dung lượng pdf, nén pdf trực tuyến, nén pdf miễn phí, giảm kích thước file pdf",
+        "ru": "сжать pdf, уменьшить размер pdf, сжать pdf онлайн, сжать pdf бесплатно, уменьшить вес pdf файла",
+        "ja": "pdf 圧縮, pdf サイズ 縮小, pdf 圧縮 オンライン, pdf 圧縮 無料, pdfファイルを軽くする",
+        "it": "comprimere pdf, ridurre dimensione pdf, comprimere pdf online, comprimere pdf gratis, alleggerire un pdf",
+        "ko": "pdf 압축, pdf 용량 줄이기, pdf 온라인 압축, pdf 무료 압축, pdf 파일 크기 줄이기",
+        "nl": "pdf comprimeren, pdf bestandsgrootte verkleinen, pdf online comprimeren, pdf gratis comprimeren, pdf kleiner maken",
+        "pl": "kompresuj pdf, zmniejsz rozmiar pdf, kompresuj pdf online, kompresuj pdf za darmo, zmniejsz wagę pliku pdf",
+        "tr": "pdf sıkıştır, pdf boyutunu küçült, pdf sıkıştırma online, ücretsiz pdf sıkıştır, pdf dosyasını küçült"
       }
     },
     {
