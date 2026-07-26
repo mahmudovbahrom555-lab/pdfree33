@@ -1284,7 +1284,14 @@
         "tr": "PDF'deki hassas bilgileri kalıcı olarak gizleyin. Tarayıcıda işleme — dosyalar cihazınızı terk etmez."
       },
       "keywords": {
-        "en": "redact pdf, cover area pdf, hide text pdf, pdf redaction free, black out pdf text, pdf censor"
+        "en": "redact pdf, cover area pdf, hide text pdf, pdf redaction free, black out pdf text, pdf censor",
+        "es": "censurar pdf, tapar texto en pdf, ocultar información en pdf, censurar pdf gratis, tachar texto pdf online",
+        "pt": "censurar pdf, ocultar texto no pdf, esconder informação no pdf, censurar pdf grátis, tarjar texto pdf online",
+        "de": "pdf schwärzen, text in pdf unkenntlich machen, informationen in pdf verbergen, pdf kostenlos schwärzen, pdf text schwärzen online",
+        "fr": "censurer pdf, masquer du texte dans un pdf, cacher des informations dans un pdf, censurer pdf gratuit, noircir texte pdf en ligne",
+        "id": "sensor pdf, hapus teks pdf, sembunyikan informasi di pdf, sensor pdf gratis, hitamkan teks pdf online",
+        "vi": "che văn bản pdf, xóa văn bản pdf, ẩn thông tin trong pdf, che pdf miễn phí, tô đen văn bản pdf trực tuyến",
+        "tr": "pdf gizle, pdf'de metni karart, pdf'de bilgi gizle, ücretsiz pdf gizleme, pdf metin karartma online"
       }
     },
     {
@@ -2870,7 +2877,20 @@
         "pl": "Konwertuj strony PDF do slajdów prezentacji .pptx. Przetwarzanie w przeglądarce."
       },
       "keywords": {
-        "en": "pdf to powerpoint, pdf to pptx, convert pdf to powerpoint, pdf to ppt, pdf to slides, pdf to presentation"
+        "en": "pdf to powerpoint, pdf to pptx, convert pdf to powerpoint, pdf to ppt, pdf to slides, pdf to presentation",
+        "es": "pdf a powerpoint, convertir pdf a powerpoint, pdf a pptx, pdf a diapositivas, pdf a presentación, convertidor pdf powerpoint",
+        "pt": "pdf para powerpoint, converter pdf em powerpoint, pdf para pptx, pdf para slides, pdf para apresentação, conversor pdf powerpoint",
+        "de": "pdf zu powerpoint, pdf in powerpoint umwandeln, pdf zu pptx, pdf zu folien, pdf zu präsentation, pdf powerpoint konverter",
+        "fr": "pdf en powerpoint, convertir pdf en powerpoint, pdf en pptx, pdf en diapositives, pdf en présentation, convertisseur pdf powerpoint",
+        "id": "pdf ke powerpoint, konversi pdf ke powerpoint, pdf ke pptx, pdf ke slide, pdf ke presentasi, konverter pdf ke powerpoint",
+        "vi": "pdf sang powerpoint, chuyển pdf sang powerpoint, pdf sang pptx, pdf sang slide, pdf sang bài thuyết trình, công cụ chuyển pdf sang powerpoint",
+        "ru": "pdf в powerpoint, конвертировать pdf в powerpoint, pdf в pptx, pdf в слайды, pdf в презентацию, конвертер pdf в powerpoint",
+        "ja": "pdf powerpoint 変換, pdfをpowerpointに変換, pdf pptx 変換, pdf スライド 変換, pdf プレゼン資料 変換, pdf パワーポイント コンバーター",
+        "it": "pdf in powerpoint, convertire pdf in powerpoint, pdf in pptx, pdf in diapositive, pdf in presentazione, convertitore pdf powerpoint",
+        "ko": "pdf powerpoint 변환, pdf를 powerpoint로 변환, pdf pptx 변환, pdf 슬라이드 변환, pdf 프레젠테이션 변환, pdf 파워포인트 변환기",
+        "nl": "pdf naar powerpoint, pdf omzetten naar powerpoint, pdf naar pptx, pdf naar dia's, pdf naar presentatie, pdf powerpoint converter",
+        "pl": "pdf do powerpoint, konwertuj pdf do powerpoint, pdf do pptx, pdf do slajdów, pdf do prezentacji, konwerter pdf do powerpoint",
+        "tr": "pdf powerpoint'e dönüştür, pdf'yi powerpoint yap, pdf pptx dönüştürücü, pdf'yi slayta çevir, pdf sunuma dönüştür, pdf powerpoint dönüştürücü"
       }
     },
     {
@@ -3038,7 +3058,20 @@
         "pl": "Konwertuj zawartość PDF do tekstu Markdown .md. Przetwarzanie w przeglądarce."
       },
       "keywords": {
-        "en": "pdf to markdown, pdf to md, convert pdf to markdown, pdf to md converter, extract pdf text as markdown"
+        "en": "pdf to markdown, pdf to md, convert pdf to markdown, pdf to md converter, extract pdf text as markdown",
+        "es": "pdf a markdown, convertir pdf a markdown, pdf a md, extraer texto de pdf como markdown, convertidor pdf markdown",
+        "pt": "pdf para markdown, converter pdf em markdown, pdf para md, extrair texto de pdf como markdown, conversor pdf markdown",
+        "de": "pdf zu markdown, pdf in markdown umwandeln, pdf zu md, pdf text als markdown extrahieren, pdf markdown konverter",
+        "fr": "pdf en markdown, convertir pdf en markdown, pdf en md, extraire le texte d'un pdf en markdown, convertisseur pdf markdown",
+        "id": "pdf ke markdown, konversi pdf ke markdown, pdf ke md, ekstrak teks pdf jadi markdown, konverter pdf markdown",
+        "vi": "pdf sang markdown, chuyển pdf sang markdown, pdf sang md, trích xuất văn bản pdf thành markdown, công cụ chuyển pdf sang markdown",
+        "ru": "pdf в markdown, конвертировать pdf в markdown, pdf в md, извлечь текст pdf в markdown, конвертер pdf в markdown",
+        "ja": "pdf markdown 変換, pdfをmarkdownに変換, pdf md 変換, pdfのテキストをmarkdownで抽出, pdf マークダウン コンバーター",
+        "it": "pdf in markdown, convertire pdf in markdown, pdf in md, estrarre testo da pdf in markdown, convertitore pdf markdown",
+        "ko": "pdf markdown 변환, pdf를 markdown으로 변환, pdf md 변환, pdf 텍스트를 markdown으로 추출, pdf 마크다운 변환기",
+        "nl": "pdf naar markdown, pdf omzetten naar markdown, pdf naar md, pdf tekst extraheren als markdown, pdf markdown converter",
+        "pl": "pdf do markdown, konwertuj pdf do markdown, pdf do md, wyodrębnij tekst pdf jako markdown, konwerter pdf do markdown",
+        "tr": "pdf markdown'a dönüştür, pdf'yi markdown yap, pdf md dönüştürücü, pdf metnini markdown olarak çıkar, pdf markdown dönüştürücü"
       }
     },
     {
