@@ -2054,7 +2054,20 @@
         "tr": "PDF'i doğrudan resimlere dönüştürün. %100 gizli — dosyalar tarayıcıyı asla terk etmez."
       },
       "keywords": {
-        "en": "pdf to jpg, convert pdf to jpg, pdf to image, export pdf pages as images, pdf to jpg free, pdf to png"
+        "en": "pdf to jpg, convert pdf to jpg, pdf to image, export pdf pages as images, pdf to jpg free, pdf to png",
+        "es": "pdf a jpg, convertir pdf a jpg, pdf a imagen, exportar páginas de pdf como imágenes, pdf a jpg gratis, pdf a png",
+        "pt": "pdf para jpg, converter pdf em jpg, pdf para imagem, exportar páginas de pdf como imagens, pdf para jpg grátis, pdf para png",
+        "de": "pdf zu jpg, pdf in jpg umwandeln, pdf zu bild, pdf seiten als bilder exportieren, pdf zu jpg kostenlos, pdf zu png",
+        "fr": "pdf en jpg, convertir pdf en jpg, pdf en image, exporter les pages pdf en images, pdf en jpg gratuit, pdf en png",
+        "id": "pdf ke jpg, konversi pdf ke jpg, pdf ke gambar, ekspor halaman pdf sebagai gambar, pdf ke jpg gratis, pdf ke png",
+        "vi": "pdf sang jpg, chuyển pdf sang jpg, pdf sang ảnh, xuất trang pdf thành ảnh, pdf sang jpg miễn phí, pdf sang png",
+        "ru": "pdf в jpg, конвертировать pdf в jpg, pdf в изображение, экспорт страниц pdf как изображений, pdf в jpg бесплатно, pdf в png",
+        "ja": "pdf jpg 変換, pdfをjpgに変換, pdf 画像 変換, pdfページを画像として書き出す, pdf jpg 変換 無料, pdf png 変換",
+        "it": "pdf in jpg, convertire pdf in jpg, pdf in immagine, esportare pagine pdf come immagini, pdf in jpg gratis, pdf in png",
+        "ko": "pdf jpg 변환, pdf를 jpg로 변환, pdf 이미지 변환, pdf 페이지를 이미지로 내보내기, pdf jpg 무료 변환, pdf png 변환",
+        "nl": "pdf naar jpg, pdf omzetten naar jpg, pdf naar afbeelding, pdf pagina's exporteren als afbeelding, pdf naar jpg gratis, pdf naar png",
+        "pl": "pdf do jpg, konwertuj pdf do jpg, pdf do obrazu, eksportuj strony pdf jako obrazy, pdf do jpg za darmo, pdf do png",
+        "tr": "pdf jpg'ye dönüştür, pdf'yi jpg yap, pdf resme çevir, pdf sayfalarını resim olarak dışa aktar, ücretsiz pdf jpg dönüştürücü, pdf png'ye çevir"
       }
     },
     {
@@ -2222,7 +2235,20 @@
         "tr": "PDF form alanlarını doldurun ve imza ekleyin. %100 yerel — dosyalar tarayıcınızdan asla ayrılmaz. Ücretsiz, kayıt olmadan."
       },
       "keywords": {
-        "en": "fill pdf form, fill pdf online free, fill out pdf, pdf form filler, complete pdf form online"
+        "en": "fill pdf form, fill pdf online free, fill out pdf, pdf form filler, complete pdf form online",
+        "es": "rellenar pdf, rellenar formulario pdf online, completar pdf gratis, rellenar pdf sin imprimir, editor de formularios pdf",
+        "pt": "preencher pdf, preencher formulário pdf online, completar pdf grátis, preencher pdf sem imprimir, editor de formulários pdf",
+        "de": "pdf ausfüllen, pdf formular online ausfüllen, pdf kostenlos ausfüllen, pdf ausfüllen ohne drucken, pdf formular editor",
+        "fr": "remplir pdf, remplir un formulaire pdf en ligne, remplir pdf gratuit, remplir pdf sans imprimer, éditeur de formulaire pdf",
+        "id": "isi pdf, isi formulir pdf online, isi pdf gratis, isi pdf tanpa cetak, editor formulir pdf",
+        "vi": "điền pdf, điền form pdf trực tuyến, điền pdf miễn phí, điền pdf không cần in, trình chỉnh sửa biểu mẫu pdf",
+        "ru": "заполнить pdf, заполнить форму pdf онлайн, заполнить pdf бесплатно, заполнение pdf без печати, редактор форм pdf",
+        "ja": "pdf 記入, pdf フォーム 入力 オンライン, pdf 記入 無料, 印刷せずにpdfに入力, pdf フォーム編集",
+        "it": "compilare pdf, compilare modulo pdf online, compilare pdf gratis, compilare pdf senza stampare, editor di moduli pdf",
+        "ko": "pdf 작성, pdf 양식 온라인 작성, pdf 무료 작성, 인쇄 없이 pdf 작성, pdf 양식 편집기",
+        "nl": "pdf invullen, pdf formulier online invullen, pdf gratis invullen, pdf invullen zonder printen, pdf formulier editor",
+        "pl": "wypełnij pdf, wypełnij formularz pdf online, wypełnij pdf za darmo, wypełnij pdf bez drukowania, edytor formularzy pdf",
+        "tr": "pdf doldur, pdf formu online doldur, ücretsiz pdf doldurma, yazdırmadan pdf doldur, pdf form düzenleyici"
       }
     },
     {
@@ -2663,7 +2689,20 @@
         "pl": "Tabele PDF stają się prawdziwym arkuszem .xlsx. Przetwarzanie w przeglądarce — nic nie jest wysyłane na serwer."
       },
       "keywords": {
-        "en": "pdf to excel, pdf to xlsx, convert pdf to excel, extract table from pdf, pdf table extractor, pdf to spreadsheet"
+        "en": "pdf to excel, pdf to xlsx, convert pdf to excel, extract table from pdf, pdf table extractor, pdf to spreadsheet",
+        "es": "pdf a excel, convertir pdf a excel, pdf a xlsx, extraer tablas de pdf, pdf a hoja de cálculo, convertidor pdf a excel",
+        "pt": "pdf para excel, converter pdf em excel, pdf para xlsx, extrair tabelas de pdf, pdf para planilha, conversor pdf para excel",
+        "de": "pdf zu excel, pdf in excel umwandeln, pdf zu xlsx, tabellen aus pdf extrahieren, pdf zu tabelle, pdf excel konverter",
+        "fr": "pdf en excel, convertir pdf en excel, pdf en xlsx, extraire des tableaux d'un pdf, pdf en tableur, convertisseur pdf excel",
+        "id": "pdf ke excel, konversi pdf ke excel, pdf ke xlsx, ekstrak tabel dari pdf, pdf ke spreadsheet, konverter pdf ke excel",
+        "vi": "pdf sang excel, chuyển pdf sang excel, pdf sang xlsx, trích xuất bảng từ pdf, pdf sang bảng tính, công cụ chuyển pdf sang excel",
+        "ru": "pdf в excel, конвертировать pdf в excel, pdf в xlsx, извлечь таблицы из pdf, pdf в таблицу, конвертер pdf в excel",
+        "ja": "pdf excel 変換, pdfをexcelに変換, pdf xlsx 変換, pdfから表を抽出, pdf 表計算 変換, pdf excel コンバーター",
+        "it": "pdf in excel, convertire pdf in excel, pdf in xlsx, estrarre tabelle da pdf, pdf in foglio di calcolo, convertitore pdf excel",
+        "ko": "pdf excel 변환, pdf를 excel로 변환, pdf xlsx 변환, pdf에서 표 추출, pdf 스프레드시트 변환, pdf excel 변환기",
+        "nl": "pdf naar excel, pdf omzetten naar excel, pdf naar xlsx, tabellen uit pdf halen, pdf naar spreadsheet, pdf excel converter",
+        "pl": "pdf do excel, konwertuj pdf do excel, pdf do xlsx, wyodrębnij tabele z pdf, pdf do arkusza kalkulacyjnego, konwerter pdf do excel",
+        "tr": "pdf excel'e dönüştür, pdf'yi excel yap, pdf xlsx dönüştürücü, pdf'den tablo çıkar, pdf'yi e-tabloya çevir, pdf excel dönüştürücü"
       }
     },
     {
