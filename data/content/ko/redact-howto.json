@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDF 가리는 방법",
+  "description": "PDF의 민감한 영역을 영구적으로 가립니다 — 100% 로컬 처리, 업로드 없음.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDF 열기",
+      "text": "'파일 선택'을 클릭하거나 PDF를 업로드 영역으로 드래그하세요."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "가리기 상자 그리기",
+      "text": "가리고 싶은 영역 위에서 클릭하고 드래그하세요. 불투명한 검은 상자가 선택한 영역을 영구적으로 덮습니다."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "가려진 PDF 다운로드",
+      "text": "'가리기 적용'을 클릭하세요. 가려진 영역은 페이지에 영구적으로 반영되어 어떤 PDF 뷰어에서도 드러나지 않습니다."
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+[
+  {
+    "@type": "Question",
+    "name": "L'oscuramento del PDF avviene localmente o su un server?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "100% localmente. PDFree elabora l'oscuramento interamente nel tuo browser — niente viene caricato su alcun server."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFree memorizza o registra i miei file dopo l'elaborazione?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. PDFree funziona interamente nel tuo browser — non esiste un server backend che riceve i tuoi file. Poiché niente viene caricato, niente può essere memorizzato o registrato. Il documento esiste solo nella memoria del browser per la durata della sessione e viene cancellato quando chiudi la scheda."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "L'oscuramento è permanente?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. PDFree sostituisce il contenuto sotto i riquadri oscurati con un rettangolo nero a livello di oggetto PDF. Il testo o i dati dell'immagine originali non vengono conservati altrove nel file e non possono essere recuperati."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Oscurare un PDF rimuove anche i metadati?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. L'oscuramento visivo non rimuove i metadati del documento. Usa separatamente lo strumento Metadati sulla homepage di PDFree per rimuovere nome dell'autore e date di creazione."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso oscurare più aree contemporaneamente?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. Puoi disegnare tutti i riquadri di oscuramento necessari prima di applicarli."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Qual è la differenza tra oscuramento reale e una sovrapposizione nera?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Alcuni strumenti disegnano un'immagine nera sopra il testo ma lasciano il testo originale accessibile nei dati sottostanti del PDF. PDFree rimuove il contenuto — chi estrae il flusso di testo del PDF non troverà nulla sotto il riquadro oscurato."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso annullare un oscuramento dopo averlo scaricato?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. L'oscuramento è un'operazione a senso unico — è proprio questo che lo rende sicuro. Se devi annullarlo, riparti dal file originale non oscurato. Conserva l'originale in un luogo sicuro finché non hai verificato che la versione oscurata sia corretta."
+    }
+  }
+]

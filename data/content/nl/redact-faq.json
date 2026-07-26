@@ -1,0 +1,58 @@
+[
+  {
+    "@type": "Question",
+    "name": "Gebeurt het zwartmaken van PDF's lokaal of op een server?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "100% lokaal. PDFree verwerkt het zwartmaken volledig in je browser — er wordt niets naar een server geüpload."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bewaart of registreert PDFree mijn bestanden na verwerking?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. PDFree draait volledig in je browser — er is geen backendserver die je bestanden ontvangt. Omdat er niets wordt geüpload, kan er ook niets worden opgeslagen of gelogd. Het document bestaat alleen in het browsergeheugen tijdens de sessie en wordt gewist zodra je het tabblad sluit."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is het zwartmaken permanent?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. PDFree vervangt de inhoud onder de zwarte vakken door een zwarte rechthoek op PDF-objectniveau. De originele tekst- of afbeeldingsgegevens worden nergens anders in het bestand bewaard en kunnen niet worden hersteld."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Verwijdert het zwartmaken van een PDF ook de metadata?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. Visueel zwartmaken verwijdert geen documentmetadata. Gebruik apart de Metadata-tool op de PDFree-homepage om auteursnamen en aanmaakdatums te verwijderen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik meerdere gebieden tegelijk zwartmaken?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Je kunt zoveel zwarte vakken tekenen als nodig voordat je ze toepast."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Wat is het verschil tussen echt zwartmaken en een zwarte overlay?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sommige tools tekenen een zwarte afbeelding over tekst heen, maar laten de originele tekst toegankelijk in de onderliggende PDF-gegevens. PDFree verwijdert de inhoud — wie de tekststroom van de PDF uitleest, vindt niets onder het zwarte vak."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik zwartmaken ongedaan maken na het downloaden?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. Zwartmaken is een eenrichtingsbewerking — dat is precies wat het veilig maakt. Werk vanaf het originele, niet-bewerkte bestand als je iets moet terugdraaien. Bewaar het origineel op een veilige plek totdat je hebt bevestigd dat de bewerkte versie klopt."
+    }
+  }
+]

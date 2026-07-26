@@ -1185,6 +1185,12 @@
         "fr": "censurer-pdf",
         "id": "hapus-teks-pdf",
         "vi": "xoa-van-ban-pdf",
+        "ru": "skryt-tekst-pdf",
+        "ja": "pdf-kurotsubushi",
+        "it": "oscura-pdf",
+        "ko": "pdf-garigi",
+        "nl": "pdf-zwartmaken",
+        "pl": "zaczernij-pdf",
         "tr": "pdf-gizle"
       },
       "titles": {
@@ -1195,6 +1201,12 @@
         "fr": "Caviarder PDF Gratuit — Supprimer Données Sensibles | PDFree",
         "id": "Hapus Teks PDF Online — Sembunyikan Data Sensitif Tanpa Upload | PDFree",
         "vi": "Xóa Văn Bản PDF Trực Tuyến — Ẩn Dữ Liệu Nhạy Cảm Không Tải Lên | PDFree",
+        "ru": "Скрыть Текст в PDF Онлайн — Закрасить Данные, Без Загрузки | PDFree",
+        "ja": "PDFの黒塗りをオンラインで — 機密データを隠す、アップロード不要 | PDFree",
+        "it": "Oscurare PDF Online — Coprire Dati Sensibili, Senza Upload | PDFree",
+        "ko": "PDF 가리기 온라인 — 민감한 데이터 가리기, 업로드 없음 | PDFree",
+        "nl": "PDF Zwartmaken Online — Gevoelige Gegevens Afdekken, Geen Upload | PDFree",
+        "pl": "Zaczernij PDF Online — Zakryj Wrażliwe Dane, Bez Przesyłania | PDFree",
         "tr": "PDF Gizle — Hassas Bilgileri Kalıcı Olarak Sil | PDFree"
       },
       "descs": {
@@ -1205,6 +1217,12 @@
         "fr": "Caviarder un PDF gratuitement en ligne. Suppression définitive et irrécupérable des zones sensibles. 100 % privé — aucun envoi, sans inscription.",
         "id": "Sembunyikan teks, tanda tangan, atau data sensitif dengan blok buram. 100% lokal — file tidak pernah diunggah.",
         "vi": "Ẩn văn bản, chữ ký hoặc dữ liệu nhạy cảm với các khối đục mờ. 100% cục bộ — file không bao giờ được tải lên.",
+        "ru": "Скрывайте текст, подписи или конфиденциальные данные непрозрачными блоками. 100% локальная обработка — файлы никогда не загружаются.",
+        "ja": "テキスト、署名、機密データを不透明なブロックで隠します。100%ローカル処理 — ファイルは一切アップロードされません。",
+        "it": "Nascondi testo, firme o dati sensibili con blocchi opachi. Elaborazione 100% locale — i file non vengono mai caricati.",
+        "ko": "텍스트, 서명 또는 민감한 데이터를 불투명한 블록으로 가리세요. 100% 로컬 처리 — 파일이 업로드되지 않습니다.",
+        "nl": "Verberg tekst, handtekeningen of gevoelige gegevens met ondoorzichtige blokken. 100% lokale verwerking — bestanden worden nooit geüpload.",
+        "pl": "Ukryj tekst, podpisy lub wrażliwe dane za pomocą nieprzezroczystych bloków. 100% lokalne przetwarzanie — pliki nigdy nie są przesyłane.",
         "tr": "PDF'deki hassas bilgileri kalıcı olarak gizleyin. Gizlenen sayfalar görüntüye dönüştürülür — metin kurtarılamaz. Yükleme yok, sunucu yok."
       },
       "navLabels": {
@@ -1215,6 +1233,12 @@
         "fr": "Caviarder",
         "id": "Hapus Teks",
         "vi": "Xóa Vùng",
+        "ru": "Скрыть текст",
+        "ja": "黒塗り",
+        "it": "Oscura",
+        "ko": "가리기",
+        "nl": "Zwartmaken",
+        "pl": "Zaczernij",
         "tr": "PDF Gizle"
       },
       "cardNames": {
@@ -1225,6 +1249,12 @@
         "fr": "Caviarder Zone",
         "id": "Hapus Area",
         "vi": "Xóa Vùng",
+        "ru": "Скрыть область",
+        "ja": "領域を隠す",
+        "it": "Copri Area",
+        "ko": "영역 가리기",
+        "nl": "Gebied Afdekken",
+        "pl": "Zakryj Obszar",
         "tr": "PDF Gizle"
       },
       "cardDescs": {
@@ -1235,6 +1265,12 @@
         "fr": "Masquer filigranes, signatures ou données sensibles localement",
         "id": "Sembunyikan tanda air, tanda tangan atau data sensitif secara lokal",
         "vi": "Ẩn watermark, chữ ký hoặc dữ liệu nhạy cảm cục bộ",
+        "ru": "Скрывайте водяные знаки, подписи или конфиденциальные данные локально",
+        "ja": "透かし、署名、機密データをローカルで隠す",
+        "it": "Nascondi filigrane, firme o dati sensibili localmente",
+        "ko": "워터마크, 서명 또는 민감한 데이터를 로컬에서 가리기",
+        "nl": "Verberg watermerken, handtekeningen of gevoelige gegevens lokaal",
+        "pl": "Ukryj znaki wodne, podpisy lub wrażliwe dane lokalnie",
         "tr": "PDF'den hassas bilgileri kalıcı olarak kaldırın"
       },
       "breadcrumb": {
@@ -1245,6 +1281,12 @@
         "fr": "Caviarder PDF",
         "id": "Hapus Teks PDF",
         "vi": "Xóa Văn Bản PDF",
+        "ru": "Скрыть текст в PDF",
+        "ja": "PDFを黒塗り",
+        "it": "Oscura PDF",
+        "ko": "PDF 가리기",
+        "nl": "PDF Zwartmaken",
+        "pl": "Zaczernij PDF",
         "tr": "PDF Gizle"
       },
       "metaDescs": {
@@ -1271,6 +1313,12 @@
         "fr": "Caviarder PDF Gratuit — Suppression Définitive de Données Sensibles",
         "id": "Hapus Teks PDF Permanen — Penghapusan Konten Nyata, Tanpa Upload",
         "vi": "Xóa Văn Bản PDF Vĩnh Viễn — Xóa Nội Dung Thực Sự, Không Tải Lên",
+        "ru": "Скрыть Текст в PDF Навсегда — Настоящее Удаление Содержимого, а не Просто Закрытие",
+        "ja": "PDFを完全に黒塗り — 単なる上塗りではなく本当のコンテンツ削除",
+        "it": "Oscura PDF Permanentemente — Vera Rimozione del Contenuto, non Solo una Copertura",
+        "ko": "PDF 영구 가리기 — 단순 덮기가 아닌 실제 콘텐츠 제거",
+        "nl": "PDF Permanent Zwartmaken — Echte Contentverwijdering, Geen Simpele Afdekking",
+        "pl": "Trwałe Zaczernienie PDF — Prawdziwe Usunięcie Treści, a nie Tylko Zakrycie",
         "tr": "PDF Gizle Ücretsiz — Hassas Bilgileri Kalıcı Sil | PDFree"
       },
       "ogDescs": {
@@ -1281,6 +1329,12 @@
         "fr": "Caviarder un PDF gratuitement en ligne. Suppression définitive et irrécupérable des zones sensibles. 100 % privé — aucun envoi, sans inscription.",
         "id": "Hapus teks sensitif dari PDF secara permanen. 100% lokal — tidak ada yang meninggalkan perangkat Anda. Gratis, tanpa daftar.",
         "vi": "Xóa vĩnh viễn văn bản nhạy cảm khỏi PDF. 100% cục bộ — không có gì rời khỏi thiết bị của bạn. Miễn phí, không đăng ký.",
+        "ru": "Навсегда скрывайте конфиденциальный текст в PDF. 100% локально — ничего не покидает ваше устройство. Бесплатно, без регистрации.",
+        "ja": "PDFの機密テキストを完全に削除。100%ローカル処理 — 何もデバイスから出ません。無料、登録不要。",
+        "it": "Oscura permanentemente il testo sensibile dai PDF. 100% locale — niente lascia il tuo dispositivo. Gratis, senza registrazione.",
+        "ko": "PDF에서 민감한 텍스트를 영구적으로 가리세요. 100% 로컬 — 아무것도 기기를 벗어나지 않습니다. 무료, 가입 불필요.",
+        "nl": "Verberg gevoelige tekst permanent uit PDF's. 100% lokaal — niets verlaat je apparaat. Gratis, geen registratie.",
+        "pl": "Trwale zaczernij wrażliwy tekst w PDF-ach. 100% lokalnie — nic nie opuszcza Twojego urządzenia. Za darmo, bez rejestracji.",
         "tr": "PDF'deki hassas bilgileri kalıcı olarak gizleyin. Tarayıcıda işleme — dosyalar cihazınızı terk etmez."
       },
       "keywords": {
@@ -1291,6 +1345,12 @@
         "fr": "censurer pdf, masquer du texte dans un pdf, cacher des informations dans un pdf, censurer pdf gratuit, noircir texte pdf en ligne",
         "id": "sensor pdf, hapus teks pdf, sembunyikan informasi di pdf, sensor pdf gratis, hitamkan teks pdf online",
         "vi": "che văn bản pdf, xóa văn bản pdf, ẩn thông tin trong pdf, che pdf miễn phí, tô đen văn bản pdf trực tuyến",
+        "ru": "скрыть текст в pdf, закрасить область pdf, спрятать текст pdf, редактирование pdf бесплатно, замазать текст в pdf, цензура pdf",
+        "ja": "pdf 黒塗り, pdf 領域を隠す, pdf テキストを隠す, pdf 墨消し 無料, pdf テキストを塗りつぶす, pdf 検閲",
+        "it": "oscurare pdf, coprire area pdf, nascondere testo pdf, redazione pdf gratis, annerire testo pdf online, censura pdf",
+        "ko": "pdf 가리기, pdf 영역 가리기, pdf 텍스트 숨기기, pdf 무료 편집, pdf 텍스트 검게 칠하기, pdf 검열",
+        "nl": "pdf zwartmaken, pdf gebied afdekken, tekst verbergen in pdf, pdf redigeren gratis, tekst zwart maken in pdf online, pdf censureren",
+        "pl": "zaczernij pdf, zakryj obszar pdf, ukryj tekst w pdf, redakcja pdf za darmo, zaczernij tekst w pdf online, cenzura pdf",
         "tr": "pdf gizle, pdf'de metni karart, pdf'de bilgi gizle, ücretsiz pdf gizleme, pdf metin karartma online"
       }
     },

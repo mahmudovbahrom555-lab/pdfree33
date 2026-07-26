@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDFを黒塗りする方法",
+  "description": "PDF内の機密領域を永久に隠します — 100%ローカル処理、アップロードなし。",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDFを開く",
+      "text": "「ファイルを選択」をクリックするか、PDFをドロップ領域にドラッグします。"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "黒塗りボックスを描く",
+      "text": "隠したい領域の上でクリックしてドラッグします。不透明な黒いボックスが選択領域を永久に覆います。"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "黒塗り済みPDFをダウンロード",
+      "text": "「黒塗りを適用」をクリックします。隠した領域はページに焼き付けられ、どのPDFビューアでも表示できません。"
+    }
+  ]
+}

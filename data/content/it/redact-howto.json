@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Come oscurare un PDF",
+  "description": "Copri permanentemente le aree sensibili in un PDF — 100% locale, niente caricato.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Apri il tuo PDF",
+      "text": "Clicca su 'Scegli file' oppure trascina il PDF nell'area di caricamento."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Disegna i riquadri da oscurare",
+      "text": "Clicca e trascina sopra qualsiasi area che vuoi coprire. Un riquadro nero opaco copre permanentemente la zona selezionata."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Scarica il PDF oscurato",
+      "text": "Clicca su 'Applica Oscuramento'. Le aree coperte vengono incorporate nella pagina — non possono essere scoperte in nessun visualizzatore PDF."
+    }
+  ]
+}

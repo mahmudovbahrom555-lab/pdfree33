@@ -1,0 +1,58 @@
+[
+  {
+    "@type": "Question",
+    "name": "Czy zaczernianie PDF odbywa się lokalnie czy na serwerze?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "W 100% lokalnie. PDFree przetwarza zaczernienie całkowicie w Twojej przeglądarce — nic nie jest przesyłane na żaden serwer."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy PDFree przechowuje lub rejestruje moje pliki po przetworzeniu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie. PDFree działa całkowicie w Twojej przeglądarce — nie ma serwera zaplecza, który otrzymywałby Twoje pliki. Ponieważ nic nie jest przesyłane, nic nie może być przechowywane ani rejestrowane. Dokument istnieje wyłącznie w pamięci przeglądarki przez czas trwania sesji i jest usuwany po zamknięciu karty."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy zaczernienie jest trwałe?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. PDFree zastępuje treść pod blokami zaczernienia czarnym prostokątem na poziomie obiektu PDF. Oryginalny tekst lub dane obrazu nie są przechowywane nigdzie indziej w pliku i nie można ich odzyskać."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy zaczernienie PDF usuwa też metadane?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie. Wizualne zaczernienie nie usuwa metadanych dokumentu. Użyj osobno narzędzia Metadane na stronie głównej PDFree, aby usunąć nazwisko autora i daty utworzenia."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy mogę zaczernić wiele obszarów jednocześnie?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. Możesz narysować dowolną liczbę bloków zaczernienia przed zastosowaniem."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Jaka jest różnica między prawdziwym zaczernieniem a czarną nakładką?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Niektóre narzędzia rysują czarny obraz na tekście, ale pozostawiają oryginalny tekst dostępny w danych PDF. PDFree usuwa treść — osoba, która wyodrębni strumień tekstu z PDF, nie znajdzie niczego pod blokiem zaczernienia."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy mogę cofnąć zaczernienie po pobraniu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie. Zaczernienie to operacja jednokierunkowa — właśnie to czyni ją bezpieczną. Jeśli musisz cofnąć zmiany, pracuj na oryginalnym, niezaczernionym pliku. Przechowuj oryginał w bezpiecznym miejscu, dopóki nie zweryfikujesz poprawności zaczernionej wersji."
+    }
+  }
+]
