@@ -2552,6 +2552,22 @@
         "ko": "PDF를 편집 가능한 .docx 문서로 변환. 브라우저 처리 — 서버에 업로드되지 않습니다.",
         "nl": "Converteer PDF naar bewerkbaar .docx-document. Verwerking in de browser — niets geüpload naar een server.",
         "pl": "Konwertuj PDF do edytowalnego dokumentu .docx. Przetwarzanie w przeglądarce — nic nie jest wysyłane na serwer."
+      },
+      "keywords": {
+        "en": "pdf to word, convert pdf to word, pdf to docx, pdf to word converter free, pdf to doc, editable word from pdf",
+        "es": "pdf a word, convertir pdf a word, pdf a docx, convertidor pdf a word gratis, pdf editable en word",
+        "pt": "pdf para word, converter pdf em word, pdf para docx, conversor pdf para word grátis, pdf editável em word",
+        "de": "pdf zu word, pdf in word umwandeln, pdf zu docx, pdf word konverter kostenlos, bearbeitbares word aus pdf",
+        "fr": "pdf en word, convertir pdf en word, pdf en docx, convertisseur pdf word gratuit, pdf modifiable en word",
+        "id": "pdf ke word, konversi pdf ke word, pdf ke docx, konverter pdf ke word gratis, pdf jadi word yang bisa diedit",
+        "vi": "pdf sang word, chuyển pdf sang word, pdf sang docx, công cụ chuyển pdf sang word miễn phí, pdf thành word có thể chỉnh sửa",
+        "ru": "pdf в word, конвертировать pdf в word, pdf в docx, конвертер pdf в word бесплатно, редактируемый word из pdf",
+        "ja": "pdf word 変換, pdfをwordに変換, pdf docx 変換, pdf word 変換 無料, pdfを編集可能なwordに",
+        "it": "pdf in word, convertire pdf in word, pdf in docx, convertitore pdf word gratis, pdf modificabile in word",
+        "ko": "pdf word 변환, pdf를 word로 변환, pdf docx 변환, 무료 pdf word 변환기, 편집 가능한 word로 변환",
+        "nl": "pdf naar word, pdf omzetten naar word, pdf naar docx, gratis pdf word converter, bewerkbaar word van pdf",
+        "pl": "pdf do word, konwertuj pdf do word, pdf do docx, konwerter pdf do word za darmo, edytowalny word z pdf",
+        "tr": "pdf word'e dönüştür, pdf'yi word yap, pdf docx dönüştürücü, ücretsiz pdf word dönüştürücü, pdf'den düzenlenebilir word"
       }
     },
     {
@@ -3190,7 +3206,12 @@
         "tr": "PDF'den parola korumasını kaldırın. Tarayıcıda işleme — dosyalar cihazınızı terk etmez."
       },
       "keywords": {
-        "en": "unlock pdf, remove pdf password, remove password from pdf, open protected pdf, decrypt pdf, pdf password remover"
+        "en": "unlock pdf, remove pdf password, remove password from pdf, open protected pdf, decrypt pdf, pdf password remover",
+        "es": "desbloquear pdf, quitar contraseña de pdf, eliminar contraseña pdf, abrir pdf protegido, desencriptar pdf online",
+        "pt": "desbloquear pdf, remover senha do pdf, tirar senha do pdf, abrir pdf protegido, desencriptar pdf online",
+        "de": "pdf entsperren, pdf passwort entfernen, pdf passwort löschen, geschütztes pdf öffnen, pdf online entschlüsseln",
+        "fr": "déverrouiller pdf, supprimer le mot de passe d'un pdf, retirer mot de passe pdf, ouvrir pdf protégé, décrypter pdf en ligne",
+        "tr": "pdf kilidini aç, pdf şifresini kaldır, pdf şifresini sil, korumalı pdf aç, pdf şifre çöz online"
       }
     }
   ],
