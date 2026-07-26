@@ -976,7 +976,20 @@
         "tr": "PDF'e doğrudan filigran ekleyin. %100 gizli — dosyalar tarayıcıyı asla terk etmez."
       },
       "keywords": {
-        "en": "watermark pdf, add watermark to pdf, pdf watermark online free, text watermark pdf, confidential watermark"
+        "en": "watermark pdf, add watermark to pdf, pdf watermark online free, text watermark pdf, confidential watermark",
+        "es": "marca de agua pdf, añadir marca de agua a pdf, marca de agua pdf online, marca de agua pdf gratis, marca de agua de texto en pdf",
+        "pt": "marca d'água pdf, adicionar marca d'água ao pdf, marca d'água pdf online, marca d'água pdf grátis, marca d'água de texto em pdf",
+        "de": "wasserzeichen pdf, wasserzeichen zu pdf hinzufügen, pdf wasserzeichen online, pdf wasserzeichen kostenlos, textwasserzeichen pdf",
+        "fr": "filigrane pdf, ajouter un filigrane à un pdf, filigrane pdf en ligne, filigrane pdf gratuit, filigrane texte pdf",
+        "id": "watermark pdf, tambah watermark ke pdf, watermark pdf online, watermark pdf gratis, tanda air teks pdf",
+        "vi": "watermark pdf, thêm watermark vào pdf, đóng dấu pdf trực tuyến, watermark pdf miễn phí, chèn hình mờ vào pdf",
+        "ru": "водяной знак pdf, добавить водяной знак в pdf, водяной знак pdf онлайн, водяной знак pdf бесплатно, текстовый водяной знак pdf",
+        "ja": "pdf 透かし, pdfに透かしを追加, pdf 透かし オンライン, pdf 透かし 無料, pdf テキスト透かし",
+        "it": "filigrana pdf, aggiungere filigrana al pdf, filigrana pdf online, filigrana pdf gratis, filigrana di testo pdf",
+        "ko": "pdf 워터마크, pdf에 워터마크 추가, pdf 워터마크 온라인, pdf 워터마크 무료, pdf 텍스트 워터마크",
+        "nl": "watermerk pdf, watermerk toevoegen aan pdf, pdf watermerk online, pdf watermerk gratis, tekst watermerk pdf",
+        "pl": "znak wodny pdf, dodaj znak wodny do pdf, znak wodny pdf online, znak wodny pdf za darmo, tekstowy znak wodny pdf",
+        "tr": "pdf filigran, pdf'ye filigran ekle, pdf filigran online, ücretsiz pdf filigran, pdf metin filigranı"
       }
     },
     {
@@ -1144,7 +1157,20 @@
         "tr": "PDF'i AES-256 ile doğrudan şifreleyin. %100 gizli — dosyalar tarayıcıyı asla terk etmez."
       },
       "keywords": {
-        "en": "protect pdf, password protect pdf, encrypt pdf, add password to pdf, pdf password free, pdf encryption"
+        "en": "protect pdf, password protect pdf, encrypt pdf, add password to pdf, pdf password free, pdf encryption",
+        "es": "proteger pdf, poner contraseña a pdf, cifrar pdf, proteger pdf con contraseña gratis, encriptar pdf online",
+        "pt": "proteger pdf, colocar senha no pdf, criptografar pdf, proteger pdf com senha grátis, encriptar pdf online",
+        "de": "pdf schützen, pdf mit passwort schützen, pdf verschlüsseln, pdf passwort kostenlos, pdf online verschlüsseln",
+        "fr": "protéger pdf, mettre un mot de passe sur pdf, chiffrer pdf, protéger pdf gratuit, crypter pdf en ligne",
+        "id": "lindungi pdf, beri password pdf, enkripsi pdf, proteksi pdf dengan password gratis, kunci pdf online",
+        "vi": "bảo vệ pdf, đặt mật khẩu cho pdf, mã hóa pdf, bảo vệ pdf bằng mật khẩu miễn phí, khóa pdf trực tuyến",
+        "ru": "защитить pdf, поставить пароль на pdf, зашифровать pdf, защита pdf паролем бесплатно, шифрование pdf онлайн",
+        "ja": "pdf 保護, pdf パスワード設定, pdf 暗号化, pdf パスワード 無料, pdf 保護 オンライン",
+        "it": "proteggere pdf, mettere password a pdf, crittografare pdf, proteggere pdf con password gratis, cifrare pdf online",
+        "ko": "pdf 보호, pdf 비밀번호 설정, pdf 암호화, pdf 비밀번호 무료, pdf 온라인 암호화",
+        "nl": "pdf beveiligen, wachtwoord op pdf zetten, pdf versleutelen, pdf beveiligen met wachtwoord gratis, pdf online versleutelen",
+        "pl": "zabezpiecz pdf, ustaw hasło do pdf, zaszyfruj pdf, zabezpiecz pdf hasłem za darmo, szyfrowanie pdf online",
+        "tr": "pdf koru, pdf'ye şifre koy, pdf şifrele, ücretsiz pdf şifreleme, pdf online şifreleme"
       }
     },
     {
@@ -1847,7 +1873,20 @@
         "tr": "Resimleri doğrudan PDF'ye dönüştürün. %100 gizli — dosyalar tarayıcıyı asla terk etmez."
       },
       "keywords": {
-        "en": "jpg to pdf, convert jpg to pdf, image to pdf, jpg to pdf free online, convert images to pdf, png to pdf"
+        "en": "jpg to pdf, convert jpg to pdf, image to pdf, jpg to pdf free online, convert images to pdf, png to pdf",
+        "es": "jpg a pdf, convertir jpg a pdf, imagen a pdf, jpg a pdf online gratis, convertir imágenes a pdf",
+        "pt": "jpg para pdf, converter jpg em pdf, imagem para pdf, jpg para pdf online grátis, converter imagens em pdf",
+        "de": "jpg zu pdf, jpg in pdf umwandeln, bild zu pdf, jpg zu pdf online kostenlos, bilder in pdf konvertieren",
+        "fr": "jpg en pdf, convertir jpg en pdf, image en pdf, jpg en pdf gratuit en ligne, convertir des images en pdf",
+        "id": "jpg ke pdf, konversi jpg ke pdf, gambar ke pdf, jpg ke pdf online gratis, ubah foto jadi pdf",
+        "vi": "jpg sang pdf, chuyển jpg sang pdf, ảnh sang pdf, jpg sang pdf trực tuyến miễn phí, chuyển ảnh thành pdf",
+        "ru": "jpg в pdf, конвертировать jpg в pdf, изображение в pdf, jpg в pdf онлайн бесплатно, конвертировать фото в pdf",
+        "ja": "jpg pdf 変換, jpgをpdfに変換, 画像 pdf 変換, jpg pdf 変換 無料 オンライン, 写真をpdfに変換",
+        "it": "jpg in pdf, convertire jpg in pdf, immagine in pdf, jpg in pdf online gratis, convertire foto in pdf",
+        "ko": "jpg pdf 변환, jpg를 pdf로 변환, 이미지 pdf 변환, jpg pdf 무료 변환, 사진 pdf로 바꾸기",
+        "nl": "jpg naar pdf, jpg omzetten naar pdf, afbeelding naar pdf, jpg naar pdf gratis online, foto's omzetten naar pdf",
+        "pl": "jpg do pdf, konwertuj jpg do pdf, obraz do pdf, jpg do pdf online za darmo, zamień zdjęcia na pdf",
+        "tr": "jpg pdf'ye dönüştür, jpg'yi pdf yap, resim pdf'ye çevir, ücretsiz online jpg pdf dönüştürücü, fotoğrafı pdf'ye çevir"
       }
     },
     {
