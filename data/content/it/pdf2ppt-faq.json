@@ -20,7 +20,7 @@
     "name": "Il testo nelle slide è modificabile?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Il testo del PDF viene mantenuto come testo nella slide se il PDF ha uno strato di testo. I PDF scansionati producono solo slide immagine."
+      "text": "Non direttamente — ogni slide è un'immagine della pagina PDF originale, il che preserva esattamente il layout ma significa che il testo non è un oggetto PowerPoint separato e modificabile. Questo è l'approccio usato praticamente da tutti gli strumenti di conversione da PDF a PowerPoint. Se ti serve testo modificabile, usa invece PDF in Word."
     }
   },
   {

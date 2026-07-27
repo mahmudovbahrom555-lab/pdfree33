@@ -20,7 +20,7 @@
     "name": "Is de tekst in slides bewerkbaar?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Tekst uit de PDF wordt als tekst in de slide bewaard als de PDF een tekstlaag heeft. Gescande PDF's leveren alleen afbeeldingsslides op."
+      "text": "Niet rechtstreeks — elke dia is een afbeelding van de originele PDF-pagina, wat de exacte lay-out behoudt maar betekent dat tekst geen apart, bewerkbaar PowerPoint-object is. Dit is de aanpak die vrijwel alle PDF-naar-PowerPoint-tools gebruiken. Gebruik PDF naar Word als je bewerkbare tekst nodig hebt."
     }
   },
   {

@@ -20,7 +20,7 @@
     "name": "Apakah teks di slide bisa diedit?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Teks dari PDF dipertahankan sebagai teks di slide jika PDF memiliki lapisan teks. PDF yang dipindai hanya menghasilkan slide gambar."
+      "text": "Tidak secara langsung — setiap slide adalah gambar dari halaman PDF asli, yang mempertahankan tata letak persis tetapi berarti teks bukan objek PowerPoint terpisah yang bisa diedit. Ini adalah pendekatan yang digunakan hampir semua alat konversi PDF ke PowerPoint. Jika Anda memerlukan teks yang bisa diedit, gunakan PDF ke Word."
     }
   },
   {

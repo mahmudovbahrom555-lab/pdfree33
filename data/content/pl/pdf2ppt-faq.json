@@ -20,7 +20,7 @@
     "name": "Czy tekst na slajdach jest edytowalny?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Tekst z PDF jest zachowywany jako tekst na slajdzie, jeśli PDF ma warstwę tekstową. Zeskanowane PDF-y dają tylko slajdy-obrazy."
+      "text": "Nie bezpośrednio — każdy slajd to obraz oryginalnej strony PDF, co zachowuje dokładny układ, ale oznacza, że tekst nie jest osobnym, edytowalnym obiektem PowerPoint. To podejście stosuje niemal każde narzędzie do konwersji PDF na PowerPoint. Jeśli potrzebujesz edytowalnego tekstu, użyj zamiast tego PDF na Word."
     }
   },
   {

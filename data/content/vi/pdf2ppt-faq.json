@@ -20,7 +20,7 @@
     "name": "Văn bản trong slide có thể chỉnh sửa được không?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Văn bản từ PDF được giữ nguyên nếu PDF có lớp văn bản. PDF được quét chỉ tạo ra slide hình ảnh."
+      "text": "Không trực tiếp — mỗi slide là một hình ảnh của trang PDF gốc, giữ nguyên bố cục chính xác nhưng có nghĩa là văn bản không phải là một đối tượng PowerPoint riêng biệt có thể chỉnh sửa. Đây là cách tiếp cận mà hầu hết các công cụ chuyển đổi PDF sang PowerPoint đều sử dụng. Nếu bạn cần văn bản có thể chỉnh sửa, hãy dùng PDF sang Word."
     }
   },
   {
