@@ -92,8 +92,13 @@ async function _preflightPDF(file) {
     }
 
     return { isEncrypted: true, hasAES: true, aesVersion, restrictions };
-  } catch {
-    return null;  // any error → treat as normal file, let pdf-lib handle it
+  } catch (err) {
+    // Any error here (e.g. a cloud-sync placeholder file — OneDrive/Google Drive
+    // "Files On-Demand" — that hasn't actually downloaded yet, so file.slice()
+    // rejects) used to be swallowed with zero trace, making a stuck file look
+    // like "nothing happened" with no way to diagnose from a bug report alone.
+    console.warn('[PDFree] preflight read failed for', file.name, '—', err?.name, err?.message);
+    return null;  // treat as normal file, let pdf-lib handle it (or fail loudly later)
   }
 }
 
