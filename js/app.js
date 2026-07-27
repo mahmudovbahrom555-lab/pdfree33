@@ -1272,6 +1272,27 @@ function _initPWA() {
         _showUpdateBanner(reg);
       }
 
+      // The browser only checks '/sw.js' for a new version on navigation —
+      // a tab left open for hours/days (no reload, no new nav) can sit on a
+      // stale worker indefinitely, since nothing here re-triggers the check.
+      // A real report: merge-pdf silently doing nothing on both Windows
+      // Chrome and Mac Safari, but working fine in a fresh incognito window
+      // — same stale-SW shape on two unrelated engines/OSes, ruled out as
+      // an app bug once it reproduced on neither Chromium nor WebKit here.
+      // Re-check whenever the tab regains focus (the common "left it open,
+      // came back later" case) and on a slow interval as a backstop for
+      // tabs that are simply never backgrounded.
+      const _recheckForUpdate = () => reg.update().catch(() => {});
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') _recheckForUpdate();
+      });
+      // 30 min backstop for tabs that are simply never backgrounded.
+      // Codebase convention here is self-rescheduling setTimeout, not
+      // setInterval (see eslint globals — setInterval isn't allow-listed).
+      (function _scheduleRecheck() {
+        setTimeout(() => { _recheckForUpdate(); _scheduleRecheck(); }, 30 * 60 * 1000);
+      })();
+
       // ── Share Target: retrieve file sent via OS share sheet ─
       const sharedUuid = new URL(location.href).searchParams.get('shared');
       if (sharedUuid && navigator.serviceWorker.controller) {
