@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src  'self' 'wasm-unsafe-eval' blob:
+                https://cdnjs.cloudflare.com https://esm.sh
+                https://plausible.io https://static.cloudflareinsights.com;
+    style-src   'self' 'unsafe-inline';
+    font-src    'self';
+    img-src     'self' data: blob: https:;
+    connect-src 'self' https://cdnjs.cloudflare.com https://*.workers.dev
+                https://plausible.io https://cloudflareinsights.com;
+    worker-src  'self' blob:;
+    object-src  'none';
+  ">
+
+  <title>Juntar PDFs Escaneados Grátis — Combine Documentos Escaneados Sem Upload | PDFree</title>
+  <meta name="description" content="Junte arquivos PDF escaneados grátis — combine páginas e documentos escaneados em um só PDF. Funciona no seu navegador, sem upload, sem limite de tamanho, sem cadastro.">
+  <meta name="keywords" content="juntar pdf escaneados, combinar documentos escaneados, juntar páginas escaneadas em um pdf, unir arquivos pdf escaneados">
+
+  <meta property="og:title"       content="Juntar PDFs Escaneados — Grátis, Sem Upload, Sem Limite de Tamanho">
+  <meta property="og:description" content="Junte arquivos PDF escaneados grátis — combine páginas e documentos escaneados em um só PDF. Funciona no seu navegador, sem upload, sem limite de tamanho, sem cadastro.">
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://pdfree.io/pt/juntar-pdf-escaneados/">
+  <meta property="og:site_name"   content="PDFree">
+  <meta property="og:locale"      content="pt_BR">
+  <meta property="og:image"        content="https://pdfree.io/icons/og-image.jpg">
+  <meta property="og:image:width"  content="1200">
+  <meta property="og:image:height" content="633">
+  <meta property="og:image:alt"    content="Juntar PDFs Escaneados — Grátis, Sem Upload, Sem Limite de Tamanho">
+  <meta name="twitter:card"       content="summary_large_image">
+  <meta name="twitter:site"       content="@pdfree_io">
+  <meta name="twitter:title"      content="Juntar PDFs Escaneados — Grátis, Sem Upload, Sem Limite de Tamanho">
+  <meta name="twitter:description" content="Junte arquivos PDF escaneados grátis — combine páginas e documentos escaneados em um só PDF. Funciona no seu navegador, sem upload, sem limite de tamanho, sem cadastro.">
+  <meta name="twitter:image"       content="https://pdfree.io/icons/og-image.jpg">
+  <meta name="twitter:image:alt"   content="Juntar PDFs Escaneados — Grátis, Sem Upload, Sem Limite de Tamanho">
+
+  <link rel="canonical" href="https://pdfree.io/pt/juntar-pdf-escaneados/">
+  <link rel="alternate" hreflang="en"        href="https://pdfree.io/merge-scanned-pdf/">
+  <link rel="alternate" hreflang="de"        href="https://pdfree.io/de/gescannte-pdfs-zusammenfuehren/">
+  <link rel="alternate" hreflang="es"        href="https://pdfree.io/es/unir-pdf-escaneados/">
+  <link rel="alternate" hreflang="fr"        href="https://pdfree.io/fr/fusionner-pdf-scannes/">
+  <link rel="alternate" hreflang="pt"        href="https://pdfree.io/pt/juntar-pdf-escaneados/">
+  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/merge-scanned-pdf/">
+
+  <link rel="manifest" href="../../manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="PDFree">
+  <link rel="apple-touch-icon" href="../../icons/icon-192.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+  <link rel="preconnect" href="https://plausible.io">
+  <link rel="preconnect" href="https://static.cloudflareinsights.com">
+  <link rel="preload" href="../../fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../css/fonts.css">
+
+  <script src="../../js/theme.js"></script>
+  <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/animations.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/components.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Juntar Arquivos PDF Escaneados",
+    "description": "Junte arquivos PDF escaneados grátis — combine páginas e documentos escaneados em um só PDF. Sem limite de tamanho, sem upload, o processamento acontece no seu navegador.",
+    "url": "https://pdfree.io/pt/juntar-pdf-escaneados/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "featureList": [
+      "Sem limite de tamanho de arquivo — junte PDFs escaneados de 100 MB, 500 MB ou mais",
+      "Sem upload para servidores — os arquivos ficam no seu dispositivo",
+      "Não requer conta",
+      "Processa PDFs escaneados, baseados em imagem e mistos",
+      "Funciona offline"
+    ],
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.9",
+      "ratingCount": "1243",
+      "bestRating": "5",
+      "worstRating": "1"
+    },
+    "provider": { "@type": "Organization", "name": "PDFree", "url": "https://pdfree.io" }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "Como Juntar Arquivos PDF Escaneados",
+    "description": "Combine documentos PDF escaneados em um só arquivo — grátis, sem upload, sem limite de tamanho.",
+    "totalTime": "PT2M",
+    "tool": [{ "@type": "HowToTool", "name": "PDFree — combinador de PDF grátis baseado no navegador" }],
+    "step": [
+      { "@type": "HowToStep", "position": 1, "name": "Abra a ferramenta Juntar do PDFree", "text": "Sem instalação, sem conta.", "url": "https://pdfree.io/pt/juntar-pdf-escaneados/#step1" },
+      { "@type": "HowToStep", "position": 2, "name": "Adicione seus PDFs escaneados", "text": "Solte todos os arquivos PDF escaneados de uma vez. São processados localmente, nada é enviado.", "url": "https://pdfree.io/pt/juntar-pdf-escaneados/#step2" },
+      { "@type": "HowToStep", "position": 3, "name": "Organize a ordem das páginas", "text": "Arraste os arquivos para definir a ordem em que aparecerão no documento final.", "url": "https://pdfree.io/pt/juntar-pdf-escaneados/#step3" },
+      { "@type": "HowToStep", "position": 4, "name": "Junte e baixe", "text": "Clique em \"Juntar arquivos PDF\". O PDF combinado é baixado instantaneamente.", "url": "https://pdfree.io/pt/juntar-pdf-escaneados/#step4" }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Por que meu PDF escaneado unido ficou tão grande?",
+        "acceptedAnswer": { "@type": "Answer", "text": "As páginas escaneadas são salvas como imagens em resolução total (um escaneamento a 300 DPI equivale a cerca de 1-3 MB por página). Use pdfree.io/pt/comprimir-pdf/ depois de juntar para reduzir o tamanho do arquivo — a compressão funciona especialmente bem em PDFs escaneados com muitas imagens, reduzindo o tamanho em 50-70% na maioria dos casos." }
+      },
+      {
+        "@type": "Question",
+        "name": "Posso juntar PDFs escaneados e PDFs de texto ao mesmo tempo?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Sim. O PDFree junta qualquer combinação de PDFs escaneados e de texto. O resultado preserva cada página exatamente como ela é — as páginas escaneadas continuam sendo imagens e as páginas de texto continuam sendo texto selecionável." }
+      },
+      {
+        "@type": "Question",
+        "name": "Existe um limite de páginas para juntar PDFs escaneados?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Não há limite de páginas. O PDFree processa os arquivos localmente no seu navegador. O limite prático é a memória RAM disponível do seu dispositivo — dispositivos modernos lidam com centenas de páginas escaneadas sem problemas." }
+      },
+      {
+        "@type": "Question",
+        "name": "Posso reordenar as páginas antes de juntar?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Sim — arraste os arquivos para a ordem desejada antes de clicar em Juntar. Cada arquivo aparece como uma entrada separada; você pode reordená-los arrastando." }
+      },
+      {
+        "@type": "Question",
+        "name": "Como faço o texto do meu PDF escaneado ficar selecionável depois de juntar?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Passe o PDF unido pelo pdfree.io/pt/ocr-pdf/ — a ferramenta de OCR adiciona uma camada de texto pesquisável às páginas escaneadas, mantendo o escaneamento original visível." }
+      }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "PDFree", "item": "https://pdfree.io/pt/" },
+      { "@type": "ListItem", "position": 2, "name": "Juntar PDF", "item": "https://pdfree.io/pt/juntar-pdf/" },
+      { "@type": "ListItem", "position": 3, "name": "Juntar PDFs Escaneados", "item": "https://pdfree.io/pt/juntar-pdf-escaneados/" }
+    ]
+  }
+  </script>
+</head>
+<body data-tool="merge">
+
+  <nav>
+    <a href="/pt/" class="logo" id="logo" aria-label="Ir para a página inicial" style="text-decoration:none">
+      <div class="logo-icon" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+      </div>
+      <span class="logo-text">PDF<span>ree</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="/pt/juntar-pdf/" class="nav-link" data-tool="merge">Juntar</a>
+      <a href="/pt/dividir-pdf/" class="nav-link" data-tool="split">Dividir</a>
+      <a href="/pt/comprimir-pdf/" class="nav-link" data-tool="compress">Comprimir</a>
+      <a href="/pt/jpg-para-pdf/" class="nav-link" data-tool="jpg2pdf">JPG→PDF</a>
+      <a href="/pt/pdf-para-jpg/" class="nav-link" data-tool="pdf2jpg">PDF→JPG</a>
+      <a href="/pt/marca-dagua-pdf/" class="nav-link" data-tool="watermark">Marca d'água</a>
+      <a href="/pt/numeros-de-pagina-pdf/" class="nav-link" data-tool="pagenum">Núm. página</a>
+      <a href="/pt/metadados-pdf/" class="nav-link" data-tool="meta">Metadados</a>
+      <a href="/pt/extrair-pdf/" class="nav-link" data-tool="extract">Extrair</a>
+      <a href="/pt/desenhar-no-pdf/" class="nav-link" data-tool="draw-pdf">Desenhar</a>
+      <a href="/pt/girar-pdf/" class="nav-link" data-tool="rotate">Girar</a>
+      <a href="/pt/proteger-pdf/" class="nav-link" data-tool="protect">Proteger</a>
+      <a href="/pt/ocr-pdf/" class="nav-link" data-tool="ocr">OCR</a>
+      <a href="/pt/pdf-para-word/" class="nav-link" data-tool="pdf2word">PDF→Word</a>
+      <a href="/pt/nivelar-pdf/" class="nav-link" data-tool="flatten">Bloquear PDF</a>
+      <a href="/compare-pdf/" class="nav-link" data-tool="compare">Comparar</a>
+    </div>
+    <button id="themeToggle" class="theme-toggle" aria-label="Alternar modo escuro" title="Alternar modo escuro"></button>
+  </nav>
+
+  <!-- Hero — compacto: só o título, a ferramenta vem logo abaixo -->
+  <section style="background:var(--green-light);border-bottom:1px solid rgba(45,122,79,0.15);padding:24px 24px 20px;text-align:center;">
+    <div style="max-width:720px;margin:0 auto;">
+      <h1 style="font-size:clamp(22px,3.5vw,34px);font-weight:700;letter-spacing:-0.5px;line-height:1.2;color:var(--text);margin:0 0 6px;">Juntar PDFs Escaneados Grátis — Combine Documentos Escaneados</h1>
+      <p style="font-size:14px;color:var(--green);margin:0;font-weight:500;">Documentos escaneados, fotos de páginas, saída de scanner — combine qualquer PDF, sem upload</p>
+    </div>
+  </section>
+
+  <!-- Ferramenta — visível imediatamente, acima da dobra -->
+  <div id="tool"></div>
+  <main id="toolArea" class="main-area" aria-busy="false">
+    <div class="tool-header">
+      <div class="tool-header-icon" id="toolIcon" aria-hidden="true">🔗</div>
+      <div class="tool-header-text">
+        <h2 id="toolTitle">Juntar PDFs escaneados — qualquer tamanho, sem limites</h2>
+        <p  id="toolDesc">PDFs escaneados são arquivos PDF normais. Solte todos de uma vez e junte em segundos.</p>
+      </div>
+    </div>
+
+    <div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-label="Enviar arquivos — clique ou arraste e solte">
+      <input type="file" id="fileInput" multiple accept=".pdf" aria-hidden="true">
+      <span class="drop-icon" aria-hidden="true">📂</span>
+      <div class="drop-title">Solte seus arquivos PDF escaneados aqui</div>
+      <div class="drop-sub">PDFs escaneados, saída de scanner, PDFs de fotos — qualquer tamanho, sem limites</div>
+      <label class="drop-btn" id="chooseFilesBtn" for="fileInput">Escolher arquivos</label>
+    </div>
+
+    <div id="fileList"    class="file-list" aria-live="polite"></div>
+    <div id="fileCount"   class="file-count"   style="display:none"></div>
+    <div id="reorderHint" class="reorder-hint" style="display:none">↕ Arraste para reordenar os arquivos antes de juntar</div>
+
+    <div id="mergeOptions"     class="j2p-options"     style="display:none" aria-label="Merge options"></div>
+    <div id="splitOptions"     style="display:none"></div>
+    <div id="compressOptions"  style="display:none"></div>
+    <div id="jpg2pdfOptions"   style="display:none"></div>
+    <div id="pdf2jpgOptions"   style="display:none"></div>
+    <div id="watermarkOptions" style="display:none"></div>
+    <div id="pageNumOptions"   style="display:none"></div>
+    <div id="metaOptions"      style="display:none"></div>
+    <div id="protectOptions"   style="display:none"></div>
+    <div id="redactOptions"    style="display:none"></div>
+    <div id="rotateOptions"    style="display:none"></div>
+    <div id="pdf2wordOptions"  class="j2p-options"     style="display:none" aria-label="PDF to Word options"></div>
+
+    <button id="mergeBtn"  class="merge-btn"  type="button" disabled data-mode="process">Juntar arquivos PDF</button>
+    <button id="cancelBtn" class="cancel-btn" type="button" style="display:none">✕ Cancelar</button>
+
+    <div id="progressBar"   class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+    <div id="progressLabel" class="progress-label"></div>
+
+    <div id="successCard" class="success-card" role="alert" aria-live="polite" style="display:none">
+      <div class="success-top">
+        <div class="success-icon">✓</div>
+        <div class="success-text">
+          <h3 id="successTitle">Pronto!</h3>
+          <p  id="successDesc"></p>
+        </div>
+        <button id="downloadBtn" class="download-btn" type="button">⬇ Baixar</button>
+        <button id="shareBtn" class="share-btn" type="button" style="display:none" aria-label="Enviar arquivo pelos apps do dispositivo"></button>
+      </div>
+      <div id="privacyCleared" class="privacy-cleared" aria-live="polite">
+        <span class="privacy-cleared__icon" aria-hidden="true">🛡️</span>
+        <div class="privacy-cleared__body">
+          <strong class="privacy-cleared__title">Arquivo apagado da memória</strong>
+          <span class="privacy-cleared__sub">Seu documento não deixou rastros em nenhum servidor.</span>
+        </div>
+      </div>
+      <div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(45,122,79,0.2);">
+        <p style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--text3);margin:0 0 8px;">O que vem a seguir?</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <a href="/pt/ocr-pdf/" data-handoff style="font-size:13px;background:var(--green-light);color:var(--green);padding:6px 12px;border-radius:6px;text-decoration:none;font-weight:500;border:1px solid rgba(45,122,79,0.2);">Tornar pesquisável (OCR) →</a>
+          <a href="/pt/comprimir-pdf/" data-handoff style="font-size:13px;background:var(--surface);color:var(--text2);padding:6px 12px;border-radius:6px;text-decoration:none;border:1px solid var(--border);">Comprimir resultado</a>
+          <a href="/pt/extrair-pdf/" data-handoff style="font-size:13px;background:var(--surface);color:var(--text2);padding:6px 12px;border-radius:6px;text-decoration:none;border:1px solid var(--border);">Extrair páginas</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Selos de recursos -->
+  <section style="padding:14px 24px;border-bottom:1px solid var(--border);background:var(--surface);">
+    <div style="max-width:760px;margin:0 auto;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;align-items:center;">
+      <span style="font-size:12px;background:var(--green-light);color:var(--green);padding:4px 11px;border-radius:20px;font-weight:600;">Sem limite de tamanho</span>
+      <span style="font-size:12px;background:var(--green-light);color:var(--green);padding:4px 11px;border-radius:20px;font-weight:600;">Sem limite de páginas</span>
+      <span style="font-size:12px;background:var(--green-light);color:var(--green);padding:4px 11px;border-radius:20px;font-weight:600;">Sem upload — fica no seu dispositivo</span>
+      <span style="font-size:12px;background:var(--green-light);color:var(--green);padding:4px 11px;border-radius:20px;font-weight:600;">Sempre grátis</span>
+    </div>
+  </section>
+
+  <!-- Conteúdo SEO -->
+  <hr style="border:none;border-top:2px solid var(--border);margin:48px 24px 0;" aria-hidden="true">
+  <section class="seo-article">
+    <div class="seo-article__inner">
+      <div class="seo-content" style="max-width:800px;margin:60px auto 40px;padding:0 24px;color:var(--text2);line-height:1.8;">
+
+        <h2 style="font-size:26px;color:var(--text);margin:0 0 16px;font-weight:700;">PDFs Escaneados São Arquivos PDF Normais</h2>
+        <p>Um PDF escaneado é simplesmente um PDF cujas páginas são imagens (JPEGs ou PNGs incorporados no contêiner do PDF) em vez de texto. Do ponto de vista da junção, PDFs escaneados e PDFs de texto se comportam de forma idêntica — podem ser combinados em qualquer ordem, com qualquer mistura de páginas escaneadas e de texto. O PDFree lida com os dois sem nenhuma configuração especial.</p>
+        <p>Solte seus PDFs escaneados na ferramenta acima, organize a ordem e clique em Juntar. O resultado é um arquivo PDF padrão que abre em qualquer leitor de PDF.</p>
+
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 16px;font-weight:700;">Situações Comuns para Juntar PDFs Escaneados</h2>
+        <div style="display:flex;flex-direction:column;gap:12px;margin:16px 0 32px;">
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <span style="font-size:20px;flex-shrink:0">🖨️</span>
+            <div><strong style="color:var(--text);">Documentos de várias páginas escaneados uma página de cada vez</strong> — seu scanner gera um arquivo PDF individual para cada página. Junte todos em um único documento completo.</div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <span style="font-size:20px;flex-shrink:0">📝</span>
+            <div><strong style="color:var(--text);">Contratos físicos escaneados página por página</strong> — reúna páginas de contratos escaneadas separadamente em um único documento pronto para assinatura.</div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <span style="font-size:20px;flex-shrink:0">📅</span>
+            <div><strong style="color:var(--text);">Combinar páginas de diferentes sessões de digitalização</strong> — se você escaneou páginas hoje e outras na semana passada, junte os dois conjuntos em um único documento unificado.</div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <span style="font-size:20px;flex-shrink:0">🧾</span>
+            <div><strong style="color:var(--text);">Arquivos de notas fiscais ou recibos escaneados</strong> — combine as notas fiscais escaneadas de cada mês em um único arquivo anual para contabilidade ou auditoria.</div>
+          </div>
+        </div>
+
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 16px;font-weight:700;">Tamanho do Arquivo e Número de Páginas</h2>
+        <p>PDFs escaneados costumam ser maiores que PDFs de texto porque cada página é armazenada como uma imagem em resolução total. Um escaneamento a 300 DPI de uma página A4 tem aproximadamente 1-3 MB por página — um documento escaneado de 100 páginas pode ter entre 100 e 300 MB. O PDFree não tem limite de tamanho de arquivo porque o processamento acontece no seu navegador, não em um servidor. O único limite é a memória RAM disponível do seu dispositivo.</p>
+
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:18px 20px;margin:20px 0 32px;">
+          <strong style="color:var(--text);display:block;margin:0 0 10px;">Uso típico de RAM para PDFs escaneados</strong>
+          <ul style="margin:0;padding-left:20px;font-size:14px;color:var(--text2);display:flex;flex-direction:column;gap:6px;">
+            <li><strong>8 GB de RAM:</strong> lida com 50-100 páginas escaneadas (100-300 MB) sem problemas</li>
+            <li><strong>16 GB de RAM:</strong> lida com 300-500 páginas escaneadas ou várias centenas de MB</li>
+            <li><strong>Lotes grandes (500+ páginas):</strong> feche outras abas do navegador para liberar RAM antes de juntar</li>
+          </ul>
+        </div>
+
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 16px;font-weight:700;">Depois de Juntar: Torne o PDF Pesquisável</h2>
+        <p>Depois de juntar PDFs escaneados, você pode querer rodar o OCR (reconhecimento óptico de caracteres) para tornar o texto selecionável e pesquisável. A ferramenta de OCR do PDFree (<a href="/pt/ocr-pdf/" style="color:var(--green);font-weight:500;">pdfree.io/pt/ocr-pdf/</a>) processa o arquivo unido inteiramente no seu navegador — sem precisar de upload. O OCR adiciona uma camada de texto transparente sobre cada página escaneada, mantendo o escaneamento original visível enquanto o texto se torna pesquisável e copiável.</p>
+
+        <div style="background:var(--green-light);border-left:4px solid var(--green);padding:18px 20px;border-radius:0 8px 8px 0;margin:20px 0 32px;">
+          <p style="margin:0;font-size:14px;color:var(--text);"><strong>Fluxo de trabalho recomendado para documentos escaneados:</strong></p>
+          <ol style="margin:8px 0 0;padding-left:20px;font-size:14px;color:var(--text);display:flex;flex-direction:column;gap:4px;">
+            <li>Junte todas as páginas escaneadas → um PDF combinado (esta ferramenta)</li>
+            <li>Rode o OCR no arquivo unido → camada de texto pesquisável (<a href="/pt/ocr-pdf/" style="color:var(--green);">pdfree.io/pt/ocr-pdf/</a>)</li>
+            <li>Comprima se o arquivo estiver grande demais para enviar (<a href="/pt/comprimir-pdf/" style="color:var(--green);">pdfree.io/pt/comprimir-pdf/</a>)</li>
+          </ol>
+        </div>
+
+        <!-- FAQ -->
+        <h2 style="font-size:26px;color:var(--text);margin:52px 0 20px;font-weight:700;">Perguntas Frequentes</h2>
+        <div style="display:flex;flex-direction:column;gap:20px;">
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Por que meu PDF escaneado unido ficou tão grande?</h3>
+            <p style="margin:0;font-size:14px;">As páginas escaneadas são salvas como imagens em resolução total (um escaneamento a 300 DPI equivale a cerca de 1-3 MB por página). Use <a href="/pt/comprimir-pdf/" style="color:var(--green);">pdfree.io/pt/comprimir-pdf/</a> depois de juntar para reduzir o tamanho do arquivo — a compressão funciona especialmente bem em PDFs escaneados com muitas imagens, reduzindo o tamanho em 50-70% na maioria dos casos.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Posso juntar PDFs escaneados e PDFs de texto ao mesmo tempo?</h3>
+            <p style="margin:0;font-size:14px;">Sim. O PDFree junta qualquer combinação de PDFs escaneados e de texto. O resultado preserva cada página exatamente como ela é — as páginas escaneadas continuam sendo imagens e as páginas de texto continuam sendo texto selecionável.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Existe um limite de páginas para juntar PDFs escaneados?</h3>
+            <p style="margin:0;font-size:14px;">Não há limite de páginas. O PDFree processa os arquivos localmente no seu navegador. O limite prático é a memória RAM disponível do seu dispositivo — dispositivos modernos lidam com centenas de páginas escaneadas sem problemas.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Posso reordenar as páginas antes de juntar?</h3>
+            <p style="margin:0;font-size:14px;">Sim — arraste os arquivos para a ordem desejada antes de clicar em Juntar. Cada arquivo aparece como uma entrada separada; você pode reordená-los arrastando.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Como faço o texto do meu PDF escaneado ficar selecionável depois de juntar?</h3>
+            <p style="margin:0;font-size:14px;">Passe o PDF unido pelo <a href="/pt/ocr-pdf/" style="color:var(--green);">pdfree.io/pt/ocr-pdf/</a> — a ferramenta de OCR adiciona uma camada de texto pesquisável às páginas escaneadas, mantendo o escaneamento original visível.</p>
+          </div>
+        </div>
+
+        <!-- Related tools -->
+        <h2 style="font-size:26px;color:var(--text);margin:52px 0 12px;font-weight:700;">Ferramentas Gratuitas Relacionadas</h2>
+        <ul style="margin:12px 0;padding-left:24px;display:flex;flex-direction:column;gap:8px;">
+          <li><a href="/pt/juntar-pdf/" style="color:var(--green);font-weight:500;">Juntar PDF</a> — combine qualquer arquivo PDF em um único documento</li>
+          <li><a href="/pt/comprimir-pdf/" style="color:var(--green);font-weight:500;">Comprimir PDF</a> — reduza o tamanho do seu PDF escaneado unido</li>
+          <li><a href="/pt/ocr-pdf/" style="color:var(--green);font-weight:500;">OCR PDF</a> — torne o texto escaneado pesquisável e selecionável</li>
+        </ul>
+
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    PDFree · <strong>Todo o processamento acontece 100% no seu navegador</strong> · Os arquivos <strong>nunca são enviados</strong><br>
+    <span style="color:var(--green)">🔒</span> Seus documentos nunca saem do seu dispositivo &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> Feito para ser grátis para todos, sempre<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
+      <a href="/privacy.html" style="color:var(--green)">Privacidade</a> &nbsp;·&nbsp;
+      <a href="/terms.html" style="color:var(--green)">Termos</a> &nbsp;·&nbsp;
+      <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a> &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green)">GitHub</a>
+    </span>
+  </footer>
+
+  <div id="toast"      class="toast" role="status" aria-live="polite"></div>
+  <div id="hero"       style="display:none"></div>
+  <div id="trustAlert" style="display:none"></div>
+  <div id="noLimitBar" style="display:none"></div>
+  <div id="toolsGrid"  style="display:none"></div>
+  <div id="pwaNudge"   style="display:none"></div>
+
+  <script type="module" src="../../js/locales/pt.js"></script>
+  <script type="module" src="../../js/app.js"></script>
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script>
+</body>
+</html>
