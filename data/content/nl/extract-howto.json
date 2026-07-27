@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Hoe je pagina's uit een PDF extraheert",
+  "description": "Haal specifieke pagina's uit een PDF naar een nieuw bestand — gratis, geen upload nodig.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Open je PDF",
+      "text": "Klik op 'Kies bestanden' of sleep je PDF naar het uploadvak."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Voer de pagina's in om te extraheren",
+      "text": "Typ een paginabereik zoals 1,3-5,8 om losse pagina's of bereiken uit het document te extraheren."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Download de geëxtraheerde pagina's",
+      "text": "Klik op 'Pagina's Extraheren'. De geselecteerde pagina's worden gebundeld in een nieuwe PDF en direct gedownload."
+    }
+  ]
+}

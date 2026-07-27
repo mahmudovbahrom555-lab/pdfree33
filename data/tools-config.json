@@ -1549,6 +1549,10 @@
         "vi": "trich-xuat-pdf",
         "ru": "izvlech-stranitsy-pdf",
         "ja": "pdf-chushutsu",
+        "it": "estrai-pdf",
+        "ko": "pdf-chuchul",
+        "nl": "pdf-extraheren",
+        "pl": "wyodrebnij-pdf",
         "tr": "sayfa-cikar"
       },
       "titles": {
@@ -1561,6 +1565,10 @@
         "vi": "Trích Xuất Trang PDF Trực Tuyến — Miễn Phí, Không Tải Lên | PDFree",
         "ru": "Извлечь страницы из PDF — бесплатно, без загрузки | PDFree",
         "ja": "PDFのページを抽出 — 無料、アップロード不要 | PDFree",
+        "it": "Estrarre Pagine da PDF Gratis — Scegli Qualsiasi Pagina o Intervallo | PDFree",
+        "ko": "PDF에서 페이지 추출 무료 — 원하는 페이지나 범위 선택 | PDFree",
+        "nl": "Pagina's uit PDF Extraheren Gratis — Kies Elke Pagina of Bereik | PDFree",
+        "pl": "Wyodrębnij Strony z PDF Za Darmo — Wybierz Dowolne Strony lub Zakres | PDFree",
         "tr": "PDF'den Sayfa Çıkar — Ücretsiz, Yükleme Yapmadan | PDFree"
       },
       "descs": {
@@ -1573,6 +1581,10 @@
         "vi": "Trích xuất các trang cụ thể từ PDF. 100% riêng tư — xử lý cục bộ, không tải lên, không đăng ký.",
         "ru": "Извлекайте конкретные страницы из PDF. 100% конфиденциально — локальная обработка, без загрузки.",
         "ja": "PDFから特定のページを抽出します。100%プライベート — ローカルで処理、アップロード不要。",
+        "it": "Estrai pagine specifiche da un PDF. 100% privato — elaborato localmente, senza upload, senza registrazione.",
+        "ko": "PDF에서 특정 페이지를 추출하세요. 100% 비공개 — 로컬 처리, 업로드 없음, 가입 불필요.",
+        "nl": "Extraheer specifieke pagina's uit een PDF. 100% privé — lokaal verwerkt, geen upload, geen registratie.",
+        "pl": "Wyodrębnij konkretne strony z PDF. 100% prywatności — przetwarzanie lokalne, bez przesyłania, bez rejestracji.",
         "tr": "PDF'den belirli sayfaları çıkarın. Tek sayfa veya aralık seçin, yeni bir PDF olarak indirin. Tarayıcıda işleme — yükleme yok."
       },
       "navLabels": {
@@ -1585,6 +1597,10 @@
         "vi": "Trích Xuất",
         "ru": "Извлечь",
         "ja": "抽出",
+        "it": "Estrai",
+        "ko": "추출",
+        "nl": "Extraheren",
+        "pl": "Wyodrębnij",
         "tr": "Sayfa Çıkar"
       },
       "cardNames": {
@@ -1597,6 +1613,10 @@
         "vi": "Trích Xuất Trang",
         "ru": "Извлечь страницы",
         "ja": "ページを抽出",
+        "it": "Estrai Pagine",
+        "ko": "페이지 추출",
+        "nl": "Pagina's Extraheren",
+        "pl": "Wyodrębnij Strony",
         "tr": "Sayfa Çıkar"
       },
       "cardDescs": {
@@ -1609,6 +1629,10 @@
         "vi": "Lấy các trang được chọn vào PDF mới",
         "ru": "Извлекайте выбранные страницы в новый PDF",
         "ja": "選択したページを新しいPDFにまとめる",
+        "it": "Estrai le pagine selezionate in un nuovo PDF",
+        "ko": "선택한 페이지를 새 PDF로 가져오기",
+        "nl": "Haal geselecteerde pagina's in een nieuwe PDF",
+        "pl": "Wyodrębnij wybrane strony do nowego pliku PDF",
         "tr": "PDF'den belirli sayfaları çıkarın"
       },
       "breadcrumb": {
@@ -1621,6 +1645,10 @@
         "vi": "Trích Xuất Trang PDF",
         "ru": "Извлечь страницы PDF",
         "ja": "PDFページ抽出",
+        "it": "Estrai Pagine PDF",
+        "ko": "PDF 페이지 추출",
+        "nl": "Pagina's Extraheren PDF",
+        "pl": "Wyodrębnij Strony PDF",
         "tr": "Sayfa Çıkar"
       },
       "metaDescs": {
@@ -1649,6 +1677,10 @@
         "vi": "Trích Xuất Trang PDF — Phạm Vi Chính Xác, Không Tải Lên, Miễn Phí",
         "ru": "Извлечь страницы из PDF — точный диапазон, без загрузки, бесплатно",
         "ja": "PDFからページを抽出 — 正確な範囲指定、アップロード不要、無料",
+        "it": "Estrarre Pagine da PDF Gratis — Pagine Singole o Intervalli, Senza Upload",
+        "ko": "PDF에서 페이지 추출 무료 — 개별 페이지 또는 범위, 업로드 없음",
+        "nl": "Pagina's uit PDF Extraheren Gratis — Losse Pagina's of Bereiken, Geen Upload",
+        "pl": "Wyodrębnij Strony z PDF Za Darmo — Pojedyncze Strony lub Zakresy, Bez Przesyłania",
         "tr": "PDF'den Sayfa Çıkar Ücretsiz — Yükleme Yok | PDFree"
       },
       "ogDescs": {
@@ -1661,6 +1693,10 @@
         "vi": "Trích xuất các trang cụ thể từ bất kỳ PDF nào. Xử lý trong trình duyệt — file không bao giờ rời thiết bị của bạn. Miễn phí.",
         "ru": "Извлекайте конкретные страницы из любого PDF. Обрабатывается в браузере — файлы не покидают устройство. Бесплатно.",
         "ja": "任意のPDFから特定のページを抽出します。ブラウザ内で処理 — ファイルはデバイスから出ません。無料。",
+        "it": "Estrai pagine specifiche da qualsiasi PDF. Elaborato nel browser — i file non lasciano mai il tuo dispositivo. Gratis.",
+        "ko": "모든 PDF에서 특정 페이지를 추출하세요. 브라우저에서 처리 — 파일이 기기를 벗어나지 않습니다. 무료.",
+        "nl": "Extraheer specifieke pagina's uit elke PDF. Verwerkt in je browser — bestanden verlaten nooit je apparaat. Gratis.",
+        "pl": "Wyodrębnij konkretne strony z dowolnego PDF. Przetwarzane w przeglądarce — pliki nigdy nie opuszczają Twojego urządzenia. Za darmo.",
         "tr": "PDF'den belirli sayfaları çıkarın. Tarayıcıda işleme — dosyalar cihazınızı terk etmez."
       },
       "keywords": {
@@ -1673,6 +1709,10 @@
         "vi": "trích xuất trang pdf, công cụ trích trang pdf, trích xuất trang pdf trực tuyến miễn phí, chọn trang từ pdf",
         "ru": "извлечь страницы из pdf, экстрактор страниц pdf, извлечь страницы pdf онлайн бесплатно, выбрать страницы из pdf",
         "ja": "pdf ページ抽出, pdf ページ抽出ツール, pdf ページ抽出 無料 オンライン, pdfからページを選択",
+        "it": "estrarre pagine da pdf, estrattore di pagine pdf, estrarre pagine pdf online gratis, selezionare pagine da un pdf",
+        "ko": "pdf 페이지 추출, pdf 페이지 추출기, pdf 페이지 무료 온라인 추출, pdf에서 페이지 선택",
+        "nl": "pagina's uit pdf extraheren, pdf pagina extractor, pdf pagina's gratis online extraheren, pagina's uit pdf selecteren",
+        "pl": "wyodrębnij strony z pdf, ekstraktor stron pdf, wyodrębnij strony pdf online za darmo, wybierz strony z pdf",
         "tr": "pdf sayfa çıkar, pdf sayfa çıkarma aracı, ücretsiz online pdf sayfa çıkarma, pdf'den sayfa seç"
       }
     },

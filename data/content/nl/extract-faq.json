@@ -1,0 +1,74 @@
+[
+  {
+    "@type": "Question",
+    "name": "Wordt mijn bestand geüpload bij het extraheren van PDF-pagina's?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. PDFree extraheert pagina's volledig in je browser. Je bestanden verlaten nooit je apparaat."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bewaart of registreert PDFree mijn bestanden na verwerking?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. PDFree draait volledig in je browser — er is geen backendserver die je bestanden ontvangt. Omdat er niets wordt geüpload, kan er ook niets worden opgeslagen of gelogd. Het document bestaat alleen in het browsergeheugen tijdens de sessie en wordt gewist zodra je het tabblad sluit."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Wat is het verschil tussen Extraheren en Splitsen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Met Extraheren kies je specifieke pagina's (bijv. pagina 2, 5, 8) en sla je die op als één nieuwe PDF. Splitsen verdeelt het hele document in losse bestanden."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik niet-opeenvolgende pagina's extraheren?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Je kunt elke combinatie van losse pagina's en paginabereiken selecteren."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is er een limiet aan hoeveel pagina's ik kan extraheren?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. Je kunt elk aantal pagina's extraheren uit een PDF van elke grootte, zolang je browser genoeg geheugen heeft om het bestand te bevatten."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Wat is het formaat voor het paginabereik?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Voer pagina's en bereiken gescheiden door komma's in: 1, 3-7, 12, 15-20. Spaties zijn optioneel. Bereiken zijn inclusief — 3-7 extraheert pagina 3, 4, 5, 6 en 7."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Blijft de opmaak van de geëxtraheerde pagina's exact behouden?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Pagina's worden gekopieerd op PDF-objectniveau — lettertypen, afbeeldingen, links en opmaak zijn identiek aan de originelen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Hoe extraheer ik één pagina uit een PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Typ het paginanummer in het bereikveld — bijvoorbeeld 5 om alleen pagina 5 te extraheren. Het resultaat is een nieuwe PDF met alleen die ene pagina. Alle opmaak, afbeeldingen en links blijven precies zoals in het origineel behouden."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik pagina's extraheren uit een met wachtwoord beveiligde PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. Versleutelde PDF's kunnen niet worden gewijzigd zonder het wachtwoord. Verwijder eerst het wachtwoord en extraheer daarna de pagina's."
+    }
+  }
+]

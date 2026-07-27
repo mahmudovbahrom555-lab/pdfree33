@@ -1,0 +1,74 @@
+[
+  {
+    "@type": "Question",
+    "name": "Estrarre pagine PDF carica il mio file?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. PDFree estrae le pagine interamente nel tuo browser. I tuoi file non lasciano mai il tuo dispositivo."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFree memorizza o registra i miei file dopo l'elaborazione?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. PDFree funziona interamente nel tuo browser — non esiste un server backend che riceve i tuoi file. Poiché niente viene caricato, niente può essere memorizzato o registrato. Il documento esiste solo nella memoria del browser per la durata della sessione e viene cancellato quando chiudi la scheda."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Qual è la differenza tra Estrai e Dividi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Estrai ti permette di scegliere pagine specifiche (es. pagine 2, 5, 8) e salvarle come un nuovo PDF. Dividi separa l'intero documento in file individuali."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso estrarre pagine non consecutive?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. Puoi selezionare qualsiasi combinazione di pagine singole e intervalli di pagine."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "C'è un limite al numero di pagine che posso estrarre?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Puoi estrarre qualsiasi numero di pagine da un PDF di qualsiasi dimensione, purché il tuo browser abbia memoria sufficiente per contenere il file."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Qual è il formato dell'intervallo di pagine?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Inserisci pagine e intervalli separati da virgole: 1, 3-7, 12, 15-20. Gli spazi sono opzionali. Gli intervalli sono inclusivi — 3-7 estrae le pagine 3, 4, 5, 6 e 7."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Le pagine estratte mantengono la formattazione esatta?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. Le pagine vengono copiate a livello di oggetto PDF — font, immagini, link e formattazione sono identici agli originali."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Come estraggo una singola pagina da un PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Digita il numero di pagina nel campo dell'intervallo — ad esempio 5 per estrarre solo la pagina 5. Il risultato è un nuovo PDF contenente solo quella pagina. Formattazione, immagini e link sono preservati esattamente come nell'originale."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso estrarre pagine da un PDF protetto da password?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. I PDF cifrati non possono essere modificati senza la password. Rimuovi prima la password, poi estrai le pagine."
+    }
+  }
+]

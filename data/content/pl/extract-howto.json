@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Jak wyodrębnić strony z PDF",
+  "description": "Wyciągnij konkretne strony z PDF do nowego pliku — za darmo, bez konieczności przesyłania.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Otwórz swój PDF",
+      "text": "Kliknij 'Wybierz pliki' lub przeciągnij PDF do obszaru przesyłania."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Wprowadź strony do wyodrębnienia",
+      "text": "Wpisz zakres stron, np. 1,3-5,8, aby wyodrębnić pojedyncze strony lub zakresy z dokumentu."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Pobierz wyodrębnione strony",
+      "text": "Kliknij 'Wyodrębnij Strony'. Wybrane strony zostaną zapakowane w nowy PDF i natychmiast pobrane."
+    }
+  ]
+}

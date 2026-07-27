@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDF에서 페이지 추출하는 방법",
+  "description": "PDF에서 특정 페이지를 새 파일로 뽑아내세요 — 무료, 업로드 불필요.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDF 열기",
+      "text": "'파일 선택'을 클릭하거나 PDF를 업로드 영역으로 드래그하세요."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "추출할 페이지 입력",
+      "text": "1,3-5,8과 같은 페이지 범위를 입력해 문서에서 개별 페이지나 범위를 추출하세요."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "추출된 페이지 다운로드",
+      "text": "'페이지 추출'을 클릭하세요. 선택한 페이지가 새 PDF로 만들어져 즉시 다운로드됩니다."
+    }
+  ]
+}

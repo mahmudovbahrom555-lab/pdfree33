@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Come estrarre pagine da un PDF",
+  "description": "Estrai pagine specifiche da un PDF in un nuovo file — gratis, nessun caricamento richiesto.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Apri il tuo PDF",
+      "text": "Clicca su 'Scegli file' oppure trascina il PDF nell'area di caricamento."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Inserisci le pagine da estrarre",
+      "text": "Digita un intervallo di pagine come 1,3-5,8 per estrarre singole pagine o intervalli dal documento."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Scarica le pagine estratte",
+      "text": "Clicca su 'Estrai Pagine'. Le pagine selezionate vengono raccolte in un nuovo PDF e scaricate immediatamente."
+    }
+  ]
+}
