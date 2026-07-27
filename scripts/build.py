@@ -393,7 +393,9 @@ SPECIALTY_PAGES = [
     'merge-pdf-files-into-one',
     'merge-large-pdf-files',
     'merge-password-protected-pdf',
-    'merge-scanned-pdf',
+    # merge-scanned-pdf now has de/es/fr/pt translations — handled by
+    # _lang_specialty below (with full locale alternates), like
+    # merge-pdf-without-uploading/pdf-tools-no-upload/secure-pdf-tools.
     'pdf-to-jpg-300-dpi',
     'pdf-to-jpg-high-quality',
     'pdf-to-png',
@@ -628,6 +630,13 @@ def _write_sitemap(config, out_dir):
             'es': 'es/herramientas-pdf-seguras',
             'fr': 'fr/outils-pdf-securises',
             'pt': 'pt/ferramentas-pdf-seguras',
+        },
+        'merge-scanned-pdf': {
+            'en': 'merge-scanned-pdf',
+            'de': 'de/gescannte-pdfs-zusammenfuehren',
+            'es': 'es/unir-pdf-escaneados',
+            'fr': 'fr/fusionner-pdf-scannes',
+            'pt': 'pt/juntar-pdf-escaneados',
         },
 
     }
