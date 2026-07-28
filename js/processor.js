@@ -19,6 +19,26 @@ import { preprocessPdfBuffer, decryptWithPassword } from './decryptPdf.js';
 import { detectTables, groupItemsIntoLines } from './pdf2wordTables.js';
 import { detectTableGrids } from './pdf2wordBorders.js';
 import { openFeedback } from './feedback.js';
+import { evaluateStructural } from './eriScore.js';
+
+// Below this ERI "tables" score, the text-detected/border-grid tables in the
+// first-pass docx are more likely mis-detected layout (garbled/ghost tables)
+// than real ones — see checkTablesStruct() in eriChecks.js. _runPdf2Word()
+// rebuilds paragraphs-only (no tables) in that case and keeps whichever
+// variant scores higher overall, rather than shipping a probably-broken table.
+const _ERI_TABLE_RETRY_THRESHOLD = 0.75;
+
+// CamScanner adds a stamp at the bottom of every scanned page. pdf.js
+// sometimes extracts it as two separate items on the same line, so joining
+// produces "CamScannerCamScanner" instead of "CamScanner". Normalise to
+// a single canonical form so the frequency counter sees one string, not two.
+// Also collapse the "cs]" logo abbreviation and bare "-" separator line.
+// Shared by _p2wBuildPageData() (builds the repeat-text set) and
+// _p2wBuildParagraphs() (checks a paragraph against that set).
+const _normWatermark = t =>
+  t.replace(/^(CamScanner)+$/i, 'CamScanner')
+   .replace(/^[Cc][Ss]\]?$/, 'CamScanner')
+   .replace(/^-$/, '');
 
 // Hard cap for image mode — defined here to avoid coupling with pdf2wordUI.js.
 // Must match MAX_IMAGE_PAGES in pdf2wordUI.js.
@@ -1094,10 +1114,13 @@ async function _runPdf2Word(filesSnapshot, { mode = 'text', dpi = 150 } = {}) {
 
   let paragraphs;
   let confidence = null;
+  let pageData, median, repeatTextSet, cs;   // text mode only — kept for the ERI retry below
   try {
     if (mode === 'text') {
       setProgress(10, 'Extracting text…');
-      ({ paragraphs, confidence } = await _p2wExtractText(pdfDoc));
+      ({ pageData, median, repeatTextSet, cs } = await _p2wBuildPageData(pdfDoc));
+      ({ paragraphs, cs } = await _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSet, cs));
+      confidence = _p2wConfidence(cs, median);
     } else {
       setProgress(10, 'Rendering pages…');
       paragraphs = await _p2wRenderImages(pdfDoc, dpi, effectivePages);
@@ -1112,15 +1135,43 @@ async function _runPdf2Word(filesSnapshot, { mode = 'text', dpi = 150 } = {}) {
   setProgress(92, 'Building Word document…');
 
   const { Document, Packer } = window.docx;
-  const doc = new Document({
+  const _buildDoc = children => new Document({
     creator:     'PDFree',
     description: 'Converted from PDF by PDFree.io',
-    sections: [{ children: paragraphs }],
+    sections: [{ children }],
   });
 
   // toBlob() uses JSZip type:"blob" — browser-native, no polyfill needed.
   // toBuffer() uses type:"nodebuffer" which JSZip does not support in browsers.
-  const blob = await Packer.toBlob(doc);
+  let blob = await Packer.toBlob(_buildDoc(paragraphs));
+
+  // Self-check: if this document has tables, verify with Atlas's ERI structural
+  // scorer that they're real tables, not layout mis-detected as one (see
+  // checkTablesStruct() in eriChecks.js). If the score looks bad, rebuild
+  // paragraphs-only (no PDF re-parse needed — pageData is already extracted)
+  // and keep whichever variant actually scores higher. Best-effort: any
+  // failure here just ships the original conversion, never blocks success.
+  if (mode === 'text' && cs.totalTables > 0 && isProcessing) {
+    try {
+      const eri = await evaluateStructural(await blob.arrayBuffer());
+      if (eri.components.tables < _ERI_TABLE_RETRY_THRESHOLD) {
+        setProgress(95, 'Verifying table structure…');
+        const retry = await _p2wBuildParagraphs(
+          pdfDoc, pageData, median, repeatTextSet, cs, { useTables: false }
+        );
+        const retryBlob = await Packer.toBlob(_buildDoc(retry.paragraphs));
+        const retryEri = await evaluateStructural(await retryBlob.arrayBuffer());
+        if (retryEri.eri > eri.eri) {
+          blob       = retryBlob;
+          confidence = _p2wConfidence(retry.cs, median);
+        }
+      }
+    } catch {
+      // ERI check is best-effort — never let a scoring failure block a
+      // conversion that already succeeded.
+    }
+  }
+
   const baseName = file.name.replace(/\.pdf$/i, '');
   const filename = `${baseName}.docx`;
   const modeTag  = mode === 'text' ? 'editable text' : 'page images';
@@ -1877,12 +1928,12 @@ function _visualRTLToLogical(s) {
 }
 
 // Text extraction: uses PDF.js getTextContent → builds docx paragraphs.
-// Groups items into lines, runs table detection per page, emits docx.Table
-// for detected tables and docx.Paragraph for everything else.
-async function _p2wExtractText(pdfDoc) {
-  const { Paragraph, TextRun, HeadingLevel,
-          Table, TableRow, TableCell, WidthType, ImageRun } = window.docx;
-
+// Pass 1: parses the PDF into per-page line/text data (the expensive part —
+// pdf.js getTextContent() + border-grid detection for every page). Returns
+// data consumed by _p2wBuildParagraphs(), which can be re-run cheaply on
+// the same pageData without repeating this parse — see _runPdf2Word()'s
+// ERI-scored table retry.
+async function _p2wBuildPageData(pdfDoc) {
   const YTOL = 6;   // px — items within 6px on Y → same line (was 4; increased to group
                    //  characters with slight baseline variation, e.g. Cyrillic in some PDFs)
 
@@ -2027,17 +2078,6 @@ async function _p2wExtractText(pdfDoc) {
   // ── Post-Pass-1: build watermark filter ───────────────────────────────────
   // Short text appearing on ≥ ⅔ of pages (min 3) is treated as a repeated
   // watermark / header / footer and suppressed in DOCX output.
-
-  // CamScanner adds a stamp at the bottom of every scanned page. pdf.js
-  // sometimes extracts it as two separate items on the same line, so joining
-  // produces "CamScannerCamScanner" instead of "CamScanner". Normalise to
-  // a single canonical form so the frequency counter sees one string, not two.
-  // Also collapse the "cs]" logo abbreviation and bare "-" separator line.
-  const _normWatermark = t =>
-    t.replace(/^(CamScanner)+$/i, 'CamScanner')
-     .replace(/^[Cc][Ss]\]?$/, 'CamScanner')
-     .replace(/^-$/, '');
-
   const _repeatTextSet = new Set();
   {
     const freq = new Map();   // lineText → number of pages it appears on
@@ -2063,7 +2103,20 @@ async function _p2wExtractText(pdfDoc) {
     }
   }
 
-  // ── Pass 2: build Word content ─────────────────────────────────────────────
+  return { pageData, median, repeatTextSet: _repeatTextSet, cs: _cs };
+}
+
+// Pass 2: builds Word paragraphs/tables from pageData already extracted by
+// _p2wBuildPageData() — no PDF re-parsing, safe to call twice.
+// useTables:false skips text-detected AND border-grid tables entirely (all
+// their lines flow through the normal paragraph path instead) — used as the
+// conservative fallback when the first attempt's tables look mis-detected.
+async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSet, cs, { useTables = true } = {}) {
+  const { Paragraph, TextRun, HeadingLevel,
+          Table, TableRow, TableCell, WidthType, ImageRun } = window.docx;
+  const _repeatTextSet = repeatTextSet;
+  const _cs = { ...cs, totalTables: 0, totalGapVisuals: 0, totalInlineVisuals: 0 };
+
   // Adaptive gap factor: linearly interpolates from 1.6 (small fonts / dense technical
   // PDFs) to 2.5 (large fonts / presentations) over the 8–14pt range.
   // Smaller factor → more sensitive gap detection for tight-spaced documents;
@@ -2181,8 +2234,10 @@ async function _p2wExtractText(pdfDoc) {
     setProgress(50 + Math.round((pi / pageData.length) * 40),
                 `Building page ${pi + 1}/${pageData.length}…`);
 
-    // Detect tables on this page
-    const tables = detectTables(lines);
+    // Detect tables on this page (skipped entirely in the conservative retry —
+    // useTables:false means every line below falls through to the normal
+    // paragraph path instead of becoming a Table).
+    const tables = useTables ? detectTables(lines) : [];
 
     // Build set: lineIdx → table object (for O(1) lookup)
     const lineToTable = new Map();
@@ -2210,8 +2265,10 @@ async function _p2wExtractText(pdfDoc) {
       if (yAbove - yBelow < gapThreshold) continue;
       // Skip if a border grid already covers this gap — it will be rendered as a
       // Word Table by the 'grid' event handler; inserting an ImageRun here too
-      // would duplicate the same content in the DOCX output.
-      const coveredByGrid = borderGrids.some(g =>
+      // would duplicate the same content in the DOCX output. When useTables is
+      // false, grids are never rendered as tables, so this region must be free
+      // to become a visual-gap image instead — otherwise it's silently dropped.
+      const coveredByGrid = useTables && borderGrids.some(g =>
         (g.y + g.h) <= yAbove + 10 && g.y >= yBelow - 10
       );
       if (!coveredByGrid) visualGaps.push({ yAbove, yBelow });
@@ -2262,15 +2319,20 @@ async function _p2wExtractText(pdfDoc) {
 
     const events = lines.map((ln, lineIdx) => ({ type: 'line', y: ln.y, lineIdx }));
 
-    // Add border grids that aren't already covered by a text-detected table
-    const textYRanges = tables.map(t => ({
-      minY: lines[t.endIdx].y, maxY: lines[t.startIdx].y,
-    }));
-    for (const grid of borderGrids) {
-      const covered = textYRanges.some(r =>
-        (grid.y + grid.h) >= r.minY - 20 && grid.y <= r.maxY + 20
-      );
-      if (!covered) events.push({ type: 'grid', y: grid.y + grid.h, grid });
+    // Add border grids that aren't already covered by a text-detected table.
+    // Skipped when useTables is false — grid lines instead flow through as
+    // ordinary 'line' events (already in `events` above) and become plain
+    // paragraphs; the visual-gap logic above picks up their empty regions.
+    if (useTables) {
+      const textYRanges = tables.map(t => ({
+        minY: lines[t.endIdx].y, maxY: lines[t.startIdx].y,
+      }));
+      for (const grid of borderGrids) {
+        const covered = textYRanges.some(r =>
+          (grid.y + grid.h) >= r.minY - 20 && grid.y <= r.maxY + 20
+        );
+        if (!covered) events.push({ type: 'grid', y: grid.y + grid.h, grid });
+      }
     }
 
     // Add visual region events for detected diagram/graphic gaps.
@@ -2456,7 +2518,7 @@ async function _p2wExtractText(pdfDoc) {
     _flushPara();   // flush last paragraph at end of each page's content
   }
 
-  return { paragraphs, confidence: _p2wConfidence(_cs, median) };
+  return { paragraphs, cs: _cs };
 }
 
 // Computes a confidence score from accumulated conversion stats.
