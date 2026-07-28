@@ -1,0 +1,74 @@
+[
+  {
+    "@type": "Question",
+    "name": "Công cụ OCR này có thực sự miễn phí không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có, hoàn toàn miễn phí. Không có gói đăng ký, không có cấp cao cấp, không tính phí theo file. Bộ máy OCR (Tesseract.js) là mã nguồn mở và chạy hoàn toàn trong trình duyệt của bạn."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFree có lưu trữ hoặc ghi lại file của tôi sau khi xử lý không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không. PDFree không có máy chủ backend nào nhận file của bạn, nên không có gì có thể được lưu trữ, ghi lại hay giữ lại. PDF và văn bản nhận dạng của bạn chỉ tồn tại trong bộ nhớ trình duyệt trong phiên làm việc và bị xóa khi bạn đóng tab."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "File của tôi có được tải lên máy chủ không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không bao giờ. Toàn bộ quá trình xử lý diễn ra trong tab trình duyệt của bạn. File PDF của bạn không bao giờ rời khỏi thiết bị — không máy chủ nào nhận được nó. Bộ máy Tesseract.js được tải từ CDN một lần và lưu cache; sau đó chạy hoàn toàn ngoại tuyến."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Nhận diện ngôn ngữ tự động hoạt động thế nào?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree phân tích văn bản từ các trang scan của bạn và đề xuất ngôn ngữ tài liệu có khả năng cao nhất trước khi chạy OCR — bạn không cần biết trước. Việc này hoạt động độc lập với ngôn ngữ giao diện của trang web. Bạn luôn có thể ghi đè đề xuất từ menu thả xuống."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Những ngôn ngữ nào được hỗ trợ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "18 ngôn ngữ: Anh, Pháp, Đức, Tây Ban Nha, Ý, Bồ Đào Nha, Nga, Uzbek, Hà Lan, Ba Lan, Thổ Nhĩ Kỳ, Ả Rập, Nhật, Trung (Giản thể và Phồn thể), Hàn, Hindi và Thái."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDF có trông khác đi sau khi OCR không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không. PDFree thêm một lớp văn bản vô hình lên trên các trang scan gốc của bạn. Giao diện không thay đổi — hình ảnh, bố cục và định dạng vẫn giữ nguyên chính xác."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Vì sao chất lượng OCR của tôi bị đánh giá Khá hoặc Kém?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Độ chính xác OCR phụ thuộc vào chất lượng bản scan gốc. Độ phân giải thấp (dưới 150 DPI), trang mờ hoặc nghiêng, nền màu và chữ viết tay đều làm giảm điểm tin cậy. Để có kết quả tốt nhất: scan ở 300 DPI trở lên với ánh sáng tốt."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Giới hạn dung lượng file là bao nhiêu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "OCR PDFree hỗ trợ file lên đến 200 MB. Trên di động (iOS/iPadOS), xử lý giới hạn ở 30 trang đầu tiên — hãy tách PDF trước để xử lý phần còn lại. Không có giới hạn trên trình duyệt máy tính."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Có hoạt động ngoại tuyến không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có. Sau khi bộ máy Tesseract.js được tải về ở lần chạy OCR đầu tiên, PDFree hoạt động hoàn toàn ngoại tuyến như một Progressive Web App."
+    }
+  }
+]

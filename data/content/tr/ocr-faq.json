@@ -1,0 +1,74 @@
+[
+  {
+    "@type": "Question",
+    "name": "Bu OCR aracı gerçekten ücretsiz mi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet, tamamen ücretsiz. Abonelik yok, premium katman yok, dosya başına ücret yok. OCR motoru (Tesseract.js) açık kaynaklıdır ve tamamen tarayıcınızda çalışır."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFree, işlemden sonra dosyalarımı saklıyor veya kaydediyor mu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. PDFree'nin dosyalarınızı alan bir arka uç sunucusu yoktur, bu yüzden hiçbir şey saklanamaz, kaydedilemez veya tutulamaz. PDF'iniz ve tanınan metin yalnızca oturum boyunca tarayıcınızın belleğinde bulunur ve sekmeyi kapattığınızda silinir."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Dosyam bir sunucuya yükleniyor mu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Asla. Tüm işlem tarayıcı sekmenizin içinde gerçekleşir. PDF dosyanız hiçbir zaman cihazınızdan çıkmaz — hiçbir sunucu onu almaz. Tesseract.js motoru bir CDN'den bir kez indirilir ve önbelleğe alınır; sonrasında tamamen çevrimdışı çalışır."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Otomatik dil algılama nasıl çalışır?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree, taranan sayfalarınızdan metni analiz eder ve OCR'ı çalıştırmadan önce belgenin en olası dilini önerir — önceden bilmenize gerek yoktur. Bu, sitenin arayüz dilinden bağımsız olarak çalışır. Öneriyi her zaman açılır menüden değiştirebilirsiniz."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Hangi diller destekleniyor?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "18 dil: İngilizce, Fransızca, Almanca, İspanyolca, İtalyanca, Portekizce, Rusça, Özbekçe, Felemenkçe, Lehçe, Türkçe, Arapça, Japonca, Çince (Basitleştirilmiş ve Geleneksel), Korece, Hintçe ve Tayca."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "OCR sonrasında PDF farklı görünecek mi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. PDFree, orijinal taranmış sayfalarınızın üzerine görünmez bir metin katmanı ekler. Görünüm değişmez — görüntüler, düzen ve biçimlendirme tam olarak aynı kalır."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "OCR kalitem neden Orta veya Zayıf olarak değerlendiriliyor?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "OCR doğruluğu orijinal tarama kalitesine bağlıdır. Düşük çözünürlük (150 DPI altı), bulanık veya eğik sayfalar, renkli arka planlar ve el yazısı, güven puanını düşürür. En iyi sonuçlar için: 300 DPI veya üzerinde, iyi aydınlatmayla tarayın."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Dosya boyutu sınırı nedir?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree OCR, 200 MB'a kadar dosyaları destekler. Mobilde (iOS/iPadOS), bellek sorunlarını önlemek için işlem ilk 30 sayfayla sınırlıdır — geri kalanını işlemek için önce PDF'i bölün. Masaüstü tarayıcılarında sınır yoktur."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Çevrimdışı çalışır mı?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. İlk OCR çalıştırmanızda Tesseract.js motoru indirildikten sonra, PDFree bir Progressive Web App olarak tamamen çevrimdışı çalışır."
+    }
+  }
+]

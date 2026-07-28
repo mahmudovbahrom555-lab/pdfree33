@@ -1,0 +1,74 @@
+[
+  {
+    "@type": "Question",
+    "name": "Is deze OCR-tool echt gratis?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja, volledig gratis. Geen abonnement, geen premiumniveau, geen kosten per bestand. De OCR-engine (Tesseract.js) is open source en draait volledig in je browser."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bewaart of registreert PDFree mijn bestanden na verwerking?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. PDFree heeft geen backend-server die je bestanden ontvangt, dus er kan niets worden opgeslagen, geregistreerd of bewaard. Je PDF en de herkende tekst bestaan alleen in het geheugen van je browser tijdens de sessie en worden gewist zodra je het tabblad sluit."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Wordt mijn bestand naar een server geüpload?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nooit. Alle verwerking gebeurt in je browsertab. Je PDF-bestand verlaat nooit je apparaat — geen server ontvangt het ooit. De Tesseract.js-engine wordt eenmalig gedownload van een CDN en gecached; daarna werkt hij volledig offline."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Hoe werkt de automatische taaldetectie?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree analyseert tekst van je gescande pagina's en stelt de meest waarschijnlijke documenttaal voor voordat de OCR draait — je hoeft het niet vooraf te weten. Dit werkt onafhankelijk van de interfacetaal van de site. Je kunt de suggestie altijd overschrijven via het dropdownmenu."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Welke talen worden ondersteund?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "18 talen: Engels, Frans, Duits, Spaans, Italiaans, Portugees, Russisch, Oezbeeks, Nederlands, Pools, Turks, Arabisch, Japans, Chinees (vereenvoudigd en traditioneel), Koreaans, Hindi en Thais."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Ziet de PDF er anders uit na OCR?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. PDFree voegt een onzichtbare tekstlaag toe boven je originele gescande pagina's. Het uiterlijk verandert niet — afbeeldingen, lay-out en opmaak blijven exact hetzelfde."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Waarom wordt mijn OCR-kwaliteit als Matig of Slecht beoordeeld?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "De OCR-nauwkeurigheid hangt af van de kwaliteit van de originele scan. Lage resolutie (onder 150 DPI), wazige of scheve pagina's, gekleurde achtergronden en handschrift verlagen allemaal de betrouwbaarheidsscore. Voor de beste resultaten: scan op 300 DPI of hoger met goede verlichting."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Wat is de maximale bestandsgrootte?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree OCR ondersteunt bestanden tot 200 MB. Op mobiel (iOS/iPadOS) is de verwerking beperkt tot de eerste 30 pagina's om geheugenproblemen te voorkomen — splits de PDF eerst om de rest te verwerken. Geen limieten op desktopbrowsers."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Werkt het offline?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Zodra de Tesseract.js-engine bij je eerste OCR-run is gedownload, werkt PDFree volledig offline als Progressive Web App."
+    }
+  }
+]

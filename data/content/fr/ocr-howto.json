@@ -1,0 +1,38 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Comment appliquer l'OCR à un PDF pour le rendre consultable",
+  "description": "Rendez un PDF scanné consultable et extrayez son texte — gratuit, entièrement traité dans votre navigateur, avec détection automatique de la langue du document.",
+  "totalTime": "PT5M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — outil OCR gratuit basé sur le navigateur, aucun envoi requis" }],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Ouvrez votre PDF scanné",
+      "text": "Cliquez sur « Choisir un PDF » ou glissez votre PDF scanné dans la zone de dépôt. PDFree détecte automatiquement si votre PDF est scanné ou possède déjà une couche de texte.",
+      "url": "https://pdfree.io/fr/ocr-pdf/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Laissez PDFree détecter la langue ou choisissez-la vous-même",
+      "text": "PDFree analyse la page et suggère automatiquement la langue du document — aucune supposition requise. Modifiez-la depuis le menu déroulant si besoin. Les PDF avec couche de texte sautent cette étape.",
+      "url": "https://pdfree.io/fr/ocr-pdf/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Cliquez sur « Rendre le PDF cherchable »",
+      "text": "Le moteur OCR (Tesseract.js) traite chaque page localement dans votre navigateur — rien n'est envoyé. Une barre de progression indique le temps restant estimé.",
+      "url": "https://pdfree.io/fr/ocr-pdf/#step3"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 4,
+      "name": "Téléchargez le PDF consultable",
+      "text": "Votre PDF consultable se télécharge automatiquement une fois l'OCR terminé. L'apparence d'origine ne change pas — seule une couche de texte invisible est ajoutée.",
+      "url": "https://pdfree.io/fr/ocr-pdf/#step4"
+    }
+  ]
+}

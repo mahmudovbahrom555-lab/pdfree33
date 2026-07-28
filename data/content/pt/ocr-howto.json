@@ -1,0 +1,38 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Como fazer OCR em um PDF e torná-lo pesquisável",
+  "description": "Torne um PDF digitalizado pesquisável e extraia seu texto — grátis, processado inteiramente no seu navegador, com detecção automática do idioma do documento.",
+  "totalTime": "PT5M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — ferramenta de OCR gratuita baseada no navegador, sem necessidade de upload" }],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Abra seu PDF digitalizado",
+      "text": "Clique em 'Escolher PDF' ou arraste seu PDF digitalizado para a área de soltar. O PDFree detecta automaticamente se seu PDF está digitalizado ou já tem uma camada de texto.",
+      "url": "https://pdfree.io/pt/ocr-pdf/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Deixe o PDFree detectar o idioma ou escolha você mesmo",
+      "text": "O PDFree analisa a página e sugere o idioma do documento automaticamente — sem precisar adivinhar. Você pode mudar no menu suspenso se precisar. PDFs com camada de texto pulam esta etapa.",
+      "url": "https://pdfree.io/pt/ocr-pdf/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Clique em 'Tornar PDF pesquisável'",
+      "text": "O mecanismo de OCR (Tesseract.js) processa cada página localmente no seu navegador — nada é enviado. Uma barra de progresso mostra o tempo estimado restante.",
+      "url": "https://pdfree.io/pt/ocr-pdf/#step3"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 4,
+      "name": "Baixe o PDF pesquisável",
+      "text": "Seu PDF pesquisável é baixado automaticamente quando o OCR termina. A aparência original não muda — apenas uma camada de texto invisível é adicionada.",
+      "url": "https://pdfree.io/pt/ocr-pdf/#step4"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Cách OCR một PDF và Làm cho Nó Có Thể Tìm Kiếm",
+  "description": "Làm cho một PDF scan có thể tìm kiếm và trích xuất văn bản của nó — miễn phí, xử lý hoàn toàn trong trình duyệt của bạn, với nhận diện ngôn ngữ tài liệu tự động.",
+  "totalTime": "PT5M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — công cụ OCR miễn phí chạy trên trình duyệt, không cần tải lên" }],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Mở PDF scan của bạn",
+      "text": "Bấm 'Chọn PDF' hoặc kéo PDF scan của bạn vào vùng thả file. PDFree tự động phát hiện xem PDF của bạn đã scan hay đã có lớp văn bản.",
+      "url": "https://pdfree.io/vi/ocr-pdf/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Để PDFree tự nhận diện ngôn ngữ hoặc tự chọn",
+      "text": "PDFree phân tích trang và tự động đề xuất ngôn ngữ tài liệu — không cần đoán. Đổi từ menu thả xuống nếu cần. PDF có lớp văn bản sẽ bỏ qua bước này.",
+      "url": "https://pdfree.io/vi/ocr-pdf/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Bấm 'Làm PDF Có Thể Tìm Kiếm'",
+      "text": "Bộ máy OCR (Tesseract.js) xử lý từng trang cục bộ trong trình duyệt của bạn — không có gì được tải lên. Thanh tiến trình hiển thị thời gian ước tính còn lại.",
+      "url": "https://pdfree.io/vi/ocr-pdf/#step3"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 4,
+      "name": "Tải PDF có thể tìm kiếm về máy",
+      "text": "PDF có thể tìm kiếm của bạn tự động tải về khi OCR hoàn tất. Giao diện gốc không thay đổi — chỉ có lớp văn bản vô hình được thêm vào.",
+      "url": "https://pdfree.io/vi/ocr-pdf/#step4"
+    }
+  ]
+}

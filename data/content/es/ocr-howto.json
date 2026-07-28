@@ -1,0 +1,38 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Cómo aplicar OCR a un PDF y hacerlo buscable",
+  "description": "Haz que un PDF escaneado sea buscable y extrae su texto — gratis, procesado enteramente en tu navegador, con detección automática del idioma del documento.",
+  "totalTime": "PT5M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — herramienta OCR gratuita basada en el navegador, sin necesidad de subir archivos" }],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Abre tu PDF escaneado",
+      "text": "Haz clic en 'Elegir PDF' o arrastra tu PDF escaneado a la zona de destino. PDFree detecta automáticamente si tu PDF está escaneado o ya tiene una capa de texto.",
+      "url": "https://pdfree.io/es/ocr-pdf/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Deja que PDFree detecte el idioma o elígelo tú mismo",
+      "text": "PDFree analiza la página y sugiere el idioma del documento automáticamente — sin adivinar. Puedes cambiarlo desde el menú desplegable si lo necesitas. Los PDFs con capa de texto se saltan este paso.",
+      "url": "https://pdfree.io/es/ocr-pdf/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Haz clic en 'Hacer PDF buscable'",
+      "text": "El motor OCR (Tesseract.js) procesa cada página localmente en tu navegador — nada se sube. Una barra de progreso muestra el tiempo estimado restante.",
+      "url": "https://pdfree.io/es/ocr-pdf/#step3"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 4,
+      "name": "Descarga el PDF buscable",
+      "text": "Tu PDF buscable se descarga automáticamente al terminar el OCR. El aspecto original no cambia — solo se añade una capa de texto invisible.",
+      "url": "https://pdfree.io/es/ocr-pdf/#step4"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Jak wykonać OCR pliku PDF i sprawić, by był przeszukiwalny",
+  "description": "Spraw, by zeskanowany PDF był przeszukiwalny, i wyodrębnij jego tekst — za darmo, przetwarzane w całości w Twojej przeglądarce, z automatycznym wykrywaniem języka dokumentu.",
+  "totalTime": "PT5M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — darmowe narzędzie OCR działające w przeglądarce, bez przesyłania plików" }],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Otwórz swój zeskanowany PDF",
+      "text": "Kliknij „Wybierz PDF” lub przeciągnij zeskanowany PDF do strefy upuszczania. PDFree automatycznie sprawdza, czy Twój PDF jest zeskanowany, czy ma już warstwę tekstu.",
+      "url": "https://pdfree.io/pl/rozpoznaj-tekst-pdf/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Pozwól PDFree wykryć język lub wybierz go sam",
+      "text": "PDFree analizuje stronę i automatycznie sugeruje język dokumentu — bez zgadywania. Zmień go w rozwijanym menu, jeśli trzeba. PDF-y z warstwą tekstu pomijają ten krok.",
+      "url": "https://pdfree.io/pl/rozpoznaj-tekst-pdf/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Kliknij „Spraw, by PDF był Przeszukiwalny”",
+      "text": "Silnik OCR (Tesseract.js) przetwarza każdą stronę lokalnie w Twojej przeglądarce — nic nie jest przesyłane. Pasek postępu pokazuje szacowany pozostały czas.",
+      "url": "https://pdfree.io/pl/rozpoznaj-tekst-pdf/#step3"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 4,
+      "name": "Pobierz przeszukiwalny PDF",
+      "text": "Przeszukiwalny PDF pobiera się automatycznie po zakończeniu OCR. Oryginalny wygląd się nie zmienia — dodawana jest tylko niewidoczna warstwa tekstu.",
+      "url": "https://pdfree.io/pl/rozpoznaj-tekst-pdf/#step4"
+    }
+  ]
+}

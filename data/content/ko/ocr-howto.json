@@ -1,0 +1,38 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDF를 OCR로 검색 가능하게 만드는 방법",
+  "description": "스캔한 PDF를 검색 가능하게 만들고 텍스트를 추출하세요 — 무료, 브라우저에서 완전히 처리, 문서 언어 자동 감지.",
+  "totalTime": "PT5M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — 업로드가 필요 없는 무료 브라우저 기반 OCR 도구" }],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "스캔한 PDF 열기",
+      "text": "'PDF 선택'을 클릭하거나 스캔한 PDF를 드롭 영역으로 끌어다 놓으세요. PDFree는 PDF가 스캔된 것인지 이미 텍스트 레이어가 있는지 자동으로 감지합니다.",
+      "url": "https://pdfree.io/ko/pdf-munja-insik/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "PDFree가 언어를 감지하게 하거나 직접 선택",
+      "text": "PDFree는 페이지를 분석해 문서 언어를 자동으로 제안합니다 — 추측할 필요가 없습니다. 필요하면 드롭다운에서 변경하세요. 텍스트 레이어가 있는 PDF는 이 단계를 건너뜁니다.",
+      "url": "https://pdfree.io/ko/pdf-munja-insik/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "'PDF를 검색 가능하게 만들기' 클릭",
+      "text": "OCR 엔진(Tesseract.js)이 브라우저에서 각 페이지를 로컬로 처리합니다 — 업로드되는 것은 없습니다. 진행률 표시줄에 예상 남은 시간이 표시됩니다.",
+      "url": "https://pdfree.io/ko/pdf-munja-insik/#step3"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 4,
+      "name": "검색 가능한 PDF 다운로드",
+      "text": "OCR이 끝나면 검색 가능한 PDF가 자동으로 다운로드됩니다. 원본 모습은 변하지 않으며 보이지 않는 텍스트 레이어만 추가됩니다.",
+      "url": "https://pdfree.io/ko/pdf-munja-insik/#step4"
+    }
+  ]
+}

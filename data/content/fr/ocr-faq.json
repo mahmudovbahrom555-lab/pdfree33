@@ -1,0 +1,82 @@
+[
+  {
+    "@type": "Question",
+    "name": "Cet outil OCR est-il vraiment gratuit ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui, entièrement gratuit. Pas d'abonnement, pas de palier premium, pas de frais par fichier. Le moteur OCR (Tesseract.js) est open source et fonctionne entièrement dans votre navigateur."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFree conserve-t-il ou enregistre-t-il mes fichiers après traitement ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non. PDFree n'a aucun serveur backend qui reçoit vos fichiers, donc rien ne peut être stocké, enregistré ou conservé. Votre PDF et le texte reconnu n'existent que dans la mémoire de votre navigateur pendant la session, et sont effacés à la fermeture de l'onglet."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Mon fichier est-il envoyé sur un serveur ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Jamais. Tout le traitement se fait dans votre onglet de navigateur. Votre fichier PDF ne quitte jamais votre appareil — aucun serveur ne le reçoit. Le moteur Tesseract.js est téléchargé une fois depuis un CDN et mis en cache ; il fonctionne ensuite entièrement hors ligne."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Comment fonctionne la détection automatique de la langue ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree analyse le texte de vos pages scannées et suggère la langue la plus probable du document avant de lancer l'OCR — inutile de la connaître à l'avance. Cela fonctionne indépendamment de la langue de l'interface du site. Vous pouvez toujours corriger la suggestion depuis le menu déroulant."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Quelles langues sont prises en charge ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "18 langues : anglais, français, allemand, espagnol, italien, portugais, russe, ouzbek, néerlandais, polonais, turc, arabe, japonais, chinois (simplifié et traditionnel), coréen, hindi et thaï."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Le PDF aura-t-il une apparence différente après l'OCR ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non. PDFree ajoute une couche de texte invisible par-dessus vos pages scannées d'origine. L'apparence ne change pas — images, mise en page et formatage restent exactement identiques."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Pourquoi ma qualité OCR est-elle notée Correcte ou Faible ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "La précision de l'OCR dépend de la qualité du scan d'origine. Une faible résolution (moins de 150 DPI), des pages floues ou inclinées, des fonds colorés et du texte manuscrit réduisent le score de confiance. Pour de meilleurs résultats : scannez à 300 DPI ou plus, avec un bon éclairage."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Quelle est la différence entre un PDF consultable et un fichier .txt ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Le PDF consultable conserve vos images scannées et ajoute une couche de texte invisible par-dessus. Le fichier .txt contient uniquement le texte brut avec des séparateurs de page. Téléchargez les deux à la fois avec la case « Télécharger aussi une copie .txt »."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Quelle est la taille maximale de fichier ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "L'OCR PDFree prend en charge les fichiers jusqu'à 200 Mo. Sur mobile (iOS/iPadOS), le traitement est limité aux 30 premières pages — divisez d'abord le PDF pour traiter le reste. Aucune limite sur les navigateurs de bureau."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Fonctionne-t-il hors ligne ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui. Une fois le moteur Tesseract.js téléchargé lors de votre premier OCR, PDFree fonctionne entièrement hors ligne en tant que Progressive Web App."
+    }
+  }
+]

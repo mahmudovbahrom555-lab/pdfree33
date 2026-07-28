@@ -1,0 +1,38 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Bir PDF Nasıl OCR'lanır ve Aranabilir Hale Getirilir",
+  "description": "Taranan bir PDF'i aranabilir hale getirin ve metnini çıkarın — ücretsiz, tamamen tarayıcınızda işlenir, otomatik belge dili algılama ile.",
+  "totalTime": "PT5M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — yükleme gerektirmeyen ücretsiz tarayıcı tabanlı OCR aracı" }],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Taranan PDF'inizi açın",
+      "text": "'PDF Seç'e tıklayın veya taranan PDF'inizi bırakma alanına sürükleyin. PDFree, PDF'inizin taranmış olup olmadığını veya zaten bir metin katmanına sahip olup olmadığını otomatik olarak algılar.",
+      "url": "https://pdfree.io/tr/metin-tanima-pdf/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "PDFree'nin dili algılamasına izin verin veya kendiniz seçin",
+      "text": "PDFree sayfayı analiz eder ve belge dilini otomatik olarak önerir — tahmin etmeye gerek yok. Gerekirse açılır menüden değiştirin. Metin katmanı olan PDF'ler bu adımı atlar.",
+      "url": "https://pdfree.io/tr/metin-tanima-pdf/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "'PDF'i Aranabilir Yap'a tıklayın",
+      "text": "OCR motoru (Tesseract.js) her sayfayı tarayıcınızda yerel olarak işler — hiçbir şey yüklenmez. Bir ilerleme çubuğu tahmini kalan süreyi gösterir.",
+      "url": "https://pdfree.io/tr/metin-tanima-pdf/#step3"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 4,
+      "name": "Aranabilir PDF'i indirin",
+      "text": "OCR tamamlandığında aranabilir PDF'iniz otomatik olarak indirilir. Orijinal görünüm değişmez — yalnızca görünmez bir metin katmanı eklenir.",
+      "url": "https://pdfree.io/tr/metin-tanima-pdf/#step4"
+    }
+  ]
+}

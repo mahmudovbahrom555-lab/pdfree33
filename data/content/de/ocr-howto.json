@@ -1,0 +1,38 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "So machst du ein PDF per OCR durchsuchbar",
+  "description": "Mache ein gescanntes PDF durchsuchbar und extrahiere den Text — kostenlos, vollständig im Browser verarbeitet, mit automatischer Spracherkennung.",
+  "totalTime": "PT5M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — kostenloses browserbasiertes OCR-Tool, kein Upload nötig" }],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Öffne dein gescanntes PDF",
+      "text": "Klicke auf „PDF auswählen\" oder ziehe dein gescanntes PDF in die Ablagefläche. PDFree erkennt automatisch, ob dein PDF gescannt ist oder bereits eine Textebene hat.",
+      "url": "https://pdfree.io/de/ocr-pdf/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Sprache automatisch erkennen lassen oder selbst wählen",
+      "text": "PDFree analysiert die Seite und schlägt die Dokumentsprache automatisch vor — kein Raten nötig. Über das Dropdown lässt sie sich bei Bedarf ändern. Bei Text-PDFs entfällt dieser Schritt.",
+      "url": "https://pdfree.io/de/ocr-pdf/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Klicke auf „PDF durchsuchbar machen\"",
+      "text": "Die OCR-Engine (Tesseract.js) verarbeitet jede Seite lokal im Browser — nichts wird hochgeladen. Ein Fortschrittsbalken zeigt die geschätzte Restzeit.",
+      "url": "https://pdfree.io/de/ocr-pdf/#step3"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 4,
+      "name": "Lade das durchsuchbare PDF herunter",
+      "text": "Dein durchsuchbares PDF wird automatisch heruntergeladen, sobald die OCR fertig ist. Das Erscheinungsbild bleibt unverändert — nur eine unsichtbare Textebene wird hinzugefügt.",
+      "url": "https://pdfree.io/de/ocr-pdf/#step4"
+    }
+  ]
+}

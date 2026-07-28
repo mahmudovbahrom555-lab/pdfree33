@@ -1,0 +1,38 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Cara Melakukan OCR pada PDF dan Membuatnya Bisa Dicari",
+  "description": "Buat PDF hasil scan bisa dicari dan ekstrak teksnya — gratis, diproses sepenuhnya di browser Anda, dengan deteksi bahasa dokumen otomatis.",
+  "totalTime": "PT5M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — alat OCR gratis berbasis browser, tanpa perlu unggah" }],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Buka PDF hasil scan Anda",
+      "text": "Klik 'Pilih PDF' atau seret PDF hasil scan Anda ke area drop. PDFree otomatis mendeteksi apakah PDF Anda hasil scan atau sudah punya lapisan teks.",
+      "url": "https://pdfree.io/id/ocr-pdf/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Biarkan PDFree mendeteksi bahasa atau pilih sendiri",
+      "text": "PDFree menganalisis halaman dan menyarankan bahasa dokumen secara otomatis — tanpa perlu menebak. Ubah dari menu dropdown jika perlu. PDF berlapisan teks melewati langkah ini.",
+      "url": "https://pdfree.io/id/ocr-pdf/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Klik 'Buat PDF Bisa Dicari'",
+      "text": "Mesin OCR (Tesseract.js) memproses tiap halaman secara lokal di browser Anda — tidak ada yang diunggah. Progress bar menampilkan estimasi waktu tersisa.",
+      "url": "https://pdfree.io/id/ocr-pdf/#step3"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 4,
+      "name": "Unduh PDF yang bisa dicari",
+      "text": "PDF bisa dicari Anda otomatis terunduh setelah OCR selesai. Tampilan asli tidak berubah — hanya lapisan teks tak terlihat yang ditambahkan.",
+      "url": "https://pdfree.io/id/ocr-pdf/#step4"
+    }
+  ]
+}

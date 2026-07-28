@@ -1,0 +1,38 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to OCR a PDF and Make It Searchable",
+  "description": "Make a scanned PDF searchable and extract its text — free, processed entirely in your browser, with automatic document-language detection.",
+  "totalTime": "PT5M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — free browser-based OCR tool, no upload required" }],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Open your scanned PDF",
+      "text": "Click 'Choose PDF' or drag your scanned PDF into the drop zone. PDFree automatically detects whether your PDF is scanned or already has a text layer.",
+      "url": "https://pdfree.io/ocr-pdf/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Let PDFree detect the language, or choose it yourself",
+      "text": "For scanned PDFs, PDFree samples the page and suggests the document's language automatically — no guessing required. Override it from the dropdown if needed. Text-layer PDFs skip this step.",
+      "url": "https://pdfree.io/ocr-pdf/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Click Make PDF Searchable",
+      "text": "The OCR engine (Tesseract.js) processes each page locally in your browser — nothing is uploaded. A progress bar shows estimated time remaining.",
+      "url": "https://pdfree.io/ocr-pdf/#step3"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 4,
+      "name": "Download the searchable PDF",
+      "text": "Your searchable PDF downloads automatically when OCR finishes. The original appearance is unchanged — only an invisible text layer is added so you can search, select, and copy text in any PDF reader.",
+      "url": "https://pdfree.io/ocr-pdf/#step4"
+    }
+  ]
+}

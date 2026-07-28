@@ -1,0 +1,82 @@
+[
+  {
+    "@type": "Question",
+    "name": "Esta ferramenta de OCR é realmente grátis?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim, totalmente grátis. Sem assinatura, sem nível premium, sem cobrança por arquivo. O mecanismo de OCR (Tesseract.js) é de código aberto e roda inteiramente no seu navegador."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "O PDFree armazena ou registra meus arquivos após o processamento?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Não. O PDFree não tem servidor algum que receba seus arquivos, então nada pode ser armazenado, registrado ou retido. Seu PDF e o texto reconhecido existem apenas na memória do seu navegador durante a sessão e são apagados ao fechar a aba."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Meu arquivo é enviado a um servidor?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nunca. Todo o processamento acontece dentro da sua aba do navegador. Seu arquivo PDF nunca sai do seu dispositivo — nenhum servidor o recebe. O mecanismo Tesseract.js é baixado uma vez de um CDN e armazenado em cache; depois roda totalmente offline."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Como funciona a detecção automática de idioma?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "O PDFree analisa texto das suas páginas digitalizadas e sugere o idioma mais provável do documento antes de rodar o OCR — você não precisa saber de antemão. Isso funciona independentemente do idioma da interface do site. Você sempre pode substituir a sugestão pelo menu suspenso."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Quais idiomas são suportados?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "18 idiomas: inglês, francês, alemão, espanhol, italiano, português, russo, uzbeque, holandês, polonês, turco, árabe, japonês, chinês (simplificado e tradicional), coreano, hindi e tailandês."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "O PDF vai ficar diferente depois do OCR?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Não. O PDFree adiciona uma camada de texto invisível sobre suas páginas digitalizadas originais. A aparência não muda — imagens, layout e formatação permanecem exatamente iguais."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Por que minha qualidade de OCR está sendo classificada como Razoável ou Ruim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "A precisão do OCR depende da qualidade da digitalização original. Baixa resolução (abaixo de 150 DPI), páginas borradas ou tortas, fundos coloridos e texto manuscrito reduzem a pontuação de confiança. Para melhores resultados: digitalize a 300 DPI ou mais, com boa iluminação."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Qual é a diferença entre um PDF pesquisável e um arquivo .txt?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "O PDF pesquisável mantém suas imagens digitalizadas e adiciona uma camada de texto invisível por cima. O arquivo .txt contém apenas o texto simples com separadores de página. Baixe os dois de uma vez com a caixa \"Também baixar cópia .txt\"."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Qual é o limite de tamanho do arquivo?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "O OCR do PDFree suporta arquivos de até 200 MB. No celular (iOS/iPadOS), o processamento é limitado às primeiras 30 páginas — divida o PDF antes para processar o restante. Não há limites em navegadores de desktop."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Funciona offline?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim. Assim que o mecanismo Tesseract.js é baixado na sua primeira execução, o PDFree funciona completamente offline como um Progressive Web App."
+    }
+  }
+]

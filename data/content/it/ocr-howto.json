@@ -1,0 +1,38 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Come eseguire l'OCR su un PDF e renderlo ricercabile",
+  "description": "Rendi ricercabile un PDF scansionato ed estrai il suo testo — gratis, elaborato interamente nel tuo browser, con rilevamento automatico della lingua del documento.",
+  "totalTime": "PT5M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — strumento OCR gratuito basato su browser, nessun caricamento richiesto" }],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Apri il tuo PDF scansionato",
+      "text": "Clicca su 'Scegli PDF' oppure trascina il tuo PDF scansionato nell'area di rilascio. PDFree rileva automaticamente se il tuo PDF è scansionato o ha già uno strato di testo.",
+      "url": "https://pdfree.io/it/riconosci-testo-pdf/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Lascia che PDFree rilevi la lingua o scegli tu",
+      "text": "PDFree analizza la pagina e suggerisce automaticamente la lingua del documento — nessuna supposizione richiesta. Cambiala dal menu a tendina se necessario. I PDF con strato di testo saltano questo passaggio.",
+      "url": "https://pdfree.io/it/riconosci-testo-pdf/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Clicca su 'Rendi il PDF Ricercabile'",
+      "text": "Il motore OCR (Tesseract.js) elabora ogni pagina localmente nel tuo browser — nulla viene caricato. Una barra di avanzamento mostra il tempo stimato rimanente.",
+      "url": "https://pdfree.io/it/riconosci-testo-pdf/#step3"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 4,
+      "name": "Scarica il PDF ricercabile",
+      "text": "Il tuo PDF ricercabile si scarica automaticamente al termine dell'OCR. L'aspetto originale non cambia — viene aggiunto solo uno strato di testo invisibile.",
+      "url": "https://pdfree.io/it/riconosci-testo-pdf/#step4"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Hoe een PDF te OCR'en en Doorzoekbaar te Maken",
+  "description": "Maak een gescande PDF doorzoekbaar en haal de tekst eruit — gratis, volledig verwerkt in je browser, met automatische detectie van de documenttaal.",
+  "totalTime": "PT5M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — gratis browsergebaseerde OCR-tool, geen upload nodig" }],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Open je gescande PDF",
+      "text": "Klik op 'PDF kiezen' of sleep je gescande PDF naar de dropzone. PDFree detecteert automatisch of je PDF gescand is of al een tekstlaag heeft.",
+      "url": "https://pdfree.io/nl/pdf-tekstherkenning/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Laat PDFree de taal detecteren of kies zelf",
+      "text": "PDFree analyseert de pagina en stelt automatisch de documenttaal voor — geen giswerk nodig. Wijzig dit via het dropdownmenu indien nodig. PDF's met een tekstlaag slaan deze stap over.",
+      "url": "https://pdfree.io/nl/pdf-tekstherkenning/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Klik op 'PDF Doorzoekbaar Maken'",
+      "text": "De OCR-engine (Tesseract.js) verwerkt elke pagina lokaal in je browser — er wordt niets geüpload. Een voortgangsbalk toont de geschatte resterende tijd.",
+      "url": "https://pdfree.io/nl/pdf-tekstherkenning/#step3"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 4,
+      "name": "Download de doorzoekbare PDF",
+      "text": "Je doorzoekbare PDF wordt automatisch gedownload zodra de OCR klaar is. Het originele uiterlijk verandert niet — er wordt alleen een onzichtbare tekstlaag toegevoegd.",
+      "url": "https://pdfree.io/nl/pdf-tekstherkenning/#step4"
+    }
+  ]
+}

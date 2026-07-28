@@ -1,0 +1,74 @@
+[
+  {
+    "@type": "Question",
+    "name": "Apakah alat OCR ini benar-benar gratis?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ya, sepenuhnya gratis. Tanpa langganan, tanpa tingkat premium, tanpa biaya per file. Mesin OCR (Tesseract.js) bersifat open-source dan berjalan sepenuhnya di browser Anda."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah PDFree menyimpan atau mencatat file saya setelah diproses?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak. PDFree tidak memiliki server backend yang menerima file Anda, jadi tidak ada yang bisa disimpan, dicatat, atau dipertahankan. PDF dan teks hasil pengenalan Anda hanya ada di memori browser selama sesi berlangsung dan terhapus saat Anda menutup tab."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah file saya diunggah ke server?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak pernah. Semua pemrosesan terjadi di dalam tab browser Anda. File PDF Anda tidak pernah meninggalkan perangkat — tidak ada server yang menerimanya. Mesin Tesseract.js diunduh sekali dari CDN dan disimpan cache; setelah itu berjalan sepenuhnya offline."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bagaimana cara kerja deteksi bahasa otomatis?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree menganalisis teks dari halaman hasil scan Anda dan menyarankan bahasa dokumen yang paling mungkin sebelum OCR dijalankan — Anda tidak perlu tahu sebelumnya. Ini bekerja lepas dari bahasa antarmuka situs. Anda selalu bisa mengganti saran itu dari menu dropdown."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bahasa apa saja yang didukung?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "18 bahasa: Inggris, Prancis, Jerman, Spanyol, Italia, Portugis, Rusia, Uzbek, Belanda, Polandia, Turki, Arab, Jepang, Mandarin (Sederhana dan Tradisional), Korea, Hindi, dan Thai."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah PDF akan terlihat berbeda setelah OCR?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak. PDFree menambahkan lapisan teks tak terlihat di atas halaman hasil scan asli Anda. Tampilan tidak berubah — gambar, tata letak, dan format tetap persis sama."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kenapa kualitas OCR saya dinilai Cukup atau Buruk?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Akurasi OCR bergantung pada kualitas scan asli. Resolusi rendah (di bawah 150 DPI), halaman buram atau miring, latar belakang berwarna, dan tulisan tangan semuanya menurunkan skor kepercayaan. Untuk hasil terbaik: scan di 300 DPI atau lebih dengan pencahayaan baik."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Berapa batas ukuran file?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "OCR PDFree mendukung file hingga 200 MB. Di ponsel (iOS/iPadOS), pemrosesan dibatasi hanya 30 halaman pertama — pisahkan PDF dulu untuk memproses sisanya. Tidak ada batasan di browser desktop."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah bisa dipakai offline?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ya. Setelah mesin Tesseract.js diunduh saat OCR pertama Anda, PDFree bekerja sepenuhnya offline sebagai Progressive Web App."
+    }
+  }
+]

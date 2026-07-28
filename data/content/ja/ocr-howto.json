@@ -1,0 +1,38 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDFをOCRして検索可能にする方法",
+  "description": "スキャンしたPDFを検索可能にし、テキストを抽出します — 無料、完全にブラウザ内で処理、文書の言語を自動検出。",
+  "totalTime": "PT5M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — アップロード不要の無料ブラウザ内OCRツール" }],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "スキャンしたPDFを開く",
+      "text": "「PDFを選択」をクリックするか、スキャンしたPDFをドロップゾーンにドラッグします。PDFreeはPDFがスキャンされたものか、すでにテキスト層があるかを自動的に判定します。",
+      "url": "https://pdfree.io/ja/pdf-moji-ninshiki/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "言語を自動検出させるか自分で選ぶ",
+      "text": "PDFreeはページを解析して文書の言語を自動的に提案します — 推測は不要です。必要ならドロップダウンから変更できます。テキスト層のあるPDFはこの手順を省略します。",
+      "url": "https://pdfree.io/ja/pdf-moji-ninshiki/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "「PDFを検索可能にする」をクリック",
+      "text": "OCRエンジン（Tesseract.js）がブラウザ内で各ページをローカルに処理します — アップロードは一切ありません。進捗バーで推定残り時間が表示されます。",
+      "url": "https://pdfree.io/ja/pdf-moji-ninshiki/#step3"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 4,
+      "name": "検索可能なPDFをダウンロード",
+      "text": "OCRが完了すると検索可能なPDFが自動的にダウンロードされます。元の見た目は変わらず、見えないテキスト層が追加されるだけです。",
+      "url": "https://pdfree.io/ja/pdf-moji-ninshiki/#step4"
+    }
+  ]
+}
