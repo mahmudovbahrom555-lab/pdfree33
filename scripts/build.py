@@ -140,7 +140,7 @@ _NAV_TOOL_IDS = [
     'merge', 'split', 'compress', 'jpg2pdf', 'pdf2jpg',
     'watermark', 'pagenum', 'metadata', 'extract',
     # draw-on-pdf inserted here (EN-only, no locale slugs)
-    'rotate', 'protect', 'pdf2word', 'pdf2excel', 'pdf2ppt', 'pdf2md', 'unlock',
+    'rotate', 'protect', 'ocr', 'pdf2word', 'pdf2excel', 'pdf2ppt', 'pdf2md', 'unlock',
 ]
 
 def _build_nav_items(lang, all_tools):
@@ -373,9 +373,10 @@ SPECIALTY_PAGES = [
     'hipaa-pdf-tools',
     'ilovepdf-alternative',
     'compress-large-pdf-free',
-    # compare-pdf is EN-only so stays here; ocr-pdf/pdf-to-word/draw-on-pdf/
-    # secure-pdf-tools/merge-pdf-without-uploading/pdf-tools-no-upload are
-    # handled by _lang_specialty below (with full locale alternates).
+    # compare-pdf is EN-only so stays here; draw-on-pdf/secure-pdf-tools/
+    # merge-pdf-without-uploading/pdf-tools-no-upload are handled by
+    # _lang_specialty below (with full locale alternates). ocr-pdf and
+    # pdf-to-word are fully migrated to tools-config (see _ssg_fully_migrated).
     'compare-pdf',
     # pdf-to-word-free is EN-only (no locale variants)
     'pdf-to-word-free',
@@ -585,24 +586,11 @@ def _write_sitemap(config, out_dir):
 
     # ── Non-EN static specialty pages ──────────────────────────
     # Static specialty pages that exist in language subdirs but aren't
-    # in tools-config (ocr, draw, pdf-to-word, flatten in each locale).
-    # pdf-to-word EN is now in tools-config → its EN URL block comes from
-    # the tools section above; skip EN here to avoid a duplicate sitemap entry.
+    # in tools-config (draw, flatten in each locale).
+    # pdf-to-word and ocr-pdf are now in tools-config → their URL blocks come
+    # from the tools section above; kept out of this dict entirely to avoid
+    # duplicate sitemap entries (see _ssg_fully_migrated below).
     _lang_specialty = {
-        'ocr-pdf': {
-            'en': 'ocr-pdf',
-            'de': 'de/ocr-pdf',
-            'es': 'es/ocr-pdf',
-            'fr': 'fr/ocr-pdf',
-            'pt': 'pt/ocr-pdf',
-        },
-        'pdf-to-word': {
-            'en': 'pdf-to-word',
-            'de': 'de/pdf-zu-word',
-            'es': 'es/pdf-a-word',
-            'fr': 'fr/pdf-en-word',
-            'pt': 'pt/pdf-para-word',
-        },
         'draw-on-pdf': {
             'en': 'draw-on-pdf',
             'de': 'de/pdf-zeichnen',
@@ -651,7 +639,9 @@ def _write_sitemap(config, out_dir):
     }
     # Tools fully migrated to SSG (all locales in tools-config) — all URL blocks
     # come from the tools loop above; skip the entire tool here to avoid duplicates.
-    _ssg_fully_migrated = {'pdf-to-word'}
+    # (Both are already absent from _lang_specialty above; kept here as a documented
+    # record of what's been migrated, matching how pdf-to-word's migration left it.)
+    _ssg_fully_migrated = {'pdf-to-word', 'ocr-pdf'}
 
     for en_key, loc_map in _lang_specialty.items():
         if en_key in _ssg_fully_migrated:

@@ -2,6 +2,7 @@
 // Copyright (C) 2025 PDFree Contributors
 
 import { loadPdfJs } from './pdf2jpgUI.js';
+import { loadPdfLib } from './lazyLibs.js';
 import { t } from './i18n.js';
 import { saveHandoff } from './handoff.js';
 
@@ -766,6 +767,11 @@ function _bindMergeBtn() {
         _showSuccess('Text extracted and saved to your device.');
       } else {
         const myGen = ++_generation;
+        // On the SPA home page pdf-lib is already preloaded (no-op below); on
+        // standalone tool pages (e.g. /ocr-pdf/) it isn't, so fetch it from CDN
+        // now, in parallel with the OCR pass, so it's ready by the time we
+        // need it to build the output PDF a few seconds from now.
+        const pdfLibPromise = loadPdfLib();
         const { ocrPages, fullText, avgConfidence } = await _runOcr(_file, myGen);
         if (myGen !== _generation) return;
         _updateProgress(95, 'Building searchable PDF…');
@@ -776,6 +782,7 @@ function _bindMergeBtn() {
           try { localStorage.setItem(`pdfree_ocr_lang_${usedLang}`, '1'); } catch { /* private browsing */ }
           try { localStorage.setItem('pdfree_ocr_last_lang', usedLang); } catch { /* private browsing */ }
         }
+        await pdfLibPromise;
         const pdfBytes = await _buildSearchablePdf(_file, ocrPages, usedLang);
         _lastResultBlob = new Blob([pdfBytes], { type: 'application/pdf' });
         _lastResultName = _file.name.replace(/\.pdf$/i, '_searchable.pdf');
