@@ -16,7 +16,7 @@
 //  the detector's self-reported confidence (see pdf2wordTables.js's
 //  tbl.confidence, which is a separate, earlier gate in processor.js).
 //
-//  Three checks, each scoped to what's actually verifiable without a
+//  Four checks, each scoped to what's actually verifiable without a
 //  human-labeled corpus (mirrors why Word's port only carries 3 of Atlas's
 //  5 channels — see eriChecks.js's header):
 //    columnConsistency — real tables have a stable column count row to row;
@@ -28,6 +28,12 @@
 //                         (e.g. "1,234.56") but was written as a string
 //                         instead of a real numeric cell loses the one
 //                         thing a spreadsheet is for: sums, sorting, charts.
+//    proseVsData         — two unrelated prose lists placed side by side
+//                         (e.g. a resume's Skills/Interests columns) can
+//                         pass all three checks above and still not be a
+//                         table — see checkProseVsData() below for the
+//                         structural proxy this uses instead of language
+//                         understanding.
 //
 //  Usage:
 //    import { evaluateXlsxStructural } from './eriScoreXlsx.js';
@@ -180,12 +186,60 @@ function checkNumericFidelity(rows) {
   return { score, findings };
 }
 
+// Two unrelated prose lists placed side by side (e.g. a resume's "Skills" /
+// "Interests" columns) can be perfectly column-consistent, use every
+// column, and contain no numbers — passing all three checks above even
+// though the columns share no real relationship. This can't be proven
+// without language understanding, but real tabular data (invoices, budgets,
+// schedules, price lists — the vast majority of tables users actually
+// convert) almost always has at least one short, numeric, or code-like
+// column; free-running multi-word phrases in EVERY column, with no numeric
+// anchor anywhere, is a structural proxy for "two lists", not a table.
+function checkProseVsData(rows) {
+  if (rows.length < 2) return { score: 1.0, findings: [] };
+  // Skip the header row: headers are short in real AND fake tables alike
+  // (e.g. "Skills" / "Interests" is 1 word each), so including it dilutes
+  // the one place this signal is strong — the body rows.
+  const body = rows.slice(1);
+  if (!body.length) return { score: 1.0, findings: [] };
+  let cellCount = 0;
+  let wordCount = 0;
+  let hasNumericAnchor = false;
+  for (const r of body) {
+    for (const c of r.cells) {
+      const text = c.text.trim();
+      if (!text) continue;
+      cellCount++;
+      wordCount += text.split(/\s+/).length;
+      if (NUMERIC_LOOKING.test(text)) hasNumericAnchor = true;
+    }
+  }
+  if (!cellCount) return { score: 1.0, findings: [] };
+  const avgWords = wordCount / cellCount;
+  if (!hasNumericAnchor && avgWords >= 2.0) {
+    return {
+      score: 0.1,
+      findings: [`every column is multi-word prose (avg ${avgWords.toFixed(1)} words/cell) with no numeric or short-code column anywhere — looks like independent text lists placed side by side, not tabular data`],
+    };
+  }
+  return { score: 1.0, findings: [] };
+}
+
 const CHECKS = [
   ['columnConsistency', checkColumnConsistency],
   ['columnDominance',   checkColumnDominance],
   ['numericFidelity',   checkNumericFidelity],
+  ['proseVsData',       checkProseVsData],
 ];
-const DEFAULT_WEIGHTS = { columnConsistency: 0.35, columnDominance: 0.35, numericFidelity: 0.30 };
+// proseVsData carries the heaviest weight: when it fires it's a fairly
+// confident, specific signal (see its own comment), and the other three
+// checks are, by construction, near-perfect for exactly this failure mode
+// (consistent columns, every column used, no numbers to mis-type) — so a
+// lighter weight would let this exact false-positive class slip through
+// the overall average even while proseVsData correctly flags it.
+const DEFAULT_WEIGHTS = {
+  columnConsistency: 0.25, columnDominance: 0.20, numericFidelity: 0.20, proseVsData: 0.35,
+};
 
 /**
  * evaluateXlsxStructural(arrayBuffer, { skipSheets, weights }?) -> {
