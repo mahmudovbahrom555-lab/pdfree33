@@ -20,6 +20,7 @@ import { detectTables, groupItemsIntoLines } from './pdf2wordTables.js';
 import { detectTableGrids } from './pdf2wordBorders.js';
 import { openFeedback } from './feedback.js';
 import { evaluateStructural } from './eriScore.js';
+import { evaluateXlsxStructural } from './eriScoreXlsx.js';
 
 // Below this ERI "tables" score, the text-detected/border-grid tables in the
 // first-pass docx are more likely mis-detected layout (garbled/ghost tables)
@@ -27,6 +28,18 @@ import { evaluateStructural } from './eriScore.js';
 // rebuilds paragraphs-only (no tables) in that case and keeps whichever
 // variant scores higher overall, rather than shipping a probably-broken table.
 const _ERI_TABLE_RETRY_THRESHOLD = 0.75;
+
+// pdf2excel's two independent quality gates, applied in sequence:
+//  1. detectTables()'s OWN confidence (pdf2wordTables.js) already floors at
+//     0.72 before a table is returned at all — _P2E_CONF_THRESHOLD raises
+//     that bar specifically for "does this deserve its own worksheet", vs.
+//     being flattened into the Text sheet as plain rows.
+//  2. _P2E_ERI_THRESHOLD is a second, independent opinion computed from the
+//     ACTUAL produced .xlsx bytes (eriScoreXlsx.js) — a table can pass gate 1
+//     (detector was confident) and still be structurally wrong (e.g. a
+//     confidently-aligned two-column resume layout that isn't tabular data).
+const _P2E_CONF_THRESHOLD = 0.85;
+const _P2E_ERI_THRESHOLD  = 70;
 
 // CamScanner adds a stamp at the bottom of every scanned page. pdf.js
 // sometimes extracts it as two separate items on the same line, so joining
@@ -1252,7 +1265,85 @@ async function _runPdf2Excel(filesSnapshot) {
 
   setProgress(90, 'Building spreadsheet…');
 
-  const { tables, textRows } = extracted;
+  // Gate 1: detector's own confidence (pdf2wordTables.js already floors
+  // emission at 0.72 — this raises the bar specifically for "does this
+  // deserve its own worksheet" vs. being flattened into the Text sheet).
+  // Demoted rows are joined with a double space, same shape as a plain
+  // text line — they're no longer claimed to be tabular data.
+  const keptTables  = [];
+  let   textRows    = [...extracted.textRows];
+  for (const tbl of extracted.tables) {
+    if (tbl.confidence >= _P2E_CONF_THRESHOLD) {
+      keptTables.push(tbl);
+    } else {
+      for (const row of tbl.rows) textRows.push({ page: tbl.page, text: row.join('  ') });
+    }
+  }
+  let tables = keptTables;
+
+  let workbook = _p2eBuildWorkbook(tables, textRows);
+  let buffer   = await workbook.xlsx.writeBuffer();
+
+  // Gate 2: independent structural check computed from the ACTUAL produced
+  // .xlsx bytes (eriScoreXlsx.js), not the detector's self-reported
+  // confidence — a table can pass gate 1 (detector was confident) and still
+  // be structurally wrong (e.g. a confidently-aligned two-column layout
+  // that isn't tabular data at all). Best-effort: any failure here just
+  // ships the gate-1 result, never blocks a successful conversion.
+  if (tables.length && isProcessing) {
+    try {
+      const eri = await evaluateXlsxStructural(buffer);
+      const badSheetNames = new Set(
+        eri.sheets.filter(s => s.eri < _P2E_ERI_THRESHOLD).map(s => s.name)
+      );
+      if (badSheetNames.size) {
+        setProgress(95, 'Verifying table structure…');
+        const survivors = [];
+        tables.forEach((tbl, i) => {
+          if (badSheetNames.has(`Table ${i + 1}`)) {
+            for (const row of tbl.rows) textRows.push({ page: tbl.page, text: row.join('  ') });
+          } else {
+            survivors.push(tbl);
+          }
+        });
+        tables   = survivors;
+        workbook = _p2eBuildWorkbook(tables, textRows);
+        buffer   = await workbook.xlsx.writeBuffer();
+      }
+    } catch {
+      // ERI check is best-effort — never let a scoring failure block a
+      // conversion that already succeeded.
+    }
+  }
+
+  const blob = new Blob([buffer], {
+    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  });
+
+  const baseName = file.name.replace(/\.pdf$/i, '');
+  const filename = `${baseName}.xlsx`;
+  const confidence = _p2eConfidence({ ...extracted, tables });
+  const tableNote = tables.length
+    ? `${tables.length} table${tables.length !== 1 ? 's' : ''} found`
+    : 'no tables found';
+  const desc = `${extracted.totalPages} page${extracted.totalPages !== 1 ? 's' : ''} · ${tableNote} · ${fmtSize(blob.size)}`;
+
+  isProcessing = false;
+  setFilesLocked(false);
+  hideCancelBtn();
+  setProgress(100, t('prog_done'));
+
+  document.dispatchEvent(new CustomEvent('pdfree:success', {
+    detail: { tool: 'pdf2excel', blob, desc, filename, confidence }
+  }));
+}
+
+// Builds the ExcelJS workbook: one worksheet per surviving table, plus a
+// single "Text" sheet for everything not confidently tabular. Split out so
+// _runPdf2Excel() can rebuild it a second time (cheap — no PDF re-parse,
+// no re-detection) after demoting whichever tables fail the post-build ERI
+// structural check.
+function _p2eBuildWorkbook(tables, textRows) {
   const workbook = new window.ExcelJS.Workbook();
   workbook.creator = 'PDFree';
 
@@ -1305,27 +1396,7 @@ async function _runPdf2Excel(filesSnapshot) {
     sheet.addRow(['No extractable text or tables were found in this PDF.']);
   }
 
-  const buffer = await workbook.xlsx.writeBuffer();
-  const blob = new Blob([buffer], {
-    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-  });
-
-  const baseName = file.name.replace(/\.pdf$/i, '');
-  const filename = `${baseName}.xlsx`;
-  const confidence = _p2eConfidence(extracted);
-  const tableNote = tables.length
-    ? `${tables.length} table${tables.length !== 1 ? 's' : ''} found`
-    : 'no tables found';
-  const desc = `${extracted.totalPages} page${extracted.totalPages !== 1 ? 's' : ''} · ${tableNote} · ${fmtSize(blob.size)}`;
-
-  isProcessing = false;
-  setFilesLocked(false);
-  hideCancelBtn();
-  setProgress(100, t('prog_done'));
-
-  document.dispatchEvent(new CustomEvent('pdfree:success', {
-    detail: { tool: 'pdf2excel', blob, desc, filename, confidence }
-  }));
+  return workbook;
 }
 
 // Simplified line-grouping (no heading/RTL-paragraph/rotated-header handling —
