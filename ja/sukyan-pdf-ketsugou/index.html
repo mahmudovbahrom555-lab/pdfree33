@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src  'self' 'wasm-unsafe-eval' blob:
+                https://cdnjs.cloudflare.com https://esm.sh
+                https://plausible.io https://static.cloudflareinsights.com;
+    style-src   'self' 'unsafe-inline';
+    font-src    'self';
+    img-src     'self' data: blob: https:;
+    connect-src 'self' https://cdnjs.cloudflare.com https://*.workers.dev
+                https://plausible.io https://cloudflareinsights.com;
+    worker-src  'self' blob:;
+    object-src  'none';
+  ">
+
+  <title>スキャンPDFを無料で結合 — アップロード不要でスキャン文書を一つに | PDFree</title>
+  <meta name="description" content="スキャンしたPDFファイルを無料で結合 — スキャンしたページや文書を一つのPDFにまとめます。ブラウザ内で動作、アップロード不要、サイズ制限なし、登録不要。">
+  <meta name="keywords" content="スキャン pdf 結合, スキャン文書 結合, スキャンページ 一つのpdfに, スキャンpdf まとめる">
+
+  <meta property="og:title"       content="スキャンPDFを結合 — 無料、アップロード不要、サイズ制限なし">
+  <meta property="og:description" content="スキャンしたPDFファイルを無料で結合 — スキャンしたページや文書を一つのPDFにまとめます。ブラウザ内で動作、アップロード不要、サイズ制限なし、登録不要。">
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://pdfree.io/ja/sukyan-pdf-ketsugou/">
+  <meta property="og:site_name"   content="PDFree">
+  <meta property="og:image"        content="https://pdfree.io/icons/og-image.jpg">
+  <meta property="og:image:width"  content="1200">
+  <meta property="og:image:height" content="633">
+  <meta property="og:image:alt"    content="スキャンPDFを結合 — 無料、アップロード不要、サイズ制限なし">
+  <meta name="twitter:card"       content="summary_large_image">
+  <meta name="twitter:site"       content="@pdfree_io">
+  <meta name="twitter:title"      content="スキャンPDFを結合 — 無料、アップロード不要、サイズ制限なし">
+  <meta name="twitter:description" content="スキャンしたPDFファイルを無料で結合 — スキャンしたページや文書を一つのPDFにまとめます。ブラウザ内で動作、アップロード不要、サイズ制限なし、登録不要。">
+  <meta name="twitter:image"       content="https://pdfree.io/icons/og-image.jpg">
+  <meta name="twitter:image:alt"   content="スキャンPDFを結合 — 無料、アップロード不要、サイズ制限なし">
+
+  <link rel="canonical" href="https://pdfree.io/ja/sukyan-pdf-ketsugou/">
+  <link rel="alternate" hreflang="en"        href="https://pdfree.io/merge-scanned-pdf/">
+  <link rel="alternate" hreflang="de"        href="https://pdfree.io/de/gescannte-pdfs-zusammenfuehren/">
+  <link rel="alternate" hreflang="es"        href="https://pdfree.io/es/unir-pdf-escaneados/">
+  <link rel="alternate" hreflang="fr"        href="https://pdfree.io/fr/fusionner-pdf-scannes/">
+  <link rel="alternate" hreflang="pt"        href="https://pdfree.io/pt/juntar-pdf-escaneados/">
+  <link rel="alternate" hreflang="id"        href="https://pdfree.io/id/gabung-pdf-hasil-scan/">
+  <link rel="alternate" hreflang="vi"        href="https://pdfree.io/vi/ghep-pdf-scan/">
+  <link rel="alternate" hreflang="ru"        href="https://pdfree.io/ru/objedinit-skanirovannye-pdf/">
+  <link rel="alternate" hreflang="ja"        href="https://pdfree.io/ja/sukyan-pdf-ketsugou/">
+  <link rel="alternate" hreflang="it"        href="https://pdfree.io/it/unisci-pdf-scansionati/">
+  <link rel="alternate" hreflang="ko"        href="https://pdfree.io/ko/seukaen-pdf-hapchigi/">
+  <link rel="alternate" hreflang="nl"        href="https://pdfree.io/nl/gescande-pdfs-samenvoegen/">
+  <link rel="alternate" hreflang="pl"        href="https://pdfree.io/pl/polacz-zeskanowane-pdf/">
+  <link rel="alternate" hreflang="tr"        href="https://pdfree.io/tr/taranan-pdf-birlestir/">
+  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/merge-scanned-pdf/">
+
+  <link rel="manifest" href="../../manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="PDFree">
+  <link rel="apple-touch-icon" href="../../icons/icon-192.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+  <link rel="preconnect" href="https://plausible.io">
+  <link rel="preconnect" href="https://static.cloudflareinsights.com">
+  <link rel="preload" href="../../fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../css/fonts.css">
+
+  <script src="../../js/theme.js"></script>
+  <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/animations.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/components.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "スキャンPDFファイルの結合",
+    "description": "スキャンしたPDFファイルを無料で結合 — スキャンしたページや文書を一つのPDFにまとめます。サイズ制限なし、アップロード不要、処理はブラウザ内で行われます。",
+    "url": "https://pdfree.io/ja/sukyan-pdf-ketsugou/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "featureList": [
+      "ファイルサイズ制限なし — 100MB、500MB以上のスキャンPDFも結合可能",
+      "サーバーへのアップロードなし — ファイルはお使いの端末に残ります",
+      "アカウント不要",
+      "スキャン、画像ベース、混在PDFに対応",
+      "オフラインで動作"
+    ],
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.9",
+      "ratingCount": "1243",
+      "bestRating": "5",
+      "worstRating": "1"
+    },
+    "provider": { "@type": "Organization", "name": "PDFree", "url": "https://pdfree.io" }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "スキャンPDFファイルの結合方法",
+    "description": "スキャンしたPDF文書を一つのファイルにまとめます — 無料、アップロード不要、サイズ制限なし。",
+    "totalTime": "PT2M",
+    "tool": [{ "@type": "HowToTool", "name": "PDFree" }],
+    "step": [
+      { "@type": "HowToStep", "position": 1, "name": "PDFreeの結合ツールを開く", "text": "インストール不要、アカウント不要。", "url": "https://pdfree.io/ja/sukyan-pdf-ketsugou/#step1" },
+      { "@type": "HowToStep", "position": 2, "name": "スキャンしたPDFを追加", "text": "スキャンしたPDFファイルをすべて一度にドロップします。ファイルはローカルで処理され、何もアップロードされません。", "url": "https://pdfree.io/ja/sukyan-pdf-ketsugou/#step2" },
+      { "@type": "HowToStep", "position": 3, "name": "ページの順序を並べ替え", "text": "ファイルをドラッグして、最終文書内での表示順を設定します。", "url": "https://pdfree.io/ja/sukyan-pdf-ketsugou/#step3" },
+      { "@type": "HowToStep", "position": 4, "name": "結合してダウンロード", "text": "「PDFファイルを結合」をクリック。結合されたPDFがすぐにダウンロードされます。", "url": "https://pdfree.io/ja/sukyan-pdf-ketsugou/#step4" }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "結合したスキャンPDFがなぜこんなに大きいのですか？",
+        "acceptedAnswer": { "@type": "Answer", "text": "スキャンしたページはフル解像度の画像として保存されます（300 DPIのスキャン ≈ 1ページあたり1〜3MB）。結合後にpdfree.io/ja/pdf-atsuryoku/を使ってファイルサイズを縮小してください — 圧縮は画像が多いスキャンPDFに特に効果的で、サイズを50〜70%削減することが多いです。" }
+      },
+      {
+        "@type": "Question",
+        "name": "スキャンPDFとテキストPDFを一緒に結合できますか？",
+        "acceptedAnswer": { "@type": "Answer", "text": "はい。PDFreeはスキャンPDFとテキストPDFのあらゆる組み合わせを結合できます。結果は各ページをそのまま保持します — スキャンページは画像のまま、テキストページは選択可能なテキストのままです。" }
+      },
+      {
+        "@type": "Question",
+        "name": "スキャンPDFの結合にページ数の制限はありますか？",
+        "acceptedAnswer": { "@type": "Answer", "text": "ページ数の制限はありません。PDFreeはブラウザ内でファイルをローカル処理します。実質的な制限は端末の利用可能なRAMです — 現代の端末は数百ページのスキャンでも問題なく処理できます。" }
+      },
+      {
+        "@type": "Question",
+        "name": "結合前にページの順序を変更できますか？",
+        "acceptedAnswer": { "@type": "Answer", "text": "はい — 「結合」をクリックする前に、ファイルを好みの順序にドラッグしてください。各ファイルは個別の項目として表示され、ドラッグで並べ替えられます。" }
+      },
+      {
+        "@type": "Question",
+        "name": "結合後、スキャンPDF内のテキストを選択可能にするにはどうすればよいですか？",
+        "acceptedAnswer": { "@type": "Answer", "text": "結合したPDFをpdfree.io/ocr-pdf/に通してください — OCRツールがスキャンページに検索可能なテキスト層を追加し、元のスキャン画像はそのまま表示されます。" }
+      }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "PDFree", "item": "https://pdfree.io/" },
+      { "@type": "ListItem", "position": 2, "name": "PDFを結合", "item": "https://pdfree.io/ja/pdf-ketsugou/" },
+      { "@type": "ListItem", "position": 3, "name": "スキャンPDFを無料で結合", "item": "https://pdfree.io/ja/sukyan-pdf-ketsugou/" }
+    ]
+  }
+  </script>
+</head>
+<body data-tool="merge">
+
+  <nav>
+    <a href="../../" class="logo" id="logo" aria-label="ホームへ" style="text-decoration:none">
+      <div class="logo-icon" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+      </div>
+      <span class="logo-text">PDF<span>ree</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="../pdf-ketsugou/" class="nav-link" data-tool="merge">結合</a>
+      <a href="../pdf-bunkatsu/" class="nav-link" data-tool="split">分割</a>
+      <a href="../pdf-atsuryoku/" class="nav-link" data-tool="compress">圧縮</a>
+      <a href="../jpg-pdf-henkan/" class="nav-link" data-tool="jpg2pdf">JPG→PDF</a>
+      <a href="../pdf-jpg-henkan/" class="nav-link" data-tool="pdf2jpg">PDF→JPG</a>
+      <a href="../pdf-sukashi/" class="nav-link" data-tool="watermark">透かし</a>
+      <a href="../pdf-page-bango/" class="nav-link" data-tool="pagenum">ページ番号</a>
+      <a href="../pdf-metadeta/" class="nav-link" data-tool="meta">メタデータ</a>
+      <a href="../pdf-chushutsu/" class="nav-link" data-tool="extract">抽出</a>
+      <a href="/draw-on-pdf/" class="nav-link" data-tool="draw-pdf">Draw</a>
+      <a href="../pdf-kaiten/" class="nav-link" data-tool="rotate">回転</a>
+      <a href="../pdf-password/" class="nav-link" data-tool="protect">保護</a>
+      <a href="../pdf-word-henkan/" class="nav-link" data-tool="pdf2word">PDF→Word</a>
+      <a href="../pdf-excel-henkan/" class="nav-link" data-tool="pdf2excel">PDFからExcel</a>
+      <a href="../pdf-powerpoint-henkan/" class="nav-link" data-tool="pdf2ppt">PDFからPowerPoint</a>
+      <a href="../pdf-markdown-henkan/" class="nav-link" data-tool="pdf2md">PDFからMarkdown</a>
+      <a href="../pdf-kaijo/" class="nav-link" data-tool="unlock">PDFのロック解除</a>
+      <a href="/compare-pdf/" class="nav-link" data-tool="compare">Compare</a>
+    </div>
+    <button id="themeToggle" class="theme-toggle" aria-label="ダークモード切替" title="ダークモード切替"></button>
+  </nav>
+
+  <!-- Hero -->
+  <section style="background:var(--green-light);border-bottom:1px solid rgba(45,122,79,0.15);padding:24px 24px 20px;text-align:center;">
+    <div style="max-width:720px;margin:0 auto;">
+      <h1 style="font-size:clamp(22px,3.5vw,34px);font-weight:700;letter-spacing:-0.5px;line-height:1.2;color:var(--text);margin:0 0 6px;">スキャンPDFを無料で結合 — スキャン文書を一つに</h1>
+      <p style="font-size:14px;color:var(--green);margin:0;font-weight:500;">スキャン文書、ページの写真、スキャナー出力 — どんなPDFもアップロード不要で結合</p>
+    </div>
+  </section>
+
+  <!-- Tool -->
+  <div id="tool"></div>
+  <main id="toolArea" class="main-area" aria-busy="false">
+    <div class="tool-header">
+      <div class="tool-header-icon" id="toolIcon" aria-hidden="true">🔗</div>
+      <div class="tool-header-text">
+        <h2 id="toolTitle">スキャンPDFを結合 — サイズ無制限、制限なし</h2>
+        <p  id="toolDesc">スキャンPDFは通常のPDFファイルです。すべて一度にドロップして数秒で結合できます。</p>
+      </div>
+    </div>
+
+    <div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-label="スキャンしたPDFファイルをここにドロップ">
+      <input type="file" id="fileInput" multiple accept=".pdf" aria-hidden="true">
+      <span class="drop-icon" aria-hidden="true">📂</span>
+      <div class="drop-title">スキャンしたPDFファイルをここにドロップ</div>
+      <div class="drop-sub">スキャンPDF、スキャナー出力、写真PDF — サイズ無制限、制限なし</div>
+      <label class="drop-btn" id="chooseFilesBtn" for="fileInput">ファイルを選択</label>
+    </div>
+
+    <div id="fileList"    class="file-list" aria-live="polite"></div>
+    <div id="fileCount"   class="file-count"   style="display:none"></div>
+    <div id="reorderHint" class="reorder-hint" style="display:none">↕ 結合前にファイルをドラッグして並び替え</div>
+
+    <div id="mergeOptions"     class="j2p-options"     style="display:none" aria-label="Merge options"></div>
+    <div id="splitOptions"     style="display:none"></div>
+    <div id="compressOptions"  style="display:none"></div>
+    <div id="jpg2pdfOptions"   style="display:none"></div>
+    <div id="pdf2jpgOptions"   style="display:none"></div>
+    <div id="watermarkOptions" style="display:none"></div>
+    <div id="pageNumOptions"   style="display:none"></div>
+    <div id="metaOptions"      style="display:none"></div>
+    <div id="protectOptions"   style="display:none"></div>
+    <div id="redactOptions"    style="display:none"></div>
+    <div id="rotateOptions"    style="display:none"></div>
+    <div id="pdf2wordOptions"  class="j2p-options"     style="display:none" aria-label="PDF to Word options"></div>
+
+    <button id="mergeBtn"  class="merge-btn"  type="button" disabled data-mode="process">PDFを結合</button>
+    <button id="cancelBtn" class="cancel-btn" type="button" style="display:none">✕ キャンセル</button>
+
+    <div id="progressBar"   class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+    <div id="progressLabel" class="progress-label"></div>
+
+    <div id="successCard" class="success-card" role="alert" aria-live="polite" style="display:none">
+      <div class="success-top">
+        <div class="success-icon">✓</div>
+        <div class="success-text">
+          <h3 id="successTitle">完了！</h3>
+          <p  id="successDesc"></p>
+        </div>
+        <button id="downloadBtn" class="download-btn" type="button">⬇ ダウンロード</button>
+        <button id="shareBtn" class="share-btn" type="button" style="display:none" aria-label="Share"></button>
+      </div>
+      <div id="privacyCleared" class="privacy-cleared" aria-live="polite">
+        <span class="privacy-cleared__icon" aria-hidden="true">🛡️</span>
+        <div class="privacy-cleared__body">
+          <strong class="privacy-cleared__title">ファイルはメモリから消去されました</strong>
+          <span class="privacy-cleared__sub">あなたの文書はどのサーバーにも痕跡を残していません。</span>
+        </div>
+      </div>
+      <div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(45,122,79,0.2);">
+        <p style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--text3);margin:0 0 8px;">次は？</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <a href="/ocr-pdf/" data-handoff style="font-size:13px;background:var(--green-light);color:var(--green);padding:6px 12px;border-radius:6px;text-decoration:none;font-weight:500;border:1px solid rgba(45,122,79,0.2);">検索可能にする（OCR）→</a>
+          <a href="/ja/pdf-atsuryoku/" data-handoff style="font-size:13px;background:var(--surface);color:var(--text2);padding:6px 12px;border-radius:6px;text-decoration:none;border:1px solid var(--border);">結果を圧縮</a>
+          <a href="/ja/pdf-chushutsu/" data-handoff style="font-size:13px;background:var(--surface);color:var(--text2);padding:6px 12px;border-radius:6px;text-decoration:none;border:1px solid var(--border);">ページを抽出</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Badges -->
+  <section style="padding:14px 24px;border-bottom:1px solid var(--border);background:var(--surface);">
+    <div style="max-width:760px;margin:0 auto;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;align-items:center;">
+      <span style="font-size:12px;background:var(--green-light);color:var(--green);padding:4px 11px;border-radius:20px;font-weight:600;">サイズ制限なし</span>
+      <span style="font-size:12px;background:var(--green-light);color:var(--green);padding:4px 11px;border-radius:20px;font-weight:600;">ページ数制限なし</span>
+      <span style="font-size:12px;background:var(--green-light);color:var(--green);padding:4px 11px;border-radius:20px;font-weight:600;">アップロードなし — 端末に残ります</span>
+      <span style="font-size:12px;background:var(--green-light);color:var(--green);padding:4px 11px;border-radius:20px;font-weight:600;">常に無料</span>
+    </div>
+  </section>
+
+  <!-- SEO content -->
+  <hr style="border:none;border-top:2px solid var(--border);margin:48px 24px 0;" aria-hidden="true">
+  <section class="seo-article">
+    <div class="seo-article__inner">
+      <div class="seo-content" style="max-width:800px;margin:60px auto 40px;padding:0 24px;color:var(--text2);line-height:1.8;">
+
+        <h2 style="font-size:26px;color:var(--text);margin:0 0 16px;font-weight:700;">スキャンPDFは通常のPDFファイルです</h2>
+        <p>スキャンPDFとは、ページがテキストではなく画像（PDFコンテナに埋め込まれたJPEGやPNG）であるだけのPDFです。結合の観点からは、スキャンPDFとテキストPDFはまったく同じように扱われます — どんな順序でも、スキャンページとテキストページを自由に組み合わせて結合できます。PDFreeは特別な設定なしで両方に対応します。</p>
+        <p>上のツールにスキャンPDFをドロップし、順序を整えてから「結合」をクリックしてください。結果は、どのPDFビューアでも開ける標準的なPDFファイルです。</p>
+
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 16px;font-weight:700;">スキャンPDFを結合する一般的なシナリオ</h2>
+        <div style="display:flex;flex-direction:column;gap:12px;margin:16px 0 32px;">
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <span style="font-size:20px;flex-shrink:0">🖨️</span>
+            <div><strong style="color:var(--text);">一ページずつスキャンした複数ページ文書</strong> — スキャナーが各ページごとに個別のPDFファイルを生成する場合。それらすべてを一つの完全な文書に結合します。</div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <span style="font-size:20px;flex-shrink:0">📝</span>
+            <div><strong style="color:var(--text);">ページごとにスキャンした紙の契約書</strong> — バラバラにスキャンされた契約書のページを、署名可能な一つの文書にまとめます。</div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <span style="font-size:20px;flex-shrink:0">📅</span>
+            <div><strong style="color:var(--text);">異なるスキャンセッションのページを結合</strong> — 今日スキャンしたページと先週スキャンした追加ページがある場合、両方を一つの統合文書に結合します。</div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <span style="font-size:20px;flex-shrink:0">🧾</span>
+            <div><strong style="color:var(--text);">スキャンした請求書や領収書のアーカイブ</strong> — 毎月スキャンした請求書を、経理や監査用の年間アーカイブファイルに結合します。</div>
+          </div>
+        </div>
+
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 16px;font-weight:700;">ファイルサイズとページ数</h2>
+        <p>スキャンPDFは、各ページがフル解像度の画像として保存されるため、テキストPDFより通常大きくなります。A4ページの300 DPIスキャンは1ページあたり約1〜3MBで、100ページのスキャン文書は100〜300MBになることもあります。PDFreeは処理がブラウザ内で行われサーバーを使わないため、ファイルサイズの制限はありません。実質的な制限は端末の利用可能なRAMのみです。</p>
+
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:18px 20px;margin:20px 0 32px;">
+          <strong style="color:var(--text);display:block;margin:0 0 10px;">スキャンPDFの一般的なRAM使用量</strong>
+          <ul style="margin:0;padding-left:20px;font-size:14px;color:var(--text2);display:flex;flex-direction:column;gap:6px;">
+            <li><strong>8GBのRAM：</strong> 50〜100ページのスキャン（100〜300MB）を快適に処理</li>
+            <li><strong>16GBのRAM：</strong> 300〜500ページのスキャンや数百MBを処理</li>
+            <li><strong>大きなバッチ（500ページ以上）：</strong> 結合前に他のブラウザタブを閉じてRAMを解放してください</li>
+          </ul>
+        </div>
+
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 16px;font-weight:700;">結合後：PDFを検索可能にする</h2>
+        <p>スキャンPDFを結合した後、テキストを選択・検索可能にするためOCR（光学文字認識）を実行したい場合があります。PDFreeのOCRツール（pdfree.io/ocr-pdf/）は、結合したファイルをブラウザ内で完全に処理できます — アップロード不要です。OCRは各スキャンページの上に透明なテキスト層を追加するため、元のスキャン画像は表示されたまま、テキストは検索・コピー可能になります。</p>
+
+        <div style="background:var(--green-light);border-left:4px solid var(--green);padding:18px 20px;border-radius:0 8px 8px 0;margin:20px 0 32px;">
+          <p style="margin:0;font-size:14px;color:var(--text);"><strong>スキャン文書の推奨ワークフロー：</strong></p>
+          <ol style="margin:8px 0 0;padding-left:20px;font-size:14px;color:var(--text);display:flex;flex-direction:column;gap:4px;">
+            <li>すべてのスキャンページを結合 → 一つの結合PDF（このツール）</li>
+            <li>結合ファイルにOCRを実行 → 検索可能なテキスト層（pdfree.io/ocr-pdf/）</li>
+            <li>ファイルが大きすぎて送信できない場合は圧縮（pdfree.io/ja/pdf-atsuryoku/）</li>
+          </ol>
+        </div>
+
+        <!-- FAQ -->
+        <h2 style="font-size:26px;color:var(--text);margin:52px 0 20px;font-weight:700;">よくある質問</h2>
+        <div style="display:flex;flex-direction:column;gap:20px;">
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">結合したスキャンPDFがなぜこんなに大きいのですか？</h3>
+            <p style="margin:0;font-size:14px;">スキャンしたページはフル解像度の画像として保存されます（300 DPIのスキャン ≈ 1ページあたり1〜3MB）。結合後にpdfree.io/ja/pdf-atsuryoku/を使ってファイルサイズを縮小してください — 圧縮は画像が多いスキャンPDFに特に効果的で、サイズを50〜70%削減することが多いです。</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">スキャンPDFとテキストPDFを一緒に結合できますか？</h3>
+            <p style="margin:0;font-size:14px;">はい。PDFreeはスキャンPDFとテキストPDFのあらゆる組み合わせを結合できます。結果は各ページをそのまま保持します — スキャンページは画像のまま、テキストページは選択可能なテキストのままです。</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">スキャンPDFの結合にページ数の制限はありますか？</h3>
+            <p style="margin:0;font-size:14px;">ページ数の制限はありません。PDFreeはブラウザ内でファイルをローカル処理します。実質的な制限は端末の利用可能なRAMです — 現代の端末は数百ページのスキャンでも問題なく処理できます。</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">結合前にページの順序を変更できますか？</h3>
+            <p style="margin:0;font-size:14px;">はい — 「結合」をクリックする前に、ファイルを好みの順序にドラッグしてください。各ファイルは個別の項目として表示され、ドラッグで並べ替えられます。</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">結合後、スキャンPDF内のテキストを選択可能にするにはどうすればよいですか？</h3>
+            <p style="margin:0;font-size:14px;">結合したPDFをpdfree.io/ocr-pdf/に通してください — OCRツールがスキャンページに検索可能なテキスト層を追加し、元のスキャン画像はそのまま表示されます。</p>
+          </div>
+        </div>
+
+        <!-- Related tools -->
+        <h2 style="font-size:26px;color:var(--text);margin:52px 0 12px;font-weight:700;">関連する無料ツール</h2>
+        <ul style="margin:12px 0;padding-left:24px;display:flex;flex-direction:column;gap:8px;">
+          <li><a href="/ja/pdf-ketsugou/" style="color:var(--green);font-weight:500;">PDFを結合</a> — どんなPDFファイルも一つの文書に結合</li>
+          <li><a href="/ja/pdf-atsuryoku/" style="color:var(--green);font-weight:500;">PDF圧縮</a> — 結合したスキャンPDFのサイズを縮小</li>
+          <li><a href="/ocr-pdf/" style="color:var(--green);font-weight:500;">PDF OCR</a> — スキャンしたテキストを検索・選択可能にする</li>
+        </ul>
+
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    PDFree · <strong>すべての処理はブラウザ内で100%行われます</strong> · ファイルは一切アップロードされません<br>
+    <span style="color:var(--green)">🔒</span> 文書はデバイスから出ることはありません &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> すべての人に永久無料で提供<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
+      <a href="/privacy.html" style="color:var(--green)">プライバシー</a> &nbsp;·&nbsp;
+      <a href="/terms.html" style="color:var(--green)">利用規約</a> &nbsp;·&nbsp;
+      <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a> &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green)">GitHub</a>
+    </span>
+  </footer>
+
+  <div id="toast"      class="toast" role="status" aria-live="polite"></div>
+  <div id="hero"       style="display:none"></div>
+  <div id="trustAlert" style="display:none"></div>
+  <div id="noLimitBar" style="display:none"></div>
+  <div id="toolsGrid"  style="display:none"></div>
+  <div id="pwaNudge"   style="display:none"></div>
+
+  <script type="module" src="../../js/locales/ja.js"></script>
+  <script type="module" src="../../js/app.js"></script>
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script>
+</body>
+</html>

@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src  'self' 'wasm-unsafe-eval' blob:
+                https://cdnjs.cloudflare.com https://esm.sh
+                https://plausible.io https://static.cloudflareinsights.com;
+    style-src   'self' 'unsafe-inline';
+    font-src    'self';
+    img-src     'self' data: blob: https:;
+    connect-src 'self' https://cdnjs.cloudflare.com https://*.workers.dev
+                https://plausible.io https://cloudflareinsights.com;
+    worker-src  'self' blob:;
+    object-src  'none';
+  ">
+
+  <title>Ghép PDF Đã Scan Miễn Phí — Kết Hợp Tài Liệu Scan Không Cần Tải Lên | PDFree</title>
+  <meta name="description" content="Ghép các file PDF đã scan miễn phí — kết hợp các trang và tài liệu đã scan thành một PDF. Chạy trong trình duyệt, không tải lên, không giới hạn dung lượng, không cần đăng ký.">
+  <meta name="keywords" content="ghep pdf scan, ket hop tai lieu scan, ghep trang scan thanh mot pdf, ghep file pdf da scan">
+
+  <meta property="og:title"       content="Ghép PDF Đã Scan — Miễn Phí, Không Tải Lên, Không Giới Hạn Dung Lượng">
+  <meta property="og:description" content="Ghép các file PDF đã scan miễn phí — kết hợp các trang và tài liệu đã scan thành một PDF. Chạy trong trình duyệt, không tải lên, không giới hạn dung lượng, không cần đăng ký.">
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://pdfree.io/vi/ghep-pdf-scan/">
+  <meta property="og:site_name"   content="PDFree">
+  <meta property="og:image"        content="https://pdfree.io/icons/og-image.jpg">
+  <meta property="og:image:width"  content="1200">
+  <meta property="og:image:height" content="633">
+  <meta property="og:image:alt"    content="Ghép PDF Đã Scan — Miễn Phí, Không Tải Lên, Không Giới Hạn Dung Lượng">
+  <meta name="twitter:card"       content="summary_large_image">
+  <meta name="twitter:site"       content="@pdfree_io">
+  <meta name="twitter:title"      content="Ghép PDF Đã Scan — Miễn Phí, Không Tải Lên, Không Giới Hạn Dung Lượng">
+  <meta name="twitter:description" content="Ghép các file PDF đã scan miễn phí — kết hợp các trang và tài liệu đã scan thành một PDF. Chạy trong trình duyệt, không tải lên, không giới hạn dung lượng, không cần đăng ký.">
+  <meta name="twitter:image"       content="https://pdfree.io/icons/og-image.jpg">
+  <meta name="twitter:image:alt"   content="Ghép PDF Đã Scan — Miễn Phí, Không Tải Lên, Không Giới Hạn Dung Lượng">
+
+  <link rel="canonical" href="https://pdfree.io/vi/ghep-pdf-scan/">
+  <link rel="alternate" hreflang="en"        href="https://pdfree.io/merge-scanned-pdf/">
+  <link rel="alternate" hreflang="de"        href="https://pdfree.io/de/gescannte-pdfs-zusammenfuehren/">
+  <link rel="alternate" hreflang="es"        href="https://pdfree.io/es/unir-pdf-escaneados/">
+  <link rel="alternate" hreflang="fr"        href="https://pdfree.io/fr/fusionner-pdf-scannes/">
+  <link rel="alternate" hreflang="pt"        href="https://pdfree.io/pt/juntar-pdf-escaneados/">
+  <link rel="alternate" hreflang="id"        href="https://pdfree.io/id/gabung-pdf-hasil-scan/">
+  <link rel="alternate" hreflang="vi"        href="https://pdfree.io/vi/ghep-pdf-scan/">
+  <link rel="alternate" hreflang="ru"        href="https://pdfree.io/ru/objedinit-skanirovannye-pdf/">
+  <link rel="alternate" hreflang="ja"        href="https://pdfree.io/ja/sukyan-pdf-ketsugou/">
+  <link rel="alternate" hreflang="it"        href="https://pdfree.io/it/unisci-pdf-scansionati/">
+  <link rel="alternate" hreflang="ko"        href="https://pdfree.io/ko/seukaen-pdf-hapchigi/">
+  <link rel="alternate" hreflang="nl"        href="https://pdfree.io/nl/gescande-pdfs-samenvoegen/">
+  <link rel="alternate" hreflang="pl"        href="https://pdfree.io/pl/polacz-zeskanowane-pdf/">
+  <link rel="alternate" hreflang="tr"        href="https://pdfree.io/tr/taranan-pdf-birlestir/">
+  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/merge-scanned-pdf/">
+
+  <link rel="manifest" href="../../manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="PDFree">
+  <link rel="apple-touch-icon" href="../../icons/icon-192.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+  <link rel="preconnect" href="https://plausible.io">
+  <link rel="preconnect" href="https://static.cloudflareinsights.com">
+  <link rel="preload" href="../../fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../css/fonts.css">
+
+  <script src="../../js/theme.js"></script>
+  <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/animations.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/components.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Ghép File PDF Đã Scan",
+    "description": "Ghép các file PDF đã scan miễn phí — kết hợp trang và tài liệu đã scan thành một PDF. Không giới hạn dung lượng, không tải lên, xử lý ngay trong trình duyệt của bạn.",
+    "url": "https://pdfree.io/vi/ghep-pdf-scan/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "featureList": [
+      "Không giới hạn dung lượng — ghép PDF scan 100MB, 500MB+",
+      "Không tải lên máy chủ — file ở lại trên thiết bị của bạn",
+      "Không cần tài khoản",
+      "Xử lý PDF scan, PDF ảnh và PDF kết hợp",
+      "Hoạt động ngoại tuyến"
+    ],
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.9",
+      "ratingCount": "1243",
+      "bestRating": "5",
+      "worstRating": "1"
+    },
+    "provider": { "@type": "Organization", "name": "PDFree", "url": "https://pdfree.io" }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "Cách Ghép Các File PDF Đã Scan",
+    "description": "Kết hợp tài liệu PDF đã scan thành một file — miễn phí, không tải lên, không giới hạn dung lượng.",
+    "totalTime": "PT2M",
+    "tool": [{ "@type": "HowToTool", "name": "PDFree" }],
+    "step": [
+      { "@type": "HowToStep", "position": 1, "name": "Mở công cụ Ghép của PDFree", "text": "Không cần cài đặt, không cần tài khoản.", "url": "https://pdfree.io/vi/ghep-pdf-scan/#step1" },
+      { "@type": "HowToStep", "position": 2, "name": "Thêm các PDF đã scan của bạn", "text": "Thả tất cả file PDF đã scan cùng lúc. File được xử lý cục bộ, không có gì được tải lên.", "url": "https://pdfree.io/vi/ghep-pdf-scan/#step2" },
+      { "@type": "HowToStep", "position": 3, "name": "Sắp xếp thứ tự trang", "text": "Kéo các file để đặt thứ tự chúng xuất hiện trong tài liệu cuối cùng.", "url": "https://pdfree.io/vi/ghep-pdf-scan/#step3" },
+      { "@type": "HowToStep", "position": 4, "name": "Ghép và tải xuống", "text": "Nhấp \"Ghép file PDF\". PDF đã ghép tải xuống ngay lập tức.", "url": "https://pdfree.io/vi/ghep-pdf-scan/#step4" }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Tại sao file PDF scan đã ghép của tôi lại nặng vậy?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Các trang scan được lưu dưới dạng ảnh độ phân giải đầy đủ (scan 300 DPI ≈ 1-3 MB mỗi trang). Dùng pdfree.io/vi/nen-pdf/ sau khi ghép để giảm dung lượng — nén hoạt động đặc biệt tốt với PDF scan nhiều ảnh, thường giảm 50-70% dung lượng." }
+      },
+      {
+        "@type": "Question",
+        "name": "Tôi có thể ghép PDF scan với PDF văn bản không?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Có. PDFree ghép mọi kết hợp giữa PDF scan và PDF văn bản. Kết quả giữ nguyên từng trang — trang scan vẫn là ảnh, trang văn bản vẫn có thể chọn được." }
+      },
+      {
+        "@type": "Question",
+        "name": "Có giới hạn số trang khi ghép PDF scan không?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Không có giới hạn trang. PDFree xử lý file cục bộ trong trình duyệt của bạn. Giới hạn thực tế là RAM khả dụng của thiết bị — thiết bị hiện đại xử lý hàng trăm trang scan không vấn đề gì." }
+      },
+      {
+        "@type": "Question",
+        "name": "Tôi có thể sắp xếp lại trang trước khi ghép không?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Có — kéo các file theo thứ tự bạn muốn trước khi nhấp Ghép. Mỗi file hiển thị như một mục riêng; bạn có thể sắp xếp lại bằng cách kéo chúng." }
+      },
+      {
+        "@type": "Question",
+        "name": "Làm sao để văn bản trong PDF scan có thể chọn được sau khi ghép?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Chạy PDF đã ghép qua pdfree.io/ocr-pdf/ — công cụ OCR thêm lớp văn bản có thể tìm kiếm lên các trang scan trong khi vẫn giữ nguyên bản scan gốc hiển thị." }
+      }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "PDFree", "item": "https://pdfree.io/vi/" },
+      { "@type": "ListItem", "position": 2, "name": "Ghép PDF", "item": "https://pdfree.io/vi/gop-pdf/" },
+      { "@type": "ListItem", "position": 3, "name": "Ghép PDF Đã Scan Miễn Phí", "item": "https://pdfree.io/vi/ghep-pdf-scan/" }
+    ]
+  }
+  </script>
+</head>
+<body data-tool="merge">
+
+  <nav>
+    <a href="../" class="logo" id="logo" aria-label="Về trang chủ" style="text-decoration:none">
+      <div class="logo-icon" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+      </div>
+      <span class="logo-text">PDF<span>ree</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="../gop-pdf/" class="nav-link" data-tool="merge">Ghép</a>
+      <a href="../tach-pdf/" class="nav-link" data-tool="split">Tách</a>
+      <a href="../nen-pdf/" class="nav-link" data-tool="compress">Nén</a>
+      <a href="../jpg-sang-pdf/" class="nav-link" data-tool="jpg2pdf">JPG→PDF</a>
+      <a href="../pdf-sang-jpg/" class="nav-link" data-tool="pdf2jpg">PDF→JPG</a>
+      <a href="../them-watermark-pdf/" class="nav-link" data-tool="watermark">Watermark</a>
+      <a href="../danh-so-trang-pdf/" class="nav-link" data-tool="pagenum">Số Trang</a>
+      <a href="../chinh-sua-metadata-pdf/" class="nav-link" data-tool="meta">Metadata</a>
+      <a href="../trich-xuat-pdf/" class="nav-link" data-tool="extract">Trích Xuất</a>
+      <a href="/draw-on-pdf/" class="nav-link" data-tool="draw-pdf">Draw</a>
+      <a href="../xoay-pdf/" class="nav-link" data-tool="rotate">Xoay</a>
+      <a href="../bao-ve-pdf/" class="nav-link" data-tool="protect">Bảo Vệ</a>
+      <a href="../pdf-sang-word/" class="nav-link" data-tool="pdf2word">PDF→Word</a>
+      <a href="../pdf-sang-excel/" class="nav-link" data-tool="pdf2excel">PDF sang Excel</a>
+      <a href="../pdf-sang-powerpoint/" class="nav-link" data-tool="pdf2ppt">PDF sang PowerPoint</a>
+      <a href="../pdf-sang-markdown/" class="nav-link" data-tool="pdf2md">PDF sang Markdown</a>
+      <a href="../mo-khoa-pdf/" class="nav-link" data-tool="unlock">Mở Khóa PDF</a>
+      <a href="/compare-pdf/" class="nav-link" data-tool="compare">Compare</a>
+    </div>
+    <button id="themeToggle" class="theme-toggle" aria-label="Chuyển chế độ tối" title="Chuyển chế độ tối"></button>
+  </nav>
+
+  <!-- Hero -->
+  <section style="background:var(--green-light);border-bottom:1px solid rgba(45,122,79,0.15);padding:24px 24px 20px;text-align:center;">
+    <div style="max-width:720px;margin:0 auto;">
+      <h1 style="font-size:clamp(22px,3.5vw,34px);font-weight:700;letter-spacing:-0.5px;line-height:1.2;color:var(--text);margin:0 0 6px;">Ghép PDF Đã Scan Miễn Phí — Kết Hợp Tài Liệu Scan</h1>
+      <p style="font-size:14px;color:var(--green);margin:0;font-weight:500;">Tài liệu đã scan, ảnh chụp trang, kết quả từ máy scan — ghép bất kỳ PDF nào, không cần tải lên</p>
+    </div>
+  </section>
+
+  <!-- Tool -->
+  <div id="tool"></div>
+  <main id="toolArea" class="main-area" aria-busy="false">
+    <div class="tool-header">
+      <div class="tool-header-icon" id="toolIcon" aria-hidden="true">🔗</div>
+      <div class="tool-header-text">
+        <h2 id="toolTitle">Ghép PDF đã scan — bất kỳ dung lượng nào, không giới hạn</h2>
+        <p  id="toolDesc">PDF đã scan cũng là file PDF thông thường. Thả tất cả cùng lúc và ghép trong vài giây.</p>
+      </div>
+    </div>
+
+    <div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-label="Thả các file PDF đã scan của bạn vào đây">
+      <input type="file" id="fileInput" multiple accept=".pdf" aria-hidden="true">
+      <span class="drop-icon" aria-hidden="true">📂</span>
+      <div class="drop-title">Thả các file PDF đã scan của bạn vào đây</div>
+      <div class="drop-sub">PDF đã scan, kết quả từ máy scan, PDF ảnh — bất kỳ dung lượng nào, không giới hạn</div>
+      <label class="drop-btn" id="chooseFilesBtn" for="fileInput">Chọn file</label>
+    </div>
+
+    <div id="fileList"    class="file-list" aria-live="polite"></div>
+    <div id="fileCount"   class="file-count"   style="display:none"></div>
+    <div id="reorderHint" class="reorder-hint" style="display:none">↕ Kéo để sắp xếp lại file trước khi ghép</div>
+
+    <div id="mergeOptions"     class="j2p-options"     style="display:none" aria-label="Merge options"></div>
+    <div id="splitOptions"     style="display:none"></div>
+    <div id="compressOptions"  style="display:none"></div>
+    <div id="jpg2pdfOptions"   style="display:none"></div>
+    <div id="pdf2jpgOptions"   style="display:none"></div>
+    <div id="watermarkOptions" style="display:none"></div>
+    <div id="pageNumOptions"   style="display:none"></div>
+    <div id="metaOptions"      style="display:none"></div>
+    <div id="protectOptions"   style="display:none"></div>
+    <div id="redactOptions"    style="display:none"></div>
+    <div id="rotateOptions"    style="display:none"></div>
+    <div id="pdf2wordOptions"  class="j2p-options"     style="display:none" aria-label="PDF to Word options"></div>
+
+    <button id="mergeBtn"  class="merge-btn"  type="button" disabled data-mode="process">Ghép PDF</button>
+    <button id="cancelBtn" class="cancel-btn" type="button" style="display:none">✕ Hủy</button>
+
+    <div id="progressBar"   class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+    <div id="progressLabel" class="progress-label"></div>
+
+    <div id="successCard" class="success-card" role="alert" aria-live="polite" style="display:none">
+      <div class="success-top">
+        <div class="success-icon">✓</div>
+        <div class="success-text">
+          <h3 id="successTitle">Xong!</h3>
+          <p  id="successDesc"></p>
+        </div>
+        <button id="downloadBtn" class="download-btn" type="button">⬇ Tải xuống</button>
+        <button id="shareBtn" class="share-btn" type="button" style="display:none" aria-label="Share"></button>
+      </div>
+      <div id="privacyCleared" class="privacy-cleared" aria-live="polite">
+        <span class="privacy-cleared__icon" aria-hidden="true">🛡️</span>
+        <div class="privacy-cleared__body">
+          <strong class="privacy-cleared__title">File đã được xóa khỏi bộ nhớ</strong>
+          <span class="privacy-cleared__sub">Tài liệu của bạn không để lại dấu vết nào trên bất kỳ máy chủ nào.</span>
+        </div>
+      </div>
+      <div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(45,122,79,0.2);">
+        <p style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--text3);margin:0 0 8px;">Tiếp theo?</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <a href="/ocr-pdf/" data-handoff style="font-size:13px;background:var(--green-light);color:var(--green);padding:6px 12px;border-radius:6px;text-decoration:none;font-weight:500;border:1px solid rgba(45,122,79,0.2);">Làm cho có thể tìm kiếm (OCR) →</a>
+          <a href="/vi/nen-pdf/" data-handoff style="font-size:13px;background:var(--surface);color:var(--text2);padding:6px 12px;border-radius:6px;text-decoration:none;border:1px solid var(--border);">Nén kết quả</a>
+          <a href="/vi/trich-xuat-pdf/" data-handoff style="font-size:13px;background:var(--surface);color:var(--text2);padding:6px 12px;border-radius:6px;text-decoration:none;border:1px solid var(--border);">Trích xuất trang</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Badges -->
+  <section style="padding:14px 24px;border-bottom:1px solid var(--border);background:var(--surface);">
+    <div style="max-width:760px;margin:0 auto;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;align-items:center;">
+      <span style="font-size:12px;background:var(--green-light);color:var(--green);padding:4px 11px;border-radius:20px;font-weight:600;">Không giới hạn dung lượng</span>
+      <span style="font-size:12px;background:var(--green-light);color:var(--green);padding:4px 11px;border-radius:20px;font-weight:600;">Không giới hạn số trang</span>
+      <span style="font-size:12px;background:var(--green-light);color:var(--green);padding:4px 11px;border-radius:20px;font-weight:600;">Không tải lên — ở lại trên thiết bị của bạn</span>
+      <span style="font-size:12px;background:var(--green-light);color:var(--green);padding:4px 11px;border-radius:20px;font-weight:600;">Luôn miễn phí</span>
+    </div>
+  </section>
+
+  <!-- SEO content -->
+  <hr style="border:none;border-top:2px solid var(--border);margin:48px 24px 0;" aria-hidden="true">
+  <section class="seo-article">
+    <div class="seo-article__inner">
+      <div class="seo-content" style="max-width:800px;margin:60px auto 40px;padding:0 24px;color:var(--text2);line-height:1.8;">
+
+        <h2 style="font-size:26px;color:var(--text);margin:0 0 16px;font-weight:700;">PDF Đã Scan Cũng Là File PDF Thông Thường</h2>
+        <p>PDF đã scan đơn giản là một PDF mà các trang là ảnh (JPEG hoặc PNG nhúng trong PDF) thay vì văn bản. Xét về việc ghép, PDF scan và PDF văn bản hoạt động giống hệt nhau — có thể kết hợp theo bất kỳ thứ tự nào, với bất kỳ sự pha trộn nào giữa trang scan và trang văn bản. PDFree xử lý cả hai mà không cần cấu hình đặc biệt.</p>
+        <p>Thả các PDF đã scan của bạn vào công cụ bên trên, sắp xếp thứ tự, rồi nhấp Ghép. Kết quả là một file PDF chuẩn có thể mở bằng bất kỳ trình đọc PDF nào.</p>
+
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 16px;font-weight:700;">Các Tình Huống Thường Gặp Khi Ghép PDF Đã Scan</h2>
+        <div style="display:flex;flex-direction:column;gap:12px;margin:16px 0 32px;">
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <span style="font-size:20px;flex-shrink:0">🖨️</span>
+            <div><strong style="color:var(--text);">Tài liệu nhiều trang được scan từng trang một</strong> — máy scan của bạn tạo ra file PDF riêng cho mỗi trang. Ghép tất cả thành một tài liệu hoàn chỉnh.</div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <span style="font-size:20px;flex-shrink:0">📝</span>
+            <div><strong style="color:var(--text);">Hợp đồng giấy được scan từng trang</strong> — tập hợp các trang hợp đồng đã scan rời rạc thành một tài liệu sẵn sàng để ký.</div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <span style="font-size:20px;flex-shrink:0">📅</span>
+            <div><strong style="color:var(--text);">Kết hợp các trang từ các lần scan khác nhau</strong> — nếu bạn scan trang hôm nay và trang bổ sung tuần trước, ghép cả hai thành một tài liệu thống nhất.</div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <span style="font-size:20px;flex-shrink:0">🧾</span>
+            <div><strong style="color:var(--text);">Lưu trữ hóa đơn hoặc biên lai đã scan</strong> — kết hợp hóa đơn scan hàng tháng thành một file lưu trữ cuối năm để phục vụ kế toán hoặc kiểm toán.</div>
+          </div>
+        </div>
+
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 16px;font-weight:700;">Dung Lượng File và Số Trang</h2>
+        <p>PDF đã scan thường lớn hơn PDF văn bản vì mỗi trang được lưu dưới dạng ảnh độ phân giải đầy đủ. Một bản scan 300 DPI của trang A4 nặng khoảng 1-3 MB mỗi trang — tài liệu scan 100 trang có thể nặng 100-300 MB. PDFree không giới hạn dung lượng file vì việc xử lý diễn ra trong trình duyệt của bạn, không phải trên máy chủ. Giới hạn thực tế duy nhất là RAM khả dụng của thiết bị bạn.</p>
+
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:18px 20px;margin:20px 0 32px;">
+          <strong style="color:var(--text);display:block;margin:0 0 10px;">Mức Sử Dụng RAM Điển Hình cho PDF Đã Scan</strong>
+          <ul style="margin:0;padding-left:20px;font-size:14px;color:var(--text2);display:flex;flex-direction:column;gap:6px;">
+            <li><strong>8 GB RAM:</strong> xử lý thoải mái 50-100 trang scan (100-300 MB)</li>
+            <li><strong>16 GB RAM:</strong> xử lý 300-500 trang scan hoặc vài trăm MB</li>
+            <li><strong>Lô lớn (500+ trang):</strong> đóng các tab trình duyệt khác để giải phóng RAM trước khi ghép</li>
+          </ul>
+        </div>
+
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 16px;font-weight:700;">Sau Khi Ghép: Làm Cho PDF Có Thể Tìm Kiếm</h2>
+        <p>Sau khi ghép PDF đã scan, bạn có thể muốn chạy OCR (nhận dạng ký tự quang học) để làm cho văn bản có thể chọn và tìm kiếm được. Công cụ OCR của PDFree (pdfree.io/ocr-pdf/) có thể xử lý toàn bộ file đã ghép ngay trong trình duyệt của bạn — không cần tải lên. OCR thêm một lớp văn bản trong suốt lên mỗi trang scan, để bản scan gốc vẫn hiển thị trong khi văn bản trở nên có thể tìm kiếm và sao chép được.</p>
+
+        <div style="background:var(--green-light);border-left:4px solid var(--green);padding:18px 20px;border-radius:0 8px 8px 0;margin:20px 0 32px;">
+          <p style="margin:0;font-size:14px;color:var(--text);"><strong>Quy trình được đề xuất cho tài liệu đã scan:</strong></p>
+          <ol style="margin:8px 0 0;padding-left:20px;font-size:14px;color:var(--text);display:flex;flex-direction:column;gap:4px;">
+            <li>Ghép tất cả các trang scan → một PDF kết hợp (công cụ này)</li>
+            <li>Chạy OCR trên file đã ghép → lớp văn bản có thể tìm kiếm (pdfree.io/ocr-pdf/)</li>
+            <li>Nén nếu file quá lớn để gửi (pdfree.io/vi/nen-pdf/)</li>
+          </ol>
+        </div>
+
+        <!-- FAQ -->
+        <h2 style="font-size:26px;color:var(--text);margin:52px 0 20px;font-weight:700;">Câu Hỏi Thường Gặp</h2>
+        <div style="display:flex;flex-direction:column;gap:20px;">
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Tại sao file PDF scan đã ghép của tôi lại nặng vậy?</h3>
+            <p style="margin:0;font-size:14px;">Các trang scan được lưu dưới dạng ảnh độ phân giải đầy đủ (scan 300 DPI ≈ 1-3 MB mỗi trang). Dùng pdfree.io/vi/nen-pdf/ sau khi ghép để giảm dung lượng — nén hoạt động đặc biệt tốt với PDF scan nhiều ảnh, thường giảm 50-70% dung lượng.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Tôi có thể ghép PDF scan với PDF văn bản không?</h3>
+            <p style="margin:0;font-size:14px;">Có. PDFree ghép mọi kết hợp giữa PDF scan và PDF văn bản. Kết quả giữ nguyên từng trang — trang scan vẫn là ảnh, trang văn bản vẫn có thể chọn được.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Có giới hạn số trang khi ghép PDF scan không?</h3>
+            <p style="margin:0;font-size:14px;">Không có giới hạn trang. PDFree xử lý file cục bộ trong trình duyệt của bạn. Giới hạn thực tế là RAM khả dụng của thiết bị — thiết bị hiện đại xử lý hàng trăm trang scan không vấn đề gì.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Tôi có thể sắp xếp lại trang trước khi ghép không?</h3>
+            <p style="margin:0;font-size:14px;">Có — kéo các file theo thứ tự bạn muốn trước khi nhấp Ghép. Mỗi file hiển thị như một mục riêng; bạn có thể sắp xếp lại bằng cách kéo chúng.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Làm sao để văn bản trong PDF scan có thể chọn được sau khi ghép?</h3>
+            <p style="margin:0;font-size:14px;">Chạy PDF đã ghép qua pdfree.io/ocr-pdf/ — công cụ OCR thêm lớp văn bản có thể tìm kiếm lên các trang scan trong khi vẫn giữ nguyên bản scan gốc hiển thị.</p>
+          </div>
+        </div>
+
+        <!-- Related tools -->
+        <h2 style="font-size:26px;color:var(--text);margin:52px 0 12px;font-weight:700;">Công Cụ Miễn Phí Liên Quan</h2>
+        <ul style="margin:12px 0;padding-left:24px;display:flex;flex-direction:column;gap:8px;">
+          <li><a href="/vi/gop-pdf/" style="color:var(--green);font-weight:500;">Ghép PDF</a> — kết hợp bất kỳ file PDF nào thành một tài liệu</li>
+          <li><a href="/vi/nen-pdf/" style="color:var(--green);font-weight:500;">Nén PDF</a> — giảm dung lượng của PDF scan đã ghép</li>
+          <li><a href="/ocr-pdf/" style="color:var(--green);font-weight:500;">OCR PDF</a> — làm cho văn bản đã scan có thể tìm kiếm và chọn được</li>
+        </ul>
+
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    PDFree · <strong>Toàn bộ xử lý diễn ra 100% trong trình duyệt của bạn</strong> · File của bạn không bao giờ được tải lên<br>
+    <span style="color:var(--green)">🔒</span> Tài liệu của bạn không bao giờ rời khỏi thiết bị &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> Được xây dựng miễn phí cho tất cả mọi người, mãi mãi<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
+      <a href="/privacy.html" style="color:var(--green)">Quyền riêng tư</a> &nbsp;·&nbsp;
+      <a href="/terms.html" style="color:var(--green)">Điều khoản</a> &nbsp;·&nbsp;
+      <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a> &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green)">GitHub</a>
+    </span>
+  </footer>
+
+  <div id="toast"      class="toast" role="status" aria-live="polite"></div>
+  <div id="hero"       style="display:none"></div>
+  <div id="trustAlert" style="display:none"></div>
+  <div id="noLimitBar" style="display:none"></div>
+  <div id="toolsGrid"  style="display:none"></div>
+  <div id="pwaNudge"   style="display:none"></div>
+
+  <script type="module" src="../../js/locales/vi.js"></script>
+  <script type="module" src="../../js/app.js"></script>
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script>
+</body>
+</html>

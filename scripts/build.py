@@ -637,6 +637,15 @@ def _write_sitemap(config, out_dir):
             'es': 'es/unir-pdf-escaneados',
             'fr': 'fr/fusionner-pdf-scannes',
             'pt': 'pt/juntar-pdf-escaneados',
+            'id': 'id/gabung-pdf-hasil-scan',
+            'vi': 'vi/ghep-pdf-scan',
+            'ru': 'ru/objedinit-skanirovannye-pdf',
+            'ja': 'ja/sukyan-pdf-ketsugou',
+            'it': 'it/unisci-pdf-scansionati',
+            'ko': 'ko/seukaen-pdf-hapchigi',
+            'nl': 'nl/gescande-pdfs-samenvoegen',
+            'pl': 'pl/polacz-zeskanowane-pdf',
+            'tr': 'tr/taranan-pdf-birlestir',
         },
 
     }
