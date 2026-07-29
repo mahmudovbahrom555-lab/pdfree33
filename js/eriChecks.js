@@ -20,7 +20,9 @@
 //  (GENERIC profile has none of these fields set), so omitting them
 //  here changes nothing relative to the Python behavior this ports.
 //
-//  Checked for parity against Python in tests/eriScore.test.js.
+//  Checked for parity against Python in tests/eriScore.test.js. Synced
+//  through Atlas_DR v0.2.2's check_tables_struct: the "irregular row
+//  widths" (merged-cell) penalty, gated on anatomy.js's Tbl.regular.
 // ============================================================
 
 // Same terminal-punctuation set as eri_core/checks.py's TERMINAL.
@@ -68,6 +70,12 @@ export function checkTablesStruct(a) {
     const mult = Math.max(0.65, 0.96 ** layoutish.length);
     score *= mult;
     findings.push(`${layoutish.length} single-row strip-tables — looks like layout-by-grid (×${mult.toFixed(2)})`);
+  }
+  const irregular = real.filter((t) => !t.regular);
+  if (irregular.length) {
+    const mult = Math.max(0.7, 1 - 0.1 * irregular.length);
+    score *= mult;
+    findings.push(`${irregular.length} table(s) with irregular row widths (merged cells) — inserting a plain row would need surgery, not a keystroke (×${mult.toFixed(2)})`);
   }
   return { score, findings };
 }

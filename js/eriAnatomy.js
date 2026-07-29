@@ -4,7 +4,13 @@
 // ============================================================
 //  eriAnatomy.js — DOCX structural dissection (pure, no DOM UI)
 //
-//  JavaScript port of Atlas_DR's eri_core/anatomy.py `dissect()`.
+//  JavaScript port of Atlas_DR's eri_core/anatomy.py `dissect()`,
+//  synced through Atlas_DR v0.2.2 (NFC text normalization + gridSpan-aware
+//  Tbl.regular — see ownParagraphText()/_rowEffectiveWidth() below). Not
+//  ported: has_numpr/effective_number (v0.2.1's native-list-renumbering
+//  machinery) — only feeds check_lists(), a profile/ground-truth-only
+//  check that doesn't apply to an arbitrary user's document; see
+//  eriChecks.js's header for why only 3 of Atlas's channels are ported.
 //  Reads word/document.xml directly (JSZip + DOMParser) rather than
 //  a docx-parsing library, because python-docx-style libraries don't
 //  see text boxes either — and text boxes are exactly what matters
@@ -81,7 +87,31 @@ function ownParagraphText(p) {
   for (const t of p.getElementsByTagNameNS(W_NS, 't')) {
     if (nearestParagraphAncestor(t) === p) text += t.textContent || '';
   }
-  return text;
+  // NFC normalize (matches anatomy.py v0.2.2): a converter reading a
+  // decomposed-Unicode source PDF (combining marks — common for Vietnamese
+  // and other diacritic-heavy scripts) can pass NFD straight through into
+  // <w:t> — confirmed directly on pdf2docx. Normalizing once here, at the
+  // single point all downstream text flows through, keeps char counts
+  // (bodyChars/tblChars/textboxChars) and any future marker-matching
+  // consistent regardless of which form the source used.
+  return text.normalize('NFC');
+}
+
+// gridSpan-aware effective row width, per anatomy.py's Tbl.regular: a table
+// whose rows disagree once merged cells (gridSpan) are accounted for needs
+// surgery, not a keystroke, to insert a plain row — a real editability cost
+// checkTablesStruct penalizes that the raw <w:tc> count (nCols/nRows above,
+// intentionally left untouched — see anatomy.py's comment on why gridSpan
+// must never feed into the dimension-match numbers) can't see.
+function _rowEffectiveWidth(tr) {
+  let width = 0;
+  for (const tc of directChildren(tr, W_NS, 'tc')) {
+    const tcPr = directChild(tc, W_NS, 'tcPr');
+    const gridSpan = tcPr && directChild(tcPr, W_NS, 'gridSpan');
+    const span = gridSpan ? parseInt(gridSpan.getAttributeNS(W_NS, 'val'), 10) : 1;
+    width += Number.isFinite(span) ? span : 1;
+  }
+  return width;
 }
 
 /**
@@ -90,7 +120,7 @@ function ownParagraphText(p) {
  * Anatomy shape: { paras: Para[], tables: Tbl[], fullText, bodyChars,
  *                  tblChars, textboxChars, parseError }
  * Para shape:    { text, inTextbox, inTable, hasNumPr, brCount }
- * Tbl shape:     { rows, cols, inTextbox, chars }
+ * Tbl shape:     { rows, cols, inTextbox, chars, regular }
  */
 export async function dissect(arrayBuffer) {
   const a = {
@@ -145,10 +175,15 @@ export async function dissect(arrayBuffer) {
     const trs = directChildren(tbl, W_NS, 'tr');
     const nRows = trs.length;
     const nCols = trs.length ? Math.max(...trs.map((tr) => directChildren(tr, W_NS, 'tc').length)) : 0;
+    // regular: a SEPARATE signal from nCols above — never feed gridSpan into
+    // the raw <w:tc> count, or dimension-matching against a profile's
+    // expected cols/rows would silently drift (matches anatomy.py's comment).
+    const rowWidths = trs.map(_rowEffectiveWidth);
+    const regular = new Set(rowWidths).size <= 1;
     const inTb = hasAncestor(tbl, W_NS, 'txbxContent');
     let chars = 0;
     for (const t of tbl.getElementsByTagNameNS(W_NS, 't')) chars += (t.textContent || '').length;
-    a.tables.push({ rows: nRows, cols: nCols, inTextbox: inTb, chars });
+    a.tables.push({ rows: nRows, cols: nCols, inTextbox: inTb, chars, regular });
   }
 
   a.fullText = chunks.join('\n');
