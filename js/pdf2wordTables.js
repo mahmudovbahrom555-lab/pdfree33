@@ -322,5 +322,35 @@ function _debugPrint(tables, _lines) {
   console.groupEnd();
 }
 
+// Two unrelated prose lists placed side by side (e.g. a resume's "Skills" /
+// "Interests" columns) can pass detectTables()'s own alignment/fill checks
+// perfectly — consistently X-aligned, every column filled, no empty cells —
+// while sharing no real relationship. Real tabular data (invoices, budgets,
+// schedules, price lists) almost always has at least one short, numeric, or
+// code-like column; multi-word prose in EVERY column with no numeric anchor
+// anywhere is a structural proxy for "two lists", not a table. Same
+// heuristic and threshold as eriScoreXlsx.js's checkProseVsData, adapted to
+// operate directly on detectTables()'s raw string rows (used by pdf2md,
+// which has no built file afterward to score) rather than a built .xlsx
+// file's typed cells (used by pdf2excel's post-build ERI check).
+const _PROSE_NUMERIC_LOOKING = /^-?[$€£¥]?\s?\d{1,3}(,\d{3})*(\.\d+)?%?$/;
+
+export function looksLikeProseNotData(rows) {
+  if (rows.length < 2) return false;
+  const body = rows.slice(1); // header row is short in real AND fake tables alike
+  let cellCount = 0, wordCount = 0, hasNumericAnchor = false;
+  for (const row of body) {
+    for (const cell of row) {
+      const text = (cell || '').trim();
+      if (!text) continue;
+      cellCount++;
+      wordCount += text.split(/\s+/).length;
+      if (_PROSE_NUMERIC_LOOKING.test(text)) hasNumericAnchor = true;
+    }
+  }
+  if (!cellCount) return false;
+  return !hasNumericAnchor && (wordCount / cellCount) >= 2.0;
+}
+
 // ── Exports for test harness ──────────────────────────────────────────────────
 export { MIN_ROWS, MIN_COLS, COL_TOLERANCE, ALIGN_THRESHOLD, CONF_THRESHOLD };

@@ -16,7 +16,7 @@ import { getRunner, getWorkerTool } from './toolRegistry.js';
 import { loadJSZip, loadDocx, loadExcelJs, loadPptxGenJs } from './lazyLibs.js';
 import { loadPdfJs } from './pdf2jpgUI.js';
 import { preprocessPdfBuffer, decryptWithPassword } from './decryptPdf.js';
-import { detectTables, groupItemsIntoLines } from './pdf2wordTables.js';
+import { detectTables, groupItemsIntoLines, looksLikeProseNotData } from './pdf2wordTables.js';
 import { detectTableGrids } from './pdf2wordBorders.js';
 import { openFeedback } from './feedback.js';
 import { evaluateStructural } from './eriScore.js';
@@ -1808,7 +1808,12 @@ async function _p2mdExtractText(pdfDoc) {
   for (const { lines } of pageData) {
     // Same text-based detector pdf2excel uses (no border-grid pass — that's
     // only worth the extra render cost in pdf2word's richer visual pipeline).
-    const tables = detectTables(lines);
+    // Filtered through looksLikeProseNotData(): two unrelated prose lists
+    // (e.g. a resume's Skills/Interests columns) can pass detectTables()'s
+    // own alignment/fill checks cleanly — there's no built file afterward
+    // to score, like pdf2excel's post-build ERI check has, so this has to
+    // gate here, before the candidate is ever treated as a table.
+    const tables = detectTables(lines).filter(t => !looksLikeProseNotData(t.rows));
     const lineToTable = new Map();
     for (const t of tables) {
       for (let li = t.startIdx; li <= t.endIdx; li++) lineToTable.set(li, t);
