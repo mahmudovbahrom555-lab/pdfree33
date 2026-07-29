@@ -1806,8 +1806,28 @@ async function _p2mdExtractText(pdfDoc) {
   };
 
   for (const { lines } of pageData) {
+    // Same text-based detector pdf2excel uses (no border-grid pass — that's
+    // only worth the extra render cost in pdf2word's richer visual pipeline).
+    const tables = detectTables(lines);
+    const lineToTable = new Map();
+    for (const t of tables) {
+      for (let li = t.startIdx; li <= t.endIdx; li++) lineToTable.set(li, t);
+    }
+
     for (let li = 0; li < lines.length; li++) {
       const ln = lines[li];
+
+      // Table lines never fall through to heading/list/paragraph
+      // classification — emit one 'table' block at the first line, then
+      // skip the rest (already accounted for by that block).
+      const tbl = lineToTable.get(li);
+      if (tbl) {
+        if (li === tbl.startIdx) {
+          _flushPara();
+          blocks.push({ type: 'table', rows: tbl.rows });
+        }
+        continue;
+      }
 
       // Skip embedded page numbers: bottom-region line that's a bare integer
       // (same heuristic _p2wExtractText uses).
@@ -1894,6 +1914,17 @@ function _p2mdRender(blocks) {
     } else if (b.type === 'list') {
       if (prevType !== 'list' && lines.length) lines.push('');
       lines.push(b.text);
+    } else if (b.type === 'table') {
+      if (lines.length) lines.push('');
+      // GFM pipe-table syntax. A literal '|' in cell text would otherwise
+      // be read as a column boundary; a raw newline would break the row
+      // onto multiple lines — both are rare in a single detected table
+      // cell, but cheap to guard against.
+      const cell = c => (c || '').replace(/\|/g, '\\|').replace(/\r?\n/g, ' ');
+      const [header, ...body] = b.rows;
+      lines.push(`| ${header.map(cell).join(' | ')} |`);
+      lines.push(`| ${header.map(() => '---').join(' | ')} |`);
+      for (const row of body) lines.push(`| ${row.map(cell).join(' | ')} |`);
     } else {
       if (lines.length) lines.push('');
       lines.push(wrap(b.text, b.bold, b.italic));
