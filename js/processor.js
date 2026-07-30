@@ -2068,10 +2068,31 @@ async function _p2wBuildPageData(pdfDoc) {
 
     const page    = await pdfDoc.getPage(p);
     const pageH   = page.getViewport({ scale: 1 }).height;
+    // getOperatorList() runs alongside the other two purely to force pdf.js to
+    // resolve font objects into page.commonObjs — getTextContent() alone never
+    // does, and without it every font's style below reports a generic CSS
+    // fallback family ("sans-serif") instead of the real embedded name, so
+    // bold detection silently fails on any PDF whose fonts pdf.js can't map
+    // to a known family (confirmed on a real contract where headings were
+    // same-size-but-bold: content.styles[...].fontFamily was "sans-serif" for
+    // BOTH the bold title and regular body text — indistinguishable — while
+    // page.commonObjs.get(fontName).name correctly gave
+    // "CAAAAA+NotoSans-Bold" vs "DAAAAA+NotoSans-Regular").
     const [content, borderGrids] = await Promise.all([
       page.getTextContent({ normalizeWhitespace: false }),
       detectTableGrids(page).catch(() => []),
+      page.getOperatorList().catch(() => {}),
     ]);
+    const _boldFontCache = new Map(); // fontName -> boolean, one commonObjs lookup per unique font per page
+    const _isFontBold = fontName => {
+      if (_boldFontCache.has(fontName)) return _boldFontCache.get(fontName);
+      let bold = false;
+      try {
+        bold = /bold|heavy|black/i.test(page.commonObjs.get(fontName)?.name || '');
+      } catch { /* font object failed to resolve — fall through to false */ }
+      _boldFontCache.set(fontName, bold);
+      return bold;
+    };
     const allMapped = content.items
       .filter(item => 'str' in item && item.str.split('\u0000').join('').trim())
       .map(item => {
@@ -2094,7 +2115,7 @@ async function _p2wBuildPageData(pdfDoc) {
           width:    item.width || 0,
           fontSize,
           rotated:  isRotated,
-          bold:     /bold|heavy|black/.test(fam),
+          bold:     _isFontBold(item.fontName) || /bold|heavy|black/.test(fam),
           italic:   /italic|oblique/.test(fam),
         };
       });
@@ -2238,6 +2259,20 @@ async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSet, cs, 
   const paragraphs  = [];
   const _paraBuffer = [];   // accumulates lines that should be merged into one Paragraph
 
+  // Same-size-but-bold section headings are common in formal/legal PDFs —
+  // found on a real 19-page contract where every heading (including the
+  // document title) used the EXACT same point size as body text, only
+  // distinguished by bold. The font-size-ratio check below never fires
+  // there, silently merging headings into the preceding paragraph. Checking
+  // the WHOLE line (not just some items) matters: inline emphasis like
+  // "«Инвестиционный посредник»" is bold only within a longer non-bold
+  // sentence, not a heading — a partial-line bold run must not qualify.
+  const _isBoldHeadingLine = (items) => {
+    if (!items.every(i => i.bold)) return false;
+    const len = items.map(i => i.str).join('').replace(/\s+/g, '').length;
+    return len > 3 && len <= 100;
+  };
+
   // Flushes the buffered lines as a single Paragraph, then clears the buffer.
   // Called before tables, grids, and at end of each page's event loop.
   const _flushPara = () => {
@@ -2264,6 +2299,15 @@ async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSet, cs, 
       if      (maxSize >= median * 2.2) heading = HeadingLevel.HEADING_1;
       else if (maxSize >= median * 1.7) heading = HeadingLevel.HEADING_2;
       else if (maxSize >= median * 1.3) heading = HeadingLevel.HEADING_3;
+      else if (allTextTrimmed.length <= 100 && _paraBuffer.every(ln => _isBoldHeadingLine(ln.items))) {
+        // No font-size jump, but every line is entirely bold — same-size-bold
+        // section titles (see _isBoldHeadingLine above). All-caps gets the
+        // higher level, matching how these documents actually distinguish
+        // top-level sections ("ФОРС-МАЖОР") from sub-labels ("Клиент не вправе:").
+        const letters    = allText.replace(/[^\p{L}]/gu, '');
+        const isAllCaps  = letters.length > 0 && letters === letters.toUpperCase() && letters !== letters.toLowerCase();
+        heading = isAllCaps ? HeadingLevel.HEADING_1 : HeadingLevel.HEADING_2;
+      }
     }
 
     const runs = [];
@@ -2533,13 +2577,13 @@ async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSet, cs, 
           }
 
           const maxFont = Math.max(...ln.items.map(i => i.fontSize));
-          const isHead  = maxFont >= median * 1.3;
+          const isHead  = maxFont >= median * 1.3 || _isBoldHeadingLine(ln.items);
 
           if (_paraBuffer.length > 0) {
             const lastLn      = _paraBuffer[_paraBuffer.length - 1];
             const lastMaxFont = Math.max(...lastLn.items.map(i => i.fontSize));
             const gap         = lastLn.y - ln.y;
-            const lastIsHead  = lastMaxFont >= median * 1.3;
+            const lastIsHead  = lastMaxFont >= median * 1.3 || _isBoldHeadingLine(lastLn.items);
 
             // CJK PDFs often use 2.0×–2.5× line spacing, so a fixed 2.0× threshold
             // incorrectly splits word-wrapped lines into separate paragraphs.
