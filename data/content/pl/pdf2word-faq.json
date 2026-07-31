@@ -1,50 +1,98 @@
 [
   {
     "@type": "Question",
-    "name": "Czy mój plik jest przesyłany na serwer?",
+    "name": "Czy ten konwerter PDF do Word jest naprawdę darmowy?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nie. Wszystko odbywa się w przeglądarce. Nic nie jest wysyłane na serwery PDFree."
+      "text": "Tak, całkowicie za darmo. Bez subskrypcji, bez znaków wodnych, bez limitów na stronę. Cała konwersja odbywa się w przeglądarce z użyciem bibliotek open source."
     }
   },
   {
     "@type": "Question",
-    "name": "Czy PDFree przechowuje lub rejestruje moje pliki po przetworzeniu?",
+    "name": "Czy mój PDF jest gdziekolwiek przesyłany?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nie. PDFree działa całkowicie w przeglądarce — nie ma serwera backend, który odbierałby Twoje pliki. Ponieważ nic nie jest przesyłane, nic nie może być przechowywane, rejestrowane ani zatrzymywane. Twój dokument istnieje tylko w pamięci przeglądarki przez czas trwania sesji i jest usuwany po zamknięciu karty."
+      "text": "Nigdy. Plik jest odczytywany lokalnie przez przeglądarkę. Żaden serwer nie bierze udziału w żadnym etapie konwersji."
     }
   },
   {
     "@type": "Question",
-    "name": "Czy zeskanowane PDF-y mogą być konwertowane?",
+    "name": "Jaka jest różnica między trybem tekstowym a trybem obrazu?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nie bezpośrednio. Zeskanowane PDF-y to obrazy bez tekstu. Najpierw zastosuj OCR, aby dodać warstwę tekstową."
+      "text": "Tryb tekstowy wyodrębnia tekst z PDF-a i tworzy edytowalny dokument Word z akapitami, nagłówkami, pogrubieniem, kursywą i tabelami. Tryb obrazu renderuje każdą stronę jako obraz wysokiej rozdzielczości i umieszcza go w dokumencie Word — układ wizualny jest zachowany dokładnie, ale tekstu nie można edytować."
     }
   },
   {
     "@type": "Question",
-    "name": "Czy formatowanie jest zachowywane?",
+    "name": "Czy formatowanie będzie wyglądać tak samo w Word?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Podstawowy tekst i struktura są zachowywane. Złożone układy z wieloma kolumnami mogą wymagać ręcznych poprawek."
+      "text": "W trybie tekstowym zachowywane są treść tekstu i podstawowe formatowanie (pogrubienie, kursywa, rozmiar czcionki, nagłówki, tabele). Złożone układy wielokolumnowe mogą nie odpowiadać dokładnie. Dla idealnej wierności układu użyj trybu obrazu."
     }
   },
   {
     "@type": "Question",
-    "name": "Czy jest limit rozmiaru pliku?",
+    "name": "Czy obsługuje arabski, hebrajski, cyrylicę lub chiński?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nie. PDFree nie ma limitów rozmiaru pliku ani dziennego użytkowania."
+      "text": "Tak. Tryb tekstowy obsługuje alfabet łaciński, cyrylicę (rosyjski, ukraiński, bułgarski), arabski i hebrajski (z poprawnym kierunkiem akapitu od prawej do lewej), CJK (chiński, japoński, koreański), dewanagari (hindi) oraz większość systemów pisma Unicode występujących w standardowych plikach PDF."
     }
   },
   {
     "@type": "Question",
-    "name": "Czy to narzędzie jest darmowe?",
+    "name": "Czy tabele są poprawnie konwertowane?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Tak, całkowicie darmowe na zawsze. Bez płatnych planów, bez dziennych limitów."
+      "text": "PDFree wykrywa tabele na dwa sposoby: przez wyrównanie elementów tekstowych w kolumny (dla tabel danych) oraz przez wykrywanie narysowanych linii obramowania (dla formularzy siatkowych). Wykryte tabele stają się prawdziwymi tabelami Word — nie zwykłym tekstem. Bardzo złożone układy lub scalone komórki mogą nie konwertować się idealnie."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Jaki jest maksymalny rozmiar pliku?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie ma sztywnego limitu. Bardzo duże pliki PDF (100 MB i więcej) mogą jednak przetwarzać się dłużej i wymagać więcej pamięci. Dla najlepszych wyników zachowaj pliki poniżej 100 MB w trybie tekstowym i poniżej 50 MB w trybie obrazu przy 300 DPI."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy potrzebuję Microsoft Word, aby otworzyć plik?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie. Format .docx to otwarty standard obsługiwany przez Dokumenty Google (za darmo), LibreOffice Writer (darmowy, open source), Apple Pages oraz Microsoft 365 Online (w przeglądarce, za darmo). Nie potrzebujesz płatnej subskrypcji Word."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy mogę przekonwertować zeskanowany PDF na edytowalny Word?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "To zależy. Jeśli skan ma osadzoną warstwę tekstową (dodaną przez Adobe Scan, Microsoft Lens lub nowoczesny skaner), tryb tekstowy poprawnie ją wyodrębnia. Jeśli PDF jest czysto obrazowy, użyj najpierw narzędzia Rozpoznaj Tekst PDF (OCR), aby dodać warstwę tekstową, a następnie przekonwertuj do Word."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy działa offline?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. PDFree działa całkowicie offline jako Progresywna Aplikacja Webowa (PWA) po co najmniej jednym załadowaniu strony. Konwersja nie wymaga połączenia z internetem."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Jak działa wskaźnik jakości konwersji?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Po konwersji PDFree pokazuje wskaźnik pewności (0–100%) na podstawie tego, co wykryto w dokumencie: pokrycie warstwy tekstowej, tabele, diagramy i złożoność pisma. Wysoki (≥80%) oznacza w pełni edytowalny wynik. Umiarkowany (55–79%) oznacza, że niektóre strony mogą być tylko obrazem. Niski (<55%) zwykle oznacza, że PDF jest głównie zeskanowany — uruchom najpierw OCR, aby uzyskać edytowalny wynik Word."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy istnieje konwerter PDF do Word, który nie przesyła plików?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak — PDFree. Cała konwersja działa w przeglądarce z użyciem PDF.js i WebAssembly. Twój PDF nigdy nie jest wysyłany na żaden serwer. Możesz to zweryfikować, otwierając zakładkę Sieć w narzędziach deweloperskich i obserwując, że podczas konwersji nie ma żadnego żądania przesłania pliku. Większość konwerterów online faktycznie przesyła Twój plik; PDFree tego nie robi."
     }
   }
 ]
