@@ -16,7 +16,7 @@ import { getRunner, getWorkerTool } from './toolRegistry.js';
 import { loadJSZip, loadDocx, loadExcelJs, loadPptxGenJs } from './lazyLibs.js';
 import { loadPdfJs } from './pdf2jpgUI.js';
 import { preprocessPdfBuffer, decryptWithPassword } from './decryptPdf.js';
-import { detectTables, groupItemsIntoLines, looksLikeProseNotData } from './pdf2wordTables.js';
+import { detectTables, groupItemsIntoLines, looksLikeProseNotData, looksLikeEnumeratedList } from './pdf2wordTables.js';
 import { detectTableGrids } from './pdf2wordBorders.js';
 import { openFeedback } from './feedback.js';
 import { evaluateStructural } from './eriScore.js';
@@ -2388,7 +2388,21 @@ async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSet, cs, 
     // Detect tables on this page (skipped entirely in the conservative retry —
     // useTables:false means every line below falls through to the normal
     // paragraph path instead of becoming a Table).
-    const tables = useTables ? detectTables(lines) : [];
+    // Filtered through looksLikeProseNotData() + looksLikeEnumeratedList()
+    // (pdf2wordTables.js): a real 19-page contract had detectTables() emit 3
+    // false-positive "tables" that were actually numbered legal clause lists
+    // (clause number in column 1, clause prose in column 2 — e.g. "5.11. |
+    // а) при биржевых торгах..."), plus one more from two unrelated text
+    // blocks (a wrapped address + a label/value signature block) that
+    // happened to align by X-coordinate. pdf2md already gates on
+    // looksLikeProseNotData for the same reason (no post-build check to
+    // catch it downstream there); pdf2word has a post-build ERI retry
+    // (_ERI_TABLE_RETRY_THRESHOLD below) but that only rebuilds the WHOLE
+    // document tables-free on a bad aggregate score — too blunt to fix
+    // individual false positives sitting next to genuinely good tables.
+    const tables = useTables
+      ? detectTables(lines).filter(t => !looksLikeProseNotData(t.rows) && !looksLikeEnumeratedList(t.rows))
+      : [];
 
     // Build set: lineIdx → table object (for O(1) lookup)
     const lineToTable = new Map();

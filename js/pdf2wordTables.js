@@ -352,5 +352,52 @@ export function looksLikeProseNotData(rows) {
   return !hasNumericAnchor && (wordCount / cellCount) >= 2.0;
 }
 
+// Found on the same real 19-page contract as looksLikeProseNotData above: a
+// numbered legal clause list — clause marker in column 1 ("2.5.1.", "5.11.",
+// "а)", "б)"), full clause prose in column 2 — passes detectTables()'s own
+// alignment/fill checks perfectly (every row has exactly 2 filled cells,
+// consistently X-aligned across rows) while being a list, not a table.
+// looksLikeProseNotData() catches most of these too (clause prose is
+// wordy and no single cell is a bare number), but it can be defeated when a
+// clause happens to embed a number that ends a sentence in a way a future
+// tweak might read as an anchor, or when column widths shift some prose into
+// short fragments — this checks the STRUCTURE of column 1 directly instead,
+// so the two guards catch genuinely different failure modes:
+//   • dotted/hierarchical numbering: "2.", "2.5.", "2.5.1.", "5.11."
+//   • lettered sub-items: "а)"/"б)" (Cyrillic) or "a)"/"b)" (Latin)
+// Plain sequential row numbers ("1.", "2.", "3.") on a genuine numbered
+// price/item table would ALSO match this marker shape, so this alone isn't
+// enough — real numbered-table rows pair the marker with a SHORT other-column
+// value (a price, a code, a name), while clause lists pair it with a full
+// sentence. Requiring both the marker pattern AND prose-heavy other columns
+// keeps genuine numbered tables (e.g. "1. | Widget A | $10.00") intact.
+const _CLAUSE_MARKER_RE = /^(?:\d{1,3}(?:\.\d{1,3}){0,3}\.?|[a-zA-Zа-яёА-ЯЁ]\))$/;
+const _CLAUSE_MARKER_RATIO   = 0.7;  // fraction of rows whose column 1 must match
+const _CLAUSE_OTHER_COLS_WPC = 4.0;  // avg words/cell in the non-marker columns
+
+export function looksLikeEnumeratedList(rows) {
+  if (rows.length < 2) return false;
+
+  let markerRows = 0, dataRows = 0;
+  let cellCount = 0, wordCount = 0;
+  for (const row of rows) {
+    const marker = (row[0] || '').trim();
+    if (!marker) continue;
+    dataRows++;
+    if (_CLAUSE_MARKER_RE.test(marker)) markerRows++;
+    for (let c = 1; c < row.length; c++) {
+      const text = (row[c] || '').trim();
+      if (!text) continue;
+      cellCount++;
+      wordCount += text.split(/\s+/).length;
+    }
+  }
+  if (dataRows < 2 || !cellCount) return false;
+
+  const markerRatio = markerRows / dataRows;
+  const otherColsWordsPerCell = wordCount / cellCount;
+  return markerRatio >= _CLAUSE_MARKER_RATIO && otherColsWordsPerCell >= _CLAUSE_OTHER_COLS_WPC;
+}
+
 // ── Exports for test harness ──────────────────────────────────────────────────
 export { MIN_ROWS, MIN_COLS, COL_TOLERANCE, ALIGN_THRESHOLD, CONF_THRESHOLD };
