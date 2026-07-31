@@ -57,6 +57,34 @@ const _normWatermark = t =>
 // Must match MAX_IMAGE_PAGES in pdf2wordUI.js.
 const _P2W_IMAGE_CAP = 500;
 
+// Shared list-line detector — pdf2md and pdf2word (_p2wBuildParagraphs) both
+// use this exact pattern to keep list items from being swallowed into the
+// surrounding paragraph. Bullet glyphs are unambiguous; numbered markers
+// require a "N." / "N)" prefix followed by whitespace (excludes decimals
+// like "3.14"). Multi-level clause numbering ("2.5.1.", "5.11.") never
+// matches — there's no whitespace right after the first "N." — which is
+// exactly the safety margin pdf2word's native-numbering rendering below
+// depends on: renumbering a legal clause's own reference number would be a
+// real regression, but a flat "1. / 2. / 3." list is safe to renumber.
+// Letter/roman enumeration ("a.", "iv.") is deliberately excluded — too
+// easy to confuse with initials or headers, and detectTables()'s own
+// "prefer false negatives" philosophy applies here too.
+// Exported (despite the leading-underscore-free name — an exception here
+// since these are already public-shaped module constants, not internal
+// helpers) purely so tests/pdf2wordLists.test.js can pin the exact same
+// regex production uses, most importantly the "multi-level clause numbers
+// never match" safety property pdf2word's native-numbering rendering
+// depends on — see js/processor.js's _P2W_NUMBERED_LIST_REF usage.
+export const BULLET_RE   = /^[•◦▪‣●○]\s*/;
+export const NUMBERED_RE = /^\d{1,3}[.)]\s+/;
+
+// docx.js reference id linking a numbered-list Paragraph (in
+// _p2wBuildParagraphs) to the Document-level numbering definition that
+// actually supplies the "1. 2. 3." auto-numbering (built in _runPdf2Word's
+// _buildDoc). Bullets don't need this — docx.js's `bullet: { level: 0 }`
+// shorthand needs no matching Document-level config.
+const _P2W_NUMBERED_LIST_REF = 'p2w-numbered-list';
+
 let _worker = _createWorker();
 export let isProcessing = false;
 let _currentTool = '';
@@ -1147,10 +1175,26 @@ async function _runPdf2Word(filesSnapshot, { mode = 'text', dpi = 150 } = {}) {
 
   setProgress(92, 'Building Word document…');
 
-  const { Document, Packer } = window.docx;
+  const { Document, Packer, AlignmentType, LevelFormat } = window.docx;
   const _buildDoc = children => new Document({
     creator:     'PDFree',
     description: 'Converted from PDF by PDFree.io',
+    // Only referenced by paragraphs _p2wBuildParagraphs tags with
+    // numbering:{reference:_P2W_NUMBERED_LIST_REF,level:0} (flat "1./2./3."
+    // markers detected in the source) — harmless, unused boilerplate on any
+    // document that has none (image mode, or text with no numbered lists).
+    numbering: {
+      config: [{
+        reference: _P2W_NUMBERED_LIST_REF,
+        levels: [{
+          level:     0,
+          format:    LevelFormat.DECIMAL,
+          text:      '%1.',
+          alignment: AlignmentType.START,
+          style: { paragraph: { indent: { left: 720, hanging: 360 } } },
+        }],
+      }],
+    },
     sections: [{ children }],
   });
 
@@ -1774,15 +1818,6 @@ async function _p2mdExtractText(pdfDoc) {
     }
   }
 
-  // List-line detection — the one piece of logic not present anywhere else
-  // in the codebase. Bullet glyphs are unambiguous; numbered markers require
-  // a "N." / "N)" prefix followed by whitespace (excludes decimals like
-  // "3.14"). Letter/roman enumeration ("a.", "iv.") is deliberately excluded
-  // — too easy to confuse with initials or headers, and detectTables()'s own
-  // "prefer false negatives" philosophy applies here too.
-  const BULLET_RE   = /^[•◦▪‣●○]\s*/;
-  const NUMBERED_RE = /^\d{1,3}[.)]\s+/;
-
   const blocks      = [];
   const _paraBuffer = [];
 
@@ -2256,6 +2291,28 @@ async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSet, cs, 
   const _MIN_GAP_PT = 20;    // minimum gap in PDF points (~0.28 inch); was 30 but
                               // CamScanner math PDFs have diagrams with tighter gaps
 
+  // Builds a single-line Paragraph for a detected bullet/numbered list item,
+  // marker stripped so Word's own bullet/numbering supplies it instead of
+  // duplicating it as literal text. Flattens the line to one TextRun (bold
+  // only when every item on the line is bold, matching _isBoldHeadingLine's
+  // convention) rather than tracking per-item runs — list items are
+  // overwhelmingly plain single-style text, and the string surgery needed to
+  // strip a marker that may span or sit inside an item boundary makes
+  // per-item run preservation not worth the complexity here.
+  const _buildListParagraph = (ln, markerRe, listProps) => {
+    const rawText = ln.items.map(i => i.str).join('');
+    const text = rawText.replace(markerRe, '').trim();
+    if (!text) return null;
+    const bold   = ln.items.every(i => i.bold);
+    const italic = ln.items.every(i => i.italic);
+    const size   = Math.max(16, Math.round(Math.max(...ln.items.map(i => i.fontSize)) * 2));
+    return new Paragraph({
+      ...listProps,
+      children: [new TextRun({ text, bold, italics: italic, size })],
+      spacing: { after: 80 },
+    });
+  };
+
   const paragraphs  = [];
   const _paraBuffer = [];   // accumulates lines that should be merged into one Paragraph
 
@@ -2588,6 +2645,22 @@ async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSet, cs, 
           if (lineIdx >= lines.length - 3 && ln.items.length === 1 && !lineToTable.has(lineIdx)) {
             const t = ln.items[0].str.trim();
             if (/^\d+$/.test(t)) continue;
+          }
+
+          // List items never merge into the surrounding paragraph, and get
+          // real Word list formatting (native bullet, or auto-numbering for
+          // flat "1./2./3." markers) instead of the marker surviving as
+          // literal text — same "never merge" treatment headings already get.
+          const lnRawText     = ln.items.map(i => i.str).join('').trim();
+          const bulletMatch   = BULLET_RE.test(lnRawText);
+          const numberedMatch = !bulletMatch && NUMBERED_RE.test(lnRawText);
+          if (bulletMatch || numberedMatch) {
+            _flushPara();
+            const p = bulletMatch
+              ? _buildListParagraph(ln, BULLET_RE, { bullet: { level: 0 } })
+              : _buildListParagraph(ln, NUMBERED_RE, { numbering: { reference: _P2W_NUMBERED_LIST_REF, level: 0 } });
+            if (p) paragraphs.push(p);
+            continue;
           }
 
           const maxFont = Math.max(...ln.items.map(i => i.fontSize));
