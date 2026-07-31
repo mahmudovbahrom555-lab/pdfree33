@@ -2781,7 +2781,7 @@
         "ja": "PDFをWordに変換する処理はすべてブラウザ内で実行されます。アップロードなし、サーバーなし、アカウントなし。表・アラビア語・中国語など対応。100%プライベート。",
         "tr": "PDF'den Word'e dönüşüm tamamen tarayıcınızda gerçekleşir. Yükleme yok, sunucu yok, hesap yok. Tablolar, Arapça, Çince ve daha fazlası. %100 gizlilik.",
         "it": "La conversione da PDF a Word avviene interamente nel browser. Nessun caricamento, nessun server, nessun account. Tabelle, arabo, cinese e altro. 100% privato.",
-        "ko": "PDF to Word 변환이 브라우저 안에서 전부 처리됩니다. 업로드 없음, 서버 없음, 계정 없음. 표, 아랍어, 중국어 등 지원. 100% 프라이빗.",
+        "ko": "PDF를 Word로 변환이 브라우저 안에서 전부 처리됩니다. 업로드 없음, 서버 없음, 계정 없음. 표, 아랍어, 중국어 등 지원. 100% 프라이빗.",
         "nl": "PDF naar Word converteren gebeurt volledig in je browser. Geen upload, geen server, geen account. Tabellen, Arabisch, Chinees en meer. 100% privé.",
         "pl": "Konwersja PDF do Word odbywa się całkowicie w przeglądarce. Bez przesyłania, bez serwera, bez konta. Tabele, arabski, chiński i więcej. 100% prywatności."
       },
@@ -2866,7 +2866,7 @@
         "ru": "PDF в Excel",
         "ja": "PDFからExcel",
         "it": "PDF in Excel",
-        "ko": "PDF to Excel",
+        "ko": "PDF를 Excel로",
         "nl": "PDF naar Excel",
         "pl": "PDF do Excel"
       },
@@ -2882,7 +2882,7 @@
         "ru": "PDF в Excel",
         "ja": "PDFからExcel",
         "it": "PDF in Excel",
-        "ko": "PDF to Excel",
+        "ko": "PDF를 Excel로",
         "nl": "PDF naar Excel",
         "pl": "PDF do Excel"
       },
@@ -3047,7 +3047,7 @@
         "ru": "PDF в PowerPoint",
         "ja": "PDFからPowerPoint",
         "it": "PDF in PowerPoint",
-        "ko": "PDF to PowerPoint",
+        "ko": "PDF를 PowerPoint로",
         "nl": "PDF naar PowerPoint",
         "pl": "PDF do PowerPoint"
       },
@@ -3063,7 +3063,7 @@
         "ru": "PDF в PowerPoint",
         "ja": "PDFからPowerPoint",
         "it": "PDF in PowerPoint",
-        "ko": "PDF to PowerPoint",
+        "ko": "PDF를 PowerPoint로",
         "nl": "PDF naar PowerPoint",
         "pl": "PDF do PowerPoint"
       },
@@ -3228,7 +3228,7 @@
         "ru": "PDF в Markdown",
         "ja": "PDFからMarkdown",
         "it": "PDF in Markdown",
-        "ko": "PDF to Markdown",
+        "ko": "PDF를 Markdown으로",
         "nl": "PDF naar Markdown",
         "pl": "PDF do Markdown"
       },
@@ -3244,7 +3244,7 @@
         "ru": "PDF в Markdown",
         "ja": "PDFからMarkdown",
         "it": "PDF in Markdown",
-        "ko": "PDF to Markdown",
+        "ko": "PDF를 Markdown으로",
         "nl": "PDF naar Markdown",
         "pl": "PDF do Markdown"
       },
