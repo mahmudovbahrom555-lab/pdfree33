@@ -344,16 +344,15 @@ def _git_lastmod(rel_path):
 
 
 # Locales that have a real homepage file (index.html at their dir root).
-# The other languages in config['languages'] (vi/ru/ja/it/ko/nl/pl) only
-# have individual tool pages — no {dir}/index.html exists for them. Cloudflare
-# Workers Assets 404s a request to e.g. /ru/ when no matching asset exists
-# (see wrangler.toml's not_found_handling), so those locales must stay out of
-# the sitemap/hreflang set — submitting /ru/ with hreflang="ru" would tell
-# Google "here is Russian content" for a URL that 404s. Their tool sub-pages
-# (e.g. /ru/objedinit-pdf/) are real files and unaffected — only the
+# Locales in config['languages'] but NOT in this set only have individual
+# tool pages — no {dir}/index.html exists for them. Cloudflare Workers
+# Assets 404s a request to e.g. /ko/ when no matching asset exists (see
+# wrangler.toml's not_found_handling), so those locales must stay out of
+# the sitemap/hreflang set — submitting /ko/ with hreflang="ko" would tell
+# Google "here is Korean content" for a URL that 404s. Their tool sub-pages
+# (e.g. /ko/pdf-word-byeonhwan/) are real files and unaffected — only the
 # homepage-level entries need to stay out of the sitemap/hreflang set.
-# id and tr both have real homepage files (id/index.html, tr/index.html).
-HOMEPAGE_LANGS = {'en', 'de', 'es', 'fr', 'pt', 'id', 'tr', 'vi'}
+HOMEPAGE_LANGS = {'en', 'de', 'es', 'fr', 'pt', 'id', 'tr', 'vi', 'ru'}
 
 # Native display names for the language switcher.
 LANG_NAMES = {
