@@ -352,7 +352,7 @@ def _git_lastmod(rel_path):
 # Google "here is Korean content" for a URL that 404s. Their tool sub-pages
 # (e.g. /ko/pdf-word-byeonhwan/) are real files and unaffected — only the
 # homepage-level entries need to stay out of the sitemap/hreflang set.
-HOMEPAGE_LANGS = {'en', 'de', 'es', 'fr', 'pt', 'id', 'tr', 'vi', 'ru', 'ja', 'it', 'ko', 'nl'}
+HOMEPAGE_LANGS = {'en', 'de', 'es', 'fr', 'pt', 'id', 'tr', 'vi', 'ru', 'ja', 'it', 'ko', 'nl', 'pl'}
 
 # Native display names for the language switcher.
 LANG_NAMES = {
