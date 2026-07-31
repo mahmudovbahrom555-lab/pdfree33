@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src  'self'
+                'wasm-unsafe-eval'
+                blob:
+                https://cdnjs.cloudflare.com
+                https://plausible.io
+                https://pagead2.googlesyndication.com
+                https://static.cloudflareinsights.com
+                https://cdn.jsdelivr.net
+                https://unpkg.com;
+    style-src   'self' 'unsafe-inline';
+    font-src    'self';
+    img-src     'self' data: blob: https:;
+    connect-src 'self'
+                https://cdnjs.cloudflare.com
+                https://*.workers.dev
+                https://plausible.io
+                https://pagead2.googlesyndication.com
+                https://www.googletagservices.com
+                https://*.doubleclick.net
+                https://cloudflareinsights.com;
+    frame-src   https://googleads.g.doubleclick.net
+                https://tpc.googlesyndication.com;
+    worker-src  'self' blob:;
+    object-src  'none';
+  ">
+  <title>PDFree — Gratis PDF-tools, Zonder Limieten</title>
+  <meta name="description" content="PDF samenvoegen, splitsen, comprimeren en converteren — in je browser. Geen upload, geen account, geen limieten. Meer dan 20 gratis PDF-tools, voor altijd.">
+  <meta name="keywords"    content="pdf samenvoegen, pdf splitsen, pdf comprimeren, gratis pdf tools, privé pdf, pdf zonder upload, watermerk pdf, paginanummers pdf, metadata bewerken pdf">
+  <meta property="og:title"       content="PDFree — Privé PDF-tools, Voor Altijd Gratis">
+  <meta property="og:description" content="PDF samenvoegen, splitsen, comprimeren, watermerk toevoegen. 100% privé — bestanden verlaten nooit je apparaat. Zonder registratie, zonder limieten.">
+  <meta property="og:type"        content="website">
+  <meta property="og:url"       content="https://pdfree.io/nl/">
+  <meta property="og:site_name" content="PDFree">
+  <meta property="og:locale"    content="nl_NL">
+  <meta property="og:image"     content="https://pdfree.io/icons/og-image.jpg">
+  <meta property="og:image:width"  content="1200">
+  <meta property="og:image:height" content="633">
+  <meta property="og:image:alt"    content="PDFree — Privé PDF-tools, Voor Altijd Gratis">
+  <meta name="twitter:card"        content="summary_large_image">
+  <meta name="twitter:site"        content="@pdfree_io">
+  <meta name="twitter:title"       content="PDFree — Privé PDF-tools, Voor Altijd Gratis">
+  <meta name="twitter:description" content="PDF samenvoegen, splitsen, comprimeren en converteren — 100% privé, bestanden verlaten nooit je browser. Zonder registratie, zonder limieten. Voor altijd gratis.">
+  <meta name="twitter:image"       content="https://pdfree.io/icons/og-image.jpg">
+  <meta name="twitter:image:alt"   content="PDFree — privé PDF-tools in je browser">
+
+  <link rel="canonical" href="https://pdfree.io/nl/">
+  <link rel="alternate" hreflang="en" href="https://pdfree.io/">
+  <link rel="alternate" hreflang="es" href="https://pdfree.io/es/">
+  <link rel="alternate" hreflang="pt" href="https://pdfree.io/pt/">
+  <link rel="alternate" hreflang="de" href="https://pdfree.io/de/">
+  <link rel="alternate" hreflang="fr" href="https://pdfree.io/fr/">
+  <link rel="alternate" hreflang="id" href="https://pdfree.io/id/">
+  <link rel="alternate" hreflang="tr" href="https://pdfree.io/tr/">
+  <link rel="alternate" hreflang="vi" href="https://pdfree.io/vi/">
+  <link rel="alternate" hreflang="ru" href="https://pdfree.io/ru/">
+  <link rel="alternate" hreflang="ja" href="https://pdfree.io/ja/">
+  <link rel="alternate" hreflang="it" href="https://pdfree.io/it/">
+  <link rel="alternate" hreflang="ko" href="https://pdfree.io/ko/">
+  <link rel="alternate" hreflang="nl" href="https://pdfree.io/nl/">
+  <link rel="alternate" hreflang="pl" href="https://pdfree.io/pl/">
+  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/">
+
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="PDFree">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <!-- Privacy-first analytics (no cookies, GDPR compliant) -->
+  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+  <link rel="preconnect" href="https://plausible.io">
+  <link rel="preconnect" href="https://static.cloudflareinsights.com">
+  <link rel="preload" href="../fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../css/fonts.css">
+
+  <script src="../js/theme.js"></script>
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/animations.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+
+    <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "PDFree",
+    "url": "https://pdfree.io/nl/",
+    "inLanguage": "nl",
+    "description": "Gratis PDF-tools die volledig in je browser werken. Geen bestandsupload, geen registratie vereist.",
+    "applicationCategory": "UtilityApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Uploaden de tools van PDFree mijn bestanden?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Nee. Elke PDFree-tool werkt volledig in je browser. Je bestanden worden nooit naar een server verstuurd — ze verlaten nooit je apparaat."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is PDFree echt gratis?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Ja. Alle tools zijn gratis zonder bestandsgroottelimiet, zonder watermerken en zonder verplichte registratie — nu en altijd."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Welke PDF-tools biedt PDFree?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "PDFree biedt: samenvoegen, splitsen, comprimeren, draaien, beveiligen, zwartmaken, watermerk, paginanummers, metadata bewerken, JPG naar PDF, PDF naar JPG, pagina's extraheren, tekenen op PDF, formulieren invullen, vergelijken — allemaal gratis en privé."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Werkt PDFree op mijn telefoon?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Ja. PDFree is een Progressive Web App (PWA) die werkt in elke moderne browser op desktop, tablet en telefoon — inclusief iOS en Android."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is PDFree veilig voor vertrouwelijke documenten?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Ja. Omdat bestanden nooit je apparaat verlaten, is PDFree veilig voor vertrouwelijke documenten, medische dossiers, financiële overzichten en juridische documenten."
+      }
+    }
+  ]
+}
+  </script>
+  <script type="application/ld+json">
+  {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "PDFree",
+  "url": "https://pdfree.io/",
+  "logo": "https://pdfree.io/icons/icon-192.png",
+  "description": "PDFree biedt gratis en privé PDF-tools die volledig in je browser werken — zonder upload, zonder account, zonder bestandsgroottelimiet.",
+  "sameAs": [
+    "https://github.com/mahmudovbahrom555-lab/pdfree33"
+  ],
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "contactType": "customer support",
+    "url": "https://pdfree.io/"
+  }
+}
+  </script>
+  <script type="application/ld+json">
+  {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "PDFree",
+  "url": "https://pdfree.io/nl/",
+  "inLanguage": "nl",
+  "description": "Gratis PDF-tools die in de browser werken — zonder upload, zonder account, zonder limieten.",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "https://pdfree.io/nl/?q={search_term_string}"
+    },
+    "query-input": "required name=search_term_string"
+  }
+}
+  </script>
+</head>
+<body>
+
+  <!-- ── Navigation ── -->
+  <nav>
+    <div class="logo" id="logo" tabindex="0" role="button" aria-label="Naar de homepage">
+      <div class="logo-icon" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+      </div>
+      <span class="logo-text">PDF<span>ree</span></span>
+    </div>
+    <div class="nav-links">
+      <a href="/nl/pdf-samenvoegen/" class="nav-link" data-tool="merge">Samenvoegen</a>
+      <a href="/nl/pdf-splitsen/" class="nav-link" data-tool="split">Splitsen</a>
+      <a href="/nl/pdf-comprimeren/" class="nav-link" data-tool="compress">Comprimeren</a>
+      <a href="/nl/jpg-naar-pdf/" class="nav-link" data-tool="jpg2pdf">JPG→PDF</a>
+      <a href="/nl/pdf-naar-jpg/" class="nav-link" data-tool="pdf2jpg">PDF→JPG</a>
+      <a href="/nl/watermerk-pdf/" class="nav-link" data-tool="watermark">Watermerk</a>
+      <a href="/nl/paginanummers-pdf/" class="nav-link" data-tool="pagenum">Paginanr.</a>
+      <a href="/nl/pdf-metadata/" class="nav-link" data-tool="meta">Metadata</a>
+      <a href="/nl/pdf-extraheren/" class="nav-link" data-tool="extract">Extraheren</a>
+      <a href="/draw-on-pdf/" class="nav-link" data-tool="draw-pdf">Tekenen</a>
+      <a href="/nl/pdf-draaien/" class="nav-link" data-tool="rotate">Draaien</a>
+      <a href="/nl/pdf-beveiligen/" class="nav-link" data-tool="protect">Beveiligen</a>
+      <a href="/nl/pdf-tekstherkenning/" class="nav-link" data-tool="ocr">OCR</a>
+      <a href="/nl/pdf-naar-word/" class="nav-link" data-tool="pdf2word">PDF→Word</a>
+      <a href="/nl/pdf-afvlakken/" class="nav-link" data-tool="flatten">PDF Vergrendelen</a>
+      <a href="/compare-pdf/" class="nav-link" data-tool="compare">Vergelijken</a>
+    </div>
+    <div class="nav-right">
+      <details class="lang-switch" id="langSwitch">
+        <summary aria-label="Taal wijzigen">🌐 NL</summary>
+        <div class="lang-switch__menu" role="menu">
+          <a href="/" role="menuitem">English</a>
+          <a href="/es/" role="menuitem">Español</a>
+          <a href="/pt/" role="menuitem">Português</a>
+          <a href="/de/" role="menuitem">Deutsch</a>
+          <a href="/fr/" role="menuitem">Français</a>
+          <a href="/id/" role="menuitem">Bahasa Indonesia</a>
+          <a href="/tr/" role="menuitem">Türkçe</a>
+          <a href="/vi/" role="menuitem">Tiếng Việt</a>
+          <a href="/ru/" role="menuitem">Русский</a>
+          <a href="/ja/" role="menuitem">日本語</a>
+          <a href="/it/" role="menuitem">Italiano</a>
+          <a href="/ko/" role="menuitem">한국어</a>
+          <a href="/nl/" role="menuitem" aria-current="true">Nederlands</a>
+          <a href="/pl/" role="menuitem">Polski</a>
+        </div>
+      </details>
+      <button id="themeToggle" class="theme-toggle" aria-label="Donkere modus wisselen" title="Donkere modus wisselen"></button>
+    </div>
+  </nav>
+
+  <!-- ── Hero ── -->
+  <section id="hero" class="hero js-home-only">
+    <div class="hero-badge">🔒 100% privé · geen upload · zonder registratie · zonder limieten</div>
+    <h1>PDF-tools die<br><em>gewoon werken</em></h1>
+    <p>Samenvoegen, splitsen, comprimeren, converteren en bewerken — alles gebeurt <strong>lokaal in je browser</strong>. Je bestanden verlaten nooit je apparaat.</p>
+
+    <div class="search-hero" id="searchHero">
+      <div class="hero-drop-zone" id="heroDropZone">
+        <input type="file" id="heroFileInput" accept=".pdf,application/pdf" multiple hidden>
+        <div class="hero-drop-zone__idle" id="heroDropIdle">
+          <span class="hero-drop-zone__upload-icon" aria-hidden="true"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></span>
+          <span class="hero-drop-zone__label" id="heroDropLabel">Begin met je PDF</span>
+          <div class="hero-drop-zone__choose-row">
+            <span class="hero-drop-zone__drop-text">Sleep de PDF hierheen</span>
+            <span class="hero-drop-zone__sep" id="heroDropOr">of</span>
+            <label class="hero-drop-zone__btn" for="heroFileInput" id="heroDropChooseBtn">Bestand kiezen</label>
+          </div>
+          <a href="/nl/jpg-naar-pdf/" class="hero-drop-zone__img-link" id="heroImgHint">Heb je een afbeelding?</a>
+        </div>
+        <div class="hero-drop-zone__ready" id="heroDropReady" hidden>
+          <span class="hero-drop-zone__check">✓</span>
+          <span id="heroFileName"></span>
+          <button class="hero-drop-zone__clear" id="heroClearFile" type="button" aria-label="Bestand verwijderen">×</button>
+        </div>
+      </div>
+      <p class="hero-section-label" id="heroFeaturedLabel">Populaire tools</p>
+      <div class="hero-featured" id="heroFeatured">
+        <a href="/nl/pdf-samenvoegen/" class="hero-fcard" data-tool="merge" onclick="window.plausible&&window.plausible('Card Click',{props:{tool:'merge'}})">
+          <span class="hero-fcard__icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span>
+          <span class="hero-fcard__body"><span class="hero-fcard__name">PDF samenvoegen</span><span class="hero-fcard__desc">Combineer meerdere PDF's tot één</span></span>
+          <span class="hero-fcard__arrow" aria-hidden="true">→</span>
+        </a>
+        <a href="/nl/pdf-comprimeren/" class="hero-fcard" data-tool="compress" onclick="window.plausible&&window.plausible('Card Click',{props:{tool:'compress'}})">
+          <span class="hero-fcard__icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/><path d="M5 2h14"/><path d="M5 22h14"/></svg></span>
+          <span class="hero-fcard__body"><span class="hero-fcard__name">PDF comprimeren</span><span class="hero-fcard__desc">Verklein het formaat met behoud van kwaliteit</span></span>
+          <span class="hero-fcard__arrow" aria-hidden="true">→</span>
+        </a>
+        <a href="/nl/pdf-splitsen/" class="hero-fcard" data-tool="split" onclick="window.plausible&&window.plausible('Card Click',{props:{tool:'split'}})">
+          <span class="hero-fcard__icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg></span>
+          <span class="hero-fcard__body"><span class="hero-fcard__name">PDF splitsen</span><span class="hero-fcard__desc">Pagina's extraheren of opsplitsen</span></span>
+          <span class="hero-fcard__arrow" aria-hidden="true">→</span>
+        </a>
+        <a href="/nl/pdf-naar-jpg/" class="hero-fcard" data-tool="pdf2jpg" onclick="window.plausible&&window.plausible('Card Click',{props:{tool:'pdf2jpg'}})">
+          <span class="hero-fcard__icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg></span>
+          <span class="hero-fcard__body"><span class="hero-fcard__name">PDF naar JPG</span><span class="hero-fcard__desc">Zet PDF-pagina's om in afbeeldingen</span></span>
+          <span class="hero-fcard__arrow" aria-hidden="true">→</span>
+        </a>
+        <a href="/nl/pdf-beveiligen/" class="hero-fcard" data-tool="protect" onclick="window.plausible&&window.plausible('Card Click',{props:{tool:'protect'}})">
+          <span class="hero-fcard__icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+          <span class="hero-fcard__body"><span class="hero-fcard__name">PDF beveiligen</span><span class="hero-fcard__desc">AES-256-wachtwoordbeveiliging</span></span>
+          <span class="hero-fcard__arrow" aria-hidden="true">→</span>
+        </a>
+        <a href="/nl/pdf-naar-word/" class="hero-fcard" data-tool="pdf2word" onclick="window.plausible&&window.plausible('Card Click',{props:{tool:'pdf2word'}})">
+          <span class="hero-fcard__icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></span>
+          <span class="hero-fcard__body"><span class="hero-fcard__name">PDF naar Word</span><span class="hero-fcard__desc">Zet om naar bewerkbaar .docx</span></span>
+          <span class="hero-fcard__arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+      <p class="hero-chips-label" id="heroChipsLabel" hidden>Wat kun je het beste doen met dit bestand?</p>
+      <div class="search-popular" id="searchPopular" aria-label="Populaire tools"></div>
+      <p class="hero-section-label hero-search-label">Op zoek naar een andere tool?</p>
+      <div class="search-wrap">
+        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input id="toolSearch" type="search" autocomplete="off" spellcheck="false"
+               placeholder="PDF samenvoegen, comprimeren, draaien, watermerk, PDF naar Word…" aria-label="PDF-tools zoeken">
+      </div>
+      <div class="search-result" id="searchResult" hidden role="region" aria-label="Gevonden tool">
+        <label class="search-result__info" id="srInfoLabel" for="srFileInput">
+          <input type="file" id="srFileInput" accept=".pdf,application/pdf" hidden>
+          <span class="search-result__icon" id="srIcon" aria-hidden="true"></span>
+          <strong id="srName"></strong>
+          <span class="search-result__go" id="srGo" aria-hidden="true">&rarr;</span>
+          <span class="search-result__desc" id="srDesc"></span>
+        </label>
+        <div class="search-result__pending-file" id="srPendingFile" hidden></div>
+        <div class="search-result__drop" id="srDropHint" aria-hidden="true">of sleep een PDF hierheen</div>
+      </div>
+      <p class="search-miss" id="searchMiss" hidden role="status"></p>
+    </div>
+
+    <div id="heroBanner" class="hero-banner" hidden>
+      <span class="hero-banner__icon" aria-hidden="true">🛡</span>
+      <span class="hero-banner__text">Lokaal verwerkt in de browser · Je bestanden verlaten nooit je apparaat</span>
+      <button class="hero-banner__close" id="heroBannerClose" type="button" aria-label="Sluiten">×</button>
+    </div>
+
+    <div id="heroDetected" class="hero-detected" hidden></div>
+
+    <div class="hero-features">
+      <div class="hero-feature">
+        <div class="hero-feature__icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <div>
+          <strong>100% Privé</strong>
+          <span>Bestanden verlaten je apparaat nooit</span>
+        </div>
+      </div>
+      <div class="hero-feature">
+        <div class="hero-feature__icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        </div>
+        <div>
+          <strong>Supersnel</strong>
+          <span>Werkt direct, offline</span>
+        </div>
+      </div>
+      <div class="hero-feature">
+        <div class="hero-feature__icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+        <div>
+          <strong>Zonder limieten</strong>
+          <span>Geen grootte- of dagelijkse limieten</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Trust alert block ── -->
+  <div class="trust-alert js-home-only" id="trustAlert" aria-label="Privacygarantie">
+    <div class="trust-alert-icon" aria-hidden="true">
+      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
+    </div>
+    <div class="trust-alert-text">
+      <strong>Je bestanden blijven op je apparaat.</strong>
+      <span>We gebruiken Web Workers en lokale bibliotheken — er wordt nooit iets naar een server gestuurd.</span>
+    </div>
+  </div>
+
+  <!-- ── No-limit bar ── -->
+  <div id="noLimitBar" class="no-limit-bar js-home-only">
+    <div class="no-limit-item">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+      Geen bestandslimiet
+    </div>
+    <div class="no-limit-item">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+      Geen watermerk toegevoegd
+    </div>
+    <div class="no-limit-item">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+      Zonder registratie
+    </div>
+    <div class="no-limit-item">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      Bestanden verlaten je apparaat niet
+    </div>
+  </div>
+
+  <!-- ── Tools grid ── -->
+  <section id="toolsGrid" class="tools-section js-home-only">
+    <div class="section-label">Alle tools</div>
+    <div class="tools-grid">
+      <a href="/nl/pdf-samenvoegen/" class="tool-card featured" data-tool="merge" aria-label="PDF samenvoegen">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
+        <div class="tool-name">PDF samenvoegen</div>
+        <div class="tool-desc">Combineer onbeperkte PDF-bestanden — zonder beperkingen</div>
+      </a>
+      <a href="/nl/pdf-splitsen/" class="tool-card" data-tool="split" aria-label="PDF splitsen">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg></div>
+        <div class="tool-name">PDF splitsen</div>
+        <div class="tool-desc">PDF splitsen of specifieke pagina's extraheren — zonder beperkingen</div>
+      </a>
+      <a href="/nl/pdf-comprimeren/" class="tool-card" data-tool="compress" aria-label="PDF comprimeren">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/><path d="M5 2h14"/><path d="M5 22h14"/></svg></div>
+        <div class="tool-name">PDF comprimeren</div>
+        <div class="tool-desc">PDF comprimeren in je browser — geen upload</div>
+      </a>
+      <a href="/nl/jpg-naar-pdf/" class="tool-card" data-tool="jpg2pdf" aria-label="JPG naar PDF">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
+        <div class="tool-name">JPG naar PDF</div>
+        <div class="tool-desc">Afbeeldingen naar PDF converteren — geen upload</div>
+      </a>
+      <a href="/nl/pdf-naar-jpg/" class="tool-card" data-tool="pdf2jpg" aria-label="PDF naar JPG">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg></div>
+        <div class="tool-name">PDF naar JPG</div>
+        <div class="tool-desc">PDF-pagina's converteren naar JPG afbeeldingen — geen upload</div>
+      </a>
+      <a href="/nl/pdf-extraheren/" class="tool-card" data-tool="extract" aria-label="Pagina's Extraheren">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="M12 12v6"/><path d="m9 15 3-3 3 3"/></svg></div>
+        <div class="tool-name">Pagina's Extraheren</div>
+        <div class="tool-desc">Haal geselecteerde pagina's in een nieuwe PDF</div>
+      </a>
+      <a href="/nl/watermerk-pdf/" class="tool-card" data-tool="watermark" aria-label="Watermerk PDF">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg></div>
+        <div class="tool-name">Watermerk PDF</div>
+        <div class="tool-desc">Tekststempels toevoegen aan PDF — geen upload</div>
+      </a>
+      <a href="/nl/paginanummers-pdf/" class="tool-card" data-tool="pagenum" aria-label="Paginanummers">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 22h14a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v4"/><polyline points="14 2 14 8 20 8"/><path d="M2 15h4v4"/><path d="M4 15v6"/><path d="M10 15v6"/><path d="M14 15v6"/></svg></div>
+        <div class="tool-name">Paginanummers</div>
+        <div class="tool-desc">Genummerde voettekst toevoegen — Arabisch, Romeins of ABC</div>
+      </a>
+      <a href="/nl/pdf-metadata/" class="tool-card" data-tool="meta" aria-label="Metadata Bewerken">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"/><path d="M7 7h.01"/></svg></div>
+        <div class="tool-name">Metadata Bewerken</div>
+        <div class="tool-desc">Titel, auteur, trefwoorden bekijken en bewerken</div>
+      </a>
+      <a href="/nl/pdf-zwartmaken/" class="tool-card" data-tool="redact" aria-label="Gebied Afdekken">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 14l2 2 4-4"/></svg></div>
+        <div class="tool-name">Gebied Afdekken</div>
+        <div class="tool-desc">Verberg watermerken, handtekeningen of gevoelige gegevens lokaal</div>
+      </a>
+      <a href="/nl/pdf-draaien/" class="tool-card" data-tool="rotate" aria-label="PDF Draaien">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg></div>
+        <div class="tool-name">PDF Draaien</div>
+        <div class="tool-desc">Corrigeer de pagina-oriëntatie in elke PDF</div>
+      </a>
+      <a href="/nl/pdf-beveiligen/" class="tool-card" data-tool="protect" aria-label="PDF beveiligen">
+        <div class="tool-card-pulse" aria-hidden="true">
+          <div class="tool-card-pulse__ring"></div>
+          <div class="tool-card-pulse__dot"></div>
+        </div>
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div class="tool-name">PDF beveiligen</div>
+        <div class="tool-desc">PDF beveiligen met AES-256-wachtwoord — geen upload</div>
+      </a>
+      <a href="/nl/pdf-invullen/" class="tool-card" data-tool="fill" aria-label="PDF-formulier invullen">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg></div>
+        <div class="tool-name">PDF Invullen</div>
+        <div class="tool-desc">Vul formuliervelden in en onderteken PDF's lokaal</div>
+      </a>
+      <a href="/draw-on-pdf/" class="tool-card" data-tool="draw-pdf" aria-label="Tekenen op PDF">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></div>
+        <div class="tool-name">Tekenen op PDF</div>
+        <div class="tool-desc">Annoteer PDF's met pijlen, tekst en vormen — privé, geen upload</div>
+      </a>
+      <a href="/nl/pdf-tekstherkenning/" class="tool-card" data-tool="ocr" aria-label="PDF Tekstherkenning">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M11 8v6"/><path d="M8 11h6"/></svg></div>
+        <div class="tool-name">Tekstherkenning</div>
+        <div class="tool-desc">Maak gescande PDF's doorzoekbaar — tekst lokaal herkennen</div>
+      </a>
+      <a href="/nl/pdf-naar-word/" class="tool-card" data-tool="pdf2word" aria-label="PDF naar Word">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div>
+        <div class="tool-name">PDF naar Word</div>
+        <div class="tool-desc">Converteer naar bewerkbaar .docx — geen upload</div>
+      </a>
+      <a href="/nl/pdf-afvlakken/" class="tool-card" data-tool="flatten" aria-label="PDF Afvlakken">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><line x1="8" y1="15" x2="16" y2="15"/></svg></div>
+        <div class="tool-name">PDF Afvlakken</div>
+        <div class="tool-desc">Bak formuliervelden in de pagina — voorkom bewerking</div>
+      </a>
+      <a href="/compare-pdf/" class="tool-card" data-tool="compare" aria-label="PDF vergelijken">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="8" height="18" rx="1"/><rect x="14" y="3" width="8" height="18" rx="1"/><path d="M10 8h4M10 12h4M10 16h4"/></svg></div>
+        <div class="tool-name">PDF vergelijken</div>
+        <div class="tool-desc">Vergelijk twee PDF's en markeer de verschillen — geen upload</div>
+      </a>
+      <a href="/nl/pdf-naar-excel/" class="tool-card" data-tool="pdf2excel" aria-label="PDF naar Excel">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg></div>
+        <div class="tool-name">PDF naar Excel</div>
+        <div class="tool-desc">Converteer PDF-tabellen naar een spreadsheet lokaal</div>
+      </a>
+      <a href="/nl/pdf-naar-powerpoint/" class="tool-card" data-tool="pdf2ppt" aria-label="PDF naar PowerPoint">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+        <div class="tool-name">PDF naar PowerPoint</div>
+        <div class="tool-desc">Converteer PDF-pagina's naar presentatie lokaal</div>
+      </a>
+      <a href="/nl/pdf-naar-markdown/" class="tool-card" data-tool="pdf2md" aria-label="PDF naar Markdown">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg></div>
+        <div class="tool-name">PDF naar Markdown</div>
+        <div class="tool-desc">Converteer PDF-tekst naar schone .md-bestanden lokaal</div>
+      </a>
+      <a href="/nl/pdf-ontgrendelen/" class="tool-card" data-tool="unlock" aria-label="PDF Ontgrendelen">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg></div>
+        <div class="tool-name">PDF Ontgrendelen</div>
+        <div class="tool-desc">Verwijder wachtwoordbeveiliging lokaal</div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ── Privacy trust bar ── -->
+  <section id="privacyBar" class="privacy-bar js-home-only" aria-label="Privacygarantie">
+    <div class="privacy-bar__inner">
+      <div class="privacy-bar__item">
+        <div class="privacy-bar__icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <div>
+          <strong>100% privé by design</strong>
+          <p>Je bestanden worden volledig in de browser verwerkt. Nul uploads — nooit.</p>
+        </div>
+      </div>
+      <div class="privacy-bar__item">
+        <div class="privacy-bar__icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </div>
+        <div>
+          <strong>Werkt op jouw apparaat</strong>
+          <p>Alle PDF-bewerkingen draaien in een Web Worker — een geïsoleerde thread op jouw hardware.</p>
+        </div>
+      </div>
+      <div class="privacy-bar__item">
+        <div class="privacy-bar__icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+        </div>
+        <div>
+          <strong>Direct verwijderd</strong>
+          <p>Bestanden leven alleen in RAM. Sluit het tabblad en ze zijn weg — geen log, geen spoor.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FAQ section (visible for SEO) ── -->
+  <section id="faqSection" class="js-home-only" style="max-width:760px;margin:0 auto;padding:48px 24px 0;" aria-label="Veelgestelde vragen">
+    <div class="section-label">FAQ</div>
+    <h2 style="font-size:clamp(20px,3vw,26px);color:var(--text);margin:12px 0 32px;font-weight:700;">Veelgestelde vragen</h2>
+    <dl style="display:flex;flex-direction:column;gap:0;">
+      <div style="border-bottom:1px solid var(--border);padding:20px 0;">
+        <dt style="font-weight:600;color:var(--text);font-size:15px;margin-bottom:8px;">Uploaden de tools van PDFree mijn bestanden?</dt>
+        <dd style="color:var(--text2);font-size:14px;line-height:1.7;margin:0;">Nee. Elke tool werkt volledig in je browser. Je bestanden worden nooit naar een server verstuurd — ze verlaten nooit je apparaat.</dd>
+      </div>
+      <div style="border-bottom:1px solid var(--border);padding:20px 0;">
+        <dt style="font-weight:600;color:var(--text);font-size:15px;margin-bottom:8px;">Is PDFree echt gratis — zonder addertjes?</dt>
+        <dd style="color:var(--text2);font-size:14px;line-height:1.7;margin:0;">Ja. Alle tools zijn gratis zonder groottelimiet, zonder watermerken, zonder dagelijkse limiet en zonder account. Voor altijd gratis.</dd>
+      </div>
+      <div style="border-bottom:1px solid var(--border);padding:20px 0;">
+        <dt style="font-weight:600;color:var(--text);font-size:15px;margin-bottom:8px;">Welke PDF-tools biedt PDFree?</dt>
+        <dd style="color:var(--text2);font-size:14px;line-height:1.7;margin:0;">PDFree biedt <a href="/nl/pdf-samenvoegen/" style="color:var(--green);">PDF samenvoegen</a>, <a href="/nl/pdf-splitsen/" style="color:var(--green);">splitsen</a>, <a href="/nl/pdf-comprimeren/" style="color:var(--green);">comprimeren</a>, <a href="/nl/pdf-draaien/" style="color:var(--green);">draaien</a>, <a href="/nl/pdf-beveiligen/" style="color:var(--green);">beveiligen</a>, <a href="/nl/watermerk-pdf/" style="color:var(--green);">watermerk</a>, <a href="/nl/jpg-naar-pdf/" style="color:var(--green);">JPG naar PDF</a> en meer — allemaal gratis en privé.</dd>
+      </div>
+      <div style="padding:20px 0;">
+        <dt style="font-weight:600;color:var(--text);font-size:15px;margin-bottom:8px;">Werkt PDFree op mijn telefoon?</dt>
+        <dd style="color:var(--text2);font-size:14px;line-height:1.7;margin:0;">Ja. PDFree is een Progressive Web App (PWA) die werkt in elke moderne browser op desktop, tablet en telefoon.</dd>
+      </div>
+      <div style="padding:20px 0;">
+        <dt style="font-weight:600;color:var(--text);font-size:15px;margin-bottom:8px;">Is PDFree veilig voor vertrouwelijke documenten?</dt>
+        <dd style="color:var(--text2);font-size:14px;line-height:1.7;margin:0;">Ja. Omdat bestanden nooit je apparaat verlaten, is PDFree veilig voor vertrouwelijke documenten, medische dossiers, financiële overzichten en juridische documenten. Verwerking gebeurt in een geïsoleerde WebAssembly-thread — er wordt niets gelogd, opgeslagen of verzonden.</dd>
+      </div>
+    </dl>
+  </section>
+
+  <!-- ── Tool workspace ── -->
+  <main id="toolArea" class="main-area" style="display:none" aria-busy="false">
+
+    <div class="tool-header">
+      <div class="tool-header-icon" id="toolIcon" aria-hidden="true">🔗</div>
+      <div class="tool-header-text">
+        <h2 id="toolTitle">PDF samenvoegen</h2>
+        <p  id="toolDesc">Combineer onbeperkte PDF-bestanden — zonder beperkingen</p>
+      </div>
+    </div>
+
+    <div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-label="Bestanden uploaden — klik of sleep">
+      <input type="file" id="fileInput" multiple accept=".pdf,application/pdf" aria-hidden="true">
+      <span class="drop-icon" aria-hidden="true">📂</span>
+      <div class="drop-title">Sleep je bestanden hier naartoe</div>
+      <div class="drop-sub">of klik om te bladeren — onbeperkt aantal bestanden</div>
+      <label class="drop-btn" id="chooseFilesBtn" for="fileInput">Bestanden kiezen</label>
+    </div>
+
+    <div id="fileList"    class="file-list" aria-live="polite" aria-label="Selected files"></div>
+    <div id="fileCount"   class="file-count"   style="display:none"></div>
+    <div id="reorderHint" class="reorder-hint" style="display:none">↕ Sleep om bestanden te herordenen vóór het samenvoegen</div>
+
+    <div id="splitOptions"    class="split-options"   style="display:none" aria-label="Split options"></div>
+    <div id="compressOptions" class="compress-options" style="display:none" aria-label="Compression options"></div>
+    <div id="jpg2pdfOptions"  class="j2p-options"     style="display:none" aria-label="JPG to PDF options"></div>
+    <div id="pdf2jpgOptions"  class="j2p-options"     style="display:none" aria-label="PDF to JPG options"></div>
+    <div id="watermarkOptions" class="j2p-options"    style="display:none" aria-label="Watermark options"></div>
+    <div id="pageNumOptions"  class="j2p-options"     style="display:none" aria-label="Page numbers options"></div>
+    <div id="metaOptions"     class="j2p-options"     style="display:none" aria-label="Metadata editor"></div>
+    <div id="protectOptions"  class="j2p-options"     style="display:none" aria-label="Protect PDF options"></div>
+    <div id="redactOptions"   class="j2p-options"     style="display:none" aria-label="Cover Area options"></div>
+    <div id="rotateOptions"   class="j2p-options"     style="display:none" aria-label="Rotate PDF options"></div>
+    <div id="mergeOptions"    class="j2p-options"     style="display:none" aria-label="Merge options"></div>
+    <div id="pdf2wordOptions"  class="j2p-options"     style="display:none" aria-label="PDF to Word options"></div>
+    <div id="pdf2excelOptions" class="j2p-options"     style="display:none" aria-label="PDF to Excel options"></div>
+    <div id="pdf2pptOptions"   class="j2p-options"     style="display:none" aria-label="PDF to PowerPoint options"></div>
+    <div id="pdf2mdOptions"    class="j2p-options"     style="display:none" aria-label="PDF to Markdown options"></div>
+    <div id="unlockOptions"    class="j2p-options"     style="display:none" aria-label="Unlock PDF options"></div>
+    <div id="ocrOptions"       class="j2p-options"     style="display:none" aria-label="OCR options"></div>
+    <div id="compareOptions"   class="j2p-options"     style="display:none" aria-label="Compare PDF options"></div>
+
+    <button id="mergeBtn"  class="merge-btn"  type="button" disabled data-mode="process">🔗 PDF-bestanden samenvoegen</button>
+    <button id="cancelBtn" class="cancel-btn" type="button" style="display:none" aria-label="Verwerking annuleren">✕ Annuleren</button>
+
+    <div id="progressBar"   class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+    <div id="progressLabel" class="progress-label"></div>
+
+    <!-- Success card -->
+    <div id="successCard" class="success-card" role="alert" aria-live="polite" style="display:none">
+      <div class="success-top">
+        <div class="success-icon" aria-hidden="true">✓</div>
+        <div class="success-text">
+          <h3 id="successTitle">Klaar!</h3>
+          <p  id="successDesc"></p>
+        </div>
+        <button id="downloadBtn" class="download-btn" type="button">⬇ Downloaden</button>
+        <button id="shareBtn" class="share-btn" type="button" style="display:none" aria-label="Send file via device apps"></button>
+      </div>
+
+      <!-- Feedback row — directly under download button -->
+      <div class="fb-row" id="fbRow">
+        <button type="button" class="fb-row-btn fb-row-btn--bug"  data-open-feedback data-fb-type="bug">🐛 Bug gevonden</button>
+        <button type="button" class="fb-row-btn fb-row-btn--idea" data-open-feedback data-fb-type="idea">💡 Heb een idee</button>
+        <button type="button" class="fb-row-btn fb-row-btn--good" data-open-feedback data-fb-type="other">👍 Alles goed!</button>
+      </div>
+
+      <!-- Share this tool — shown after every successful conversion -->
+      <div class="share-tool-row" id="shareToolRow">
+        <span class="share-tool-label">Ken je iemand die met PDF's werkt?</span>
+        <div class="share-tool-menu-wrap">
+          <button type="button" class="share-tool-btn" id="shareToolBtn"
+                  data-msg="Ik heb PDFree gebruikt om een PDF te bewerken — gratis, privé, werkt volledig in de browser."
+                  data-copy="Link kopiëren" data-copied="Link gekopieerd!"
+                  aria-haspopup="true" aria-expanded="false">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.5" x2="15.4" y2="6.5"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/></svg>
+            Deze tool delen
+          </button>
+          <div class="share-fallback-menu" id="shareFallbackMenu" role="menu" hidden></div>
+        </div>
+      </div>
+
+      <!-- Install PWA nudge — shown only when browser supports it -->
+      <div class="pwa-nudge" id="pwaNudge" style="display:none">
+        <span class="pwa-nudge__text">⚡ Installeer voor directe toegang — werkt offline</span>
+        <button type="button" class="pwa-nudge__btn" id="pwaNudgeBtn">App installeren</button>
+        <button type="button" class="pwa-nudge__skip" id="pwaNudgeSkip" aria-label="Sluiten">✕</button>
+      </div>
+
+    </div>
+
+  </main>
+
+  <footer>
+    PDFree · <strong>Alle verwerking gebeurt 100% in je browser</strong> · <strong>nooit geüpload</strong><br>
+    <span style="color:var(--green)">🔒</span> Je documenten verlaten nooit je apparaat &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> Gratis voor iedereen, voor altijd<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
+      <a href="/privacy.html" style="color:var(--green)">Privacy</a>
+      &nbsp;·&nbsp;
+      <a href="/terms.html" style="color:var(--green)">Voorwaarden</a>
+      &nbsp;·&nbsp;
+      <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a>
+      &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green)">GitHub</a>
+    </span>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <!-- JSZip для создания ZIP-архива при Split PDF -->
+  <!-- pdf-lib нужен в основном потоке для splitUI.js (window.PDFLib) -->
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+  <script type="module" src="../js/locales/nl.js"></script>
+  <script type="module" src="../js/app.js"></script>
+
+
+<!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
