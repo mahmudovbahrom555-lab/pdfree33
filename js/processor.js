@@ -2946,6 +2946,53 @@ async function _p2wRenderAllVisuals(pdfDoc, pageNum, pageH, gaps, textItems, bor
   await page.render({ canvasContext: ctx, viewport: vp }).promise;
   page.cleanup?.();
 
+  // Crops `src` to its actual ink bounding box (+ small padding) in BOTH
+  // dimensions, instead of leaving it at the full band the caller cropped
+  // out of the page. Both crop paths below (gap runs, inline runs) hand
+  // this a canvas that's the full canvas width, and — for gap runs — a
+  // height padded by the text-line-gap heuristic (medianFontSize-based
+  // margins above/below), not the actual content's extent. Left
+  // untightened, a small logo/icon in a corner gets stretched to fill the
+  // whole content width in Word AND carries a lot of blank vertical margin
+  // into its height, badly distorting both its size and aspect ratio
+  // relative to how it looked in the source PDF (confirmed on a real 1"×1"
+  // square logo: came out as 6.19"×0.96" before this fix, full content
+  // width with the wrong aspect ratio). Returns `{ canvas, width, height }`
+  // — `canvas` is `src` itself, untouched, when there's no meaningful
+  // tightening to do (ink already spans ~the whole band, e.g. a genuine
+  // full-width diagram/chart).
+  function _tightenToInk(src, inkStep) {
+    const d = src.getContext('2d').getImageData(0, 0, src.width, src.height).data;
+    let minX = src.width, maxX = -1, minY = src.height, maxY = -1;
+    for (let y = 0; y < src.height; y += inkStep) {
+      for (let x = 0; x < src.width; x += inkStep) {
+        const idx = (y * src.width + x) * 4;
+        if (d[idx] < 240 || d[idx + 1] < 240 || d[idx + 2] < 240) {
+          if (x < minX) minX = x;
+          if (x > maxX) maxX = x;
+          if (y < minY) minY = y;
+          if (y > maxY) maxY = y;
+        }
+      }
+    }
+    if (maxX < 0) return { canvas: src, width: src.width, height: src.height }; // no ink — caller's density check already guards this
+    const PAD = 8; // canvas px — keeps edges of the actual content from being clipped
+    const x0 = Math.max(0, minX - PAD);
+    const x1 = Math.min(src.width, maxX + PAD);
+    const y0 = Math.max(0, minY - PAD);
+    const y1 = Math.min(src.height, maxY + PAD);
+    const w  = x1 - x0;
+    const h  = y1 - y0;
+    if (w >= src.width - PAD && h >= src.height - PAD) {
+      return { canvas: src, width: src.width, height: src.height }; // already ~the full band
+    }
+    const cropped = document.createElement('canvas');
+    cropped.width  = w;
+    cropped.height = h;
+    cropped.getContext('2d').drawImage(src, x0, y0, w, h, 0, 0, w, h);
+    return { canvas: cropped, width: w, height: h };
+  }
+
   // ── Part 1: gap runs ────────────────────────────────────────────────────────
   const gapRuns = [];
   // Track gap canvas Y ranges so inline scanner skips them (already captured)
@@ -2975,15 +3022,18 @@ async function _p2wRenderAllVisuals(pdfDoc, pageNum, pageH, gaps, textItems, bor
     }
     if (total === 0 || ink / total < _INK_THRESH) { tmp.width = 0; tmp.height = 0; continue; }
 
-    const fmt  = _p2wDetectFormat(tmp);
+    const { canvas: tight, width: tightW, height: tightH } = _tightenToInk(tmp, _INK_STEP);
+
+    const fmt  = _p2wDetectFormat(tight);
     const blob = await new Promise(res =>
-      tmp.toBlob(res, `image/${fmt}`, fmt === 'jpeg' ? 0.92 : undefined));
+      tight.toBlob(res, `image/${fmt}`, fmt === 'jpeg' ? 0.92 : undefined));
+    if (tight !== tmp) { tight.width = 0; tight.height = 0; }
     tmp.width = 0; tmp.height = 0;
     if (!blob) continue;
     const buf = await blob.arrayBuffer();
 
-    let w = Math.round(canvas.width * 96 / _RENDER_DPI);
-    let h = Math.round(cropH        * 96 / _RENDER_DPI);
+    let w = Math.round(tightW * 96 / _RENDER_DPI);
+    let h = Math.round(tightH * 96 / _RENDER_DPI);
     if (w > _MAX_W_PX) { h = Math.round(h * _MAX_W_PX / w); w = _MAX_W_PX; }
 
     gapRuns.push({ yAbove, imgRun: new ImageRun({ data: buf, transformation: { width: w, height: h }, type: fmt === 'png' ? 'png' : 'jpg' }) });
@@ -3062,14 +3112,17 @@ async function _p2wRenderAllVisuals(pdfDoc, pageNum, pageH, gaps, textItems, bor
       tmp.height = cropH;
       tmp.getContext('2d').drawImage(canvas, 0, cyTop, canvas.width, cropH, 0, 0, canvas.width, cropH);
 
-      const fmt  = _p2wDetectFormat(tmp);
+      const { canvas: tight, width: tightW, height: tightH } = _tightenToInk(tmp, _INK_STEP_INL);
+
+      const fmt  = _p2wDetectFormat(tight);
       const blob = await new Promise(res =>
-        tmp.toBlob(res, `image/${fmt}`, fmt === 'jpeg' ? 0.92 : undefined));
+        tight.toBlob(res, `image/${fmt}`, fmt === 'jpeg' ? 0.92 : undefined));
+      if (tight !== tmp) { tight.width = 0; tight.height = 0; }
       tmp.width = 0; tmp.height = 0;
       if (blob) {
         const buf = await blob.arrayBuffer();
-        let w = Math.round(canvas.width * 96 / _RENDER_DPI);
-        let h = Math.round(cropH        * 96 / _RENDER_DPI);
+        let w = Math.round(tightW * 96 / _RENDER_DPI);
+        let h = Math.round(tightH * 96 / _RENDER_DPI);
         if (w > _MAX_W_PX) { h = Math.round(h * _MAX_W_PX / w); w = _MAX_W_PX; }
         const pdfY = pageH - cyTop / scale;
         inlineRuns.push({
