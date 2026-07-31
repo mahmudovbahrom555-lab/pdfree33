@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="robots" content="noindex, nofollow">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="Content-Security-Policy" content="
     default-src 'self';
@@ -55,7 +54,8 @@
   <link rel="preconnect" href="https://static.cloudflareinsights.com">
   <link rel="preload" href="../fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="../css/fonts.css">
-  
+
+  <script src="../js/theme.js"></script>
   <link rel="stylesheet" href="../css/variables.css">
   <link rel="stylesheet" href="../css/animations.css">
   <link rel="stylesheet" href="../css/layout.css">
@@ -67,13 +67,13 @@
     "@type": "SoftwareApplication",
     "name": "Sign PDF Free — PDFree",
     "url": "https://pdfree.io/sign/",
-    "description": "Sign PDF documents online for free. Type or place your name as a text signature directly in your browser. No file uploads, no account required.",
+    "description": "Sign PDF documents online for free. Draw, type, or upload your signature and place it directly in your browser. No file uploads, no account required.",
     "applicationCategory": "UtilityApplication",
     "operatingSystem": "Any",
     "browserRequirements": "Requires a modern browser with JavaScript enabled",
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
     "featureList": [
-      "Type your name as a text signature",
+      "Draw, type, or upload your signature",
       "Position signature precisely on the document",
       "Works on any PDF — contracts, forms, agreements",
       "No file upload required",
@@ -101,7 +101,7 @@
         "name": "Is signing a PDF with PDFree legally valid?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "PDFree adds a typed-text signature to your PDF. In most jurisdictions, a typed name on a document constitutes a valid electronic signature under laws like the US ESIGN Act and EU eIDAS. For contracts requiring a qualified electronic signature (QES) with cryptographic certificate, you would need a specialized e-signature service."
+          "text": "PDFree lets you draw, type, or upload a signature and place it on your PDF. In most jurisdictions, a signature like this constitutes a valid electronic signature under laws like the US ESIGN Act and EU eIDAS. For contracts requiring a qualified electronic signature (QES) with cryptographic certificate, you would need a specialized e-signature service."
         }
       },
       {
@@ -138,7 +138,8 @@
     "@type": "BreadcrumbList",
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "PDFree", "item": "https://pdfree.io/" },
-      { "@type": "ListItem", "position": 2, "name": "Sign PDF", "item": "https://pdfree.io/sign/" }
+      { "@type": "ListItem", "position": 2, "name": "Fill PDF Form", "item": "https://pdfree.io/fill/" },
+      { "@type": "ListItem", "position": 3, "name": "Sign PDF", "item": "https://pdfree.io/sign/" }
     ]
   }
   </script>
@@ -153,13 +154,13 @@
       "@type": "HowToStep",
       "position": 1,
       "name": "Open your PDF",
-      "text": "Click 'Choose files' or drag your PDF into the drop zone. The PDF renders with all existing content visible."
+      "text": "Go to pdfree.io/fill/, then click 'Choose files' or drag your PDF into the drop zone. The PDF renders with all existing content visible."
     },
     {
       "@type": "HowToStep",
       "position": 2,
-      "name": "Draw your signature",
-      "text": "Click the signature tool and draw your signature in the pop-up pad using your mouse or finger. Click 'Place signature' to position it anywhere on the page."
+      "name": "Create your signature",
+      "text": "Open the signature pad and choose Draw (mouse or finger), Type (your name in a signature font), or Upload (an image of your existing signature). Click 'Place signature' to position it anywhere on the page."
     },
     {
       "@type": "HowToStep",
@@ -198,17 +199,17 @@
 
         <h1 style="font-size:32px; color:var(--text); margin:0 0 24px; font-weight:700;">Sign PDF Free — No Upload Required</h1>
 
-        <p style="font-size:18px; margin:0 0 32px; color:var(--text);">Sign any PDF document in your browser — type your name as a text signature and place it exactly where it needs to go. No account, no uploads, no cost. Your document stays on your device.</p>
+        <p style="font-size:18px; margin:0 0 32px; color:var(--text);">Sign any PDF document in your browser — draw, type, or upload your signature and place it exactly where it needs to go. No account, no uploads, no cost. Your document stays on your device.</p>
 
-        <a href="../annotate-pdf/" class="merge-btn" style="display:inline-block; margin:0 0 48px; text-decoration:none; padding:14px 32px; font-size:16px; font-weight:600;">Sign PDF Now — Free</a>
+        <a href="../fill/" class="merge-btn" style="display:inline-block; margin:0 0 48px; text-decoration:none; padding:14px 32px; font-size:16px; font-weight:600;">Sign PDF Now — Free</a>
 
         <h2 style="font-size:22px; color:var(--text); margin:0 0 16px; font-weight:600;">How to sign a PDF online</h2>
 
         <ol style="margin:0 0 32px; padding-left:24px;">
-          <li style="margin-bottom:10px;">Open the <a href="../annotate-pdf/" style="color:var(--green);">PDFree annotation tool</a> and upload your PDF.</li>
-          <li style="margin-bottom:10px;">Select the <strong>Text</strong> tool from the toolbar.</li>
-          <li style="margin-bottom:10px;">Click on the signature line in the document.</li>
-          <li style="margin-bottom:10px;">Type your name — resize and reposition as needed.</li>
+          <li style="margin-bottom:10px;">Open the <a href="../fill/" style="color:var(--green);">PDFree Fill &amp; Sign tool</a> and upload your PDF.</li>
+          <li style="margin-bottom:10px;">Open the signature pad and choose <strong>Draw</strong>, <strong>Type</strong>, or <strong>Upload</strong>.</li>
+          <li style="margin-bottom:10px;">Draw with your mouse or finger, type your name in a signature font, or upload an image of your signature.</li>
+          <li style="margin-bottom:10px;">Drag it onto the document — resize and reposition as needed.</li>
           <li style="margin-bottom:10px;">Download the signed PDF — your signature is permanently embedded.</li>
         </ol>
 
@@ -218,11 +219,11 @@
 
         <p style="margin-top:16px;">PDFree processes everything locally in your browser. <strong>Your document never leaves your device.</strong> There is no account to create, no subscription to manage, and no usage limits.</p>
 
-        <h2 style="font-size:22px; color:var(--text); margin:32px 0 16px; font-weight:600;">Is a typed signature legally valid?</h2>
+        <h2 style="font-size:22px; color:var(--text); margin:32px 0 16px; font-weight:600;">Is a signature made with PDFree legally valid?</h2>
 
-        <p>In most jurisdictions, yes. A typed name on a document constitutes a valid electronic signature under the <strong>US ESIGN Act</strong>, <strong>UETA</strong>, and <strong>EU eIDAS</strong> for the majority of business agreements — employment contracts, service agreements, consent forms, and more.</p>
+        <p>In most jurisdictions, yes. A drawn or typed signature on a document constitutes a valid electronic signature under the <strong>US ESIGN Act</strong>, <strong>UETA</strong>, and <strong>EU eIDAS</strong> for the majority of business agreements — employment contracts, service agreements, consent forms, and more.</p>
 
-        <p style="margin-top:16px;">For documents that legally require a qualified electronic signature (QES) with a cryptographic certificate — such as certain government filings or notarized documents — you would need a specialized certified e-signature service. For everyday business use, a typed signature is sufficient.</p>
+        <p style="margin-top:16px;">For documents that legally require a qualified electronic signature (QES) with a cryptographic certificate — such as certain government filings or notarized documents — you would need a specialized certified e-signature service. For everyday business use, a visual signature is sufficient.</p>
 
         <h2 style="font-size:22px; color:var(--text); margin:32px 0 16px; font-weight:600;">Frequently asked questions</h2>
 
@@ -230,7 +231,7 @@
 
           <div style="border:1px solid var(--border); border-radius:12px; padding:20px;">
             <h3 style="font-size:16px; color:var(--text); margin:0 0 8px; font-weight:600;">Is signing a PDF with PDFree legally valid?</h3>
-            <p style="margin:0; font-size:15px;">For most business agreements, yes. A typed name qualifies as an electronic signature under the US ESIGN Act and EU eIDAS. For documents requiring a certified QES, use a specialized e-signature service.</p>
+            <p style="margin:0; font-size:15px;">For most business agreements, yes. A drawn or typed signature qualifies as an electronic signature under the US ESIGN Act and EU eIDAS. For documents requiring a certified QES, use a specialized e-signature service.</p>
           </div>
 
           <div style="border:1px solid var(--border); border-radius:12px; padding:20px;">
@@ -253,7 +254,7 @@
         <h2 style="font-size:22px; color:var(--text); margin:0 0 16px; font-weight:600;">Related tools</h2>
         <ul style="margin:0 0 40px; padding-left:24px;">
           <li><a href="../fill/" style="color:var(--green);">Fill PDF Form</a> — type text into form fields before signing</li>
-          <li><a href="../annotate-pdf/" style="color:var(--green);">Annotate PDF</a> — add arrows, boxes and other markup</li>
+          <li><a href="../flatten-pdf/" style="color:var(--green);">Flatten PDF</a> — lock a signed form so fields can't be edited afterward</li>
           <li><a href="../protect-pdf/" style="color:var(--green);">Protect PDF</a> — password-lock a signed document</li>
           <li><a href="../compress-large-pdf-free/" style="color:var(--green);">Compress PDF</a> — reduce file size before emailing</li>
           <li><a href="/blog/how-to-sign-pdf-free/" style="color:var(--green);">How to Sign a PDF for Free</a> — detailed guide for any device</li>

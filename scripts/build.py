@@ -364,11 +364,16 @@ LANG_NAMES = {
 
 SPECIALTY_PAGES = [
     'annotate-pdf',
-    # highlight-pdf and sign are noindex,nofollow (doorway content referencing
-    # a non-existent annotation UI — see commit 8178b68) — excluded from the
+    # highlight-pdf is still noindex,nofollow (doorway content referencing a
+    # non-existent annotation UI — see commit 8178b68) — excluded from the
     # sitemap so we don't submit a page for indexing that tells Google not to
-    # index it. Re-add once their copy is rewritten around a real tool and the
+    # index it. Re-add once its copy is rewritten around a real tool and the
     # noindex tag is removed.
+    # sign/ was noindexed for the same reason (its CTA pointed at the
+    # non-existent 'PDFree annotation tool') but the real Fill & Sign tool
+    # (/fill/, with a genuine draw/type/upload signature pad) now exists —
+    # sign/'s copy was rewritten to point at it and the noindex tag removed.
+    'sign',
     'hipaa-pdf-tools',
     'private-pdf-tools',
     'legal-pdf-tools',
