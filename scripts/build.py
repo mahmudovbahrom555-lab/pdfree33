@@ -371,6 +371,7 @@ SPECIALTY_PAGES = [
     # noindex tag is removed.
     'hipaa-pdf-tools',
     'private-pdf-tools',
+    'legal-pdf-tools',
     'ilovepdf-alternative',
     'compress-large-pdf-free',
     # compare-pdf is EN-only so stays here; draw-on-pdf/secure-pdf-tools/
