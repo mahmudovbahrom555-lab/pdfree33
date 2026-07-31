@@ -2926,8 +2926,7 @@ function _p2wDetectFormat(canvas) {
 async function _p2wRenderAllVisuals(pdfDoc, pageNum, pageH, gaps, textItems, borderGrids, medianFontSize, ImageRun) {
   const _RENDER_DPI = 150;
   const _MAX_W_PX   = 594;    // max width in px at 96 DPI (fits A4 and Letter margins)
-  const _INK_THRESH = 0.02;   // gap crop: skip if < 2% pixels are non-white
-  const _INK_STEP   = 8;      // gap crop: sample every 8th pixel
+  const _INK_THRESH = 0.02;   // gap crop: skip if < 2% of the tightened content's own bbox is non-white
   // Inline visual detection
   const _STRIP_H         = 20;    // strip height in canvas px (~10pt at 150 DPI)
   const _TEXT_COV_THRESH = 0.60;  // strip is >60% covered by text bboxes → skip
@@ -2961,13 +2960,33 @@ async function _p2wRenderAllVisuals(pdfDoc, pageNum, pageH, gaps, textItems, bor
   // — `canvas` is `src` itself, untouched, when there's no meaningful
   // tightening to do (ink already spans ~the whole band, e.g. a genuine
   // full-width diagram/chart).
-  function _tightenToInk(src, inkStep) {
+  //
+  // Scans every pixel (no stride) — this is the edge-finding pass, not a
+  // coarse density pre-check. A QR code's modules are only a few px each at
+  // render DPI, so a coarse sampling grid can straddle past the last
+  // row/column of modules and lock the box in short, visibly clipping the
+  // code. The full canvas is already resident in memory either way
+  // (getImageData), so scanning every pixel only costs loop iterations,
+  // which stay cheap even for a full-page band (a couple million
+  // iterations, low tens of ms).
+  //
+  // Also returns `density`: ink pixels divided by the TIGHT bbox area, not
+  // the padded band `src` started as. Callers used to gate on density
+  // measured over the full padded band, which dilutes small-but-real
+  // content — a 1"×1" QR code sitting in a large layout gap measured ~1.6%
+  // ink over the whole band (below the 2% "is this real content" cutoff)
+  // and was silently dropped whole, not just cropped loosely. Measuring
+  // density over the content's own bounding box is what the threshold was
+  // actually meant to test.
+  function _tightenToInk(src) {
     const d = src.getContext('2d').getImageData(0, 0, src.width, src.height).data;
     let minX = src.width, maxX = -1, minY = src.height, maxY = -1;
-    for (let y = 0; y < src.height; y += inkStep) {
-      for (let x = 0; x < src.width; x += inkStep) {
+    let inkCount = 0;
+    for (let y = 0; y < src.height; y++) {
+      for (let x = 0; x < src.width; x++) {
         const idx = (y * src.width + x) * 4;
         if (d[idx] < 240 || d[idx + 1] < 240 || d[idx + 2] < 240) {
+          inkCount++;
           if (x < minX) minX = x;
           if (x > maxX) maxX = x;
           if (y < minY) minY = y;
@@ -2975,7 +2994,7 @@ async function _p2wRenderAllVisuals(pdfDoc, pageNum, pageH, gaps, textItems, bor
         }
       }
     }
-    if (maxX < 0) return { canvas: src, width: src.width, height: src.height }; // no ink — caller's density check already guards this
+    if (maxX < 0) return { canvas: src, width: src.width, height: src.height, density: 0 };
     const PAD = 8; // canvas px — keeps edges of the actual content from being clipped
     const x0 = Math.max(0, minX - PAD);
     const x1 = Math.min(src.width, maxX + PAD);
@@ -2983,14 +3002,15 @@ async function _p2wRenderAllVisuals(pdfDoc, pageNum, pageH, gaps, textItems, bor
     const y1 = Math.min(src.height, maxY + PAD);
     const w  = x1 - x0;
     const h  = y1 - y0;
+    const density = (w * h) > 0 ? inkCount / (w * h) : 0;
     if (w >= src.width - PAD && h >= src.height - PAD) {
-      return { canvas: src, width: src.width, height: src.height }; // already ~the full band
+      return { canvas: src, width: src.width, height: src.height, density }; // already ~the full band
     }
     const cropped = document.createElement('canvas');
     cropped.width  = w;
     cropped.height = h;
     cropped.getContext('2d').drawImage(src, x0, y0, w, h, 0, 0, w, h);
-    return { canvas: cropped, width: w, height: h };
+    return { canvas: cropped, width: w, height: h, density };
   }
 
   // ── Part 1: gap runs ────────────────────────────────────────────────────────
@@ -3011,18 +3031,18 @@ async function _p2wRenderAllVisuals(pdfDoc, pageNum, pageH, gaps, textItems, bor
     const tmp  = document.createElement('canvas');
     tmp.width  = canvas.width;
     tmp.height = cropH;
-    const tCtx = tmp.getContext('2d');
-    tCtx.drawImage(canvas, 0, cyTop, canvas.width, cropH, 0, 0, canvas.width, cropH);
+    tmp.getContext('2d').drawImage(canvas, 0, cyTop, canvas.width, cropH, 0, 0, canvas.width, cropH);
 
-    const d = tCtx.getImageData(0, 0, tmp.width, cropH).data;
-    let ink = 0, total = 0;
-    for (let i = 0; i < d.length; i += 4 * _INK_STEP) {
-      if (d[i] < 240 || d[i + 1] < 240 || d[i + 2] < 240) ink++;
-      total++;
+    // Density is checked AFTER tightening, over the content's own bounding
+    // box — not over this padded band, which can be much larger than a
+    // small graphic sitting inside a wide layout gap and would dilute a
+    // real image's ink ratio below threshold (see _tightenToInk).
+    const { canvas: tight, width: tightW, height: tightH, density } = _tightenToInk(tmp);
+    if (density < _INK_THRESH) {
+      if (tight !== tmp) { tight.width = 0; tight.height = 0; }
+      tmp.width = 0; tmp.height = 0;
+      continue;
     }
-    if (total === 0 || ink / total < _INK_THRESH) { tmp.width = 0; tmp.height = 0; continue; }
-
-    const { canvas: tight, width: tightW, height: tightH } = _tightenToInk(tmp, _INK_STEP);
 
     const fmt  = _p2wDetectFormat(tight);
     const blob = await new Promise(res =>
@@ -3112,7 +3132,7 @@ async function _p2wRenderAllVisuals(pdfDoc, pageNum, pageH, gaps, textItems, bor
       tmp.height = cropH;
       tmp.getContext('2d').drawImage(canvas, 0, cyTop, canvas.width, cropH, 0, 0, canvas.width, cropH);
 
-      const { canvas: tight, width: tightW, height: tightH } = _tightenToInk(tmp, _INK_STEP_INL);
+      const { canvas: tight, width: tightW, height: tightH } = _tightenToInk(tmp);
 
       const fmt  = _p2wDetectFormat(tight);
       const blob = await new Promise(res =>
