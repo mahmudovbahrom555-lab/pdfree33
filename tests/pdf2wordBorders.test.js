@@ -29,9 +29,33 @@
 //      own tiny "frame" on its own, and preferring the smallest would
 //      shred one real table into dozens of fragments instead of finding it.
 //
+//  A second real bug was found in a follow-up round of synthetic-PDF
+//  testing (a German sales report with a merged region column): once a
+//  grid can hold real, densely-populated data (not just an empty
+//  template's header row, the ONLY case _assignLineToGridCols() used to
+//  see), the ±4px matching slack in _assignLineToGridCols() (processor.js)
+//  turned out to be big enough to misassign left-aligned cell text back
+//  into the PREVIOUS column when it started only ~3px past its own
+//  column's divider — a normal amount of cell padding. Fixed by shrinking
+//  the slack to ±2px (GRID_SLACK in processor.js), matching the actual
+//  worst-case rounding error from colXs's own 4px coordinate snapping.
+//
 // Run: node tests/pdf2wordBorders.test.js
 
+// processor.js touches Worker/document at module load time (it's built for
+// the browser) — same minimal stub pdf2excel.logic.test.js uses.
+global.document = {
+  documentElement: { lang: 'en' },
+  getElementById:  () => null,
+  querySelector:   () => null,
+  addEventListener: () => {},
+  createElement:   () => ({ style: {}, setAttribute() {}, appendChild() {} }),
+};
+global.window    = globalThis;
+global.Worker    = class { postMessage() {} terminate() {} addEventListener() {} };
+
 const { detectTableGrids } = await import('../js/pdf2wordBorders.js');
+const { _assignLineToGridCols } = await import('../js/processor.js');
 
 let passed = 0, failed = 0;
 async function test(name, fn) {
@@ -153,6 +177,34 @@ await test('a plain unrelated box with no internal divider (1 row) is below MIN_
   const ops = [rectOp(40, 40, 60, 30)];
   const grids = await detectTableGrids(fakePage(ops));
   expect(grids.length).toBe(0);
+});
+
+// ── _assignLineToGridCols: real bug found via a German merged-report fixture ──
+console.log('\n_assignLineToGridCols — column-boundary slack:');
+
+await test('left-aligned text starting just past its OWN column divider stays in ' +
+     'that column, not the previous one (real bug: "Kategorie" drawn 3px past a ' +
+     'divider at x=164 was misassigned back into the x=72-164 column)', () => {
+  const colXs = [72, 164, 272, 352, 444];
+  const items = [
+    { x: 77,  str: 'Region' },      // 5px past the x=72 divider — column 0
+    { x: 167, str: 'Kategorie' },   // 3px past the x=164 divider — column 1
+    { x: 277, str: 'Menge' },       // column 2
+    { x: 357, str: 'Umsatz' },      // column 3
+  ];
+  const cells = _assignLineToGridCols(items, colXs);
+  expect(cells.length).toBe(4);
+  expect(cells[0]).toBe('Region');
+  expect(cells[1]).toBe('Kategorie');
+  expect(cells[2]).toBe('Menge');
+  expect(cells[3]).toBe('Umsatz');
+});
+
+await test('an item exactly on a boundary still resolves to a single column (no throw, no dupe)', () => {
+  const colXs = [0, 100, 200];
+  const cells = _assignLineToGridCols([{ x: 100, str: 'X' }], colXs);
+  expect(cells.length).toBe(2);
+  expect(cells[0] + cells[1]).toBe('X'); // appears in exactly one cell
 });
 
 // ── Summary ──────────────────────────────────────────────────

@@ -2772,13 +2772,31 @@ function _p2wGroupRotated(items, xTol = 20) {
 // Distributes text items in a line across grid columns by X position.
 // colXs: sorted array of column boundary X values [x0, x1, x2, ...].
 // Returns string[] with one entry per column interval.
-function _assignLineToGridCols(items, colXs) {
+//
+// GRID_SLACK is intentionally small (not the full border-detection SNAP=4
+// px from pdf2wordBorders.js): colXs values are snapped to a 4px grid, so
+// an item's "true" boundary can be off by up to SNAP/2=2px from rounding —
+// that's the only slack genuinely needed here. A ±4px slack (the SNAP
+// value itself) was tried first and found to double-count near each
+// boundary: real left-aligned cell text often starts only ~5px past its
+// OWN column's left edge (completely normal — e.g. a synthetic report
+// fixture with "Kategorie" drawn 5px right of a divider at x=164 still
+// landed at x=167, just 3px past the boundary), and a ±4px zone on both
+// sides of that boundary swallowed it back into the PREVIOUS column
+// instead. This barely mattered while grids only ever held near-empty
+// template rows (this function's original use case), but now that
+// pdf2wordBorders.js can also detect real, densely-populated merged-cell
+// tables, a misassigned column silently corrupts real data instead of
+// just a decorative header cell.
+const GRID_SLACK = 2;
+
+export function _assignLineToGridCols(items, colXs) {
   const colCount = colXs.length - 1;
   const cells = Array.from({ length: colCount }, () => []);
   for (const item of items) {
     let col = colCount - 1;
     for (let c = 0; c < colCount; c++) {
-      if (item.x >= colXs[c] - 4 && item.x < colXs[c + 1] + 4) { col = c; break; }
+      if (item.x >= colXs[c] - GRID_SLACK && item.x < colXs[c + 1] + GRID_SLACK) { col = c; break; }
     }
     cells[col].push(item.str);
   }
