@@ -335,6 +335,29 @@ function _debugPrint(tables, _lines) {
 // file's typed cells (used by pdf2excel's post-build ERI check).
 const _PROSE_NUMERIC_LOOKING = /^-?[$€£¥]?\s?\d{1,3}(,\d{3})*(\.\d+)?%?$/;
 
+// "Word count via whitespace split" silently returns 1 for an entire CJK
+// sentence, since Chinese/Japanese prose has no spaces between words at
+// all (Korean is less affected — it does use spaces between phrases).
+// Found via a synthetic Japanese contract fixture: a heading + a 3-item
+// numbered clause list ("1. 乙は、甲の指示に従い、本契約に定める業務を誠実
+// に遂行するものとする。" — one long sentence, one whitespace-token) got
+// detected as a table and neither looksLikeProseNotData() nor
+// looksLikeEnumeratedList() caught it, because every clause's prose cell
+// counted as "1 word" — nowhere near either function's word-per-cell
+// threshold, despite being obviously prose to a human reader. Counting CJK
+// ideographs/kana/hangul directly (each roughly half a Latin "word" in
+// information density — two CJK characters carry about as much meaning as
+// one space-delimited word) fixes both guards without touching their
+// thresholds, which stay calibrated against Latin/Cyrillic prose.
+const _CJK_RE = /[一-鿿㐀-䶿぀-ヿ가-힣]/g;
+
+function _wordCount(text) {
+  const cjkChars  = (text.match(_CJK_RE) || []).length;
+  const nonCjk    = text.replace(_CJK_RE, ' ').trim();
+  const latinWords = nonCjk ? nonCjk.split(/\s+/).filter(Boolean).length : 0;
+  return latinWords + Math.ceil(cjkChars / 2);
+}
+
 export function looksLikeProseNotData(rows) {
   if (rows.length < 2) return false;
   const body = rows.slice(1); // header row is short in real AND fake tables alike
@@ -344,7 +367,7 @@ export function looksLikeProseNotData(rows) {
       const text = (cell || '').trim();
       if (!text) continue;
       cellCount++;
-      wordCount += text.split(/\s+/).length;
+      wordCount += _wordCount(text);
       if (_PROSE_NUMERIC_LOOKING.test(text)) hasNumericAnchor = true;
     }
   }
@@ -389,7 +412,7 @@ export function looksLikeEnumeratedList(rows) {
       const text = (row[c] || '').trim();
       if (!text) continue;
       cellCount++;
-      wordCount += text.split(/\s+/).length;
+      wordCount += _wordCount(text);
     }
   }
   if (dataRows < 2 || !cellCount) return false;

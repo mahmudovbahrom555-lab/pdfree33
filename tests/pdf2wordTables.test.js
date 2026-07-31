@@ -173,6 +173,43 @@ test('fewer than 2 rows never qualifies', () => {
   expect(looksLikeProseNotData([['A', 'B']])).toBe(false);
 });
 
+// ── CJK word density: real bug found via a synthetic Japanese contract ─────
+// "Word count via whitespace split" returns 1 for an entire CJK sentence,
+// since Chinese/Japanese prose has no spaces between words at all. A
+// synthetic Japanese contract fixture (heading "第二条　委託業務の内容" +
+// a 3-item numbered clause list, each clause a single long sentence with
+// zero whitespace) got detected as a table by detectTables(), and NEITHER
+// guard caught it before this fix: every clause's prose cell counted as
+// "1 word", far under both functions' word-per-cell thresholds despite
+// being obviously prose. Fixed by counting CJK ideographs/kana/hangul
+// directly (see _wordCount() in pdf2wordTables.js) instead of only
+// whitespace-delimited tokens.
+console.log('\nCJK word density (no whitespace between words):');
+
+test('a Japanese heading + numbered-clause table (no real tabular data) is caught ' +
+     'by looksLikeProseNotData once CJK sentences count as multi-word', () => {
+  const rows = [
+    ['第二条', '委託業務の内容'],
+    ['1.', '乙は、甲の指示に従い、本契約に定める業務を誠実に遂行するものとする。'],
+    ['2.', '乙は、業務の遂行にあたり、善良な管理者の注意義務を負うものとする。'],
+    ['3.', '乙は、本契約に定める業務以外の業務を行ってはならないものとする。'],
+    ['第三条', '料金表'],
+  ];
+  expect(looksLikeProseNotData(rows)).toBe(true);
+});
+
+test('a real Japanese price table (short CJK cells, real numeric data) is NOT ' +
+     'flagged by either guard', () => {
+  const rows = [
+    ['No.', '項目', '数量', '金額（円）'],
+    ['1', '基本コンサルティング', '10時間', '100,000'],
+    ['2', '追加サポート', '5時間', '50,000'],
+    ['3', '資料作成', '1式', '30,000'],
+  ];
+  expect(looksLikeProseNotData(rows)).toBe(false);
+  expect(looksLikeEnumeratedList(rows)).toBe(false);
+});
+
 // ── Summary ──────────────────────────────────────────────────
 console.log(`\n${'─'.repeat(40)}`);
 console.log(`Tests: ${passed + failed} | ✓ ${passed} | ${failed > 0 ? '✗ ' + failed : '0 failed'}`);
