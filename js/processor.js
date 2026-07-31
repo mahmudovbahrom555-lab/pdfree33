@@ -2629,11 +2629,17 @@ async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSet, cs, 
         }));
 
       } else {
-        // ── 'grid' event: border-detected table (empty body rows) ─────────────
+        // ── 'grid' event: border-detected table ────────────────────────────────
+        // Originally only ever fed empty template forms (blank rows, header
+        // text only), hence "hdrLines" below. Since detectTableGrids() can now
+        // also find merged-cell tables that carry real body text (see
+        // pdf2wordBorders.js), this same path may receive dozens of populated
+        // lines — only the FIRST is a genuine header, the rest are data rows
+        // and must not all render bold.
         _flushPara();   // emit any buffered paragraph before the grid
         const { grid } = event;
 
-        // Consume text lines inside the grid's Y range → become header row(s)
+        // Consume text lines inside the grid's Y range → become table row(s)
         const hdrLines = [];
         for (let li2 = 0; li2 < lines.length; li2++) {
           const ln = lines[li2];
@@ -2645,13 +2651,14 @@ async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSet, cs, 
         }
         hdrLines.sort((a, b) => b.y - a.y); // top first
 
-        // Header rows — distribute items across columns by X position
-        const gridRows = hdrLines.map(ln =>
+        // Distribute each line's items across columns by X position; only
+        // the first line is treated as a header (bold).
+        const gridRows = hdrLines.map((ln, idx) =>
           new TableRow({
             children: _assignLineToGridCols(ln.items, grid.colXs).map(cellText =>
               new TableCell({
                 children: [new Paragraph({
-                  children: [new TextRun({ text: cellText, bold: true })],
+                  children: [new TextRun({ text: cellText, bold: idx === 0 })],
                   spacing: { after: 0 },
                 })],
               })

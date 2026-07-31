@@ -2,16 +2,27 @@
 // Copyright (C) 2025 PDFree Contributors
 //
 // ── pdf2wordBorders.js ────────────────────────────────────────────────────────
-// Detects empty table grids in a PDF page by analysing drawing operators.
-// Purpose: find tables that have no text content (empty form rows) which the
-// text-based detector (pdf2wordTables.js) cannot see.
+// Detects table grids in a PDF page by analysing drawing operators — both
+// empty form rows (no text content, which the text-based detector in
+// pdf2wordTables.js cannot see) AND merged-cell tables (rowspan/colspan)
+// whose irregular per-row column counts make the text-alignment detector
+// reject them outright.
 //
-// Algorithm:
+// Algorithm ("frame first, then split-and-merge" — see _buildGrids below):
 //   1. Parse PDF operator list → collect all line segments (from m/l and re ops).
 //   2. Snap coordinates to a grid (SNAP px tolerance).
 //   3. Group H-lines by Y, V-lines by X.
-//   4. A grid exists where ≥ MIN_COLS+1 unique X values AND ≥ MIN_ROWS+1 unique
-//      Y values are connected by crossing lines within a bounding rectangle.
+//   4. Find the table's OUTER rectangle first: a top/bottom h-line pair whose
+//      spans substantially overlap, closed on the sides by v-lines that span
+//      (close to) the full candidate height. This is validated strictly.
+//   5. Only once that frame is anchored, collect INTERNAL row/column dividers —
+//      any real segment touching the frame's interior counts, regardless of
+//      how much of the width/height it actually spans. A merged cell (e.g. a
+//      tariff table row whose product-name cell spans 3 price rows) legit-
+//      imately has no divider drawn for the rows/columns it merges across;
+//      requiring every internal divider to span the whole table (the
+//      previous design) rejected such tables entirely instead of just losing
+//      some colspan/rowspan fidelity.
 //
 // Coordinates: PDF user space (Y increases upward, same as text item.transform[5]).
 // ─────────────────────────────────────────────────────────────────────────────
@@ -19,6 +30,14 @@
 const SNAP     = 4;   // px — coordinates within SNAP px → treated as same line
 const MIN_ROWS = 2;   // minimum body rows (not counting header) to call it a grid
 const MIN_COLS = 1;   // minimum columns
+
+// Frame-search tuneables (see _buildGrids)
+const FRAME_MIN_HEIGHT      = SNAP * 5;   // 20px floor for a candidate table's total height
+const FRAME_MIN_OVERLAP_ABS = SNAP * 10;  // 40px floor for top/bottom span overlap
+const FRAME_OVERLAP_FRAC    = 0.6;        // …or ≥60% of the shorter span, whichever is stricter
+const FRAME_EDGE_SLACK      = SNAP * 2;   // 8px slack when matching a side v-line's span to the frame height
+const INTERNAL_MIN_OVERLAP  = SNAP * 5;   // 20px — ignore stray/incidental internal segment overlaps
+const MAX_H_CANDIDATES      = 300;        // safety cap: bail out of the O(n²) frame search on pathological pages
 
 // ── Public API ────────────────────────────────────────────────────────────────
 
@@ -41,7 +60,8 @@ const MIN_COLS = 1;   // minimum columns
 export async function detectTableGrids(page) {
   const opList = await page.getOperatorList();
   const { hLines, vLines } = _extractSegments(opList);
-  return _buildGrids(hLines, vLines);
+  const viewport = page.getViewport({ scale: 1 });
+  return _buildGrids(hLines, vLines, viewport.width, viewport.height);
 }
 
 // ── Segment extraction ────────────────────────────────────────────────────────
@@ -184,7 +204,7 @@ function _extractSegments(opList) {
 
 function _snap(v) { return Math.round(v / SNAP) * SNAP; }
 
-function _buildGrids(hLines, vLines) {
+function _buildGrids(hLines, vLines, pageW = Infinity, pageH = Infinity) {
   if (!hLines.length || !vLines.length) return [];
 
   // Snap all coordinates
@@ -209,59 +229,119 @@ function _buildGrids(hLines, vLines) {
   const vXs = [...vByX.keys()].sort((a, b) => a - b);
 
   if (hYs.length < MIN_ROWS + 1 || vXs.length < MIN_COLS + 1) return [];
+  if (hYs.length > MAX_H_CANDIDATES || vXs.length > MAX_H_CANDIDATES) return [];
 
-  // Find rectangular subsets of hYs × vXs that form a valid grid.
-  // Strategy: group contiguous hYs and vXs where lines span the same range.
-  // For simplicity: find the largest bounding box where H-lines span full width
-  // and V-lines span full height.
+  // ── Frame-first search ("split-and-merge") ──────────────────────────────
+  // For every pair of horizontal lines (yHi above yLo), check whether they
+  // form a table's top/bottom edge: their spans must substantially overlap
+  // (that overlap becomes the candidate left/right), and there must be a
+  // vertical line near each side spanning (close to) the full height. This
+  // is exactly as strict as the old per-row/per-column validation — it just
+  // applies ONLY to the outer frame, not to every internal divider.
+  const candidates = [];
 
-  const grids = [];
+  for (let hi = hYs.length - 1; hi >= 0; hi--) {
+    const yHi = hYs[hi];
+    for (let lo = 0; lo < hi; lo++) {
+      const yLo = hYs[lo];
+      if (yHi - yLo < FRAME_MIN_HEIGHT) continue;
 
-  // Cluster Y-values by proximity and shared X range
-  // (two H-lines at nearby Y with similar X range belong to the same table)
-  const yGroups = _cluster(hYs, SNAP * 3);    // groups of close Y values
-  const xGroups = _cluster(vXs, SNAP * 3);    // groups of close X values
-
-  for (const yGroup of yGroups) {
-    if (yGroup.length < MIN_ROWS + 1) continue;
-
-    for (const xGroup of xGroups) {
-      if (xGroup.length < MIN_COLS + 1) continue;
-
-      const minX = xGroup[0], maxX = xGroup[xGroup.length - 1];
-      const minY = yGroup[0], maxY = yGroup[yGroup.length - 1];
-
-      // Verify: each Y in yGroup has an H-line spanning [minX, maxX]
-      const hValid = yGroup.every(y => {
-        const spans = hByY.get(y) || [];
-        return spans.some(([x1, x2]) => x1 <= minX + SNAP && x2 >= maxX - SNAP);
-      });
-
-      // Verify: each X in xGroup has a V-line spanning [minY, maxY]
-      const vValid = xGroup.every(x => {
-        const spans = vByX.get(x) || [];
-        return spans.some(([y1, y2]) => y1 <= minY + SNAP && y2 >= maxY - SNAP);
-      });
-
-      if (hValid && vValid) {
-        grids.push({
-          x:        minX,
-          y:        minY,
-          w:        maxX - minX,
-          h:        maxY - minY,
-          colCount: xGroup.length - 1,
-          rowCount: yGroup.length - 1,
-          colXs:    xGroup,
-          rowYs:    [...yGroup].reverse(),  // descending (top first in PDF)
-        });
+      // Best-overlapping span pair between yHi's and yLo's h-line segments
+      // defines the candidate frame's left/right edges.
+      let left = null, right = null, bestOverlap = 0;
+      for (const [ax1, ax2] of hByY.get(yHi) || []) {
+        for (const [bx1, bx2] of hByY.get(yLo) || []) {
+          const overlap = Math.min(ax2, bx2) - Math.max(ax1, bx1);
+          if (overlap <= 0) continue;
+          const minSpan = Math.min(ax2 - ax1, bx2 - bx1);
+          if (overlap < FRAME_MIN_OVERLAP_ABS || overlap < minSpan * FRAME_OVERLAP_FRAC) continue;
+          if (overlap > bestOverlap) {
+            bestOverlap = overlap;
+            left  = Math.max(ax1, bx1);
+            right = Math.min(ax2, bx2);
+          }
+        }
       }
+      if (left === null) continue;
+
+      // Outer sides: a v-line near `left` and one near `right` must each
+      // span (close to) the full candidate height [yLo, yHi].
+      const findEdgeX = (target) => {
+        for (const x of vXs) {
+          if (Math.abs(x - target) > SNAP * 2) continue;
+          const spans = vByX.get(x) || [];
+          if (spans.some(([y1, y2]) => y1 <= yLo + FRAME_EDGE_SLACK && y2 >= yHi - FRAME_EDGE_SLACK)) {
+            return x;
+          }
+        }
+        return null;
+      };
+      const leftX  = findEdgeX(left);
+      const rightX = findEdgeX(right);
+      if (leftX === null || rightX === null || leftX === rightX) continue;
+
+      // Reject the page's own crop/media box outline — many PDF generators
+      // draw a full-page border rectangle that technically satisfies every
+      // frame check above (its top/bottom edges span the "full width" and
+      // its sides span the "full height" — of the page itself). That is
+      // never a real table; it would otherwise swallow every genuine table
+      // on the page as "internal dividers" of one giant page-sized grid.
+      if ((rightX - leftX) >= pageW - SNAP * 4 && (yHi - yLo) >= pageH - SNAP * 4) continue;
+
+      // Reject candidates whose sides sit exactly at the page's own left/
+      // right edge UNLESS the candidate also spans (close to) the page's
+      // full height. A real table almost always has some horizontal
+      // margin; reusing the raw page boundary as a wall — combined with
+      // unrelated full-width rules elsewhere (section dividers, a 2-column
+      // layout's vertical rule) — can otherwise assemble a false "table"
+      // out of ordinary decorative lines that were never meant to be a
+      // table at all.
+      const sidesArePageEdge = leftX <= SNAP * 2 || rightX >= pageW - SNAP * 2;
+      if (sidesArePageEdge && (yHi - yLo) < pageH - SNAP * 4) continue;
+
+      // ── Internal dividers: once the frame is anchored, collect every row/
+      // column separator inside it regardless of how much of the width or
+      // height it actually spans — a merged cell (rowspan/colspan)
+      // legitimately breaks a divider into a partial-length segment. This is
+      // the one behaviour change from the old algorithm: previously an
+      // internal divider had to span the WHOLE opposite dimension, which is
+      // exactly why a real tariff table with merged product-name cells was
+      // silently rejected before (its internal column dividers only existed
+      // for some rows, never the table's full height).
+      const internalYs = hYs.filter(y => y > yLo + SNAP && y < yHi - SNAP &&
+        (hByY.get(y) || []).some(([x1, x2]) =>
+          Math.min(x2, rightX) - Math.max(x1, leftX) >= INTERNAL_MIN_OVERLAP));
+      const internalXs = vXs.filter(x => x > leftX + SNAP && x < rightX - SNAP &&
+        (vByX.get(x) || []).some(([y1, y2]) =>
+          Math.min(y2, yHi) - Math.max(y1, yLo) >= INTERNAL_MIN_OVERLAP));
+
+      const rowYs = [yHi, ...internalYs.sort((a, b) => b - a), yLo];
+      const colXs = [leftX, ...internalXs.sort((a, b) => a - b), rightX];
+      const rowCount = rowYs.length - 1;
+      const colCount = colXs.length - 1;
+      if (rowCount < MIN_ROWS || colCount < MIN_COLS) continue;
+
+      candidates.push({
+        x: leftX, y: yLo, w: rightX - leftX, h: yHi - yLo,
+        colCount, rowCount, colXs, rowYs,
+      });
     }
   }
 
-  // Remove grids contained within a larger grid
-  grids.sort((a, b) => (b.colCount * b.rowCount) - (a.colCount * a.rowCount));
+  // Resolve nested/overlapping frame candidates by preferring the LARGEST:
+  // whenever the same pair of full-height outer verticals encloses a real
+  // multi-row table, every adjacent 2-row slice of it also technically
+  // satisfies the frame checks on its own (it reuses the same left/right
+  // verticals, which trivially "span" any sub-range of a height they already
+  // span in full) — preferring the smallest nested candidate would shred one
+  // real table into dozens of tiny 2-row fragments instead of recognising
+  // it as one table. The genuinely-bogus "coarser wrapper" case (a full
+  // page's own crop-box outline swallowing everything on it) is excluded
+  // explicitly above via the pageW/pageH check, so it never reaches here to
+  // compete for "largest" in the first place.
+  candidates.sort((a, b) => (b.colCount * b.rowCount) - (a.colCount * a.rowCount));
   const result = [];
-  for (const g of grids) {
+  for (const g of candidates) {
     const inside = result.some(r =>
       r.x <= g.x + SNAP && r.y <= g.y + SNAP &&
       (r.x + r.w) >= (g.x + g.w) - SNAP &&
@@ -271,19 +351,4 @@ function _buildGrids(hLines, vLines) {
   }
 
   return result;
-}
-
-// Group a sorted array of numbers into clusters where adjacent values
-// differ by ≤ gap. Returns array of arrays.
-function _cluster(sorted, gap) {
-  if (!sorted.length) return [];
-  const groups = [[sorted[0]]];
-  for (let i = 1; i < sorted.length; i++) {
-    if (sorted[i] - sorted[i - 1] <= gap) {
-      groups[groups.length - 1].push(sorted[i]);
-    } else {
-      groups.push([sorted[i]]);
-    }
-  }
-  return groups;
 }
