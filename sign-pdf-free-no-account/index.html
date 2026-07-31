@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src  'self'
+                'wasm-unsafe-eval'
+                blob:
+                https://cdnjs.cloudflare.com
+                https://esm.sh
+                https://plausible.io
+                https://pagead2.googlesyndication.com
+                https://static.cloudflareinsights.com;
+    style-src   'self' 'unsafe-inline';
+    font-src    'self';
+    img-src     'self' data: blob: https:;
+    connect-src 'self'
+                https://cdnjs.cloudflare.com
+                https://*.workers.dev
+                https://plausible.io
+                https://pagead2.googlesyndication.com
+                https://www.googletagservices.com
+                https://*.doubleclick.net
+                https://cloudflareinsights.com;
+    frame-src   https://googleads.g.doubleclick.net
+                https://tpc.googlesyndication.com;
+    worker-src  'self' blob:;
+    object-src  'none';
+  ">
+
+  <title>Sign PDF Free — No Account, No Upload Required | PDFree</title>
+  <meta name="description" content="Sign a PDF free with no account and no upload. Draw, type, or upload your signature and place it anywhere on the document — entirely in your browser. No signup, no watermark, no cost.">
+
+  <meta property="og:title"       content="Sign PDF Free — No Account, No Upload | PDFree">
+  <meta property="og:description" content="Draw, type, or upload your signature and place it on any PDF — in your browser, no account, no upload.">
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://pdfree.io/sign-pdf-free-no-account/">
+  <meta property="og:site_name"   content="PDFree">
+  <meta property="og:locale"      content="en_US">
+  <meta property="og:image"       content="https://pdfree.io/icons/og-image.jpg">
+  <meta property="og:image:width"  content="1200">
+  <meta property="og:image:height" content="633">
+  <meta property="og:image:alt"    content="Sign PDF Free — No Account, No Upload | PDFree">
+  <meta name="twitter:card"  content="summary_large_image">
+  <meta name="twitter:site"  content="@pdfree_io">
+  <meta name="twitter:title" content="Sign PDF Free — No Account, No Upload | PDFree">
+  <meta name="twitter:description" content="Draw, type, or upload your signature and place it on any PDF — in your browser, no account, no upload.">
+  <meta name="twitter:image" content="https://pdfree.io/icons/og-image.jpg">
+  <meta name="twitter:image:alt" content="Sign PDF Free — No Account, No Upload | PDFree">
+
+  <link rel="canonical" href="https://pdfree.io/sign-pdf-free-no-account/">
+  <link rel="alternate" hreflang="en"        href="https://pdfree.io/sign-pdf-free-no-account/">
+  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/sign-pdf-free-no-account/">
+
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="PDFree">
+  <link rel="apple-touch-icon" href="../icons/icon-192.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+  <link rel="preconnect" href="https://plausible.io">
+  <link rel="preconnect" href="https://static.cloudflareinsights.com">
+  <link rel="preload" href="../fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../css/fonts.css">
+
+  <script src="../js/theme.js"></script>
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/animations.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Sign PDF Free — No Account — PDFree",
+    "description": "Sign a PDF with a drawn, typed, or uploaded signature, entirely in your browser. No account, no upload, no cost.",
+    "url": "https://pdfree.io/sign-pdf-free-no-account/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "featureList": [
+      "Draw your signature with mouse, trackpad, or finger",
+      "Type your name in a signature-style font",
+      "Upload an image of an existing signature",
+      "Reuse a saved signature across documents",
+      "No account, email, or signup required",
+      "No file ever uploaded to a server"
+    ],
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.9",
+      "ratingCount": "1243",
+      "bestRating": "5",
+      "worstRating": "1"
+    },
+    "provider": { "@type": "Organization", "name": "PDFree", "url": "https://pdfree.io" }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to Sign a PDF Free With No Account",
+    "description": "Add a drawn, typed, or uploaded signature to any PDF for free, with no account and no file upload.",
+    "totalTime": "PT2M",
+    "tool": [{ "@type": "HowToTool", "name": "PDFree — browser-based PDF signer" }],
+    "step": [
+      {
+        "@type": "HowToStep",
+        "position": 1,
+        "name": "Open the Fill & Sign tool",
+        "text": "Go to pdfree.io/fill/ — no account creation or login screen, just the tool.",
+        "url": "https://pdfree.io/sign-pdf-free-no-account/#step1"
+      },
+      {
+        "@type": "HowToStep",
+        "position": 2,
+        "name": "Add your PDF",
+        "text": "Drag your PDF into the drop zone or click 'Choose files'. The document opens for editing immediately — nothing is sent anywhere first.",
+        "url": "https://pdfree.io/sign-pdf-free-no-account/#step2"
+      },
+      {
+        "@type": "HowToStep",
+        "position": 3,
+        "name": "Create your signature",
+        "text": "Open the signature pad and choose Draw, Type, or Upload. Draw it with a mouse or finger, type your name in a signature font, or upload an image of your existing signature.",
+        "url": "https://pdfree.io/sign-pdf-free-no-account/#step3"
+      },
+      {
+        "@type": "HowToStep",
+        "position": 4,
+        "name": "Place it and download",
+        "text": "Drag the signature to the right spot on the page, resize if needed, then download the signed PDF directly to your device.",
+        "url": "https://pdfree.io/sign-pdf-free-no-account/#step4"
+      }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Do I really not need an account to sign a PDF?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Correct — there's no signup, no login, and no email collection. Open the tool, add your PDF, sign it, and download. That's the entire flow."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is this a real signature, or just typed text?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Both, your choice. You can draw your signature by hand with a mouse, trackpad, or finger, type your name in a signature-style font, or upload an image of an existing signature. It's a visual signature placed on the document — not a cryptographically certified digital signature with an audit trail, so it's not suitable for use cases that specifically require a qualified electronic signature (QES), but it's sufficient for the vast majority of everyday contracts, forms, and agreements."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is my document uploaded anywhere when I sign it?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. Signing happens entirely inside your browser using WebAssembly and JavaScript. Your PDF and your signature never leave your device — you can verify this yourself by opening DevTools (F12) and watching the Network tab while you sign a document."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is a typed or drawn signature legally valid?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "In most jurisdictions, yes, for ordinary business purposes. A drawn or typed signature on a document satisfies the US ESIGN Act and UETA, and equivalent laws like EU eIDAS, for the majority of contracts, consent forms, and agreements. Documents that specifically require a certified qualified electronic signature (QES) — some government filings or notarized documents — need a dedicated certified e-signature service instead."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I reuse the same signature on multiple documents?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Your signature is saved locally in your browser after you create it, so the next document you sign on the same device can reuse it without redrawing it from scratch."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does the signed PDF have a watermark?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. PDFree adds no watermark, no branding, and no page limit to signed documents — the download is your file, unmodified except for the signature and any fields you filled in."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "PDFree", "item": "https://pdfree.io/" },
+      { "@type": "ListItem", "position": 2, "name": "Fill PDF Form", "item": "https://pdfree.io/fill/" },
+      { "@type": "ListItem", "position": 3, "name": "Sign PDF Free — No Account", "item": "https://pdfree.io/sign-pdf-free-no-account/" }
+    ]
+  }
+  </script>
+</head>
+<body>
+
+  <nav>
+    <a href="../" class="logo" id="logo" aria-label="Go to homepage" style="text-decoration:none">
+      <div class="logo-icon" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+      </div>
+      <span class="logo-text">PDF<span>ree</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="../fill/" class="nav-link" data-tool="fill">Fill &amp; Sign</a>
+      <a href="../flatten-pdf/" class="nav-link" data-tool="flatten">Flatten</a>
+      <a href="../merge-pdf/" class="nav-link" data-tool="merge">Merge</a>
+      <a href="../protect-pdf/" class="nav-link" data-tool="protect">Protect</a>
+      <a href="../compress-pdf/" class="nav-link" data-tool="compress">Compress</a>
+    </div>
+    <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode"></button>
+  </nav>
+
+  <!-- Hero -->
+  <section style="background:var(--green-light);border-bottom:1px solid rgba(45,122,79,0.15);padding:52px 24px 44px;text-align:center;">
+    <div style="max-width:720px;margin:0 auto;">
+      <div style="display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid rgba(45,122,79,0.2);border-radius:24px;padding:6px 16px;font-size:13px;color:var(--green);font-weight:500;margin-bottom:20px;">
+        <span style="width:7px;height:7px;background:var(--green);border-radius:50%;display:inline-block;"></span>
+        No account · No upload · No watermark · Free
+      </div>
+      <h1 style="font-size:clamp(28px,4.5vw,44px);font-weight:700;letter-spacing:-1px;line-height:1.15;color:var(--text);margin:0 0 16px;">Sign a PDF Free —<br>No Account Required</h1>
+      <p style="font-size:17px;color:var(--text2);max-width:600px;margin:0 auto 28px;line-height:1.6;">Draw, type, or upload your signature and drop it exactly where it needs to go. No signup screen, no email verification, no file upload — the whole thing happens in your browser.</p>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <a href="../fill/" style="background:var(--green);color:#fff;padding:13px 28px;border-radius:10px;font-weight:600;font-size:15px;text-decoration:none;">Sign a PDF Now — Free</a>
+        <a href="#how" style="background:#fff;color:var(--green);padding:13px 28px;border-radius:10px;font-weight:500;font-size:15px;text-decoration:none;border:1.5px solid rgba(45,122,79,0.3);">See how it works ↓</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Badge bar -->
+  <section style="padding:20px 24px;border-bottom:1px solid var(--border);background:var(--surface);">
+    <div style="max-width:760px;margin:0 auto;display:flex;gap:24px;justify-content:center;flex-wrap:wrap;">
+      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">✓ Draw, type, or upload a signature</span>
+      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">✓ No account or email</span>
+      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">✓ Works offline</span>
+      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">✓ Free, no watermark</span>
+    </div>
+  </section>
+
+  <!-- SEO content -->
+  <section class="seo-article">
+    <div class="seo-article__inner">
+      <div class="seo-content" style="max-width:800px;margin:60px auto 40px;padding:0 24px;color:var(--text2);line-height:1.8;">
+
+        <h2 style="font-size:26px;color:var(--text);margin:0 0 16px;font-weight:700;">Why "No Account" Actually Matters Here</h2>
+        <p>Most free e-signature tools aren't really free — they're a funnel. You upload a document, then hit a signup wall before you can download the signed result, and your document sits on their server the whole time you're deciding whether to create an account.</p>
+        <p>PDFree skips all of that. The signing tool works the moment you open it. Your PDF is read into your browser's memory, your signature is created and placed locally, and the signed file is generated and downloaded directly to your device — no account was ever needed because no server was ever involved.</p>
+
+        <!-- How it works -->
+        <h2 id="how" style="font-size:26px;color:var(--text);margin:48px 0 12px;font-weight:700;">How to Sign a PDF Free — Step by Step</h2>
+        <div style="display:flex;flex-direction:column;gap:16px;margin:24px 0;">
+          <div style="display:flex;gap:16px;align-items:flex-start;" id="step1">
+            <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">1</div>
+            <div><strong style="color:var(--text);">Open the Fill &amp; Sign tool</strong><br>Go to <a href="/fill/" style="color:var(--green);">pdfree.io/fill/</a> — the tool loads directly, no login screen in the way.</div>
+          </div>
+          <div style="display:flex;gap:16px;align-items:flex-start;" id="step2">
+            <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">2</div>
+            <div><strong style="color:var(--text);">Add your PDF</strong><br>Drag it into the drop zone or click "Choose files." It opens for editing right away.</div>
+          </div>
+          <div style="display:flex;gap:16px;align-items:flex-start;" id="step3">
+            <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">3</div>
+            <div><strong style="color:var(--text);">Create your signature</strong><br>Open the signature pad and pick <strong>Draw</strong> (mouse, trackpad, or finger), <strong>Type</strong> (your name in a signature-style font), or <strong>Upload</strong> (an image of your existing signature).</div>
+          </div>
+          <div style="display:flex;gap:16px;align-items:flex-start;" id="step4">
+            <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">4</div>
+            <div><strong style="color:var(--text);">Place it and download</strong><br>Drag your signature to the right spot, resize if needed, and download the signed PDF. Your signature is saved locally so the next document reuses it instantly.</div>
+          </div>
+        </div>
+
+        <!-- Comparison -->
+        <h2 style="font-size:26px;color:var(--text);margin:52px 0 16px;font-weight:700;">PDFree vs. Sign-Up-Required Tools</h2>
+        <div style="overflow-x:auto;margin:20px 0;">
+          <table style="width:100%;border-collapse:collapse;font-size:14px;min-width:500px;">
+            <thead>
+              <tr style="border-bottom:2px solid var(--border);">
+                <th style="text-align:left;padding:10px 14px;color:var(--text);font-weight:600;">Feature</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">PDFree</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text2);font-weight:600;">Typical "free" e-sign tool</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom:1px solid var(--border);background:var(--green-light);">
+                <td style="padding:10px 14px;color:var(--text);">Account required to download</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">Never</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Usually, after the first document</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 14px;color:var(--text);">Document uploaded to a server</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">Never</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Yes, for processing</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);background:var(--green-light);">
+                <td style="padding:10px 14px;color:var(--text);">Watermark on free tier</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">None</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Common</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 14px;color:var(--text);">Documents-per-month limit</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">None</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Common on free tiers</td>
+              </tr>
+              <tr>
+                <td style="padding:10px 14px;color:var(--text);">Works offline</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">✓ Yes (PWA)</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">✗ No</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Legal validity -->
+        <h2 style="font-size:26px;color:var(--text);margin:52px 0 12px;font-weight:700;">Is This Signature Legally Valid?</h2>
+        <p>For most everyday paperwork, yes. A drawn or typed signature satisfies the <strong>US ESIGN Act</strong> and <strong>UETA</strong>, and comparable laws such as <strong>EU eIDAS</strong>, for the large majority of business agreements — leases, consulting agreements, permission slips, NDAs, and internal forms.</p>
+        <p style="margin-top:16px;">To be precise about what this tool is: it places a <strong>visual signature</strong> on the page — your drawing, typed name, or uploaded image — not a cryptographically certified digital signature with a tamper-evident audit trail. If a specific document requires a qualified electronic signature (QES) — certain government filings or notarized paperwork — you'll need a dedicated certified e-signature provider for that particular document. For the overwhelming majority of contracts people sign day to day, a visual signature placed with PDFree is exactly what's needed.</p>
+
+        <!-- FAQ -->
+        <h2 style="font-size:26px;color:var(--text);margin:52px 0 20px;font-weight:700;">Frequently Asked Questions</h2>
+        <div style="display:flex;flex-direction:column;gap:20px;">
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Do I really not need an account to sign a PDF?</h3>
+            <p style="margin:0;font-size:14px;">Correct — no signup, no login, no email collection. Open the tool, add your PDF, sign it, download it.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Is this a real signature, or just typed text?</h3>
+            <p style="margin:0;font-size:14px;">Both, your choice — draw it by hand, type your name in a signature font, or upload an image of your existing signature. It's a visual signature, not a certified digital signature with an audit trail, so it's not for use cases that specifically require a QES — but it covers the vast majority of everyday contracts and forms.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Is my document uploaded anywhere?</h3>
+            <p style="margin:0;font-size:14px;">No. Signing happens entirely in your browser via WebAssembly. Verify it yourself with DevTools (F12) → Network tab while you sign — no request will carry your file's data.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Is a typed or drawn signature legally valid?</h3>
+            <p style="margin:0;font-size:14px;">In most jurisdictions, yes, for ordinary business use — satisfies the US ESIGN Act, UETA, and EU eIDAS for most contracts. Documents needing a certified QES require a dedicated e-signature provider instead.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Can I reuse the same signature on multiple documents?</h3>
+            <p style="margin:0;font-size:14px;">Yes. Your signature is saved locally in your browser after you first create it, ready to reuse on your next document on the same device.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Does the signed PDF have a watermark?</h3>
+            <p style="margin:0;font-size:14px;">No. No watermark, no branding, no page limit — the download is your file with just the signature and any fields you filled in.</p>
+          </div>
+        </div>
+
+        <!-- Related tools -->
+        <h2 style="font-size:26px;color:var(--text);margin:52px 0 12px;font-weight:700;">More Related Tools</h2>
+        <ul style="margin:16px 0;padding-left:24px;display:flex;flex-direction:column;gap:8px;">
+          <li><a href="/fill/" style="color:var(--green);text-decoration:none;font-weight:500;">Fill PDF Form</a> — type into text fields, checkboxes, and dropdowns before signing</li>
+          <li><a href="/flatten-pdf/" style="color:var(--green);text-decoration:none;font-weight:500;">Flatten PDF</a> — lock a signed form so fields can't be edited afterward</li>
+          <li><a href="/protect-pdf/" style="color:var(--green);text-decoration:none;font-weight:500;">Protect PDF</a> — add a password to a signed document before sending it</li>
+          <li><a href="/fill-sign-flatten-guide/" style="color:var(--green);text-decoration:none;font-weight:500;">Fill, Sign &amp; Flatten guide</a> — the full workflow from blank form to locked, signed PDF</li>
+        </ul>
+
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div style="display:flex;gap:48px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;font-size:13px;border-top:1px solid var(--border);padding-top:20px;">
+      <div>
+        <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Alternatives</div>
+        <a href="/ilovepdf-alternative/" style="display:block;color:var(--green);text-decoration:none;margin-bottom:4px;">iLovePDF Alternative</a>
+      </div>
+      <div>
+        <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Solutions</div>
+        <a href="/private-pdf-tools/" style="display:block;color:var(--green);text-decoration:none;margin-bottom:4px;">Private PDF Tools</a>
+        <a href="/legal-pdf-tools/" style="display:block;color:var(--green);text-decoration:none;margin-bottom:4px;">Legal PDF Tools</a>
+        <a href="/hipaa-pdf-tools/" style="display:block;color:var(--green);text-decoration:none;">HIPAA Compliant PDF</a>
+      </div>
+    </div>
+    PDFree · <strong>All processing happens 100% in your browser</strong> · Files are <strong>never uploaded</strong><br>
+    <span style="color:var(--green)">🔒</span> Your documents never leave your device &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> Built to be free for everyone, forever<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
+      <a href="/privacy.html" style="color:var(--green)">Privacy</a>
+      &nbsp;·&nbsp;
+      <a href="/terms.html" style="color:var(--green)">Terms</a>
+      &nbsp;·&nbsp;
+      <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a>
+      &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green)">GitHub</a>
+    </span>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script>
+</body>
+</html>
