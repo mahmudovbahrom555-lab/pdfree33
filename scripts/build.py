@@ -370,6 +370,7 @@ SPECIALTY_PAGES = [
     # index it. Re-add once their copy is rewritten around a real tool and the
     # noindex tag is removed.
     'hipaa-pdf-tools',
+    'private-pdf-tools',
     'ilovepdf-alternative',
     'compress-large-pdf-free',
     # compare-pdf is EN-only so stays here; draw-on-pdf/secure-pdf-tools/
