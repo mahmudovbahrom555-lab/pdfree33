@@ -1,50 +1,98 @@
 [
   {
     "@type": "Question",
-    "name": "Wordt mijn bestand naar een server geüpload?",
+    "name": "Is deze PDF naar Word-converter echt gratis?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nee. Alles verloopt in de browser. Er wordt niets verzonden naar servers van PDFree."
+      "text": "Ja, volledig gratis. Geen abonnement, geen watermerken, geen limiet per pagina. De volledige conversie gebeurt in je browser met open source-bibliotheken."
     }
   },
   {
     "@type": "Question",
-    "name": "Slaat PDFree mijn bestanden op of registreert het ze na verwerking?",
+    "name": "Wordt mijn PDF ergens geüpload?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nee. PDFree draait volledig in je browser — er is geen backend-server die je bestanden ontvangt. Omdat er niets wordt geüpload, kan er ook niets worden opgeslagen, geregistreerd of bewaard. Je document bestaat alleen in het geheugen van je browser tijdens de sessie en wordt gewist wanneer je het tabblad sluit."
+      "text": "Nooit. Het bestand wordt lokaal door je browser gelezen. Er is geen server betrokken bij welke stap van de conversie dan ook."
     }
   },
   {
     "@type": "Question",
-    "name": "Kunnen gescande PDF's worden geconverteerd?",
+    "name": "Wat is het verschil tussen tekstmodus en afbeeldingsmodus?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Niet rechtstreeks. Gescande PDF's zijn afbeeldingen zonder tekst. Pas eerst OCR toe om een tekstlaag toe te voegen."
+      "text": "Tekstmodus haalt de tekst uit je PDF en maakt een bewerkbaar Word-document met alinea's, koppen, vet, cursief en tabellen. Afbeeldingsmodus rendert elke pagina als een afbeelding met hoge resolutie en plaatst deze in het Word-document — de visuele lay-out blijft exact behouden, maar de tekst kan niet bewerkt worden."
     }
   },
   {
     "@type": "Question",
-    "name": "Wordt de opmaak bewaard?",
+    "name": "Ziet de opmaak er in Word hetzelfde uit?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Basistekst en structuur worden bewaard. Complexe lay-outs met meerdere kolommen kunnen handmatige aanpassingen vereisen."
+      "text": "In tekstmodus blijven de tekstinhoud en basisopmaak (vet, cursief, lettergrootte, koppen, tabellen) behouden. Complexe lay-outs met meerdere kolommen komen mogelijk niet exact overeen. Gebruik voor perfecte lay-outgetrouwheid de afbeeldingsmodus."
     }
   },
   {
     "@type": "Question",
-    "name": "Is er een limiet op de bestandsgrootte?",
+    "name": "Ondersteunt het Arabisch, Hebreeuws, Cyrillisch of Chinees?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nee. PDFree heeft geen limieten op bestandsgrootte of dagelijks gebruik."
+      "text": "Ja. Tekstmodus ondersteunt Latijns, Cyrillisch (Russisch, Oekraïens, Bulgaars), Arabisch en Hebreeuws (met correcte schrijfrichting van rechts naar links), CJK (Chinees, Japans, Koreaans), Devanagari (Hindi) en de meeste Unicode-schriftsystemen die in standaard-PDF's voorkomen."
     }
   },
   {
     "@type": "Question",
-    "name": "Is dit hulpmiddel gratis?",
+    "name": "Worden tabellen correct geconverteerd?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ja, volledig gratis voor altijd. Geen betaalde abonnementen, geen dagelijkse limieten."
+      "text": "PDFree herkent tabellen op twee manieren: door tekstitems in kolommen uit te lijnen (voor gegevenstabellen) en door getekende randlijnen te detecteren (voor rasterformulieren). Herkende tabellen worden echte Word-tabellen — geen platte tekst. Zeer complexe lay-outs of samengevoegde cellen worden mogelijk niet perfect geconverteerd."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Wat is de maximale bestandsgrootte?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Er is geen harde limiet. Zeer grote PDF's (100+ MB) kunnen echter langer duren om te verwerken en meer geheugen vereisen. Houd voor de beste resultaten bestanden onder 100 MB in tekstmodus en onder 50 MB in afbeeldingsmodus bij 300 DPI."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Heb ik Microsoft Word nodig om het bestand te openen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. Het .docx-formaat is een open standaard die wordt ondersteund door Google Documenten (gratis), LibreOffice Writer (gratis, open source), Apple Pages en Microsoft 365 Online (browsergebaseerd, gratis). Je hebt geen betaald Word-abonnement nodig."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik een gescande PDF converteren naar bewerkbare Word?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Dat hangt ervan af. Als de scan een ingebedde tekstlaag heeft (toegevoegd door Adobe Scan, Microsoft Lens of een moderne scanner), haalt tekstmodus deze correct eruit. Als de PDF puur op afbeeldingen is gebaseerd, gebruik dan eerst de tool PDF Tekstherkenning (OCR) om een tekstlaag toe te voegen, en converteer daarna naar Word."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Werkt het offline?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. PDFree werkt volledig offline als Progressive Web App zodra de pagina minstens één keer is geladen. Er is geen internetverbinding nodig om te converteren."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Hoe werkt de conversiekwaliteitsscore?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Na het converteren toont PDFree een betrouwbaarheidsscore (0–100%) op basis van wat in je document is gedetecteerd: dekking van de tekstlaag, tabellen, diagrammen en complexiteit van het schrift. Hoog (≥80%) betekent een volledig bewerkbaar resultaat. Redelijk (55–79%) betekent dat sommige pagina's mogelijk alleen afbeeldingen zijn. Beperkt (<55%) betekent meestal dat de PDF grotendeels gescand is — voer eerst OCR uit voor een bewerkbaar Word-resultaat."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bestaat er een PDF naar Word-converter die geen bestanden uploadt?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja — PDFree. De volledige conversie draait in je browser met PDF.js en WebAssembly. Je PDF wordt nooit naar een server verstuurd. Je kunt dit verifiëren door het tabblad Netwerk van de ontwikkelaarstools te openen en te zien dat er tijdens het converteren geen enkel uploadverzoek wordt gedaan. De meeste online converters uploaden je bestand wél; PDFree niet."
     }
   }
 ]
