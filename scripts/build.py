@@ -378,6 +378,7 @@ SPECIALTY_PAGES = [
     'private-pdf-tools',
     'legal-pdf-tools',
     'sign-pdf-free-no-account',
+    'fill-sign-flatten-guide',
     'ilovepdf-alternative',
     'compress-large-pdf-free',
     # compare-pdf is EN-only so stays here; draw-on-pdf/secure-pdf-tools/
