@@ -1,50 +1,98 @@
 [
   {
     "@type": "Question",
-    "name": "Biçimlendirme korunur mu?",
+    "name": "Bu PDF'den Word'e dönüştürücü gerçekten ücretsiz mi?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Temel paragraf ve başlık yapısı korunur. Karmaşık çok sütunlu düzenler manuel düzenleme gerektirebilir."
+      "text": "Evet, tamamen ücretsiz. Abonelik yok, filigran yok, sayfa başına sınır yok. Tüm dönüştürme, açık kaynaklı kütüphaneler kullanılarak tarayıcınızda gerçekleşir."
     }
   },
   {
     "@type": "Question",
-    "name": "PDFree, dosyalarımı işledikten sonra depoluyor veya kaydediyor mu?",
+    "name": "Dosyalarım herhangi bir yere yükleniyor mu?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Hayır. PDFree tamamen tarayıcınızda çalışır — dosyalarınızı alan bir arka uç sunucusu yoktur. Hiçbir şey yüklenmediğinden, hiçbir şey depolanamaz, kaydedilemez veya saklanamaz. Belgeniz yalnızca oturum süresince tarayıcı belleğinde bulunur ve sekmeyi kapattığınızda silinir."
+      "text": "Asla. Dosya tarayıcınız tarafından yerel olarak okunur. Dönüştürmenin hiçbir aşamasında bir sunucu devreye girmez."
     }
   },
   {
     "@type": "Question",
-    "name": "Taranmış PDF'yi Word'e dönüştürebilir miyim?",
+    "name": "Metin Modu ile Görsel Modu arasındaki fark nedir?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Taranmış PDF'ler görüntü tabanlıdır ve metin içermediklerinden dönüştürülemezler. OCR aracı gereklidir."
+      "text": "Metin Modu PDF'nizden metni çıkarır ve paragraflar, başlıklar, kalın/italik yazı ve tablolar içeren düzenlenebilir bir Word belgesi oluşturur. Görsel Modu her sayfayı yüksek çözünürlüklü bir görsel olarak işler ve Word belgesine yerleştirir — görsel düzen tam olarak korunur ama metin düzenlenemez."
     }
   },
   {
     "@type": "Question",
-    "name": "Dosyalarım yükleniyor mu?",
+    "name": "Biçimlendirme (formatlamalar) korunur mu?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Hayır. İşlem tamamen tarayıcınızda gerçekleşir."
+      "text": "Metin Modu'nda, metin içeriği ve temel biçimlendirme (kalın, italik, font boyutu, başlıklar, tablolar) korunur. Karmaşık çok sütunlu düzenler tam olarak eşleşmeyebilir. Mükemmel düzen sadakati için Görsel Modu'nu kullanın."
     }
   },
   {
     "@type": "Question",
-    "name": "Hangi programlarla açabilirim?",
+    "name": "Arapça, İbranice, Kiril alfabesi veya Çince destekliyor mu?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Microsoft Word, Google Docs ve LibreOffice Writer ile açılabilir."
+      "text": "Evet. Metin Modu, Latin alfabesini, Kiril alfabesini (Rusça, Ukraynaca, Bulgarca), Arapça ve İbranice'yi (doğru sağdan sola paragraf yönüyle), CJK'yı (Çince, Japonca, Korece), Devanagari'yi (Hintçe) ve standart PDF'lerde bulunan çoğu Unicode yazı sistemini destekler."
     }
   },
   {
     "@type": "Question",
-    "name": "Bu araç ücretsiz mi?",
+    "name": "Tablolar doğru şekilde dönüştürülüyor mu?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Evet, sonsuza kadar tamamen ücretsizdir."
+      "text": "PDFree tabloları iki şekilde algılar: metin öğelerini sütunlar halinde hizalayarak (veri tabloları için) ve çizilmiş kenarlık çizgilerini algılayarak (ızgara formları için). Algılanan tablolar düz metin değil, gerçek Word tabloları haline gelir. Çok karmaşık düzenler veya birleştirilmiş hücreler mükemmel şekilde dönüştürülemeyebilir."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Maksimum dosya boyutu nedir?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Kesin bir sınır yoktur. Ancak çok büyük PDF'ler (100 MB ve üzeri) işlenmesi daha uzun sürebilir ve daha fazla bellek gerektirebilir. En iyi sonuçlar için Metin Modu'nda 100 MB altı, 300 DPI Görsel Modu'nda ise 50 MB altı dosyalar kullanın."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Dosyayı açmak için Microsoft Word'e ihtiyacım var mı?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. .docx formatı, Google Docs (ücretsiz), LibreOffice Writer (ücretsiz, açık kaynak), Apple Pages ve Microsoft 365 Online (tarayıcı tabanlı, ücretsiz) tarafından desteklenen açık bir standarttır. Ücretli bir Word aboneliğine ihtiyacınız yok."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Taranmış bir PDF'yi düzenlenebilir Word'e dönüştürebilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Duruma göre değişir. Taramada gömülü bir metin katmanı varsa (Adobe Scan, Microsoft Lens veya modern bir tarayıcı tarafından eklenmiş), Metin Modu bunu doğru şekilde çıkarır. PDF tamamen görsel tabanlıysa, önce PDF Metin Tanıma (OCR) aracıyla bir metin katmanı ekleyin, ardından Word'e dönüştürün."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Çevrimdışı çalışıyor mu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. Sayfa en az bir kez yüklendikten sonra PDFree, Progressive Web App olarak tamamen çevrimdışı çalışır. Dönüştürme için internet bağlantısı gerekmez."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Dönüşüm kalite puanı nasıl çalışır?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Dönüştürdükten sonra PDFree, belgenizde algılananlara (metin katmanı kapsamı, tablolar, diyagramlar ve yazı karmaşıklığı) dayalı bir güven puanı (%0–100) gösterir. Yüksek (≥%80) tamamen düzenlenebilir bir sonuç anlamına gelir. Orta (%55–79) bazı sayfaların yalnızca görsel olabileceği anlamına gelir. Düşük (<%55) genellikle PDF'nin büyük ölçüde taranmış olduğu anlamına gelir — düzenlenebilir bir Word sonucu için önce OCR çalıştırın."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Dosyaları yüklemeyen bir PDF'den Word'e dönüştürücü var mı?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet — PDFree. Tüm dönüştürme, PDF.js ve WebAssembly kullanılarak tarayıcınızda çalışır. PDF'iniz hiçbir zaman bir sunucuya gönderilmez. Bunu, geliştirici araçlarında Ağ sekmesini açarak ve dönüştürme sırasında hiçbir dosya yükleme isteği yapılmadığını gözlemleyerek doğrulayabilirsiniz. Çoğu çevrimiçi dönüştürücü dosyanızı gerçekten yükler; PDFree yüklemez."
     }
   }
 ]
