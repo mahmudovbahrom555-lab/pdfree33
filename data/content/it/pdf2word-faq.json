@@ -1,50 +1,98 @@
 [
   {
     "@type": "Question",
-    "name": "Il mio file viene caricato su un server?",
+    "name": "Questo convertitore da PDF a Word è davvero gratuito?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. Tutto avviene nel browser. Nessun file viene inviato ai server di PDFree."
+      "text": "Sì, completamente gratuito. Nessun abbonamento, nessuna filigrana, nessun limite per pagina. L'intera conversione avviene nel browser usando librerie open source."
     }
   },
   {
     "@type": "Question",
-    "name": "PDFree conserva o registra i miei file dopo l'elaborazione?",
+    "name": "Il mio PDF viene caricato da qualche parte?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. PDFree funziona interamente nel tuo browser — non esiste alcun server backend che riceva i tuoi file. Poiché nulla viene caricato, nulla può essere conservato, registrato o trattenuto. Il tuo documento esiste solo nella memoria del browser per la durata della sessione e viene eliminato alla chiusura della scheda."
+      "text": "Mai. Il file viene letto localmente dal browser. Nessun server è coinvolto in nessuna fase della conversione."
     }
   },
   {
     "@type": "Question",
-    "name": "I PDF scansionati possono essere convertiti?",
+    "name": "Qual è la differenza tra modalità testo e modalità immagine?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Non direttamente. I PDF scansionati sono immagini senza testo. Applica prima l'OCR per aggiungere un livello di testo."
+      "text": "La modalità testo estrae il testo dal PDF e crea un documento Word modificabile con paragrafi, titoli, grassetto, corsivo e tabelle. La modalità immagine renderizza ogni pagina come immagine ad alta risoluzione e la inserisce nel documento Word — il layout visivo è preservato esattamente ma il testo non può essere modificato."
     }
   },
   {
     "@type": "Question",
-    "name": "Il formato viene preservato?",
+    "name": "La formattazione resterà uguale in Word?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Il testo e la struttura di base vengono preservati. Layout complessi con colonne multiple o elementi grafici possono richiedere aggiustamenti manuali."
+      "text": "In modalità testo, il contenuto testuale e la formattazione di base (grassetto, corsivo, dimensione carattere, titoli, tabelle) vengono preservati. I layout complessi a più colonne potrebbero non corrispondere esattamente. Per una fedeltà perfetta del layout, usa la modalità immagine."
     }
   },
   {
     "@type": "Question",
-    "name": "C'è un limite di dimensione?",
+    "name": "Supporta arabo, ebraico, cirillico o cinese?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. PDFree non ha limiti di dimensione o di utilizzo giornaliero."
+      "text": "Sì. La modalità testo supporta il latino, il cirillico (russo, ucraino, bulgaro), arabo ed ebraico (con corretta direzione del paragrafo da destra a sinistra), CJK (cinese, giapponese, coreano), devanagari (hindi) e la maggior parte delle scritture Unicode presenti nei PDF standard."
     }
   },
   {
     "@type": "Question",
-    "name": "Questo strumento è gratuito?",
+    "name": "Le tabelle vengono convertite correttamente?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sì, completamente gratuito per sempre. Nessun piano a pagamento, nessun limite giornaliero."
+      "text": "PDFree rileva le tabelle in due modi: allineando gli elementi di testo in colonne (per tabelle di dati) e rilevando le linee di bordo disegnate (per moduli a griglia). Le tabelle rilevate diventano vere tabelle Word — non semplice testo. Layout molto complessi o celle unite potrebbero non convertirsi perfettamente."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Qual è la dimensione massima del file?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non c'è un limite rigido. Tuttavia, PDF molto grandi (oltre 100 MB) potrebbero richiedere più tempo di elaborazione e più memoria. Per risultati ottimali, mantieni i file sotto i 100 MB in modalità testo e sotto i 50 MB in modalità immagine a 300 DPI."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Serve Microsoft Word per aprire il file?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Il formato .docx è uno standard aperto supportato da Google Documenti (gratis), LibreOffice Writer (gratuito, open source), Apple Pages e Microsoft 365 Online (basato su browser, gratis). Non serve un abbonamento Word a pagamento."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso convertire un PDF scansionato in Word modificabile?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Dipende. Se la scansione ha un livello di testo incorporato (aggiunto da Adobe Scan, Microsoft Lens o uno scanner moderno), la modalità testo lo estrae correttamente. Se il PDF è puramente basato su immagini, usa prima lo strumento Riconosci Testo PDF (OCR) per aggiungere un livello di testo, poi converti in Word."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Funziona offline?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. PDFree funziona completamente offline come Progressive Web App dopo che la pagina è stata caricata almeno una volta. Non è richiesta alcuna connessione internet per la conversione."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Come funziona il punteggio di qualità della conversione?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Dopo la conversione, PDFree mostra un punteggio di affidabilità (0–100%) basato su ciò che è stato rilevato nel documento: copertura del livello di testo, tabelle, diagrammi e complessità della scrittura. Alto (≥80%) significa risultato completamente modificabile. Medio (55–79%) significa che alcune pagine potrebbero essere solo immagini. Limitato (<55%) di solito significa che il PDF è per lo più scansionato — esegui prima l'OCR per un risultato Word modificabile."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Esiste un convertitore da PDF a Word che non carica i file?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì — PDFree. L'intera conversione viene eseguita nel browser usando PDF.js e WebAssembly. Il tuo PDF non viene mai inviato ad alcun server. Puoi verificarlo aprendo la scheda Network degli strumenti per sviluppatori e osservando che non viene effettuata alcuna richiesta di caricamento file durante la conversione. La maggior parte dei convertitori online carica effettivamente il tuo file; PDFree no."
     }
   }
 ]
