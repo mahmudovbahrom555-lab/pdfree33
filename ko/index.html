@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src  'self'
+                'wasm-unsafe-eval'
+                blob:
+                https://cdnjs.cloudflare.com
+                https://plausible.io
+                https://pagead2.googlesyndication.com
+                https://static.cloudflareinsights.com
+                https://cdn.jsdelivr.net
+                https://unpkg.com;
+    style-src   'self' 'unsafe-inline';
+    font-src    'self';
+    img-src     'self' data: blob: https:;
+    connect-src 'self'
+                https://cdnjs.cloudflare.com
+                https://*.workers.dev
+                https://plausible.io
+                https://pagead2.googlesyndication.com
+                https://www.googletagservices.com
+                https://*.doubleclick.net
+                https://cloudflareinsights.com;
+    frame-src   https://googleads.g.doubleclick.net
+                https://tpc.googlesyndication.com;
+    worker-src  'self' blob:;
+    object-src  'none';
+  ">
+  <title>PDFree — 무료 PDF 도구, 제한 없음</title>
+  <meta name="description" content="PDF 합치기, 분할, 압축, 변환을 브라우저에서. 업로드 없음, 계정 불필요, 제한 없음. 20개 이상의 무료 PDF 도구를 영원히.">
+  <meta name="keywords"    content="pdf 합치기, pdf 분할, pdf 압축, 무료 pdf 도구, 프라이빗 pdf, 업로드 없는 pdf, pdf 워터마크, pdf 페이지 번호, pdf 메타데이터 편집">
+  <meta property="og:title"       content="PDFree — 프라이빗한 PDF 도구, 영원히 무료">
+  <meta property="og:description" content="PDF 합치기, 분할, 압축, 워터마크 추가. 100% 프라이빗 — 파일이 기기를 절대 벗어나지 않습니다. 회원가입 없이, 제한 없음.">
+  <meta property="og:type"        content="website">
+  <meta property="og:url"       content="https://pdfree.io/ko/">
+  <meta property="og:site_name" content="PDFree">
+  <meta property="og:locale"    content="ko_KR">
+  <meta property="og:image"     content="https://pdfree.io/icons/og-image.jpg">
+  <meta property="og:image:width"  content="1200">
+  <meta property="og:image:height" content="633">
+  <meta property="og:image:alt"    content="PDFree — 프라이빗한 PDF 도구, 영원히 무료">
+  <meta name="twitter:card"        content="summary_large_image">
+  <meta name="twitter:site"        content="@pdfree_io">
+  <meta name="twitter:title"       content="PDFree — 프라이빗한 PDF 도구, 영원히 무료">
+  <meta name="twitter:description" content="PDF 합치기, 분할, 압축, 변환 — 100% 프라이빗, 파일이 브라우저를 벗어나지 않습니다. 회원가입 없이, 제한 없음. 영원히 무료.">
+  <meta name="twitter:image"       content="https://pdfree.io/icons/og-image.jpg">
+  <meta name="twitter:image:alt"   content="PDFree — 브라우저에서 완결되는 프라이빗 PDF 도구">
+
+  <link rel="canonical" href="https://pdfree.io/ko/">
+  <link rel="alternate" hreflang="en" href="https://pdfree.io/">
+  <link rel="alternate" hreflang="es" href="https://pdfree.io/es/">
+  <link rel="alternate" hreflang="pt" href="https://pdfree.io/pt/">
+  <link rel="alternate" hreflang="de" href="https://pdfree.io/de/">
+  <link rel="alternate" hreflang="fr" href="https://pdfree.io/fr/">
+  <link rel="alternate" hreflang="id" href="https://pdfree.io/id/">
+  <link rel="alternate" hreflang="tr" href="https://pdfree.io/tr/">
+  <link rel="alternate" hreflang="vi" href="https://pdfree.io/vi/">
+  <link rel="alternate" hreflang="ru" href="https://pdfree.io/ru/">
+  <link rel="alternate" hreflang="ja" href="https://pdfree.io/ja/">
+  <link rel="alternate" hreflang="it" href="https://pdfree.io/it/">
+  <link rel="alternate" hreflang="ko" href="https://pdfree.io/ko/">
+  <link rel="alternate" hreflang="nl" href="https://pdfree.io/nl/">
+  <link rel="alternate" hreflang="pl" href="https://pdfree.io/pl/">
+  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/">
+
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="PDFree">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <!-- Privacy-first analytics (no cookies, GDPR compliant) -->
+  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+  <link rel="preconnect" href="https://plausible.io">
+  <link rel="preconnect" href="https://static.cloudflareinsights.com">
+  <link rel="preload" href="../fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../css/fonts.css">
+
+  <script src="../js/theme.js"></script>
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/animations.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+
+    <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "PDFree",
+    "url": "https://pdfree.io/ko/",
+    "inLanguage": "ko",
+    "description": "브라우저에서 완전히 작동하는 무료 PDF 도구입니다. 파일 업로드 없음, 회원가입 불필요.",
+    "applicationCategory": "UtilityApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "PDFree 도구가 제 파일을 업로드하나요?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "아니요. PDFree의 각 도구는 전적으로 브라우저에서 실행됩니다. 파일이 서버로 전송되는 일은 없으며, 기기를 절대 벗어나지 않습니다."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "PDFree는 정말 무료인가요?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "네. 모든 도구는 파일 크기 제한 없이, 워터마크 없이, 회원가입 없이 무료로 제공됩니다 — 지금도 앞으로도."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "PDFree는 어떤 PDF 도구를 제공하나요?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "PDFree는 합치기, 분할, 압축, 회전, 보호, 가리기, 워터마크, 페이지 번호, 메타데이터 편집, JPG를 PDF로, PDF를 JPG로, 페이지 추출, PDF에 그리기, 양식 작성, 비교 등을 제공합니다 — 모두 무료이며 프라이빗합니다."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "PDFree는 휴대폰에서도 작동하나요?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "네. PDFree는 Progressive Web App(PWA)으로, 데스크톱·태블릿·휴대폰의 모든 최신 브라우저에서 작동합니다 — iOS와 Android 포함."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "기밀 문서에 PDFree를 사용해도 안전한가요?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "네. 파일이 기기를 절대 벗어나지 않기 때문에, PDFree는 기밀 문서, 의료 기록, 재무제표, 법률 문서에도 안전하게 사용할 수 있습니다."
+      }
+    }
+  ]
+}
+  </script>
+  <script type="application/ld+json">
+  {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "PDFree",
+  "url": "https://pdfree.io/",
+  "logo": "https://pdfree.io/icons/icon-192.png",
+  "description": "PDFree는 브라우저에서 전적으로 작동하는 무료이자 프라이빗한 PDF 도구를 제공합니다 — 업로드 없음, 계정 불필요, 파일 크기 제한 없음.",
+  "sameAs": [
+    "https://github.com/mahmudovbahrom555-lab/pdfree33"
+  ],
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "contactType": "customer support",
+    "url": "https://pdfree.io/"
+  }
+}
+  </script>
+  <script type="application/ld+json">
+  {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "PDFree",
+  "url": "https://pdfree.io/ko/",
+  "inLanguage": "ko",
+  "description": "브라우저에서 작동하는 무료 PDF 도구 — 업로드 없음, 계정 불필요, 제한 없음.",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "https://pdfree.io/ko/?q={search_term_string}"
+    },
+    "query-input": "required name=search_term_string"
+  }
+}
+  </script>
+</head>
+<body>
+
+  <!-- ── Navigation ── -->
+  <nav>
+    <div class="logo" id="logo" tabindex="0" role="button" aria-label="홈으로 이동">
+      <div class="logo-icon" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+      </div>
+      <span class="logo-text">PDF<span>ree</span></span>
+    </div>
+    <div class="nav-links">
+      <a href="/ko/pdf-hapchigi/" class="nav-link" data-tool="merge">합치기</a>
+      <a href="/ko/pdf-bunhal/" class="nav-link" data-tool="split">분할</a>
+      <a href="/ko/pdf-apchuk/" class="nav-link" data-tool="compress">압축</a>
+      <a href="/ko/jpg-pdf-byeonhwan/" class="nav-link" data-tool="jpg2pdf">JPG→PDF</a>
+      <a href="/ko/pdf-jpg-byeonhwan/" class="nav-link" data-tool="pdf2jpg">PDF→JPG</a>
+      <a href="/ko/pdf-watermark/" class="nav-link" data-tool="watermark">워터마크</a>
+      <a href="/ko/pdf-peiji-beonho/" class="nav-link" data-tool="pagenum">페이지 번호</a>
+      <a href="/ko/pdf-metadeiteo/" class="nav-link" data-tool="meta">메타데이터</a>
+      <a href="/ko/pdf-chuchul/" class="nav-link" data-tool="extract">추출</a>
+      <a href="/draw-on-pdf/" class="nav-link" data-tool="draw-pdf">그리기</a>
+      <a href="/ko/pdf-hoejeon/" class="nav-link" data-tool="rotate">회전</a>
+      <a href="/ko/pdf-amho/" class="nav-link" data-tool="protect">암호 설정</a>
+      <a href="/ko/pdf-munja-insik/" class="nav-link" data-tool="ocr">OCR</a>
+      <a href="/ko/pdf-word-byeonhwan/" class="nav-link" data-tool="pdf2word">PDF→Word</a>
+      <a href="/ko/pdf-pyeongmyeonhwa/" class="nav-link" data-tool="flatten">PDF 잠금</a>
+      <a href="/compare-pdf/" class="nav-link" data-tool="compare">비교</a>
+    </div>
+    <div class="nav-right">
+      <details class="lang-switch" id="langSwitch">
+        <summary aria-label="언어 변경">🌐 KO</summary>
+        <div class="lang-switch__menu" role="menu">
+          <a href="/" role="menuitem">English</a>
+          <a href="/es/" role="menuitem">Español</a>
+          <a href="/pt/" role="menuitem">Português</a>
+          <a href="/de/" role="menuitem">Deutsch</a>
+          <a href="/fr/" role="menuitem">Français</a>
+          <a href="/id/" role="menuitem">Bahasa Indonesia</a>
+          <a href="/tr/" role="menuitem">Türkçe</a>
+          <a href="/vi/" role="menuitem">Tiếng Việt</a>
+          <a href="/ru/" role="menuitem">Русский</a>
+          <a href="/ja/" role="menuitem">日本語</a>
+          <a href="/it/" role="menuitem">Italiano</a>
+          <a href="/ko/" role="menuitem" aria-current="true">한국어</a>
+          <a href="/nl/" role="menuitem">Nederlands</a>
+          <a href="/pl/" role="menuitem">Polski</a>
+        </div>
+      </details>
+      <button id="themeToggle" class="theme-toggle" aria-label="다크 모드 전환" title="다크 모드 전환"></button>
+    </div>
+  </nav>
+
+  <!-- ── Hero ── -->
+  <section id="hero" class="hero js-home-only">
+    <div class="hero-badge">🔒 100% 비공개 · 업로드 없음 · 회원가입 없이 · 무제한</div>
+    <h1>브라우저에서 바로 쓰는<br><em>PDF 도구</em></h1>
+    <p>합치기, 분할, 압축, 변환, 편집 — 모든 작업이 <strong>브라우저에서</strong> 이루어집니다. 파일이 기기를 절대 벗어나지 않습니다.</p>
+
+    <div class="search-hero" id="searchHero">
+      <div class="hero-drop-zone" id="heroDropZone">
+        <input type="file" id="heroFileInput" accept=".pdf,application/pdf" multiple hidden>
+        <div class="hero-drop-zone__idle" id="heroDropIdle">
+          <span class="hero-drop-zone__upload-icon" aria-hidden="true"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></span>
+          <span class="hero-drop-zone__label" id="heroDropLabel">PDF로 시작하기</span>
+          <div class="hero-drop-zone__choose-row">
+            <span class="hero-drop-zone__drop-text">여기에 PDF를 드래그하세요</span>
+            <span class="hero-drop-zone__sep" id="heroDropOr">또는</span>
+            <label class="hero-drop-zone__btn" for="heroFileInput" id="heroDropChooseBtn">파일 선택</label>
+          </div>
+          <a href="/ko/jpg-pdf-byeonhwan/" class="hero-drop-zone__img-link" id="heroImgHint">이미지가 있으신가요?</a>
+        </div>
+        <div class="hero-drop-zone__ready" id="heroDropReady" hidden>
+          <span class="hero-drop-zone__check">✓</span>
+          <span id="heroFileName"></span>
+          <button class="hero-drop-zone__clear" id="heroClearFile" type="button" aria-label="파일 삭제">×</button>
+        </div>
+      </div>
+      <p class="hero-section-label" id="heroFeaturedLabel">인기 도구</p>
+      <div class="hero-featured" id="heroFeatured">
+        <a href="/ko/pdf-hapchigi/" class="hero-fcard" data-tool="merge" onclick="window.plausible&&window.plausible('Card Click',{props:{tool:'merge'}})">
+          <span class="hero-fcard__icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span>
+          <span class="hero-fcard__body"><span class="hero-fcard__name">PDF 합치기</span><span class="hero-fcard__desc">여러 PDF를 하나로 합치기</span></span>
+          <span class="hero-fcard__arrow" aria-hidden="true">→</span>
+        </a>
+        <a href="/ko/pdf-apchuk/" class="hero-fcard" data-tool="compress" onclick="window.plausible&&window.plausible('Card Click',{props:{tool:'compress'}})">
+          <span class="hero-fcard__icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/><path d="M5 2h14"/><path d="M5 22h14"/></svg></span>
+          <span class="hero-fcard__body"><span class="hero-fcard__name">PDF 압축</span><span class="hero-fcard__desc">품질은 유지하고 용량만 줄이기</span></span>
+          <span class="hero-fcard__arrow" aria-hidden="true">→</span>
+        </a>
+        <a href="/ko/pdf-bunhal/" class="hero-fcard" data-tool="split" onclick="window.plausible&&window.plausible('Card Click',{props:{tool:'split'}})">
+          <span class="hero-fcard__icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg></span>
+          <span class="hero-fcard__body"><span class="hero-fcard__name">PDF 분할</span><span class="hero-fcard__desc">페이지 추출 또는 여러 파일로 분할</span></span>
+          <span class="hero-fcard__arrow" aria-hidden="true">→</span>
+        </a>
+        <a href="/ko/pdf-jpg-byeonhwan/" class="hero-fcard" data-tool="pdf2jpg" onclick="window.plausible&&window.plausible('Card Click',{props:{tool:'pdf2jpg'}})">
+          <span class="hero-fcard__icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg></span>
+          <span class="hero-fcard__body"><span class="hero-fcard__name">PDF를 JPG로</span><span class="hero-fcard__desc">PDF 페이지를 이미지로 변환</span></span>
+          <span class="hero-fcard__arrow" aria-hidden="true">→</span>
+        </a>
+        <a href="/ko/pdf-amho/" class="hero-fcard" data-tool="protect" onclick="window.plausible&&window.plausible('Card Click',{props:{tool:'protect'}})">
+          <span class="hero-fcard__icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+          <span class="hero-fcard__body"><span class="hero-fcard__name">PDF 보호</span><span class="hero-fcard__desc">AES-256 비밀번호로 보호</span></span>
+          <span class="hero-fcard__arrow" aria-hidden="true">→</span>
+        </a>
+        <a href="/ko/pdf-word-byeonhwan/" class="hero-fcard" data-tool="pdf2word" onclick="window.plausible&&window.plausible('Card Click',{props:{tool:'pdf2word'}})">
+          <span class="hero-fcard__icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></span>
+          <span class="hero-fcard__body"><span class="hero-fcard__name">PDF를 Word로</span><span class="hero-fcard__desc">편집 가능한 .docx로 변환</span></span>
+          <span class="hero-fcard__arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+      <p class="hero-chips-label" id="heroChipsLabel" hidden>이 파일로 무엇을 하는 게 좋을까요?</p>
+      <div class="search-popular" id="searchPopular" aria-label="인기 도구"></div>
+      <p class="hero-section-label hero-search-label">다른 도구를 찾으시나요?</p>
+      <div class="search-wrap">
+        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input id="toolSearch" type="search" autocomplete="off" spellcheck="false"
+               placeholder="PDF 합치기, 압축, 회전, 워터마크, PDF를 Word로…" aria-label="PDF 도구 검색">
+      </div>
+      <div class="search-result" id="searchResult" hidden role="region" aria-label="찾은 도구">
+        <label class="search-result__info" id="srInfoLabel" for="srFileInput">
+          <input type="file" id="srFileInput" accept=".pdf,application/pdf" hidden>
+          <span class="search-result__icon" id="srIcon" aria-hidden="true"></span>
+          <strong id="srName"></strong>
+          <span class="search-result__go" id="srGo" aria-hidden="true">&rarr;</span>
+          <span class="search-result__desc" id="srDesc"></span>
+        </label>
+        <div class="search-result__pending-file" id="srPendingFile" hidden></div>
+        <div class="search-result__drop" id="srDropHint" aria-hidden="true">또는 여기에 PDF를 드롭하세요</div>
+      </div>
+      <p class="search-miss" id="searchMiss" hidden role="status"></p>
+    </div>
+
+    <div id="heroBanner" class="hero-banner" hidden>
+      <span class="hero-banner__icon" aria-hidden="true">🛡</span>
+      <span class="hero-banner__text">브라우저에서 로컬로 처리됩니다 · 파일이 기기를 절대 벗어나지 않습니다</span>
+      <button class="hero-banner__close" id="heroBannerClose" type="button" aria-label="닫기">×</button>
+    </div>
+
+    <div id="heroDetected" class="hero-detected" hidden></div>
+
+    <div class="hero-features">
+      <div class="hero-feature">
+        <div class="hero-feature__icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <div>
+          <strong>100% 비공개</strong>
+          <span>파일이 기기를 벗어나지 않습니다</span>
+        </div>
+      </div>
+      <div class="hero-feature">
+        <div class="hero-feature__icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        </div>
+        <div>
+          <strong>매우 빠름</strong>
+          <span>오프라인에서도 즉시 작동</span>
+        </div>
+      </div>
+      <div class="hero-feature">
+        <div class="hero-feature__icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+        <div>
+          <strong>제한 없음</strong>
+          <span>용량 제한도 일일 제한도 없습니다</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Trust alert block ── -->
+  <div class="trust-alert js-home-only" id="trustAlert" aria-label="개인정보 보호 보장">
+    <div class="trust-alert-icon" aria-hidden="true">
+      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
+    </div>
+    <div class="trust-alert-text">
+      <strong>파일이 기기에 그대로 남아 있습니다.</strong>
+      <span>Web Worker와 로컬 라이브러리를 사용합니다 — 아무것도 서버로 전송되지 않습니다.</span>
+    </div>
+  </div>
+
+  <!-- ── No-limit bar ── -->
+  <div id="noLimitBar" class="no-limit-bar js-home-only">
+    <div class="no-limit-item">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+      파일 수 제한 없음
+    </div>
+    <div class="no-limit-item">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+      워터마크 없음
+    </div>
+    <div class="no-limit-item">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+      회원가입 없이
+    </div>
+    <div class="no-limit-item">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      파일이 기기를 벗어나지 않음
+    </div>
+  </div>
+
+  <!-- ── Tools grid ── -->
+  <section id="toolsGrid" class="tools-section js-home-only">
+    <div class="section-label">모든 도구</div>
+    <div class="tools-grid">
+      <a href="/ko/pdf-hapchigi/" class="tool-card featured" data-tool="merge" aria-label="PDF 합치기">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
+        <div class="tool-name">PDF 합치기</div>
+        <div class="tool-desc">PDF 파일을 무제한으로 합치기 — 제한 없음</div>
+      </a>
+      <a href="/ko/pdf-bunhal/" class="tool-card" data-tool="split" aria-label="PDF 분할">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg></div>
+        <div class="tool-name">PDF 분할</div>
+        <div class="tool-desc">PDF 분할 또는 특정 페이지 추출 — 제한 없음</div>
+      </a>
+      <a href="/ko/pdf-apchuk/" class="tool-card" data-tool="compress" aria-label="PDF 압축">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/><path d="M5 2h14"/><path d="M5 22h14"/></svg></div>
+        <div class="tool-name">PDF 압축</div>
+        <div class="tool-desc">품질 손실 없이 PDF 용량 줄이기 — 업로드 없음</div>
+      </a>
+      <a href="/ko/jpg-pdf-byeonhwan/" class="tool-card" data-tool="jpg2pdf" aria-label="JPG를 PDF로">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
+        <div class="tool-name">JPG를 PDF로</div>
+        <div class="tool-desc">이미지를 PDF로 변환 — 업로드 없음</div>
+      </a>
+      <a href="/ko/pdf-jpg-byeonhwan/" class="tool-card" data-tool="pdf2jpg" aria-label="PDF를 JPG로">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg></div>
+        <div class="tool-name">PDF를 JPG로</div>
+        <div class="tool-desc">PDF 페이지를 JPG 이미지로 변환 — 업로드 없음</div>
+      </a>
+      <a href="/ko/pdf-chuchul/" class="tool-card" data-tool="extract" aria-label="페이지 추출">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="M12 12v6"/><path d="m9 15 3-3 3 3"/></svg></div>
+        <div class="tool-name">페이지 추출</div>
+        <div class="tool-desc">선택한 페이지를 새 PDF로 가져오기</div>
+      </a>
+      <a href="/ko/pdf-watermark/" class="tool-card" data-tool="watermark" aria-label="PDF 워터마크">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg></div>
+        <div class="tool-name">PDF 워터마크</div>
+        <div class="tool-desc">PDF에 텍스트 도장 추가 — 업로드 없음</div>
+      </a>
+      <a href="/ko/pdf-peiji-beonho/" class="tool-card" data-tool="pagenum" aria-label="페이지 번호">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 22h14a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v4"/><polyline points="14 2 14 8 20 8"/><path d="M2 15h4v4"/><path d="M4 15v6"/><path d="M10 15v6"/><path d="M14 15v6"/></svg></div>
+        <div class="tool-name">페이지 번호</div>
+        <div class="tool-desc">번호가 매겨진 바닥글 추가 — 아라비아, 로마 숫자 또는 ABC</div>
+      </a>
+      <a href="/ko/pdf-metadeiteo/" class="tool-card" data-tool="meta" aria-label="메타데이터 편집">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"/><path d="M7 7h.01"/></svg></div>
+        <div class="tool-name">메타데이터 편집</div>
+        <div class="tool-desc">제목, 작성자, 키워드 보기 및 편집</div>
+      </a>
+      <a href="/ko/pdf-garigi/" class="tool-card" data-tool="redact" aria-label="영역 가리기">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 14l2 2 4-4"/></svg></div>
+        <div class="tool-name">영역 가리기</div>
+        <div class="tool-desc">워터마크, 서명 또는 민감한 데이터를 로컬에서 가리기</div>
+      </a>
+      <a href="/ko/pdf-hoejeon/" class="tool-card" data-tool="rotate" aria-label="PDF 회전">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg></div>
+        <div class="tool-name">PDF 회전</div>
+        <div class="tool-desc">모든 PDF의 페이지 방향을 수정하세요</div>
+      </a>
+      <a href="/ko/pdf-amho/" class="tool-card" data-tool="protect" aria-label="PDF 보호">
+        <div class="tool-card-pulse" aria-hidden="true">
+          <div class="tool-card-pulse__ring"></div>
+          <div class="tool-card-pulse__dot"></div>
+        </div>
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div class="tool-name">PDF 보호</div>
+        <div class="tool-desc">AES-256로 PDF에 비밀번호 설정 — 업로드 없음</div>
+      </a>
+      <a href="/ko/pdf-jakseong/" class="tool-card" data-tool="fill" aria-label="PDF 양식 작성">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg></div>
+        <div class="tool-name">PDF 양식 작성</div>
+        <div class="tool-desc">양식을 채우고 PDF에 로컬에서 서명</div>
+      </a>
+      <a href="/draw-on-pdf/" class="tool-card" data-tool="draw-pdf" aria-label="PDF에 그리기">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></div>
+        <div class="tool-name">PDF에 그리기</div>
+        <div class="tool-desc">화살표, 텍스트, 도형으로 PDF에 주석 달기 — 프라이빗, 업로드 없음</div>
+      </a>
+      <a href="/ko/pdf-munja-insik/" class="tool-card" data-tool="ocr" aria-label="PDF 문자 인식">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M11 8v6"/><path d="M8 11h6"/></svg></div>
+        <div class="tool-name">PDF 문자 인식</div>
+        <div class="tool-desc">스캔한 PDF를 검색 가능하게 — 로컬에서 텍스트 추출</div>
+      </a>
+      <a href="/ko/pdf-word-byeonhwan/" class="tool-card" data-tool="pdf2word" aria-label="PDF를 Word로">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div>
+        <div class="tool-name">PDF를 Word로</div>
+        <div class="tool-desc">편집 가능한 .docx 문서로 변환. 업로드 없음, 계정 불필요.</div>
+      </a>
+      <a href="/ko/pdf-pyeongmyeonhwa/" class="tool-card" data-tool="flatten" aria-label="PDF 평면화">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><line x1="8" y1="15" x2="16" y2="15"/></svg></div>
+        <div class="tool-name">PDF 평면화</div>
+        <div class="tool-desc">양식 필드를 페이지에 영구 반영 — 편집 방지</div>
+      </a>
+      <a href="/compare-pdf/" class="tool-card" data-tool="compare" aria-label="PDF 비교">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="8" height="18" rx="1"/><rect x="14" y="3" width="8" height="18" rx="1"/><path d="M10 8h4M10 12h4M10 16h4"/></svg></div>
+        <div class="tool-name">PDF 비교</div>
+        <div class="tool-desc">두 PDF를 비교하고 차이점 강조 — 업로드 없음</div>
+      </a>
+      <a href="/ko/pdf-excel-byeonhwan/" class="tool-card" data-tool="pdf2excel" aria-label="PDF to Excel">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg></div>
+        <div class="tool-name">PDF to Excel</div>
+        <div class="tool-desc">PDF 표를 실제 .xlsx 파일로 변환. 업로드 없음, 계정 불필요.</div>
+      </a>
+      <a href="/ko/pdf-powerpoint-byeonhwan/" class="tool-card" data-tool="pdf2ppt" aria-label="PDF to PowerPoint">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+        <div class="tool-name">PDF to PowerPoint</div>
+        <div class="tool-desc">PDF 페이지를 .pptx 슬라이드로 변환. 업로드 없음, 계정 불필요.</div>
+      </a>
+      <a href="/ko/pdf-markdown-byeonhwan/" class="tool-card" data-tool="pdf2md" aria-label="PDF to Markdown">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg></div>
+        <div class="tool-name">PDF to Markdown</div>
+        <div class="tool-desc">PDF를 가벼운 Markdown 텍스트로 변환. 업로드 없음, 계정 불필요.</div>
+      </a>
+      <a href="/ko/pdf-jamgeum-haeje/" class="tool-card" data-tool="unlock" aria-label="PDF 잠금 해제">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg></div>
+        <div class="tool-name">PDF 잠금 해제</div>
+        <div class="tool-desc">로컬에서 비밀번호 보호 제거</div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ── Privacy trust bar ── -->
+  <section id="privacyBar" class="privacy-bar js-home-only" aria-label="개인정보 보호 보장">
+    <div class="privacy-bar__inner">
+      <div class="privacy-bar__item">
+        <div class="privacy-bar__icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <div>
+          <strong>설계부터 100% 비공개</strong>
+          <p>파일이 브라우저 안에서만 처리됩니다. 업로드 제로 — 절대로.</p>
+        </div>
+      </div>
+      <div class="privacy-bar__item">
+        <div class="privacy-bar__icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </div>
+        <div>
+          <strong>기기에서 직접 실행</strong>
+          <p>모든 PDF 작업이 Web Worker에서 실행됩니다 — 하드웨어의 격리된 스레드.</p>
+        </div>
+      </div>
+      <div class="privacy-bar__item">
+        <div class="privacy-bar__icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+        </div>
+        <div>
+          <strong>즉시 삭제</strong>
+          <p>파일은 RAM에만 존재합니다. 탭을 닫으면 사라집니다 — 로그 없음, 흔적 없음.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FAQ section (visible for SEO) ── -->
+  <section id="faqSection" class="js-home-only" style="max-width:760px;margin:0 auto;padding:48px 24px 0;" aria-label="자주 묻는 질문">
+    <div class="section-label">FAQ</div>
+    <h2 style="font-size:clamp(20px,3vw,26px);color:var(--text);margin:12px 0 32px;font-weight:700;">자주 묻는 질문</h2>
+    <dl style="display:flex;flex-direction:column;gap:0;">
+      <div style="border-bottom:1px solid var(--border);padding:20px 0;">
+        <dt style="font-weight:600;color:var(--text);font-size:15px;margin-bottom:8px;">PDFree 도구가 제 파일을 업로드하나요?</dt>
+        <dd style="color:var(--text2);font-size:14px;line-height:1.7;margin:0;">아니요. 각 도구는 전적으로 브라우저에서 실행됩니다. 파일이 서버로 전송되는 일은 없으며, 기기를 절대 벗어나지 않습니다.</dd>
+      </div>
+      <div style="border-bottom:1px solid var(--border);padding:20px 0;">
+        <dt style="font-weight:600;color:var(--text);font-size:15px;margin-bottom:8px;">PDFree는 정말 무료인가요 — 숨겨진 조건이 있나요?</dt>
+        <dd style="color:var(--text2);font-size:14px;line-height:1.7;margin:0;">네. 모든 도구는 용량 제한, 워터마크, 일일 사용 제한, 계정 없이 무료입니다. 영원히 무료입니다.</dd>
+      </div>
+      <div style="border-bottom:1px solid var(--border);padding:20px 0;">
+        <dt style="font-weight:600;color:var(--text);font-size:15px;margin-bottom:8px;">PDFree는 어떤 PDF 도구를 제공하나요?</dt>
+        <dd style="color:var(--text2);font-size:14px;line-height:1.7;margin:0;">PDFree는 <a href="/ko/pdf-hapchigi/" style="color:var(--green);">PDF 합치기</a>, <a href="/ko/pdf-bunhal/" style="color:var(--green);">분할</a>, <a href="/ko/pdf-apchuk/" style="color:var(--green);">압축</a>, <a href="/ko/pdf-hoejeon/" style="color:var(--green);">회전</a>, <a href="/ko/pdf-amho/" style="color:var(--green);">보호</a>, <a href="/ko/pdf-watermark/" style="color:var(--green);">워터마크</a>, <a href="/ko/jpg-pdf-byeonhwan/" style="color:var(--green);">JPG를 PDF로</a> 등 다양한 도구를 제공합니다 — 모두 무료이며 프라이빗합니다.</dd>
+      </div>
+      <div style="padding:20px 0;">
+        <dt style="font-weight:600;color:var(--text);font-size:15px;margin-bottom:8px;">PDFree는 휴대폰에서도 작동하나요?</dt>
+        <dd style="color:var(--text2);font-size:14px;line-height:1.7;margin:0;">네. PDFree는 Progressive Web App(PWA)으로, 데스크톱·태블릿·휴대폰의 모든 최신 브라우저에서 작동합니다.</dd>
+      </div>
+      <div style="padding:20px 0;">
+        <dt style="font-weight:600;color:var(--text);font-size:15px;margin-bottom:8px;">기밀 문서에 PDFree를 사용해도 안전한가요?</dt>
+        <dd style="color:var(--text2);font-size:14px;line-height:1.7;margin:0;">네. 파일이 기기를 절대 벗어나지 않기 때문에, PDFree는 기밀 문서, 의료 기록, 재무제표, 법률 문서에도 안전하게 사용할 수 있습니다. 처리는 격리된 WebAssembly 스레드에서 이루어지며, 아무것도 기록·저장·전송되지 않습니다.</dd>
+      </div>
+    </dl>
+  </section>
+
+  <!-- ── Tool workspace ── -->
+  <main id="toolArea" class="main-area" style="display:none" aria-busy="false">
+
+    <div class="tool-header">
+      <div class="tool-header-icon" id="toolIcon" aria-hidden="true">🔗</div>
+      <div class="tool-header-text">
+        <h2 id="toolTitle">PDF 합치기</h2>
+        <p  id="toolDesc">PDF 파일을 무제한으로 합치기 — 제한 없음</p>
+      </div>
+    </div>
+
+    <div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-label="파일 업로드 — 클릭 또는 드래그 앤 드롭">
+      <input type="file" id="fileInput" multiple accept=".pdf,application/pdf" aria-hidden="true">
+      <span class="drop-icon" aria-hidden="true">📂</span>
+      <div class="drop-title">여기에 파일을 드래그하세요</div>
+      <div class="drop-sub">또는 클릭하여 파일 선택 — 파일 수 제한 없음</div>
+      <label class="drop-btn" id="chooseFilesBtn" for="fileInput">파일 선택</label>
+    </div>
+
+    <div id="fileList"    class="file-list" aria-live="polite" aria-label="Selected files"></div>
+    <div id="fileCount"   class="file-count"   style="display:none"></div>
+    <div id="reorderHint" class="reorder-hint" style="display:none">↕ 드래그하여 합치기 전에 파일 순서 조정</div>
+
+    <div id="splitOptions"    class="split-options"   style="display:none" aria-label="Split options"></div>
+    <div id="compressOptions" class="compress-options" style="display:none" aria-label="Compression options"></div>
+    <div id="jpg2pdfOptions"  class="j2p-options"     style="display:none" aria-label="JPG to PDF options"></div>
+    <div id="pdf2jpgOptions"  class="j2p-options"     style="display:none" aria-label="PDF to JPG options"></div>
+    <div id="watermarkOptions" class="j2p-options"    style="display:none" aria-label="Watermark options"></div>
+    <div id="pageNumOptions"  class="j2p-options"     style="display:none" aria-label="Page numbers options"></div>
+    <div id="metaOptions"     class="j2p-options"     style="display:none" aria-label="Metadata editor"></div>
+    <div id="protectOptions"  class="j2p-options"     style="display:none" aria-label="Protect PDF options"></div>
+    <div id="redactOptions"   class="j2p-options"     style="display:none" aria-label="Cover Area options"></div>
+    <div id="rotateOptions"   class="j2p-options"     style="display:none" aria-label="Rotate PDF options"></div>
+    <div id="mergeOptions"    class="j2p-options"     style="display:none" aria-label="Merge options"></div>
+    <div id="pdf2wordOptions"  class="j2p-options"     style="display:none" aria-label="PDF to Word options"></div>
+    <div id="pdf2excelOptions" class="j2p-options"     style="display:none" aria-label="PDF to Excel options"></div>
+    <div id="pdf2pptOptions"   class="j2p-options"     style="display:none" aria-label="PDF to PowerPoint options"></div>
+    <div id="pdf2mdOptions"    class="j2p-options"     style="display:none" aria-label="PDF to Markdown options"></div>
+    <div id="unlockOptions"    class="j2p-options"     style="display:none" aria-label="Unlock PDF options"></div>
+    <div id="ocrOptions"       class="j2p-options"     style="display:none" aria-label="OCR options"></div>
+    <div id="compareOptions"   class="j2p-options"     style="display:none" aria-label="Compare PDF options"></div>
+
+    <button id="mergeBtn"  class="merge-btn"  type="button" disabled data-mode="process">🔗 PDF 파일 합치기</button>
+    <button id="cancelBtn" class="cancel-btn" type="button" style="display:none" aria-label="처리 취소">✕ 취소</button>
+
+    <div id="progressBar"   class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+    <div id="progressLabel" class="progress-label"></div>
+
+    <!-- Success card -->
+    <div id="successCard" class="success-card" role="alert" aria-live="polite" style="display:none">
+      <div class="success-top">
+        <div class="success-icon" aria-hidden="true">✓</div>
+        <div class="success-text">
+          <h3 id="successTitle">완료!</h3>
+          <p  id="successDesc"></p>
+        </div>
+        <button id="downloadBtn" class="download-btn" type="button">⬇ 다운로드</button>
+        <button id="shareBtn" class="share-btn" type="button" style="display:none" aria-label="Send file via device apps"></button>
+      </div>
+
+      <!-- Feedback row — directly under download button -->
+      <div class="fb-row" id="fbRow">
+        <button type="button" class="fb-row-btn fb-row-btn--bug"  data-open-feedback data-fb-type="bug">🐛 버그 발견</button>
+        <button type="button" class="fb-row-btn fb-row-btn--idea" data-open-feedback data-fb-type="idea">💡 아이디어 있음</button>
+        <button type="button" class="fb-row-btn fb-row-btn--good" data-open-feedback data-fb-type="other">👍 다 좋아요!</button>
+      </div>
+
+      <!-- Share this tool — shown after every successful conversion -->
+      <div class="share-tool-row" id="shareToolRow">
+        <span class="share-tool-label">PDF 작업하는 지인이 있으신가요?</span>
+        <div class="share-tool-menu-wrap">
+          <button type="button" class="share-tool-btn" id="shareToolBtn"
+                  data-msg="PDFree로 PDF 작업을 했어요 — 무료, 프라이빗, 브라우저에서 전부 처리돼요."
+                  data-copy="링크 복사" data-copied="링크가 복사되었습니다!"
+                  aria-haspopup="true" aria-expanded="false">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.5" x2="15.4" y2="6.5"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/></svg>
+            이 도구 공유하기
+          </button>
+          <div class="share-fallback-menu" id="shareFallbackMenu" role="menu" hidden></div>
+        </div>
+      </div>
+
+      <!-- Install PWA nudge — shown only when browser supports it -->
+      <div class="pwa-nudge" id="pwaNudge" style="display:none">
+        <span class="pwa-nudge__text">⚡ 설치하고 즉시 접근하세요 — 오프라인에서도 작동</span>
+        <button type="button" class="pwa-nudge__btn" id="pwaNudgeBtn">앱 설치</button>
+        <button type="button" class="pwa-nudge__skip" id="pwaNudgeSkip" aria-label="닫기">✕</button>
+      </div>
+
+    </div>
+
+  </main>
+
+  <footer>
+    PDFree · <strong>모든 처리가 브라우저에서 100% 이루어집니다</strong> · <strong>절대 업로드되지 않습니다</strong><br>
+    <span style="color:var(--green)">🔒</span> 문서가 기기를 절대 벗어나지 않습니다 &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> 모두를 위해, 영원히 무료<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
+      <a href="/privacy.html" style="color:var(--green)">개인정보 보호</a>
+      &nbsp;·&nbsp;
+      <a href="/terms.html" style="color:var(--green)">이용약관</a>
+      &nbsp;·&nbsp;
+      <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a>
+      &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green)">GitHub</a>
+    </span>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <!-- JSZip для создания ZIP-архива при Split PDF -->
+  <!-- pdf-lib нужен в основном потоке для splitUI.js (window.PDFLib) -->
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+  <script type="module" src="../js/locales/ko.js"></script>
+  <script type="module" src="../js/app.js"></script>
+
+
+<!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
