@@ -1,50 +1,10 @@
 [
   {
     "@type": "Question",
-    "name": "Dosyalarım yükleniyor mu?",
+    "name": "PDF döndürmek dosyamı sunucuya yükler mi?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Hayır. Tüm işlemler yalnızca tarayıcınızda gerçekleşir. Dosyalarınız cihazınızı asla terk etmez."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "Döndürmek kalite kaybına yol açar mı?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Hayır. Sayfalar PDF nesne düzeyinde döndürülür — yeniden sıkıştırma yapılmaz, görsel veya metin kalitesi bozulmaz."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "Yalnızca belirli sayfaları döndürebilir miyim?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Evet. Küçük resimlere tıklayarak istediğiniz sayfaları seçin ve döndürme açısını uygulayın. Diğer sayfalar değişmez."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "Hangi döndürme açıları destekleniyor?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "90° (saat yönü), 180° ve 270° (saat yönünün tersi) desteklenmektedir."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "Bu araç ücretsiz mi?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Evet, sonsuza kadar tamamen ücretsizdir. Kayıt, abonelik veya gizli ücret yoktur."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "Döndürme kalıcı olarak kaydedilir mi?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Evet. PDF Döndür'e tıkladığınızda, döndürme kalıcı olarak uygulanmış yeni bir PDF dosyası cihazınıza indirilir. Herhangi bir PDF görüntüleyicide düzeltilmiş yönde görüntülenir."
+      "text": "Hayır. Döndürme işlemi tamamen tarayıcınızda gerçekleşir. Dosyalarınız hiçbir yere gönderilmez."
     }
   },
   {
@@ -53,6 +13,70 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Hayır. PDFree tamamen tarayıcınızda çalışır — dosyalarınızı alan bir arka uç sunucusu yoktur. Hiçbir şey yüklenmediğinden, hiçbir şey depolanamaz, kaydedilemez veya saklanamaz. Belgeniz yalnızca oturum süresince tarayıcı belleğinde bulunur ve sekmeyi kapattığınızda silinir."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDF döndürmek için bir dosya boyutu sınırı var mı?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. Dosya boyutu veya sayfa sayısı sınırı yoktur."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Yalnızca belirli sayfaları döndürebilir miyim, hepsini değil mi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. Döndürmek istediğiniz sayfaları seçmek için tek tek sayfa küçük resimlerine tıklayın. Seçilmeyen sayfalar orijinal yönünde kalır. Hızlı toplu seçim için Tümünü Seç / Seçimi Kaldır seçeneklerini de kullanabilirsiniz."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Döndürmek kalite kaybına yol açar mı?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. Döndürme, PDF dosyasındaki bir meta veri değişikliğidir. Sayfa içeriği (görseller, metin, vektör grafikler) yeniden oluşturulmaz veya yeniden sıkıştırılmaz. Dosya boyutu neredeyse hiç değişmez."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Hangi döndürme açıları destekleniyor?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "90° saat yönünde, 90° saat yönünün tersine (saat yönünde 270°'ye eşdeğer) ve 180°. Bunlar tüm standart yön düzeltmelerini kapsar."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "iPhone veya Android telefonumda PDF döndürebilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. PDFree, iOS'ta mobil Safari'de ve Android'de Chrome'da çalışır. Dosya seçiciyi kullanarak PDF'nizi seçin ve döndürmeyi uygulayın — sonuç cihazınıza indirilir."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Döndürme sonrası bağlantılar ve yer imleri korunur mu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. Döndürme yalnızca PDF'deki sayfa yönü bayrağını değiştirir. Tüm etkileşimli öğeler (bağlantılar, yer imleri, form alanları) tam olarak korunur."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bu araç tamamen ücretsiz mi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. PDFree abonelik, günlük limit veya kayıt gerektirmeden ücretsizdir. Çıktıya hiçbir filigran eklenmez ve dosya boyutu kısıtlaması yoktur."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Döndürme kalıcı olarak kaydedilir mi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. PDF Döndür'e tıkladığınızda, döndürme kalıcı olarak uygulanmış yeni bir PDF dosyası cihazınıza indirilir. Herhangi bir PDF görüntüleyicide düzeltilmiş yönde görüntülenir."
     }
   }
 ]

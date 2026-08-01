@@ -46,5 +46,21 @@
       "@type": "Answer",
       "text": "Evet, sonsuza kadar tamamen ücretsizdir."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Meta veriyi düzenlemek PDF'nin içeriğini veya görünümünü değiştirir mi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. Meta veri, sayfa içeriğinden ayrı olarak saklanır. Meta veri alanlarını düzenlemenin veya temizlemenin metin, görsel, düzen veya belgenin görünen herhangi bir unsuru üzerinde hiçbir etkisi yoktur."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFree'nin düzenleyemediği meta veri var mı?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. Bazı Adobe ürünleri tarafından eklenen genişletilmiş XMP meta veri paketleri ve uygulamaya özel özel meta veriler düzenlenemeyebilir. PDFree, en yaygın alanları kapsayan standart PDF bilgi sözlüğünü düzenler."
+    }
   }
 ]

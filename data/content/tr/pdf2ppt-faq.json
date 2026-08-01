@@ -1,10 +1,10 @@
 [
   {
     "@type": "Question",
-    "name": "Her PDF sayfası bir slayt mı olur?",
+    "name": "PDF'im dönüştürülürken herhangi bir yere yükleniyor mu?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Evet. Her PDF sayfası ayrı bir .pptx slaytına dönüşür."
+      "text": "Hayır. Her slayt, pdf.js ve PptxGenJS kullanılarak tarayıcınızda oluşturulur ve paketlenir. PDF'niz cihazınızdan asla ayrılmaz."
     }
   },
   {
@@ -17,34 +17,50 @@
   },
   {
     "@type": "Question",
-    "name": "Dosyalarım yükleniyor mu?",
+    "name": "Dönüştürdükten sonra slaytlardaki metni düzenleyebilir miyim?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Hayır. İşlem tamamen tarayıcınızda gerçekleşir."
+      "text": "Doğrudan değil — her slayt, orijinal PDF sayfasının bir görselidir; bu, düzeni birebir korur ancak metnin ayrı, düzenlenebilir bir PowerPoint nesnesi olmadığı anlamına gelir. Bu, hemen hemen tüm PDF-PowerPoint araçlarının kullandığı yaklaşımdır. Düzenlenebilir metne ihtiyacınız varsa, bunun yerine PDF'den Word'e aracını kullanın."
     }
   },
   {
     "@type": "Question",
-    "name": "Hangi programlarla açabilirim?",
+    "name": "Slaytlarım hangi boyutta olacak?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Microsoft PowerPoint, Google Slaytlar ve LibreOffice Impress ile açılabilir."
+      "text": "Slayt boyutu, PDF'nizin sayfa boyutlarını ve en-boy oranını tam olarak eşleştirir — kenarlarda siyah şerit veya gerilmiş kenar boşluğu oluşmaz."
     }
   },
   {
     "@type": "Question",
-    "name": "Görseller slaytlara aktarılır mı?",
+    "name": "Hangi kalite ayarını seçmeliyim?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Evet. PDF sayfaları slayt arka planı olarak içe aktarılır."
+      "text": "Dengeli (150 dpi) çoğu deste için iyi bir varsayılandır. Yoğun metin veya küçük yazılar için Yüksek kaliteyi; dosyayı e-postayla gönderecekseniz Kompakt'ı seçin."
     }
   },
   {
     "@type": "Question",
-    "name": "Bu araç ücretsiz mi?",
+    "name": "Bu, kayıt gerektirmeyen ücretsiz bir PDF-PowerPoint dönüştürücü mü?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Evet, sonsuza kadar tamamen ücretsizdir."
+      "text": "Evet. PDFree tamamen ücretsizdir — kayıt yok, hesap yok, kurulum yok. Aracı açın, PDF'nizi yükleyin ve .pptx dosyasını indirin."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Büyük bir PDF ile çalışır mı?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet, ancak çok fazla sayfa içeren dosyalarda tarayıcınızın belleğinin tükenmesini önlemek için otomatik olarak daha düşük bir görsel kalite kullanılır. Büyük destler için Kompakt kalite en güvenilir seçimdir."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Her PDF sayfası bir slayt mı olur?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. Her PDF sayfası, orijinal sayfa sırasında ayrı bir .pptx slaytına dönüşür."
     }
   }
 ]

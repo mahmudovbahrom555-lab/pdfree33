@@ -46,5 +46,21 @@
       "@type": "Answer",
       "text": "Evet, ancak önce mevcut parolayı kaldırmanız gerekebilir. Açık PDF'yi yükleyip yeni parola ile şifreleyin."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Parolayı biri kırabilir mi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "AES-256, brute-force yöntemiyle pratikte kırılamaz. En iyi güvenlik için güçlü ve benzersiz bir parola kullanın."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Şifrelenmiş PDF, Adobe Reader'da açılır mı?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. PDFree, Adobe Acrobat, Adobe Reader, macOS Preview ve tüm modern PDF görüntüleyicilerde açılan standartlara uygun şifreli PDF'ler üretir."
+    }
   }
 ]

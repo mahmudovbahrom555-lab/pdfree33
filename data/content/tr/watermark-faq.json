@@ -1,10 +1,10 @@
 [
   {
     "@type": "Question",
-    "name": "Filigran metni özelleştirilebilir mi?",
+    "name": "Filigran eklemek PDF'imi sunucuya yükler mi?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Evet. Metin içeriğini, yazı tipi boyutunu, rengini, saydamlık düzeyini ve konumunu (köşegen, yatay veya dikey) özelleştirebilirsiniz."
+      "text": "Hayır. Filigran ekleme işlemi tamamen tarayıcınızda, pdf-lib kütüphanesi kullanılarak yapılır. Hiçbir şey sunucuya yüklenmez."
     }
   },
   {
@@ -17,10 +17,34 @@
   },
   {
     "@type": "Question",
-    "name": "PDF sunucuya yükleniyor mu?",
+    "name": "PDF'den filigranı kaldırabilir miyim?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Hayır. Filigran işlemi tamamen tarayıcıda gerçekleşir. Dosyalarınız cihazınızdan ayrılmaz."
+      "text": "PDFree filigran ekler, ancak mevcut PDF'lerden filigran kaldırmaz. PDFree ile eklenen filigranlar sayfa içeriğine gömülür ve temel araçlarla otomatik olarak kaldırılamaz."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Görsel/logo filigranı ekleyebilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Şu anda PDFree yalnızca metin filigranını destekliyor. Görsel/logo filigranı yol haritasında yer alıyor."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Filigranın saydamlığını ve konumunu kontrol edebilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. Saydamlığı (%10–%100), yazı boyutunu, rengini ve döndürme açısını ayarlayabilirsiniz. Filigranı uygulamadan önce önizleme anlık olarak güncellenir."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Filigran kalıcı mı?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. Filigran, PDF'ye sayfa içeriği olarak gömülür ve standart araçlarla kolayca kaldırılamaz."
     }
   },
   {
@@ -28,23 +52,39 @@
     "name": "Filigran tüm sayfalara eklenir mi?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Evet. PDFree filigranı PDF'nin tüm sayfalarına otomatik olarak uygular."
+      "text": "Evet. PDFree filigranı PDF'nin tüm sayfalarına varsayılan olarak uygular."
     }
   },
   {
     "@type": "Question",
-    "name": "Logolu filigran ekleyebilir miyim?",
+    "name": "Saydamlık (opacity) neyi kontrol eder?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree şu an için yalnızca metin filigranı destekler. Görüntü filigranı gelecekte eklenebilir."
+      "text": "%100 saydamlık filigranı tamamen opak (koyu, dolgun) yapar. %20–%30 saydamlık ise içeriği kapatmadan görünür kalan klasik 'hayalet' filigran etkisini oluşturur. Çoğu kullanım senaryosu %20–%40 aralığında iyi sonuç verir."
     }
   },
   {
     "@type": "Question",
-    "name": "Filigran kaldırılabilir mi?",
+    "name": "Filigran rengini ayarlayabilir miyim?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree filigranı PDF içeriğinin üzerine katman olarak yazar. Filigranın kaldırılması için orijinal dosyayı saklayın."
+      "text": "Evet. İstediğiniz hex rengi girebilir veya yaygın hazır renklerden seçebilirsiniz. Açık gri (%30 saydamlıkta #CCCCCC) profesyonel ve göze batmayan bir sonuç verir."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bu PDF filigran aracı tamamen ücretsiz mi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. PDFree tamamen ücretsiz bir PDF filigran aracıdır — abonelik yok, kayıt yok, çıktınıza eklenen filigran veya kredi yok. Günlük limit olmadan ihtiyacınız kadar PDF'ye filigran ekleyebilirsiniz."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDF'de filigran ile damga (stamp) arasındaki fark nedir?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Bu terimler sıklıkla birbirinin yerine kullanılır. Filigran genellikle her sayfada çapraz olarak tekrar eden yarı saydam bir metin veya görseldir (örn. %30 saydamlıkta TASLAK). Damga ise genellikle sabit bir konumda bir kez yerleştirilen opak bir etikettir (örn. bir köşede ONAYLANDI). PDFree, metin filigranının saydamlığını ve konumunu ayarlayarak her iki görünümü de elde etmenizi sağlar."
     }
   }
 ]

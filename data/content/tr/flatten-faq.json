@@ -1,10 +1,10 @@
 [
   {
     "@type": "Question",
-    "name": "Düzleştirme geri alınabilir mi?",
+    "name": "PDF'yi düzleştirmek tam olarak ne yapar?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Hayır. Düzleştirme kalıcıdır. Orijinal dosyanızı yedekleyin — araç indirmeden önce önizleme yapmanıza olanak tanır."
+      "text": "Düzleştirme; form alanları, açıklamalar, dijital imzalar ve katmanlar gibi tüm etkileşimli katmanları statik sayfa içeriğiyle birleştirir. Sonuç, orijinaliyle aynı görünen ancak düzenlenemeyen düz, etkileşimsiz bir PDF'dir."
     }
   },
   {
@@ -17,34 +17,58 @@
   },
   {
     "@type": "Question",
-    "name": "Neden PDF düzleştirmeliyim?",
+    "name": "Düzleştirme geri alınabilir mi?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Düzleştirme form alanlarını kilitler, evrensel uyumluluğu garanti eder ve arşivleme için belgeyi değiştirilemez hale getirir."
+      "text": "Hayır. Düzleştirme geri alınamaz — orijinal form alanları kalıcı olarak statik görsel içerikle değiştirilir. Değerleri daha sonra değiştirmeniz gerekebileceğini düşünüyorsanız, düzleştirmeden önce doldurulmuş orijinal PDF'nizin bir yedeğini her zaman saklayın."
     }
   },
   {
     "@type": "Question",
-    "name": "Dijital imzalar da düzleştirilir mi?",
+    "name": "Düzleştirme dijital imzaları kaldırır mı?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "İmzalar görsel olarak gömülür; ancak kriptografik doğrulama kaldırılır."
+      "text": "PDF Doldur aracıyla oluşturulan çizim imzaları (imza alanı görselleri) sayfaya düzleştirilir. Sertifikalı e-imza sağlayıcılarından gelen kriptografik dijital imzalar farklı işlenebilir — görsel görünüm korunur ancak kriptografik sertifika düzleştirmeden sonra artık doğrulanmayabilir."
     }
   },
   {
     "@type": "Question",
-    "name": "Dosyalarım yükleniyor mu?",
+    "name": "PDF'im herhangi bir sunucuya yükleniyor mu?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Hayır. Tüm işlem tarayıcınızda gerçekleşir."
+      "text": "Hayır. Her şey tarayıcınızda pdf-lib kullanılarak çalışır. Ne orijinal PDF'niz ne de düzleştirilmiş sonuç herhangi bir yere gönderilir. Belgeniz ve içeriği her zaman cihazınızda kalır."
     }
   },
   {
     "@type": "Question",
-    "name": "Bu araç ücretsiz mi?",
+    "name": "Neden doldurulmuş PDF'yi olduğu gibi kaydetmek yerine düzleştirmeliyim?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Evet, sonsuza kadar tamamen ücretsizdir."
+      "text": "Kaydedilmiş, doldurulmuş bir PDF hâlâ düzenlenebilir alanlar içerir — bir alıcı değerlerinizi silip yeniden doldurabilir. Düzleştirme, içeriği kalıcı olarak sayfaya kilitler, düzenlemeyi engeller, tüm PDF görüntüleyicilerde tutarlı görünüm sağlar ve dosyadaki gizli form meta verisini kaldırır."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDF'yi tarayıcımda nasıl düzleştiririm?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree Düzleştir, Mac, Windows ve Linux'ta Chrome, Safari, Firefox, Edge gibi herhangi bir modern tarayıcıda çalışır. İndirme veya kurulum gerekmez. PDF Düzleştir aracını açın, PDF'nizi yükleyin, Düzleştir'e tıklayın ve sonuç doğrudan cihazınıza indirilir. Hiçbir aşamada masaüstü yazılımına gerek yoktur."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Düzleştirme PDF dosya boyutunu küçültür mü?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Genellikle biraz küçültür. Düzleştirme, etkileşimli form bileşen verilerini ve JavaScript'i kaldırır; bu da çok alanlı formlarda dosya boyutunu azaltır. Ancak görseller ve gömülü fontlar etkilenmez. Belirgin bir boyut küçültme için, düzleştirilmiş çıktıyı bir PDF sıkıştırma aracından geçirin."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDF'yi düzleştirmek ile parolayla korumak arasındaki fark nedir?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Bunlar farklı sorunları çözer. Düzleştirme, etkileşimli form yapısını tamamen kaldırır — izinlerden bağımsız olarak düzenlenecek alan kalmaz. Parola koruması ise erişimi veya düzenleme haklarını kısıtlar ama form alanlarını olduğu gibi bırakır; parolaya sahip biri doldurulabilir bir formu yine de değiştirebilir. En yüksek güvenlik için önce düzleştirerek içeriği sabitleyin, ardından parola ekleyin."
     }
   }
 ]

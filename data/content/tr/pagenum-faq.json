@@ -1,10 +1,10 @@
 [
   {
     "@type": "Question",
-    "name": "Hangi numaralandırma formatları destekleniyor?",
+    "name": "Sayfa numarası eklerken dosyalarım sunucuya yükleniyor mu?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Arap rakamları (1, 2, 3), küçük Romen (i, ii, iii), büyük Romen (I, II, III) ve alfabetik (a, b, c) formatları desteklenmektedir."
+      "text": "Hayır. Sayfa numaralandırma işlemi tamamen tarayıcınızda JavaScript kullanılarak yapılır. Dosyalar cihazınızdan asla ayrılmaz. Bunu kendiniz doğrulayabilirsiniz: Geliştirici Araçları → Ağ sekmesini açın — işlem sırasında PDF'nizin yüklendiğini görmemelisiniz."
     }
   },
   {
@@ -17,6 +17,14 @@
   },
   {
     "@type": "Question",
+    "name": "Sayfa numarası eklemenin bir sayfa limiti var mı?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. PDFree'de sayfa veya dosya boyutu limiti yoktur. Tek pratik sınır, cihazınızın kullanılabilir belleğidir."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "Numaralandırmaya 1 dışında bir sayıyla başlayabilir miyim?",
     "acceptedAnswer": {
       "@type": "Answer",
@@ -25,10 +33,26 @@
   },
   {
     "@type": "Question",
-    "name": "Kapak sayfasını numara dışında bırakabilir miyim?",
+    "name": "Kapak sayfasını numaralandırma dışında bırakabilir miyim?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Evet. Numaralandırmanın hangi sayfadan başlayacağını ve ilk numaranın ne olacağını ayarlayabilirsiniz. Kapak sayfası numara almadan kalır."
+      "text": "Evet. \"İlk sayfayı atla\" seçeneğini etkinleştirin. 1. sayfa (kapak) numara almaz ve numaralandırma ikinci sayfadan başlar."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Hangi numaralandırma formatları destekleniyor?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Arap rakamları (1, 2, 3), küçük Romen (i, ii, iii), büyük Romen (I, II, III), küçük harf (a, b, c) ve büyük harf (A, B, C) formatları desteklenmektedir."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Sayfa numarası eklemek mevcut içeriği değiştirir mi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. Sayfa numaraları, mevcut içeriğin üzerine yeni bir metin katmanı olarak eklenir. Alttaki orijinal metin, görseller ve düzen değişmeden kalır."
     }
   },
   {
@@ -44,15 +68,31 @@
     "name": "\"Sayfa 1 / 20\" formatını ekleyebilir miyim?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Evet. Sayının önüne metin eklemek için önek alanını (örneğin \"Sayfa \"), sonrasına eklemek için sonek alanını (örneğin \" / 20\") kullanın."
+      "text": "Evet. Sayının önüne metin eklemek için önek alanını (örneğin \"Sayfa \"), sonrasına eklemek için sonek alanını (örneğin \" / 20\") kullanın. Bu, profesyonel baskı belgelerinde ve raporlarda kullanılan yaygın \"Sayfa 1 / 20\" formatını oluşturur."
     }
   },
   {
     "@type": "Question",
-    "name": "Numaraların renk ve boyutunu değiştirebilir miyim?",
+    "name": "PDF'yi sayfalandırmak (paginate) ne anlama gelir?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Evet. Yazı boyutu, rengi ve konumu tam olarak özelleştirilebilir."
+      "text": "PDF'yi sayfalandırmak, belgenin her sayfasına görünür sayfa numarası eklemek anlamına gelir. Sayfalandırma, uzun belgelerde gezinmeyi, referans vermeyi ve baskı almayı kolaylaştırır. PDFree PDF'leri ücretsiz olarak çevrimiçi sayfalandırır — numara formatını, konumu ve başlangıç numarasını seçin, ardından sayfalandırılmış PDF'yi anında indirin."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Sayfa numaralandırma aracı ücretsiz mi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. PDFree tamamen ücretsizdir — abonelik yok, kayıt yok, çıktıya filigran eklenmez. Dosya boyutu veya sayfa sayısı konusunda limit yoktur."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Taranmış (scanned) bir PDF'ye sayfa numarası ekleyebilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. Taranmış PDF'ler diğer PDF'lerle aynı şekilde işlenir — sayfa numarası her sayfanın üzerine bir metin öğesi olarak yerleştirilir. Alttaki tarama görüntüsü değişmez."
     }
   },
   {
@@ -60,15 +100,7 @@
     "name": "Sayfa numaralarını ekledikten sonra kaldırabilir miyim?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Hayır. Sayfa numaraları belgeye kalıcı olarak yerleştirilir. Daha sonra numarasız bir sürüme ihtiyaç duyarsanız orijinal dosyayı ayrıca saklayın."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "Dosyalarım yükleniyor mu?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Hayır. Tüm işlem tarayıcınızda gerçekleşir. Belgeleriniz cihazınızdan asla ayrılmaz."
+      "text": "PDFree ile eklenen sayfa numaraları PDF'ye metin olarak gömülür. Bu araçla seçili olarak kaldırılamaz — en basit yaklaşım, orijinal numarasız dosyayı saklamak ve gerektiğinde düzeltilmiş ayarlarla aracı tekrar çalıştırmaktır."
     }
   }
 ]

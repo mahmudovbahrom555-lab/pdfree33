@@ -44,7 +44,23 @@
     "name": "Bu araç ücretsiz mi?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Evet, sonsuza kadar tamamen ücretsizdir."
+      "text": "Evet, sonsuza kadar tamamen ücretsizdir. Kayıt, hesap veya kurulum gerekmez."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Parolayı doğru girdim ama yanlış diyor. Şimdi ne yapmalıyım?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yazım hatası, fazladan boşluk veya Caps Lock olup olmadığını kontrol edin. Parolalar büyük/küçük harfe duyarlıdır. Dosyanız seçili kalır, bu yüzden tekrar deneyebilirsiniz."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Daha sonra tekrar parola ekleyebilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet — kilidi açılmış dosyaya yeni bir parola veya kısıtlama eklemek için PDF'yi Parolayla Koru aracını kullanın."
     }
   }
 ]

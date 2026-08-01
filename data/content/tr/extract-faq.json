@@ -46,5 +46,37 @@
       "@type": "Answer",
       "text": "Evet, sonsuza kadar tamamen ücretsizdir."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Parola korumalı bir PDF'den sayfa çıkarabilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. Şifreli PDF'ler parola olmadan değiştirilemez. Önce parolayı kaldırın, ardından sayfaları çıkarın."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Çıkarabileceğim sayfa sayısında bir sınır var mı?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. Tarayıcınızın belleği dosyayı tutmaya yettiği sürece, herhangi bir boyuttaki PDF'den istediğiniz kadar sayfa çıkarabilirsiniz."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Taranmış bir PDF'den sayfa çıkarabilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. Taranmış PDF'ler bir PDF kabına gömülmüş görsellerdir — çıkarma işlemi diğer PDF'lerle tamamen aynı şekilde çalışır. Sayfalar nesne düzeyinde kopyalanır, bu yüzden tarama kalitesi çıktı dosyasında tamamen korunur."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Çıkarılan sayfalar biçimlendirmeyi tam olarak korur mu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. Sayfalar PDF nesne düzeyinde kopyalanır — yazı tipleri, görseller, bağlantılar ve biçimlendirme orijinalleriyle birebir aynıdır."
+    }
   }
 ]

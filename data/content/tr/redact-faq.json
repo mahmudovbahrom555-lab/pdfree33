@@ -46,5 +46,21 @@
       "@type": "Answer",
       "text": "Evet, sonsuza kadar tamamen ücretsizdir. Kayıt, abonelik veya gizli ücret yoktur."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Gizlemek, meta veriyi de kaldırır mı?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. Görsel gizleme belge meta verisini kaldırmaz. Yazar adı ve oluşturma tarihini kaldırmak için PDFree ana sayfasındaki Meta Veri aracını ayrıca kullanın."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "İndirdikten sonra gizlemeyi geri alabilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. Gizleme tek yönlü bir işlemdir — onu güvenli yapan da budur. Geri almanız gerekiyorsa orijinal, gizlenmemiş dosyayla çalışın. Gizlenmiş sürüm doğrulanana kadar orijinali güvenli bir yerde saklayın."
+    }
   }
 ]
