@@ -52,7 +52,7 @@
     "name": "¿Se conserva la calidad de las imágenes al convertirlas a PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sí. Las imágenes se incrustan directamente en el PDF sin compresión adicional. La calidad original se mantiene íntegra."
+      "text": "Por defecto, PDFree comprime ligeramente las imágenes (calidad JPEG 82%, máximo 2400px en el lado más largo) para mantener un tamaño de PDF razonable — visualmente casi imperceptible. Desactiva \"Comprimir imágenes\" antes de convertir si necesitas la resolución original exacta."
     }
   }
 ]

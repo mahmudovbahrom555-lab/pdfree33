@@ -44,7 +44,7 @@
     "name": "Chất lượng ảnh có bị giảm sau khi chuyển đổi không?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Không. Ảnh được nhúng với độ phân giải gốc mà không nén lại. Chất lượng ảnh được bảo toàn 100%."
+      "text": "Theo mặc định, PDFree nén nhẹ hình ảnh (chất lượng JPEG 82%, giới hạn 2400px ở cạnh dài nhất) để giữ kích thước PDF hợp lý — gần như không nhận thấy bằng mắt thường. Tắt \"Nén hình ảnh\" trước khi chuyển đổi nếu bạn cần độ phân giải gốc chính xác."
     }
   },
   {

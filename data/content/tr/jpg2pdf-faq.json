@@ -28,7 +28,7 @@
     "name": "Görüntü kalitesi korunacak mı?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Evet. PDFree görüntüleri tam çözünürlükle PDF'ye gömer. Kalite kaybı olmaz."
+      "text": "Varsayılan olarak PDFree, PDF boyutunu makul tutmak için görselleri hafifçe sıkıştırır (JPEG kalitesi %82, uzun kenarda en fazla 2400px) — görsel olarak neredeyse fark edilmez. Tam orijinal çözünürlüğe ihtiyacınız varsa dönüştürmeden önce \"Görselleri sıkıştır\" seçeneğini kapatın."
     }
   },
   {

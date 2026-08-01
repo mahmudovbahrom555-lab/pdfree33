@@ -44,7 +44,7 @@
     "name": "Will the image quality be reduced?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. Images are embedded at their original resolution. The PDF page size is set to match the image dimensions, so there is no scaling or re-compression."
+      "text": "By default, PDFree compresses images slightly (JPEG quality 82%, capped at 2400px on the longest side) to keep the PDF a reasonable size — visually almost unnoticeable. Turn off \"Compress images\" before converting if you need the exact original resolution."
     }
   },
   {

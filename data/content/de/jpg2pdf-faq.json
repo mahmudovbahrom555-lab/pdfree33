@@ -28,7 +28,7 @@
     "name": "Bleibt die Bildqualität beim Konvertieren erhalten?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ja. Bilder werden direkt in das PDF eingebettet, ohne zusätzliche Komprimierung oder Qualitätseinbußen."
+      "text": "Standardmäßig komprimiert PDFree Bilder leicht (JPEG-Qualität 82 %, maximal 2400px auf der längeren Seite), um die PDF-Größe vernünftig zu halten — visuell praktisch nicht sichtbar. Deaktiviere „Bilder komprimieren\" vor der Konvertierung, wenn du die exakte Originalauflösung benötigst."
     }
   },
   {

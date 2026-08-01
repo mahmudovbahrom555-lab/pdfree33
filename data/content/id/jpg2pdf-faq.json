@@ -44,7 +44,7 @@
     "name": "Apakah kualitas gambar berkurang setelah dikonversi?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Tidak. Gambar disematkan pada resolusi aslinya tanpa kompresi ulang. Kualitas gambar dipertahankan 100%."
+      "text": "Secara default, PDFree mengompres gambar sedikit (kualitas JPEG 82%, maksimal 2400px pada sisi terpanjang) agar ukuran PDF tetap wajar — hampir tidak terlihat secara visual. Matikan \"Kompres gambar\" sebelum konversi jika Anda memerlukan resolusi asli yang persis."
     }
   },
   {

@@ -44,7 +44,7 @@
     "name": "La qualité des images est-elle dégradée lors de la conversion ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Non. PDFree intègre les images dans le PDF sans recompression. La qualité originale est préservée."
+      "text": "Par défaut, PDFree compresse légèrement les images (qualité JPEG 82 %, plafonnée à 2400px sur le plus grand côté) pour garder une taille de PDF raisonnable — visuellement quasi imperceptible. Désactivez « Compresser les images » avant la conversion si vous avez besoin de la résolution d'origine exacte."
     }
   }
 ]
