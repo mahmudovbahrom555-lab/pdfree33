@@ -10,6 +10,31 @@ import { saveHandoff } from './handoff.js';
 const TESSERACT_CDN       = 'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js';
 const TEXT_CHAR_THRESHOLD = 100; // min chars across sampled pages → classified as text PDF (items-count was 5 — too low)
 
+// Locale-correct slugs for the "What to do next" handoff links below. The OCR
+// tool page is served at a translated pathname in every non-English locale
+// (e.g. /ru/raspoznat-tekst-pdf/), and so are its target pages — a bare
+// English relative href (../pdf-to-word/) resolves to a URL that doesn't
+// exist in that locale (e.g. /ru/pdf-to-word/ instead of /ru/pdf-v-word/),
+// landing on an unstyled fallback instead of the real page. Mirrors the
+// per-locale slugs in data/tools-config.json.
+const NEXT_STEP_SLUGS = {
+  pdf2word: { en: 'pdf-to-word', de: 'pdf-zu-word', es: 'pdf-a-word', fr: 'pdf-en-word', pt: 'pdf-para-word', id: 'pdf-ke-word', vi: 'pdf-sang-word', ru: 'pdf-v-word', ja: 'pdf-word-henkan', tr: 'pdf-word-donustur', it: 'pdf-in-word', ko: 'pdf-word-byeonhwan', nl: 'pdf-naar-word', pl: 'pdf-do-word' },
+  split:    { en: 'split-pdf', de: 'pdf-aufteilen', es: 'dividir-pdf', fr: 'diviser-pdf', pt: 'dividir-pdf', id: 'pisah-pdf', vi: 'tach-pdf', ru: 'razdelit-pdf', ja: 'pdf-bunkatsu', tr: 'pdf-bol', it: 'dividi-pdf', ko: 'pdf-bunhal', nl: 'pdf-splitsen', pl: 'podziel-pdf' },
+  compress: { en: 'compress-pdf', de: 'pdf-komprimieren', es: 'comprimir-pdf', fr: 'compresser-pdf', pt: 'comprimir-pdf', id: 'kompres-pdf', vi: 'nen-pdf', ru: 'szhat-pdf', ja: 'pdf-atsuryoku', tr: 'pdf-sikistir', it: 'comprimi-pdf', ko: 'pdf-apchuk', nl: 'pdf-comprimeren', pl: 'kompresuj-pdf' },
+};
+const NEXT_STEP_LOCALES = new Set(['de', 'es', 'fr', 'pt', 'id', 'vi', 'ru', 'ja', 'it', 'ko', 'nl', 'pl', 'tr']);
+
+function _currentLocale() {
+  const seg = location.pathname.split('/')[1];
+  return NEXT_STEP_LOCALES.has(seg) ? seg : 'en';
+}
+
+function _nextStepHref(toolKey) {
+  const lc   = _currentLocale();
+  const slug = NEXT_STEP_SLUGS[toolKey][lc] || NEXT_STEP_SLUGS[toolKey].en;
+  return lc === 'en' ? `/${slug}/` : `/${lc}/${slug}/`;
+}
+
 // Resolution profile per script family.
 // CJK ideographs are small and dense — need higher resolution for stroke preservation.
 // Arabic and Devanagari have connected ligatures that benefit from slightly more pixels.
@@ -888,13 +913,13 @@ function _showSuccess(desc) {
     nextSteps.innerHTML = `
       <div style="font-weight:600;color:var(--text2);margin-bottom:10px;">What to do next</div>
       <div style="display:flex;flex-direction:column;gap:8px;">
-        <a href="../pdf-to-word/" data-handoff style="display:flex;align-items:center;gap:8px;color:var(--green);text-decoration:none;font-weight:500;">
+        <a href="${_nextStepHref('pdf2word')}" data-handoff style="display:flex;align-items:center;gap:8px;color:var(--green);text-decoration:none;font-weight:500;">
           <span style="font-size:16px">📝</span> Convert to Word — edit the content
         </a>
-        <a href="../split-pdf/" data-handoff style="display:flex;align-items:center;gap:8px;color:var(--green);text-decoration:none;font-weight:500;">
+        <a href="${_nextStepHref('split')}" data-handoff style="display:flex;align-items:center;gap:8px;color:var(--green);text-decoration:none;font-weight:500;">
           <span style="font-size:16px">✂️</span> Split PDF — extract specific pages
         </a>
-        <a href="../compress-large-pdf-free/" data-handoff style="display:flex;align-items:center;gap:8px;color:var(--green);text-decoration:none;font-weight:500;">
+        <a href="${_nextStepHref('compress')}" data-handoff style="display:flex;align-items:center;gap:8px;color:var(--green);text-decoration:none;font-weight:500;">
           <span style="font-size:16px">🗜️</span> Compress PDF — reduce size before sharing
         </a>
       </div>`;
