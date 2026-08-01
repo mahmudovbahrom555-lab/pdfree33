@@ -36,7 +36,7 @@
     "name": "Filigranın saydamlığını ve konumunu kontrol edebilir miyim?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Evet. Saydamlığı (%10–%100), yazı boyutunu, rengini ve döndürme açısını ayarlayabilirsiniz. Filigranı uygulamadan önce önizleme anlık olarak güncellenir."
+      "text": "Evet. Saydamlığı (%5–%80), yazı boyutunu, rengini ve döndürme açısını ayarlayabilirsiniz. Filigranı uygulamadan önce önizleme anlık olarak güncellenir."
     }
   },
   {

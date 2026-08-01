@@ -28,7 +28,7 @@
     "name": "Can I control watermark opacity and position?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Yes. You can adjust opacity (10–100%), font size, color, and rotation angle. Preview updates in real time before you apply the watermark."
+      "text": "Yes. You can adjust opacity (5–80%), font size, color, and rotation angle. Preview updates in real time before you apply the watermark."
     }
   },
   {
