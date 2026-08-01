@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src  'self' 'wasm-unsafe-eval' blob:
+                https://cdnjs.cloudflare.com https://esm.sh
+                https://plausible.io https://pagead2.googlesyndication.com
+                https://static.cloudflareinsights.com;
+    style-src   'self' 'unsafe-inline';
+    font-src    'self';
+    img-src     'self' data: blob: https:;
+    connect-src 'self' https://cdnjs.cloudflare.com https://*.workers.dev
+                https://plausible.io https://pagead2.googlesyndication.com
+                https://www.googletagservices.com https://*.doubleclick.net
+                https://cloudflareinsights.com;
+    frame-src   https://googleads.g.doubleclick.net https://tpc.googlesyndication.com;
+    worker-src  'self' blob:;
+    object-src  'none';
+  ">
+
+  <title>HIPAA-Safe OCR for Medical Documents — No PHI Ever Leaves Your Device | PDFree</title>
+  <meta name="description" content="Make scanned medical records searchable without transmitting PHI to any server. Browser-based OCR is HIPAA-safe by architecture — no BAA required.">
+
+  <meta property="og:title"       content="HIPAA-Safe OCR for Medical Documents | PDFree">
+  <meta property="og:description" content="OCR scanned patient records without PHI ever touching a server. HIPAA-safe by architecture, not just policy.">
+  <meta property="og:type"        content="article">
+  <meta property="og:url"         content="https://pdfree.io/blog/hipaa-safe-ocr-for-medical-documents/">
+  <meta property="og:site_name"   content="PDFree">
+  <meta property="og:image"        content="https://pdfree.io/icons/og-image.jpg">
+  <meta property="og:image:width"  content="1200">
+  <meta property="og:image:height" content="633">
+  <meta property="og:image:alt"    content="HIPAA-Safe OCR for Medical Documents | PDFree">
+  <meta name="twitter:card"       content="summary_large_image">
+  <meta name="twitter:site"       content="@pdfree_io">
+  <meta name="twitter:title"      content="HIPAA-Safe OCR for Medical Documents | PDFree">
+  <meta name="twitter:description" content="Make scanned patient records searchable without PHI ever reaching a server.">
+  <meta name="twitter:image"      content="https://pdfree.io/icons/og-image.jpg">
+  <meta name="twitter:image:alt"  content="HIPAA-Safe OCR for Medical Documents | PDFree">
+
+  <link rel="canonical" href="https://pdfree.io/blog/hipaa-safe-ocr-for-medical-documents/">
+  <link rel="alternate" hreflang="en"        href="https://pdfree.io/blog/hipaa-safe-ocr-for-medical-documents/">
+  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/blog/hipaa-safe-ocr-for-medical-documents/">
+
+  <link rel="manifest" href="../../manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="PDFree">
+  <link rel="apple-touch-icon" href="../../icons/icon-192.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+  <link rel="preconnect" href="https://plausible.io">
+  <link rel="preconnect" href="https://static.cloudflareinsights.com">
+  <link rel="preload" href="../../fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../css/fonts.css">
+  <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/animations.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/components.css">
+
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "HIPAA-Safe OCR for Medical Documents",
+  "description": "How browser-based OCR lets healthcare workers make scanned patient records searchable without transmitting PHI to any server.",
+  "url": "https://pdfree.io/blog/hipaa-safe-ocr-for-medical-documents/",
+  "datePublished": "2026-08-01",
+  "dateModified": "2026-08-01",
+  "publisher": { "@type": "Organization", "name": "PDFree", "url": "https://pdfree.io" },
+  "author": { "@type": "Organization", "name": "PDFree" },
+  "image": { "@type": "ImageObject", "url": "https://pdfree.io/icons/og-image.jpg", "width": 1200, "height": 633 },
+  "keywords": "hipaa safe ocr, hipaa compliant ocr, ocr medical records, phi ocr, hipaa pdf ocr"
+}
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Does OCR on scanned medical records count as a HIPAA disclosure risk?",
+        "acceptedAnswer": { "@type": "Answer", "text": "It can, if the OCR tool uploads the document to a server to process it — that transmission of PHI to a third party is exactly the kind of event HIPAA's Security Rule is concerned with, and typically requires a Business Associate Agreement (BAA) with the vendor. Browser-based OCR avoids the question because there is no transmission: recognition happens locally on the healthcare worker's own device." }
+      },
+      {
+        "@type": "Question",
+        "name": "Do I need a BAA to use PDFree's OCR on patient records?",
+        "acceptedAnswer": { "@type": "Answer", "text": "No. A BAA is required when a vendor receives, stores, or processes PHI on your behalf. PDFree never receives your files — OCR runs entirely in your browser via WebAssembly, so PDFree is not a Business Associate under HIPAA and no BAA is necessary." }
+      },
+      {
+        "@type": "Question",
+        "name": "Is browser-based OCR accurate enough for medical records?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Accuracy depends primarily on scan quality, not on whether recognition runs locally or on a server — both use comparable OCR engines. A clean 300 DPI scan of a typed medical record typically recognizes with high accuracy. Handwritten clinical notes remain harder to OCR reliably regardless of which tool is used, and should be reviewed rather than trusted blindly." }
+      },
+      {
+        "@type": "Question",
+        "name": "What happens to the scanned file after OCR?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Nothing — because the file was never sent anywhere. It exists only in your browser's memory for the duration of the session and is cleared when you close the tab. There is no server-side copy to delete because one was never created." }
+      }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "PDFree", "item": "https://pdfree.io/" },
+      { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://pdfree.io/blog/" },
+      { "@type": "ListItem", "position": 3, "name": "HIPAA-Safe OCR for Medical Documents", "item": "https://pdfree.io/blog/hipaa-safe-ocr-for-medical-documents/" }
+    ]
+  }
+  </script>
+  <script src="../../js/theme.js"></script>
+</head>
+<body>
+
+  <nav>
+    <a href="../../" class="logo" id="logo" aria-label="Go to homepage" style="text-decoration:none"><span class="logo-text">PDF<span>ree</span></span></a>
+    <div class="nav-links">
+      <a href="/ocr-pdf/" class="nav-link" data-tool="ocr">OCR</a>
+      <a href="/redact-pdf/" class="nav-link" data-tool="redact">Redact</a>
+      <a href="/protect-pdf/" class="nav-link" data-tool="protect">Protect</a>
+      <a href="/merge-pdf/" class="nav-link" data-tool="merge">Merge</a>
+    </div>
+    <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode"></button>
+  </nav>
+
+  <section class="seo-article" aria-labelledby="articleTitle">
+    <div class="seo-article__inner">
+      <div style="max-width:800px;margin:60px auto 40px;padding:0 24px;color:var(--text2);line-height:1.8;">
+
+        <p style="font-size:13px;color:var(--text3);margin:0 0 16px;">
+          <a href="../../" style="color:var(--text3);text-decoration:none;">PDFree</a> ›
+          <a href="../" style="color:var(--text3);text-decoration:none;">Blog</a> ›
+          HIPAA-Safe OCR for Medical Documents
+        </p>
+
+        <h1 id="articleTitle" style="font-size:32px;color:var(--text);margin:0 0 16px;font-weight:700;line-height:1.25;">HIPAA-Safe OCR for Medical Documents</h1>
+
+        <p style="font-size:15px;color:var(--text3);margin:0 0 32px;">4-minute read · Updated August 2026</p>
+
+        <p style="font-size:18px;margin:0 0 24px;color:var(--text);">Scanned intake forms, referral letters, and lab reports are hard to search, hard to index, and easy to misfile. OCR fixes that — but running a patient document through the wrong OCR tool means sending Protected Health Information (PHI) to a third-party server, which is exactly the kind of exposure HIPAA is designed to prevent. Here's how to make medical records searchable without that risk.</p>
+
+        <!-- Inline CTA -->
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:28px;margin:0 0 40px;text-align:center;">
+          <p style="font-size:16px;font-weight:600;color:var(--text);margin:0 0 8px;">OCR a patient record right now</p>
+          <p style="font-size:14px;color:var(--text2);margin:0 0 20px;">No PHI transmitted. No BAA needed. Free.</p>
+          <a href="../../ocr-pdf/" style="background:var(--green);color:#fff;padding:13px 28px;border-radius:10px;font-weight:600;font-size:15px;text-decoration:none;display:inline-block;">OCR a PDF — Free</a>
+        </div>
+
+        <h2 style="font-size:22px;color:var(--text);margin:0 0 16px;font-weight:600;">Why most OCR tools are a HIPAA problem for medical records</h2>
+        <p>Most free and paid OCR services — including the OCR features built into Adobe Acrobat, Smallpdf, and PDF24's web tools — process your document on their own servers. To do that, the file has to be uploaded first. For a scanned patient chart, referral letter, or lab result, that upload is a transmission of PHI to a third party.</p>
+        <p style="margin-top:16px;">Under HIPAA's Security Rule, transmitting PHI to a vendor generally requires a signed <strong>Business Associate Agreement (BAA)</strong> with that vendor, spelling out how they'll safeguard the data. Many consumer PDF tools don't offer a BAA at all — meaning using them on real patient documents is a compliance gap, not just a theoretical risk.</p>
+
+        <h2 style="font-size:22px;color:var(--text);margin:32px 0 16px;font-weight:600;">How browser-based OCR sidesteps the problem entirely</h2>
+        <p>PDFree's OCR tool runs <a href="https://github.com/naptha/tesseract.js" style="color:var(--green);" target="_blank" rel="noopener">Tesseract.js</a> — a WebAssembly build of the open-source Tesseract engine — directly inside your browser. The scanned document is read from your device, recognized on your device's own CPU, and the searchable result is written back to your device. At no point does the file, or any part of its content, travel over the network.</p>
+        <p style="margin-top:16px;">This isn't a policy commitment to delete files quickly — it's an architectural fact: PDFree has no server-side document processing pipeline to receive the file in the first place. Because no PHI is ever transmitted, PDFree is not a Business Associate under HIPAA, and no BAA is required to use it on patient documents.</p>
+
+        <h2 style="font-size:22px;color:var(--text);margin:32px 0 16px;font-weight:600;">Practical uses in a healthcare setting</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin:20px 0;">
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;">
+            <div style="font-size:24px;margin-bottom:8px;">🗂️</div>
+            <strong style="color:var(--text);">Making scanned charts searchable</strong>
+            <p style="font-size:13px;margin:8px 0 0;color:var(--text2);">Find a specific patient note or lab value by keyword instead of scrolling through pages of scanned images.</p>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;">
+            <div style="font-size:24px;margin-bottom:8px;">📋</div>
+            <strong style="color:var(--text);">Indexing referral letters</strong>
+            <p style="font-size:13px;margin:8px 0 0;color:var(--text2);">Faxed or scanned referrals become text-searchable for faster retrieval in document management systems.</p>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;">
+            <div style="font-size:24px;margin-bottom:8px;">🧾</div>
+            <strong style="color:var(--text);">Preparing records for release of information</strong>
+            <p style="font-size:13px;margin:8px 0 0;color:var(--text2);">Searchable text makes it faster to locate and <a href="/redact-pdf/" style="color:var(--green);">redact</a> specific sections before releasing records externally.</p>
+          </div>
+        </div>
+
+        <h2 style="font-size:22px;color:var(--text);margin:32px 0 16px;font-weight:600;">A note on accuracy for clinical use</h2>
+        <p>OCR accuracy depends on scan quality, not on whether recognition happens locally or on a server — the underlying recognition technology is comparable either way. Clean, typed, 300 DPI scans recognize reliably. Handwritten clinical notes are harder for any OCR engine to read accurately and should always be reviewed by a person rather than relied on blindly, regardless of which tool produced the searchable text.</p>
+
+        <h2 style="font-size:22px;color:var(--text);margin:32px 0 16px;font-weight:600;">The rest of the HIPAA-safe workflow</h2>
+        <p>OCR is one step in a larger document workflow. PDFree's other tools apply the same no-upload architecture, so an entire record-handling process can stay off any server:</p>
+        <ul style="margin:12px 0 24px;padding-left:24px;display:flex;flex-direction:column;gap:8px;">
+          <li><a href="/redact-pdf/" style="color:var(--green);">Redact PDF</a> — permanently remove identifying details before sharing a record externally</li>
+          <li><a href="/merge-large-pdf-files/" style="color:var(--green);">Merge PDF</a> — combine multi-part scanned charts into a single file</li>
+          <li><a href="/protect-pdf/" style="color:var(--green);">Protect PDF</a> — add a password before emailing a record internally</li>
+        </ul>
+        <p>See the full <a href="/hipaa-pdf-tools/" style="color:var(--green);">HIPAA-safe PDF tools overview</a> for the complete picture of what's covered.</p>
+
+        <h2 style="font-size:22px;color:var(--text);margin:32px 0 20px;font-weight:600;">Frequently Asked Questions</h2>
+        <div style="display:flex;flex-direction:column;gap:20px;margin:0 0 32px;">
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Does OCR on scanned medical records count as a HIPAA disclosure risk?</h3>
+            <p style="margin:0;font-size:14px;">It can, if the OCR tool uploads the document to a server to process it — that transmission of PHI to a third party is exactly the kind of event HIPAA's Security Rule is concerned with, and typically requires a Business Associate Agreement (BAA) with the vendor. Browser-based OCR avoids the question because there is no transmission: recognition happens locally on the healthcare worker's own device.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Do I need a BAA to use PDFree's OCR on patient records?</h3>
+            <p style="margin:0;font-size:14px;">No. A BAA is required when a vendor receives, stores, or processes PHI on your behalf. PDFree never receives your files — OCR runs entirely in your browser via WebAssembly, so PDFree is not a Business Associate under HIPAA and no BAA is necessary.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Is browser-based OCR accurate enough for medical records?</h3>
+            <p style="margin:0;font-size:14px;">Accuracy depends primarily on scan quality, not on whether recognition runs locally or on a server — both use comparable OCR engines. A clean 300 DPI scan of a typed medical record typically recognizes with high accuracy. Handwritten clinical notes remain harder to OCR reliably regardless of which tool is used, and should be reviewed rather than trusted blindly.</p>
+          </div>
+          <div>
+            <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">What happens to the scanned file after OCR?</h3>
+            <p style="margin:0;font-size:14px;">Nothing — because the file was never sent anywhere. It exists only in your browser's memory for the duration of the session and is cleared when you close the tab. There is no server-side copy to delete because one was never created.</p>
+          </div>
+        </div>
+
+        <!-- Second CTA -->
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:28px;margin:40px 0;text-align:center;">
+          <p style="font-size:16px;font-weight:600;color:var(--text);margin:0 0 8px;">Make a scanned record searchable now</p>
+          <p style="font-size:14px;color:var(--text2);margin:0 0 20px;">No PHI transmitted. No BAA. No account. Free.</p>
+          <a href="../../ocr-pdf/" style="background:var(--green);color:#fff;padding:13px 28px;border-radius:10px;font-weight:600;font-size:15px;text-decoration:none;display:inline-block;">OCR a PDF</a>
+        </div>
+
+        <!-- Related -->
+        <div style="padding-top:24px;border-top:1px solid var(--border);">
+          <p style="font-size:12px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin:0 0 10px;">Related reading</p>
+          <ul style="margin:0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:6px;">
+            <li><a href="/hipaa-pdf-tools/" style="color:var(--green);">HIPAA-safe PDF tools</a> — the full toolkit for healthcare workers</li>
+            <li><a href="/blog/how-to-ocr-a-pdf-without-uploading/" style="color:var(--green);">How to OCR a PDF without uploading it</a> — general walkthrough</li>
+            <li><a href="/blog/best-free-ocr-pdf-tools/" style="color:var(--green);">Best free OCR PDF tools compared</a> — how PDFree stacks up</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div style="display:flex;gap:48px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;font-size:13px;border-top:1px solid var(--border);padding-top:20px;">
+      <div>
+        <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Solutions</div>
+        <a href="/hipaa-pdf-tools/" style="display:block;color:var(--green);text-decoration:none;margin-bottom:4px;">HIPAA Compliant PDF</a>
+        <a href="/legal-pdf-tools/" style="display:block;color:var(--green);text-decoration:none;">Legal PDF Tools</a>
+      </div>
+      <div>
+        <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Alternatives</div>
+        <a href="/adobe-acrobat-alternative/" style="display:block;color:var(--green);text-decoration:none;">Adobe Acrobat Alternative</a>
+      </div>
+    </div>
+    PDFree · <strong>All processing happens 100% in your browser</strong> · Files are <strong>never uploaded</strong><br>
+    <span style="color:var(--green)">🔒</span> Your documents never leave your device &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> Built to be free for everyone, forever<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
+      <a href="/privacy.html" style="color:var(--green)">Privacy</a> &nbsp;·&nbsp;
+      <a href="/terms.html" style="color:var(--green)">Terms</a> &nbsp;·&nbsp;
+      <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a> &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green)">GitHub</a>
+    </span>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script>
+</body>
+</html>

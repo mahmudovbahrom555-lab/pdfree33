@@ -31,11 +31,11 @@
     object-src  'none';
   ">
 
-  <title>Fill, Sign &amp; Flatten a PDF — Complete Guide | PDFree</title>
-  <meta name="description" content="How to fill out a PDF form, add your signature, and lock it against further edits — all free, all in your browser. A step-by-step guide combining PDFree's Fill and Flatten tools.">
+  <title>Fill, Sign &amp; Flatten a PDF in One Tool — Free, No Upload | PDFree</title>
+  <meta name="description" content="Fill a PDF form, add your signature, and lock it against further edits — in a single pass, one tool, free, in your browser. No upload, no account.">
 
-  <meta property="og:title"       content="Fill, Sign &amp; Flatten a PDF — Complete Guide | PDFree">
-  <meta property="og:description" content="The full workflow: fill a form, sign it, lock it so nobody can edit it afterward. Free, in your browser, no upload.">
+  <meta property="og:title"       content="Fill, Sign &amp; Flatten a PDF in One Tool — Free, No Upload | PDFree">
+  <meta property="og:description" content="One tool does the whole workflow: fill a form, sign it, and lock it so nobody can edit it afterward — free, in your browser, no upload.">
   <meta property="og:type"        content="article">
   <meta property="og:url"         content="https://pdfree.io/fill-sign-flatten-guide/">
   <meta property="og:site_name"   content="PDFree">
@@ -43,13 +43,13 @@
   <meta property="og:image"       content="https://pdfree.io/icons/og-image.jpg">
   <meta property="og:image:width"  content="1200">
   <meta property="og:image:height" content="633">
-  <meta property="og:image:alt"    content="Fill, Sign & Flatten a PDF — Complete Guide | PDFree">
+  <meta property="og:image:alt"    content="Fill, Sign & Flatten a PDF in One Tool | PDFree">
   <meta name="twitter:card"  content="summary_large_image">
   <meta name="twitter:site"  content="@pdfree_io">
-  <meta name="twitter:title" content="Fill, Sign &amp; Flatten a PDF — Complete Guide | PDFree">
-  <meta name="twitter:description" content="The full workflow: fill a form, sign it, lock it so nobody can edit it afterward. Free, in your browser, no upload.">
+  <meta name="twitter:title" content="Fill, Sign &amp; Flatten a PDF in One Tool — Free, No Upload | PDFree">
+  <meta name="twitter:description" content="One tool: fill a form, sign it, lock it. Free, in your browser, no upload.">
   <meta name="twitter:image" content="https://pdfree.io/icons/og-image.jpg">
-  <meta name="twitter:image:alt" content="Fill, Sign & Flatten a PDF — Complete Guide | PDFree">
+  <meta name="twitter:image:alt" content="Fill, Sign & Flatten a PDF in One Tool | PDFree">
 
   <link rel="canonical" href="https://pdfree.io/fill-sign-flatten-guide/">
   <link rel="alternate" hreflang="en"        href="https://pdfree.io/fill-sign-flatten-guide/">
@@ -81,8 +81,8 @@
   {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": "Fill, Sign & Flatten a PDF — Complete Guide",
-    "description": "How to fill a PDF form, add a signature, and lock the result so it can't be edited further — using PDFree's Fill and Flatten tools, entirely in the browser.",
+    "headline": "Fill, Sign & Flatten a PDF in One Tool",
+    "description": "How to fill a PDF form, add a signature, and lock the result so it can't be edited further — in a single pass, using one PDFree tool, entirely in the browser.",
     "author": { "@type": "Organization", "name": "PDFree" },
     "publisher": { "@type": "Organization", "name": "PDFree", "url": "https://pdfree.io" },
     "mainEntityOfPage": "https://pdfree.io/fill-sign-flatten-guide/"
@@ -93,12 +93,11 @@
   {
     "@context": "https://schema.org",
     "@type": "HowTo",
-    "name": "How to Fill, Sign, and Flatten a PDF Form",
-    "description": "Complete a PDF form, sign it, and lock it against further edits — all free, all in the browser, no upload.",
-    "totalTime": "PT5M",
+    "name": "How to Fill, Sign, and Flatten a PDF Form in One Pass",
+    "description": "Complete a PDF form, sign it, and lock it against further edits — all in one tool, free, all in the browser, no upload.",
+    "totalTime": "PT2M",
     "tool": [
-      { "@type": "HowToTool", "name": "PDFree Fill & Sign — /fill/" },
-      { "@type": "HowToTool", "name": "PDFree Flatten — /flatten-pdf/" }
+      { "@type": "HowToTool", "name": "PDFree Fill & Sign — /fill/" }
     ],
     "step": [
       {
@@ -118,23 +117,9 @@
       {
         "@type": "HowToStep",
         "position": 3,
-        "name": "Download the filled and signed PDF",
-        "text": "Click download. At this point the form fields are technically still fields — the values are baked in visually and on save, but the underlying form structure can still be reopened and edited by the recipient.",
+        "name": "Download the filled, signed, and locked PDF",
+        "text": "Click download. The 'Flatten fields' option is checked by default, so the values and signature are baked permanently into the page in the same pass — the file that downloads is already locked against further edits. No second tool or separate step is needed.",
         "url": "https://pdfree.io/fill-sign-flatten-guide/#step3"
-      },
-      {
-        "@type": "HowToStep",
-        "position": 4,
-        "name": "Flatten to lock it",
-        "text": "Open pdfree.io/flatten-pdf/ and upload the filled, signed PDF from step 3. Flattening bakes every field's value permanently into the page content and removes the interactive form structure, so nobody — including you — can edit the answers or move the signature afterward.",
-        "url": "https://pdfree.io/fill-sign-flatten-guide/#step4"
-      },
-      {
-        "@type": "HowToStep",
-        "position": 5,
-        "name": "Download the final, locked PDF",
-        "text": "Download the flattened file. This is the version you send — the content is finalized and the form can no longer be altered.",
-        "url": "https://pdfree.io/fill-sign-flatten-guide/#step5"
       }
     ]
   }
@@ -147,6 +132,14 @@
     "mainEntity": [
       {
         "@type": "Question",
+        "name": "Do I have to use two separate tools for this?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. PDFree's Fill tool (/fill/) fills the form, places your signature, and flattens the result into a locked, non-editable PDF — all in one download. The separate Flatten tool (/flatten-pdf/) only exists for the rare case where you already have a filled PDF from somewhere else and need to lock it after the fact."
+        }
+      },
+      {
+        "@type": "Question",
         "name": "Why flatten a PDF after filling and signing it?",
         "acceptedAnswer": {
           "@type": "Answer",
@@ -155,26 +148,26 @@
       },
       {
         "@type": "Question",
-        "name": "Do I have to use two separate tools for this?",
+        "name": "Can I keep an editable copy instead of flattening?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Yes — Fill and Flatten are two distinct, focused tools rather than one combined tool. Fill (/fill/) handles entering data and placing a signature; Flatten (/flatten-pdf/) handles locking the result. Running the filled file through Flatten as a second, separate step takes under a minute and keeps each tool doing one job well."
+          "text": "Yes. The Fill tool shows a 'Flatten fields' checkbox, checked by default. Uncheck it before downloading if you want the output to remain an editable form — useful if you need to come back and adjust an answer later, or if the recipient needs to fill in their own portion afterward."
         }
       },
       {
         "@type": "Question",
-        "name": "Is the flattening step reversible if I made a mistake?",
+        "name": "Is flattening reversible if I made a mistake?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "No — once a PDF is flattened, the original interactive fields are gone from that file. Keep the filled-but-not-yet-flattened version from step 3 until you're sure everything is correct, since that's the version you'd need to go back and edit."
+          "text": "No — once a PDF is flattened, the original interactive fields are gone from that specific file. If you're not sure everything is correct yet, uncheck 'Flatten fields' first, review the editable download, then run it through the Fill tool again (or the standalone Flatten tool) once you're satisfied."
         }
       },
       {
         "@type": "Question",
-        "name": "Does this whole workflow require uploading my document anywhere?",
+        "name": "Does this workflow require uploading my document anywhere?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "No. Both the Fill tool and the Flatten tool run entirely in your browser. Your document never leaves your device at any point in the fill, sign, or flatten steps."
+          "text": "No. The Fill tool runs entirely in your browser. Your document never leaves your device at any point — filling, signing, and flattening all happen locally in a single pass."
         }
       }
     ]
@@ -202,7 +195,7 @@
       <span class="logo-text">PDF<span>ree</span></span>
     </a>
     <div class="nav-links">
-      <a href="../fill/" class="nav-link" data-tool="fill">Fill &amp; Sign</a>
+      <a href="../fill/" class="nav-link" data-tool="fill">Fill, Sign &amp; Flatten</a>
       <a href="../flatten-pdf/" class="nav-link" data-tool="flatten">Flatten</a>
       <a href="../protect-pdf/" class="nav-link" data-tool="protect">Protect</a>
       <a href="../merge-pdf/" class="nav-link" data-tool="merge">Merge</a>
@@ -213,8 +206,8 @@
   <!-- Compact title banner -->
   <section style="background:var(--green-light);border-bottom:1px solid rgba(45,122,79,0.15);padding:44px 24px 36px;text-align:center;">
     <div style="max-width:720px;margin:0 auto;">
-      <h1 style="font-size:clamp(26px,4vw,40px);font-weight:700;letter-spacing:-0.5px;line-height:1.2;color:var(--text);margin:0 0 12px;">Fill, Sign &amp; Flatten a PDF — the Complete Workflow</h1>
-      <p style="font-size:15px;color:var(--green);margin:0;font-weight:500;">Three steps, two tools, zero uploads. Here's exactly how the pieces fit together.</p>
+      <h1 style="font-size:clamp(26px,4vw,40px);font-weight:700;letter-spacing:-0.5px;line-height:1.2;color:var(--text);margin:0 0 12px;">Fill, Sign &amp; Flatten a PDF — in One Tool</h1>
+      <p style="font-size:15px;color:var(--green);margin:0;font-weight:500;">Three steps, one tool, zero uploads. Here's exactly how it works.</p>
     </div>
   </section>
 
@@ -223,13 +216,14 @@
     <div class="seo-article__inner">
       <div class="seo-content" style="max-width:800px;margin:60px auto 40px;padding:0 24px;color:var(--text2);line-height:1.8;">
 
-        <h2 style="font-size:26px;color:var(--text);margin:0 0 16px;font-weight:700;">Why This Is a Two-Tool Workflow, Not One</h2>
-        <p>Filling out a form and locking it afterward are genuinely different operations, and PDFree keeps them as two focused tools rather than bundling them into one:</p>
+        <h2 style="font-size:26px;color:var(--text);margin:0 0 16px;font-weight:700;">One Tool Does All Three Steps</h2>
+        <p>Filling out a form, signing it, and locking it against further edits sound like three separate jobs — but PDFree's <a href="/fill/" style="color:var(--green);">Fill tool</a> handles all three in a single pass:</p>
         <ul style="margin:12px 0;padding-left:24px;display:flex;flex-direction:column;gap:6px;">
-          <li><strong style="color:var(--text);">Fill (<a href="/fill/" style="color:var(--green);">/fill/</a>)</strong> — enter text into form fields, check boxes, pick dropdown values, and place a signature.</li>
-          <li><strong style="color:var(--text);">Flatten (<a href="/flatten-pdf/" style="color:var(--green);">/flatten-pdf/</a>)</strong> — take a filled document and permanently bake every value into the page, removing the ability to edit it further.</li>
+          <li><strong style="color:var(--text);">Fill</strong> — enter text into form fields, check boxes, and pick dropdown values. Detected automatically from the PDF's AcroForm structure.</li>
+          <li><strong style="color:var(--text);">Sign</strong> — the same tool includes a signature pad: draw, type, or upload an image of your signature, then place it on the page.</li>
+          <li><strong style="color:var(--text);">Flatten</strong> — a "Flatten fields" checkbox, checked by default, bakes every value and the signature permanently into the page and removes the interactive form structure before the file downloads.</li>
         </ul>
-        <p>A form you've just filled in is still, technically, a form — the fields are populated but still editable by anyone who opens the file next. That's exactly what you want while you're double-checking your own entries. It's not what you want once the document is ready to send. Flattening is the step that turns "editable form with my answers in it" into "final document."</p>
+        <p>Because flattening happens by default in the same download, most people never need a second tool at all. The standalone <a href="/flatten-pdf/" style="color:var(--green);">Flatten tool</a> still exists for one specific case: you already have a filled PDF from somewhere else (or you unchecked the flatten option earlier) and now want to lock it after the fact.</p>
 
         <!-- Steps -->
         <h2 style="font-size:26px;color:var(--text);margin:48px 0 12px;font-weight:700;">The Full Walkthrough</h2>
@@ -244,21 +238,13 @@
           </div>
           <div style="display:flex;gap:16px;align-items:flex-start;" id="step3">
             <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">3</div>
-            <div><strong style="color:var(--text);">Download the filled, signed PDF</strong><br>This version has your answers and signature in it — but the underlying fields still exist and are technically still editable by whoever opens it next. Keep this copy in case you need to make a correction later.</div>
-          </div>
-          <div style="display:flex;gap:16px;align-items:flex-start;" id="step4">
-            <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">4</div>
-            <div><strong style="color:var(--text);">Flatten it</strong><br>Open <a href="/flatten-pdf/" style="color:var(--green);">pdfree.io/flatten-pdf/</a> and upload the file from step 3. Flattening bakes every field's value into the page content permanently and strips out the editable form structure.</div>
-          </div>
-          <div style="display:flex;gap:16px;align-items:flex-start;" id="step5">
-            <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">5</div>
-            <div><strong style="color:var(--text);">Download the final PDF</strong><br>This is the file you send. Your answers and signature are locked in — nobody, including you, can edit the fields on this copy anymore.</div>
+            <div><strong style="color:var(--text);">Download — already locked</strong><br>Leave "Flatten fields" checked (it's on by default) and click download. Your answers and signature are baked into the page as final content — nobody, including you, can edit the fields on this file anymore. One click, one file, done.</div>
           </div>
         </div>
 
         <div style="background:var(--green-light);border-left:4px solid var(--green);padding:18px 20px;border-radius:0 8px 8px 0;margin:28px 0;">
           <p style="margin:0;font-size:14px;color:var(--text);">
-            <strong>Keep the pre-flatten copy.</strong> Flattening isn't reversible — once a field is baked into the page, that particular file can't be un-flattened. Hold onto the version from step 3 until you're certain everything is correct.
+            <strong>Need to keep it editable a bit longer?</strong> Uncheck "Flatten fields" before downloading. You'll get a PDF where the fields are still filled in but remain editable — useful while you're still double-checking entries. Run it back through the Fill tool (or the standalone Flatten tool) once you're ready to lock it in. Flattening itself isn't reversible, so keep an unflattened copy until you're certain everything is correct.
           </p>
         </div>
 
@@ -286,28 +272,32 @@
         <h2 style="font-size:26px;color:var(--text);margin:52px 0 20px;font-weight:700;">Frequently Asked Questions</h2>
         <div style="display:flex;flex-direction:column;gap:20px;">
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Do I have to use two separate tools for this?</h3>
+            <p style="margin:0;font-size:14px;">No. PDFree's Fill tool fills the form, places your signature, and flattens the result into a locked, non-editable PDF — all in one download. The separate Flatten tool only exists for the rare case where you already have a filled PDF from somewhere else and need to lock it after the fact.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Why flatten a PDF after filling and signing it?</h3>
             <p style="margin:0;font-size:14px;">Without flattening, a filled-in form's fields are still editable — anyone who opens it can change what you typed or move your signature, even after saving. Flattening bakes every value into permanent page content and removes the interactive form structure.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
-            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Do I have to use two separate tools for this?</h3>
-            <p style="margin:0;font-size:14px;">Yes — Fill and Flatten are two focused tools rather than one combined tool. Fill handles data entry and signature placement; Flatten handles locking the result. Running the filled file through Flatten as a second step takes under a minute.</p>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Can I keep an editable copy instead of flattening?</h3>
+            <p style="margin:0;font-size:14px;">Yes. The Fill tool shows a "Flatten fields" checkbox, checked by default. Uncheck it before downloading if you want the output to remain an editable form — useful if you need to come back and adjust an answer later.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Is flattening reversible if I made a mistake?</h3>
-            <p style="margin:0;font-size:14px;">No — once flattened, the original interactive fields are gone from that file. Keep the filled-but-not-yet-flattened version from step 3 until you're sure everything is correct.</p>
+            <p style="margin:0;font-size:14px;">No — once flattened, the original interactive fields are gone from that file. If you're not sure everything is correct yet, uncheck "Flatten fields" first and review the editable download before locking it in.</p>
           </div>
           <div>
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Does this workflow require uploading my document anywhere?</h3>
-            <p style="margin:0;font-size:14px;">No. Both the Fill and Flatten tools run entirely in your browser — your document never leaves your device at any step.</p>
+            <p style="margin:0;font-size:14px;">No. The Fill tool runs entirely in your browser — your document never leaves your device at any step of filling, signing, or flattening.</p>
           </div>
         </div>
 
         <!-- Related -->
         <h2 style="font-size:26px;color:var(--text);margin:52px 0 12px;font-weight:700;">Related Tools</h2>
         <ul style="margin:16px 0;padding-left:24px;display:flex;flex-direction:column;gap:8px;">
-          <li><a href="/fill/" style="color:var(--green);text-decoration:none;font-weight:500;">Fill PDF Form</a> — start here: fill fields and add a signature</li>
-          <li><a href="/flatten-pdf/" style="color:var(--green);text-decoration:none;font-weight:500;">Flatten PDF</a> — lock the filled form so it can't be edited</li>
+          <li><a href="/fill/" style="color:var(--green);text-decoration:none;font-weight:500;">Fill, Sign &amp; Flatten a PDF</a> — start here: fill fields, add a signature, and download already locked</li>
+          <li><a href="/flatten-pdf/" style="color:var(--green);text-decoration:none;font-weight:500;">Flatten PDF</a> — lock a PDF you already filled somewhere else</li>
           <li><a href="/sign-pdf-free-no-account/" style="color:var(--green);text-decoration:none;font-weight:500;">Sign PDF Free — No Account</a> — more on the signature step specifically</li>
           <li><a href="/protect-pdf/" style="color:var(--green);text-decoration:none;font-weight:500;">Protect PDF</a> — add a password to the final, flattened file</li>
         </ul>
