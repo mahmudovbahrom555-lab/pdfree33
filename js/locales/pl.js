@@ -269,7 +269,7 @@ window.PDFREE_LOCALE = {
   rdct_loading:            'Ładowanie PDF…',
   rdct_err_read:           'Nie można odczytać PDF: {msg}',
   rdct_banner_true:        '🔒 <strong>Prawdziwa redakcja PDF</strong> — trwale usuwa treść z dokumentu. Zredagowane strony są konwertowane do obrazów, więc podstawowego tekstu nie można odzyskać. Pliki nigdy nie opuszczają Twojego urządzenia.',
-  rdct_banner_cover:       '🛡️ <strong>Zakryj obszar</strong> — rysuje nieprzezroczysty prostokąt nad wybranym obszarem. Treść pod spodem jest wizualnie ukryta, ale <em>nie jest kryptograficznie usunięta</em>. Do prawnej redakcji użyj narzędzia <a href="/redact-pdf/" style="color:var(--green)">Redact PDF</a>.',
+  rdct_banner_cover:       '🛡️ <strong>Zakryj obszar</strong> — rysuje nieprzezroczysty prostokąt nad wybranym obszarem. Treść pod spodem jest wizualnie ukryta, ale <em>nie jest kryptograficznie usunięta</em>. Do prawnej redakcji użyj narzędzia <a href="/pl/zaczernij-pdf/" style="color:var(--green)">Redact PDF</a>.',
   rdct_banner_annotate:    '✏️ <strong>Adnotuj PDF</strong> — rysuj kolorowe pola, podświetlenia lub okładki na dowolnej stronie. Wszystko działa lokalnie w przeglądarce — Twój PDF nigdy nie opuszcza urządzenia.',
   rdct_footer_true:        '🔒 Przetworzono w całości w Twojej przeglądarce · Pliki nigdy nie opuszczają urządzenia · Treść trwale usunięta',
   rdct_footer:             '🔒 Przetworzono w całości w Twojej przeglądarce · Pliki nigdy nie opuszczają urządzenia',

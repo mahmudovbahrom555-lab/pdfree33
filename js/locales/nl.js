@@ -269,7 +269,7 @@ window.PDFREE_LOCALE = {
   rdct_loading:            'PDF laden…',
   rdct_err_read:           'Kon PDF niet lezen: {msg}',
   rdct_banner_true:        '🔒 <strong>Echte PDF-redactie</strong> — verwijdert inhoud permanent uit het document. Geredigeerde pagina\'s worden omgezet naar afbeeldingen zodat de onderliggende tekst niet kan worden hersteld. Bestanden verlaten nooit uw apparaat.',
-  rdct_banner_cover:       '🛡️ <strong>Gebied bedekken</strong> — tekent een ondoorzichtige rechthoek over het geselecteerde gebied. De inhoud eronder is visueel verborgen maar <em>niet cryptografisch verwijderd</em>. Gebruik voor juridische redactie de <a href="/redact-pdf/" style="color:var(--green)">Redact PDF</a>-tool.',
+  rdct_banner_cover:       '🛡️ <strong>Gebied bedekken</strong> — tekent een ondoorzichtige rechthoek over het geselecteerde gebied. De inhoud eronder is visueel verborgen maar <em>niet cryptografisch verwijderd</em>. Gebruik voor juridische redactie de <a href="/nl/pdf-zwartmaken/" style="color:var(--green)">Redact PDF</a>-tool.',
   rdct_banner_annotate:    '✏️ <strong>PDF annoteren</strong> — teken gekleurde vakken, markeringen of bedekkingen op elke pagina. Alles werkt lokaal in uw browser — uw PDF verlaat nooit uw apparaat.',
   rdct_footer_true:        '🔒 Volledig verwerkt in uw browser · Bestanden verlaten nooit het apparaat · Inhoud permanent verwijderd',
   rdct_footer:             '🔒 Volledig verwerkt in uw browser · Bestanden verlaten nooit het apparaat',

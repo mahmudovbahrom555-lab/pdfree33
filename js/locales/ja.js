@@ -270,7 +270,7 @@ window.PDFREE_LOCALE = {
   rdct_loading:            'PDFを読み込み中…',
   rdct_err_read:           'PDFを読み込めませんでした: {msg}',
   rdct_banner_true:        '🔒 <strong>完全PDF墨消し</strong> — ドキュメントからコンテンツを永久に削除します。墨消しされたページは画像に変換されるため、元のテキストを復元できません。ファイルはデバイスから出ません。',
-  rdct_banner_cover:       '🛡️ <strong>エリアを覆う</strong> — 選択した領域に不透明な四角形を描きます。下のコンテンツは視覚的に隠されますが、<em>暗号的に削除されるわけではありません</em>。法的な墨消しには<a href="/redact-pdf/" style="color:var(--green)">Redact PDF</a>ツールを使用してください。',
+  rdct_banner_cover:       '🛡️ <strong>エリアを覆う</strong> — 選択した領域に不透明な四角形を描きます。下のコンテンツは視覚的に隠されますが、<em>暗号的に削除されるわけではありません</em>。法的な墨消しには<a href="/ja/pdf-kurotsubushi/" style="color:var(--green)">Redact PDF</a>ツールを使用してください。',
   rdct_banner_annotate:    '✏️ <strong>PDFに注釈</strong> — どのページにも色付きボックス、ハイライト、またはカバーを描きます。すべてブラウザでローカルに実行されます — PDFはデバイスから出ません。',
   rdct_footer_true:        '🔒 ブラウザ内で完全処理 · ファイルはデバイスから出ません · コンテンツは永久削除',
   rdct_footer:             '🔒 ブラウザ内で完全処理 · ファイルはデバイスから出ません',

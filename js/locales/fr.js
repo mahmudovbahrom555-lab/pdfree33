@@ -271,7 +271,7 @@ window.PDFREE_LOCALE = {
   rdct_loading:            'Chargement du PDF…',
   rdct_err_read:           'Impossible de lire le PDF : {msg}',
   rdct_banner_true:        '🔒 <strong>Rédaction PDF vraie</strong> — supprime définitivement le contenu du document. Les pages rédigées sont converties en images afin que le texte sous-jacent ne puisse pas être récupéré. Les fichiers ne quittent jamais votre appareil.',
-  rdct_banner_cover:       '🛡️ <strong>Couvrir une zone</strong> — dessine un rectangle opaque sur la région sélectionnée. Le contenu en dessous est caché visuellement mais <em>pas supprimé cryptographiquement</em>. Pour une rédaction légale, utilisez l\'outil <a href="/redact-pdf/" style="color:var(--green)">Rédiger le PDF</a>.',
+  rdct_banner_cover:       '🛡️ <strong>Couvrir une zone</strong> — dessine un rectangle opaque sur la région sélectionnée. Le contenu en dessous est caché visuellement mais <em>pas supprimé cryptographiquement</em>. Pour une rédaction légale, utilisez l\'outil <a href="/fr/censurer-pdf/" style="color:var(--green)">Rédiger le PDF</a>.',
   rdct_banner_annotate:    '✏️ <strong>Annoter le PDF</strong> — dessinez des zones colorées, des surlignages ou des couvertures sur n\'importe quelle page. Tout s\'exécute localement dans votre navigateur — votre PDF ne quitte jamais votre appareil.',
   rdct_footer_true:        '🔒 Traité entièrement dans votre navigateur · Les fichiers ne quittent jamais l\'appareil · Contenu supprimé définitivement',
   rdct_footer:             '🔒 Traité entièrement dans votre navigateur · Les fichiers ne quittent jamais l\'appareil',
