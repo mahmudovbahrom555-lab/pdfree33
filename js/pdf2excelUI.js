@@ -7,6 +7,24 @@ import { preprocessPdfBuffer } from './decryptPdf.js';
 import { loadingRow } from './uiComponents.js';
 import { detectTables, groupItemsIntoLines } from './pdf2wordTables.js';
 
+// Locale-correct slugs for the "Run OCR first" / "PDF to Word" cross-links in
+// the hints below. This module is shared across every locale's page, and
+// both target tools are served at translated pathnames in non-English
+// locales (e.g. /ru/raspoznat-tekst-pdf/, /de/pdf-zu-word/) — bare
+// '/ocr-pdf/' / '/pdf-to-word/' hrefs resolve to the English pages
+// regardless of which locale the user is on. Mirrors the per-locale slugs in
+// data/tools-config.json (same table/pattern as the fix in js/ocrUI.js).
+const OCR_SLUGS      = { en: 'ocr-pdf', de: 'ocr-pdf', es: 'ocr-pdf', fr: 'ocr-pdf', pt: 'ocr-pdf', id: 'ocr-pdf', vi: 'nhan-dang-van-ban-pdf', ru: 'raspoznat-tekst-pdf', ja: 'pdf-moji-ninshiki', tr: 'metin-tanima-pdf', it: 'riconosci-testo-pdf', ko: 'pdf-munja-insik', nl: 'pdf-tekstherkenning', pl: 'rozpoznaj-tekst-pdf' };
+const PDF2WORD_SLUGS = { en: 'pdf-to-word', de: 'pdf-zu-word', es: 'pdf-a-word', fr: 'pdf-en-word', pt: 'pdf-para-word', id: 'pdf-ke-word', vi: 'pdf-sang-word', ru: 'pdf-v-word', ja: 'pdf-word-henkan', tr: 'pdf-word-donustur', it: 'pdf-in-word', ko: 'pdf-word-byeonhwan', nl: 'pdf-naar-word', pl: 'pdf-do-word' };
+const KNOWN_LOCALES  = new Set(['de', 'es', 'fr', 'pt', 'id', 'vi', 'ru', 'ja', 'it', 'ko', 'nl', 'pl', 'tr']);
+
+function _crossToolHref(slugs) {
+  const seg = location.pathname.split('/')[1];
+  const lc  = KNOWN_LOCALES.has(seg) ? seg : 'en';
+  const slug = slugs[lc] || slugs.en;
+  return lc === 'en' ? `/${slug}/` : `/${lc}/${slug}/`;
+}
+
 // ── State ─────────────────────────────────────────────────────────────────────
 let _file      = null;
 let _pageCount = 0;
@@ -141,7 +159,7 @@ async function _scanTablesBackground(doc, gen) {
       div.setAttribute('role', 'alert');
       div.innerHTML =
         '⚠️ No text layer detected — this PDF is a scanned image, so no tables can be extracted. ' +
-        '<a href="/ocr-pdf/" style="color:inherit;font-weight:600;white-space:nowrap">' +
+        `<a href="${_crossToolHref(OCR_SLUGS)}" style="color:inherit;font-weight:600;white-space:nowrap">` +
         'Run OCR first →</a> to get extractable text.';
       hint.before(div);
     }
@@ -172,7 +190,7 @@ async function _scanTablesBackground(doc, gen) {
       div.style.cssText = 'margin-top:8px;font-size:12px;color:var(--text3);padding:6px 10px';
       div.innerHTML =
         'No tables detected in the first pages — this PDF may not be spreadsheet-like. ' +
-        'Consider <a href="/pdf-to-word/" style="color:var(--green);font-weight:600">PDF to Word</a> instead.';
+        `Consider <a href="${_crossToolHref(PDF2WORD_SLUGS)}" style="color:var(--green);font-weight:600">PDF to Word</a> instead.`;
       hint.after(div);
     }
   }

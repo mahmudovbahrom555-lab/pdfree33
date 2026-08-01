@@ -19,6 +19,22 @@ import { t, tp } from './i18n.js';
 import { sliderRow, checkbox } from './uiComponents.js';
 import { wmRemoveHtml, bindWmRemove, resetWmRemove } from './watermarkRemoveUI.js';
 
+// Locale-correct slug for the "splitting" cross-link in the email-size verdict
+// below. This module is shared across every locale's page, and the Split PDF
+// tool is served at a translated pathname in every non-English locale — a
+// bare '/split-pdf/' href resolves to the English page regardless of which
+// locale the user is on. Mirrors the per-locale slugs in data/tools-config.json
+// (same table/pattern as the fix in js/ocrUI.js).
+const SPLIT_SLUGS = { en: 'split-pdf', de: 'pdf-aufteilen', es: 'dividir-pdf', fr: 'diviser-pdf', pt: 'dividir-pdf', id: 'pisah-pdf', vi: 'tach-pdf', ru: 'razdelit-pdf', ja: 'pdf-bunkatsu', tr: 'pdf-bol', it: 'dividi-pdf', ko: 'pdf-bunhal', nl: 'pdf-splitsen', pl: 'podziel-pdf' };
+const KNOWN_LOCALES = new Set(['de', 'es', 'fr', 'pt', 'id', 'vi', 'ru', 'ja', 'it', 'ko', 'nl', 'pl', 'tr']);
+
+function _splitHref() {
+  const seg = location.pathname.split('/')[1];
+  const lc  = KNOWN_LOCALES.has(seg) ? seg : 'en';
+  const slug = SPLIT_SLUGS[lc] || SPLIT_SLUGS.en;
+  return lc === 'en' ? `/${slug}/` : `/${lc}/${slug}/`;
+}
+
 // ── State ──────────────────────────────────────────────────────
 let _preset       = 'medium';  // 'low' | 'medium' | 'high'
 let _preserveText = true;
@@ -727,7 +743,7 @@ export function renderEmailVerdict(compressedSize) {
     msg = `⚠️ ${fmtSize(compressedSize)} — fits Gmail (25 MB) but may exceed Outlook's 20 MB limit`;
   } else {
     cls = 'compress-scan--warn';
-    msg = `⚠️ ${fmtSize(compressedSize)} — still exceeds Gmail's 25 MB limit. Try <a href="/split-pdf/" style="color:inherit;text-decoration:underline">splitting</a> the PDF first.`;
+    msg = `⚠️ ${fmtSize(compressedSize)} — still exceeds Gmail's 25 MB limit. Try <a href="${_splitHref()}" style="color:inherit;text-decoration:underline">splitting</a> the PDF first.`;
   }
 
   const div = document.createElement('div');

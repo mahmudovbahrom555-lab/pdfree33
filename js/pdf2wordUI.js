@@ -7,6 +7,23 @@ import { preprocessPdfBuffer } from './decryptPdf.js';
 import { chipGroup, group, loadingRow } from './uiComponents.js';
 import { detectTables } from './pdf2wordTables.js';
 
+// Locale-correct slug for the "Run OCR first" cross-link in the scanned-PDF
+// hint below. This module is shared across every locale's page, and the OCR
+// tool is served at a translated pathname in several non-English locales
+// (e.g. /ru/raspoznat-tekst-pdf/) — a bare '/ocr-pdf/' href resolves to the
+// English page regardless of which locale the user is on. Mirrors the
+// per-locale slugs in data/tools-config.json (same table/pattern as the fix
+// in js/ocrUI.js).
+const OCR_SLUGS = { en: 'ocr-pdf', de: 'ocr-pdf', es: 'ocr-pdf', fr: 'ocr-pdf', pt: 'ocr-pdf', id: 'ocr-pdf', vi: 'nhan-dang-van-ban-pdf', ru: 'raspoznat-tekst-pdf', ja: 'pdf-moji-ninshiki', tr: 'metin-tanima-pdf', it: 'riconosci-testo-pdf', ko: 'pdf-munja-insik', nl: 'pdf-tekstherkenning', pl: 'rozpoznaj-tekst-pdf' };
+const KNOWN_LOCALES = new Set(['de', 'es', 'fr', 'pt', 'id', 'vi', 'ru', 'ja', 'it', 'ko', 'nl', 'pl', 'tr']);
+
+function _ocrHref() {
+  const seg = location.pathname.split('/')[1];
+  const lc  = KNOWN_LOCALES.has(seg) ? seg : 'en';
+  const slug = OCR_SLUGS[lc] || OCR_SLUGS.en;
+  return lc === 'en' ? `/${slug}/` : `/${lc}/${slug}/`;
+}
+
 // ── Constants ─────────────────────────────────────────────────────────────────
 // JPEG compression ratio at quality 0.85 over typical PDF content
 // (mix of text, graphics). Actual ratio: 10–16×; 12× is a safe middle estimate.
@@ -283,7 +300,7 @@ async function _scanTablesBackground(doc, gen) {
         div.innerHTML =
           '⚠️ No text layer detected — this PDF is a scanned image. ' +
           'Word output will contain images only. ' +
-          '<a href="/ocr-pdf/" style="color:inherit;font-weight:600;white-space:nowrap">' +
+          `<a href="${_ocrHref()}" style="color:inherit;font-weight:600;white-space:nowrap">` +
           'Run OCR first →</a> to get editable text in Word.';
         hint.before(div);
       }

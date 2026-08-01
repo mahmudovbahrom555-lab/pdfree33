@@ -24,6 +24,23 @@ import { id }                from './utils.js';
 import { loadPdfJs }         from './pdf2jpgUI.js';
 import { setButtonDisabled } from './ui.js';
 
+// Locale-correct slug for the "Redact / Annotate" cross-link in the
+// no-fillable-fields hint below. This module is shared across every locale's
+// page, and the Redact PDF tool is served at a translated pathname in every
+// non-English locale — a bare '/redact-pdf/' href resolves to the English
+// page regardless of which locale the user is on. Mirrors the per-locale
+// slugs in data/tools-config.json (same table/pattern as the fix in
+// js/ocrUI.js).
+const REDACT_SLUGS = { en: 'redact-pdf', de: 'pdf-schwaerzen', es: 'censurar-pdf', fr: 'censurer-pdf', pt: 'censurar-pdf', id: 'hapus-teks-pdf', vi: 'xoa-van-ban-pdf', ru: 'skryt-tekst-pdf', ja: 'pdf-kurotsubushi', tr: 'pdf-gizle', it: 'oscura-pdf', ko: 'pdf-garigi', nl: 'pdf-zwartmaken', pl: 'zaczernij-pdf' };
+const KNOWN_LOCALES = new Set(['de', 'es', 'fr', 'pt', 'id', 'vi', 'ru', 'ja', 'it', 'ko', 'nl', 'pl', 'tr']);
+
+function _redactHref() {
+  const seg = location.pathname.split('/')[1];
+  const lc  = KNOWN_LOCALES.has(seg) ? seg : 'en';
+  const slug = REDACT_SLUGS[lc] || REDACT_SLUGS.en;
+  return lc === 'en' ? `/${slug}/` : `/${lc}/${slug}/`;
+}
+
 // ── Saved signature ───────────────────────────────────────────
 const _SIG_STORAGE_KEY = 'pdfree_saved_sig';
 
@@ -908,7 +925,7 @@ function _noFieldsHTML() {
     <p style="margin:0;font-size:13px;color:var(--text3);line-height:1.5;">
       This PDF doesn't have AcroForm fields. It may use the legacy XFA format
       (open in Adobe Acrobat) or it's a scanned/flat PDF — for those, use the
-      <a href="/redact-pdf/" style="color:var(--green);">Redact / Annotate</a> tool to overlay text.
+      <a href="${_redactHref()}" style="color:var(--green);">Redact / Annotate</a> tool to overlay text.
     </p>
   </div>`;
 }
