@@ -2,7 +2,7 @@
   "@context": "https://schema.org",
   "@type": "HowTo",
   "name": "Cara Melindungi PDF dengan Kata Sandi",
-  "description": "Enkripsi PDF dengan AES-256 langsung di browser — tanpa upload, tanpa daftar, gratis.",
+  "description": "Enkripsi PDF dengan RC4-128 langsung di browser — tanpa upload, tanpa daftar, gratis.",
   "step": [
     {
       "@type": "HowToStep",
@@ -17,7 +17,7 @@
     {
       "@type": "HowToStep",
       "name": "Lindungi dan unduh",
-      "text": "Klik Lindungi PDF. PDF terenkripsi AES-256 diunduh langsung ke perangkat Anda."
+      "text": "Klik Lindungi PDF. PDF terenkripsi RC4-128 diunduh langsung ke perangkat Anda."
     }
   ]
 }

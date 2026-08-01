@@ -2,7 +2,7 @@
   "@context": "https://schema.org",
   "@type": "HowTo",
   "name": "PDF'yi ücretsiz parolayla koru",
-  "description": "PDF'yi sunucuya yüklemeden AES-256 şifresiyle koruyun — ücretsiz, tamamen tarayıcıda işlenir.",
+  "description": "PDF'yi sunucuya yüklemeden RC4-128 şifresiyle koruyun — ücretsiz, tamamen tarayıcıda işlenir.",
   "totalTime": "PT1M",
   "tool": [{ "@type": "HowToTool", "name": "PDFree — ücretsiz, yükleme yapmadan tarayıcıda PDF şifreleme aracı" }],
   "step": [

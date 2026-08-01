@@ -2,7 +2,7 @@
   "@context": "https://schema.org",
   "@type": "HowTo",
   "name": "PDF beveiligen met Wachtwoord — in de browser",
-  "description": "Beveilig een PDF met AES-256-versleuteling zonder uploaden, direct in de browser.",
+  "description": "Beveilig een PDF met RC4-128-versleuteling zonder uploaden, direct in de browser.",
   "totalTime": "PT1M",
   "tool": [
     { "@type": "HowToTool", "name": "PDFree.io — gratis PDF-tools" }

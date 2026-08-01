@@ -2,7 +2,7 @@
   "@context": "https://schema.org",
   "@type": "HowTo",
   "name": "Zabezpiecz PDF hasłem za darmo",
-  "description": "Dodaj hasło do PDF z szyfrowaniem AES-256 bez przesyłania na serwer — za darmo, całkowicie przetwarzane w przeglądarce.",
+  "description": "Dodaj hasło do PDF z szyfrowaniem RC4-128 bez przesyłania na serwer — za darmo, całkowicie przetwarzane w przeglądarce.",
   "totalTime": "PT1M",
   "tool": [{ "@type": "HowToTool", "name": "PDFree — darmowe narzędzie do zabezpieczania PDF w przeglądarce, bez przesyłania" }],
   "step": [

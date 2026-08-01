@@ -2,7 +2,7 @@
   "@context": "https://schema.org",
   "@type": "HowTo",
   "name": "PDFに無料でパスワードをかける方法",
-  "description": "PDFをAES-256で暗号化し、パスワードを設定します。アップロード不要、完全無料、すべてブラウザ内で処理されます。",
+  "description": "PDFをRC4-128で暗号化し、パスワードを設定します。アップロード不要、完全無料、すべてブラウザ内で処理されます。",
   "totalTime": "PT1M",
   "tool": [{ "@type": "HowToTool", "name": "PDFree — ブラウザ上で動作する無料PDFパスワード保護ツール" }],
   "step": [
@@ -24,7 +24,7 @@
       "@type": "HowToStep",
       "position": 3,
       "name": "保護済みPDFをダウンロード",
-      "text": "「PDFを保護」をクリックしてください。AES-256で暗号化された保護済みPDFがすぐにダウンロードできます。",
+      "text": "「PDFを保護」をクリックしてください。RC4-128で暗号化された保護済みPDFがすぐにダウンロードできます。",
       "url": "https://pdfree.io/ja/pdf-password/#step3"
     }
   ]

@@ -2,7 +2,7 @@
   "@context": "https://schema.org",
   "@type": "HowTo",
   "name": "How to Password-Protect a PDF",
-  "description": "Add AES-256 encryption to a PDF — processed in your browser, never uploaded.",
+  "description": "Add RC4-128 encryption to a PDF — processed in your browser, never uploaded.",
   "step": [
     {
       "@type": "HowToStep",

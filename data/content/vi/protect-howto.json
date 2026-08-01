@@ -2,7 +2,7 @@
   "@context": "https://schema.org",
   "@type": "HowTo",
   "name": "Cách Bảo Vệ PDF Bằng Mật Khẩu",
-  "description": "Mã hóa PDF với AES-256 ngay trong trình duyệt — không tải lên server, không cần đăng ký, miễn phí.",
+  "description": "Mã hóa PDF với RC4-128 ngay trong trình duyệt — không tải lên server, không cần đăng ký, miễn phí.",
   "step": [
     {
       "@type": "HowToStep",
@@ -17,7 +17,7 @@
     {
       "@type": "HowToStep",
       "name": "Bảo vệ và tải về",
-      "text": "Nhấp Bảo vệ PDF. PDF được mã hóa AES-256 tải xuống ngay lập tức."
+      "text": "Nhấp Bảo vệ PDF. PDF được mã hóa RC4-128 tải xuống ngay lập tức."
     }
   ]
 }

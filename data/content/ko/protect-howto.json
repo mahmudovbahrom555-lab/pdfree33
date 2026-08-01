@@ -2,7 +2,7 @@
   "@context": "https://schema.org",
   "@type": "HowTo",
   "name": "PDF 암호 설정 — 브라우저에서",
-  "description": "PDF에 비밀번호를 추가하여 AES-256 암호화로 보호하세요. 업로드 없이 브라우저에서 처리됩니다.",
+  "description": "PDF에 비밀번호를 추가하여 RC4-128 암호화로 보호하세요. 업로드 없이 브라우저에서 처리됩니다.",
   "totalTime": "PT1M",
   "tool": [
     { "@type": "HowToTool", "name": "PDFree.io — 무료 PDF 도구" }
