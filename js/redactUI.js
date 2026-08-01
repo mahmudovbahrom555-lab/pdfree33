@@ -259,7 +259,7 @@ export async function initRedactOptions(file) {
   const preset = _detectPreset();
   _colorKey     = preset.color;
   _opacity      = preset.opacity;
-  _isTrueRedact = window.location.pathname.includes('/redact-pdf/');
+  _isTrueRedact = document.body.hasAttribute('data-true-redact');
 
   container.innerHTML = loadingRow(t('rdct_loading'));
   container.style.display = 'block';
@@ -321,7 +321,7 @@ export function hideRedactOptions() {
 function _render(container, fileName, preset) {
   const tone = preset.tone;
 
-  const isTrueRedact = window.location.pathname.includes('/redact-pdf/');
+  const isTrueRedact = document.body.hasAttribute('data-true-redact');
 
   const bannerText = isTrueRedact
     ? t('rdct_banner_true')
@@ -1642,7 +1642,7 @@ function _updateMergeBtn() {
   const btn = id('mergeBtn');
   if (!btn) return;
 
-  const isTrueRedact = window.location.pathname.includes('/redact-pdf/');
+  const isTrueRedact = document.body.hasAttribute('data-true-redact');
   const preset = _detectPreset();
   const tone = preset.tone;
   const btnKey = isTrueRedact ? 'rdct_btn_redact' : (tone === 'privacy' ? 'rdct_btn_cover' : 'rdct_btn_apply');

@@ -251,9 +251,15 @@ registerTool('meta', {
 });
 
 registerTool('redact', {
-  // True redact (/redact-pdf/ route) uses canvas-flatten via dedicated worker.
-  // Visual cover (/annotate-pdf/, /cover-pdf/, /highlight-pdf/) keeps worker runner.
-  runner:     window.location.pathname.includes('/redact-pdf/') ? 'redact-true' : 'worker',
+  // True redact (canonical /redact-pdf/ tool page, any locale) uses canvas-flatten
+  // via dedicated worker. Visual cover (/annotate-pdf/, /cover-pdf/, /highlight-pdf/)
+  // keeps worker runner. Gated on data-true-redact (set by tool-page.html only for
+  // tool.id === 'redact') rather than an English-only pathname substring — the
+  // canonical redact page is served at a translated slug in every non-English
+  // locale (e.g. /de/pdf-schwaerzen/), so a literal '/redact-pdf/' check silently
+  // fell through to cover-only (recoverable) behavior on all 13 non-English pages
+  // while their SEO copy explicitly promised permanent, unrecoverable redaction.
+  runner:     document.body.hasAttribute('data-true-redact') ? 'redact-true' : 'worker',
   workerTool: 'redact',
   init:       initRedactOptions,
   hide:       hideRedactOptions,
