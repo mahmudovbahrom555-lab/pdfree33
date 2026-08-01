@@ -455,7 +455,7 @@ function _renderUI(container) {
     container.innerHTML = `
       <div style="padding:16px;border:1px solid var(--green);border-radius:10px;background:var(--surface);">
         <p style="margin:0 0 12px;font-size:14px;color:var(--text);">
-          &#x2713; This PDF has a text layer &mdash; extracting directly (no OCR needed)
+          &#x2713; This PDF already has a text layer &mdash; no OCR needed, ready to download
         </p>
         ${_txtCheckboxHTML()}
       </div>`;
@@ -645,7 +645,7 @@ function _syncBtnLabel() {
     return;
   }
   btn.disabled = false;
-  btn.textContent = _isTextPdf ? 'Extract Text' : '🔍 Make PDF Searchable';
+  btn.textContent = _isTextPdf ? '✓ Download PDF' : '🔍 Make PDF Searchable';
 }
 
 // Called when auto-detection was inconclusive. The select becomes the dominant
@@ -757,14 +757,22 @@ function _bindMergeBtn() {
 
     try {
       if (_isTextPdf) {
-        _updateProgress(10, 'Extracting text…');
-        const rawText = await _extractTextDirect(_file);
-        const pageCount = rawText.split('--- Page ').length - 1;
-        const text = _applyHeader(rawText, _file, pageCount);
-        _lastResultBlob = new Blob([text], { type: 'text/plain;charset=utf-8' });
-        _lastResultName = _file.name.replace(/\.pdf$/i, '.txt');
-        // _showSuccess handles the auto-download via _lastResultBlob
-        _showSuccess('Text extracted and saved to your device.');
+        _updateProgress(10, 'Preparing…');
+        // Already has a text layer on every page — no OCR needed. The PDF
+        // itself is already searchable, so it's the primary output (matches
+        // what every other OCR tool returns); .txt stays an optional extra
+        // via the same checkbox used in the OCR branch below.
+        const originalBytes = await _file.arrayBuffer();
+        _lastResultBlob = new Blob([originalBytes], { type: 'application/pdf' });
+        _lastResultName = _file.name.replace(/\.pdf$/i, '_searchable.pdf');
+        if (_downloadAsTxt) {
+          const rawText = await _extractTextDirect(_file);
+          const pageCount = rawText.split('--- Page ').length - 1;
+          const text = _applyHeader(rawText, _file, pageCount);
+          _downloadText(text, _file.name);
+        }
+        // _showSuccess handles the main PDF auto-download via _lastResultBlob
+        _showSuccess('This PDF already had a text layer — no OCR needed, downloaded as-is.');
       } else {
         const myGen = ++_generation;
         // On the SPA home page pdf-lib is already preloaded (no-op below); on
