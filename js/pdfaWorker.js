@@ -15,7 +15,7 @@
 
 importScripts('./vendor/pdf-lib.min.js');
 
-const { PDFDocument, PDFName, PDFDict, PDFRef, PDFArray } = self.PDFLib;
+const { PDFDocument, PDFName, PDFDict, PDFRef, PDFArray, PDFString, decodePDFRawStream } = self.PDFLib;
 
 // ── Font embedding check ─────────────────────────────────────────────────
 // Walks Type0 → DescendantFonts → CIDFont → FontDescriptor for composite
@@ -106,36 +106,190 @@ function checkEncryption(pdfDoc) {
   return !!pdfDoc.isEncrypted;
 }
 
+// PDF/A forbids LZWDecode (patent-encumbered historically, and simply not on
+// the permitted filter list). pdf-lib's own save() only ever WRITES
+// FlateDecode — it never introduces LZW itself — but it also doesn't
+// recompress streams it didn't touch, so a source PDF that already has an
+// LZW-compressed stream (old scanners/ancient Distiller output) would sail
+// through save() unchanged and ship a silently non-compliant "PDF/A". This
+// scans for that up front so conversion can refuse instead.
+function checkLzw(pdfDoc) {
+  const context = pdfDoc.context;
+  for (const [, obj] of context.enumerateIndirectObjects()) {
+    if (!(obj instanceof PDFDict) || typeof obj.get !== 'function') continue;
+    const filter = context.lookup(obj.get(PDFName.of('Filter')));
+    if (!filter) continue;
+    const names = filter instanceof PDFArray
+      ? Array.from({ length: filter.size() }, (_, i) => filter.get(i))
+      : [filter];
+    if (names.some(n => n?.decodeText?.() === 'LZWDecode')) return true;
+  }
+  return false;
+}
+
+function analyze(pdfDoc) {
+  const encrypted = checkEncryption(pdfDoc);
+  // If encrypted, object streams may not have parsed — other checks on a
+  // still-encrypted document are unreliable, so skip them and report the
+  // single blocking issue instead of false positives.
+  const missingFonts = encrypted ? [] : checkFonts(pdfDoc);
+  const forbidden     = encrypted ? [] : checkForbidden(pdfDoc);
+  const hasLzw         = encrypted ? false : checkLzw(pdfDoc);
+
+  return {
+    pageCount: pdfDoc.getPageCount(),
+    encrypted,
+    missingFonts,
+    forbidden,
+    hasLzw,
+    compliant: !encrypted && missingFonts.length === 0 && forbidden.length === 0 && !hasLzw,
+  };
+}
+
+// ── XMP metadata ──────────────────────────────────────────────────────────
+// Info dict and XMP must agree (a PDF/A validator flags a mismatch as an
+// error) — so XMP fields are read FROM the Info dict just set below, never
+// authored independently.
+function _xmlEscape(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function buildXmp({ title, author, producer, createdISO }) {
+  // The xpacket "begin" attribute must contain a literal U+FEFF (BOM) per
+  // the XMP spec — written as an escape, not the raw invisible character,
+  // so it survives editors/linters that mangle or flag irregular whitespace.
+  return `<?xpacket begin="${'\uFEFF'}" id="W5M0MpCehiHzreSzNTczkc9d"?>
+<x:xmpmeta xmlns:x="adobe:ns:meta/">
+  <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+    <rdf:Description rdf:about="" xmlns:pdfaid="http://www.aiim.org/pdfa/ns/id/">
+      <pdfaid:part>2</pdfaid:part>
+      <pdfaid:conformance>B</pdfaid:conformance>
+    </rdf:Description>
+    <rdf:Description rdf:about="" xmlns:dc="http://purl.org/dc/elements/1.1/">
+      <dc:title><rdf:Alt><rdf:li xml:lang="x-default">${_xmlEscape(title || '')}</rdf:li></rdf:Alt></dc:title>
+      <dc:creator><rdf:Seq><rdf:li>${_xmlEscape(author || '')}</rdf:li></rdf:Seq></dc:creator>
+    </rdf:Description>
+    <rdf:Description rdf:about="" xmlns:pdf="http://ns.adobe.com/pdf/1.3/">
+      <pdf:Producer>${_xmlEscape(producer || '')}</pdf:Producer>
+    </rdf:Description>
+    <rdf:Description rdf:about="" xmlns:xmp="http://ns.adobe.com/xap/1.0/">
+      <xmp:CreateDate>${_xmlEscape(createdISO || '')}</xmp:CreateDate>
+      <xmp:MetadataDate>${_xmlEscape(createdISO || '')}</xmp:MetadataDate>
+    </rdf:Description>
+  </rdf:RDF>
+</x:xmpmeta>
+<?xpacket end="w"?>`;
+}
+
+// ── Conversion ──────────────────────────────────────────────────────────
+const PRODUCER = 'PDFree (pdfree.io) — client-side PDF/A-2b conversion';
+
+async function convert(pdfDoc, iccBytes) {
+  const report = analyze(pdfDoc);
+  if (!report.compliant) {
+    return { blocked: true, report };
+  }
+
+  const context = pdfDoc.context;
+
+  // Info dict is the single source of truth — set it first, then mirror
+  // into XMP, so the two can never disagree.
+  const nowISO = new Date().toISOString();
+  pdfDoc.setProducer(PRODUCER);
+  pdfDoc.setModificationDate(new Date());
+  const xmp = buildXmp({
+    title:      pdfDoc.getTitle() || '',
+    author:     pdfDoc.getAuthor() || '',
+    producer:   PRODUCER,
+    createdISO: nowISO,
+  });
+  const xmpBytes = new TextEncoder().encode(xmp);
+  const xmpStream = context.flateStream(xmpBytes, { Type: 'Metadata', Subtype: 'XML' });
+  const xmpRef = context.register(xmpStream);
+  pdfDoc.catalog.set(PDFName.of('Metadata'), xmpRef);
+
+  // ICC OutputIntent — DestOutputProfile is the embedded profile stream;
+  // N=3 declares a 3-component (RGB) profile.
+  const iccStream = context.flateStream(iccBytes, { N: 3, Alternate: 'DeviceRGB' });
+  const iccRef = context.register(iccStream);
+  // OutputConditionIdentifier/Info are text strings per spec (7.11.4.1) — a
+  // bare JS string through context.obj() would instead become a PDFName
+  // (its default coercion for strings), which a strict validator flags.
+  const outputIntent = context.obj({
+    Type: 'OutputIntent',
+    S: 'GTS_PDFA1',
+    OutputConditionIdentifier: PDFString.of('sRGB IEC61966-2.1'),
+    Info: PDFString.of('sRGB IEC61966-2.1'),
+    DestOutputProfile: iccRef,
+  });
+  const outputIntentRef = context.register(outputIntent);
+  pdfDoc.catalog.set(PDFName.of('OutputIntents'), context.obj([outputIntentRef]));
+
+  const savedBytes = await pdfDoc.save();
+
+  const audit = await selfAudit(savedBytes, iccBytes.length);
+  return { blocked: false, fileBytes: savedBytes, audit };
+}
+
+// Re-parses the just-written file independently — never trusts "we called
+// the right functions", only trusts what's actually readable back out of
+// the produced bytes. Streams come back from the parser still Flate-
+// compressed (PDFRawStream.contents is the raw on-disk bytes) — an earlier
+// version of this function compared/decoded that compressed data directly,
+// which under-counted the ICC profile's length (compression isn't 1:1) and
+// decoded garbage instead of XML for the XMP check, silently reporting a
+// correctly-written file as failed. decodePDFRawStream(...).decode() —
+// the same utility already used in worker.js for image pixel data — does
+// the actual inflate.
+async function selfAudit(savedBytes, expectedIccLen) {
+  const doc = await PDFDocument.load(savedBytes, { ignoreEncryption: true, updateMetadata: false });
+  const context = doc.context;
+
+  const outputIntents = context.lookup(doc.catalog.get(PDFName.of('OutputIntents')));
+  let outputIntentOk = false;
+  if (outputIntents instanceof PDFArray && outputIntents.size() > 0) {
+    const oi = context.lookup(outputIntents.get(0));
+    const profileStream = oi instanceof PDFDict ? context.lookup(oi.get(PDFName.of('DestOutputProfile'))) : null;
+    if (profileStream) {
+      const iccInflated = decodePDFRawStream(profileStream).decode();
+      outputIntentOk = iccInflated.length === expectedIccLen;
+    }
+  }
+
+  const metadataStream = context.lookup(doc.catalog.get(PDFName.of('Metadata')));
+  let xmpOk = false;
+  if (metadataStream) {
+    const xmpBytes = decodePDFRawStream(metadataStream).decode();
+    const xmpText = new TextDecoder().decode(xmpBytes);
+    xmpOk = xmpText.includes('pdfaid:part>2') && xmpText.includes('pdfaid:conformance>B');
+  }
+
+  return {
+    outputIntentPresent: outputIntentOk,
+    xmpPresent: xmpOk,
+    notEncrypted: !doc.isEncrypted,
+    passed: outputIntentOk && xmpOk && !doc.isEncrypted,
+  };
+}
+
 // ── Main ──────────────────────────────────────────────────────────────────
 self.onmessage = async function (e) {
-  const { id, fileBytes } = e.data;
+  const { id, type, fileBytes, iccBytes } = e.data;
   try {
     const pdfDoc = await PDFDocument.load(fileBytes, {
       ignoreEncryption: true,
       updateMetadata: false,
     });
 
-    const encrypted = checkEncryption(pdfDoc);
-    // If encrypted, object streams may not have parsed — font/forbidden
-    // checks on a still-encrypted document are unreliable, so skip them
-    // and report the single blocking issue instead of false positives.
-    const missingFonts = encrypted ? [] : checkFonts(pdfDoc);
-    const forbidden     = encrypted ? [] : checkForbidden(pdfDoc);
+    if (type === 'convert') {
+      const result = await convert(pdfDoc, iccBytes);
+      const transfer = result.fileBytes ? [result.fileBytes.buffer] : [];
+      self.postMessage({ id, ok: true, result }, transfer);
+      return;
+    }
 
-    const pageCount = pdfDoc.getPageCount();
-
-    self.postMessage({
-      id,
-      ok: true,
-      result: {
-        pageCount,
-        encrypted,
-        missingFonts,
-        forbidden,
-        compliant: !encrypted && missingFonts.length === 0 && forbidden.length === 0,
-      },
-    });
+    self.postMessage({ id, ok: true, result: analyze(pdfDoc) });
   } catch (err) {
-    self.postMessage({ id, ok: false, message: err?.message || 'Failed to analyze PDF' });
+    self.postMessage({ id, ok: false, message: err?.message || 'Failed to process PDF' });
   }
 };

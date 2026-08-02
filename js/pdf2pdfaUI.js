@@ -6,8 +6,10 @@
 //
 //  Self-managed tool (see SELF_MANAGED_TOOLS in app.js): no runner,
 //  no doProcess. Analysis runs automatically as soon as a file is
-//  selected — there is no output file to produce or download, so
-//  the generic mergeBtn is hidden entirely for this tool.
+//  selected. The generic mergeBtn is hidden entirely — this tool
+//  drives its own "Convert" button and download link instead of
+//  the standard successCard flow, since it's a read-mostly report
+//  UI, not a file-in/file-out form.
 //
 //  Unlike other tools, this one has no dedicated "#pdf2pdfaOptions"
 //  container in any of the 14 homepage HTML files or the standalone
@@ -16,12 +18,14 @@
 //  in app.js). This avoids having to touch every locale's index.html
 //  for what is, for now, an English-only MVP tool (see config.js).
 //
-//  This is deliberately analysis-only (Phase 1 of the PDF/A plan).
-//  Actual PDF/A-2b conversion is a separate, later phase.
+//  Phase 2: conversion writes an ICC OutputIntent + XMP metadata via
+//  pdfaWorker.js. The worker independently re-checks compliance
+//  before writing anything, so a stale report in this UI can't
+//  produce a silently-broken output file.
 // ============================================================
 
 import { id, esc } from './utils.js';
-import { analyzePdfA } from './pdfaAnalyze.js';
+import { analyzePdfA, convertToPdfA } from './pdfaAnalyze.js';
 import { selectedFiles } from './files.js';
 
 // files.js only dispatches 'pdfree:file-removed' when files remain after the
@@ -85,6 +89,63 @@ export async function initPdf2PdfaOptions(file) {
   }
   if (myGen !== _gen) return;
   c.innerHTML = _reportHtml(result);
+  _bindConvertBtn(myGen);
+}
+
+function _bindConvertBtn(myGen) {
+  const btn = id('pdf2pdfaConvertBtn');
+  if (!btn) return;
+  btn.addEventListener('click', async () => {
+    if (!_file || myGen !== _gen) return;
+    btn.disabled = true;
+    const originalLabel = btn.textContent;
+    btn.textContent = 'Converting…';
+
+    let result;
+    try {
+      result = await convertToPdfA(_file);
+    } catch (err) {
+      if (myGen !== _gen) return;
+      btn.disabled = false;
+      btn.textContent = originalLabel;
+      const statusEl = id('pdf2pdfaConvertStatus');
+      if (statusEl) statusEl.textContent = 'Conversion failed' + (err?.message ? ': ' + err.message : '.');
+      return;
+    }
+    if (myGen !== _gen) return;
+
+    if (result.blocked) {
+      // Worker's own re-check disagreed with what this UI showed (e.g. the
+      // file changed on disk between analyze and convert) — re-render the
+      // fresh report rather than silently failing.
+      const c = id('pdf2pdfaOptions');
+      if (c) { c.innerHTML = _reportHtml(result.report); _bindConvertBtn(myGen); }
+      return;
+    }
+
+    _triggerDownload(_file, result.fileBytes);
+    btn.disabled = false;
+    btn.textContent = originalLabel;
+    const statusEl = id('pdf2pdfaConvertStatus');
+    if (statusEl) {
+      statusEl.textContent = result.audit.passed
+        ? '✓ Converted — self-check confirmed the OutputIntent and XMP markers in the downloaded file.'
+        : '⚠ Converted, but the self-check could not confirm all markers in the output file — verify with a dedicated PDF/A validator before relying on this file.';
+    }
+  });
+}
+
+function _triggerDownload(sourceFile, fileBytes) {
+  const blob = new Blob([fileBytes], { type: 'application/pdf' });
+  const url  = URL.createObjectURL(blob);
+  const name = sourceFile.name.replace(/\.pdf$/i, '') + '-pdfa.pdf';
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = name;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 30000);
 }
 
 export function hidePdf2PdfaOptions() {
@@ -134,11 +195,19 @@ function _reportHtml(r) {
       ? `Found: ${r.forbidden.map(k => forbiddenLabels[k] || k).join(', ')}`
       : null));
 
+  rows.push(_row(!r.hasLzw, 'No LZW-compressed streams',
+    r.hasLzw ? 'PDF/A does not permit the LZWDecode filter.' : null));
+
   const verdict = r.compliant
     ? `<div style="margin-top:10px;padding:10px 14px;background:var(--green-light);border:1px solid rgba(45,122,79,.18);
         border-radius:10px;color:var(--green);font-size:13px;font-weight:600;">
         ✓ This PDF meets the structural requirements for PDF/A-2b.
-      </div>`
+      </div>
+      <button id="pdf2pdfaConvertBtn" type="button" style="margin-top:10px;padding:10px 18px;background:var(--green,#2d7a4f);
+        color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;">
+        📐 Convert to PDF/A-2b
+      </button>
+      <div id="pdf2pdfaConvertStatus" style="margin-top:8px;font-size:12px;color:var(--text2);"></div>`
     : `<div style="margin-top:10px;padding:10px 14px;background:var(--yellow-light,#fef8e7);border:1px solid rgba(202,138,4,.25);
         border-radius:10px;color:#8a6d1a;font-size:13px;font-weight:600;">
         This PDF is not PDF/A-2b compliant yet — see the issues above.

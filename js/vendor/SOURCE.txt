@@ -1,0 +1,14 @@
+Profile:     sRGB2014.icc
+Source:      International Color Consortium (ICC) — color.org reference sRGB profile
+Downloaded:  2026-08-02
+Size:        3024 bytes
+Verified:    ICC header signature ('acsp' at byte offset 36) and profile
+             class ('mntr RGB XYZ') checked with `file` and a raw hex dump
+             before being added to this repo — confirmed a genuine ICC
+             color profile, not an HTML error page saved with a .icc name.
+
+Used by:     js/pdfaWorker.js — embedded as the /DestOutputProfile stream
+             in the /OutputIntents entry required for PDF/A-2b conversion
+             (see js/pdf2pdfaUI.js).
+
+See LICENSE.txt in this directory for redistribution terms.

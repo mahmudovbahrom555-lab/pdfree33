@@ -11,10 +11,24 @@
 // ============================================================
 
 const _WORKER_URL = new URL('./pdfaWorker.js', import.meta.url).href;
+const _ICC_URL    = new URL('./vendor/sRGB2014.icc', import.meta.url).href;
 
 let _worker      = null;
 let _nextId      = 1;
 const _pending   = new Map();
+let _iccPromise  = null;
+
+// Fetched once per page load and cached — the ICC bytes are the same for
+// every conversion (see js/vendor/SOURCE.txt for provenance).
+function _loadIcc() {
+  if (!_iccPromise) {
+    _iccPromise = fetch(_ICC_URL).then(r => {
+      if (!r.ok) throw new Error('Failed to load color profile (' + r.status + ')');
+      return r.arrayBuffer();
+    });
+  }
+  return _iccPromise;
+}
 
 function _ensureWorker() {
   if (_worker) return;
@@ -51,6 +65,35 @@ export async function analyzePdfA(file) {
     _pending.set(id, { resolve, reject });
     try {
       _worker.postMessage({ id, fileBytes }, [fileBytes.buffer]);
+    } catch (err) {
+      _pending.delete(id);
+      reject(err);
+    }
+  });
+}
+
+/**
+ * Convert a PDF to PDF/A-2b. The worker independently re-runs the same
+ * blocking checks analyzePdfA() does — a caller skipping the analyze step
+ * (or acting on a stale report) can't produce a silently-broken "PDF/A".
+ * @param {File} file
+ * @returns {Promise<
+ *   {blocked:true, report:object} |
+ *   {blocked:false, fileBytes:Uint8Array, audit:{outputIntentPresent:boolean, xmpPresent:boolean, notEncrypted:boolean, passed:boolean}}
+ * >}
+ */
+export async function convertToPdfA(file) {
+  _ensureWorker();
+  const [fileBytes, iccBuffer] = await Promise.all([
+    file.arrayBuffer().then(b => new Uint8Array(b)),
+    _loadIcc(),
+  ]);
+  const iccBytes = new Uint8Array(iccBuffer);
+  return new Promise((resolve, reject) => {
+    const id = _nextId++;
+    _pending.set(id, { resolve, reject });
+    try {
+      _worker.postMessage({ id, type: 'convert', fileBytes, iccBytes }, [fileBytes.buffer]);
     } catch (err) {
       _pending.delete(id);
       reject(err);

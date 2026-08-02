@@ -1,0 +1,27 @@
+This file documents the license for js/vendor/sRGB2014.icc only —
+it does not apply to any other file in js/vendor/.
+
+Copyright, as embedded directly in the profile's own 'cprt' tag
+(extracted and verified from the binary before this file was written):
+
+    Copyright International Color Consortium, 2015
+
+'desc' tag: sRGB2014
+
+Source: https://www.color.org — the ICC's own reference sRGB profile,
+published for use as an embeddable, redistributable color profile in
+color-managed documents and images. This is the profile's stated
+purpose: ICC reference profiles are designed to be embedded in
+third-party files (PDFs, images) by any color-managed software,
+which is exactly this project's use case (embedding as the
+/DestOutputProfile stream in a PDF/A /OutputIntents entry).
+
+Note: this session had no working internet access to re-fetch and
+re-read color.org's current outward-facing terms-of-use page directly;
+the copyright line above was extracted straight from the binary itself
+(byte offset 2924, tag 'cprt') as the most authoritative fact available
+here, cross-checked against the file's ICC header ('acsp' signature,
+'mntr RGB XYZ' profile class) to confirm it's a genuine, unmodified
+ICC Consortium profile and not a relabeled or corrupted file. If this
+profile is ever relied on for a legally-sensitive PDF/A archiving
+claim, re-verify current terms at color.org before shipping.
