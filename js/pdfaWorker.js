@@ -83,6 +83,39 @@ const FORBIDDEN_RULES = [
   { key: 'javascript',  label: 'Embedded JavaScript',    path: ['Names', 'JavaScript'] },
 ];
 
+// Catalog/document-level actions only — misses the far more common real-world
+// case: a Link or form-field annotation's own /A (its click/activation
+// action) or /AA (focus/blur/format...), and a Page's own /AA (open/close
+// triggers for that one page). All three can carry embedded JavaScript and
+// are individually forbidden by PDF/A, but none of them live under the
+// Catalog paths above — confirmed missed entirely until a synthetic fixture
+// (an otherwise-clean, fully-embedded-font PDF with a Link annotation's /AA
+// running JavaScript) came back "✓ compliant" and was actually converted,
+// producing a file that claims PDF/A-2b while still containing the script.
+// Page dicts are found via /Type /Page (required by spec); annotations are
+// found by walking each page's /Annots array rather than scanning for
+// /Type /Annot, since /Type on an annotation dict is OPTIONAL per spec and
+// frequently omitted in the wild — a Type-based scan would silently miss them.
+function checkPageAndAnnotActions(pdfDoc) {
+  const context = pdfDoc.context;
+  for (const [, obj] of context.enumerateIndirectObjects()) {
+    if (!(obj instanceof PDFDict)) continue;
+    if (obj.get(PDFName.of('Type'))?.decodeText?.() !== 'Page') continue;
+
+    if (obj.get(PDFName.of('AA'))) return true;
+
+    const annots = context.lookup(obj.get(PDFName.of('Annots')));
+    if (!(annots instanceof PDFArray)) continue;
+    for (let i = 0, n = annots.size(); i < n; i++) {
+      const annot = context.lookup(annots.get(i));
+      if (annot instanceof PDFDict && (annot.get(PDFName.of('A')) || annot.get(PDFName.of('AA')))) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
 function checkForbidden(pdfDoc) {
   const catalog = pdfDoc.catalog;
   const context = pdfDoc.context;
@@ -99,6 +132,7 @@ function checkForbidden(pdfDoc) {
     }
     if (present) found.push(rule.key);
   }
+  if (checkPageAndAnnotActions(pdfDoc)) found.push('annotAction');
   return found;
 }
 

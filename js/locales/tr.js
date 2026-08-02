@@ -284,6 +284,7 @@ window.PDFREE_LOCALE = {
   pdfa_action_openAction:      'bir belge açma eylemi',
   pdfa_action_aa:              'belge düzeyinde eylemler',
   pdfa_action_javascript:      'gömülü JavaScript',
+  pdfa_action_annotAction:    'bir sayfa veya not eylemi (ör. JavaScript çalıştıran bir bağlantı veya form alanı)',
   pdfa_row_lzw:                'LZW ile sıkıştırılmış akış yok',
   pdfa_row_lzw_detail:         'PDF/A, LZWDecode filtresine izin vermez.',
   pdfa_compliant:              '✓ Bu PDF, PDF/A-2b yapısal gereksinimlerini karşılıyor.',

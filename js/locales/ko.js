@@ -286,6 +286,7 @@ window.PDFREE_LOCALE = {
   pdfa_action_openAction:      '문서 열기 작업',
   pdfa_action_aa:              '문서 수준 작업',
   pdfa_action_javascript:      '포함된 JavaScript',
+  pdfa_action_annotAction:    '페이지 또는 주석 작업(예: JavaScript를 실행하는 링크나 양식 필드)',
   pdfa_row_lzw:                'LZW로 압축된 스트림 없음',
   pdfa_row_lzw_detail:         'PDF/A는 LZWDecode 필터를 허용하지 않습니다.',
   pdfa_compliant:              '✓ 이 PDF는 PDF/A-2b 구조 요건을 충족합니다.',

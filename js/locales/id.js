@@ -285,6 +285,7 @@ window.PDFREE_LOCALE = {
   pdfa_action_openAction:      'aksi pembukaan dokumen',
   pdfa_action_aa:              'aksi tingkat dokumen',
   pdfa_action_javascript:      'JavaScript tertanam',
+  pdfa_action_annotAction:    'aksi tingkat halaman atau anotasi (mis. tautan atau bidang formulir yang menjalankan JavaScript)',
   pdfa_row_lzw:                'Tanpa stream terkompresi LZW',
   pdfa_row_lzw_detail:         'PDF/A tidak mengizinkan filter LZWDecode.',
   pdfa_compliant:              '✓ PDF ini memenuhi persyaratan struktural PDF/A-2b.',

@@ -285,6 +285,7 @@ window.PDFREE_LOCALE = {
   pdfa_action_openAction:      'một hành động mở tài liệu',
   pdfa_action_aa:              'hành động cấp tài liệu',
   pdfa_action_javascript:      'JavaScript nhúng sẵn',
+  pdfa_action_annotAction:    'một hành động cấp trang hoặc chú thích (ví dụ: liên kết hoặc trường biểu mẫu chạy JavaScript)',
   pdfa_row_lzw:                'Không có luồng nén LZW',
   pdfa_row_lzw_detail:         'PDF/A không cho phép bộ lọc LZWDecode.',
   pdfa_compliant:              '✓ PDF này đáp ứng các yêu cầu cấu trúc của PDF/A-2b.',

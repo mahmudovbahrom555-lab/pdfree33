@@ -284,6 +284,7 @@ window.PDFREE_LOCALE = {
   pdfa_action_openAction:      "un'azione di apertura del documento",
   pdfa_action_aa:              'azioni a livello di documento',
   pdfa_action_javascript:      'JavaScript incorporato',
+  pdfa_action_annotAction:    "un'azione a livello di pagina o annotazione (es. un link o un campo modulo che esegue JavaScript)",
   pdfa_row_lzw:                'Nessun flusso compresso con LZW',
   pdfa_row_lzw_detail:         'PDF/A non consente il filtro LZWDecode.',
   pdfa_compliant:              '✓ Questo PDF soddisfa i requisiti strutturali per PDF/A-2b.',

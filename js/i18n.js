@@ -275,6 +275,7 @@ export const EN = {
   pdfa_action_openAction:     'a document open action',
   pdfa_action_aa:             'document-level actions',
   pdfa_action_javascript:     'embedded JavaScript',
+  pdfa_action_annotAction:    'a page or annotation action (e.g. a link or form field running JavaScript)',
   pdfa_row_lzw:               'No LZW-compressed streams',
   pdfa_row_lzw_detail:        'PDF/A does not permit the LZWDecode filter.',
   pdfa_compliant:         '✓ This PDF meets the structural requirements for PDF/A-2b.',

@@ -287,6 +287,7 @@ window.PDFREE_LOCALE = {
   pdfa_action_openAction:      'ドキュメントを開く際のアクション',
   pdfa_action_aa:              'ドキュメントレベルのアクション',
   pdfa_action_javascript:      '埋め込みJavaScript',
+  pdfa_action_annotAction:    'ページまたは注釈のアクション（例：JavaScriptを実行するリンクやフォームフィールド）',
   pdfa_row_lzw:                'LZW圧縮ストリームなし',
   pdfa_row_lzw_detail:         'PDF/AはLZWDecodeフィルタを許可していません。',
   pdfa_compliant:              '✓ このPDFはPDF/A-2bの構造要件を満たしています。',
