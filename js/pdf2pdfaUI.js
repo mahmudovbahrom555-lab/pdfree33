@@ -70,6 +70,7 @@ function _unwatch() {
 
 let _file = null;
 let _gen  = 0; // guards against a stale analysis resolving after a newer file was dropped
+let _lastSubstitutableFonts = []; // from the most recent analyze report — tells convertToPdfA which Liberation files to fetch
 
 function _ensureContainer() {
   let c = id('pdf2pdfaOptions');
@@ -106,53 +107,96 @@ export async function initPdf2PdfaOptions(file) {
     return;
   }
   if (myGen !== _gen) return;
+  _lastSubstitutableFonts = result.substitutableFonts || [];
   c.innerHTML = _reportHtml(result);
   _bindConvertBtn(myGen);
+  _bindSubstituteControls(myGen);
 }
 
 function _bindConvertBtn(myGen) {
   const btn = id('pdf2pdfaConvertBtn');
   if (!btn) return;
-  btn.addEventListener('click', async () => {
-    if (!_file || myGen !== _gen) return;
-    btn.disabled = true;
-    const originalLabel = btn.textContent;
-    btn.textContent = t('pdfa_converting');
+  btn.addEventListener('click', () => _runConvert(myGen, btn, false));
+}
 
-    let result;
-    try {
-      result = await convertToPdfA(_file);
-    } catch (err) {
-      if (myGen !== _gen) return;
-      btn.disabled = false;
-      btn.textContent = originalLabel;
-      const statusEl = id('pdf2pdfaConvertStatus');
-      if (statusEl) statusEl.textContent = err?.message ? t('pdfa_convert_failed_detail', { message: err.message }) : t('pdfa_convert_failed');
-      return;
-    }
+// Opt-in substitution offer: checkbox must be explicitly checked before the
+// verify-and-convert button is even clickable — no accidental one-click
+// risky action. Only rendered when EVERY missing font has a known
+// candidate (see pdfaWorker.js classifyStandardFont) — a document with a
+// mix of substitutable and non-substitutable fonts still just gets the
+// plain refusal, since partial substitution isn't a coherent offer.
+function _bindSubstituteControls(myGen) {
+  const checkbox = id('pdf2pdfaSubstituteCheck');
+  const btn = id('pdf2pdfaSubstituteBtn');
+  if (!checkbox || !btn) return;
+  checkbox.addEventListener('change', () => {
+    btn.disabled = !checkbox.checked;
+    btn.style.opacity = checkbox.checked ? '1' : '.5';
+  });
+  btn.addEventListener('click', () => _runConvert(myGen, btn, true));
+}
+
+async function _runConvert(myGen, btn, substituteFonts) {
+  if (!_file || myGen !== _gen) return;
+  btn.disabled = true;
+  const originalLabel = btn.textContent;
+  btn.textContent = substituteFonts ? t('pdfa_substitute_verifying') : t('pdfa_converting');
+
+  let result;
+  try {
+    result = await convertToPdfA(_file, { substituteFonts, fontNames: _lastSubstitutableFonts });
+  } catch (err) {
     if (myGen !== _gen) return;
-
-    if (result.blocked) {
-      // Worker's own re-check disagreed with what this UI showed (e.g. the
-      // file changed on disk between analyze and convert) — re-render the
-      // fresh report rather than silently failing.
-      const c = id('pdf2pdfaOptions');
-      if (c) { c.innerHTML = _reportHtml(result.report); _bindConvertBtn(myGen); }
-      return;
-    }
-
-    _triggerDownload(_file, result.fileBytes);
     btn.disabled = false;
     btn.textContent = originalLabel;
-    const statusEl = id('pdf2pdfaConvertStatus');
-    if (statusEl) {
-      const level = result.conformance === 'U' ? 'PDF/A-2u' : 'PDF/A-2b';
-      const lines = [result.audit.passed ? t('pdfa_convert_success', { level }) : t('pdfa_convert_warn')];
-      const removedText = _removedSummary(result.removedActions);
-      if (removedText) lines.push(removedText);
-      statusEl.textContent = lines.join(' ');
+    const statusEl = id('pdf2pdfaConvertStatus') || id('pdf2pdfaSubstituteStatus');
+    if (statusEl) statusEl.textContent = err?.message ? t('pdfa_convert_failed_detail', { message: err.message }) : t('pdfa_convert_failed');
+    return;
+  }
+  if (myGen !== _gen) return;
+
+  if (result.blocked) {
+    if (result.substitutionFailed?.length) {
+      // Refused specifically because verification failed for one or more
+      // fonts — show exactly which, rather than re-rendering the generic
+      // report (which would just say "not embedded" again with no
+      // explanation of what was actually tried).
+      const c = id('pdf2pdfaOptions');
+      if (c) {
+        _lastSubstitutableFonts = result.report.substitutableFonts || [];
+        c.innerHTML = _reportHtml(result.report);
+        _bindConvertBtn(myGen);
+        _bindSubstituteControls(myGen);
+        const statusEl = id('pdf2pdfaSubstituteStatus');
+        if (statusEl) statusEl.textContent = t('pdfa_substitute_failed', { fonts: result.substitutionFailed.join(', ') });
+      }
+      return;
     }
-  });
+    // Worker's own re-check disagreed with what this UI showed (e.g. the
+    // file changed on disk between analyze and convert) — re-render the
+    // fresh report rather than silently failing.
+    const c = id('pdf2pdfaOptions');
+    if (c) {
+      _lastSubstitutableFonts = result.report.substitutableFonts || [];
+      c.innerHTML = _reportHtml(result.report);
+      _bindConvertBtn(myGen);
+      _bindSubstituteControls(myGen);
+    }
+    return;
+  }
+
+  _triggerDownload(_file, result.fileBytes);
+  btn.disabled = false;
+  btn.textContent = originalLabel;
+  const statusEl = id('pdf2pdfaConvertStatus') || id('pdf2pdfaSubstituteStatus');
+  if (statusEl) {
+    const level = result.conformance === 'U' ? 'PDF/A-2u' : 'PDF/A-2b';
+    const lines = [result.audit.passed ? t('pdfa_convert_success', { level }) : t('pdfa_convert_warn')];
+    const removedText = _removedSummary(result.removedActions);
+    if (removedText) lines.push(removedText);
+    if (result.substitution?.length) lines.push(t('pdfa_substitute_note', { fonts: result.substitution.join(', ') }));
+    statusEl.textContent = lines.join(' ');
+  }
 }
 
 // Builds the "Removed during conversion: ..." disclosure line — shown
@@ -269,9 +313,33 @@ function _reportHtml(r) {
         ${esc(t('pdfa_not_compliant'))}
       </div>`;
 
+  // Only offered when fonts are the SOLE blocker and every one of them has
+  // a known candidate — a mix of substitutable and non-substitutable fonts
+  // isn't a coherent offer, so it falls through to the plain refusal above
+  // with no substitution UI at all.
+  const onlyFontsBlock = r.blocking && !r.encrypted && !r.hasSignature && !r.hasLzw && r.missingFonts.length > 0;
+  const allSubstitutable = onlyFontsBlock && r.substitutableFonts.length === r.missingFonts.length;
+  const substituteOffer = allSubstitutable
+    ? `<div style="margin-top:10px;padding:12px 14px;border:1px solid var(--border);border-radius:10px;">
+        <p style="margin:0 0 10px;font-size:12px;color:var(--text2);line-height:1.5;">
+          ${esc(t('pdfa_substitute_offer', { fonts: r.substitutableFonts.join(', ') }))}
+        </p>
+        <label style="display:flex;gap:8px;align-items:flex-start;font-size:13px;color:var(--text);cursor:pointer;">
+          <input type="checkbox" id="pdf2pdfaSubstituteCheck" style="margin-top:2px;">
+          <span>${esc(t('pdfa_substitute_checkbox'))}</span>
+        </label>
+        <button id="pdf2pdfaSubstituteBtn" type="button" disabled style="margin-top:10px;padding:10px 18px;background:var(--green,#2d7a4f);
+          color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;opacity:.5;">
+          ${esc(t('pdfa_substitute_btn'))}
+        </button>
+        <div id="pdf2pdfaSubstituteStatus" style="margin-top:8px;font-size:12px;color:var(--text2);"></div>
+      </div>`
+    : '';
+
   return `<div style="padding:10px 0 4px;">
     ${rows.join('')}
     ${verdict}
+    ${substituteOffer}
     <p style="margin:12px 0 0;font-size:11px;color:var(--text2);line-height:1.5;">
       ${esc(t('pdfa_disclaimer'))}
     </p>

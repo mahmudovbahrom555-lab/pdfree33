@@ -10,13 +10,15 @@
 //    • Same request/response pattern as decryptPdf.js + qpdf worker
 // ============================================================
 
-const _WORKER_URL = new URL('./pdfaWorker.js', import.meta.url).href;
-const _ICC_URL    = new URL('./vendor/sRGB2014.icc', import.meta.url).href;
+const _WORKER_URL   = new URL('./pdfaWorker.js', import.meta.url).href;
+const _ICC_URL      = new URL('./vendor/sRGB2014.icc', import.meta.url).href;
+const _LIBERATION_DIR = new URL('./vendor/liberation-fonts/', import.meta.url).href;
 
 let _worker      = null;
 let _nextId      = 1;
 const _pending   = new Map();
 let _iccPromise  = null;
+const _liberationCache = new Map(); // filename -> ArrayBuffer promise
 
 // Fetched once per page load and cached — the ICC bytes are the same for
 // every conversion (see js/vendor/SOURCE.txt for provenance).
@@ -28,6 +30,38 @@ function _loadIcc() {
     });
   }
   return _iccPromise;
+}
+
+// Mirrors pdfaWorker.js's classifyStandardFont() — kept in sync deliberately
+// duplicated (main thread vs worker context, can't share a module easily
+// between an ES module and a classic-worker importScripts file). Only used
+// here to decide WHICH of the 12 Liberation files to fetch; the worker does
+// its own full, authoritative classification + metric verification — this
+// copy being wrong in some edge case would at worst fetch an unneeded file
+// or miss one (causing that specific font to fail verification and the
+// whole conversion to refuse, same as not opting in at all), never produce
+// an unsafe result.
+function _classifyStandardFont(baseFont) {
+  const name = baseFont.toLowerCase();
+  let family = null;
+  if (/helvetica|arial/.test(name)) family = 'Sans';
+  else if (/times/.test(name)) family = 'Serif';
+  else if (/courier/.test(name)) family = 'Mono';
+  else return null;
+  const bold = /bold/.test(name);
+  const italic = /italic|oblique/.test(name);
+  const style = bold && italic ? 'BoldItalic' : bold ? 'Bold' : italic ? 'Italic' : 'Regular';
+  return `Liberation${family}-${style}.ttf`;
+}
+
+function _loadLiberationFont(filename) {
+  if (!_liberationCache.has(filename)) {
+    _liberationCache.set(filename, fetch(_LIBERATION_DIR + filename).then(r => {
+      if (!r.ok) throw new Error(`Failed to load ${filename} (${r.status})`);
+      return r.arrayBuffer();
+    }));
+  }
+  return _liberationCache.get(filename);
 }
 
 function _ensureWorker() {
@@ -77,23 +111,45 @@ export async function analyzePdfA(file) {
  * blocking checks analyzePdfA() does — a caller skipping the analyze step
  * (or acting on a stale report) can't produce a silently-broken "PDF/A".
  * @param {File} file
+ * @param {object} [options]
+ * @param {boolean} [options.substituteFonts] — opt-in: try replacing
+ *   unembedded standard-14 fonts (Helvetica/Times/Courier families only)
+ *   with metric-compatible Liberation fonts. The worker verifies each
+ *   font's actual metrics before ever using this — see pdfaWorker.js.
+ * @param {string[]} [options.fontNames] — the report's substitutableFonts
+ *   list, used only to decide which of the 12 Liberation files to fetch.
  * @returns {Promise<
- *   {blocked:true, report:object} |
- *   {blocked:false, fileBytes:Uint8Array, audit:{outputIntentPresent:boolean, xmpPresent:boolean, notEncrypted:boolean, passed:boolean}}
+ *   {blocked:true, report:object, substitutionFailed?:string[]} |
+ *   {blocked:false, fileBytes:Uint8Array, audit:object, conformance:string, substitution:string[]|null}
  * >}
  */
-export async function convertToPdfA(file) {
+export async function convertToPdfA(file, options = {}) {
   _ensureWorker();
-  const [fileBytes, iccBuffer] = await Promise.all([
+  const { substituteFonts = false, fontNames = [] } = options;
+
+  const neededFiles = substituteFonts
+    ? Array.from(new Set(fontNames.map(_classifyStandardFont).filter(Boolean)))
+    : [];
+
+  const [fileBytes, iccBuffer, ...liberationBuffers] = await Promise.all([
     file.arrayBuffer().then(b => new Uint8Array(b)),
     _loadIcc(),
+    ...neededFiles.map(_loadLiberationFont),
   ]);
   const iccBytes = new Uint8Array(iccBuffer);
+  const liberationFonts = {};
+  neededFiles.forEach((filename, i) => {
+    liberationFonts[filename] = new Uint8Array(liberationBuffers[i]);
+  });
+
   return new Promise((resolve, reject) => {
     const id = _nextId++;
     _pending.set(id, { resolve, reject });
     try {
-      _worker.postMessage({ id, type: 'convert', fileBytes, iccBytes }, [fileBytes.buffer]);
+      _worker.postMessage(
+        { id, type: 'convert', fileBytes, iccBytes, substituteFonts, liberationFonts },
+        [fileBytes.buffer],
+      );
     } catch (err) {
       _pending.delete(id);
       reject(err);

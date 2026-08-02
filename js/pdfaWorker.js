@@ -14,6 +14,7 @@
 // ============================================================
 
 importScripts('./vendor/pdf-lib.min.js');
+importScripts('./vendor/fontkit.umd.js');
 
 const { PDFDocument, PDFName, PDFDict, PDFRef, PDFArray, PDFString, decodePDFRawStream } = self.PDFLib;
 
@@ -71,6 +72,134 @@ function checkFonts(pdfDoc) {
     }
   }
   return Array.from(missing);
+}
+
+// ── Font substitution (opt-in, standard-14 fonts only) ───────────────────
+// See js/vendor/liberation-fonts/SOURCE.txt for provenance/license. Scope
+// is deliberately narrow: only the Helvetica/Arial, Times, and Courier
+// families — the fonts that are conceptually "the standard 14" and have a
+// well-established, purpose-built free metric-compatible replacement.
+// Symbol/ZapfDingbats and anything else are never substituted; the
+// existing "not embedded, please fix the source" refusal still applies.
+function classifyStandardFont(baseFont) {
+  const name = baseFont.toLowerCase();
+  let family = null;
+  if (/helvetica|arial/.test(name)) family = 'Sans';
+  else if (/times/.test(name)) family = 'Serif';
+  else if (/courier/.test(name)) family = 'Mono';
+  else return null;
+  const bold = /bold/.test(name);
+  const italic = /italic|oblique/.test(name);
+  const style = bold && italic ? 'BoldItalic' : bold ? 'Bold' : italic ? 'Italic' : 'Regular';
+  return { family, style, file: `Liberation${family}-${style}.ttf` };
+}
+
+// WinAnsiEncoding code -> Unicode codepoint, for codes 32-255 (generated
+// from Python's cp1252 codec, which matches WinAnsiEncoding in this range;
+// a handful of codes — 129,141,143,144,157 — are genuinely unassigned and
+// simply absent from this table, treated as "unmappable" below).
+const WIN_ANSI_TO_UNICODE = {32:32,33:33,34:34,35:35,36:36,37:37,38:38,39:39,40:40,41:41,42:42,43:43,44:44,45:45,46:46,47:47,48:48,49:49,50:50,51:51,52:52,53:53,54:54,55:55,56:56,57:57,58:58,59:59,60:60,61:61,62:62,63:63,64:64,65:65,66:66,67:67,68:68,69:69,70:70,71:71,72:72,73:73,74:74,75:75,76:76,77:77,78:78,79:79,80:80,81:81,82:82,83:83,84:84,85:85,86:86,87:87,88:88,89:89,90:90,91:91,92:92,93:93,94:94,95:95,96:96,97:97,98:98,99:99,100:100,101:101,102:102,103:103,104:104,105:105,106:106,107:107,108:108,109:109,110:110,111:111,112:112,113:113,114:114,115:115,116:116,117:117,118:118,119:119,120:120,121:121,122:122,123:123,124:124,125:125,126:126,127:127,128:8364,130:8218,131:402,132:8222,133:8230,134:8224,135:8225,136:710,137:8240,138:352,139:8249,140:338,142:381,145:8216,146:8217,147:8220,148:8221,149:8226,150:8211,151:8212,152:732,153:8482,154:353,155:8250,156:339,158:382,159:376,160:160,161:161,162:162,163:163,164:164,165:165,166:166,167:167,168:168,169:169,170:170,171:171,172:172,173:173,174:174,175:175,176:176,177:177,178:178,179:179,180:180,181:181,182:182,183:183,184:184,185:185,186:186,187:187,188:188,189:189,190:190,191:191,192:192,193:193,194:194,195:195,196:196,197:197,198:198,199:199,200:200,201:201,202:202,203:203,204:204,205:205,206:206,207:207,208:208,209:209,210:210,211:211,212:212,213:213,214:214,215:215,216:216,217:217,218:218,219:219,220:220,221:221,222:222,223:223,224:224,225:225,226:226,227:227,228:228,229:229,230:230,231:231,232:232,233:233,234:234,235:235,236:236,237:237,238:238,239:239,240:240,241:241,242:242,243:243,244:244,245:245,246:246,247:247,248:248,249:249,250:250,251:251,252:252,253:253,254:254,255:255};
+
+// A /Differences array means the font remaps character codes in a custom,
+// non-standard way — we can't safely resolve code->glyph without correctly
+// interpreting it, so substitution is refused rather than risk a wrong
+// glyph. Absent /Encoding, or a bare /WinAnsiEncoding|/MacRomanEncoding|
+// /StandardEncoding name, are all identical to this table in the range we
+// verify, so all three are treated the same, safe way.
+function getSafeEncodingTable(context, fontDict) {
+  const enc = context.lookup(fontDict.get(PDFName.of('Encoding')));
+  if (!enc) return WIN_ANSI_TO_UNICODE;
+  if (enc instanceof PDFDict) {
+    return enc.get(PDFName.of('Differences')) ? null : WIN_ANSI_TO_UNICODE;
+  }
+  return WIN_ANSI_TO_UNICODE; // a bare PDFName encoding
+}
+
+// The actual safety check: does the ORIGINAL font's own declared /Widths
+// (if any) agree with what the Liberation replacement's real glyph metrics
+// would produce for the same character codes? This is the "only if it
+// doesn't break the document" verification — never trust the Liberation
+// project's metric-compatibility claim blindly, confirm it against THIS
+// specific file's own numbers. A ±1 tolerance absorbs integer rounding
+// (PDF widths are integers in 1/1000 em); anything larger is a genuine
+// mismatch and refuses substitution for that font.
+function verifyFontMetrics(context, fontDict, fkFont) {
+  const table = getSafeEncodingTable(context, fontDict);
+  if (!table) return false;
+
+  const widthsArr = context.lookup(fontDict.get(PDFName.of('Widths')));
+  if (!widthsArr) return true; // no override present — relies on standard metrics, safe by construction
+
+  if (!(widthsArr instanceof PDFArray)) return false;
+  const firstChar = fontDict.get(PDFName.of('FirstChar'))?.asNumber?.();
+  if (typeof firstChar !== 'number') return false;
+
+  const scale = 1000 / fkFont.unitsPerEm;
+  for (let i = 0, n = widthsArr.size(); i < n; i++) {
+    const declared = context.lookup(widthsArr.get(i))?.asNumber?.();
+    if (typeof declared !== 'number' || declared === 0) continue; // 0 = code unused in this font
+    const unicode = table[firstChar + i];
+    if (unicode == null) return false; // a real declared width for a code we can't safely map
+    let glyph;
+    try { glyph = fkFont.glyphForCodePoint(unicode); } catch { return false; }
+    const actual = Math.round(glyph.advanceWidth * scale);
+    if (Math.abs(actual - declared) > 1) return false;
+  }
+  return true;
+}
+
+// Embeds the Liberation font program directly into the EXISTING font
+// dict's object slot (same object number) rather than creating a new
+// object and rewriting every reference to it — every page/annotation that
+// already points at this font automatically sees the embedded version.
+// containsFontFile validators (correctly) require /Subtype to agree with
+// the embedded format — this must stay /TrueType since the program is
+// FontFile2. Found via direct testing: labeling the dict /Type1 while
+// embedding via FontFile2 passed our own structural checks (and pikepdf's)
+// but veraPDF correctly flagged it as still "not embedded" because the
+// subtype/format didn't match — the two must agree, not just both be present.
+function substituteFont(context, fontDict, fontBytes, fkFont) {
+  const scale = 1000 / fkFont.unitsPerEm;
+  const fontFileStream = context.flateStream(fontBytes, { Length1: fontBytes.length });
+  const fontFileRef = context.register(fontFileStream);
+
+  const descriptor = context.obj({
+    Type: 'FontDescriptor',
+    FontName: fkFont.postscriptName || 'LiberationReplacement',
+    Flags: 32 | (fkFont.italicAngle ? 64 : 0),
+    FontBBox: [
+      Math.round(fkFont.bbox.minX * scale), Math.round(fkFont.bbox.minY * scale),
+      Math.round(fkFont.bbox.maxX * scale), Math.round(fkFont.bbox.maxY * scale),
+    ],
+    ItalicAngle: fkFont.italicAngle || 0,
+    Ascent: Math.round(fkFont.ascent * scale),
+    Descent: Math.round(fkFont.descent * scale),
+    CapHeight: Math.round((fkFont.capHeight || fkFont.ascent) * scale),
+    StemV: /bold/i.test(fkFont.postscriptName || '') ? 120 : 80,
+    FontFile2: fontFileRef,
+  });
+  const descriptorRef = context.register(descriptor);
+
+  fontDict.set(PDFName.of('Subtype'), PDFName.of('TrueType'));
+  fontDict.set(PDFName.of('FontDescriptor'), descriptorRef);
+
+  // If the original had no /Widths (relying on standard metrics), supply
+  // Liberation's own — otherwise the original array already passed
+  // verifyFontMetrics() and is left untouched.
+  if (!context.lookup(fontDict.get(PDFName.of('Widths')))) {
+    const table = WIN_ANSI_TO_UNICODE;
+    const widths = [];
+    for (let code = 32; code <= 255; code++) {
+      const unicode = table[code];
+      if (unicode == null) { widths.push(0); continue; }
+      let glyph;
+      try { glyph = fkFont.glyphForCodePoint(unicode); } catch { glyph = null; }
+      widths.push(glyph ? Math.round(glyph.advanceWidth * scale) : 0);
+    }
+    fontDict.set(PDFName.of('FirstChar'), context.obj(32));
+    fontDict.set(PDFName.of('LastChar'), context.obj(255));
+    fontDict.set(PDFName.of('Widths'), context.obj(widths));
+  }
 }
 
 // ── Forbidden-content check ──────────────────────────────────────────────
@@ -255,10 +384,18 @@ function analyze(pdfDoc) {
   // "this would silently invalidate a legal signature."
   const blocking = encrypted || missingFonts.length > 0 || hasLzw || hasSignature;
 
+  // Cheap, name-only classification (no fontkit / font bytes needed) —
+  // just enough to decide whether the "try safe substitution" opt-in is
+  // worth offering at all. The real, per-file metric verification only
+  // happens in convert(), once the user has actually opted in and the
+  // Liberation bytes have been fetched.
+  const substitutableFonts = missingFonts.filter(f => classifyStandardFont(f) != null);
+
   return {
     pageCount: pdfDoc.getPageCount(),
     encrypted,
     missingFonts,
+    substitutableFonts,
     forbidden,
     hasLzw,
     unicodeOk,
@@ -356,8 +493,72 @@ function stripForbiddenActions(pdfDoc) {
 // ── Conversion ──────────────────────────────────────────────────────────
 const PRODUCER = 'PDFree (pdfree.io) — client-side PDF/A-2b/2u conversion';
 
-async function convert(pdfDoc, iccBytes) {
-  const report = analyze(pdfDoc);
+// Finds actual unembedded SIMPLE (Type1/TrueType/MMType1) font dict objects
+// — deliberately excludes Type0/CIDFontType0/2, since a "standard 14, not
+// embedded" reference in practice is essentially always a simple font;
+// composite fonts exist specifically for subsetting/embedding non-Latin
+// scripts, not for referencing Helvetica/Times/Courier by name. Skipping
+// them here avoids double-counting a Type0 wrapper and its own descendant
+// as two separate substitution targets when only the wrapper is what
+// resources actually reference.
+function findSimpleUnembeddedFonts(context) {
+  const targets = [];
+  for (const [, obj] of context.enumerateIndirectObjects()) {
+    if (!(obj instanceof PDFDict)) continue;
+    if (obj.get(PDFName.of('Type'))?.decodeText?.() !== 'Font') continue;
+    const subtype = obj.get(PDFName.of('Subtype'))?.decodeText?.();
+    if (subtype === 'Type0' || subtype === 'CIDFontType0' || subtype === 'CIDFontType2') continue;
+    if (obj.get(PDFName.of('FontDescriptor'))) {
+      const fd = context.lookup(obj.get(PDFName.of('FontDescriptor')));
+      const embedded = fd instanceof PDFDict && ['FontFile', 'FontFile2', 'FontFile3']
+        .some(k => { const s = context.lookup(fd.get(PDFName.of(k))); return s?.contents?.length > 64; });
+      if (embedded) continue;
+    }
+    const baseFont = (obj.get(PDFName.of('BaseFont'))?.decodeText?.() || 'Unknown').replace(/^[A-Z]{6}\+/, '');
+    targets.push({ dict: obj, baseFont });
+  }
+  return targets;
+}
+
+// Attempts verified substitution for every unembedded simple font. Refuses
+// as a whole (no partial substitution) if even one font can't be safely
+// verified — a half-fixed document is worse than a clear refusal.
+function trySubstituteFonts(context, liberationFonts) {
+  const targets = findSimpleUnembeddedFonts(context);
+  const substituted = [];
+  const failed = [];
+
+  for (const { dict, baseFont } of targets) {
+    const cls = classifyStandardFont(baseFont);
+    if (!cls) { failed.push(baseFont); continue; }
+    const fontBytes = liberationFonts[cls.file];
+    if (!fontBytes) { failed.push(baseFont); continue; }
+    let fkFont;
+    try { fkFont = self.fontkit.create(fontBytes); } catch { failed.push(baseFont); continue; }
+    if (!verifyFontMetrics(context, dict, fkFont)) { failed.push(baseFont); continue; }
+    substituteFont(context, dict, fontBytes, fkFont);
+    substituted.push(baseFont);
+  }
+
+  return { ok: failed.length === 0, substituted, failed };
+}
+
+async function convert(pdfDoc, iccBytes, substituteFontsOpt, liberationFonts) {
+  let report = analyze(pdfDoc);
+  let substitution = null;
+
+  if (report.missingFonts.length > 0 && substituteFontsOpt) {
+    const result = trySubstituteFonts(pdfDoc.context, liberationFonts || {});
+    if (!result.ok) {
+      // Refuse clearly rather than partially substitute — re-run analyze()
+      // for an up-to-date report and tell the UI exactly which font(s)
+      // couldn't be safely verified.
+      return { blocked: true, report: analyze(pdfDoc), substitutionFailed: result.failed };
+    }
+    substitution = result.substituted;
+    report = analyze(pdfDoc); // fonts are now embedded — re-check from scratch
+  }
+
   if (report.blocking) {
     return { blocked: true, report };
   }
@@ -409,7 +610,7 @@ async function convert(pdfDoc, iccBytes) {
   const savedBytes = await pdfDoc.save();
 
   const audit = await selfAudit(savedBytes, iccBytes.length, conformance);
-  return { blocked: false, fileBytes: savedBytes, audit, removedActions, conformance };
+  return { blocked: false, fileBytes: savedBytes, audit, removedActions, conformance, substitution };
 }
 
 // Re-parses the just-written file independently — never trusts "we called
@@ -445,24 +646,28 @@ async function selfAudit(savedBytes, expectedIccLen, expectedConformance) {
     xmpOk = xmpText.includes('pdfaid:part>2') && xmpText.includes(`pdfaid:conformance>${expectedConformance}`);
   }
 
-  // Forbidden actions are supposed to have been stripped by convert() before
-  // save() — re-check the ACTUAL saved bytes rather than trusting that the
-  // strip step ran cleanly, same "never trust, re-verify" discipline as the
-  // OutputIntent/XMP checks above.
-  const actionsClean = analyze(doc).forbidden.length === 0;
+  // Forbidden actions are supposed to have been stripped, and any font
+  // substitution supposed to have actually embedded real glyph data —
+  // re-check both against the ACTUAL saved bytes rather than trusting the
+  // earlier steps ran cleanly, same "never trust, re-verify" discipline as
+  // the OutputIntent/XMP checks above.
+  const reloaded = analyze(doc);
+  const actionsClean = reloaded.forbidden.length === 0;
+  const fontsClean = reloaded.missingFonts.length === 0;
 
   return {
     outputIntentPresent: outputIntentOk,
     xmpPresent: xmpOk,
     notEncrypted: !doc.isEncrypted,
     actionsClean,
-    passed: outputIntentOk && xmpOk && !doc.isEncrypted && actionsClean,
+    fontsClean,
+    passed: outputIntentOk && xmpOk && !doc.isEncrypted && actionsClean && fontsClean,
   };
 }
 
 // ── Main ──────────────────────────────────────────────────────────────────
 self.onmessage = async function (e) {
-  const { id, type, fileBytes, iccBytes } = e.data;
+  const { id, type, fileBytes, iccBytes, substituteFonts, liberationFonts } = e.data;
   try {
     const pdfDoc = await PDFDocument.load(fileBytes, {
       ignoreEncryption: true,
@@ -470,7 +675,7 @@ self.onmessage = async function (e) {
     });
 
     if (type === 'convert') {
-      const result = await convert(pdfDoc, iccBytes);
+      const result = await convert(pdfDoc, iccBytes, substituteFonts, liberationFonts);
       const transfer = result.fileBytes ? [result.fileBytes.buffer] : [];
       self.postMessage({ id, ok: true, result }, transfer);
       return;

@@ -1,0 +1,25 @@
+Fonts:      Liberation Sans/Serif/Mono, Regular/Bold/Italic/BoldItalic (12 files)
+Source:     https://github.com/liberationfonts/liberation-fonts (upstream project;
+            installed here via Homebrew Cask `font-liberation` 2.1.5)
+Downloaded: 2026-08-02
+Verified:   License and copyright confirmed two ways before adding to this repo:
+            (1) the bundled LICENSE file (this directory), and (2) the name-table
+            strings embedded directly in each .ttf itself ("Licensed under the SIL
+            Open Font License, Version 1.1", "Copyright (c) 2012 Red Hat, Inc." /
+            "Digitized data copyright (c) 2010 Google Corporation") — checked via
+            `strings LiberationSans-Regular.ttf | grep -i license`, not assumed.
+
+License:    SIL Open Font License 1.1 (see LICENSE.txt in this directory). OFL
+            explicitly permits bundling/embedding the fonts with software and
+            states the license does not carry over to documents created using
+            the fonts — i.e. a PDF a user converts with these fonts embedded is
+            not itself OFL-encumbered.
+
+Used by:    js/pdfaFontSubstitute.js — optional, opt-in substitution for
+            unembedded standard-14 PDF fonts (Helvetica/Arial, Times/Times New
+            Roman, Courier/Courier New families only) during PDF/A conversion.
+            Liberation Sans/Serif/Mono are metric-compatible replacements for
+            Arial/Times New Roman/Courier New by design (that is the explicit
+            purpose of the Liberation project) — but see pdfaFontSubstitute.js
+            for the actual width-table verification done before ever using
+            them, rather than trusting metric-compatibility as a given.

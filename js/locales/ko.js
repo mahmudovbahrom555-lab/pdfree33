@@ -307,6 +307,12 @@ window.PDFREE_LOCALE = {
   pdfa_removed_pageOrAnnot_many: '페이지 또는 주석 작업 {n}개',
   pdfa_unlock_link: '비밀번호 제거 →',
   pdfa_disclaimer:             '이것은 실패 가능성이 가장 높은 구조적 요건에 대한 자체 검사이며, 브라우저에서 완전히 실행됩니다. 법적으로 요구되는 아카이빙에는 완전한 ISO 19005 검증기(예: veraPDF)를 대신할 수 없습니다.',
+  pdfa_substitute_offer: '이 글꼴에는 무료로 메트릭 검증된 대체 글꼴(Liberation 계열)이 있습니다: {fonts}. PDFree는 사용하기 전에 정확한 일치 여부를 확인합니다 — 확인에 실패하면 아무것도 변경되지 않고 변환이 계속 거부됩니다.',
+  pdfa_substitute_checkbox: '글꼴 대체 시도',
+  pdfa_substitute_btn: '📐 확인 후 변환',
+  pdfa_substitute_verifying: '글꼴 확인 중…',
+  pdfa_substitute_failed: '다음 글꼴에 대한 대체를 안전하게 확인할 수 없습니다: {fonts}. 아무것도 변경되지 않았습니다 — 대신 원본 문서를 글꼴을 포함하여 다시 내보내 보세요.',
+  pdfa_substitute_note: '글꼴 대체됨(Liberation, 메트릭 호환성 확인됨): {fonts}.',
   pdfa_aria_label:             'PDF/A 준수 보고서',
 
   // hero drop zone

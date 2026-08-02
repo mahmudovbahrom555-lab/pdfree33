@@ -308,6 +308,12 @@ window.PDFREE_LOCALE = {
   pdfa_removed_pageOrAnnot_many: 'ページまたは注釈のアクション{n}件',
   pdfa_unlock_link: 'パスワードを削除 →',
   pdfa_disclaimer:             'これは、失敗する可能性が最も高い構造要件についての、ブラウザ内で完結するセルフチェックです。法的に義務付けられたアーカイブ用途では、完全なISO 19005バリデータ（veraPDFなど）の代わりにはなりません。',
+  pdfa_substitute_offer: 'これらのフォントには無料でメトリック検証済みの代替（Liberationファミリー）があります: {fonts}。PDFreeは使用前に正確な一致を検証します — 検証に失敗した場合、何も変更されず変換は拒否されたままです。',
+  pdfa_substitute_checkbox: 'フォント代替を試す',
+  pdfa_substitute_btn: '📐 検証して変換',
+  pdfa_substitute_verifying: 'フォントを検証中…',
+  pdfa_substitute_failed: '次のフォントの代替を安全に検証できませんでした: {fonts}。何も変更されていません — 代わりに元のドキュメントをフォント埋め込みで再エクスポートしてください。',
+  pdfa_substitute_note: 'フォントを置換しました（Liberation、メトリック互換性を検証済み）: {fonts}。',
   pdfa_aria_label:             'PDF/A準拠レポート',
 
   // hero drop zone

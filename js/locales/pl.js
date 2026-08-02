@@ -305,6 +305,12 @@ window.PDFREE_LOCALE = {
   pdfa_removed_pageOrAnnot_many: '{n} akcji strony lub adnotacji',
   pdfa_unlock_link: 'Usuń hasło →',
   pdfa_disclaimer:             'To jest samokontrola wymagań strukturalnych najbardziej narażonych na błąd, wykonywana w całości w przeglądarce. Nie zastępuje pełnego walidatora ISO 19005 (np. veraPDF) w przypadku archiwizacji wymaganej prawnie.',
+  pdfa_substitute_offer: 'Dla tych czcionek dostępny jest darmowy, zweryfikowany metrycznie zamiennik (rodzina Liberation): {fonts}. PDFree weryfikuje dokładne dopasowanie przed użyciem — jeśli weryfikacja się nie powiedzie, nic nie zostanie zmienione, a konwersja pozostanie odrzucona.',
+  pdfa_substitute_checkbox: 'Wypróbuj zamianę czcionek',
+  pdfa_substitute_btn: '📐 Zweryfikuj i konwertuj',
+  pdfa_substitute_verifying: 'Weryfikowanie czcionek…',
+  pdfa_substitute_failed: 'Nie udało się bezpiecznie zweryfikować zamiany dla: {fonts}. Nic nie zostało zmienione — spróbuj zamiast tego wyeksportować ponownie dokument źródłowy z osadzonymi czcionkami.',
+  pdfa_substitute_note: 'Czcionki zastąpione (Liberation, zweryfikowana zgodność metryczna): {fonts}.',
   pdfa_aria_label:             'Raport zgodności PDF/A',
 
   // hero drop zone

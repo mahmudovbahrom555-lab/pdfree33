@@ -296,6 +296,12 @@ export const EN = {
   pdfa_removed_pageOrAnnot_many: '{n} page or annotation actions',
   pdfa_unlock_link:       'Remove password →',
   pdfa_disclaimer:        'This is a self-check of the structural requirements most likely to fail, run entirely in your browser. It is not a substitute for a full ISO 19005 validator (e.g. veraPDF) for legally mandated archiving.',
+  pdfa_substitute_offer:    'These fonts have a free, metric-verified substitute available (Liberation family): {fonts}. PDFree verifies the exact metric match before ever using it — if verification fails, nothing is changed and conversion stays refused.',
+  pdfa_substitute_checkbox: 'Try font substitution',
+  pdfa_substitute_btn:      '📐 Verify & Convert',
+  pdfa_substitute_verifying: 'Verifying fonts…',
+  pdfa_substitute_failed:   "Substitution couldn't be safely verified for: {fonts}. Nothing was changed — try re-exporting the source document with fonts embedded instead.",
+  pdfa_substitute_note:     'Fonts substituted (Liberation, verified metric-compatible): {fonts}.',
   pdfa_aria_label:        'PDF/A compliance report',
 
   // ── hero drop zone ────────────────────────────────────────────

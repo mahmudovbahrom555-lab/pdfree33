@@ -305,6 +305,12 @@ window.PDFREE_LOCALE = {
   pdfa_removed_pageOrAnnot_many: '{n} pagina- of annotatieacties',
   pdfa_unlock_link: 'Wachtwoord verwijderen →',
   pdfa_disclaimer:             'Dit is een zelfcontrole van de structurele vereisten die het meest waarschijnlijk falen, volledig uitgevoerd in je browser. Het is geen vervanging voor een volledige ISO 19005-validator (bijv. veraPDF) voor wettelijk verplichte archivering.',
+  pdfa_substitute_offer: 'Voor deze lettertypen is een gratis, metrisch geverifieerd alternatief beschikbaar (Liberation-familie): {fonts}. PDFree verifieert de exacte overeenkomst voordat het wordt gebruikt — als de verificatie mislukt, wordt niets gewijzigd en blijft de conversie geweigerd.',
+  pdfa_substitute_checkbox: 'Lettertypevervanging proberen',
+  pdfa_substitute_btn: '📐 Verifiëren & Converteren',
+  pdfa_substitute_verifying: 'Lettertypen verifiëren…',
+  pdfa_substitute_failed: 'De vervanging kon niet veilig worden geverifieerd voor: {fonts}. Er is niets gewijzigd — exporteer het bronbestand in plaats daarvan opnieuw met ingesloten lettertypen.',
+  pdfa_substitute_note: 'Lettertypen vervangen (Liberation, metrische compatibiliteit geverifieerd): {fonts}.',
   pdfa_aria_label:             'PDF/A-conformiteitsrapport',
 
   // hero drop zone

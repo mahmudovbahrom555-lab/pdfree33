@@ -306,6 +306,12 @@ window.PDFREE_LOCALE = {
   pdfa_removed_pageOrAnnot_many: '{n} hành động trang hoặc chú thích',
   pdfa_unlock_link: 'Xóa mật khẩu →',
   pdfa_disclaimer:             'Đây là bước tự kiểm tra các yêu cầu cấu trúc dễ thất bại nhất, chạy hoàn toàn trong trình duyệt của bạn. Nó không thay thế trình xác thực ISO 19005 đầy đủ (ví dụ: veraPDF) cho việc lưu trữ theo yêu cầu pháp lý.',
+  pdfa_substitute_offer: 'Các phông chữ này có bản thay thế miễn phí, đã xác minh về số đo (họ Liberation): {fonts}. PDFree xác minh sự khớp chính xác trước khi sử dụng — nếu xác minh thất bại, không có gì bị thay đổi và việc chuyển đổi vẫn bị từ chối.',
+  pdfa_substitute_checkbox: 'Thử thay thế phông chữ',
+  pdfa_substitute_btn: '📐 Xác minh & Chuyển đổi',
+  pdfa_substitute_verifying: 'Đang xác minh phông chữ…',
+  pdfa_substitute_failed: 'Không thể xác minh an toàn việc thay thế cho: {fonts}. Không có gì bị thay đổi — hãy thử xuất lại tài liệu gốc với phông chữ được nhúng thay vào đó.',
+  pdfa_substitute_note: 'Phông chữ đã được thay thế (Liberation, đã xác minh tương thích số đo): {fonts}.',
   pdfa_aria_label:             'Báo cáo tuân thủ PDF/A',
 
   // hero drop zone

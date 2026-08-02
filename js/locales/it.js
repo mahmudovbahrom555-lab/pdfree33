@@ -305,6 +305,12 @@ window.PDFREE_LOCALE = {
   pdfa_removed_pageOrAnnot_many: '{n} azioni di pagina o annotazione',
   pdfa_unlock_link: 'Rimuovi password →',
   pdfa_disclaimer:             "Questa è un'autoverifica dei requisiti strutturali più a rischio di errore, eseguita interamente nel tuo browser. Non sostituisce un validatore ISO 19005 completo (es. veraPDF) per archiviazione legalmente obbligatoria.",
+  pdfa_substitute_offer: 'Questi font hanno un sostituto gratuito e verificato a livello metrico disponibile (famiglia Liberation): {fonts}. PDFree verifica la corrispondenza esatta prima di usarlo — se la verifica fallisce, non viene modificato nulla e la conversione resta rifiutata.',
+  pdfa_substitute_checkbox: 'Prova la sostituzione dei font',
+  pdfa_substitute_btn: '📐 Verifica e Converti',
+  pdfa_substitute_verifying: 'Verifica dei font in corso…',
+  pdfa_substitute_failed: 'Impossibile verificare in modo sicuro la sostituzione per: {fonts}. Non è stato modificato nulla — prova invece a esportare di nuovo il documento originale con i font incorporati.',
+  pdfa_substitute_note: 'Font sostituiti (Liberation, compatibilità metrica verificata): {fonts}.',
   pdfa_aria_label:             'Rapporto di conformità PDF/A',
 
   // hero drop zone
