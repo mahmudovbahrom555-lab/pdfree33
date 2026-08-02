@@ -267,7 +267,8 @@ window.PDFREE_LOCALE = {
   search_aria:        'Szukaj narzędzi PDF',
   search_drop:        'lub przeciągnij PDF tutaj',
   search_start:       'Uruchom →',
-  search_miss:        'Nie znaleziono narzędzia dla "{q}" — spróbuj "połącz", "kompresuj" lub "podziel"',
+  search_miss:            'Nie znaleziono narzędzia dla "{q}" — spróbuj jednego z tych:',
+  search_candidates_label: 'Pasujące narzędzia',
 
   // hero drop zone
   hero_drop:          'Przeciągnij swój PDF tutaj',

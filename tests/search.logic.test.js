@@ -104,6 +104,86 @@ test('nonsense query beyond typo tolerance returns nothing', () => {
   expect(topKey('xyzxyzxyz')).toBeFalsy();
 });
 
+// ── Tool-key indexing (typing the tool's own internal identifier) ──
+console.log('\nTool-key indexing:');
+
+test("'pdf2word' (exact key) finds pdf2word", () => {
+  expect(topKey('pdf2word')).toBe('pdf2word');
+});
+
+test("'draw-pdf' (exact key, with hyphen) finds draw-pdf", () => {
+  expect(topKey('draw-pdf')).toBe('draw-pdf');
+});
+
+test("'drawpdf' (key with hyphen dropped) also finds draw-pdf", () => {
+  expect(topKey('drawpdf')).toBe('draw-pdf');
+});
+
+test("'pdf2w' (key prefix) narrows to pdf2word alone", () => {
+  const results = search('pdf2w', index);
+  expect(results.length).toBe(1);
+  expect(results[0].key).toBe('pdf2word');
+});
+
+// ── Digit-triggered fuzzy suppression (regression: "pdf2" fuzzy-matched
+//    merge/split/compress via 1-edit distance to the unrelated word "pdfs"
+//    in their tags — a coincidental digit/letter collision, not a typo) ──
+console.log('\nDigit-triggered fuzzy suppression:');
+
+test("'pdf2' does not fuzzy-match merge/split/compress (old bug)", () => {
+  const keys = search('pdf2', index).map(r => r.key);
+  expect(keys.includes('merge')).toBeFalsy();
+  expect(keys.includes('split')).toBeFalsy();
+  expect(keys.includes('compress')).toBeFalsy();
+});
+
+test("'pdf2' instead correctly surfaces the whole pdf2* family via key-prefix", () => {
+  const keys = search('pdf2', index).map(r => r.key).sort();
+  expect(JSON.stringify(keys)).toBe(JSON.stringify(['pdf2excel', 'pdf2jpg', 'pdf2md', 'pdf2ppt', 'pdf2word'].sort()));
+});
+
+// ── search() no longer truncates internally — caller decides how many
+//    to render (this is what makes the multi-candidate narrowing UI and
+//    the pdf2*-family result above possible in the first place) ──
+console.log('\nNo internal result cap:');
+
+test("a broad query ('pdf2') can return more than 3 results", () => {
+  expect(search('pdf2', index).length > 3).toBeTruthy();
+});
+
+// ── Connector-phrase family narrowing across languages (e.g. "pdf to" /
+//    "pdf в" / "pdf'den" plausibly means any pdf2* tool; narrows as the
+//    user keeps typing) — every locale's pdf2* titles already follow a
+//    "PDF <connector> <Format>" pattern, so this exercises the interaction
+//    between that data and the uncapped multi-result search above ──
+console.log('\nConnector-phrase family narrowing (real per-locale titles):');
+
+test('EN "pdf to" surfaces multiple pdf2* tools', () => {
+  const enIndex = buildIndex(TOOLS, 'en');
+  const keys = search('pdf to', enIndex).map(r => r.key);
+  expect(keys.length > 1).toBeTruthy();
+  expect(keys.includes('pdf2word')).toBeTruthy();
+});
+
+test('EN "pdf to w" narrows to just pdf2word', () => {
+  const enIndex = buildIndex(TOOLS, 'en');
+  expect(topKey('pdf to w', enIndex)).toBe('pdf2word');
+});
+
+test('RU "pdf в" surfaces multiple pdf2* tools', () => {
+  const ruIdx = buildIndex(TOOLS, 'ru', loadLocaleSearchTags('ru'));
+  const keys = search('pdf в', ruIdx).map(r => r.key);
+  expect(keys.length > 1).toBeTruthy();
+  expect(keys.includes('pdf2word')).toBeTruthy();
+});
+
+test("TR \"pdf'den\" surfaces multiple pdf2* tools", () => {
+  const trIdx = buildIndex(TOOLS, 'tr', loadLocaleSearchTags('tr'));
+  const keys = search("pdf'den", trIdx).map(r => r.key);
+  expect(keys.length > 1).toBeTruthy();
+  expect(keys.includes('pdf2word')).toBeTruthy();
+});
+
 // ── Localized search (regression: non-English queries found nothing —
 //    buildIndex only ever scanned English tags/names, see js/i18n.js's
 //    EN.search_tags contract and js/locales/<lc>.js's search_tags) ──

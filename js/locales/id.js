@@ -268,7 +268,8 @@ window.PDFREE_LOCALE = {
   search_aria:        'Cari alat PDF',
   search_drop:        'atau letakkan PDF di sini',
   search_start:       'Mulai →',
-  search_miss:        'Tidak ada alat untuk „{q}" — coba „gabung", „kompres", atau „pisah"',
+  search_miss:            'Tidak ada alat untuk „{q}" — coba salah satu ini:',
+  search_candidates_label: 'Alat yang cocok',
 
   // hero drop zone
   hero_drop:          'Mulai dengan PDF Anda',

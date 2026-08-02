@@ -192,10 +192,13 @@ export function trackHeroFileSelect(fileCount, source) {
 /**
  * User clicked a popular chip.
  * @param {string} key   — tool key (e.g. 'merge', 'compress')
- * @param {'file-first'|'search-first'|'image-hint'} flow
+ * @param {'file-first'|'search-first'|'image-hint'|'search-candidate'|'search-fallback'} flow
  *   file-first  = had a pending file → chip launches tool immediately
  *   search-first = no file → chip opens result card for file selection
  *   image-hint  = clicked the hero-zone "have an image?" escape hatch
+ *   search-candidate = picked one of several tools a query narrowed down to
+ *   search-fallback  = query matched nothing → picked one of the popular
+ *                      tools shown as a fallback instead
  */
 export function trackChipClick(key, flow) {
   _track('Chip Click', { tool: key, flow });

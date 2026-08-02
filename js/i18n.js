@@ -255,11 +255,12 @@ export const EN = {
   rot_banner:            '🔒 Processed entirely in your browser · No upload',
 
   // ── search (homepage intent search) ───────────────────────────
-  search_placeholder: 'merge pdf, compress, rotate, watermark, pdf to word…',
-  search_aria:        'Search PDF tools',
-  search_drop:        'or drop PDF here',
-  search_start:       'Start →',
-  search_miss:        'No tool found for "{q}" — try "merge", "compress", or "split"',
+  search_placeholder:     'merge pdf, compress, rotate, watermark, pdf to word…',
+  search_aria:            'Search PDF tools',
+  search_drop:            'or drop PDF here',
+  search_start:           'Start →',
+  search_miss:            'No tool found for "{q}" — try one of these:',
+  search_candidates_label: 'Matching tools',
 
   // ── hero drop zone ────────────────────────────────────────────
   hero_drop:          'Start with your PDF',

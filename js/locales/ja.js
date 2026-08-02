@@ -270,7 +270,8 @@ window.PDFREE_LOCALE = {
   search_aria:        'PDFツールを検索',
   search_drop:        'またはPDFをここにドロップ',
   search_start:       '開始 →',
-  search_miss:        '「{q}」に該当するツールが見つかりません — 「結合」「圧縮」「分割」などをお試しください',
+  search_miss:            '「{q}」に該当するツールが見つかりません — 以下からお試しください:',
+  search_candidates_label: '該当するツール',
 
   // hero drop zone
   hero_drop:          'PDFファイルから始めましょう',

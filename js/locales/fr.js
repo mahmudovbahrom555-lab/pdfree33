@@ -267,7 +267,8 @@ window.PDFREE_LOCALE = {
   search_aria:        'Rechercher des outils PDF',
   search_drop:        'ou déposez un PDF ici',
   search_start:       'Démarrer →',
-  search_miss:        'Aucun outil trouvé pour « {q} » — essaie « fusionner », « compresser » ou « diviser »',
+  search_miss:            "Aucun outil trouvé pour « {q} » — essaie l'un de ceux-ci :",
+  search_candidates_label: 'Outils correspondants',
 
   // hero drop zone
   hero_drop:          'Commencez avec votre PDF',

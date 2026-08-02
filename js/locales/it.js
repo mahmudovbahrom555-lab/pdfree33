@@ -267,7 +267,8 @@ window.PDFREE_LOCALE = {
   search_aria:        'Cerca strumenti PDF',
   search_drop:        'o trascina un PDF qui',
   search_start:       'Avvia →',
-  search_miss:        'Nessuno strumento trovato per "{q}" — prova "unisci", "comprimi" o "dividi"',
+  search_miss:            'Nessuno strumento trovato per "{q}" — prova uno di questi:',
+  search_candidates_label: 'Strumenti corrispondenti',
 
   // hero drop zone
   hero_drop:          'Trascina il tuo PDF qui',

@@ -267,7 +267,8 @@ window.PDFREE_LOCALE = {
   search_aria:        'PDF-tools zoeken',
   search_drop:        'of sleep een PDF hier naartoe',
   search_start:       'Starten →',
-  search_miss:        'Geen tool gevonden voor "{q}" — probeer "samenvoegen", "comprimeren" of "splitsen"',
+  search_miss:            'Geen tool gevonden voor "{q}" — probeer een van deze:',
+  search_candidates_label: 'Overeenkomende tools',
 
   // hero drop zone
   hero_drop:          'Sleep je PDF hier naartoe',

@@ -267,7 +267,8 @@ window.PDFREE_LOCALE = {
   search_aria:        'PDF araçlarında ara',
   search_drop:        'veya bir PDF buraya sürükleyin',
   search_start:       'Başla →',
-  search_miss:        '"{q}" için araç bulunamadı — "birleştir", "sıkıştır" veya "böl" deneyin',
+  search_miss:            '"{q}" için araç bulunamadı — bunlardan birini deneyin:',
+  search_candidates_label: 'Eşleşen araçlar',
 
   // hero drop zone
   hero_drop:          'PDF\'inizi buraya sürükleyin',

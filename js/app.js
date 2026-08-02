@@ -1056,6 +1056,46 @@ function initSearch() {
   let _debounce = null;
   let _activeResult = null;
 
+  // Narrowing candidate list: sits between the search input and the applied-
+  // result card. A query can match several tools at once (e.g. "pdf2" or
+  // "pdf to" plausibly means any of pdf2word/pdf2excel/pdf2ppt/pdf2md/
+  // pdf2jpg) — rather than silently guessing one and hiding the rest, the
+  // top guess is still applied to the result card below (so the fast path
+  // — type, drop a file — stays instant for the common single-match case),
+  // and every candidate is also listed here as a click-to-pick alternative.
+  // The same element/rendering doubles as the empty-query-miss fallback:
+  // when nothing matches at all, it's populated with the popular-tools
+  // list instead of leaving the user looking at blank space.
+  const candidatesEl = document.createElement('div');
+  candidatesEl.className = 'search-candidates';
+  candidatesEl.hidden = true;
+  candidatesEl.setAttribute('role', 'listbox');
+  candidatesEl.setAttribute('aria-label', t('search_candidates_label'));
+  resultEl.insertAdjacentElement('beforebegin', candidatesEl);
+
+  const MAX_CANDIDATES = 5;
+
+  function _renderCandidates(entries, flow) {
+    candidatesEl.innerHTML = '';
+    const shown = entries.slice(0, MAX_CANDIDATES);
+    if (!shown.length) { candidatesEl.hidden = true; return; }
+    shown.forEach(entry => {
+      const chip = document.createElement('button');
+      chip.type = 'button';
+      chip.className = 'search-chip';
+      chip.setAttribute('role', 'option');
+      chip.textContent = `${entry.icon} ${entry.displayName}`;
+      chip.addEventListener('click', () => {
+        trackChipClick(entry.key, flow);
+        searchEl.value = entry.displayName;
+        _applyResult(entry);
+        candidatesEl.hidden = true;
+      });
+      candidatesEl.appendChild(chip);
+    });
+    candidatesEl.hidden = false;
+  }
+
   searchEl.addEventListener('input', () => {
     clearTimeout(_debounce);
     _debounce = setTimeout(() => _runSearch(searchEl.value), 200);
@@ -1069,12 +1109,33 @@ function initSearch() {
     if (results.length) {
       trackSearchQuery(q, results.length);
       _applyResult(results[0]);
+      // The list is for genuinely plausible alternatives, not every hit —
+      // scores below 50 are the typo-tolerance/description tiers, which
+      // exist so a real typo still resolves to *something*, but are too
+      // weak to display as a second option once a confident (score ≥50)
+      // match already exists (e.g. "merge" exact-matches merge at 100, but
+      // also coincidentally fuzzy-matches "large" in compress-email's tags
+      // at a distance of 2 — real but not worth surfacing next to a 100).
+      const listable = results.filter(r => r.score >= 50);
+      if (listable.length > 1) _renderCandidates(listable, 'search-candidate');
+      else candidatesEl.hidden = true;
     } else {
       trackSearchMiss(q);
       trackMiss(q);
-      _clearResult();
-      missEl.textContent = t('search_miss', { q });
-      missEl.hidden = false;
+      resultEl.hidden = true;
+      _activeResult   = null;
+      // A short/early query (e.g. still mid-word) isn't a real "miss" yet —
+      // only label it as not-found once it's long enough to plausibly be a
+      // finished, deliberate attempt. Either way, show the popular tools
+      // instead of leaving the user looking at nothing.
+      if (q.length >= 4) {
+        missEl.textContent = t('search_miss', { q });
+        missEl.hidden = false;
+      } else {
+        missEl.hidden = true;
+      }
+      const fallback = CHIP_TOOLS_DEFAULT.map(key => index.find(e => e.key === key)).filter(Boolean);
+      _renderCandidates(fallback, 'search-fallback');
     }
   }
 
@@ -1109,6 +1170,7 @@ function initSearch() {
   function _clearResult() {
     resultEl.hidden = true;
     missEl.hidden   = true;
+    candidatesEl.hidden = true;
     _activeResult   = null;
     if (srPendingFile) srPendingFile.hidden = true;
     if (srDropHint)  srDropHint.hidden = false;

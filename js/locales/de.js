@@ -268,7 +268,8 @@ window.PDFREE_LOCALE = {
   search_aria:        'PDF-Tools suchen',
   search_drop:        'oder PDF hier ablegen',
   search_start:       'Starten →',
-  search_miss:        'Kein Tool für „{q}" gefunden — versuche „zusammenfügen", „komprimieren" oder „aufteilen"',
+  search_miss:            'Kein Tool für „{q}" gefunden — probiere eines davon:',
+  search_candidates_label: 'Passende Tools',
 
   // hero drop zone
   hero_drop:          'Starte mit deinem PDF',

@@ -3378,6 +3378,22 @@ body:not(.has-files) #heroChipsLabel { display: none !important; }
   max-width: 540px;
 }
 
+/* Narrowing candidate list / no-match fallback below the search input —
+   visibility is driven by search state (candidatesEl.hidden, toggled in
+   js/app.js), not file-drop state, so this deliberately does NOT reuse
+   .search-popular — that class is hidden outright while body lacks
+   .has-files (see the rule above and css/layout.css's #searchPopular
+   rules), which would make this list invisible regardless of its own
+   `hidden` attribute. */
+.search-candidates {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  max-width: 540px;
+  margin: 0 0 10px;
+}
+
 .search-chip {
   padding: 5px 13px;
   border: 1.5px solid var(--border);

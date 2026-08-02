@@ -269,7 +269,8 @@ window.PDFREE_LOCALE = {
   search_aria:        'PDF 도구 검색',
   search_drop:        '또는 PDF를 여기에 드래그',
   search_start:       '시작 →',
-  search_miss:        '"{q}"에 해당하는 도구를 찾을 수 없습니다 — "합치기", "압축" 또는 "분할"을 시도해 보세요',
+  search_miss:            '"{q}"에 해당하는 도구를 찾을 수 없습니다 — 아래 중 하나를 시도해 보세요:',
+  search_candidates_label: '일치하는 도구',
 
   // hero drop zone
   hero_drop:          '여기로 PDF를 끌어오세요',

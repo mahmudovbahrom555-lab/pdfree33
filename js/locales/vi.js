@@ -268,7 +268,8 @@ window.PDFREE_LOCALE = {
   search_aria:        'Tìm kiếm công cụ PDF',
   search_drop:        'hoặc thả PDF vào đây',
   search_start:       'Bắt đầu →',
-  search_miss:        'Không tìm thấy công cụ cho „{q}" — thử „ghép", „nén" hoặc „tách"',
+  search_miss:            'Không tìm thấy công cụ cho „{q}" — thử một trong số này:',
+  search_candidates_label: 'Công cụ phù hợp',
 
   // hero drop zone
   hero_drop:          'Thả PDF vào đây',

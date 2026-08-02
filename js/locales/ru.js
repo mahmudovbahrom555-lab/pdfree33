@@ -268,7 +268,8 @@ window.PDFREE_LOCALE = {
   search_aria:        'Поиск PDF-инструментов',
   search_drop:        'или перетащите PDF сюда',
   search_start:       'Начать →',
-  search_miss:        'Инструмент для «{q}» не найден — попробуйте «объединить», «сжать» или «разделить»',
+  search_miss:            'Инструмент для «{q}» не найден — попробуйте один из этих:',
+  search_candidates_label: 'Подходящие инструменты',
 
   // hero drop zone
   hero_drop:          'Начните с вашего PDF',
