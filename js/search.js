@@ -14,14 +14,22 @@ const MISS_KEY = 'pdfree_search_misses';
 // U+036F) handles most of this (ö→o, ü→u, ç→c, ş→s, ğ→g, é→e, Vietnamese's
 // stacked tone marks like ệ→e, ả→a...). A few base letters are visually
 // "accented" but don't have an NFD decomposition — they're distinct code
-// points, not letter+combining-mark — so they're folded explicitly:
-// Turkish dotless ı (U+0131) and Vietnamese đ (U+0111, "d with stroke").
-// Without this, Vietnamese typed "không dấu" (without diacritics — common
-// on non-Vietnamese keyboards or just for speed) matched nothing at all:
-// "đặt mật khẩu" (set password) has no NFD-decomposable letter until you
-// also fold đ, so "dat mat khau" fell through every tier silently.
+// points, not letter+combining-mark — so they're folded explicitly. Found
+// by scanning every character actually used across all 13 locales'
+// search_tags data and checking which ones don't decompose (not by
+// guessing language-by-language): Turkish dotless ı (U+0131), Vietnamese
+// đ (U+0111, "d with stroke"), Polish ł (U+0142, "l with stroke"), and
+// German ß (U+00DF, "sharp s" — folds to "ss", the standard ASCII
+// transliteration, not "s"). Without this, e.g. Vietnamese typed "không
+// dấu" (without diacritics — common on non-Vietnamese keyboards or just
+// for speed) matched nothing at all: "đặt mật khẩu" (set password) has no
+// NFD-decomposable letter until you also fold đ, so "dat mat khau" fell
+// through every tier silently. Cyrillic and CJK characters are a
+// different alphabet, not an "accented Latin letter" concept — left
+// untouched.
 function foldDiacritics(s) {
-  return s.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/ı/g, 'i').replace(/đ/g, 'd');
+  return s.normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/ı/g, 'i').replace(/đ/g, 'd').replace(/ł/g, 'l').replace(/ß/g, 'ss');
 }
 
 /**

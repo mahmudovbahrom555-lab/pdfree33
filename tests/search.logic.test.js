@@ -249,6 +249,30 @@ test('an unrelated 2-word query still returns nothing (no new false positives)',
   expect(topKey('happy birthday')).toBeFalsy();
 });
 
+// ── More non-decomposing base letters (found by scanning every character
+//    actually used across all 13 locales' search_tags, not by guessing
+//    language-by-language — same bug class as ı/đ above) ──
+console.log('\nMore non-decomposing base letters (Polish ł, German ß):');
+
+test('PL "polacz" (no ł) exact-matches merge, not just a weak fuzzy guess', () => {
+  const plIdx = buildIndex(TOOLS, 'pl', loadLocaleSearchTags('pl'));
+  const results = search('polacz', plIdx);
+  expect(results[0]?.key).toBe('merge');
+  expect(results[0]?.score).toBe(90);
+});
+
+test('PL "splaszcz" (no ł, real tag is "spłaszcz") finds flatten', () => {
+  const plIdx = buildIndex(TOOLS, 'pl', loadLocaleSearchTags('pl'));
+  expect(topKey('splaszcz', plIdx)).toBe('flatten');
+});
+
+test('DE "fusszeile" (ß folded to ss, real tag is "fußzeile") finds pagenum', () => {
+  const deIdx = buildIndex(TOOLS, 'de', loadLocaleSearchTags('de'));
+  const results = search('fusszeile', deIdx);
+  expect(results[0]?.key).toBe('pagenum');
+  expect(results[0]?.score).toBe(90);
+});
+
 // ── Localized search (regression: non-English queries found nothing —
 //    buildIndex only ever scanned English tags/names, see js/i18n.js's
 //    EN.search_tags contract and js/locales/<lc>.js's search_tags) ──
