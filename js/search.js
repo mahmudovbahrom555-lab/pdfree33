@@ -3,6 +3,22 @@
 
 const MISS_KEY = 'pdfree_search_misses';
 
+// Fold accented/diacritic characters to their plain-Latin base for matching
+// (never for display) — e.g. Turkish "sıkıştır" (compress) should still be
+// found by a user typing the ASCII "sikistir" on a non-Turkish keyboard, or
+// dropping accents out of habit/speed in any language (French "compresser"
+// typed "compreser" is a typo the fuzzy tier already catches at 1 edit, but
+// "protéger" -> "proteger" is also an *accent* difference some fuzzy-tier
+// length budgets don't cover once a word has several accented letters).
+// Standard Unicode NFD decomposition + stripping combining marks (U+0300–
+// U+036F) handles most of this (ö→o, ü→u, ç→c, ş→s, ğ→g, é→e...). Turkish's
+// dotless ı (U+0131) is the one common exception — it's a distinct base
+// letter, not an accent-marked 'i', so NFD leaves it untouched; folded
+// explicitly below.
+function foldDiacritics(s) {
+  return s.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/ı/g, 'i');
+}
+
 /**
  * Build a flat search index from the TOOLS dict.
  * Called once at homepage init; result is passed to search().
@@ -20,15 +36,15 @@ export function buildIndex(tools, lang = 'en', localeTags = {}) {
       key,
       displayName: t.titles?.[lang] || t.title || key,
       icon:        t.icon || '📄',
-      name:       (t.titles?.[lang] || t.title || '').toLowerCase(),
-      nameEn:     (t.title || '').toLowerCase(),
+      name:       foldDiacritics((t.titles?.[lang] || t.title || '').toLowerCase()),
+      nameEn:     foldDiacritics((t.title || '').toLowerCase()),
       // The tool's own internal identifier (e.g. 'pdf2word', 'draw-pdf') is
       // itself a recognizable, languageless term some users type verbatim —
       // index it (and a no-hyphen variant, since 'draw-pdf' vs 'drawpdf' is
       // an easy thing to not realize matters) alongside the translated name.
-      keyTerms:   [key, key.replace(/-/g, '')].map(s => s.toLowerCase()),
-      desc:       (t.descs?.[lang]  || t.desc  || '').toLowerCase(),
-      tags:       [...(t.tags || []), ...(localeTags?.[key] || [])].map(s => s.toLowerCase()),
+      keyTerms:   [key, key.replace(/-/g, '')].map(s => foldDiacritics(s.toLowerCase())),
+      desc:       foldDiacritics((t.descs?.[lang]  || t.desc  || '').toLowerCase()),
+      tags:       [...(t.tags || []), ...(localeTags?.[key] || [])].map(s => foldDiacritics(s.toLowerCase())),
       accept:     t.accept || '.pdf',
       multi:      t.multi  || false,
       btn:        t.btns?.[lang] || t.btn || '',
@@ -117,7 +133,7 @@ function minQueryLength(q) {
 const NO_FUZZY_RE = /\d/;
 
 export function search(query, index) {
-  const q = query.toLowerCase().trim();
+  const q = foldDiacritics(query.toLowerCase().trim());
   if (q.length < minQueryLength(q)) return [];
 
   return index

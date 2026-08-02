@@ -184,6 +184,34 @@ test("TR \"pdf'den\" surfaces multiple pdf2* tools", () => {
   expect(keys.includes('pdf2word')).toBeTruthy();
 });
 
+// ── Diacritic folding (regression: a real user testing every locale in a
+//    browser found that Turkish "sikistir" — the ASCII spelling of
+//    "sıkıştır", compress, typed without dotless-ı/ş because those aren't
+//    on every keyboard — returned nothing at all. The word needs 4 letter
+//    substitutions to become "sıkıştır", well past the fuzzy-typo edit
+//    budget, so it silently fell through everything) ──
+console.log('\nDiacritic folding (ASCII-typed accented words):');
+
+test('TR "sikistir" (no dotless-ı/ş) finds compress', () => {
+  const trIdx = buildIndex(TOOLS, 'tr', loadLocaleSearchTags('tr'));
+  expect(topKey('sikistir', trIdx)).toBe('compress');
+});
+
+test('TR accented "sıkıştır" still finds the same tool as the ASCII form', () => {
+  const trIdx = buildIndex(TOOLS, 'tr', loadLocaleSearchTags('tr'));
+  expect(topKey('sıkıştır', trIdx)).toBe('compress');
+});
+
+test('ES "titulo" (no accent, real tag is "título") finds metadata', () => {
+  const esIdx = buildIndex(TOOLS, 'es', loadLocaleSearchTags('es'));
+  expect(topKey('titulo', esIdx)).toBe('meta');
+});
+
+test("CJK matching is unaffected by diacritic folding (結合 still finds merge)", () => {
+  const jaIdx = buildIndex(TOOLS, 'ja', loadLocaleSearchTags('ja'));
+  expect(topKey('結合', jaIdx)).toBe('merge');
+});
+
 // ── Localized search (regression: non-English queries found nothing —
 //    buildIndex only ever scanned English tags/names, see js/i18n.js's
 //    EN.search_tags contract and js/locales/<lc>.js's search_tags) ──
