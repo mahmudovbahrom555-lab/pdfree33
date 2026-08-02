@@ -15,8 +15,9 @@
 //  container in any of the 14 homepage HTML files or the standalone
 //  tool-page template — it creates its own, inserted right before
 //  #mergeBtn (same insertion technique as the search-candidates list
-//  in app.js). This avoids having to touch every locale's index.html
-//  for what is, for now, an English-only MVP tool (see config.js).
+//  in app.js). Report strings are fully localized via i18n.js/t() —
+//  only the standalone SEO page (data/content/*/pdf2pdfa.html) is
+//  English-only for now, see js/config.js.
 //
 //  Phase 2: conversion writes an ICC OutputIntent + XMP metadata via
 //  pdfaWorker.js. The worker independently re-checks compliance
@@ -25,6 +26,7 @@
 // ============================================================
 
 import { id, esc } from './utils.js';
+import { t } from './i18n.js';
 import { analyzePdfA, convertToPdfA } from './pdfaAnalyze.js';
 import { selectedFiles } from './files.js';
 
@@ -61,7 +63,7 @@ function _ensureContainer() {
   c = document.createElement('div');
   c.id = 'pdf2pdfaOptions';
   c.className = 'j2p-options';
-  c.setAttribute('aria-label', 'PDF/A compliance report');
+  c.setAttribute('aria-label', t('pdfa_aria_label'));
   btn.insertAdjacentElement('beforebegin', c);
   return c;
 }
@@ -99,7 +101,7 @@ function _bindConvertBtn(myGen) {
     if (!_file || myGen !== _gen) return;
     btn.disabled = true;
     const originalLabel = btn.textContent;
-    btn.textContent = 'Converting…';
+    btn.textContent = t('pdfa_converting');
 
     let result;
     try {
@@ -109,7 +111,7 @@ function _bindConvertBtn(myGen) {
       btn.disabled = false;
       btn.textContent = originalLabel;
       const statusEl = id('pdf2pdfaConvertStatus');
-      if (statusEl) statusEl.textContent = 'Conversion failed' + (err?.message ? ': ' + err.message : '.');
+      if (statusEl) statusEl.textContent = err?.message ? t('pdfa_convert_failed_detail', { message: err.message }) : t('pdfa_convert_failed');
       return;
     }
     if (myGen !== _gen) return;
@@ -128,9 +130,7 @@ function _bindConvertBtn(myGen) {
     btn.textContent = originalLabel;
     const statusEl = id('pdf2pdfaConvertStatus');
     if (statusEl) {
-      statusEl.textContent = result.audit.passed
-        ? '✓ Converted — self-check confirmed the OutputIntent and XMP markers in the downloaded file.'
-        : '⚠ Converted, but the self-check could not confirm all markers in the output file — verify with a dedicated PDF/A validator before relying on this file.';
+      statusEl.textContent = result.audit.passed ? t('pdfa_convert_success') : t('pdfa_convert_warn');
     }
   });
 }
@@ -159,13 +159,14 @@ export function hidePdf2PdfaOptions() {
 }
 
 function _loadingHtml() {
-  return `<div style="padding:14px 0;color:var(--text2);font-size:14px;">Analyzing PDF/A-2b compliance…</div>`;
+  return `<div style="padding:14px 0;color:var(--text2);font-size:14px;">${esc(t('pdfa_analyzing'))}</div>`;
 }
 
 function _errorHtml(message) {
+  const text = message ? t('pdfa_error', { message }) : t('pdfa_error_generic');
   return `<div style="padding:12px 14px;background:var(--red-light,#fdecea);border:1px solid rgba(200,40,40,.2);
     border-radius:10px;color:var(--red,#c0392b);font-size:13px;">
-    Could not analyze this file${message ? ': ' + esc(message) : '.'}
+    ${esc(text)}
   </div>`;
 }
 
@@ -174,51 +175,49 @@ function _row(ok, label, detail) {
   const color = ok ? 'var(--green,#2d7a4f)' : 'var(--red,#c0392b)';
   return `<div style="display:flex;gap:8px;align-items:flex-start;padding:6px 0;font-size:13px;">
     <span style="color:${color};font-weight:700;flex-shrink:0;">${icon}</span>
-    <span style="color:var(--text);">${esc(label)}${detail ? `<br><span style="color:var(--text2);font-size:12px;">${detail}</span>` : ''}</span>
+    <span style="color:var(--text);">${esc(label)}${detail ? `<br><span style="color:var(--text2);font-size:12px;">${esc(detail)}</span>` : ''}</span>
   </div>`;
 }
 
 function _reportHtml(r) {
   const rows = [];
 
-  rows.push(_row(!r.encrypted, 'No password / encryption',
-    r.encrypted ? 'Remove the password first, then re-check.' : null));
+  rows.push(_row(!r.encrypted, t('pdfa_row_encryption'),
+    r.encrypted ? t('pdfa_row_encryption_detail') : null));
 
-  rows.push(_row(r.missingFonts.length === 0, 'All fonts embedded',
+  rows.push(_row(r.missingFonts.length === 0, t('pdfa_row_fonts'),
     r.missingFonts.length
-      ? `Not embedded: ${r.missingFonts.slice(0, 5).map(esc).join(', ')}${r.missingFonts.length > 5 ? '…' : ''}`
+      ? t('pdfa_row_fonts_detail', { fonts: r.missingFonts.slice(0, 5).join(', ') + (r.missingFonts.length > 5 ? '…' : '') })
       : null));
 
-  const forbiddenLabels = { openAction: 'a document open action', aa: 'document-level actions', javascript: 'embedded JavaScript' };
-  rows.push(_row(r.forbidden.length === 0, 'No interactive actions or scripts',
+  rows.push(_row(r.forbidden.length === 0, t('pdfa_row_actions'),
     r.forbidden.length
-      ? `Found: ${r.forbidden.map(k => forbiddenLabels[k] || k).join(', ')}`
+      ? t('pdfa_row_actions_detail', { actions: r.forbidden.map(k => t('pdfa_action_' + k)).join(', ') })
       : null));
 
-  rows.push(_row(!r.hasLzw, 'No LZW-compressed streams',
-    r.hasLzw ? 'PDF/A does not permit the LZWDecode filter.' : null));
+  rows.push(_row(!r.hasLzw, t('pdfa_row_lzw'),
+    r.hasLzw ? t('pdfa_row_lzw_detail') : null));
 
   const verdict = r.compliant
     ? `<div style="margin-top:10px;padding:10px 14px;background:var(--green-light);border:1px solid rgba(45,122,79,.18);
         border-radius:10px;color:var(--green);font-size:13px;font-weight:600;">
-        ✓ This PDF meets the structural requirements for PDF/A-2b.
+        ${esc(t('pdfa_compliant'))}
       </div>
       <button id="pdf2pdfaConvertBtn" type="button" style="margin-top:10px;padding:10px 18px;background:var(--green,#2d7a4f);
         color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;">
-        📐 Convert to PDF/A-2b
+        ${esc(t('pdfa_convert_btn'))}
       </button>
       <div id="pdf2pdfaConvertStatus" style="margin-top:8px;font-size:12px;color:var(--text2);"></div>`
     : `<div style="margin-top:10px;padding:10px 14px;background:var(--yellow-light,#fef8e7);border:1px solid rgba(202,138,4,.25);
         border-radius:10px;color:#8a6d1a;font-size:13px;font-weight:600;">
-        This PDF is not PDF/A-2b compliant yet — see the issues above.
+        ${esc(t('pdfa_not_compliant'))}
       </div>`;
 
   return `<div style="padding:10px 0 4px;">
     ${rows.join('')}
     ${verdict}
     <p style="margin:12px 0 0;font-size:11px;color:var(--text2);line-height:1.5;">
-      This is a self-check of the structural requirements most likely to fail, run entirely in your browser.
-      It is not a substitute for a full ISO 19005 validator (e.g. veraPDF) for legally mandated archiving.
+      ${esc(t('pdfa_disclaimer'))}
     </p>
   </div>`;
 }

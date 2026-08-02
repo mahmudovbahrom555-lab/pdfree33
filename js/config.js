@@ -406,18 +406,19 @@ export const TOOLS = {
     accept:      '.pdf,application/pdf',
     implemented: true,
   },
-  // MVP: analysis only (Phase 1 of the PDF/A plan) — no conversion yet, no
-  // tool-grid card, no dedicated SEO page. Reachable via search and direct
-  // ?tool=pdf2pdfa routing only. English-only for now — no titles/descs/btns
-  // per-locale entries yet, so it falls back to the English strings below on
-  // every locale page (the same fallback contract every other tool already
-  // relies on when a translation key is missing — see search.js buildIndex).
+  // Analysis + conversion (Phases 1-2 of the PDF/A plan) done; tool-grid
+  // card + this dict's titles/descs/btns are Phase 3. The dedicated SEO
+  // page (data/content/*/pdf2pdfa.html) is still EN-only — see
+  // data/tools-config.json, which only has an 'en' slug for now.
   pdf2pdfa: {
     icon:        '📐',
     title:       'Check PDF/A Compliance',
     desc:        'Check if a PDF meets PDF/A-2b archival requirements — runs in your browser, no upload',
     tags:        ['pdfa', 'pdf/a', 'pdf-a', 'archive', 'archival', 'iso 19005', 'compliance',
                   'long-term archiving', 'check pdf/a', 'pdf to pdfa', 'pdf to pdf/a'],
+    titles: { en: 'Check PDF/A Compliance', de: 'PDF/A-Konformität prüfen', es: 'Comprobar Conformidad PDF/A', fr: 'Vérifier la Conformité PDF/A', id: 'Periksa Kepatuhan PDF/A', vi: 'Kiểm Tra Tuân Thủ PDF/A', ru: 'Проверить Соответствие PDF/A', ja: 'PDF/A準拠をチェック', it: 'Verifica Conformità PDF/A', ko: 'PDF/A 준수 확인', nl: 'PDF/A-conformiteit Controleren', pl: 'Sprawdź Zgodność z PDF/A', tr: 'PDF/A Uyumluluğunu Kontrol Et', pt: 'Verificar Conformidade PDF/A' },
+    descs:  { en: 'Check if a PDF meets PDF/A-2b archival requirements — runs in your browser, no upload', de: 'Prüfen, ob ein PDF die PDF/A-2b-Archivierungsanforderungen erfüllt — läuft im Browser, kein Upload', es: 'Comprueba si un PDF cumple los requisitos de archivo PDF/A-2b — funciona en tu navegador, sin subida', fr: "Vérifiez si un PDF répond aux exigences d'archivage PDF/A-2b — dans votre navigateur, sans envoi", id: 'Periksa apakah PDF memenuhi persyaratan arsip PDF/A-2b — berjalan di browser Anda, tanpa unggah', vi: 'Kiểm tra xem PDF có đáp ứng yêu cầu lưu trữ PDF/A-2b không — chạy trong trình duyệt, không tải lên', ru: 'Проверьте, соответствует ли PDF архивным требованиям PDF/A-2b — работает в браузере, без загрузки', ja: 'PDFがPDF/A-2bアーカイブ要件を満たしているか確認 — ブラウザ内で動作、アップロード不要', it: 'Verifica se un PDF soddisfa i requisiti di archiviazione PDF/A-2b — funziona nel browser, senza caricamento', ko: 'PDF가 PDF/A-2b 보관 요건을 충족하는지 확인 — 브라우저에서 실행, 업로드 없음', nl: 'Controleer of een PDF voldoet aan de PDF/A-2b-archiveringsvereisten — werkt in je browser, geen upload', pl: 'Sprawdź, czy PDF spełnia wymagania archiwizacji PDF/A-2b — działa w przeglądarce, bez przesyłania', tr: "PDF'in PDF/A-2b arşivleme gereksinimlerini karşılayıp karşılamadığını kontrol edin — tarayıcınızda çalışır, yükleme yok", pt: 'Verifique se um PDF atende aos requisitos de arquivamento PDF/A-2b — funciona no navegador, sem upload' },
+    btns:   { en: '📐 Check Compliance', de: '📐 Konformität prüfen', es: '📐 Comprobar Conformidad', fr: '📐 Vérifier la Conformité', id: '📐 Periksa Kepatuhan', vi: '📐 Kiểm Tra Tuân Thủ', ru: '📐 Проверить Соответствие', ja: '📐 準拠をチェック', it: '📐 Verifica Conformità', ko: '📐 준수 확인', nl: '📐 Conformiteit Controleren', pl: '📐 Sprawdź Zgodność', tr: '📐 Uyumluluğu Kontrol Et', pt: '📐 Verificar Conformidade' },
     btn:         '📐 Check Compliance',
     multi:       false,
     accept:      '.pdf,application/pdf',

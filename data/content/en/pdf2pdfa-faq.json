@@ -1,0 +1,74 @@
+[
+  {
+    "@type": "Question",
+    "name": "What is PDF/A?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDF/A is an ISO-standardized (ISO 19005) version of PDF designed for long-term archiving. It requires all fonts to be embedded, forbids encryption and embedded JavaScript, and embeds color-profile and metadata information so the document renders identically decades from now, independent of external resources."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Which PDF/A conformance level does PDFree target?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDF/A-2b — the visual-reproduction level of the PDF/A-2 part of the standard. It's the right target for most archiving needs without requiring full accessibility tagging (PDF/A-2a), which is a separate, much larger undertaking."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Why does my PDF fail the compliance check?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "The most common reason is unembedded fonts — many PDFs reference standard fonts like Helvetica or Arial by name instead of embedding them, which PDF/A does not allow. Other reasons include a password/encryption, embedded JavaScript or automatic open actions, and (rarely) old LZW-compressed image streams."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can PDFree fix a PDF with missing fonts?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Not automatically, and deliberately so. Substituting a replacement font for text that wasn't embedded risks silently shifting line breaks and page layout. PDFree tells you exactly which fonts aren't embedded so you can re-export the source document with fonts embedded (most word processors and design tools support this directly)."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is the compliance check a full PDF/A validator like veraPDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. This is a self-check of the structural requirements most PDFs actually fail — it is not a substitute for a full ISO 19005 validator. If you need a legally certified PDF/A file for regulatory or legal archiving, verify the converted file with a dedicated validator such as veraPDF afterward."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Does checking or converting my PDF upload it to a server?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Both the compliance check and the conversion run entirely in your browser using a dedicated Web Worker. Your file is never uploaded anywhere."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Does PDFree store or log my files after processing?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. PDFree runs entirely in your browser — there is no backend server that receives your files. Because nothing is uploaded, nothing can be stored, logged, or retained. Your document exists only in your browser's memory for the duration of the session and is cleared when you close the tab."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "What does the converted PDF/A file actually contain?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "The conversion embeds a standard sRGB ICC color profile (via an OutputIntent) and an XMP metadata packet declaring PDF/A-2b conformance, mirrored from the document's own title/author so the two can't disagree. It does not alter your document's text, images, or layout."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is checking and converting PDFs to PDF/A free?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. PDFree is free with no subscription, no daily limits, and no signup."
+    }
+  }
+]

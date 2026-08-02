@@ -3706,6 +3706,44 @@
         "pl": "ocr pdf, ocr pdf online za darmo, rozpoznawanie tekstu pdf, zeskanowany pdf na tekst, zrób przeszukiwalny pdf, wyodrębnij tekst ze skanu",
         "tr": "pdf ocr, ücretsiz pdf ocr, taranan pdf'i metne çevir, pdf metin tanıma, taranan pdf aranabilir yap, pdf'den metin çıkar"
       }
+    },
+    {
+      "id": "pdf2pdfa",
+      "icon": "📐",
+      "toolKey": "pdf2pdfa",
+      "slugs": {
+        "en": "pdf-to-pdfa"
+      },
+      "breadcrumb": {
+        "en": "PDF to PDF/A"
+      },
+      "cardNames": {
+        "en": "Check PDF/A Compliance"
+      },
+      "cardDescs": {
+        "en": "Check & convert to PDF/A-2b — no upload"
+      },
+      "navLabels": {
+        "en": "PDF/A"
+      },
+      "titles": {
+        "en": "PDF to PDF/A-2b Converter Free — Check & Convert for Archiving | PDFree"
+      },
+      "descs": {
+        "en": "Check if your PDF meets PDF/A-2b archival requirements and convert compliant files instantly. 100% private — runs in your browser, nothing uploaded."
+      },
+      "metaDescs": {
+        "en": "Check PDF/A-2b compliance and convert eligible PDFs for long-term archiving — free, private, runs entirely in your browser. No upload, no signup."
+      },
+      "ogTitles": {
+        "en": "PDF to PDF/A-2b Converter — Free, Private, No Upload"
+      },
+      "ogDescs": {
+        "en": "Check PDF/A-2b compliance and convert your PDF for long-term archiving. Runs in your browser — nothing uploaded, nothing saved on a server. Free forever, no signup."
+      },
+      "keywords": {
+        "en": "pdf to pdfa, pdf/a converter, pdf/a compliance checker, convert pdf to pdf/a-2b, iso 19005, pdf archiving, check pdf/a online free"
+      }
     }
   ],
   "ui": {
