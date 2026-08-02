@@ -16,7 +16,7 @@
 importScripts('./vendor/pdf-lib.min.js');
 importScripts('./vendor/fontkit.umd.js');
 
-const { PDFDocument, PDFName, PDFDict, PDFRef, PDFArray, PDFString, decodePDFRawStream } = self.PDFLib;
+const { PDFDocument, PDFName, PDFDict, PDFRef, PDFArray, PDFString, PDFHexString, decodePDFRawStream } = self.PDFLib;
 
 // ── Font embedding check ─────────────────────────────────────────────────
 // Walks Type0 → DescendantFonts → CIDFont → FontDescriptor for composite
@@ -607,6 +607,22 @@ async function convert(pdfDoc, iccBytes, substituteFontsOpt, liberationFonts) {
   const outputIntentRef = context.register(outputIntent);
   pdfDoc.catalog.set(PDFName.of('OutputIntents'), context.obj([outputIntentRef]));
 
+  // PDF/A requires a trailer /ID (ISO 19005 6.1.3, inherited from ISO 32000-1
+  // 14.4) — pdf-lib's save() preserves an ID the SOURCE file already had,
+  // but never generates one if the source never had one to begin with. A
+  // real-data comparison against a competitor's output (same veraPDF flavor,
+  // same source file) caught our own converter failing this exact rule on
+  // a source PDF with no pre-existing ID — not hypothetical, reproduced on
+  // an actual file. Both array elements set to the same fresh random value,
+  // matching common practice for a document's first save (spec doesn't
+  // mandate a specific derivation, only that it be present).
+  if (!context.trailerInfo.ID) {
+    const randomBytes = crypto.getRandomValues(new Uint8Array(16));
+    const hex = Array.from(randomBytes).map(b => b.toString(16).padStart(2, '0')).join('');
+    const idString = PDFHexString.of(hex);
+    context.trailerInfo.ID = context.obj([idString, idString]);
+  }
+
   const savedBytes = await pdfDoc.save();
 
   const audit = await selfAudit(savedBytes, iccBytes.length, conformance);
@@ -654,6 +670,7 @@ async function selfAudit(savedBytes, expectedIccLen, expectedConformance) {
   const reloaded = analyze(doc);
   const actionsClean = reloaded.forbidden.length === 0;
   const fontsClean = reloaded.missingFonts.length === 0;
+  const hasTrailerId = !!doc.context.trailerInfo.ID;
 
   return {
     outputIntentPresent: outputIntentOk,
@@ -661,7 +678,8 @@ async function selfAudit(savedBytes, expectedIccLen, expectedConformance) {
     notEncrypted: !doc.isEncrypted,
     actionsClean,
     fontsClean,
-    passed: outputIntentOk && xmpOk && !doc.isEncrypted && actionsClean && fontsClean,
+    hasTrailerId,
+    passed: outputIntentOk && xmpOk && !doc.isEncrypted && actionsClean && fontsClean && hasTrailerId,
   };
 }
 
