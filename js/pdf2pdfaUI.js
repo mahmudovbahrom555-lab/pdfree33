@@ -229,6 +229,9 @@ function _reportHtml(r) {
     : null;
   rows.push(_row(r.encrypted ? 'fail' : 'ok', t('pdfa_row_encryption'), encryptionDetail));
 
+  rows.push(_row(r.hasSignature ? 'fail' : 'ok', t('pdfa_row_signature'),
+    r.hasSignature ? esc(t('pdfa_row_signature_detail')) : null));
+
   rows.push(_row(r.missingFonts.length === 0 ? 'ok' : 'fail', t('pdfa_row_fonts'),
     r.missingFonts.length
       ? esc(t('pdfa_row_fonts_detail', { fonts: r.missingFonts.slice(0, 5).join(', ') + (r.missingFonts.length > 5 ? '…' : '') }))

@@ -277,6 +277,8 @@ window.PDFREE_LOCALE = {
   pdfa_error_generic:          'Bu dosya analiz edilemedi.',
   pdfa_row_encryption:         'Şifre / şifreleme yok',
   pdfa_row_encryption_detail:  'Önce şifreyi kaldırın, ardından tekrar kontrol edin.',
+  pdfa_row_signature: 'Uygulanmış dijital imza yok',
+  pdfa_row_signature_detail: 'Dönüştürme mevcut imzayı geçersiz kılar. Dönüştürülen dosyayı daha sonra yeniden imzalayın veya imzalamadan önce dönüştürün.',
   pdfa_row_fonts:              'Tüm yazı tipleri gömülü',
   pdfa_row_fonts_detail:       'Gömülü değil: {fonts}',
   pdfa_row_actions:            'Etkileşimli işlem veya betik yok',

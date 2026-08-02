@@ -277,6 +277,8 @@ window.PDFREE_LOCALE = {
   pdfa_error_generic:          'Não foi possível analisar este arquivo.',
   pdfa_row_encryption:         'Sem senha / criptografia',
   pdfa_row_encryption_detail:  'Remova a senha primeiro e verifique novamente.',
+  pdfa_row_signature: 'Nenhuma assinatura digital aplicada',
+  pdfa_row_signature_detail: 'A conversão invalidaria a assinatura existente. Assine o arquivo convertido novamente depois, ou converta antes de assinar.',
   pdfa_row_fonts:              'Todas as fontes incorporadas',
   pdfa_row_fonts_detail:       'Não incorporadas: {fonts}',
   pdfa_row_actions:            'Sem ações interativas ou scripts',

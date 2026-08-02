@@ -280,6 +280,8 @@ window.PDFREE_LOCALE = {
   pdfa_error_generic:          'このファイルを解析できませんでした。',
   pdfa_row_encryption:         'パスワード・暗号化なし',
   pdfa_row_encryption_detail:  'まずパスワードを解除してから再確認してください。',
+  pdfa_row_signature: '適用済みのデジタル署名なし',
+  pdfa_row_signature_detail: '変換すると既存の署名が無効になります。変換後のファイルに再度署名するか、署名前に変換してください。',
   pdfa_row_fonts:              'すべてのフォントが埋め込み済み',
   pdfa_row_fonts_detail:       '未埋め込み: {fonts}',
   pdfa_row_actions:            '対話型アクションやスクリプトなし',

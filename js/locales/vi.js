@@ -278,6 +278,8 @@ window.PDFREE_LOCALE = {
   pdfa_error_generic:          'Không thể phân tích tệp này.',
   pdfa_row_encryption:         'Không có mật khẩu / mã hóa',
   pdfa_row_encryption_detail:  'Hãy xóa mật khẩu trước, sau đó kiểm tra lại.',
+  pdfa_row_signature: 'Không có chữ ký số đã áp dụng',
+  pdfa_row_signature_detail: 'Việc chuyển đổi sẽ làm mất hiệu lực chữ ký hiện có. Hãy ký lại tệp đã chuyển đổi sau đó, hoặc chuyển đổi trước khi ký.',
   pdfa_row_fonts:              'Tất cả phông chữ đã được nhúng',
   pdfa_row_fonts_detail:       'Chưa nhúng: {fonts}',
   pdfa_row_actions:            'Không có hành động tương tác hoặc tập lệnh',

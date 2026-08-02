@@ -278,6 +278,8 @@ window.PDFREE_LOCALE = {
   pdfa_error_generic:          'Datei konnte nicht analysiert werden.',
   pdfa_row_encryption:         'Kein Passwort / keine Verschlüsselung',
   pdfa_row_encryption_detail:  'Entfernen Sie zuerst das Passwort und prüfen Sie erneut.',
+  pdfa_row_signature: 'Keine angewendete digitale Signatur',
+  pdfa_row_signature_detail: 'Die Umwandlung würde die vorhandene Signatur ungültig machen. Signieren Sie die umgewandelte Datei danach erneut, oder wandeln Sie vor dem Signieren um.',
   pdfa_row_fonts:              'Alle Schriftarten eingebettet',
   pdfa_row_fonts_detail:       'Nicht eingebettet: {fonts}',
   pdfa_row_actions:            'Keine interaktiven Aktionen oder Skripte',

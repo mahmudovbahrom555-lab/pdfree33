@@ -277,6 +277,8 @@ window.PDFREE_LOCALE = {
   pdfa_error_generic:          'Kon dit bestand niet analyseren.',
   pdfa_row_encryption:         'Geen wachtwoord / versleuteling',
   pdfa_row_encryption_detail:  'Verwijder eerst het wachtwoord en controleer opnieuw.',
+  pdfa_row_signature: 'Geen toegepaste digitale handtekening',
+  pdfa_row_signature_detail: 'Converteren zou de bestaande handtekening ongeldig maken. Onderteken het geconverteerde bestand daarna opnieuw, of converteer vóór het ondertekenen.',
   pdfa_row_fonts:              'Alle lettertypen ingesloten',
   pdfa_row_fonts_detail:       'Niet ingesloten: {fonts}',
   pdfa_row_actions:            'Geen interactieve acties of scripts',

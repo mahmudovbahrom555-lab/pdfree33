@@ -277,6 +277,8 @@ window.PDFREE_LOCALE = {
   pdfa_error_generic:          'Nie udało się przeanalizować tego pliku.',
   pdfa_row_encryption:         'Brak hasła / szyfrowania',
   pdfa_row_encryption_detail:  'Najpierw usuń hasło, a następnie sprawdź ponownie.',
+  pdfa_row_signature: 'Brak zastosowanego podpisu cyfrowego',
+  pdfa_row_signature_detail: 'Konwersja unieważni istniejący podpis. Podpisz przekonwertowany plik ponownie później albo dokonaj konwersji przed podpisaniem.',
   pdfa_row_fonts:              'Wszystkie czcionki osadzone',
   pdfa_row_fonts_detail:       'Nieosadzone: {fonts}',
   pdfa_row_actions:            'Brak akcji interaktywnych ani skryptów',

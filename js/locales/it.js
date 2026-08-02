@@ -277,6 +277,8 @@ window.PDFREE_LOCALE = {
   pdfa_error_generic:          'Impossibile analizzare questo file.',
   pdfa_row_encryption:         'Nessuna password / crittografia',
   pdfa_row_encryption_detail:  'Rimuovi prima la password, poi ricontrolla.',
+  pdfa_row_signature: 'Nessuna firma digitale applicata',
+  pdfa_row_signature_detail: 'La conversione invaliderebbe la firma esistente. Firma nuovamente il file convertito in seguito, oppure converti prima di firmare.',
   pdfa_row_fonts:              'Tutti i font incorporati',
   pdfa_row_fonts_detail:       'Non incorporati: {fonts}',
   pdfa_row_actions:            'Nessuna azione interattiva o script',

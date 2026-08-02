@@ -268,6 +268,8 @@ export const EN = {
   pdfa_error_generic:     'Could not analyze this file.',
   pdfa_row_encryption:        'No password / encryption',
   pdfa_row_encryption_detail: 'Remove the password first, then re-check.',
+  pdfa_row_signature:         'No applied digital signature',
+  pdfa_row_signature_detail:  'Converting would invalidate the existing signature. Sign the converted file again afterward, or convert before signing.',
   pdfa_row_fonts:             'All fonts embedded',
   pdfa_row_fonts_detail:      'Not embedded: {fonts}',
   pdfa_row_actions:           'No interactive actions or scripts',

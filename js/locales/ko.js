@@ -279,6 +279,8 @@ window.PDFREE_LOCALE = {
   pdfa_error_generic:          '이 파일을 분석할 수 없습니다.',
   pdfa_row_encryption:         '비밀번호/암호화 없음',
   pdfa_row_encryption_detail:  '먼저 비밀번호를 제거한 후 다시 확인하세요.',
+  pdfa_row_signature: '적용된 디지털 서명 없음',
+  pdfa_row_signature_detail: '변환하면 기존 서명이 무효화됩니다. 변환된 파일에 나중에 다시 서명하거나, 서명하기 전에 변환하세요.',
   pdfa_row_fonts:              '모든 글꼴이 포함됨',
   pdfa_row_fonts_detail:       '포함되지 않음: {fonts}',
   pdfa_row_actions:            '대화형 작업이나 스크립트 없음',

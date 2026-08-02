@@ -140,6 +140,33 @@ function checkEncryption(pdfDoc) {
   return !!pdfDoc.isEncrypted;
 }
 
+// ── Digital signature check ──────────────────────────────────────────────
+// A signed PDF's signature covers a byte-range hash of the file as it was
+// AT SIGNING TIME — any re-save (this tool's save() included) changes those
+// bytes and silently invalidates the signature, with no error from pdf-lib
+// itself. For the legal/court/government segment this tool is explicitly
+// aimed at, that's not a cosmetic issue: a converted, "PDF/A-compliant"
+// court filing with a dead signature is a serious, undetected problem.
+// Checked two ways: AcroForm's /SigFlags bit 1 (SignaturesExist, value 1
+// per PDF spec 12.7.2 Table 225), and directly walking Widget annotations
+// for an /FT /Sig field whose /V (the applied signature dictionary) is
+// actually present — an unsigned signature FIELD (a placeholder waiting to
+// be signed) has no /V and is not a problem; an already-signed one is.
+function checkDigitalSignature(pdfDoc) {
+  const context = pdfDoc.context;
+  const acroForm = context.lookup(pdfDoc.catalog.get(PDFName.of('AcroForm')));
+  if (acroForm instanceof PDFDict) {
+    const sigFlags = context.lookup(acroForm.get(PDFName.of('SigFlags')));
+    if (sigFlags?.asNumber?.() & 1) return true;
+  }
+  for (const [, obj] of context.enumerateIndirectObjects()) {
+    if (!(obj instanceof PDFDict)) continue;
+    if (obj.get(PDFName.of('FT'))?.decodeText?.() !== 'Sig') continue;
+    if (obj.get(PDFName.of('V'))) return true;
+  }
+  return false;
+}
+
 // ── Unicode mapping check (PDF/A-2u eligibility) ─────────────────────────
 // PDF/A-2u adds one requirement on top of 2b: every glyph used for
 // rendering must have a determinable Unicode value, normally via a
@@ -215,6 +242,7 @@ function analyze(pdfDoc) {
   const forbidden     = encrypted ? [] : checkForbidden(pdfDoc);
   const hasLzw         = encrypted ? false : checkLzw(pdfDoc);
   const unicodeOk      = encrypted ? false : checkUnicodeMapping(pdfDoc);
+  const hasSignature   = encrypted ? false : checkDigitalSignature(pdfDoc);
 
   // Forbidden actions (OpenAction/AA/JS/annotation actions) are NOT a
   // blocking issue — convert() strips them automatically and reports
@@ -222,8 +250,10 @@ function analyze(pdfDoc) {
   // embedding or encryption, removing an action changes zero visible
   // content, so there's no layout-risk reason to refuse the way we do for
   // the other checks. `blocking` is the set that genuinely still requires
-  // the user to act before conversion is possible at all.
-  const blocking = encrypted || missingFonts.length > 0 || hasLzw;
+  // the user to act before conversion is possible at all. hasSignature IS
+  // blocking — unlike a forbidden action, there is no automatic fix for
+  // "this would silently invalidate a legal signature."
+  const blocking = encrypted || missingFonts.length > 0 || hasLzw || hasSignature;
 
   return {
     pageCount: pdfDoc.getPageCount(),
@@ -232,6 +262,7 @@ function analyze(pdfDoc) {
     forbidden,
     hasLzw,
     unicodeOk,
+    hasSignature,
     blocking,
     compliant: !blocking, // kept for backward compat with existing callers/tests
   };

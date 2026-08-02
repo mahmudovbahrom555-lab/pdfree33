@@ -278,6 +278,8 @@ window.PDFREE_LOCALE = {
   pdfa_error_generic:          'Tidak dapat menganalisis file ini.',
   pdfa_row_encryption:         'Tanpa kata sandi / enkripsi',
   pdfa_row_encryption_detail:  'Hapus kata sandi terlebih dahulu, lalu periksa ulang.',
+  pdfa_row_signature: 'Tidak ada tanda tangan digital yang diterapkan',
+  pdfa_row_signature_detail: 'Mengonversi akan membatalkan tanda tangan yang ada. Tandatangani ulang file yang dikonversi setelahnya, atau konversi sebelum menandatangani.',
   pdfa_row_fonts:              'Semua font tertanam',
   pdfa_row_fonts_detail:       'Tidak tertanam: {fonts}',
   pdfa_row_actions:            'Tanpa aksi interaktif atau skrip',
