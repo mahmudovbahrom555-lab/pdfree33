@@ -1,0 +1,90 @@
+[
+  {
+    "@type": "Question",
+    "name": "PDF/A là gì?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDF/A là phiên bản PDF được chuẩn hóa theo ISO (ISO 19005), được thiết kế để lưu trữ lâu dài. Nó yêu cầu tất cả phông chữ phải được nhúng, cấm mã hóa và JavaScript nhúng, và nhúng thông tin hồ sơ màu và siêu dữ liệu để tài liệu hiển thị giống hệt nhau nhiều thập kỷ sau, độc lập với tài nguyên bên ngoài."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Sự khác biệt giữa PDF/A-2b và PDF/A-2u là gì?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDF/A-2u thêm một yêu cầu so với 2b: mọi phông chữ phải có ánh xạ Unicode đã xác minh, để văn bản của tài liệu bạn vẫn có thể tìm kiếm và sao chép-dán đúng cách, không chỉ chính xác về mặt hình ảnh. PDFree tự động kiểm tra điều này và nhắm mục tiêu 2u bất cứ khi nào phông chữ của bạn đủ điều kiện, quay lại 2b nếu không — bạn không cần phải chọn."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Tại sao PDF của tôi không vượt qua kiểm tra tuân thủ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Lý do phổ biến nhất là phông chữ không được nhúng — nhiều PDF tham chiếu các phông chữ tiêu chuẩn như Helvetica hoặc Arial theo tên thay vì nhúng chúng, điều mà PDF/A không cho phép. Các lý do khác bao gồm mật khẩu/mã hóa, chữ ký số đã được áp dụng, JavaScript nhúng hoặc hành động mở tự động (bao gồm cả những hành động ẩn bên trong một liên kết hoặc trường biểu mẫu duy nhất), và các luồng hình ảnh nén LZW cũ."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFree có thể sửa PDF bị thiếu phông chữ không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Đôi khi, như một lựa chọn tham gia rõ ràng. Nếu phông chữ bị thiếu là Helvetica/Arial, Times hoặc Courier, PDFree có thể cung cấp một thay thế miễn phí, tương thích về số liệu (họ phông chữ Liberation) — nhưng chỉ sau khi xác minh độ rộng ký tự chính xác của tài liệu bạn khớp nhau, để văn bản không thể âm thầm dịch chuyển. Nếu xác minh thất bại dù chỉ với một phông chữ, không có gì được thay đổi và việc chuyển đổi vẫn bị từ chối. Đối với mọi thứ khác, PDFree cho bạn biết chính xác phông chữ nào không được nhúng để bạn có thể xuất lại tài liệu gốc với phông chữ được nhúng."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Việc chuyển đổi có xóa JavaScript hoặc các tính năng tương tác khỏi PDF của tôi không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có, khi có mặt — PDF/A cấm JavaScript nhúng và các hành động tự động, bao gồm cả các tập lệnh tính toán trường biểu mẫu (ví dụ: một trường tổng tự động cộng). PDFree tự động xóa những thứ này như một phần của việc chuyển đổi và cho bạn biết chính xác những gì đã bị xóa, vì vậy bạn sẽ không bao giờ ngạc nhiên khi một biểu mẫu ngừng tính toán tự động sau khi lưu trữ."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFree có bảo tồn chữ ký số hiện có không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree kiểm tra trước xem có chữ ký nào không. Bất kỳ sửa đổi nào đối với PDF đã ký — bao gồm cả việc chuyển đổi này — sẽ làm mất hiệu lực chữ ký hiện có của nó, vì vậy nếu PDFree phát hiện một chữ ký đã được áp dụng, nó sẽ từ chối chuyển đổi và yêu cầu bạn ký vào bản lưu trữ sau đó, thay vì âm thầm tạo ra một tệp có chữ ký bị hỏng."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kiểm tra tuân thủ có phải là trình xác thực PDF/A đầy đủ như veraPDF không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không. Đây là một tự kiểm tra các yêu cầu cấu trúc mà hầu hết các PDF thực sự không đáp ứng được — nó không phải là sự thay thế cho một trình xác thực ISO 19005 đầy đủ. Nếu bạn cần một tệp PDF/A được chứng nhận hợp pháp để lưu trữ theo quy định hoặc pháp lý, PDFree liên kết trực tiếp đến veraPDF để kiểm tra độc lập, có thẩm quyền sau khi chuyển đổi."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Việc kiểm tra hoặc chuyển đổi PDF của tôi có tải nó lên máy chủ không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không. Cả việc kiểm tra tuân thủ và chuyển đổi đều chạy hoàn toàn trong trình duyệt của bạn bằng cách sử dụng một Web Worker chuyên dụng. Tệp của bạn không bao giờ được tải lên bất cứ đâu."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFree có lưu trữ hoặc ghi nhật ký tệp của tôi sau khi xử lý không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không. PDFree chạy hoàn toàn trong trình duyệt của bạn — không có máy chủ backend nào nhận tệp của bạn. Vì không có gì được tải lên, không có gì có thể được lưu trữ, ghi nhật ký hoặc giữ lại. Tài liệu của bạn chỉ tồn tại trong bộ nhớ trình duyệt của bạn trong thời gian phiên và bị xóa khi bạn đóng tab."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Tệp PDF/A đã chuyển đổi thực sự chứa những gì?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Việc chuyển đổi nhúng một hồ sơ màu ICC sRGB tiêu chuẩn (thông qua OutputIntent), một gói siêu dữ liệu XMP khai báo sự tuân thủ PDF/A (phản ánh từ tiêu đề/tác giả của chính tài liệu để hai bên không thể mâu thuẫn), và một số nhận dạng tệp. Nó không thay đổi văn bản, hình ảnh hoặc bố cục hiển thị của tài liệu bạn."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Việc kiểm tra và chuyển đổi PDF sang PDF/A có miễn phí không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có. PDFree miễn phí, không có đăng ký, không có giới hạn hàng ngày và không cần đăng ký tài khoản."
+    }
+  }
+]

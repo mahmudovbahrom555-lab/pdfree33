@@ -1,0 +1,90 @@
+[
+  {
+    "@type": "Question",
+    "name": "Apa itu PDF/A?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDF/A adalah versi PDF standar ISO (ISO 19005) yang dirancang untuk pengarsipan jangka panjang. Format ini mewajibkan semua font tertanam, melarang enkripsi dan JavaScript tertanam, serta menyematkan informasi profil warna dan metadata agar dokumen tampil identik puluhan tahun kemudian, tanpa bergantung pada sumber daya eksternal."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apa perbedaan antara PDF/A-2b dan PDF/A-2u?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDF/A-2u menambahkan satu persyaratan di atas 2b: setiap font harus memiliki pemetaan Unicode yang terverifikasi, agar teks dokumen Anda tetap dapat dicari dan disalin dengan benar, bukan hanya benar secara visual. PDFree memeriksa ini secara otomatis dan menargetkan 2u kapan pun font Anda memenuhi syarat, kembali ke 2b jika tidak — Anda tidak perlu memilih."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Mengapa PDF saya gagal dalam pemeriksaan kepatuhan?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Alasan paling umum adalah font yang tidak tertanam — banyak PDF merujuk font standar seperti Helvetica atau Arial hanya berdasarkan nama alih-alih menyematkannya, yang tidak diizinkan PDF/A. Alasan lain termasuk kata sandi/enkripsi, tanda tangan digital yang sudah diterapkan, JavaScript tertanam atau aksi pembukaan otomatis (bahkan tersembunyi dalam satu tautan atau bidang formulir), dan stream gambar lama yang terkompresi LZW."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah PDFree memperbaiki PDF dengan font yang hilang?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Terkadang, sebagai opsi eksplisit. Jika font yang hilang adalah Helvetica/Arial, Times, atau Courier, PDFree dapat menawarkan pengganti gratis yang kompatibel secara metrik (keluarga font Liberation) — tetapi hanya setelah memverifikasi bahwa lebar karakter dokumen Anda cocok persis, agar teks tidak bergeser diam-diam. Jika verifikasi gagal bahkan untuk satu font, tidak ada yang diubah dan konversi tetap ditolak. Untuk yang lainnya, PDFree memberi tahu Anda persis font mana yang tidak tertanam agar Anda dapat mengekspor ulang dokumen sumber dengan font tertanam."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah konversi menghapus JavaScript atau fitur interaktif dari PDF saya?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ya, jika ada — PDF/A melarang JavaScript tertanam dan aksi otomatis, termasuk skrip perhitungan bidang formulir (misalnya bidang total yang dijumlahkan otomatis). PDFree menghapusnya secara otomatis sebagai bagian dari konversi dan memberi tahu Anda persis apa yang dihapus, agar Anda tidak pernah terkejut mengapa formulir berhenti menghitung otomatis setelah pengarsipan."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah PDFree mempertahankan tanda tangan digital yang sudah ada?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree memeriksanya terlebih dahulu. Setiap modifikasi pada PDF yang ditandatangani — termasuk konversi ini — membatalkan tanda tangan yang ada, jadi jika PDFree mendeteksi satu yang sudah diterapkan, ia menolak konversi dan menyarankan Anda menandatangani salinan arsip setelahnya, alih-alih diam-diam menghasilkan file dengan tanda tangan rusak."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah pemeriksaan kepatuhan ini validator PDF/A lengkap seperti veraPDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak. Ini adalah pemeriksaan mandiri terhadap persyaratan struktural yang paling sering benar-benar gagal dipenuhi PDF — bukan pengganti validator ISO 19005 lengkap. Jika Anda memerlukan PDF/A yang bersertifikat secara hukum untuk pengarsipan regulasi atau hukum, PDFree menautkan langsung ke veraPDF untuk pemeriksaan independen dan otoritatif setelah konversi."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah memeriksa atau mengonversi PDF saya mengunggahnya ke server?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak. Baik pemeriksaan kepatuhan maupun konversi berjalan sepenuhnya di browser Anda menggunakan Web Worker khusus. File Anda tidak pernah diunggah ke mana pun."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah PDFree menyimpan atau mencatat file saya setelah diproses?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak. PDFree berjalan sepenuhnya di browser Anda — tidak ada server backend yang menerima file Anda. Karena tidak ada yang diunggah, tidak ada yang dapat disimpan, dicatat, atau dipertahankan. Dokumen Anda hanya ada di memori browser Anda selama sesi berlangsung dan dihapus saat Anda menutup tab."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apa sebenarnya yang terkandung dalam file PDF/A yang dikonversi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Konversi menyematkan profil warna ICC sRGB standar (melalui OutputIntent), paket metadata XMP yang menyatakan kepatuhan PDF/A (mencerminkan judul/penulis dokumen itu sendiri agar keduanya tidak dapat bertentangan), dan pengenal file. Konversi tidak mengubah teks yang terlihat, gambar, atau tata letak dokumen Anda."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah memeriksa dan mengonversi PDF ke PDF/A gratis?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ya. PDFree gratis tanpa langganan, tanpa batas harian, dan tanpa pendaftaran."
+    }
+  }
+]

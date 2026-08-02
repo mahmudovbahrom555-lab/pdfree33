@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDF를 PDF/A-2b 또는 PDF/A-2u로 검사하고 변환하는 방법",
+  "description": "PDF가 PDF/A 보관 요구사항을 충족하는지 확인하고 적합한 파일을 변환하세요 — 무료, 업로드 불필요.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDF 열기",
+      "text": "'파일 선택'을 클릭하거나 PDF를 드롭 영역으로 드래그하세요. 파일은 브라우저에서 전부 분석됩니다."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "준수 보고서 검토",
+      "text": "PDFree는 임베드된 폰트, 암호화, 이미 적용된 디지털 서명, 문서·페이지·주석 수준의 대화형 작업/JavaScript, LZW 압축 스트림, 유니코드 텍스트 매핑을 검사합니다."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "준수 시 변환",
+      "text": "차단 문제가 발견되지 않으면 '변환'을 클릭하여 필요한 ICC 색상 프로필, XMP 메타데이터, 파일 식별자를 추가하고, 발견된 대화형 작업을 자동으로 제거한 후 변환된 파일을 다운로드합니다 — 폰트가 지원하면 PDF/A-2u, 그렇지 않으면 PDF/A-2b."
+    }
+  ]
+}

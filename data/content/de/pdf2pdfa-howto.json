@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "So prüfen und konvertieren Sie ein PDF zu PDF/A-2b oder PDF/A-2u",
+  "description": "Prüfen Sie, ob ein PDF die PDF/A-Archivanforderungen erfüllt, und konvertieren Sie geeignete Dateien — kostenlos, kein Upload erforderlich.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDF öffnen",
+      "text": "Klicken Sie auf 'Dateien auswählen' oder ziehen Sie Ihr PDF in die Ablagefläche. Die Datei wird vollständig in Ihrem Browser analysiert."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Konformitätsbericht prüfen",
+      "text": "PDFree prüft eingebettete Schriftarten, Verschlüsselung, eine bereits angewendete digitale Signatur, interaktive Aktionen/JavaScript auf Dokument-, Seiten- und Anmerkungsebene, LZW-komprimierte Streams und Unicode-Textzuordnung."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Bei Konformität umwandeln",
+      "text": "Werden keine blockierenden Probleme gefunden, klicken Sie auf 'Umwandeln', um das erforderliche ICC-Farbprofil, XMP-Metadaten und eine Dateikennung hinzuzufügen, gefundene interaktive Aktionen automatisch zu entfernen und die umgewandelte Datei herunterzuladen — PDF/A-2u, wenn Ihre Schriftarten es unterstützen, sonst PDF/A-2b."
+    }
+  ]
+}

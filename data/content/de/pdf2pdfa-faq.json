@@ -1,0 +1,90 @@
+[
+  {
+    "@type": "Question",
+    "name": "Was ist PDF/A?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDF/A ist eine ISO-standardisierte (ISO 19005) Version von PDF für die Langzeitarchivierung. Sie erfordert eingebettete Schriftarten, verbietet Verschlüsselung und eingebettetes JavaScript und bettet Farbprofil- und Metadateninformationen ein, damit das Dokument auch Jahrzehnte später identisch dargestellt wird, unabhängig von externen Ressourcen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Was ist der Unterschied zwischen PDF/A-2b und PDF/A-2u?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDF/A-2u fügt zu 2b eine Anforderung hinzu: Jede Schriftart muss eine verifizierte Unicode-Zuordnung haben, damit der Text durchsuchbar und kopierbar bleibt, nicht nur visuell korrekt. PDFree prüft dies automatisch und zielt auf 2u, sobald Ihre Schriftarten dies zulassen, sonst auf 2b — Sie müssen nicht wählen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Warum scheitert mein PDF an der Konformitätsprüfung?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Der häufigste Grund sind nicht eingebettete Schriftarten — viele PDFs verweisen namentlich auf Standardschriftarten wie Helvetica oder Arial, statt sie einzubetten, was PDF/A nicht erlaubt. Weitere Gründe sind Passwort/Verschlüsselung, eine bereits angewendete digitale Signatur, eingebettetes JavaScript oder automatische Öffnungsaktionen (auch versteckt in einem einzelnen Link oder Formularfeld) und alte LZW-komprimierte Bildströme."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann PDFree ein PDF mit fehlenden Schriftarten reparieren?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Manchmal, als ausdrückliche Option. Sind die fehlenden Schriftarten Helvetica/Arial, Times oder Courier, kann PDFree einen kostenlosen, metrisch kompatiblen Ersatz anbieten (die Liberation-Schriftfamilie) — aber erst nach Prüfung, dass die genauen Zeichenbreiten Ihres Dokuments übereinstimmen, damit sich der Text nicht heimlich verschiebt. Schlägt die Prüfung auch nur bei einer Schriftart fehl, wird nichts geändert und die Umwandlung bleibt verweigert. Bei allem anderen sagt Ihnen PDFree genau, welche Schriftarten nicht eingebettet sind, damit Sie das Quelldokument stattdessen mit eingebetteten Schriftarten neu exportieren können."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Entfernt die Umwandlung JavaScript oder interaktive Funktionen aus meinem PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja, falls vorhanden — PDF/A verbietet eingebettetes JavaScript und automatische Aktionen, einschließlich Berechnungsskripten für Formularfelder (z. B. ein automatisch summiertes Gesamtfeld). PDFree entfernt diese automatisch bei der Umwandlung und zeigt genau an, was entfernt wurde, damit Sie nicht überrascht sind, warum ein Formular nach der Archivierung nicht mehr automatisch rechnet."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bleibt eine vorhandene digitale Signatur erhalten?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree prüft zuerst darauf. Jede Änderung an einem signierten PDF — einschließlich dieser Umwandlung — macht die vorhandene Signatur ungültig. Erkennt PDFree eine bereits angewendete Signatur, verweigert es die Umwandlung und rät, die archivierte Kopie danach zu signieren, statt heimlich eine Datei mit gebrochener Signatur zu erzeugen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Ist die Konformitätsprüfung ein vollständiger PDF/A-Validator wie veraPDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nein. Dies ist eine Selbstprüfung der strukturellen Anforderungen, an denen PDFs am häufigsten tatsächlich scheitern — kein Ersatz für einen vollständigen ISO-19005-Validator. Benötigen Sie ein rechtlich zertifiziertes PDF/A für behördliche oder rechtliche Archivierung, verlinkt PDFree direkt zu veraPDF für eine unabhängige, maßgebliche Prüfung nach der Umwandlung."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Wird mein PDF beim Prüfen oder Umwandeln auf einen Server hochgeladen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nein. Sowohl die Konformitätsprüfung als auch die Umwandlung laufen vollständig in Ihrem Browser über einen dedizierten Web Worker. Ihre Datei wird niemals irgendwohin hochgeladen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Speichert oder protokolliert PDFree meine Dateien nach der Verarbeitung?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nein. PDFree läuft vollständig in Ihrem Browser — es gibt keinen Backend-Server, der Ihre Dateien empfängt. Da nichts hochgeladen wird, kann nichts gespeichert, protokolliert oder aufbewahrt werden. Ihr Dokument existiert nur im Arbeitsspeicher Ihres Browsers für die Dauer der Sitzung und wird beim Schließen des Tabs gelöscht."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Was enthält die umgewandelte PDF/A-Datei tatsächlich?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Die Umwandlung bettet ein standardmäßiges sRGB-ICC-Farbprofil (über ein OutputIntent), ein XMP-Metadatenpaket mit PDF/A-Konformitätserklärung (gespiegelt vom Titel/Autor des Dokuments, damit beide nicht widersprechen können) und eine Dateikennung ein. Sichtbarer Text, Bilder oder Layout Ihres Dokuments werden nicht verändert."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Ist das Prüfen und Umwandeln von PDFs zu PDF/A kostenlos?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. PDFree ist kostenlos, ohne Abonnement, ohne Tageslimit und ohne Anmeldung."
+    }
+  }
+]

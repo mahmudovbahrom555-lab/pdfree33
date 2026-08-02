@@ -1,0 +1,90 @@
+[
+  {
+    "@type": "Question",
+    "name": "Czym jest PDF/A?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDF/A to znormalizowana przez ISO (ISO 19005) wersja PDF zaprojektowana do archiwizacji długoterminowej. Wymaga osadzenia wszystkich czcionek, zabrania szyfrowania i osadzonego JavaScriptu oraz osadza informacje o profilu kolorów i metadanych, dzięki czemu dokument renderuje się identycznie za dziesiątki lat, niezależnie od zasobów zewnętrznych."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Jaka jest różnica między PDF/A-2b a PDF/A-2u?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDF/A-2u dodaje jedno wymaganie ponad 2b: każda czcionka musi mieć zweryfikowane mapowanie Unicode, dzięki czemu tekst dokumentu pozostaje prawidłowo przeszukiwalny i możliwy do skopiowania, a nie tylko wizualnie poprawny. PDFree sprawdza to automatycznie i celuje w 2u zawsze, gdy czcionki się kwalifikują, w przeciwnym razie stosuje 2b — nie musisz wybierać."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Dlaczego mój PDF nie przechodzi kontroli zgodności?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Najczęstszym powodem są nieosadzone czcionki — wiele plików PDF odwołuje się do standardowych czcionek, takich jak Helvetica czy Arial, po nazwie zamiast je osadzać, na co PDF/A nie pozwala. Inne powody to hasło/szyfrowanie, już zastosowany podpis cyfrowy, osadzony JavaScript lub automatyczne akcje otwierania (w tym ukryte w pojedynczym linku lub polu formularza) oraz stare strumienie obrazów skompresowane LZW."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy PDFree może naprawić PDF z brakującymi czcionkami?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Czasami, jako wyraźne opcjonalne działanie. Jeśli brakujące czcionki to Helvetica/Arial, Times lub Courier, PDFree może zaoferować darmowy, kompatybilny metrycznie zamiennik (rodzina czcionek Liberation) — ale tylko po zweryfikowaniu, że dokładne szerokości znaków w dokumencie się zgadzają, aby tekst nie mógł się cicho przesunąć. Jeśli weryfikacja nie powiedzie się nawet dla jednej czcionki, nic nie jest zmieniane, a konwersja pozostaje odrzucona. W pozostałych przypadkach PDFree dokładnie mówi, które czcionki nie są osadzone, abyś mógł ponownie wyeksportować dokument źródłowy z osadzonymi czcionkami."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy konwersja usuwa JavaScript lub funkcje interaktywne z mojego PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak, jeśli są obecne — PDF/A zabrania osadzonego JavaScriptu i automatycznych akcji, w tym skryptów obliczeniowych pól formularza (np. pola automatycznie sumującego). PDFree usuwa je automatycznie w ramach konwersji i dokładnie informuje, co zostało usunięte, dzięki czemu nigdy nie zaskoczy Cię, że formularz przestał automatycznie obliczać po archiwizacji."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy PDFree zachowuje istniejący podpis cyfrowy?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree najpierw sprawdza, czy taki istnieje. Każda modyfikacja podpisanego PDF — w tym ta konwersja — unieważnia jego istniejący podpis, więc jeśli PDFree wykryje już zastosowany podpis, odmawia konwersji i prosi o podpisanie zarchiwizowanej kopii później, zamiast cicho tworzyć plik z uszkodzonym podpisem."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy kontrola zgodności to pełny walidator PDF/A, taki jak veraPDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie. To samokontrola wymagań strukturalnych, których większość plików PDF faktycznie nie spełnia — nie jest to substytut pełnego walidatora ISO 19005. Jeśli potrzebujesz prawnie certyfikowanego pliku PDF/A do archiwizacji regulacyjnej lub prawnej, PDFree łączy bezpośrednio z veraPDF w celu niezależnej, autorytatywnej kontroli po konwersji."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy sprawdzenie lub konwersja mojego PDF przesyła go na serwer?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie. Zarówno kontrola zgodności, jak i konwersja działają całkowicie w Twojej przeglądarce przy użyciu dedykowanego Web Workera. Twój plik nigdy nigdzie nie jest przesyłany."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy PDFree przechowuje lub rejestruje moje pliki po przetworzeniu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie. PDFree działa całkowicie w Twojej przeglądarce — nie istnieje serwer backendowy, który otrzymywałby Twoje pliki. Ponieważ nic nie jest przesyłane, nic nie może być przechowywane, rejestrowane ani zachowywane. Twój dokument istnieje tylko w pamięci przeglądarki na czas trwania sesji i jest usuwany po zamknięciu karty."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Co faktycznie zawiera przekonwertowany plik PDF/A?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Konwersja osadza standardowy profil kolorów sRGB ICC (poprzez OutputIntent), pakiet metadanych XMP deklarujący zgodność z PDF/A (odzwierciedlający własny tytuł/autora dokumentu, więc nie mogą się one nie zgadzać) oraz identyfikator pliku. Nie zmienia widocznego tekstu, obrazów ani układu dokumentu."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy sprawdzanie i konwertowanie plików PDF do PDF/A jest darmowe?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. PDFree jest darmowe, bez subskrypcji, bez dziennych limitów i bez rejestracji."
+    }
+  }
+]

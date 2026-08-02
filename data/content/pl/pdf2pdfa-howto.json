@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Jak Sprawdzić i Przekonwertować PDF do PDF/A-2b lub PDF/A-2u",
+  "description": "Sprawdź, czy PDF spełnia wymagania archiwizacji PDF/A i przekonwertuj kwalifikujące się pliki — za darmo, bez konieczności przesyłania.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Otwórz swój PDF",
+      "text": "Kliknij 'Wybierz pliki' lub przeciągnij PDF do strefy upuszczania. Plik jest analizowany całkowicie w Twojej przeglądarce."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Przejrzyj raport zgodności",
+      "text": "PDFree sprawdza osadzone czcionki, szyfrowanie, już zastosowany podpis cyfrowy, interaktywne akcje/JavaScript na poziomie dokumentu, strony i adnotacji, strumienie skompresowane LZW oraz mapowanie tekstu Unicode."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Przekonwertuj, jeśli zgodny",
+      "text": "Jeśli nie zostaną znalezione żadne blokujące problemy, kliknij 'Konwertuj', aby dodać wymagany profil kolorów ICC, metadane XMP i identyfikator pliku, automatycznie usunąć wszelkie znalezione akcje interaktywne i pobrać przekonwertowany plik — PDF/A-2u, gdy czcionki na to pozwalają, w przeciwnym razie PDF/A-2b."
+    }
+  ]
+}

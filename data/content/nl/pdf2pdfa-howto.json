@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Hoe je een PDF controleert en converteert naar PDF/A-2b of PDF/A-2u",
+  "description": "Controleer of een PDF voldoet aan de PDF/A-archiveringseisen en converteer geschikte bestanden — gratis, geen upload nodig.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Open je PDF",
+      "text": "Klik op 'Bestanden kiezen' of sleep je PDF naar de drop-zone. Het bestand wordt volledig in je browser geanalyseerd."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Bekijk het conformiteitsrapport",
+      "text": "PDFree controleert ingesloten lettertypen, versleuteling, een al toegepaste digitale handtekening, interactieve acties/JavaScript op document-, pagina- en annotatieniveau, LZW-gecomprimeerde streams en Unicode-tekstmapping."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Converteer indien conform",
+      "text": "Als er geen blokkerende problemen worden gevonden, klik je op 'Converteren' om het vereiste ICC-kleurprofiel, XMP-metadata en bestandsidentifier toe te voegen, gevonden interactieve acties automatisch te verwijderen en het geconverteerde bestand te downloaden — PDF/A-2u wanneer je lettertypen dat ondersteunen, anders PDF/A-2b."
+    }
+  ]
+}

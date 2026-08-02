@@ -1,0 +1,90 @@
+[
+  {
+    "@type": "Question",
+    "name": "PDF/A nedir?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDF/A, uzun vadeli arşivleme için tasarlanmış, ISO tarafından standartlaştırılmış (ISO 19005) bir PDF sürümüdür. Tüm yazı tiplerinin gömülmesini gerektirir, şifrelemeyi ve gömülü JavaScript'i yasaklar ve belgenin harici kaynaklardan bağımsız olarak on yıllar sonra bile aynı şekilde işlenmesi için renk profili ve meta veri bilgilerini gömer."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDF/A-2b ile PDF/A-2u arasındaki fark nedir?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDF/A-2u, 2b'nin üzerine bir gereksinim daha ekler: her yazı tipinin doğrulanmış bir Unicode eşlemesi olmalıdır, böylece belgenizin metni yalnızca görsel olarak doğru olmakla kalmaz, doğru şekilde aranabilir ve kopyalanıp yapıştırılabilir kalır. PDFree bunu otomatik olarak kontrol eder ve yazı tipleriniz uygun olduğunda 2u'yu hedefler, aksi halde 2b'ye geri döner — seçim yapmanıza gerek yoktur."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDF'im neden uyumluluk kontrolünden geçemiyor?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "En yaygın neden, gömülü olmayan yazı tipleridir — birçok PDF, Helvetica veya Arial gibi standart yazı tiplerini gömmek yerine isimle referans verir, bu PDF/A tarafından izin verilmez. Diğer nedenler arasında şifre/şifreleme, zaten uygulanmış bir dijital imza, gömülü JavaScript veya otomatik açma eylemleri (tek bir bağlantı veya form alanı içinde gizlenmiş olanlar dahil) ve eski LZW ile sıkıştırılmış görüntü akışları bulunur."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFree eksik yazı tipleri olan bir PDF'i düzeltebilir mi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Bazen, açık bir katılım seçeneği olarak. Eksik yazı tipleri Helvetica/Arial, Times veya Courier ise, PDFree ücretsiz, ölçüsel olarak uyumlu bir değişim (Liberation yazı tipi ailesi) sunabilir — ancak yalnızca belgenizin tam karakter genişliklerinin eşleştiğini doğruladıktan sonra, böylece metin sessizce kayamaz. Doğrulama tek bir yazı tipi için bile başarısız olursa, hiçbir şey değiştirilmez ve dönüştürme reddedilmeye devam eder. Diğer her şey için, PDFree hangi yazı tiplerinin gömülü olmadığını tam olarak söyler, böylece kaynak belgeyi yazı tipleri gömülü olarak yeniden dışa aktarabilirsiniz."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Dönüştürme PDF'imden JavaScript veya etkileşimli özellikleri kaldırır mı?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet, mevcut olduklarında — PDF/A gömülü JavaScript'i ve otomatik hesaplama toplamı olan bir alan gibi form alanı hesaplama betikleri dahil otomatik eylemleri yasaklar. PDFree, dönüştürmenin bir parçası olarak bunları otomatik olarak kaldırır ve tam olarak neyin kaldırıldığını söyler, böylece arşivlemeden sonra bir formun otomatik hesaplamayı durdurduğunu görüp asla şaşırmazsınız."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFree mevcut bir dijital imzayı korur mu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree önce bir tane olup olmadığını kontrol eder. İmzalı bir PDF'deki herhangi bir değişiklik — bu dönüştürme dahil — mevcut imzasını geçersiz kılar, bu nedenle PDFree zaten uygulanmış bir imza algılarsa, dönüştürmeyi reddeder ve bozuk imzalı bir dosya sessizce üretmek yerine daha sonra arşivlenen kopyayı imzalamanızı söyler."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Uyumluluk kontrolü veraPDF gibi tam bir PDF/A doğrulayıcısı mı?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. Bu, çoğu PDF'nin gerçekten başarısız olduğu yapısal gereksinimlerin bir kendi kendini kontrolüdür — tam bir ISO 19005 doğrulayıcısının yerini tutmaz. Düzenleyici veya yasal arşivleme için yasal olarak sertifikalandırılmış bir PDF/A dosyasına ihtiyacınız varsa, PDFree dönüştürmeden sonra bağımsız, yetkili bir kontrol için doğrudan veraPDF'ye bağlanır."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDF'imi kontrol etmek veya dönüştürmek onu bir sunucuya yükler mi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. Hem uyumluluk kontrolü hem de dönüştürme, özel bir Web Worker kullanarak tamamen tarayıcınızda çalışır. Dosyanız hiçbir yere yüklenmez."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFree işlemden sonra dosyalarımı saklar veya kaydeder mi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. PDFree tamamen tarayıcınızda çalışır — dosyalarınızı alan bir arka uç sunucu yoktur. Hiçbir şey yüklenmediğinden, hiçbir şey saklanamaz, kaydedilemez veya tutulamaz. Belgeniz yalnızca oturum süresince tarayıcınızın belleğinde bulunur ve sekmeyi kapattığınızda temizlenir."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Dönüştürülmüş PDF/A dosyası aslında neler içerir?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Dönüştürme, standart bir sRGB ICC renk profilini (bir OutputIntent aracılığıyla), PDF/A uygunluğunu bildiren bir XMP meta veri paketini (belgenin kendi başlığından/yazarından yansıtılır, böylece ikisi çelişemez) ve bir dosya tanımlayıcısını gömer. Belgenizin görünür metnini, resimlerini veya düzenini değiştirmez."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDF'leri PDF/A'ya kontrol etmek ve dönüştürmek ücretsiz mi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. PDFree abonelik olmadan, günlük limit olmadan ve kayıt olmadan ücretsizdir."
+    }
+  }
+]

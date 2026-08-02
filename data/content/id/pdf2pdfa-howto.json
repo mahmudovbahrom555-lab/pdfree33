@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Cara Memeriksa dan Mengonversi PDF ke PDF/A-2b atau PDF/A-2u",
+  "description": "Periksa apakah PDF memenuhi persyaratan arsip PDF/A dan konversi file yang memenuhi syarat — gratis, tanpa perlu unggah.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Buka PDF Anda",
+      "text": "Klik 'Pilih file' atau seret PDF Anda ke zona unggah. File dianalisis sepenuhnya di browser Anda."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Tinjau laporan kepatuhan",
+      "text": "PDFree memeriksa font tertanam, enkripsi, tanda tangan digital yang sudah diterapkan, aksi interaktif/JavaScript di tingkat dokumen, halaman, dan anotasi, stream terkompresi LZW, serta pemetaan teks Unicode."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Konversi jika sesuai",
+      "text": "Jika tidak ada masalah pemblokiran ditemukan, klik 'Konversi' untuk menambahkan profil warna ICC yang diperlukan, metadata XMP, dan pengenal file, secara otomatis menghapus aksi interaktif yang ditemukan, lalu mengunduh file yang dikonversi — PDF/A-2u jika font Anda mendukungnya, atau PDF/A-2b jika tidak."
+    }
+  ]
+}

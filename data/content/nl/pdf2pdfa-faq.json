@@ -1,0 +1,90 @@
+[
+  {
+    "@type": "Question",
+    "name": "Wat is PDF/A?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDF/A is een ISO-gestandaardiseerde (ISO 19005) versie van PDF, ontworpen voor langetermijnarchivering. Alle lettertypen moeten worden ingesloten, versleuteling en ingesloten JavaScript zijn verboden, en kleurprofiel- en metadatainformatie worden ingesloten zodat het document decennia later identiek wordt weergegeven, onafhankelijk van externe bronnen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Wat is het verschil tussen PDF/A-2b en PDF/A-2u?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDF/A-2u voegt één eis toe boven op 2b: elk lettertype moet een geverifieerde Unicode-mapping hebben, zodat de tekst van je document correct doorzoekbaar en kopieerbaar blijft, niet alleen visueel correct. PDFree controleert dit automatisch en richt zich op 2u wanneer je lettertypen dat toelaten, en valt anders terug op 2b — je hoeft niet te kiezen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Waarom slaagt mijn PDF niet voor de conformiteitscontrole?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "De meest voorkomende reden zijn niet-ingesloten lettertypen — veel PDF's verwijzen naar standaardlettertypen zoals Helvetica of Arial bij naam in plaats van ze in te sluiten, wat PDF/A niet toestaat. Andere redenen zijn een wachtwoord/versleuteling, een al toegepaste digitale handtekening, ingesloten JavaScript of automatische openacties (inclusief acties verborgen in een enkele link of formulierveld), en oude LZW-gecomprimeerde afbeeldingsstreams."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan PDFree een PDF met ontbrekende lettertypen repareren?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Soms, als expliciete opt-in. Als de ontbrekende lettertypen Helvetica/Arial, Times of Courier zijn, kan PDFree een gratis, metrisch compatibele vervanging aanbieden (de Liberation-lettertypefamilie) — maar alleen nadat is geverifieerd dat de exacte tekenbreedtes van je document overeenkomen, zodat tekst niet stilzwijgend kan verschuiven. Als de verificatie zelfs voor één lettertype faalt, wordt er niets veranderd en blijft conversie geweigerd. Voor al het andere vertelt PDFree je precies welke lettertypen niet zijn ingesloten, zodat je het bronbestand opnieuw kunt exporteren met ingesloten lettertypen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Verwijdert converteren JavaScript of interactieve functies uit mijn PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja, indien aanwezig — PDF/A verbiedt ingesloten JavaScript en automatische acties, inclusief berekeningsscripts van formuliervelden (bijv. een veld met automatische som). PDFree verwijdert deze automatisch als onderdeel van de conversie en vertelt je precies wat er is verwijderd, zodat je nooit verrast wordt dat een formulier na archivering niet meer automatisch berekent."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Behoudt PDFree een bestaande digitale handtekening?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree controleert eerst of er een is. Elke wijziging aan een ondertekende PDF — inclusief deze conversie — maakt de bestaande handtekening ongeldig, dus als PDFree er al een gedetecteerd, weigert het te converteren en vraagt het je om de gearchiveerde kopie daarna te ondertekenen, in plaats van stilzwijgend een bestand met een kapotte handtekening te produceren."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is de conformiteitscontrole een volledige PDF/A-validator zoals veraPDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. Dit is een zelfcontrole van de structurele eisen waar de meeste PDF's daadwerkelijk op falen — het is geen vervanging voor een volledige ISO 19005-validator. Als je een wettelijk gecertificeerd PDF/A-bestand nodig hebt voor regelgevende of juridische archivering, linkt PDFree direct naar veraPDF voor een onafhankelijke, gezaghebbende controle na conversie."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Wordt mijn PDF geüpload naar een server tijdens controle of conversie?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. Zowel de conformiteitscontrole als de conversie draaien volledig in je browser met een speciale Web Worker. Je bestand wordt nooit ergens geüpload."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Slaat PDFree mijn bestanden op of logt het ze na verwerking?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. PDFree draait volledig in je browser — er is geen backend-server die je bestanden ontvangt. Omdat er niets wordt geüpload, kan er niets worden opgeslagen, gelogd of bewaard. Je document bestaat alleen in het geheugen van je browser voor de duur van de sessie en wordt gewist wanneer je het tabblad sluit."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Wat bevat het geconverteerde PDF/A-bestand precies?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "De conversie sluit een standaard sRGB ICC-kleurprofiel in (via een OutputIntent), een XMP-metadatapakket dat PDF/A-conformiteit verklaart (weerspiegeld vanuit de eigen titel/auteur van het document, zodat de twee niet met elkaar in tegenspraak kunnen zijn), en een bestandsidentifier. Het verandert de zichtbare tekst, afbeeldingen of lay-out van je document niet."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is het controleren en converteren van PDF's naar PDF/A gratis?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. PDFree is gratis zonder abonnement, zonder dagelijkse limieten en zonder registratie."
+    }
+  }
+]

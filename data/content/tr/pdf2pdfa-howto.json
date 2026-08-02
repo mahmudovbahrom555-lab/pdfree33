@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Bir PDF Nasıl Kontrol Edilir ve PDF/A-2b veya PDF/A-2u'ya Dönüştürülür",
+  "description": "Bir PDF'nin PDF/A arşivleme gereksinimlerini karşılayıp karşılamadığını kontrol edin ve uygun dosyaları dönüştürün — ücretsiz, yükleme gerekmez.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDF'inizi Açın",
+      "text": "'Dosya Seç'e tıklayın veya PDF'inizi bırakma alanına sürükleyin. Dosya tamamen tarayıcınızda analiz edilir."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Uyumluluk Raporunu İnceleyin",
+      "text": "PDFree, gömülü yazı tiplerini, şifrelemeyi, zaten uygulanmış bir dijital imzayı, belge, sayfa ve açıklama düzeyinde etkileşimli eylemleri/JavaScript'i, LZW ile sıkıştırılmış akışları ve Unicode metin eşlemesini kontrol eder."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Uyumluysa Dönüştürün",
+      "text": "Engelleyici bir sorun bulunmazsa, gerekli ICC renk profilini, XMP meta verilerini ve dosya tanımlayıcısını eklemek, bulunan tüm etkileşimli eylemleri otomatik olarak kaldırmak ve dönüştürülen dosyayı indirmek için 'Dönüştür'e tıklayın — yazı tipleriniz destekliyorsa PDF/A-2u, aksi halde PDF/A-2b."
+    }
+  ]
+}

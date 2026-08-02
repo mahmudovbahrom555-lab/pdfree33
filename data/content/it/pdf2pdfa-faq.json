@@ -1,0 +1,90 @@
+[
+  {
+    "@type": "Question",
+    "name": "Cos'è il PDF/A?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDF/A è una versione di PDF standardizzata ISO (ISO 19005) progettata per l'archiviazione a lungo termine. Richiede che tutti i font siano incorporati, vieta la crittografia e il JavaScript incorporato, e incorpora informazioni sul profilo colore e sui metadati in modo che il documento venga visualizzato identicamente anche tra decenni, indipendentemente da risorse esterne."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Qual è la differenza tra PDF/A-2b e PDF/A-2u?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDF/A-2u aggiunge un requisito rispetto a 2b: ogni font deve avere una mappatura Unicode verificata, così che il testo del tuo documento resti correttamente ricercabile e copiabile, non solo visivamente corretto. PDFree lo verifica automaticamente e punta a 2u ogni volta che i tuoi font sono idonei, ripiegando su 2b altrimenti — non devi scegliere tu."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Perché il mio PDF non supera il controllo di conformità?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Il motivo più comune sono i font non incorporati — molti PDF fanno riferimento a font standard come Helvetica o Arial per nome invece di incorporarli, cosa che il PDF/A non consente. Altri motivi includono password/crittografia, una firma digitale già applicata, JavaScript incorporato o azioni di apertura automatica (anche nascoste dentro un singolo link o campo modulo), e vecchi stream di immagini compressi con LZW."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFree può correggere un PDF con font mancanti?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "A volte, come opzione esplicita. Se i font mancanti sono Helvetica/Arial, Times o Courier, PDFree può offrire un sostituto gratuito e metricamente compatibile (la famiglia di font Liberation) — ma solo dopo aver verificato che le larghezze esatte dei caratteri del tuo documento corrispondano, così il testo non può spostarsi silenziosamente. Se la verifica fallisce anche per un solo font, non viene cambiato nulla e la conversione resta rifiutata. Per tutto il resto, PDFree ti dice esattamente quali font non sono incorporati così puoi ri-esportare il documento sorgente con i font incorporati."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "La conversione rimuove JavaScript o funzionalità interattive dal mio PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì, quando presenti — il PDF/A vieta il JavaScript incorporato e le azioni automatiche, inclusi gli script di calcolo dei campi modulo (es. un campo totale che si somma automaticamente). PDFree li rimuove automaticamente durante la conversione e ti dice esattamente cosa è stato rimosso, così non ti sorprenderai mai che un modulo abbia smesso di calcolare automaticamente dopo l'archiviazione."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFree preserva una firma digitale esistente?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree la controlla per prima cosa. Qualsiasi modifica a un PDF firmato — inclusa questa conversione — invalida la sua firma esistente, quindi se PDFree rileva una firma già applicata, rifiuta la conversione e ti dice di firmare la copia archiviata in seguito, invece di produrre silenziosamente un file con una firma compromessa."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Il controllo di conformità è un validatore PDF/A completo come veraPDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Questo è un autocontrollo dei requisiti strutturali che la maggior parte dei PDF effettivamente non soddisfa — non è un sostituto di un validatore completo ISO 19005. Se hai bisogno di un file PDF/A legalmente certificato per l'archiviazione normativa o legale, PDFree collega direttamente a veraPDF per un controllo indipendente e autorevole dopo la conversione."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Il controllo o la conversione del mio PDF lo caricano su un server?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Sia il controllo di conformità che la conversione avvengono interamente nel tuo browser tramite un Web Worker dedicato. Il tuo file non viene mai caricato da nessuna parte."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFree memorizza o registra i miei file dopo l'elaborazione?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. PDFree funziona interamente nel tuo browser — non esiste un server backend che riceve i tuoi file. Poiché nulla viene caricato, nulla può essere memorizzato, registrato o conservato. Il tuo documento esiste solo nella memoria del tuo browser per la durata della sessione e viene cancellato quando chiudi la scheda."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Cosa contiene effettivamente il file PDF/A convertito?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "La conversione incorpora un profilo colore ICC sRGB standard (tramite un OutputIntent), un pacchetto di metadati XMP che dichiara la conformità PDF/A (rispecchiato dal titolo/autore del documento stesso, così i due non possono essere in disaccordo), e un identificatore di file. Non altera il testo visibile, le immagini o il layout del tuo documento."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Verificare e convertire PDF in PDF/A è gratuito?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. PDFree è gratuito senza abbonamento, senza limiti giornalieri e senza registrazione."
+    }
+  }
+]

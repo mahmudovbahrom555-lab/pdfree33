@@ -1,0 +1,90 @@
+[
+  {
+    "@type": "Question",
+    "name": "Qu'est-ce que le PDF/A ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Le PDF/A est une version normalisée ISO (ISO 19005) du PDF conçue pour l'archivage à long terme. Il exige que toutes les polices soient incorporées, interdit le chiffrement et le JavaScript incorporé, et intègre des informations de profil colorimétrique et de métadonnées afin que le document s'affiche à l'identique dans plusieurs décennies, indépendamment de ressources externes."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Quelle est la différence entre PDF/A-2b et PDF/A-2u ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Le PDF/A-2u ajoute une exigence par rapport au 2b : chaque police doit avoir un mappage Unicode vérifié, afin que le texte de votre document reste correctement indexable et copiable, pas seulement visuellement correct. PDFree vérifie cela automatiquement et vise le 2u dès que vos polices le permettent, avec repli sur le 2b sinon — vous n'avez pas à choisir."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Pourquoi mon PDF échoue-t-il à la vérification de conformité ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "La raison la plus courante est l'absence de polices incorporées — de nombreux PDF référencent des polices standard comme Helvetica ou Arial par leur nom au lieu de les incorporer, ce que le PDF/A n'autorise pas. Les autres raisons incluent un mot de passe/chiffrement, une signature numérique déjà appliquée, du JavaScript incorporé ou des actions d'ouverture automatique (même cachées dans un simple lien ou un champ de formulaire), et d'anciens flux d'image compressés en LZW."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFree peut-il réparer un PDF aux polices manquantes ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Parfois, en option explicite. Si les polices manquantes sont Helvetica/Arial, Times ou Courier, PDFree peut proposer un substitut gratuit et métriquement compatible (la famille de polices Liberation) — mais seulement après avoir vérifié que les largeurs exactes des caractères de votre document correspondent, pour que le texte ne se décale pas silencieusement. Si la vérification échoue ne serait-ce que pour une police, rien n'est modifié et la conversion reste refusée. Pour tout le reste, PDFree vous indique exactement quelles polices ne sont pas incorporées afin que vous puissiez réexporter le document source avec les polices incorporées."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "La conversion supprime-t-elle le JavaScript ou les fonctionnalités interactives de mon PDF ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui, lorsqu'ils sont présents — le PDF/A interdit le JavaScript incorporé et les actions automatiques, y compris les scripts de calcul de champs de formulaire (par exemple un champ de total auto-additionné). PDFree les supprime automatiquement lors de la conversion et vous indique exactement ce qui a été supprimé, pour que vous ne soyez jamais surpris qu'un formulaire ait cessé de calculer automatiquement après archivage."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFree conserve-t-il une signature numérique existante ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree vérifie d'abord sa présence. Toute modification d'un PDF signé — y compris cette conversion — invalide sa signature existante. Si PDFree détecte une signature déjà appliquée, il refuse la conversion et vous invite à signer la copie archivée après coup, plutôt que de produire silencieusement un fichier à la signature cassée."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "La vérification de conformité est-elle un validateur PDF/A complet comme veraPDF ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non. Il s'agit d'une autovérification des exigences structurelles auxquelles les PDF échouent le plus souvent réellement — ce n'est pas un substitut à un validateur ISO 19005 complet. Si vous avez besoin d'un PDF/A certifié légalement pour un archivage réglementaire ou juridique, PDFree renvoie directement vers veraPDF pour une vérification indépendante et faisant autorité après la conversion."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Vérifier ou convertir mon PDF l'envoie-t-il sur un serveur ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non. La vérification de conformité et la conversion s'exécutent entièrement dans votre navigateur via un Web Worker dédié. Votre fichier n'est jamais envoyé nulle part."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFree stocke-t-il ou enregistre-t-il mes fichiers après traitement ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non. PDFree fonctionne entièrement dans votre navigateur — il n'y a pas de serveur backend qui reçoit vos fichiers. Comme rien n'est envoyé, rien ne peut être stocké, enregistré ou conservé. Votre document n'existe que dans la mémoire de votre navigateur pendant la session et est effacé à la fermeture de l'onglet."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Que contient réellement le fichier PDF/A converti ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "La conversion incorpore un profil colorimétrique ICC sRGB standard (via un OutputIntent), un ensemble de métadonnées XMP déclarant la conformité PDF/A (reflétant le titre/auteur du document lui-même pour que les deux ne puissent pas se contredire), et un identifiant de fichier. Elle ne modifie ni le texte visible, ni les images, ni la mise en page de votre document."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Vérifier et convertir des PDF en PDF/A est-il gratuit ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui. PDFree est gratuit, sans abonnement, sans limite quotidienne et sans inscription."
+    }
+  }
+]

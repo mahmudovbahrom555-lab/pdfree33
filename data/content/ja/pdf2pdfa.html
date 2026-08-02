@@ -1,0 +1,174 @@
+<div class="seo-content" style="max-width:800px;margin:60px auto 40px;padding:0 24px;color:var(--text2);line-height:1.75;">
+
+        <h1 id="seoH1_pdf2pdfa" style="font-size:clamp(22px,3.5vw,30px);color:var(--text);margin:0 0 16px;font-weight:700;">PDF から PDF/A-2b/2u 変換ツール — 長期保存用チェック＆変換</h1>
+        <p style="font-size:15px;margin:0 0 40px;">PDF/AはISO標準化された長期保存用のPDFで、多くの裁判所、政府機関、大学、企業の記録保存ポリシーで必須とされています。PDFreeはPDFがPDF/A-2bの構造要件をすでに満たしているかを確認し、フォントが対応していればより厳格でテキスト全文検索可能なPDF/A-2uへ自動的にアップグレードして変換します — すべてブラウザ内で処理され、アップロードは一切ありません。ファイルが対象外の場合（多くはフォントが埋め込まれていない、または以下のあまり一般的でない問題）、PDFreeは見た目だけPDF/Aのようなファイルを作る代わりに、正確な理由を伝えます。</p>
+
+        <!-- How to use -->
+        <h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">PDFをPDF/Aにチェック＆変換する方法</h2>
+
+        <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
+          <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">1</div>
+          <div>
+            <strong style="color:var(--text);font-size:15px;">PDFを開く</strong>
+            <p style="margin:6px 0 0;font-size:14px;"><strong>ファイルを選択</strong>をクリックするか、PDFをドロップゾーンにドラッグしてください。ファイルはローカルで解析され、サーバーには一切送信されません。</p>
+          </div>
+        </div>
+        <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
+          <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">2</div>
+          <div>
+            <strong style="color:var(--text);font-size:15px;">準拠レポートを確認</strong>
+            <p style="margin:6px 0 0;font-size:14px;">PDFreeは埋め込みフォント、パスワード/暗号化、すでに適用されているデジタル署名、インタラクティブなアクションやJavaScript（ページ・注釈・ドキュメントレベル）、LZW圧縮ストリーム、Unicodeテキストマッピングをチェックします — PDF/Aが最も失敗しやすい要件を、ドキュメントのルートだけでなく、実際のPDFがそれらを隠し得るあらゆる階層でチェックします。</p>
+          </div>
+        </div>
+        <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
+          <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">3</div>
+          <div>
+            <strong style="color:var(--text);font-size:15px;">準拠していれば変換</strong>
+            <p style="margin:6px 0 0;font-size:14px;">ブロッキング問題が見つからなければ、<strong>変換</strong>をクリックしてください。PDFreeは必要なsRGBカラープロファイル、XMPメタデータ、ファイル識別子を埋め込み、見つかったインタラクティブなアクションを自動的に削除し（削除内容を正確に開示）、変換後のファイルをダウンロードします — フォントが対応していればPDF/A-2u、そうでなければPDF/A-2bをターゲットにします。</p>
+          </div>
+        </div>
+
+        <!-- When to use -->
+        <h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">誰がPDF/Aを必要とするか、その理由</h2>
+
+        <div id="pdfa-for-lawyers" style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">弁護士、パラリーガル、裁判所提出用のPDF/A</strong>
+          <p style="margin:6px 0 0;font-size:14px;">多くの裁判所や規制機関は、数年後も文書が読みやすく改変されないよう、電子提出にPDF/Aを要求しています。ファイルにすでにデジタル署名が適用されている場合、PDFreeはそれを検出して変換を拒否します — 再保存すると署名が気づかれないまま無効になってしまうため、変換後にアーカイブコピーに署名するよう案内し、署名が壊れた状態での提出リスクを回避します。</p>
+        </div>
+        <div id="pdfa-for-government" style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">記録管理者、アーキビスト、政府フォーム向けのPDF/A</strong>
+          <p style="margin:6px 0 0;font-size:14px;">国立公文書館、図書館、公共部門のデジタルリポジトリでは、永久保存のために提出されるすべてのものにPDF/Aを義務付けることが一般的です — 記入式の政府フォームも含め、PDFreeのチェックはページコンテンツと同様に、フォームフィールドのアクションや計算スクリプトにも徹底的に踏み込みます。</p>
+        </div>
+        <div id="pdfa-for-academia" style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">大学院生、研究者、機関リポジトリ向けのPDF/A</strong>
+          <p style="margin:6px 0 0;font-size:14px;">多くの大学では、長期的な可読性のために論文・学位論文の提出をPDF/A形式で求めています。文書のフォントが対応していれば、PDFreeはUnicodeテキストバリアントであるPDF/A-2uをターゲットにします — これにより、単に見た目が同じであるだけでなく、リポジトリ内で正しく検索・抽出可能なテキストが維持されます。</p>
+        </div>
+        <div id="pdfa-for-compliance" style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">会計士、コンプライアンス担当者、財務記録向けのPDF/A</strong>
+          <p style="margin:6px 0 0;font-size:14px;">SOX法、GDPR、税務保存規則の下で何年も何十年も読みやすさを維持しなければならない契約書、請求書、コンプライアンス記録は、PDF/Aの自己完結型でフォントに依存しない形式の恩恵を受けます — クライアントや財務データがデバイスから外に出ることなく処理されます。</p>
+        </div>
+        <div id="pdfa-for-everyone" style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">一度限りの提出向けのPDF/A</strong>
+          <p style="margin:6px 0 0;font-size:14px;">誰かに「これをPDF/Aで提出して」と言われて、どこから始めればいいかわからない場合は、上にファイルをドロップしてください。PDFreeはアカウント不要、インストール不要のソフトウェア、1日の利用制限なしで、すでに要件を満たしているかどうかを数秒で教えてくれます。</p>
+        </div>
+
+        <!-- Comparison table -->
+        <h2 style="font-size:22px;color:var(--text);margin:48px 0 16px;font-weight:700;">PDFreeが他のPDF/Aコンバーターと違う点</h2>
+        <div style="overflow-x:auto;margin:0 0 32px;">
+          <table style="width:100%;border-collapse:collapse;font-size:14px;min-width:520px;">
+            <thead>
+              <tr style="border-bottom:2px solid var(--border);">
+                <th style="text-align:left;padding:10px 14px;color:var(--text);font-weight:600;">機能</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">PDFree</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">一般的なクラウドツール</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom:1px solid var(--border);background:var(--green-light);">
+                <td style="padding:10px 14px;color:var(--text);font-weight:500;">ファイルのプライバシー</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;">アップロードなし — デバイス内に保持</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">リモートサーバーにアップロード</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 14px;color:var(--text);font-weight:500;">フォント未埋め込みファイル</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;">拒否、または検証済み代替を提案</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">壊れた「PDF/A」を気づかれないまま生成することが多い</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);background:var(--green-light);">
+                <td style="padding:10px 14px;color:var(--text);font-weight:500;">適用済みデジタル署名</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;">検出し、保護のため変換を拒否</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">通常チェックされず、署名が気づかれないまま破損</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 14px;color:var(--text);font-weight:500;">削除されたインタラクティブなアクション</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;">正確に何を削除したか開示</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">対応していても通常は非開示</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);background:var(--green-light);">
+                <td style="padding:10px 14px;color:var(--text);font-weight:500;">セルフチェックの透明性</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;">何がチェックされたか正確に表示</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">通常はブラックボックス</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 14px;color:var(--text);font-weight:500;">1日の利用制限</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;">なし</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">無料プランでは制限されることが多い</td>
+              </tr>
+              <tr>
+                <td style="padding:10px 14px;color:var(--text);font-weight:500;">価格</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;">永久無料</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">制限付き無料 / 有料プラン</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- FAQ -->
+        <h2 style="font-size:22px;color:var(--text);margin:48px 0 20px;font-weight:700;">よくある質問</h2>
+
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">PDF/Aとは何ですか？</h3>
+          <p style="margin:0;font-size:14px;">PDF/Aは長期保存のために設計されたISO標準化（ISO 19005）のPDFバージョンです。すべてのフォントの埋め込みを必須とし、暗号化と埋め込みJavaScriptを禁止し、カラープロファイルとメタデータ情報を埋め込むことで、外部リソースに依存せず、何十年後でも文書が同一に表示されるようにします。</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">PDF/A-2bとPDF/A-2uの違いは何ですか？</h3>
+          <p style="margin:0;font-size:14px;">PDF/A-2uは2bに1つの要件を追加します：すべてのフォントに検証済みのUnicodeマッピングが必要で、文書のテキストが見た目だけでなく正しく検索・コピー可能な状態を保ちます。PDFreeはこれを自動的にチェックし、フォントが対応していれば常に2uをターゲットにし、対応していなければ2bにフォールバックします — 選択の必要はありません。</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">なぜPDFが準拠チェックに失敗するのですか？</h3>
+          <p style="margin:0;font-size:14px;">最も一般的な理由はフォントが埋め込まれていないことです — 多くのPDFはHelveticaやArialのような標準フォントを埋め込む代わりに名前で参照しており、これはPDF/Aでは許可されません。その他の理由には、パスワード/暗号化、すでに適用されているデジタル署名、埋め込みJavaScriptや自動オープンアクション（1つのリンクやフォームフィールド内に隠れているものも含む）、古いLZW圧縮画像ストリームなどがあります。</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">PDFreeはフォントが欠落しているPDFを修正できますか？</h3>
+          <p style="margin:0;font-size:14px;">場合によっては、明示的なオプトインとして可能です。欠落しているフォントがHelvetica/Arial、Times、Courierの場合、PDFreeは無料でメトリック互換の代替フォント（Liberationフォントファミリー）を提供できます — ただし、文書の正確な文字幅が一致することを検証した後のみです。1つでも検証に失敗すれば何も変更されず、変換は拒否されたままです。それ以外の場合、PDFreeはどのフォントが埋め込まれていないかを正確に伝えるので、フォントを埋め込んだ状態で元の文書を再エクスポートできます。</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">変換するとPDFからJavaScriptやインタラクティブ機能が削除されますか？</h3>
+          <p style="margin:0;font-size:14px;">はい、存在する場合は削除されます — PDF/Aは埋め込みJavaScriptと自動アクション（自動合計フィールドなどのフォームフィールド計算スクリプトを含む）を禁止しています。PDFreeは変換の一部としてこれらを自動的に削除し、削除内容を正確に伝えるので、アーカイブ後にフォームの自動計算が止まっていて驚くことはありません。</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">PDFreeは既存のデジタル署名を保持しますか？</h3>
+          <p style="margin:0;font-size:14px;">PDFreeはまず署名の有無を確認します。署名済みPDFへのあらゆる変更 — この変換を含む — は既存の署名を無効にします。そのため、PDFreeが既に適用された署名を検出した場合、変換を拒否し、署名が壊れたファイルを気づかれないまま生成する代わりに、後でアーカイブコピーに署名するよう案内します。</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">準拠チェックはveraPDFのような完全なPDF/Aバリデーターですか？</h3>
+          <p style="margin:0;font-size:14px;">いいえ。これは、ほとんどのPDFが実際に失敗する構造要件のセルフチェックであり、完全なISO 19005バリデーターの代替ではありません。規制や法的アーカイブのために法的に認証されたPDF/Aファイルが必要な場合、PDFreeは変換後に独立した権威あるチェックを行うveraPDFへ直接リンクします。</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">PDFのチェックや変換はサーバーにアップロードされますか？</h3>
+          <p style="margin:0;font-size:14px;">いいえ。準拠チェックと変換の両方は、専用のWeb Workerを使用してブラウザ内で完全に実行されます。ファイルがどこかにアップロードされることは一切ありません。</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">PDFreeは処理後にファイルを保存またはログに記録しますか？</h3>
+          <p style="margin:0;font-size:14px;">いいえ。PDFreeはブラウザ内で完全に動作します — ファイルを受け取るバックエンドサーバーは存在しません。何もアップロードされないため、何も保存・記録・保持されることはありません。文書はセッション中のみブラウザのメモリ内に存在し、タブを閉じるとクリアされます。</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">変換されたPDF/Aファイルには実際に何が含まれていますか？</h3>
+          <p style="margin:0;font-size:14px;">変換により、標準的なsRGB ICCカラープロファイル（OutputIntent経由）、PDF/A準拠を宣言するXMPメタデータパケット（文書自身のタイトル/著者を反映しているため、両者が矛盾することはありません）、およびファイル識別子が埋め込まれます。文書の可視テキスト、画像、レイアウトは変更されません。</p>
+        </div>
+        <div style="margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">PDFのPDF/Aチェックと変換は無料ですか？</h3>
+          <p style="margin:0;font-size:14px;">はい。PDFreeはサブスクリプションなし、1日の利用制限なし、登録不要で無料です。</p>
+        </div>
+
+        <!-- Why PDFree -->
+        <h2 style="font-size:22px;color:var(--text);margin:48px 0 16px;font-weight:700;">PDF/Aのチェックと変換にPDFreeを使う理由</h2>
+        <p style="font-size:14px;margin:0 0 16px;">PDFreeはPDFのPDF/Aチェックと変換をすべてブラウザ内で行います — ファイルがデバイスから出ることは一切ありません。フォントが埋め込まれていない、既存のデジタル署名がある、またはインタラクティブなアクションが残っている文書に対して壊れた「PDF/A」ファイルを気づかれないまま生成する他のツールとは異なり、PDFreeはこれらすべてをチェックし、明確な理由で拒否するか、完全な開示のもとで修正するため、非準拠（または署名が偶然壊れた）ファイルをアーカイブ対応済みと誤解することはありません。</p>
+        <ul style="margin:0 0 32px;padding-left:24px;display:flex;flex-direction:column;gap:8px;font-size:14px;">
+          <li><strong>永久無料</strong> — サブスクリプションなし、プレミアムプランなし</li>
+          <li><strong>登録不要</strong> — ツールを開いてすぐに開始</li>
+          <li><strong>100%プライベート</strong> — PDFはローカルで処理され、サーバーにアップロードされることはありません</li>
+          <li><strong>正直な拒否</strong> — フォントが埋め込まれていない、または署名が壊れる場合に壊れた「PDF/A」を気づかれないまま出力しません</li>
+          <li><strong>可能な限りPDF/A-2u</strong> — 最小限ではなく、より厳格で完全にテキスト検索可能なレベルを自動的にターゲット</li>
+          <li><strong>セルフチェックの透明性</strong> — 準拠レポートは何がチェックされ、何が変更されたかを正確に表示</li>
+        </ul>
+
+        <!-- Related tools -->
+        <h2 style="font-size:22px;color:var(--text);margin:48px 0 12px;font-weight:700;">関連ツール</h2>
+        <ul style="margin:0 0 40px;padding-left:24px;display:flex;flex-direction:column;gap:8px;">
+          <li><a href="/ja/pdf-kaijo/" style="color:var(--green);font-weight:500;">PDFのロック解除</a> — PDF/A準拠チェックの前にパスワードを削除</li>
+          <li><a href="/ja/pdf-metadeta/" style="color:var(--green);font-weight:500;">PDFメタデータ編集</a> — 変換前にタイトルと著者を設定</li>
+          <li><a href="/ja/pdf-atsuryoku/" style="color:var(--green);font-weight:500;">PDF圧縮</a> — アーカイブ前にファイルサイズを削減</li>
+        </ul>
+
+      </div>
