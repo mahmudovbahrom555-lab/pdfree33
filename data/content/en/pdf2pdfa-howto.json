@@ -1,8 +1,8 @@
 {
   "@context": "https://schema.org",
   "@type": "HowTo",
-  "name": "How to Check and Convert a PDF to PDF/A-2b",
-  "description": "Check whether a PDF meets PDF/A-2b archival requirements and convert eligible files — free, no upload required.",
+  "name": "How to Check and Convert a PDF to PDF/A-2b or PDF/A-2u",
+  "description": "Check whether a PDF meets PDF/A archival requirements and convert eligible files — free, no upload required.",
   "step": [
     {
       "@type": "HowToStep",
@@ -14,13 +14,13 @@
       "@type": "HowToStep",
       "position": 2,
       "name": "Review the compliance report",
-      "text": "PDFree checks for embedded fonts, encryption, interactive actions/JavaScript, and LZW-compressed streams — the structural requirements PDF/A-2b enforces."
+      "text": "PDFree checks embedded fonts, encryption, an already-applied digital signature, interactive actions/JavaScript at the document, page, and annotation level, LZW-compressed streams, and Unicode text mapping."
     },
     {
       "@type": "HowToStep",
       "position": 3,
       "name": "Convert if compliant",
-      "text": "If no blocking issues are found, click 'Convert to PDF/A-2b' to add the required ICC color profile and XMP metadata, then download the converted file."
+      "text": "If no blocking issues are found, click 'Convert' to add the required ICC color profile, XMP metadata, and file identifier, automatically remove any interactive actions found, and download the converted file — PDF/A-2u when your fonts support it, PDF/A-2b otherwise."
     }
   ]
 }

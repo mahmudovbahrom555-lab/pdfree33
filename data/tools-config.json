@@ -3721,28 +3721,28 @@
         "en": "Check PDF/A Compliance"
       },
       "cardDescs": {
-        "en": "Check & convert to PDF/A-2b — no upload"
+        "en": "Check & convert to PDF/A-2b/2u — no upload"
       },
       "navLabels": {
         "en": "PDF/A"
       },
       "titles": {
-        "en": "PDF to PDF/A-2b Converter Free — Check & Convert for Archiving | PDFree"
+        "en": "PDF to PDF/A-2b/2u Converter Free — Check & Convert for Archiving | PDFree"
       },
       "descs": {
-        "en": "Check if your PDF meets PDF/A-2b archival requirements and convert compliant files instantly. 100% private — runs in your browser, nothing uploaded."
+        "en": "Check if your PDF meets PDF/A archival requirements and convert compliant files instantly — targets PDF/A-2u when your fonts qualify. 100% private, nothing uploaded."
       },
       "metaDescs": {
-        "en": "Check PDF/A-2b compliance and convert eligible PDFs for long-term archiving — free, private, runs entirely in your browser. No upload, no signup."
+        "en": "Check PDF/A compliance and convert eligible PDFs for long-term archiving — auto-targets PDF/A-2u, refuses instead of breaking signatures or fonts. Free, private, no upload."
       },
       "ogTitles": {
-        "en": "PDF to PDF/A-2b Converter — Free, Private, No Upload"
+        "en": "PDF to PDF/A-2b/2u Converter — Free, Private, No Upload"
       },
       "ogDescs": {
-        "en": "Check PDF/A-2b compliance and convert your PDF for long-term archiving. Runs in your browser — nothing uploaded, nothing saved on a server. Free forever, no signup."
+        "en": "Check PDF/A compliance and convert your PDF for long-term archiving, with automatic PDF/A-2u when possible. Runs in your browser — nothing uploaded. Free forever, no signup."
       },
       "keywords": {
-        "en": "pdf to pdfa, pdf/a converter, pdf/a compliance checker, convert pdf to pdf/a-2b, iso 19005, pdf archiving, check pdf/a online free"
+        "en": "pdf to pdfa, pdf/a converter, pdf/a-2u, pdf/a compliance checker, convert pdf to pdf/a-2b, iso 19005, pdf archiving, check pdf/a online free"
       }
     }
   ],

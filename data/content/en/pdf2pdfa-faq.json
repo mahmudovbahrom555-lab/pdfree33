@@ -9,10 +9,10 @@
   },
   {
     "@type": "Question",
-    "name": "Which PDF/A conformance level does PDFree target?",
+    "name": "What's the difference between PDF/A-2b and PDF/A-2u?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDF/A-2b — the visual-reproduction level of the PDF/A-2 part of the standard. It's the right target for most archiving needs without requiring full accessibility tagging (PDF/A-2a), which is a separate, much larger undertaking."
+      "text": "PDF/A-2u adds one requirement on top of 2b: every font must have a verified Unicode mapping, so your document's text stays properly searchable and copy-pasteable, not just visually correct. PDFree checks this automatically and targets 2u whenever your fonts qualify, falling back to 2b otherwise — you don't have to choose."
     }
   },
   {
@@ -20,7 +20,7 @@
     "name": "Why does my PDF fail the compliance check?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "The most common reason is unembedded fonts — many PDFs reference standard fonts like Helvetica or Arial by name instead of embedding them, which PDF/A does not allow. Other reasons include a password/encryption, embedded JavaScript or automatic open actions, and (rarely) old LZW-compressed image streams."
+      "text": "The most common reason is unembedded fonts — many PDFs reference standard fonts like Helvetica or Arial by name instead of embedding them, which PDF/A does not allow. Other reasons include a password/encryption, an already-applied digital signature, embedded JavaScript or automatic open actions (including ones hidden inside a single link or form field), and old LZW-compressed image streams."
     }
   },
   {
@@ -28,7 +28,23 @@
     "name": "Can PDFree fix a PDF with missing fonts?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Not automatically, and deliberately so. Substituting a replacement font for text that wasn't embedded risks silently shifting line breaks and page layout. PDFree tells you exactly which fonts aren't embedded so you can re-export the source document with fonts embedded (most word processors and design tools support this directly)."
+      "text": "Sometimes, as an explicit opt-in. If the missing fonts are Helvetica/Arial, Times, or Courier, PDFree can offer a free, metrically-compatible substitute (the Liberation font family) — but only after verifying your document's exact character widths match, so text can't silently shift. If verification fails for even one font, nothing is changed and conversion stays refused. For anything else, PDFree tells you exactly which fonts aren't embedded so you can re-export the source document with fonts embedded instead."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Does converting remove JavaScript or interactive features from my PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes, when present — PDF/A forbids embedded JavaScript and automatic actions, including form-field calculation scripts (e.g. an auto-summed total field). PDFree removes these automatically as part of conversion and tells you exactly what was removed, so you're never surprised that a form stopped auto-calculating after archiving."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Does PDFree preserve an existing digital signature?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree checks for one first. Any modification to a signed PDF — including this conversion — invalidates its existing signature, so if PDFree detects one already applied, it refuses to convert and tells you to sign the archived copy afterward instead, rather than silently producing a file with a broken signature."
     }
   },
   {
@@ -36,7 +52,7 @@
     "name": "Is the compliance check a full PDF/A validator like veraPDF?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. This is a self-check of the structural requirements most PDFs actually fail — it is not a substitute for a full ISO 19005 validator. If you need a legally certified PDF/A file for regulatory or legal archiving, verify the converted file with a dedicated validator such as veraPDF afterward."
+      "text": "No. This is a self-check of the structural requirements most PDFs actually fail — it is not a substitute for a full ISO 19005 validator. If you need a legally certified PDF/A file for regulatory or legal archiving, PDFree links directly to veraPDF for an independent, authoritative check after conversion."
     }
   },
   {
@@ -60,7 +76,7 @@
     "name": "What does the converted PDF/A file actually contain?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "The conversion embeds a standard sRGB ICC color profile (via an OutputIntent) and an XMP metadata packet declaring PDF/A-2b conformance, mirrored from the document's own title/author so the two can't disagree. It does not alter your document's text, images, or layout."
+      "text": "The conversion embeds a standard sRGB ICC color profile (via an OutputIntent), an XMP metadata packet declaring PDF/A conformance (mirrored from the document's own title/author so the two can't disagree), and a file identifier. It does not alter your document's visible text, images, or layout."
     }
   },
   {

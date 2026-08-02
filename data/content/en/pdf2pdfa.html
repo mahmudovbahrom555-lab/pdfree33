@@ -1,10 +1,10 @@
 <div class="seo-content" style="max-width:800px;margin:60px auto 40px;padding:0 24px;color:var(--text2);line-height:1.75;">
 
-        <h1 id="seoH1_pdf2pdfa" style="font-size:clamp(22px,3.5vw,30px);color:var(--text);margin:0 0 16px;font-weight:700;">PDF to PDF/A-2b Converter — Check &amp; Convert for Long-Term Archiving</h1>
-        <p style="font-size:15px;margin:0 0 40px;">PDF/A is the ISO-standardized version of PDF built for long-term archiving — required by many courts, government agencies, universities, and corporate records-retention policies. PDFree checks whether your PDF already meets the structural requirements for PDF/A-2b, and converts it if it does — entirely in your browser, nothing uploaded. If a file isn't eligible (most often because of unembedded fonts), PDFree tells you exactly why instead of producing a file that only looks like PDF/A.</p>
+        <h1 id="seoH1_pdf2pdfa" style="font-size:clamp(22px,3.5vw,30px);color:var(--text);margin:0 0 16px;font-weight:700;">PDF to PDF/A-2b/2u Converter — Check &amp; Convert for Long-Term Archiving</h1>
+        <p style="font-size:15px;margin:0 0 40px;">PDF/A is the ISO-standardized version of PDF built for long-term archiving — required by many courts, government agencies, universities, and corporate records-retention policies. PDFree checks whether your PDF already meets the structural requirements for PDF/A-2b, upgrades automatically to the stricter, full-text-searchable PDF/A-2u when your fonts qualify, and converts it — entirely in your browser, nothing uploaded. If a file isn't eligible (most often unembedded fonts, or a few less common issues below), PDFree tells you exactly why instead of producing a file that only looks like PDF/A.</p>
 
         <!-- How to use -->
-        <h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">How to Check and Convert a PDF to PDF/A-2b</h2>
+        <h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">How to Check and Convert a PDF to PDF/A</h2>
 
         <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
           <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">1</div>
@@ -17,14 +17,14 @@
           <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">2</div>
           <div>
             <strong style="color:var(--text);font-size:15px;">Review the compliance report</strong>
-            <p style="margin:6px 0 0;font-size:14px;">PDFree checks for embedded fonts, a password/encryption, interactive actions or JavaScript, and LZW-compressed streams — the requirements PDF/A-2b enforces and PDFs most often fail.</p>
+            <p style="margin:6px 0 0;font-size:14px;">PDFree checks embedded fonts, password/encryption, an already-applied digital signature, interactive actions or JavaScript (page-, annotation-, and document-level), LZW-compressed streams, and Unicode text mapping — the requirements PDF/A most often fails, checked at every level a real-world PDF can hide them in, not just the document root.</p>
           </div>
         </div>
         <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
           <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">3</div>
           <div>
             <strong style="color:var(--text);font-size:15px;">Convert if compliant</strong>
-            <p style="margin:6px 0 0;font-size:14px;">If no blocking issues are found, click <strong>Convert to PDF/A-2b</strong>. PDFree embeds the required sRGB color profile and XMP metadata, then downloads the converted file.</p>
+            <p style="margin:6px 0 0;font-size:14px;">If no blocking issues are found, click <strong>Convert</strong>. PDFree embeds the required sRGB color profile, XMP metadata, and a file identifier, automatically removes any interactive actions found (disclosing exactly what was removed), and downloads the converted file — targeting PDF/A-2u when your fonts support it, PDF/A-2b otherwise.</p>
           </div>
         </div>
 
@@ -32,20 +32,20 @@
         <h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">When You Need PDF/A</h2>
 
         <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
-          <strong style="color:var(--text);font-size:15px;">Legal and regulatory filings</strong>
-          <p style="margin:6px 0 0;font-size:14px;">Many courts and regulatory bodies require PDF/A for electronic filings so documents remain readable and unaltered years later.</p>
+          <strong style="color:var(--text);font-size:15px;">Legal and court filings</strong>
+          <p style="margin:6px 0 0;font-size:14px;">Many courts and regulatory bodies require PDF/A for electronic filings so documents remain readable and unaltered years later. If your file already carries an applied digital signature, PDFree detects it and refuses to convert — re-saving would silently invalidate the signature, so it asks you to sign after conversion instead.</p>
         </div>
         <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
-          <strong style="color:var(--text);font-size:15px;">Government and library submissions</strong>
-          <p style="margin:6px 0 0;font-size:14px;">National archives, libraries, and public-sector digital repositories commonly mandate PDF/A for anything submitted for permanent retention.</p>
+          <strong style="color:var(--text);font-size:15px;">Government forms and library submissions</strong>
+          <p style="margin:6px 0 0;font-size:14px;">National archives, libraries, and public-sector digital repositories commonly mandate PDF/A for anything submitted for permanent retention — including fillable government forms, which PDFree's checks reach into (form-field actions, calculation scripts) just as thoroughly as page content.</p>
         </div>
         <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
-          <strong style="color:var(--text);font-size:15px;">Academic theses and dissertations</strong>
-          <p style="margin:6px 0 0;font-size:14px;">Many universities require thesis and dissertation submissions in PDF/A format to guarantee long-term readability in institutional repositories.</p>
+          <strong style="color:var(--text);font-size:15px;">Academic theses and research repositories</strong>
+          <p style="margin:6px 0 0;font-size:14px;">Many universities require thesis and dissertation submissions in PDF/A format for long-term readability. When your document's fonts support it, PDFree targets PDF/A-2u — the Unicode-text variant that keeps your document's text properly searchable and extractable, not just visually identical.</p>
         </div>
         <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
-          <strong style="color:var(--text);font-size:15px;">Corporate records retention</strong>
-          <p style="margin:6px 0 0;font-size:14px;">Contracts, invoices, and compliance records that must stay readable for years or decades benefit from PDF/A's self-contained, font-independent format.</p>
+          <strong style="color:var(--text);font-size:15px;">Corporate records and compliance retention</strong>
+          <p style="margin:6px 0 0;font-size:14px;">Contracts, invoices, and compliance records that must stay readable for years or decades benefit from PDF/A's self-contained, font-independent format — processed without ever leaving your device, which matters for anything containing client or financial data.</p>
         </div>
 
         <!-- Comparison table -->
@@ -66,9 +66,19 @@
                 <td style="text-align:center;padding:10px 14px;color:var(--text2);">Uploaded to remote servers</td>
               </tr>
               <tr style="border-bottom:1px solid var(--border);">
-                <td style="padding:10px 14px;color:var(--text);font-weight:500;">Unembeddable-font files</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;">Refuses, explains why</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Often produces a broken "PDF/A" silently</td>
+                <td style="padding:10px 14px;color:var(--text);font-weight:500;">Unembedded-font files</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;">Refuses, or offers verified substitution</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Often silently produces a broken "PDF/A"</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);background:var(--green-light);">
+                <td style="padding:10px 14px;color:var(--text);font-weight:500;">Applied digital signatures</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;">Detected, conversion refused to protect it</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Usually not checked — signature silently breaks</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 14px;color:var(--text);font-weight:500;">Removed interactive actions</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;">Disclosed — tells you exactly what was removed</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Usually silent, if handled at all</td>
               </tr>
               <tr style="border-bottom:1px solid var(--border);background:var(--green-light);">
                 <td style="padding:10px 14px;color:var(--text);font-weight:500;">Self-check transparency</td>
@@ -97,20 +107,28 @@
           <p style="margin:0;font-size:14px;">PDF/A is an ISO-standardized (ISO 19005) version of PDF designed for long-term archiving. It requires all fonts to be embedded, forbids encryption and embedded JavaScript, and embeds color-profile and metadata information so the document renders identically decades from now, independent of external resources.</p>
         </div>
         <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
-          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Which PDF/A conformance level does PDFree target?</h3>
-          <p style="margin:0;font-size:14px;">PDF/A-2b — the visual-reproduction level of the PDF/A-2 part of the standard. It's the right target for most archiving needs without requiring full accessibility tagging (PDF/A-2a), which is a separate, much larger undertaking.</p>
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">What's the difference between PDF/A-2b and PDF/A-2u?</h3>
+          <p style="margin:0;font-size:14px;">PDF/A-2u adds one requirement on top of 2b: every font must have a verified Unicode mapping, so your document's text stays properly searchable and copy-pasteable, not just visually correct. PDFree checks this automatically and targets 2u whenever your fonts qualify, falling back to 2b otherwise — you don't have to choose.</p>
         </div>
         <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
           <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Why does my PDF fail the compliance check?</h3>
-          <p style="margin:0;font-size:14px;">The most common reason is unembedded fonts — many PDFs reference standard fonts like Helvetica or Arial by name instead of embedding them, which PDF/A does not allow. Other reasons include a password/encryption, embedded JavaScript or automatic open actions, and (rarely) old LZW-compressed image streams.</p>
+          <p style="margin:0;font-size:14px;">The most common reason is unembedded fonts — many PDFs reference standard fonts like Helvetica or Arial by name instead of embedding them, which PDF/A does not allow. Other reasons include a password/encryption, an already-applied digital signature, embedded JavaScript or automatic open actions (including ones hidden inside a single link or form field), and old LZW-compressed image streams.</p>
         </div>
         <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
           <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Can PDFree fix a PDF with missing fonts?</h3>
-          <p style="margin:0;font-size:14px;">Not automatically, and deliberately so. Substituting a replacement font for text that wasn't embedded risks silently shifting line breaks and page layout. PDFree tells you exactly which fonts aren't embedded so you can re-export the source document with fonts embedded (most word processors and design tools support this directly).</p>
+          <p style="margin:0;font-size:14px;">Sometimes, as an explicit opt-in. If the missing fonts are Helvetica/Arial, Times, or Courier, PDFree can offer a free, metrically-compatible substitute (the Liberation font family) — but only after verifying your document's exact character widths match, so text can't silently shift. If verification fails for even one font, nothing is changed and conversion stays refused. For anything else, PDFree tells you exactly which fonts aren't embedded so you can re-export the source document with fonts embedded instead.</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Does converting remove JavaScript or interactive features from my PDF?</h3>
+          <p style="margin:0;font-size:14px;">Yes, when present — PDF/A forbids embedded JavaScript and automatic actions, including form-field calculation scripts (e.g. an auto-summed total field). PDFree removes these automatically as part of conversion and tells you exactly what was removed, so you're never surprised that a form stopped auto-calculating after archiving.</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Does PDFree preserve an existing digital signature?</h3>
+          <p style="margin:0;font-size:14px;">PDFree checks for one first. Any modification to a signed PDF — including this conversion — invalidates its existing signature, so if PDFree detects one already applied, it refuses to convert and tells you to sign the archived copy afterward instead, rather than silently producing a file with a broken signature.</p>
         </div>
         <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
           <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Is the compliance check a full PDF/A validator like veraPDF?</h3>
-          <p style="margin:0;font-size:14px;">No. This is a self-check of the structural requirements most PDFs actually fail — it is not a substitute for a full ISO 19005 validator. If you need a legally certified PDF/A file for regulatory or legal archiving, verify the converted file with a dedicated validator such as veraPDF afterward.</p>
+          <p style="margin:0;font-size:14px;">No. This is a self-check of the structural requirements most PDFs actually fail — it is not a substitute for a full ISO 19005 validator. If you need a legally certified PDF/A file for regulatory or legal archiving, PDFree links directly to veraPDF for an independent, authoritative check after conversion.</p>
         </div>
         <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
           <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Does checking or converting my PDF upload it to a server?</h3>
@@ -122,7 +140,7 @@
         </div>
         <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
           <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">What does the converted PDF/A file actually contain?</h3>
-          <p style="margin:0;font-size:14px;">The conversion embeds a standard sRGB ICC color profile (via an OutputIntent) and an XMP metadata packet declaring PDF/A-2b conformance, mirrored from the document's own title/author so the two can't disagree. It does not alter your document's text, images, or layout.</p>
+          <p style="margin:0;font-size:14px;">The conversion embeds a standard sRGB ICC color profile (via an OutputIntent), an XMP metadata packet declaring PDF/A conformance (mirrored from the document's own title/author so the two can't disagree), and a file identifier. It does not alter your document's visible text, images, or layout.</p>
         </div>
         <div style="margin-bottom:20px;">
           <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Is checking and converting PDFs to PDF/A free?</h3>
@@ -131,13 +149,14 @@
 
         <!-- Why PDFree -->
         <h2 style="font-size:22px;color:var(--text);margin:48px 0 16px;font-weight:700;">Why Use PDFree to Check and Convert PDF/A?</h2>
-        <p style="font-size:14px;margin:0 0 16px;">PDFree checks and converts PDFs to PDF/A-2b entirely inside your browser — your file never leaves your device. Unlike tools that silently produce a broken "PDF/A" file when a document has unembedded fonts, PDFree refuses and explains exactly why, so you never mistake a non-compliant file for an archival-ready one.</p>
+        <p style="font-size:14px;margin:0 0 16px;">PDFree checks and converts PDFs to PDF/A entirely inside your browser — your file never leaves your device. Unlike tools that silently produce a broken "PDF/A" file when a document has unembedded fonts, an existing digital signature, or leftover interactive actions, PDFree checks for all of it and either refuses with a clear reason or fixes it with full disclosure, so you never mistake a non-compliant (or accidentally signature-broken) file for an archival-ready one.</p>
         <ul style="margin:0 0 32px;padding-left:24px;display:flex;flex-direction:column;gap:8px;font-size:14px;">
           <li><strong>Free forever</strong> — no subscription, no premium tier</li>
           <li><strong>No signup required</strong> — open the tool and start instantly</li>
           <li><strong>100% private</strong> — your PDF is processed locally, never uploaded to any server</li>
-          <li><strong>Honest refusal</strong> — won't silently ship a broken "PDF/A" when fonts aren't embedded</li>
-          <li><strong>Self-check transparency</strong> — the compliance report shows exactly what was checked</li>
+          <li><strong>Honest refusal</strong> — won't silently ship a broken "PDF/A" when fonts aren't embedded or a signature would break</li>
+          <li><strong>PDF/A-2u when possible</strong> — automatically targets the stricter, fully text-searchable level, not just the minimum</li>
+          <li><strong>Self-check transparency</strong> — the compliance report shows exactly what was checked, and what was changed</li>
         </ul>
 
         <!-- Related tools -->
