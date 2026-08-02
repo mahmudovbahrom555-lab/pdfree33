@@ -26,9 +26,25 @@
 // ============================================================
 
 import { id, esc } from './utils.js';
-import { t } from './i18n.js';
+import { t, tp } from './i18n.js';
 import { analyzePdfA, convertToPdfA } from './pdfaAnalyze.js';
 import { selectedFiles } from './files.js';
+
+// Locale-correct link to the Unlock tool from the encryption row — mirrors
+// the NEXT_STEP_SLUGS pattern in ocrUI.js. Sourced from data/tools-config.json.
+const UNLOCK_SLUGS = { en: 'unlock-pdf', de: 'pdf-entsperren', es: 'desbloquear-pdf', fr: 'deverrouiller-pdf', pt: 'desbloquear-pdf', id: 'buka-kunci-pdf', vi: 'mo-khoa-pdf', ru: 'razblokirovat-pdf', ja: 'pdf-kaijo', it: 'sblocca-pdf', ko: 'pdf-jamgeum-haeje', nl: 'pdf-ontgrendelen', pl: 'odblokuj-pdf', tr: 'pdf-sifre-kaldir' };
+const UNLOCK_LOCALES = new Set(Object.keys(UNLOCK_SLUGS).filter(l => l !== 'en'));
+
+function _currentLocale() {
+  const seg = location.pathname.split('/')[1];
+  return UNLOCK_LOCALES.has(seg) ? seg : 'en';
+}
+
+function _unlockHref() {
+  const lc = _currentLocale();
+  const slug = UNLOCK_SLUGS[lc] || UNLOCK_SLUGS.en;
+  return lc === 'en' ? `/${slug}/` : `/${lc}/${slug}/`;
+}
 
 // files.js only dispatches 'pdfree:file-removed' when files remain after the
 // removal (deliberately — see commit 63de885, scoped to the "stale file[0]
@@ -130,9 +146,28 @@ function _bindConvertBtn(myGen) {
     btn.textContent = originalLabel;
     const statusEl = id('pdf2pdfaConvertStatus');
     if (statusEl) {
-      statusEl.textContent = result.audit.passed ? t('pdfa_convert_success') : t('pdfa_convert_warn');
+      const level = result.conformance === 'U' ? 'PDF/A-2u' : 'PDF/A-2b';
+      const lines = [result.audit.passed ? t('pdfa_convert_success', { level }) : t('pdfa_convert_warn')];
+      const removedText = _removedSummary(result.removedActions);
+      if (removedText) lines.push(removedText);
+      statusEl.textContent = lines.join(' ');
     }
   });
+}
+
+// Builds the "Removed during conversion: ..." disclosure line — shown
+// unconditionally when anything was actually stripped, never silently.
+function _removedSummary(removed) {
+  if (!removed) return '';
+  const items = [];
+  if (removed.openAction) items.push(t('pdfa_action_openAction'));
+  if (removed.aa) items.push(t('pdfa_action_aa'));
+  if (removed.javascript) items.push(t('pdfa_action_javascript'));
+  if (removed.pageOrAnnotCount > 0) {
+    items.push(tp(removed.pageOrAnnotCount, 'pdfa_removed_pageOrAnnot_one', 'pdfa_removed_pageOrAnnot_many', { n: removed.pageOrAnnotCount }));
+  }
+  if (items.length === 0) return '';
+  return t('pdfa_removed_summary', { items: items.join(', ') });
 }
 
 function _triggerDownload(sourceFile, fileBytes) {
@@ -170,42 +205,60 @@ function _errorHtml(message) {
   </div>`;
 }
 
-function _row(ok, label, detail) {
-  const icon  = ok ? '✓' : '✗';
-  const color = ok ? 'var(--green,#2d7a4f)' : 'var(--red,#c0392b)';
+// state: 'ok' (green ✓) | 'warn' (amber ⚠, informational — not blocking
+// conversion) | 'fail' (red ✗, blocks conversion until the user acts).
+const _ROW_STYLE = {
+  ok:   { icon: '✓', color: 'var(--green,#2d7a4f)' },
+  warn: { icon: '⚠', color: '#a17a00' },
+  fail: { icon: '✗', color: 'var(--red,#c0392b)' },
+};
+
+function _row(state, label, detailHtml) {
+  const { icon, color } = _ROW_STYLE[state];
   return `<div style="display:flex;gap:8px;align-items:flex-start;padding:6px 0;font-size:13px;">
     <span style="color:${color};font-weight:700;flex-shrink:0;">${icon}</span>
-    <span style="color:var(--text);">${esc(label)}${detail ? `<br><span style="color:var(--text2);font-size:12px;">${esc(detail)}</span>` : ''}</span>
+    <span style="color:var(--text);">${esc(label)}${detailHtml ? `<br><span style="color:var(--text2);font-size:12px;">${detailHtml}</span>` : ''}</span>
   </div>`;
 }
 
 function _reportHtml(r) {
   const rows = [];
 
-  rows.push(_row(!r.encrypted, t('pdfa_row_encryption'),
-    r.encrypted ? t('pdfa_row_encryption_detail') : null));
+  const encryptionDetail = r.encrypted
+    ? `${esc(t('pdfa_row_encryption_detail'))} <a href="${esc(_unlockHref())}" style="color:var(--green,#2d7a4f);font-weight:600;">${esc(t('pdfa_unlock_link'))}</a>`
+    : null;
+  rows.push(_row(r.encrypted ? 'fail' : 'ok', t('pdfa_row_encryption'), encryptionDetail));
 
-  rows.push(_row(r.missingFonts.length === 0, t('pdfa_row_fonts'),
+  rows.push(_row(r.missingFonts.length === 0 ? 'ok' : 'fail', t('pdfa_row_fonts'),
     r.missingFonts.length
-      ? t('pdfa_row_fonts_detail', { fonts: r.missingFonts.slice(0, 5).join(', ') + (r.missingFonts.length > 5 ? '…' : '') })
+      ? esc(t('pdfa_row_fonts_detail', { fonts: r.missingFonts.slice(0, 5).join(', ') + (r.missingFonts.length > 5 ? '…' : '') }))
       : null));
 
-  rows.push(_row(r.forbidden.length === 0, t('pdfa_row_actions'),
+  // Forbidden actions no longer block conversion — they're auto-removed and
+  // disclosed (see pdfaWorker.js's stripForbiddenActions()), so this row is
+  // 'warn', not 'fail'.
+  rows.push(_row(r.forbidden.length === 0 ? 'ok' : 'warn', t('pdfa_row_actions'),
     r.forbidden.length
-      ? t('pdfa_row_actions_detail', { actions: r.forbidden.map(k => t('pdfa_action_' + k)).join(', ') })
+      ? esc(t('pdfa_row_actions_willremove', { actions: r.forbidden.map(k => t('pdfa_action_' + k)).join(', ') }))
       : null));
 
-  rows.push(_row(!r.hasLzw, t('pdfa_row_lzw'),
-    r.hasLzw ? t('pdfa_row_lzw_detail') : null));
+  rows.push(_row(r.hasLzw ? 'fail' : 'ok', t('pdfa_row_lzw'),
+    r.hasLzw ? esc(t('pdfa_row_lzw_detail')) : null));
 
-  const verdict = r.compliant
+  // Unicode mapping is informational only — it decides whether the file
+  // qualifies for the stricter PDF/A-2u instead of 2b, never blocks.
+  rows.push(_row(r.unicodeOk ? 'ok' : 'warn', t('pdfa_row_unicode'),
+    r.unicodeOk ? null : esc(t('pdfa_row_unicode_detail'))));
+
+  const level = r.unicodeOk ? 'PDF/A-2u' : 'PDF/A-2b';
+  const verdict = !r.blocking
     ? `<div style="margin-top:10px;padding:10px 14px;background:var(--green-light);border:1px solid rgba(45,122,79,.18);
         border-radius:10px;color:var(--green);font-size:13px;font-weight:600;">
-        ${esc(t('pdfa_compliant'))}
+        ${esc(t('pdfa_compliant', { level }))}
       </div>
       <button id="pdf2pdfaConvertBtn" type="button" style="margin-top:10px;padding:10px 18px;background:var(--green,#2d7a4f);
         color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;">
-        ${esc(t('pdfa_convert_btn'))}
+        ${esc(t('pdfa_convert_btn', { level }))}
       </button>
       <div id="pdf2pdfaConvertStatus" style="margin-top:8px;font-size:12px;color:var(--text2);"></div>`
     : `<div style="margin-top:10px;padding:10px 14px;background:var(--yellow-light,#fef8e7);border:1px solid rgba(202,138,4,.25);

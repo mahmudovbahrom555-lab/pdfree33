@@ -140,6 +140,41 @@ function checkEncryption(pdfDoc) {
   return !!pdfDoc.isEncrypted;
 }
 
+// ── Unicode mapping check (PDF/A-2u eligibility) ─────────────────────────
+// PDF/A-2u adds one requirement on top of 2b: every glyph used for
+// rendering must have a determinable Unicode value, normally via a
+// /ToUnicode CMap stream on the font. Real-world validators vary on how
+// lenient they are about *implicit* Unicode mapping through well-known
+// encodings (WinAnsiEncoding etc.) without an explicit /ToUnicode — rather
+// than guess at that leniency, this check requires an explicit, non-empty
+// /ToUnicode on every font. Conservative on purpose: it can under-qualify
+// a file that some validators would accept as 2u, but it can never
+// overclaim 2u — consistent with this tool's whole "honest refusal over
+// false positive" position (see the Phase 1/2 analyzer's same bias).
+function hasToUnicode(context, fontDict) {
+  const stream = context.lookup(fontDict.get(PDFName.of('ToUnicode')));
+  return !!(stream?.contents?.length > 0);
+}
+
+function checkUnicodeMapping(pdfDoc) {
+  const context = pdfDoc.context;
+  for (const [, obj] of context.enumerateIndirectObjects()) {
+    if (!(obj instanceof PDFDict)) continue;
+    if (obj.get(PDFName.of('Type'))?.decodeText?.() !== 'Font') continue;
+    // Descendant CID fonts (referenced only via a Type0's /DescendantFonts)
+    // never carry their own /ToUnicode per spec — the Type0 wrapper does.
+    // Checking them here would always fail even on a correctly-mapped
+    // composite font, exactly the bug that first shipped this function:
+    // a fixture with a real, verified /ToUnicode on the Type0 object still
+    // came back "not eligible" because the loop also visited its
+    // CIDFontType2 descendant and failed on that unrelated object.
+    const subtype = obj.get(PDFName.of('Subtype'))?.decodeText?.();
+    if (subtype === 'CIDFontType0' || subtype === 'CIDFontType2') continue;
+    if (!hasToUnicode(context, obj)) return false;
+  }
+  return true; // no fonts (or all mapped) — vacuously eligible, same logic as checkFonts()
+}
+
 // PDF/A forbids LZWDecode (patent-encumbered historically, and simply not on
 // the permitted filter list). pdf-lib's own save() only ever WRITES
 // FlateDecode — it never introduces LZW itself — but it also doesn't
@@ -179,6 +214,16 @@ function analyze(pdfDoc) {
   const missingFonts = encrypted ? [] : checkFonts(pdfDoc);
   const forbidden     = encrypted ? [] : checkForbidden(pdfDoc);
   const hasLzw         = encrypted ? false : checkLzw(pdfDoc);
+  const unicodeOk      = encrypted ? false : checkUnicodeMapping(pdfDoc);
+
+  // Forbidden actions (OpenAction/AA/JS/annotation actions) are NOT a
+  // blocking issue — convert() strips them automatically and reports
+  // exactly what was removed (see stripForbiddenActions()). Unlike font
+  // embedding or encryption, removing an action changes zero visible
+  // content, so there's no layout-risk reason to refuse the way we do for
+  // the other checks. `blocking` is the set that genuinely still requires
+  // the user to act before conversion is possible at all.
+  const blocking = encrypted || missingFonts.length > 0 || hasLzw;
 
   return {
     pageCount: pdfDoc.getPageCount(),
@@ -186,7 +231,9 @@ function analyze(pdfDoc) {
     missingFonts,
     forbidden,
     hasLzw,
-    compliant: !encrypted && missingFonts.length === 0 && forbidden.length === 0 && !hasLzw,
+    unicodeOk,
+    blocking,
+    compliant: !blocking, // kept for backward compat with existing callers/tests
   };
 }
 
@@ -198,7 +245,7 @@ function _xmlEscape(s) {
   return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
-function buildXmp({ title, author, producer, createdISO }) {
+function buildXmp({ title, author, producer, createdISO, conformance }) {
   // The xpacket "begin" attribute must contain a literal U+FEFF (BOM) per
   // the XMP spec — written as an escape, not the raw invisible character,
   // so it survives editors/linters that mangle or flag irregular whitespace.
@@ -207,7 +254,7 @@ function buildXmp({ title, author, producer, createdISO }) {
   <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
     <rdf:Description rdf:about="" xmlns:pdfaid="http://www.aiim.org/pdfa/ns/id/">
       <pdfaid:part>2</pdfaid:part>
-      <pdfaid:conformance>B</pdfaid:conformance>
+      <pdfaid:conformance>${conformance}</pdfaid:conformance>
     </rdf:Description>
     <rdf:Description rdf:about="" xmlns:dc="http://purl.org/dc/elements/1.1/">
       <dc:title><rdf:Alt><rdf:li xml:lang="x-default">${_xmlEscape(title || '')}</rdf:li></rdf:Alt></dc:title>
@@ -225,16 +272,74 @@ function buildXmp({ title, author, producer, createdISO }) {
 <?xpacket end="w"?>`;
 }
 
+// ── Strip forbidden actions ──────────────────────────────────────────────
+// Unlike font embedding or encryption, removing an OpenAction/AA/JS action
+// changes zero visible content — there's no layout-risk reason to refuse
+// conversion over these the way we do for the other checks. Every removal
+// is counted and reported back (see convert()) rather than done silently —
+// a competitor tool tested against this exact dataset did this same
+// stripping with no disclosure at all, which is the anti-pattern here.
+function stripForbiddenActions(pdfDoc) {
+  const catalog = pdfDoc.catalog;
+  const context = pdfDoc.context;
+  const removed = { openAction: false, aa: false, javascript: false, pageOrAnnotCount: 0 };
+
+  if (catalog.get(PDFName.of('OpenAction'))) {
+    catalog.delete(PDFName.of('OpenAction'));
+    removed.openAction = true;
+  }
+  if (catalog.get(PDFName.of('AA'))) {
+    catalog.delete(PDFName.of('AA'));
+    removed.aa = true;
+  }
+  const names = context.lookup(catalog.get(PDFName.of('Names')));
+  if (names instanceof PDFDict && names.get(PDFName.of('JavaScript'))) {
+    names.delete(PDFName.of('JavaScript'));
+    removed.javascript = true;
+  }
+
+  for (const [, obj] of context.enumerateIndirectObjects()) {
+    if (!(obj instanceof PDFDict)) continue;
+    if (obj.get(PDFName.of('Type'))?.decodeText?.() !== 'Page') continue;
+
+    if (obj.get(PDFName.of('AA'))) {
+      obj.delete(PDFName.of('AA'));
+      removed.pageOrAnnotCount++;
+    }
+
+    const annots = context.lookup(obj.get(PDFName.of('Annots')));
+    if (!(annots instanceof PDFArray)) continue;
+    for (let i = 0, n = annots.size(); i < n; i++) {
+      const annot = context.lookup(annots.get(i));
+      if (!(annot instanceof PDFDict)) continue;
+      let touched = false;
+      if (annot.get(PDFName.of('A')))  { annot.delete(PDFName.of('A'));  touched = true; }
+      if (annot.get(PDFName.of('AA'))) { annot.delete(PDFName.of('AA')); touched = true; }
+      if (touched) removed.pageOrAnnotCount++;
+    }
+  }
+
+  return removed;
+}
+
 // ── Conversion ──────────────────────────────────────────────────────────
-const PRODUCER = 'PDFree (pdfree.io) — client-side PDF/A-2b conversion';
+const PRODUCER = 'PDFree (pdfree.io) — client-side PDF/A-2b/2u conversion';
 
 async function convert(pdfDoc, iccBytes) {
   const report = analyze(pdfDoc);
-  if (!report.compliant) {
+  if (report.blocking) {
     return { blocked: true, report };
   }
 
   const context = pdfDoc.context;
+
+  const removedActions = report.forbidden.length > 0 ? stripForbiddenActions(pdfDoc) : null;
+
+  // unicodeOk was computed before any modification above; stripping actions
+  // never touches fonts, so it's still valid to decide the conformance
+  // letter here. 'U' (PDF/A-2u) is strictly 2b plus this one requirement,
+  // so upgrading is always safe when it qualifies.
+  const conformance = report.unicodeOk ? 'U' : 'B';
 
   // Info dict is the single source of truth — set it first, then mirror
   // into XMP, so the two can never disagree.
@@ -246,6 +351,7 @@ async function convert(pdfDoc, iccBytes) {
     author:     pdfDoc.getAuthor() || '',
     producer:   PRODUCER,
     createdISO: nowISO,
+    conformance,
   });
   const xmpBytes = new TextEncoder().encode(xmp);
   const xmpStream = context.flateStream(xmpBytes, { Type: 'Metadata', Subtype: 'XML' });
@@ -271,8 +377,8 @@ async function convert(pdfDoc, iccBytes) {
 
   const savedBytes = await pdfDoc.save();
 
-  const audit = await selfAudit(savedBytes, iccBytes.length);
-  return { blocked: false, fileBytes: savedBytes, audit };
+  const audit = await selfAudit(savedBytes, iccBytes.length, conformance);
+  return { blocked: false, fileBytes: savedBytes, audit, removedActions, conformance };
 }
 
 // Re-parses the just-written file independently — never trusts "we called
@@ -285,7 +391,7 @@ async function convert(pdfDoc, iccBytes) {
 // correctly-written file as failed. decodePDFRawStream(...).decode() —
 // the same utility already used in worker.js for image pixel data — does
 // the actual inflate.
-async function selfAudit(savedBytes, expectedIccLen) {
+async function selfAudit(savedBytes, expectedIccLen, expectedConformance) {
   const doc = await PDFDocument.load(savedBytes, { ignoreEncryption: true, updateMetadata: false });
   const context = doc.context;
 
@@ -305,14 +411,21 @@ async function selfAudit(savedBytes, expectedIccLen) {
   if (metadataStream) {
     const xmpBytes = decodePDFRawStream(metadataStream).decode();
     const xmpText = new TextDecoder().decode(xmpBytes);
-    xmpOk = xmpText.includes('pdfaid:part>2') && xmpText.includes('pdfaid:conformance>B');
+    xmpOk = xmpText.includes('pdfaid:part>2') && xmpText.includes(`pdfaid:conformance>${expectedConformance}`);
   }
+
+  // Forbidden actions are supposed to have been stripped by convert() before
+  // save() — re-check the ACTUAL saved bytes rather than trusting that the
+  // strip step ran cleanly, same "never trust, re-verify" discipline as the
+  // OutputIntent/XMP checks above.
+  const actionsClean = analyze(doc).forbidden.length === 0;
 
   return {
     outputIntentPresent: outputIntentOk,
     xmpPresent: xmpOk,
     notEncrypted: !doc.isEncrypted,
-    passed: outputIntentOk && xmpOk && !doc.isEncrypted,
+    actionsClean,
+    passed: outputIntentOk && xmpOk && !doc.isEncrypted && actionsClean,
   };
 }
 
