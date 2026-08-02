@@ -305,6 +305,7 @@ window.PDFREE_LOCALE = {
   pdfa_removed_pageOrAnnot_many: '{n} sayfa veya not eylemi',
   pdfa_unlock_link: 'Şifreyi kaldır →',
   pdfa_disclaimer:             'Bu, başarısız olma olasılığı en yüksek yapısal gereksinimlerin tamamen tarayıcınızda çalışan kendi kendine kontrolüdür. Yasal olarak zorunlu arşivleme için tam bir ISO 19005 doğrulayıcısının (ör. veraPDF) yerini tutmaz.',
+  pdfa_verapdf_link: 'veraPDF ile bağımsız olarak doğrulayın ↗',
   pdfa_substitute_offer: 'Bu yazı tipleri için ücretsiz, metrik olarak doğrulanmış bir alternatif mevcut (Liberation ailesi): {fonts}. PDFree, kullanmadan önce tam eşleşmeyi doğrular — doğrulama başarısız olursa hiçbir şey değiştirilmez ve dönüştürme reddedilmeye devam eder.',
   pdfa_substitute_checkbox: 'Yazı tipi değişimini dene',
   pdfa_substitute_btn: '📐 Doğrula ve Dönüştür',

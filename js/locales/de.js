@@ -306,6 +306,7 @@ window.PDFREE_LOCALE = {
   pdfa_removed_pageOrAnnot_many: '{n} Seiten- oder Anmerkungsaktionen',
   pdfa_unlock_link: 'Passwort entfernen →',
   pdfa_disclaimer:             'Dies ist eine Selbstprüfung der wahrscheinlichsten strukturellen Anforderungen, die vollständig in Ihrem Browser läuft. Sie ersetzt keinen vollständigen ISO-19005-Validator (z. B. veraPDF) für rechtlich vorgeschriebene Archivierung.',
+  pdfa_verapdf_link: 'Unabhängig mit veraPDF prüfen ↗',
   pdfa_substitute_offer: 'Für diese Schriftarten gibt es einen kostenlosen, metrisch verifizierten Ersatz (Liberation-Familie): {fonts}. PDFree überprüft die exakte Übereinstimmung, bevor sie verwendet wird — schlägt die Prüfung fehl, wird nichts geändert und die Umwandlung bleibt verweigert.',
   pdfa_substitute_checkbox: 'Schriftartersatz versuchen',
   pdfa_substitute_btn: '📐 Prüfen & Umwandeln',

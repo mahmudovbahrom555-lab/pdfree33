@@ -343,5 +343,9 @@ function _reportHtml(r) {
     <p style="margin:12px 0 0;font-size:11px;color:var(--text2);line-height:1.5;">
       ${esc(t('pdfa_disclaimer'))}
     </p>
+    <a href="https://verapdf.org/home/" target="_blank" rel="noopener noreferrer"
+       style="display:inline-block;margin-top:8px;font-size:11px;color:var(--green,#2d7a4f);font-weight:600;">
+      ${esc(t('pdfa_verapdf_link'))}
+    </a>
   </div>`;
 }

@@ -305,6 +305,7 @@ window.PDFREE_LOCALE = {
   pdfa_removed_pageOrAnnot_many: '{n} ações de página ou anotação',
   pdfa_unlock_link: 'Remover senha →',
   pdfa_disclaimer:             'Esta é uma autoverificação dos requisitos estruturais com maior probabilidade de falha, executada inteiramente no seu navegador. Não substitui um validador ISO 19005 completo (ex.: veraPDF) para arquivamento exigido legalmente.',
+  pdfa_verapdf_link: 'Verificar de forma independente com veraPDF ↗',
   pdfa_substitute_offer: 'Estas fontes têm um substituto gratuito e verificado metricamente disponível (família Liberation): {fonts}. O PDFree verifica a correspondência exata antes de usá-lo — se a verificação falhar, nada será alterado e a conversão permanecerá recusada.',
   pdfa_substitute_checkbox: 'Tentar substituição de fontes',
   pdfa_substitute_btn: '📐 Verificar e Converter',

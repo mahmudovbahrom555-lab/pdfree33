@@ -306,6 +306,7 @@ window.PDFREE_LOCALE = {
   pdfa_removed_pageOrAnnot_many: '{n} aksi halaman atau anotasi',
   pdfa_unlock_link: 'Hapus kata sandi →',
   pdfa_disclaimer:             'Ini adalah pemeriksaan mandiri terhadap persyaratan struktural yang paling mungkin gagal, dijalankan sepenuhnya di browser Anda. Ini bukan pengganti validator ISO 19005 lengkap (mis. veraPDF) untuk pengarsipan yang diwajibkan secara hukum.',
+  pdfa_verapdf_link: 'Verifikasi secara independen dengan veraPDF ↗',
   pdfa_substitute_offer: 'Font ini memiliki pengganti gratis yang telah diverifikasi metriknya (keluarga Liberation): {fonts}. PDFree memverifikasi kecocokan persis sebelum menggunakannya — jika verifikasi gagal, tidak ada yang diubah dan konversi tetap ditolak.',
   pdfa_substitute_checkbox: 'Coba substitusi font',
   pdfa_substitute_btn: '📐 Verifikasi & Konversi',

@@ -306,6 +306,7 @@ window.PDFREE_LOCALE = {
   pdfa_removed_pageOrAnnot_many: '{n} hành động trang hoặc chú thích',
   pdfa_unlock_link: 'Xóa mật khẩu →',
   pdfa_disclaimer:             'Đây là bước tự kiểm tra các yêu cầu cấu trúc dễ thất bại nhất, chạy hoàn toàn trong trình duyệt của bạn. Nó không thay thế trình xác thực ISO 19005 đầy đủ (ví dụ: veraPDF) cho việc lưu trữ theo yêu cầu pháp lý.',
+  pdfa_verapdf_link: 'Xác minh độc lập bằng veraPDF ↗',
   pdfa_substitute_offer: 'Các phông chữ này có bản thay thế miễn phí, đã xác minh về số đo (họ Liberation): {fonts}. PDFree xác minh sự khớp chính xác trước khi sử dụng — nếu xác minh thất bại, không có gì bị thay đổi và việc chuyển đổi vẫn bị từ chối.',
   pdfa_substitute_checkbox: 'Thử thay thế phông chữ',
   pdfa_substitute_btn: '📐 Xác minh & Chuyển đổi',
