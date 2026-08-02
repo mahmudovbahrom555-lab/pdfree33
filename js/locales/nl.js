@@ -28,6 +28,7 @@ window.PDFREE_LOCALE = {
     unlock:           ['pdf ontgrendelen', 'wachtwoord verwijderen', 'pdf-wachtwoord verwijderen'],
     flatten:          ['afvlakken', 'formulier vergrendelen', 'niet bewerkbaar', 'velden vastzetten', 'pdf vergrendelen'],
     compare:          ['vergelijken', 'diff', 'verschil', 'wijzigingen', 'pdf\'s vergelijken', 'wijzigingen vinden'],
+    pdf2pdfa:         ['pdf/a', 'pdfa', 'archivering', 'archiveerbaar', 'pdf/a controleren', 'iso 19005', 'langetermijnarchivering'],
   },
 
   // app

@@ -59,6 +59,7 @@ import { initUnlockOptions, hideUnlockOptions,
          getUnlockParams }                  from './unlockUI.js';
 import { initCompareOptions, hideCompareOptions,
          getCompareParams }               from './compareUI.js';
+import { initPdf2PdfaOptions, hidePdf2PdfaOptions } from './pdf2pdfaUI.js';
 
 // ── Merge filename ─────────────────────────────────────────────
 
@@ -421,6 +422,12 @@ registerTool('compare', {
     if (!p.hasFiles) return 'Please select two PDF files to compare';
     return null;
   },
+});
+
+// Analysis-only — no runner, no getParams. See pdf2pdfaUI.js header.
+registerTool('pdf2pdfa', {
+  init: initPdf2PdfaOptions,
+  hide: hidePdf2PdfaOptions,
 });
 
 // Email compression mode — same worker runner as 'compress' but with

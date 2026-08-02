@@ -28,6 +28,7 @@ window.PDFREE_LOCALE = {
     unlock:           ['desbloquear pdf', 'remover senha', 'remover senha do pdf'],
     flatten:          ['achatar', 'bloquear formulário', 'não editável', 'fixar campos', 'bloquear pdf'],
     compare:          ['comparar', 'diferença', 'diferenças', 'mudanças', 'comparar pdf', 'encontrar diferenças'],
+    pdf2pdfa:         ['pdf/a', 'pdfa', 'arquivamento', 'arquivo', 'verificar pdf/a', 'iso 19005', 'arquivamento de longo prazo'],
   },
 
   // app

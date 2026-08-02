@@ -29,6 +29,7 @@ window.PDFREE_LOCALE = {
     unlock:           ['buka kunci pdf', 'hapus kata sandi', 'buka proteksi', 'buka pdf terkunci', 'hapus password'],
     flatten:          ['kunci formulir', 'tidak bisa diedit', 'kunci field', 'flatten pdf'],
     compare:          ['bandingkan', 'perbedaan', 'cari perubahan', 'bandingkan pdf', 'perbedaan pdf'],
+    pdf2pdfa:         ['pdf/a', 'pdfa', 'arsip', 'pengarsipan', 'periksa pdf/a', 'iso 19005', 'arsip jangka panjang'],
   },
 
   // app

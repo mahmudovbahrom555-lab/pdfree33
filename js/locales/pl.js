@@ -28,6 +28,7 @@ window.PDFREE_LOCALE = {
     unlock:           ['odblokuj pdf', 'usuń hasło', 'usuń hasło pdf'],
     flatten:          ['spłaszcz', 'zablokuj formularz', 'nieedytowalny', 'zablokuj pola', 'zablokuj pdf'],
     compare:          ['porównaj', 'różnica', 'różnice', 'zmiany', 'porównaj pdf', 'znajdź zmiany'],
+    pdf2pdfa:         ['pdf/a', 'pdfa', 'archiwizacja', 'archiwalny', 'sprawdź pdf/a', 'iso 19005', 'archiwizacja długoterminowa'],
   },
 
   // app

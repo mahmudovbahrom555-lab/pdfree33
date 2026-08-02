@@ -450,7 +450,7 @@ function _maybeShowPwaNudge() {
 // phase. The guard below is the reliable fix.
 //
 // To add a new self-managed tool: append its key here + build its own UI module.
-const SELF_MANAGED_TOOLS = new Set(['ocr', 'compare']);
+const SELF_MANAGED_TOOLS = new Set(['ocr', 'compare', 'pdf2pdfa']);
 
 function _onMergeBtnClick() {
   const mode = id('mergeBtn').dataset.mode || 'process';

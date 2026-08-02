@@ -28,6 +28,7 @@ window.PDFREE_LOCALE = {
     unlock:           ['kilidi aç', 'şifreyi kaldır', 'parolayı kaldır', 'pdf kilidini kaldır', 'kilidi kaldır'],
     flatten:          ['formu kilitle', 'düzenlenemez yap', 'pdf kilitle', 'alanları sabitle', 'formu sabitle'],
     compare:          ['karşılaştır', 'fark', 'farkları bul', 'pdf karşılaştır', 'değişiklikleri bul'],
+    pdf2pdfa:         ['pdf/a', 'pdfa', 'arşiv', 'arşivleme', 'pdf/a kontrol', 'iso 19005', 'uzun süreli arşivleme'],
   },
 
   // app

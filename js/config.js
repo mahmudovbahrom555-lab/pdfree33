@@ -406,4 +406,21 @@ export const TOOLS = {
     accept:      '.pdf,application/pdf',
     implemented: true,
   },
+  // MVP: analysis only (Phase 1 of the PDF/A plan) — no conversion yet, no
+  // tool-grid card, no dedicated SEO page. Reachable via search and direct
+  // ?tool=pdf2pdfa routing only. English-only for now — no titles/descs/btns
+  // per-locale entries yet, so it falls back to the English strings below on
+  // every locale page (the same fallback contract every other tool already
+  // relies on when a translation key is missing — see search.js buildIndex).
+  pdf2pdfa: {
+    icon:        '📐',
+    title:       'Check PDF/A Compliance',
+    desc:        'Check if a PDF meets PDF/A-2b archival requirements — runs in your browser, no upload',
+    tags:        ['pdfa', 'pdf/a', 'pdf-a', 'archive', 'archival', 'iso 19005', 'compliance',
+                  'long-term archiving', 'check pdf/a', 'pdf to pdfa', 'pdf to pdf/a'],
+    btn:         '📐 Check Compliance',
+    multi:       false,
+    accept:      '.pdf,application/pdf',
+    implemented: true,
+  },
 };

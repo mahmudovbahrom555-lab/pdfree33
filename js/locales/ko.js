@@ -30,6 +30,7 @@ window.PDFREE_LOCALE = {
     unlock:           ['pdf 잠금 해제', '비밀번호 제거', 'pdf 비밀번호 삭제'],
     flatten:          ['평탄화', '양식 잠금', '편집 불가', '필드 고정', 'pdf 잠금'],
     compare:          ['비교', '차이점', '변경 사항', 'pdf 비교', '차이 찾기', '비교하기'],
+    pdf2pdfa:         ['pdf/a', '아카이브', '장기보존', 'pdf/a 확인', '보존용 pdf'],
   },
 
   // app

@@ -29,6 +29,7 @@ window.PDFREE_LOCALE = {
     unlock:           ['pdf entsperren', 'passwort entfernen', 'pdf passwort entfernen'],
     flatten:          ['abflachen', 'formular sperren', 'nicht bearbeitbar', 'felder fixieren', 'pdf sperren'],
     compare:          ['vergleichen', 'unterschied', 'unterschiede', 'änderungen', 'pdfs vergleichen', 'änderungen finden'],
+    pdf2pdfa:         ['pdf/a', 'pdfa', 'archivierung', 'archivtauglich', 'pdf/a prüfen', 'iso 19005', 'langzeitarchivierung'],
   },
 
   // app

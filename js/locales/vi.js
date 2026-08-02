@@ -29,6 +29,7 @@ window.PDFREE_LOCALE = {
     unlock:           ['mở khóa pdf', 'gỡ mật khẩu', 'xóa mật khẩu', 'mở file khóa', 'bỏ khóa pdf'],
     flatten:          ['khóa biểu mẫu', 'không chỉnh sửa được', 'khóa pdf', 'cố định trường', 'không cho sửa nữa'],
     compare:          ['so sánh', 'khác biệt', 'so sánh pdf', 'tìm thay đổi', 'đối chiếu'],
+    pdf2pdfa:         ['pdf/a', 'pdfa', 'lưu trữ', 'lưu trữ lâu dài', 'kiểm tra pdf/a', 'iso 19005'],
   },
 
   // app

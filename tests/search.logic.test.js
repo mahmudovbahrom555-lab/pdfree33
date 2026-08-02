@@ -139,7 +139,7 @@ test("'pdf2' does not fuzzy-match merge/split/compress (old bug)", () => {
 
 test("'pdf2' instead correctly surfaces the whole pdf2* family via key-prefix", () => {
   const keys = search('pdf2', index).map(r => r.key).sort();
-  expect(JSON.stringify(keys)).toBe(JSON.stringify(['pdf2excel', 'pdf2jpg', 'pdf2md', 'pdf2ppt', 'pdf2word'].sort()));
+  expect(JSON.stringify(keys)).toBe(JSON.stringify(['pdf2excel', 'pdf2jpg', 'pdf2md', 'pdf2pdfa', 'pdf2ppt', 'pdf2word'].sort()));
 });
 
 // ── search() no longer truncates internally — caller decides how many
