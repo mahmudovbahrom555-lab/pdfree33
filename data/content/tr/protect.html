@@ -99,7 +99,7 @@
 
   <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
     <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Hangi şifreleme standardı kullanılıyor?</h3>
-    <p style="margin:0;font-size:14px;">PDFree, endüstri standardı AES-256 şifrelemesi kullanır. Bu, bankacılık ve hükümet belgeleri için kullanılan şifreleme seviyesidir ve PDF spesifikasyonunda (PDF 2.0 / PDF 1.7) tanımlanan en yüksek düzey PDF şifrelemesidir.</p>
+    <p style="margin:0;font-size:14px;">PDFree, RC4-128 kullanır — PDF spesifikasyonunun Revision 3 güvenlik işleyicisi (PDF 1.4–1.7). Bu AES-256 değildir: düzenlemeye tabi veya son derece hassas belgeler için bunu tek güvenceniz değil, bir koruma katmanı olarak değerlendirin.</p>
   </div>
   <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
     <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">PDFree, dosyalarımı işledikten sonra depoluyor veya kaydediyor mu?</h3>
@@ -123,7 +123,7 @@
   </div>
   <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
     <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Parolayı biri kırabilir mi?</h3>
-    <p style="margin:0;font-size:14px;">AES-256, brute-force yöntemiyle pratikte kırılamaz. En iyi güvenlik için güçlü ve benzersiz bir parola kullanın.</p>
+    <p style="margin:0;font-size:14px;">Güçlü, benzersiz bir parola (12+ karakter, büyük/küçük harf, rakam, sembol karışımı) rastgele ve otomatik kırma girişimlerine karşı dayanıklıdır. RC4-128, AES-256 gibi modern şifrelerden daha zayıftır — bu yüzden son derece hassas veya düzenlemeye tabi dosyalarda tek güvenceniz olarak değil, bir koruma katmanı olarak kullanın.</p>
   </div>
   <div style="margin-bottom:20px;">
     <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Şifrelenmiş PDF, Adobe Reader'da açılır mı?</h3>
@@ -132,12 +132,12 @@
 
   <!-- Why PDFree -->
   <h2 style="font-size:22px;color:var(--text);margin:48px 0 16px;font-weight:700;">Neden PDF'leri Korumak İçin PDFree Kullanmalısınız?</h2>
-  <p style="font-size:14px;margin:0 0 16px;">PDFree, kayıt gerektirmeyen, dosya yüklemesi istemeyen ve kurulum gerektirmeyen ücretsiz bir çevrimiçi PDF parola aracıdır — PDF'ye parola ekleyin, PDF'yi çevrimiçi şifreleyin veya parolaları kaldırın. Hassas belgeleriniz, tarayıcınızda AES-256 şifrelemesi kullanılarak yerel olarak şifrelenir. Korumalı PDF anında indirilir ve her PDF görüntüleyicide çalışır.</p>
+  <p style="font-size:14px;margin:0 0 16px;">PDFree, kayıt gerektirmeyen, dosya yüklemesi istemeyen ve kurulum gerektirmeyen ücretsiz bir çevrimiçi PDF parola aracıdır — PDF'ye parola ekleyin, PDF'yi çevrimiçi şifreleyin veya parolaları kaldırın. Hassas belgeleriniz, tarayıcınızda RC4-128 şifrelemesi kullanılarak yerel olarak şifrelenir. Korumalı PDF anında indirilir ve her PDF görüntüleyicide çalışır.</p>
   <ul style="margin:0 0 32px;padding-left:24px;display:flex;flex-direction:column;gap:8px;font-size:14px;">
     <li><strong>Sonsuza kadar ücretsiz</strong> — abonelik olmadan PDF'leri parola ile koruyun</li>
     <li><strong>Kayıt gerekmez</strong> — anında PDF parolası ekleyin</li>
     <li><strong>%100 gizli</strong> — şifreleme yerel olarak yapılır, dosyalar asla yüklenmez</li>
-    <li><strong>AES-256 şifreleme</strong> — PDF'niz için endüstri standardı koruma</li>
+    <li><strong>RC4-128 şifreleme</strong> — her PDF görüntüleyiciyle uyumlu gerçek parola koruması</li>
     <li><strong>Anında sonuç</strong> — dosya boyutundan bağımsız olarak saniyeler içinde parola uygulanır</li>
   </ul>
 

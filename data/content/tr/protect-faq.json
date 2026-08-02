@@ -4,7 +4,7 @@
     "name": "Hangi şifreleme standardı kullanılıyor?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree, endüstri standardı AES-256 şifrelemesi kullanır. Bu, bankacılık ve hükümet belgeleri için kullanılan şifreleme seviyesidir."
+      "text": "PDFree, RC4-128 kullanır — PDF spesifikasyonunun Revision 3 güvenlik işleyicisi (PDF 1.4–1.7). Bu AES-256 değildir: düzenlemeye tabi veya son derece hassas belgeler için bunu tek güvenceniz değil, bir koruma katmanı olarak değerlendirin."
     }
   },
   {
@@ -52,7 +52,7 @@
     "name": "Parolayı biri kırabilir mi?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "AES-256, brute-force yöntemiyle pratikte kırılamaz. En iyi güvenlik için güçlü ve benzersiz bir parola kullanın."
+      "text": "Güçlü, benzersiz bir parola (12+ karakter, büyük/küçük harf, rakam, sembol karışımı) rastgele ve otomatik kırma girişimlerine karşı dayanıklıdır. RC4-128, AES-256 gibi modern şifrelerden daha zayıftır — bu yüzden son derece hassas veya düzenlemeye tabi dosyalarda tek güvenceniz olarak değil, bir koruma katmanı olarak kullanın."
     }
   },
   {

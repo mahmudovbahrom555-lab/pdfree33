@@ -99,7 +99,7 @@ window.PDFREE_LOCALE = {
   desc_watermark:           'Dodano znak wodny · {pages} stron · {size}',
   desc_pagenum:             'Dodano numery stron · {pages} stron · {size}',
   desc_meta:                'Zaktualizowano metadane · {pages} stron · {size}',
-  desc_protect:             'Zabezpieczono AES-256 · {pages} stron · {size}{extra}',
+  desc_protect:             'Zabezpieczono hasłem · {pages} stron · {size}{extra}',
   desc_rotate:              'Obrócono · {pages} stron · {size}',
   desc_redact:              'Ukryto obszary · {pages} stron · {size}',
   desc_fill:                'Wypełniono formularz · {pages} stron · {size}',

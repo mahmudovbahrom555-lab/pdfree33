@@ -99,7 +99,7 @@ window.PDFREE_LOCALE = {
   desc_watermark:           'Marca de água adicionada · {pages} páginas · {size}',
   desc_pagenum:             'Números de página adicionados · {pages} páginas · {size}',
   desc_meta:                'Metadados atualizados · {pages} páginas · {size}',
-  desc_protect:             'Protegido com AES-256 · {pages} páginas · {size}{extra}',
+  desc_protect:             'Protegido com senha · {pages} páginas · {size}{extra}',
   desc_rotate:              'Rodado · {pages} páginas · {size}',
   desc_redact:              'Áreas cobertas · {pages} páginas · {size}',
   desc_fill:                'Formulário preenchido · {pages} páginas · {size}',

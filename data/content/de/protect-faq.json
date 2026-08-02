@@ -28,7 +28,7 @@
     "name": "Welche Verschlüsselung wird verwendet?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree verwendet AES-256 — den aktuellen Industriestandard für PDF-Verschlüsselung. Dieser Standard ist auch bei Banken, Behörden und Sicherheitssoftware im Einsatz."
+      "text": "PDFree verwendet RC4-128 — den Sicherheitsstandard Revision 3 der PDF-Spezifikation (PDF 1.4–1.7). Das ist kein AES-256: Für stark regulierte oder besonders sensible Dokumente solltest du zusätzliche Schutzmaßnahmen einplanen, statt dich allein darauf zu verlassen."
     }
   },
   {

@@ -100,7 +100,7 @@ window.PDFREE_LOCALE = {
   desc_watermark:           '透かしを追加しました · {pages}ページ · {size}',
   desc_pagenum:             'ページ番号を追加しました · {pages}ページ · {size}',
   desc_meta:                'メタデータを更新しました · {pages}ページ · {size}',
-  desc_protect:             'AES-256で保護しました · {pages}ページ · {size}{extra}',
+  desc_protect:             'パスワードで保護しました · {pages}ページ · {size}{extra}',
   desc_rotate:              '回転しました · {pages}ページ · {size}',
   desc_redact:              '範囲を塗りつぶしました · {pages}ページ · {size}',
   desc_fill:                'フォームに入力しました · {pages}ページ · {size}',

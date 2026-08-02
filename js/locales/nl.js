@@ -99,7 +99,7 @@ window.PDFREE_LOCALE = {
   desc_watermark:           'Watermerk toegevoegd · {pages} pagina\'s · {size}',
   desc_pagenum:             'Paginanummers toegevoegd · {pages} pagina\'s · {size}',
   desc_meta:                'Metadata bijgewerkt · {pages} pagina\'s · {size}',
-  desc_protect:             'Beveiligd met AES-256 · {pages} pagina\'s · {size}{extra}',
+  desc_protect:             'Beveiligd met wachtwoord · {pages} pagina\'s · {size}{extra}',
   desc_rotate:              'Geroteerd · {pages} pagina\'s · {size}',
   desc_redact:              'Gebieden verborgen · {pages} pagina\'s · {size}',
   desc_fill:                'Formulier ingevuld · {pages} pagina\'s · {size}',

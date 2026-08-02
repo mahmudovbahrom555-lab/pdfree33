@@ -100,7 +100,7 @@ window.PDFREE_LOCALE = {
   desc_watermark:           'Wasserzeichen hinzugefügt · {pages} Seiten · {size}',
   desc_pagenum:             'Seitenzahlen hinzugefügt · {pages} Seiten · {size}',
   desc_meta:                'Metadaten aktualisiert · {pages} Seiten · {size}',
-  desc_protect:             'AES-256 geschützt · {pages} Seiten · {size}{extra}',
+  desc_protect:             'Passwortgeschützt · {pages} Seiten · {size}{extra}',
   desc_rotate:              'Gedreht · {pages} Seiten · {size}',
   desc_redact:              'Bereiche abgedeckt · {pages} Seiten · {size}',
   desc_fill:                'Formular ausgefüllt · {pages} Seiten · {size}',

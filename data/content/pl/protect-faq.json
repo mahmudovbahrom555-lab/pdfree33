@@ -4,7 +4,7 @@
     "name": "Jakiego szyfrowania używa PDFree?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "AES-256 — ten sam standard, co banki i służby rządowe. Najsilniejsze dostępne szyfrowanie dla PDF-ów."
+      "text": "RC4-128 — standard bezpieczeństwa Revision 3 specyfikacji PDF (PDF 1.4–1.7). To nie jest AES-256: w przypadku dokumentów regulowanych lub bardzo wrażliwych traktuj to jako jedną warstwę ochrony, a nie jedyne zabezpieczenie."
     }
   },
   {

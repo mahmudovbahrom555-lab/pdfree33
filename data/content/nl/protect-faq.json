@@ -4,7 +4,7 @@
     "name": "Welk type versleuteling wordt gebruikt?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree gebruikt AES-256-versleuteling — de industriestandaard die ook door banken en overheden wordt gebruikt."
+      "text": "PDFree gebruikt RC4-128 — de Revision 3-beveiligingsstandaard van de PDF-specificatie (PDF 1.4–1.7). Dit is geen AES-256: behandel het bij gereguleerde of zeer gevoelige documenten als één beschermingslaag, niet als je enige waarborg."
     }
   },
   {

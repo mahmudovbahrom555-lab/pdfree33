@@ -99,7 +99,7 @@ window.PDFREE_LOCALE = {
   desc_watermark:           'Filigrane ajouté · {pages} pages · {size}',
   desc_pagenum:             'Numéros de page ajoutés · {pages} pages · {size}',
   desc_meta:                'Métadonnées mises à jour · {pages} pages · {size}',
-  desc_protect:             'Protégé AES-256 · {pages} pages · {size}{extra}',
+  desc_protect:             'Protégé par mot de passe · {pages} pages · {size}{extra}',
   desc_rotate:              'Pivoté · {pages} pages · {size}',
   desc_redact:              'Zones masquées · {pages} pages · {size}',
   desc_fill:                'Formulaire rempli · {pages} pages · {size}',

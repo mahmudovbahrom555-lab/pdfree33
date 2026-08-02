@@ -100,7 +100,7 @@ window.PDFREE_LOCALE = {
   desc_watermark:           'Добавлен водяной знак · {pages} стр. · {size}',
   desc_pagenum:             'Добавлены номера страниц · {pages} стр. · {size}',
   desc_meta:                'Метаданные обновлены · {pages} стр. · {size}',
-  desc_protect:             'Защищено AES-256 · {pages} стр. · {size}{extra}',
+  desc_protect:             'Защищено паролем · {pages} стр. · {size}{extra}',
   desc_rotate:              'Повёрнуто · {pages} стр. · {size}',
   desc_redact:              'Области закрашены · {pages} стр. · {size}',
   desc_fill:                'Форма заполнена · {pages} стр. · {size}',

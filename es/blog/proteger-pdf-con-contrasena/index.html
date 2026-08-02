@@ -60,7 +60,7 @@
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"PDFree","item":"https://pdfree.io/"},{"@type":"ListItem","position":2,"name":"Español","item":"https://pdfree.io/es/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pdfree.io/es/blog/"},{"@type":"ListItem","position":4,"name":"Proteger PDF con contraseña","item":"https://pdfree.io/es/blog/proteger-pdf-con-contrasena/"}]}
   </script>
   <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"¿Qué tipo de cifrado usa PDFree para proteger el PDF?","acceptedAnswer":{"@type":"Answer","text":"PDFree usa cifrado AES-256, el mismo estándar que utilizan los bancos y organismos gubernamentales. Tu contraseña nunca se envía a ningún servidor."}},{"@type":"Question","name":"¿Se suben mis archivos PDF al protegerlos?","acceptedAnswer":{"@type":"Answer","text":"No. PDFree procesa todos los archivos únicamente en tu navegador. Tus documentos no salen de tu dispositivo en ningún momento."}},{"@type":"Question","name":"¿Puedo quitar la contraseña después?","acceptedAnswer":{"@type":"Answer","text":"Sí. Usa la herramienta Desbloquear PDF de PDFree en pdfree.io/es/desbloquear-pdf/ — también gratis, sin subida, directamente en el navegador."}}]}
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"¿Qué tipo de cifrado usa PDFree para proteger el PDF?","acceptedAnswer":{"@type":"Answer","text":"PDFree usa RC4-128 — el estándar de seguridad Revisión 3 de la especificación PDF (PDF 1.4–1.7). No es AES-256: para documentos regulados o muy sensibles, trátalo como una capa de protección adicional. Tu contraseña nunca se envía a ningún servidor."}},{"@type":"Question","name":"¿Se suben mis archivos PDF al protegerlos?","acceptedAnswer":{"@type":"Answer","text":"No. PDFree procesa todos los archivos únicamente en tu navegador. Tus documentos no salen de tu dispositivo en ningún momento."}},{"@type":"Question","name":"¿Puedo quitar la contraseña después?","acceptedAnswer":{"@type":"Answer","text":"Sí. Usa la herramienta Desbloquear PDF de PDFree en pdfree.io/es/desbloquear-pdf/ — también gratis, sin subida, directamente en el navegador."}}]}
   </script>
   <script src="../../../js/theme.js"></script>
 </head>
@@ -98,7 +98,7 @@
 
         <div style="background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:28px;margin:0 0 40px;text-align:center;">
           <p style="font-size:16px;font-weight:600;color:var(--text);margin:0 0 8px;">Protege tu PDF ahora</p>
-          <p style="font-size:14px;color:var(--text2);margin:0 0 20px;">Sin cuenta. Sin subida. Cifrado AES-256.</p>
+          <p style="font-size:14px;color:var(--text2);margin:0 0 20px;">Sin cuenta. Sin subida. Cifrado con contraseña.</p>
           <a href="../../proteger-pdf/" style="background:var(--green);color:#fff;padding:13px 28px;border-radius:10px;font-weight:600;font-size:15px;text-decoration:none;display:inline-block;">Proteger PDF — Gratis</a>
         </div>
 
@@ -135,8 +135,8 @@
           </li>
         </ol>
 
-        <h2 style="font-size:22px;color:var(--text);margin:0 0 16px;font-weight:600;">¿Qué es el cifrado AES-256?</h2>
-        <p>PDFree utiliza AES-256 (Advanced Encryption Standard con clave de 256 bits) — el mismo estándar de cifrado que usan los bancos, organismos gubernamentales y aplicaciones de seguridad en todo el mundo. Un PDF cifrado con AES-256 no puede abrirse sin la contraseña correcta, incluso con hardware moderno de alta potencia.</p>
+        <h2 style="font-size:22px;color:var(--text);margin:0 0 16px;font-weight:600;">¿Qué cifrado utiliza PDFree?</h2>
+        <p>PDFree utiliza RC4-128 — el estándar de seguridad Revisión 3 de la especificación PDF (PDF 1.4–1.7). Es cifrado real con contraseña, compatible con cualquier lector de PDF. No es AES-256: para documentos regulados o muy sensibles, trátalo como una capa de protección adicional, no como tu única salvaguarda.</p>
         <p style="margin-top:16px;">La diferencia clave respecto a otras herramientas online: en PDFree todo el cifrado ocurre en tu navegador. Tus documentos y tu contraseña nunca salen de tu dispositivo — no hay ningún servidor que los reciba.</p>
 
         <h2 style="font-size:22px;color:var(--text);margin:32px 0 16px;font-weight:600;">Consejos para una contraseña segura en PDF</h2>
@@ -151,7 +151,7 @@
         <h2 style="font-size:22px;color:var(--text);margin:0 0 16px;font-weight:600;">Preguntas frecuentes</h2>
         <dl style="margin:0 0 32px;">
           <dt style="font-weight:600;color:var(--text);margin:0 0 8px;">¿Qué tipo de cifrado usa PDFree para proteger el PDF?</dt>
-          <dd style="margin:0 0 20px;padding-left:16px;border-left:3px solid var(--border);">PDFree usa cifrado AES-256, el mismo estándar que utilizan los bancos y organismos gubernamentales. Tu contraseña nunca se envía a ningún servidor.</dd>
+          <dd style="margin:0 0 20px;padding-left:16px;border-left:3px solid var(--border);">PDFree usa RC4-128 — el estándar de seguridad Revisión 3 de la especificación PDF (PDF 1.4–1.7). No es AES-256. Tu contraseña nunca se envía a ningún servidor.</dd>
           <dt style="font-weight:600;color:var(--text);margin:0 0 8px;">¿Se suben mis archivos PDF al protegerlos?</dt>
           <dd style="margin:0 0 20px;padding-left:16px;border-left:3px solid var(--border);">No. PDFree procesa todos los archivos únicamente en tu navegador. Tus documentos no salen de tu dispositivo en ningún momento.</dd>
           <dt style="font-weight:600;color:var(--text);margin:0 0 8px;">¿Puedo quitar la contraseña después?</dt>
@@ -167,7 +167,7 @@
         <div style="padding-top:24px;border-top:1px solid var(--border);">
           <p style="font-size:12px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin:0 0 10px;">Guías relacionadas</p>
           <ul style="margin:0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:6px;">
-            <li><a href="../../proteger-pdf/" style="color:var(--green);">Proteger PDF</a> — Herramienta gratuita, sin subida, AES-256</li>
+            <li><a href="../../proteger-pdf/" style="color:var(--green);">Proteger PDF</a> — Herramienta gratuita, sin subida</li>
             <li><a href="../../desbloquear-pdf/" style="color:var(--green);">Desbloquear PDF</a> — Eliminar contraseña de un PDF</li>
             <li><a href="../unir-archivos-pdf-gratis/" style="color:var(--green);">Unir archivos PDF gratis</a> — Combinar PDFs de forma segura</li>
           </ul>

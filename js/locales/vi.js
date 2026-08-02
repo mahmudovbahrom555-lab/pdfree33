@@ -100,7 +100,7 @@ window.PDFREE_LOCALE = {
   desc_watermark:           'Đã thêm watermark · {pages} trang · {size}',
   desc_pagenum:             'Đã thêm số trang · {pages} trang · {size}',
   desc_meta:                'Đã cập nhật metadata · {pages} trang · {size}',
-  desc_protect:             'Bảo vệ AES-256 · {pages} trang · {size}{extra}',
+  desc_protect:             'Bảo vệ bằng mật khẩu · {pages} trang · {size}{extra}',
   desc_rotate:              'Đã xoay · {pages} trang · {size}',
   desc_redact:              'Đã che vùng · {pages} trang · {size}',
   desc_fill:                'Đã điền biểu mẫu · {pages} trang · {size}',

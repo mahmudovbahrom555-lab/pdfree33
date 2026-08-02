@@ -60,7 +60,7 @@
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"PDFree","item":"https://pdfree.io/"},{"@type":"ListItem","position":2,"name":"Português","item":"https://pdfree.io/pt/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pdfree.io/pt/blog/"},{"@type":"ListItem","position":4,"name":"Proteger PDF com senha","item":"https://pdfree.io/pt/blog/proteger-pdf-com-senha/"}]}
   </script>
   <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Qual tipo de criptografia o PDFree usa para proteger o PDF?","acceptedAnswer":{"@type":"Answer","text":"O PDFree usa criptografia AES-256, o mesmo padrão utilizado por bancos e órgãos governamentais. Sua senha nunca é enviada para nenhum servidor."}},{"@type":"Question","name":"Meus arquivos PDF são enviados ao protegê-los?","acceptedAnswer":{"@type":"Answer","text":"Não. O PDFree processa todos os arquivos apenas no seu navegador. Seus documentos nunca saem do seu dispositivo."}},{"@type":"Question","name":"Posso remover a senha depois?","acceptedAnswer":{"@type":"Answer","text":"Sim. Use a ferramenta Desbloquear PDF do PDFree em pdfree.io/pt/desbloquear-pdf/ — também grátis, sem upload, diretamente no navegador."}}]}
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Qual tipo de criptografia o PDFree usa para proteger o PDF?","acceptedAnswer":{"@type":"Answer","text":"O PDFree usa RC4-128, o padrão de segurança Revisão 3 da especificação PDF (PDF 1.4–1.7). Não é AES-256: para documentos regulados ou muito sensíveis, trate isso como uma camada de proteção adicional. Sua senha nunca é enviada para nenhum servidor."}},{"@type":"Question","name":"Meus arquivos PDF são enviados ao protegê-los?","acceptedAnswer":{"@type":"Answer","text":"Não. O PDFree processa todos os arquivos apenas no seu navegador. Seus documentos nunca saem do seu dispositivo."}},{"@type":"Question","name":"Posso remover a senha depois?","acceptedAnswer":{"@type":"Answer","text":"Sim. Use a ferramenta Desbloquear PDF do PDFree em pdfree.io/pt/desbloquear-pdf/ — também grátis, sem upload, diretamente no navegador."}}]}
   </script>
   <script src="../../../js/theme.js"></script>
 </head>
@@ -98,7 +98,7 @@
 
         <div style="background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:28px;margin:0 0 40px;text-align:center;">
           <p style="font-size:16px;font-weight:600;color:var(--text);margin:0 0 8px;">Proteja seu PDF agora</p>
-          <p style="font-size:14px;color:var(--text2);margin:0 0 20px;">Sem conta. Sem upload. Criptografia AES-256.</p>
+          <p style="font-size:14px;color:var(--text2);margin:0 0 20px;">Sem conta. Sem upload. Criptografia com senha.</p>
           <a href="../../proteger-pdf/" style="background:var(--green);color:#fff;padding:13px 28px;border-radius:10px;font-weight:600;font-size:15px;text-decoration:none;display:inline-block;">Proteger PDF — Grátis</a>
         </div>
 
@@ -135,8 +135,8 @@
           </li>
         </ol>
 
-        <h2 style="font-size:22px;color:var(--text);margin:0 0 16px;font-weight:600;">O que é a criptografia AES-256?</h2>
-        <p>O PDFree usa AES-256 (Advanced Encryption Standard com chave de 256 bits) — o mesmo padrão de criptografia utilizado por bancos, órgãos governamentais e softwares de segurança em todo o mundo. Um PDF criptografado com AES-256 não pode ser aberto sem a senha correta, mesmo com hardware computacional de alta potência.</p>
+        <h2 style="font-size:22px;color:var(--text);margin:0 0 16px;font-weight:600;">Que criptografia o PDFree usa?</h2>
+        <p>O PDFree usa RC4-128, o padrão de segurança Revisão 3 da especificação PDF (PDF 1.4–1.7). É criptografia real por senha, compatível com qualquer leitor de PDF padrão. Não é AES-256: para documentos regulados ou muito sensíveis, trate isso como uma camada de proteção, não como sua única salvaguarda.</p>
         <p style="margin-top:16px;">A diferença principal em relação a outras ferramentas online: no PDFree, toda a criptografia ocorre no seu navegador. Seus documentos e sua senha nunca saem do seu dispositivo — não existe nenhum servidor para recebê-los.</p>
 
         <h2 style="font-size:22px;color:var(--text);margin:32px 0 16px;font-weight:600;">Dicas para uma senha PDF segura</h2>
@@ -151,7 +151,7 @@
         <h2 style="font-size:22px;color:var(--text);margin:0 0 16px;font-weight:600;">Perguntas frequentes</h2>
         <dl style="margin:0 0 32px;">
           <dt style="font-weight:600;color:var(--text);margin:0 0 8px;">Qual tipo de criptografia o PDFree usa para proteger o PDF?</dt>
-          <dd style="margin:0 0 20px;padding-left:16px;border-left:3px solid var(--border);">O PDFree usa criptografia AES-256, o mesmo padrão utilizado por bancos e órgãos governamentais. Sua senha nunca é enviada para nenhum servidor.</dd>
+          <dd style="margin:0 0 20px;padding-left:16px;border-left:3px solid var(--border);">O PDFree usa RC4-128, o padrão de segurança Revisão 3 da especificação PDF (PDF 1.4–1.7). Não é AES-256. Sua senha nunca é enviada para nenhum servidor.</dd>
           <dt style="font-weight:600;color:var(--text);margin:0 0 8px;">Meus arquivos PDF são enviados ao protegê-los?</dt>
           <dd style="margin:0 0 20px;padding-left:16px;border-left:3px solid var(--border);">Não. O PDFree processa todos os arquivos apenas no seu navegador. Seus documentos nunca saem do seu dispositivo.</dd>
           <dt style="font-weight:600;color:var(--text);margin:0 0 8px;">Posso remover a senha depois?</dt>
@@ -167,7 +167,7 @@
         <div style="padding-top:24px;border-top:1px solid var(--border);">
           <p style="font-size:12px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin:0 0 10px;">Guias relacionados</p>
           <ul style="margin:0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:6px;">
-            <li><a href="../../proteger-pdf/" style="color:var(--green);">Proteger PDF</a> — Ferramenta gratuita, sem upload, AES-256</li>
+            <li><a href="../../proteger-pdf/" style="color:var(--green);">Proteger PDF</a> — Ferramenta gratuita, sem upload</li>
             <li><a href="../../desbloquear-pdf/" style="color:var(--green);">Desbloquear PDF</a> — Remover senha de um PDF</li>
             <li><a href="../juntar-arquivos-pdf-gratis/" style="color:var(--green);">Juntar arquivos PDF grátis</a> — Combinar PDFs com segurança</li>
           </ul>

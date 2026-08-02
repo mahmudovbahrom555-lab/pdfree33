@@ -20,7 +20,7 @@
     "name": "PDFree sử dụng tiêu chuẩn mã hóa nào?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree sử dụng mã hóa AES-256 — tiêu chuẩn tương tự được ngân hàng và cơ quan chính phủ sử dụng."
+      "text": "PDFree sử dụng RC4-128 — tiêu chuẩn bảo mật Revision 3 của đặc tả PDF (PDF 1.4–1.7). Đây không phải AES-256: với tài liệu chịu quy định hoặc rất nhạy cảm, hãy xem đây là một lớp bảo vệ, không phải biện pháp bảo vệ duy nhất."
     }
   },
   {
@@ -33,10 +33,10 @@
   },
   {
     "@type": "Question",
-    "name": "Mã hóa AES-256 mạnh đến mức nào?",
+    "name": "Mã hóa RC4-128 mạnh đến mức nào?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "AES-256 là tiêu chuẩn mã hóa cao nhất được ngân hàng, chính phủ và quân đội sử dụng — thực tế không thể bị bẻ bằng brute force."
+      "text": "Mật khẩu mạnh và duy nhất (12+ ký tự, kết hợp chữ hoa/thường, số, ký hiệu) chống lại các nỗ lực bẻ khóa thông thường và tự động. RC4-128 yếu hơn các thuật toán hiện đại như AES-256, vì vậy với tài liệu rất nhạy cảm hoặc chịu quy định, hãy xem đây là một lớp bảo vệ chứ không phải biện pháp bảo vệ duy nhất."
     }
   },
   {
@@ -76,7 +76,7 @@
     "name": "PDF được bảo vệ có tương thích với mọi trình đọc không?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Có. PDF mã hóa AES-256 tương thích với Adobe Acrobat, Foxit Reader và tất cả trình đọc PDF hiện đại."
+      "text": "Có. PDF mã hóa RC4-128 tương thích với Adobe Acrobat, Foxit Reader và tất cả trình đọc PDF chuẩn."
     }
   }
 ]

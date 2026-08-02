@@ -4,7 +4,7 @@
     "name": "¿Qué cifrado se utiliza?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree utiliza AES-256 — el estándar actual de cifrado PDF, también usado por bancos y software de seguridad."
+      "text": "PDFree utiliza RC4-128 — el estándar de seguridad Revisión 3 de la especificación PDF (PDF 1.4–1.7). No es AES-256: para documentos regulados o muy sensibles, trátalo como una capa de protección adicional, no como tu única salvaguarda."
     }
   },
   {

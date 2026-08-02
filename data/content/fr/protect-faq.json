@@ -28,7 +28,7 @@
     "name": "Quel niveau de chiffrement est utilisé ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree utilise AES-256, le standard de chiffrement utilisé par les gouvernements et les institutions financières. C'est le niveau maximal prévu par la spécification PDF."
+      "text": "PDFree utilise RC4-128, le standard de sécurité Révision 3 de la spécification PDF (PDF 1.4–1.7). Ce n'est pas de l'AES-256 : pour les documents réglementés ou très sensibles, considérez-le comme une couche de protection parmi d'autres, pas comme votre seule sauvegarde."
     }
   },
   {

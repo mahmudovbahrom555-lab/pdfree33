@@ -71,10 +71,10 @@
     worker-src  'self' blob:;
     object-src  'none';
   ">
-  <title>Password Protect PDF — AES-256 Encryption | PDFree</title>
-  <meta name="description" content="Password-protect your PDF with AES-256 encryption. Files stay on your device — never uploaded to any server. Free.">
-  <meta property="og:title"       content="Encrypt PDF with AES-256 — Your Password Never Reaches Any Server">
-  <meta property="og:description" content="Password-protect your PDF with AES-256 encryption. Files never uploaded. Free, no signup.">
+  <title>Password Protect PDF — Free, No Upload | PDFree</title>
+  <meta name="description" content="Password-protect your PDF with RC4-128 encryption. Files stay on your device — never uploaded to any server. Free.">
+  <meta property="og:title"       content="Password Protect PDF — Your Password Never Reaches Any Server">
+  <meta property="og:description" content="Password-protect your PDF with RC4-128 encryption. Files never uploaded. Free, no signup.">
   <meta property="og:type"        content="website">
   <meta property="og:url"       content="https://pdfree.io/protect-pdf/">
   <meta property="og:site_name" content="PDFree">
@@ -82,12 +82,12 @@
   <meta property="og:image"     content="https://pdfree.io/icons/og-image.jpg">
   <meta property="og:image:width"  content="1200">
   <meta property="og:image:height" content="633">
-  <meta property="og:image:alt"    content="Encrypt PDF with AES-256 — Your Password Never Reaches Any Server">
+  <meta property="og:image:alt"    content="Password Protect PDF — Your Password Never Reaches Any Server">
   <meta name="twitter:card"        content="summary_large_image">
   <meta name="twitter:site"        content="@pdfree_io">
   <meta name="twitter:image"       content="https://pdfree.io/icons/og-image.jpg">
-  <meta name="twitter:title"       content="Encrypt PDF with AES-256 — Your Password Never Reaches Any Server">
-  <meta name="twitter:description" content="Password-protect your PDF with AES-256 encryption. Files never uploaded. Free, no signup.">
+  <meta name="twitter:title"       content="Password Protect PDF — Your Password Never Reaches Any Server">
+  <meta name="twitter:description" content="Password-protect your PDF with RC4-128 encryption. Files never uploaded. Free, no signup.">
   
   <link rel="canonical" href="https://pdfree.io/protect-pdf/">
     <link rel="alternate" hreflang="en" href="https://pdfree.io/protect-pdf/">
@@ -125,7 +125,7 @@
   "@context": "https://schema.org",
   "@type": "WebApplication",
   "name": "Password Protect PDF",
-  "description": "Encrypt PDF files with AES-256 password protection. Files never leave your device.",
+  "description": "Encrypt PDF files with RC4-128 password protection. Files never leave your device.",
   "url": "https://pdfree.io/protect-pdf/",
   "applicationCategory": "UtilitiesApplication",
   "operatingSystem": "Any",
@@ -168,7 +168,7 @@
       "name": "What encryption standard does PDFree use?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "PDFree uses AES-256 encryption, the same standard used by banks and government systems."
+        "text": "PDFree uses RC4-128 — the PDF format's Revision 3 standard security handler (PDF 1.4–1.7). It's real password encryption, compatible with every standard-compliant PDF reader. It is not AES-256, so for regulated or highly sensitive documents, treat it as one layer of protection rather than your only safeguard."
       }
     },
     {
@@ -184,7 +184,7 @@
       "name": "Can someone crack the password?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "AES-256 is practically uncrackable by brute force. Use a strong, unique password for best security."
+        "text": "A strong, unique password (12+ characters, mixed case, numbers, symbols) resists casual and automated cracking attempts. RC4-128 is weaker than modern ciphers like AES-256, so for highly sensitive or regulated files, use it as one layer of protection rather than your only safeguard."
       }
     }
   ]
@@ -297,7 +297,7 @@
       <div class="tool-header-icon" id="toolIcon" aria-hidden="true">🔒</div>
       <div class="tool-header-text">
         <h2 id="toolTitle">Password protect PDF online</h2>
-        <p  id="toolDesc">AES-256 password &amp; permissions — 100% private</p>
+        <p  id="toolDesc">Password &amp; permissions — 100% private</p>
       </div>
     </div>
 
@@ -455,7 +455,11 @@
         
         <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
           <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">What encryption does PDFree use?</h3>
-          <p style="margin:0;font-size:14px;">PDFree uses 256-bit AES encryption, the same standard used by banks and government agencies. It is the highest level of PDF encryption defined in the PDF specification (PDF 2.0 / PDF 1.7).</p>
+          <p style="margin:0;font-size:14px;">PDFree uses RC4-128 — the PDF format's Revision 3 standard security handler (PDF 1.4–1.7). It's real password encryption, compatible with every standard-compliant PDF reader. It is not AES-256, so for regulated or highly sensitive documents, treat it as one layer of protection rather than your only safeguard.</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Can someone crack the password?</h3>
+          <p style="margin:0;font-size:14px;">A strong, unique password (12+ characters, mixed case, numbers, symbols) resists casual and automated cracking attempts. RC4-128 is weaker than modern ciphers like AES-256, so for highly sensitive or regulated files, use it as one layer of protection rather than your only safeguard.</p>
         </div>
         <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
           <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Can I remove the password from a protected PDF?</h3>
@@ -471,7 +475,7 @@
         </div>
         <div style="margin-bottom:20px;">
           <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Can I set different passwords for opening and editing?</h3>
-          <p style="margin:0;font-size:14px;">Currently PDFree sets an owner password that restricts opening the document. Separate user/owner permissions (controlling printing, copying, editing) are on the roadmap.</p>
+          <p style="margin:0;font-size:14px;">Yes. You can set an owner password (for editing/printing restrictions) separately from a user password (for opening the file).</p>
         </div>
 
         <!-- Related tools -->

@@ -100,7 +100,7 @@ window.PDFREE_LOCALE = {
   desc_watermark:           'Tanda air ditambahkan · {pages} halaman · {size}',
   desc_pagenum:             'Nomor halaman ditambahkan · {pages} halaman · {size}',
   desc_meta:                'Metadata diperbarui · {pages} halaman · {size}',
-  desc_protect:             'Dilindungi AES-256 · {pages} halaman · {size}{extra}',
+  desc_protect:             'Dilindungi kata sandi · {pages} halaman · {size}{extra}',
   desc_rotate:              'Diputar · {pages} halaman · {size}',
   desc_redact:              'Area ditutup · {pages} halaman · {size}',
   desc_fill:                'Formulir diisi · {pages} halaman · {size}',

@@ -20,7 +20,7 @@
     "name": "Standar enkripsi apa yang digunakan PDFree?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree menggunakan enkripsi AES-256 — standar yang sama yang digunakan oleh perbankan dan sistem pemerintahan."
+      "text": "PDFree menggunakan RC4-128 — standar keamanan Revisi 3 dari spesifikasi PDF (PDF 1.4–1.7). Ini bukan AES-256: untuk dokumen yang diatur secara ketat atau sangat sensitif, anggap ini sebagai satu lapisan perlindungan, bukan satu-satunya pengaman Anda."
     }
   },
   {
@@ -33,10 +33,10 @@
   },
   {
     "@type": "Question",
-    "name": "Seberapa kuat enkripsi AES-256?",
+    "name": "Seberapa kuat enkripsi RC4-128?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "AES-256 adalah standar enkripsi tertinggi yang digunakan oleh perbankan, pemerintah, dan militer. Ini adalah enkripsi terkuat yang tersedia untuk PDF, secara praktis tidak bisa dipecahkan dengan brute force."
+      "text": "Kata sandi yang kuat dan unik (12+ karakter, kombinasi huruf besar-kecil, angka, simbol) tahan terhadap upaya pembobolan biasa dan otomatis. RC4-128 lebih lemah dibanding cipher modern seperti AES-256, jadi untuk file yang sangat sensitif atau diatur secara ketat, jadikan ini satu lapisan perlindungan, bukan satu-satunya pengaman Anda."
     }
   },
   {
@@ -76,7 +76,7 @@
     "name": "Apakah PDF yang dilindungi kompatibel dengan semua pembaca PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ya. PDF terenkripsi AES-256 yang dihasilkan kompatibel dengan Adobe Acrobat, Foxit Reader, dan semua pembaca PDF modern."
+      "text": "Ya. PDF terenkripsi RC4-128 yang dihasilkan kompatibel dengan Adobe Acrobat, Foxit Reader, dan semua pembaca PDF standar."
     }
   }
 ]

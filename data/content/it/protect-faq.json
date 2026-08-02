@@ -4,7 +4,7 @@
     "name": "Che tipo di crittografia viene usata?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "AES-256 — lo stesso standard usato dalle banche e dai servizi governativi. È la crittografia più sicura disponibile per i PDF."
+      "text": "RC4-128 — lo standard di sicurezza Revision 3 della specifica PDF (PDF 1.4–1.7). Non è AES-256: per documenti regolamentati o molto sensibili, consideralo un livello di protezione aggiuntivo, non l'unica tua salvaguardia."
     }
   },
   {

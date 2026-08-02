@@ -111,7 +111,7 @@ export const EN = {
   desc_watermark:           'Watermarked · {pages} pages · {size}',
   desc_pagenum:             'Page numbers added · {pages} pages · {size}',
   desc_meta:                'Metadata updated · {pages} pages · {size}',
-  desc_protect:             'AES-256 protected · {pages} pages · {size}{extra}',
+  desc_protect:             'Password protected · {pages} pages · {size}{extra}',
   desc_rotate:              'Rotated · {pages} pages · {size}',
   desc_redact:              'Areas covered · {pages} pages · {size}',
   desc_fill:                'Form filled · {pages} pages · {size}',

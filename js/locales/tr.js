@@ -99,7 +99,7 @@ window.PDFREE_LOCALE = {
   desc_watermark:           'Filigran eklendi · {pages} sayfa · {size}',
   desc_pagenum:             'Sayfa numaraları eklendi · {pages} sayfa · {size}',
   desc_meta:                'Meta veriler güncellendi · {pages} sayfa · {size}',
-  desc_protect:             'AES-256 ile korundu · {pages} sayfa · {size}{extra}',
+  desc_protect:             'Parolayla korundu · {pages} sayfa · {size}{extra}',
   desc_rotate:              'Döndürüldü · {pages} sayfa · {size}',
   desc_redact:              'Alanlar gizlendi · {pages} sayfa · {size}',
   desc_fill:                'Form dolduruldu · {pages} sayfa · {size}',

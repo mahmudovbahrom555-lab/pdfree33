@@ -20,7 +20,7 @@
     "name": "Qual nível de criptografia é usado?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "O PDFree usa AES-256, o padrão de criptografia usado por governos e instituições financeiras. É o nível máximo previsto pela especificação PDF."
+      "text": "O PDFree usa RC4-128, o padrão de segurança Revisão 3 da especificação PDF (PDF 1.4–1.7). Não é AES-256: para documentos regulados ou muito sensíveis, trate isso como uma camada de proteção, não como sua única salvaguarda."
     }
   },
   {
