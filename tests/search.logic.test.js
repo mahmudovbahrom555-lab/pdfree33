@@ -212,6 +212,43 @@ test("CJK matching is unaffected by diacritic folding (結合 still finds merge)
   expect(topKey('結合', jaIdx)).toBe('merge');
 });
 
+test('VI "dat mat khau" (đặt mật khẩu with no diacritics at all) finds protect', () => {
+  const viIdx = buildIndex(TOOLS, 'vi', loadLocaleSearchTags('vi'));
+  expect(topKey('dat mat khau', viIdx)).toBe('protect');
+});
+
+// ── Multi-word phrase typo tolerance (regression: found via manual browser
+//    QA across ko/ja/id/vi — a typo in just one word of a multi-word tag
+//    ("tanda air" -> "tada air", Indonesian for watermark) matched nothing.
+//    bestWordDistance alone compares the *entire* query as one unit against
+//    individual words of the target text, which can never work once the
+//    query itself has more than one word — bestPhraseDistance matches each
+//    query word to its own best word in the target independently) ──
+console.log('\nMulti-word phrase typo tolerance:');
+
+test('KO multi-word query with a typo in the second word finds ocr', () => {
+  // 스캔한 문서 (scanned document) typo'd to 문사 in the second word only
+  const koIdx = buildIndex(TOOLS, 'ko', loadLocaleSearchTags('ko'));
+  expect(topKey('스캔한 문사', koIdx)).toBe('ocr');
+});
+
+test('ID multi-word query with a dropped letter in the first word finds watermark', () => {
+  // "tanda air" (watermark) typo'd to "tada air" (dropped the 'n')
+  const idIdx = buildIndex(TOOLS, 'id', loadLocaleSearchTags('id'));
+  expect(topKey('tada air', idIdx)).toBe('watermark');
+});
+
+test('VI multi-word query combining a typo AND dropped diacritics finds pdf2word', () => {
+  // "chuyển sang word" typo'd to "chuen sang word" (dropped diacritics too)
+  const viIdx = buildIndex(TOOLS, 'vi', loadLocaleSearchTags('vi'));
+  expect(topKey('chuen sang word', viIdx)).toBe('pdf2word');
+});
+
+test('an unrelated 2-word query still returns nothing (no new false positives)', () => {
+  expect(topKey('purple elephant')).toBeFalsy();
+  expect(topKey('happy birthday')).toBeFalsy();
+});
+
 // ── Localized search (regression: non-English queries found nothing —
 //    buildIndex only ever scanned English tags/names, see js/i18n.js's
 //    EN.search_tags contract and js/locales/<lc>.js's search_tags) ──

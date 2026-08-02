@@ -11,12 +11,17 @@ const MISS_KEY = 'pdfree_search_misses';
 // "protéger" -> "proteger" is also an *accent* difference some fuzzy-tier
 // length budgets don't cover once a word has several accented letters).
 // Standard Unicode NFD decomposition + stripping combining marks (U+0300–
-// U+036F) handles most of this (ö→o, ü→u, ç→c, ş→s, ğ→g, é→e...). Turkish's
-// dotless ı (U+0131) is the one common exception — it's a distinct base
-// letter, not an accent-marked 'i', so NFD leaves it untouched; folded
-// explicitly below.
+// U+036F) handles most of this (ö→o, ü→u, ç→c, ş→s, ğ→g, é→e, Vietnamese's
+// stacked tone marks like ệ→e, ả→a...). A few base letters are visually
+// "accented" but don't have an NFD decomposition — they're distinct code
+// points, not letter+combining-mark — so they're folded explicitly:
+// Turkish dotless ı (U+0131) and Vietnamese đ (U+0111, "d with stroke").
+// Without this, Vietnamese typed "không dấu" (without diacritics — common
+// on non-Vietnamese keyboards or just for speed) matched nothing at all:
+// "đặt mật khẩu" (set password) has no NFD-decomposable letter until you
+// also fold đ, so "dat mat khau" fell through every tier silently.
 function foldDiacritics(s) {
-  return s.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/ı/g, 'i');
+  return s.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/ı/g, 'i').replace(/đ/g, 'd');
 }
 
 /**
@@ -95,6 +100,29 @@ function bestWordDistance(query, text) {
   return best;
 }
 
+// Like bestWordDistance, but for multi-word queries: matches each query
+// word to its own best word in `text` independently (order doesn't matter),
+// so a typo in just ONE word of a phrase still resolves — e.g. Indonesian
+// "tanda air" (watermark) typed "tada air" is a real, findable typo, but
+// bestWordDistance alone can never catch it: it only ever compares the
+// *entire* query as one unit against individual words of the target, which
+// can't work once the query itself has more than one word. Returns the
+// summed distance across all query words, or Infinity if the query is a
+// single word (bestWordDistance already covers that) or if any one query
+// word can't find a close-enough match at all — one unrelated word should
+// disqualify the whole phrase rather than being silently ignored.
+function bestPhraseDistance(query, text) {
+  const queryWords = query.split(/\s+/).filter(Boolean);
+  if (queryWords.length < 2) return Infinity;
+  let total = 0;
+  for (const w of queryWords) {
+    const d = bestWordDistance(w, text);
+    if (d === Infinity) return Infinity;
+    total += d;
+  }
+  return total;
+}
+
 /**
  * Return every matching tool for the given query, best match first. Does
  * NOT cap the result count — callers decide how many to render (e.g. show
@@ -150,8 +178,8 @@ export function search(query, index) {
       else {
         let dist = Infinity;
         if (!NO_FUZZY_RE.test(q)) {
-          const nameDist = Math.min(...names.map(n => bestWordDistance(q, n)));
-          const tagDist  = entry.tags.reduce((min, t) => Math.min(min, bestWordDistance(q, t)), Infinity);
+          const nameDist = Math.min(...names.map(n => Math.min(bestWordDistance(q, n), bestPhraseDistance(q, n))));
+          const tagDist  = entry.tags.reduce((min, t) => Math.min(min, bestWordDistance(q, t), bestPhraseDistance(q, t)), Infinity);
           dist = Math.min(nameDist, tagDist);
           if (dist < Infinity) score = 46 - dist * 4 + (nameDist <= tagDist ? 1 : 0);
         }
