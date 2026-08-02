@@ -132,6 +132,90 @@ test('English tags still work on a Russian-language index (bilingual fallback)',
   expect(topKey('compress', ruIndex)).toBe('compress');
 });
 
+console.log('\nLocalized search (DE, via real js/locales/de.js data):');
+
+const deTags  = loadLocaleSearchTags('de');
+const deIndex = buildIndex(TOOLS, 'de', deTags);
+
+test('de.js actually defines search_tags for draw-pdf (not just the {} scaffold)', () => {
+  expect(Array.isArray(deTags['draw-pdf']) && deTags['draw-pdf'].length > 0).toBeTruthy();
+});
+
+test('exact German tag match finds draw-pdf', () => {
+  expect(topKey('zeichnen', deIndex)).toBe('draw-pdf');
+});
+
+test('a typo of a German tag still finds draw-pdf (the reported bug)', () => {
+  expect(topKey('zeichnnen', deIndex)).toBe('draw-pdf');
+});
+
+test('German query for merge finds merge, not an unrelated tool', () => {
+  expect(topKey('zusammenführen', deIndex)).toBe('merge');
+});
+
+console.log('\nLocalized search (ES, via real js/locales/es.js data):');
+
+const esTags  = loadLocaleSearchTags('es');
+const esIndex = buildIndex(TOOLS, 'es', esTags);
+
+test('es.js actually defines search_tags for draw-pdf (not just the {} scaffold)', () => {
+  expect(Array.isArray(esTags['draw-pdf']) && esTags['draw-pdf'].length > 0).toBeTruthy();
+});
+
+test('exact Spanish tag match finds draw-pdf', () => {
+  expect(topKey('dibujar', esIndex)).toBe('draw-pdf');
+});
+
+test('a typo of a Spanish tag still finds draw-pdf (the reported bug)', () => {
+  expect(topKey('dibuar', esIndex)).toBe('draw-pdf');
+});
+
+test('Spanish query for merge finds merge, not an unrelated tool', () => {
+  expect(topKey('combinar', esIndex)).toBe('merge');
+});
+
+console.log('\nLocalized search (FR, via real js/locales/fr.js data):');
+
+const frTags  = loadLocaleSearchTags('fr');
+const frIndex = buildIndex(TOOLS, 'fr', frTags);
+
+test('fr.js actually defines search_tags for draw-pdf (not just the {} scaffold)', () => {
+  expect(Array.isArray(frTags['draw-pdf']) && frTags['draw-pdf'].length > 0).toBeTruthy();
+});
+
+test('exact French tag match finds draw-pdf', () => {
+  expect(topKey('dessiner', frIndex)).toBe('draw-pdf');
+});
+
+test('a typo of a French tag still finds draw-pdf (the reported bug)', () => {
+  expect(topKey('dessinner', frIndex)).toBe('draw-pdf');
+});
+
+test('French query for merge finds merge, not an unrelated tool', () => {
+  expect(topKey('fusionner', frIndex)).toBe('merge');
+});
+
+console.log('\nLocalized search (PT, via real js/locales/pt.js data):');
+
+const ptTags  = loadLocaleSearchTags('pt');
+const ptIndex = buildIndex(TOOLS, 'pt', ptTags);
+
+test('pt.js actually defines search_tags for draw-pdf (not just the {} scaffold)', () => {
+  expect(Array.isArray(ptTags['draw-pdf']) && ptTags['draw-pdf'].length > 0).toBeTruthy();
+});
+
+test('exact Portuguese tag match finds draw-pdf', () => {
+  expect(topKey('desenhar', ptIndex)).toBe('draw-pdf');
+});
+
+test('a typo of a Portuguese tag still finds draw-pdf (the reported bug)', () => {
+  expect(topKey('desenhr', ptIndex)).toBe('draw-pdf');
+});
+
+test('Portuguese query for merge finds merge, not an unrelated tool', () => {
+  expect(topKey('mesclar', ptIndex)).toBe('merge');
+});
+
 // ── Summary ───────────────────────────────────────────────────
 console.log(`\n${passed} passed, ${failed} failed`);
 if (failed > 0) process.exit(1);

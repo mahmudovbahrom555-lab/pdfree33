@@ -1,8 +1,34 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // French (FR) UI strings — loaded before app.js on /fr/ pages
 window.PDFREE_LOCALE = {
-  // search_tags: populated by localization pass — see js/i18n.js EN.search_tags for the contract.
-  search_tags: {},
+  // search_tags: per-tool synonyms so the homepage search box finds tools
+  // when users type in French. Keys must match js/config.js's TOOLS keys
+  // exactly. Merged with (not replacing) the English tags in js/search.js.
+  search_tags: {
+    merge:            ['fusionner', 'combiner', 'joindre', 'unir', 'fusion de fichiers', 'plusieurs pdf', 'joindre des pdf'],
+    split:            ['diviser', 'séparer', 'découper', 'couper', 'supprimer des pages', 'retirer des pages'],
+    compress:         ['compresser', 'réduire', 'plus petit', 'diminuer', 'optimiser', 'taille du fichier', 'trop lourd'],
+    jpg2pdf:          ['image en pdf', 'photo en pdf', 'png en pdf', 'convertir image en pdf', 'jpg en pdf'],
+    pdf2jpg:          ['pdf en image', 'exporter les pages', 'convertir en jpg', 'extraire les images'],
+    redact:           ['caviarder', 'masquer', 'cacher', 'censurer', 'noircir', 'flouter', 'effacer le texte'],
+    rotate:           ['pivoter', 'rotation', 'tourner', 'paysage', 'portrait', 'orientation'],
+    extract:          ['extraire', 'extraire des pages', 'sélectionner des pages', 'récupérer des pages'],
+    watermark:        ['filigrane', 'tampon', 'superposer du texte', 'marque', 'diagonale', 'ajouter du texte'],
+    pagenum:          ['numéros de page', 'numérotation', 'pagination', 'pied de page', 'numéroter les pages'],
+    meta:             ['métadonnées', 'titre', 'auteur', 'propriétés', 'informations sur le fichier'],
+    protect:          ['protéger', 'mot de passe', 'verrouiller', 'chiffrer', 'crypter', 'restreindre'],
+    fill:             ['remplir', 'formulaire', 'case à cocher', 'liste déroulante', 'champ de texte', 'remplir un formulaire'],
+    'compress-email':  ['email', 'courriel', 'gmail', 'outlook', 'envoyer pdf', 'pièce jointe', 'fichier trop lourd pour email'],
+    'draw-pdf':        ['dessiner', 'annoter', 'annotation', 'marquer', 'flèche', 'forme', 'zone de texte', 'main levée', 'surligner'],
+    ocr:              ['ocr', 'extraire le texte', 'numérisé', 'scan en texte', 'reconnaissance de texte', 'recherchable'],
+    pdf2word:         ['word', 'docx', 'convertir en word', 'pdf en docx', 'modifiable'],
+    pdf2excel:        ['excel', 'xlsx', 'convertir en excel', 'pdf en xlsx', 'extraire un tableau'],
+    pdf2ppt:          ['powerpoint', 'pptx', 'convertir en powerpoint', 'pdf en pptx'],
+    pdf2md:           ['markdown', 'md', 'convertir en markdown', 'pdf en md'],
+    unlock:           ['déverrouiller pdf', 'supprimer le mot de passe', 'retirer le mot de passe pdf'],
+    flatten:          ['aplatir', 'verrouiller le formulaire', 'non modifiable', 'figer les champs', 'verrouiller le pdf'],
+    compare:          ['comparer', 'différence', 'différences', 'changements', 'comparer des pdf', 'trouver les différences'],
+  },
 
   // app
   wait_processing:  '⏳ Veuillez patienter pendant le traitement',

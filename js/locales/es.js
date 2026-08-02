@@ -1,8 +1,34 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Spanish (ES) UI strings — loaded before app.js on /es/ pages
 window.PDFREE_LOCALE = {
-  // search_tags: populated by localization pass — see js/i18n.js EN.search_tags for the contract.
-  search_tags: {},
+  // search_tags: per-tool synonyms so the homepage search box finds tools
+  // when users type in Spanish. Keys must match js/config.js's TOOLS keys
+  // exactly. Merged with (not replacing) the English tags in js/search.js.
+  search_tags: {
+    merge:            ['combinar', 'unir', 'fusionar', 'juntar', 'unir archivos', 'varios pdf', 'juntar pdf'],
+    split:            ['dividir', 'separar', 'cortar', 'eliminar páginas', 'quitar páginas', 'división'],
+    compress:         ['comprimir', 'reducir', 'más pequeño', 'achicar', 'optimizar', 'tamaño de archivo', 'muy pesado'],
+    jpg2pdf:          ['imagen a pdf', 'foto a pdf', 'png a pdf', 'convertir imagen a pdf', 'jpg a pdf'],
+    pdf2jpg:          ['pdf a imagen', 'exportar páginas', 'convertir a jpg', 'extraer imágenes'],
+    redact:           ['tachar', 'ocultar', 'cubrir', 'censurar', 'tapar texto', 'difuminar', 'borrar texto'],
+    rotate:           ['rotar', 'girar', 'orientación', 'voltear', 'horizontal', 'vertical'],
+    extract:          ['extraer', 'sacar páginas', 'seleccionar páginas', 'obtener páginas'],
+    watermark:        ['marca de agua', 'sello', 'superponer texto', 'marca', 'diagonal', 'añadir texto'],
+    pagenum:          ['números de página', 'numeración', 'paginación', 'pie de página', 'numerar páginas'],
+    meta:             ['metadatos', 'título', 'autor', 'propiedades', 'información del archivo'],
+    protect:          ['proteger', 'contraseña', 'bloquear', 'cifrar', 'encriptar', 'restringir'],
+    fill:             ['rellenar', 'formulario', 'casilla', 'lista desplegable', 'campo de texto', 'llenar formulario'],
+    'compress-email':  ['correo', 'gmail', 'outlook', 'enviar pdf', 'adjunto', 'archivo pequeño', 'demasiado grande para email'],
+    'draw-pdf':        ['dibujar', 'anotar', 'anotación', 'marcar', 'flecha', 'forma', 'cuadro de texto', 'a mano alzada', 'resaltar'],
+    ocr:              ['ocr', 'extraer texto', 'escaneado', 'escanear a texto', 'reconocimiento de texto', 'buscable'],
+    pdf2word:         ['word', 'docx', 'convertir a word', 'pdf a docx', 'editable'],
+    pdf2excel:        ['excel', 'xlsx', 'convertir a excel', 'pdf a xlsx', 'extraer tabla'],
+    pdf2ppt:          ['powerpoint', 'pptx', 'convertir a powerpoint', 'pdf a pptx'],
+    pdf2md:           ['markdown', 'md', 'convertir a markdown', 'pdf a md'],
+    unlock:           ['desbloquear pdf', 'quitar contraseña', 'eliminar contraseña de pdf'],
+    flatten:          ['aplanar', 'bloquear formulario', 'no editable', 'fijar campos', 'bloquear pdf'],
+    compare:          ['comparar', 'diferencia', 'diferencias', 'cambios', 'comparar pdf', 'encontrar cambios'],
+  },
 
   // app
   wait_processing:  '⏳ Por favor espera a que termine el procesamiento',
