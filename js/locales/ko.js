@@ -307,7 +307,7 @@ window.PDFREE_LOCALE = {
   pdfa_removed_pageOrAnnot_many: '페이지 또는 주석 작업 {n}개',
   pdfa_unlock_link: '비밀번호 제거 →',
   pdfa_disclaimer:             '이것은 실패 가능성이 가장 높은 구조적 요건에 대한 자체 검사이며, 브라우저에서 완전히 실행됩니다. 법적으로 요구되는 아카이빙에는 완전한 ISO 19005 검증기(예: veraPDF)를 대신할 수 없습니다.',
-  pdfa_verapdf_link: 'veraPDF로 독립적으로 검증 ↗',
+  pdfa_verapdf_link: '독립적으로 검증하려면 veraPDF 다운로드 ↗',
   pdfa_substitute_offer: '이 글꼴에는 무료로 메트릭 검증된 대체 글꼴(Liberation 계열)이 있습니다: {fonts}. PDFree는 사용하기 전에 정확한 일치 여부를 확인합니다 — 확인에 실패하면 아무것도 변경되지 않고 변환이 계속 거부됩니다.',
   pdfa_substitute_checkbox: '글꼴 대체 시도',
   pdfa_substitute_btn: '📐 확인 후 변환',

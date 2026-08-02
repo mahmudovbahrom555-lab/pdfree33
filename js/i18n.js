@@ -296,7 +296,7 @@ export const EN = {
   pdfa_removed_pageOrAnnot_many: '{n} page or annotation actions',
   pdfa_unlock_link:       'Remove password →',
   pdfa_disclaimer:        'This is a self-check of the structural requirements most likely to fail, run entirely in your browser. It is not a substitute for a full ISO 19005 validator (e.g. veraPDF) for legally mandated archiving.',
-  pdfa_verapdf_link:      'Verify independently with veraPDF ↗',
+  pdfa_verapdf_link:      'Download veraPDF to verify independently ↗',
   pdfa_substitute_offer:    'These fonts have a free, metric-verified substitute available (Liberation family): {fonts}. PDFree verifies the exact metric match before ever using it — if verification fails, nothing is changed and conversion stays refused.',
   pdfa_substitute_checkbox: 'Try font substitution',
   pdfa_substitute_btn:      '📐 Verify & Convert',

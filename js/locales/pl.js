@@ -305,7 +305,7 @@ window.PDFREE_LOCALE = {
   pdfa_removed_pageOrAnnot_many: '{n} akcji strony lub adnotacji',
   pdfa_unlock_link: 'Usuń hasło →',
   pdfa_disclaimer:             'To jest samokontrola wymagań strukturalnych najbardziej narażonych na błąd, wykonywana w całości w przeglądarce. Nie zastępuje pełnego walidatora ISO 19005 (np. veraPDF) w przypadku archiwizacji wymaganej prawnie.',
-  pdfa_verapdf_link: 'Zweryfikuj niezależnie za pomocą veraPDF ↗',
+  pdfa_verapdf_link: 'Pobierz veraPDF, aby zweryfikować niezależnie ↗',
   pdfa_substitute_offer: 'Dla tych czcionek dostępny jest darmowy, zweryfikowany metrycznie zamiennik (rodzina Liberation): {fonts}. PDFree weryfikuje dokładne dopasowanie przed użyciem — jeśli weryfikacja się nie powiedzie, nic nie zostanie zmienione, a konwersja pozostanie odrzucona.',
   pdfa_substitute_checkbox: 'Wypróbuj zamianę czcionek',
   pdfa_substitute_btn: '📐 Zweryfikuj i konwertuj',
