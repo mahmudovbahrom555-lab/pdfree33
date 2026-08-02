@@ -354,7 +354,7 @@ export const TOOLS = {
     icon:        '📝',
     title:       'PDF to Markdown',
     desc:        'Convert PDF text, headings and lists into Markdown — runs in your browser, no upload',
-    tags:        ['markdown', 'md', 'convert to markdown', 'pdf to md',
+    tags:        ['markdown', 'convert to markdown', 'pdf to md',
                   'pdf to markdown', 'export to markdown', 'pdf to text'],
     titles: { en: 'PDF to Markdown', es: 'PDF a Markdown', pt: 'PDF para Markdown', de: 'PDF zu Markdown', fr: 'PDF en Markdown', tr: "PDF'den Markdown'a", id: 'PDF ke Markdown', vi: 'PDF sang Markdown', ru: 'PDF в Markdown', ja: 'PDFからMarkdown', it: 'PDF in Markdown', ko: 'PDF를 Markdown으로', nl: 'PDF naar Markdown', pl: 'PDF do Markdown' },
     descs:  { en: 'Convert PDF text, headings and lists into Markdown — runs in your browser, no upload', es: 'Convierte texto PDF en archivos .md limpios localmente', pt: 'Converta texto PDF em arquivos .md limpos localmente', de: 'PDF-Text lokal in saubere .md-Dateien umwandeln', fr: 'Convertir le texte PDF en fichiers .md propres localement', tr: "PDF'yi Markdown formatına dönüştürün", id: 'Konversi PDF ke teks Markdown yang ringan. Tanpa unggah, tanpa akun.', vi: 'Chuyển PDF sang văn bản Markdown nhẹ. Không tải lên, không cần tài khoản.', ru: 'Конвертируйте PDF в лёгкий текст Markdown. Без загрузки, без аккаунта.', ja: 'PDFを軽量Markdownテキストに変換。アップロードなし、アカウント不要。', it: 'Converti PDF in testo Markdown leggero. Senza caricamento, senza account.', ko: 'PDF를 가벼운 Markdown 텍스트로 변환. 업로드 없음, 계정 불필요.', nl: 'Converteer PDF naar lichte Markdown-tekst. Zonder upload, zonder account.', pl: 'Konwertuj PDF do lekkiego tekstu Markdown. Bez przesyłania, bez konta.' },

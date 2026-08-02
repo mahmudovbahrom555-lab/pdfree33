@@ -24,7 +24,7 @@ window.PDFREE_LOCALE = {
     pdf2word:         ['word', 'docx', 'convertire in word', 'pdf in docx', 'modificabile'],
     pdf2excel:        ['excel', 'xlsx', 'convertire in excel', 'pdf in xlsx', 'estrai tabella'],
     pdf2ppt:          ['powerpoint', 'pptx', 'convertire in powerpoint', 'pdf in pptx'],
-    pdf2md:           ['markdown', 'md', 'convertire in markdown', 'pdf in md'],
+    pdf2md:           ['markdown', 'convertire in markdown', 'pdf in md'],
     unlock:           ['sblocca pdf', 'rimuovi password', 'rimuovi password pdf'],
     flatten:          ['appiattire', 'blocca modulo', 'non modificabile', 'fissa campi', 'blocca pdf'],
     compare:          ['confrontare', 'diff', 'differenza', 'modifiche', 'confronta pdf', 'trova modifiche'],

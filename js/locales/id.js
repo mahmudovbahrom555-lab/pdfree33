@@ -25,9 +25,9 @@ window.PDFREE_LOCALE = {
     pdf2word:         ['word', 'docx', 'ubah ke word', 'pdf ke docx', 'bisa diedit'],
     pdf2excel:        ['excel', 'xlsx', 'ubah ke excel', 'pdf ke xlsx', 'ambil tabel'],
     pdf2ppt:          ['powerpoint', 'pptx', 'ubah ke powerpoint', 'pdf ke pptx', 'presentasi'],
-    pdf2md:           ['markdown', 'md', 'ubah ke markdown', 'pdf ke md', 'teks markdown'],
+    pdf2md:           ['markdown', 'ubah ke markdown', 'pdf ke md', 'teks markdown'],
     unlock:           ['buka kunci pdf', 'hapus kata sandi', 'buka proteksi', 'buka pdf terkunci', 'hapus password'],
-    flatten:          ['kunci formulir', 'tidak bisa diedit', 'kunci pdf', 'kunci field', 'flatten pdf'],
+    flatten:          ['kunci formulir', 'tidak bisa diedit', 'kunci field', 'flatten pdf'],
     compare:          ['bandingkan', 'perbedaan', 'cari perubahan', 'bandingkan pdf', 'perbedaan pdf'],
   },
 

@@ -27,7 +27,7 @@ window.PDFREE_LOCALE = {
     pdf2word:         ['Word', 'ワード', 'docx', 'Wordに変換', '編集可能'],
     pdf2excel:        ['Excel', 'エクセル', 'xlsx', 'Excelに変換', '表を抽出'],
     pdf2ppt:          ['PowerPoint', 'パワーポイント', 'pptx', 'PowerPointに変換', 'プレゼン'],
-    pdf2md:           ['Markdown', 'マークダウン', 'md', 'Markdownに変換', 'mdファイル'],
+    pdf2md:           ['Markdown', 'マークダウン', 'Markdownに変換', 'mdファイル'],
     unlock:           ['ロック解除', 'パスワード解除', 'パスワードを削除', 'PDFのロックを外す', '制限解除'],
     flatten:          ['フォームを固定', '編集不可にする', 'PDFを固定化', 'フィールドを固定', '編集できなくする'],
     compare:          ['比較', '差分', '違いを比較', 'PDFを比較', '変更点を見つける'],

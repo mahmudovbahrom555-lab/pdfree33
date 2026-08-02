@@ -88,9 +88,19 @@ function bestWordDistance(query, text) {
  *          matches at the same distance)
  *    20 — description contains query
  */
+// CJK scripts (Han/Kanji, Hiragana, Katakana, Hangul) pack far more meaning
+// per character than Latin/Cyrillic text — a 2-character word like 結合
+// (merge) or 압축 (compress) is a complete, common term, not an abbreviation.
+// A flat "3 char minimum" query gate would silently reject these and make
+// roughly half of ja/ko's natural search terms permanently unmatchable.
+const CJK_RE = /[぀-ヿ一-鿿가-힣]/;
+function minQueryLength(q) {
+  return CJK_RE.test(q) ? 2 : 3;
+}
+
 export function search(query, index) {
   const q = query.toLowerCase().trim();
-  if (q.length < 3) return [];
+  if (q.length < minQueryLength(q)) return [];
 
   return index
     .map(entry => {

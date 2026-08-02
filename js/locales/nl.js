@@ -24,7 +24,7 @@ window.PDFREE_LOCALE = {
     pdf2word:         ['word', 'docx', 'converteren naar word', 'pdf naar docx', 'bewerkbaar'],
     pdf2excel:        ['excel', 'xlsx', 'converteren naar excel', 'pdf naar xlsx', 'tabel extraheren'],
     pdf2ppt:          ['powerpoint', 'pptx', 'converteren naar powerpoint', 'pdf naar pptx'],
-    pdf2md:           ['markdown', 'md', 'converteren naar markdown', 'pdf naar md'],
+    pdf2md:           ['markdown', 'converteren naar markdown', 'pdf naar md'],
     unlock:           ['pdf ontgrendelen', 'wachtwoord verwijderen', 'pdf-wachtwoord verwijderen'],
     flatten:          ['afvlakken', 'formulier vergrendelen', 'niet bewerkbaar', 'velden vastzetten', 'pdf vergrendelen'],
     compare:          ['vergelijken', 'diff', 'verschil', 'wijzigingen', 'pdf\'s vergelijken', 'wijzigingen vinden'],

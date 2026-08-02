@@ -6,7 +6,7 @@ window.PDFREE_LOCALE = {
   // exactly. Merged with (not replacing) the English tags in js/search.js.
   search_tags: {
     merge:            ['birleştir', 'birleştirme', 'pdf birleştir', 'dosyaları birleştir', 'tek dosya yap', "pdf'leri birleştir"],
-    split:            ['böl', 'ayır', 'sayfa sil', 'sayfa çıkar', 'bölme', 'parçala'],
+    split:            ['böl', 'ayır', 'sayfa sil', 'bölme', 'parçala'],
     compress:         ['sıkıştır', 'küçült', 'boyut küçült', 'optimize et', 'dosya boyutu', 'çok büyük'],
     jpg2pdf:          ['resmi pdfye çevir', 'fotoğraf pdf', 'jpg pdf', 'png pdf', 'resim pdf'],
     pdf2jpg:          ['pdf resim', 'pdf jpg', 'sayfa dışa aktar', "jpg'e çevir", 'resim çıkar'],
@@ -19,12 +19,12 @@ window.PDFREE_LOCALE = {
     protect:          ['koru', 'şifrele', 'parola', 'kilitle', 'güvenlik', 'kısıtla'],
     fill:             ['form doldur', 'form', 'onay kutusu', 'açılır liste', 'metin alanı'],
     'compress-email': ['e-posta', 'gmail', 'outlook', 'pdf gönder', 'ek dosya', 'küçük dosya', 'mail için çok büyük'],
-    'draw-pdf':       ['çiz', 'not al', 'açıklama ekle', 'işaretle', 'ok', 'şekil', 'metin kutusu', 'serbest çizim', 'vurgula'],
+    'draw-pdf':       ['çiz', 'not al', 'açıklama ekle', 'işaretle', 'ok işareti', 'şekil', 'metin kutusu', 'serbest çizim', 'vurgula'],
     ocr:              ['ocr', 'metin çıkar', 'taranmış', 'taramayı metne çevir', 'metin tanıma', 'aranabilir'],
     pdf2word:         ['word', 'docx', "word'e çevir", 'pdf docx', 'düzenlenebilir'],
     pdf2excel:        ['excel', 'xlsx', "excel'e çevir", 'pdf xlsx', 'tablo çıkar'],
     pdf2ppt:          ['powerpoint', 'pptx', "powerpoint'e çevir", 'pdf pptx', 'sunum'],
-    pdf2md:           ['markdown', 'md', "markdown'a çevir", 'pdf md', 'md dosyası'],
+    pdf2md:           ['markdown', "markdown'a çevir", 'pdf md', 'md dosyası'],
     unlock:           ['kilidi aç', 'şifreyi kaldır', 'parolayı kaldır', 'pdf kilidini kaldır', 'kilidi kaldır'],
     flatten:          ['formu kilitle', 'düzenlenemez yap', 'pdf kilitle', 'alanları sabitle', 'formu sabitle'],
     compare:          ['karşılaştır', 'fark', 'farkları bul', 'pdf karşılaştır', 'değişiklikleri bul'],
