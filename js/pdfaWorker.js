@@ -113,11 +113,21 @@ function checkEncryption(pdfDoc) {
 // LZW-compressed stream (old scanners/ancient Distiller output) would sail
 // through save() unchanged and ship a silently non-compliant "PDF/A". This
 // scans for that up front so conversion can refuse instead.
+//
+// /Filter lives on the STREAM dict, and stream objects (PDFRawStream) are
+// NOT instanceof PDFDict in pdf-lib — they extend a separate base class and
+// expose their dict via a `.dict` property instead. An earlier version of
+// this function only checked `obj instanceof PDFDict`, which silently
+// skipped every stream object in the document — i.e. every place /Filter
+// actually appears — so it could never detect a real LZWDecode filter.
+// Found via a synthetic fixture (a stream with /Filter forced to
+// /LZWDecode) that this function wrongly reported as clean.
 function checkLzw(pdfDoc) {
   const context = pdfDoc.context;
   for (const [, obj] of context.enumerateIndirectObjects()) {
-    if (!(obj instanceof PDFDict) || typeof obj.get !== 'function') continue;
-    const filter = context.lookup(obj.get(PDFName.of('Filter')));
+    const dict = obj instanceof PDFDict ? obj : (obj?.dict instanceof PDFDict ? obj.dict : null);
+    if (!dict) continue;
+    const filter = context.lookup(dict.get(PDFName.of('Filter')));
     if (!filter) continue;
     const names = filter instanceof PDFArray
       ? Array.from({ length: filter.size() }, (_, i) => filter.get(i))
