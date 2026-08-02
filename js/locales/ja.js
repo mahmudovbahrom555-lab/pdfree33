@@ -2,8 +2,36 @@
 // Japanese (JA) UI strings — loaded before app.js on /ja/ pages
 // Sets window.PDFREE_LOCALE which i18n.js merges over EN defaults.
 window.PDFREE_LOCALE = {
-  // search_tags: populated by localization pass — see js/i18n.js EN.search_tags for the contract.
-  search_tags: {},
+  // search_tags: per-tool synonyms so the homepage search box finds tools
+  // when users type in Japanese. Keys must match js/config.js's TOOLS keys
+  // exactly. Merged with (not replacing) the English tags in js/search.js.
+  // Includes both native kanji/hiragana forms and katakana/romaji loanword
+  // variants, since real users mix scripts and IME conversion habits.
+  search_tags: {
+    merge:            ['結合', '結合する', '合体', 'ファイルを結合', 'まとめる', 'マージ', 'PDF結合'],
+    split:            ['分割', '分ける', 'ページを削除', 'ページ削除', '切り分ける', 'スプリット'],
+    compress:         ['圧縮', '圧縮する', '小さくする', 'ファイルサイズを小さく', '最適化', '容量が大きい'],
+    jpg2pdf:          ['画像をPDFに', '写真をPDFに', 'JPGをPDFに', 'PNGをPDFに', '画像変換'],
+    pdf2jpg:          ['PDFを画像に', 'PDFをJPGに', 'ページを書き出す', '画像に変換', '画像抽出'],
+    redact:           ['黒塗り', '隠す', 'マスク', '塗りつぶす', '個人情報を隠す', 'レダクト'],
+    rotate:           ['回転', '回す', '向きを変える', '横向き', '縦向き', '回転する'],
+    extract:          ['ページ抽出', 'ページを選択', 'ページを取り出す', '抽出', '取り出す'],
+    watermark:        ['透かし', 'ウォーターマーク', 'スタンプ', '文字を重ねる', 'ロゴを入れる'],
+    pagenum:          ['ページ番号', 'ノンブル', 'フッター', '番号を振る', 'ページ番号を追加'],
+    meta:             ['メタデータ', 'タイトル', '作成者', 'プロパティ', 'ファイル情報'],
+    protect:          ['保護', 'パスワード', 'ロック', '暗号化', '保護する', 'パスワードを設定'],
+    fill:             ['フォーム入力', 'フォーム', 'チェックボックス', '入力欄', 'フォームに入力'],
+    'compress-email': ['メール', 'Gmail', 'Outlook', 'PDFを送る', '添付ファイル', 'ファイルが大きすぎる', 'メール添付'],
+    'draw-pdf':       ['描く', '注釈', 'アノテーション', 'マークアップ', '矢印', '図形', 'テキストボックス', '手書き', 'ハイライト'],
+    ocr:              ['OCR', 'テキスト抽出', 'スキャンした文書', 'スキャンをテキストに', '文字認識', '検索可能にする'],
+    pdf2word:         ['Word', 'ワード', 'docx', 'Wordに変換', '編集可能'],
+    pdf2excel:        ['Excel', 'エクセル', 'xlsx', 'Excelに変換', '表を抽出'],
+    pdf2ppt:          ['PowerPoint', 'パワーポイント', 'pptx', 'PowerPointに変換', 'プレゼン'],
+    pdf2md:           ['Markdown', 'マークダウン', 'md', 'Markdownに変換', 'mdファイル'],
+    unlock:           ['ロック解除', 'パスワード解除', 'パスワードを削除', 'PDFのロックを外す', '制限解除'],
+    flatten:          ['フォームを固定', '編集不可にする', 'PDFを固定化', 'フィールドを固定', '編集できなくする'],
+    compare:          ['比較', '差分', '違いを比較', 'PDFを比較', '変更点を見つける'],
+  },
 
   // app
   wait_processing:  '⏳ 処理が完了するまでお待ちください',

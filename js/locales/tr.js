@@ -1,8 +1,34 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Turkish (TR) UI strings — loaded before app.js on /tr/ pages
 window.PDFREE_LOCALE = {
-  // search_tags: populated by localization pass — see js/i18n.js EN.search_tags for the contract.
-  search_tags: {},
+  // search_tags: per-tool synonyms so the homepage search box finds tools
+  // when users type in Turkish. Keys must match js/config.js's TOOLS keys
+  // exactly. Merged with (not replacing) the English tags in js/search.js.
+  search_tags: {
+    merge:            ['birleştir', 'birleştirme', 'pdf birleştir', 'dosyaları birleştir', 'tek dosya yap', "pdf'leri birleştir"],
+    split:            ['böl', 'ayır', 'sayfa sil', 'sayfa çıkar', 'bölme', 'parçala'],
+    compress:         ['sıkıştır', 'küçült', 'boyut küçült', 'optimize et', 'dosya boyutu', 'çok büyük'],
+    jpg2pdf:          ['resmi pdfye çevir', 'fotoğraf pdf', 'jpg pdf', 'png pdf', 'resim pdf'],
+    pdf2jpg:          ['pdf resim', 'pdf jpg', 'sayfa dışa aktar', "jpg'e çevir", 'resim çıkar'],
+    redact:           ['sansürle', 'gizle', 'karart', 'kapat', 'sakla', 'metni sil', 'maskele'],
+    rotate:           ['döndür', 'çevir', 'yönlendirme', 'yatay', 'dikey', 'sayfa döndür'],
+    extract:          ['sayfa al', 'sayfa seç', 'sayfaları çıkar', 'sayfa ayıkla', 'sayfa çıkarma'],
+    watermark:        ['filigran', 'damga', 'yazı ekle', 'marka', 'çapraz yazı'],
+    pagenum:          ['sayfa numarası', 'numaralandırma', 'alt bilgi', 'sayfa numaralama', 'sayfa no ekle'],
+    meta:             ['meta veri', 'başlık', 'yazar', 'özellikler', 'dosya bilgisi'],
+    protect:          ['koru', 'şifrele', 'parola', 'kilitle', 'güvenlik', 'kısıtla'],
+    fill:             ['form doldur', 'form', 'onay kutusu', 'açılır liste', 'metin alanı'],
+    'compress-email': ['e-posta', 'gmail', 'outlook', 'pdf gönder', 'ek dosya', 'küçük dosya', 'mail için çok büyük'],
+    'draw-pdf':       ['çiz', 'not al', 'açıklama ekle', 'işaretle', 'ok', 'şekil', 'metin kutusu', 'serbest çizim', 'vurgula'],
+    ocr:              ['ocr', 'metin çıkar', 'taranmış', 'taramayı metne çevir', 'metin tanıma', 'aranabilir'],
+    pdf2word:         ['word', 'docx', "word'e çevir", 'pdf docx', 'düzenlenebilir'],
+    pdf2excel:        ['excel', 'xlsx', "excel'e çevir", 'pdf xlsx', 'tablo çıkar'],
+    pdf2ppt:          ['powerpoint', 'pptx', "powerpoint'e çevir", 'pdf pptx', 'sunum'],
+    pdf2md:           ['markdown', 'md', "markdown'a çevir", 'pdf md', 'md dosyası'],
+    unlock:           ['kilidi aç', 'şifreyi kaldır', 'parolayı kaldır', 'pdf kilidini kaldır', 'kilidi kaldır'],
+    flatten:          ['formu kilitle', 'düzenlenemez yap', 'pdf kilitle', 'alanları sabitle', 'formu sabitle'],
+    compare:          ['karşılaştır', 'fark', 'farkları bul', 'pdf karşılaştır', 'değişiklikleri bul'],
+  },
 
   // app
   wait_processing:  '⏳ İşlemin tamamlanmasını bekleyin',

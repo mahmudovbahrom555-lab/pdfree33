@@ -216,6 +216,190 @@ test('Portuguese query for merge finds merge, not an unrelated tool', () => {
   expect(topKey('mesclar', ptIndex)).toBe('merge');
 });
 
+console.log('\nLocalized search (IT, via real js/locales/it.js data):');
+
+const itTags  = loadLocaleSearchTags('it');
+const itIndex = buildIndex(TOOLS, 'it', itTags);
+
+test('it.js actually defines search_tags for draw-pdf (not just the {} scaffold)', () => {
+  expect(Array.isArray(itTags['draw-pdf']) && itTags['draw-pdf'].length > 0).toBeTruthy();
+});
+
+test('exact Italian tag match finds draw-pdf', () => {
+  expect(topKey('disegnare', itIndex)).toBe('draw-pdf');
+});
+
+test('a typo of an Italian tag still finds draw-pdf (the reported bug)', () => {
+  expect(topKey('disegnre', itIndex)).toBe('draw-pdf');
+});
+
+test('Italian query for merge finds merge, not an unrelated tool', () => {
+  expect(topKey('unire', itIndex)).toBe('merge');
+});
+
+console.log('\nLocalized search (KO, via real js/locales/ko.js data):');
+
+const koTags  = loadLocaleSearchTags('ko');
+const koIndex = buildIndex(TOOLS, 'ko', koTags);
+
+test('ko.js actually defines search_tags for draw-pdf (not just the {} scaffold)', () => {
+  expect(Array.isArray(koTags['draw-pdf']) && koTags['draw-pdf'].length > 0).toBeTruthy();
+});
+
+test('exact Korean tag match finds draw-pdf', () => {
+  expect(topKey('드로잉', koIndex)).toBe('draw-pdf');
+});
+
+test('a typo of a Korean tag still finds draw-pdf (the reported bug)', () => {
+  expect(topKey('드러잉', koIndex)).toBe('draw-pdf');
+});
+
+test('Korean query for merge finds merge, not an unrelated tool', () => {
+  expect(topKey('합치기', koIndex)).toBe('merge');
+});
+
+console.log('\nLocalized search (NL, via real js/locales/nl.js data):');
+
+const nlTags  = loadLocaleSearchTags('nl');
+const nlIndex = buildIndex(TOOLS, 'nl', nlTags);
+
+test('nl.js actually defines search_tags for draw-pdf (not just the {} scaffold)', () => {
+  expect(Array.isArray(nlTags['draw-pdf']) && nlTags['draw-pdf'].length > 0).toBeTruthy();
+});
+
+test('exact Dutch tag match finds draw-pdf', () => {
+  expect(topKey('tekenen', nlIndex)).toBe('draw-pdf');
+});
+
+test('a typo of a Dutch tag still finds draw-pdf (the reported bug)', () => {
+  expect(topKey('teknen', nlIndex)).toBe('draw-pdf');
+});
+
+test('Dutch query for merge finds merge, not an unrelated tool', () => {
+  expect(topKey('samenvoegen', nlIndex)).toBe('merge');
+});
+
+console.log('\nLocalized search (PL, via real js/locales/pl.js data):');
+
+const plTags  = loadLocaleSearchTags('pl');
+const plIndex = buildIndex(TOOLS, 'pl', plTags);
+
+test('pl.js actually defines search_tags for draw-pdf (not just the {} scaffold)', () => {
+  expect(Array.isArray(plTags['draw-pdf']) && plTags['draw-pdf'].length > 0).toBeTruthy();
+});
+
+test('exact Polish tag match finds draw-pdf', () => {
+  expect(topKey('rysowanie', plIndex)).toBe('draw-pdf');
+});
+
+test('a typo of a Polish tag still finds draw-pdf (the reported bug)', () => {
+  expect(topKey('rysowani', plIndex)).toBe('draw-pdf');
+});
+
+test('Polish query for merge finds merge, not an unrelated tool', () => {
+  expect(topKey('scal', plIndex)).toBe('merge');
+});
+
+console.log('\nLocalized search (ID, via real js/locales/id.js data):');
+
+const idTags  = loadLocaleSearchTags('id');
+const idIndex = buildIndex(TOOLS, 'id', idTags);
+
+test('id.js actually defines search_tags for draw-pdf (not just the {} scaffold)', () => {
+  expect(Array.isArray(idTags['draw-pdf']) && idTags['draw-pdf'].length > 0).toBeTruthy();
+});
+
+test('exact Indonesian tag match finds draw-pdf', () => {
+  expect(topKey('anotasi', idIndex)).toBe('draw-pdf');
+});
+
+test('a typo of an Indonesian tag still finds draw-pdf (the reported bug)', () => {
+  expect(topKey('anotsi', idIndex)).toBe('draw-pdf');
+});
+
+test('Indonesian query for merge finds merge, not an unrelated tool', () => {
+  expect(topKey('gabungkan', idIndex)).toBe('merge');
+});
+
+test('English tags still work on an Indonesian-language index (bilingual fallback)', () => {
+  expect(topKey('compress', idIndex)).toBe('compress');
+});
+
+console.log('\nLocalized search (VI, via real js/locales/vi.js data):');
+
+const viTags  = loadLocaleSearchTags('vi');
+const viIndex = buildIndex(TOOLS, 'vi', viTags);
+
+test('vi.js actually defines search_tags for draw-pdf (not just the {} scaffold)', () => {
+  expect(Array.isArray(viTags['draw-pdf']) && viTags['draw-pdf'].length > 0).toBeTruthy();
+});
+
+test('exact Vietnamese tag match finds compress', () => {
+  expect(topKey('nén', viIndex)).toBe('compress');
+});
+
+test('a typo of a Vietnamese tag (dropped diacritic) still finds compress (the reported bug)', () => {
+  expect(topKey('nen', viIndex)).toBe('compress');
+});
+
+test('Vietnamese query for merge finds merge, not an unrelated tool', () => {
+  expect(topKey('ghép', viIndex)).toBe('merge');
+});
+
+test('English tags still work on a Vietnamese-language index (bilingual fallback)', () => {
+  expect(topKey('compress', viIndex)).toBe('compress');
+});
+
+console.log('\nLocalized search (TR, via real js/locales/tr.js data):');
+
+const trTags  = loadLocaleSearchTags('tr');
+const trIndex = buildIndex(TOOLS, 'tr', trTags);
+
+test('tr.js actually defines search_tags for draw-pdf (not just the {} scaffold)', () => {
+  expect(Array.isArray(trTags['draw-pdf']) && trTags['draw-pdf'].length > 0).toBeTruthy();
+});
+
+test('exact Turkish tag match finds draw-pdf', () => {
+  expect(topKey('vurgula', trIndex)).toBe('draw-pdf');
+});
+
+test('a typo of a Turkish tag still finds draw-pdf (the reported bug)', () => {
+  expect(topKey('vurgla', trIndex)).toBe('draw-pdf');
+});
+
+test('Turkish query for merge finds merge, not an unrelated tool', () => {
+  expect(topKey('birleştir', trIndex)).toBe('merge');
+});
+
+test('English tags still work on a Turkish-language index (bilingual fallback)', () => {
+  expect(topKey('compress', trIndex)).toBe('compress');
+});
+
+console.log('\nLocalized search (JA, via real js/locales/ja.js data):');
+
+const jaTags  = loadLocaleSearchTags('ja');
+const jaIndex = buildIndex(TOOLS, 'ja', jaTags);
+
+test('ja.js actually defines search_tags for draw-pdf (not just the {} scaffold)', () => {
+  expect(Array.isArray(jaTags['draw-pdf']) && jaTags['draw-pdf'].length > 0).toBeTruthy();
+});
+
+test('exact Japanese tag match finds draw-pdf (katakana loanword form)', () => {
+  expect(topKey('アノテーション', jaIndex)).toBe('draw-pdf');
+});
+
+test('a dropped-kana typo of a Japanese tag still finds draw-pdf (the reported bug)', () => {
+  expect(topKey('アテーション', jaIndex)).toBe('draw-pdf');
+});
+
+test('Japanese query for merge (kanji) finds merge, not an unrelated tool', () => {
+  expect(topKey('結合する', jaIndex)).toBe('merge');
+});
+
+test('English tags still work on a Japanese-language index (bilingual fallback)', () => {
+  expect(topKey('compress', jaIndex)).toBe('compress');
+});
+
 // ── Summary ───────────────────────────────────────────────────
 console.log(`\n${passed} passed, ${failed} failed`);
 if (failed > 0) process.exit(1);

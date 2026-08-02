@@ -2,8 +2,34 @@
 // Indonesian (ID) UI strings — loaded before app.js on /id/ pages
 // Sets window.PDFREE_LOCALE which i18n.js merges over EN defaults.
 window.PDFREE_LOCALE = {
-  // search_tags: populated by localization pass — see js/i18n.js EN.search_tags for the contract.
-  search_tags: {},
+  // search_tags: per-tool synonyms so the homepage search box finds tools
+  // when users type in Indonesian. Keys must match js/config.js's TOOLS keys
+  // exactly. Merged with (not replacing) the English tags in js/search.js.
+  search_tags: {
+    merge:            ['gabungkan', 'gabung', 'satukan', 'gabung pdf', 'gabungkan file', 'satukan file', 'jadi satu file'],
+    split:            ['pisahkan', 'pisah', 'potong', 'bagi pdf', 'hapus halaman', 'pecah pdf'],
+    compress:         ['kompres', 'perkecil', 'kecilkan ukuran', 'mampatkan', 'ukuran file besar', 'terlalu besar', 'perkecil ukuran'],
+    jpg2pdf:          ['gambar ke pdf', 'foto ke pdf', 'jpg ke pdf', 'png ke pdf', 'ubah foto jadi pdf'],
+    pdf2jpg:          ['pdf ke gambar', 'pdf ke jpg', 'ekspor halaman', 'konversi ke jpg', 'ambil gambar'],
+    redact:           ['sensor', 'hitamkan', 'sembunyikan', 'tutupi teks', 'coret', 'hapus teks', 'blokir informasi'],
+    rotate:           ['putar', 'rotasi', 'balik halaman', 'orientasi', 'lanskap', 'potret'],
+    extract:          ['ambil halaman', 'pilih halaman', 'keluarkan halaman', 'ekstrak halaman', 'ekstrak'],
+    watermark:        ['tanda air', 'stempel', 'cap air', 'tambah teks', 'watermark', 'merek'],
+    pagenum:          ['nomor halaman', 'penomoran', 'footer', 'tambah nomor halaman', 'nomor otomatis'],
+    meta:             ['metadata', 'judul file', 'penulis', 'properti file', 'info file'],
+    protect:          ['lindungi', 'kata sandi', 'kunci pdf', 'enkripsi', 'amankan', 'proteksi'],
+    fill:             ['isi formulir', 'formulir', 'kotak centang', 'isi form', 'kolom teks'],
+    'compress-email': ['email', 'gmail', 'kirim pdf', 'lampiran', 'file kecil', 'terlalu besar untuk email'],
+    'draw-pdf':       ['gambar bebas', 'coret-coret', 'anotasi', 'tandai', 'panah', 'bentuk', 'kotak teks', 'sorot'],
+    ocr:              ['ocr', 'ekstrak teks', 'hasil pindai', 'ubah scan jadi teks', 'pengenalan teks', 'bisa dicari'],
+    pdf2word:         ['word', 'docx', 'ubah ke word', 'pdf ke docx', 'bisa diedit'],
+    pdf2excel:        ['excel', 'xlsx', 'ubah ke excel', 'pdf ke xlsx', 'ambil tabel'],
+    pdf2ppt:          ['powerpoint', 'pptx', 'ubah ke powerpoint', 'pdf ke pptx', 'presentasi'],
+    pdf2md:           ['markdown', 'md', 'ubah ke markdown', 'pdf ke md', 'teks markdown'],
+    unlock:           ['buka kunci pdf', 'hapus kata sandi', 'buka proteksi', 'buka pdf terkunci', 'hapus password'],
+    flatten:          ['kunci formulir', 'tidak bisa diedit', 'kunci pdf', 'kunci field', 'flatten pdf'],
+    compare:          ['bandingkan', 'perbedaan', 'cari perubahan', 'bandingkan pdf', 'perbedaan pdf'],
+  },
 
   // app
   wait_processing:  '⏳ Harap tunggu hingga pemrosesan selesai',

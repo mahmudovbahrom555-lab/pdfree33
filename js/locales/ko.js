@@ -1,8 +1,36 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Korean (KO) UI strings — loaded before app.js on /ko/ pages
 window.PDFREE_LOCALE = {
-  // search_tags: populated by localization pass — see js/i18n.js EN.search_tags for the contract.
-  search_tags: {},
+  // search_tags: per-tool synonyms so the homepage search box finds tools
+  // when users type in Korean. Keys must match js/config.js's TOOLS keys
+  // exactly. Merged with (not replacing) the English tags in js/search.js.
+  // Includes both native Korean phrasings and common loanwords (written in
+  // Hangul, e.g. 드로잉/워터마크) since real search behavior mixes registers.
+  search_tags: {
+    merge:            ['병합', '합치기', '결합', '합체', '여러 pdf', '파일 합치기', 'pdf 합치기', '머지'],
+    split:            ['분할', '나누기', '분리', '자르기', '페이지 삭제', '페이지 제거', '스플릿'],
+    compress:         ['압축', '압축하기', '용량 줄이기', '축소', '최적화', '파일 크기', '용량 너무 큼'],
+    jpg2pdf:          ['이미지를 pdf로', '사진을 pdf로', 'png를 pdf로', '이미지 변환'],
+    pdf2jpg:          ['pdf를 이미지로', '페이지 내보내기', 'jpg로 변환', '이미지 추출'],
+    redact:           ['가리기', '숨기기', '검열', '검게 칠하기', '마스킹', '블러', '텍스트 삭제'],
+    rotate:           ['회전', '돌리기', '방향', '가로', '세로', '회전하기'],
+    extract:          ['추출', '페이지 추출', '페이지 선택', '페이지 가져오기'],
+    watermark:        ['워터마크', '스탬프', '텍스트 삽입', '로고 삽입', '대각선', '텍스트 추가'],
+    pagenum:          ['페이지 번호', '번호 매기기', '쪽번호', '바닥글', '페이지 넘버링'],
+    meta:             ['메타데이터', '제목', '작성자', '속성', '문서 정보'],
+    protect:          ['보호', '비밀번호', '잠금', '암호화', '암호 설정', '제한'],
+    fill:             ['채우기', '양식', '체크박스', '드롭다운', '텍스트 필드', '양식 채우기', '폼 작성'],
+    'compress-email':  ['이메일', '지메일', '아웃룩', 'pdf 보내기', '첨부파일', '작은 파일', '이메일 용량 초과'],
+    'draw-pdf':        ['그리기', '주석', '마크업', '화살표', '도형', '텍스트 상자', '손그림', '드로잉', '안노테이션'],
+    ocr:              ['ocr', '텍스트 추출', '스캔한 문서', '스캔을 텍스트로', '문자 인식', '검색 가능한 pdf'],
+    pdf2word:         ['워드', 'docx', '워드로 변환', 'pdf를 워드로', '편집 가능'],
+    pdf2excel:        ['엑셀', 'xlsx', '엑셀로 변환', 'pdf를 엑셀로', '표 추출'],
+    pdf2ppt:          ['파워포인트', 'pptx', '파워포인트로 변환', 'pdf를 파워포인트로', 'ppt 변환'],
+    pdf2md:           ['마크다운', 'md', '마크다운으로 변환', 'pdf를 마크다운으로'],
+    unlock:           ['pdf 잠금 해제', '비밀번호 제거', 'pdf 비밀번호 삭제'],
+    flatten:          ['평탄화', '양식 잠금', '편집 불가', '필드 고정', 'pdf 잠금'],
+    compare:          ['비교', '차이점', '변경 사항', 'pdf 비교', '차이 찾기', '비교하기'],
+  },
 
   // app
   wait_processing:  '⏳ 처리가 완료될 때까지 기다려 주세요',

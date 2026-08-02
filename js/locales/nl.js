@@ -1,8 +1,34 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Dutch (NL) UI strings — loaded before app.js on /nl/ pages
 window.PDFREE_LOCALE = {
-  // search_tags: populated by localization pass — see js/i18n.js EN.search_tags for the contract.
-  search_tags: {},
+  // search_tags: per-tool synonyms so the homepage search box finds tools
+  // when users type in Dutch. Keys must match js/config.js's TOOLS keys
+  // exactly. Merged with (not replacing) the English tags in js/search.js.
+  search_tags: {
+    merge:            ['samenvoegen', 'combineren', 'pdf\'s samenvoegen', 'meerdere pdf\'s', 'pdf combineren', 'documenten samenvoegen'],
+    split:            ['splitsen', 'opsplitsen', 'scheiden', 'knippen', 'pagina\'s verwijderen', 'pagina\'s uitsnijden'],
+    compress:         ['comprimeren', 'verkleinen', 'kleiner maken', 'optimaliseren', 'bestandsgrootte', 'te groot bestand'],
+    jpg2pdf:          ['afbeelding naar pdf', 'foto naar pdf', 'png naar pdf', 'plaatje naar pdf'],
+    pdf2jpg:          ['pdf naar afbeelding', 'pagina\'s exporteren', 'converteren naar jpg', 'afbeeldingen extraheren'],
+    redact:           ['redigeren', 'verbergen', 'bedekken', 'zwart maken', 'censureren', 'onherkenbaar maken', 'vervagen'],
+    rotate:           ['roteren', 'draaien', 'kantelen', 'oriëntatie', 'liggend', 'staand'],
+    extract:          ['extraheren', 'pagina\'s nemen', 'pagina\'s selecteren', 'pagina\'s ophalen'],
+    watermark:        ['watermerk', 'stempel', 'tekst overlay', 'merk', 'diagonaal', 'tekst toevoegen'],
+    pagenum:          ['paginanummers', 'nummering', 'paginering', 'voettekst', 'pagina\'s nummeren'],
+    meta:             ['metadata', 'titel', 'auteur', 'onderwerp', 'eigenschappen', 'bestandsinfo'],
+    protect:          ['beveiligen', 'wachtwoord', 'vergrendelen', 'versleutelen', 'beveiliging', 'beperken'],
+    fill:             ['invullen', 'formulier', 'selectievakje', 'keuzelijst', 'tekstveld', 'formulier invullen'],
+    'compress-email':  ['email', 'gmail', 'outlook', 'pdf versturen', 'bijlage', 'klein bestand', 'te groot voor email'],
+    'draw-pdf':        ['tekenen', 'annoteren', 'annotatie', 'markeren', 'pijl', 'vorm', 'tekstvak', 'vrije hand', 'markering'],
+    ocr:              ['ocr', 'tekst extraheren', 'gescand', 'scan naar tekst', 'tekstherkenning', 'doorzoekbaar'],
+    pdf2word:         ['word', 'docx', 'converteren naar word', 'pdf naar docx', 'bewerkbaar'],
+    pdf2excel:        ['excel', 'xlsx', 'converteren naar excel', 'pdf naar xlsx', 'tabel extraheren'],
+    pdf2ppt:          ['powerpoint', 'pptx', 'converteren naar powerpoint', 'pdf naar pptx'],
+    pdf2md:           ['markdown', 'md', 'converteren naar markdown', 'pdf naar md'],
+    unlock:           ['pdf ontgrendelen', 'wachtwoord verwijderen', 'pdf-wachtwoord verwijderen'],
+    flatten:          ['afvlakken', 'formulier vergrendelen', 'niet bewerkbaar', 'velden vastzetten', 'pdf vergrendelen'],
+    compare:          ['vergelijken', 'diff', 'verschil', 'wijzigingen', 'pdf\'s vergelijken', 'wijzigingen vinden'],
+  },
 
   // app
   wait_processing:  '⏳ Wacht tot de verwerking klaar is',

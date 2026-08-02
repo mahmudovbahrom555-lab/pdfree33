@@ -2,8 +2,34 @@
 // Vietnamese (VI) UI strings — loaded before app.js on /vi/ pages
 // Sets window.PDFREE_LOCALE which i18n.js merges over EN defaults.
 window.PDFREE_LOCALE = {
-  // search_tags: populated by localization pass — see js/i18n.js EN.search_tags for the contract.
-  search_tags: {},
+  // search_tags: per-tool synonyms so the homepage search box finds tools
+  // when users type in Vietnamese. Keys must match js/config.js's TOOLS keys
+  // exactly. Merged with (not replacing) the English tags in js/search.js.
+  search_tags: {
+    merge:            ['ghép', 'ghép file', 'gộp', 'hợp nhất', 'nối file', 'ghép pdf', 'gộp file'],
+    split:            ['tách', 'chia', 'cắt', 'xóa trang', 'tách trang', 'chia nhỏ pdf'],
+    compress:         ['nén', 'giảm dung lượng', 'thu nhỏ', 'tối ưu', 'file quá nặng', 'giảm kích thước'],
+    jpg2pdf:          ['ảnh sang pdf', 'ảnh thành pdf', 'jpg sang pdf', 'png sang pdf', 'chuyển ảnh sang pdf'],
+    pdf2jpg:          ['pdf sang ảnh', 'pdf sang jpg', 'xuất trang', 'chuyển sang jpg', 'trích ảnh'],
+    redact:           ['che thông tin', 'xóa thông tin', 'kiểm duyệt', 'làm mờ', 'ẩn văn bản', 'tô đen', 'che'],
+    rotate:           ['xoay', 'xoay trang', 'lật trang', 'hướng trang', 'ngang', 'dọc'],
+    extract:          ['trích trang', 'chọn trang', 'lấy trang', 'tách trang riêng', 'trích xuất trang'],
+    watermark:        ['hình mờ', 'đóng dấu', 'chèn chữ', 'watermark', 'thương hiệu'],
+    pagenum:          ['đánh số trang', 'số trang', 'chân trang', 'thêm số trang', 'số thứ tự trang'],
+    meta:             ['siêu dữ liệu', 'tiêu đề', 'tác giả', 'thuộc tính file', 'thông tin file'],
+    protect:          ['bảo vệ', 'mật khẩu', 'khóa file', 'mã hóa', 'đặt mật khẩu', 'bảo mật'],
+    fill:             ['điền form', 'biểu mẫu', 'hộp kiểm', 'điền biểu mẫu', 'ô văn bản'],
+    'compress-email': ['email', 'gmail', 'gửi pdf', 'tệp đính kèm', 'file nhỏ', 'quá to để gửi mail'],
+    'draw-pdf':       ['vẽ', 'chú thích', 'đánh dấu', 'mũi tên', 'hình dạng', 'hộp văn bản', 'vẽ tay', 'tô sáng', 'ghi chú'],
+    ocr:              ['ocr', 'trích văn bản', 'bản scan', 'chuyển scan thành văn bản', 'nhận dạng văn bản', 'có thể tìm kiếm'],
+    pdf2word:         ['word', 'docx', 'chuyển sang word', 'pdf sang docx', 'chỉnh sửa được'],
+    pdf2excel:        ['excel', 'xlsx', 'chuyển sang excel', 'pdf sang xlsx', 'trích bảng'],
+    pdf2ppt:          ['powerpoint', 'pptx', 'chuyển sang powerpoint', 'pdf sang pptx', 'trình chiếu'],
+    pdf2md:           ['markdown', 'md', 'chuyển sang markdown', 'pdf sang md', 'tệp md'],
+    unlock:           ['mở khóa pdf', 'gỡ mật khẩu', 'xóa mật khẩu', 'mở file khóa', 'bỏ khóa pdf'],
+    flatten:          ['khóa biểu mẫu', 'không chỉnh sửa được', 'khóa pdf', 'cố định trường', 'không cho sửa nữa'],
+    compare:          ['so sánh', 'khác biệt', 'so sánh pdf', 'tìm thay đổi', 'đối chiếu'],
+  },
 
   // app
   wait_processing:  '⏳ Vui lòng chờ cho đến khi quá trình xử lý hoàn tất',
