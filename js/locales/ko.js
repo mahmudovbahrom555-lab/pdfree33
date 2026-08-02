@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Korean (KO) UI strings — loaded before app.js on /ko/ pages
 window.PDFREE_LOCALE = {
+  // search_tags: populated by localization pass — see js/i18n.js EN.search_tags for the contract.
+  search_tags: {},
+
   // app
   wait_processing:  '⏳ 처리가 완료될 때까지 기다려 주세요',
   coming_soon:      '🚧 곧 출시 예정!',

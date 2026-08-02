@@ -7,9 +7,13 @@ const MISS_KEY = 'pdfree_search_misses';
  * Build a flat search index from the TOOLS dict.
  * Called once at homepage init; result is passed to search().
  * @param {Record<string, object>} tools — TOOLS from config.js
- * @param {string} lang — current page language (en/de/es/fr/pt)
+ * @param {string} lang — current page language (en/de/es/fr/pt/...)
+ * @param {Record<string, string[]>} [localeTags] — window.PDFREE_LOCALE.search_tags
+ *   for the current page's language: { toolKey: [translated synonym, ...] }.
+ *   English tags (t.tags in config.js) are always included too, so users
+ *   typing an English tool name on a non-English page still get a match.
  */
-export function buildIndex(tools, lang = 'en') {
+export function buildIndex(tools, lang = 'en', localeTags = {}) {
   return Object.entries(tools)
     .filter(([, t]) => t.implemented)
     .map(([key, t]) => ({
@@ -19,7 +23,7 @@ export function buildIndex(tools, lang = 'en') {
       name:       (t.titles?.[lang] || t.title || '').toLowerCase(),
       nameEn:     (t.title || '').toLowerCase(),
       desc:       (t.descs?.[lang]  || t.desc  || '').toLowerCase(),
-      tags:       (t.tags || []).map(s => s.toLowerCase()),
+      tags:       [...(t.tags || []), ...(localeTags?.[key] || [])].map(s => s.toLowerCase()),
       accept:     t.accept || '.pdf',
       multi:      t.multi  || false,
       btn:        t.btns?.[lang] || t.btn || '',

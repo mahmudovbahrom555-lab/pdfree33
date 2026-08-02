@@ -666,7 +666,7 @@ function initSearch() {
   }
 
   const lang  = document.documentElement.lang || 'en';
-  const index = buildIndex(TOOLS, lang);
+  const index = buildIndex(TOOLS, lang, window.PDFREE_LOCALE?.search_tags);
 
   // ── Hero drop zone ──────────────────────────────────────────────
   let _pendingFiles     = null;

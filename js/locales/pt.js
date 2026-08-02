@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Portuguese (PT/BR) UI strings — loaded before app.js on /pt/ pages
 window.PDFREE_LOCALE = {
+  // search_tags: populated by localization pass — see js/i18n.js EN.search_tags for the contract.
+  search_tags: {},
+
   // app
   wait_processing:  '⏳ Por favor aguarde o processamento terminar',
   coming_soon:      '🚧 Em breve!',

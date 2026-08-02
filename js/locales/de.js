@@ -2,6 +2,9 @@
 // German (DE) UI strings — loaded before app.js on /de/ pages
 // Sets window.PDFREE_LOCALE which i18n.js merges over EN defaults.
 window.PDFREE_LOCALE = {
+  // search_tags: populated by localization pass — see js/i18n.js EN.search_tags for the contract.
+  search_tags: {},
+
   // app
   wait_processing:  '⏳ Bitte warten, bis die Verarbeitung abgeschlossen ist',
   coming_soon:      '🚧 Demnächst verfügbar!',

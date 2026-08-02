@@ -2,6 +2,9 @@
 // Indonesian (ID) UI strings — loaded before app.js on /id/ pages
 // Sets window.PDFREE_LOCALE which i18n.js merges over EN defaults.
 window.PDFREE_LOCALE = {
+  // search_tags: populated by localization pass — see js/i18n.js EN.search_tags for the contract.
+  search_tags: {},
+
   // app
   wait_processing:  '⏳ Harap tunggu hingga pemrosesan selesai',
   coming_soon:      '🚧 Segera hadir!',

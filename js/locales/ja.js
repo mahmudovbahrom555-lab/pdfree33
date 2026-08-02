@@ -2,6 +2,9 @@
 // Japanese (JA) UI strings — loaded before app.js on /ja/ pages
 // Sets window.PDFREE_LOCALE which i18n.js merges over EN defaults.
 window.PDFREE_LOCALE = {
+  // search_tags: populated by localization pass — see js/i18n.js EN.search_tags for the contract.
+  search_tags: {},
+
   // app
   wait_processing:  '⏳ 処理が完了するまでお待ちください',
   coming_soon:      '🚧 近日公開予定です',

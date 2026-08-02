@@ -2,6 +2,9 @@
 // Vietnamese (VI) UI strings — loaded before app.js on /vi/ pages
 // Sets window.PDFREE_LOCALE which i18n.js merges over EN defaults.
 window.PDFREE_LOCALE = {
+  // search_tags: populated by localization pass — see js/i18n.js EN.search_tags for the contract.
+  search_tags: {},
+
   // app
   wait_processing:  '⏳ Vui lòng chờ cho đến khi quá trình xử lý hoàn tất',
   coming_soon:      '🚧 Sắp ra mắt!',

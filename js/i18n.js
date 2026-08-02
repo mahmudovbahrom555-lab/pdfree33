@@ -13,6 +13,13 @@
 // tp(n, one, many, vars?) — choose singular/plural key, then translate
 
 export const EN = {
+  // search_tags: per-tool localized search synonyms for the homepage search
+  // box (js/search.js buildIndex). Not a translatable string like the rest
+  // of this file — English tags already live in js/config.js's TOOLS[key]
+  // .tags array, so this stays empty on English pages; non-English
+  // js/locales/<lc>.js files populate it with { toolKey: [synonym, ...] }.
+  search_tags: {},
+
   // ── app.js ─────────────────────────────────────────────────────
   wait_processing:     '⏳ Please wait for processing to finish',
   coming_soon:         '🚧 Coming soon!',
