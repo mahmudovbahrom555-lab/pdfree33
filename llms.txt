@@ -1,0 +1,20 @@
+# PDFree
+
+> Free, privacy-first PDF toolkit. Every tool runs entirely inside the browser using WebAssembly and a Web Worker — files are never uploaded to a server, there is no account, no daily limit, and no subscription. Verifiable by inspecting the Network tab during use: no file-content requests leave the device.
+
+PDFree offers merge, split, compress, rotate, watermark, redact, OCR, format conversion (PDF↔JPG/Word/Excel/PowerPoint/Markdown), metadata editing, page numbering, annotation, digital signing, form filling, and PDF/A archival compliance checking — all client-side. Available in English, German, Spanish, French, Portuguese, Indonesian, Vietnamese, Russian, Japanese, Italian, Korean, Dutch, Polish, and Turkish.
+
+## Key pages
+
+- [Merge PDF](https://pdfree.io/merge-pdf/): combine multiple PDFs into one, locally in the browser.
+- [Split PDF](https://pdfree.io/split-pdf/): split a PDF into separate files or page ranges.
+- [Compress PDF](https://pdfree.io/compress-pdf/): reduce PDF file size without uploading.
+- [Check PDF/A Compliance](https://pdfree.io/pdf2pdfa/): check and convert a PDF to PDF/A-2b or PDF/A-2u for long-term archiving.
+- [Redact PDF](https://pdfree.io/redact-pdf/): permanently remove sensitive content, not just visually cover it.
+- [PDF Tools with No Upload](https://pdfree.io/pdf-tools-no-upload/): explanation of the local-processing architecture.
+- [HIPAA-Considerations PDF Tools](https://pdfree.io/hipaa-pdf-tools/): why local processing matters for regulated documents.
+
+## Notes
+
+- No API. No account system. No server-side storage of any kind.
+- Source of truth for tool list and locales: https://pdfree.io/sitemap.xml

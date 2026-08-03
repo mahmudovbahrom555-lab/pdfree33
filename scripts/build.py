@@ -201,6 +201,7 @@ def _hreflang_links(tool, config):
 # ── Schema builders ───────────────────────────────────────────────────────────
 
 def _webapp_schema(tool, lang, canonical_path):
+    content_lastmod = _git_lastmod(f"data/content/{lang}/{tool['id']}.html")
     return json.dumps({
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
@@ -228,6 +229,7 @@ def _webapp_schema(tool, lang, canonical_path):
         ],
         "softwareVersion": "6.2",
         "datePublished": "2023-01-01",
+        "dateModified": content_lastmod,
         "downloadUrl": f"{BASE_URL}/{canonical_path}",
         "screenshot": {
             "@type": "ImageObject",
@@ -236,7 +238,13 @@ def _webapp_schema(tool, lang, canonical_path):
             "height": 633,
         },
         "softwareHelp": {"@type": "CreativeWork", "url": "https://pdfree.io/"},
-        "provider": {"@type": "Organization", "name": "PDFree", "url": "https://pdfree.io"},
+        "provider": {
+            "@type": "Organization",
+            "name": "PDFree",
+            "url": "https://pdfree.io",
+            "description": "PDFree is a free, privacy-first PDF toolkit that runs entirely in the browser — files are processed locally and never uploaded to a server.",
+            "logo": "https://pdfree.io/icons/icon-512.png",
+        },
     }, indent=2, ensure_ascii=False)
 
 
