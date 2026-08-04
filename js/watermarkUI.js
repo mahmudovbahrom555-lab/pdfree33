@@ -38,6 +38,13 @@ let _logoBytes   = null;  // Uint8Array — raw file bytes, sent to the worker a
 let _logoMime    = null;  // 'image/png' | 'image/jpeg'
 let _logoImg     = null;  // cached HTMLImageElement, for preview drawing only
 let _logoSize    = 0.25;  // logo width as a fraction of page width (0..1)
+// Separate, lower-range opacity for logo mode. A text watermark is thin
+// font strokes with lots of empty space, so 30-80% still reads fine
+// underneath; a logo often has large solid-fill shapes (a bold silhouette,
+// not an outline), so the same opacity range turns it into a redaction
+// block over the document text instead of a watermark. Default and cap
+// both sit lower here on purpose.
+let _logoOpacity = 0.15;
 
 // Preview state — reset on each initWatermarkOptions() call
 let _pageW       = 595;   // actual page width in PDF pts (A4 default)
@@ -47,7 +54,7 @@ let _bgImageData = null;  // cached first-page render (physical canvas pixels)
 export function getWatermarkParams() {
   if (_kind === 'image') {
     return { kind: 'image', bytes: _logoBytes, mime: _logoMime,
-              opacity: _opacity, size: _logoSize, position: _position };
+              opacity: _logoOpacity, size: _logoSize, position: _position };
   }
   return { kind: 'text', text: _text, opacity: _opacity, position: _position,
            fontSize: _fontSize, color: _color };
@@ -63,6 +70,7 @@ export function initWatermarkOptions(file) {
   _logoBytes = null;
   _logoMime = null;
   _logoImg = null;
+  _logoOpacity = 0.15;
   const container = id('watermarkOptions');
   if (!container) return;
   container.style.display = 'block';
@@ -85,10 +93,10 @@ function _render() {
   const container = id('watermarkOptions');
   if (!container) return;
 
-  const pctOpacity = Math.round(_opacity * 100);
+  const isImage    = _kind === 'image';
+  const pctOpacity = Math.round((isImage ? _logoOpacity : _opacity) * 100);
   const pctSize    = Math.round(_logoSize * 100);
   const displayH   = Math.round(PREVIEW_W * _pageH / _pageW);
-  const isImage    = _kind === 'image';
 
   container.innerHTML = `
     <div class="wm-row">
@@ -137,9 +145,14 @@ function _render() {
           </div>
         `) : ''}
 
-        ${sliderRow({ id: 'wmOpacity', label: 'Opacity', valId: 'wmOpacityVal',
-                      valText: pctOpacity + '%', min: 5, max: 80, step: 5,
-                      value: pctOpacity, ariaLabel: `Opacity ${pctOpacity}%` })}
+        ${isImage
+          ? sliderRow({ id: 'wmOpacity', label: 'Opacity', valId: 'wmOpacityVal',
+                        valText: pctOpacity + '%', min: 5, max: 50, step: 5,
+                        value: pctOpacity, ariaLabel: `Opacity ${pctOpacity}%` })
+          : sliderRow({ id: 'wmOpacity', label: 'Opacity', valId: 'wmOpacityVal',
+                        valText: pctOpacity + '%', min: 5, max: 80, step: 5,
+                        value: pctOpacity, ariaLabel: `Opacity ${pctOpacity}%` })}
+        ${isImage ? `<p class="wm-hint">Lower opacity keeps document text readable under solid parts of the logo.</p>` : ''}
 
         ${isImage
           ? sliderRow({ id: 'wmLogoSize', label: 'Size', valId: 'wmLogoSizeVal',
@@ -196,7 +209,11 @@ function _bindEvents() {
   });
 
   id('wmOpacity')?.addEventListener('input', e => {
-    _opacity = e.target.value / 100;
+    if (_kind === 'image') {
+      _logoOpacity = e.target.value / 100;
+    } else {
+      _opacity = e.target.value / 100;
+    }
     const val = id('wmOpacityVal');
     if (val) val.textContent = e.target.value + '%';
     _schedulePreview();  // debounced — continuous drag
@@ -446,7 +463,7 @@ function _drawLogoLayer(ctx, W, H) {
   const h = w * aspect;
 
   ctx.save();
-  ctx.globalAlpha = _opacity;
+  ctx.globalAlpha = _logoOpacity;
 
   const drawAt = (x, y) => {
     // PDF space is y-up from bottom-left; canvas is y-down from top-left.

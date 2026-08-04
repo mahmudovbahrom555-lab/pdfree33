@@ -1468,6 +1468,12 @@ button,
   letter-spacing: .5px;
 }
 
+.wm-hint {
+  font-size: 12px;
+  color: var(--text3);
+  margin: -8px 0 0;
+}
+
 @media (max-width: 720px) {
   .wm-row { grid-template-columns: 1fr; }
   .wm-preview-wrap { min-height: 220px; }
