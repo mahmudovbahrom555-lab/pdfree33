@@ -57,10 +57,10 @@
   },
   {
     "@type": "Question",
-    "name": "Có thể dùng hình ảnh làm hình mờ không?",
+    "name": "Có thể dùng hình ảnh (logo) làm hình mờ không?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Hiện tại PDFree hỗ trợ hình mờ văn bản. Để hình mờ dạng hình ảnh, cần dùng công cụ khác."
+      "text": "Có. Chuyển sang chế độ Logo trong công cụ hình mờ và tải lên file PNG hoặc JPG. Dùng chung các tùy chỉnh độ mờ, kích thước và vị trí với hình mờ văn bản — hỗ trợ PNG nền trong suốt."
     }
   }
 ]

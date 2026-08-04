@@ -28,7 +28,7 @@
     "name": "Görsel/logo filigranı ekleyebilir miyim?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Şu anda PDFree yalnızca metin filigranını destekliyor. Görsel/logo filigranı yol haritasında yer alıyor."
+      "text": "Evet. Filigran aracında Logo moduna geçin ve bir PNG veya JPG yükleyin. Metin filigranıyla aynı saydamlık, boyut ve konum ayarlarını kullanır — şeffaf arka planlı PNG dosyaları desteklenir."
     }
   },
   {

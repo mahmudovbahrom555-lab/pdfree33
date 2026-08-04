@@ -25,6 +25,14 @@
   },
   {
     "@type": "Question",
+    "name": "Posso aggiungere un logo come filigrana?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. Passa alla modalità Logo nello strumento filigrana e carica un PNG o JPG. Usa gli stessi controlli di opacità, dimensione e posizione della filigrana di testo — i PNG con sfondo trasparente sono supportati."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "I miei file vengono caricati?",
     "acceptedAnswer": {
       "@type": "Answer",

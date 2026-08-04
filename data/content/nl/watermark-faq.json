@@ -25,6 +25,14 @@
   },
   {
     "@type": "Question",
+    "name": "Kan ik een logo als watermerk toevoegen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Schakel over naar de Logo-modus in de watermerktool en upload een PNG of JPG. Dezelfde dekking-, grootte- en positie-instellingen als bij een tekstwatermerk zijn van toepassing — PNG's met transparante achtergrond worden ondersteund."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "Wordt de PDF geüpload naar een server?",
     "acceptedAnswer": {
       "@type": "Answer",

@@ -52,7 +52,7 @@
     "name": "Posso adicionar um logo como marca d'água de imagem?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ainda não. O PDFree suporta atualmente apenas marcas d'água de texto. O suporte a imagens e logos está planejado para uma atualização futura."
+      "text": "Sim. Mude para o modo Logo na ferramenta de marca d'água e envie um PNG ou JPG. Usa os mesmos controles de opacidade, tamanho e posição da marca d'água de texto — PNGs com fundo transparente são suportados."
     }
   }
 ]

@@ -20,7 +20,7 @@
     "name": "Can I add an image as a watermark instead of text?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Not yet. PDFree currently supports text watermarks only. Image and logo watermark support is planned for a future update."
+      "text": "Yes. Switch to Logo mode in the watermark tool and upload a PNG or JPG. It uses the same opacity, size, and position controls as the text watermark, and PNGs with a transparent background are supported."
     }
   },
   {

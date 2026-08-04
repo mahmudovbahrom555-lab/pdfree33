@@ -44,7 +44,7 @@
     "name": "Kann ich ein Logo als Bild-Wasserzeichen einfügen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Noch nicht. PDFree unterstützt derzeit ausschließlich Text-Wasserzeichen. Bild- und Logo-Wasserzeichen sind für ein zukünftiges Update geplant."
+      "text": "Ja. Wechsle im Wasserzeichen-Tool in den Logo-Modus und lade ein PNG oder JPG hoch. Es nutzt dieselben Regler für Deckkraft, Größe und Position wie das Text-Wasserzeichen — PNGs mit transparentem Hintergrund werden unterstützt."
     }
   },
   {

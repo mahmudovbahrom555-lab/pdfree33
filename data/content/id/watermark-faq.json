@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "Tidak. PDFree gratis selamanya — tidak ada langganan, tidak ada batasan harian, tidak ada batas ukuran file."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah bisa menggunakan gambar (logo) sebagai tanda air?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ya. Beralih ke mode Logo di alat tanda air dan unggah file PNG atau JPG. Menggunakan pengaturan opasitas, ukuran, dan posisi yang sama dengan tanda air teks — PNG dengan latar belakang transparan didukung."
+    }
   }
 ]

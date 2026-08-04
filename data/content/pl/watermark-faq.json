@@ -25,6 +25,14 @@
   },
   {
     "@type": "Question",
+    "name": "Czy mogę dodać logo jako znak wodny?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. Przełącz się na tryb Logo w narzędziu do znaku wodnego i wgraj plik PNG lub JPG. Dostępne są te same ustawienia przezroczystości, rozmiaru i pozycji co w przypadku tekstowego znaku wodnego — obsługiwane są pliki PNG z przezroczystym tłem."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "Czy moje pliki są przesyłane?",
     "acceptedAnswer": {
       "@type": "Answer",
