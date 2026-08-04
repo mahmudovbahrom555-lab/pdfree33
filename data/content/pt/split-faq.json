@@ -1,10 +1,10 @@
 [
   {
     "@type": "Question",
-    "name": "Os meus ficheiros são enviados ao dividir um PDF?",
+    "name": "Os meus arquivos são enviados ao dividir um PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Não. O PDFree divide PDFs inteiramente no seu browser através de JavaScript. Os ficheiros nunca saem do seu dispositivo. Pode verificar por si mesmo: abra as DevTools do seu browser → separador \"Rede\" — não deverá ver o seu PDF a ser enviado para um servidor remoto durante o processamento."
+      "text": "Não. O PDFree divide PDFs inteiramente no seu navegador através de JavaScript. Os arquivos nunca saem do seu dispositivo. Pode verificar por si mesmo: abra as DevTools do seu navegador → separador \"Rede\" — não deverá ver o seu PDF a ser enviado para um servidor remoto durante o processamento."
     }
   },
   {
@@ -20,7 +20,7 @@
     "name": "Que formato de intervalo de páginas o PDFree aceita?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Introduza páginas e intervalos separados por vírgulas: por exemplo 1, 3-7, 12, 15-20. Os espaços são opcionais. Também pode clicar em miniaturas de páginas individuais para as seleccionar ou desseleccionar visualmente, ou utilizar botões de selecção rápida para páginas ímpares, pares ou metades do documento."
+      "text": "Introduza páginas e intervalos separados por vírgulas: por exemplo 1, 3-7, 12, 15-20. Os espaços são opcionais. Também pode clicar em miniaturas de páginas individuais para as selecionar ou desselecionar visualmente, ou utilizar botões de seleção rápida para páginas ímpares, pares ou metades do documento."
     }
   },
   {
@@ -28,7 +28,7 @@
     "name": "Posso extrair apenas páginas específicas de um PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sim. Pode extrair um intervalo de páginas personalizado (p. ex. páginas 3–7) ou dividir cada página em ficheiros individuais. Introduza o intervalo como valores separados por vírgulas como \"1-5, 8, 11-15\", ou clique nas páginas visualmente na grelha de miniaturas."
+      "text": "Sim. Pode extrair um intervalo de páginas personalizado (p. ex. páginas 3–7) ou dividir cada página em arquivos individuais. Introduza o intervalo como valores separados por vírgulas como \"1-5, 8, 11-15\", ou clique nas páginas visualmente na grade de miniaturas."
     }
   },
   {
@@ -36,7 +36,7 @@
     "name": "Como elimino ou removo uma página específica de um PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Seleccione todas as páginas excepto as que pretende remover e clique em \"Dividir PDF\" para extrair apenas as páginas que deseja manter. Por exemplo, para eliminar a página 3 de um PDF de 10 páginas, seleccione as páginas 1-2 e 4-10 e extraia-as. O resultado é o seu PDF sem as páginas removidas — qualidade original preservada."
+      "text": "Selecione todas as páginas exceto as que pretende remover e clique em \"Dividir PDF\" para extrair apenas as páginas que deseja manter. Por exemplo, para eliminar a página 3 de um PDF de 10 páginas, selecione as páginas 1-2 e 4-10 e extraia-as. O resultado é o seu PDF sem as páginas removidas — qualidade original preservada."
     }
   },
   {
@@ -44,23 +44,23 @@
     "name": "Existe algum limite de páginas ao dividir?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Não. O PDFree não tem limites de páginas nem de tamanho de ficheiro. O processamento depende da memória disponível do seu dispositivo. PDFs com centenas de páginas geram miniaturas em segundos num computador moderno."
+      "text": "Não. O PDFree não tem limites de páginas nem de tamanho de arquivo. O processamento depende da memória disponível do seu dispositivo. PDFs com centenas de páginas geram miniaturas em segundos num computador moderno."
     }
   },
   {
     "@type": "Question",
-    "name": "Posso dividir um PDF sem ligação à internet?",
+    "name": "Posso dividir um PDF sem conexão à internet?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sim. O PDFree é uma Progressive Web App e funciona completamente offline após o carregamento no seu browser. Não é necessária ligação à internet para dividir ou extrair páginas."
+      "text": "Sim. O PDFree é uma Progressive Web App e funciona completamente offline após o carregamento no seu navegador. Não é necessária conexão à internet para dividir ou extrair páginas."
     }
   },
   {
     "@type": "Question",
-    "name": "Posso dividir um PDF protegido por palavra-passe?",
+    "name": "Posso dividir um PDF protegido por senha?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sim, se conhecer a palavra-passe. Quando abre um ficheiro protegido, o PDFree pede-lhe que a introduza. Após o desbloqueio, pode selecionar e extrair páginas normalmente. O PDFree não consegue contornar nem quebrar uma palavra-passe — apenas abre ficheiros a que está autorizado a aceder."
+      "text": "Sim, se conhecer a senha. Quando abre um arquivo protegido, o PDFree pede-lhe que a introduza. Após o desbloqueio, pode selecionar e extrair páginas normalmente. O PDFree não consegue contornar nem quebrar uma senha — apenas abre arquivos a que está autorizado a aceder."
     }
   },
   {
@@ -68,7 +68,7 @@
     "name": "Como divido um PDF no iPhone, iPad ou Mac sem Adobe Acrobat?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Abra o PDFree no Safari (iPhone/iPad) ou em qualquer navegador no Mac — não é necessário transferir nenhuma app nem o Adobe Acrobat. A ferramenta funciona completamente no navegador: carregue o PDF, selecione páginas, toque em Dividir PDF. O resultado é guardado na app Ficheiros (iOS) ou na pasta Transferências (Mac)."
+      "text": "Abra o PDFree no Safari (iPhone/iPad) ou em qualquer navegador no Mac — não é necessário baixar nenhuma app nem o Adobe Acrobat. A ferramenta funciona completamente no navegador: carregue o PDF, selecione páginas, toque em Dividir PDF. O resultado é guardado na app Arquivos (iOS) ou na pasta Downloads (Mac)."
     }
   },
   {
@@ -76,7 +76,7 @@
     "name": "Posso dividir vários PDFs ao mesmo tempo?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Não em lote — o PDFree processa um PDF de cada vez. Abra a ferramenta num novo separador para dividir um segundo ficheiro em paralelo. O PDFree também funciona offline como Progressive Web App, sem esperar pela rede entre ficheiros."
+      "text": "Não em lote — o PDFree processa um PDF de cada vez. Abra a ferramenta num nova aba para dividir um segundo arquivo em paralelo. O PDFree também funciona offline como Progressive Web App, sem esperar pela rede entre arquivos."
     }
   }
 ]

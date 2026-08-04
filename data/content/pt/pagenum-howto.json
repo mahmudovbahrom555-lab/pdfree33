@@ -15,7 +15,7 @@
       "@type": "HowToStep",
       "position": 1,
       "name": "Abrir o PDF",
-      "text": "Clique em \"Escolher ficheiros\" ou arraste o seu PDF para a zona de depósito. O ficheiro carrega no seu navegador — nada é enviado para nenhum servidor.",
+      "text": "Clique em \"Escolher arquivos\" ou arraste o seu PDF para a zona de depósito. O arquivo carrega no seu navegador — nada é enviado para nenhum servidor.",
       "url": "https://pdfree.io/pagenum-pdf/#step1"
     },
     {

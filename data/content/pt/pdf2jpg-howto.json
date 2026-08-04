@@ -2,29 +2,29 @@
   "@context": "https://schema.org",
   "@type": "HowTo",
   "name": "Como converter PDF para JPG ou PNG gratuitamente",
-  "description": "Exporte cada página de um PDF como imagem JPG ou PNG de alta qualidade — gratuito, sem upload, processado localmente no seu browser.",
+  "description": "Exporte cada página de um PDF como imagem JPG ou PNG de alta qualidade — gratuito, sem upload, processado localmente no seu navegador.",
   "totalTime": "PT2M",
-  "tool": [{ "@type": "HowToTool", "name": "PDFree — conversor de PDF para imagem gratuito baseado no browser, sem necessidade de upload" }],
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — conversor de PDF para imagem gratuito baseado no navegador, sem necessidade de upload" }],
   "step": [
     {
       "@type": "HowToStep",
       "position": 1,
       "name": "Abra o seu PDF",
-      "text": "Clique em \"Escolher ficheiros\" ou arraste o seu PDF para a zona de largada. O ficheiro é carregado no seu browser — nada é enviado para nenhum servidor.",
+      "text": "Clique em \"Escolher arquivos\" ou arraste o seu PDF para a zona de soltar. O arquivo é carregado no seu navegador — nada é enviado para nenhum servidor.",
       "url": "https://pdfree.io/pdf2jpg/#step1"
     },
     {
       "@type": "HowToStep",
       "position": 2,
       "name": "Escolha o formato e a resolução",
-      "text": "Seleccione o formato de saída JPG ou PNG. Escolha a resolução preferida: 72 DPI (ecrã/web), 150 DPI (equilibrado) ou 300 DPI (qualidade de impressão). Uma resolução mais elevada produz imagens mais nítidas com ficheiros de maior dimensão.",
+      "text": "Selecione o formato de saída JPG ou PNG. Escolha a resolução preferida: 72 DPI (tela/web), 150 DPI (equilibrado) ou 300 DPI (qualidade de impressão). Uma resolução mais elevada produz imagens mais nítidas com arquivos de maior dimensão.",
       "url": "https://pdfree.io/pdf2jpg/#step2"
     },
     {
       "@type": "HowToStep",
       "position": 3,
-      "name": "Converter e transferir",
-      "text": "Clique em \"Converter para JPG\". Cada página é renderizada como um ficheiro de imagem separado. Múltiplas páginas são transferidas como um arquivo ZIP. Nada é enviado para nenhum servidor em nenhum passo.",
+      "name": "Converter e baixar",
+      "text": "Clique em \"Converter para JPG\". Cada página é renderizada como um arquivo de imagem separado. Múltiplas páginas são transferidas como um arquivo ZIP. Nada é enviado para nenhum servidor em nenhum passo.",
       "url": "https://pdfree.io/pdf2jpg/#step3"
     }
   ]

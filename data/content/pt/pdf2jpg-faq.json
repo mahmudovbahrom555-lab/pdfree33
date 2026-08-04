@@ -4,7 +4,7 @@
     "name": "Meus arquivos são enviados para um servidor?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Não. O PDFree converte páginas PDF em imagens inteiramente no seu browser utilizando PDF.js (o renderizador PDF open source da Mozilla). Nada é enviado para nenhum servidor."
+      "text": "Não. O PDFree converte páginas PDF em imagens inteiramente no seu navegador utilizando PDF.js (o renderizador PDF open source da Mozilla). Nada é enviado para nenhum servidor."
     }
   },
   {
@@ -25,10 +25,10 @@
   },
   {
     "@type": "Question",
-    "name": "Um PDF de 10 páginas irá produzir 10 ficheiros JPG separados?",
+    "name": "Um PDF de 10 páginas irá produzir 10 arquivos JPG separados?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sim. Cada página torna-se num ficheiro JPG. Se o seu PDF tiver mais de uma página, todas as imagens são agrupadas num arquivo ZIP para transferência com um único clique."
+      "text": "Sim. Cada página torna-se num arquivo JPG. Se o seu PDF tiver mais de uma página, todas as imagens são agrupadas num arquivo ZIP para download com um único clique."
     }
   },
   {
@@ -36,7 +36,7 @@
     "name": "Existe algum limite de páginas para a conversão?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Não. Não existem limites de número de páginas nem de tamanho de ficheiro. PDFs muito grandes podem demorar mais a processar."
+      "text": "Não. Não existem limites de número de páginas nem de tamanho de arquivo. PDFs muito grandes podem demorar mais a processar."
     }
   },
   {

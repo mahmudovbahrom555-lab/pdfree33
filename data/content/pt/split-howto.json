@@ -2,35 +2,35 @@
   "@context": "https://schema.org",
   "@type": "HowTo",
   "name": "Como dividir um PDF gratuitamente",
-  "description": "Divida um PDF em ficheiros separados ou extraia páginas específicas — gratuito, sem upload, processado localmente no seu browser.",
+  "description": "Divida um PDF em arquivos separados ou extraia páginas específicas — gratuito, sem upload, processado localmente no seu navegador.",
   "totalTime": "PT1M",
-  "tool": [{ "@type": "HowToTool", "name": "PDFree — ferramenta de divisão de PDF gratuita baseada no browser, sem necessidade de upload" }],
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — ferramenta de divisão de PDF gratuita baseada no navegador, sem necessidade de upload" }],
   "step": [
     {
       "@type": "HowToStep",
       "position": 1,
       "name": "Abra o seu PDF",
-      "text": "Clique em \"Escolher ficheiros\" ou arraste o seu PDF para a zona de largada. As miniaturas de páginas são apresentadas no seu browser — nada é enviado para nenhum servidor.",
+      "text": "Clique em \"Escolher arquivos\" ou arraste o seu PDF para a zona de soltar. As miniaturas de páginas são apresentadas no seu navegador — nada é enviado para nenhum servidor.",
       "url": "https://pdfree.io/split-pdf/#step1"
     },
     {
       "@type": "HowToStep",
       "position": 2,
-      "name": "Seleccione as páginas pretendidas",
-      "text": "Clique em miniaturas de páginas individuais para as seleccionar ou desseleccionar, ou introduza um intervalo como \"1-3, 5, 8-10\". Utilize os botões de selecção rápida para páginas ímpares, pares ou metades. Para eliminar páginas, seleccione tudo excepto essas páginas.",
+      "name": "Selecione as páginas pretendidas",
+      "text": "Clique em miniaturas de páginas individuais para as selecionar ou desselecionar, ou introduza um intervalo como \"1-3, 5, 8-10\". Utilize os botões de seleção rápida para páginas ímpares, pares ou metades. Para eliminar páginas, selecione tudo exceto essas páginas.",
       "url": "https://pdfree.io/split-pdf/#step2"
     },
     {
       "@type": "HowToStep",
       "position": 3,
-      "name": "Escolha a saída: um ficheiro ou ficheiros separados",
-      "text": "Seleccione \"Extrair páginas\" para obter as páginas seleccionadas como um único PDF combinado, ou \"Dividir todas as páginas\" para obter cada página como o seu próprio ficheiro PDF num arquivo ZIP.",
+      "name": "Escolha a saída: um arquivo ou arquivos separados",
+      "text": "Selecione \"Extrair páginas\" para obter as páginas selecionadas como um único PDF combinado, ou \"Dividir todas as páginas\" para obter cada página como o seu próprio arquivo PDF num arquivo ZIP.",
       "url": "https://pdfree.io/split-pdf/#step3"
     },
     {
       "@type": "HowToStep",
       "position": 4,
-      "name": "Transfira o resultado",
+      "name": "Baixe o resultado",
       "text": "Clique em \"Dividir PDF\". As suas páginas extraídas são transferidas imediatamente — como um único PDF ou um ZIP de páginas individuais.",
       "url": "https://pdfree.io/split-pdf/#step4"
     }

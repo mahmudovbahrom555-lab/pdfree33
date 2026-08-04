@@ -1,10 +1,10 @@
 [
   {
     "@type": "Question",
-    "name": "Os meus ficheiros são enviados para um servidor ao combinar PDFs?",
+    "name": "Os meus arquivos são enviados para um servidor ao combinar PDFs?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Não. O PDFree combina ficheiros PDF inteiramente no seu browser utilizando pdf-lib. Os seus ficheiros nunca saem do seu dispositivo e nunca são enviados para nenhum servidor."
+      "text": "Não. O PDFree combina arquivos PDF inteiramente no seu navegador utilizando pdf-lib. Os seus arquivos nunca saem do seu dispositivo e nunca são enviados para nenhum servidor."
     }
   },
   {
@@ -17,10 +17,10 @@
   },
   {
     "@type": "Question",
-    "name": "Existe algum limite de tamanho de ficheiro para combinar PDFs?",
+    "name": "Existe algum limite de tamanho de arquivo para combinar PDFs?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Não existem limites artificiais nem subscrições obrigatórias. O PDFree processa os ficheiros localmente no seu browser. Para melhor desempenho, recomendamos manter o total abaixo de 300 MB."
+      "text": "Não existem limites artificiais nem subscrições obrigatórias. O PDFree processa os arquivos localmente no seu navegador. Para melhor desempenho, recomendamos manter o total abaixo de 300 MB."
     }
   },
   {
@@ -33,10 +33,10 @@
   },
   {
     "@type": "Question",
-    "name": "A combinação de PDFs funciona sem ligação à internet?",
+    "name": "A combinação de PDFs funciona sem conexão à internet?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sim. O PDFree é uma Progressive Web App (PWA). Uma vez carregado, funciona completamente offline — não é necessária ligação à internet para o processamento."
+      "text": "Sim. O PDFree é uma Progressive Web App (PWA). Uma vez carregado, funciona completamente offline — não é necessária conexão à internet para o processamento."
     }
   },
   {
@@ -49,10 +49,10 @@
   },
   {
     "@type": "Question",
-    "name": "Posso combinar PDFs num telemóvel ou tablet?",
+    "name": "Posso combinar PDFs num celular ou tablet?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sim. O PDFree funciona em browsers móveis — Chrome para Android e Safari para iOS. A seleção de ficheiros usa o seletor nativo e pode reordenar os ficheiros com os botões no ecrã."
+      "text": "Sim. O PDFree funciona em navegadores móveis — Chrome para Android e Safari para iOS. A seleção de arquivos usa o seletor nativo e pode reordenar os arquivos com os botões na tela."
     }
   },
   {

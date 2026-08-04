@@ -4,7 +4,7 @@
     "name": "Meus arquivos são enviados para um servidor?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Não. A adição de números de página é processada inteiramente no seu navegador com JavaScript. Os ficheiros nunca saem do seu dispositivo."
+      "text": "Não. A adição de números de página é processada inteiramente no seu navegador com JavaScript. Os arquivos nunca saem do seu dispositivo."
     }
   },
   {

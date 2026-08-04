@@ -17,7 +17,7 @@
   },
   {
     "@type": "Question",
-    "name": "Quanto pode o PDFree reduzir o tamanho de um ficheiro PDF?",
+    "name": "Quanto pode o PDFree reduzir o tamanho de um arquivo PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "As reduções típicas são de 20–70 %. Os PDFs com imagens de alta resolução (documentos digitalizados, brochuras fotográficas) são os mais comprimidos — frequentemente 50–80 % de poupança. Os PDFs apenas com texto são menos reduzidos, uma vez que o texto já é armazenado eficientemente como vectores."
@@ -33,10 +33,10 @@
   },
   {
     "@type": "Question",
-    "name": "Posso comprimir um PDF protegido por palavra-passe?",
+    "name": "Posso comprimir um PDF protegido por senha?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "O PDFree tenta optimizar PDFs encriptados sempre que possível, mas ficheiros muito protegidos podem não ser comprimidos na totalidade. Remova primeiro a palavra-passe com a ferramenta Proteger PDF, e depois comprima."
+      "text": "O PDFree tenta otimizar PDFs encriptados sempre que possível, mas arquivos muito protegidos podem não ser comprimidos na totalidade. Remova primeiro a senha com a ferramenta Proteger PDF, e depois comprima."
     }
   },
   {
