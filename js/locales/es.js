@@ -438,7 +438,7 @@ window.PDFREE_LOCALE = {
   wm_color_red:          'Rojo',
   wm_color_blue:         'Azul',
   wm_opacity_label:      'Opacidad',
-  wm_opacity_hint:       'Una opacidad más baja mantiene el texto del documento legible bajo las partes sólidas del logo.',
+  wm_opacity_hint:       'Un valor más bajo aquí mantiene el texto del documento legible bajo las partes sólidas del logo.',
   wm_size_label:         'Tamaño',
   wm_preview_label:      'Vista previa',
   wm_preview_aria:       'Vista previa de la marca de agua',

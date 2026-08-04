@@ -439,7 +439,7 @@ window.PDFREE_LOCALE = {
   wm_color_red:          'Rot',
   wm_color_blue:         'Blau',
   wm_opacity_label:      'Deckkraft',
-  wm_opacity_hint:       'Geringere Deckkraft hält den Dokumenttext unter den durchgehenden Bereichen des Logos lesbar.',
+  wm_opacity_hint:       'Ein niedrigerer Wert hält den Dokumenttext unter den durchgehenden Bereichen des Logos lesbar.',
   wm_size_label:         'Größe',
   wm_preview_label:      'Vorschau',
   wm_preview_aria:       'Wasserzeichen-Vorschau',

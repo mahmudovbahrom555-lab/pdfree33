@@ -438,7 +438,7 @@ window.PDFREE_LOCALE = {
   wm_color_red:          '빨강',
   wm_color_blue:         '파랑',
   wm_opacity_label:      '불투명도',
-  wm_opacity_hint:       '불투명도를 낮추면 로고의 불투명한 부분 아래에서도 문서 텍스트를 읽을 수 있습니다.',
+  wm_opacity_hint:       '이 값을 낮추면 로고의 불투명한 부분 아래에서도 문서 텍스트를 읽을 수 있습니다.',
   wm_size_label:         '크기',
   wm_preview_label:      '미리보기',
   wm_preview_aria:       '워터마크 미리보기',

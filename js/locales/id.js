@@ -437,7 +437,7 @@ window.PDFREE_LOCALE = {
   wm_color_red:          'Merah',
   wm_color_blue:         'Biru',
   wm_opacity_label:      'Opasitas',
-  wm_opacity_hint:       'Opasitas lebih rendah membuat teks dokumen tetap terbaca di bawah bagian solid logo.',
+  wm_opacity_hint:       'Nilai yang lebih rendah di sini membuat teks dokumen tetap terbaca di bawah bagian solid logo.',
   wm_size_label:         'Ukuran',
   wm_preview_label:      'Pratinjau',
   wm_preview_aria:       'Pratinjau tanda air',

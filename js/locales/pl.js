@@ -436,7 +436,7 @@ window.PDFREE_LOCALE = {
   wm_color_red:          'Czerwony',
   wm_color_blue:         'Niebieski',
   wm_opacity_label:      'Przezroczystość',
-  wm_opacity_hint:       'Niższa przezroczystość zachowuje czytelność tekstu dokumentu pod pełnymi obszarami logo.',
+  wm_opacity_hint:       'Niższa wartość tutaj zachowuje czytelność tekstu dokumentu pod pełnymi obszarami logo.',
   wm_size_label:         'Rozmiar',
   wm_preview_label:      'Podgląd',
   wm_preview_aria:       'Podgląd znaku wodnego',

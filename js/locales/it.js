@@ -436,7 +436,7 @@ window.PDFREE_LOCALE = {
   wm_color_red:          'Rosso',
   wm_color_blue:         'Blu',
   wm_opacity_label:      'Opacità',
-  wm_opacity_hint:       "Un'opacità più bassa mantiene il testo del documento leggibile sotto le parti piene del logo.",
+  wm_opacity_hint:       'Un valore più basso qui mantiene il testo del documento leggibile sotto le parti piene del logo.',
   wm_size_label:         'Dimensione',
   wm_preview_label:      'Anteprima',
   wm_preview_aria:       'Anteprima filigrana',

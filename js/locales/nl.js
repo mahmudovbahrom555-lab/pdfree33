@@ -436,7 +436,7 @@ window.PDFREE_LOCALE = {
   wm_color_red:          'Rood',
   wm_color_blue:         'Blauw',
   wm_opacity_label:      'Dekking',
-  wm_opacity_hint:       'Een lagere dekking houdt de documenttekst leesbaar onder de volle delen van het logo.',
+  wm_opacity_hint:       'Een lagere waarde hier houdt de documenttekst leesbaar onder de volle delen van het logo.',
   wm_size_label:         'Grootte',
   wm_preview_label:      'Voorbeeld',
   wm_preview_aria:       'Watermerkvoorbeeld',

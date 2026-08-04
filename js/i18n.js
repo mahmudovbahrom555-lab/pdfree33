@@ -458,7 +458,7 @@ export const EN = {
   wm_color_red:          'Red',
   wm_color_blue:         'Blue',
   wm_opacity_label:      'Opacity',
-  wm_opacity_hint:       'Lower opacity keeps document text readable under solid parts of the logo.',
+  wm_opacity_hint:       'A lower value here keeps document text readable under solid parts of the logo.',
   wm_size_label:         'Size',
   wm_preview_label:      'Preview',
   wm_preview_aria:       'Watermark preview',
