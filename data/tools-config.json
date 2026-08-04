@@ -1055,7 +1055,7 @@
         "ru": "Защитить",
         "ja": "保護",
         "it": "Proteggi",
-        "ko": "암호 설정",
+        "ko": "보호",
         "nl": "Beveiligen",
         "pl": "Zabezpiecz",
         "tr": "PDF Koru"
@@ -1103,7 +1103,7 @@
         "ru": "Защитить PDF",
         "ja": "PDFを保護",
         "it": "Proteggi PDF",
-        "ko": "PDF 암호 설정",
+        "ko": "PDF 보호",
         "nl": "PDF beveiligen",
         "pl": "Zabezpiecz PDF",
         "tr": "PDF Koru"
