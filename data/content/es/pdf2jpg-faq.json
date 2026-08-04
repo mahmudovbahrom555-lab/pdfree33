@@ -20,7 +20,7 @@
     "name": "¿Puedo convertir PDF a PNG en lugar de JPG?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sí. PDFree admite salida en JPG y PNG. PNG es sin pérdidas y mejor para documentos con mucho texto o gráficos donde necesita nitidez perfecta al píxel. JPG produce archivos más pequeños y es mejor para páginas con muchas fotos. Seleccione el formato antes de convertir."
+      "text": "Sí. PDFree admite salida en JPG y PNG. PNG es sin pérdidas y mejor para documentos con mucho texto o gráficos donde necesita nitidez perfecta al píxel. JPG produce archivos más pequeños y es mejor para páginas con muchas fotos. Selecciona el formato antes de convertir."
     }
   },
   {
@@ -36,7 +36,7 @@
     "name": "¿Un PDF de 10 páginas producirá 10 archivos JPG separados?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sí. Cada página se convierte en un archivo JPG o PNG. Si su PDF tiene más de una página, todas las imágenes se agrupan en un archivo ZIP para descargar con un solo clic."
+      "text": "Sí. Cada página se convierte en un archivo JPG o PNG. Si tu PDF tiene más de una página, todas las imágenes se agrupan en un archivo ZIP para descargar con un solo clic."
     }
   },
   {
@@ -44,7 +44,7 @@
     "name": "¿Hay un límite de páginas para la conversión?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. No hay límites de número de páginas ni de tamaño de archivo. Los PDFs muy grandes (100+ páginas a 300 DPI) pueden tardar más en procesarse. Para mejores resultados con archivos grandes, cierre otras pestañas del navegador antes de convertir."
+      "text": "No. No hay límites de número de páginas ni de tamaño de archivo. Los PDFs muy grandes (100+ páginas a 300 DPI) pueden tardar más en procesarse. Para mejores resultados con archivos grandes, cierra otras pestañas del navegador antes de convertir."
     }
   },
   {

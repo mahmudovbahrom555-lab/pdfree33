@@ -12,7 +12,7 @@
     "name": "Was ist der Unterschied zwischen PDF/A-2b und PDF/A-2u?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDF/A-2u fügt zu 2b eine Anforderung hinzu: Jede Schriftart muss eine verifizierte Unicode-Zuordnung haben, damit der Text durchsuchbar und kopierbar bleibt, nicht nur visuell korrekt. PDFree prüft dies automatisch und zielt auf 2u, sobald Ihre Schriftarten dies zulassen, sonst auf 2b — Sie müssen nicht wählen."
+      "text": "PDF/A-2u fügt zu 2b eine Anforderung hinzu: Jede Schriftart muss eine verifizierte Unicode-Zuordnung haben, damit der Text durchsuchbar und kopierbar bleibt, nicht nur visuell korrekt. PDFree prüft dies automatisch und zielt auf 2u, sobald deine Schriftarten dies zulassen, sonst auf 2b — du musst nicht wählen."
     }
   },
   {
@@ -28,7 +28,7 @@
     "name": "Kann PDFree ein PDF mit fehlenden Schriftarten reparieren?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Manchmal, als ausdrückliche Option. Sind die fehlenden Schriftarten Helvetica/Arial, Times oder Courier, kann PDFree einen kostenlosen, metrisch kompatiblen Ersatz anbieten (die Liberation-Schriftfamilie) — aber erst nach Prüfung, dass die genauen Zeichenbreiten Ihres Dokuments übereinstimmen, damit sich der Text nicht heimlich verschiebt. Schlägt die Prüfung auch nur bei einer Schriftart fehl, wird nichts geändert und die Umwandlung bleibt verweigert. Bei allem anderen sagt Ihnen PDFree genau, welche Schriftarten nicht eingebettet sind, damit Sie das Quelldokument stattdessen mit eingebetteten Schriftarten neu exportieren können."
+      "text": "Manchmal, als ausdrückliche Option. Sind die fehlenden Schriftarten Helvetica/Arial, Times oder Courier, kann PDFree einen kostenlosen, metrisch kompatiblen Ersatz anbieten (die Liberation-Schriftfamilie) — aber erst nach Prüfung, dass die genauen Zeichenbreiten deines Dokuments übereinstimmen, damit sich der Text nicht heimlich verschiebt. Schlägt die Prüfung auch nur bei einer Schriftart fehl, wird nichts geändert und die Umwandlung bleibt verweigert. Bei allem anderen sagt dir PDFree genau, welche Schriftarten nicht eingebettet sind, damit du das Quelldokument stattdessen mit eingebetteten Schriftarten neu exportieren kannst."
     }
   },
   {
@@ -36,7 +36,7 @@
     "name": "Entfernt die Umwandlung JavaScript oder interaktive Funktionen aus meinem PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ja, falls vorhanden — PDF/A verbietet eingebettetes JavaScript und automatische Aktionen, einschließlich Berechnungsskripten für Formularfelder (z. B. ein automatisch summiertes Gesamtfeld). PDFree entfernt diese automatisch bei der Umwandlung und zeigt genau an, was entfernt wurde, damit Sie nicht überrascht sind, warum ein Formular nach der Archivierung nicht mehr automatisch rechnet."
+      "text": "Ja, falls vorhanden — PDF/A verbietet eingebettetes JavaScript und automatische Aktionen, einschließlich Berechnungsskripten für Formularfelder (z. B. ein automatisch summiertes Gesamtfeld). PDFree entfernt diese automatisch bei der Umwandlung und zeigt genau an, was entfernt wurde, damit du nicht überrascht bist, warum ein Formular nach der Archivierung nicht mehr automatisch rechnet."
     }
   },
   {
@@ -52,7 +52,7 @@
     "name": "Ist die Konformitätsprüfung ein vollständiger PDF/A-Validator wie veraPDF?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nein. Dies ist eine Selbstprüfung der strukturellen Anforderungen, an denen PDFs am häufigsten tatsächlich scheitern — kein Ersatz für einen vollständigen ISO-19005-Validator. Benötigen Sie ein rechtlich zertifiziertes PDF/A für behördliche oder rechtliche Archivierung, verlinkt PDFree direkt zu veraPDF für eine unabhängige, maßgebliche Prüfung nach der Umwandlung."
+      "text": "Nein. Dies ist eine Selbstprüfung der strukturellen Anforderungen, an denen PDFs am häufigsten tatsächlich scheitern — kein Ersatz für einen vollständigen ISO-19005-Validator. Benötigst du ein rechtlich zertifiziertes PDF/A für behördliche oder rechtliche Archivierung, verlinkt PDFree direkt zu veraPDF für eine unabhängige, maßgebliche Prüfung nach der Umwandlung."
     }
   },
   {
@@ -60,7 +60,7 @@
     "name": "Wird mein PDF beim Prüfen oder Umwandeln auf einen Server hochgeladen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nein. Sowohl die Konformitätsprüfung als auch die Umwandlung laufen vollständig in Ihrem Browser über einen dedizierten Web Worker. Ihre Datei wird niemals irgendwohin hochgeladen."
+      "text": "Nein. Sowohl die Konformitätsprüfung als auch die Umwandlung laufen vollständig in deinem Browser über einen dedizierten Web Worker. Deine Datei wird niemals irgendwohin hochgeladen."
     }
   },
   {
@@ -68,7 +68,7 @@
     "name": "Speichert oder protokolliert PDFree meine Dateien nach der Verarbeitung?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nein. PDFree läuft vollständig in Ihrem Browser — es gibt keinen Backend-Server, der Ihre Dateien empfängt. Da nichts hochgeladen wird, kann nichts gespeichert, protokolliert oder aufbewahrt werden. Ihr Dokument existiert nur im Arbeitsspeicher Ihres Browsers für die Dauer der Sitzung und wird beim Schließen des Tabs gelöscht."
+      "text": "Nein. PDFree läuft vollständig in deinem Browser — es gibt keinen Backend-Server, der deine Dateien empfängt. Da nichts hochgeladen wird, kann nichts gespeichert, protokolliert oder aufbewahrt werden. Dein Dokument existiert nur im Arbeitsspeicher deines Browsers für die Dauer der Sitzung und wird beim Schließen des Tabs gelöscht."
     }
   },
   {
@@ -76,7 +76,7 @@
     "name": "Was enthält die umgewandelte PDF/A-Datei tatsächlich?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Die Umwandlung bettet ein standardmäßiges sRGB-ICC-Farbprofil (über ein OutputIntent), ein XMP-Metadatenpaket mit PDF/A-Konformitätserklärung (gespiegelt vom Titel/Autor des Dokuments, damit beide nicht widersprechen können) und eine Dateikennung ein. Sichtbarer Text, Bilder oder Layout Ihres Dokuments werden nicht verändert."
+      "text": "Die Umwandlung bettet ein standardmäßiges sRGB-ICC-Farbprofil (über ein OutputIntent), ein XMP-Metadatenpaket mit PDF/A-Konformitätserklärung (gespiegelt vom Titel/Autor des Dokuments, damit beide nicht widersprechen können) und eine Dateikennung ein. Sichtbarer Text, Bilder oder Layout deines Dokuments werden nicht verändert."
     }
   },
   {

@@ -36,7 +36,7 @@
     "name": "¿Puedo comprimir un PDF protegido con contraseña?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree intenta optimizar los PDFs cifrados cuando es posible, pero los archivos muy protegidos podrían no comprimirse completamente. Para mejores resultados, elimine primero la contraseña usando la herramienta PDFree Protect PDF (que también puede eliminar contraseñas existentes), y luego comprima."
+      "text": "PDFree intenta optimizar los PDFs cifrados cuando es posible, pero los archivos muy protegidos podrían no comprimirse completamente. Para mejores resultados, elimina primero la contraseña usando la herramienta PDFree Protect PDF (que también puede eliminar contraseñas existentes), y luego comprima."
     }
   },
   {
@@ -44,7 +44,7 @@
     "name": "¿La compresión de PDF funciona sin conexión a internet?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sí. PDFree funciona completamente sin conexión como una Progressive Web App una vez que la página ha cargado. No se requiere conexión a internet — todo el procesamiento se ejecuta en su navegador."
+      "text": "Sí. PDFree funciona completamente sin conexión como una Progressive Web App una vez que la página ha cargado. No se requiere conexión a internet — todo el procesamiento se ejecuta en tu navegador."
     }
   },
   {

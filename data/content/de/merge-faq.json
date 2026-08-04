@@ -4,7 +4,7 @@
     "name": "Werden meine Dateien beim Zusammenführen auf einen Server hochgeladen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nein. PDFree führt PDF-Dateien vollständig in Ihrem Browser mit pdf-lib zusammen. Ihre Dateien verlassen Ihr Gerät nie und werden niemals an einen Server gesendet."
+      "text": "Nein. PDFree führt PDF-Dateien vollständig in deinem Browser mit pdf-lib zusammen. Deine Dateien verlassen dein Gerät nie und werden niemals an einen Server gesendet."
     }
   },
   {
@@ -20,7 +20,7 @@
     "name": "Gibt es ein Dateigrößenlimit beim Zusammenführen von PDFs?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Es gibt keine künstlichen Limits oder Bezahlschranken. PDFree verarbeitet Dateien lokal in Ihrem Browser — kein Abonnement erforderlich. Für beste Ergebnisse empfehlen wir, die Gesamtgröße unter 300 MB zu halten; größere Batches können auf speicherarmen Geräten langsamer sein."
+      "text": "Es gibt keine künstlichen Limits oder Bezahlschranken. PDFree verarbeitet Dateien lokal in deinem Browser — kein Abonnement erforderlich. Für beste Ergebnisse empfehlen wir, die Gesamtgröße unter 300 MB zu halten; größere Batches können auf speicherarmen Geräten langsamer sein."
     }
   },
   {

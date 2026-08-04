@@ -4,7 +4,7 @@
     "name": "Werden meine Dateien auf einen Server hochgeladen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nein. PDFree konvertiert PDF-Seiten vollständig in Ihrem Browser mit PDF.js (Mozillas Open-Source-PDF-Renderer) in Bilder. Nichts wird auf einen Server hochgeladen."
+      "text": "Nein. PDFree konvertiert PDF-Seiten vollständig in deinem Browser mit PDF.js (Mozillas Open-Source-PDF-Renderer) in Bilder. Nichts wird auf einen Server hochgeladen."
     }
   },
   {
@@ -20,7 +20,7 @@
     "name": "Kann ich PDF statt in JPG in PNG konvertieren?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ja. PDFree unterstützt sowohl JPG- als auch PNG-Ausgabe. PNG ist verlustfrei und besser für textlastige Dokumente oder Diagramme, bei denen Sie pixelgenaue Schärfe benötigen. JPG erzeugt kleinere Dateien und eignet sich besser für bildreiche Seiten. Wählen Sie das Format vor der Konvertierung aus."
+      "text": "Ja. PDFree unterstützt sowohl JPG- als auch PNG-Ausgabe. PNG ist verlustfrei und besser für textlastige Dokumente oder Diagramme, bei denen du pixelgenaue Schärfe benötigst. JPG erzeugt kleinere Dateien und eignet sich besser für bildreiche Seiten. Wähle das Format vor der Konvertierung aus."
     }
   },
   {
@@ -36,7 +36,7 @@
     "name": "Erzeugt ein 10-seitiges PDF 10 separate JPG-Dateien?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ja. Jede Seite wird zu einer JPG- oder PNG-Datei. Wenn Ihr PDF mehr als eine Seite hat, werden alle Bilder für den Download in einem ZIP-Archiv gebündelt."
+      "text": "Ja. Jede Seite wird zu einer JPG- oder PNG-Datei. Wenn dein PDF mehr als eine Seite hat, werden alle Bilder für den Download in einem ZIP-Archiv gebündelt."
     }
   },
   {
@@ -44,7 +44,7 @@
     "name": "Gibt es ein Seitenlimit bei der Konvertierung?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nein. Es gibt keine Seitenanzahl- oder Dateigrößenlimits. Sehr große PDFs (100+ Seiten bei 300 DPI) können länger dauern. Schließen Sie bei großen Dateien für beste Ergebnisse andere Browser-Tabs, bevor Sie konvertieren."
+      "text": "Nein. Es gibt keine Seitenanzahl- oder Dateigrößenlimits. Sehr große PDFs (100+ Seiten bei 300 DPI) können länger dauern. Schließe bei großen Dateien für beste Ergebnisse andere Browser-Tabs, bevor du konvertierst."
     }
   },
   {

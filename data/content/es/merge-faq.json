@@ -4,7 +4,7 @@
     "name": "¿Se suben mis archivos a un servidor al fusionarlos?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. PDFree fusiona archivos PDF completamente en su navegador usando pdf-lib. Sus archivos nunca salen de su dispositivo y nunca se envían a ningún servidor."
+      "text": "No. PDFree fusiona archivos PDF completamente en tu navegador usando pdf-lib. Tus archivos nunca salen de tu dispositivo y nunca se envían a ningún servidor."
     }
   },
   {
@@ -20,7 +20,7 @@
     "name": "¿Hay un límite de tamaño de archivo para fusionar PDFs?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No hay límites artificiales ni muros de pago. PDFree procesa los archivos localmente en su navegador — sin suscripción. Para mejor rendimiento, recomendamos mantener el total por debajo de 300 MB; lotes más grandes pueden ser más lentos en dispositivos con poca memoria."
+      "text": "No hay límites artificiales ni muros de pago. PDFree procesa los archivos localmente en tu navegador — sin suscripción. Para mejor rendimiento, recomendamos mantener el total por debajo de 300 MB; lotes más grandes pueden ser más lentos en dispositivos con poca memoria."
     }
   },
   {

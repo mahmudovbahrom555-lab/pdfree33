@@ -36,7 +36,7 @@
     "name": "Kann ich ein passwortgeschütztes PDF komprimieren?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree versucht, verschlüsselte PDFs nach Möglichkeit zu optimieren, aber stark geschützte Dateien werden möglicherweise nicht vollständig komprimiert. Für beste Ergebnisse entfernen Sie zuerst das Passwort mit dem PDFree-Tool \"PDF schützen\" (das auch vorhandene Passwörter entfernen kann), und komprimieren Sie dann."
+      "text": "PDFree versucht, verschlüsselte PDFs nach Möglichkeit zu optimieren, aber stark geschützte Dateien werden möglicherweise nicht vollständig komprimiert. Für beste Ergebnisse entferne zuerst das Passwort mit dem PDFree-Tool \"PDF schützen\" (das auch vorhandene Passwörter entfernen kann), und komprimiere dann."
     }
   },
   {
@@ -44,7 +44,7 @@
     "name": "Funktioniert die PDF-Komprimierung ohne Internetverbindung?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ja. PDFree funktioniert als Progressive Web App vollständig offline, sobald die Seite geladen wurde. Es ist keine Internetverbindung erforderlich — die gesamte Verarbeitung erfolgt in Ihrem Browser."
+      "text": "Ja. PDFree funktioniert als Progressive Web App vollständig offline, sobald die Seite geladen wurde. Es ist keine Internetverbindung erforderlich — die gesamte Verarbeitung erfolgt in deinem Browser."
     }
   },
   {

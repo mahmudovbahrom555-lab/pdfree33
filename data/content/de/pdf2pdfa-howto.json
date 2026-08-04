@@ -1,14 +1,14 @@
 {
   "@context": "https://schema.org",
   "@type": "HowTo",
-  "name": "So prüfen und konvertieren Sie ein PDF zu PDF/A-2b oder PDF/A-2u",
-  "description": "Prüfen Sie, ob ein PDF die PDF/A-Archivanforderungen erfüllt, und konvertieren Sie geeignete Dateien — kostenlos, kein Upload erforderlich.",
+  "name": "So prüfst und konvertierst du ein PDF zu PDF/A-2b oder PDF/A-2u",
+  "description": "Prüfe, ob ein PDF die PDF/A-Archivanforderungen erfüllt, und konvertiere geeignete Dateien — kostenlos, kein Upload erforderlich.",
   "step": [
     {
       "@type": "HowToStep",
       "position": 1,
       "name": "PDF öffnen",
-      "text": "Klicken Sie auf 'Dateien auswählen' oder ziehen Sie Ihr PDF in die Ablagefläche. Die Datei wird vollständig in Ihrem Browser analysiert."
+      "text": "Klicke auf 'Dateien auswählen' oder ziehe dein PDF in die Ablagefläche. Die Datei wird vollständig in deinem Browser analysiert."
     },
     {
       "@type": "HowToStep",
@@ -20,7 +20,7 @@
       "@type": "HowToStep",
       "position": 3,
       "name": "Bei Konformität umwandeln",
-      "text": "Werden keine blockierenden Probleme gefunden, klicken Sie auf 'Umwandeln', um das erforderliche ICC-Farbprofil, XMP-Metadaten und eine Dateikennung hinzuzufügen, gefundene interaktive Aktionen automatisch zu entfernen und die umgewandelte Datei herunterzuladen — PDF/A-2u, wenn Ihre Schriftarten es unterstützen, sonst PDF/A-2b."
+      "text": "Werden keine blockierenden Probleme gefunden, klicke auf 'Umwandeln', um das erforderliche ICC-Farbprofil, XMP-Metadaten und eine Dateikennung hinzuzufügen, gefundene interaktive Aktionen automatisch zu entfernen und die umgewandelte Datei herunterzuladen — PDF/A-2u, wenn deine Schriftarten es unterstützen, sonst PDF/A-2b."
     }
   ]
 }

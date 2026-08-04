@@ -4,7 +4,7 @@
     "name": "Werden meine Dateien beim Teilen eines PDFs hochgeladen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nein. PDFree teilt PDFs vollständig in Ihrem Browser mit JavaScript. Dateien verlassen Ihr Gerät nie. Sie können dies selbst überprüfen: Öffnen Sie die DevTools Ihres Browsers → Registerkarte \"Netzwerk\" — Sie sollten nicht sehen, dass Ihr PDF während der Verarbeitung auf einen Remoteserver hochgeladen wird."
+      "text": "Nein. PDFree teilt PDFs vollständig in deinem Browser mit JavaScript. Dateien verlassen dein Gerät nie. Du kannst dies selbst überprüfen: Öffne die DevTools deines Browsers → Registerkarte \"Netzwerk\" — du solltest nicht sehen, dass dein PDF während der Verarbeitung auf einen Remoteserver hochgeladen wird."
     }
   },
   {
@@ -20,7 +20,7 @@
     "name": "Welches Seitenbereichsformat akzeptiert PDFree?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Geben Sie kommagetrennte Seiten und Bereiche ein: zum Beispiel 1, 3-7, 12, 15-20. Leerzeichen sind optional. Sie können auch einzelne Seitenvorschauen anklicken, um sie visuell auszuwählen oder abzuwählen, oder Schnellauswahl-Schaltflächen für ungerade Seiten, gerade Seiten oder Hälften des Dokuments verwenden."
+      "text": "Gib kommagetrennte Seiten und Bereiche ein: zum Beispiel 1, 3-7, 12, 15-20. Leerzeichen sind optional. Du kannst auch einzelne Seitenvorschauen anklicken, um sie visuell auszuwählen oder abzuwählen, oder Schnellauswahl-Schaltflächen für ungerade Seiten, gerade Seiten oder Hälften des Dokuments verwenden."
     }
   },
   {
@@ -28,7 +28,7 @@
     "name": "Kann ich nur bestimmte Seiten aus einem PDF extrahieren?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ja. Sie können einen benutzerdefinierten Seitenbereich extrahieren (z. B. Seiten 3–7) oder jede Seite in einzelne Dateien aufteilen. Geben Sie den Bereich als kommagetrennte Werte ein wie \"1-5, 8, 11-15\", oder klicken Sie die Seiten visuell im Vorschaubereich an."
+      "text": "Ja. Du kannst einen benutzerdefinierten Seitenbereich extrahieren (z. B. Seiten 3–7) oder jede Seite in einzelne Dateien aufteilen. Gib den Bereich als kommagetrennte Werte ein wie \"1-5, 8, 11-15\", oder klicke die Seiten visuell im Vorschaubereich an."
     }
   },
   {
@@ -36,7 +36,7 @@
     "name": "Wie lösche oder entferne ich eine bestimmte Seite aus einem PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Wählen Sie alle Seiten außer den zu entfernenden aus, und klicken Sie dann auf \"PDF teilen\", um nur die gewünschten Seiten zu extrahieren. Um z. B. Seite 3 aus einem 10-seitigen PDF zu löschen, wählen Sie die Seiten 1–2 und 4–10 aus und extrahieren Sie diese. Das Ergebnis ist Ihr PDF ohne die entfernten Seiten — Originalqualität bleibt erhalten."
+      "text": "Wähle alle Seiten außer den zu entfernenden aus, und klicke dann auf \"PDF teilen\", um nur die gewünschten Seiten zu extrahieren. Um z. B. Seite 3 aus einem 10-seitigen PDF zu löschen, wähle die Seiten 1–2 und 4–10 aus und extrahiere diese. Das Ergebnis ist dein PDF ohne die entfernten Seiten — Originalqualität bleibt erhalten."
     }
   },
   {
@@ -44,7 +44,7 @@
     "name": "Gibt es ein Limit für Seitenanzahl oder Dateigröße?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nein. PDFree hat keine Seiten- oder Dateigrößenlimits. Die Verarbeitung hängt vom verfügbaren Arbeitsspeicher Ihres Geräts ab. PDFs mit Hunderten von Seiten rendern Vorschauen in Sekunden auf einem modernen Computer."
+      "text": "Nein. PDFree hat keine Seiten- oder Dateigrößenlimits. Die Verarbeitung hängt vom verfügbaren Arbeitsspeicher deines Geräts ab. PDFs mit Hunderten von Seiten rendern Vorschauen in Sekunden auf einem modernen Computer."
     }
   },
   {
@@ -52,7 +52,7 @@
     "name": "Kann ich ein PDF offline teilen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ja. PDFree ist eine Progressive Web App und funktioniert vollständig offline, sobald die Seite in Ihrem Browser geladen wurde. Es ist keine Internetverbindung erforderlich, um Seiten zu teilen oder zu extrahieren."
+      "text": "Ja. PDFree ist eine Progressive Web App und funktioniert vollständig offline, sobald die Seite in deinem Browser geladen wurde. Es ist keine Internetverbindung erforderlich, um Seiten zu teilen oder zu extrahieren."
     }
   },
   {
