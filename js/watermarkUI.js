@@ -230,8 +230,6 @@ function _bindEvents() {
 
     const img = new Image();
     img.onload = async () => {
-      _logoImg = img;
-
       if (file.type === 'image/png') {
         // Some PNGs (indexed/palette color, 16-bit depth — common from
         // stock-asset sites) aren't reliably alpha-decoded by pdf-lib's
@@ -241,15 +239,44 @@ function _bindEvents() {
         const canvas = document.createElement('canvas');
         canvas.width  = img.naturalWidth;
         canvas.height = img.naturalHeight;
-        canvas.getContext('2d').drawImage(img, 0, 0);
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0);
+
+        // De-matte: many exported PNGs bake a white background into the
+        // RGB of every semi-transparent (anti-aliased edge) pixel, rather
+        // than storing the "true" color under a straight alpha channel.
+        // On artwork with lots of soft/thin edges (fine linework, hair,
+        // feathers) this shows up as a faint white haze over the whole
+        // logo once composited, even though the alpha channel itself
+        // decodes fine. Reverse the over-white blend per pixel:
+        //   observed = true*a + 255*(1-a)  ⇒  true = (observed - 255*(1-a)) / a
+        const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const d = imgData.data;
+        for (let i = 0; i < d.length; i += 4) {
+          const a = d[i + 3] / 255;
+          if (a > 0 && a < 1) {
+            d[i]     = Math.max(0, Math.min(255, (d[i]     - 255 * (1 - a)) / a));
+            d[i + 1] = Math.max(0, Math.min(255, (d[i + 1] - 255 * (1 - a)) / a));
+            d[i + 2] = Math.max(0, Math.min(255, (d[i + 2] - 255 * (1 - a)) / a));
+          }
+        }
+        ctx.putImageData(imgData, 0, 0);
+
         const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
         _logoBytes = new Uint8Array(await blob.arrayBuffer());
         _logoMime  = 'image/png';
-      } else {
-        _logoBytes = new Uint8Array(await file.arrayBuffer());
-        _logoMime  = file.type;
+
+        // Preview from the de-matted canvas, not the raw upload, so the
+        // preview matches what actually gets embedded in the PDF.
+        const correctedImg = new Image();
+        correctedImg.onload = () => { _logoImg = correctedImg; _render(); };
+        correctedImg.src = URL.createObjectURL(blob);
+        return;
       }
 
+      _logoBytes = new Uint8Array(await file.arrayBuffer());
+      _logoMime  = file.type;
+      _logoImg   = img;
       _render();  // re-render to swap the upload placeholder for the preview thumbnail
     };
     img.src = URL.createObjectURL(file);
