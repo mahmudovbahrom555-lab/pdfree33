@@ -227,13 +227,29 @@ function _bindEvents() {
       showToast(`Logo image is too large — please use one under ${LOGO_MAX_MB} MB`);
       return;
     }
-    const buf = await file.arrayBuffer();
-    _logoBytes = new Uint8Array(buf);
-    _logoMime  = file.type;
 
     const img = new Image();
-    img.onload = () => {
+    img.onload = async () => {
       _logoImg = img;
+
+      if (file.type === 'image/png') {
+        // Some PNGs (indexed/palette color, 16-bit depth — common from
+        // stock-asset sites) aren't reliably alpha-decoded by pdf-lib's
+        // embedPng(), and render as an opaque white block instead of a
+        // transparent logo. Re-encoding through canvas normalizes any
+        // input into standard 8-bit RGBA, which pdf-lib always handles.
+        const canvas = document.createElement('canvas');
+        canvas.width  = img.naturalWidth;
+        canvas.height = img.naturalHeight;
+        canvas.getContext('2d').drawImage(img, 0, 0);
+        const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+        _logoBytes = new Uint8Array(await blob.arrayBuffer());
+        _logoMime  = 'image/png';
+      } else {
+        _logoBytes = new Uint8Array(await file.arrayBuffer());
+        _logoMime  = file.type;
+      }
+
       _render();  // re-render to swap the upload placeholder for the preview thumbnail
     };
     img.src = URL.createObjectURL(file);
