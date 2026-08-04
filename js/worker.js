@@ -9,6 +9,7 @@
 
 importScripts('./vendor/pdf-lib.min.js');
 importScripts('pdfEncrypt.js');
+importScripts('watermarkImage.js');
 
 // Note: pdf-lib-encrypt.min.js (broken fork) is no longer loaded here.
 // Encryption is now handled by our own pdfEncrypt.js which correctly
@@ -1538,6 +1539,15 @@ const WM_COLORS = {
 };
 
 async function handleWatermark(fileBuffer, options) {
+  if (options.kind === 'image') {
+    await pdfPipeline(fileBuffer, { saveValue: 92, saveLabel: 'Saving…' }, async (pdf, pages) => {
+      progress(10, 'Placing logo…');
+      await applyImageWatermark(pdf, pages, options);
+      progress(90, 'Saving…');
+    });
+    return;
+  }
+
   const { rgb, StandardFonts, degrees } = PDFLib;
   const { text = 'CONFIDENTIAL', opacity = 0.3, position = 'center',
           fontSize = 40, color = 'gray' } = options;

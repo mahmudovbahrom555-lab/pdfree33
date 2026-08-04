@@ -36,7 +36,7 @@ export default [
         btoa: 'readonly', atob: 'readonly', module: 'readonly',
         localStorage: 'readonly', sessionStorage: 'readonly', CSS: 'readonly',
         MessageChannel: 'readonly', indexedDB: 'readonly',
-        encryptPDF: 'readonly',
+        encryptPDF: 'readonly', applyImageWatermark: 'readonly',
       },
     },
     rules: {

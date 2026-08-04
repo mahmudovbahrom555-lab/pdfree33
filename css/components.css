@@ -1405,6 +1405,39 @@ button,
   box-shadow: 0 0 0 3px rgba(45,122,79,.1);
 }
 
+/* Logo upload dropzone */
+.wm-logo-drop {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 84px;
+  padding: 14px;
+  border: 1.5px dashed var(--border);
+  border-radius: 10px;
+  background: var(--surface2);
+  cursor: pointer;
+  transition: border-color .15s, background .15s;
+  box-sizing: border-box;
+}
+
+.wm-logo-drop:hover {
+  border-color: var(--green);
+  background: var(--surface);
+}
+
+.wm-logo-drop__hint {
+  font-size: 13px;
+  color: var(--text2);
+  text-align: center;
+}
+
+.wm-logo-drop__preview {
+  max-width: 100%;
+  max-height: 64px;
+  object-fit: contain;
+}
+
 /* Preview canvas wrapper */
 .wm-preview-wrap {
   background: var(--surface2);

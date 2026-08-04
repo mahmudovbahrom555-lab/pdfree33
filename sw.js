@@ -68,6 +68,7 @@ const STATIC_ASSETS = [
   '/js/vendor/pdf.worker.min.js',
   '/js/toolRegistrations.js',
   '/js/pdfEncrypt.js',
+  '/js/watermarkImage.js',
   '/js/watermarkRemoveUI.js',
   '/js/pdf2wordTables.js',
   '/js/pdf2wordBorders.js',

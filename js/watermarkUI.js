@@ -18,16 +18,26 @@ import { id }       from './utils.js';
 import { chipGroup, sliderRow, group } from './uiComponents.js';
 import { loadPdfJs } from './pdf2jpgUI.js';
 import { computeWatermarkLayout } from './watermarkLayout.js';
+import { showToast } from './ui.js';
+
+const LOGO_MAX_MB = 10;
 
 // ── Constants ──────────────────────────────────────────────────
 const PREVIEW_W = 280;  // preview canvas CSS width in px
 
 // ── State ──────────────────────────────────────────────────────
+let _kind     = 'text';         // 'text' | 'image'
 let _text     = 'CONFIDENTIAL';
 let _opacity  = 0.3;
 let _position = 'center';       // 'center' | 'top' | 'bottom' | 'tile'
 let _fontSize = 40;
 let _color    = 'gray';         // 'gray' | 'red' | 'blue'
+
+// Logo (image) mode state
+let _logoBytes   = null;  // Uint8Array — raw file bytes, sent to the worker as-is
+let _logoMime    = null;  // 'image/png' | 'image/jpeg'
+let _logoImg     = null;  // cached HTMLImageElement, for preview drawing only
+let _logoSize    = 0.25;  // logo width as a fraction of page width (0..1)
 
 // Preview state — reset on each initWatermarkOptions() call
 let _pageW       = 595;   // actual page width in PDF pts (A4 default)
@@ -35,7 +45,11 @@ let _pageH       = 842;   // actual page height in PDF pts (A4 default)
 let _bgImageData = null;  // cached first-page render (physical canvas pixels)
 
 export function getWatermarkParams() {
-  return { text: _text, opacity: _opacity, position: _position,
+  if (_kind === 'image') {
+    return { kind: 'image', bytes: _logoBytes, mime: _logoMime,
+              opacity: _opacity, size: _logoSize, position: _position };
+  }
+  return { kind: 'text', text: _text, opacity: _opacity, position: _position,
            fontSize: _fontSize, color: _color };
 }
 
@@ -45,6 +59,10 @@ export function initWatermarkOptions(file) {
   _bgImageData = null;
   _pageW = 595;
   _pageH = 842;
+  _kind = 'text';
+  _logoBytes = null;
+  _logoMime = null;
+  _logoImg = null;
   const container = id('watermarkOptions');
   if (!container) return;
   container.style.display = 'block';
@@ -68,16 +86,33 @@ function _render() {
   if (!container) return;
 
   const pctOpacity = Math.round(_opacity * 100);
+  const pctSize    = Math.round(_logoSize * 100);
   const displayH   = Math.round(PREVIEW_W * _pageH / _pageW);
+  const isImage    = _kind === 'image';
 
   container.innerHTML = `
     <div class="wm-row">
       <div class="wm-controls">
 
-        ${group('Watermark text', `
-          <input type="text" id="wmText" class="wm-text-input"
-                 value="${_escAttr(_text)}" maxlength="60"
-                 placeholder="CONFIDENTIAL" aria-label="Watermark text">`)}
+        ${group('Watermark type', chipGroup('wmKind', [
+          { value: 'text',  label: 'Aa Text' },
+          { value: 'image', label: '🖼 Logo' },
+        ], _kind, 'Watermark type'))}
+
+        ${isImage ? `
+          ${group('Upload logo', `
+            <label class="wm-logo-drop" for="wmLogoInput">
+              <input type="file" id="wmLogoInput" accept="image/png,image/jpeg" style="display:none">
+              ${_logoImg
+                ? `<img src="${_logoImg.src}" alt="Logo preview" class="wm-logo-drop__preview">`
+                : `<span class="wm-logo-drop__hint">Tap to choose a PNG or JPG logo</span>`}
+            </label>`)}
+        ` : `
+          ${group('Watermark text', `
+            <input type="text" id="wmText" class="wm-text-input"
+                   value="${_escAttr(_text)}" maxlength="60"
+                   placeholder="CONFIDENTIAL" aria-label="Watermark text">`)}
+        `}
 
         ${group('Position', chipGroup('wmPos', [
           { value: 'center', label: '✦ Center' },
@@ -86,7 +121,7 @@ function _render() {
           { value: 'tile',   label: '⠿ Tile'   },
         ], _position, 'Position'))}
 
-        ${group('Color', `
+        ${!isImage ? group('Color', `
           <div class="wm-colors" role="group" aria-label="Color">
             ${[
               { v: 'gray', name: 'Gray' },
@@ -100,15 +135,19 @@ function _render() {
                 <span class="wm-color__name">${c.name}</span>
               </label>`).join('')}
           </div>
-        `)}
+        `) : ''}
 
         ${sliderRow({ id: 'wmOpacity', label: 'Opacity', valId: 'wmOpacityVal',
                       valText: pctOpacity + '%', min: 5, max: 80, step: 5,
                       value: pctOpacity, ariaLabel: `Opacity ${pctOpacity}%` })}
 
-        ${sliderRow({ id: 'wmFontSize', label: 'Size', valId: 'wmFontSizeVal',
-                      valText: _fontSize + 'pt', min: 16, max: 80, step: 4,
-                      value: _fontSize, ariaLabel: `Font size ${_fontSize}pt` })}
+        ${isImage
+          ? sliderRow({ id: 'wmLogoSize', label: 'Size', valId: 'wmLogoSizeVal',
+                        valText: pctSize + '%', min: 10, max: 60, step: 5,
+                        value: pctSize, ariaLabel: `Logo size ${pctSize}% of page width` })
+          : sliderRow({ id: 'wmFontSize', label: 'Size', valId: 'wmFontSizeVal',
+                        valText: _fontSize + 'pt', min: 16, max: 80, step: 4,
+                        value: _fontSize, ariaLabel: `Font size ${_fontSize}pt` })}
 
       </div>
 
@@ -137,6 +176,11 @@ function _bindEvents() {
   });
 
   container.addEventListener('change', e => {
+    if (e.target.name === 'wmKind') {
+      _kind = e.target.value;
+      _render();  // controls differ enough between modes to re-render the whole panel
+      return;
+    }
     if (e.target.name === 'wmPos') {
       _position = e.target.value;
       container.querySelectorAll('[data-name="wmPos"]').forEach(el =>
@@ -163,6 +207,36 @@ function _bindEvents() {
     const val = id('wmFontSizeVal');
     if (val) val.textContent = e.target.value + 'pt';
     _schedulePreview();  // debounced — continuous drag
+  });
+
+  id('wmLogoSize')?.addEventListener('input', e => {
+    _logoSize = e.target.value / 100;
+    const val = id('wmLogoSizeVal');
+    if (val) val.textContent = e.target.value + '%';
+    _schedulePreview();  // debounced — continuous drag
+  });
+
+  id('wmLogoInput')?.addEventListener('change', async e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (file.type !== 'image/png' && file.type !== 'image/jpeg') {
+      showToast('Please choose a PNG or JPG image');
+      return;
+    }
+    if (file.size > LOGO_MAX_MB * 1024 * 1024) {
+      showToast(`Logo image is too large — please use one under ${LOGO_MAX_MB} MB`);
+      return;
+    }
+    const buf = await file.arrayBuffer();
+    _logoBytes = new Uint8Array(buf);
+    _logoMime  = file.type;
+
+    const img = new Image();
+    img.onload = () => {
+      _logoImg = img;
+      _render();  // re-render to swap the upload placeholder for the preview thumbnail
+    };
+    img.src = URL.createObjectURL(file);
   });
 }
 
@@ -281,6 +355,11 @@ function _drawPreview() {
 //   canvasX = x * scaleX
 //   canvasY = H - y * scaleY
 function _drawWatermarkLayer(ctx, W, H) {
+  if (_kind === 'image') {
+    _drawLogoLayer(ctx, W, H);
+    return;
+  }
+
   const text     = _text || 'WATERMARK';
   const scaleX   = W / _pageW;
   const scaleY   = H / _pageH;
@@ -305,6 +384,48 @@ function _drawWatermarkLayer(ctx, W, H) {
     ctx.rotate(-angle);  // y-axis flip (PDF y-up → canvas y-down) reverses rotation
     ctx.fillText(text, 0, 0);
     ctx.restore();
+  }
+
+  ctx.restore();
+}
+
+// Logo preview — mirrors the geometry in js/watermarkImage.js (worker-side,
+// PDF-point space) so the preview matches the actual output. Keep the two
+// in sync when changing margins/gap factor.
+const IMG_TILE_GAP_FACTOR = 1.6;
+
+function _drawLogoLayer(ctx, W, H) {
+  if (!_logoImg) return;
+  const scaleX = W / _pageW;
+  const scaleY = H / _pageH;
+  const aspect = _logoImg.naturalHeight / _logoImg.naturalWidth;
+  const w = _pageW * _logoSize;
+  const h = w * aspect;
+
+  ctx.save();
+  ctx.globalAlpha = _opacity;
+
+  const drawAt = (x, y) => {
+    // PDF space is y-up from bottom-left; canvas is y-down from top-left.
+    ctx.drawImage(_logoImg, x * scaleX, H - (y + h) * scaleY, w * scaleX, h * scaleY);
+  };
+
+  if (_position === 'tile') {
+    const gapX = w * IMG_TILE_GAP_FACTOR;
+    const gapY = h * IMG_TILE_GAP_FACTOR;
+    const cols = Math.ceil(_pageW / gapX) + 2;
+    const rows = Math.ceil(_pageH / gapY) + 2;
+    for (let row = -1; row < rows; row++) {
+      for (let col = -1; col < cols; col++) {
+        drawAt(col * gapX + (row % 2) * (gapX / 2), row * gapY);
+      }
+    }
+  } else {
+    const x = (_pageW - w) / 2;
+    const y = _position === 'top'    ? _pageH - h - 40
+            : _position === 'bottom' ? 40
+            :                          (_pageH - h) / 2;
+    drawAt(x, y);
   }
 
   ctx.restore();

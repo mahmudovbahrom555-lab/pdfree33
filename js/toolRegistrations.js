@@ -232,7 +232,9 @@ registerTool('watermark', {
   init:       initWatermarkOptions,
   hide:       hideWatermarkOptions,
   getParams:  getWatermarkParams,
-  validate:   p => !p.text?.trim() ? 'Please enter watermark text' : null,
+  validate:   p => p.kind === 'image'
+    ? (!p.bytes ? 'Please upload a logo image' : null)
+    : (!p.text?.trim() ? 'Please enter watermark text' : null),
 });
 
 registerTool('pagenum', {
