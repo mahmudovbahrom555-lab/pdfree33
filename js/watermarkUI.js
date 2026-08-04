@@ -19,6 +19,7 @@ import { chipGroup, sliderRow, group } from './uiComponents.js';
 import { loadPdfJs } from './pdf2jpgUI.js';
 import { computeWatermarkLayout } from './watermarkLayout.js';
 import { showToast } from './ui.js';
+import { t } from './i18n.js';
 
 const LOGO_MAX_MB = 10;
 
@@ -27,7 +28,7 @@ const PREVIEW_W = 280;  // preview canvas CSS width in px
 
 // ── State ──────────────────────────────────────────────────────
 let _kind     = 'text';         // 'text' | 'image'
-let _text     = 'CONFIDENTIAL';
+let _text     = t('wm_text_placeholder');
 let _opacity  = 0.3;
 let _position = 'center';       // 'center' | 'top' | 'bottom' | 'tile'
 let _fontSize = 40;
@@ -102,44 +103,44 @@ function _render() {
     <div class="wm-row">
       <div class="wm-controls">
 
-        ${group('Watermark type', chipGroup('wmKind', [
-          { value: 'text',  label: 'Aa Text' },
-          { value: 'image', label: '🖼 Logo' },
-        ], _kind, 'Watermark type'))}
+        ${group(t('wm_type_label'), chipGroup('wmKind', [
+          { value: 'text',  label: `Aa ${t('wm_type_text')}` },
+          { value: 'image', label: `🖼 ${t('wm_type_image')}` },
+        ], _kind, t('wm_type_label')))}
 
         ${isImage ? `
-          ${group('Upload logo', `
+          ${group(t('wm_upload_logo'), `
             <label class="wm-logo-drop" for="wmLogoInput">
               <input type="file" id="wmLogoInput" accept="image/png,image/jpeg" style="display:none">
               ${_logoImg
-                ? `<img src="${_logoImg.src}" alt="Logo preview" class="wm-logo-drop__preview">`
+                ? `<img src="${_logoImg.src}" alt="${t('wm_logo_preview_alt')}" class="wm-logo-drop__preview">`
                 : `<span class="wm-logo-drop__icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></span>
-                   <span class="wm-logo-drop__btn">Choose logo</span>
-                   <span class="wm-logo-drop__hint">PNG or JPG</span>`}
+                   <span class="wm-logo-drop__btn">${t('wm_logo_choose')}</span>
+                   <span class="wm-logo-drop__hint">${t('wm_logo_hint')}</span>`}
             </label>`)}
         ` : `
-          ${group('Watermark text', `
+          ${group(t('wm_text_label'), `
             <input type="text" id="wmText" class="wm-text-input"
                    value="${_escAttr(_text)}" maxlength="60"
-                   placeholder="CONFIDENTIAL" aria-label="Watermark text">`)}
+                   placeholder="${_escAttr(t('wm_text_placeholder'))}" aria-label="${_escAttr(t('wm_text_label'))}">`)}
         `}
 
-        ${group('Position', chipGroup('wmPos', [
-          { value: 'center', label: '✦ Center' },
-          { value: 'top',    label: '↑ Top'    },
-          { value: 'bottom', label: '↓ Bottom' },
-          { value: 'tile',   label: '⠿ Tile'   },
-        ], _position, 'Position'))}
+        ${group(t('wm_position_label'), chipGroup('wmPos', [
+          { value: 'center', label: `✦ ${t('wm_pos_center')}` },
+          { value: 'top',    label: `↑ ${t('wm_pos_top')}`    },
+          { value: 'bottom', label: `↓ ${t('wm_pos_bottom')}` },
+          { value: 'tile',   label: `⠿ ${t('wm_pos_tile')}`   },
+        ], _position, t('wm_position_label')))}
 
-        ${!isImage ? group('Color', `
-          <div class="wm-colors" role="group" aria-label="Color">
+        ${!isImage ? group(t('wm_color_label'), `
+          <div class="wm-colors" role="group" aria-label="${_escAttr(t('wm_color_label'))}">
             ${[
-              { v: 'gray', name: 'Gray' },
-              { v: 'red',  name: 'Red'  },
-              { v: 'blue', name: 'Blue' },
+              { v: 'gray', name: t('wm_color_gray') },
+              { v: 'red',  name: t('wm_color_red')  },
+              { v: 'blue', name: t('wm_color_blue') },
             ].map(c => `
               <label class="wm-color wm-color--${c.v}${_color === c.v ? ' wm-color--active' : ''}"
-                     data-value="${c.v}" data-name="wmColor" title="${c.name}">
+                     data-value="${c.v}" data-name="wmColor" title="${_escAttr(c.name)}">
                 <input type="radio" name="wmColor" value="${c.v}"${_color === c.v ? ' checked' : ''}>
                 <span class="wm-color__swatch" aria-hidden="true"></span>
                 <span class="wm-color__name">${c.name}</span>
@@ -148,30 +149,30 @@ function _render() {
         `) : ''}
 
         ${isImage
-          ? sliderRow({ id: 'wmOpacity', label: 'Opacity', valId: 'wmOpacityVal',
+          ? sliderRow({ id: 'wmOpacity', label: t('wm_opacity_label'), valId: 'wmOpacityVal',
                         valText: pctOpacity + '%', min: 5, max: 50, step: 5,
-                        value: pctOpacity, ariaLabel: `Opacity ${pctOpacity}%` })
-          : sliderRow({ id: 'wmOpacity', label: 'Opacity', valId: 'wmOpacityVal',
+                        value: pctOpacity, ariaLabel: t('wm_aria_opacity', { pct: pctOpacity }) })
+          : sliderRow({ id: 'wmOpacity', label: t('wm_opacity_label'), valId: 'wmOpacityVal',
                         valText: pctOpacity + '%', min: 5, max: 80, step: 5,
-                        value: pctOpacity, ariaLabel: `Opacity ${pctOpacity}%` })}
-        ${isImage ? `<p class="wm-hint">Lower opacity keeps document text readable under solid parts of the logo.</p>` : ''}
+                        value: pctOpacity, ariaLabel: t('wm_aria_opacity', { pct: pctOpacity }) })}
+        ${isImage ? `<p class="wm-hint">${t('wm_opacity_hint')}</p>` : ''}
 
         ${isImage
-          ? sliderRow({ id: 'wmLogoSize', label: 'Size', valId: 'wmLogoSizeVal',
+          ? sliderRow({ id: 'wmLogoSize', label: t('wm_size_label'), valId: 'wmLogoSizeVal',
                         valText: pctSize + '%', min: 10, max: 60, step: 5,
-                        value: pctSize, ariaLabel: `Logo size ${pctSize}% of page width` })
-          : sliderRow({ id: 'wmFontSize', label: 'Size', valId: 'wmFontSizeVal',
+                        value: pctSize, ariaLabel: t('wm_aria_logo_size', { pct: pctSize }) })
+          : sliderRow({ id: 'wmFontSize', label: t('wm_size_label'), valId: 'wmFontSizeVal',
                         valText: _fontSize + 'pt', min: 16, max: 80, step: 4,
-                        value: _fontSize, ariaLabel: `Font size ${_fontSize}pt` })}
+                        value: _fontSize, ariaLabel: t('wm_aria_font_size', { size: _fontSize }) })}
 
       </div>
 
       <!-- Live preview -->
-      <div class="wm-preview-wrap" aria-label="Watermark preview" role="img">
+      <div class="wm-preview-wrap" aria-label="${_escAttr(t('wm_preview_aria'))}" role="img">
         <canvas id="wmPreview" class="wm-preview"
                 style="width:${PREVIEW_W}px;height:${displayH}px"
-                aria-label="Preview of watermark placement"></canvas>
-        <div class="wm-preview__label">Preview</div>
+                aria-label="${_escAttr(t('wm_preview_img_aria'))}"></canvas>
+        <div class="wm-preview__label">${t('wm_preview_label')}</div>
       </div>
     </div>
   `;
@@ -239,11 +240,11 @@ function _bindEvents() {
     const file = e.target.files[0];
     if (!file) return;
     if (file.type !== 'image/png' && file.type !== 'image/jpeg') {
-      showToast('Please choose a PNG or JPG image');
+      showToast(t('wm_toast_invalid_type'));
       return;
     }
     if (file.size > LOGO_MAX_MB * 1024 * 1024) {
-      showToast(`Logo image is too large — please use one under ${LOGO_MAX_MB} MB`);
+      showToast(t('wm_toast_too_large', { max: LOGO_MAX_MB }));
       return;
     }
 
@@ -422,7 +423,7 @@ function _drawWatermarkLayer(ctx, W, H) {
     return;
   }
 
-  const text     = _text || 'WATERMARK';
+  const text     = _text || t('wm_default_text');
   const scaleX   = W / _pageW;
   const scaleY   = H / _pageH;
   const colorStr = (COLOR_MAP[_color] || COLOR_MAP.gray) + _opacity + ')';
