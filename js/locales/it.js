@@ -49,7 +49,7 @@ window.PDFREE_LOCALE = {
   dupe_skip_one:   '{n} duplicato ignorato',
   dupe_skip_many:  '{n} duplicati ignorati',
   not_valid_pdf:   '⚠️ "{name}" non è un file PDF valido',
-  aes_help:        '🔒 PDF cifrato con {ver} — impossibile elaborare senza la password del proprietario. {restricted} Soluzione: 1) Apri in un lettore PDF. 2) File → Proprietà → Sicurezza. 3) Metodo di sicurezza: Nessuna sicurezza → Salva. Poi carica di nuovo qui.',
+  aes_help:        '🔒 PDF cifrato con {ver} — impossibile elaborare senza la password del proprietario. {restricted} Usa Sblocca PDF per rimuovere la password (se la conosci), poi carica di nuovo qui il file sbloccato.',
 
   // ui
   btn_processing:   '⏳ Elaborando...',

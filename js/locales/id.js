@@ -50,7 +50,7 @@ window.PDFREE_LOCALE = {
   dupe_skip_one:   '{n} duplikat dilewati',
   dupe_skip_many:  '{n} duplikat dilewati',
   not_valid_pdf:   '⚠️ „{name}" bukan file PDF yang valid',
-  aes_help:        '🔒 PDF terenkripsi {ver} — tidak dapat diproses tanpa kata sandi pemilik. {restricted} Solusi: 1) Buka di Adobe Acrobat. 2) File → Properti → Keamanan. 3) Metode keamanan: Tanpa Keamanan → Simpan. Kemudian unggah ulang di sini.',
+  aes_help:        '🔒 PDF terenkripsi {ver} — tidak dapat diproses tanpa kata sandi pemilik. {restricted} Gunakan Buka Kunci PDF untuk menghapus kata sandi (jika Anda mengetahuinya), lalu unggah ulang file yang sudah dibuka kuncinya di sini.',
 
   // ui
   btn_processing:   '⏳ Sedang diproses...',

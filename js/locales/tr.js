@@ -49,7 +49,7 @@ window.PDFREE_LOCALE = {
   dupe_skip_one:   '{n} kopya atlandı',
   dupe_skip_many:  '{n} kopya atlandı',
   not_valid_pdf:   '⚠️ "{name}" geçerli bir PDF dosyası değil',
-  aes_help:        '🔒 PDF {ver} tarafından şifrelenmiş — sahip parolası olmadan işlenemiyor. {restricted} Çözüm: 1) Adobe Acrobat\'ta açın. 2) Dosya → Özellikler → Güvenlik. 3) Güvenlik Yöntemi: Güvenlik Yok → Kaydet. Ardından buraya tekrar yükleyin.',
+  aes_help:        '🔒 PDF {ver} tarafından şifrelenmiş — sahip parolası olmadan işlenemiyor. {restricted} Şifreyi kaldırmak için (biliyorsanız) PDF Kilidi Aç aracını kullanın, ardından kilidi açılmış dosyayı buraya tekrar yükleyin.',
 
   // ui
   btn_processing:   '⏳ İşleniyor...',

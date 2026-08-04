@@ -49,7 +49,7 @@ window.PDFREE_LOCALE = {
   dupe_skip_one:   '{n} duplicaat overgeslagen',
   dupe_skip_many:  '{n} duplicaten overgeslagen',
   not_valid_pdf:   '⚠️ "{name}" is geen geldig PDF-bestand',
-  aes_help:        '🔒 PDF versleuteld met {ver} — kan niet worden verwerkt zonder het eigenaarswachtwoord. {restricted} Oplossing: 1) Open in een PDF-reader. 2) Bestand → Eigenschappen → Beveiliging. 3) Beveiligingsmethode: Geen beveiliging → Opslaan. Upload daarna opnieuw hier.',
+  aes_help:        '🔒 PDF versleuteld met {ver} — kan niet worden verwerkt zonder het eigenaarswachtwoord. {restricted} Gebruik PDF Ontgrendelen om het wachtwoord te verwijderen (als je het weet), en upload het ontgrendelde bestand daarna hier opnieuw.',
 
   // ui
   btn_processing:   '⏳ Verwerken...',

@@ -49,7 +49,7 @@ window.PDFREE_LOCALE = {
   dupe_skip_one:   '{n} doublon ignoré',
   dupe_skip_many:  '{n} doublons ignorés',
   not_valid_pdf:   '⚠️ « {name} » n\'est pas un fichier PDF valide',
-  aes_help:        "🔒 PDF chiffré {ver} — impossible à traiter sans le mot de passe propriétaire. {restricted} Solution : 1) Ouvrir dans Adobe Acrobat. 2) Fichier → Propriétés → Sécurité. 3) Méthode de sécurité : Aucune sécurité → Enregistrer. Puis re-déposez ici.",
+  aes_help:        "🔒 PDF chiffré {ver} — impossible à traiter sans le mot de passe propriétaire. {restricted} Utilisez Déverrouiller PDF pour supprimer le mot de passe (si vous le connaissez), puis redéposez ici le fichier déverrouillé.",
 
   // ui
   btn_processing:   '⏳ Traitement en cours...',

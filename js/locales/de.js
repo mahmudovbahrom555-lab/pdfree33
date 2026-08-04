@@ -50,7 +50,7 @@ window.PDFREE_LOCALE = {
   dupe_skip_one:   '{n} Duplikat übersprungen',
   dupe_skip_many:  '{n} Duplikate übersprungen',
   not_valid_pdf:   '⚠️ „{name}" ist keine gültige PDF-Datei',
-  aes_help:        '🔒 {ver}-verschlüsseltes PDF — ohne Eigentümer-Passwort nicht verarbeitbar. {restricted} Lösung: 1) In Adobe Acrobat öffnen. 2) Datei → Eigenschaften → Sicherheit. 3) Sicherheitsmethode: Keine Sicherheit → Speichern. Dann hier erneut hochladen.',
+  aes_help:        '🔒 {ver}-verschlüsseltes PDF — ohne Eigentümer-Passwort nicht verarbeitbar. {restricted} Verwende PDF entsperren, um das Passwort zu entfernen (falls du es kennst), und lade die entsperrte Datei dann hier erneut hoch.',
 
   // ui
   btn_processing:   '⏳ Wird verarbeitet...',

@@ -51,7 +51,7 @@ window.PDFREE_LOCALE = {
   dupe_skip_one:   '중복 {n}개 건너뜀',
   dupe_skip_many:  '중복 {n}개 건너뜀',
   not_valid_pdf:   '⚠️ "{name}"은(는) 유효한 PDF 파일이 아닙니다',
-  aes_help:        '🔒 {ver}로 암호화된 PDF — 소유자 비밀번호 없이 처리할 수 없습니다. {restricted} 해결 방법: 1) PDF 리더에서 열기. 2) 파일 → 속성 → 보안. 3) 보안 방법: 보안 없음 → 저장. 그 후 다시 업로드하세요.',
+  aes_help:        "🔒 {ver}로 암호화된 PDF — 소유자 비밀번호 없이 처리할 수 없습니다. {restricted} 비밀번호를 아는 경우 'PDF 잠금 해제'를 사용해 제거한 후, 잠금이 해제된 파일을 여기에 다시 업로드하세요.",
 
   // ui
   btn_processing:   '⏳ 처리 중...',

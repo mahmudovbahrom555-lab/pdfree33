@@ -50,7 +50,7 @@ window.PDFREE_LOCALE = {
   dupe_skip_one:   'Bỏ qua {n} bản sao',
   dupe_skip_many:  'Bỏ qua {n} bản sao',
   not_valid_pdf:   '⚠️ „{name}" không phải file PDF hợp lệ',
-  aes_help:        '🔒 PDF được mã hóa {ver} — không thể xử lý mà không có mật khẩu chủ sở hữu. {restricted} Giải pháp: 1) Mở trong Adobe Acrobat. 2) File → Thuộc tính → Bảo mật. 3) Phương thức bảo mật: Không bảo mật → Lưu. Sau đó tải lại ở đây.',
+  aes_help:        '🔒 PDF được mã hóa {ver} — không thể xử lý mà không có mật khẩu chủ sở hữu. {restricted} Sử dụng Mở Khóa PDF để xóa mật khẩu (nếu bạn biết), sau đó tải lại file đã mở khóa ở đây.',
 
   // ui
   btn_processing:   '⏳ Đang xử lý...',

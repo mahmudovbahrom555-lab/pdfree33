@@ -49,7 +49,7 @@ window.PDFREE_LOCALE = {
   dupe_skip_one:   '{n} duplicado omitido',
   dupe_skip_many:  '{n} duplicados omitidos',
   not_valid_pdf:   '⚠️ "{name}" no es un archivo PDF válido',
-  aes_help:        '🔒 PDF cifrado con {ver} — no se puede procesar sin la contraseña del propietario. {restricted} Solución: 1) Abre en Adobe Acrobat. 2) Archivo → Propiedades → Seguridad. 3) Método de seguridad: Sin seguridad → Guardar. Luego vuelve a subir aquí.',
+  aes_help:        '🔒 PDF cifrado con {ver} — no se puede procesar sin la contraseña del propietario. {restricted} Usa Desbloquear PDF para eliminar la contraseña (si la conoces), luego vuelve a subir aquí el archivo desbloqueado.',
 
   // ui
   btn_processing:   '⏳ Procesando...',

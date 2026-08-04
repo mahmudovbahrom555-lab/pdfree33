@@ -49,7 +49,7 @@ window.PDFREE_LOCALE = {
   dupe_skip_one:   '{n} duplikat pominięty',
   dupe_skip_many:  '{n} duplikaty pominięte',
   not_valid_pdf:   '⚠️ "{name}" nie jest prawidłowym plikiem PDF',
-  aes_help:        '🔒 PDF zaszyfrowany przez {ver} — nie można przetworzyć bez hasła właściciela. {restricted} Rozwiązanie: 1) Otwórz w PDF readerze. 2) Plik → Właściwości → Zabezpieczenia. 3) Metoda zabezpieczeń: Brak zabezpieczeń → Zapisz. Następnie prześlij ponownie tutaj.',
+  aes_help:        '🔒 PDF zaszyfrowany przez {ver} — nie można przetworzyć bez hasła właściciela. {restricted} Użyj narzędzia Odblokuj PDF, aby usunąć hasło (jeśli je znasz), a następnie prześlij tutaj ponownie odblokowany plik.',
 
   // ui
   btn_processing:   '⏳ Przetwarzanie...',
