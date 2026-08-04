@@ -161,10 +161,10 @@
     "mainEntity": [
       {
         "@type": "Question",
-        "name": "¿PDFree sube mis archivos PDF a un servidor?",
+        "name": "¿Qué pasa si mi conexión a internet se corta mientras uno mis PDFs?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "No. PDFree une archivos PDF por completo en tu navegador usando pdf-lib — una librería de JavaScript que se ejecuta localmente. Tus archivos nunca se envían por internet. Puedes comprobarlo abriendo las DevTools de tu navegador (F12), yendo a la pestaña Red y uniendo un archivo — no verás ninguna solicitud con los datos de tu PDF."
+          "text": "Nada malo — la unión sigue funcionando con normalidad. Como todo el procesamiento ocurre en tu navegador con pdf-lib, PDFree no depende de una conexión activa para unir archivos; solo la necesitas para cargar la página por primera vez. Si tu conexión falla a mitad de una unión, el proceso continúa sin interrupciones porque no hay ninguna solicitud de red en curso que pueda cortarse."
         }
       },
       {
@@ -185,18 +185,18 @@
       },
       {
         "@type": "Question",
-        "name": "¿Hay un límite de tamaño de archivo al unir PDFs sin subirlos?",
+        "name": "¿Cuánta memoria RAM necesito para unir archivos PDF grandes sin subirlos?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "No. PDFree no tiene límites de tamaño de archivo porque el procesamiento ocurre localmente — la memoria disponible de tu dispositivo es el único límite. La mayoría de dispositivos modernos manejan PDFs de varios cientos de megabytes sin problemas."
+          "text": "Depende del tamaño total de tus PDFs, pero la mayoría de dispositivos modernos (4 GB de RAM o más) unen sin problemas archivos de varios cientos de megabytes. Como no hay subida ni servidor, el único límite real es la memoria disponible en tu propio dispositivo — no una cuota impuesta por PDFree. Para lotes muy grandes, cerrar otras pestañas del navegador libera RAM adicional."
         }
       },
       {
         "@type": "Question",
-        "name": "¿Puedo unir PDFs sin conexión, sin subirlos?",
+        "name": "¿PDFree guarda algún rastro de mis archivos en la caché del navegador tras unirlos?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Sí. PDFree es una Progressive Web App (PWA). Tras tu primera visita, la app queda en caché en tu navegador y funciona completamente sin conexión. Puedes unir PDFs sin ninguna conexión a internet."
+          "text": "No. Aunque PDFree se instala como Progressive Web App y guarda en caché los archivos de la propia aplicación (HTML, CSS, JS) para funcionar sin conexión, el contenido de tus PDFs nunca se escribe en caché ni en almacenamiento persistente. Los archivos existen únicamente en la memoria RAM del navegador durante la sesión activa y se eliminan por completo al cerrar la pestaña."
         }
       },
       {
@@ -463,8 +463,8 @@
 
         <div style="display:flex;flex-direction:column;gap:20px;">
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
-            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">¿PDFree sube mis archivos PDF a un servidor?</h3>
-            <p style="margin:0;font-size:14px;">No. PDFree une PDFs por completo en tu navegador usando pdf-lib. Tus archivos nunca se envían por internet. Puedes verificarlo abriendo DevTools → Red — verás cero solicitudes con los datos de tu PDF.</p>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">¿Qué pasa si mi conexión a internet se corta mientras uno mis PDFs?</h3>
+            <p style="margin:0;font-size:14px;">Nada malo — la unión sigue funcionando con normalidad. PDFree no depende de una conexión activa para unir archivos, solo la necesitas para cargar la página. Si tu conexión falla a mitad de una unión, el proceso continúa sin interrupciones porque no hay ninguna solicitud de red en curso.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">¿Es seguro para historiales médicos y documentos legales?</h3>
@@ -475,12 +475,12 @@
             <p style="margin:0;font-size:14px;">iLovePDF y SmallPDF suben tus archivos a sus servidores, los procesan allí y los eliminan tras 1-2 horas. PDFree procesa todo localmente — tus archivos nunca viajan a ningún servidor. Tampoco tienes límites de tamaño de archivo ni límites de uso diario.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
-            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">¿Hay un límite de tamaño de archivo?</h3>
-            <p style="margin:0;font-size:14px;">No. PDFree no tiene límites de tamaño porque el procesamiento es local. La memoria RAM de tu dispositivo es la única restricción — los dispositivos modernos manejan PDFs de varios cientos de megabytes sin problemas.</p>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">¿Cuánta memoria RAM necesito para unir archivos PDF grandes sin subirlos?</h3>
+            <p style="margin:0;font-size:14px;">Depende del tamaño total de tus PDFs, pero la mayoría de dispositivos modernos (4 GB de RAM o más) unen sin problemas archivos de varios cientos de megabytes. El único límite real es la memoria de tu dispositivo — no una cuota impuesta por PDFree.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
-            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">¿Puedo unir PDFs completamente sin conexión?</h3>
-            <p style="margin:0;font-size:14px;">Sí. Tras tu primera visita, PDFree queda en caché como PWA y funciona completamente sin conexión — no se necesita internet para el procesamiento.</p>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">¿PDFree guarda algún rastro de mis archivos en la caché del navegador tras unirlos?</h3>
+            <p style="margin:0;font-size:14px;">No. Aunque PDFree se instala como PWA y guarda en caché los archivos de la propia aplicación para funcionar sin conexión, el contenido de tus PDFs nunca se escribe en caché ni en almacenamiento persistente — existe solo en la RAM del navegador durante la sesión.</p>
           </div>
           <div>
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">¿Es PDFree compatible con HIPAA?</h3>

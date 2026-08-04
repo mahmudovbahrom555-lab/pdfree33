@@ -133,8 +133,8 @@
     "mainEntity": [
       {
         "@type": "Question",
-        "name": "Alguma ferramenta do PDFree envia arquivos a um servidor?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Não. Cada ferramenta do PDFree processa arquivos inteiramente no seu navegador usando JavaScript. Seus arquivos nunca saem do seu dispositivo, nunca são enviados a nenhum servidor e nunca são armazenados fora da memória temporária do seu navegador." }
+        "name": "Que tecnologia o PDFree usa para processar PDFs sem enviá-los a um servidor?",
+        "acceptedAnswer": { "@type": "Answer", "text": "O PDFree combina WebAssembly (pdf-lib e PDF.js compilados para WASM) com Web Workers do navegador. O WebAssembly executa o processamento de PDF em velocidade quase nativa diretamente no seu navegador, enquanto os Web Workers mantêm esse trabalho em uma thread separada para que a interface não trave com arquivos grandes." }
       },
       {
         "@type": "Question",
@@ -305,8 +305,8 @@
         <h2 style="font-size:26px;color:var(--text);margin:48px 0 20px;font-weight:700;">Perguntas Frequentes</h2>
         <div style="display:flex;flex-direction:column;gap:20px;">
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
-            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Alguma ferramenta do PDFree envia arquivos a um servidor?</h3>
-            <p style="margin:0;font-size:14px;">Não. Cada ferramenta do PDFree processa arquivos inteiramente no seu navegador. Seus arquivos nunca são enviados a um servidor, armazenados em lugar nenhum, ou registrados de qualquer forma.</p>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Que tecnologia o PDFree usa para processar PDFs sem enviá-los a um servidor?</h3>
+            <p style="margin:0;font-size:14px;">O PDFree combina WebAssembly (pdf-lib e PDF.js compilados para WASM) com Web Workers do navegador. O WebAssembly executa o processamento em velocidade quase nativa direto no seu navegador, enquanto os Web Workers mantêm esse trabalho numa thread separada para a interface não travar com arquivos grandes.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">As ferramentas do PDFree são compatíveis com a LGPD?</h3>

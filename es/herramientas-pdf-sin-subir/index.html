@@ -129,8 +129,8 @@
       },
       {
         "@type": "Question",
-        "name": "¿Se sube realmente mi PDF cuando uso PDFree?",
-        "acceptedAnswer": { "@type": "Answer", "text": "No. Tu PDF nunca se envía a ningún servidor. Cuando sueltas un archivo en PDFree, el navegador lo lee desde tu disco local usando la File API. Todo el procesamiento — unir, comprimir, dividir, convertir — ocurre en tu navegador mediante WebAssembly (pdf-lib y PDF.js). El resultado se descarga directamente desde la memoria a tu dispositivo. Ningún byte de tu archivo toca un servidor." }
+        "name": "¿Qué tecnología usa PDFree para procesar PDFs sin subirlos a un servidor?",
+        "acceptedAnswer": { "@type": "Answer", "text": "PDFree combina WebAssembly (pdf-lib y PDF.js compilados a WASM) con Web Workers del navegador. WebAssembly ejecuta el código de procesamiento de PDF a velocidad casi nativa directamente en tu navegador, mientras que los Web Workers mantienen ese trabajo en un hilo separado para que la interfaz no se congele con archivos grandes. Ninguna de estas tecnologías requiere ni usa un servidor." }
       },
       {
         "@type": "Question",
@@ -139,13 +139,13 @@
       },
       {
         "@type": "Question",
-        "name": "¿PDFree funciona en móvil sin subir archivos?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Sí. PDFree funciona en Safari de iOS, Chrome de Android y todos los navegadores móviles modernos — sin subir nada. El mismo procesamiento basado en WebAssembly funciona en dispositivos móviles. También puedes instalar PDFree como PWA desde la opción \"Añadir a la pantalla de inicio\" de tu navegador, con acceso sin conexión como una app nativa." }
+        "name": "¿Puedo verificar yo mismo que PDFree no sube mis archivos?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Sí. Abre las herramientas de desarrollador de tu navegador (F12 o clic derecho → Inspeccionar), ve a la pestaña Red, y procesa cualquier PDF. No verás ninguna solicitud de red con el contenido de tu archivo — toda la actividad de red se limita a la carga inicial de la página. Es una forma sencilla de comprobar la afirmación en lugar de simplemente confiar en ella." }
       },
       {
         "@type": "Question",
-        "name": "¿Es PDFree realmente gratis, sin límites ocultos?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Sí. PDFree es completamente gratis, sin límites diarios de tareas, sin tope de tamaño de archivo, sin necesidad de cuenta y sin marcas de agua en el resultado. No hay ningún plan de pago que desbloquear — todas las herramientas son gratis para siempre. El proyecto es de código abierto bajo la licencia GNU AGPLv3." }
+        "name": "¿Qué pasa con los metadatos ocultos de mis PDFs al procesarlos localmente?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Se mantienen bajo tu control total. Como el procesamiento ocurre en tu dispositivo, PDFree nunca ve ni transmite metadatos como autor, fecha de creación o software usado — a diferencia de las herramientas en la nube, donde esos metadatos pasan por sus servidores igual que el resto del archivo. Puedes usar la herramienta de metadatos de PDFree para revisar o limpiar esta información sin que salga nunca de tu equipo." }
       }
     ]
   }
@@ -405,20 +405,20 @@
             <p style="margin:0;font-size:14px;">Sí. Tras tu primera visita, PDFree funciona completamente sin conexión. Un Service Worker guarda en caché toda la aplicación — scripts, módulos WebAssembly y fuentes. En cualquier visita posterior, incluso sin internet, todas las herramientas cargan desde la caché y procesan PDFs sin necesitar conexión de red.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
-            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">¿Se sube realmente mi PDF cuando uso PDFree?</h3>
-            <p style="margin:0;font-size:14px;">No. Tu PDF se lee desde tu disco local mediante la File API del navegador y se procesa en la memoria del navegador. Ningún byte de tu archivo se envía por una conexión de red. Puedes comprobarlo tú mismo: abre las DevTools de tu navegador → pestaña Red y observa si aparece alguna solicitud de subida de archivos — no hay ninguna.</p>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">¿Qué tecnología usa PDFree para procesar PDFs sin subirlos a un servidor?</h3>
+            <p style="margin:0;font-size:14px;">PDFree combina WebAssembly (pdf-lib y PDF.js compilados a WASM) con Web Workers del navegador. WebAssembly ejecuta el procesamiento de PDF a velocidad casi nativa directamente en tu navegador, mientras los Web Workers lo mantienen en un hilo separado para que la interfaz no se congele con archivos grandes.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">¿En qué se diferencia esto de las herramientas PDF en la nube?</h3>
             <p style="margin:0;font-size:14px;">Las herramientas en la nube suben tu archivo a sus servidores, lo procesan de forma remota y te devuelven el resultado. Tu documento está temporalmente en su infraestructura. PDFree es lo contrario — el motor de procesamiento vive en tu navegador. Tu archivo nunca sale de tu dispositivo. Esto hace que PDFree sea fundamentalmente más seguro para documentos sensibles y utilizable sin internet tras la primera carga.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
-            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">¿PDFree funciona en móvil sin subir archivos?</h3>
-            <p style="margin:0;font-size:14px;">Sí. PDFree funciona en Safari de iOS, Chrome de Android y todos los navegadores móviles modernos. El procesamiento basado en WebAssembly funciona igual en móvil — sin subir nada, sin servidor. También puedes instalar PDFree como PWA desde el menú de tu navegador para acceso rápido sin conexión desde tu pantalla de inicio.</p>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">¿Puedo verificar yo mismo que PDFree no sube mis archivos?</h3>
+            <p style="margin:0;font-size:14px;">Sí. Abre las herramientas de desarrollador de tu navegador (F12 → pestaña Red) y procesa cualquier PDF. No verás ninguna solicitud con el contenido de tu archivo — toda la actividad de red se limita a la carga inicial de la página. Es una forma sencilla de comprobarlo en lugar de simplemente confiar en ello.</p>
           </div>
           <div>
-            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">¿Es realmente gratis, sin trampas ocultas?</h3>
-            <p style="margin:0;font-size:14px;">Sí. PDFree no tiene plan de pago, sin límites diarios, sin tope de tamaño de archivo, sin marcas de agua en el resultado y sin necesidad de cuenta. Todas las herramientas son gratis para siempre. El proyecto es de código abierto bajo la licencia GNU AGPLv3 — puedes revisar el código fuente para verificar exactamente cómo funciona.</p>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">¿Qué pasa con los metadatos ocultos de mis PDFs al procesarlos localmente?</h3>
+            <p style="margin:0;font-size:14px;">Se mantienen bajo tu control total. Como el procesamiento ocurre en tu dispositivo, PDFree nunca ve ni transmite metadatos como autor o fecha de creación — a diferencia de las herramientas en la nube, donde esos datos pasan por sus servidores igual que el resto del archivo.</p>
           </div>
         </div>
 
