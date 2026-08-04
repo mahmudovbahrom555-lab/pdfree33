@@ -1,7 +1,7 @@
 [
   {
     "@type": "Question",
-    "name": "Thêm watermark có tải file lên server không?",
+    "name": "Thêm hình mờ có tải file lên server không?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Không. Tất cả xử lý diễn ra trong trình duyệt bằng pdf-lib. File không bao giờ được gửi đến bất kỳ server nào."
@@ -17,7 +17,7 @@
   },
   {
     "@type": "Question",
-    "name": "Có thể tùy chỉnh những gì trong watermark?",
+    "name": "Có thể tùy chỉnh những gì trong hình mờ?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Bạn có thể điều chỉnh văn bản, độ mờ, màu sắc, cỡ chữ, góc xoay và kiểu (chéo đơn lẻ hoặc lặp lại toàn trang)."
@@ -25,31 +25,31 @@
   },
   {
     "@type": "Question",
-    "name": "Watermark có thể xóa sau khi thêm không?",
+    "name": "Hình Mờ có thể xóa sau khi thêm không?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Watermark của PDFree được nhúng vào nội dung trang. Hãy lưu bản sao gốc không có watermark trước khi áp dụng."
+      "text": "Hình Mờ của PDFree được nhúng vào nội dung trang. Hãy lưu bản sao gốc không có hình mờ trước khi áp dụng."
     }
   },
   {
     "@type": "Question",
-    "name": "Có giới hạn số trang có thể thêm watermark không?",
+    "name": "Có giới hạn số trang có thể thêm hình mờ không?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Không có. Thêm watermark vào PDF với bất kỳ số trang nào — miễn phí không giới hạn."
+      "text": "Không có. Thêm hình mờ vào PDF với bất kỳ số trang nào — miễn phí không giới hạn."
     }
   },
   {
     "@type": "Question",
-    "name": "Có thể thêm watermark vào PDF bảo vệ bằng mật khẩu không?",
+    "name": "Có thể thêm hình mờ vào PDF bảo vệ bằng mật khẩu không?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Không. PDF được mã hóa phải được mở khóa trước khi có thể thêm watermark."
+      "text": "Không. PDF được mã hóa phải được mở khóa trước khi có thể thêm hình mờ."
     }
   },
   {
     "@type": "Question",
-    "name": "Có mất phí khi dùng tính năng watermark PDF không?",
+    "name": "Có mất phí khi dùng tính năng hình mờ PDF không?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Không. PDFree miễn phí mãi mãi — không có đăng ký, không giới hạn hàng ngày, không giới hạn kích thước file."
@@ -57,10 +57,10 @@
   },
   {
     "@type": "Question",
-    "name": "Có thể dùng hình ảnh làm watermark không?",
+    "name": "Có thể dùng hình ảnh làm hình mờ không?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Hiện tại PDFree hỗ trợ watermark văn bản. Để watermark dạng hình ảnh, cần dùng công cụ khác."
+      "text": "Hiện tại PDFree hỗ trợ hình mờ văn bản. Để hình mờ dạng hình ảnh, cần dùng công cụ khác."
     }
   }
 ]
