@@ -63,13 +63,13 @@
         <p style="font-size:14px;margin:0 0 32px;">PDFreeは仕組みが異なります。記入処理はすべて、実績のあるオープンソースライブラリ<strong>pdf-lib</strong>と<strong>pdf.js</strong>を使ってブラウザ内で完結します。PDFファイルも入力内容も、端末の外に出ることはありません。PDFree自身のサーバーを含め、どのサーバーにもデータは送信されません。</p>
 
         <!-- 実際のフィールド検出 -->
-        <p style="font-size:14px;margin:0 0 16px;">もう一つ同じくらい重要な違いがあります。多くのオンラインPDFツールは、あなたのフォームを画像として扱います。フォームを平坦化し、フィールドがあると思われる位置にテキストボックスや署名欄を手動で描かせます。PDFreeはフォームの本来の、インタラクティブな構造を保持します — PDFにAcroFormフィールドがあれば、PDFreeはそれを直接検出して表示するので、実際のテキストフィールドに入力し、実際のチェックボックスにチェックを入れ、Tabキーでフィールド間を移動できます。フォームが本来設計された通りに動作します。</p>
+        <p style="font-size:14px;margin:0 0 16px;">もう一つ同じくらい重要な違いがあります。多くのオンラインPDFツールは、あなたのフォームを画像として扱います。フォームをフラット化し、フィールドがあると思われる位置にテキストボックスや署名欄を手動で描かせます。PDFreeはフォームの本来の、インタラクティブな構造を保持します — PDFにAcroFormフィールドがあれば、PDFreeはそれを直接検出して表示するので、実際のテキストフィールドに入力し、実際のチェックボックスにチェックを入れ、Tabキーでフィールド間を移動できます。フォームが本来設計された通りに動作します。</p>
 
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:0 0 32px;">
           <div style="border:1.5px solid var(--border);border-radius:10px;padding:18px;background:var(--surface);">
             <div style="font-weight:700;color:var(--text2);margin-bottom:12px;font-size:14px;">多くのオンラインPDFツール</div>
             <ul style="margin:0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:8px;font-size:13px;color:var(--text2);">
-              <li>⬜ フォームを画像に平坦化</li>
+              <li>⬜ フォームを画像にフラット化</li>
               <li>⬜ テキストボックスを手動で描画、位置は推測</li>
               <li>⬜ 署名欄を手動で描画</li>
               <li>⬜ Tabキーでのフィールド移動なし</li>

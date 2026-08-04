@@ -1,10 +1,10 @@
 [
   {
     "@type": "Question",
-    "name": "O que o nivelamento de um PDF realmente faz?",
+    "name": "O que o achatamento de um PDF realmente faz?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "O nivelamento mescla todas as camadas interativas — campos de formulário, anotações, assinaturas digitais e sobreposições — no conteúdo estático da página. O resultado é um PDF plano, não interativo, com aparência idêntica ao original, mas que não pode ser editado."
+      "text": "O achatamento mescla todas as camadas interativas — campos de formulário, anotações, assinaturas digitais e sobreposições — no conteúdo estático da página. O resultado é um PDF plano, não interativo, com aparência idêntica ao original, mas que não pode ser editado."
     }
   },
   {
@@ -17,18 +17,18 @@
   },
   {
     "@type": "Question",
-    "name": "O nivelamento pode ser desfeito?",
+    "name": "O achatamento pode ser desfeito?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Não. O nivelamento é irreversível — os campos de formulário originais são permanentemente substituídos por conteúdo visual estático. Sempre mantenha um backup do seu PDF preenchido antes de nivelá-lo."
+      "text": "Não. O achatamento é irreversível — os campos de formulário originais são permanentemente substituídos por conteúdo visual estático. Sempre mantenha um backup do seu PDF preenchido antes de achatá-lo."
     }
   },
   {
     "@type": "Question",
-    "name": "O nivelamento remove as assinaturas digitais?",
+    "name": "O achatamento remove as assinaturas digitais?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Assinaturas desenhadas com a ferramenta Preencher PDF (imagens do painel de assinatura) são niveladas na página. Assinaturas digitais criptográficas de provedores certificados de assinatura eletrônica podem ser tratadas de forma diferente — a aparência visual é preservada, mas o certificado criptográfico pode não ser mais válido após o nivelamento."
+      "text": "Assinaturas desenhadas com a ferramenta Preencher PDF (imagens do painel de assinatura) são achatadas na página. Assinaturas digitais criptográficas de provedores certificados de assinatura eletrônica podem ser tratadas de forma diferente — a aparência visual é preservada, mas o certificado criptográfico pode não ser mais válido após o achatamento."
     }
   },
   {
@@ -41,34 +41,34 @@
   },
   {
     "@type": "Question",
-    "name": "Por que nivelar em vez de simplesmente salvar o PDF preenchido?",
+    "name": "Por que achatar em vez de simplesmente salvar o PDF preenchido?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Um PDF preenchido salvo ainda contém campos editáveis — um destinatário poderia apagar seus valores e preenchê-los novamente. O nivelamento bloqueia permanentemente o conteúdo na página, impede a edição e garante renderização consistente em todos os leitores de PDF."
+      "text": "Um PDF preenchido salvo ainda contém campos editáveis — um destinatário poderia apagar seus valores e preenchê-los novamente. O achatamento bloqueia permanentemente o conteúdo na página, impede a edição e garante renderização consistente em todos os leitores de PDF."
     }
   },
   {
     "@type": "Question",
-    "name": "Como nivelar um PDF diretamente no meu navegador?",
+    "name": "Como achatar um PDF diretamente no meu navegador?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "O PDFree Nivelar funciona em qualquer navegador moderno — Chrome, Safari, Firefox, Edge — no Mac, Windows e Linux. Nenhuma instalação é necessária. Abra a ferramenta, carregue seu PDF, clique em «Nivelar PDF» e o resultado é baixado diretamente para o seu dispositivo. Nenhum software de desktop é necessário."
+      "text": "O PDFree Achatar funciona em qualquer navegador moderno — Chrome, Safari, Firefox, Edge — no Mac, Windows e Linux. Nenhuma instalação é necessária. Abra a ferramenta, carregue seu PDF, clique em «Achatar PDF» e o resultado é baixado diretamente para o seu dispositivo. Nenhum software de desktop é necessário."
     }
   },
   {
     "@type": "Question",
-    "name": "Nivelar um PDF reduz o tamanho do arquivo?",
+    "name": "Achatar um PDF reduz o tamanho do arquivo?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Frequentemente, um pouco. Nivelar remove os dados dos widgets interativos e o JavaScript, reduzindo o tamanho em formulários com muitos campos. Imagens e fontes incorporadas não são afetadas. Para uma redução significativa, processe o resultado nivelado com um compressor de PDF."
+      "text": "Frequentemente, um pouco. Achatar remove os dados dos widgets interativos e o JavaScript, reduzindo o tamanho em formulários com muitos campos. Imagens e fontes incorporadas não são afetadas. Para uma redução significativa, processe o resultado achatado com um compressor de PDF."
     }
   },
   {
     "@type": "Question",
-    "name": "Qual é a diferença entre nivelar e proteger um PDF com senha?",
+    "name": "Qual é a diferença entre achatar e proteger um PDF com senha?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Eles resolvem problemas diferentes. Nivelar remove completamente a estrutura de formulário interativo — nenhum campo existe para ser editado, independentemente das permissões. A proteção por senha restringe o acesso ou os direitos de edição, mas deixa os campos intactos. Para máxima segurança, nivele primeiro e depois adicione uma senha."
+      "text": "Eles resolvem problemas diferentes. Achatar remove completamente a estrutura de formulário interativo — nenhum campo existe para ser editado, independentemente das permissões. A proteção por senha restringe o acesso ou os direitos de edição, mas deixa os campos intactos. Para máxima segurança, achate primeiro e depois adicione uma senha."
     }
   },
   {
