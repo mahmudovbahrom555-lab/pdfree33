@@ -1798,7 +1798,7 @@
         "ko": "메타데이터 편집",
         "nl": "Metadata Bewerken",
         "pl": "Edytuj Metadane",
-        "tr": "PDF Meta Verisi"
+        "tr": "PDF Meta Verisini Düzenle"
       },
       "cardDescs": {
         "en": "View and edit title, author, keywords",
@@ -1830,7 +1830,7 @@
         "ko": "PDF 메타데이터",
         "nl": "PDF Metadata",
         "pl": "Metadane PDF",
-        "tr": "PDF Meta Verisi"
+        "tr": "PDF Meta Verisini Düzenle"
       },
       "metaDescs": {
         "en": "View and edit PDF metadata — title, author, subject, keywords. Works offline in your browser, never uploaded. Remove personal info before sharing. Free.",
