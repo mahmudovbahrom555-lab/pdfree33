@@ -1408,27 +1408,47 @@ button,
 /* Logo upload dropzone */
 .wm-logo-drop {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 4px;
   width: 100%;
-  min-height: 84px;
-  padding: 14px;
-  border: 1.5px dashed var(--border);
+  min-height: 96px;
+  padding: 16px;
+  border: 2px dashed var(--green);
   border-radius: 10px;
-  background: var(--surface2);
+  background: var(--green-light);
   cursor: pointer;
-  transition: border-color .15s, background .15s;
+  transition: border-color .15s, background .15s, transform .15s;
   box-sizing: border-box;
 }
 
 .wm-logo-drop:hover {
-  border-color: var(--green);
+  border-color: #235f3c;
   background: var(--surface);
+  transform: translateY(-1px);
 }
 
-.wm-logo-drop__hint {
+.wm-logo-drop__icon {
+  color: var(--green);
+  margin-bottom: 4px;
+}
+
+.wm-logo-drop__btn {
+  display: inline-block;
+  background: var(--green);
+  color: white;
+  padding: 8px 22px;
+  border-radius: 20px;
   font-size: 13px;
-  color: var(--text2);
+  font-weight: 500;
+}
+
+.wm-logo-drop:hover .wm-logo-drop__btn { background: #235f3c; }
+
+.wm-logo-drop__hint {
+  font-size: 12px;
+  color: var(--text3);
   text-align: center;
 }
 
