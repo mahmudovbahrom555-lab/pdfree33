@@ -205,6 +205,7 @@ window.PDFREE_LOCALE = {
   err_encrypted_pdf:   'PDF này có cấu trúc bất thường hoặc bị hỏng (điều này cũng có thể xảy ra với các tệp được bảo vệ bằng mật khẩu). Hãy thử lưu lại tệp bằng một ứng dụng PDF khác, hoặc xóa mật khẩu, rồi thử lại.',
   err_cdn_lib_unavailable: 'Không thể tải thư viện {lib} — vui lòng kiểm tra kết nối internet',
   err_compress_timeout: '⏱ Nén bị hủy — file chứa quá nhiều ảnh cho trình duyệt. Thử preset Nhẹ hoặc tách PDF trước.',
+  err_merge_timeout:    '⏱ Hợp nhất bị hủy — trình duyệt có thể đã hết bộ nhớ. Hãy thử hợp nhất ít file hơn hoặc file nhỏ hơn cùng lúc.',
   warn_compress_large:  '⚠️ File lớn ({size}) — nén có thể mất 1–2 phút. Trình duyệt xử lý tất cả cục bộ trong bộ nhớ.',
   compress_scan_skipped: 'File lớn — bỏ qua quét sơ bộ để tiết kiệm bộ nhớ',
 

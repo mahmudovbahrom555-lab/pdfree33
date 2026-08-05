@@ -204,6 +204,7 @@ window.PDFREE_LOCALE = {
   err_encrypted_pdf:    'Bu PDF alışılmadık veya bozuk bir yapıya sahip (bu durum parola korumalı dosyalarda da olabilir). Başka bir PDF uygulamasından yeniden kaydetmeyi veya parolayı kaldırmayı deneyip tekrar deneyin.',
   err_cdn_lib_unavailable: '{lib} kütüphanesi kullanılamıyor — internet bağlantınızı kontrol edin',
   err_compress_timeout: '⏱ Sıkıştırma iptal edildi — dosyanın çok fazla resmi var, tarayıcı işleyemiyor. Hafif ayarı deneyin veya PDF\'yi önce bölün.',
+  err_merge_timeout:    '⏱ Birleştirme iptal edildi — tarayıcının belleği yetersiz kalmış olabilir. Daha az veya daha küçük dosyaları birleştirmeyi deneyin.',
   warn_compress_large:  '⚠️ Büyük dosya ({size}) — sıkıştırma 1–2 dakika sürebilir. Tarayıcı her şeyi hafızada yerel olarak işler.',
   compress_scan_skipped: 'Büyük dosya — hafızadan tasarruf etmek için ön tarama atlandı',
 

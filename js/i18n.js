@@ -193,6 +193,7 @@ export const EN = {
   err_encrypted_pdf:    'This PDF has an unusual or corrupted structure (this can also happen with password-protected files). Try re-saving it from another PDF app, or removing any password, then try again.',
   err_cdn_lib_unavailable: '{lib} library unavailable — check your internet connection',
   err_compress_timeout: '⏱ Compression timed out — the file may be too image-heavy for the browser. Try the Light preset or split the PDF into smaller parts first.',
+  err_merge_timeout:    '⏱ Merge timed out — the browser may have run out of memory. Try merging fewer files, or smaller ones, at a time.',
   warn_compress_large:  '⚠️ Large file ({size}) — compression may take 1–2 minutes. The browser processes everything locally in RAM.',
   compress_scan_skipped: 'Large file — pre-scan skipped to save memory',
 

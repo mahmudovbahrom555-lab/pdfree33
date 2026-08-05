@@ -129,7 +129,15 @@ export function cancelCompressScan() {
   if (!_scanResolve) return;
   _scanResolve(null);
   _scanResolve      = null;
-  _worker.onmessage = null;
+  // The scan's postMessage is still executing inside the worker — a single
+  // in-flight message can't be aborted, only ignored client-side. Left alone,
+  // it keeps parsing the PDF in the background, competing for CPU/RAM with
+  // whatever runs next (e.g. the real compress/merge job the user just
+  // triggered). On memory-constrained mobile devices that contention can
+  // silently crash or stall the worker mid-job. Recreating it guarantees
+  // a clean slate for the job about to start.
+  _worker.terminate();
+  _worker = _createWorker();
 }
 
 // ── Background merge page-count scan ─────────────────────────
@@ -164,7 +172,15 @@ export function cancelMergeScan() {
   if (!_mergeScanResolve) return;
   _mergeScanResolve([]);
   _mergeScanResolve  = null;
-  _worker.onmessage  = null;
+  // Same reasoning as cancelCompressScan(): the in-flight 'merge-scan-batch'
+  // message can't be aborted, only ignored — without recreating the worker it
+  // keeps reading/parsing every queued file in the background right as the
+  // real 'merge' job is about to be posted to the SAME worker, doubling
+  // memory/CPU load at the worst possible moment. This is the likely cause
+  // of "sometimes it just doesn't merge" reports on lower-memory phones —
+  // clicking Merge before the background page-count scan has finished.
+  _worker.terminate();
+  _worker = _createWorker();
 }
 
 // ── Cancel ────────────────────────────────────────────────────
@@ -313,6 +329,32 @@ async function _runMerge(filesSnapshot, { removeWatermarks = false, outputFilena
   ));
   setProgress(10, t('prog_merging'));
 
+  // Watchdog: mirrors _runCompress's — browsers don't reliably fire onerror
+  // when a worker is OOM-killed, which is exactly the failure mode
+  // cancelMergeScan() above guards against (a stale background page-count
+  // scan competing for memory with this job on a low-RAM phone). Without
+  // this, a silently-dead worker leaves the UI stuck in "processing"
+  // forever with no error and no merged file — indistinguishable from
+  // "nothing happened" from the user's side.
+  const WATCHDOG_MS = 45_000;
+  let watchdog = setTimeout(() => {
+    if (!isProcessing) return;   // already cancelled — don't fire phantom error
+    isProcessing = false;
+    setFilesLocked(false);
+    hideCancelBtn();
+    _handleError('merge', t('err_merge_timeout'), 'timeout');
+  }, WATCHDOG_MS);
+  const _resetWatchdog = () => {
+    clearTimeout(watchdog);
+    watchdog = setTimeout(() => {
+      if (!isProcessing) return;
+      isProcessing = false;
+      setFilesLocked(false);
+      hideCancelBtn();
+      _handleError('merge', t('err_merge_timeout'), 'timeout');
+    }, WATCHDOG_MS);
+  };
+
   // ⚠️  TRANSFERABLE: all buffers in `buffers` are transferred to the worker.
   //     They are DETACHED here immediately after postMessage — do not read them.
   //     Filenames are passed separately (plain strings, not Transferable) so the
@@ -323,8 +365,10 @@ async function _runMerge(filesSnapshot, { removeWatermarks = false, outputFilena
   _worker.onmessage = (e) => {
     const data = e.data;
     if (data.type === 'progress') {
+      _resetWatchdog();
       setProgress(data.value, data.label);
     } else if (data.type === 'done') {
+      clearTimeout(watchdog);
       if (!(data.result instanceof ArrayBuffer)) {
         _handleError('merge', 'Unexpected result type from worker'); return;
       }
@@ -367,6 +411,7 @@ async function _runMerge(filesSnapshot, { removeWatermarks = false, outputFilena
         );
       }
     } else if (data.type === 'error') {
+      clearTimeout(watchdog);
       isProcessing = false;
       setFilesLocked(false);
       hideCancelBtn();
@@ -374,6 +419,7 @@ async function _runMerge(filesSnapshot, { removeWatermarks = false, outputFilena
     }
   };
   _worker.onerror = (e) => {
+    clearTimeout(watchdog);
     isProcessing = false;
     setFilesLocked(false);
     hideCancelBtn();

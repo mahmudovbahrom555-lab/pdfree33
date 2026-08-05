@@ -205,6 +205,7 @@ window.PDFREE_LOCALE = {
   err_encrypted_pdf:   'PDF ini memiliki struktur yang tidak biasa atau rusak (ini juga bisa terjadi pada file yang dilindungi kata sandi). Coba simpan ulang dari aplikasi PDF lain, atau hapus kata sandinya, lalu coba lagi.',
   err_cdn_lib_unavailable: 'Pustaka {lib} tidak tersedia — periksa koneksi internet Anda',
   err_compress_timeout: '⏱ Kompresi dibatalkan — file mengandung terlalu banyak gambar untuk browser. Coba preset Ringan atau pisahkan PDF terlebih dahulu.',
+  err_merge_timeout:    '⏱ Penggabungan dibatalkan — browser mungkin kehabisan memori. Coba gabungkan lebih sedikit file, atau file yang lebih kecil, sekaligus.',
   warn_compress_large:  '⚠️ File besar ({size}) — kompresi dapat memerlukan 1–2 menit. Browser memproses semuanya secara lokal di memori.',
   compress_scan_skipped: 'File besar — pemindaian awal dilewati untuk menghemat memori',
 
