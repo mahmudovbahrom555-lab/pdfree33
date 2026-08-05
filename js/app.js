@@ -42,7 +42,8 @@ import { trackToolStart, trackToolSuccess,
 import { buildIndex, search, trackMiss }           from './search.js';
 import { loadPdfLib }                              from './lazyLibs.js';
 import { checkReturnVisit, recordDownload,
-         checkAndRecordConversion }                from './behavioralSignals.js';
+         checkAndRecordConversion,
+         checkAutoDownloadRecovery }               from './behavioralSignals.js';
 import { t }                                      from './i18n.js';
 import { saveHandoff, restoreHandoff }            from './handoff.js';
 
@@ -342,6 +343,7 @@ function _handleSuccess({ tool, blob, desc, filename, compressionReport, pageCou
   const _autoA = document.createElement('a');
   _autoA.href = _capturedUrl; _autoA.download = filename;
   document.body.appendChild(_autoA); _autoA.click(); document.body.removeChild(_autoA);
+  const _autoDownloadAtMs = Date.now();
 
   // Show hint + update button to "Download again" fallback
   const _hint = id('successAutoHint');
@@ -350,6 +352,10 @@ function _handleSuccess({ tool, blob, desc, filename, compressionReport, pageCou
   if (_dlBtn) {
     _dlBtn.textContent = t('download_again');
     _dlBtn.onclick = () => {
+      // A manual click landing seconds after the automatic download fired
+      // is the strongest available signal that the automatic one silently
+      // failed (blocked, dismissed save dialog, iOS opening instead of saving).
+      checkAutoDownloadRecovery(tool, _autoDownloadAtMs);
       // Disable immediately to prevent double-download on rapid re-click.
       _dlBtn.disabled = true;
       const a = document.createElement('a');

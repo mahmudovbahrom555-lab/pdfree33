@@ -24,6 +24,7 @@ import {
   trackBehaviorRetry,
   trackBehaviorQuickRetry,
   trackBehaviorReturnVisit,
+  trackBehaviorAutoDownloadRecovery,
 } from './analytics.js';
 
 const _SS_KEY = 'pdfree_hashes';   // sessionStorage: { [hash]: conversionCount }
@@ -86,6 +87,20 @@ export async function checkAndRecordConversion(tool, file) {
       }
     }
   } catch { /* never block processing */ }
+}
+
+// ── Auto-download recovery detection ────────────────────────────
+// Called when the user manually clicks "Download again". If that lands
+// within a few seconds of the automatic download firing, the automatic
+// one almost certainly failed silently — there's no reliable browser API
+// to detect a blocked/dismissed download directly, so a fast manual
+// re-click is the best available proxy.
+
+const _AUTO_DOWNLOAD_RECOVERY_WINDOW_MS = 8000;
+
+export function checkAutoDownloadRecovery(tool, autoDownloadAtMs) {
+  if (Date.now() - autoDownloadAtMs > _AUTO_DOWNLOAD_RECOVERY_WINDOW_MS) return;
+  trackBehaviorAutoDownloadRecovery(tool);
 }
 
 // SHA-256 of first 64 KB — fast enough to run just before processing.

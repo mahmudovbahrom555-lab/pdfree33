@@ -161,6 +161,17 @@ export function trackBehaviorReturnVisit(gapMin, tool) {
   _track('Return Visit', { gap_min: String(gapMin), tool });
 }
 
+/**
+ * User clicked "Download again" within seconds of the automatic download
+ * firing → the automatic one very likely failed silently (blocked by the
+ * browser, a save dialog was dismissed, iOS Safari opened the PDF instead
+ * of saving it). Strongest available signal for "the file was ready but
+ * the user never actually got it" — see behavioralSignals.js.
+ */
+export function trackBehaviorAutoDownloadRecovery(tool) {
+  _track('Auto Download Recovery', { tool });
+}
+
 // ── Search funnel ─────────────────────────────────────────────
 
 /** User typed a query and got results */
