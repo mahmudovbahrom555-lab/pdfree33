@@ -117,7 +117,7 @@ export function initOcrOptions(file) {
   _selectedLang      = 'auto';
   _detectedLang      = null;
   _requiresManualLang = false;
-  el.innerHTML = _spinnerHTML('Analysing PDF…');
+  el.innerHTML = _spinnerHTML(t('val_analysing_pdf'));
   _bindMergeBtn();   // register listener immediately so loading-state clicks are handled
   _analyse(file, el);
 }
@@ -171,7 +171,7 @@ async function _analyse(file, container) {
     await Promise.resolve();
     if (myGen !== _generation) return;
     const btn = document.getElementById('mergeBtn');
-    if (btn && btn._ocrBound) { btn.disabled = true; btn.textContent = 'Analysing…'; }
+    if (btn && btn._ocrBound) { btn.disabled = true; btn.textContent = t('ocr_analysing_short'); }
 
     await loadPdfJs();
     if (myGen !== _generation) return;
@@ -217,8 +217,8 @@ async function _analyse(file, container) {
     _loading = false;
     if (_isPasswordError(err)) {
       container.innerHTML = _errorHTML(
-        'Please unlock the PDF first (remove the password in Acrobat or a trusted tool), then try again.',
-        '🔒 This PDF is password protected'
+        t('ocr_password_protected_msg'),
+        t('ocr_password_protected_title')
       );
     } else {
       container.innerHTML = _errorHTML(err.message);
@@ -434,8 +434,8 @@ async function _detectLanguage(pdfDoc, worker) {
 // ── UI rendering ─────────────────────────────────────────────────────────────
 function _langSelectHTML() {
   const autoLabel = _detectedLang
-    ? `Auto — Detected: ${_getLangName(_detectedLang)}`
-    : 'Auto (Recommended)';
+    ? t('ocr_auto_detected', { lang: _getLangName(_detectedLang) })
+    : t('ocr_auto_recommended');
   const euOptions = LANGUAGES.european
     .map(l => `<option value="${l.code}"${_selectedLang === l.code ? ' selected' : ''}>${l.name} &middot; ${l.size}</option>`)
     .join('\n        ');
@@ -446,14 +446,14 @@ function _langSelectHTML() {
   return `
   <div id="ocrLangBlock" style="margin-top:12px;padding:14px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
     <label for="ocrLangSelect" style="display:block;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;color:var(--text3);margin-bottom:8px;">
-      Document language
+      ${t('ocr_lang_doc')}
     </label>
     <select id="ocrLangSelect" style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text);font-size:15px;font-family:inherit;margin-bottom:0;cursor:pointer;">
       <option value="auto"${_selectedLang === 'auto' ? ' selected' : ''}>${autoLabel}</option>
-      <optgroup label="European languages">
+      <optgroup label="${t('ocr_lang_group_eu')}">
         ${euOptions}
       </optgroup>
-      <optgroup label="Complex scripts (larger download)">
+      <optgroup label="${t('ocr_lang_group_complex')}">
         ${cxOptions}
       </optgroup>
     </select>
@@ -466,11 +466,11 @@ function _txtCheckboxHTML() {
   <div style="margin-top:10px;display:flex;flex-direction:column;gap:8px;">
     <div style="display:flex;align-items:center;gap:8px;">
       <input type="checkbox" id="ocrTxtCheck" style="width:16px;height:16px;cursor:pointer;accent-color:var(--green);">
-      <label for="ocrTxtCheck" style="font-size:13px;color:var(--text2);cursor:pointer;">Also download .txt copy</label>
+      <label for="ocrTxtCheck" style="font-size:13px;color:var(--text2);cursor:pointer;">${t('ocr_txt_checkbox')}</label>
     </div>
     <div style="display:flex;align-items:center;gap:8px;margin-left:24px;">
       <input type="checkbox" id="ocrHeaderCheck" style="width:14px;height:14px;cursor:pointer;accent-color:var(--green);">
-      <label for="ocrHeaderCheck" style="font-size:12px;color:var(--text3);cursor:pointer;">Include metadata header (filename, page count, date)</label>
+      <label for="ocrHeaderCheck" style="font-size:12px;color:var(--text3);cursor:pointer;">${t('ocr_txt_header_checkbox')}</label>
     </div>
   </div>`;
 }
@@ -480,7 +480,7 @@ function _renderUI(container) {
     container.innerHTML = `
       <div style="padding:16px;border:1px solid var(--green);border-radius:10px;background:var(--surface);">
         <p style="margin:0 0 12px;font-size:14px;color:var(--text);">
-          &#x2713; This PDF already has a text layer &mdash; no OCR needed, ready to download
+          &#x2713; ${t('ocr_has_text_layer')}
         </p>
         ${_txtCheckboxHTML()}
       </div>`;
@@ -494,9 +494,9 @@ function _renderUI(container) {
     _ocrReady = true;
     container.innerHTML = `
       <div id="ocrInstallBlock" style="padding:16px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
-        <p style="margin:0 0 12px;font-size:14px;color:var(--text);">This PDF is scanned &mdash; OCR required to extract text.</p>
+        <p style="margin:0 0 12px;font-size:14px;color:var(--text);">${t('ocr_scanned_needs_ocr')}</p>
         <div id="ocrReadyMsg" style="padding:10px 14px;border:1px solid var(--green);border-radius:8px;font-size:13px;color:var(--text);background:var(--surface);">
-          &#x2713; OCR ready &mdash; click &ldquo;Make PDF Searchable&rdquo; to start
+          &#x2713; ${t('ocr_ready_msg')}
         </div>
         ${_langSelectHTML()}
         ${_txtCheckboxHTML()}
@@ -515,21 +515,21 @@ function _renderUI(container) {
         display:block;width:100%;padding:12px 16px;
         background:var(--green);color:#fff;border:none;border-radius:8px;
         font-size:14px;font-weight:600;cursor:pointer;text-align:center;">
-        Install OCR PDF &middot; ~17 MB
+        ${t('ocr_install_btn')}
       </button>`}
 
       <div id="iosInstallHint" style="display:${isIos ? '' : 'none'};padding:12px;border:1px solid var(--border);border-radius:8px;background:var(--surface);margin-top:8px;">
-        <p style="margin:0 0 10px;font-size:13px;color:var(--text);">To install the app: tap Share &rarr; Add to Home Screen</p>
+        <p style="margin:0 0 10px;font-size:13px;color:var(--text);">${t('ocr_ios_hint')}</p>
         <button id="btnDownloadOcrOnly" type="button" style="
           display:block;width:100%;padding:10px 14px;
           background:var(--surface);color:var(--green);border:1.5px solid var(--green);border-radius:8px;
           font-size:13px;font-weight:600;cursor:pointer;text-align:center;">
-          Download OCR Engine &middot; ~17 MB
+          ${t('ocr_download_engine_btn')}
         </button>
       </div>
 
       <div id="ocrReadyMsg" style="display:none;padding:10px 14px;margin-top:12px;border:1px solid var(--green);border-radius:8px;font-size:13px;color:var(--text);background:var(--surface);">
-        &#x2713; OCR ready &mdash; click &ldquo;Make PDF Searchable&rdquo; to start
+        &#x2713; ${t('ocr_ready_msg')}
       </div>
 
       ${_langSelectHTML()}
@@ -598,12 +598,12 @@ function _showLangInfo(lang) {
   const installed = _isLangInstalled(lang.code);
   const lines = [];
   if (installed) {
-    lines.push(`<p style="margin:0;font-size:12px;color:var(--green);">✓ ${lang.name} installed — no download needed</p>`);
+    lines.push(`<p style="margin:0;font-size:12px;color:var(--green);">✓ ${t('ocr_lang_installed', { lang: lang.name })}</p>`);
   } else {
-    lines.push(`<p style="margin:0;font-size:12px;color:var(--text3);">ⓘ One-time download (~${lang.size}). Stored locally in your browser.</p>`);
+    lines.push(`<p style="margin:0;font-size:12px;color:var(--text3);">ⓘ ${t('ocr_lang_download_note', { size: lang.size })}</p>`);
   }
   if (CJK_LANGS.has(_primaryScript(lang.code))) {
-    lines.push(`<p style="margin:6px 0 0;font-size:12px;color:var(--text3);">Numbers and Latin text recognized well. Dense kanji/hanzi may have reduced accuracy — known Tesseract limitation.</p>`);
+    lines.push(`<p style="margin:6px 0 0;font-size:12px;color:var(--text3);">${t('ocr_cjk_note')}</p>`);
   }
   block.innerHTML = lines.join('');
   block.style.display = '';
@@ -628,7 +628,7 @@ async function _loadTesseract() {
   if (window.Tesseract) { _ocrReady = true; _showOcrReady(); return; }
 
   const btn = document.getElementById('btnInstallOcr') || document.getElementById('btnDownloadOcrOnly');
-  if (btn) { btn.disabled = true; btn.textContent = 'Downloading OCR engine…'; }
+  if (btn) { btn.disabled = true; btn.textContent = t('ocr_downloading_engine'); }
 
   try {
     await new Promise((resolve, reject) => {
@@ -643,8 +643,8 @@ async function _loadTesseract() {
     localStorage.setItem('pdfree_ocr_installed', '1');
     _showOcrReady();
   } catch (err) {
-    if (btn) { btn.disabled = false; btn.textContent = 'Install OCR PDF · ~17 MB'; }
-    _showToast('Download failed — check your connection and try again');
+    if (btn) { btn.disabled = false; btn.textContent = t('ocr_install_btn'); }
+    _showToast(t('ocr_download_failed'));
   }
 }
 
@@ -666,7 +666,7 @@ function _syncBtnLabel() {
   if (!btn || !btn._ocrBound) return;
   if (_requiresManualLang) {
     btn.disabled = false; // keep clickable — click will open the language picker
-    btn.textContent = '↑ Select a language first';
+    btn.textContent = t('ocr_select_lang_first');
     return;
   }
   btn.disabled = false;
@@ -704,7 +704,8 @@ function _showLangRequired(detectedLang) {
   hint.className = 'detect-hint';
   hint.style.cssText = 'margin:8px 0 0;font-size:12px;color:var(--text2);';
   const langName = _getLangName(finalCandidate);
-  hint.textContent = `Language detection was inconclusive${finalCandidate !== 'eng' ? ` — script looks like ${langName}` : ''}. Choose the correct language above, then click Run OCR.`;
+  const note = finalCandidate !== 'eng' ? t('ocr_detection_script_note', { lang: langName }) : '';
+  hint.textContent = t('ocr_detection_inconclusive', { note });
   langBlock.appendChild(hint);
 
   // When user picks a language, clear suggestion state and unblock OCR
@@ -742,7 +743,7 @@ function _bindMergeBtn() {
 
     // Analysis still running — user clicked too early.
     if (_loading) {
-      _showToast('Analysing PDF…');
+      _showToast(t('val_analysing_pdf'));
       e.stopImmediatePropagation();
       return;
     }
@@ -774,15 +775,15 @@ function _bindMergeBtn() {
     document.querySelectorAll('.detect-hint').forEach(el => el.remove());
 
     btn.disabled = true;
-    btn.textContent = 'Processing…';
+    btn.textContent = t('ocr_processing');
     btn.classList.add('ocr-btn--busy');
     const bar = document.getElementById('progressBar');
     if (bar) bar.hidden = false;
-    _updateProgress(3, 'Starting…');
+    _updateProgress(3, t('ocr_starting'));
 
     try {
       if (_isTextPdf) {
-        _updateProgress(10, 'Preparing…');
+        _updateProgress(10, t('ocr_preparing'));
         // Already has a text layer on every page — no OCR needed. The PDF
         // itself is already searchable, so it's the primary output (matches
         // what every other OCR tool returns); .txt stays an optional extra
@@ -797,7 +798,7 @@ function _bindMergeBtn() {
           _downloadText(text, _file.name);
         }
         // _showSuccess handles the main PDF auto-download via _lastResultBlob
-        _showSuccess('This PDF already had a text layer — no OCR needed, downloaded as-is.');
+        _showSuccess(t('ocr_already_had_text'));
       } else {
         const myGen = ++_generation;
         // On the SPA home page pdf-lib is already preloaded (no-op below); on
@@ -807,8 +808,8 @@ function _bindMergeBtn() {
         const pdfLibPromise = loadPdfLib();
         const { ocrPages, fullText, avgConfidence } = await _runOcr(_file, myGen);
         if (myGen !== _generation) return;
-        _updateProgress(95, 'Building searchable PDF…');
-        _setBtnProgress('Building PDF…');
+        _updateProgress(95, t('ocr_building_searchable'));
+        _setBtnProgress(t('ocr_building_pdf_short'));
         const usedLang = _detectedLang ?? _selectedLang;
         // Mark language model as installed — next visit shows "✓ installed" instead of download notice
         if (usedLang && usedLang !== 'auto') {
@@ -826,7 +827,7 @@ function _bindMergeBtn() {
         }
         // _showSuccess handles the main PDF auto-download via _lastResultBlob
         const qualityLabel = _ocrQualityLabel(avgConfidence, usedLang);
-        _showSuccess(`Searchable PDF saved — you can now select and copy text in any PDF reader.${qualityLabel}`);
+        _showSuccess(t('ocr_searchable_saved', { quality: qualityLabel }));
       }
     } catch (err) {
       if (err.message === '__LANG_REQUIRED__') {
@@ -835,7 +836,7 @@ function _bindMergeBtn() {
         // the finally block calls _syncBtnLabel() which respects that flag.
         _showLangRequired(_detectedLang);
       } else {
-        _showToast('Error: ' + err.message);
+        _showToast(t('ocr_error_prefix', { msg: err.message }));
       }
     } finally {
       // _syncBtnLabel() checks _requiresManualLang — if set, keeps button disabled
@@ -852,7 +853,7 @@ function _showSuccess(desc) {
 
   sc.style.display = 'block';
   const title = document.getElementById('successTitle');
-  if (title) title.textContent = 'Done!';
+  if (title) title.textContent = t('prog_done');
   const descEl = document.getElementById('successDesc');
   if (descEl) descEl.textContent = desc;
 
@@ -911,16 +912,16 @@ function _showSuccess(desc) {
     nextSteps.className = 'ocr-next-steps';
     nextSteps.style.cssText = 'margin-top:16px;padding-top:14px;border-top:1px solid var(--border);font-size:13px;';
     nextSteps.innerHTML = `
-      <div style="font-weight:600;color:var(--text2);margin-bottom:10px;">What to do next</div>
+      <div style="font-weight:600;color:var(--text2);margin-bottom:10px;">${t('ocr_next_steps_title')}</div>
       <div style="display:flex;flex-direction:column;gap:8px;">
         <a href="${_nextStepHref('pdf2word')}" data-handoff style="display:flex;align-items:center;gap:8px;color:var(--green);text-decoration:none;font-weight:500;">
-          <span style="font-size:16px">📝</span> Convert to Word — edit the content
+          <span style="font-size:16px">📝</span> ${t('ocr_next_word')}
         </a>
         <a href="${_nextStepHref('split')}" data-handoff style="display:flex;align-items:center;gap:8px;color:var(--green);text-decoration:none;font-weight:500;">
-          <span style="font-size:16px">✂️</span> Split PDF — extract specific pages
+          <span style="font-size:16px">✂️</span> ${t('ocr_next_split')}
         </a>
         <a href="${_nextStepHref('compress')}" data-handoff style="display:flex;align-items:center;gap:8px;color:var(--green);text-decoration:none;font-weight:500;">
-          <span style="font-size:16px">🗜️</span> Compress PDF — reduce size before sharing
+          <span style="font-size:16px">🗜️</span> ${t('ocr_next_compress')}
         </a>
       </div>`;
     // OCR is self-managed and never fires pdfree:success, so the global
@@ -945,7 +946,7 @@ function _showSuccess(desc) {
 // ── TXT header ───────────────────────────────────────────────────────────────
 function _buildTxtHeader(file, pageCount) {
   const date = new Date().toISOString().slice(0, 10);
-  return `Extracted from: ${file.name}\nPages: ${pageCount}\nProcessed: ${date} (PDFree OCR — pdfree.io)\n\n`;
+  return t('ocr_txt_header', { name: file.name, pages: pageCount, date });
 }
 
 function _applyHeader(text, file, pageCount) {
@@ -980,16 +981,15 @@ const MAX_PAGES_IOS = 30;
 async function _runOcr(file, gen) {
   if (file.size > MAX_FILE_MB * 1024 * 1024) {
     throw new Error(
-      `File is ${Math.round(file.size / 1024 / 1024)} MB — OCR is limited to ${MAX_FILE_MB} MB. ` +
-      `Split the PDF first to process it in parts.`
+      t('ocr_too_large_for_ocr', { mb: Math.round(file.size / 1024 / 1024), max: MAX_FILE_MB })
     );
   }
 
-  _updateProgress(5, 'Loading PDF engine…');
-  _setBtnProgress('Loading…');
+  _updateProgress(5, t('p2j_loading_engine'));
+  _setBtnProgress(t('ocr_loading_short'));
   await loadPdfJs();
 
-  _updateProgress(8, 'Reading PDF…');
+  _updateProgress(8, t('ocr_reading_pdf'));
   const buf    = await file.arrayBuffer();
   let pdfDoc;
   try {
@@ -998,23 +998,21 @@ async function _runOcr(file, gen) {
     }).promise;
   } catch (err) {
     if (_isPasswordError(err)) {
-      throw new Error('🔒 This PDF is password protected — please unlock it first and try again.', { cause: err });
+      throw new Error(t('ocr_password_protected_inline'), { cause: err });
     }
-    throw new Error('Could not open PDF: ' + err.message, { cause: err });
+    throw new Error(t('ocr_could_not_open', { msg: err.message }), { cause: err });
   }
-  _updateProgress(11, `PDF opened · ${pdfDoc.numPages} pages`);
+  _updateProgress(11, t('ocr_pdf_opened', { n: pdfDoc.numPages }));
 
   // Guard: warn and cap on Mobile Safari to avoid tab kill under memory pressure
   const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
   if (isIos && pdfDoc.numPages > MAX_PAGES_IOS) {
     const proceed = window.confirm(
-      `This PDF has ${pdfDoc.numPages} pages. Mobile Safari may run out of memory on large documents.\n\n` +
-      `Only the first ${MAX_PAGES_IOS} pages will be processed. ` +
-      `Split the PDF first to process remaining pages.\n\nContinue?`
+      t('ocr_ios_confirm', { n: pdfDoc.numPages, max: MAX_PAGES_IOS })
     );
     if (!proceed) {
       pdfDoc.destroy();
-      throw new Error('Cancelled by user.');
+      throw new Error(t('ocr_cancelled_by_user'));
     }
   }
 
@@ -1023,8 +1021,8 @@ async function _runOcr(file, gen) {
 
   let worker;
   try {
-  _updateProgress(13, 'Initializing OCR engine…');
-  _setBtnProgress('Initializing…');
+  _updateProgress(13, t('ocr_initializing_engine'));
+  _setBtnProgress(t('ocr_initializing_short'));
   // Always start with resolved lang (eng for auto); reinitialize after detection if needed
   // Add jpn_vert for Japanese (horizontal + vertical recognition)
   const initTsLang = resolvedLang === 'jpn'     ? 'jpn+jpn_vert'
@@ -1033,9 +1031,9 @@ async function _runOcr(file, gen) {
   worker = await window.Tesseract.createWorker(initTsLang, 1, {
     logger: m => {
       if (m.status === 'recognizing text') {
-        _updateProgress(Math.round(m.progress * 100), `Recognizing text (${_getLangName(resolvedLang)})…`);
+        _updateProgress(Math.round(m.progress * 100), t('ocr_recognizing_text', { lang: _getLangName(resolvedLang) }));
       } else if (m.status && m.progress != null) {
-        _updateProgress(Math.round(m.progress * 15), `Loading ${_getLangName(resolvedLang)}…`);
+        _updateProgress(Math.round(m.progress * 15), t('ocr_loading_lang_short', { lang: _getLangName(resolvedLang) }));
       }
     },
   });
@@ -1055,14 +1053,14 @@ async function _runOcr(file, gen) {
     if (cached) {
       detection = cached;
     } else {
-      _updateProgress(14, 'Detecting document language…');
+      _updateProgress(14, t('ocr_detecting_lang'));
       const t0 = Date.now();
       detection = await _detectLanguage(pdfDoc, worker);
       const elapsed = ((Date.now() - t0) / 1000).toFixed(1);
       const switchedNote = _lastDetectionMetrics?.switched
-        ? ` (switched from ${_getLangName(_lastDetectionMetrics.initial)})`
+        ? t('ocr_switched_from', { lang: _getLangName(_lastDetectionMetrics.initial) })
         : '';
-      _updateProgress(15, `Detected: ${_getLangName(detection.lang)} in ${elapsed}s${switchedNote}`);
+      _updateProgress(15, t('ocr_detected_in', { lang: _getLangName(detection.lang), elapsed, switched: switchedNote }));
       if (cacheKey) _langCache.set(cacheKey, detection);
     }
     _detectedLang = detection.lang;
@@ -1070,8 +1068,8 @@ async function _runOcr(file, gen) {
     // Update dropdown label to show detection result
     const sel = document.getElementById('ocrLangSelect');
     if (sel && sel.options[0]) {
-      const uncertain = !detection.confident ? ' ⚠ uncertain' : '';
-      sel.options[0].textContent = `Auto — Detected: ${_getLangName(detection.lang)}${uncertain}`;
+      const uncertain = !detection.confident ? t('ocr_uncertain_suffix') : '';
+      sel.options[0].textContent = t('ocr_auto_detected', { lang: _getLangName(detection.lang) }) + uncertain;
     }
     // Low confidence → abort OCR and ask user to select language manually.
     // Throwing here exits _runOcr(); the caller's catch block calls
@@ -1082,7 +1080,7 @@ async function _runOcr(file, gen) {
     // Reinitialize with correct model if detection found non-English script
     if (detection.lang !== 'eng') {
       const detTsLang = detection.lang === 'jpn' ? 'jpn+jpn_vert' : detection.lang;
-      _updateProgress(15, `Loading ${_getLangName(detection.lang)} language model…`);
+      _updateProgress(15, t('ocr_loading_lang_model', { lang: _getLangName(detection.lang) }));
       await worker.reinitialize(detTsLang);
       // reinitialize() resets engine params — re-apply PSM 11 for CJK (set pre-detection
       // against 'eng' above, so it never took effect for the auto-detect path until now).
@@ -1109,11 +1107,11 @@ async function _runOcr(file, gen) {
       const avgMs = pageDurationsMs.reduce((s, t) => s + t, 0) / pageDurationsMs.length;
       const remainMs = avgMs * (total - p + 1);
       etaSuffix = remainMs >= 60000
-        ? ` · ~${Math.ceil(remainMs / 60000)} min left`
-        : ` · ~${Math.round(remainMs / 1000)}s left`;
+        ? t('ocr_eta_min', { n: Math.ceil(remainMs / 60000) })
+        : t('ocr_eta_sec', { n: Math.round(remainMs / 1000) });
     }
-    _updateProgress(basePct, `OCR page ${p} of ${total} · ${langLabel}${etaSuffix}`);
-    _setBtnProgress(`Page ${p} / ${total}`);
+    _updateProgress(basePct, t('ocr_page_progress', { p, total, lang: langLabel, eta: etaSuffix }));
+    _setBtnProgress(t('ocr_page_short', { p, total }));
     const _pageT0 = Date.now();
 
     let canvas, ocrCanvas;
@@ -1220,7 +1218,7 @@ async function _runOcr(file, gen) {
     if (gen !== _generation) break;
   }
 
-  if (gen === _generation) _updateProgress(92, 'OCR complete');
+  if (gen === _generation) _updateProgress(92, t('ocr_complete'));
 
   // Surface per-page failures as a non-fatal warning toast
   if (pageErrors.length > 0) {
@@ -1248,21 +1246,21 @@ function _ocrQualityLabel(avgConf, lang) {
   if (COMPLEX_LANGS.has(_primaryScript(lang))) {
     // Complex-script confidence is structurally lower even for correct text.
     // Show the raw number with an honest note so users aren't misled.
-    return ` · OCR confidence: ${avgConf}% (${_getLangName(lang)} — lower scores are typical for this script and do not indicate poor accuracy)`;
+    return t('ocr_quality_complex', { pct: avgConf, lang: _getLangName(lang) });
   }
   let tier;
-  if (avgConf >= 90)      tier = `Excellent (${avgConf}%)`;
-  else if (avgConf >= 80) tier = `Good (${avgConf}%)`;
-  else if (avgConf >= 60) tier = `Fair (${avgConf}%)`;
-  else                    tier = `Poor (${avgConf}%) — consider rescanning at higher DPI`;
-  return ` · OCR quality: ${tier}`;
+  if (avgConf >= 90)      tier = t('ocr_quality_excellent', { pct: avgConf });
+  else if (avgConf >= 80) tier = t('ocr_quality_good', { pct: avgConf });
+  else if (avgConf >= 60) tier = t('ocr_quality_fair', { pct: avgConf });
+  else                    tier = t('ocr_quality_poor', { pct: avgConf });
+  return t('ocr_quality_prefix', { tier });
 }
 
 // ── Direct text extraction (text-layer PDFs) ─────────────────────────────────
 async function _extractTextDirect(file) {
   if (file.size > MAX_FILE_MB * 1024 * 1024) {
     throw new Error(
-      `File is ${Math.round(file.size / 1024 / 1024)} MB — text extraction is limited to ${MAX_FILE_MB} MB.`
+      t('ocr_file_too_large_extract', { mb: Math.round(file.size / 1024 / 1024), max: MAX_FILE_MB })
     );
   }
   await loadPdfJs();
@@ -1274,7 +1272,7 @@ async function _extractTextDirect(file) {
   const texts = [];
   const total = pdfDoc.numPages;
   for (let p = 1; p <= total; p++) {
-    _updateProgress(Math.round(p / total * 90), `Extracting page ${p} of ${total}…`);
+    _updateProgress(Math.round(p / total * 90), t('ocr_extracting_page', { p, total }));
     const page = await pdfDoc.getPage(p);
     const tc   = await page.getTextContent();
     // Group items into lines by Y position (items within 4pt of same baseline → same line).
@@ -1296,7 +1294,7 @@ async function _extractTextDirect(file) {
     texts.push(`--- Page ${p} ---\n${text.trim()}`);
   }
   pdfDoc.destroy();
-  _updateProgress(100, 'Done');
+  _updateProgress(100, t('ocr_done'));
   return texts.join('\n\n');
 }
 
@@ -1604,9 +1602,9 @@ async function _buildSearchablePdf(file, ocrPages, lang) {
     page.pushOperators(popGraphicsState());
   }
 
-  _updateProgress(98, 'Saving PDF…');
+  _updateProgress(98, t('ocr_saving_pdf'));
   const bytes = await pdfDoc.save({ useObjectStreams: true });
-  _updateProgress(100, 'Done');
+  _updateProgress(100, t('ocr_done'));
   return bytes;
 }
 
@@ -1669,7 +1667,7 @@ function _isPasswordError(err) {
   return err?.name === 'PasswordException' || /password/i.test(err?.message ?? '');
 }
 
-function _errorHTML(msg, title = 'Could not analyse PDF') {
+function _errorHTML(msg, title = t('ocr_error_title')) {
   return `<div style="padding:16px;border:1px solid #fca5a5;border-radius:10px;background:#fff1f2;color:#dc2626;font-size:13px;">
     <strong>${title}</strong><br>${msg}
   </div>`;
