@@ -195,8 +195,7 @@ export function initCompressOptions(file) {
         <span class="compress-info__meta">${fmtSize(file.size)}</span>
       </div>
       <div class="compress-scan compress-scan--warn" role="alert">
-        ⚠️ File too large for browser compression (max 150 MB).
-        Try splitting it first, or use a desktop tool.
+        ${t('cmp_file_too_large')}
       </div>`;
     return;
   }
@@ -256,7 +255,7 @@ export function renderWorkerScanReport(report) {
     const existingBadge = label.querySelector('.compress-preset__rec');
     if (value === rec) {
       if (!existingBadge) {
-        label.insertAdjacentHTML('beforeend', ' <span class="compress-preset__rec" aria-label="Recommended">⭐</span>');
+        label.insertAdjacentHTML('beforeend', ` <span class="compress-preset__rec" aria-label="${t('cmp_recommended')}">⭐</span>`);
       }
     } else {
       existingBadge?.remove();
@@ -276,7 +275,7 @@ export function renderWorkerScanReport(report) {
       infoDiv.insertAdjacentHTML('beforeend',
         '<span class="compress-info__badge compress-info__badge--warn">🔒 encrypted</span>');
     }
-    showToast('⚠️ Encrypted PDF — some content may not be fully optimized', 5000);
+    showToast(t('cmp_encrypted_toast'), 5000);
   }
 }
 
@@ -328,43 +327,46 @@ export function renderCompressionReport(data) {
   // Shown in isOptimized note (replaces generic message) and in breakdown footer.
   let whyNote = null;
   if (lightPreset) {
-    whyNote = '💡 <strong>Switch to Standard preset</strong> to also recompress images — that\'s where most savings come from.';
+    whyNote = t('cmp_why_light_preset');
   } else if (noImages) {
-    whyNote = '📄 This PDF has no raster images — text and vectors don\'t compress much. Savings are from metadata and structure cleanup only.';
+    whyNote = t('cmp_why_no_images');
   } else if (allSkipped) {
-    whyNote = '🎨 Images were found but use CMYK color profiles or transparency layers — the browser must preserve them to avoid color distortion. Metadata has been cleaned up.';
+    whyNote = t('cmp_why_all_skipped');
   }
 
   // Breakdown items — each has an optional href to the glossary explanation page
   const G = '/pdf-compression-glossary/';
   const items = [];
-  if (report.hasXMP)        items.push({ icon: '📋', label: 'XMP metadata stream removed',          href: `${G}#xmp` });
-  if (report.thumbnails > 0) items.push({ icon: '🖼️', label: `${report.thumbnails} embedded thumbnail${report.thumbnails > 1 ? 's' : ''} removed`, href: `${G}#thumbnails` });
-  if (report.hasPieceInfo)  items.push({ icon: '🔧', label: 'Adobe PieceInfo metadata removed',     href: `${G}#pieceinfo` });
-  if (report.metadataFields > 0) items.push({ icon: '🏷️', label: `${report.metadataFields} metadata fields cleared`, href: `${G}#metadata-fields` });
+  if (report.hasXMP)        items.push({ icon: '📋', label: t('cmp_item_xmp'),          href: `${G}#xmp` });
+  if (report.thumbnails > 0) items.push({ icon: '🖼️', label: tp(report.thumbnails, 'cmp_item_thumb_one', 'cmp_item_thumb_many', { n: report.thumbnails }), href: `${G}#thumbnails` });
+  if (report.hasPieceInfo)  items.push({ icon: '🔧', label: t('cmp_item_pieceinfo'),     href: `${G}#pieceinfo` });
+  if (report.metadataFields > 0) items.push({ icon: '🏷️', label: t('cmp_item_metafields', { n: report.metadataFields }), href: `${G}#metadata-fields` });
   if (report.imagesDeduplicated > 0) {
     const dedupSaved = report.dedupSavedBytes ?? 0;
-    items.push({ icon: '🔁', label: `${report.imagesDeduplicated} duplicate image${report.imagesDeduplicated > 1 ? 's' : ''} removed${dedupSaved > 0 ? ' (−' + fmtSize(dedupSaved) + ')' : ''}`, href: `${G}#duplicate-images` });
+    const label = tp(report.imagesDeduplicated, 'cmp_item_dedup_one', 'cmp_item_dedup_many', { n: report.imagesDeduplicated });
+    items.push({ icon: '🔁', label: `${label}${dedupSaved > 0 ? ' (−' + fmtSize(dedupSaved) + ')' : ''}`, href: `${G}#duplicate-images` });
   }
   if (report.imagesRecompressed > 0) {
     const imgSaved = report.imagesSavedBytes ?? 0;
-    items.push({ icon: '📸', label: `${report.imagesRecompressed} image${report.imagesRecompressed > 1 ? 's' : ''} recompressed${imgSaved > 0 ? ' (−' + fmtSize(imgSaved) + ')' : ''}`, href: `${G}#image-recompression` });
+    const label = tp(report.imagesRecompressed, 'cmp_item_recompressed_one', 'cmp_item_recompressed_many', { n: report.imagesRecompressed });
+    items.push({ icon: '📸', label: `${label}${imgSaved > 0 ? ' (−' + fmtSize(imgSaved) + ')' : ''}`, href: `${G}#image-recompression` });
   }
   if (report.flateStreamsRepacked > 0) {
     const flateSaved = report.flateSavedBytes ?? 0;
-    items.push({ icon: '🗄️', label: `${report.flateStreamsRepacked} font/content stream${report.flateStreamsRepacked > 1 ? 's' : ''} repacked${flateSaved > 0 ? ' (−' + fmtSize(flateSaved) + ')' : ''}`, href: `${G}#stream-repacking` });
+    const label = tp(report.flateStreamsRepacked, 'cmp_item_flate_one', 'cmp_item_flate_many', { n: report.flateStreamsRepacked });
+    items.push({ icon: '🗄️', label: `${label}${flateSaved > 0 ? ' (−' + fmtSize(flateSaved) + ')' : ''}`, href: `${G}#stream-repacking` });
   }
-  if (report.useObjectStreams) items.push({ icon: '📦', label: 'Object stream compression applied', href: `${G}#object-streams` });
+  if (report.useObjectStreams) items.push({ icon: '📦', label: t('cmp_item_objstreams'), href: `${G}#object-streams` });
 
   const div = document.createElement('div');
   div.id        = 'compressReport';
   div.className = `compress-report${isOptimized ? ' compress-report--optimized' : ''}`;
 
   div.innerHTML = `
-    <div class="compress-report__hero" aria-label="${fmtSize(originalSize)} compressed to ${fmtSize(compressedSize)}">
+    <div class="compress-report__hero" aria-label="${t('cmp_hero_aria', { orig: fmtSize(originalSize), comp: fmtSize(compressedSize) })}">
       <span class="compress-report__hero-sizes">${fmtSize(originalSize)} → ${fmtSize(compressedSize)}</span>
       <span class="compress-report__hero-badge${pct <= 0 ? ' compress-report__hero-badge--neutral' : ''}">
-        ${pct > 0 ? `−${pct}%` : 'No change'}
+        ${pct > 0 ? `−${pct}%` : t('cmp_no_change')}
       </span>
     </div>
     <div class="compress-report__gauge" role="img" aria-hidden="true">
@@ -379,13 +381,13 @@ export function renderCompressionReport(data) {
 
     ${isOptimized
       ? `<div class="compress-report__note">
-           ${whyNote ?? 'ℹ️ This PDF is already well-optimized — not much left to remove. For image-heavy PDFs, our upcoming <strong>Ghostscript engine</strong> will deliver deeper compression.'}
+           ${whyNote ?? t('cmp_already_optimized')}
          </div>`
-      : `<div class="compress-report__breakdown" aria-label="What was optimized">
+      : `<div class="compress-report__breakdown" aria-label="${t('cmp_breakdown_aria')}">
            ${items.map((it, i) => `
              <div class="compress-report__item" style="animation-delay:${i * 60}ms">
                <span class="compress-report__item-icon" aria-hidden="true">${it.icon}</span>
-               <span class="compress-report__item-label">${it.label}${it.href ? ` <a href="${it.href}" class="compress-report__explain" title="What does this mean?" aria-label="Learn what this means" style="font-size:11px;color:var(--green);text-decoration:none;opacity:0.7;vertical-align:middle">?</a>` : ''}</span>
+               <span class="compress-report__item-label">${it.label}${it.href ? ` <a href="${it.href}" class="compress-report__explain" title="${t('cmp_explain_title')}" aria-label="${t('cmp_explain_aria')}" style="font-size:11px;color:var(--green);text-decoration:none;opacity:0.7;vertical-align:middle">?</a>` : ''}</span>
                <span class="compress-report__item-check" aria-hidden="true">✓</span>
              </div>
            `).join('')}
@@ -436,9 +438,9 @@ function _render(file, scan) {
     ${scan ? _buildScanBanner(scan, _targetDpi) : `<div class="compress-scan compress-scan--info" id="compressScanBanner" role="status">🔍 ${t('compress_placeholder')}</div>`}
 
     <div class="compress-presets">
-      ${_presetCard('low',    '🪶', 'Light',    'Removes thumbnails and info fields only. No image recompression, no DPI change — maximum compatibility.', _lastScan && _recommendedPreset(_lastScan) === 'low')}
-      ${_presetCard('medium', '⚡', 'Standard', 'Removes metadata + recompresses images. Adjust quality below.',                                            _lastScan && _recommendedPreset(_lastScan) === 'medium')}
-      ${_presetCard('high',   '🔥', 'Maximum',  'Aggressive structure cleanup + image recompression. Adjust quality below.',                                _lastScan && _recommendedPreset(_lastScan) === 'high')}
+      ${_presetCard('low',    '🪶', t('cmp_preset_light_name'),    t('cmp_preset_light_desc'),    _lastScan && _recommendedPreset(_lastScan) === 'low')}
+      ${_presetCard('medium', '⚡', t('cmp_preset_standard_name'), t('cmp_preset_standard_desc'), _lastScan && _recommendedPreset(_lastScan) === 'medium')}
+      ${_presetCard('high',   '🔥', t('cmp_preset_maximum_name'),  t('cmp_preset_maximum_desc'),  _lastScan && _recommendedPreset(_lastScan) === 'high')}
     </div>
 
     ${_qualityRow()}
@@ -450,9 +452,9 @@ function _render(file, scan) {
     ${checkbox({
       id:       'preserveTextCheck',
       checked:  _preserveText,
-      title:    'Preserve text &amp; accessibility',
-      subtitle: 'On Maximum: keeps PDF tagging intact (turn off for smallest file)',
-      ariaLabel: 'Preserve text quality — keeps PDF tagging and structure trees intact',
+      title:    t('cmp_preserve_title'),
+      subtitle: t('cmp_preserve_sub'),
+      ariaLabel: t('cmp_preserve_aria'),
     })}
 
     ${wmRemoveHtml()}
@@ -461,7 +463,7 @@ function _render(file, scan) {
   _bindEvents();
 
   if (scan?.isEncrypted) {
-    showToast('⚠️ Encrypted PDF — some content may not be fully optimized', 5000);
+    showToast(t('cmp_encrypted_toast'), 5000);
   }
 }
 
@@ -486,9 +488,9 @@ function _buildScanBanner(scan, targetDpi = null) {
 
   // Metadata findings
   const found = [];
-  if (scan.hasXMP)       found.push('XMP stream');
+  if (scan.hasXMP)       found.push(t('cmp_found_xmp_stream'));
   if (thumbCount > 0)    found.push(tp(thumbCount, 'compress_thumb', 'compress_thumbs'));
-  if (scan.hasPieceInfo) found.push('PieceInfo');
+  if (scan.hasPieceInfo) found.push(t('cmp_found_pieceinfo'));
   const findingsHtml = found.length > 0
     ? ` · <strong>${found.join(', ')}</strong> ${t('compress_findings_found')}`
     : '';
@@ -509,21 +511,21 @@ function _qualityRow() {
   return sliderRow({
     id:          'qualitySlider',
     containerId: 'qualityRow',
-    label:       'Image quality',
+    label:       t('cmp_quality_label'),
     valId:       'qualityVal',
     valText:     `${_quality}%`,
     min:         60,
     max:         95,
     step:        1,
     value:       _quality,
-    ariaLabel:   'JPEG image quality for recompression',
+    ariaLabel:   t('cmp_quality_aria'),
     style:       'margin-bottom:18px',
   });
 }
 
 function _presetCard(value, icon, label, desc, isRecommended = false) {
   const recBadge = isRecommended
-    ? ' <span class="compress-preset__rec" aria-label="Recommended">⭐</span>'
+    ? ` <span class="compress-preset__rec" aria-label="${t('cmp_recommended')}">⭐</span>`
     : '';
   return `
     <label class="compress-preset ${_preset === value ? 'j2p-chip--active' : ''}" data-preset="${value}">
@@ -538,13 +540,13 @@ function _presetCard(value, icon, label, desc, isRecommended = false) {
 function _dpiRow() {
   if (_preset === 'low') return '';
   const opts = [
-    { value: 96,   label: 'Email',    hint: '96 DPI' },
-    { value: 150,  label: 'Web',      hint: '150 DPI' },
-    { value: null, label: 'Original', hint: 'no resize' },
+    { value: 96,   label: t('cmp_dpi_email'),    hint: t('cmp_dpi_email_hint') },
+    { value: 150,  label: t('cmp_dpi_web'),      hint: t('cmp_dpi_web_hint') },
+    { value: null, label: t('cmp_dpi_original'), hint: t('cmp_dpi_original_hint') },
   ];
   return `
-    <div class="compress-dpi" role="group" aria-label="Image resolution">
-      <span class="compress-dpi__label">Image resolution</span>
+    <div class="compress-dpi" role="group" aria-label="${t('cmp_dpi_resolution_label')}">
+      <span class="compress-dpi__label">${t('cmp_dpi_resolution_label')}</span>
       <div class="compress-dpi__chips">
         ${opts.map(o => `
           <label class="compress-dpi__chip ${_targetDpi === o.value ? 'active' : ''}" data-dpi="${o.value ?? 'null'}">
@@ -683,8 +685,7 @@ export function initCompressEmailOptions(file) {
         <span class="compress-info__meta">${fmtSize(file.size)}</span>
       </div>
       <div class="compress-scan compress-scan--warn" role="alert">
-        ⚠️ File too large for browser compression (max 150 MB).
-        Try splitting it first, or use a desktop tool.
+        ${t('cmp_file_too_large')}
       </div>`;
     return;
   }
@@ -699,12 +700,11 @@ export function initCompressEmailOptions(file) {
     </div>
 
     <div class="compress-scan compress-scan--info" id="compressScanBanner" role="status">
-      🔍 Analysis runs automatically when you compress
+      🔍 ${t('compress_placeholder')}
     </div>
 
     <div class="compress-scan compress-scan--info" role="status" style="margin-top:8px">
-      📧 Email mode: <strong>Maximum preset</strong> · <strong>96 DPI</strong> · <strong>60% image quality</strong>
-      — preset locked for smallest possible output
+      ${t('cmp_email_locked')}
     </div>
   `;
 }
@@ -737,13 +737,13 @@ export function renderEmailVerdict(compressedSize) {
 
   if (mb < 20) {
     cls = 'compress-scan--found';
-    msg = `✅ Email-ready — ${fmtSize(compressedSize)} fits Gmail (25 MB), Outlook (20 MB) and Yahoo (25 MB)`;
+    msg = t('cmp_email_ok', { size: fmtSize(compressedSize) });
   } else if (mb < 25) {
     cls = 'compress-scan--warn';
-    msg = `⚠️ ${fmtSize(compressedSize)} — fits Gmail (25 MB) but may exceed Outlook's 20 MB limit`;
+    msg = t('cmp_email_warn_outlook', { size: fmtSize(compressedSize) });
   } else {
     cls = 'compress-scan--warn';
-    msg = `⚠️ ${fmtSize(compressedSize)} — still exceeds Gmail's 25 MB limit. Try <a href="${_splitHref()}" style="color:inherit;text-decoration:underline">splitting</a> the PDF first.`;
+    msg = t('cmp_email_warn_gmail', { size: fmtSize(compressedSize), href: _splitHref() });
   }
 
   const div = document.createElement('div');
