@@ -23,6 +23,7 @@
 import { id }                from './utils.js';
 import { loadPdfJs }         from './pdf2jpgUI.js';
 import { setButtonDisabled } from './ui.js';
+import { t, tp }             from './i18n.js';
 
 // Locale-correct slug for the "Redact / Annotate" cross-link in the
 // no-fillable-fields hint below. This module is shared across every locale's
@@ -98,11 +99,11 @@ export function getFillParams() {
 async function _extractAndRender(file, container) {
   _loading = true;
   const myGen = ++_generation;
-  container.innerHTML = _spinnerHTML('Analysing form fields…');
+  container.innerHTML = _spinnerHTML(t('fill_analysing'));
   try {
     await loadPdfJs();
     if (myGen !== _generation) return; // superseded by newer upload
-    if (!window.pdfjsLib) throw new Error('pdf.js renderer not available');
+    if (!window.pdfjsLib) throw new Error(t('fill_pdfjs_unavailable'));
 
     const rawBuf = await file.arrayBuffer();
     const pdfDoc = await window.pdfjsLib.getDocument({
@@ -240,7 +241,7 @@ function _humanizeLabel(a) {
   if (a.alternativeText) return a.alternativeText.trim();
   let n = (a.fieldName || '').split('.').pop().replace(/\[\d+\]/g, '');
   n = n.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/[_-]+/g, ' ').trim();
-  return n ? n.charAt(0).toUpperCase() + n.slice(1) : 'Field';
+  return n ? n.charAt(0).toUpperCase() + n.slice(1) : t('fill_field_fallback');
 }
 
 function _detectInputMeta(label, name) {
@@ -286,7 +287,7 @@ function _buildFormHTML(fields) {
           <div id="fillProgressFill" style="height:100%;background:var(--green);border-radius:3px;width:0%;transition:width .3s ease;"></div>
         </div>
         <span id="fillProgressLabel" style="white-space:nowrap;min-width:80px;text-align:right;">
-          <strong id="fillDone">${totalFilled}</strong> / ${totalCount} filled
+          <strong id="fillDone">${totalFilled}</strong> ${t('fill_progress_suffix', { total: totalCount })}
         </span>
       </div>`;
 
@@ -294,8 +295,8 @@ function _buildFormHTML(fields) {
     if (multiPage) {
       html += `<details open style="margin-top:12px;border:1px solid var(--border);border-radius:10px;overflow:hidden;">
         <summary style="padding:12px 16px;cursor:pointer;font-weight:600;font-size:14px;background:var(--surface);list-style:none;display:flex;align-items:center;gap:8px;">
-          <span>📄</span> Page ${page}
-          <span style="margin-left:auto;font-size:12px;font-weight:400;color:var(--text3);">${byPage[page].length} fields</span>
+          <span>📄</span> ${t('rot_page_aria', { n: page })}
+          <span style="margin-left:auto;font-size:12px;font-weight:400;color:var(--text3);">${tp(byPage[page].length, 'fill_fields_count_one', 'fill_fields_count_many', { n: byPage[page].length })}</span>
         </summary>
         <div style="padding:12px 16px;display:flex;flex-direction:column;gap:14px;">`;
     } else {
@@ -313,8 +314,8 @@ function _buildFormHTML(fields) {
       <input type="checkbox" id="fillFlattenToggle" checked
         style="width:18px;height:18px;accent-color:var(--green);cursor:pointer;flex-shrink:0;">
       <label for="fillFlattenToggle" style="font-size:13px;color:var(--text2);cursor:pointer;line-height:1.4;">
-        Flatten fields
-        <span style="color:var(--text3);font-size:12px;">(prevents editing after download)</span>
+        ${t('fill_flatten_label')}
+        <span style="color:var(--text3);font-size:12px;">${t('fill_flatten_hint')}</span>
       </label>
     </div>`;
 
@@ -333,7 +334,7 @@ function _fieldHTML(f) {
     return `<div>
       <label style="display:block;font-size:11px;font-weight:600;text-transform:uppercase;
         letter-spacing:.4px;color:var(--text3);margin-bottom:5px;">
-        ${_esc(f.label)}<span style="font-size:9px;margin-left:4px;opacity:0.6;text-transform:none;letter-spacing:0;">(read-only)</span>
+        ${_esc(f.label)}<span style="font-size:9px;margin-left:4px;opacity:0.6;text-transform:none;letter-spacing:0;">${t('fill_readonly_suffix')}</span>
       </label>
       <input type="text" disabled value="${_esc(f.value || '')}" style="${roBase}">
     </div>`;
@@ -396,7 +397,7 @@ function _fieldHTML(f) {
       ${labelHTML}
       <select id="fill_${_esc(f.name)}" data-field-name="${_esc(f.name)}"
         style="${baseStyle}appearance:auto;">
-        <option value="">— Select —</option>
+        <option value="">${t('fill_select_placeholder')}</option>
         ${selectOpts}
       </select>
     </div>`;
@@ -412,10 +413,10 @@ function _fieldHTML(f) {
         data-sig-page="${f.pageIndex}"
         style="${baseStyle}cursor:pointer;display:flex;align-items:center;gap:10px;
           border-color:var(--border);color:var(--text2);justify-content:center;">
-        <span style="font-size:20px;">✍️</span> Tap to sign
+        <span style="font-size:20px;">✍️</span> ${t('fill_tap_to_sign')}
       </button>
       <p style="margin:4px 0 0;font-size:11px;color:var(--text3);line-height:1.4;">
-        Visual signature — not a certified digital signature
+        ${t('fill_sig_disclaimer')}
       </p>
     </div>`;
   }
@@ -578,20 +579,21 @@ function _openSigPad(fieldName, rect, pageIndex) {
     <button data-sig-action="use-saved"
       style="flex:1;padding:13px;background:#1a3a2a;color:#b6f5d0;border:none;border-radius:10px;
              font-size:13px;font-weight:500;cursor:pointer;">
-      Use saved ↑
+      ${t('fill_use_saved')}
     </button>` : '';
 
-  const _tabBtn = (t, active) =>
-    `<button data-sig-tab="${t}" style="flex:1;padding:10px 4px;border:none;font-size:13px;` +
+  const TAB_LABELS = { draw: t('fill_tab_draw'), type: t('fill_tab_type'), upload: t('fill_tab_upload') };
+  const _tabBtn = (tab, active) =>
+    `<button data-sig-tab="${tab}" style="flex:1;padding:10px 4px;border:none;font-size:13px;` +
     `font-weight:${active ? '600' : '400'};cursor:pointer;` +
     `background:${active ? '#2D7A4F' : 'transparent'};color:${active ? '#fff' : '#888'};` +
-    `transition:background .15s,color .15s;">${t.charAt(0).toUpperCase() + t.slice(1)}</button>`;
+    `transition:background .15s,color .15s;">${TAB_LABELS[tab]}</button>`;
 
   _sigModal = document.createElement('div');
   _sigModal.style.cssText = 'position:fixed;inset:0;background:#111;z-index:10000;display:flex;flex-direction:column;touch-action:none;overflow:hidden;';
   _sigModal.innerHTML = `
     <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 20px;background:#1a1a1a;flex-shrink:0;">
-      <span style="color:#fff;font-size:15px;font-weight:600;">✍️ Sign here</span>
+      <span style="color:#fff;font-size:15px;font-weight:600;">✍️ ${t('fill_sign_here')}</span>
       <button data-sig-action="cancel" style="color:#aaa;background:none;border:none;font-size:22px;padding:4px 8px;cursor:pointer;line-height:1;">✕</button>
     </div>
     <div style="display:flex;background:#1a1a1a;border-top:1px solid #2a2a2a;flex-shrink:0;">
@@ -613,7 +615,7 @@ function _openSigPad(fieldName, rect, pageIndex) {
 
     <!-- Type panel -->
     <div id="_sigPanelType" style="display:none;flex:1;flex-direction:column;align-items:center;justify-content:center;padding:20px;gap:16px;overflow:hidden;">
-      <input id="_sigTypeInput" type="text" placeholder="Type your name"
+      <input id="_sigTypeInput" type="text" placeholder="${t('fill_type_placeholder')}"
         style="width:100%;max-width:480px;padding:14px 16px;font-size:20px;border:none;border-radius:10px;
                text-align:center;background:#222;color:#fff;outline:none;box-sizing:border-box;">
       <canvas id="_fillSigTypeCanvas"
@@ -626,23 +628,23 @@ function _openSigPad(fieldName, rect, pageIndex) {
     <div id="_sigPanelUpload" style="display:none;flex:1;flex-direction:column;align-items:center;justify-content:center;padding:20px;gap:16px;overflow:hidden;">
       <label id="_sigUploadLabel" style="width:100%;max-width:480px;border:2px dashed #444;border-radius:12px;
              padding:28px 20px;text-align:center;cursor:pointer;color:#888;font-size:14px;line-height:1.6;box-sizing:border-box;">
-        Tap to choose a signature image
-        <br><span style="font-size:12px;color:#555;">PNG, JPG, SVG</span>
+        ${t('fill_upload_tap')}
+        <br><span style="font-size:12px;color:#555;">${t('fill_upload_formats')}</span>
         <input type="file" id="_sigUploadInput" accept="image/*" style="display:none;">
       </label>
       <img id="_sigUploadPreview" style="display:none;max-height:120px;max-width:100%;border-radius:8px;background:#fff;padding:8px;" alt="Signature preview">
     </div>
 
     <p id="_sigHint" style="text-align:center;color:#555;font-size:11px;padding:4px 0;margin:0;flex-shrink:0;">
-      ${isPortrait ? 'Sign along the dashed line — draw left to right' : 'Sign along the dashed line'}
+      ${isPortrait ? t('fill_hint_draw_portrait') : t('fill_hint_draw')}
     </p>
     <div style="display:flex;gap:10px;padding:14px 20px;background:#1a1a1a;flex-shrink:0;">
       ${useSavedBtn}
-      <button data-sig-action="clear" style="flex:1;padding:13px;background:#333;color:#fff;border:none;border-radius:10px;font-size:15px;cursor:pointer;">Clear</button>
-      <button data-sig-action="save"  style="flex:1;padding:13px;background:#2D7A4F;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;">Done ✓</button>
+      <button data-sig-action="clear" style="flex:1;padding:13px;background:#333;color:#fff;border:none;border-radius:10px;font-size:15px;cursor:pointer;">${t('ext_clear')}</button>
+      <button data-sig-action="save"  style="flex:1;padding:13px;background:#2D7A4F;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;">${t('fill_done_btn')}</button>
     </div>
     <p style="text-align:center;color:#444;font-size:10px;padding:0 20px 12px;margin:0;line-height:1.5;flex-shrink:0;">
-      Visual signature only — not a PKI digital signature.
+      ${t('fill_sig_disclaimer_footer')}
     </p>`;
   document.body.appendChild(_sigModal);
 
@@ -752,9 +754,9 @@ function _openSigPad(fieldName, rect, pageIndex) {
     }
     if (_hint) {
       _hint.textContent = tab === 'draw'
-        ? 'Sign along the dashed line'
-        : tab === 'type'   ? 'Type your name — preview updates live'
-        : 'Upload a PNG, JPG, or SVG image of your signature';
+        ? t('fill_hint_draw')
+        : tab === 'type'   ? t('fill_hint_type')
+        : t('fill_hint_upload');
     }
     if (tab === 'type') setTimeout(() => typeInput.focus(), 50);
   }
@@ -868,7 +870,7 @@ function _updateSigBtn(fieldName, dataUrl) {
   const btn = Array.from(el.querySelectorAll('[data-sig-field]'))
     .find(b => b.dataset.sigField === fieldName);
   if (btn) {
-    btn.innerHTML = `<img src="${dataUrl}" style="height:28px;vertical-align:middle;border-radius:3px;margin-right:8px;"> Re-sign`;
+    btn.innerHTML = `<img src="${dataUrl}" style="height:28px;vertical-align:middle;border-radius:3px;margin-right:8px;"> ${t('fill_re_sign')}`;
     btn.style.borderColor = 'var(--green)';
     btn.style.color       = 'var(--text)';
   }
@@ -921,17 +923,16 @@ function _spinnerHTML(msg) {
 
 function _noFieldsHTML() {
   return `<div style="padding:20px 16px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
-    <p style="margin:0 0 8px;font-weight:600;color:var(--text);">No fillable fields found</p>
+    <p style="margin:0 0 8px;font-weight:600;color:var(--text);">${t('fill_no_fields_title')}</p>
     <p style="margin:0;font-size:13px;color:var(--text3);line-height:1.5;">
-      This PDF doesn't have AcroForm fields. It may use the legacy XFA format
-      (open in Adobe Acrobat) or it's a scanned/flat PDF — for those, use the
-      <a href="${_redactHref()}" style="color:var(--green);">Redact / Annotate</a> tool to overlay text.
+      ${t('fill_no_fields_body')}
+      <a href="${_redactHref()}" style="color:var(--green);">${t('fill_no_fields_link')}</a>${t('fill_no_fields_suffix')}
     </p>
   </div>`;
 }
 
 function _errorHTML(msg) {
   return `<div style="padding:16px;border:1px solid #fca5a5;border-radius:10px;background:#fff1f2;color:#dc2626;font-size:13px;">
-    Could not read form fields: ${_esc(msg)}
+    ${t('fill_error_prefix', { msg: _esc(msg) })}
   </div>`;
 }
