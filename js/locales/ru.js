@@ -521,4 +521,23 @@ window.PDFREE_LOCALE = {
   unlk_password_placeholder: 'Введите пароль от PDF',
   unlk_password_aria:        'Пароль от PDF',
   unlk_hint:                  'Для снятия защиты нужен правильный пароль — PDFree не может обойти его или подобрать.',
+
+  // jpg2pdfUI.js
+  j2p_reading_images:  'Чтение изображений…',
+  j2p_exif_note_one:   '📐 {n} изображение будет автоматически повёрнуто (коррекция EXIF)',
+  j2p_exif_note_many:  '📐 {n} изображений будут автоматически повёрнуты (коррекция EXIF)',
+  j2p_image_preview:   'Превью изображения',
+  j2p_will_be_rotated: 'Будет повёрнуто',
+  j2p_more_images:     'Ещё {n} изображений',
+  j2p_page_size:       'Размер страницы',
+  j2p_size_auto:       '📐 Авто',
+  j2p_fit:             '⤡ По размеру',
+  j2p_orientation:     'Ориентация',
+  j2p_orient_auto:     '🔄 Авто',
+  j2p_orient_portrait: '▯ Книжная',
+  j2p_orient_landscape: '▭ Альбомная',
+  j2p_compress_images: 'Сжать изображения',
+  j2p_compress_desc:   'Уменьшает размер PDF — качество JPEG остаётся высоким',
+  j2p_quality:         'Качество',
+  j2p_aria_quality:    'Качество JPEG {pct}%',
 };

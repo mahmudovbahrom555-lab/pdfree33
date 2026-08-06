@@ -521,4 +521,23 @@ window.PDFREE_LOCALE = {
   unlk_password_placeholder: 'Nhập mật khẩu của PDF',
   unlk_password_aria:        'Mật khẩu PDF',
   unlk_hint:                  'Bạn cần đúng mật khẩu để gỡ bỏ bảo vệ — PDFree không thể vượt qua hoặc đoán mật khẩu.',
+
+  // jpg2pdfUI.js
+  j2p_reading_images:  'Đang đọc hình ảnh…',
+  j2p_exif_note_one:   '📐 {n} ảnh sẽ được tự động xoay (hiệu chỉnh EXIF)',
+  j2p_exif_note_many:  '📐 {n} ảnh sẽ được tự động xoay (hiệu chỉnh EXIF)',
+  j2p_image_preview:   'Xem trước hình ảnh',
+  j2p_will_be_rotated: 'Sẽ được xoay',
+  j2p_more_images:     'Thêm {n} ảnh',
+  j2p_page_size:       'Kích thước trang',
+  j2p_size_auto:       '📐 Tự động',
+  j2p_fit:             '⤡ Vừa khít',
+  j2p_orientation:     'Hướng trang',
+  j2p_orient_auto:     '🔄 Tự động',
+  j2p_orient_portrait: '▯ Dọc',
+  j2p_orient_landscape: '▭ Ngang',
+  j2p_compress_images: 'Nén hình ảnh',
+  j2p_compress_desc:   'Giảm dung lượng PDF — chất lượng JPEG vẫn cao',
+  j2p_quality:         'Chất lượng',
+  j2p_aria_quality:    'Chất lượng JPEG {pct}%',
 };

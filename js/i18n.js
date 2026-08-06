@@ -542,6 +542,25 @@ export const EN = {
   unlk_password_placeholder: "Enter the PDF's password",
   unlk_password_aria:      'PDF password',
   unlk_hint:                'You need the correct password to remove protection — PDFree cannot bypass or guess it.',
+
+  // ── jpg2pdfUI.js ───────────────────────────────────────────────
+  j2p_reading_images:  'Reading images…',
+  j2p_exif_note_one:   '📐 {n} image will be auto-rotated (EXIF correction)',
+  j2p_exif_note_many:  '📐 {n} images will be auto-rotated (EXIF correction)',
+  j2p_image_preview:   'Image preview',
+  j2p_will_be_rotated: 'Will be rotated',
+  j2p_more_images:     '{n} more images',
+  j2p_page_size:       'Page size',
+  j2p_size_auto:       '📐 Auto',
+  j2p_fit:             '⤡ Fit',
+  j2p_orientation:     'Orientation',
+  j2p_orient_auto:     '🔄 Auto',
+  j2p_orient_portrait: '▯ Portrait',
+  j2p_orient_landscape: '▭ Landscape',
+  j2p_compress_images: 'Compress images',
+  j2p_compress_desc:   'Reduces PDF size — JPEG quality stays high',
+  j2p_quality:         'Quality',
+  j2p_aria_quality:    'JPEG quality {pct}%',
 };
 
 const L = { ...EN, ...(window.PDFREE_LOCALE ?? {}) };

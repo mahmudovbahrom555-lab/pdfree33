@@ -15,6 +15,7 @@
 // ============================================================
 
 import { id }       from './utils.js';
+import { t, tp }    from './i18n.js';
 
 // ── State ──────────────────────────────────────────────────────
 let _pageSize    = 'auto';      // 'auto' | 'a4' | 'letter' | 'fit'
@@ -44,7 +45,7 @@ export async function initJpg2PdfOptions(files) {
   container.innerHTML = `
     <div class="j2p-loading">
       <span class="compress-loading__spinner" aria-hidden="true"></span>
-      Reading images…
+      ${t('j2p_reading_images')}
     </div>
   `;
   container.style.display = 'block';
@@ -76,24 +77,24 @@ function _render(files) {
   const rotated = _exifAngles.filter(a => a !== 0).length;
   const exifNote = rotated > 0
     ? `<div class="j2p-exif-note" role="status">
-         📐 ${rotated} image${rotated > 1 ? 's' : ''} will be auto-rotated (EXIF correction)
+         ${tp(rotated, 'j2p_exif_note_one', 'j2p_exif_note_many', { n: rotated })}
        </div>`
     : '';
 
   container.innerHTML = `
     ${exifNote}
 
-    <div class="j2p-previews" aria-label="Image preview" role="list">
+    <div class="j2p-previews" aria-label="${t('j2p_image_preview')}" role="list">
       ${files.slice(0, 20).map((f, i) => `
         <div class="j2p-thumb" role="listitem" data-index="${i}" title="${_esc(f.name)}">
           <canvas class="j2p-thumb__canvas" data-index="${i}"
                   width="48" height="48" aria-hidden="true"></canvas>
           <span class="j2p-thumb__name">${_truncName(f.name, 12)}</span>
-          ${_exifAngles[i] !== 0 ? `<span class="j2p-thumb__badge" aria-label="Will be rotated">↺</span>` : ''}
+          ${_exifAngles[i] !== 0 ? `<span class="j2p-thumb__badge" aria-label="${t('j2p_will_be_rotated')}">↺</span>` : ''}
         </div>
       `).join('')}
       ${files.length > 20
-        ? `<div class="j2p-thumb j2p-thumb--more" role="listitem" aria-label="${files.length - 20} more images">
+        ? `<div class="j2p-thumb j2p-thumb--more" role="listitem" aria-label="${t('j2p_more_images', { n: files.length - 20 })}">
              <div class="j2p-thumb__more-box">+${files.length - 20}</div>
              <span class="j2p-thumb__name">more</span>
            </div>`
@@ -102,13 +103,13 @@ function _render(files) {
 
     <div class="j2p-row">
       <div class="j2p-group">
-        <span class="j2p-group__label">Page size</span>
-        <div class="j2p-chips" role="group" aria-label="Page size">
+        <span class="j2p-group__label">${t('j2p_page_size')}</span>
+        <div class="j2p-chips" role="group" aria-label="${t('j2p_page_size')}">
           ${[
-            { value: 'auto',   label: '📐 Auto'  },
+            { value: 'auto',   label: t('j2p_size_auto') },
             { value: 'a4',     label: 'A4'       },
             { value: 'letter', label: 'Letter'   },
-            { value: 'fit',    label: '⤡ Fit'   },
+            { value: 'fit',    label: t('j2p_fit') },
           ].map(o => `
             <label class="j2p-chip${_pageSize === o.value ? ' j2p-chip--active' : ''}" data-value="${o.value}" data-name="j2pSize">
               <input type="radio" name="j2pSize" value="${o.value}"${_pageSize === o.value ? ' checked' : ''}>
@@ -119,12 +120,12 @@ function _render(files) {
       </div>
 
       <div class="j2p-group">
-        <span class="j2p-group__label">Orientation</span>
-        <div class="j2p-chips" role="group" aria-label="Orientation">
+        <span class="j2p-group__label">${t('j2p_orientation')}</span>
+        <div class="j2p-chips" role="group" aria-label="${t('j2p_orientation')}">
           ${[
-            { value: 'auto',      label: '🔄 Auto'      },
-            { value: 'portrait',  label: '▯ Portrait'   },
-            { value: 'landscape', label: '▭ Landscape'  },
+            { value: 'auto',      label: t('j2p_orient_auto')      },
+            { value: 'portrait',  label: t('j2p_orient_portrait')  },
+            { value: 'landscape', label: t('j2p_orient_landscape') },
           ].map(o => `
             <label class="j2p-chip${_orientation === o.value ? ' j2p-chip--active' : ''}" data-value="${o.value}" data-name="j2pOrient">
               <input type="radio" name="j2pOrient" value="${o.value}"${_orientation === o.value ? ' checked' : ''}>
@@ -138,10 +139,10 @@ function _render(files) {
     <div class="j2p-compress-block">
       <div class="j2p-compress-row">
         <div class="j2p-compress-label">
-          <strong>Compress images</strong>
-          <small>Reduces PDF size — JPEG quality stays high</small>
+          <strong>${t('j2p_compress_images')}</strong>
+          <small>${t('j2p_compress_desc')}</small>
         </div>
-        <label class="j2p-toggle" aria-label="Compress images">
+        <label class="j2p-toggle" aria-label="${t('j2p_compress_images')}">
           <input type="checkbox" id="j2pCompressCheck"${_compress ? ' checked' : ''}>
           <span class="j2p-toggle__track"></span>
           <span class="j2p-toggle__thumb"></span>
@@ -150,12 +151,12 @@ function _render(files) {
 
       <div class="j2p-quality-row${_compress ? '' : ' j2p-quality-row--disabled'}" id="j2pQualityRow">
         <div class="j2p-quality-header">
-          <span>Quality</span>
+          <span>${t('j2p_quality')}</span>
           <span class="j2p-quality-val" id="j2pQualityVal">${Math.round(_quality * 100)}%</span>
         </div>
         <input type="range" id="j2pQuality" class="j2p-quality-slider"
                min="40" max="100" step="1" value="${Math.round(_quality * 100)}"
-               aria-label="JPEG quality ${Math.round(_quality * 100)}%">
+               aria-label="${t('j2p_aria_quality', { pct: Math.round(_quality * 100) })}">
       </div>
     </div>
   `;

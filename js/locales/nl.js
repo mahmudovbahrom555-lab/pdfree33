@@ -520,4 +520,23 @@ window.PDFREE_LOCALE = {
   unlk_password_placeholder: 'Voer het wachtwoord van de PDF in',
   unlk_password_aria:        'PDF-wachtwoord',
   unlk_hint:                  'Je hebt het juiste wachtwoord nodig om de beveiliging te verwijderen — PDFree kan het niet omzeilen of raden.',
+
+  // jpg2pdfUI.js
+  j2p_reading_images:  'Afbeeldingen lezen…',
+  j2p_exif_note_one:   '📐 {n} afbeelding wordt automatisch gedraaid (EXIF-correctie)',
+  j2p_exif_note_many:  '📐 {n} afbeeldingen worden automatisch gedraaid (EXIF-correctie)',
+  j2p_image_preview:   'Afbeeldingsvoorbeeld',
+  j2p_will_be_rotated: 'Wordt gedraaid',
+  j2p_more_images:     '{n} meer afbeeldingen',
+  j2p_page_size:       'Paginaformaat',
+  j2p_size_auto:       '📐 Auto',
+  j2p_fit:             '⤡ Passend',
+  j2p_orientation:     'Oriëntatie',
+  j2p_orient_auto:     '🔄 Auto',
+  j2p_orient_portrait: '▯ Staand',
+  j2p_orient_landscape: '▭ Liggend',
+  j2p_compress_images: 'Afbeeldingen comprimeren',
+  j2p_compress_desc:   'Verkleint de PDF — JPEG-kwaliteit blijft hoog',
+  j2p_quality:         'Kwaliteit',
+  j2p_aria_quality:    'JPEG-kwaliteit {pct}%',
 };

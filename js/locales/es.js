@@ -522,4 +522,23 @@ window.PDFREE_LOCALE = {
   unlk_password_placeholder: 'Introduce la contraseña del PDF',
   unlk_password_aria:        'Contraseña del PDF',
   unlk_hint:                  'Necesitas la contraseña correcta para eliminar la protección — PDFree no puede omitirla ni adivinarla.',
+
+  // jpg2pdfUI.js
+  j2p_reading_images:  'Leyendo imágenes…',
+  j2p_exif_note_one:   '📐 {n} imagen se rotará automáticamente (corrección EXIF)',
+  j2p_exif_note_many:  '📐 {n} imágenes se rotarán automáticamente (corrección EXIF)',
+  j2p_image_preview:   'Vista previa de la imagen',
+  j2p_will_be_rotated: 'Se rotará',
+  j2p_more_images:     '{n} imágenes más',
+  j2p_page_size:       'Tamaño de página',
+  j2p_size_auto:       '📐 Auto',
+  j2p_fit:             '⤡ Ajustar',
+  j2p_orientation:     'Orientación',
+  j2p_orient_auto:     '🔄 Auto',
+  j2p_orient_portrait: '▯ Vertical',
+  j2p_orient_landscape: '▭ Horizontal',
+  j2p_compress_images: 'Comprimir imágenes',
+  j2p_compress_desc:   'Reduce el tamaño del PDF — la calidad JPEG se mantiene alta',
+  j2p_quality:         'Calidad',
+  j2p_aria_quality:    'Calidad JPEG {pct}%',
 };

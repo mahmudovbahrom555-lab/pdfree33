@@ -520,4 +520,23 @@ window.PDFREE_LOCALE = {
   unlk_password_placeholder: "PDF'nin şifresini girin",
   unlk_password_aria:        'PDF şifresi',
   unlk_hint:                  "Korumayı kaldırmak için doğru şifreye ihtiyacınız var — PDFree şifreyi aşamaz veya tahmin edemez.",
+
+  // jpg2pdfUI.js
+  j2p_reading_images:  'Görseller okunuyor…',
+  j2p_exif_note_one:   '📐 {n} görsel otomatik olarak döndürülecek (EXIF düzeltmesi)',
+  j2p_exif_note_many:  '📐 {n} görsel otomatik olarak döndürülecek (EXIF düzeltmesi)',
+  j2p_image_preview:   'Görsel önizleme',
+  j2p_will_be_rotated: 'Döndürülecek',
+  j2p_more_images:     '{n} görsel daha',
+  j2p_page_size:       'Sayfa boyutu',
+  j2p_size_auto:       '📐 Otomatik',
+  j2p_fit:             '⤡ Sığdır',
+  j2p_orientation:     'Yönlendirme',
+  j2p_orient_auto:     '🔄 Otomatik',
+  j2p_orient_portrait: '▯ Dikey',
+  j2p_orient_landscape: '▭ Yatay',
+  j2p_compress_images: 'Görselleri sıkıştır',
+  j2p_compress_desc:   'PDF boyutunu küçültür — JPEG kalitesi yüksek kalır',
+  j2p_quality:         'Kalite',
+  j2p_aria_quality:    'JPEG kalitesi %{pct}',
 };

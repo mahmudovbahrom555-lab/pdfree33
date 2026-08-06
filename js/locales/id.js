@@ -521,4 +521,23 @@ window.PDFREE_LOCALE = {
   unlk_password_placeholder: 'Masukkan kata sandi PDF',
   unlk_password_aria:        'Kata sandi PDF',
   unlk_hint:                  'Anda memerlukan kata sandi yang benar untuk menghapus perlindungan — PDFree tidak bisa melewati atau menebaknya.',
+
+  // jpg2pdfUI.js
+  j2p_reading_images:  'Membaca gambar…',
+  j2p_exif_note_one:   '📐 {n} gambar akan diputar otomatis (koreksi EXIF)',
+  j2p_exif_note_many:  '📐 {n} gambar akan diputar otomatis (koreksi EXIF)',
+  j2p_image_preview:   'Pratinjau gambar',
+  j2p_will_be_rotated: 'Akan diputar',
+  j2p_more_images:     '{n} gambar lainnya',
+  j2p_page_size:       'Ukuran halaman',
+  j2p_size_auto:       '📐 Otomatis',
+  j2p_fit:             '⤡ Sesuaikan',
+  j2p_orientation:     'Orientasi',
+  j2p_orient_auto:     '🔄 Otomatis',
+  j2p_orient_portrait: '▯ Potret',
+  j2p_orient_landscape: '▭ Lanskap',
+  j2p_compress_images: 'Kompres gambar',
+  j2p_compress_desc:   'Mengurangi ukuran PDF — kualitas JPEG tetap tinggi',
+  j2p_quality:         'Kualitas',
+  j2p_aria_quality:    'Kualitas JPEG {pct}%',
 };
