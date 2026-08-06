@@ -826,4 +826,20 @@ window.PDFREE_LOCALE = {
   fill_no_fields_link:        'Hapus Teks / Anotasi',
   fill_no_fields_suffix:      ' untuk menumpangkan teks.',
   fill_error_prefix:          'Tidak dapat membaca kolom formulir: {msg}',
+
+  // ── drawUI.js + drawPointer.js ──────────────────────────
+  draw_load_renderer_failed:   'Gagal memuat perender PDF. Periksa koneksi internet Anda.',
+  draw_read_file_failed:       'Tidak dapat membaca file.',
+  draw_open_pdf_failed:        'Gagal membuka PDF: {msg}',
+  draw_render_error:           'Kesalahan render: {msg}',
+  draw_exporting:              'Mengekspor…',
+  draw_no_annotations:         'Tidak ada anotasi untuk disimpan. Gambar sesuatu terlebih dahulu.',
+  draw_export_failed:          'Ekspor gagal: {msg}',
+  draw_2d_context_unavailable: 'Konteks 2D tidak tersedia',
+  draw_png_export_failed:      'Ekspor PNG gagal',
+  draw_worker_error:           'Kesalahan worker',
+  draw_edit_text:              'Edit teks',
+  draw_add_text:               'Tambah teks',
+  draw_save_btn:               'Simpan',
+  draw_add_btn:                'Tambah',
 };

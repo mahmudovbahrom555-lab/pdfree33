@@ -825,4 +825,20 @@ window.PDFREE_LOCALE = {
   fill_no_fields_link:        'PDF Gizle / Not Ekle',
   fill_no_fields_suffix:      ' aracını kullanarak metin ekleyebilirsiniz.',
   fill_error_prefix:          'Form alanları okunamadı: {msg}',
+
+  // ── drawUI.js + drawPointer.js ──────────────────────────
+  draw_load_renderer_failed:   'PDF işleyicisi yüklenemedi. İnternet bağlantınızı kontrol edin.',
+  draw_read_file_failed:       'Dosya okunamadı.',
+  draw_open_pdf_failed:        'PDF açılamadı: {msg}',
+  draw_render_error:           'İşleme hatası: {msg}',
+  draw_exporting:              'Dışa aktarılıyor…',
+  draw_no_annotations:         'Kaydedilecek not yok. Önce bir şeyler çizin.',
+  draw_export_failed:          'Dışa aktarma başarısız: {msg}',
+  draw_2d_context_unavailable: '2D bağlam kullanılamıyor',
+  draw_png_export_failed:      'PNG dışa aktarma başarısız',
+  draw_worker_error:           'Worker hatası',
+  draw_edit_text:              'Metni düzenle',
+  draw_add_text:               'Metin ekle',
+  draw_save_btn:               'Kaydet',
+  draw_add_btn:                'Ekle',
 };

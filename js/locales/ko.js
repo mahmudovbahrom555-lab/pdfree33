@@ -827,4 +827,20 @@ window.PDFREE_LOCALE = {
   fill_no_fields_link:        'PDF 가리기 / 주석',
   fill_no_fields_suffix:      ' 도구를 사용해 텍스트를 겹쳐보세요.',
   fill_error_prefix:          '양식 필드를 읽을 수 없습니다: {msg}',
+
+  // ── drawUI.js + drawPointer.js ──────────────────────────
+  draw_load_renderer_failed:   'PDF 렌더러를 불러오지 못했습니다. 인터넷 연결을 확인하세요.',
+  draw_read_file_failed:       '파일을 읽을 수 없습니다.',
+  draw_open_pdf_failed:        'PDF를 열지 못했습니다: {msg}',
+  draw_render_error:           '렌더링 오류: {msg}',
+  draw_exporting:              '내보내는 중…',
+  draw_no_annotations:         '저장할 주석이 없습니다. 먼저 무언가를 그려보세요.',
+  draw_export_failed:          '내보내기 실패: {msg}',
+  draw_2d_context_unavailable: '2D 컨텍스트를 사용할 수 없습니다',
+  draw_png_export_failed:      'PNG 내보내기 실패',
+  draw_worker_error:           '워커 오류',
+  draw_edit_text:              '텍스트 편집',
+  draw_add_text:               '텍스트 추가',
+  draw_save_btn:               '저장',
+  draw_add_btn:                '추가',
 };

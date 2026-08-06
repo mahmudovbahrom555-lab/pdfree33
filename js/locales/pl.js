@@ -825,4 +825,20 @@ window.PDFREE_LOCALE = {
   fill_no_fields_link:        'Zaczernij / Adnotuj',
   fill_no_fields_suffix:      ', aby nałożyć tekst.',
   fill_error_prefix:          'Nie udało się odczytać pól formularza: {msg}',
+
+  // ── drawUI.js + drawPointer.js ──────────────────────────
+  draw_load_renderer_failed:   'Nie udało się załadować renderera PDF. Sprawdź połączenie internetowe.',
+  draw_read_file_failed:       'Nie można odczytać pliku.',
+  draw_open_pdf_failed:        'Nie udało się otworzyć pliku PDF: {msg}',
+  draw_render_error:           'Błąd renderowania: {msg}',
+  draw_exporting:              'Eksportowanie…',
+  draw_no_annotations:         'Brak adnotacji do zapisania. Najpierw coś narysuj.',
+  draw_export_failed:          'Eksport nie powiódł się: {msg}',
+  draw_2d_context_unavailable: 'Kontekst 2D niedostępny',
+  draw_png_export_failed:      'Eksport PNG nie powiódł się',
+  draw_worker_error:           'Błąd workera',
+  draw_edit_text:              'Edytuj tekst',
+  draw_add_text:               'Dodaj tekst',
+  draw_save_btn:               'Zapisz',
+  draw_add_btn:                'Dodaj',
 };

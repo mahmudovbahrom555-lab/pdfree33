@@ -825,4 +825,20 @@ window.PDFREE_LOCALE = {
   fill_no_fields_link:        'Oscura / Annota',
   fill_no_fields_suffix:      ' per sovrapporre del testo.',
   fill_error_prefix:          'Impossibile leggere i campi del modulo: {msg}',
+
+  // ── drawUI.js + drawPointer.js ──────────────────────────
+  draw_load_renderer_failed:   'Impossibile caricare il motore di rendering PDF. Controlla la tua connessione internet.',
+  draw_read_file_failed:       'Impossibile leggere il file.',
+  draw_open_pdf_failed:        'Impossibile aprire il PDF: {msg}',
+  draw_render_error:           'Errore di rendering: {msg}',
+  draw_exporting:              'Esportazione…',
+  draw_no_annotations:         'Nessuna annotazione da salvare. Disegna prima qualcosa.',
+  draw_export_failed:          'Esportazione non riuscita: {msg}',
+  draw_2d_context_unavailable: 'Contesto 2D non disponibile',
+  draw_png_export_failed:      'Esportazione PNG non riuscita',
+  draw_worker_error:           'Errore del worker',
+  draw_edit_text:              'Modifica testo',
+  draw_add_text:               'Aggiungi testo',
+  draw_save_btn:               'Salva',
+  draw_add_btn:                'Aggiungi',
 };

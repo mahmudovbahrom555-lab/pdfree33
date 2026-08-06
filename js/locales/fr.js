@@ -827,4 +827,20 @@ window.PDFREE_LOCALE = {
   fill_no_fields_link:        'Caviarder / Annoter',
   fill_no_fields_suffix:      ' pour superposer du texte.',
   fill_error_prefix:          'Impossible de lire les champs du formulaire : {msg}',
+
+  // ── drawUI.js + drawPointer.js ──────────────────────────
+  draw_load_renderer_failed:   'Échec du chargement du moteur de rendu PDF. Vérifiez votre connexion internet.',
+  draw_read_file_failed:       'Impossible de lire le fichier.',
+  draw_open_pdf_failed:        'Échec de l\'ouverture du PDF : {msg}',
+  draw_render_error:           'Erreur de rendu : {msg}',
+  draw_exporting:              'Exportation…',
+  draw_no_annotations:         'Aucune annotation à enregistrer. Dessinez quelque chose d\'abord.',
+  draw_export_failed:          'Échec de l\'exportation : {msg}',
+  draw_2d_context_unavailable: 'Contexte 2D indisponible',
+  draw_png_export_failed:      'Échec de l\'export PNG',
+  draw_worker_error:           'Erreur du worker',
+  draw_edit_text:              'Modifier le texte',
+  draw_add_text:               'Ajouter du texte',
+  draw_save_btn:               'Enregistrer',
+  draw_add_btn:                'Ajouter',
 };

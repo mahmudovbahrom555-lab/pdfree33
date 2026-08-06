@@ -849,6 +849,22 @@ export const EN = {
   fill_no_fields_link:       'Redact / Annotate',
   fill_no_fields_suffix:     ' tool to overlay text.',
   fill_error_prefix:         'Could not read form fields: {msg}',
+
+  // ── drawUI.js + drawPointer.js ──────────────────────────────────
+  draw_load_renderer_failed:   'Failed to load PDF renderer. Check your internet connection.',
+  draw_read_file_failed:       'Could not read the file.',
+  draw_open_pdf_failed:        'Failed to open PDF: {msg}',
+  draw_render_error:           'Render error: {msg}',
+  draw_exporting:              'Exporting…',
+  draw_no_annotations:         'No annotations to save. Draw something first.',
+  draw_export_failed:          'Export failed: {msg}',
+  draw_2d_context_unavailable: '2D context unavailable',
+  draw_png_export_failed:      'PNG export failed',
+  draw_worker_error:           'Worker error',
+  draw_edit_text:              'Edit text',
+  draw_add_text:               'Add text',
+  draw_save_btn:               'Save',
+  draw_add_btn:                'Add',
 };
 
 const L = { ...EN, ...(window.PDFREE_LOCALE ?? {}) };

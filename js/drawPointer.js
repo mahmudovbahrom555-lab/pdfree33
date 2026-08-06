@@ -27,6 +27,7 @@ import {
   // constants
   HIGHLIGHT_OPACITY, MARKER_OPACITY,
 } from './drawUI.js';
+import { t } from './i18n.js';
 
 let _current = null;   // { type, ...fields } | null — command in progress
 let _rafId   = 0;      // pending requestAnimationFrame id (0 = none)
@@ -392,8 +393,8 @@ function _openMobileSheet(opts) {
   _mts.insertPoint = opts.insertPoint ?? null;
   _mts.callback    = opts.callback    ?? null;
 
-  _mts.title.textContent     = _mts.mode === 'edit' ? 'Edit text' : 'Add text';
-  _mts.ok.textContent        = _mts.mode === 'edit' ? 'Save' : 'Add';
+  _mts.title.textContent     = _mts.mode === 'edit' ? t('draw_edit_text') : t('draw_add_text');
+  _mts.ok.textContent        = _mts.mode === 'edit' ? t('draw_save_btn') : t('draw_add_btn');
   _mts.deleteBtn.hidden      = _mts.mode !== 'edit';
   _mts.textarea.value        = opts.initialText  ?? '';
   _mts.sizeLabel.textContent = _fontSize + 'px';

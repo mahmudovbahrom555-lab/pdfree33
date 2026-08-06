@@ -828,4 +828,20 @@ window.PDFREE_LOCALE = {
   fill_no_fields_link:        'Schwärzen / Kommentieren',
   fill_no_fields_suffix:      '-Tool, um Text zu überlagern.',
   fill_error_prefix:          'Formularfelder konnten nicht gelesen werden: {msg}',
+
+  // ── drawUI.js + drawPointer.js ──────────────────────────
+  draw_load_renderer_failed:   'PDF-Renderer konnte nicht geladen werden. Überprüfe deine Internetverbindung.',
+  draw_read_file_failed:       'Datei konnte nicht gelesen werden.',
+  draw_open_pdf_failed:        'PDF konnte nicht geöffnet werden: {msg}',
+  draw_render_error:           'Renderfehler: {msg}',
+  draw_exporting:              'Wird exportiert…',
+  draw_no_annotations:         'Keine Anmerkungen zum Speichern. Zeichne zuerst etwas.',
+  draw_export_failed:          'Export fehlgeschlagen: {msg}',
+  draw_2d_context_unavailable: '2D-Kontext nicht verfügbar',
+  draw_png_export_failed:      'PNG-Export fehlgeschlagen',
+  draw_worker_error:           'Worker-Fehler',
+  draw_edit_text:              'Text bearbeiten',
+  draw_add_text:               'Text hinzufügen',
+  draw_save_btn:               'Speichern',
+  draw_add_btn:                'Hinzufügen',
 };

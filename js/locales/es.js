@@ -827,4 +827,20 @@ window.PDFREE_LOCALE = {
   fill_no_fields_link:        'Censurar / Anotar',
   fill_no_fields_suffix:      ' para superponer texto.',
   fill_error_prefix:          'No se pudieron leer los campos del formulario: {msg}',
+
+  // ── drawUI.js + drawPointer.js ──────────────────────────
+  draw_load_renderer_failed:   'No se pudo cargar el renderizador de PDF. Comprueba tu conexión a internet.',
+  draw_read_file_failed:       'No se pudo leer el archivo.',
+  draw_open_pdf_failed:        'No se pudo abrir el PDF: {msg}',
+  draw_render_error:           'Error de renderizado: {msg}',
+  draw_exporting:              'Exportando…',
+  draw_no_annotations:         'No hay anotaciones que guardar. Dibuja algo primero.',
+  draw_export_failed:          'Error al exportar: {msg}',
+  draw_2d_context_unavailable: 'Contexto 2D no disponible',
+  draw_png_export_failed:      'Error al exportar el PNG',
+  draw_worker_error:           'Error del worker',
+  draw_edit_text:              'Editar texto',
+  draw_add_text:               'Añadir texto',
+  draw_save_btn:               'Guardar',
+  draw_add_btn:                'Añadir',
 };

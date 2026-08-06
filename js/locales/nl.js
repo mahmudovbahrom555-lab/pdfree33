@@ -825,4 +825,20 @@ window.PDFREE_LOCALE = {
   fill_no_fields_link:        'Zwartmaken / Annoteren',
   fill_no_fields_suffix:      '-tool om tekst overheen te plaatsen.',
   fill_error_prefix:          'Kan formuliervelden niet lezen: {msg}',
+
+  // ── drawUI.js + drawPointer.js ──────────────────────────
+  draw_load_renderer_failed:   'Laden van PDF-renderer mislukt. Controleer je internetverbinding.',
+  draw_read_file_failed:       'Kan het bestand niet lezen.',
+  draw_open_pdf_failed:        'Kan PDF niet openen: {msg}',
+  draw_render_error:           'Renderfout: {msg}',
+  draw_exporting:              'Exporteren…',
+  draw_no_annotations:         'Geen aantekeningen om op te slaan. Teken eerst iets.',
+  draw_export_failed:          'Exporteren mislukt: {msg}',
+  draw_2d_context_unavailable: '2D-context niet beschikbaar',
+  draw_png_export_failed:      'PNG-export mislukt',
+  draw_worker_error:           'Workerfout',
+  draw_edit_text:              'Tekst bewerken',
+  draw_add_text:               'Tekst toevoegen',
+  draw_save_btn:               'Opslaan',
+  draw_add_btn:                'Toevoegen',
 };

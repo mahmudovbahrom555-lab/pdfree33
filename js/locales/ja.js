@@ -828,4 +828,20 @@ window.PDFREE_LOCALE = {
   fill_no_fields_link:        '黒塗り / 注釈',
   fill_no_fields_suffix:      'ツールを使用してテキストを重ねてください。',
   fill_error_prefix:          'フォームフィールドを読み込めませんでした: {msg}',
+
+  // ── drawUI.js + drawPointer.js ──────────────────────────
+  draw_load_renderer_failed:   'PDFレンダラーの読み込みに失敗しました。インターネット接続を確認してください。',
+  draw_read_file_failed:       'ファイルを読み込めませんでした。',
+  draw_open_pdf_failed:        'PDFを開けませんでした: {msg}',
+  draw_render_error:           'レンダリングエラー: {msg}',
+  draw_exporting:              'エクスポート中…',
+  draw_no_annotations:         '保存する注釈がありません。まず何か描いてください。',
+  draw_export_failed:          'エクスポートに失敗しました: {msg}',
+  draw_2d_context_unavailable: '2Dコンテキストが利用できません',
+  draw_png_export_failed:      'PNGのエクスポートに失敗しました',
+  draw_worker_error:           'ワーカーエラー',
+  draw_edit_text:              'テキストを編集',
+  draw_add_text:               'テキストを追加',
+  draw_save_btn:               '保存',
+  draw_add_btn:                '追加',
 };

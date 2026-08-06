@@ -19,6 +19,7 @@
 import { loadPdfJs }  from './pdf2jpgUI.js';
 import { id }         from './utils.js';
 import { showToast }  from './ui.js';
+import { t }          from './i18n.js';
 
 // ── Constants ──────────────────────────────────────────────────
 const MAX_DIMENSION            = 4096;   // internal: canvas pixel size guard
@@ -106,7 +107,7 @@ export async function loadPdfFile(file) {
   try {
     await loadPdfJs();
   } catch {
-    showToast('Failed to load PDF renderer. Check your internet connection.');
+    showToast(t('draw_load_renderer_failed'));
     return;
   }
 
@@ -114,7 +115,7 @@ export async function loadPdfFile(file) {
   try {
     buf = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await file.arrayBuffer();
   } catch {
-    showToast('Could not read the file.');
+    showToast(t('draw_read_file_failed'));
     return;
   }
 
@@ -128,7 +129,7 @@ export async function loadPdfFile(file) {
       disableJavaScript: true,
     }).promise;
   } catch (err) {
-    showToast('Failed to open PDF: ' + err.message);
+    showToast(t('draw_open_pdf_failed', { msg: err.message }));
     return;
   }
 
@@ -326,7 +327,7 @@ async function _renderPage(pageNum) {
     _updateNavUI();
 
   } catch (err) {
-    if (token === _renderId) showToast('Render error: ' + err.message);
+    if (token === _renderId) showToast(t('draw_render_error', { msg: err.message }));
   } finally {
     if (token === _renderId) _canvasLoading.hidden = true;
   }
@@ -715,7 +716,7 @@ async function _exportToPdf() {
   const btn         = _downloadBtn;
   const originalText = btn.textContent;
   btn.disabled      = true;
-  btn.textContent   = 'Exporting…';
+  btn.textContent   = t('draw_exporting');
 
   try {
     const total  = _pdfJsDoc.numPages;
@@ -730,7 +731,7 @@ async function _exportToPdf() {
     }
 
     if (layers.every(l => l === null)) {
-      showToast('No annotations to save. Draw something first.');
+      showToast(t('draw_no_annotations'));
       return;
     }
 
@@ -751,7 +752,7 @@ async function _exportToPdf() {
     setTimeout(() => URL.revokeObjectURL(url), 10000);
 
   } catch (err) {
-    showToast('Export failed: ' + err.message);
+    showToast(t('draw_export_failed', { msg: err.message }));
   } finally {
     btn.disabled    = false;
     btn.textContent = originalText;
@@ -763,7 +764,7 @@ async function _renderLayerToPng(cmds, w, h) {
   if (typeof OffscreenCanvas !== 'undefined') {
     const off = new OffscreenCanvas(w, h);
     const ctx = off.getContext('2d');
-    if (!ctx) throw new Error('2D context unavailable');
+    if (!ctx) throw new Error(t('draw_2d_context_unavailable'));
     effective.forEach(cmd => renderCommand(ctx, cmd));
     const blob = await off.convertToBlob({ type: 'image/png' });
     return blob.arrayBuffer();
@@ -774,10 +775,10 @@ async function _renderLayerToPng(cmds, w, h) {
     tmp.width  = w;
     tmp.height = h;
     const ctx  = tmp.getContext('2d');
-    if (!ctx) { reject(new Error('2D context unavailable')); return; }
+    if (!ctx) { reject(new Error(t('draw_2d_context_unavailable'))); return; }
     effective.forEach(cmd => renderCommand(ctx, cmd));
     tmp.toBlob(b => {
-      if (!b) { reject(new Error('PNG export failed')); return; }
+      if (!b) { reject(new Error(t('draw_png_export_failed'))); return; }
       b.arrayBuffer().then(resolve, reject);
     }, 'image/png');
   });
@@ -790,7 +791,7 @@ function _runExportWorker(original, layers, transferable) {
       if (e.data.type === 'done')  { resolve(e.data.result); w.terminate(); }
       if (e.data.type === 'error') { reject(new Error(e.data.message)); w.terminate(); }
     };
-    w.onerror = (err) => { reject(new Error(err.message || 'Worker error')); w.terminate(); };
+    w.onerror = (err) => { reject(new Error(err.message || t('draw_worker_error'))); w.terminate(); };
     w.postMessage({ tool: 'draw', original, layers }, transferable);
   });
 }

@@ -826,4 +826,20 @@ window.PDFREE_LOCALE = {
   fill_no_fields_link:        'Xóa văn bản / Chú thích',
   fill_no_fields_suffix:      ' để phủ văn bản lên.',
   fill_error_prefix:          'Không thể đọc các trường biểu mẫu: {msg}',
+
+  // ── drawUI.js + drawPointer.js ──────────────────────────
+  draw_load_renderer_failed:   'Không thể tải trình kết xuất PDF. Kiểm tra kết nối internet của bạn.',
+  draw_read_file_failed:       'Không thể đọc tệp.',
+  draw_open_pdf_failed:        'Không thể mở PDF: {msg}',
+  draw_render_error:           'Lỗi kết xuất: {msg}',
+  draw_exporting:              'Đang xuất…',
+  draw_no_annotations:         'Không có chú thích nào để lưu. Hãy vẽ gì đó trước.',
+  draw_export_failed:          'Xuất thất bại: {msg}',
+  draw_2d_context_unavailable: 'Không có ngữ cảnh 2D',
+  draw_png_export_failed:      'Xuất PNG thất bại',
+  draw_worker_error:           'Lỗi worker',
+  draw_edit_text:              'Chỉnh sửa văn bản',
+  draw_add_text:               'Thêm văn bản',
+  draw_save_btn:               'Lưu',
+  draw_add_btn:                'Thêm',
 };

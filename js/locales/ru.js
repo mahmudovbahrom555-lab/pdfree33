@@ -826,4 +826,20 @@ window.PDFREE_LOCALE = {
   fill_no_fields_link:        'Скрыть текст / Аннотировать',
   fill_no_fields_suffix:      ' для наложения текста.',
   fill_error_prefix:          'Не удалось прочитать поля формы: {msg}',
+
+  // ── drawUI.js + drawPointer.js ──────────────────────────
+  draw_load_renderer_failed:   'Не удалось загрузить рендерер PDF. Проверьте подключение к интернету.',
+  draw_read_file_failed:       'Не удалось прочитать файл.',
+  draw_open_pdf_failed:        'Не удалось открыть PDF: {msg}',
+  draw_render_error:           'Ошибка рендеринга: {msg}',
+  draw_exporting:              'Экспорт…',
+  draw_no_annotations:         'Нет аннотаций для сохранения. Сначала что-нибудь нарисуйте.',
+  draw_export_failed:          'Ошибка экспорта: {msg}',
+  draw_2d_context_unavailable: '2D-контекст недоступен',
+  draw_png_export_failed:      'Ошибка экспорта PNG',
+  draw_worker_error:           'Ошибка воркера',
+  draw_edit_text:              'Изменить текст',
+  draw_add_text:               'Добавить текст',
+  draw_save_btn:               'Сохранить',
+  draw_add_btn:                'Добавить',
 };
