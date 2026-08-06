@@ -781,4 +781,16 @@ window.PDFREE_LOCALE = {
   meta_paste_prompt:       '메타데이터 JSON을 붙여넣으세요:',
   meta_imported_toast:     '✅ 메타데이터를 가져왔습니다',
   meta_invalid_json_toast: '⚠️ 잘못된 JSON입니다 — 내보낸 형식을 붙여넣으세요',
+
+  // ── pdf2pptUI.js + pdf2mdUI.js ───────────────────────────
+  p2p_slide_one:         '슬라이드 {n}개',
+  p2p_slide_many:        '슬라이드 {n}개',
+  p2p_quality_label:     '슬라이드 품질',
+  p2p_quality_aria:      '슬라이드 이미지 품질',
+  p2p_mode_hint:         '📽️ 각 페이지는 하나의 전체 슬라이드 이미지가 됩니다 — 편집 가능한 텍스트가 아닌 이미지입니다. 이는 PDF 페이지를 레이아웃 그대로 슬라이드로 변환하는 유일한 방법이기 때문입니다.',
+  p2p_size_danger:       '⚠️ 예상 .pptx 크기: <strong>약 {mb}MB</strong> — 매우 큽니다. 브라우저 메모리가 부족할 수 있습니다. <strong>컴팩트</strong> 품질을 시도해 보세요.',
+  p2p_size_warn:         '📦 예상 .pptx 크기: <strong>약 {mb}MB</strong>{safari}.',
+  p2p_size_normal:       '📦 예상 .pptx 크기: 약 {mb}MB',
+  p2m_one_markdown_file: 'Markdown 파일 1개',
+  p2m_mode_hint:         '📝 제목, 글머리 기호/번호 매기기 목록, 굵게/기울임꼴 텍스트가 자동으로 감지됩니다. 표와 이미지는 변환되지 않습니다 — 이를 위해서는 PDF를 Excel로 또는 PDF를 Word로 사용해 보세요.',
 };

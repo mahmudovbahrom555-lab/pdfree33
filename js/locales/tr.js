@@ -779,4 +779,16 @@ window.PDFREE_LOCALE = {
   meta_paste_prompt:       'Meta veri JSON\'unu yapıştırın:',
   meta_imported_toast:     '✅ Meta veriler içe aktarıldı',
   meta_invalid_json_toast: '⚠️ Geçersiz JSON — dışa aktarılan biçimi yapıştırın',
+
+  // ── pdf2pptUI.js + pdf2mdUI.js ───────────────────────────
+  p2p_slide_one:         '{n} slayt',
+  p2p_slide_many:        '{n} slayt',
+  p2p_quality_label:     'Slayt kalitesi',
+  p2p_quality_aria:      'Slayt görüntü kalitesi',
+  p2p_mode_hint:         '📽️ Her sayfa tam slayt görüntüsü haline gelir — düzenlenebilir metin değil, bir görüntüdür, çünkü herhangi bir PDF sayfasını slayda dönüştürmenin düzene sadık kalan tek yolu budur.',
+  p2p_size_danger:       '⚠️ Tahmini .pptx boyutu: <strong>~{mb} MB</strong> — çok büyük. Tarayıcının belleği yetersiz kalabilir. <strong>Kompakt</strong> kaliteyi deneyin.',
+  p2p_size_warn:         '📦 Tahmini .pptx boyutu: <strong>~{mb} MB</strong>{safari}.',
+  p2p_size_normal:       '📦 Tahmini .pptx boyutu: ~{mb} MB',
+  p2m_one_markdown_file: '1 Markdown dosyası',
+  p2m_mode_hint:         '📝 Başlıklar, madde işaretli/numaralı listeler ve kalın/italik metin otomatik olarak algılanır. Tablolar ve görüntüler dönüştürülmez — bunlar için PDF\'den Excel\'e veya PDF\'den Word\'e araçlarını deneyin.',
 };

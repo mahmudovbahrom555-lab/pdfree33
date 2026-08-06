@@ -779,4 +779,16 @@ window.PDFREE_LOCALE = {
   meta_paste_prompt:       'Plak metadata-JSON:',
   meta_imported_toast:     '✅ Metadata geïmporteerd',
   meta_invalid_json_toast: '⚠️ Ongeldige JSON — plak het geëxporteerde formaat',
+
+  // ── pdf2pptUI.js + pdf2mdUI.js ───────────────────────────
+  p2p_slide_one:         '{n} dia',
+  p2p_slide_many:        '{n} dia\'s',
+  p2p_quality_label:     'Diakwaliteit',
+  p2p_quality_aria:      'Afbeeldingskwaliteit van de dia',
+  p2p_mode_hint:         '📽️ Elke pagina wordt één full-slide afbeelding — een afbeelding, geen bewerkbare tekst, aangezien dit de enige lay-outgetrouwe manier is om een willekeurige PDF-pagina in een dia om te zetten.',
+  p2p_size_danger:       '⚠️ Geschatte .pptx-grootte: <strong>~{mb} MB</strong> — erg groot. De browser heeft mogelijk onvoldoende geheugen. Probeer de kwaliteit <strong>Compact</strong>.',
+  p2p_size_warn:         '📦 Geschatte .pptx-grootte: <strong>~{mb} MB</strong>{safari}.',
+  p2p_size_normal:       '📦 Geschatte .pptx-grootte: ~{mb} MB',
+  p2m_one_markdown_file: '1 Markdown-bestand',
+  p2m_mode_hint:         '📝 Koppen, opsommings-/genummerde lijsten en vet/cursief worden automatisch gedetecteerd. Tabellen en afbeeldingen worden niet geconverteerd — probeer daarvoor PDF naar Excel of PDF naar Word.',
 };

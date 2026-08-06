@@ -779,4 +779,16 @@ window.PDFREE_LOCALE = {
   meta_paste_prompt:       'Wklej JSON metadanych:',
   meta_imported_toast:     '✅ Metadane zaimportowane',
   meta_invalid_json_toast: '⚠️ Nieprawidłowy JSON — wklej wyeksportowany format',
+
+  // ── pdf2pptUI.js + pdf2mdUI.js ───────────────────────────
+  p2p_slide_one:         '{n} slajd',
+  p2p_slide_many:        '{n} slajdów',
+  p2p_quality_label:     'Jakość slajdów',
+  p2p_quality_aria:      'Jakość obrazu slajdu',
+  p2p_mode_hint:         '📽️ Każda strona staje się jednym obrazem slajdu na pełny ekran — obrazem, a nie edytowalnym tekstem, ponieważ jest to jedyny sposób na wierne odwzorowanie układu dowolnej strony PDF jako slajdu.',
+  p2p_size_danger:       '⚠️ Szacowany rozmiar .pptx: <strong>~{mb} MB</strong> — bardzo duży. Przeglądarce może zabraknąć pamięci. Wypróbuj jakość <strong>Kompaktowa</strong>.',
+  p2p_size_warn:         '📦 Szacowany rozmiar .pptx: <strong>~{mb} MB</strong>{safari}.',
+  p2p_size_normal:       '📦 Szacowany rozmiar .pptx: ~{mb} MB',
+  p2m_one_markdown_file: '1 plik Markdown',
+  p2m_mode_hint:         '📝 Nagłówki, listy punktowane/numerowane oraz pogrubiony/kursywowy tekst są wykrywane automatycznie. Tabele i obrazy nie są konwertowane — spróbuj PDF do Excel lub PDF do Word dla nich.',
 };

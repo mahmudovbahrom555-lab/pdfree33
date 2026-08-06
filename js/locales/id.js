@@ -780,4 +780,16 @@ window.PDFREE_LOCALE = {
   meta_paste_prompt:       'Tempel JSON metadata:',
   meta_imported_toast:     '✅ Metadata diimpor',
   meta_invalid_json_toast: '⚠️ JSON tidak valid — tempel format yang diekspor',
+
+  // ── pdf2pptUI.js + pdf2mdUI.js ───────────────────────────
+  p2p_slide_one:         '{n} slide',
+  p2p_slide_many:        '{n} slide',
+  p2p_quality_label:     'Kualitas slide',
+  p2p_quality_aria:      'Kualitas gambar slide',
+  p2p_mode_hint:         '📽️ Setiap halaman menjadi satu gambar slide penuh — gambar, bukan teks yang dapat diedit, karena ini satu-satunya cara yang setia pada tata letak untuk mengubah halaman PDF apa pun menjadi slide.',
+  p2p_size_danger:       '⚠️ Perkiraan ukuran .pptx: <strong>~{mb} MB</strong> — sangat besar. Browser mungkin kehabisan memori. Coba kualitas <strong>Kompak</strong>.',
+  p2p_size_warn:         '📦 Perkiraan ukuran .pptx: <strong>~{mb} MB</strong>{safari}.',
+  p2p_size_normal:       '📦 Perkiraan ukuran .pptx: ~{mb} MB',
+  p2m_one_markdown_file: '1 file Markdown',
+  p2m_mode_hint:         '📝 Heading, daftar berpoin/bernomor, dan teks tebal/miring terdeteksi secara otomatis. Tabel dan gambar tidak dikonversi — coba PDF ke Excel atau PDF ke Word untuk itu.',
 };

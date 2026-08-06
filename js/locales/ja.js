@@ -782,4 +782,16 @@ window.PDFREE_LOCALE = {
   meta_paste_prompt:       'メタデータのJSONを貼り付けてください:',
   meta_imported_toast:     '✅ メタデータをインポートしました',
   meta_invalid_json_toast: '⚠️ 無効なJSONです — エクスポートした形式を貼り付けてください',
+
+  // ── pdf2pptUI.js + pdf2mdUI.js ───────────────────────────
+  p2p_slide_one:         '{n}枚のスライド',
+  p2p_slide_many:        '{n}枚のスライド',
+  p2p_quality_label:     'スライド品質',
+  p2p_quality_aria:      'スライド画像の品質',
+  p2p_mode_hint:         '📽️ 各ページは1枚のフルサイズのスライド画像になります — 編集可能なテキストではなく画像です。これは、任意のPDFページをレイアウトを保ったままスライドに変換する唯一の方法です。',
+  p2p_size_danger:       '⚠️ 推定.pptxサイズ: <strong>約{mb} MB</strong> — 非常に大きいです。ブラウザのメモリが不足する可能性があります。<strong>コンパクト</strong>品質を試してください。',
+  p2p_size_warn:         '📦 推定.pptxサイズ: <strong>約{mb} MB</strong>{safari}。',
+  p2p_size_normal:       '📦 推定.pptxサイズ: 約{mb} MB',
+  p2m_one_markdown_file: 'Markdownファイル1件',
+  p2m_mode_hint:         '📝 見出し、箇条書き/番号付きリスト、太字/斜体は自動的に検出されます。表と画像は変換されません — その場合はPDFからExcelまたはPDFからWordをお試しください。',
 };

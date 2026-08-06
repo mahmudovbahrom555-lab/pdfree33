@@ -781,4 +781,16 @@ window.PDFREE_LOCALE = {
   meta_paste_prompt:       'Cole o JSON de metadados:',
   meta_imported_toast:     '✅ Metadados importados',
   meta_invalid_json_toast: '⚠️ JSON inválido — cole o formato exportado',
+
+  // ── pdf2pptUI.js + pdf2mdUI.js ───────────────────────────
+  p2p_slide_one:         '{n} slide',
+  p2p_slide_many:        '{n} slides',
+  p2p_quality_label:     'Qualidade do slide',
+  p2p_quality_aria:      'Qualidade de imagem do slide',
+  p2p_mode_hint:         '📽️ Cada página se torna uma imagem de slide completa — uma imagem, não texto editável, já que essa é a única forma fiel ao layout de transformar uma página de PDF em um slide.',
+  p2p_size_danger:       '⚠️ Tamanho estimado do .pptx: <strong>~{mb} MB</strong> — muito grande. O navegador pode ficar sem memória. Experimente a qualidade <strong>Compacta</strong>.',
+  p2p_size_warn:         '📦 Tamanho estimado do .pptx: <strong>~{mb} MB</strong>{safari}.',
+  p2p_size_normal:       '📦 Tamanho estimado do .pptx: ~{mb} MB',
+  p2m_one_markdown_file: '1 arquivo Markdown',
+  p2m_mode_hint:         '📝 Títulos, listas com marcadores/numeradas e texto em negrito/itálico são detectados automaticamente. Tabelas e imagens não são convertidas — experimente PDF para Excel ou PDF para Word para isso.',
 };

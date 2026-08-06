@@ -780,4 +780,16 @@ window.PDFREE_LOCALE = {
   meta_paste_prompt:       'Dán JSON metadata:',
   meta_imported_toast:     '✅ Đã nhập metadata',
   meta_invalid_json_toast: '⚠️ JSON không hợp lệ — dán định dạng đã xuất',
+
+  // ── pdf2pptUI.js + pdf2mdUI.js ───────────────────────────
+  p2p_slide_one:         '{n} trang chiếu',
+  p2p_slide_many:        '{n} trang chiếu',
+  p2p_quality_label:     'Chất lượng trang chiếu',
+  p2p_quality_aria:      'Chất lượng hình ảnh trang chiếu',
+  p2p_mode_hint:         '📽️ Mỗi trang trở thành một hình ảnh trang chiếu toàn màn hình — một hình ảnh, không phải văn bản có thể chỉnh sửa, vì đây là cách duy nhất giữ đúng bố cục khi chuyển một trang PDF bất kỳ thành trang chiếu.',
+  p2p_size_danger:       '⚠️ Kích thước .pptx ước tính: <strong>~{mb} MB</strong> — rất lớn. Trình duyệt có thể hết bộ nhớ. Hãy thử chất lượng <strong>Gọn nhẹ</strong>.',
+  p2p_size_warn:         '📦 Kích thước .pptx ước tính: <strong>~{mb} MB</strong>{safari}.',
+  p2p_size_normal:       '📦 Kích thước .pptx ước tính: ~{mb} MB',
+  p2m_one_markdown_file: '1 tệp Markdown',
+  p2m_mode_hint:         '📝 Tiêu đề, danh sách có dấu đầu dòng/đánh số, và văn bản in đậm/in nghiêng được phát hiện tự động. Bảng và hình ảnh không được chuyển đổi — hãy thử PDF sang Excel hoặc PDF sang Word cho những nội dung đó.',
 };

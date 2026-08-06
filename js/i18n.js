@@ -801,6 +801,20 @@ export const EN = {
   meta_paste_prompt:       'Paste metadata JSON:',
   meta_imported_toast:     '✅ Metadata imported',
   meta_invalid_json_toast: '⚠️ Invalid JSON — paste the exported format',
+
+  // ── pdf2pptUI.js ───────────────────────────────────────────────
+  p2p_slide_one:      '{n} slide',
+  p2p_slide_many:     '{n} slides',
+  p2p_quality_label:  'Slide quality',
+  p2p_quality_aria:   'Slide image quality',
+  p2p_mode_hint:      "📽️ Each page becomes one full-slide image — a picture, not editable text, since that's the only layout-faithful way to turn an arbitrary PDF page into a slide.",
+  p2p_size_danger:    '⚠️ Estimated .pptx: <strong>~{mb} MB</strong> — very large. Your browser may run out of memory. Try <strong>Compact</strong> quality.',
+  p2p_size_warn:      '📦 Estimated .pptx: <strong>~{mb} MB</strong>{safari}.',
+  p2p_size_normal:    '📦 Estimated .pptx: ~{mb} MB',
+
+  // ── pdf2mdUI.js ────────────────────────────────────────────────
+  p2m_one_markdown_file: '1 Markdown file',
+  p2m_mode_hint:          "📝 Headings, bullet/numbered lists and bold/italic text are detected automatically. Tables and images aren't converted — try PDF to Excel or PDF to Word for those.",
 };
 
 const L = { ...EN, ...(window.PDFREE_LOCALE ?? {}) };

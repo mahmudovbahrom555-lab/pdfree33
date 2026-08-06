@@ -5,6 +5,7 @@ import { id } from './utils.js';
 import { loadPdfJs } from './pdf2jpgUI.js';
 import { preprocessPdfBuffer } from './decryptPdf.js';
 import { group } from './uiComponents.js';
+import { t, tp } from './i18n.js';
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 // JPEG compression ratio at quality 0.85 over typical PDF content — same
@@ -33,7 +34,7 @@ export async function initPdf2PptOptions(file) {
 
   _file    = file;
   _loading = true;
-  el.innerHTML    = '<div class="compress-scan">Analysing PDF…</div>';
+  el.innerHTML    = `<div class="compress-scan">${t('val_analysing_pdf')}</div>`;
   el.style.display = '';
 
   try {
@@ -62,7 +63,7 @@ export async function initPdf2PptOptions(file) {
     _loading = false;
     el.innerHTML = `
       <div class="compress-scan compress-scan--found" role="alert">
-        Cannot read PDF: ${_esc(err.message)}
+        ${t('p2w_cannot_read', { msg: _esc(err.message) })}
       </div>`;
   }
 }
@@ -94,20 +95,20 @@ function _render(file) {
     <div class="compress-info">
       <span class="compress-info__name" title="${_esc(file.name)}">${name}</span>
       <span class="compress-info__dot">·</span>
-      <span class="compress-info__meta">${_pageCount} page${_pageCount !== 1 ? 's' : ''} → ${_pageCount} slide${_pageCount !== 1 ? 's' : ''}</span>
+      <span class="compress-info__meta">${tp(_pageCount, 'split_info_page', 'split_info_pages', { n: _pageCount })} → ${tp(_pageCount, 'p2p_slide_one', 'p2p_slide_many', { n: _pageCount })}</span>
     </div>
 
-    ${group('Slide quality', `
-      <div class="j2p-chips" role="group" aria-label="Slide image quality">
-        ${_dpiChip('72',  'Compact',      '72',  _dpi)}
-        ${_dpiChip('150', 'Balanced',     '150', _dpi, true)}
-        ${_dpiChip('300', 'High quality', '300', _dpi)}
+    ${group(t('p2p_quality_label'), `
+      <div class="j2p-chips" role="group" aria-label="${t('p2p_quality_aria')}">
+        ${_dpiChip('72',  t('p2w_dpi_compact'),  '72',  _dpi)}
+        ${_dpiChip('150', t('p2w_dpi_balanced'), '150', _dpi, true)}
+        ${_dpiChip('300', t('p2w_dpi_high'),     '300', _dpi)}
       </div>
     `)}
     <div id="p2pSizeHint" style="margin-top:8px">${_sizeHintHTML(_dpi)}</div>
 
     <div class="compress-scan compress-scan--ok" role="status" aria-live="polite" style="margin-top:8px">
-      📽️ Each page becomes one full-slide image — a picture, not editable text, since that's the only layout-faithful way to turn an arbitrary PDF page into a slide.
+      ${t('p2p_mode_hint')}
     </div>
   `;
 
@@ -136,16 +137,16 @@ function _sizeHintHTML(dpi) {
 
   if (mb >= DANGER_MB) {
     return `<div class="compress-scan compress-scan--found" style="margin:0" role="alert">
-      ⚠️ Estimated .pptx: <strong>~${mbStr} MB</strong> — very large. Your browser may run out of memory. Try <strong>Compact</strong> quality.
-      ${isSafari ? '<br><small>Safari may close the tab. Chrome or Firefox handle large files better.</small>' : ''}
+      ${t('p2p_size_danger', { mb: mbStr })}
+      ${isSafari ? t('p2w_safari_note') : ''}
     </div>`;
   }
   if (mb >= WARN_MB) {
     return `<div class="compress-scan" style="margin:0;background:rgba(200,130,0,.08);border:1px solid rgba(200,130,0,.3);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--text2)">
-      📦 Estimated .pptx: <strong>~${mbStr} MB</strong>${isSafari ? ' · Consider <strong>Compact</strong> on Safari' : ''}.
+      ${t('p2p_size_warn', { mb: mbStr, safari: isSafari ? t('p2w_size_warn_safari') : '' })}
     </div>`;
   }
-  return `<div style="font-size:12px;color:var(--text3);padding:4px 0">📦 Estimated .pptx: ~${mbStr} MB</div>`;
+  return `<div style="font-size:12px;color:var(--text3);padding:4px 0">${t('p2p_size_normal', { mb: mbStr })}</div>`;
 }
 
 // ── Events ────────────────────────────────────────────────────────────────────

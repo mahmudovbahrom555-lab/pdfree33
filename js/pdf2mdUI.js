@@ -4,6 +4,7 @@
 import { id } from './utils.js';
 import { loadPdfJs } from './pdf2jpgUI.js';
 import { preprocessPdfBuffer } from './decryptPdf.js';
+import { t, tp } from './i18n.js';
 
 // ── State ─────────────────────────────────────────────────────────────────────
 let _pageCount = 0;
@@ -20,7 +21,7 @@ export async function initPdf2MdOptions(file) {
   if (!el) return;
 
   _loading = true;
-  el.innerHTML     = '<div class="compress-scan">Analysing PDF…</div>';
+  el.innerHTML     = `<div class="compress-scan">${t('val_analysing_pdf')}</div>`;
   el.style.display = '';
 
   try {
@@ -42,7 +43,7 @@ export async function initPdf2MdOptions(file) {
     _loading = false;
     el.innerHTML = `
       <div class="compress-scan compress-scan--found" role="alert">
-        Cannot read PDF: ${_esc(err.message)}
+        ${t('p2w_cannot_read', { msg: _esc(err.message) })}
       </div>`;
   }
 }
@@ -65,11 +66,11 @@ function _render(file) {
     <div class="compress-info">
       <span class="compress-info__name" title="${_esc(file.name)}">${name}</span>
       <span class="compress-info__dot">·</span>
-      <span class="compress-info__meta">${_pageCount} page${_pageCount !== 1 ? 's' : ''} → 1 Markdown file</span>
+      <span class="compress-info__meta">${tp(_pageCount, 'split_info_page', 'split_info_pages', { n: _pageCount })} → ${t('p2m_one_markdown_file')}</span>
     </div>
 
     <div class="compress-scan compress-scan--ok" role="status" aria-live="polite" style="margin-top:8px">
-      📝 Headings, bullet/numbered lists and bold/italic text are detected automatically. Tables and images aren't converted — try PDF to Excel or PDF to Word for those.
+      ${t('p2m_mode_hint')}
     </div>
   `;
 }

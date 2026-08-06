@@ -782,4 +782,16 @@ window.PDFREE_LOCALE = {
   meta_paste_prompt:       'Metadaten-JSON einfügen:',
   meta_imported_toast:     '✅ Metadaten importiert',
   meta_invalid_json_toast: '⚠️ Ungültiges JSON — bitte das exportierte Format einfügen',
+
+  // ── pdf2pptUI.js + pdf2mdUI.js ───────────────────────────
+  p2p_slide_one:         '{n} Folie',
+  p2p_slide_many:        '{n} Folien',
+  p2p_quality_label:     'Folienqualität',
+  p2p_quality_aria:      'Bildqualität der Folien',
+  p2p_mode_hint:         '📽️ Jede Seite wird zu einem vollflächigen Folienbild — ein Bild, kein bearbeitbarer Text, da dies die einzige layoutgetreue Möglichkeit ist, eine beliebige PDF-Seite in eine Folie umzuwandeln.',
+  p2p_size_danger:       '⚠️ Geschätzte .pptx-Größe: <strong>~{mb} MB</strong> — sehr groß. Der Browser könnte nicht genug Speicher haben. Versuche die Qualität <strong>Kompakt</strong>.',
+  p2p_size_warn:         '📦 Geschätzte .pptx-Größe: <strong>~{mb} MB</strong>{safari}.',
+  p2p_size_normal:       '📦 Geschätzte .pptx-Größe: ~{mb} MB',
+  p2m_one_markdown_file: '1 Markdown-Datei',
+  p2m_mode_hint:         '📝 Überschriften, Aufzählungs-/nummerierte Listen sowie Fett-/Kursivschrift werden automatisch erkannt. Tabellen und Bilder werden nicht konvertiert — probiere dafür PDF zu Excel oder PDF zu Word.',
 };

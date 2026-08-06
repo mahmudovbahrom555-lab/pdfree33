@@ -781,4 +781,16 @@ window.PDFREE_LOCALE = {
   meta_paste_prompt:       'Collez le JSON des métadonnées :',
   meta_imported_toast:     '✅ Métadonnées importées',
   meta_invalid_json_toast: '⚠️ JSON invalide — collez le format exporté',
+
+  // ── pdf2pptUI.js + pdf2mdUI.js ───────────────────────────
+  p2p_slide_one:         '{n} diapositive',
+  p2p_slide_many:        '{n} diapositives',
+  p2p_quality_label:     'Qualité des diapositives',
+  p2p_quality_aria:      'Qualité d\'image des diapositives',
+  p2p_mode_hint:         '📽️ Chaque page devient une image de diapositive pleine page — une image, pas du texte modifiable, car c\'est la seule façon fidèle à la mise en page de transformer une page PDF en diapositive.',
+  p2p_size_danger:       '⚠️ Taille .pptx estimée : <strong>~{mb} Mo</strong> — très volumineux. Le navigateur pourrait manquer de mémoire. Essayez la qualité <strong>Compacte</strong>.',
+  p2p_size_warn:         '📦 Taille .pptx estimée : <strong>~{mb} Mo</strong>{safari}.',
+  p2p_size_normal:       '📦 Taille .pptx estimée : ~{mb} Mo',
+  p2m_one_markdown_file: '1 fichier Markdown',
+  p2m_mode_hint:         '📝 Les titres, les listes à puces/numérotées et le texte en gras/italique sont détectés automatiquement. Les tableaux et les images ne sont pas convertis — essayez PDF en Excel ou PDF en Word pour cela.',
 };
