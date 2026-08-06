@@ -156,26 +156,10 @@ export const EN = {
 
   // ── splitUI.js ─────────────────────────────────────────────────
   no_pages_pdf:             'This PDF has no pages',
-  warn_large_pdf:           '⚠️ Large PDF ({n} pages) — processing may take a while',
   split_info_page:          '{n} page',
   split_info_pages:         '{n} pages',
-  split_mode_separate:      'Separate files',
-  split_mode_separate_desc: 'Each page → individual PDF',
-  split_mode_single:        'Single file',
-  split_mode_single_desc:   'Selected pages → one PDF',
-  split_pages_label:        'Pages to extract',
-  err_read_pages:           'Could not read PDF pages: {msg}',
-  select_all:               'Select all',
-  deselect_all:             'Deselect all',
   select_all_short:         'All',
   deselect_all_short:       'None',
-  pages_selected:           '{n} of {total} pages selected',
-  invalid_range:            'Invalid range — no valid pages found',
-  split_btn_separate:       '✂️ Split into {n} file',
-  split_btn_separate_many:  '✂️ Split into {n} files',
-  split_btn_single:         '📄 Extract {n} page',
-  split_btn_single_many:    '📄 Extract {n} pages',
-  split_btn_disabled:       '✂️ Select pages to split',
 
   // ── pdf2jpgUI.js ───────────────────────────────────────────────
   err_pdf_engine: 'PDF engine could not load. Check your internet connection — pdf.js is loaded from CDN.',
@@ -470,6 +454,49 @@ export const EN = {
   wm_toast_invalid_type: 'Please choose a PNG or JPG image',
   wm_toast_too_large:    'Logo image is too large — please use one under {max} MB',
   wm_default_text:       'WATERMARK',
+
+  // ── watermarkRemoveUI.js (shared by merge/compress/split/rotate) ──
+  wmrm_title:    'Remove stamp & layer watermarks',
+  wmrm_subtitle: 'Works on stamp annotations and OCG layers. Results vary by watermark type.',
+
+  // ── toolRegistrations.js — merge filename + validate() messages ──
+  val_output_filename:      'Output filename',
+  val_select_page:          'Please select at least one page',
+  val_light_no_savings:     '⚠️ Light preset found nothing to remove in this PDF. Try Standard for real savings.',
+  val_wm_upload_logo:       'Please upload a logo image',
+  val_wm_enter_text:        'Please enter watermark text',
+  val_redact_draw_area:     'Draw at least one area to redact',
+  val_rotate_select:        'Rotate at least one page',
+  val_protect_required:     'Set an open password or restrict at least one permission',
+  val_fill_loading:         'Reading PDF fields — please wait a moment…',
+  val_fill_no_fields:       'No fillable fields found in this PDF',
+  val_fill_required_prefix: 'Required:',
+  val_analysing_pdf:        'Analysing PDF…',
+  val_enter_password:       'Enter the PDF password',
+
+  // ── extractUI.js (backs split + extract) ──────────────────────
+  ext_loading:            'Loading pages…',
+  ext_load_failed:        'Failed to load PDF: {msg}',
+  ext_step_output_format: 'Output format',
+  ext_mode_single:        'Single file',
+  ext_mode_single_desc:   'All selected pages in one PDF',
+  ext_mode_separate:      'Separate files',
+  ext_mode_separate_desc: 'One PDF per selected page',
+  ext_step_select_pages:  'Select pages',
+  ext_range_placeholder:  'e.g. 1-3, 5, 7',
+  ext_apply:              'Apply',
+  ext_preset_all:         'All',
+  ext_preset_odd:         'Odd',
+  ext_preset_even:        'Even',
+  ext_preset_first:       '1st half',
+  ext_preset_last:        '2nd half',
+  ext_step_options:       'Options',
+  ext_reverse:            'Reverse page order',
+  ext_reverse_desc:       'Output pages in reverse sequence',
+  ext_rendering_thumbs:   'Rendering thumbnails…',
+  ext_clear:              'Clear',
+  ext_selected_one:       'Selected: {n} page',
+  ext_selected_many:      'Selected: {n} pages',
 };
 
 const L = { ...EN, ...(window.PDFREE_LOCALE ?? {}) };

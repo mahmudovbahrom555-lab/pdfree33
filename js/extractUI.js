@@ -14,6 +14,7 @@ import { parseRange, pagesToRangeString }   from './pageSelectorUtils.js';
 import {
   wmRemoveHtml, bindWmRemove, resetWmRemove, getWmRemove,
 } from './watermarkRemoveUI.js';
+import { t, tp } from './i18n.js';
 
 const THUMBS_PER_PAGE = 16;   // 4-column grid of 4 rows
 const THUMB_SCALE     = 0.18;
@@ -53,7 +54,7 @@ export async function initExtractOptions(file, defaultMode = 'single') {
   resetWmRemove();
 
   _container.style.display = '';
-  _container.innerHTML = '<div class="split-loading">Loading pages…</div>';
+  _container.innerHTML = `<div class="split-loading">${t('ext_loading')}</div>`;
 
   const myGen = ++_renderGen;
 
@@ -79,7 +80,7 @@ export async function initExtractOptions(file, defaultMode = 'single') {
     await _renderThumbPage(myGen);
   } catch (err) {
     if (myGen !== _renderGen) return;
-    _container.innerHTML = `<div class="split-loading">Failed to load PDF: ${err.message}</div>`;
+    _container.innerHTML = `<div class="split-loading">${t('ext_load_failed', { msg: err.message })}</div>`;
   }
 }
 
@@ -106,50 +107,50 @@ function _panelHTML() {
       <div class="ext-panel">
         <div class="ext-section">
           <div class="ext-section__title">
-            <span class="ext-step">1</span>Output format
+            <span class="ext-step">1</span>${t('ext_step_output_format')}
           </div>
           <div class="ext-modes">
             <label class="ext-mode ${_mode === 'single' ? 'ext-mode--active' : ''}">
               <input type="radio" name="extMode" value="single" ${_mode === 'single' ? 'checked' : ''}>
-              <strong>Single file</strong>
-              <small>All selected pages in one PDF</small>
+              <strong>${t('ext_mode_single')}</strong>
+              <small>${t('ext_mode_single_desc')}</small>
             </label>
             <label class="ext-mode ${_mode === 'separate' ? 'ext-mode--active' : ''}">
               <input type="radio" name="extMode" value="separate" ${_mode === 'separate' ? 'checked' : ''}>
-              <strong>Separate files</strong>
-              <small>One PDF per selected page</small>
+              <strong>${t('ext_mode_separate')}</strong>
+              <small>${t('ext_mode_separate_desc')}</small>
             </label>
           </div>
         </div>
 
         <div class="ext-section">
           <div class="ext-section__title">
-            <span class="ext-step">2</span>Select pages
+            <span class="ext-step">2</span>${t('ext_step_select_pages')}
           </div>
           <div class="ext-range-row">
             <input type="text" id="extRangeInput" class="ext-range-input"
-                   placeholder="e.g. 1-3, 5, 7">
-            <button type="button" id="extRangeApply" class="ext-apply-btn">Apply</button>
+                   placeholder="${t('ext_range_placeholder')}">
+            <button type="button" id="extRangeApply" class="ext-apply-btn">${t('ext_apply')}</button>
           </div>
           <div class="ext-quick-btns">
-            <button type="button" class="ext-quick-btn" data-preset="all">All</button>
-            <button type="button" class="ext-quick-btn" data-preset="odd">Odd</button>
-            <button type="button" class="ext-quick-btn" data-preset="even">Even</button>
-            <button type="button" class="ext-quick-btn" data-preset="first">1st half</button>
-            <button type="button" class="ext-quick-btn" data-preset="last">2nd half</button>
+            <button type="button" class="ext-quick-btn" data-preset="all">${t('ext_preset_all')}</button>
+            <button type="button" class="ext-quick-btn" data-preset="odd">${t('ext_preset_odd')}</button>
+            <button type="button" class="ext-quick-btn" data-preset="even">${t('ext_preset_even')}</button>
+            <button type="button" class="ext-quick-btn" data-preset="first">${t('ext_preset_first')}</button>
+            <button type="button" class="ext-quick-btn" data-preset="last">${t('ext_preset_last')}</button>
           </div>
         </div>
 
         <div class="ext-section">
           <div class="ext-section__title">
-            <span class="ext-step">3</span>Options
+            <span class="ext-step">3</span>${t('ext_step_options')}
           </div>
           <label class="compress-preserve">
             <input type="checkbox" id="extReverse">
             <span class="compress-preserve__box" aria-hidden="true"></span>
             <div class="compress-preserve__text">
-              <strong>Reverse page order</strong>
-              <small>Output pages in reverse sequence</small>
+              <strong>${t('ext_reverse')}</strong>
+              <small>${t('ext_reverse_desc')}</small>
             </div>
           </label>
           ${wmRemoveHtml()}
@@ -158,7 +159,7 @@ function _panelHTML() {
 
       <div class="ext-thumbs-col">
         <div class="ext-thumbs-grid" id="extThumbsGrid">
-          <div class="split-loading">Rendering thumbnails…</div>
+          <div class="split-loading">${t('ext_rendering_thumbs')}</div>
         </div>
         ${showPager ? `
         <div class="ext-pager">
@@ -168,7 +169,7 @@ function _panelHTML() {
         </div>` : ''}
         <div class="ext-sel-bar">
           <span id="extSelCount" class="ext-sel-count"></span>
-          <button type="button" id="extClearSel" class="ext-clear-btn">Clear</button>
+          <button type="button" id="extClearSel" class="ext-clear-btn">${t('ext_clear')}</button>
         </div>
       </div>
     </div>
@@ -317,7 +318,7 @@ function _refreshThumbSelections() {
 function _updateSelCount() {
   const el = document.getElementById('extSelCount');
   const n  = _selectedPages.size;
-  if (el) el.textContent = `Selected: ${n} page${n === 1 ? '' : 's'}`;
+  if (el) el.textContent = tp(n, 'ext_selected_one', 'ext_selected_many');
 }
 
 function _updateRangeInput() {

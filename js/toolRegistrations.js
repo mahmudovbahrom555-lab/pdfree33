@@ -11,11 +11,10 @@
 
 import { registerTool } from './toolRegistry.js';
 import { id, esc }      from './utils.js';
+import { t }             from './i18n.js';
 import { getWmRemove, wmRemoveHtml, bindWmRemove, resetWmRemove } from './watermarkRemoveUI.js';
 
 // ── UI modules ─────────────────────────────────────────────────
-import { initSplitOptions, hideSplitOptions,
-         getSelectedPages, getSplitMode }   from './splitUI.js';
 import { initCompressOptions, hideCompressOptions,
          getCompressParams, getCompressScan,
          renderCompressionReport,
@@ -105,7 +104,7 @@ function _filenameHtml() {
     <div style="margin-bottom:14px;">
       <label for="mergeFilenameInput" style="display:block;font-size:12px;font-weight:600;
         color:var(--text2);margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em;">
-        Output filename
+        ${t('val_output_filename')}
       </label>
       <div style="display:flex;align-items:center;gap:6px;">
         <input id="mergeFilenameInput" type="text" spellcheck="false" autocomplete="off"
@@ -178,7 +177,7 @@ registerTool('split', {
   init:      file => initExtractOptions(file, 'separate'),
   hide:      hideExtractOptions,
   getParams: getExtractParams,
-  validate:  p => p.pages.length === 0 ? 'Please select at least one page' : null,
+  validate:  p => p.pages.length === 0 ? t('val_select_page') : null,
 });
 
 registerTool('extract', {
@@ -186,7 +185,7 @@ registerTool('extract', {
   init:      initExtractOptions,
   hide:      hideExtractOptions,
   getParams: getExtractParams,
-  validate:  p => p.pages.length === 0 ? 'Please select at least one page' : null,
+  validate:  p => p.pages.length === 0 ? t('val_select_page') : null,
 });
 
 registerTool('compress', {
@@ -200,7 +199,7 @@ registerTool('compress', {
     // Light does not recompress images or use object streams, so if pre-scan
     // found zero removable items the operation will produce negligible results.
     if (scan && p.preset === 'low' && scan.opportunities === 0) {
-      return '⚠️ Light preset found nothing to remove in this PDF. Try Standard for real savings.';
+      return t('val_light_no_savings');
     }
     return null;
   },
@@ -223,7 +222,7 @@ registerTool('pdf2jpg', {
   init:      initPdf2JpgOptions,
   hide:      hidePdf2JpgOptions,
   getParams: getPdf2JpgParams,
-  validate:  p => p.pages.length === 0 ? 'Please select at least one page' : null,
+  validate:  p => p.pages.length === 0 ? t('val_select_page') : null,
 });
 
 registerTool('watermark', {
@@ -233,8 +232,8 @@ registerTool('watermark', {
   hide:       hideWatermarkOptions,
   getParams:  getWatermarkParams,
   validate:   p => p.kind === 'image'
-    ? (!p.bytes ? 'Please upload a logo image' : null)
-    : (!p.text?.trim() ? 'Please enter watermark text' : null),
+    ? (!p.bytes ? t('val_wm_upload_logo') : null)
+    : (!p.text?.trim() ? t('val_wm_enter_text') : null),
 });
 
 registerTool('pagenum', {
@@ -271,7 +270,7 @@ registerTool('redact', {
     const total = p.applyAll
       ? (p.rects?.length || 0)
       : Object.values(p.rectsByPage || {}).reduce((sum, arr) => sum + arr.length, 0);
-    return total === 0 ? 'Draw at least one area to redact' : null;
+    return total === 0 ? t('val_redact_draw_area') : null;
   },
 });
 
@@ -283,7 +282,7 @@ registerTool('rotate', {
   getParams:  () => ({ ...getRotateParams(), removeWatermarks: getWmRemove() }),
   validate:   (p) => {
     const changed = p.rotations.filter(r => r.angle !== 0).length;
-    if (changed === 0) return 'Rotate at least one page';
+    if (changed === 0) return t('val_rotate_select');
     return null;
   },
 });
@@ -300,7 +299,7 @@ registerTool('protect', {
     const hasOpenPwd = p.userPassword?.length > 0;
     const hasRestrictions = Object.values(p.permissions).some(v => v === false);
     if (!hasOpenPwd && !hasRestrictions) {
-      return 'Set an open password or restrict at least one permission';
+      return t('val_protect_required');
     }
     return null;
   },
@@ -313,11 +312,11 @@ registerTool('fill', {
   hide:       hideFillOptions,
   getParams:  getFillParams,
   validate:   p => p.loading
-                ? 'Reading PDF fields — please wait a moment…'
+                ? t('val_fill_loading')
                 : !p.hasFields
-                ? 'No fillable fields found in this PDF'
+                ? t('val_fill_no_fields')
                 : p.missingRequired?.length
-                ? `Required: ${p.missingRequired.slice(0, 3).join(', ')}${p.missingRequired.length > 3 ? '…' : ''}`
+                ? `${t('val_fill_required_prefix')} ${p.missingRequired.slice(0, 3).join(', ')}${p.missingRequired.length > 3 ? '…' : ''}`
                 : null,
 });
 
@@ -349,9 +348,9 @@ registerTool('ocr', {
   hide:      hideOcrOptions,
   getParams: getOcrParams,
   validate:  p => {
-    if (p.loading)                      return 'Analysing PDF…';
+    if (p.loading)                      return t('val_analysing_pdf');
     if (!p.hasFile)                     return null;
-    if (!p.isTextPdf && !p.isOcrReady) return 'Install OCR engine first';
+    if (!p.isTextPdf && !p.isOcrReady) return t('install_ocr_first');
     return null;
   },
 });
@@ -362,7 +361,7 @@ registerTool('pdf2word', {
   hide:      hidePdf2WordOptions,
   getParams: getPdf2WordParams,
   validate:  p => {
-    if (p.loading) return 'Analysing PDF…';
+    if (p.loading) return t('val_analysing_pdf');
     if (!p.pageCount) return null;
     return null;
   },
@@ -377,7 +376,7 @@ registerTool('pdf2excel', {
   hide:      hidePdf2ExcelOptions,
   getParams: getPdf2ExcelParams,
   validate:  p => {
-    if (p.loading) return 'Analysing PDF…';
+    if (p.loading) return t('val_analysing_pdf');
     if (!p.pageCount) return null;
     return null;
   },
@@ -392,7 +391,7 @@ registerTool('pdf2ppt', {
   hide:      hidePdf2PptOptions,
   getParams: getPdf2PptParams,
   validate:  p => {
-    if (p.loading) return 'Analysing PDF…';
+    if (p.loading) return t('val_analysing_pdf');
     if (!p.pageCount) return null;
     return null;
   },
@@ -403,7 +402,7 @@ registerTool('pdf2md', {
   init:      initPdf2MdOptions,
   hide:      hidePdf2MdOptions,
   getParams: getPdf2MdParams,
-  validate:  p => p.loading ? 'Analysing PDF…' : null,
+  validate:  p => p.loading ? t('val_analysing_pdf') : null,
 });
 
 registerTool('unlock', {
@@ -411,7 +410,7 @@ registerTool('unlock', {
   init:      initUnlockOptions,
   hide:      hideUnlockOptions,
   getParams: getUnlockParams,
-  validate:  p => (p.needsPassword && !p.password) ? 'Enter the PDF password' : null,
+  validate:  p => (p.needsPassword && !p.password) ? t('val_enter_password') : null,
 });
 
 registerTool('compare', {

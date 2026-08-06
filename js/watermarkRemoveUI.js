@@ -17,6 +17,7 @@
 // ============================================================
 
 import { checkbox } from './uiComponents.js';
+import { t } from './i18n.js';
 
 let _active = false;
 
@@ -29,8 +30,8 @@ export function wmRemoveHtml() {
   return checkbox({
     id:       WM_TOGGLE_ID,
     checked:  _active,
-    title:    'Remove stamp & layer watermarks',
-    subtitle: 'Works on stamp annotations and OCG layers. Results vary by watermark type.',
+    title:    t('wmrm_title'),
+    subtitle: t('wmrm_subtitle'),
   });
 }
 
