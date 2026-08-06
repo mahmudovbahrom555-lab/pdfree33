@@ -16,6 +16,7 @@
 import { id }       from './utils.js';
 import { showToast } from './ui.js';
 import { loadPdfLib } from './lazyLibs.js';
+import { t } from './i18n.js';
 
 // ── State ──────────────────────────────────────────────────────
 let _meta = { title: '', author: '', subject: '', keywords: '', creator: '', producer: '' };
@@ -35,7 +36,7 @@ export async function initMetaOptions(file) {
   container.innerHTML = `
     <div class="compress-loading">
       <span class="compress-loading__spinner" aria-hidden="true"></span>
-      Reading metadata…
+      ${t('meta_reading')}
     </div>
   `;
   container.style.display = 'block';
@@ -58,7 +59,7 @@ export async function initMetaOptions(file) {
     };
   } catch {
     _meta = { title: '', author: '', subject: '', keywords: '', creator: '', producer: '' };
-    showToast('Could not read metadata — editing from scratch', 4000);
+    showToast(t('meta_read_failed'), 4000);
   }
 
   _render();
@@ -74,14 +75,16 @@ export function hideMetaOptions() {
 
 // ── Render ─────────────────────────────────────────────────────
 
-const FIELDS = [
-  { key: 'title',    label: 'Title',    placeholder: 'Document title' },
-  { key: 'author',   label: 'Author',   placeholder: 'Author name' },
-  { key: 'subject',  label: 'Subject',  placeholder: 'Document subject' },
-  { key: 'keywords', label: 'Keywords', placeholder: 'keyword1, keyword2' },
-  { key: 'creator',  label: 'Creator',  placeholder: 'Application name' },
-  { key: 'producer', label: 'Producer', placeholder: 'PDF library' },
-];
+function _fields() {
+  return [
+    { key: 'title',    label: t('meta_field_title'),    placeholder: t('meta_ph_title')    },
+    { key: 'author',   label: t('meta_field_author'),   placeholder: t('meta_ph_author')   },
+    { key: 'subject',  label: t('meta_field_subject'),  placeholder: t('meta_ph_subject')  },
+    { key: 'keywords', label: t('meta_field_keywords'), placeholder: t('meta_ph_keywords') },
+    { key: 'creator',  label: t('meta_field_creator'),  placeholder: t('meta_ph_creator')  },
+    { key: 'producer', label: t('meta_field_producer'), placeholder: t('meta_ph_producer') },
+  ];
+}
 
 function _render() {
   const container = id('metaOptions');
@@ -91,24 +94,24 @@ function _render() {
 
   container.innerHTML = `
     <div class="meta-toolbar">
-      <button type="button" class="meta-btn" id="metaStripAll" aria-label="Clear all fields">
-        🧹 Strip all
+      <button type="button" class="meta-btn" id="metaStripAll" aria-label="${t('meta_clear_all_aria')}">
+        🧹 ${t('meta_strip_all')}
       </button>
-      <button type="button" class="meta-btn" id="metaExportJson" aria-label="Copy as JSON">
-        {} Export JSON
+      <button type="button" class="meta-btn" id="metaExportJson" aria-label="${t('meta_copy_json_aria')}">
+        {} ${t('meta_export_json')}
       </button>
-      <button type="button" class="meta-btn" id="metaImportJson" aria-label="Import from JSON">
-        ⬆ Import JSON
+      <button type="button" class="meta-btn" id="metaImportJson" aria-label="${t('meta_import_json_aria')}">
+        ⬆ ${t('meta_import_json')}
       </button>
     </div>
 
     ${hasAnyValue
-      ? `<div class="meta-notice">✏️ Editing existing metadata — blank fields will be cleared</div>`
-      : `<div class="meta-notice meta-notice--empty">📄 No metadata found — fill in fields below</div>`
+      ? `<div class="meta-notice">✏️ ${t('meta_editing_notice')}</div>`
+      : `<div class="meta-notice meta-notice--empty">📄 ${t('meta_empty_notice')}</div>`
     }
 
     <div class="meta-fields">
-      ${FIELDS.map(f => `
+      ${_fields().map(f => `
         <div class="meta-field">
           <label class="meta-field__label" for="meta_${f.key}">${f.label}</label>
           <input
@@ -142,16 +145,16 @@ function _bindEvents() {
 
   // Strip all
   id('metaStripAll')?.addEventListener('click', () => {
-    FIELDS.forEach(f => { _meta[f.key] = ''; });
+    _fields().forEach(f => { _meta[f.key] = ''; });
     container.querySelectorAll('.meta-field__input').forEach(inp => { inp.value = ''; });
-    showToast('All metadata fields cleared', 2500);
+    showToast(t('meta_cleared_toast'), 2500);
   });
 
   // Export JSON
   id('metaExportJson')?.addEventListener('click', () => {
     const json = JSON.stringify(_meta, null, 2);
     navigator.clipboard.writeText(json)
-      .then(() => showToast('📋 Metadata copied as JSON', 2500))
+      .then(() => showToast(t('meta_copied_toast'), 2500))
       .catch(() => {
         // Fallback: show in a textarea
         const ta = document.createElement('textarea');
@@ -160,26 +163,26 @@ function _bindEvents() {
         document.body.appendChild(ta);
         ta.focus(); ta.select();
         setTimeout(() => ta.remove(), 8000);
-        showToast('📋 Select all and copy (Ctrl+A, Ctrl+C)', 7000);
+        showToast(t('meta_select_copy_toast'), 7000);
       });
   });
 
   // Import JSON
   id('metaImportJson')?.addEventListener('click', () => {
-    const raw = prompt('Paste metadata JSON:');
+    const raw = prompt(t('meta_paste_prompt'));
     if (!raw) return;
     try {
       const parsed = JSON.parse(raw.trim());
-      FIELDS.forEach(f => {
+      _fields().forEach(f => {
         if (parsed[f.key] !== undefined) {
           _meta[f.key] = String(parsed[f.key]);
           const inp = id(`meta_${f.key}`);
           if (inp) inp.value = _meta[f.key];
         }
       });
-      showToast('✅ Metadata imported', 2500);
+      showToast(t('meta_imported_toast'), 2500);
     } catch {
-      showToast('⚠️ Invalid JSON — paste the exported format', 4000);
+      showToast(t('meta_invalid_json_toast'), 4000);
     }
   });
 }
