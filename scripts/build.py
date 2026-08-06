@@ -99,6 +99,19 @@ def _compute_hashes():
             if os.path.isfile(fpath):
                 with open(fpath, 'rb') as f:
                     combined += f.read()
+    # js/locales/*.js — os.listdir(js_dir) above only sees the top-level js/
+    # directory, so locale-only edits (i18n text changes) never bumped
+    # cache_version. Combined with /js/* being served immutable + 1yr with no
+    # ?v= on locale <script> tags, this let translation fixes silently never
+    # reach returning visitors' browsers until the HTTP cache expired.
+    locales_dir = os.path.join(js_dir, 'locales')
+    if os.path.isdir(locales_dir):
+        for fname in sorted(os.listdir(locales_dir)):
+            if fname.endswith('.js'):
+                fpath = os.path.join(locales_dir, fname)
+                if os.path.isfile(fpath):
+                    with open(fpath, 'rb') as f:
+                        combined += f.read()
     css_dir = os.path.join(ROOT, 'css')
     for fname in sorted(os.listdir(css_dir)):
         if fname.endswith('.css'):
@@ -812,6 +825,30 @@ def _inject_hashes(hashes, out_dir):
                     f.write(new_content)
                 css_count += 1
     print(f'  css?v={css_hash} injected into {css_count} HTML files')
+
+    # Inject cache_version into every HTML file's locale <script> tags.
+    # Same immutable-cache problem as app.js/css above, but for
+    # js/locales/xx.js — those tags never carried a ?v= param, so a
+    # translation-only deploy left already-visited users on the old strings
+    # for up to a year (the SW's precache list also only ever covered
+    # de/es/fr/pt, so most locales weren't even force-refreshed there).
+    locale_count = 0
+    for root, _dirs, files in os.walk(out_dir):
+        for fname in files:
+            if not fname.endswith('.html'):
+                continue
+            path = os.path.join(root, fname)
+            content = open(path, encoding='utf-8').read()
+            new_content = re.sub(
+                r'(src="[^"]*js/locales/[a-z]{2}\.js)(?:\?v=[^"]*)?(")',
+                rf'\g<1>?v={css_hash}\g<2>',
+                content,
+            )
+            if new_content != content:
+                with open(path, 'w', encoding='utf-8') as f:
+                    f.write(new_content)
+                locale_count += 1
+    print(f'  locales?v={css_hash} injected into {locale_count} HTML files')
 
 
 # ── Static asset copy ─────────────────────────────────────────────────────────

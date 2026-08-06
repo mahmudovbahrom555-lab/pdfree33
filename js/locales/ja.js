@@ -329,7 +329,7 @@ window.PDFREE_LOCALE = {
   fb_send:               'Murodに送信',
   fb_thanks:             'ありがとうございます — 私自身が読みます。',
   fb_device_info:        'デバイス・ブラウザ情報を含める — 問題の再現に役立ちます',
-  fb_attach_screenshot:  '📎 スクリーンショットを添付',
+  fb_attach_screenshot:  '📎 Screenshot',
   fb_screenshot_hint:    'Telegramに直接送信されます — ドキュメントの内容が写っていないか確認してください',
   fb_screenshot_remove:  'スクリーンショットを削除',
   fb_screenshot_too_large: '画像が大きすぎます（最大15MB）',

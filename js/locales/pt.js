@@ -326,7 +326,7 @@ window.PDFREE_LOCALE = {
   fb_send:               'Enviar para o Murod',
   fb_thanks:             'Obrigado — eu mesmo leio isso.',
   fb_device_info:        'Incluir info do dispositivo e navegador — ajuda a reproduzir o problema',
-  fb_attach_screenshot:  '📎 Anexar captura de tela',
+  fb_attach_screenshot:  '📎 Screenshot',
   fb_screenshot_hint:    'Vai direto para o Telegram — garanta que não mostra o conteúdo do seu documento',
   fb_screenshot_remove:  'Remover captura de tela',
   fb_screenshot_too_large: 'Imagem muito grande (máx. 15 MB)',

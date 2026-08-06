@@ -328,7 +328,7 @@ window.PDFREE_LOCALE = {
   fb_send:               'Murod에게 보내기',
   fb_thanks:             '감사합니다 — 제가 직접 읽어요.',
   fb_device_info:        '기기 및 브라우저 정보 포함 — 문제 재현에 도움이 됩니다',
-  fb_attach_screenshot:  '📎 스크린샷 첨부',
+  fb_attach_screenshot:  '📎 Screenshot',
   fb_screenshot_hint:    'Telegram으로 바로 전송됩니다 — 문서 내용이 보이지 않는지 확인하세요',
   fb_screenshot_remove:  '스크린샷 제거',
   fb_screenshot_too_large: '이미지가 너무 큽니다 (최대 15MB)',

@@ -327,7 +327,7 @@ window.PDFREE_LOCALE = {
   fb_send:               'Kirim ke Murod',
   fb_thanks:             'Terima kasih — saya membacanya sendiri.',
   fb_device_info:        'Sertakan info perangkat & browser — membantu saya mereproduksinya',
-  fb_attach_screenshot:  '📎 Lampirkan tangkapan layar',
+  fb_attach_screenshot:  '📎 Screenshot',
   fb_screenshot_hint:    'Langsung terkirim ke Telegram — pastikan tidak menampilkan isi dokumen Anda',
   fb_screenshot_remove:  'Hapus tangkapan layar',
   fb_screenshot_too_large: 'Gambar terlalu besar (maks 15 MB)',

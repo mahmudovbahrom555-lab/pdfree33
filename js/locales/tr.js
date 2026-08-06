@@ -326,7 +326,7 @@ window.PDFREE_LOCALE = {
   fb_send:               'Murod\'a gönder',
   fb_thanks:             'Teşekkürler — bunu kendim okuyorum.',
   fb_device_info:        'Cihaz ve tarayıcı bilgisini ekle — sorunu yeniden oluşturmama yardımcı olur',
-  fb_attach_screenshot:  '📎 Ekran görüntüsü ekle',
+  fb_attach_screenshot:  '📎 Screenshot',
   fb_screenshot_hint:    'Doğrudan Telegram\'a gider — belge içeriğinizin görünmediğinden emin olun',
   fb_screenshot_remove:  'Ekran görüntüsünü kaldır',
   fb_screenshot_too_large: 'Görsel çok büyük (maks. 15 MB)',
