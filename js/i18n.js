@@ -317,6 +317,11 @@ export const EN = {
   fb_email_placeholder:  'Email (optional — only if you\'d like a reply)',
   fb_send:               'Send to Murod',
   fb_thanks:             'Thank you — I read this myself.',
+  fb_device_info:        'Include device & browser info — helps me reproduce it',
+  fb_attach_screenshot:  '📎 Attach screenshot',
+  fb_screenshot_hint:    'Goes straight to Telegram — make sure it doesn\'t show your document\'s content',
+  fb_screenshot_remove:  'Remove screenshot',
+  fb_screenshot_too_large: 'Image too large (max 15 MB)',
 
   // ── redactUI.js ────────────────────────────────────────────────
   rdct_loading:            'Loading PDF…',

@@ -195,6 +195,12 @@ async function handleFeedback(request, env) {
   const email = typeof body.email === 'string' ? body.email.trim().slice(0, 200)  : '';
   const tool  = typeof body.tool  === 'string' ? body.tool.trim().slice(0, 50)    : 'unknown';
   const pageUrl = typeof body.url === 'string' ? body.url.trim().slice(0, 300)    : '';
+  // Technical error string computed client-side (processor.js's _handleError) —
+  // shown to the user as read-only context, forwarded here so a report actually
+  // carries a diagnosable cause instead of just "it didn't work".
+  const message = typeof body.message === 'string' ? body.message.trim().slice(0, 500) : '';
+  // "OS · Browser", not a raw User-Agent — see feedback.js _detectDevice().
+  const device  = typeof body.device  === 'string' ? body.device.trim().slice(0, 100)  : '';
 
   // "All good" (type=other, no text) is valid; every other type needs a real message.
   if (type !== 'other' && type !== 'waitlist' && text.length < 3) {
@@ -217,6 +223,8 @@ async function handleFeedback(request, env) {
 
   const parts = [`${_TYPE_LABEL[type] || type} — ${tool}`];
   if (text)    parts.push(text);
+  if (message) parts.push(`🔧 ${message}`);
+  if (device)  parts.push(`📱 ${device}`);
   if (email)   parts.push(`📧 ${email}`);
   if (pageUrl) parts.push(`🔗 ${pageUrl}`);
 
@@ -244,6 +252,38 @@ async function handleFeedback(request, env) {
     }
   } catch (err) {
     console.log(`[feedback] Telegram fetch threw: ${err && err.message}`);
+  }
+
+  // Optional screenshot — sent as a separate message right after the text
+  // one, via sendPhoto. Kept out of the sendMessage call above because
+  // Telegram caption length (1024 chars) is shorter than our text field.
+  if (typeof body.screenshot === 'string' && body.screenshot) {
+    const match = /^data:image\/(png|jpe?g|webp);base64,([A-Za-z0-9+/=]+)$/.exec(body.screenshot);
+    const MAX_SCREENSHOT_BYTES = 6 * 1024 * 1024;
+    if (!match) {
+      console.log(`[feedback] screenshot rejected: not a recognized image data URL`);
+    } else {
+      try {
+        const bytes = Uint8Array.from(atob(match[2]), c => c.charCodeAt(0));
+        if (bytes.length === 0 || bytes.length > MAX_SCREENSHOT_BYTES) {
+          console.log(`[feedback] screenshot rejected: size=${bytes.length}`);
+        } else {
+          const form = new FormData();
+          form.append('chat_id', env.TELEGRAM_CHAT_ID);
+          form.append('photo', new Blob([bytes], { type: `image/${match[1]}` }), 'screenshot.jpg');
+          const photoRes = await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendPhoto`, {
+            method: 'POST',
+            body: form,
+          });
+          if (!photoRes.ok) {
+            const photoBody = await photoRes.text().catch(() => '');
+            console.log(`[feedback] Telegram API rejected sendPhoto: ${photoRes.status} ${photoBody}`);
+          }
+        }
+      } catch (err) {
+        console.log(`[feedback] screenshot relay threw: ${err && err.message}`);
+      }
+    }
   }
 
   return new Response('OK', { status: 200 });

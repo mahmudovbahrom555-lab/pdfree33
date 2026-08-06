@@ -325,6 +325,11 @@ window.PDFREE_LOCALE = {
   fb_email_placeholder:  'Email (facultatif — seulement si vous voulez une réponse)',
   fb_send:               'Envoyer à Murod',
   fb_thanks:             'Merci — je le lis moi-même.',
+  fb_device_info:        'Inclure les infos appareil et navigateur — ça m\'aide à reproduire le problème',
+  fb_attach_screenshot:  '📎 Joindre une capture d\'écran',
+  fb_screenshot_hint:    'Part directement sur Telegram — assure-toi qu\'elle ne montre pas le contenu de ton document',
+  fb_screenshot_remove:  'Retirer la capture',
+  fb_screenshot_too_large: 'Image trop grande (max 15 Mo)',
 
   // redactUI
   rdct_loading:            'Chargement du PDF…',
