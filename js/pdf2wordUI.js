@@ -6,6 +6,7 @@ import { loadPdfJs } from './pdf2jpgUI.js';
 import { preprocessPdfBuffer } from './decryptPdf.js';
 import { chipGroup, group, loadingRow } from './uiComponents.js';
 import { detectTables } from './pdf2wordTables.js';
+import { t, tp } from './i18n.js';
 
 // Locale-correct slug for the "Run OCR first" cross-link in the scanned-PDF
 // hint below. This module is shared across every locale's page, and the OCR
@@ -54,7 +55,7 @@ export async function initPdf2WordOptions(file) {
 
   _file    = file;
   _loading = true;
-  el.innerHTML    = loadingRow('Analysing PDF…');
+  el.innerHTML    = loadingRow(t('val_analysing_pdf'));
   el.style.display = '';
 
   try {
@@ -89,7 +90,7 @@ export async function initPdf2WordOptions(file) {
     _loading = false;
     el.innerHTML = `
       <div class="compress-scan compress-scan--found" role="alert">
-        Cannot read PDF: ${_esc(err.message)}
+        ${t('p2w_cannot_read', { msg: _esc(err.message) })}
       </div>`;
   }
 }
@@ -126,20 +127,20 @@ function _render(file) {
     <div class="compress-info">
       <span class="compress-info__name" title="${_esc(file.name)}">${name}</span>
       <span class="compress-info__dot">·</span>
-      <span class="compress-info__meta">${_pageCount} page${_pageCount !== 1 ? 's' : ''}</span>
+      <span class="compress-info__meta">${tp(_pageCount, 'split_info_page', 'split_info_pages', { n: _pageCount })}</span>
     </div>
 
-    ${group('Output mode', chipGroup('p2wMode', [
-      { value: 'text',  label: 'Text (editable)' },
-      { value: 'image', label: 'Pages as images' },
-    ], _mode, 'Conversion mode'))}
+    ${group(t('p2w_output_mode'), chipGroup('p2wMode', [
+      { value: 'text',  label: t('p2w_mode_text') },
+      { value: 'image', label: t('p2w_mode_image') },
+    ], _mode, t('p2w_conversion_mode_aria')))}
 
     <div id="p2wImageBlock" style="${_mode === 'image' ? '' : 'display:none'}">
-      ${group('Resolution', `
-        <div class="j2p-chips" role="group" aria-label="Image resolution">
-          ${_dpiChip('72',  'Compact',        '72',  _dpi)}
-          ${_dpiChip('150', 'Balanced',       '150', _dpi, true)}
-          ${_dpiChip('300', 'High quality',   '300', _dpi)}
+      ${group(t('p2w_resolution'), `
+        <div class="j2p-chips" role="group" aria-label="${t('p2w_image_resolution_aria')}">
+          ${_dpiChip('72',  t('p2w_dpi_compact'),  '72',  _dpi)}
+          ${_dpiChip('150', t('p2w_dpi_balanced'), '150', _dpi, true)}
+          ${_dpiChip('300', t('p2w_dpi_high'),     '300', _dpi)}
         </div>
       `)}
       <div id="p2wSizeHint" style="margin-top:8px">${_sizeHintHTML(_dpi)}</div>
@@ -177,30 +178,29 @@ function _sizeHintHTML(dpi) {
 
   if (mb >= DANGER_MB) {
     const pages = _pageCount;
+    const detail = pages > MAX_IMAGE_PAGES
+      ? t('p2w_size_danger_limited', { max: MAX_IMAGE_PAGES })
+      : t('p2w_size_danger_try');
+    const safari = isSafari ? t('p2w_safari_note') : '';
     return `<div class="compress-scan compress-scan--found" style="margin:0" role="alert">
-      ⚠️ Estimated .docx: <strong>~${mbStr} MB</strong> — very large.
-      ${pages > MAX_IMAGE_PAGES
-        ? `Conversion is limited to ${MAX_IMAGE_PAGES} pages in image mode.`
-        : 'Your browser may run out of memory. Try <strong>Compact</strong> resolution or switch to Text mode.'}
-      ${isSafari ? '<br><small>Safari may close the tab. Chrome or Firefox handle large files better.</small>' : ''}
+      ${t('p2w_size_danger', { mb: mbStr, detail, safari })}
     </div>`;
   }
 
   if (mb >= WARN_MB) {
+    const safari = isSafari ? t('p2w_size_warn_safari') : '';
     return `<div class="compress-scan" style="margin:0;background:rgba(200,130,0,.08);border:1px solid rgba(200,130,0,.3);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--text2)">
-      📦 Estimated .docx: <strong>~${mbStr} MB</strong>${isSafari ? ' · Consider <strong>Compact</strong> on Safari' : ''}.
+      ${t('p2w_size_warn', { mb: mbStr, safari })}
     </div>`;
   }
 
   return `<div style="font-size:12px;color:var(--text3);padding:4px 0">
-    📦 Estimated .docx: ~${mbStr} MB
+    ${t('p2w_size_normal', { mb: mbStr })}
   </div>`;
 }
 
 function _modeHintText() {
-  return _mode === 'text'
-    ? '📄 Text mode — readable and editable in Word. Headings, bold, italic preserved. Complex layouts may differ.'
-    : '🖼️ Image mode — pixel-perfect visual copy of each page. Text cannot be edited in Word.';
+  return _mode === 'text' ? t('p2w_mode_text_hint') : t('p2w_mode_image_hint');
 }
 
 // ── Events ────────────────────────────────────────────────────────────────────
@@ -298,10 +298,9 @@ async function _scanTablesBackground(doc, gen) {
         div.style.cssText = 'margin-top:8px;font-size:13px;padding:10px 12px';
         div.setAttribute('role', 'alert');
         div.innerHTML =
-          '⚠️ No text layer detected — this PDF is a scanned image. ' +
-          'Word output will contain images only. ' +
+          t('p2w_ocr_hint') +
           `<a href="${_ocrHref()}" style="color:inherit;font-weight:600;white-space:nowrap">` +
-          'Run OCR first →</a> to get editable text in Word.';
+          `${t('p2w_run_ocr_link')}</a>${t('p2w_ocr_to_get_editable')}`;
         hint.before(div);
       }
     }
@@ -313,7 +312,7 @@ async function _scanTablesBackground(doc, gen) {
   const badge = el.querySelector('#p2wTableBadge');
 
   if (totalTables > 0) {
-    const msg = `🗂️ ${totalTables} table${totalTables !== 1 ? 's' : ''} detected — will be converted as Word tables`;
+    const msg = tp(totalTables, 'p2w_tables_detected_one', 'p2w_tables_detected_many', { n: totalTables });
     if (badge) {
       badge.textContent = msg;
     } else {
@@ -341,10 +340,10 @@ export function renderP2wConfidence({ score, level, detected, warnings }) {
   const el = id('p2wConfidence');
   if (!el) return;
 
-  const levelLabel = level === 'high' ? 'Good' : level === 'medium' ? 'Fair' : 'Limited';
+  const levelLabel = level === 'high' ? t('p2w_confidence_good') : level === 'medium' ? t('p2w_confidence_fair') : t('p2w_confidence_limited');
 
   let html = `<div class="p2w-confidence__row">
-    <span class="p2w-confidence__label">Detected</span>
+    <span class="p2w-confidence__label">${t('p2w_detected_label')}</span>
     <span class="p2w-confidence__items">${detected.map(d => `<span>${d}</span>`).join('')}</span>
     <span class="p2w-confidence__badge p2w-confidence__badge--${level}">${score}% ${levelLabel}</span>
   </div>`;
