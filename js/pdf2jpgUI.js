@@ -3,7 +3,7 @@
 
 import { id }               from './utils.js';
 import { showToast }        from './ui.js';
-import { t }                from './i18n.js';
+import { t, tp }            from './i18n.js';
 import { trackToolError }   from './analytics.js';
 import { preprocessPdfBuffer } from './decryptPdf.js';
 
@@ -35,7 +35,7 @@ export async function initPdf2JpgOptions(file) {
   container.innerHTML = `
     <div class="p2j-loading">
       <div class="p2j-loading__spinner"></div>
-      <div class="p2j-loading__msg" id="p2jLoadMsg">Loading PDF engine…</div>
+      <div class="p2j-loading__msg" id="p2jLoadMsg">${t('p2j_loading_engine')}</div>
     </div>`;
 
   const _setMsg = msg => {
@@ -46,17 +46,17 @@ export async function initPdf2JpgOptions(file) {
   try {
     if (file.size > 40 * 1024 * 1024) {
       const mb = Math.round(file.size / 1024 / 1024);
-      showToast(`Large file (${mb} MB) — parsing may take 10–30 seconds, please wait`);
+      showToast(t('p2j_large_file_toast', { mb }));
     }
 
     await _ensurePdfJs();
-    _setMsg('Reading file…');
+    _setMsg(t('p2j_reading_file'));
 
     const rawBuf = file._decryptedBuffer
       ? file._decryptedBuffer.slice(0)
       : await preprocessPdfBuffer(await file.arrayBuffer());
 
-    _setMsg('Parsing PDF…');
+    _setMsg(t('p2j_parsing_pdf'));
     _pdfDoc?.destroy();
     _pdfDoc = await window.pdfjsLib.getDocument({
       data:              new Uint8Array(rawBuf),
@@ -67,7 +67,7 @@ export async function initPdf2JpgOptions(file) {
 
     _pageCount     = _pdfDoc.numPages;
     _selectedPages = Array.from({ length: _pageCount }, (_, i) => i + 1);
-    _setMsg(`PDF opened · ${_pageCount} page${_pageCount !== 1 ? 's' : ''} · loading previews…`);
+    _setMsg(tp(_pageCount, 'p2j_opened_one', 'p2j_opened_many', { n: _pageCount }));
 
     const firstPage = await _pdfDoc.getPage(1);
     _viewport = firstPage.getViewport({ scale: 1 });
@@ -129,7 +129,7 @@ function _render() {
       <!-- 1: Output format -->
       <div class="p2j-section">
         <div class="p2j-section__hdr">
-          <span class="p2j-step">1</span>Output format
+          <span class="p2j-step">1</span>${t('p2j_step_output_format')}
         </div>
         <div class="p2j-fmt-cards">
           <label class="p2j-fmt-card p2j-fmt-card--on" data-fmt="jpg">
@@ -140,7 +140,7 @@ function _render() {
               <polyline points="21,15 16,10 5,21"/>
             </svg>
             <span class="p2j-fmt-card__name">JPG</span>
-            <span class="p2j-fmt-card__desc">Best for photos and general use</span>
+            <span class="p2j-fmt-card__desc">${t('p2j_fmt_jpg_desc')}</span>
           </label>
           <label class="p2j-fmt-card" data-fmt="png">
             <input type="radio" name="p2jFormat" value="png">
@@ -149,7 +149,7 @@ function _render() {
               <path d="M3 9h18M9 21V9"/>
             </svg>
             <span class="p2j-fmt-card__name">PNG</span>
-            <span class="p2j-fmt-card__desc">Best for screenshots and graphics</span>
+            <span class="p2j-fmt-card__desc">${t('p2j_fmt_png_desc')}</span>
           </label>
         </div>
       </div>
@@ -157,47 +157,47 @@ function _render() {
       <!-- 2: Image quality -->
       <div class="p2j-section">
         <div class="p2j-section__hdr">
-          <span class="p2j-step">2</span>Image quality (resolution)
+          <span class="p2j-step">2</span>${t('p2j_step_image_quality')}
         </div>
         <div class="p2j-dpi-cards">
           <label class="p2j-dpi-card" data-dpi="72">
             <input type="radio" name="p2jDpi" value="72">
             <span class="p2j-dpi-card__val">72 dpi</span>
-            <span class="p2j-dpi-card__lbl">Smaller file size</span>
-            <span class="p2j-dpi-card__sub">Web / Email</span>
+            <span class="p2j-dpi-card__lbl">${t('p2j_dpi_72_lbl')}</span>
+            <span class="p2j-dpi-card__sub">${t('p2j_dpi_72_sub')}</span>
           </label>
           <label class="p2j-dpi-card p2j-dpi-card--on" data-dpi="150">
             <input type="radio" name="p2jDpi" value="150" checked>
             <span class="p2j-dpi-card__val">150 dpi</span>
-            <span class="p2j-dpi-card__lbl">Good quality</span>
-            <span class="p2j-dpi-card__sub">Most common</span>
+            <span class="p2j-dpi-card__lbl">${t('p2j_dpi_150_lbl')}</span>
+            <span class="p2j-dpi-card__sub">${t('p2j_dpi_150_sub')}</span>
           </label>
           <label class="p2j-dpi-card" data-dpi="300">
             <input type="radio" name="p2jDpi" value="300">
             <span class="p2j-dpi-card__val">300 dpi</span>
-            <span class="p2j-dpi-card__lbl">High quality</span>
-            <span class="p2j-dpi-card__sub">Print</span>
+            <span class="p2j-dpi-card__lbl">${t('p2j_dpi_300_lbl')}</span>
+            <span class="p2j-dpi-card__sub">${t('p2j_dpi_300_sub')}</span>
           </label>
         </div>
       </div>
 
       <!-- Summary sidebar -->
       <aside class="p2j-summary">
-        <div class="p2j-summary__title">Summary</div>
+        <div class="p2j-summary__title">${t('p2j_summary_title')}</div>
         <div class="p2j-summary__row">
-          <span class="p2j-summary__key">Selected pages</span>
-          <span class="p2j-summary__val" id="p2jSumPages">${_selectedPages.length} of ${_pageCount}</span>
+          <span class="p2j-summary__key">${t('p2j_summary_pages')}</span>
+          <span class="p2j-summary__val" id="p2jSumPages">${t('p2j_of_total', { n: _selectedPages.length, total: _pageCount })}</span>
         </div>
         <div class="p2j-summary__row">
-          <span class="p2j-summary__key">Format</span>
+          <span class="p2j-summary__key">${t('p2j_summary_format')}</span>
           <span class="p2j-summary__val" id="p2jSumFormat">JPG</span>
         </div>
         <div class="p2j-summary__row">
-          <span class="p2j-summary__key">Resolution</span>
+          <span class="p2j-summary__key">${t('p2j_summary_resolution')}</span>
           <span class="p2j-summary__val" id="p2jSumDpi">150 dpi</span>
         </div>
         <div class="p2j-summary__row p2j-summary__row--last">
-          <span class="p2j-summary__key">Estimated size</span>
+          <span class="p2j-summary__key">${t('p2j_summary_size')}</span>
           <span class="p2j-summary__val" id="p2jSumSize">${_fmtEstimate()}</span>
         </div>
       </aside>
@@ -206,18 +206,18 @@ function _render() {
     <!-- 3: Choose pages -->
     <div class="p2j-section">
       <div class="p2j-section__hdr">
-        <span class="p2j-step">3</span>Choose pages to export
+        <span class="p2j-step">3</span>${t('p2j_step_choose_pages')}
       </div>
       <div class="p2j-thumb-toolbar">
         <div class="p2j-presets">
-          <span class="p2j-presets__lbl">Select:</span>
-          <button type="button" class="p2j-preset p2j-preset--on" id="p2jAll">All</button>
-          <button type="button" class="p2j-preset" id="p2jNone">None</button>
-          <button type="button" class="p2j-preset" id="p2jOdd">Odd pages</button>
-          <button type="button" class="p2j-preset" id="p2jEven">Even pages</button>
+          <span class="p2j-presets__lbl">${t('p2j_select_label')}</span>
+          <button type="button" class="p2j-preset p2j-preset--on" id="p2jAll">${t('p2j_select_all')}</button>
+          <button type="button" class="p2j-preset" id="p2jNone">${t('p2j_select_none')}</button>
+          <button type="button" class="p2j-preset" id="p2jOdd">${t('p2j_select_odd')}</button>
+          <button type="button" class="p2j-preset" id="p2jEven">${t('p2j_select_even')}</button>
         </div>
         <div class="p2j-zoom">
-          <span class="p2j-zoom__lbl">Zoom</span>
+          <span class="p2j-zoom__lbl">${t('p2j_zoom')}</span>
           <button type="button" class="p2j-zoom__btn" id="p2jZoomMinus">&#x2212;</button>
           <input type="range" id="p2jZoom" class="p2j-zoom__range"
                  min="80" max="240" step="20" value="${_thumbZoom}">
@@ -227,19 +227,19 @@ function _render() {
       <div class="p2j-thumbs" id="p2jThumbs"
            style="--thumb-w:${_thumbZoom}px;--thumb-aspect:${aspectPct}%"></div>
       <div class="p2j-thumb-count" id="p2jThumbCount">
-        ${_selectedPages.length} of ${_pageCount} pages selected
+        ${tp(_selectedPages.length, 'p2j_pages_selected_one', 'p2j_pages_selected_many', { n: _selectedPages.length, total: _pageCount })}
       </div>
     </div>
 
     ${_pageCount > 1 ? `
     <div class="p2j-section p2j-section--opts">
       <div class="p2j-section__hdr">
-        <span class="p2j-step">4</span>More options
+        <span class="p2j-step">4</span>${t('p2j_step_more_options')}
       </div>
       <div class="p2j-opt-row">
         <div class="p2j-opt-row__info">
-          <span class="p2j-opt-row__title">Download as ZIP archive</span>
-          <span class="p2j-opt-row__sub">Pack all images into a single ZIP file</span>
+          <span class="p2j-opt-row__title">${t('p2j_download_zip')}</span>
+          <span class="p2j-opt-row__sub">${t('p2j_download_zip_sub')}</span>
         </div>
         <label class="j2p-toggle">
           <input type="checkbox" id="p2jZipCheck" ${_zip ? 'checked' : ''}>
@@ -412,7 +412,7 @@ function _afterSelectionChange(activePreset) {
   });
 
   const el = id('p2jThumbCount');
-  if (el) el.textContent = `${_selectedPages.length} of ${_pageCount} pages selected`;
+  if (el) el.textContent = tp(_selectedPages.length, 'p2j_pages_selected_one', 'p2j_pages_selected_many', { n: _selectedPages.length, total: _pageCount });
   _updateSummary();
   _updateMergeBtn();
 }
@@ -422,7 +422,7 @@ function _updateSummary() {
   const sf = id('p2jSumFormat');
   const sd = id('p2jSumDpi');
   const ss = id('p2jSumSize');
-  if (sp) sp.textContent = `${_selectedPages.length} of ${_pageCount}`;
+  if (sp) sp.textContent = t('p2j_of_total', { n: _selectedPages.length, total: _pageCount });
   if (sf) sf.textContent = _format.toUpperCase();
   if (sd) sd.textContent = `${_dpi} dpi`;
   if (ss) ss.textContent = _fmtEstimate();
@@ -434,10 +434,10 @@ function _updateMergeBtn() {
   const n = _selectedPages.length;
   if (n === 0) {
     btn.disabled = true;
-    btn.textContent = 'Select pages to export';
+    btn.textContent = t('p2j_select_pages_btn');
   } else {
     btn.disabled = false;
-    btn.textContent = `Export ${n} image${n !== 1 ? 's' : ''}`;
+    btn.textContent = tp(n, 'p2j_export_one', 'p2j_export_many', { n });
   }
 }
 
