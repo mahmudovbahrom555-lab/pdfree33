@@ -19,6 +19,7 @@
 import { id }        from './utils.js';
 import { showToast } from './ui.js';
 import { group, infoBanner } from './uiComponents.js';
+import { t } from './i18n.js';
 
 // ── State ──────────────────────────────────────────────────────
 const _state = {
@@ -126,16 +127,16 @@ function _render(container) {
       <!-- LEFT: Passwords -->
       <div class="prot-col">
 
-        ${group('Open password', `
+        ${group(t('prot_open_pwd_label'), `
           <div class="prot-pwd-row">
             <input type="password" id="protUserPwd" class="prot-input"
-                   placeholder="Leave blank = no password" maxlength="128"
-                   autocomplete="new-password" aria-label="Open password"
+                   placeholder="${t('prot_open_pwd_placeholder')}" maxlength="128"
+                   autocomplete="new-password" aria-label="${t('prot_open_pwd_label')}"
                    spellcheck="false">
             <button type="button" class="prot-eye" id="protUserEye"
-                    aria-label="Show password" title="Show/hide">👁</button>
+                    aria-label="${t('prot_show_password')}" title="${t('prot_show_hide_title')}">👁</button>
             <button type="button" class="prot-gen" id="protUserGen"
-                    aria-label="Generate password" title="Generate strong password">⚡</button>
+                    aria-label="${t('prot_generate_password')}" title="${t('prot_generate_strong_title')}">⚡</button>
           </div>
           <div class="prot-strength" role="presentation" aria-hidden="true">
             <div class="prot-strength__bar" id="protStrBar"></div>
@@ -143,17 +144,17 @@ function _render(container) {
           <div class="prot-strength__label" id="protStrLabel" aria-live="polite"></div>
         `)}
 
-        ${group('Owner password', `
+        ${group(t('prot_owner_pwd_label'), `
           <div class="prot-pwd-row">
             <input type="password" id="protOwnerPwd" class="prot-input"
-                   placeholder="Auto-generated if blank" maxlength="128"
-                   autocomplete="new-password" aria-label="Owner password"
+                   placeholder="${t('prot_owner_pwd_placeholder')}" maxlength="128"
+                   autocomplete="new-password" aria-label="${t('prot_owner_pwd_label')}"
                    spellcheck="false">
             <button type="button" class="prot-eye" id="protOwnerEye"
-                    aria-label="Show owner password" title="Show/hide">👁</button>
+                    aria-label="${t('prot_show_owner_password')}" title="${t('prot_show_hide_title')}">👁</button>
           </div>
           <div class="prot-hint">
-            Required to remove restrictions. Leave blank and we'll generate one.
+            ${t('prot_owner_hint')}
           </div>
         `)}
 
@@ -163,35 +164,35 @@ function _render(container) {
       <div class="prot-col">
 
         <div class="j2p-group">
-          <div class="j2p-label">Presets</div>
+          <div class="j2p-label">${t('prot_presets_label')}</div>
           <div class="prot-presets">
             <button type="button" class="prot-preset" data-preset="open"
-                    title="Password to open, full rights inside">
+                    title="${t('prot_preset_open_title')}">
               <span class="prot-preset__icon">🔓</span>
-              <span class="prot-preset__name">Open only</span>
+              <span class="prot-preset__name">${t('prot_preset_open_name')}</span>
             </button>
             <button type="button" class="prot-preset" data-preset="readonly"
-                    title="View and print, no copy or edit">
+                    title="${t('prot_preset_readonly_title')}">
               <span class="prot-preset__icon">📖</span>
-              <span class="prot-preset__name">Read-only</span>
+              <span class="prot-preset__name">${t('prot_preset_readonly_name')}</span>
             </button>
             <button type="button" class="prot-preset" data-preset="fortknox"
-                    title="Maximum restrictions">
+                    title="${t('prot_preset_fortknox_title')}">
               <span class="prot-preset__icon">🏰</span>
-              <span class="prot-preset__name">Fort Knox</span>
+              <span class="prot-preset__name">${t('prot_preset_fortknox_name')}</span>
             </button>
           </div>
         </div>
 
         <div class="j2p-group">
-          <div class="j2p-label">Permissions</div>
+          <div class="j2p-label">${t('prot_permissions_label')}</div>
           <div id="protPermissions" class="prot-perms"></div>
         </div>
 
       </div>
     </div>
 
-    ${infoBanner('🔒 RC4-128 encryption · Processed entirely in your browser', 'info')}
+    ${infoBanner(t('prot_banner'), 'info')}
   `;
 
   _renderPermissions();
@@ -203,12 +204,12 @@ function _renderPermissions() {
   if (!el) return;
 
   const perms = [
-    { key: 'printing',     label: 'Print',        sub: 'Allow printing the document'     },
-    { key: 'copying',      label: 'Copy text',     sub: 'Allow copying text and images'   },
-    { key: 'modifying',    label: 'Edit',          sub: 'Allow editing content'           },
-    { key: 'annotating',   label: 'Annotate',      sub: 'Allow adding comments'           },
-    { key: 'fillingForms', label: 'Fill forms',    sub: 'Allow filling form fields'       },
-    { key: 'assembly',     label: 'Assemble',      sub: 'Allow inserting/rotating pages'  },
+    { key: 'printing',     label: t('prot_perm_print'),     sub: t('prot_perm_print_sub')     },
+    { key: 'copying',      label: t('prot_perm_copy'),      sub: t('prot_perm_copy_sub')      },
+    { key: 'modifying',    label: t('prot_perm_edit'),      sub: t('prot_perm_edit_sub')      },
+    { key: 'annotating',   label: t('prot_perm_annotate'),  sub: t('prot_perm_annotate_sub')  },
+    { key: 'fillingForms', label: t('prot_perm_fill'),      sub: t('prot_perm_fill_sub')      },
+    { key: 'assembly',     label: t('prot_perm_assemble'),  sub: t('prot_perm_assemble_sub')  },
   ];
 
   el.innerHTML = perms.map(p => `
@@ -254,7 +255,7 @@ function _bindEvents(container) {
     input.type  = 'text';   // show it so user can copy
     _updateStrength(pwd);
     id('protUserEye') && (id('protUserEye').textContent = '🙈');
-    showToast('Strong password generated — copy it before closing!', 5000);
+    showToast(t('prot_gen_toast'), 5000);
   });
 
   // Presets
@@ -279,10 +280,10 @@ function _updateStrength(pwd) {
 
   const entropy = _entropy(pwd);
   let cls, text;
-  if (entropy < 28)      { cls = 'weak';   text = 'Weak';   }
-  else if (entropy < 50) { cls = 'fair';   text = 'Fair';   }
-  else if (entropy < 72) { cls = 'good';   text = 'Good';   }
-  else                   { cls = 'strong'; text = 'Strong'; }
+  if (entropy < 28)      { cls = 'weak';   text = t('prot_strength_weak');   }
+  else if (entropy < 50) { cls = 'fair';   text = t('prot_strength_fair');   }
+  else if (entropy < 72) { cls = 'good';   text = t('prot_strength_good');   }
+  else                   { cls = 'strong'; text = t('prot_strength_strong'); }
 
   bar.className     = `prot-strength__bar prot-strength__bar--${cls}`;
   label.textContent = text;

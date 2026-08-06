@@ -18,6 +18,7 @@
 
 import { id }        from './utils.js';
 import { group, infoBanner } from './uiComponents.js';
+import { t } from './i18n.js';
 
 let _file = null;
 
@@ -63,25 +64,22 @@ function _render(container) {
   const needsPassword = !!_file?._pdfMeta?.isEncrypted;
 
   if (!needsPassword) {
-    container.innerHTML = infoBanner(
-      '✓ This PDF doesn\'t require a password — click <strong>Remove Password Protection</strong> to continue.',
-      'clean'
-    );
+    container.innerHTML = infoBanner(t('unlk_no_password_needed'), 'clean');
     return;
   }
 
   container.innerHTML = `
-    ${group('Password', `
+    ${group(t('unlk_password_label'), `
       <div class="prot-pwd-row">
         <input type="password" id="unlockPwd" class="prot-input"
-               placeholder="Enter the PDF's password" maxlength="128"
-               autocomplete="current-password" aria-label="PDF password"
+               placeholder="${t('unlk_password_placeholder')}" maxlength="128"
+               autocomplete="current-password" aria-label="${t('unlk_password_aria')}"
                spellcheck="false">
         <button type="button" class="prot-eye" id="unlockPwdEye"
-                aria-label="Show password" title="Show/hide">👁</button>
+                aria-label="${t('prot_show_password')}" title="${t('prot_show_hide_title')}">👁</button>
       </div>
       <div class="prot-hint">
-        You need the correct password to remove protection — PDFree cannot bypass or guess it.
+        ${t('unlk_hint')}
       </div>
     `)}
   `;
