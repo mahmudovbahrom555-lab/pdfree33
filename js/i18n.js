@@ -752,6 +752,18 @@ export const EN = {
   p2w_confidence_fair:      'Fair',
   p2w_confidence_limited:   'Limited',
   p2w_detected_label:       'Detected',
+
+  // ── pdf2excelUI.js ─────────────────────────────────────────────
+  p2e_mode_hint:              '📊 Detected tables are converted into separate Excel sheets. Any other text is kept in a "Text" sheet so nothing is lost.',
+  p2e_ocr_hint:                '⚠️ No text layer detected — this PDF is a scanned image, so no tables can be extracted. ',
+  p2e_ocr_to_get_extractable:  ' to get extractable text.',
+  p2e_tables_detected_one:     '🗂️ {n} table detected — will become its own Excel sheet',
+  p2e_tables_detected_many:    '🗂️ {n} tables detected — each will become its own Excel sheet',
+  p2e_no_table_hint:           'No tables detected in the first pages — this PDF may not be spreadsheet-like. Consider ',
+  p2e_pdf_to_word_link:        'PDF to Word',
+  p2e_instead_suffix:          ' instead.',
+  p2e_table_count_one:         '{n} table',
+  p2e_table_count_many:        '{n} tables',
 };
 
 const L = { ...EN, ...(window.PDFREE_LOCALE ?? {}) };

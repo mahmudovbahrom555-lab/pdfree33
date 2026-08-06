@@ -730,4 +730,16 @@ window.PDFREE_LOCALE = {
   p2w_confidence_fair:       'Redelijk',
   p2w_confidence_limited:    'Beperkt',
   p2w_detected_label:        'Gedetecteerd',
+
+  // ── pdf2excelUI.js ───────────────────────────────────────
+  p2e_mode_hint:              '📊 Gedetecteerde tabellen worden omgezet in aparte Excel-werkbladen. Overige tekst blijft bewaard in een blad "Tekst", zodat niets verloren gaat.',
+  p2e_ocr_hint:               '⚠️ Geen tekstlaag gedetecteerd — dit PDF-bestand is een gescande afbeelding, waardoor er geen tabellen kunnen worden geëxtraheerd. ',
+  p2e_ocr_to_get_extractable: ' om extraheerbare tekst te krijgen.',
+  p2e_tables_detected_one:    '🗂️ {n} tabel gedetecteerd — wordt een eigen Excel-werkblad',
+  p2e_tables_detected_many:   '🗂️ {n} tabellen gedetecteerd — elk wordt een eigen Excel-werkblad',
+  p2e_no_table_hint:          'Geen tabellen gedetecteerd op de eerste pagina\'s — dit PDF-bestand is mogelijk geen spreadsheet-achtig document. ',
+  p2e_pdf_to_word_link:       'PDF naar Word',
+  p2e_instead_suffix:         ' is mogelijk een betere keuze.',
+  p2e_table_count_one:        '{n} tabel',
+  p2e_table_count_many:       '{n} tabellen',
 };

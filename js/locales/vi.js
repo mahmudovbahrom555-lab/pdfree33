@@ -731,4 +731,16 @@ window.PDFREE_LOCALE = {
   p2w_confidence_fair:       'Trung bình',
   p2w_confidence_limited:    'Hạn chế',
   p2w_detected_label:        'Đã phát hiện',
+
+  // ── pdf2excelUI.js ───────────────────────────────────────
+  p2e_mode_hint:              '📊 Các bảng được phát hiện sẽ chuyển thành các trang tính Excel riêng biệt. Văn bản còn lại được giữ trong một trang tính "Văn bản" để không bị mất dữ liệu.',
+  p2e_ocr_hint:               '⚠️ Không phát hiện lớp văn bản — PDF này là hình ảnh được quét, do đó không thể trích xuất bảng nào. ',
+  p2e_ocr_to_get_extractable: ' để có văn bản có thể trích xuất.',
+  p2e_tables_detected_one:    '🗂️ Phát hiện {n} bảng — sẽ trở thành trang tính Excel riêng',
+  p2e_tables_detected_many:   '🗂️ Phát hiện {n} bảng — mỗi bảng sẽ trở thành trang tính Excel riêng',
+  p2e_no_table_hint:          'Không phát hiện bảng nào trong các trang đầu — PDF này có thể không có định dạng giống bảng tính. ',
+  p2e_pdf_to_word_link:       'PDF sang Word',
+  p2e_instead_suffix:         ' có thể phù hợp hơn.',
+  p2e_table_count_one:        '{n} bảng',
+  p2e_table_count_many:       '{n} bảng',
 };

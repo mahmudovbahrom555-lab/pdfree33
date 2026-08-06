@@ -730,4 +730,16 @@ window.PDFREE_LOCALE = {
   p2w_confidence_fair:       'Średnie',
   p2w_confidence_limited:    'Ograniczone',
   p2w_detected_label:        'Wykryto',
+
+  // ── pdf2excelUI.js ───────────────────────────────────────
+  p2e_mode_hint:              '📊 Wykryte tabele są konwertowane na osobne arkusze Excel. Pozostały tekst jest zachowywany w arkuszu "Tekst", dzięki czemu nic nie ginie.',
+  p2e_ocr_hint:               '⚠️ Nie wykryto warstwy tekstu — ten plik PDF to zeskanowany obraz, więc nie można wyodrębnić żadnych tabel. ',
+  p2e_ocr_to_get_extractable: ', aby uzyskać tekst możliwy do wyodrębnienia.',
+  p2e_tables_detected_one:    '🗂️ Wykryto {n} tabelę — stanie się osobnym arkuszem Excel',
+  p2e_tables_detected_many:   '🗂️ Wykryto {n} tabel — każda stanie się osobnym arkuszem Excel',
+  p2e_no_table_hint:          'Nie wykryto tabel na pierwszych stronach — ten plik PDF może nie mieć struktury arkusza kalkulacyjnego. ',
+  p2e_pdf_to_word_link:       'PDF do Word',
+  p2e_instead_suffix:         ' może być lepszym wyborem.',
+  p2e_table_count_one:        '{n} tabela',
+  p2e_table_count_many:       '{n} tabel',
 };

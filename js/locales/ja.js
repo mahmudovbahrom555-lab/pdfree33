@@ -733,4 +733,16 @@ window.PDFREE_LOCALE = {
   p2w_confidence_fair:       '普通',
   p2w_confidence_limited:    '限定的',
   p2w_detected_label:        '検出',
+
+  // ── pdf2excelUI.js ───────────────────────────────────────
+  p2e_mode_hint:              '📊 検出された表はそれぞれ個別のExcelシートに変換されます。それ以外のテキストは「テキスト」シートに保持されるため、何も失われません。',
+  p2e_ocr_hint:               '⚠️ テキストレイヤーが検出されません — このPDFはスキャンされた画像のため、表を抽出できません。',
+  p2e_ocr_to_get_extractable: 'すると、抽出可能なテキストが得られます。',
+  p2e_tables_detected_one:    '🗂️ {n}個の表を検出 — それぞれ独立したExcelシートになります',
+  p2e_tables_detected_many:   '🗂️ {n}個の表を検出 — それぞれ独立したExcelシートになります',
+  p2e_no_table_hint:          '最初の数ページに表は見つかりませんでした — このPDFは表形式ではない可能性があります。',
+  p2e_pdf_to_word_link:       'PDFをWordに',
+  p2e_instead_suffix:         'を試すことをおすすめします。',
+  p2e_table_count_one:        '{n}個の表',
+  p2e_table_count_many:       '{n}個の表',
 };

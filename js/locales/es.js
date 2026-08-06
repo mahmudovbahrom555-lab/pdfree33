@@ -732,4 +732,16 @@ window.PDFREE_LOCALE = {
   p2w_confidence_fair:       'Aceptable',
   p2w_confidence_limited:    'Limitada',
   p2w_detected_label:        'Detectado',
+
+  // ── pdf2excelUI.js ───────────────────────────────────────
+  p2e_mode_hint:              '📊 Las tablas detectadas se convierten en hojas de Excel independientes. Cualquier otro texto se mantiene en una hoja "Texto" para que nada se pierda.',
+  p2e_ocr_hint:               '⚠️ No se detectó capa de texto — este PDF es una imagen escaneada, por lo que no se pueden extraer tablas. ',
+  p2e_ocr_to_get_extractable: ' para obtener texto extraíble.',
+  p2e_tables_detected_one:    '🗂️ {n} tabla detectada — se convertirá en su propia hoja de Excel',
+  p2e_tables_detected_many:   '🗂️ {n} tablas detectadas — cada una se convertirá en su propia hoja de Excel',
+  p2e_no_table_hint:          'No se detectaron tablas en las primeras páginas — es posible que este PDF no tenga formato de hoja de cálculo. ',
+  p2e_pdf_to_word_link:       'PDF a Word',
+  p2e_instead_suffix:         ' podría ser mejor opción.',
+  p2e_table_count_one:        '{n} tabla',
+  p2e_table_count_many:       '{n} tablas',
 };

@@ -731,4 +731,16 @@ window.PDFREE_LOCALE = {
   p2w_confidence_fair:       'Cukup',
   p2w_confidence_limited:    'Terbatas',
   p2w_detected_label:        'Terdeteksi',
+
+  // ── pdf2excelUI.js ───────────────────────────────────────
+  p2e_mode_hint:              '📊 Tabel yang terdeteksi akan diubah menjadi sheet Excel terpisah. Teks lainnya disimpan dalam sheet "Teks" agar tidak ada yang hilang.',
+  p2e_ocr_hint:               '⚠️ Tidak ada lapisan teks terdeteksi — PDF ini adalah gambar hasil pindaian, sehingga tidak ada tabel yang dapat diekstrak. ',
+  p2e_ocr_to_get_extractable: ' untuk mendapatkan teks yang dapat diekstrak.',
+  p2e_tables_detected_one:    '🗂️ {n} tabel terdeteksi — akan menjadi sheet Excel tersendiri',
+  p2e_tables_detected_many:   '🗂️ {n} tabel terdeteksi — masing-masing akan menjadi sheet Excel tersendiri',
+  p2e_no_table_hint:          'Tidak ada tabel terdeteksi di halaman awal — PDF ini mungkin bukan berformat seperti spreadsheet. ',
+  p2e_pdf_to_word_link:       'PDF ke Word',
+  p2e_instead_suffix:         ' mungkin lebih cocok.',
+  p2e_table_count_one:        '{n} tabel',
+  p2e_table_count_many:       '{n} tabel',
 };

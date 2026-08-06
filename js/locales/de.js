@@ -733,4 +733,16 @@ window.PDFREE_LOCALE = {
   p2w_confidence_fair:       'Mäßig',
   p2w_confidence_limited:    'Begrenzt',
   p2w_detected_label:        'Erkannt',
+
+  // ── pdf2excelUI.js ───────────────────────────────────────
+  p2e_mode_hint:              '📊 Erkannte Tabellen werden in separate Excel-Tabellenblätter umgewandelt. Anderer Text bleibt in einem Blatt "Text" erhalten, damit nichts verloren geht.',
+  p2e_ocr_hint:               '⚠️ Keine Textebene erkannt — dieses PDF ist ein gescanntes Bild, daher können keine Tabellen extrahiert werden. ',
+  p2e_ocr_to_get_extractable: ', um extrahierbaren Text zu erhalten.',
+  p2e_tables_detected_one:    '🗂️ {n} Tabelle erkannt — wird zu einem eigenen Excel-Blatt',
+  p2e_tables_detected_many:   '🗂️ {n} Tabellen erkannt — jede wird zu einem eigenen Excel-Blatt',
+  p2e_no_table_hint:          'Auf den ersten Seiten wurden keine Tabellen gefunden — dieses PDF ist möglicherweise nicht tabellenartig. ',
+  p2e_pdf_to_word_link:       'PDF zu Word',
+  p2e_instead_suffix:         ' könnte besser passen.',
+  p2e_table_count_one:        '{n} Tabelle',
+  p2e_table_count_many:       '{n} Tabellen',
 };

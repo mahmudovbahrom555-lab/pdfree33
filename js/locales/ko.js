@@ -732,4 +732,16 @@ window.PDFREE_LOCALE = {
   p2w_confidence_fair:       '보통',
   p2w_confidence_limited:    '제한적',
   p2w_detected_label:        '감지됨',
+
+  // ── pdf2excelUI.js ───────────────────────────────────────
+  p2e_mode_hint:              '📊 감지된 표는 각각 별도의 Excel 시트로 변환됩니다. 다른 텍스트는 손실 없이 "텍스트" 시트에 보관됩니다.',
+  p2e_ocr_hint:               '⚠️ 텍스트 레이어가 감지되지 않았습니다 — 이 PDF는 스캔된 이미지이므로 표를 추출할 수 없습니다. ',
+  p2e_ocr_to_get_extractable: '하면 추출 가능한 텍스트를 얻을 수 있습니다.',
+  p2e_tables_detected_one:    '🗂️ 표 {n}개 감지됨 — 별도의 Excel 시트가 됩니다',
+  p2e_tables_detected_many:   '🗂️ 표 {n}개 감지됨 — 각각 별도의 Excel 시트가 됩니다',
+  p2e_no_table_hint:          '처음 몇 페이지에서 표가 감지되지 않았습니다 — 이 PDF는 스프레드시트 형식이 아닐 수 있습니다. ',
+  p2e_pdf_to_word_link:       'PDF를 Word로',
+  p2e_instead_suffix:         '을(를) 사용해 보세요.',
+  p2e_table_count_one:        '표 {n}개',
+  p2e_table_count_many:       '표 {n}개',
 };

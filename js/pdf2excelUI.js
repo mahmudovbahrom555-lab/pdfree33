@@ -6,6 +6,7 @@ import { loadPdfJs } from './pdf2jpgUI.js';
 import { preprocessPdfBuffer } from './decryptPdf.js';
 import { loadingRow } from './uiComponents.js';
 import { detectTables, groupItemsIntoLines } from './pdf2wordTables.js';
+import { t, tp } from './i18n.js';
 
 // Locale-correct slugs for the "Run OCR first" / "PDF to Word" cross-links in
 // the hints below. This module is shared across every locale's page, and
@@ -43,7 +44,7 @@ export async function initPdf2ExcelOptions(file) {
 
   _file    = file;
   _loading = true;
-  el.innerHTML    = loadingRow('Analysing PDF…');
+  el.innerHTML    = loadingRow(t('val_analysing_pdf'));
   el.style.display = '';
 
   try {
@@ -69,7 +70,7 @@ export async function initPdf2ExcelOptions(file) {
     _loading = false;
     el.innerHTML = `
       <div class="compress-scan compress-scan--found" role="alert">
-        Cannot read PDF: ${_esc(err.message)}
+        ${t('p2w_cannot_read', { msg: _esc(err.message) })}
       </div>`;
   }
 }
@@ -94,11 +95,11 @@ function _render(file) {
     <div class="compress-info">
       <span class="compress-info__name" title="${_esc(file.name)}">${name}</span>
       <span class="compress-info__dot">·</span>
-      <span class="compress-info__meta">${_pageCount} page${_pageCount !== 1 ? 's' : ''}</span>
+      <span class="compress-info__meta">${tp(_pageCount, 'split_info_page', 'split_info_pages', { n: _pageCount })}</span>
     </div>
 
     <div id="p2eModeHint" class="compress-scan compress-scan--ok" role="status" aria-live="polite">
-      📊 Detected tables are converted into separate Excel sheets. Any other text is kept in a "Text" sheet so nothing is lost.
+      ${t('p2e_mode_hint')}
     </div>
   `;
 }
@@ -158,9 +159,9 @@ async function _scanTablesBackground(doc, gen) {
       div.style.cssText = 'margin-top:8px;font-size:13px;padding:10px 12px';
       div.setAttribute('role', 'alert');
       div.innerHTML =
-        '⚠️ No text layer detected — this PDF is a scanned image, so no tables can be extracted. ' +
+        t('p2e_ocr_hint') +
         `<a href="${_crossToolHref(OCR_SLUGS)}" style="color:inherit;font-weight:600;white-space:nowrap">` +
-        'Run OCR first →</a> to get extractable text.';
+        `${t('p2w_run_ocr_link')}</a>${t('p2e_ocr_to_get_extractable')}`;
       hint.before(div);
     }
   } else if (ocrHintEl) {
@@ -170,7 +171,7 @@ async function _scanTablesBackground(doc, gen) {
   // ── Table badge / no-tables nudge ─────────────────────────────────────────
   const badge = el.querySelector('#p2eTableBadge');
   if (totalTables > 0) {
-    const msg = `🗂️ ${totalTables} table${totalTables !== 1 ? 's' : ''} detected — each will become its own Excel sheet`;
+    const msg = tp(totalTables, 'p2e_tables_detected_one', 'p2e_tables_detected_many', { n: totalTables });
     if (badge) {
       badge.textContent = msg;
     } else if (hint) {
@@ -189,8 +190,8 @@ async function _scanTablesBackground(doc, gen) {
       div.className = 'compress-scan';
       div.style.cssText = 'margin-top:8px;font-size:12px;color:var(--text3);padding:6px 10px';
       div.innerHTML =
-        'No tables detected in the first pages — this PDF may not be spreadsheet-like. ' +
-        `Consider <a href="${_crossToolHref(PDF2WORD_SLUGS)}" style="color:var(--green);font-weight:600">PDF to Word</a> instead.`;
+        t('p2e_no_table_hint') +
+        `<a href="${_crossToolHref(PDF2WORD_SLUGS)}" style="color:var(--green);font-weight:600">${t('p2e_pdf_to_word_link')}</a>${t('p2e_instead_suffix')}`;
       hint.after(div);
     }
   }
@@ -208,11 +209,11 @@ export function renderP2eConfidence({ score, level, tableCount }) {
     return;
   }
 
-  const levelLabel = level === 'high' ? 'Good' : level === 'medium' ? 'Fair' : 'Limited';
+  const levelLabel = level === 'high' ? t('p2w_confidence_good') : level === 'medium' ? t('p2w_confidence_fair') : t('p2w_confidence_limited');
 
   el.innerHTML = `<div class="p2w-confidence__row">
-    <span class="p2w-confidence__label">Detected</span>
-    <span class="p2w-confidence__items"><span>${tableCount} table${tableCount !== 1 ? 's' : ''}</span></span>
+    <span class="p2w-confidence__label">${t('p2w_detected_label')}</span>
+    <span class="p2w-confidence__items"><span>${tp(tableCount, 'p2e_table_count_one', 'p2e_table_count_many', { n: tableCount })}</span></span>
     <span class="p2w-confidence__badge p2w-confidence__badge--${level}">${score}% ${levelLabel}</span>
   </div>`;
   el.style.display = '';

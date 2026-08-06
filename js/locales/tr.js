@@ -730,4 +730,16 @@ window.PDFREE_LOCALE = {
   p2w_confidence_fair:       'Orta',
   p2w_confidence_limited:    'Sınırlı',
   p2w_detected_label:        'Tespit edilen',
+
+  // ── pdf2excelUI.js ───────────────────────────────────────
+  p2e_mode_hint:              '📊 Tespit edilen tablolar ayrı Excel sayfalarına dönüştürülür. Diğer tüm metinler hiçbir şey kaybolmadan bir "Metin" sayfasında tutulur.',
+  p2e_ocr_hint:               '⚠️ Metin katmanı tespit edilmedi — bu PDF taranmış bir görüntü, bu nedenle hiçbir tablo çıkarılamaz. ',
+  p2e_ocr_to_get_extractable: ' ile çıkarılabilir metin elde edebilirsiniz.',
+  p2e_tables_detected_one:    '🗂️ {n} tablo tespit edildi — kendi Excel sayfasına dönüştürülecek',
+  p2e_tables_detected_many:   '🗂️ {n} tablo tespit edildi — her biri kendi Excel sayfasına dönüştürülecek',
+  p2e_no_table_hint:          'İlk sayfalarda hiçbir tablo tespit edilmedi — bu PDF elektronik tablo formatında olmayabilir. ',
+  p2e_pdf_to_word_link:       'PDF\'den Word\'e',
+  p2e_instead_suffix:         ' daha uygun olabilir.',
+  p2e_table_count_one:        '{n} tablo',
+  p2e_table_count_many:       '{n} tablo',
 };

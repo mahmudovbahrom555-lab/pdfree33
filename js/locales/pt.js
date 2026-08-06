@@ -732,4 +732,16 @@ window.PDFREE_LOCALE = {
   p2w_confidence_fair:       'Razoável',
   p2w_confidence_limited:    'Limitada',
   p2w_detected_label:        'Detectado',
+
+  // ── pdf2excelUI.js ───────────────────────────────────────
+  p2e_mode_hint:              '📊 As tabelas detectadas são convertidas em planilhas do Excel separadas. Qualquer outro texto é mantido em uma planilha "Texto" para que nada seja perdido.',
+  p2e_ocr_hint:               '⚠️ Nenhuma camada de texto detectada — este PDF é uma imagem digitalizada, portanto nenhuma tabela pode ser extraída. ',
+  p2e_ocr_to_get_extractable: ' para obter texto extraível.',
+  p2e_tables_detected_one:    '🗂️ {n} tabela detectada — se tornará sua própria planilha do Excel',
+  p2e_tables_detected_many:   '🗂️ {n} tabelas detectadas — cada uma se tornará sua própria planilha do Excel',
+  p2e_no_table_hint:          'Nenhuma tabela detectada nas primeiras páginas — este PDF pode não ter formato de planilha. ',
+  p2e_pdf_to_word_link:       'PDF para Word',
+  p2e_instead_suffix:         ' pode ser mais adequado.',
+  p2e_table_count_one:        '{n} tabela',
+  p2e_table_count_many:       '{n} tabelas',
 };
