@@ -422,6 +422,13 @@ export const EN = {
   rdct_pii_cc:             '💳 Credit Card',
   rdct_pii_iban:           '🏦 IBAN',
   rdct_pii_url:            '🌐 URL',
+  rdct_color_black:        'Black',
+  rdct_color_white:        'White',
+  rdct_dir_left:           'Left',
+  rdct_dir_right:          'Right',
+  rdct_type_here:          'Type here...',
+  rdct_move_handle:        'Move',
+  rdct_remove_area:        'Remove area {n}',
 
   // ── watermarkUI.js ────────────────────────────────────────────
   wm_type_label:         'Watermark type',

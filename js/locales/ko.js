@@ -402,6 +402,13 @@ window.PDFREE_LOCALE = {
   rdct_pii_cc:             '💳 신용카드',
   rdct_pii_iban:           '🏦 IBAN',
   rdct_pii_url:            '🌐 URL',
+  rdct_color_black: '검정',
+  rdct_color_white: '흰색',
+  rdct_dir_left:    '왼쪽',
+  rdct_dir_right:   '오른쪽',
+  rdct_type_here:   '여기에 입력...',
+  rdct_move_handle: '이동',
+  rdct_remove_area: '영역 {n} 제거',
 
   // watermarkUI.js
   wm_type_label:         '워터마크 유형',

@@ -400,6 +400,13 @@ window.PDFREE_LOCALE = {
   rdct_pii_cc:             '💳 Kredi Kartı',
   rdct_pii_iban:           '🏦 IBAN',
   rdct_pii_url:            '🌐 URL',
+  rdct_color_black: 'Siyah',
+  rdct_color_white: 'Beyaz',
+  rdct_dir_left:    'Sol',
+  rdct_dir_right:   'Sağ',
+  rdct_type_here:   'Buraya yazın...',
+  rdct_move_handle: 'Taşı',
+  rdct_remove_area: '{n}. alanı kaldır',
 
   // watermarkUI.js
   wm_type_label:         'Filigran türü',

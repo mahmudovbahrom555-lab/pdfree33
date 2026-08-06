@@ -402,6 +402,13 @@ window.PDFREE_LOCALE = {
   rdct_pii_cc:             '💳 Carte de crédit',
   rdct_pii_iban:           '🏦 IBAN',
   rdct_pii_url:            '🌐 URL',
+  rdct_color_black: 'Noir',
+  rdct_color_white: 'Blanc',
+  rdct_dir_left:    'Gauche',
+  rdct_dir_right:   'Droite',
+  rdct_type_here:   'Tapez ici...',
+  rdct_move_handle: 'Déplacer',
+  rdct_remove_area: 'Supprimer la zone {n}',
 
   // watermarkUI.js
   wm_type_label:         'Type de filigrane',

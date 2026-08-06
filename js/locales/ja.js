@@ -403,6 +403,13 @@ window.PDFREE_LOCALE = {
   rdct_pii_cc:             '💳 クレジットカード',
   rdct_pii_iban:           '🏦 IBAN',
   rdct_pii_url:            '🌐 URL',
+  rdct_color_black: '黒',
+  rdct_color_white: '白',
+  rdct_dir_left:    '左',
+  rdct_dir_right:   '右',
+  rdct_type_here:   'ここに入力...',
+  rdct_move_handle: '移動',
+  rdct_remove_area: '領域{n}を削除',
 
   // watermarkUI.js
   wm_type_label:         '透かしの種類',

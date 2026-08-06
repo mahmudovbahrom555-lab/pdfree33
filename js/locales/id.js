@@ -401,6 +401,13 @@ window.PDFREE_LOCALE = {
   rdct_pii_cc:             '💳 Kartu Kredit',
   rdct_pii_iban:           '🏦 IBAN',
   rdct_pii_url:            '🌐 URL',
+  rdct_color_black: 'Hitam',
+  rdct_color_white: 'Putih',
+  rdct_dir_left:    'Kiri',
+  rdct_dir_right:   'Kanan',
+  rdct_type_here:   'Ketik di sini...',
+  rdct_move_handle: 'Pindahkan',
+  rdct_remove_area: 'Hapus area {n}',
 
   // watermarkUI.js
   wm_type_label:         'Jenis tanda air',

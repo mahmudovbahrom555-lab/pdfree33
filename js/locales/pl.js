@@ -400,6 +400,13 @@ window.PDFREE_LOCALE = {
   rdct_pii_cc:             '💳 Karta kredytowa',
   rdct_pii_iban:           '🏦 IBAN',
   rdct_pii_url:            '🌐 URL',
+  rdct_color_black: 'Czarny',
+  rdct_color_white: 'Biały',
+  rdct_dir_left:    'Lewo',
+  rdct_dir_right:   'Prawo',
+  rdct_type_here:   'Wpisz tutaj...',
+  rdct_move_handle: 'Przesuń',
+  rdct_remove_area: 'Usuń obszar {n}',
 
   // watermarkUI.js
   wm_type_label:         'Typ znaku wodnego',

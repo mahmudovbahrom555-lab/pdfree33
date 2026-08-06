@@ -401,6 +401,13 @@ window.PDFREE_LOCALE = {
   rdct_pii_cc:             '💳 Thẻ tín dụng',
   rdct_pii_iban:           '🏦 IBAN',
   rdct_pii_url:            '🌐 URL',
+  rdct_color_black: 'Đen',
+  rdct_color_white: 'Trắng',
+  rdct_dir_left:    'Trái',
+  rdct_dir_right:   'Phải',
+  rdct_type_here:   'Nhập vào đây...',
+  rdct_move_handle: 'Di chuyển',
+  rdct_remove_area: 'Xóa vùng {n}',
 
   // watermarkUI.js
   wm_type_label:         'Loại hình mờ',

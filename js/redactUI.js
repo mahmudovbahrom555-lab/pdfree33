@@ -40,10 +40,10 @@ const _MIN_DRAG_SIZE = 30;  // px — compromise: mouse precision vs finger
 
 // Color palette — 4 named colors with both hex (preview) and rgb (PDF output)
 const COLORS = {
-  black: { hex: '#000000', rgb: [0, 0, 0],          label: 'Black' },
-  red:   { hex: '#DC2626', rgb: [0.86, 0.15, 0.15], label: 'Red'   },
-  blue:  { hex: '#2563EB', rgb: [0.15, 0.39, 0.92], label: 'Blue'  },
-  white: { hex: '#FFFFFF', rgb: [1, 1, 1],          label: 'White' },
+  black: { hex: '#000000', rgb: [0, 0, 0],          get label() { return t('rdct_color_black'); } },
+  red:   { hex: '#DC2626', rgb: [0.86, 0.15, 0.15], get label() { return t('wm_color_red');      } },
+  blue:  { hex: '#2563EB', rgb: [0.15, 0.39, 0.92], get label() { return t('wm_color_blue');     } },
+  white: { hex: '#FFFFFF', rgb: [1, 1, 1],          get label() { return t('rdct_color_white'); } },
 };
 
 // ── Luhn algorithm (credit card validation) ───────────────────
@@ -276,7 +276,7 @@ export async function initRedactOptions(file) {
     }).promise;
 
     _pageCount = _pdfDoc.numPages;
-    if (_pageCount === 0) { showToast('This PDF has no pages'); _collapse(container); return; }
+    if (_pageCount === 0) { showToast(t('no_pages_pdf')); _collapse(container); return; }
 
     // Sizes populated lazily per page in _renderPage (viewport at scale=1 = PDF points).
     // _humanPosition/_sizeDescription have A4 fallbacks so no upfront load needed.
@@ -968,7 +968,7 @@ function _redrawOverlay() {
         ta.value = r.text || '';
         ta.style.color = color;
         ta.style.fontSize = `${ch * 0.8}px`;
-        ta.placeholder = 'Type here...';
+        ta.placeholder = t('rdct_type_here');
 
         // Prevent drag conflict
         ta.addEventListener('mousedown', e => e.stopPropagation());
@@ -1020,7 +1020,7 @@ function _redrawOverlay() {
     const moveHandle = document.createElement('div');
     moveHandle.className = 'rdct-move-handle';
     moveHandle.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="5 9 2 12 5 15"></polyline><polyline points="9 5 12 2 15 5"></polyline><polyline points="19 9 22 12 19 15"></polyline><polyline points="9 19 12 22 15 19"></polyline><line x1="2" y1="12" x2="22" y2="12"></line><line x1="12" y1="2" x2="12" y2="22"></line></svg>';
-    moveHandle.title = 'Move';
+    moveHandle.title = t('rdct_move_handle');
     box.appendChild(moveHandle);
 
     const label = document.createElement('div');
@@ -1087,14 +1087,18 @@ function _humanPosition(r) {
   const yRatio = centerY / size.height;
   const vert = yRatio > 0.67 ? 'top' : yRatio < 0.33 ? 'bottom' : 'middle';
 
-  if (horiz === 'center' && vert === 'middle') return 'Center';
-  if (horiz === 'center') return _capitalize(vert);
-  if (vert === 'middle')  return _capitalize(horiz);
-  return `${_capitalize(vert)} ${horiz}`;
-}
+  const DIR = {
+    top:    t('wm_pos_top'),
+    bottom: t('wm_pos_bottom'),
+    left:   t('rdct_dir_left'),
+    right:  t('rdct_dir_right'),
+    center: t('wm_pos_center'),
+  };
 
-function _capitalize(s) {
-  return s.charAt(0).toUpperCase() + s.slice(1);
+  if (horiz === 'center' && vert === 'middle') return DIR.center;
+  if (horiz === 'center') return DIR[vert];
+  if (vert === 'middle')  return DIR[horiz];
+  return `${DIR[vert]} ${DIR[horiz].toLowerCase()}`;
 }
 
 function _sizeDescription(r) {
@@ -1152,7 +1156,7 @@ function _updateRectsList() {
         <li class="rdct-rect-item" data-idx="${i}">
           <span class="rdct-rect-num">${i + 1}</span>
           <span class="rdct-rect-coords">${position} · ${size}</span>
-          <button type="button" class="rdct-rect-del" data-idx="${i}" aria-label="Remove area ${i+1}">✕</button>
+          <button type="button" class="rdct-rect-del" data-idx="${i}" aria-label="${t('rdct_remove_area', { n: i + 1 })}">✕</button>
         </li>`;
       }).join('');
 }

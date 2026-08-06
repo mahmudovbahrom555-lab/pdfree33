@@ -401,6 +401,13 @@ window.PDFREE_LOCALE = {
   rdct_pii_cc:             '💳 Кредитная карта',
   rdct_pii_iban:           '🏦 IBAN',
   rdct_pii_url:            '🌐 URL',
+  rdct_color_black: 'Чёрный',
+  rdct_color_white: 'Белый',
+  rdct_dir_left:    'Слева',
+  rdct_dir_right:   'Справа',
+  rdct_type_here:   'Введите текст...',
+  rdct_move_handle: 'Переместить',
+  rdct_remove_area: 'Удалить область {n}',
 
   // watermarkUI.js
   wm_type_label:         'Тип водяного знака',

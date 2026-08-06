@@ -402,6 +402,13 @@ window.PDFREE_LOCALE = {
   rdct_pii_cc:             '💳 Tarjeta de crédito',
   rdct_pii_iban:           '🏦 IBAN',
   rdct_pii_url:            '🌐 URL',
+  rdct_color_black: 'Negro',
+  rdct_color_white: 'Blanco',
+  rdct_dir_left:    'Izquierda',
+  rdct_dir_right:   'Derecha',
+  rdct_type_here:   'Escribe aquí...',
+  rdct_move_handle: 'Mover',
+  rdct_remove_area: 'Eliminar área {n}',
 
   // watermarkUI.js
   wm_type_label:         'Tipo de marca de agua',
