@@ -87,6 +87,37 @@ jobs:
           done
           exit $FAIL
 
+      - name: Submit URLs to IndexNow (Bing, Yandex, Seznam, Naver)
+        run: |
+          python3 -c "
+          import json, urllib.request, xml.etree.ElementTree as ET
+
+          ns = {'s': 'http://www.sitemaps.org/schemas/sitemap/0.9'}
+          root = ET.parse('dist/sitemap.xml').getroot()
+          urls = [el.text for el in root.findall('s:url/s:loc', ns)]
+
+          payload = json.dumps({
+              'host': 'pdfree.io',
+              'key': '1cf67831677e5e165d22b0b4851a5e8d',
+              'keyLocation': 'https://pdfree.io/1cf67831677e5e165d22b0b4851a5e8d.txt',
+              'urlList': urls,
+          }).encode()
+
+          req = urllib.request.Request(
+              'https://api.indexnow.org/indexnow',
+              data=payload,
+              headers={'Content-Type': 'application/json; charset=utf-8'},
+              method='POST',
+          )
+          try:
+              with urllib.request.urlopen(req, timeout=15) as resp:
+                  print(f'IndexNow: submitted {len(urls)} URLs, status {resp.status}')
+          except urllib.error.HTTPError as e:
+              print(f'IndexNow: HTTP {e.code} — {e.read().decode()[:200]}')
+          except Exception as e:
+              print(f'IndexNow: request failed — {e}')
+          "
+
       - name: Notify Telegram on failure
         if: failure()
         run: |
