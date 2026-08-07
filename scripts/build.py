@@ -401,9 +401,9 @@ SPECIALTY_PAGES = [
     'sign-pdf-free-no-account',
     'fill-sign-flatten-guide',
     'ilovepdf-alternative',
-    'compress-large-pdf-free',
     # compare-pdf is EN-only so stays here; draw-on-pdf/secure-pdf-tools/
-    # merge-pdf-without-uploading/pdf-tools-no-upload are handled by
+    # merge-pdf-without-uploading/pdf-tools-no-upload/merge-scanned-pdf/
+    # compress-large-pdf-free/merge-large-pdf-files are handled by
     # _lang_specialty below (with full locale alternates). ocr-pdf and
     # pdf-to-word are fully migrated to tools-config (see _ssg_fully_migrated).
     'compare-pdf',
@@ -421,7 +421,6 @@ SPECIALTY_PAGES = [
     'split-pdf-by-range',
     'split-pdf-odd-even',
     'merge-pdf-files-into-one',
-    'merge-large-pdf-files',
     'merge-password-protected-pdf',
     # merge-scanned-pdf now has de/es/fr/pt translations — handled by
     # _lang_specialty below (with full locale alternates), like
@@ -438,7 +437,10 @@ SPECIALTY_PAGES = [
     'pdf24-alternative',
     'adobe-acrobat-alternative',
     # Stage 5 long-tail landing pages
-    'merge-pdf-no-size-limit',
+    # merge-pdf-no-size-limit: consolidated into merge-large-pdf-files (301
+    # redirect in _redirects) — near-zero internal linking, near-duplicate
+    # "no size limit" intent competing with the now-13-language
+    # merge-large-pdf-files cluster; unique tips/FAQ merged into that page.
     'free-pdf-tools-no-signup',
     'compress-pdf-without-account',
     'convert-pdf-to-jpg-free-no-watermark',
@@ -666,6 +668,38 @@ def _write_sitemap(config, out_dir):
             'nl': 'nl/gescande-pdfs-samenvoegen',
             'pl': 'pl/polacz-zeskanowane-pdf',
             'tr': 'tr/taranan-pdf-birlestir',
+        },
+        'merge-large-pdf-files': {
+            'en': 'merge-large-pdf-files',
+            'de': 'de/pdf-zusammenfuehren-grosse-dateien',
+            'es': 'es/unir-pdf-archivos-grandes',
+            'fr': 'fr/fusionner-pdf-fichiers-volumineux',
+            'pt': 'pt/juntar-pdf-arquivos-grandes',
+            'id': 'id/gabung-pdf-file-besar',
+            'vi': 'vi/ghep-pdf-file-lon',
+            'ru': 'ru/objedinit-bolshie-pdf',
+            'ja': 'ja/pdf-daiyouryou-ketsugou',
+            'it': 'it/unisci-pdf-file-grandi',
+            'ko': 'ko/pdf-daeyongryang-hapchigi',
+            'nl': 'nl/pdf-samenvoegen-grote-bestanden',
+            'pl': 'pl/polacz-duze-pliki-pdf',
+            'tr': 'tr/buyuk-pdf-dosyalarini-birlestir',
+        },
+        'compress-large-pdf-free': {
+            'en': 'compress-large-pdf-free',
+            'de': 'de/pdf-komprimieren-grosse-dateien',
+            'es': 'es/comprimir-pdf-archivos-grandes',
+            'fr': 'fr/compresser-pdf-fichiers-volumineux',
+            'pt': 'pt/comprimir-pdf-arquivos-grandes',
+            'id': 'id/kompres-pdf-file-besar',
+            'vi': 'vi/nen-pdf-file-lon',
+            'ru': 'ru/szhat-bolshie-pdf',
+            'ja': 'ja/pdf-daiyouryou-atsuryoku',
+            'it': 'it/comprimi-pdf-file-grandi',
+            'ko': 'ko/pdf-daeyongryang-apchuk',
+            'nl': 'nl/pdf-comprimeren-grote-bestanden',
+            'pl': 'pl/kompresuj-duze-pliki-pdf',
+            'tr': 'tr/buyuk-pdf-dosyalarini-sikistir',
         },
 
     }

@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src  'self' 'wasm-unsafe-eval' blob:
+                https://cdnjs.cloudflare.com https://esm.sh
+                https://plausible.io https://static.cloudflareinsights.com;
+    style-src   'self' 'unsafe-inline';
+    font-src    'self';
+    img-src     'self' data: blob: https:;
+    connect-src 'self' https://cdnjs.cloudflare.com https://*.workers.dev
+                https://plausible.io https://cloudflareinsights.com;
+    worker-src  'self' blob:;
+    object-src  'none';
+  ">
+
+  <title>Büyük PDF Dosyalarını Ücretsiz Sıkıştırın | PDFree</title>
+  <meta name="description" content="Her boyuttaki PDF'yi ücretsiz sıkıştırın — 100 MB'dan 1 GB'a. Günlük limit yok, yükleme yok, tarayıcınızda işlenir.">
+
+  <meta property="og:title"       content="Büyük PDF Dosyalarını Ücretsiz Sıkıştırın — 25 MB Sınırı Yok | PDFree">
+  <meta property="og:description" content="Boyutu ne olursa olsun PDF'leri ücretsiz sıkıştırın. 25 MB yükleme sınırı yok. Günlük limit yok. Tamamen tarayıcınızda sıkıştırılır — dosyanız cihazınızdan hiç çıkmaz.">
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://pdfree.io/tr/buyuk-pdf-dosyalarini-sikistir/">
+  <meta property="og:site_name"   content="PDFree">
+  <meta property="og:image"        content="https://pdfree.io/icons/og-image.jpg">
+  <meta property="og:image:width"  content="1200">
+  <meta property="og:image:height" content="633">
+  <meta property="og:image:alt"    content="Büyük PDF Dosyalarını Ücretsiz Sıkıştırın — 25 MB Sınırı Yok | PDFree">
+  <meta name="twitter:card"       content="summary_large_image">
+  <meta name="twitter:site"       content="@pdfree_io">
+  <meta name="twitter:title"      content="Büyük PDF Dosyalarını Ücretsiz Sıkıştırın — 25 MB Sınırı Yok | PDFree">
+  <meta name="twitter:description" content="Boyutu ne olursa olsun PDF'leri ücretsiz sıkıştırın. 25 MB yükleme sınırı yok. Günlük limit yok. Tamamen tarayıcınızda sıkıştırılır — dosyanız cihazınızdan hiç çıkmaz.">
+  <meta name="twitter:image"       content="https://pdfree.io/icons/og-image.jpg">
+  <meta name="twitter:image:alt"   content="Büyük PDF Dosyalarını Ücretsiz Sıkıştırın — 25 MB Sınırı Yok | PDFree">
+
+  <link rel="canonical" href="https://pdfree.io/tr/buyuk-pdf-dosyalarini-sikistir/">
+  <link rel="alternate" hreflang="en"        href="https://pdfree.io/compress-large-pdf-free/">
+  <link rel="alternate" hreflang="de"        href="https://pdfree.io/de/pdf-komprimieren-grosse-dateien/">
+  <link rel="alternate" hreflang="es"        href="https://pdfree.io/es/comprimir-pdf-archivos-grandes/">
+  <link rel="alternate" hreflang="fr"        href="https://pdfree.io/fr/compresser-pdf-fichiers-volumineux/">
+  <link rel="alternate" hreflang="pt"        href="https://pdfree.io/pt/comprimir-pdf-arquivos-grandes/">
+  <link rel="alternate" hreflang="id"        href="https://pdfree.io/id/kompres-pdf-file-besar/">
+  <link rel="alternate" hreflang="vi"        href="https://pdfree.io/vi/nen-pdf-file-lon/">
+  <link rel="alternate" hreflang="ru"        href="https://pdfree.io/ru/szhat-bolshie-pdf/">
+  <link rel="alternate" hreflang="ja"        href="https://pdfree.io/ja/pdf-daiyouryou-atsuryoku/">
+  <link rel="alternate" hreflang="it"        href="https://pdfree.io/it/comprimi-pdf-file-grandi/">
+  <link rel="alternate" hreflang="ko"        href="https://pdfree.io/ko/pdf-daeyongryang-apchuk/">
+  <link rel="alternate" hreflang="nl"        href="https://pdfree.io/nl/pdf-comprimeren-grote-bestanden/">
+  <link rel="alternate" hreflang="pl"        href="https://pdfree.io/pl/kompresuj-duze-pliki-pdf/">
+  <link rel="alternate" hreflang="tr"        href="https://pdfree.io/tr/buyuk-pdf-dosyalarini-sikistir/">
+  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/compress-large-pdf-free/">
+
+  <link rel="manifest" href="../../manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="PDFree">
+  <link rel="apple-touch-icon" href="../../icons/icon-192.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+  <link rel="preconnect" href="https://plausible.io">
+  <link rel="preconnect" href="https://static.cloudflareinsights.com">
+  <link rel="preload" href="../../fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../css/fonts.css">
+  <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/animations.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/components.css">
+
+  <script src="../../js/theme.js"></script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Büyük PDF Dosyalarını Sınırsız Sıkıştırın",
+    "description": "PDF dosyalarını boyutu ne olursa olsun ücretsiz sıkıştırın. Dosya boyutu sınırı yok, günlük limit yok. Tüm işlem tarayıcınızda yerel olarak gerçekleşir — dosyanız cihazınızdan hiç çıkmaz.",
+    "url": "https://pdfree.io/tr/buyuk-pdf-dosyalarini-sikistir/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "featureList": [
+      "Dosya boyutu sınırı yok — 100 MB, 500 MB, 1 GB PDF'leri sıkıştırın",
+      "Günlük görev limiti yok",
+      "Sunucuya yükleme yok — dosyalar cihazınızda kalır",
+      "Hesap gerekmez",
+      "Çevrimdışı çalışır"
+    ],
+    "dateModified": "2026-08-07",
+    "provider": {
+      "@type": "Organization",
+      "name": "PDFree",
+      "url": "https://pdfree.io",
+      "description": "PDFree is a free, privacy-first PDF toolkit that runs entirely in the browser — files are processed locally and never uploaded to a server.",
+      "logo": "https://pdfree.io/icons/icon-512.png"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "Büyük Bir PDF Dosyasını Ücretsiz Nasıl Sıkıştırırsınız",
+    "description": "Büyük PDF'lerin dosya boyutunu sınır olmadan, yükleme yapmadan ve ücret ödemeden küçültün.",
+    "totalTime": "PT2M",
+    "tool": [{ "@type": "HowToTool", "name": "PDFree — ücretsiz tarayıcı tabanlı PDF sıkıştırıcı" }],
+    "step": [
+      { "@type": "HowToStep", "position": 1, "name": "PDFree Sıkıştırma aracını açın", "text": "Chrome, Firefox veya Safari'de pdfree.io/tr/buyuk-pdf-dosyalarini-sikistir/ adresine gidin. Kurulum veya hesap gerekmez.", "url": "https://pdfree.io/tr/buyuk-pdf-dosyalarini-sikistir/#step1" },
+      { "@type": "HowToStep", "position": 2, "name": "Büyük PDF dosyanızı bırakın", "text": "\"Dosya seç\"e tıklayın veya sürükleyip bırakın. Her boyuttaki dosya kabul edilir — 100 MB, 500 MB, hatta 1 GB. İşlem tarayıcınızda gerçekleştiği için sunucu yükleme sınırı yoktur.", "url": "https://pdfree.io/tr/buyuk-pdf-dosyalarini-sikistir/#step2" },
+      { "@type": "HowToStep", "position": 3, "name": "Sıkıştırma seviyesini seçin", "text": "Ne kadar agresif sıkıştırma yapılacağını seçin. Daha yüksek sıkıştırma dosya boyutunu daha fazla azaltır ancak görüntü kalitesini hafifçe düşürebilir. Çoğunlukla metinden oluşan belgelerde en yüksek sıkıştırma bile aynı görünür.", "url": "https://pdfree.io/tr/buyuk-pdf-dosyalarini-sikistir/#step3" },
+      { "@type": "HowToStep", "position": 4, "name": "Sıkıştırın ve indirin", "text": "\"PDF'yi Sıkıştır\"a tıklayın. Çok büyük dosyalarda işlem 15–90 saniye sürebilir. Sıkıştırılmış PDF doğrudan cihazınıza indirilir.", "url": "https://pdfree.io/tr/buyuk-pdf-dosyalarini-sikistir/#step4" }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "100 MB'den büyük bir PDF dosyasını ücretsiz sıkıştırabilir miyim?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Evet. PDFree'de dosya boyutu sınırı yoktur. 100 MB, 500 MB veya daha büyük PDF'leri ücretsiz olarak sıkıştırabilirsiniz. İşlem tamamen tarayıcınızda gerçekleştiği için — bir sunucuda değil — yükleme sınırı ya da boyut sınırını zorunlu kılacak bant genişliği maliyeti yoktur." }
+      },
+      {
+        "@type": "Question",
+        "name": "iLovePDF neden ücretsiz sıkıştırmayı 25 MB ile sınırlıyor?",
+        "acceptedAnswer": { "@type": "Answer", "text": "iLovePDF, dosyaları kendi sunucularında sıkıştırır; bu da bant genişliği ve depolama maliyeti anlamına gelir. Ücretsiz kullanıcılar için bu maliyetleri kontrol altında tutmak amacıyla dosya boyutu sınırları ve günlük limitler uygularlar. PDFree, her şeyi tarayıcınızda yerel olarak sıkıştırır; bu nedenle sunucu maliyeti yoktur — dolayısıyla sınır da yoktur." }
+      },
+      {
+        "@type": "Question",
+        "name": "PDFree büyük bir PDF'yi ne kadar sıkıştırabilir?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Sonuç içeriğe göre değişir. Çok sayıda gömülü görsel içeren PDF'ler genellikle %40-80 küçülür. Çoğunlukla metinden oluşan PDF'ler daha az sıkışır — genellikle %10-30. PDFree, masaüstü araçlarıyla aynı sıkıştırma algoritmalarını kullanır, ancak tamamen tarayıcınızda çalışır." }
+      },
+      {
+        "@type": "Question",
+        "name": "Kaç PDF sıkıştırabileceğime dair günlük bir limit var mı?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Hayır. PDFree'de günlük kullanım limiti yoktur. SmallPDF'in (ücretsiz planda günde 2 görev) veya iLovePDF'in (ücretsiz hesaplarda günlük limitler) aksine, PDFree ile ihtiyacınız kadar, istediğiniz sıklıkta PDF sıkıştırabilirsiniz — ücretsiz olarak." }
+      },
+      {
+        "@type": "Question",
+        "name": "Sıkıştırma PDF'imin kalitesini düşürür mü?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Çoğunlukla metinden oluşan belgelerde sıkıştırmanın kalite üzerinde görünür bir etkisi yoktur — metin keskin kalır. Fotoğraf içeren PDF'lerde daha yüksek sıkıştırma seviyeleri görüntü çözünürlüğünü düşürür; bu, yakından bakıldığında fark edilebilir. Boyut küçültme ile görüntü kalitesi arasında denge kurmak için orta düzey bir sıkıştırma seçin." }
+      }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "PDFree", "item": "https://pdfree.io/" },
+      { "@type": "ListItem", "position": 2, "name": "PDF Sıkıştır", "item": "https://pdfree.io/tr/pdf-sikistir/" },
+      { "@type": "ListItem", "position": 3, "name": "Büyük PDF Dosyalarını Sıkıştır", "item": "https://pdfree.io/tr/buyuk-pdf-dosyalarini-sikistir/" }
+    ]
+  }
+  </script>
+</head>
+<body data-tool="compress">
+
+  <nav>
+    <a href="../" class="logo" id="logo" aria-label="Ana sayfaya git" style="text-decoration:none">
+      <div class="logo-icon" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+      </div>
+      <span class="logo-text">PDF<span>ree</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="../pdf-birlestir/" class="nav-link" data-tool="merge">PDF Birleştir</a>
+      <a href="../pdf-bol/" class="nav-link" data-tool="split">PDF Böl</a>
+      <a href="../pdf-sikistir/" class="nav-link" data-tool="compress">PDF Sıkıştır</a>
+      <a href="../jpg-den-pdf-ye/" class="nav-link" data-tool="jpg2pdf">JPG → PDF</a>
+      <a href="../pdf-den-jpg-ye/" class="nav-link" data-tool="pdf2jpg">PDF → JPG</a>
+      <a href="../pdf-filigran/" class="nav-link" data-tool="watermark">Filigran Ekle</a>
+      <a href="../sayfa-numarasi-ekle/" class="nav-link" data-tool="pagenum">Sayfa Numarası</a>
+      <a href="../pdf-meta-veri/" class="nav-link" data-tool="meta">Meta Veri Düzenle</a>
+      <a href="../sayfa-cikar/" class="nav-link" data-tool="extract">Sayfa Çıkar</a>
+      <a href="/draw-on-pdf/" class="nav-link" data-tool="draw-pdf">Draw</a>
+      <a href="../pdf-dondur/" class="nav-link" data-tool="rotate">PDF Döndür</a>
+      <a href="../pdf-koru/" class="nav-link" data-tool="protect">PDF Koru</a>
+      <a href="../pdf-word-donustur/" class="nav-link" data-tool="pdf2word">PDF'den Word'e</a>
+      <a href="../pdf-excel-donustur/" class="nav-link" data-tool="pdf2excel">PDF'den Excel'e</a>
+      <a href="../pdf-powerpoint-donustur/" class="nav-link" data-tool="pdf2ppt">PDF'den PowerPoint'e</a>
+      <a href="../pdf-markdown-donustur/" class="nav-link" data-tool="pdf2md">PDF'den Markdown'a</a>
+      <a href="../pdf-sifre-kaldir/" class="nav-link" data-tool="unlock">PDF Kilidi Aç</a>
+      <a href="/compare-pdf/" class="nav-link" data-tool="compare">Compare</a>
+    </div>
+    <button id="themeToggle" class="theme-toggle" aria-label="Karanlık modu değiştir" title="Karanlık modu değiştir"></button>
+  </nav>
+
+  <nav aria-label="Breadcrumb" style="position:static;padding:8px 24px;border-bottom:1px solid var(--border);background:var(--surface);">
+    <ol style="list-style:none;margin:0;padding:0;display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text3);"
+        itemscope itemtype="https://schema.org/BreadcrumbList">
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a href="../" itemprop="item" style="color:var(--green);text-decoration:none;font-weight:500;">
+          <span itemprop="name">PDFree</span></a>
+        <meta itemprop="position" content="1">
+      </li>
+      <li aria-hidden="true" style="color:var(--text3);">›</li>
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a href="../buyuk-pdf-dosyalarini-sikistir/" itemprop="item" style="color:var(--green);text-decoration:none;font-weight:500;">
+          <span itemprop="name">PDF Sıkıştır</span></a>
+        <meta itemprop="position" content="2">
+      </li>
+      <li aria-hidden="true" style="color:var(--text3);">›</li>
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <span itemprop="name" aria-current="page" style="color:var(--text2);">Büyük PDF Dosyalarını Sıkıştır</span>
+        <meta itemprop="position" content="3">
+      </li>
+    </ol>
+  </nav>
+
+  <!-- Kompakt başlık banner -->
+  <section style="background:var(--green-light);border-bottom:1px solid rgba(45,122,79,0.15);padding:24px 24px 20px;text-align:center;">
+    <div style="max-width:720px;margin:0 auto;">
+      <h1 style="font-size:clamp(22px,3.5vw,34px);font-weight:700;letter-spacing:-0.5px;line-height:1.2;color:var(--text);margin:0 0 6px;">Büyük PDF Dosyalarını Ücretsiz Sıkıştırın — Boyut Sınırı Yok</h1>
+      <p style="font-size:14px;color:var(--green);margin:0;font-weight:500;">100 MB, 500 MB, 1 GB — her boyut. Yükleme yok, hesap yok, günlük limit yok.</p>
+    </div>
+  </section>
+
+  <!-- Araç -->
+  <div id="tool"></div>
+  <main id="toolArea" class="main-area" aria-busy="false">
+    <div class="tool-header">
+      <div class="tool-header-icon" id="toolIcon" aria-hidden="true">🗜️</div>
+      <div class="tool-header-text">
+        <h2 id="toolTitle">PDF'yi sıkıştırın — her boyut, sınır yok</h2>
+        <p  id="toolDesc">Her boyutta dosya bırakın. Tek sınır cihazınızın RAM'idir — sunucu yok, yükleme sınırı yok.</p>
+      </div>
+    </div>
+
+    <div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-label="Dosya yükleyin — tıklayın veya sürükleyip bırakın">
+      <input type="file" id="fileInput" accept=".pdf" aria-hidden="true">
+      <span class="drop-icon" aria-hidden="true">📂</span>
+      <div class="drop-title">Büyük PDF dosyanızı buraya bırakın</div>
+      <div class="drop-sub">Her dosya boyutu kabul edilir — 100 MB, 500 MB, 1 GB ve üzeri</div>
+      <label class="drop-btn" id="chooseFilesBtn" for="fileInput">Dosya seçin</label>
+    </div>
+
+    <div id="fileList"    class="file-list" aria-live="polite"></div>
+    <div id="fileCount"   class="file-count"   style="display:none"></div>
+    <div id="reorderHint" class="reorder-hint" style="display:none"></div>
+
+    <div id="splitOptions"     style="display:none"></div>
+    <div id="compressOptions"  style="display:none"></div>
+    <div id="jpg2pdfOptions"   style="display:none"></div>
+    <div id="pdf2jpgOptions"   style="display:none"></div>
+    <div id="watermarkOptions" style="display:none"></div>
+    <div id="pageNumOptions"   style="display:none"></div>
+    <div id="metaOptions"      style="display:none"></div>
+    <div id="protectOptions"   style="display:none"></div>
+    <div id="redactOptions"    style="display:none"></div>
+    <div id="rotateOptions"    style="display:none"></div>
+    <div id="pdf2wordOptions"  class="j2p-options"     style="display:none" aria-label="PDF to Word options"></div>
+
+    <button id="mergeBtn"  class="merge-btn"  type="button" disabled data-mode="process">PDF'yi Sıkıştır</button>
+    <button id="cancelBtn" class="cancel-btn" type="button" style="display:none">✕ İptal</button>
+
+    <div id="progressBar"   class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+    <div id="progressLabel" class="progress-label"></div>
+
+    <div id="successCard" class="success-card" role="alert" aria-live="polite" style="display:none">
+      <div class="success-top">
+        <div class="success-icon">✓</div>
+        <div class="success-text">
+          <h3 id="successTitle">Tamamlandı!</h3>
+          <p  id="successDesc"></p>
+        </div>
+        <button id="downloadBtn" class="download-btn" type="button">⬇ İndir</button>
+        <button id="shareBtn" class="share-btn" type="button" style="display:none" aria-label="Dosyayı cihaz uygulamaları aracılığıyla gönder"></button>
+      </div>
+      <div id="privacyCleared" class="privacy-cleared" aria-live="polite">
+        <span class="privacy-cleared__icon" aria-hidden="true">🛡️</span>
+        <div class="privacy-cleared__body">
+          <strong class="privacy-cleared__title">Dosya bellekten temizlendi</strong>
+          <span class="privacy-cleared__sub">Belgeniz herhangi bir sunucuda iz bırakmadı.</span>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- SEO içeriği -->
+  <hr style="border:none;border-top:2px solid var(--border);margin:48px 24px 0;" aria-hidden="true">
+  <section class="seo-article">
+    <div class="seo-article__inner">
+      <div class="seo-content" style="max-width:800px;margin:60px auto 40px;padding:0 24px;color:var(--text2);line-height:1.8;">
+
+        <h2 style="font-size:26px;color:var(--text);margin:0 0 16px;font-weight:700;">Diğer PDF Araçları Sıkıştırmayı Neden 25 MB İle Sınırlıyor</h2>
+        <p>PDF sıkıştırıcılarındaki dosya boyutu sınırları var, çünkü sunucuda sıkıştırma yapmak para maliyeti oluşturur. Yüklediğiniz her 100 MB, sağlayıcının altyapısında bant genişliği, depolama alanı ve işlemci zamanı tüketir. Bu altyapıyı kötüye kullanıma karşı korumak — ve kullanıcıları ücretli planlara yönlendirmek — için ücretsiz katmanlar 25 MB, 5 MB veya günde 2 görevle sınırlandırılır.</p>
+        <p>PDFree bu sorunu tamamen ortadan kaldırır: <strong>dosyanız hiçbir zaman tarayıcınızdan çıkmaz</strong>. Sıkıştırma algoritması cihazınızda JavaScript ile çalışır. Karşılanması gereken sunucu maliyeti olmadığından, uygulanacak bir sınır da yoktur.</p>
+
+        <div style="background:var(--green-light);border-left:4px solid var(--green);padding:18px 20px;border-radius:0 8px 8px 0;margin:28px 0;">
+          <p style="margin:0;font-size:14px;color:var(--text);"><strong>Gerçek sınır:</strong> cihazınızın RAM'i. 8 GB+ RAM'e sahip modern bir dizüstü bilgisayar veya telefon, birkaç yüz megabayta kadar PDF'leri rahatlıkla sıkıştırır. 500 MB'ın üzerindeki dosyalarda, sıkıştırmadan önce bellek boşaltmak için diğer tarayıcı sekmelerini kapatın.</p>
+        </div>
+
+        <!-- Ne zaman gerekli -->
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 16px;font-weight:700;">Büyük Bir PDF'yi Ne Zaman Sıkıştırmanız Gerekir</h2>
+        <div style="display:flex;flex-direction:column;gap:16px;margin:16px 0 32px;">
+          <div style="border-left:3px solid var(--green);padding:14px 18px;background:var(--surface);border-radius:0 8px 8px 0;">
+            <strong style="color:var(--text);">E-posta ekleri</strong>
+            <p style="margin:6px 0 0;font-size:14px;">Gmail ve Outlook ekleri 25 MB ile sınırlıyor. 40 MB'lık taranmış bir rapor gönderilemez. 8 MB'a sıkıştırırsanız bulut bağlantısına gerek kalmadan gönderebilirsiniz.</p>
+          </div>
+          <div style="border-left:3px solid var(--green);padding:14px 18px;background:var(--surface);border-radius:0 8px 8px 0;">
+            <strong style="color:var(--text);">Kamu kurumu ve mahkeme portalları</strong>
+            <p style="margin:6px 0 0;font-size:14px;">Birçok e-başvuru sistemi yüklemeleri 10 MB veya 20 MB ile sınırlıyor. Taranmış kanıtlar içeren hukuki belgeler genellikle 50-200 MB'a ulaşır. Portalın sınırında kalmak için yerel olarak sıkıştırın.</p>
+          </div>
+          <div style="border-left:3px solid var(--green);padding:14px 18px;background:var(--surface);border-radius:0 8px 8px 0;">
+            <strong style="color:var(--text);">Mobil paylaşım</strong>
+            <p style="margin:6px 0 0;font-size:14px;">WhatsApp dosyaları 100 MB ile sınırlıyor. 180 MB'lık bir mimari çizim gönderilemez. Önce sıkıştırın, ardından telefonunuzdan doğrudan paylaşın.</p>
+          </div>
+          <div style="border-left:3px solid var(--green);padding:14px 18px;background:var(--surface);border-radius:0 8px 8px 0;">
+            <strong style="color:var(--text);">Birden fazla büyük PDF'yi birleştirmeden önce</strong>
+            <p style="margin:6px 0 0;font-size:14px;">Beş adet 80 MB'lık PDF'yi birleştirmek 400 MB'lık bir dosya oluşturur. Önce her birini sıkıştırın, sonra <a href="../buyuk-pdf-dosyalarini-birlestir/" style="color:var(--green);">birleştirin</a> — saklaması ve paylaşması kolay bir sonuç elde edersiniz.</p>
+          </div>
+        </div>
+
+        <!-- Karşılaştırma tablosu -->
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 16px;font-weight:700;">PDF Sıkıştırma İçin Dosya Boyutu Sınırları: PDFree ve Rakipleri</h2>
+        <div style="overflow-x:auto;margin:16px 0 32px;">
+          <table style="width:100%;border-collapse:collapse;font-size:14px;min-width:480px;">
+            <thead>
+              <tr style="border-bottom:2px solid var(--border);">
+                <th style="text-align:left;padding:10px 14px;color:var(--text);font-weight:600;">Araç</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">Dosya boyutu sınırı</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">Günlük görev limiti</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">Dosyalar yükleniyor mu?</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom:1px solid var(--border);background:var(--green-light);">
+                <td style="padding:10px 14px;color:var(--green);font-weight:700;">PDFree</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">Yok</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">Yok</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">Asla</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 14px;color:var(--text);">iLovePDF (ücretsiz)</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">~25 MB</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Sınırlı</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Evet — kendi sunucularına</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 14px;color:var(--text);">SmallPDF (ücretsiz)</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">~5 MB sıkıştırılmış</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Günde 2 görev</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Evet — kendi sunucularına</td>
+              </tr>
+              <tr>
+                <td style="padding:10px 14px;color:var(--text);">Adobe Acrobat</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">100 MB (ücretli)</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Sınırsız (ücretli)</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Evet — Adobe bulutuna</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- İpuçları -->
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 16px;font-weight:700;">Çok Büyük PDF Dosyalarını Sıkıştırma İpuçları</h2>
+        <div style="display:flex;flex-direction:column;gap:16px;margin:16px 0;">
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <div style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">1</div>
+            <div><strong style="color:var(--text);">Chrome veya Edge kullanın</strong> — en verimli JavaScript motorlarına sahiptirler ve büyük bellek işlemlerini en iyi şekilde yönetirler. Firefox da çalışır ancak 500 MB üzerindeki dosyalarda daha yavaş olabilir.</div>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <div style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">2</div>
+            <div><strong style="color:var(--text);">Önce diğer sekmeleri kapatın</strong> — RAM'i boşaltmak, tarayıcıya sıkıştırma işlemi için daha fazla kaynak sağlar. Her sekme yaklaşık 100-300 MB kullanır; bu, büyük dosyalarda hızla birikir.</div>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <div style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">3</div>
+            <div><strong style="color:var(--text);">Doğru sıkıştırma seviyesini ayarlayın</strong> — çoğunlukla metinden oluşan PDF'ler her seviyede iyi sıkışır. Yüksek çözünürlüklü fotoğraflarla dolu PDF'ler, görünür kalite kaybını önlemek için orta düzey bir seviye gerektirir.</div>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <div style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">4</div>
+            <div><strong style="color:var(--text);">Çok büyük dosyalarda sabırlı olun</strong> — 500 MB+ sıkıştırmak, cihaza bağlı olarak 30-120 saniye sürebilir. Bir ilerleme çubuğu durumu gösterir. İşlem sırasında sekmeyi kapatmayın.</div>
+          </div>
+        </div>
+
+        <!-- SSS -->
+        <h2 style="font-size:26px;color:var(--text);margin:52px 0 20px;font-weight:700;">Sıkça Sorulan Sorular</h2>
+        <div style="display:flex;flex-direction:column;gap:20px;">
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">100 MB'den büyük bir PDF dosyasını ücretsiz sıkıştırabilir miyim?</h3>
+            <p style="margin:0;font-size:14px;">Evet. PDFree'de dosya boyutu sınırı yoktur. İşlem tamamen tarayıcınızda gerçekleştiği için 100 MB, 500 MB, hatta 1 GB'lık PDF'leri ücretsiz sıkıştırabilirsiniz — sunucuya yükleme olmadığı için yükleme sınırı da yoktur.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">iLovePDF neden ücretsiz sıkıştırmayı 25 MB ile sınırlıyor, PDFree neden sınırlamıyor?</h3>
+            <p style="margin:0;font-size:14px;">iLovePDF, dosyaları kendi sunucularında işler; bu da gerçek bant genişliği ve işlem maliyeti yaratır. PDFree, dosyaları tarayıcınızda yerel olarak işler — sunucu maliyeti olmadığından dosya boyutlarını sınırlamak için bir neden yoktur.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Sıkıştırma PDF'imin dosya boyutunu ne kadar küçültür?</h3>
+            <p style="margin:0;font-size:14px;">Sonuç içeriğe göre değişir. Görsel açısından zengin PDF'ler genellikle %40-80 küçülür. Çoğunlukla metinden oluşan PDF'ler %10-30 sıkışır. PDFree, masaüstü araçlarıyla aynı sıkıştırma algoritmalarını kullanır.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">PDF sıkıştırmalarında günlük bir sınır var mı?</h3>
+            <p style="margin:0;font-size:14px;">Hayır. SmallPDF'in (ücretsiz planda günde 2 görev) veya iLovePDF'in (günlük limitler) aksine, PDFree'de günlük limit yoktur. İhtiyacınız kadar, istediğiniz sıklıkta PDF sıkıştırın.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Sıkıştırırken dosyam sunucuya yükleniyor mu?</h3>
+            <p style="margin:0;font-size:14px;">Hayır. PDFree dosyanızı asla yüklemez. Tüm sıkıştırma işlemi, cihazınızdaki tarayıcı içinde JavaScript ile gerçekleşir. Belgeniz tamamen gizli kalır — hiçbir sunucuya ulaşmaz.</p>
+          </div>
+        </div>
+
+        <!-- İlgili araçlar -->
+        <h2 style="font-size:26px;color:var(--text);margin:52px 0 12px;font-weight:700;">Daha Fazla Ücretsiz Araç — Hiçbirinde Sınır Yok</h2>
+        <ul style="margin:12px 0;padding-left:24px;display:flex;flex-direction:column;gap:8px;">
+          <li><a href="../buyuk-pdf-dosyalarini-birlestir/" style="color:var(--green);font-weight:500;">Büyük PDF dosyalarını ücretsiz birleştirin</a> — sunucuya yüklemeden 500 MB'lık PDF'leri birleştirin</li>
+          <li><a href="../pdf-sikistir/" style="color:var(--green);font-weight:500;">PDF Sıkıştır</a> — herhangi bir PDF için standart sıkıştırma aracı</li>
+          <li><a href="../pdf-bol/" style="color:var(--green);font-weight:500;">PDF Böl</a> — sıkıştırmadan önce sayfaları çıkararak boyutu küçültün</li>
+          <li><a href="../pdf-koru/" style="color:var(--green);font-weight:500;">PDF Koru</a> — sıkıştırılmış dosyaya şifre ekleyin</li>
+          <li><a href="/blog/how-to-compress-pdf-for-email/" style="color:var(--green);font-weight:500;">E-posta İçin PDF Sıkıştırma Rehberi</a> — e-posta boyutu sınırlarını aşmak için adım adım kılavuz</li>
+        </ul>
+
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    PDFree · <strong>Tüm işlemler %100 tarayıcınızda gerçekleşir</strong> · Dosyalar <strong>asla yüklenmez</strong><br>
+    <span style="color:var(--green)">🔒</span> Belgeleriniz cihazınızdan asla ayrılmaz &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> Herkes için sonsuza dek ücretsiz<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
+      <a href="/privacy.html" style="color:var(--green)">Gizlilik</a> &nbsp;·&nbsp;
+      <a href="/terms.html" style="color:var(--green)">Şartlar</a> &nbsp;·&nbsp;
+      <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a> &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green)">GitHub</a>
+    </span>
+  </footer>
+
+  <div id="toast"      class="toast" role="status" aria-live="polite"></div>
+  <div id="hero"       style="display:none"></div>
+  <div id="trustAlert" style="display:none"></div>
+  <div id="noLimitBar" style="display:none"></div>
+  <div id="toolsGrid"  style="display:none"></div>
+  <div id="pwaNudge"   style="display:none"></div>
+
+  <script type="module" src="../../js/locales/tr.js"></script>
+  <script type="module" src="../../js/app.js"></script>
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script>
+</body>
+</html>

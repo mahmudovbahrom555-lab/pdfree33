@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src  'self' 'wasm-unsafe-eval' blob:
+                https://cdnjs.cloudflare.com https://esm.sh
+                https://plausible.io https://static.cloudflareinsights.com;
+    style-src   'self' 'unsafe-inline';
+    font-src    'self';
+    img-src     'self' data: blob: https:;
+    connect-src 'self' https://cdnjs.cloudflare.com https://*.workers.dev
+                https://plausible.io https://cloudflareinsights.com;
+    worker-src  'self' blob:;
+    object-src  'none';
+  ">
+
+  <title>Ghép File PDF Lớn Miễn Phí — Không Giới Hạn | PDFree</title>
+  <meta name="description" content="Ghép file PDF mọi dung lượng miễn phí — 100MB đến 1GB. Không giới hạn dung lượng, không giới hạn mỗi ngày, không tải lên.">
+
+  <meta property="og:title"       content="Ghép File PDF Lớn Miễn Phí — Không Giới Hạn Dung Lượng | PDFree">
+  <meta property="og:description" content="Ghép các file PDF với bất kỳ dung lượng nào miễn phí. Không giới hạn 25MB. Không giới hạn lượt dùng mỗi ngày. Xử lý ngay trong trình duyệt của bạn.">
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://pdfree.io/vi/ghep-pdf-file-lon/">
+  <meta property="og:site_name"   content="PDFree">
+  <meta property="og:image"        content="https://pdfree.io/icons/og-image.jpg">
+  <meta property="og:image:width"  content="1200">
+  <meta property="og:image:height" content="633">
+  <meta property="og:image:alt"    content="Ghép File PDF Lớn Miễn Phí — Không Giới Hạn Dung Lượng | PDFree">
+  <meta name="twitter:card"       content="summary_large_image">
+  <meta name="twitter:site"       content="@pdfree_io">
+  <meta name="twitter:title"      content="Ghép File PDF Lớn Miễn Phí — Không Giới Hạn Dung Lượng | PDFree">
+  <meta name="twitter:description" content="Ghép các file PDF với bất kỳ dung lượng nào miễn phí. Không giới hạn 25MB. Không giới hạn lượt dùng mỗi ngày. Xử lý ngay trong trình duyệt của bạn.">
+  <meta name="twitter:image"       content="https://pdfree.io/icons/og-image.jpg">
+  <meta name="twitter:image:alt"   content="Ghép File PDF Lớn Miễn Phí — Không Giới Hạn Dung Lượng | PDFree">
+
+  <link rel="canonical" href="https://pdfree.io/vi/ghep-pdf-file-lon/">
+  <link rel="alternate" hreflang="en"        href="https://pdfree.io/merge-large-pdf-files/">
+  <link rel="alternate" hreflang="de"        href="https://pdfree.io/de/pdf-zusammenfuehren-grosse-dateien/">
+  <link rel="alternate" hreflang="es"        href="https://pdfree.io/es/unir-pdf-archivos-grandes/">
+  <link rel="alternate" hreflang="fr"        href="https://pdfree.io/fr/fusionner-pdf-fichiers-volumineux/">
+  <link rel="alternate" hreflang="pt"        href="https://pdfree.io/pt/juntar-pdf-arquivos-grandes/">
+  <link rel="alternate" hreflang="id"        href="https://pdfree.io/id/gabung-pdf-file-besar/">
+  <link rel="alternate" hreflang="vi"        href="https://pdfree.io/vi/ghep-pdf-file-lon/">
+  <link rel="alternate" hreflang="ru"        href="https://pdfree.io/ru/objedinit-bolshie-pdf/">
+  <link rel="alternate" hreflang="ja"        href="https://pdfree.io/ja/pdf-daiyouryou-ketsugou/">
+  <link rel="alternate" hreflang="it"        href="https://pdfree.io/it/unisci-pdf-file-grandi/">
+  <link rel="alternate" hreflang="ko"        href="https://pdfree.io/ko/pdf-daeyongryang-hapchigi/">
+  <link rel="alternate" hreflang="nl"        href="https://pdfree.io/nl/pdf-samenvoegen-grote-bestanden/">
+  <link rel="alternate" hreflang="pl"        href="https://pdfree.io/pl/polacz-duze-pliki-pdf/">
+  <link rel="alternate" hreflang="tr"        href="https://pdfree.io/tr/buyuk-pdf-dosyalarini-birlestir/">
+  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/merge-large-pdf-files/">
+
+  <link rel="manifest" href="../../manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="PDFree">
+  <link rel="apple-touch-icon" href="../../icons/icon-192.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+  <link rel="preconnect" href="https://plausible.io">
+  <link rel="preconnect" href="https://static.cloudflareinsights.com">
+  <link rel="preload" href="../../fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../css/fonts.css">
+  <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/animations.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/components.css">
+
+  <script src="../../js/theme.js"></script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Ghép File PDF Lớn Không Giới Hạn Dung Lượng",
+    "description": "Ghép các file PDF với bất kỳ dung lượng nào, miễn phí. Không giới hạn dung lượng file, không giới hạn lượt dùng mỗi ngày. Toàn bộ quá trình xử lý diễn ra ngay trong trình duyệt.",
+    "url": "https://pdfree.io/vi/ghep-pdf-file-lon/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "featureList": [
+      "Không giới hạn dung lượng file — ghép PDF 100MB, 500MB, 1GB",
+      "Không giới hạn lượt dùng mỗi ngày",
+      "Không tải file lên server — file luôn nằm trên thiết bị của bạn",
+      "Không cần tạo tài khoản",
+      "Hoạt động ngay cả khi không có mạng"
+    ],
+    "dateModified": "2026-08-07",
+    "provider": {
+      "@type": "Organization",
+      "name": "PDFree",
+      "url": "https://pdfree.io",
+      "description": "PDFree is a free, privacy-first PDF toolkit that runs entirely in the browser — files are processed locally and never uploaded to a server.",
+      "logo": "https://pdfree.io/icons/icon-512.png"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "Cách Ghép File PDF Lớn Miễn Phí",
+    "description": "Ghép các file PDF lớn không giới hạn dung lượng, không cần tải lên và không mất phí.",
+    "totalTime": "PT2M",
+    "tool": [{ "@type": "HowToTool", "name": "PDFree — công cụ ghép PDF miễn phí chạy trên trình duyệt" }],
+    "step": [
+      { "@type": "HowToStep", "position": 1, "name": "Mở công cụ Ghép PDF của PDFree", "text": "Truy cập pdfree.io/vi/ghep-pdf-file-lon/ bằng Chrome, Firefox hoặc Safari. Không cần cài đặt, không cần tài khoản.", "url": "https://pdfree.io/vi/ghep-pdf-file-lon/#step1" },
+      { "@type": "HowToStep", "position": 2, "name": "Thêm các file PDF lớn của bạn", "text": "Nhấn 'Chọn file' hoặc kéo thả vào. File với bất kỳ dung lượng nào đều được chấp nhận — 100MB, 500MB, thậm chí 1GB. Quá trình xử lý diễn ra ngay trong trình duyệt nên không có giới hạn tải lên server.", "url": "https://pdfree.io/vi/ghep-pdf-file-lon/#step2" },
+      { "@type": "HowToStep", "position": 3, "name": "Sắp xếp thứ tự", "text": "Kéo các file lên xuống để sắp xếp thứ tự chúng sẽ xuất hiện trong tài liệu ghép cuối cùng.", "url": "https://pdfree.io/vi/ghep-pdf-file-lon/#step3" },
+      { "@type": "HowToStep", "position": 4, "name": "Ghép và tải xuống", "text": "Nhấn 'Ghép file PDF'. Với file rất lớn, quá trình xử lý có thể mất 10–60 giây. File PDF đã ghép sẽ tải trực tiếp về thiết bị của bạn.", "url": "https://pdfree.io/vi/ghep-pdf-file-lon/#step4" }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Tôi có thể ghép file PDF lớn hơn 100MB miễn phí không?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Có. PDFree không giới hạn dung lượng file. Bạn có thể ghép PDF 100MB, 500MB hoặc lớn hơn hoàn toàn miễn phí. Vì quá trình xử lý diễn ra hoàn toàn trong trình duyệt của bạn — không phải trên server — nên không có giới hạn tải lên và không phát sinh chi phí băng thông buộc phải áp giới hạn dung lượng." }
+      },
+      {
+        "@type": "Question",
+        "name": "Tại sao iLovePDF lại giới hạn dung lượng file ở mức 25MB?",
+        "acceptedAnswer": { "@type": "Answer", "text": "iLovePDF xử lý file trên server của họ, điều này phát sinh chi phí băng thông và lưu trữ. Để kiểm soát chi phí cho người dùng miễn phí, họ áp giới hạn dung lượng file. PDFree xử lý mọi thứ ngay trong trình duyệt của bạn nên không có chi phí server — và vì vậy không có giới hạn dung lượng." }
+      },
+      {
+        "@type": "Question",
+        "name": "PDFree có thể ghép file PDF lớn đến mức nào?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Giới hạn thực tế là dung lượng RAM khả dụng trên thiết bị của bạn. Máy tính và điện thoại đời mới thường xử lý PDF lên đến vài trăm megabyte mà không gặp vấn đề gì. Với file rất lớn (500MB+), hãy đảm bảo bạn có ít nhất 2-4GB RAM trống." }
+      },
+      {
+        "@type": "Question",
+        "name": "Tôi nên làm gì nếu trình duyệt bị treo khi ghép các file rất lớn?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Đóng các tab trình duyệt khác để giải phóng bộ nhớ, sau đó thử lại — mỗi tab đang mở sẽ chiếm dụng RAM không còn khả dụng cho việc ghép file. Ghép theo từng đợt nhỏ hơn (5–10 file mỗi lần, sau đó ghép các kết quả lại) cũng sử dụng ít bộ nhớ hơn tại một thời điểm. Bạn cũng có thể nén từng file trước bằng công cụ Nén PDF để giảm tổng dung lượng trước khi ghép." }
+      },
+      {
+        "@type": "Question",
+        "name": "Có giới hạn số lần ghép PDF mỗi ngày không?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Không. PDFree không giới hạn lượt dùng mỗi ngày. Khác với SmallPDF (2 tác vụ/ngày ở gói miễn phí) hay iLovePDF (giới hạn theo ngày cho tài khoản miễn phí), PDFree cho phép bạn ghép bao nhiêu file PDF tùy thích, bất kỳ lúc nào, hoàn toàn miễn phí." }
+      },
+      {
+        "@type": "Question",
+        "name": "Tôi có thể ghép cùng lúc bao nhiêu file PDF?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Không có giới hạn về số lượng file. Bạn có thể ghép 2, 50, 100 hoặc nhiều file PDF hơn trong một lần thao tác. PDFree xử lý mọi thứ trong bộ nhớ trình duyệt của bạn — RAM khả dụng trên thiết bị là giới hạn thực tế duy nhất. Máy tính đời mới dễ dàng xử lý 100+ file với tổng dung lượng vài trăm megabyte." }
+      },
+      {
+        "@type": "Question",
+        "name": "Tôi có thể ghép 50 hoặc 100 file PDF cùng lúc miễn phí không?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Có. PDFree không giới hạn số lượng file mỗi lần ghép và không giới hạn lượt dùng mỗi ngày. Thả tất cả file vào cùng lúc, sắp xếp thứ tự và nhấn Ghép. Kết quả sẽ tải trực tiếp về thiết bị của bạn — không cần tải lên bất kỳ server nào." }
+      },
+      {
+        "@type": "Question",
+        "name": "Tại sao ghép PDF lớn trên iLovePDF chậm nhưng trên PDFree lại nhanh?",
+        "acceptedAnswer": { "@type": "Answer", "text": "iLovePDF yêu cầu tải file của bạn lên server, xử lý ở đó rồi tải kết quả về — ba bước truyền tải mạng khiến file lớn tốn nhiều thời gian. PDFree xử lý mọi thứ ngay trong trình duyệt mà không cần truyền tải qua mạng, nên tốc độ chỉ phụ thuộc vào CPU thiết bị của bạn, không phụ thuộc vào kết nối internet." }
+      }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "PDFree", "item": "https://pdfree.io/vi/" },
+      { "@type": "ListItem", "position": 2, "name": "Ghép PDF", "item": "https://pdfree.io/vi/gop-pdf/" },
+      { "@type": "ListItem", "position": 3, "name": "Ghép File PDF Lớn", "item": "https://pdfree.io/vi/ghep-pdf-file-lon/" }
+    ]
+  }
+  </script>
+</head>
+<body data-tool="merge">
+
+  <nav>
+    <a href="../" class="logo" id="logo" aria-label="Về trang chủ" style="text-decoration:none">
+      <div class="logo-icon" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+      </div>
+      <span class="logo-text">PDF<span>ree</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="../gop-pdf/" class="nav-link" data-tool="merge">Ghép</a>
+      <a href="../tach-pdf/" class="nav-link" data-tool="split">Tách</a>
+      <a href="../nen-pdf/" class="nav-link" data-tool="compress">Nén</a>
+      <a href="../jpg-sang-pdf/" class="nav-link" data-tool="jpg2pdf">JPG→PDF</a>
+      <a href="../pdf-sang-jpg/" class="nav-link" data-tool="pdf2jpg">PDF→JPG</a>
+      <a href="../them-watermark-pdf/" class="nav-link" data-tool="watermark">Hình Mờ</a>
+      <a href="../danh-so-trang-pdf/" class="nav-link" data-tool="pagenum">Số Trang</a>
+      <a href="../chinh-sua-metadata-pdf/" class="nav-link" data-tool="meta">Metadata</a>
+      <a href="../trich-xuat-pdf/" class="nav-link" data-tool="extract">Trích Xuất</a>
+      <a href="/draw-on-pdf/" class="nav-link" data-tool="draw-pdf">Draw</a>
+      <a href="../xoay-pdf/" class="nav-link" data-tool="rotate">Xoay</a>
+      <a href="../bao-ve-pdf/" class="nav-link" data-tool="protect">Bảo Vệ</a>
+      <a href="../pdf-sang-word/" class="nav-link" data-tool="pdf2word">PDF→Word</a>
+      <a href="../pdf-sang-excel/" class="nav-link" data-tool="pdf2excel">PDF sang Excel</a>
+      <a href="../pdf-sang-powerpoint/" class="nav-link" data-tool="pdf2ppt">PDF sang PowerPoint</a>
+      <a href="../pdf-sang-markdown/" class="nav-link" data-tool="pdf2md">PDF sang Markdown</a>
+      <a href="../mo-khoa-pdf/" class="nav-link" data-tool="unlock">Mở Khóa PDF</a>
+      <a href="/compare-pdf/" class="nav-link" data-tool="compare">Compare</a>
+    </div>
+    <button id="themeToggle" class="theme-toggle" aria-label="Chuyển chế độ tối" title="Chuyển chế độ tối"></button>
+  </nav>
+
+  <!-- Banner tiêu đề gọn — tool hiển thị ngay bên dưới -->
+  <section style="background:var(--green-light);border-bottom:1px solid rgba(45,122,79,0.15);padding:24px 24px 20px;text-align:center;">
+    <div style="max-width:720px;margin:0 auto;">
+      <h1 style="font-size:clamp(22px,3.5vw,34px);font-weight:700;letter-spacing:-0.5px;line-height:1.2;color:var(--text);margin:0 0 6px;">Ghép File PDF Lớn Miễn Phí — Không Giới Hạn Dung Lượng, Không Giới Hạn Số File</h1>
+      <p style="font-size:14px;color:var(--green);margin:0;font-weight:500;">100MB, 500MB, 1GB — bất kỳ dung lượng nào. 2, 50, 100+ file — bất kỳ số lượng nào. Không tải lên, không tài khoản, không giới hạn.</p>
+    </div>
+  </section>
+
+  <!-- Tool -->
+  <div id="tool"></div>
+  <main id="toolArea" class="main-area" aria-busy="false">
+    <div class="tool-header">
+      <div class="tool-header-icon" id="toolIcon" aria-hidden="true">🔗</div>
+      <div class="tool-header-text">
+        <h2 id="toolTitle">Ghép file PDF — mọi dung lượng, không giới hạn</h2>
+        <p  id="toolDesc">Thả file với bất kỳ dung lượng nào. RAM thiết bị của bạn là giới hạn duy nhất — không server, không giới hạn tải lên.</p>
+      </div>
+    </div>
+
+    <div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-label="Tải file lên — nhấn hoặc kéo thả">
+      <input type="file" id="fileInput" multiple accept=".pdf" aria-hidden="true">
+      <span class="drop-icon" aria-hidden="true">📂</span>
+      <div class="drop-title">Thả file PDF vào đây — mọi dung lượng, mọi số lượng</div>
+      <div class="drop-sub">File 100MB, 500MB, 1GB+ · 2, 50, 100+ file · không giới hạn</div>
+      <label class="drop-btn" id="chooseFilesBtn" for="fileInput">Chọn file</label>
+    </div>
+
+    <div id="fileList"    class="file-list" aria-live="polite"></div>
+    <div id="fileCount"   class="file-count"   style="display:none"></div>
+    <div id="reorderHint" class="reorder-hint" style="display:none">↕ Kéo để sắp xếp lại file trước khi ghép</div>
+
+    <div id="mergeOptions"     class="j2p-options"     style="display:none" aria-label="Merge options"></div>
+    <div id="splitOptions"     style="display:none"></div>
+    <div id="compressOptions"  style="display:none"></div>
+    <div id="jpg2pdfOptions"   style="display:none"></div>
+    <div id="pdf2jpgOptions"   style="display:none"></div>
+    <div id="watermarkOptions" style="display:none"></div>
+    <div id="pageNumOptions"   style="display:none"></div>
+    <div id="metaOptions"      style="display:none"></div>
+    <div id="protectOptions"   style="display:none"></div>
+    <div id="redactOptions"    style="display:none"></div>
+    <div id="rotateOptions"    style="display:none"></div>
+    <div id="pdf2wordOptions"  class="j2p-options"     style="display:none" aria-label="PDF to Word options"></div>
+
+    <button id="mergeBtn"  class="merge-btn"  type="button" disabled data-mode="process">Ghép file PDF</button>
+    <button id="cancelBtn" class="cancel-btn" type="button" style="display:none">✕ Hủy</button>
+
+    <div id="progressBar"   class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+    <div id="progressLabel" class="progress-label"></div>
+
+    <div id="successCard" class="success-card" role="alert" aria-live="polite" style="display:none">
+      <div class="success-top">
+        <div class="success-icon">✓</div>
+        <div class="success-text">
+          <h3 id="successTitle">Xong!</h3>
+          <p  id="successDesc"></p>
+        </div>
+        <button id="downloadBtn" class="download-btn" type="button">⬇ Tải xuống</button>
+        <button id="shareBtn" class="share-btn" type="button" style="display:none" aria-label="Gửi file qua ứng dụng trên thiết bị"></button>
+      </div>
+      <div id="privacyCleared" class="privacy-cleared" aria-live="polite">
+        <span class="privacy-cleared__icon" aria-hidden="true">🛡️</span>
+        <div class="privacy-cleared__body">
+          <strong class="privacy-cleared__title">File đã được xóa khỏi bộ nhớ</strong>
+          <span class="privacy-cleared__sub">Tài liệu của bạn không để lại dấu vết nào trên bất kỳ server nào.</span>
+        </div>
+      </div>
+      <div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(45,122,79,0.2);">
+        <p style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--text3);margin:0 0 8px;">Bước tiếp theo?</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <a href="/vi/nen-pdf-file-lon/" data-handoff style="font-size:13px;background:var(--green-light);color:var(--green);padding:6px 12px;border-radius:6px;text-decoration:none;font-weight:500;border:1px solid rgba(45,122,79,0.2);">Nén kết quả →</a>
+          <a href="../bao-ve-pdf/" data-handoff style="font-size:13px;background:var(--surface);color:var(--text2);padding:6px 12px;border-radius:6px;text-decoration:none;border:1px solid var(--border);">Bảo vệ PDF</a>
+          <a href="../tach-pdf/" data-handoff style="font-size:13px;background:var(--surface);color:var(--text2);padding:6px 12px;border-radius:6px;text-decoration:none;border:1px solid var(--border);">Trích xuất trang</a>
+          <a href="/ocr-pdf/" data-handoff style="font-size:13px;background:var(--surface);color:var(--text2);padding:6px 12px;border-radius:6px;text-decoration:none;border:1px solid var(--border);">Tạo bản có thể tìm kiếm</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Huy hiệu so sánh — bên dưới tool để không làm chậm việc truy cập -->
+  <section style="padding:14px 24px;border-bottom:1px solid var(--border);background:var(--surface);">
+    <div style="max-width:760px;margin:0 auto;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;align-items:center;">
+      <span style="font-size:12px;background:#fef3c7;color:#92400e;padding:4px 11px;border-radius:20px;font-weight:500;">iLovePDF: giới hạn 25MB</span>
+      <span style="font-size:12px;background:#fef3c7;color:#92400e;padding:4px 11px;border-radius:20px;font-weight:500;">SmallPDF: 2 tác vụ/ngày</span>
+      <span style="font-size:12px;background:#fef3c7;color:#92400e;padding:4px 11px;border-radius:20px;font-weight:500;">Adobe: cần gói trả phí</span>
+      <span style="font-size:13px;color:var(--text2);">so với</span>
+      <span style="font-size:12px;background:var(--green-light);color:var(--green);padding:4px 11px;border-radius:20px;font-weight:600;">PDFree: ∞ Không giới hạn, luôn miễn phí</span>
+    </div>
+  </section>
+
+  <!-- Nội dung SEO -->
+  <hr style="border:none;border-top:2px solid var(--border);margin:48px 24px 0;" aria-hidden="true">
+  <section class="seo-article">
+    <div class="seo-article__inner">
+      <div class="seo-content" style="max-width:800px;margin:60px auto 40px;padding:0 24px;color:var(--text2);line-height:1.8;">
+
+        <h2 style="font-size:26px;color:var(--text);margin:0 0 16px;font-weight:700;">Vì Sao Các Công Cụ PDF Khác Giới Hạn Dung Lượng File</h2>
+        <p>Giới hạn dung lượng file tồn tại vì việc ghép PDF trên server tốn tiền. Mỗi 100MB bạn tải lên tiêu tốn băng thông, dung lượng lưu trữ và thời gian CPU trên hạ tầng của nhà cung cấp. Để bảo vệ hạ tầng đó khỏi bị lạm dụng — và hướng người dùng đến các gói trả phí — các gói miễn phí thường bị giới hạn.</p>
+        <p>PDFree loại bỏ hoàn toàn vấn đề này: <strong>file của bạn không bao giờ rời khỏi trình duyệt</strong>. Thao tác ghép file chạy bằng JavaScript ngay trên thiết bị của bạn. Không có chi phí server cần chi trả, nên cũng không có giới hạn nào cần áp đặt.</p>
+
+        <div style="background:var(--green-light);border-left:4px solid var(--green);padding:18px 20px;border-radius:0 8px 8px 0;margin:28px 0;">
+          <p style="margin:0 0 10px;font-size:14px;color:var(--text);"><strong>Giới hạn thực sự: RAM của thiết bị bạn.</strong> Không có giới hạn phần mềm nào về số lượng hay dung lượng file. Ràng buộc thực tế duy nhất là lượng bộ nhớ mà trình duyệt của bạn có thể sử dụng.</p>
+          <ul style="margin:0;padding-left:20px;font-size:14px;color:var(--text);display:flex;flex-direction:column;gap:4px;">
+            <li><strong>RAM 8 GB:</strong> xử lý thoải mái 100 file hoặc tổng dung lượng 500 MB</li>
+            <li><strong>RAM 16 GB:</strong> xử lý 500+ file hoặc tổng dung lượng vài GB</li>
+            <li><strong>RAM 4 GB (điện thoại đời cũ):</strong> nên giới hạn ở 50 file hoặc tổng dung lượng 200 MB</li>
+          </ul>
+          <p style="margin:10px 0 0;font-size:13px;color:var(--text2);">Nếu gặp giới hạn bộ nhớ, hãy chia nhỏ đợt xử lý: ghép 50 file đầu tiên, sau đó ghép kết quả đó với 50 file tiếp theo.</p>
+        </div>
+
+        <!-- Số lượng file -->
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 12px;font-weight:700;">Không Giới Hạn Phần Mềm Về Số Lượng File</h2>
+        <p style="margin:0 0 16px;">PDFree không áp đặt giới hạn phần mềm về số lượng file bạn có thể ghép. Vì quá trình xử lý diễn ra ngay trong trình duyệt, giới hạn thực tế phụ thuộc vào bộ nhớ khả dụng và khả năng của trình duyệt trên thiết bị của bạn.</p>
+
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:18px 20px;margin:0 0 20px;">
+          <strong style="color:var(--text);display:block;margin:0 0 10px;">Các trường hợp sử dụng phổ biến</strong>
+          <ul style="margin:0;padding-left:20px;font-size:14px;color:var(--text2);display:flex;flex-direction:column;gap:6px;">
+            <li>Ghép 50 hóa đơn thành một file lưu trữ hằng năm.</li>
+            <li>Kết hợp 100 trang đã scan trước khi gửi đi OCR.</li>
+            <li>Ghép hàng trăm file PDF chương sách thành một tài liệu duy nhất.</li>
+            <li>Sắp xếp bộ hồ sơ pháp lý lớn thành một hồ sơ nộp tòa duy nhất.</li>
+          </ul>
+        </div>
+
+        <!-- Bảng so sánh -->
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 16px;font-weight:700;">Giới Hạn Dung Lượng File: PDFree So Với Đối Thủ</h2>
+        <div style="overflow-x:auto;margin:16px 0 32px;">
+          <table style="width:100%;border-collapse:collapse;font-size:14px;min-width:480px;">
+            <thead>
+              <tr style="border-bottom:2px solid var(--border);">
+                <th style="text-align:left;padding:10px 14px;color:var(--text);font-weight:600;">Công cụ</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">Giới hạn dung lượng</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">Giới hạn/ngày</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">Giá</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom:1px solid var(--border);background:var(--green-light);">
+                <td style="padding:10px 14px;color:var(--green);font-weight:700;">PDFree</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">Không có</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">Không có</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">Miễn phí vĩnh viễn</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 14px;color:var(--text);">iLovePDF (miễn phí)</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">~25MB</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Có giới hạn</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Miễn phí / từ 6$/tháng</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 14px;color:var(--text);">SmallPDF (miễn phí)</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">~5MB nén</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">2 tác vụ/ngày</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Miễn phí / từ 9$/tháng</td>
+              </tr>
+              <tr>
+                <td style="padding:10px 14px;color:var(--text);">Adobe Acrobat</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">100MB (trả phí)</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Không giới hạn (trả phí)</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">19,99$/tháng</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Ghép nhiều file -->
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 16px;font-weight:700;">Ghép 50, 100 Hoặc 500 File PDF Cùng Lúc</h2>
+        <p>PDFree <strong>không giới hạn số lượng file</strong> bạn có thể ghép trong một lần thao tác. Dù bạn cần ghép 2 PDF hay 500 hóa đơn đã scan, quy trình đều giống nhau: thả tất cả file vào cùng lúc, sắp xếp lại nếu cần, nhấn Ghép. Cùng một công cụ ghép 2 file cũng ghép được 10, 50, 100 hay 200 file — không cần thay đổi cấu hình gì.</p>
+        <p>Những tình huống ghép hàng loạt phổ biến mà PDFree xử lý không giới hạn:</p>
+        <div style="display:flex;flex-direction:column;gap:12px;margin:20px 0 32px;">
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <span style="font-size:20px;flex-shrink:0">🧾</span>
+            <div><strong style="color:var(--text);">Hóa đơn &amp; biên lai</strong> — scan 80 hóa đơn hằng tháng từng trang một, rồi ghép tất cả thành một file lưu trữ hằng năm duy nhất.</div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <span style="font-size:20px;flex-shrink:0">📋</span>
+            <div><strong style="color:var(--text);">Pháp lý &amp; tuân thủ</strong> — kết hợp 50–100 trang hợp đồng, phụ lục và chữ ký thành một tài liệu sẵn sàng nộp tòa.</div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <span style="font-size:20px;flex-shrink:0">📚</span>
+            <div><strong style="color:var(--text);">Tổng hợp báo cáo</strong> — ghép các chương, phụ lục và bảng dữ liệu từ nhiều tác giả thành một sản phẩm bàn giao duy nhất.</div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <span style="font-size:20px;flex-shrink:0">🗂️</span>
+            <div><strong style="color:var(--text);">Số hóa lưu trữ</strong> — kết hợp hàng trăm trang tài liệu đã scan thành một file lưu trữ có thể tìm kiếm.</div>
+          </div>
+        </div>
+        <div style="background:var(--green-light);border-left:4px solid var(--green);padding:18px 20px;border-radius:0 8px 8px 0;margin:0 0 32px;">
+          <p style="margin:0;font-size:14px;color:var(--text);"><strong>Mẹo khi có 50+ file:</strong> Giữ <kbd style="background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:1px 5px;font-size:12px;">Ctrl</kbd> (hoặc <kbd style="background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:1px 5px;font-size:12px;">⌘</kbd> trên Mac) khi nhấn chọn trong hộp thoại chọn file để chọn nhiều file cùng lúc, hoặc kéo cả một thư mục PDF vào vùng thả file. RAM khả dụng trên thiết bị của bạn là giới hạn thực tế duy nhất.</p>
+        </div>
+
+        <!-- Ai sử dụng -->
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 16px;font-weight:700;">Ai Sử Dụng Công Cụ Này</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin:0 0 40px;">
+          <div style="padding:18px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
+            <div style="font-size:22px;margin:0 0 8px;">⚖️</div>
+            <strong style="color:var(--text);display:block;margin:0 0 6px;">Văn phòng luật</strong>
+            <p style="margin:0;font-size:13px;color:var(--text2);">Kết hợp 50–100 phụ lục, trang hợp đồng và chữ ký thành một hồ sơ nộp tòa duy nhất.</p>
+          </div>
+          <div style="padding:18px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
+            <div style="font-size:22px;margin:0 0 8px;">🧮</div>
+            <strong style="color:var(--text);display:block;margin:0 0 6px;">Kế toán</strong>
+            <p style="margin:0;font-size:13px;color:var(--text2);">Ghép hàng loạt 80+ hóa đơn hằng tháng thành một file lưu trữ cuối năm để kiểm toán hoặc kê khai thuế.</p>
+          </div>
+          <div style="padding:18px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
+            <div style="font-size:22px;margin:0 0 8px;">📐</div>
+            <strong style="color:var(--text);display:block;margin:0 0 6px;">Kiến trúc sư</strong>
+            <p style="margin:0;font-size:13px;color:var(--text2);">Hợp nhất bản vẽ mặt bằng, thông số kỹ thuật và giấy phép của một dự án nhiều tòa nhà thành một bộ hồ sơ nộp duy nhất.</p>
+          </div>
+          <div style="padding:18px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
+            <div style="font-size:22px;margin:0 0 8px;">🎓</div>
+            <strong style="color:var(--text);display:block;margin:0 0 6px;">Sinh viên</strong>
+            <p style="margin:0;font-size:13px;color:var(--text2);">Ghép luận văn, danh mục tài liệu tham khảo, phụ lục và trang bìa trước khi nộp lên cổng thông tin trường đại học.</p>
+          </div>
+          <div style="padding:18px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
+            <div style="font-size:22px;margin:0 0 8px;">🏛️</div>
+            <strong style="color:var(--text);display:block;margin:0 0 6px;">Cơ quan nhà nước</strong>
+            <p style="margin:0;font-size:13px;color:var(--text2);">Kết hợp đơn đăng ký, tài liệu bổ trợ và biên lai thanh toán thành một hồ sơ duy nhất cho mỗi trường hợp.</p>
+          </div>
+          <div style="padding:18px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
+            <div style="font-size:22px;margin:0 0 8px;">🏥</div>
+            <strong style="color:var(--text);display:block;margin:0 0 6px;">Y tế</strong>
+            <p style="margin:0;font-size:13px;color:var(--text2);">Tổng hợp hồ sơ bệnh nhân, kết quả xét nghiệm, báo cáo chẩn đoán hình ảnh và thư chuyển viện thành một file duy nhất — mà không cần tải dữ liệu nhạy cảm lên đâu cả.</p>
+          </div>
+        </div>
+
+        <!-- Mẹo cho file lớn -->
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 16px;font-weight:700;">Mẹo Khi Ghép File PDF Rất Lớn</h2>
+        <div style="display:flex;flex-direction:column;gap:16px;margin:16px 0;">
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <div style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">1</div>
+            <div><strong style="color:var(--text);">Dùng Chrome hoặc Edge</strong> — hai trình duyệt này có engine JavaScript hiệu quả nhất và xử lý tốt các thao tác tốn nhiều bộ nhớ.</div>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <div style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">2</div>
+            <div><strong style="color:var(--text);">Đóng các tab khác</strong> — giải phóng RAM giúp trình duyệt có thêm bộ nhớ để xử lý file rất lớn.</div>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <div style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">3</div>
+            <div><strong style="color:var(--text);">Nén trước nếu có thể</strong> — nếu file PDF gốc của bạn nặng do có nhiều ảnh nhúng, hãy <a href="/vi/nen-pdf-file-lon/" style="color:var(--green);">nén từng file trước</a> khi ghép.</div>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <div style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">4</div>
+            <div><strong style="color:var(--text);">Kiên nhẫn với file lớn</strong> — ghép file trên 500MB có thể mất 30–90 giây. Đừng đóng tab khi thấy đang hiển thị "Đang xử lý...".</div>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <div style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">5</div>
+            <div><strong style="color:var(--text);">Dùng trình duyệt trên máy tính và khởi động lại</strong> — trình duyệt trên máy tính thường có nhiều RAM trống hơn trình duyệt di động, và một trình duyệt vừa khởi động lại sẽ cho bạn nhiều bộ nhớ khả dụng nhất.</div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <h2 style="font-size:26px;color:var(--text);margin:52px 0 20px;font-weight:700;">Câu Hỏi Thường Gặp</h2>
+        <div style="display:flex;flex-direction:column;gap:20px;">
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Tôi có thể ghép file PDF lớn hơn 100MB miễn phí không?</h3>
+            <p style="margin:0;font-size:14px;">Có. PDFree không giới hạn dung lượng file. Bạn có thể ghép PDF 100MB, 500MB, thậm chí 1GB miễn phí vì quá trình xử lý diễn ra hoàn toàn trong trình duyệt — không tải lên server nghĩa là không giới hạn tải lên.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Tại sao iLovePDF giới hạn 25MB nhưng PDFree thì không?</h3>
+            <p style="margin:0;font-size:14px;">iLovePDF xử lý file trên server của họ, gây ra chi phí băng thông và lưu trữ. PDFree xử lý file ngay trong trình duyệt của bạn — không có chi phí server, nên không có lý do gì để giới hạn dung lượng file.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Có giới hạn số lần ghép mỗi ngày không?</h3>
+            <p style="margin:0;font-size:14px;">Không. Khác với SmallPDF (2 tác vụ/ngày miễn phí) hay iLovePDF (giới hạn theo ngày), PDFree không giới hạn theo ngày. Ghép bao nhiêu PDF tùy thích, bất kỳ lúc nào.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Tôi có thể ghép file PDF lớn đến mức nào?</h3>
+            <p style="margin:0;font-size:14px;">Giới hạn thực tế là RAM của thiết bị bạn. Hầu hết máy tính đời mới xử lý dễ dàng vài trăm megabyte. Với file trên 500MB, hãy đóng các tab khác để giải phóng bộ nhớ.</p>
+          </div>
+                    <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Tôi nên làm gì nếu trình duyệt bị treo khi ghép các file rất lớn?</h3>
+            <p style="margin:0;font-size:14px;">Đóng các tab khác để giải phóng bộ nhớ, sau đó thử lại — ghép theo từng đợt nhỏ hơn (5–10 file mỗi lần, sau đó ghép các kết quả lại) cũng sử dụng ít bộ nhớ hơn tại một thời điểm. Bạn cũng có thể nén từng file trước bằng <a href="../nen-pdf-file-lon/" style="color:var(--green);">công cụ Nén PDF</a> để giảm tổng dung lượng trước khi ghép.</p>
+          </div>
+<div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Tôi có thể ghép cùng lúc bao nhiêu file PDF?</h3>
+            <p style="margin:0;font-size:14px;">Không có giới hạn về số lượng file. PDFree xử lý mọi thứ trong bộ nhớ trình duyệt của bạn, vì vậy bạn có thể ghép 2, 50 hoặc 100+ file PDF trong một lần thao tác. Ràng buộc thực tế duy nhất là RAM khả dụng trên thiết bị của bạn — máy tính đời mới dễ dàng xử lý 100 file với tổng dung lượng vài trăm megabyte.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Tôi có thể ghép 50 hoặc 100 file PDF cùng lúc miễn phí không?</h3>
+            <p style="margin:0;font-size:14px;">Có, hoàn toàn miễn phí và không giới hạn theo ngày. Khác với SmallPDF (2 tác vụ/ngày) hay iLovePDF (giới hạn theo ngày), PDFree không có bất kỳ ràng buộc sử dụng nào. Thả cả 50 hoặc 100 file vào cùng lúc, sắp xếp thứ tự và nhấn Ghép — kết quả tải trực tiếp về thiết bị của bạn, không cần tải lên bất kỳ server nào.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Tôi có cần tạo tài khoản không?</h3>
+            <p style="margin:0;font-size:14px;">Không. PDFree không bao giờ yêu cầu tài khoản, email hay đăng ký. Mở công cụ và bắt đầu ghép ngay lập tức.</p>
+          </div>
+        </div>
+
+        <!-- Liên quan -->
+        <h2 style="font-size:26px;color:var(--text);margin:52px 0 12px;font-weight:700;">Thêm Công Cụ Miễn Phí — Không Giới Hạn Bất Kỳ Công Cụ Nào</h2>
+        <ul style="margin:12px 0;padding-left:24px;display:flex;flex-direction:column;gap:8px;">
+          <li><a href="/vi/nen-pdf-file-lon/" style="color:var(--green);font-weight:500;">Nén file PDF lớn miễn phí</a> — giảm dung lượng file đã ghép nếu quá lớn để gửi đi</li>
+          <li><a href="../tach-pdf/" style="color:var(--green);font-weight:500;">Tách PDF</a> — trích xuất các trang cụ thể từ tài liệu đã ghép</li>
+          <li><a href="../bao-ve-pdf/" style="color:var(--green);font-weight:500;">Bảo Vệ PDF</a> — thêm mật khẩu cho file đã ghép</li>
+          <li><a href="/merge-pdf-without-uploading/" style="color:var(--green);font-weight:500;">Ghép PDF Không Cần Tải Lên</a> (tiếng Anh) — hướng dẫn bảo mật cho tài liệu nhạy cảm</li>
+          <li><a href="/blog/how-to-merge-pdf-files-for-free/" style="color:var(--green);font-weight:500;">Cách Ghép File PDF Miễn Phí</a> (tiếng Anh) — hướng dẫn từng bước kèm mẹo cho các đợt ghép lớn</li>
+        </ul>
+
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    PDFree · <strong>Toàn bộ xử lý diễn ra 100% trong trình duyệt của bạn</strong> · File của bạn <strong>không bao giờ được tải lên</strong><br>
+    <span style="color:var(--green)">🔒</span> Tài liệu của bạn không bao giờ rời khỏi thiết bị &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> Được xây dựng miễn phí cho tất cả mọi người, mãi mãi<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
+      <a href="/privacy.html" style="color:var(--green)">Quyền riêng tư</a> &nbsp;·&nbsp;
+      <a href="/terms.html" style="color:var(--green)">Điều khoản</a> &nbsp;·&nbsp;
+      <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a> &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green)">GitHub</a>
+    </span>
+  </footer>
+
+  <div id="toast"      class="toast" role="status" aria-live="polite"></div>
+  <div id="hero"       style="display:none"></div>
+  <div id="trustAlert" style="display:none"></div>
+  <div id="noLimitBar" style="display:none"></div>
+  <div id="toolsGrid"  style="display:none"></div>
+  <div id="pwaNudge"   style="display:none"></div>
+
+  <script type="module" src="../../js/locales/vi.js"></script>
+  <script type="module" src="../../js/app.js"></script>
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script>
+</body>
+</html>

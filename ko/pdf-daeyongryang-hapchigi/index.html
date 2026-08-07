@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src  'self' 'wasm-unsafe-eval' blob:
+                https://cdnjs.cloudflare.com https://esm.sh
+                https://plausible.io https://static.cloudflareinsights.com;
+    style-src   'self' 'unsafe-inline';
+    font-src    'self';
+    img-src     'self' data: blob: https:;
+    connect-src 'self' https://cdnjs.cloudflare.com https://*.workers.dev
+                https://plausible.io https://cloudflareinsights.com;
+    worker-src  'self' blob:;
+    object-src  'none';
+  ">
+
+  <title>대용량 PDF 파일 무료로 합치기 | PDFree</title>
+  <meta name="description" content="어떤 용량의 PDF든 무료로 합치기 — 100MB부터 1GB까지. 용량 제한 없음, 일일 제한 없음, 업로드 불필요.">
+
+  <meta property="og:title"       content="대용량 PDF 파일 무료 합치기 — 용량 제한 없음 | PDFree">
+  <meta property="og:description" content="어떤 용량의 PDF든 무료로 합치세요. 25MB 제한 없음. 일일 제한 없음. 브라우저에서 로컬로 처리됩니다.">
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://pdfree.io/ko/pdf-daeyongryang-hapchigi/">
+  <meta property="og:site_name"   content="PDFree">
+  <meta property="og:image"        content="https://pdfree.io/icons/og-image.jpg">
+  <meta property="og:image:width"  content="1200">
+  <meta property="og:image:height" content="633">
+  <meta property="og:image:alt"    content="대용량 PDF 파일 무료 합치기 — 용량 제한 없음 | PDFree">
+  <meta name="twitter:card"       content="summary_large_image">
+  <meta name="twitter:site"       content="@pdfree_io">
+  <meta name="twitter:title"      content="대용량 PDF 파일 무료 합치기 — 용량 제한 없음 | PDFree">
+  <meta name="twitter:description" content="어떤 용량의 PDF든 무료로 합치세요. 25MB 제한 없음. 일일 제한 없음. 브라우저에서 로컬로 처리됩니다.">
+  <meta name="twitter:image"       content="https://pdfree.io/icons/og-image.jpg">
+  <meta name="twitter:image:alt"   content="대용량 PDF 파일 무료 합치기 — 용량 제한 없음 | PDFree">
+
+  <link rel="canonical" href="https://pdfree.io/ko/pdf-daeyongryang-hapchigi/">
+  <link rel="alternate" hreflang="en"        href="https://pdfree.io/merge-large-pdf-files/">
+  <link rel="alternate" hreflang="de"        href="https://pdfree.io/de/pdf-zusammenfuehren-grosse-dateien/">
+  <link rel="alternate" hreflang="es"        href="https://pdfree.io/es/unir-pdf-archivos-grandes/">
+  <link rel="alternate" hreflang="fr"        href="https://pdfree.io/fr/fusionner-pdf-fichiers-volumineux/">
+  <link rel="alternate" hreflang="pt"        href="https://pdfree.io/pt/juntar-pdf-arquivos-grandes/">
+  <link rel="alternate" hreflang="id"        href="https://pdfree.io/id/gabung-pdf-file-besar/">
+  <link rel="alternate" hreflang="vi"        href="https://pdfree.io/vi/ghep-pdf-file-lon/">
+  <link rel="alternate" hreflang="ru"        href="https://pdfree.io/ru/objedinit-bolshie-pdf/">
+  <link rel="alternate" hreflang="ja"        href="https://pdfree.io/ja/pdf-daiyouryou-ketsugou/">
+  <link rel="alternate" hreflang="it"        href="https://pdfree.io/it/unisci-pdf-file-grandi/">
+  <link rel="alternate" hreflang="ko"        href="https://pdfree.io/ko/pdf-daeyongryang-hapchigi/">
+  <link rel="alternate" hreflang="nl"        href="https://pdfree.io/nl/pdf-samenvoegen-grote-bestanden/">
+  <link rel="alternate" hreflang="pl"        href="https://pdfree.io/pl/polacz-duze-pliki-pdf/">
+  <link rel="alternate" hreflang="tr"        href="https://pdfree.io/tr/buyuk-pdf-dosyalarini-birlestir/">
+  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/merge-large-pdf-files/">
+
+  <link rel="manifest" href="../../manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="PDFree">
+  <link rel="apple-touch-icon" href="../../icons/icon-192.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+  <link rel="preconnect" href="https://plausible.io">
+  <link rel="preconnect" href="https://static.cloudflareinsights.com">
+  <link rel="preload" href="../../fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../css/fonts.css">
+  <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/animations.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/components.css">
+
+  <script src="../../js/theme.js"></script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "대용량 PDF 파일 무료로 합치기 — 용량 제한 없음",
+    "description": "PDF 파일을 용량에 상관없이 무료로 합치세요. 파일 용량 제한 없음, 일일 제한 없음. 모든 처리는 브라우저에서 로컬로 이루어집니다.",
+    "url": "https://pdfree.io/ko/pdf-daeyongryang-hapchigi/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "featureList": [
+      "파일 용량 제한 없음 — 100MB, 500MB, 1GB PDF도 합치기 가능",
+      "일일 작업 제한 없음",
+      "서버 업로드 없음 — 파일이 기기에 그대로 남음",
+      "계정 불필요",
+      "오프라인에서도 작동"
+    ],
+    "dateModified": "2026-08-07",
+    "provider": {
+      "@type": "Organization",
+      "name": "PDFree",
+      "url": "https://pdfree.io",
+      "description": "PDFree is a free, privacy-first PDF toolkit that runs entirely in the browser — files are processed locally and never uploaded to a server.",
+      "logo": "https://pdfree.io/icons/icon-512.png"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "대용량 PDF 파일을 무료로 합치는 방법",
+    "description": "용량 제한 없이, 업로드 없이, 비용 없이 대용량 PDF 파일을 합칩니다.",
+    "totalTime": "PT2M",
+    "tool": [{ "@type": "HowToTool", "name": "PDFree — 무료 브라우저 기반 PDF 합치기 도구" }],
+    "step": [
+      { "@type": "HowToStep", "position": 1, "name": "PDFree 합치기 도구 열기", "text": "Chrome, Firefox, Safari 등에서 pdfree.io/ko/pdf-daeyongryang-hapchigi/ 로 이동하세요. 설치나 계정이 필요 없습니다.", "url": "https://pdfree.io/ko/pdf-daeyongryang-hapchigi/#step1" },
+      { "@type": "HowToStep", "position": 2, "name": "대용량 PDF 파일 추가", "text": "'파일 선택'을 클릭하거나 드래그 앤 드롭하세요. 100MB, 500MB, 심지어 1GB까지 어떤 용량의 파일도 받을 수 있습니다. 처리가 브라우저에서 이루어지므로 서버 업로드 제한이 없습니다.", "url": "https://pdfree.io/ko/pdf-daeyongryang-hapchigi/#step2" },
+      { "@type": "HowToStep", "position": 3, "name": "순서 정렬", "text": "파일을 위아래로 드래그하여 최종 합쳐진 문서에 나타날 순서를 정하세요.", "url": "https://pdfree.io/ko/pdf-daeyongryang-hapchigi/#step3" },
+      { "@type": "HowToStep", "position": 4, "name": "합치고 다운로드", "text": "'PDF 파일 합치기'를 클릭하세요. 매우 큰 파일의 경우 처리에 10~60초가 걸릴 수 있습니다. 합쳐진 PDF가 바로 기기에 다운로드됩니다.", "url": "https://pdfree.io/ko/pdf-daeyongryang-hapchigi/#step4" }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "100MB보다 큰 PDF 파일도 무료로 합칠 수 있나요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "네. PDFree는 파일 용량 제한이 없습니다. 100MB, 500MB, 또는 그 이상 크기의 PDF도 무료로 합칠 수 있습니다. 처리가 서버가 아니라 브라우저에서 완전히 이루어지기 때문에 업로드 제한도, 용량 제한을 강제하는 대역폭 비용도 없습니다." }
+      },
+      {
+        "@type": "Question",
+        "name": "iLovePDF는 왜 25MB 파일 용량 제한이 있나요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "iLovePDF는 파일을 자체 서버에서 처리하기 때문에 대역폭과 저장 비용이 발생합니다. 무료 사용자에 대한 이런 비용을 통제하기 위해 파일 용량 제한을 둡니다. PDFree는 모든 처리를 브라우저에서 로컬로 수행하므로 서버 비용이 없고, 따라서 용량 제한도 없습니다." }
+      },
+      {
+        "@type": "Question",
+        "name": "PDFree는 얼마나 큰 PDF를 합칠 수 있나요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "실질적인 제한은 기기에서 사용 가능한 RAM입니다. 최신 컴퓨터와 스마트폰은 대개 수백 메가바이트 크기의 PDF도 문제없이 처리합니다. 매우 큰 파일(500MB 이상)의 경우 최소 2~4GB의 여유 RAM을 확보하세요." }
+      },
+      {
+        "@type": "Question",
+        "name": "매우 큰 파일을 합치는 중 브라우저가 다운되면 어떻게 해야 하나요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "다른 브라우저 탭을 닫아 메모리를 확보한 후 다시 시도하세요 — 열려 있는 탭마다 합치기에 사용할 수 없는 RAM을 차지합니다. 더 작은 단위로 나눠서 합치는 것(한 번에 5~10개 파일씩 합친 후 결과를 다시 합치기)도 한 번에 사용하는 메모리를 줄여줍니다. PDF 압축 도구로 각 파일을 먼저 압축하여 합치기 전에 전체 크기를 줄일 수도 있습니다." }
+      },
+      {
+        "@type": "Question",
+        "name": "합칠 수 있는 PDF 개수에 일일 제한이 있나요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "아니요. PDFree는 일일 사용 제한이 없습니다. SmallPDF(무료 플랜에서 하루 2개 작업)나 iLovePDF(무료 계정 일일 제한)와 달리, PDFree는 필요한 만큼, 원하는 만큼 자주 무료로 PDF를 합칠 수 있게 해줍니다." }
+      },
+      {
+        "@type": "Question",
+        "name": "한 번에 몇 개의 PDF 파일을 합칠 수 있나요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "파일 개수에는 제한이 없습니다. 한 번의 작업으로 2개, 50개, 100개 이상의 PDF 파일을 합칠 수 있습니다. PDFree는 모든 처리를 브라우저 메모리에서 수행하므로 기기의 사용 가능한 RAM이 유일한 실질적 제약입니다. 최신 컴퓨터는 총 수백 메가바이트에 달하는 100개 이상의 파일도 쉽게 처리합니다." }
+      },
+      {
+        "@type": "Question",
+        "name": "50개나 100개의 PDF 파일을 한 번에 무료로 합칠 수 있나요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "네. PDFree는 한 번의 합치기 작업에서 파일 개수 제한이 없고 일일 사용 제한도 없습니다. 모든 파일을 한 번에 드롭하고 순서를 정한 다음 합치기를 클릭하세요. 결과물은 바로 기기에 다운로드됩니다 — 어떤 서버에도 업로드할 필요가 없습니다." }
+      },
+      {
+        "@type": "Question",
+        "name": "대용량 PDF 합치기가 iLovePDF에서는 느리고 PDFree에서는 빠른 이유는 무엇인가요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "iLovePDF는 파일을 서버에 업로드하고, 그곳에서 처리한 다음, 결과를 다운로드해야 합니다 — 이 세 번의 네트워크 왕복이 대용량 파일에서 상당한 시간을 추가합니다. PDFree는 네트워크 전송 없이 모든 처리를 브라우저에서 로컬로 수행하므로 속도는 인터넷 연결이 아니라 기기의 CPU에만 좌우됩니다." }
+      }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "PDFree", "item": "https://pdfree.io/" },
+      { "@type": "ListItem", "position": 2, "name": "PDF 합치기", "item": "https://pdfree.io/ko/pdf-hapchigi/" },
+      { "@type": "ListItem", "position": 3, "name": "대용량 PDF 파일 합치기", "item": "https://pdfree.io/ko/pdf-daeyongryang-hapchigi/" }
+    ]
+  }
+  </script>
+</head>
+<body data-tool="merge">
+
+  <nav>
+    <a href="../../" class="logo" id="logo" aria-label="홈으로 이동" style="text-decoration:none">
+      <div class="logo-icon" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+      </div>
+      <span class="logo-text">PDF<span>ree</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="../pdf-hapchigi/" class="nav-link" data-tool="merge">합치기</a>
+      <a href="../pdf-bunhal/" class="nav-link" data-tool="split">분할</a>
+      <a href="../pdf-apchuk/" class="nav-link" data-tool="compress">압축</a>
+      <a href="../jpg-pdf-byeonhwan/" class="nav-link" data-tool="jpg2pdf">JPG → PDF</a>
+      <a href="../pdf-jpg-byeonhwan/" class="nav-link" data-tool="pdf2jpg">PDF → JPG</a>
+      <a href="../pdf-watermark/" class="nav-link" data-tool="watermark">워터마크</a>
+      <a href="../pdf-peiji-beonho/" class="nav-link" data-tool="pagenum">페이지 번호</a>
+      <a href="../pdf-metadeiteo/" class="nav-link" data-tool="meta">메타데이터</a>
+      <a href="../pdf-chuchul/" class="nav-link" data-tool="extract">추출</a>
+      <a href="/draw-on-pdf/" class="nav-link" data-tool="draw-pdf">Draw</a>
+      <a href="../pdf-hoejeon/" class="nav-link" data-tool="rotate">회전</a>
+      <a href="../pdf-amho/" class="nav-link" data-tool="protect">보호</a>
+      <a href="../pdf-word-byeonhwan/" class="nav-link" data-tool="pdf2word">PDF to Word</a>
+      <a href="../pdf-excel-byeonhwan/" class="nav-link" data-tool="pdf2excel">PDF to Excel</a>
+      <a href="../pdf-powerpoint-byeonhwan/" class="nav-link" data-tool="pdf2ppt">PDF to PowerPoint</a>
+      <a href="../pdf-markdown-byeonhwan/" class="nav-link" data-tool="pdf2md">PDF to Markdown</a>
+      <a href="../pdf-jamgeum-haeje/" class="nav-link" data-tool="unlock">PDF 잠금 해제</a>
+      <a href="/compare-pdf/" class="nav-link" data-tool="compare">Compare</a>
+    </div>
+    <button id="themeToggle" class="theme-toggle" aria-label="다크 모드 전환" title="다크 모드 전환"></button>
+  </nav>
+
+  <!-- 컴팩트 타이틀 배너 — 도구가 바로 아래에 이어짐 -->
+  <section style="background:var(--green-light);border-bottom:1px solid rgba(45,122,79,0.15);padding:24px 24px 20px;text-align:center;">
+    <div style="max-width:720px;margin:0 auto;">
+      <h1 style="font-size:clamp(22px,3.5vw,34px);font-weight:700;letter-spacing:-0.5px;line-height:1.2;color:var(--text);margin:0 0 6px;">대용량 PDF 파일 무료로 합치기 — 용량 제한 없음, 파일 개수 제한 없음</h1>
+      <p style="font-size:14px;color:var(--green);margin:0;font-weight:500;">100MB, 500MB, 1GB — 어떤 용량이든. 2개, 50개, 100개 이상 — 어떤 개수든. 업로드 없음, 계정 불필요, 제한 없음.</p>
+    </div>
+  </section>
+
+  <!-- 도구 -->
+  <div id="tool"></div>
+  <main id="toolArea" class="main-area" aria-busy="false">
+    <div class="tool-header">
+      <div class="tool-header-icon" id="toolIcon" aria-hidden="true">🔗</div>
+      <div class="tool-header-text">
+        <h2 id="toolTitle">PDF 파일 합치기 — 어떤 용량이든, 제한 없음</h2>
+        <p  id="toolDesc">어떤 용량의 파일이든 드롭하세요. 기기의 RAM만이 유일한 제한입니다 — 서버도 없고 업로드 제한도 없습니다.</p>
+      </div>
+    </div>
+
+    <div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-label="파일 업로드 — 클릭하거나 드래그 앤 드롭">
+      <input type="file" id="fileInput" multiple accept=".pdf" aria-hidden="true">
+      <span class="drop-icon" aria-hidden="true">📂</span>
+      <div class="drop-title">PDF 파일을 여기에 드롭하세요 — 어떤 용량이든, 어떤 개수든</div>
+      <div class="drop-sub">100MB, 500MB, 1GB 이상 파일 · 2개, 50개, 100개 이상 파일 · 제한 없음</div>
+      <label class="drop-btn" id="chooseFilesBtn" for="fileInput">파일 선택</label>
+    </div>
+
+    <div id="fileList"    class="file-list" aria-live="polite"></div>
+    <div id="fileCount"   class="file-count"   style="display:none"></div>
+    <div id="reorderHint" class="reorder-hint" style="display:none">↕ 합치기 전에 드래그하여 파일 순서 조정</div>
+
+    <div id="mergeOptions"     class="j2p-options"     style="display:none" aria-label="Merge options"></div>
+    <div id="splitOptions"     style="display:none"></div>
+    <div id="compressOptions"  style="display:none"></div>
+    <div id="jpg2pdfOptions"   style="display:none"></div>
+    <div id="pdf2jpgOptions"   style="display:none"></div>
+    <div id="watermarkOptions" style="display:none"></div>
+    <div id="pageNumOptions"   style="display:none"></div>
+    <div id="metaOptions"      style="display:none"></div>
+    <div id="protectOptions"   style="display:none"></div>
+    <div id="redactOptions"    style="display:none"></div>
+    <div id="rotateOptions"    style="display:none"></div>
+    <div id="pdf2wordOptions"  class="j2p-options"     style="display:none" aria-label="PDF to Word options"></div>
+
+    <button id="mergeBtn"  class="merge-btn"  type="button" disabled data-mode="process">PDF 파일 합치기</button>
+    <button id="cancelBtn" class="cancel-btn" type="button" style="display:none">✕ 취소</button>
+
+    <div id="progressBar"   class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+    <div id="progressLabel" class="progress-label"></div>
+
+    <div id="successCard" class="success-card" role="alert" aria-live="polite" style="display:none">
+      <div class="success-top">
+        <div class="success-icon">✓</div>
+        <div class="success-text">
+          <h3 id="successTitle">완료!</h3>
+          <p  id="successDesc"></p>
+        </div>
+        <button id="downloadBtn" class="download-btn" type="button">⬇ 다운로드</button>
+        <button id="shareBtn" class="share-btn" type="button" style="display:none" aria-label="기기 앱으로 파일 보내기"></button>
+      </div>
+      <div id="privacyCleared" class="privacy-cleared" aria-live="polite">
+        <span class="privacy-cleared__icon" aria-hidden="true">🛡️</span>
+        <div class="privacy-cleared__body">
+          <strong class="privacy-cleared__title">파일이 메모리에서 삭제되었습니다</strong>
+          <span class="privacy-cleared__sub">문서가 어떤 서버에도 흔적을 남기지 않았습니다.</span>
+        </div>
+      </div>
+      <div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(45,122,79,0.2);">
+        <p style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--text3);margin:0 0 8px;">다음 단계는?</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <a href="/ko/pdf-daeyongryang-apchuk/" data-handoff style="font-size:13px;background:var(--green-light);color:var(--green);padding:6px 12px;border-radius:6px;text-decoration:none;font-weight:500;border:1px solid rgba(45,122,79,0.2);">결과 압축하기 →</a>
+          <a href="/ko/pdf-amho/" data-handoff style="font-size:13px;background:var(--surface);color:var(--text2);padding:6px 12px;border-radius:6px;text-decoration:none;border:1px solid var(--border);">PDF 보호하기</a>
+          <a href="/ko/pdf-bunhal/" data-handoff style="font-size:13px;background:var(--surface);color:var(--text2);padding:6px 12px;border-radius:6px;text-decoration:none;border:1px solid var(--border);">페이지 추출하기</a>
+          <a href="/ocr-pdf/" data-handoff style="font-size:13px;background:var(--surface);color:var(--text2);padding:6px 12px;border-radius:6px;text-decoration:none;border:1px solid var(--border);">검색 가능하게 만들기</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- 비교 배지 — 도구 접근을 지연시키지 않도록 아래에 배치 -->
+  <section style="padding:14px 24px;border-bottom:1px solid var(--border);background:var(--surface);">
+    <div style="max-width:760px;margin:0 auto;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;align-items:center;">
+      <span style="font-size:12px;background:#fef3c7;color:#92400e;padding:4px 11px;border-radius:20px;font-weight:500;">iLovePDF: 25MB 제한</span>
+      <span style="font-size:12px;background:#fef3c7;color:#92400e;padding:4px 11px;border-radius:20px;font-weight:500;">SmallPDF: 하루 2개 작업</span>
+      <span style="font-size:12px;background:#fef3c7;color:#92400e;padding:4px 11px;border-radius:20px;font-weight:500;">Adobe: 유료 플랜 필요</span>
+      <span style="font-size:13px;color:var(--text2);">vs</span>
+      <span style="font-size:12px;background:var(--green-light);color:var(--green);padding:4px 11px;border-radius:20px;font-weight:600;">PDFree: ∞ 제한 없음, 항상 무료</span>
+    </div>
+  </section>
+
+  <!-- SEO 콘텐츠 -->
+  <hr style="border:none;border-top:2px solid var(--border);margin:48px 24px 0;" aria-hidden="true">
+  <section class="seo-article">
+    <div class="seo-article__inner">
+      <div class="seo-content" style="max-width:800px;margin:60px auto 40px;padding:0 24px;color:var(--text2);line-height:1.8;">
+
+        <h2 style="font-size:26px;color:var(--text);margin:0 0 16px;font-weight:700;">다른 PDF 도구들은 왜 파일 용량 제한이 있을까요</h2>
+        <p>파일 용량 제한이 존재하는 이유는 서버에서 PDF를 합치는 데 비용이 들기 때문입니다. 업로드하는 100MB마다 제공업체 인프라의 대역폭, 저장 공간, CPU 시간을 소모합니다. 이런 인프라를 남용으로부터 보호하고 — 동시에 사용자를 유료 플랜으로 유도하기 위해 — 무료 등급에는 제한이 걸립니다.</p>
+        <p>PDFree는 이 문제를 완전히 없앱니다. <strong>파일이 브라우저를 벗어나는 일이 없습니다.</strong> 합치기 작업은 기기에서 자바스크립트로 실행됩니다. 감당해야 할 서버 비용이 없으므로 부과할 제한도 없습니다.</p>
+
+        <div style="background:var(--green-light);border-left:4px solid var(--green);padding:18px 20px;border-radius:0 8px 8px 0;margin:28px 0;">
+          <p style="margin:0 0 10px;font-size:14px;color:var(--text);"><strong>진짜 제한: 기기의 RAM입니다.</strong> 파일 개수나 용량에 대한 소프트웨어 제한은 없습니다. 유일한 실질적 제약은 브라우저가 사용할 수 있는 메모리 양입니다.</p>
+          <ul style="margin:0;padding-left:20px;font-size:14px;color:var(--text);display:flex;flex-direction:column;gap:4px;">
+            <li><strong>8GB RAM:</strong> 파일 100개 또는 총 500MB를 여유롭게 처리</li>
+            <li><strong>16GB RAM:</strong> 파일 500개 이상 또는 총 수GB 처리</li>
+            <li><strong>4GB RAM (구형 스마트폰):</strong> 파일 50개 또는 총 200MB 이내로 유지</li>
+          </ul>
+          <p style="margin:10px 0 0;font-size:13px;color:var(--text2);">메모리 제한에 부딪히면 작업을 나누세요: 처음 50개 파일을 먼저 합친 다음, 그 결과를 나머지 50개와 다시 합치세요.</p>
+        </div>
+
+        <!-- 파일 개수 -->
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 12px;font-weight:700;">파일 개수에 소프트웨어 제한이 없습니다</h2>
+        <p style="margin:0 0 16px;">PDFree는 합칠 수 있는 파일 개수에 소프트웨어 제한을 두지 않습니다. 처리가 브라우저에서 로컬로 이루어지기 때문에 실질적인 제한은 기기의 사용 가능한 메모리와 브라우저 성능에 달려 있습니다.</p>
+
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:18px 20px;margin:0 0 20px;">
+          <strong style="color:var(--text);display:block;margin:0 0 10px;">일반적인 사용 사례</strong>
+          <ul style="margin:0;padding-left:20px;font-size:14px;color:var(--text2);display:flex;flex-direction:column;gap:6px;">
+            <li>50개의 인보이스를 하나의 연간 아카이브로 합치기.</li>
+            <li>OCR로 보내기 전에 스캔한 100페이지를 결합하기.</li>
+            <li>수백 개의 챕터 PDF를 하나의 문서로 합치기.</li>
+            <li>대규모 법률 문서 세트를 하나의 법원 제출 파일로 정리하기.</li>
+          </ul>
+        </div>
+
+        <!-- 비교 표 -->
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 16px;font-weight:700;">파일 용량 제한: PDFree vs 경쟁 서비스</h2>
+        <div style="overflow-x:auto;margin:16px 0 32px;">
+          <table style="width:100%;border-collapse:collapse;font-size:14px;min-width:480px;">
+            <thead>
+              <tr style="border-bottom:2px solid var(--border);">
+                <th style="text-align:left;padding:10px 14px;color:var(--text);font-weight:600;">도구</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">파일 용량 제한</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">일일 작업 제한</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">가격</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom:1px solid var(--border);background:var(--green-light);">
+                <td style="padding:10px 14px;color:var(--green);font-weight:700;">PDFree</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">없음</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">없음</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">영구 무료</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 14px;color:var(--text);">iLovePDF (무료)</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">~25MB</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">제한적</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">무료 / 월 6달러부터</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 14px;color:var(--text);">SmallPDF (무료)</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">~5MB(압축 후)</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">하루 2개 작업</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">무료 / 월 9달러부터</td>
+              </tr>
+              <tr>
+                <td style="padding:10px 14px;color:var(--text);">Adobe Acrobat</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">100MB (유료)</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">무제한 (유료)</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">월 19.99달러</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- 대량 합치기 -->
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 16px;font-weight:700;">50개, 100개, 500개의 PDF 파일을 한 번에 합치기</h2>
+        <p>PDFree는 한 번의 작업으로 합칠 수 있는 <strong>파일 개수에 제한이 없습니다.</strong> 2개의 PDF를 합치든 500개의 스캔된 인보이스를 합치든 과정은 동일합니다: 모든 파일을 한 번에 드롭하고, 필요하면 순서를 조정하고, 합치기를 클릭하세요. 2개의 파일을 합치는 도구와 10개, 50개, 100개, 200개를 합치는 도구는 동일합니다 — 별도의 설정 변경이 필요 없습니다.</p>
+        <p>PDFree가 제한 없이 처리하는 대량 합치기 시나리오:</p>
+        <div style="display:flex;flex-direction:column;gap:12px;margin:20px 0 32px;">
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <span style="font-size:20px;flex-shrink:0">🧾</span>
+            <div><strong style="color:var(--text);">인보이스 &amp; 영수증</strong> — 매달 인보이스 80건을 한 페이지씩 스캔한 다음, 모두 하나의 연간 아카이브 PDF로 합치세요.</div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <span style="font-size:20px;flex-shrink:0">📋</span>
+            <div><strong style="color:var(--text);">법률 &amp; 컴플라이언스</strong> — 50~100페이지의 계약서, 증거자료, 서명 페이지를 법원 제출용 문서 하나로 결합하세요.</div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <span style="font-size:20px;flex-shrink:0">📚</span>
+            <div><strong style="color:var(--text);">보고서 작성</strong> — 여러 저자의 챕터, 부록, 데이터 표를 하나의 산출물로 합치세요.</div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <span style="font-size:20px;flex-shrink:0">🗂️</span>
+            <div><strong style="color:var(--text);">아카이브 디지털화</strong> — 수백 페이지의 스캔 문서를 검색 가능한 아카이브 파일 하나로 결합하세요.</div>
+          </div>
+        </div>
+        <div style="background:var(--green-light);border-left:4px solid var(--green);padding:18px 20px;border-radius:0 8px 8px 0;margin:0 0 32px;">
+          <p style="margin:0;font-size:14px;color:var(--text);"><strong>50개 이상 파일 처리 팁:</strong> 파일 선택 창에서 클릭할 때 <kbd style="background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:1px 5px;font-size:12px;">Ctrl</kbd>(Mac에서는 <kbd style="background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:1px 5px;font-size:12px;">⌘</kbd>)을 누른 채로 여러 파일을 한 번에 선택하거나, PDF가 담긴 폴더 전체를 드롭 영역에 끌어다 놓으세요. 기기의 사용 가능한 RAM이 유일한 실질적 제한입니다.</p>
+        </div>
+
+        <!-- 사용자 -->
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 16px;font-weight:700;">이 도구를 사용하는 사람들</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin:0 0 40px;">
+          <div style="padding:18px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
+            <div style="font-size:22px;margin:0 0 8px;">⚖️</div>
+            <strong style="color:var(--text);display:block;margin:0 0 6px;">법률 사무소</strong>
+            <p style="margin:0;font-size:13px;color:var(--text2);">50~100개의 증거자료, 계약서 페이지, 서명을 법원 제출용 문서 하나로 결합합니다.</p>
+          </div>
+          <div style="padding:18px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
+            <div style="font-size:22px;margin:0 0 8px;">🧮</div>
+            <strong style="color:var(--text);display:block;margin:0 0 6px;">회계사</strong>
+            <p style="margin:0;font-size:13px;color:var(--text2);">80건 이상의 월별 인보이스를 감사나 세무 신고를 위한 연간 아카이브 하나로 일괄 합칩니다.</p>
+          </div>
+          <div style="padding:18px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
+            <div style="font-size:22px;margin:0 0 8px;">📐</div>
+            <strong style="color:var(--text);display:block;margin:0 0 6px;">건축사</strong>
+            <p style="margin:0;font-size:13px;color:var(--text2);">여러 건물 프로젝트의 도면, 사양서, 허가서를 하나의 제출 문서로 통합합니다.</p>
+          </div>
+          <div style="padding:18px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
+            <div style="font-size:22px;margin:0 0 8px;">🎓</div>
+            <strong style="color:var(--text);display:block;margin:0 0 6px;">학생</strong>
+            <p style="margin:0;font-size:13px;color:var(--text2);">대학 포털에 제출하기 전에 논문, 참고문헌, 부록, 표지를 하나로 합칩니다.</p>
+          </div>
+          <div style="padding:18px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
+            <div style="font-size:22px;margin:0 0 8px;">🏛️</div>
+            <strong style="color:var(--text);display:block;margin:0 0 6px;">관공서</strong>
+            <p style="margin:0;font-size:13px;color:var(--text2);">신청서, 증빙 서류, 납부 영수증을 사건별로 하나의 기록으로 결합합니다.</p>
+          </div>
+          <div style="padding:18px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
+            <div style="font-size:22px;margin:0 0 8px;">🏥</div>
+            <strong style="color:var(--text);display:block;margin:0 0 6px;">의료기관</strong>
+            <p style="margin:0;font-size:13px;color:var(--text2);">환자 기록, 검사 결과, 영상 판독지, 소개장을 민감한 데이터를 업로드하지 않고 하나의 파일로 정리합니다.</p>
+          </div>
+        </div>
+
+        <!-- 팁 -->
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 16px;font-weight:700;">매우 큰 PDF 파일을 합칠 때의 팁</h2>
+        <div style="display:flex;flex-direction:column;gap:16px;margin:16px 0;">
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <div style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">1</div>
+            <div><strong style="color:var(--text);">Chrome이나 Edge 사용하기</strong> — 가장 효율적인 자바스크립트 엔진을 갖추고 있어 대용량 메모리 작업을 가장 잘 처리합니다.</div>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <div style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">2</div>
+            <div><strong style="color:var(--text);">다른 탭 닫기</strong> — RAM을 확보하면 매우 큰 파일 작업을 위해 브라우저가 더 많은 메모리를 사용할 수 있습니다.</div>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <div style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">3</div>
+            <div><strong style="color:var(--text);">가능하면 먼저 압축하기</strong> — 원본 PDF가 삽입된 이미지 때문에 크다면, 합치기 전에 <a href="/ko/pdf-daeyongryang-apchuk/" style="color:var(--green);">각 파일을 먼저 압축</a>해 보세요.</div>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <div style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">4</div>
+            <div><strong style="color:var(--text);">대용량 파일은 여유를 갖고 기다리기</strong> — 500MB 이상을 합치는 데는 30~90초가 걸릴 수 있습니다. "처리 중..."이 표시되는 동안 탭을 닫지 마세요.</div>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <div style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">5</div>
+            <div><strong style="color:var(--text);">데스크톱 브라우저를 사용하고 새로 시작하세요</strong> — 데스크톱 브라우저는 보통 모바일보다 여유 RAM이 더 많으며, 방금 재시작한 브라우저는 사용 가능한 메모리가 가장 많습니다.</div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <h2 style="font-size:26px;color:var(--text);margin:52px 0 20px;font-weight:700;">자주 묻는 질문</h2>
+        <div style="display:flex;flex-direction:column;gap:20px;">
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">100MB보다 큰 PDF 파일도 무료로 합칠 수 있나요?</h3>
+            <p style="margin:0;font-size:14px;">네. PDFree는 파일 용량 제한이 없습니다. 처리가 브라우저에서 완전히 이루어지므로 업로드 제한 없이 100MB, 500MB, 심지어 1GB PDF도 무료로 합칠 수 있습니다.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">iLovePDF는 25MB 제한이 있는데 PDFree는 왜 없나요?</h3>
+            <p style="margin:0;font-size:14px;">iLovePDF는 파일을 자체 서버에서 처리하기 때문에 대역폭과 저장 비용이 발생합니다. PDFree는 브라우저에서 로컬로 파일을 처리하므로 서버 비용이 없고, 따라서 파일 용량을 제한할 이유가 없습니다.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">합치기에 일일 제한이 있나요?</h3>
+            <p style="margin:0;font-size:14px;">아니요. SmallPDF(무료 하루 2개 작업)나 iLovePDF(일일 제한)와 달리 PDFree는 일일 제한이 없습니다. 필요한 만큼, 원하는 만큼 자주 PDF를 합치세요.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">얼마나 큰 PDF를 합칠 수 있나요?</h3>
+            <p style="margin:0;font-size:14px;">실질적인 제한은 기기의 RAM입니다. 대부분의 최신 컴퓨터는 수백 메가바이트를 쉽게 처리합니다. 500MB가 넘는 파일은 다른 탭을 닫아 메모리를 확보하세요.</p>
+          </div>
+                    <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">매우 큰 파일을 합치는 중 브라우저가 다운되면 어떻게 해야 하나요?</h3>
+            <p style="margin:0;font-size:14px;">다른 탭을 닫아 메모리를 확보한 후 다시 시도하세요 — 더 작은 단위로 나눠서 합치는 것(한 번에 5~10개 파일씩 합친 후 결과를 다시 합치기)도 한 번에 사용하는 메모리를 줄여줍니다. <a href="../pdf-daeyongryang-apchuk/" style="color:var(--green);">PDF 압축 도구</a>로 각 파일을 먼저 압축하여 합치기 전에 전체 크기를 줄일 수도 있습니다.</p>
+          </div>
+<div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">한 번에 몇 개의 PDF 파일을 합칠 수 있나요?</h3>
+            <p style="margin:0;font-size:14px;">파일 개수 제한은 없습니다. PDFree는 모든 작업을 브라우저 메모리에서 처리하므로 한 번의 작업으로 2개, 50개, 100개 이상의 PDF 파일을 합칠 수 있습니다. 유일한 실질적 제약은 기기의 사용 가능한 RAM입니다 — 최신 컴퓨터는 총 수백 메가바이트에 달하는 100개 파일도 쉽게 처리합니다.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">50개나 100개의 PDF 파일을 한 번에 무료로 합칠 수 있나요?</h3>
+            <p style="margin:0;font-size:14px;">네, 일일 제한 없이 완전 무료입니다. SmallPDF(하루 2개 작업)나 iLovePDF(일일 제한)와 달리 PDFree는 사용 제한이 없습니다. 50개나 100개의 파일을 한 번에 드롭하고 순서를 정한 다음 합치기를 클릭하세요 — 결과물은 어떤 서버에도 업로드하지 않고 바로 기기에 다운로드됩니다.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">계정을 만들어야 하나요?</h3>
+            <p style="margin:0;font-size:14px;">아니요. PDFree는 계정, 이메일, 등록이 전혀 필요하지 않습니다. 도구를 열고 바로 합치기를 시작하세요.</p>
+          </div>
+        </div>
+
+        <!-- 관련 도구 -->
+        <h2 style="font-size:26px;color:var(--text);margin:52px 0 12px;font-weight:700;">더 많은 무료 도구 — 모두 제한 없음</h2>
+        <ul style="margin:12px 0;padding-left:24px;display:flex;flex-direction:column;gap:8px;">
+          <li><a href="/ko/pdf-daeyongryang-apchuk/" style="color:var(--green);font-weight:500;">대용량 PDF 파일 무료로 압축하기</a> — 합친 파일이 너무 크면 용량 줄이기</li>
+          <li><a href="/ko/pdf-bunhal/" style="color:var(--green);font-weight:500;">PDF 분할</a> — 합친 문서에서 특정 페이지 추출하기</li>
+          <li><a href="/ko/pdf-hapchigi/" style="color:var(--green);font-weight:500;">PDF 파일 하나로 합치기</a> — 개수 제한 없이 여러 PDF를 하나의 문서로 결합</li>
+          <li><a href="/ko/pdf-amho/" style="color:var(--green);font-weight:500;">PDF 보호</a> — 합친 파일에 비밀번호 추가하기</li>
+          <li><a href="/ko/seukaen-pdf-hapchigi/" style="color:var(--green);font-weight:500;">스캔 PDF 합치기</a> — 업로드 없이 스캔한 문서를 안전하게 결합하는 가이드</li>
+          <li><a href="/blog/how-to-merge-pdf-files-for-free/" style="color:var(--green);font-weight:500;">PDF 파일을 무료로 합치는 방법</a> — 대용량 배치를 위한 팁이 담긴 단계별 가이드</li>
+        </ul>
+
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    PDFree · <strong>모든 처리는 브라우저에서 100% 이루어집니다</strong> · 파일은 절대 업로드되지 않습니다<br>
+    <span style="color:var(--green)">🔒</span> 문서는 절대 기기를 벗어나지 않습니다 &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> 모두를 위해 영구 무료로 제공됩니다<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
+      <a href="/privacy.html" style="color:var(--green)">개인정보 처리방침</a> &nbsp;·&nbsp;
+      <a href="/terms.html" style="color:var(--green)">이용약관</a> &nbsp;·&nbsp;
+      <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a> &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green)">GitHub</a>
+    </span>
+  </footer>
+
+  <div id="toast"      class="toast" role="status" aria-live="polite"></div>
+  <div id="hero"       style="display:none"></div>
+  <div id="trustAlert" style="display:none"></div>
+  <div id="noLimitBar" style="display:none"></div>
+  <div id="toolsGrid"  style="display:none"></div>
+  <div id="pwaNudge"   style="display:none"></div>
+
+  <script type="module" src="../../js/locales/ko.js"></script>
+  <script type="module" src="../../js/app.js"></script>
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script>
+</body>
+</html>

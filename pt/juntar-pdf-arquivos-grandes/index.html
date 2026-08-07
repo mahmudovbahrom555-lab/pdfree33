@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src  'self' 'wasm-unsafe-eval' blob:
+                https://cdnjs.cloudflare.com https://esm.sh
+                https://plausible.io https://static.cloudflareinsights.com;
+    style-src   'self' 'unsafe-inline';
+    font-src    'self';
+    img-src     'self' data: blob: https:;
+    connect-src 'self' https://cdnjs.cloudflare.com https://*.workers.dev
+                https://plausible.io https://cloudflareinsights.com;
+    worker-src  'self' blob:;
+    object-src  'none';
+  ">
+
+  <title>Juntar Arquivos PDF Grandes Grátis | PDFree</title>
+  <meta name="description" content="Junte arquivos PDF de qualquer tamanho grátis — 100MB a 1GB. Sem limite de tamanho, sem limite diário, sem upload.">
+
+  <meta property="og:title"       content="Juntar Arquivos PDF Grandes Grátis — Sem Limite de Tamanho | PDFree">
+  <meta property="og:description" content="Combine PDFs de qualquer tamanho gratuitamente. Sem limite de 25MB. Sem limite diário. Processado localmente no seu navegador.">
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://pdfree.io/pt/juntar-pdf-arquivos-grandes/">
+  <meta property="og:site_name"   content="PDFree">
+  <meta property="og:locale"      content="pt_BR">
+  <meta property="og:image"        content="https://pdfree.io/icons/og-image.jpg">
+  <meta property="og:image:width"  content="1200">
+  <meta property="og:image:height" content="633">
+  <meta property="og:image:alt"    content="Juntar Arquivos PDF Grandes Grátis — Sem Limite de Tamanho | PDFree">
+  <meta name="twitter:card"       content="summary_large_image">
+  <meta name="twitter:site"       content="@pdfree_io">
+  <meta name="twitter:title"      content="Juntar Arquivos PDF Grandes Grátis — Sem Limite de Tamanho | PDFree">
+  <meta name="twitter:description" content="Combine PDFs de qualquer tamanho gratuitamente. Sem limite de 25MB. Sem limite diário. Processado localmente no seu navegador.">
+  <meta name="twitter:image"       content="https://pdfree.io/icons/og-image.jpg">
+  <meta name="twitter:image:alt"   content="Juntar Arquivos PDF Grandes Grátis — Sem Limite de Tamanho | PDFree">
+
+  <link rel="canonical" href="https://pdfree.io/pt/juntar-pdf-arquivos-grandes/">
+  <link rel="alternate" hreflang="en"        href="https://pdfree.io/merge-large-pdf-files/">
+  <link rel="alternate" hreflang="de"        href="https://pdfree.io/de/pdf-zusammenfuehren-grosse-dateien/">
+  <link rel="alternate" hreflang="es"        href="https://pdfree.io/es/unir-pdf-archivos-grandes/">
+  <link rel="alternate" hreflang="fr"        href="https://pdfree.io/fr/fusionner-pdf-fichiers-volumineux/">
+  <link rel="alternate" hreflang="pt"        href="https://pdfree.io/pt/juntar-pdf-arquivos-grandes/">
+  <link rel="alternate" hreflang="id"        href="https://pdfree.io/id/gabung-pdf-file-besar/">
+  <link rel="alternate" hreflang="vi"        href="https://pdfree.io/vi/ghep-pdf-file-lon/">
+  <link rel="alternate" hreflang="ru"        href="https://pdfree.io/ru/objedinit-bolshie-pdf/">
+  <link rel="alternate" hreflang="ja"        href="https://pdfree.io/ja/pdf-daiyouryou-ketsugou/">
+  <link rel="alternate" hreflang="it"        href="https://pdfree.io/it/unisci-pdf-file-grandi/">
+  <link rel="alternate" hreflang="ko"        href="https://pdfree.io/ko/pdf-daeyongryang-hapchigi/">
+  <link rel="alternate" hreflang="nl"        href="https://pdfree.io/nl/pdf-samenvoegen-grote-bestanden/">
+  <link rel="alternate" hreflang="pl"        href="https://pdfree.io/pl/polacz-duze-pliki-pdf/">
+  <link rel="alternate" hreflang="tr"        href="https://pdfree.io/tr/buyuk-pdf-dosyalarini-birlestir/">
+  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/merge-large-pdf-files/">
+
+  <link rel="manifest" href="../../manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="PDFree">
+  <link rel="apple-touch-icon" href="../../icons/icon-192.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+  <link rel="preconnect" href="https://plausible.io">
+  <link rel="preconnect" href="https://static.cloudflareinsights.com">
+  <link rel="preload" href="../../fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../css/fonts.css">
+  <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/animations.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/components.css">
+
+  <script src="../../js/theme.js"></script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Juntar Arquivos PDF Grandes — Sem Limite de Tamanho",
+    "description": "Junte arquivos PDF de qualquer tamanho gratuitamente. Sem limite de tamanho de arquivo, sem limite diário. Todo o processamento acontece localmente no navegador.",
+    "url": "https://pdfree.io/pt/juntar-pdf-arquivos-grandes/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "featureList": [
+      "Sem limite de tamanho de arquivo — junte PDFs de 100MB, 500MB, 1GB",
+      "Sem limite diário de tarefas",
+      "Sem upload para servidores — os arquivos ficam no seu dispositivo",
+      "Sem necessidade de conta",
+      "Funciona offline"
+    ],
+    "dateModified": "2026-08-07",
+    "provider": {
+      "@type": "Organization",
+      "name": "PDFree",
+      "url": "https://pdfree.io",
+      "description": "PDFree is a free, privacy-first PDF toolkit that runs entirely in the browser — files are processed locally and never uploaded to a server.",
+      "logo": "https://pdfree.io/icons/icon-512.png"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "Como Juntar Arquivos PDF Grandes Gratuitamente",
+    "description": "Combine arquivos PDF grandes sem limite de tamanho, sem upload e sem pagar.",
+    "totalTime": "PT2M",
+    "tool": [{ "@type": "HowToTool", "name": "PDFree — juntador de PDF gratuito baseado no navegador" }],
+    "step": [
+      { "@type": "HowToStep", "position": 1, "name": "Abrir a ferramenta Juntar do PDFree", "text": "Acesse pdfree.io/pt/juntar-pdf-arquivos-grandes/ no Chrome, Firefox ou Safari. Não é necessário instalar nada nem criar conta.", "url": "https://pdfree.io/pt/juntar-pdf-arquivos-grandes/#step1" },
+      { "@type": "HowToStep", "position": 2, "name": "Adicione seus arquivos PDF grandes", "text": "Clique em 'Escolher arquivos' ou arraste e solte. Arquivos de qualquer tamanho são aceitos — 100MB, 500MB, até 1GB. O processamento acontece no seu navegador, então não há limite de upload no servidor.", "url": "https://pdfree.io/pt/juntar-pdf-arquivos-grandes/#step2" },
+      { "@type": "HowToStep", "position": 3, "name": "Organize a ordem", "text": "Arraste os arquivos para cima ou para baixo para definir a ordem em que aparecerão no documento final combinado.", "url": "https://pdfree.io/pt/juntar-pdf-arquivos-grandes/#step3" },
+      { "@type": "HowToStep", "position": 4, "name": "Junte e baixe", "text": "Clique em 'Juntar arquivos PDF'. O processamento pode levar de 10 a 60 segundos para arquivos muito grandes. O PDF combinado é baixado diretamente no seu dispositivo.", "url": "https://pdfree.io/pt/juntar-pdf-arquivos-grandes/#step4" }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Posso juntar arquivos PDF maiores que 100MB gratuitamente?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Sim. O PDFree não tem limite de tamanho de arquivo. Você pode juntar PDFs de 100MB, 500MB ou maiores gratuitamente. Como o processamento acontece inteiramente no seu navegador — não em um servidor —, não há limite de upload nem custo de largura de banda que exigiria um limite de tamanho." }
+      },
+      {
+        "@type": "Question",
+        "name": "Por que o iLovePDF tem um limite de 25MB por arquivo?",
+        "acceptedAnswer": { "@type": "Answer", "text": "O iLovePDF processa arquivos em seus servidores, o que gera custos de largura de banda e armazenamento. Para controlar esses custos para usuários gratuitos, a ferramenta impõe limites de tamanho de arquivo. O PDFree processa tudo localmente no seu navegador, então não há custos de servidor — e, portanto, nenhum limite de tamanho." }
+      },
+      {
+        "@type": "Question",
+        "name": "Qual o tamanho máximo de PDF que o PDFree consegue juntar?",
+        "acceptedAnswer": { "@type": "Answer", "text": "O limite prático é a memória RAM disponível no seu dispositivo. Computadores e celulares modernos costumam lidar sem problemas com PDFs de várias centenas de megabytes. Para arquivos muito grandes (500MB+), certifique-se de ter pelo menos 2-4GB de RAM livre." }
+      },
+      {
+        "@type": "Question",
+        "name": "O que devo fazer se o navegador travar ao juntar arquivos muito grandes?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Feche outras abas do navegador para liberar memória e tente novamente — cada aba aberta consome RAM que deixa de estar disponível para a junção. Juntar em lotes menores (5–10 arquivos por vez, depois juntar os resultados) também usa menos memória de cada vez. Você também pode comprimir cada arquivo primeiro com a ferramenta Comprimir PDF para reduzir o tamanho total antes de juntar." }
+      },
+      {
+        "@type": "Question",
+        "name": "Existe um limite diário de quantos PDFs posso juntar?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Não. O PDFree não tem limites de uso diário. Diferente do SmallPDF (2 tarefas por dia no plano gratuito) ou do iLovePDF (limites diários em contas gratuitas), o PDFree permite juntar quantos PDFs você precisar, quantas vezes quiser, de graça." }
+      },
+      {
+        "@type": "Question",
+        "name": "Quantos arquivos PDF posso juntar de uma vez?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Não há limite na quantidade de arquivos. Você pode juntar 2, 50, 100 ou mais arquivos PDF em uma única operação. O PDFree processa tudo na memória do seu navegador — a RAM disponível no seu dispositivo é a única restrição prática. Computadores modernos lidam facilmente com mais de 100 arquivos totalizando várias centenas de megabytes." }
+      },
+      {
+        "@type": "Question",
+        "name": "Posso juntar 50 ou 100 arquivos PDF de uma vez gratuitamente?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Sim. O PDFree não tem limite na quantidade de arquivos por junção nem limite diário de uso. Solte todos os seus arquivos de uma vez, organize a ordem e clique em Juntar. O resultado é baixado diretamente no seu dispositivo — sem necessidade de upload para nenhum servidor." }
+      },
+      {
+        "@type": "Question",
+        "name": "Por que juntar PDFs grandes é lento no iLovePDF, mas rápido no PDFree?",
+        "acceptedAnswer": { "@type": "Answer", "text": "O iLovePDF exige o upload do seu arquivo para o servidor, o processamento lá e o download do resultado — três trajetos de rede que somam tempo significativo em arquivos grandes. O PDFree processa tudo localmente no seu navegador, sem transferência de rede, então a velocidade depende apenas da CPU do seu dispositivo, não da sua conexão com a internet." }
+      }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "PDFree", "item": "https://pdfree.io/" },
+      { "@type": "ListItem", "position": 2, "name": "Juntar PDF", "item": "https://pdfree.io/pt/juntar-pdf/" },
+      { "@type": "ListItem", "position": 3, "name": "Juntar Arquivos PDF Grandes", "item": "https://pdfree.io/pt/juntar-pdf-arquivos-grandes/" }
+    ]
+  }
+  </script>
+</head>
+<body data-tool="merge">
+
+  <nav>
+    <a href="/pt/" class="logo" id="logo" aria-label="Ir para a página inicial" style="text-decoration:none">
+      <div class="logo-icon" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+      </div>
+      <span class="logo-text">PDF<span>ree</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="/pt/juntar-pdf/" class="nav-link" data-tool="merge">Juntar</a>
+      <a href="/pt/dividir-pdf/" class="nav-link" data-tool="split">Dividir</a>
+      <a href="/pt/comprimir-pdf/" class="nav-link" data-tool="compress">Comprimir</a>
+      <a href="/pt/jpg-para-pdf/" class="nav-link" data-tool="jpg2pdf">JPG→PDF</a>
+      <a href="/pt/pdf-para-jpg/" class="nav-link" data-tool="pdf2jpg">PDF→JPG</a>
+      <a href="/pt/marca-dagua-pdf/" class="nav-link" data-tool="watermark">Marca d'água</a>
+      <a href="/pt/numeros-de-pagina-pdf/" class="nav-link" data-tool="pagenum">Núm. página</a>
+      <a href="/pt/metadados-pdf/" class="nav-link" data-tool="meta">Metadados</a>
+      <a href="/pt/extrair-pdf/" class="nav-link" data-tool="extract">Extrair</a>
+      <a href="/pt/desenhar-no-pdf/" class="nav-link" data-tool="draw-pdf">Desenhar</a>
+      <a href="/pt/girar-pdf/" class="nav-link" data-tool="rotate">Girar</a>
+      <a href="/pt/proteger-pdf/" class="nav-link" data-tool="protect">Proteger</a>
+      <a href="/pt/ocr-pdf/" class="nav-link" data-tool="ocr">OCR</a>
+      <a href="/pt/pdf-para-word/" class="nav-link" data-tool="pdf2word">PDF→Word</a>
+      <a href="/pt/nivelar-pdf/" class="nav-link" data-tool="flatten">Bloquear PDF</a>
+      <a href="/compare-pdf/" class="nav-link" data-tool="compare">Comparar</a>
+    </div>
+    <button id="themeToggle" class="theme-toggle" aria-label="Alternar modo escuro" title="Alternar modo escuro"></button>
+  </nav>
+
+  <!-- Banner de título compacto — a ferramenta segue logo abaixo -->
+  <section style="background:var(--green-light);border-bottom:1px solid rgba(45,122,79,0.15);padding:24px 24px 20px;text-align:center;">
+    <div style="max-width:720px;margin:0 auto;">
+      <h1 style="font-size:clamp(22px,3.5vw,34px);font-weight:700;letter-spacing:-0.5px;line-height:1.2;color:var(--text);margin:0 0 6px;">Juntar Arquivos PDF Grandes Grátis — Sem Limite de Tamanho, Sem Limite de Arquivos</h1>
+      <p style="font-size:14px;color:var(--green);margin:0;font-weight:500;">100MB, 500MB, 1GB — qualquer tamanho. 2, 50, 100+ arquivos — qualquer quantidade. Sem upload, sem conta, sem limites.</p>
+    </div>
+  </section>
+
+  <!-- Tool -->
+  <div id="tool"></div>
+  <main id="toolArea" class="main-area" aria-busy="false">
+    <div class="tool-header">
+      <div class="tool-header-icon" id="toolIcon" aria-hidden="true">🔗</div>
+      <div class="tool-header-text">
+        <h2 id="toolTitle">Juntar arquivos PDF — qualquer tamanho, sem limites</h2>
+        <p  id="toolDesc">Solte arquivos de qualquer tamanho. A RAM do seu dispositivo é o único limite — sem servidor, sem limite de upload.</p>
+      </div>
+    </div>
+
+    <div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-label="Enviar arquivos — clique ou arraste e solte">
+      <input type="file" id="fileInput" multiple accept=".pdf" aria-hidden="true">
+      <span class="drop-icon" aria-hidden="true">📂</span>
+      <div class="drop-title">Solte arquivos PDF aqui — qualquer tamanho, qualquer quantidade</div>
+      <div class="drop-sub">Arquivos de 100MB, 500MB, 1GB+ · 2, 50, 100+ arquivos · sem limites</div>
+      <label class="drop-btn" id="chooseFilesBtn" for="fileInput">Escolher arquivos</label>
+    </div>
+
+    <div id="fileList"    class="file-list" aria-live="polite"></div>
+    <div id="fileCount"   class="file-count"   style="display:none"></div>
+    <div id="reorderHint" class="reorder-hint" style="display:none">↕ Arraste para reordenar os arquivos antes de juntar</div>
+
+    <div id="mergeOptions"     class="j2p-options"     style="display:none" aria-label="Merge options"></div>
+    <div id="splitOptions"     style="display:none"></div>
+    <div id="compressOptions"  style="display:none"></div>
+    <div id="jpg2pdfOptions"   style="display:none"></div>
+    <div id="pdf2jpgOptions"   style="display:none"></div>
+    <div id="watermarkOptions" style="display:none"></div>
+    <div id="pageNumOptions"   style="display:none"></div>
+    <div id="metaOptions"      style="display:none"></div>
+    <div id="protectOptions"   style="display:none"></div>
+    <div id="redactOptions"    style="display:none"></div>
+    <div id="rotateOptions"    style="display:none"></div>
+    <div id="pdf2wordOptions"  class="j2p-options"     style="display:none" aria-label="PDF to Word options"></div>
+
+    <button id="mergeBtn"  class="merge-btn"  type="button" disabled data-mode="process">Juntar arquivos PDF</button>
+    <button id="cancelBtn" class="cancel-btn" type="button" style="display:none">✕ Cancelar</button>
+
+    <div id="progressBar"   class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+    <div id="progressLabel" class="progress-label"></div>
+
+    <div id="successCard" class="success-card" role="alert" aria-live="polite" style="display:none">
+      <div class="success-top">
+        <div class="success-icon">✓</div>
+        <div class="success-text">
+          <h3 id="successTitle">Pronto!</h3>
+          <p  id="successDesc"></p>
+        </div>
+        <button id="downloadBtn" class="download-btn" type="button">⬇ Baixar</button>
+        <button id="shareBtn" class="share-btn" type="button" style="display:none" aria-label="Enviar arquivo via apps do dispositivo"></button>
+      </div>
+      <div id="privacyCleared" class="privacy-cleared" aria-live="polite">
+        <span class="privacy-cleared__icon" aria-hidden="true">🛡️</span>
+        <div class="privacy-cleared__body">
+          <strong class="privacy-cleared__title">Arquivo removido da memória</strong>
+          <span class="privacy-cleared__sub">Seu documento não deixou nenhum rastro em nenhum servidor.</span>
+        </div>
+      </div>
+      <div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(45,122,79,0.2);">
+        <p style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--text3);margin:0 0 8px;">O que vem a seguir?</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <a href="/pt/comprimir-pdf-arquivos-grandes/" data-handoff style="font-size:13px;background:var(--green-light);color:var(--green);padding:6px 12px;border-radius:6px;text-decoration:none;font-weight:500;border:1px solid rgba(45,122,79,0.2);">Comprimir resultado →</a>
+          <a href="/pt/proteger-pdf/" data-handoff style="font-size:13px;background:var(--surface);color:var(--text2);padding:6px 12px;border-radius:6px;text-decoration:none;border:1px solid var(--border);">Proteger PDF</a>
+          <a href="/pt/dividir-pdf/" data-handoff style="font-size:13px;background:var(--surface);color:var(--text2);padding:6px 12px;border-radius:6px;text-decoration:none;border:1px solid var(--border);">Extrair páginas</a>
+          <a href="/pt/ocr-pdf/" data-handoff style="font-size:13px;background:var(--surface);color:var(--text2);padding:6px 12px;border-radius:6px;text-decoration:none;border:1px solid var(--border);">Tornar pesquisável</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Selos de comparação — abaixo da ferramenta para não atrasar o acesso -->
+  <section style="padding:14px 24px;border-bottom:1px solid var(--border);background:var(--surface);">
+    <div style="max-width:760px;margin:0 auto;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;align-items:center;">
+      <span style="font-size:12px;background:#fef3c7;color:#92400e;padding:4px 11px;border-radius:20px;font-weight:500;">iLovePDF: limite de 25MB</span>
+      <span style="font-size:12px;background:#fef3c7;color:#92400e;padding:4px 11px;border-radius:20px;font-weight:500;">SmallPDF: 2 tarefas/dia</span>
+      <span style="font-size:12px;background:#fef3c7;color:#92400e;padding:4px 11px;border-radius:20px;font-weight:500;">Adobe: exige plano pago</span>
+      <span style="font-size:13px;color:var(--text2);">vs</span>
+      <span style="font-size:12px;background:var(--green-light);color:var(--green);padding:4px 11px;border-radius:20px;font-weight:600;">PDFree: ∞ Sem limites, sempre grátis</span>
+    </div>
+  </section>
+
+  <!-- Conteúdo SEO -->
+  <hr style="border:none;border-top:2px solid var(--border);margin:48px 24px 0;" aria-hidden="true">
+  <section class="seo-article">
+    <div class="seo-article__inner">
+      <div class="seo-content" style="max-width:800px;margin:60px auto 40px;padding:0 24px;color:var(--text2);line-height:1.8;">
+
+        <h2 style="font-size:26px;color:var(--text);margin:0 0 16px;font-weight:700;">Por Que Outras Ferramentas De PDF Têm Limites De Tamanho</h2>
+        <p>Limites de tamanho de arquivo existem porque juntar PDFs em um servidor custa dinheiro. Cada 100MB enviado consome largura de banda, armazenamento e tempo de CPU na infraestrutura do provedor. Para proteger essa infraestrutura contra abusos — e empurrar os usuários para planos pagos — os planos gratuitos ficam limitados.</p>
+        <p>O PDFree elimina esse problema por completo: <strong>seus arquivos nunca saem do seu navegador</strong>. A operação de junção roda em JavaScript no seu dispositivo. Não há custos de servidor a cobrir, então não há limites a impor.</p>
+
+        <div style="background:var(--green-light);border-left:4px solid var(--green);padding:18px 20px;border-radius:0 8px 8px 0;margin:28px 0;">
+          <p style="margin:0 0 10px;font-size:14px;color:var(--text);"><strong>O limite real: a RAM do seu dispositivo.</strong> Não existe limite de software para a quantidade ou o tamanho dos arquivos. A única restrição prática é quanta memória o seu navegador consegue usar.</p>
+          <ul style="margin:0;padding-left:20px;font-size:14px;color:var(--text);display:flex;flex-direction:column;gap:4px;">
+            <li><strong>8 GB de RAM:</strong> lida tranquilamente com 100 arquivos ou 500 MB no total</li>
+            <li><strong>16 GB de RAM:</strong> lida com 500+ arquivos ou vários GB no total</li>
+            <li><strong>4 GB de RAM (celulares mais antigos):</strong> fique em torno de 50 arquivos ou 200 MB no total</li>
+          </ul>
+          <p style="margin:10px 0 0;font-size:13px;color:var(--text2);">Se você atingir um limite de memória, divida o lote: junte os primeiros 50 arquivos e depois junte esse resultado com os próximos 50.</p>
+        </div>
+
+        <!-- Quantidade de arquivos -->
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 12px;font-weight:700;">Nenhum Limite De Software Para A Quantidade De Arquivos</h2>
+        <p style="margin:0 0 16px;">O PDFree não impõe um limite de software para a quantidade de arquivos que você pode juntar. Como o processamento acontece localmente no seu navegador, o limite prático depende da memória disponível no seu dispositivo e das capacidades do navegador.</p>
+
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:18px 20px;margin:0 0 20px;">
+          <strong style="color:var(--text);display:block;margin:0 0 10px;">Usos comuns</strong>
+          <ul style="margin:0;padding-left:20px;font-size:14px;color:var(--text2);display:flex;flex-direction:column;gap:6px;">
+            <li>Junte 50 notas fiscais em um único arquivo anual.</li>
+            <li>Combine 100 páginas escaneadas antes de enviar para OCR.</li>
+            <li>Junte centenas de PDFs de capítulos em um único documento.</li>
+            <li>Organize grandes conjuntos de documentos jurídicos em uma única petição.</li>
+          </ul>
+        </div>
+
+        <!-- Tabela comparativa -->
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 16px;font-weight:700;">Limites De Tamanho De Arquivo: PDFree Vs. Concorrentes</h2>
+        <div style="overflow-x:auto;margin:16px 0 32px;">
+          <table style="width:100%;border-collapse:collapse;font-size:14px;min-width:480px;">
+            <thead>
+              <tr style="border-bottom:2px solid var(--border);">
+                <th style="text-align:left;padding:10px 14px;color:var(--text);font-weight:600;">Ferramenta</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">Limite de tamanho de arquivo</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">Limite diário de tarefas</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">Preço</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom:1px solid var(--border);background:var(--green-light);">
+                <td style="padding:10px 14px;color:var(--green);font-weight:700;">PDFree</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">Nenhum</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">Nenhum</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">Grátis para sempre</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 14px;color:var(--text);">iLovePDF (grátis)</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">~25MB</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Limitado</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Grátis / a partir de $6/mês</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 14px;color:var(--text);">SmallPDF (grátis)</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">~5MB comprimido</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">2 tarefas/dia</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Grátis / a partir de $9/mês</td>
+              </tr>
+              <tr>
+                <td style="padding:10px 14px;color:var(--text);">Adobe Acrobat</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">100MB (pago)</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Ilimitado (pago)</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">$19,99/mês</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Muitos arquivos -->
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 16px;font-weight:700;">Junte 50, 100 Ou 500 Arquivos PDF De Uma Vez</h2>
+        <p>O PDFree <strong>não tem limite na quantidade de arquivos</strong> que você pode juntar em uma única operação. Seja para combinar 2 PDFs ou 500 notas fiscais escaneadas, o processo é idêntico: solte todos os arquivos de uma vez, reordene se necessário, clique em Juntar. A mesma ferramenta que junta 2 arquivos junta 10, 50, 100 ou 200 arquivos — sem precisar mudar nenhuma configuração.</p>
+        <p>Cenários comuns de junção em massa que o PDFree resolve sem limite:</p>
+        <div style="display:flex;flex-direction:column;gap:12px;margin:20px 0 32px;">
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <span style="font-size:20px;flex-shrink:0">🧾</span>
+            <div><strong style="color:var(--text);">Notas fiscais e recibos</strong> — escaneie 80 notas fiscais mensais uma página de cada vez e depois junte todas em um único PDF de arquivo anual.</div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <span style="font-size:20px;flex-shrink:0">📋</span>
+            <div><strong style="color:var(--text);">Jurídico e conformidade</strong> — combine 50–100 páginas de contrato, anexos e assinaturas em um único documento pronto para o tribunal.</div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <span style="font-size:20px;flex-shrink:0">📚</span>
+            <div><strong style="color:var(--text);">Montagem de relatórios</strong> — junte capítulos, apêndices e tabelas de dados de vários autores em um único entregável.</div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <span style="font-size:20px;flex-shrink:0">🗂️</span>
+            <div><strong style="color:var(--text);">Digitalização de arquivos</strong> — combine centenas de páginas de documentos escaneados em um único arquivo pesquisável.</div>
+          </div>
+        </div>
+        <div style="background:var(--green-light);border-left:4px solid var(--green);padding:18px 20px;border-radius:0 8px 8px 0;margin:0 0 32px;">
+          <p style="margin:0;font-size:14px;color:var(--text);"><strong>Dica para 50+ arquivos:</strong> Segure <kbd style="background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:1px 5px;font-size:12px;">Ctrl</kbd> (ou <kbd style="background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:1px 5px;font-size:12px;">⌘</kbd> no Mac) enquanto clica no seletor de arquivos para selecionar vários de uma vez, ou solte uma pasta inteira de PDFs na área de soltar. A RAM disponível no seu dispositivo é a única restrição prática.</p>
+        </div>
+
+        <!-- Quem usa -->
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 16px;font-weight:700;">Quem Usa Esta Ferramenta</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin:0 0 40px;">
+          <div style="padding:18px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
+            <div style="font-size:22px;margin:0 0 8px;">⚖️</div>
+            <strong style="color:var(--text);display:block;margin:0 0 6px;">Escritórios de advocacia</strong>
+            <p style="margin:0;font-size:13px;color:var(--text2);">Combinam 50–100 anexos, páginas de contrato e assinaturas em uma única petição pronta para o tribunal.</p>
+          </div>
+          <div style="padding:18px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
+            <div style="font-size:22px;margin:0 0 8px;">🧮</div>
+            <strong style="color:var(--text);display:block;margin:0 0 6px;">Contadores</strong>
+            <p style="margin:0;font-size:13px;color:var(--text2);">Juntam mais de 80 notas fiscais mensais em um único arquivo de fim de ano para auditoria ou declaração de impostos.</p>
+          </div>
+          <div style="padding:18px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
+            <div style="font-size:22px;margin:0 0 8px;">📐</div>
+            <strong style="color:var(--text);display:block;margin:0 0 6px;">Arquitetos</strong>
+            <p style="margin:0;font-size:13px;color:var(--text2);">Consolidam plantas, especificações e alvarás de um projeto com vários edifícios em uma única submissão.</p>
+          </div>
+          <div style="padding:18px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
+            <div style="font-size:22px;margin:0 0 8px;">🎓</div>
+            <strong style="color:var(--text);display:block;margin:0 0 6px;">Estudantes</strong>
+            <p style="margin:0;font-size:13px;color:var(--text2);">Juntam tese, bibliografia, apêndices e folha de rosto antes de enviar pelo portal da universidade.</p>
+          </div>
+          <div style="padding:18px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
+            <div style="font-size:22px;margin:0 0 8px;">🏛️</div>
+            <strong style="color:var(--text);display:block;margin:0 0 6px;">Órgãos públicos</strong>
+            <p style="margin:0;font-size:13px;color:var(--text2);">Combinam solicitações, documentos comprobatórios e comprovantes de pagamento em um único registro por processo.</p>
+          </div>
+          <div style="padding:18px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
+            <div style="font-size:22px;margin:0 0 8px;">🏥</div>
+            <strong style="color:var(--text);display:block;margin:0 0 6px;">Saúde</strong>
+            <p style="margin:0;font-size:13px;color:var(--text2);">Reúnem prontuários de pacientes, resultados de exames, laudos de imagem e cartas de encaminhamento em um único arquivo — sem enviar dados sensíveis para servidores.</p>
+          </div>
+        </div>
+
+        <!-- Dicas para arquivos grandes -->
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 16px;font-weight:700;">Dicas Para Juntar Arquivos PDF Muito Grandes</h2>
+        <div style="display:flex;flex-direction:column;gap:16px;margin:16px 0;">
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <div style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">1</div>
+            <div><strong style="color:var(--text);">Use Chrome ou Edge</strong> — eles têm os motores JavaScript mais eficientes e lidam melhor com operações de memória grandes.</div>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <div style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">2</div>
+            <div><strong style="color:var(--text);">Feche outras abas</strong> — liberar RAM dá ao navegador mais memória para trabalhar em arquivos muito grandes.</div>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <div style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">3</div>
+            <div><strong style="color:var(--text);">Comprima antes, se possível</strong> — se seus PDFs de origem são grandes por causa de imagens incorporadas, tente <a href="/pt/comprimir-pdf-arquivos-grandes/" style="color:var(--green);">comprimir cada arquivo primeiro</a> antes de juntar.</div>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <div style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">4</div>
+            <div><strong style="color:var(--text);">Tenha paciência com arquivos grandes</strong> — juntar mais de 500MB pode levar de 30 a 90 segundos. Não feche a aba enquanto "Processando..." estiver sendo exibido.</div>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <div style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">5</div>
+            <div><strong style="color:var(--text);">Use um navegador de desktop e comece do zero</strong> — navegadores de desktop costumam ter mais RAM livre do que os móveis, e um navegador recém-reiniciado oferece a maior memória disponível.</div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <h2 style="font-size:26px;color:var(--text);margin:52px 0 20px;font-weight:700;">Perguntas Frequentes</h2>
+        <div style="display:flex;flex-direction:column;gap:20px;">
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Posso juntar arquivos PDF maiores que 100MB gratuitamente?</h3>
+            <p style="margin:0;font-size:14px;">Sim. O PDFree não tem limite de tamanho de arquivo. Você pode juntar PDFs de 100MB, 500MB ou até 1GB gratuitamente, porque o processamento acontece inteiramente no seu navegador — sem upload para servidor significa sem limite de upload.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Por que o iLovePDF tem limite de 25MB, mas o PDFree não?</h3>
+            <p style="margin:0;font-size:14px;">O iLovePDF processa arquivos em seus servidores, o que gera custos de largura de banda e armazenamento. O PDFree processa arquivos localmente no seu navegador — não há custos de servidor, então não há motivo para limitar o tamanho dos arquivos.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Existe um limite diário para junções?</h3>
+            <p style="margin:0;font-size:14px;">Não. Diferente do SmallPDF (2 tarefas/dia grátis) ou do iLovePDF (limites diários), o PDFree não tem limite diário. Junte quantos PDFs precisar, quantas vezes quiser.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Qual o tamanho máximo de PDF que posso juntar?</h3>
+            <p style="margin:0;font-size:14px;">O limite prático é a RAM do seu dispositivo. A maioria dos computadores modernos lida facilmente com várias centenas de megabytes. Para arquivos acima de 500MB, feche outras abas para liberar memória.</p>
+          </div>
+                    <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">O que devo fazer se o navegador travar ao juntar arquivos muito grandes?</h3>
+            <p style="margin:0;font-size:14px;">Feche outras abas para liberar memória e tente novamente — juntar em lotes menores (5–10 arquivos por vez, depois juntar os resultados) também usa menos memória de cada vez. Você também pode comprimir cada arquivo primeiro com a <a href="/pt/comprimir-pdf-arquivos-grandes/" style="color:var(--green);">ferramenta Comprimir PDF</a> para reduzir o tamanho total antes de juntar.</p>
+          </div>
+<div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Quantos arquivos PDF posso juntar de uma vez?</h3>
+            <p style="margin:0;font-size:14px;">Não há limite na quantidade de arquivos. O PDFree processa tudo na memória do seu navegador, então você pode juntar 2, 50 ou mais de 100 arquivos PDF em uma única operação. A única restrição prática é a RAM disponível no seu dispositivo — computadores modernos lidam facilmente com 100 arquivos totalizando várias centenas de megabytes.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Posso juntar 50 ou 100 arquivos PDF de uma vez gratuitamente?</h3>
+            <p style="margin:0;font-size:14px;">Sim, totalmente grátis e sem limite diário. Diferente do SmallPDF (2 tarefas/dia) ou do iLovePDF (limites diários), o PDFree não tem restrições de uso. Solte todos os 50 ou 100 arquivos de uma vez, organize a ordem e clique em Juntar — o resultado é baixado diretamente no seu dispositivo, sem upload para nenhum servidor.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Preciso criar uma conta?</h3>
+            <p style="margin:0;font-size:14px;">Não. O PDFree nunca exige conta, e-mail ou cadastro. Abra a ferramenta e comece a juntar imediatamente.</p>
+          </div>
+        </div>
+
+        <!-- Relacionados -->
+        <h2 style="font-size:26px;color:var(--text);margin:52px 0 12px;font-weight:700;">Mais Ferramentas Gratuitas — Sem Limites Em Nenhuma Delas</h2>
+        <ul style="margin:12px 0;padding-left:24px;display:flex;flex-direction:column;gap:8px;">
+          <li><a href="/pt/comprimir-pdf-arquivos-grandes/" style="color:var(--green);font-weight:500;">Comprimir arquivos PDF grandes grátis</a> — reduza o tamanho do arquivo combinado se ele ficar grande demais para enviar</li>
+          <li><a href="/pt/dividir-pdf/" style="color:var(--green);font-weight:500;">Dividir PDF</a> — extraia páginas específicas do documento combinado</li>
+          <li><a href="/pt/juntar-pdfs-em-um/" style="color:var(--green);font-weight:500;">Juntar PDFs em Um</a> — combine qualquer quantidade de PDFs em um único documento</li>
+          <li><a href="/pt/proteger-pdf/" style="color:var(--green);font-weight:500;">Proteger PDF</a> — adicione uma senha ao arquivo combinado</li>
+          <li><a href="/pt/juntar-pdf-sem-upload/" style="color:var(--green);font-weight:500;">Juntar PDF Sem Upload</a> — guia de privacidade para documentos sensíveis</li>
+          <li><a href="/pt/blog/juntar-arquivos-pdf-gratis/" style="color:var(--green);font-weight:500;">Como Juntar Arquivos PDF Gratuitamente</a> — guia passo a passo com dicas para lotes grandes</li>
+        </ul>
+
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    PDFree · <strong>Todo o processamento acontece 100% no seu navegador</strong> · Os arquivos <strong>nunca são enviados</strong><br>
+    <span style="color:var(--green)">🔒</span> Seus documentos nunca saem do seu dispositivo &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> Feito para ser grátis para todos, para sempre<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
+      <a href="/privacy.html" style="color:var(--green)">Privacidade</a> &nbsp;·&nbsp;
+      <a href="/terms.html" style="color:var(--green)">Termos</a> &nbsp;·&nbsp;
+      <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a> &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green)">GitHub</a>
+    </span>
+  </footer>
+
+  <div id="toast"      class="toast" role="status" aria-live="polite"></div>
+  <div id="hero"       style="display:none"></div>
+  <div id="trustAlert" style="display:none"></div>
+  <div id="noLimitBar" style="display:none"></div>
+  <div id="toolsGrid"  style="display:none"></div>
+  <div id="pwaNudge"   style="display:none"></div>
+
+  <script type="module" src="../../js/locales/pt.js"></script>
+  <script type="module" src="../../js/app.js"></script>
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script>
+</body>
+</html>

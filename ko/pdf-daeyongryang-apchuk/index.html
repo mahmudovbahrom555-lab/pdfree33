@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src  'self' 'wasm-unsafe-eval' blob:
+                https://cdnjs.cloudflare.com https://esm.sh
+                https://plausible.io https://static.cloudflareinsights.com;
+    style-src   'self' 'unsafe-inline';
+    font-src    'self';
+    img-src     'self' data: blob: https:;
+    connect-src 'self' https://cdnjs.cloudflare.com https://*.workers.dev
+                https://plausible.io https://cloudflareinsights.com;
+    worker-src  'self' blob:;
+    object-src  'none';
+  ">
+
+  <title>대용량 PDF 파일 무료로 압축 | PDFree</title>
+  <meta name="description" content="어떤 용량의 PDF든 무료로 압축 — 100MB부터 1GB까지. 일일 제한 없음, 업로드 불필요, 브라우저 내 처리.">
+
+  <meta property="og:title"       content="대용량 PDF 파일 무료로 압축하기 — 25MB 제한 없음 | PDFree">
+  <meta property="og:description" content="어떤 용량의 PDF든 무료로 줄이세요. 25MB 업로드 제한 없음. 일일 제한 없음. 브라우저에서 완전히 압축되며 파일이 기기를 벗어나지 않습니다.">
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://pdfree.io/ko/pdf-daeyongryang-apchuk/">
+  <meta property="og:site_name"   content="PDFree">
+  <meta property="og:image"        content="https://pdfree.io/icons/og-image.jpg">
+  <meta property="og:image:width"  content="1200">
+  <meta property="og:image:height" content="633">
+  <meta property="og:image:alt"    content="대용량 PDF 파일 무료로 압축하기 — 25MB 제한 없음 | PDFree">
+  <meta name="twitter:card"       content="summary_large_image">
+  <meta name="twitter:site"       content="@pdfree_io">
+  <meta name="twitter:title"      content="대용량 PDF 파일 무료로 압축하기 — 25MB 제한 없음 | PDFree">
+  <meta name="twitter:description" content="어떤 용량의 PDF든 무료로 줄이세요. 25MB 업로드 제한 없음. 일일 제한 없음. 브라우저에서 완전히 압축되며 파일이 기기를 벗어나지 않습니다.">
+  <meta name="twitter:image"       content="https://pdfree.io/icons/og-image.jpg">
+  <meta name="twitter:image:alt"   content="대용량 PDF 파일 무료로 압축하기 — 25MB 제한 없음 | PDFree">
+
+  <link rel="canonical" href="https://pdfree.io/ko/pdf-daeyongryang-apchuk/">
+  <link rel="alternate" hreflang="en"        href="https://pdfree.io/compress-large-pdf-free/">
+  <link rel="alternate" hreflang="de"        href="https://pdfree.io/de/pdf-komprimieren-grosse-dateien/">
+  <link rel="alternate" hreflang="es"        href="https://pdfree.io/es/comprimir-pdf-archivos-grandes/">
+  <link rel="alternate" hreflang="fr"        href="https://pdfree.io/fr/compresser-pdf-fichiers-volumineux/">
+  <link rel="alternate" hreflang="pt"        href="https://pdfree.io/pt/comprimir-pdf-arquivos-grandes/">
+  <link rel="alternate" hreflang="id"        href="https://pdfree.io/id/kompres-pdf-file-besar/">
+  <link rel="alternate" hreflang="vi"        href="https://pdfree.io/vi/nen-pdf-file-lon/">
+  <link rel="alternate" hreflang="ru"        href="https://pdfree.io/ru/szhat-bolshie-pdf/">
+  <link rel="alternate" hreflang="ja"        href="https://pdfree.io/ja/pdf-daiyouryou-atsuryoku/">
+  <link rel="alternate" hreflang="it"        href="https://pdfree.io/it/comprimi-pdf-file-grandi/">
+  <link rel="alternate" hreflang="ko"        href="https://pdfree.io/ko/pdf-daeyongryang-apchuk/">
+  <link rel="alternate" hreflang="nl"        href="https://pdfree.io/nl/pdf-comprimeren-grote-bestanden/">
+  <link rel="alternate" hreflang="pl"        href="https://pdfree.io/pl/kompresuj-duze-pliki-pdf/">
+  <link rel="alternate" hreflang="tr"        href="https://pdfree.io/tr/buyuk-pdf-dosyalarini-sikistir/">
+  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/compress-large-pdf-free/">
+
+  <link rel="manifest" href="../../manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="PDFree">
+  <link rel="apple-touch-icon" href="../../icons/icon-192.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+  <link rel="preconnect" href="https://plausible.io">
+  <link rel="preconnect" href="https://static.cloudflareinsights.com">
+  <link rel="preload" href="../../fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../css/fonts.css">
+  <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/animations.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/components.css">
+
+  <script src="../../js/theme.js"></script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "대용량 PDF 파일 무료로 압축하기 — 용량 제한 없음",
+    "description": "PDF 파일을 용량에 상관없이 무료로 압축하세요. 파일 용량 제한 없음, 일일 제한 없음. 모든 처리는 브라우저에서 로컬로 이루어집니다 — 파일이 기기를 벗어나지 않습니다.",
+    "url": "https://pdfree.io/ko/pdf-daeyongryang-apchuk/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "featureList": [
+      "파일 용량 제한 없음 — 100MB, 500MB, 1GB PDF도 압축 가능",
+      "일일 작업 제한 없음",
+      "서버 업로드 없음 — 파일이 기기에 그대로 남음",
+      "계정 불필요",
+      "오프라인에서도 작동"
+    ],
+    "dateModified": "2026-08-07",
+    "provider": {
+      "@type": "Organization",
+      "name": "PDFree",
+      "url": "https://pdfree.io",
+      "description": "PDFree is a free, privacy-first PDF toolkit that runs entirely in the browser — files are processed locally and never uploaded to a server.",
+      "logo": "https://pdfree.io/icons/icon-512.png"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "대용량 PDF 파일을 무료로 압축하는 방법",
+    "description": "용량 제한 없이, 업로드 없이, 비용 없이 대용량 PDF를 줄입니다.",
+    "totalTime": "PT2M",
+    "tool": [{ "@type": "HowToTool", "name": "PDFree — 무료 브라우저 기반 PDF 압축 도구" }],
+    "step": [
+      { "@type": "HowToStep", "position": 1, "name": "PDFree 압축 도구 열기", "text": "Chrome, Firefox, Safari 등에서 pdfree.io/ko/pdf-daeyongryang-apchuk/ 로 이동하세요. 설치나 계정이 필요 없습니다.", "url": "https://pdfree.io/ko/pdf-daeyongryang-apchuk/#step1" },
+      { "@type": "HowToStep", "position": 2, "name": "대용량 PDF 파일 드롭", "text": "'파일 선택'을 클릭하거나 드래그 앤 드롭하세요. 100MB, 500MB, 심지어 1GB까지 어떤 용량의 파일도 받을 수 있습니다. 처리가 브라우저에서 이루어지므로 서버 업로드 제한이 없습니다.", "url": "https://pdfree.io/ko/pdf-daeyongryang-apchuk/#step2" },
+      { "@type": "HowToStep", "position": 3, "name": "압축 수준 선택", "text": "얼마나 강하게 압축할지 선택하세요. 압축 수준이 높을수록 용량은 더 줄어들지만 이미지 품질이 약간 저하될 수 있습니다. 대부분 텍스트로 구성된 문서는 최대 압축을 적용해도 동일하게 보입니다.", "url": "https://pdfree.io/ko/pdf-daeyongryang-apchuk/#step3" },
+      { "@type": "HowToStep", "position": 4, "name": "압축하고 다운로드", "text": "'PDF 압축'을 클릭하세요. 매우 큰 파일의 경우 처리에 15~90초가 걸릴 수 있습니다. 압축된 PDF가 바로 기기에 다운로드됩니다.", "url": "https://pdfree.io/ko/pdf-daeyongryang-apchuk/#step4" }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "100MB보다 큰 PDF도 무료로 압축할 수 있나요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "네. PDFree는 파일 용량 제한이 없습니다. 100MB, 500MB, 또는 그 이상 크기의 PDF도 무료로 압축할 수 있습니다. 처리가 서버가 아니라 브라우저에서 완전히 이루어지기 때문에 업로드 제한도, 용량 제한을 강제하는 대역폭 비용도 없습니다." }
+      },
+      {
+        "@type": "Question",
+        "name": "iLovePDF는 왜 무료 압축을 25MB로 제한하나요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "iLovePDF는 파일을 자체 서버에서 압축하기 때문에 대역폭과 저장 비용이 발생합니다. 무료 사용자에 대한 이런 비용을 통제하기 위해 파일 용량 제한과 일일 제한을 둡니다. PDFree는 모든 처리를 브라우저에서 로컬로 수행하므로 서버 비용이 없고, 따라서 제한도 없습니다." }
+      },
+      {
+        "@type": "Question",
+        "name": "PDFree는 대용량 PDF를 얼마나 압축할 수 있나요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "결과는 콘텐츠에 따라 다릅니다. 이미지가 많이 포함된 PDF는 보통 40~80% 줄어듭니다. 텍스트 위주의 PDF는 압축률이 낮은 편으로, 일반적으로 10~30%입니다. PDFree는 데스크톱 도구와 동일한 PDF 압축 알고리즘을 브라우저에서 그대로 사용합니다." }
+      },
+      {
+        "@type": "Question",
+        "name": "압축할 수 있는 PDF 개수에 일일 제한이 있나요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "아니요. PDFree는 일일 사용 제한이 없습니다. SmallPDF(무료 플랜에서 하루 2개 작업)나 iLovePDF(무료 계정 일일 제한)와 달리, PDFree는 필요한 만큼, 원하는 만큼 자주 무료로 PDF를 압축할 수 있게 해줍니다." }
+      },
+      {
+        "@type": "Question",
+        "name": "압축하면 PDF 품질이 떨어지나요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "대부분 텍스트로 구성된 문서는 압축해도 품질에 눈에 띄는 영향이 없습니다 — 텍스트는 선명하게 유지됩니다. 사진이 포함된 PDF는 압축 수준이 높을수록 이미지 해상도가 줄어들며, 자세히 보면 차이가 느껴질 수 있습니다. 용량 감소와 이미지 품질의 균형을 맞추려면 중간 정도의 압축 수준을 선택하세요." }
+      }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "PDFree", "item": "https://pdfree.io/" },
+      { "@type": "ListItem", "position": 2, "name": "PDF 압축", "item": "https://pdfree.io/ko/pdf-apchuk/" },
+      { "@type": "ListItem", "position": 3, "name": "대용량 PDF 파일 무료로 압축하기", "item": "https://pdfree.io/ko/pdf-daeyongryang-apchuk/" }
+    ]
+  }
+  </script>
+</head>
+<body data-tool="compress">
+
+  <nav>
+    <a href="../../" class="logo" id="logo" aria-label="홈으로 이동" style="text-decoration:none">
+      <div class="logo-icon" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+      </div>
+      <span class="logo-text">PDF<span>ree</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="../pdf-hapchigi/" class="nav-link" data-tool="merge">합치기</a>
+      <a href="../pdf-bunhal/" class="nav-link" data-tool="split">분할</a>
+      <a href="../pdf-apchuk/" class="nav-link" data-tool="compress">압축</a>
+      <a href="../jpg-pdf-byeonhwan/" class="nav-link" data-tool="jpg2pdf">JPG → PDF</a>
+      <a href="../pdf-jpg-byeonhwan/" class="nav-link" data-tool="pdf2jpg">PDF → JPG</a>
+      <a href="../pdf-watermark/" class="nav-link" data-tool="watermark">워터마크</a>
+      <a href="../pdf-peiji-beonho/" class="nav-link" data-tool="pagenum">페이지 번호</a>
+      <a href="../pdf-metadeiteo/" class="nav-link" data-tool="meta">메타데이터</a>
+      <a href="../pdf-chuchul/" class="nav-link" data-tool="extract">추출</a>
+      <a href="/draw-on-pdf/" class="nav-link" data-tool="draw-pdf">Draw</a>
+      <a href="../pdf-hoejeon/" class="nav-link" data-tool="rotate">회전</a>
+      <a href="../pdf-amho/" class="nav-link" data-tool="protect">보호</a>
+      <a href="../pdf-word-byeonhwan/" class="nav-link" data-tool="pdf2word">PDF to Word</a>
+      <a href="../pdf-excel-byeonhwan/" class="nav-link" data-tool="pdf2excel">PDF to Excel</a>
+      <a href="../pdf-powerpoint-byeonhwan/" class="nav-link" data-tool="pdf2ppt">PDF to PowerPoint</a>
+      <a href="../pdf-markdown-byeonhwan/" class="nav-link" data-tool="pdf2md">PDF to Markdown</a>
+      <a href="../pdf-jamgeum-haeje/" class="nav-link" data-tool="unlock">PDF 잠금 해제</a>
+      <a href="/compare-pdf/" class="nav-link" data-tool="compare">Compare</a>
+    </div>
+    <button id="themeToggle" class="theme-toggle" aria-label="다크 모드 전환" title="다크 모드 전환"></button>
+  </nav>
+
+  <nav aria-label="Breadcrumb" style="position:static;padding:8px 24px;border-bottom:1px solid var(--border);background:var(--surface);">
+    <ol style="list-style:none;margin:0;padding:0;display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text3);"
+        itemscope itemtype="https://schema.org/BreadcrumbList">
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a href="/ko/" itemprop="item" style="color:var(--green);text-decoration:none;font-weight:500;">
+          <span itemprop="name">PDFree</span></a>
+        <meta itemprop="position" content="1">
+      </li>
+      <li aria-hidden="true" style="color:var(--text3);">›</li>
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a href="/ko/pdf-daeyongryang-apchuk/" itemprop="item" style="color:var(--green);text-decoration:none;font-weight:500;">
+          <span itemprop="name">PDF 압축</span></a>
+        <meta itemprop="position" content="2">
+      </li>
+      <li aria-hidden="true" style="color:var(--text3);">›</li>
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <span itemprop="name" aria-current="page" style="color:var(--text2);">대용량 PDF 파일 무료로 압축하기</span>
+        <meta itemprop="position" content="3">
+      </li>
+    </ol>
+  </nav>
+
+  <!-- 컴팩트 타이틀 배너 -->
+  <section style="background:var(--green-light);border-bottom:1px solid rgba(45,122,79,0.15);padding:24px 24px 20px;text-align:center;">
+    <div style="max-width:720px;margin:0 auto;">
+      <h1 style="font-size:clamp(22px,3.5vw,34px);font-weight:700;letter-spacing:-0.5px;line-height:1.2;color:var(--text);margin:0 0 6px;">대용량 PDF 파일 무료로 압축하기 — 파일 용량 제한 없음</h1>
+      <p style="font-size:14px;color:var(--green);margin:0;font-weight:500;">100MB, 500MB, 1GB — 어떤 용량이든. 업로드 없음, 계정 불필요, 일일 제한 없음.</p>
+    </div>
+  </section>
+
+  <!-- 도구 -->
+  <div id="tool"></div>
+  <main id="toolArea" class="main-area" aria-busy="false">
+    <div class="tool-header">
+      <div class="tool-header-icon" id="toolIcon" aria-hidden="true">🗜️</div>
+      <div class="tool-header-text">
+        <h2 id="toolTitle">PDF 압축 — 어떤 용량이든, 제한 없음</h2>
+        <p  id="toolDesc">어떤 용량의 파일이든 드롭하세요. 기기의 RAM만이 유일한 제한입니다 — 서버도 없고 업로드 제한도 없습니다.</p>
+      </div>
+    </div>
+
+    <div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-label="파일 업로드 — 클릭하거나 드래그 앤 드롭">
+      <input type="file" id="fileInput" accept=".pdf" aria-hidden="true">
+      <span class="drop-icon" aria-hidden="true">📂</span>
+      <div class="drop-title">대용량 PDF 파일을 여기에 드롭하세요</div>
+      <div class="drop-sub">어떤 용량의 파일이든 가능합니다 — 100MB, 500MB, 1GB 이상</div>
+      <label class="drop-btn" id="chooseFilesBtn" for="fileInput">파일 선택</label>
+    </div>
+
+    <div id="fileList"    class="file-list" aria-live="polite"></div>
+    <div id="fileCount"   class="file-count"   style="display:none"></div>
+    <div id="reorderHint" class="reorder-hint" style="display:none"></div>
+
+    <div id="splitOptions"     style="display:none"></div>
+    <div id="compressOptions"  style="display:none"></div>
+    <div id="jpg2pdfOptions"   style="display:none"></div>
+    <div id="pdf2jpgOptions"   style="display:none"></div>
+    <div id="watermarkOptions" style="display:none"></div>
+    <div id="pageNumOptions"   style="display:none"></div>
+    <div id="metaOptions"      style="display:none"></div>
+    <div id="protectOptions"   style="display:none"></div>
+    <div id="redactOptions"    style="display:none"></div>
+    <div id="rotateOptions"    style="display:none"></div>
+    <div id="pdf2wordOptions"  class="j2p-options"     style="display:none" aria-label="PDF to Word options"></div>
+
+    <button id="mergeBtn"  class="merge-btn"  type="button" disabled data-mode="process">PDF 압축</button>
+    <button id="cancelBtn" class="cancel-btn" type="button" style="display:none">✕ 취소</button>
+
+    <div id="progressBar"   class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+    <div id="progressLabel" class="progress-label"></div>
+
+    <div id="successCard" class="success-card" role="alert" aria-live="polite" style="display:none">
+      <div class="success-top">
+        <div class="success-icon">✓</div>
+        <div class="success-text">
+          <h3 id="successTitle">완료!</h3>
+          <p  id="successDesc"></p>
+        </div>
+        <button id="downloadBtn" class="download-btn" type="button">⬇ 다운로드</button>
+        <button id="shareBtn" class="share-btn" type="button" style="display:none" aria-label="기기 앱으로 파일 보내기"></button>
+      </div>
+      <div id="privacyCleared" class="privacy-cleared" aria-live="polite">
+        <span class="privacy-cleared__icon" aria-hidden="true">🛡️</span>
+        <div class="privacy-cleared__body">
+          <strong class="privacy-cleared__title">파일이 메모리에서 삭제되었습니다</strong>
+          <span class="privacy-cleared__sub">문서가 어떤 서버에도 흔적을 남기지 않았습니다.</span>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- SEO 콘텐츠 -->
+  <hr style="border:none;border-top:2px solid var(--border);margin:48px 24px 0;" aria-hidden="true">
+  <section class="seo-article">
+    <div class="seo-article__inner">
+      <div class="seo-content" style="max-width:800px;margin:60px auto 40px;padding:0 24px;color:var(--text2);line-height:1.8;">
+
+        <h2 style="font-size:26px;color:var(--text);margin:0 0 16px;font-weight:700;">다른 PDF 도구들은 왜 압축을 25MB로 제한할까요</h2>
+        <p>PDF 압축 도구의 파일 용량 제한이 존재하는 이유는 서버에서 압축하는 데 비용이 들기 때문입니다. 업로드하는 100MB마다 제공업체 인프라의 대역폭, 저장 공간, CPU 시간을 소모합니다. 이런 인프라를 남용으로부터 보호하고 — 동시에 사용자를 유료 플랜으로 유도하기 위해 — 무료 등급은 25MB, 5MB, 또는 하루 2개 작업으로 제한됩니다.</p>
+        <p>PDFree는 이 문제를 완전히 없앱니다. <strong>파일이 브라우저를 벗어나는 일이 없습니다.</strong> 압축 알고리즘은 기기에서 자바스크립트로 실행됩니다. 감당해야 할 서버 비용이 없으므로 부과할 제한도 없습니다.</p>
+
+        <div style="background:var(--green-light);border-left:4px solid var(--green);padding:18px 20px;border-radius:0 8px 8px 0;margin:28px 0;">
+          <p style="margin:0;font-size:14px;color:var(--text);"><strong>진짜 제한:</strong> 기기의 RAM입니다. 8GB 이상의 RAM을 갖춘 최신 노트북이나 스마트폰은 수백 메가바이트 크기의 PDF도 여유롭게 압축할 수 있습니다. 500MB가 넘는 파일은 압축 전에 다른 브라우저 탭을 닫아 메모리를 확보하세요.</p>
+        </div>
+
+        <!-- 언제 필요한가 -->
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 16px;font-weight:700;">대용량 PDF를 압축해야 할 때</h2>
+        <div style="display:flex;flex-direction:column;gap:16px;margin:16px 0 32px;">
+          <div style="border-left:3px solid var(--green);padding:14px 18px;background:var(--surface);border-radius:0 8px 8px 0;">
+            <strong style="color:var(--text);">이메일 첨부파일</strong>
+            <p style="margin:6px 0 0;font-size:14px;">Gmail과 Outlook은 첨부파일을 25MB로 제한합니다. 40MB짜리 스캔 보고서는 전송되지 않습니다. 8MB로 압축하면 클라우드 링크 없이도 바로 보낼 수 있습니다.</p>
+          </div>
+          <div style="border-left:3px solid var(--green);padding:14px 18px;background:var(--surface);border-radius:0 8px 8px 0;">
+            <strong style="color:var(--text);">관공서 및 법원 제출 포털</strong>
+            <p style="margin:6px 0 0;font-size:14px;">많은 전자 제출 시스템은 업로드를 10MB나 20MB로 제한합니다. 스캔한 증거자료가 포함된 법률 문서는 흔히 50~200MB에 달합니다. 로컬에서 압축해 포털의 제한을 넘지 않게 하세요.</p>
+          </div>
+          <div style="border-left:3px solid var(--green);padding:14px 18px;background:var(--surface);border-radius:0 8px 8px 0;">
+            <strong style="color:var(--text);">모바일 공유</strong>
+            <p style="margin:6px 0 0;font-size:14px;">WhatsApp은 파일을 100MB로 제한합니다. 180MB짜리 건축 도면은 전송되지 않습니다. 먼저 압축한 다음 휴대폰에서 바로 공유하세요.</p>
+          </div>
+          <div style="border-left:3px solid var(--green);padding:14px 18px;background:var(--surface);border-radius:0 8px 8px 0;">
+            <strong style="color:var(--text);">여러 대용량 PDF를 합치기 전에</strong>
+            <p style="margin:6px 0 0;font-size:14px;">80MB짜리 PDF 5개를 합치면 400MB 파일이 만들어집니다. 각각을 먼저 압축한 다음 <a href="/ko/pdf-daeyongryang-hapchigi/" style="color:var(--green);">합치면</a> 저장하고 공유하기 실용적인 최종 문서를 얻을 수 있습니다.</p>
+          </div>
+        </div>
+
+        <!-- 비교 표 -->
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 16px;font-weight:700;">PDF 압축 파일 용량 제한: PDFree vs 경쟁 서비스</h2>
+        <div style="overflow-x:auto;margin:16px 0 32px;">
+          <table style="width:100%;border-collapse:collapse;font-size:14px;min-width:480px;">
+            <thead>
+              <tr style="border-bottom:2px solid var(--border);">
+                <th style="text-align:left;padding:10px 14px;color:var(--text);font-weight:600;">도구</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">파일 용량 제한</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">일일 작업 제한</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">파일 업로드 여부</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom:1px solid var(--border);background:var(--green-light);">
+                <td style="padding:10px 14px;color:var(--green);font-weight:700;">PDFree</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">없음</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">없음</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">전혀 없음</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 14px;color:var(--text);">iLovePDF (무료)</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">~25MB</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">제한적</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">예 — 자체 서버로</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 14px;color:var(--text);">SmallPDF (무료)</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">~5MB(압축 후)</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">하루 2개 작업</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">예 — 자체 서버로</td>
+              </tr>
+              <tr>
+                <td style="padding:10px 14px;color:var(--text);">Adobe Acrobat</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">100MB (유료)</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">무제한 (유료)</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">예 — Adobe 클라우드로</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- 팁 -->
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 16px;font-weight:700;">매우 큰 PDF 파일을 압축할 때의 팁</h2>
+        <div style="display:flex;flex-direction:column;gap:16px;margin:16px 0;">
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <div style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">1</div>
+            <div><strong style="color:var(--text);">Chrome이나 Edge 사용하기</strong> — 가장 효율적인 자바스크립트 엔진을 갖추고 있어 대용량 메모리 작업을 가장 잘 처리합니다. Firefox도 작동하지만 500MB 이상에서는 느릴 수 있습니다.</div>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <div style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">2</div>
+            <div><strong style="color:var(--text);">다른 탭을 먼저 닫기</strong> — RAM을 확보하면 압축 작업을 위해 브라우저가 더 많은 메모리를 사용할 수 있습니다. 탭 하나당 약 100~300MB를 사용하므로 대용량 파일에서는 금방 누적됩니다.</div>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <div style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">3</div>
+            <div><strong style="color:var(--text);">적절한 압축 수준 설정하기</strong> — 텍스트 위주의 PDF는 어떤 수준에서도 잘 압축됩니다. 고해상도 사진으로 가득한 PDF는 눈에 띄는 품질 저하를 피하려면 중간 수준이 필요합니다.</div>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <div style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">4</div>
+            <div><strong style="color:var(--text);">매우 큰 파일은 여유를 갖고 기다리기</strong> — 500MB 이상을 압축하는 데는 기기에 따라 30~120초가 걸릴 수 있습니다. 진행률 표시줄이 상태를 보여줍니다. 처리 중에는 탭을 닫지 마세요.</div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <h2 style="font-size:26px;color:var(--text);margin:52px 0 20px;font-weight:700;">자주 묻는 질문</h2>
+        <div style="display:flex;flex-direction:column;gap:20px;">
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">100MB보다 큰 PDF도 무료로 압축할 수 있나요?</h3>
+            <p style="margin:0;font-size:14px;">네. PDFree는 파일 용량 제한이 없습니다. 처리가 브라우저에서 완전히 이루어지므로 업로드 제한 없이 100MB, 500MB, 심지어 1GB PDF도 무료로 압축할 수 있습니다.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">iLovePDF는 무료 압축을 25MB로 제한하는데 PDFree는 왜 아닌가요?</h3>
+            <p style="margin:0;font-size:14px;">iLovePDF는 파일을 자체 서버에서 처리하기 때문에 실제 대역폭과 컴퓨팅 비용이 발생합니다. PDFree는 브라우저에서 로컬로 파일을 처리하므로 서버 비용이 없고, 따라서 파일 용량을 제한할 이유가 없습니다.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">압축하면 내 PDF의 용량이 얼마나 줄어드나요?</h3>
+            <p style="margin:0;font-size:14px;">결과는 콘텐츠에 따라 다릅니다. 이미지가 많은 PDF는 보통 40~80% 줄어듭니다. 텍스트 위주의 PDF는 10~30% 줄어듭니다. PDFree는 데스크톱 도구와 동일한 압축 알고리즘을 사용합니다.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">PDF 압축에 일일 제한이 있나요?</h3>
+            <p style="margin:0;font-size:14px;">아니요. SmallPDF(무료 하루 2개 작업)나 iLovePDF(일일 제한)와 달리 PDFree는 일일 제한이 없습니다. 필요한 만큼, 원하는 만큼 자주 PDF를 압축하세요.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">압축할 때 파일이 서버에 업로드되나요?</h3>
+            <p style="margin:0;font-size:14px;">아니요. PDFree는 파일을 절대 업로드하지 않습니다. 압축 작업 전체가 기기의 브라우저 안에서 자바스크립트로 실행됩니다. 문서는 완전히 비공개로 유지되며 어떤 서버에도 도달하지 않습니다.</p>
+          </div>
+        </div>
+
+        <!-- 관련 도구 -->
+        <h2 style="font-size:26px;color:var(--text);margin:52px 0 12px;font-weight:700;">더 많은 무료 도구 — 모두 제한 없음</h2>
+        <ul style="margin:12px 0;padding-left:24px;display:flex;flex-direction:column;gap:8px;">
+          <li><a href="/ko/pdf-daeyongryang-hapchigi/" style="color:var(--green);font-weight:500;">대용량 PDF 파일 무료로 합치기</a> — 업로드 없이 500MB PDF도 결합하기</li>
+          <li><a href="/ko/pdf-apchuk/" style="color:var(--green);font-weight:500;">PDF 압축</a> — 모든 PDF를 위한 표준 압축 도구</li>
+          <li><a href="/ko/pdf-bunhal/" style="color:var(--green);font-weight:500;">PDF 분할</a> — 압축 전에 페이지를 추출해 용량 줄이기</li>
+          <li><a href="/ko/pdf-amho/" style="color:var(--green);font-weight:500;">PDF 보호</a> — 압축한 파일에 비밀번호 추가하기</li>
+          <li><a href="/blog/how-to-compress-pdf-for-email/" style="color:var(--green);font-weight:500;">이메일용 PDF 압축 방법</a> — 이메일 용량 제한을 피하는 단계별 가이드</li>
+        </ul>
+
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    PDFree · <strong>모든 처리는 브라우저에서 100% 이루어집니다</strong> · 파일은 절대 업로드되지 않습니다<br>
+    <span style="color:var(--green)">🔒</span> 문서는 절대 기기를 벗어나지 않습니다 &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> 모두를 위해 영구 무료로 제공됩니다<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
+      <a href="/privacy.html" style="color:var(--green)">개인정보 처리방침</a> &nbsp;·&nbsp;
+      <a href="/terms.html" style="color:var(--green)">이용약관</a> &nbsp;·&nbsp;
+      <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a> &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green)">GitHub</a>
+    </span>
+  </footer>
+
+  <div id="toast"      class="toast" role="status" aria-live="polite"></div>
+  <div id="hero"       style="display:none"></div>
+  <div id="trustAlert" style="display:none"></div>
+  <div id="noLimitBar" style="display:none"></div>
+  <div id="toolsGrid"  style="display:none"></div>
+  <div id="pwaNudge"   style="display:none"></div>
+
+  <script type="module" src="../../js/locales/ko.js"></script>
+  <script type="module" src="../../js/app.js"></script>
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script>
+</body>
+</html>

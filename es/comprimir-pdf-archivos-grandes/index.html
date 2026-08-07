@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src  'self' 'wasm-unsafe-eval' blob:
+                https://cdnjs.cloudflare.com https://esm.sh
+                https://plausible.io https://static.cloudflareinsights.com;
+    style-src   'self' 'unsafe-inline';
+    font-src    'self';
+    img-src     'self' data: blob: https:;
+    connect-src 'self' https://cdnjs.cloudflare.com https://*.workers.dev
+                https://plausible.io https://cloudflareinsights.com;
+    worker-src  'self' blob:;
+    object-src  'none';
+  ">
+
+  <title>Comprimir Archivos PDF Grandes Gratis | PDFree</title>
+  <meta name="description" content="Comprime archivos PDF de cualquier tamaño gratis — 100 MB a 1 GB. Sin límite diario, sin subidas, todo en tu navegador.">
+
+  <meta property="og:title"       content="Comprimir Archivos PDF Grandes Gratis — Sin Límite De 25 MB | PDFree">
+  <meta property="og:description" content="Reduce PDF de cualquier tamaño gratis. Sin límite de subida de 25 MB. Sin límite diario. Comprimido enteramente en tu navegador — tu archivo nunca sale de tu dispositivo.">
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://pdfree.io/es/comprimir-pdf-archivos-grandes/">
+  <meta property="og:site_name"   content="PDFree">
+  <meta property="og:locale"      content="es_ES">
+  <meta property="og:image"        content="https://pdfree.io/icons/og-image.jpg">
+  <meta property="og:image:width"  content="1200">
+  <meta property="og:image:height" content="633">
+  <meta property="og:image:alt"    content="Comprimir Archivos PDF Grandes Gratis — Sin Límite De 25 MB | PDFree">
+  <meta name="twitter:card"       content="summary_large_image">
+  <meta name="twitter:site"       content="@pdfree_io">
+  <meta name="twitter:title"      content="Comprimir Archivos PDF Grandes Gratis — Sin Límite De 25 MB | PDFree">
+  <meta name="twitter:description" content="Reduce PDF de cualquier tamaño gratis. Sin límite de subida de 25 MB. Sin límite diario. Comprimido enteramente en tu navegador — tu archivo nunca sale de tu dispositivo.">
+  <meta name="twitter:image"       content="https://pdfree.io/icons/og-image.jpg">
+  <meta name="twitter:image:alt"   content="Comprimir Archivos PDF Grandes Gratis — Sin Límite De 25 MB | PDFree">
+
+  <link rel="canonical" href="https://pdfree.io/es/comprimir-pdf-archivos-grandes/">
+  <link rel="alternate" hreflang="en"        href="https://pdfree.io/compress-large-pdf-free/">
+  <link rel="alternate" hreflang="de"        href="https://pdfree.io/de/pdf-komprimieren-grosse-dateien/">
+  <link rel="alternate" hreflang="es"        href="https://pdfree.io/es/comprimir-pdf-archivos-grandes/">
+  <link rel="alternate" hreflang="fr"        href="https://pdfree.io/fr/compresser-pdf-fichiers-volumineux/">
+  <link rel="alternate" hreflang="pt"        href="https://pdfree.io/pt/comprimir-pdf-arquivos-grandes/">
+  <link rel="alternate" hreflang="id"        href="https://pdfree.io/id/kompres-pdf-file-besar/">
+  <link rel="alternate" hreflang="vi"        href="https://pdfree.io/vi/nen-pdf-file-lon/">
+  <link rel="alternate" hreflang="ru"        href="https://pdfree.io/ru/szhat-bolshie-pdf/">
+  <link rel="alternate" hreflang="ja"        href="https://pdfree.io/ja/pdf-daiyouryou-atsuryoku/">
+  <link rel="alternate" hreflang="it"        href="https://pdfree.io/it/comprimi-pdf-file-grandi/">
+  <link rel="alternate" hreflang="ko"        href="https://pdfree.io/ko/pdf-daeyongryang-apchuk/">
+  <link rel="alternate" hreflang="nl"        href="https://pdfree.io/nl/pdf-comprimeren-grote-bestanden/">
+  <link rel="alternate" hreflang="pl"        href="https://pdfree.io/pl/kompresuj-duze-pliki-pdf/">
+  <link rel="alternate" hreflang="tr"        href="https://pdfree.io/tr/buyuk-pdf-dosyalarini-sikistir/">
+  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/compress-large-pdf-free/">
+
+  <link rel="manifest" href="../../manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="PDFree">
+  <link rel="apple-touch-icon" href="../../icons/icon-192.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+  <link rel="preconnect" href="https://plausible.io">
+  <link rel="preconnect" href="https://static.cloudflareinsights.com">
+  <link rel="preload" href="../../fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../css/fonts.css">
+  <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/animations.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/components.css">
+
+  <script src="../../js/theme.js"></script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Comprimir Archivos PDF Grandes Sin Límite De Tamaño",
+    "description": "Comprime archivos PDF de cualquier tamaño gratis. Sin límite de tamaño de archivo, sin límite diario. Todo el procesamiento ocurre localmente en el navegador — tu archivo nunca sale de tu dispositivo.",
+    "url": "https://pdfree.io/es/comprimir-pdf-archivos-grandes/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "featureList": [
+      "Sin límite de tamaño de archivo — comprime PDFs de 100 MB, 500 MB, 1 GB",
+      "Sin límite de tareas diarias",
+      "Sin subir a servidores — los archivos permanecen en tu dispositivo",
+      "No requiere cuenta",
+      "Funciona sin conexión"
+    ],
+    "dateModified": "2026-08-07",
+    "provider": {
+      "@type": "Organization",
+      "name": "PDFree",
+      "url": "https://pdfree.io",
+      "description": "PDFree is a free, privacy-first PDF toolkit that runs entirely in the browser — files are processed locally and never uploaded to a server.",
+      "logo": "https://pdfree.io/icons/icon-512.png"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "Cómo Comprimir Archivos PDF Grandes Gratis",
+    "description": "Reduce el tamaño de PDF grandes sin límites de tamaño, sin subirlos y sin pagar.",
+    "totalTime": "PT2M",
+    "tool": [{ "@type": "HowToTool", "name": "PDFree — compresor de PDF gratuito basado en el navegador" }],
+    "step": [
+      { "@type": "HowToStep", "position": 1, "name": "Abrir la herramienta Comprimir de PDFree", "text": "Ve a pdfree.io/es/comprimir-pdf-archivos-grandes/ en Chrome, Firefox o Safari. No necesitas instalación ni cuenta.", "url": "https://pdfree.io/es/comprimir-pdf-archivos-grandes/#step1" },
+      { "@type": "HowToStep", "position": 2, "name": "Suelta tu archivo PDF grande", "text": "Haz clic en «Elegir archivo» o arrástralo y suéltalo. Se aceptan archivos de cualquier tamaño — 100 MB, 500 MB, incluso 1 GB. El procesamiento ocurre en tu navegador, así que no hay límite de subida al servidor.", "url": "https://pdfree.io/es/comprimir-pdf-archivos-grandes/#step2" },
+      { "@type": "HowToStep", "position": 3, "name": "Elige el nivel de compresión", "text": "Selecciona con qué intensidad comprimir. Una compresión mayor reduce más el tamaño, pero puede reducir ligeramente la calidad de las imágenes. En documentos mayormente de texto, incluso la compresión máxima se ve idéntica.", "url": "https://pdfree.io/es/comprimir-pdf-archivos-grandes/#step3" },
+      { "@type": "HowToStep", "position": 4, "name": "Comprime y descarga", "text": "Haz clic en «Comprimir PDF». El procesamiento puede tardar entre 15 y 90 segundos con archivos muy grandes. El PDF comprimido se descarga directamente en tu dispositivo.", "url": "https://pdfree.io/es/comprimir-pdf-archivos-grandes/#step4" }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "¿Puedo comprimir un PDF de más de 100 MB gratis?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Sí. PDFree no tiene límite de tamaño de archivo. Puedes comprimir PDFs de 100 MB, 500 MB o más de forma gratuita. Como el procesamiento ocurre completamente en tu navegador — no en un servidor —, no hay límite de subida ni costes de ancho de banda que obliguen a imponer un tope de tamaño." }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Por qué iLovePDF limita la compresión gratuita a 25 MB?",
+        "acceptedAnswer": { "@type": "Answer", "text": "iLovePDF comprime los archivos en sus servidores, lo que genera costes de ancho de banda y almacenamiento. Para controlar esos costes en los usuarios gratuitos, imponen límites de tamaño de archivo y topes diarios. PDFree comprime todo localmente en tu navegador, así que no hay costes de servidor — y por lo tanto no hay límites." }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Cuánto puede comprimir PDFree un PDF grande?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Los resultados de compresión varían según el contenido. Los PDF con muchas imágenes incrustadas suelen reducirse entre un 40 % y un 80 %. Los PDF con mucho texto comprimen menos — normalmente entre un 10 % y un 30 %. PDFree usa los mismos algoritmos de compresión que las herramientas de escritorio, ejecutándose por completo en tu navegador." }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Hay un límite diario de cuántos PDF puedo comprimir?",
+        "acceptedAnswer": { "@type": "Answer", "text": "No. PDFree no tiene límites de uso diario. A diferencia de SmallPDF (2 tareas al día en el plan gratuito) o iLovePDF (límites diarios en cuentas gratuitas), PDFree te permite comprimir tantos PDF como necesites, tan a menudo como quieras, gratis." }
+      },
+      {
+        "@type": "Question",
+        "name": "¿La compresión reducirá la calidad de mi PDF?",
+        "acceptedAnswer": { "@type": "Answer", "text": "En documentos mayormente de texto, la compresión no tiene un impacto visible en la calidad — el texto sigue nítido. En PDF con fotos, los niveles de compresión más altos reducen la resolución de las imágenes, lo que puede notarse al mirar de cerca. Elige un nivel de compresión moderado para equilibrar la reducción de tamaño con la calidad de las imágenes." }
+      }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "PDFree", "item": "https://pdfree.io/" },
+      { "@type": "ListItem", "position": 2, "name": "Comprimir PDF", "item": "https://pdfree.io/es/comprimir-pdf/" },
+      { "@type": "ListItem", "position": 3, "name": "Comprimir Archivos PDF Grandes Gratis", "item": "https://pdfree.io/es/comprimir-pdf-archivos-grandes/" }
+    ]
+  }
+  </script>
+</head>
+<body data-tool="compress">
+
+  <nav>
+    <a href="/es/" class="logo" id="logo" aria-label="Ir a la página de inicio" style="text-decoration:none">
+      <div class="logo-icon" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+      </div>
+      <span class="logo-text">PDF<span>ree</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="/es/unir-pdf/" class="nav-link" data-tool="merge">Unir</a>
+      <a href="/es/dividir-pdf/" class="nav-link" data-tool="split">Dividir</a>
+      <a href="/es/comprimir-pdf/" class="nav-link" data-tool="compress">Comprimir</a>
+      <a href="/es/jpg-a-pdf/" class="nav-link" data-tool="jpg2pdf">JPG→PDF</a>
+      <a href="/es/pdf-a-jpg/" class="nav-link" data-tool="pdf2jpg">PDF→JPG</a>
+      <a href="/es/marca-de-agua-pdf/" class="nav-link" data-tool="watermark">Marca de agua</a>
+      <a href="/es/numeros-de-pagina-pdf/" class="nav-link" data-tool="pagenum">Núm. página</a>
+      <a href="/es/metadatos-pdf/" class="nav-link" data-tool="meta">Metadatos</a>
+      <a href="/es/extraer-pdf/" class="nav-link" data-tool="extract">Extraer</a>
+      <a href="/es/dibujar-en-pdf/" class="nav-link" data-tool="draw-pdf">Dibujar</a>
+      <a href="/es/rotar-pdf/" class="nav-link" data-tool="rotate">Rotar</a>
+      <a href="/es/proteger-pdf/" class="nav-link" data-tool="protect">Proteger</a>
+      <a href="/es/ocr-pdf/" class="nav-link" data-tool="ocr">OCR</a>
+      <a href="/es/pdf-a-word/" class="nav-link" data-tool="pdf2word">PDF→Word</a>
+      <a href="/es/aplanar-pdf/" class="nav-link" data-tool="flatten">Bloquear PDF</a>
+      <a href="/compare-pdf/" class="nav-link" data-tool="compare">Comparar</a>
+    </div>
+    <button id="themeToggle" class="theme-toggle" aria-label="Cambiar modo oscuro" title="Cambiar modo oscuro"></button>
+  </nav>
+
+  <nav aria-label="Breadcrumb" style="position:static;padding:8px 24px;border-bottom:1px solid var(--border);background:var(--surface);">
+    <ol style="list-style:none;margin:0;padding:0;display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text3);"
+        itemscope itemtype="https://schema.org/BreadcrumbList">
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a href="/es/" itemprop="item" style="color:var(--green);text-decoration:none;font-weight:500;">
+          <span itemprop="name">PDFree</span></a>
+        <meta itemprop="position" content="1">
+      </li>
+      <li aria-hidden="true" style="color:var(--text3);">›</li>
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a href="/es/comprimir-pdf-archivos-grandes/" itemprop="item" style="color:var(--green);text-decoration:none;font-weight:500;">
+          <span itemprop="name">Comprimir PDF</span></a>
+        <meta itemprop="position" content="2">
+      </li>
+      <li aria-hidden="true" style="color:var(--text3);">›</li>
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <span itemprop="name" aria-current="page" style="color:var(--text2);">Comprimir Archivos PDF Grandes Gratis</span>
+        <meta itemprop="position" content="3">
+      </li>
+    </ol>
+  </nav>
+
+  <!-- Banner de título compacto -->
+  <section style="background:var(--green-light);border-bottom:1px solid rgba(45,122,79,0.15);padding:24px 24px 20px;text-align:center;">
+    <div style="max-width:720px;margin:0 auto;">
+      <h1 style="font-size:clamp(22px,3.5vw,34px);font-weight:700;letter-spacing:-0.5px;line-height:1.2;color:var(--text);margin:0 0 6px;">Comprimir Archivos PDF Grandes Gratis — Sin Límite De Tamaño</h1>
+      <p style="font-size:14px;color:var(--green);margin:0;font-weight:500;">100 MB, 500 MB, 1 GB — cualquier tamaño. Sin subidas, sin cuenta, sin límite diario.</p>
+    </div>
+  </section>
+
+  <!-- Herramienta -->
+  <div id="tool"></div>
+  <main id="toolArea" class="main-area" aria-busy="false">
+    <div class="tool-header">
+      <div class="tool-header-icon" id="toolIcon" aria-hidden="true">🗜️</div>
+      <div class="tool-header-text">
+        <h2 id="toolTitle">Comprimir PDF — cualquier tamaño, sin límites</h2>
+        <p  id="toolDesc">Suelta un archivo de cualquier tamaño. La RAM de tu dispositivo es el único límite — sin servidor, sin tope de subida.</p>
+      </div>
+    </div>
+
+    <div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-label="Subir archivo — haz clic o arrastra y suelta">
+      <input type="file" id="fileInput" accept=".pdf" aria-hidden="true">
+      <span class="drop-icon" aria-hidden="true">📂</span>
+      <div class="drop-title">Suelta aquí un archivo PDF grande</div>
+      <div class="drop-sub">Se acepta cualquier tamaño de archivo — 100 MB, 500 MB, 1 GB y más</div>
+      <label class="drop-btn" id="chooseFilesBtn" for="fileInput">Elegir archivo</label>
+    </div>
+
+    <div id="fileList"    class="file-list" aria-live="polite"></div>
+    <div id="fileCount"   class="file-count"   style="display:none"></div>
+    <div id="reorderHint" class="reorder-hint" style="display:none"></div>
+
+    <div id="splitOptions"     style="display:none"></div>
+    <div id="compressOptions"  style="display:none"></div>
+    <div id="jpg2pdfOptions"   style="display:none"></div>
+    <div id="pdf2jpgOptions"   style="display:none"></div>
+    <div id="watermarkOptions" style="display:none"></div>
+    <div id="pageNumOptions"   style="display:none"></div>
+    <div id="metaOptions"      style="display:none"></div>
+    <div id="protectOptions"   style="display:none"></div>
+    <div id="redactOptions"    style="display:none"></div>
+    <div id="rotateOptions"    style="display:none"></div>
+    <div id="pdf2wordOptions"  class="j2p-options"     style="display:none" aria-label="PDF to Word options"></div>
+
+    <button id="mergeBtn"  class="merge-btn"  type="button" disabled data-mode="process">Comprimir PDF</button>
+    <button id="cancelBtn" class="cancel-btn" type="button" style="display:none">✕ Cancelar</button>
+
+    <div id="progressBar"   class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+    <div id="progressLabel" class="progress-label"></div>
+
+    <div id="successCard" class="success-card" role="alert" aria-live="polite" style="display:none">
+      <div class="success-top">
+        <div class="success-icon">✓</div>
+        <div class="success-text">
+          <h3 id="successTitle">¡Listo!</h3>
+          <p  id="successDesc"></p>
+        </div>
+        <button id="downloadBtn" class="download-btn" type="button">⬇ Descargar</button>
+        <button id="shareBtn" class="share-btn" type="button" style="display:none" aria-label="Enviar archivo mediante apps del dispositivo"></button>
+      </div>
+      <div id="privacyCleared" class="privacy-cleared" aria-live="polite">
+        <span class="privacy-cleared__icon" aria-hidden="true">🛡️</span>
+        <div class="privacy-cleared__body">
+          <strong class="privacy-cleared__title">Archivo eliminado de la memoria</strong>
+          <span class="privacy-cleared__sub">Tu documento no ha dejado rastro en ningún servidor.</span>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Contenido SEO -->
+  <hr style="border:none;border-top:2px solid var(--border);margin:48px 24px 0;" aria-hidden="true">
+  <section class="seo-article">
+    <div class="seo-article__inner">
+      <div class="seo-content" style="max-width:800px;margin:60px auto 40px;padding:0 24px;color:var(--text2);line-height:1.8;">
+
+        <h2 style="font-size:26px;color:var(--text);margin:0 0 16px;font-weight:700;">Por Qué Otras Herramientas De PDF Limitan La Compresión A 25 MB</h2>
+        <p>Los límites de tamaño en los compresores de PDF existen porque comprimir en un servidor cuesta dinero. Cada 100 MB que subes consume ancho de banda, almacenamiento y tiempo de CPU en la infraestructura del proveedor. Para proteger esa infraestructura del abuso — y empujar a los usuarios hacia planes de pago — los niveles gratuitos quedan limitados a 25 MB, 5 MB o 2 tareas al día.</p>
+        <p>PDFree elimina este problema por completo: <strong>tu archivo nunca sale de tu navegador</strong>. El algoritmo de compresión se ejecuta en JavaScript en tu dispositivo. No hay costes de servidor que cubrir, así que no hay límites que imponer.</p>
+
+        <div style="background:var(--green-light);border-left:4px solid var(--green);padding:18px 20px;border-radius:0 8px 8px 0;margin:28px 0;">
+          <p style="margin:0;font-size:14px;color:var(--text);"><strong>El límite real:</strong> la RAM de tu dispositivo. Un portátil o teléfono moderno con 8 GB de RAM o más puede comprimir cómodamente PDF de hasta varios cientos de megabytes. Con archivos de más de 500 MB, cierra otras pestañas del navegador para liberar memoria antes de comprimir.</p>
+        </div>
+
+        <!-- Cuándo lo necesitas -->
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 16px;font-weight:700;">Cuándo Necesitas Comprimir Un PDF Grande</h2>
+        <div style="display:flex;flex-direction:column;gap:16px;margin:16px 0 32px;">
+          <div style="border-left:3px solid var(--green);padding:14px 18px;background:var(--surface);border-radius:0 8px 8px 0;">
+            <strong style="color:var(--text);">Adjuntos de correo</strong>
+            <p style="margin:6px 0 0;font-size:14px;">Gmail y Outlook limitan los adjuntos a 25 MB. Un informe escaneado de 40 MB no pasará. Comprímelo a 8 MB y envíalo sin necesitar un enlace en la nube.</p>
+          </div>
+          <div style="border-left:3px solid var(--green);padding:14px 18px;background:var(--surface);border-radius:0 8px 8px 0;">
+            <strong style="color:var(--text);">Portales de trámites gubernamentales y judiciales</strong>
+            <p style="margin:6px 0 0;font-size:14px;">Muchos sistemas de presentación electrónica limitan las subidas a 10 MB o 20 MB. Los documentos legales con anexos escaneados suelen alcanzar 50-200 MB. Comprime localmente para quedarte dentro del límite del portal.</p>
+          </div>
+          <div style="border-left:3px solid var(--green);padding:14px 18px;background:var(--surface);border-radius:0 8px 8px 0;">
+            <strong style="color:var(--text);">Compartir desde el móvil</strong>
+            <p style="margin:6px 0 0;font-size:14px;">WhatsApp limita los archivos a 100 MB. Un plano arquitectónico de 180 MB no se puede enviar. Comprímelo primero y compártelo directamente desde tu teléfono.</p>
+          </div>
+          <div style="border-left:3px solid var(--green);padding:14px 18px;background:var(--surface);border-radius:0 8px 8px 0;">
+            <strong style="color:var(--text);">Antes de unir varios PDF grandes</strong>
+            <p style="margin:6px 0 0;font-size:14px;">Unir cinco PDF de 80 MB genera un archivo de 400 MB. Comprime cada uno primero y luego <a href="/es/unir-pdf-archivos-grandes/" style="color:var(--green);">únelos</a> para obtener un documento final práctico de guardar y compartir.</p>
+          </div>
+        </div>
+
+        <!-- Tabla comparativa -->
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 16px;font-weight:700;">Límites De Tamaño Para Comprimir PDF: PDFree Vs. La Competencia</h2>
+        <div style="overflow-x:auto;margin:16px 0 32px;">
+          <table style="width:100%;border-collapse:collapse;font-size:14px;min-width:480px;">
+            <thead>
+              <tr style="border-bottom:2px solid var(--border);">
+                <th style="text-align:left;padding:10px 14px;color:var(--text);font-weight:600;">Herramienta</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">Límite de tamaño</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">Límite diario</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">¿Se suben los archivos?</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom:1px solid var(--border);background:var(--green-light);">
+                <td style="padding:10px 14px;color:var(--green);font-weight:700;">PDFree</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">Ninguno</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">Ninguno</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">Nunca</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 14px;color:var(--text);">iLovePDF (gratis)</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">~25 MB</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Limitado</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Sí — a sus servidores</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 14px;color:var(--text);">SmallPDF (gratis)</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">~5 MB comprimido</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">2 tareas/día</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Sí — a sus servidores</td>
+              </tr>
+              <tr>
+                <td style="padding:10px 14px;color:var(--text);">Adobe Acrobat</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">100 MB (de pago)</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Ilimitado (de pago)</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Sí — a la nube de Adobe</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Consejos -->
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 16px;font-weight:700;">Consejos Para Comprimir Archivos PDF Muy Grandes</h2>
+        <div style="display:flex;flex-direction:column;gap:16px;margin:16px 0;">
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <div style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">1</div>
+            <div><strong style="color:var(--text);">Usa Chrome o Edge</strong> — tienen los motores de JavaScript más eficientes y manejan mejor las operaciones de memoria grandes. Firefox funciona, pero puede ser más lento con archivos de 500 MB o más.</div>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <div style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">2</div>
+            <div><strong style="color:var(--text);">Cierra otras pestañas primero</strong> — liberar RAM le da al navegador más margen para la operación de compresión. Cada pestaña usa entre 100 y 300 MB aproximadamente, lo que se acumula rápido con archivos grandes.</div>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <div style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">3</div>
+            <div><strong style="color:var(--text);">Elige el nivel de compresión adecuado</strong> — los PDF con mucho texto comprimen bien en cualquier nivel. Los PDF llenos de fotos de alta resolución necesitan un nivel moderado para evitar pérdidas visibles de calidad.</div>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <div style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">4</div>
+            <div><strong style="color:var(--text);">Ten paciencia con archivos muy grandes</strong> — comprimir 500 MB o más puede tardar entre 30 y 120 segundos según tu dispositivo. Una barra de progreso muestra el estado. No cierres la pestaña mientras se procesa.</div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <h2 style="font-size:26px;color:var(--text);margin:52px 0 20px;font-weight:700;">Preguntas Frecuentes</h2>
+        <div style="display:flex;flex-direction:column;gap:20px;">
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">¿Puedo comprimir un PDF de más de 100 MB gratis?</h3>
+            <p style="margin:0;font-size:14px;">Sí. PDFree no tiene límite de tamaño de archivo. Puedes comprimir PDF de 100 MB, 500 MB o incluso 1 GB gratis porque el procesamiento ocurre completamente en tu navegador — sin subida al servidor significa sin límite de subida.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">¿Por qué iLovePDF limita la compresión gratuita a 25 MB pero PDFree no?</h3>
+            <p style="margin:0;font-size:14px;">iLovePDF procesa los archivos en sus servidores, lo que genera costes reales de ancho de banda y cómputo. PDFree procesa los archivos localmente en tu navegador — no hay costes de servidor, así que no hay motivo para limitar el tamaño de los archivos.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">¿Cuánto reducirá la compresión el tamaño de mi PDF?</h3>
+            <p style="margin:0;font-size:14px;">El resultado depende del contenido. Los PDF con muchas imágenes suelen reducirse entre un 40 % y un 80 %. Los PDF con mucho texto comprimen entre un 10 % y un 30 %. PDFree usa los mismos algoritmos de compresión que las herramientas de escritorio.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">¿Hay un límite diario de compresiones de PDF?</h3>
+            <p style="margin:0;font-size:14px;">No. A diferencia de SmallPDF (2 tareas/día gratis) o iLovePDF (límites diarios), PDFree no tiene tope diario. Comprime tantos PDF como necesites, tan a menudo como quieras.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">¿Se sube mi archivo a un servidor cuando lo comprimo?</h3>
+            <p style="margin:0;font-size:14px;">No. PDFree nunca sube tu archivo. Toda la operación de compresión se ejecuta en JavaScript dentro de tu navegador, en tu dispositivo. Tu documento permanece completamente privado — nunca llega a ningún servidor.</p>
+          </div>
+        </div>
+
+        <!-- Relacionados -->
+        <h2 style="font-size:26px;color:var(--text);margin:52px 0 12px;font-weight:700;">Más Herramientas Gratis — Sin Límites En Ninguna</h2>
+        <ul style="margin:12px 0;padding-left:24px;display:flex;flex-direction:column;gap:8px;">
+          <li><a href="/es/unir-pdf-archivos-grandes/" style="color:var(--green);font-weight:500;">Unir archivos PDF grandes gratis</a> — combina PDF de 500 MB sin subirlos</li>
+          <li><a href="/es/comprimir-pdf/" style="color:var(--green);font-weight:500;">Comprimir PDF</a> — herramienta de compresión estándar para cualquier PDF</li>
+          <li><a href="/es/dividir-pdf/" style="color:var(--green);font-weight:500;">Dividir PDF</a> — extrae páginas para reducir el tamaño antes de comprimir</li>
+          <li><a href="/es/proteger-pdf/" style="color:var(--green);font-weight:500;">Proteger PDF</a> — añade una contraseña a tu archivo comprimido</li>
+          <li><a href="/es/blog/comprimir-pdf-para-correo/" style="color:var(--green);font-weight:500;">Cómo Comprimir PDF Para Correo</a> — guía paso a paso para superar los límites de tamaño del correo</li>
+        </ul>
+
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    PDFree · <strong>Todo el procesamiento ocurre 100 % en tu navegador</strong> · Los archivos <strong>nunca se suben</strong><br>
+    <span style="color:var(--green)">🔒</span> Tus documentos nunca salen de tu dispositivo &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> Creado para ser gratis para todos, para siempre<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
+      <a href="/privacy.html" style="color:var(--green)">Privacidad</a> &nbsp;·&nbsp;
+      <a href="/terms.html" style="color:var(--green)">Términos</a> &nbsp;·&nbsp;
+      <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a> &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green)">GitHub</a>
+    </span>
+  </footer>
+
+  <div id="toast"      class="toast" role="status" aria-live="polite"></div>
+  <div id="hero"       style="display:none"></div>
+  <div id="trustAlert" style="display:none"></div>
+  <div id="noLimitBar" style="display:none"></div>
+  <div id="toolsGrid"  style="display:none"></div>
+  <div id="pwaNudge"   style="display:none"></div>
+
+  <script type="module" src="../../js/locales/es.js"></script>
+  <script type="module" src="../../js/app.js"></script>
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script>
+</body>
+</html>

@@ -12,6 +12,11 @@
 /split-pdf-every-page/ /split-pdf/ 301
 /split-pdf-free-no-watermark/ /split-pdf/ 301
 
+# Consolidated into /merge-large-pdf-files/ — near-duplicate "no size limit"
+# intent with zero internal links; unique tips/FAQ merged into the target
+# page (now localized across 13 languages)
+/merge-pdf-no-size-limit/ /merge-large-pdf-files/ 301
+
 # Common alternate spellings / search intent URLs
 /pdf-to-jpg/ /pdf2jpg/ 301
 /pdf-to-jpg /pdf2jpg/ 301

@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src  'self' 'wasm-unsafe-eval' blob:
+                https://cdnjs.cloudflare.com https://esm.sh
+                https://plausible.io https://static.cloudflareinsights.com;
+    style-src   'self' 'unsafe-inline';
+    font-src    'self';
+    img-src     'self' data: blob: https:;
+    connect-src 'self' https://cdnjs.cloudflare.com https://*.workers.dev
+                https://plausible.io https://cloudflareinsights.com;
+    worker-src  'self' blob:;
+    object-src  'none';
+  ">
+
+  <title>大容量PDFファイルを無料で結合 | PDFree</title>
+  <meta name="description" content="どんなサイズのPDFも無料で結合 — 100MBから1GBまで。サイズ制限なし、1日の上限なし、アップロード不要。">
+
+  <meta property="og:title"       content="大容量PDFファイルを無料で結合 — サイズ制限なし | PDFree">
+  <meta property="og:description" content="どんなサイズのPDFも無料で結合。25MB制限なし。1日の上限なし。ブラウザ内でローカル処理。">
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://pdfree.io/ja/pdf-daiyouryou-ketsugou/">
+  <meta property="og:site_name"   content="PDFree">
+  <meta property="og:image"        content="https://pdfree.io/icons/og-image.jpg">
+  <meta property="og:image:width"  content="1200">
+  <meta property="og:image:height" content="633">
+  <meta property="og:image:alt"    content="大容量PDFファイルを無料で結合 — サイズ制限なし | PDFree">
+  <meta name="twitter:card"       content="summary_large_image">
+  <meta name="twitter:site"       content="@pdfree_io">
+  <meta name="twitter:title"      content="大容量PDFファイルを無料で結合 — サイズ制限なし | PDFree">
+  <meta name="twitter:description" content="どんなサイズのPDFも無料で結合。25MB制限なし。1日の上限なし。ブラウザ内でローカル処理。">
+  <meta name="twitter:image"       content="https://pdfree.io/icons/og-image.jpg">
+  <meta name="twitter:image:alt"   content="大容量PDFファイルを無料で結合 — サイズ制限なし | PDFree">
+
+  <link rel="canonical" href="https://pdfree.io/ja/pdf-daiyouryou-ketsugou/">
+  <link rel="alternate" hreflang="en"        href="https://pdfree.io/merge-large-pdf-files/">
+  <link rel="alternate" hreflang="de"        href="https://pdfree.io/de/pdf-zusammenfuehren-grosse-dateien/">
+  <link rel="alternate" hreflang="es"        href="https://pdfree.io/es/unir-pdf-archivos-grandes/">
+  <link rel="alternate" hreflang="fr"        href="https://pdfree.io/fr/fusionner-pdf-fichiers-volumineux/">
+  <link rel="alternate" hreflang="pt"        href="https://pdfree.io/pt/juntar-pdf-arquivos-grandes/">
+  <link rel="alternate" hreflang="id"        href="https://pdfree.io/id/gabung-pdf-file-besar/">
+  <link rel="alternate" hreflang="vi"        href="https://pdfree.io/vi/ghep-pdf-file-lon/">
+  <link rel="alternate" hreflang="ru"        href="https://pdfree.io/ru/objedinit-bolshie-pdf/">
+  <link rel="alternate" hreflang="ja"        href="https://pdfree.io/ja/pdf-daiyouryou-ketsugou/">
+  <link rel="alternate" hreflang="it"        href="https://pdfree.io/it/unisci-pdf-file-grandi/">
+  <link rel="alternate" hreflang="ko"        href="https://pdfree.io/ko/pdf-daeyongryang-hapchigi/">
+  <link rel="alternate" hreflang="nl"        href="https://pdfree.io/nl/pdf-samenvoegen-grote-bestanden/">
+  <link rel="alternate" hreflang="pl"        href="https://pdfree.io/pl/polacz-duze-pliki-pdf/">
+  <link rel="alternate" hreflang="tr"        href="https://pdfree.io/tr/buyuk-pdf-dosyalarini-birlestir/">
+  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/merge-large-pdf-files/">
+
+  <link rel="manifest" href="../../manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="PDFree">
+  <link rel="apple-touch-icon" href="../../icons/icon-192.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+  <link rel="preconnect" href="https://plausible.io">
+  <link rel="preconnect" href="https://static.cloudflareinsights.com">
+  <link rel="preload" href="../../fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../css/fonts.css">
+  <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/animations.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/components.css">
+
+  <script src="../../js/theme.js"></script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "大容量PDFファイルの結合 — サイズ制限なし",
+    "description": "どんなサイズのPDFファイルも無料で結合。ファイルサイズ制限なし、1日の上限なし。すべての処理はブラウザ内でローカルに行われます。",
+    "url": "https://pdfree.io/ja/pdf-daiyouryou-ketsugou/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "featureList": [
+      "ファイルサイズ制限なし — 100MB、500MB、1GBのPDFを結合",
+      "1日のタスク上限なし",
+      "サーバーへのアップロードなし — ファイルは端末に残ります",
+      "アカウント登録不要",
+      "オフラインで動作"
+    ],
+    "dateModified": "2026-08-07",
+    "provider": {
+      "@type": "Organization",
+      "name": "PDFree",
+      "url": "https://pdfree.io",
+      "description": "PDFree is a free, privacy-first PDF toolkit that runs entirely in the browser — files are processed locally and never uploaded to a server.",
+      "logo": "https://pdfree.io/icons/icon-512.png"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "大容量PDFファイルを無料で結合する方法",
+    "description": "サイズ制限なし、アップロードなし、料金なしで大容量PDFファイルを結合します。",
+    "totalTime": "PT2M",
+    "tool": [{ "@type": "HowToTool", "name": "PDFree — 無料のブラウザベースPDF結合ツール" }],
+    "step": [
+      { "@type": "HowToStep", "position": 1, "name": "PDFreeの結合ツールを開く", "text": "Chrome、Firefox、Safariでpdfree.io/ja/pdf-daiyouryou-ketsugou/にアクセスします。インストールもアカウントも不要です。", "url": "https://pdfree.io/ja/pdf-daiyouryou-ketsugou/#step1" },
+      { "@type": "HowToStep", "position": 2, "name": "大容量PDFファイルを追加", "text": "「ファイルを選択」をクリックするか、ドラッグ&ドロップします。100MB、500MB、1GBなど、どんなサイズのファイルでも受け付けます。処理はブラウザ内で行われるため、サーバーへのアップロード上限はありません。", "url": "https://pdfree.io/ja/pdf-daiyouryou-ketsugou/#step2" },
+      { "@type": "HowToStep", "position": 3, "name": "順序を並び替える", "text": "ファイルを上下にドラッグして、結合後の文書に表示される順序を設定します。", "url": "https://pdfree.io/ja/pdf-daiyouryou-ketsugou/#step3" },
+      { "@type": "HowToStep", "position": 4, "name": "結合してダウンロード", "text": "「PDFファイルを結合」をクリックします。非常に大きなファイルの場合、処理に10〜60秒かかることがあります。結合されたPDFは直接端末にダウンロードされます。", "url": "https://pdfree.io/ja/pdf-daiyouryou-ketsugou/#step4" }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "100MBを超えるPDFファイルを無料で結合できますか？",
+        "acceptedAnswer": { "@type": "Answer", "text": "はい。PDFreeにはファイルサイズ制限がありません。100MB、500MB、あるいはそれ以上のPDFを無料で結合できます。処理はサーバーではなく完全にブラウザ内で行われるため、アップロード上限やサイズ制限を強いる帯域幅コストが発生しません。" }
+      },
+      {
+        "@type": "Question",
+        "name": "なぜiLovePDFには25MBのファイルサイズ制限があるのですか？",
+        "acceptedAnswer": { "@type": "Answer", "text": "iLovePDFはサーバー上でファイルを処理するため、帯域幅とストレージのコストが発生します。無料ユーザーのコストを抑えるため、ファイルサイズ制限を設けています。PDFreeはすべての処理をブラウザ内でローカルに行うため、サーバーコストが発生せず、サイズ制限もありません。" }
+      },
+      {
+        "@type": "Question",
+        "name": "PDFreeはどのくらいの大きさのPDFを結合できますか？",
+        "acceptedAnswer": { "@type": "Answer", "text": "実質的な上限はお使いの端末で利用可能なRAM容量です。現代のパソコンやスマートフォンであれば、数百MBまでのPDFは問題なく処理できます。非常に大きなファイル（500MB以上）の場合は、少なくとも2〜4GBの空きRAMを確保してください。" }
+      },
+      {
+        "@type": "Question",
+        "name": "非常に大きなファイルを結合中にブラウザがクラッシュした場合はどうすればよいですか？",
+        "acceptedAnswer": { "@type": "Answer", "text": "他のブラウザタブを閉じてメモリを解放してから、もう一度お試しください — 開いているタブはそれぞれ結合に使えないメモリを消費しています。少人数のバッチで結合する（一度に5〜10ファイルずつ結合し、その結果をさらに結合する）ことでも、一度に使うメモリを減らせます。結合前に「PDFを圧縮」ツールで各ファイルを先に圧縮し、合計サイズを小さくすることもできます。" }
+      },
+      {
+        "@type": "Question",
+        "name": "1日に結合できるPDFの数に制限はありますか？",
+        "acceptedAnswer": { "@type": "Answer", "text": "いいえ。PDFreeには1日の利用制限がありません。SmallPDF（無料プランで1日2タスクまで）やiLovePDF（無料アカウントに1日の上限あり）とは異なり、PDFreeでは必要なだけ、好きなだけ無料でPDFを結合できます。" }
+      },
+      {
+        "@type": "Question",
+        "name": "一度に何個のPDFファイルを結合できますか？",
+        "acceptedAnswer": { "@type": "Answer", "text": "ファイル数に制限はありません。1回の操作で2個、50個、100個、あるいはそれ以上のPDFファイルを結合できます。PDFreeはすべての処理をブラウザのメモリ内で行うため、実質的な制約は端末で利用可能なRAM容量のみです。現代のパソコンであれば、合計数百MBに及ぶ100以上のファイルも問題なく処理できます。" }
+      },
+      {
+        "@type": "Question",
+        "name": "50個や100個のPDFファイルを一度に無料で結合できますか？",
+        "acceptedAnswer": { "@type": "Answer", "text": "はい。PDFreeには1回の結合あたりのファイル数制限も、1日の利用上限もありません。すべてのファイルを一度にドロップし、順序を整えて「結合」をクリックするだけです。結果は直接端末にダウンロードされ、サーバーへのアップロードは一切不要です。" }
+      },
+      {
+        "@type": "Question",
+        "name": "なぜ大容量PDFの結合はiLovePDFでは遅く、PDFreeでは速いのですか？",
+        "acceptedAnswer": { "@type": "Answer", "text": "iLovePDFではファイルをサーバーにアップロードし、そこで処理してから結果をダウンロードする必要があります — この3段階の通信が、大きなファイルでは大きな時間を要します。PDFreeはネットワーク転送なしにすべてブラウザ内でローカルに処理するため、速度はインターネット接続ではなく端末のCPU性能だけに依存します。" }
+      }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "PDFree", "item": "https://pdfree.io/" },
+      { "@type": "ListItem", "position": 2, "name": "PDF結合", "item": "https://pdfree.io/ja/pdf-ketsugou/" },
+      { "@type": "ListItem", "position": 3, "name": "大容量PDFファイルの結合", "item": "https://pdfree.io/ja/pdf-daiyouryou-ketsugou/" }
+    ]
+  }
+  </script>
+</head>
+<body data-tool="merge">
+
+  <nav>
+    <a href="../../" class="logo" id="logo" aria-label="ホームへ" style="text-decoration:none">
+      <div class="logo-icon" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+      </div>
+      <span class="logo-text">PDF<span>ree</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="../pdf-ketsugou/" class="nav-link" data-tool="merge">結合</a>
+      <a href="../pdf-bunkatsu/" class="nav-link" data-tool="split">分割</a>
+      <a href="../pdf-atsuryoku/" class="nav-link" data-tool="compress">圧縮</a>
+      <a href="../jpg-pdf-henkan/" class="nav-link" data-tool="jpg2pdf">JPG→PDF</a>
+      <a href="../pdf-jpg-henkan/" class="nav-link" data-tool="pdf2jpg">PDF→JPG</a>
+      <a href="../pdf-sukashi/" class="nav-link" data-tool="watermark">透かし</a>
+      <a href="../pdf-page-bango/" class="nav-link" data-tool="pagenum">ページ番号</a>
+      <a href="../pdf-metadeta/" class="nav-link" data-tool="meta">メタデータ</a>
+      <a href="../pdf-chushutsu/" class="nav-link" data-tool="extract">抽出</a>
+      <a href="/draw-on-pdf/" class="nav-link" data-tool="draw-pdf">Draw</a>
+      <a href="../pdf-kaiten/" class="nav-link" data-tool="rotate">回転</a>
+      <a href="../pdf-password/" class="nav-link" data-tool="protect">保護</a>
+      <a href="../pdf-word-henkan/" class="nav-link" data-tool="pdf2word">PDF→Word</a>
+      <a href="../pdf-excel-henkan/" class="nav-link" data-tool="pdf2excel">PDFからExcel</a>
+      <a href="../pdf-powerpoint-henkan/" class="nav-link" data-tool="pdf2ppt">PDFからPowerPoint</a>
+      <a href="../pdf-markdown-henkan/" class="nav-link" data-tool="pdf2md">PDFからMarkdown</a>
+      <a href="../pdf-kaijo/" class="nav-link" data-tool="unlock">PDFのロック解除</a>
+      <a href="/compare-pdf/" class="nav-link" data-tool="compare">Compare</a>
+    </div>
+    <button id="themeToggle" class="theme-toggle" aria-label="ダークモード切替" title="ダークモード切替"></button>
+  </nav>
+
+  <!-- コンパクトなタイトルバナー — ツールがすぐ下に続く -->
+  <section style="background:var(--green-light);border-bottom:1px solid rgba(45,122,79,0.15);padding:24px 24px 20px;text-align:center;">
+    <div style="max-width:720px;margin:0 auto;">
+      <h1 style="font-size:clamp(22px,3.5vw,34px);font-weight:700;letter-spacing:-0.5px;line-height:1.2;color:var(--text);margin:0 0 6px;">大容量PDFファイルを無料で結合 — サイズ制限なし、ファイル数制限なし</h1>
+      <p style="font-size:14px;color:var(--green);margin:0;font-weight:500;">100MB、500MB、1GB — どんなサイズでも。2、50、100以上のファイル — どんな数でも。アップロード不要、アカウント不要、制限なし。</p>
+    </div>
+  </section>
+
+  <!-- ツール -->
+  <div id="tool"></div>
+  <main id="toolArea" class="main-area" aria-busy="false">
+    <div class="tool-header">
+      <div class="tool-header-icon" id="toolIcon" aria-hidden="true">🔗</div>
+      <div class="tool-header-text">
+        <h2 id="toolTitle">PDFファイルを結合 — サイズ無制限、制限なし</h2>
+        <p  id="toolDesc">どんなサイズのファイルでもドロップできます。制限となるのは端末のRAMだけ — サーバーなし、アップロード上限なし。</p>
+      </div>
+    </div>
+
+    <div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-label="ファイルをアップロード — クリックまたはドラッグ&ドロップ">
+      <input type="file" id="fileInput" multiple accept=".pdf" aria-hidden="true">
+      <span class="drop-icon" aria-hidden="true">📂</span>
+      <div class="drop-title">PDFファイルをここにドロップ — サイズ・数を問いません</div>
+      <div class="drop-sub">100MB、500MB、1GB以上のファイル · 2、50、100以上のファイル · 制限なし</div>
+      <label class="drop-btn" id="chooseFilesBtn" for="fileInput">ファイルを選択</label>
+    </div>
+
+    <div id="fileList"    class="file-list" aria-live="polite"></div>
+    <div id="fileCount"   class="file-count"   style="display:none"></div>
+    <div id="reorderHint" class="reorder-hint" style="display:none">↕ 結合前にドラッグしてファイルを並び替え</div>
+
+    <div id="mergeOptions"     class="j2p-options"     style="display:none" aria-label="Merge options"></div>
+    <div id="splitOptions"     style="display:none"></div>
+    <div id="compressOptions"  style="display:none"></div>
+    <div id="jpg2pdfOptions"   style="display:none"></div>
+    <div id="pdf2jpgOptions"   style="display:none"></div>
+    <div id="watermarkOptions" style="display:none"></div>
+    <div id="pageNumOptions"   style="display:none"></div>
+    <div id="metaOptions"      style="display:none"></div>
+    <div id="protectOptions"   style="display:none"></div>
+    <div id="redactOptions"    style="display:none"></div>
+    <div id="rotateOptions"    style="display:none"></div>
+    <div id="pdf2wordOptions"  class="j2p-options"     style="display:none" aria-label="PDF to Word options"></div>
+
+    <button id="mergeBtn"  class="merge-btn"  type="button" disabled data-mode="process">PDFファイルを結合</button>
+    <button id="cancelBtn" class="cancel-btn" type="button" style="display:none">✕ キャンセル</button>
+
+    <div id="progressBar"   class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+    <div id="progressLabel" class="progress-label"></div>
+
+    <div id="successCard" class="success-card" role="alert" aria-live="polite" style="display:none">
+      <div class="success-top">
+        <div class="success-icon">✓</div>
+        <div class="success-text">
+          <h3 id="successTitle">完了！</h3>
+          <p  id="successDesc"></p>
+        </div>
+        <button id="downloadBtn" class="download-btn" type="button">⬇ ダウンロード</button>
+        <button id="shareBtn" class="share-btn" type="button" style="display:none" aria-label="デバイスのアプリで送信"></button>
+      </div>
+      <div id="privacyCleared" class="privacy-cleared" aria-live="polite">
+        <span class="privacy-cleared__icon" aria-hidden="true">🛡️</span>
+        <div class="privacy-cleared__body">
+          <strong class="privacy-cleared__title">ファイルはメモリから消去されました</strong>
+          <span class="privacy-cleared__sub">あなたの文書はどのサーバーにも痕跡を残していません。</span>
+        </div>
+      </div>
+      <div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(45,122,79,0.2);">
+        <p style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--text3);margin:0 0 8px;">次は？</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <a href="/ja/pdf-daiyouryou-atsuryoku/" data-handoff style="font-size:13px;background:var(--green-light);color:var(--green);padding:6px 12px;border-radius:6px;text-decoration:none;font-weight:500;border:1px solid rgba(45,122,79,0.2);">結果を圧縮する →</a>
+          <a href="/ja/pdf-password/" data-handoff style="font-size:13px;background:var(--surface);color:var(--text2);padding:6px 12px;border-radius:6px;text-decoration:none;border:1px solid var(--border);">PDFを保護</a>
+          <a href="/ja/pdf-bunkatsu/" data-handoff style="font-size:13px;background:var(--surface);color:var(--text2);padding:6px 12px;border-radius:6px;text-decoration:none;border:1px solid var(--border);">ページを抽出</a>
+          <a href="/ocr-pdf/" data-handoff style="font-size:13px;background:var(--surface);color:var(--text2);padding:6px 12px;border-radius:6px;text-decoration:none;border:1px solid var(--border);">検索可能にする</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- 比較バッジ — ツールの下に配置してアクセスを妨げない -->
+  <section style="padding:14px 24px;border-bottom:1px solid var(--border);background:var(--surface);">
+    <div style="max-width:760px;margin:0 auto;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;align-items:center;">
+      <span style="font-size:12px;background:#fef3c7;color:#92400e;padding:4px 11px;border-radius:20px;font-weight:500;">iLovePDF: 25MB制限</span>
+      <span style="font-size:12px;background:#fef3c7;color:#92400e;padding:4px 11px;border-radius:20px;font-weight:500;">SmallPDF: 1日2タスクまで</span>
+      <span style="font-size:12px;background:#fef3c7;color:#92400e;padding:4px 11px;border-radius:20px;font-weight:500;">Adobe: 有料プランが必要</span>
+      <span style="font-size:13px;color:var(--text2);">vs</span>
+      <span style="font-size:12px;background:var(--green-light);color:var(--green);padding:4px 11px;border-radius:20px;font-weight:600;">PDFree: ∞ 制限なし、常に無料</span>
+    </div>
+  </section>
+
+  <!-- SEOコンテンツ -->
+  <hr style="border:none;border-top:2px solid var(--border);margin:48px 24px 0;" aria-hidden="true">
+  <section class="seo-article">
+    <div class="seo-article__inner">
+      <div class="seo-content" style="max-width:800px;margin:60px auto 40px;padding:0 24px;color:var(--text2);line-height:1.8;">
+
+        <h2 style="font-size:26px;color:var(--text);margin:0 0 16px;font-weight:700;">他のPDFツールにファイルサイズ制限がある理由</h2>
+        <p>ファイルサイズ制限が存在するのは、サーバー上でのPDF結合にお金がかかるからです。100MBのアップロードごとに、提供元のインフラの帯域幅、ストレージ、CPU時間が消費されます。このインフラを乱用から守り——そして有料プランへの移行を促すために——無料プランには上限が設けられています。</p>
+        <p>PDFreeはこの問題を完全に解消します。<strong>ファイルがブラウザから外に出ることは一切ありません。</strong>結合処理はお使いの端末上でJavaScriptによって実行されます。サーバーコストが発生しないため、制限を課す理由もありません。</p>
+
+        <div style="background:var(--green-light);border-left:4px solid var(--green);padding:18px 20px;border-radius:0 8px 8px 0;margin:28px 0;">
+          <p style="margin:0 0 10px;font-size:14px;color:var(--text);"><strong>本当の限界：お使いの端末のRAM。</strong> ファイルの数やサイズにソフトウェア上の制限はありません。唯一の実質的な制約は、ブラウザがどれだけメモリを使えるかです。</p>
+          <ul style="margin:0;padding-left:20px;font-size:14px;color:var(--text);display:flex;flex-direction:column;gap:4px;">
+            <li><strong>8GB RAM：</strong>100ファイルまたは合計500MBまで快適に処理</li>
+            <li><strong>16GB RAM：</strong>500以上のファイルまたは合計数GBまで処理</li>
+            <li><strong>4GB RAM（古めのスマートフォン）：</strong>50ファイルまたは合計200MBまでにとどめる</li>
+          </ul>
+          <p style="margin:10px 0 0;font-size:13px;color:var(--text2);">メモリの上限に達した場合は、バッチを分割してください。まず最初の50ファイルを結合し、その結果を次の50ファイルと結合します。</p>
+        </div>
+
+        <!-- ファイル数について -->
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 12px;font-weight:700;">ファイル数にソフトウェア上の制限はありません</h2>
+        <p style="margin:0 0 16px;">PDFreeは結合できるファイル数にソフトウェア上の制限を設けていません。処理はブラウザ内でローカルに行われるため、実質的な上限はお使いの端末の空きメモリとブラウザの性能によって決まります。</p>
+
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:18px 20px;margin:0 0 20px;">
+          <strong style="color:var(--text);display:block;margin:0 0 10px;">よくある使い方</strong>
+          <ul style="margin:0;padding-left:20px;font-size:14px;color:var(--text2);display:flex;flex-direction:column;gap:6px;">
+            <li>50件の請求書を1つの年間アーカイブに結合する。</li>
+            <li>OCRに送る前に、100ページのスキャンを結合する。</li>
+            <li>数百のチャプターPDFを1つの文書にまとめる。</li>
+            <li>大規模な法的文書一式を1つの提出用ファイルに整理する。</li>
+          </ul>
+        </div>
+
+        <!-- 比較表 -->
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 16px;font-weight:700;">ファイルサイズ制限：PDFree対競合サービス</h2>
+        <div style="overflow-x:auto;margin:16px 0 32px;">
+          <table style="width:100%;border-collapse:collapse;font-size:14px;min-width:480px;">
+            <thead>
+              <tr style="border-bottom:2px solid var(--border);">
+                <th style="text-align:left;padding:10px 14px;color:var(--text);font-weight:600;">ツール</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">ファイルサイズ制限</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">1日のタスク上限</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">料金</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom:1px solid var(--border);background:var(--green-light);">
+                <td style="padding:10px 14px;color:var(--green);font-weight:700;">PDFree</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">なし</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">なし</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">永久無料</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 14px;color:var(--text);">iLovePDF（無料）</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">約25MB</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">制限あり</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">無料 / 月額6ドル〜</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 14px;color:var(--text);">SmallPDF（無料）</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">圧縮後約5MB</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">1日2タスク</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">無料 / 月額9ドル〜</td>
+              </tr>
+              <tr>
+                <td style="padding:10px 14px;color:var(--text);">Adobe Acrobat</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">100MB（有料）</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">無制限（有料）</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">月額19.99ドル</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- 大量結合 -->
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 16px;font-weight:700;">50、100、500個のPDFファイルを一度に結合</h2>
+        <p>PDFreeには<strong>ファイル数の制限が一切ありません</strong>。1回の操作で結合できます。2個のPDFでも、500件のスキャン済み請求書でも、手順は同じです。すべてのファイルを一度にドロップし、必要なら並び替えて、「結合」をクリックするだけ。2個のファイルを結合するのと同じツールで、10個、50個、100個、200個のファイルも結合できます — 設定変更は不要です。</p>
+        <p>PDFreeが制限なく処理できる、よくある大量結合のシナリオ：</p>
+        <div style="display:flex;flex-direction:column;gap:12px;margin:20px 0 32px;">
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <span style="font-size:20px;flex-shrink:0">🧾</span>
+            <div><strong style="color:var(--text);">請求書・領収書</strong> — 毎月80件の請求書を1ページずつスキャンし、それらすべてを1つの年間アーカイブPDFに結合します。</div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <span style="font-size:20px;flex-shrink:0">📋</span>
+            <div><strong style="color:var(--text);">法務・コンプライアンス</strong> — 50〜100ページの契約書、証拠資料、署名を1つの法廷提出用文書に結合します。</div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <span style="font-size:20px;flex-shrink:0">📚</span>
+            <div><strong style="color:var(--text);">レポート作成</strong> — 複数の執筆者によるチャプター、付録、データ表を1つの成果物に結合します。</div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <span style="font-size:20px;flex-shrink:0">🗂️</span>
+            <div><strong style="color:var(--text);">アーカイブのデジタル化</strong> — 数百ページのスキャン文書を1つの検索可能なアーカイブファイルに結合します。</div>
+          </div>
+        </div>
+        <div style="background:var(--green-light);border-left:4px solid var(--green);padding:18px 20px;border-radius:0 8px 8px 0;margin:0 0 32px;">
+          <p style="margin:0;font-size:14px;color:var(--text);"><strong>50件以上のファイルを扱う際のヒント：</strong> ファイル選択ダイアログで複数ファイルを選択するには <kbd style="background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:1px 5px;font-size:12px;">Ctrl</kbd>（Macでは <kbd style="background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:1px 5px;font-size:12px;">⌘</kbd>）を押しながらクリックするか、PDFの入ったフォルダーごとドロップゾーンにドラッグしてください。実質的な制約は端末で利用可能なRAM容量だけです。</p>
+        </div>
+
+        <!-- 利用者 -->
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 16px;font-weight:700;">このツールを使う人たち</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin:0 0 40px;">
+          <div style="padding:18px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
+            <div style="font-size:22px;margin:0 0 8px;">⚖️</div>
+            <strong style="color:var(--text);display:block;margin:0 0 6px;">法律事務所</strong>
+            <p style="margin:0;font-size:13px;color:var(--text2);">50〜100件の証拠資料、契約書ページ、署名を1つの法廷提出用書類に結合します。</p>
+          </div>
+          <div style="padding:18px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
+            <div style="font-size:22px;margin:0 0 8px;">🧮</div>
+            <strong style="color:var(--text);display:block;margin:0 0 6px;">会計士</strong>
+            <p style="margin:0;font-size:13px;color:var(--text2);">80件以上の月次請求書を、監査や確定申告用の年間アーカイブに一括結合します。</p>
+          </div>
+          <div style="padding:18px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
+            <div style="font-size:22px;margin:0 0 8px;">📐</div>
+            <strong style="color:var(--text);display:block;margin:0 0 6px;">建築士</strong>
+            <p style="margin:0;font-size:13px;color:var(--text2);">複数棟にまたがるプロジェクトの平面図、仕様書、許可証を1つの提出書類にまとめます。</p>
+          </div>
+          <div style="padding:18px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
+            <div style="font-size:22px;margin:0 0 8px;">🎓</div>
+            <strong style="color:var(--text);display:block;margin:0 0 6px;">学生</strong>
+            <p style="margin:0;font-size:13px;color:var(--text2);">大学ポータルへの提出前に、論文・参考文献リスト・付録・表紙を結合します。</p>
+          </div>
+          <div style="padding:18px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
+            <div style="font-size:22px;margin:0 0 8px;">🏛️</div>
+            <strong style="color:var(--text);display:block;margin:0 0 6px;">行政機関</strong>
+            <p style="margin:0;font-size:13px;color:var(--text2);">申請書、添付書類、支払い領収書を案件ごとに1つの記録として結合します。</p>
+          </div>
+          <div style="padding:18px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
+            <div style="font-size:22px;margin:0 0 8px;">🏥</div>
+            <strong style="color:var(--text);display:block;margin:0 0 6px;">医療機関</strong>
+            <p style="margin:0;font-size:13px;color:var(--text2);">機密データをアップロードすることなく、患者記録・検査結果・画像診断報告書・紹介状を1つのファイルにまとめます。</p>
+          </div>
+        </div>
+
+        <!-- 大容量ファイルのヒント -->
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 16px;font-weight:700;">非常に大きなPDFファイルを結合するためのヒント</h2>
+        <div style="display:flex;flex-direction:column;gap:16px;margin:16px 0;">
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <div style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">1</div>
+            <div><strong style="color:var(--text);">ChromeまたはEdgeを使う</strong> — 最も効率的なJavaScriptエンジンを備えており、大きなメモリ操作を最もうまく処理します。</div>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <div style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">2</div>
+            <div><strong style="color:var(--text);">他のタブを閉じる</strong> — RAMを解放することで、非常に大きなファイルを扱う際にブラウザがより多くのメモリを使えるようになります。</div>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <div style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">3</div>
+            <div><strong style="color:var(--text);">可能であれば先に圧縮する</strong> — 元のPDFが画像の埋め込みによって大きくなっている場合は、結合する前に<a href="/ja/pdf-daiyouryou-atsuryoku/" style="color:var(--green);">各ファイルを先に圧縮</a>してみてください。</div>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <div style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">4</div>
+            <div><strong style="color:var(--text);">大きなファイルでは気長に待つ</strong> — 500MB以上の結合には30〜90秒かかることがあります。「処理中…」と表示されている間はタブを閉じないでください。</div>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <div style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">5</div>
+            <div><strong style="color:var(--text);">デスクトップブラウザを使い、最初からやり直す</strong> — デスクトップブラウザは通常モバイルより空きRAMが多く、再起動直後のブラウザは利用可能なメモリが最大になります。</div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <h2 style="font-size:26px;color:var(--text);margin:52px 0 20px;font-weight:700;">よくある質問</h2>
+        <div style="display:flex;flex-direction:column;gap:20px;">
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">100MBを超えるPDFファイルを無料で結合できますか？</h3>
+            <p style="margin:0;font-size:14px;">はい。PDFreeにはファイルサイズ制限がありません。処理が完全にブラウザ内で行われるため、100MB、500MB、あるいは1GBのPDFでも無料で結合できます — サーバーへのアップロードがないので、アップロード上限もありません。</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">なぜiLovePDFには25MBの制限があるのに、PDFreeにはないのですか？</h3>
+            <p style="margin:0;font-size:14px;">iLovePDFは自社サーバーでファイルを処理するため、帯域幅とストレージのコストが発生します。PDFreeはブラウザ内でローカルにファイルを処理するため、サーバーコストが発生せず、ファイルサイズを制限する理由がありません。</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">結合に1日の上限はありますか？</h3>
+            <p style="margin:0;font-size:14px;">いいえ。SmallPDF（無料で1日2タスク）やiLovePDF（1日の上限あり）とは異なり、PDFreeには1日の上限がありません。必要なだけ、好きなだけPDFを結合できます。</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">どのくらいの大きさのPDFを結合できますか？</h3>
+            <p style="margin:0;font-size:14px;">実質的な上限は端末のRAMです。ほとんどの現代のパソコンなら数百MBまで簡単に処理できます。500MBを超えるファイルの場合は、他のタブを閉じてメモリを解放してください。</p>
+          </div>
+                    <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">非常に大きなファイルを結合中にブラウザがクラッシュした場合はどうすればよいですか？</h3>
+            <p style="margin:0;font-size:14px;">他のタブを閉じてメモリを解放してから、もう一度お試しください — 少人数のバッチで結合する（一度に5〜10ファイルずつ結合し、その結果をさらに結合する）ことでも、一度に使うメモリを減らせます。結合前に<a href="../pdf-daiyouryou-atsuryoku/" style="color:var(--green);">「PDFを圧縮」ツール</a>で各ファイルを先に圧縮し、合計サイズを小さくすることもできます。</p>
+          </div>
+<div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">一度に何個のPDFファイルを結合できますか？</h3>
+            <p style="margin:0;font-size:14px;">ファイル数に制限はありません。PDFreeはすべての処理をブラウザのメモリ内で行うため、1回の操作で2個、50個、あるいは100以上のPDFファイルを結合できます。実質的な制約は端末で利用可能なRAM容量だけ — 現代のパソコンなら合計数百MBに及ぶ100個のファイルも問題なく処理できます。</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">50個や100個のPDFファイルを一度に無料で結合できますか？</h3>
+            <p style="margin:0;font-size:14px;">はい、1日の上限なしで完全無料です。SmallPDF（1日2タスク）やiLovePDF（1日の上限あり）とは異なり、PDFreeには利用制限がありません。50個や100個のファイルを一度にドロップし、順序を整えて「結合」をクリックするだけ — 結果は直接端末にダウンロードされ、サーバーへのアップロードは不要です。</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">アカウント登録は必要ですか？</h3>
+            <p style="margin:0;font-size:14px;">いいえ。PDFreeはアカウント、メールアドレス、登録を一切必要としません。ツールを開いてすぐに結合を始められます。</p>
+          </div>
+        </div>
+
+        <!-- 関連ツール -->
+        <h2 style="font-size:26px;color:var(--text);margin:52px 0 12px;font-weight:700;">他の無料ツール — どれも制限なし</h2>
+        <ul style="margin:12px 0;padding-left:24px;display:flex;flex-direction:column;gap:8px;">
+          <li><a href="/ja/pdf-daiyouryou-atsuryoku/" style="color:var(--green);font-weight:500;">大容量PDFファイルを無料で圧縮</a> — 結合したファイルが大きすぎて送信できない場合にサイズを縮小</li>
+          <li><a href="/ja/pdf-bunkatsu/" style="color:var(--green);font-weight:500;">PDFを分割</a> — 結合した文書から特定のページを抽出</li>
+          <li><a href="/ja/pdf-ketsugou/" style="color:var(--green);font-weight:500;">PDFを1つに結合</a> — 何個でもPDFを1つの文書にまとめます</li>
+          <li><a href="/ja/pdf-password/" style="color:var(--green);font-weight:500;">PDFを保護</a> — 結合したファイルにパスワードを追加</li>
+          <li><a href="/merge-pdf-without-uploading/" style="color:var(--green);font-weight:500;">アップロードせずにPDFを結合する方法</a> — 機密文書のためのプライバシーガイド</li>
+          <li><a href="/blog/how-to-merge-pdf-files-for-free/" style="color:var(--green);font-weight:500;">PDFファイルを無料で結合する方法</a> — 大量のファイルを扱うコツを含むステップバイステップガイド</li>
+        </ul>
+
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    PDFree · <strong>すべての処理はブラウザ内で100%行われます</strong> · ファイルは一切アップロードされません<br>
+    <span style="color:var(--green)">🔒</span> あなたの文書はデバイスから出ることはありません &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> すべての人に永久無料で提供<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
+      <a href="/privacy.html" style="color:var(--green)">プライバシー</a> &nbsp;·&nbsp;
+      <a href="/terms.html" style="color:var(--green)">利用規約</a> &nbsp;·&nbsp;
+      <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a> &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green)">GitHub</a>
+    </span>
+  </footer>
+
+  <div id="toast"      class="toast" role="status" aria-live="polite"></div>
+  <div id="hero"       style="display:none"></div>
+  <div id="trustAlert" style="display:none"></div>
+  <div id="noLimitBar" style="display:none"></div>
+  <div id="toolsGrid"  style="display:none"></div>
+  <div id="pwaNudge"   style="display:none"></div>
+
+  <script type="module" src="../../js/locales/ja.js"></script>
+  <script type="module" src="../../js/app.js"></script>
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script>
+</body>
+</html>
