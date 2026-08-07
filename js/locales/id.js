@@ -55,6 +55,7 @@ window.PDFREE_LOCALE = {
   // ui
   btn_processing:   '⏳ Sedang diproses...',
   drop_mobile_hint: 'Buka aplikasi File dan pilih PDF — bukan Foto atau Kamera',
+  drop_batch_hint:  'Pilih beberapa file untuk memprosesnya sekaligus — Anda akan mendapatkan ZIP berisi hasilnya.',
 
   // progress
   cancelled:         'Pemrosesan dibatalkan',

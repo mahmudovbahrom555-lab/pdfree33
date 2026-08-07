@@ -55,6 +55,7 @@ window.PDFREE_LOCALE = {
   // ui
   btn_processing:   '⏳ Đang xử lý...',
   drop_mobile_hint: 'Mở ứng dụng File và chọn PDF — không phải Ảnh hay Camera',
+  drop_batch_hint:  'Chọn nhiều file để xử lý cùng lúc — bạn sẽ nhận được một file ZIP chứa kết quả.',
 
   // progress
   cancelled:         'Đã hủy xử lý',

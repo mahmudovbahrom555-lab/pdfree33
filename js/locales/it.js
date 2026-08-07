@@ -54,6 +54,7 @@ window.PDFREE_LOCALE = {
   // ui
   btn_processing:   '⏳ Elaborando...',
   drop_mobile_hint: 'Apri l\'app File e seleziona un PDF — non Foto o Fotocamera',
+  drop_batch_hint:  'Seleziona più file per elaborarli tutti insieme — riceverai uno ZIP con i risultati.',
 
   // progress
   cancelled:         'Elaborazione annullata',

@@ -154,6 +154,13 @@ button,
   .drop-icon        { font-size: 28px; margin-bottom: 8px; }
 }
 
+.drop-batch-hint {
+  font-size: 12px;
+  color: var(--green);
+  margin-top: 10px;
+  line-height: 1.4;
+}
+
 /* ── File list ── */
 .file-list {
   margin-top: 16px;

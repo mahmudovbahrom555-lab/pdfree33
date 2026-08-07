@@ -962,11 +962,20 @@ async function _runWorkerTool(tool, filesSnapshot, params) {
   };
 }
 
-// ── Batch processing (compress / watermark / rotate, 2+ files) ─
+// ── Batch processing (compress / watermark / rotate / protect / pagenum /
+//    flatten, 2+ files) ──────────────────────────────────────────
 //
-// Scope is intentionally narrow: only these 3 tools. merge/jpg2pdf are
-// already N-inputs→1-output; split already has its own separate-files
-// zip flow. Everything else stays 1-file-in.
+// Scope is intentionally narrow, not "everything with runner:'worker'".
+// merge/jpg2pdf are already N-inputs→1-output; split already has its own
+// separate-files zip flow — those stay outside _runBatch entirely.
+// fill is deliberately excluded even though it's runner:'worker': its
+// options panel is built from file[0]'s AcroForm field *schema*, and
+// applying file[0]'s filled-in values to other files is only correct when
+// every file is the same template — silently "batching" it would produce
+// wrong output on the common case (different files, different forms).
+// meta is excluded for now too — technically as safe as pagenum (no
+// per-file dependency), just not asked for yet; add it the same one-line
+// way as the rest below if it ever is.
 //
 // Design: reuse the SAME shared `_worker` instance, one postMessage per
 // file, awaited sequentially — never concurrent (the shared worker's
@@ -975,7 +984,10 @@ async function _runWorkerTool(tool, filesSnapshot, params) {
 // file's ArrayBuffer result is collected, then all successful outputs
 // are bundled into one ZIP via the exact loadJSZip()/JSZip() pattern
 // already used by _runSplit's separate-files mode and _runPdf2Jpg.
-const BATCH_TOOLS = new Set(['compress', 'watermark', 'rotate']);
+// Derived from config.js's `batch: true` flag, not hardcoded here — single
+// source of truth, so adding/removing a batch-eligible tool only ever means
+// touching one file (config.js), never risks the two lists drifting apart.
+const BATCH_TOOLS = new Set(Object.keys(TOOLS).filter(k => TOOLS[k].batch));
 
 // worker.js's rotate handler already ignores out-of-range page indices
 // (`if (index >= 0 && index < pages.length)`) — so applying file[0]'s
@@ -983,8 +995,19 @@ const BATCH_TOOLS = new Set(['compress', 'watermark', 'rotate']);
 // imprecise if page counts differ. Documented product decision, not a bug:
 // the options panel is inherently single-file (built from files[0]), so
 // batch mode applies whatever the panel currently holds to every file.
-const _BATCH_SIZE_LIMITS = { compress: MAX_COMPRESS_MB, watermark: 200, rotate: 150 };
-const _BATCH_SUFFIX      = { watermark: '-watermarked', rotate: '-rotated' };
+// protect is the clearest case where this is exactly the point, not a
+// caveat: one password entered once, applied to every file in the batch.
+// pagenum's options (position/format/start number) and flatten (no options
+// at all — it just locks whatever fields exist) have no per-file dependency,
+// so there's no analogous edge case to document for them.
+const _BATCH_SIZE_LIMITS = {
+  compress: MAX_COMPRESS_MB, watermark: 200, rotate: 150,
+  protect: 200, pagenum: 200, flatten: 150,
+};
+const _BATCH_SUFFIX = {
+  watermark: '-watermarked', rotate: '-rotated',
+  protect: '-protected', pagenum: '-numbered', flatten: '-flattened',
+};
 const _BATCH_WATCHDOG_MS = 45_000; // same silent-hang guard as _runCompress's single-file watchdog
 
 /**

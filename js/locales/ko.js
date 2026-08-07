@@ -56,6 +56,7 @@ window.PDFREE_LOCALE = {
   // ui
   btn_processing:   '⏳ 처리 중...',
   drop_mobile_hint: '파일 앱을 열고 PDF를 선택하세요 — 사진이나 카메라 아님',
+  drop_batch_hint:  '여러 파일을 선택하면 한 번에 처리할 수 있습니다 — 결과는 ZIP으로 받습니다.',
 
   // progress
   cancelled:         '처리가 취소되었습니다',

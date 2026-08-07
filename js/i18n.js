@@ -43,6 +43,7 @@ export const EN = {
   // ── ui.js ──────────────────────────────────────────────────────
   btn_processing:   '⏳ Processing...',
   drop_mobile_hint: 'Open your Files app and select a PDF — not Photos or Camera',
+  drop_batch_hint:  'Select multiple files to process them all at once — you\'ll get a ZIP with the results.',
 
   // ── processor.js — progress ────────────────────────────────────
   cancelled:         'Processing cancelled',

@@ -174,3 +174,27 @@ export function setDropHint(accept) {
     if (hint) hint.remove();
   }
 }
+
+/**
+ * Показывает/убирает подсказку про пакетную обработку в дропзоне.
+ * Только для инструментов с TOOLS[tool].batch === true (2+ файла →
+ * очередь + ZIP, см. processor.js's BATCH_TOOLS) — НЕ для любого
+ * multi:true (у merge/jpg2pdf/compare мульти-файл означает N входов → 1
+ * результат, а не батч с ZIP на выходе, текст про ZIP там был бы неверным).
+ * @param {boolean} hasBatch — tool.batch из config.js
+ */
+export function setBatchHint(hasBatch) {
+  const zone = id('dropZone');
+  if (!zone) return;
+  let hint = zone.querySelector('.drop-batch-hint');
+  if (hasBatch) {
+    if (!hint) {
+      hint = document.createElement('p');
+      hint.className = 'drop-batch-hint';
+      zone.appendChild(hint);
+    }
+    hint.textContent = t('drop_batch_hint');
+  } else {
+    if (hint) hint.remove();
+  }
+}

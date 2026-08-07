@@ -54,6 +54,7 @@ window.PDFREE_LOCALE = {
   // ui
   btn_processing:   '⏳ Verwerken...',
   drop_mobile_hint: 'Open de Bestanden-app en selecteer een PDF — niet Foto\'s of Camera',
+  drop_batch_hint:  'Selecteer meerdere bestanden om ze allemaal tegelijk te verwerken — je krijgt een ZIP met de resultaten.',
 
   // progress
   cancelled:         'Verwerking geannuleerd',

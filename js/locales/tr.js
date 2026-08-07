@@ -54,6 +54,7 @@ window.PDFREE_LOCALE = {
   // ui
   btn_processing:   '⏳ İşleniyor...',
   drop_mobile_hint: 'Dosyalar uygulamasını açın ve bir PDF seçin — Fotoğraflar veya Kamera değil',
+  drop_batch_hint:  'Hepsini aynı anda işlemek için birden fazla dosya seçin — sonuçları ZIP olarak alacaksınız.',
 
   // progress
   cancelled:         'İşlem iptal edildi',

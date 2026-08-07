@@ -112,7 +112,8 @@ export const TOOLS = {
     titles: { en: 'Compress PDF', es: 'Comprimir PDF', pt: 'Comprimir PDF', de: 'PDF Komprimieren', fr: 'Compresser PDF', id: 'Kompres PDF', vi: 'Nén PDF', ru: 'Сжать PDF', ja: 'PDF圧縮', it: 'Comprimi PDF', ko: 'PDF 압축', nl: 'PDF comprimeren', pl: 'Kompresuj PDF', tr: 'PDF Sıkıştır' },
     descs:  { en: 'Reduce file size without losing quality', es: 'Reduce el tamaño sin perder calidad', pt: 'Reduza o tamanho sem perder qualidade', de: 'Dateigröße ohne Qualitätsverlust reduzieren', fr: 'Réduire la taille sans perte de qualité', id: 'Perkecil ukuran file tanpa kehilangan kualitas', vi: 'Giảm dung lượng mà không mất chất lượng', ru: 'Уменьшайте размер файла без потери качества', ja: '品質を落とさずにファイルサイズを削減する', it: 'Riduci le dimensioni del PDF — senza perdita di qualità', ko: '품질 손실 없이 PDF 용량 줄이기 — 업로드 없음', nl: 'PDF comprimeren in je browser — geen upload', pl: 'Kompresuj PDF bez utraty jakości — bez przesyłania', tr: "PDF'i kalite kaybetmeden sıkıştır — yükleme yok" },
     btns:   { en: '🗜️ Compress PDF', es: '🗜️ Comprimir PDF', pt: '🗜️ Comprimir PDF', de: '🗜️ PDF komprimieren', fr: '🗜️ Compresser le PDF', id: '🗜️ Kompres PDF', vi: '🗜️ Nén PDF', ru: '🗜️ Сжать PDF', ja: '🗜️ PDF圧縮', it: '🗜️ Comprimi PDF', ko: '🗜️ PDF 압축', nl: '🗜️ PDF comprimeren', pl: '🗜️ Kompresuj PDF', tr: '🗜️ PDF Sıkıştır' },
-    multi:         false,
+    multi:         true,
+    batch:         true, // 2+ files → sequential queue + ZIP (processor.js's BATCH_TOOLS)
     accept:        '.pdf,application/pdf',
     implemented:   true,
     defaultPreset: 'medium',
@@ -170,7 +171,8 @@ export const TOOLS = {
     titles: { en: 'Rotate PDF', es: 'Rotar PDF', pt: 'Girar PDF', de: 'PDF Drehen', fr: 'Rotation PDF', id: 'Putar PDF', vi: 'Xoay PDF', ru: 'Повернуть PDF', ja: 'PDFを回転', it: 'Ruota PDF', ko: 'PDF 회전', nl: 'PDF Draaien', pl: 'Obróć PDF', tr: 'PDF Döndür' },
     descs:  { en: 'Fix page orientation in any PDF', es: 'Arregla la orientación de páginas en cualquier PDF', pt: 'Corrija a orientação das páginas em qualquer PDF', de: 'Seitenausrichtung in beliebigen PDFs korrigieren', fr: "Corriger l'orientation des pages dans n'importe quel PDF", id: 'Perbaiki orientasi halaman di PDF mana pun', vi: 'Sửa hướng trang trong bất kỳ PDF nào', ru: 'Исправляйте ориентацию страниц в любом PDF', ja: 'どのPDFでもページの向きを修正する', it: "Correggi l'orientamento delle pagine in qualsiasi PDF", ko: '모든 PDF의 페이지 방향을 수정하세요', nl: 'Corrigeer de pagina-oriëntatie in elke PDF', pl: 'Popraw orientację stron w dowolnym pliku PDF', tr: 'PDF sayfalarının yönünü düzeltin' },
     btns:   { en: '🔄 Rotate PDF', es: '🔄 Rotar PDF', pt: '🔄 Girar PDF', de: '🔄 PDF drehen', fr: '🔄 Faire pivoter', id: '🔄 Putar PDF', vi: '🔄 Xoay PDF', ru: '🔄 Повернуть PDF', ja: '🔄 PDFを回転', it: '🔄 Ruota PDF', ko: '🔄 PDF 회전', nl: '🔄 PDF Draaien', pl: '🔄 Obróć PDF', tr: '🔄 PDF Döndür' },
-    multi:       false,
+    multi:       true,
+    batch:       true, // 2+ files → sequential queue + ZIP (processor.js's BATCH_TOOLS)
     accept:      '.pdf,application/pdf',
     implemented: true,
   },
@@ -198,7 +200,8 @@ export const TOOLS = {
     titles: { en: 'Watermark PDF', es: 'Marca de agua', pt: "Marca d'água", de: 'Wasserzeichen PDF', fr: 'Filigrane PDF', id: 'Tanda Air PDF', vi: 'Thêm Hình Mờ', ru: 'Водяной знак PDF', ja: '透かし追加', it: 'Filigrana PDF', ko: 'PDF 워터마크', nl: 'Watermerk PDF', pl: 'Znak wodny PDF', tr: 'PDF Filigran' },
     descs:  { en: 'Stamp text on every page — diagonal or tiled', es: 'Estampa texto en cada página — diagonal o en mosaico', pt: 'Estampe texto em cada página — diagonal ou em mosaico', de: 'Text auf jeder Seite stempeln — diagonal oder gekachelt', fr: 'Tamponner du texte sur chaque page — diagonal ou en mosaïque', id: 'Cetak teks di setiap halaman — diagonal atau berulang', vi: 'Đóng dấu văn bản trên mỗi trang — chéo hoặc lưới', ru: 'Ставьте текстовый штамп на каждой странице — диагонально или плиткой', ja: 'すべてのページにテキストを押す — 斜めまたはタイル状', it: 'Aggiungi timbri di testo al PDF — senza upload', ko: 'PDF에 텍스트 도장 추가 — 업로드 없음', nl: 'Tekststempels toevoegen aan PDF — geen upload', pl: 'Dodaj tekstowe stemple do PDF — bez przesyłania', tr: "PDF'e metin damgası ekle — yükleme yok" },
     btns:   { en: '💧 Apply Watermark', es: '💧 Aplicar marca de agua', pt: "💧 Aplicar marca d'água", de: '💧 Wasserzeichen einfügen', fr: '💧 Appliquer le filigrane', id: '💧 Tanda Air PDF', vi: '💧 Thêm Hình Mờ', ru: '💧 Водяной знак PDF', ja: '💧 透かし追加', it: '💧 Filigrana PDF', ko: '💧 PDF 워터마크', nl: '💧 Watermerk PDF', pl: '💧 Znak wodny PDF', tr: '💧 PDF Filigran' },
-    multi:       false,
+    multi:       true,
+    batch:       true, // 2+ files → sequential queue + ZIP (processor.js's BATCH_TOOLS)
     accept:      '.pdf,application/pdf',
     implemented: true,
   },
@@ -212,7 +215,8 @@ export const TOOLS = {
     titles: { en: 'Page Numbers', es: 'Números de página', pt: 'Números de página', de: 'Seitenzahlen', fr: 'Numérotation PDF', id: 'Nomor Halaman', vi: 'Số Trang PDF', ru: 'Номера страниц', ja: 'ページ番号', it: 'Numeri di Pagina', ko: '페이지 번호', nl: 'Paginanummers', pl: 'Numery Stron', tr: 'Sayfa Numarası Ekle' },
     descs:  { en: 'Add numbered footers — Arabic, Roman or ABC', es: 'Añade números de página en el pie — Arábigos, Romanos o ABC', pt: 'Adicione números de página no rodapé — Arábicos, Romanos ou ABC', de: 'Nummerierte Fußzeilen hinzufügen — Arabisch, Römisch oder ABC', fr: 'Ajouter des pieds de page numérotés — arabe, romain ou alphabétique', id: 'Tambah footer bernomor — Arab, Romawi atau ABC', vi: 'Thêm chân trang có số — Ả Rập, La Mã hoặc ABC', ru: 'Добавьте нумерованные колонтитулы — арабские, римские цифры или буквы', ja: '番号付きフッターを追加 — アラビア数字、ローマ数字、またはABC', it: 'Aggiungi piè di pagina numerati — arabo, romano o ABC', ko: '번호가 매겨진 바닥글 추가 — 아라비아, 로마 숫자 또는 ABC', nl: 'Genummerde voettekst toevoegen — Arabisch, Romeins of ABC', pl: 'Dodaj numerowane stopki — arabskie, rzymskie lub ABC', tr: "PDF'ye özelleştirilebilir sayfa numaraları ekleyin" },
     btns:   { en: '🔢 Add Numbers', es: '🔢 Añadir números', pt: '🔢 Adicionar números', de: '🔢 Nummern hinzufügen', fr: '🔢 Ajouter la numérotation', id: '🔢 Tambah Nomor Halaman', vi: '🔢 Thêm Số Trang', ru: '🔢 Номера страниц', ja: '🔢 ページ番号', it: '🔢 Numeri di Pagina', ko: '🔢 페이지 번호', nl: '🔢 Paginanummers', pl: '🔢 Numery Stron', tr: '🔢 Sayfa Numarası Ekle' },
-    multi:       false,
+    multi:       true,
+    batch:       true, // 2+ files → sequential queue + ZIP (processor.js's BATCH_TOOLS)
     accept:      '.pdf,application/pdf',
     implemented: true,
   },
@@ -240,7 +244,8 @@ export const TOOLS = {
     titles: { en: 'Protect PDF', es: 'Proteger PDF', pt: 'Proteger PDF', de: 'PDF Schützen', fr: 'Protéger PDF', id: 'Lindungi PDF', vi: 'Bảo Vệ PDF', ru: 'Защитить PDF', ja: 'PDFを保護', it: 'Proteggi PDF', ko: 'PDF 보호', nl: 'PDF beveiligen', pl: 'Zabezpiecz PDF', tr: 'PDF Koru' },
     descs:  { en: 'Password & permissions — 100% private', es: 'Contraseña y permisos — 100% privado', pt: 'Senha e permissões — 100% privado', de: 'Passwort und Berechtigungen — 100 % privat', fr: 'Mot de passe et permissions — 100 % privé', id: 'Kata sandi & izin — 100% pribadi', vi: 'Mật khẩu & quyền — 100% riêng tư', ru: 'Пароль и права — 100% конфиденциально', ja: 'パスワード & アクセス権 — 100%プライベート', it: 'Proteggi PDF con password — nessun upload', ko: 'PDF에 비밀번호 설정 — 업로드 없음', nl: 'PDF beveiligen met wachtwoord — geen upload', pl: 'Zabezpiecz PDF hasłem — bez przesyłania', tr: "PDF'i parolayla koru — yükleme yok" },
     btns:   { en: '🔒 Protect PDF', es: '🔒 Proteger PDF', pt: '🔒 Proteger PDF', de: '🔒 PDF schützen', fr: '🔒 Protéger le PDF', id: '🔒 Lindungi PDF', vi: '🔒 Bảo Vệ PDF', ru: '🔒 Защитить PDF', ja: '🔒 PDFを保護', it: '🔒 Proteggi PDF', ko: '🔒 PDF 보호', nl: '🔒 PDF beveiligen', pl: '🔒 Zabezpiecz PDF', tr: '🔒 PDF Koru' },
-    multi:       false,
+    multi:       true,
+    batch:       true, // 2+ files → sequential queue + ZIP (processor.js's BATCH_TOOLS)
     accept:      '.pdf,application/pdf',
     implemented: true,
   },
@@ -388,7 +393,8 @@ export const TOOLS = {
     descs:  { en: 'Bake form fields into the page — make PDF non-editable', es: 'Incrusta campos de formulario — hace el PDF no editable', pt: 'Incorpora campos de formulário — torna o PDF não editável', de: 'Formularfelder einbetten — PDF nicht bearbeitbar machen', fr: 'Intégrer les champs de formulaire — rendre le PDF non modifiable', id: 'Tanam kolom formulir ke halaman — cegah pengeditan', vi: 'Nhúng trường biểu mẫu vào trang — ngăn chỉnh sửa', ru: 'Встройте поля формы в страницу — предотвратите редактирование', ja: 'フォームフィールドをページに焼き付け — 編集を防止', it: 'Incorpora i campi del modulo nella pagina — impedisci la modifica', ko: '양식 필드를 페이지에 영구 반영 — 편집 방지', nl: 'Bak formuliervelden in de pagina — voorkom bewerking', pl: 'Wpisz pola formularza na stałe w stronę — zapobiegaj edycji', tr: 'PDF form alanlarını kalıcı olarak kilitleyin' },
     btns:   { en: '🔒 Lock PDF Form', es: '🔒 Bloquear formulario', pt: '🔒 Bloquear formulário', de: '🔒 Formular sperren', fr: '🔒 Verrouiller le formulaire', id: '🔒 Ratakan PDF', vi: '🔒 Làm Phẳng PDF', ru: '🔒 Зафиксировать PDF', ja: '🔒 PDFをフラット化', it: '🔒 Appiattisci PDF', ko: '🔒 PDF 평면화', nl: '🔒 PDF Afvlakken', pl: '🔒 Spłaszcz PDF', tr: '🔒 PDF Düzleştir' },
     btn:         '🔒 Lock PDF Form',
-    multi:       false,
+    multi:       true,
+    batch:       true, // 2+ files → sequential queue + ZIP (processor.js's BATCH_TOOLS)
     accept:      '.pdf,application/pdf',
     implemented: true,
   },

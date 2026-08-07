@@ -54,6 +54,7 @@ window.PDFREE_LOCALE = {
   // ui
   btn_processing:   '⏳ Procesando...',
   drop_mobile_hint: 'Abre la app de Archivos y selecciona un PDF — no Fotos o Cámara',
+  drop_batch_hint:  'Selecciona varios archivos para procesarlos todos a la vez — recibirás un ZIP con los resultados.',
 
   // progress
   cancelled:         'Procesamiento cancelado',

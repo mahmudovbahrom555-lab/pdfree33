@@ -57,6 +57,7 @@ window.PDFREE_LOCALE = {
   // ui
   btn_processing:   '⏳ 処理中...',
   drop_mobile_hint: '「ファイル」アプリを開いてPDFを選択してください — 「写真」や「カメラ」は不可',
+  drop_batch_hint:  '複数のファイルを選択すると、まとめて処理できます — 結果はZIPでダウンロードされます。',
 
   // progress
   cancelled:         '処理をキャンセルしました',

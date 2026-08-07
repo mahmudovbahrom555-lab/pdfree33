@@ -54,6 +54,7 @@ window.PDFREE_LOCALE = {
   // ui
   btn_processing:   '⏳ Przetwarzanie...',
   drop_mobile_hint: 'Otwórz aplikację Pliki i wybierz plik PDF — nie Zdjęcia ani Aparat',
+  drop_batch_hint:  'Wybierz kilka plików, aby przetworzyć je wszystkie naraz — otrzymasz ZIP z wynikami.',
 
   // progress
   cancelled:         'Przetwarzanie anulowane',
