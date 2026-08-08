@@ -451,6 +451,10 @@ SPECIALTY_PAGES = [
     'for-lawyers',
     'for-students',
     'for-teachers',
+    # Batch processing hub — links out to the 6 batch-eligible tools,
+    # no embedded tool of its own (EN-only for now, translate after
+    # traffic validation per the SEO batch-processing rollout plan)
+    'batch-process-pdf-free',
     # Research / benchmark project page (EN-only for now)
     'atlas',
     # Developer SDK waitlist landing page (validation experiment, EN-only)
