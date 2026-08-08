@@ -197,6 +197,7 @@ window.PDFREE_LOCALE = {
   preset_remember_sub_protect: 'We onthouden je machtigingskeuzes de volgende keer — nooit je wachtwoord.',
   err_merge_timeout:    '⏱ Samenvoegen geannuleerd — de browser had mogelijk onvoldoende geheugen. Probeer minder of kleinere bestanden tegelijk samen te voegen.',
   warn_compress_large:  '⚠️ Groot bestand ({size}) — comprimeren kan 1–2 minuten duren. De browser verwerkt alles lokaal in geheugen.',
+  warn_many_images:     '⚠️ {n} afbeeldingen geselecteerd — dat is veel voor één batch. Verwerken kan traag zijn of veel geheugen gebruiken op oudere apparaten.',
   compress_scan_skipped: 'Groot bestand — voorafgaande scan overgeslagen om geheugen te besparen',
 
   compress_placeholder:      'Analyse wordt automatisch uitgevoerd bij het comprimeren',
@@ -544,9 +545,8 @@ window.PDFREE_LOCALE = {
   j2p_reading_images:  'Afbeeldingen lezen…',
   j2p_exif_note_one:   '📐 {n} afbeelding wordt automatisch gedraaid (EXIF-correctie)',
   j2p_exif_note_many:  '📐 {n} afbeeldingen worden automatisch gedraaid (EXIF-correctie)',
-  j2p_image_preview:   'Afbeeldingsvoorbeeld',
+  j2p_image_preview:   'Afbeeldingsvoorbeeld — sleep om te herschikken',
   j2p_will_be_rotated: 'Wordt gedraaid',
-  j2p_more_images:     '{n} meer afbeeldingen',
   j2p_page_size:       'Paginaformaat',
   j2p_size_auto:       '📐 Auto',
   j2p_fit:             '⤡ Passend',

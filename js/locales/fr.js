@@ -197,6 +197,7 @@ window.PDFREE_LOCALE = {
   preset_remember_sub_protect: 'Nous mémoriserons vos choix de permissions la prochaine fois — jamais votre mot de passe.',
   err_merge_timeout:    "⏱ Fusion annulée — le navigateur a peut-être manqué de mémoire. Essayez de fusionner moins de fichiers, ou des fichiers plus petits, à la fois.",
   warn_compress_large:  '⚠️ Fichier volumineux ({size}) — la compression peut prendre 1–2 minutes. Le navigateur traite tout localement en mémoire vive.',
+  warn_many_images:     "⚠️ {n} images sélectionnées — c'est beaucoup pour un seul lot. Le traitement peut être lent ou utiliser beaucoup de mémoire sur les appareils plus anciens.",
   compress_scan_skipped: 'Fichier volumineux — pré-analyse ignorée pour économiser la mémoire',
 
   compress_placeholder:      "L'analyse démarre automatiquement à la compression",
@@ -546,9 +547,8 @@ window.PDFREE_LOCALE = {
   j2p_reading_images:  'Lecture des images…',
   j2p_exif_note_one:   '📐 {n} image sera automatiquement pivotée (correction EXIF)',
   j2p_exif_note_many:  '📐 {n} images seront automatiquement pivotées (correction EXIF)',
-  j2p_image_preview:   "Aperçu de l'image",
+  j2p_image_preview:   'Aperçu des images — glissez pour réorganiser',
   j2p_will_be_rotated: 'Sera pivotée',
-  j2p_more_images:     '{n} images supplémentaires',
   j2p_page_size:       'Taille de page',
   j2p_size_auto:       '📐 Auto',
   j2p_fit:             '⤡ Ajuster',

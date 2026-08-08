@@ -197,6 +197,7 @@ window.PDFREE_LOCALE = {
   preset_remember_sub_protect: 'Zapamiętamy wybrane uprawnienia następnym razem — nigdy hasła.',
   err_merge_timeout:    '⏱ Scalanie anulowane — przeglądarce mogło zabraknąć pamięci. Spróbuj scalić mniej plików lub mniejsze pliki naraz.',
   warn_compress_large:  '⚠️ Duży plik ({size}) — kompresja może potrwać 1–2 minuty. Przeglądarka przetwarza wszystko lokalnie w pamięci.',
+  warn_many_images:     '⚠️ Wybrano {n} obrazów — to dużo jak na jedną partię. Przetwarzanie może być wolne lub zużywać dużo pamięci na starszych urządzeniach.',
   compress_scan_skipped: 'Duży plik — wstępne skanowanie pominięte, aby zaoszczędzić pamięć',
 
   compress_placeholder:      'Analiza zostanie uruchomiona automatycznie podczas kompresji',
@@ -544,9 +545,8 @@ window.PDFREE_LOCALE = {
   j2p_reading_images:  'Wczytywanie obrazów…',
   j2p_exif_note_one:   '📐 {n} obraz zostanie automatycznie obrócony (korekta EXIF)',
   j2p_exif_note_many:  '📐 {n} obrazów zostanie automatycznie obróconych (korekta EXIF)',
-  j2p_image_preview:   'Podgląd obrazu',
+  j2p_image_preview:   'Podgląd obrazów — przeciągnij, aby zmienić kolejność',
   j2p_will_be_rotated: 'Zostanie obrócony',
-  j2p_more_images:     '{n} kolejnych obrazów',
   j2p_page_size:       'Rozmiar strony',
   j2p_size_auto:       '📐 Automatyczny',
   j2p_fit:             '⤡ Dopasuj',

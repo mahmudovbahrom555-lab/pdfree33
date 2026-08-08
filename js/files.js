@@ -10,6 +10,7 @@ import { showToast } from './ui.js';
 import { ACCEPTED_MIME } from './config.js';
 import { t, tp } from './i18n.js';
 import { decryptOwnerOnly } from './decryptPdf.js';
+import { bindDragReorder } from './dragReorder.js';
 
 // ── PDF encryption preflight ──────────────────────────────────
 //
@@ -139,6 +140,11 @@ export function setFilesLocked(locked) {
   chooseBtn.setAttribute('aria-disabled', locked ? 'true' : 'false');
 }
 
+/** @returns {boolean} true while a tool is actively processing */
+export function isFilesLocked() {
+  return _locked;
+}
+
 // ── Add / Remove ───────────────────────────────────────────
 
 /**
@@ -259,6 +265,17 @@ export function renderList(keepSuccess = false) {
   const list = id('fileList');
   list.innerHTML = '';
 
+  // jpg2pdf renders its own reorderable thumbnail grid (jpg2pdfUI.js) —
+  // the numbered row list would just duplicate the same files a second
+  // time on screen. Meta line / success-card / body-class side effects
+  // below still need to run, so this isn't a full early return.
+  if (_currentTool === 'jpg2pdf') {
+    _updateMeta();
+    if (!keepSuccess) id('successCard').style.display = 'none';
+    document.body.classList.toggle('has-files', selectedFiles.length > 0);
+    return;
+  }
+
   selectedFiles.forEach((f, i) => {
     const el = document.createElement('div');
     el.className = 'file-item';
@@ -296,20 +313,19 @@ export function renderList(keepSuccess = false) {
       <button class="file-item-del" data-i="${i}" aria-label="Remove ${esc(f.name)}" ${_locked ? 'disabled aria-disabled="true"' : ''}>×</button>
     `;
 
-    if (isDraggable) {
-      // Desktop HTML5 drag-and-drop
-      el.addEventListener('dragstart', _onDragStart);
-      el.addEventListener('dragover',  _onDragOver);
-      el.addEventListener('drop',      _onDrop);
-      el.addEventListener('dragend',   _onDragEnd);
-      // Mobile touch drag (HTML5 D&D does not fire on touch screens)
-      el.addEventListener('touchstart', _onTouchStart, { passive: true });
-      el.addEventListener('touchmove',  _onTouchMove,  { passive: false });
-      el.addEventListener('touchend',   _onTouchEnd,   { passive: true });
-    }
-
     list.appendChild(el);
   });
+
+  if (_currentTool === 'merge' && !_locked) {
+    bindDragReorder({
+      container:  list,
+      itemSelector: '.file-item',
+      arrays:     [selectedFiles],
+      onReorder:  () => renderList(true),
+      isLocked:   () => _locked,
+      mode:       'list',
+    });
+  }
 
   // Delegation: delete button + encryption help link
   list.onclick = e => {
@@ -389,144 +405,7 @@ function _updateMeta() {
   }
 }
 
-// ── Drag-to-reorder (desktop) ──────────────────────────────
 
-let _dragFrom = null;
-
-function _onDragStart() {
-  if (_locked) return;
-  _dragFrom = +this.dataset.i;
-  this.classList.add('dragging');
-}
-
-function _onDragOver(e) {
-  if (_locked) return;
-  e.preventDefault();
-  this.classList.add('drag-target');
-}
-
-function _onDrop(e) {
-  if (_locked) return;
-  e.preventDefault();
-  this.classList.remove('drag-target');
-  const to = +this.dataset.i;
-  if (_dragFrom === to) return;
-
-  const [moved] = selectedFiles.splice(_dragFrom, 1);
-  selectedFiles.splice(to, 0, moved);
-  renderList(true); // reorder only — keep successCard visible
-}
-
-function _onDragEnd() {
-  document.querySelectorAll('.file-item').forEach(el => {
-    el.classList.remove('dragging', 'drag-target');
-  });
-}
-
-// ── Drag-to-reorder (touch / mobile) ───────────────────────
-//
-// HTML5 drag-and-drop API does not fire on iOS/Android touch screens.
-// We handle touchstart/touchmove/touchend ourselves.
-//
-// Gesture detection:
-//   - First 8 px of movement: wait (might be a tap or horizontal scroll)
-//   - Horizontal movement dominates (|dx| > |dy| + 4): cancel — let browser scroll
-//   - Vertical movement > 8 px threshold: enter drag mode, call preventDefault
-//     to lock out page scrolling for the rest of the gesture
-//
-// Visual: translateY moves the item with the finger. elementFromPoint (with
-// pointerEvents:'none' on the dragging element) finds the drop target under
-// the finger even though touch events always fire on the original element.
-
-let _touchFrom    = null; // index of item being dragged
-let _touchEl      = null; // DOM element being dragged
-let _touchStartY  = 0;
-let _touchStartX  = 0;
-let _touchOverEl  = null; // current drop-target element
-let _touchDragging = false;
-
-function _onTouchStart(e) {
-  if (_locked) return;
-  const touch = e.touches[0];
-  _touchFrom    = +this.dataset.i;
-  _touchEl      = this;
-  _touchStartY  = touch.clientY;
-  _touchStartX  = touch.clientX;
-  _touchOverEl  = null;
-  _touchDragging = false;
-}
-
-function _onTouchMove(e) {
-  if (_locked || _touchFrom === null) return;
-  const touch = e.touches[0];
-  const dy = touch.clientY - _touchStartY;
-  const dx = touch.clientX - _touchStartX;
-
-  if (!_touchDragging) {
-    // Horizontal scroll intent — abort drag entirely
-    if (Math.abs(dx) > Math.abs(dy) + 4) {
-      _touchFrom = null;
-      _touchEl   = null;
-      return;
-    }
-    // Not past threshold yet — let it be (could still be a tap)
-    if (Math.abs(dy) < 8) return;
-    _touchDragging = true;
-  }
-
-  // Lock out page scroll now that we're committed to dragging
-  e.preventDefault();
-
-  // Move dragging element visually with the finger
-  _touchEl.style.transform = `translateY(${dy}px)`;
-  _touchEl.classList.add('touch-dragging');
-
-  // Find what's directly under the finger (skip the dragging element itself)
-  _touchEl.style.pointerEvents = 'none';
-  const hit = document.elementFromPoint(touch.clientX, touch.clientY);
-  _touchEl.style.pointerEvents = '';
-
-  const target = hit?.closest('.file-item');
-
-  if (target && target !== _touchEl) {
-    if (_touchOverEl && _touchOverEl !== target) {
-      _touchOverEl.classList.remove('drag-target');
-    }
-    target.classList.add('drag-target');
-    _touchOverEl = target;
-  } else if (!target && _touchOverEl) {
-    _touchOverEl.classList.remove('drag-target');
-    _touchOverEl = null;
-  }
-}
-
-function _onTouchEnd() {
-  if (_touchFrom === null) return;
-
-  // Reset dragging element visual state
-  if (_touchEl) {
-    _touchEl.style.transform = '';
-    _touchEl.classList.remove('touch-dragging');
-  }
-
-  // Perform the reorder if a valid target was highlighted
-  if (_touchDragging && _touchOverEl) {
-    _touchOverEl.classList.remove('drag-target');
-    const to = +_touchOverEl.dataset.i;
-    if (to !== _touchFrom) {
-      const [moved] = selectedFiles.splice(_touchFrom, 1);
-      selectedFiles.splice(to, 0, moved);
-      renderList(true); // reorder only — keep successCard visible
-    }
-  } else if (_touchOverEl) {
-    _touchOverEl.classList.remove('drag-target');
-  }
-
-  _touchFrom    = null;
-  _touchEl      = null;
-  _touchOverEl  = null;
-  _touchDragging = false;
-}
 
 // ── Setup input listeners ──────────────────────────────────
 

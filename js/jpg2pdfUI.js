@@ -16,6 +16,17 @@
 
 import { id }       from './utils.js';
 import { t, tp }    from './i18n.js';
+import { showToast } from './ui.js';
+import { selectedFiles, isFilesLocked } from './files.js';
+import { bindDragReorder } from './dragReorder.js';
+
+// Soft, non-blocking heads-up — not a hard cap. Canvas thumbnail decoding
+// happens one file at a time (see _renderPreviews), so memory pressure is
+// mild even well past this, but very large batches can still get slow on
+// low-RAM devices. The user asked to remove the old hard 20-file preview
+// cap and only warn, never block, past a reasonable size.
+const _MANY_IMAGES_WARN_THRESHOLD = 80;
+let _warnedManyImages = false;
 
 // ── State ──────────────────────────────────────────────────────
 let _pageSize    = 'auto';      // 'auto' | 'a4' | 'letter' | 'fit'
@@ -53,6 +64,15 @@ export async function initJpg2PdfOptions(files) {
   // Read EXIF in parallel — fast, only first 64KB per file
   _exifAngles = await Promise.all(files.map(f => _readExifAngle(f)));
 
+  // One-time soft warning per session past the threshold — never blocks.
+  if (files.length > _MANY_IMAGES_WARN_THRESHOLD && !_warnedManyImages) {
+    _warnedManyImages = true;
+    showToast(t('warn_many_images', { n: files.length }), 7000);
+  }
+  if (files.length <= _MANY_IMAGES_WARN_THRESHOLD) {
+    _warnedManyImages = false; // back under threshold — allow warning again if it grows past it later
+  }
+
   _render(files);
 }
 
@@ -66,6 +86,7 @@ export function hideJpg2PdfOptions() {
   _compress    = true;
   _quality     = 0.82;
   _exifAngles  = [];
+  _warnedManyImages = false;
 }
 
 // ── Render ─────────────────────────────────────────────────────
@@ -85,20 +106,14 @@ function _render(files) {
     ${exifNote}
 
     <div class="j2p-previews" aria-label="${t('j2p_image_preview')}" role="list">
-      ${files.slice(0, 20).map((f, i) => `
-        <div class="j2p-thumb" role="listitem" data-index="${i}" title="${_esc(f.name)}">
+      ${files.map((f, i) => `
+        <div class="j2p-thumb" role="listitem" data-index="${i}" data-i="${i}" title="${_esc(f.name)}">
           <canvas class="j2p-thumb__canvas" data-index="${i}"
                   width="48" height="48" aria-hidden="true"></canvas>
           <span class="j2p-thumb__name">${_truncName(f.name, 12)}</span>
           ${_exifAngles[i] !== 0 ? `<span class="j2p-thumb__badge" aria-label="${t('j2p_will_be_rotated')}">↺</span>` : ''}
         </div>
       `).join('')}
-      ${files.length > 20
-        ? `<div class="j2p-thumb j2p-thumb--more" role="listitem" aria-label="${t('j2p_more_images', { n: files.length - 20 })}">
-             <div class="j2p-thumb__more-box">+${files.length - 20}</div>
-             <span class="j2p-thumb__name">more</span>
-           </div>`
-        : ''}
     </div>
 
     <div class="j2p-row">
@@ -170,21 +185,35 @@ function _render(files) {
 // Рендерим миниатюры после того как DOM готов.
 // createImageBitmap не блокирует — идеально.
 
+// File → decoded <img> element. Keyed by the File object itself (not index,
+// which changes on every reorder) so dragging to reorder redraws instantly
+// from cache instead of re-fetching + re-decoding every image again — this
+// matters more now that the old 20-file cap is gone and a batch can be large.
+const _imgCache = new WeakMap();
+
+async function _loadImage(file) {
+  const cached = _imgCache.get(file);
+  if (cached) return cached;
+
+  const url = URL.createObjectURL(file);
+  const img = new Image();
+  // onerror = res (not rej) is intentional: preview is cosmetic, we don't
+  // want one broken image to abort the entire preview loop. Resolving on
+  // error also guarantees URL.revokeObjectURL runs in all cases without
+  // needing a try/finally — the promise always resolves, revoke always runs.
+  await new Promise(res => { img.onload = res; img.onerror = res; img.src = url; });
+  URL.revokeObjectURL(url);
+  _imgCache.set(file, img);
+  return img;
+}
+
 async function _renderPreviews(files) {
-  // Only render the first 20 thumbnails — DOM is also capped at 20
-  const visible = files.slice(0, 20);
-  for (let i = 0; i < visible.length; i++) {
+  for (let i = 0; i < files.length; i++) {
     const canvas = document.querySelector(`.j2p-thumb__canvas[data-index="${i}"]`);
     if (!canvas) continue;
     try {
-      const url    = URL.createObjectURL(visible[i]);
-      const img    = new Image();
-      // onerror = res (not rej) is intentional: preview is cosmetic, we don't
-      // want one broken image to abort the entire preview loop. Resolving on
-      // error also guarantees URL.revokeObjectURL runs in all cases without
-      // needing a try/finally — the promise always resolves, revoke always runs.
-      await new Promise(res => { img.onload = res; img.onerror = res; img.src = url; });
-      URL.revokeObjectURL(url);
+      const img = await _loadImage(files[i]);
+      if (!img.naturalWidth) continue; // failed to decode — leave canvas blank
 
       const ctx = canvas.getContext('2d');
       const s   = Math.min(48 / img.naturalWidth, 48 / img.naturalHeight);
@@ -193,6 +222,7 @@ async function _renderPreviews(files) {
 
       // Apply EXIF rotation on preview
       const angle = _exifAngles[i] || 0;
+      ctx.clearRect(0, 0, 48, 48);
       ctx.save();
       ctx.translate(24, 24);
       ctx.rotate(angle * Math.PI / 180);
@@ -234,6 +264,22 @@ function _bindEvents() {
       const val = id('j2pQualityVal');
       if (val) val.textContent = slider.value + '%';
       // (label update removed — new design shows percentage in the slider header only)
+    });
+  }
+
+  // Drag-to-reorder the thumbnail grid — mouse + touch, shared with merge's
+  // file list (dragReorder.js). selectedFiles and _exifAngles are spliced
+  // in lockstep so a thumbnail's rotation correction follows it to its new
+  // position instead of staying pinned to the old index.
+  const previews = container.querySelector('.j2p-previews');
+  if (previews) {
+    bindDragReorder({
+      container:    previews,
+      itemSelector: '.j2p-thumb',
+      arrays:       [selectedFiles, _exifAngles],
+      onReorder:    () => _render(selectedFiles), // _render() already re-binds events + redraws previews
+      isLocked:     isFilesLocked,
+      mode:         'grid',
     });
   }
 }

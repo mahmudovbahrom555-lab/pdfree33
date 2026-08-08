@@ -183,6 +183,7 @@ export const EN = {
   err_batch_timeout:    '⏱ This file timed out — it may be too large or complex for the browser. It will be marked as failed and the batch will continue with the rest.',
   err_merge_timeout:    '⏱ Merge timed out — the browser may have run out of memory. Try merging fewer files, or smaller ones, at a time.',
   warn_compress_large:  '⚠️ Large file ({size}) — compression may take 1–2 minutes. The browser processes everything locally in RAM.',
+  warn_many_images:     '⚠️ {n} images selected — that\'s a lot for one batch. Processing may be slow or use significant memory on older devices.',
   compress_scan_skipped: 'Large file — pre-scan skipped to save memory',
 
   // ── compressUI — scan banner & doc type ───────────────────────
@@ -568,9 +569,8 @@ export const EN = {
   j2p_reading_images:  'Reading images…',
   j2p_exif_note_one:   '📐 {n} image will be auto-rotated (EXIF correction)',
   j2p_exif_note_many:  '📐 {n} images will be auto-rotated (EXIF correction)',
-  j2p_image_preview:   'Image preview',
+  j2p_image_preview:   'Image preview — drag to reorder',
   j2p_will_be_rotated: 'Will be rotated',
-  j2p_more_images:     '{n} more images',
   j2p_page_size:       'Page size',
   j2p_size_auto:       '📐 Auto',
   j2p_fit:             '⤡ Fit',

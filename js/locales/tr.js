@@ -197,6 +197,7 @@ window.PDFREE_LOCALE = {
   preset_remember_sub_protect: 'İzin seçimlerinizi bir dahaki sefere hatırlayacağız — parolanızı asla.',
   err_merge_timeout:    '⏱ Birleştirme iptal edildi — tarayıcının belleği yetersiz kalmış olabilir. Daha az veya daha küçük dosyaları birleştirmeyi deneyin.',
   warn_compress_large:  '⚠️ Büyük dosya ({size}) — sıkıştırma 1–2 dakika sürebilir. Tarayıcı her şeyi hafızada yerel olarak işler.',
+  warn_many_images:     '⚠️ {n} görsel seçildi — bu tek seferde işlemek için çok fazla. İşleme yavaş olabilir veya eski cihazlarda önemli miktarda bellek kullanabilir.',
   compress_scan_skipped: 'Büyük dosya — hafızadan tasarruf etmek için ön tarama atlandı',
 
   compress_placeholder:      'Analiz sıkıştırma sırasında otomatik çalışacak',
@@ -544,9 +545,8 @@ window.PDFREE_LOCALE = {
   j2p_reading_images:  'Görseller okunuyor…',
   j2p_exif_note_one:   '📐 {n} görsel otomatik olarak döndürülecek (EXIF düzeltmesi)',
   j2p_exif_note_many:  '📐 {n} görsel otomatik olarak döndürülecek (EXIF düzeltmesi)',
-  j2p_image_preview:   'Görsel önizleme',
+  j2p_image_preview:   'Görsel önizleme — sıralamak için sürükleyin',
   j2p_will_be_rotated: 'Döndürülecek',
-  j2p_more_images:     '{n} görsel daha',
   j2p_page_size:       'Sayfa boyutu',
   j2p_size_auto:       '📐 Otomatik',
   j2p_fit:             '⤡ Sığdır',

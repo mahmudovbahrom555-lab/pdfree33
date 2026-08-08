@@ -198,6 +198,7 @@ window.PDFREE_LOCALE = {
   preset_remember_sub_protect: 'Chúng tôi sẽ ghi nhớ lựa chọn quyền của bạn lần sau — không bao giờ ghi nhớ mật khẩu.',
   err_merge_timeout:    '⏱ Hợp nhất bị hủy — trình duyệt có thể đã hết bộ nhớ. Hãy thử hợp nhất ít file hơn hoặc file nhỏ hơn cùng lúc.',
   warn_compress_large:  '⚠️ File lớn ({size}) — nén có thể mất 1–2 phút. Trình duyệt xử lý tất cả cục bộ trong bộ nhớ.',
+  warn_many_images:     '⚠️ Đã chọn {n} ảnh — khá nhiều cho một lần xử lý. Quá trình xử lý có thể chậm hoặc tốn nhiều bộ nhớ trên thiết bị cũ.',
   compress_scan_skipped: 'File lớn — bỏ qua quét sơ bộ để tiết kiệm bộ nhớ',
 
   compress_placeholder:      'Phân tích tự động bắt đầu khi nén',
@@ -545,9 +546,8 @@ window.PDFREE_LOCALE = {
   j2p_reading_images:  'Đang đọc hình ảnh…',
   j2p_exif_note_one:   '📐 {n} ảnh sẽ được tự động xoay (hiệu chỉnh EXIF)',
   j2p_exif_note_many:  '📐 {n} ảnh sẽ được tự động xoay (hiệu chỉnh EXIF)',
-  j2p_image_preview:   'Xem trước hình ảnh',
+  j2p_image_preview:   'Xem trước hình ảnh — kéo để sắp xếp lại',
   j2p_will_be_rotated: 'Sẽ được xoay',
-  j2p_more_images:     'Thêm {n} ảnh',
   j2p_page_size:       'Kích thước trang',
   j2p_size_auto:       '📐 Tự động',
   j2p_fit:             '⤡ Vừa khít',

@@ -740,6 +740,17 @@ button,
   align-items: center;
   gap: 4px;
   position: relative;
+  cursor: grab;
+  user-select: none;
+  touch-action: none; /* whole thumbnail is the drag surface — no separate handle icon */
+}
+.j2p-thumb.dragging       { opacity: 0.4; border-style: dashed; }
+.j2p-thumb.drag-target .j2p-thumb__canvas { border-color: var(--green); background: var(--green-light); }
+.j2p-thumb.touch-dragging {
+  opacity: 0.88;
+  z-index: 10;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.14);
+  transition: box-shadow 0.1s;
 }
 
 .j2p-thumb__canvas {
@@ -774,20 +785,6 @@ button,
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.j2p-thumb--more .j2p-thumb__more-box {
-  width: 56px;
-  height: 56px;
-  border-radius: 8px;
-  border: 1px dashed var(--border);
-  background: var(--surface2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text3);
 }
 
 .j2p-exif-note {

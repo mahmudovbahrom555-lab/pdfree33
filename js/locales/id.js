@@ -198,6 +198,7 @@ window.PDFREE_LOCALE = {
   preset_remember_sub_protect: 'Kami akan mengingat pilihan izin Anda lain kali — tidak pernah kata sandi Anda.',
   err_merge_timeout:    '⏱ Penggabungan dibatalkan — browser mungkin kehabisan memori. Coba gabungkan lebih sedikit file, atau file yang lebih kecil, sekaligus.',
   warn_compress_large:  '⚠️ File besar ({size}) — kompresi dapat memerlukan 1–2 menit. Browser memproses semuanya secara lokal di memori.',
+  warn_many_images:     '⚠️ {n} gambar dipilih — itu banyak untuk satu batch. Pemrosesan mungkin lambat atau menggunakan banyak memori di perangkat lama.',
   compress_scan_skipped: 'File besar — pemindaian awal dilewati untuk menghemat memori',
 
   compress_placeholder:      'Analisis dimulai otomatis saat mengompres',
@@ -545,9 +546,8 @@ window.PDFREE_LOCALE = {
   j2p_reading_images:  'Membaca gambar…',
   j2p_exif_note_one:   '📐 {n} gambar akan diputar otomatis (koreksi EXIF)',
   j2p_exif_note_many:  '📐 {n} gambar akan diputar otomatis (koreksi EXIF)',
-  j2p_image_preview:   'Pratinjau gambar',
+  j2p_image_preview:   'Pratinjau gambar — seret untuk mengatur ulang',
   j2p_will_be_rotated: 'Akan diputar',
-  j2p_more_images:     '{n} gambar lainnya',
   j2p_page_size:       'Ukuran halaman',
   j2p_size_auto:       '📐 Otomatis',
   j2p_fit:             '⤡ Sesuaikan',

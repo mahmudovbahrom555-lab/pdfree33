@@ -199,6 +199,7 @@ window.PDFREE_LOCALE = {
   preset_remember_sub_protect: '다음에도 권한 선택을 기억합니다 — 비밀번호는 절대 기억하지 않습니다.',
   err_merge_timeout:    '⏱ 병합 시간이 초과되었습니다 — 브라우저 메모리가 부족했을 수 있습니다. 한 번에 병합하는 파일 수를 줄이거나 더 작은 파일로 시도해 보세요.',
   warn_compress_large:  '⚠️ 대용량 파일 ({size}) — 압축에 1~2분이 걸릴 수 있습니다. 브라우저가 모두 브라우저에서 처리합니다.',
+  warn_many_images:     '⚠️ 이미지 {n}개 선택됨 — 한 번에 처리하기에는 많은 양입니다. 처리 속도가 느려지거나 오래된 기기에서 메모리를 많이 사용할 수 있습니다.',
   compress_scan_skipped: '대용량 파일 — 메모리 절약을 위해 사전 스캔 건너뜀',
 
   compress_placeholder:      '압축 시 자동으로 분석이 실행됩니다',
@@ -546,9 +547,8 @@ window.PDFREE_LOCALE = {
   j2p_reading_images:  '이미지를 읽는 중…',
   j2p_exif_note_one:   '📐 {n}개 이미지가 자동으로 회전됩니다 (EXIF 보정)',
   j2p_exif_note_many:  '📐 {n}개 이미지가 자동으로 회전됩니다 (EXIF 보정)',
-  j2p_image_preview:   '이미지 미리보기',
+  j2p_image_preview:   '이미지 미리보기 — 드래그하여 순서 변경',
   j2p_will_be_rotated: '회전됨',
-  j2p_more_images:     '{n}개의 이미지 더보기',
   j2p_page_size:       '페이지 크기',
   j2p_size_auto:       '📐 자동',
   j2p_fit:             '⤡ 맞춤',
