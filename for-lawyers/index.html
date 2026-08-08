@@ -86,6 +86,11 @@
         "@type": "Question",
         "name": "How does local processing relate to GDPR obligations for legal documents?",
         "acceptedAnswer": { "@type": "Answer", "text": "Since no file data is transmitted to PDFree's servers or any third party, local processing avoids many of the data-transfer obligations that arise when using cloud-based tools. There is no controller-processor relationship with PDFree because personal data is not processed by our infrastructure. Whether this fully satisfies your GDPR or firm-specific compliance requirements depends on your context. Consult your DPO for specific guidance." }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I watermark or password-protect an entire discovery set at once?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes. Batch mode on the Watermark and Protect tools applies the same setting to every exhibit you select, keeping each file separate and returning them together in one ZIP." }
       }
     ]
   }
@@ -237,9 +242,37 @@
       </a>
     </div>
 
+    <!-- Workflow 4: Batch processing -->
+    <h2 style="font-size:22px;color:var(--text);margin:0 0 8px;font-weight:700;">Workflow 4 — Batch Watermark or Protect Discovery Documents</h2>
+    <p style="font-size:14px;color:var(--text2);margin:0 0 20px;">Discovery sets can mean dozens or hundreds of individual exhibits that each need the same treatment — stamp them as privileged and lock them down without processing one at a time.</p>
+
+    <div style="display:flex;flex-direction:column;gap:3px;margin:0 0 48px;">
+      <a href="../watermark-pdf/" style="display:flex;align-items:center;gap:14px;padding:16px 20px;border:2px solid var(--green);border-radius:10px;background:var(--green-light);text-decoration:none;">
+        <span style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">1</span>
+        <div>
+          <strong style="color:var(--text);display:block;">Watermark PDF (batch)</strong>
+          <span style="font-size:13px;color:var(--text2);">Stamp "Privileged" or "Confidential" across every exhibit at once — each file stays separate, no merging.</span>
+        </div>
+        <span style="margin-left:auto;color:var(--green);font-weight:600;font-size:13px;">Open →</span>
+      </a>
+      <div style="padding-left:34px;font-size:12px;color:var(--text3);">↓ optional</div>
+      <a href="../protect-pdf/" style="display:flex;align-items:center;gap:14px;padding:16px 20px;border:1px solid var(--border);border-radius:10px;text-decoration:none;background:var(--surface);">
+        <span style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">2</span>
+        <div>
+          <strong style="color:var(--text);display:block;">Protect PDF (batch)</strong>
+          <span style="font-size:13px;color:var(--text2);">Apply the same password to the entire batch before sending to opposing counsel or the court.</span>
+        </div>
+        <span style="margin-left:auto;color:var(--green);font-weight:600;font-size:13px;">Open →</span>
+      </a>
+    </div>
+
     <!-- FAQ -->
     <h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">Frequently Asked Questions</h2>
     <div style="display:flex;flex-direction:column;gap:16px;margin:0 0 48px;">
+      <div style="border:1px solid var(--border);border-radius:12px;padding:18px 20px;">
+        <h3 style="font-size:15px;color:var(--text);margin:0 0 8px;font-weight:600;">Can I watermark or password-protect an entire discovery set at once?</h3>
+        <p style="margin:0;font-size:14px;">Yes. Batch mode on Watermark and Protect applies the same setting to every exhibit you select, keeping each file separate and returning them together in one ZIP. See the full <a href="/batch-process-pdf-free/" style="color:var(--green);">batch processing guide</a> for all supported tools.</p>
+      </div>
       <div style="border:1px solid var(--border);border-radius:12px;padding:18px 20px;">
         <h3 style="font-size:15px;color:var(--text);margin:0 0 8px;font-weight:600;">Does using PDFree risk breaching attorney-client privilege?</h3>
         <p style="margin:0;font-size:14px;">Local processing helps reduce exposure because no file is transmitted to any third-party server — the document remains on your device throughout. Whether this fully satisfies your privilege obligations depends on your jurisdiction and internal firm policies. What we can say with certainty: PDFree does not receive, store, or process your files on any server. Consult your bar association guidelines for specific advice.</p>
@@ -263,6 +296,7 @@
         <a href="../redact-pdf/"  style="background:var(--green);color:#fff;padding:10px 20px;border-radius:8px;font-weight:600;text-decoration:none;font-size:14px;">Redact PDF</a>
         <a href="../protect-pdf/" style="background:var(--green);color:#fff;padding:10px 20px;border-radius:8px;font-weight:600;text-decoration:none;font-size:14px;">Protect PDF</a>
         <a href="../merge-pdf/"   style="background:var(--green);color:#fff;padding:10px 20px;border-radius:8px;font-weight:600;text-decoration:none;font-size:14px;">Merge PDF</a>
+        <a href="/batch-process-pdf-free/" style="background:var(--surface);color:var(--text);padding:10px 20px;border-radius:8px;font-weight:600;text-decoration:none;font-size:14px;border:1px solid var(--border);">Batch Process Files</a>
       </div>
     </div>
 

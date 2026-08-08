@@ -451,6 +451,8 @@ SPECIALTY_PAGES = [
     'for-lawyers',
     'for-students',
     'for-teachers',
+    'for-hr',
+    'for-insurance',
     # Batch processing hub — links out to the 6 batch-eligible tools,
     # no embedded tool of its own (EN-only for now, translate after
     # traffic validation per the SEO batch-processing rollout plan)
@@ -484,6 +486,8 @@ SPECIALTY_PAGES = [
     'blog/how-to-ocr-a-pdf-without-uploading',
     'blog/best-free-ocr-pdf-tools',
     'blog/hipaa-safe-ocr-for-medical-documents',
+    'blog/free-vs-paid-batch-pdf-tools',
+    'blog/how-to-batch-process-pdf-documents-safely',
 ]
 
 # NOTE (Sitemap Index): If the site ever grows beyond 50,000 URLs, split the sitemap

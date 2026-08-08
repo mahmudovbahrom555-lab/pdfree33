@@ -81,6 +81,11 @@
         "@type": "Question",
         "name": "How do I extract text from a scanned bank statement?",
         "acceptedAnswer": { "@type": "Answer", "text": "Use PDFree's OCR PDF tool to add a searchable text layer to the scanned statement, then use PDF to Word to convert it to editable format. Both steps run locally in your browser — account numbers and transaction data never leave your device." }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I batch compress or password-protect client statements without merging them?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes. Batch mode on the Compress and Protect tools keeps each file separate — it applies the same setting to every file you select and returns them as individual files inside one ZIP, not combined into a single document." }
       }
     ]
   }
@@ -222,9 +227,37 @@
       </a>
     </div>
 
+    <!-- Workflow 4: Batch processing -->
+    <h2 style="font-size:22px;color:var(--text);margin:0 0 8px;font-weight:700;">Workflow 4 — Batch Compress or Password-Protect Client Files</h2>
+    <p style="font-size:14px;color:var(--text2);margin:0 0 20px;">Need to keep 30 client statements as separate files instead of merging them? PDFree's batch mode applies the same settings to every file at once and returns a ZIP — no merging required.</p>
+
+    <div style="display:flex;flex-direction:column;gap:3px;margin:0 0 48px;">
+      <a href="../compress-pdf/" style="display:flex;align-items:center;gap:14px;padding:16px 20px;border:2px solid var(--green);border-radius:10px;background:var(--green-light);text-decoration:none;">
+        <span style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">1</span>
+        <div>
+          <strong style="color:var(--text);display:block;">Compress PDF (batch)</strong>
+          <span style="font-size:13px;color:var(--text2);">Select all client statements at once. Each is compressed separately, still as its own file — you get a ZIP with all of them shrunk.</span>
+        </div>
+        <span style="margin-left:auto;color:var(--green);font-weight:600;font-size:13px;">Open →</span>
+      </a>
+      <div style="padding-left:34px;font-size:12px;color:var(--text3);">↓ optional</div>
+      <a href="../protect-pdf/" style="display:flex;align-items:center;gap:14px;padding:16px 20px;border:1px solid var(--border);border-radius:10px;text-decoration:none;background:var(--surface);">
+        <span style="background:var(--green);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">2</span>
+        <div>
+          <strong style="color:var(--text);display:block;">Protect PDF (batch)</strong>
+          <span style="font-size:13px;color:var(--text2);">Apply the same password to every client's statement in one pass, without emailing them one at a time.</span>
+        </div>
+        <span style="margin-left:auto;color:var(--green);font-weight:600;font-size:13px;">Open →</span>
+      </a>
+    </div>
+
     <!-- FAQ -->
     <h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">Frequently Asked Questions</h2>
     <div style="display:flex;flex-direction:column;gap:16px;margin:0 0 48px;">
+      <div style="border:1px solid var(--border);border-radius:12px;padding:18px 20px;">
+        <h3 style="font-size:15px;color:var(--text);margin:0 0 8px;font-weight:600;">Can I batch compress or password-protect client statements without merging them?</h3>
+        <p style="margin:0;font-size:14px;">Yes. Batch mode on Compress and Protect keeps each file separate — it applies the same setting to every file you select and returns them as individual files inside one ZIP, not combined into a single document. See the full <a href="/batch-process-pdf-free/" style="color:var(--green);">batch processing guide</a> for all supported tools.</p>
+      </div>
       <div style="border:1px solid var(--border);border-radius:12px;padding:18px 20px;">
         <h3 style="font-size:15px;color:var(--text);margin:0 0 8px;font-weight:600;">Is it safe to process client financial data with a free online tool?</h3>
         <p style="margin:0;font-size:14px;">With PDFree, yes. No file is transmitted to any server. Account numbers, tax IDs, and financial figures stay in your browser's memory and are cleared when you close the tab. Most other free PDF tools upload your document — check their privacy policy before processing financial data with them.</p>
@@ -248,6 +281,7 @@
         <a href="../compress-pdf/"         style="background:var(--green);color:#fff;padding:10px 20px;border-radius:8px;font-weight:600;text-decoration:none;font-size:14px;">Compress Reports</a>
         <a href="../pdf-to-word/"          style="background:var(--green);color:#fff;padding:10px 20px;border-radius:8px;font-weight:600;text-decoration:none;font-size:14px;">PDF to Word</a>
         <a href="../split-pdf/"            style="background:var(--green);color:#fff;padding:10px 20px;border-radius:8px;font-weight:600;text-decoration:none;font-size:14px;">Split Payslips</a>
+        <a href="/batch-process-pdf-free/" style="background:var(--surface);color:var(--text);padding:10px 20px;border-radius:8px;font-weight:600;text-decoration:none;font-size:14px;border:1px solid var(--border);">Batch Process Files</a>
       </div>
     </div>
 
