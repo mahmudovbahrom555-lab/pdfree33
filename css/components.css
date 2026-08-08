@@ -1973,6 +1973,15 @@ button,
   gap: 12px;
   margin-bottom: 14px;
   align-items: center;
+  /* Sticks right below <nav> (itself position:sticky; top:0; height:60px)
+     so rotate/undo/reset stay reachable without scrolling back up on long
+     documents — the whole point is seeing the result where you made it. */
+  position: sticky;
+  top: 60px;
+  z-index: 50;
+  background: var(--bg);
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
 }
 
 .rot-btns {
