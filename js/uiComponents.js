@@ -106,6 +106,19 @@ export function checkbox({ id, checked, title, subtitle, style = '', ariaLabel }
   </div>`;
 }
 
+/**
+ * Same toggle as checkbox(), wrapped in a bordered/tinted card so
+ * "Remember my settings" stands out from ordinary option toggles instead
+ * of blending into the list. Used identically by compress/watermark/
+ * protect/pagenum's options panels — see presets.js.
+ * @param {{id:string, checked:boolean, title:string, subtitle:string, ariaLabel?:string}} opts
+ */
+export function presetRememberCard(opts) {
+  return `<div style="margin-top:14px;padding:2px 16px;background:var(--green-light);border:1px solid rgba(45,122,79,0.2);border-radius:10px;">
+    ${checkbox(opts)}
+  </div>`;
+}
+
 // ── Label + group wrapper ─────────────────────────────────────
 
 /**

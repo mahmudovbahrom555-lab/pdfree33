@@ -16,7 +16,7 @@ import { id, fmtSize } from './utils.js';
 import { MAX_COMPRESS_MB } from './config.js';
 import { showToast } from './ui.js';
 import { t, tp } from './i18n.js';
-import { sliderRow, checkbox } from './uiComponents.js';
+import { sliderRow, checkbox, presetRememberCard } from './uiComponents.js';
 import { wmRemoveHtml, bindWmRemove, resetWmRemove } from './watermarkRemoveUI.js';
 import { loadPreset, clearPreset } from './presets.js';
 
@@ -480,10 +480,10 @@ function _render(file, scan) {
 
     ${wmRemoveHtml()}
 
-    ${checkbox({
+    ${presetRememberCard({
       id:       'compressRememberCheck',
       checked:  loadPreset('compress') !== null,
-      title:    t('preset_remember_title'),
+      title:    '💾 ' + t('preset_remember_title'),
       subtitle: t('preset_remember_sub'),
       ariaLabel: t('preset_remember_title'),
     })}

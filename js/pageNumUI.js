@@ -11,7 +11,7 @@
 // ============================================================
 
 import { id } from './utils.js';
-import { chipGroup, sliderRow, checkbox } from './uiComponents.js';
+import { chipGroup, sliderRow, checkbox, presetRememberCard } from './uiComponents.js';
 import { formatPageNumber } from './pageNumUtils.js';
 import { t } from './i18n.js';
 import { loadPreset, clearPreset } from './presets.js';
@@ -234,10 +234,10 @@ function _render() {
                   valText: _fontSize + 'pt', min: 7, max: 16, step: 1,
                   value: _fontSize, ariaLabel: t('pn_aria_font_size', { size: _fontSize }) })}
 
-    ${checkbox({
+    ${presetRememberCard({
       id:       'pagenumRememberCheck',
       checked:  loadPreset('pagenum') !== null,
-      title:    t('preset_remember_title'),
+      title:    '💾 ' + t('preset_remember_title'),
       subtitle: t('preset_remember_sub'),
       ariaLabel: t('preset_remember_title'),
     })}

@@ -15,7 +15,7 @@
 // ============================================================
 
 import { id }       from './utils.js';
-import { chipGroup, sliderRow, group, checkbox } from './uiComponents.js';
+import { chipGroup, sliderRow, group, presetRememberCard } from './uiComponents.js';
 import { loadPdfJs } from './pdf2jpgUI.js';
 import { computeWatermarkLayout } from './watermarkLayout.js';
 import { showToast } from './ui.js';
@@ -183,10 +183,10 @@ function _render() {
                         valText: _fontSize + 'pt', min: 16, max: 80, step: 4,
                         value: _fontSize, ariaLabel: t('wm_aria_font_size', { size: _fontSize }) })}
 
-        ${!isImage ? checkbox({
+        ${!isImage ? presetRememberCard({
           id:       'watermarkRememberCheck',
           checked:  loadPreset('watermark') !== null,
-          title:    t('preset_remember_title'),
+          title:    '💾 ' + t('preset_remember_title'),
           subtitle: t('preset_remember_sub'),
           ariaLabel: t('preset_remember_title'),
         }) : ''}

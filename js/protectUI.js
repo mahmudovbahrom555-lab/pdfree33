@@ -18,7 +18,7 @@
 
 import { id }        from './utils.js';
 import { showToast } from './ui.js';
-import { group, infoBanner, checkbox } from './uiComponents.js';
+import { group, infoBanner, presetRememberCard } from './uiComponents.js';
 import { t } from './i18n.js';
 import { loadPreset, clearPreset } from './presets.js';
 
@@ -201,10 +201,10 @@ function _render(container) {
           <div id="protPermissions" class="prot-perms"></div>
         </div>
 
-        ${checkbox({
+        ${presetRememberCard({
           id:       'protectRememberCheck',
           checked:  loadPreset('protect') !== null,
-          title:    t('preset_remember_title'),
+          title:    '💾 ' + t('preset_remember_title'),
           subtitle: t('preset_remember_sub_protect'),
           ariaLabel: t('preset_remember_title'),
         })}
