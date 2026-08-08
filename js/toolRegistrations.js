@@ -221,6 +221,10 @@ registerTool('jpg2pdf', {
   init:      initJpg2PdfOptions,
   hide:      hideJpg2PdfOptions,
   getParams: getJpg2PdfParams,
+  // exifAngles is per-image rotation for this specific batch, not a reusable
+  // setting — stripped, leaving only jpg2pdfUI.js's own layout/quality settings.
+  presetFilter: ({ pageSize, orientation, compress, quality }) =>
+    ({ pageSize, orientation, compress, quality }),
 });
 
 registerTool('pdf2jpg', {

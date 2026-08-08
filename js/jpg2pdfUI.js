@@ -19,6 +19,8 @@ import { t, tp }    from './i18n.js';
 import { showToast } from './ui.js';
 import { selectedFiles, isFilesLocked } from './files.js';
 import { bindDragReorder } from './dragReorder.js';
+import { presetRememberCard } from './uiComponents.js';
+import { loadPreset, clearPreset } from './presets.js';
 
 // Soft, non-blocking heads-up — not a hard cap. Canvas thumbnail decoding
 // happens one file at a time (see _renderPreviews), so memory pressure is
@@ -34,6 +36,7 @@ let _orientation = 'auto';     // 'auto' | 'portrait' | 'landscape'
 let _compress    = true;
 let _quality     = 0.82;       // JPEG quality 0–1
 let _exifAngles  = [];         // cached EXIF rotation per file (degrees)
+let _rememberLoaded = false;   // "Remember my settings" applied once per tool session
 
 export function getJpg2PdfParams() {
   return { pageSize: _pageSize, orientation: _orientation,
@@ -52,6 +55,20 @@ export async function initJpg2PdfOptions(files) {
   if (!container) return;
 
   if (files.length === 0) { container.style.display = 'none'; return; }
+
+  // Restore saved layout/quality settings once per tool session — exifAngles
+  // is never part of the saved preset (this batch's own per-image rotation,
+  // see presetFilter in toolRegistrations.js), so it always starts fresh.
+  if (!_rememberLoaded) {
+    _rememberLoaded = true;
+    const saved = loadPreset('jpg2pdf');
+    if (saved) {
+      _pageSize    = saved.pageSize    ?? _pageSize;
+      _orientation = saved.orientation ?? _orientation;
+      _compress    = saved.compress    ?? _compress;
+      _quality     = saved.quality     ?? _quality;
+    }
+  }
 
   container.innerHTML = `
     <div class="j2p-loading">
@@ -87,6 +104,7 @@ export function hideJpg2PdfOptions() {
   _quality     = 0.82;
   _exifAngles  = [];
   _warnedManyImages = false;
+  _rememberLoaded = false;
 }
 
 // ── Render ─────────────────────────────────────────────────────
@@ -174,6 +192,14 @@ function _render(files) {
                aria-label="${t('j2p_aria_quality', { pct: Math.round(_quality * 100) })}">
       </div>
     </div>
+
+    ${presetRememberCard({
+      id:       'jpg2pdfRememberCheck',
+      checked:  loadPreset('jpg2pdf') !== null,
+      title:    '💾 ' + t('preset_remember_title'),
+      subtitle: t('preset_remember_sub'),
+      ariaLabel: t('preset_remember_title'),
+    })}
   `;
 
   _bindEvents();
@@ -254,6 +280,11 @@ function _bindEvents() {
       _compress = e.target.checked;
       const row = id('j2pQualityRow');
       if (row) row.classList.toggle('j2p-quality-row--disabled', !_compress);
+    }
+    // Unchecking forgets immediately — saving happens centrally in app.js
+    // (_maybeSavePreset) right before processing starts.
+    if (e.target.id === 'jpg2pdfRememberCheck' && !e.target.checked) {
+      clearPreset('jpg2pdf');
     }
   });
 
