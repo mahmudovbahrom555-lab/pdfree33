@@ -14,6 +14,7 @@ import { id } from './utils.js';
 import { chipGroup, sliderRow, checkbox } from './uiComponents.js';
 import { formatPageNumber } from './pageNumUtils.js';
 import { t } from './i18n.js';
+import { loadPreset, clearPreset } from './presets.js';
 
 // ── State ──────────────────────────────────────────────────────
 let _position  = 'bottom-center'; // 'bottom-center'|'bottom-right'|'bottom-left'|'top-center'|'book'
@@ -24,6 +25,7 @@ let _startAt   = 1;               // number shown on the first numbered page
 let _autoStart = true;            // true = startAt mirrors fromPage automatically
 let _fontSize  = 10;
 let _showTotal = false;           // show "1 / N" instead of just "1"
+let _rememberLoaded = false;      // "Remember my settings" applied once per tool session
 
 export function getPageNumParams() {
   return {
@@ -42,6 +44,21 @@ export function getPageNumParams() {
 // ── Public API ─────────────────────────────────────────────────
 
 export function initPageNumOptions() {
+  // Restore saved settings once per tool session — fromPage/toPage are never
+  // part of the saved preset (this document's own page range, see
+  // presetFilter in toolRegistrations.js), so numbering always starts fresh
+  // from the top for a new document.
+  if (!_rememberLoaded) {
+    _rememberLoaded = true;
+    const saved = loadPreset('pagenum');
+    if (saved) {
+      _position  = saved.position  ?? _position;
+      _format    = saved.format    ?? _format;
+      _fontSize  = saved.fontSize  ?? _fontSize;
+      _showTotal = saved.showTotal ?? _showTotal;
+    }
+  }
+
   const container = id('pageNumOptions');
   if (!container) return;
   container.style.display = 'block';
@@ -61,6 +78,7 @@ export function hidePageNumOptions() {
   _autoStart = true;
   _fontSize  = 10;
   _showTotal = false;
+  _rememberLoaded = false;
 }
 
 // ── Render ─────────────────────────────────────────────────────
@@ -216,6 +234,14 @@ function _render() {
                   valText: _fontSize + 'pt', min: 7, max: 16, step: 1,
                   value: _fontSize, ariaLabel: t('pn_aria_font_size', { size: _fontSize }) })}
 
+    ${checkbox({
+      id:       'pagenumRememberCheck',
+      checked:  loadPreset('pagenum') !== null,
+      title:    t('preset_remember_title'),
+      subtitle: t('preset_remember_sub'),
+      ariaLabel: t('preset_remember_title'),
+    })}
+
     <!-- ── PREVIEW ── -->
     <div class="pn-preview" aria-hidden="true">
       ${_previewHTML()}
@@ -275,6 +301,11 @@ function _bindEvents() {
       _refreshPreview();
     }
     if (e.target.id === 'pnShowTotal') { _showTotal = e.target.checked; _refreshPreview(); }
+    // Unchecking forgets immediately — saving happens centrally in app.js
+    // (_maybeSavePreset) right before processing starts.
+    if (e.target.id === 'pagenumRememberCheck' && !e.target.checked) {
+      clearPreset('pagenum');
+    }
   });
 
   // Helper: sync startAt to fromPage when in auto mode + microanimation

@@ -18,6 +18,7 @@ import { showToast } from './ui.js';
 import { t, tp } from './i18n.js';
 import { sliderRow, checkbox } from './uiComponents.js';
 import { wmRemoveHtml, bindWmRemove, resetWmRemove } from './watermarkRemoveUI.js';
+import { loadPreset, clearPreset } from './presets.js';
 
 // Locale-correct slug for the "splitting" cross-link in the email-size verdict
 // below. This module is shared across every locale's page, and the Split PDF
@@ -44,6 +45,7 @@ let _targetSizeMb = null;      // Target Size Mode: null | 25 | 10 | 5
 let _lastScan     = null;      // scan report (background or worker), null until scan arrives
 let _presetAutoSelected = false; // true when we auto-selected a preset from scan data
 let _eventsBound  = false;     // listeners live on the persistent #compressOptions div — bind once
+let _rememberLoaded = false;   // "Remember my settings" applied once per tool session — see initCompressOptions
 
 // Defaults applied when user switches presets
 const _dpiDefaults     = { low: null, medium: 150, high: 96 };
@@ -205,6 +207,24 @@ export function initCompressOptions(file) {
   }
 
   _lastScan = null;
+
+  // Restore saved settings once per tool session — NOT on every file add,
+  // so switching preset mid-session for a later file isn't silently
+  // overwritten each time a new file lands (see hideCompressOptions,
+  // which clears _rememberLoaded for the next fresh session).
+  if (!_rememberLoaded) {
+    _rememberLoaded = true;
+    const saved = loadPreset('compress');
+    if (saved) {
+      _preset       = saved.preset       ?? _preset;
+      _preserveText = saved.preserveText ?? _preserveText;
+      _targetDpi    = saved.targetDpi    ?? _targetDpi;
+      _quality      = saved.quality != null ? Math.round(saved.quality * 100) : _quality;
+      _targetSizeMb = saved.targetSizeMb ?? _targetSizeMb;
+      _presetAutoSelected = true; // saved choice counts as explicit — don't let scan auto-override it
+    }
+  }
+
   _render(file, null);
 }
 
@@ -292,6 +312,7 @@ export function hideCompressOptions() {
   _targetSizeMb       = null;
   _lastScan           = null;
   _presetAutoSelected = false;
+  _rememberLoaded     = false;
   resetWmRemove();
 }
 
@@ -458,6 +479,14 @@ function _render(file, scan) {
     })}
 
     ${wmRemoveHtml()}
+
+    ${checkbox({
+      id:       'compressRememberCheck',
+      checked:  loadPreset('compress') !== null,
+      title:    t('preset_remember_title'),
+      subtitle: t('preset_remember_sub'),
+      ariaLabel: t('preset_remember_title'),
+    })}
   `;
 
   _bindEvents();
@@ -649,6 +678,12 @@ function _bindEvents() {
     }
     if (e.target.id === 'preserveTextCheck') {
       _preserveText = e.target.checked;
+    }
+    // Unchecking forgets immediately — saving itself happens centrally in
+    // app.js (_maybeSavePreset) right before processing starts, once the
+    // final settings are known.
+    if (e.target.id === 'compressRememberCheck' && !e.target.checked) {
+      clearPreset('compress');
     }
   });
 

@@ -28,7 +28,9 @@ import { doProcess, isProcessing,
          startCompressScan, startMergeBatchScan,
          getProcessStartMs }                      from './processor.js';
 import { hideAllToolOptions, initToolOptions,
-         collectToolParams, notifyToolSuccess }  from './toolRegistry.js';
+         collectToolParams, notifyToolSuccess,
+         getPresetFilter }                        from './toolRegistry.js';
+import { savePreset } from './presets.js';
 import { updateMergeDefaultFilename } from './toolRegistrations.js';
 import { renderWorkerScanReport }               from './compressUI.js';
 import { trackToolStart, trackToolSuccess,
@@ -459,6 +461,19 @@ function _maybeShowPwaNudge() {
 // To add a new self-managed tool: append its key here + build its own UI module.
 const SELF_MANAGED_TOOLS = new Set(['ocr', 'compare', 'pdf2pdfa']);
 
+// "Remember my settings" — only tools with a registered presetFilter are
+// eligible (see toolRegistrations.js). The checkbox lives in that tool's
+// own options panel as #<tool>RememberCheck; each XOptions container is
+// mounted in the DOM simultaneously (one visible at a time), so the id
+// is tool-prefixed to avoid duplicate-id collisions across panels.
+function _maybeSavePreset(tool, params) {
+  const filter = getPresetFilter(tool);
+  if (!filter) return;
+  if (!id(`${tool}RememberCheck`)?.checked) return;
+  const filtered = filter(params);
+  if (filtered) savePreset(tool, filtered);
+}
+
 function _onMergeBtnClick() {
   const mode = id('mergeBtn').dataset.mode || 'process';
   if (mode === 'reset') {
@@ -471,6 +486,7 @@ function _onMergeBtnClick() {
   // Registry dispatch — no more if-else per tool
   const { params, error } = collectToolParams(currentTool);
   if (error) { showToast(error); return; }
+  _maybeSavePreset(currentTool, params);
   checkAndRecordConversion(currentTool, selectedFiles[0]);  // fire-and-forget
   trackToolStart(currentTool);
   doProcess(currentTool, params);

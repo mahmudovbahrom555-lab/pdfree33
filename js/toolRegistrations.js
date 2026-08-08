@@ -203,6 +203,11 @@ registerTool('compress', {
     }
     return null;
   },
+  // preScan is this file's scan result, not a reusable setting; removeWatermarks
+  // is a shared cross-tool toggle (watermarkRemoveUI.js) with no restore path
+  // yet — both stripped, leaving only compressUI.js's own settings.
+  presetFilter: ({ preset, preserveText, targetDpi, quality, targetSizeMb }) =>
+    ({ preset, preserveText, targetDpi, quality, targetSizeMb }),
   onSuccess: ({ compressionReport }) => {
     if (compressionReport) renderCompressionReport(compressionReport);
   },
@@ -234,6 +239,11 @@ registerTool('watermark', {
   validate:   p => p.kind === 'image'
     ? (!p.bytes ? t('val_wm_upload_logo') : null)
     : (!p.text?.trim() ? t('val_wm_enter_text') : null),
+  // Image-mode watermarks carry the logo's raw bytes — not practical to
+  // persist in localStorage, so image mode simply isn't remembered.
+  presetFilter: p => p.kind === 'image'
+    ? null
+    : { kind: p.kind, text: p.text, opacity: p.opacity, position: p.position, fontSize: p.fontSize, color: p.color },
 });
 
 registerTool('pagenum', {
@@ -242,6 +252,9 @@ registerTool('pagenum', {
   init:       initPageNumOptions,
   hide:       hidePageNumOptions,
   getParams:  getPageNumParams,
+  // fromPage/toPage are this document's page range, not a reusable setting —
+  // the next file re-applies the saved format/position from page 1.
+  presetFilter: ({ position, format, fontSize, showTotal }) => ({ position, format, fontSize, showTotal }),
 });
 
 registerTool('meta', {
@@ -303,6 +316,9 @@ registerTool('protect', {
     }
     return null;
   },
+  // Passwords are never persisted — protectUI.js deliberately never caches
+  // them across async gaps either. Only the permission toggles are reusable.
+  presetFilter: ({ permissions }) => ({ permissions }),
 });
 
 registerTool('fill', {

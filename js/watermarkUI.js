@@ -15,11 +15,12 @@
 // ============================================================
 
 import { id }       from './utils.js';
-import { chipGroup, sliderRow, group } from './uiComponents.js';
+import { chipGroup, sliderRow, group, checkbox } from './uiComponents.js';
 import { loadPdfJs } from './pdf2jpgUI.js';
 import { computeWatermarkLayout } from './watermarkLayout.js';
 import { showToast } from './ui.js';
 import { t } from './i18n.js';
+import { loadPreset, clearPreset } from './presets.js';
 
 const LOGO_MAX_MB = 10;
 
@@ -51,6 +52,7 @@ let _logoOpacity = 0.15;
 let _pageW       = 595;   // actual page width in PDF pts (A4 default)
 let _pageH       = 842;   // actual page height in PDF pts (A4 default)
 let _bgImageData = null;  // cached first-page render (physical canvas pixels)
+let _rememberLoaded = false; // "Remember my settings" applied once per tool session
 
 export function getWatermarkParams() {
   if (_kind === 'image') {
@@ -72,6 +74,21 @@ export function initWatermarkOptions(file) {
   _logoMime = null;
   _logoImg = null;
   _logoOpacity = 0.15;
+  // Restore saved text-watermark settings once per tool session — image
+  // mode is always reset above and never saved (see presetFilter in
+  // toolRegistrations.js), so there's nothing to restore for it.
+  if (!_rememberLoaded) {
+    _rememberLoaded = true;
+    const saved = loadPreset('watermark');
+    if (saved) {
+      _text     = saved.text     ?? _text;
+      _opacity  = saved.opacity  ?? _opacity;
+      _position = saved.position ?? _position;
+      _fontSize = saved.fontSize ?? _fontSize;
+      _color    = saved.color    ?? _color;
+    }
+  }
+
   const container = id('watermarkOptions');
   if (!container) return;
   container.style.display = 'block';
@@ -86,6 +103,7 @@ export function hideWatermarkOptions() {
   container.style.display = 'none';
   container.innerHTML = '';
   _bgImageData = null;
+  _rememberLoaded = false;
 }
 
 // ── Render ─────────────────────────────────────────────────────
@@ -165,6 +183,14 @@ function _render() {
                         valText: _fontSize + 'pt', min: 16, max: 80, step: 4,
                         value: _fontSize, ariaLabel: t('wm_aria_font_size', { size: _fontSize }) })}
 
+        ${!isImage ? checkbox({
+          id:       'watermarkRememberCheck',
+          checked:  loadPreset('watermark') !== null,
+          title:    t('preset_remember_title'),
+          subtitle: t('preset_remember_sub'),
+          ariaLabel: t('preset_remember_title'),
+        }) : ''}
+
       </div>
 
       <!-- Live preview -->
@@ -208,6 +234,11 @@ function _bindEvents() {
       container.querySelectorAll('[data-name="wmColor"]').forEach(el =>
         el.classList.toggle('wm-color--active', el.dataset.value === _color));
       _drawPreview();  // immediate — discrete choice
+    }
+    // Unchecking forgets immediately — saving happens centrally in app.js
+    // (_maybeSavePreset) right before processing starts.
+    if (e.target.id === 'watermarkRememberCheck' && !e.target.checked) {
+      clearPreset('watermark');
     }
   });
 

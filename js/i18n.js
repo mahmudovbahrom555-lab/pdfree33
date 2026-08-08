@@ -473,6 +473,11 @@ export const EN = {
   wmrm_title:    'Remove stamp & layer watermarks',
   wmrm_subtitle: 'Works on stamp annotations and OCG layers. Results vary by watermark type.',
 
+  // ── presets.js — "Remember my settings" (compress/watermark/protect/pagenum) ──
+  preset_remember_title:         'Remember my settings',
+  preset_remember_sub:           "We'll use these settings next time — no account needed.",
+  preset_remember_sub_protect:   "We'll remember your permission choices next time — never your password.",
+
   // ── toolRegistrations.js — merge filename + validate() messages ──
   val_output_filename:      'Output filename',
   val_select_page:          'Please select at least one page',

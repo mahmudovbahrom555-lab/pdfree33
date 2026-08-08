@@ -20,6 +20,13 @@
 //    hide?:      () => void                      — called on tool switch / reset
 //    getParams?: () => object                    — called before doProcess
 //    validate?:  (params) => string|null         — error message or null if ok
+//    presetFilter?: (params) => object|null      — "Remember my settings" support.
+//               Presence of this function is what makes a tool preset-eligible
+//               (checked by app.js before saving). Must strip anything unsafe
+//               to persist (passwords, file bytes) or document-specific
+//               (per-page state, page ranges) — return null to mean "don't
+//               save this particular params object" (e.g. watermark's image
+//               mode, which has no safely-persistable settings yet).
 //
 //    // Processor routing
 //    runner:     'merge'|'split'|'compress'|'jpg2pdf'
@@ -111,4 +118,14 @@ export function getWorkerTool(key) {
  */
 export function notifyToolSuccess(key, detail) {
   _registry.get(key)?.onSuccess?.(detail);
+}
+
+/**
+ * Returns the tool's presetFilter function, or undefined if the tool
+ * doesn't support "Remember my settings" (e.g. rotate — see toolRegistrations.js).
+ * @param {string} key
+ * @returns {((params: object) => object|null)|undefined}
+ */
+export function getPresetFilter(key) {
+  return _registry.get(key)?.presetFilter;
 }

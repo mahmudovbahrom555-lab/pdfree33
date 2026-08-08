@@ -18,8 +18,9 @@
 
 import { id }        from './utils.js';
 import { showToast } from './ui.js';
-import { group, infoBanner } from './uiComponents.js';
+import { group, infoBanner, checkbox } from './uiComponents.js';
 import { t } from './i18n.js';
+import { loadPreset, clearPreset } from './presets.js';
 
 // ── State ──────────────────────────────────────────────────────
 const _state = {
@@ -33,10 +34,20 @@ const _state = {
 
 let _userPwd  = '';
 let _ownerPwd = '';
+let _rememberLoaded = false; // "Remember my settings" applied once per tool session
 
 // ── Public API ─────────────────────────────────────────────────
 
 export function initProtectOptions() {
+  // Restore saved permission toggles once per tool session — passwords are
+  // never part of the saved preset (see presetFilter in toolRegistrations.js
+  // and the "never caches passwords" note on getProtectParams above).
+  if (!_rememberLoaded) {
+    _rememberLoaded = true;
+    const saved = loadPreset('protect');
+    if (saved?.permissions) Object.assign(_state, saved.permissions);
+  }
+
   const container = id('protectOptions');
   if (!container) return;
   container.style.display = 'block';
@@ -50,6 +61,7 @@ export function hideProtectOptions() {
   // Wipe state — paranoid but right
   _userPwd  = '';
   _ownerPwd = '';
+  _rememberLoaded = false;
   container.innerHTML = '';
 }
 
@@ -189,6 +201,14 @@ function _render(container) {
           <div id="protPermissions" class="prot-perms"></div>
         </div>
 
+        ${checkbox({
+          id:       'protectRememberCheck',
+          checked:  loadPreset('protect') !== null,
+          title:    t('preset_remember_title'),
+          subtitle: t('preset_remember_sub_protect'),
+          ariaLabel: t('preset_remember_title'),
+        })}
+
       </div>
     </div>
 
@@ -261,6 +281,13 @@ function _bindEvents(container) {
   // Presets
   container.querySelectorAll('.prot-preset[data-preset]').forEach(btn => {
     btn.addEventListener('click', () => _applyPreset(btn.dataset.preset));
+  });
+
+  // "Remember my settings" — unchecking forgets immediately. Saving (of
+  // permissions only, never passwords) happens centrally in app.js
+  // (_maybeSavePreset) right before processing starts.
+  id('protectRememberCheck')?.addEventListener('change', e => {
+    if (!e.target.checked) clearPreset('protect');
   });
 }
 
