@@ -2,6 +2,11 @@
 /annotate /annotate-pdf/ 301
 /annotate/ /annotate-pdf/ 301
 
+# Short-circuit Cloudflare's built-in trailing-slash normalizer (which
+# adds an extra 307 hop) for standalone .html pages — straight 301 to canonical
+/privacy/ /privacy.html 301
+/terms/   /terms.html   301
+
 
 /add-page-numbers-to-pdf/ /pagenum-pdf/ 301
 /meta-pdf/ /metadata-pdf/ 301
