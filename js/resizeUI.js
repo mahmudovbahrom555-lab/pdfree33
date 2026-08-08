@@ -284,10 +284,15 @@ function _updatePreview() {
     thumb.style.bottom = `${((marginPt + y) / h) * 100}%`;
   }
 
-  // Computed, not mode-hardcoded — true for at least one axis under 'fill'
-  // by design, but can also fire under 'actual' when the source is
-  // physically larger than the target paper minus margins.
-  const clips = scaledW > availW + 0.5 || scaledH > availH + 0.5;
+  // Compare against the full page (w/h), not the margin-reduced availW/
+  // availH: _fitRect's symmetric centering offset cancels the margin out
+  // exactly whenever content doesn't fit the margin box, landing it flush
+  // with the true page edge — filling the page with nothing actually cut
+  // off. Comparing against availW/availH was a false-positive bug: an A4
+  // source at Actual size onto an A4 target always "overflowed" the margin
+  // box and wrongly warned "will be clipped" on same-size documents, the
+  // single most common case.
+  const clips = scaledW > w + 0.5 || scaledH > h + 0.5;
   const warnEl = id('rszClipWarning');
   if (warnEl) warnEl.style.display = clips ? 'block' : 'none';
 
