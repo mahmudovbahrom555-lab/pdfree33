@@ -17,7 +17,7 @@ import { getWmRemove, wmRemoveHtml, bindWmRemove, resetWmRemove } from './waterm
 // ── UI modules ─────────────────────────────────────────────────
 import { initCompressOptions, hideCompressOptions,
          getCompressParams, getCompressScan,
-         renderCompressionReport,
+         renderCompressionReport, renderBatchCompressionSummary,
          initCompressEmailOptions, hideCompressEmailOptions,
          renderEmailVerdict }              from './compressUI.js';
 import { initJpg2PdfOptions, hideJpg2PdfOptions,
@@ -208,8 +208,9 @@ registerTool('compress', {
   // yet — both stripped, leaving only compressUI.js's own settings.
   presetFilter: ({ preset, preserveText, targetDpi, quality, targetSizeMb }) =>
     ({ preset, preserveText, targetDpi, quality, targetSizeMb }),
-  onSuccess: ({ compressionReport }) => {
+  onSuccess: ({ compressionReport, batchCompressSummary }) => {
     if (compressionReport) renderCompressionReport(compressionReport);
+    else if (batchCompressSummary) renderBatchCompressionSummary(batchCompressSummary);
   },
 });
 

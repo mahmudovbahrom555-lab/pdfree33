@@ -442,6 +442,32 @@ export function renderCompressionReport(data) {
   }));
 }
 
+/**
+ * Lightweight sibling of renderCompressionReport() for batch compress —
+ * just the prominent "{before} → {after}" hero line + percentage badge,
+ * summed across the whole batch. No gauge, no itemized breakdown: those
+ * are per-file details (XMP/thumbnails/image counts) that don't sum into
+ * anything meaningful across dozens of unrelated files.
+ * @param {{ originalSize: number, compressedSize: number }} data
+ */
+export function renderBatchCompressionSummary({ originalSize, compressedSize }) {
+  id('compressReport')?.remove();
+  const pct = originalSize > 0 ? Math.round((originalSize - compressedSize) / originalSize * 100) : 0;
+
+  const div = document.createElement('div');
+  div.id        = 'compressReport';
+  div.className = 'compress-report';
+  div.innerHTML = `
+    <div class="compress-report__hero" aria-label="${t('cmp_hero_aria', { orig: fmtSize(originalSize), comp: fmtSize(compressedSize) })}">
+      <span class="compress-report__hero-sizes">${fmtSize(originalSize)} → ${fmtSize(compressedSize)}</span>
+      <span class="compress-report__hero-badge${pct <= 0 ? ' compress-report__hero-badge--neutral' : ''}">
+        ${pct > 0 ? `−${pct}%` : t('cmp_no_change')}
+      </span>
+    </div>
+  `;
+  id('successDesc')?.insertAdjacentElement('afterend', div);
+}
+
 // ── Render ─────────────────────────────────────────────────────
 
 function _render(file, scan) {

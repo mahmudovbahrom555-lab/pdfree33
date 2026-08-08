@@ -8,7 +8,7 @@
 import { fmtSize } from './utils.js';
 import { t, tp } from './i18n.js';
 import { setProgress, hideProgress, setButtonProcessing, setButtonReady,
-         showCancelBtn, hideCancelBtn, showToast, startLongOpHint } from './ui.js';
+         showCancelBtn, hideCancelBtn, showToast, startLongOpHint, clearLongOpHint } from './ui.js';
 import { selectedFiles, setFilesLocked, renderList } from './files.js';
 import { trackToolError, trackBatchStart, trackBatchSuccess } from './analytics.js';
 import { TOOLS, MAX_COMPRESS_MB } from './config.js';
@@ -1165,24 +1165,36 @@ async function _runBatch(tool, filesSnapshot, extraParams) {
   setFilesLocked(false);
   hideCancelBtn();
   setProgress(100, t('prog_done'));
+  clearLongOpHint(); // batch never called hideProgress() on success — the "Still
+                      // working…" hint (armed by startLongOpHint in doProcess) was
+                      // never dismissed and could linger past a 12s+ batch finishing.
 
   const failed = total - succeeded;
+  // Exact before/after size + % lives in the prominent hero line rendered by
+  // renderBatchCompressionSummary() (see batchCompressSummary below) — the
+  // text description here stays generic, mirroring the single-file compress
+  // flow's own desc_compress_saved/desc_compress_optimized pattern.
   let desc;
   if (tool === 'compress' && totalOriginalSize > 0) {
-    const pct = Math.max(0, Math.round((totalOriginalSize - totalCompressedSize) / totalOriginalSize * 100));
-    const vars = { before: fmtSize(totalOriginalSize), after: fmtSize(totalCompressedSize), pct };
     desc = failed > 0
-      ? t('desc_batch_compress_partial', { ok: succeeded, total, ...vars })
-      : t('desc_batch_compress_done',    { n: succeeded, ...vars });
+      ? t('desc_batch_compress_partial', { ok: succeeded, total })
+      : t('desc_batch_compress_done',    { n: succeeded });
   } else {
     desc = failed > 0
       ? t('desc_batch_partial', { ok: succeeded, total, size: fmtSize(blob.size) })
       : t('desc_batch_done', { n: succeeded, size: fmtSize(blob.size) });
   }
   const filename = `${tool}-batch-${succeeded}-files.zip`;
+  // Separate shape from single-file's compressionReport (which carries a
+  // per-file breakdown: XMP/thumbnails/image recompression counts, etc.) —
+  // none of that sums meaningfully across a batch, so this is just the two
+  // totals compressUI.js needs for the prominent "before → after" line.
+  const batchCompressSummary = tool === 'compress' && totalOriginalSize > 0
+    ? { originalSize: totalOriginalSize, compressedSize: totalCompressedSize }
+    : null;
 
   document.dispatchEvent(new CustomEvent('pdfree:success', {
-    detail: { tool, blob, desc, filename }
+    detail: { tool, blob, desc, filename, batchCompressSummary }
   }));
   trackBatchSuccess(tool, total, succeeded);
 
