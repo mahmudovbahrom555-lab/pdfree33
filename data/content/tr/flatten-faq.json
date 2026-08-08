@@ -70,5 +70,13 @@
       "@type": "Answer",
       "text": "Bunlar farklı sorunları çözer. Düzleştirme, etkileşimli form yapısını tamamen kaldırır — izinlerden bağımsız olarak düzenlenecek alan kalmaz. Parola koruması ise erişimi veya düzenleme haklarını kısıtlar ama form alanlarını olduğu gibi bırakır; parolaya sahip biri doldurulabilir bir formu yine de değiştirebilir. En yüksek güvenlik için önce düzleştirerek içeriği sabitleyin, ardından parola ekleyin."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Birden fazla PDF dosyasını aynı anda düzleştirebilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. PDFree'nin toplu modu, seçtiğiniz kadar PDF dosyasındaki form alanlarını ve notları düzleştirir, her birini tarayıcınızda yerel olarak işler. Tüm düzleştirilmiş dosyaları tek bir ZIP olarak birlikte indirirsiniz, boyut sınırı yoktur."
+    }
   }
 ]

@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "Não. O PDFree não tem limites artificiais. A única restrição é a memória RAM disponível no seu dispositivo."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso comprimir vários arquivos PDF de uma vez?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim. O PDFree oferece processamento em lote completo — selecione ou arraste vários PDFs, cada um é comprimido localmente no seu navegador. Ao final, baixe todos os resultados em um único arquivo ZIP. Sem limite diário nem de quantidade de arquivos."
+    }
   }
 ]

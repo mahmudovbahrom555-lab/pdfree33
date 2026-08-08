@@ -46,5 +46,13 @@
       "@type": "Answer",
       "text": "Não. O PDFree não tem limites artificiais. A única restrição é a memória RAM disponível no seu dispositivo."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso proteger vários arquivos PDF com senha de uma vez?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim. O modo em lote do PDFree permite adicionar senha e permissões a vários arquivos PDF de uma vez, cada um criptografado separadamente no seu navegador com as mesmas configurações. Você receberá um ZIP com todos os arquivos protegidos."
+    }
   }
 ]

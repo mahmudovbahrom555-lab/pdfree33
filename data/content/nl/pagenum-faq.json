@@ -70,5 +70,13 @@
       "@type": "Answer",
       "text": "Nee. Paginanummers worden permanent ingesloten. Bewaar het originele bestand apart als je later een versie zonder nummers nodig hebt."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik meerdere PDF-bestanden tegelijk van paginanummers voorzien?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Selecteer of sleep meerdere PDF-bestanden en PDFree nummert de pagina's van elk bestand in het gekozen formaat, direct in je browser. De genummerde bestanden worden gebundeld in één ZIP om te downloaden. Geen upload, geen dagelijkse limiet."
+    }
   }
 ]

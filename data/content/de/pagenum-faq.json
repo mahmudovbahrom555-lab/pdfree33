@@ -70,5 +70,13 @@
       "@type": "Answer",
       "text": "Nein. Seitenzahlen werden fest eingebettet. Speichere die Originaldatei separat, falls du sie später ohne Seitenzahlen benötigst."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann ich mehreren PDF-Dateien gleichzeitig Seitenzahlen hinzufügen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Wähle oder ziehe mehrere PDF-Dateien hinein, und PDFree nummeriert die Seiten jeder Datei im gewählten Format — direkt im Browser. Die nummerierten Dateien werden als ZIP heruntergeladen."
+    }
   }
 ]

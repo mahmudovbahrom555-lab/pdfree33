@@ -46,5 +46,13 @@
       "@type": "Answer",
       "text": "Ja. Bestanden verlaten nooit de browser. Geen data wordt opgeslagen of naar servers gestuurd. Volledig AVG-conform."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik meerdere PDF-bestanden tegelijk met een wachtwoord beveiligen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Met PDFree's batchmodus kun je meerdere PDF-bestanden tegelijk voorzien van een wachtwoord en machtigingen — elk apart versleuteld in je browser met dezelfde instellingen. Je krijgt een ZIP met alle beveiligde bestanden."
+    }
   }
 ]

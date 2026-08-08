@@ -70,5 +70,13 @@
       "@type": "Answer",
       "text": "No. PDFree has no upload limit because nothing is uploaded. The only practical limit is your device's available RAM. Most computers comfortably handle PDFs up to several hundred megabytes."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I compress multiple PDF files at once?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. PDFree supports full batch compression — select or drag in as many PDF files as you need, and each one is compressed locally in your browser using your chosen preset. When it's done, download all the results as a single ZIP file. There's no daily limit and no cap on how many files you can process."
+    }
   }
 ]

@@ -62,5 +62,13 @@
       "@type": "Answer",
       "text": "Evet. PDFree, Adobe Acrobat, Adobe Reader, macOS Preview ve tüm modern PDF görüntüleyicilerde açılan standartlara uygun şifreli PDF'ler üretir."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Birden fazla PDF dosyasını aynı anda parola ile koruyabilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. PDFree'nin toplu modu, birden fazla PDF dosyasına aynı anda parola ve izin eklemenizi sağlar — her biri tarayıcınızda aynı ayarlarla ayrı ayrı şifrelenir. Korunan tüm dosyaları içeren bir ZIP elde edersiniz."
+    }
   }
 ]

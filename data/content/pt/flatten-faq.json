@@ -78,5 +78,13 @@
       "@type": "Answer",
       "text": "Não. O texto e o conteúdo vetorial permanecem idênticos. Apenas a interatividade desaparece — a aparência do documento não muda."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso achatar vários arquivos PDF de uma vez?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim. O modo em lote do PDFree achata campos de formulário e anotações em quantos arquivos PDF você selecionar, processando cada um localmente no seu navegador. Baixe todos os arquivos achatados juntos em um ZIP, sem limite de tamanho."
+    }
   }
 ]

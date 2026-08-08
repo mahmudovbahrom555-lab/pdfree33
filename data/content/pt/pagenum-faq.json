@@ -70,5 +70,13 @@
       "@type": "Answer",
       "text": "Sim. Você pode ajustar o tamanho da fonte para que os números sejam discretos ou bem visíveis conforme suas necessidades."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso adicionar números de página a vários arquivos PDF de uma vez?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim. Selecione ou arraste vários arquivos PDF e o PDFree numerará as páginas de cada um no formato escolhido, direto no seu navegador. Os arquivos numerados são reunidos em um único ZIP para download. Sem envio, sem limite diário."
+    }
   }
 ]

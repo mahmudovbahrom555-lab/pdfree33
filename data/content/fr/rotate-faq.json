@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "Non. PDFree fonctionne entièrement dans votre navigateur — il n'y a pas de serveur backend qui reçoit vos fichiers. Comme rien n'est téléchargé, rien ne peut être stocké, enregistré ou conservé. Votre document n'existe que dans la mémoire de votre navigateur le temps de la session et disparaît à la fermeture de l'onglet."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Puis-je pivoter plusieurs fichiers PDF à la fois ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui. PDFree prend en charge la rotation par lots — sélectionnez plusieurs fichiers PDF, choisissez l'angle, et chacun est pivoté localement dans votre navigateur. Vous obtiendrez un ZIP contenant tous les fichiers pivotés, sans limite de nombre de fichiers."
+    }
   }
 ]

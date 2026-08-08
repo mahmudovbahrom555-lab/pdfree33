@@ -94,5 +94,13 @@
       "@type": "Answer",
       "text": "Yes. Scanned PDFs are treated identically to any other PDF — the page number is overlaid on each page as a text element. The underlying scan image is not changed."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I add page numbers to multiple PDF files at once?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. Select or drag in multiple PDF files and PDFree numbers the pages of each one using your chosen format and position, entirely in your browser. The numbered files are bundled into a single ZIP for download — no upload, no daily limit."
+    }
   }
 ]

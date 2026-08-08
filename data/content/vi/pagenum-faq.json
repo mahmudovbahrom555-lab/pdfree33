@@ -62,5 +62,13 @@
       "@type": "Answer",
       "text": "Không. Số trang được thêm dưới dạng lớp văn bản mới trên nội dung hiện có. Văn bản gốc, hình ảnh và bố cục bên dưới không thay đổi."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Tôi có thể thêm số trang vào nhiều file PDF cùng lúc không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có. Chọn hoặc kéo thả nhiều file PDF và PDFree đánh số trang cho từng file theo định dạng bạn chọn, ngay trong trình duyệt. Các file đã đánh số được đóng gói thành một file ZIP duy nhất để tải xuống. Không tải lên, không giới hạn hàng ngày."
+    }
   }
 ]

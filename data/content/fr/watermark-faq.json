@@ -62,5 +62,13 @@
       "@type": "Answer",
       "text": "Non. Le filigrane est intégré définitivement dans le PDF. Conservez toujours le fichier original avant d'appliquer un filigrane si vous en avez besoin sans."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Puis-je ajouter un filigrane à plusieurs fichiers PDF à la fois ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui. Sélectionnez ou glissez plusieurs fichiers PDF et PDFree applique le même filigrane à chacun, directement dans votre navigateur. Les résultats sont regroupés dans un seul fichier ZIP à télécharger. Aucun compte, aucun envoi, aucune limite de fichiers."
+    }
   }
 ]

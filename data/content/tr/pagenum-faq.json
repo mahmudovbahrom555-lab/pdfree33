@@ -102,5 +102,13 @@
       "@type": "Answer",
       "text": "PDFree ile eklenen sayfa numaraları PDF'ye metin olarak gömülür. Bu araçla seçili olarak kaldırılamaz — en basit yaklaşım, orijinal numarasız dosyayı saklamak ve gerektiğinde düzeltilmiş ayarlarla aracı tekrar çalıştırmaktır."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Birden fazla PDF dosyasına aynı anda sayfa numarası ekleyebilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. Birden fazla PDF dosyası seçin veya sürükleyin, PDFree her dosyanın sayfalarını seçtiğiniz formatta numaralandırır, doğrudan tarayıcınızda. Numaralandırılmış dosyalar indirilebilir tek bir ZIP'te toplanır. Yükleme yok, günlük limit yok."
+    }
   }
 ]

@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "Tak — żadne pliki nigdy nie są wysyłane na serwery. Wszystko odbywa się w Twojej przeglądarce. Zgodny z RODO."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy mogę dodać znak wodny do wielu plików PDF naraz?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. Wybierz lub przeciągnij kilka plików PDF, a PDFree naniesie ten sam znak wodny na każdy plik, bezpośrednio w przeglądarce. Wyniki są pakowane do jednego archiwum ZIP do pobrania. Bez konta, bez przesyłania, bez limitu liczby plików."
+    }
   }
 ]

@@ -86,5 +86,13 @@
       "@type": "Answer",
       "text": "Bu terimler sıklıkla birbirinin yerine kullanılır. Filigran genellikle her sayfada çapraz olarak tekrar eden yarı saydam bir metin veya görseldir (örn. %30 saydamlıkta TASLAK). Damga ise genellikle sabit bir konumda bir kez yerleştirilen opak bir etikettir (örn. bir köşede ONAYLANDI). PDFree, metin filigranının saydamlığını ve konumunu ayarlayarak her iki görünümü de elde etmenizi sağlar."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Birden fazla PDF dosyasına aynı anda filigran ekleyebilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. Birden fazla PDF dosyası seçin veya sürükleyin, PDFree her birine aynı filigranı doğrudan tarayıcınızda uygular. Sonuçlar indirilebilir tek bir ZIP dosyasında toplanır. Hesap yok, yükleme yok, dosya sayısı sınırı yok."
+    }
   }
 ]

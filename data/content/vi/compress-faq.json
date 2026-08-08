@@ -46,5 +46,13 @@
       "@type": "Answer",
       "text": "Có. PDFree hoạt động hoàn toàn ngoại tuyến như Progressive Web App sau khi trang được tải. Không cần kết nối internet — tất cả xử lý chạy trong trình duyệt của bạn."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Tôi có thể nén nhiều file PDF cùng lúc không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có. PDFree hỗ trợ xử lý hàng loạt đầy đủ — chọn hoặc kéo thả nhiều file PDF, mỗi file được nén ngay trong trình duyệt của bạn. Khi xong, tải xuống toàn bộ kết quả trong một file ZIP. Không giới hạn hàng ngày hay số lượng file."
+    }
   }
 ]

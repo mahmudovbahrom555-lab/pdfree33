@@ -70,5 +70,13 @@
       "@type": "Answer",
       "text": "Standardmäßig wird das Wasserzeichen auf alle Seiten angewendet."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann ich mehrere PDF-Dateien gleichzeitig mit einem Wasserzeichen versehen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Wähle oder ziehe mehrere PDF-Dateien hinein — PDFree fügt jeder Datei dasselbe Wasserzeichen hinzu, direkt im Browser. Die Ergebnisse werden als eine ZIP-Datei zum Download bereitgestellt."
+    }
   }
 ]

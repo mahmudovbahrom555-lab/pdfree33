@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "Yes — upload the encrypted PDF, enter the current password, leave the new password field empty, and save. This produces an unprotected version of the file."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I password-protect multiple PDF files at once?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. PDFree's batch mode lets you add a password and permissions to many PDF files in one pass — select or drag in multiple files, and each is encrypted separately in your browser with the same settings. You'll get a ZIP with all protected files, and nothing is ever uploaded to a server."
+    }
   }
 ]

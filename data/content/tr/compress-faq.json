@@ -38,5 +38,13 @@
       "@type": "Answer",
       "text": "Evet — dosyalar hiçbir zaman tarayıcıyı terk etmez. Sunuculara hiçbir veri gönderilmez. Tamamen KVKK uyumludur."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Birden fazla PDF dosyasını aynı anda sıkıştırabilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. PDFree tam toplu işlem desteği sunar — birden fazla PDF dosyası seçin veya sürükleyin, her biri tarayıcınızda yerel olarak sıkıştırılır. İşlem bitince tüm sonuçları tek bir ZIP dosyası olarak indirirsiniz. Günlük limit veya dosya sayısı sınırı yoktur."
+    }
   }
 ]

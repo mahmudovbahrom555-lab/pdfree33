@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "Ja. Bestanden verlaten nooit de browser. Geen data wordt opgeslagen of naar servers gestuurd. Volledig AVG-conform."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik meerdere PDF-bestanden tegelijk van een watermerk voorzien?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Selecteer of sleep meerdere PDF-bestanden en PDFree past hetzelfde watermerk toe op elk bestand, direct in je browser. De resultaten worden gebundeld in één ZIP-bestand om te downloaden. Geen account, geen upload, geen limiet op het aantal bestanden."
+    }
   }
 ]

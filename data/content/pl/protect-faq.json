@@ -46,5 +46,13 @@
       "@type": "Answer",
       "text": "Tak — pliki nigdy nie opuszczają przeglądarki. Żadne dane nie są wysyłane na serwery. W pełni zgodny z RODO."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy mogę zabezpieczyć hasłem wiele plików PDF naraz?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. Tryb wsadowy PDFree pozwala dodać hasło i uprawnienia do kilku plików PDF naraz — każdy jest szyfrowany osobno w przeglądarce z tymi samymi ustawieniami. Otrzymasz archiwum ZIP ze wszystkimi zabezpieczonymi plikami."
+    }
   }
 ]

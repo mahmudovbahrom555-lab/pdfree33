@@ -46,5 +46,13 @@
       "@type": "Answer",
       "text": "Sì — i file non lasciano mai il browser. Nessun dato viene inviato a server. Nessun cookie di tracciamento. Completamente conforme al GDPR."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso comprimere più file PDF contemporaneamente?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. PDFree supporta l'elaborazione batch completa — seleziona o trascina più file PDF, ognuno viene compresso localmente nel tuo browser. Al termine, scarica tutti i risultati in un unico file ZIP. Nessun limite giornaliero né al numero di file."
+    }
   }
 ]

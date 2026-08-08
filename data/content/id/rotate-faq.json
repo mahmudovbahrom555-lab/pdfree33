@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "Tidak. PDFree berjalan sepenuhnya di browser Anda — tidak ada server backend yang menerima file Anda. Karena tidak ada yang diunggah, tidak ada yang bisa disimpan, dicatat, atau dipertahankan. Dokumen Anda hanya ada di memori browser selama sesi berlangsung dan dihapus saat Anda menutup tab."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah saya memutar beberapa file PDF sekaligus?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ya. PDFree mendukung rotasi batch — pilih beberapa file PDF, pilih sudut rotasi, dan setiap file diputar secara lokal di browser Anda. Anda akan mendapatkan ZIP berisi semua file yang telah diputar, tanpa batas jumlah file."
+    }
   }
 ]

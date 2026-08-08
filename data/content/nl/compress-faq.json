@@ -46,5 +46,13 @@
       "@type": "Answer",
       "text": "Ja — bestanden verlaten nooit de browser. Geen gegevens worden naar servers gestuurd. Volledig AVG-conform."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik meerdere PDF-bestanden tegelijk comprimeren?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. PDFree ondersteunt volledige batchverwerking — selecteer of sleep meerdere PDF-bestanden, elk wordt lokaal in je browser gecomprimeerd. Download aan het einde alle resultaten als één ZIP-bestand. Geen dagelijkse limiet en geen limiet op het aantal bestanden."
+    }
   }
 ]

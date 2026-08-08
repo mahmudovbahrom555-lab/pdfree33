@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "Không. PDFree chạy hoàn toàn trong trình duyệt của bạn — không có máy chủ backend nào nhận file của bạn. Vì không có gì được tải lên, không có gì có thể được lưu trữ, ghi lại hoặc giữ lại. Tài liệu của bạn chỉ tồn tại trong bộ nhớ trình duyệt trong suốt phiên và bị xóa khi bạn đóng tab."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Tôi có thể xoay nhiều file PDF cùng lúc không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có. PDFree hỗ trợ xoay hàng loạt — chọn nhiều file PDF, chọn góc xoay, và mỗi file được xoay ngay trong trình duyệt của bạn. Bạn sẽ nhận được một file ZIP chứa tất cả các file đã xoay, không giới hạn số lượng file."
+    }
   }
 ]

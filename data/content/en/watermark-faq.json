@@ -86,5 +86,13 @@
       "@type": "Answer",
       "text": "Yes. You can set any hex color or choose from common presets. Light grey (#CCCCCC at 30% opacity) gives a professional, unobtrusive result."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I add a watermark to multiple PDF files at once?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. Select or drag in multiple PDF files and PDFree applies the same watermark — text or image — to every file, one after another, entirely in your browser. The results are packaged into a single ZIP for download. No account, no upload, no file-count limit."
+    }
   }
 ]

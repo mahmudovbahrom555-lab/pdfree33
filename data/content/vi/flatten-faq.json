@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "Làm phẳng xóa hoàn toàn cấu trúc biểu mẫu tương tác — không có trường nào để chỉnh sửa. Bảo vệ mật khẩu hạn chế quyền truy cập nhưng để nguyên các trường biểu mẫu. Để bảo mật tối đa, làm phẳng trước rồi thêm mật khẩu."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Tôi có thể làm phẳng nhiều file PDF cùng lúc không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có. Chế độ xử lý hàng loạt của PDFree làm phẳng các trường biểu mẫu và chú thích trên bao nhiêu file PDF bạn chọn, xử lý từng file ngay trong trình duyệt. Tải xuống tất cả các file đã làm phẳng cùng nhau trong một ZIP, không giới hạn dung lượng."
+    }
   }
 ]

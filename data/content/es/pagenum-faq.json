@@ -70,5 +70,13 @@
       "@type": "Answer",
       "text": "No. Los números se incrustan permanentemente. Guarda el archivo original por separado si lo necesitas sin números."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Puedo añadir números de página a varios archivos PDF a la vez?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sí. Selecciona o arrastra varios archivos PDF y PDFree numerará las páginas de cada uno con el formato elegido, directamente en tu navegador. Los archivos numerados se agrupan en un único ZIP para descargar. Sin subida, sin límite diario."
+    }
   }
 ]

@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "Perataan menghapus struktur formulir interaktif sepenuhnya — tidak ada bidang yang bisa diedit. Proteksi kata sandi membatasi akses tetapi membiarkan bidang formulir tetap ada. Untuk keamanan maksimal, ratakan dulu lalu tambahkan kata sandi."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah saya meratakan beberapa file PDF sekaligus?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ya. Mode batch PDFree meratakan bidang formulir dan anotasi di sebanyak mungkin file PDF yang Anda pilih, memproses masing-masing secara lokal di browser Anda. Unduh semua file yang telah diratakan bersama dalam satu ZIP, tanpa batas ukuran."
+    }
   }
 ]

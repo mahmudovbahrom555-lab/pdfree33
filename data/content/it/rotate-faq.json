@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "No. PDFree funziona interamente nel tuo browser — non esiste un server backend che riceve i tuoi file. Poiché nulla viene caricato, nulla può essere memorizzato, registrato o conservato. Il tuo documento esiste solo nella memoria del browser per la durata della sessione e viene eliminato quando chiudi la scheda."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso ruotare più file PDF contemporaneamente?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. PDFree supporta la rotazione batch — seleziona più file PDF, scegli l'angolo, e ogni file viene ruotato localmente nel tuo browser. Otterrai uno ZIP con tutti i file ruotati, senza limiti al numero di file."
+    }
   }
 ]

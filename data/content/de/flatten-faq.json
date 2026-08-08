@@ -70,5 +70,13 @@
       "@type": "Answer",
       "text": "Nein. Text und Vektorinhalt bleibt identisch. Nur die Interaktivität entfällt — das Aussehen des Dokuments ändert sich nicht."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann ich mehrere PDF-Dateien gleichzeitig abflachen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Der Stapelmodus flacht Formularfelder und Anmerkungen in beliebig vielen PDF-Dateien ab, jede einzeln im Browser verarbeitet. Lade alle abgeflachten Dateien gemeinsam als ZIP herunter — ohne Größenbegrenzung."
+    }
   }
 ]

@@ -46,5 +46,13 @@
       "@type": "Answer",
       "text": "Sì — i file non lasciano mai il browser. Nessun dato viene inviato a server. Completamente conforme al GDPR."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso proteggere con password più file PDF contemporaneamente?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. La modalità batch di PDFree permette di aggiungere password e permessi a più file PDF contemporaneamente, ognuno cifrato separatamente nel tuo browser con le stesse impostazioni. Otterrai uno ZIP con tutti i file protetti."
+    }
   }
 ]

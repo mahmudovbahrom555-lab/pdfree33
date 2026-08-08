@@ -46,5 +46,13 @@
       "@type": "Answer",
       "text": "Non. Le chiffrement s'effectue localement dans votre navigateur. PDFree ne voit jamais votre mot de passe ni votre fichier."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Puis-je protéger plusieurs fichiers PDF par mot de passe à la fois ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui. Le mode par lots de PDFree permet d'ajouter un mot de passe et des permissions à plusieurs fichiers PDF en une seule fois, chacun chiffré séparément dans votre navigateur avec les mêmes paramètres. Vous obtiendrez un ZIP avec tous les fichiers protégés."
+    }
   }
 ]

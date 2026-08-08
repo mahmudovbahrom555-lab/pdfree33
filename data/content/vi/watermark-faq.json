@@ -62,5 +62,13 @@
       "@type": "Answer",
       "text": "Có. Chuyển sang chế độ Logo trong công cụ hình mờ và tải lên file PNG hoặc JPG. Dùng chung các tùy chỉnh độ mờ, kích thước và vị trí với hình mờ văn bản — hỗ trợ PNG nền trong suốt."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Tôi có thể thêm hình mờ vào nhiều file PDF cùng lúc không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có. Chọn hoặc kéo thả nhiều file PDF và PDFree áp cùng hình mờ vào từng file, ngay trong trình duyệt của bạn. Kết quả được đóng gói thành một file ZIP duy nhất để tải xuống. Không cần tài khoản, không tải lên, không giới hạn số file."
+    }
   }
 ]

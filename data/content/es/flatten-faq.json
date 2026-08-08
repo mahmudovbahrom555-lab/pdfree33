@@ -70,5 +70,13 @@
       "@type": "Answer",
       "text": "Resuelven problemas distintos. Aplanar elimina por completo la estructura de formulario interactivo — no existen campos que editar, sin importar los permisos. La protección por contraseña restringe el acceso o los derechos de edición pero deja los campos intactos. Para mayor seguridad, aplana primero y luego añade una contraseña."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Puedo aplanar varios archivos PDF a la vez?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sí. El modo por lotes de PDFree aplana campos de formulario y anotaciones en tantos archivos PDF como selecciones, procesando cada uno localmente en tu navegador. Descarga todos los archivos aplanados juntos en un ZIP, sin límite de tamaño ni registro."
+    }
   }
 ]

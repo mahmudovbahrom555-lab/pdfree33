@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "No. PDFree runs entirely in your browser — there is no backend server that receives your files. Because nothing is uploaded, nothing can be stored, logged, or retained. Your document exists only in your browser's memory for the duration of the session and is cleared when you close the tab."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I rotate multiple PDF files at once?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. PDFree supports batch rotation — select several PDF files, choose the rotation angle, and each file is rotated locally in your browser. You'll get a ZIP containing all the rotated files, with no cap on how many you can process at once."
+    }
   }
 ]

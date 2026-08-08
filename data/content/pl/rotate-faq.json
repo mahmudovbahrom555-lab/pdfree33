@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "Nie. PDFree działa w całości w Twojej przeglądarce — nie ma serwera backendowego, który odbierałby Twoje pliki. Ponieważ nic nie jest przesyłane, nic nie może być przechowywane, rejestrowane ani zatrzymywane. Twój dokument istnieje tylko w pamięci przeglądarki przez czas trwania sesji i jest usuwany po zamknięciu karty."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy mogę obrócić wiele plików PDF naraz?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. PDFree obsługuje obracanie wsadowe — wybierz kilka plików PDF, ustaw kąt, a każdy plik zostanie obrócony lokalnie w przeglądarce. Otrzymasz archiwum ZIP ze wszystkimi obróconymi plikami, bez limitu liczby plików."
+    }
   }
 ]

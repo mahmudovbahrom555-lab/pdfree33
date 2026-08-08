@@ -62,5 +62,13 @@
       "@type": "Answer",
       "text": "Ya. Pilihan posisi meliputi: bawah tengah, bawah kiri, bawah kanan, atas tengah, atas kiri, dan atas kanan."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah saya menambahkan nomor halaman ke beberapa file PDF sekaligus?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ya. Pilih atau seret beberapa file PDF dan PDFree menomori halaman setiap file dengan format pilihan Anda, langsung di browser Anda. File yang telah diberi nomor dikemas dalam satu ZIP untuk diunduh. Tanpa unggah, tanpa batas harian."
+    }
   }
 ]

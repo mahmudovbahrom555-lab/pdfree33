@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "Sì — nessun file viene mai inviato a server. Tutto avviene nel tuo browser."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso aggiungere una filigrana a più file PDF contemporaneamente?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. Seleziona o trascina più file PDF e PDFree applica la stessa filigrana a ognuno, direttamente nel tuo browser. I risultati vengono raggruppati in un unico file ZIP da scaricare. Nessun account, nessun caricamento, nessun limite al numero di file."
+    }
   }
 ]

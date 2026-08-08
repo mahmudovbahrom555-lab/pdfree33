@@ -62,5 +62,13 @@
       "@type": "Answer",
       "text": "Ze lossen verschillende problemen op. Afvlakken verwijdert de interactieve formulierstructuur volledig — er zijn geen velden om te bewerken, ongeacht rechten. Wachtwoordbeveiliging beperkt toegang of bewerkingsrechten, maar laat formuliervelden intact; iemand met het wachtwoord kan een invulbaar formulier nog steeds wijzigen. Voor maximale beveiliging vlak je eerst af om de inhoud vast te leggen, en voeg je daarna een wachtwoord toe."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik meerdere PDF-bestanden tegelijk afvlakken?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. PDFree's batchmodus vlakt formuliervelden en annotaties af in zoveel PDF-bestanden als je selecteert, elk lokaal verwerkt in je browser. Download alle afgevlakte bestanden samen als één ZIP, zonder groottelimiet."
+    }
   }
 ]

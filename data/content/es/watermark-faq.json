@@ -62,5 +62,13 @@
       "@type": "Answer",
       "text": "No. No hay límites artificiales. La única limitación es la memoria RAM disponible en tu computadora o smartphone."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Puedo añadir una marca de agua a varios archivos PDF a la vez?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sí. Selecciona o arrastra varios archivos PDF y PDFree aplica la misma marca de agua a cada uno, directamente en tu navegador. Los resultados se empaquetan en un único archivo ZIP para descargar. Sin cuenta, sin subida, sin límite de archivos."
+    }
   }
 ]

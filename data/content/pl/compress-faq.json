@@ -38,5 +38,13 @@
       "@type": "Answer",
       "text": "Tak — pliki nigdy nie opuszczają przeglądarki. Żadne dane nie są wysyłane na serwery. W pełni zgodny z RODO."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy mogę skompresować wiele plików PDF naraz?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. PDFree obsługuje pełne przetwarzanie wsadowe — wybierz lub przeciągnij kilka plików PDF, każdy jest kompresowany lokalnie w przeglądarce. Po zakończeniu pobierz wszystkie wyniki jako jedno archiwum ZIP. Bez dziennego limitu i bez limitu liczby plików."
+    }
   }
 ]

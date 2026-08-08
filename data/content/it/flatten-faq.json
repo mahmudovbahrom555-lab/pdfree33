@@ -62,5 +62,13 @@
       "@type": "Answer",
       "text": "Risolvono problemi diversi. L'appiattimento rimuove completamente la struttura del modulo interattivo — non esistono campi da modificare, indipendentemente dai permessi. La protezione con password limita l'accesso o i diritti di modifica ma lascia intatti i campi modulo; chi ha la password potrebbe comunque modificare un modulo compilabile. Per la massima sicurezza, appiattisci prima per bloccare il contenuto, poi aggiungi una password."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso appiattire più file PDF contemporaneamente?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. La modalità batch di PDFree appiattisce i campi modulo e le annotazioni di quanti file PDF selezioni, elaborando ognuno localmente nel tuo browser. Scarica tutti i file appiattiti insieme in uno ZIP, senza limiti di dimensione."
+    }
   }
 ]

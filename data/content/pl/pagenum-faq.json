@@ -70,5 +70,13 @@
       "@type": "Answer",
       "text": "Nie. Numery stron są trwale osadzane w dokumencie. Zachowaj oryginalny plik osobno, jeśli później potrzebujesz wersji bez numerów."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy mogę dodać numery stron do wielu plików PDF naraz?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. Wybierz lub przeciągnij kilka plików PDF, a PDFree ponumeruje strony każdego z nich w wybranym formacie, bezpośrednio w przeglądarce. Ponumerowane pliki są pakowane do jednego archiwum ZIP do pobrania. Bez przesyłania, bez dziennego limitu."
+    }
   }
 ]

@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "Nee. PDFree draait volledig in je browser — er is geen backend-server die je bestanden ontvangt. Omdat niets wordt geüpload, kan niets worden opgeslagen, geregistreerd of bewaard. Je document bestaat alleen in het geheugen van je browser gedurende de sessie en wordt gewist zodra je het tabblad sluit."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik meerdere PDF-bestanden tegelijk draaien?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. PDFree ondersteunt batchrotatie — selecteer meerdere PDF-bestanden, kies de hoek, en elk bestand wordt lokaal in je browser gedraaid. Je krijgt een ZIP met alle gedraaide bestanden, zonder limiet op het aantal bestanden."
+    }
   }
 ]

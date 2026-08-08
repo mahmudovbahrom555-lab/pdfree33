@@ -78,5 +78,13 @@
       "@type": "Answer",
       "text": "Ya. PDF terenkripsi RC4-128 yang dihasilkan kompatibel dengan Adobe Acrobat, Foxit Reader, dan semua pembaca PDF standar."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah saya melindungi beberapa file PDF dengan kata sandi sekaligus?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ya. Mode batch PDFree memungkinkan Anda menambahkan kata sandi dan izin ke beberapa file PDF sekaligus, masing-masing dienkripsi secara terpisah di browser Anda dengan pengaturan yang sama. Anda akan mendapatkan ZIP berisi semua file yang dilindungi."
+    }
   }
 ]

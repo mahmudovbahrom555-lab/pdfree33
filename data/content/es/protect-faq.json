@@ -38,5 +38,13 @@
       "@type": "Answer",
       "text": "No. La única limitación es la memoria RAM disponible en tu dispositivo."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Puedo proteger con contraseña varios archivos PDF a la vez?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sí. El modo por lotes de PDFree permite añadir contraseña y permisos a varios archivos PDF a la vez, cada uno cifrado por separado en tu navegador con la misma configuración. Obtendrás un ZIP con todos los archivos protegidos."
+    }
   }
 ]

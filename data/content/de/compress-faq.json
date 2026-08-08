@@ -60,7 +60,7 @@
     "name": "Kann ich mehrere PDFs auf einmal komprimieren?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Aktuell wird eine Datei pro Vorgang verarbeitet. Nach dem Download kannst du sofort die nächste Datei laden."
+      "text": "Ja. PDFree unterstützt vollständige Stapelverarbeitung — wähle oder ziehe beliebig viele PDF-Dateien hinein, jede wird einzeln in deinem Browser komprimiert. Am Ende lädst du alle Ergebnisse als eine ZIP-Datei herunter. Kein Tageslimit, keine Begrenzung der Dateianzahl."
     }
   }
 ]

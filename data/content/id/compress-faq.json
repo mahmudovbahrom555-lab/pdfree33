@@ -46,5 +46,13 @@
       "@type": "Answer",
       "text": "Ya. PDFree berfungsi sepenuhnya offline sebagai Progressive Web App setelah halaman dimuat. Tidak diperlukan koneksi internet — semua pemrosesan berjalan di browser Anda."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah saya mengompres beberapa file PDF sekaligus?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ya. PDFree mendukung pemrosesan batch penuh — pilih atau seret beberapa file PDF, masing-masing dikompres secara lokal di browser Anda. Setelah selesai, unduh semua hasil dalam satu file ZIP. Tanpa batas harian atau jumlah file."
+    }
   }
 ]

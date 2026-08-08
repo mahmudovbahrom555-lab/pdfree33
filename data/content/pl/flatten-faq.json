@@ -62,5 +62,13 @@
       "@type": "Answer",
       "text": "Rozwiązują różne problemy. Spłaszczanie całkowicie usuwa interaktywną strukturę formularza — nie ma pól do edycji, niezależnie od uprawnień. Zabezpieczenie hasłem ogranicza dostęp lub prawa do edycji, ale pozostawia pola formularza nienaruszone; ktoś znający hasło nadal może zmodyfikować wypełnialny formularz. Dla maksymalnego bezpieczeństwa najpierw spłaszcz, aby zablokować treść, a następnie dodaj hasło."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy mogę spłaszczyć wiele plików PDF naraz?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. Tryb wsadowy PDFree spłaszcza pola formularzy i adnotacje w dowolnej liczbie wybranych plików PDF, przetwarzając każdy lokalnie w przeglądarce. Pobierz wszystkie spłaszczone pliki razem jako jedno archiwum ZIP, bez limitu rozmiaru."
+    }
   }
 ]

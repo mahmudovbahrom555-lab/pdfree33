@@ -78,5 +78,13 @@
       "@type": "Answer",
       "text": "Non. Le texte et le contenu vectoriel reste identique. Seule l'interactivité disparaît — l'apparence du document ne change pas."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Puis-je aplatir plusieurs fichiers PDF à la fois ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui. Le mode par lots de PDFree aplatit les champs de formulaire et annotations d'autant de fichiers PDF que vous sélectionnez, chacun traité localement dans votre navigateur. Téléchargez tous les fichiers aplatis ensemble dans un ZIP, sans limite de taille."
+    }
   }
 ]

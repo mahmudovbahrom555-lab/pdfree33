@@ -70,5 +70,13 @@
       "@type": "Answer",
       "text": "No. I numeri di pagina vengono incorporati in modo permanente. Conserva il file originale separatamente se in seguito ti serve una versione senza numeri."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso aggiungere numeri di pagina a più file PDF contemporaneamente?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. Seleziona o trascina più file PDF e PDFree numererà le pagine di ognuno nel formato scelto, direttamente nel tuo browser. I file numerati vengono raggruppati in un unico ZIP da scaricare. Nessun caricamento, nessun limite giornaliero."
+    }
   }
 ]

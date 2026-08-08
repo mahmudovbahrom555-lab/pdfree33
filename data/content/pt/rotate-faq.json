@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "Não. O PDFree funciona inteiramente no seu navegador — não há servidor de back-end que receba seus arquivos. Como nada é enviado, nada pode ser armazenado, registrado ou retido. Seu documento existe apenas na memória do navegador durante a sessão e é apagado ao fechar a aba."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso girar vários arquivos PDF de uma vez?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim. O PDFree oferece rotação em lote — selecione vários arquivos PDF, escolha o ângulo, e cada um é girado localmente no seu navegador. Você receberá um ZIP com todos os arquivos girados, sem limite de quantidade de arquivos."
+    }
   }
 ]

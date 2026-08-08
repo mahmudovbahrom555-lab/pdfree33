@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "Nein. PDFree läuft vollständig in deinem Browser — es gibt keinen Backend-Server, der deine Dateien empfängt. Da nichts hochgeladen wird, kann auch nichts gespeichert, protokolliert oder aufbewahrt werden. Dein Dokument existiert nur im Arbeitsspeicher deines Browsers während der Sitzung und wird gelöscht, wenn du den Tab schließt."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann ich mehrere PDF-Dateien gleichzeitig drehen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. PDFree unterstützt Stapelverarbeitung beim Drehen — wähle mehrere Dateien, lege den Drehwinkel fest, und jede Datei wird einzeln im Browser gedreht. Du erhältst eine ZIP mit allen gedrehten Dateien."
+    }
   }
 ]

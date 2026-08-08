@@ -78,5 +78,13 @@
       "@type": "Answer",
       "text": "Có. PDF mã hóa RC4-128 tương thích với Adobe Acrobat, Foxit Reader và tất cả trình đọc PDF chuẩn."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Tôi có thể đặt mật khẩu cho nhiều file PDF cùng lúc không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có. Chế độ xử lý hàng loạt của PDFree cho phép thêm mật khẩu và quyền hạn cho nhiều file PDF cùng lúc, mỗi file được mã hóa riêng ngay trong trình duyệt với cùng thiết lập. Bạn sẽ nhận được một file ZIP chứa tất cả các file đã được bảo vệ."
+    }
   }
 ]
