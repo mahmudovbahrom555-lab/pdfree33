@@ -172,6 +172,34 @@ export function trackBehaviorAutoDownloadRecovery(tool) {
   _track('Auto Download Recovery', { tool });
 }
 
+// ── Batch processing funnel ─────────────────────────────────────
+// Layered on top of the generic Tool Open → File Added → Tool Start →
+// Tool Success funnel above (app.js's shared pdfree:success handler calls
+// trackToolSuccess for batch runs too, via the same _timers[tool] set by
+// the trackToolStart call before doProcess() — that's left untouched here).
+// These batch-specific events add file-count and per-batch success-rate
+// visibility that the generic funnel can't express.
+const _batchTimers = {};
+
+/** Call when a batch run begins (2+ files selected on a batch-eligible tool). */
+export function trackBatchStart(tool, fileCount) {
+  _batchTimers[tool] = performance.now();
+  _track('Batch Start', { tool, files: String(fileCount) });
+}
+
+/**
+ * Call when a batch run finishes and a ZIP was produced (even if some
+ * individual files failed — see trackToolError('batch_item_failed') for
+ * per-file failures and trackToolError('batch_all_failed') when none succeed).
+ */
+export function trackBatchSuccess(tool, fileCount, succeeded) {
+  const durationMs = _batchTimers[tool] ? performance.now() - _batchTimers[tool] : null;
+  delete _batchTimers[tool];
+  const props = { tool, files: String(fileCount), succeeded: String(succeeded) };
+  if (durationMs !== null) props.duration_s = _roundDuration(durationMs);
+  _track('Batch Success', props);
+}
+
 // ── Search funnel ─────────────────────────────────────────────
 
 /** User typed a query and got results */

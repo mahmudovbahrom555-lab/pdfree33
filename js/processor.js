@@ -10,7 +10,7 @@ import { t, tp } from './i18n.js';
 import { setProgress, hideProgress, setButtonProcessing, setButtonReady,
          showCancelBtn, hideCancelBtn, showToast, startLongOpHint } from './ui.js';
 import { selectedFiles, setFilesLocked, renderList } from './files.js';
-import { trackToolError } from './analytics.js';
+import { trackToolError, trackBatchStart, trackBatchSuccess } from './analytics.js';
 import { TOOLS, MAX_COMPRESS_MB } from './config.js';
 import { getRunner, getWorkerTool } from './toolRegistry.js';
 import { loadJSZip, loadDocx, loadExcelJs, loadPptxGenJs } from './lazyLibs.js';
@@ -1068,6 +1068,7 @@ async function _batchWorkerToolOne(tool, file, params, onProgress) {
 
 async function _runBatch(tool, filesSnapshot, extraParams) {
   const total = filesSnapshot.length;
+  trackBatchStart(tool, total);
 
   // Fresh queue — reset any stale status left over from a previous failed
   // "process again" attempt on the same file objects.
@@ -1130,6 +1131,7 @@ async function _runBatch(tool, filesSnapshot, extraParams) {
     isProcessing = false;
     setFilesLocked(false);
     hideCancelBtn();
+    trackToolError(tool, 'batch_all_failed');
     _handleError(tool, t('err_batch_all_failed'));
     return;
   }
@@ -1160,6 +1162,7 @@ async function _runBatch(tool, filesSnapshot, extraParams) {
   document.dispatchEvent(new CustomEvent('pdfree:success', {
     detail: { tool, blob, desc, filename }
   }));
+  trackBatchSuccess(tool, total, succeeded);
 
   if (failed > 0) {
     const names = failedNames.slice(0, 5).join(', ');
