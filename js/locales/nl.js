@@ -189,6 +189,7 @@ window.PDFREE_LOCALE = {
   err_encrypted_pdf:    'Deze PDF heeft een ongebruikelijke of beschadigde structuur (dit kan ook gebeuren bij met een wachtwoord beveiligde bestanden). Probeer het opnieuw op te slaan vanuit een andere PDF-app, of verwijder het wachtwoord, en probeer het opnieuw.',
   err_cdn_lib_unavailable: '{lib}-bibliotheek niet beschikbaar — controleer je internetverbinding',
   err_compress_timeout: '⏱ Comprimeren geannuleerd — het bestand heeft te veel afbeeldingen voor de browser. Probeer de Light-instelling of splits de PDF eerst.',
+  err_batch_timeout:    '⏱ Deze bestandsverwerking duurde te lang — het bestand is mogelijk te groot of te complex voor de browser. Het wordt als mislukt gemarkeerd en de batch gaat verder met de rest.',
   err_merge_timeout:    '⏱ Samenvoegen geannuleerd — de browser had mogelijk onvoldoende geheugen. Probeer minder of kleinere bestanden tegelijk samen te voegen.',
   warn_compress_large:  '⚠️ Groot bestand ({size}) — comprimeren kan 1–2 minuten duren. De browser verwerkt alles lokaal in geheugen.',
   compress_scan_skipped: 'Groot bestand — voorafgaande scan overgeslagen om geheugen te besparen',

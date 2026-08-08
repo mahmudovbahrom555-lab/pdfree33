@@ -248,11 +248,12 @@ export async function doProcess(currentTool, extraParams = {}) {
   showCancelBtn();
 
   // ── Batch dispatch ──────────────────────────────────────────────
-  // 2+ files for compress/watermark/rotate route into the sequential
-  // queue + ZIP flow (see "Batch processing" section below) instead of
-  // the single-file runnerMap. Exactly one file for ANY tool (including
-  // these three) always falls through to the unchanged code below —
-  // single-file behavior is byte-for-byte identical to before this existed.
+  // 2+ files for any tool in BATCH_TOOLS (compress/watermark/rotate/
+  // protect/pagenum/flatten) route into the sequential queue + ZIP flow
+  // (see "Batch processing" section below) instead of the single-file
+  // runnerMap. Exactly one file for ANY tool always falls through to the
+  // unchanged code below — single-file behavior is byte-for-byte
+  // identical to before batch processing existed.
   if (BATCH_TOOLS.has(currentTool) && filesSnapshot.length > 1) {
     try {
       await _runBatch(currentTool, filesSnapshot, extraParams);
@@ -1021,7 +1022,7 @@ function _postToWorkerForBatch(msg, transfer, onProgress) {
     let watchdog;
     const arm = () => {
       clearTimeout(watchdog);
-      watchdog = setTimeout(() => settle(reject, new Error(t('err_compress_timeout'))), _BATCH_WATCHDOG_MS);
+      watchdog = setTimeout(() => settle(reject, new Error(t('err_batch_timeout'))), _BATCH_WATCHDOG_MS);
     };
     const settle = (fn, val) => {
       clearTimeout(watchdog);

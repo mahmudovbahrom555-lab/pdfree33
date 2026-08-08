@@ -189,6 +189,7 @@ window.PDFREE_LOCALE = {
   err_encrypted_pdf:    'Ten plik PDF ma nietypową lub uszkodzoną strukturę (może się tak zdarzyć również w przypadku plików chronionych hasłem). Spróbuj zapisać go ponownie w innej aplikacji PDF lub usuń hasło, a następnie spróbuj ponownie.',
   err_cdn_lib_unavailable: 'Biblioteka {lib} niedostępna — sprawdź połączenie z internetem',
   err_compress_timeout: '⏱ Kompresja anulowana — plik ma zbyt wiele obrazów dla przeglądarki. Wypróbuj ustawienie Lekkie lub najpierw podziel PDF.',
+  err_batch_timeout:    '⏱ Przetwarzanie tego pliku przekroczyło limit czasu — plik może być zbyt duży lub zbyt złożony dla przeglądarki. Zostanie oznaczony jako nieudany, a partia będzie kontynuowana z pozostałymi plikami.',
   err_merge_timeout:    '⏱ Scalanie anulowane — przeglądarce mogło zabraknąć pamięci. Spróbuj scalić mniej plików lub mniejsze pliki naraz.',
   warn_compress_large:  '⚠️ Duży plik ({size}) — kompresja może potrwać 1–2 minuty. Przeglądarka przetwarza wszystko lokalnie w pamięci.',
   compress_scan_skipped: 'Duży plik — wstępne skanowanie pominięte, aby zaoszczędzić pamięć',

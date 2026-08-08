@@ -189,6 +189,7 @@ window.PDFREE_LOCALE = {
   err_encrypted_pdf:   'Este PDF tiene una estructura inusual o dañada (esto también puede ocurrir con archivos protegidos con contraseña). Intenta guardarlo de nuevo desde otra aplicación de PDF, o elimina la contraseña, y vuelve a intentarlo.',
   err_cdn_lib_unavailable: 'Biblioteca de {lib} no disponible — comprueba tu conexión a internet',
   err_compress_timeout: '⏱ Compresión cancelada — el archivo tiene demasiadas imágenes para el navegador. Prueba el preset Light o divide el PDF primero.',
+  err_batch_timeout:    '⏱ Esta operación superó el tiempo de espera — el archivo puede ser demasiado grande o complejo para el navegador. Se marcará como fallido y el lote continuará con el resto.',
   err_merge_timeout:    '⏱ Combinación cancelada — es posible que el navegador se haya quedado sin memoria. Intenta combinar menos archivos, o archivos más pequeños, a la vez.',
   warn_compress_large:  '⚠️ Archivo grande ({size}) — la compresión puede tardar 1–2 minutos. El navegador lo procesa todo localmente en memoria.',
   compress_scan_skipped: 'Archivo grande — pre-escaneo omitido para ahorrar memoria',
