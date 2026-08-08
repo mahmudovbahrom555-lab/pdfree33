@@ -628,7 +628,8 @@
         "nl": "pdf comprimeren, pdf bestandsgrootte verkleinen, pdf online comprimeren, pdf gratis comprimeren, pdf kleiner maken",
         "pl": "kompresuj pdf, zmniejsz rozmiar pdf, kompresuj pdf online, kompresuj pdf za darmo, zmniejsz wagę pliku pdf",
         "tr": "pdf sıkıştır, pdf boyutunu küçült, pdf sıkıştırma online, ücretsiz pdf sıkıştır, pdf dosyasını küçült"
-      }
+      },
+      "batch": true
     },
     {
       "id": "rotate",
@@ -809,7 +810,8 @@
         "nl": "pdf draaien, pdf pagina's draaien, pdf oriëntatie corrigeren, pdf draaien gratis online, pdf roteren",
         "pl": "obróć pdf, obracanie stron pdf, popraw orientację pdf, obróć pdf online za darmo, odwróć pdf",
         "tr": "pdf döndür, pdf sayfa döndürme, pdf yön düzeltme, pdf döndürme ücretsiz online, pdf çevir"
-      }
+      },
+      "batch": true
     },
     {
       "id": "watermark",
@@ -990,7 +992,8 @@
         "nl": "watermerk pdf, watermerk toevoegen aan pdf, pdf watermerk online, pdf watermerk gratis, tekst watermerk pdf, logo watermerk pdf, logo toevoegen aan pdf",
         "pl": "znak wodny pdf, dodaj znak wodny do pdf, znak wodny pdf online, znak wodny pdf za darmo, tekstowy znak wodny pdf, znak wodny logo pdf, dodaj logo do pdf",
         "tr": "pdf filigran, pdf'ye filigran ekle, pdf filigran online, ücretsiz pdf filigran, pdf metin filigranı, pdf logo filigranı, pdf'ye logo ekle"
-      }
+      },
+      "batch": true
     },
     {
       "id": "protect",
@@ -1171,7 +1174,8 @@
         "nl": "pdf beveiligen, wachtwoord op pdf zetten, pdf versleutelen, pdf beveiligen met wachtwoord gratis, pdf online versleutelen",
         "pl": "zabezpiecz pdf, ustaw hasło do pdf, zaszyfruj pdf, zabezpiecz pdf hasłem za darmo, szyfrowanie pdf online",
         "tr": "pdf koru, pdf'ye şifre koy, pdf şifrele, ücretsiz pdf şifreleme, pdf online şifreleme"
-      }
+      },
+      "batch": true
     },
     {
       "id": "redact",
@@ -1533,7 +1537,8 @@
         "nl": "paginanummers toevoegen aan pdf, pdf paginanummering, pdf gratis pagineren, pdf paginering online",
         "pl": "dodaj numery stron do pdf, numeracja stron pdf, ponumeruj pdf za darmo, paginacja pdf online",
         "tr": "pdf'ye sayfa numarası ekle, pdf sayfa numaralama, ücretsiz pdf sayfa numaralama, pdf sayfalama online"
-      }
+      },
+      "batch": true
     },
     {
       "id": "extract",
@@ -2619,7 +2624,8 @@
         "nl": "pdf afvlakken, ingevuld pdf afvlakken, pdf niet-bewerkbaar maken, pdf formuliervelden vergrendelen, pdf gratis online afvlakken",
         "pl": "spłaszcz pdf, spłaszcz wypełniony pdf, zrób pdf nieedytowalny, zablokuj pola formularza pdf, spłaszcz pdf online za darmo",
         "tr": "pdf düzleştir, doldurulmuş pdf'yi düzleştir, pdf'yi düzenlenemez yap, pdf form alanlarını kilitle, ücretsiz online pdf düzleştirme"
-      }
+      },
+      "batch": true
     },
     {
       "id": "pdf2word",
@@ -3957,7 +3963,8 @@
       "whyNoDailyLimit": "No daily limits",
       "whyNoDailyLimitDesc": "Use as many times as you need. No per-day quotas, no monthly caps, no premium upsell.",
       "whyFree": "Free forever",
-      "whyFreeDesc": "No free trial, no freemium tier. PDFree is completely free — open source under AGPLv3."
+      "whyFreeDesc": "No free trial, no freemium tier. PDFree is completely free — open source under AGPLv3.",
+      "whyBatch": "Batch processing"
     },
     "es": {
       "moreNav": "Más",
@@ -4026,7 +4033,8 @@
       "whyNoDailyLimit": "Sin límites diarios",
       "whyNoDailyLimitDesc": "Úsalo cuantas veces quieras. Sin cuotas diarias ni mensuales, sin suscripción premium.",
       "whyFree": "Gratis para siempre",
-      "whyFreeDesc": "Sin prueba gratuita, sin freemium. PDFree es completamente gratis — código abierto bajo AGPLv3."
+      "whyFreeDesc": "Sin prueba gratuita, sin freemium. PDFree es completamente gratis — código abierto bajo AGPLv3.",
+      "whyBatch": "Procesamiento por lotes"
     },
     "pt": {
       "moreNav": "Mais",
@@ -4095,7 +4103,8 @@
       "whyNoDailyLimit": "Sem limites diários",
       "whyNoDailyLimitDesc": "Use quantas vezes quiser. Sem cotas diárias ou mensais, sem plano premium.",
       "whyFree": "Grátis para sempre",
-      "whyFreeDesc": "Sem versão de teste, sem freemium. PDFree é completamente gratuito — código aberto sob AGPLv3."
+      "whyFreeDesc": "Sem versão de teste, sem freemium. PDFree é completamente gratuito — código aberto sob AGPLv3.",
+      "whyBatch": "Processamento em lote"
     },
     "de": {
       "moreNav": "Mehr",
@@ -4164,7 +4173,8 @@
       "whyNoDailyLimit": "Keine täglichen Limits",
       "whyNoDailyLimitDesc": "Beliebig oft nutzen. Keine Tageskontingente, keine Monatslimits, kein Premium-Druck.",
       "whyFree": "Für immer kostenlos",
-      "whyFreeDesc": "Keine Testversion, kein Freemium. PDFree ist komplett kostenlos — Open Source unter AGPLv3."
+      "whyFreeDesc": "Keine Testversion, kein Freemium. PDFree ist komplett kostenlos — Open Source unter AGPLv3.",
+      "whyBatch": "Batch-Verarbeitung"
     },
     "fr": {
       "moreNav": "Plus",
@@ -4233,7 +4243,8 @@
       "whyNoDailyLimit": "Aucune limite quotidienne",
       "whyNoDailyLimitDesc": "Utilisez autant de fois que vous voulez. Sans quota journalier, sans abonnement premium.",
       "whyFree": "Gratuit pour toujours",
-      "whyFreeDesc": "Sans essai gratuit, sans freemium. PDFree est entièrement gratuit — open source sous AGPLv3."
+      "whyFreeDesc": "Sans essai gratuit, sans freemium. PDFree est entièrement gratuit — open source sous AGPLv3.",
+      "whyBatch": "Traitement par lots"
     },
     "id": {
       "moreNav": "Lainnya",
@@ -4302,7 +4313,8 @@
       "whyNoDailyLimit": "Tanpa batas harian",
       "whyNoDailyLimitDesc": "Gunakan sebanyak yang Anda butuhkan. Tanpa kuota harian atau bulanan, tanpa paket premium.",
       "whyFree": "Gratis selamanya",
-      "whyFreeDesc": "Tanpa uji coba gratis, tanpa freemium. PDFree sepenuhnya gratis — open source di bawah AGPLv3."
+      "whyFreeDesc": "Tanpa uji coba gratis, tanpa freemium. PDFree sepenuhnya gratis — open source di bawah AGPLv3.",
+      "whyBatch": "Pemrosesan batch"
     },
     "vi": {
       "moreNav": "Thêm",
@@ -4371,7 +4383,8 @@
       "whyNoDailyLimit": "Không giới hạn hàng ngày",
       "whyNoDailyLimitDesc": "Dùng bao nhiêu lần tùy thích. Không hạn ngạch ngày hay tháng, không gói cao cấp.",
       "whyFree": "Miễn phí mãi mãi",
-      "whyFreeDesc": "Không dùng thử, không freemium. PDFree hoàn toàn miễn phí — mã nguồn mở theo AGPLv3."
+      "whyFreeDesc": "Không dùng thử, không freemium. PDFree hoàn toàn miễn phí — mã nguồn mở theo AGPLv3.",
+      "whyBatch": "Xử lý hàng loạt"
     },
     "ru": {
       "moreNav": "Ещё",
@@ -4440,7 +4453,8 @@
       "whyNoDailyLimit": "Без дневных лимитов",
       "whyNoDailyLimitDesc": "Используйте сколько угодно. Без дневных квот, месячных лимитов, платных планов.",
       "whyFree": "Бесплатно навсегда",
-      "whyFreeDesc": "Без пробного периода, без freemium. PDFree полностью бесплатен — открытый код под AGPLv3."
+      "whyFreeDesc": "Без пробного периода, без freemium. PDFree полностью бесплатен — открытый код под AGPLv3.",
+      "whyBatch": "Пакетная обработка"
     },
     "ja": {
       "moreNav": "その他",
@@ -4509,7 +4523,8 @@
       "whyNoDailyLimit": "1日の利用回数制限なし",
       "whyNoDailyLimitDesc": "何度でも使えます。日次・月次クォータなし、プレミアムプランへの誘導なし。",
       "whyFree": "永久無料",
-      "whyFreeDesc": "無料トライアルもフリーミアムも不要。PDFreeは完全無料 — AGPLv3のオープンソース。"
+      "whyFreeDesc": "無料トライアルもフリーミアムも不要。PDFreeは完全無料 — AGPLv3のオープンソース。",
+      "whyBatch": "バッチ処理"
     },
     "it": {
       "moreNav": "Altro",
@@ -4578,7 +4593,8 @@
       "whyNoDailyLimit": "Nessun limite giornaliero",
       "whyNoDailyLimitDesc": "Usa quante volte vuoi. Nessuna quota giornaliera o mensile, nessun piano premium.",
       "whyFree": "Gratuito per sempre",
-      "whyFreeDesc": "Nessuna prova gratuita, nessun freemium. PDFree è completamente gratuito — open source sotto AGPLv3."
+      "whyFreeDesc": "Nessuna prova gratuita, nessun freemium. PDFree è completamente gratuito — open source sotto AGPLv3.",
+      "whyBatch": "Elaborazione batch"
     },
     "ko": {
       "moreNav": "더보기",
@@ -4647,7 +4663,8 @@
       "whyNoDailyLimit": "일일 사용 제한 없음",
       "whyNoDailyLimitDesc": "원하는 만큼 사용하세요. 일일/월간 할당량 없음, 프리미엄 플랜 없음.",
       "whyFree": "영원히 무료",
-      "whyFreeDesc": "무료 체험판도 프리미엄도 없습니다. PDFree는 완전 무료 — AGPLv3 오픈소스."
+      "whyFreeDesc": "무료 체험판도 프리미엄도 없습니다. PDFree는 완전 무료 — AGPLv3 오픈소스.",
+      "whyBatch": "일괄 처리"
     },
     "nl": {
       "moreNav": "Meer",
@@ -4716,7 +4733,8 @@
       "whyNoDailyLimit": "Geen dagelijkse limieten",
       "whyNoDailyLimitDesc": "Gebruik zo vaak als nodig. Geen dagelijkse of maandelijkse quota, geen premium-abonnement.",
       "whyFree": "Voor altijd gratis",
-      "whyFreeDesc": "Geen gratis proefversie, geen freemium. PDFree is volledig gratis — open source onder AGPLv3."
+      "whyFreeDesc": "Geen gratis proefversie, geen freemium. PDFree is volledig gratis — open source onder AGPLv3.",
+      "whyBatch": "Batchverwerking"
     },
     "pl": {
       "moreNav": "Więcej",
@@ -4785,7 +4803,8 @@
       "whyNoDailyLimit": "Bez dziennych limitów",
       "whyNoDailyLimitDesc": "Używaj tyle razy, ile potrzebujesz. Bez dziennych ani miesięcznych limitów, bez planu premium.",
       "whyFree": "Darmowy na zawsze",
-      "whyFreeDesc": "Bez okresu próbnego, bez freemium. PDFree jest całkowicie darmowy — open source na licencji AGPLv3."
+      "whyFreeDesc": "Bez okresu próbnego, bez freemium. PDFree jest całkowicie darmowy — open source na licencji AGPLv3.",
+      "whyBatch": "Przetwarzanie wsadowe"
     },
     "tr": {
       "moreNav": "Diğer",
@@ -4854,7 +4873,8 @@
       "whyNoDailyLimit": "Günlük sınır yok",
       "whyNoDailyLimitDesc": "İstediğiniz kadar kullanın. Günlük veya aylık kota yok, premium plan yok.",
       "whyFree": "Sonsuza kadar ücretsiz",
-      "whyFreeDesc": "Deneme süresi yok, freemium yok. PDFree tamamen ücretsizdir — AGPLv3 lisanslı açık kaynak."
+      "whyFreeDesc": "Deneme süresi yok, freemium yok. PDFree tamamen ücretsizdir — AGPLv3 lisanslı açık kaynak.",
+      "whyBatch": "Toplu işleme"
     }
   }
 }

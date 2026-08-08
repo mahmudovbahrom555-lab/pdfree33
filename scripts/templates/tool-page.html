@@ -198,6 +198,14 @@
       <span style="display:inline-flex;align-items:center;gap:4px;padding:4px 11px;background:var(--green-light);border:1px solid rgba(45,122,79,.18);border-radius:20px;font-size:12px;color:var(--green);font-weight:500;line-height:1.4;">✓ {{ ui.whyNoAccount }}</span>
       <span style="display:inline-flex;align-items:center;gap:4px;padding:4px 11px;background:var(--green-light);border:1px solid rgba(45,122,79,.18);border-radius:20px;font-size:12px;color:var(--green);font-weight:500;line-height:1.4;">✓ {{ ui.whyNoWatermark }}</span>
       <span style="display:inline-flex;align-items:center;gap:4px;padding:4px 11px;background:var(--green-light);border:1px solid rgba(45,122,79,.18);border-radius:20px;font-size:12px;color:var(--green);font-weight:500;line-height:1.4;">✓ {{ ui.whyFree }}</span>
+      {# batch:true is set per-tool in data/tools-config.json (compress/protect/
+         watermark/rotate/pagenum/flatten today) — mirrors config.js's own
+         batch:true flag that actually enables the feature. If you add batch
+         support to another tool, don't forget to also set "batch": true on
+         that tool's entry in tools-config.json, or this badge won't appear. #}
+      {% if tool.batch %}
+      <span style="display:inline-flex;align-items:center;gap:4px;padding:4px 11px;background:var(--green-light);border:1px solid rgba(45,122,79,.18);border-radius:20px;font-size:12px;color:var(--green);font-weight:500;line-height:1.4;">✓ {{ ui.whyBatch }}</span>
+      {% endif %}
     </div>
 
     <div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-label="{{ ui.dropTitle }}">
