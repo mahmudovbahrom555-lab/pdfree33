@@ -13,6 +13,7 @@ window.PDFREE_LOCALE = {
     pdf2jpg:          ['pdf in bild', 'seiten exportieren', 'in jpg umwandeln', 'bilder extrahieren'],
     redact:           ['schwärzen', 'verstecken', 'abdecken', 'zensieren', 'unkenntlich machen', 'text schwärzen'],
     rotate:           ['drehen', 'ausrichtung', 'wenden', 'querformat', 'hochformat'],
+    organize:         ['organisieren', 'seiten sortieren', 'neu anordnen', 'seitenreihenfolge'],
     extract:          ['extrahieren', 'seiten entnehmen', 'seiten auswählen', 'seiten herausnehmen'],
     watermark:        ['wasserzeichen', 'stempel', 'text einfügen', 'branding', 'diagonal', 'text hinzufügen'],
     pagenum:          ['seitenzahlen', 'nummerierung', 'paginierung', 'fußzeile', 'seiten nummerieren'],
@@ -109,6 +110,7 @@ window.PDFREE_LOCALE = {
   prog_meta:         'Metadaten werden aktualisiert...',
   prog_protect:      'PDF wird verschlüsselt...',
   prog_rotate:       'Drehungen werden angewendet...',
+  prog_organize:     'PDF wird neu aufgebaut...',
   prog_flatten:      'Formularfelder werden fixiert...',
 
   // ── processor.js — batch queue (compress/watermark/protect/pagenum/flatten, 2+ files) ──
@@ -136,6 +138,7 @@ window.PDFREE_LOCALE = {
   desc_meta:                'Metadaten aktualisiert · {pages} Seiten · {size}',
   desc_protect:             'Passwortgeschützt · {pages} Seiten · {size}{extra}',
   desc_rotate:              'Gedreht · {pages} Seiten · {size}',
+  desc_organize:            'Organisiert · {pages} Seiten · {size}',
   desc_redact:              'Bereiche abgedeckt · {pages} Seiten · {size}',
   desc_fill:                'Formular ausgefüllt · {pages} Seiten · {size}',
   warn_fill_skip_one:       '{n} Feld konnte nicht ausgefüllt werden und wurde übersprungen — bitte die heruntergeladene PDF prüfen.',
@@ -259,6 +262,29 @@ window.PDFREE_LOCALE = {
   rot_btn_many:           '🔄 {n} Seiten drehen',
   rot_btn_disabled:       '🔄 Seiten zum Drehen auswählen',
   rot_banner:             '🔒 Vollständig im Browser verarbeitet · Kein Upload',
+
+  // organizeUI
+  org_loading:            'PDF wird geladen…',
+  org_err_load:           'PDF konnte nicht gelesen werden: {msg}',
+  org_toolbar_aria:       'Drehung',
+  org_ccw_title:          '90° gegen den Uhrzeigersinn drehen',
+  org_180_title:          '180° drehen',
+  org_cw_title:           '90° im Uhrzeigersinn drehen',
+  org_quick_aria:         'Schnellauswahl',
+  org_select_label:       'Auswählen:',
+  org_delete_selected:    '✕ Auswahl löschen',
+  org_delete_btn:         'Seite löschen',
+  org_restore_btn:        'Seite wiederherstellen',
+  org_grid_aria:          'PDF-Seiten — zum Ändern der Reihenfolge ziehen',
+  org_page_alt:           'Seite {n}',
+  org_page_aria:          'Seite {n}',
+  org_deleted_suffix:     ' (gelöscht)',
+  org_hint_click:         'Ziehen zum Umsortieren, klicken zum Auswählen oder Seiten löschen',
+  org_banner:             '🔒 Vollständig im Browser verarbeitet · Kein Upload',
+  org_btn_no_pages:       'Weniger Seiten löschen, um fortzufahren',
+  org_btn_one:            '🗂️ {n} Seite speichern',
+  org_btn_many:           '🗂️ {n} Seiten speichern',
+  val_organize_no_pages:  'Lösche weniger Seiten — mindestens eine muss übrig bleiben.',
 
   // search
   search_placeholder: 'PDF zusammenfügen, komprimieren, drehen, Wasserzeichen, PDF zu Word…',

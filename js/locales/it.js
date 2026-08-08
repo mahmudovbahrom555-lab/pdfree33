@@ -12,6 +12,7 @@ window.PDFREE_LOCALE = {
     pdf2jpg:          ['pdf in immagine', 'esporta pagine', 'convertire in jpg', 'estrai immagini'],
     redact:           ['redigere', 'nascondere', 'coprire', 'oscurare', 'censurare', 'sfocare', 'cancellare testo'],
     rotate:           ['ruotare', 'capovolgere', 'orientamento', 'girare', 'orizzontale', 'verticale'],
+    organize:         ['organizza', 'riordina', 'ordina pagine', 'ordine delle pagine'],
     extract:          ['estrarre', 'prendi pagine', 'seleziona pagine', 'ottieni pagine'],
     watermark:        ['filigrana', 'timbro', 'sovrapporre testo', 'marchio', 'diagonale', 'aggiungi testo'],
     pagenum:          ['numeri di pagina', 'numerazione', 'paginazione', 'piè di pagina', 'numera pagine'],
@@ -108,6 +109,7 @@ window.PDFREE_LOCALE = {
   prog_meta:         'Aggiornamento metadati...',
   prog_protect:      'Cifratura PDF...',
   prog_rotate:       'Applicazione rotazioni...',
+  prog_organize:     'Ricostruzione del PDF...',
   prog_flatten:      'Blocco campi modulo...',
 
   // ── processor.js — batch queue (compress/watermark/protect/pagenum/flatten, 2+ files) ──
@@ -135,6 +137,7 @@ window.PDFREE_LOCALE = {
   desc_meta:                'Metadati aggiornati · {pages} pagine · {size}',
   desc_protect:             'Protetto con password · {pages} pagine · {size}{extra}',
   desc_rotate:              'Ruotato · {pages} pagine · {size}',
+  desc_organize:            'Organizzato · {pages} pagine · {size}',
   desc_redact:              'Aree oscurate · {pages} pagine · {size}',
   desc_fill:                'Modulo compilato · {pages} pagine · {size}',
   warn_fill_skip_one:       '{n} campo non è stato compilato ed è stato saltato — controlla il PDF scaricato.',
@@ -258,6 +261,29 @@ window.PDFREE_LOCALE = {
   rot_btn_many:           '🔄 Ruota {n} pagine',
   rot_btn_disabled:       '🔄 Seleziona le pagine da ruotare',
   rot_banner:             '🔒 Elaborato interamente nel tuo browser · Nessun caricamento',
+
+  // organizeUI
+  org_loading:            'Caricamento PDF…',
+  org_err_load:           'Impossibile leggere il PDF: {msg}',
+  org_toolbar_aria:       'Rotazione',
+  org_ccw_title:          'Ruota di 90° in senso antiorario',
+  org_180_title:          'Ruota di 180°',
+  org_cw_title:           'Ruota di 90° in senso orario',
+  org_quick_aria:         'Selezione rapida',
+  org_select_label:       'Seleziona:',
+  org_delete_selected:    '✕ Elimina selezionate',
+  org_delete_btn:         'Elimina pagina',
+  org_restore_btn:        'Ripristina pagina',
+  org_grid_aria:          'Pagine del PDF — trascina per riordinare',
+  org_page_alt:           'Pagina {n}',
+  org_page_aria:          'Pagina {n}',
+  org_deleted_suffix:     ' (eliminata)',
+  org_hint_click:         'Trascina per riordinare, clicca per selezionare o elimina le pagine',
+  org_banner:             '🔒 Elaborato interamente nel tuo browser · Nessun caricamento',
+  org_btn_no_pages:       'Elimina meno pagine per continuare',
+  org_btn_one:            '🗂️ Salva {n} pagina',
+  org_btn_many:           '🗂️ Salva {n} pagine',
+  val_organize_no_pages:  'Elimina meno pagine — deve rimanerne almeno una.',
 
   // search
   search_placeholder: 'unisci PDF, comprimi, dividi, filigrana, PDF in Word…',

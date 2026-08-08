@@ -7,12 +7,13 @@ window.PDFREE_LOCALE = {
   // exactly. Merged with (not replacing) the English tags in js/search.js.
   search_tags: {
     merge:            ['gabungkan', 'gabung', 'satukan', 'gabung pdf', 'gabungkan file', 'satukan file', 'jadi satu file'],
-    split:            ['pisahkan', 'pisah', 'potong', 'bagi pdf', 'hapus halaman', 'pecah pdf'],
+    split:            ['pisahkan', 'pisah', 'potong', 'bagi pdf', 'pecah pdf'],
     compress:         ['kompres', 'perkecil', 'kecilkan ukuran', 'mampatkan', 'ukuran file besar', 'terlalu besar', 'perkecil ukuran'],
     jpg2pdf:          ['gambar ke pdf', 'foto ke pdf', 'jpg ke pdf', 'png ke pdf', 'ubah foto jadi pdf'],
     pdf2jpg:          ['pdf ke gambar', 'pdf ke jpg', 'ekspor halaman', 'konversi ke jpg', 'ambil gambar'],
     redact:           ['sensor', 'hitamkan', 'sembunyikan', 'tutupi teks', 'coret', 'hapus teks', 'blokir informasi'],
     rotate:           ['putar', 'rotasi', 'balik halaman', 'orientasi', 'lanskap', 'potret'],
+    organize:         ['atur halaman', 'urutkan ulang', 'hapus halaman', 'susun halaman', 'urutan halaman'],
     extract:          ['ambil halaman', 'pilih halaman', 'keluarkan halaman', 'ekstrak halaman', 'ekstrak'],
     watermark:        ['tanda air', 'stempel', 'cap air', 'tambah teks', 'watermark', 'merek'],
     pagenum:          ['nomor halaman', 'penomoran', 'footer', 'tambah nomor halaman', 'nomor otomatis'],
@@ -109,6 +110,7 @@ window.PDFREE_LOCALE = {
   prog_meta:         'Memperbarui metadata...',
   prog_protect:      'Mengenkripsi PDF...',
   prog_rotate:       'Menerapkan rotasi...',
+  prog_organize:     'Membangun ulang PDF...',
   prog_flatten:      'Mengunci bidang formulir...',
 
   // ── processor.js — batch queue (compress/watermark/protect/pagenum/flatten, 2+ files) ──
@@ -136,6 +138,7 @@ window.PDFREE_LOCALE = {
   desc_meta:                'Metadata diperbarui · {pages} halaman · {size}',
   desc_protect:             'Dilindungi kata sandi · {pages} halaman · {size}{extra}',
   desc_rotate:              'Diputar · {pages} halaman · {size}',
+  desc_organize:            'Diatur · {pages} halaman · {size}',
   desc_redact:              'Area ditutup · {pages} halaman · {size}',
   desc_fill:                'Formulir diisi · {pages} halaman · {size}',
   warn_fill_skip_one:       '{n} kolom tidak dapat diisi dan dilewati — silakan periksa PDF yang diunduh.',
@@ -259,6 +262,29 @@ window.PDFREE_LOCALE = {
   rot_btn_many:           '🔄 Putar {n} halaman',
   rot_btn_disabled:       '🔄 Pilih halaman untuk diputar',
   rot_banner:             '🔒 Diproses sepenuhnya di browser Anda · Tanpa unggah',
+
+  // organizeUI
+  org_loading:            'Memuat PDF…',
+  org_err_load:           'Tidak dapat membaca PDF: {msg}',
+  org_toolbar_aria:       'Rotasi',
+  org_ccw_title:          'Putar 90° berlawanan arah jarum jam',
+  org_180_title:          'Putar 180°',
+  org_cw_title:           'Putar 90° searah jarum jam',
+  org_quick_aria:         'Pilih cepat',
+  org_select_label:       'Pilih:',
+  org_delete_selected:    '✕ Hapus yang dipilih',
+  org_delete_btn:         'Hapus halaman',
+  org_restore_btn:        'Pulihkan halaman',
+  org_grid_aria:          'Halaman PDF — seret untuk mengatur ulang urutan',
+  org_page_alt:           'Halaman {n}',
+  org_page_aria:          'Halaman {n}',
+  org_deleted_suffix:     ' (dihapus)',
+  org_hint_click:         'Seret untuk mengatur ulang urutan, klik untuk memilih, atau hapus halaman',
+  org_banner:             '🔒 Diproses sepenuhnya di browser Anda · Tanpa unggah',
+  org_btn_no_pages:       'Hapus lebih sedikit halaman untuk melanjutkan',
+  org_btn_one:            '🗂️ Simpan {n} halaman',
+  org_btn_many:           '🗂️ Simpan {n} halaman',
+  val_organize_no_pages:  'Hapus lebih sedikit halaman — minimal satu harus tersisa.',
 
   // search
   search_placeholder: 'gabungkan PDF, kompres, putar, tanda air, PDF ke Word…',

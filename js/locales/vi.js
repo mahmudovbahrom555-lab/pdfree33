@@ -7,12 +7,13 @@ window.PDFREE_LOCALE = {
   // exactly. Merged with (not replacing) the English tags in js/search.js.
   search_tags: {
     merge:            ['ghép', 'ghép file', 'gộp', 'hợp nhất', 'nối file', 'ghép pdf', 'gộp file'],
-    split:            ['tách', 'chia', 'cắt', 'xóa trang', 'tách trang', 'chia nhỏ pdf'],
+    split:            ['tách', 'chia', 'cắt', 'tách trang', 'chia nhỏ pdf'],
     compress:         ['nén', 'giảm dung lượng', 'thu nhỏ', 'tối ưu', 'file quá nặng', 'giảm kích thước'],
     jpg2pdf:          ['ảnh sang pdf', 'ảnh thành pdf', 'jpg sang pdf', 'png sang pdf', 'chuyển ảnh sang pdf'],
     pdf2jpg:          ['pdf sang ảnh', 'pdf sang jpg', 'xuất trang', 'chuyển sang jpg', 'trích ảnh'],
     redact:           ['che thông tin', 'xóa thông tin', 'kiểm duyệt', 'làm mờ', 'ẩn văn bản', 'tô đen', 'che'],
     rotate:           ['xoay', 'xoay trang', 'lật trang', 'hướng trang', 'ngang', 'dọc'],
+    organize:         ['sắp xếp', 'sắp xếp lại', 'xóa trang', 'sắp xếp trang', 'thứ tự trang'],
     extract:          ['trích trang', 'chọn trang', 'lấy trang', 'tách trang riêng', 'trích xuất trang'],
     watermark:        ['hình mờ', 'đóng dấu', 'chèn chữ', 'watermark', 'thương hiệu'],
     pagenum:          ['đánh số trang', 'số trang', 'chân trang', 'thêm số trang', 'số thứ tự trang'],
@@ -109,6 +110,7 @@ window.PDFREE_LOCALE = {
   prog_meta:         'Đang cập nhật metadata...',
   prog_protect:      'Đang mã hóa PDF...',
   prog_rotate:       'Đang áp dụng xoay...',
+  prog_organize:     'Đang xây dựng lại PDF...',
   prog_flatten:      'Đang khóa trường biểu mẫu...',
 
   // ── processor.js — batch queue (compress/watermark/protect/pagenum/flatten, 2+ files) ──
@@ -136,6 +138,7 @@ window.PDFREE_LOCALE = {
   desc_meta:                'Đã cập nhật metadata · {pages} trang · {size}',
   desc_protect:             'Bảo vệ bằng mật khẩu · {pages} trang · {size}{extra}',
   desc_rotate:              'Đã xoay · {pages} trang · {size}',
+  desc_organize:            'Đã sắp xếp · {pages} trang · {size}',
   desc_redact:              'Đã che vùng · {pages} trang · {size}',
   desc_fill:                'Đã điền biểu mẫu · {pages} trang · {size}',
   warn_fill_skip_one:       'Có {n} trường không thể điền và đã bị bỏ qua — vui lòng kiểm tra PDF đã tải xuống.',
@@ -259,6 +262,29 @@ window.PDFREE_LOCALE = {
   rot_btn_many:           '🔄 Xoay {n} trang',
   rot_btn_disabled:       '🔄 Chọn trang để xoay',
   rot_banner:             '🔒 Xử lý hoàn toàn trong trình duyệt của bạn · Không tải lên',
+
+  // organizeUI
+  org_loading:            'Đang tải PDF…',
+  org_err_load:           'Không thể đọc PDF: {msg}',
+  org_toolbar_aria:       'Xoay',
+  org_ccw_title:          'Xoay 90° ngược chiều kim đồng hồ',
+  org_180_title:          'Xoay 180°',
+  org_cw_title:           'Xoay 90° theo chiều kim đồng hồ',
+  org_quick_aria:         'Chọn nhanh',
+  org_select_label:       'Chọn:',
+  org_delete_selected:    '✕ Xóa mục đã chọn',
+  org_delete_btn:         'Xóa trang',
+  org_restore_btn:        'Khôi phục trang',
+  org_grid_aria:          'Các trang PDF — kéo để sắp xếp lại',
+  org_page_alt:           'Trang {n}',
+  org_page_aria:          'Trang {n}',
+  org_deleted_suffix:     ' (đã xóa)',
+  org_hint_click:         'Kéo để sắp xếp lại, nhấp để chọn, hoặc xóa trang',
+  org_banner:             '🔒 Xử lý hoàn toàn trong trình duyệt của bạn · Không tải lên',
+  org_btn_no_pages:       'Xóa ít trang hơn để tiếp tục',
+  org_btn_one:            '🗂️ Lưu {n} trang',
+  org_btn_many:           '🗂️ Lưu {n} trang',
+  val_organize_no_pages:  'Xóa ít trang hơn — phải còn lại ít nhất một trang.',
 
   // search
   search_placeholder: 'gộp PDF, nén, xoay, watermark, PDF sang Word…',

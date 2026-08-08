@@ -12,6 +12,7 @@ window.PDFREE_LOCALE = {
     pdf2jpg:          ['pdf naar afbeelding', 'pagina\'s exporteren', 'converteren naar jpg', 'afbeeldingen extraheren'],
     redact:           ['redigeren', 'verbergen', 'bedekken', 'zwart maken', 'censureren', 'onherkenbaar maken', 'vervagen'],
     rotate:           ['roteren', 'draaien', 'kantelen', 'oriëntatie', 'liggend', 'staand'],
+    organize:         ['organiseren', 'herschikken', "pagina's sorteren", 'paginavolgorde'],
     extract:          ['extraheren', 'pagina\'s nemen', 'pagina\'s selecteren', 'pagina\'s ophalen'],
     watermark:        ['watermerk', 'stempel', 'tekst overlay', 'merk', 'diagonaal', 'tekst toevoegen'],
     pagenum:          ['paginanummers', 'nummering', 'paginering', 'voettekst', 'pagina\'s nummeren'],
@@ -108,6 +109,7 @@ window.PDFREE_LOCALE = {
   prog_meta:         'Metadata bijwerken...',
   prog_protect:      'PDF versleutelen...',
   prog_rotate:       'Rotaties toepassen...',
+  prog_organize:     'PDF wordt herbouwd...',
   prog_flatten:      'Formuliervelden vergrendelen...',
 
   // ── processor.js — batch queue (compress/watermark/protect/pagenum/flatten, 2+ files) ──
@@ -135,6 +137,7 @@ window.PDFREE_LOCALE = {
   desc_meta:                'Metadata bijgewerkt · {pages} pagina\'s · {size}',
   desc_protect:             'Beveiligd met wachtwoord · {pages} pagina\'s · {size}{extra}',
   desc_rotate:              'Geroteerd · {pages} pagina\'s · {size}',
+  desc_organize:            "Georganiseerd · {pages} pagina's · {size}",
   desc_redact:              'Gebieden verborgen · {pages} pagina\'s · {size}',
   desc_fill:                'Formulier ingevuld · {pages} pagina\'s · {size}',
   warn_fill_skip_one:       '{n} veld kon niet worden ingevuld en is overgeslagen — controleer de gedownloade PDF.',
@@ -258,6 +261,29 @@ window.PDFREE_LOCALE = {
   rot_btn_many:           "🔄 {n} pagina's draaien",
   rot_btn_disabled:       "🔄 Selecteer pagina's om te draaien",
   rot_banner:             '🔒 Volledig verwerkt in je browser · Geen upload',
+
+  // organizeUI
+  org_loading:            'PDF laden…',
+  org_err_load:           'Kon PDF niet lezen: {msg}',
+  org_toolbar_aria:       'Rotatie',
+  org_ccw_title:          '90° linksom draaien',
+  org_180_title:          '180° draaien',
+  org_cw_title:           '90° rechtsom draaien',
+  org_quick_aria:         'Snelle selectie',
+  org_select_label:       'Selecteren:',
+  org_delete_selected:    '✕ Selectie verwijderen',
+  org_delete_btn:         'Pagina verwijderen',
+  org_restore_btn:        'Pagina herstellen',
+  org_grid_aria:          "PDF-pagina's — sleep om te herschikken",
+  org_page_alt:           'Pagina {n}',
+  org_page_aria:          'Pagina {n}',
+  org_deleted_suffix:     ' (verwijderd)',
+  org_hint_click:         "Sleep om te herschikken, klik om te selecteren, of verwijder pagina's",
+  org_banner:             '🔒 Volledig verwerkt in je browser · Geen upload',
+  org_btn_no_pages:       "Verwijder minder pagina's om door te gaan",
+  org_btn_one:            '🗂️ {n} pagina opslaan',
+  org_btn_many:           "🗂️ {n} pagina's opslaan",
+  val_organize_no_pages:  "Verwijder minder pagina's — er moet er minstens één overblijven.",
 
   // search
   search_placeholder: 'PDF samenvoegen, comprimeren, splitsen, watermerk, PDF naar Word…',

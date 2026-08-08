@@ -8,12 +8,13 @@ window.PDFREE_LOCALE = {
   // Hangul, e.g. 드로잉/워터마크) since real search behavior mixes registers.
   search_tags: {
     merge:            ['병합', '합치기', '결합', '합체', '여러 pdf', '파일 합치기', 'pdf 합치기', '머지'],
-    split:            ['분할', '나누기', '분리', '자르기', '페이지 삭제', '페이지 제거', '스플릿'],
+    split:            ['분할', '나누기', '분리', '자르기', '페이지 제거', '스플릿'],
     compress:         ['압축', '압축하기', '용량 줄이기', '축소', '최적화', '파일 크기', '용량 너무 큼'],
     jpg2pdf:          ['이미지를 pdf로', '사진을 pdf로', 'png를 pdf로', '이미지 변환'],
     pdf2jpg:          ['pdf를 이미지로', '페이지 내보내기', 'jpg로 변환', '이미지 추출'],
     redact:           ['가리기', '숨기기', '검열', '검게 칠하기', '마스킹', '블러', '텍스트 삭제'],
     rotate:           ['회전', '돌리기', '방향', '가로', '세로', '회전하기'],
+    organize:         ['정리', '순서 변경', '페이지 삭제', '페이지 정렬', '페이지 순서'],
     extract:          ['추출', '페이지 추출', '페이지 선택', '페이지 가져오기'],
     watermark:        ['워터마크', '스탬프', '텍스트 삽입', '로고 삽입', '대각선', '텍스트 추가'],
     pagenum:          ['페이지 번호', '번호 매기기', '쪽번호', '바닥글', '페이지 넘버링'],
@@ -110,6 +111,7 @@ window.PDFREE_LOCALE = {
   prog_meta:         '메타데이터 업데이트 중...',
   prog_protect:      'PDF 암호화 중...',
   prog_rotate:       '회전 적용 중...',
+  prog_organize:     'PDF 재구성 중...',
   prog_flatten:      '양식 필드 잠금 중...',
 
   // ── processor.js — batch queue (compress/watermark/protect/pagenum/flatten, 2+ files) ──
@@ -137,6 +139,7 @@ window.PDFREE_LOCALE = {
   desc_meta:                '메타데이터 업데이트됨 · {pages}페이지 · {size}',
   desc_protect:             '비밀번호로 보호됨 · {pages}페이지 · {size}{extra}',
   desc_rotate:              '회전됨 · {pages}페이지 · {size}',
+  desc_organize:            '정리됨 · {pages}페이지 · {size}',
   desc_redact:              '영역 가려짐 · {pages}페이지 · {size}',
   desc_fill:                '양식 작성됨 · {pages}페이지 · {size}',
   warn_fill_skip_one:       '{n}개 필드를 채우지 못해 건너뛰었습니다 — 다운로드한 PDF를 확인해 주세요.',
@@ -260,6 +263,29 @@ window.PDFREE_LOCALE = {
   rot_btn_many:           '🔄 {n}페이지 회전',
   rot_btn_disabled:       '🔄 회전할 페이지 선택',
   rot_banner:             '🔒 브라우저에서 완전히 처리 · 업로드 없음',
+
+  // organizeUI
+  org_loading:            'PDF 불러오는 중…',
+  org_err_load:           'PDF를 읽을 수 없습니다: {msg}',
+  org_toolbar_aria:       '회전',
+  org_ccw_title:          '반시계 방향으로 90° 회전',
+  org_180_title:          '180° 회전',
+  org_cw_title:           '시계 방향으로 90° 회전',
+  org_quick_aria:         '빠른 선택',
+  org_select_label:       '선택:',
+  org_delete_selected:    '✕ 선택 항목 삭제',
+  org_delete_btn:         '페이지 삭제',
+  org_restore_btn:        '페이지 복원',
+  org_grid_aria:          'PDF 페이지 — 드래그하여 순서 변경',
+  org_page_alt:           '페이지 {n}',
+  org_page_aria:          '페이지 {n}',
+  org_deleted_suffix:     ' (삭제됨)',
+  org_hint_click:         '드래그로 순서를 바꾸거나, 클릭으로 선택하거나, 페이지를 삭제하세요',
+  org_banner:             '🔒 브라우저에서 완전히 처리 · 업로드 없음',
+  org_btn_no_pages:       '계속하려면 삭제하는 페이지 수를 줄이세요',
+  org_btn_one:            '🗂️ {n}페이지 저장',
+  org_btn_many:           '🗂️ {n}페이지 저장',
+  val_organize_no_pages:  '삭제하는 페이지 수를 줄이세요 — 최소 한 페이지는 남아 있어야 합니다.',
 
   // search
   search_placeholder: 'PDF 합치기, 압축, 분할, 워터마크, PDF를 Word로…',

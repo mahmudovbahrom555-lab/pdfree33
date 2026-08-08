@@ -6,12 +6,13 @@ window.PDFREE_LOCALE = {
   // exactly. Merged with (not replacing) the English tags in js/search.js.
   search_tags: {
     merge:            ['birleştir', 'birleştirme', 'pdf birleştir', 'dosyaları birleştir', 'tek dosya yap', "pdf'leri birleştir"],
-    split:            ['böl', 'ayır', 'sayfa sil', 'bölme', 'parçala'],
+    split:            ['böl', 'ayır', 'bölme', 'parçala'],
     compress:         ['sıkıştır', 'küçült', 'boyut küçült', 'optimize et', 'dosya boyutu', 'çok büyük'],
     jpg2pdf:          ['resmi pdfye çevir', 'fotoğraf pdf', 'jpg pdf', 'png pdf', 'resim pdf'],
     pdf2jpg:          ['pdf resim', 'pdf jpg', 'sayfa dışa aktar', "jpg'e çevir", 'resim çıkar'],
     redact:           ['sansürle', 'gizle', 'karart', 'kapat', 'sakla', 'metni sil', 'maskele'],
     rotate:           ['döndür', 'çevir', 'yönlendirme', 'yatay', 'dikey', 'sayfa döndür'],
+    organize:         ['düzenle', 'yeniden sırala', 'sayfa sil', 'sayfaları sırala', 'sayfa sırası'],
     extract:          ['sayfa al', 'sayfa seç', 'sayfaları çıkar', 'sayfa ayıkla', 'sayfa çıkarma'],
     watermark:        ['filigran', 'damga', 'yazı ekle', 'marka', 'çapraz yazı'],
     pagenum:          ['sayfa numarası', 'numaralandırma', 'alt bilgi', 'sayfa numaralama', 'sayfa no ekle'],
@@ -108,6 +109,7 @@ window.PDFREE_LOCALE = {
   prog_meta:         'Meta veriler güncelleniyor...',
   prog_protect:      'PDF şifreleniyor...',
   prog_rotate:       'Rotasyonlar uygulanıyor...',
+  prog_organize:     'PDF yeniden oluşturuluyor...',
   prog_flatten:      'Form alanları kilitleniyor...',
 
   // ── processor.js — batch queue (compress/watermark/protect/pagenum/flatten, 2+ files) ──
@@ -135,6 +137,7 @@ window.PDFREE_LOCALE = {
   desc_meta:                'Meta veriler güncellendi · {pages} sayfa · {size}',
   desc_protect:             'Parolayla korundu · {pages} sayfa · {size}{extra}',
   desc_rotate:              'Döndürüldü · {pages} sayfa · {size}',
+  desc_organize:            'Düzenlendi · {pages} sayfa · {size}',
   desc_redact:              'Alanlar gizlendi · {pages} sayfa · {size}',
   desc_fill:                'Form dolduruldu · {pages} sayfa · {size}',
   warn_fill_skip_one:       "{n} alan doldurulamadı ve atlandı — lütfen indirilen PDF'yi kontrol edin.",
@@ -258,6 +261,29 @@ window.PDFREE_LOCALE = {
   rot_btn_many:           '🔄 {n} sayfayı döndür',
   rot_btn_disabled:       '🔄 Döndürülecek sayfaları seçin',
   rot_banner:             '🔒 Tamamen tarayıcınızda işlenir · Yükleme yok',
+
+  // organizeUI
+  org_loading:            'PDF yükleniyor…',
+  org_err_load:           'PDF okunamadı: {msg}',
+  org_toolbar_aria:       'Döndürme',
+  org_ccw_title:          'Saat yönünün tersine 90° döndür',
+  org_180_title:          '180° döndür',
+  org_cw_title:           'Saat yönünde 90° döndür',
+  org_quick_aria:         'Hızlı seçim',
+  org_select_label:       'Seç:',
+  org_delete_selected:    '✕ Seçilenleri sil',
+  org_delete_btn:         'Sayfayı sil',
+  org_restore_btn:        'Sayfayı geri yükle',
+  org_grid_aria:          'PDF sayfaları — sıralamak için sürükleyin',
+  org_page_alt:           'Sayfa {n}',
+  org_page_aria:          'Sayfa {n}',
+  org_deleted_suffix:     ' (silindi)',
+  org_hint_click:         'Sıralamak için sürükleyin, seçmek için tıklayın veya sayfaları silin',
+  org_banner:             '🔒 Tamamen tarayıcınızda işlenir · Yükleme yok',
+  org_btn_no_pages:       'Devam etmek için daha az sayfa silin',
+  org_btn_one:            '🗂️ {n} sayfayı kaydet',
+  org_btn_many:           '🗂️ {n} sayfayı kaydet',
+  val_organize_no_pages:  'Daha az sayfa silin — en az bir sayfa kalmalı.',
 
   // search
   search_placeholder: 'PDF birleştir, sıkıştır, böl, filigran, PDF\'den Word\'e…',

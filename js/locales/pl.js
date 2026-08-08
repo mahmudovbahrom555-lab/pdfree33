@@ -6,12 +6,13 @@ window.PDFREE_LOCALE = {
   // exactly. Merged with (not replacing) the English tags in js/search.js.
   search_tags: {
     merge:            ['scal', 'scalanie', 'połącz', 'złącz', 'łączenie plików', 'wiele pdf', 'połącz pdf'],
-    split:            ['podziel', 'podzielić', 'rozdziel', 'wytnij', 'usuń strony', 'usuwanie stron'],
+    split:            ['podziel', 'podzielić', 'rozdziel', 'wytnij', 'usuwanie stron'],
     compress:         ['kompresuj', 'kompresja', 'zmniejsz', 'mniejszy', 'optymalizuj', 'rozmiar pliku', 'za duży plik'],
     jpg2pdf:          ['obraz do pdf', 'zdjęcie do pdf', 'png do pdf', 'zdjęcie na pdf'],
     pdf2jpg:          ['pdf do obrazu', 'eksportuj strony', 'konwertuj do jpg', 'wyodrębnij obrazy'],
     redact:           ['ukryj', 'zaczernij', 'cenzura', 'zamaskuj', 'ukryj tekst', 'usuń tekst', 'zamalowanie'],
     rotate:           ['obróć', 'obracanie', 'odwróć', 'pozioma', 'pionowa', 'orientacja'],
+    organize:         ['organizuj', 'zmień kolejność', 'usuń strony', 'sortuj strony', 'kolejność stron'],
     extract:          ['wyodrębnij', 'wyodrębnij strony', 'wybierz strony', 'pobierz strony'],
     watermark:        ['znak wodny', 'pieczątka', 'nakładka tekstowa', 'marka', 'dodaj tekst'],
     pagenum:          ['numery stron', 'numeracja', 'paginacja', 'stopka', 'numeruj strony'],
@@ -108,6 +109,7 @@ window.PDFREE_LOCALE = {
   prog_meta:         'Aktualizowanie metadanych...',
   prog_protect:      'Szyfrowanie PDF...',
   prog_rotate:       'Stosowanie rotacji...',
+  prog_organize:     'Odbudowywanie PDF...',
   prog_flatten:      'Blokowanie pól formularza...',
 
   // ── processor.js — batch queue (compress/watermark/protect/pagenum/flatten, 2+ files) ──
@@ -135,6 +137,7 @@ window.PDFREE_LOCALE = {
   desc_meta:                'Zaktualizowano metadane · {pages} stron · {size}',
   desc_protect:             'Zabezpieczono hasłem · {pages} stron · {size}{extra}',
   desc_rotate:              'Obrócono · {pages} stron · {size}',
+  desc_organize:            'Uporządkowano · {pages} stron · {size}',
   desc_redact:              'Ukryto obszary · {pages} stron · {size}',
   desc_fill:                'Wypełniono formularz · {pages} stron · {size}',
   warn_fill_skip_one:       '{n} pole nie mogło zostać wypełnione i zostało pominięte — sprawdź pobrany plik PDF.',
@@ -258,6 +261,29 @@ window.PDFREE_LOCALE = {
   rot_btn_many:           '🔄 Obróć stron: {n}',
   rot_btn_disabled:       '🔄 Zaznacz strony do obrotu',
   rot_banner:             '🔒 Przetwarzane całkowicie w przeglądarce · Bez przesyłania',
+
+  // organizeUI
+  org_loading:            'Wczytywanie PDF…',
+  org_err_load:           'Nie można odczytać PDF: {msg}',
+  org_toolbar_aria:       'Obrót',
+  org_ccw_title:          'Obróć o 90° w lewo',
+  org_180_title:          'Obróć o 180°',
+  org_cw_title:           'Obróć o 90° w prawo',
+  org_quick_aria:         'Szybki wybór',
+  org_select_label:       'Zaznacz:',
+  org_delete_selected:    '✕ Usuń zaznaczone',
+  org_delete_btn:         'Usuń stronę',
+  org_restore_btn:        'Przywróć stronę',
+  org_grid_aria:          'Strony PDF — przeciągnij, aby zmienić kolejność',
+  org_page_alt:           'Strona {n}',
+  org_page_aria:          'Strona {n}',
+  org_deleted_suffix:     ' (usunięta)',
+  org_hint_click:         'Przeciągnij, aby zmienić kolejność, kliknij, aby zaznaczyć, lub usuń strony',
+  org_banner:             '🔒 Przetwarzane całkowicie w przeglądarce · Bez przesyłania',
+  org_btn_no_pages:       'Usuń mniej stron, aby kontynuować',
+  org_btn_one:            '🗂️ Zapisz {n} stronę',
+  org_btn_many:           '🗂️ Zapisz stron: {n}',
+  val_organize_no_pages:  'Usuń mniej stron — musi zostać przynajmniej jedna.',
 
   // search
   search_placeholder: 'Połącz PDF, kompresuj, podziel, znak wodny, PDF do Word…',

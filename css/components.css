@@ -2169,6 +2169,61 @@ button,
 }
 
 /* ══════════════════════════════════════════════════════════════
+   ORGANIZE — reorder/delete/rotate grid (extends .rot-card/.rot-thumb/
+   .rot-numbox/.rot-badge above; only the delete/restore affordance and
+   the deleted-state dimming are new)
+   ══════════════════════════════════════════════════════════════ */
+
+.org-card {
+  cursor: grab;
+  user-select: none;
+  touch-action: none; /* whole card is the drag surface, same as jpg2pdf's thumbs */
+}
+
+.org-card.dragging       { opacity: .4; }
+.org-card.drag-target .rot-thumb,
+.org-card.drag-target .rot-numbox { outline: 2px solid var(--green); outline-offset: 2px; }
+.org-card.touch-dragging { z-index: 5; box-shadow: var(--shadow-lg); }
+
+.org-card--deleted {
+  opacity: .45;
+  border-style: dashed;
+}
+.org-card--deleted .rot-thumb img,
+.org-card--deleted .rot-numbox__n {
+  filter: grayscale(1);
+}
+
+/* Delete/restore — opposite corner from .rot-badge (top-right) to avoid collision */
+.org-card__action {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 20px;
+  height: 20px;
+  border: none;
+  border-radius: 50%;
+  font-size: 12px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: var(--surface);
+  color: var(--text2);
+  box-shadow: 0 1px 3px rgba(0,0,0,.15);
+}
+.org-card__action--delete:hover  { background: #fee2e2; color: #dc2626; }
+.org-card__action--restore       { background: var(--green-light); color: var(--green-dark); }
+.org-card__action--restore:hover { background: var(--green); color: #fff; }
+
+.org-delete-sel-btn { color: #dc2626; }
+
+@media (max-width: 600px) {
+  .org-grid { grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); }
+}
+
+/* ══════════════════════════════════════════════════════════════
    COVER AREA / REDACT — drag-to-mark canvas
    ══════════════════════════════════════════════════════════════ */
 

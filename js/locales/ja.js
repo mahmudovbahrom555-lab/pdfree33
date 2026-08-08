@@ -9,12 +9,13 @@ window.PDFREE_LOCALE = {
   // variants, since real users mix scripts and IME conversion habits.
   search_tags: {
     merge:            ['結合', '結合する', '合体', 'ファイルを結合', 'まとめる', 'マージ', 'PDF結合'],
-    split:            ['分割', '分ける', 'ページを削除', 'ページ削除', '切り分ける', 'スプリット'],
+    split:            ['分割', '分ける', 'ページを削除', '切り分ける', 'スプリット'],
     compress:         ['圧縮', '圧縮する', '小さくする', 'ファイルサイズを小さく', '最適化', '容量が大きい'],
     jpg2pdf:          ['画像をPDFに', '写真をPDFに', 'JPGをPDFに', 'PNGをPDFに', '画像変換'],
     pdf2jpg:          ['PDFを画像に', 'PDFをJPGに', 'ページを書き出す', '画像に変換', '画像抽出'],
     redact:           ['黒塗り', '隠す', 'マスク', '塗りつぶす', '個人情報を隠す', 'レダクト'],
     rotate:           ['回転', '回す', '向きを変える', '横向き', '縦向き', '回転する'],
+    organize:         ['整理', '並べ替え', 'ページ削除', 'ページ整理', 'ページ順序'],
     extract:          ['ページ抽出', 'ページを選択', 'ページを取り出す', '抽出', '取り出す'],
     watermark:        ['透かし', 'ウォーターマーク', 'スタンプ', '文字を重ねる', 'ロゴを入れる'],
     pagenum:          ['ページ番号', 'ノンブル', 'フッター', '番号を振る', 'ページ番号を追加'],
@@ -111,6 +112,7 @@ window.PDFREE_LOCALE = {
   prog_meta:         'メタデータを更新しています...',
   prog_protect:      'PDFを暗号化しています...',
   prog_rotate:       '回転を適用しています...',
+  prog_organize:     'PDFを再構築しています...',
   prog_flatten:      'フォームフィールドを固定しています...',
 
   // ── processor.js — batch queue (compress/watermark/protect/pagenum/flatten, 2+ files) ──
@@ -138,6 +140,7 @@ window.PDFREE_LOCALE = {
   desc_meta:                'メタデータを更新しました · {pages}ページ · {size}',
   desc_protect:             'パスワードで保護しました · {pages}ページ · {size}{extra}',
   desc_rotate:              '回転しました · {pages}ページ · {size}',
+  desc_organize:            '整理しました · {pages}ページ · {size}',
   desc_redact:              '範囲を塗りつぶしました · {pages}ページ · {size}',
   desc_fill:                'フォームに入力しました · {pages}ページ · {size}',
   warn_fill_skip_one:       '{n}件のフィールドに入力できず、スキップされました — ダウンロードしたPDFをご確認ください。',
@@ -261,6 +264,29 @@ window.PDFREE_LOCALE = {
   rot_btn_many:           '🔄 {n}ページを回転',
   rot_btn_disabled:       '🔄 回転するページを選択',
   rot_banner:             '🔒 すべてブラウザ内で処理 · アップロードなし',
+
+  // organizeUI
+  org_loading:            'PDFを読み込み中…',
+  org_err_load:           'PDFを読み込めませんでした: {msg}',
+  org_toolbar_aria:       '回転',
+  org_ccw_title:          '反時計回りに90°回転',
+  org_180_title:          '180°回転',
+  org_cw_title:           '時計回りに90°回転',
+  org_quick_aria:         'クイック選択',
+  org_select_label:       '選択:',
+  org_delete_selected:    '✕ 選択したページを削除',
+  org_delete_btn:         'ページを削除',
+  org_restore_btn:        'ページを復元',
+  org_grid_aria:          'PDFのページ — ドラッグで並べ替え',
+  org_page_alt:           'ページ{n}',
+  org_page_aria:          'ページ{n}',
+  org_deleted_suffix:     '（削除済み）',
+  org_hint_click:         'ドラッグで並べ替え、クリックで選択、または削除できます',
+  org_banner:             '🔒 すべてブラウザ内で処理 · アップロードなし',
+  org_btn_no_pages:       '続けるにはページの削除数を減らしてください',
+  org_btn_one:            '🗂️ {n}ページを保存',
+  org_btn_many:           '🗂️ {n}ページを保存',
+  val_organize_no_pages:  '削除するページを減らしてください — 少なくとも1ページ残す必要があります。',
 
   // search
   search_placeholder: 'PDF結合、圧縮、回転、透かし、PDFをWordに…',

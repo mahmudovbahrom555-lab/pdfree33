@@ -283,6 +283,7 @@ export async function doProcess(currentTool, extraParams = {}) {
     pdf2md:   () => _runPdf2Md(filesSnapshot, extraParams),
     unlock:       () => _runUnlock(filesSnapshot, extraParams),
     worker:       () => _runWorkerTool(getWorkerTool(currentTool) ?? currentTool, filesSnapshot, extraParams),
+    organize:     () => _runOrganize(filesSnapshot, extraParams),
     'redact-true': () => _runRedactTrue(filesSnapshot, extraParams),
   };
 
@@ -511,6 +512,73 @@ async function _runSplit(filesSnapshot, { pages, mode, removeWatermarks = false 
     setFilesLocked(false);
     hideCancelBtn();
     _handleError('split', e.message || 'Worker error');
+  };
+}
+
+// ── Organize (reorder / delete / rotate pages) ──────────────────
+//
+// Deliberately its own Worker instance, NOT the shared `_worker` above —
+// js/worker.js is off-limits per CLAUDE.md and has no primitive for
+// rebuilding a document in caller-chosen page order anyway (its rotate
+// handler only mutates pages in place). js/organizeWorker.js is a
+// standalone classic worker, same pattern as js/pdfaAnalyze.js's
+// dedicated js/pdfaWorker.js. Created once and kept alive for the
+// session (not re-created/terminated per call) — mirrors `_worker`
+// itself, and avoids re-running importScripts('pdf-lib.min.js') on
+// every single Organize submission.
+let _organizeWorker = null;
+function _ensureOrganizeWorker() {
+  if (!_organizeWorker) {
+    _organizeWorker = new Worker(new URL('./organizeWorker.js', import.meta.url));
+  }
+  return _organizeWorker;
+}
+
+async function _runOrganize(filesSnapshot, { pageOrder = [] } = {}) {
+  if (!_checkSize(filesSnapshot[0], 200)) { _abortUI(); return; }
+  const file   = filesSnapshot[0];
+  const buffer = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await file.arrayBuffer());
+  setProgress(5, t('prog_organize'));
+
+  const worker = _ensureOrganizeWorker();
+  // ⚠️  TRANSFERABLE CONTRACT — same as every other worker call in this file:
+  //     `buffer` is detached here; the worker owns it until `done` transfers
+  //     data.result back.
+  worker.postMessage({ file: buffer, options: { pageOrder } }, [buffer]);
+
+  worker.onmessage = (e) => {
+    const data = e.data;
+    if (data.type === 'progress') {
+      setProgress(data.value, data.label);
+    } else if (data.type === 'done') {
+      if (!(data.result instanceof ArrayBuffer)) {
+        _handleError('organize', 'Unexpected result from worker'); return;
+      }
+      isProcessing = false;
+      setFilesLocked(false);
+      hideCancelBtn();
+      setProgress(100, t('prog_done'));
+
+      const blob     = new Blob([data.result], { type: 'application/pdf' });
+      const base     = file.name.replace(/\.pdf$/i, '');
+      const filename = `${base}-organized.pdf`;
+      const desc     = t('desc_organize', { pages: data.pageCount, size: fmtSize(blob.size) });
+
+      document.dispatchEvent(new CustomEvent('pdfree:success', {
+        detail: { tool: 'organize', blob, desc, filename }
+      }));
+    } else if (data.type === 'error') {
+      isProcessing = false;
+      setFilesLocked(false);
+      hideCancelBtn();
+      _handleError('organize', data.message);
+    }
+  };
+  worker.onerror = (e) => {
+    isProcessing = false;
+    setFilesLocked(false);
+    hideCancelBtn();
+    _handleError('organize', e.message || 'Worker error');
   };
 }
 

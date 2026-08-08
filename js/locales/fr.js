@@ -6,12 +6,13 @@ window.PDFREE_LOCALE = {
   // exactly. Merged with (not replacing) the English tags in js/search.js.
   search_tags: {
     merge:            ['fusionner', 'combiner', 'joindre', 'unir', 'fusion de fichiers', 'plusieurs pdf', 'joindre des pdf'],
-    split:            ['diviser', 'séparer', 'découper', 'couper', 'supprimer des pages', 'retirer des pages'],
+    split:            ['diviser', 'séparer', 'découper', 'couper', 'retirer des pages'],
     compress:         ['compresser', 'réduire', 'plus petit', 'diminuer', 'optimiser', 'taille du fichier', 'trop lourd'],
     jpg2pdf:          ['image en pdf', 'photo en pdf', 'png en pdf', 'convertir image en pdf', 'jpg en pdf'],
     pdf2jpg:          ['pdf en image', 'exporter les pages', 'convertir en jpg', 'extraire les images'],
     redact:           ['caviarder', 'masquer', 'cacher', 'censurer', 'noircir', 'flouter', 'effacer le texte'],
     rotate:           ['pivoter', 'rotation', 'tourner', 'paysage', 'portrait', 'orientation'],
+    organize:         ['organiser', 'réorganiser', 'supprimer des pages', 'trier les pages', 'ordre des pages'],
     extract:          ['extraire', 'extraire des pages', 'sélectionner des pages', 'récupérer des pages'],
     watermark:        ['filigrane', 'tampon', 'superposer du texte', 'marque', 'diagonale', 'ajouter du texte'],
     pagenum:          ['numéros de page', 'numérotation', 'pagination', 'pied de page', 'numéroter les pages'],
@@ -108,6 +109,7 @@ window.PDFREE_LOCALE = {
   prog_meta:         'Mise à jour des métadonnées...',
   prog_protect:      'Chiffrement du PDF...',
   prog_rotate:       'Application des rotations...',
+  prog_organize:     'Reconstruction du PDF...',
   prog_flatten:      'Verrouillage des champs du formulaire...',
 
   // ── processor.js — batch queue (compress/watermark/protect/pagenum/flatten, 2+ files) ──
@@ -135,6 +137,7 @@ window.PDFREE_LOCALE = {
   desc_meta:                'Métadonnées mises à jour · {pages} pages · {size}',
   desc_protect:             'Protégé par mot de passe · {pages} pages · {size}{extra}',
   desc_rotate:              'Pivoté · {pages} pages · {size}',
+  desc_organize:            'Organisé · {pages} pages · {size}',
   desc_redact:              'Zones masquées · {pages} pages · {size}',
   desc_fill:                'Formulaire rempli · {pages} pages · {size}',
   warn_fill_skip_one:       "{n} champ n'a pas pu être rempli et a été ignoré — vérifiez le PDF téléchargé.",
@@ -258,6 +261,29 @@ window.PDFREE_LOCALE = {
   rot_btn_many:           '🔄 Pivoter {n} pages',
   rot_btn_disabled:       '🔄 Sélectionnez des pages à pivoter',
   rot_banner:             '🔒 Traité entièrement dans votre navigateur · Sans envoi',
+
+  // organizeUI
+  org_loading:            'Chargement du PDF…',
+  org_err_load:           'Impossible de lire le PDF : {msg}',
+  org_toolbar_aria:       'Rotation',
+  org_ccw_title:          'Pivoter de 90° dans le sens antihoraire',
+  org_180_title:          'Pivoter de 180°',
+  org_cw_title:           'Pivoter de 90° dans le sens horaire',
+  org_quick_aria:         'Sélection rapide',
+  org_select_label:       'Sélectionner :',
+  org_delete_selected:    '✕ Supprimer la sélection',
+  org_delete_btn:         'Supprimer la page',
+  org_restore_btn:        'Restaurer la page',
+  org_grid_aria:          'Pages du PDF — glissez pour réorganiser',
+  org_page_alt:           'Page {n}',
+  org_page_aria:          'Page {n}',
+  org_deleted_suffix:     ' (supprimée)',
+  org_hint_click:         'Glissez pour réorganiser, cliquez pour sélectionner, ou supprimez des pages',
+  org_banner:             '🔒 Traité entièrement dans votre navigateur · Sans envoi',
+  org_btn_no_pages:       'Supprimez moins de pages pour continuer',
+  org_btn_one:            '🗂️ Enregistrer {n} page',
+  org_btn_many:           '🗂️ Enregistrer {n} pages',
+  val_organize_no_pages:  'Supprimez moins de pages — au moins une doit rester.',
 
   // search
   search_placeholder: 'fusionner PDF, compresser, pivoter, filigrane, PDF en Word…',

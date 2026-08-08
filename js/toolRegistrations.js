@@ -38,6 +38,8 @@ import { initFillOptions, hideFillOptions,
          getFillParams }                 from './fillUI.js';
 import { initRotateOptions, hideRotateOptions,
          getRotateParams }              from './rotateUI.js';
+import { initOrganizeOptions, hideOrganizeOptions,
+         getOrganizeParams }            from './organizeUI.js';
 import { initRedactOptions, hideRedactOptions,
          getRedactParams }                from './redactUI.js';
 import { initDraw, loadPdfFile, resetDraw } from './drawUI.js';
@@ -306,6 +308,17 @@ registerTool('rotate', {
     if (changed === 0) return t('val_rotate_select');
     return null;
   },
+});
+
+registerTool('organize', {
+  runner:     'organize', // dedicated js/organizeWorker.js, not the shared js/worker.js — see processor.js's _runOrganize
+  init:       initOrganizeOptions,
+  hide:       hideOrganizeOptions,
+  getParams:  getOrganizeParams,
+  validate:   (p) => p.pageOrder.length === 0 ? t('val_organize_no_pages') : null,
+  // No presetFilter — page order/deletions/rotations are 100% specific to
+  // this document, same reasoning that excludes rotate entirely and strips
+  // exifAngles/pages from jpg2pdf's and pdf2jpg's presets.
 });
 
 registerTool('protect', {

@@ -179,6 +179,24 @@ export const TOOLS = {
     accept:      '.pdf,application/pdf',
     implemented: true,
   },
+  organize: {
+    icon:   '🗂️',
+    title:  'Organize PDF',
+    desc:   'Reorder, delete, and rotate pages in one place',
+    tags:   ['organize', 'reorder', 'rearrange', 'sort pages', 'page order',
+             'drag pages', 'page manager'],
+    btn:    '🗂️ Organize PDF',
+    titles: { en: 'Organize PDF', es: 'Organizar PDF', pt: 'Organizar PDF', de: 'PDF Organisieren', fr: 'Organiser PDF', id: 'Atur Halaman PDF', vi: 'Sắp Xếp PDF', ru: 'Упорядочить PDF', ja: 'PDFを整理', it: 'Organizza PDF', ko: 'PDF 정리', nl: 'PDF Organiseren', pl: 'Organizuj PDF', tr: 'PDF Düzenle' },
+    descs:  { en: 'Reorder, delete, and rotate pages in one place', es: 'Reordena, elimina y rota páginas en un solo lugar', pt: 'Reordene, exclua e gire páginas em um só lugar', de: 'Seiten neu anordnen, löschen und drehen — alles an einem Ort', fr: 'Réorganisez, supprimez et pivotez des pages en un seul endroit', id: 'Atur ulang, hapus, dan putar halaman di satu tempat', vi: 'Sắp xếp lại, xóa và xoay trang ở một nơi', ru: 'Меняйте порядок, удаляйте и поворачивайте страницы в одном месте', ja: 'ページの並べ替え・削除・回転を一か所で', it: 'Riordina, elimina e ruota le pagine in un unico posto', ko: '페이지 순서 변경, 삭제, 회전을 한곳에서', nl: "Pagina's herschikken, verwijderen en draaien op één plek", pl: 'Zmieniaj kolejność, usuwaj i obracaj strony w jednym miejscu', tr: 'Sayfaları tek yerden yeniden sıralayın, silin ve döndürün' },
+    btns:   { en: '🗂️ Organize PDF', es: '🗂️ Organizar PDF', pt: '🗂️ Organizar PDF', de: '🗂️ PDF organisieren', fr: '🗂️ Organiser PDF', id: '🗂️ Atur PDF', vi: '🗂️ Sắp xếp PDF', ru: '🗂️ Упорядочить PDF', ja: '🗂️ PDFを整理', it: '🗂️ Organizza PDF', ko: '🗂️ PDF 정리', nl: '🗂️ PDF organiseren', pl: '🗂️ Organizuj PDF', tr: '🗂️ PDF düzenle' },
+    // Single-file only, same reasoning as rotate: page order/deletions/
+    // rotations are per-document and can't generalize across a batch of
+    // files with different page counts. Never batch:true — see rotate's
+    // history in this file and processor.js for why.
+    multi:       false,
+    accept:      '.pdf,application/pdf',
+    implemented: true,
+  },
   extract: {
     icon:   '📑',
     title:  'Extract Pages',
