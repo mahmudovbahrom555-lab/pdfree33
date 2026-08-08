@@ -33,6 +33,7 @@ export const EN = {
 
   // ── files.js ───────────────────────────────────────────────────
   split_one_only:  'Split works with one PDF only. Remove the current file first.',
+  single_file_only: 'This tool works with one file at a time. Remove the current file first.',
   invalid_pdf:     'Please select a PDF file — open your Files app, not Photos or Camera',
   invalid_img:     'Please select a JPG or PNG image',
   dupe_skip_one:   '{n} duplicate skipped',

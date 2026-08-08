@@ -44,6 +44,7 @@ window.PDFREE_LOCALE = {
 
   // files
   split_one_only:  'Bölme işlemi aynı anda yalnızca bir PDF ile çalışır. Önce mevcut dosyayı kaldırın.',
+  single_file_only: 'Bu araç aynı anda yalnızca bir dosya ile çalışır. Önce mevcut dosyayı kaldırın.',
   invalid_pdf:     'Bir PDF dosyası seçin — Fotoğraflar veya Kamera değil, Dosyalar uygulamasını açın',
   invalid_img:     'Bir JPG veya PNG resmi seçin',
   dupe_skip_one:   '{n} kopya atlandı',

@@ -7,7 +7,7 @@
 
 import { esc, fmtSize, id, hide, isFileAccepted } from './utils.js';
 import { showToast } from './ui.js';
-import { ACCEPTED_MIME } from './config.js';
+import { ACCEPTED_MIME, TOOLS } from './config.js';
 import { t, tp } from './i18n.js';
 import { decryptOwnerOnly } from './decryptPdf.js';
 import { bindDragReorder } from './dragReorder.js';
@@ -155,9 +155,13 @@ export function isFilesLocked() {
 export function addFiles(files) {
   if (_locked) return; // (п.2) игнорируем добавление во время обработки
 
-  // Split работает только с одним файлом
-  if (_currentTool === 'split' && selectedFiles.length >= 1) {
-    showToast(t('split_one_only'));
+  // Tools with multi:false (config.js) accept exactly one file — a second
+  // "Choose file" pick must replace-or-block, not silently append to a list
+  // the tool's UI never re-reads past files[0]. split keeps its own wording;
+  // every other single-file tool (pdf2jpg, redact, extract, meta, fill, ocr,
+  // unlock, pdf2pdfa) shares a generic message.
+  if (TOOLS[_currentTool]?.multi === false && selectedFiles.length >= 1) {
+    showToast(_currentTool === 'split' ? t('split_one_only') : t('single_file_only'));
     return;
   }
 

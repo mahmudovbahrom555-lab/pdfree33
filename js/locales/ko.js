@@ -46,6 +46,7 @@ window.PDFREE_LOCALE = {
 
   // files
   split_one_only:  '분할은 PDF 하나만 지원합니다. 현재 파일을 먼저 제거해 주세요.',
+  single_file_only: '이 도구는 한 번에 하나의 파일만 지원합니다. 현재 파일을 먼저 제거해 주세요.',
   invalid_pdf:     'PDF 파일을 선택해 주세요 — 사진이나 카메라가 아닌 파일 앱을 열어 주세요',
   invalid_img:     'JPG 또는 PNG 이미지를 선택해 주세요',
   dupe_skip_one:   '중복 {n}개 건너뜀',

@@ -44,6 +44,7 @@ window.PDFREE_LOCALE = {
 
   // files
   split_one_only:  "Split ne fonctionne qu'avec un seul PDF. Supprimez d'abord le fichier actuel.",
+  single_file_only: "Cet outil fonctionne avec un seul fichier à la fois. Supprimez d'abord le fichier actuel.",
   invalid_pdf:     "Veuillez sélectionner un fichier PDF — ouvrez l'app Fichiers, pas Photos ou Appareil photo",
   invalid_img:     'Veuillez sélectionner une image JPG ou PNG',
   dupe_skip_one:   '{n} doublon ignoré',

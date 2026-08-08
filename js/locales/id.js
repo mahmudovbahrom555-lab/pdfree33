@@ -45,6 +45,7 @@ window.PDFREE_LOCALE = {
 
   // files
   split_one_only:  'Pisah hanya bekerja dengan satu PDF. Silakan hapus file yang ada terlebih dahulu.',
+  single_file_only: 'Alat ini hanya bekerja dengan satu file dalam satu waktu. Silakan hapus file yang ada terlebih dahulu.',
   invalid_pdf:     'Pilih file PDF — buka aplikasi File, bukan Foto atau Kamera',
   invalid_img:     'Pilih gambar JPG atau PNG',
   dupe_skip_one:   '{n} duplikat dilewati',

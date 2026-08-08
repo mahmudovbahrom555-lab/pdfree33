@@ -47,6 +47,7 @@ window.PDFREE_LOCALE = {
 
   // files
   split_one_only:  '分割は1つのPDFのみ対応しています。先に現在のファイルを削除してください。',
+  single_file_only: 'このツールは一度に1つのファイルのみ処理できます。先に現在のファイルを削除してください。',
   invalid_pdf:     'PDFファイルを選択してください — 「写真」や「カメラ」ではなく「ファイル」アプリを開いてください',
   invalid_img:     'JPGまたはPNG画像を選択してください',
   dupe_skip_one:   '重複ファイルを{n}件スキップしました',

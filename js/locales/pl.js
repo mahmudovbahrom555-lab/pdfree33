@@ -44,6 +44,7 @@ window.PDFREE_LOCALE = {
 
   // files
   split_one_only:  'Dzielenie działa tylko na jednym pliku PDF naraz. Usuń najpierw bieżący plik.',
+  single_file_only: 'To narzędzie działa tylko na jednym pliku naraz. Usuń najpierw bieżący plik.',
   invalid_pdf:     'Wybierz plik PDF — otwórz aplikację Pliki, nie Zdjęcia ani Aparat',
   invalid_img:     'Wybierz obraz JPG lub PNG',
   dupe_skip_one:   '{n} duplikat pominięty',

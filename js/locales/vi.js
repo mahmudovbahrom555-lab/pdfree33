@@ -45,6 +45,7 @@ window.PDFREE_LOCALE = {
 
   // files
   split_one_only:  'Tách chỉ hoạt động với một PDF. Vui lòng xóa file hiện tại trước.',
+  single_file_only: 'Công cụ này chỉ hoạt động với một file tại một thời điểm. Vui lòng xóa file hiện tại trước.',
   invalid_pdf:     'Vui lòng chọn file PDF — mở ứng dụng File, không phải Ảnh hay Camera',
   invalid_img:     'Vui lòng chọn ảnh JPG hoặc PNG',
   dupe_skip_one:   'Bỏ qua {n} bản sao',

@@ -44,6 +44,7 @@ window.PDFREE_LOCALE = {
 
   // files
   split_one_only:  'Splitsen werkt met één PDF tegelijk. Verwijder eerst het huidige bestand.',
+  single_file_only: 'Deze tool werkt met één bestand tegelijk. Verwijder eerst het huidige bestand.',
   invalid_pdf:     'Selecteer een PDF-bestand — open de Bestanden-app, niet Foto\'s of Camera',
   invalid_img:     'Selecteer een JPG- of PNG-afbeelding',
   dupe_skip_one:   '{n} duplicaat overgeslagen',
