@@ -113,6 +113,8 @@ window.PDFREE_LOCALE = {
   prog_batch_file: '{n} dosyadan {i}. işleniyor...',
   desc_batch_done: '{n} dosya işlendi · {size}',
   desc_batch_partial: '{total} dosyadan {ok} tanesi işlendi · {size}',
+  desc_batch_compress_done:    '{n} dosya sıkıştırıldı — {before} → {after} (%{pct} daha küçük)',
+  desc_batch_compress_partial: '{total} dosyadan {ok} tanesi sıkıştırıldı — {before} → {after} (%{pct} daha küçük)',
   warn_batch_failed_one: '⚠️ {n} dosya başarısız oldu ve atlandı: {names}',
   warn_batch_failed_many: '⚠️ {n} dosya başarısız oldu ve atlandı: {names}',
   err_batch_all_failed: 'Tüm dosyaların işlenmesi başarısız oldu — indirilecek bir şey yok.',

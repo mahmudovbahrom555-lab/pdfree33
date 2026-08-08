@@ -1055,7 +1055,10 @@ async function _batchCompressOne(file, params, onProgress) {
   );
   if (!(data.result instanceof ArrayBuffer)) throw new Error('Unexpected result type from worker');
   const baseName = file.name.replace(/\.pdf$/i, '');
-  return { name: `${baseName}-compressed.pdf`, buffer: data.result };
+  // originalSize/compressedSize come straight from worker.js's compress handler
+  // (same 'done' message shape as the single-file path) — _runBatch sums these
+  // across the whole batch for the aggregate "before → after" summary.
+  return { name: `${baseName}-compressed.pdf`, buffer: data.result, originalSize: data.originalSize, compressedSize: data.compressedSize };
 }
 
 /** One file through a generic worker tool (watermark/rotate) — returns { name, buffer }. */
@@ -1079,6 +1082,11 @@ async function _runBatch(tool, filesSnapshot, extraParams) {
   const zipEntries   = [];
   const failedNames  = [];
   let succeeded = 0;
+  // compress-only aggregate for the "before → after" summary — see the
+  // desc-building block below. Meaningless for the other 5 batch tools
+  // (they don't shrink files on purpose), so left at 0 and unused there.
+  let totalOriginalSize   = 0;
+  let totalCompressedSize = 0;
 
   for (let i = 0; i < total; i++) {
     // cancelProcess() rejects the CURRENT file's in-flight worker promise via
@@ -1113,6 +1121,10 @@ async function _runBatch(tool, filesSnapshot, extraParams) {
       zipEntries.push(result);
       file._batchStatus = 'done';
       succeeded++;
+      if (tool === 'compress') {
+        totalOriginalSize   += result.originalSize;
+        totalCompressedSize += result.compressedSize;
+      }
     } catch (err) {
       if (err instanceof _BatchCancelled) return; // cancelProcess() already cleaned up the UI
       file._batchStatus = 'error';
@@ -1155,9 +1167,18 @@ async function _runBatch(tool, filesSnapshot, extraParams) {
   setProgress(100, t('prog_done'));
 
   const failed = total - succeeded;
-  const desc = failed > 0
-    ? t('desc_batch_partial', { ok: succeeded, total, size: fmtSize(blob.size) })
-    : t('desc_batch_done', { n: succeeded, size: fmtSize(blob.size) });
+  let desc;
+  if (tool === 'compress' && totalOriginalSize > 0) {
+    const pct = Math.max(0, Math.round((totalOriginalSize - totalCompressedSize) / totalOriginalSize * 100));
+    const vars = { before: fmtSize(totalOriginalSize), after: fmtSize(totalCompressedSize), pct };
+    desc = failed > 0
+      ? t('desc_batch_compress_partial', { ok: succeeded, total, ...vars })
+      : t('desc_batch_compress_done',    { n: succeeded, ...vars });
+  } else {
+    desc = failed > 0
+      ? t('desc_batch_partial', { ok: succeeded, total, size: fmtSize(blob.size) })
+      : t('desc_batch_done', { n: succeeded, size: fmtSize(blob.size) });
+  }
   const filename = `${tool}-batch-${succeeded}-files.zip`;
 
   document.dispatchEvent(new CustomEvent('pdfree:success', {

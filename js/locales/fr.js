@@ -113,6 +113,8 @@ window.PDFREE_LOCALE = {
   prog_batch_file: 'Traitement du fichier {i} sur {n}...',
   desc_batch_done: '{n} fichiers traités · {size}',
   desc_batch_partial: '{ok} fichiers sur {total} traités · {size}',
+  desc_batch_compress_done:    '{n} fichiers compressés — {before} → {after} ({pct}% plus petit)',
+  desc_batch_compress_partial: '{ok} sur {total} fichiers compressés — {before} → {after} ({pct}% plus petit)',
   warn_batch_failed_one: '⚠️ {n} fichier a échoué et a été ignoré : {names}',
   warn_batch_failed_many: '⚠️ {n} fichiers ont échoué et ont été ignorés : {names}',
   err_batch_all_failed: 'Tous les fichiers ont échoué — rien à télécharger.',

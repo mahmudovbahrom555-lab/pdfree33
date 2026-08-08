@@ -113,6 +113,8 @@ window.PDFREE_LOCALE = {
   prog_batch_file: 'Bestand {i} van {n} verwerken...',
   desc_batch_done: '{n} bestanden verwerkt · {size}',
   desc_batch_partial: '{ok} van {total} bestanden verwerkt · {size}',
+  desc_batch_compress_done:    '{n} bestanden gecomprimeerd — {before} → {after} ({pct}% kleiner)',
+  desc_batch_compress_partial: '{ok} van {total} bestanden gecomprimeerd — {before} → {after} ({pct}% kleiner)',
   warn_batch_failed_one: '⚠️ {n} bestand mislukt en overgeslagen: {names}',
   warn_batch_failed_many: '⚠️ {n} bestanden mislukt en overgeslagen: {names}',
   err_batch_all_failed: 'Alle bestanden zijn mislukt — niets om te downloaden.',
