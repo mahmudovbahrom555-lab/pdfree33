@@ -185,6 +185,7 @@ export const EN = {
   err_merge_timeout:    '⏱ Merge timed out — the browser may have run out of memory. Try merging fewer files, or smaller ones, at a time.',
   warn_compress_large:  '⚠️ Large file ({size}) — compression may take 1–2 minutes. The browser processes everything locally in RAM.',
   warn_many_images:     '⚠️ {n} images selected — that\'s a lot for one batch. Processing may be slow or use significant memory on older devices.',
+  warn_many_pages:      '⚠️ {n}-page document — thumbnails may take a moment to load on older devices. Rotation still works fine either way.',
   compress_scan_skipped: 'Large file — pre-scan skipped to save memory',
 
   // ── compressUI — scan banner & doc type ───────────────────────

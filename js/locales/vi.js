@@ -200,6 +200,8 @@ window.PDFREE_LOCALE = {
   err_merge_timeout:    '⏱ Hợp nhất bị hủy — trình duyệt có thể đã hết bộ nhớ. Hãy thử hợp nhất ít file hơn hoặc file nhỏ hơn cùng lúc.',
   warn_compress_large:  '⚠️ File lớn ({size}) — nén có thể mất 1–2 phút. Trình duyệt xử lý tất cả cục bộ trong bộ nhớ.',
   warn_many_images:     '⚠️ Đã chọn {n} ảnh — khá nhiều cho một lần xử lý. Quá trình xử lý có thể chậm hoặc tốn nhiều bộ nhớ trên thiết bị cũ.',
+  warn_many_pages:      '⚠️ Tài liệu {n} trang — hình thu nhỏ có thể mất một chút thời gian để tải trên thiết bị cũ. Việc xoay vẫn hoạt động bình thường.',
+
   compress_scan_skipped: 'File lớn — bỏ qua quét sơ bộ để tiết kiệm bộ nhớ',
 
   compress_placeholder:      'Phân tích tự động bắt đầu khi nén',

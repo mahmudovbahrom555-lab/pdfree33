@@ -199,6 +199,8 @@ window.PDFREE_LOCALE = {
   err_merge_timeout:    '⏱ Samenvoegen geannuleerd — de browser had mogelijk onvoldoende geheugen. Probeer minder of kleinere bestanden tegelijk samen te voegen.',
   warn_compress_large:  '⚠️ Groot bestand ({size}) — comprimeren kan 1–2 minuten duren. De browser verwerkt alles lokaal in geheugen.',
   warn_many_images:     '⚠️ {n} afbeeldingen geselecteerd — dat is veel voor één batch. Verwerken kan traag zijn of veel geheugen gebruiken op oudere apparaten.',
+  warn_many_pages:      "⚠️ Document met {n} pagina's — miniaturen kunnen even duren om te laden op oudere apparaten. Draaien werkt gewoon prima.",
+
   compress_scan_skipped: 'Groot bestand — voorafgaande scan overgeslagen om geheugen te besparen',
 
   compress_placeholder:      'Analyse wordt automatisch uitgevoerd bij het comprimeren',

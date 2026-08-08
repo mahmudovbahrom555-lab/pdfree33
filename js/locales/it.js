@@ -199,6 +199,8 @@ window.PDFREE_LOCALE = {
   err_merge_timeout:    '⏱ Unione annullata — il browser potrebbe aver esaurito la memoria. Prova a unire meno file, o file più piccoli, alla volta.',
   warn_compress_large:  '⚠️ File grande ({size}) — la compressione potrebbe richiedere 1–2 minuti. Il browser lo elabora tutto localmente in memoria.',
   warn_many_images:     "⚠️ {n} immagini selezionate — sono tante per un unico batch. L'elaborazione potrebbe essere lenta o usare molta memoria sui dispositivi meno recenti.",
+  warn_many_pages:      '⚠️ Documento di {n} pagine — le anteprime potrebbero richiedere qualche istante su dispositivi meno recenti. La rotazione funziona comunque perfettamente.',
+
   compress_scan_skipped: 'File grande — pre-scansione saltata per risparmiare memoria',
 
   compress_placeholder:      'L\'analisi viene eseguita automaticamente alla compressione',

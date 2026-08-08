@@ -199,6 +199,8 @@ window.PDFREE_LOCALE = {
   err_merge_timeout:    '⏱ Combinación cancelada — es posible que el navegador se haya quedado sin memoria. Intenta combinar menos archivos, o archivos más pequeños, a la vez.',
   warn_compress_large:  '⚠️ Archivo grande ({size}) — la compresión puede tardar 1–2 minutos. El navegador lo procesa todo localmente en memoria.',
   warn_many_images:     '⚠️ {n} imágenes seleccionadas — son muchas para un solo lote. El procesamiento puede ser lento o usar mucha memoria en dispositivos antiguos.',
+  warn_many_pages:      '⚠️ Documento de {n} páginas — las miniaturas pueden tardar un momento en cargar en dispositivos antiguos. La rotación funciona igual de bien.',
+
   compress_scan_skipped: 'Archivo grande — pre-escaneo omitido para ahorrar memoria',
 
   compress_placeholder:      'El análisis se ejecuta automáticamente al comprimir',

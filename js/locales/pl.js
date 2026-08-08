@@ -199,6 +199,8 @@ window.PDFREE_LOCALE = {
   err_merge_timeout:    '⏱ Scalanie anulowane — przeglądarce mogło zabraknąć pamięci. Spróbuj scalić mniej plików lub mniejsze pliki naraz.',
   warn_compress_large:  '⚠️ Duży plik ({size}) — kompresja może potrwać 1–2 minuty. Przeglądarka przetwarza wszystko lokalnie w pamięci.',
   warn_many_images:     '⚠️ Wybrano {n} obrazów — to dużo jak na jedną partię. Przetwarzanie może być wolne lub zużywać dużo pamięci na starszych urządzeniach.',
+  warn_many_pages:      '⚠️ Dokument liczący {n} stron — miniatury mogą wczytywać się chwilę dłużej na starszych urządzeniach. Obracanie i tak działa bez problemu.',
+
   compress_scan_skipped: 'Duży plik — wstępne skanowanie pominięte, aby zaoszczędzić pamięć',
 
   compress_placeholder:      'Analiza zostanie uruchomiona automatycznie podczas kompresji',

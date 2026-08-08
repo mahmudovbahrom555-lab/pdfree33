@@ -200,6 +200,8 @@ window.PDFREE_LOCALE = {
   err_merge_timeout:    '⏱ Zusammenführen abgebrochen — der Browser hatte möglicherweise nicht genug Speicher. Versuche es mit weniger oder kleineren Dateien.',
   warn_compress_large:  '⚠️ Große Datei ({size}) — Komprimierung kann 1–2 Minuten dauern. Der Browser verarbeitet alles lokal im Arbeitsspeicher.',
   warn_many_images:     '⚠️ {n} Bilder ausgewählt — das ist viel für einen Durchgang. Die Verarbeitung kann langsam sein oder auf älteren Geräten viel Speicher benötigen.',
+  warn_many_pages:      '⚠️ {n}-seitiges Dokument — Miniaturansichten können auf älteren Geräten etwas dauern. Die Drehung funktioniert trotzdem einwandfrei.',
+
   compress_scan_skipped: 'Große Datei — Vorabscan übersprungen, um Speicher zu sparen',
 
   compress_placeholder:      'Analyse startet automatisch beim Komprimieren',

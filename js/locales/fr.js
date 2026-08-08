@@ -199,6 +199,8 @@ window.PDFREE_LOCALE = {
   err_merge_timeout:    "⏱ Fusion annulée — le navigateur a peut-être manqué de mémoire. Essayez de fusionner moins de fichiers, ou des fichiers plus petits, à la fois.",
   warn_compress_large:  '⚠️ Fichier volumineux ({size}) — la compression peut prendre 1–2 minutes. Le navigateur traite tout localement en mémoire vive.',
   warn_many_images:     "⚠️ {n} images sélectionnées — c'est beaucoup pour un seul lot. Le traitement peut être lent ou utiliser beaucoup de mémoire sur les appareils plus anciens.",
+  warn_many_pages:      '⚠️ Document de {n} pages — les miniatures peuvent mettre un moment à charger sur les appareils plus anciens. La rotation fonctionne quand même parfaitement.',
+
   compress_scan_skipped: 'Fichier volumineux — pré-analyse ignorée pour économiser la mémoire',
 
   compress_placeholder:      "L'analyse démarre automatiquement à la compression",

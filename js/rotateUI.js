@@ -13,12 +13,15 @@
 //    храним delta, отдаём final = (initial + delta) % 360.
 //    Без этого сканы со встроенным /Rotate 90° сломаются.
 //
-//  ✗ IntersectionObserver lazy-render — НЕ делаю.
-//    Причина: порог 20 страниц для thumbnail-режима.
-//    Выше 20 — numbered-cards (без рендера pdf.js вообще).
-//    20 страниц рендерятся за ~1–2с, это приемлемо.
-//    IntersectionObserver добавляет ~80 строк кода и баги с
-//    ResizeObserver на Safari. Оптимизация не нужна до 20+.
+//  ✓ IntersectionObserver lazy-render — делаю (было "НЕ делаю" с
+//    жёстким порогом 44 страницы → numbered-cards). Причина смены
+//    решения: сам порог существовал только потому, что рендер был
+//    eager (весь документ пачкой перед показом UI) — "200 = death".
+//    С ленивым рендером (тот же паттерн, что в pdf2jpgUI.js —
+//    IntersectionObserver + MAX_RENDERS=3 очередь) страница любого
+//    размера получает настоящие миниатюры без блокировки потока.
+//    numbered-cards остаются только как честный fallback при реальном
+//    сбое pdf.js (CDN недоступен и т.п.), не по числу страниц.
 //
 //  ✗ Undo-стек (unlimited) — НЕ делаю.
 //    Делаю 1-уровневый undo ("отменить последнее").
@@ -43,10 +46,12 @@ import { t, tp } from './i18n.js';
 
 // ── Constants ─────────────────────────────────────────────────
 
-// PDFs with ≤ THUMB_THRESHOLD pages get visual thumbnails.
-// Above this: numbered cards (rotation badge only, no pdf.js render).
-// Rationale: 20 thumb renders ≈ 1–2s, acceptable. 200 = death.
-const THUMB_THRESHOLD = 44;
+// Soft, non-blocking heads-up for very large documents — not a hard cap.
+// Thumbnails render lazily as cards scroll into view, so memory/CPU
+// pressure stays mild even well past this; it's just honest disclosure
+// that a huge document may feel slower on older devices.
+const _LARGE_DOC_WARN_THRESHOLD = 150;
+const MAX_RENDERS = 3; // concurrent lazy thumb renders, mirrors pdf2jpgUI.js
 
 // ── State ──────────────────────────────────────────────────────
 
@@ -55,8 +60,12 @@ let _initialRotations = [];  // [number] — per-page rotation already in PDF (0
 let _deltas           = [];  // [number] — user's rotation delta per page (0/90/180/270)
 let _prevDeltas       = null; // snapshot for single-level undo
 let _selected         = new Set(); // Set<index> — 0-indexed
-let _thumbnailURLs    = [];  // [string | null] — objectURLs, null for numbered-card mode
+let _thumbnailURLs    = [];  // [string | null] — objectURLs, null = not rendered yet
 let _useThumbs        = false;
+let _pdfJsDoc         = null;  // pdf.js document — pages rendered lazily on scroll
+let _observer         = null;  // IntersectionObserver driving lazy thumb renders
+let _renderQueue      = [];    // page indices queued for canvas rendering
+let _activeRenders    = 0;     // concurrent renders in flight
 
 // ── Public API ─────────────────────────────────────────────────
 
@@ -103,21 +112,24 @@ export async function initRotateOptions(file) {
     _prevDeltas = null;
     _selected  = new Set();
     _thumbnailURLs = new Array(_pageCount).fill(null);
-    _useThumbs = _pageCount <= THUMB_THRESHOLD;
 
-    // 2. Try to render thumbnails. Wrapped in its own try/catch so any
-    // failure (CDN unavailable, pdf.js worker error, localhost CORS, etc.)
-    // gracefully falls back to numbered-card mode instead of hiding the
-    // entire tool. The rotate functionality works fine without thumbnails.
-    if (_useThumbs) {
-      try {
-        await _renderThumbnails(buf);
-      } catch (thumbErr) {
-        // Fallback: numbered cards (no pdf.js needed)
-        _useThumbs = false;
-        _thumbnailURLs = new Array(_pageCount).fill(null);
-        console.warn('[rotateUI] Thumbnail render failed, using numbered cards:', thumbErr.message);
-      }
+    // 2. Load the pdf.js document reference (fast — no page rendering yet).
+    // Wrapped in its own try/catch so any failure (CDN unavailable, pdf.js
+    // worker error, localhost CORS, etc.) gracefully falls back to
+    // numbered-card mode instead of hiding the entire tool. The rotate
+    // functionality works fine without thumbnails. Actual page thumbnails
+    // render lazily as cards scroll into view — see _setupLazyThumbs().
+    _useThumbs = true;
+    try {
+      await _initPdfJsDoc(buf);
+    } catch (thumbErr) {
+      _useThumbs = false;
+      _pdfJsDoc  = null;
+      console.warn('[rotateUI] pdf.js unavailable, using numbered cards:', thumbErr.message);
+    }
+
+    if (_pageCount > _LARGE_DOC_WARN_THRESHOLD) {
+      showToast(t('warn_many_pages', { n: _pageCount }), 7000);
     }
 
     _render(file);
@@ -143,24 +155,65 @@ export function hideRotateOptions() {
   resetWmRemove();
 }
 
-// ── Thumbnail rendering ────────────────────────────────────────
+// ── Thumbnail rendering (lazy — mirrors pdf2jpgUI.js's _buildThumbs/
+//    _enqueue/_drain pattern) ─────────────────────────────────────
 
-async function _renderThumbnails(buf) {
-  // Load pdf.js (shared with pdf2jpgUI — no double CDN hit if already loaded)
-  await loadPdfJs();
-
-  // Pass raw bytes directly — no blob URL, no network fetch.
-  // disableWorker:true runs pdf.js in the main thread, which eliminates
-  // the Worker-context blob-URL access error on localhost and file:// origins.
-  // For ≤20 pages at scale 0.4 the main-thread cost is negligible (<100ms).
-  const pdfJsDoc = await window.pdfjsLib.getDocument({
+// Loads the pdf.js document reference only — no page rendering yet.
+// Pass raw bytes directly — no blob URL, no network fetch. disableWorker:true
+// runs pdf.js in the main thread, which eliminates the Worker-context
+// blob-URL access error on localhost and file:// origins.
+async function _initPdfJsDoc(buf) {
+  await loadPdfJs(); // shared with pdf2jpgUI — no double CDN hit if already loaded
+  _pdfJsDoc = await window.pdfjsLib.getDocument({
     data:          new Uint8Array(buf.slice(0)),
     disableWorker: true,
   }).promise;
+}
 
-  for (let i = 0; i < _pageCount; i++) {
-    const page     = await pdfJsDoc.getPage(i + 1);
-    const viewport = page.getViewport({ scale: 0.4 });  // small = fast
+// (Re)observes every card that doesn't have a rendered thumbnail yet.
+// Must be re-run any time the grid's DOM nodes are replaced wholesale
+// (_refreshAllCards) — IntersectionObserver stops watching a node once
+// it's removed from the document, and outerHTML replacement always
+// creates a new node.
+function _setupLazyThumbs() {
+  _observer?.disconnect();
+  if (!_useThumbs || !_pdfJsDoc) return;
+
+  _observer = new IntersectionObserver(entries => {
+    for (const e of entries) {
+      if (e.isIntersecting) {
+        _observer.unobserve(e.target);
+        _enqueueThumb(parseInt(e.target.dataset.idx, 10));
+      }
+    }
+  }, { rootMargin: '300px' });
+
+  id('rotGrid')?.querySelectorAll('[data-idx]').forEach(el => {
+    const idx = parseInt(el.dataset.idx, 10);
+    if (!_thumbnailURLs[idx]) _observer.observe(el);
+  });
+}
+
+function _enqueueThumb(idx) {
+  if (_thumbnailURLs[idx] || _renderQueue.includes(idx)) return;
+  _renderQueue.push(idx);
+  _drainThumbs();
+}
+
+function _drainThumbs() {
+  while (_activeRenders < MAX_RENDERS && _renderQueue.length > 0) {
+    const idx = _renderQueue.shift();
+    if (_thumbnailURLs[idx]) continue;
+    _activeRenders++;
+    _renderThumb(idx).finally(() => { _activeRenders--; _drainThumbs(); });
+  }
+}
+
+async function _renderThumb(idx) {
+  if (!_pdfJsDoc || _thumbnailURLs[idx]) return;
+  try {
+    const page     = await _pdfJsDoc.getPage(idx + 1);
+    const viewport = page.getViewport({ scale: 0.4 }); // small = fast
 
     const canvas  = document.createElement('canvas');
     canvas.width  = viewport.width;
@@ -171,8 +224,10 @@ async function _renderThumbnails(buf) {
     // toDataURL base64-encodes (+33% overhead), stays in JS heap.
     // objectURL is a pointer; Blob lives in browser's managed memory.
     const blob = await new Promise(res => canvas.toBlob(res, 'image/jpeg', 0.72));
-    _thumbnailURLs[i] = URL.createObjectURL(blob);
-  }
+    _thumbnailURLs[idx] = URL.createObjectURL(blob);
+    page.cleanup?.();
+    _updateCard(idx); // swap the placeholder for the rendered <img>
+  } catch { /* leave placeholder — cosmetic only, rotation still works */ }
 }
 
 // ── Main render ────────────────────────────────────────────────
@@ -231,6 +286,7 @@ function _render(file) {
   `;
 
   _bindEvents(container);
+  _setupLazyThumbs();
 }
 
 function _renderGrid() {
@@ -261,14 +317,18 @@ function _cardHTML(i) {
 
   if (_useThumbs) {
     const url = _thumbnailURLs[i];
+    // Not rendered yet — blank placeholder box (IntersectionObserver
+    // triggers the actual render once this card scrolls into view).
+    const thumbInner = url
+      ? `<img src="${esc(url)}" alt="${t('rot_page_alt', { n: i + 1 })}"
+               style="transform:rotate(${visual}deg)" loading="lazy">`
+      : '';
     return `
       <div class="rot-card${selClass}${chgClass}" data-idx="${i}"
            role="listitem button" tabindex="0"
            aria-label="${esc(ariaLabel)}">
         <div class="rot-thumb">
-          <img src="${esc(url)}" alt="${t('rot_page_alt', { n: i + 1 })}"
-               style="transform:rotate(${visual}deg)"
-               loading="lazy">
+          ${thumbInner}
           ${badgeHTML}
         </div>
         <span class="rot-card__num">${i + 1}</span>
@@ -389,12 +449,19 @@ function _updateCard(idx) {
   const card = grid.querySelector(`[data-idx="${idx}"]`);
   if (!card) return;
   card.outerHTML = _cardHTML(idx);
-  // After outerHTML replacement re-bind is automatic — event delegation on grid
+  // After outerHTML replacement re-bind is automatic — event delegation on grid.
+  // outerHTML always creates a fresh node, so a still-pending thumbnail's
+  // IntersectionObserver registration on the old node is gone — reattach it.
+  if (_useThumbs && !_thumbnailURLs[idx] && _observer) {
+    const freshCard = grid.querySelector(`[data-idx="${idx}"]`);
+    if (freshCard) _observer.observe(freshCard);
+  }
 }
 
 function _refreshAllCards() {
   const grid = id('rotGrid');
   if (grid) grid.innerHTML = _renderGrid();
+  _setupLazyThumbs(); // whole grid replaced — every pending card needs re-observing
 }
 
 function _hintText() {
@@ -432,6 +499,12 @@ function _updateMergeBtn() {
 // ── Cleanup ────────────────────────────────────────────────────
 
 function _cleanup() {
+  _observer?.disconnect();
+  _observer      = null;
+  _renderQueue   = [];
+  _activeRenders = 0;
+  _pdfJsDoc      = null;
+
   // Revoke all objectURLs — critical for memory management
   // Without this: ~2–5 MB per page stays in browser memory indefinitely
   for (const url of _thumbnailURLs) {

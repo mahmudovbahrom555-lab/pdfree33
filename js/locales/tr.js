@@ -199,6 +199,8 @@ window.PDFREE_LOCALE = {
   err_merge_timeout:    '⏱ Birleştirme iptal edildi — tarayıcının belleği yetersiz kalmış olabilir. Daha az veya daha küçük dosyaları birleştirmeyi deneyin.',
   warn_compress_large:  '⚠️ Büyük dosya ({size}) — sıkıştırma 1–2 dakika sürebilir. Tarayıcı her şeyi hafızada yerel olarak işler.',
   warn_many_images:     '⚠️ {n} görsel seçildi — bu tek seferde işlemek için çok fazla. İşleme yavaş olabilir veya eski cihazlarda önemli miktarda bellek kullanabilir.',
+  warn_many_pages:      '⚠️ {n} sayfalık belge — küçük resimler eski cihazlarda yüklenmesi biraz zaman alabilir. Döndürme yine de sorunsuz çalışır.',
+
   compress_scan_skipped: 'Büyük dosya — hafızadan tasarruf etmek için ön tarama atlandı',
 
   compress_placeholder:      'Analiz sıkıştırma sırasında otomatik çalışacak',

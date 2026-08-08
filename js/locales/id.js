@@ -200,6 +200,8 @@ window.PDFREE_LOCALE = {
   err_merge_timeout:    '⏱ Penggabungan dibatalkan — browser mungkin kehabisan memori. Coba gabungkan lebih sedikit file, atau file yang lebih kecil, sekaligus.',
   warn_compress_large:  '⚠️ File besar ({size}) — kompresi dapat memerlukan 1–2 menit. Browser memproses semuanya secara lokal di memori.',
   warn_many_images:     '⚠️ {n} gambar dipilih — itu banyak untuk satu batch. Pemrosesan mungkin lambat atau menggunakan banyak memori di perangkat lama.',
+  warn_many_pages:      '⚠️ Dokumen {n} halaman — thumbnail mungkin butuh waktu sedikit lebih lama untuk dimuat di perangkat lama. Rotasi tetap berfungsi dengan baik.',
+
   compress_scan_skipped: 'File besar — pemindaian awal dilewati untuk menghemat memori',
 
   compress_placeholder:      'Analisis dimulai otomatis saat mengompres',
