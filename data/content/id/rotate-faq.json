@@ -60,7 +60,7 @@
     "name": "Bisakah saya memutar beberapa file PDF sekaligus?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ya. PDFree mendukung rotasi batch — pilih beberapa file PDF, pilih sudut rotasi, dan setiap file diputar secara lokal di browser Anda. Anda akan mendapatkan ZIP berisi semua file yang telah diputar, tanpa batas jumlah file."
+      "text": "Putar bekerja dengan satu file PDF dalam satu waktu, sehingga Anda bisa menyesuaikan rotasi setiap halaman secara individual — misalnya, memperbaiki hanya halaman yang miring pada dokumen hasil pindai sambil membiarkan sisanya tidak berubah. Untuk batch file yang semuanya membutuhkan perlakuan yang sama persis, alat PDFree lain seperti Kompres dan Watermark mendukung pemrosesan beberapa file sekaligus."
     }
   }
 ]

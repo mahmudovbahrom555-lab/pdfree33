@@ -60,7 +60,7 @@
     "name": "Posso ruotare più file PDF contemporaneamente?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sì. PDFree supporta la rotazione batch — seleziona più file PDF, scegli l'angolo, e ogni file viene ruotato localmente nel tuo browser. Otterrai uno ZIP con tutti i file ruotati, senza limiti al numero di file."
+      "text": "La rotazione funziona con un PDF alla volta, così puoi regolare la rotazione di ogni pagina singolarmente — ad esempio correggendo solo le pagine storte di un documento scansionato e lasciando intatto il resto. Per lotti di file che richiedono tutti lo stesso trattamento, altri strumenti di PDFree come Comprimi e Filigrana supportano l'elaborazione di più file contemporaneamente."
     }
   }
 ]

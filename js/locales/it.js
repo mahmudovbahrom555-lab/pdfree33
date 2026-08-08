@@ -110,7 +110,7 @@ window.PDFREE_LOCALE = {
   prog_rotate:       'Applicazione rotazioni...',
   prog_flatten:      'Blocco campi modulo...',
 
-  // ── processor.js — batch queue (compress/watermark/rotate, 2+ files) ──
+  // ── processor.js — batch queue (compress/watermark/protect/pagenum/flatten, 2+ files) ──
   prog_batch_file: 'Elaborazione file {i} di {n}...',
   desc_batch_done: '{n} file elaborati · {size}',
   desc_batch_partial: '{ok} di {total} file elaborati · {size}',

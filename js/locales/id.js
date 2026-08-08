@@ -111,7 +111,7 @@ window.PDFREE_LOCALE = {
   prog_rotate:       'Menerapkan rotasi...',
   prog_flatten:      'Mengunci bidang formulir...',
 
-  // ── processor.js — batch queue (compress/watermark/rotate, 2+ files) ──
+  // ── processor.js — batch queue (compress/watermark/protect/pagenum/flatten, 2+ files) ──
   prog_batch_file: 'Memproses file {i} dari {n}...',
   desc_batch_done: '{n} file diproses · {size}',
   desc_batch_partial: '{ok} dari {total} file diproses · {size}',

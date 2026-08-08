@@ -100,7 +100,7 @@ export const EN = {
   prog_redact:       'Covering areas...',
   prog_flatten:      'Flattening form fields...',
 
-  // ── processor.js — batch queue (compress/watermark/rotate, 2+ files) ──
+  // ── processor.js — batch queue (compress/watermark/protect/pagenum/flatten, 2+ files) ──
   prog_batch_file:        'Processing file {i} of {n}...',
   desc_batch_done:        'Processed {n} files · {size}',
   desc_batch_partial:     '{ok} of {total} files processed · {size}',

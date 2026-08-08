@@ -60,7 +60,7 @@
     "name": "Czy mogę obrócić wiele plików PDF naraz?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Tak. PDFree obsługuje obracanie wsadowe — wybierz kilka plików PDF, ustaw kąt, a każdy plik zostanie obrócony lokalnie w przeglądarce. Otrzymasz archiwum ZIP ze wszystkimi obróconymi plikami, bez limitu liczby plików."
+      "text": "Obracanie działa z jednym plikiem PDF naraz, dzięki czemu możesz dostosować obrót każdej strony indywidualnie — na przykład poprawić tylko przekrzywione strony zeskanowanego dokumentu, zostawiając resztę bez zmian. W przypadku partii plików wymagających dokładnie takiej samej obróbki inne narzędzia PDFree, takie jak Kompresowanie i Znak wodny, obsługują przetwarzanie wielu plików naraz."
     }
   }
 ]

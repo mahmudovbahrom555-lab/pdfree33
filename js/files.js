@@ -358,7 +358,8 @@ export function renderList(keepSuccess = false) {
 // ── Batch queue status badge ───────────────────────────────
 //
 // Set on individual File objects (f._batchStatus) only by processor.js's
-// _runBatch(), for the compress/watermark/rotate multi-file queue flow.
+// _runBatch(), for the compress/watermark/protect/pagenum/flatten multi-file
+// queue flow.
 // Absent on every other tool and on single-file selections — this renders
 // nothing for those, so single-file row markup is unchanged.
 

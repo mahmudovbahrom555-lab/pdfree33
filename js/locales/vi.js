@@ -111,7 +111,7 @@ window.PDFREE_LOCALE = {
   prog_rotate:       'Đang áp dụng xoay...',
   prog_flatten:      'Đang khóa trường biểu mẫu...',
 
-  // ── processor.js — batch queue (compress/watermark/rotate, 2+ files) ──
+  // ── processor.js — batch queue (compress/watermark/protect/pagenum/flatten, 2+ files) ──
   prog_batch_file: 'Đang xử lý file {i} / {n}...',
   desc_batch_done: 'Đã xử lý {n} file · {size}',
   desc_batch_partial: 'Đã xử lý {ok}/{total} file · {size}',

@@ -60,7 +60,7 @@
     "name": "Kann ich mehrere PDF-Dateien gleichzeitig drehen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ja. PDFree unterstützt Stapelverarbeitung beim Drehen — wähle mehrere Dateien, lege den Drehwinkel fest, und jede Datei wird einzeln im Browser gedreht. Du erhältst eine ZIP mit allen gedrehten Dateien."
+      "text": "Drehen funktioniert mit jeweils einer Datei, sodass du die Drehung jeder Seite einzeln anpassen kannst — zum Beispiel nur die schräg gescannten Seiten eines Dokuments korrigieren, während der Rest unverändert bleibt. Für Stapel von Dateien, die alle dieselbe Behandlung brauchen, unterstützen PDFrees andere Tools wie Komprimieren und Wasserzeichen die Verarbeitung mehrerer Dateien auf einmal."
     }
   }
 ]

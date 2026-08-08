@@ -60,7 +60,7 @@
     "name": "Tôi có thể xoay nhiều file PDF cùng lúc không?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Có. PDFree hỗ trợ xoay hàng loạt — chọn nhiều file PDF, chọn góc xoay, và mỗi file được xoay ngay trong trình duyệt của bạn. Bạn sẽ nhận được một file ZIP chứa tất cả các file đã xoay, không giới hạn số lượng file."
+      "text": "Xoay hoạt động với từng file PDF một, vì vậy bạn có thể tinh chỉnh độ xoay của từng trang riêng lẻ — ví dụ, chỉ sửa các trang bị lệch trong một tài liệu quét trong khi giữ nguyên phần còn lại. Với các lô file cần xử lý giống hệt nhau, các công cụ khác của PDFree như Nén và Watermark hỗ trợ xử lý nhiều file cùng lúc."
     }
   }
 ]

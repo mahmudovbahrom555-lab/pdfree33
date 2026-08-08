@@ -111,7 +111,7 @@ window.PDFREE_LOCALE = {
   prog_rotate:       'Drehungen werden angewendet...',
   prog_flatten:      'Formularfelder werden fixiert...',
 
-  // ── processor.js — batch queue (compress/watermark/rotate, 2+ files) ──
+  // ── processor.js — batch queue (compress/watermark/protect/pagenum/flatten, 2+ files) ──
   prog_batch_file: 'Datei {i} von {n} wird verarbeitet...',
   desc_batch_done: '{n} Dateien verarbeitet · {size}',
   desc_batch_partial: '{ok} von {total} Dateien verarbeitet · {size}',

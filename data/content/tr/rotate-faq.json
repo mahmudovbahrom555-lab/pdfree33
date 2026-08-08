@@ -84,7 +84,7 @@
     "name": "Birden fazla PDF dosyasını aynı anda döndürebilir miyim?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Evet. PDFree toplu döndürmeyi destekler — birden fazla PDF dosyası seçin, açıyı belirleyin, her dosya tarayıcınızda yerel olarak döndürülür. Döndürülmüş tüm dosyaları içeren bir ZIP elde edersiniz, dosya sayısı sınırı yoktur."
+      "text": "Döndürme özelliği tek seferde bir PDF ile çalışır, böylece her sayfanın döndürmesini ayrı ayrı ayarlayabilirsiniz — örneğin, taranmış bir belgede yalnızca eğik sayfaları düzeltip geri kalanını değiştirmeden bırakabilirsiniz. Tümü aynı işlemi gerektiren dosya grupları için PDFree'nin Sıkıştırma ve Filigran gibi diğer araçları birden fazla dosyayı aynı anda işlemeyi destekler."
     }
   }
 ]

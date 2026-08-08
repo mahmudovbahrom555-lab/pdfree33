@@ -248,8 +248,8 @@ export async function doProcess(currentTool, extraParams = {}) {
   showCancelBtn();
 
   // ── Batch dispatch ──────────────────────────────────────────────
-  // 2+ files for any tool in BATCH_TOOLS (compress/watermark/rotate/
-  // protect/pagenum/flatten) route into the sequential queue + ZIP flow
+  // 2+ files for any tool in BATCH_TOOLS (compress/watermark/protect/
+  // pagenum/flatten) route into the sequential queue + ZIP flow
   // (see "Batch processing" section below) instead of the single-file
   // runnerMap. Exactly one file for ANY tool always falls through to the
   // unchanged code below — single-file behavior is byte-for-byte
@@ -963,7 +963,7 @@ async function _runWorkerTool(tool, filesSnapshot, params) {
   };
 }
 
-// ── Batch processing (compress / watermark / rotate / protect / pagenum /
+// ── Batch processing (compress / watermark / protect / pagenum /
 //    flatten, 2+ files) ──────────────────────────────────────────
 //
 // Scope is intentionally narrow, not "everything with runner:'worker'".
@@ -990,23 +990,21 @@ async function _runWorkerTool(tool, filesSnapshot, params) {
 // touching one file (config.js), never risks the two lists drifting apart.
 const BATCH_TOOLS = new Set(Object.keys(TOOLS).filter(k => TOOLS[k].batch));
 
-// worker.js's rotate handler already ignores out-of-range page indices
-// (`if (index >= 0 && index < pages.length)`) — so applying file[0]'s
-// rotation selection to shorter/longer files in the batch is safe, just
-// imprecise if page counts differ. Documented product decision, not a bug:
-// the options panel is inherently single-file (built from files[0]), so
+// The options panel is inherently single-file (built from files[0]), so
 // batch mode applies whatever the panel currently holds to every file.
 // protect is the clearest case where this is exactly the point, not a
 // caveat: one password entered once, applied to every file in the batch.
 // pagenum's options (position/format/start number) and flatten (no options
-// at all — it just locks whatever fields exist) have no per-file dependency,
-// so there's no analogous edge case to document for them.
+// at all — it just locks whatever fields exist) have no per-file dependency
+// either. rotate was tried here too but reverted (see config.js's rotate
+// entry) — per-page rotation genuinely can't generalize across files with
+// different page counts, unlike the tools that remain.
 const _BATCH_SIZE_LIMITS = {
-  compress: MAX_COMPRESS_MB, watermark: 200, rotate: 150,
+  compress: MAX_COMPRESS_MB, watermark: 200,
   protect: 200, pagenum: 200, flatten: 150,
 };
 const _BATCH_SUFFIX = {
-  watermark: '-watermarked', rotate: '-rotated',
+  watermark: '-watermarked',
   protect: '-protected', pagenum: '-numbered', flatten: '-flattened',
 };
 const _BATCH_WATCHDOG_MS = 45_000; // same silent-hang guard as _runCompress's single-file watchdog
@@ -1061,7 +1059,7 @@ async function _batchCompressOne(file, params, onProgress) {
   return { name: `${baseName}-compressed.pdf`, buffer: data.result, originalSize: data.originalSize, compressedSize: data.compressedSize };
 }
 
-/** One file through a generic worker tool (watermark/rotate) — returns { name, buffer }. */
+/** One file through a generic worker tool (watermark/protect/pagenum/flatten) — returns { name, buffer }. */
 async function _batchWorkerToolOne(tool, file, params, onProgress) {
   const buffer = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await file.arrayBuffer());
   const data = await _postToWorkerForBatch({ tool, file: buffer, options: params }, [buffer], onProgress);
@@ -1083,7 +1081,7 @@ async function _runBatch(tool, filesSnapshot, extraParams) {
   const failedNames  = [];
   let succeeded = 0;
   // compress-only aggregate for the "before → after" summary — see the
-  // desc-building block below. Meaningless for the other 5 batch tools
+  // desc-building block below. Meaningless for the other 4 batch tools
   // (they don't shrink files on purpose), so left at 0 and unused there.
   let totalOriginalSize   = 0;
   let totalCompressedSize = 0;

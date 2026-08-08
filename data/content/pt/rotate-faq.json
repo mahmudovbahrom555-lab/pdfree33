@@ -60,7 +60,7 @@
     "name": "Posso girar vários arquivos PDF de uma vez?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sim. O PDFree oferece rotação em lote — selecione vários arquivos PDF, escolha o ângulo, e cada um é girado localmente no seu navegador. Você receberá um ZIP com todos os arquivos girados, sem limite de quantidade de arquivos."
+      "text": "Girar funciona com um PDF de cada vez, para que você possa ajustar a rotação de cada página individualmente — por exemplo, corrigindo apenas as páginas tortas de um documento escaneado e deixando o resto intacto. Para lotes de arquivos que precisam exatamente do mesmo tratamento, outras ferramentas do PDFree como Comprimir e Marca d'água permitem processar vários arquivos de uma vez."
     }
   }
 ]

@@ -112,7 +112,7 @@ window.PDFREE_LOCALE = {
   prog_rotate:       '회전 적용 중...',
   prog_flatten:      '양식 필드 잠금 중...',
 
-  // ── processor.js — batch queue (compress/watermark/rotate, 2+ files) ──
+  // ── processor.js — batch queue (compress/watermark/protect/pagenum/flatten, 2+ files) ──
   prog_batch_file: '{n}개 중 {i}번째 파일 처리 중...',
   desc_batch_done: '{n}개 파일 처리됨 · {size}',
   desc_batch_partial: '{total}개 중 {ok}개 파일 처리됨 · {size}',

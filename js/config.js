@@ -171,8 +171,11 @@ export const TOOLS = {
     titles: { en: 'Rotate PDF', es: 'Rotar PDF', pt: 'Girar PDF', de: 'PDF Drehen', fr: 'Rotation PDF', id: 'Putar PDF', vi: 'Xoay PDF', ru: 'Повернуть PDF', ja: 'PDFを回転', it: 'Ruota PDF', ko: 'PDF 회전', nl: 'PDF Draaien', pl: 'Obróć PDF', tr: 'PDF Döndür' },
     descs:  { en: 'Fix page orientation in any PDF', es: 'Arregla la orientación de páginas en cualquier PDF', pt: 'Corrija a orientação das páginas em qualquer PDF', de: 'Seitenausrichtung in beliebigen PDFs korrigieren', fr: "Corriger l'orientation des pages dans n'importe quel PDF", id: 'Perbaiki orientasi halaman di PDF mana pun', vi: 'Sửa hướng trang trong bất kỳ PDF nào', ru: 'Исправляйте ориентацию страниц в любом PDF', ja: 'どのPDFでもページの向きを修正する', it: "Correggi l'orientamento delle pagine in qualsiasi PDF", ko: '모든 PDF의 페이지 방향을 수정하세요', nl: 'Corrigeer de pagina-oriëntatie in elke PDF', pl: 'Popraw orientację stron w dowolnym pliku PDF', tr: 'PDF sayfalarının yönünü düzeltin' },
     btns:   { en: '🔄 Rotate PDF', es: '🔄 Rotar PDF', pt: '🔄 Girar PDF', de: '🔄 PDF drehen', fr: '🔄 Faire pivoter', id: '🔄 Putar PDF', vi: '🔄 Xoay PDF', ru: '🔄 Повернуть PDF', ja: '🔄 PDFを回転', it: '🔄 Ruota PDF', ko: '🔄 PDF 회전', nl: '🔄 PDF Draaien', pl: '🔄 Obróć PDF', tr: '🔄 PDF Döndür' },
-    multi:       true,
-    batch:       true, // 2+ files → sequential queue + ZIP (processor.js's BATCH_TOOLS)
+    // Single-file only: rotation is per-page and tied to one document —
+    // it can't generalize across a batch of different files (see
+    // toolRegistrations.js's rotate entry / processor.js history for why
+    // this was tried as a batch tool and reverted).
+    multi:       false,
     accept:      '.pdf,application/pdf',
     implemented: true,
   },

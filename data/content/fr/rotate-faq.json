@@ -60,7 +60,7 @@
     "name": "Puis-je pivoter plusieurs fichiers PDF à la fois ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Oui. PDFree prend en charge la rotation par lots — sélectionnez plusieurs fichiers PDF, choisissez l'angle, et chacun est pivoté localement dans votre navigateur. Vous obtiendrez un ZIP contenant tous les fichiers pivotés, sans limite de nombre de fichiers."
+      "text": "La rotation fonctionne avec un seul PDF à la fois, ce qui vous permet d'ajuster la rotation de chaque page individuellement — par exemple, en corrigeant uniquement les pages de travers d'un document scanné tout en laissant le reste intact. Pour des lots de fichiers nécessitant exactement le même traitement, d'autres outils de PDFree comme Compresser et Filigrane permettent de traiter plusieurs fichiers à la fois."
     }
   }
 ]

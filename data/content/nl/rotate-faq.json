@@ -60,7 +60,7 @@
     "name": "Kan ik meerdere PDF-bestanden tegelijk draaien?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ja. PDFree ondersteunt batchrotatie — selecteer meerdere PDF-bestanden, kies de hoek, en elk bestand wordt lokaal in je browser gedraaid. Je krijgt een ZIP met alle gedraaide bestanden, zonder limiet op het aantal bestanden."
+      "text": "Draaien werkt met één PDF tegelijk, zodat je de rotatie van elke pagina afzonderlijk kunt aanpassen — bijvoorbeeld alleen de scheve pagina's van een gescand document corrigeren terwijl de rest ongewijzigd blijft. Voor batches bestanden die allemaal exact dezelfde behandeling nodig hebben, ondersteunen andere PDFree-tools zoals Comprimeren en Watermerk het verwerken van meerdere bestanden tegelijk."
     }
   }
 ]

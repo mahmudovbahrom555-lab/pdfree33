@@ -60,7 +60,7 @@
     "name": "¿Puedo rotar varios archivos PDF a la vez?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sí. PDFree admite rotación por lotes — selecciona varios archivos PDF, elige el ángulo, y cada uno se rota localmente en tu navegador. Obtendrás un ZIP con todos los archivos rotados, sin límite de cantidad de archivos."
+      "text": "Rotar funciona con un PDF a la vez, para que puedas ajustar la rotación de cada página individualmente — por ejemplo, corrigiendo solo las páginas torcidas de un documento escaneado y dejando el resto intacto. Para lotes de archivos que necesitan el mismo tratamiento, otras herramientas de PDFree como Comprimir y Marca de agua permiten procesar varios archivos a la vez."
     }
   }
 ]
