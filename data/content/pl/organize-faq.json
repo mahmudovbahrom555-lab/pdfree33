@@ -1,0 +1,90 @@
+[
+  {
+    "@type": "Question",
+    "name": "Czy organizowanie PDF-a przesyła mój plik na serwer?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie. Zmiana kolejności, usuwanie i obracanie stron są w całości przetwarzane w przeglądarce. Twój plik nigdy nigdzie nie jest wysyłany."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Jak zmienić kolejność stron w PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Przeciągnij dowolną miniaturę strony na nową pozycję w siatce — pozostałe strony automatycznie się przesuną. Upuść ją tam, gdzie chcesz — to będzie nowa kolejność w pobranym PDF-ie."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Jak usunąć strony z PDF-a?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Kliknij × w rogu dowolnej miniatury strony, aby oznaczyć ją do usunięcia — kliknij ponownie, aby przywrócić stronę przed zapisaniem. Usunięte strony po prostu nie znajdą się w pobranym PDF-ie."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy jest limit liczby stron, które mogę zorganizować?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie. Nie ma limitu liczby stron ani rozmiaru pliku. Bardzo duże dokumenty (150+ stron) otrzymują krótkie ostrzeżenie, że miniatury mogą wczytywać się nieco wolniej na starszych urządzeniach — zmiana kolejności i usuwanie działają dokładnie tak samo."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy mogę obracać strony podczas zmiany ich kolejności?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. Zaznacz jedną lub więcej stron i obróć je o 90°, 180° lub 270° — obrót zostanie zachowany, jeśli później przeciągniesz stronę na nową pozycję."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy zmiana kolejności lub usuwanie stron obniża jakość?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie. Zachowane strony są kopiowane do nowego PDF-a dokładnie takimi, jakimi były — obrazy, tekst i grafika wektorowa nie są ponownie renderowane ani kompresowane."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy mogę cofnąć zmianę, jeśli się pomylę?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. Cofnij odwraca twoją ostatnią akcję (zmianę kolejności, usunięcie lub obrót). Zresetuj wszystko przywraca każdą stronę do jej pierwotnej pozycji, orientacji i stanu (nie)usunięcia."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy mogę organizować wiele plików PDF naraz?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Organizuj działa z jednym plikiem PDF naraz, ponieważ kolejność i usuwanie stron są specyficzne dla tego dokumentu. Dla plików wymagających dokładnie takiej samej obróbki inne narzędzia PDFree, takie jak Kompresowanie i Znak wodny, obsługują przetwarzanie wielu plików naraz."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy mogę organizować PDF na telefonie?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. PDFree działa w mobilnym Safari (iOS) i Chrome na Androida — przeciągaj miniatury palcem tak samo, jak zrobiłbyś to myszką."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy potrzebuję konta, aby zorganizować więcej niż jeden PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie, i nigdy nie będzie to potrzebne. Niektóre darmowe organizatory pozwalają przetworzyć jeden plik, a potem wymagają zalogowania się dla kolejnego, albo ograniczają cię do około 100-1500 stron. PDFree nie ma konta, limitu stron ani dziennego limitu — organizuj tyle plików PDF, ile chcesz."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy organizator stron PDF jest naprawdę darmowy?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. PDFree jest darmowy, bez subskrypcji, bez dziennych limitów i bez rejestracji. Do wyniku nie są dodawane żadne znaki wodne i nie ma ograniczeń rozmiaru pliku."
+    }
+  }
+]

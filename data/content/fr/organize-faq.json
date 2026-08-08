@@ -1,0 +1,90 @@
+[
+  {
+    "@type": "Question",
+    "name": "Organiser un PDF envoie-t-il mon fichier sur un serveur ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non. Réorganiser, supprimer et pivoter des pages sont entièrement traités dans votre navigateur. Votre fichier n'est jamais envoyé nulle part."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Comment réorganiser les pages d'un PDF ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Glissez n'importe quelle miniature vers une nouvelle position dans la grille — les autres pages se décalent automatiquement. Déposez-la où vous voulez, et ce sera le nouvel ordre dans votre PDF téléchargé."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Comment supprimer des pages d'un PDF ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Cliquez sur le × dans le coin d'une miniature pour la marquer à supprimer — cliquez à nouveau pour la restaurer avant d'enregistrer. Les pages supprimées sont simplement absentes du PDF téléchargé."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Y a-t-il une limite au nombre de pages que je peux organiser ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non. Il n'y a pas de limite de nombre de pages ni de taille de fichier. Les très grands documents (150+ pages) affichent un bref avertissement indiquant que les miniatures peuvent mettre un peu plus de temps à charger sur les appareils anciens — réorganiser et supprimer fonctionnent exactement de la même façon."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Puis-je pivoter des pages tout en les réorganisant ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui. Sélectionnez une ou plusieurs pages et pivotez-les à 90°, 180° ou 270° — la rotation reste appliquée si vous glissez ensuite la page vers une nouvelle position."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Réorganiser ou supprimer des pages réduit-il la qualité ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non. Les pages conservées sont copiées dans le nouveau PDF telles quelles — les images, le texte et les graphiques vectoriels ne sont ni ré-affichés ni recompressés."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Puis-je annuler une modification si je me trompe ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui. Annuler défait votre dernière action (une réorganisation, une suppression ou une rotation). Tout réinitialiser remet chaque page à sa position, son orientation et son état (non) supprimé d'origine."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Puis-je organiser plusieurs fichiers PDF à la fois ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Organiser fonctionne avec un seul PDF à la fois, car l'ordre et les suppressions de pages sont propres à ce document. Pour des fichiers nécessitant exactement le même traitement, d'autres outils de PDFree comme Compresser et Filigrane permettent de traiter plusieurs fichiers à la fois."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Puis-je organiser un PDF depuis mon téléphone ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui. PDFree fonctionne sur Safari mobile (iOS) et Chrome pour Android — glissez les miniatures avec votre doigt comme vous le feriez avec une souris."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Ai-je besoin d'un compte pour organiser plusieurs PDF ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non, et ce ne sera jamais le cas. Certains organisateurs gratuits vous laissent traiter un fichier puis exigent une connexion pour le suivant, ou vous limitent à environ 100-1 500 pages. PDFree n'a ni compte, ni limite de pages, ni limite quotidienne — organisez autant de PDF que vous voulez."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "L'organisateur de pages PDF est-il vraiment gratuit ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui. PDFree est gratuit, sans abonnement, sans limite quotidienne et sans inscription. Aucun filigrane n'est ajouté au résultat et il n'y a aucune restriction de taille de fichier."
+    }
+  }
+]

@@ -1,0 +1,90 @@
+[
+  {
+    "@type": "Question",
+    "name": "Wordt mijn bestand geüpload naar een server bij het organiseren van een PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. Pagina's herschikken, verwijderen en draaien wordt volledig in je browser verwerkt. Je bestand wordt nooit ergens naartoe gestuurd."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Hoe herschik ik PDF-pagina's?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sleep een pagina-miniatuur naar een nieuwe positie in het raster — de rest van de pagina's schuift automatisch op. Laat los waar je wilt, en dat wordt de nieuwe volgorde in je gedownloade PDF."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Hoe verwijder ik pagina's uit een PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Klik op de × in de hoek van een pagina-miniatuur om die te markeren voor verwijdering — klik opnieuw om de pagina te herstellen vóór het opslaan. Verwijderde pagina's worden simpelweg weggelaten uit de gedownloade PDF."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is er een limiet aan hoeveel pagina's ik kan organiseren?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. Er is geen limiet voor aantal pagina's of bestandsgrootte. Zeer grote documenten (150+ pagina's) krijgen een korte melding dat miniaturen iets langzamer kunnen laden op oudere apparaten — herschikken en verwijderen werken verder precies hetzelfde."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik pagina's draaien terwijl ik ze herschik?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Selecteer een of meer pagina's en draai ze 90°, 180° of 270° — de rotatie blijft behouden als je de pagina later naar een nieuwe positie sleept."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Vermindert herschikken of verwijderen van pagina's de kwaliteit?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. Behouden pagina's worden precies zoals ze waren gekopieerd naar de nieuwe PDF — afbeeldingen, tekst en vectorafbeeldingen worden niet opnieuw gerenderd of gecomprimeerd."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik een wijziging ongedaan maken als ik een fout maak?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Ongedaan maken keert je laatste actie terug (een herschikking, een verwijdering of een rotatie). Alles resetten brengt elke pagina terug naar de oorspronkelijke positie, oriëntatie en (niet-)verwijderde status."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik meerdere PDF-bestanden tegelijk organiseren?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Organiseren werkt met één PDF tegelijk, omdat paginavolgorde en verwijderingen specifiek zijn voor dat document. Voor bestanden die allemaal exact dezelfde behandeling nodig hebben, ondersteunen andere PDFree-tools zoals Comprimeren en Watermerk het verwerken van meerdere bestanden tegelijk."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik een PDF organiseren op mijn telefoon?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. PDFree werkt in mobiele Safari (iOS) en Chrome voor Android — sleep miniaturen met je vinger net zoals je met een muis zou doen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Heb ik een account nodig om meer dan één PDF te organiseren?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee, en dat zal ook nooit nodig zijn. Sommige gratis organizers laten je één bestand verwerken en vragen daarna om in te loggen voor het volgende, of beperken je tot ongeveer 100-1.500 pagina's. PDFree heeft geen account, geen paginalimiet en geen dagelijkse limiet — organiseer zoveel PDF's als je wilt."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is de PDF-paginaorganizer echt gratis?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. PDFree is gratis zonder abonnement, zonder dagelijkse limieten en zonder registratie. Er worden geen watermerken toegevoegd aan het resultaat en er zijn geen beperkingen op bestandsgrootte."
+    }
+  }
+]

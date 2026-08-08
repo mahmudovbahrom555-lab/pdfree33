@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDF Sayfaları Nasıl Düzenlenir",
+  "description": "Küçük resimleri sürükleyerek PDF sayfalarını sıralayın, silin ve döndürün — ücretsiz, yükleme gerekmez.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDF'inizi açın",
+      "text": "'Dosya seç'e tıklayın veya PDF'inizi bırakma alanına sürükleyin."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Sıralamak, silmek veya döndürmek için sürükleyin",
+      "text": "Sayfa küçük resimlerini yeni bir sıraya sürükleyin, istenmeyen sayfaları silmek için ×'e tıklayın, ve sayfaları 90°, 180° veya 270° döndürmek için seçin."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Düzenlenmiş PDF'i indirin",
+      "text": "'Kaydet'e tıklayın. Yeniden sıralanmış, kısaltılmış ve döndürülmüş PDF'iniz anında indirilmeye hazır."
+    }
+  ]
+}

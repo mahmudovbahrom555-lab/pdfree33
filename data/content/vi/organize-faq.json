@@ -1,0 +1,90 @@
+[
+  {
+    "@type": "Question",
+    "name": "Sắp xếp PDF có tải file của tôi lên máy chủ không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không. Sắp xếp lại, xóa, và xoay trang đều được xử lý hoàn toàn trong trình duyệt của bạn. File của bạn không bao giờ được gửi đi đâu cả."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Làm thế nào để sắp xếp lại trang PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Kéo bất kỳ hình thu nhỏ trang nào đến vị trí mới trong lưới — các trang còn lại tự động dịch chuyển. Thả nó ở nơi bạn muốn, và đó sẽ là thứ tự mới trong PDF bạn tải xuống."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Làm thế nào để xóa trang khỏi PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nhấp × ở góc của bất kỳ hình thu nhỏ trang nào để đánh dấu xóa — nhấp lại để khôi phục trang trước khi lưu. Các trang đã xóa đơn giản là không xuất hiện trong PDF bạn tải xuống."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Có giới hạn số trang tôi có thể sắp xếp không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không. Không có giới hạn số trang hay dung lượng file. Các tài liệu rất lớn (150+ trang) sẽ nhận được thông báo ngắn rằng hình thu nhỏ có thể tải chậm hơn một chút trên thiết bị cũ — sắp xếp lại và xóa vẫn hoạt động y hệt."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Tôi có thể xoay trang trong khi sắp xếp lại không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có. Chọn một hoặc nhiều trang và xoay 90°, 180°, hoặc 270° — độ xoay sẽ theo trang nếu sau đó bạn kéo trang đến vị trí mới."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Sắp xếp lại hoặc xóa trang có làm giảm chất lượng không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không. Các trang được giữ lại được sao chép vào PDF mới y hệt như ban đầu — hình ảnh, văn bản, và đồ họa vector không bị kết xuất lại hay nén lại."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Tôi có thể hoàn tác nếu làm sai không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có. Hoàn tác sẽ đảo ngược hành động cuối cùng của bạn (sắp xếp lại, xóa, hoặc xoay). Đặt lại tất cả đưa mỗi trang về vị trí, hướng, và trạng thái (chưa) xóa ban đầu."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Tôi có thể sắp xếp nhiều file PDF cùng lúc không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sắp xếp hoạt động với từng file PDF một, vì thứ tự và việc xóa trang là đặc thù của tài liệu đó. Với các file cần xử lý giống hệt nhau, các công cụ khác của PDFree như Nén và Watermark hỗ trợ xử lý nhiều file cùng lúc."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Tôi có thể sắp xếp PDF trên điện thoại của mình không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có. PDFree hoạt động trên Safari di động (iOS) và Chrome cho Android — kéo hình thu nhỏ bằng ngón tay giống như khi dùng chuột."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Tôi có cần tài khoản để sắp xếp nhiều hơn một PDF không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không, và PDFree sẽ không bao giờ yêu cầu. Một số công cụ sắp xếp miễn phí cho phép bạn xử lý một file, sau đó yêu cầu đăng nhập cho file tiếp theo, hoặc giới hạn bạn khoảng 100-1.500 trang. PDFree không có tài khoản, không giới hạn trang, không giới hạn hàng ngày — sắp xếp bao nhiêu PDF tùy thích."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Công cụ sắp xếp trang PDF này có hoàn toàn miễn phí không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có. PDFree miễn phí, không cần đăng ký gói, không giới hạn hàng ngày, và không cần đăng ký tài khoản. Không có watermark được thêm vào kết quả và không có giới hạn dung lượng file."
+    }
+  }
+]

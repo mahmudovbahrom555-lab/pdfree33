@@ -1,0 +1,90 @@
+[
+  {
+    "@type": "Question",
+    "name": "Apakah mengatur PDF mengunggah file saya ke server?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak. Mengurutkan ulang, menghapus, dan memutar halaman semuanya diproses sepenuhnya di browser Anda. File Anda tidak pernah dikirim ke mana pun."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bagaimana cara mengurutkan ulang halaman PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Seret thumbnail halaman mana pun ke posisi baru dalam kisi — halaman lainnya bergeser otomatis. Lepaskan di tempat yang Anda inginkan, dan itulah urutan baru di PDF hasil unduhan Anda."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bagaimana cara menghapus halaman dari PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Klik × di sudut thumbnail halaman mana pun untuk menandainya akan dihapus — klik lagi untuk memulihkan halaman sebelum menyimpan. Halaman yang dihapus hanya tidak disertakan dalam PDF hasil unduhan."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah ada batas jumlah halaman yang bisa saya atur?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak. Tidak ada batas jumlah halaman atau ukuran file. Dokumen sangat besar (150+ halaman) akan mendapat peringatan singkat bahwa thumbnail mungkin sedikit lebih lambat dimuat di perangkat lama — mengurutkan ulang dan menghapus tetap berfungsi sama persis."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah saya memutar halaman sambil mengurutkan ulang?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ya. Pilih satu atau beberapa halaman dan putar 90°, 180°, atau 270° — rotasi akan tetap mengikuti halaman jika Anda menyeretnya ke posisi baru nanti."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah mengurutkan ulang atau menghapus halaman mengurangi kualitas?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak. Halaman yang disimpan disalin ke PDF baru persis seperti aslinya — gambar, teks, dan grafik vektor tidak dirender ulang atau dikompres ulang."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah saya membatalkan perubahan jika salah?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ya. Urungkan membalikkan tindakan terakhir Anda (pengurutan ulang, penghapusan, atau rotasi). Atur ulang semua mengembalikan setiap halaman ke posisi, orientasi, dan status (tidak) terhapus semula."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah saya mengatur beberapa file PDF sekaligus?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Atur bekerja dengan satu PDF dalam satu waktu, karena urutan dan penghapusan halaman bersifat khusus untuk dokumen tersebut. Untuk file yang semuanya membutuhkan perlakuan yang sama persis, alat PDFree lain seperti Kompres dan Watermark mendukung pemrosesan beberapa file sekaligus."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah saya mengatur PDF di ponsel saya?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ya. PDFree bekerja di Safari seluler (iOS) dan Chrome untuk Android — seret thumbnail dengan jari Anda seperti halnya menggunakan mouse."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah saya perlu akun untuk mengatur lebih dari satu PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak, dan PDFree tidak akan pernah memintanya. Beberapa pengatur gratis membiarkan Anda memproses satu file, lalu meminta masuk untuk file berikutnya, atau membatasi Anda sekitar 100-1.500 halaman. PDFree tidak punya akun, tidak ada batas halaman, dan tidak ada batas harian — atur PDF sebanyak yang Anda mau."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah alat pengatur halaman PDF ini benar-benar gratis?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ya. PDFree gratis tanpa langganan, tanpa batas harian, dan tanpa daftar. Tidak ada watermark yang ditambahkan pada hasil dan tidak ada batasan ukuran file."
+    }
+  }
+]

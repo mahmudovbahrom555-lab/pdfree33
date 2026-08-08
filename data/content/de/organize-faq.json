@@ -1,0 +1,90 @@
+[
+  {
+    "@type": "Question",
+    "name": "Wird meine Datei beim Organisieren eines PDFs hochgeladen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nein. Neuanordnen, Löschen und Drehen von Seiten werden vollständig in deinem Browser verarbeitet. Deine Datei wird niemals irgendwohin gesendet."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Wie ordne ich PDF-Seiten neu an?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ziehe eine Miniaturansicht an eine neue Position im Raster — die übrigen Seiten verschieben sich automatisch. Lege sie dort ab, wo du sie haben möchtest — das ist die neue Reihenfolge in deinem heruntergeladenen PDF."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Wie lösche ich Seiten aus einem PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Klicke auf das × in der Ecke einer Seiten-Miniaturansicht, um sie zum Löschen zu markieren — klicke erneut, um die Seite vor dem Speichern wiederherzustellen. Gelöschte Seiten werden im heruntergeladenen PDF einfach weggelassen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Gibt es ein Limit, wie viele Seiten ich organisieren kann?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nein. Es gibt kein Seiten- oder Dateigrößenlimit. Sehr große Dokumente (150+ Seiten) erhalten einen kurzen Hinweis, dass Miniaturansichten auf älteren Geräten etwas langsamer laden können — Neuanordnen und Löschen funktionieren trotzdem genauso."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann ich Seiten beim Neuanordnen auch drehen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Wähle eine oder mehrere Seiten aus und drehe sie um 90°, 180° oder 270° — die Drehung bleibt erhalten, wenn du die Seite später an eine neue Position ziehst."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Verringert Neuanordnen oder Löschen die Qualität?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nein. Beibehaltene Seiten werden unverändert in das neue PDF kopiert — Bilder, Text und Vektorgrafiken werden nicht neu gerendert oder neu komprimiert."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann ich eine Änderung rückgängig machen, wenn mir ein Fehler unterläuft?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Rückgängig macht deine letzte Aktion (eine Neuanordnung, eine Löschung oder eine Drehung) rückgängig. Alles zurücksetzen bringt jede Seite auf ihre ursprüngliche Position, Ausrichtung und ihren (nicht) gelöschten Zustand zurück."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann ich mehrere PDF-Dateien gleichzeitig organisieren?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Organisieren funktioniert mit jeweils einer PDF-Datei, da Seitenreihenfolge und Löschungen dokumentspezifisch sind. Für Dateien, die alle dieselbe Behandlung brauchen, unterstützen PDFrees andere Tools wie Komprimieren und Wasserzeichen die Verarbeitung mehrerer Dateien auf einmal."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann ich ein PDF auf meinem Handy organisieren?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. PDFree funktioniert in mobilem Safari (iOS) und Chrome für Android — ziehe Miniaturansichten mit dem Finger genauso wie mit der Maus."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Brauche ich ein Konto, um mehr als ein PDF zu organisieren?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nein, und das wird auch nie nötig sein. Manche kostenlosen Organizer lassen dich eine Datei bearbeiten und verlangen danach eine Anmeldung, oder begrenzen dich auf etwa 100–1.500 Seiten. PDFree hat kein Konto, kein Seitenlimit und kein Tageslimit — organisiere so viele PDFs, wie du willst."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Ist der PDF-Seiten-Organizer wirklich kostenlos?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. PDFree ist kostenlos, ohne Abonnement, ohne Tageslimit und ohne Anmeldung. Es werden keine Wasserzeichen hinzugefügt und es gibt keine Dateigrößenbeschränkungen."
+    }
+  }
+]

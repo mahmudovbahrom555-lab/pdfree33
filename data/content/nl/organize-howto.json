@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Hoe PDF-pagina's te organiseren",
+  "description": "Herschik, verwijder en draai PDF-pagina's door miniaturen te slepen — gratis, geen upload nodig.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Open je PDF",
+      "text": "Klik op 'Bestanden kiezen' of sleep je PDF naar de uploadzone."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Sleep om te herschikken, verwijderen of draaien",
+      "text": "Sleep paginaminiaturen naar een nieuwe volgorde, klik op × om ongewenste pagina's te verwijderen, en selecteer pagina's om 90°, 180° of 270° te draaien."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Download de georganiseerde PDF",
+      "text": "Klik op 'Opslaan'. Je herschikte, ingekorte en gedraaide PDF is direct klaar om te downloaden."
+    }
+  ]
+}

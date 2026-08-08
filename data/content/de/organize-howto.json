@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "So organisierst du PDF-Seiten",
+  "description": "PDF-Seiten per Drag & Drop neu anordnen, löschen und drehen — kostenlos, kein Upload nötig.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDF öffnen",
+      "text": "Klicke auf 'Dateien auswählen' oder ziehe dein PDF in die Ablagefläche."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Ziehen, löschen oder drehen",
+      "text": "Ziehe Seiten-Miniaturansichten in eine neue Reihenfolge, klicke auf × zum Löschen unerwünschter Seiten, und wähle Seiten aus, um sie um 90°, 180° oder 270° zu drehen."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Organisiertes PDF herunterladen",
+      "text": "Klicke auf 'Speichern'. Dein neu angeordnetes, gekürztes und gedrehtes PDF ist sofort zum Download bereit."
+    }
+  ]
+}

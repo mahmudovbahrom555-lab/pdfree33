@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Comment organiser les pages d'un PDF",
+  "description": "Réorganisez, supprimez et pivotez des pages PDF en glissant les miniatures — gratuit, sans envoi de fichier requis.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Ouvrez votre PDF",
+      "text": "Cliquez sur 'Choisir les fichiers' ou glissez votre PDF dans la zone de dépôt."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Glissez pour réorganiser, supprimer ou pivoter",
+      "text": "Glissez les miniatures des pages dans un nouvel ordre, cliquez sur × pour supprimer les pages indésirables, et sélectionnez des pages à pivoter de 90°, 180° ou 270°."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Téléchargez le PDF organisé",
+      "text": "Cliquez sur 'Enregistrer'. Votre PDF réorganisé, allégé et pivoté est prêt à télécharger instantanément."
+    }
+  ]
+}

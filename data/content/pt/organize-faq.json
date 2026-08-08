@@ -1,0 +1,90 @@
+[
+  {
+    "@type": "Question",
+    "name": "Organizar um PDF envia o meu arquivo para um servidor?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Não. Reordenar, excluir e girar páginas são processados totalmente no seu navegador. O seu arquivo nunca é enviado para lugar nenhum."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Como reordeno as páginas de um PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Arraste qualquer miniatura de página para uma nova posição na grelha — as restantes páginas deslocam-se automaticamente. Solte-a onde quiser, e essa será a nova ordem no seu PDF baixado."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Como excluo páginas de um PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Clique no × no canto de qualquer miniatura para marcá-la para exclusão — clique novamente para restaurar a página antes de guardar. As páginas excluídas simplesmente não aparecem no PDF baixado."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Há um limite de quantas páginas posso organizar?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Não. Não há limite de número de páginas nem de tamanho de arquivo. Documentos muito grandes (150+ páginas) recebem um breve aviso de que as miniaturas podem demorar um pouco mais em dispositivos antigos — reordenar e excluir funcionam exatamente da mesma forma."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso girar páginas enquanto as reordeno?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim. Selecione uma ou mais páginas e gire-as 90°, 180° ou 270° — a rotação mantém-se se depois arrastar a página para uma nova posição."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Reordenar ou excluir páginas reduz a qualidade?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Não. As páginas mantidas são copiadas para o novo PDF exatamente como estavam — imagens, texto e gráficos vetoriais não são renderizados nem comprimidos novamente."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso desfazer uma alteração se me enganar?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim. Desfazer reverte a sua última ação (uma reordenação, uma exclusão ou uma rotação). Repor tudo devolve cada página à sua posição, orientação e estado (não) excluído original."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso organizar vários arquivos PDF de uma vez?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Organizar funciona com um PDF de cada vez, já que a ordem e as exclusões de páginas são específicas desse documento. Para arquivos que precisam exatamente do mesmo tratamento, outras ferramentas da PDFree como Comprimir e Marca d'água permitem processar vários arquivos de uma vez."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso organizar um PDF no meu telemóvel?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim. A PDFree funciona no Safari móvel (iOS) e no Chrome para Android — arraste as miniaturas com o dedo da mesma forma que faria com o rato."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Preciso de uma conta para organizar mais de um PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Não, e nunca vai precisar. Alguns organizadores gratuitos deixam-no processar um arquivo e depois pedem para iniciar sessão no próximo, ou limitam-no a cerca de 100-1.500 páginas. A PDFree não tem conta, nem limite de páginas, nem limite diário — organize quantos PDFs quiser."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "O organizador de páginas PDF é mesmo grátis?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim. A PDFree é grátis, sem subscrição, sem limites diários e sem cadastro. Não são adicionadas marcas d'água ao resultado e não há restrições de tamanho de arquivo."
+    }
+  }
+]

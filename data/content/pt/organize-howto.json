@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Como organizar páginas de um PDF",
+  "description": "Reordene, exclua e gire páginas de PDF arrastando miniaturas — grátis, sem necessidade de envio de arquivo.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Abra o seu PDF",
+      "text": "Clique em 'Escolher arquivos' ou arraste o seu PDF para a zona de soltar."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Arraste para reordenar, excluir ou girar",
+      "text": "Arraste as miniaturas das páginas para uma nova ordem, clique em × para excluir páginas indesejadas, e selecione páginas para girá-las 90°, 180° ou 270°."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Baixe o PDF organizado",
+      "text": "Clique em 'Guardar'. O seu PDF reordenado, reduzido e girado está pronto para baixar instantaneamente."
+    }
+  ]
+}

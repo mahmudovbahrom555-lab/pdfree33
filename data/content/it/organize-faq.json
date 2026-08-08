@@ -1,0 +1,90 @@
+[
+  {
+    "@type": "Question",
+    "name": "Organizzare un PDF carica il mio file su un server?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Riordinare, eliminare e ruotare le pagine sono processi interamente eseguiti nel tuo browser. Il tuo file non viene mai inviato da nessuna parte."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Come riordino le pagine di un PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Trascina qualsiasi miniatura di pagina in una nuova posizione nella griglia — le altre pagine si spostano automaticamente. Rilasciala dove vuoi, e sarà il nuovo ordine nel tuo PDF scaricato."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Come elimino pagine da un PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Clicca sulla × nell'angolo di qualsiasi miniatura per contrassegnarla per l'eliminazione — clicca di nuovo per ripristinare la pagina prima di salvare. Le pagine eliminate semplicemente non compaiono nel PDF scaricato."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "C'è un limite a quante pagine posso organizzare?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Non c'è limite al numero di pagine o alla dimensione del file. I documenti molto grandi (150+ pagine) ricevono un breve avviso che le miniature potrebbero caricarsi un po' più lentamente su dispositivi meno recenti — riordinare ed eliminare funzionano comunque esattamente allo stesso modo."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso ruotare le pagine mentre le riordino?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. Seleziona una o più pagine e ruotale di 90°, 180° o 270° — la rotazione resta applicata se poi trascini la pagina in una nuova posizione."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Riordinare o eliminare pagine riduce la qualità?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Le pagine mantenute vengono copiate nel nuovo PDF esattamente come erano — immagini, testo e grafica vettoriale non vengono ri-renderizzati né ricompressi."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso annullare una modifica se sbaglio?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. Annulla ripristina la tua ultima azione (un riordino, un'eliminazione o una rotazione). Ripristina tutto riporta ogni pagina alla sua posizione, orientamento e stato (non) eliminato originali."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso organizzare più file PDF contemporaneamente?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Organizza funziona con un PDF alla volta, poiché l'ordine e le eliminazioni delle pagine sono specifiche di quel documento. Per file che richiedono tutti lo stesso trattamento, altri strumenti di PDFree come Comprimi e Filigrana supportano l'elaborazione di più file contemporaneamente."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso organizzare un PDF dal mio telefono?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. PDFree funziona su Safari mobile (iOS) e Chrome per Android — trascina le miniature con il dito allo stesso modo in cui faresti con il mouse."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Ho bisogno di un account per organizzare più di un PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No, e non ne avrai mai bisogno. Alcuni organizzatori gratuiti ti permettono di elaborare un file e poi richiedono l'accesso per il successivo, oppure ti limitano a circa 100-1.500 pagine. PDFree non ha account, né limite di pagine, né limite giornaliero — organizza tutti i PDF che vuoi."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "L'organizzatore di pagine PDF è davvero gratuito?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. PDFree è gratuito senza abbonamento, senza limiti giornalieri e senza registrazione. Nessuna filigrana viene aggiunta al risultato e non ci sono restrizioni sulla dimensione del file."
+    }
+  }
+]

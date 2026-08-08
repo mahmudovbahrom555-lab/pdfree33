@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to Organize PDF Pages",
+  "description": "Reorder, delete, and rotate PDF pages by dragging thumbnails — free, no upload required.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Open your PDF",
+      "text": "Click 'Choose files' or drag your PDF into the drop zone."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Drag to reorder, delete, or rotate",
+      "text": "Drag page thumbnails to arrange them in a new order, click × to delete unwanted pages, and select pages to rotate 90°, 180°, or 270°."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Download the organized PDF",
+      "text": "Click 'Save'. Your reordered, trimmed, and rotated PDF is ready to download instantly."
+    }
+  ]
+}

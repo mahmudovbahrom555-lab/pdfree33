@@ -1,0 +1,90 @@
+[
+  {
+    "@type": "Question",
+    "name": "Does organizing a PDF upload my file to a server?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Reordering, deleting, and rotating pages are all processed entirely in your browser. Your file is never sent anywhere."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "How do I reorder PDF pages?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Drag any page thumbnail to a new position in the grid — the rest of the pages shift automatically. Drop it where you want it, and that's the new order in your downloaded PDF."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "How do I delete pages from a PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Click the × in the corner of any page thumbnail to mark it for deletion — click it again to restore the page before saving. Deleted pages are simply left out of the downloaded PDF."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is there a limit on how many pages I can organize?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. There's no page-count or file-size limit. Very large documents (150+ pages) get a brief heads-up that thumbnails may load a little slower on older devices — reordering and deleting still work exactly the same."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I rotate pages while reordering them?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. Select one or more pages and rotate them 90°, 180°, or 270° — the rotation travels with the page if you later drag it to a new position."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Does reordering or deleting pages reduce quality?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Kept pages are copied into the new PDF exactly as they were — images, text, and vector graphics are not re-rendered or recompressed."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I undo a change if I make a mistake?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. Undo reverses your last action (a reorder, a delete, or a rotation). Reset all reverts every page back to its original position, orientation, and (un)deleted state."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I organize multiple PDF files at once?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Organize works with one PDF at a time, since page order and deletions are specific to that document. For files that all need the exact same treatment, PDFree's other tools such as Compress and Watermark support processing several files at once."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I organize a PDF on my phone?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. PDFree works in mobile Safari (iOS) and Chrome for Android — drag thumbnails with your finger the same way you would with a mouse."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Do I need an account to organize more than one PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No, and PDFree never will. Some free organizers let you process one file, then require a sign-in for the next one, or cap you around 100–1,500 pages. PDFree has no account, no page limit, and no daily cap — organize as many PDFs as you want."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is the PDF page organizer completely free?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. PDFree is free with no subscription, no daily limits, and no signup. There are no watermarks added to the output and no file size restrictions."
+    }
+  }
+]

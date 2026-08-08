@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Jak organizować strony PDF",
+  "description": "Zmieniaj kolejność, usuwaj i obracaj strony PDF, przeciągając miniatury — za darmo, bez przesyłania plików.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Otwórz plik PDF",
+      "text": "Kliknij 'Wybierz pliki' lub przeciągnij PDF do strefy wgrywania."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Przeciągnij, aby zmienić kolejność, usunąć lub obrócić",
+      "text": "Przeciągnij miniatury stron do nowej kolejności, kliknij × aby usunąć niepotrzebne strony, i zaznacz strony do obrócenia o 90°, 180° lub 270°."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Pobierz zorganizowany PDF",
+      "text": "Kliknij 'Zapisz'. Twój PDF z nową kolejnością, usuniętymi stronami i zastosowanymi obrotami jest gotowy do natychmiastowego pobrania."
+    }
+  ]
+}

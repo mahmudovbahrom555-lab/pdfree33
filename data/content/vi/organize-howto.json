@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Cách Sắp Xếp Trang PDF",
+  "description": "Sắp xếp lại, xóa, và xoay trang PDF bằng cách kéo hình thu nhỏ — miễn phí, không cần tải lên.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Mở file PDF của bạn",
+      "text": "Nhấp 'Chọn file' hoặc kéo PDF của bạn vào vùng thả."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Kéo để sắp xếp lại, xóa, hoặc xoay",
+      "text": "Kéo hình thu nhỏ trang đến thứ tự mới, nhấp × để xóa trang không muốn, và chọn trang để xoay 90°, 180°, hoặc 270°."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Tải xuống PDF đã sắp xếp",
+      "text": "Nhấp 'Lưu'. PDF đã sắp xếp lại, cắt bớt, và xoay của bạn sẵn sàng để tải xuống ngay lập tức."
+    }
+  ]
+}

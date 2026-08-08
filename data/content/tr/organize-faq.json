@@ -1,0 +1,90 @@
+[
+  {
+    "@type": "Question",
+    "name": "PDF düzenlemek dosyamı bir sunucuya yükler mi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. Sayfa sıralama, silme ve döndürme tamamen tarayıcınızda işlenir. Dosyanız hiçbir yere gönderilmez."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDF sayfalarını nasıl yeniden sıralarım?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Herhangi bir sayfa küçük resmini ızgarada yeni bir konuma sürükleyin — geri kalan sayfalar otomatik olarak kayar. İstediğiniz yere bırakın, bu indirdiğiniz PDF'deki yeni sıra olacaktır."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDF'den sayfaları nasıl silerim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Herhangi bir sayfa küçük resminin köşesindeki ×'e tıklayarak silinmek üzere işaretleyin — kaydetmeden önce sayfayı geri getirmek için tekrar tıklayın. Silinen sayfalar indirdiğiniz PDF'de yalnızca bulunmaz."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Düzenleyebileceğim sayfa sayısında bir sınır var mı?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. Sayfa sayısı veya dosya boyutu sınırı yoktur. Çok büyük belgeler (150+ sayfa) için eski cihazlarda küçük resimlerin biraz daha yavaş yüklenebileceğine dair kısa bir uyarı gösterilir — sıralama ve silme tam olarak aynı şekilde çalışmaya devam eder."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Sıralarken sayfaları döndürebilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. Bir veya daha fazla sayfa seçin ve 90°, 180° ya da 270° döndürün — daha sonra sayfayı yeni bir konuma sürüklerseniz döndürme kalır."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Sayfaları sıralamak veya silmek kaliteyi düşürür mü?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. Tutulan sayfalar tam olarak oldukları gibi yeni PDF'ye kopyalanır — görüntüler, metin ve vektör grafikler yeniden oluşturulmaz veya yeniden sıkıştırılmaz."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bir hata yaparsam değişikliği geri alabilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. Geri al, son işleminizi (bir sıralama, silme veya döndürme) tersine çevirir. Tümünü sıfırla, her sayfayı orijinal konumuna, yönüne ve (silinmemiş) durumuna döndürür."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Birden fazla PDF dosyasını aynı anda düzenleyebilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Düzenle aracı tek seferde bir PDF ile çalışır, çünkü sayfa sırası ve silmeler o belgeye özgüdür. Tümü aynı işlemi gerektiren dosyalar için PDFree'nin Sıkıştırma ve Filigran gibi diğer araçları birden fazla dosyayı aynı anda işlemeyi destekler."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Telefonumda PDF düzenleyebilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. PDFree mobil Safari (iOS) ve Android için Chrome'da çalışır — küçük resimleri fareyle yaptığınız gibi parmağınızla sürükleyin."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Birden fazla PDF düzenlemek için hesaba ihtiyacım var mı?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır, ve asla gerekmeyecek. Bazı ücretsiz düzenleme araçları bir dosyayı işlemenize izin verir, ardından bir sonraki için giriş yapmanızı ister, veya sizi yaklaşık 100-1.500 sayfayla sınırlar. PDFree'de hesap, sayfa sınırı veya günlük sınır yoktur — istediğiniz kadar PDF düzenleyin."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDF sayfa düzenleme aracı gerçekten ücretsiz mi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. PDFree abonelik olmadan, günlük sınır olmadan ve kayıt olmadan ücretsizdir. Sonuca filigran eklenmez ve dosya boyutu kısıtlaması yoktur."
+    }
+  }
+]
