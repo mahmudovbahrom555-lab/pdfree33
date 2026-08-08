@@ -6,6 +6,8 @@ import { showToast }        from './ui.js';
 import { t, tp }            from './i18n.js';
 import { trackToolError }   from './analytics.js';
 import { preprocessPdfBuffer } from './decryptPdf.js';
+import { presetRememberCard } from './uiComponents.js';
+import { loadPreset, clearPreset } from './presets.js';
 
 // ── State ──────────────────────────────────────────────────────
 let _pageCount     = 0;
@@ -13,6 +15,7 @@ let _selectedPages = [];
 let _format        = 'jpg';
 let _dpi           = 150;
 let _zip           = true;
+let _rememberLoaded = false;  // "Remember my settings" applied once per tool session
 let _pdfDoc        = null;    // cached PDF.js document — reused for thumbnails
 let _viewport      = null;    // first-page viewport for size estimation
 let _thumbZoom     = 160;     // thumbnail CSS width in px
@@ -69,6 +72,19 @@ export async function initPdf2JpgOptions(file) {
     _selectedPages = Array.from({ length: _pageCount }, (_, i) => i + 1);
     _setMsg(tp(_pageCount, 'p2j_opened_one', 'p2j_opened_many', { n: _pageCount }));
 
+    // Restore saved format/dpi/zip once per tool session — pages is never
+    // part of the saved preset (this document's own page selection, see
+    // presetFilter in toolRegistrations.js), so it always starts as "all".
+    if (!_rememberLoaded) {
+      _rememberLoaded = true;
+      const saved = loadPreset('pdf2jpg');
+      if (saved) {
+        _format = saved.format ?? _format;
+        _dpi    = saved.dpi    ?? _dpi;
+        _zip    = saved.zip    ?? _zip;
+      }
+    }
+
     const firstPage = await _pdfDoc.getPage(1);
     _viewport = firstPage.getViewport({ scale: 1 });
 
@@ -111,6 +127,7 @@ export function hidePdf2JpgOptions() {
   _dpi           = 150;
   _zip           = true;
   _thumbZoom     = 160;
+  _rememberLoaded = false;
 }
 
 // ── Render ─────────────────────────────────────────────────────
@@ -132,8 +149,8 @@ function _render() {
           <span class="p2j-step">1</span>${t('p2j_step_output_format')}
         </div>
         <div class="p2j-fmt-cards">
-          <label class="p2j-fmt-card p2j-fmt-card--on" data-fmt="jpg">
-            <input type="radio" name="p2jFormat" value="jpg" checked>
+          <label class="p2j-fmt-card${_format === 'jpg' ? ' p2j-fmt-card--on' : ''}" data-fmt="jpg">
+            <input type="radio" name="p2jFormat" value="jpg"${_format === 'jpg' ? ' checked' : ''}>
             <svg class="p2j-fmt-card__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
               <rect x="3" y="3" width="18" height="18" rx="2"/>
               <circle cx="8.5" cy="8.5" r="1.5"/>
@@ -142,8 +159,8 @@ function _render() {
             <span class="p2j-fmt-card__name">JPG</span>
             <span class="p2j-fmt-card__desc">${t('p2j_fmt_jpg_desc')}</span>
           </label>
-          <label class="p2j-fmt-card" data-fmt="png">
-            <input type="radio" name="p2jFormat" value="png">
+          <label class="p2j-fmt-card${_format === 'png' ? ' p2j-fmt-card--on' : ''}" data-fmt="png">
+            <input type="radio" name="p2jFormat" value="png"${_format === 'png' ? ' checked' : ''}>
             <svg class="p2j-fmt-card__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
               <rect x="3" y="3" width="18" height="18" rx="2"/>
               <path d="M3 9h18M9 21V9"/>
@@ -160,20 +177,20 @@ function _render() {
           <span class="p2j-step">2</span>${t('p2j_step_image_quality')}
         </div>
         <div class="p2j-dpi-cards">
-          <label class="p2j-dpi-card" data-dpi="72">
-            <input type="radio" name="p2jDpi" value="72">
+          <label class="p2j-dpi-card${_dpi === 72 ? ' p2j-dpi-card--on' : ''}" data-dpi="72">
+            <input type="radio" name="p2jDpi" value="72"${_dpi === 72 ? ' checked' : ''}>
             <span class="p2j-dpi-card__val">72 dpi</span>
             <span class="p2j-dpi-card__lbl">${t('p2j_dpi_72_lbl')}</span>
             <span class="p2j-dpi-card__sub">${t('p2j_dpi_72_sub')}</span>
           </label>
-          <label class="p2j-dpi-card p2j-dpi-card--on" data-dpi="150">
-            <input type="radio" name="p2jDpi" value="150" checked>
+          <label class="p2j-dpi-card${_dpi === 150 ? ' p2j-dpi-card--on' : ''}" data-dpi="150">
+            <input type="radio" name="p2jDpi" value="150"${_dpi === 150 ? ' checked' : ''}>
             <span class="p2j-dpi-card__val">150 dpi</span>
             <span class="p2j-dpi-card__lbl">${t('p2j_dpi_150_lbl')}</span>
             <span class="p2j-dpi-card__sub">${t('p2j_dpi_150_sub')}</span>
           </label>
-          <label class="p2j-dpi-card" data-dpi="300">
-            <input type="radio" name="p2jDpi" value="300">
+          <label class="p2j-dpi-card${_dpi === 300 ? ' p2j-dpi-card--on' : ''}" data-dpi="300">
+            <input type="radio" name="p2jDpi" value="300"${_dpi === 300 ? ' checked' : ''}>
             <span class="p2j-dpi-card__val">300 dpi</span>
             <span class="p2j-dpi-card__lbl">${t('p2j_dpi_300_lbl')}</span>
             <span class="p2j-dpi-card__sub">${t('p2j_dpi_300_sub')}</span>
@@ -190,11 +207,11 @@ function _render() {
         </div>
         <div class="p2j-summary__row">
           <span class="p2j-summary__key">${t('p2j_summary_format')}</span>
-          <span class="p2j-summary__val" id="p2jSumFormat">JPG</span>
+          <span class="p2j-summary__val" id="p2jSumFormat">${_format.toUpperCase()}</span>
         </div>
         <div class="p2j-summary__row">
           <span class="p2j-summary__key">${t('p2j_summary_resolution')}</span>
-          <span class="p2j-summary__val" id="p2jSumDpi">150 dpi</span>
+          <span class="p2j-summary__val" id="p2jSumDpi">${_dpi} dpi</span>
         </div>
         <div class="p2j-summary__row p2j-summary__row--last">
           <span class="p2j-summary__key">${t('p2j_summary_size')}</span>
@@ -248,6 +265,14 @@ function _render() {
         </label>
       </div>
     </div>` : ''}
+
+    ${presetRememberCard({
+      id:       'pdf2jpgRememberCheck',
+      checked:  loadPreset('pdf2jpg') !== null,
+      title:    '💾 ' + t('preset_remember_title'),
+      subtitle: t('preset_remember_sub'),
+      ariaLabel: t('preset_remember_title'),
+    })}
   `;
 
   _buildThumbs();
@@ -368,6 +393,11 @@ function _bindEvents() {
     }
     if (e.target.id === 'p2jZipCheck') {
       _zip = e.target.checked;
+    }
+    // Unchecking forgets immediately — saving happens centrally in app.js
+    // (_maybeSavePreset) right before processing starts.
+    if (e.target.id === 'pdf2jpgRememberCheck' && !e.target.checked) {
+      clearPreset('pdf2jpg');
     }
   });
 

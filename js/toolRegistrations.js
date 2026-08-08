@@ -233,6 +233,9 @@ registerTool('pdf2jpg', {
   hide:      hidePdf2JpgOptions,
   getParams: getPdf2JpgParams,
   validate:  p => p.pages.length === 0 ? t('val_select_page') : null,
+  // pages is this document's own page selection, not a reusable setting —
+  // stripped, leaving only pdf2jpgUI.js's own output settings.
+  presetFilter: ({ format, dpi, zip }) => ({ format, dpi, zip }),
 });
 
 registerTool('watermark', {
