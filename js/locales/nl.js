@@ -13,6 +13,7 @@ window.PDFREE_LOCALE = {
     redact:           ['redigeren', 'verbergen', 'bedekken', 'zwart maken', 'censureren', 'onherkenbaar maken', 'vervagen'],
     rotate:           ['roteren', 'draaien', 'kantelen', 'oriëntatie', 'liggend', 'staand'],
     organize:         ['organiseren', 'herschikken', "pagina's sorteren", 'paginavolgorde'],
+    resize:           ['formaat wijzigen', 'passend maken op pagina', 'papierformaat', 'afdrukformaat', 'pdf voor afdrukken', 'schalen', 'verkleinen voor afdrukken'],
     extract:          ['extraheren', 'pagina\'s nemen', 'pagina\'s selecteren', 'pagina\'s ophalen'],
     watermark:        ['watermerk', 'stempel', 'tekst overlay', 'merk', 'diagonaal', 'tekst toevoegen'],
     pagenum:          ['paginanummers', 'nummering', 'paginering', 'voettekst', 'pagina\'s nummeren'],
@@ -110,6 +111,7 @@ window.PDFREE_LOCALE = {
   prog_protect:      'PDF versleutelen...',
   prog_rotate:       'Rotaties toepassen...',
   prog_organize:     'PDF wordt herbouwd...',
+  prog_resize:       "Pagina's worden aangepast...",
   prog_flatten:      'Formuliervelden vergrendelen...',
 
   // ── processor.js — batch queue (compress/watermark/protect/pagenum/flatten, 2+ files) ──
@@ -138,6 +140,7 @@ window.PDFREE_LOCALE = {
   desc_protect:             'Beveiligd met wachtwoord · {pages} pagina\'s · {size}{extra}',
   desc_rotate:              'Geroteerd · {pages} pagina\'s · {size}',
   desc_organize:            "Georganiseerd · {pages} pagina's · {size}",
+  desc_resize:              "Formaat aangepast · {pages} pagina's · {size}",
   desc_redact:              'Gebieden verborgen · {pages} pagina\'s · {size}',
   desc_fill:                'Formulier ingevuld · {pages} pagina\'s · {size}',
   warn_fill_skip_one:       '{n} veld kon niet worden ingevuld en is overgeslagen — controleer de gedownloade PDF.',
@@ -284,6 +287,29 @@ window.PDFREE_LOCALE = {
   org_btn_one:            '🗂️ {n} pagina opslaan',
   org_btn_many:           "🗂️ {n} pagina's opslaan",
   val_organize_no_pages:  "Verwijder minder pagina's — er moet er minstens één overblijven.",
+
+  // ── resizeUI.js ──────────────────────────────────────────────
+  rsz_loading: 'PDF laden…',
+  rsz_err_load: 'Kon PDF niet lezen: {msg}',
+  rsz_preview_alt: 'Voorbeeld pagina 1',
+  rsz_paper_size: 'Papierformaat',
+  rsz_mode: 'Aanpassingsmodus',
+  rsz_margin: 'Marge',
+  rsz_orientation: 'Oriëntatie',
+  rsz_mode_fit: 'Passend maken',
+  rsz_mode_fill: 'Vullen',
+  rsz_mode_actual: 'Werkelijke grootte',
+  rsz_margin_none: 'Geen',
+  rsz_margin_small: 'Klein',
+  rsz_margin_normal: 'Normaal',
+  rsz_margin_large: 'Groot',
+  rsz_orient_auto: 'Automatisch — volgt bron-oriëntatie',
+  rsz_orient_portrait: 'Staand',
+  rsz_orient_landscape: 'Liggend',
+  rsz_summary: '{from} → {to} · Schaal {pct}%',
+  rsz_summary_no_shrink: '{from} → {to} · Geen verkleining nodig',
+  rsz_clip_warning: '⚠️ Inhoud is groter dan de pagina — randen worden bijgesneden',
+  rsz_banner: '🔒 Volledig verwerkt in je browser · Geen upload',
 
   // search
   search_placeholder: 'PDF samenvoegen, comprimeren, splitsen, watermerk, PDF naar Word…',

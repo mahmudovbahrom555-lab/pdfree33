@@ -13,6 +13,7 @@ window.PDFREE_LOCALE = {
     redact:           ['tachar', 'ocultar', 'cubrir', 'censurar', 'tapar texto', 'difuminar', 'borrar texto'],
     rotate:           ['rotar', 'girar', 'orientación', 'voltear', 'horizontal', 'vertical'],
     organize:         ['organizar', 'reordenar', 'eliminar páginas', 'ordenar páginas', 'orden de páginas'],
+    resize:           ['redimensionar', 'ajustar a la página', 'tamaño de papel', 'tamaño de impresión', 'pdf para imprimir', 'escalar', 'reducir para imprimir'],
     extract:          ['extraer', 'sacar páginas', 'seleccionar páginas', 'obtener páginas'],
     watermark:        ['marca de agua', 'sello', 'superponer texto', 'marca', 'diagonal', 'añadir texto'],
     pagenum:          ['números de página', 'numeración', 'paginación', 'pie de página', 'numerar páginas'],
@@ -110,6 +111,7 @@ window.PDFREE_LOCALE = {
   prog_protect:      'Cifrando PDF...',
   prog_rotate:       'Aplicando rotaciones...',
   prog_organize:     'Reconstruyendo el PDF...',
+  prog_resize:       'Ajustando páginas...',
   prog_flatten:      'Bloqueando campos del formulario...',
 
   // ── processor.js — batch queue (compress/watermark/protect/pagenum/flatten, 2+ files) ──
@@ -138,6 +140,7 @@ window.PDFREE_LOCALE = {
   desc_protect:             'Protegido con contraseña · {pages} páginas · {size}{extra}',
   desc_rotate:              'Rotado · {pages} páginas · {size}',
   desc_organize:            'Organizado · {pages} páginas · {size}',
+  desc_resize:              'Redimensionado · {pages} páginas · {size}',
   desc_redact:              'Áreas cubiertas · {pages} páginas · {size}',
   desc_fill:                'Formulario completado · {pages} páginas · {size}',
   warn_fill_skip_one:       '{n} campo no se pudo rellenar y se omitió — revisa el PDF descargado.',
@@ -284,6 +287,29 @@ window.PDFREE_LOCALE = {
   org_btn_one:            '🗂️ Guardar {n} página',
   org_btn_many:           '🗂️ Guardar {n} páginas',
   val_organize_no_pages:  'Elimina menos páginas — debe quedar al menos una.',
+
+  // ── resizeUI.js ──────────────────────────────────────────────
+  rsz_loading: 'Cargando PDF…',
+  rsz_err_load: 'No se pudo leer el PDF: {msg}',
+  rsz_preview_alt: 'Vista previa de la página 1',
+  rsz_paper_size: 'Tamaño de papel',
+  rsz_mode: 'Modo de ajuste',
+  rsz_margin: 'Margen',
+  rsz_orientation: 'Orientación',
+  rsz_mode_fit: 'Ajustar',
+  rsz_mode_fill: 'Rellenar',
+  rsz_mode_actual: 'Tamaño real',
+  rsz_margin_none: 'Ninguno',
+  rsz_margin_small: 'Pequeño',
+  rsz_margin_normal: 'Normal',
+  rsz_margin_large: 'Grande',
+  rsz_orient_auto: 'Automático — según orientación original',
+  rsz_orient_portrait: 'Vertical',
+  rsz_orient_landscape: 'Horizontal',
+  rsz_summary: '{from} → {to} · Escala {pct}%',
+  rsz_summary_no_shrink: '{from} → {to} · No es necesario reducir',
+  rsz_clip_warning: '⚠️ El contenido es más grande que la página — los bordes se recortarán',
+  rsz_banner: '🔒 Procesado totalmente en tu navegador · Sin subida',
 
   // search
   search_placeholder: 'unir PDF, comprimir, rotar, marca de agua, PDF a Word…',

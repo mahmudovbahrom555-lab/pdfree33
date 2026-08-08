@@ -40,6 +40,8 @@ import { initRotateOptions, hideRotateOptions,
          getRotateParams }              from './rotateUI.js';
 import { initOrganizeOptions, hideOrganizeOptions,
          getOrganizeParams }            from './organizeUI.js';
+import { initResizeOptions, hideResizeOptions,
+         getResizeParams }              from './resizeUI.js';
 import { initRedactOptions, hideRedactOptions,
          getRedactParams }                from './redactUI.js';
 import { initDraw, loadPdfFile, resetDraw } from './drawUI.js';
@@ -319,6 +321,17 @@ registerTool('organize', {
   // No presetFilter — page order/deletions/rotations are 100% specific to
   // this document, same reasoning that excludes rotate entirely and strips
   // exifAngles/pages from jpg2pdf's and pdf2jpg's presets.
+});
+
+registerTool('resize', {
+  runner:     'resize', // dedicated js/resizeWorker.js, not the shared js/worker.js — see processor.js's _runResize
+  init:       initResizeOptions,
+  hide:       hideResizeOptions,
+  getParams:  getResizeParams,
+  // Unlike rotate/organize, every field here (paper size, mode, margin,
+  // orientation) is a genuine cross-document preference, not per-document
+  // state — safe to persist as-is, same class as jpg2pdf/pdf2jpg's presets.
+  presetFilter: (p) => ({ ...p }),
 });
 
 registerTool('protect', {

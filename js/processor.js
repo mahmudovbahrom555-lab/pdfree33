@@ -284,6 +284,7 @@ export async function doProcess(currentTool, extraParams = {}) {
     unlock:       () => _runUnlock(filesSnapshot, extraParams),
     worker:       () => _runWorkerTool(getWorkerTool(currentTool) ?? currentTool, filesSnapshot, extraParams),
     organize:     () => _runOrganize(filesSnapshot, extraParams),
+    resize:       () => _runResize(filesSnapshot, extraParams),
     'redact-true': () => _runRedactTrue(filesSnapshot, extraParams),
   };
 
@@ -579,6 +580,64 @@ async function _runOrganize(filesSnapshot, { pageOrder = [] } = {}) {
     setFilesLocked(false);
     hideCancelBtn();
     _handleError('organize', e.message || 'Worker error');
+  };
+}
+
+// ── Resize (fit/fill/actual-size onto a target paper size) ──────
+//
+// Own persistent Worker instance, same rationale as _organizeWorker above:
+// js/worker.js is off-limits and importScripts('pdf-lib.min.js') is worth
+// paying once per session, not once per submission.
+let _resizeWorker = null;
+function _ensureResizeWorker() {
+  if (!_resizeWorker) {
+    _resizeWorker = new Worker(new URL('./resizeWorker.js', import.meta.url));
+  }
+  return _resizeWorker;
+}
+
+async function _runResize(filesSnapshot, { targetSize = 'a4', mode = 'fit', marginPt = 28, orientation = 'auto' } = {}) {
+  if (!_checkSize(filesSnapshot[0], 200)) { _abortUI(); return; }
+  const file   = filesSnapshot[0];
+  const buffer = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await file.arrayBuffer());
+  setProgress(5, t('prog_resize'));
+
+  const worker = _ensureResizeWorker();
+  worker.postMessage({ file: buffer, options: { targetSize, mode, marginPt, orientation } }, [buffer]);
+
+  worker.onmessage = (e) => {
+    const data = e.data;
+    if (data.type === 'progress') {
+      setProgress(data.value, data.label);
+    } else if (data.type === 'done') {
+      if (!(data.result instanceof ArrayBuffer)) {
+        _handleError('resize', 'Unexpected result from worker'); return;
+      }
+      isProcessing = false;
+      setFilesLocked(false);
+      hideCancelBtn();
+      setProgress(100, t('prog_done'));
+
+      const blob     = new Blob([data.result], { type: 'application/pdf' });
+      const base     = file.name.replace(/\.pdf$/i, '');
+      const filename = `${base}-resized.pdf`;
+      const desc     = t('desc_resize', { pages: data.pageCount, size: fmtSize(blob.size) });
+
+      document.dispatchEvent(new CustomEvent('pdfree:success', {
+        detail: { tool: 'resize', blob, desc, filename }
+      }));
+    } else if (data.type === 'error') {
+      isProcessing = false;
+      setFilesLocked(false);
+      hideCancelBtn();
+      _handleError('resize', data.message);
+    }
+  };
+  worker.onerror = (e) => {
+    isProcessing = false;
+    setFilesLocked(false);
+    hideCancelBtn();
+    _handleError('resize', e.message || 'Worker error');
   };
 }
 

@@ -14,6 +14,7 @@ window.PDFREE_LOCALE = {
     redact:           ['скрыть', 'закрасить', 'цензура', 'затемнить', 'спрятать текст', 'удалить текст', 'замазать'],
     rotate:           ['повернуть', 'поворот', 'переворот', 'альбомная', 'книжная', 'ориентация'],
     organize:         ['упорядочить', 'изменить порядок', 'удалить страницы', 'сортировать страницы', 'порядок страниц'],
+    resize:           ['изменить размер', 'подогнать под страницу', 'размер бумаги', 'размер для печати', 'pdf для печати', 'масштабировать', 'уменьшить для печати'],
     extract:          ['извлечь', 'извлечь страницы', 'выбрать страницы', 'получить страницы'],
     watermark:        ['водяной знак', 'штамп', 'наложить текст', 'бренд', 'добавить текст'],
     pagenum:          ['номера страниц', 'нумерация', 'постраничная нумерация', 'добавить номер страницы'],
@@ -111,6 +112,7 @@ window.PDFREE_LOCALE = {
   prog_protect:      'Шифрование PDF...',
   prog_rotate:       'Применение поворота...',
   prog_organize:     'Пересборка PDF...',
+  prog_resize:       'Изменение размера страниц...',
   prog_flatten:      'Блокировка полей формы...',
 
   // ── processor.js — batch queue (compress/watermark/protect/pagenum/flatten, 2+ files) ──
@@ -139,6 +141,7 @@ window.PDFREE_LOCALE = {
   desc_protect:             'Защищено паролем · {pages} стр. · {size}{extra}',
   desc_rotate:              'Повёрнуто · {pages} стр. · {size}',
   desc_organize:            'Упорядочено · {pages} стр. · {size}',
+  desc_resize:              'Размер изменён · {pages} стр. · {size}',
   desc_redact:              'Области закрашены · {pages} стр. · {size}',
   desc_fill:                'Форма заполнена · {pages} стр. · {size}',
   warn_fill_skip_one:       '{n} поле не удалось заполнить, оно было пропущено — проверьте скачанный PDF.',
@@ -285,6 +288,29 @@ window.PDFREE_LOCALE = {
   org_btn_one:            '🗂️ Сохранить {n} страницу',
   org_btn_many:           '🗂️ Сохранить страниц: {n}',
   val_organize_no_pages:  'Удалите меньше страниц — должна остаться хотя бы одна.',
+
+  // ── resizeUI.js ──────────────────────────────────────────────
+  rsz_loading: 'Загрузка PDF…',
+  rsz_err_load: 'Не удалось прочитать PDF: {msg}',
+  rsz_preview_alt: 'Предпросмотр страницы 1',
+  rsz_paper_size: 'Размер бумаги',
+  rsz_mode: 'Режим подгонки',
+  rsz_margin: 'Поля',
+  rsz_orientation: 'Ориентация',
+  rsz_mode_fit: 'Вписать',
+  rsz_mode_fill: 'Заполнить',
+  rsz_mode_actual: 'Реальный размер',
+  rsz_margin_none: 'Без полей',
+  rsz_margin_small: 'Малые',
+  rsz_margin_normal: 'Обычные',
+  rsz_margin_large: 'Большие',
+  rsz_orient_auto: 'Авто — как в исходном документе',
+  rsz_orient_portrait: 'Книжная',
+  rsz_orient_landscape: 'Альбомная',
+  rsz_summary: '{from} → {to} · Масштаб {pct}%',
+  rsz_summary_no_shrink: '{from} → {to} · Уменьшение не требуется',
+  rsz_clip_warning: '⚠️ Содержимое больше страницы — края будут обрезаны',
+  rsz_banner: '🔒 Полностью обрабатывается в браузере · Без загрузки на сервер',
 
   // search
   search_placeholder: 'объединить pdf, сжать, повернуть, водяной знак, pdf в word…',

@@ -14,6 +14,7 @@ window.PDFREE_LOCALE = {
     redact:           ['schwärzen', 'verstecken', 'abdecken', 'zensieren', 'unkenntlich machen', 'text schwärzen'],
     rotate:           ['drehen', 'ausrichtung', 'wenden', 'querformat', 'hochformat'],
     organize:         ['organisieren', 'seiten sortieren', 'neu anordnen', 'seitenreihenfolge'],
+    resize:           ['größe ändern', 'an seite anpassen', 'papierformat', 'druckgröße', 'pdf für druck', 'skalieren', 'verkleinern für druck'],
     extract:          ['extrahieren', 'seiten entnehmen', 'seiten auswählen', 'seiten herausnehmen'],
     watermark:        ['wasserzeichen', 'stempel', 'text einfügen', 'branding', 'diagonal', 'text hinzufügen'],
     pagenum:          ['seitenzahlen', 'nummerierung', 'paginierung', 'fußzeile', 'seiten nummerieren'],
@@ -111,6 +112,7 @@ window.PDFREE_LOCALE = {
   prog_protect:      'PDF wird verschlüsselt...',
   prog_rotate:       'Drehungen werden angewendet...',
   prog_organize:     'PDF wird neu aufgebaut...',
+  prog_resize:       'Seiten werden angepasst...',
   prog_flatten:      'Formularfelder werden fixiert...',
 
   // ── processor.js — batch queue (compress/watermark/protect/pagenum/flatten, 2+ files) ──
@@ -139,6 +141,7 @@ window.PDFREE_LOCALE = {
   desc_protect:             'Passwortgeschützt · {pages} Seiten · {size}{extra}',
   desc_rotate:              'Gedreht · {pages} Seiten · {size}',
   desc_organize:            'Organisiert · {pages} Seiten · {size}',
+  desc_resize:              'Größe angepasst · {pages} Seiten · {size}',
   desc_redact:              'Bereiche abgedeckt · {pages} Seiten · {size}',
   desc_fill:                'Formular ausgefüllt · {pages} Seiten · {size}',
   warn_fill_skip_one:       '{n} Feld konnte nicht ausgefüllt werden und wurde übersprungen — bitte die heruntergeladene PDF prüfen.',
@@ -285,6 +288,29 @@ window.PDFREE_LOCALE = {
   org_btn_one:            '🗂️ {n} Seite speichern',
   org_btn_many:           '🗂️ {n} Seiten speichern',
   val_organize_no_pages:  'Lösche weniger Seiten — mindestens eine muss übrig bleiben.',
+
+  // ── resizeUI.js ──────────────────────────────────────────────
+  rsz_loading: 'PDF wird geladen…',
+  rsz_err_load: 'PDF konnte nicht gelesen werden: {msg}',
+  rsz_preview_alt: 'Vorschau Seite 1',
+  rsz_paper_size: 'Papierformat',
+  rsz_mode: 'Anpassungsmodus',
+  rsz_margin: 'Rand',
+  rsz_orientation: 'Ausrichtung',
+  rsz_mode_fit: 'Einpassen',
+  rsz_mode_fill: 'Ausfüllen',
+  rsz_mode_actual: 'Originalgröße',
+  rsz_margin_none: 'Kein',
+  rsz_margin_small: 'Klein',
+  rsz_margin_normal: 'Normal',
+  rsz_margin_large: 'Groß',
+  rsz_orient_auto: 'Automatisch — an Quellausrichtung anpassen',
+  rsz_orient_portrait: 'Hochformat',
+  rsz_orient_landscape: 'Querformat',
+  rsz_summary: '{from} → {to} · Skalierung {pct}%',
+  rsz_summary_no_shrink: '{from} → {to} · Keine Verkleinerung nötig',
+  rsz_clip_warning: '⚠️ Inhalt ist größer als die Seite — Ränder werden abgeschnitten',
+  rsz_banner: '🔒 Vollständig in deinem Browser verarbeitet · Kein Upload',
 
   // search
   search_placeholder: 'PDF zusammenfügen, komprimieren, drehen, Wasserzeichen, PDF zu Word…',

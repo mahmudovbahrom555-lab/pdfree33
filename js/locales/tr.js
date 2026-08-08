@@ -13,6 +13,7 @@ window.PDFREE_LOCALE = {
     redact:           ['sansürle', 'gizle', 'karart', 'kapat', 'sakla', 'metni sil', 'maskele'],
     rotate:           ['döndür', 'çevir', 'yönlendirme', 'yatay', 'dikey', 'sayfa döndür'],
     organize:         ['düzenle', 'yeniden sırala', 'sayfa sil', 'sayfaları sırala', 'sayfa sırası'],
+    resize:           ['boyutlandır', 'sayfaya sığdır', 'kağıt boyutu', 'baskı boyutu', 'yazdırma için pdf', 'pdf ölçekle', 'baskı için küçült'],
     extract:          ['sayfa al', 'sayfa seç', 'sayfaları çıkar', 'sayfa ayıkla', 'sayfa çıkarma'],
     watermark:        ['filigran', 'damga', 'yazı ekle', 'marka', 'çapraz yazı'],
     pagenum:          ['sayfa numarası', 'numaralandırma', 'alt bilgi', 'sayfa numaralama', 'sayfa no ekle'],
@@ -110,6 +111,7 @@ window.PDFREE_LOCALE = {
   prog_protect:      'PDF şifreleniyor...',
   prog_rotate:       'Rotasyonlar uygulanıyor...',
   prog_organize:     'PDF yeniden oluşturuluyor...',
+  prog_resize:       'Sayfa boyutu değiştiriliyor...',
   prog_flatten:      'Form alanları kilitleniyor...',
 
   // ── processor.js — batch queue (compress/watermark/protect/pagenum/flatten, 2+ files) ──
@@ -138,6 +140,7 @@ window.PDFREE_LOCALE = {
   desc_protect:             'Parolayla korundu · {pages} sayfa · {size}{extra}',
   desc_rotate:              'Döndürüldü · {pages} sayfa · {size}',
   desc_organize:            'Düzenlendi · {pages} sayfa · {size}',
+  desc_resize:              'Boyut değiştirildi · {pages} sayfa · {size}',
   desc_redact:              'Alanlar gizlendi · {pages} sayfa · {size}',
   desc_fill:                'Form dolduruldu · {pages} sayfa · {size}',
   warn_fill_skip_one:       "{n} alan doldurulamadı ve atlandı — lütfen indirilen PDF'yi kontrol edin.",
@@ -284,6 +287,29 @@ window.PDFREE_LOCALE = {
   org_btn_one:            '🗂️ {n} sayfayı kaydet',
   org_btn_many:           '🗂️ {n} sayfayı kaydet',
   val_organize_no_pages:  'Daha az sayfa silin — en az bir sayfa kalmalı.',
+
+  // ── resizeUI.js ──────────────────────────────────────────────
+  rsz_loading: 'PDF yükleniyor…',
+  rsz_err_load: 'PDF okunamadı: {msg}',
+  rsz_preview_alt: '1. sayfa önizlemesi',
+  rsz_paper_size: 'Kağıt boyutu',
+  rsz_mode: 'Sığdırma modu',
+  rsz_margin: 'Kenar boşluğu',
+  rsz_orientation: 'Yön',
+  rsz_mode_fit: 'Sığdır',
+  rsz_mode_fill: 'Doldur',
+  rsz_mode_actual: 'Gerçek boyut',
+  rsz_margin_none: 'Yok',
+  rsz_margin_small: 'Küçük',
+  rsz_margin_normal: 'Normal',
+  rsz_margin_large: 'Büyük',
+  rsz_orient_auto: 'Otomatik — kaynak yönüne uyar',
+  rsz_orient_portrait: 'Dikey',
+  rsz_orient_landscape: 'Yatay',
+  rsz_summary: '{from} → {to} · Ölçek %{pct}',
+  rsz_summary_no_shrink: '{from} → {to} · Küçültme gerekmiyor',
+  rsz_clip_warning: '⚠️ İçerik sayfadan büyük — kenarlar kırpılacak',
+  rsz_banner: '🔒 Tamamen tarayıcınızda işlenir · Yükleme yok',
 
   // search
   search_placeholder: 'PDF birleştir, sıkıştır, böl, filigran, PDF\'den Word\'e…',

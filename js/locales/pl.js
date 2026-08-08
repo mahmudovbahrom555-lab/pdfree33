@@ -13,6 +13,7 @@ window.PDFREE_LOCALE = {
     redact:           ['ukryj', 'zaczernij', 'cenzura', 'zamaskuj', 'ukryj tekst', 'usuń tekst', 'zamalowanie'],
     rotate:           ['obróć', 'obracanie', 'odwróć', 'pozioma', 'pionowa', 'orientacja'],
     organize:         ['organizuj', 'zmień kolejność', 'usuń strony', 'sortuj strony', 'kolejność stron'],
+    resize:           ['zmień rozmiar', 'dopasuj do strony', 'rozmiar papieru', 'rozmiar do druku', 'pdf do druku', 'skaluj pdf', 'zmniejsz do druku'],
     extract:          ['wyodrębnij', 'wyodrębnij strony', 'wybierz strony', 'pobierz strony'],
     watermark:        ['znak wodny', 'pieczątka', 'nakładka tekstowa', 'marka', 'dodaj tekst'],
     pagenum:          ['numery stron', 'numeracja', 'paginacja', 'stopka', 'numeruj strony'],
@@ -110,6 +111,7 @@ window.PDFREE_LOCALE = {
   prog_protect:      'Szyfrowanie PDF...',
   prog_rotate:       'Stosowanie rotacji...',
   prog_organize:     'Odbudowywanie PDF...',
+  prog_resize:       'Zmiana rozmiaru stron...',
   prog_flatten:      'Blokowanie pól formularza...',
 
   // ── processor.js — batch queue (compress/watermark/protect/pagenum/flatten, 2+ files) ──
@@ -138,6 +140,7 @@ window.PDFREE_LOCALE = {
   desc_protect:             'Zabezpieczono hasłem · {pages} stron · {size}{extra}',
   desc_rotate:              'Obrócono · {pages} stron · {size}',
   desc_organize:            'Uporządkowano · {pages} stron · {size}',
+  desc_resize:              'Zmieniono rozmiar · {pages} stron · {size}',
   desc_redact:              'Ukryto obszary · {pages} stron · {size}',
   desc_fill:                'Wypełniono formularz · {pages} stron · {size}',
   warn_fill_skip_one:       '{n} pole nie mogło zostać wypełnione i zostało pominięte — sprawdź pobrany plik PDF.',
@@ -284,6 +287,29 @@ window.PDFREE_LOCALE = {
   org_btn_one:            '🗂️ Zapisz {n} stronę',
   org_btn_many:           '🗂️ Zapisz stron: {n}',
   val_organize_no_pages:  'Usuń mniej stron — musi zostać przynajmniej jedna.',
+
+  // ── resizeUI.js ──────────────────────────────────────────────
+  rsz_loading: 'Wczytywanie PDF…',
+  rsz_err_load: 'Nie można odczytać PDF: {msg}',
+  rsz_preview_alt: 'Podgląd strony 1',
+  rsz_paper_size: 'Rozmiar papieru',
+  rsz_mode: 'Tryb dopasowania',
+  rsz_margin: 'Margines',
+  rsz_orientation: 'Orientacja',
+  rsz_mode_fit: 'Dopasuj',
+  rsz_mode_fill: 'Wypełnij',
+  rsz_mode_actual: 'Rozmiar rzeczywisty',
+  rsz_margin_none: 'Brak',
+  rsz_margin_small: 'Mały',
+  rsz_margin_normal: 'Normalny',
+  rsz_margin_large: 'Duży',
+  rsz_orient_auto: 'Automatycznie — dopasuj do orientacji źródła',
+  rsz_orient_portrait: 'Pionowa',
+  rsz_orient_landscape: 'Pozioma',
+  rsz_summary: '{from} → {to} · Skala {pct}%',
+  rsz_summary_no_shrink: '{from} → {to} · Zmniejszenie niepotrzebne',
+  rsz_clip_warning: '⚠️ Zawartość jest większa niż strona — krawędzie zostaną przycięte',
+  rsz_banner: '🔒 Przetwarzane w całości w przeglądarce · Bez przesyłania',
 
   // search
   search_placeholder: 'Połącz PDF, kompresuj, podziel, znak wodny, PDF do Word…',

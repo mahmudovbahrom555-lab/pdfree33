@@ -14,6 +14,7 @@ window.PDFREE_LOCALE = {
     redact:           ['che thông tin', 'xóa thông tin', 'kiểm duyệt', 'làm mờ', 'ẩn văn bản', 'tô đen', 'che'],
     rotate:           ['xoay', 'xoay trang', 'lật trang', 'hướng trang', 'ngang', 'dọc'],
     organize:         ['sắp xếp', 'sắp xếp lại', 'xóa trang', 'sắp xếp trang', 'thứ tự trang'],
+    resize:           ['đổi kích thước', 'vừa khít trang', 'khổ giấy', 'kích thước in', 'pdf để in', 'thay đổi tỷ lệ', 'thu nhỏ để in'],
     extract:          ['trích trang', 'chọn trang', 'lấy trang', 'tách trang riêng', 'trích xuất trang'],
     watermark:        ['hình mờ', 'đóng dấu', 'chèn chữ', 'watermark', 'thương hiệu'],
     pagenum:          ['đánh số trang', 'số trang', 'chân trang', 'thêm số trang', 'số thứ tự trang'],
@@ -111,6 +112,7 @@ window.PDFREE_LOCALE = {
   prog_protect:      'Đang mã hóa PDF...',
   prog_rotate:       'Đang áp dụng xoay...',
   prog_organize:     'Đang xây dựng lại PDF...',
+  prog_resize:       'Đang thay đổi kích thước trang...',
   prog_flatten:      'Đang khóa trường biểu mẫu...',
 
   // ── processor.js — batch queue (compress/watermark/protect/pagenum/flatten, 2+ files) ──
@@ -139,6 +141,7 @@ window.PDFREE_LOCALE = {
   desc_protect:             'Bảo vệ bằng mật khẩu · {pages} trang · {size}{extra}',
   desc_rotate:              'Đã xoay · {pages} trang · {size}',
   desc_organize:            'Đã sắp xếp · {pages} trang · {size}',
+  desc_resize:              'Đã đổi kích thước · {pages} trang · {size}',
   desc_redact:              'Đã che vùng · {pages} trang · {size}',
   desc_fill:                'Đã điền biểu mẫu · {pages} trang · {size}',
   warn_fill_skip_one:       'Có {n} trường không thể điền và đã bị bỏ qua — vui lòng kiểm tra PDF đã tải xuống.',
@@ -285,6 +288,29 @@ window.PDFREE_LOCALE = {
   org_btn_one:            '🗂️ Lưu {n} trang',
   org_btn_many:           '🗂️ Lưu {n} trang',
   val_organize_no_pages:  'Xóa ít trang hơn — phải còn lại ít nhất một trang.',
+
+  // ── resizeUI.js ──────────────────────────────────────────────
+  rsz_loading: 'Đang tải PDF…',
+  rsz_err_load: 'Không thể đọc PDF: {msg}',
+  rsz_preview_alt: 'Xem trước trang 1',
+  rsz_paper_size: 'Khổ giấy',
+  rsz_mode: 'Chế độ vừa khít',
+  rsz_margin: 'Lề',
+  rsz_orientation: 'Hướng trang',
+  rsz_mode_fit: 'Vừa khít',
+  rsz_mode_fill: 'Lấp đầy',
+  rsz_mode_actual: 'Kích thước gốc',
+  rsz_margin_none: 'Không',
+  rsz_margin_small: 'Nhỏ',
+  rsz_margin_normal: 'Bình thường',
+  rsz_margin_large: 'Lớn',
+  rsz_orient_auto: 'Tự động — theo hướng trang gốc',
+  rsz_orient_portrait: 'Dọc',
+  rsz_orient_landscape: 'Ngang',
+  rsz_summary: '{from} → {to} · Tỷ lệ {pct}%',
+  rsz_summary_no_shrink: '{from} → {to} · Không cần thu nhỏ',
+  rsz_clip_warning: '⚠️ Nội dung lớn hơn trang giấy — các cạnh sẽ bị cắt',
+  rsz_banner: '🔒 Xử lý hoàn toàn trong trình duyệt của bạn · Không tải lên',
 
   // search
   search_placeholder: 'gộp PDF, nén, xoay, watermark, PDF sang Word…',

@@ -14,6 +14,7 @@ window.PDFREE_LOCALE = {
     redact:           ['sensor', 'hitamkan', 'sembunyikan', 'tutupi teks', 'coret', 'hapus teks', 'blokir informasi'],
     rotate:           ['putar', 'rotasi', 'balik halaman', 'orientasi', 'lanskap', 'potret'],
     organize:         ['atur halaman', 'urutkan ulang', 'hapus halaman', 'susun halaman', 'urutan halaman'],
+    resize:           ['ubah ukuran', 'sesuaikan ke halaman', 'ukuran kertas', 'ukuran cetak', 'pdf untuk cetak', 'skala pdf', 'perkecil untuk cetak'],
     extract:          ['ambil halaman', 'pilih halaman', 'keluarkan halaman', 'ekstrak halaman', 'ekstrak'],
     watermark:        ['tanda air', 'stempel', 'cap air', 'tambah teks', 'watermark', 'merek'],
     pagenum:          ['nomor halaman', 'penomoran', 'footer', 'tambah nomor halaman', 'nomor otomatis'],
@@ -111,6 +112,7 @@ window.PDFREE_LOCALE = {
   prog_protect:      'Mengenkripsi PDF...',
   prog_rotate:       'Menerapkan rotasi...',
   prog_organize:     'Membangun ulang PDF...',
+  prog_resize:       'Mengubah ukuran halaman...',
   prog_flatten:      'Mengunci bidang formulir...',
 
   // ── processor.js — batch queue (compress/watermark/protect/pagenum/flatten, 2+ files) ──
@@ -139,6 +141,7 @@ window.PDFREE_LOCALE = {
   desc_protect:             'Dilindungi kata sandi · {pages} halaman · {size}{extra}',
   desc_rotate:              'Diputar · {pages} halaman · {size}',
   desc_organize:            'Diatur · {pages} halaman · {size}',
+  desc_resize:              'Ukuran diubah · {pages} halaman · {size}',
   desc_redact:              'Area ditutup · {pages} halaman · {size}',
   desc_fill:                'Formulir diisi · {pages} halaman · {size}',
   warn_fill_skip_one:       '{n} kolom tidak dapat diisi dan dilewati — silakan periksa PDF yang diunduh.',
@@ -285,6 +288,29 @@ window.PDFREE_LOCALE = {
   org_btn_one:            '🗂️ Simpan {n} halaman',
   org_btn_many:           '🗂️ Simpan {n} halaman',
   val_organize_no_pages:  'Hapus lebih sedikit halaman — minimal satu harus tersisa.',
+
+  // ── resizeUI.js ──────────────────────────────────────────────
+  rsz_loading: 'Memuat PDF…',
+  rsz_err_load: 'Tidak dapat membaca PDF: {msg}',
+  rsz_preview_alt: 'Pratinjau halaman 1',
+  rsz_paper_size: 'Ukuran kertas',
+  rsz_mode: 'Mode penyesuaian',
+  rsz_margin: 'Margin',
+  rsz_orientation: 'Orientasi',
+  rsz_mode_fit: 'Sesuaikan',
+  rsz_mode_fill: 'Penuhi',
+  rsz_mode_actual: 'Ukuran asli',
+  rsz_margin_none: 'Tanpa',
+  rsz_margin_small: 'Kecil',
+  rsz_margin_normal: 'Normal',
+  rsz_margin_large: 'Besar',
+  rsz_orient_auto: 'Otomatis — sesuai orientasi sumber',
+  rsz_orient_portrait: 'Potret',
+  rsz_orient_landscape: 'Lanskap',
+  rsz_summary: '{from} → {to} · Skala {pct}%',
+  rsz_summary_no_shrink: '{from} → {to} · Tidak perlu diperkecil',
+  rsz_clip_warning: '⚠️ Konten lebih besar dari halaman — tepi akan terpotong',
+  rsz_banner: '🔒 Diproses sepenuhnya di browser Anda · Tanpa unggah',
 
   // search
   search_placeholder: 'gabungkan PDF, kompres, putar, tanda air, PDF ke Word…',

@@ -15,6 +15,7 @@ window.PDFREE_LOCALE = {
     redact:           ['가리기', '숨기기', '검열', '검게 칠하기', '마스킹', '블러', '텍스트 삭제'],
     rotate:           ['회전', '돌리기', '방향', '가로', '세로', '회전하기'],
     organize:         ['정리', '순서 변경', '페이지 삭제', '페이지 정렬', '페이지 순서'],
+    resize:           ['크기 조정', '페이지에 맞추기', '용지 크기', '인쇄 크기', '인쇄용 pdf', '배율 조정', '인쇄용 축소'],
     extract:          ['추출', '페이지 추출', '페이지 선택', '페이지 가져오기'],
     watermark:        ['워터마크', '스탬프', '텍스트 삽입', '로고 삽입', '대각선', '텍스트 추가'],
     pagenum:          ['페이지 번호', '번호 매기기', '쪽번호', '바닥글', '페이지 넘버링'],
@@ -112,6 +113,7 @@ window.PDFREE_LOCALE = {
   prog_protect:      'PDF 암호화 중...',
   prog_rotate:       '회전 적용 중...',
   prog_organize:     'PDF 재구성 중...',
+  prog_resize:       '페이지 크기 조정 중...',
   prog_flatten:      '양식 필드 잠금 중...',
 
   // ── processor.js — batch queue (compress/watermark/protect/pagenum/flatten, 2+ files) ──
@@ -140,6 +142,7 @@ window.PDFREE_LOCALE = {
   desc_protect:             '비밀번호로 보호됨 · {pages}페이지 · {size}{extra}',
   desc_rotate:              '회전됨 · {pages}페이지 · {size}',
   desc_organize:            '정리됨 · {pages}페이지 · {size}',
+  desc_resize:              '크기 조정됨 · {pages}페이지 · {size}',
   desc_redact:              '영역 가려짐 · {pages}페이지 · {size}',
   desc_fill:                '양식 작성됨 · {pages}페이지 · {size}',
   warn_fill_skip_one:       '{n}개 필드를 채우지 못해 건너뛰었습니다 — 다운로드한 PDF를 확인해 주세요.',
@@ -286,6 +289,29 @@ window.PDFREE_LOCALE = {
   org_btn_one:            '🗂️ {n}페이지 저장',
   org_btn_many:           '🗂️ {n}페이지 저장',
   val_organize_no_pages:  '삭제하는 페이지 수를 줄이세요 — 최소 한 페이지는 남아 있어야 합니다.',
+
+  // ── resizeUI.js ──────────────────────────────────────────────
+  rsz_loading: 'PDF 불러오는 중…',
+  rsz_err_load: 'PDF를 읽을 수 없습니다: {msg}',
+  rsz_preview_alt: '1페이지 미리보기',
+  rsz_paper_size: '용지 크기',
+  rsz_mode: '맞춤 모드',
+  rsz_margin: '여백',
+  rsz_orientation: '방향',
+  rsz_mode_fit: '맞추기',
+  rsz_mode_fill: '채우기',
+  rsz_mode_actual: '원본 크기',
+  rsz_margin_none: '없음',
+  rsz_margin_small: '좁게',
+  rsz_margin_normal: '보통',
+  rsz_margin_large: '넓게',
+  rsz_orient_auto: '자동 — 원본 방향에 맞춤',
+  rsz_orient_portrait: '세로',
+  rsz_orient_landscape: '가로',
+  rsz_summary: '{from} → {to} · 배율 {pct}%',
+  rsz_summary_no_shrink: '{from} → {to} · 축소가 필요하지 않음',
+  rsz_clip_warning: '⚠️ 콘텐츠가 페이지보다 커서 가장자리가 잘립니다',
+  rsz_banner: '🔒 브라우저에서 완전히 처리 · 업로드 없음',
 
   // search
   search_placeholder: 'PDF 합치기, 압축, 분할, 워터마크, PDF를 Word로…',

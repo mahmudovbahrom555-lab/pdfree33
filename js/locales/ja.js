@@ -16,6 +16,7 @@ window.PDFREE_LOCALE = {
     redact:           ['黒塗り', '隠す', 'マスク', '塗りつぶす', '個人情報を隠す', 'レダクト'],
     rotate:           ['回転', '回す', '向きを変える', '横向き', '縦向き', '回転する'],
     organize:         ['整理', '並べ替え', 'ページ削除', 'ページ整理', 'ページ順序'],
+    resize:           ['サイズ変更', 'ページに合わせる', '用紙サイズ', '印刷サイズ', '印刷用pdf', '拡大縮小', '印刷用に縮小'],
     extract:          ['ページ抽出', 'ページを選択', 'ページを取り出す', '抽出', '取り出す'],
     watermark:        ['透かし', 'ウォーターマーク', 'スタンプ', '文字を重ねる', 'ロゴを入れる'],
     pagenum:          ['ページ番号', 'ノンブル', 'フッター', '番号を振る', 'ページ番号を追加'],
@@ -113,6 +114,7 @@ window.PDFREE_LOCALE = {
   prog_protect:      'PDFを暗号化しています...',
   prog_rotate:       '回転を適用しています...',
   prog_organize:     'PDFを再構築しています...',
+  prog_resize:       'ページのサイズを変更しています...',
   prog_flatten:      'フォームフィールドを固定しています...',
 
   // ── processor.js — batch queue (compress/watermark/protect/pagenum/flatten, 2+ files) ──
@@ -141,6 +143,7 @@ window.PDFREE_LOCALE = {
   desc_protect:             'パスワードで保護しました · {pages}ページ · {size}{extra}',
   desc_rotate:              '回転しました · {pages}ページ · {size}',
   desc_organize:            '整理しました · {pages}ページ · {size}',
+  desc_resize:              'サイズ変更済み · {pages}ページ · {size}',
   desc_redact:              '範囲を塗りつぶしました · {pages}ページ · {size}',
   desc_fill:                'フォームに入力しました · {pages}ページ · {size}',
   warn_fill_skip_one:       '{n}件のフィールドに入力できず、スキップされました — ダウンロードしたPDFをご確認ください。',
@@ -287,6 +290,29 @@ window.PDFREE_LOCALE = {
   org_btn_one:            '🗂️ {n}ページを保存',
   org_btn_many:           '🗂️ {n}ページを保存',
   val_organize_no_pages:  '削除するページを減らしてください — 少なくとも1ページ残す必要があります。',
+
+  // ── resizeUI.js ──────────────────────────────────────────────
+  rsz_loading: 'PDFを読み込んでいます…',
+  rsz_err_load: 'PDFを読み込めませんでした: {msg}',
+  rsz_preview_alt: '1ページ目のプレビュー',
+  rsz_paper_size: '用紙サイズ',
+  rsz_mode: '調整モード',
+  rsz_margin: '余白',
+  rsz_orientation: '向き',
+  rsz_mode_fit: 'フィット',
+  rsz_mode_fill: 'フィル',
+  rsz_mode_actual: '原寸大',
+  rsz_margin_none: 'なし',
+  rsz_margin_small: '狭い',
+  rsz_margin_normal: '標準',
+  rsz_margin_large: '広い',
+  rsz_orient_auto: '自動 — 元の向きに合わせる',
+  rsz_orient_portrait: '縦向き',
+  rsz_orient_landscape: '横向き',
+  rsz_summary: '{from} → {to} · 拡大率 {pct}%',
+  rsz_summary_no_shrink: '{from} → {to} · 縮小の必要なし',
+  rsz_clip_warning: '⚠️ コンテンツがページより大きいため、端が切り取られます',
+  rsz_banner: '🔒 すべてブラウザ内で処理 · アップロードなし',
 
   // search
   search_placeholder: 'PDF結合、圧縮、回転、透かし、PDFをWordに…',

@@ -197,6 +197,24 @@ export const TOOLS = {
     accept:      '.pdf,application/pdf',
     implemented: true,
   },
+  resize: {
+    icon:   '🖨️',
+    title:  'Resize PDF',
+    desc:   'Fit any PDF to A4, Letter, Legal, A3 or A5 for printing',
+    tags:   ['resize', 'fit to page', 'fit to paper', 'print size', 'paper size',
+             'pdf prints cut off', 'scale pdf', 'shrink to fit', 'resize for printing'],
+    btn:    '🖨️ Resize PDF',
+    titles: { en: 'Resize PDF', es: 'Redimensionar PDF', pt: 'Redimensionar PDF', de: 'PDF Größe Ändern', fr: 'Redimensionner PDF', id: 'Ubah Ukuran PDF', vi: 'Đổi Kích Thước PDF', ru: 'Изменить размер PDF', ja: 'PDFのサイズ変更', it: 'Ridimensiona PDF', ko: 'PDF 크기 조정', nl: 'PDF Formaat Wijzigen', pl: 'Zmień Rozmiar PDF', tr: 'PDF Boyutunu Değiştir' },
+    descs:  { en: 'Fit any PDF to A4, Letter, Legal, A3 or A5 for printing', es: 'Ajusta cualquier PDF a A4, Carta, Legal, A3 o A5 para imprimir', pt: 'Ajuste qualquer PDF a A4, Carta, Ofício, A3 ou A5 para impressão', de: 'Jedes PDF für den Druck an A4, Letter, Legal, A3 oder A5 anpassen', fr: "Adaptez n'importe quel PDF au format A4, Letter, Legal, A3 ou A5 pour l'impression", id: 'Sesuaikan PDF apa pun ke ukuran A4, Letter, Legal, A3 atau A5 untuk dicetak', vi: 'Vừa khít mọi PDF vào khổ A4, Letter, Legal, A3 hoặc A5 để in', ru: 'Подгоните любой PDF под A4, Letter, Legal, A3 или A5 для печати', ja: 'どのPDFもA4・Letter・Legal・A3・A5に合わせて印刷用に調整', it: 'Adatta qualsiasi PDF a A4, Letter, Legal, A3 o A5 per la stampa', ko: '어떤 PDF든 A4, Letter, Legal, A3, A5 용지에 맞춰 인쇄 준비', nl: 'Pas elke PDF aan naar A4, Letter, Legal, A3 of A5 formaat om af te drukken', pl: 'Dopasuj dowolny PDF do formatu A4, Letter, Legal, A3 lub A5 do druku', tr: "Herhangi bir PDF'yi yazdırmak için A4, Letter, Legal, A3 veya A5 boyutuna uydurun" },
+    btns:   { en: '🖨️ Resize PDF', es: '🖨️ Redimensionar PDF', pt: '🖨️ Redimensionar PDF', de: '🖨️ PDF Größe ändern', fr: '🖨️ Redimensionner le PDF', id: '🖨️ Ubah Ukuran PDF', vi: '🖨️ Đổi Kích Thước PDF', ru: '🖨️ Изменить размер PDF', ja: '🖨️ PDFのサイズ変更', it: '🖨️ Ridimensiona PDF', ko: '🖨️ PDF 크기 조정', nl: '🖨️ PDF formaat wijzigen', pl: '🖨️ Zmień rozmiar PDF', tr: '🖨️ PDF Boyutunu Değiştir' },
+    // Single-file only: paper size/mode/margin/orientation would generalize
+    // across a batch uniformly (unlike rotate/organize's per-document
+    // state), but the batch pipeline is hardwired to the shared js/worker.js
+    // — extending it to a dedicated worker is a separate change. See plan.
+    multi:       false,
+    accept:      '.pdf,application/pdf',
+    implemented: true,
+  },
   extract: {
     icon:   '📑',
     title:  'Extract Pages',

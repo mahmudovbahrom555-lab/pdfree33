@@ -13,6 +13,7 @@ window.PDFREE_LOCALE = {
     redact:           ['redigere', 'nascondere', 'coprire', 'oscurare', 'censurare', 'sfocare', 'cancellare testo'],
     rotate:           ['ruotare', 'capovolgere', 'orientamento', 'girare', 'orizzontale', 'verticale'],
     organize:         ['organizza', 'riordina', 'ordina pagine', 'ordine delle pagine'],
+    resize:           ['ridimensiona', 'adatta alla pagina', 'formato carta', 'dimensione stampa', 'pdf per stampa', 'scala pdf', 'riduci per stampa'],
     extract:          ['estrarre', 'prendi pagine', 'seleziona pagine', 'ottieni pagine'],
     watermark:        ['filigrana', 'timbro', 'sovrapporre testo', 'marchio', 'diagonale', 'aggiungi testo'],
     pagenum:          ['numeri di pagina', 'numerazione', 'paginazione', 'piè di pagina', 'numera pagine'],
@@ -110,6 +111,7 @@ window.PDFREE_LOCALE = {
   prog_protect:      'Cifratura PDF...',
   prog_rotate:       'Applicazione rotazioni...',
   prog_organize:     'Ricostruzione del PDF...',
+  prog_resize:       'Ridimensionamento delle pagine...',
   prog_flatten:      'Blocco campi modulo...',
 
   // ── processor.js — batch queue (compress/watermark/protect/pagenum/flatten, 2+ files) ──
@@ -138,6 +140,7 @@ window.PDFREE_LOCALE = {
   desc_protect:             'Protetto con password · {pages} pagine · {size}{extra}',
   desc_rotate:              'Ruotato · {pages} pagine · {size}',
   desc_organize:            'Organizzato · {pages} pagine · {size}',
+  desc_resize:              'Ridimensionato · {pages} pagine · {size}',
   desc_redact:              'Aree oscurate · {pages} pagine · {size}',
   desc_fill:                'Modulo compilato · {pages} pagine · {size}',
   warn_fill_skip_one:       '{n} campo non è stato compilato ed è stato saltato — controlla il PDF scaricato.',
@@ -284,6 +287,29 @@ window.PDFREE_LOCALE = {
   org_btn_one:            '🗂️ Salva {n} pagina',
   org_btn_many:           '🗂️ Salva {n} pagine',
   val_organize_no_pages:  'Elimina meno pagine — deve rimanerne almeno una.',
+
+  // ── resizeUI.js ──────────────────────────────────────────────
+  rsz_loading: 'Caricamento PDF…',
+  rsz_err_load: 'Impossibile leggere il PDF: {msg}',
+  rsz_preview_alt: 'Anteprima pagina 1',
+  rsz_paper_size: 'Formato carta',
+  rsz_mode: 'Modalità di adattamento',
+  rsz_margin: 'Margine',
+  rsz_orientation: 'Orientamento',
+  rsz_mode_fit: 'Adatta',
+  rsz_mode_fill: 'Riempi',
+  rsz_mode_actual: 'Dimensione reale',
+  rsz_margin_none: 'Nessuno',
+  rsz_margin_small: 'Piccolo',
+  rsz_margin_normal: 'Normale',
+  rsz_margin_large: 'Grande',
+  rsz_orient_auto: "Automatico — corrisponde all'orientamento originale",
+  rsz_orient_portrait: 'Verticale',
+  rsz_orient_landscape: 'Orizzontale',
+  rsz_summary: '{from} → {to} · Scala {pct}%',
+  rsz_summary_no_shrink: '{from} → {to} · Nessun ridimensionamento necessario',
+  rsz_clip_warning: '⚠️ Il contenuto è più grande della pagina — i bordi verranno tagliati',
+  rsz_banner: '🔒 Elaborato interamente nel tuo browser · Nessun caricamento',
 
   // search
   search_placeholder: 'unisci PDF, comprimi, dividi, filigrana, PDF in Word…',
