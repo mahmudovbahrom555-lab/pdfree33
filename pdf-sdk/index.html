@@ -298,15 +298,7 @@
 
   <script src="../js/sdk-waitlist.js"></script>
   <script src="/embed/sdk.js"></script>
-  <script>
-    PDFree.create({
-      container: '#pdfree-live-demo',
-      onComplete: function (r) {
-        var el = document.getElementById('liveDemoStatus');
-        if (el) el.textContent = 'Compressed "' + r.filename + '" — ' + (r.size / 1024).toFixed(0) + ' KB, entirely in your browser.';
-      }
-    });
-  </script>
+  <script src="../js/sdk-live-demo.js"></script>
   <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script>
 </body>
 </html>
