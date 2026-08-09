@@ -49,7 +49,7 @@
   },
   {
     "@type": "Question",
-    "name": "¿Funcionará con PDFs escaneados?",
+    "name": "¿Funciona con PDFs escaneados?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Solo si el PDF ya tiene una capa de texto. Los PDFs escaneados basados solo en imágenes no tienen texto extraíble — aplica primero OCR y luego convierte el resultado."
