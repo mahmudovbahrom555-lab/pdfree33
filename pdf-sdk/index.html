@@ -131,18 +131,28 @@
     </div>
   </section>
 
-  <!-- Code example -->
+  <!-- Code example + live demo -->
   <section style="padding:44px 24px;border-bottom:1px solid var(--border);background:var(--surface);">
     <div style="max-width:640px;margin:0 auto;">
       <div style="background:#1a1a18;border-radius:12px;padding:24px 28px;overflow-x:auto;">
-        <pre style="margin:0;font-family:'SFMono-Regular',Consolas,Menlo,monospace;font-size:14px;line-height:1.7;color:#e4e4e0;"><code><span style="color:#7ec9a3;">import</span> { PDFree } <span style="color:#7ec9a3;">from</span> <span style="color:#e0b96a;">'@pdfree/sdk'</span>;
+        <pre style="margin:0;font-family:'SFMono-Regular',Consolas,Menlo,monospace;font-size:14px;line-height:1.7;color:#e4e4e0;"><code><span style="color:#8a8a82;">&lt;script src=</span><span style="color:#e0b96a;">"https://pdfree.io/embed/sdk.js"</span><span style="color:#8a8a82;">&gt;&lt;/script&gt;</span>
+<span style="color:#8a8a82;">&lt;div id=</span><span style="color:#e0b96a;">"my-widget"</span><span style="color:#8a8a82;">&gt;&lt;/div&gt;</span>
 
-<span style="color:#8a8a82;">// Runs in your user's browser. Nothing is uploaded.</span>
-<span style="color:#7ec9a3;">const</span> merged = <span style="color:#7ec9a3;">await</span> PDFree.merge(files);
-<span style="color:#7ec9a3;">const</span> smaller = <span style="color:#7ec9a3;">await</span> PDFree.compress(file);
-<span style="color:#7ec9a3;">const</span> redacted = <span style="color:#7ec9a3;">await</span> PDFree.redact(file, areas);</code></pre>
+<span style="color:#8a8a82;">&lt;script&gt;</span>
+  <span style="color:#7ec9a3;">PDFree</span>.create({
+    container: <span style="color:#e0b96a;">'#my-widget'</span>,
+    onComplete: (result) =&gt; {
+      <span style="color:#8a8a82;">// result.filename, result.size, result.blob — all local</span>
+      console.log(result.filename, result.size);
+    }
+  });
+<span style="color:#8a8a82;">&lt;/script&gt;</span></code></pre>
       </div>
       <p style="text-align:center;font-size:13px;color:var(--text3);margin-top:14px;">Browser → WebAssembly → Browser. No server in between, ever.</p>
+
+      <p style="text-align:center;font-size:13px;font-weight:600;color:var(--text);margin:32px 0 12px;">This isn't a mockup — try it right now:</p>
+      <div id="pdfree-live-demo"></div>
+      <p id="liveDemoStatus" style="text-align:center;font-size:13px;color:var(--text2);margin-top:10px;min-height:18px;"></p>
     </div>
   </section>
 
@@ -287,6 +297,16 @@
   </footer>
 
   <script src="../js/sdk-waitlist.js"></script>
+  <script src="/embed/sdk.js"></script>
+  <script>
+    PDFree.create({
+      container: '#pdfree-live-demo',
+      onComplete: function (r) {
+        var el = document.getElementById('liveDemoStatus');
+        if (el) el.textContent = 'Compressed "' + r.filename + '" — ' + (r.size / 1024).toFixed(0) + ' KB, entirely in your browser.';
+      }
+    });
+  </script>
   <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script>
 </body>
 </html>

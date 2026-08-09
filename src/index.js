@@ -289,6 +289,20 @@ async function handleFeedback(request, env) {
   return new Response('OK', { status: 200 });
 }
 
+// Embed pages (js/embedBridge.js's iframe target, loaded via embed/sdk.js on
+// third-party domains) need to be frameable cross-origin — the global
+// X-Frame-Options: SAMEORIGIN in _headers blocks that for every other path
+// on the site (clickjacking protection, left untouched everywhere else).
+// Applied here rather than relied on via _headers because this Worker uses
+// the newer Workers Assets binding, not classic Cloudflare Pages, and this
+// guarantees correctness regardless of _headers support under that binding.
+function withEmbedFrameHeaders(response) {
+  const headers = new Headers(response.headers);
+  headers.delete('X-Frame-Options');
+  headers.set('Content-Security-Policy', 'frame-ancestors *;');
+  return new Response(response.body, { status: response.status, headers });
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -307,6 +321,11 @@ export default {
         },
       });
     }
+
+    if (url.pathname.startsWith('/embed/')) {
+      return withEmbedFrameHeaders(await env.ASSETS.fetch(request));
+    }
+
     return env.ASSETS.fetch(request);
   },
 };

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+
+  <!--
+    Minimal, embeddable Compress PDF tool — loaded inside a cross-origin
+    <iframe> via embed/sdk.js. Deliberately trimmed: no nav, no footer, no
+    SEO content, no ad/analytics-beacon domains, only the single
+    #compressOptions container (every other tool's option container is
+    intentionally omitted — js/compressUI.js and every other *UI.js module
+    null-guard on `id('xOptions')` and no-op if it's absent, so app.js/
+    processor.js/toolRegistry.js work unmodified against this trimmed DOM).
+    See /Users/murodjon/.claude/plans/crystalline-munching-galaxy.md.
+  -->
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src  'self' 'wasm-unsafe-eval' blob: https://plausible.io;
+    style-src   'self' 'unsafe-inline';
+    font-src    'self';
+    img-src     'self' data: blob:;
+    connect-src 'self' https://plausible.io;
+    worker-src  'self' blob:;
+    object-src  'none';
+  ">
+
+  <title>Compress PDF — PDFree Embed</title>
+
+  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+  <link rel="preload" href="../../fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../css/fonts.css">
+  <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/animations.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/components.css">
+
+  <script src="../../js/theme.js"></script>
+</head>
+<body data-tool="compress" style="padding:16px;">
+
+  <a href="https://pdfree.io/" id="logo" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;text-decoration:none;color:var(--text3);font-size:12px;margin-bottom:10px;">
+    <span class="logo-icon" aria-hidden="true" style="display:inline-flex;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+    </span>
+    Powered by PDFree ↗
+  </a>
+
+  <main id="toolArea" class="main-area" aria-busy="false">
+
+    <div class="tool-header">
+      <div class="tool-header-icon" id="toolIcon" aria-hidden="true">🗜️</div>
+      <div class="tool-header-text">
+        <h2 id="toolTitle">Compress PDF</h2>
+        <p id="toolDesc">Reduce file size — runs entirely in your browser, nothing uploaded.</p>
+      </div>
+    </div>
+
+    <div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-label="Drop files here">
+      <input type="file" id="fileInput" multiple accept=".pdf,application/pdf" aria-hidden="true">
+      <span class="drop-icon" aria-hidden="true">📂</span>
+      <div class="drop-title">Drop a PDF here</div>
+      <div class="drop-sub">or click to browse</div>
+      <label class="drop-btn" id="chooseFilesBtn" for="fileInput">Choose file</label>
+    </div>
+
+    <div id="privacyBadge" style="display:flex;align-items:center;gap:9px;margin:10px 0 4px;padding:9px 14px;background:var(--green-light);border:1px solid rgba(45,122,79,0.22);border-radius:10px;font-size:13px;color:var(--green);line-height:1.3;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0;opacity:.85"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+      <span>Your file never leaves this page — processed locally, no uploads</span>
+    </div>
+
+    <div id="fileList" class="file-list" aria-live="polite" aria-label="Selected files"></div>
+    <div id="fileCount" class="file-count" style="display:none"></div>
+
+    <div id="compressOptions" class="compress-options" style="display:none" aria-label="Compression options"></div>
+
+    <button id="mergeBtn" class="merge-btn" type="button" disabled data-mode="process">Compress PDF</button>
+    <button id="cancelBtn" class="cancel-btn" type="button" style="display:none" aria-label="Cancel">✕ Cancel</button>
+
+    <div id="progressBar" class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+    <div id="progressLabel" class="progress-label"></div>
+
+    <div id="successCard" class="success-card" role="alert" aria-live="polite" style="display:none">
+      <div class="success-top">
+        <div class="success-icon" aria-hidden="true">✓</div>
+        <div class="success-text">
+          <h3 id="successTitle">Done!</h3>
+          <p id="successDesc"></p>
+          <p id="successAutoHint" class="success-auto-hint" style="display:none"></p>
+        </div>
+        <button id="downloadBtn" class="download-btn" type="button">⬇ Download</button>
+      </div>
+    </div>
+
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script type="module" src="../../js/app.js"></script>
+  <script type="module" src="../../js/embedBridge.js"></script>
+</body>
+</html>
