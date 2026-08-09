@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src  'self' 'wasm-unsafe-eval' blob:
+                https://cdnjs.cloudflare.com https://esm.sh
+                https://plausible.io https://pagead2.googlesyndication.com
+                https://static.cloudflareinsights.com;
+    style-src   'self' 'unsafe-inline';
+    font-src    'self';
+    img-src     'self' data: blob: https:;
+    connect-src 'self' https://cdnjs.cloudflare.com https://*.workers.dev
+                https://plausible.io https://pagead2.googlesyndication.com
+                https://www.googletagservices.com https://*.doubleclick.net
+                https://cloudflareinsights.com;
+    frame-src   https://googleads.g.doubleclick.net https://tpc.googlesyndication.com;
+    worker-src  'self' blob:;
+    object-src  'none';
+  ">
+
+  <title>파일을 업로드하지 않는 안전한 PDF 도구 — PDFree</title>
+  <meta name="description" content="파일을 서버에 절대 업로드하지 않는 PDF 도구입니다. 모든 처리가 브라우저에서 이루어집니다 — PDF 병합, 압축, 분할, 보호를 완전한 개인정보 보호와 함께.">
+
+  <meta property="og:title"       content="안전한 PDF 도구 — 파일이 절대 업로드되지 않습니다 | PDFree">
+  <meta property="og:description" content="모든 작업을 브라우저에서 처리하는 유일한 PDF 도구 모음입니다. 서버도, 저장도, 추적도 없습니다.">
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://pdfree.io/ko/anjeon-pdf-dogu/">
+  <meta property="og:site_name"   content="PDFree">
+  <meta property="og:locale"      content="ko_KR">
+  <meta property="og:image"        content="https://pdfree.io/icons/og-image.jpg">
+  <meta property="og:image:width"  content="1200">
+  <meta property="og:image:height" content="633">
+  <meta property="og:image:alt"    content="안전한 PDF 도구 — 파일이 절대 업로드되지 않습니다 | PDFree">
+  <meta name="twitter:card"       content="summary_large_image">
+  <meta name="twitter:site"       content="@pdfree_io">
+  <meta name="twitter:title"      content="안전한 PDF 도구 — 파일이 절대 업로드되지 않습니다 | PDFree">
+  <meta name="twitter:description" content="모든 작업을 브라우저에서 처리하는 유일한 PDF 도구 모음입니다. 서버도, 저장도, 추적도 없습니다.">
+  <meta name="twitter:image"       content="https://pdfree.io/icons/og-image.jpg">
+  <meta name="twitter:image:alt"   content="안전한 PDF 도구 — 파일이 절대 업로드되지 않습니다 | PDFree">
+
+  <link rel="canonical" href="https://pdfree.io/ko/anjeon-pdf-dogu/">
+  <link rel="alternate" hreflang="en"        href="https://pdfree.io/secure-pdf-tools/">
+  <link rel="alternate" hreflang="de"        href="https://pdfree.io/de/sichere-pdf-tools/">
+  <link rel="alternate" hreflang="es"        href="https://pdfree.io/es/herramientas-pdf-seguras/">
+  <link rel="alternate" hreflang="fr"        href="https://pdfree.io/fr/outils-pdf-securises/">
+  <link rel="alternate" hreflang="pt"        href="https://pdfree.io/pt/ferramentas-pdf-seguras/">
+  <link rel="alternate" hreflang="id"        href="https://pdfree.io/id/alat-pdf-aman/">
+  <link rel="alternate" hreflang="vi"        href="https://pdfree.io/vi/cong-cu-pdf-an-toan/">
+  <link rel="alternate" hreflang="ru"        href="https://pdfree.io/ru/bezopasnye-pdf-instrumenty/">
+  <link rel="alternate" hreflang="ja"        href="https://pdfree.io/ja/anzen-pdf-tool/">
+  <link rel="alternate" hreflang="it"        href="https://pdfree.io/it/strumenti-pdf-sicuri/">
+  <link rel="alternate" hreflang="ko"        href="https://pdfree.io/ko/anjeon-pdf-dogu/">
+  <link rel="alternate" hreflang="nl"        href="https://pdfree.io/nl/veilige-pdf-tools/">
+  <link rel="alternate" hreflang="pl"        href="https://pdfree.io/pl/bezpieczne-narzedzia-pdf/">
+  <link rel="alternate" hreflang="tr"        href="https://pdfree.io/tr/guvenli-pdf-araclari/">
+  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/secure-pdf-tools/">
+
+  <link rel="manifest" href="../../manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="PDFree">
+  <link rel="apple-touch-icon" href="../../icons/icon-192.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+  <link rel="preconnect" href="https://plausible.io">
+  <link rel="preconnect" href="https://static.cloudflareinsights.com">
+  <link rel="preload" href="../../fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../css/fonts.css">
+  <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/animations.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/components.css">
+  <style>.secure-tool-card{border:1px solid var(--border);transition:border-color 0.2s}.secure-tool-card:hover{border-color:var(--green)}</style>
+
+  <script src="../../js/theme.js"></script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "PDFree — 안전한 PDF 도구",
+    "description": "파일을 절대 업로드하지 않는 안전한 PDF 도구입니다. 모든 처리는 브라우저에서 로컬로 이루어집니다. 무료, 회원가입 불필요.",
+    "url": "https://pdfree.io/ko/anjeon-pdf-dogu/",
+    "applicationCategory": "UtilityApplication",
+    "operatingSystem": "Web, iOS, Android",
+    "isAccessibleForFree": true,
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/InStock"
+    },
+    "featureList": [
+      "파일이 서버에 절대 업로드되지 않습니다",
+      "회원가입 불필요",
+      "파일 크기 제한 없음",
+      "오프라인에서도 작동 (PWA)",
+      "PDF 비밀번호 보호 지원 (RC4-128 암호화)",
+      "데이터를 전혀 보관하지 않음"
+    ],
+    "dateModified": "2026-08-09",
+    "provider": {
+      "@type": "Organization",
+      "name": "PDFree",
+      "url": "https://pdfree.io",
+      "description": "PDFree is a free, privacy-first PDF toolkit that runs entirely in the browser — files are processed locally and never uploaded to a server.",
+      "logo": "https://pdfree.io/icons/icon-512.png"
+    }
+  }
+  </script>
+
+    <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "파일을 업로드하지 않는 안전한 PDF 도구",
+    "description": "파일이 서버에 절대 업로드되지 않는 브라우저 기반 PDF 도구 모음입니다.",
+    "url": "https://pdfree.io/ko/anjeon-pdf-dogu/",
+    "numberOfItems": 8,
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "업로드 없이 PDF 병합", "url": "https://pdfree.io/ko/pdf-hapchigi/" },
+      { "@type": "ListItem", "position": 2, "name": "업로드 없이 PDF 압축", "url": "https://pdfree.io/ko/pdf-apchuk/" },
+      { "@type": "ListItem", "position": 3, "name": "업로드 없이 PDF 분할", "url": "https://pdfree.io/ko/pdf-bunhal/" },
+      { "@type": "ListItem", "position": 4, "name": "로컬에서 PDF 비밀번호 보호", "url": "https://pdfree.io/ko/pdf-amho/" },
+      { "@type": "ListItem", "position": 5, "name": "브라우저에서 PDF 가리기", "url": "https://pdfree.io/ko/pdf-garigi/" },
+      { "@type": "ListItem", "position": 6, "name": "로컬에서 JPG를 PDF로 변환", "url": "https://pdfree.io/ko/jpg-pdf-byeonhwan/" },
+      { "@type": "ListItem", "position": 7, "name": "PDF에 워터마크 추가", "url": "https://pdfree.io/ko/pdf-watermark/" },
+      { "@type": "ListItem", "position": 8, "name": "PDF 메타데이터 편집", "url": "https://pdfree.io/ko/pdf-metadeiteo/" }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "PDFree 도구가 파일을 서버에 업로드하나요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "아니요. PDFree의 모든 도구는 JavaScript를 사용해 파일을 전적으로 브라우저에서 처리합니다. 파일은 절대 기기를 벗어나지 않으며, 서버에 업로드되지 않고, 브라우저의 임시 메모리 외에는 어디에도 저장되지 않습니다." }
+      },
+      {
+        "@type": "Question",
+        "name": "제 파일이 업로드되지 않는다는 것을 어떻게 확인할 수 있나요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "브라우저의 DevTools(F12)를 열고 Network 탭으로 이동한 다음, 아무 PDFree 도구나 사용해 보세요. PDF 파일 데이터가 담긴 요청은 전혀 보이지 않고, 앱의 JavaScript와 CSS 파일에 대한 요청만 보일 것입니다." }
+      },
+      {
+        "@type": "Question",
+        "name": "PDFree 도구는 GDPR을 준수하나요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "네. PDFree는 설계 자체로 GDPR을 준수합니다. 개인 데이터나 파일이 저희 서버로 전송되는 일이 전혀 없으므로, 보호하거나 삭제하거나 보고할 데이터 자체가 존재하지 않습니다. 이 아키텍처는 구조적으로 GDPR 위반을 불가능하게 만듭니다." }
+      },
+      {
+        "@type": "Question",
+        "name": "HIPAA 규제 대상 문서에 PDFree를 사용할 수 있나요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "네. PDFree의 브라우저 기반 아키텍처 덕분에 보호 대상 건강 정보(PHI)가 외부 서버로 전송되는 일이 전혀 없습니다. 의료 종사자는 환자 기록과 의료 문서를 PDFree로 안전하게 처리할 수 있습니다." }
+      }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "PDFree", "item": "https://pdfree.io/" },
+      { "@type": "ListItem", "position": 2, "name": "안전한 PDF 도구", "item": "https://pdfree.io/ko/anjeon-pdf-dogu/" }
+    ]
+  }
+  </script>
+</head>
+<body>
+
+  <nav>
+    <a href="/ko/" class="logo" aria-label="홈으로 이동" style="text-decoration:none">
+      <div class="logo-icon" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+      </div>
+      <span class="logo-text">PDF<span>ree</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="/ko/pdf-hapchigi/" class="nav-link" data-tool="merge">합치기</a>
+      <a href="/ko/pdf-bunhal/" class="nav-link" data-tool="split">분할</a>
+      <a href="/ko/pdf-apchuk/" class="nav-link" data-tool="compress">압축</a>
+      <a href="/ko/jpg-pdf-byeonhwan/" class="nav-link" data-tool="jpg2pdf">JPG→PDF</a>
+      <a href="/ko/pdf-jpg-byeonhwan/" class="nav-link" data-tool="pdf2jpg">PDF→JPG</a>
+      <a href="/ko/pdf-watermark/" class="nav-link" data-tool="watermark">워터마크</a>
+      <a href="/ko/pdf-peiji-beonho/" class="nav-link" data-tool="pagenum">페이지 번호</a>
+      <a href="/ko/pdf-metadeiteo/" class="nav-link" data-tool="meta">메타데이터</a>
+      <a href="/ko/pdf-chuchul/" class="nav-link" data-tool="extract">추출</a>
+      <a href="/draw-on-pdf/" class="nav-link" data-tool="draw-pdf">그리기</a>
+      <a href="/ko/pdf-hoejeon/" class="nav-link" data-tool="rotate">회전</a>
+      <a href="/ko/pdf-jeongli/" class="nav-link" data-tool="organize">정리</a>
+      <a href="/ko/pdf-keugi-jojeong/" class="nav-link" data-tool="resize">크기 조정</a>
+      <a href="/ko/pdf-amho/" class="nav-link" data-tool="protect">보호</a>
+      <a href="/ko/pdf-munja-insik/" class="nav-link" data-tool="ocr">OCR</a>
+      <a href="/ko/pdf-word-byeonhwan/" class="nav-link" data-tool="pdf2word">PDF→Word</a>
+      <a href="/ko/pdf-pyeongmyeonhwa/" class="nav-link" data-tool="flatten">PDF 잠금</a>
+      <a href="/compare-pdf/" class="nav-link" data-tool="compare">비교</a>
+    </div>
+    <div class="nav-right">
+      <details class="lang-switch" id="langSwitch">
+        <summary aria-label="언어 변경">🌐 KO</summary>
+        <div class="lang-switch__menu" role="menu">
+          <a href="/" role="menuitem">English</a>
+          <a href="/es/" role="menuitem">Español</a>
+          <a href="/pt/" role="menuitem">Português</a>
+          <a href="/de/" role="menuitem">Deutsch</a>
+          <a href="/fr/" role="menuitem">Français</a>
+          <a href="/id/" role="menuitem">Bahasa Indonesia</a>
+          <a href="/tr/" role="menuitem">Türkçe</a>
+          <a href="/vi/" role="menuitem">Tiếng Việt</a>
+          <a href="/ru/" role="menuitem">Русский</a>
+          <a href="/ja/" role="menuitem">日本語</a>
+          <a href="/it/" role="menuitem">Italiano</a>
+          <a href="/ko/" role="menuitem" aria-current="true">한국어</a>
+          <a href="/nl/" role="menuitem">Nederlands</a>
+          <a href="/pl/" role="menuitem">Polski</a>
+        </div>
+      </details>
+      <button id="themeToggle" class="theme-toggle" aria-label="다크 모드 전환" title="다크 모드 전환"></button>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section style="background:var(--green-light);border-bottom:1px solid rgba(45,122,79,0.15);padding:52px 24px 44px;text-align:center;">
+    <div style="max-width:720px;margin:0 auto;">
+      <div style="display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid rgba(45,122,79,0.2);border-radius:24px;padding:6px 16px;font-size:13px;color:var(--green);font-weight:500;margin-bottom:20px;">
+        <span style="width:7px;height:7px;background:var(--green);border-radius:50%;display:inline-block;"></span>
+        업로드 없음 · 저장 없음 · 추적 없음
+      </div>
+      <h1 style="font-size:clamp(28px,4.5vw,44px);font-weight:700;letter-spacing:-1px;line-height:1.15;color:var(--text);margin:0 0 16px;">파일을 업로드하지 않는<br>안전한 PDF 도구</h1>
+      <p style="font-size:17px;color:var(--text2);max-width:580px;margin:0 auto 28px;line-height:1.6;">PDFree의 모든 도구는 문서를 전적으로 브라우저에서 처리합니다. 파일은 단 1밀리초도 기기를 벗어나지 않습니다. PDF 병합, 압축, 분할, 보호, 가리기를 완전한 개인정보 보호와 함께 사용하세요.</p>
+      <a href="/ko/" style="background:var(--green);color:#fff;padding:13px 28px;border-radius:10px;font-weight:600;font-size:15px;text-decoration:none;display:inline-block;">모든 PDF 도구 보기 — 무료</a>
+    </div>
+  </section>
+
+  <!-- Trust proof -->
+  <section style="padding:20px 24px;border-bottom:1px solid var(--border);background:var(--surface);">
+    <div style="max-width:720px;margin:0 auto;display:flex;gap:24px;justify-content:center;flex-wrap:wrap;">
+      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">🔒 파일이 기기를 벗어나지 않습니다</span>
+      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">⚡ 100% 오프라인에서 작동</span>
+      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">✓ 설계상 GDPR 안전</span>
+      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">✓ 설계상 HIPAA 안전</span>
+      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">🚫 회원가입 없음, 추적 없음</span>
+    </div>
+  </section>
+
+  <!-- SEO Content -->
+  <section class="seo-article">
+    <div class="seo-article__inner">
+      <div class="seo-content" style="max-width:800px;margin:60px auto 40px;padding:0 24px;color:var(--text2);line-height:1.8;">
+
+        <h2 style="font-size:26px;color:var(--text);margin:0 0 16px;font-weight:700;">대부분의 PDF 도구가 진짜로 안전하지 않은 이유</h2>
+        <p>신뢰할 만한 서비스라 해도 클라우드 기반 도구에 PDF를 업로드하면, 파일은 인터넷을 거쳐 원격 서버로 이동합니다. 그곳에서 처리되고, 일시적으로 저장된 뒤, 결국 삭제됩니다. 그 시간 동안 여러분의 문서는 여러분이 통제할 수 없는 하드웨어, 한 번도 본 적 없는 데이터센터에, 보안 관행을 암묵적으로 신뢰할 수밖에 없는 회사의 관리 아래 존재합니다.</p>
+        <p>대부분의 파일에는 이 정도가 받아들일 만한 절충안입니다. 하지만 <strong>계약서, 진료 기록, 재무제표, 세금 신고서, 인사 문서, 혹은 개인적인 모든 것</strong>에 있어서는 — 이 노출의 시간 자체가 서버 침해, 잘못 설정된 접근 제어, 법적 소환장, 내부자 위협 같은 실질적인 위험을 만들어냅니다.</p>
+        <p>가장 안전한 접근 방식은 서버 측 암호화를 더 강화하는 것이 아닙니다. <strong>서버 자체를 두지 않는 것</strong>입니다.</p>
+
+        <div style="background:var(--green-light);border-left:4px solid var(--green);padding:18px 20px;border-radius:0 8px 8px 0;margin:28px 0;">
+          <p style="margin:0;font-size:14px;color:var(--text);"><strong>PDFree의 보안 모델:</strong> 병합, 압축, 분할, 암호화를 포함한 모든 PDF 처리는 브라우저 탭에서 실행되는 JavaScript로 이루어집니다. 파일은 RAM에 로드되어 로컬에서 처리되고, 결과물은 바로 다운로드됩니다. 탭을 닫으면 모든 것이 사라집니다. 침해할 서버가 없습니다. 애초에 서버가 존재하지 않기 때문입니다.</p>
+        </div>
+
+        <!-- Tool grid -->
+        <h2 style="font-size:26px;color:var(--text);margin:52px 0 16px;font-weight:700;">모든 안전한 PDF 도구 — 업로드가 필요 없습니다</h2>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin:20px 0 40px;">
+          <a href="/ko/pdf-hapchigi/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">🔗</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">PDF 병합</strong>
+            <span style="font-size:13px;color:var(--text2);">여러 PDF를 하나로 합치기 — 로컬에서, 비공개로</span>
+          </a>
+          <a href="/ko/pdf-apchuk/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">⚡</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">PDF 압축</strong>
+            <span style="font-size:13px;color:var(--text2);">파일을 어디에도 보내지 않고 크기 줄이기</span>
+          </a>
+          <a href="/ko/pdf-bunhal/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">✂️</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">PDF 분할</strong>
+            <span style="font-size:13px;color:var(--text2);">업로드 없이 모든 PDF에서 페이지 추출</span>
+          </a>
+          <a href="/ko/pdf-amho/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">🔐</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">PDF 보호</strong>
+            <span style="font-size:13px;color:var(--text2);">비밀번호 암호화 추가 — 키가 기기를 벗어나지 않습니다</span>
+          </a>
+          <a href="/ko/pdf-garigi/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">⬛</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">PDF 가리기</strong>
+            <span style="font-size:13px;color:var(--text2);">공유 전에 민감한 내용 가리기 — 로컬에서 처리</span>
+          </a>
+          <a href="/ko/jpg-pdf-byeonhwan/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">🖼️</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">JPG를 PDF로</strong>
+            <span style="font-size:13px;color:var(--text2);">브라우저에서 이미지를 PDF로 변환</span>
+          </a>
+          <a href="/ko/pdf-watermark/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">💧</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">PDF 워터마크</strong>
+            <span style="font-size:13px;color:var(--text2);">텍스트 또는 이미지 워터마크를 로컬에서 추가</span>
+          </a>
+          <a href="/ko/pdf-metadeiteo/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">🏷️</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">메타데이터 편집</strong>
+            <span style="font-size:13px;color:var(--text2);">작성자, 제목, 생성일을 비공개로 삭제</span>
+          </a>
+        </div>
+
+        <!-- Verify -->
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 12px;font-weight:700;">파일이 업로드되지 않는지 확인하는 방법</h2>
+        <p>브라우저의 DevTools(<kbd style="background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:2px 7px;font-size:13px;">F12</kbd> 키)를 열고 <strong>Network</strong> 탭으로 이동한 다음, 아무 PDFree 도구나 사용해 보세요. "Doc" 또는 "XHR"로 요청을 필터링하면 PDF 데이터가 담긴 항목은 전혀 찾을 수 없습니다. 유일한 네트워크 요청은 앱을 구동하는 JavaScript와 CSS 파일뿐입니다.</p>
+        <p>이것이 여러분의 파일이 기기에 그대로 남아 있다는 가장 직접적인 증거입니다. 믿을 필요 없이, 30초 안에 직접 확인해 보세요.</p>
+
+        <!-- Who it's for -->
+        <h2 style="font-size:26px;color:var(--text);margin:52px 0 16px;font-weight:700;">안전한 PDF 도구가 필요한 사람들</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:16px 0 40px;">
+          <div style="border:1px solid var(--border);border-radius:12px;padding:18px;">
+            <strong style="color:var(--text);display:block;margin-bottom:6px;">⚖️ 법률 전문가</strong>
+            <p style="font-size:13px;margin:0;color:var(--text2);">변호사-의뢰인 특권은 문서를 기밀로 다룰 것을 요구합니다. PDFree는 의뢰인 파일을 제3자 서버에 절대 노출하지 않습니다.</p>
+          </div>
+          <div style="border:1px solid var(--border);border-radius:12px;padding:18px;">
+            <strong style="color:var(--text);display:block;margin-bottom:6px;">🏥 의료 종사자</strong>
+            <p style="font-size:13px;margin:0;color:var(--text2);">HIPAA는 환자 데이터 보호를 요구합니다. PDFree는 진료 기록을 로컬에서 처리합니다 — PHI는 전혀 전송되지 않습니다.</p>
+          </div>
+          <div style="border:1px solid var(--border);border-radius:12px;padding:18px;">
+            <strong style="color:var(--text);display:block;margin-bottom:6px;">💼 재무 및 회계</strong>
+            <p style="font-size:13px;margin:0;color:var(--text2);">세금 신고서, 은행 명세서, 급여 문서에는 민감한 정보가 담겨 있으며, 이는 오직 여러분의 기기에만 있어야 합니다.</p>
+          </div>
+          <div style="border:1px solid var(--border);border-radius:12px;padding:18px;">
+            <strong style="color:var(--text);display:block;margin-bottom:6px;">🏢 인사 담당자</strong>
+            <p style="font-size:13px;margin:0;color:var(--text2);">직원 계약서, 성과 평가, 지원자 파일 — 서버 노출 없이 다루세요.</p>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 20px;font-weight:700;">자주 묻는 질문</h2>
+        <div style="display:flex;flex-direction:column;gap:20px;">
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">PDFree 도구가 파일을 서버에 업로드하나요?</h3>
+            <p style="margin:0;font-size:14px;">아니요. PDFree의 모든 도구는 브라우저에서 전적으로 파일을 처리합니다. 파일은 서버로 전송되거나, 어딘가에 저장되거나, 어떤 방식으로든 기록되지 않습니다.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">PDFree 도구는 GDPR을 준수하나요?</h3>
+            <p style="margin:0;font-size:14px;">네, 설계상 그렇습니다. 개인 데이터나 파일이 저희 서버로 전송되는 일이 전혀 없으므로, GDPR 준수는 구조적으로 보장됩니다 — 애초에 잘못 다룰 데이터가 없습니다.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">HIPAA 규제 대상 진료 기록에 PDFree를 사용할 수 있나요?</h3>
+            <p style="margin:0;font-size:14px;">네. PDFree의 아키텍처는 보호 대상 건강 정보(PHI)가 외부로 전송되는 일이 전혀 없도록 보장합니다. 의료 전문가는 환자 기록을 전적으로 브라우저에서 안전하게 처리할 수 있습니다.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">PDFree는 iLovePDF나 SmallPDF와 어떻게 다른가요?</h3>
+            <p style="margin:0;font-size:14px;">iLovePDF와 SmallPDF는 처리를 위해 파일을 자사 서버에 업로드합니다. PDFree는 전적으로 브라우저에서 실행됩니다 — 파일이 기기를 벗어나지 않습니다. 또한 PDFree는 파일 크기 제한이나 일일 사용 제한도 없습니다.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div style="display:flex;gap:48px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;font-size:13px;border-top:1px solid var(--border);padding-top:20px;">
+      <div>
+        <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">대안</div>
+        <a href="/ilovepdf-alternative/" style="display:block;color:var(--green);text-decoration:none;margin-bottom:4px;">iLovePDF 대안</a>
+      </div>
+      <div>
+        <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">솔루션</div>
+        <a href="/hipaa-pdf-tools/" style="display:block;color:var(--green);text-decoration:none;margin-bottom:4px;">HIPAA 준수 PDF 도구</a>
+        <a href="/ko/anjeon-pdf-dogu/" style="display:block;color:var(--green);text-decoration:none;">안전한 PDF 도구</a>
+      </div>
+    </div>
+    PDFree · <strong>모든 처리가 브라우저에서 100% 이루어집니다</strong> · 파일은 <strong>절대 업로드되지 않습니다</strong><br>
+    <span style="color:var(--green)">🔒</span> 문서가 기기를 절대 벗어나지 않습니다 &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> 모두를 위해, 영원히 무료<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
+      <a href="/privacy.html" style="color:var(--green)">개인정보 보호</a> &nbsp;·&nbsp;
+      <a href="/terms.html" style="color:var(--green)">이용약관</a> &nbsp;·&nbsp;
+      <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a> &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green)">GitHub</a>
+    </span>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script>
+</body>
+</html>

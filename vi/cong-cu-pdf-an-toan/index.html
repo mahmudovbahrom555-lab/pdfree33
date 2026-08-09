@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src  'self' 'wasm-unsafe-eval' blob:
+                https://cdnjs.cloudflare.com https://esm.sh
+                https://plausible.io https://pagead2.googlesyndication.com
+                https://static.cloudflareinsights.com;
+    style-src   'self' 'unsafe-inline';
+    font-src    'self';
+    img-src     'self' data: blob: https:;
+    connect-src 'self' https://cdnjs.cloudflare.com https://*.workers.dev
+                https://plausible.io https://pagead2.googlesyndication.com
+                https://www.googletagservices.com https://*.doubleclick.net
+                https://cloudflareinsights.com;
+    frame-src   https://googleads.g.doubleclick.net https://tpc.googlesyndication.com;
+    worker-src  'self' blob:;
+    object-src  'none';
+  ">
+
+  <title>Công Cụ PDF An Toàn Không Tải File Của Bạn Lên — PDFree</title>
+  <meta name="description" content="Công cụ PDF không bao giờ tải file của bạn lên máy chủ. Mọi xử lý diễn ra ngay trong trình duyệt của bạn — ghép, nén, tách, bảo vệ PDF với quyền riêng tư hoàn toàn.">
+
+  <meta property="og:title"       content="Công Cụ PDF An Toàn — File Không Bao Giờ Được Tải Lên | PDFree">
+  <meta property="og:description" content="Bộ công cụ PDF duy nhất xử lý mọi thứ ngay trong trình duyệt của bạn. Không máy chủ, không lưu trữ, không theo dõi.">
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://pdfree.io/vi/cong-cu-pdf-an-toan/">
+  <meta property="og:site_name"   content="PDFree">
+  <meta property="og:locale"      content="vi_VN">
+  <meta property="og:image"        content="https://pdfree.io/icons/og-image.jpg">
+  <meta property="og:image:width"  content="1200">
+  <meta property="og:image:height" content="633">
+  <meta property="og:image:alt"    content="Công Cụ PDF An Toàn — File Không Bao Giờ Được Tải Lên | PDFree">
+  <meta name="twitter:card"       content="summary_large_image">
+  <meta name="twitter:site"       content="@pdfree_io">
+  <meta name="twitter:title"      content="Công Cụ PDF An Toàn — File Không Bao Giờ Được Tải Lên | PDFree">
+  <meta name="twitter:description" content="Bộ công cụ PDF duy nhất xử lý mọi thứ ngay trong trình duyệt của bạn. Không máy chủ, không lưu trữ, không theo dõi.">
+  <meta name="twitter:image"       content="https://pdfree.io/icons/og-image.jpg">
+  <meta name="twitter:image:alt"   content="Công Cụ PDF An Toàn — File Không Bao Giờ Được Tải Lên | PDFree">
+
+  <link rel="canonical" href="https://pdfree.io/vi/cong-cu-pdf-an-toan/">
+  <link rel="alternate" hreflang="en"        href="https://pdfree.io/secure-pdf-tools/">
+  <link rel="alternate" hreflang="de"        href="https://pdfree.io/de/sichere-pdf-tools/">
+  <link rel="alternate" hreflang="es"        href="https://pdfree.io/es/herramientas-pdf-seguras/">
+  <link rel="alternate" hreflang="fr"        href="https://pdfree.io/fr/outils-pdf-securises/">
+  <link rel="alternate" hreflang="pt"        href="https://pdfree.io/pt/ferramentas-pdf-seguras/">
+  <link rel="alternate" hreflang="id"        href="https://pdfree.io/id/alat-pdf-aman/">
+  <link rel="alternate" hreflang="vi"        href="https://pdfree.io/vi/cong-cu-pdf-an-toan/">
+  <link rel="alternate" hreflang="ru"        href="https://pdfree.io/ru/bezopasnye-pdf-instrumenty/">
+  <link rel="alternate" hreflang="ja"        href="https://pdfree.io/ja/anzen-pdf-tool/">
+  <link rel="alternate" hreflang="it"        href="https://pdfree.io/it/strumenti-pdf-sicuri/">
+  <link rel="alternate" hreflang="ko"        href="https://pdfree.io/ko/anjeon-pdf-dogu/">
+  <link rel="alternate" hreflang="nl"        href="https://pdfree.io/nl/veilige-pdf-tools/">
+  <link rel="alternate" hreflang="pl"        href="https://pdfree.io/pl/bezpieczne-narzedzia-pdf/">
+  <link rel="alternate" hreflang="tr"        href="https://pdfree.io/tr/guvenli-pdf-araclari/">
+  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/secure-pdf-tools/">
+
+  <link rel="manifest" href="../../manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="PDFree">
+  <link rel="apple-touch-icon" href="../../icons/icon-192.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+  <link rel="preconnect" href="https://plausible.io">
+  <link rel="preconnect" href="https://static.cloudflareinsights.com">
+  <link rel="preload" href="../../fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../css/fonts.css">
+  <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/animations.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/components.css">
+  <style>.secure-tool-card{border:1px solid var(--border);transition:border-color 0.2s}.secure-tool-card:hover{border-color:var(--green)}</style>
+
+  <script src="../../js/theme.js"></script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "PDFree — Công Cụ PDF An Toàn",
+    "description": "Công cụ PDF an toàn không bao giờ tải file của bạn lên. Mọi xử lý diễn ra cục bộ trong trình duyệt của bạn. Miễn phí, không cần tài khoản.",
+    "url": "https://pdfree.io/vi/cong-cu-pdf-an-toan/",
+    "applicationCategory": "UtilityApplication",
+    "operatingSystem": "Web, iOS, Android",
+    "isAccessibleForFree": true,
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/InStock"
+    },
+    "featureList": [
+      "File không bao giờ được tải lên bất kỳ máy chủ nào",
+      "Không cần tài khoản",
+      "Không giới hạn dung lượng file",
+      "Hoạt động ngoại tuyến (PWA)",
+      "Có sẵn tính năng bảo vệ PDF bằng mật khẩu (mã hóa RC4-128)",
+      "Không lưu trữ dữ liệu"
+    ],
+    "dateModified": "2026-08-09",
+    "provider": {
+      "@type": "Organization",
+      "name": "PDFree",
+      "url": "https://pdfree.io",
+      "description": "PDFree is a free, privacy-first PDF toolkit that runs entirely in the browser — files are processed locally and never uploaded to a server.",
+      "logo": "https://pdfree.io/icons/icon-512.png"
+    }
+  }
+  </script>
+
+    <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "Công Cụ PDF An Toàn Không Tải File Của Bạn Lên",
+    "description": "Một bộ công cụ PDF dựa trên trình duyệt, nơi file không bao giờ được tải lên bất kỳ máy chủ nào.",
+    "url": "https://pdfree.io/vi/cong-cu-pdf-an-toan/",
+    "numberOfItems": 8,
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Ghép PDF không cần tải lên", "url": "https://pdfree.io/vi/gop-pdf/" },
+      { "@type": "ListItem", "position": 2, "name": "Nén PDF không cần tải lên", "url": "https://pdfree.io/vi/nen-pdf/" },
+      { "@type": "ListItem", "position": 3, "name": "Tách PDF không cần tải lên", "url": "https://pdfree.io/vi/tach-pdf/" },
+      { "@type": "ListItem", "position": 4, "name": "Bảo vệ PDF bằng mật khẩu cục bộ", "url": "https://pdfree.io/vi/bao-ve-pdf/" },
+      { "@type": "ListItem", "position": 5, "name": "Xóa văn bản PDF trong trình duyệt", "url": "https://pdfree.io/vi/xoa-van-ban-pdf/" },
+      { "@type": "ListItem", "position": 6, "name": "Chuyển JPG sang PDF cục bộ", "url": "https://pdfree.io/vi/jpg-sang-pdf/" },
+      { "@type": "ListItem", "position": 7, "name": "Thêm hình mờ vào PDF", "url": "https://pdfree.io/vi/them-watermark-pdf/" },
+      { "@type": "ListItem", "position": 8, "name": "Chỉnh sửa metadata PDF", "url": "https://pdfree.io/vi/chinh-sua-metadata-pdf/" }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Có công cụ PDFree nào tải file lên máy chủ không?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Không. Mọi công cụ PDFree đều xử lý file hoàn toàn trong trình duyệt của bạn. File của bạn không bao giờ được gửi đến bất kỳ máy chủ nào, lưu trữ ở bất cứ đâu, hay ghi lại dưới bất kỳ hình thức nào." }
+      },
+      {
+        "@type": "Question",
+        "name": "Các công cụ PDFree có tuân thủ GDPR không?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Có, ngay từ thiết kế. Vì không có dữ liệu cá nhân hay file nào từng được truyền đến máy chủ của chúng tôi, việc tuân thủ GDPR được đảm bảo về mặt cấu trúc — đơn giản là không có dữ liệu nào để xử lý sai." }
+      },
+      {
+        "@type": "Question",
+        "name": "Tôi có thể dùng PDFree cho hồ sơ y tế theo quy định HIPAA không?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Có. Kiến trúc của PDFree đảm bảo rằng Thông tin Y tế được Bảo vệ (PHI) không bao giờ được truyền ra bên ngoài. Nhân viên y tế có thể an tâm xử lý hồ sơ bệnh nhân hoàn toàn trong trình duyệt của họ." }
+      },
+      {
+        "@type": "Question",
+        "name": "PDFree khác gì so với iLovePDF hay SmallPDF?",
+        "acceptedAnswer": { "@type": "Answer", "text": "iLovePDF và SmallPDF tải file của bạn lên máy chủ của họ để xử lý. PDFree chạy hoàn toàn trong trình duyệt của bạn — file của bạn không bao giờ rời khỏi thiết bị. PDFree cũng không có giới hạn dung lượng file và không giới hạn số lần sử dụng hàng ngày." }
+      }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "PDFree", "item": "https://pdfree.io/" },
+      { "@type": "ListItem", "position": 2, "name": "Công Cụ PDF An Toàn", "item": "https://pdfree.io/vi/cong-cu-pdf-an-toan/" }
+    ]
+  }
+  </script>
+</head>
+<body>
+
+  <nav>
+    <a href="/vi/" class="logo" aria-label="Về trang chủ" style="text-decoration:none">
+      <div class="logo-icon" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+      </div>
+      <span class="logo-text">PDF<span>ree</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="/vi/gop-pdf/" class="nav-link" data-tool="merge">Ghép</a>
+      <a href="/vi/tach-pdf/" class="nav-link" data-tool="split">Tách</a>
+      <a href="/vi/nen-pdf/" class="nav-link" data-tool="compress">Nén</a>
+      <a href="/vi/jpg-sang-pdf/" class="nav-link" data-tool="jpg2pdf">JPG→PDF</a>
+      <a href="/vi/pdf-sang-jpg/" class="nav-link" data-tool="pdf2jpg">PDF→JPG</a>
+      <a href="/vi/them-watermark-pdf/" class="nav-link" data-tool="watermark">Hình Mờ</a>
+      <a href="/vi/danh-so-trang-pdf/" class="nav-link" data-tool="pagenum">Số Trang</a>
+      <a href="/vi/chinh-sua-metadata-pdf/" class="nav-link" data-tool="meta">Metadata</a>
+      <a href="/vi/trich-xuat-pdf/" class="nav-link" data-tool="extract">Trích Xuất</a>
+      <a href="/vi/xoay-pdf/" class="nav-link" data-tool="rotate">Xoay</a>
+      <a href="/vi/sap-xep-pdf/" class="nav-link" data-tool="organize">Sắp xếp</a>
+      <a href="/vi/doi-kich-thuoc-pdf/" class="nav-link" data-tool="resize">Đổi Kích Thước</a>
+      <a href="/vi/bao-ve-pdf/" class="nav-link" data-tool="protect">Bảo Vệ</a>
+      <a href="/vi/pdf-sang-word/" class="nav-link" data-tool="pdf2word">PDF→Word</a>
+      <a href="/vi/lam-phang-pdf/" class="nav-link" data-tool="flatten">Khóa PDF</a>
+      <a href="/compare-pdf/" class="nav-link" data-tool="compare">So Sánh</a>
+    </div>
+    <div class="nav-right">
+      <details class="lang-switch" id="langSwitch">
+        <summary aria-label="Đổi ngôn ngữ">🌐 VI</summary>
+        <div class="lang-switch__menu" role="menu">
+          <a href="/" role="menuitem">English</a>
+          <a href="/es/" role="menuitem">Español</a>
+          <a href="/pt/" role="menuitem">Português</a>
+          <a href="/de/" role="menuitem">Deutsch</a>
+          <a href="/fr/" role="menuitem">Français</a>
+          <a href="/id/" role="menuitem">Bahasa Indonesia</a>
+          <a href="/tr/" role="menuitem">Türkçe</a>
+          <a href="/vi/" role="menuitem" aria-current="true">Tiếng Việt</a>
+          <a href="/ru/" role="menuitem">Русский</a>
+          <a href="/ja/" role="menuitem">日本語</a>
+          <a href="/it/" role="menuitem">Italiano</a>
+          <a href="/ko/" role="menuitem">한국어</a>
+          <a href="/nl/" role="menuitem">Nederlands</a>
+          <a href="/pl/" role="menuitem">Polski</a>
+        </div>
+      </details>
+      <button id="themeToggle" class="theme-toggle" aria-label="Chuyển đổi chế độ tối" title="Chuyển đổi chế độ tối"></button>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section style="background:var(--green-light);border-bottom:1px solid rgba(45,122,79,0.15);padding:52px 24px 44px;text-align:center;">
+    <div style="max-width:720px;margin:0 auto;">
+      <div style="display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid rgba(45,122,79,0.2);border-radius:24px;padding:6px 16px;font-size:13px;color:var(--green);font-weight:500;margin-bottom:20px;">
+        <span style="width:7px;height:7px;background:var(--green);border-radius:50%;display:inline-block;"></span>
+        Không tải lên · Không lưu trữ · Không theo dõi
+      </div>
+      <h1 style="font-size:clamp(28px,4.5vw,44px);font-weight:700;letter-spacing:-1px;line-height:1.15;color:var(--text);margin:0 0 16px;">Công Cụ PDF An Toàn Không<br>Tải File Của Bạn Lên</h1>
+      <p style="font-size:17px;color:var(--text2);max-width:580px;margin:0 auto 28px;line-height:1.6;">Mọi công cụ của PDFree đều xử lý tài liệu của bạn hoàn toàn trong trình duyệt. File của bạn không bao giờ rời khỏi thiết bị — dù chỉ một phần nghìn giây. Ghép, nén, tách, bảo vệ và xóa văn bản PDF với quyền riêng tư tuyệt đối.</p>
+      <a href="/vi/" style="background:var(--green);color:#fff;padding:13px 28px;border-radius:10px;font-weight:600;font-size:15px;text-decoration:none;display:inline-block;">Khám Phá Tất Cả Công Cụ PDF — Miễn Phí</a>
+    </div>
+  </section>
+
+  <!-- Trust proof -->
+  <section style="padding:20px 24px;border-bottom:1px solid var(--border);background:var(--surface);">
+    <div style="max-width:720px;margin:0 auto;display:flex;gap:24px;justify-content:center;flex-wrap:wrap;">
+      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">🔒 File không bao giờ rời khỏi thiết bị của bạn</span>
+      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">⚡ Hoạt động 100% ngoại tuyến</span>
+      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">✓ An toàn với GDPR theo thiết kế</span>
+      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">✓ An toàn với HIPAA theo thiết kế</span>
+      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">🚫 Không tài khoản, không theo dõi</span>
+    </div>
+  </section>
+
+  <!-- SEO Content -->
+  <section class="seo-article">
+    <div class="seo-article__inner">
+      <div class="seo-content" style="max-width:800px;margin:60px auto 40px;padding:0 24px;color:var(--text2);line-height:1.8;">
+
+        <h2 style="font-size:26px;color:var(--text);margin:0 0 16px;font-weight:700;">Vì Sao Hầu Hết Công Cụ PDF Không Thực Sự An Toàn</h2>
+        <p>Khi bạn tải một file PDF lên công cụ dựa trên đám mây — kể cả công cụ uy tín — file của bạn phải di chuyển qua internet đến một máy chủ ở xa. Tại đó file được xử lý, lưu trữ tạm thời, rồi cuối cùng bị xóa. Trong khoảng thời gian đó, tài liệu của bạn tồn tại trên phần cứng mà bạn không kiểm soát, trong một trung tâm dữ liệu mà bạn chưa từng thấy, được quản lý bởi một công ty mà bạn phải tin tưởng hoàn toàn vào cách họ bảo mật.</p>
+        <p>Với hầu hết các file, đây là một sự đánh đổi có thể chấp nhận được. Nhưng với <strong>hợp đồng, hồ sơ y tế, báo cáo tài chính, tờ khai thuế, tài liệu nhân sự, hoặc bất cứ điều gì mang tính cá nhân</strong> — khoảng thời gian phơi nhiễm đó tạo ra rủi ro thực sự: rò rỉ máy chủ, cấu hình kiểm soát truy cập sai, trát đòi hầu tòa, hoặc mối đe dọa từ nội bộ.</p>
+        <p>Cách tiếp cận an toàn nhất không phải là mã hóa phía máy chủ tốt hơn. Đó là <strong>không có máy chủ nào cả</strong>.</p>
+
+        <div style="background:var(--green-light);border-left:4px solid var(--green);padding:18px 20px;border-radius:0 8px 8px 0;margin:28px 0;">
+          <p style="margin:0;font-size:14px;color:var(--text);"><strong>Mô hình bảo mật của PDFree:</strong> Toàn bộ quá trình xử lý PDF — ghép, nén, tách, mã hóa — diễn ra bằng JavaScript chạy ngay trong tab trình duyệt của bạn. File của bạn được tải vào RAM, xử lý cục bộ, và kết quả được tải xuống trực tiếp. Đóng tab lại là mọi thứ biến mất. Không có máy chủ nào để bị xâm nhập vì đơn giản là không có máy chủ.</p>
+        </div>
+
+        <!-- Tool grid -->
+        <h2 style="font-size:26px;color:var(--text);margin:52px 0 16px;font-weight:700;">Tất Cả Công Cụ PDF An Toàn — Không Cần Tải Lên</h2>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin:20px 0 40px;">
+          <a href="/vi/gop-pdf/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">🔗</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">Ghép PDF</strong>
+            <span style="font-size:13px;color:var(--text2);">Ghép nhiều PDF thành một — cục bộ, riêng tư</span>
+          </a>
+          <a href="/vi/nen-pdf/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">⚡</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">Nén PDF</strong>
+            <span style="font-size:13px;color:var(--text2);">Giảm dung lượng file mà không gửi file đi bất cứ đâu</span>
+          </a>
+          <a href="/vi/tach-pdf/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">✂️</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">Tách PDF</strong>
+            <span style="font-size:13px;color:var(--text2);">Trích xuất trang từ bất kỳ PDF nào, không cần tải lên</span>
+          </a>
+          <a href="/vi/bao-ve-pdf/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">🔐</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">Bảo Vệ PDF</strong>
+            <span style="font-size:13px;color:var(--text2);">Thêm mã hóa mật khẩu — khóa của bạn không bao giờ rời khỏi thiết bị</span>
+          </a>
+          <a href="/vi/xoa-van-ban-pdf/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">⬛</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">Xóa Văn Bản PDF</strong>
+            <span style="font-size:13px;color:var(--text2);">Che nội dung nhạy cảm trước khi chia sẻ — thực hiện cục bộ</span>
+          </a>
+          <a href="/vi/jpg-sang-pdf/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">🖼️</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">JPG sang PDF</strong>
+            <span style="font-size:13px;color:var(--text2);">Chuyển đổi hình ảnh sang PDF ngay trong trình duyệt</span>
+          </a>
+          <a href="/vi/them-watermark-pdf/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">💧</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">Thêm Hình Mờ</strong>
+            <span style="font-size:13px;color:var(--text2);">Thêm hình mờ văn bản hoặc hình ảnh cục bộ</span>
+          </a>
+          <a href="/vi/chinh-sua-metadata-pdf/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">🏷️</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">Chỉnh Sửa Metadata</strong>
+            <span style="font-size:13px;color:var(--text2);">Xóa tác giả, tiêu đề, ngày tạo — một cách riêng tư</span>
+          </a>
+        </div>
+
+        <!-- Verify -->
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 12px;font-weight:700;">Cách Xác Minh Không Có File Nào Được Tải Lên</h2>
+        <p>Mở DevTools của trình duyệt (nhấn <kbd style="background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:2px 7px;font-size:13px;">F12</kbd>), vào tab <strong>Mạng</strong>, rồi sử dụng bất kỳ công cụ PDFree nào. Lọc các yêu cầu theo "Doc" hoặc "XHR" — bạn sẽ không tìm thấy gì chứa dữ liệu PDF của mình. Các yêu cầu mạng duy nhất là cho file JavaScript và CSS giúp ứng dụng hoạt động.</p>
+        <p>Đây là bằng chứng trực tiếp nhất cho thấy file của bạn luôn ở trên thiết bị của bạn. Không cần tin tưởng — hãy tự mình kiểm chứng trong 30 giây.</p>
+
+        <!-- Who it's for -->
+        <h2 style="font-size:26px;color:var(--text);margin:52px 0 16px;font-weight:700;">Ai Cần Công Cụ PDF An Toàn</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:16px 0 40px;">
+          <div style="border:1px solid var(--border);border-radius:12px;padding:18px;">
+            <strong style="color:var(--text);display:block;margin-bottom:6px;">⚖️ Chuyên gia pháp lý</strong>
+            <p style="font-size:13px;margin:0;color:var(--text2);">Đặc quyền luật sư-khách hàng đòi hỏi xử lý tài liệu bảo mật. PDFree không bao giờ để lộ file khách hàng cho máy chủ bên thứ ba.</p>
+          </div>
+          <div style="border:1px solid var(--border);border-radius:12px;padding:18px;">
+            <strong style="color:var(--text);display:block;margin-bottom:6px;">🏥 Nhân viên y tế</strong>
+            <p style="font-size:13px;margin:0;color:var(--text2);">HIPAA yêu cầu bảo vệ dữ liệu bệnh nhân. PDFree xử lý hồ sơ y tế cục bộ — không truyền bất kỳ PHI nào.</p>
+          </div>
+          <div style="border:1px solid var(--border);border-radius:12px;padding:18px;">
+            <strong style="color:var(--text);display:block;margin-bottom:6px;">💼 Tài chính &amp; kế toán</strong>
+            <p style="font-size:13px;margin:0;color:var(--text2);">Tờ khai thuế, sao kê ngân hàng, và tài liệu lương chứa dữ liệu nhạy cảm chỉ nên tồn tại trên thiết bị của bạn.</p>
+          </div>
+          <div style="border:1px solid var(--border);border-radius:12px;padding:18px;">
+            <strong style="color:var(--text);display:block;margin-bottom:6px;">🏢 Chuyên viên nhân sự</strong>
+            <p style="font-size:13px;margin:0;color:var(--text2);">Hợp đồng nhân viên, đánh giá hiệu suất, và hồ sơ ứng viên — xử lý mà không lộ ra bất kỳ máy chủ nào.</p>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 20px;font-weight:700;">Câu Hỏi Thường Gặp</h2>
+        <div style="display:flex;flex-direction:column;gap:20px;">
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Có công cụ PDFree nào tải file lên máy chủ không?</h3>
+            <p style="margin:0;font-size:14px;">Không. Mọi công cụ PDFree đều xử lý file hoàn toàn trong trình duyệt của bạn. File của bạn không bao giờ được gửi đến bất kỳ máy chủ nào, lưu trữ ở bất cứ đâu, hay ghi lại dưới bất kỳ hình thức nào.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Các công cụ PDFree có tuân thủ GDPR không?</h3>
+            <p style="margin:0;font-size:14px;">Có, ngay từ thiết kế. Vì không có dữ liệu cá nhân hay file nào từng được truyền đến máy chủ của chúng tôi, việc tuân thủ GDPR được đảm bảo về mặt cấu trúc — đơn giản là không có dữ liệu nào để xử lý sai.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Tôi có thể dùng PDFree cho hồ sơ y tế theo quy định HIPAA không?</h3>
+            <p style="margin:0;font-size:14px;">Có. Kiến trúc của PDFree đảm bảo rằng Thông tin Y tế được Bảo vệ (PHI) không bao giờ được truyền ra bên ngoài. Nhân viên y tế có thể an tâm xử lý hồ sơ bệnh nhân hoàn toàn trong trình duyệt của họ.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">PDFree khác gì so với iLovePDF hay SmallPDF?</h3>
+            <p style="margin:0;font-size:14px;">iLovePDF và SmallPDF tải file của bạn lên máy chủ của họ để xử lý. PDFree chạy hoàn toàn trong trình duyệt của bạn — file của bạn không bao giờ rời khỏi thiết bị. PDFree cũng không có giới hạn dung lượng file và không giới hạn số lần sử dụng hàng ngày.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div style="display:flex;gap:48px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;font-size:13px;border-top:1px solid var(--border);padding-top:20px;">
+      <div>
+        <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Giải Pháp Thay Thế</div>
+        <a href="/ilovepdf-alternative/" style="display:block;color:var(--green);text-decoration:none;margin-bottom:4px;">Giải Pháp Thay Thế iLovePDF</a>
+      </div>
+      <div>
+        <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Giải Pháp</div>
+        <a href="/hipaa-pdf-tools/" style="display:block;color:var(--green);text-decoration:none;margin-bottom:4px;">PDF Tuân Thủ HIPAA</a>
+        <a href="/vi/cong-cu-pdf-an-toan/" style="display:block;color:var(--green);text-decoration:none;">Công Cụ PDF An Toàn</a>
+      </div>
+    </div>
+    PDFree · <strong>Toàn bộ xử lý diễn ra 100% trong trình duyệt của bạn</strong> · File <strong>không bao giờ được tải lên</strong><br>
+    <span style="color:var(--green)">🔒</span> Tài liệu của bạn không bao giờ rời khỏi thiết bị &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> Được xây dựng để miễn phí cho tất cả mọi người, mãi mãi<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
+      <a href="/privacy.html" style="color:var(--green)">Quyền Riêng Tư</a> &nbsp;·&nbsp;
+      <a href="/terms.html" style="color:var(--green)">Điều Khoản</a> &nbsp;·&nbsp;
+      <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a> &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green)">GitHub</a>
+    </span>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script>
+</body>
+</html>

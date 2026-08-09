@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src  'self' 'wasm-unsafe-eval' blob:
+                https://cdnjs.cloudflare.com https://esm.sh
+                https://plausible.io https://pagead2.googlesyndication.com
+                https://static.cloudflareinsights.com;
+    style-src   'self' 'unsafe-inline';
+    font-src    'self';
+    img-src     'self' data: blob: https:;
+    connect-src 'self' https://cdnjs.cloudflare.com https://*.workers.dev
+                https://plausible.io https://pagead2.googlesyndication.com
+                https://www.googletagservices.com https://*.doubleclick.net
+                https://cloudflareinsights.com;
+    frame-src   https://googleads.g.doubleclick.net https://tpc.googlesyndication.com;
+    worker-src  'self' blob:;
+    object-src  'none';
+  ">
+
+  <title>Безопасные PDF-инструменты, которые не загружают ваши файлы — PDFree</title>
+  <meta name="description" content="PDF-инструменты, которые никогда не загружают ваши файлы на сервер. Вся обработка происходит в вашем браузере — объединяйте, сжимайте, разделяйте, защищайте PDF с полной конфиденциальностью.">
+
+  <meta property="og:title"       content="Безопасные PDF-инструменты — Файлы Никогда Не Загружаются | PDFree">
+  <meta property="og:description" content="Единственный набор PDF-инструментов, который обрабатывает всё прямо в вашем браузере. Без сервера, без хранения, без слежки.">
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://pdfree.io/ru/bezopasnye-pdf-instrumenty/">
+  <meta property="og:site_name"   content="PDFree">
+  <meta property="og:locale"      content="ru_RU">
+  <meta property="og:image"        content="https://pdfree.io/icons/og-image.jpg">
+  <meta property="og:image:width"  content="1200">
+  <meta property="og:image:height" content="633">
+  <meta property="og:image:alt"    content="Безопасные PDF-инструменты — Файлы Никогда Не Загружаются | PDFree">
+  <meta name="twitter:card"       content="summary_large_image">
+  <meta name="twitter:site"       content="@pdfree_io">
+  <meta name="twitter:title"      content="Безопасные PDF-инструменты — Файлы Никогда Не Загружаются | PDFree">
+  <meta name="twitter:description" content="Единственный набор PDF-инструментов, который обрабатывает всё прямо в вашем браузере. Без сервера, без хранения, без слежки.">
+  <meta name="twitter:image"       content="https://pdfree.io/icons/og-image.jpg">
+  <meta name="twitter:image:alt"   content="Безопасные PDF-инструменты — Файлы Никогда Не Загружаются | PDFree">
+
+  <link rel="canonical" href="https://pdfree.io/ru/bezopasnye-pdf-instrumenty/">
+  <link rel="alternate" hreflang="en"        href="https://pdfree.io/secure-pdf-tools/">
+  <link rel="alternate" hreflang="de"        href="https://pdfree.io/de/sichere-pdf-tools/">
+  <link rel="alternate" hreflang="es"        href="https://pdfree.io/es/herramientas-pdf-seguras/">
+  <link rel="alternate" hreflang="fr"        href="https://pdfree.io/fr/outils-pdf-securises/">
+  <link rel="alternate" hreflang="pt"        href="https://pdfree.io/pt/ferramentas-pdf-seguras/">
+  <link rel="alternate" hreflang="id"        href="https://pdfree.io/id/alat-pdf-aman/">
+  <link rel="alternate" hreflang="vi"        href="https://pdfree.io/vi/cong-cu-pdf-an-toan/">
+  <link rel="alternate" hreflang="ru"        href="https://pdfree.io/ru/bezopasnye-pdf-instrumenty/">
+  <link rel="alternate" hreflang="ja"        href="https://pdfree.io/ja/anzen-pdf-tool/">
+  <link rel="alternate" hreflang="it"        href="https://pdfree.io/it/strumenti-pdf-sicuri/">
+  <link rel="alternate" hreflang="ko"        href="https://pdfree.io/ko/anjeon-pdf-dogu/">
+  <link rel="alternate" hreflang="nl"        href="https://pdfree.io/nl/veilige-pdf-tools/">
+  <link rel="alternate" hreflang="pl"        href="https://pdfree.io/pl/bezpieczne-narzedzia-pdf/">
+  <link rel="alternate" hreflang="tr"        href="https://pdfree.io/tr/guvenli-pdf-araclari/">
+  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/secure-pdf-tools/">
+
+  <link rel="manifest" href="../../manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="PDFree">
+  <link rel="apple-touch-icon" href="../../icons/icon-192.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+  <link rel="preconnect" href="https://plausible.io">
+  <link rel="preconnect" href="https://static.cloudflareinsights.com">
+  <link rel="preload" href="../../fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../css/fonts.css">
+  <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/animations.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/components.css">
+  <style>.secure-tool-card{border:1px solid var(--border);transition:border-color 0.2s}.secure-tool-card:hover{border-color:var(--green)}</style>
+
+  <script src="../../js/theme.js"></script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "PDFree — Безопасные PDF-инструменты",
+    "description": "Безопасные PDF-инструменты, которые никогда не загружают ваши файлы. Вся обработка происходит локально в вашем браузере. Бесплатно, регистрация не требуется.",
+    "url": "https://pdfree.io/ru/bezopasnye-pdf-instrumenty/",
+    "applicationCategory": "UtilityApplication",
+    "operatingSystem": "Web, iOS, Android",
+    "isAccessibleForFree": true,
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/InStock"
+    },
+    "featureList": [
+      "Файлы никогда не загружаются на сервер",
+      "Регистрация не требуется",
+      "Без ограничений по размеру файла",
+      "Работает офлайн (PWA)",
+      "Доступна защита PDF паролем (шифрование RC4-128)",
+      "Данные нигде не сохраняются"
+    ],
+    "dateModified": "2026-08-09",
+    "provider": {
+      "@type": "Organization",
+      "name": "PDFree",
+      "url": "https://pdfree.io",
+      "description": "PDFree is a free, privacy-first PDF toolkit that runs entirely in the browser — files are processed locally and never uploaded to a server.",
+      "logo": "https://pdfree.io/icons/icon-512.png"
+    }
+  }
+  </script>
+
+    <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "Безопасные PDF-инструменты, которые не загружают ваши файлы",
+    "description": "Набор PDF-инструментов на основе браузера, где файлы никогда не загружаются на сервер.",
+    "url": "https://pdfree.io/ru/bezopasnye-pdf-instrumenty/",
+    "numberOfItems": 8,
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Объединить PDF без загрузки", "url": "https://pdfree.io/ru/objedinit-pdf/" },
+      { "@type": "ListItem", "position": 2, "name": "Сжать PDF без загрузки", "url": "https://pdfree.io/ru/szhat-pdf/" },
+      { "@type": "ListItem", "position": 3, "name": "Разделить PDF без загрузки", "url": "https://pdfree.io/ru/razdelit-pdf/" },
+      { "@type": "ListItem", "position": 4, "name": "Защитить PDF паролем локально", "url": "https://pdfree.io/ru/zaschitit-pdf/" },
+      { "@type": "ListItem", "position": 5, "name": "Скрыть текст в PDF в браузере", "url": "https://pdfree.io/ru/skryt-tekst-pdf/" },
+      { "@type": "ListItem", "position": 6, "name": "Конвертировать JPG в PDF локально", "url": "https://pdfree.io/ru/jpg-v-pdf/" },
+      { "@type": "ListItem", "position": 7, "name": "Добавить водяной знак в PDF", "url": "https://pdfree.io/ru/vodnoy-znak-pdf/" },
+      { "@type": "ListItem", "position": 8, "name": "Редактировать метаданные PDF", "url": "https://pdfree.io/ru/metadannye-pdf/" }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Загружают ли инструменты PDFree файлы на сервер?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Нет. Каждый инструмент PDFree обрабатывает файлы полностью в вашем браузере с помощью JavaScript. Ваши файлы никогда не покидают устройство, никогда не загружаются на сервер и никогда не сохраняются нигде, кроме временной памяти браузера." }
+      },
+      {
+        "@type": "Question",
+        "name": "Как я могу убедиться, что мои файлы не загружаются?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Откройте DevTools вашего браузера (F12), перейдите на вкладку Network и воспользуйтесь любым инструментом PDFree. Вы не увидите ни одного запроса с данными вашего PDF-файла — только запросы за JavaScript и CSS-файлами приложения." }
+      },
+      {
+        "@type": "Question",
+        "name": "Соответствуют ли инструменты PDFree требованиям GDPR?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Да. PDFree соответствует GDPR по своей архитектуре. Поскольку никакие личные данные или файлы никогда не передаются на наши серверы, защищать, удалять или отчитываться попросту не о чем. Такая архитектура делает нарушения GDPR структурно невозможными." }
+      },
+      {
+        "@type": "Question",
+        "name": "Можно ли использовать PDFree для документов, регулируемых HIPAA?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Да. Архитектура PDFree на основе браузера означает, что защищённая медицинская информация (PHI) никогда не передаётся на внешние серверы. Медицинские работники могут безопасно использовать PDFree для карт пациентов и медицинской документации." }
+      }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "PDFree", "item": "https://pdfree.io/" },
+      { "@type": "ListItem", "position": 2, "name": "Безопасные PDF-инструменты", "item": "https://pdfree.io/ru/bezopasnye-pdf-instrumenty/" }
+    ]
+  }
+  </script>
+</head>
+<body>
+
+  <nav>
+    <a href="/ru/" class="logo" aria-label="На главную" style="text-decoration:none">
+      <div class="logo-icon" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+      </div>
+      <span class="logo-text">PDF<span>ree</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="/ru/objedinit-pdf/" class="nav-link" data-tool="merge">Объединить</a>
+      <a href="/ru/razdelit-pdf/" class="nav-link" data-tool="split">Разделить</a>
+      <a href="/ru/szhat-pdf/" class="nav-link" data-tool="compress">Сжать</a>
+      <a href="/ru/jpg-v-pdf/" class="nav-link" data-tool="jpg2pdf">JPG→PDF</a>
+      <a href="/ru/pdf-v-jpg/" class="nav-link" data-tool="pdf2jpg">PDF→JPG</a>
+      <a href="/ru/vodnoy-znak-pdf/" class="nav-link" data-tool="watermark">Водяной знак</a>
+      <a href="/ru/numeratsiya-stranits-pdf/" class="nav-link" data-tool="pagenum">Нумерация</a>
+      <a href="/ru/metadannye-pdf/" class="nav-link" data-tool="meta">Метаданные</a>
+      <a href="/ru/izvlech-stranitsy-pdf/" class="nav-link" data-tool="extract">Извлечь</a>
+      <a href="/draw-on-pdf/" class="nav-link" data-tool="draw-pdf">Рисовать</a>
+      <a href="/ru/povernut-pdf/" class="nav-link" data-tool="rotate">Повернуть</a>
+      <a href="/ru/organizovat-pdf/" class="nav-link" data-tool="organize">Упорядочить</a>
+      <a href="/ru/izmenit-razmer-pdf/" class="nav-link" data-tool="resize">Изменить размер</a>
+      <a href="/ru/zaschitit-pdf/" class="nav-link" data-tool="protect">Защитить</a>
+      <a href="/ru/raspoznat-tekst-pdf/" class="nav-link" data-tool="ocr">OCR</a>
+      <a href="/ru/pdf-v-word/" class="nav-link" data-tool="pdf2word">PDF→Word</a>
+      <a href="/ru/uploshchit-pdf/" class="nav-link" data-tool="flatten">Заблокировать PDF</a>
+      <a href="/compare-pdf/" class="nav-link" data-tool="compare">Сравнить</a>
+    </div>
+    <div class="nav-right">
+      <details class="lang-switch" id="langSwitch">
+        <summary aria-label="Изменить язык">🌐 RU</summary>
+        <div class="lang-switch__menu" role="menu">
+          <a href="/" role="menuitem">English</a>
+          <a href="/es/" role="menuitem">Español</a>
+          <a href="/pt/" role="menuitem">Português</a>
+          <a href="/de/" role="menuitem">Deutsch</a>
+          <a href="/fr/" role="menuitem">Français</a>
+          <a href="/id/" role="menuitem">Bahasa Indonesia</a>
+          <a href="/tr/" role="menuitem">Türkçe</a>
+          <a href="/vi/" role="menuitem">Tiếng Việt</a>
+          <a href="/ru/" role="menuitem" aria-current="true">Русский</a>
+          <a href="/ja/" role="menuitem">日本語</a>
+          <a href="/it/" role="menuitem">Italiano</a>
+          <a href="/ko/" role="menuitem">한국어</a>
+          <a href="/nl/" role="menuitem">Nederlands</a>
+          <a href="/pl/" role="menuitem">Polski</a>
+        </div>
+      </details>
+      <button id="themeToggle" class="theme-toggle" aria-label="Переключить тёмную тему" title="Переключить тёмную тему"></button>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section style="background:var(--green-light);border-bottom:1px solid rgba(45,122,79,0.15);padding:52px 24px 44px;text-align:center;">
+    <div style="max-width:720px;margin:0 auto;">
+      <div style="display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid rgba(45,122,79,0.2);border-radius:24px;padding:6px 16px;font-size:13px;color:var(--green);font-weight:500;margin-bottom:20px;">
+        <span style="width:7px;height:7px;background:var(--green);border-radius:50%;display:inline-block;"></span>
+        Без загрузки · Без хранения · Без слежки
+      </div>
+      <h1 style="font-size:clamp(28px,4.5vw,44px);font-weight:700;letter-spacing:-1px;line-height:1.15;color:var(--text);margin:0 0 16px;">Безопасные PDF-инструменты, которые<br>не загружают ваши файлы</h1>
+      <p style="font-size:17px;color:var(--text2);max-width:580px;margin:0 auto 28px;line-height:1.6;">Каждый инструмент PDFree обрабатывает ваши документы полностью в браузере. Ваши файлы никогда не покидают устройство — ни на миллисекунду. Объединяйте, сжимайте, разделяйте, защищайте и скрывайте текст в PDF с полной конфиденциальностью.</p>
+      <a href="/ru/" style="background:var(--green);color:#fff;padding:13px 28px;border-radius:10px;font-weight:600;font-size:15px;text-decoration:none;display:inline-block;">Смотреть все PDF-инструменты — бесплатно</a>
+    </div>
+  </section>
+
+  <!-- Trust proof -->
+  <section style="padding:20px 24px;border-bottom:1px solid var(--border);background:var(--surface);">
+    <div style="max-width:720px;margin:0 auto;display:flex;gap:24px;justify-content:center;flex-wrap:wrap;">
+      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">🔒 Файлы никогда не покидают устройство</span>
+      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">⚡ Работает на 100% офлайн</span>
+      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">✓ Безопасно для GDPR по архитектуре</span>
+      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">✓ Безопасно для HIPAA по архитектуре</span>
+      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">🚫 Без регистрации, без слежки</span>
+    </div>
+  </section>
+
+  <!-- SEO Content -->
+  <section class="seo-article">
+    <div class="seo-article__inner">
+      <div class="seo-content" style="max-width:800px;margin:60px auto 40px;padding:0 24px;color:var(--text2);line-height:1.8;">
+
+        <h2 style="font-size:26px;color:var(--text);margin:0 0 16px;font-weight:700;">Почему большинство PDF-инструментов на самом деле не безопасны</h2>
+        <p>Когда вы загружаете PDF в облачный инструмент — даже в достаточно надёжный — ваш файл отправляется через интернет на удалённый сервер. Там он обрабатывается, временно хранится и в конце концов удаляется. В течение этого времени ваш документ существует на оборудовании, которое вы не контролируете, в дата-центре, который вы никогда не видели, под управлением компании, чьим методам защиты данных вы вынуждены слепо доверять.</p>
+        <p>Для большинства файлов это приемлемый компромисс. Но для <strong>договоров, медицинских карт, финансовой отчётности, налоговых деклараций, кадровых документов или всего личного</strong> — это окно уязвимости создаёт реальный риск: утечки с серверов, неправильно настроенные права доступа, судебные повестки или действия недобросовестных сотрудников.</p>
+        <p>Самый безопасный подход — не более совершенное шифрование на сервере. Это <strong>полное отсутствие сервера</strong>.</p>
+
+        <div style="background:var(--green-light);border-left:4px solid var(--green);padding:18px 20px;border-radius:0 8px 8px 0;margin:28px 0;">
+          <p style="margin:0;font-size:14px;color:var(--text);"><strong>Модель безопасности PDFree:</strong> Вся обработка PDF — объединение, сжатие, разделение, шифрование — происходит в JavaScript-коде, работающем прямо во вкладке вашего браузера. Ваши файлы загружаются в оперативную память, обрабатываются локально, а результат скачивается напрямую. Закройте вкладку — и всё исчезнет. Взламывать нечего, потому что сервера просто не существует.</p>
+        </div>
+
+        <!-- Tool grid -->
+        <h2 style="font-size:26px;color:var(--text);margin:52px 0 16px;font-weight:700;">Все безопасные PDF-инструменты — без загрузки</h2>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin:20px 0 40px;">
+          <a href="/ru/objedinit-pdf/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">🔗</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">Объединить PDF</strong>
+            <span style="font-size:13px;color:var(--text2);">Объединяйте несколько PDF в один файл — локально и приватно</span>
+          </a>
+          <a href="/ru/szhat-pdf/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">⚡</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">Сжать PDF</strong>
+            <span style="font-size:13px;color:var(--text2);">Уменьшайте размер файла, никуда его не отправляя</span>
+          </a>
+          <a href="/ru/razdelit-pdf/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">✂️</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">Разделить PDF</strong>
+            <span style="font-size:13px;color:var(--text2);">Извлекайте страницы из любого PDF без загрузки</span>
+          </a>
+          <a href="/ru/zaschitit-pdf/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">🔐</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">Защитить PDF</strong>
+            <span style="font-size:13px;color:var(--text2);">Добавьте шифрование паролем — ваш ключ никогда не покидает устройство</span>
+          </a>
+          <a href="/ru/skryt-tekst-pdf/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">⬛</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">Скрыть текст в PDF</strong>
+            <span style="font-size:13px;color:var(--text2);">Скрывайте конфиденциальный контент перед отправкой — локально</span>
+          </a>
+          <a href="/ru/jpg-v-pdf/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">🖼️</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">JPG в PDF</strong>
+            <span style="font-size:13px;color:var(--text2);">Конвертируйте изображения в PDF прямо в браузере</span>
+          </a>
+          <a href="/ru/vodnoy-znak-pdf/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">💧</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">Водяной знак PDF</strong>
+            <span style="font-size:13px;color:var(--text2);">Добавляйте текстовые или графические водяные знаки локально</span>
+          </a>
+          <a href="/ru/metadannye-pdf/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">🏷️</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">Редактировать метаданные</strong>
+            <span style="font-size:13px;color:var(--text2);">Удаляйте автора, заголовок, дату создания — приватно</span>
+          </a>
+        </div>
+
+        <!-- Verify -->
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 12px;font-weight:700;">Как убедиться, что файлы не загружаются</h2>
+        <p>Откройте DevTools вашего браузера (нажмите <kbd style="background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:2px 7px;font-size:13px;">F12</kbd>), перейдите на вкладку <strong>Network</strong>, а затем воспользуйтесь любым инструментом PDFree. Отфильтруйте запросы по «Doc» или «XHR» — вы не найдёте ничего, что содержало бы данные вашего PDF. Единственные сетевые запросы — это JavaScript и CSS-файлы, благодаря которым работает приложение.</p>
+        <p>Это самое прямое доказательство того, что ваши файлы остаются на вашем устройстве. Никакого доверия на слово — проверьте сами за 30 секунд.</p>
+
+        <!-- Who it's for -->
+        <h2 style="font-size:26px;color:var(--text);margin:52px 0 16px;font-weight:700;">Кому нужны безопасные PDF-инструменты</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:16px 0 40px;">
+          <div style="border:1px solid var(--border);border-radius:12px;padding:18px;">
+            <strong style="color:var(--text);display:block;margin-bottom:6px;">⚖️ Юристы</strong>
+            <p style="font-size:13px;margin:0;color:var(--text2);">Адвокатская тайна требует конфиденциальной работы с документами. PDFree никогда не передаёт файлы клиентов на сторонние серверы.</p>
+          </div>
+          <div style="border:1px solid var(--border);border-radius:12px;padding:18px;">
+            <strong style="color:var(--text);display:block;margin-bottom:6px;">🏥 Медицинские работники</strong>
+            <p style="font-size:13px;margin:0;color:var(--text2);">HIPAA требует защиты данных пациентов. PDFree обрабатывает медицинские записи локально — PHI никуда не передаётся.</p>
+          </div>
+          <div style="border:1px solid var(--border);border-radius:12px;padding:18px;">
+            <strong style="color:var(--text);display:block;margin-bottom:6px;">💼 Финансы и бухгалтерия</strong>
+            <p style="font-size:13px;margin:0;color:var(--text2);">Налоговые декларации, банковские выписки и данные о зарплате содержат конфиденциальную информацию, которая должна оставаться только на вашем устройстве.</p>
+          </div>
+          <div style="border:1px solid var(--border);border-radius:12px;padding:18px;">
+            <strong style="color:var(--text);display:block;margin-bottom:6px;">🏢 HR-специалисты</strong>
+            <p style="font-size:13px;margin:0;color:var(--text2);">Трудовые договоры, оценки эффективности и данные кандидатов — работайте с ними без риска утечки через сервер.</p>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 20px;font-weight:700;">Часто задаваемые вопросы</h2>
+        <div style="display:flex;flex-direction:column;gap:20px;">
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Загружают ли инструменты PDFree файлы на сервер?</h3>
+            <p style="margin:0;font-size:14px;">Нет. Каждый инструмент PDFree обрабатывает файлы полностью в вашем браузере. Ваши файлы никогда не отправляются на сервер, нигде не хранятся и никак не логируются.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Соответствуют ли инструменты PDFree требованиям GDPR?</h3>
+            <p style="margin:0;font-size:14px;">Да, по своей архитектуре. Поскольку личные данные и файлы никогда не передаются на наши серверы, соответствие GDPR гарантировано структурно — просто не с чем поступить неправильно.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Можно ли использовать PDFree для медицинских записей, регулируемых HIPAA?</h3>
+            <p style="margin:0;font-size:14px;">Да. Архитектура PDFree гарантирует, что защищённая медицинская информация (PHI) никогда не передаётся вовне. Медицинские специалисты могут безопасно обрабатывать карты пациентов полностью в браузере.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Чем PDFree отличается от iLovePDF или SmallPDF?</h3>
+            <p style="margin:0;font-size:14px;">iLovePDF и SmallPDF загружают ваши файлы на свои серверы для обработки. PDFree работает полностью в вашем браузере — ваши файлы никогда не покидают устройство. У PDFree также нет ограничений по размеру файла и дневных лимитов использования.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div style="display:flex;gap:48px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;font-size:13px;border-top:1px solid var(--border);padding-top:20px;">
+      <div>
+        <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Альтернативы</div>
+        <a href="/ilovepdf-alternative/" style="display:block;color:var(--green);text-decoration:none;margin-bottom:4px;">Альтернатива iLovePDF</a>
+      </div>
+      <div>
+        <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Решения</div>
+        <a href="/hipaa-pdf-tools/" style="display:block;color:var(--green);text-decoration:none;margin-bottom:4px;">PDF, совместимый с HIPAA</a>
+        <a href="/ru/bezopasnye-pdf-instrumenty/" style="display:block;color:var(--green);text-decoration:none;">Безопасные PDF-инструменты</a>
+      </div>
+    </div>
+    PDFree · <strong>Вся обработка происходит 100% в вашем браузере</strong> · Файлы <strong>никогда не загружаются</strong><br>
+    <span style="color:var(--green)">🔒</span> Ваши документы никогда не покидают устройство &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> Создан бесплатным для всех — навсегда<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
+      <a href="/privacy.html" style="color:var(--green)">Конфиденциальность</a> &nbsp;·&nbsp;
+      <a href="/terms.html" style="color:var(--green)">Условия</a> &nbsp;·&nbsp;
+      <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a> &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green)">GitHub</a>
+    </span>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script>
+</body>
+</html>

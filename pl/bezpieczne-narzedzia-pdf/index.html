@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src  'self' 'wasm-unsafe-eval' blob:
+                https://cdnjs.cloudflare.com https://esm.sh
+                https://plausible.io https://pagead2.googlesyndication.com
+                https://static.cloudflareinsights.com;
+    style-src   'self' 'unsafe-inline';
+    font-src    'self';
+    img-src     'self' data: blob: https:;
+    connect-src 'self' https://cdnjs.cloudflare.com https://*.workers.dev
+                https://plausible.io https://pagead2.googlesyndication.com
+                https://www.googletagservices.com https://*.doubleclick.net
+                https://cloudflareinsights.com;
+    frame-src   https://googleads.g.doubleclick.net https://tpc.googlesyndication.com;
+    worker-src  'self' blob:;
+    object-src  'none';
+  ">
+
+  <title>Bezpieczne Narzędzia PDF, Które Nie Przesyłają Twoich Plików — PDFree</title>
+  <meta name="description" content="Narzędzia PDF, które nigdy nie przesyłają Twoich plików na serwer. Całe przetwarzanie odbywa się w przeglądarce — łącz, kompresuj, dziel i zabezpieczaj pliki PDF z pełną prywatnością.">
+
+  <meta property="og:title"       content="Bezpieczne Narzędzia PDF — Pliki Nigdy Nie Są Przesyłane | PDFree">
+  <meta property="og:description" content="Jedyny zestaw narzędzi PDF, który przetwarza wszystko w przeglądarce. Bez serwera, bez przechowywania, bez śledzenia.">
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://pdfree.io/pl/bezpieczne-narzedzia-pdf/">
+  <meta property="og:site_name"   content="PDFree">
+  <meta property="og:locale"      content="pl_PL">
+  <meta property="og:image"        content="https://pdfree.io/icons/og-image.jpg">
+  <meta property="og:image:width"  content="1200">
+  <meta property="og:image:height" content="633">
+  <meta property="og:image:alt"    content="Bezpieczne Narzędzia PDF — Pliki Nigdy Nie Są Przesyłane | PDFree">
+  <meta name="twitter:card"       content="summary_large_image">
+  <meta name="twitter:site"       content="@pdfree_io">
+  <meta name="twitter:title"      content="Bezpieczne Narzędzia PDF — Pliki Nigdy Nie Są Przesyłane | PDFree">
+  <meta name="twitter:description" content="Jedyny zestaw narzędzi PDF, który przetwarza wszystko w przeglądarce. Bez serwera, bez przechowywania, bez śledzenia.">
+  <meta name="twitter:image"       content="https://pdfree.io/icons/og-image.jpg">
+  <meta name="twitter:image:alt"   content="Bezpieczne Narzędzia PDF — Pliki Nigdy Nie Są Przesyłane | PDFree">
+
+  <link rel="canonical" href="https://pdfree.io/pl/bezpieczne-narzedzia-pdf/">
+  <link rel="alternate" hreflang="en"        href="https://pdfree.io/secure-pdf-tools/">
+  <link rel="alternate" hreflang="de"        href="https://pdfree.io/de/sichere-pdf-tools/">
+  <link rel="alternate" hreflang="es"        href="https://pdfree.io/es/herramientas-pdf-seguras/">
+  <link rel="alternate" hreflang="fr"        href="https://pdfree.io/fr/outils-pdf-securises/">
+  <link rel="alternate" hreflang="pt"        href="https://pdfree.io/pt/ferramentas-pdf-seguras/">
+  <link rel="alternate" hreflang="id"        href="https://pdfree.io/id/alat-pdf-aman/">
+  <link rel="alternate" hreflang="vi"        href="https://pdfree.io/vi/cong-cu-pdf-an-toan/">
+  <link rel="alternate" hreflang="ru"        href="https://pdfree.io/ru/bezopasnye-pdf-instrumenty/">
+  <link rel="alternate" hreflang="ja"        href="https://pdfree.io/ja/anzen-pdf-tool/">
+  <link rel="alternate" hreflang="it"        href="https://pdfree.io/it/strumenti-pdf-sicuri/">
+  <link rel="alternate" hreflang="ko"        href="https://pdfree.io/ko/anjeon-pdf-dogu/">
+  <link rel="alternate" hreflang="nl"        href="https://pdfree.io/nl/veilige-pdf-tools/">
+  <link rel="alternate" hreflang="pl"        href="https://pdfree.io/pl/bezpieczne-narzedzia-pdf/">
+  <link rel="alternate" hreflang="tr"        href="https://pdfree.io/tr/guvenli-pdf-araclari/">
+  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/secure-pdf-tools/">
+
+  <link rel="manifest" href="../../manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="PDFree">
+  <link rel="apple-touch-icon" href="../../icons/icon-192.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+  <link rel="preconnect" href="https://plausible.io">
+  <link rel="preconnect" href="https://static.cloudflareinsights.com">
+  <link rel="preload" href="../../fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../css/fonts.css">
+  <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/animations.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/components.css">
+  <style>.secure-tool-card{border:1px solid var(--border);transition:border-color 0.2s}.secure-tool-card:hover{border-color:var(--green)}</style>
+
+  <script src="../../js/theme.js"></script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "PDFree — Bezpieczne Narzędzia PDF",
+    "description": "Bezpieczne narzędzia PDF, które nigdy nie przesyłają Twoich plików. Całe przetwarzanie odbywa się lokalnie w przeglądarce. Za darmo, bez konieczności zakładania konta.",
+    "url": "https://pdfree.io/pl/bezpieczne-narzedzia-pdf/",
+    "applicationCategory": "UtilityApplication",
+    "operatingSystem": "Web, iOS, Android",
+    "isAccessibleForFree": true,
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/InStock"
+    },
+    "featureList": [
+      "Pliki nigdy nie są przesyłane na żaden serwer",
+      "Konto nie jest wymagane",
+      "Brak limitu rozmiaru pliku",
+      "Działa offline (PWA)",
+      "Dostępna ochrona PDF hasłem (szyfrowanie RC4-128)",
+      "Zero przechowywania danych"
+    ],
+    "dateModified": "2026-08-09",
+    "provider": {
+      "@type": "Organization",
+      "name": "PDFree",
+      "url": "https://pdfree.io",
+      "description": "PDFree is a free, privacy-first PDF toolkit that runs entirely in the browser — files are processed locally and never uploaded to a server.",
+      "logo": "https://pdfree.io/icons/icon-512.png"
+    }
+  }
+  </script>
+
+    <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "Bezpieczne Narzędzia PDF, Które Nie Przesyłają Twoich Plików",
+    "description": "Zestaw narzędzi PDF działających w przeglądarce, w którym pliki nigdy nie są przesyłane na żaden serwer.",
+    "url": "https://pdfree.io/pl/bezpieczne-narzedzia-pdf/",
+    "numberOfItems": 8,
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Połącz PDF bez przesyłania", "url": "https://pdfree.io/pl/polacz-pdf/" },
+      { "@type": "ListItem", "position": 2, "name": "Kompresuj PDF bez przesyłania", "url": "https://pdfree.io/pl/kompresuj-pdf/" },
+      { "@type": "ListItem", "position": 3, "name": "Podziel PDF bez przesyłania", "url": "https://pdfree.io/pl/podziel-pdf/" },
+      { "@type": "ListItem", "position": 4, "name": "Zabezpiecz PDF hasłem lokalnie", "url": "https://pdfree.io/pl/zabezpiecz-pdf/" },
+      { "@type": "ListItem", "position": 5, "name": "Zaczernij PDF w przeglądarce", "url": "https://pdfree.io/pl/zaczernij-pdf/" },
+      { "@type": "ListItem", "position": 6, "name": "Konwertuj JPG do PDF lokalnie", "url": "https://pdfree.io/pl/jpg-do-pdf/" },
+      { "@type": "ListItem", "position": 7, "name": "Dodaj znak wodny do PDF", "url": "https://pdfree.io/pl/znak-wodny-pdf/" },
+      { "@type": "ListItem", "position": 8, "name": "Edytuj metadane PDF", "url": "https://pdfree.io/pl/metadane-pdf/" }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Czy jakiekolwiek narzędzia PDFree przesyłają pliki na serwer?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Nie. Każde narzędzie PDFree przetwarza pliki całkowicie w Twojej przeglądarce za pomocą JavaScript. Twoje pliki nigdy nie opuszczają Twojego urządzenia, nigdy nie są przesyłane na żaden serwer i nigdy nie są przechowywane poza tymczasową pamięcią Twojej przeglądarki." }
+      },
+      {
+        "@type": "Question",
+        "name": "Jak mogę sprawdzić, że moje pliki nie są przesyłane?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Otwórz narzędzia deweloperskie przeglądarki (F12), przejdź do zakładki Sieć, a następnie użyj dowolnego narzędzia PDFree. Nie zobaczysz żadnych żądań zawierających dane Twojego pliku PDF — jedynie żądania dotyczące plików JavaScript i CSS aplikacji." }
+      },
+      {
+        "@type": "Question",
+        "name": "Czy narzędzia PDFree są zgodne z RODO?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Tak. PDFree jest zgodne z RODO już w założeniu. Ponieważ żadne dane osobowe ani pliki nigdy nie są przesyłane na nasze serwery, nie ma danych do ochrony, usunięcia czy raportowania. Architektura sprawia, że naruszenia RODO są strukturalnie niemożliwe." }
+      },
+      {
+        "@type": "Question",
+        "name": "Czy mogę używać PDFree do dokumentów medycznych wymagających ścisłej ochrony?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Tak. Architektura PDFree oparta na przeglądarce sprawia, że żadne chronione informacje zdrowotne (PHI) nigdy nie są przesyłane do zewnętrznych serwerów. Pracownicy służby zdrowia mogą bezpiecznie korzystać z PDFree do dokumentacji pacjentów i dokumentów medycznych." }
+      }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "PDFree", "item": "https://pdfree.io/" },
+      { "@type": "ListItem", "position": 2, "name": "Bezpieczne Narzędzia PDF", "item": "https://pdfree.io/pl/bezpieczne-narzedzia-pdf/" }
+    ]
+  }
+  </script>
+</head>
+<body>
+
+  <nav>
+    <a href="/pl/" class="logo" aria-label="Przejdź do strony głównej" style="text-decoration:none">
+      <div class="logo-icon" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+      </div>
+      <span class="logo-text">PDF<span>ree</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="/pl/polacz-pdf/" class="nav-link" data-tool="merge">Połącz</a>
+      <a href="/pl/podziel-pdf/" class="nav-link" data-tool="split">Podziel</a>
+      <a href="/pl/kompresuj-pdf/" class="nav-link" data-tool="compress">Kompresuj</a>
+      <a href="/pl/jpg-do-pdf/" class="nav-link" data-tool="jpg2pdf">JPG→PDF</a>
+      <a href="/pl/pdf-do-jpg/" class="nav-link" data-tool="pdf2jpg">PDF→JPG</a>
+      <a href="/pl/znak-wodny-pdf/" class="nav-link" data-tool="watermark">Znak wodny</a>
+      <a href="/pl/numeracja-stron-pdf/" class="nav-link" data-tool="pagenum">Nr Strony</a>
+      <a href="/pl/metadane-pdf/" class="nav-link" data-tool="meta">Metadane</a>
+      <a href="/pl/wyodrebnij-pdf/" class="nav-link" data-tool="extract">Wyodrębnij</a>
+      <a href="/draw-on-pdf/" class="nav-link" data-tool="draw-pdf">Rysuj</a>
+      <a href="/pl/obroc-pdf/" class="nav-link" data-tool="rotate">Obróć</a>
+      <a href="/pl/organizuj-pdf/" class="nav-link" data-tool="organize">Organizuj</a>
+      <a href="/pl/zmien-rozmiar-pdf/" class="nav-link" data-tool="resize">Zmień rozmiar</a>
+      <a href="/pl/zabezpiecz-pdf/" class="nav-link" data-tool="protect">Zabezpiecz</a>
+      <a href="/pl/rozpoznaj-tekst-pdf/" class="nav-link" data-tool="ocr">OCR</a>
+      <a href="/pl/pdf-do-word/" class="nav-link" data-tool="pdf2word">PDF→Word</a>
+      <a href="/pl/splaszcz-pdf/" class="nav-link" data-tool="flatten">Zablokuj PDF</a>
+      <a href="/compare-pdf/" class="nav-link" data-tool="compare">Porównaj</a>
+    </div>
+    <div class="nav-right">
+      <details class="lang-switch" id="langSwitch">
+        <summary aria-label="Zmień język">🌐 PL</summary>
+        <div class="lang-switch__menu" role="menu">
+          <a href="/" role="menuitem">English</a>
+          <a href="/es/" role="menuitem">Español</a>
+          <a href="/pt/" role="menuitem">Português</a>
+          <a href="/de/" role="menuitem">Deutsch</a>
+          <a href="/fr/" role="menuitem">Français</a>
+          <a href="/id/" role="menuitem">Bahasa Indonesia</a>
+          <a href="/tr/" role="menuitem">Türkçe</a>
+          <a href="/vi/" role="menuitem">Tiếng Việt</a>
+          <a href="/ru/" role="menuitem">Русский</a>
+          <a href="/ja/" role="menuitem">日本語</a>
+          <a href="/it/" role="menuitem">Italiano</a>
+          <a href="/ko/" role="menuitem">한국어</a>
+          <a href="/nl/" role="menuitem">Nederlands</a>
+          <a href="/pl/" role="menuitem" aria-current="true">Polski</a>
+        </div>
+      </details>
+      <button id="themeToggle" class="theme-toggle" aria-label="Przełącz tryb ciemny" title="Przełącz tryb ciemny"></button>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section style="background:var(--green-light);border-bottom:1px solid rgba(45,122,79,0.15);padding:52px 24px 44px;text-align:center;">
+    <div style="max-width:720px;margin:0 auto;">
+      <div style="display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid rgba(45,122,79,0.2);border-radius:24px;padding:6px 16px;font-size:13px;color:var(--green);font-weight:500;margin-bottom:20px;">
+        <span style="width:7px;height:7px;background:var(--green);border-radius:50%;display:inline-block;"></span>
+        Zero przesyłania · Zero przechowywania · Zero śledzenia
+      </div>
+      <h1 style="font-size:clamp(28px,4.5vw,44px);font-weight:700;letter-spacing:-1px;line-height:1.15;color:var(--text);margin:0 0 16px;">Bezpieczne Narzędzia PDF, Które<br>Nie Przesyłają Twoich Plików</h1>
+      <p style="font-size:17px;color:var(--text2);max-width:580px;margin:0 auto 28px;line-height:1.6;">Każde narzędzie PDFree przetwarza Twoje dokumenty całkowicie w przeglądarce. Twoje pliki nigdy nie opuszczają urządzenia — ani na milisekundę. Łącz, kompresuj, dziel, zabezpieczaj i zaczerniaj pliki PDF z pełną prywatnością.</p>
+      <a href="/pl/" style="background:var(--green);color:#fff;padding:13px 28px;border-radius:10px;font-weight:600;font-size:15px;text-decoration:none;display:inline-block;">Przeglądaj Wszystkie Narzędzia PDF — Za Darmo</a>
+    </div>
+  </section>
+
+  <!-- Trust proof -->
+  <section style="padding:20px 24px;border-bottom:1px solid var(--border);background:var(--surface);">
+    <div style="max-width:720px;margin:0 auto;display:flex;gap:24px;justify-content:center;flex-wrap:wrap;">
+      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">🔒 Pliki nigdy nie opuszczają Twojego urządzenia</span>
+      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">⚡ Działa w 100% offline</span>
+      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">✓ Bezpieczne dla RODO już w założeniu</span>
+      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">✓ Bezpieczne dla danych zdrowotnych już w założeniu</span>
+      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">🚫 Bez konta, bez śledzenia</span>
+    </div>
+  </section>
+
+  <!-- SEO Content -->
+  <section class="seo-article">
+    <div class="seo-article__inner">
+      <div class="seo-content" style="max-width:800px;margin:60px auto 40px;padding:0 24px;color:var(--text2);line-height:1.8;">
+
+        <h2 style="font-size:26px;color:var(--text);margin:0 0 16px;font-weight:700;">Dlaczego Większość Narzędzi PDF Nie Jest Naprawdę Bezpieczna</h2>
+        <p>Gdy przesyłasz PDF do narzędzia działającego w chmurze — nawet renomowanego — Twój plik wędruje przez internet do zdalnego serwera. Tam jest przetwarzany, tymczasowo przechowywany i ostatecznie usuwany. W tym czasie Twój dokument znajduje się na sprzęcie, którego nie kontrolujesz, w centrum danych, którego nigdy nie widziałeś, zarządzanym przez firmę, której praktykom bezpieczeństwa bezwarunkowo ufasz.</p>
+        <p>Dla większości plików jest to akceptowalny kompromis. Ale w przypadku <strong>umów, dokumentacji medycznej, sprawozdań finansowych, zeznań podatkowych, dokumentów kadrowych lub czegokolwiek osobistego</strong> — to okno ekspozycji tworzy realne ryzyko: naruszenia bezpieczeństwa serwera, źle skonfigurowane kontrole dostępu, wezwania sądowe lub zagrożenia wewnętrzne.</p>
+        <p>Najbezpieczniejsze podejście to nie lepsze szyfrowanie po stronie serwera. To <strong>brak serwera w ogóle</strong>.</p>
+
+        <div style="background:var(--green-light);border-left:4px solid var(--green);padding:18px 20px;border-radius:0 8px 8px 0;margin:28px 0;">
+          <p style="margin:0;font-size:14px;color:var(--text);"><strong>Model bezpieczeństwa PDFree:</strong> całe przetwarzanie PDF — łączenie, kompresowanie, dzielenie, szyfrowanie — odbywa się w JavaScript działającym w karcie Twojej przeglądarki. Twoje pliki są ładowane do pamięci RAM, przetwarzane lokalnie, a wynik pobierany jest bezpośrednio. Zamknij kartę, a wszystko znika. Nie ma serwera do złamania, ponieważ nie ma serwera.</p>
+        </div>
+
+        <!-- Tool grid -->
+        <h2 style="font-size:26px;color:var(--text);margin:52px 0 16px;font-weight:700;">Wszystkie Bezpieczne Narzędzia PDF — Bez Konieczności Przesyłania</h2>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin:20px 0 40px;">
+          <a href="/pl/polacz-pdf/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">🔗</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">Połącz PDF</strong>
+            <span style="font-size:13px;color:var(--text2);">Połącz wiele plików PDF w jeden — lokalnie, prywatnie</span>
+          </a>
+          <a href="/pl/kompresuj-pdf/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">⚡</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">Kompresuj PDF</strong>
+            <span style="font-size:13px;color:var(--text2);">Zmniejsz rozmiar pliku bez wysyłania go gdziekolwiek</span>
+          </a>
+          <a href="/pl/podziel-pdf/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">✂️</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">Podziel PDF</strong>
+            <span style="font-size:13px;color:var(--text2);">Wyodrębnij strony z dowolnego PDF-a, bez przesyłania</span>
+          </a>
+          <a href="/pl/zabezpiecz-pdf/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">🔐</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">Zabezpiecz PDF</strong>
+            <span style="font-size:13px;color:var(--text2);">Dodaj szyfrowanie hasłem — Twój klucz nigdy nie opuszcza urządzenia</span>
+          </a>
+          <a href="/pl/zaczernij-pdf/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">⬛</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">Zaczernij PDF</strong>
+            <span style="font-size:13px;color:var(--text2);">Zakryj wrażliwą treść przed udostępnieniem — zrobione lokalnie</span>
+          </a>
+          <a href="/pl/jpg-do-pdf/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">🖼️</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">JPG do PDF</strong>
+            <span style="font-size:13px;color:var(--text2);">Konwertuj obrazy do PDF w przeglądarce</span>
+          </a>
+          <a href="/pl/znak-wodny-pdf/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">💧</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">Znak Wodny PDF</strong>
+            <span style="font-size:13px;color:var(--text2);">Dodaj znaki wodne tekstowe lub graficzne lokalnie</span>
+          </a>
+          <a href="/pl/metadane-pdf/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">🏷️</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">Edytuj Metadane</strong>
+            <span style="font-size:13px;color:var(--text2);">Usuń autora, tytuł, datę utworzenia — prywatnie</span>
+          </a>
+        </div>
+
+        <!-- Verify -->
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 12px;font-weight:700;">Jak Sprawdzić, Że Żadne Pliki Nie Są Przesyłane</h2>
+        <p>Otwórz narzędzia deweloperskie przeglądarki (naciśnij <kbd style="background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:2px 7px;font-size:13px;">F12</kbd>), przejdź do zakładki <strong>Sieć</strong>, a następnie użyj dowolnego narzędzia PDFree. Filtruj żądania według "Doc" lub "XHR" — nie znajdziesz niczego zawierającego dane Twojego PDF-a. Jedyne żądania sieciowe dotyczą plików JavaScript i CSS, które sprawiają, że aplikacja działa.</p>
+        <p>To najbardziej bezpośredni dowód na to, że Twoje pliki pozostają na Twoim urządzeniu. Nie musisz nikomu ufać — sprawdź to sam w 30 sekund.</p>
+
+        <!-- Who it's for -->
+        <h2 style="font-size:26px;color:var(--text);margin:52px 0 16px;font-weight:700;">Kto Potrzebuje Bezpiecznych Narzędzi PDF</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:16px 0 40px;">
+          <div style="border:1px solid var(--border);border-radius:12px;padding:18px;">
+            <strong style="color:var(--text);display:block;margin-bottom:6px;">⚖️ Prawnicy</strong>
+            <p style="font-size:13px;margin:0;color:var(--text2);">Tajemnica adwokacka wymaga poufnego obchodzenia się z dokumentami. PDFree nigdy nie udostępnia plików klientów serwerom stron trzecich.</p>
+          </div>
+          <div style="border:1px solid var(--border);border-radius:12px;padding:18px;">
+            <strong style="color:var(--text);display:block;margin-bottom:6px;">🏥 Pracownicy służby zdrowia</strong>
+            <p style="font-size:13px;margin:0;color:var(--text2);">Dane pacjentów wymagają ścisłej ochrony. PDFree przetwarza dokumentację medyczną lokalnie — żadne dane zdrowotne nie są przesyłane.</p>
+          </div>
+          <div style="border:1px solid var(--border);border-radius:12px;padding:18px;">
+            <strong style="color:var(--text);display:block;margin-bottom:6px;">💼 Finanse i księgowość</strong>
+            <p style="font-size:13px;margin:0;color:var(--text2);">Zeznania podatkowe, wyciągi bankowe i dokumenty płacowe zawierają wrażliwe dane, które powinny pozostać wyłącznie na Twoim urządzeniu.</p>
+          </div>
+          <div style="border:1px solid var(--border);border-radius:12px;padding:18px;">
+            <strong style="color:var(--text);display:block;margin-bottom:6px;">🏢 Specjaliści HR</strong>
+            <p style="font-size:13px;margin:0;color:var(--text2);">Umowy pracowników, oceny wyników i dane kandydatów — obsługuj je bez żadnej ekspozycji na serwery.</p>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 20px;font-weight:700;">Najczęściej Zadawane Pytania</h2>
+        <div style="display:flex;flex-direction:column;gap:20px;">
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Czy jakiekolwiek narzędzia PDFree przesyłają pliki na serwer?</h3>
+            <p style="margin:0;font-size:14px;">Nie. Każde narzędzie PDFree przetwarza pliki całkowicie w Twojej przeglądarce. Twoje pliki nigdy nie są wysyłane na żaden serwer, nigdzie przechowywane ani w żaden sposób rejestrowane.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Czy narzędzia PDFree są zgodne z RODO?</h3>
+            <p style="margin:0;font-size:14px;">Tak, już w założeniu. Ponieważ żadne dane osobowe ani pliki nigdy nie są przesyłane na nasze serwery, zgodność z RODO jest strukturalnie gwarantowana — po prostu nie ma danych, którymi można by niewłaściwie zarządzać.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Czy mogę używać PDFree do dokumentacji medycznej wymagającej ścisłej ochrony?</h3>
+            <p style="margin:0;font-size:14px;">Tak. Architektura PDFree gwarantuje, że żadne chronione informacje zdrowotne (PHI) nigdy nie są przesyłane na zewnątrz. Pracownicy służby zdrowia mogą przetwarzać dokumentację pacjentów całkowicie w przeglądarce.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Czym PDFree różni się od iLovePDF lub SmallPDF?</h3>
+            <p style="margin:0;font-size:14px;">iLovePDF i SmallPDF przesyłają Twoje pliki na swoje serwery w celu przetworzenia. PDFree działa całkowicie w Twojej przeglądarce — Twoje pliki nigdy nie opuszczają Twojego urządzenia. PDFree nie ma też limitów rozmiaru pliku ani dziennych limitów użycia.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div style="display:flex;gap:48px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;font-size:13px;border-top:1px solid var(--border);padding-top:20px;">
+      <div>
+        <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Alternatywy</div>
+        <a href="/ilovepdf-alternative/" style="display:block;color:var(--green);text-decoration:none;margin-bottom:4px;">Alternatywa dla iLovePDF</a>
+      </div>
+      <div>
+        <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Rozwiązania</div>
+        <a href="/hipaa-pdf-tools/" style="display:block;color:var(--green);text-decoration:none;margin-bottom:4px;">Narzędzia PDF Zgodne z HIPAA</a>
+        <a href="/pl/bezpieczne-narzedzia-pdf/" style="display:block;color:var(--green);text-decoration:none;">Bezpieczne Narzędzia PDF</a>
+      </div>
+    </div>
+    PDFree · <strong>Całe przetwarzanie odbywa się w 100% w Twojej przeglądarce</strong> · Pliki <strong>nigdy nie są przesyłane</strong><br>
+    <span style="color:var(--green)">🔒</span> Twoje dokumenty nigdy nie opuszczają Twojego urządzenia &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> Stworzone, by być darmowe dla każdego, na zawsze<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
+      <a href="/privacy.html" style="color:var(--green)">Prywatność</a> &nbsp;·&nbsp;
+      <a href="/terms.html" style="color:var(--green)">Regulamin</a> &nbsp;·&nbsp;
+      <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a> &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green)">GitHub</a>
+    </span>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script>
+</body>
+</html>

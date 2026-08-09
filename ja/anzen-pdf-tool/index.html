@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src  'self' 'wasm-unsafe-eval' blob:
+                https://cdnjs.cloudflare.com https://esm.sh
+                https://plausible.io https://pagead2.googlesyndication.com
+                https://static.cloudflareinsights.com;
+    style-src   'self' 'unsafe-inline';
+    font-src    'self';
+    img-src     'self' data: blob: https:;
+    connect-src 'self' https://cdnjs.cloudflare.com https://*.workers.dev
+                https://plausible.io https://pagead2.googlesyndication.com
+                https://www.googletagservices.com https://*.doubleclick.net
+                https://cloudflareinsights.com;
+    frame-src   https://googleads.g.doubleclick.net https://tpc.googlesyndication.com;
+    worker-src  'self' blob:;
+    object-src  'none';
+  ">
+
+  <title>ファイルをアップロードしない安全なPDFツール — PDFree</title>
+  <meta name="description" content="ファイルをサーバーに一切アップロードしないPDFツール。すべての処理はブラウザ内で完結します — PDFの結合・圧縮・分割・保護を、完全なプライバシーで。">
+
+  <meta property="og:title"       content="安全なPDFツール — ファイルは一切アップロードされません | PDFree">
+  <meta property="og:description" content="すべてをブラウザ内で処理する唯一のPDFツールキット。サーバーなし、保存なし、トラッキングなし。">
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://pdfree.io/ja/anzen-pdf-tool/">
+  <meta property="og:site_name"   content="PDFree">
+  <meta property="og:locale"      content="ja_JP">
+  <meta property="og:image"        content="https://pdfree.io/icons/og-image.jpg">
+  <meta property="og:image:width"  content="1200">
+  <meta property="og:image:height" content="633">
+  <meta property="og:image:alt"    content="安全なPDFツール — ファイルは一切アップロードされません | PDFree">
+  <meta name="twitter:card"       content="summary_large_image">
+  <meta name="twitter:site"       content="@pdfree_io">
+  <meta name="twitter:title"      content="安全なPDFツール — ファイルは一切アップロードされません | PDFree">
+  <meta name="twitter:description" content="すべてをブラウザ内で処理する唯一のPDFツールキット。サーバーなし、保存なし、トラッキングなし。">
+  <meta name="twitter:image"       content="https://pdfree.io/icons/og-image.jpg">
+  <meta name="twitter:image:alt"   content="安全なPDFツール — ファイルは一切アップロードされません | PDFree">
+
+  <link rel="canonical" href="https://pdfree.io/ja/anzen-pdf-tool/">
+  <link rel="alternate" hreflang="en"        href="https://pdfree.io/secure-pdf-tools/">
+  <link rel="alternate" hreflang="de"        href="https://pdfree.io/de/sichere-pdf-tools/">
+  <link rel="alternate" hreflang="es"        href="https://pdfree.io/es/herramientas-pdf-seguras/">
+  <link rel="alternate" hreflang="fr"        href="https://pdfree.io/fr/outils-pdf-securises/">
+  <link rel="alternate" hreflang="pt"        href="https://pdfree.io/pt/ferramentas-pdf-seguras/">
+  <link rel="alternate" hreflang="id"        href="https://pdfree.io/id/alat-pdf-aman/">
+  <link rel="alternate" hreflang="vi"        href="https://pdfree.io/vi/cong-cu-pdf-an-toan/">
+  <link rel="alternate" hreflang="ru"        href="https://pdfree.io/ru/bezopasnye-pdf-instrumenty/">
+  <link rel="alternate" hreflang="ja"        href="https://pdfree.io/ja/anzen-pdf-tool/">
+  <link rel="alternate" hreflang="it"        href="https://pdfree.io/it/strumenti-pdf-sicuri/">
+  <link rel="alternate" hreflang="ko"        href="https://pdfree.io/ko/anjeon-pdf-dogu/">
+  <link rel="alternate" hreflang="nl"        href="https://pdfree.io/nl/veilige-pdf-tools/">
+  <link rel="alternate" hreflang="pl"        href="https://pdfree.io/pl/bezpieczne-narzedzia-pdf/">
+  <link rel="alternate" hreflang="tr"        href="https://pdfree.io/tr/guvenli-pdf-araclari/">
+  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/secure-pdf-tools/">
+
+  <link rel="manifest" href="../../manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="PDFree">
+  <link rel="apple-touch-icon" href="../../icons/icon-192.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+  <link rel="preconnect" href="https://plausible.io">
+  <link rel="preconnect" href="https://static.cloudflareinsights.com">
+  <link rel="preload" href="../../fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../css/fonts.css">
+  <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/animations.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/components.css">
+  <style>.secure-tool-card{border:1px solid var(--border);transition:border-color 0.2s}.secure-tool-card:hover{border-color:var(--green)}</style>
+
+  <script src="../../js/theme.js"></script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "PDFree — 安全なPDFツール",
+    "description": "ファイルを一切アップロードしない安全なPDFツール。すべての処理はブラウザ内でローカルに行われます。無料、登録不要。",
+    "url": "https://pdfree.io/ja/anzen-pdf-tool/",
+    "applicationCategory": "UtilityApplication",
+    "operatingSystem": "Web, iOS, Android",
+    "isAccessibleForFree": true,
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/InStock"
+    },
+    "featureList": [
+      "ファイルはサーバーに一切アップロードされません",
+      "登録不要",
+      "ファイルサイズの制限なし",
+      "オフラインで動作（PWA）",
+      "PDFのパスワード保護（RC4-128暗号化）に対応",
+      "データは一切保存されません"
+    ],
+    "dateModified": "2026-08-09",
+    "provider": {
+      "@type": "Organization",
+      "name": "PDFree",
+      "url": "https://pdfree.io",
+      "description": "PDFree is a free, privacy-first PDF toolkit that runs entirely in the browser — files are processed locally and never uploaded to a server.",
+      "logo": "https://pdfree.io/icons/icon-512.png"
+    }
+  }
+  </script>
+
+    <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "ファイルをアップロードしない安全なPDFツール",
+    "description": "ファイルが一切サーバーにアップロードされない、ブラウザベースのPDFツール群。",
+    "url": "https://pdfree.io/ja/anzen-pdf-tool/",
+    "numberOfItems": 8,
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "アップロードせずにPDFを結合", "url": "https://pdfree.io/ja/pdf-ketsugou/" },
+      { "@type": "ListItem", "position": 2, "name": "アップロードせずにPDFを圧縮", "url": "https://pdfree.io/ja/pdf-atsuryoku/" },
+      { "@type": "ListItem", "position": 3, "name": "アップロードせずにPDFを分割", "url": "https://pdfree.io/ja/pdf-bunkatsu/" },
+      { "@type": "ListItem", "position": 4, "name": "ローカルでPDFにパスワードを設定", "url": "https://pdfree.io/ja/pdf-password/" },
+      { "@type": "ListItem", "position": 5, "name": "ブラウザでPDFを黒塗り", "url": "https://pdfree.io/ja/pdf-kurotsubushi/" },
+      { "@type": "ListItem", "position": 6, "name": "ローカルでJPGをPDFに変換", "url": "https://pdfree.io/ja/jpg-pdf-henkan/" },
+      { "@type": "ListItem", "position": 7, "name": "PDFに透かしを追加", "url": "https://pdfree.io/ja/pdf-sukashi/" },
+      { "@type": "ListItem", "position": 8, "name": "PDFのメタデータを編集", "url": "https://pdfree.io/ja/pdf-metadeta/" }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "PDFreeのツールはファイルをサーバーにアップロードしますか？",
+        "acceptedAnswer": { "@type": "Answer", "text": "いいえ。PDFreeのすべてのツールは、JavaScriptを使ってファイルを完全にブラウザ内で処理します。ファイルがデバイスから出ることは一切なく、サーバーにアップロードされることもなく、ブラウザの一時メモリ以外のどこにも保存されません。" }
+      },
+      {
+        "@type": "Question",
+        "name": "自分のファイルがアップロードされていないことをどうやって確認できますか？",
+        "acceptedAnswer": { "@type": "Answer", "text": "ブラウザのDevTools（F12）を開き、Networkタブに移動してから、任意のPDFreeツールを使用してください。PDFファイルのデータを含むリクエストは一切表示されず、アプリのJavaScriptとCSSファイルへのリクエストのみが表示されます。" }
+      },
+      {
+        "@type": "Question",
+        "name": "PDFreeのツールはGDPRに準拠していますか？",
+        "acceptedAnswer": { "@type": "Answer", "text": "はい。PDFreeは設計上GDPRに準拠しています。個人データやファイルが当社のサーバーに送信されることは一切ないため、保護、削除、報告すべきデータがそもそも存在しません。このアーキテクチャにより、GDPR違反は構造的に発生し得ません。" }
+      },
+      {
+        "@type": "Question",
+        "name": "HIPAAで規制されている文書にPDFreeを使用できますか？",
+        "acceptedAnswer": { "@type": "Answer", "text": "はい。PDFreeのブラウザベースのアーキテクチャにより、保護対象保健情報（PHI）が外部サーバーに送信されることは一切ありません。医療従事者は患者記録や医療文書を安全にPDFreeで処理できます。" }
+      }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "PDFree", "item": "https://pdfree.io/" },
+      { "@type": "ListItem", "position": 2, "name": "安全なPDFツール", "item": "https://pdfree.io/ja/anzen-pdf-tool/" }
+    ]
+  }
+  </script>
+</head>
+<body>
+
+  <nav>
+    <a href="/ja/" class="logo" aria-label="ホームへ" style="text-decoration:none">
+      <div class="logo-icon" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+      </div>
+      <span class="logo-text">PDF<span>ree</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="/ja/pdf-ketsugou/" class="nav-link" data-tool="merge">結合</a>
+      <a href="/ja/pdf-bunkatsu/" class="nav-link" data-tool="split">分割</a>
+      <a href="/ja/pdf-atsuryoku/" class="nav-link" data-tool="compress">圧縮</a>
+      <a href="/ja/jpg-pdf-henkan/" class="nav-link" data-tool="jpg2pdf">JPG→PDF</a>
+      <a href="/ja/pdf-jpg-henkan/" class="nav-link" data-tool="pdf2jpg">PDF→JPG</a>
+      <a href="/ja/pdf-sukashi/" class="nav-link" data-tool="watermark">透かし</a>
+      <a href="/ja/pdf-page-bango/" class="nav-link" data-tool="pagenum">ページ番号</a>
+      <a href="/ja/pdf-metadeta/" class="nav-link" data-tool="meta">メタデータ</a>
+      <a href="/ja/pdf-chushutsu/" class="nav-link" data-tool="extract">抽出</a>
+      <a href="/draw-on-pdf/" class="nav-link" data-tool="draw-pdf">描画</a>
+      <a href="/ja/pdf-kaiten/" class="nav-link" data-tool="rotate">回転</a>
+      <a href="/ja/pdf-narabekae/" class="nav-link" data-tool="organize">整理</a>
+      <a href="/ja/pdf-size-henkou/" class="nav-link" data-tool="resize">サイズ変更</a>
+      <a href="/ja/pdf-password/" class="nav-link" data-tool="protect">保護</a>
+      <a href="/ja/pdf-moji-ninshiki/" class="nav-link" data-tool="ocr">OCR</a>
+      <a href="/ja/pdf-word-henkan/" class="nav-link" data-tool="pdf2word">PDF→Word</a>
+      <a href="/ja/pdf-heitanka/" class="nav-link" data-tool="flatten">PDFをロック</a>
+      <a href="/compare-pdf/" class="nav-link" data-tool="compare">比較</a>
+    </div>
+    <div class="nav-right">
+      <details class="lang-switch" id="langSwitch">
+        <summary aria-label="言語を切り替え">🌐 JA</summary>
+        <div class="lang-switch__menu" role="menu">
+          <a href="/" role="menuitem">English</a>
+          <a href="/es/" role="menuitem">Español</a>
+          <a href="/pt/" role="menuitem">Português</a>
+          <a href="/de/" role="menuitem">Deutsch</a>
+          <a href="/fr/" role="menuitem">Français</a>
+          <a href="/id/" role="menuitem">Bahasa Indonesia</a>
+          <a href="/tr/" role="menuitem">Türkçe</a>
+          <a href="/vi/" role="menuitem">Tiếng Việt</a>
+          <a href="/ru/" role="menuitem">Русский</a>
+          <a href="/ja/" role="menuitem" aria-current="true">日本語</a>
+          <a href="/it/" role="menuitem">Italiano</a>
+          <a href="/ko/" role="menuitem">한국어</a>
+          <a href="/nl/" role="menuitem">Nederlands</a>
+          <a href="/pl/" role="menuitem">Polski</a>
+        </div>
+      </details>
+      <button id="themeToggle" class="theme-toggle" aria-label="ダークモード切替" title="ダークモード切替"></button>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section style="background:var(--green-light);border-bottom:1px solid rgba(45,122,79,0.15);padding:52px 24px 44px;text-align:center;">
+    <div style="max-width:720px;margin:0 auto;">
+      <div style="display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid rgba(45,122,79,0.2);border-radius:24px;padding:6px 16px;font-size:13px;color:var(--green);font-weight:500;margin-bottom:20px;">
+        <span style="width:7px;height:7px;background:var(--green);border-radius:50%;display:inline-block;"></span>
+        アップロードなし · 保存なし · トラッキングなし
+      </div>
+      <h1 style="font-size:clamp(28px,4.5vw,44px);font-weight:700;letter-spacing:-1px;line-height:1.15;color:var(--text);margin:0 0 16px;">ファイルをアップロードしない<br>安全なPDFツール</h1>
+      <p style="font-size:17px;color:var(--text2);max-width:580px;margin:0 auto 28px;line-height:1.6;">PDFreeのすべてのツールは、あなたの文書を完全にブラウザ内で処理します。ファイルはデバイスから一瞬たりとも出ることはありません。PDFの結合・圧縮・分割・保護・黒塗りを、完全なプライバシーで。</p>
+      <a href="/ja/" style="background:var(--green);color:#fff;padding:13px 28px;border-radius:10px;font-weight:600;font-size:15px;text-decoration:none;display:inline-block;">すべてのPDFツールを見る — 無料</a>
+    </div>
+  </section>
+
+  <!-- Trust proof -->
+  <section style="padding:20px 24px;border-bottom:1px solid var(--border);background:var(--surface);">
+    <div style="max-width:720px;margin:0 auto;display:flex;gap:24px;justify-content:center;flex-wrap:wrap;">
+      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">🔒 ファイルはデバイスから出ません</span>
+      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">⚡ 100%オフラインで動作</span>
+      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">✓ 設計上GDPR対応</span>
+      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">✓ 設計上HIPAA対応</span>
+      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">🚫 登録不要、トラッキングなし</span>
+    </div>
+  </section>
+
+  <!-- SEO Content -->
+  <section class="seo-article">
+    <div class="seo-article__inner">
+      <div class="seo-content" style="max-width:800px;margin:60px auto 40px;padding:0 24px;color:var(--text2);line-height:1.8;">
+
+        <h2 style="font-size:26px;color:var(--text);margin:0 0 16px;font-weight:700;">なぜほとんどのPDFツールは本当の意味で安全ではないのか</h2>
+        <p>クラウドベースのツール — たとえ信頼できるものであっても — にPDFをアップロードすると、ファイルはインターネットを経由して遠く離れたサーバーへ送られます。そこで処理され、一時的に保存され、やがて削除されます。その間、あなたの文書は自分では管理できないハードウェア上に、見たこともないデータセンターの中に、そのセキュリティ対策を暗黙のうちに信頼するしかない企業によって管理された状態で存在します。</p>
+        <p>ほとんどのファイルにとって、これは許容できるトレードオフです。しかし<strong>契約書、医療記録、財務諸表、確定申告書、人事書類、あるいは個人的なもの全般</strong>にとっては — この露出の時間が、サーバー侵害、設定ミスによるアクセス制御、法的召喚状、内部関係者による脅威といった現実のリスクを生み出します。</p>
+        <p>最も安全なアプローチは、サーバー側の暗号化を強化することではありません。<strong>そもそもサーバーを持たないこと</strong>です。</p>
+
+        <div style="background:var(--green-light);border-left:4px solid var(--green);padding:18px 20px;border-radius:0 8px 8px 0;margin:28px 0;">
+          <p style="margin:0;font-size:14px;color:var(--text);"><strong>PDFreeのセキュリティモデル：</strong>結合、圧縮、分割、暗号化を含むすべてのPDF処理は、ブラウザのタブ内で動作するJavaScriptによって行われます。ファイルはRAMに読み込まれ、ローカルで処理され、結果は直接ダウンロードされます。タブを閉じれば、すべてが消えます。侵害すべきサーバーは存在しません。なぜなら、サーバーそのものが存在しないからです。</p>
+        </div>
+
+        <!-- Tool grid -->
+        <h2 style="font-size:26px;color:var(--text);margin:52px 0 16px;font-weight:700;">すべての安全なPDFツール — アップロード不要</h2>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin:20px 0 40px;">
+          <a href="/ja/pdf-ketsugou/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">🔗</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">PDFを結合</strong>
+            <span style="font-size:13px;color:var(--text2);">複数のPDFを1つに結合 — ローカルで、プライベートに</span>
+          </a>
+          <a href="/ja/pdf-atsuryoku/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">⚡</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">PDFを圧縮</strong>
+            <span style="font-size:13px;color:var(--text2);">ファイルをどこにも送らずにサイズを縮小</span>
+          </a>
+          <a href="/ja/pdf-bunkatsu/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">✂️</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">PDFを分割</strong>
+            <span style="font-size:13px;color:var(--text2);">アップロード不要で、どのPDFからでもページを抽出</span>
+          </a>
+          <a href="/ja/pdf-password/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">🔐</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">PDFを保護</strong>
+            <span style="font-size:13px;color:var(--text2);">パスワード暗号化を追加 — 鍵がデバイスから出ることはありません</span>
+          </a>
+          <a href="/ja/pdf-kurotsubushi/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">⬛</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">PDFを黒塗り</strong>
+            <span style="font-size:13px;color:var(--text2);">共有前に機密情報を隠す — ローカルで完結</span>
+          </a>
+          <a href="/ja/jpg-pdf-henkan/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">🖼️</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">JPGをPDFに変換</strong>
+            <span style="font-size:13px;color:var(--text2);">ブラウザ内で画像をPDFに変換</span>
+          </a>
+          <a href="/ja/pdf-sukashi/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">💧</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">PDFに透かし</strong>
+            <span style="font-size:13px;color:var(--text2);">テキストや画像の透かしをローカルで追加</span>
+          </a>
+          <a href="/ja/pdf-metadeta/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">🏷️</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">メタデータを編集</strong>
+            <span style="font-size:13px;color:var(--text2);">作成者、タイトル、作成日をプライベートに削除</span>
+          </a>
+        </div>
+
+        <!-- Verify -->
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 12px;font-weight:700;">ファイルがアップロードされていないことを確認する方法</h2>
+        <p>ブラウザのDevTools（<kbd style="background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:2px 7px;font-size:13px;">F12</kbd>を押す）を開き、<strong>Network</strong>タブに移動してから、任意のPDFreeツールを使用してください。「Doc」または「XHR」でリクエストを絞り込むと、PDFのデータを含むものは何も見つかりません。表示されるネットワークリクエストは、アプリを動かすJavaScriptとCSSファイルのみです。</p>
+        <p>これは、あなたのファイルがデバイス内にとどまっていることの最も直接的な証拠です。信頼する必要はありません — 30秒で自分の目で確かめてください。</p>
+
+        <!-- Who it's for -->
+        <h2 style="font-size:26px;color:var(--text);margin:52px 0 16px;font-weight:700;">安全なPDFツールが必要な人</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:16px 0 40px;">
+          <div style="border:1px solid var(--border);border-radius:12px;padding:18px;">
+            <strong style="color:var(--text);display:block;margin-bottom:6px;">⚖️ 法律専門家</strong>
+            <p style="font-size:13px;margin:0;color:var(--text2);">弁護士と依頼者間の秘匿特権には、文書の機密な取り扱いが求められます。PDFreeは依頼者のファイルを第三者のサーバーに一切さらしません。</p>
+          </div>
+          <div style="border:1px solid var(--border);border-radius:12px;padding:18px;">
+            <strong style="color:var(--text);display:block;margin-bottom:6px;">🏥 医療従事者</strong>
+            <p style="font-size:13px;margin:0;color:var(--text2);">HIPAAは患者データの保護を求めています。PDFreeは医療記録をローカルで処理します — PHIは一切送信されません。</p>
+          </div>
+          <div style="border:1px solid var(--border);border-radius:12px;padding:18px;">
+            <strong style="color:var(--text);display:block;margin-bottom:6px;">💼 財務・会計</strong>
+            <p style="font-size:13px;margin:0;color:var(--text2);">確定申告書、銀行明細書、給与関連書類には機密情報が含まれており、それはあなたのデバイスだけにとどまるべきです。</p>
+          </div>
+          <div style="border:1px solid var(--border);border-radius:12px;padding:18px;">
+            <strong style="color:var(--text);display:block;margin-bottom:6px;">🏢 人事担当者</strong>
+            <p style="font-size:13px;margin:0;color:var(--text2);">雇用契約書、人事評価、応募者のファイル — サーバーにさらすことなく扱えます。</p>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 20px;font-weight:700;">よくある質問</h2>
+        <div style="display:flex;flex-direction:column;gap:20px;">
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">PDFreeのツールはファイルをサーバーにアップロードしますか？</h3>
+            <p style="margin:0;font-size:14px;">いいえ。PDFreeのすべてのツールはブラウザ内で完全にファイルを処理します。ファイルがサーバーに送信されたり、どこかに保存されたり、記録されたりすることは一切ありません。</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">PDFreeのツールはGDPRに準拠していますか？</h3>
+            <p style="margin:0;font-size:14px;">はい、設計上準拠しています。個人データやファイルが当社のサーバーに送信されることは一切ないため、GDPR準拠は構造的に保証されています — そもそも誤って扱われるデータが存在しません。</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">HIPAAで規制されている医療記録にPDFreeを使用できますか？</h3>
+            <p style="margin:0;font-size:14px;">はい。PDFreeのアーキテクチャにより、保護対象保健情報（PHI）が外部に送信されることは一切ありません。医療専門家は患者記録を完全にブラウザ内で安全に処理できます。</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">PDFreeはiLovePDFやSmallPDFとどう違いますか？</h3>
+            <p style="margin:0;font-size:14px;">iLovePDFやSmallPDFは、処理のためにファイルを自社サーバーにアップロードします。PDFreeは完全にブラウザ内で動作します — ファイルがデバイスから出ることはありません。さらにPDFreeにはファイルサイズの制限や1日の利用制限もありません。</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div style="display:flex;gap:48px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;font-size:13px;border-top:1px solid var(--border);padding-top:20px;">
+      <div>
+        <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">代替ツール</div>
+        <a href="/ilovepdf-alternative/" style="display:block;color:var(--green);text-decoration:none;margin-bottom:4px;">iLovePDFの代替</a>
+      </div>
+      <div>
+        <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">ソリューション</div>
+        <a href="/hipaa-pdf-tools/" style="display:block;color:var(--green);text-decoration:none;margin-bottom:4px;">HIPAA準拠のPDFツール</a>
+        <a href="/ja/anzen-pdf-tool/" style="display:block;color:var(--green);text-decoration:none;">安全なPDFツール</a>
+      </div>
+    </div>
+    PDFree · <strong>すべての処理はブラウザ内で100%行われます</strong> · ファイルは<strong>一切アップロードされません</strong><br>
+    <span style="color:var(--green)">🔒</span> あなたの文書はデバイスから出ることはありません &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> すべての人に永久無料で提供<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
+      <a href="/privacy.html" style="color:var(--green)">プライバシー</a> &nbsp;·&nbsp;
+      <a href="/terms.html" style="color:var(--green)">利用規約</a> &nbsp;·&nbsp;
+      <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a> &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green)">GitHub</a>
+    </span>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script>
+</body>
+</html>

@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src  'self' 'wasm-unsafe-eval' blob:
+                https://cdnjs.cloudflare.com https://esm.sh
+                https://plausible.io https://pagead2.googlesyndication.com
+                https://static.cloudflareinsights.com;
+    style-src   'self' 'unsafe-inline';
+    font-src    'self';
+    img-src     'self' data: blob: https:;
+    connect-src 'self' https://cdnjs.cloudflare.com https://*.workers.dev
+                https://plausible.io https://pagead2.googlesyndication.com
+                https://www.googletagservices.com https://*.doubleclick.net
+                https://cloudflareinsights.com;
+    frame-src   https://googleads.g.doubleclick.net https://tpc.googlesyndication.com;
+    worker-src  'self' blob:;
+    object-src  'none';
+  ">
+
+  <title>Alat PDF Aman yang Tidak Mengunggah File Anda — PDFree</title>
+  <meta name="description" content="Alat PDF yang tidak pernah mengunggah file Anda ke server. Semua pemrosesan terjadi di browser Anda — gabungkan, kompres, pisahkan, lindungi PDF dengan privasi penuh.">
+
+  <meta property="og:title"       content="Alat PDF Aman — File Tidak Pernah Diunggah | PDFree">
+  <meta property="og:description" content="Satu-satunya toolkit PDF yang memproses semuanya di browser Anda. Tanpa server, tanpa penyimpanan, tanpa pelacakan.">
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://pdfree.io/id/alat-pdf-aman/">
+  <meta property="og:site_name"   content="PDFree">
+  <meta property="og:locale"      content="id_ID">
+  <meta property="og:image"        content="https://pdfree.io/icons/og-image.jpg">
+  <meta property="og:image:width"  content="1200">
+  <meta property="og:image:height" content="633">
+  <meta property="og:image:alt"    content="Alat PDF Aman — File Tidak Pernah Diunggah | PDFree">
+  <meta name="twitter:card"       content="summary_large_image">
+  <meta name="twitter:site"       content="@pdfree_io">
+  <meta name="twitter:title"      content="Alat PDF Aman — File Tidak Pernah Diunggah | PDFree">
+  <meta name="twitter:description" content="Satu-satunya toolkit PDF yang memproses semuanya di browser Anda. Tanpa server, tanpa penyimpanan, tanpa pelacakan.">
+  <meta name="twitter:image"       content="https://pdfree.io/icons/og-image.jpg">
+  <meta name="twitter:image:alt"   content="Alat PDF Aman — File Tidak Pernah Diunggah | PDFree">
+
+  <link rel="canonical" href="https://pdfree.io/id/alat-pdf-aman/">
+  <link rel="alternate" hreflang="en"        href="https://pdfree.io/secure-pdf-tools/">
+  <link rel="alternate" hreflang="de"        href="https://pdfree.io/de/sichere-pdf-tools/">
+  <link rel="alternate" hreflang="es"        href="https://pdfree.io/es/herramientas-pdf-seguras/">
+  <link rel="alternate" hreflang="fr"        href="https://pdfree.io/fr/outils-pdf-securises/">
+  <link rel="alternate" hreflang="pt"        href="https://pdfree.io/pt/ferramentas-pdf-seguras/">
+  <link rel="alternate" hreflang="id"        href="https://pdfree.io/id/alat-pdf-aman/">
+  <link rel="alternate" hreflang="vi"        href="https://pdfree.io/vi/cong-cu-pdf-an-toan/">
+  <link rel="alternate" hreflang="ru"        href="https://pdfree.io/ru/bezopasnye-pdf-instrumenty/">
+  <link rel="alternate" hreflang="ja"        href="https://pdfree.io/ja/anzen-pdf-tool/">
+  <link rel="alternate" hreflang="it"        href="https://pdfree.io/it/strumenti-pdf-sicuri/">
+  <link rel="alternate" hreflang="ko"        href="https://pdfree.io/ko/anjeon-pdf-dogu/">
+  <link rel="alternate" hreflang="nl"        href="https://pdfree.io/nl/veilige-pdf-tools/">
+  <link rel="alternate" hreflang="pl"        href="https://pdfree.io/pl/bezpieczne-narzedzia-pdf/">
+  <link rel="alternate" hreflang="tr"        href="https://pdfree.io/tr/guvenli-pdf-araclari/">
+  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/secure-pdf-tools/">
+
+  <link rel="manifest" href="../../manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="PDFree">
+  <link rel="apple-touch-icon" href="../../icons/icon-192.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+  <link rel="preconnect" href="https://plausible.io">
+  <link rel="preconnect" href="https://static.cloudflareinsights.com">
+  <link rel="preload" href="../../fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../css/fonts.css">
+  <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/animations.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/components.css">
+  <style>.secure-tool-card{border:1px solid var(--border);transition:border-color 0.2s}.secure-tool-card:hover{border-color:var(--green)}</style>
+
+  <script src="../../js/theme.js"></script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "PDFree — Alat PDF Aman",
+    "description": "Alat PDF aman yang tidak pernah mengunggah file Anda. Semua pemrosesan terjadi secara lokal di browser Anda. Gratis, tanpa akun.",
+    "url": "https://pdfree.io/id/alat-pdf-aman/",
+    "applicationCategory": "UtilityApplication",
+    "operatingSystem": "Web, iOS, Android",
+    "isAccessibleForFree": true,
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/InStock"
+    },
+    "featureList": [
+      "File tidak pernah diunggah ke server mana pun",
+      "Tidak perlu akun",
+      "Tanpa batasan ukuran file",
+      "Berfungsi offline (PWA)",
+      "Tersedia perlindungan kata sandi PDF (enkripsi RC4-128)",
+      "Nol penyimpanan data"
+    ],
+    "dateModified": "2026-08-09",
+    "provider": {
+      "@type": "Organization",
+      "name": "PDFree",
+      "url": "https://pdfree.io",
+      "description": "PDFree is a free, privacy-first PDF toolkit that runs entirely in the browser — files are processed locally and never uploaded to a server.",
+      "logo": "https://pdfree.io/icons/icon-512.png"
+    }
+  }
+  </script>
+
+    <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "Alat PDF Aman yang Tidak Mengunggah File Anda",
+    "description": "Kumpulan alat PDF berbasis browser di mana file tidak pernah diunggah ke server mana pun.",
+    "url": "https://pdfree.io/id/alat-pdf-aman/",
+    "numberOfItems": 8,
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Gabung PDF tanpa mengunggah", "url": "https://pdfree.io/id/gabung-pdf/" },
+      { "@type": "ListItem", "position": 2, "name": "Kompres PDF tanpa mengunggah", "url": "https://pdfree.io/id/kompres-pdf/" },
+      { "@type": "ListItem", "position": 3, "name": "Pisah PDF tanpa mengunggah", "url": "https://pdfree.io/id/pisah-pdf/" },
+      { "@type": "ListItem", "position": 4, "name": "Lindungi PDF dengan kata sandi secara lokal", "url": "https://pdfree.io/id/lindungi-pdf/" },
+      { "@type": "ListItem", "position": 5, "name": "Hapus teks PDF di browser", "url": "https://pdfree.io/id/hapus-teks-pdf/" },
+      { "@type": "ListItem", "position": 6, "name": "Konversi JPG ke PDF secara lokal", "url": "https://pdfree.io/id/jpg-ke-pdf/" },
+      { "@type": "ListItem", "position": 7, "name": "Tambahkan tanda air ke PDF", "url": "https://pdfree.io/id/tanda-air-pdf/" },
+      { "@type": "ListItem", "position": 8, "name": "Edit metadata PDF", "url": "https://pdfree.io/id/metadata-pdf/" }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Apakah ada alat PDFree yang mengunggah file ke server?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Tidak. Setiap alat PDFree memproses file sepenuhnya di browser Anda. File Anda tidak pernah dikirim ke server mana pun, disimpan di mana pun, atau dicatat dengan cara apa pun." }
+      },
+      {
+        "@type": "Question",
+        "name": "Apakah alat PDFree mematuhi GDPR?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Ya, sejak desain. Karena tidak ada data pribadi atau file yang pernah dikirimkan ke server kami, kepatuhan GDPR terjamin secara struktural — sederhananya, tidak ada data yang bisa disalahgunakan." }
+      },
+      {
+        "@type": "Question",
+        "name": "Bisakah saya menggunakan PDFree untuk catatan medis yang diatur HIPAA?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Ya. Arsitektur PDFree memastikan bahwa Informasi Kesehatan yang Dilindungi (PHI) tidak pernah dikirimkan secara eksternal. Tenaga kesehatan dapat dengan aman memproses catatan pasien sepenuhnya di browser mereka." }
+      },
+      {
+        "@type": "Question",
+        "name": "Apa perbedaan PDFree dengan iLovePDF atau SmallPDF?",
+        "acceptedAnswer": { "@type": "Answer", "text": "iLovePDF dan SmallPDF mengunggah file Anda ke server mereka untuk diproses. PDFree berjalan sepenuhnya di browser Anda — file Anda tidak pernah meninggalkan perangkat Anda. PDFree juga tidak memiliki batasan ukuran file dan tidak ada pembatasan penggunaan harian." }
+      }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "PDFree", "item": "https://pdfree.io/" },
+      { "@type": "ListItem", "position": 2, "name": "Alat PDF Aman", "item": "https://pdfree.io/id/alat-pdf-aman/" }
+    ]
+  }
+  </script>
+</head>
+<body>
+
+  <nav>
+    <a href="/id/" class="logo" aria-label="Ke halaman utama" style="text-decoration:none">
+      <div class="logo-icon" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+      </div>
+      <span class="logo-text">PDF<span>ree</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="/id/gabung-pdf/" class="nav-link" data-tool="merge">Gabung</a>
+      <a href="/id/pisah-pdf/" class="nav-link" data-tool="split">Pisah</a>
+      <a href="/id/kompres-pdf/" class="nav-link" data-tool="compress">Kompres</a>
+      <a href="/id/jpg-ke-pdf/" class="nav-link" data-tool="jpg2pdf">JPG→PDF</a>
+      <a href="/id/pdf-ke-jpg/" class="nav-link" data-tool="pdf2jpg">PDF→JPG</a>
+      <a href="/id/tanda-air-pdf/" class="nav-link" data-tool="watermark">Tanda Air</a>
+      <a href="/id/nomor-halaman-pdf/" class="nav-link" data-tool="pagenum">No. Halaman</a>
+      <a href="/id/metadata-pdf/" class="nav-link" data-tool="meta">Metadata</a>
+      <a href="/id/ekstrak-pdf/" class="nav-link" data-tool="extract">Ekstrak</a>
+      <a href="/id/putar-pdf/" class="nav-link" data-tool="rotate">Putar</a>
+      <a href="/id/atur-halaman-pdf/" class="nav-link" data-tool="organize">Atur</a>
+      <a href="/id/ubah-ukuran-pdf/" class="nav-link" data-tool="resize">Ubah Ukuran</a>
+      <a href="/id/lindungi-pdf/" class="nav-link" data-tool="protect">Lindungi</a>
+      <a href="/id/pdf-ke-word/" class="nav-link" data-tool="pdf2word">PDF→Word</a>
+      <a href="/id/ratakan-pdf/" class="nav-link" data-tool="flatten">Ratakan</a>
+      <a href="/compare-pdf/" class="nav-link" data-tool="compare">Bandingkan</a>
+    </div>
+    <div class="nav-right">
+      <details class="lang-switch" id="langSwitch">
+        <summary aria-label="Ganti bahasa">🌐 ID</summary>
+        <div class="lang-switch__menu" role="menu">
+          <a href="/" role="menuitem">English</a>
+          <a href="/es/" role="menuitem">Español</a>
+          <a href="/pt/" role="menuitem">Português</a>
+          <a href="/de/" role="menuitem">Deutsch</a>
+          <a href="/fr/" role="menuitem">Français</a>
+          <a href="/id/" role="menuitem" aria-current="true">Bahasa Indonesia</a>
+          <a href="/tr/" role="menuitem">Türkçe</a>
+          <a href="/vi/" role="menuitem">Tiếng Việt</a>
+          <a href="/ru/" role="menuitem">Русский</a>
+          <a href="/ja/" role="menuitem">日本語</a>
+          <a href="/it/" role="menuitem">Italiano</a>
+          <a href="/ko/" role="menuitem">한국어</a>
+          <a href="/nl/" role="menuitem">Nederlands</a>
+          <a href="/pl/" role="menuitem">Polski</a>
+        </div>
+      </details>
+      <button id="themeToggle" class="theme-toggle" aria-label="Alihkan mode gelap" title="Alihkan mode gelap"></button>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section style="background:var(--green-light);border-bottom:1px solid rgba(45,122,79,0.15);padding:52px 24px 44px;text-align:center;">
+    <div style="max-width:720px;margin:0 auto;">
+      <div style="display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid rgba(45,122,79,0.2);border-radius:24px;padding:6px 16px;font-size:13px;color:var(--green);font-weight:500;margin-bottom:20px;">
+        <span style="width:7px;height:7px;background:var(--green);border-radius:50%;display:inline-block;"></span>
+        Nol unggahan · Nol penyimpanan · Nol pelacakan
+      </div>
+      <h1 style="font-size:clamp(28px,4.5vw,44px);font-weight:700;letter-spacing:-1px;line-height:1.15;color:var(--text);margin:0 0 16px;">Alat PDF Aman yang Tidak<br>Mengunggah File Anda</h1>
+      <p style="font-size:17px;color:var(--text2);max-width:580px;margin:0 auto 28px;line-height:1.6;">Setiap alat PDFree memproses dokumen Anda sepenuhnya di browser Anda. File Anda tidak pernah meninggalkan perangkat Anda — tidak sedetik pun. Gabungkan, kompres, pisahkan, lindungi, dan hapus teks PDF dengan privasi penuh.</p>
+      <a href="/id/" style="background:var(--green);color:#fff;padding:13px 28px;border-radius:10px;font-weight:600;font-size:15px;text-decoration:none;display:inline-block;">Jelajahi Semua Alat PDF — Gratis</a>
+    </div>
+  </section>
+
+  <!-- Trust proof -->
+  <section style="padding:20px 24px;border-bottom:1px solid var(--border);background:var(--surface);">
+    <div style="max-width:720px;margin:0 auto;display:flex;gap:24px;justify-content:center;flex-wrap:wrap;">
+      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">🔒 File tidak pernah meninggalkan perangkat Anda</span>
+      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">⚡ Berfungsi 100% offline</span>
+      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">✓ Aman GDPR secara desain</span>
+      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">✓ Aman HIPAA secara desain</span>
+      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">🚫 Tanpa akun, tanpa pelacakan</span>
+    </div>
+  </section>
+
+  <!-- SEO Content -->
+  <section class="seo-article">
+    <div class="seo-article__inner">
+      <div class="seo-content" style="max-width:800px;margin:60px auto 40px;padding:0 24px;color:var(--text2);line-height:1.8;">
+
+        <h2 style="font-size:26px;color:var(--text);margin:0 0 16px;font-weight:700;">Mengapa Sebagian Besar Alat PDF Tidak Benar-Benar Aman</h2>
+        <p>Saat Anda mengunggah PDF ke alat berbasis cloud — bahkan yang tepercaya sekalipun — file Anda melintasi internet menuju server jarak jauh. Di sana file diproses, disimpan sementara, dan akhirnya dihapus. Selama jendela waktu itu, dokumen Anda berada di perangkat keras yang tidak Anda kendalikan, di pusat data yang belum pernah Anda lihat, dikelola oleh perusahaan yang praktik keamanannya Anda percayai begitu saja.</p>
+        <p>Untuk sebagian besar file, ini adalah kompromi yang bisa diterima. Tapi untuk <strong>kontrak, catatan medis, laporan keuangan, SPT pajak, dokumen HR, atau apa pun yang bersifat pribadi</strong> — jendela paparan itu menciptakan risiko nyata: peretasan server, kesalahan konfigurasi kontrol akses, panggilan pengadilan, atau ancaman dari orang dalam.</p>
+        <p>Pendekatan paling aman bukanlah enkripsi sisi server yang lebih baik. Melainkan <strong>tidak memiliki server sama sekali</strong>.</p>
+
+        <div style="background:var(--green-light);border-left:4px solid var(--green);padding:18px 20px;border-radius:0 8px 8px 0;margin:28px 0;">
+          <p style="margin:0;font-size:14px;color:var(--text);"><strong>Model keamanan PDFree:</strong> Semua pemrosesan PDF — menggabungkan, mengompres, memisahkan, mengenkripsi — terjadi dalam JavaScript yang berjalan di tab browser Anda. File Anda dimuat ke RAM, diproses secara lokal, dan hasilnya langsung diunduh. Tutup tab, dan semuanya hilang. Tidak ada server yang bisa diretas karena memang tidak ada server.</p>
+        </div>
+
+        <!-- Tool grid -->
+        <h2 style="font-size:26px;color:var(--text);margin:52px 0 16px;font-weight:700;">Semua Alat PDF Aman — Tanpa Perlu Unggah</h2>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin:20px 0 40px;">
+          <a href="/id/gabung-pdf/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">🔗</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">Gabung PDF</strong>
+            <span style="font-size:13px;color:var(--text2);">Gabungkan beberapa PDF menjadi satu — secara lokal, privat</span>
+          </a>
+          <a href="/id/kompres-pdf/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">⚡</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">Kompres PDF</strong>
+            <span style="font-size:13px;color:var(--text2);">Perkecil ukuran file tanpa mengirim file ke mana pun</span>
+          </a>
+          <a href="/id/pisah-pdf/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">✂️</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">Pisah PDF</strong>
+            <span style="font-size:13px;color:var(--text2);">Ekstrak halaman dari PDF mana pun, tanpa perlu unggah</span>
+          </a>
+          <a href="/id/lindungi-pdf/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">🔐</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">Lindungi PDF</strong>
+            <span style="font-size:13px;color:var(--text2);">Tambahkan enkripsi kata sandi — kunci Anda tidak pernah meninggalkan perangkat</span>
+          </a>
+          <a href="/id/hapus-teks-pdf/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">⬛</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">Hapus Teks PDF</strong>
+            <span style="font-size:13px;color:var(--text2);">Tutupi konten sensitif sebelum membagikan — dilakukan secara lokal</span>
+          </a>
+          <a href="/id/jpg-ke-pdf/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">🖼️</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">JPG ke PDF</strong>
+            <span style="font-size:13px;color:var(--text2);">Ubah gambar menjadi PDF di browser Anda</span>
+          </a>
+          <a href="/id/tanda-air-pdf/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">💧</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">Tanda Air PDF</strong>
+            <span style="font-size:13px;color:var(--text2);">Tambahkan tanda air teks atau gambar secara lokal</span>
+          </a>
+          <a href="/id/metadata-pdf/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">🏷️</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">Edit Metadata</strong>
+            <span style="font-size:13px;color:var(--text2);">Hapus penulis, judul, tanggal pembuatan — secara privat</span>
+          </a>
+        </div>
+
+        <!-- Verify -->
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 12px;font-weight:700;">Cara Memverifikasi Tidak Ada File yang Diunggah</h2>
+        <p>Buka DevTools browser Anda (tekan <kbd style="background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:2px 7px;font-size:13px;">F12</kbd>), buka tab <strong>Jaringan</strong>, lalu gunakan alat PDFree apa pun. Filter permintaan berdasarkan "Doc" atau "XHR" — Anda tidak akan menemukan apa pun yang berisi data PDF Anda. Satu-satunya permintaan jaringan adalah untuk file JavaScript dan CSS yang menjalankan aplikasi.</p>
+        <p>Ini adalah bukti paling langsung bahwa file Anda tetap berada di perangkat Anda. Tidak perlu kepercayaan — verifikasi sendiri dalam 30 detik.</p>
+
+        <!-- Who it's for -->
+        <h2 style="font-size:26px;color:var(--text);margin:52px 0 16px;font-weight:700;">Siapa yang Membutuhkan Alat PDF Aman</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:16px 0 40px;">
+          <div style="border:1px solid var(--border);border-radius:12px;padding:18px;">
+            <strong style="color:var(--text);display:block;margin-bottom:6px;">⚖️ Profesional hukum</strong>
+            <p style="font-size:13px;margin:0;color:var(--text2);">Hak istimewa pengacara-klien mengharuskan penanganan dokumen yang rahasia. PDFree tidak pernah mengekspos file klien ke server pihak ketiga.</p>
+          </div>
+          <div style="border:1px solid var(--border);border-radius:12px;padding:18px;">
+            <strong style="color:var(--text);display:block;margin-bottom:6px;">🏥 Tenaga kesehatan</strong>
+            <p style="font-size:13px;margin:0;color:var(--text2);">HIPAA mengharuskan perlindungan data pasien. PDFree memproses catatan medis secara lokal — nol PHI yang dikirimkan.</p>
+          </div>
+          <div style="border:1px solid var(--border);border-radius:12px;padding:18px;">
+            <strong style="color:var(--text);display:block;margin-bottom:6px;">💼 Keuangan &amp; akuntansi</strong>
+            <p style="font-size:13px;margin:0;color:var(--text2);">SPT pajak, rekening koran bank, dan dokumen penggajian berisi data sensitif yang seharusnya hanya berada di perangkat Anda.</p>
+          </div>
+          <div style="border:1px solid var(--border);border-radius:12px;padding:18px;">
+            <strong style="color:var(--text);display:block;margin-bottom:6px;">🏢 Profesional HR</strong>
+            <p style="font-size:13px;margin:0;color:var(--text2);">Kontrak karyawan, penilaian kinerja, dan file kandidat — tangani tanpa paparan server sama sekali.</p>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 20px;font-weight:700;">Pertanyaan yang Sering Diajukan</h2>
+        <div style="display:flex;flex-direction:column;gap:20px;">
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Apakah ada alat PDFree yang mengunggah file ke server?</h3>
+            <p style="margin:0;font-size:14px;">Tidak. Setiap alat PDFree memproses file sepenuhnya di browser Anda. File Anda tidak pernah dikirim ke server mana pun, disimpan di mana pun, atau dicatat dengan cara apa pun.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Apakah alat PDFree mematuhi GDPR?</h3>
+            <p style="margin:0;font-size:14px;">Ya, sejak desain. Karena tidak ada data pribadi atau file yang pernah dikirimkan ke server kami, kepatuhan GDPR terjamin secara struktural — sederhananya, tidak ada data yang bisa disalahgunakan.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Bisakah saya menggunakan PDFree untuk catatan medis yang diatur HIPAA?</h3>
+            <p style="margin:0;font-size:14px;">Ya. Arsitektur PDFree memastikan bahwa Informasi Kesehatan yang Dilindungi (PHI) tidak pernah dikirimkan secara eksternal. Tenaga kesehatan dapat dengan aman memproses catatan pasien sepenuhnya di browser mereka.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Apa perbedaan PDFree dengan iLovePDF atau SmallPDF?</h3>
+            <p style="margin:0;font-size:14px;">iLovePDF dan SmallPDF mengunggah file Anda ke server mereka untuk diproses. PDFree berjalan sepenuhnya di browser Anda — file Anda tidak pernah meninggalkan perangkat Anda. PDFree juga tidak memiliki batasan ukuran file dan tidak ada pembatasan penggunaan harian.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div style="display:flex;gap:48px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;font-size:13px;border-top:1px solid var(--border);padding-top:20px;">
+      <div>
+        <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Alternatif</div>
+        <a href="/ilovepdf-alternative/" style="display:block;color:var(--green);text-decoration:none;margin-bottom:4px;">Alternatif iLovePDF</a>
+      </div>
+      <div>
+        <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Solusi</div>
+        <a href="/hipaa-pdf-tools/" style="display:block;color:var(--green);text-decoration:none;margin-bottom:4px;">PDF Sesuai HIPAA</a>
+        <a href="/id/alat-pdf-aman/" style="display:block;color:var(--green);text-decoration:none;">Alat PDF Aman</a>
+      </div>
+    </div>
+    PDFree · <strong>Semua pemrosesan terjadi 100% di browser Anda</strong> · File <strong>tidak pernah diunggah</strong><br>
+    <span style="color:var(--green)">🔒</span> Dokumen Anda tidak pernah meninggalkan perangkat Anda &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> Dibangun untuk gratis bagi semua orang, selamanya<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
+      <a href="/privacy.html" style="color:var(--green)">Privasi</a> &nbsp;·&nbsp;
+      <a href="/terms.html" style="color:var(--green)">Ketentuan</a> &nbsp;·&nbsp;
+      <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a> &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green)">GitHub</a>
+    </span>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script>
+</body>
+</html>

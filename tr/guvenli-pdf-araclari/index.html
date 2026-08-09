@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src  'self' 'wasm-unsafe-eval' blob:
+                https://cdnjs.cloudflare.com https://esm.sh
+                https://plausible.io https://pagead2.googlesyndication.com
+                https://static.cloudflareinsights.com;
+    style-src   'self' 'unsafe-inline';
+    font-src    'self';
+    img-src     'self' data: blob: https:;
+    connect-src 'self' https://cdnjs.cloudflare.com https://*.workers.dev
+                https://plausible.io https://pagead2.googlesyndication.com
+                https://www.googletagservices.com https://*.doubleclick.net
+                https://cloudflareinsights.com;
+    frame-src   https://googleads.g.doubleclick.net https://tpc.googlesyndication.com;
+    worker-src  'self' blob:;
+    object-src  'none';
+  ">
+
+  <title>Dosyalarınızı Yüklemeyen Güvenli PDF Araçları — PDFree</title>
+  <meta name="description" content="Dosyalarınızı asla bir sunucuya yüklemeyen PDF araçları. Tüm işlemler tarayıcınızda gerçekleşir — PDF'leri tam gizlilikle birleştirin, sıkıştırın, bölün, koruyun.">
+
+  <meta property="og:title"       content="Güvenli PDF Araçları — Dosyalar Asla Yüklenmez | PDFree">
+  <meta property="og:description" content="Her şeyi tarayıcınızda işleyen tek PDF araç seti. Sunucu yok, depolama yok, takip yok.">
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://pdfree.io/tr/guvenli-pdf-araclari/">
+  <meta property="og:site_name"   content="PDFree">
+  <meta property="og:locale"      content="tr_TR">
+  <meta property="og:image"        content="https://pdfree.io/icons/og-image.jpg">
+  <meta property="og:image:width"  content="1200">
+  <meta property="og:image:height" content="633">
+  <meta property="og:image:alt"    content="Güvenli PDF Araçları — Dosyalar Asla Yüklenmez | PDFree">
+  <meta name="twitter:card"       content="summary_large_image">
+  <meta name="twitter:site"       content="@pdfree_io">
+  <meta name="twitter:title"      content="Güvenli PDF Araçları — Dosyalar Asla Yüklenmez | PDFree">
+  <meta name="twitter:description" content="Her şeyi tarayıcınızda işleyen tek PDF araç seti. Sunucu yok, depolama yok, takip yok.">
+  <meta name="twitter:image"       content="https://pdfree.io/icons/og-image.jpg">
+  <meta name="twitter:image:alt"   content="Güvenli PDF Araçları — Dosyalar Asla Yüklenmez | PDFree">
+
+  <link rel="canonical" href="https://pdfree.io/tr/guvenli-pdf-araclari/">
+  <link rel="alternate" hreflang="en"        href="https://pdfree.io/secure-pdf-tools/">
+  <link rel="alternate" hreflang="de"        href="https://pdfree.io/de/sichere-pdf-tools/">
+  <link rel="alternate" hreflang="es"        href="https://pdfree.io/es/herramientas-pdf-seguras/">
+  <link rel="alternate" hreflang="fr"        href="https://pdfree.io/fr/outils-pdf-securises/">
+  <link rel="alternate" hreflang="pt"        href="https://pdfree.io/pt/ferramentas-pdf-seguras/">
+  <link rel="alternate" hreflang="id"        href="https://pdfree.io/id/alat-pdf-aman/">
+  <link rel="alternate" hreflang="vi"        href="https://pdfree.io/vi/cong-cu-pdf-an-toan/">
+  <link rel="alternate" hreflang="ru"        href="https://pdfree.io/ru/bezopasnye-pdf-instrumenty/">
+  <link rel="alternate" hreflang="ja"        href="https://pdfree.io/ja/anzen-pdf-tool/">
+  <link rel="alternate" hreflang="it"        href="https://pdfree.io/it/strumenti-pdf-sicuri/">
+  <link rel="alternate" hreflang="ko"        href="https://pdfree.io/ko/anjeon-pdf-dogu/">
+  <link rel="alternate" hreflang="nl"        href="https://pdfree.io/nl/veilige-pdf-tools/">
+  <link rel="alternate" hreflang="pl"        href="https://pdfree.io/pl/bezpieczne-narzedzia-pdf/">
+  <link rel="alternate" hreflang="tr"        href="https://pdfree.io/tr/guvenli-pdf-araclari/">
+  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/secure-pdf-tools/">
+
+  <link rel="manifest" href="../../manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="PDFree">
+  <link rel="apple-touch-icon" href="../../icons/icon-192.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
+  <link rel="preconnect" href="https://plausible.io">
+  <link rel="preconnect" href="https://static.cloudflareinsights.com">
+  <link rel="preload" href="../../fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../css/fonts.css">
+  <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/animations.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/components.css">
+  <style>.secure-tool-card{border:1px solid var(--border);transition:border-color 0.2s}.secure-tool-card:hover{border-color:var(--green)}</style>
+
+  <script src="../../js/theme.js"></script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "PDFree — Güvenli PDF Araçları",
+    "description": "Dosyalarınızı asla yüklemeyen güvenli PDF araçları. Tüm işlemler tarayıcınızda yerel olarak gerçekleşir. Ücretsiz, hesap gerektirmez.",
+    "url": "https://pdfree.io/tr/guvenli-pdf-araclari/",
+    "applicationCategory": "UtilityApplication",
+    "operatingSystem": "Web, iOS, Android",
+    "isAccessibleForFree": true,
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/InStock"
+    },
+    "featureList": [
+      "Dosyalar hiçbir sunucuya yüklenmez",
+      "Hesap gerekmez",
+      "Dosya boyutu sınırı yok",
+      "Çevrimdışı çalışır (PWA)",
+      "PDF parola koruması mevcuttur (RC4-128 şifreleme)",
+      "Sıfır veri saklama"
+    ],
+    "dateModified": "2026-08-09",
+    "provider": {
+      "@type": "Organization",
+      "name": "PDFree",
+      "url": "https://pdfree.io",
+      "description": "PDFree is a free, privacy-first PDF toolkit that runs entirely in the browser — files are processed locally and never uploaded to a server.",
+      "logo": "https://pdfree.io/icons/icon-512.png"
+    }
+  }
+  </script>
+
+    <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "Dosyalarınızı Yüklemeyen Güvenli PDF Araçları",
+    "description": "Dosyaların hiçbir sunucuya yüklenmediği, tarayıcı tabanlı bir PDF araç seti.",
+    "url": "https://pdfree.io/tr/guvenli-pdf-araclari/",
+    "numberOfItems": 8,
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Yüklemeden PDF birleştir", "url": "https://pdfree.io/tr/pdf-birlestir/" },
+      { "@type": "ListItem", "position": 2, "name": "Yüklemeden PDF sıkıştır", "url": "https://pdfree.io/tr/pdf-sikistir/" },
+      { "@type": "ListItem", "position": 3, "name": "Yüklemeden PDF böl", "url": "https://pdfree.io/tr/pdf-bol/" },
+      { "@type": "ListItem", "position": 4, "name": "PDF'i yerel olarak parolayla koru", "url": "https://pdfree.io/tr/pdf-koru/" },
+      { "@type": "ListItem", "position": 5, "name": "Tarayıcıda PDF gizle", "url": "https://pdfree.io/tr/pdf-gizle/" },
+      { "@type": "ListItem", "position": 6, "name": "JPG'yi yerel olarak PDF'ye dönüştür", "url": "https://pdfree.io/tr/jpg-den-pdf-ye/" },
+      { "@type": "ListItem", "position": 7, "name": "PDF'e filigran ekle", "url": "https://pdfree.io/tr/pdf-filigran/" },
+      { "@type": "ListItem", "position": 8, "name": "PDF meta verisini düzenle", "url": "https://pdfree.io/tr/pdf-meta-veri/" }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Herhangi bir PDFree aracı dosyaları bir sunucuya yüklüyor mu?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Hayır. Her PDFree aracı dosyaları tamamen tarayıcınızda işler. Dosyalarınız hiçbir zaman bir sunucuya gönderilmez, herhangi bir yerde saklanmaz veya herhangi bir şekilde kaydedilmez." }
+      },
+      {
+        "@type": "Question",
+        "name": "PDFree araçları GDPR uyumlu mu?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Evet, tasarım gereği. Kişisel veriler veya dosyalar hiçbir zaman sunucularımıza iletilmediğinden, GDPR uyumluluğu yapısal olarak garanti edilir — kötüye kullanılacak hiçbir veri yoktur." }
+      },
+      {
+        "@type": "Question",
+        "name": "PDFree'yi HIPAA kapsamındaki tıbbi kayıtlar için kullanabilir miyim?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Evet. PDFree'nin mimarisi, Korunan Sağlık Bilgilerinin (PHI) hiçbir zaman dışarıya iletilmemesini sağlar. Sağlık çalışanları, hasta kayıtlarını güvenle tamamen tarayıcılarında işleyebilir." }
+      },
+      {
+        "@type": "Question",
+        "name": "PDFree, iLovePDF veya SmallPDF'den nasıl farklı?",
+        "acceptedAnswer": { "@type": "Answer", "text": "iLovePDF ve SmallPDF, işlemek için dosyalarınızı kendi sunucularına yükler. PDFree tamamen tarayıcınızda çalışır — dosyalarınız cihazınızdan asla ayrılmaz. PDFree'nin ayrıca dosya boyutu sınırı ve günlük kullanım kısıtlaması yoktur." }
+      }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "PDFree", "item": "https://pdfree.io/" },
+      { "@type": "ListItem", "position": 2, "name": "Güvenli PDF Araçları", "item": "https://pdfree.io/tr/guvenli-pdf-araclari/" }
+    ]
+  }
+  </script>
+</head>
+<body>
+
+  <nav>
+    <a href="/tr/" class="logo" aria-label="Ana sayfaya git" style="text-decoration:none">
+      <div class="logo-icon" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+      </div>
+      <span class="logo-text">PDF<span>ree</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="/tr/pdf-birlestir/" class="nav-link" data-tool="merge">PDF Birleştir</a>
+      <a href="/tr/pdf-bol/" class="nav-link" data-tool="split">PDF Böl</a>
+      <a href="/tr/pdf-sikistir/" class="nav-link" data-tool="compress">PDF Sıkıştır</a>
+      <a href="/tr/jpg-den-pdf-ye/" class="nav-link" data-tool="jpg2pdf">JPG → PDF</a>
+      <a href="/tr/pdf-den-jpg-ye/" class="nav-link" data-tool="pdf2jpg">PDF → JPG</a>
+      <a href="/tr/pdf-filigran/" class="nav-link" data-tool="watermark">Filigran Ekle</a>
+      <a href="/tr/sayfa-numarasi-ekle/" class="nav-link" data-tool="pagenum">Sayfa Numarası</a>
+      <a href="/tr/pdf-meta-veri/" class="nav-link" data-tool="meta">Meta Veri Düzenle</a>
+      <a href="/tr/sayfa-cikar/" class="nav-link" data-tool="extract">Sayfa Çıkar</a>
+      <a href="/tr/pdf-dondur/" class="nav-link" data-tool="rotate">PDF Döndür</a>
+      <a href="/tr/pdf-duzenle/" class="nav-link" data-tool="organize">Düzenle</a>
+      <a href="/tr/pdf-boyutu-degistir/" class="nav-link" data-tool="resize">Boyutlandır</a>
+      <a href="/tr/pdf-koru/" class="nav-link" data-tool="protect">PDF Koru</a>
+      <a href="/tr/pdf-word-donustur/" class="nav-link" data-tool="pdf2word">PDF'den Word'e</a>
+      <a href="/tr/pdf-duzlestir/" class="nav-link" data-tool="flatten">Form Kilitle</a>
+      <a href="/compare-pdf/" class="nav-link" data-tool="compare">Karşılaştır</a>
+    </div>
+    <div class="nav-right">
+      <details class="lang-switch" id="langSwitch">
+        <summary aria-label="Dili değiştir">🌐 TR</summary>
+        <div class="lang-switch__menu" role="menu">
+          <a href="/" role="menuitem">English</a>
+          <a href="/es/" role="menuitem">Español</a>
+          <a href="/pt/" role="menuitem">Português</a>
+          <a href="/de/" role="menuitem">Deutsch</a>
+          <a href="/fr/" role="menuitem">Français</a>
+          <a href="/id/" role="menuitem">Bahasa Indonesia</a>
+          <a href="/tr/" role="menuitem" aria-current="true">Türkçe</a>
+          <a href="/vi/" role="menuitem">Tiếng Việt</a>
+          <a href="/ru/" role="menuitem">Русский</a>
+          <a href="/ja/" role="menuitem">日本語</a>
+          <a href="/it/" role="menuitem">Italiano</a>
+          <a href="/ko/" role="menuitem">한국어</a>
+          <a href="/nl/" role="menuitem">Nederlands</a>
+          <a href="/pl/" role="menuitem">Polski</a>
+        </div>
+      </details>
+      <button id="themeToggle" class="theme-toggle" aria-label="Karanlık modu değiştir" title="Karanlık modu değiştir"></button>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section style="background:var(--green-light);border-bottom:1px solid rgba(45,122,79,0.15);padding:52px 24px 44px;text-align:center;">
+    <div style="max-width:720px;margin:0 auto;">
+      <div style="display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid rgba(45,122,79,0.2);border-radius:24px;padding:6px 16px;font-size:13px;color:var(--green);font-weight:500;margin-bottom:20px;">
+        <span style="width:7px;height:7px;background:var(--green);border-radius:50%;display:inline-block;"></span>
+        Sıfır yükleme · Sıfır depolama · Sıfır takip
+      </div>
+      <h1 style="font-size:clamp(28px,4.5vw,44px);font-weight:700;letter-spacing:-1px;line-height:1.15;color:var(--text);margin:0 0 16px;">Dosyalarınızı Yüklemeyen<br>Güvenli PDF Araçları</h1>
+      <p style="font-size:17px;color:var(--text2);max-width:580px;margin:0 auto 28px;line-height:1.6;">Her PDFree aracı belgelerinizi tamamen tarayıcınızda işler. Dosyalarınız cihazınızdan asla ayrılmaz — bir milisaniye bile. PDF'leri tam gizlilikle birleştirin, sıkıştırın, bölün, koruyun ve gizleyin.</p>
+      <a href="/tr/" style="background:var(--green);color:#fff;padding:13px 28px;border-radius:10px;font-weight:600;font-size:15px;text-decoration:none;display:inline-block;">Tüm PDF Araçlarına Göz Atın — Ücretsiz</a>
+    </div>
+  </section>
+
+  <!-- Trust proof -->
+  <section style="padding:20px 24px;border-bottom:1px solid var(--border);background:var(--surface);">
+    <div style="max-width:720px;margin:0 auto;display:flex;gap:24px;justify-content:center;flex-wrap:wrap;">
+      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">🔒 Dosyalar cihazınızdan asla çıkmaz</span>
+      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">⚡ %100 çevrimdışı çalışır</span>
+      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">✓ Tasarım gereği GDPR uyumlu</span>
+      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">✓ Tasarım gereği HIPAA uyumlu</span>
+      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">🚫 Hesap yok, takip yok</span>
+    </div>
+  </section>
+
+  <!-- SEO Content -->
+  <section class="seo-article">
+    <div class="seo-article__inner">
+      <div class="seo-content" style="max-width:800px;margin:60px auto 40px;padding:0 24px;color:var(--text2);line-height:1.8;">
+
+        <h2 style="font-size:26px;color:var(--text);margin:0 0 16px;font-weight:700;">Çoğu PDF Aracı Neden Gerçekten Güvenli Değil</h2>
+        <p>Bulut tabanlı bir araca PDF yüklediğinizde — saygın bir araç olsa bile — dosyanız internet üzerinden uzak bir sunucuya gider. Orada işlenir, geçici olarak saklanır ve sonunda silinir. Bu süre boyunca belgeniz, kontrol etmediğiniz bir donanımda, hiç görmediğiniz bir veri merkezinde, güvenlik uygulamalarına körü körüne güvendiğiniz bir şirket tarafından yönetilir.</p>
+        <p>Çoğu dosya için bu kabul edilebilir bir uzlaşmadır. Ancak <strong>sözleşmeler, tıbbi kayıtlar, mali tablolar, vergi beyannameleri, İK belgeleri veya kişisel herhangi bir şey</strong> için — bu maruz kalma penceresi gerçek riskler yaratır: sunucu ihlalleri, yanlış yapılandırılmış erişim kontrolleri, mahkeme celpleri veya içeriden gelen tehditler.</p>
+        <p>En güvenli yaklaşım daha iyi sunucu taraflı şifreleme değildir. <strong>Hiç sunucunun olmamasıdır</strong>.</p>
+
+        <div style="background:var(--green-light);border-left:4px solid var(--green);padding:18px 20px;border-radius:0 8px 8px 0;margin:28px 0;">
+          <p style="margin:0;font-size:14px;color:var(--text);"><strong>PDFree'nin güvenlik modeli:</strong> Tüm PDF işlemleri — birleştirme, sıkıştırma, bölme, şifreleme — tarayıcı sekmenizde çalışan JavaScript içinde gerçekleşir. Dosyalarınız RAM'e yüklenir, yerel olarak işlenir ve sonuç doğrudan indirilir. Sekmeyi kapatın, her şey yok olur. İhlal edilecek bir sunucu yoktur, çünkü sunucu yoktur.</p>
+        </div>
+
+        <!-- Tool grid -->
+        <h2 style="font-size:26px;color:var(--text);margin:52px 0 16px;font-weight:700;">Tüm Güvenli PDF Araçları — Yükleme Gerektirmez</h2>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin:20px 0 40px;">
+          <a href="/tr/pdf-birlestir/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">🔗</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">PDF Birleştir</strong>
+            <span style="font-size:13px;color:var(--text2);">Birden fazla PDF'i tek dosyada birleştirin — yerel olarak, gizlice</span>
+          </a>
+          <a href="/tr/pdf-sikistir/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">⚡</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">PDF Sıkıştır</strong>
+            <span style="font-size:13px;color:var(--text2);">Dosyaları hiçbir yere göndermeden dosya boyutunu küçültün</span>
+          </a>
+          <a href="/tr/pdf-bol/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">✂️</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">PDF Böl</strong>
+            <span style="font-size:13px;color:var(--text2);">Herhangi bir PDF'den sayfa çıkarın, yükleme gerekmez</span>
+          </a>
+          <a href="/tr/pdf-koru/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">🔐</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">PDF Koru</strong>
+            <span style="font-size:13px;color:var(--text2);">Parola şifrelemesi ekleyin — anahtarınız cihazınızdan asla çıkmaz</span>
+          </a>
+          <a href="/tr/pdf-gizle/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">⬛</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">PDF Gizle</strong>
+            <span style="font-size:13px;color:var(--text2);">Paylaşmadan önce hassas içeriği kapatın — yerel olarak yapılır</span>
+          </a>
+          <a href="/tr/jpg-den-pdf-ye/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">🖼️</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">JPG'den PDF'ye</strong>
+            <span style="font-size:13px;color:var(--text2);">Görselleri tarayıcınızda PDF'ye dönüştürün</span>
+          </a>
+          <a href="/tr/pdf-filigran/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">💧</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">PDF Filigran</strong>
+            <span style="font-size:13px;color:var(--text2);">Yerel olarak metin veya görsel filigranı ekleyin</span>
+          </a>
+          <a href="/tr/pdf-meta-veri/" class="secure-tool-card" style="background:var(--surface);border-radius:12px;padding:18px;text-decoration:none;display:block;">
+            <div style="font-size:22px;margin-bottom:8px;">🏷️</div>
+            <strong style="color:var(--text);display:block;margin-bottom:4px;">Meta Veriyi Düzenle</strong>
+            <span style="font-size:13px;color:var(--text2);">Yazar, başlık, oluşturma tarihini kaldırın — gizlice</span>
+          </a>
+        </div>
+
+        <!-- Verify -->
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 12px;font-weight:700;">Hiçbir Dosyanın Yüklenmediğini Nasıl Doğrularsınız</h2>
+        <p>Tarayıcınızın DevTools'unu açın (<kbd style="background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:2px 7px;font-size:13px;">F12</kbd>'ye basın), <strong>Ağ</strong> sekmesine gidin, ardından herhangi bir PDFree aracını kullanın. İstekleri "Doc" veya "XHR" ile filtreleyin — PDF verinizi içeren hiçbir şey bulamayacaksınız. Tek ağ istekleri, uygulamayı çalıştıran JavaScript ve CSS dosyaları içindir.</p>
+        <p>Bu, dosyalarınızın cihazınızda kaldığının en doğrudan kanıtıdır. Güvenmenize gerek yok — 30 saniyede kendiniz doğrulayın.</p>
+
+        <!-- Who it's for -->
+        <h2 style="font-size:26px;color:var(--text);margin:52px 0 16px;font-weight:700;">Güvenli PDF Araçlarına Kimler İhtiyaç Duyar</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:16px 0 40px;">
+          <div style="border:1px solid var(--border);border-radius:12px;padding:18px;">
+            <strong style="color:var(--text);display:block;margin-bottom:6px;">⚖️ Hukuk uzmanları</strong>
+            <p style="font-size:13px;margin:0;color:var(--text2);">Avukat-müvekkil gizliliği, belgelerin gizli tutulmasını gerektirir. PDFree, müvekkil dosyalarını asla üçüncü taraf sunuculara açık etmez.</p>
+          </div>
+          <div style="border:1px solid var(--border);border-radius:12px;padding:18px;">
+            <strong style="color:var(--text);display:block;margin-bottom:6px;">🏥 Sağlık çalışanları</strong>
+            <p style="font-size:13px;margin:0;color:var(--text2);">HIPAA, hasta verilerinin korunmasını gerektirir. PDFree tıbbi kayıtları yerel olarak işler — hiçbir PHI iletilmez.</p>
+          </div>
+          <div style="border:1px solid var(--border);border-radius:12px;padding:18px;">
+            <strong style="color:var(--text);display:block;margin-bottom:6px;">💼 Finans ve muhasebe</strong>
+            <p style="font-size:13px;margin:0;color:var(--text2);">Vergi beyannameleri, banka ekstreleri ve bordro belgeleri, yalnızca cihazınızda kalması gereken hassas veriler içerir.</p>
+          </div>
+          <div style="border:1px solid var(--border);border-radius:12px;padding:18px;">
+            <strong style="color:var(--text);display:block;margin-bottom:6px;">🏢 İK uzmanları</strong>
+            <p style="font-size:13px;margin:0;color:var(--text2);">Çalışan sözleşmeleri, performans değerlendirmeleri ve aday dosyaları — hiçbir sunucuya maruz kalmadan işleyin.</p>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <h2 style="font-size:26px;color:var(--text);margin:48px 0 20px;font-weight:700;">Sıkça Sorulan Sorular</h2>
+        <div style="display:flex;flex-direction:column;gap:20px;">
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Herhangi bir PDFree aracı dosyaları bir sunucuya yüklüyor mu?</h3>
+            <p style="margin:0;font-size:14px;">Hayır. Her PDFree aracı dosyaları tamamen tarayıcınızda işler. Dosyalarınız hiçbir zaman bir sunucuya gönderilmez, herhangi bir yerde saklanmaz veya herhangi bir şekilde kaydedilmez.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">PDFree araçları GDPR uyumlu mu?</h3>
+            <p style="margin:0;font-size:14px;">Evet, tasarım gereği. Kişisel veriler veya dosyalar hiçbir zaman sunucularımıza iletilmediğinden, GDPR uyumluluğu yapısal olarak garanti edilir — kötüye kullanılacak hiçbir veri yoktur.</p>
+          </div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">PDFree'yi HIPAA kapsamındaki tıbbi kayıtlar için kullanabilir miyim?</h3>
+            <p style="margin:0;font-size:14px;">Evet. PDFree'nin mimarisi, Korunan Sağlık Bilgilerinin (PHI) hiçbir zaman dışarıya iletilmemesini sağlar. Sağlık çalışanları, hasta kayıtlarını güvenle tamamen tarayıcılarında işleyebilir.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">PDFree, iLovePDF veya SmallPDF'den nasıl farklı?</h3>
+            <p style="margin:0;font-size:14px;">iLovePDF ve SmallPDF, işlemek için dosyalarınızı kendi sunucularına yükler. PDFree tamamen tarayıcınızda çalışır — dosyalarınız cihazınızdan asla ayrılmaz. PDFree'nin ayrıca dosya boyutu sınırı ve günlük kullanım kısıtlaması yoktur.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div style="display:flex;gap:48px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;font-size:13px;border-top:1px solid var(--border);padding-top:20px;">
+      <div>
+        <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Alternatifler</div>
+        <a href="/ilovepdf-alternative/" style="display:block;color:var(--green);text-decoration:none;margin-bottom:4px;">iLovePDF Alternatifi</a>
+      </div>
+      <div>
+        <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Çözümler</div>
+        <a href="/hipaa-pdf-tools/" style="display:block;color:var(--green);text-decoration:none;margin-bottom:4px;">HIPAA Uyumlu PDF</a>
+        <a href="/tr/guvenli-pdf-araclari/" style="display:block;color:var(--green);text-decoration:none;">Güvenli PDF Araçları</a>
+      </div>
+    </div>
+    PDFree · <strong>Tüm işlemler %100 tarayıcınızda gerçekleşir</strong> · Dosyalar <strong>asla yüklenmez</strong><br>
+    <span style="color:var(--green)">🔒</span> Belgeleriniz cihazınızdan asla çıkmaz &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> Herkes için sonsuza dek ücretsiz olacak şekilde tasarlandı<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
+      <a href="/privacy.html" style="color:var(--green)">Gizlilik</a> &nbsp;·&nbsp;
+      <a href="/terms.html" style="color:var(--green)">Şartlar</a> &nbsp;·&nbsp;
+      <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a> &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green)">GitHub</a>
+    </span>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script>
+</body>
+</html>
