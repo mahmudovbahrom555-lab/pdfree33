@@ -1,0 +1,82 @@
+[
+  {
+    "@type": "Question",
+    "name": "Redimensionar um PDF envia o meu arquivo para um servidor?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Não. Cada página é reconstruída totalmente no seu navegador. O seu arquivo nunca é enviado para lugar nenhum."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Por que é que o meu PDF imprime cortado apesar de parecer bem no ecrã?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Normalmente, o tamanho de página do arquivo não corresponde ao papel colocado na impressora, e a escala automática «Ajustar à página» do navegador ou do controlador tenta adivinhar como conciliar os dois — de forma inconsistente. Redimensionar o próprio PDF para o tamanho de papel pretendido elimina essa incerteza de forma permanente."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Qual é a diferença entre Ajustar, Preencher e Tamanho real?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ajustar reduz a página para que fique totalmente visível no novo tamanho de papel, deixando uma margem se as proporções não corresponderem exatamente. Preencher aumenta a página para cobrir todo o novo tamanho de margem a margem, o que pode cortar uma pequena parte dos lados. Tamanho real não aplica qualquer escala — o conteúdo original é centrado no novo tamanho de papel à escala real, o que é correto para moldes, formulários ou diagramas que não podem mudar de tamanho."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "O que faz a orientação «Automático»?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Automático faz corresponder a orientação da nova página à orientação de cada página de origem — uma página em paisagem obtém um destino em paisagem, uma página em retrato obtém um destino em retrato — para que uma impressão de uma folha de cálculo larga não fique espremida numa moldura alta a uma escala minúscula. Também pode forçar Retrato ou Paisagem para todas as páginas."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Há um limite de quantas páginas posso redimensionar?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Não. Não há limite de número de páginas nem de tamanho de arquivo, nem limite de tarefas por hora. Redimensione um formulário de 2 páginas ou um relatório de 500 páginas tantas vezes quantas precisar."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "O redimensionamento reduz a qualidade das imagens ou do texto?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Não. Cada página é incorporada como um objeto vetorial e escalada matematicamente, e não novamente processada como imagem rasterizada — o texto mantém-se nítido e pesquisável, e as imagens mantêm a resolução original em relação à nova escala."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso redimensionar um PDF que mistura páginas Carta e A4?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim. Cada página é medida e ajustada individualmente, pelo que um documento com tamanhos de página originais mistos converge na mesma para um único tamanho de papel uniforme no resultado."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso redimensionar vários arquivos PDF de uma vez?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Redimensionar funciona com um PDF de cada vez. Para arquivos que precisam exatamente do mesmo tratamento, outras ferramentas da PDFree como Comprimir e Marca d'água permitem processar vários arquivos de uma vez."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso redimensionar um PDF no meu telemóvel?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim. A PDFree funciona no Safari móvel (iOS) e no Chrome para Android — os mesmos controlos de tamanho de papel e modo de ajuste funcionam com um toque."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "A ferramenta de redimensionamento de PDF é mesmo grátis?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim. A PDFree é grátis, sem subscrição, sem limites diários ou por hora, e sem cadastro. Não é adicionada nenhuma marca d'água ao resultado e não há restrição de tamanho de arquivo."
+    }
+  }
+]

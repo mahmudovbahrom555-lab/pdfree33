@@ -1,0 +1,82 @@
+[
+  {
+    "@type": "Question",
+    "name": "Does resizing a PDF upload my file to a server?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Every page is rebuilt entirely in your browser. Your file is never sent anywhere."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Why does my PDF print cut off even though it looks fine on screen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Usually the page size in the file doesn't match the paper loaded in the printer, and the browser or driver's automatic \"Fit to Page\" scaling is guessing how to reconcile the two — inconsistently. Resizing the actual PDF to your target paper size removes that guesswork permanently."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "What's the difference between Fit, Fill, and Actual size?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Fit shrinks the page so all of it is visible on the new paper size, leaving a border if the proportions don't match exactly. Fill scales up to cover the entire new page edge-to-edge, which can crop a small amount off the sides. Actual size applies no scaling at all — the original content is centered on the new paper size at true scale, which is correct for patterns, forms, or diagrams that must not change size."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "What does \"Auto\" orientation do?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Auto matches the new page's orientation to each source page's own orientation — a landscape page gets a landscape target, a portrait page gets a portrait target — so a wide spreadsheet printout isn't squeezed into a tall frame at a tiny scale. You can also force Portrait or Landscape for every page."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is there a limit on how many pages I can resize?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. There's no page-count or file-size limit, and no per-hour task limit. Resize a 2-page form or a 500-page report as many times as you need."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Does resizing reduce the quality of images or text?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Each page is embedded as a vector object and scaled mathematically, not re-rendered as a raster image — text stays sharp and searchable, and images keep their original resolution relative to the new scale."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I resize a PDF that mixes Letter and A4 pages?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. Every page is measured and fit individually, so a document with mixed original page sizes still converges to one uniform paper size in the output."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I resize multiple PDF files at once?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Resize works with one PDF at a time. For files that all need the exact same treatment, PDFree's other tools such as Compress and Watermark support processing several files at once."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I resize a PDF on my phone?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. PDFree works in mobile Safari (iOS) and Chrome for Android — the same paper size and fit-mode controls work with a tap."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is the PDF resize tool completely free?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. PDFree is free with no subscription, no daily or hourly limits, and no signup. No watermark is added to the output and there's no file size restriction."
+    }
+  }
+]

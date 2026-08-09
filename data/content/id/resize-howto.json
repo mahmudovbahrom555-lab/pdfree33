@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Cara Mengubah Ukuran PDF untuk Dicetak",
+  "description": "Sesuaikan PDF apa pun ke A4, Letter, Legal, A3, atau A5 untuk dicetak — gratis, tanpa perlu unggah.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Buka PDF Anda",
+      "text": "Klik 'Pilih file' atau seret PDF Anda ke area unggah."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Pilih ukuran kertas dan mode penyesuaian",
+      "text": "Pilih A4, Letter, Legal, A3, atau A5, lalu pilih Sesuaikan, Penuhi, atau Ukuran asli. Pratinjau langsung menampilkan skala yang tepat sebelum Anda memutuskan."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Unduh dan cetak dengan percaya diri",
+      "text": "Klik 'Ubah Ukuran PDF'. Setiap halaman dibangun ulang pada ukuran kertas target dan langsung siap diunduh."
+    }
+  ]
+}

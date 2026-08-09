@@ -1,0 +1,82 @@
+[
+  {
+    "@type": "Question",
+    "name": "Wird meine Datei beim Ändern der PDF-Größe hochgeladen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nein. Jede Seite wird vollständig in deinem Browser neu erstellt. Deine Datei wird niemals irgendwohin gesendet."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Warum wird mein PDF abgeschnitten gedruckt, obwohl es am Bildschirm gut aussieht?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Meist stimmt das Seitenformat in der Datei nicht mit dem im Drucker eingelegten Papier überein, und die automatische „An Seite anpassen\"-Skalierung von Browser oder Treiber rät, wie beides in Einklang zu bringen ist — und zwar uneinheitlich. Wenn du das PDF selbst auf dein Zielformat anpasst, entfällt dieses Rätselraten dauerhaft."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Was ist der Unterschied zwischen Einpassen, Ausfüllen und Originalgröße?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Einpassen verkleinert die Seite so, dass sie vollständig auf dem neuen Papierformat sichtbar ist, wobei ein Rand entsteht, wenn die Proportionen nicht exakt übereinstimmen. Ausfüllen vergrößert die Seite, um das neue Format randlos zu füllen, wodurch an den Seiten etwas beschnitten werden kann. Originalgröße wendet gar keine Skalierung an — der ursprüngliche Inhalt wird maßstabsgetreu auf dem neuen Papierformat zentriert, was für Schnittmuster, Formulare oder Diagramme richtig ist, die ihre Größe nicht verändern dürfen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Was macht die Ausrichtung „Automatisch\"?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Automatisch passt die Ausrichtung der neuen Seite an die Ausrichtung der jeweiligen Quellseite an — eine Querformat-Seite erhält ein Querformat-Ziel, eine Hochformat-Seite ein Hochformat-Ziel —, sodass ein breiter Tabellenausdruck nicht in winzigem Maßstab in einen hohen Rahmen gepresst wird. Du kannst für alle Seiten auch fest Hochformat oder Querformat erzwingen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Gibt es ein Limit, wie viele Seiten ich in der Größe ändern kann?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nein. Es gibt kein Seitenzahl- oder Dateigrößenlimit und kein stündliches Aufgabenlimit. Ändere die Größe eines 2-seitigen Formulars oder eines 500-seitigen Berichts so oft du willst."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Verringert die Größenänderung die Qualität von Bildern oder Text?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nein. Jede Seite wird als Vektorobjekt eingebettet und mathematisch skaliert, nicht als Rasterbild neu gerendert — Text bleibt scharf und durchsuchbar, und Bilder behalten ihre ursprüngliche Auflösung relativ zum neuen Maßstab."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann ich ein PDF in der Größe ändern, das Letter- und A4-Seiten mischt?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Jede Seite wird einzeln vermessen und angepasst, sodass ein Dokument mit gemischten ursprünglichen Seitenformaten im Ergebnis trotzdem zu einem einheitlichen Papierformat zusammenläuft."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann ich mehrere PDF-Dateien gleichzeitig in der Größe ändern?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Größe ändern funktioniert mit jeweils einer PDF-Datei. Für Dateien, die alle dieselbe Behandlung brauchen, unterstützen PDFrees andere Tools wie Komprimieren und Wasserzeichen die Verarbeitung mehrerer Dateien auf einmal."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann ich die PDF-Größe auf meinem Handy ändern?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. PDFree funktioniert in mobilem Safari (iOS) und Chrome für Android — dieselben Steuerelemente für Papierformat und Anpassungsmodus funktionieren mit einem Tipp."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Ist das PDF-Resize-Tool wirklich kostenlos?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. PDFree ist kostenlos, ohne Abonnement, ohne Tages- oder Stundenlimit und ohne Anmeldung. Es wird kein Wasserzeichen hinzugefügt, und es gibt keine Dateigrößenbeschränkung."
+    }
+  }
+]

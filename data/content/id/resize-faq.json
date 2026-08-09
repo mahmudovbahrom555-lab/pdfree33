@@ -1,0 +1,82 @@
+[
+  {
+    "@type": "Question",
+    "name": "Apakah mengubah ukuran PDF mengunggah file saya ke server?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak. Setiap halaman dibangun ulang sepenuhnya di browser Anda. File Anda tidak pernah dikirim ke mana pun."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Mengapa PDF saya tercetak terpotong padahal terlihat baik-baik saja di layar?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Biasanya ukuran halaman dalam file tidak sesuai dengan kertas yang dimuat di printer, dan penskalaan otomatis \"Fit to Page\" pada browser atau driver menebak cara menyelaraskan keduanya — secara tidak konsisten. Mengubah ukuran PDF yang sebenarnya ke ukuran kertas target Anda menghilangkan tebakan itu secara permanen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apa perbedaan antara Sesuaikan, Penuhi, dan Ukuran asli?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sesuaikan memperkecil halaman sehingga seluruhnya terlihat di ukuran kertas baru, meninggalkan batas jika proporsinya tidak persis sama. Penuhi memperbesar untuk menutupi seluruh halaman baru dari tepi ke tepi, yang bisa memotong sedikit bagian sisi. Ukuran asli tidak menerapkan skala sama sekali — konten asli diposisikan di tengah ukuran kertas baru pada skala sebenarnya, yang tepat untuk pola, formulir, atau diagram yang tidak boleh berubah ukuran."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apa yang dilakukan orientasi \"Otomatis\"?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Otomatis menyesuaikan orientasi halaman baru dengan orientasi halaman sumber masing-masing — halaman lanskap mendapat target lanskap, halaman potret mendapat target potret — sehingga hasil cetak spreadsheet yang lebar tidak diperkecil ke bingkai yang tinggi dengan skala sangat kecil. Anda juga bisa memaksa Potret atau Lanskap untuk semua halaman."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah ada batas jumlah halaman yang bisa saya ubah ukurannya?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak. Tidak ada batas jumlah halaman atau ukuran file, dan tidak ada batas tugas per jam. Ubah ukuran formulir 2 halaman atau laporan 500 halaman sesering yang Anda butuhkan."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah mengubah ukuran menurunkan kualitas gambar atau teks?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak. Setiap halaman disematkan sebagai objek vektor dan diskalakan secara matematis, bukan dirender ulang sebagai gambar raster — teks tetap tajam dan dapat dicari, dan gambar mempertahankan resolusi aslinya relatif terhadap skala baru."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah saya mengubah ukuran PDF yang mencampur halaman Letter dan A4?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ya. Setiap halaman diukur dan disesuaikan secara individual, sehingga dokumen dengan ukuran halaman asli yang bercampur tetap menyatu menjadi satu ukuran kertas seragam pada hasilnya."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah saya mengubah ukuran beberapa file PDF sekaligus?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ubah Ukuran bekerja dengan satu PDF dalam satu waktu. Untuk file yang semuanya membutuhkan perlakuan yang sama persis, alat PDFree lain seperti Kompres dan Watermark mendukung pemrosesan beberapa file sekaligus."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah saya mengubah ukuran PDF di ponsel saya?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ya. PDFree bekerja di Safari seluler (iOS) dan Chrome untuk Android — kontrol ukuran kertas dan mode penyesuaian yang sama berfungsi dengan sentuhan."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah alat ubah ukuran PDF ini benar-benar gratis?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ya. PDFree gratis tanpa langganan, tanpa batas harian atau per jam, dan tanpa daftar. Tidak ada watermark yang ditambahkan pada hasil dan tidak ada batasan ukuran file."
+    }
+  }
+]

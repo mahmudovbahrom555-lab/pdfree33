@@ -1,0 +1,82 @@
+[
+  {
+    "@type": "Question",
+    "name": "Est-ce que redimensionner un PDF envoie mon fichier sur un serveur ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non. Chaque page est entièrement reconstruite dans votre navigateur. Votre fichier n'est jamais envoyé nulle part."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Pourquoi mon PDF s'imprime-t-il coupé alors qu'il a l'air correct à l'écran ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "En général, le format de page du fichier ne correspond pas au papier chargé dans l'imprimante, et la mise à l'échelle automatique « Ajuster à la page » du navigateur ou du pilote tente de deviner comment concilier les deux — de façon incohérente. Redimensionner réellement le PDF au format de papier voulu supprime définitivement cette incertitude."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Quelle est la différence entre Ajuster, Remplir et Taille réelle ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ajuster réduit la page pour qu'elle soit entièrement visible sur le nouveau format de papier, laissant une bordure si les proportions ne correspondent pas exactement. Remplir agrandit la page pour couvrir tout le nouveau format bord à bord, ce qui peut rogner légèrement les côtés. Taille réelle n'applique aucune mise à l'échelle — le contenu original est centré sur le nouveau format de papier à l'échelle exacte, ce qui convient aux patrons, formulaires ou schémas qui ne doivent pas changer de taille."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Que fait l'orientation « Auto » ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Auto adapte l'orientation de la nouvelle page à l'orientation propre de chaque page source — une page paysage obtient une cible paysage, une page portrait obtient une cible portrait — afin qu'une impression de tableur large ne soit pas compressée dans un cadre haut à une échelle minuscule. Vous pouvez aussi forcer Portrait ou Paysage pour toutes les pages."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Y a-t-il une limite au nombre de pages que je peux redimensionner ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non. Il n'y a aucune limite de nombre de pages ni de taille de fichier, et aucune limite de tâches par heure. Redimensionnez un formulaire de 2 pages ou un rapport de 500 pages autant de fois que nécessaire."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Le redimensionnement réduit-il la qualité des images ou du texte ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non. Chaque page est intégrée comme un objet vectoriel et mise à l'échelle mathématiquement, et non ré-affichée comme une image matricielle — le texte reste net et recherchable, et les images conservent leur résolution d'origine par rapport à la nouvelle échelle."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Puis-je redimensionner un PDF qui mélange des pages Letter et A4 ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui. Chaque page est mesurée et ajustée individuellement, si bien qu'un document dont les formats de page d'origine sont mélangés converge malgré tout vers un format de papier uniforme dans le résultat."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Puis-je redimensionner plusieurs fichiers PDF à la fois ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Redimensionner fonctionne avec un seul PDF à la fois. Pour des fichiers nécessitant exactement le même traitement, d'autres outils de PDFree comme Compresser et Filigrane permettent de traiter plusieurs fichiers à la fois."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Puis-je redimensionner un PDF depuis mon téléphone ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui. PDFree fonctionne sur Safari mobile (iOS) et Chrome pour Android — les mêmes contrôles de format de papier et de mode d'ajustement fonctionnent d'un simple tapotement."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "L'outil de redimensionnement PDF est-il entièrement gratuit ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui. PDFree est gratuit, sans abonnement, sans limite quotidienne ou horaire, et sans inscription. Aucun filigrane n'est ajouté au résultat et il n'y a aucune restriction de taille de fichier."
+    }
+  }
+]

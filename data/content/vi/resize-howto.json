@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Cách Đổi Kích Thước PDF Để In",
+  "description": "Vừa khít bất kỳ PDF nào vào khổ A4, Letter, Legal, A3, hoặc A5 để in — miễn phí, không cần tải lên.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Mở PDF của bạn",
+      "text": "Nhấp 'Chọn file' hoặc kéo PDF của bạn vào vùng thả."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Chọn khổ giấy và chế độ vừa khít",
+      "text": "Chọn A4, Letter, Legal, A3, hoặc A5, sau đó chọn Vừa khít, Lấp đầy, hoặc Kích thước gốc. Bản xem trước trực tiếp hiển thị tỷ lệ chính xác trước khi bạn quyết định."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Tải xuống và in với sự tự tin",
+      "text": "Nhấp 'Đổi Kích Thước PDF'. Mỗi trang được xây dựng lại theo khổ giấy mục tiêu và sẵn sàng để tải xuống ngay lập tức."
+    }
+  ]
+}

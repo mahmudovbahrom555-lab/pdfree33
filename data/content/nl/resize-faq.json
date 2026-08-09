@@ -1,0 +1,82 @@
+[
+  {
+    "@type": "Question",
+    "name": "Wordt mijn bestand geüpload naar een server bij het wijzigen van het PDF-formaat?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. Elke pagina wordt volledig herbouwd in je browser. Je bestand wordt nooit ergens naartoe gestuurd."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Waarom wordt mijn PDF afgesneden afgedrukt terwijl het er op het scherm goed uitziet?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Meestal komt het paginaformaat in het bestand niet overeen met het papier in de printer, en de automatische \"Passend op pagina\"-schaling van de browser of driver gokt hoe die twee met elkaar te verzoenen — inconsistent. Het daadwerkelijke PDF-formaat aanpassen naar je doelpapierformaat verwijdert dat gegok permanent."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Wat is het verschil tussen Passend maken, Vullen en Werkelijke grootte?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Passend maken verkleint de pagina zodat deze volledig zichtbaar is op het nieuwe papierformaat, met een rand als de verhoudingen niet exact overeenkomen. Vullen vergroot de pagina om de volledige nieuwe pagina rand tot rand te bedekken, wat een kleine hoeveelheid van de zijkanten kan bijsnijden. Werkelijke grootte past helemaal geen schaling toe — de originele inhoud wordt op ware grootte gecentreerd op het nieuwe papierformaat, wat correct is voor patronen, formulieren of diagrammen die niet van grootte mogen veranderen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Wat doet de oriëntatie \"Automatisch\"?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Automatisch laat de oriëntatie van de nieuwe pagina overeenkomen met de eigen oriëntatie van elke bronpagina — een liggende pagina krijgt een liggend doelformaat, een staande pagina krijgt een staand doelformaat — zodat een brede spreadsheet-afdruk niet op een piepklein schaaltje in een hoog kader wordt geperst. Je kunt ook Staand of Liggend forceren voor alle pagina's."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is er een limiet aan hoeveel pagina's ik van formaat kan veranderen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. Er is geen limiet voor aantal pagina's of bestandsgrootte, en geen taken-per-uur-limiet. Wijzig het formaat van een formulier van 2 pagina's of een rapport van 500 pagina's zo vaak als je wilt."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Vermindert formaat wijzigen de kwaliteit van afbeeldingen of tekst?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. Elke pagina wordt ingesloten als een vectorobject en wiskundig geschaald, niet opnieuw gerenderd als rasterafbeelding — tekst blijft scherp en doorzoekbaar, en afbeeldingen behouden hun oorspronkelijke resolutie ten opzichte van de nieuwe schaal."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik het formaat wijzigen van een PDF die Letter- en A4-pagina's mixt?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Elke pagina wordt afzonderlijk gemeten en aangepast, zodat een document met gemengde originele paginaformaten in het resultaat toch samenkomt tot één uniform papierformaat."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik meerdere PDF-bestanden tegelijk van formaat veranderen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Formaat wijzigen werkt met één PDF tegelijk. Voor bestanden die allemaal exact dezelfde behandeling nodig hebben, ondersteunen andere PDFree-tools zoals Comprimeren en Watermerk het verwerken van meerdere bestanden tegelijk."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik het PDF-formaat wijzigen op mijn telefoon?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. PDFree werkt in mobiele Safari (iOS) en Chrome voor Android — dezelfde bediening voor papierformaat en aanpassingsmodus werkt met een tik."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is de tool om het PDF-formaat te wijzigen echt gratis?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. PDFree is gratis zonder abonnement, zonder dagelijkse of uurlijkse limieten en zonder registratie. Er wordt geen watermerk toegevoegd aan het resultaat en er zijn geen beperkingen op bestandsgrootte."
+    }
+  }
+]

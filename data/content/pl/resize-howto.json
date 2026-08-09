@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Jak Zmienić Rozmiar PDF do Druku",
+  "description": "Dopasuj dowolny PDF do formatu A4, Letter, Legal, A3 lub A5 do druku — za darmo, bez konieczności przesyłania.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Otwórz plik PDF",
+      "text": "Kliknij 'Wybierz pliki' lub przeciągnij PDF do strefy wgrywania."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Wybierz rozmiar papieru i tryb dopasowania",
+      "text": "Wybierz A4, Letter, Legal, A3 lub A5, a następnie wybierz Dopasuj, Wypełnij lub Rozmiar rzeczywisty. Podgląd na żywo pokazuje dokładną skalę, zanim zatwierdzisz."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Pobierz i drukuj z pewnością",
+      "text": "Kliknij 'Zmień Rozmiar PDF'. Każda strona jest przebudowywana do docelowego rozmiaru papieru i od razu gotowa do pobrania."
+    }
+  ]
+}

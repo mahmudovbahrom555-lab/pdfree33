@@ -1,0 +1,82 @@
+[
+  {
+    "@type": "Question",
+    "name": "PDF boyutunu değiştirmek dosyamı bir sunucuya yükler mi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. Her sayfa tamamen tarayıcınızda yeniden oluşturulur. Dosyanız hiçbir yere gönderilmez."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Ekranda düzgün göründüğü halde PDF'im neden kırpılmış yazdırılıyor?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Genellikle dosyadaki sayfa boyutu, yazıcıya takılı kağıtla uyuşmaz ve tarayıcının veya sürücünün otomatik \"Sayfaya Sığdır\" ölçeklemesi ikisini nasıl uzlaştıracağını tahmin eder — tutarsız bir şekilde. Gerçek PDF'i hedef kağıt boyutunuza göre yeniden boyutlandırmak bu tahmin sorununu kalıcı olarak ortadan kaldırır."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Sığdır, Doldur ve Gerçek boyut arasındaki fark nedir?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sığdır, sayfayı yeni kağıt boyutunda tamamının görünmesi için küçültür; oranlar tam uymuyorsa bir kenar boşluğu bırakır. Doldur, yeni sayfanın tamamını kenardan kenara kaplayacak şekilde büyütür, bu da kenarlardan az miktarda kırpabilir. Gerçek boyut hiçbir ölçekleme uygulamaz — orijinal içerik, gerçek ölçekte yeni kağıt boyutunun ortasına yerleştirilir; bu, boyutu değişmemesi gereken kalıplar, formlar veya diyagramlar için doğrudur."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "\"Otomatik\" yön ne yapar?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Otomatik, yeni sayfanın yönünü her kaynak sayfanın kendi yönüyle eşleştirir — yatay bir sayfa yatay bir hedef alır, dikey bir sayfa dikey bir hedef alır — böylece geniş bir tablo çıktısı çok küçük bir ölçekte uzun bir çerçeveye sıkıştırılmaz. Tüm sayfalar için Dikey veya Yatay yönü de zorlayabilirsiniz."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kaç sayfayı yeniden boyutlandırabileceğimin bir sınırı var mı?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. Sayfa sayısı veya dosya boyutu sınırı ve saatlik görev sınırı yoktur. 2 sayfalık bir formu veya 500 sayfalık bir raporu istediğiniz kadar yeniden boyutlandırın."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Boyutlandırma görüntülerin veya metnin kalitesini düşürür mü?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. Her sayfa vektör nesnesi olarak gömülür ve matematiksel olarak ölçeklenir, raster görüntü olarak yeniden oluşturulmaz — metin keskin ve aranabilir kalır, görüntüler ise yeni ölçeğe göre orijinal çözünürlüklerini korur."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Letter ve A4 sayfalarını karıştıran bir PDF'i yeniden boyutlandırabilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. Her sayfa ayrı ayrı ölçülür ve sığdırılır, bu yüzden karışık orijinal sayfa boyutlarına sahip bir belge sonuçta yine de tek, tekdüze bir kağıt boyutuna dönüşür."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Birden fazla PDF dosyasını aynı anda yeniden boyutlandırabilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Boyutlandırma tek seferde bir PDF ile çalışır. Hepsi tam olarak aynı işlemi gerektiren dosyalar için PDFree'nin Sıkıştırma ve Filigran gibi diğer araçları birden fazla dosyayı aynı anda işlemeyi destekler."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Telefonumda bir PDF'i yeniden boyutlandırabilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. PDFree mobil Safari (iOS) ve Android için Chrome'da çalışır — aynı kağıt boyutu ve sığdırma modu kontrolleri bir dokunuşla çalışır."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDF boyutlandırma aracı tamamen ücretsiz mi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. PDFree abonelik olmadan, günlük veya saatlik sınır olmadan ve kayıt olmadan ücretsizdir. Sonuca filigran eklenmez ve dosya boyutu kısıtlaması yoktur."
+    }
+  }
+]

@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "인쇄용 PDF 크기 조정 방법",
+  "description": "어떤 PDF든 A4, Letter, Legal, A3, A5에 맞춰 인쇄용으로 조정 — 무료, 업로드 불필요.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDF 열기",
+      "text": "'파일 선택'을 클릭하거나 PDF를 드롭 영역으로 드래그하세요."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "용지 크기와 맞춤 모드 선택",
+      "text": "A4, Letter, Legal, A3, A5 중 하나를 선택한 다음, 맞추기, 채우기, 원본 크기 중 하나를 선택합니다. 실시간 미리보기가 적용 전에 정확한 배율을 보여줍니다."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "다운로드 후 안심하고 인쇄",
+      "text": "'PDF 크기 조정'을 클릭하세요. 모든 페이지가 지정한 용지 크기로 다시 만들어져 즉시 다운로드할 수 있습니다."
+    }
+  ]
+}

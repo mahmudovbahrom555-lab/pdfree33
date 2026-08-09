@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to Resize a PDF for Printing",
+  "description": "Fit any PDF to A4, Letter, Legal, A3, or A5 for printing — free, no upload required.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Open your PDF",
+      "text": "Click 'Choose files' or drag your PDF into the drop zone."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Pick a paper size and fit mode",
+      "text": "Choose A4, Letter, Legal, A3, or A5, then choose Fit, Fill, or Actual size. The live preview shows the exact scale before you commit."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Download and print with confidence",
+      "text": "Click 'Resize PDF'. Every page is rebuilt at the target paper size and ready to download instantly."
+    }
+  ]
+}

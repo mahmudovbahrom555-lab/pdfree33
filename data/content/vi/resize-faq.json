@@ -1,0 +1,82 @@
+[
+  {
+    "@type": "Question",
+    "name": "Đổi kích thước PDF có tải file của tôi lên máy chủ không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không. Mỗi trang được xây dựng lại hoàn toàn trong trình duyệt của bạn. File của bạn không bao giờ được gửi đi đâu cả."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Tại sao PDF của tôi in bị cắt dù trông vẫn ổn trên màn hình?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Thường thì khổ trang trong file không khớp với giấy đang nạp trong máy in, và tính năng co giãn tự động \"Fit to Page\" của trình duyệt hoặc driver đang đoán cách dung hòa hai thứ đó — một cách không nhất quán. Đổi kích thước PDF thực tế về đúng khổ giấy mục tiêu sẽ loại bỏ việc đoán mò đó vĩnh viễn."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Sự khác biệt giữa Vừa khít, Lấp đầy, và Kích thước gốc là gì?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Vừa khít thu nhỏ trang để toàn bộ nội dung hiển thị trên khổ giấy mới, để lại viền nếu tỷ lệ không khớp chính xác. Lấp đầy phóng to để phủ kín toàn bộ trang mới từ mép đến mép, có thể cắt mất một chút ở các cạnh. Kích thước gốc không áp dụng bất kỳ tỷ lệ nào — nội dung gốc được căn giữa trên khổ giấy mới theo tỷ lệ thật, phù hợp cho mẫu rập, biểu mẫu, hoặc sơ đồ không được phép thay đổi kích thước."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Hướng \"Tự động\" hoạt động như thế nào?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tự động khớp hướng của trang mới với hướng của từng trang gốc — trang ngang nhận khổ ngang, trang dọc nhận khổ dọc — để một bản in bảng tính rộng không bị ép vào khung cao ở tỷ lệ rất nhỏ. Bạn cũng có thể ép buộc Dọc hoặc Ngang cho mọi trang."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Có giới hạn số trang tôi có thể đổi kích thước không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không. Không có giới hạn số trang hay dung lượng file, và không có giới hạn tác vụ mỗi giờ. Đổi kích thước một biểu mẫu 2 trang hay báo cáo 500 trang bao nhiêu lần tùy bạn."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Đổi kích thước có làm giảm chất lượng hình ảnh hoặc văn bản không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không. Mỗi trang được nhúng dưới dạng đối tượng vector và co giãn theo toán học, không được render lại thành ảnh raster — văn bản vẫn sắc nét và có thể tìm kiếm, còn hình ảnh giữ nguyên độ phân giải gốc tương ứng với tỷ lệ mới."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Tôi có thể đổi kích thước một PDF pha trộn trang Letter và A4 không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có. Mỗi trang được đo và vừa khít riêng lẻ, nên tài liệu có khổ trang gốc pha trộn vẫn hội tụ thành một khổ giấy đồng nhất trong kết quả."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Tôi có thể đổi kích thước nhiều file PDF cùng lúc không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Đổi Kích Thước hoạt động với từng PDF một. Với các file đều cần cùng một cách xử lý, các công cụ khác của PDFree như Nén và Watermark hỗ trợ xử lý nhiều file cùng lúc."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Tôi có thể đổi kích thước PDF trên điện thoại không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có. PDFree hoạt động trên Safari di động (iOS) và Chrome cho Android — các điều khiển khổ giấy và chế độ vừa khít giống nhau hoạt động chỉ với một chạm."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Công cụ đổi kích thước PDF này có hoàn toàn miễn phí không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có. PDFree miễn phí, không cần đăng ký gói, không giới hạn hàng ngày hay hàng giờ, và không cần đăng ký tài khoản. Không có watermark được thêm vào kết quả và không có giới hạn dung lượng file."
+    }
+  }
+]

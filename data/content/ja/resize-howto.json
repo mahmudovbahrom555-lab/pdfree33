@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "印刷用にPDFのサイズを変更する方法",
+  "description": "どのPDFもA4、Letter、Legal、A3、A5に合わせて印刷用に調整 — 無料、アップロード不要。",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDFを開く",
+      "text": "「ファイルを選択」をクリックするか、PDFをドロップゾーンにドラッグします。"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "用紙サイズと調整モードを選ぶ",
+      "text": "A4、Letter、Legal、A3、A5のいずれかを選び、続けてフィット、フィル、原寸大のいずれかを選択します。ライブプレビューが確定前に正確な縮尺を表示します。"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "ダウンロードして安心して印刷",
+      "text": "「PDFのサイズを変更」をクリックします。すべてのページが指定した用紙サイズで再構築され、即座にダウンロードできます。"
+    }
+  ]
+}

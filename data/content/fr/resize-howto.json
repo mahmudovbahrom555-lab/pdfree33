@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Comment redimensionner un PDF pour l'impression",
+  "description": "Adaptez n'importe quel PDF au format A4, Letter, Legal, A3 ou A5 pour l'impression — gratuit, sans envoi de fichier.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Ouvrez votre PDF",
+      "text": "Cliquez sur 'Choisir les fichiers' ou glissez votre PDF dans la zone de dépôt."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Choisissez un format de papier et un mode d'ajustement",
+      "text": "Choisissez A4, Letter, Legal, A3 ou A5, puis choisissez Ajuster, Remplir ou Taille réelle. L'aperçu en direct affiche l'échelle exacte avant que vous validiez."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Téléchargez et imprimez en toute confiance",
+      "text": "Cliquez sur 'Redimensionner PDF'. Chaque page est reconstruite au format de papier cible et prête à être téléchargée instantanément."
+    }
+  ]
+}

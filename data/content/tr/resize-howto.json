@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Yazdırma İçin PDF Boyutu Nasıl Değiştirilir",
+  "description": "Herhangi bir PDF'i yazdırmak için A4, Letter, Legal, A3 veya A5'e sığdırın — ücretsiz, yükleme gerektirmez.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDF'inizi açın",
+      "text": "'Dosya seç'e tıklayın veya PDF'inizi bırakma alanına sürükleyin."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Kağıt boyutu ve sığdırma modu seçin",
+      "text": "A4, Letter, Legal, A3 veya A5 seçin, ardından Sığdır, Doldur veya Gerçek boyut seçeneklerinden birini belirleyin. Canlı önizleme, siz karar vermeden önce tam ölçeği gösterir."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Güvenle indirin ve yazdırın",
+      "text": "'PDF Boyutunu Değiştir'e tıklayın. Her sayfa hedef kağıt boyutunda yeniden oluşturulur ve anında indirilmeye hazır olur."
+    }
+  ]
+}

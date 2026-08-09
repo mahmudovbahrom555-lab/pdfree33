@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Come ridimensionare un PDF per la stampa",
+  "description": "Adatta qualsiasi PDF ad A4, Letter, Legal, A3 o A5 per la stampa — gratis, senza bisogno di caricare file.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Apri il tuo PDF",
+      "text": "Clicca su 'Scegli file' o trascina il tuo PDF nell'area di caricamento."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Scegli un formato carta e una modalità di adattamento",
+      "text": "Scegli A4, Letter, Legal, A3 o A5, poi scegli Adatta, Riempi o Dimensione reale. L'anteprima dal vivo mostra la scala esatta prima di confermare."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Scarica e stampa con fiducia",
+      "text": "Clicca su 'Ridimensiona PDF'. Ogni pagina viene ricostruita nel formato carta scelto e pronta da scaricare all'istante."
+    }
+  ]
+}

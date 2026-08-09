@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDF Formaat Wijzigen voor Afdrukken",
+  "description": "Pas elke PDF aan naar A4, Letter, Legal, A3 of A5 om af te drukken — gratis, geen upload nodig.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Open je PDF",
+      "text": "Klik op 'Bestanden kiezen' of sleep je PDF naar de uploadzone."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Kies een papierformaat en aanpassingsmodus",
+      "text": "Kies A4, Letter, Legal, A3 of A5, en kies vervolgens Passend maken, Vullen of Werkelijke grootte. De live voorvertoning toont de exacte schaal voordat je bevestigt."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Downloaden en met vertrouwen afdrukken",
+      "text": "Klik op 'PDF Formaat Wijzigen'. Elke pagina wordt herbouwd op het doelformaat en is direct klaar om te downloaden."
+    }
+  ]
+}

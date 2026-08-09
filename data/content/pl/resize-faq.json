@@ -1,0 +1,82 @@
+[
+  {
+    "@type": "Question",
+    "name": "Czy zmiana rozmiaru PDF przesyła mój plik na serwer?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie. Każda strona jest w całości przebudowywana w twojej przeglądarce. Twój plik nigdy nigdzie nie jest wysyłany."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Dlaczego mój PDF drukuje się przycięty, mimo że wygląda dobrze na ekranie?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Zwykle rozmiar strony w pliku nie odpowiada papierowi włożonemu do drukarki, a automatyczne skalowanie \"Dopasuj do strony\" w przeglądarce lub sterowniku zgaduje, jak to pogodzić — niekonsekwentnie. Zmiana rozmiaru samego pliku PDF na docelowy rozmiar papieru trwale eliminuje to zgadywanie."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Jaka jest różnica między Dopasuj, Wypełnij i Rozmiar rzeczywisty?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Dopasuj zmniejsza stronę, tak aby cała była widoczna na nowym rozmiarze papieru, zostawiając margines, jeśli proporcje nie pasują dokładnie. Wypełnij powiększa, aby pokryć całą nową stronę od krawędzi do krawędzi, co może przyciąć niewielką część po bokach. Rozmiar rzeczywisty w ogóle nie stosuje skalowania — oryginalna treść jest wyśrodkowana na nowym rozmiarze papieru w rzeczywistej skali, co jest właściwe dla wykrojów, formularzy lub diagramów, które nie mogą zmienić rozmiaru."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Co robi orientacja \"Automatycznie\"?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Automatycznie dopasowuje orientację nowej strony do orientacji każdej strony źródłowej — strona pozioma otrzymuje docelowy format poziomy, strona pionowa otrzymuje docelowy format pionowy — dzięki czemu szeroki wydruk arkusza kalkulacyjnego nie zostaje wciśnięty w wysoką ramkę w bardzo małej skali. Możesz też wymusić orientację pionową lub poziomą dla wszystkich stron."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy istnieje limit liczby stron, którym mogę zmienić rozmiar?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie. Nie ma limitu liczby stron ani rozmiaru pliku, ani limitu zadań na godzinę. Zmień rozmiar 2-stronicowego formularza lub 500-stronicowego raportu tyle razy, ile potrzebujesz."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy zmiana rozmiaru obniża jakość obrazów lub tekstu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie. Każda strona jest osadzana jako obiekt wektorowy i skalowana matematycznie, a nie ponownie renderowana jako obraz rastrowy — tekst pozostaje ostry i przeszukiwalny, a obrazy zachowują swoją oryginalną rozdzielczość względem nowej skali."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy mogę zmienić rozmiar PDF-a mieszającego strony Letter i A4?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. Każda strona jest mierzona i dopasowywana indywidualnie, więc dokument z mieszanymi oryginalnymi rozmiarami stron i tak zbiega się do jednego jednolitego rozmiaru papieru w wyniku."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy mogę zmienić rozmiar wielu plików PDF naraz?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Zmień Rozmiar działa z jednym plikiem PDF naraz. Dla plików wymagających dokładnie takiej samej obróbki inne narzędzia PDFree, takie jak Kompresowanie i Znak wodny, obsługują przetwarzanie wielu plików naraz."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy mogę zmienić rozmiar PDF na telefonie?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. PDFree działa w mobilnym Safari (iOS) i Chrome na Androida — te same ustawienia rozmiaru papieru i trybu dopasowania działają jednym dotknięciem."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy narzędzie do zmiany rozmiaru PDF jest naprawdę darmowe?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. PDFree jest darmowy, bez subskrypcji, bez dziennych ani godzinowych limitów i bez rejestracji. Do wyniku nie są dodawane żadne znaki wodne i nie ma ograniczeń rozmiaru pliku."
+    }
+  }
+]

@@ -1,0 +1,82 @@
+[
+  {
+    "@type": "Question",
+    "name": "Ridimensionare un PDF carica il mio file su un server?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Ogni pagina viene ricostruita interamente nel tuo browser. Il tuo file non viene mai inviato da nessuna parte."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Perché il mio PDF si stampa tagliato anche se sullo schermo sembra a posto?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Di solito il formato di pagina nel file non corrisponde alla carta caricata nella stampante, e il ridimensionamento automatico «Adatta alla pagina» del browser o del driver cerca di indovinare come conciliare i due — in modo incoerente. Ridimensionare direttamente il PDF al formato carta desiderato elimina questa incertezza in modo permanente."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Qual è la differenza tra Adatta, Riempi e Dimensione reale?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Adatta riduce la pagina in modo che sia interamente visibile sul nuovo formato carta, lasciando un bordo se le proporzioni non coincidono esattamente. Riempi ingrandisce la pagina per coprire l'intero nuovo formato a tutta pagina, il che può tagliare una piccola parte dei lati. Dimensione reale non applica alcun ridimensionamento — il contenuto originale viene centrato sul nuovo formato carta in scala reale, il che è corretto per cartamodelli, moduli o diagrammi che non devono cambiare dimensione."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Cosa fa l'orientamento «Automatico»?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Automatico fa corrispondere l'orientamento della nuova pagina all'orientamento proprio di ciascuna pagina di origine — una pagina orizzontale ottiene una destinazione orizzontale, una pagina verticale ottiene una destinazione verticale — così una stampa di un foglio di calcolo largo non viene compressa in una cornice alta a una scala minuscola. Puoi anche forzare Verticale o Orizzontale per tutte le pagine."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "C'è un limite a quante pagine posso ridimensionare?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Non c'è limite al numero di pagine né alla dimensione del file, né un limite di attività all'ora. Ridimensiona un modulo di 2 pagine o un report di 500 pagine tutte le volte che ti serve."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Il ridimensionamento riduce la qualità di immagini o testo?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Ogni pagina viene incorporata come oggetto vettoriale e ridimensionata matematicamente, non ri-renderizzata come immagine raster — il testo resta nitido e ricercabile, e le immagini mantengono la loro risoluzione originale rispetto alla nuova scala."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso ridimensionare un PDF che mescola pagine Letter e A4?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. Ogni pagina viene misurata e adattata singolarmente, quindi un documento con formati di pagina originali misti converge comunque verso un unico formato carta uniforme nel risultato."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso ridimensionare più file PDF contemporaneamente?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ridimensiona funziona con un PDF alla volta. Per file che richiedono tutti lo stesso trattamento, altri strumenti di PDFree come Comprimi e Filigrana supportano l'elaborazione di più file contemporaneamente."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso ridimensionare un PDF dal mio telefono?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. PDFree funziona su Safari mobile (iOS) e Chrome per Android — gli stessi controlli di formato carta e modalità di adattamento funzionano con un tocco."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Lo strumento per ridimensionare PDF è davvero gratuito?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. PDFree è gratuito senza abbonamento, senza limiti giornalieri o orari, e senza registrazione. Nessuna filigrana viene aggiunta al risultato e non ci sono restrizioni sulla dimensione del file."
+    }
+  }
+]

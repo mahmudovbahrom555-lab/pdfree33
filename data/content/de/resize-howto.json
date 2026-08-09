@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "So änderst du die PDF-Größe für den Druck",
+  "description": "Passe jedes PDF für den Druck an A4, Letter, Legal, A3 oder A5 an — kostenlos, kein Upload nötig.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDF öffnen",
+      "text": "Klicke auf 'Dateien auswählen' oder ziehe dein PDF in die Ablagefläche."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Papierformat und Anpassungsmodus wählen",
+      "text": "Wähle A4, Letter, Legal, A3 oder A5 und anschließend Einpassen, Ausfüllen oder Originalgröße. Die Live-Vorschau zeigt den genauen Skalierungswert, bevor du dich festlegst."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Herunterladen und sicher drucken",
+      "text": "Klicke auf 'PDF-Größe ändern'. Jede Seite wird im Zielformat neu erstellt und steht sofort zum Download bereit."
+    }
+  ]
+}

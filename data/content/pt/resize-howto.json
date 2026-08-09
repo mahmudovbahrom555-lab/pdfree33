@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Como redimensionar um PDF para impressão",
+  "description": "Ajuste qualquer PDF a A4, Carta, Ofício, A3 ou A5 para impressão — grátis, sem necessidade de enviar arquivos.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Abra o seu PDF",
+      "text": "Clique em 'Escolher arquivos' ou arraste o seu PDF para a zona de soltar."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Escolha um tamanho de papel e um modo de ajuste",
+      "text": "Escolha A4, Carta, Ofício, A3 ou A5, e depois escolha Ajustar, Preencher ou Tamanho real. A pré-visualização em direto mostra a escala exata antes de confirmar."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Descarregue e imprima com confiança",
+      "text": "Clique em 'Redimensionar PDF'. Cada página é reconstruída no tamanho de papel escolhido e fica pronta a descarregar instantaneamente."
+    }
+  ]
+}
