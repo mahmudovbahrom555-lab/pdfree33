@@ -298,44 +298,30 @@ function _otsuThreshold(data) {
 }
 
 // Kept in sync with js/cleanScanWorker.js's _applyClean/_despeckleMask —
-// see their comments for the gamma-curve darkening + connected-component
-// despeckle rationale.
-const _MIN_COMPONENT_SIZE = 3; // real periods measured as low as ~6px in some fonts/weights, so this must stay well below that
+// see its comment for why this is a soft-erosion rank filter (keep a dark
+// pixel only if its 3x3 window has >= minDarkNeighbors dark pixels) rather
+// than classic morphological erosion (which requires all 8 neighbors dark
+// and was tried, then reverted for deleting thin/faint strokes outright).
+const _MIN_DARK_NEIGHBORS = 3;
 
-function _despeckleMask(mask, w, h) {
-  const n = w * h;
-  const visited = new Uint8Array(n);
-  const out     = new Uint8Array(n);
-  const stack   = new Int32Array(n);
-  const members = new Int32Array(n);
-
-  for (let start = 0; start < n; start++) {
-    if (!mask[start] || visited[start]) continue;
-
-    let top = 0, count = 0;
-    stack[top++] = start;
-    visited[start] = 1;
-
-    while (top > 0) {
-      const p = stack[--top];
-      members[count++] = p;
-      const x = p % w, y = (p / w) | 0;
+function _despeckleMask(mask, w, h, minDarkNeighbors) {
+  const out = new Uint8Array(mask.length);
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      const p = y * w + x;
+      if (!mask[p]) continue;
+      let count = 0;
       for (let dy = -1; dy <= 1; dy++) {
         const ny = y + dy;
         if (ny < 0 || ny >= h) continue;
         const nrow = ny * w;
         for (let dx = -1; dx <= 1; dx++) {
-          if (dx === 0 && dy === 0) continue;
           const nx = x + dx;
           if (nx < 0 || nx >= w) continue;
-          const np = nrow + nx;
-          if (mask[np] && !visited[np]) { visited[np] = 1; stack[top++] = np; }
+          if (mask[nrow + nx]) count++;
         }
       }
-    }
-
-    if (count >= _MIN_COMPONENT_SIZE) {
-      for (let k = 0; k < count; k++) out[members[k]] = 1;
+      out[p] = count >= minDarkNeighbors ? 1 : 0;
     }
   }
   return out;
@@ -355,7 +341,7 @@ function _applyClean(canvas, strength) {
   const n = w * h;
   let mask = new Uint8Array(n);
   for (let p = 0, i = 0; p < n; p++, i += 4) mask[p] = d[i] < th ? 1 : 0;
-  mask = _despeckleMask(mask, w, h);
+  mask = _despeckleMask(mask, w, h, _MIN_DARK_NEIGHBORS);
 
   for (let p = 0, i = 0; p < n; p++, i += 4) {
     if (!mask[p]) { d[i] = d[i + 1] = d[i + 2] = 255; }

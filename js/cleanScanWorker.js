@@ -288,55 +288,44 @@ function _otsuThreshold(data) {
 const _CLEAN_GAMMA    = 3.0;
 const _CLEAN_DARK_CAP = 20; // sub-threshold ("text") pixels never render lighter than this
 
-// Despeckle: drop small connected blobs of dark pixels before darkening
-// them. The first version of this only cleared pixels with zero dark
-// neighbors — enough for the isolated single-pixel scanner dust it was
-// built and tested against, but real halftone-print scan noise (confirmed
-// against an actual scanned page, not just a synthetic single-pixel-noise
-// test) is often small CONNECTED clusters, 2–4px, e.g. a halftone dot or a
-// speck of toner residue — every pixel in a 2-4px cluster already has a
-// dark neighbor, so the old rule let all of it straight through. Real ink
-// strokes run to dozens of connected pixels even for a single thin
-// character at this tool's 2–3x render scale, so a connected-component
-// size cutoff (flood fill, 8-connectivity) separates the two cleanly:
-// clusters under MIN_COMPONENT_SIZE are noise and get cleared, anything at
-// or above it is kept as text untouched.
-const _MIN_COMPONENT_SIZE = 3; // real periods measured as low as ~6px in some fonts/weights, so this must stay well below that
+// Despeckle: soft erosion (rank/majority filter), not classic morphological
+// erosion. Classic erosion (keep a pixel only if ALL 8 neighbors are also
+// dark) was tried and failed hard: no pixel in a stroke under 3px wide
+// ever has a full ring of dark neighbors (the neighbors across the
+// stroke's *width* are always background), so it deleted thin/faint text
+// outright instead of just noise. A connected-component size cutoff (the
+// version before this one) had the opposite problem — real halftone/dust
+// noise often clusters into small 2-4px connected blobs that read as
+// "big enough to be real" by pure size.
+//
+// The fix is a rank filter: count dark pixels (including itself) in the
+// 3x3 window and keep the pixel only if that count clears a minimum.
+// A single isolated noise pixel has at most 1-2 dark neighbors. A straight
+// 1px-wide stroke always has >=3 in any 3x3 window along its length
+// (itself + one neighbor on each side of the line) — no minimum width
+// requirement, unlike classic erosion, so faint thin strokes survive.
+// minDarkNeighbors=3 is the safe default, verified against real thin-text
+// and punctuation tests (periods, "i" dots) before shipping.
+const _MIN_DARK_NEIGHBORS = 3;
 
-function _despeckleMask(mask, w, h) {
-  const n = w * h;
-  const visited = new Uint8Array(n);
-  const out     = new Uint8Array(n);
-  const stack   = new Int32Array(n);   // flood-fill work stack, reused per component
-  const members = new Int32Array(n);   // collects this component's pixel indices
-
-  for (let start = 0; start < n; start++) {
-    if (!mask[start] || visited[start]) continue;
-
-    let top = 0, count = 0;
-    stack[top++] = start;
-    visited[start] = 1;
-
-    while (top > 0) {
-      const p = stack[--top];
-      members[count++] = p;
-      const x = p % w, y = (p / w) | 0;
+function _despeckleMask(mask, w, h, minDarkNeighbors) {
+  const out = new Uint8Array(mask.length);
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      const p = y * w + x;
+      if (!mask[p]) continue;
+      let count = 0;
       for (let dy = -1; dy <= 1; dy++) {
         const ny = y + dy;
         if (ny < 0 || ny >= h) continue;
         const nrow = ny * w;
         for (let dx = -1; dx <= 1; dx++) {
-          if (dx === 0 && dy === 0) continue;
           const nx = x + dx;
           if (nx < 0 || nx >= w) continue;
-          const np = nrow + nx;
-          if (mask[np] && !visited[np]) { visited[np] = 1; stack[top++] = np; }
+          if (mask[nrow + nx]) count++;
         }
       }
-    }
-
-    if (count >= _MIN_COMPONENT_SIZE) {
-      for (let k = 0; k < count; k++) out[members[k]] = 1;
+      out[p] = count >= minDarkNeighbors ? 1 : 0;
     }
   }
   return out;
@@ -354,7 +343,7 @@ function _applyClean(canvas, strength) {
   const n = w * h;
   let mask = new Uint8Array(n);
   for (let p = 0, i = 0; p < n; p++, i += 4) mask[p] = d[i] < t ? 1 : 0;
-  mask = _despeckleMask(mask, w, h);
+  mask = _despeckleMask(mask, w, h, _MIN_DARK_NEIGHBORS);
 
   for (let p = 0, i = 0; p < n; p++, i += 4) {
     if (!mask[p]) { d[i] = d[i + 1] = d[i + 2] = 255; }
