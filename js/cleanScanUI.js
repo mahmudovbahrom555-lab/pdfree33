@@ -298,16 +298,29 @@ function _otsuThreshold(data) {
 }
 
 // Kept in sync with js/cleanScanWorker.js's _applyClean/_despeckleMask —
-// see their comments for the gamma-curve darkening + despeckle rationale.
+// see their comments for the gamma-curve darkening + connected-component
+// despeckle rationale.
+const _MIN_COMPONENT_SIZE = 3; // real periods measured as low as ~6px in some fonts/weights, so this must stay well below that
+
 function _despeckleMask(mask, w, h) {
-  const out = new Uint8Array(mask.length);
-  for (let y = 0; y < h; y++) {
-    const row = y * w;
-    for (let x = 0; x < w; x++) {
-      const p = row + x;
-      if (!mask[p]) continue;
-      let hasNeighbor = false;
-      for (let dy = -1; dy <= 1 && !hasNeighbor; dy++) {
+  const n = w * h;
+  const visited = new Uint8Array(n);
+  const out     = new Uint8Array(n);
+  const stack   = new Int32Array(n);
+  const members = new Int32Array(n);
+
+  for (let start = 0; start < n; start++) {
+    if (!mask[start] || visited[start]) continue;
+
+    let top = 0, count = 0;
+    stack[top++] = start;
+    visited[start] = 1;
+
+    while (top > 0) {
+      const p = stack[--top];
+      members[count++] = p;
+      const x = p % w, y = (p / w) | 0;
+      for (let dy = -1; dy <= 1; dy++) {
         const ny = y + dy;
         if (ny < 0 || ny >= h) continue;
         const nrow = ny * w;
@@ -315,10 +328,14 @@ function _despeckleMask(mask, w, h) {
           if (dx === 0 && dy === 0) continue;
           const nx = x + dx;
           if (nx < 0 || nx >= w) continue;
-          if (mask[nrow + nx]) { hasNeighbor = true; break; }
+          const np = nrow + nx;
+          if (mask[np] && !visited[np]) { visited[np] = 1; stack[top++] = np; }
         }
       }
-      out[p] = hasNeighbor ? 1 : 0;
+    }
+
+    if (count >= _MIN_COMPONENT_SIZE) {
+      for (let k = 0; k < count; k++) out[members[k]] = 1;
     }
   }
   return out;

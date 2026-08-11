@@ -288,22 +288,40 @@ function _otsuThreshold(data) {
 const _CLEAN_GAMMA    = 3.0;
 const _CLEAN_DARK_CAP = 20; // sub-threshold ("text") pixels never render lighter than this
 
-// Despeckle: drop dark pixels with no dark neighbor before darkening them.
-// Scanner dust and halftone/JPEG grain that survives the threshold as
-// "text" shows up as isolated 1px specks; real ink strokes are always at
-// least a couple of connected pixels wide at the render scales this tool
-// uses (2–3x). A pixel with zero dark 8-neighbors is specifically the
-// former, never the latter — clearing it removes the residual fleck noise
-// on the whitened background without ever eroding real, if thin, strokes.
+// Despeckle: drop small connected blobs of dark pixels before darkening
+// them. The first version of this only cleared pixels with zero dark
+// neighbors — enough for the isolated single-pixel scanner dust it was
+// built and tested against, but real halftone-print scan noise (confirmed
+// against an actual scanned page, not just a synthetic single-pixel-noise
+// test) is often small CONNECTED clusters, 2–4px, e.g. a halftone dot or a
+// speck of toner residue — every pixel in a 2-4px cluster already has a
+// dark neighbor, so the old rule let all of it straight through. Real ink
+// strokes run to dozens of connected pixels even for a single thin
+// character at this tool's 2–3x render scale, so a connected-component
+// size cutoff (flood fill, 8-connectivity) separates the two cleanly:
+// clusters under MIN_COMPONENT_SIZE are noise and get cleared, anything at
+// or above it is kept as text untouched.
+const _MIN_COMPONENT_SIZE = 3; // real periods measured as low as ~6px in some fonts/weights, so this must stay well below that
+
 function _despeckleMask(mask, w, h) {
-  const out = new Uint8Array(mask.length);
-  for (let y = 0; y < h; y++) {
-    const row = y * w;
-    for (let x = 0; x < w; x++) {
-      const p = row + x;
-      if (!mask[p]) continue;
-      let hasNeighbor = false;
-      for (let dy = -1; dy <= 1 && !hasNeighbor; dy++) {
+  const n = w * h;
+  const visited = new Uint8Array(n);
+  const out     = new Uint8Array(n);
+  const stack   = new Int32Array(n);   // flood-fill work stack, reused per component
+  const members = new Int32Array(n);   // collects this component's pixel indices
+
+  for (let start = 0; start < n; start++) {
+    if (!mask[start] || visited[start]) continue;
+
+    let top = 0, count = 0;
+    stack[top++] = start;
+    visited[start] = 1;
+
+    while (top > 0) {
+      const p = stack[--top];
+      members[count++] = p;
+      const x = p % w, y = (p / w) | 0;
+      for (let dy = -1; dy <= 1; dy++) {
         const ny = y + dy;
         if (ny < 0 || ny >= h) continue;
         const nrow = ny * w;
@@ -311,10 +329,14 @@ function _despeckleMask(mask, w, h) {
           if (dx === 0 && dy === 0) continue;
           const nx = x + dx;
           if (nx < 0 || nx >= w) continue;
-          if (mask[nrow + nx]) { hasNeighbor = true; break; }
+          const np = nrow + nx;
+          if (mask[np] && !visited[np]) { visited[np] = 1; stack[top++] = np; }
         }
       }
-      out[p] = hasNeighbor ? 1 : 0;
+    }
+
+    if (count >= _MIN_COMPONENT_SIZE) {
+      for (let k = 0; k < count; k++) out[members[k]] = 1;
     }
   }
   return out;
