@@ -70,5 +70,21 @@
       "@type": "Answer",
       "text": "PDFree detects AcroForm interactive fields. If the PDF is a scanned image or a flat document without embedded form fields, you will see a 'No fillable fields found' message. For flat PDFs you can use the Annotate or Watermark tools to add text overlays."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I change the Tab key order of PDF form fields?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. Once a form with two or more fields is loaded, open the Tab order section and choose Fix (auto) to sort fields by their position on the page, or Customize to drag fields into your own order. The order is written into the PDF itself, so it works the same way in any PDF reader afterward."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Why does tab order matter when filling a PDF form?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tab order controls the sequence fields are visited in when navigating with the keyboard instead of the mouse. It matters most for automated data-entry scripts that fill a form by pressing Tab a fixed number of times — if the order changes, the script fills the wrong fields. A predictable order also makes any form faster to fill by hand."
+    }
   }
 ]

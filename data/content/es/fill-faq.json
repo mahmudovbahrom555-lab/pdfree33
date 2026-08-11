@@ -62,5 +62,21 @@
       "@type": "Answer",
       "text": "Solo si tienes la contraseña de propietario. Los PDFs cifrados con restricciones de edición no pueden rellenarse sin las credenciales. Elimina primero la contraseña con la herramienta Proteger PDF (introduce la contraseña y guarda sin nueva contraseña)."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Puedo cambiar el orden de tabulación de los campos de un formulario PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sí. Una vez cargado un formulario con dos o más campos, abre la sección Orden de tabulación y elige Corregir (automático) para ordenar los campos según su posición en la página, o Personalizar para arrastrar los campos a tu propio orden. El orden se guarda en el propio PDF, así que funciona igual después en cualquier lector de PDF."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Por qué importa el orden de tabulación al rellenar un formulario PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "El orden de tabulación controla la secuencia en la que se visitan los campos al navegar con el teclado en lugar del ratón. Importa sobre todo para scripts de introducción de datos automatizados que rellenan un formulario pulsando Tab un número fijo de veces — si el orden cambia, el script rellena los campos equivocados. Un orden predecible también hace que cualquier formulario se rellene más rápido a mano."
+    }
   }
 ]

@@ -70,5 +70,21 @@
       "@type": "Answer",
       "text": "PDFree rileva i campi AcroForm reali del tuo PDF e li visualizza come un modulo realmente compilabile, senza disegnare campi di testo a mano. Se il tuo PDF non ha campi incorporati, PDFree te lo dice direttamente."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso cambiare l'ordine di tabulazione dei campi di un modulo PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. Una volta caricato un modulo con due o più campi, apri la sezione Ordine di tabulazione e scegli Correggi (automatico) per ordinare i campi in base alla loro posizione nella pagina, oppure Personalizza per trascinare i campi nell'ordine che preferisci. L'ordine viene salvato direttamente nel PDF, quindi funziona allo stesso modo in qualsiasi lettore PDF in seguito."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Perché l'ordine di tabulazione è importante quando si compila un modulo PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "L'ordine di tabulazione controlla la sequenza in cui i campi vengono raggiunti quando si naviga con la tastiera invece che con il mouse. È particolarmente importante per gli script di inserimento dati automatizzati che compilano un modulo premendo Tab un numero fisso di volte — se l'ordine cambia, lo script compila i campi sbagliati. Un ordine prevedibile rende inoltre qualsiasi modulo più veloce da compilare a mano."
+    }
   }
 ]

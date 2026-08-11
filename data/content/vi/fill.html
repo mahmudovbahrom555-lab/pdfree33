@@ -120,6 +120,24 @@
           </table>
         </div>
 
+                <!-- Tab order -->
+        <h2 style="font-size:22px;color:var(--text);margin:48px 0 16px;font-weight:700;">Kiểm soát thứ tự Tab của các trường trong biểu mẫu</h2>
+        <p style="font-size:14px;margin:0 0 16px;">Khi bạn nhấn Tab trong lúc điền PDF, con trỏ sẽ nhảy đến trường tiếp theo theo một trình tự nhất định — thứ tự Tab của biểu mẫu. Nếu biểu mẫu được tạo với các trường theo thứ tự lộn xộn hoặc khó đoán, việc điền thủ công sẽ chậm hơn, và bất kỳ script hay công cụ tự động nào điền biểu mẫu bằng cách nhấn Tab một số lần cố định đều có thể bị lỗi hoàn toàn. PDFree cho phép bạn sửa thứ tự đó trước khi điền bất cứ thứ gì.</p>
+
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">Sửa tự động</strong>
+          <p style="margin:6px 0 0;font-size:14px;">Chỉ một cú nhấp sắp xếp mọi trường theo vị trí trên trang — từ trên xuống dưới, từ trái sang phải — để phím Tab luôn di chuyển theo cách mắt bạn đọc biểu mẫu một cách tự nhiên.</p>
+        </div>
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">Tùy chỉnh thủ công</strong>
+          <p style="margin:6px 0 0;font-size:14px;">Kéo các trường vào đúng trình tự bạn cần. Điều này đặc biệt quan trọng với các script nhập liệu và công cụ điền biểu mẫu tự động dựa vào việc nhấn Tab một số lần cố định theo thứ tự cố định.</p>
+        </div>
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">Lưu trực tiếp vào PDF</strong>
+          <p style="margin:6px 0 0;font-size:14px;">Thứ tự mới được ghi trực tiếp vào cấu trúc của biểu mẫu, nên vẫn đúng khi tệp được mở sau này ở bất kỳ trình đọc PDF nào — không chỉ trong PDFree.</p>
+        </div>
+
+        
         <!-- Câu hỏi thường gặp -->
         <h2 style="font-size:22px;color:var(--text);margin:48px 0 20px;font-weight:700;">Câu Hỏi Thường Gặp</h2>
 
@@ -151,9 +169,17 @@
           <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Có thể dùng trên điện thoại không?</h3>
           <p style="margin:0;font-size:14px;">Có. PDFree hoạt động trên trình duyệt di động. Chạm vào trường để điền, và dùng ngón tay để vẽ chữ ký.</p>
         </div>
-        <div style="margin-bottom:20px;">
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
           <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Công cụ này có thực sự điền vào các trường thực của form, hay tôi phải đặt văn bản thủ công?</h3>
           <p style="margin:0;font-size:14px;">PDFree phát hiện các trường AcroForm thực của PDF — trường văn bản, hộp kiểm, nút radio, danh sách thả xuống và trường chữ ký — và hiển thị chúng như một form thực sự có thể điền được. Bạn không vẽ ô văn bản thủ công hay đoán vị trí. Nếu PDF của bạn không có trường form, PDFree sẽ báo trực tiếp thay vì giả vờ phát hiện các trường không tồn tại.</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Tôi có thể thay đổi thứ tự Tab của các trường trong biểu mẫu PDF không?</h3>
+          <p style="margin:0;font-size:14px;">Có. Sau khi tải lên biểu mẫu có từ hai trường trở lên, mở phần Thứ tự Tab và chọn Sửa (tự động) để sắp xếp các trường theo vị trí trên trang, hoặc Tùy chỉnh để kéo các trường theo thứ tự riêng của bạn. Thứ tự này được lưu trực tiếp vào PDF, nên sau đó hoạt động giống nhau ở bất kỳ trình đọc PDF nào.</p>
+        </div>
+        <div style="margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Tại sao thứ tự Tab lại quan trọng khi điền biểu mẫu PDF?</h3>
+          <p style="margin:0;font-size:14px;">Thứ tự Tab kiểm soát trình tự các trường được truy cập khi điều hướng bằng bàn phím thay vì chuột. Điều này đặc biệt quan trọng với các script nhập liệu tự động điền biểu mẫu bằng cách nhấn Tab một số lần cố định — nếu thứ tự thay đổi, script sẽ điền sai trường. Thứ tự có thể dự đoán được cũng giúp điền bất kỳ biểu mẫu nào nhanh hơn bằng tay.</p>
         </div>
 
         <!-- Tại sao dùng PDFree -->

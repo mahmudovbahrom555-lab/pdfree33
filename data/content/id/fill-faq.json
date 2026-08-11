@@ -78,5 +78,21 @@
       "@type": "Answer",
       "text": "Ya. PDFree berfungsi di browser mobile. Ketuk kolom untuk mengisinya, dan gunakan jari untuk menggambar tanda tangan."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah saya mengubah urutan tab kolom formulir PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Bisa. Setelah formulir dengan dua kolom atau lebih dimuat, buka bagian Urutan tab dan pilih Perbaiki (otomatis) untuk mengurutkan kolom berdasarkan posisinya di halaman, atau Sesuaikan untuk menyeret kolom ke urutan Anda sendiri. Urutan tersebut disimpan langsung di dalam PDF, sehingga bekerja sama di pembaca PDF mana pun setelahnya."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Mengapa urutan tab penting saat mengisi formulir PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Urutan tab mengontrol urutan kolom yang dikunjungi saat menavigasi dengan keyboard, bukan mouse. Ini sangat penting untuk skrip entri data otomatis yang mengisi formulir dengan menekan Tab sejumlah kali tetap — jika urutannya berubah, skrip akan mengisi kolom yang salah. Urutan yang dapat diprediksi juga membuat formulir apa pun lebih cepat diisi secara manual."
+    }
   }
 ]

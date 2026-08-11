@@ -70,5 +70,21 @@
       "@type": "Answer",
       "text": "PDFree detecteert de echte AcroForm-velden van je PDF — tekstvelden, selectievakjes, keuzerondjes, dropdowns en handtekeningvelden — en toont ze als een echt invulbaar formulier, zonder tekstvakken met de hand te tekenen. Heeft je PDF geen ingebedde velden, dan laat PDFree dat direct weten."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik de tabvolgorde van PDF-formuliervelden wijzigen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Zodra een formulier met twee of meer velden is geladen, open je de sectie Tabvolgorde en kies je Herstellen (automatisch) om velden te sorteren op hun positie op de pagina, of Aanpassen om velden naar je eigen volgorde te slepen. De volgorde wordt in de PDF zelf opgeslagen en werkt daarna op dezelfde manier in elke PDF-lezer."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Waarom is tabvolgorde belangrijk bij het invullen van een PDF-formulier?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "De tabvolgorde bepaalt in welke volgorde velden worden bezocht bij navigeren met het toetsenbord in plaats van de muis. Dit is vooral belangrijk voor geautomatiseerde data-invoerscripts die een formulier invullen door een vast aantal keer op Tab te drukken — verandert de volgorde, dan vult het script de verkeerde velden in. Een voorspelbare volgorde maakt elk formulier ook sneller om handmatig in te vullen."
+    }
   }
 ]

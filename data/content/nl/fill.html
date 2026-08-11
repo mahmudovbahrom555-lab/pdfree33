@@ -127,6 +127,24 @@
           </table>
         </div>
 
+                <!-- Tab order -->
+        <h2 style="font-size:22px;color:var(--text);margin:48px 0 16px;font-weight:700;">Beheer de tabvolgorde van je formuliervelden</h2>
+        <p style="font-size:14px;margin:0 0 16px;">Als je Tab indrukt tijdens het invullen van een PDF, springt de cursor in een bepaalde volgorde naar het volgende veld — de tabvolgorde van het formulier. Is een formulier gebouwd met velden in een rommelige of onvoorspelbare volgorde, dan duurt handmatig invullen langer, en elk script of elke automatisering die het formulier invult door een vast aantal keer op Tab te drukken kan volledig vastlopen. Met PDFree kun je die volgorde herstellen voordat je iets invult.</p>
+
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">Automatisch herstellen</strong>
+          <p style="margin:6px 0 0;font-size:14px;">Met één klik worden alle velden gesorteerd op hun positie op de pagina — van boven naar beneden, van links naar rechts — zodat Tab altijd beweegt zoals je ogen het formulier van nature lezen.</p>
+        </div>
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">Handmatig aanpassen</strong>
+          <p style="margin:6px 0 0;font-size:14px;">Sleep velden naar precies de volgorde die je nodig hebt. Dit is vooral belangrijk voor data-invoerscripts en geautomatiseerde invultools die afhankelijk zijn van een vast aantal keer op Tab drukken in een vaste volgorde.</p>
+        </div>
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">Opgeslagen in de PDF zelf</strong>
+          <p style="margin:6px 0 0;font-size:14px;">De nieuwe volgorde wordt rechtstreeks in de structuur van het formulier geschreven, dus blijft geldig wanneer het bestand later in een willekeurige PDF-lezer wordt geopend — niet alleen binnen PDFree.</p>
+        </div>
+
+        
         <!-- FAQ -->
         <h2 style="font-size:22px;color:var(--text);margin:48px 0 20px;font-weight:700;">Veelgestelde vragen</h2>
 
@@ -162,9 +180,17 @@
           <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Kan ik een PDF-formulier gratis online invullen en ondertekenen?</h3>
           <p style="margin:0;font-size:14px;">Ja. PDFree ondersteunt invullen en ondertekenen in één stap. Vul tekstvelden en selectievakjes in, tik dan op een handtekeningveld om een tekenveld te openen. De handtekening wordt in het gedownloade PDF ingebed.</p>
         </div>
-        <div style="margin-bottom:20px;">
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
           <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Vult deze tool echt de echte velden van mijn formulier in, of moet ik tekst handmatig plaatsen?</h3>
           <p style="margin:0;font-size:14px;">PDFree detecteert de echte AcroForm-velden van je PDF — tekstvelden, selectievakjes, keuzerondjes, dropdowns en handtekeningvelden — en toont ze als een echt invulbaar formulier. Je tekent geen tekstvakken met de hand en gokt niet naar de positie. Heeft je PDF geen ingebedde velden, dan laat PDFree dat direct weten in plaats van velden te simuleren die niet bestaan.</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Kan ik de tabvolgorde van PDF-formuliervelden wijzigen?</h3>
+          <p style="margin:0;font-size:14px;">Ja. Zodra een formulier met twee of meer velden is geladen, open je de sectie Tabvolgorde en kies je Herstellen (automatisch) om velden te sorteren op hun positie op de pagina, of Aanpassen om velden naar je eigen volgorde te slepen. De volgorde wordt in de PDF zelf opgeslagen en werkt daarna op dezelfde manier in elke PDF-lezer.</p>
+        </div>
+        <div style="margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Waarom is tabvolgorde belangrijk bij het invullen van een PDF-formulier?</h3>
+          <p style="margin:0;font-size:14px;">De tabvolgorde bepaalt in welke volgorde velden worden bezocht bij navigeren met het toetsenbord in plaats van de muis. Dit is vooral belangrijk voor geautomatiseerde data-invoerscripts die een formulier invullen door een vast aantal keer op Tab te drukken — verandert de volgorde, dan vult het script de verkeerde velden in. Een voorspelbare volgorde maakt elk formulier ook sneller om handmatig in te vullen.</p>
         </div>
 
         <!-- Gerelateerde tools -->

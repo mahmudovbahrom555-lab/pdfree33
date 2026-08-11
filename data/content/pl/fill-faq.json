@@ -70,5 +70,21 @@
       "@type": "Answer",
       "text": "PDFree wykrywa rzeczywiste pola AcroForm w Twoim PDF i wyświetla je jako naprawdę wypełnialny formularz, bez ręcznego rysowania pól tekstowych. Jeśli Twój PDF nie ma osadzonych pól, PDFree poinformuje Cię o tym wprost."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy mogę zmienić kolejność Tab pól formularza PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. Po wczytaniu formularza z co najmniej dwoma polami otwórz sekcję Kolejność Tab i wybierz Napraw (automatycznie), aby posortować pola według ich pozycji na stronie, lub Dostosuj, aby przeciągnąć pola we własnej kolejności. Kolejność jest zapisywana bezpośrednio w pliku PDF, więc później działa tak samo w każdym czytniku PDF."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Dlaczego kolejność Tab ma znaczenie podczas wypełniania formularza PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Kolejność Tab kontroluje sekwencję, w jakiej odwiedzane są pola podczas nawigacji za pomocą klawiatury zamiast myszy. Ma to szczególne znaczenie dla zautomatyzowanych skryptów wprowadzania danych, które wypełniają formularz, naciskając Tab określoną liczbę razy — jeśli kolejność się zmieni, skrypt wypełni niewłaściwe pola. Przewidywalna kolejność sprawia też, że każdy formularz szybciej wypełnia się ręcznie."
+    }
   }
 ]

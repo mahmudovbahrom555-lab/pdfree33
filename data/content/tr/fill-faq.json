@@ -70,5 +70,21 @@
       "@type": "Answer",
       "text": "PDFree, PDF'nizin gerçek AcroForm alanlarını algılar ve bunları gerçekten doldurulabilir bir form olarak gösterir; metin kutularını elle çizmez. PDF'nizde gömülü alan yoksa, PDFree bunu doğrudan size bildirir."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "PDF form alanlarının Tab tuşu sırasını değiştirebilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. İki veya daha fazla alanı olan bir form yüklendikten sonra Sekme sırası bölümünü açın ve alanları sayfadaki konumlarına göre sıralamak için Düzelt (otomatik) seçeneğini, ya da alanları kendi sıranıza sürüklemek için Özelleştir seçeneğini seçin. Sıra doğrudan PDF'in içine kaydedilir, böylece daha sonra herhangi bir PDF okuyucusunda aynı şekilde çalışır."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bir PDF formunu doldururken sekme sırası neden önemlidir?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sekme sırası, fare yerine klavyeyle gezinirken alanların ziyaret edilme sırasını kontrol eder. Bu, bir formu Tab tuşuna sabit sayıda basarak dolduran otomatik veri girişi betikleri için özellikle önemlidir — sıra değişirse betik yanlış alanları doldurur. Öngörülebilir bir sıra, herhangi bir formu elle doldurmayı da hızlandırır."
+    }
   }
 ]

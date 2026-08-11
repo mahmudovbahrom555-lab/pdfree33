@@ -54,5 +54,21 @@
       "@type": "Answer",
       "text": "PDFree erkennt interaktive AcroForm-Felder. Handelt es sich beim PDF um ein gescanntes Bild oder ein flaches Dokument ohne eingebettete Formularfelder, erscheint die Meldung „Keine ausfüllbaren Felder gefunden\". Für flache PDFs kannst du die Anmerkungs- oder Wasserzeichen-Tools verwenden, um Text zu überlagern."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann ich die Tab-Reihenfolge von PDF-Formularfeldern ändern?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Sobald ein Formular mit zwei oder mehr Feldern geladen ist, öffne den Bereich Tab-Reihenfolge und wähle Automatisch korrigieren, um Felder nach ihrer Position auf der Seite zu sortieren, oder Anpassen, um Felder per Drag & Drop in deine eigene Reihenfolge zu bringen. Die Reihenfolge wird direkt im PDF gespeichert und funktioniert danach in jedem PDF-Reader genauso."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Warum ist die Tab-Reihenfolge beim Ausfüllen eines PDF-Formulars wichtig?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Die Tab-Reihenfolge bestimmt, in welcher Reihenfolge Felder angesteuert werden, wenn man mit der Tastatur statt mit der Maus navigiert. Besonders wichtig ist das für automatisierte Dateneingabe-Skripte, die ein Formular durch eine feste Anzahl an Tab-Tastendrücken ausfüllen — ändert sich die Reihenfolge, füllt das Skript die falschen Felder aus. Eine vorhersehbare Reihenfolge macht jedes Formular außerdem schneller von Hand ausfüllbar."
+    }
   }
 ]

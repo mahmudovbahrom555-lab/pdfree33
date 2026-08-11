@@ -127,6 +127,24 @@
           </table>
         </div>
 
+                <!-- Tab order -->
+        <h2 style="font-size:22px;color:var(--text);margin:48px 0 16px;font-weight:700;">Controlla l'ordine di tabulazione dei campi del modulo</h2>
+        <p style="font-size:14px;margin:0 0 16px;">Quando premi Tab mentre compili un PDF, il cursore salta al campo successivo seguendo una sequenza precisa — l'ordine di tabulazione del modulo. Se un modulo è stato creato con i campi in un ordine confuso o imprevedibile, compilarlo a mano è più lento, e qualsiasi script o automazione che compila il modulo premendo Tab un numero fisso di volte può smettere completamente di funzionare. PDFree ti permette di correggere quell'ordine prima di compilare qualsiasi cosa.</p>
+
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">Correggi automaticamente</strong>
+          <p style="margin:6px 0 0;font-size:14px;">Un clic ordina tutti i campi in base alla loro posizione nella pagina — dall'alto in basso, da sinistra a destra — così Tab si muove sempre come i tuoi occhi leggono naturalmente il modulo.</p>
+        </div>
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">Personalizza manualmente</strong>
+          <p style="margin:6px 0 0;font-size:14px;">Trascina i campi esattamente nella sequenza di cui hai bisogno. È particolarmente utile per script di inserimento dati e strumenti di compilazione automatica che si basano su un numero fisso di pressioni di Tab in un ordine fisso.</p>
+        </div>
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">Salvato direttamente nel PDF</strong>
+          <p style="margin:6px 0 0;font-size:14px;">Il nuovo ordine viene scritto direttamente nella struttura del modulo, quindi resta valido quando il file viene aperto in seguito in qualsiasi lettore PDF — non solo dentro PDFree.</p>
+        </div>
+
+        
         <!-- FAQ -->
         <h2 style="font-size:22px;color:var(--text);margin:48px 0 20px;font-weight:700;">Domande frequenti</h2>
 
@@ -162,9 +180,17 @@
           <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Posso compilare e firmare un modulo PDF online gratuitamente?</h3>
           <p style="margin:0;font-size:14px;">Sì. PDFree supporta compilazione e firma in un solo passaggio. Compila campi di testo e caselle di controllo, poi tocca qualsiasi campo firma per aprire un pad di disegno. La firma viene incorporata nel PDF scaricato.</p>
         </div>
-        <div style="margin-bottom:20px;">
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
           <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Questo strumento compila davvero i campi reali del mio modulo, o devo posizionare il testo manualmente?</h3>
           <p style="margin:0;font-size:14px;">PDFree rileva i campi AcroForm reali del tuo PDF — campi di testo, caselle di controllo, pulsanti di opzione, menu a tendina e campi firma — e li visualizza come un modulo realmente compilabile. Non disegni campi di testo a mano né indovini la posizione. Se il tuo PDF non ha campi incorporati, PDFree te lo dice direttamente invece di fingere di rilevare campi inesistenti.</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Posso cambiare l'ordine di tabulazione dei campi di un modulo PDF?</h3>
+          <p style="margin:0;font-size:14px;">Sì. Una volta caricato un modulo con due o più campi, apri la sezione Ordine di tabulazione e scegli Correggi (automatico) per ordinare i campi in base alla loro posizione nella pagina, oppure Personalizza per trascinare i campi nell'ordine che preferisci. L'ordine viene salvato direttamente nel PDF, quindi funziona allo stesso modo in qualsiasi lettore PDF in seguito.</p>
+        </div>
+        <div style="margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Perché l'ordine di tabulazione è importante quando si compila un modulo PDF?</h3>
+          <p style="margin:0;font-size:14px;">L'ordine di tabulazione controlla la sequenza in cui i campi vengono raggiunti quando si naviga con la tastiera invece che con il mouse. È particolarmente importante per gli script di inserimento dati automatizzati che compilano un modulo premendo Tab un numero fisso di volte — se l'ordine cambia, lo script compila i campi sbagliati. Un ordine prevedibile rende inoltre qualsiasi modulo più veloce da compilare a mano.</p>
         </div>
 
         <!-- Strumenti correlati -->

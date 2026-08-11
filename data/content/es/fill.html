@@ -123,6 +123,24 @@
           </table>
         </div>
 
+                <!-- Tab order -->
+        <h2 style="font-size:22px;color:var(--text);margin:48px 0 16px;font-weight:700;">Controla el orden de tabulación de los campos del formulario</h2>
+        <p style="font-size:14px;margin:0 0 16px;">Cuando pulsas Tab mientras rellenas un PDF, el cursor salta al siguiente campo en una secuencia concreta: el orden de tabulación del formulario. Si un formulario se creó con los campos en un orden desordenado o impredecible, rellenarlo a mano es más lento, y cualquier script o automatización que rellene el formulario pulsando Tab un número fijo de veces puede fallar por completo. PDFree te permite corregir ese orden antes de rellenar nada.</p>
+
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">Corregir automáticamente</strong>
+          <p style="margin:6px 0 0;font-size:14px;">Un clic ordena todos los campos según su posición en la página — de arriba abajo, de izquierda a derecha — para que Tab se mueva siempre como tus ojos leen el formulario de forma natural.</p>
+        </div>
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">Personalizar manualmente</strong>
+          <p style="margin:6px 0 0;font-size:14px;">Arrastra los campos hasta obtener exactamente la secuencia que necesitas. Esto importa sobre todo para scripts de introducción de datos y herramientas de automatización que dependen de pulsar Tab un número fijo de veces en un orden fijo.</p>
+        </div>
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">Guardado en el propio PDF</strong>
+          <p style="margin:6px 0 0;font-size:14px;">El nuevo orden se escribe directamente en la estructura del formulario, así que se mantiene cuando el archivo se abre más tarde en cualquier lector de PDF — no solo dentro de PDFree.</p>
+        </div>
+
+        
         <!-- FAQ -->
         <h2 style="font-size:22px;color:var(--text);margin:48px 0 20px;font-weight:700;">Preguntas frecuentes</h2>
 
@@ -150,9 +168,17 @@
           <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">¿Puedo rellenar un PDF protegido con contraseña?</h3>
           <p style="margin:0;font-size:14px;">Solo si tienes la contraseña de propietario. Los PDFs cifrados con restricciones de edición no pueden rellenarse sin las credenciales. Elimina primero la contraseña con la herramienta <a href="/es/proteger-pdf/" style="color:var(--green)">Proteger PDF</a> (introduce la contraseña y guarda sin nueva contraseña).</p>
         </div>
-        <div style="margin-bottom:20px;">
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
           <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">¿Rellena de verdad los campos reales de mi formulario, o tengo que colocar el texto manualmente?</h3>
           <p style="margin:0;font-size:14px;">PDFree detecta los campos AcroForm reales de tu PDF — cuadros de texto, casillas, botones de opción, listas desplegables y campos de firma — y los muestra como un formulario realmente rellenable. No dibujas cuadros de texto a mano ni adivinas la posición. Si tu PDF no tiene campos incrustados, PDFree te lo indica directamente en lugar de simular que detecta campos que no existen.</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">¿Puedo cambiar el orden de tabulación de los campos de un formulario PDF?</h3>
+          <p style="margin:0;font-size:14px;">Sí. Una vez cargado un formulario con dos o más campos, abre la sección Orden de tabulación y elige Corregir (automático) para ordenar los campos según su posición en la página, o Personalizar para arrastrar los campos a tu propio orden. El orden se guarda en el propio PDF, así que funciona igual después en cualquier lector de PDF.</p>
+        </div>
+        <div style="margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">¿Por qué importa el orden de tabulación al rellenar un formulario PDF?</h3>
+          <p style="margin:0;font-size:14px;">El orden de tabulación controla la secuencia en la que se visitan los campos al navegar con el teclado en lugar del ratón. Importa sobre todo para scripts de introducción de datos automatizados que rellenan un formulario pulsando Tab un número fijo de veces — si el orden cambia, el script rellena los campos equivocados. Un orden predecible también hace que cualquier formulario se rellene más rápido a mano.</p>
         </div>
 
         <!-- Herramientas relacionadas -->

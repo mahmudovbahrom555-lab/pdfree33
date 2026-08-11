@@ -62,5 +62,21 @@
       "@type": "Answer",
       "text": "PDFree phát hiện các trường AcroForm thực của PDF — trường văn bản, hộp kiểm, nút radio, danh sách thả xuống và trường chữ ký — và hiển thị chúng như một form thực sự có thể điền được, không vẽ ô văn bản thủ công. Nếu PDF của bạn không có trường form, PDFree sẽ báo trực tiếp."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Tôi có thể thay đổi thứ tự Tab của các trường trong biểu mẫu PDF không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có. Sau khi tải lên biểu mẫu có từ hai trường trở lên, mở phần Thứ tự Tab và chọn Sửa (tự động) để sắp xếp các trường theo vị trí trên trang, hoặc Tùy chỉnh để kéo các trường theo thứ tự riêng của bạn. Thứ tự này được lưu trực tiếp vào PDF, nên sau đó hoạt động giống nhau ở bất kỳ trình đọc PDF nào."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Tại sao thứ tự Tab lại quan trọng khi điền biểu mẫu PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Thứ tự Tab kiểm soát trình tự các trường được truy cập khi điều hướng bằng bàn phím thay vì chuột. Điều này đặc biệt quan trọng với các script nhập liệu tự động điền biểu mẫu bằng cách nhấn Tab một số lần cố định — nếu thứ tự thay đổi, script sẽ điền sai trường. Thứ tự có thể dự đoán được cũng giúp điền bất kỳ biểu mẫu nào nhanh hơn bằng tay."
+    }
   }
 ]

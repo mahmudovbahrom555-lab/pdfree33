@@ -127,6 +127,24 @@
           </table>
         </div>
 
+                <!-- Tab order -->
+        <h2 style="font-size:22px;color:var(--text);margin:48px 0 16px;font-weight:700;">Control the Tab Order of Your Form Fields</h2>
+        <p style="font-size:14px;margin:0 0 16px;">When you press Tab while filling out a PDF, the cursor jumps to the next field in a specific sequence — the form's tab order. If a form was built with fields in a messy or unpredictable order, filling it by hand is slower, and any script or automation that fills the form by pressing Tab a fixed number of times can break entirely. PDFree lets you fix that order before you fill anything in.</p>
+
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">Fix automatically</strong>
+          <p style="margin:6px 0 0;font-size:14px;">One click sorts every field to match its position on the page — top to bottom, left to right — so Tab always moves the way your eyes naturally read the form.</p>
+        </div>
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">Customize manually</strong>
+          <p style="margin:6px 0 0;font-size:14px;">Drag fields into exactly the sequence you need. This matters most for data-entry scripts and automated form-filling tools that rely on pressing Tab a fixed number of times in a fixed order.</p>
+        </div>
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">Saved into the PDF itself</strong>
+          <p style="margin:6px 0 0;font-size:14px;">The new order is written directly into the form's structure, so it holds true when the file is opened later in any PDF reader — not only inside PDFree.</p>
+        </div>
+
+        
         <!-- FAQ -->
         <h2 style="font-size:22px;color:var(--text);margin:48px 0 20px;font-weight:700;">Frequently Asked Questions</h2>
 
@@ -162,9 +180,17 @@
           <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Can I fill and sign a PDF form online for free?</h3>
           <p style="margin:0;font-size:14px;">Yes. PDFree supports both filling and signing in one step. Fill in text fields and checkboxes, then tap any signature field to open a drawing pad — sign with your finger on mobile or your mouse on desktop. The signature is embedded in the downloaded PDF.</p>
         </div>
-        <div style="margin-bottom:20px;">
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
           <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Does this actually fill in my form's real fields, or do I have to place text manually?</h3>
           <p style="margin:0;font-size:14px;">PDFree detects your PDF's real AcroForm fields — text boxes, checkboxes, radio buttons, dropdowns, and signature fields — and renders them as an actual fillable form. You are not drawing text boxes by hand or guessing at positioning. If your PDF has no embedded fields (a flat or scanned document), PDFree tells you directly rather than pretending to detect fields that aren't there.</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Can I change the Tab key order of PDF form fields?</h3>
+          <p style="margin:0;font-size:14px;">Yes. Once a form with two or more fields is loaded, open the Tab order section and choose Fix (auto) to sort fields by their position on the page, or Customize to drag fields into your own order. The order is written into the PDF itself, so it works the same way in any PDF reader afterward.</p>
+        </div>
+        <div style="margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Why does tab order matter when filling a PDF form?</h3>
+          <p style="margin:0;font-size:14px;">Tab order controls the sequence fields are visited in when navigating with the keyboard instead of the mouse. It matters most for automated data-entry scripts that fill a form by pressing Tab a fixed number of times — if the order changes, the script fills the wrong fields. A predictable order also makes any form faster to fill by hand.</p>
         </div>
 
         <!-- Related tools -->

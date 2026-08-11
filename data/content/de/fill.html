@@ -123,6 +123,24 @@
           </table>
         </div>
 
+                <!-- Tab order -->
+        <h2 style="font-size:22px;color:var(--text);margin:48px 0 16px;font-weight:700;">Tab-Reihenfolge deiner Formularfelder steuern</h2>
+        <p style="font-size:14px;margin:0 0 16px;">Wenn du beim Ausfüllen eines PDFs die Tabulatortaste drückst, springt der Cursor in einer bestimmten Reihenfolge zum nächsten Feld — der Tab-Reihenfolge des Formulars. Ist ein Formular mit unübersichtlicher oder unvorhersehbarer Feldreihenfolge aufgebaut, dauert das Ausfüllen von Hand länger, und jedes Skript oder jede Automatisierung, die das Formular durch eine feste Anzahl an Tab-Tastendrücken ausfüllt, kann komplett fehlschlagen. Mit PDFree kannst du diese Reihenfolge festlegen, bevor du etwas ausfüllst.</p>
+
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">Automatisch korrigieren</strong>
+          <p style="margin:6px 0 0;font-size:14px;">Ein Klick sortiert alle Felder nach ihrer Position auf der Seite — von oben nach unten, von links nach rechts —, sodass Tab immer so springt, wie deine Augen das Formular natürlich lesen.</p>
+        </div>
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">Manuell anpassen</strong>
+          <p style="margin:6px 0 0;font-size:14px;">Ziehe die Felder in genau die Reihenfolge, die du brauchst. Das ist besonders wichtig für Dateneingabe-Skripte und automatisierte Ausfüll-Tools, die sich auf eine feste Anzahl an Tab-Tastendrücken in fester Reihenfolge verlassen.</p>
+        </div>
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">Direkt im PDF gespeichert</strong>
+          <p style="margin:6px 0 0;font-size:14px;">Die neue Reihenfolge wird direkt in die Struktur des Formulars geschrieben und bleibt daher erhalten, wenn die Datei später in einem beliebigen PDF-Reader geöffnet wird — nicht nur in PDFree.</p>
+        </div>
+
+        
         <!-- FAQ -->
         <h2 style="font-size:22px;color:var(--text);margin:48px 0 20px;font-weight:700;">Häufig gestellte Fragen</h2>
 
@@ -150,9 +168,17 @@
           <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Kann ich ein passwortgeschütztes PDF ausfüllen?</h3>
           <p style="margin:0;font-size:14px;">Nur wenn du das Inhaberpasswort kennst. Verschlüsselte PDFs mit Bearbeitungsbeschränkungen können ohne die Zugangsdaten nicht ausgefüllt werden. Entferne zuerst das Passwort mit dem <a href="/de/pdf-schuetzen/" style="color:var(--green)">PDF Schützen</a>-Tool (Passwort eingeben, dann ohne neues Passwort speichern).</p>
         </div>
-        <div style="margin-bottom:20px;">
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
           <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Füllt das Tool wirklich meine echten Formularfelder aus, oder muss ich Text manuell platzieren?</h3>
           <p style="margin:0;font-size:14px;">PDFree erkennt die echten AcroForm-Felder deines PDFs — Textfelder, Checkboxen, Optionsfelder, Dropdowns und Unterschriftenfelder — und stellt sie als echtes ausfüllbares Formular dar. Du zeichnest keine Textfelder per Hand und musst keine Position schätzen. Hat dein PDF keine eingebetteten Felder, sagt dir PDFree das direkt, statt Felder vorzutäuschen, die nicht existieren.</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Kann ich die Tab-Reihenfolge von PDF-Formularfeldern ändern?</h3>
+          <p style="margin:0;font-size:14px;">Ja. Sobald ein Formular mit zwei oder mehr Feldern geladen ist, öffne den Bereich Tab-Reihenfolge und wähle Automatisch korrigieren, um Felder nach ihrer Position auf der Seite zu sortieren, oder Anpassen, um Felder per Drag & Drop in deine eigene Reihenfolge zu bringen. Die Reihenfolge wird direkt im PDF gespeichert und funktioniert danach in jedem PDF-Reader genauso.</p>
+        </div>
+        <div style="margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Warum ist die Tab-Reihenfolge beim Ausfüllen eines PDF-Formulars wichtig?</h3>
+          <p style="margin:0;font-size:14px;">Die Tab-Reihenfolge bestimmt, in welcher Reihenfolge Felder angesteuert werden, wenn man mit der Tastatur statt mit der Maus navigiert. Besonders wichtig ist das für automatisierte Dateneingabe-Skripte, die ein Formular durch eine feste Anzahl an Tab-Tastendrücken ausfüllen — ändert sich die Reihenfolge, füllt das Skript die falschen Felder aus. Eine vorhersehbare Reihenfolge macht jedes Formular außerdem schneller von Hand ausfüllbar.</p>
         </div>
 
         <!-- Verwandte Tools -->

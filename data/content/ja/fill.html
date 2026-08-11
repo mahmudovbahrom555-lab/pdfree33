@@ -127,6 +127,24 @@
           </table>
         </div>
 
+                <!-- Tab order -->
+        <h2 style="font-size:22px;color:var(--text);margin:48px 0 16px;font-weight:700;">フォームフィールドのタブ順を管理</h2>
+        <p style="font-size:14px;margin:0 0 16px;">PDFに入力中にTabキーを押すと、カーソルは決まった順序で次のフィールドに移動します — これがフォームのタブ順です。フィールドの順序が乱雑で予測しづらいフォームは、手動での入力に時間がかかるだけでなく、決まった回数だけTabキーを押してフォームを自動入力するスクリプトやツールが完全に機能しなくなることもあります。PDFreeでは、入力を始める前にこの順序を修正できます。</p>
+
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">自動修正</strong>
+          <p style="margin:6px 0 0;font-size:14px;">ワンクリックで、ページ上の位置(上から下、左から右)に合わせてすべてのフィールドを並べ替えます。これにより、Tabキーは常にフォームを自然に読む順序で移動します。</p>
+        </div>
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">手動でカスタマイズ</strong>
+          <p style="margin:6px 0 0;font-size:14px;">フィールドをドラッグして、必要な順序に正確に並べ替えられます。決まった回数だけTabキーを押して入力するデータ入力スクリプトや自動入力ツールにとって、特に重要な機能です。</p>
+        </div>
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">PDF自体に保存される</strong>
+          <p style="margin:6px 0 0;font-size:14px;">新しい順序はフォームの構造に直接書き込まれるため、後でどのPDFリーダーでファイルを開いても — PDFree以外でも — その順序が維持されます。</p>
+        </div>
+
+        
         <!-- FAQ -->
         <h2 style="font-size:22px;color:var(--text);margin:48px 0 20px;font-weight:700;">よくある質問</h2>
 
@@ -166,9 +184,17 @@
           <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">PDFフォームへの記入と署名をオンラインで無料でできますか？</h3>
           <p style="margin:0;font-size:14px;">はい。PDFreeは記入と署名を一度の操作でサポートしています。テキストフィールドとチェックボックスに入力した後、署名フィールドをタップして署名パッドを開いてください。署名はダウンロードしたPDFに埋め込まれます。</p>
         </div>
-        <div style="margin-bottom:20px;">
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
           <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">このツールは本当にフォームの実際のフィールドに記入するのですか、それとも手動でテキストを配置する必要がありますか？</h3>
           <p style="margin:0;font-size:14px;">PDFreeはPDFの本来のAcroFormフィールド — テキストフィールド、チェックボックス、ラジオボタン、ドロップダウン、署名フィールド — を検出し、実際に記入可能なフォームとして表示します。テキストボックスを手動で描いたり、位置を推測したりする必要はありません。埋め込みフィールドがないPDFの場合、PDFreeは存在しないフィールドを検出したふりをするのではなく、その旨を直接お伝えします。</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">PDFフォームフィールドのTab順を変更できますか?</h3>
+          <p style="margin:0;font-size:14px;">はい。2つ以上のフィールドを含むフォームを読み込んだ後、「タブ順」セクションを開き、「自動修正」を選ぶとページ上の位置に基づいてフィールドが並べ替えられます。「カスタマイズ」を選ぶと、フィールドをドラッグして自分の順序に並べ替えられます。順序はPDF自体に保存されるため、その後はどのPDFリーダーでも同じように機能します。</p>
+        </div>
+        <div style="margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">PDFフォームに入力する際、タブ順はなぜ重要なのですか?</h3>
+          <p style="margin:0;font-size:14px;">タブ順は、マウスではなくキーボードで操作する際にフィールドが移動する順序を制御します。決まった回数だけTabキーを押してフォームを自動入力するデータ入力スクリプトにとって特に重要で、順序が変わるとスクリプトが誤ったフィールドに入力してしまいます。予測可能な順序は、手動での入力も速くします。</p>
         </div>
 
         <!-- 関連ツール -->

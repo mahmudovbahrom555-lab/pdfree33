@@ -127,6 +127,24 @@
           </table>
         </div>
 
+                <!-- Tab order -->
+        <h2 style="font-size:22px;color:var(--text);margin:48px 0 16px;font-weight:700;">Kontroluj kolejność Tab pól formularza</h2>
+        <p style="font-size:14px;margin:0 0 16px;">Gdy naciskasz Tab podczas wypełniania PDF-a, kursor przeskakuje do kolejnego pola w określonej sekwencji — to kolejność Tab formularza. Jeśli formularz został utworzony z polami w chaotycznej lub nieprzewidywalnej kolejności, wypełnianie go ręcznie trwa dłużej, a każdy skrypt lub automatyzacja wypełniająca formularz poprzez naciśnięcie Tab określoną liczbę razy może całkowicie przestać działać. PDFree pozwala poprawić tę kolejność, zanim cokolwiek wypełnisz.</p>
+
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">Napraw automatycznie</strong>
+          <p style="margin:6px 0 0;font-size:14px;">Jedno kliknięcie sortuje wszystkie pola według ich pozycji na stronie — od góry do dołu, od lewej do prawej — dzięki czemu Tab zawsze porusza się tak, jak naturalnie czytasz formularz wzrokiem.</p>
+        </div>
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">Dostosuj ręcznie</strong>
+          <p style="margin:6px 0 0;font-size:14px;">Przeciągnij pola, aby uzyskać dokładnie taką kolejność, jakiej potrzebujesz. Ma to szczególne znaczenie dla skryptów wprowadzania danych i narzędzi automatycznego wypełniania, które opierają się na naciśnięciu Tab określoną liczbę razy w ustalonej kolejności.</p>
+        </div>
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">Zapisane bezpośrednio w PDF-ie</strong>
+          <p style="margin:6px 0 0;font-size:14px;">Nowa kolejność jest zapisywana bezpośrednio w strukturze formularza, więc pozostaje aktualna, gdy plik zostanie później otwarty w dowolnym czytniku PDF — nie tylko w PDFree.</p>
+        </div>
+
+        
         <!-- FAQ -->
         <h2 style="font-size:22px;color:var(--text);margin:48px 0 20px;font-weight:700;">Najczęściej zadawane pytania</h2>
 
@@ -162,9 +180,17 @@
           <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Czy mogę wypełnić i podpisać formularz PDF online za darmo?</h3>
           <p style="margin:0;font-size:14px;">Tak. PDFree obsługuje wypełnianie i podpisywanie w jednym kroku. Wypełnij pola tekstowe i checkboxy, a następnie dotknij dowolnego pola podpisu, aby otworzyć panel rysowania. Podpis zostaje osadzony w pobranym pliku PDF.</p>
         </div>
-        <div style="margin-bottom:20px;">
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
           <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Czy to narzędzie naprawdę wypełnia rzeczywiste pola mojego formularza, czy muszę umieszczać tekst ręcznie?</h3>
           <p style="margin:0;font-size:14px;">PDFree wykrywa rzeczywiste pola AcroForm w Twoim PDF — pola tekstowe, checkboxy, przyciski opcji, listy rozwijane i pola podpisu — i wyświetla je jako naprawdę wypełnialny formularz. Nie rysujesz pól tekstowych ręcznie ani nie zgadujesz ich pozycji. Jeśli Twój PDF nie ma osadzonych pól, PDFree poinformuje Cię o tym wprost, zamiast udawać, że wykrywa pola, których nie ma.</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Czy mogę zmienić kolejność Tab pól formularza PDF?</h3>
+          <p style="margin:0;font-size:14px;">Tak. Po wczytaniu formularza z co najmniej dwoma polami otwórz sekcję Kolejność Tab i wybierz Napraw (automatycznie), aby posortować pola według ich pozycji na stronie, lub Dostosuj, aby przeciągnąć pola we własnej kolejności. Kolejność jest zapisywana bezpośrednio w pliku PDF, więc później działa tak samo w każdym czytniku PDF.</p>
+        </div>
+        <div style="margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Dlaczego kolejność Tab ma znaczenie podczas wypełniania formularza PDF?</h3>
+          <p style="margin:0;font-size:14px;">Kolejność Tab kontroluje sekwencję, w jakiej odwiedzane są pola podczas nawigacji za pomocą klawiatury zamiast myszy. Ma to szczególne znaczenie dla zautomatyzowanych skryptów wprowadzania danych, które wypełniają formularz, naciskając Tab określoną liczbę razy — jeśli kolejność się zmieni, skrypt wypełni niewłaściwe pola. Przewidywalna kolejność sprawia też, że każdy formularz szybciej wypełnia się ręcznie.</p>
         </div>
 
         <!-- Powiązane narzędzia -->

@@ -54,5 +54,21 @@
       "@type": "Answer",
       "text": "O PDFree detecta campos interativos AcroForm. Se o PDF for uma imagem digitalizada ou um documento plano sem campos incorporados, você verá a mensagem \"Nenhum campo preenchível encontrado\". Para PDFs planos, você pode usar as ferramentas de anotação ou marca d'água para adicionar sobreposições de texto."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso alterar a ordem de tabulação dos campos de um formulário PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim. Depois de carregar um formulário com dois ou mais campos, abra a seção Ordem de tabulação e escolha Corrigir (automático) para ordenar os campos pela posição na página, ou Personalizar para arrastar os campos na ordem que você quiser. A ordem é gravada diretamente no PDF, funcionando da mesma forma depois em qualquer leitor de PDF."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Por que a ordem de tabulação importa ao preencher um formulário PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "A ordem de tabulação controla a sequência em que os campos são visitados ao navegar pelo teclado em vez do mouse. Isso é essencial para scripts automatizados de entrada de dados que preenchem um formulário pressionando Tab um número fixo de vezes — se a ordem mudar, o script preenche os campos errados. Uma ordem previsível também torna qualquer formulário mais rápido de preencher manualmente."
+    }
   }
 ]

@@ -54,5 +54,21 @@
       "@type": "Answer",
       "text": "PDFree détecte les champs interactifs AcroForm. Si le PDF est une image scannée ou un document plat sans champs intégrés, le message « Aucun champ remplissable trouvé » s'affiche. Pour les PDF plats, vous pouvez utiliser les outils d'annotation ou de filigrane pour ajouter du texte en superposition."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Puis-je modifier l'ordre de tabulation des champs d'un formulaire PDF ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui. Une fois un formulaire d'au moins deux champs chargé, ouvrez la section Ordre de tabulation et choisissez Corriger (auto) pour trier les champs selon leur position sur la page, ou Personnaliser pour les faire glisser dans votre propre ordre. L'ordre est enregistré directement dans le PDF, il fonctionne donc de la même façon ensuite dans n'importe quel lecteur PDF."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Pourquoi l'ordre de tabulation est-il important pour remplir un formulaire PDF ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "L'ordre de tabulation détermine la séquence dans laquelle les champs sont visités lors d'une navigation au clavier plutôt qu'à la souris. Il est surtout important pour les scripts de saisie automatisée qui remplissent un formulaire en appuyant sur Tab un nombre fixe de fois — si l'ordre change, le script remplit les mauvais champs. Un ordre prévisible rend aussi tout formulaire plus rapide à remplir à la main."
+    }
   }
 ]
