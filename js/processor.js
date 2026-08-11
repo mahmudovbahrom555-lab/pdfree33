@@ -1945,6 +1945,27 @@ export function _p2eCellValue(str) {
 // image fallback uses) and the same large-deck quality tiering
 // _p2wRenderImages() already applies for memory safety.
 
+// Scale-to-fit + center a page's own image within the deck's fixed slide
+// box, instead of stretching it to fill x=0,y=0,w=layoutW,h=layoutH
+// unconditionally. PPTX only supports one slide size per deck, so a mixed-
+// page-size source PDF (e.g. one landscape page in an otherwise-portrait
+// document) can't get its own slide dimensions — but the previous version
+// force-stretched every page into the layout box regardless, visibly
+// distorting anything that didn't match page 1's aspect ratio. This never
+// enlarges past 100% and is a no-op (scale=1, x=y=0, same output as
+// before) for the common case where a page's aspect ratio already matches
+// the deck layout — same 'fit' semantics as resizeWorker.js's _fitRect
+// (checked several open-source PDF→PPTX converters, e.g. kevinmcguinness/
+// pdf2pptx, while fixing this: deriving layout from page 1 and force-
+// stretching everything else turns out to be the common failure mode
+// here, not something to imitate).
+function _p2pFitRect(srcW, srcH, availW, availH) {
+  const scale  = Math.min(1, availW / srcW, availH / srcH);
+  const scaledW = srcW * scale;
+  const scaledH = srcH * scale;
+  return { w: scaledW, h: scaledH, x: (availW - scaledW) / 2, y: (availH - scaledH) / 2 };
+}
+
 async function _runPdf2Ppt(filesSnapshot, { dpi = 150 } = {}) {
   const file = filesSnapshot[0];
   if (!_checkSize(file, 150)) { _abortUI(); return; }
@@ -2024,8 +2045,15 @@ async function _runPdf2Ppt(filesSnapshot, { dpi = 150 } = {}) {
       const fmt     = _p2wDetectFormat(canvas);
       const dataUrl = canvas.toDataURL(`image/${fmt}`, fmt === 'jpeg' ? quality : undefined);
 
+      // viewport is already this page's own size at scale=dpi/72, so
+      // width/dpi and height/dpi recover its size in inches directly —
+      // no extra getViewport({scale:1}) call needed.
+      const pageW = viewport.width  / dpi;
+      const pageH = viewport.height / dpi;
+      const fit   = _p2pFitRect(pageW, pageH, layoutW, layoutH);
+
       const slide = pptx.addSlide();
-      slide.addImage({ data: dataUrl, x: 0, y: 0, w: layoutW, h: layoutH });
+      slide.addImage({ data: dataUrl, x: fit.x, y: fit.y, w: fit.w, h: fit.h });
 
       const now = performance.now();
       if (now - frameStart >= _FRAME_BUDGET_MS) {

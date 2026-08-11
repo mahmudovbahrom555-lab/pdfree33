@@ -28,7 +28,7 @@
     "name": "What size will my slides be?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "The slide size matches your PDF's page dimensions and aspect ratio exactly — no letterboxing or stretched margins."
+      "text": "The deck's slide size matches your PDF's first-page dimensions and aspect ratio. If every page is the same size, slides fill edge-to-edge with no letterboxing. PowerPoint only supports one slide size per deck, so if your PDF mixes page sizes or orientations, those pages are scaled to fit and centered instead of being stretched or distorted."
     }
   },
   {

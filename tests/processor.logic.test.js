@@ -135,6 +135,48 @@ test('повторный cancel не вызывает terminate снова', () 
   expect(terminateCount).toBe(0);
 });
 
+// ── PDF to PowerPoint: mixed-page-size slide fitting ───────
+// Mirrors js/processor.js's _p2pFitRect verbatim — small, pure function,
+// same "reimplement inline for testing" approach this file already uses
+// elsewhere rather than importing all of processor.js (heavily DOM/UI-
+// coupled, not import-safe in Node). Regression coverage for the bug
+// fixed here: pages that don't match the deck's page-1-derived layout
+// aspect ratio used to be force-stretched into it (visibly distorting
+// e.g. a landscape page in an otherwise-portrait deck); this fits and
+// centers instead.
+console.log('\nPDF to PowerPoint fit-rect (mixed page sizes):');
+
+function p2pFitRect(srcW, srcH, availW, availH) {
+  const scale   = Math.min(1, availW / srcW, availH / srcH);
+  const scaledW = srcW * scale;
+  const scaledH = srcH * scale;
+  return { w: scaledW, h: scaledH, x: (availW - scaledW) / 2, y: (availH - scaledH) / 2 };
+}
+
+test('страница того же размера что и layout — заполняет слайд без изменений (регресс на прежнее поведение)', () => {
+  const fit = p2pFitRect(8.5, 11, 8.5, 11);
+  expect(fit).toEqual({ w: 8.5, h: 11, x: 0, y: 0 });
+});
+
+test('альбомная страница в портретной колоде — вписывается и центрируется, а не растягивается', () => {
+  // deck layout derived from a portrait page-1 (8.5x11); this page is landscape (11x8.5)
+  const fit = p2pFitRect(11, 8.5, 8.5, 11);
+  // must preserve the page's own aspect ratio — never distort
+  expect(Math.abs(fit.w / fit.h - 11 / 8.5) < 1e-9).toBeTruthy();
+  // must never enlarge past the available box
+  expect(fit.w <= 8.5).toBeTruthy();
+  expect(fit.h <= 11).toBeTruthy();
+  // must be centered, not pinned to a corner
+  expect(Math.abs(fit.x - (8.5 - fit.w) / 2) < 1e-9).toBeTruthy();
+  expect(Math.abs(fit.y - (11 - fit.h) / 2) < 1e-9).toBeTruthy();
+});
+
+test('меньшая страница не увеличивается сверх 100%', () => {
+  const fit = p2pFitRect(4, 3, 8.5, 11);
+  expect(fit.w).toBe(4);
+  expect(fit.h).toBe(3);
+});
+
 // ── Summary ────────────────────────────────────────────────
 console.log(`\n${'─'.repeat(40)}`);
 console.log(`Tests: ${passed + failed} | ✓ ${passed} | ${failed > 0 ? '✗ ' + failed : '0 failed'}`);

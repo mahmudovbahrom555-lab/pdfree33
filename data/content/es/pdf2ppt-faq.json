@@ -28,7 +28,7 @@
     "name": "¿Qué tamaño tendrán las diapositivas?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "El tamaño de la diapositiva coincide exactamente con las dimensiones y la relación de aspecto de la página de tu PDF, sin letterboxing ni márgenes estirados."
+      "text": "El tamaño de la diapositiva coincide con las dimensiones y proporción de la primera página de tu PDF. Si todas las páginas tienen el mismo tamaño, las diapositivas se llenan de borde a borde sin letterboxing. PowerPoint solo admite un tamaño de diapositiva por presentación, así que si tu PDF combina tamaños u orientaciones de página, esas páginas se ajustan y centran en lugar de estirarse o distorsionarse."
     }
   },
   {

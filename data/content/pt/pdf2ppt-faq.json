@@ -28,7 +28,7 @@
     "name": "Qual tamanho terão os slides?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "O tamanho do slide corresponde exatamente às dimensões e proporção de aspecto da página do seu PDF, sem letterboxing ou margens esticadas."
+      "text": "O tamanho do slide corresponde às dimensões e proporção da primeira página do seu PDF. Se todas as páginas tiverem o mesmo tamanho, os slides preenchem de borda a borda sem letterboxing. O PowerPoint só permite um tamanho de slide por apresentação; se o seu PDF combina tamanhos ou orientações de página diferentes, essas páginas são ajustadas e centralizadas em vez de esticadas ou distorcidas."
     }
   },
   {
