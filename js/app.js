@@ -270,6 +270,22 @@ function showTool(tool, pushHistory = true, preFiles = null) {
   });
 }
 
+// Tools with inline:false have no options container in the homepage-embedded
+// #toolArea (only their dedicated page HTML has it) — calling showTool() with
+// preFiles for one of these would silently no-op (container missing) instead
+// of rendering the tool. Route those through a real navigation + IndexedDB
+// handoff instead, same mechanism already used by cross-sell result links.
+function _openToolWithFiles(key, files) {
+  if (TOOLS[key]?.inline === false && files[0]) {
+    const href = TOOL_SLUGS[key] || `/${key}-pdf/`;
+    saveHandoff(files[0], files[0].name, currentTool, href)
+      .catch(() => {})
+      .then(() => { location.href = href; });
+    return;
+  }
+  showTool(key, true, files);
+}
+
 // ── State reset ───────────────────────────────────────────────
 
 function resetState() {
@@ -1211,7 +1227,7 @@ function initSearch() {
           return;
         }
         trackChipClick(_activeResult.key, 'file-first');
-        showTool(_activeResult.key, true, _pendingFiles);
+        _openToolWithFiles(_activeResult.key, _pendingFiles);
       }
     });
   }
@@ -1222,7 +1238,7 @@ function initSearch() {
     srFileInput.value = ''; // reset so re-selecting the same file fires change again
     if (!files.length || !_activeResult) return;
     trackSearchSelect(searchEl.value.trim(), _activeResult.key);
-    showTool(_activeResult.key, true, files);
+    _openToolWithFiles(_activeResult.key, files);
   });
 
   // Drag-and-drop on search result card drop zone
@@ -1237,7 +1253,7 @@ function initSearch() {
     const files = Array.from(e.dataTransfer.files).filter(f => f.type === 'application/pdf');
     if (!files.length || !_activeResult) return;
     trackSearchSelect(searchEl.value.trim(), _activeResult.key);
-    showTool(_activeResult.key, true, files);
+    _openToolWithFiles(_activeResult.key, files);
   });
 
   // When files are loaded in the hero zone, intercept nav and featured-card

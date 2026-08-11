@@ -87,6 +87,73 @@ def check_file(html_path: Path) -> tuple[list[str], list[str]]:
         missing_theme = ['theme.js missing — page will always render with default (dark) theme, ignoring user preference']
     return missing_ids, missing_tool + bad_cards + missing_theme
 
+
+# ── Homepage tool-options-container parity ─────────────────────
+#
+# Unlike dedicated tool pages (built from scripts/templates/tool-page.html),
+# these homepage files are hand-maintained and embed the #toolArea inline —
+# reachable via the search widget's file-first flow or any other client-side
+# tool switch, WITHOUT a full page load. If a tool's own "#<tool>Options"
+# container div isn't physically present here, initToolOptions() hits its
+# `if (!container) return` guard and silently no-ops: no options panel, no
+# loading, the submit button never gets managed, and the tool looks
+# permanently "stuck" — with zero error, because nothing actually threw.
+#
+# This has bitten twice for real: Clean Scan shipped without its container
+# on ANY homepage (root included), and Organize/Resize were added to root
+# index.html but never back-ported to de/es/fr/pt/id. Both were only caught
+# by live user reports, not by CI. This check makes that class of bug fail
+# the build instead.
+HOMEPAGE_FILES = [
+    'index.html', 'de/index.html', 'es/index.html',
+    'fr/index.html', 'pt/index.html', 'id/index.html',
+]
+
+# Containers that ARE referenced in JS but must NOT be required on homepages:
+#   fillOptions     — 'fill' is inline:false in config.js (dedicated page
+#                      only, per its own comment: "requires dedicated page
+#                      HTML"). js/app.js routes homepage/search uploads for
+#                      inline:false tools through a real navigation + IndexedDB
+#                      handoff (saveHandoff/restoreHandoff) instead of trying
+#                      to render inline — so no homepage container is needed.
+#   pdf2pdfaOptions — js/pdf2pdfaUI.js's _ensureContainer() creates this div
+#                      dynamically (insertAdjacentElement) if it isn't already
+#                      in the DOM, by design (see its own top-of-file comment).
+# If you add a new inline:false tool that also has its own JS-referenced
+# "#<tool>Options" id, add it here with the same kind of explanation —
+# otherwise this check will (correctly) demand it exist on every homepage.
+HOMEPAGE_OPTIONS_EXCLUDE = {'fillOptions', 'pdf2pdfaOptions'}
+
+_OPTIONS_ID_REF_RE = re.compile(r"(?:id\(|getElementById\()['\"]([a-zA-Z0-9_-]*Options)['\"]\)")
+_OPTIONS_ID_DIV_RE = re.compile(r'id="([a-zA-Z0-9_-]*Options)"')
+
+def _required_options_ids() -> set[str]:
+    """Every '#XOptions' container id actually looked up somewhere in js/*.js."""
+    ids = set()
+    for js_path in sorted((ROOT / 'js').glob('*.js')):
+        text = js_path.read_text(encoding='utf-8', errors='replace')
+        ids.update(_OPTIONS_ID_REF_RE.findall(text))
+    return ids - HOMEPAGE_OPTIONS_EXCLUDE
+
+def check_homepage_options_parity() -> list[tuple[str, list[str]]]:
+    required = _required_options_ids()
+    errors = []
+    for rel in HOMEPAGE_FILES:
+        path = ROOT / rel
+        if not path.exists():
+            continue
+        text = path.read_text(encoding='utf-8', errors='replace')
+        present = set(_OPTIONS_ID_DIV_RE.findall(text))
+        missing = sorted(required - present)
+        if missing:
+            errors.append((rel, [
+                f'missing <div id="{mid}"> — tool is unreachable (silently no-ops) '
+                f'via search / SPA navigation on this homepage'
+                for mid in missing
+            ]))
+    return errors
+
+
 def main():
     errors = []
     html_files = sorted(ROOT.rglob('*.html'))
@@ -110,6 +177,8 @@ def main():
             rel = path.relative_to(ROOT)
             errors.append((str(rel), issues))
         checked += 1
+
+    errors.extend(check_homepage_options_parity())
 
     if errors:
         print(f'\n[check_dom] FAIL — {len(errors)} page(s) with issues:\n')
