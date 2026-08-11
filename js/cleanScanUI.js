@@ -193,6 +193,89 @@ function _flatFieldCorrect(gray, bg) {
   return gray;
 }
 
+// Kept in sync with js/cleanScanWorker.js's _medianFilterGray — must run
+// BEFORE _unsharpMask below, see that file's comment for why (sharpening
+// amplifies noise into small connected blobs that survive despeckling
+// unless it's denoised first).
+function _medianFilterGray(data, w, h) {
+  const out = new Uint8ClampedArray(w * h);
+  const win = new Uint8Array(9);
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      let n = 0;
+      for (let dy = -1; dy <= 1; dy++) {
+        const ny = y + dy;
+        if (ny < 0 || ny >= h) continue;
+        const rowBase = ny * w;
+        for (let dx = -1; dx <= 1; dx++) {
+          const nx = x + dx;
+          if (nx < 0 || nx >= w) continue;
+          win[n++] = data[(rowBase + nx) * 4];
+        }
+      }
+      for (let a = 1; a < n; a++) {
+        const key = win[a];
+        let b = a - 1;
+        while (b >= 0 && win[b] > key) { win[b + 1] = win[b]; b--; }
+        win[b + 1] = key;
+      }
+      out[y * w + x] = win[n >> 1];
+    }
+  }
+  return out;
+}
+
+function _applyMedianFilter(gray) {
+  const w = gray.width, h = gray.height;
+  const ctx = gray.getContext('2d');
+  const img = ctx.getImageData(0, 0, w, h);
+  const d = img.data;
+  const med = _medianFilterGray(d, w, h);
+  for (let i = 0, p = 0; i < d.length; i += 4, p++) d[i] = d[i + 1] = d[i + 2] = med[p];
+  ctx.putImageData(img, 0, 0);
+  return gray;
+}
+
+// Kept in sync with js/cleanScanWorker.js's _unsharpMask/_boxBlurGray —
+// see its comment for the High-Pass+Linear-Light-collapses-to-unsharp-mask
+// derivation.
+function _boxBlurGray(data, w, h, radius) {
+  const out = new Float32Array(w * h);
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      let sum = 0, count = 0;
+      for (let dy = -radius; dy <= radius; dy++) {
+        const ny = y + dy;
+        if (ny < 0 || ny >= h) continue;
+        const rowBase = ny * w;
+        for (let dx = -radius; dx <= radius; dx++) {
+          const nx = x + dx;
+          if (nx < 0 || nx >= w) continue;
+          sum += data[(rowBase + nx) * 4];
+          count++;
+        }
+      }
+      out[y * w + x] = sum / count;
+    }
+  }
+  return out;
+}
+
+function _unsharpMask(gray, radius, amount) {
+  const w = gray.width, h = gray.height;
+  const ctx = gray.getContext('2d');
+  const img = ctx.getImageData(0, 0, w, h);
+  const d = img.data;
+  const blurred = _boxBlurGray(d, w, h, radius);
+  for (let i = 0, p = 0; i < d.length; i += 4, p++) {
+    const v = d[i] + amount * (d[i] - blurred[p]);
+    const c = Math.min(255, Math.max(0, v));
+    d[i] = d[i + 1] = d[i + 2] = c;
+  }
+  ctx.putImageData(img, 0, 0);
+  return gray;
+}
+
 function _otsuThreshold(data) {
   const hist = new Array(256).fill(0);
   for (let i = 0; i < data.length; i += 4) hist[data[i]]++;
@@ -300,6 +383,8 @@ async function _updatePreview() {
   const gray = _toGrayscaleCanvas(src);
   const bg   = _estimateBackground(gray);
   _flatFieldCorrect(gray, bg);
+  _applyMedianFilter(gray);
+  _unsharpMask(gray, 2, 2.0);
   if (_mode === 'enhance') _applyEnhance(gray, _strength);
   else _applyClean(gray, _strength);
 

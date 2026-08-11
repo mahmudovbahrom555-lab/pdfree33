@@ -53,6 +53,8 @@ async function handleProcessPage(index, bitmap, mode, strength) {
   const gray = _toGrayscaleCanvas(src);
   const bg   = _estimateBackground(gray);
   _flatFieldCorrect(gray, bg);
+  _applyMedianFilter(gray);
+  _unsharpMask(gray, 2, 2.0);
 
   if (mode === 'enhance') _applyEnhance(gray, strength);
   else _applyClean(gray, strength);
@@ -133,6 +135,109 @@ function _flatFieldCorrect(grayCanvas, bgCanvas) {
     gd[i] = gd[i + 1] = gd[i + 2] = v;
   }
   gctx.putImageData(gImg, 0, 0);
+  return grayCanvas;
+}
+
+// Median filter (3x3) — must run BEFORE the unsharp mask below, not after.
+// Sharpening amplifies whatever high-frequency signal is already there,
+// noise included: a single isolated dust/grain pixel gets its neighbors
+// pulled darker too by the unsharp pass (a box blur average always leans
+// slightly toward its darkest neighbor), turning a 1px speck into a small
+// connected blob that then survives _despeckleMask's "has a dark neighbor"
+// check. A median filter is the standard fix for exactly this class of
+// noise — unlike a mean/box blur it doesn't soften real edges, it just
+// replaces outlier pixels (which is what isolated noise is) with their
+// neighborhood's median value. Denoise, then sharpen — never the reverse.
+function _medianFilterGray(data, w, h) {
+  const out = new Uint8ClampedArray(w * h);
+  const win = new Uint8Array(9);
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      let n = 0;
+      for (let dy = -1; dy <= 1; dy++) {
+        const ny = y + dy;
+        if (ny < 0 || ny >= h) continue;
+        const rowBase = ny * w;
+        for (let dx = -1; dx <= 1; dx++) {
+          const nx = x + dx;
+          if (nx < 0 || nx >= w) continue;
+          win[n++] = data[(rowBase + nx) * 4];
+        }
+      }
+      for (let a = 1; a < n; a++) {
+        const key = win[a];
+        let b = a - 1;
+        while (b >= 0 && win[b] > key) { win[b + 1] = win[b]; b--; }
+        win[b + 1] = key;
+      }
+      out[y * w + x] = win[n >> 1];
+    }
+  }
+  return out;
+}
+
+function _applyMedianFilter(grayCanvas) {
+  const w = grayCanvas.width, h = grayCanvas.height;
+  const ctx = grayCanvas.getContext('2d');
+  const img = ctx.getImageData(0, 0, w, h);
+  const d = img.data;
+  const med = _medianFilterGray(d, w, h);
+  for (let i = 0, p = 0; i < d.length; i += 4, p++) d[i] = d[i + 1] = d[i + 2] = med[p];
+  ctx.putImageData(img, 0, 0);
+  return grayCanvas;
+}
+
+// Unsharp mask — local contrast boost so soft/anti-aliased text edges read
+// as crisp instead of blurred, independent of the darkening curve below
+// (that curve only remaps a pixel's own intensity; it can't sharpen an
+// edge that's genuinely soft across several pixels). This is the standard
+// manual Photoshop fix for exactly this — duplicate the layer, Filter >
+// Other > High Pass at a small radius, set that layer's blend mode to
+// Linear Light. Both steps reduce to closed-form pixel math:
+//   High Pass(r)   = (original − blur(original, r)) + 128
+//   Linear Light   = base + 2×blend − 255
+// Substituting one into the other collapses to the classic unsharp-mask
+// formula, so that's what's implemented directly rather than emulating
+// two separate filter/blend passes:
+//   result = original + amount × (original − blur(original, r))
+// radius=2 matches the small radius that tutorial uses (this needs to
+// sharpen text-stroke edges, not undo the large-radius background-
+// illumination blur above); amount=2 matches what Linear Light's ×2 term
+// actually contributes.
+function _boxBlurGray(data, w, h, radius) {
+  const out = new Float32Array(w * h);
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      let sum = 0, count = 0;
+      for (let dy = -radius; dy <= radius; dy++) {
+        const ny = y + dy;
+        if (ny < 0 || ny >= h) continue;
+        const rowBase = ny * w;
+        for (let dx = -radius; dx <= radius; dx++) {
+          const nx = x + dx;
+          if (nx < 0 || nx >= w) continue;
+          sum += data[(rowBase + nx) * 4];
+          count++;
+        }
+      }
+      out[y * w + x] = sum / count;
+    }
+  }
+  return out;
+}
+
+function _unsharpMask(grayCanvas, radius, amount) {
+  const w = grayCanvas.width, h = grayCanvas.height;
+  const ctx = grayCanvas.getContext('2d');
+  const img = ctx.getImageData(0, 0, w, h);
+  const d = img.data;
+  const blurred = _boxBlurGray(d, w, h, radius);
+  for (let i = 0, p = 0; i < d.length; i += 4, p++) {
+    const v = d[i] + amount * (d[i] - blurred[p]);
+    const c = Math.min(255, Math.max(0, v));
+    d[i] = d[i + 1] = d[i + 2] = c;
+  }
+  ctx.putImageData(img, 0, 0);
   return grayCanvas;
 }
 
