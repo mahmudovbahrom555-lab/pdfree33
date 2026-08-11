@@ -64,6 +64,14 @@ const TOOL_SLUGS = {
   flatten:          '/flatten-pdf/',
   compare:          '/compare-pdf/',
   cleanScan:        '/clean-scan/',
+  organize:         '/organize-pdf/',
+  resize:           '/resize-pdf-for-printing/',
+  unlock:           '/unlock-pdf/',
+  pdf2word:         '/pdf-to-word/',
+  pdf2excel:        '/pdf-to-excel/',
+  pdf2ppt:          '/pdf-to-powerpoint/',
+  pdf2md:           '/pdf-to-markdown/',
+  pdf2pdfa:         '/pdf-to-pdfa/',
 };
 
 // Reverse map pathname → tool key (primary tool slug URLs).
