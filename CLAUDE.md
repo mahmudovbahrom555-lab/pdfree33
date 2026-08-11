@@ -1,7 +1,9 @@
 # PDFree — Claude Code Instructions
 
 ## Stack
-Static site. Vanilla JS ES Modules, no framework. Build: `python3 scripts/build.py` (Jinja2 templates → `dist/`). Deploy: Cloudflare Workers via GitHub Actions. 6 languages: EN/DE/ES/FR/PT/ID (Bahasa Indonesia).
+Static site. Vanilla JS ES Modules, no framework. Build: `python3 scripts/build.py` (Jinja2 templates → `dist/`). Deploy: Cloudflare Workers via GitHub Actions.
+
+**Languages: 14 total, ALL with a real homepage + full UI translation** — EN/DE/ES/FR/PT/ID plus RU/JA/KO/IT/NL/PL/TR/VI (the full list is `HOMEPAGE_LANGS` in `scripts/build.py`). Every one of these 14 has its own `index.html` (or `<lang>/index.html`) with the complete hero/search/tool-card/toolArea homepage, not just a tool page — deeper SEO content investment (blog posts, longer tool-page copy) has historically focused on the first 6, but functionally all 14 are equal. Don't assume "6 languages" when touching anything homepage-related — that used to be written here, was wrong, and caused a real production bug three times (see the checklist below).
 
 ## OFF-LIMITS — never modify
 - `js/vendor/` — bundled third-party libraries
@@ -66,6 +68,33 @@ When a tool is opened, `showToolPage()` in `js/ui.js` hides all homepage section
 
 `showToolPage()` and `showHomePage()` use `querySelectorAll('.js-home-only')` — no JS edits needed, just the class.
 
+## Adding a new tool — homepage checklist
+
+Every tool needs its own `<div id="{tool}Options">` container wherever its UI module's
+`initXOptions()` looks it up (`id('{tool}Options')` / `getElementById('{tool}Options')`) —
+not just on its dedicated page (`scripts/templates/tool-page.html`), but on **all 14 real
+homepages** (`index.html` + one per `HOMEPAGE_LANGS` locale, see Stack above), because the
+homepage embeds the same `#toolArea` inline and can reach any tool client-side (search widget,
+tool-card clicks) without a full page load. Miss it on even one homepage and that tool goes
+silently "stuck" there — no error, `initToolOptions()` just hits an `if (!container) return`
+guard and never loads the file. This happened for real three times (Clean Scan shipped with
+the container nowhere; Organize/Resize made it to `index.html` but not the other homepages;
+then Clean Scan/Organize/Resize were all still missing on 8 of the 14 locales because an
+earlier fix only accounted for 6).
+
+Two layers now guard against this — you shouldn't need to think about it, but know they exist:
+- **`scripts/check_dom.py`** fails the build if any homepage is missing a container some JS
+  module actually references. It discovers "which files are real homepages" dynamically
+  (`id="toolSearch"` marker), not from a hardcoded locale list — don't reintroduce one.
+- **`scripts/build.py`**'s `_heal_homepage_options_containers` auto-injects any still-missing
+  container into `dist/` at build time as a last-resort safety net. If you see its
+  `⚠ auto-healed` warning, fix the source homepage file for real — that warning means
+  check_dom.py's guard was bypassed or a homepage file was hand-edited after the fact.
+
+If you add a tool and want it reachable from the homepage tool-card grid (not just search/direct
+URL — the grid itself is hand-maintained HTML, not auto-generated), you still need to add the
+`<a class="tool-card">` entry to all 14 homepage files by hand — that part isn't automated.
+
 ## Architecture patterns
 - **Tool Registry**: `js/toolRegistry.js` + `js/toolRegistrations.js`
 - **Tool config**: `js/config.js` — TOOLS dict + i18n slugs + language config
@@ -77,8 +106,8 @@ When a tool is opened, `showToolPage()` in `js/ui.js` hides all homepage section
 
 ## SEO — what's already done (don't redo)
 - JSON-LD schemas: SoftwareApplication, HowTo, FAQPage, BreadcrumbList, AggregateRating, Organization, WebSite, Article — on all pages
-- Sitemap: 141 URLs, all 6 locales, changefreq + priority
-- hreflang: all tool pages + blog posts, 7 alternates per page (en/de/es/fr/pt/id/x-default)
+- Sitemap: auto-generated, all locales, changefreq + priority (URL count grows with each new tool — don't hardcode a number when referencing this)
+- hreflang: all tool pages + blog posts, alternates per page across all locales + x-default
 - OG tags + Twitter Cards: 100% coverage
 - LCP font preloads on all pages
 - Security headers: HSTS, X-Frame-Options, Referrer-Policy in `_headers`

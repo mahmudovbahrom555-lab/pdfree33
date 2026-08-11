@@ -123,10 +123,18 @@ def _compute_hashes():
     if os.path.exists(sw_path):
         with open(sw_path, 'rb') as f:
             combined += f.read()
+    # Every locale in HOMEPAGE_LANGS has a real homepage shell — this used to
+    # be a hardcoded 5-locale list (de/es/fr/pt/id) that silently fell out of
+    # sync with HOMEPAGE_LANGS actually having 14. A CSS/HTML-only edit to
+    # any of the other 9 (ru/ja/ko/it/nl/pl/tr/vi) never bumped cache_version,
+    # so already-visited users' Service Worker kept serving the stale cached
+    # shell indefinitely (same failure mode the big comment above this
+    # function describes for app.js/css/sw.js). Deriving the list from
+    # HOMEPAGE_LANGS means a locale gaining a real homepage can't repeat it.
     html_shells = [
-        'index.html', 'de/index.html', 'es/index.html', 'fr/index.html', 'pt/index.html',
-        os.path.join('scripts', 'templates', 'tool-page.html'),
-    ]
+        ('index.html' if lc == 'en' else f'{lc}/index.html')
+        for lc in sorted(HOMEPAGE_LANGS)
+    ] + [os.path.join('scripts', 'templates', 'tool-page.html')]
     for rel in html_shells:
         fpath = os.path.join(ROOT, rel)
         if os.path.isfile(fpath):
@@ -914,6 +922,84 @@ def _should_skip(name, is_dir):
     return ext in SKIP_EXTS
 
 
+# ── Homepage tool-options-container self-healing ────────────────────────────
+#
+# The homepage files (index.html + one per HOMEPAGE_LANGS locale) are hand-
+# maintained, "copied as-is" — every tool ships its own "#<tool>Options"
+# container div (rendered by scripts/templates/tool-page.html on dedicated
+# pages) that ALSO has to exist on every one of these 14 files for the tool
+# to work when reached client-side (search widget, tool-card clicks) instead
+# of via a full page load. Forgetting to add it to even one homepage leaves
+# that tool silently "stuck" there — no error, just initToolOptions() hitting
+# an `if (!container) return` guard. This has happened three separate times
+# (see scripts/check_dom.py's check_homepage_options_parity for the history).
+#
+# check_dom.py catches this before deploy, but only if it's run — and still
+# requires a human to notice the failure and manually patch N locale files.
+# This pass makes the actual output self-healing: any "#<tool>Options" id
+# referenced anywhere in js/*.js that a homepage is missing gets a container
+# injected automatically at build time, so a new tool that never got wired
+# into the homepages by hand still works everywhere instead of shipping
+# broken. check_dom.py remains the source-level guard (it should still be
+# fixed for real — this is a safety net, not a reason to skip that step).
+_OPTIONS_ID_REF_RE = re.compile(r"(?:id\(|getElementById\()['\"]([a-zA-Z0-9_-]*Options)['\"]\)")
+_OPTIONS_ID_DIV_RE = re.compile(r'id="([a-zA-Z0-9_-]*Options)"')
+
+# Kept in sync with scripts/check_dom.py's HOMEPAGE_OPTIONS_EXCLUDE — see
+# that file for the per-id rationale (fill is inline:false/real-navigation
+# only; pdf2pdfa creates its own container dynamically in JS).
+_HOMEPAGE_OPTIONS_EXCLUDE = {'fillOptions', 'pdf2pdfaOptions'}
+
+def _required_options_ids():
+    ids = set()
+    js_dir = os.path.join(ROOT, 'js')
+    for fname in sorted(os.listdir(js_dir)):
+        if not fname.endswith('.js'):
+            continue
+        fpath = os.path.join(js_dir, fname)
+        if not os.path.isfile(fpath):
+            continue
+        with open(fpath, encoding='utf-8', errors='replace') as f:
+            ids.update(_OPTIONS_ID_REF_RE.findall(f.read()))
+    return ids - _HOMEPAGE_OPTIONS_EXCLUDE
+
+def _friendly_options_label(container_id):
+    """'cleanScanOptions' -> 'Clean Scan options' — fallback aria-label for
+    an auto-injected container; a hand-written one in source is always
+    preferred, this only fires when a homepage forgot to add one at all."""
+    base = container_id[:-len('Options')] if container_id.endswith('Options') else container_id
+    words = re.sub(r'(?<!^)(?=[A-Z])', ' ', base).replace('-', ' ').replace('_', ' ')
+    return f'{words.strip().title()} options'
+
+def _heal_homepage_options_containers(dist_root, homepage_langs):
+    required = _required_options_ids()
+    healed = []
+    for lc in sorted(homepage_langs):
+        rel = 'index.html' if lc == 'en' else f'{lc}/index.html'
+        path = os.path.join(dist_root, rel)
+        if not os.path.isfile(path):
+            continue
+        with open(path, encoding='utf-8') as f:
+            text = f.read()
+        present = set(_OPTIONS_ID_DIV_RE.findall(text))
+        missing = sorted(required - present)
+        if not missing:
+            continue
+        anchor = '<button id="mergeBtn"'
+        if anchor not in text:
+            continue  # not a real toolArea homepage shell — leave untouched
+        injected = ''.join(
+            f'    <div id="{mid}" class="j2p-options" style="display:none" '
+            f'aria-label="{_friendly_options_label(mid)}"></div>\n'
+            for mid in missing
+        )
+        text = text.replace(anchor, injected + '    ' + anchor, 1)
+        with open(path, 'w', encoding='utf-8') as f:
+            f.write(text)
+        healed.append((rel, missing))
+    return healed
+
+
 def _copy_static(src_root, dst_root, tool_dirs):
     """Copy everything from src_root to dst_root, skipping SSG-generated tool dirs."""
     copied = 0
@@ -1052,6 +1138,16 @@ def main():
         print('Copying static assets...')
         _copy_static(ROOT, DIST, tool_dirs)
         print('  done')
+
+        # Self-heal any homepage missing a tool's #<tool>Options container
+        # (see _heal_homepage_options_containers's docstring) — a build-time
+        # safety net, not a substitute for check_dom.py catching it in the
+        # source files.
+        healed = _heal_homepage_options_containers(DIST, HOMEPAGE_LANGS)
+        if healed:
+            print('  ⚠ auto-healed missing options containers (fix these in source too):')
+            for rel, missing in healed:
+                print(f'    {rel}: {", ".join(missing)}')
 
         # Inject computed hashes into sw.js and processor.js
         print('Injecting hashes...')
