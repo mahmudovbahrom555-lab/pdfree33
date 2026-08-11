@@ -112,6 +112,7 @@ window.PDFREE_LOCALE = {
   prog_rotate:       'Applicazione rotazioni...',
   prog_organize:     'Ricostruzione del PDF...',
   prog_resize:       'Ridimensionamento delle pagine...',
+  prog_fill_order:       "Riordino dell'ordine di tabulazione...",
   prog_flatten:      'Blocco campi modulo...',
 
   // ── processor.js — batch queue (compress/watermark/protect/pagenum/flatten, 2+ files) ──
@@ -892,6 +893,10 @@ window.PDFREE_LOCALE = {
   fill_no_fields_link:        'Oscura / Annota',
   fill_no_fields_suffix:      ' per sovrapporre del testo.',
   fill_error_prefix:          'Impossibile leggere i campi del modulo: {msg}',
+  fill_tab_order_label:      'Ordine di tabulazione',
+  fill_tab_order_hint:       'Controlla a quale campo salta il tasto Tab successivamente — utile per flussi di lavoro macro/RPA',
+  fill_tab_order_auto:       'Correggi (automatico)',
+  fill_tab_order_manual:     'Personalizza',
 
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Impossibile caricare il motore di rendering PDF. Controlla la tua connessione internet.',

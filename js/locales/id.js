@@ -113,6 +113,7 @@ window.PDFREE_LOCALE = {
   prog_rotate:       'Menerapkan rotasi...',
   prog_organize:     'Membangun ulang PDF...',
   prog_resize:       'Mengubah ukuran halaman...',
+  prog_fill_order:       'Menyusun ulang urutan tab...',
   prog_flatten:      'Mengunci bidang formulir...',
 
   // ── processor.js — batch queue (compress/watermark/protect/pagenum/flatten, 2+ files) ──
@@ -893,6 +894,10 @@ window.PDFREE_LOCALE = {
   fill_no_fields_link:        'Hapus Teks / Anotasi',
   fill_no_fields_suffix:      ' untuk menumpangkan teks.',
   fill_error_prefix:          'Tidak dapat membaca kolom formulir: {msg}',
+  fill_tab_order_label:      'Urutan tab',
+  fill_tab_order_hint:       'Menentukan bidang mana yang dituju tombol Tab berikutnya — berguna untuk alur kerja makro/RPA',
+  fill_tab_order_auto:       'Perbaiki (otomatis)',
+  fill_tab_order_manual:     'Sesuaikan',
 
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Gagal memuat perender PDF. Periksa koneksi internet Anda.',

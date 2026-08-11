@@ -24,6 +24,7 @@ import { id }                from './utils.js';
 import { loadPdfJs }         from './pdf2jpgUI.js';
 import { setButtonDisabled } from './ui.js';
 import { t, tp }             from './i18n.js';
+import { bindDragReorder }   from './dragReorder.js';
 
 // Locale-correct slug for the "Redact / Annotate" cross-link in the
 // no-fillable-fields hint below. This module is shared across every locale's
@@ -62,6 +63,14 @@ let _sigModal    = null; // active signature pad DOM node
 let _loading     = false; // true while _extractAndRender is in progress
 let _generation  = 0;    // incremented on each new extraction; stale calls bail early
 
+// ── Custom tab order ──────────────────────────────────────────
+// null: no reorder requested (default — output keeps the PDF's original
+// tab order). 'auto': fillOrderWorker sorts by visual position, no
+// _fieldOrder needed. 'manual': _fieldOrder (below) is the user's
+// drag-arranged field-NAME order, sent as-is to the worker.
+let _tabOrderMode = null;   // null | 'auto' | 'manual'
+let _fieldOrder   = [];     // field names, manual mode only
+
 // ── Public API ────────────────────────────────────────────────
 
 export function initFillOptions(file) {
@@ -77,6 +86,7 @@ export function hideFillOptions() {
   if (el) { el.style.display = 'none'; el.innerHTML = ''; }
   _closeSigPad();
   _fields = []; _values = {}; _draftKey = null; _sigImages = {}; _loading = false; _generation++;
+  _tabOrderMode = null; _fieldOrder = [];
 }
 
 export function getFillParams() {
@@ -91,6 +101,8 @@ export function getFillParams() {
       _fields.map(f => [f.name, { editable: !!f.editable }])
     ),
     flatten:         document.getElementById('fillFlattenToggle')?.checked ?? true,
+    tabOrderMode:    _tabOrderMode,
+    tabOrder:        _tabOrderMode === 'manual' ? [..._fieldOrder] : undefined,
   };
 }
 
@@ -133,6 +145,8 @@ async function _extractAndRender(file, container) {
     }
 
     _sigImages = {};
+    _tabOrderMode = null;
+    _fieldOrder = [];
     _draftKey = `pdfree_fill_${file.name}_${file.size}_${file.lastModified}`;
     const draft = _loadDraft(_draftKey);
     _values = draft || _defaultValues(_fields);
@@ -319,8 +333,83 @@ function _buildFormHTML(fields) {
       </label>
     </div>`;
 
+  html += _tabOrderBlockHTML(fields);
+
   html += `</div>`;
   return html;
+}
+
+// ── Custom tab order ─────────────────────────────────────────
+
+function _tabOrderModeBtn(mode, label) {
+  const active = _tabOrderMode === mode;
+  return `<button type="button" data-tab-order-mode="${mode}" style="
+    padding:8px 12px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;
+    border:1.5px solid ${active ? 'var(--green)' : 'var(--border)'};
+    background:${active ? 'var(--green-light)' : 'var(--surface)'};
+    color:${active ? 'var(--green)' : 'var(--text2)'};">${label}</button>`;
+}
+
+function _tabOrderBlockHTML(fields) {
+  const orderable = fields.length > 1;
+  if (!orderable) return '';
+  return `
+    <div id="fillTabOrderBlock" style="margin-top:12px;padding:12px 16px;background:var(--surface);
+      border:1px solid var(--border);border-radius:10px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+        <div>
+          <p style="margin:0;font-size:13px;font-weight:600;color:var(--text);">${t('fill_tab_order_label')}</p>
+          <p style="margin:2px 0 0;font-size:12px;color:var(--text3);">${t('fill_tab_order_hint')}</p>
+        </div>
+        <div style="display:flex;gap:6px;">
+          ${_tabOrderModeBtn('auto', t('fill_tab_order_auto'))}
+          ${_tabOrderModeBtn('manual', t('fill_tab_order_manual'))}
+        </div>
+      </div>
+      <div id="fillTabOrderList" style="margin-top:12px;${_tabOrderMode === 'manual' ? '' : 'display:none;'}">
+        ${_tabOrderMode === 'manual' ? _fieldOrderListHTML() : ''}
+      </div>
+    </div>`;
+}
+
+function _fieldOrderListHTML() {
+  return `<div style="display:flex;flex-direction:column;gap:6px;">
+    ${_fieldOrder.map((name, i) => {
+      const f = _fields.find(x => x.name === name);
+      return `<div class="fill-order-item" data-i="${i}" draggable="true" style="
+        display:flex;align-items:center;gap:10px;padding:9px 12px;
+        border:1.5px solid var(--border);border-radius:8px;background:var(--bg,var(--surface));
+        cursor:grab;font-size:13px;color:var(--text);">
+        <span aria-hidden="true" style="color:var(--text3);font-size:14px;">☰</span>
+        <span style="flex:1;">${_esc(f ? f.label : name)}</span>
+      </div>`;
+    }).join('')}
+  </div>`;
+}
+
+function _bindFieldOrderDrag() {
+  const list = document.getElementById('fillTabOrderList');
+  if (!list) return;
+  bindDragReorder({
+    container:    list,
+    itemSelector: '.fill-order-item',
+    arrays:       [_fieldOrder],
+    onReorder:    () => { list.innerHTML = _fieldOrderListHTML(); _bindFieldOrderDrag(); },
+    mode:         'list',
+  });
+}
+
+function _setTabOrderMode(mode, container) {
+  _tabOrderMode = _tabOrderMode === mode ? null : mode; // click active mode again to turn off
+
+  if (_tabOrderMode === 'manual' && _fieldOrder.length === 0) {
+    _fieldOrder = _fields.map(f => f.name);
+  }
+
+  const block = container.querySelector('#fillTabOrderBlock');
+  if (!block) return;
+  block.outerHTML = _tabOrderBlockHTML(_fields);
+  if (_tabOrderMode === 'manual') _bindFieldOrderDrag();
 }
 
 function _fieldHTML(f) {
@@ -452,9 +541,11 @@ function _bindEvents(container) {
   container.removeEventListener('input',  _onInput);
   container.removeEventListener('change', _onInput);
   container.removeEventListener('click',  _onSigClick);
+  container.removeEventListener('click',  _onTabOrderClick);
   container.addEventListener('input',  _onInput);
   container.addEventListener('change', _onInput);
   container.addEventListener('click',  _onSigClick);
+  container.addEventListener('click',  _onTabOrderClick);
 }
 
 function _onSigClick(e) {
@@ -464,6 +555,13 @@ function _onSigClick(e) {
   const rect      = JSON.parse(btn.dataset.sigRect  || '[0,0,200,60]');
   const pageIndex = parseInt(btn.dataset.sigPage || '0', 10);
   _openSigPad(fieldName, rect, pageIndex);
+}
+
+function _onTabOrderClick(e) {
+  const btn = e.target.closest('[data-tab-order-mode]');
+  if (!btn) return;
+  const container = id('fillOptions');
+  if (container) _setTabOrderMode(btn.dataset.tabOrderMode, container);
 }
 
 function _onInput(e) {

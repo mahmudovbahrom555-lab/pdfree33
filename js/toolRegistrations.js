@@ -356,7 +356,7 @@ registerTool('protect', {
 });
 
 registerTool('fill', {
-  runner:     'worker',
+  runner:     'fillOrder', // dedicated js/fillOrderWorker.js runs first (tab order), then falls through to the shared js/worker.js fill pipeline — see processor.js's _runFillOrder
   workerTool: 'fill',
   init:       initFillOptions,
   hide:       hideFillOptions,

@@ -2185,6 +2185,10 @@ button,
 .org-card.drag-target .rot-numbox { outline: 2px solid var(--green); outline-offset: 2px; }
 .org-card.touch-dragging { z-index: 5; box-shadow: var(--shadow-lg); }
 
+.fill-order-item.dragging     { opacity: .4; border-style: dashed; }
+.fill-order-item.drag-target  { border-color: var(--green); background: var(--green-light); }
+.fill-order-item.touch-dragging { z-index: 5; box-shadow: var(--shadow-lg); touch-action: none; }
+
 .org-card--deleted {
   opacity: .45;
   border-style: dashed;

@@ -113,6 +113,7 @@ window.PDFREE_LOCALE = {
   prog_rotate:       'Применение поворота...',
   prog_organize:     'Пересборка PDF...',
   prog_resize:       'Изменение размера страниц...',
+  prog_fill_order:       'Изменение порядка перехода Tab...',
   prog_flatten:      'Блокировка полей формы...',
 
   // ── processor.js — batch queue (compress/watermark/protect/pagenum/flatten, 2+ files) ──
@@ -893,6 +894,10 @@ window.PDFREE_LOCALE = {
   fill_no_fields_link:        'Скрыть текст / Аннотировать',
   fill_no_fields_suffix:      ' для наложения текста.',
   fill_error_prefix:          'Не удалось прочитать поля формы: {msg}',
+  fill_tab_order_label:      'Порядок Tab',
+  fill_tab_order_hint:       'Определяет, на какое поле переходит клавиша Tab дальше — полезно для макросов и RPA',
+  fill_tab_order_auto:       'Исправить (авто)',
+  fill_tab_order_manual:     'Настроить',
 
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Не удалось загрузить рендерер PDF. Проверьте подключение к интернету.',

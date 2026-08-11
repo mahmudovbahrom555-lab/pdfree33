@@ -112,6 +112,7 @@ window.PDFREE_LOCALE = {
   prog_rotate:       'Rotaties toepassen...',
   prog_organize:     'PDF wordt herbouwd...',
   prog_resize:       "Pagina's worden aangepast...",
+  prog_fill_order:       'Tabvolgorde wordt aangepast...',
   prog_flatten:      'Formuliervelden vergrendelen...',
 
   // ── processor.js — batch queue (compress/watermark/protect/pagenum/flatten, 2+ files) ──
@@ -892,6 +893,10 @@ window.PDFREE_LOCALE = {
   fill_no_fields_link:        'Zwartmaken / Annoteren',
   fill_no_fields_suffix:      '-tool om tekst overheen te plaatsen.',
   fill_error_prefix:          'Kan formuliervelden niet lezen: {msg}',
+  fill_tab_order_label:      'Tabvolgorde',
+  fill_tab_order_hint:       'Bepaalt naar welk veld de Tab-toets vervolgens springt — handig voor macro-/RPA-workflows',
+  fill_tab_order_auto:       'Herstellen (automatisch)',
+  fill_tab_order_manual:     'Aanpassen',
 
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Laden van PDF-renderer mislukt. Controleer je internetverbinding.',

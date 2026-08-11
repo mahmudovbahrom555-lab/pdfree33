@@ -112,6 +112,7 @@ window.PDFREE_LOCALE = {
   prog_rotate:       'Application des rotations...',
   prog_organize:     'Reconstruction du PDF...',
   prog_resize:       'Redimensionnement des pages...',
+  prog_fill_order:       "Réorganisation de l'ordre de tabulation...",
   prog_flatten:      'Verrouillage des champs du formulaire...',
 
   // ── processor.js — batch queue (compress/watermark/protect/pagenum/flatten, 2+ files) ──
@@ -894,6 +895,10 @@ window.PDFREE_LOCALE = {
   fill_no_fields_link:        'Caviarder / Annoter',
   fill_no_fields_suffix:      ' pour superposer du texte.',
   fill_error_prefix:          'Impossible de lire les champs du formulaire : {msg}',
+  fill_tab_order_label:      'Ordre de tabulation',
+  fill_tab_order_hint:       'Détermine vers quel champ la touche Tab passe ensuite — utile pour les workflows macro/RPA',
+  fill_tab_order_auto:       'Corriger (auto)',
+  fill_tab_order_manual:     'Personnaliser',
 
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Échec du chargement du moteur de rendu PDF. Vérifiez votre connexion internet.',

@@ -285,6 +285,7 @@ export async function doProcess(currentTool, extraParams = {}) {
     worker:       () => _runWorkerTool(getWorkerTool(currentTool) ?? currentTool, filesSnapshot, extraParams),
     organize:     () => _runOrganize(filesSnapshot, extraParams),
     resize:       () => _runResize(filesSnapshot, extraParams),
+    fillOrder:    () => _runFillOrder(filesSnapshot, extraParams),
     'redact-true': () => _runRedactTrue(filesSnapshot, extraParams),
   };
 
@@ -638,6 +639,65 @@ async function _runResize(filesSnapshot, { targetSize = 'a4', mode = 'fit', marg
     setFilesLocked(false);
     hideCancelBtn();
     _handleError('resize', e.message || 'Worker error');
+  };
+}
+
+// ── Fill: custom tab order ────────────────────────────────────
+//
+// Own persistent Worker instance, same rationale as _organizeWorker/
+// _resizeWorker above. Must run BEFORE the shared-worker fill pipeline,
+// on the original unfilled bytes — js/worker.js's handleFill() defaults
+// to flatten()ing the form, which deletes the AcroForm/widget dicts
+// entirely, leaving nothing left to reorder afterward. This worker only
+// mutates structural field order (/Annots + /Tabs); values, fonts,
+// flatten and signatures all still go through the existing, unmodified
+// _runWorkerTool('fill', ...) pipeline exactly as before.
+let _fillOrderWorker = null;
+function _ensureFillOrderWorker() {
+  if (!_fillOrderWorker) {
+    _fillOrderWorker = new Worker(new URL('./fillOrderWorker.js', import.meta.url));
+  }
+  return _fillOrderWorker;
+}
+
+async function _runFillOrder(filesSnapshot, params) {
+  const { tabOrderMode, tabOrder, ...fillParams } = params;
+  if (!tabOrderMode) {
+    await _runWorkerTool('fill', filesSnapshot, fillParams);
+    return;
+  }
+
+  if (!_checkSize(filesSnapshot[0], 200)) { _abortUI(); return; }
+  const file     = filesSnapshot[0];
+  const original = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await file.arrayBuffer());
+  setProgress(3, t('prog_fill_order'));
+
+  const worker = _ensureFillOrderWorker();
+  worker.postMessage({ file: original, options: { mode: tabOrderMode, fieldOrder: tabOrder } }, [original]);
+
+  // Intermediate progress from fillOrderWorker is intentionally not
+  // forwarded — reordering is near-instant and _runWorkerTool's own
+  // setProgress(5, ...) takes over right after, so relaying fine-grained
+  // percentages here would just make the bar jump backward at the handoff.
+  worker.onmessage = (e) => {
+    const data = e.data;
+    if (data.type === 'done') {
+      if (!(data.result instanceof ArrayBuffer)) {
+        _handleError('fill', 'Unexpected result from worker'); return;
+      }
+      _runWorkerTool('fill', filesSnapshot, fillParams, data.result);
+    } else if (data.type === 'error') {
+      isProcessing = false;
+      setFilesLocked(false);
+      hideCancelBtn();
+      _handleError('fill', data.message);
+    }
+  };
+  worker.onerror = (e) => {
+    isProcessing = false;
+    setFilesLocked(false);
+    hideCancelBtn();
+    _handleError('fill', e.message || 'Worker error');
   };
 }
 
@@ -1009,11 +1069,14 @@ async function _runPdf2Jpg(filesSnapshot, { pages, format, dpi, zip }) {
 // Используется для watermark, pagenum, meta — все следуют одному
 // паттерну: один файл → worker → ArrayBuffer → Blob → success.
 
-async function _runWorkerTool(tool, filesSnapshot, params) {
+// bufferOverride: used by _runFillOrder to hand off already-reordered
+// bytes instead of re-reading/preprocessing the original file — every
+// other caller omits it and behaves exactly as before.
+async function _runWorkerTool(tool, filesSnapshot, params, bufferOverride) {
   const file   = filesSnapshot[0];
   const limits = { watermark: 200, pagenum: 200, meta: 200, protect: 200, rotate: 150, redact: 150, fill: 200, flatten: 200 };
   if (!_checkSize(file, limits[tool] ?? 200)) { _abortUI(); return; }
-  const buffer = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await file.arrayBuffer());
+  const buffer = bufferOverride ?? (file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await file.arrayBuffer()));
 
   const labelMap = {
     watermark: t('prog_watermark'),

@@ -113,6 +113,7 @@ window.PDFREE_LOCALE = {
   prog_rotate:       'Drehungen werden angewendet...',
   prog_organize:     'PDF wird neu aufgebaut...',
   prog_resize:       'Seiten werden angepasst...',
+  prog_fill_order:       'Tab-Reihenfolge wird angepasst...',
   prog_flatten:      'Formularfelder werden fixiert...',
 
   // ── processor.js — batch queue (compress/watermark/protect/pagenum/flatten, 2+ files) ──
@@ -895,6 +896,10 @@ window.PDFREE_LOCALE = {
   fill_no_fields_link:        'Schwärzen / Kommentieren',
   fill_no_fields_suffix:      '-Tool, um Text zu überlagern.',
   fill_error_prefix:          'Formularfelder konnten nicht gelesen werden: {msg}',
+  fill_tab_order_label:      'Tab-Reihenfolge',
+  fill_tab_order_hint:       'Bestimmt, zu welchem Feld die Tab-Taste als Nächstes springt – nützlich für Makro-/RPA-Workflows',
+  fill_tab_order_auto:       'Automatisch korrigieren',
+  fill_tab_order_manual:     'Anpassen',
 
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'PDF-Renderer konnte nicht geladen werden. Überprüfe deine Internetverbindung.',

@@ -115,6 +115,7 @@ window.PDFREE_LOCALE = {
   prog_rotate:       '回転を適用しています...',
   prog_organize:     'PDFを再構築しています...',
   prog_resize:       'ページのサイズを変更しています...',
+  prog_fill_order:       'タブ順を並べ替え中...',
   prog_flatten:      'フォームフィールドを固定しています...',
 
   // ── processor.js — batch queue (compress/watermark/protect/pagenum/flatten, 2+ files) ──
@@ -895,6 +896,10 @@ window.PDFREE_LOCALE = {
   fill_no_fields_link:        '黒塗り / 注釈',
   fill_no_fields_suffix:      'ツールを使用してテキストを重ねてください。',
   fill_error_prefix:          'フォームフィールドを読み込めませんでした: {msg}',
+  fill_tab_order_label:      'タブ順',
+  fill_tab_order_hint:       'Tabキーで次に移動するフィールドを制御します — マクロ/RPAワークフローに便利です',
+  fill_tab_order_auto:       '自動修正',
+  fill_tab_order_manual:     'カスタマイズ',
 
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'PDFレンダラーの読み込みに失敗しました。インターネット接続を確認してください。',

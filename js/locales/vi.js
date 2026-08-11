@@ -113,6 +113,7 @@ window.PDFREE_LOCALE = {
   prog_rotate:       'Đang áp dụng xoay...',
   prog_organize:     'Đang xây dựng lại PDF...',
   prog_resize:       'Đang thay đổi kích thước trang...',
+  prog_fill_order:       'Đang sắp xếp lại thứ tự Tab...',
   prog_flatten:      'Đang khóa trường biểu mẫu...',
 
   // ── processor.js — batch queue (compress/watermark/protect/pagenum/flatten, 2+ files) ──
@@ -893,6 +894,10 @@ window.PDFREE_LOCALE = {
   fill_no_fields_link:        'Xóa văn bản / Chú thích',
   fill_no_fields_suffix:      ' để phủ văn bản lên.',
   fill_error_prefix:          'Không thể đọc các trường biểu mẫu: {msg}',
+  fill_tab_order_label:      'Thứ tự Tab',
+  fill_tab_order_hint:       'Kiểm soát trường nào phím Tab sẽ chuyển đến tiếp theo — hữu ích cho quy trình macro/RPA',
+  fill_tab_order_auto:       'Sửa (tự động)',
+  fill_tab_order_manual:     'Tùy chỉnh',
 
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Không thể tải trình kết xuất PDF. Kiểm tra kết nối internet của bạn.',

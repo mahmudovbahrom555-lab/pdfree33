@@ -112,6 +112,7 @@ window.PDFREE_LOCALE = {
   prog_rotate:       'Rotasyonlar uygulanıyor...',
   prog_organize:     'PDF yeniden oluşturuluyor...',
   prog_resize:       'Sayfa boyutu değiştiriliyor...',
+  prog_fill_order:       'Sekme sırası yeniden düzenleniyor...',
   prog_flatten:      'Form alanları kilitleniyor...',
 
   // ── processor.js — batch queue (compress/watermark/protect/pagenum/flatten, 2+ files) ──
@@ -892,6 +893,10 @@ window.PDFREE_LOCALE = {
   fill_no_fields_link:        'PDF Gizle / Not Ekle',
   fill_no_fields_suffix:      ' aracını kullanarak metin ekleyebilirsiniz.',
   fill_error_prefix:          'Form alanları okunamadı: {msg}',
+  fill_tab_order_label:      'Sekme sırası',
+  fill_tab_order_hint:       'Tab tuşunun sırada hangi alana geçeceğini belirler — makro/RPA iş akışları için kullanışlıdır',
+  fill_tab_order_auto:       'Düzelt (otomatik)',
+  fill_tab_order_manual:     'Özelleştir',
 
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'PDF işleyicisi yüklenemedi. İnternet bağlantınızı kontrol edin.',

@@ -114,6 +114,7 @@ window.PDFREE_LOCALE = {
   prog_rotate:       '회전 적용 중...',
   prog_organize:     'PDF 재구성 중...',
   prog_resize:       '페이지 크기 조정 중...',
+  prog_fill_order:       '탭 순서 재정렬 중...',
   prog_flatten:      '양식 필드 잠금 중...',
 
   // ── processor.js — batch queue (compress/watermark/protect/pagenum/flatten, 2+ files) ──
@@ -894,6 +895,10 @@ window.PDFREE_LOCALE = {
   fill_no_fields_link:        'PDF 가리기 / 주석',
   fill_no_fields_suffix:      ' 도구를 사용해 텍스트를 겹쳐보세요.',
   fill_error_prefix:          '양식 필드를 읽을 수 없습니다: {msg}',
+  fill_tab_order_label:      '탭 순서',
+  fill_tab_order_hint:       'Tab 키가 다음으로 이동할 필드를 제어합니다 — 매크로/RPA 워크플로우에 유용합니다',
+  fill_tab_order_auto:       '수정 (자동)',
+  fill_tab_order_manual:     '사용자 지정',
 
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'PDF 렌더러를 불러오지 못했습니다. 인터넷 연결을 확인하세요.',

@@ -99,6 +99,7 @@ export const EN = {
   prog_rotate:       'Applying rotations...',
   prog_organize:     'Rebuilding PDF...',
   prog_resize:       'Resizing pages...',
+  prog_fill_order:   'Reordering tab order...',
   prog_redact:       'Covering areas...',
   prog_flatten:      'Flattening form fields...',
 
@@ -915,6 +916,10 @@ export const EN = {
   fill_no_fields_link:       'Redact / Annotate',
   fill_no_fields_suffix:     ' tool to overlay text.',
   fill_error_prefix:         'Could not read form fields: {msg}',
+  fill_tab_order_label:      'Tab order',
+  fill_tab_order_hint:       'Controls what field the Tab key jumps to next — useful for macro/RPA workflows',
+  fill_tab_order_auto:       'Fix (auto)',
+  fill_tab_order_manual:     'Customize',
 
   // ── drawUI.js + drawPointer.js ──────────────────────────────────
   draw_load_renderer_failed:   'Failed to load PDF renderer. Check your internet connection.',
