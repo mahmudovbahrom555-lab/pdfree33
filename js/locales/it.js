@@ -897,6 +897,7 @@ window.PDFREE_LOCALE = {
   fill_tab_order_hint:       'Controlla a quale campo salta il tasto Tab successivamente — utile per flussi di lavoro macro/RPA',
   fill_tab_order_auto:       'Correggi (automatico)',
   fill_tab_order_manual:     'Personalizza',
+  fill_tab_order_flatten_note: "L'opzione Appiattisci campi qui sopra è stata disattivata — un PDF appiattito non ha più campi tra cui spostarsi con Tab.",
 
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Impossibile caricare il motore di rendering PDF. Controlla la tua connessione internet.',

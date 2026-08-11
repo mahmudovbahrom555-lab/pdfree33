@@ -897,6 +897,7 @@ window.PDFREE_LOCALE = {
   fill_tab_order_hint:       'Bepaalt naar welk veld de Tab-toets vervolgens springt — handig voor macro-/RPA-workflows',
   fill_tab_order_auto:       'Herstellen (automatisch)',
   fill_tab_order_manual:     'Aanpassen',
+  fill_tab_order_flatten_note: 'De optie "Velden afvlakken" hierboven is uitgeschakeld — een afgevlakt PDF heeft geen velden meer om met Tab te doorlopen.',
 
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Laden van PDF-renderer mislukt. Controleer je internetverbinding.',

@@ -898,6 +898,7 @@ window.PDFREE_LOCALE = {
   fill_tab_order_hint:       'Определяет, на какое поле переходит клавиша Tab дальше — полезно для макросов и RPA',
   fill_tab_order_auto:       'Исправить (авто)',
   fill_tab_order_manual:     'Настроить',
+  fill_tab_order_flatten_note: 'Опция "Зафиксировать поля" выше была отключена — в зафиксированном PDF больше нет полей для перехода клавишей Tab.',
 
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Не удалось загрузить рендерер PDF. Проверьте подключение к интернету.',

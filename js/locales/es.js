@@ -899,6 +899,7 @@ window.PDFREE_LOCALE = {
   fill_tab_order_hint:       'Controla a qué campo salta la tecla Tab a continuación — útil para flujos de macros/RPA',
   fill_tab_order_auto:       'Corregir (automático)',
   fill_tab_order_manual:     'Personalizar',
+  fill_tab_order_flatten_note: 'Se desactivó "Aplanar campos" arriba — un PDF aplanado no tiene campos por los que navegar con Tab.',
 
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'No se pudo cargar el renderizador de PDF. Comprueba tu conexión a internet.',

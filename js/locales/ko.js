@@ -899,6 +899,7 @@ window.PDFREE_LOCALE = {
   fill_tab_order_hint:       'Tab 키가 다음으로 이동할 필드를 제어합니다 — 매크로/RPA 워크플로우에 유용합니다',
   fill_tab_order_auto:       '수정 (자동)',
   fill_tab_order_manual:     '사용자 지정',
+  fill_tab_order_flatten_note: '위의 "필드 평면화" 옵션이 꺼졌습니다 — 평면화된 PDF에는 Tab으로 이동할 필드가 남아 있지 않습니다.',
 
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'PDF 렌더러를 불러오지 못했습니다. 인터넷 연결을 확인하세요.',

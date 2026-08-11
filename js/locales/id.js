@@ -898,6 +898,7 @@ window.PDFREE_LOCALE = {
   fill_tab_order_hint:       'Menentukan bidang mana yang dituju tombol Tab berikutnya — berguna untuk alur kerja makro/RPA',
   fill_tab_order_auto:       'Perbaiki (otomatis)',
   fill_tab_order_manual:     'Sesuaikan',
+  fill_tab_order_flatten_note: 'Opsi "Ratakan kolom" di atas dinonaktifkan — PDF yang diratakan tidak memiliki kolom lagi untuk dijelajahi dengan Tab.',
 
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Gagal memuat perender PDF. Periksa koneksi internet Anda.',

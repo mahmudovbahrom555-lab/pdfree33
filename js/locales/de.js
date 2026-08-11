@@ -900,6 +900,7 @@ window.PDFREE_LOCALE = {
   fill_tab_order_hint:       'Bestimmt, zu welchem Feld die Tab-Taste als Nächstes springt – nützlich für Makro-/RPA-Workflows',
   fill_tab_order_auto:       'Automatisch korrigieren',
   fill_tab_order_manual:     'Anpassen',
+  fill_tab_order_flatten_note: 'Option "Felder fixieren" oben wurde deaktiviert – ein fixiertes PDF hat keine Felder mehr zum Durchtabben.',
 
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'PDF-Renderer konnte nicht geladen werden. Überprüfe deine Internetverbindung.',

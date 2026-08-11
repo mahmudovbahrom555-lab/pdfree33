@@ -897,6 +897,7 @@ window.PDFREE_LOCALE = {
   fill_tab_order_hint:       'Określa, do którego pola przeskoczy klawisz Tab — przydatne w procesach makro/RPA',
   fill_tab_order_auto:       'Napraw (automatycznie)',
   fill_tab_order_manual:     'Dostosuj',
+  fill_tab_order_flatten_note: 'Opcja "Spłaszcz pola" powyżej została wyłączona — spłaszczony PDF nie ma już pól do przechodzenia klawiszem Tab.',
 
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Nie udało się załadować renderera PDF. Sprawdź połączenie internetowe.',

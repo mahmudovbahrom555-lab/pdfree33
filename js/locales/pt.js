@@ -899,6 +899,7 @@ window.PDFREE_LOCALE = {
   fill_tab_order_hint:       'Controla para qual campo a tecla Tab avança em seguida — útil para fluxos de macro/RPA',
   fill_tab_order_auto:       'Corrigir (automático)',
   fill_tab_order_manual:     'Personalizar',
+  fill_tab_order_flatten_note: 'A opção "Nivelar campos" acima foi desativada — um PDF nivelado não tem mais campos para navegar com Tab.',
 
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Falha ao carregar o renderizador de PDF. Verifique sua conexão com a internet.',

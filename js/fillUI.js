@@ -366,6 +366,7 @@ function _tabOrderBlockHTML(fields) {
           ${_tabOrderModeBtn('manual', t('fill_tab_order_manual'))}
         </div>
       </div>
+      ${_tabOrderMode ? `<p style="margin:8px 0 0;font-size:11px;color:var(--text3);">${t('fill_tab_order_flatten_note')}</p>` : ''}
       <div id="fillTabOrderList" style="margin-top:12px;${_tabOrderMode === 'manual' ? '' : 'display:none;'}">
         ${_tabOrderMode === 'manual' ? _fieldOrderListHTML() : ''}
       </div>
@@ -404,6 +405,14 @@ function _setTabOrderMode(mode, container) {
 
   if (_tabOrderMode === 'manual' && _fieldOrder.length === 0) {
     _fieldOrder = _fields.map(f => f.name);
+  }
+
+  // A flattened PDF has no interactive fields left at all — reordering
+  // tab order would have zero visible effect in the output. Auto-uncheck
+  // so the feature isn't silently a no-op behind the default-on checkbox.
+  if (_tabOrderMode) {
+    const flattenBox = container.querySelector('#fillFlattenToggle');
+    if (flattenBox) flattenBox.checked = false;
   }
 
   const block = container.querySelector('#fillTabOrderBlock');

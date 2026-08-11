@@ -900,6 +900,7 @@ window.PDFREE_LOCALE = {
   fill_tab_order_hint:       'Tabキーで次に移動するフィールドを制御します — マクロ/RPAワークフローに便利です',
   fill_tab_order_auto:       '自動修正',
   fill_tab_order_manual:     'カスタマイズ',
+  fill_tab_order_flatten_note: '上の「フィールドを固定化」はオフになりました — 固定化されたPDFにはTabで移動できるフィールドが残りません。',
 
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'PDFレンダラーの読み込みに失敗しました。インターネット接続を確認してください。',

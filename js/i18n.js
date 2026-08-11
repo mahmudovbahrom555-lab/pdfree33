@@ -920,6 +920,7 @@ export const EN = {
   fill_tab_order_hint:       'Controls what field the Tab key jumps to next — useful for macro/RPA workflows',
   fill_tab_order_auto:       'Fix (auto)',
   fill_tab_order_manual:     'Customize',
+  fill_tab_order_flatten_note: 'Turned off "Flatten" above — a flattened PDF has no fields left to tab through.',
 
   // ── drawUI.js + drawPointer.js ──────────────────────────────────
   draw_load_renderer_failed:   'Failed to load PDF renderer. Check your internet connection.',

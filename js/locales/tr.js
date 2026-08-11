@@ -897,6 +897,7 @@ window.PDFREE_LOCALE = {
   fill_tab_order_hint:       'Tab tuşunun sırada hangi alana geçeceğini belirler — makro/RPA iş akışları için kullanışlıdır',
   fill_tab_order_auto:       'Düzelt (otomatik)',
   fill_tab_order_manual:     'Özelleştir',
+  fill_tab_order_flatten_note: "Yukarıdaki Alanları düzleştir seçeneği kapatıldı — düzleştirilmiş bir PDF'de Tab ile gezinilecek alan kalmaz.",
 
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'PDF işleyicisi yüklenemedi. İnternet bağlantınızı kontrol edin.',

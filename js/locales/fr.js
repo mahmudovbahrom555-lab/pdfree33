@@ -899,6 +899,7 @@ window.PDFREE_LOCALE = {
   fill_tab_order_hint:       'Détermine vers quel champ la touche Tab passe ensuite — utile pour les workflows macro/RPA',
   fill_tab_order_auto:       'Corriger (auto)',
   fill_tab_order_manual:     'Personnaliser',
+  fill_tab_order_flatten_note: "L'option « Aplatir les champs » ci-dessus a été désactivée — un PDF aplati n'a plus de champs pour naviguer avec Tab.",
 
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Échec du chargement du moteur de rendu PDF. Vérifiez votre connexion internet.',

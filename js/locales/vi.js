@@ -898,6 +898,7 @@ window.PDFREE_LOCALE = {
   fill_tab_order_hint:       'Kiểm soát trường nào phím Tab sẽ chuyển đến tiếp theo — hữu ích cho quy trình macro/RPA',
   fill_tab_order_auto:       'Sửa (tự động)',
   fill_tab_order_manual:     'Tùy chỉnh',
+  fill_tab_order_flatten_note: 'Đã tắt tùy chọn "Làm phẳng các trường" ở trên — PDF đã làm phẳng không còn trường nào để di chuyển bằng Tab.',
 
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Không thể tải trình kết xuất PDF. Kiểm tra kết nối internet của bạn.',
