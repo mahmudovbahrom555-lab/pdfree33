@@ -165,19 +165,56 @@ function _otsuThreshold(data) {
 // Clean (Hard) mode: threshold the flat-field-corrected image. The
 // Strength slider (0..1, default 0.5) nudges the Otsu-computed baseline
 // rather than making the user pick a raw 0–255 number from scratch.
-// Sub-threshold pixels get darkened, not a hard drop to 0 — hard
-// binarization destroys anti-aliased edges on small text.
 //
 // Darkening is a gamma curve on each pixel's distance below the threshold,
-// not a flat offset — a flat "-30" barely dented faint/thin/anti-aliased
-// strokes near the threshold (e.g. a pixel at 180 stayed a washed-out 150,
-// the "letters aren't dark enough" bug), while ink that was already near-
-// black needed no help at all and got the same treatment for nothing.
-// Normalizing each pixel to its fraction of the threshold and raising it to
-// gamma>1 pulls faint strokes toward black hard while barely touching ink
-// that's already dark — the same asymmetric correction a manual Photoshop
-// cleanup gets from pulling the Levels/Curves black-input slider toward the
-// midtones after isolating the background.
+// not a flat offset or a hard 0/255 split — real-world feedback (across
+// three rounds against an actual scanned book page, not just a synthetic
+// test) settled on gamma=3/darkCap=20: sub-threshold pixels now land in a
+// narrow near-black band (0–20) instead of a genuinely graduated one, i.e.
+// close to hard binarization but keeping a sliver of range so the very
+// faintest classified-as-text edge pixels aren't bit-identical to solid
+// ink. Earlier, gentler curves (flat "-30", then gamma=2.2/darkCap=90,
+// then gamma=2.4/darkCap=45) were each an improvement but still read as
+// "gray, not dark enough" once tested on real text instead of a synthetic
+// gradient — same asymmetric correction a manual Photoshop cleanup gets
+// from pulling the Levels/Curves black-input slider hard toward the
+// midtones after isolating the background, just pulled further than the
+// first two attempts.
+const _CLEAN_GAMMA    = 3.0;
+const _CLEAN_DARK_CAP = 20; // sub-threshold ("text") pixels never render lighter than this
+
+// Despeckle: drop dark pixels with no dark neighbor before darkening them.
+// Scanner dust and halftone/JPEG grain that survives the threshold as
+// "text" shows up as isolated 1px specks; real ink strokes are always at
+// least a couple of connected pixels wide at the render scales this tool
+// uses (2–3x). A pixel with zero dark 8-neighbors is specifically the
+// former, never the latter — clearing it removes the residual fleck noise
+// on the whitened background without ever eroding real, if thin, strokes.
+function _despeckleMask(mask, w, h) {
+  const out = new Uint8Array(mask.length);
+  for (let y = 0; y < h; y++) {
+    const row = y * w;
+    for (let x = 0; x < w; x++) {
+      const p = row + x;
+      if (!mask[p]) continue;
+      let hasNeighbor = false;
+      for (let dy = -1; dy <= 1 && !hasNeighbor; dy++) {
+        const ny = y + dy;
+        if (ny < 0 || ny >= h) continue;
+        const nrow = ny * w;
+        for (let dx = -1; dx <= 1; dx++) {
+          if (dx === 0 && dy === 0) continue;
+          const nx = x + dx;
+          if (nx < 0 || nx >= w) continue;
+          if (mask[nrow + nx]) { hasNeighbor = true; break; }
+        }
+      }
+      out[p] = hasNeighbor ? 1 : 0;
+    }
+  }
+  return out;
+}
+
 function _applyClean(canvas, strength) {
   const w = canvas.width, h = canvas.height;
   const ctx = canvas.getContext('2d');
@@ -186,13 +223,17 @@ function _applyClean(canvas, strength) {
   const base  = _otsuThreshold(d);
   const shift = ((strength ?? 0.5) - 0.5) * 80; // ±40 around the auto baseline
   const t = Math.min(250, Math.max(5, base + shift));
-  const gamma   = 2.4;
-  const darkCap = 45; // sub-threshold ("text") pixels never render lighter than this
-  for (let i = 0; i < d.length; i += 4) {
-    const v = d[i];
-    if (v >= t) { d[i] = d[i + 1] = d[i + 2] = 255; }
+
+  const n = w * h;
+  let mask = new Uint8Array(n);
+  for (let p = 0, i = 0; p < n; p++, i += 4) mask[p] = d[i] < t ? 1 : 0;
+  mask = _despeckleMask(mask, w, h);
+
+  for (let p = 0, i = 0; p < n; p++, i += 4) {
+    if (!mask[p]) { d[i] = d[i + 1] = d[i + 2] = 255; }
     else {
-      const dark = Math.round(((v / t) ** gamma) * darkCap);
+      const v = d[i];
+      const dark = Math.round(((v / t) ** _CLEAN_GAMMA) * _CLEAN_DARK_CAP);
       d[i] = d[i + 1] = d[i + 2] = dark;
     }
   }

@@ -214,8 +214,33 @@ function _otsuThreshold(data) {
   return threshold;
 }
 
-// Kept in sync with js/cleanScanWorker.js's _applyClean — see its comment
-// for why sub-threshold pixels use a gamma curve instead of a flat offset.
+// Kept in sync with js/cleanScanWorker.js's _applyClean/_despeckleMask —
+// see their comments for the gamma-curve darkening + despeckle rationale.
+function _despeckleMask(mask, w, h) {
+  const out = new Uint8Array(mask.length);
+  for (let y = 0; y < h; y++) {
+    const row = y * w;
+    for (let x = 0; x < w; x++) {
+      const p = row + x;
+      if (!mask[p]) continue;
+      let hasNeighbor = false;
+      for (let dy = -1; dy <= 1 && !hasNeighbor; dy++) {
+        const ny = y + dy;
+        if (ny < 0 || ny >= h) continue;
+        const nrow = ny * w;
+        for (let dx = -1; dx <= 1; dx++) {
+          if (dx === 0 && dy === 0) continue;
+          const nx = x + dx;
+          if (nx < 0 || nx >= w) continue;
+          if (mask[nrow + nx]) { hasNeighbor = true; break; }
+        }
+      }
+      out[p] = hasNeighbor ? 1 : 0;
+    }
+  }
+  return out;
+}
+
 function _applyClean(canvas, strength) {
   const w = canvas.width, h = canvas.height;
   const ctx = canvas.getContext('2d');
@@ -224,12 +249,18 @@ function _applyClean(canvas, strength) {
   const base  = _otsuThreshold(d);
   const shift = (strength - 0.5) * 80;
   const th = Math.min(250, Math.max(5, base + shift));
-  const gamma   = 2.4;
-  const darkCap = 45;
-  for (let i = 0; i < d.length; i += 4) {
-    const v = d[i];
-    if (v >= th) { d[i] = d[i + 1] = d[i + 2] = 255; }
+  const gamma   = 3.0;
+  const darkCap = 20;
+
+  const n = w * h;
+  let mask = new Uint8Array(n);
+  for (let p = 0, i = 0; p < n; p++, i += 4) mask[p] = d[i] < th ? 1 : 0;
+  mask = _despeckleMask(mask, w, h);
+
+  for (let p = 0, i = 0; p < n; p++, i += 4) {
+    if (!mask[p]) { d[i] = d[i + 1] = d[i + 2] = 255; }
     else {
+      const v = d[i];
       const dark = Math.round(((v / th) ** gamma) * darkCap);
       d[i] = d[i + 1] = d[i + 2] = dark;
     }
