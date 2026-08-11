@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Jak wyczyścić zeskanowany PDF",
+  "description": "Rozjaśnij tła zeskanowanych stron i wyostrz tekst — za darmo, bez konieczności przesyłania.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Otwórz swój PDF",
+      "text": "Kliknij 'Wybierz pliki' lub przeciągnij PDF do strefy upuszczania."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Wybierz tryb i siłę",
+      "text": "Wybierz Wyczyść lub Popraw, a następnie dostosuj suwak siły. Podgląd na żywo aktualizuje się na bieżąco."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Pobierz wyczyszczony PDF",
+      "text": "Kliknij 'Wyczyść i pobierz'. Każda strona jest przetwarzana i gotowa do natychmiastowego pobrania."
+    }
+  ]
+}

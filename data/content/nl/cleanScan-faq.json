@@ -1,0 +1,74 @@
+[
+  {
+    "@type": "Question",
+    "name": "Wordt mijn bestand geüpload naar een server als ik een scan opschoon?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. Elke pagina wordt volledig geanalyseerd en opnieuw opgebouwd in je browser. Je bestand wordt nooit ergens naartoe gestuurd."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Wat is het verschil tussen de modus Opschonen en Verbeteren?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Opschonen vlakt de achtergrond af tot zuiver wit en verdonkert tekst voor maximaal contrast — het beste voor pagina's met alleen tekst. Verbeteren maakt de pagina helderder en verhoogt het contrast zonder de achtergrond volledig wit te maken, waardoor stempels, handtekeningen en foto's op de pagina herkenbaar blijven."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Worden kleurenfoto's of stempels uit mijn document verwijderd?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "De modus Opschonen kan kleurinhoud laten vervagen of verwijderen, omdat deze is ontworpen om alles richting zwarte tekst op een witte achtergrond te duwen. Bevat een pagina kleur die je wilt behouden, gebruik dan in plaats daarvan de modus Verbeteren — de tool waarschuwt je automatisch wanneer kleur wordt gedetecteerd op de pagina die je aan het bekijken bent."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Waarom heeft mijn scan eigenlijk een schaduw of grijze verloop?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Flatbedscanners en telefooncamera's belichten een pagina zelden perfect gelijkmatig — de rug van een boek werpt schaduw nabij de vouw, omgevingslicht neemt af richting de randen, en verouderd papier reflecteert licht ongelijkmatig. Die ongelijkmatigheid wordt vastgelegd als deel van de afbeelding zelf, en dat is precies wat de achtergrondanalyse van Scan Opschonen corrigeert."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is er een limiet aan het aantal pagina's dat ik kan opschonen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. Er is geen limiet op het aantal pagina's of de bestandsgrootte, en geen limiet op taken per uur. Schoon een scan van één pagina of een document van honderd pagina's op, zo vaak als nodig."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Vermindert opschonen de beeldkwaliteit?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "De modus Opschonen slaat pagina's op als PNG, wat compressieartefacten voorkomt die scherpe zwart-witte tekst zouden vervagen. De modus Verbeteren slaat op als hoogwaardige JPEG, geschikt voor pagina's die nog foto's of continue tint bevatten."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik dit gebruiken op een gewone PDF die geen scan is?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Dat kan, maar dat is niet het beoogde gebruik — opschonen zet elke pagina om in een afbeelding, dus echte selecteerbare tekst in een normale digitale PDF zou een afbeelding van tekst worden. De tool detecteert wanneer een PDF echte tekstinhoud lijkt te bevatten en toont een waarschuwing voordat je verder gaat."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik een scan opschonen op mijn telefoon?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. PDFree werkt in mobiele Safari (iOS) en Chrome voor Android — dezelfde modus-, sterkte- en voorbeeldbediening werkt met één tik."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is de Scan Opschonen-tool echt volledig gratis?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. PDFree is gratis zonder abonnement, zonder dagelijkse of uurlijkse limieten en zonder aanmelding. Er wordt geen watermerk aan het resultaat toegevoegd en er is geen beperking op bestandsgrootte."
+    }
+  }
+]

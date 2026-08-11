@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to Clean a Scanned PDF",
+  "description": "Whiten scanned-page backgrounds and sharpen text — free, no upload required.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Open your PDF",
+      "text": "Click 'Choose files' or drag your PDF into the drop zone."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Pick a mode and strength",
+      "text": "Choose Clean or Enhance, then adjust the strength slider. The live before/after preview updates as you go."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Download your cleaned PDF",
+      "text": "Click 'Clean & Download'. Every page is processed and ready to download instantly."
+    }
+  ]
+}

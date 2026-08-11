@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Come pulire un PDF scansionato",
+  "description": "Sbianca gli sfondi delle pagine scansionate e rendi il testo più nitido — gratis, senza necessità di caricamento.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Apri il tuo PDF",
+      "text": "Clicca su 'Scegli file' o trascina il tuo PDF nella zona di rilascio."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Scegli una modalità e un'intensità",
+      "text": "Scegli Pulisci o Migliora, poi regola il cursore dell'intensità. L'anteprima dal vivo si aggiorna man mano."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Scarica il tuo PDF pulito",
+      "text": "Clicca su 'Pulisci e scarica'. Ogni pagina viene elaborata e pronta per il download istantaneo."
+    }
+  ]
+}

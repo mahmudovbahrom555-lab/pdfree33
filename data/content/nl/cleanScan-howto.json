@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Hoe je een gescande PDF opschoont",
+  "description": "Maak achtergronden van gescande pagina's wit en scherp de tekst aan — gratis, geen upload nodig.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Open je PDF",
+      "text": "Klik op 'Bestanden kiezen' of sleep je PDF naar de uploadzone."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Kies een modus en sterkte",
+      "text": "Kies Opschonen of Verbeteren en pas de sterkteschuif aan. Het live voorbeeld wordt bijgewerkt terwijl je dit doet."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Download je opgeschoonde PDF",
+      "text": "Klik op 'Opschonen & downloaden'. Elke pagina wordt verwerkt en is direct klaar om te downloaden."
+    }
+  ]
+}

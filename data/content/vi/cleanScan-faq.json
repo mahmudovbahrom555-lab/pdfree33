@@ -1,0 +1,74 @@
+[
+  {
+    "@type": "Question",
+    "name": "Làm sạch bản scan có tải tệp của tôi lên máy chủ không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không. Mỗi trang được phân tích và xây dựng lại hoàn toàn trong trình duyệt của bạn. Tệp của bạn không bao giờ được gửi đi bất cứ đâu."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Sự khác biệt giữa chế độ Làm sạch và Cải thiện là gì?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Làm sạch làm phẳng nền thành trắng tinh khiết và làm đậm chữ để có độ tương phản tối đa — tốt nhất cho trang chỉ có chữ. Cải thiện làm sáng trang và tăng độ tương phản mà không làm trắng hoàn toàn nền, giúp con dấu, chữ ký và ảnh trên trang vẫn nhận diện được."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Điều này có xóa ảnh màu hoặc con dấu khỏi tài liệu của tôi không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Chế độ Làm sạch có thể làm mờ hoặc xóa nội dung màu, vì nó được thiết kế để đẩy mọi thứ về chữ đen trên nền trắng. Nếu một trang có màu bạn muốn giữ lại, hãy dùng chế độ Cải thiện thay thế — công cụ sẽ tự động cảnh báo khi phát hiện màu trên trang bạn đang xem trước."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Vì sao bản scan của tôi lại có bóng hoặc dải màu xám ngay từ đầu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Máy scan phẳng và camera điện thoại hiếm khi chiếu sáng một trang hoàn toàn đều — gáy sách tạo bóng gần chỗ gấp, ánh sáng xung quanh giảm dần về phía mép, và giấy cũ phản chiếu ánh sáng không đều. Sự không đồng đều đó được ghi lại như một phần của chính bức ảnh, và đó chính là điều mà phân tích nền của Làm Sạch Bản Scan khắc phục."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Có giới hạn số trang tôi có thể làm sạch không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không. Không có giới hạn số trang hay kích thước tệp, cũng không có giới hạn tác vụ mỗi giờ. Làm sạch một bản scan một trang hoặc tài liệu một trăm trang bao nhiêu lần tùy ý."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Việc làm sạch có làm giảm chất lượng ảnh không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Chế độ Làm sạch lưu trang dưới dạng PNG, tránh các hiện tượng nén làm mờ chữ đen trắng sắc nét. Chế độ Cải thiện lưu dưới dạng JPEG chất lượng cao, phù hợp cho các trang vẫn còn ảnh hoặc nội dung tông màu liên tục."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Tôi có thể dùng công cụ này trên một PDF thông thường không phải bản scan không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Bạn có thể, nhưng đây không phải mục đích sử dụng dự kiến — việc làm sạch chuyển mỗi trang thành ảnh, vì vậy chữ có thể chọn thật trong một PDF kỹ thuật số thông thường sẽ trở thành ảnh của chữ. Công cụ phát hiện khi một PDF có vẻ chứa nội dung chữ thật và hiển thị cảnh báo trước khi xử lý."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Tôi có thể làm sạch bản scan trên điện thoại không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có. PDFree hoạt động trên Safari di động (iOS) và Chrome cho Android — cùng các điều khiển chế độ, cường độ và xem trước hoạt động chỉ với một chạm."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Công cụ Làm Sạch Bản Scan có thực sự hoàn toàn miễn phí không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có. PDFree miễn phí, không đăng ký gói, không giới hạn hàng ngày hoặc hàng giờ, và không cần đăng ký tài khoản. Không có watermark nào được thêm vào kết quả và không có giới hạn kích thước tệp."
+    }
+  }
+]

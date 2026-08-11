@@ -1,0 +1,74 @@
+[
+  {
+    "@type": "Question",
+    "name": "Nettoyer un scan envoie-t-il mon fichier sur un serveur ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non. Chaque page est analysée et reconstruite entièrement dans votre navigateur. Votre fichier n'est jamais envoyé nulle part."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Quelle est la différence entre le mode Nettoyer et Améliorer ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nettoyer aplatit le fond en blanc pur et assombrit le texte pour un contraste maximal — idéal pour les pages de texte simple. Améliorer éclaircit la page et augmente le contraste sans blanchir entièrement le fond, ce qui garde les tampons, signatures et photos reconnaissables."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Cela va-t-il supprimer les photos couleur ou les tampons de mon document ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Le mode Nettoyer peut estomper ou supprimer le contenu couleur, car il est conçu pour tout pousser vers du texte noir sur fond blanc. Si une page contient de la couleur que vous voulez conserver, utilisez plutôt le mode Améliorer — l'outil vous avertit automatiquement quand il détecte de la couleur sur la page prévisualisée."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Pourquoi mon scan a-t-il une ombre ou un dégradé gris au départ ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Les scanners à plat et les appareils photo de téléphone éclairent rarement une page de façon parfaitement uniforme — la reliure d'un livre projette une ombre près de la gouttière, la lumière ambiante diminue vers les bords, et le papier ancien réfléchit la lumière de façon inégale. Cette irrégularité est capturée comme faisant partie de l'image elle-même, ce qui est exactement ce que l'analyse de fond de Nettoyer Scan corrige."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Y a-t-il une limite au nombre de pages que je peux nettoyer ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non. Il n'y a aucune limite de nombre de pages ou de taille de fichier, ni de limite de tâches par heure. Nettoyez un scan d'une page ou un document de cent pages, aussi souvent que nécessaire."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Le nettoyage réduit-il la qualité de l'image ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Le mode Nettoyer enregistre les pages en PNG, ce qui évite les artefacts de compression qui flouteraient un texte noir et blanc net. Le mode Améliorer enregistre en JPEG haute qualité, adapté aux pages contenant encore des photos ou du contenu en tons continus."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Puis-je utiliser ceci sur un PDF normal qui n'est pas un scan ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Vous le pouvez, mais ce n'est pas l'usage prévu — le nettoyage convertit chaque page en image, donc du vrai texte sélectionnable dans un PDF numérique normal deviendrait une image de texte. L'outil détecte quand un PDF semble contenir du vrai texte et affiche un avertissement avant de le traiter."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Puis-je nettoyer un scan sur mon téléphone ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui. PDFree fonctionne sur Safari mobile (iOS) et Chrome pour Android — les mêmes contrôles de mode, d'intensité et d'aperçu fonctionnent d'un simple toucher."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "L'outil Nettoyer Scan est-il vraiment entièrement gratuit ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui. PDFree est gratuit, sans abonnement, sans limites quotidiennes ou horaires, et sans inscription. Aucun filigrane n'est ajouté au résultat et il n'y a aucune restriction de taille de fichier."
+    }
+  }
+]

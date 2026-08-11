@@ -1,0 +1,74 @@
+[
+  {
+    "@type": "Question",
+    "name": "¿Limpiar un escaneo sube mi archivo a un servidor?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Cada página se analiza y reconstruye enteramente en tu navegador. Tu archivo nunca se envía a ningún sitio."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Cuál es la diferencia entre el modo Limpiar y Mejorar?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Limpiar aplana el fondo a blanco puro y oscurece el texto para lograr el máximo contraste — ideal para páginas de texto simple. Mejorar aclara la página y aumenta el contraste sin blanquear del todo el fondo, lo que mantiene reconocibles los sellos, firmas y fotos de la página."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Se eliminarán las fotos en color o los sellos de mi documento?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "El modo Limpiar puede desvanecer o eliminar contenido en color, ya que está diseñado para llevar todo hacia texto negro sobre fondo blanco. Si una página contiene color que quieres conservar, usa el modo Mejorar — la herramienta te avisa automáticamente cuando detecta color en la página que estás previsualizando."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Por qué mi escaneo tiene una sombra o degradado gris en primer lugar?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Los escáneres planos y las cámaras de los móviles rara vez iluminan una página de forma perfectamente uniforme — el lomo de un libro proyecta sombra cerca de la encuadernación, la luz ambiental disminuye hacia los bordes, y el papel envejecido refleja la luz de forma desigual. Esa irregularidad queda capturada como parte de la propia imagen, que es justo lo que corrige el análisis de fondo de Limpiar Escaneo."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Hay un límite de cuántas páginas puedo limpiar?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. No hay límite de número de páginas ni de tamaño de archivo, ni límite de tareas por hora. Limpia un escaneo de una página o un documento de cien, tantas veces como necesites."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿La limpieza reduce la calidad de la imagen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "El modo Limpiar guarda las páginas como PNG, lo que evita los artefactos de compresión que difuminarían el texto blanco y negro nítido. El modo Mejorar guarda como JPEG de alta calidad, apropiado para páginas que aún contienen fotos o contenido de tono continuo."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Puedo usar esto en un PDF normal que no sea un escaneo?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Puedes, pero no es el uso previsto — limpiar convierte cada página en una imagen, así que el texto real seleccionable de un PDF digital normal se convertiría en una imagen de texto. La herramienta detecta cuando un PDF parece tener contenido de texto real y muestra un aviso antes de procesarlo."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Puedo limpiar un escaneo desde el móvil?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sí. PDFree funciona en Safari móvil (iOS) y Chrome para Android — los mismos controles de modo, intensidad y vista previa funcionan con un toque."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿La herramienta Limpiar Escaneo es totalmente gratuita?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sí. PDFree es gratis, sin suscripción, sin límites diarios ni por hora, y sin registro. No se añade marca de agua al resultado y no hay restricción de tamaño de archivo."
+    }
+  }
+]

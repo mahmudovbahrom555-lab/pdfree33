@@ -1,0 +1,74 @@
+[
+  {
+    "@type": "Question",
+    "name": "Limpar uma digitalização envia meu arquivo para um servidor?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Não. Cada página é analisada e reconstruída inteiramente no seu navegador. Seu arquivo nunca é enviado a lugar nenhum."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Qual é a diferença entre o modo Limpar e Melhorar?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Limpar deixa o fundo branco puro e escurece o texto para o máximo contraste — ideal para páginas de texto simples. Melhorar clareia a página e aumenta o contraste sem deixar o fundo totalmente branco, o que mantém carimbos, assinaturas e fotos reconhecíveis."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Isso vai remover fotos coloridas ou carimbos do meu documento?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "O modo Limpar pode desbotar ou remover conteúdo colorido, pois foi feito para levar tudo em direção a texto preto sobre fundo branco. Se uma página contém cor que você quer manter, use o modo Melhorar — a ferramenta avisa automaticamente quando detecta cor na página que você está pré-visualizando."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Por que minha digitalização tem uma sombra ou gradiente cinza?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Scanners de mesa e câmeras de celular raramente iluminam uma página de forma perfeitamente uniforme — a lombada de um livro projeta sombra perto da dobra, a luz ambiente diminui em direção às bordas, e papel envelhecido reflete a luz de forma desigual. Essa irregularidade é capturada como parte da própria imagem, que é exatamente o que a análise de fundo do Limpar Digitalização corrige."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Há um limite de quantas páginas posso limpar?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Não. Não há limite de número de páginas ou tamanho de arquivo, nem limite de tarefas por hora. Limpe uma digitalização de uma página ou um documento de cem páginas quantas vezes precisar."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "A limpeza reduz a qualidade da imagem?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "O modo Limpar salva as páginas como PNG, o que evita os artefatos de compressão que borrariam texto preto e branco nítido. O modo Melhorar salva como JPEG de alta qualidade, apropriado para páginas que ainda contêm fotos ou conteúdo de tom contínuo."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso usar isso em um PDF normal que não é uma digitalização?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Pode, mas não é o uso pretendido — a limpeza converte cada página em imagem, então texto real selecionável em um PDF digital normal se tornaria uma imagem de texto. A ferramenta detecta quando um PDF parece ter conteúdo de texto real e mostra um aviso antes de processá-lo."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso limpar uma digitalização no celular?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim. O PDFree funciona no Safari mobile (iOS) e Chrome para Android — os mesmos controles de modo, intensidade e prévia funcionam com um toque."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "A ferramenta Limpar Digitalização é realmente totalmente gratuita?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim. O PDFree é grátis, sem assinatura, sem limites diários ou por hora, e sem cadastro. Nenhuma marca d'água é adicionada ao resultado e não há restrição de tamanho de arquivo."
+    }
+  }
+]

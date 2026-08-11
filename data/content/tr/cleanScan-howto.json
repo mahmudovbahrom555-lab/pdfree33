@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Taranan bir PDF nasıl temizlenir",
+  "description": "Taranan sayfaların arka planını beyazlatın ve metni netleştirin — ücretsiz, yükleme gerekmez.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDF'inizi açın",
+      "text": "'Dosya seç'e tıklayın veya PDF'inizi bırakma alanına sürükleyin."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Bir mod ve güç seçin",
+      "text": "Temizle veya İyileştir'i seçin, ardından güç kaydırıcısını ayarlayın. Canlı önizleme siz yaptıkça güncellenir."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Temizlenmiş PDF'inizi indirin",
+      "text": "'Temizle ve İndir'e tıklayın. Her sayfa işlenir ve anında indirmeye hazır olur."
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "So bereinigst du ein gescanntes PDF",
+  "description": "Weiße Hintergründe gescannter Seiten auf und schärfe Text — kostenlos, kein Upload nötig.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDF öffnen",
+      "text": "Klicke auf 'Dateien wählen' oder ziehe dein PDF in den Ablagebereich."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Modus und Stärke wählen",
+      "text": "Wähle Sauber oder Verbessern und passe den Stärke-Regler an. Die Live-Vorschau aktualisiert sich laufend."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Bereinigtes PDF herunterladen",
+      "text": "Klicke auf 'Säubern & Herunterladen'. Jede Seite wird verarbeitet und ist sofort zum Download bereit."
+    }
+  ]
+}

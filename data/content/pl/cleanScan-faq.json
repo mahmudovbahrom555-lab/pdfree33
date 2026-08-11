@@ -1,0 +1,74 @@
+[
+  {
+    "@type": "Question",
+    "name": "Czy czyszczenie skanu przesyła mój plik na serwer?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie. Każda strona jest analizowana i odbudowywana całkowicie w Twojej przeglądarce. Twój plik nigdy nigdzie nie jest wysyłany."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Jaka jest różnica między trybem Wyczyść a Popraw?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Wyczyść wyrównuje tło do czystej bieli i przyciemnia tekst dla maksymalnego kontrastu — najlepsze dla stron z samym tekstem. Popraw rozjaśnia stronę i zwiększa kontrast bez pełnego wybielania tła, co zachowuje rozpoznawalność pieczątek, podpisów i zdjęć na stronie."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy to usunie kolorowe zdjęcia lub pieczątki z mojego dokumentu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tryb Wyczyść może wyblaknąć lub usunąć kolorową zawartość, ponieważ jest zaprojektowany, aby wszystko sprowadzić do czarnego tekstu na białym tle. Jeśli strona zawiera kolor, który chcesz zachować, użyj zamiast tego trybu Popraw — narzędzie automatycznie ostrzega, gdy wykryje kolor na podglądanej stronie."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Dlaczego mój skan w ogóle ma cień lub szary gradient?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Skanery płaskie i aparaty w telefonach rzadko oświetlają stronę idealnie równomiernie — grzbiet książki rzuca cień blisko zagięcia, światło otoczenia słabnie w kierunku krawędzi, a stary papier nierównomiernie odbija światło. Ta nierównomierność jest rejestrowana jako część samego obrazu, co dokładnie koryguje analiza tła w Wyczyść Skan."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy jest limit liczby stron, które mogę wyczyścić?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie. Nie ma limitu liczby stron ani rozmiaru pliku, ani limitu zadań na godzinę. Czyść jednostronicowy skan lub stustronicowy dokument tak często, jak potrzebujesz."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy czyszczenie obniża jakość obrazu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tryb Wyczyść zapisuje strony jako PNG, co unika artefaktów kompresji, które rozmyłyby ostry czarno-biały tekst. Tryb Popraw zapisuje jako wysokiej jakości JPEG, odpowiedni dla stron nadal zawierających zdjęcia lub treści o ciągłej tonalności."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy mogę użyć tego na zwykłym PDF, który nie jest skanem?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Możesz, ale nie jest to zamierzone zastosowanie — czyszczenie zamienia każdą stronę w obraz, więc prawdziwy zaznaczalny tekst w normalnym cyfrowym PDF stałby się obrazem tekstu. Narzędzie wykrywa, gdy PDF wygląda na zawierający prawdziwą treść tekstową, i wyświetla ostrzeżenie przed przetworzeniem."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy mogę wyczyścić skan na telefonie?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. PDFree działa w mobilnej Safari (iOS) i Chrome dla Androida — te same kontrolki trybu, siły i podglądu działają jednym dotknięciem."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy narzędzie Wyczyść Skan jest naprawdę całkowicie darmowe?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. PDFree jest darmowe, bez subskrypcji, bez dziennych lub godzinowych limitów i bez rejestracji. Do wyniku nie dodaje się znaku wodnego i nie ma ograniczenia rozmiaru pliku."
+    }
+  }
+]

@@ -1,0 +1,74 @@
+[
+  {
+    "@type": "Question",
+    "name": "Apakah membersihkan scan mengunggah file saya ke server?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak. Setiap halaman dianalisis dan dibangun ulang sepenuhnya di browser Anda. File Anda tidak pernah dikirim ke mana pun."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apa perbedaan antara mode Bersihkan dan Tingkatkan?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Bersihkan meratakan latar belakang menjadi putih murni dan menggelapkan teks untuk kontras maksimal — terbaik untuk halaman teks polos. Tingkatkan mencerahkan halaman dan meningkatkan kontras tanpa memutihkan latar belakang sepenuhnya, sehingga stempel, tanda tangan, dan foto pada halaman tetap dapat dikenali."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah ini akan menghapus foto berwarna atau stempel dari dokumen saya?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Mode Bersihkan dapat memudarkan atau menghapus konten berwarna, karena dirancang untuk mendorong semuanya menjadi teks hitam di atas latar belakang putih. Jika suatu halaman berisi warna yang ingin Anda pertahankan, gunakan mode Tingkatkan — alat ini secara otomatis memperingatkan Anda saat mendeteksi warna pada halaman yang sedang Anda pratinjau."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Mengapa scan saya memiliki bayangan atau gradasi abu-abu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Scanner flatbed dan kamera ponsel jarang menerangi halaman secara sempurna merata — tulang punggung buku menimbulkan bayangan dekat lipatan, cahaya sekitar berkurang menuju tepi, dan kertas lama memantulkan cahaya secara tidak merata. Ketidakmerataan itu terekam sebagai bagian dari gambar itu sendiri, yang justru diperbaiki oleh analisis latar belakang Bersihkan Scan."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah ada batas berapa banyak halaman yang bisa saya bersihkan?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak. Tidak ada batas jumlah halaman atau ukuran file, dan tidak ada batas tugas per jam. Bersihkan scan satu halaman atau dokumen seratus halaman sesering yang Anda butuhkan."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah pembersihan mengurangi kualitas gambar?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Mode Bersihkan menyimpan halaman sebagai PNG, yang menghindari artefak kompresi yang akan mengaburkan teks hitam-putih yang tajam. Mode Tingkatkan menyimpan sebagai JPEG berkualitas tinggi, sesuai untuk halaman yang masih berisi foto atau konten bertona kontinu."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah saya menggunakan ini pada PDF biasa yang bukan hasil scan?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Bisa, tetapi ini bukan penggunaan yang dimaksudkan — pembersihan mengubah setiap halaman menjadi gambar, sehingga teks asli yang dapat dipilih pada PDF digital biasa akan menjadi gambar teks. Alat ini mendeteksi ketika PDF tampak memiliki konten teks asli dan menampilkan peringatan sebelum memprosesnya."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah saya membersihkan scan di ponsel saya?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ya. PDFree berfungsi di Safari mobile (iOS) dan Chrome untuk Android — kontrol mode, kekuatan, dan pratinjau yang sama berfungsi dengan satu ketukan."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah alat Bersihkan Scan benar-benar gratis sepenuhnya?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ya. PDFree gratis tanpa langganan, tanpa batas harian atau per jam, dan tanpa pendaftaran. Tidak ada watermark yang ditambahkan pada hasil dan tidak ada batasan ukuran file."
+    }
+  }
+]

@@ -1,0 +1,74 @@
+[
+  {
+    "@type": "Question",
+    "name": "Pulire una scansione carica il mio file su un server?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Ogni pagina viene analizzata e ricostruita interamente nel tuo browser. Il tuo file non viene mai inviato da nessuna parte."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Qual è la differenza tra modalità Pulisci e Migliora?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Pulisci appiattisce lo sfondo a bianco puro e scurisce il testo per il massimo contrasto — ideale per pagine di solo testo. Migliora schiarisce la pagina e aumenta il contrasto senza sbiancare completamente lo sfondo, il che mantiene riconoscibili timbri, firme e foto sulla pagina."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Questo rimuoverà foto a colori o timbri dal mio documento?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "La modalità Pulisci può sbiadire o rimuovere contenuti a colori, poiché è progettata per spingere tutto verso testo nero su sfondo bianco. Se una pagina contiene colori che vuoi mantenere, usa invece la modalità Migliora — lo strumento ti avvisa automaticamente quando rileva colore nella pagina in anteprima."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Perché la mia scansione ha un'ombra o un gradiente grigio?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Gli scanner piani e le fotocamere degli smartphone raramente illuminano una pagina in modo perfettamente uniforme — la rilegatura di un libro proietta ombra vicino alla piega, la luce ambientale diminuisce verso i bordi, e la carta invecchiata riflette la luce in modo irregolare. Questa irregolarità viene catturata come parte dell'immagine stessa, ed è esattamente ciò che l'analisi dello sfondo di Pulisci Scansione corregge."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "C'è un limite al numero di pagine che posso pulire?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Non c'è limite al numero di pagine o alla dimensione del file, né un limite di attività orario. Pulisci una scansione di una pagina o un documento di cento pagine, quante volte serve."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "La pulizia riduce la qualità dell'immagine?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "La modalità Pulisci salva le pagine come PNG, evitando gli artefatti di compressione che sfocherebbero un testo bianco e nero nitido. La modalità Migliora salva come JPEG di alta qualità, adatto a pagine che contengono ancora foto o contenuti a tono continuo."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso usarlo su un PDF normale che non è una scansione?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Puoi, ma non è l'uso previsto — la pulizia converte ogni pagina in un'immagine, quindi il testo selezionabile reale in un normale PDF digitale diventerebbe un'immagine di testo. Lo strumento rileva quando un PDF sembra avere contenuto testuale reale e mostra un avviso prima di elaborarlo."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso pulire una scansione dal telefono?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. PDFree funziona su Safari mobile (iOS) e Chrome per Android — gli stessi controlli di modalità, intensità e anteprima funzionano con un tocco."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Lo strumento Pulisci Scansione è davvero completamente gratuito?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. PDFree è gratuito, senza abbonamento, senza limiti giornalieri o orari, e senza registrazione. Nessuna filigrana viene aggiunta al risultato e non c'è alcuna restrizione sulla dimensione del file."
+    }
+  }
+]

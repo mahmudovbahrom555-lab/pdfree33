@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Cara membersihkan PDF hasil scan",
+  "description": "Putihkan latar belakang halaman hasil scan dan pertajam teks — gratis, tanpa perlu mengunggah.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Buka PDF Anda",
+      "text": "Klik 'Pilih file' atau seret PDF Anda ke zona unggah."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Pilih mode dan kekuatan",
+      "text": "Pilih Bersihkan atau Tingkatkan, lalu sesuaikan penggeser kekuatan. Pratinjau langsung diperbarui saat Anda melakukannya."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Unduh PDF bersih Anda",
+      "text": "Klik 'Bersihkan & Unduh'. Setiap halaman diproses dan siap diunduh secara instan."
+    }
+  ]
+}

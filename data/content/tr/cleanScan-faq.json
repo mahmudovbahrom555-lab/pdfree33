@@ -1,0 +1,74 @@
+[
+  {
+    "@type": "Question",
+    "name": "Bir taramayı temizlemek dosyamı bir sunucuya yüklüyor mu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. Her sayfa tamamen tarayıcınızda analiz edilir ve yeniden oluşturulur. Dosyanız hiçbir zaman hiçbir yere gönderilmez."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Temizle ve İyileştir modu arasındaki fark nedir?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Temizle, arka planı saf beyaza düzleştirir ve maksimum kontrast için metni koyulaştırır — düz metin sayfaları için en iyisidir. İyileştir, arka planı tamamen beyazlatmadan sayfayı aydınlatır ve kontrastı artırır, bu da sayfadaki damga, imza ve fotoğrafları tanınabilir tutar."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bu, belgemdeki renkli fotoğrafları veya damgaları kaldıracak mı?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Temizle modu, her şeyi beyaz zemin üzerinde siyah metne doğru itmek üzere tasarlandığından renkli içeriği soldurabilir veya kaldırabilir. Bir sayfada korumak istediğiniz renk varsa, bunun yerine İyileştir modunu kullanın — araç, önizlemekte olduğunuz sayfada renk algıladığında sizi otomatik olarak uyarır."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Taramamda neden bir gölge veya gri gradyan var?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Düz yataklı tarayıcılar ve telefon kameraları bir sayfayı nadiren mükemmel şekilde eşit aydınlatır — bir kitabın sırtı ciltleme yakınında gölge oluşturur, ortam ışığı kenarlara doğru azalır ve eskimiş kağıt ışığı düzensiz yansıtır. Bu düzensizlik görüntünün kendisinin bir parçası olarak yakalanır ve Taramayı Temizle'nin arka plan analizi tam olarak bunu düzeltmek için tasarlanmıştır."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Temizleyebileceğim sayfa sayısında bir sınır var mı?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. Sayfa sayısı veya dosya boyutu sınırı yoktur ve saatlik görev sınırı da yoktur. İhtiyacınız olduğu kadar tek sayfalık bir taramayı veya yüz sayfalık bir belgeyi temizleyin."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Temizleme görüntü kalitesini düşürür mü?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Temizle modu, keskin siyah beyaz metni bulanıklaştıracak sıkıştırma eserlerini önleyen PNG olarak sayfaları kaydeder. İyileştir modu, hâlâ fotoğraf veya sürekli ton içeriği içeren sayfalar için uygun olan yüksek kaliteli JPEG olarak kaydeder."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bunu tarama olmayan normal bir PDF'de kullanabilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Kullanabilirsiniz, ancak amaçlanan kullanım bu değildir — temizleme her sayfayı bir görüntüye dönüştürür, bu nedenle normal bir dijital PDF'deki gerçek seçilebilir metin bir metin görüntüsüne dönüşür. Araç, bir PDF'in gerçek metin içeriğine sahip göründüğünü algılar ve işlemeden önce bir uyarı gösterir."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Telefonumda bir taramayı temizleyebilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. PDFree mobil Safari (iOS) ve Android için Chrome'da çalışır — aynı mod, güç ve önizleme kontrolleri tek bir dokunuşla çalışır."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Taramayı Temizle aracı gerçekten tamamen ücretsiz mi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. PDFree abonelik olmadan, günlük veya saatlik sınır olmadan ve kayıt olmadan ücretsizdir. Sonuca hiçbir filigran eklenmez ve dosya boyutu kısıtlaması yoktur."
+    }
+  }
+]
