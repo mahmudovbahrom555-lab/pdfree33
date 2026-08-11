@@ -154,6 +154,7 @@ _NAV_TOOL_IDS = [
     'watermark', 'pagenum', 'metadata', 'extract',
     # draw-on-pdf inserted here (EN-only, no locale slugs)
     'rotate', 'organize', 'resize', 'protect', 'ocr', 'pdf2word', 'pdf2excel', 'pdf2ppt', 'pdf2md', 'unlock',
+    'cleanScan',
 ]
 
 def _build_nav_items(lang, all_tools):

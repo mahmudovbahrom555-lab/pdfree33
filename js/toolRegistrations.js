@@ -42,6 +42,8 @@ import { initOrganizeOptions, hideOrganizeOptions,
          getOrganizeParams }            from './organizeUI.js';
 import { initResizeOptions, hideResizeOptions,
          getResizeParams }              from './resizeUI.js';
+import { initCleanScanOptions, hideCleanScanOptions,
+         getCleanScanParams }           from './cleanScanUI.js';
 import { initRedactOptions, hideRedactOptions,
          getRedactParams }                from './redactUI.js';
 import { initDraw, loadPdfFile, resetDraw } from './drawUI.js';
@@ -332,6 +334,14 @@ registerTool('resize', {
   // orientation) is a genuine cross-document preference, not per-document
   // state — safe to persist as-is, same class as jpg2pdf/pdf2jpg's presets.
   presetFilter: (p) => ({ ...p }),
+});
+
+registerTool('cleanScan', {
+  runner:    'cleanScan', // dedicated js/cleanScanWorker.js, not the shared js/worker.js — see processor.js's _runCleanScan
+  init:      initCleanScanOptions,
+  hide:      hideCleanScanOptions,
+  getParams: getCleanScanParams,
+  validate:  p => !p.hasFile ? t('val_cs_loading') : null,
 });
 
 registerTool('protect', {

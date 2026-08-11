@@ -22,7 +22,7 @@ const ROOT      = path.join(__dirname, '..');
 
 // Known runner keys in processor.js runnerMap.
 // If you add a new runner there, add it here too.
-const KNOWN_RUNNERS = new Set(['merge', 'split', 'compress', 'jpg2pdf', 'pdf2jpg', 'pdf2word', 'pdf2excel', 'pdf2ppt', 'pdf2md', 'unlock', 'worker', 'organize', 'resize', 'fillOrder']);
+const KNOWN_RUNNERS = new Set(['merge', 'split', 'compress', 'jpg2pdf', 'pdf2jpg', 'pdf2word', 'pdf2excel', 'pdf2ppt', 'pdf2md', 'unlock', 'worker', 'organize', 'resize', 'fillOrder', 'cleanScan']);
 
 // ── Parse sources ─────────────────────────────────────────────────
 

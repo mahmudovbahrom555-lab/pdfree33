@@ -286,6 +286,7 @@ export async function doProcess(currentTool, extraParams = {}) {
     organize:     () => _runOrganize(filesSnapshot, extraParams),
     resize:       () => _runResize(filesSnapshot, extraParams),
     fillOrder:    () => _runFillOrder(filesSnapshot, extraParams),
+    cleanScan:    () => _runCleanScan(filesSnapshot, extraParams),
     'redact-true': () => _runRedactTrue(filesSnapshot, extraParams),
   };
 
@@ -699,6 +700,114 @@ async function _runFillOrder(filesSnapshot, params) {
     hideCancelBtn();
     _handleError('fill', e.message || 'Worker error');
   };
+}
+
+// ── Clean Scan (whiten scanned-document backgrounds) ────────────
+//
+// Own persistent Worker instance, same rationale as the other dedicated
+// workers above. Different shape from those, though: pdf.js has no
+// working precedent in this codebase for running inside a Worker (every
+// existing worker only ever does pdf-lib/pixel work — pdf.js rendering
+// always stays main-thread, see ocrUI.js/pdf2jpgUI.js), so THIS function
+// drives the render loop itself — one page at a time, sequential, never
+// parallel (matches pdf2jpgUI.js's own bounded-concurrency discipline;
+// full-DPI raster pages are far heavier than that file's 160px thumbs) —
+// and cleanScanWorker.js only ever receives already-rendered bitmaps.
+let _cleanScanWorker = null;
+function _ensureCleanScanWorker() {
+  if (!_cleanScanWorker) {
+    _cleanScanWorker = new Worker(new URL('./cleanScanWorker.js', import.meta.url));
+  }
+  return _cleanScanWorker;
+}
+
+// cleanScanWorker.js emits 'progress' zero or more times before its real
+// response (only the 'assemble' message type does) — resolve on the
+// first non-progress message, relay progress via callback in the meantime.
+function _cleanScanWorkerRequest(worker, message, transfer, onProgress) {
+  return new Promise((resolve, reject) => {
+    worker.onmessage = (e) => {
+      const d = e.data;
+      if (d.type === 'progress') { onProgress?.(d.value, d.label); return; }
+      if (d.type === 'error') { reject(new Error(d.message)); return; }
+      resolve(d);
+    };
+    worker.onerror = (e) => reject(new Error(e.message || 'Worker error'));
+    worker.postMessage(message, transfer);
+  });
+}
+
+async function _runCleanScan(filesSnapshot, { mode = 'clean', strength = 0.5, scale = 2 } = {}) {
+  if (!_checkSize(filesSnapshot[0], 150)) { _abortUI(); return; }
+  const file = filesSnapshot[0];
+
+  try {
+    setProgress(2, t('prog_clean_scan_load'));
+    await loadPdfJs();
+    const buffer = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await file.arrayBuffer());
+    const pdfDoc = await window.pdfjsLib.getDocument({ data: new Uint8Array(buffer) }).promise;
+    const pageCount = pdfDoc.numPages;
+    if (pageCount === 0) throw new Error('PDF has no pages');
+
+    const worker     = _ensureCleanScanWorker();
+    const pages      = [];
+    const pageSizes  = [];
+
+    // Sequential, one page fully round-tripped (render → worker → response)
+    // before starting the next — deliberately not parallel, see comment above.
+    for (let i = 1; i <= pageCount; i++) {
+      const page = await pdfDoc.getPage(i);
+      const vp1  = page.getViewport({ scale: 1 }); // unscaled viewport = page size in points
+      pageSizes.push({ width: vp1.width, height: vp1.height });
+
+      const vp     = page.getViewport({ scale });
+      const canvas = document.createElement('canvas');
+      canvas.width  = Math.round(vp.width);
+      canvas.height = Math.round(vp.height);
+      await page.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
+      page.cleanup?.();
+
+      const bitmap = await createImageBitmap(canvas);
+      const result = await _cleanScanWorkerRequest(
+        worker,
+        { type: 'processPage', index: i - 1, bitmap, mode, strength },
+        [bitmap]
+      );
+      pages.push(result);
+
+      setProgress(5 + Math.round((i / pageCount) * 80), t('prog_clean_scan_page', { n: i, total: pageCount }));
+    }
+
+    const done = await _cleanScanWorkerRequest(
+      worker,
+      { type: 'assemble', pages, pageSizes },
+      pages.map(p => p.bytes),
+      (value, label) => setProgress(Math.max(85, value), label)
+    );
+
+    if (!(done.result instanceof ArrayBuffer)) {
+      _handleError('cleanScan', 'Unexpected result from worker'); return;
+    }
+
+    isProcessing = false;
+    setFilesLocked(false);
+    hideCancelBtn();
+    setProgress(100, t('prog_done'));
+
+    const blob     = new Blob([done.result], { type: 'application/pdf' });
+    const base     = file.name.replace(/\.pdf$/i, '');
+    const filename = `${base}-cleaned.pdf`;
+    const desc     = t('desc_clean_scan', { pages: done.pageCount, size: fmtSize(blob.size) });
+
+    document.dispatchEvent(new CustomEvent('pdfree:success', {
+      detail: { tool: 'cleanScan', blob, desc, filename }
+    }));
+  } catch (err) {
+    isProcessing = false;
+    setFilesLocked(false);
+    hideCancelBtn();
+    _handleError('cleanScan', err.message || 'Processing error');
+  }
 }
 
 // ── Compress ───────────────────────────────────────────────────

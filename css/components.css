@@ -2294,6 +2294,96 @@ button,
 }
 
 /* ══════════════════════════════════════════════════════════════
+   CLEAN SCAN — strength slider, before/after preview, warnings
+   ══════════════════════════════════════════════════════════════ */
+
+.cs-slider {
+  width: 100%;
+  accent-color: var(--green);
+  cursor: pointer;
+}
+
+.cs-page-select {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 14px;
+}
+
+.cs-preview {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.cs-preview__col {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cs-preview__label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: .4px;
+}
+
+.cs-preview__img {
+  width: 100%;
+  border: 1px solid var(--border-strong, var(--border));
+  border-radius: 6px;
+  background: var(--surface);
+  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+}
+
+.cs-warning {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: #b45309;
+  background: #fef3c7;
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-top: 12px;
+}
+:root[data-theme="dark"] .cs-warning {
+  background: rgba(180,83,9,.18); color: #fbbf24;
+}
+.cs-warning--info {
+  color: var(--text2);
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+:root[data-theme="dark"] .cs-warning--info {
+  color: var(--text2);
+  background: var(--surface);
+}
+
+.cs-warning__btn {
+  border: none;
+  background: var(--green);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+@media (max-width: 640px) {
+  .cs-preview { grid-template-columns: 1fr; }
+}
+
+/* ══════════════════════════════════════════════════════════════
    COVER AREA / REDACT — drag-to-mark canvas
    ══════════════════════════════════════════════════════════════ */
 
