@@ -15,9 +15,10 @@
 // ============================================================
 
 import { id, esc }                   from './utils.js';
-import { showToast }                 from './ui.js';
+import { showToast, setButtonDisabled, setButtonReady } from './ui.js';
 import { loadingRow, infoBanner }    from './uiComponents.js';
 import { loadPdfJs }                 from './pdf2jpgUI.js';
+import { TOOLS, getLocalizedTool }   from './config.js';
 import { t, tp }                     from './i18n.js';
 
 const PREVIEW_WIDTH = 900;
@@ -59,6 +60,19 @@ export async function initCleanScanOptions(file) {
   container.innerHTML = loadingRow(t('cs_loading'));
   container.style.display = 'block';
 
+  // Disabled for the duration of PDF loading/parsing — otherwise a click
+  // during this ~1s window falls through to the validate() error toast
+  // ("please wait a moment") instead of simply being unavailable to click.
+  // Deferred to a microtask: files.js dispatches 'pdfree:files-added'
+  // (which synchronously reaches this point via the tool registry) and
+  // THEN calls renderList() right after on the same call stack —
+  // renderList()'s _updateMeta() unconditionally re-enables mergeBtn
+  // based on file count alone, with no awareness of a tool's own async
+  // loading state. Disabling synchronously here would just get
+  // overwritten a few lines later in files.js; queueing it instead
+  // guarantees this runs after that synchronous chain finishes.
+  queueMicrotask(() => setButtonDisabled());
+
   try {
     await loadPdfJs();
     const buf = await file.arrayBuffer();
@@ -72,6 +86,7 @@ export async function initCleanScanOptions(file) {
     _previewPage = 1;
     await _checkLooksDigital();
     _render(file);
+    setButtonReady(getLocalizedTool(TOOLS.cleanScan).btn);
     await _updatePreview();
   } catch (err) {
     showToast(t('cs_err_load', { msg: err.message }), 5000);
