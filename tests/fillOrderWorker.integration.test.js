@@ -252,6 +252,45 @@ await test('rotation-aware: a 90°-rotated page sorts by the DISPLAYED orientati
 });
 
 // ══════════════════════════════════════════════════════════════
+// Re-reordering an already-reordered document (regression)
+//
+// Caught live on production, not by any of the tests above: every test
+// so far builds a FRESH document each time. On a document that has
+// already been through one handleFillOrder + pdf-lib save/reload cycle,
+// the AcroForm field tree's Kids() refs and the physical refs actually
+// sitting in the page's /Annots array are NOT guaranteed to be the same
+// PDFRef instances — matching widgets via form.getFields()/Kids() (the
+// original implementation) silently found zero matches on the second
+// pass, so nothing got reordered and /Tabs never got set. Fixed by
+// reading field identity directly off each page's own /Annots entries
+// (their /T, walking /Parent) instead of cross-referencing from
+// form.getFields() at all.
+// ══════════════════════════════════════════════════════════════
+
+console.log('\n📑 handleFillOrder — re-reordering an already-processed document:');
+
+await test('a second reorder pass on an already-reordered document still works', async () => {
+  const doc  = await PDFDocument.create();
+  const page = doc.addPage([600, 800]);
+  const form = doc.getForm();
+  form.createTextField('Third').addToPage(page, { x: 50, y: 700, width: 200, height: 24 });
+  form.createTextField('First').addToPage(page,  { x: 50, y: 600, width: 200, height: 24 });
+  form.createTextField('Second').addToPage(page, { x: 50, y: 500, width: 200, height: 24 });
+
+  const buf1 = await toBuffer(doc);
+  await handleFillOrder(buf1, { mode: 'manual', fieldOrder: ['First', 'Second', 'Third'] });
+  const pass1Result = lastDone().result;
+
+  // Second pass, on the OUTPUT of the first — a different requested order.
+  await handleFillOrder(pass1Result, { mode: 'manual', fieldOrder: ['Second', 'Third', 'First'] });
+  const pass2Result = lastDone().result;
+
+  const out = await PDFDocument.load(pass2Result);
+  expect(annotsFieldOrder(out, 0)).toEqual(['Second', 'Third', 'First']);
+  expect(tabsOf(out, 0)).toBe('/A');
+});
+
+// ══════════════════════════════════════════════════════════════
 // Round-trip — reordered-but-unfilled bytes stay a valid, fillable form
 // ══════════════════════════════════════════════════════════════
 
