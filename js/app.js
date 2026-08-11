@@ -63,6 +63,7 @@ const TOOL_SLUGS = {
   'ocr':            '/ocr-pdf/',
   flatten:          '/flatten-pdf/',
   compare:          '/compare-pdf/',
+  cleanScan:        '/clean-scan/',
 };
 
 // Reverse map pathname → tool key (primary tool slug URLs).
