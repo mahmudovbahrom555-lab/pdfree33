@@ -165,8 +165,19 @@ function _otsuThreshold(data) {
 // Clean (Hard) mode: threshold the flat-field-corrected image. The
 // Strength slider (0..1, default 0.5) nudges the Otsu-computed baseline
 // rather than making the user pick a raw 0–255 number from scratch.
-// Sub-threshold pixels get a mild darken, not a hard drop to 0 — hard
+// Sub-threshold pixels get darkened, not a hard drop to 0 — hard
 // binarization destroys anti-aliased edges on small text.
+//
+// Darkening is a gamma curve on each pixel's distance below the threshold,
+// not a flat offset — a flat "-30" barely dented faint/thin/anti-aliased
+// strokes near the threshold (e.g. a pixel at 180 stayed a washed-out 150,
+// the "letters aren't dark enough" bug), while ink that was already near-
+// black needed no help at all and got the same treatment for nothing.
+// Normalizing each pixel to its fraction of the threshold and raising it to
+// gamma>1 pulls faint strokes toward black hard while barely touching ink
+// that's already dark — the same asymmetric correction a manual Photoshop
+// cleanup gets from pulling the Levels/Curves black-input slider toward the
+// midtones after isolating the background.
 function _applyClean(canvas, strength) {
   const w = canvas.width, h = canvas.height;
   const ctx = canvas.getContext('2d');
@@ -175,10 +186,15 @@ function _applyClean(canvas, strength) {
   const base  = _otsuThreshold(d);
   const shift = ((strength ?? 0.5) - 0.5) * 80; // ±40 around the auto baseline
   const t = Math.min(250, Math.max(5, base + shift));
+  const gamma   = 2.2;
+  const darkCap = 90; // sub-threshold ("text") pixels never render lighter than this
   for (let i = 0; i < d.length; i += 4) {
     const v = d[i];
     if (v >= t) { d[i] = d[i + 1] = d[i + 2] = 255; }
-    else { const dark = Math.max(0, v - 30); d[i] = d[i + 1] = d[i + 2] = dark; }
+    else {
+      const dark = Math.round(((v / t) ** gamma) * darkCap);
+      d[i] = d[i + 1] = d[i + 2] = dark;
+    }
   }
   ctx.putImageData(img, 0, 0);
 }

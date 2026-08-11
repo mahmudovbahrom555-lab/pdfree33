@@ -214,6 +214,8 @@ function _otsuThreshold(data) {
   return threshold;
 }
 
+// Kept in sync with js/cleanScanWorker.js's _applyClean — see its comment
+// for why sub-threshold pixels use a gamma curve instead of a flat offset.
 function _applyClean(canvas, strength) {
   const w = canvas.width, h = canvas.height;
   const ctx = canvas.getContext('2d');
@@ -222,10 +224,15 @@ function _applyClean(canvas, strength) {
   const base  = _otsuThreshold(d);
   const shift = (strength - 0.5) * 80;
   const th = Math.min(250, Math.max(5, base + shift));
+  const gamma   = 2.2;
+  const darkCap = 90;
   for (let i = 0; i < d.length; i += 4) {
     const v = d[i];
     if (v >= th) { d[i] = d[i + 1] = d[i + 2] = 255; }
-    else { const dark = Math.max(0, v - 30); d[i] = d[i + 1] = d[i + 2] = dark; }
+    else {
+      const dark = Math.round(((v / th) ** gamma) * darkCap);
+      d[i] = d[i + 1] = d[i + 2] = dark;
+    }
   }
   ctx.putImageData(img, 0, 0);
 }
