@@ -1963,7 +1963,143 @@ function _p2pFitRect(srcW, srcH, availW, availH) {
   const scale  = Math.min(1, availW / srcW, availH / srcH);
   const scaledW = srcW * scale;
   const scaledH = srcH * scale;
-  return { w: scaledW, h: scaledH, x: (availW - scaledW) / 2, y: (availH - scaledH) / 2 };
+  return { scale, w: scaledW, h: scaledH, x: (availW - scaledW) / 2, y: (availH - scaledH) / 2 };
+}
+
+// ── Invisible text layer: Ctrl+F search + copy-paste over the image ────
+//
+// The slide image is a flat raster — nothing on it is searchable or
+// selectable in PowerPoint. This adds a second, transparent layer of real
+// text boxes positioned to match pdf.js's own text coordinates, so Ctrl+F
+// and drag-select work even though every slide is still fundamentally an
+// image. The text is never visible (color alpha 0, no fill, no border) —
+// this is a utility layer, not an attempt at visually-editable slides
+// (that remains a deliberately rejected approach, see the block comment
+// above _p2pFitRect).
+//
+// Naively wrapping every pdf.js text *item* in its own PPTX text box was
+// considered and rejected: kerning/ligatures/font switches routinely
+// split a single word across 3-4 items, so a page can report hundreds of
+// them — one shape per item would both tank PowerPoint's render
+// performance and make drag-select pick up meaningless fragments instead
+// of words. Merged in three passes instead: group items into lines by Y
+// (small tolerance for sub/superscript jitter), merge items within a line
+// by X-gap (small gap = same word run, large gap = a column break — keep
+// those as separate boxes rather than smearing two columns into one
+// unreadable line), then merge vertically-adjacent single-column lines
+// with matching indent/font-size into one multi-line paragraph box (own
+// addition beyond the line-level merge — cuts shape count further for
+// ordinary body text, which is most of what real documents are).
+const _P2P_MAX_TEXT_BLOCKS = 400; // safety cap — skip the layer entirely past this, not truncate it
+
+function _p2pMergeLineItems(line) {
+  line.sort((a, b) => a.x - b.x);
+  const blocks = [];
+  let cur = null;
+  for (const item of line) {
+    if (!cur) { cur = { ...item }; continue; }
+    const gap    = item.x - (cur.x + cur.width);
+    const maxGap = cur.fontSize * 0.6; // beyond this, treat as a separate column/block, not a word gap
+    if (gap < maxGap) {
+      const needsSpace = gap > cur.fontSize * 0.1;
+      cur.text  += (needsSpace ? ' ' : '') + item.text;
+      cur.width  = (item.x + item.width) - cur.x;
+      cur.height = Math.max(cur.height, item.height);
+    } else {
+      blocks.push(cur);
+      cur = { ...item };
+    }
+  }
+  if (cur) blocks.push(cur);
+  return blocks;
+}
+
+// Merge line N+1 into line N's block only when it's unambiguous: exactly
+// one block on each line (no column split already detected on either),
+// same left edge within 2pt, similar font size (within 15%), and a
+// vertical gap consistent with ordinary single-spaced body text (<0.7×
+// font size) — anything a real paragraph wouldn't do (a heading followed
+// by body text, a table row, two side-by-side columns) fails at least one
+// of these and is deliberately left as separate boxes.
+function _p2pMergeParagraphs(lineBlockGroups) {
+  const out = [];
+  for (const group of lineBlockGroups) {
+    if (group.length !== 1) { out.push(...group); continue; }
+    const block = group[0];
+    const prev  = out[out.length - 1];
+    if (prev &&
+        prev._singleLine &&
+        Math.abs(prev.x - block.x) < 2 &&
+        Math.abs(prev.fontSize - block.fontSize) / prev.fontSize < 0.15 &&
+        // Baseline-to-baseline gap consistent with ordinary single-line
+        // spacing. Typical single-spaced leading runs ~1.15-1.5x font
+        // size depending on font/renderer (verified empirically — an
+        // initial 0.7x threshold rejected every real paragraph line,
+        // since normal line spacing is *always* well above 0.7x); 1.8x
+        // stays comfortably above that range while still well under a
+        // genuine paragraph-break/heading gap (commonly 2x+).
+        (prev._bottomY - block.y) < prev.fontSize * 1.8 &&
+        (prev._bottomY - block.y) > 0) {
+      prev.text   += '\n' + block.text;
+      prev.width   = Math.max(prev.width, block.width);
+      // prev._topY is fixed at the paragraph's first line, set once below
+      // and never touched again — recomputing height from it directly
+      // avoids compounding error on the 3rd+ merged line (an earlier
+      // version derived each new height from the previous ALREADY-
+      // accumulated height plus prev.y again, double-counting on every
+      // merge past the first and producing a shape positioned above the
+      // actual top of the text — caught by inspecting the raw generated
+      // XML, not visually, since the layer is invisible by design).
+      prev.height   = prev._topY - block.y;
+      prev._bottomY = block.y;
+      continue;
+    }
+    block._singleLine = true;
+    block._topY        = block.y + block.height;
+    block._bottomY      = block.y;
+    out.push(block);
+  }
+  return out;
+}
+
+async function _p2pExtractTextBlocks(page) {
+  let items;
+  try {
+    items = (await page.getTextContent()).items;
+  } catch { return []; }
+
+  const norm = items
+    .filter(it => it.str && it.str.trim() !== '')
+    .map(it => {
+      const tx = it.transform;
+      return {
+        text: it.str, x: tx[4], y: tx[5],
+        width: it.width, height: it.height || Math.abs(tx[3]),
+        fontSize: Math.abs(tx[3]) || 10,
+      };
+    });
+  if (!norm.length) return [];
+
+  norm.sort((a, b) => b.y - a.y); // PDF: larger y = higher on the page
+
+  const lines = [];
+  let curLine = null, curY = null;
+  for (const item of norm) {
+    const yTolerance = item.fontSize * 0.3;
+    if (curY === null || Math.abs(curY - item.y) > yTolerance) {
+      if (curLine) lines.push(curLine);
+      curLine = [item];
+      curY = item.y;
+    } else {
+      curLine.push(item);
+    }
+  }
+  if (curLine) lines.push(curLine);
+
+  const lineBlockGroups = lines.map(_p2pMergeLineItems);
+  const blocks = _p2pMergeParagraphs(lineBlockGroups);
+
+  return blocks.length > _P2P_MAX_TEXT_BLOCKS ? [] : blocks;
 }
 
 async function _runPdf2Ppt(filesSnapshot, { dpi = 150 } = {}) {
@@ -2040,6 +2176,12 @@ async function _runPdf2Ppt(filesSnapshot, { dpi = 150 } = {}) {
       canvas.width   = Math.round(viewport.width);
       canvas.height  = Math.round(viewport.height);
       await page.render({ canvasContext: ctx, viewport }).promise;
+
+      // Must run before cleanup() — pulls from the same page object the
+      // render just used.
+      const textBlocks = await _p2pExtractTextBlocks(page);
+      const pageHeightPt = viewport.height / scale; // undo the dpi/72 render scale, points
+
       page.cleanup?.();
 
       const fmt     = _p2wDetectFormat(canvas);
@@ -2053,7 +2195,43 @@ async function _runPdf2Ppt(filesSnapshot, { dpi = 150 } = {}) {
       const fit   = _p2pFitRect(pageW, pageH, layoutW, layoutH);
 
       const slide = pptx.addSlide();
+
+      // Tried using slide.background here for the common uniform-page-size
+      // case (fit.scale === 1) instead of addImage, since pptxgenjs has no
+      // lock/noSelect option for addImage and a real OOXML <p:bg> can't be
+      // click-dragged the way a regular picture shape can. Verified against
+      // the actual generated XML before keeping it, though — pptxgenjs
+      // 3.12.0's slide.background silently emits the exact same <p:pic>
+      // shape addImage would, not a <p:bg> element, so there was no locking
+      // benefit to have. Reverted to always using the positioned addImage
+      // path below (needed unconditionally anyway for the mixed-page-size
+      // fit/letterbox fix — it's already correct for both cases).
       slide.addImage({ data: dataUrl, x: fit.x, y: fit.y, w: fit.w, h: fit.h });
+
+      for (const block of textBlocks) {
+        // PDF points, origin bottom-left → inches, origin top-left, then
+        // through the same scale+offset the image itself was fit with, so
+        // the invisible text stays aligned to the (possibly letterboxed)
+        // image beneath it.
+        const xIn    = block.x / 72;
+        const yTopIn = (pageHeightPt - block.y - block.height) / 72;
+        const wIn    = block.width  / 72;
+        const hIn    = block.height / 72;
+
+        slide.addText(block.text, {
+          x: fit.x + xIn * fit.scale,
+          y: fit.y + yTopIn * fit.scale,
+          w: Math.max(0.05, wIn * fit.scale),
+          h: Math.max(0.05, hIn * fit.scale),
+          fontSize:    Math.max(1, block.fontSize * fit.scale),
+          color:       '000000',
+          transparency: 100,
+          fill:        { type: 'none' },
+          line:        { type: 'none' },
+          margin:      0,
+          wrap:        false,
+        });
+      }
 
       const now = performance.now();
       if (now - frameStart >= _FRAME_BUDGET_MS) {

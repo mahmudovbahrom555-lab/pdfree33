@@ -177,6 +177,116 @@ test('меньшая страница не увеличивается сверх
   expect(fit.h).toBe(3);
 });
 
+// ── PDF to PowerPoint: invisible text-layer merging ─────────
+// Mirrors js/processor.js's _p2pMergeLineItems/_p2pMergeParagraphs
+// verbatim. Two real bugs were found and fixed in this logic by manual
+// testing (inspecting actual generated PPTX XML, since the layer is
+// invisible by design so nothing shows up visually): a too-tight line-
+// spacing threshold that rejected every real paragraph, and a height
+// double-counting bug on the 3rd+ merged line that positioned the shape
+// above the actual text. Both are covered below so neither can silently
+// come back.
+console.log('\nPDF to PowerPoint text-layer merging:');
+
+function p2pMergeLineItems(line) {
+  line.sort((a, b) => a.x - b.x);
+  const blocks = [];
+  let cur = null;
+  for (const item of line) {
+    if (!cur) { cur = { ...item }; continue; }
+    const gap    = item.x - (cur.x + cur.width);
+    const maxGap = cur.fontSize * 0.6;
+    if (gap < maxGap) {
+      const needsSpace = gap > cur.fontSize * 0.1;
+      cur.text  += (needsSpace ? ' ' : '') + item.text;
+      cur.width  = (item.x + item.width) - cur.x;
+      cur.height = Math.max(cur.height, item.height);
+    } else {
+      blocks.push(cur);
+      cur = { ...item };
+    }
+  }
+  if (cur) blocks.push(cur);
+  return blocks;
+}
+
+function p2pMergeParagraphs(lineBlockGroups) {
+  const out = [];
+  for (const group of lineBlockGroups) {
+    if (group.length !== 1) { out.push(...group); continue; }
+    const block = group[0];
+    const prev  = out[out.length - 1];
+    if (prev &&
+        prev._singleLine &&
+        Math.abs(prev.x - block.x) < 2 &&
+        Math.abs(prev.fontSize - block.fontSize) / prev.fontSize < 0.15 &&
+        (prev._bottomY - block.y) < prev.fontSize * 1.8 &&
+        (prev._bottomY - block.y) > 0) {
+      prev.text   += '\n' + block.text;
+      prev.width   = Math.max(prev.width, block.width);
+      prev.height   = prev._topY - block.y;
+      prev._bottomY = block.y;
+      continue;
+    }
+    block._singleLine = true;
+    block._topY        = block.y + block.height;
+    block._bottomY      = block.y;
+    out.push(block);
+  }
+  return out;
+}
+
+function makeItem(text, x, y, width, height, fontSize) {
+  return { text, x, y, width, height, fontSize };
+}
+
+test('склейка внутри строки: близкие фрагменты — одно слово/блок', () => {
+  const line = [makeItem('Hel', 50, 700, 14, 12, 12), makeItem('lo', 64, 700, 10, 12, 12)];
+  const blocks = p2pMergeLineItems(line);
+  expect(blocks.length).toBe(1);
+  expect(blocks[0].text).toBe('Hello');
+});
+
+test('склейка внутри строки: большой разрыв X — раздельные блоки (колонки)', () => {
+  const line = [makeItem('Left', 50, 380, 30, 12, 12), makeItem('Right', 350, 380, 35, 12, 12)];
+  const blocks = p2pMergeLineItems(line);
+  expect(blocks.length).toBe(2);
+});
+
+test('склейка параграфа: 5 строк с обычным интервалом — один блок (регресс на порог 0.7x)', () => {
+  const y = [650, 634, 618, 602, 586];
+  const lineGroups = y.map((yy, i) => p2pMergeLineItems([makeItem(`line${i}`, 50, yy, 100, 12, 12)]));
+  const merged = p2pMergeParagraphs(lineGroups);
+  expect(merged.length).toBe(1);
+  expect(merged[0].text).toBe('line0\nline1\nline2\nline3\nline4');
+});
+
+test('склейка параграфа: высота блока считается от ПЕРВОЙ строки, не накапливается с ошибкой (регресс на double-counting)', () => {
+  const y = [650, 634, 618, 602, 586]; // fontSize 12, item.height 12 → top of line0 = 650+12 = 662
+  const lineGroups = y.map((yy, i) => p2pMergeLineItems([makeItem(`line${i}`, 50, yy, 100, 12, 12)]));
+  const merged = p2pMergeParagraphs(lineGroups);
+  // correct height = topOfFirstLine(662) - bottomOfLastLine(586) = 76
+  expect(merged[0].height).toBe(76);
+  // block.y must stay pinned to the first line — a positive height alone
+  // doesn't catch a shape computed to start above the actual text (the
+  // real symptom of the bug this covers: a negative PPTX y-offset)
+  expect(merged[0].y).toBe(650);
+});
+
+test('склейка параграфа: разный размер шрифта — НЕ склеивается (заголовок отдельно от текста)', () => {
+  const heading = p2pMergeLineItems([makeItem('Heading', 50, 500, 60, 18, 18)]);
+  const body    = p2pMergeLineItems([makeItem('Body text', 50, 470, 60, 12, 12)]);
+  const merged = p2pMergeParagraphs([heading, body]);
+  expect(merged.length).toBe(2);
+});
+
+test('склейка параграфа: большой вертикальный разрыв — НЕ склеивается (разрыв абзаца)', () => {
+  const line1 = p2pMergeLineItems([makeItem('Paragraph one', 50, 650, 80, 12, 12)]);
+  const line2 = p2pMergeLineItems([makeItem('Paragraph two, far below', 50, 400, 80, 12, 12)]);
+  const merged = p2pMergeParagraphs([line1, line2]);
+  expect(merged.length).toBe(2);
+});
+
 // ── Summary ────────────────────────────────────────────────
 console.log(`\n${'─'.repeat(40)}`);
 console.log(`Tests: ${passed + failed} | ✓ ${passed} | ${failed > 0 ? '✗ ' + failed : '0 failed'}`);
