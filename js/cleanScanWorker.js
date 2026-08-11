@@ -186,8 +186,8 @@ function _applyClean(canvas, strength) {
   const base  = _otsuThreshold(d);
   const shift = ((strength ?? 0.5) - 0.5) * 80; // ±40 around the auto baseline
   const t = Math.min(250, Math.max(5, base + shift));
-  const gamma   = 2.2;
-  const darkCap = 90; // sub-threshold ("text") pixels never render lighter than this
+  const gamma   = 2.4;
+  const darkCap = 45; // sub-threshold ("text") pixels never render lighter than this
   for (let i = 0; i < d.length; i += 4) {
     const v = d[i];
     if (v >= t) { d[i] = d[i + 1] = d[i + 2] = 255; }

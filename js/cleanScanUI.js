@@ -224,8 +224,8 @@ function _applyClean(canvas, strength) {
   const base  = _otsuThreshold(d);
   const shift = (strength - 0.5) * 80;
   const th = Math.min(250, Math.max(5, base + shift));
-  const gamma   = 2.2;
-  const darkCap = 90;
+  const gamma   = 2.4;
+  const darkCap = 45;
   for (let i = 0; i < d.length; i += 4) {
     const v = d[i];
     if (v >= th) { d[i] = d[i + 1] = d[i + 2] = 255; }
