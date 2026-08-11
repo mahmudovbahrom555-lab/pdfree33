@@ -99,15 +99,39 @@ def check_file(html_path: Path) -> tuple[list[str], list[str]]:
 # loading, the submit button never gets managed, and the tool looks
 # permanently "stuck" — with zero error, because nothing actually threw.
 #
-# This has bitten twice for real: Clean Scan shipped without its container
-# on ANY homepage (root included), and Organize/Resize were added to root
-# index.html but never back-ported to de/es/fr/pt/id. Both were only caught
-# by live user reports, not by CI. This check makes that class of bug fail
-# the build instead.
-HOMEPAGE_FILES = [
-    'index.html', 'de/index.html', 'es/index.html',
-    'fr/index.html', 'pt/index.html', 'id/index.html',
-]
+# This has bitten three times for real: Clean Scan shipped without its
+# container on ANY homepage (root included); Organize/Resize were added to
+# root index.html but never back-ported to de/es/fr/pt/id; and then all
+# three were missing on ru/ja/ko/it/nl/pl/tr/vi — locales with a genuine,
+# fully-functional homepage that CLAUDE.md's "6 languages" summary and an
+# earlier hardcoded fix-list both failed to account for. Every one of these
+# was only caught by a live user report, not CI.
+#
+# To make sure a 14th (or 20th) locale homepage can't silently repeat this,
+# HOMEPAGE_FILES is discovered rather than hand-maintained: any top-level
+# "<code>/index.html" whose content actually embeds the inline tool area
+# (id="toolArea" — the same marker check_file() already relies on) counts,
+# no matter what locale list any comment or doc happens to mention.
+def _discover_homepage_files() -> list[str]:
+    files = ['index.html']
+    for entry in sorted(ROOT.iterdir()):
+        if not entry.is_dir() or entry.name.startswith('.'):
+            continue
+        if entry.name in ('node_modules', 'dist', 'data', 'blog'):
+            continue
+        candidate = entry / 'index.html'
+        if not candidate.exists():
+            continue
+        text = candidate.read_text(encoding='utf-8', errors='replace')
+        # id="toolSearch" (the hero search widget) only exists on real
+        # homepages — every dedicated tool page also has id="toolArea" and
+        # id="mergeBtn" (same shared template), so those two alone would
+        # wrongly match every one of the ~300 tool-page directories too.
+        if 'id="toolSearch"' in text:
+            files.append(f'{entry.name}/index.html')
+    return files
+
+HOMEPAGE_FILES = _discover_homepage_files()
 
 # Containers that ARE referenced in JS but must NOT be required on homepages:
 #   fillOptions     — 'fill' is inline:false in config.js (dedicated page
