@@ -1,6 +1,14 @@
 [
   {
     "@type": "Question",
+    "name": "Is het zwartmaken permanent?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. PDFree vervangt de inhoud onder de zwarte vakken door een zwarte rechthoek op PDF-objectniveau. De originele tekst- of afbeeldingsgegevens worden nergens anders in het bestand bewaard en kunnen niet worden hersteld."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "Gebeurt het zwartmaken van PDF's lokaal of op een server?",
     "acceptedAnswer": {
       "@type": "Answer",
@@ -17,14 +25,6 @@
   },
   {
     "@type": "Question",
-    "name": "Is het zwartmaken permanent?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Ja. PDFree vervangt de inhoud onder de zwarte vakken door een zwarte rechthoek op PDF-objectniveau. De originele tekst- of afbeeldingsgegevens worden nergens anders in het bestand bewaard en kunnen niet worden hersteld."
-    }
-  },
-  {
-    "@type": "Question",
     "name": "Verwijdert het zwartmaken van een PDF ook de metadata?",
     "acceptedAnswer": {
       "@type": "Answer",
@@ -33,18 +33,18 @@
   },
   {
     "@type": "Question",
-    "name": "Kan ik meerdere gebieden tegelijk zwartmaken?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Ja. Je kunt zoveel zwarte vakken tekenen als nodig voordat je ze toepast."
-    }
-  },
-  {
-    "@type": "Question",
     "name": "Wat is het verschil tussen echt zwartmaken en een zwarte overlay?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Sommige tools tekenen een zwarte afbeelding over tekst heen, maar laten de originele tekst toegankelijk in de onderliggende PDF-gegevens. PDFree verwijdert de inhoud — wie de tekststroom van de PDF uitleest, vindt niets onder het zwarte vak."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik meerdere pagina's tegelijk zwartmaken?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Navigeer tussen pagina's met de paginaknoppen en teken vakken op elke pagina. Alle vakken worden toegepast als je op 'Zwartmaken Toepassen' klikt."
     }
   },
   {

@@ -1,6 +1,14 @@
 [
   {
     "@type": "Question",
+    "name": "가리기는 영구적인가요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "네. PDFree는 가리기 상자 아래의 내용을 PDF 객체 수준에서 검은 사각형으로 대체합니다. 원본 텍스트나 이미지 데이터는 파일 어디에도 저장되지 않으며 복구할 수 없습니다."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "PDF 가리기는 로컬에서 처리되나요, 서버에서 처리되나요?",
     "acceptedAnswer": {
       "@type": "Answer",
@@ -17,14 +25,6 @@
   },
   {
     "@type": "Question",
-    "name": "가리기는 영구적인가요?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "네. PDFree는 가리기 상자 아래의 내용을 PDF 객체 수준에서 검은 사각형으로 대체합니다. 원본 텍스트나 이미지 데이터는 파일 어디에도 저장되지 않으며 복구할 수 없습니다."
-    }
-  },
-  {
-    "@type": "Question",
     "name": "PDF를 가리면 메타데이터도 삭제되나요?",
     "acceptedAnswer": {
       "@type": "Answer",
@@ -33,18 +33,18 @@
   },
   {
     "@type": "Question",
-    "name": "여러 영역을 한 번에 가릴 수 있나요?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "네. 적용하기 전에 필요한 만큼 가리기 상자를 그릴 수 있습니다."
-    }
-  },
-  {
-    "@type": "Question",
     "name": "진짜 가리기와 검은 이미지 덮기의 차이는 무엇인가요?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "일부 도구는 텍스트 위에 검은 이미지를 그릴 뿐, 원본 텍스트는 PDF의 내부 데이터에서 여전히 접근 가능하게 남아 있습니다. PDFree는 내용 자체를 삭제하므로, PDF의 텍스트 스트림을 추출해도 가리기 상자 아래에서 아무것도 찾을 수 없습니다."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "여러 페이지를 한 번에 가릴 수 있나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "네. 페이지 버튼으로 페이지를 이동하며 어떤 페이지에도 상자를 그릴 수 있습니다. '가리기 적용'을 클릭하면 모든 상자가 적용됩니다."
     }
   },
   {

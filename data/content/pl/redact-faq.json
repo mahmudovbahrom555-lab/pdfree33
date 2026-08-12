@@ -1,6 +1,14 @@
 [
   {
     "@type": "Question",
+    "name": "Czy zaczernienie jest trwałe?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. PDFree zastępuje treść pod blokami zaczernienia czarnym prostokątem na poziomie obiektu PDF. Oryginalny tekst lub dane obrazu nie są przechowywane nigdzie indziej w pliku i nie można ich odzyskać."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "Czy zaczernianie PDF odbywa się lokalnie czy na serwerze?",
     "acceptedAnswer": {
       "@type": "Answer",
@@ -17,14 +25,6 @@
   },
   {
     "@type": "Question",
-    "name": "Czy zaczernienie jest trwałe?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Tak. PDFree zastępuje treść pod blokami zaczernienia czarnym prostokątem na poziomie obiektu PDF. Oryginalny tekst lub dane obrazu nie są przechowywane nigdzie indziej w pliku i nie można ich odzyskać."
-    }
-  },
-  {
-    "@type": "Question",
     "name": "Czy zaczernienie PDF usuwa też metadane?",
     "acceptedAnswer": {
       "@type": "Answer",
@@ -33,18 +33,18 @@
   },
   {
     "@type": "Question",
-    "name": "Czy mogę zaczernić wiele obszarów jednocześnie?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Tak. Możesz narysować dowolną liczbę bloków zaczernienia przed zastosowaniem."
-    }
-  },
-  {
-    "@type": "Question",
     "name": "Jaka jest różnica między prawdziwym zaczernieniem a czarną nakładką?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Niektóre narzędzia rysują czarny obraz na tekście, ale pozostawiają oryginalny tekst dostępny w danych PDF. PDFree usuwa treść — osoba, która wyodrębni strumień tekstu z PDF, nie znajdzie niczego pod blokiem zaczernienia."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy mogę zaczernić wiele stron jednocześnie?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. Przechodź między stronami za pomocą przycisków nawigacji i rysuj bloki na dowolnej stronie. Wszystkie bloki są stosowane po kliknięciu „Zastosuj Zaczernienie”."
     }
   },
   {

@@ -1,10 +1,10 @@
 [
   {
     "@type": "Question",
-    "name": "Is PDF redaction done locally or on a server?",
+    "name": "Is the redaction permanent?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "100% locally. PDFree processes redaction entirely in your browser — nothing is uploaded to any server."
+      "text": "Yes. PDFree replaces the content under the redaction boxes with a black rectangle at the PDF object level. The original text or image data is not stored elsewhere in the file and cannot be recovered."
     }
   },
   {
@@ -17,10 +17,10 @@
   },
   {
     "@type": "Question",
-    "name": "Is the redaction permanent?",
+    "name": "Is PDF redaction done locally or on a server?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Yes. PDFree replaces the content under the redaction boxes with a black rectangle at the PDF object level. The original text or image data is not stored elsewhere in the file and cannot be recovered."
+      "text": "100% locally. PDFree processes redaction entirely in your browser — nothing is uploaded to any server."
     }
   },
   {
@@ -33,14 +33,6 @@
   },
   {
     "@type": "Question",
-    "name": "Can I redact multiple areas at once?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Yes. You can draw as many redaction boxes as needed before applying."
-    }
-  },
-  {
-    "@type": "Question",
     "name": "What is the difference between redaction and a black rectangle overlay?",
     "acceptedAnswer": {
       "@type": "Answer",
@@ -49,10 +41,10 @@
   },
   {
     "@type": "Question",
-    "name": "Does PDFree redact text search content too?",
+    "name": "Can I redact multiple pages at once?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Yes. The redaction removes the PDF content stream data for the covered area, including any searchable text within the box bounds."
+      "text": "Yes. Navigate between pages using the page buttons and draw boxes on any page. All boxes are applied when you click 'Apply Redaction'."
     }
   },
   {
@@ -61,6 +53,14 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "No. Redaction is a one-way operation — that is what makes it secure. If you need to undo, work from the original unredacted file. Keep the original in a secure location until the redacted version is verified correct."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Does PDFree redact text search content too?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. The redaction removes the PDF content stream data for the covered area, including any searchable text within the box bounds."
     }
   }
 ]
