@@ -24,6 +24,18 @@
 
 import { getLang } from './config.js';
 
+// Ephemeral, in-memory-only grouping key — generated fresh on every page
+// load, never written to localStorage/sessionStorage/cookies, never sent
+// anywhere except as an opaque value on this page load's own events. Not a
+// persistent user ID: it can't be linked across page loads or devices and
+// identifies nothing about the person — it only answers "did these two
+// events, within this one visit, come from the same tab" (e.g. did a
+// Tool Error get followed by a Tool Success). Falls back to Math.random()
+// for browsers without crypto.randomUUID (older Safari).
+const _sessionId = (typeof crypto !== 'undefined' && crypto.randomUUID)
+  ? crypto.randomUUID()
+  : Math.random().toString(36).slice(2);
+
 /** Rounded size bucket for privacy-safe reporting */
 function _sizeBucket(bytes) {
   if (!bytes || bytes <= 0)        return 'unknown';
@@ -44,9 +56,9 @@ function _roundDuration(ms) {
 function _track(eventName, props = {}) {
   try {
     if (typeof window === 'undefined') return;
-    // locale first — no caller ever passes it explicitly, but this keeps
-    // the merge order intentional rather than accidental.
-    const fullProps = { locale: getLang(), ...props };
+    // locale/session first — no caller ever passes these explicitly, but
+    // this keeps the merge order intentional rather than accidental.
+    const fullProps = { locale: getLang(), session: _sessionId, ...props };
     if (typeof fetch === 'function') {
       fetch('/api/analytics', {
         method: 'POST',
@@ -288,4 +300,20 @@ export function trackHomepageNoInteraction(elapsedMs) {
  */
 export function trackHomepageScrollDepth(depth) {
   _track('Homepage Scroll Depth', { depth: String(depth) });
+}
+
+// ── Rage clicks ────────────────────────────────────────────────
+// Site-wide (not homepage-only, unlike the signals above) — a dead/
+// unresponsive button is just as relevant on a tool page as on the
+// homepage. See js/rageClicks.js for the burst-detection logic; this is
+// just the wrapper. Fired at most once per element per ~5s burst.
+
+/**
+ * 3+ clicks landed on the same element within ~1s with no page
+ * navigation/state change in between — the standard "rage click" signal
+ * for a dead button, confusing disabled control, or unresponsive UI.
+ * @param {string} target — best-effort element descriptor (#id, tag.class, or bare tag)
+ */
+export function trackRageClick(target) {
+  _track('Rage Click', { target });
 }

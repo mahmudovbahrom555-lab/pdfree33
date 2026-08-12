@@ -341,18 +341,21 @@ async function handleFeedback(request, env) {
 // single indexes[0] — so this uses one generic, event-shape-agnostic mapping
 // rather than per-event-type logic (avoids touching this endpoint every time
 // js/analytics.js gains a new event):
-//   indexes: [eventName]                    — primary filter/group dimension
-//   blobs:   [locale, tool, "key=value"...] — locale/tool get fixed slots
-//             (present on nearly every event), everything else remaining
-//             is tagged "key=value" so it stays identifiable in queries
+//   indexes: [eventName]                            — primary filter/group dimension
+//   blobs:   [locale, tool, session, "key=value"...] — locale/tool/session get
+//             fixed slots (present on nearly every event; session is a clean
+//             equality-joinable column specifically so "did this session's
+//             Tool Error get followed by a Tool Success" is a plain SQL join
+//             instead of string-matching), everything else remaining is
+//             tagged "key=value" so it stays identifiable in queries
 //   doubles: [...values that parse as finite numbers]
 //
 // Limits (per Cloudflare docs): 20 blobs, 20 doubles, 1 index per write,
 // index ≤ 96 bytes, 16 KB total blob size per call — truncated defensively
 // below, well under those ceilings for anything this site actually sends.
 function _dataPointFromEvent(eventName, props) {
-  const { locale = '', tool = '', ...rest } = props;
-  const blobs = [String(locale).slice(0, 100), String(tool).slice(0, 100)];
+  const { locale = '', tool = '', session = '', ...rest } = props;
+  const blobs = [String(locale).slice(0, 100), String(tool).slice(0, 100), String(session).slice(0, 100)];
   const doubles = [];
 
   for (const [key, value] of Object.entries(rest)) {

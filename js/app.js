@@ -47,6 +47,7 @@ import { checkReturnVisit, recordDownload,
          checkAndRecordConversion,
          checkAutoDownloadRecovery }               from './behavioralSignals.js';
 import { initHomepageEngagement }                 from './homepageEngagement.js';
+import { initRageClickDetection }                 from './rageClicks.js';
 import { t }                                      from './i18n.js';
 import { saveHandoff, restoreHandoff }            from './handoff.js';
 
@@ -1295,6 +1296,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   initFileListeners();
   initEvents();
+  initRageClickDetection();
   _initPWA();
   _prefetchHeavyAssets();
 
