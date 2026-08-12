@@ -1,10 +1,10 @@
 [
   {
     "@type": "Question",
-    "name": "Werden meine Dateien auf einen Server hochgeladen?",
+    "name": "Ist das Wasserzeichen dauerhaft eingebettet?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nein. PDFree arbeitet vollständig auf deinem Gerät (clientseitig). Alle Verarbeitungsschritte finden im Browser statt — deine Dateien verlassen dein Gerät nie."
+      "text": "Ja. Es wird fest in das PDF eingebettet und kann ohne spezielles Werkzeug nicht einfach entfernt werden."
     }
   },
   {
@@ -17,10 +17,26 @@
   },
   {
     "@type": "Question",
+    "name": "Kann ich das Wasserzeichen auf allen Seiten oder nur auf bestimmten einfügen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Standardmäßig wird das Wasserzeichen auf alle Seiten angewendet."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "Gibt es ein Limit für die Dateigröße oder Seitenanzahl?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Nein, es gibt keine künstlichen Limits. Die einzige Begrenzung ist der verfügbare Arbeitsspeicher deines Computers oder Smartphones."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Werden meine Dateien auf einen Server hochgeladen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nein. PDFree arbeitet vollständig auf deinem Gerät (clientseitig). Alle Verarbeitungsschritte finden im Browser statt — deine Dateien verlassen dein Gerät nie."
     }
   },
   {
@@ -41,7 +57,7 @@
   },
   {
     "@type": "Question",
-    "name": "Kann ich ein Logo als Bild-Wasserzeichen einfügen?",
+    "name": "Kann ich ein Logo als Wasserzeichen einfügen?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Ja. Wechsle im Wasserzeichen-Tool in den Logo-Modus und lade ein PNG oder JPG hoch. Es nutzt dieselben Regler für Deckkraft, Größe und Position wie das Text-Wasserzeichen — PNGs mit transparentem Hintergrund werden unterstützt."
@@ -61,14 +77,6 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Das hängt vom Zweck ab. Für Textstempel wie ENTWURF oder VERTRAULICH quer über die Seite sind 25–35 % ideal — erkennbar, aber ohne den Inhalt zu überlagern. Für feste Stempel in einer Ecke (z. B. GENEHMIGT) eignen sich 70–100 %. Passe den Wert einfach in der Vorschau an, bis das Ergebnis passt."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "Kann ich das Wasserzeichen auf allen Seiten oder nur auf bestimmten einfügen?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Standardmäßig wird das Wasserzeichen auf alle Seiten angewendet."
     }
   },
   {

@@ -17,7 +17,7 @@
   },
   {
     "@type": "Question",
-    "name": "Có thể tùy chỉnh những gì trong hình mờ?",
+    "name": "Có thể tùy chỉnh giao diện hình mờ không?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Bạn có thể điều chỉnh văn bản, độ mờ, màu sắc, cỡ chữ, góc xoay và kiểu (chéo đơn lẻ hoặc lặp lại toàn trang)."
@@ -33,10 +33,10 @@
   },
   {
     "@type": "Question",
-    "name": "Có giới hạn số trang có thể thêm hình mờ không?",
+    "name": "Có mất phí khi dùng tính năng hình mờ PDF không?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Không có. Thêm hình mờ vào PDF với bất kỳ số trang nào — miễn phí không giới hạn."
+      "text": "Không. PDFree miễn phí mãi mãi — không có đăng ký, không giới hạn hàng ngày, không giới hạn kích thước file."
     }
   },
   {
@@ -49,10 +49,18 @@
   },
   {
     "@type": "Question",
-    "name": "Có mất phí khi dùng tính năng hình mờ PDF không?",
+    "name": "Có thể thêm hình mờ chỉ vào một số trang không?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Không. PDFree miễn phí mãi mãi — không có đăng ký, không giới hạn hàng ngày, không giới hạn kích thước file."
+      "text": "Hiện tại PDFree áp dụng hình mờ cho tất cả trang cùng lúc. Để áp dụng cho trang cụ thể, hãy trích xuất trang đó trước, thêm hình mờ, rồi ghép lại."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Có thể thêm hình mờ vào bao nhiêu trang?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không có. Thêm hình mờ vào PDF với bất kỳ số trang nào — miễn phí không giới hạn."
     }
   },
   {

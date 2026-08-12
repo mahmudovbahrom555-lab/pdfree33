@@ -17,7 +17,15 @@
   },
   {
     "@type": "Question",
-    "name": "Can I add an image as a watermark instead of text?",
+    "name": "Can I remove a watermark from a PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree adds watermarks but does not remove them from existing PDFs. Watermarks added by PDFree are embedded as page content and cannot be automatically removed by basic tools."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I add an image watermark (logo)?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Yes. Switch to Logo mode in the watermark tool and upload a PNG or JPG. It uses the same opacity, size, and position controls as the text watermark, and PNGs with a transparent background are supported."
@@ -41,26 +49,10 @@
   },
   {
     "@type": "Question",
-    "name": "Is this PDF watermark tool completely free?",
+    "name": "Will the watermark appear on every page?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Yes. PDFree is a completely free PDF watermark tool — no subscription, no sign up, no watermarks or credits added to your output. Watermark as many PDFs as you need with no daily limit."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "What is the difference between a watermark and a stamp on a PDF?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "The terms are often used interchangeably. A watermark is typically a semi-transparent text that repeats diagonally across every page (e.g. DRAFT at 30% opacity). A stamp is usually an opaque label placed once in a fixed position (e.g. APPROVED in a corner). PDFree lets you achieve either look by adjusting the opacity and position of the text watermark."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "Can I remove a watermark from a PDF?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "PDFree adds watermarks but does not remove them from existing PDFs. Watermarks added by PDFree are embedded as page content and cannot be automatically removed by basic tools."
+      "text": "Yes. The watermark is applied to all pages of the PDF by default."
     }
   },
   {
@@ -73,18 +65,26 @@
   },
   {
     "@type": "Question",
-    "name": "Will the watermark appear on every page?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Yes. The watermark is applied to all pages of the PDF by default."
-    }
-  },
-  {
-    "@type": "Question",
     "name": "Can I set the watermark color?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Yes. You can set any hex color or choose from common presets. Light grey (#CCCCCC at 30% opacity) gives a professional, unobtrusive result."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is this PDF watermark tool completely free?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. PDFree is a completely free PDF watermark tool — no subscription, no sign up, no watermarks or credits added to your output. Watermark as many PDFs as you need with no daily limit."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "What is the difference between a watermark and a stamp on a PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "The terms are often used interchangeably. A watermark is typically a semi-transparent text that repeats diagonally across every page (e.g. DRAFT at 30% opacity). A stamp is usually an opaque label placed once in a fixed position (e.g. APPROVED in a corner). PDFree lets you achieve either look by adjusting the opacity and position of the text watermark."
     }
   },
   {

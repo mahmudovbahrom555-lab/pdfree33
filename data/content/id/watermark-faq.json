@@ -33,10 +33,10 @@
   },
   {
     "@type": "Question",
-    "name": "Apakah ada batasan jumlah halaman yang bisa diberi tanda air?",
+    "name": "Apakah tanda air bisa ditambahkan hanya ke halaman tertentu?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Tidak ada. Tambahkan tanda air ke PDF dengan jumlah halaman berapa pun — gratis tanpa batasan."
+      "text": "Saat ini PDFree menerapkan tanda air ke semua halaman sekaligus. Untuk halaman tertentu, ekstrak halaman tersebut terlebih dahulu, tambahkan tanda air, lalu gabungkan kembali."
     }
   },
   {
@@ -53,6 +53,14 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Tidak. PDFree gratis selamanya — tidak ada langganan, tidak ada batasan harian, tidak ada batas ukuran file."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Berapa banyak halaman yang bisa diberi tanda air?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak ada. Tambahkan tanda air ke PDF dengan jumlah halaman berapa pun — gratis tanpa batasan."
     }
   },
   {

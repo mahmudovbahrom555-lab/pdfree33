@@ -1,7 +1,7 @@
 [
   {
     "@type": "Question",
-    "name": "Est-ce complètement gratuit d'ajouter un filigrane à un PDF ?",
+    "name": "Est-ce complètement gratuit ?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Oui. PDFree est entièrement gratuit — sans abonnement, sans inscription, sans limite quotidienne. Vous pouvez ajouter des filigranes à autant de PDF que vous le souhaitez, sans aucun coût."
@@ -25,7 +25,7 @@
   },
   {
     "@type": "Question",
-    "name": "Quelle est la différence entre un filigrane et un tampon ?",
+    "name": "Quelle est la différence entre filigrane et tampon ?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Les termes sont souvent utilisés de façon interchangeable. Un filigrane est typiquement un texte semi-transparent en diagonale sur toutes les pages (ex. BROUILLON à 30 % d'opacité). Un tampon est généralement une étiquette opaque à une position fixe (ex. APPROUVÉ dans un coin). Avec PDFree, vous obtenez les deux effets en ajustant l'opacité et la position."
@@ -33,18 +33,10 @@
   },
   {
     "@type": "Question",
-    "name": "Y a-t-il une limite de taille de fichier ou de nombre de pages ?",
+    "name": "Le filigrane peut-il être supprimé après application ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Non, il n'y a pas de limites artificielles. La seule limitation est la mémoire vive disponible sur votre ordinateur ou smartphone."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "Puis-je ajouter un logo comme filigrane image ?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Oui. Passez en mode Logo dans l'outil de filigrane et importez un PNG ou JPG. Les réglages d'opacité, de taille et de position sont les mêmes que pour le filigrane texte — les PNG à fond transparent sont pris en charge."
+      "text": "Non. Le filigrane est intégré définitivement dans le PDF. Conservez toujours le fichier original avant d'appliquer un filigrane si vous en avez besoin sans."
     }
   },
   {
@@ -57,10 +49,18 @@
   },
   {
     "@type": "Question",
-    "name": "Le filigrane peut-il être supprimé après application ?",
+    "name": "Puis-je ajouter un logo comme filigrane image ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Non. Le filigrane est intégré définitivement dans le PDF. Conservez toujours le fichier original avant d'appliquer un filigrane si vous en avez besoin sans."
+      "text": "Oui. Passez en mode Logo dans l'outil de filigrane et importez un PNG ou JPG. Les réglages d'opacité, de taille et de position sont les mêmes que pour le filigrane texte — les PNG à fond transparent sont pris en charge."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Y a-t-il une limite de taille de fichier ou de nombre de pages ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non, il n'y a pas de limites artificielles. La seule limitation est la mémoire vive disponible sur votre ordinateur ou smartphone."
     }
   },
   {
