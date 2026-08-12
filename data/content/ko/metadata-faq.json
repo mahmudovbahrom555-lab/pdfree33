@@ -25,14 +25,6 @@
   },
   {
     "@type": "Question",
-    "name": "PDF에서 모든 메타데이터를 제거할 수 있나요?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "네. 저장하기 전에 일부 또는 모든 메타데이터 필드를 지울 수 있습니다. 문서를 공유하기 전에 개인정보를 제거하는 데 유용합니다."
-    }
-  },
-  {
-    "@type": "Question",
     "name": "메타데이터 편집이 PDF 내용이나 모양을 바꾸나요?",
     "acceptedAnswer": {
       "@type": "Answer",
@@ -41,18 +33,18 @@
   },
   {
     "@type": "Question",
-    "name": "메타데이터를 삭제하면 파일 크기가 줄어드나요?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "약간 줄어듭니다 — 메타데이터는 PDF 구조의 작은 부분입니다. 대부분의 파일에서 크기 감소는 미미하지만 몇 킬로바이트 정도일 수 있습니다."
-    }
-  },
-  {
-    "@type": "Question",
     "name": "현재 제 PDF에 있는 모든 메타데이터를 볼 수 있나요?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "네. PDF를 업로드하면 PDFree가 기존 메타데이터 값을 모두 읽어 양식 필드에 표시합니다. 빈 필드는 해당 데이터가 파일에 없다는 뜻입니다."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "메타데이터를 삭제하면 파일 크기가 줄어드나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "약간 줄어듭니다 — 메타데이터는 PDF 구조의 작은 부분입니다. 대부분의 파일에서 크기 감소는 미미하지만 몇 킬로바이트 정도일 수 있습니다."
     }
   },
   {

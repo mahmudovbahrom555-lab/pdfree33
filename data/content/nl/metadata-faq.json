@@ -25,14 +25,6 @@
   },
   {
     "@type": "Question",
-    "name": "Kan ik alle metadata uit een PDF verwijderen?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Ja. Je kunt elk of alle metadatavelden wissen voordat je opslaat. Handig om persoonlijke informatie te verwijderen voordat je een document deelt."
-    }
-  },
-  {
-    "@type": "Question",
     "name": "Verandert het bewerken van metadata de inhoud of het uiterlijk van de PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
@@ -41,18 +33,18 @@
   },
   {
     "@type": "Question",
-    "name": "Vermindert het verwijderen van metadata de bestandsgrootte?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Een beetje — metadata is een klein onderdeel van de PDF-structuur. De vermindering in grootte is voor de meeste bestanden verwaarloosbaar, maar kan enkele kilobytes zijn."
-    }
-  },
-  {
-    "@type": "Question",
     "name": "Kan ik alle metadata zien die momenteel in mijn PDF staat?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Ja. Wanneer je een PDF uploadt, leest en toont PDFree alle bestaande metadatawaarden in de formuliervelden. Lege velden betekenen dat die gegevens niet in het bestand aanwezig zijn."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Vermindert het verwijderen van metadata de bestandsgrootte?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Een beetje — metadata is een klein onderdeel van de PDF-structuur. De vermindering in grootte is voor de meeste bestanden verwaarloosbaar, maar kan enkele kilobytes zijn."
     }
   },
   {

@@ -25,14 +25,6 @@
   },
   {
     "@type": "Question",
-    "name": "Czy mogę usunąć wszystkie metadane z PDF?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Tak. Możesz wyczyścić dowolne lub wszystkie pola metadanych przed zapisaniem. Jest to przydatne do usuwania danych osobowych przed udostępnieniem dokumentu."
-    }
-  },
-  {
-    "@type": "Question",
     "name": "Czy edycja metadanych zmienia treść lub wygląd PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
@@ -41,18 +33,18 @@
   },
   {
     "@type": "Question",
-    "name": "Czy usunięcie metadanych zmniejsza rozmiar pliku?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Nieznacznie — metadane to niewielka część struktury PDF. Zmniejszenie rozmiaru jest znikome dla większości plików, ale może wynieść kilka kilobajtów."
-    }
-  },
-  {
-    "@type": "Question",
     "name": "Czy mogę zobaczyć wszystkie metadane obecnie zawarte w moim PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Tak. Po przesłaniu pliku PDF PDFree odczytuje i wyświetla wszystkie istniejące wartości metadanych w polach formularza. Puste pola oznaczają, że dane te nie występują w pliku."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy usunięcie metadanych zmniejsza rozmiar pliku?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nieznacznie — metadane to niewielka część struktury PDF. Zmniejszenie rozmiaru jest znikome dla większości plików, ale może wynieść kilka kilobajtów."
     }
   },
   {

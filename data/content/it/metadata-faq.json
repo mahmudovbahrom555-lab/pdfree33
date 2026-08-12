@@ -25,14 +25,6 @@
   },
   {
     "@type": "Question",
-    "name": "Posso rimuovere tutti i metadati da un PDF?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Sì. Puoi svuotare uno o tutti i campi dei metadati prima di salvare. Utile per rimuovere informazioni personali prima di condividere un documento."
-    }
-  },
-  {
-    "@type": "Question",
     "name": "Modificare i metadati cambia il contenuto o l'aspetto del PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
@@ -41,18 +33,18 @@
   },
   {
     "@type": "Question",
-    "name": "Rimuovere i metadati riduce la dimensione del file?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Leggermente — i metadati sono una piccola parte della struttura del PDF. La riduzione di dimensione è trascurabile per la maggior parte dei file, ma può essere di qualche kilobyte."
-    }
-  },
-  {
-    "@type": "Question",
     "name": "Posso vedere tutti i metadati attualmente presenti nel mio PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Sì. Quando carichi un PDF, PDFree legge e mostra tutti i valori dei metadati esistenti nei campi del modulo. I campi vuoti significano che quel dato non è presente nel file."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Rimuovere i metadati riduce la dimensione del file?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Leggermente — i metadati sono una piccola parte della struttura del PDF. La riduzione di dimensione è trascurabile per la maggior parte dei file, ma può essere di qualche kilobyte."
     }
   },
   {
