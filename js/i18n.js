@@ -187,6 +187,7 @@ export const EN = {
   err_enc_unavailable:  'Encryption library failed to load. Please refresh the page and try again.',
   err_enc_failed:       'Encryption failed. The PDF may be in an unsupported format.',
   err_encrypted_pdf:    'This PDF has an unusual or corrupted structure (this can also happen with password-protected files). Try re-saving it from another PDF app, or removing any password, then try again.',
+  err_watermark_unsupported_chars: 'This watermark text can’t be rendered — try text without Chinese, Japanese, or Korean characters.',
   err_cdn_lib_unavailable: '{lib} library unavailable — check your internet connection',
   err_compress_timeout: '⏱ Compression timed out — the file may be too image-heavy for the browser. Try the Light preset or split the PDF into smaller parts first.',
   err_batch_timeout:    '⏱ This file timed out — it may be too large or complex for the browser. It will be marked as failed and the batch will continue with the rest.',

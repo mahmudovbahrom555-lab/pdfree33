@@ -713,6 +713,98 @@ async function _runFillOrder(filesSnapshot, params) {
 // parallel (matches pdf2jpgUI.js's own bounded-concurrency discipline;
 // full-DPI raster pages are far heavier than that file's 160px thumbs) —
 // and cleanScanWorker.js only ever receives already-rendered bitmaps.
+// ── Watermark (text mode): dedicated Unicode-capable worker ────────────
+// See watermarkTextWorker.js's own header for the full rationale — this
+// exists because worker.js's handleWatermark() embeds a WinAnsi-only
+// standard font, which can't render Cyrillic/Vietnamese/Turkish text
+// (including the localized default watermark text on ru/vi/tr). Image
+// watermarks don't need any of this and stay on worker.js unchanged —
+// only routed here when options.kind !== 'image'.
+let _watermarkTextWorker = null;
+function _ensureWatermarkTextWorker() {
+  if (!_watermarkTextWorker) {
+    _watermarkTextWorker = new Worker(new URL('./watermarkTextWorker.js', import.meta.url));
+  }
+  return _watermarkTextWorker;
+}
+
+// Fetched once per page load and cached — same file every time, same
+// pattern as pdfaAnalyze.js's _loadLiberationFont (LiberationSans-Bold is
+// the metric-compatible replacement for the HelveticaBold this feature
+// used before, so existing Latin-text watermarks render identically).
+// Only fileBuffer goes in postMessage's transfer list below, never this
+// cached buffer — an ArrayBuffer put in a transfer list is detached after
+// the call, which would silently corrupt every watermark after the first
+// if this cache were transferred instead of structure-cloned.
+let _liberationSansBoldPromise = null;
+function _loadLiberationSansBold() {
+  if (!_liberationSansBoldPromise) {
+    const url = new URL('./vendor/liberation-fonts/LiberationSans-Bold.ttf', import.meta.url).href;
+    _liberationSansBoldPromise = fetch(url).then(r => {
+      if (!r.ok) throw new Error(`Failed to load LiberationSans-Bold.ttf (${r.status})`);
+      return r.arrayBuffer();
+    });
+  }
+  return _liberationSansBoldPromise;
+}
+
+// Low-level request/response round trip for one file — shared by both the
+// single-file path (_runWatermarkText) and the batch path
+// (_batchWorkerToolOne). No watchdog/cancel wiring (unlike
+// _postToWorkerForBatch's shared-worker version) — font-embedding +
+// drawText is fast enough that a hang here would indicate a real bug, not
+// something worth a timeout UX for.
+async function _watermarkTextRequest(fileBuffer, options, onProgress) {
+  const fontBytes = await _loadLiberationSansBold();
+  return new Promise((resolve, reject) => {
+    const worker = _ensureWatermarkTextWorker();
+    worker.onmessage = (e) => {
+      const data = e.data;
+      if (data.type === 'progress') { onProgress?.(data.value, data.label); return; }
+      if (data.type === 'done')     { resolve(data); return; }
+      if (data.type === 'error')    { const err = new Error(data.message); err.code = data.code; err.chars = data.chars; reject(err); return; }
+    };
+    worker.onerror = (e) => reject(new Error(e.message || 'Worker error'));
+    worker.postMessage({ fileBuffer, options, fontBytes }, [fileBuffer]);
+  });
+}
+
+async function _runWatermarkText(filesSnapshot, params) {
+  const file = filesSnapshot[0];
+  if (!_checkSize(file, 200)) { _abortUI(); return; }
+  const buffer = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await file.arrayBuffer());
+
+  setProgress(5, t('prog_watermark'));
+
+  let data;
+  try {
+    data = await _watermarkTextRequest(buffer, params, (value, label) => setProgress(value, label));
+  } catch (err) {
+    isProcessing = false; setFilesLocked(false); hideCancelBtn();
+    if (err.code === 'unsupported-characters') {
+      _handleError('watermark', t('err_watermark_unsupported_chars'), 'watermark_unsupported_chars');
+    } else {
+      _handleError('watermark', err.message);
+    }
+    return;
+  }
+  if (!isProcessing) return;
+
+  isProcessing = false;
+  setFilesLocked(false);
+  hideCancelBtn();
+  setProgress(100, t('prog_done'));
+
+  const blob = new Blob([data.result], { type: 'application/pdf' });
+  const base = file.name.replace(/\.pdf$/i, '');
+  const filename = `${base}-watermarked.pdf`;
+  const desc = t('desc_watermark', { pages: data.pageCount, size: fmtSize(blob.size) });
+
+  document.dispatchEvent(new CustomEvent('pdfree:success', {
+    detail: { tool: 'watermark', blob, desc, filename }
+  }));
+}
+
 let _cleanScanWorker = null;
 function _ensureCleanScanWorker() {
   if (!_cleanScanWorker) {
@@ -1182,6 +1274,12 @@ async function _runPdf2Jpg(filesSnapshot, { pages, format, dpi, zip }) {
 // bytes instead of re-reading/preprocessing the original file — every
 // other caller omits it and behaves exactly as before.
 async function _runWorkerTool(tool, filesSnapshot, params, bufferOverride) {
+  // Text watermarks need a Unicode-capable font — see watermarkTextWorker.js.
+  // Image watermarks (options.kind === 'image') don't and stay below unchanged.
+  if (tool === 'watermark' && params.kind !== 'image') {
+    return _runWatermarkText(filesSnapshot, params);
+  }
+
   const file   = filesSnapshot[0];
   const limits = { watermark: 200, pagenum: 200, meta: 200, protect: 200, rotate: 150, redact: 150, fill: 200, flatten: 200 };
   if (!_checkSize(file, limits[tool] ?? 200)) { _abortUI(); return; }
@@ -1361,7 +1459,13 @@ async function _batchCompressOne(file, params, onProgress) {
 /** One file through a generic worker tool (watermark/protect/pagenum/flatten) — returns { name, buffer }. */
 async function _batchWorkerToolOne(tool, file, params, onProgress) {
   const buffer = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await file.arrayBuffer());
-  const data = await _postToWorkerForBatch({ tool, file: buffer, options: params }, [buffer], onProgress);
+  // Same Unicode-font routing as the single-file path in _runWorkerTool —
+  // see watermarkTextWorker.js for why. _watermarkTextRequest throwing
+  // (e.g. code:'unsupported-characters') is caught by _runBatch's own
+  // per-file try/catch, same as any other batch-item failure.
+  const data = (tool === 'watermark' && params.kind !== 'image')
+    ? await _watermarkTextRequest(buffer, params, onProgress)
+    : await _postToWorkerForBatch({ tool, file: buffer, options: params }, [buffer], onProgress);
   if (!(data.result instanceof ArrayBuffer)) throw new Error('Unexpected result from worker');
   const base = file.name.replace(/\.pdf$/i, '');
   return { name: `${base}${_BATCH_SUFFIX[tool] || '-processed'}.pdf`, buffer: data.result };

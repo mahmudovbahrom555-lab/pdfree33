@@ -202,6 +202,7 @@ window.PDFREE_LOCALE = {
   err_enc_unavailable: 'Không thể tải thư viện mã hóa. Vui lòng tải lại trang.',
   err_enc_failed:      'Mã hóa thất bại. Định dạng PDF có thể không được hỗ trợ.',
   err_encrypted_pdf:   'PDF này có cấu trúc bất thường hoặc bị hỏng (điều này cũng có thể xảy ra với các tệp được bảo vệ bằng mật khẩu). Hãy thử lưu lại tệp bằng một ứng dụng PDF khác, hoặc xóa mật khẩu, rồi thử lại.',
+  err_watermark_unsupported_chars: 'Không thể hiển thị văn bản hình mờ này — hãy thử văn bản không có ký tự Trung, Nhật hoặc Hàn.',
   err_cdn_lib_unavailable: 'Không thể tải thư viện {lib} — vui lòng kiểm tra kết nối internet',
   err_compress_timeout: '⏱ Nén bị hủy — file chứa quá nhiều ảnh cho trình duyệt. Thử preset Nhẹ hoặc tách PDF trước.',
   err_batch_timeout:    '⏱ File này đã hết thời gian xử lý — có thể quá lớn hoặc quá phức tạp cho trình duyệt. File sẽ được đánh dấu là lỗi và lô xử lý sẽ tiếp tục với các file còn lại.',

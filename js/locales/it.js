@@ -201,6 +201,7 @@ window.PDFREE_LOCALE = {
   err_enc_unavailable: 'La libreria di cifratura non ha potuto caricarsi. Ricarica la pagina.',
   err_enc_failed:      'Cifratura fallita. Il PDF potrebbe essere in un formato non compatibile.',
   err_encrypted_pdf:   "Questo PDF ha una struttura insolita o danneggiata (può succedere anche con file protetti da password). Prova a salvarlo di nuovo da un'altra app PDF, oppure rimuovi la password, e riprova.",
+  err_watermark_unsupported_chars: 'Questo testo della filigrana non può essere visualizzato — prova un testo senza caratteri cinesi, giapponesi o coreani.',
   err_cdn_lib_unavailable: "Libreria {lib} non disponibile — controlla la tua connessione internet",
   err_compress_timeout: '⏱ Compressione annullata — il file ha troppe immagini per il browser. Prova il preset Leggero o dividi il PDF prima.',
   err_batch_timeout:    '⏱ Questo file ha superato il tempo limite — potrebbe essere troppo grande o complesso per il browser. Verrà contrassegnato come non riuscito e il batch continuerà con gli altri file.',

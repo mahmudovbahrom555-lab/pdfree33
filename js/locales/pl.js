@@ -201,6 +201,7 @@ window.PDFREE_LOCALE = {
   err_enc_unavailable:  'Nie można załadować biblioteki szyfrowania. Odśwież stronę.',
   err_enc_failed:       'Szyfrowanie nie powiodło się. PDF może mieć nieobsługiwany format.',
   err_encrypted_pdf:    'Ten plik PDF ma nietypową lub uszkodzoną strukturę (może się tak zdarzyć również w przypadku plików chronionych hasłem). Spróbuj zapisać go ponownie w innej aplikacji PDF lub usuń hasło, a następnie spróbuj ponownie.',
+  err_watermark_unsupported_chars: 'Tego tekstu znaku wodnego nie można wyświetlić — spróbuj tekstu bez chińskich, japońskich lub koreańskich znaków.',
   err_cdn_lib_unavailable: 'Biblioteka {lib} niedostępna — sprawdź połączenie z internetem',
   err_compress_timeout: '⏱ Kompresja anulowana — plik ma zbyt wiele obrazów dla przeglądarki. Wypróbuj ustawienie Lekkie lub najpierw podziel PDF.',
   err_batch_timeout:    '⏱ Przetwarzanie tego pliku przekroczyło limit czasu — plik może być zbyt duży lub zbyt złożony dla przeglądarki. Zostanie oznaczony jako nieudany, a partia będzie kontynuowana z pozostałymi plikami.',

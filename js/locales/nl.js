@@ -201,6 +201,7 @@ window.PDFREE_LOCALE = {
   err_enc_unavailable:  'Versleutelingsbibliotheek kon niet worden geladen. Vernieuw de pagina.',
   err_enc_failed:       'Versleuteling mislukt. De PDF heeft mogelijk een niet-ondersteund formaat.',
   err_encrypted_pdf:    'Deze PDF heeft een ongebruikelijke of beschadigde structuur (dit kan ook gebeuren bij met een wachtwoord beveiligde bestanden). Probeer het opnieuw op te slaan vanuit een andere PDF-app, of verwijder het wachtwoord, en probeer het opnieuw.',
+  err_watermark_unsupported_chars: 'Deze watermarktekst kan niet worden weergegeven — probeer tekst zonder Chinese, Japanse of Koreaanse tekens.',
   err_cdn_lib_unavailable: '{lib}-bibliotheek niet beschikbaar — controleer je internetverbinding',
   err_compress_timeout: '⏱ Comprimeren geannuleerd — het bestand heeft te veel afbeeldingen voor de browser. Probeer de Light-instelling of splits de PDF eerst.',
   err_batch_timeout:    '⏱ Deze bestandsverwerking duurde te lang — het bestand is mogelijk te groot of te complex voor de browser. Het wordt als mislukt gemarkeerd en de batch gaat verder met de rest.',
