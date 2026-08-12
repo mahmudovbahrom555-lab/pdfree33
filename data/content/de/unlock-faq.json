@@ -17,7 +17,7 @@
   },
   {
     "@type": "Question",
-    "name": "Kann PDFree ein unbekanntes Passwort knacken oder erraten?",
+    "name": "Kann PDFree ein unbekanntes Passwort knacken?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Nein. Du musst das korrekte Passwort der PDF kennen. PDFree entfernt nur den Schutz bei Dateien, die du bereits berechtigt bist zu öffnen — das Tool rät keine Passwörter, umgeht keine Verschlüsselung und stellt keine Passwörter wieder her."
@@ -25,7 +25,7 @@
   },
   {
     "@type": "Question",
-    "name": "Was, wenn meine PDF sagt: 'Kein Passwort erforderlich'?",
+    "name": "Was, wenn meine PDF sagt: „Kein Passwort erforderlich\"?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Manche PDFs haben nur Eigentümerbeschränkungen (z. B. Drucken oder Kopieren deaktiviert), ohne ein Öffnungspasswort zu benötigen. PDFree erkennt das automatisch und entfernt diese Einschränkungen, ohne dass du etwas eingeben musst."
@@ -33,7 +33,7 @@
   },
   {
     "@type": "Question",
-    "name": "Ich habe das Passwort eingegeben, aber es sagt 'Falsch'. Was nun?",
+    "name": "Ich habe das Passwort eingegeben, aber es sagt „Falsch\". Was nun?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Überprüfe auf Tippfehler, Leerzeichen vor oder nach dem Passwort sowie die Feststelltaste. Passwörter sind Groß-/Kleinschreibung-sensitiv. Die Datei bleibt ausgewählt, sodass du einfach erneut versuchen kannst."

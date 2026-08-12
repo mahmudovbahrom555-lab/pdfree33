@@ -25,7 +25,7 @@
   },
   {
     "@type": "Question",
-    "name": "Que faire si mon PDF indique qu'aucun mot de passe n'est requis ?",
+    "name": "Que faire si mon PDF indique « aucun mot de passe requis » ?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Certains PDFs ont uniquement des restrictions propriétaire (impression ou copie désactivées) sans nécessiter de mot de passe pour les ouvrir. PDFree le détecte automatiquement et vous permet de supprimer ces restrictions sans rien saisir."
