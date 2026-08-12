@@ -45,6 +45,7 @@ window.PDFREE_LOCALE = {
   process_again:    '↺ Обработать снова',
   download_again:      '⬇ Скачать снова',
   auto_download_hint:  '✓ Файл {filename} сохранён на устройство',
+  download_toast:      '📥 Файл {filename} скачан',
 
   // files
   split_one_only:  'Разделение работает только с одним PDF. Сначала удалите текущий файл.',

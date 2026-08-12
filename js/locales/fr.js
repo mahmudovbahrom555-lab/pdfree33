@@ -44,6 +44,7 @@ window.PDFREE_LOCALE = {
   process_again:    '↺ Traiter à nouveau',
   download_again:      '⬇ Télécharger à nouveau',
   auto_download_hint:  '✓ {filename} enregistré sur votre appareil',
+  download_toast:      '📥 {filename} téléchargé',
 
   // files
   split_one_only:  "Split ne fonctionne qu'avec un seul PDF. Supprimez d'abord le fichier actuel.",

@@ -877,6 +877,10 @@ function _showSuccess(desc) {
   const hint = document.getElementById('successAutoHint');
   if (hint) { hint.textContent = t('auto_download_hint', { filename: _lastResultName }); hint.style.display = ''; }
 
+  // Second, more transient confirmation channel — matches app.js's shared
+  // _handleSuccess() so OCR's independent success path doesn't diverge.
+  setTimeout(() => _showToast(t('download_toast', { filename: _lastResultName })), 400);
+
   // Wire "Download again" fallback button
   const dlBtn = document.getElementById('downloadBtn');
   if (dlBtn) {

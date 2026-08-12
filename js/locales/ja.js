@@ -47,6 +47,7 @@ window.PDFREE_LOCALE = {
   process_again:    '↺ もう一度処理する',
   download_again:      '⬇ もう一度ダウンロード',
   auto_download_hint:  '✓ {filename} を端末に保存しました',
+  download_toast:      '📥 {filename} をダウンロードしました',
 
   // files
   split_one_only:  '分割は1つのPDFのみ対応しています。先に現在のファイルを削除してください。',
