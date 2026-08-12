@@ -1,10 +1,10 @@
 [
   {
     "@type": "Question",
-    "name": "¿Se suben mis archivos a un servidor?",
+    "name": "¿Cuánto se reducirá el tamaño de mi PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. Todo funciona en tu navegador. Tus documentos nunca salen de tu dispositivo."
+      "text": "Los PDFs con imágenes pueden reducirse un 50–70 %. Los de solo texto, un 10–30 %."
     }
   },
   {
@@ -17,10 +17,18 @@
   },
   {
     "@type": "Question",
-    "name": "¿Cuánto puede reducir PDFree el tamaño de un PDF?",
+    "name": "¿Se suben mis archivos a un servidor?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Las reducciones típicas son del 20–70 %. Los PDFs con imágenes de alta resolución (documentos escaneados, catálogos fotográficos) se comprimen más — a menudo un ahorro del 50–80 %. Los PDFs de solo texto se reducen menos, ya que el texto ya se almacena eficientemente como vectores."
+      "text": "No. Todo funciona en tu navegador. Tus documentos nunca salen de tu dispositivo."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Hay un límite de tamaño de archivo?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. La única limitación es la memoria RAM disponible en tu dispositivo."
     }
   },
   {
@@ -45,14 +53,6 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Sí. PDFree funciona completamente sin conexión como una Progressive Web App una vez que la página ha cargado. No se requiere conexión a internet — todo el procesamiento se ejecuta en tu navegador."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "¿Hay un límite de tamaño de archivo?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "No. La única limitación es la memoria RAM disponible en tu dispositivo."
     }
   },
   {

@@ -1,10 +1,18 @@
 [
   {
     "@type": "Question",
-    "name": "Does PDFree upload my file to compress it?",
+    "name": "Does PDF compression work without an internet connection?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. Compression runs entirely in your browser using JavaScript. Your PDF is loaded into browser memory, processed locally, and the result is offered as a download. No data is sent to any server."
+      "text": "Yes. PDFree works fully offline as a Progressive Web App once the page has loaded. No internet connection is required — all processing runs in your browser."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "How much does PDF compression reduce file size?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Typical reductions are 20–70%. PDFs with high-resolution images (scanned documents, photo brochures) compress the most — often 50–80% savings. Text-only PDFs see less reduction since text is already stored efficiently as vectors."
     }
   },
   {
@@ -13,14 +21,6 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "No. Text in PDFs is vector-based and is not affected by image compression. Only raster images embedded in the PDF are recompressed. On the 'Light' setting even images are untouched — only metadata and hidden redundant objects are removed."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "How much can PDFree reduce a PDF file size?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Typical reductions are 20–70%. PDFs with high-resolution images (scanned documents, photo brochures) compress the most — often 50–80% savings. Text-only PDFs see less reduction since text is already stored efficiently as vectors."
     }
   },
   {
@@ -41,10 +41,18 @@
   },
   {
     "@type": "Question",
-    "name": "Does PDF compression work without an internet connection?",
+    "name": "Is there a file size limit for compression?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Yes. PDFree works fully offline as a Progressive Web App once the page has loaded. No internet connection is required — all processing runs in your browser."
+      "text": "No. PDFree has no upload limit because nothing is uploaded. The only practical limit is your device's available RAM. Most computers comfortably handle PDFs up to several hundred megabytes."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Does PDFree upload my file to compress it?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Compression runs entirely in your browser using JavaScript. Your PDF is loaded into browser memory, processed locally, and the result is offered as a download. No data is sent to any server."
     }
   },
   {
@@ -61,14 +69,6 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Yes. PDFree is a completely free PDF compressor — no subscription, no sign up, no watermarks on the output. Compress as many PDFs as you need with no daily limit and no file size cap."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "Is there a file size limit for compression?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "No. PDFree has no upload limit because nothing is uploaded. The only practical limit is your device's available RAM. Most computers comfortably handle PDFs up to several hundred megabytes."
     }
   },
   {
