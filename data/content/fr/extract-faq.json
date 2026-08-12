@@ -17,14 +17,6 @@
   },
   {
     "@type": "Question",
-    "name": "Puis-je extraire des pages non consécutives ?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Oui. Vous pouvez spécifier n'importe quelle combinaison de pages, par exemple 1, 4, 7–9, 12."
-    }
-  },
-  {
-    "@type": "Question",
     "name": "Le PDF original est-il modifié lors de l'extraction ?",
     "acceptedAnswer": {
       "@type": "Answer",
@@ -33,10 +25,26 @@
   },
   {
     "@type": "Question",
+    "name": "Puis-je extraire des pages non consécutives ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui. Vous pouvez spécifier n'importe quelle combinaison de pages, par exemple 1, 4, 7–9, 12."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "La qualité est-elle préservée lors de l'extraction ?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Oui. Les pages sont extraites au niveau des objets PDF — sans recompression ni perte de qualité. Textes, images et graphiques vectoriels sont identiques à l'original."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Y a-t-il des limites de taille ou de nombre de pages ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non. PDFree n'a pas de limites artificielles. La seule contrainte est la mémoire vive disponible sur votre appareil."
     }
   }
 ]

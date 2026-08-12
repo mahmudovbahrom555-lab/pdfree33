@@ -25,10 +25,18 @@
   },
   {
     "@type": "Question",
-    "name": "Posso estrarre pagine non consecutive?",
+    "name": "Le pagine estratte mantengono la formattazione esatta?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sì. Puoi selezionare qualsiasi combinazione di pagine singole e intervalli di pagine."
+      "text": "Sì. Le pagine vengono copiate a livello di oggetto PDF — font, immagini, link e formattazione sono identici agli originali."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso estrarre pagine da un PDF protetto da password?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. I PDF cifrati non possono essere modificati senza la password. Rimuovi prima la password, poi estrai le pagine."
     }
   },
   {
@@ -41,22 +49,6 @@
   },
   {
     "@type": "Question",
-    "name": "Qual è il formato dell'intervallo di pagine?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Inserisci pagine e intervalli separati da virgole: 1, 3-7, 12, 15-20. Gli spazi sono opzionali. Gli intervalli sono inclusivi — 3-7 estrae le pagine 3, 4, 5, 6 e 7."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "Le pagine estratte mantengono la formattazione esatta?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Sì. Le pagine vengono copiate a livello di oggetto PDF — font, immagini, link e formattazione sono identici agli originali."
-    }
-  },
-  {
-    "@type": "Question",
     "name": "Come estraggo una singola pagina da un PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
@@ -65,10 +57,10 @@
   },
   {
     "@type": "Question",
-    "name": "Posso estrarre pagine da un PDF protetto da password?",
+    "name": "Estrarre pagine modifica il file originale?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. I PDF cifrati non possono essere modificati senza la password. Rimuovi prima la password, poi estrai le pagine."
+      "text": "No. PDFree legge il tuo file nella memoria del browser e crea un nuovo PDF con le pagine selezionate. Il file originale sul tuo dispositivo non viene mai modificato — resta esattamente com'era."
     }
   }
 ]

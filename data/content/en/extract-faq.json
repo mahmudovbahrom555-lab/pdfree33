@@ -1,10 +1,10 @@
 [
   {
     "@type": "Question",
-    "name": "Does extracting PDF pages upload my file?",
+    "name": "What is the page range format?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. PDFree extracts pages entirely in your browser. Your files never leave your device."
+      "text": "Enter pages and ranges separated by commas: 1, 3-7, 12, 15-20. Spaces are optional. Ranges are inclusive — 3-7 extracts pages 3, 4, 5, 6, and 7."
     }
   },
   {
@@ -25,10 +25,18 @@
   },
   {
     "@type": "Question",
-    "name": "Can I extract non-consecutive pages?",
+    "name": "Will the extracted pages preserve formatting exactly?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Yes. You can select any combination of individual pages and page ranges."
+      "text": "Yes. Pages are copied at the PDF object level — fonts, images, links, and formatting are identical to the originals."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I extract pages from a password-protected PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Encrypted PDFs cannot be modified without the password. Remove the password first, then extract the pages."
     }
   },
   {
@@ -41,22 +49,6 @@
   },
   {
     "@type": "Question",
-    "name": "What is the page range format?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Enter pages and ranges separated by commas: 1, 3-7, 12, 15-20. Spaces are optional. Ranges are inclusive — 3-7 extracts pages 3, 4, 5, 6, and 7."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "Will the extracted pages preserve formatting exactly?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Yes. Pages are copied at the PDF object level — fonts, images, links, and formatting are identical to the originals."
-    }
-  },
-  {
-    "@type": "Question",
     "name": "How do I extract a single page from a PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
@@ -65,10 +57,18 @@
   },
   {
     "@type": "Question",
-    "name": "Can I extract pages from a password-protected PDF?",
+    "name": "Can I extract pages from a scanned PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. Encrypted PDFs cannot be modified without the password. Remove the password first, then extract the pages."
+      "text": "Yes. Scanned PDFs are images embedded in a PDF container — extraction works identically to any other PDF. The pages are copied at the object level, so the scan quality is completely unchanged in the output file."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Does extracting pages change the original file?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. PDFree reads your file in your browser's memory and creates a new PDF with the selected pages. The original file on your device is never modified — it stays exactly as it was."
     }
   }
 ]

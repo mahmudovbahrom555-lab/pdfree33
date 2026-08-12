@@ -25,10 +25,18 @@
   },
   {
     "@type": "Question",
-    "name": "Kan ik niet-opeenvolgende pagina's extraheren?",
+    "name": "Blijft de opmaak van de geëxtraheerde pagina's exact behouden?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ja. Je kunt elke combinatie van losse pagina's en paginabereiken selecteren."
+      "text": "Ja. Pagina's worden gekopieerd op PDF-objectniveau — lettertypen, afbeeldingen, links en opmaak zijn identiek aan de originelen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik pagina's extraheren uit een met wachtwoord beveiligde PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. Versleutelde PDF's kunnen niet worden gewijzigd zonder het wachtwoord. Verwijder eerst het wachtwoord en extraheer daarna de pagina's."
     }
   },
   {
@@ -41,22 +49,6 @@
   },
   {
     "@type": "Question",
-    "name": "Wat is het formaat voor het paginabereik?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Voer pagina's en bereiken gescheiden door komma's in: 1, 3-7, 12, 15-20. Spaties zijn optioneel. Bereiken zijn inclusief — 3-7 extraheert pagina 3, 4, 5, 6 en 7."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "Blijft de opmaak van de geëxtraheerde pagina's exact behouden?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Ja. Pagina's worden gekopieerd op PDF-objectniveau — lettertypen, afbeeldingen, links en opmaak zijn identiek aan de originelen."
-    }
-  },
-  {
-    "@type": "Question",
     "name": "Hoe extraheer ik één pagina uit een PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
@@ -65,10 +57,10 @@
   },
   {
     "@type": "Question",
-    "name": "Kan ik pagina's extraheren uit een met wachtwoord beveiligde PDF?",
+    "name": "Verandert het extraheren van pagina's het originele bestand?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nee. Versleutelde PDF's kunnen niet worden gewijzigd zonder het wachtwoord. Verwijder eerst het wachtwoord en extraheer daarna de pagina's."
+      "text": "Nee. PDFree leest je bestand in het geheugen van je browser en maakt een nieuwe PDF met de geselecteerde pagina's. Het originele bestand op je apparaat wordt nooit gewijzigd — het blijft precies zoals het was."
     }
   }
 ]
