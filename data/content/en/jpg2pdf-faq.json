@@ -1,30 +1,6 @@
 [
   {
     "@type": "Question",
-    "name": "Does the tool upload my images anywhere?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "No. All processing happens in your browser using the pdf-lib JavaScript library. Images are loaded into browser memory and never transmitted."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "Does PDFree store or log my files after processing?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "No. PDFree runs entirely in your browser — there is no backend server that receives your files. Because nothing is uploaded, nothing can be stored, logged, or retained. Your document exists only in your browser's memory for the duration of the session and is cleared when you close the tab."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "Can I convert multiple JPG images into one PDF?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Yes. You can add multiple images and they will be combined into a single multi-page PDF."
-    }
-  },
-  {
-    "@type": "Question",
     "name": "What image formats can I convert to PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
@@ -49,6 +25,14 @@
   },
   {
     "@type": "Question",
+    "name": "Can I mix JPG and PNG images in one PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. Add any combination of JPG, PNG, and WebP files. Each becomes a page in the final PDF regardless of format."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "What page size will the PDF use?",
     "acceptedAnswer": {
       "@type": "Answer",
@@ -61,6 +45,22 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "No. Add as many images as you need. Processing time scales with total image size — dozens of photos may take 10–20 seconds on slower devices."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Does the tool upload my images anywhere?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. All processing happens in your browser using the pdf-lib JavaScript library. Images are loaded into browser memory and never transmitted."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Does PDFree store or log my files after processing?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. PDFree runs entirely in your browser — there is no backend server that receives your files. Because nothing is uploaded, nothing can be stored, logged, or retained. Your document exists only in your browser's memory for the duration of the session and is cleared when you close the tab."
     }
   }
 ]

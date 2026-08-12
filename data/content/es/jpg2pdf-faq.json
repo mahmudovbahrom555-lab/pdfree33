@@ -1,7 +1,7 @@
 [
   {
     "@type": "Question",
-    "name": "¿Es completamente gratis convertir JPG a PDF?",
+    "name": "¿Es completamente gratis?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Sí. PDFree es totalmente gratuito — sin suscripción, sin registro, sin límite diario. Puedes convertir tantas imágenes como necesites sin coste alguno."
@@ -33,15 +33,15 @@
   },
   {
     "@type": "Question",
-    "name": "¿Cuántas imágenes puedo convertir a la vez?",
+    "name": "¿Se conserva la calidad de imagen al convertir?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No hay límite fijo. Puedes añadir tantas imágenes como necesites — la única restricción es la memoria RAM de tu dispositivo."
+      "text": "Por defecto, PDFree comprime ligeramente las imágenes (calidad JPEG 82%, máximo 2400px en el lado más largo) para mantener un tamaño de PDF razonable — visualmente casi imperceptible. Desactiva \"Comprimir imágenes\" antes de convertir si necesitas la resolución original exacta."
     }
   },
   {
     "@type": "Question",
-    "name": "¿Funciona en el móvil sin instalar ninguna app?",
+    "name": "¿Funciona en el móvil sin instalar nada?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Sí. Abre la página desde el navegador de tu teléfono y selecciona fotos directamente desde la galería. No hay que instalar ninguna aplicación."
@@ -49,10 +49,10 @@
   },
   {
     "@type": "Question",
-    "name": "¿Se conserva la calidad de las imágenes al convertirlas a PDF?",
+    "name": "¿Cuántas imágenes puedo convertir a la vez?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Por defecto, PDFree comprime ligeramente las imágenes (calidad JPEG 82%, máximo 2400px en el lado más largo) para mantener un tamaño de PDF razonable — visualmente casi imperceptible. Desactiva \"Comprimir imágenes\" antes de convertir si necesitas la resolución original exacta."
+      "text": "No hay límite fijo. Puedes añadir tantas imágenes como necesites — la única restricción es la memoria RAM de tu dispositivo."
     }
   }
 ]

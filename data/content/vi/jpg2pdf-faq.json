@@ -1,30 +1,6 @@
 [
   {
     "@type": "Question",
-    "name": "Ảnh của tôi có bị tải lên đâu đó không?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Không. Quá trình chuyển đổi diễn ra hoàn toàn trong trình duyệt. File ảnh không bao giờ được gửi đến bất kỳ server nào."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "PDFree có lưu trữ hoặc ghi lại file của tôi sau khi xử lý không?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Không. PDFree chạy hoàn toàn trong trình duyệt của bạn — không có máy chủ backend nào nhận file của bạn. Vì không có gì được tải lên, không có gì có thể được lưu trữ, ghi lại hoặc giữ lại. Tài liệu của bạn chỉ tồn tại trong bộ nhớ trình duyệt trong suốt phiên và bị xóa khi bạn đóng tab."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "Có thể chuyển nhiều ảnh JPG thành một PDF không?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Có. Bạn có thể thêm nhiều ảnh và tất cả sẽ được gộp thành một PDF nhiều trang."
-    }
-  },
-  {
-    "@type": "Question",
     "name": "Định dạng ảnh nào có thể chuyển sang PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
@@ -41,14 +17,6 @@
   },
   {
     "@type": "Question",
-    "name": "Chất lượng ảnh có bị giảm sau khi chuyển đổi không?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Theo mặc định, PDFree nén nhẹ hình ảnh (chất lượng JPEG 82%, giới hạn 2400px ở cạnh dài nhất) để giữ kích thước PDF hợp lý — gần như không nhận thấy bằng mắt thường. Tắt \"Nén hình ảnh\" trước khi chuyển đổi nếu bạn cần độ phân giải gốc chính xác."
-    }
-  },
-  {
-    "@type": "Question",
     "name": "Có thể dùng trên điện thoại không?",
     "acceptedAnswer": {
       "@type": "Answer",
@@ -57,10 +25,18 @@
   },
   {
     "@type": "Question",
-    "name": "Có giới hạn số ảnh có thể chuyển không?",
+    "name": "Chất lượng ảnh có bị giảm không?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Không. Thêm bao nhiêu ảnh tùy thích. Thời gian xử lý tỉ lệ với tổng kích thước ảnh — hàng chục ảnh có thể mất 10–20 giây trên thiết bị chậm hơn."
+      "text": "Theo mặc định, PDFree nén nhẹ hình ảnh (chất lượng JPEG 82%, giới hạn 2400px ở cạnh dài nhất) để giữ kích thước PDF hợp lý — gần như không nhận thấy bằng mắt thường. Tắt \"Nén hình ảnh\" trước khi chuyển đổi nếu bạn cần độ phân giải gốc chính xác."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Có thể trộn JPG và PNG trong một PDF không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có. Thêm bất kỳ kết hợp nào của file JPG, PNG và WebP. Mỗi file trở thành một trang trong PDF cuối cùng bất kể định dạng."
     }
   },
   {
@@ -73,10 +49,26 @@
   },
   {
     "@type": "Question",
-    "name": "Có thể trộn JPG và PNG trong một PDF không?",
+    "name": "Có giới hạn số ảnh có thể chuyển không?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Có. Thêm bất kỳ kết hợp nào của file JPG, PNG và WebP. Mỗi file trở thành một trang trong PDF cuối cùng bất kể định dạng."
+      "text": "Không. Thêm bao nhiêu ảnh tùy thích. Thời gian xử lý tỉ lệ với tổng kích thước ảnh — hàng chục ảnh có thể mất 10–20 giây trên thiết bị chậm hơn."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Ảnh của tôi có bị tải lên đâu đó không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không. Quá trình chuyển đổi diễn ra hoàn toàn trong trình duyệt. File ảnh không bao giờ được gửi đến bất kỳ server nào."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFree có lưu trữ hoặc ghi lại file của tôi sau khi xử lý không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không. PDFree chạy hoàn toàn trong trình duyệt của bạn — không có máy chủ backend nào nhận file của bạn. Vì không có gì được tải lên, không có gì có thể được lưu trữ, ghi lại hoặc giữ lại. Tài liệu của bạn chỉ tồn tại trong bộ nhớ trình duyệt trong suốt phiên và bị xóa khi bạn đóng tab."
     }
   }
 ]

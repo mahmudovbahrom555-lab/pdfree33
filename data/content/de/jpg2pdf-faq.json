@@ -1,10 +1,10 @@
 [
   {
     "@type": "Question",
-    "name": "Werden meine Dateien auf einem Server gespeichert?",
+    "name": "Wie viele Bilder kann ich auf einmal konvertieren?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nein. PDFree arbeitet vollständig auf deinem Gerät (clientseitig). Wir haben keine Server, die deine Dateien verarbeiten, was 100 % Privatsphäre garantiert."
+      "text": "Es gibt kein festes Limit. Du kannst beliebig viele Bilder hinzufügen — jedes wird zu einer Seite im fertigen PDF."
     }
   },
   {
@@ -17,10 +17,10 @@
   },
   {
     "@type": "Question",
-    "name": "Wie viele Bilder kann ich auf einmal konvertieren?",
+    "name": "Werden meine Bilder auf einen Server hochgeladen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Es gibt kein festes Limit. Du kannst beliebig viele Bilder hinzufügen — jedes wird zu einer Seite im fertigen PDF."
+      "text": "Nein. Alle Verarbeitungsschritte finden ausschließlich in deinem Browser statt. Deine Bilder und das fertige PDF verlassen dein Gerät nie."
     }
   },
   {
