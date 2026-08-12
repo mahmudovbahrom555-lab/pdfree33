@@ -33,7 +33,7 @@
   },
   {
     "@type": "Question",
-    "name": "Is my PDF uploaded to any server when flattening?",
+    "name": "Is my PDF uploaded to any server?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "No. Everything runs in your browser using pdf-lib. Neither your original PDF nor the flattened result is ever sent anywhere. Your document and its contents stay on your device at all times."
@@ -57,7 +57,7 @@
   },
   {
     "@type": "Question",
-    "name": "Does flattening a PDF reduce the file size?",
+    "name": "Does flattening a PDF reduce file size?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Often slightly. Flattening removes interactive form widget data and JavaScript, which reduces file size for forms with many fields. However, images and embedded fonts are unaffected by flattening. For significant size reduction, run the flattened output through a PDF compressor after flattening."
@@ -65,7 +65,7 @@
   },
   {
     "@type": "Question",
-    "name": "What is the difference between flattening a PDF and password-protecting it?",
+    "name": "What is the difference between flattening and password-protecting a PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "They solve different problems. Flattening removes the interactive form structure entirely — no fields exist to edit, regardless of permissions. Password protection restricts access or editing rights but leaves form fields intact; someone with the password could still modify a fillable form. For maximum security, flatten first to lock the content, then add a password."

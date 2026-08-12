@@ -25,14 +25,6 @@
   },
   {
     "@type": "Question",
-    "name": "L'aplatissement supprime-t-il les signatures numériques ?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Les signatures dessinées avec l'outil Remplir PDF (images du pavé de signature) sont aplaties dans la page. Les signatures numériques cryptographiques issues de fournisseurs de signature électronique certifiés peuvent être traitées différemment — l'apparence visuelle est préservée, mais le certificat cryptographique peut ne plus être valide après l'aplatissement."
-    }
-  },
-  {
-    "@type": "Question",
     "name": "Mes fichiers sont-ils envoyés à un serveur ?",
     "acceptedAnswer": {
       "@type": "Answer",
@@ -41,7 +33,23 @@
   },
   {
     "@type": "Question",
-    "name": "Pourquoi aplatir plutôt que simplement enregistrer le PDF rempli ?",
+    "name": "L'aplatissement supprime-t-il les signatures numériques ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Les signatures dessinées avec l'outil Remplir PDF (images du pavé de signature) sont aplaties dans la page. Les signatures numériques cryptographiques issues de fournisseurs de signature électronique certifiés peuvent être traitées différemment — l'apparence visuelle est préservée, mais le certificat cryptographique peut ne plus être valide après l'aplatissement."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "La qualité visuelle est-elle affectée ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non. Le texte et le contenu vectoriel reste identique. Seule l'interactivité disparaît — l'apparence du document ne change pas."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Pourquoi aplatir plutôt qu'enregistrer simplement le PDF rempli ?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Un PDF rempli enregistré contient encore des champs modifiables — un destinataire pourrait effacer vos valeurs et les re-saisir. L'aplatissement verrouille définitivement le contenu dans la page, empêche la modification et garantit un rendu cohérent dans tous les lecteurs PDF."
@@ -69,14 +77,6 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Ils résolvent des problèmes différents. L'aplatissement supprime entièrement la structure du formulaire interactif — aucun champ n'existe plus pour être modifié, quelles que soient les autorisations. La protection par mot de passe restreint l'accès ou les droits de modification mais laisse les champs intacts. Pour une sécurité maximale, aplatissez d'abord puis ajoutez un mot de passe."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "La qualité visuelle est-elle affectée ?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Non. Le texte et le contenu vectoriel reste identique. Seule l'interactivité disparaît — l'apparence du document ne change pas."
     }
   },
   {

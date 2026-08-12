@@ -1,10 +1,10 @@
 [
   {
     "@type": "Question",
-    "name": "O que o achatamento de um PDF realmente faz?",
+    "name": "O que significa achatar um PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "O achatamento mescla todas as camadas interativas — campos de formulário, anotações, assinaturas digitais e sobreposições — no conteúdo estático da página. O resultado é um PDF plano, não interativo, com aparência idêntica ao original, mas que não pode ser editado."
+      "text": "Achatar significa incorporar permanentemente todos os elementos interativos (campos de formulário, caixas de seleção, assinaturas, anotações) no conteúdo estático da página. O resultado é um PDF normal sem elementos editáveis."
     }
   },
   {
@@ -25,6 +25,14 @@
   },
   {
     "@type": "Question",
+    "name": "Meus arquivos são enviados para um servidor?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Não. Todo o processamento ocorre localmente no seu navegador. Seus arquivos nunca saem do seu dispositivo."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "O achatamento remove as assinaturas digitais?",
     "acceptedAnswer": {
       "@type": "Answer",
@@ -33,10 +41,10 @@
   },
   {
     "@type": "Question",
-    "name": "Meus arquivos são enviados para um servidor?",
+    "name": "A qualidade visual é afetada?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Não. Todo o processamento ocorre localmente no seu navegador. Seus arquivos nunca saem do seu dispositivo."
+      "text": "Não. O texto e o conteúdo vetorial permanecem idênticos. Apenas a interatividade desaparece — a aparência do documento não muda."
     }
   },
   {
@@ -69,14 +77,6 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Eles resolvem problemas diferentes. Achatar remove completamente a estrutura de formulário interativo — nenhum campo existe para ser editado, independentemente das permissões. A proteção por senha restringe o acesso ou os direitos de edição, mas deixa os campos intactos. Para máxima segurança, achate primeiro e depois adicione uma senha."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "A qualidade visual é afetada?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Não. O texto e o conteúdo vetorial permanecem idênticos. Apenas a interatividade desaparece — a aparência do documento não muda."
     }
   },
   {

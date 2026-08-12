@@ -17,7 +17,7 @@
   },
   {
     "@type": "Question",
-    "name": "Kann ein abgeflachtes PDF rückgängig gemacht werden?",
+    "name": "Kann das Abflachen rückgängig gemacht werden?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Nein. Das Abflachen ist irreversibel — die ursprünglichen Formularfelder werden dauerhaft durch statischen Inhalt ersetzt. Bewahre immer eine Sicherungskopie deines ausgefüllten PDFs auf, bevor du es abflachst."
@@ -29,6 +29,14 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Nein. Das gesamte Abflachen erfolgt lokal in deinem Browser. Deine Dateien verlassen dein Gerät zu keiner Zeit."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Wird die visuelle Qualität beeinträchtigt?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nein. Text und Vektorinhalt bleibt identisch. Nur die Interaktivität entfällt — das Aussehen des Dokuments ändert sich nicht."
     }
   },
   {
@@ -49,7 +57,7 @@
   },
   {
     "@type": "Question",
-    "name": "Reduziert das Abflachen die Dateigröße des PDFs?",
+    "name": "Reduziert das Abflachen die Dateigröße?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Oft leicht. Das Abflachen entfernt interaktive Widget-Daten und JavaScript, was die Dateigröße bei Formularen mit vielen Feldern reduziert. Bilder und eingebettete Schriften sind davon nicht betroffen. Für eine deutliche Verkleinerung das Ergebnis anschließend durch ein PDF-Komprimierungstool laufen lassen."
@@ -61,14 +69,6 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Beides löst unterschiedliche Probleme. Das Abflachen entfernt die interaktive Formularstruktur vollständig — es gibt keine Felder mehr, die bearbeitet werden könnten, unabhängig von Berechtigungen. Passwortschutz schränkt Zugriff oder Bearbeitungsrechte ein, lässt die Formularfelder aber intakt. Für maximale Sicherheit erst abflachen, dann ein Passwort hinzufügen."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "Wird die visuelle Qualität beeinträchtigt?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Nein. Text und Vektorinhalt bleibt identisch. Nur die Interaktivität entfällt — das Aussehen des Dokuments ändert sich nicht."
     }
   },
   {

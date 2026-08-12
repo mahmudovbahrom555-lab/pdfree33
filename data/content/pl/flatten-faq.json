@@ -33,7 +33,7 @@
   },
   {
     "@type": "Question",
-    "name": "Czy mój PDF jest przesyłany na jakiś serwer podczas spłaszczania?",
+    "name": "Czy mój PDF jest przesyłany na jakiś serwer?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Nie. Wszystko odbywa się w Twojej przeglądarce za pomocą pdf-lib. Ani oryginalny PDF, ani spłaszczony wynik nigdy nie są nigdzie wysyłane. Twój dokument i jego zawartość zawsze pozostają na Twoim urządzeniu."

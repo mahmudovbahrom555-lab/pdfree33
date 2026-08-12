@@ -1,10 +1,10 @@
 [
   {
     "@type": "Question",
-    "name": "¿Qué hace exactamente aplanar un PDF?",
+    "name": "¿Qué significa aplanar un PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Aplanar fusiona todas las capas interactivas — campos de formulario, anotaciones, firmas digitales y superposiciones — en el contenido estático de la página. El resultado es un PDF plano, no interactivo, que parece idéntico al original pero no puede editarse."
+      "text": "Aplanar significa integrar permanentemente todos los elementos interactivos (campos de formulario, casillas, firmas, anotaciones) en el contenido estático de la página. El resultado es un PDF normal sin elementos editables."
     }
   },
   {
@@ -25,18 +25,26 @@
   },
   {
     "@type": "Question",
-    "name": "¿El aplanado elimina las firmas digitales?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Las firmas dibujadas con la herramienta Rellenar PDF (imágenes del panel de firmas) se aplanan en la página. Las firmas digitales criptográficas de proveedores certificados de firma electrónica pueden tratarse de forma diferente — la apariencia visual se conserva, pero el certificado criptográfico puede dejar de validarse después del aplanado."
-    }
-  },
-  {
-    "@type": "Question",
     "name": "¿Se suben mis archivos a un servidor?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "No. Todo se ejecuta en tu navegador con pdf-lib. Ni el original ni el resultado aplanado se envían nunca a ningún servidor. Tu documento permanece en tu dispositivo en todo momento."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Se pierde calidad visual al aplanar?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. El texto y el contenido vectorial permanece idéntico. Solo desaparece la interactividad — el aspecto del documento no cambia."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿El aplanado elimina las firmas digitales?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Las firmas dibujadas con la herramienta Rellenar PDF (imágenes del panel de firmas) se aplanan en la página. Las firmas digitales criptográficas de proveedores certificados de firma electrónica pueden tratarse de forma diferente — la apariencia visual se conserva, pero el certificado criptográfico puede dejar de validarse después del aplanado."
     }
   },
   {

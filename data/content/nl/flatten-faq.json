@@ -33,7 +33,7 @@
   },
   {
     "@type": "Question",
-    "name": "Wordt mijn PDF naar een server geüpload tijdens het afvlakken?",
+    "name": "Wordt mijn PDF naar een server geüpload?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Nee. Alles gebeurt in je browser met pdf-lib. Noch je originele PDF, noch het afgevlakte resultaat wordt ooit ergens naartoe gestuurd. Je document en de inhoud ervan blijven altijd op je apparaat."

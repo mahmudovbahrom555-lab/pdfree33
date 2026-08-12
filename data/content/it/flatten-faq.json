@@ -33,7 +33,7 @@
   },
   {
     "@type": "Question",
-    "name": "Il mio PDF viene caricato su qualche server durante l'appiattimento?",
+    "name": "Il mio PDF viene caricato su qualche server?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "No. Tutto avviene nel tuo browser usando pdf-lib. Né il tuo PDF originale né il risultato appiattito vengono mai inviati da nessuna parte. Il tuo documento e i suoi contenuti restano sempre sul tuo dispositivo."
