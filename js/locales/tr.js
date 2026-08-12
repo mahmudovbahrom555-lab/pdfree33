@@ -43,7 +43,7 @@ window.PDFREE_LOCALE = {
   sent:             '✓ Gönderildi',
   process_again:    '↺ Tekrar İşle',
   download_again:   '⬇ Tekrar İndir',
-  auto_download_hint: 'İndirme otomatik olarak başlamalı.',
+  auto_download_hint: '✓ {filename} cihazınıza kaydedildi',
 
   // files
   split_one_only:  'Bölme işlemi aynı anda yalnızca bir PDF ile çalışır. Önce mevcut dosyayı kaldırın.',

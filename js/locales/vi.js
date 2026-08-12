@@ -44,7 +44,7 @@ window.PDFREE_LOCALE = {
   sent:             '✓ Đã gửi',
   process_again:    '↺ Xử lý lại',
   download_again:      '⬇ Tải về lại',
-  auto_download_hint:  'Quá trình tải xuống của bạn sẽ tự động bắt đầu.',
+  auto_download_hint:  '✓ Đã lưu {filename} vào thiết bị của bạn',
 
   // files
   split_one_only:  'Tách chỉ hoạt động với một PDF. Vui lòng xóa file hiện tại trước.',

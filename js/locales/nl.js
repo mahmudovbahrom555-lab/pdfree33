@@ -43,7 +43,7 @@ window.PDFREE_LOCALE = {
   sent:             '✓ Verzonden',
   process_again:    '↺ Opnieuw verwerken',
   download_again:   '⬇ Opnieuw downloaden',
-  auto_download_hint: 'Je download zou automatisch moeten starten.',
+  auto_download_hint: '✓ {filename} opgeslagen op je apparaat',
 
   // files
   split_one_only:  'Splitsen werkt met één PDF tegelijk. Verwijder eerst het huidige bestand.',

@@ -376,7 +376,7 @@ function _handleSuccess({ tool, blob, desc, filename, compressionReport, batchCo
 
   // Show hint + update button to "Download again" fallback
   const _hint = id('successAutoHint');
-  if (_hint) { _hint.textContent = t('auto_download_hint'); _hint.style.display = ''; }
+  if (_hint) { _hint.textContent = t('auto_download_hint', { filename }); _hint.style.display = ''; }
   const _dlBtn = id('downloadBtn');
   if (_dlBtn) {
     _dlBtn.textContent = t('download_again');

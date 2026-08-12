@@ -875,7 +875,7 @@ function _showSuccess(desc) {
 
   // Show auto-download hint
   const hint = document.getElementById('successAutoHint');
-  if (hint) { hint.textContent = t('auto_download_hint'); hint.style.display = ''; }
+  if (hint) { hint.textContent = t('auto_download_hint', { filename: _lastResultName }); hint.style.display = ''; }
 
   // Wire "Download again" fallback button
   const dlBtn = document.getElementById('downloadBtn');
