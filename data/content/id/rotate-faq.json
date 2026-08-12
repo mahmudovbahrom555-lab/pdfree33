@@ -9,18 +9,18 @@
   },
   {
     "@type": "Question",
-    "name": "Bisakah memutar hanya beberapa halaman tertentu?",
+    "name": "Apakah PDFree menyimpan atau mencatat file saya setelah diproses?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ya. Setiap halaman dapat diputar secara independen menggunakan tombol rotasi pada thumbnail halaman tersebut."
+      "text": "Tidak. PDFree berjalan sepenuhnya di browser Anda — tidak ada server backend yang menerima file Anda. Karena tidak ada yang diunggah, tidak ada yang bisa disimpan, dicatat, atau dipertahankan. Dokumen Anda hanya ada di memori browser selama sesi berlangsung dan dihapus saat Anda menutup tab."
     }
   },
   {
     "@type": "Question",
-    "name": "Sudut rotasi apa yang didukung?",
+    "name": "Bisakah memutar hanya beberapa halaman tertentu?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree mendukung rotasi 90° searah jarum jam, 180° (terbalik), dan 270° (90° berlawanan arah jarum jam)."
+      "text": "Ya. Setiap halaman dapat diputar secara independen menggunakan tombol rotasi pada thumbnail halaman tersebut."
     }
   },
   {
@@ -33,6 +33,14 @@
   },
   {
     "@type": "Question",
+    "name": "Sudut rotasi apa yang didukung?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree mendukung rotasi 90° searah jarum jam, 180° (terbalik), dan 270° (90° berlawanan arah jarum jam)."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "Apakah ada batasan jumlah halaman yang bisa diputar?",
     "acceptedAnswer": {
       "@type": "Answer",
@@ -41,18 +49,10 @@
   },
   {
     "@type": "Question",
-    "name": "Apakah PDFree bisa digunakan di ponsel untuk memutar PDF?",
+    "name": "Apakah bisa digunakan di ponsel?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Ya. PDFree berfungsi di browser mobile (Chrome Android, Safari iOS). Ketuk tombol rotasi untuk memutar halaman."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "Apakah PDFree menyimpan atau mencatat file saya setelah diproses?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Tidak. PDFree berjalan sepenuhnya di browser Anda — tidak ada server backend yang menerima file Anda. Karena tidak ada yang diunggah, tidak ada yang bisa disimpan, dicatat, atau dipertahankan. Dokumen Anda hanya ada di memori browser selama sesi berlangsung dan dihapus saat Anda menutup tab."
     }
   },
   {

@@ -9,6 +9,14 @@
   },
   {
     "@type": "Question",
+    "name": "Speichert oder protokolliert PDFree meine Dateien nach der Verarbeitung?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nein. PDFree läuft vollständig in deinem Browser — es gibt keinen Backend-Server, der deine Dateien empfängt. Da nichts hochgeladen wird, kann auch nichts gespeichert, protokolliert oder aufbewahrt werden. Dein Dokument existiert nur im Arbeitsspeicher deines Browsers während der Sitzung und wird gelöscht, wenn du den Tab schließt."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "Verliere ich Qualität beim Drehen?",
     "acceptedAnswer": {
       "@type": "Answer",
@@ -33,26 +41,18 @@
   },
   {
     "@type": "Question",
-    "name": "Ist das PDF-Drehen komplett kostenlos?",
+    "name": "Bleiben Links und Lesezeichen nach dem Drehen erhalten?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ja. PDFree ist kostenlos, ohne Tageslimits und ohne Registrierung. Der Ausgabedatei werden keine Wasserzeichen hinzugefügt."
+      "text": "Ja. Nur das Ausrichtungs-Flag der Seite wird geändert. Links, Lesezeichen und Formularfelder bleiben vollständig erhalten."
     }
   },
   {
     "@type": "Question",
-    "name": "Kann ich dieses Tool auf dem Handy nutzen?",
+    "name": "Kann ich ein passwortgeschütztes PDF drehen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ja. PDFree funktioniert in Safari für iOS und Chrome für Android. Wähle deine Datei aus und wende die Drehung direkt im mobilen Browser an."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "Speichert oder protokolliert PDFree meine Dateien nach der Verarbeitung?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Nein. PDFree läuft vollständig in deinem Browser — es gibt keinen Backend-Server, der deine Dateien empfängt. Da nichts hochgeladen wird, kann auch nichts gespeichert, protokolliert oder aufbewahrt werden. Dein Dokument existiert nur im Arbeitsspeicher deines Browsers während der Sitzung und wird gelöscht, wenn du den Tab schließt."
+      "text": "Ja. Gib das Passwort beim Hochladen der Datei ein — anschließend kann PDFree sie ganz normal verarbeiten, auch die Drehung."
     }
   },
   {

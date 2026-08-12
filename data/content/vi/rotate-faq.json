@@ -9,18 +9,18 @@
   },
   {
     "@type": "Question",
-    "name": "Có thể xoay chỉ một số trang cụ thể không?",
+    "name": "PDFree có lưu trữ hoặc ghi lại file của tôi sau khi xử lý không?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Có. Mỗi trang có thể được xoay độc lập bằng cách nhấp nút xoay trên thumbnail của trang đó."
+      "text": "Không. PDFree chạy hoàn toàn trong trình duyệt của bạn — không có máy chủ backend nào nhận file của bạn. Vì không có gì được tải lên, không có gì có thể được lưu trữ, ghi lại hoặc giữ lại. Tài liệu của bạn chỉ tồn tại trong bộ nhớ trình duyệt trong suốt phiên và bị xóa khi bạn đóng tab."
     }
   },
   {
     "@type": "Question",
-    "name": "Những góc xoay nào được hỗ trợ?",
+    "name": "Có thể xoay chỉ một số trang cụ thể không?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree hỗ trợ xoay 90° theo chiều kim đồng hồ, 180° (lật ngược) và 270° (90° ngược chiều kim đồng hồ)."
+      "text": "Có. Mỗi trang có thể được xoay độc lập bằng cách nhấp nút xoay trên thumbnail của trang đó."
     }
   },
   {
@@ -33,6 +33,14 @@
   },
   {
     "@type": "Question",
+    "name": "Những góc xoay nào được hỗ trợ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree hỗ trợ xoay 90° theo chiều kim đồng hồ, 180° (lật ngược) và 270° (90° ngược chiều kim đồng hồ)."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "Có giới hạn số trang có thể xoay không?",
     "acceptedAnswer": {
       "@type": "Answer",
@@ -41,18 +49,10 @@
   },
   {
     "@type": "Question",
-    "name": "PDFree có thể dùng trên điện thoại để xoay PDF không?",
+    "name": "Có thể dùng trên điện thoại không?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Có. PDFree hoạt động trên trình duyệt di động (Chrome Android, Safari iOS). Chạm vào nút xoay để xoay trang."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "PDFree có lưu trữ hoặc ghi lại file của tôi sau khi xử lý không?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Không. PDFree chạy hoàn toàn trong trình duyệt của bạn — không có máy chủ backend nào nhận file của bạn. Vì không có gì được tải lên, không có gì có thể được lưu trữ, ghi lại hoặc giữ lại. Tài liệu của bạn chỉ tồn tại trong bộ nhớ trình duyệt trong suốt phiên và bị xóa khi bạn đóng tab."
     }
   },
   {

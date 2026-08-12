@@ -9,7 +9,7 @@
   },
   {
     "@type": "Question",
-    "name": "Posso ruotare solo alcune pagine, non tutto il PDF?",
+    "name": "Posso ruotare solo alcune pagine?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Sì. Puoi scegliere di ruotare tutte le pagine oppure selezionare singole pagine da ruotare."
@@ -17,15 +17,7 @@
   },
   {
     "@type": "Question",
-    "name": "Quali angoli di rotazione sono supportati?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "PDFree supporta la rotazione di 90°, 180° e 270° per qualsiasi selezione di pagine."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "Ruotare il PDF riduce la qualità delle immagini?",
+    "name": "Ruotare riduce la qualità delle immagini?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "No. La rotazione modifica solo il metadato di orientamento della pagina. Il contenuto (immagini, testo, grafica vettoriale) non viene ricompresso o ridisegnato."
@@ -33,26 +25,26 @@
   },
   {
     "@type": "Question",
-    "name": "C'è un limite di dimensione del file per ruotare i PDF?",
+    "name": "Quali angoli di rotazione sono disponibili?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. Non ci sono limiti di dimensione del file o di numero di pagine."
+      "text": "90° orario, 90° antiorario (equivalente a 270° orario) e 180°. Coprono tutte le correzioni di orientamento standard."
     }
   },
   {
     "@type": "Question",
-    "name": "Il ruotatore di PDF è completamente gratuito?",
+    "name": "C'è un limite di dimensione o numero di pagine?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sì. PDFree è gratuito, senza abbonamento, senza limiti giornalieri e senza registrazione. Non vengono aggiunte filigrane al file risultante."
+      "text": "No. Nessun limite artificiale — l'unico vincolo è la memoria disponibile sul tuo dispositivo."
     }
   },
   {
     "@type": "Question",
-    "name": "PDFree memorizza o registra i miei file dopo l'elaborazione?",
+    "name": "La rotazione preserva link e segnalibri?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. PDFree funziona interamente nel tuo browser — non esiste un server backend che riceve i tuoi file. Poiché nulla viene caricato, nulla può essere memorizzato, registrato o conservato. Il tuo documento esiste solo nella memoria del browser per la durata della sessione e viene eliminato quando chiudi la scheda."
+      "text": "Sì. Viene modificato solo il flag di orientamento della pagina. Link, segnalibri e campi modulo restano intatti."
     }
   },
   {

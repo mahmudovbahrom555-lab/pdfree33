@@ -9,23 +9,23 @@
   },
   {
     "@type": "Question",
-    "name": "Czy mogę obrócić tylko wybrane strony, a nie cały PDF?",
+    "name": "Czy PDFree przechowuje lub rejestruje moje pliki po przetworzeniu?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Tak. Możesz obrócić wszystkie strony naraz albo wybrać pojedyncze strony do obrócenia."
+      "text": "Nie. PDFree działa w całości w Twojej przeglądarce — nie ma serwera backendowego, który odbierałby Twoje pliki. Ponieważ nic nie jest przesyłane, nic nie może być przechowywane, rejestrowane ani zatrzymywane. Twój dokument istnieje tylko w pamięci przeglądarki przez czas trwania sesji i jest usuwany po zamknięciu karty."
     }
   },
   {
     "@type": "Question",
-    "name": "Jakie kąty obrotu są obsługiwane?",
+    "name": "Czy mogę obrócić tylko wybrane strony?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree obsługuje obrót o 90°, 180° i 270° dla dowolnego wyboru stron."
+      "text": "Tak. Kliknij miniatury pojedynczych stron, aby wybrać te do obrócenia. Pozostałe strony nie ulegają zmianie."
     }
   },
   {
     "@type": "Question",
-    "name": "Czy obracanie PDF obniża jakość obrazów?",
+    "name": "Czy obracanie obniża jakość obrazów?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Nie. Obrót zmienia jedynie metadane orientacji strony. Zawartość (obrazy, tekst, grafika wektorowa) nie jest ponownie renderowana ani kompresowana."
@@ -33,26 +33,26 @@
   },
   {
     "@type": "Question",
-    "name": "Czy istnieje limit rozmiaru pliku dla obracania PDF?",
+    "name": "Jakie kąty obrotu są dostępne?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nie. Nie ma limitów rozmiaru pliku ani liczby stron."
+      "text": "90° w prawo, 90° w lewo (odpowiednik 270° w prawo) i 180°. Obejmują wszystkie standardowe poprawki orientacji."
     }
   },
   {
     "@type": "Question",
-    "name": "Czy narzędzie do obracania PDF jest całkowicie darmowe?",
+    "name": "Czy istnieje limit rozmiaru pliku lub liczby stron?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Tak. PDFree jest darmowe — bez abonamentu, bez dziennych limitów i bez rejestracji. Do wyniku nie są dodawane żadne znaki wodne."
+      "text": "Nie. Brak sztucznych limitów — jedynym ograniczeniem jest dostępna pamięć Twojego urządzenia."
     }
   },
   {
     "@type": "Question",
-    "name": "Czy PDFree przechowuje lub rejestruje moje pliki po przetworzeniu?",
+    "name": "Czy linki i zakładki są zachowane po obróceniu?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nie. PDFree działa w całości w Twojej przeglądarce — nie ma serwera backendowego, który odbierałby Twoje pliki. Ponieważ nic nie jest przesyłane, nic nie może być przechowywane, rejestrowane ani zatrzymywane. Twój dokument istnieje tylko w pamięci przeglądarki przez czas trwania sesji i jest usuwany po zamknięciu karty."
+      "text": "Tak. Zmienia się tylko flaga orientacji strony. Linki, zakładki i pola formularzy pozostają nienaruszone."
     }
   },
   {
