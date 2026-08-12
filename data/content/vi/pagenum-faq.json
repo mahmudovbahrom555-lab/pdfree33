@@ -17,6 +17,14 @@
   },
   {
     "@type": "Question",
+    "name": "Có giới hạn số trang không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không. PDFree không giới hạn số trang hay kích thước file. Giới hạn thực tế duy nhất là bộ nhớ thiết bị của bạn."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "Tôi có thể bắt đầu đánh số từ số khác 1 không?",
     "acceptedAnswer": {
       "@type": "Answer",
@@ -25,7 +33,7 @@
   },
   {
     "@type": "Question",
-    "name": "Tôi có thể bỏ qua trang đầu tiên khi đánh số không?",
+    "name": "Tôi có thể bỏ qua trang đầu tiên (trang bìa) không?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Có. Bật tùy chọn 'Bỏ qua trang đầu'. Trang 1 (bìa) không có số, và đánh số bắt đầu từ trang thứ hai."
@@ -41,26 +49,26 @@
   },
   {
     "@type": "Question",
-    "name": "Tôi có thể thêm định dạng 'Trang 1 / 20' không?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Có. Dùng trường tiền tố để thêm văn bản trước số (ví dụ: 'Trang ') và trường hậu tố để thêm văn bản sau số (ví dụ: ' / 20'). Điều này tạo ra định dạng 'Trang 1 / 20' thông dụng trong tài liệu in chuyên nghiệp."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "Có giới hạn số trang không?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Không. PDFree không giới hạn số trang hay kích thước file. Giới hạn thực tế duy nhất là bộ nhớ thiết bị của bạn."
-    }
-  },
-  {
-    "@type": "Question",
     "name": "Thêm số trang có thay đổi nội dung hiện có không?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Không. Số trang được thêm dưới dạng lớp văn bản mới trên nội dung hiện có. Văn bản gốc, hình ảnh và bố cục bên dưới không thay đổi."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Tôi có thể chọn vị trí số trang không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có. Các tùy chọn vị trí bao gồm: dưới giữa, dưới trái, dưới phải, trên giữa, trên trái và trên phải."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Tôi có thể thêm định dạng \"Trang 1 / 20\" không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có. Dùng trường tiền tố để thêm văn bản trước số (ví dụ: 'Trang ') và trường hậu tố để thêm văn bản sau số (ví dụ: ' / 20'). Điều này tạo ra định dạng 'Trang 1 / 20' thông dụng trong tài liệu in chuyên nghiệp."
     }
   },
   {

@@ -25,14 +25,6 @@
   },
   {
     "@type": "Question",
-    "name": "¿Puedo excluir la portada de la numeración?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Sí. Ajusta el número inicial a 0 o comienza la numeración desde la página 2. La portada queda sin número."
-    }
-  },
-  {
-    "@type": "Question",
     "name": "¿Qué formatos de número están disponibles?",
     "acceptedAnswer": {
       "@type": "Answer",
@@ -41,7 +33,7 @@
   },
   {
     "@type": "Question",
-    "name": "¿Puedo añadir el formato 'Página 1 de 20'?",
+    "name": "¿Puedo añadir el formato \"Página 1 de 20\"?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Sí. Usa el campo de prefijo para añadir texto antes del número (p. ej. 'Página ') y el campo de sufijo para añadir texto después (p. ej. ' de 20'). Esto crea el formato común 'Página 1 de 20' usado en documentos profesionales."
@@ -49,18 +41,18 @@
   },
   {
     "@type": "Question",
-    "name": "¿Puedo elegir dónde aparecen los números de página?",
+    "name": "¿Puedo excluir la portada de la numeración?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sí. Las opciones de posición incluyen: parte inferior central, inferior izquierda, inferior derecha, parte superior central, superior izquierda y superior derecha."
+      "text": "Sí. Ajusta el número inicial a 0 o comienza la numeración desde la página 2. La portada queda sin número."
     }
   },
   {
     "@type": "Question",
-    "name": "¿Hay un límite de páginas para añadir números?",
+    "name": "¿Se suben mis archivos a un servidor?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. PDFree no tiene límites de páginas ni de tamaño de archivo. La única limitación práctica es la memoria disponible en tu dispositivo."
+      "text": "No. Todo el procesamiento se realiza en tu navegador. Tus documentos nunca salen de tu dispositivo."
     }
   },
   {
@@ -69,6 +61,14 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "No. Los números se incrustan permanentemente. Guarda el archivo original por separado si lo necesitas sin números."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Hay un límite de páginas?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. PDFree no tiene límites de páginas ni de tamaño de archivo. La única limitación práctica es la memoria disponible en tu dispositivo."
     }
   },
   {

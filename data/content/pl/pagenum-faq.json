@@ -1,10 +1,10 @@
 [
   {
     "@type": "Question",
-    "name": "Czy moje pliki są gdzieś przesyłane podczas dodawania numerów stron?",
+    "name": "Czy mogę rozpocząć numerację od liczby innej niż 1?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nie. Dodawanie numerów stron odbywa się całkowicie w Twojej przeglądarce za pomocą JavaScript. Pliki nigdy nie opuszczają Twojego urządzenia. Możesz to sprawdzić samodzielnie: otwórz Narzędzia deweloperskie → kartę Sieć — nie zobaczysz przesyłania pliku PDF na zdalny serwer."
+      "text": "Tak. Wpisz dowolny numer początkowy w polu 'Numer początkowy'. Przydatne w dokumentach, w których strona tytułowa liczy się jako strona 0, lub w rozdziałach kontynuujących numerację z poprzedniej sekcji."
     }
   },
   {
@@ -17,22 +17,6 @@
   },
   {
     "@type": "Question",
-    "name": "Czy mogę rozpocząć numerację od liczby innej niż 1?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Tak. Wpisz dowolny numer początkowy w polu 'Numer początkowy'. Przydatne w dokumentach, w których strona tytułowa liczy się jako strona 0, lub w rozdziałach kontynuujących numerację z poprzedniej sekcji."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "Czy mogę wykluczyć okładkę z numeracji?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Tak. Włącz opcję 'Pomiń pierwszą stronę'. Strona 1 (okładka) nie otrzyma numeru, a numeracja rozpocznie się od drugiej strony."
-    }
-  },
-  {
-    "@type": "Question",
     "name": "Jakie formaty numerów są dostępne?",
     "acceptedAnswer": {
       "@type": "Answer",
@@ -41,7 +25,7 @@
   },
   {
     "@type": "Question",
-    "name": "Czy mogę dodać format 'Strona 1 z 20'?",
+    "name": "Czy mogę dodać format \"Strona 1 z 20\"?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Tak. Użyj pola prefiksu, aby wstawić tekst przed numerem (np. 'Strona '), oraz pola sufiksu dla tekstu po nim (np. ' z 20'). Tworzy to popularny format 'Strona 1 z 20' stosowany w profesjonalnych dokumentach drukowanych."
@@ -57,10 +41,18 @@
   },
   {
     "@type": "Question",
-    "name": "Czy istnieje limit liczby stron?",
+    "name": "Czy mogę wykluczyć okładkę z numeracji?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nie. PDFree nie ma limitów liczby stron ani rozmiaru pliku. Jedynym praktycznym ograniczeniem jest dostępna pamięć operacyjna Twojego urządzenia."
+      "text": "Tak. Włącz opcję 'Pomiń pierwszą stronę'. Strona 1 (okładka) nie otrzyma numeru, a numeracja rozpocznie się od drugiej strony."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy moje pliki są przesyłane na serwer?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie. Całe przetwarzanie odbywa się wyłącznie w Twojej przeglądarce. Twoje dokumenty nigdy nie opuszczają Twojego urządzenia."
     }
   },
   {
@@ -69,6 +61,14 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Nie. Numery stron są trwale osadzane w dokumencie. Zachowaj oryginalny plik osobno, jeśli później potrzebujesz wersji bez numerów."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy istnieje limit liczby stron?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie. PDFree nie ma limitów liczby stron ani rozmiaru pliku. Jedynym praktycznym ograniczeniem jest dostępna pamięć operacyjna Twojego urządzenia."
     }
   },
   {

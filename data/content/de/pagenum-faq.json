@@ -1,10 +1,10 @@
 [
   {
     "@type": "Question",
-    "name": "Werden meine Dateien hochgeladen, wenn Seitenzahlen hinzugefügt werden?",
+    "name": "Kann ich mit einer anderen Zahl als 1 beginnen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nein. Das Hinzufügen von Seitenzahlen erfolgt vollständig in Ihrem Browser mit JavaScript. Dateien verlassen Ihr Gerät nie. Sie können dies selbst überprüfen: Öffnen Sie DevTools → Netzwerk-Tab — Sie sollten nicht sehen, dass Ihr PDF auf einen Remote-Server hochgeladen wird."
+      "text": "Ja. Geben Sie eine beliebige Startzahl in das Feld 'Startnummer' ein. Dies ist nützlich für Dokumente, bei denen eine Titelseite die Seite 0 ist, oder für Kapitel, die die Nummerierung aus einem vorherigen Abschnitt fortsetzen."
     }
   },
   {
@@ -17,22 +17,6 @@
   },
   {
     "@type": "Question",
-    "name": "Kann ich mit einer anderen Zahl als 1 beginnen?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Ja. Geben Sie eine beliebige Startzahl in das Feld 'Startnummer' ein. Dies ist nützlich für Dokumente, bei denen eine Titelseite die Seite 0 ist, oder für Kapitel, die die Nummerierung aus einem vorherigen Abschnitt fortsetzen."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "Kann ich das Deckblatt von der Nummerierung ausschließen?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Ja. Aktivieren Sie die Option 'Erste Seite überspringen'. Seite 1 (Titel) erhält keine Nummer, und die Nummerierung beginnt ab der zweiten Seite."
-    }
-  },
-  {
-    "@type": "Question",
     "name": "Welche Zahlenformate sind verfügbar?",
     "acceptedAnswer": {
       "@type": "Answer",
@@ -41,7 +25,7 @@
   },
   {
     "@type": "Question",
-    "name": "Kann ich das Format 'Seite 1 von 20' hinzufügen?",
+    "name": "Kann ich das Format \"Seite 1 von 20\" hinzufügen?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Ja. Verwenden Sie das Präfix-Feld, um Text vor der Zahl einzufügen (z. B. 'Seite '), und das Suffix-Feld, um Text danach einzufügen (z. B. ' von 20'). Dies erzeugt das gebräuchliche Format 'Seite 1 von 20' für professionelle Druckdokumente."
@@ -57,10 +41,18 @@
   },
   {
     "@type": "Question",
-    "name": "Gibt es ein Seitenlimit?",
+    "name": "Kann ich das Deckblatt von der Nummerierung ausschließen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nein. PDFree hat keine Seiten- oder Dateigrößenbeschränkungen. Die einzige praktische Einschränkung ist der verfügbare Arbeitsspeicher Ihres Geräts."
+      "text": "Ja. Aktivieren Sie die Option 'Erste Seite überspringen'. Seite 1 (Titel) erhält keine Nummer, und die Nummerierung beginnt ab der zweiten Seite."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Werden meine Dateien auf einen Server hochgeladen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nein. Alle Verarbeitungsschritte finden ausschließlich in deinem Browser statt. Deine Dokumente verlassen dein Gerät nie."
     }
   },
   {
@@ -69,6 +61,14 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Nein. Seitenzahlen werden fest eingebettet. Speichere die Originaldatei separat, falls du sie später ohne Seitenzahlen benötigst."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Gibt es ein Seitenlimit?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nein. PDFree hat keine Seiten- oder Dateigrößenbeschränkungen. Die einzige praktische Einschränkung ist der verfügbare Arbeitsspeicher Ihres Geräts."
     }
   },
   {

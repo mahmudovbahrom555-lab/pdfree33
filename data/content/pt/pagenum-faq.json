@@ -25,14 +25,6 @@
   },
   {
     "@type": "Question",
-    "name": "Posso excluir a página de rosto da numeração?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Sim. Ajuste o número inicial para 0 ou comece a numeração a partir da página 2. A página de rosto ficará sem número."
-    }
-  },
-  {
-    "@type": "Question",
     "name": "Que formatos de número estão disponíveis?",
     "acceptedAnswer": {
       "@type": "Answer",
@@ -41,7 +33,7 @@
   },
   {
     "@type": "Question",
-    "name": "Posso adicionar o formato 'Página 1 de 20'?",
+    "name": "Posso adicionar o formato \"Página 1 de 20\"?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Sim. Use o campo de prefixo para adicionar texto antes do número (p. ex. 'Página ') e o campo de sufixo para adicionar texto depois (p. ex. ' de 20'). Isto cria o formato comum 'Página 1 de 20' usado em documentos profissionais impressos."
@@ -53,6 +45,14 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Sim. As opções de posição incluem: fundo centro, fundo esquerda, fundo direita, topo centro, topo esquerda e topo direita."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso excluir a página de rosto da numeração?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim. Ajuste o número inicial para 0 ou comece a numeração a partir da página 2. A página de rosto ficará sem número."
     }
   },
   {
@@ -69,6 +69,14 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Sim. Você pode ajustar o tamanho da fonte para que os números sejam discretos ou bem visíveis conforme suas necessidades."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Existe um limite de tamanho ou número de páginas?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Não. O PDFree não tem limites artificiais. A única restrição é a memória RAM disponível no seu dispositivo."
     }
   },
   {

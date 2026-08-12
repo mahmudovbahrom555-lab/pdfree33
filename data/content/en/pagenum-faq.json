@@ -17,6 +17,14 @@
   },
   {
     "@type": "Question",
+    "name": "Is there a page limit for adding page numbers?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. PDFree has no page or file size limits. The only practical constraint is your device's available memory."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "Can I start page numbering from a number other than 1?",
     "acceptedAnswer": {
       "@type": "Answer",
@@ -25,7 +33,7 @@
   },
   {
     "@type": "Question",
-    "name": "Can I skip the first page (cover page) when numbering?",
+    "name": "Can I skip the first page (cover page) from numbering?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Yes. Enable the 'Skip first page' option. Page 1 (the cover) receives no number, and numbering starts from the second page."
@@ -41,15 +49,15 @@
   },
   {
     "@type": "Question",
-    "name": "Can I add 'Page 1 of 20' format?",
+    "name": "Will adding page numbers change the existing content?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Yes. Use the prefix field to add text before the number (e.g. 'Page ') and the suffix field to add text after (e.g. ' of 20'). This creates the common 'Page 1 of 20' format used in professional print documents and reports."
+      "text": "No. Page numbers are added as a new text layer on top of the existing content. The original text, images, and layout underneath are unchanged."
     }
   },
   {
     "@type": "Question",
-    "name": "Can I choose where page numbers appear?",
+    "name": "Can I choose where the page numbers appear?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Yes. Position options include bottom center, bottom left, bottom right, top center, top left, and top right."
@@ -57,10 +65,10 @@
   },
   {
     "@type": "Question",
-    "name": "Is there a page limit for adding page numbers?",
+    "name": "Can I add \"Page 1 of 20\" format instead of just \"1\"?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. PDFree has no page or file size limits. The only practical constraint is your device's available memory."
+      "text": "Yes. Use the prefix field to add text before the number (e.g. 'Page ') and the suffix field to add text after (e.g. ' of 20'). This creates the common 'Page 1 of 20' format used in professional print documents and reports."
     }
   },
   {
@@ -81,18 +89,18 @@
   },
   {
     "@type": "Question",
-    "name": "Will adding page numbers change the existing content?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "No. Page numbers are added as a new text layer on top of the existing content. The original text, images, and layout underneath are unchanged."
-    }
-  },
-  {
-    "@type": "Question",
     "name": "Can I add page numbers to a scanned PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Yes. Scanned PDFs are treated identically to any other PDF — the page number is overlaid on each page as a text element. The underlying scan image is not changed."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I remove page numbers I added?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Page numbers added by PDFree are embedded as text annotations in the PDF. They cannot be selectively removed with this tool — the simplest approach is to keep the original unnumbered file and re-run the tool with corrected settings when needed."
     }
   },
   {

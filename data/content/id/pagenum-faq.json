@@ -25,7 +25,7 @@
   },
   {
     "@type": "Question",
-    "name": "Bisakah saya melewati halaman pertama saat penomoran?",
+    "name": "Bisakah saya melewati halaman pertama (halaman sampul)?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Ya. Aktifkan opsi 'Lewati halaman pertama'. Halaman 1 (sampul) tidak mendapat nomor, dan penomoran dimulai dari halaman kedua."
@@ -41,18 +41,10 @@
   },
   {
     "@type": "Question",
-    "name": "Bisakah saya menambahkan format 'Halaman 1 dari 20'?",
+    "name": "Apakah menambah nomor halaman mengubah konten yang ada?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ya. Gunakan kolom awalan untuk menambahkan teks sebelum angka (mis. 'Halaman ') dan kolom akhiran untuk menambahkan teks setelah angka (mis. ' dari 20'). Ini membuat format 'Halaman 1 dari 20' yang umum digunakan dalam dokumen cetak profesional."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "Apakah ada batas halaman untuk menambah nomor halaman?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Tidak. PDFree tidak memiliki batas halaman atau ukuran file. Satu-satunya batasan praktis adalah memori perangkat Anda."
+      "text": "Tidak. Nomor halaman ditambahkan sebagai lapisan teks baru di atas konten yang ada. Teks asli, gambar, dan tata letak di bawahnya tidak berubah."
     }
   },
   {
@@ -61,6 +53,14 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Ya. Pilihan posisi meliputi: bawah tengah, bawah kiri, bawah kanan, atas tengah, atas kiri, dan atas kanan."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah saya menambahkan format \"Halaman 1 dari 20\"?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ya. Gunakan kolom awalan untuk menambahkan teks sebelum angka (mis. 'Halaman ') dan kolom akhiran untuk menambahkan teks setelah angka (mis. ' dari 20'). Ini membuat format 'Halaman 1 dari 20' yang umum digunakan dalam dokumen cetak profesional."
     }
   },
   {

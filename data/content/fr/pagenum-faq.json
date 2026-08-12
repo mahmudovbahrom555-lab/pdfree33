@@ -25,14 +25,6 @@
   },
   {
     "@type": "Question",
-    "name": "Puis-je ignorer la première page (page de couverture) lors de la numérotation ?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Oui. Activez l'option 'Ignorer la première page'. La page 1 (couverture) ne reçoit aucun numéro, et la numérotation commence à partir de la deuxième page."
-    }
-  },
-  {
-    "@type": "Question",
     "name": "Quels formats de numérotation sont disponibles ?",
     "acceptedAnswer": {
       "@type": "Answer",
@@ -41,7 +33,7 @@
   },
   {
     "@type": "Question",
-    "name": "Puis-je ajouter le format 'Page 1 sur 20' ?",
+    "name": "Puis-je ajouter le format \"Page 1 sur 20\" ?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Oui. Utilisez le champ préfixe pour ajouter du texte avant le numéro (p. ex. 'Page ') et le champ suffixe pour ajouter du texte après (p. ex. ' sur 20'). Cela crée le format courant 'Page 1 sur 20' utilisé dans les documents professionnels imprimés."
@@ -57,10 +49,18 @@
   },
   {
     "@type": "Question",
-    "name": "Y a-t-il des limites de taille ou de nombre de pages ?",
+    "name": "Puis-je exclure la page de titre de la numérotation ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Non. PDFree n'a pas de limite de pages ni de taille de fichier. La seule contrainte pratique est la mémoire disponible sur votre appareil."
+      "text": "Oui. Réglez le numéro de départ à 0 ou commencez la numérotation à la page 2. La page de titre n'affichera pas de numéro."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Les numéros de page peuvent-ils être supprimés après application ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non. Les numéros sont intégrés définitivement. Conservez le fichier original si vous pensez avoir besoin d'une version sans numéros."
     }
   },
   {
@@ -73,10 +73,10 @@
   },
   {
     "@type": "Question",
-    "name": "Les numéros de page peuvent-ils être supprimés après application ?",
+    "name": "Y a-t-il des limites de taille ou de nombre de pages ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Non. Les numéros sont intégrés définitivement. Conservez le fichier original si vous pensez avoir besoin d'une version sans numéros."
+      "text": "Non. PDFree n'a pas de limite de pages ni de taille de fichier. La seule contrainte pratique est la mémoire disponible sur votre appareil."
     }
   },
   {
