@@ -9,18 +9,18 @@
   },
   {
     "@type": "Question",
-    "name": "Speichert oder protokolliert PDFree meine Dateien nach der Verarbeitung?",
+    "name": "Wird meine PDF irgendwo hochgeladen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nein. PDFree läuft vollständig in deinem Browser — es gibt keinen Backend-Server, der deine Dateien empfängt. Da nichts hochgeladen wird, kann auch nichts gespeichert, protokolliert oder aufbewahrt werden. Dein Dokument existiert nur im Arbeitsspeicher deines Browsers während der Sitzung und wird gelöscht, wenn du den Tab schließt."
+      "text": "Nein. Deine Datei wird lokal in deinem Browser gelesen. Es ist kein Server an irgendeinem Schritt der Konvertierung beteiligt."
     }
   },
   {
     "@type": "Question",
-    "name": "Wird meine PDF beim Konvertieren hochgeladen?",
+    "name": "Speichert oder protokolliert PDFree meine Dateien nach der Verarbeitung?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nein. Die gesamte Konvertierung findet in deinem Browser statt. Deine PDF wird nie an einen Server gesendet — auch nicht vorübergehend."
+      "text": "Nein. PDFree läuft vollständig in deinem Browser — es gibt keinen Backend-Server, der deine Dateien empfängt. Da nichts hochgeladen wird, kann auch nichts gespeichert, protokolliert oder aufbewahrt werden. Dein Dokument existiert nur im Arbeitsspeicher deines Browsers während der Sitzung und wird gelöscht, wenn du den Tab schließt."
     }
   },
   {
@@ -41,10 +41,10 @@
   },
   {
     "@type": "Question",
-    "name": "Kann ich eine gescannte PDF in Word konvertieren?",
+    "name": "Werden Arabisch, Kyrillisch oder Chinesisch unterstützt?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Wenn deine gescannte PDF eine eingebettete Textebene enthält (viele moderne Scanner fügen eine hinzu), extrahiert der Textmodus diese korrekt. Ist die PDF rein bildbasiert ohne Textebene, verwende den Bildmodus oder nutze zuerst das OCR-PDF-Tool, um eine Textebene hinzuzufügen."
+      "text": "Ja. Der Textmodus unterstützt Latein, Kyrillisch (Russisch, Ukrainisch, Bulgarisch), Arabisch und Hebräisch (mit korrekter Rechts-nach-links-Absatzrichtung), CJK (Chinesisch, Japanisch, Koreanisch), Devanagari (Hindi) und die meisten Unicode-Schriften aus Standard-PDFs."
     }
   },
   {
@@ -57,7 +57,15 @@
   },
   {
     "@type": "Question",
-    "name": "Brauche ich Microsoft Word, um die konvertierte Datei zu öffnen?",
+    "name": "Gibt es eine maximale Dateigröße?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Es gibt keine feste Grenze. Sehr große PDFs (100+ MB) können jedoch länger dauern und mehr Arbeitsspeicher benötigen. Für beste Ergebnisse empfehlen wir Dateien unter 100 MB im Textmodus und unter 50 MB im Bildmodus bei 300 DPI."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Brauche ich Microsoft Word, um die Datei zu öffnen?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Nein. Das .docx-Format wird von Microsoft Word, Google Docs (in Drive hochladen und öffnen), LibreOffice Writer (kostenlos, Open Source) und Apple Pages unterstützt. Du benötigst kein bezahltes Microsoft 365-Abonnement."
@@ -65,10 +73,10 @@
   },
   {
     "@type": "Question",
-    "name": "Gibt es eine maximale Dateigröße?",
+    "name": "Kann ich eine gescannte PDF in bearbeitbares Word konvertieren?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Es gibt keine feste Grenze. Sehr große PDFs (100+ MB) können jedoch länger dauern und mehr Arbeitsspeicher benötigen. Für beste Ergebnisse empfehlen wir Dateien unter 100 MB im Textmodus und unter 50 MB im Bildmodus bei 300 DPI."
+      "text": "Das hängt davon ab. Wenn der Scan eine eingebettete Textebene hat (von Adobe Scan, Microsoft Lens oder modernen Scannern), extrahiert der Textmodus diese korrekt. Wenn die PDF rein bildbasiert ist, verwende zuerst das OCR-PDF-Tool, dann in Word konvertieren."
     }
   },
   {

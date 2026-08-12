@@ -41,10 +41,10 @@
   },
   {
     "@type": "Question",
-    "name": "Puis-je convertir un PDF numérisé en Word éditable ?",
+    "name": "L'arabe, l'hébreu, le cyrillique ou le chinois sont-ils pris en charge ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Cela dépend. Si votre PDF numérisé contient une couche de texte intégrée (ajoutée par de nombreux scanners modernes), le mode texte l'extrait correctement. Si le PDF est purement visuel sans couche de texte, utilisez le mode image ou utilisez d'abord l'outil OCR PDF pour ajouter une couche de texte avant de convertir en Word."
+      "text": "Oui. Le mode texte prend en charge le latin, le cyrillique (russe, ukrainien, bulgare), l'arabe et l'hébreu (avec direction de paragraphe de droite à gauche correcte), le CJK (chinois, japonais, coréen), le devanagari (hindi) et la plupart des scripts Unicode des PDFs standard."
     }
   },
   {
@@ -57,7 +57,15 @@
   },
   {
     "@type": "Question",
-    "name": "Ai-je besoin de Microsoft Word pour ouvrir le fichier converti ?",
+    "name": "Quelle est la taille de fichier maximale ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Il n'y a pas de limite fixe. Les PDFs très volumineux (plus de 100 Mo) peuvent prendre plus de temps et nécessiter plus de mémoire. Pour de meilleurs résultats, restez en dessous de 100 Mo en mode texte et 50 Mo en mode image à 300 DPI."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Ai-je besoin de Microsoft Word pour ouvrir le fichier ?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Non. Le format .docx est compatible avec Microsoft Word, Google Docs (importer sur Drive et ouvrir), LibreOffice Writer (gratuit, open source) et Apple Pages. Vous n'avez pas besoin d'un abonnement payant Microsoft 365 pour ouvrir le fichier."
@@ -65,10 +73,10 @@
   },
   {
     "@type": "Question",
-    "name": "Quelle est la taille de fichier maximale pour convertir un PDF en Word ?",
+    "name": "Puis-je convertir un PDF numérisé en Word éditable ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Il n'y a pas de limite fixe. Les PDFs très volumineux (plus de 100 Mo) peuvent prendre plus de temps et nécessiter plus de mémoire. Pour de meilleurs résultats, restez en dessous de 100 Mo en mode texte et 50 Mo en mode image à 300 DPI."
+      "text": "Cela dépend. Si votre PDF numérisé contient une couche de texte intégrée (ajoutée par de nombreux scanners modernes), le mode texte l'extrait correctement. Si le PDF est purement visuel sans couche de texte, utilisez le mode image ou utilisez d'abord l'outil OCR PDF pour ajouter une couche de texte avant de convertir en Word."
     }
   },
   {
@@ -93,14 +101,6 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Oui — PDFree. La conversion s'exécute dans votre navigateur avec PDF.js et WebAssembly. Votre PDF n'est jamais envoyé à un serveur. Vous pouvez le vérifier en ouvrant DevTools → onglet Réseau et en observant qu'aucune requête d'envoi de fichier n'est effectuée pendant la conversion."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "L'arabe, l'hébreu, le cyrillique ou le chinois sont-ils pris en charge ?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Oui. Le mode texte prend en charge le latin, le cyrillique (russe, ukrainien, bulgare), l'arabe et l'hébreu (avec direction de paragraphe de droite à gauche correcte), le CJK (chinois, japonais, coréen), le devanagari (hindi) et la plupart des scripts Unicode des PDFs standard."
     }
   }
 ]

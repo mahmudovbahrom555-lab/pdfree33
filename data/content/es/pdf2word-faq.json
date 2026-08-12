@@ -41,10 +41,10 @@
   },
   {
     "@type": "Question",
-    "name": "¿Puedo convertir un PDF escaneado a Word?",
+    "name": "¿Es compatible con árabe, hebreo, cirílico o chino?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Si tu PDF escaneado contiene una capa de texto incrustada (muchos escáneres modernos la añaden), el modo texto la extraerá. Si el PDF es solo imagen sin capa de texto, usa el modo imagen o la herramienta OCR PDF primero para añadir una capa de texto antes de convertir."
+      "text": "Sí. El modo texto es compatible con latín, cirílico (ruso, ucraniano, búlgaro), árabe y hebreo (con dirección de párrafo de derecha a izquierda correcta), CJK (chino, japonés, coreano), devanagari (hindi) y la mayoría de escrituras Unicode en PDFs estándar."
     }
   },
   {
@@ -57,15 +57,7 @@
   },
   {
     "@type": "Question",
-    "name": "¿Necesito Microsoft Word para abrir el archivo convertido?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "No. El formato .docx es compatible con Microsoft Word, Google Docs (subir a Drive y abrir), LibreOffice Writer (gratis, código abierto) y Apple Pages. No necesitas una suscripción de pago a Microsoft 365 para abrir el archivo."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "¿Cuál es el tamaño máximo de archivo para convertir PDF a Word?",
+    "name": "¿Cuál es el tamaño máximo de archivo?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "No hay un límite fijo. Los PDFs muy grandes (más de 100 MB) pueden tardar más y requerir más memoria. Para mejores resultados, archivos por debajo de 100 MB en modo texto y por debajo de 50 MB en modo imagen a 300 DPI."
@@ -73,7 +65,23 @@
   },
   {
     "@type": "Question",
-    "name": "¿Funciona sin conexión a Internet?",
+    "name": "¿Necesito Microsoft Word para abrir el archivo?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. El formato .docx es compatible con Microsoft Word, Google Docs (subir a Drive y abrir), LibreOffice Writer (gratis, código abierto) y Apple Pages. No necesitas una suscripción de pago a Microsoft 365 para abrir el archivo."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Puedo convertir un PDF escaneado a Word editable?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Depende. Si el escaneado tiene una capa de texto incrustada (añadida por Adobe Scan, Microsoft Lens o un escáner moderno), el modo texto la extrae correctamente. Si el PDF es puramente visual, usa primero la herramienta OCR PDF y luego convierte a Word."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Funciona sin conexión?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Sí. Una vez que la página se ha cargado, PDFree funciona completamente sin conexión como Progressive Web App. No se necesita Internet para la conversión."
@@ -93,14 +101,6 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Sí — PDFree. La conversión se ejecuta en tu navegador con PDF.js y WebAssembly. Tu PDF nunca se envía a ningún servidor. Puedes verificarlo abriendo DevTools → pestaña Red y comprobando que no hay solicitud de subida durante la conversión. La mayoría de conversores en línea sí suben el archivo; PDFree no lo hace."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "¿Es compatible con árabe, hebreo, cirílico o chino?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Sí. El modo texto es compatible con latín, cirílico (ruso, ucraniano, búlgaro), árabe y hebreo (con dirección de párrafo de derecha a izquierda correcta), CJK (chino, japonés, coreano), devanagari (hindi) y la mayoría de escrituras Unicode en PDFs estándar."
     }
   }
 ]

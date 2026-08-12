@@ -17,10 +17,10 @@
   },
   {
     "@type": "Question",
-    "name": "Meu PDF é enviado para algum lugar na conversão?",
+    "name": "Meu PDF é enviado para algum lugar?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Não. A conversão ocorre inteiramente dentro do seu navegador. Seu PDF nunca é enviado a nenhum servidor — nem mesmo temporariamente."
+      "text": "Nunca. Seu arquivo é lido localmente pelo seu navegador. Nenhum servidor está envolvido em nenhuma etapa da conversão."
     }
   },
   {
@@ -41,10 +41,10 @@
   },
   {
     "@type": "Question",
-    "name": "Posso converter um PDF digitalizado em Word editável?",
+    "name": "Árabe, hebraico, cirílico e chinês são suportados?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Depende. Se o PDF digitalizado tiver uma camada de texto incorporada (muitos scanners modernos a adicionam), o modo texto a extrai corretamente. Se o PDF for apenas imagem sem camada de texto, use o modo imagem ou use primeiro a ferramenta OCR PDF para adicionar uma camada de texto antes de converter para Word."
+      "text": "Sim. O modo texto suporta latino, cirílico (russo, ucraniano, búlgaro), árabe e hebraico (com direção de parágrafo correta da direita para a esquerda), CJK (chinês, japonês, coreano), devanágari (hindi) e a maioria dos alfabetos Unicode de PDFs padrão."
     }
   },
   {
@@ -57,7 +57,15 @@
   },
   {
     "@type": "Question",
-    "name": "Preciso do Microsoft Word para abrir o arquivo convertido?",
+    "name": "Qual é o tamanho máximo de arquivo?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Não há um limite fixo. PDFs muito grandes (mais de 100 MB) podem demorar mais e exigir mais memória. Para melhores resultados, fique abaixo de 100 MB no modo texto e 50 MB no modo imagem a 300 DPI."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Preciso do Microsoft Word para abrir o arquivo?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Não. O formato .docx é compatível com Microsoft Word, Google Docs (faça upload no Drive e abra), LibreOffice Writer (gratuito, open source) e Apple Pages. Você não precisa de uma assinatura paga do Microsoft 365 para abrir o arquivo."
@@ -65,10 +73,10 @@
   },
   {
     "@type": "Question",
-    "name": "Qual é o tamanho máximo de arquivo para converter PDF para Word?",
+    "name": "Posso converter um PDF digitalizado em Word editável?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Não há um limite fixo. PDFs muito grandes (mais de 100 MB) podem demorar mais e exigir mais memória. Para melhores resultados, fique abaixo de 100 MB no modo texto e 50 MB no modo imagem a 300 DPI."
+      "text": "Depende. Se o PDF digitalizado tiver uma camada de texto incorporada (muitos scanners modernos a adicionam), o modo texto a extrai corretamente. Se o PDF for apenas imagem sem camada de texto, use o modo imagem ou use primeiro a ferramenta OCR PDF para adicionar uma camada de texto antes de converter para Word."
     }
   },
   {
@@ -89,18 +97,10 @@
   },
   {
     "@type": "Question",
-    "name": "Existe um conversor de PDF para Word sem upload de arquivo?",
+    "name": "Existe um conversor de PDF para Word sem envio de arquivo?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Sim — PDFree. A conversão é executada no seu navegador com PDF.js e WebAssembly. Seu PDF nunca é enviado a nenhum servidor. Você pode verificar abrindo DevTools → aba Rede e confirmando que não há nenhuma requisição de upload de arquivo durante a conversão."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "Árabe, hebraico, cirílico e chinês são suportados?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Sim. O modo texto suporta latino, cirílico (russo, ucraniano, búlgaro), árabe e hebraico (com direção de parágrafo correta da direita para a esquerda), CJK (chinês, japonês, coreano), devanágari (hindi) e a maioria dos alfabetos Unicode de PDFs padrão."
     }
   }
 ]

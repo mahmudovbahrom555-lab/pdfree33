@@ -41,10 +41,10 @@
   },
   {
     "@type": "Question",
-    "name": "Can I convert a scanned PDF to Word?",
+    "name": "Does it support Arabic, Hebrew, Cyrillic, or Chinese text?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "If your scanned PDF contains an embedded text layer (many modern scanners add one), text mode will extract it. If the PDF is image-only with no text layer, use image mode to get a Word document with page images, or use the OCR PDF tool first to add a text layer before converting."
+      "text": "Yes. Text mode supports Latin, Cyrillic (Russian, Ukrainian, Bulgarian), Arabic and Hebrew (with correct right-to-left paragraph direction), CJK (Chinese, Japanese, Korean), Devanagari (Hindi), and most Unicode scripts used in standard PDFs."
     }
   },
   {
@@ -57,7 +57,15 @@
   },
   {
     "@type": "Question",
-    "name": "Do I need Microsoft Word to open the converted file?",
+    "name": "What is the maximum file size?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "There is no hard limit. However, very large PDFs (100+ MB) may take longer and require more memory. For best results keep files under 100 MB in text mode and under 50 MB in image mode at 300 DPI."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Do I need Microsoft Word to open the file?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "No. The .docx format is supported by Microsoft Word, Google Docs (upload to Drive and open), LibreOffice Writer (free, open-source), and Apple Pages. You do not need a paid Microsoft 365 subscription to open the file."
@@ -65,10 +73,10 @@
   },
   {
     "@type": "Question",
-    "name": "What is the maximum file size for PDF to Word conversion?",
+    "name": "Can I convert a scanned PDF to editable Word?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "There is no hard limit. However, very large PDFs (100+ MB) may take longer and require more memory. For best results keep files under 100 MB in text mode and under 50 MB in image mode at 300 DPI."
+      "text": "It depends. If the scan has an embedded text layer (added by Adobe Scan, Microsoft Lens, or a modern scanner), text mode extracts it correctly. If the PDF is purely image-based, use the OCR PDF tool first to add a text layer, then convert to Word."
     }
   },
   {
@@ -93,14 +101,6 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Yes — PDFree. The entire conversion runs inside your browser using PDF.js and WebAssembly. Your PDF is never sent to any server. You can verify this by opening DevTools → Network tab and watching that no file upload request is made during conversion. Most online converters upload your file to their servers; PDFree does not."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "Does it support Arabic, Hebrew, Cyrillic, or Chinese text?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Yes. Text mode supports Latin, Cyrillic (Russian, Ukrainian, Bulgarian), Arabic and Hebrew (with correct right-to-left paragraph direction), CJK (Chinese, Japanese, Korean), Devanagari (Hindi), and most Unicode scripts used in standard PDFs."
     }
   }
 ]
