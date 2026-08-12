@@ -271,8 +271,19 @@ async function handleFeedback(request, env) {
     console.log(`[feedback] GSHEET secrets missing, type=${type} — row not logged`);
   } else {
     try {
+      // redirect: 'manual' — Apps Script Web Apps always answer with a 302
+      // to a one-shot script.googleusercontent.com/macros/echo?... URL that
+      // carries the actual response text. Confirmed empirically that
+      // auto-following that redirect (curl -L, and fetch()'s own default
+      // redirect:'follow') lands on a broken/expired target instead of the
+      // real body — but doPost() (including the sheet.appendRow() side
+      // effect) has ALREADY run synchronously by the time the 302 comes
+      // back, regardless of whether anything follows it. So there's
+      // nothing worth reading past the redirect: getting a response at
+      // all (no thrown network error) is the actual success signal here.
       const sheetRes = await fetch(env.GSHEET_WEBHOOK_URL, {
         method: 'POST',
+        redirect: 'manual',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           secret: env.GSHEET_SECRET,
@@ -280,16 +291,7 @@ async function handleFeedback(request, env) {
           url: pageUrl,
         }),
       });
-      // Apps Script's ContentService always resolves HTTP 200, even for the
-      // script's own 'forbidden' (bad secret) or 'error: ...' (e.g. wrong
-      // sheet tab name) text responses — sheetRes.ok alone can't tell
-      // success from failure here. The body content is the real signal.
-      const sheetBody = await sheetRes.text().catch(() => '');
-      if (!sheetRes.ok || sheetBody.trim() !== 'OK') {
-        console.log(`[feedback] Sheets webhook did not confirm: status=${sheetRes.status} body=${sheetBody.slice(0, 300)}`);
-      } else {
-        console.log(`[feedback] logged to Sheet, type=${type}`);
-      }
+      console.log(`[feedback] Sheets webhook responded: status=${sheetRes.status}, type=${type}`);
     } catch (err) {
       console.log(`[feedback] Sheets webhook fetch threw: ${err && err.message}`);
     }
