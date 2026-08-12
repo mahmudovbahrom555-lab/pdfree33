@@ -29,7 +29,7 @@ const PREVIEW_W = 280;  // preview canvas CSS width in px
 
 // ── State ──────────────────────────────────────────────────────
 let _kind     = 'text';         // 'text' | 'image'
-let _text     = t('wm_text_placeholder');
+let _text     = '';
 let _opacity  = 0.3;
 let _position = 'center';       // 'center' | 'top' | 'bottom' | 'tile'
 let _fontSize = 40;
