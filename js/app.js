@@ -46,6 +46,7 @@ import { loadPdfLib }                              from './lazyLibs.js';
 import { checkReturnVisit, recordDownload,
          checkAndRecordConversion,
          checkAutoDownloadRecovery }               from './behavioralSignals.js';
+import { initHomepageEngagement }                 from './homepageEngagement.js';
 import { t }                                      from './i18n.js';
 import { saveHandoff, restoreHandoff }            from './handoff.js';
 
@@ -1313,6 +1314,7 @@ document.addEventListener('DOMContentLoaded', () => {
   } else {
     showHomePage();
     initSearch();
+    initHomepageEngagement();
     window.scrollTo({ top: 0, behavior: 'instant' });
   }
 });

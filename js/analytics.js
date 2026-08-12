@@ -15,6 +15,8 @@
 //     нет интернета) — молча ничего не делает.
 // ============================================================
 
+import { getLang } from './config.js';
+
 /** Rounded size bucket for privacy-safe reporting */
 function _sizeBucket(bytes) {
   if (!bytes || bytes <= 0)        return 'unknown';
@@ -43,12 +45,15 @@ if (typeof window !== 'undefined') {
 function _track(eventName, props = {}) {
   try {
     if (typeof window === 'undefined') return;
+    // locale first — no caller ever passes it explicitly, but this keeps
+    // the merge order intentional rather than accidental.
+    const fullProps = { locale: getLang(), ...props };
     if (typeof window.plausible === 'function') {
-      window.plausible(eventName, { props });
+      window.plausible(eventName, { props: fullProps });
     }
     // In development, log to console instead
     if (window._pdfreeDevMode) {
-      console.info(`[Analytics] ${eventName}`, props);
+      console.info(`[Analytics] ${eventName}`, fullProps);
     }
   } catch { /* Never let analytics break the app */ }
 }
@@ -241,4 +246,43 @@ export function trackHeroFileSelect(fileCount, source) {
  */
 export function trackChipClick(key, flow) {
   _track('Chip Click', { tool: key, flow });
+}
+
+// ── Homepage engagement signals ─────────────────────────────────
+// Homepage-only — tool pages already get an equivalent "did nothing" rate
+// for free from the gap between Tool Open and File Added counts above.
+// Kept independent of each other by design: each event's meaning stays
+// literal (e.g. "No Interaction" means zero clicks/input, full stop), and
+// any cross-referencing (e.g. "left without scrolling past 25%") is left
+// to Plausible's own segmentation UI rather than baked into the code.
+// See js/homepageEngagement.js for the signal-detection wiring.
+
+/**
+ * User's first click/input anywhere on the homepage after load. Fired at
+ * most once per pageview. Answers "how long before someone engages" —
+ * informs whether the hero/above-the-fold content prompts immediate action.
+ * @param {number} elapsedMs — ms from navigation/bootstrap to first interaction
+ */
+export function trackHomepageTimeToInteract(elapsedMs) {
+  _track('Homepage Time To Interact', { seconds: String(_roundDuration(elapsedMs)) });
+}
+
+/**
+ * Homepage tab hidden (backgrounded/closed/navigated away) with zero
+ * clicks or input events recorded during this pageview. Fired at most
+ * once per pageview.
+ * @param {number} elapsedMs — ms from navigation/bootstrap to hidden
+ */
+export function trackHomepageNoInteraction(elapsedMs) {
+  _track('Homepage No Interaction', { seconds: String(_roundDuration(elapsedMs)) });
+}
+
+/**
+ * User's vertical scroll passed a milestone percentage of the page. Fired
+ * at most once per milestone per pageview. Directly answers whether
+ * content below the hero (tool cards, FAQ) gets seen at all.
+ * @param {25|50|75|100} depth
+ */
+export function trackHomepageScrollDepth(depth) {
+  _track('Homepage Scroll Depth', { depth: String(depth) });
 }
