@@ -49,7 +49,7 @@
   },
   {
     "@type": "Question",
-    "name": "Kann ich nach der Konvertierung Formeln hinzufügen oder neu berechnen?",
+    "name": "Kann ich nach der Konvertierung Formeln hinzufügen?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Die extrahierten Werte sind normale Zahlen und Text, keine Formeln — eine PDF speichert keine zugrundeliegenden Berechnungen, nur dargestellte Ergebnisse. In Excel kannst du beliebige Formeln über die extrahierten Daten legen."

@@ -1,7 +1,7 @@
 [
   {
     "@type": "Question",
-    "name": "¿Se sube mi PDF a algún servidor para la conversión?",
+    "name": "¿Se sube mi PDF a algún servidor?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "No. La detección de tablas y la generación del archivo Excel se realizan completamente en tu navegador usando pdf.js y exceljs. Tu PDF y los datos extraídos nunca salen de tu dispositivo."
@@ -49,7 +49,7 @@
   },
   {
     "@type": "Question",
-    "name": "¿Puedo editar fórmulas o recalcular después de convertir?",
+    "name": "¿Puedo añadir fórmulas después de convertir?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Los valores extraídos son números y texto ordinarios, no fórmulas — un PDF no almacena cálculos subyacentes, solo resultados renderizados. Una vez en Excel, puedes añadir tus propias fórmulas sobre los datos extraídos con normalidad."
