@@ -17,10 +17,10 @@
   },
   {
     "@type": "Question",
-    "name": "Có những độ phân giải DPI nào?",
+    "name": "Nên chọn độ phân giải DPI nào?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree cung cấp 72 DPI (web), 150 DPI (thông thường) và 300 DPI (chất lượng in). Chọn theo nhu cầu của bạn."
+      "text": "72 DPI phù hợp cho hiển thị web hoặc email. 150 DPI cho bài thuyết trình thông thường. 300 DPI cho mục đích in ấn hoặc khi cần chi tiết tinh tế."
     }
   },
   {
@@ -41,10 +41,10 @@
   },
   {
     "@type": "Question",
-    "name": "Có giới hạn số trang không?",
+    "name": "Có giới hạn số trang có thể chuyển không?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Không có. PDFree có thể chuyển đổi PDF với bất kỳ số trang nào. Miễn phí không giới hạn."
+      "text": "Không có. Chuyển đổi PDF bao nhiêu trang tùy thích — thời gian xử lý phụ thuộc vào kích thước và độ phân giải đã chọn."
     }
   },
   {

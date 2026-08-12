@@ -1,10 +1,10 @@
 [
   {
     "@type": "Question",
-    "name": "Does converting PDF to JPG upload my file?",
+    "name": "What DPI should I choose?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. PDFree converts PDF pages to images entirely in your browser using PDF.js (Mozilla's open-source PDF renderer). Nothing is uploaded to any server. You can verify this: open DevTools → Network tab and you should not see your PDF being uploaded during conversion."
+      "text": "72 DPI is fine for websites and screen display. 150 DPI works for most office uses. Choose 300 DPI when you need print-quality output or want to read small text clearly after conversion."
     }
   },
   {
@@ -25,10 +25,18 @@
   },
   {
     "@type": "Question",
-    "name": "Can I convert only specific pages to JPG?",
+    "name": "Is there a page limit for conversion?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "The tool currently converts all pages at once. To export only specific pages, first use the PDFree Split PDF tool to extract the pages you need into a separate PDF, then convert that PDF to JPG. Both steps are free and run locally in your browser."
+      "text": "No. There are no page count or file size limits. Very large PDFs (100+ pages at 300 DPI) may take longer to process. For best results with large files, close other browser tabs before converting."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Does converting a PDF to JPG lose quality?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "JPG uses lossy compression — at 300 DPI the quality is very high and text remains readable. For completely lossless output, use PNG format instead. PDFree supports both JPG and PNG — select the format before converting."
     }
   },
   {
@@ -41,10 +49,18 @@
   },
   {
     "@type": "Question",
-    "name": "Is there a page limit for conversion?",
+    "name": "Can I convert specific pages only?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. There are no page count or file size limits. Very large PDFs (100+ pages at 300 DPI) may take longer to process. For best results with large files, close other browser tabs before converting."
+      "text": "The tool currently converts all pages at once. To export only specific pages, first use the PDFree Split PDF tool to extract the pages you need into a separate PDF, then convert that PDF to JPG. Both steps are free and run locally in your browser."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Are my PDF files uploaded to a server?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. PDFree uses PDF.js (Mozilla's open-source PDF renderer) running entirely in your browser. Pages are rendered locally and exported as JPG files — nothing leaves your device."
     }
   },
   {
@@ -69,14 +85,6 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "PDFree exports up to 300 DPI, which is standard print-quality resolution. PDF text and vector graphics render sharply at 300 DPI — the output looks identical to the original document."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "What DPI should I choose?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "72 DPI is fine for websites and screen display. 150 DPI works for most office uses. Choose 300 DPI when you need print-quality output or want to read small text clearly after conversion."
     }
   }
 ]

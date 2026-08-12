@@ -41,15 +41,15 @@
   },
   {
     "@type": "Question",
-    "name": "Apakah ada batasan jumlah halaman?",
+    "name": "Apakah ada batasan jumlah halaman yang bisa dikonversi?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Tidak ada. PDFree dapat mengonversi PDF dengan jumlah halaman berapa pun. Gratis tanpa batas."
+      "text": "Tidak ada. Konversi PDF berapa halaman pun — waktu pemrosesan bergantung pada ukuran dan resolusi yang dipilih."
     }
   },
   {
     "@type": "Question",
-    "name": "Bisakah mengonversi PDF yang dilindungi kata sandi?",
+    "name": "Apakah PDF yang dilindungi kata sandi bisa dikonversi?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Tidak. PDF terenkripsi tidak bisa dibuka untuk dirender. Hapus kata sandi terlebih dahulu menggunakan alat yang sesuai."

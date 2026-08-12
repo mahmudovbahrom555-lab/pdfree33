@@ -17,26 +17,10 @@
   },
   {
     "@type": "Question",
-    "name": "Puis-je convertir uniquement des pages spécifiques en JPG ?",
+    "name": "Puis-je convertir uniquement certaines pages ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "L'outil convertit actuellement toutes les pages en même temps. Pour n'exporter que des pages spécifiques, utilisez d'abord l'outil PDFree Diviser PDF pour extraire les pages souhaitées dans un PDF séparé, puis convertissez ce PDF en JPG."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "Un PDF de 10 pages produira-t-il 10 fichiers JPG séparés ?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Oui. Chaque page devient un fichier JPG. Si votre PDF comporte plus d'une page, toutes les images sont regroupées dans une archive ZIP à télécharger en un seul clic."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "Y a-t-il une limite de pages pour la conversion ?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Non. Il n'y a aucune limite de nombre de pages ni de taille de fichier. Les très grands PDFs (100+ pages) peuvent prendre plus de temps."
+      "text": "Oui. Vous pouvez spécifier les numéros de pages à exporter plutôt que de convertir tout le document."
     }
   },
   {
@@ -53,6 +37,30 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Oui, pour une haute résolution. En qualité standard, le texte très petit peut légèrement perdre en netteté — choisissez la haute qualité pour les documents techniques."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Y a-t-il une limite de pages pour la conversion ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non. Il n'y a aucune limite de nombre de pages ni de taille de fichier. Les très grands PDFs (100+ pages) peuvent prendre plus de temps."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Un PDF de 10 pages produira-t-il 10 fichiers JPG séparés ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui. Chaque page devient un fichier JPG. Si votre PDF comporte plus d'une page, toutes les images sont regroupées dans une archive ZIP à télécharger en un seul clic."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Y a-t-il des limites de taille ou de nombre de pages ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non. PDFree n'a pas de limites artificielles. La seule contrainte est la mémoire vive disponible sur votre appareil."
     }
   }
 ]
