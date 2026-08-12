@@ -220,49 +220,81 @@ async function handleFeedback(request, env) {
     return new Response('OK', { status: 200 }); // silently drop
   }
 
+  // ── Channel 1: Telegram — real-time notification ──────────────────────
   if (!env.TELEGRAM_BOT_TOKEN || !env.TELEGRAM_CHAT_ID) {
     console.log(`[feedback] TELEGRAM secrets missing, type=${type} — message dropped`);
-    return new Response('OK', { status: 200 }); // not configured yet — no-op, don't break the client
+  } else {
+    const parts = [`${_TYPE_LABEL[type] || type} — ${tool}`];
+    if (text)    parts.push(text);
+    if (message) parts.push(`🔧 ${message}`);
+    if (errorId) parts.push(`🆔 ${errorId}`);
+    if (device)  parts.push(`📱 ${device}`);
+    if (email)   parts.push(`📧 ${email}`);
+    if (pageUrl) parts.push(`🔗 ${pageUrl}`);
+
+    try {
+      const tgRes = await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        // No parse_mode — plain text, so user-supplied text can't break
+        // Telegram's Markdown/HTML formatting or inject unintended entities.
+        body: JSON.stringify({
+          chat_id: env.TELEGRAM_CHAT_ID,
+          text: parts.join('\n\n'),
+          disable_web_page_preview: true,
+        }),
+      });
+      // fetch() only throws on network failure — a non-2xx from Telegram
+      // itself (bad chat_id, bot blocked, rate limit) resolves normally and
+      // was previously invisible. Log it so a silent delivery gap shows up
+      // in `wrangler tail` instead of just "the user says it never arrived".
+      if (!tgRes.ok) {
+        const body = await tgRes.text().catch(() => '');
+        console.log(`[feedback] Telegram API rejected sendMessage: ${tgRes.status} ${body}`);
+      } else {
+        console.log(`[feedback] delivered to Telegram, type=${type}`);
+      }
+    } catch (err) {
+      console.log(`[feedback] Telegram fetch threw: ${err && err.message}`);
+    }
   }
 
-  const parts = [`${_TYPE_LABEL[type] || type} — ${tool}`];
-  if (text)    parts.push(text);
-  if (message) parts.push(`🔧 ${message}`);
-  if (errorId) parts.push(`🆔 ${errorId}`);
-  if (device)  parts.push(`📱 ${device}`);
-  if (email)   parts.push(`📧 ${email}`);
-  if (pageUrl) parts.push(`🔗 ${pageUrl}`);
-
-  try {
-    const tgRes = await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      // No parse_mode — plain text, so user-supplied text can't break
-      // Telegram's Markdown/HTML formatting or inject unintended entities.
-      body: JSON.stringify({
-        chat_id: env.TELEGRAM_CHAT_ID,
-        text: parts.join('\n\n'),
-        disable_web_page_preview: true,
-      }),
-    });
-    // fetch() only throws on network failure — a non-2xx from Telegram
-    // itself (bad chat_id, bot blocked, rate limit) resolves normally and
-    // was previously invisible. Log it so a silent delivery gap shows up
-    // in `wrangler tail` instead of just "the user says it never arrived".
-    if (!tgRes.ok) {
-      const body = await tgRes.text().catch(() => '');
-      console.log(`[feedback] Telegram API rejected sendMessage: ${tgRes.status} ${body}`);
-    } else {
-      console.log(`[feedback] delivered to Telegram, type=${type}`);
+  // ── Channel 2: Google Sheet — structured, queryable log ────────────────
+  // Independent of the Telegram channel above (and of each other's
+  // failures) — Apps Script Web App bound to a Sheet's doPost(), appends
+  // one row per submission. No database provisioned for this: a Sheet is
+  // enough to filter/pivot by tool, error_type, errorId over time, and to
+  // build closing-the-loop follow-ups later (a Status column + a
+  // time-based Apps Script trigger that emails anyone with a saved email
+  // once their row is marked Fixed).
+  if (!env.GSHEET_WEBHOOK_URL || !env.GSHEET_SECRET) {
+    console.log(`[feedback] GSHEET secrets missing, type=${type} — row not logged`);
+  } else {
+    try {
+      const sheetRes = await fetch(env.GSHEET_WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          secret: env.GSHEET_SECRET,
+          type, tool, errorId, message, text, email, device,
+          url: pageUrl,
+        }),
+      });
+      if (!sheetRes.ok) {
+        const body = await sheetRes.text().catch(() => '');
+        console.log(`[feedback] Sheets webhook rejected: ${sheetRes.status} ${body}`);
+      } else {
+        console.log(`[feedback] logged to Sheet, type=${type}`);
+      }
+    } catch (err) {
+      console.log(`[feedback] Sheets webhook fetch threw: ${err && err.message}`);
     }
-  } catch (err) {
-    console.log(`[feedback] Telegram fetch threw: ${err && err.message}`);
   }
 
   // Optional screenshot — sent as a separate message right after the text
   // one, via sendPhoto. Kept out of the sendMessage call above because
   // Telegram caption length (1024 chars) is shorter than our text field.
-  if (typeof body.screenshot === 'string' && body.screenshot) {
+  if (env.TELEGRAM_BOT_TOKEN && env.TELEGRAM_CHAT_ID && typeof body.screenshot === 'string' && body.screenshot) {
     const match = /^data:image\/(png|jpe?g|webp);base64,([A-Za-z0-9+/=]+)$/.exec(body.screenshot);
     const MAX_SCREENSHOT_BYTES = 6 * 1024 * 1024;
     if (!match) {
