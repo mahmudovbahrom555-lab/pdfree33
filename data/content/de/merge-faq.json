@@ -1,10 +1,10 @@
 [
   {
     "@type": "Question",
-    "name": "Werden meine Dateien beim Zusammenführen auf einen Server hochgeladen?",
+    "name": "Wie viele PDF-Dateien kann ich auf einmal zusammenfügen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nein. PDFree führt PDF-Dateien vollständig in deinem Browser mit pdf-lib zusammen. Deine Dateien verlassen dein Gerät nie und werden niemals an einen Server gesendet."
+      "text": "Es gibt kein Limit. PDFree verarbeitet alles im Arbeitsspeicher deines Browsers — du kannst 2, 50 oder 100+ Dateien in einem Vorgang zusammenfügen. Bei großen Stapeln (50+ Dateien oder über 500 MB) schließe andere Browser-Tabs, um RAM freizugeben."
     }
   },
   {
@@ -25,34 +25,10 @@
   },
   {
     "@type": "Question",
-    "name": "Wie viele PDF-Dateien kann ich auf einmal zusammenfügen?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Es gibt kein Limit. PDFree verarbeitet alles im Arbeitsspeicher deines Browsers — du kannst 2, 50 oder 100+ Dateien in einem Vorgang zusammenfügen. Bei großen Stapeln (50+ Dateien oder über 500 MB) schließe andere Browser-Tabs, um RAM freizugeben."
-    }
-  },
-  {
-    "@type": "Question",
     "name": "Funktioniert das Zusammenführen von PDFs offline?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Ja. PDFree ist eine Progressive Web App (PWA). Einmal geladen, funktioniert sie vollständig offline — keine Internetverbindung für die Verarbeitung erforderlich."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "Gibt es ein Tageslimit für das Zusammenfügen?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Nein. PDFree hat keinerlei Nutzungsbeschränkungen. Füge so viele PDFs zusammen, wie du möchtest, so oft du es brauchst — kein Tageslimit, kein Aufgabenlimit, kein Dateianzahl-Limit."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "Kann ich PDFs auf einem Smartphone oder Tablet zusammenführen?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Ja. PDFree funktioniert in mobilen Browsern — Chrome für Android und Safari für iOS. Die Dateiauswahl erfolgt über den nativen Datei-Picker und die Reihenfolge lässt sich über die Schaltflächen auf dem Bildschirm anpassen."
     }
   },
   {
@@ -69,6 +45,30 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Nein. Verschlüsselte PDFs können ohne Passwort weder gelesen noch bearbeitet werden. Entferne zunächst den Passwortschutz und füge die Dateien danach zusammen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Gibt es ein Tageslimit für das Zusammenfügen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nein. PDFree hat keinerlei Nutzungsbeschränkungen. Füge so viele PDFs zusammen, wie du möchtest, so oft du es brauchst — kein Tageslimit, kein Aufgabenlimit, kein Dateianzahl-Limit."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Werden meine Dateien beim Zusammenfügen auf einen Server hochgeladen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nein. Deine Dateien werden vollständig im Arbeitsspeicher deines Browsers verarbeitet. Nichts wird an einen Server gesendet. Schließe den Tab — die Dateien sind aus dem Speicher gelöscht, ohne Spuren auf einem Server zu hinterlassen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann ich PDFs auf dem Smartphone oder Tablet zusammenfügen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. PDFree funktioniert in mobilen Browsern — Chrome für Android und Safari für iOS. Die Dateiauswahl erfolgt über den nativen Datei-Picker und die Reihenfolge lässt sich über die Schaltflächen auf dem Bildschirm anpassen."
     }
   }
 ]

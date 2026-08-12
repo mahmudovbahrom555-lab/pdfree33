@@ -1,10 +1,10 @@
 [
   {
     "@type": "Question",
-    "name": "File của tôi có được tải lên server khi ghép không?",
+    "name": "Có thể ghép bao nhiêu file PDF cùng một lúc?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Không. PDFree ghép file PDF hoàn toàn trong trình duyệt của bạn bằng pdf-lib. File của bạn không bao giờ rời thiết bị và không bao giờ được gửi đến bất kỳ server nào."
+      "text": "Không có giới hạn. PDFree xử lý tất cả trong bộ nhớ trình duyệt của bạn, vì vậy bạn có thể ghép 2, 50 hoặc 100+ file trong một thao tác. Đối với lô lớn (50+ file hoặc tổng 500 MB+), hãy đóng các tab trình duyệt khác để giải phóng RAM."
     }
   },
   {
@@ -17,18 +17,26 @@
   },
   {
     "@type": "Question",
-    "name": "Có giới hạn kích thước file khi ghép PDF không?",
+    "name": "Định dạng và font có được giữ nguyên sau khi ghép không?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Không có giới hạn nhân tạo. PDFree xử lý file cục bộ trong trình duyệt của bạn — không cần đăng ký. Để có trải nghiệm tốt nhất, giữ tổng lô dưới 300 MB; các lô lớn hơn có thể chậm hơn trên thiết bị bộ nhớ thấp."
+      "text": "Có. PDFree sử dụng pdf-lib, sao chép các trang ở cấp độ đối tượng PDF — font, hình ảnh, đồ họa vector và định dạng được bảo toàn chính xác như bản gốc."
     }
   },
   {
     "@type": "Question",
-    "name": "Có thể ghép nhiều hơn hai PDF cùng lúc không?",
+    "name": "Có thể ghép PDF được bảo vệ bằng mật khẩu không?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Có. Bạn có thể ghép không giới hạn file PDF trong một thao tác. Chỉ cần thêm tất cả các file bạn muốn kết hợp — 2, 10, 50 hoặc 100+."
+      "text": "Không. PDF được mã hóa không thể đọc hoặc sửa đổi mà không có mật khẩu. Hãy xóa mật khẩu trước bằng công cụ PDF, sau đó ghép."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Có giới hạn kích thước file khi ghép PDF không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không có giới hạn nhân tạo. PDFree xử lý file cục bộ trong trình duyệt của bạn — không cần đăng ký. Để có trải nghiệm tốt nhất, giữ tổng lô dưới 300 MB; các lô lớn hơn có thể chậm hơn trên thiết bị bộ nhớ thấp."
     }
   },
   {
@@ -49,26 +57,18 @@
   },
   {
     "@type": "Question",
+    "name": "Việc ghép có tải file lên server không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không. PDFree ghép file PDF hoàn toàn trong trình duyệt của bạn bằng pdf-lib. File của bạn không bao giờ rời thiết bị và không bao giờ được gửi đến bất kỳ server nào."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "Có thể ghép PDF trên điện thoại hoặc máy tính bảng không?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Có. PDFree hoạt động trên trình duyệt di động — Chrome cho Android và Safari cho iOS. Chọn file sử dụng bộ chọn file gốc, và bạn có thể sắp xếp lại file bằng các nút trên màn hình."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "Có thể ghép PDF được bảo vệ bằng mật khẩu không?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Không. PDF được mã hóa không thể đọc hoặc sửa đổi mà không có mật khẩu. Hãy xóa mật khẩu trước bằng công cụ PDF, sau đó ghép."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "Định dạng và font có được giữ nguyên sau khi ghép không?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Có. PDFree sử dụng pdf-lib, sao chép các trang ở cấp độ đối tượng PDF — font, hình ảnh, đồ họa vector và định dạng được bảo toàn chính xác như bản gốc."
     }
   }
 ]

@@ -1,10 +1,10 @@
 [
   {
     "@type": "Question",
-    "name": "Os meus arquivos são enviados para um servidor ao combinar PDFs?",
+    "name": "Quantos arquivos PDF posso juntar de uma vez?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Não. O PDFree combina arquivos PDF inteiramente no seu navegador utilizando pdf-lib. Os seus arquivos nunca saem do seu dispositivo e nunca são enviados para nenhum servidor."
+      "text": "Não há limite. O PDFree processa tudo na memória do navegador — você pode juntar 2, 50 ou 100+ arquivos em uma única operação. Para lotes grandes (50+ arquivos ou mais de 500 MB), feche outras abas para liberar RAM."
     }
   },
   {
@@ -17,18 +17,26 @@
   },
   {
     "@type": "Question",
-    "name": "Existe algum limite de tamanho de arquivo para combinar PDFs?",
+    "name": "A formatação será preservada após juntar os PDFs?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Não existem limites artificiais nem subscrições obrigatórias. O PDFree processa os arquivos localmente no seu navegador. Para melhor desempenho, recomendamos manter o total abaixo de 300 MB."
+      "text": "Sim. O PDFree usa pdf-lib que copia as páginas no nível dos objetos PDF — fontes, imagens, gráficos vetoriais e formatação são preservados exatamente como nos originais."
     }
   },
   {
     "@type": "Question",
-    "name": "Quantos arquivos PDF posso juntar de uma vez?",
+    "name": "Posso juntar PDFs protegidos por senha?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Não há limite. O PDFree processa tudo na memória do navegador — você pode juntar 2, 50 ou 100+ arquivos em uma única operação. Para lotes grandes (50+ arquivos ou mais de 500 MB), feche outras abas para liberar RAM."
+      "text": "Não. PDFs criptografados não podem ser lidos sem a senha. Remova a proteção primeiro e depois junte."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Existe algum limite de tamanho de arquivo para combinar PDFs?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Não existem limites artificiais nem subscrições obrigatórias. O PDFree processa os arquivos localmente no seu navegador. Para melhor desempenho, recomendamos manter o total abaixo de 300 MB."
     }
   },
   {
@@ -49,26 +57,18 @@
   },
   {
     "@type": "Question",
-    "name": "Posso combinar PDFs num celular ou tablet?",
+    "name": "Meus arquivos são enviados para um servidor ao juntar?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Não. Tudo é processado na memória do seu navegador. Nada é enviado para nenhum servidor. Feche a aba e os arquivos desaparecem completamente da memória — sem rastro em nenhum servidor."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso juntar PDFs no celular ou tablet?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Sim. O PDFree funciona em navegadores móveis — Chrome para Android e Safari para iOS. A seleção de arquivos usa o seletor nativo e pode reordenar os arquivos com os botões na tela."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "Posso juntar PDFs protegidos por senha?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Não. PDFs criptografados não podem ser lidos sem a senha. Remova a proteção primeiro e depois junte."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "A formatação será preservada após juntar os PDFs?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Sim. O PDFree usa pdf-lib que copia as páginas no nível dos objetos PDF — fontes, imagens, gráficos vetoriais e formatação são preservados exatamente como nos originais."
     }
   }
 ]

@@ -1,10 +1,10 @@
 [
   {
     "@type": "Question",
-    "name": "Mes fichiers sont-ils téléversés sur un serveur lors de la fusion ?",
+    "name": "Combien de fichiers PDF puis-je fusionner à la fois ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Non. PDFree fusionne les fichiers PDF entièrement dans votre navigateur grâce à pdf-lib. Vos fichiers ne quittent jamais votre appareil et ne sont jamais envoyés à aucun serveur."
+      "text": "Il n'y a pas de limite. PDFree traite tout dans la mémoire du navigateur — vous pouvez fusionner 2, 50 ou 100+ fichiers en une seule opération. Pour les grands lots (50+ fichiers ou 500 Mo+), fermez les autres onglets pour libérer de la RAM."
     }
   },
   {
@@ -17,18 +17,18 @@
   },
   {
     "@type": "Question",
-    "name": "Y a-t-il une limite de taille de fichier pour la fusion de PDFs ?",
+    "name": "La mise en forme sera-t-elle conservée après la fusion ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Il n'y a aucune limite artificielle ni abonnement requis. PDFree traite les fichiers localement dans votre navigateur. Pour de meilleures performances, nous recommandons de garder la taille totale sous 300 Mo."
+      "text": "Oui. PDFree utilise pdf-lib qui copie les pages au niveau des objets PDF — polices, images, graphiques vectoriels et mise en forme sont conservés exactement comme dans les originaux."
     }
   },
   {
     "@type": "Question",
-    "name": "Puis-je fusionner plus de deux PDFs à la fois ?",
+    "name": "Puis-je fusionner des PDF protégés par mot de passe ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Oui. Vous pouvez fusionner un nombre illimité de fichiers PDF en une seule opération — 2, 10, 50 ou plus de 100. Ajoutez simplement tous les fichiers que vous souhaitez combiner."
+      "text": "Non. Les PDF chiffrés ne peuvent pas être lus sans le mot de passe. Supprimez d'abord la protection, puis fusionnez."
     }
   },
   {
@@ -41,7 +41,7 @@
   },
   {
     "@type": "Question",
-    "name": "Y a-t-il une limite quotidienne sur le nombre de fusions ?",
+    "name": "Y a-t-il une limite quotidienne pour les fusions ?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Non. PDFree n'a aucun plafond d'utilisation quotidien. Fusionnez autant de PDFs que vous le souhaitez, aussi souvent que nécessaire — sans limite de tâches ni limite quotidienne."
@@ -49,7 +49,15 @@
   },
   {
     "@type": "Question",
-    "name": "Puis-je fusionner des PDFs sur un téléphone ou une tablette ?",
+    "name": "Mes fichiers sont-ils envoyés à un serveur lors de la fusion ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non. Vos fichiers sont traités entièrement dans la mémoire de votre navigateur. Rien n'est envoyé à aucun serveur. Fermez l'onglet et les fichiers disparaissent de la mémoire — sans aucune trace sur un serveur."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Puis-je fusionner des PDF sur téléphone ou tablette ?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Oui. PDFree fonctionne dans les navigateurs mobiles — Chrome pour Android et Safari pour iOS. La sélection des fichiers utilise le sélecteur natif et vous pouvez réorganiser les fichiers à l'aide des boutons à l'écran."
@@ -73,26 +81,10 @@
   },
   {
     "@type": "Question",
-    "name": "Existe-t-il un PDF joiner gratuit sans inscription ?",
+    "name": "Existe-t-il un « PDF joiner » gratuit sans inscription ?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Oui, c'est exactement ce qu'est PDFree : un joiner de PDF gratuit, sans compte à créer et sans logiciel à installer. Glissez vos fichiers, réorganisez-les, puis téléchargez le PDF assemblé."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "La mise en forme sera-t-elle conservée après la fusion ?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Oui. PDFree utilise pdf-lib qui copie les pages au niveau des objets PDF — polices, images, graphiques vectoriels et mise en forme sont conservés exactement comme dans les originaux."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "Puis-je fusionner des PDF protégés par mot de passe ?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Non. Les PDF chiffrés ne peuvent pas être lus sans le mot de passe. Supprimez d'abord la protection, puis fusionnez."
     }
   }
 ]
