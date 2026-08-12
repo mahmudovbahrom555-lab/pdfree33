@@ -280,9 +280,13 @@ async function handleFeedback(request, env) {
           url: pageUrl,
         }),
       });
-      if (!sheetRes.ok) {
-        const body = await sheetRes.text().catch(() => '');
-        console.log(`[feedback] Sheets webhook rejected: ${sheetRes.status} ${body}`);
+      // Apps Script's ContentService always resolves HTTP 200, even for the
+      // script's own 'forbidden' (bad secret) or 'error: ...' (e.g. wrong
+      // sheet tab name) text responses — sheetRes.ok alone can't tell
+      // success from failure here. The body content is the real signal.
+      const sheetBody = await sheetRes.text().catch(() => '');
+      if (!sheetRes.ok || sheetBody.trim() !== 'OK') {
+        console.log(`[feedback] Sheets webhook did not confirm: status=${sheetRes.status} body=${sheetBody.slice(0, 300)}`);
       } else {
         console.log(`[feedback] logged to Sheet, type=${type}`);
       }
