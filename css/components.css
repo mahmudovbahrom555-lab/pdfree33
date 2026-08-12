@@ -3738,6 +3738,15 @@ button,
 
 @media (max-width: 500px) {
   .hero-featured { grid-template-columns: repeat(2, 1fr); }
+  /* At 2 columns, card width is too narrow for nowrap+ellipsis to leave even
+     short titles ("Merge PDF", "Compress PDF") intact — they truncated to
+     "Merge P…" / "Compre…". Let the title wrap onto a 2nd line instead;
+     the description below stays single-line ellipsis (secondary text, OK
+     to truncate). overflow-wrap covers locales whose translated title is one
+     long unbreakable compound word (German "zusammenführen") with no space
+     to wrap at — without it, that single word still got ellipsis-truncated
+     even with white-space:normal. */
+  .hero-fcard__name { white-space: normal; overflow-wrap: break-word; }
 }
 
 /* Hide chips in default state; show only when file is loaded */
