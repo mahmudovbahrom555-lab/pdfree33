@@ -1,7 +1,7 @@
 [
   {
     "@type": "Question",
-    "name": "¿Se sube mi PDF a algún servidor al rellenarlo?",
+    "name": "¿Se sube mi PDF rellenado a algún sitio?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "No. Todo el proceso de relleno se ejecuta en tu navegador con pdf-lib y pdf.js. Tu documento nunca sale de tu dispositivo — PDFree no tiene acceso a tu archivo ni a los datos que introduces."
@@ -25,10 +25,10 @@
   },
   {
     "@type": "Question",
-    "name": "¿Puedo rellenar un formulario PDF escaneado?",
+    "name": "¿Qué pasa si mi PDF no tiene campos rellenables?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No con esta herramienta — los PDFs escaneados son imágenes sin campos interactivos incrustados. PDFree detecta únicamente campos AcroForm. Para formularios escaneados necesitarías software OCR que convierta el escaneado en un PDF rellenable."
+      "text": "PDFree detecta campos interactivos AcroForm. Si el PDF es una imagen escaneada o un documento sin campos incrustados, verás el mensaje 'No se encontraron campos rellenables'. Para PDFs planos, puedes usar las herramientas de anotación o marca de agua para añadir texto encima."
     }
   },
   {
@@ -41,26 +41,18 @@
   },
   {
     "@type": "Question",
-    "name": "¿Rellena de verdad los campos reales de mi formulario, o tengo que colocar el texto manualmente?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "PDFree detecta los campos AcroForm reales de tu PDF — cuadros de texto, casillas, botones de opción, listas desplegables y campos de firma — y los muestra como un formulario realmente rellenable. No dibujas cuadros de texto a mano. Si tu PDF no tiene campos incrustados, PDFree te lo indica directamente."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "¿Qué pasa si mi PDF no tiene campos rellenables?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "PDFree detecta campos interactivos AcroForm. Si el PDF es una imagen escaneada o un documento sin campos incrustados, verás el mensaje 'No se encontraron campos rellenables'. Para PDFs planos, puedes usar las herramientas de anotación o marca de agua para añadir texto encima."
-    }
-  },
-  {
-    "@type": "Question",
     "name": "¿Puedo rellenar un PDF protegido con contraseña?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Solo si tienes la contraseña de propietario. Los PDFs cifrados con restricciones de edición no pueden rellenarse sin las credenciales. Elimina primero la contraseña con la herramienta Proteger PDF (introduce la contraseña y guarda sin nueva contraseña)."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Rellena de verdad los campos reales de mi formulario, o tengo que colocar el texto manualmente?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree detecta los campos AcroForm reales de tu PDF — cuadros de texto, casillas, botones de opción, listas desplegables y campos de firma — y los muestra como un formulario realmente rellenable. No dibujas cuadros de texto a mano. Si tu PDF no tiene campos incrustados, PDFree te lo indica directamente."
     }
   },
   {

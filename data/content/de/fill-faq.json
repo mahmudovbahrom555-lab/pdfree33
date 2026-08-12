@@ -25,10 +25,10 @@
   },
   {
     "@type": "Question",
-    "name": "Kann ich ein gescanntes PDF-Formular ausfüllen?",
+    "name": "Was, wenn mein PDF keine ausfüllbaren Felder hat?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nein — gescannte PDFs sind Bilder ohne eingebettete interaktive Felder. PDFree erkennt nur AcroForm-Felder. Für gescannte Formulare wird zuerst OCR-Software benötigt, um den Scan in ein ausfüllbares PDF umzuwandeln."
+      "text": "PDFree erkennt interaktive AcroForm-Felder. Handelt es sich beim PDF um ein gescanntes Bild oder ein flaches Dokument ohne eingebettete Formularfelder, erscheint die Meldung „Keine ausfüllbaren Felder gefunden\". Für flache PDFs kannst du die Anmerkungs- oder Wasserzeichen-Tools verwenden, um Text zu überlagern."
     }
   },
   {
@@ -41,18 +41,18 @@
   },
   {
     "@type": "Question",
-    "name": "Füllt das Tool wirklich meine echten Formularfelder aus, oder muss ich Text manuell platzieren?",
+    "name": "Kann ich ein passwortgeschütztes PDF ausfüllen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree erkennt die echten AcroForm-Felder deines PDFs — Textfelder, Checkboxen, Optionsfelder, Dropdowns und Unterschriftenfelder — und stellt sie als echtes ausfüllbares Formular dar. Du zeichnest keine Textfelder per Hand und musst keine Position schätzen. Hat dein PDF keine eingebetteten Felder, sagt dir PDFree das direkt."
+      "text": "Nur wenn du das Inhaberpasswort kennst. Verschlüsselte PDFs mit Bearbeitungsbeschränkungen können ohne die Zugangsdaten nicht ausgefüllt werden. Entferne zuerst das Passwort mit dem PDF Schützen-Tool (Passwort eingeben, dann ohne neues Passwort speichern)."
     }
   },
   {
     "@type": "Question",
-    "name": "Was, wenn mein PDF keine ausfüllbaren Felder hat?",
+    "name": "Füllt das Tool wirklich meine echten Formularfelder aus, oder muss ich Text manuell platzieren?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree erkennt interaktive AcroForm-Felder. Handelt es sich beim PDF um ein gescanntes Bild oder ein flaches Dokument ohne eingebettete Formularfelder, erscheint die Meldung „Keine ausfüllbaren Felder gefunden\". Für flache PDFs kannst du die Anmerkungs- oder Wasserzeichen-Tools verwenden, um Text zu überlagern."
+      "text": "PDFree erkennt die echten AcroForm-Felder deines PDFs — Textfelder, Checkboxen, Optionsfelder, Dropdowns und Unterschriftenfelder — und stellt sie als echtes ausfüllbares Formular dar. Du zeichnest keine Textfelder per Hand und musst keine Position schätzen. Hat dein PDF keine eingebetteten Felder, sagt dir PDFree das direkt."
     }
   },
   {

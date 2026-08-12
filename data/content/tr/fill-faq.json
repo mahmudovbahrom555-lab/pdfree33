@@ -1,7 +1,7 @@
 [
   {
     "@type": "Question",
-    "name": "PDF'im doldurulurken bir sunucuya yükleniyor mu?",
+    "name": "Doldurulmuş PDF'im bir yere yükleniyor mu?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Hayır. Tüm doldurma işlemi pdf-lib ve pdf.js kullanılarak tarayıcınızda gerçekleşir. Belgeniz cihazınızdan asla ayrılmaz — PDFree'nin dosyanıza veya girdiğiniz verilere erişimi yoktur."
@@ -17,18 +17,18 @@
   },
   {
     "@type": "Question",
-    "name": "Hangi PDF form alanı türleri destekleniyor?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "PDFree tüm standart AcroForm alan türlerini destekler: metin girişleri, onay kutuları, radyo düğmeleri, açılır listeler ve imza alanları. İmza alanları, parmağınızla veya fareyle çizebileceğiniz, adınızı el yazısı bir yazı tipiyle yazabileceğiniz veya imzanızın bir görselini yükleyebileceğiniz bir imza paneli açar."
-    }
-  },
-  {
-    "@type": "Question",
     "name": "PDF'imde doldurulabilir alan yoksa ne olur?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "PDFree etkileşimli AcroForm alanlarını algılar. PDF taranmış bir görselse veya gömülü form alanı olmayan düz bir belgeyse, \"Doldurulabilir alan bulunamadı\" mesajını görürsünüz."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Hangi PDF form alanı türleri destekleniyor?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree tüm standart AcroForm alan türlerini destekler: metin girişleri, onay kutuları, radyo düğmeleri, açılır listeler ve imza alanları. İmza alanları, parmağınızla veya fareyle çizebileceğiniz, adınızı el yazısı bir yazı tipiyle yazabileceğiniz veya imzanızın bir görselini yükleyebileceğiniz bir imza paneli açar."
     }
   },
   {

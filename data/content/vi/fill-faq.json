@@ -25,10 +25,10 @@
   },
   {
     "@type": "Question",
-    "name": "Điền form PDF có mất phí không?",
+    "name": "PDF không có trường AcroForm có điền được không?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Không có. PDFree miễn phí mãi mãi — không có đăng ký, không giới hạn hàng ngày, không giới hạn kích thước file."
+      "text": "Công cụ này được thiết kế cho PDF có trường form AcroForm. PDF không có trường form cần được chỉnh sửa bằng công cụ khác."
     }
   },
   {
@@ -41,7 +41,7 @@
   },
   {
     "@type": "Question",
-    "name": "Có thể lưu form đã điền để chỉnh sửa lại không?",
+    "name": "Form đã điền có thể chỉnh sửa lại không?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Có. Tải về PDF đã điền, rồi mở lại trong PDFree bất cứ lúc nào để thay đổi giá trị các trường trước khi lưu lại."

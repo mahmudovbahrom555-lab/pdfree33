@@ -1,7 +1,7 @@
 [
   {
     "@type": "Question",
-    "name": "Meu PDF é enviado para algum servidor ao ser preenchido?",
+    "name": "Meu PDF preenchido é enviado para algum lugar?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Não. Todo o processo de preenchimento é executado no seu navegador com pdf-lib e pdf.js. Seu documento nunca sai do seu dispositivo — o PDFree não tem acesso ao seu arquivo nem aos dados que você insere."
@@ -25,10 +25,10 @@
   },
   {
     "@type": "Question",
-    "name": "Posso preencher um formulário PDF digitalizado?",
+    "name": "E se meu PDF não tiver campos preenchíveis?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Não com esta ferramenta — PDFs digitalizados são imagens sem campos interativos incorporados. O PDFree detecta apenas campos AcroForm. Para formulários digitalizados, você precisaria de um software OCR para converter a digitalização em um PDF preenchível."
+      "text": "O PDFree detecta campos interativos AcroForm. Se o PDF for uma imagem digitalizada ou um documento plano sem campos incorporados, você verá a mensagem \"Nenhum campo preenchível encontrado\". Para PDFs planos, você pode usar as ferramentas de anotação ou marca d'água para adicionar sobreposições de texto."
     }
   },
   {
@@ -41,18 +41,18 @@
   },
   {
     "@type": "Question",
-    "name": "A ferramenta realmente preenche os campos reais do meu formulário, ou tenho que posicionar o texto manualmente?",
+    "name": "Posso preencher um PDF protegido por senha?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "O PDFree detecta os campos AcroForm reais do seu PDF — caixas de texto, caixas de seleção, botões de opção, listas suspensas e campos de assinatura — e os renderiza como um formulário realmente preenchível, sem desenhar caixas de texto à mão. Se o seu PDF não tiver campos incorporados, o PDFree informa isso diretamente."
+      "text": "Somente se você tiver a senha de proprietário. PDFs criptografados com restrições de edição não podem ser preenchidos sem as credenciais. Remova primeiro a senha com a ferramenta Proteger PDF (insira a senha e salve sem nova senha)."
     }
   },
   {
     "@type": "Question",
-    "name": "E se meu PDF não tiver campos preenchíveis?",
+    "name": "A ferramenta realmente preenche os campos reais do meu formulário, ou tenho que posicionar o texto manualmente?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "O PDFree detecta campos interativos AcroForm. Se o PDF for uma imagem digitalizada ou um documento plano sem campos incorporados, você verá a mensagem \"Nenhum campo preenchível encontrado\". Para PDFs planos, você pode usar as ferramentas de anotação ou marca d'água para adicionar sobreposições de texto."
+      "text": "O PDFree detecta os campos AcroForm reais do seu PDF — caixas de texto, caixas de seleção, botões de opção, listas suspensas e campos de assinatura — e os renderiza como um formulário realmente preenchível, sem desenhar caixas de texto à mão. Se o seu PDF não tiver campos incorporados, o PDFree informa isso diretamente."
     }
   },
   {

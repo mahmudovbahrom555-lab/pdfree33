@@ -25,10 +25,10 @@
   },
   {
     "@type": "Question",
-    "name": "Puis-je remplir un formulaire PDF scanné ?",
+    "name": "Que faire si mon PDF n'a pas de champs à remplir ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Non avec cet outil — les PDF scannés sont des images sans champs interactifs intégrés. PDFree détecte uniquement les champs AcroForm. Pour les formulaires scannés, un logiciel OCR est nécessaire pour convertir le scan en PDF remplissable."
+      "text": "PDFree détecte les champs interactifs AcroForm. Si le PDF est une image scannée ou un document plat sans champs intégrés, le message « Aucun champ remplissable trouvé » s'affiche. Pour les PDF plats, vous pouvez utiliser les outils d'annotation ou de filigrane pour ajouter du texte en superposition."
     }
   },
   {
@@ -41,18 +41,18 @@
   },
   {
     "@type": "Question",
-    "name": "L'outil remplit-il vraiment les champs réels de mon formulaire, ou dois-je placer le texte manuellement ?",
+    "name": "Puis-je remplir un PDF protégé par mot de passe ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree détecte les champs AcroForm réels de votre PDF — zones de texte, cases à cocher, boutons radio, listes déroulantes et champs de signature — et les affiche comme un véritable formulaire remplissable, sans dessiner de zones de texte à la main. Si votre PDF n'a pas de champs intégrés, PDFree vous le signale directement."
+      "text": "Seulement si vous possédez le mot de passe propriétaire. Les PDF chiffrés avec des restrictions d'édition ne peuvent pas être remplis sans les identifiants. Supprimez d'abord le mot de passe avec l'outil Protéger PDF (saisissez le mot de passe, puis enregistrez sans nouveau mot de passe)."
     }
   },
   {
     "@type": "Question",
-    "name": "Que faire si mon PDF n'a pas de champs à remplir ?",
+    "name": "L'outil remplit-il vraiment les champs réels de mon formulaire, ou dois-je placer le texte manuellement ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree détecte les champs interactifs AcroForm. Si le PDF est une image scannée ou un document plat sans champs intégrés, le message « Aucun champ remplissable trouvé » s'affiche. Pour les PDF plats, vous pouvez utiliser les outils d'annotation ou de filigrane pour ajouter du texte en superposition."
+      "text": "PDFree détecte les champs AcroForm réels de votre PDF — zones de texte, cases à cocher, boutons radio, listes déroulantes et champs de signature — et les affiche comme un véritable formulaire remplissable, sans dessiner de zones de texte à la main. Si votre PDF n'a pas de champs intégrés, PDFree vous le signale directement."
     }
   },
   {
