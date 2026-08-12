@@ -17,6 +17,14 @@
   },
   {
     "@type": "Question",
+    "name": "Mã hóa RC4-128 mạnh đến mức nào?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Mật khẩu mạnh và duy nhất (12+ ký tự, kết hợp chữ hoa/thường, số, ký hiệu) chống lại các nỗ lực bẻ khóa thông thường và tự động. RC4-128 yếu hơn các thuật toán hiện đại như AES-256, vì vậy với tài liệu rất nhạy cảm hoặc chịu quy định, hãy xem đây là một lớp bảo vệ chứ không phải biện pháp bảo vệ duy nhất."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "PDFree sử dụng tiêu chuẩn mã hóa nào?",
     "acceptedAnswer": {
       "@type": "Answer",
@@ -33,30 +41,6 @@
   },
   {
     "@type": "Question",
-    "name": "Mã hóa RC4-128 mạnh đến mức nào?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Mật khẩu mạnh và duy nhất (12+ ký tự, kết hợp chữ hoa/thường, số, ký hiệu) chống lại các nỗ lực bẻ khóa thông thường và tự động. RC4-128 yếu hơn các thuật toán hiện đại như AES-256, vì vậy với tài liệu rất nhạy cảm hoặc chịu quy định, hãy xem đây là một lớp bảo vệ chứ không phải biện pháp bảo vệ duy nhất."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "Có giới hạn kích thước file không?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Không. PDFree không giới hạn kích thước file hay số trang. Giới hạn thực tế duy nhất là bộ nhớ thiết bị của bạn."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "PDFree có lưu mật khẩu của tôi không?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Hoàn toàn không. Mật khẩu được xử lý trong trình duyệt và không bao giờ được gửi đến máy chủ PDFree hay bất kỳ máy chủ nào. PDFree không có quyền truy cập vào mật khẩu hay file của bạn."
-    }
-  },
-  {
-    "@type": "Question",
     "name": "Có thể hạn chế quyền in hoặc sao chép không?",
     "acceptedAnswer": {
       "@type": "Answer",
@@ -69,6 +53,14 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "PDFree không có công cụ xóa mật khẩu khỏi PDF đã mã hóa. Để mở khóa, bạn phải biết mật khẩu gốc."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Có giới hạn kích thước file có thể bảo vệ không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không có. Bảo vệ PDF bất kỳ kích thước nào — miễn phí không giới hạn."
     }
   },
   {

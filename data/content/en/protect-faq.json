@@ -1,10 +1,10 @@
 [
   {
     "@type": "Question",
-    "name": "Is it safe to set the password on PDFree's website?",
+    "name": "What encryption does PDFree use?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Yes. The entire encryption process runs in your browser — your password and document are never transmitted to any server. PDFree literally cannot see them."
+      "text": "PDFree encrypts your PDF with RC4-128 — the PDF format's Revision 3 standard security handler (PDF 1.4–1.7). It requires your password to open in Adobe Acrobat, Preview, and every standard-compliant PDF reader. Note this is not AES-256: for regulated or extremely sensitive documents, pair it with an additional safeguard rather than relying on it alone."
     }
   },
   {
@@ -17,26 +17,18 @@
   },
   {
     "@type": "Question",
-    "name": "What encryption standard does PDFree use?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "PDFree encrypts your PDF with RC4-128 — the PDF format's Revision 3 standard security handler (PDF 1.4–1.7). It requires your password to open in Adobe Acrobat, Preview, and every standard-compliant PDF reader. Note this is not AES-256: for regulated or extremely sensitive documents, pair it with an additional safeguard rather than relying on it alone."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "Can I set separate passwords for opening and editing?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Yes. You can set an owner password (for editing/printing restrictions) separately from a user password (for opening the file)."
-    }
-  },
-  {
-    "@type": "Question",
     "name": "Can someone crack the password?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "A strong, unique password (12+ characters, mixed case, numbers, symbols) resists casual and automated cracking attempts. RC4-128 is weaker than modern ciphers like AES-256, so treat it as one layer of protection rather than your only safeguard for highly sensitive or regulated files."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I remove the password from a protected PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes — upload the encrypted PDF, enter the current password, leave the new password field empty, and save. This produces an unprotected version of the file."
     }
   },
   {
@@ -49,10 +41,18 @@
   },
   {
     "@type": "Question",
-    "name": "Can I remove the password from a protected PDF?",
+    "name": "Is it safe to set the password on PDFree's website?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Yes — upload the encrypted PDF, enter the current password, leave the new password field empty, and save. This produces an unprotected version of the file."
+      "text": "Yes. The entire encryption process runs in your browser — your password and document are never transmitted to any server. PDFree literally cannot see them."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I set different passwords for opening and editing?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. You can set an owner password (for editing/printing restrictions) separately from a user password (for opening the file)."
     }
   },
   {
