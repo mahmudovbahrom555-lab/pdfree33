@@ -33,7 +33,7 @@
   },
   {
     "@type": "Question",
-    "name": "Como elimino ou removo uma página específica de um PDF?",
+    "name": "Como elimino uma página específica de um PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Selecione todas as páginas exceto as que pretende remover e clique em \"Dividir PDF\" para extrair apenas as páginas que deseja manter. Por exemplo, para eliminar a página 3 de um PDF de 10 páginas, selecione as páginas 1-2 e 4-10 e extraia-as. O resultado é o seu PDF sem as páginas removidas — qualidade original preservada."

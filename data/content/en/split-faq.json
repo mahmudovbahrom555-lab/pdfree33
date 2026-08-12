@@ -25,23 +25,31 @@
   },
   {
     "@type": "Question",
-    "name": "Can I split only specific pages from a PDF?",
+    "name": "Can I split a PDF into individual pages?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Yes. You can extract a custom page range (e.g. pages 3-7) or split every page into individual files. Enter the range as comma-separated values like '1-5, 8, 11-15', or click pages visually in the thumbnail grid."
+      "text": "Yes. Use the 'Split all pages' option to get every page as its own PDF file. They download as a ZIP archive named with their page numbers."
     }
   },
   {
     "@type": "Question",
-    "name": "How do I delete or remove a specific page from a PDF?",
+    "name": "What is the difference between Split and Extract?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Select all pages except the ones you want to remove, then click Split PDF to extract only the pages you want to keep. For example, to delete page 3 from a 10-page PDF, select pages 1-2 and 4-10 and extract them. The result is your PDF without the removed pages — original quality preserved."
+      "text": "Split is designed for selecting and downloading multiple page groups. Extract is a simpler tool focused on pulling out a specific page range into one new PDF. Both do similar things — use whichever fits your workflow."
     }
   },
   {
     "@type": "Question",
-    "name": "Is there a page limit for splitting?",
+    "name": "Does splitting affect PDF quality?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Pages are copied at the PDF object level — images, fonts, and vector graphics are preserved identically. Splitting does not re-render or re-compress anything."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is there a limit on PDF size or page count?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "No. PDFree has no page or file size limits. Processing depends on your device's available memory. PDFs with hundreds of pages render thumbnails in seconds on a modern computer."
@@ -49,10 +57,10 @@
   },
   {
     "@type": "Question",
-    "name": "Can I split a PDF offline?",
+    "name": "How do I delete a specific page from a PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Yes. PDFree is a Progressive Web App and works fully offline once loaded in your browser. No internet connection is required to split or extract pages."
+      "text": "Select all pages except the ones you want to remove, then click Split PDF to extract only the pages you want to keep. For example, to delete page 3 from a 10-page PDF, select pages 1-2 and 4-10 and extract them. The result is your PDF without the removed pages — original quality preserved."
     }
   },
   {
@@ -65,7 +73,7 @@
   },
   {
     "@type": "Question",
-    "name": "How do I split a PDF on iPhone, iPad, or Mac without Adobe Acrobat?",
+    "name": "How do I split a PDF on iPhone, iPad, or Mac in my browser?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Open PDFree in Safari (iPhone/iPad) or any browser on Mac — no app download or Adobe Acrobat required. The tool runs entirely in the browser: load your PDF, select pages, tap Split PDF. The result saves to your Files app on iOS or your Downloads folder on Mac."
@@ -109,22 +117,6 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "No. PDFree never adds watermarks to output files. The split pages are the exact content from your original PDF — no logo, no 'Created with PDFree' stamp, no advertising mark. Many free online PDF tools add watermarks to encourage upgrades; PDFree doesn't because there is no paid plan to upgrade to."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "What is the difference between Split and Extract?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Split is designed for selecting and downloading multiple page groups. Extract is a simpler tool focused on pulling out a specific page range into one new PDF. Both do similar things — use whichever fits your workflow."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "Does splitting affect PDF quality?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "No. Pages are copied at the PDF object level — images, fonts, and vector graphics are preserved identically. Splitting does not re-render or re-compress anything."
     }
   }
 ]

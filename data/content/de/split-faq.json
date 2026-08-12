@@ -1,7 +1,7 @@
 [
   {
     "@type": "Question",
-    "name": "Werden meine Dateien beim Teilen eines PDFs hochgeladen?",
+    "name": "Werden meine Dateien beim Aufteilen hochgeladen?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Nein. PDFree teilt PDFs vollständig in deinem Browser mit JavaScript. Dateien verlassen dein Gerät nie. Du kannst dies selbst überprüfen: Öffne die DevTools deines Browsers → Registerkarte \"Netzwerk\" — du solltest nicht sehen, dass dein PDF während der Verarbeitung auf einen Remoteserver hochgeladen wird."
@@ -33,7 +33,7 @@
   },
   {
     "@type": "Question",
-    "name": "Wie lösche oder entferne ich eine bestimmte Seite aus einem PDF?",
+    "name": "Wie lösche ich eine bestimmte Seite aus einem PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Wähle alle Seiten außer den zu entfernenden aus, und klicke dann auf \"PDF teilen\", um nur die gewünschten Seiten zu extrahieren. Um z. B. Seite 3 aus einem 10-seitigen PDF zu löschen, wähle die Seiten 1–2 und 4–10 aus und extrahiere diese. Das Ergebnis ist dein PDF ohne die entfernten Seiten — Originalqualität bleibt erhalten."
@@ -49,7 +49,7 @@
   },
   {
     "@type": "Question",
-    "name": "Kann ich ein PDF offline teilen?",
+    "name": "Kann ich ein PDF offline aufteilen?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Ja. PDFree ist eine Progressive Web App und funktioniert vollständig offline, sobald die Seite in deinem Browser geladen wurde. Es ist keine Internetverbindung erforderlich, um Seiten zu teilen oder zu extrahieren."
