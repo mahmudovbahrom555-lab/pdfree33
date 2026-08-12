@@ -7,12 +7,12 @@
     default-src 'self';
     script-src  'self' 'wasm-unsafe-eval' blob:
                 https://cdnjs.cloudflare.com https://esm.sh
-                https://plausible.io https://static.cloudflareinsights.com;
+                https://static.cloudflareinsights.com;
     style-src   'self' 'unsafe-inline';
     font-src    'self';
     img-src     'self' data: blob: https:;
     connect-src 'self' https://cdnjs.cloudflare.com https://*.workers.dev
-                https://plausible.io https://cloudflareinsights.com;
+                https://cloudflareinsights.com;
     worker-src  'self' blob:;
     object-src  'none';
   ">
@@ -49,8 +49,6 @@
   <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
   <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
 
-  <script defer data-domain="pdfree.io" src="https://plausible.io/js/script.js"></script>
-  <link rel="preconnect" href="https://plausible.io">
   <link rel="preconnect" href="https://static.cloudflareinsights.com">
   <link rel="preload" href="../fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="../css/fonts.css">

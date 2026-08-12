@@ -332,6 +332,79 @@ async function handleFeedback(request, env) {
   return new Response('OK', { status: 200 });
 }
 
+// ── Analytics relay — POST /api/analytics → Workers Analytics Engine ───────
+// Replaces the paid Plausible custom-event service. Analytics Engine has no
+// client-side JS API (unlike window.plausible()) — every event needs this
+// server round-trip so the Worker can call env.ANALYTICS.writeDataPoint().
+//
+// Analytics Engine has no named fields, just positional blobs[]/doubles[]/a
+// single indexes[0] — so this uses one generic, event-shape-agnostic mapping
+// rather than per-event-type logic (avoids touching this endpoint every time
+// js/analytics.js gains a new event):
+//   indexes: [eventName]                    — primary filter/group dimension
+//   blobs:   [locale, tool, "key=value"...] — locale/tool get fixed slots
+//             (present on nearly every event), everything else remaining
+//             is tagged "key=value" so it stays identifiable in queries
+//   doubles: [...values that parse as finite numbers]
+//
+// Limits (per Cloudflare docs): 20 blobs, 20 doubles, 1 index per write,
+// index ≤ 96 bytes, 16 KB total blob size per call — truncated defensively
+// below, well under those ceilings for anything this site actually sends.
+function _dataPointFromEvent(eventName, props) {
+  const { locale = '', tool = '', ...rest } = props;
+  const blobs = [String(locale).slice(0, 100), String(tool).slice(0, 100)];
+  const doubles = [];
+
+  for (const [key, value] of Object.entries(rest)) {
+    const n = Number(value);
+    if (value !== '' && value !== null && value !== undefined && Number.isFinite(n)) {
+      doubles.push(n);
+    } else {
+      blobs.push(`${key}=${String(value)}`.slice(0, 200));
+    }
+  }
+
+  return {
+    indexes: [String(eventName).slice(0, 96)],
+    blobs: blobs.slice(0, 20),
+    doubles: doubles.slice(0, 20),
+  };
+}
+
+async function handleAnalytics(request, env) {
+  if (request.method !== 'POST') {
+    return new Response('Method not allowed', { status: 405 });
+  }
+
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return new Response('Bad request', { status: 400 });
+  }
+
+  const eventName = typeof body.event === 'string' ? body.event.trim() : '';
+  if (!eventName) {
+    return new Response('Bad request', { status: 400 });
+  }
+  const props = (body.props && typeof body.props === 'object') ? body.props : {};
+
+  if (!env.ANALYTICS) {
+    console.log(`[analytics] ANALYTICS binding missing, event=${eventName} — dropped`);
+    return new Response('OK', { status: 200 }); // not configured yet — no-op, don't break the client
+  }
+
+  try {
+    env.ANALYTICS.writeDataPoint(_dataPointFromEvent(eventName, props));
+  } catch (err) {
+    // Never let analytics break the app — same posture as the client's own
+    // _track() try/catch.
+    console.log(`[analytics] writeDataPoint threw: ${err && err.message}`);
+  }
+
+  return new Response('OK', { status: 200 });
+}
+
 // Embed pages (js/embedBridge.js's iframe target, loaded via embed/sdk.js on
 // third-party domains) need to be frameable cross-origin — the global
 // X-Frame-Options: SAMEORIGIN in _headers blocks that for every other path
@@ -352,6 +425,10 @@ export default {
 
     if (url.pathname === '/api/feedback') {
       return handleFeedback(request, env);
+    }
+
+    if (url.pathname === '/api/analytics') {
+      return handleAnalytics(request, env);
     }
 
     const target = REDIRECTS[url.pathname];

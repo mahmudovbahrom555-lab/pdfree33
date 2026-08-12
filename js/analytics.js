@@ -2,17 +2,24 @@
 // Copyright (C) 2025 PDFree Contributors  https://github.com/mahmudovbahrom555-lab/pdfree33
 
 // ============================================================
-//  analytics.js — Privacy-first analytics via Plausible
+//  analytics.js — Privacy-first analytics via Workers Analytics Engine
 //
 //  🎯 Сверх ТЗ:
 //  1. File size buckets ("< 1 MB", "1–10 MB", "10–50 MB", "> 50 MB")
 //     вместо точных цифр — никаких fingerprinting-рисков.
-//  2. Все события через один helper _track() — легко отключить
-//     в dev-сборке (просто убери скрипт Plausible из HTML).
+//  2. Все события через один helper _track() — единая точка,
+//     если транспорт снова сменится, менять только его.
 //  3. Tool timings — замеряем сколько секунд заняла обработка
 //     (rounded to nearest 5s) — помогает понять performance.
-//  4. Graceful: если window.plausible не загружен (adblock,
-//     нет интернета) — молча ничего не делает.
+//  4. Graceful: сетевая ошибка / отсутствие бэкенда — молча
+//     ничего не делает, никогда не ломает приложение.
+//
+//  Transport: fire-and-forget POST to /api/analytics (same-origin
+//  Cloudflare Worker route), which relays to Workers Analytics Engine
+//  via env.ANALYTICS.writeDataPoint() — see src/index.js. Replaced the
+//  previous Plausible integration (paid service); Analytics Engine has
+//  no client-side JS API, so every event now needs this server round-
+//  trip instead of a direct window.plausible() call.
 // ============================================================
 
 import { getLang } from './config.js';
@@ -33,23 +40,19 @@ function _roundDuration(ms) {
   return Math.round(s / 5) * 5;
 }
 
-// Plausible v2: set up event queue so events fired before the async
-// script loads are buffered and replayed once the script initialises.
-if (typeof window !== 'undefined') {
-  window.plausible = window.plausible || function() {
-    (window.plausible.q = window.plausible.q || []).push(arguments);
-  };
-}
-
-/** Plausible custom event wrapper — no-op if not loaded */
+/** Custom event wrapper — fire-and-forget, never throws into the caller */
 function _track(eventName, props = {}) {
   try {
     if (typeof window === 'undefined') return;
     // locale first — no caller ever passes it explicitly, but this keeps
     // the merge order intentional rather than accidental.
     const fullProps = { locale: getLang(), ...props };
-    if (typeof window.plausible === 'function') {
-      window.plausible(eventName, { props: fullProps });
+    if (typeof fetch === 'function') {
+      fetch('/api/analytics', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ event: eventName, props: fullProps }),
+      }).catch(() => { /* offline/adblock/etc — never let this break the app */ });
     }
     // In development, log to console instead
     if (window._pdfreeDevMode) {
