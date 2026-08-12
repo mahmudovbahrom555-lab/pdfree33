@@ -2734,7 +2734,7 @@ async function _runUnlock(filesSnapshot, { password } = {}) {
   const blob     = new Blob([decrypted], { type: 'application/pdf' });
   const baseName = file.name.replace(/\.pdf$/i, '');
   const filename = `${baseName}-unlocked.pdf`;
-  const desc     = `Password removed · ${fmtSize(blob.size)}`;
+  const desc     = t('desc_unlock', { size: fmtSize(blob.size) });
 
   isProcessing = false;
   setFilesLocked(false);

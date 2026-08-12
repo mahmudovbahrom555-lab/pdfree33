@@ -144,6 +144,7 @@ window.PDFREE_LOCALE = {
   desc_pagenum:             'Đã thêm số trang · {pages} trang · {size}',
   desc_meta:                'Đã cập nhật metadata · {pages} trang · {size}',
   desc_protect:             'Bảo vệ bằng mật khẩu · {pages} trang · {size}{extra}',
+  desc_unlock:              'Đã xóa mật khẩu · {size}',
   desc_rotate:              'Đã xoay · {pages} trang · {size}',
   desc_organize:            'Đã sắp xếp · {pages} trang · {size}',
   desc_resize:              'Đã đổi kích thước · {pages} trang · {size}',

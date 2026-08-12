@@ -143,6 +143,7 @@ window.PDFREE_LOCALE = {
   desc_pagenum:             'Numeri di pagina aggiunti · {pages} pagine · {size}',
   desc_meta:                'Metadati aggiornati · {pages} pagine · {size}',
   desc_protect:             'Protetto con password · {pages} pagine · {size}{extra}',
+  desc_unlock:              'Password rimossa · {size}',
   desc_rotate:              'Ruotato · {pages} pagine · {size}',
   desc_organize:            'Organizzato · {pages} pagine · {size}',
   desc_resize:              'Ridimensionato · {pages} pagine · {size}',

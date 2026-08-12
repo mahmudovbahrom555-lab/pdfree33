@@ -129,6 +129,7 @@ export const EN = {
   desc_pagenum:             'Page numbers added · {pages} pages · {size}',
   desc_meta:                'Metadata updated · {pages} pages · {size}',
   desc_protect:             'Password protected · {pages} pages · {size}{extra}',
+  desc_unlock:              'Password removed · {size}',
   desc_rotate:              'Rotated · {pages} pages · {size}',
   desc_organize:            'Organized · {pages} pages · {size}',
   desc_resize:              'Resized · {pages} pages · {size}',

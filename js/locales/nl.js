@@ -143,6 +143,7 @@ window.PDFREE_LOCALE = {
   desc_pagenum:             'Paginanummers toegevoegd · {pages} pagina\'s · {size}',
   desc_meta:                'Metadata bijgewerkt · {pages} pagina\'s · {size}',
   desc_protect:             'Beveiligd met wachtwoord · {pages} pagina\'s · {size}{extra}',
+  desc_unlock:              'Wachtwoord verwijderd · {size}',
   desc_rotate:              'Geroteerd · {pages} pagina\'s · {size}',
   desc_organize:            "Georganiseerd · {pages} pagina's · {size}",
   desc_resize:              "Formaat aangepast · {pages} pagina's · {size}",
