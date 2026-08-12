@@ -244,6 +244,7 @@ window.PDFREE_LOCALE = {
 
   error_msg:           'エラー: {msg}',
   error_report_hint:   '（タップして報告）',
+  error_id_label:      'エラーID: {id}',
   still_working:       'まだ処理中です… 大きな文書は数分かかる場合があります。',
 
   // rotateUI
@@ -407,7 +408,7 @@ window.PDFREE_LOCALE = {
   fb_title_other:        '💬 ご意見をお聞かせください',
   fb_title_error:        '⚠️ 何が起きましたか？',
   fb_placeholder_bug:    '何が起きましたか？ファイルの種類やツールは？',
-  fb_placeholder_idea:   'どんな機能があれば一番助かりますか？',
+  fb_placeholder_idea:   'そのアイデアが浮かんだとき、何をしようとしていましたか?',
   fb_placeholder_other:  '気になっていることは？',
   fb_placeholder_error:  '詳細を教えていただけると早く直せます（任意）',
   fb_email_placeholder:  'メールアドレス（任意 — 返信をご希望の場合のみ）',

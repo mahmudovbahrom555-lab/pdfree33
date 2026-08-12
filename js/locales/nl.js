@@ -241,6 +241,7 @@ window.PDFREE_LOCALE = {
 
   error_msg:      'Fout: {msg}',
   error_report_hint: ' — tik om te melden',
+  error_id_label:      'Fout-ID: {id}',
   still_working:  'Bezig… Grote documenten kunnen een paar minuten duren.',
 
   // rotateUI
@@ -404,7 +405,7 @@ window.PDFREE_LOCALE = {
   fb_title_other:        '💬 Vertel me wat je denkt',
   fb_title_error:        '⚠️ Wat ging er mis?',
   fb_placeholder_bug:    'Wat ging er mis? Welk bestandstype of welke tool?',
-  fb_placeholder_idea:   'Welke functie zou je het meest helpen?',
+  fb_placeholder_idea:   'Wat probeerde je te doen toen dit idee bij je opkwam?',
   fb_placeholder_other:  'Wat heb je op je hart?',
   fb_placeholder_error:  'Een paar details helpen me het sneller op te lossen (optioneel)',
   fb_email_placeholder:  'E-mail (optioneel — alleen als je een antwoord wilt)',

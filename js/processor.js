@@ -4004,6 +4004,24 @@ async function _runStub(tool) {
 
 // ── Error ──────────────────────────────────────────────────────
 
+// Deterministic 4-hex-char hash — same (tool, errorType) pair always
+// produces the same code, so recurring reports of the same underlying
+// failure show up as the same quotable ID (e.g. "MERGE-7F32") instead of a
+// fresh one each time. Not a request/session ID — there's no backend store
+// to look it up in, so a per-instance ID would be unactionable. This is
+// closer to a Windows/Stripe-style error *code*: enough to tell "is this
+// the same bug as last week's report" apart from "a new one", by eye, in a
+// Telegram thread with no database behind it.
+function _hashCode(str) {
+  let h = 0;
+  for (let i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) | 0;
+  return (h >>> 0).toString(16).toUpperCase().padStart(4, '0').slice(-4);
+}
+
+function _errorId(tool, errorType) {
+  return `${tool.toUpperCase()}-${_hashCode(`${tool}:${errorType}`)}`;
+}
+
 function _handleError(tool, message, errorType = null) {
   hideProgress();
   setButtonReady(TOOLS[tool]?.btn || 'Try again');
@@ -4033,14 +4051,16 @@ function _handleError(tool, message, errorType = null) {
     errorType ??= 'worker_crash';
   }
 
-  trackToolError(tool, errorType ?? 'unknown');
+  const resolvedType = errorType ?? 'unknown';
+  const errorId = _errorId(tool, resolvedType);
+  trackToolError(tool, resolvedType);
   // Clickable toast: the moment of an actual failure is the highest-signal
   // point to hear from a user — opens the same feedback modal used on
   // success, pre-filled with the tool + error as read-only context.
   showToast(
-    t('error_msg', { msg: friendly }) + t('error_report_hint'),
+    t('error_msg', { msg: friendly }) + t('error_report_hint') + '  ' + t('error_id_label', { id: errorId }),
     8000,
-    () => openFeedback('error', { tool, message: friendly }),
+    () => openFeedback('error', { tool, message: friendly, errorId }),
   );
 }
 

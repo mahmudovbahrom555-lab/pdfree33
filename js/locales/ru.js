@@ -242,6 +242,7 @@ window.PDFREE_LOCALE = {
 
   error_msg:           'Ошибка: {msg}',
   error_report_hint:   ' — нажмите, чтобы сообщить',
+  error_id_label:      'ID ошибки: {id}',
   still_working:       'Всё ещё обрабатывается… Большие документы могут занять несколько минут.',
 
   // rotateUI
@@ -405,7 +406,7 @@ window.PDFREE_LOCALE = {
   fb_title_other:        '💬 Расскажите, что думаете',
   fb_title_error:        '⚠️ Что пошло не так?',
   fb_placeholder_bug:    'Что пошло не так? Какой файл или инструмент?',
-  fb_placeholder_idea:   'Какая функция помогла бы вам больше всего?',
+  fb_placeholder_idea:   'Что вы пытались сделать, когда пришла эта идея?',
   fb_placeholder_other:  'Что у вас на уме?',
   fb_placeholder_error:  'Пара деталей поможет мне быстрее исправить (необязательно)',
   fb_email_placeholder:  'Email (необязательно — только если хотите получить ответ)',

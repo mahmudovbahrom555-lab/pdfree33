@@ -241,6 +241,7 @@ window.PDFREE_LOCALE = {
 
   error_msg:      'Hata: {msg}',
   error_report_hint: ' — bildirmek için dokun',
+  error_id_label:      'Hata Kimliği: {id}',
   still_working:  'İşleniyor… Büyük belgeler birkaç dakika sürebilir.',
 
   // rotateUI
@@ -404,7 +405,7 @@ window.PDFREE_LOCALE = {
   fb_title_other:        '💬 Ne düşündüğünü söyle',
   fb_title_error:        '⚠️ Ne yanlış gitti?',
   fb_placeholder_bug:    'Ne yanlış gitti? Hangi dosya türü veya araç?',
-  fb_placeholder_idea:   'Hangi özellik sana en çok yardımcı olur?',
+  fb_placeholder_idea:   'Bu fikir aklına geldiğinde ne yapmaya çalışıyordun?',
   fb_placeholder_other:  'Aklında ne var?',
   fb_placeholder_error:  'Birkaç detay daha hızlı düzeltmeme yardımcı olur (isteğe bağlı)',
   fb_email_placeholder:  'E-posta (isteğe bağlı — sadece yanıt istiyorsan)',

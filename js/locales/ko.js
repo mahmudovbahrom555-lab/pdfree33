@@ -243,6 +243,7 @@ window.PDFREE_LOCALE = {
 
   error_msg:      '오류: {msg}',
   error_report_hint: ' — 신고하려면 탭하세요',
+  error_id_label:      '오류 ID: {id}',
   still_working:  '처리 중… 대용량 문서는 몇 분이 걸릴 수 있습니다.',
 
   // rotateUI
@@ -406,7 +407,7 @@ window.PDFREE_LOCALE = {
   fb_title_other:        '💬 어떻게 생각하는지 알려주세요',
   fb_title_error:        '⚠️ 무엇이 잘못되었나요?',
   fb_placeholder_bug:    '무엇이 잘못되었나요? 어떤 파일 형식이나 도구인가요?',
-  fb_placeholder_idea:   '어떤 기능이 가장 도움이 될까요?',
+  fb_placeholder_idea:   '그 생각이 떠올랐을 때 무엇을 하려고 하셨나요?',
   fb_placeholder_other:  '무슨 생각을 하고 계신가요?',
   fb_placeholder_error:  '몇 가지 세부사항이 있으면 더 빨리 고칠 수 있어요 (선택)',
   fb_email_placeholder:  '이메일 (선택 — 답장을 원하실 때만)',

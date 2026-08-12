@@ -199,6 +199,10 @@ async function handleFeedback(request, env) {
   // shown to the user as read-only context, forwarded here so a report actually
   // carries a diagnosable cause instead of just "it didn't work".
   const message = typeof body.message === 'string' ? body.message.trim().slice(0, 500) : '';
+  // Deterministic per-(tool, errorType) code, e.g. "MERGE-7F32" — same
+  // underlying failure always produces the same code, so repeat reports of
+  // the same bug are recognizable by eye in Telegram without a database.
+  const errorId = typeof body.errorId === 'string' ? body.errorId.trim().slice(0, 30) : '';
   // "OS · Browser", not a raw User-Agent — see feedback.js _detectDevice().
   const device  = typeof body.device  === 'string' ? body.device.trim().slice(0, 100)  : '';
 
@@ -224,6 +228,7 @@ async function handleFeedback(request, env) {
   const parts = [`${_TYPE_LABEL[type] || type} — ${tool}`];
   if (text)    parts.push(text);
   if (message) parts.push(`🔧 ${message}`);
+  if (errorId) parts.push(`🆔 ${errorId}`);
   if (device)  parts.push(`📱 ${device}`);
   if (email)   parts.push(`📧 ${email}`);
   if (pageUrl) parts.push(`🔗 ${pageUrl}`);

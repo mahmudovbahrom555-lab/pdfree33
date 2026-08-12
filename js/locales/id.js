@@ -242,6 +242,7 @@ window.PDFREE_LOCALE = {
 
   error_msg:           'Kesalahan: {msg}',
   error_report_hint:   ' — ketuk untuk melaporkan',
+  error_id_label:      'ID Error: {id}',
   still_working:       'Masih memproses… Dokumen besar dapat memerlukan beberapa menit.',
 
   // rotateUI
@@ -405,7 +406,7 @@ window.PDFREE_LOCALE = {
   fb_title_other:        '💬 Beri tahu saya pendapat Anda',
   fb_title_error:        '⚠️ Apa yang salah?',
   fb_placeholder_bug:    'Apa yang salah? Jenis file atau alat apa?',
-  fb_placeholder_idea:   'Fitur apa yang paling membantu Anda?',
+  fb_placeholder_idea:   'Apa yang sedang Anda coba lakukan saat ide ini muncul?',
   fb_placeholder_other:  'Apa yang ada di pikiran Anda?',
   fb_placeholder_error:  'Beberapa detail membantu saya memperbaikinya lebih cepat (opsional)',
   fb_email_placeholder:  'Email (opsional — hanya jika ingin balasan)',

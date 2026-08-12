@@ -163,9 +163,10 @@ function _getOrCreateModal() {
 
 /**
  * @param {string} type 'bug' | 'idea' | 'other' | 'error'
- * @param {{tool?: string, message?: string}} [context] — tool key + (for
- *   type='error') the error message shown as read-only context, not
- *   something the user has to retype.
+ * @param {{tool?: string, message?: string, errorId?: string}} [context] —
+ *   tool key + (for type='error') the error message and a stable error
+ *   code, both shown as read-only context, not something the user has to
+ *   retype.
  */
 export function openFeedback(type = 'other', context = {}) {
   const modal           = _getOrCreateModal();
@@ -180,7 +181,11 @@ export function openFeedback(type = 'other', context = {}) {
   const deviceCheckbox  = modal.querySelector('#fbModalDeviceInfo');
   const screenshotRow   = modal.querySelector('#fbModalScreenshotRow');
 
-  _context = { tool: context.tool || document.body.dataset.tool || 'unknown', message: context.message || '' };
+  _context = {
+    tool:    context.tool || document.body.dataset.tool || 'unknown',
+    message: context.message || '',
+    errorId: context.errorId || '',
+  };
 
   title.textContent = t(_TYPE_TITLE_KEYS[type] || _TYPE_TITLE_KEYS.other);
   text.placeholder  = t(_TYPE_PLACEHOLDER_KEYS[type] || _TYPE_PLACEHOLDER_KEYS.other);
@@ -189,7 +194,9 @@ export function openFeedback(type = 'other', context = {}) {
   hp.value          = '';
 
   if (type === 'error' && _context.message) {
-    ctxEl.textContent   = `"${_context.message}"`;
+    ctxEl.textContent   = _context.errorId
+      ? `"${_context.message}" · ${t('error_id_label', { id: _context.errorId })}`
+      : `"${_context.message}"`;
     ctxEl.style.display = '';
   } else {
     ctxEl.style.display = 'none';
@@ -263,6 +270,7 @@ async function _sendFeedback(modal) {
         type, text, email, hp, device,
         tool:       _context.tool,
         message:    _context.message,
+        errorId:    _context.errorId,
         screenshot: _screenshotDataUrl,
         url:        location.href,
       }),

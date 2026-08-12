@@ -242,6 +242,7 @@ window.PDFREE_LOCALE = {
 
   error_msg:           'Lỗi: {msg}',
   error_report_hint:   ' — chạm để báo cáo',
+  error_id_label:      'Mã lỗi: {id}',
   still_working:       'Vẫn đang xử lý… Tài liệu lớn có thể mất vài phút.',
 
   // rotateUI
@@ -405,7 +406,7 @@ window.PDFREE_LOCALE = {
   fb_title_other:        '💬 Cho tôi biết bạn nghĩ gì',
   fb_title_error:        '⚠️ Đã xảy ra lỗi gì?',
   fb_placeholder_bug:    'Đã xảy ra lỗi gì? Loại tệp hoặc công cụ nào?',
-  fb_placeholder_idea:   'Tính năng nào sẽ giúp ích cho bạn nhất?',
+  fb_placeholder_idea:   'Bạn đang cố làm gì khi nghĩ ra điều này?',
   fb_placeholder_other:  'Bạn đang nghĩ gì?',
   fb_placeholder_error:  'Vài chi tiết giúp tôi sửa nhanh hơn (không bắt buộc)',
   fb_email_placeholder:  'Email (không bắt buộc — chỉ khi bạn muốn được phản hồi)',

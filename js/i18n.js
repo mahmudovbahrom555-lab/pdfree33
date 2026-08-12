@@ -225,6 +225,7 @@ export const EN = {
 
   error_msg:            'Error: {msg}',
   error_report_hint:    ' — tap to report',
+  error_id_label:      'Error ID: {id}',
   still_working:        'Still working… Large documents can take a few minutes.',
 
   // ── rotateUI.js ────────────────────────────────────────────────
@@ -391,7 +392,7 @@ export const EN = {
   fb_title_other:        '💬 Tell me what you think',
   fb_title_error:        '⚠️ What went wrong?',
   fb_placeholder_bug:    'What went wrong? Which file type or tool?',
-  fb_placeholder_idea:   'What feature would help you most?',
+  fb_placeholder_idea:   'What were you trying to do when this came to mind?',
   fb_placeholder_other:  'What\'s on your mind?',
   fb_placeholder_error:  'A few details help me fix it faster (optional)',
   fb_email_placeholder:  'Email (optional — only if you\'d like a reply)',

@@ -241,6 +241,7 @@ window.PDFREE_LOCALE = {
 
   error_msg:           'Error: {msg}',
   error_report_hint:   ' — toca para informar',
+  error_id_label:      'ID de error: {id}',
   still_working:       'Trabajando… Los documentos grandes pueden tardar unos minutos.',
 
   // rotateUI
@@ -404,7 +405,7 @@ window.PDFREE_LOCALE = {
   fb_title_other:        '💬 Dime qué piensas',
   fb_title_error:        '⚠️ ¿Qué salió mal?',
   fb_placeholder_bug:    '¿Qué salió mal? ¿Qué tipo de archivo o herramienta?',
-  fb_placeholder_idea:   '¿Qué función te ayudaría más?',
+  fb_placeholder_idea:   '¿Qué intentabas hacer cuando se te ocurrió esto?',
   fb_placeholder_other:  '¿Qué tienes en mente?',
   fb_placeholder_error:  'Algunos detalles me ayudan a solucionarlo más rápido (opcional)',
   fb_email_placeholder:  'Email (opcional — solo si quieres una respuesta)',
