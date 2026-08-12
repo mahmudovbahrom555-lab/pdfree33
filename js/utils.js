@@ -18,6 +18,25 @@ export function esc(str) {
 }
 
 /**
+ * Truncates a long filename in the middle, preserving the start and the
+ * extension — "Screenshot 2026-08-12 at 19.19.09.pdf" (38 chars) becomes
+ * "Screenshot 2026-08-….pdf" at maxLen=24. Used where a long OS-generated
+ * filename (screenshots, camera exports) would otherwise wrap the success
+ * card's download confirmation onto 3+ lines.
+ * @param {string} name
+ * @param {number} [maxLen=24]
+ * @returns {string}
+ */
+export function truncateMiddle(name, maxLen = 24) {
+  if (!name || name.length <= maxLen) return name;
+  const dotIdx = name.lastIndexOf('.');
+  const ext  = dotIdx > 0 ? name.slice(dotIdx) : '';
+  const base = dotIdx > 0 ? name.slice(0, dotIdx) : name;
+  const keep = Math.max(4, maxLen - ext.length - 1);
+  return base.slice(0, keep) + '…' + ext;
+}
+
+/**
  * Форматирует байты в читаемый размер файла
  * @param {number} bytes
  * @returns {string}  e.g. "1.4 MB"

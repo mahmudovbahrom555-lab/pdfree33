@@ -384,11 +384,9 @@ button,
 }
 .success-text h3  { font-size: 15px; font-weight: 600; color: var(--green-dark); margin-bottom: 3px; letter-spacing: -0.2px; }
 .success-text p   { font-size: 13px; color: var(--text2); }
-.success-text p.success-auto-hint { font-size: 50px; font-weight: 600; color: var(--green-dark); margin-top: 2px; margin-bottom: 3px; letter-spacing: -0.2px; line-height: 1.15; }
+.success-text p.success-auto-hint { font-size: 25px; font-weight: 600; color: var(--green-dark); margin-top: 2px; margin-bottom: 3px; letter-spacing: -0.2px; line-height: 1.2; }
 @media (max-width: 700px) {
-  /* 50px wraps to 3-4 lines on narrow screens and crowds the download
-     button/toast below it — still prominent, but sized to fit. */
-  .success-text p.success-auto-hint { font-size: 24px; }
+  .success-text p.success-auto-hint { font-size: 12px; }
 }
 
 .download-btn {

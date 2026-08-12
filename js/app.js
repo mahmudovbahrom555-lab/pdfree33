@@ -10,7 +10,7 @@
 if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 
 import { TOOLS, APP_VERSION, getLocalizedTool }   from './config.js';
-import { id, hide, setText, fmtSize }              from './utils.js';
+import { id, hide, setText, fmtSize, truncateMiddle } from './utils.js';
 
 // Fires on every load — open DevTools Console to confirm active version.
 // If you see an old version here after deploying, clear SW cache:
@@ -375,14 +375,18 @@ function _handleSuccess({ tool, blob, desc, filename, compressionReport, batchCo
   document.body.appendChild(_autoA); _autoA.click(); document.body.removeChild(_autoA);
   const _autoDownloadAtMs = Date.now();
 
-  // Show hint + update button to "Download again" fallback
+  // Show hint + update button to "Download again" fallback. Truncated for
+  // DISPLAY only — a long OS-generated name (screenshots, camera exports)
+  // would otherwise wrap the confirmation onto 3+ lines; the actual saved
+  // file above still uses the full, untruncated filename.
+  const _displayName = truncateMiddle(filename);
   const _hint = id('successAutoHint');
-  if (_hint) { _hint.textContent = t('auto_download_hint', { filename }); _hint.style.display = ''; }
+  if (_hint) { _hint.textContent = t('auto_download_hint', { filename: _displayName }); _hint.style.display = ''; }
 
   // Second, more transient confirmation channel — slight delay so it
   // doesn't visually compete with the auto-download/card update that
   // just happened in the same instant.
-  setTimeout(() => showToast(t('download_toast', { filename }), 3000), 400);
+  setTimeout(() => showToast(t('download_toast', { filename: _displayName }), 3000), 400);
   const _dlBtn = id('downloadBtn');
   if (_dlBtn) {
     _dlBtn.textContent = t('download_again');

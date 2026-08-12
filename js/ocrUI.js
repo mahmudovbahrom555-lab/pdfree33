@@ -5,6 +5,7 @@ import { loadPdfJs } from './pdf2jpgUI.js';
 import { loadPdfLib } from './lazyLibs.js';
 import { t } from './i18n.js';
 import { saveHandoff } from './handoff.js';
+import { truncateMiddle } from './utils.js';
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 const TESSERACT_CDN       = 'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js';
@@ -873,13 +874,15 @@ function _showSuccess(desc) {
   document.body.removeChild(autoA);
   setTimeout(() => URL.revokeObjectURL(autoUrl), 10000);
 
-  // Show auto-download hint
+  // Show auto-download hint. Truncated for DISPLAY only — see app.js's
+  // _handleSuccess() for why (matches it so this independent path doesn't diverge).
+  const _displayName = truncateMiddle(_lastResultName);
   const hint = document.getElementById('successAutoHint');
-  if (hint) { hint.textContent = t('auto_download_hint', { filename: _lastResultName }); hint.style.display = ''; }
+  if (hint) { hint.textContent = t('auto_download_hint', { filename: _displayName }); hint.style.display = ''; }
 
   // Second, more transient confirmation channel — matches app.js's shared
   // _handleSuccess() so OCR's independent success path doesn't diverge.
-  setTimeout(() => _showToast(t('download_toast', { filename: _lastResultName })), 400);
+  setTimeout(() => _showToast(t('download_toast', { filename: _displayName })), 400);
 
   // Wire "Download again" fallback button
   const dlBtn = document.getElementById('downloadBtn');
