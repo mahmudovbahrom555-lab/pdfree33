@@ -1,10 +1,10 @@
 [
   {
     "@type": "Question",
-    "name": "Werden meine Dateien auf einen Server hochgeladen?",
+    "name": "Werden alle Metadaten entfernt?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nein. Alle Verarbeitungsschritte finden ausschließlich in deinem Browser statt. Deine Dokumente und Metadaten verlassen dein Gerät nie."
+      "text": "PDFree entfernt Standard-Metadaten (Autor, Titel, Thema, Schlüsselwörter, Datum). Eingebettete XMP-Metadaten und versteckte Informationen in Bildern (EXIF) werden möglicherweise nicht vollständig entfernt."
     }
   },
   {
@@ -17,10 +17,10 @@
   },
   {
     "@type": "Question",
-    "name": "Werden alle Metadaten entfernt?",
+    "name": "Werden meine Dateien auf einen Server hochgeladen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree entfernt Standard-Metadaten (Autor, Titel, Thema, Schlüsselwörter, Datum). Eingebettete XMP-Metadaten und versteckte Informationen in Bildern (EXIF) werden möglicherweise nicht vollständig entfernt."
+      "text": "Nein. Alle Verarbeitungsschritte finden ausschließlich in deinem Browser statt. Deine Dokumente und Metadaten verlassen dein Gerät nie."
     }
   },
   {

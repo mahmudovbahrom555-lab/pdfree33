@@ -1,10 +1,10 @@
 [
   {
     "@type": "Question",
-    "name": "¿Se suben mis archivos a un servidor?",
+    "name": "¿Se eliminan todos los metadatos?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. Todo el procesamiento se realiza en tu navegador. Tus documentos y metadatos nunca salen de tu dispositivo."
+      "text": "PDFree elimina los metadatos estándar (autor, título, asunto, palabras clave, fecha). Los metadatos XMP incrustados pueden no eliminarse completamente."
     }
   },
   {
@@ -17,10 +17,10 @@
   },
   {
     "@type": "Question",
-    "name": "¿Se eliminan todos los metadatos?",
+    "name": "¿Se suben mis archivos a un servidor?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree elimina los metadatos estándar (autor, título, asunto, palabras clave, fecha). Los metadatos XMP incrustados pueden no eliminarse completamente."
+      "text": "No. Todo el procesamiento se realiza en tu navegador. Tus documentos y metadatos nunca salen de tu dispositivo."
     }
   },
   {

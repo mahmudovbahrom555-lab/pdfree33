@@ -17,14 +17,6 @@
   },
   {
     "@type": "Question",
-    "name": "Y a-t-il des limites de taille ou de nombre de pages ?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Non. PDFree n'a pas de limites artificielles. La seule contrainte est la mémoire vive disponible sur votre appareil."
-    }
-  },
-  {
-    "@type": "Question",
     "name": "Quels formats d'image sont acceptés ?",
     "acceptedAnswer": {
       "@type": "Answer",
@@ -45,6 +37,14 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Par défaut, PDFree compresse légèrement les images (qualité JPEG 82 %, plafonnée à 2400px sur le plus grand côté) pour garder une taille de PDF raisonnable — visuellement quasi imperceptible. Désactivez « Compresser les images » avant la conversion si vous avez besoin de la résolution d'origine exacte."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Y a-t-il des limites de taille ou de nombre de pages ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non. PDFree n'a pas de limites artificielles. La seule contrainte est la mémoire vive disponible sur votre appareil."
     }
   }
 ]

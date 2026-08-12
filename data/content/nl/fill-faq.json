@@ -17,18 +17,18 @@
   },
   {
     "@type": "Question",
-    "name": "Welke soorten PDF-formuliervelden worden ondersteund?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "PDFree ondersteunt alle standaard AcroForm-veldtypen: tekstvelden, selectievakjes, keuzerondjes, dropdownlijsten en handtekeningvelden. Handtekeningvelden openen een tekenveld waar je met je vinger of muis kunt tekenen, je naam in een cursief lettertype kunt typen, of een afbeelding van je handtekening kunt uploaden."
-    }
-  },
-  {
-    "@type": "Question",
     "name": "Wat als mijn PDF geen invulbare velden heeft?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "PDFree detecteert interactieve AcroForm-velden. Als de PDF een gescande afbeelding of een plat document zonder ingebedde formuliervelden is, zie je het bericht \"Geen invulbare velden gevonden\"."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Welke soorten PDF-formuliervelden worden ondersteund?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree ondersteunt alle standaard AcroForm-veldtypen: tekstvelden, selectievakjes, keuzerondjes, dropdownlijsten en handtekeningvelden. Handtekeningvelden openen een tekenveld waar je met je vinger of muis kunt tekenen, je naam in een cursief lettertype kunt typen, of een afbeelding van je handtekening kunt uploaden."
     }
   },
   {

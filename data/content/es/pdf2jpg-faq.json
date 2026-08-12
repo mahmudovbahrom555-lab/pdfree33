@@ -25,10 +25,10 @@
   },
   {
     "@type": "Question",
-    "name": "¿Puedo seleccionar páginas concretas?",
+    "name": "¿Hay un límite de páginas para la conversión?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sí. Puedes convertir páginas específicas o el documento completo."
+      "text": "No. No hay límites de número de páginas ni de tamaño de archivo. Los PDFs muy grandes (100+ páginas a 300 DPI) pueden tardar más en procesarse. Para mejores resultados con archivos grandes, cierra otras pestañas del navegador antes de convertir."
     }
   },
   {
@@ -41,18 +41,18 @@
   },
   {
     "@type": "Question",
-    "name": "¿Hay un límite de páginas para la conversión?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "No. No hay límites de número de páginas ni de tamaño de archivo. Los PDFs muy grandes (100+ páginas a 300 DPI) pueden tardar más en procesarse. Para mejores resultados con archivos grandes, cierra otras pestañas del navegador antes de convertir."
-    }
-  },
-  {
-    "@type": "Question",
     "name": "¿Cuál es la resolución de las imágenes exportadas?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "72, 150 o 300 DPI según el nivel de calidad elegido. Para impresión profesional recomendamos 300 DPI."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Puedo seleccionar páginas concretas?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sí. Puedes convertir páginas específicas o el documento completo."
     }
   },
   {

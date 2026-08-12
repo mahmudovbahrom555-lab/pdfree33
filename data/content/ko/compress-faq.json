@@ -9,14 +9,6 @@
   },
   {
     "@type": "Question",
-    "name": "파일이 서버로 업로드되나요?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "아니요. 압축이 완전히 브라우저에서 이루어집니다. 아무 파일도 서버로 전송되지 않습니다."
-    }
-  },
-  {
-    "@type": "Question",
     "name": "압축하면 품질이 떨어지나요?",
     "acceptedAnswer": {
       "@type": "Answer",
@@ -33,6 +25,14 @@
   },
   {
     "@type": "Question",
+    "name": "파일이 서버로 업로드되나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "아니요. 압축이 완전히 브라우저에서 이루어집니다. 아무 파일도 서버로 전송되지 않습니다."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "Mac에서도 사용할 수 있나요?",
     "acceptedAnswer": {
       "@type": "Answer",
@@ -41,18 +41,18 @@
   },
   {
     "@type": "Question",
-    "name": "하루 사용 횟수 제한이 있나요?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "아니요. 회원가입 없이 제한 없이 사용할 수 있습니다."
-    }
-  },
-  {
-    "@type": "Question",
     "name": "개인정보가 보호되나요?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "예 — 파일이 브라우저를 절대 벗어나지 않습니다. 서버로 전송되는 데이터가 없습니다. 추적 쿠키도 없습니다."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "하루 사용 횟수 제한이 있나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "아니요. 회원가입 없이 제한 없이 사용할 수 있습니다."
     }
   },
   {

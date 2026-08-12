@@ -33,18 +33,18 @@
   },
   {
     "@type": "Question",
-    "name": "Apakah font dan gambar dipertahankan saat mengekstrak?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Ya. PDFree menggunakan pdf-lib yang menyalin halaman di tingkat objek PDF. Semua font, gambar, dan format dipertahankan persis seperti aslinya."
-    }
-  },
-  {
-    "@type": "Question",
     "name": "Apa perbedaan antara ekstrak dan pisah PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Ekstrak menghasilkan satu PDF baru berisi halaman yang dipilih. Pisah PDF biasanya menghasilkan beberapa file terpisah — satu per halaman atau satu per grup."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah font dan gambar dipertahankan saat mengekstrak?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ya. PDFree menggunakan pdf-lib yang menyalin halaman di tingkat objek PDF. Semua font, gambar, dan format dipertahankan persis seperti aslinya."
     }
   },
   {

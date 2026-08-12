@@ -17,18 +17,18 @@
   },
   {
     "@type": "Question",
-    "name": "What metadata fields does PDFree show and edit?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "PDFree reads and writes the standard PDF document information dictionary: Title, Author, Subject, Keywords, Creator (application that created the PDF), and Producer (PDF library used). Modification date is updated automatically on save."
-    }
-  },
-  {
-    "@type": "Question",
     "name": "Can I remove all metadata from a PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Yes. You can clear any or all metadata fields before saving. This is useful for removing personal information before sharing a document."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "What metadata fields does PDFree show and edit?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree reads and writes the standard PDF document information dictionary: Title, Author, Subject, Keywords, Creator (application that created the PDF), and Producer (PDF library used). Modification date is updated automatically on save."
     }
   },
   {
@@ -41,18 +41,18 @@
   },
   {
     "@type": "Question",
-    "name": "Does removing metadata reduce file size?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Slightly — metadata is a small part of the PDF structure. The size reduction is negligible for most files but may be a few kilobytes."
-    }
-  },
-  {
-    "@type": "Question",
     "name": "Can I see all the metadata currently in my PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Yes. When you upload a PDF, PDFree reads and displays all existing metadata values in the form fields. Empty fields mean that data is not present in the file."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Does removing metadata reduce file size?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Slightly — metadata is a small part of the PDF structure. The size reduction is negligible for most files but may be a few kilobytes."
     }
   },
   {

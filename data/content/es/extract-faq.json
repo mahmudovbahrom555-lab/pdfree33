@@ -1,10 +1,10 @@
 [
   {
     "@type": "Question",
-    "name": "¿Se suben mis archivos a un servidor?",
+    "name": "¿Se modifica el PDF original?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. Todo el procesamiento se realiza en tu navegador. Tus documentos nunca salen de tu dispositivo."
+      "text": "No. El original permanece completamente intacto. PDFree crea un nuevo archivo con las páginas seleccionadas."
     }
   },
   {
@@ -17,18 +17,10 @@
   },
   {
     "@type": "Question",
-    "name": "¿Hay un límite en el número de páginas que puedo extraer?",
+    "name": "¿Se suben mis archivos a un servidor?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. Puedes extraer cualquier número de páginas de un PDF de cualquier tamaño, siempre que tu navegador tenga suficiente memoria."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "¿Se modifica el PDF original?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "No. El original permanece completamente intacto. PDFree crea un nuevo archivo con las páginas seleccionadas."
+      "text": "No. Todo el procesamiento se realiza en tu navegador. Tus documentos nunca salen de tu dispositivo."
     }
   },
   {
@@ -45,6 +37,14 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Sí. Las páginas se extraen a nivel de objeto PDF — sin recompresión ni pérdida de calidad."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Hay un límite en el número de páginas que puedo extraer?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Puedes extraer cualquier número de páginas de un PDF de cualquier tamaño, siempre que tu navegador tenga suficiente memoria."
     }
   }
 ]

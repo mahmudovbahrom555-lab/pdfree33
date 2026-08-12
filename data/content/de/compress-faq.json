@@ -1,10 +1,10 @@
 [
   {
     "@type": "Question",
-    "name": "Werden meine Dateien auf einen Server hochgeladen?",
+    "name": "Wie viel kleiner wird meine PDF-Datei?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nein. Alles läuft ausschließlich in deinem Browser. Deine Dokumente verlassen dein Gerät zu keinem Zeitpunkt."
+      "text": "Das hängt vom Inhalt ab. Bild-lastige PDFs können um 50–70 % reduziert werden. Reine Text-PDFs lassen sich typischerweise um 10–30 % komprimieren."
     }
   },
   {
@@ -17,10 +17,26 @@
   },
   {
     "@type": "Question",
-    "name": "Wie viel kleiner wird meine PDF-Datei?",
+    "name": "Werden meine Dateien auf einen Server hochgeladen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Das hängt vom Inhalt ab. Bild-lastige PDFs können um 50–70 % reduziert werden. Reine Text-PDFs lassen sich typischerweise um 10–30 % komprimieren."
+      "text": "Nein. Alles läuft ausschließlich in deinem Browser. Deine Dokumente verlassen dein Gerät zu keinem Zeitpunkt."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Gibt es ein Dateigrößenlimit?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nein. PDFree hat keine künstlichen Limits. Die einzige Begrenzung ist der verfügbare Arbeitsspeicher deines Geräts."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann ich mehrere PDFs auf einmal komprimieren?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. PDFree unterstützt vollständige Stapelverarbeitung — wähle oder ziehe beliebig viele PDF-Dateien hinein, jede wird einzeln in deinem Browser komprimiert. Am Ende lädst du alle Ergebnisse als eine ZIP-Datei herunter. Kein Tageslimit, keine Begrenzung der Dateianzahl."
     }
   },
   {
@@ -45,22 +61,6 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Ja. PDFree funktioniert als Progressive Web App vollständig offline, sobald die Seite geladen wurde. Es ist keine Internetverbindung erforderlich — die gesamte Verarbeitung erfolgt in deinem Browser."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "Gibt es ein Dateigrößenlimit?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Nein. PDFree hat keine künstlichen Limits. Die einzige Begrenzung ist der verfügbare Arbeitsspeicher deines Geräts."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "Kann ich mehrere PDFs auf einmal komprimieren?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Ja. PDFree unterstützt vollständige Stapelverarbeitung — wähle oder ziehe beliebig viele PDF-Dateien hinein, jede wird einzeln in deinem Browser komprimiert. Am Ende lädst du alle Ergebnisse als eine ZIP-Datei herunter. Kein Tageslimit, keine Begrenzung der Dateianzahl."
     }
   }
 ]

@@ -1,10 +1,10 @@
 [
   {
     "@type": "Question",
-    "name": "Werden meine Dateien auf einen Server hochgeladen?",
+    "name": "Ist die Schwärzung wirklich dauerhaft?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nein. Alle Verarbeitungsschritte finden ausschließlich in deinem Browser statt. Deine Dokumente verlassen dein Gerät nie."
+      "text": "Ja. Die geschwärzten Bereiche werden als schwarze Rechtecke fest eingebettet. Der ursprüngliche Inhalt ist nicht mehr zugänglich."
     }
   },
   {
@@ -17,18 +17,10 @@
   },
   {
     "@type": "Question",
-    "name": "Gibt es ein Limit für die Dateigröße oder Seitenanzahl?",
+    "name": "Werden meine Dateien auf einen Server hochgeladen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nein, es gibt keine künstlichen Limits. Die einzige Begrenzung ist der verfügbare Arbeitsspeicher deines Computers oder Smartphones."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "Ist die Schwärzung wirklich dauerhaft?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Ja. Die geschwärzten Bereiche werden als schwarze Rechtecke fest eingebettet. Der ursprüngliche Inhalt ist nicht mehr zugänglich."
+      "text": "Nein. Alle Verarbeitungsschritte finden ausschließlich in deinem Browser statt. Deine Dokumente verlassen dein Gerät nie."
     }
   },
   {
@@ -45,6 +37,14 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Nein. Metadaten (Autor, Erstellungsdatum) bleiben erhalten. Nutze zusätzlich das Metadaten-Tool für eine vollständige Bereinigung."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Gibt es ein Limit für die Dateigröße oder Seitenanzahl?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nein, es gibt keine künstlichen Limits. Die einzige Begrenzung ist der verfügbare Arbeitsspeicher deines Computers oder Smartphones."
     }
   }
 ]

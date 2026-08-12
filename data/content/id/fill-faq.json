@@ -33,6 +33,14 @@
   },
   {
     "@type": "Question",
+    "name": "Apakah PDF yang tidak memiliki kolom AcroForm bisa diisi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Alat ini dirancang untuk PDF dengan kolom formulir AcroForm. PDF tanpa kolom formulir perlu diedit dengan alat lain."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "Apakah ada biaya untuk mengisi formulir PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
@@ -57,26 +65,18 @@
   },
   {
     "@type": "Question",
-    "name": "Apakah alat ini benar-benar mengisi kolom asli formulir saya, atau saya harus menempatkan teks secara manual?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "PDFree mendeteksi kolom AcroForm asli PDF Anda — kolom teks, kotak centang, tombol radio, dropdown, dan kolom tanda tangan — dan menampilkannya sebagai formulir yang benar-benar bisa diisi, tanpa menggambar kotak teks secara manual. Jika PDF Anda tidak memiliki kolom formulir, PDFree akan memberi tahu Anda secara langsung."
-    }
-  },
-  {
-    "@type": "Question",
-    "name": "Apakah PDF yang tidak memiliki kolom AcroForm bisa diisi?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Alat ini dirancang untuk PDF dengan kolom formulir AcroForm. PDF tanpa kolom formulir perlu diedit dengan alat lain."
-    }
-  },
-  {
-    "@type": "Question",
     "name": "Apakah bisa digunakan di ponsel?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Ya. PDFree berfungsi di browser mobile. Ketuk kolom untuk mengisinya, dan gunakan jari untuk menggambar tanda tangan."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah alat ini benar-benar mengisi kolom asli formulir saya, atau saya harus menempatkan teks secara manual?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree mendeteksi kolom AcroForm asli PDF Anda — kolom teks, kotak centang, tombol radio, dropdown, dan kolom tanda tangan — dan menampilkannya sebagai formulir yang benar-benar bisa diisi, tanpa menggambar kotak teks secara manual. Jika PDF Anda tidak memiliki kolom formulir, PDFree akan memberi tahu Anda secara langsung."
     }
   },
   {

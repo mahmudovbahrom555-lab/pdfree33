@@ -17,14 +17,6 @@
   },
   {
     "@type": "Question",
-    "name": "Y a-t-il des limites de taille ou de nombre de pages ?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Non. PDFree n'a pas de limites artificielles. La seule contrainte est la mémoire vive disponible sur votre appareil."
-    }
-  },
-  {
-    "@type": "Question",
     "name": "Le caviardage est-il vraiment irréversible ?",
     "acceptedAnswer": {
       "@type": "Answer",
@@ -45,6 +37,14 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Non. Les métadonnées (auteur, date) ne sont pas affectées par le caviardage. Utilisez l'outil Métadonnées en complément pour une suppression complète."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Y a-t-il des limites de taille ou de nombre de pages ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non. PDFree n'a pas de limites artificielles. La seule contrainte est la mémoire vive disponible sur votre appareil."
     }
   }
 ]

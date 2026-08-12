@@ -1,10 +1,10 @@
 [
   {
     "@type": "Question",
-    "name": "Werden meine Dateien auf einen Server hochgeladen?",
+    "name": "Wird das Original-PDF verändert?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nein. Alle Verarbeitungsschritte finden ausschließlich in deinem Browser statt. Deine Dokumente verlassen dein Gerät nie."
+      "text": "Nein. Das Original bleibt vollständig unverändert. PDFree erstellt eine neue Datei mit den ausgewählten Seiten."
     }
   },
   {
@@ -17,10 +17,10 @@
   },
   {
     "@type": "Question",
-    "name": "Gibt es ein Limit für die Anzahl der Seiten, die ich extrahieren kann?",
+    "name": "Werden meine Dateien auf einen Server hochgeladen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nein, es gibt keine künstlichen Limits. Die einzige Begrenzung ist der verfügbare Arbeitsspeicher deines Computers oder Smartphones."
+      "text": "Nein. Alle Verarbeitungsschritte finden ausschließlich in deinem Browser statt. Deine Dokumente verlassen dein Gerät nie."
     }
   },
   {
@@ -33,18 +33,18 @@
   },
   {
     "@type": "Question",
-    "name": "Wird das Original-PDF verändert?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Nein. Das Original bleibt vollständig unverändert. PDFree erstellt eine neue Datei mit den ausgewählten Seiten."
-    }
-  },
-  {
-    "@type": "Question",
     "name": "Bleibt die Qualität beim Extrahieren erhalten?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Ja. Seiten werden auf PDF-Objektebene extrahiert — keine Neukomprimierung, keine Qualitätseinbußen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Gibt es ein Limit für die Anzahl der Seiten, die ich extrahieren kann?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nein, es gibt keine künstlichen Limits. Die einzige Begrenzung ist der verfügbare Arbeitsspeicher deines Computers oder Smartphones."
     }
   }
 ]

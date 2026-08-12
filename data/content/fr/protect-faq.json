@@ -17,14 +17,6 @@
   },
   {
     "@type": "Question",
-    "name": "Y a-t-il des limites de taille ou de nombre de pages ?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Non. PDFree n'a pas de limites artificielles. La seule contrainte est la mémoire vive disponible sur votre appareil."
-    }
-  },
-  {
-    "@type": "Question",
     "name": "Quel niveau de chiffrement est utilisé ?",
     "acceptedAnswer": {
       "@type": "Answer",
@@ -45,6 +37,14 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Non. Le chiffrement s'effectue localement dans votre navigateur. PDFree ne voit jamais votre mot de passe ni votre fichier."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Y a-t-il des limites de taille ou de nombre de pages ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non. PDFree n'a pas de limites artificielles. La seule contrainte est la mémoire vive disponible sur votre appareil."
     }
   },
   {

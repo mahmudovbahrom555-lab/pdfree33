@@ -33,18 +33,18 @@
   },
   {
     "@type": "Question",
-    "name": "Font và hình ảnh có được bảo toàn khi trích xuất không?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Có. PDFree dùng pdf-lib sao chép trang ở cấp độ đối tượng PDF. Tất cả font, hình ảnh và định dạng được bảo toàn chính xác như bản gốc."
-    }
-  },
-  {
-    "@type": "Question",
     "name": "Sự khác nhau giữa trích xuất và tách PDF là gì?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Trích xuất tạo ra một PDF mới chứa các trang đã chọn. Tách PDF thường tạo nhiều file riêng lẻ — một file mỗi trang hoặc một file mỗi nhóm."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Font và hình ảnh có được bảo toàn khi trích xuất không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có. PDFree dùng pdf-lib sao chép trang ở cấp độ đối tượng PDF. Tất cả font, hình ảnh và định dạng được bảo toàn chính xác như bản gốc."
     }
   },
   {

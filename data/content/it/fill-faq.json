@@ -17,18 +17,18 @@
   },
   {
     "@type": "Question",
-    "name": "Quali tipi di campi modulo PDF sono supportati?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "PDFree supporta tutti i tipi di campo AcroForm standard: campi di testo, caselle di controllo, pulsanti di opzione, menu a tendina e campi firma. I campi firma aprono un pad dove puoi disegnare con il dito o il mouse, digitare il tuo nome in un font corsivo, oppure caricare un'immagine della tua firma."
-    }
-  },
-  {
-    "@type": "Question",
     "name": "Cosa succede se il mio PDF non ha campi compilabili?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "PDFree rileva i campi interattivi AcroForm. Se il PDF è un'immagine scansionata o un documento piatto senza campi incorporati, vedrai il messaggio \"Nessun campo compilabile trovato\"."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Quali tipi di campi modulo PDF sono supportati?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree supporta tutti i tipi di campo AcroForm standard: campi di testo, caselle di controllo, pulsanti di opzione, menu a tendina e campi firma. I campi firma aprono un pad dove puoi disegnare con il dito o il mouse, digitare il tuo nome in un font corsivo, oppure caricare un'immagine della tua firma."
     }
   },
   {

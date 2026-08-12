@@ -17,14 +17,6 @@
   },
   {
     "@type": "Question",
-    "name": "Y a-t-il des limites de taille ou de nombre de pages ?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Non. PDFree n'a pas de limites artificielles. La seule contrainte est la mémoire vive disponible sur votre appareil."
-    }
-  },
-  {
-    "@type": "Question",
     "name": "Toutes les métadonnées sont-elles supprimées ?",
     "acceptedAnswer": {
       "@type": "Answer",
@@ -45,6 +37,14 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Non. Les métadonnées sont des informations invisibles sur le document. Le texte, les images et la mise en page restent inchangés."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Y a-t-il des limites de taille ou de nombre de pages ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non. PDFree n'a pas de limites artificielles. La seule contrainte est la mémoire vive disponible sur votre appareil."
     }
   }
 ]
