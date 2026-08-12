@@ -384,7 +384,7 @@ button,
 }
 .success-text h3  { font-size: 15px; font-weight: 600; color: var(--green-dark); margin-bottom: 3px; letter-spacing: -0.2px; }
 .success-text p   { font-size: 13px; color: var(--text2); }
-.success-text p.success-auto-hint { font-size: 14px; font-weight: 600; color: var(--green-dark); margin-top: 4px; }
+.success-text p.success-auto-hint { font-size: 15px; font-weight: 600; color: var(--green-dark); margin-top: 2px; margin-bottom: 3px; letter-spacing: -0.2px; }
 
 .download-btn {
   margin-left: auto;
