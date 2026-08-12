@@ -17,7 +17,7 @@
   },
   {
     "@type": "Question",
-    "name": "Văn bản trong slide có thể chỉnh sửa được không?",
+    "name": "Tôi có thể chỉnh sửa văn bản trên slide sau khi chuyển đổi không?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Không trực tiếp — mỗi slide là một hình ảnh của trang PDF gốc, giữ nguyên bố cục chính xác nhưng có nghĩa là văn bản không phải là một đối tượng PowerPoint riêng biệt có thể chỉnh sửa. Đây là cách tiếp cận mà hầu hết các công cụ chuyển đổi PDF sang PowerPoint đều sử dụng. Nếu bạn cần văn bản có thể chỉnh sửa, hãy dùng PDF sang Word."
@@ -25,10 +25,18 @@
   },
   {
     "@type": "Question",
-    "name": "Có thể chuyển đổi bao nhiêu trang?",
+    "name": "Slide của tôi sẽ có kích thước bao nhiêu?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Tất cả các trang. Không có giới hạn trang hay kích thước file."
+      "text": "Kích thước slide khớp chính xác với kích thước trang và tỷ lệ khung hình của PDF — không có viền đen hay lề bị kéo giãn, khác với việc ép PDF dọc vào slide màn hình rộng tiêu chuẩn."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Tôi nên chọn mức chất lượng nào?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Balanced (150 dpi) là lựa chọn mặc định tốt cho hầu hết các bộ slide. Chọn chất lượng High cho văn bản dày đặc hoặc chữ nhỏ bạn sẽ phóng to; chọn Compact nếu gửi file qua email và muốn dung lượng nhỏ hơn."
     }
   },
   {
@@ -37,6 +45,14 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Có, hoàn toàn miễn phí mãi mãi."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Công cụ này có xử lý được PDF lớn không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có, mặc dù số trang rất lớn sẽ tự động dùng chất lượng hình ảnh thấp hơn để tránh làm trình duyệt hết bộ nhớ. Với bộ slide cực lớn, chất lượng Compact là lựa chọn đáng tin cậy nhất."
     }
   }
 ]

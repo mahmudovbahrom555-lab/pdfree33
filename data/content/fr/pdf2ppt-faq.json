@@ -17,7 +17,7 @@
   },
   {
     "@type": "Question",
-    "name": "Puis-je modifier le texte sur les diapositives après la conversion ?",
+    "name": "Puis-je modifier le texte sur les diapositives ?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Pas directement — chaque diapositive est une image de la page PDF originale, ce qui préserve la mise en page exacte mais signifie que le texte n'est pas un objet PowerPoint modifiable séparé. C'est la même approche qu'utilisent pratiquement tous les outils PDF en PowerPoint. Si vous avez besoin de texte éditable, utilisez plutôt PDF en Word."

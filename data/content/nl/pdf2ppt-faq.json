@@ -17,7 +17,7 @@
   },
   {
     "@type": "Question",
-    "name": "Is de tekst in slides bewerkbaar?",
+    "name": "Kan ik de tekst op de dia's bewerken na conversie?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Niet rechtstreeks — elke dia is een afbeelding van de originele PDF-pagina, wat de exacte lay-out behoudt maar betekent dat tekst geen apart, bewerkbaar PowerPoint-object is. Dit is de aanpak die vrijwel alle PDF-naar-PowerPoint-tools gebruiken. Gebruik PDF naar Word als je bewerkbare tekst nodig hebt."
@@ -25,10 +25,18 @@
   },
   {
     "@type": "Question",
-    "name": "Hoeveel pagina's kan ik converteren?",
+    "name": "Welk formaat krijgen mijn dia's?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Alle pagina's. Geen limiet op pagina's of bestandsgrootte."
+      "text": "Het diaformaat komt overeen met de paginaverhoudingen van de eerste pagina van je PDF. Als alle pagina's dezelfde grootte hebben, vullen de dia's rand tot rand zonder letterboxing — in tegenstelling tot het forceren van een staande PDF op een standaard breedbeelddia. PowerPoint ondersteunt maar één diaformaat per presentatie, dus als je PDF verschillende paginaformaten of oriëntaties combineert, worden die pagina's passend gemaakt en gecentreerd in plaats van uitgerekt of vervormd."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Welke kwaliteitsinstelling moet ik kiezen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Balanced (150 dpi) is een goede standaard voor de meeste presentaties. Kies High voor dichte tekst of kleine letters waarop je zult inzoomen; kies Compact als je het bestand mailt en een kleiner formaat wilt."
     }
   },
   {
@@ -37,6 +45,14 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Ja, volledig gratis voor altijd. Geen betaalde abonnementen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Werkt dit met een grote PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja, hoewel zeer grote paginanummers automatisch een lagere afbeeldingskwaliteit gebruiken om te voorkomen dat je browser zonder geheugen komt te zitten. Voor enorme presentaties is Compact-kwaliteit de meest betrouwbare keuze."
     }
   }
 ]

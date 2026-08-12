@@ -17,7 +17,7 @@
   },
   {
     "@type": "Question",
-    "name": "Il testo nelle slide è modificabile?",
+    "name": "Posso modificare il testo nelle slide dopo la conversione?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Non direttamente — ogni slide è un'immagine della pagina PDF originale, il che preserva esattamente il layout ma significa che il testo non è un oggetto PowerPoint separato e modificabile. Questo è l'approccio usato praticamente da tutti gli strumenti di conversione da PDF a PowerPoint. Se ti serve testo modificabile, usa invece PDF in Word."
@@ -25,10 +25,18 @@
   },
   {
     "@type": "Question",
-    "name": "Quante pagine posso convertire?",
+    "name": "Che dimensione avranno le mie slide?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Tutte le pagine. Nessun limite di pagine o dimensione file."
+      "text": "La dimensione della slide corrisponde esattamente alle dimensioni della pagina e al rapporto d'aspetto del tuo PDF — niente bande nere o margini stirati, a differenza di forzare un PDF verticale su una slide widescreen standard."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Quale impostazione di qualità dovrei scegliere?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Balanced (150 dpi) è una buona scelta predefinita per la maggior parte delle presentazioni. Scegli High per testo denso o caratteri piccoli su cui farai zoom; scegli Compact se invii il file via email e vuoi una dimensione più piccola."
     }
   },
   {
@@ -37,6 +45,14 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Sì, completamente gratuito per sempre. Nessun piano a pagamento."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Funziona con un PDF di grandi dimensioni?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì, anche se un numero di pagine molto elevato usa automaticamente una qualità immagine inferiore per evitare che il browser esaurisca la memoria. Per presentazioni enormi, la qualità Compact è la scelta più affidabile."
     }
   }
 ]

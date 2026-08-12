@@ -17,7 +17,7 @@
   },
   {
     "@type": "Question",
-    "name": "Czy tekst na slajdach jest edytowalny?",
+    "name": "Czy mogę edytować tekst na slajdach po konwersji?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Nie bezpośrednio — każdy slajd to obraz oryginalnej strony PDF, co zachowuje dokładny układ, ale oznacza, że tekst nie jest osobnym, edytowalnym obiektem PowerPoint. To podejście stosuje niemal każde narzędzie do konwersji PDF na PowerPoint. Jeśli potrzebujesz edytowalnego tekstu, użyj zamiast tego PDF na Word."
@@ -25,10 +25,18 @@
   },
   {
     "@type": "Question",
-    "name": "Ile stron mogę konwertować?",
+    "name": "Jaki rozmiar będą miały moje slajdy?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Wszystkie strony. Brak limitu stron ani rozmiaru pliku."
+      "text": "Rozmiar slajdu dokładnie odpowiada wymiarom strony i proporcjom Twojego PDF-a — bez czarnych pasów czy rozciągniętych marginesów, w przeciwieństwie do wymuszania pionowego PDF-a na standardowym slajdzie panoramicznym."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Które ustawienie jakości powinienem wybrać?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Balanced (150 dpi) to dobry domyślny wybór dla większości prezentacji. Wybierz High dla gęstego tekstu lub drobnego druku, który będziesz powiększać; wybierz Compact, jeśli wysyłasz plik e-mailem i chcesz mniejszy rozmiar."
     }
   },
   {
@@ -37,6 +45,14 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Tak, całkowicie darmowe na zawsze. Bez płatnych planów."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy zadziała z dużym plikiem PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak, choć bardzo duża liczba stron automatycznie korzysta z niższej jakości obrazu, aby zapobiec wyczerpaniu pamięci przeglądarki. Dla ogromnych prezentacji jakość Compact jest najbardziej niezawodnym wyborem."
     }
   }
 ]

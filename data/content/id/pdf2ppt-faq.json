@@ -17,7 +17,7 @@
   },
   {
     "@type": "Question",
-    "name": "Apakah teks di slide bisa diedit?",
+    "name": "Bisakah saya mengedit teks di slide setelah konversi?",
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Tidak secara langsung — setiap slide adalah gambar dari halaman PDF asli, yang mempertahankan tata letak persis tetapi berarti teks bukan objek PowerPoint terpisah yang bisa diedit. Ini adalah pendekatan yang digunakan hampir semua alat konversi PDF ke PowerPoint. Jika Anda memerlukan teks yang bisa diedit, gunakan PDF ke Word."
@@ -25,10 +25,18 @@
   },
   {
     "@type": "Question",
-    "name": "Berapa banyak halaman yang bisa dikonversi?",
+    "name": "Berapa ukuran slide saya nanti?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Semua halaman. Tidak ada batas halaman atau ukuran file."
+      "text": "Ukuran slide sama persis dengan dimensi dan rasio aspek halaman PDF Anda — tidak ada letterbox atau margin melar, berbeda dengan memaksa PDF potret ke slide widescreen standar."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Pengaturan kualitas mana yang harus saya pilih?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Balanced (150 dpi) adalah pilihan default yang baik untuk sebagian besar presentasi. Pilih kualitas High untuk teks padat atau cetakan kecil yang akan Anda perbesar; pilih Compact jika mengirim file lewat email dan ingin ukuran lebih kecil."
     }
   },
   {
@@ -37,6 +45,14 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Ya, sepenuhnya gratis selamanya. Tidak ada paket berbayar."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah ini bekerja untuk PDF berukuran besar?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ya, meskipun jumlah halaman yang sangat besar otomatis menggunakan kualitas gambar lebih rendah agar browser tidak kehabisan memori. Untuk presentasi sangat besar, kualitas Compact adalah pilihan paling andal."
     }
   }
 ]
