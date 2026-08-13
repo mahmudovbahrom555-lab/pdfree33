@@ -68,6 +68,7 @@ const TOOL_SLUGS = {
   cleanScan:        '/clean-scan/',
   organize:         '/organize-pdf/',
   resize:           '/resize-pdf-for-printing/',
+  mangaSplit:       '/split-manga-pages/',
   unlock:           '/unlock-pdf/',
   pdf2word:         '/pdf-to-word/',
   pdf2excel:        '/pdf-to-excel/',

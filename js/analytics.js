@@ -317,3 +317,16 @@ export function trackHomepageScrollDepth(depth) {
 export function trackRageClick(target) {
   _track('Rage Click', { target });
 }
+
+// ── Manga Split post-use survey ──────────────────────────────────
+// Mom-Test-style demand-validation signal for the Split Manga Pages tool
+// (see mangaSplitUI.js's renderMangaSurvey) — reuses this same generic
+// _track()/_api/analytics pipeline, no new endpoint or backend change.
+
+/**
+ * @param {'why'|'annoying'|'before'|'pay'} question
+ * @param {string} answer
+ */
+export function trackMangaSurveyAnswer(question, answer) {
+  _track('Manga Survey Answer', { question, answer });
+}

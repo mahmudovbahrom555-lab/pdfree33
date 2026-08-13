@@ -301,6 +301,7 @@ export async function doProcess(currentTool, extraParams = {}) {
     worker:       () => _runWorkerTool(getWorkerTool(currentTool) ?? currentTool, filesSnapshot, extraParams),
     organize:     () => _runOrganize(filesSnapshot, extraParams),
     resize:       () => _runResize(filesSnapshot, extraParams),
+    mangaSplit:   () => _runMangaSplit(filesSnapshot, extraParams),
     fillOrder:    () => _runFillOrder(filesSnapshot, extraParams),
     cleanScan:    () => _runCleanScan(filesSnapshot, extraParams),
     'redact-true': () => _runRedactTrue(filesSnapshot, extraParams),
@@ -656,6 +657,65 @@ async function _runResize(filesSnapshot, { targetSize = 'a4', mode = 'fit', marg
     setFilesLocked(false);
     hideCancelBtn();
     _handleError('resize', e.message || 'Worker error');
+  };
+}
+
+// ── Split Manga Pages ──────────────────────────────────────────
+//
+// Own persistent Worker instance, same rationale as _organizeWorker/
+// _resizeWorker above: js/worker.js is off-limits and importScripts
+// ('pdf-lib.min.js') is worth paying once per session, not once per
+// submission.
+let _mangaSplitWorker = null;
+function _ensureMangaSplitWorker() {
+  if (!_mangaSplitWorker) {
+    _mangaSplitWorker = new Worker(new URL('./mangaSplitWorker.js', import.meta.url));
+  }
+  return _mangaSplitWorker;
+}
+
+async function _runMangaSplit(filesSnapshot, { rtl = true, skipPages = [] } = {}) {
+  if (!_checkSize(filesSnapshot[0], 200)) { _abortUI(); return; }
+  const file   = filesSnapshot[0];
+  const buffer = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await file.arrayBuffer());
+  setProgress(5, t('prog_manga_split'));
+
+  const worker = _ensureMangaSplitWorker();
+  worker.postMessage({ file: buffer, options: { rtl, skipPages } }, [buffer]);
+
+  worker.onmessage = (e) => {
+    const data = e.data;
+    if (data.type === 'progress') {
+      setProgress(data.value, data.label);
+    } else if (data.type === 'done') {
+      if (!(data.result instanceof ArrayBuffer)) {
+        _handleError('mangaSplit', 'Unexpected result from worker'); return;
+      }
+      isProcessing = false;
+      setFilesLocked(false);
+      hideCancelBtn();
+      setProgress(100, t('prog_done'));
+
+      const blob     = new Blob([data.result], { type: 'application/pdf' });
+      const base     = file.name.replace(/\.pdf$/i, '');
+      const filename = `${base}-split.pdf`;
+      const desc     = t('desc_manga_split', { pages: data.pageCount, size: fmtSize(blob.size) });
+
+      document.dispatchEvent(new CustomEvent('pdfree:success', {
+        detail: { tool: 'mangaSplit', blob, desc, filename }
+      }));
+    } else if (data.type === 'error') {
+      isProcessing = false;
+      setFilesLocked(false);
+      hideCancelBtn();
+      _handleError('mangaSplit', data.message);
+    }
+  };
+  worker.onerror = (e) => {
+    isProcessing = false;
+    setFilesLocked(false);
+    hideCancelBtn();
+    _handleError('mangaSplit', e.message || 'Worker error');
   };
 }
 

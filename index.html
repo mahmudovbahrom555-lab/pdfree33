@@ -500,6 +500,11 @@
         <div class="tool-name">Resize PDF</div>
         <div class="tool-desc">Fit any PDF to A4, Letter, Legal, A3 or A5 for printing</div>
       </a>
+      <a href="/split-manga-pages/" class="tool-card" data-tool="mangaSplit" aria-label="Split Manga Pages">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div>
+        <div class="tool-name">Split Manga Pages</div>
+        <div class="tool-desc">Split double-page manga spreads into two correctly ordered pages</div>
+      </a>
       <a href="/clean-scan/" class="tool-card" data-tool="cleanScan" aria-label="Clean Scan">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg></div>
         <div class="tool-name">Clean Scan</div>
@@ -669,6 +674,7 @@
     <div id="pdf2pptOptions"   class="j2p-options"     style="display:none" aria-label="PDF to PowerPoint options"></div>
     <div id="pdf2mdOptions"    class="j2p-options"     style="display:none" aria-label="PDF to Markdown options"></div>
     <div id="unlockOptions"    class="j2p-options"     style="display:none" aria-label="Unlock PDF options"></div>
+    <div id="mangaSplitOptions" class="j2p-options"    style="display:none" aria-label="Split Manga Pages options"></div>
     <div id="ocrOptions"       class="j2p-options"     style="display:none" aria-label="OCR options"></div>
     <div id="compareOptions"   class="j2p-options"     style="display:none" aria-label="Compare PDF options"></div>
     <div id="cleanScanOptions" class="j2p-options"     style="display:none" aria-label="Clean Scan options"></div>
@@ -698,6 +704,9 @@
 
       <!-- PDF→Excel confidence report (hidden for other tools) -->
       <div id="p2eConfidence" class="p2w-confidence" style="display:none" aria-live="polite"></div>
+
+      <!-- Split Manga Pages post-use survey (hidden for other tools) -->
+      <div id="mangaSurvey" class="ms-survey-container" style="display:none"></div>
 
       <!-- Feedback row — directly under download button -->
       <div class="fb-row" id="fbRow">

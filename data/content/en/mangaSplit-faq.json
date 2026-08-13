@@ -1,0 +1,58 @@
+[
+  {
+    "@type": "Question",
+    "name": "Does splitting a manga PDF upload my file to a server?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Every page is split entirely in your browser. Your file is never sent anywhere."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "What order do the split pages come out in?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "By default, manga reading order — the right half of each spread comes first, then the left half. Turn off the manga toggle for left-to-right content like Western comics or some manhwa, and the left half comes first instead."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I keep a cover or single page from being split?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. Click any page in the thumbnail grid to mark it \"don't split\" — useful for covers, title pages, or any single page mixed into an otherwise all-spreads scan. It stays untouched at its original size."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Will the split reduce image or text quality?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. The tool crops the actual PDF page content rather than rendering it to an image first, so text stays selectable where the source had real text, and image quality is unchanged — nothing is re-encoded or resampled."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Does this tool add text, page numbers, or a print layout?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No — this version only splits spreads into two pages. It deliberately doesn't add text overlays, page numbers, or booklet/imposition layouts."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I use this for scanlations or manga I downloaded from elsewhere?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "This tool is intended for content you have the right to use — your own scans of books you own, digital volumes you purchased, your own doujinshi or original work, and educational material. It doesn't fetch or host manga; it only processes a file already on your device."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is there a page-count limit?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No page-count limit and no account required. Very large scanned volumes may take longer since everything runs on your own device."
+    }
+  }
+]

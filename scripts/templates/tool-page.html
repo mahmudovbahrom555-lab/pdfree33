@@ -247,6 +247,7 @@
     <div id="pdf2pptOptions"   class="j2p-options"     style="display:none" aria-label="PDF to PowerPoint options"></div>
     <div id="pdf2mdOptions"    class="j2p-options"     style="display:none" aria-label="PDF to Markdown options"></div>
     <div id="unlockOptions"    class="j2p-options"     style="display:none" aria-label="Unlock PDF options"></div>
+    <div id="mangaSplitOptions" class="j2p-options"    style="display:none" aria-label="Split Manga Pages options"></div>
 
     <button id="mergeBtn"  class="merge-btn"  type="button" disabled data-mode="process">{{ tool.cardNames[lang] }}</button>
     <button id="cancelBtn" class="cancel-btn" type="button" style="display:none" aria-label="{{ ui.cancelBtn }}">{{ ui.cancelBtn }}</button>
@@ -265,6 +266,9 @@
         <button id="downloadBtn" class="download-btn" type="button">{{ ui.downloadBtn }}</button>
         <button id="shareBtn" class="share-btn" type="button" style="display:none" aria-label="Send file via device apps"></button>
       </div>
+
+      <!-- Split Manga Pages post-use survey (hidden for other tools) -->
+      <div id="mangaSurvey" class="ms-survey-container" style="display:none"></div>
 
       <!-- Feedback row — directly under download button -->
       <div class="fb-row" id="fbRow">

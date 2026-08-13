@@ -42,6 +42,8 @@ import { initOrganizeOptions, hideOrganizeOptions,
          getOrganizeParams }            from './organizeUI.js';
 import { initResizeOptions, hideResizeOptions,
          getResizeParams }              from './resizeUI.js';
+import { initMangaSplitOptions, hideMangaSplitOptions,
+         getMangaSplitParams, renderMangaSurvey } from './mangaSplitUI.js';
 import { initCleanScanOptions, hideCleanScanOptions,
          getCleanScanParams }           from './cleanScanUI.js';
 import { initRedactOptions, hideRedactOptions,
@@ -334,6 +336,17 @@ registerTool('resize', {
   // orientation) is a genuine cross-document preference, not per-document
   // state — safe to persist as-is, same class as jpg2pdf/pdf2jpg's presets.
   presetFilter: (p) => ({ ...p }),
+});
+
+registerTool('mangaSplit', {
+  runner:     'mangaSplit', // dedicated js/mangaSplitWorker.js, not the shared js/worker.js — see processor.js's _runMangaSplit
+  init:       initMangaSplitOptions,
+  hide:       hideMangaSplitOptions,
+  getParams:  getMangaSplitParams,
+  onSuccess:  () => renderMangaSurvey(),
+  // No presetFilter — rtl/skipPages are cheap to redo per document and
+  // skipPages (page indices) has no meaning carried over to a different PDF,
+  // same reasoning that excludes rotate/organize's per-document state.
 });
 
 registerTool('cleanScan', {

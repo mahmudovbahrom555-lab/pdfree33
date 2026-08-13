@@ -215,6 +215,23 @@ export const TOOLS = {
     accept:      '.pdf,application/pdf',
     implemented: true,
   },
+  mangaSplit: {
+    icon:   '📖',
+    title:  'Split Manga Pages',
+    desc:   'Split double-page manga spreads into two correctly ordered pages',
+    tags:   ['manga', 'split manga', 'spread split', 'manga pages', 'split spread',
+             'manga scan', 'right to left', 'rtl split', 'split double page', 'manhwa',
+             'comic split', 'manga pdf'],
+    btn:    '📖 Split Manga Pages',
+    titles: { en: 'Split Manga Pages', es: 'Dividir páginas de manga', pt: 'Dividir páginas de mangá', de: 'Manga-Seiten teilen', fr: 'Diviser les pages de manga', id: 'Pisahkan Halaman Manga', vi: 'Tách Trang Manga', ru: 'Разделить страницы манги', ja: 'マンガページを分割', it: 'Dividi pagine manga', ko: '만화 페이지 분할', nl: "Mangapagina's splitsen", pl: 'Podziel strony mangi', tr: 'Manga Sayfalarını Böl' },
+    descs:  { en: 'Split double-page manga spreads into two correctly ordered pages', es: 'Divide páginas dobles de manga en dos páginas en el orden correcto', pt: 'Divida páginas duplas de mangá em duas páginas na ordem correta', de: 'Doppelseitige Manga-Spreads in zwei richtig sortierte Seiten teilen', fr: 'Divisez les doubles pages de manga en deux pages dans le bon ordre', id: 'Pisahkan halaman ganda manga menjadi dua halaman dengan urutan yang benar', vi: 'Tách trang đôi manga thành hai trang đúng thứ tự', ru: 'Разделите развороты манги на две страницы в правильном порядке', ja: 'マンガの見開きページを正しい順序の2ページに分割', it: "Dividi le doppie pagine manga in due pagine nell'ordine corretto", ko: '만화 스프레드를 올바른 순서의 두 페이지로 분할', nl: "Splits dubbele mangapagina's in twee pagina's in de juiste volgorde", pl: 'Podziel podwójne strony mangi na dwie strony we właściwej kolejności', tr: 'Çift manga sayfalarını doğru sırayla iki sayfaya bölün' },
+    btns:   { en: '📖 Split Manga Pages', es: '📖 Dividir páginas de manga', pt: '📖 Dividir páginas de mangá', de: '📖 Manga-Seiten teilen', fr: '📖 Diviser les pages de manga', id: '📖 Pisahkan Halaman Manga', vi: '📖 Tách Trang Manga', ru: '📖 Разделить страницы манги', ja: '📖 マンガページを分割', it: '📖 Dividi pagine manga', ko: '📖 만화 페이지 분할', nl: "📖 Mangapagina's splitsen", pl: '📖 Podziel strony mangi', tr: '📖 Manga Sayfalarını Böl' },
+    // Single-file only, same reasoning as rotate/organize: the skip-page
+    // selection is per-document and can't generalize across a batch.
+    multi:       false,
+    accept:      '.pdf,application/pdf',
+    implemented: true,
+  },
   cleanScan: {
     icon:   '🧼',
     title:  'Clean Scan',

@@ -2242,6 +2242,89 @@ button,
 }
 
 /* ══════════════════════════════════════════════════════════════
+   SPLIT MANGA PAGES — thumbnail grid (extends .rot-card/.rot-thumb/
+   .rot-numbox/.rot-badge above; only the skipped-state dimming and the
+   post-use survey card are new) + post-use survey
+   ══════════════════════════════════════════════════════════════ */
+
+.ms-rtl-row {
+  margin-bottom: 14px;
+}
+
+.ms-card--skipped {
+  opacity: .5;
+  border-style: dashed;
+}
+.ms-card--skipped .rot-thumb img,
+.ms-card--skipped .rot-numbox__n {
+  filter: grayscale(1);
+}
+
+.ms-badge {
+  background: var(--text3);
+}
+
+.ms-survey-container:not(:empty) {
+  margin-top: 14px;
+}
+
+.ms-survey {
+  padding: 14px 16px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.ms-survey__title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+
+.ms-survey__q {
+  margin-bottom: 12px;
+}
+
+.ms-survey__label {
+  display: block;
+  font-size: 13px;
+  color: var(--text2);
+  margin-bottom: 6px;
+}
+
+.ms-survey__input {
+  width: 100%;
+  padding: 7px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 13px;
+  font-family: inherit;
+  background: var(--bg);
+  color: var(--text);
+  outline: none;
+  box-sizing: border-box;
+}
+
+.ms-survey__actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.ms-survey__submit {
+  border-color: var(--green);
+  color: var(--green-dark);
+}
+
+.ms-survey--thanks {
+  text-align: center;
+  font-size: 13px;
+  color: var(--green-dark);
+}
+
+/* ══════════════════════════════════════════════════════════════
    RESIZE PDF — paper-frame preview + fit/fill/actual chips
    ══════════════════════════════════════════════════════════════ */
 
