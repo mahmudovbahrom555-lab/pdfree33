@@ -29,6 +29,18 @@
 //                             before ever becoming a Table (real fix,
 //                             see tests/pdf2wordTables.test.js)
 //    useTables:false        — ERI retry path; no Table instances result
+//    decimal-number guard   — NUMBERED_RE's (?!\d) lookahead: "3.14 is pi"
+//                             must stay prose, pinned here at the full
+//                             pipeline level too, not just the regex
+//                             (see tests/pdf2wordLists.test.js)
+//    border-grid gridSpan   — a hand-built borderGrids entry (shaped like
+//                             real detectTableGrids() output, colDividers
+//                             included) drives the 'grid' event handler
+//                             end-to-end, confirming a row with a missing
+//                             internal divider becomes a real docx
+//                             columnSpan (see tests/pdf2wordBorders.test.js
+//                             for the lower-level detectTableGrids()/
+//                             _activeDividersForY coverage)
 //
 // Run: node tests/pdf2wordParagraphs.test.js
 //
@@ -77,11 +89,11 @@ const baseCs = (totalPages = 1) => ({
   totalPages, fullPageFallbacks: 0, totalLines: 0, rtlLines: 0,
   mathChars: 0, totalChars: 0, totalTables: 0, totalGapVisuals: 0, totalInlineVisuals: 0,
 });
-function mkPageData(lines, pageH = 792) {
-  return [{ lines, rotatedItems: [], borderGrids: [], pageH, items: lines.flatMap(l => l.items) }];
+function mkPageData(lines, pageH = 792, borderGrids = []) {
+  return [{ lines, rotatedItems: [], borderGrids, pageH, items: lines.flatMap(l => l.items) }];
 }
-async function build(lines, median = 12, opts = {}) {
-  return _p2wBuildParagraphs({}, mkPageData(lines), median, new Set(), baseCs(1), opts);
+async function build(lines, median = 12, opts = {}, borderGrids = []) {
+  return _p2wBuildParagraphs({}, mkPageData(lines, 792, borderGrids), median, new Set(), baseCs(1), opts);
 }
 
 // ── docx.js internal-shape helpers ──────────────────────────────────────
@@ -109,6 +121,20 @@ function paragraphText(paragraph) {
       return t?.root.find(x => typeof x === 'string') || '';
     })
     .join('');
+}
+// tbl (a Table instance) -> [[{text, span}]] — one array of cells per row.
+function tableRows(tbl) {
+  return tbl.root
+    .filter(n => n && n.rootKey === 'w:tr')
+    .map(tr => tr.root
+      .filter(n => n && n.rootKey === 'w:tc')
+      .map(tc => {
+        const tcPr = tc.root.find(n => n && n.rootKey === 'w:tcPr');
+        const gsNode = tcPr?.root.find(n => n && n.rootKey === 'w:gridSpan');
+        const span = gsNode?.root?.[0]?.root?.val ?? 1;
+        const p = tc.root.find(n => n && n.rootKey === 'w:p');
+        return { text: p ? paragraphText(p) : '', span };
+      }));
 }
 
 // ══════════════════════════════════════════════════════════════════════
@@ -304,6 +330,27 @@ await test('a numbered line where the marker and text are SEPARATE items with no
   expect(txt).toContain('Пункт номер один тут');
 });
 
+await test('a decimal number at the start of a line is NOT treated as a numbered-list marker', async () => {
+  // Regression guard for the NUMBERED_RE fix above: loosening the marker
+  // regex to also match a no-space "1.Text" shape must NOT also start
+  // matching ordinary decimal numbers like "3.14 is pi" — that's exactly
+  // why the fix used a negative lookahead (?!\d) instead of just widening
+  // \s+ to \s*. Pinned here at the full _p2wBuildParagraphs level, not
+  // just the regex in isolation (already covered in
+  // tests/pdf2wordLists.test.js), so a future regression in how lines get
+  // fed into NUMBERED_RE would be caught too, not only a regex-level one.
+  const lines = [
+    mkLine(mkItem('Первый абзац текста здесь.', 50, 12), 700),
+    mkLine(mkItem('3.14 is the value of pi used throughout this section', 50, 12), 690),
+    mkLine(mkItem('Второй абзац продолжается тут.', 50, 12), 680),
+  ];
+  const { paragraphs } = await build(lines);
+  expect(isListItem(paragraphs.find(p => paragraphText(p).includes('3.14')))).toBe(false);
+  // Also confirm it didn't get split into its own paragraph as a false
+  // "heading" or "list" boundary — normal Y-gap merging still applies.
+  expect(paragraphs.length).toBe(1);
+});
+
 console.log('\n_p2wBuildParagraphs — numbered-legal-clause false positive stays prose, not a table:');
 
 // Same shape as tests/pdf2wordTables.test.js's rows_clause6 fixture (copied
@@ -343,6 +390,57 @@ await test('the same table fixture with useTables:false produces zero Table inst
   expect(paragraphs.some(isTable)).toBe(false);
   expect(cs.totalTables).toBe(0);
   if (paragraphs.length === 0) throw new Error('text content should not be silently dropped in the paragraphs-only retry');
+});
+
+console.log('\n_p2wBuildParagraphs — border-grid merged cell becomes a real gridSpan (end-to-end):');
+
+// End-to-end regression for the gridSpan fix (js/pdf2wordBorders.js +
+// js/processor.js's _activeDividersForY/_groupGridCellsWithSpans): a
+// hand-built borderGrids entry shaped like the real detectTableGrids()
+// output for a 3-row/3-col table whose middle row has a cell merged across
+// the first two columns (colDividers' x=200 divider is present for rows 1
+// and 3 but absent for row 2) — the exact real-page-18-tariff-table shape
+// tests/pdf2wordBorders.test.js already covers at the detectTableGrids()
+// level. This drives it through the FULL _p2wBuildParagraphs pipeline
+// instead, confirming the 'grid' event handler actually wires
+// _activeDividersForY/_groupGridCellsWithSpans's output into a real docx
+// Table with a genuine columnSpan, not just that the helpers work in
+// isolation.
+await test('a border-grid row with a missing internal divider renders as one spanning ' +
+     'cell (real w:gridSpan), and unmerged rows stay as separate cells', async () => {
+  const lines = [
+    mkLine([mkItem('Header', 80, 11), mkItem('Q1', 220, 11), mkItem('Q2', 380, 11)], 700),
+    mkLine([mkItem('Merged Region', 80, 11), mkItem('Note', 380, 11)], 680),
+    mkLine([mkItem('Row3A', 80, 11), mkItem('Row3B', 220, 11), mkItem('Row3C', 380, 11)], 660),
+  ];
+  const grid = {
+    x: 60, y: 650, w: 400, h: 60, colCount: 3, rowCount: 3,
+    colXs: [60, 200, 340, 460],
+    rowYs: [710, 690, 670, 650],
+    colDividers: [
+      { x: 200, spans: [[690, 710], [650, 670]] }, // present for row1 & row3, absent for row2
+      { x: 340, spans: [[650, 710]] },              // present for all rows
+    ],
+  };
+  const { paragraphs } = await build(lines, 11, {}, [grid]);
+  const tbl = paragraphs.find(isTable);
+  if (!tbl) throw new Error('expected a Table instance in the output');
+  const rows = tableRows(tbl);
+  expect(rows.length).toBe(3);
+
+  expect(rows[0].length).toBe(3);
+  expect(rows[0].map(c => c.text).join('|')).toBe('Header|Q1|Q2');
+  if (rows[0].some(c => c.span > 1)) throw new Error('row 1 has no merge — every cell should have span 1');
+
+  expect(rows[1].length).toBe(2);
+  expect(rows[1][0].text).toBe('Merged Region');
+  expect(rows[1][0].span).toBe(2);
+  expect(rows[1][1].text).toBe('Note');
+  expect(rows[1][1].span).toBe(1);
+
+  expect(rows[2].length).toBe(3);
+  expect(rows[2].map(c => c.text).join('|')).toBe('Row3A|Row3B|Row3C');
+  if (rows[2].some(c => c.span > 1)) throw new Error('row 3 has no merge — every cell should have span 1');
 });
 
 // ── Summary ──────────────────────────────────────────────────
