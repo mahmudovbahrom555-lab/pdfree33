@@ -144,6 +144,7 @@ window.PDFREE_LOCALE = {
   desc_pagenum:             'Nomor halaman ditambahkan · {pages} halaman · {size}',
   desc_meta:                'Metadata diperbarui · {pages} halaman · {size}',
   desc_protect:             'Dilindungi kata sandi · {pages} halaman · {size}{extra}',
+  desc_unlock:              'Kata sandi dihapus · {size}',
   desc_rotate:              'Diputar · {pages} halaman · {size}',
   desc_organize:            'Diatur · {pages} halaman · {size}',
   desc_resize:              'Ukuran diubah · {pages} halaman · {size}',

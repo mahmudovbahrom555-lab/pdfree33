@@ -382,6 +382,17 @@ button,
   flex-shrink: 0;
   animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s both;
 }
+.success-text {
+  /* Without an explicit flex-basis/min-width, this item's hypothetical size
+     for line-fitting purposes was its content's max-content (unwrapped)
+     width — for longer locale strings (e.g. Russian, German) that width
+     plus the icon's no longer fit next to it, so the *whole* text block
+     wrapped onto its own flex line below the icon (with the button then
+     stranded on a 3rd line below that) instead of the text itself wrapping
+     internally. flex + min-width:0 lets it shrink and wrap in place. */
+  flex: 1 1 240px;
+  min-width: 0;
+}
 .success-text h3  { font-size: 15px; font-weight: 600; color: var(--green-dark); margin-bottom: 3px; letter-spacing: -0.2px; }
 .success-text p   { font-size: 13px; color: var(--text2); }
 .success-text p.success-auto-hint { font-size: 22px; font-weight: 600; color: var(--green-dark); margin-top: 2px; margin-bottom: 3px; letter-spacing: -0.2px; line-height: 1.2; }
@@ -3738,6 +3749,15 @@ button,
 
 @media (max-width: 500px) {
   .hero-featured { grid-template-columns: repeat(2, 1fr); }
+  /* At 2 columns, card width is too narrow for nowrap+ellipsis to leave even
+     short titles ("Merge PDF", "Compress PDF") intact — they truncated to
+     "Merge P…" / "Compre…". Let the title wrap onto a 2nd line instead;
+     the description below stays single-line ellipsis (secondary text, OK
+     to truncate). overflow-wrap covers locales whose translated title is one
+     long unbreakable compound word (German "zusammenführen") with no space
+     to wrap at — without it, that single word still got ellipsis-truncated
+     even with white-space:normal. */
+  .hero-fcard__name { white-space: normal; overflow-wrap: break-word; }
 }
 
 /* Hide chips in default state; show only when file is loaded */

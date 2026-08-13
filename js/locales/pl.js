@@ -143,6 +143,7 @@ window.PDFREE_LOCALE = {
   desc_pagenum:             'Dodano numery stron · {pages} stron · {size}',
   desc_meta:                'Zaktualizowano metadane · {pages} stron · {size}',
   desc_protect:             'Zabezpieczono hasłem · {pages} stron · {size}{extra}',
+  desc_unlock:              'Usunięto hasło · {size}',
   desc_rotate:              'Obrócono · {pages} stron · {size}',
   desc_organize:            'Uporządkowano · {pages} stron · {size}',
   desc_resize:              'Zmieniono rozmiar · {pages} stron · {size}',

@@ -143,6 +143,7 @@ window.PDFREE_LOCALE = {
   desc_pagenum:             'Sayfa numaraları eklendi · {pages} sayfa · {size}',
   desc_meta:                'Meta veriler güncellendi · {pages} sayfa · {size}',
   desc_protect:             'Parolayla korundu · {pages} sayfa · {size}{extra}',
+  desc_unlock:              'Parola kaldırıldı · {size}',
   desc_rotate:              'Döndürüldü · {pages} sayfa · {size}',
   desc_organize:            'Düzenlendi · {pages} sayfa · {size}',
   desc_resize:              'Boyut değiştirildi · {pages} sayfa · {size}',

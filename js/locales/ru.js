@@ -144,6 +144,7 @@ window.PDFREE_LOCALE = {
   desc_pagenum:             'Добавлены номера страниц · {pages} стр. · {size}',
   desc_meta:                'Метаданные обновлены · {pages} стр. · {size}',
   desc_protect:             'Защищено паролем · {pages} стр. · {size}{extra}',
+  desc_unlock:              'Пароль удалён · {size}',
   desc_rotate:              'Повёрнуто · {pages} стр. · {size}',
   desc_organize:            'Упорядочено · {pages} стр. · {size}',
   desc_resize:              'Размер изменён · {pages} стр. · {size}',

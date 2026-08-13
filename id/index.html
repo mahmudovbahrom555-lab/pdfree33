@@ -91,6 +91,7 @@
 
 
   <script src="../js/theme.js"></script>
+  <script defer src="../js/priorityNav.js"></script>
 
   <script type="application/ld+json">
   {
@@ -201,7 +202,7 @@
       </div>
       <span class="logo-text">PDF<span>ree</span></span>
     </div>
-    <div class="nav-links">
+    <div class="nav-links" id="navLinks">
       <a href="/id/gabung-pdf/" class="nav-link" data-tool="merge">Gabung</a>
       <a href="/id/pisah-pdf/" class="nav-link" data-tool="split">Pisah</a>
       <a href="/id/kompres-pdf/" class="nav-link" data-tool="compress">Kompres</a>
@@ -220,6 +221,10 @@
       <a href="/compare-pdf/" class="nav-link" data-tool="compare">Bandingkan</a>
     </div>
     <div class="nav-right">
+      <details class="nav-more" id="navMore">
+        <summary aria-label="Alat lainnya">Lainnya <span class="nav-more__badge"></span></summary>
+        <div class="nav-more__menu"></div>
+      </details>
       <details class="lang-switch" id="langSwitch">
         <summary aria-label="Ganti bahasa">🌐 ID</summary>
         <div class="lang-switch__menu" role="menu">

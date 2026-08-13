@@ -146,6 +146,7 @@ window.PDFREE_LOCALE = {
   desc_pagenum:             'ページ番号を追加しました · {pages}ページ · {size}',
   desc_meta:                'メタデータを更新しました · {pages}ページ · {size}',
   desc_protect:             'パスワードで保護しました · {pages}ページ · {size}{extra}',
+  desc_unlock:              'パスワードを削除しました · {size}',
   desc_rotate:              '回転しました · {pages}ページ · {size}',
   desc_organize:            '整理しました · {pages}ページ · {size}',
   desc_resize:              'サイズ変更済み · {pages}ページ · {size}',
