@@ -89,11 +89,11 @@ const baseCs = (totalPages = 1) => ({
   totalPages, fullPageFallbacks: 0, totalLines: 0, rtlLines: 0,
   mathChars: 0, totalChars: 0, totalTables: 0, totalGapVisuals: 0, totalInlineVisuals: 0,
 });
-function mkPageData(lines, pageH = 792, borderGrids = []) {
-  return [{ lines, rotatedItems: [], borderGrids, pageH, items: lines.flatMap(l => l.items) }];
+function mkPageData(lines, pageH = 792, borderGrids = [], pageW = undefined) {
+  return [{ lines, rotatedItems: [], borderGrids, pageH, pageW, items: lines.flatMap(l => l.items) }];
 }
-async function build(lines, median = 12, opts = {}, borderGrids = []) {
-  return _p2wBuildParagraphs({}, mkPageData(lines, 792, borderGrids), median, new Set(), baseCs(1), opts);
+async function build(lines, median = 12, opts = {}, borderGrids = [], pageW = undefined) {
+  return _p2wBuildParagraphs({}, mkPageData(lines, 792, borderGrids, pageW), median, new Set(), baseCs(1), opts);
 }
 
 // ── docx.js internal-shape helpers ──────────────────────────────────────

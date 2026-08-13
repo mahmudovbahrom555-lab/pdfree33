@@ -18,6 +18,7 @@ import { loadPdfJs } from './pdf2jpgUI.js';
 import { preprocessPdfBuffer, decryptWithPassword } from './decryptPdf.js';
 import { detectTables, groupItemsIntoLines, looksLikeProseNotData, looksLikeEnumeratedList } from './pdf2wordTables.js';
 import { detectTableGrids } from './pdf2wordBorders.js';
+import { detectColumnRegions, pageIsRtl, regionIndexForX } from './pdf2wordColumns.js';
 import { openFeedback } from './feedback.js';
 import { evaluateStructural } from './eriScore.js';
 import { evaluateXlsxStructural } from './eriScoreXlsx.js';
@@ -2807,6 +2808,44 @@ function _visualRTLToLogical(s) {
     .join('');
 }
 
+// Re-splits, IN PLACE, any line whose items span multiple detected column
+// regions (js/pdf2wordColumns.js) into separate per-region lines (same Y,
+// items partitioned by region) — a no-op when detectColumnRegions() finds
+// no confident multi-column layout (the common case).
+//
+// Has to run here, on the freshly Y-grouped `lines` _p2wBuildPageData just
+// built, not later in _p2wBuildParagraphs: the Y-proximity line-grouping
+// above has no concept of columns, and for a genuine 2-column page both
+// columns commonly share near-identical Y per row (same font/line-height
+// page-wide) — confirmed empirically against 5 real 2-column academic
+// papers, 70-85% of "lines" turned out to hold items from BOTH columns
+// merged into one object. Left unfixed, _p2wBuildParagraphs's column-aware
+// dispatch would have nothing meaningful left to split — a merged line
+// routes whole to just one column, corrupting both (the other column's
+// words vanish from their own column and get spliced into this one
+// mid-sentence). Extracted as its own function, rather than left inline,
+// specifically so it's unit-testable without a real pdf.js
+// PDFDocumentProxy — it only needs the `lines` shape _p2wBuildPageData
+// already produces at this point, not the parser itself.
+export function _splitCrossColumnLines(lines, pageW) {
+  const columnRegions = detectColumnRegions(lines, pageW);
+  if (!columnRegions) return;
+  for (let li = lines.length - 1; li >= 0; li--) {
+    const ln = lines[li];
+    const byRegion = new Map();
+    for (const item of ln.items) {
+      const idx = regionIndexForX(item.x, columnRegions);
+      if (!byRegion.has(idx)) byRegion.set(idx, []);
+      byRegion.get(idx).push(item);
+    }
+    if (byRegion.size <= 1) continue; // this line only ever touched one region
+    const splitLines = [...byRegion.entries()]
+      .sort((a, b) => a[0] - b[0])
+      .map(([, regionItems]) => ({ y: ln.y, rtl: ln.rtl, items: regionItems }));
+    lines.splice(li, 1, ...splitLines);
+  }
+}
+
 // Text extraction: uses PDF.js getTextContent → builds docx paragraphs.
 // Pass 1: parses the PDF into per-page line/text data (the expensive part —
 // pdf.js getTextContent() + border-grid detection for every page). Returns
@@ -2840,7 +2879,9 @@ export async function _p2wBuildPageData(pdfDoc) {
                 `Reading page ${p}/${pdfDoc.numPages}…`);
 
     const page    = await pdfDoc.getPage(p);
-    const pageH   = page.getViewport({ scale: 1 }).height;
+    const vp1     = page.getViewport({ scale: 1 });
+    const pageH   = vp1.height;
+    const pageW   = vp1.width;
     // getOperatorList() runs alongside the other two purely to force pdf.js to
     // resolve font objects into page.commonObjs — getTextContent() alone never
     // does, and without it every font's style below reports a generic CSS
@@ -2918,8 +2959,12 @@ export async function _p2wBuildPageData(pdfDoc) {
       if (rtlCnt === 0) ln.items.sort((a, b) => a.x - b.x);
     });
 
+    // Column-aware line re-splitting — see _splitCrossColumnLines() below
+    // for why this has to happen here, before anything else touches `lines`.
+    _splitCrossColumnLines(lines, pageW);
+
     allSizes.push(...items.map(i => i.fontSize).filter(s => s > 0));
-    pageData.push({ lines, rotatedItems, borderGrids, pageH, items });
+    pageData.push({ lines, rotatedItems, borderGrids, pageH, pageW, items });
 
     // Accumulate confidence stats from this page
     _cs.totalLines += lines.length;
@@ -3153,30 +3198,18 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
     _paraBuffer.length = 0;
   };
 
-  for (let pi = 0; pi < pageData.length; pi++) {
-    if (!isProcessing) break;
-
-    if (pi > 0) {
-      paragraphs.push(new Paragraph({ children: [], pageBreakBefore: true }));
-    }
-
-    const { lines, rotatedItems, borderGrids, items: textItems } = pageData[pi];
-
-    // Pages with no extractable text (diagram-only pages in scanned PDFs):
-    // render the full page as a single ImageRun so content is not lost.
-    if (!lines.length) {
-      if (isProcessing) {
-        const imgRun = await _p2wRenderFullPage(pdfDoc, pi + 1, ImageRun).catch(() => null);
-        if (imgRun) {
-          paragraphs.push(new Paragraph({
-            children: [imgRun],
-            spacing:  { before: 60, after: 60 },
-          }));
-        }
-      }
-      continue;
-    }
-
+  // ── Column-aware per-page body ────────────────────────────────────────────
+  // Extracted so it can run once per detected column region
+  // (js/pdf2wordColumns.js) instead of once per page. Everything below is
+  // relative to its own `lines` parameter (lineIdx, consumedLines, etc.),
+  // never a page-global index, so calling it multiple times per page — once
+  // per column — is safe without any further change to the logic itself.
+  // `textItems` intentionally stays the FULL page's items even when
+  // processing a single column: _p2wRenderAllVisuals's "subtract known
+  // text — what's left is a visual" logic needs to see the WHOLE page's
+  // text, or it would misread the OTHER (not-yet-processed-in-this-call)
+  // column's text as an inline visual while processing this one.
+  async function _processLines(pi, lines, rotatedItems, borderGrids, textItems, pageH) {
     setProgress(50 + Math.round((pi / pageData.length) * 40),
                 `Building page ${pi + 1}/${pageData.length}…`);
 
@@ -3213,7 +3246,7 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
     // diagrams at page edges without special-casing — classic sentinel pattern.
     const gapThreshold = Math.max(_MIN_GAP_PT, median * _GAP_FACTOR);
     const visualGaps   = [];
-    const gapLines     = [{ y: pageData[pi].pageH }, ...lines, { y: 0 }];
+    const gapLines     = [{ y: pageH }, ...lines, { y: 0 }];
     for (let si = 0; si < gapLines.length - 1; si++) {
       const yAbove = gapLines[si].y;
       const yBelow = gapLines[si + 1].y;
@@ -3243,7 +3276,7 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
         `Capturing visuals on page ${pi + 1}/${pageData.length}…`,
       );
       const { gapRuns, inlineRuns } = await _p2wRenderAllVisuals(
-        pdfDoc, pi + 1, pageData[pi].pageH, visualGaps, textItems,
+        pdfDoc, pi + 1, pageH, visualGaps, textItems,
         borderGrids, median, ImageRun,
       ).catch(() => ({ gapRuns: [], inlineRuns: [] }));
       gapRunsArr.push(...gapRuns);
@@ -3505,7 +3538,65 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
         }
       }
     }
-    _flushPara();   // flush last paragraph at end of each page's content
+    _flushPara();   // flush last paragraph at end of each page's content (or column's, when split)
+  }
+
+  // ── Outer per-page loop: dispatches to _processLines once (no columns
+  // detected — the common case) or once per detected column region ────────
+  for (let pi = 0; pi < pageData.length; pi++) {
+    if (!isProcessing) break;
+
+    if (pi > 0) {
+      paragraphs.push(new Paragraph({ children: [], pageBreakBefore: true }));
+    }
+
+    const { lines, rotatedItems, borderGrids, items: textItems, pageH, pageW } = pageData[pi];
+
+    // Pages with no extractable text (diagram-only pages in scanned PDFs):
+    // render the full page as a single ImageRun so content is not lost.
+    if (!lines.length) {
+      if (isProcessing) {
+        const imgRun = await _p2wRenderFullPage(pdfDoc, pi + 1, ImageRun).catch(() => null);
+        if (imgRun) {
+          paragraphs.push(new Paragraph({
+            children: [imgRun],
+            spacing:  { before: 60, after: 60 },
+          }));
+        }
+      }
+      continue;
+    }
+
+    // ── Column-aware split ────────────────────────────────────────────────
+    // "Prefer false negatives": detectColumnRegions() already returns null
+    // for anything short of confident multi-column evidence. On top of
+    // that, a table/grid whose own footprint spans ACROSS a detected column
+    // boundary (a wide results table in an otherwise 2-column paper, e.g.)
+    // means the page can't be cleanly split at all — fall back to today's
+    // single, unsplit pass rather than attempt to split a structure that
+    // straddles the boundary. A page that can't be split cleanly should
+    // stay exactly as accurate as it already is, not get worse.
+    const regions = pageW ? detectColumnRegions(lines, pageW) : null;
+    const splittable = regions && !borderGrids.some(g =>
+      regions.filter(r => g.x < r.right && (g.x + g.w) > r.left).length > 1
+    );
+
+    if (!splittable) {
+      await _processLines(pi, lines, rotatedItems, borderGrids, textItems, pageH);
+    } else {
+      // RTL pages read their rightmost column first — a page-level signal
+      // (majority of the page's own lines), entirely separate from the
+      // existing per-line BiDi text shaping, which is untouched.
+      const ordered = pageIsRtl(lines) ? [...regions].reverse() : regions;
+      for (const region of ordered) {
+        if (!isProcessing) break;
+        const inRegion = (it) => !!it && it.x >= region.left && it.x < region.right;
+        const colLines        = lines.filter(ln => ln.items.length && inRegion(ln.items[0]));
+        const colRotatedItems = rotatedItems.filter(inRegion);
+        const colBorderGrids  = borderGrids.filter(g => g.x >= region.left && (g.x + g.w) <= region.right);
+        await _processLines(pi, colLines, colRotatedItems, colBorderGrids, textItems, pageH);
+      }
+    }
   }
 
   return { paragraphs, cs: _cs };
