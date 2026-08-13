@@ -3727,9 +3727,17 @@ button,
   font-weight: 600;
   color: var(--text1);
   line-height: 1.2;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  /* Titles must never truncate (unlike .hero-fcard__desc below, which is
+     secondary text and OK to ellipsis) — wrap onto a 2nd line instead.
+     This isn't just a narrow-mobile issue: .hero-featured is a fixed
+     3-column grid capped at max-width:560px, so card width (and thus this
+     truncation risk) is identical from ~500px all the way up to 1920px+.
+     Longer compound-word titles (German "PDF zusammenfügen", Dutch "PDF
+     samenvoegen") were silently ellipsis-truncating at every desktop width
+     until this was made unconditional. overflow-wrap covers single
+     unbreakable words with no space to wrap at. */
+  white-space: normal;
+  overflow-wrap: break-word;
 }
 .hero-fcard__desc {
   font-size: 10.5px;
@@ -3749,15 +3757,9 @@ button,
 
 @media (max-width: 500px) {
   .hero-featured { grid-template-columns: repeat(2, 1fr); }
-  /* At 2 columns, card width is too narrow for nowrap+ellipsis to leave even
-     short titles ("Merge PDF", "Compress PDF") intact — they truncated to
-     "Merge P…" / "Compre…". Let the title wrap onto a 2nd line instead;
-     the description below stays single-line ellipsis (secondary text, OK
-     to truncate). overflow-wrap covers locales whose translated title is one
-     long unbreakable compound word (German "zusammenführen") with no space
-     to wrap at — without it, that single word still got ellipsis-truncated
-     even with white-space:normal. */
-  .hero-fcard__name { white-space: normal; overflow-wrap: break-word; }
+  /* .hero-fcard__name wrapping is unconditional now (see rule above) — at
+     2 columns the card is just narrower still, so the same wrap behavior
+     applies with no extra override needed here. */
 }
 
 /* Hide chips in default state; show only when file is loaded */
