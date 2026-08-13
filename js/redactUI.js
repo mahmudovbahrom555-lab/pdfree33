@@ -471,7 +471,7 @@ function _render(container, fileName, preset) {
           <div class="rdct-tool-label">${t('rdct_search_title')}</div>
           <div style="display:flex;gap:6px;margin-bottom:6px;">
             <input type="text" id="rdctSearchInput" placeholder="${t('rdct_search_placeholder')}"
-              style="flex:1;padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:var(--surface2);color:var(--text);font-size:13px;">
+              style="flex:1;min-width:0;padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:var(--surface2);color:var(--text);font-size:13px;">
             <button type="button" id="rdctSearchBtn"
               style="padding:6px 10px;background:var(--green);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600;white-space:nowrap;">${t('rdct_search_btn')}</button>
           </div>
