@@ -40,6 +40,25 @@
 //  the slack to ±2px (GRID_SLACK in processor.js), matching the actual
 //  worst-case rounding error from colXs's own 4px coordinate snapping.
 //
+//  A third real bug was found via scripts/pdf2word_capability_map.mjs's
+//  Section 5.1 table-structure measurement: on a real 3-row/3-col table
+//  with a compact ~12px row height and one merged cell, the merged column
+//  divider's segments (present for 2 of 3 rows, ~12px each) were each
+//  individually SHORTER than INTERNAL_MIN_OVERLAP (20px) — the old
+//  `.some(...)` check required ANY ONE segment to independently clear that
+//  floor, so the entire divider was dropped, silently collapsing 3
+//  detected columns to 2 and merging two UNRELATED cells' text together
+//  ("Header"+"Q1" as one string) instead of just losing the one cell that
+//  was actually merged. Fixed by summing every segment's overlap instead
+//  of requiring one to clear the floor alone. The same capability-map run
+//  also showed there was no real gridSpan (merged-cell) EMISSION at all —
+//  a merged source cell just became one cell with text plus an empty
+//  neighbor, not a real spanning cell — so `colDividers`
+//  (js/pdf2wordBorders.js) and `_activeDividersForY`/
+//  `_groupGridCellsWithSpans` (js/processor.js) were added to detect,
+//  per row, which internal dividers are genuinely absent and emit a real
+//  docx `columnSpan` for that row's cell.
+//
 // Run: node tests/pdf2wordBorders.test.js
 
 // processor.js touches Worker/document at module load time (it's built for
@@ -55,7 +74,7 @@ global.window    = globalThis;
 global.Worker    = class { postMessage() {} terminate() {} addEventListener() {} };
 
 const { detectTableGrids } = await import('../js/pdf2wordBorders.js');
-const { _assignLineToGridCols } = await import('../js/processor.js');
+const { _assignLineToGridCols, _activeDividersForY, _groupGridCellsWithSpans } = await import('../js/processor.js');
 
 let passed = 0, failed = 0;
 async function test(name, fn) {
@@ -133,6 +152,83 @@ await test('an internal column divider that only spans PART of the height is sti
   expect(grids.length).toBe(1);
   expect(grids[0].rowCount).toBe(4);
   expect(grids[0].colCount).toBe(2); // the partial divider still counts as a real column
+});
+
+// ── A third real bug, found via scripts/pdf2word_capability_map.mjs: a
+// divider broken into segments each individually SHORTER than
+// INTERNAL_MIN_OVERLAP (20px) was dropped entirely, even though the
+// divider is clearly real. A real 3-row/3-col table with one merged cell
+// and a compact ~12px row height had its column divider present for 2 of
+// 3 rows (each segment ~12px, below the old `.some()` floor) — so the
+// WHOLE divider vanished, collapsing 3 columns to 2 and silently merging
+// two UNRELATED cells' text together ("Header"+"Q1" as one cell) instead
+// of just losing the one cell that was actually merged. Fixed by summing
+// all of a divider's segment overlaps instead of requiring any single one
+// to independently clear the floor.
+await test('a column divider broken into multiple SHORT segments (each below ' +
+     'INTERNAL_MIN_OVERLAP alone, but summing above it) is still detected — ' +
+     'does not collapse 3 columns into 2', async () => {
+  const ops = [
+    rectOp(40, 704, 200, 48),      // outer: x 40–240, y 704–752 (3 rows, 16px each)
+    lineOp(40, 720, 240, 720),     // row divider (full width)
+    lineOp(40, 736, 240, 736),     // row divider (full width)
+    // Column divider present for rows 1 and 3 (each a 16px segment,
+    // individually under the 20px floor) but ABSENT for row 2 (the merged
+    // row) — exactly the real page's shape.
+    lineOp(140, 736, 140, 752),    // row 1: y 736–752 (16px)
+    lineOp(140, 704, 140, 720),    // row 3: y 704–720 (16px)
+  ];
+  const grids = await detectTableGrids(fakePage(ops));
+  expect(grids.length).toBe(1);
+  expect(grids[0].rowCount).toBe(3);
+  expect(grids[0].colCount).toBe(2); // divider correctly found despite no single segment clearing the old floor
+});
+
+// ── colDividers / _activeDividersForY / _groupGridCellsWithSpans: gridSpan ──
+console.log('\ndetectTableGrids/_activeDividersForY — gridSpan (merged-cell) emission:');
+
+await test('colDividers exposes the internal divider\'s real Y-spans, not just its X', async () => {
+  const ops = [
+    rectOp(40, 704, 200, 48),
+    lineOp(40, 716, 240, 716),
+    lineOp(40, 728, 240, 728),
+    lineOp(40, 740, 240, 740),
+    lineOp(140, 740, 140, 752),
+    lineOp(140, 704, 140, 716),
+  ];
+  const grids = await detectTableGrids(fakePage(ops));
+  expect(grids[0].colDividers.length).toBe(1);
+  expect(grids[0].colDividers[0].x).toBe(140);
+  expect(grids[0].colDividers[0].spans.length).toBe(2); // the two separate row segments, not merged into one
+});
+
+await test('_activeDividersForY: a row whose Y falls in the merged band reports the divider inactive', () => {
+  const grid = {
+    rowYs: [752, 740, 728, 716, 704],           // 3 body rows, top row is the merged one
+    colDividers: [{ x: 140, spans: [[704, 716], [740, 752]] }], // present for rows 1 & 3, absent for row 2
+  };
+  expect(_activeDividersForY(grid, 746)[0]).toBe(true);  // row 1 (740–752): divider present
+  expect(_activeDividersForY(grid, 734)[0]).toBe(false); // row 2 (728–740): divider absent — merged row
+  expect(_activeDividersForY(grid, 710)[0]).toBe(true);  // row 3 (704–716): divider present
+});
+
+await test('_groupGridCellsWithSpans merges cells across an inactive divider into one spanning cell', () => {
+  // 3 raw per-column cells (as _assignLineToGridCols would produce for a
+  // 3-column grid) with the middle one empty — no text item fell there,
+  // since the merged cell's text was assigned to column 0.
+  const grouped = _groupGridCellsWithSpans(['Merged Region', '', 'Note'], [false, true]);
+  expect(grouped.length).toBe(2);
+  expect(grouped[0].text).toBe('Merged Region');
+  expect(grouped[0].span).toBe(2);
+  expect(grouped[1].text).toBe('Note');
+  expect(grouped[1].span).toBe(1);
+});
+
+await test('_groupGridCellsWithSpans leaves an ordinary fully-divided row untouched (span 1 everywhere)', () => {
+  const grouped = _groupGridCellsWithSpans(['Header', 'Q1', 'Q2'], [true, true]);
+  expect(grouped.length).toBe(3);
+  for (const g of grouped) expect(g.span).toBe(1);
+  expect(grouped.map(g => g.text).join('|')).toBe('Header|Q1|Q2');
 });
 
 // ── Safety net: the page's own border must not swallow everything ──────────

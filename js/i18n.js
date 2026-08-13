@@ -965,7 +965,7 @@ export const EN = {
   draw_add_btn:                'Add',
 };
 
-const L = { ...EN, ...(window.PDFREE_LOCALE ?? {}) };
+const L = { ...EN, ...((typeof window !== 'undefined' ? window.PDFREE_LOCALE : null) ?? {}) };
 
 export const t = (key, vars = {}) =>
   (L[key] ?? key).replace(/\{(\w+)\}/g, (_, k) => String(vars[k] ?? ''));

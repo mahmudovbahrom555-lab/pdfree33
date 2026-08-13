@@ -51,6 +51,11 @@ const MAX_H_CANDIDATES      = 300;        // safety cap: bail out of the O(n²) 
  * @property {number}   rowCount — number of rows
  * @property {number[]} colXs    — sorted column boundary X values
  * @property {number[]} rowYs    — sorted row boundary Y values (descending = top first)
+ * @property {{x:number, spans:[number,number][]}[]} colDividers — one entry
+ *   per INTERNAL column divider (excludes the frame's own left/right edges),
+ *   sorted by x, with the actual Y-span(s) that divider's line segment(s)
+ *   cover. A row whose Y-range isn't covered by a given divider's spans has
+ *   no divider there — its cell spans across that column boundary (gridSpan).
  */
 
 /**
@@ -308,12 +313,24 @@ function _buildGrids(hLines, vLines, pageW = Infinity, pageH = Infinity) {
       // exactly why a real tariff table with merged product-name cells was
       // silently rejected before (its internal column dividers only existed
       // for some rows, never the table's full height).
+      //
+      // A single merged cell can break one divider into MULTIPLE partial
+      // segments (present for the rows above and below the merge, absent for
+      // the merged row itself) — each individually shorter than
+      // INTERNAL_MIN_OVERLAP even though the divider is clearly real. Sum
+      // every segment's overlap with the frame instead of requiring any ONE
+      // of them to independently clear the floor (found via a real 3-row,
+      // 3-column table with a compact ~12px row height and one merged cell:
+      // the column divider existed for 2 of 3 rows, each segment ~12px —
+      // below the old 20px `.some()` floor — so the whole divider was
+      // dropped, collapsing 3 columns to 2 and merging two UNRELATED cells'
+      // text together instead of just losing the one merged cell's split).
+      const _sumOverlap = (spans, lo, hi) => spans.reduce((sum, [a, b]) =>
+        sum + Math.max(0, Math.min(b, hi) - Math.max(a, lo)), 0);
       const internalYs = hYs.filter(y => y > yLo + SNAP && y < yHi - SNAP &&
-        (hByY.get(y) || []).some(([x1, x2]) =>
-          Math.min(x2, rightX) - Math.max(x1, leftX) >= INTERNAL_MIN_OVERLAP));
+        _sumOverlap(hByY.get(y) || [], leftX, rightX) >= INTERNAL_MIN_OVERLAP);
       const internalXs = vXs.filter(x => x > leftX + SNAP && x < rightX - SNAP &&
-        (vByX.get(x) || []).some(([y1, y2]) =>
-          Math.min(y2, yHi) - Math.max(y1, yLo) >= INTERNAL_MIN_OVERLAP));
+        _sumOverlap(vByX.get(x) || [], yLo, yHi) >= INTERNAL_MIN_OVERLAP);
 
       const rowYs = [yHi, ...internalYs.sort((a, b) => b - a), yLo];
       const colXs = [leftX, ...internalXs.sort((a, b) => a - b), rightX];
@@ -321,9 +338,22 @@ function _buildGrids(hLines, vLines, pageW = Infinity, pageH = Infinity) {
       const colCount = colXs.length - 1;
       if (rowCount < MIN_ROWS || colCount < MIN_COLS) continue;
 
+      // Per-divider Y-spans (clipped to the frame), for callers that need to
+      // know whether a specific internal column divider is actually present
+      // at a given row's Y — i.e. whether that row's cell is a colspan.
+      // Kept separate from colXs (which only needs to know a divider exists
+      // ANYWHERE in the table) so existing colCount/colXs consumers are
+      // unaffected.
+      const colDividers = internalXs.sort((a, b) => a - b).map(x => ({
+        x,
+        spans: (vByX.get(x) || [])
+          .map(([y1, y2]) => [Math.max(y1, yLo), Math.min(y2, yHi)])
+          .filter(([y1, y2]) => y2 > y1),
+      }));
+
       candidates.push({
         x: leftX, y: yLo, w: rightX - leftX, h: yHi - yLo,
-        colCount, rowCount, colXs, rowYs,
+        colCount, rowCount, colXs, rowYs, colDividers,
       });
     }
   }

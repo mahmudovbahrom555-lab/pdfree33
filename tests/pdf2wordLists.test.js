@@ -62,6 +62,17 @@ test('recognises flat "N." and "N)" markers', () => {
   }
 });
 
+test('recognises a marker with NO space before the item text (real pdf.js extraction shape)', () => {
+  // Found via the Section 5.1 capability-map tool (scripts/pdf2word_capability_map.mjs):
+  // a real LibreOffice-exported PDF puts the auto-number and the item text as
+  // two separate text items whose visual gap is purely positional (X-offset),
+  // with no actual space character in the extracted text — "1.Numbered item 1",
+  // not "1. Numbered item 1". This used to silently fail NUMBERED_RE entirely.
+  for (const s of ['1.Numbered item 1', '2)Second item']) {
+    if (!NUMBERED_RE.test(s)) throw new Error(`expected "${s}" to match NUMBERED_RE`);
+  }
+});
+
 test('SAFETY: multi-level clause numbering never matches (real contract examples)', () => {
   // These are the exact patterns found in iia_contract_21057.pdf — if this
   // regression fires, pdf2word's numbered-list renderer would start

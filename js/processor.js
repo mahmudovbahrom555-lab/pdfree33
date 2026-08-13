@@ -60,12 +60,21 @@ const _P2W_IMAGE_CAP = 500;
 // Shared list-line detector — pdf2md and pdf2word (_p2wBuildParagraphs) both
 // use this exact pattern to keep list items from being swallowed into the
 // surrounding paragraph. Bullet glyphs are unambiguous; numbered markers
-// require a "N." / "N)" prefix followed by whitespace (excludes decimals
-// like "3.14"). Multi-level clause numbering ("2.5.1.", "5.11.") never
-// matches — there's no whitespace right after the first "N." — which is
-// exactly the safety margin pdf2word's native-numbering rendering below
+// require a "N." / "N)" prefix NOT immediately followed by another digit —
+// that's what excludes decimals like "3.14" and multi-level clause numbering
+// ("2.5.1.", "5.11.": the digit right after the first "N." blocks the match)
+// — exactly the safety margin pdf2word's native-numbering rendering below
 // depends on: renumbering a legal clause's own reference number would be a
 // real regression, but a flat "1. / 2. / 3." list is safe to renumber.
+// Was `\s+` (required whitespace) instead of `(?!\d)` until a real PDF found
+// via the Section 5.1 capability-map tool (scripts/pdf2word_capability_map.mjs)
+// broke it: pdf.js commonly extracts a real "1." marker and its following
+// item text as two separate text items with a purely positional (X-offset)
+// gap, not an actual space character — so the concatenated line text is
+// "1.Numbered item 1" with no whitespace at all, and numbered lists silently
+// fell through to plain-paragraph text while bullets (BULLET_RE's `\s*`)
+// worked fine. `(?!\d)` keeps both original safety properties (verified
+// against every case in tests/pdf2wordLists.test.js) while fixing this.
 // Letter/roman enumeration ("a.", "iv.") is deliberately excluded — too
 // easy to confuse with initials or headers, and detectTables()'s own
 // "prefer false negatives" philosophy applies here too.
@@ -76,7 +85,7 @@ const _P2W_IMAGE_CAP = 500;
 // never match" safety property pdf2word's native-numbering rendering
 // depends on — see js/processor.js's _P2W_NUMBERED_LIST_REF usage.
 export const BULLET_RE   = /^[•◦▪‣●○]\s*/;
-export const NUMBERED_RE = /^\d{1,3}[.)]\s+/;
+export const NUMBERED_RE = /^\d{1,3}[.)](?!\d)/;
 
 // docx.js reference id linking a numbered-list Paragraph (in
 // _p2wBuildParagraphs) to the Document-level numbering definition that
@@ -87,6 +96,12 @@ const _P2W_NUMBERED_LIST_REF = 'p2w-numbered-list';
 
 let _worker = _createWorker();
 export let isProcessing = false;
+// Test-only seam: _p2wBuildPageData/_p2wBuildParagraphs check isProcessing
+// per-page to support mid-run cancellation. It's only ever set true inside
+// doProcess()'s real orchestration, so tests calling these functions
+// directly (bypassing doProcess) need a way to flip it without invoking the
+// full side-effecting pipeline (DOM events, worker messaging, etc.).
+export function _setProcessingForTests(v) { isProcessing = v; }
 let _currentTool = '';
 let _processStartMs = null;
 export function getProcessStartMs() { return _processStartMs; }
@@ -2598,7 +2613,17 @@ async function _p2mdExtractText(pdfDoc) {
 
       if (bulletMatch || numberedMatch) {
         _flushPara();
-        const text = bulletMatch ? `- ${rawText.replace(BULLET_RE, '').trim()}` : rawText;
+        // NUMBERED_RE's marker-detection no longer requires a real space after
+        // "N."/"N)" (see its definition) — some real PDFs extract the marker
+        // and item text as separate positionally-gapped items with no actual
+        // space character. Markdown's own ordered-list syntax DOES require a
+        // space after the marker to parse as a list ("1.Text" renders as
+        // plain text, not an item) — normalize exactly one space here so
+        // detection and valid Markdown output stay in sync regardless of
+        // whether the source line already had one.
+        const text = bulletMatch
+          ? `- ${rawText.replace(BULLET_RE, '').trim()}`
+          : rawText.replace(/^(\d{1,3}[.)])\s*/, '$1 ');
         if (text.replace(/^[-\d.)\s]+/, '').trim()) blocks.push({ type: 'list', text });
         continue;
       }
@@ -2788,7 +2813,7 @@ function _visualRTLToLogical(s) {
 // data consumed by _p2wBuildParagraphs(), which can be re-run cheaply on
 // the same pageData without repeating this parse — see _runPdf2Word()'s
 // ERI-scored table retry.
-async function _p2wBuildPageData(pdfDoc) {
+export async function _p2wBuildPageData(pdfDoc) {
   const YTOL = 6;   // px — items within 6px on Y → same line (was 4; increased to group
                    //  characters with slight baseline variation, e.g. Cyrillic in some PDFs)
 
@@ -2987,7 +3012,7 @@ async function _p2wBuildPageData(pdfDoc) {
 // useTables:false skips text-detected AND border-grid tables entirely (all
 // their lines flow through the normal paragraph path instead) — used as the
 // conservative fallback when the first attempt's tables look mis-detected.
-async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSet, cs, { useTables = true } = {}) {
+export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSet, cs, { useTables = true } = {}) {
   const { Paragraph, TextRun, HeadingLevel,
           Table, TableRow, TableCell, WidthType, ImageRun } = window.docx;
   const _repeatTextSet = repeatTextSet;
@@ -3438,19 +3463,26 @@ async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSet, cs, 
         hdrLines.sort((a, b) => b.y - a.y); // top first
 
         // Distribute each line's items across columns by X position; only
-        // the first line is treated as a header (bold).
-        const gridRows = hdrLines.map((ln, idx) =>
-          new TableRow({
-            children: _assignLineToGridCols(ln.items, grid.colXs).map(cellText =>
+        // the first line is treated as a header (bold). Cells whose divider
+        // is missing for THIS row (grid.colDividers, via
+        // _activeDividersForY) are merged into a real docx columnSpan
+        // instead of silently becoming an empty neighboring cell.
+        const gridRows = hdrLines.map((ln, idx) => {
+          const rawCells      = _assignLineToGridCols(ln.items, grid.colXs);
+          const activeDivider = _activeDividersForY(grid, ln.y);
+          const cellGroups    = _groupGridCellsWithSpans(rawCells, activeDivider);
+          return new TableRow({
+            children: cellGroups.map(({ text, span }) =>
               new TableCell({
+                ...(span > 1 ? { columnSpan: span } : {}),
                 children: [new Paragraph({
-                  children: [new TextRun({ text: cellText, bold: idx === 0 })],
+                  children: [new TextRun({ text, bold: idx === 0 })],
                   spacing: { after: 0 },
                 })],
               })
             ),
-          })
-        );
+          });
+        });
 
         // Empty body rows
         const emptyCount = Math.max(0, grid.rowCount - hdrLines.length);
@@ -3481,7 +3513,7 @@ async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSet, cs, 
 
 // Computes a confidence score from accumulated conversion stats.
 // Returns { score, level, detected, warnings } for UI display.
-function _p2wConfidence(cs, medianFontSize) {
+export function _p2wConfidence(cs, medianFontSize) {
   let score = 100;
   const detected = [];
   const warnings = [];
@@ -3587,6 +3619,51 @@ export function _assignLineToGridCols(items, colXs) {
     cells[col].push(item.str);
   }
   return cells.map(parts => parts.join(' '));
+}
+
+// For a text line at Y, finds which of grid.rowYs' row-bands it falls into,
+// then reports — per internal column divider — whether that divider's line
+// segment(s) cover a majority of that row-band's height. A divider that's
+// NOT covered means this row's cell has no real border there: it's a
+// genuine colspan (gridSpan), not just an empty neighboring cell.
+export function _activeDividersForY(grid, y) {
+  const { rowYs, colDividers } = grid;
+  let top = rowYs[0], bottom = rowYs[rowYs.length - 1];
+  for (let r = 0; r < rowYs.length - 1; r++) {
+    if (y <= rowYs[r] + GRID_SLACK && y >= rowYs[r + 1] - GRID_SLACK) {
+      top = rowYs[r]; bottom = rowYs[r + 1];
+      break;
+    }
+  }
+  const bandHeight = Math.max(1, top - bottom);
+  return colDividers.map(d => {
+    const covered = d.spans.reduce((sum, [a, b]) =>
+      sum + Math.max(0, Math.min(b, top) - Math.max(a, bottom)), 0);
+    return covered >= bandHeight * 0.5;
+  });
+}
+
+// Merges _assignLineToGridCols()'s raw per-column cell text into spanning
+// cells wherever activeDividers[i] is false — i.e. wherever this specific
+// row has no real divider between raw columns i and i+1. Returns
+// {text, span}[]; span > 1 becomes a real docx columnSpan, not an empty
+// neighboring cell hiding a merge.
+export function _groupGridCellsWithSpans(rawCells, activeDividers) {
+  const out = [];
+  let buf = rawCells[0] ?? '';
+  let span = 1;
+  for (let i = 0; i < activeDividers.length; i++) {
+    if (activeDividers[i]) {
+      out.push({ text: buf, span });
+      buf = rawCells[i + 1] ?? '';
+      span = 1;
+    } else {
+      buf = [buf, rawCells[i + 1] ?? ''].filter(Boolean).join(' ');
+      span++;
+    }
+  }
+  out.push({ text: buf, span });
+  return out;
 }
 
 // Classifies a canvas crop as diagram (→ PNG) or photo (→ JPEG) using a fast
