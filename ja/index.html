@@ -91,6 +91,7 @@
 
 
   <script src="../js/theme.js"></script>
+  <script defer src="../js/priorityNav.js"></script>
 
     <script type="application/ld+json">
   {
@@ -201,7 +202,7 @@
       </div>
       <span class="logo-text">PDF<span>ree</span></span>
     </div>
-    <div class="nav-links">
+    <div class="nav-links" id="navLinks">
       <a href="/ja/pdf-ketsugou/" class="nav-link" data-tool="merge">結合</a>
       <a href="/ja/pdf-bunkatsu/" class="nav-link" data-tool="split">分割</a>
       <a href="/ja/pdf-atsuryoku/" class="nav-link" data-tool="compress">圧縮</a>
@@ -222,6 +223,10 @@
       <a href="/compare-pdf/" class="nav-link" data-tool="compare">比較</a>
     </div>
     <div class="nav-right">
+      <details class="nav-more" id="navMore">
+        <summary aria-label="More tools">その他 <span class="nav-more__badge"></span></summary>
+        <div class="nav-more__menu"></div>
+      </details>
       <details class="lang-switch" id="langSwitch">
         <summary aria-label="言語を切り替え">🌐 JA</summary>
         <div class="lang-switch__menu" role="menu">
