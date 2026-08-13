@@ -374,14 +374,50 @@ function _dataPointFromEvent(eventName, props) {
   };
 }
 
+// Browsers always send Origin on same-origin POST requests, not just
+// cross-origin ones — js/analytics.js's fetch('/api/analytics') always has
+// one that matches this Worker's own origin. A request with no Origin, or
+// one that doesn't match, didn't come from a page that actually loaded
+// pdfree.io — blocks the laziest form of abuse (scripts/bots posting
+// directly to this endpoint) for free, no persistent state required.
+// Not foolproof (Origin is trivially spoofable by a determined attacker),
+// but Workers are stateless per-request — same constraint already
+// documented for /api/feedback — so real rate-limiting needs a binding
+// (KV, Durable Objects) this project doesn't have yet. This is the
+// zero-infrastructure first line of defense, not the last one.
+function _hasValidOrigin(request, url) {
+  const origin = request.headers.get('Origin');
+  return origin === url.origin;
+}
+
+// Hard cap on request body size, checked before JSON parsing — a legit
+// event (locale/tool/session + a handful of short props) is well under
+// 1KB; anything wildly larger is either a mistake or someone testing how
+// much they can push through, not a real analytics event.
+const MAX_ANALYTICS_BODY_BYTES = 8 * 1024;
+
 async function handleAnalytics(request, env) {
   if (request.method !== 'POST') {
     return new Response('Method not allowed', { status: 405 });
   }
 
+  const url = new URL(request.url);
+  if (!_hasValidOrigin(request, url)) {
+    return new Response('Forbidden', { status: 403 });
+  }
+
+  const contentLength = Number(request.headers.get('Content-Length') || 0);
+  if (contentLength > MAX_ANALYTICS_BODY_BYTES) {
+    return new Response('Payload too large', { status: 413 });
+  }
+
   let body;
   try {
-    body = await request.json();
+    const text = await request.text();
+    if (text.length > MAX_ANALYTICS_BODY_BYTES) {
+      return new Response('Payload too large', { status: 413 });
+    }
+    body = JSON.parse(text);
   } catch {
     return new Response('Bad request', { status: 400 });
   }
