@@ -361,7 +361,12 @@ function columnsCase(id, colCount, itemsPerCol) {
       return {
         sectionProperties: { type: SectionType.CONTINUOUS, column: { count: colCount, space: 400 } },
         children: markers.map((m, i) => new Paragraph({ children: [new TextRun({ text: `${m} Column item ${i + 1}`, size: BODY_SIZE })], spacing: { after: 400 } })),
-        groundTruth: [{ type: 'order', sequence: markers }],
+        // col = which column this item was authored into (Word/LibreOffice
+        // fill column 0 fully before flowing into column 1, etc.) — the
+        // scorer only cares about which column-group an anchor belongs to
+        // and whether groups stay contiguous in the output, not exact
+        // per-item order within a column (see columnSwitchScore below).
+        groundTruth: [{ type: 'order', anchors: markers.map((text, i) => ({ text, col: Math.floor(i / itemsPerCol) })) }],
       };
     },
   };
@@ -369,7 +374,53 @@ function columnsCase(id, colCount, itemsPerCol) {
 CASES.push(columnsCase('columns-2', 2, 22));
 CASES.push(columnsCase('columns-3', 3, 22));
 
-console.log(`Corpus: ${CASES.length} cases.`);
+// ── Category: columns, real-world corpus ────────────────────────────────
+// tests/fixtures/columns/*.pdf — real, license-verified (CC BY 4.0) arXiv
+// papers with confirmed genuine 2-column layouts (see SOURCES.md for
+// provenance + how column layout was independently verified, not assumed
+// from the arXiv category). These have no synthetic ground-truth docx —
+// each one's ground truth is 4 short, hand-picked natural-text anchors from
+// page 2 (2 from column 1's start/end, 2 from column 2's start/end),
+// verified by reading the actual PDF once. No LibreOffice export needed —
+// these already ARE PDFs; `realPdfPath` is used directly.
+const REAL_CASES_DIR = path.join(ROOT, 'tests', 'fixtures', 'columns');
+function realColumnsCase(id, filename, anchors) {
+  return { id, category: 'columns', realPdfPath: path.join(REAL_CASES_DIR, filename), groundTruth: [{ type: 'order', anchors }] };
+}
+const REAL_CASES = [
+  realColumnsCase('real-2608.11433', '2608.11433.pdf', [
+    { text: 'HT ’26, September 14', col: 0 },
+    { text: 'considerInformation Support', col: 0 },
+    { text: 'Shirlene Rose Bandela, Karan Bindal', col: 1 },
+    { text: 'Fine-grained Stigma Labeling', col: 1 },
+  ]),
+  realColumnsCase('real-2608.11441', '2608.11441.pdf', [
+    { text: 'demonstrating that linguistic and dataset char', col: 0 },
+    { text: 'inspired learning-to-rank framework for donor se', col: 0 },
+    { text: 'and analyze it on several nonstandard and minor', col: 1 },
+    { text: 'languagefamiliesspokenacrossSub-Saharan', col: 1 },
+  ]),
+  realColumnsCase('real-2608.11629', '2608.11629.pdf', [
+    { text: 'vides a graphical interface for training Kaldi', col: 0 },
+    { text: 'pact file sizes (less than 1 GB), we ensure that trained mod', col: 0 },
+    { text: 'Screenshot of Easper Desktop Application', col: 1 },
+    { text: 'through continuous recording sessions, such as a specific inter', col: 1 },
+  ]),
+  realColumnsCase('real-2608.11694', '2608.11694.pdf', [
+    { text: 'or hurt (Madaan et al., 2023; Khot et al., 2022', col: 0 },
+    { text: 'that it only disturbs answers the model was unsure', col: 0 },
+    { text: 'validator, and judge models. (4) Open release of', col: 1 },
+    { text: 'The shared denominator makes the two directions', col: 1 },
+  ]),
+  realColumnsCase('real-2608.11947', '2608.11947.pdf', [
+    { text: 'the matcher cannot reliably map the free-text an', col: 0 },
+    { text: 'tially when the options are reordered, which sug', col: 0 },
+    { text: 'gests that multiple-choice evaluation may be mea', col: 1 },
+    { text: 'instance of LLM-as-judge evaluation, since the', col: 1 },
+  ]),
+];
+
+console.log(`Corpus: ${CASES.length} synthetic cases + ${REAL_CASES.length} real-PDF cases.`);
 
 // ═══════════════════════════════════════════════════════════════════════
 //  Stage 1 — build ground-truth .docx files
@@ -606,18 +657,68 @@ function resolveNumFmt(numberingXmlText, numId) {
   return null;
 }
 
-function orderScore(expectedSeq, actualSeq) {
-  const pos = new Map(actualSeq.map((m, i) => [m, i]));
-  let total = 0, correct = 0;
-  for (let i = 0; i < expectedSeq.length; i++) {
-    for (let j = i + 1; j < expectedSeq.length; j++) {
-      const a = expectedSeq[i], b = expectedSeq[j];
-      if (!pos.has(a) || !pos.has(b)) continue;
-      total++;
-      if (pos.get(a) < pos.get(b)) correct++;
-    }
+// The whole document's text, in document order, as ONE concatenated string
+// — unlike extractParagraphs() this is NOT filtered to [Pxxx]-marker
+// paragraphs (anchors, for the real-PDF corpus, are natural text
+// substrings, not a fixed marker pattern) and NOT split per-paragraph.
+// Position must be resolved at the CHARACTER level, not the paragraph
+// level: found via a real spot-check where PDFree glued an entire page's
+// text (both columns) into ONE giant output paragraph — every anchor
+// technically had the same "paragraph index", which made an earlier
+// per-paragraph version of this function score it a false 100% (ties broke
+// in whatever order the anchors array happened to be authored in, not the
+// real interleaving inside that merged blob). A flat string with `indexOf`
+// exposes the real character-level order regardless of paragraph
+// boundaries.
+function extractFullText(documentXmlText) {
+  const doc = parseXml(documentXmlText);
+  const ps = doc.getElementsByTagNameNS(W_NS, 'p');
+  let text = '';
+  for (let i = 0; i < ps.length; i++) {
+    const ts = ps[i].getElementsByTagNameNS(W_NS, 't');
+    for (let j = 0; j < ts.length; j++) text += ts[j].textContent || '';
+    text += '\n';
   }
-  return { correct, total };
+  return text;
+}
+
+// Replaces an earlier pairwise Kendall-tau-style metric that stayed
+// misleadingly high (~73-88%) under a clearly-wrong round-robin column
+// interleave — round-robin interleaving of N already-sorted streams keeps
+// every WITHIN-stream pair "correctly ordered", which pairwise concordance
+// rewards even though a human opening the document sees obvious garbage.
+// This instead counts how many times the actual output sequence switches
+// which column-group an item came from, compared against the minimum
+// possible (colCount - 1, i.e. finish column 0 entirely, then column 1,
+// etc.) — a direct, legible measure of "how interleaved does this look".
+// Whitespace-insensitive substring match: pdf.js's raw text extraction and
+// PDFree's own gap-based space-insertion heuristic (js/processor.js) can
+// each legitimately add or omit a space at a word boundary — found via a
+// real spot-check where an anchor copied verbatim from the SOURCE PDF's
+// extraction ("...considerInformation Support...", no space) correctly
+// became "...consider Information Support..." in PDFree's OUTPUT once its
+// own space-insertion ran. That's PDFree behaving correctly, not a bug —
+// comparing with whitespace stripped from both sides avoids the scorer
+// being fooled by incidental spacing differences that have nothing to do
+// with reading order.
+const _stripWs = (s) => s.replace(/\s+/g, '');
+function columnSwitchScore(anchors, fullText) {
+  const normFullText = _stripWs(fullText);
+  const found = [];
+  for (const a of anchors) {
+    const idx = normFullText.indexOf(_stripWs(a.text));
+    if (idx !== -1) found.push({ ...a, pos: idx });
+  }
+  found.sort((a, b) => a.pos - b.pos);
+  let switches = 0;
+  for (let i = 1; i < found.length; i++) {
+    if (found[i].col !== found[i - 1].col) switches++;
+  }
+  const distinctCols = new Set(anchors.map(a => a.col)).size;
+  const idealMin = Math.max(0, distinctCols - 1);
+  const denominator = Math.max(switches, idealMin, 1);
+  const score = found.length === anchors.length ? idealMin / denominator : 0;
+  return { switches, idealMin, foundCount: found.length, totalCount: anchors.length, score, order: found.map(f => f.text) };
 }
 
 async function scoreCase(c, categoryTallies, dissect) {
@@ -665,13 +766,16 @@ async function scoreCase(c, categoryTallies, dissect) {
       if (tbl && tbl.rows === g.expectRows && tbl.cols === g.expectCols) t.correct++;
       else t.misses.push(`${c.id}: expected ${g.expectRows}x${g.expectCols} table, got ${tbl ? `${tbl.rows}x${tbl.cols}` : (anatomy.tables.length ? `${anatomy.tables.length} tables, first mismatched` : 'NO TABLE (flattened to paragraphs)')}`);
     } else if (g.type === 'order') {
+      // Each case counts as one unit (not one per anchor/pair) — the
+      // column-switch score is already a single 0-1 judgment of "how
+      // interleaved does this whole case look", not a per-item tally.
       const t = categoryTallies.columns;
-      const actualSeq = paras.map(p => p.marker);
-      const { correct, total } = orderScore(g.sequence, actualSeq);
-      t.total += total;
-      t.correct += correct;
-      if (correct < total) {
-        t.misses.push(`${c.id}: reading order ${correct}/${total} pairs correct — expected ${g.sequence.join(' ')}, got ${actualSeq.join(' ')}`);
+      t.total += 1;
+      const r = columnSwitchScore(g.anchors, extractFullText(documentXml));
+      t.correct += r.score;
+      if (r.score < 1) {
+        t.misses.push(`${c.id}: found ${r.foundCount}/${r.totalCount} anchors, ${r.switches} column switches ` +
+          `(ideal ${r.idealMin}) — actual order: ${r.order.join(' | ')}`);
       }
     }
   }
@@ -722,8 +826,20 @@ async function main() {
   const workDir = mkdtempSync(path.join(tmpdir(), 'pdf2word-capmap-'));
   console.log(`Work dir: ${workDir}`);
 
-  const cases = await buildGroundTruth(workDir);
-  exportToPdf(workDir, cases);
+  const syntheticCases = await buildGroundTruth(workDir);
+  exportToPdf(workDir, syntheticCases);
+
+  // Real-PDF cases need no ground-truth generation or LibreOffice export —
+  // they already ARE the PDF, referenced directly from tests/fixtures/columns/.
+  for (const rc of REAL_CASES) {
+    if (!existsSync(rc.realPdfPath)) {
+      console.error(`✗ ${rc.realPdfPath} not found — see tests/fixtures/columns/SOURCES.md`);
+      process.exit(1);
+    }
+  }
+  const realCases = REAL_CASES.map(rc => ({ ...rc, pdfPath: rc.realPdfPath }));
+
+  const cases = [...syntheticCases, ...realCases];
   await runConversions(cases, workDir, pwPath, 8973);
 
   const categoryTallies = {
