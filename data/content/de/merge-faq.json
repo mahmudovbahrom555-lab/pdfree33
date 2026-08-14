@@ -70,5 +70,13 @@
       "@type": "Answer",
       "text": "Ja. PDFree funktioniert in mobilen Browsern — Chrome für Android und Safari für iOS. Die Dateiauswahl erfolgt über den nativen Datei-Picker und die Reihenfolge lässt sich über die Schaltflächen auf dem Bildschirm anpassen."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Bleiben Lesezeichen und Links beim Zusammenführen erhalten?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Verknüpfungen bleiben erhalten, auch wenn sie auf eine bestimmte Seite verweisen — sie werden beim Zusammenführen korrekt auf das neue Dokument angepasst, auch über mehrere Dateien hinweg. Lesezeichen (das Inhaltsverzeichnis in der Seitenleiste, das manche PDFs haben) werden aktuell nicht zusammengeführt — die Lesezeichenliste jeder Ausgangsdatei wird nicht in die zusammengeführte Datei übernommen."
+    }
   }
 ]

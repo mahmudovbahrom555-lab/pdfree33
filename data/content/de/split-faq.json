@@ -78,5 +78,13 @@
       "@type": "Answer",
       "text": "Nicht als Batch — PDFree verarbeitet jeweils eine Datei. Das Tool kann in einem neuen Tab geöffnet werden, um eine zweite Datei parallel zu teilen. PDFree funktioniert auch offline als Progressive Web App, sodass kein Warten auf das Netzwerk nötig ist."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Was ist der Unterschied zwischen Aufteilen und Extrahieren?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Aufteilen ist für die Auswahl und den Download mehrerer Seitengruppen gedacht. Extrahieren ist ein einfacheres Tool, das einen bestimmten Seitenbereich in ein neues PDF holt. Beide machen Ähnliches — nimm, was besser zu deinem Workflow passt."
+    }
   }
 ]

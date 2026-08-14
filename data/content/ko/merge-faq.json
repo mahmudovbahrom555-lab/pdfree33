@@ -70,5 +70,13 @@
       "@type": "Answer",
       "text": "예. PDFree는 모든 최신 브라우저에서 작동합니다 — Mac과 iPhone의 Safari, Mac, Windows, Android의 Chrome. 설치할 앱이 없습니다."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "PDF를 합칠 때 책갈피와 링크가 유지되나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "특정 페이지를 가리키는 링크를 포함해 링크는 유지됩니다 — 서로 다른 파일 사이에서도 합쳐진 문서에 맞게 올바르게 조정됩니다. 책갈피(일부 PDF에 있는 사이드바 목차)는 현재 합쳐지지 않습니다 — 각 원본 파일의 책갈피 목록은 합친 파일로 이어지지 않습니다."
+    }
   }
 ]

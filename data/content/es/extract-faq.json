@@ -46,5 +46,13 @@
       "@type": "Answer",
       "text": "No. Puedes extraer cualquier número de páginas de un PDF de cualquier tamaño, siempre que tu navegador tenga suficiente memoria."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Cuál es la diferencia entre Extraer y Dividir?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Extraer te permite elegir páginas concretas (por ejemplo, las páginas 2, 5 y 8) y guardarlas como un nuevo PDF. Dividir separa todo el documento en archivos individuales."
+    }
   }
 ]

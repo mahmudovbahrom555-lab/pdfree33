@@ -46,5 +46,13 @@
       "@type": "Answer",
       "text": "Evet. PDFree sayfaları PDF nesne düzeyinde çıkarır — kalite, yazı tipleri ve resimler orijinalle birebir aynıdır."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Böl ile Sayfa Çıkar arasındaki fark nedir?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Böl, birden fazla sayfa grubunu seçip indirmek için tasarlanmıştır. Sayfa Çıkar ise belirli bir sayfa aralığını tek bir yeni PDF'e almaya odaklanan daha basit bir araçtır. İkisi de benzer işler yapar — iş akışınıza uyanı kullanın."
+    }
   }
 ]

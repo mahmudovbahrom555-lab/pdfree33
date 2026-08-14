@@ -70,5 +70,13 @@
       "@type": "Answer",
       "text": "Có. PDFree hoạt động trên trình duyệt di động — Chrome cho Android và Safari cho iOS. Chọn file sử dụng bộ chọn file gốc, và bạn có thể sắp xếp lại file bằng các nút trên màn hình."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Dấu trang và liên kết có được giữ lại khi ghép PDF không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Liên kết được giữ lại, kể cả liên kết trỏ đến một trang cụ thể — ngay cả giữa các file khác nhau, chúng vẫn được điều chỉnh đúng vào file đã ghép. Dấu trang (bảng mục lục bên cạnh mà một số PDF có) hiện chưa được ghép lại — danh sách dấu trang của từng file gốc không được chuyển sang file đã ghép."
+    }
   }
 ]

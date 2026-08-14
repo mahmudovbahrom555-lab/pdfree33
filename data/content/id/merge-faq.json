@@ -70,5 +70,13 @@
       "@type": "Answer",
       "text": "Ya. PDFree berfungsi di browser mobile — Chrome untuk Android dan Safari untuk iOS. Pemilihan file menggunakan pemilih file bawaan, dan Anda dapat mengubah urutan file menggunakan tombol di layar."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah bookmark dan tautan tetap ada setelah menggabungkan PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tautan tetap ada, termasuk yang mengarah ke halaman tertentu — bahkan antar file, tautan tersebut disesuaikan dengan benar ke dokumen gabungan. Bookmark (panel daftar isi di sisi PDF yang dimiliki sebagian PDF) belum digabungkan saat ini — daftar bookmark dari setiap file asal tidak ikut dibawa ke file gabungan."
+    }
   }
 ]

@@ -62,5 +62,13 @@
       "@type": "Answer",
       "text": "Putar bekerja dengan satu file PDF dalam satu waktu, sehingga Anda bisa menyesuaikan rotasi setiap halaman secara individual — misalnya, memperbaiki hanya halaman yang miring pada dokumen hasil pindai sambil membiarkan sisanya tidak berubah. Untuk batch file yang semuanya membutuhkan perlakuan yang sama persis, alat PDFree lain seperti Kompres dan Watermark mendukung pemrosesan beberapa file sekaligus."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah rotasi tersimpan permanen di PDF saya?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ya. Mengklik “Putar PDF” akan membuat file PDF baru yang diunduh ke perangkat Anda dengan rotasi diterapkan secara permanen — berbeda dari rotasi tampilan sementara di beberapa pembaca PDF, yang tidak ikut tersimpan. File akan tampil dengan orientasi yang sudah benar di pembaca PDF mana pun."
+    }
   }
 ]

@@ -78,5 +78,13 @@
       "@type": "Answer",
       "text": "No en un solo lote — PDFree procesa un PDF a la vez. Puedes abrir la herramienta en una nueva pestaña para dividir un segundo archivo en paralelo. PDFree también funciona sin conexión como Progressive Web App, por lo que no hay espera de red entre archivos."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Cuál es la diferencia entre Dividir y Extraer?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Dividir está pensado para seleccionar y descargar varios grupos de páginas. Extraer es una herramienta más sencilla centrada en sacar un rango de páginas concreto a un nuevo PDF. Ambas hacen algo parecido — usa la que mejor se adapte a tu flujo de trabajo."
+    }
   }
 ]

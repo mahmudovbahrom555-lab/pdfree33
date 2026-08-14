@@ -46,5 +46,13 @@
       "@type": "Answer",
       "text": "Sì. PDFree estrae le pagine a livello di oggetti PDF — qualità, font e immagini rimangono identici all'originale."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Qual è la differenza tra Dividi ed Estrai?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Dividi è pensato per selezionare e scaricare più gruppi di pagine. Estrai è uno strumento più semplice, pensato per estrarre un intervallo di pagine specifico in un nuovo PDF. Fanno cose simili — usa quello più adatto al tuo flusso di lavoro."
+    }
   }
 ]

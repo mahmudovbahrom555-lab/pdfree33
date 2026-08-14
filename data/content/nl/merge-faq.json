@@ -70,5 +70,13 @@
       "@type": "Answer",
       "text": "Ja. PDFree werkt in alle moderne browsers — Safari op Mac en iPhone, Chrome op Mac, Windows en Android. Geen app om te installeren."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Blijven bladwijzers en links behouden bij het samenvoegen van PDF's?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Links blijven behouden, ook links die naar een specifieke pagina verwijzen — zelfs tussen verschillende bestanden worden ze correct aangepast aan het samengevoegde document. Bladwijzers (het inhoudsopgave-paneel dat sommige PDF's hebben) worden op dit moment niet samengevoegd — de bladwijzerlijst van elk bronbestand wordt niet overgenomen in het samengevoegde bestand."
+    }
   }
 ]

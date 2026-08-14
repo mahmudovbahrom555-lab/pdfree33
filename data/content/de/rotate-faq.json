@@ -62,5 +62,13 @@
       "@type": "Answer",
       "text": "Drehen funktioniert mit jeweils einer Datei, sodass du die Drehung jeder Seite einzeln anpassen kannst — zum Beispiel nur die schräg gescannten Seiten eines Dokuments korrigieren, während der Rest unverändert bleibt. Für Stapel von Dateien, die alle dieselbe Behandlung brauchen, unterstützen PDFrees andere Tools wie Komprimieren und Wasserzeichen die Verarbeitung mehrerer Dateien auf einmal."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Wird die Drehung dauerhaft in meiner PDF gespeichert?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Ein Klick auf „PDF drehen“ erzeugt eine neue PDF-Datei, die mit der dauerhaft angewendeten Drehung heruntergeladen wird — anders als die reine Ansichts-Drehung mancher PDF-Programme, die sich nicht speichert. Die Datei wird in jedem PDF-Betrachter in der korrigierten Ausrichtung angezeigt."
+    }
   }
 ]

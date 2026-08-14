@@ -62,5 +62,13 @@
       "@type": "Answer",
       "text": "Obracanie działa z jednym plikiem PDF naraz, dzięki czemu możesz dostosować obrót każdej strony indywidualnie — na przykład poprawić tylko przekrzywione strony zeskanowanego dokumentu, zostawiając resztę bez zmian. W przypadku partii plików wymagających dokładnie takiej samej obróbki inne narzędzia PDFree, takie jak Kompresowanie i Znak wodny, obsługują przetwarzanie wielu plików naraz."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy obrót zapisuje się na stałe w moim pliku PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. Kliknięcie „Obróć PDF” tworzy nowy plik PDF pobierany na Twoje urządzenie z obrotem zapisanym na stałe — w odróżnieniu od samego obrotu widoku w niektórych czytnikach PDF, który się nie zapisuje i po ponownym otwarciu wraca do złej pozycji. Plik będzie wyświetlany w poprawionej orientacji w każdym czytniku PDF."
+    }
   }
 ]

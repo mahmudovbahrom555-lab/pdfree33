@@ -70,5 +70,13 @@
       "@type": "Answer",
       "text": "Sim. O PDFree funciona em navegadores móveis — Chrome para Android e Safari para iOS. A seleção de arquivos usa o seletor nativo e pode reordenar os arquivos com os botões na tela."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Os marcadores e links são preservados ao juntar PDFs?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Os links são preservados, incluindo os que apontam para uma página específica — mesmo entre arquivos diferentes, são ajustados corretamente no documento final. Os marcadores (o painel de índice/sumário que alguns PDFs têm) não são combinados atualmente — a lista de marcadores de cada arquivo original não é transferida para o arquivo final."
+    }
   }
 ]

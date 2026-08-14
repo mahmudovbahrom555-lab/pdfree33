@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "Tidak. PDF terenkripsi harus dibuka kunci terlebih dahulu sebelum halaman dapat diekstrak."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Apa perbedaan antara Ekstrak dan Pisahkan?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ekstrak memungkinkan Anda memilih halaman tertentu (misalnya halaman 2, 5, 8) dan menyimpannya sebagai satu PDF baru. Pisahkan membagi seluruh dokumen menjadi file-file terpisah."
+    }
   }
 ]

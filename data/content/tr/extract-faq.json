@@ -78,5 +78,13 @@
       "@type": "Answer",
       "text": "Evet. Sayfalar PDF nesne düzeyinde kopyalanır — yazı tipleri, görseller, bağlantılar ve biçimlendirme orijinalleriyle birebir aynıdır."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Sayfa Çıkar ile Böl arasındaki fark nedir?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sayfa Çıkar, belirli sayfaları (örneğin 2, 5, 8. sayfaları) seçip tek bir yeni PDF olarak kaydetmenizi sağlar. Böl ise tüm belgeyi ayrı ayrı dosyalara ayırır."
+    }
   }
 ]

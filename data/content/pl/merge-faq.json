@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "Tak. PDFree działa we wszystkich nowoczesnych przeglądarkach — Safari na Macu i iPhonie, Chrome na Macu, Windowsie i Androidzie. Nie trzeba nic instalować."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy zakładki i linki są zachowywane podczas łączenia plików PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Linki są zachowywane, w tym linki prowadzące do konkretnej strony — nawet między różnymi plikami są poprawnie dopasowywane do połączonego dokumentu. Zakładki (panel spisu treści z boku, który mają niektóre pliki PDF) nie są obecnie łączone — lista zakładek z każdego pliku źródłowego nie jest przenoszona do połączonego pliku."
+    }
   }
 ]

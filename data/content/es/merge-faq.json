@@ -70,5 +70,13 @@
       "@type": "Answer",
       "text": "Sí. PDFree funciona en navegadores móviles (Chrome para Android, Safari para iOS). El arrastrar y soltar se reemplaza por un selector de archivos, y la reordenación se hace con los botones arriba/abajo."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Se conservan los marcadores y los enlaces al combinar PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Los enlaces se conservan, incluidos los que apuntan a una página concreta — incluso entre archivos distintos, se ajustan correctamente al documento combinado. Los marcadores (el panel de índice o tabla de contenido que tienen algunos PDF) no se combinan actualmente — la lista de marcadores de cada archivo original no pasa al archivo combinado."
+    }
   }
 ]

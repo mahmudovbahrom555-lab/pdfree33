@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "La rotazione funziona con un PDF alla volta, così puoi regolare la rotazione di ogni pagina singolarmente — ad esempio correggendo solo le pagine storte di un documento scansionato e lasciando intatto il resto. Per lotti di file che richiedono tutti lo stesso trattamento, altri strumenti di PDFree come Comprimi e Filigrana supportano l'elaborazione di più file contemporaneamente."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "La rotazione viene salvata in modo permanente nel PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. Facendo clic su “Ruota PDF” viene generato un nuovo file PDF, scaricato sul tuo dispositivo, con la rotazione applicata in modo permanente — a differenza della semplice rotazione di visualizzazione di alcuni lettori PDF, che non viene salvata. Il file verrà mostrato con l'orientamento corretto in qualsiasi lettore PDF."
+    }
   }
 ]

@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "Sì. PDFree funziona su tutti i browser moderni — Safari su Mac e iPhone, Chrome su Mac, Windows e Android. Nessuna app da installare."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "I segnalibri e i link vengono mantenuti unendo i PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "I link vengono mantenuti, compresi quelli che puntano a una pagina specifica — anche tra file diversi, vengono adattati correttamente al documento unito. I segnalibri (il pannello dell'indice laterale presente in alcuni PDF) al momento non vengono uniti — l'elenco dei segnalibri di ciascun file originale non viene riportato nel file unito."
+    }
   }
 ]

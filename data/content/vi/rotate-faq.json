@@ -62,5 +62,13 @@
       "@type": "Answer",
       "text": "Xoay hoạt động với từng file PDF một, vì vậy bạn có thể tinh chỉnh độ xoay của từng trang riêng lẻ — ví dụ, chỉ sửa các trang bị lệch trong một tài liệu quét trong khi giữ nguyên phần còn lại. Với các lô file cần xử lý giống hệt nhau, các công cụ khác của PDFree như Nén và Watermark hỗ trợ xử lý nhiều file cùng lúc."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Việc xoay trang có được lưu vĩnh viễn vào file PDF không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có. Khi nhấn “Xoay PDF”, một file PDF mới sẽ được tạo và tải về thiết bị của bạn với hướng xoay đã được áp dụng vĩnh viễn — khác với chế độ xoay chỉ để xem tạm thời ở một số trình đọc PDF, vốn không được lưu lại. File sẽ hiển thị đúng hướng trong bất kỳ trình đọc PDF nào."
+    }
   }
 ]

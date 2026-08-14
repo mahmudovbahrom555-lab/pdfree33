@@ -86,5 +86,13 @@
       "@type": "Answer",
       "text": "Buka PDFree di Safari (iPhone/iPad) atau browser apa pun di Android — tidak diperlukan unduhan aplikasi atau Adobe Acrobat. Alat ini berjalan sepenuhnya di browser: muat PDF Anda, pilih halaman, ketuk Pisah PDF. Hasilnya tersimpan ke aplikasi File di iOS atau folder Unduhan di Android."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Apa perbedaan antara Pisahkan dan Ekstrak?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Pisahkan dirancang untuk memilih dan mengunduh beberapa kelompok halaman sekaligus. Ekstrak adalah alat yang lebih sederhana, fokus mengambil rentang halaman tertentu ke satu PDF baru. Keduanya melakukan hal yang mirip — gunakan mana pun yang sesuai alur kerja Anda."
+    }
   }
 ]

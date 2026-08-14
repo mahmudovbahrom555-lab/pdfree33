@@ -46,5 +46,13 @@
       "@type": "Answer",
       "text": "Ja. PDFree extraheert pagina's op PDF-objectniveau — kwaliteit, lettertypen en afbeeldingen blijven identiek aan het origineel."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Wat is het verschil tussen Splitsen en Extraheren?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Splitsen is bedoeld om meerdere paginagroepen te selecteren en te downloaden. Extraheren is een eenvoudigere tool die zich richt op het halen van één specifiek paginabereik naar een nieuwe PDF. Beide doen iets vergelijkbaars — gebruik wat het beste bij je workflow past."
+    }
   }
 ]

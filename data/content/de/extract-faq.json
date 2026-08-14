@@ -46,5 +46,13 @@
       "@type": "Answer",
       "text": "Nein, es gibt keine künstlichen Limits. Die einzige Begrenzung ist der verfügbare Arbeitsspeicher deines Computers oder Smartphones."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Was ist der Unterschied zwischen Extrahieren und Aufteilen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Mit Extrahieren wählst du bestimmte Seiten aus (z. B. Seite 2, 5, 8) und speicherst sie als ein neues PDF. Aufteilen teilt das gesamte Dokument in einzelne Dateien auf."
+    }
   }
 ]

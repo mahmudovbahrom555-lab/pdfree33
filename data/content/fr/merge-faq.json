@@ -86,5 +86,13 @@
       "@type": "Answer",
       "text": "Oui, c'est exactement ce qu'est PDFree : un joiner de PDF gratuit, sans compte à créer et sans logiciel à installer. Glissez vos fichiers, réorganisez-les, puis téléchargez le PDF assemblé."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Les signets et les liens sont-ils conservés lors de la fusion des PDF ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Les liens sont conservés, y compris ceux qui pointent vers une page précise — même entre plusieurs fichiers, ils sont correctement réajustés au document fusionné. Les signets (le panneau de sommaire que certains PDF possèdent) ne sont pas encore fusionnés — la liste de signets de chaque fichier d'origine n'est pas reportée dans le fichier fusionné."
+    }
   }
 ]

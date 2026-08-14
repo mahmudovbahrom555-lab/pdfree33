@@ -46,5 +46,13 @@
       "@type": "Answer",
       "text": "Tak. PDFree wyodrębnia strony na poziomie obiektów PDF — jakość, czcionki i obrazy pozostają identyczne z oryginałem."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Jaka jest różnica między Podziel a Wyodrębnij?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Podziel służy do wybierania i pobierania kilku grup stron naraz. Wyodrębnij to prostsze narzędzie skupione na wyciągnięciu jednego konkretnego zakresu stron do nowego pliku PDF. Oba robią podobne rzeczy — użyj tego, które lepiej pasuje do Twojej pracy."
+    }
   }
 ]

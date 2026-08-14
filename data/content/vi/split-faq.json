@@ -94,5 +94,13 @@
       "@type": "Answer",
       "text": "Mở PDFree trong Safari (iPhone/iPad) hoặc bất kỳ trình duyệt nào trên Mac — không cần tải app hoặc Adobe Acrobat. Công cụ chạy hoàn toàn trong trình duyệt: tải PDF, chọn trang, nhấn Tách PDF. Kết quả lưu vào ứng dụng Tệp trên iOS hoặc thư mục Tải xuống trên Mac."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Tách và Trích xuất khác nhau như thế nào?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tách được thiết kế để chọn và tải xuống nhiều nhóm trang cùng lúc. Trích xuất là công cụ đơn giản hơn, tập trung vào việc lấy ra một khoảng trang cụ thể thành một file PDF mới. Cả hai làm việc khá giống nhau — dùng cái nào phù hợp với quy trình của bạn."
+    }
   }
 ]

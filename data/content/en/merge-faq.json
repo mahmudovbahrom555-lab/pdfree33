@@ -70,5 +70,13 @@
       "@type": "Answer",
       "text": "Yes. PDFree works in mobile browsers — Chrome for Android and Safari for iOS. File selection uses the native file picker, and you can reorder files using the on-screen buttons."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Are bookmarks and hyperlinks preserved when I merge PDFs?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Links are preserved, including links that point to a specific page — even across files, they're correctly remapped to the merged document. Bookmarks (the sidebar outline/table of contents panel some PDFs have) aren't currently combined — each source file's own bookmark list doesn't carry over into the merged file."
+    }
   }
 ]

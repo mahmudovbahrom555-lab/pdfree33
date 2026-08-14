@@ -46,5 +46,13 @@
       "@type": "Answer",
       "text": "Não. O PDFree não tem limites artificiais. A única restrição é a memória RAM disponível no seu dispositivo."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Qual é a diferença entre Extrair e Dividir?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Extrair permite escolher páginas específicas (por exemplo, as páginas 2, 5, 8) e salvá-las como um novo PDF. Dividir separa o documento inteiro em arquivos individuais."
+    }
   }
 ]

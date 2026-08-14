@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "Evet. PDFree tüm modern tarayıcılarda çalışır — Mac ve iPhone'da Safari, Mac, Windows ve Android'de Chrome. Kurulum gerekmez."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "PDF'leri birleştirirken yer imleri ve bağlantılar korunur mu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Bağlantılar korunur, belirli bir sayfaya yönlendiren bağlantılar da dahil — farklı dosyalar arasında bile birleştirilmiş belgeye doğru şekilde uyarlanır. Yer imleri (bazı PDF'lerde bulunan kenar çubuğu içindekiler paneli) şu anda birleştirilmiyor — her kaynak dosyanın kendi yer imi listesi birleştirilmiş dosyaya aktarılmıyor."
+    }
   }
 ]
