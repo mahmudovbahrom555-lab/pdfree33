@@ -62,5 +62,13 @@
       "@type": "Answer",
       "text": "Tak. Wybierz lub przeciągnij kilka plików PDF, a PDFree naniesie ten sam znak wodny na każdy plik, bezpośrednio w przeglądarce. Wyniki są pakowane do jednego archiwum ZIP do pobrania. Bez konta, bez przesyłania, bez limitu liczby plików."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy mogę postawić pieczątkę „ZAPŁACONO” lub „NIEZAPŁACONE” na fakturze?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. Wpisz jako tekst ZAPŁACONO (lub NIEZAPŁACONE), wybierz pozycję w rogu i ustaw krycie na 100%, aby uzyskać wygląd solidnej pieczątki zamiast domyślnego półprzezroczystego znaku wodnego. Dotyczy to każdej wybranej strony, więc wielostronicowa faktura zostanie oznaczona spójnie."
+    }
   }
 ]

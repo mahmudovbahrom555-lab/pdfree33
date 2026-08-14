@@ -94,5 +94,13 @@
       "@type": "Answer",
       "text": "Yes. Select or drag in multiple PDF files and PDFree applies the same watermark — text or image — to every file, one after another, entirely in your browser. The results are packaged into a single ZIP for download. No account, no upload, no file-count limit."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I stamp \"PAID\" or \"UNPAID\" on an invoice PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. Set the text to PAID (or UNPAID), pick a corner position, and set opacity to 100% for a solid, stamp-like look instead of the default translucent watermark style. It applies to every page you select, so a multi-page invoice or statement gets marked consistently."
+    }
   }
 ]

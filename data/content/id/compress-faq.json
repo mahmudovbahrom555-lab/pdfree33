@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "Ya. PDFree mendukung pemrosesan batch penuh — pilih atau seret beberapa file PDF, masing-masing dikompres secara lokal di browser Anda. Setelah selesai, unduh semua hasil dalam satu file ZIP. Tanpa batas harian atau jumlah file."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Kenapa portal CPNS atau lamaran kerja menolak PDF saya karena ukurannya terlalu besar?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Banyak formulir daring (pendaftaran CPNS, portal lamaran kerja, situs instansi pemerintah) membatasi ukuran unggahan hanya 2-10 MB, dan seringkali tidak diberitahukan dengan jelas sampai unggahan gagal. Mengompres PDF terlebih dahulu biasanya sudah cukup memperbaikinya, bahkan dengan pengurangan kecil, tanpa mengubah isi dokumen."
+    }
   }
 ]

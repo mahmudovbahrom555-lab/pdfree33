@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "Ja. Im Stapelmodus kannst du mehrere PDF-Dateien auswählen oder hineinziehen — jede wird einzeln in deinem Browser mit denselben Einstellungen verschlüsselt. Die geschützten Dateien werden als ZIP zum Download bereitgestellt, ohne Tageslimit."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Ist die RC4-128-Verschlüsselung sicher genug, um eine PDF zu schützen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Für den Alltag – ein Dokument vor beiläufigem Zugriff schützen, sensible Dateien mit vertrauenswürdigen Personen teilen oder Drucken/Kopieren einschränken – ja: RC4-128 ist ein echter, funktionierender PDF-Standard seit PDF 1.4, den jeder Reader öffnen kann. Er ist aber nicht so stark wie AES-256, und ein gut ausgestatteter Angreifer mit der verschlüsselten Datei könnte ihn knacken. Bei medizinischen Unterlagen, juristischen Schriftsätzen oder allem mit echten regulatorischen Anforderungen solltest du dich nicht allein auf den Passwortschutz verlassen — kombiniere ihn mit einem verschlüsselten Laufwerk, einem sicheren Freigabedienst oder den Compliance-Tools deiner Organisation. Ein Vorteil von RC4-128: Es öffnet sich auch in älteren PDF-Readern, die AES-256 gar nicht unterstützen — eine passwortgeschützte PDF bleibt so für möglichst viele Empfänger lesbar."
+    }
   }
 ]

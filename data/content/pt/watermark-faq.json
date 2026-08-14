@@ -62,5 +62,13 @@
       "@type": "Answer",
       "text": "Sim. Selecione ou arraste vários arquivos PDF e o PDFree aplica a mesma marca d’água a cada um, direto no seu navegador. Os resultados são reunidos em um único arquivo ZIP para download. Sem conta, sem envio, sem limite de arquivos."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso carimbar «PAGO» ou «PENDENTE» numa fatura?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim. Defina o texto como PAGO (ou PENDENTE), escolha uma posição num canto e ajuste a opacidade para 100% para obter um aspeto de carimbo sólido em vez da marca d'água translúcida padrão. Isto aplica-se a todas as páginas selecionadas, por isso uma fatura de várias páginas fica marcada de forma consistente."
+    }
   }
 ]

@@ -54,5 +54,21 @@
       "@type": "Answer",
       "text": "Os valores extraídos são números e texto comuns, não fórmulas — um PDF não armazena cálculos subjacentes, apenas resultados exibidos. No Excel, você pode adicionar suas próprias fórmulas sobre os dados extraídos normalmente."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso converter um PDF digitalizado para Excel?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Não diretamente — um PDF digitalizado é uma imagem sem camada de texto, então não há dados para detectar uma tabela. Use primeiro o OCR PDF para adicionar uma camada de texto e depois converta o resultado para Excel."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Se o meu PDF tiver várias tabelas, elas ficam em planilhas separadas?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim. Cada tabela detectada vira uma planilha própria no arquivo .xlsx gerado, nomeada e ordenada de acordo com a posição no PDF, para que tabelas de páginas ou seções diferentes não se misturem."
+    }
   }
 ]

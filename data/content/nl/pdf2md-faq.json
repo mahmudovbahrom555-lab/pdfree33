@@ -46,5 +46,13 @@
       "@type": "Answer",
       "text": "Ja, volledig gratis voor altijd."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Is dit geschikt om PDF's voor te bereiden voor AI-tools, RAG of LLM-context?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja — Markdown is een lichtgewicht, veelgebruikt formaat om documenten in het contextvenster van een LLM of een RAG-pipeline te laden, en lokaal converteren betekent dat de inhoud je apparaat niet hoeft te verlaten alleen om van formaat te wisselen. Omdat PDFree geen tabellen behoudt, kunnen documenten met dichte tabellen hun structuur verliezen in het resultaat — overweeg bij zulke documenten eerst OCR uit te voeren als de PDF gescand is, of controleer het resultaat voordat je het aan een model geeft."
+    }
   }
 ]

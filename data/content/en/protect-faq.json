@@ -62,5 +62,13 @@
       "@type": "Answer",
       "text": "Yes. PDFree's batch mode lets you add a password and permissions to many PDF files in one pass — select or drag in multiple files, and each is encrypted separately in your browser with the same settings. You'll get a ZIP with all protected files, and nothing is ever uploaded to a server."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Is RC4-128 encryption safe enough to protect a PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "For everyday use — keeping a document private from casual access, sharing sensitive files with people you trust, or restricting printing/copying — yes, RC4-128 is a real, working PDF standard supported since PDF 1.4 that every reader can open. It's not as strong as AES-256, though, and a well-resourced attacker with the encrypted file could break it. For medical records, legal filings, or anything with real regulatory stakes, don't rely on password protection alone — combine it with an encrypted drive, a secure file-sharing service, or your organization's own compliance tooling. One advantage RC4-128 does have: it opens in older PDF readers that don't support AES-256 at all, so a password-protected PDF you send stays openable for the widest range of recipients."
+    }
   }
 ]

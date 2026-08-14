@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "Nur wenn die PDF bereits eine Textebene hat. Rein bildbasierte gescannte PDFs enthalten keinen extrahierbaren Text — führe zuerst OCR durch und konvertiere dann das Ergebnis."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Eignet sich das, um PDFs für KI-Tools, RAG oder den Kontext von LLMs vorzubereiten?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja — Markdown ist ein gängiges, leichtgewichtiges Format, um Dokumente in das Kontextfenster eines LLM oder eine RAG-Pipeline einzuspeisen, und die lokale Umwandlung bedeutet, dass der Inhalt dein Gerät nicht verlassen muss, nur um ihn umzuformatieren. Da PDFree keine Tabellen erhält, können dichte Datentabellen im Ergebnis ihre Struktur verlieren — bei tabellenlastigen Dokumenten lohnt es sich, bei gescannten PDFs vorher eine OCR durchzuführen oder das Ergebnis vor der Weiterverwendung zu prüfen."
+    }
   }
 ]

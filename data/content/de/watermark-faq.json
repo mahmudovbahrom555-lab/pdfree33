@@ -86,5 +86,13 @@
       "@type": "Answer",
       "text": "Ja. Wähle oder ziehe mehrere PDF-Dateien hinein — PDFree fügt jeder Datei dasselbe Wasserzeichen hinzu, direkt im Browser. Die Ergebnisse werden als eine ZIP-Datei zum Download bereitgestellt."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann ich „BEZAHLT“ oder „OFFEN“ auf eine Rechnung stempeln?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Gib als Text BEZAHLT (oder OFFEN) ein, wähle eine Position in einer Ecke und stelle die Deckkraft auf 100 %, für einen soliden Stempel-Look statt des standardmäßig durchscheinenden Wasserzeichens. Das wird auf jede ausgewählte Seite angewendet, sodass auch eine mehrseitige Rechnung einheitlich markiert wird."
+    }
   }
 ]

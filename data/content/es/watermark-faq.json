@@ -70,5 +70,13 @@
       "@type": "Answer",
       "text": "Sí. Selecciona o arrastra varios archivos PDF y PDFree aplica la misma marca de agua a cada uno, directamente en tu navegador. Los resultados se empaquetan en un único archivo ZIP para descargar. Sin cuenta, sin subida, sin límite de archivos."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Puedo sellar una factura con «PAGADA» o «PENDIENTE»?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sí. Escribe PAGADA (o PENDIENTE) como texto, elige una posición en una esquina y pon la opacidad al 100 % para conseguir un aspecto de sello sólido en vez de la marca de agua traslúcida por defecto. Se aplica a todas las páginas que elijas, así que una factura de varias páginas queda marcada de forma consistente."
+    }
   }
 ]

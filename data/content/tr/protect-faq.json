@@ -70,5 +70,13 @@
       "@type": "Answer",
       "text": "Evet. PDFree'nin toplu modu, birden fazla PDF dosyasına aynı anda parola ve izin eklemenizi sağlar — her biri tarayıcınızda aynı ayarlarla ayrı ayrı şifrelenir. Korunan tüm dosyaları içeren bir ZIP elde edersiniz."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "RC4-128 şifrelemesi bir PDF'yi korumak için yeterince güvenli mi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Günlük kullanım için — bir belgeye rastgele erişimi engellemek, hassas dosyaları güvendiğiniz kişilerle paylaşmak veya yazdırma/kopyalamayı kısıtlamak — evet: RC4-128, PDF 1.4'ten beri desteklenen, her okuyucunun açabildiği gerçek ve çalışan bir PDF standardıdır. Ancak AES-256 kadar güçlü değildir ve yeterli kaynağa sahip bir saldırgan, şifreli dosyayı ele geçirirse onu kırabilir. Tıbbi kayıtlar, hukuki belgeler veya gerçek düzenleyici risk taşıyan her şey için yalnızca parolaya güvenmeyin — şifreli bir sürücü, güvenli bir dosya paylaşım hizmeti veya kurumunuzun kendi uyumluluk araçlarıyla birlikte kullanın. RC4-128'in bir avantajı var: AES-256'yı hiç desteklemeyen eski PDF okuyucularında da açılır, böylece parola korumalı bir PDF mümkün olduğunca çok alıcı tarafından açılabilir kalır."
+    }
   }
 ]

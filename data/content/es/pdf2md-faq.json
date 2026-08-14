@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "Solo si el PDF ya tiene una capa de texto. Los PDFs escaneados basados solo en imágenes no tienen texto extraíble — aplica primero OCR y luego convierte el resultado."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Sirve para preparar PDF para herramientas de IA, RAG o el contexto de un LLM?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sí — Markdown es un formato ligero y muy usado para introducir documentos en la ventana de contexto de un LLM o en un pipeline de RAG, y convertir el archivo localmente significa que el contenido no tiene que salir de tu dispositivo solo para cambiarlo de formato. Como PDFree no conserva las tablas, los documentos con tablas densas pueden perder su estructura en el resultado — si tu PDF tiene muchas tablas, considera pasar primero el OCR si está escaneado, o revisar el resultado antes de usarlo con un modelo."
+    }
   }
 ]

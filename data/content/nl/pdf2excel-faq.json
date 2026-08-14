@@ -46,5 +46,21 @@
       "@type": "Answer",
       "text": "Ja, volledig gratis voor altijd. Geen betaalde abonnementen, geen dagelijkse limieten."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik een gescande PDF naar Excel converteren?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Niet rechtstreeks — een gescande PDF is een afbeelding zonder tekstlaag, dus er zijn geen gegevens om een tabel in te herkennen. Voer eerst OCR PDF uit om een tekstlaag toe te voegen en converteer daarna het resultaat naar Excel."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Als mijn PDF meerdere tabellen bevat, komen die dan op aparte werkbladen terecht?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Elke gedetecteerde tabel wordt een eigen werkblad in het resulterende .xlsx-bestand, genoemd en gerangschikt op basis van de positie in de PDF, zodat tabellen van verschillende pagina's of secties niet door elkaar raken."
+    }
   }
 ]

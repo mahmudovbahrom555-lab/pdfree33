@@ -94,5 +94,13 @@
       "@type": "Answer",
       "text": "Evet. Birden fazla PDF dosyası seçin veya sürükleyin, PDFree her birine aynı filigranı doğrudan tarayıcınızda uygular. Sonuçlar indirilebilir tek bir ZIP dosyasında toplanır. Hesap yok, yükleme yok, dosya sayısı sınırı yok."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Bir faturaya “ÖDENDİ” veya “ÖDENMEDİ” damgası basabilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. Metin olarak ÖDENDİ (veya ÖDENMEDİ) yazın, bir köşe konumu seçin ve varsayılan yarı saydam filigran yerine dolgun bir damga görünümü için opaklığı %100 yapın. Bu, seçtiğiniz her sayfaya uygulanır, böylece çok sayfalı bir fatura tutarlı şekilde işaretlenir."
+    }
   }
 ]

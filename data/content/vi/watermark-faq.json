@@ -78,5 +78,13 @@
       "@type": "Answer",
       "text": "Có. Chọn hoặc kéo thả nhiều file PDF và PDFree áp cùng hình mờ vào từng file, ngay trong trình duyệt của bạn. Kết quả được đóng gói thành một file ZIP duy nhất để tải xuống. Không cần tài khoản, không tải lên, không giới hạn số file."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Tôi có thể đóng dấu “ĐÃ THANH TOÁN” hoặc “CHƯA THANH TOÁN” lên hóa đơn PDF không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có. Nhập nội dung ĐÃ THANH TOÁN (hoặc CHƯA THANH TOÁN), chọn vị trí ở một góc, và đặt độ mờ (opacity) thành 100% để có hiệu ứng như con dấu đặc thay vì hình mờ trong suốt mặc định. Thao tác này áp dụng cho mọi trang bạn chọn, nên hóa đơn nhiều trang sẽ được đánh dấu nhất quán."
+    }
   }
 ]

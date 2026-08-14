@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "Ja. PDFree ondersteunt volledige batchverwerking — selecteer of sleep meerdere PDF-bestanden, elk wordt lokaal in je browser gecomprimeerd. Download aan het einde alle resultaten als één ZIP-bestand. Geen dagelijkse limiet en geen limiet op het aantal bestanden."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Waarom weigeren sommige overheidsportalen of sollicitatiesites mijn PDF omdat die te groot is?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Veel online formulieren (MijnOverheid, DigiD-portalen, sollicitatiesites) beperken uploads tot 2-10 MB, vaak zonder dit duidelijk te vermelden totdat de upload mislukt. Het PDF-bestand vooraf comprimeren lost dit meestal al op met een kleine verkleining, zonder de inhoud te veranderen."
+    }
   }
 ]

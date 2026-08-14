@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "Có. PDFree hỗ trợ xử lý hàng loạt đầy đủ — chọn hoặc kéo thả nhiều file PDF, mỗi file được nén ngay trong trình duyệt của bạn. Khi xong, tải xuống toàn bộ kết quả trong một file ZIP. Không giới hạn hàng ngày hay số lượng file."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Vì sao một số cổng dịch vụ công hoặc trang nộp hồ sơ báo PDF của tôi quá lớn?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nhiều biểu mẫu trực tuyến (cổng dịch vụ công, trang nộp hồ sơ xin việc, website cơ quan nhà nước) giới hạn dung lượng tải lên chỉ 2-10 MB, và thường không thông báo rõ cho đến khi tải lên bị lỗi. Nén file PDF trước thường khắc phục được vấn đề này, chỉ cần giảm dung lượng một chút, mà không làm thay đổi nội dung tài liệu."
+    }
   }
 ]

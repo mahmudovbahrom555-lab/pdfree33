@@ -46,5 +46,13 @@
       "@type": "Answer",
       "text": "Evet. PDFree tam toplu işlem desteği sunar — birden fazla PDF dosyası seçin veya sürükleyin, her biri tarayıcınızda yerel olarak sıkıştırılır. İşlem bitince tüm sonuçları tek bir ZIP dosyası olarak indirirsiniz. Günlük limit veya dosya sayısı sınırı yoktur."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "e-Devlet gibi bazı portallar veya başvuru siteleri PDF'imi neden çok büyük diye reddediyor?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Birçok çevrimiçi form (e-Devlet, iş başvuru siteleri, kurum web siteleri) yüklemeleri 2-10 MB ile sınırlar ve bunu genellikle yükleme başarısız olana kadar açıkça belirtmez. PDF'i önceden sıkıştırmak, belgenin içeriğini değiştirmeden, küçük bir küçültmeyle bile bu sorunu genellikle çözer."
+    }
   }
 ]

@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "Somente se o PDF já tiver uma camada de texto. PDFs digitalizados baseados apenas em imagens não têm texto extraível — aplique primeiro o OCR e depois converta o resultado."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Isso serve para preparar PDFs para ferramentas de IA, RAG ou contexto de LLM?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim — o Markdown é um formato leve e muito usado para alimentar a janela de contexto de um LLM ou um pipeline de RAG, e converter localmente significa que o conteúdo não precisa sair do seu dispositivo só para mudar de formato. Como o PDFree não preserva tabelas, documentos com tabelas densas podem perder a estrutura no resultado — para esses casos, considere rodar o OCR antes se o PDF for digitalizado, ou revisar o resultado antes de usá-lo em um modelo."
+    }
   }
 ]

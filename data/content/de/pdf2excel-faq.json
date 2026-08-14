@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "Die extrahierten Werte sind normale Zahlen und Text, keine Formeln — eine PDF speichert keine zugrundeliegenden Berechnungen, nur dargestellte Ergebnisse. In Excel kannst du beliebige Formeln über die extrahierten Daten legen."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Wenn meine PDF mehrere Tabellen enthält, landen die dann auf separaten Tabellenblättern?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Jede erkannte Tabelle wird zu einem eigenen Tabellenblatt in der Ausgabedatei (.xlsx), benannt und sortiert entsprechend ihrer Position in der PDF, sodass Tabellen aus unterschiedlichen Seiten oder Abschnitten nicht vermischt werden."
+    }
   }
 ]

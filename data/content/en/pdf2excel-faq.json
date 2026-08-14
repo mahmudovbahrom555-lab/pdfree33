@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "The extracted values are plain numbers and text, not formulas — a PDF has no underlying formulas to recover, only rendered results. Once in Excel, you can add your own formulas over the extracted data as usual."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "If my PDF has multiple tables, do they end up on separate sheets?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. Each detected table becomes its own sheet in the output .xlsx file, named and ordered to match its position in the PDF, so tables from different pages or sections don't get mixed together."
+    }
   }
 ]

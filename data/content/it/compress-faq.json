@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "Sì. PDFree supporta l'elaborazione batch completa — seleziona o trascina più file PDF, ognuno viene compresso localmente nel tuo browser. Al termine, scarica tutti i risultati in un unico file ZIP. Nessun limite giornaliero né al numero di file."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Perché alcuni portali di concorsi pubblici o candidature rifiutano il mio PDF perché troppo grande?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Molti moduli online (concorsi pubblici, portali di candidatura, siti della pubblica amministrazione) limitano i caricamenti a 2-10 MB, spesso senza indicarlo chiaramente finché il caricamento non fallisce. Comprimere prima il PDF di solito risolve il problema anche con una riduzione minima, senza modificare il contenuto del documento."
+    }
   }
 ]

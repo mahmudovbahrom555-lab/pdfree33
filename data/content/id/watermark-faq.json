@@ -78,5 +78,13 @@
       "@type": "Answer",
       "text": "Ya. Pilih atau seret beberapa file PDF dan PDFree menerapkan tanda air yang sama ke setiap file, langsung di browser Anda. Hasilnya dikemas dalam satu file ZIP untuk diunduh. Tanpa akun, tanpa unggah, tanpa batas jumlah file."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah saya menempelkan cap “LUNAS” atau “BELUM LUNAS” pada faktur PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Bisa. Isi teks dengan LUNAS (atau BELUM LUNAS), pilih posisi di salah satu sudut, dan atur opasitas ke 100% untuk tampilan seperti cap solid, bukan tanda air transparan bawaan. Ini akan diterapkan ke setiap halaman yang Anda pilih, jadi faktur atau nota multi-halaman ditandai secara konsisten."
+    }
   }
 ]

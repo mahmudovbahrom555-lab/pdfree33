@@ -46,5 +46,13 @@
       "@type": "Answer",
       "text": "Tak. PDFree obsługuje pełne przetwarzanie wsadowe — wybierz lub przeciągnij kilka plików PDF, każdy jest kompresowany lokalnie w przeglądarce. Po zakończeniu pobierz wszystkie wyniki jako jedno archiwum ZIP. Bez dziennego limitu i bez limitu liczby plików."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Dlaczego niektóre portale, np. ePUAP, lub strony do składania podań odrzucają mój PDF jako zbyt duży?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Wiele formularzy online (ePUAP, portale rekrutacyjne, strony urzędów) ogranicza rozmiar przesyłanych plików do 2-10 MB, często nie informując o tym jasno, dopóki przesyłanie się nie powiedzie. Skompresowanie PDF wcześniej zwykle rozwiązuje ten problem nawet przy niewielkim zmniejszeniu rozmiaru, bez zmiany zawartości dokumentu."
+    }
   }
 ]

@@ -62,5 +62,21 @@
       "@type": "Answer",
       "text": "Düzenli çizgi yapısına sahip tablolarda büyük ölçüde evet. Birleştirilmiş hücreler veya iç içe geçmiş karmaşık tablolar dönüştürme sonrası manuel düzenleme gerektirebilir."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Taranmış bir PDF'yi Excel'e dönüştürebilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Doğrudan hayır — taranmış bir PDF, metin katmanı olmayan bir görüntüdür, bu yüzden tablo algılanacak veri yoktur. Önce metin katmanı eklemek için OCR PDF'i çalıştırın, ardından sonucu Excel'e dönüştürün."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDF'imde birden fazla tablo varsa, bunlar ayrı sayfalara mı ayrılır?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. Algılanan her tablo, çıktı .xlsx dosyasında kendi sayfasına dönüşür; PDF içindeki konumuna göre adlandırılır ve sıralanır, böylece farklı sayfa veya bölümlerdeki tablolar birbirine karışmaz."
+    }
   }
 ]

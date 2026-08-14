@@ -78,5 +78,13 @@
       "@type": "Answer",
       "text": "Ya. Mode batch PDFree memungkinkan Anda menambahkan kata sandi dan izin ke beberapa file PDF sekaligus, masing-masing dienkripsi secara terpisah di browser Anda dengan pengaturan yang sama. Anda akan mendapatkan ZIP berisi semua file yang dilindungi."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah enkripsi RC4-128 cukup aman untuk melindungi PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Untuk penggunaan sehari-hari — mencegah akses sembarangan ke dokumen, membagikan file sensitif dengan orang yang Anda percaya, atau membatasi pencetakan/penyalinan — ya, RC4-128 adalah standar PDF nyata yang berfungsi dan didukung sejak PDF 1.4, bisa dibuka di pembaca mana pun. Namun, ini tidak sekuat AES-256, dan penyerang dengan sumber daya besar yang memiliki file terenkripsi bisa membobolnya. Untuk rekam medis, dokumen hukum, atau apa pun dengan risiko regulasi nyata, jangan hanya mengandalkan kata sandi — gabungkan dengan drive terenkripsi, layanan berbagi file yang aman, atau alat kepatuhan organisasi Anda. RC4-128 punya satu keunggulan: file tetap bisa dibuka di pembaca PDF lama yang tidak mendukung AES-256 sama sekali, jadi PDF berpassword tetap bisa dibuka oleh lebih banyak penerima."
+    }
   }
 ]

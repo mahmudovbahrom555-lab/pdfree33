@@ -4058,20 +4058,20 @@
         "pl": "Konwertuj zawartość PDF do tekstu Markdown .md. Przetwarzanie w przeglądarce."
       },
       "keywords": {
-        "en": "pdf to markdown, pdf to md, convert pdf to markdown, pdf to md converter, extract pdf text as markdown",
-        "es": "pdf a markdown, convertir pdf a markdown, pdf a md, extraer texto de pdf como markdown, convertidor pdf markdown",
-        "pt": "pdf para markdown, converter pdf em markdown, pdf para md, extrair texto de pdf como markdown, conversor pdf markdown",
-        "de": "pdf zu markdown, pdf in markdown umwandeln, pdf zu md, pdf text als markdown extrahieren, pdf markdown konverter",
-        "fr": "pdf en markdown, convertir pdf en markdown, pdf en md, extraire le texte d'un pdf en markdown, convertisseur pdf markdown",
-        "id": "pdf ke markdown, konversi pdf ke markdown, pdf ke md, ekstrak teks pdf jadi markdown, konverter pdf markdown",
-        "vi": "pdf sang markdown, chuyển pdf sang markdown, pdf sang md, trích xuất văn bản pdf thành markdown, công cụ chuyển pdf sang markdown",
-        "ru": "pdf в markdown, конвертировать pdf в markdown, pdf в md, извлечь текст pdf в markdown, конвертер pdf в markdown",
-        "ja": "pdf markdown 変換, pdfをmarkdownに変換, pdf md 変換, pdfのテキストをmarkdownで抽出, pdf マークダウン コンバーター",
-        "it": "pdf in markdown, convertire pdf in markdown, pdf in md, estrarre testo da pdf in markdown, convertitore pdf markdown",
-        "ko": "pdf markdown 변환, pdf를 markdown으로 변환, pdf md 변환, pdf 텍스트를 markdown으로 추출, pdf 마크다운 변환기",
-        "nl": "pdf naar markdown, pdf omzetten naar markdown, pdf naar md, pdf tekst extraheren als markdown, pdf markdown converter",
-        "pl": "pdf do markdown, konwertuj pdf do markdown, pdf do md, wyodrębnij tekst pdf jako markdown, konwerter pdf do markdown",
-        "tr": "pdf markdown'a dönüştür, pdf'yi markdown yap, pdf md dönüştürücü, pdf metnini markdown olarak çıkar, pdf markdown dönüştürücü"
+        "en": "pdf to markdown, pdf to md, convert pdf to markdown, pdf to md converter, extract pdf text as markdown, pdf to markdown for ai, rag document prep, markdown for llm context",
+        "es": "pdf a markdown, convertir pdf a markdown, pdf a md, extraer texto de pdf como markdown, convertidor pdf markdown, pdf a markdown para ia, preparar documentos para rag, markdown para contexto de llm",
+        "pt": "pdf para markdown, converter pdf em markdown, pdf para md, extrair texto de pdf como markdown, conversor pdf markdown, pdf para markdown para ia, preparação de documentos rag, markdown para contexto de llm",
+        "de": "pdf zu markdown, pdf in markdown umwandeln, pdf zu md, pdf text als markdown extrahieren, pdf markdown konverter, pdf zu markdown für ki, rag dokumentenaufbereitung, markdown für llm kontext",
+        "fr": "pdf en markdown, convertir pdf en markdown, pdf en md, extraire le texte d'un pdf en markdown, convertisseur pdf markdown, pdf en markdown pour l'ia, préparation de documents rag, markdown pour contexte llm",
+        "id": "pdf ke markdown, konversi pdf ke markdown, pdf ke md, ekstrak teks pdf jadi markdown, konverter pdf markdown, pdf ke markdown untuk ai, persiapan dokumen rag, markdown untuk konteks llm",
+        "vi": "pdf sang markdown, chuyển pdf sang markdown, pdf sang md, trích xuất văn bản pdf thành markdown, công cụ chuyển pdf sang markdown, pdf sang markdown cho ai, chuẩn bị tài liệu rag, markdown cho ngữ cảnh llm",
+        "ru": "pdf в markdown, конвертировать pdf в markdown, pdf в md, извлечь текст pdf в markdown, конвертер pdf в markdown, pdf в markdown для ии, подготовка документов для rag, markdown для контекста llm",
+        "ja": "pdf markdown 変換, pdfをmarkdownに変換, pdf md 変換, pdfのテキストをmarkdownで抽出, pdf マークダウン コンバーター, pdf markdown ai変換, ragドキュメント準備, llmコンテキスト用markdown",
+        "it": "pdf in markdown, convertire pdf in markdown, pdf in md, estrarre testo da pdf in markdown, convertitore pdf markdown, pdf in markdown per ia, preparazione documenti rag, markdown per contesto llm",
+        "ko": "pdf markdown 변환, pdf를 markdown으로 변환, pdf md 변환, pdf 텍스트를 markdown으로 추출, pdf 마크다운 변환기, pdf markdown ai 변환, rag 문서 준비, llm 컨텍스트용 markdown",
+        "nl": "pdf naar markdown, pdf omzetten naar markdown, pdf naar md, pdf tekst extraheren als markdown, pdf markdown converter, pdf naar markdown voor ai, rag documentvoorbereiding, markdown voor llm context",
+        "pl": "pdf do markdown, konwertuj pdf do markdown, pdf do md, wyodrębnij tekst pdf jako markdown, konwerter pdf do markdown, pdf do markdown dla ai, przygotowanie dokumentów rag, markdown dla kontekstu llm",
+        "tr": "pdf markdown'a dönüştür, pdf'yi markdown yap, pdf md dönüştürücü, pdf metnini markdown olarak çıkar, pdf markdown dönüştürücü, pdf markdown ai için, rag belge hazırlama, llm bağlamı için markdown"
       }
     },
     {

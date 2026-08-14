@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "Sì. La modalità batch di PDFree permette di aggiungere password e permessi a più file PDF contemporaneamente, ognuno cifrato separatamente nel tuo browser con le stesse impostazioni. Otterrai uno ZIP con tutti i file protetti."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "La crittografia RC4-128 è sufficientemente sicura per proteggere un PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Per l'uso quotidiano — evitare l'accesso occasionale a un documento, condividere file sensibili con persone di fiducia o limitare stampa/copia — sì: RC4-128 è uno standard PDF reale e funzionante, supportato dal PDF 1.4, che qualsiasi lettore può aprire. Non è però robusto quanto AES-256, e un aggressore con risorse adeguate e il file cifrato potrebbe romperlo. Per cartelle cliniche, documenti legali o qualsiasi cosa con reali implicazioni normative, non affidarti solo alla password — abbinala a un'unità cifrata, un servizio di condivisione sicuro o gli strumenti di conformità della tua organizzazione. RC4-128 ha un vantaggio: si apre anche nei lettori PDF più datati che non supportano affatto AES-256, quindi un PDF protetto da password resta apribile dal maggior numero possibile di destinatari."
+    }
   }
 ]

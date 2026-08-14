@@ -78,5 +78,13 @@
       "@type": "Answer",
       "text": "Yes. PDFree supports full batch compression — select or drag in as many PDF files as you need, and each one is compressed locally in your browser using your chosen preset. When it's done, download all the results as a single ZIP file. There's no daily limit and no cap on how many files you can process."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Why do some government or job application portals reject my PDF for being too large?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Many online forms (job applications, USCIS and other government portals, university applications) cap uploads at 2-10MB and don't say so clearly until the upload fails. Compressing the PDF first — even a small reduction is usually enough — fixes this without changing what's in the document."
+    }
   }
 ]

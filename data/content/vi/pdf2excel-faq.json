@@ -46,5 +46,21 @@
       "@type": "Answer",
       "text": "Có, hoàn toàn miễn phí mãi mãi. Không có gói trả phí, không giới hạn hàng ngày."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Tôi có thể chuyển file PDF scan sang Excel không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không thể trực tiếp — file PDF scan là hình ảnh không có lớp văn bản, nên không có dữ liệu để nhận diện bảng. Hãy chạy OCR PDF trước để thêm lớp văn bản, sau đó chuyển kết quả sang Excel."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Nếu file PDF của tôi có nhiều bảng, chúng có nằm trên các trang tính riêng không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có. Mỗi bảng được nhận diện sẽ trở thành một trang tính riêng trong file .xlsx kết quả, được đặt tên và sắp xếp theo đúng vị trí trong file PDF, nên các bảng từ những trang hoặc phần khác nhau sẽ không bị lẫn vào nhau."
+    }
   }
 ]

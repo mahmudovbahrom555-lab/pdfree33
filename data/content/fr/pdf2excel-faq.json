@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "Les valeurs extraites sont des chiffres et du texte ordinaires, pas des formules — un PDF ne stocke pas les calculs sous-jacents, seulement les résultats affichés. Une fois dans Excel, vous pouvez ajouter vos propres formules sur les données extraites normalement."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Si mon PDF contient plusieurs tableaux, se retrouvent-ils sur des feuilles séparées ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui. Chaque tableau détecté devient sa propre feuille dans le fichier .xlsx généré, nommée et classée selon sa position dans le PDF, afin que les tableaux de pages ou sections différentes ne soient pas mélangés."
+    }
   }
 ]

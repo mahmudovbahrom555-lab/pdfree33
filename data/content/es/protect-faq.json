@@ -46,5 +46,13 @@
       "@type": "Answer",
       "text": "Sí. El modo por lotes de PDFree permite añadir contraseña y permisos a varios archivos PDF a la vez, cada uno cifrado por separado en tu navegador con la misma configuración. Obtendrás un ZIP con todos los archivos protegidos."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Es el cifrado RC4-128 lo bastante seguro para proteger un PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Para el uso cotidiano —evitar el acceso casual a un documento, compartir archivos sensibles con personas de confianza o restringir la impresión o copia— sí: RC4-128 es un estándar de PDF real y compatible desde PDF 1.4 que cualquier lector puede abrir. No es tan fuerte como AES-256, y un atacante con muchos recursos y el archivo cifrado podría romperlo. Para historiales médicos, documentos legales o cualquier cosa con implicaciones normativas reales, no confíes solo en la contraseña — combínala con una unidad cifrada, un servicio de intercambio seguro o las herramientas de cumplimiento de tu organización. RC4-128 tiene una ventaja: se abre en lectores de PDF antiguos que no soportan AES-256, así que un PDF con contraseña sigue siendo accesible para el mayor número de destinatarios posible."
+    }
   }
 ]

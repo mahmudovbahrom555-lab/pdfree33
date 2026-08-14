@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "Oui. Le mode par lots de PDFree permet d'ajouter un mot de passe et des permissions à plusieurs fichiers PDF en une seule fois, chacun chiffré séparément dans votre navigateur avec les mêmes paramètres. Vous obtiendrez un ZIP avec tous les fichiers protégés."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Le chiffrement RC4-128 est-il suffisamment sûr pour protéger un PDF ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Pour un usage courant — éviter un accès occasionnel à un document, partager des fichiers sensibles avec des personnes de confiance, ou restreindre l'impression/la copie — oui : RC4-128 est une norme PDF réelle et fonctionnelle, prise en charge depuis PDF 1.4 par tous les lecteurs. Il n'est cependant pas aussi robuste qu'AES-256, et un attaquant disposant de ressources importantes et du fichier chiffré pourrait le casser. Pour des dossiers médicaux, des documents juridiques ou tout ce qui comporte de véritables enjeux réglementaires, ne comptez pas uniquement sur le mot de passe — combinez-le avec un disque chiffré, un service de partage sécurisé ou les outils de conformité de votre organisation. RC4-128 a un avantage : il s'ouvre dans les anciens lecteurs PDF qui ne prennent pas du tout en charge AES-256, donc un PDF protégé reste accessible au plus grand nombre de destinataires."
+    }
   }
 ]

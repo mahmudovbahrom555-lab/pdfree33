@@ -62,5 +62,13 @@
       "@type": "Answer",
       "text": "Ja. PDFree funktioniert als Progressive Web App vollständig offline, sobald die Seite geladen wurde. Es ist keine Internetverbindung erforderlich — die gesamte Verarbeitung erfolgt in deinem Browser."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Warum lehnen manche Bewerbungs- oder Behördenportale meine PDF wegen zu großer Dateigröße ab?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Viele Online-Formulare (Bewerbungsportale, das Finanzamt-Portal, Jobcenter-Formulare) begrenzen Uploads auf 2–10 MB, oft ohne das vorher klar anzuzeigen — der Fehler kommt erst beim Hochladen. Die PDF vorher zu komprimieren behebt das meist schon mit einer kleinen Reduzierung, ohne den Inhalt zu verändern."
+    }
   }
 ]

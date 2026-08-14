@@ -62,5 +62,13 @@
       "@type": "Answer",
       "text": "Oui. PDFree prend en charge le traitement par lots complet — sélectionnez ou glissez plusieurs PDF, chacun est compressé localement dans votre navigateur. Une fois terminé, téléchargez tous les résultats dans un seul fichier ZIP. Aucune limite quotidienne ni de nombre de fichiers."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Pourquoi certains portails d'administration ou de candidature refusent-ils mon PDF car trop volumineux ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "De nombreux formulaires en ligne (service-public.fr, portails de candidature, CAF) limitent les envois à 2-10 Mo, souvent sans le préciser clairement avant l'échec de l'envoi. Compresser le PDF au préalable règle généralement le problème, même avec une petite réduction, sans changer le contenu du document."
+    }
   }
 ]

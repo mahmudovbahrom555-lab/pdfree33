@@ -46,5 +46,21 @@
       "@type": "Answer",
       "text": "Tak, całkowicie darmowe na zawsze. Bez płatnych planów, bez dziennych limitów."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy mogę przekonwertować zeskanowany plik PDF na Excel?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie bezpośrednio — zeskanowany plik PDF to obraz bez warstwy tekstowej, więc nie ma danych, w których można by wykryć tabelę. Najpierw uruchom OCR PDF, aby dodać warstwę tekstową, a następnie przekonwertuj wynik na Excel."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Jeśli mój PDF ma kilka tabel, czy trafiają one na osobne arkusze?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. Każda wykryta tabela staje się osobnym arkuszem w wynikowym pliku .xlsx, nazwanym i uporządkowanym zgodnie z jej pozycją w pliku PDF, dzięki czemu tabele z różnych stron lub sekcji się nie mieszają."
+    }
   }
 ]

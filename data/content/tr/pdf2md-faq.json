@@ -46,5 +46,13 @@
       "@type": "Answer",
       "text": "Evet, sonsuza kadar tamamen ücretsizdir."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Bu araç, PDF'leri yapay zeka araçları, RAG veya LLM bağlamı için hazırlamaya uygun mu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet — Markdown, bir belgeyi bir LLM'in bağlam penceresine veya bir RAG hattına aktarmak için yaygın kullanılan hafif bir biçimdir; yerelde dönüştürmek, içeriğin yalnızca biçim değiştirmek için cihazınızdan çıkmasına gerek olmadığı anlamına gelir. PDFree tabloları korumadığından, yoğun tablo içeren belgeler sonuçta yapısını kaybedebilir — bu tür belgelerde, PDF taranmışsa önce OCR çalıştırmayı ya da sonucu bir modele vermeden önce kontrol etmeyi düşünün."
+    }
   }
 ]

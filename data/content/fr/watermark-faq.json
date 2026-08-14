@@ -70,5 +70,13 @@
       "@type": "Answer",
       "text": "Oui. Sélectionnez ou glissez plusieurs fichiers PDF et PDFree applique le même filigrane à chacun, directement dans votre navigateur. Les résultats sont regroupés dans un seul fichier ZIP à télécharger. Aucun compte, aucun envoi, aucune limite de fichiers."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Puis-je apposer un tampon « PAYÉ » ou « IMPAYÉ » sur une facture ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui. Saisissez PAYÉ (ou IMPAYÉ) comme texte, choisissez une position dans un coin et réglez l'opacité à 100 % pour obtenir un effet de tampon opaque plutôt que le filigrane translucide par défaut. Cela s'applique à toutes les pages sélectionnées, donc une facture de plusieurs pages est marquée de façon cohérente."
+    }
   }
 ]

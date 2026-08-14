@@ -62,5 +62,13 @@
       "@type": "Answer",
       "text": "Sì. Seleziona o trascina più file PDF e PDFree applica la stessa filigrana a ognuno, direttamente nel tuo browser. I risultati vengono raggruppati in un unico file ZIP da scaricare. Nessun account, nessun caricamento, nessun limite al numero di file."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso timbrare “PAGATO” o “NON PAGATO” su una fattura?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. Inserisci come testo PAGATO (o NON PAGATO), scegli una posizione in un angolo e imposta l'opacità al 100% per un effetto timbro solido invece della filigrana traslucida predefinita. Si applica a tutte le pagine selezionate, quindi una fattura su più pagine viene contrassegnata in modo coerente."
+    }
   }
 ]

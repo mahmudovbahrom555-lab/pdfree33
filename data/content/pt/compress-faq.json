@@ -62,5 +62,13 @@
       "@type": "Answer",
       "text": "Sim. O PDFree oferece processamento em lote completo — selecione ou arraste vários PDFs, cada um é comprimido localmente no seu navegador. Ao final, baixe todos os resultados em um único arquivo ZIP. Sem limite diário nem de quantidade de arquivos."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Por que alguns portais de concurso público ou de órgãos governamentais rejeitam meu PDF por ser grande demais?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Muitos formulários on-line (concursos via Cebraspe, FGV, VUNESP, portais de órgãos públicos) limitam os envios a 2-10 MB, muitas vezes sem avisar claramente até o envio falhar. Comprimir o PDF antes costuma resolver isso mesmo com uma redução pequena, sem alterar o conteúdo do documento."
+    }
   }
 ]

@@ -46,5 +46,13 @@
       "@type": "Answer",
       "text": "Có, hoàn toàn miễn phí mãi mãi."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Công cụ này có phù hợp để chuẩn bị PDF cho công cụ AI, RAG, hay ngữ cảnh của LLM không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có — Markdown là định dạng nhẹ và phổ biến để đưa tài liệu vào cửa sổ ngữ cảnh của LLM hoặc pipeline RAG, và việc chuyển đổi cục bộ nghĩa là nội dung không cần rời khỏi thiết bị của bạn chỉ để đổi định dạng. Vì PDFree không giữ lại bảng biểu, các tài liệu có nhiều bảng dày đặc có thể mất cấu trúc trong kết quả — với tài liệu như vậy, hãy chạy OCR trước nếu PDF là bản scan, hoặc kiểm tra lại kết quả trước khi đưa vào mô hình."
+    }
   }
 ]

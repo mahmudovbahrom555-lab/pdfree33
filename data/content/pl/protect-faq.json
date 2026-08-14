@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "Tak. Tryb wsadowy PDFree pozwala dodać hasło i uprawnienia do kilku plików PDF naraz — każdy jest szyfrowany osobno w przeglądarce z tymi samymi ustawieniami. Otrzymasz archiwum ZIP ze wszystkimi zabezpieczonymi plikami."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy szyfrowanie RC4-128 jest wystarczająco bezpieczne, aby chronić plik PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Do codziennego użytku — ochrony dokumentu przed przypadkowym dostępem, udostępniania poufnych plików zaufanym osobom lub ograniczenia drukowania/kopiowania — tak: RC4-128 to prawdziwy, działający standard PDF obsługiwany od wersji PDF 1.4, który otworzy każdy czytnik. Nie jest jednak tak silny jak AES-256, a atakujący dysponujący odpowiednimi zasobami i zaszyfrowanym plikiem mógłby go złamać. W przypadku dokumentacji medycznej, dokumentów prawnych lub czegokolwiek z realnymi wymogami regulacyjnymi nie polegaj wyłącznie na haśle — połącz je z zaszyfrowanym dyskiem, bezpieczną usługą udostępniania plików lub narzędziami zgodności Twojej organizacji. RC4-128 ma jedną zaletę: otwiera się nawet w starszych czytnikach PDF, które w ogóle nie obsługują AES-256, więc plik PDF z hasłem pozostaje dostępny dla jak najszerszego grona odbiorców."
+    }
   }
 ]

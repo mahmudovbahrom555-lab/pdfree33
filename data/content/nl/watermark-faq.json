@@ -62,5 +62,13 @@
       "@type": "Answer",
       "text": "Ja. Selecteer of sleep meerdere PDF-bestanden en PDFree past hetzelfde watermerk toe op elk bestand, direct in je browser. De resultaten worden gebundeld in één ZIP-bestand om te downloaden. Geen account, geen upload, geen limiet op het aantal bestanden."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik “BETAALD” of “NIET BETAALD” op een factuur stempelen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Vul als tekst BETAALD (of NIET BETAALD) in, kies een positie in een hoek en zet de dekking op 100% voor een solide stempellook in plaats van het standaard doorschijnende watermerk. Dit wordt toegepast op elke pagina die je selecteert, zodat een factuur van meerdere pagina's consistent gemarkeerd wordt."
+    }
   }
 ]

@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "Ja. Met PDFree's batchmodus kun je meerdere PDF-bestanden tegelijk voorzien van een wachtwoord en machtigingen — elk apart versleuteld in je browser met dezelfde instellingen. Je krijgt een ZIP met alle beveiligde bestanden."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Is RC4-128-versleuteling veilig genoeg om een PDF te beschermen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Voor alledaags gebruik — voorkomen dat iemand toevallig bij een document kan, gevoelige bestanden delen met mensen die je vertrouwt, of afdrukken/kopiëren beperken — ja: RC4-128 is een echte, werkende PDF-standaard die sinds PDF 1.4 wordt ondersteund en die elke lezer kan openen. Het is echter niet zo sterk als AES-256, en een aanvaller met voldoende middelen en het versleutelde bestand zou het kunnen kraken. Voor medische dossiers, juridische stukken of alles met echte regelgevingsrisico's, vertrouw niet alleen op het wachtwoord — combineer het met een versleutelde schijf, een beveiligde deeldienst of de compliance-tools van je organisatie. RC4-128 heeft één voordeel: het opent ook in oudere PDF-lezers die AES-256 helemaal niet ondersteunen, zodat een PDF met wachtwoord voor zoveel mogelijk ontvangers bruikbaar blijft."
+    }
   }
 ]

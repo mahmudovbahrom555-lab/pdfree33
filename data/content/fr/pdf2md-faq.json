@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "Uniquement si le PDF a déjà une couche de texte. Les PDFs scannés basés sur des images n'ont pas de texte extractible — appliquez d'abord l'OCR, puis convertissez le résultat."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Est-ce adapté pour préparer des PDF destinés à des outils d'IA, du RAG ou le contexte d'un LLM ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui — le Markdown est un format léger très utilisé pour alimenter la fenêtre de contexte d'un LLM ou un pipeline RAG, et convertir le fichier localement signifie que son contenu n'a pas besoin de quitter votre appareil juste pour changer de format. Comme PDFree ne conserve pas les tableaux, les documents riches en tableaux peuvent perdre leur structure dans le résultat — pour ces documents, pensez à passer d'abord par l'OCR si le PDF est scanné, ou à vérifier le résultat avant de l'envoyer à un modèle."
+    }
   }
 ]

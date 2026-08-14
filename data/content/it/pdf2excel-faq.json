@@ -46,5 +46,21 @@
       "@type": "Answer",
       "text": "Sì, completamente gratuito per sempre. Nessun piano a pagamento, nessun limite giornaliero."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso convertire un PDF scansionato in Excel?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non direttamente — un PDF scansionato è un'immagine senza livello di testo, quindi non ci sono dati per rilevare una tabella. Esegui prima OCR PDF per aggiungere un livello di testo, poi converti il risultato in Excel."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Se il mio PDF ha più tabelle, finiscono su fogli separati?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. Ogni tabella rilevata diventa un foglio a sé nel file .xlsx generato, denominato e ordinato in base alla sua posizione nel PDF, così le tabelle di pagine o sezioni diverse non si mescolano."
+    }
   }
 ]

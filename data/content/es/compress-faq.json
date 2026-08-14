@@ -62,5 +62,13 @@
       "@type": "Answer",
       "text": "Sí. PDFree admite procesamiento por lotes completo — selecciona o arrastra varios PDF, cada uno se comprime localmente en tu navegador. Al finalizar, descargas todos los resultados en un único archivo ZIP. Sin límite diario ni de cantidad de archivos."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Por qué algunos portales de oposiciones o trámites rechazan mi PDF por ser demasiado grande?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Muchos formularios en línea (oposiciones, sede electrónica de la administración, portales de empleo) limitan las subidas a 2-10 MB y no lo avisan claramente hasta que falla la subida. Comprimir el PDF antes suele solucionarlo con una reducción pequeña, sin cambiar el contenido del documento."
+    }
   }
 ]

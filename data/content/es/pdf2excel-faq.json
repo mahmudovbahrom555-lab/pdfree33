@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "Los valores extraídos son números y texto ordinarios, no fórmulas — un PDF no almacena cálculos subyacentes, solo resultados renderizados. Una vez en Excel, puedes añadir tus propias fórmulas sobre los datos extraídos con normalidad."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Si mi PDF tiene varias tablas, ¿acaban en hojas separadas?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sí. Cada tabla detectada se convierte en su propia hoja dentro del archivo .xlsx resultante, nombrada y ordenada según su posición en el PDF, así que las tablas de páginas o secciones distintas no se mezclan."
+    }
   }
 ]

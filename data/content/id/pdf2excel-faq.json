@@ -46,5 +46,21 @@
       "@type": "Answer",
       "text": "Ya, sepenuhnya gratis selamanya. Tidak ada paket berbayar, tidak ada batas harian."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah saya mengonversi PDF hasil scan ke Excel?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak secara langsung — PDF hasil scan adalah gambar tanpa lapisan teks, jadi tidak ada data untuk mendeteksi tabel. Jalankan OCR PDF terlebih dahulu untuk menambahkan lapisan teks, lalu konversikan hasilnya ke Excel."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Jika PDF saya memiliki beberapa tabel, apakah masing-masing masuk ke lembar terpisah?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ya. Setiap tabel yang terdeteksi menjadi lembar tersendiri di file .xlsx hasil konversi, diberi nama dan diurutkan sesuai posisinya di PDF, sehingga tabel dari halaman atau bagian berbeda tidak tercampur."
+    }
   }
 ]

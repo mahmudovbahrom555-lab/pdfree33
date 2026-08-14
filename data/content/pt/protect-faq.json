@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "Sim. O modo em lote do PDFree permite adicionar senha e permissões a vários arquivos PDF de uma vez, cada um criptografado separadamente no seu navegador com as mesmas configurações. Você receberá um ZIP com todos os arquivos protegidos."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "A criptografia RC4-128 é segura o suficiente para proteger um PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Para o uso do dia a dia — evitar acesso casual a um documento, compartilhar arquivos sensíveis com pessoas de confiança ou restringir impressão/cópia — sim: o RC4-128 é um padrão real de PDF, suportado desde o PDF 1.4, que qualquer leitor consegue abrir. Porém, não é tão forte quanto o AES-256, e um atacante com bastantes recursos e o arquivo criptografado poderia quebrá-lo. Para prontuários médicos, documentos jurídicos ou qualquer coisa com exigências regulatórias reais, não confie só na senha — combine-a com um disco criptografado, um serviço de compartilhamento seguro ou as ferramentas de compliance da sua organização. O RC4-128 tem uma vantagem: ele abre em leitores de PDF mais antigos que não suportam AES-256, então um PDF com senha continua acessível ao maior número possível de destinatários."
+    }
   }
 ]
