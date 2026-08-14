@@ -339,8 +339,10 @@ async function _renderPage(pageNum) {
 
 // Applies a single move/style/delete override into the accumulator maps.
 // Shared by _resolveScene's top-level loop and its 'batch' case (lasso multi-select
-// move/delete pushes one 'batch' command whose .ops are each shaped exactly like a
-// top-level move/style/delete command — same field contract, just nested).
+// move/delete, and marker's multi-line drag-to-mark, each push one 'batch' command
+// whose .ops are shaped exactly like a top-level move/style/delete command — same
+// field contract, just nested). 'add' ops are handled separately by the caller since
+// they inject a brand new command rather than patching an existing one.
 function _applyOp(op, deleted, pos, style) {
   if (op.type === 'delete') { deleted.add(op.targetId); return; }
   if (op.type === 'move')   { const { type: _t, targetId, ...coords } = op; pos.set(targetId, coords); return; }
@@ -358,17 +360,22 @@ function _resolveScene(cmds) {
   const deleted = new Set();
   const pos     = new Map();   // id → coordinate patch ({ x,y } for text; { x1,y1,x2,y2 } for shapes)
   const style   = new Map();   // id → merged patch (last style per id wins, partial ok)
+  const added   = [];          // brand-new commands injected by 'batch' add-ops
   cmds.forEach(c => {
-    if (c.type === 'batch') { c.ops.forEach(op => _applyOp(op, deleted, pos, style)); return; }
+    if (c.type === 'batch') {
+      c.ops.forEach(op => op.type === 'add' ? added.push(op.cmd) : _applyOp(op, deleted, pos, style));
+      return;
+    }
     _applyOp(c, deleted, pos, style);
   });
-  return cmds
+  const resolved = cmds
     .filter(c => c.type !== 'move' && c.type !== 'style' && c.type !== 'delete' && c.type !== 'batch' && !deleted.has(c.id))
     .map(c => {
       const p = pos.get(c.id)   ?? null;
       const s = style.get(c.id) ?? null;
       return (p || s) ? { ...c, ...p, ...s } : c;
     });
+  return added.length ? [...resolved, ...added] : resolved;
 }
 
 // Returns the delta-shifted position fields for `cmd`, shaped to match exactly
@@ -562,6 +569,13 @@ function _redrawPage(overlay = null) {
       const shifted = cmds.filter(c => ids.includes(c.id)).map(c => ({ ...c, ...computeMovePatch(c, dx, dy) }));
       for (const c of shifted) renderCommand(ctx, c);
       if (shifted.length) _drawGroupSelectionOutline(ctx, shifted);
+    } else if (overlay.type === 'marker-smart-drag') {
+      ctx.save();
+      ctx.strokeStyle = overlay.color ?? '#e53e3e';
+      ctx.lineWidth   = 1.5;
+      ctx.setLineDash([4, 3]);
+      ctx.strokeRect(overlay.x, overlay.y, overlay.w, overlay.h);
+      ctx.restore();
     } else {
       renderCommand(ctx, overlay);
     }

@@ -77,17 +77,22 @@ function _resolveScene(cmds) {
   const deleted = new Set();
   const pos     = new Map();
   const style   = new Map();
+  const added   = [];
   cmds.forEach(c => {
-    if (c.type === 'batch') { c.ops.forEach(op => _applyOp(op, deleted, pos, style)); return; }
+    if (c.type === 'batch') {
+      c.ops.forEach(op => op.type === 'add' ? added.push(op.cmd) : _applyOp(op, deleted, pos, style));
+      return;
+    }
     _applyOp(c, deleted, pos, style);
   });
-  return cmds
+  const resolved = cmds
     .filter(c => c.type !== 'move' && c.type !== 'style' && c.type !== 'delete' && c.type !== 'batch' && !deleted.has(c.id))
     .map(c => {
       const p = pos.get(c.id)   ?? null;
       const s = style.get(c.id) ?? null;
       return (p || s) ? { ...c, ...p, ...s } : c;
     });
+  return added.length ? [...resolved, ...added] : resolved;
 }
 
 // ── Pure copy from js/drawUI.js's computeMovePatch ──────────────
@@ -433,6 +438,36 @@ test('_resolveScene: a batch can mix move, style and delete ops targeting differ
   expect(result).toHaveLength(2);
   expect(result.find(c => c.id === 1)).toEqual({ type: 'text', id: 1, x: 9, y: 9, size: 16 });
   expect(result.find(c => c.id === 2).color).toBe('#f00');
+});
+
+// ── _resolveScene: 'batch' 'add' ops (marker's multi-line drag-to-mark) ──
+
+test('_resolveScene: a batch of add-ops injects brand-new commands into the output', () => {
+  const cmds = [
+    { type: 'text', id: 1, x: 0, y: 0 },
+    { type: 'batch', ops: [
+      { type: 'add', cmd: { type: 'marker', id: 2, points: [[0, 0], [10, 0]] } },
+      { type: 'add', cmd: { type: 'marker', id: 3, points: [[0, 20], [10, 20]] } },
+    ] },
+  ];
+  const result = _resolveScene(cmds);
+  expect(result).toHaveLength(3);
+  expect(result.find(c => c.id === 2)).toEqual({ type: 'marker', id: 2, points: [[0, 0], [10, 0]] });
+  expect(result.find(c => c.id === 3)).toEqual({ type: 'marker', id: 3, points: [[0, 20], [10, 20]] });
+});
+
+test('_resolveScene: an add-op batch can be undone as one unit (later delete removes both)', () => {
+  const cmds = [
+    { type: 'batch', ops: [
+      { type: 'add', cmd: { type: 'marker', id: 1, points: [[0, 0], [10, 0]] } },
+      { type: 'add', cmd: { type: 'marker', id: 2, points: [[0, 20], [10, 20]] } },
+    ] },
+  ];
+  // Simulates Undo popping the whole batch command off the page's command list —
+  // the caller doesn't need any special-case logic, popping the one 'batch' entry
+  // is enough since both marks were added by that single history entry.
+  expect(_resolveScene(cmds)).toHaveLength(2);
+  expect(_resolveScene([])).toHaveLength(0);
 });
 
 // ── Command-stack: push / undo / redo / clear ───────────────────

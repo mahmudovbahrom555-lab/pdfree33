@@ -564,7 +564,16 @@ function _onDown(e) {
     _current = { type: 'pen', id: ++_cmdId, points: [[x, y]], color: getColor(), width: getWidth() };
   } else if (tool === 'marker') {
     clearRedoForCurrentPage();
-    _current = { type: 'marker', id: ++_cmdId, points: [[x, y]], color: getColor(), width: Math.max(6, getWidth() * 3), opacity: MARKER_OPACITY };
+    const width = Math.max(6, getWidth() * 3);
+    // Starting on text: track a drag rectangle (like rect/highlight) so _onUp can snap
+    // to the actual text touched — a tap-without-drag still marks the whole line, a real
+    // drag snaps to every line the drag rectangle overlaps. Starting off text keeps the
+    // plain freehand marker stroke (original behavior, unchanged).
+    if (_hitTestTextItem(x, y)) {
+      _current = { type: 'marker-smart-drag', _ox: x, _oy: y, x, y, w: 0, h: 0, color: getColor(), width };
+    } else {
+      _current = { type: 'marker', id: ++_cmdId, points: [[x, y]], color: getColor(), width, opacity: MARKER_OPACITY };
+    }
   } else if (tool === 'erase') {
     clearRedoForCurrentPage();
     _current = { type: 'erase', id: ++_cmdId, points: [[x, y]], width: Math.max(20, getWidth() * 6) };
@@ -639,7 +648,7 @@ function _onMove(e) {
     const snapY = ady < SNAP && ady < adx;   // snap to horizontal axis
     _current.x2 = snapX ? _current.x1 : x;
     _current.y2 = snapY ? _current.y1 : y;
-  } else if (type === 'rect' || type === 'highlight') {
+  } else if (type === 'rect' || type === 'highlight' || type === 'marker-smart-drag') {
     _current.x = Math.min(_current._ox, x);
     _current.y = Math.min(_current._oy, y);
     _current.w = Math.abs(x - _current._ox);
@@ -760,6 +769,39 @@ function _onUp(e) {
     return;
   }
 
+  // Marker started on text: a tap marks the whole line (no drag needed); a real drag
+  // snaps to every line the drag rectangle touches — "close enough" beats pixel-precise
+  // hand-dragging, matching how a real highlighter is actually used. Multiple lines
+  // become one 'batch' of add-ops so Undo removes the whole drag's marks in one step.
+  if (_current.type === 'marker-smart-drag') {
+    const { x, y, w, h, color, width } = _current;
+    if (w >= 3 && h >= 3) {
+      const lineRects = _textRectsFromDrag(getPageTextCache().get(getCurrentPage()) ?? [], { x, y, w, h });
+      if (lineRects?.length) {
+        const newCmds = lineRects.map(r => ({
+          type: 'marker', id: ++_cmdId,
+          points: [[r.x, r.y + r.h / 2], [r.x + r.w, r.y + r.h / 2]],
+          color, width, opacity: MARKER_OPACITY, comment: '',
+        }));
+        if (newCmds.length === 1) _pushCommand(newCmds[0]);
+        else _pushCommand({ type: 'batch', ops: newCmds.map(cmd => ({ type: 'add', cmd })) });
+      }
+    } else {
+      const line = _lineRectAtPoint(_current._ox, _current._oy);
+      if (line) {
+        const midY = line.y + line.h / 2;
+        _pushCommand({
+          type: 'marker', id: ++_cmdId,
+          points: [[line.x, midY], [line.x + line.w, midY]],
+          color, width, opacity: MARKER_OPACITY, comment: '',
+        });
+      }
+    }
+    _current = null;
+    redrawPage();
+    return;
+  }
+
   if (_isMeaningful(_current)) {
     const { type } = _current;
     let cmd;
@@ -771,20 +813,6 @@ function _onUp(e) {
       cmd = type === 'highlight' ? _buildHighlightCmd(rest) : rest;
     }
     _pushCommand(cmd);
-  } else if (_current.type === 'marker' && _current.points.length === 1) {
-    // Tap (no drag) with the marker tool on a text line — auto-mark the whole
-    // line instead of discarding the tap, so users don't have to hand-drag
-    // precisely across text just to underline/mark one line.
-    const [x, y] = _current.points[0];
-    const line = _lineRectAtPoint(x, y);
-    if (line) {
-      const midY = line.y + line.h / 2;
-      _pushCommand({
-        type: 'marker', id: ++_cmdId,
-        points: [[line.x, midY], [line.x + line.w, midY]],
-        color: _current.color, width: _current.width, opacity: MARKER_OPACITY, comment: '',
-      });
-    }
   }
 
   _current = null;
@@ -924,6 +952,13 @@ function _hitTestText(x, y) {
   }
   ctx.restore();
   return null;
+}
+
+// True if (x, y) lands on any text item — decides whether the marker tool starts a
+// text-snapping drag or a plain freehand stroke.
+function _hitTestTextItem(x, y) {
+  const items = getPageTextCache().get(getCurrentPage()) ?? [];
+  return items.some(it => x >= it.x && x <= it.x + it.w && y >= it.y && y <= it.y + it.h);
 }
 
 // Finds the full text line at a click point (marker's tap-to-underline shortcut).
