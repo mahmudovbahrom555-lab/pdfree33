@@ -772,6 +772,7 @@ export const EN = {
   cmp_recommended:        'Recommended',
   cmp_quality_label:      'Image quality',
   cmp_quality_aria:       'JPEG image quality for recompression',
+  cmp_quality_note:       '⚠️ Compressing images can make QR codes and fine photo detail harder to read. If your PDF has scannable codes or important photos, try Light or a higher quality value.',
   cmp_dpi_email:          'Email',
   cmp_dpi_email_hint:     '96 DPI',
   cmp_dpi_web:            'Web',

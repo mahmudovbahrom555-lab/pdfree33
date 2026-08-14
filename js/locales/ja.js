@@ -752,6 +752,7 @@ window.PDFREE_LOCALE = {
   cmp_recommended:        'おすすめ',
   cmp_quality_label:      '画像品質',
   cmp_quality_aria:       '再圧縮時のJPEG画像品質',
+  cmp_quality_note:       '⚠️ 画像を圧縮すると、QRコードや写真の細部が読み取りにくくなることがあります。スキャン可能なコードや重要な写真が含まれる場合は、「軽度」または画質を上げて試してください。',
   cmp_dpi_email:          'メール',
   cmp_dpi_email_hint:     '96 DPI',
   cmp_dpi_web:            'Web',

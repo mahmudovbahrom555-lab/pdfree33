@@ -750,6 +750,7 @@ window.PDFREE_LOCALE = {
   cmp_recommended:        'Direkomendasikan',
   cmp_quality_label:      'Kualitas gambar',
   cmp_quality_aria:       'Kualitas gambar JPEG untuk kompresi ulang',
+  cmp_quality_note:       '⚠️ Kompresi gambar dapat membuat kode QR dan detail foto halus lebih sulit dibaca. Jika PDF Anda berisi kode yang bisa dipindai atau foto penting, coba preset Ringan atau kualitas lebih tinggi.',
   cmp_dpi_email:          'Email',
   cmp_dpi_email_hint:     '96 DPI',
   cmp_dpi_web:            'Web',

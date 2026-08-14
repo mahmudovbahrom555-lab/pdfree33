@@ -750,6 +750,7 @@ window.PDFREE_LOCALE = {
   cmp_recommended:        'Рекомендуется',
   cmp_quality_label:      'Качество изображений',
   cmp_quality_aria:       'Качество JPEG для пересжатия изображений',
+  cmp_quality_note:       '⚠️ Сжатие изображений может ухудшить читаемость QR-кодов и мелких деталей на фото. Если в PDF есть сканируемые коды или важные фото, выберите режим «Лёгкое» или более высокое качество.',
   cmp_dpi_email:          'Email',
   cmp_dpi_email_hint:     '96 DPI',
   cmp_dpi_web:            'Веб',

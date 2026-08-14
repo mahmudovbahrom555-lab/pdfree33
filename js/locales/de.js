@@ -752,6 +752,7 @@ window.PDFREE_LOCALE = {
   cmp_recommended:        'Empfohlen',
   cmp_quality_label:      'Bildqualität',
   cmp_quality_aria:       'JPEG-Bildqualität für die Neukomprimierung',
+  cmp_quality_note:       '⚠️ Bildkomprimierung kann QR-Codes und feine Fotodetails schwerer lesbar machen. Falls dein PDF scanbare Codes oder wichtige Fotos enthält, wähle „Leicht“ oder eine höhere Qualität.',
   cmp_dpi_email:          'E-Mail',
   cmp_dpi_email_hint:     '96 DPI',
   cmp_dpi_web:            'Web',

@@ -750,6 +750,7 @@ window.PDFREE_LOCALE = {
   cmp_recommended:        'Đề xuất',
   cmp_quality_label:      'Chất lượng hình ảnh',
   cmp_quality_aria:       'Chất lượng hình ảnh JPEG khi nén lại',
+  cmp_quality_note:       '⚠️ Nén hình ảnh có thể khiến mã QR và chi tiết ảnh nhỏ khó đọc hơn. Nếu PDF của bạn có mã quét được hoặc ảnh quan trọng, hãy thử mức Nhẹ hoặc chất lượng cao hơn.',
   cmp_dpi_email:          'Email',
   cmp_dpi_email_hint:     '96 DPI',
   cmp_dpi_web:            'Web',

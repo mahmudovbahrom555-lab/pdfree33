@@ -492,6 +492,8 @@ function _render(file, scan) {
 
     ${_qualityRow()}
 
+    ${_qualityNote()}
+
     ${_dpiRow()}
 
     ${_targetSizeRow()}
@@ -578,6 +580,14 @@ function _qualityRow() {
   });
 }
 
+// Recompression is lossy — QR codes and fine photo detail can become hard to
+// read at higher compression. Only relevant once images actually get
+// recompressed (Light preset does no image recompression at all).
+function _qualityNote() {
+  if (_preset === 'low') return '';
+  return `<div class="compress-scan compress-scan--info" id="compressQualityNote" role="status">${t('cmp_quality_note')}</div>`;
+}
+
 function _presetCard(value, icon, label, desc, isRecommended = false) {
   const recBadge = isRecommended
     ? ` <span class="compress-preset__rec" aria-label="${t('cmp_recommended')}">⭐</span>`
@@ -634,9 +644,11 @@ function _bindEvents() {
         preserveLabel.classList.toggle('compress-preserve--inactive', _preset !== 'high');
       }
       // Apply preset quality default and sync slider
-      const qualityRow = id('qualityRow');
+      const qualityRow  = id('qualityRow');
+      const qualityNote = id('compressQualityNote');
       if (_preset === 'low') {
-        if (qualityRow) qualityRow.style.display = 'none';
+        if (qualityRow)  qualityRow.style.display  = 'none';
+        if (qualityNote) qualityNote.style.display = 'none';
       } else {
         _quality = _qualityDefaults[_preset] ?? 82;
         if (qualityRow) {
@@ -646,6 +658,7 @@ function _bindEvents() {
           const val = id('qualityVal');
           if (val) val.textContent = `${_quality}%`;
         }
+        if (qualityNote) qualityNote.style.display = '';
       }
 
       // Apply preset DPI default and update DPI row visibility
