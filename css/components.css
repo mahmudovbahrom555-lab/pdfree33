@@ -4920,6 +4920,73 @@ body:not(.has-files) #heroChipsLabel { display: none !important; }
   }
 }
 
+/* ── SEO Article baseline (data/content/<lang>/<tool>.html) ───
+   Content files usually inline-style every element themselves
+   (matches EN's own convention: font-size/color/margin on every
+   h1/h2/h3/p/ul/li) — but not every locale/tool's file does that
+   consistently. Some only inline-style the H1 and leave h2/h3/p/ul
+   completely bare, relying on page-level CSS that, until now,
+   didn't exist for .seo-article__inner at all — those pages
+   rendered as unstyled browser-default black text edge-to-edge
+   (confirmed: 46 files across nearly every locale, worst-hit were
+   8 locales' pdf2excel.html at literally zero styled tags and no
+   width constraint). Inline styles always win over these rules
+   (higher CSS specificity), so fully inline-styled files are
+   completely unaffected by this block — it's purely a safety net
+   for whatever a content file doesn't style itself, today or in
+   any future tool/locale, without depending on every content
+   author remembering to inline-style everything by hand. */
+.seo-article__inner {
+  max-width: 800px;
+  margin: 60px auto 40px;
+  padding: 0 24px;
+  color: var(--text2);
+  line-height: 1.75;
+}
+.seo-article__inner h1 {
+  font-size: clamp(22px, 3.5vw, 30px);
+  color: var(--text);
+  margin: 0 0 16px;
+  font-weight: 700;
+}
+.seo-article__inner h2 {
+  font-size: 22px;
+  color: var(--text);
+  margin: 40px 0 16px;
+  font-weight: 700;
+}
+.seo-article__inner h2:first-of-type { margin-top: 0; }
+.seo-article__inner h3 {
+  font-size: 16px;
+  color: var(--text);
+  margin: 24px 0 8px;
+  font-weight: 600;
+}
+.seo-article__inner p { font-size: 15px; margin: 0 0 16px; }
+.seo-article__inner ul,
+.seo-article__inner ol {
+  font-size: 14px;
+  margin: 0 0 24px;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.seo-article__inner a { color: var(--green); }
+.seo-article__inner strong { color: var(--text); }
+.seo-article__inner table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  margin: 0 0 24px;
+}
+.seo-article__inner th,
+.seo-article__inner td {
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+}
+
 /* ── SEO FAQ (dl/dt/dd used on localised pages) ─────────────── */
 .seo-faq {
   display: flex;
