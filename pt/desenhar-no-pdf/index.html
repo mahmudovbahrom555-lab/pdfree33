@@ -51,11 +51,20 @@
   <meta name="twitter:title"       content="Desenhar no PDF Online — Anotar Gratuitamente | PDFree">
   <meta name="twitter:description" content="Anote PDFs com setas, texto e formas — no navegador, sem upload, sem servidor.">
   <link rel="canonical" href="https://pdfree.io/pt/desenhar-no-pdf/">
-  <link rel="alternate" hreflang="en" href="https://pdfree.io/draw-on-pdf/">
-  <link rel="alternate" hreflang="de" href="https://pdfree.io/de/pdf-zeichnen/">
-  <link rel="alternate" hreflang="es" href="https://pdfree.io/es/dibujar-en-pdf/">
-  <link rel="alternate" hreflang="fr" href="https://pdfree.io/fr/dessiner-sur-pdf/">
-  <link rel="alternate" hreflang="pt" href="https://pdfree.io/pt/desenhar-no-pdf/">
+  <link rel="alternate" hreflang="en"        href="https://pdfree.io/draw-on-pdf/">
+  <link rel="alternate" hreflang="de"        href="https://pdfree.io/de/pdf-zeichnen/">
+  <link rel="alternate" hreflang="es"        href="https://pdfree.io/es/dibujar-en-pdf/">
+  <link rel="alternate" hreflang="fr"        href="https://pdfree.io/fr/dessiner-sur-pdf/">
+  <link rel="alternate" hreflang="pt"        href="https://pdfree.io/pt/desenhar-no-pdf/">
+  <link rel="alternate" hreflang="id"        href="https://pdfree.io/id/gambar-pdf/">
+  <link rel="alternate" hreflang="vi"        href="https://pdfree.io/vi/ve-pdf/">
+  <link rel="alternate" hreflang="ru"        href="https://pdfree.io/ru/risovat-pdf/">
+  <link rel="alternate" hreflang="ja"        href="https://pdfree.io/ja/pdf-byouga/">
+  <link rel="alternate" hreflang="it"        href="https://pdfree.io/it/disegna-pdf/">
+  <link rel="alternate" hreflang="ko"        href="https://pdfree.io/ko/pdf-geurigi/">
+  <link rel="alternate" hreflang="nl"        href="https://pdfree.io/nl/pdf-tekenen/">
+  <link rel="alternate" hreflang="pl"        href="https://pdfree.io/pl/rysuj-pdf/">
+  <link rel="alternate" hreflang="tr"        href="https://pdfree.io/tr/pdf-ciz/">
   <link rel="alternate" hreflang="x-default" href="https://pdfree.io/draw-on-pdf/">
 
   <!-- PWA -->
@@ -162,6 +171,601 @@
   ]
 }
   </script>
+  <style>
+    /* ── Editor shell ───────────────────────────────────────── */
+    #editorShell {
+      display: flex;
+      gap: 0;
+      width: 100%;
+      height: calc(100dvh - 56px);   /* explicit height for iOS sticky fix */
+    }
+    /* Without this, CSS display:flex overrides the HTML hidden attribute —
+       editor shell would always be visible even before a file is loaded. */
+    #editorShell[hidden] { display: none; }
+
+    /* canvas-col fills remaining space beside toolbar.
+       Without flex:1 the div shrinks to ~300px and JS reads that
+       small clientWidth — PDF renders tiny on desktop. */
+    .canvas-col {
+      flex: 1;
+      min-width: 0;    /* horizontal: prevents flex-item overflow blowout */
+      min-height: 0;   /* vertical:   defensive guard for nested flex contexts */
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-secondary, #f5f5f5);
+    }
+
+    /* ── Toolbar ─────────────────────────────────────────────── */
+    #drawToolbar {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      width: 56px;
+      min-width: 56px;
+      padding: 8px 4px;
+      background: var(--bg-card, #fff);
+      border-right: 1px solid var(--border, #e5e7eb);
+      position: sticky;
+      top: 56px;
+      height: calc(100dvh - 56px);
+      overflow-y: auto;
+    }
+
+    .tool-btn {
+      width: 40px;
+      height: 40px;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      background: none;
+      cursor: pointer;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .tool-btn:hover                { background: var(--bg-secondary, #f5f5f5); }
+    .tool-btn:active               { transform: scale(0.96); }
+    .tool-btn[aria-pressed="true"] {
+      background: var(--accent-light, #d1fae5);
+      border-color: var(--accent, #2D7A4F);
+    }
+
+    .toolbar-sep {
+      width: 32px;
+      border: none;
+      border-top: 1px solid var(--border, #e5e7eb);
+      margin: 4px 0;
+    }
+
+    /* On desktop: transparent column wrapper — items stack in the vertical sidebar */
+    .toolbar-row {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      width: 100%;
+      min-width: 0;
+    }
+
+    /* Touch hardening for Android WebView / Telegram browser */
+    .tool-btn,
+    #colorPicker {
+      box-sizing: border-box;
+      flex-shrink: 0;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-user-drag: none;
+    }
+
+    #colorPicker {
+      width: 36px;
+      height: 36px;
+      border: none;
+      border-radius: 50%;
+      padding: 0;
+      cursor: pointer;
+      background: none;
+    }
+
+    #widthSlider {
+      writing-mode: vertical-lr;
+      direction: rtl;
+      width: 6px;
+      height: 80px;
+      cursor: pointer;
+    }
+
+    /* ── Canvas area ─────────────────────────────────────────── */
+    #canvasArea {
+      flex: 1;
+      min-height: 0;                  /* flexbox fix: prevents overflow blowout */
+      width: 100%;
+      max-width: 1100px;              /* reading-column cap; JS reads clientWidth from here */
+      margin-inline: auto;            /* centers reading column when .canvas-col is wider */
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      align-items: center;            /* centers #canvasWrap so box-shadow wraps canvas, not the container */
+      padding: 16px;
+      overflow: auto;
+      scrollbar-gutter: stable;       /* Windows: reserves scrollbar space so clientWidth is stable */
+      background: var(--bg-secondary, #f5f5f5);
+    }
+
+    #canvasWrap {
+      position: relative;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+      border-radius: 2px;
+    }
+
+    #pdfCanvas  { display: block; }
+
+    #drawCanvas {
+      position: absolute;
+      top: 0; left: 0;
+      touch-action: none;
+      cursor: crosshair;
+    }
+
+    /* Cursor changes per active tool — driven by data-draw-tool attribute on canvas */
+    #drawCanvas[data-draw-tool="text"]  { cursor: text; }
+    #drawCanvas[data-draw-tool="erase"] { cursor: cell; }
+    #drawCanvas[data-draw-tool="eye"]   { cursor: crosshair; }
+
+    /* Prevent SVG nodes from intercepting clicks on tool buttons */
+    .tool-btn svg { pointer-events: none; }
+
+    /* Loading overlay */
+    #canvasLoading {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.85);
+      font-size: 14px;
+      color: var(--text-secondary, #6b7280);
+      border-radius: 2px;
+    }
+    #canvasLoading[hidden] { display: none; }   /* must block pointer events when hidden */
+
+    /* ── Page navigation ─────────────────────────────────────── */
+    #pageNav {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 12px;
+      font-size: 14px;
+      color: var(--text-secondary, #6b7280);
+    }
+
+    .nav-btn {
+      width: 32px;
+      height: 32px;
+      border: 1px solid var(--border, #e5e7eb);
+      border-radius: 6px;
+      background: var(--bg-card, #fff);
+      cursor: pointer;
+      font-size: 16px;
+      line-height: 1;
+    }
+    .nav-btn:disabled { opacity: 0.35; cursor: default; }
+
+    /* ── Floating text input (text tool) ────────────────────── */
+    /* position:fixed so clientX/Y work directly without offset math */
+    #textInputOverlay {
+      position: fixed;
+      display: none;
+      z-index: 200;
+      background: var(--bg-card, #fff);
+      color: var(--text, #111);
+      border: 2px solid var(--accent, #2D7A4F);
+      border-radius: 6px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+      padding: 8px;
+      min-width: 200px;
+      max-width: calc(100vw - 24px);
+      overflow: hidden;
+    }
+    .text-size-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+    .text-size-btn {
+      width: 28px;
+      height: 28px;
+      border: 1px solid var(--border, #e5e7eb);
+      border-radius: 4px;
+      background: none;
+      cursor: pointer;
+      font-weight: 700;
+      color: var(--text, #111);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .text-size-btn:hover { background: var(--bg-secondary, #f5f5f5); }
+    #textSizeLabel {
+      font-size: 12px;
+      min-width: 36px;
+      text-align: center;
+      color: var(--text-secondary, #6b7280);
+    }
+    #floatingTextInput {
+      display: block;
+      resize: none;
+      border: 1px solid var(--border, #e5e7eb);
+      border-radius: 4px;
+      outline: none;
+      font-size: 16px;            /* 16px min — prevents iOS auto-zoom */
+      font-family: system-ui, sans-serif;
+      line-height: 1.25;          /* matches canvas lineHeight = size * 1.25 */
+      width: 180px;
+      height: 72px;
+      max-height: 160px;
+      overflow-y: auto;
+      padding: 4px 6px;
+      background: var(--bg-secondary, #f9f9f9);
+      color: var(--text, #111);
+      box-sizing: border-box;
+    }
+    #floatingTextInput:focus { border-color: var(--accent, #2D7A4F); }
+    .text-input-hint {
+      font-size: 11px;
+      color: var(--text-secondary, #9ca3af);
+      margin: 3px 0 0;
+    }
+    .text-input-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 4px;
+      margin-top: 6px;
+    }
+    .text-input-actions button {
+      padding: 4px 12px;
+      cursor: pointer;
+      border-radius: 4px;
+      border: 1px solid var(--border, #e5e7eb);
+      font-size: 13px;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    #textInputCancel { background: transparent; color: var(--text-secondary, #6b7280); }
+    #textInputOk     { background: var(--accent, #2D7A4F); color: #fff; border-color: var(--accent, #2D7A4F); }
+
+    /* ── Text & highlight selection mini toolbars ───────────── */
+    #textSelectToolbar,
+    #hlSelectToolbar {
+      position: fixed;
+      display: none;
+      z-index: 201;
+      background: var(--bg-card, #fff);
+      color: var(--text, #111);
+      border: 2px solid var(--accent, #2D7A4F);
+      border-radius: 6px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+      padding: 4px 6px;
+      max-width: calc(100vw - 24px);
+      overflow: hidden;
+      align-items: center;
+      gap: 4px;
+      contain: layout paint;
+    }
+    .sel-btn {
+      width: 32px;
+      height: 32px;
+      border: 1px solid var(--border, #e5e7eb);
+      border-radius: 4px;
+      background: none;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text, #111);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .sel-btn:hover  { background: var(--bg-secondary, #f5f5f5); }
+    .sel-btn:active { transform: scale(0.96); }
+    #selDelete,
+    #hlDelete        { color: #dc2626; border-color: #fecaca; }
+    #selDelete:hover,
+    #hlDelete:hover  { background: #fef2f2; }
+    #selColorPicker,
+    #hlColorPicker {
+      width: 32px;
+      height: 32px;
+      border: 2px solid var(--border, #e5e7eb);
+      border-radius: 4px;
+      padding: 2px;
+      cursor: pointer;
+      box-sizing: border-box;
+      background: transparent;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      flex-shrink: 0;
+    }
+    .sel-sep { width: 1px; height: 20px; background: var(--border, #e5e7eb); flex-shrink: 0; }
+
+    /* ── Download button ─────────────────────────────────────── */
+    #downloadPdfBtn {
+      margin-top: 16px;
+      padding: 10px 28px;
+      background: var(--accent, #2D7A4F);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    #downloadPdfBtn:hover    { opacity: 0.9; }
+    #downloadPdfBtn:disabled { opacity: 0.4; cursor: default; }
+
+    /* ── Mobile: toolbar moves to bottom ─────────────────────── */
+    @media (max-width: 600px) {
+      #editorShell { flex-direction: column-reverse; height: auto; min-height: calc(100dvh - 56px); }
+      #drawToolbar {
+        flex-direction: column;
+        width: 100%;
+        min-width: unset;
+        height: auto;
+        position: sticky;
+        bottom: 0;
+        top: unset;
+        z-index: 10;
+        border-right: none;
+        border-top: 1px solid var(--border, #e5e7eb);
+        background: var(--bg-card, #fff);
+        overflow: hidden;
+        overscroll-behavior: contain;
+        padding: 4px 6px max(4px, env(safe-area-inset-bottom));
+        gap: 2px;
+      }
+      /* Rows become horizontal strips; overflow-x:auto is a safety net
+         if a future tool or locale pushes the row over 360px */
+      .toolbar-row {
+        flex-direction: row;
+        align-items: center;
+        gap: 4px;
+        padding: 2px 0;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+      }
+      .toolbar-row::-webkit-scrollbar { display: none; }
+      .primary-tools   { justify-content: center; }
+      .secondary-tools,
+      .settings-tools  { justify-content: flex-start; }
+      .toolbar-sep { display: none; }
+      .tool-btn { width: 44px; height: 44px; font-size: 18px; border-radius: 8px; }
+      #colorPicker {
+        width: 36px;
+        height: 36px;
+        border: 2px solid var(--border, #e5e7eb);
+        border-radius: 8px;
+        padding: 2px;
+      }
+      #widthSlider {
+        writing-mode: horizontal-tb;
+        direction: ltr;
+        flex: 1;
+        min-width: 40px;
+        max-width: 120px;
+        height: 6px;
+      }
+      #canvasArea { padding: 8px; contain: layout paint; }
+
+      /* ── Mobile FAB stack ──────────────────────────────────── */
+      :root { --toolbar-height: 132px; }
+      #fabStack {
+        position: fixed;
+        right: 16px;
+        bottom: calc(var(--toolbar-height) + max(16px, env(safe-area-inset-bottom, 0px)));
+        z-index: 9;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 8px;
+        padding: 0;
+        transform-origin: bottom right;
+        transition: opacity 0.25s ease, transform 0.25s ease;
+      }
+      #fabStack.is-hidden {
+        opacity: 0;
+        transform: translateY(8px) scale(0.96);
+        pointer-events: none !important;
+      }
+      #fabStack > button { user-select: none; -webkit-user-select: none; }
+      #fabUp, #fabDown {
+        display: flex;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: var(--bg-card, #fff);
+        color: var(--text, #111);
+        border: 1px solid var(--border, #e5e7eb);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+      }
+      #downloadPdfBtn {
+        padding: 10px 16px;
+        font-size: 13px;
+        border-radius: 999px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.22);
+      }
+      #fabUp.fab-edge-hidden,
+      #fabDown.fab-edge-hidden { visibility: hidden; }
+    }
+
+    /* ── Desktop: #fabStack becomes a sticky footer bar ─────────── */
+    /* On desktop, #canvasArea fills .canvas-col with flex:1, which would push
+       #fabStack out of the viewport — give it a fixed footer slot instead. */
+    @media (min-width: 601px) {
+      #fabStack {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-shrink: 0;          /* never crushed by #canvasArea flex:1 */
+        padding: 10px 16px;
+        background: var(--bg-card, #fff);
+        border-top: 1px solid var(--border, #e5e7eb);
+      }
+      #fabUp, #fabDown { display: none; }   /* scroll assist is mobile-only */
+      #fabStack #downloadPdfBtn { margin-top: 0; }
+    }
+
+    /* ── Mobile text sheet ───────────────────────────────────────── */
+    #mtsBackdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 299;
+      touch-action: none;
+    }
+    #mtsBackdrop[hidden] { display: none; }
+
+    #mobileTextSheet {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 300;
+      max-height: 90vh;           /* landscape / small phones / huge Samsung keyboard */
+      overflow-y: auto;
+      background: var(--bg-card, #fff);
+      border-radius: 16px 16px 0 0;
+      box-shadow: 0 -4px 24px rgba(0,0,0,0.18);
+      padding: 0 16px max(16px, env(safe-area-inset-bottom));
+    }
+    #mobileTextSheet[hidden] { display: none; }
+
+    /* Scroll lock: prevents PDF from scrolling under open sheet */
+    body.mts-open { overflow: hidden; touch-action: none; }
+
+    .mts-bar {
+      width: 40px; height: 4px;
+      background: var(--border, #e5e7eb);
+      border-radius: 2px;
+      margin: 12px auto 10px;
+    }
+    .mts-header {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text, #111);
+      margin-bottom: 10px;
+    }
+    #mtsTextarea {
+      display: block;
+      width: 100%;
+      min-height: 80px;
+      max-height: 40vh;
+      border: 1px solid var(--border, #e5e7eb);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 16px;              /* prevents iOS auto-zoom */
+      font-family: system-ui, sans-serif;
+      line-height: 1.4;
+      resize: none;
+      box-sizing: border-box;
+      background: var(--bg-secondary, #f9f9f9);
+      color: var(--text, #111);
+      overflow-y: auto;
+      overscroll-behavior: contain; /* prevents textarea scroll from leaking to sheet */
+    }
+    #mtsTextarea:focus { outline: none; border-color: var(--accent, #2D7A4F); }
+
+    .mts-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 10px 0 8px;
+    }
+    .mts-size-btn {
+      width: 44px; height: 44px;
+      border: 1px solid var(--border, #e5e7eb);
+      border-radius: 8px;
+      background: none;
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--text, #111);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      flex-shrink: 0;
+    }
+    .mts-size-btn:active { background: var(--bg-secondary, #f5f5f5); }
+
+    #mtsSizeLabel {
+      min-width: 38px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-secondary, #6b7280);
+    }
+    #mtsColor {
+      width: 44px; height: 44px;
+      border: 2px solid var(--border, #e5e7eb);
+      border-radius: 8px;
+      padding: 3px;
+      cursor: pointer;
+      box-sizing: border-box;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      flex-shrink: 0;
+    }
+    .mts-delete-btn {
+      width: 44px; height: 44px;
+      border: 1px solid #fecaca;
+      border-radius: 8px;
+      background: none;
+      cursor: pointer;
+      color: #dc2626;
+      display: flex; align-items: center; justify-content: center;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      margin-left: auto;
+      flex-shrink: 0;
+    }
+    .mts-delete-btn[hidden] { display: none; }
+    .mts-delete-btn:active { background: #fef2f2; }
+
+    .mts-actions {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+    .mts-actions button {
+      flex: 1;
+      height: 44px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      border: 1px solid var(--border, #e5e7eb);
+    }
+    #mtsCancel { background: transparent; color: var(--text-secondary, #6b7280); }
+    #mtsOk     { background: var(--accent, #2D7A4F); color: #fff; border-color: var(--accent, #2D7A4F); }
+  </style>
 </head>
 <body data-tool="draw-pdf">
 
@@ -196,58 +800,179 @@
         <a href="https://pdfree.io/es/dibujar-en-pdf/" role="menuitem">Español</a>
         <a href="https://pdfree.io/fr/dessiner-sur-pdf/" role="menuitem">Français</a>
         <a href="https://pdfree.io/pt/desenhar-no-pdf/" role="menuitem" aria-current="true">Português</a>
+        <a href="https://pdfree.io/id/gambar-pdf/" role="menuitem">Bahasa Indonesia</a>
+        <a href="https://pdfree.io/vi/ve-pdf/" role="menuitem">Tiếng Việt</a>
+        <a href="https://pdfree.io/ru/risovat-pdf/" role="menuitem">Русский</a>
+        <a href="https://pdfree.io/ja/pdf-byouga/" role="menuitem">日本語</a>
+        <a href="https://pdfree.io/it/disegna-pdf/" role="menuitem">Italiano</a>
+        <a href="https://pdfree.io/ko/pdf-geurigi/" role="menuitem">한국어</a>
+        <a href="https://pdfree.io/nl/pdf-tekenen/" role="menuitem">Nederlands</a>
+        <a href="https://pdfree.io/pl/rysuj-pdf/" role="menuitem">Polski</a>
+        <a href="https://pdfree.io/tr/pdf-ciz/" role="menuitem">Türkçe</a>
       </div>
     </details>
     <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode"></button>
   </nav>
 
-  <!-- ── Tool workspace ── -->
-  <main id="toolArea" class="main-area" aria-busy="false">
+  <!-- processor.js compatibility nodes (required IDs, hidden) -->
+  <div  id="toast"         class="toast" hidden></div>
+  <div  id="progressBar"   hidden><div id="progressFill"></div></div>
+  <span id="progressLabel" hidden></span>
+  <div  id="successCard"   hidden><a id="downloadBtn" href="#"></a></div>
+  <button id="cancelBtn"   type="button" hidden></button>
 
+  <!-- ── Tool area ───────────────────────────────────────────── -->
+  <main id="toolArea">
+
+    <div id="preEditorArea" class="main-area">
     <div class="tool-header">
-      <div class="tool-header-icon" id="toolIcon" aria-hidden="true">✏️</div>
+      <div class="tool-header-icon" aria-hidden="true">✏️</div>
       <div class="tool-header-text">
-        <h2 id="toolTitle">Desenhar no PDF Online</h2>
-        <p id="toolDesc">Anote PDFs com setas, texto e formas — privado, sem upload.</p>
+        <h1>Desenhar e Anotar PDF</h1>
+        <p>Adicione setas, marcadores, destaques, texto e formas — sem upload, sem software</p>
       </div>
     </div>
 
-    <div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-label="Arraste seu PDF aqui">
-      <input type="file" id="fileInput" accept=".pdf" aria-hidden="true">
+    <!-- Drop zone (before file is loaded) -->
+    <div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-label="Solte um PDF aqui ou escolha um arquivo">
+      <input id="fileInput" type="file" accept=".pdf" aria-hidden="true">
       <span class="drop-icon" aria-hidden="true">📂</span>
       <div class="drop-title">Arraste seu PDF aqui</div>
       <div class="drop-sub">ou clique para procurar</div>
       <label class="drop-btn" id="chooseFilesBtn" for="fileInput">Escolher arquivo</label>
+      <!-- Hidden stubs required by check_dom.py -->
+      <ul   id="fileList"  hidden></ul>
+      <span id="fileCount" hidden></span>
+      <button id="mergeBtn" type="button" hidden></button>
     </div>
+    </div><!-- /#preEditorArea -->
 
-    <div id="fileList" class="file-list" aria-live="polite"></div>
-    <div id="fileCount" class="file-count" style="display:none"></div>
-
-    <div id="splitOptions"     class="split-options"    style="display:none"></div>
-    <div id="compressOptions"  class="compress-options" style="display:none"></div>
-    <div id="watermarkOptions" class="j2p-options"      style="display:none"></div>
-    <div id="pageNumOptions"   class="j2p-options"      style="display:none"></div>
-    <div id="metaOptions"      class="j2p-options"      style="display:none"></div>
-    <div id="protectOptions"   class="j2p-options"      style="display:none"></div>
-    <div id="rotateOptions"    class="j2p-options"      style="display:none"></div>
-
-    <button id="mergeBtn" type="button" hidden></button>
-    <button id="cancelBtn" class="cancel-btn" type="button" style="display:none">✕</button>
-
-    <div id="progressBar" class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
-    <div id="progressLabel" class="progress-label"></div>
-
-    <div id="successCard" class="success-card" role="alert" aria-live="polite" style="display:none">
-      <div class="success-top">
-        <div class="success-icon" aria-hidden="true">✓</div>
-        <div class="success-text">
-          <h3 id="successTitle">Pronto!</h3>
-          <p id="successDesc"></p>
-        </div>
-        <button id="downloadBtn" class="download-btn" type="button">⬇ Baixar</button>
+    <!-- Floating text input — shown by text tool, hidden by default -->
+    <div id="textInputOverlay">
+      <div class="text-size-row">
+        <button type="button" class="text-size-btn" id="textSizeDown" title="Menor" aria-label="Diminuir tamanho da fonte">A−</button>
+        <span id="textSizeLabel" aria-live="polite">16px</span>
+        <button type="button" class="text-size-btn" id="textSizeUp"   title="Maior"  aria-label="Aumentar tamanho da fonte">A+</button>
+      </div>
+      <textarea id="floatingTextInput" rows="3" placeholder="Digite o texto…" aria-label="Entrada de texto"
+        autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
+      <p class="text-input-hint">Enter — nova linha · Ctrl+Enter — confirmar</p>
+      <div class="text-input-actions">
+        <button type="button" id="textInputCancel">Cancelar</button>
+        <button type="button" id="textInputOk">OK</button>
       </div>
     </div>
 
+    <!-- Text selection toolbar — shown on long-press of existing text annotation -->
+    <div id="textSelectToolbar" role="toolbar" aria-label="Opções de anotação de texto">
+      <input  type="color" id="selColorPicker" title="Mudar cor" aria-label="Cor do texto">
+      <div class="sel-sep" aria-hidden="true"></div>
+      <button type="button" class="sel-btn" id="selSizeDown" title="Menor" aria-label="Diminuir tamanho do texto">A−</button>
+      <button type="button" class="sel-btn" id="selSizeUp"   title="Maior"  aria-label="Aumentar tamanho do texto">A+</button>
+      <div class="sel-sep" aria-hidden="true"></div>
+      <button type="button" class="sel-btn" id="selDelete" title="Excluir" aria-label="Excluir texto"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/><path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/></svg></button>
+    </div>
+
+    <!-- Highlight selection toolbar — shown on tap of existing highlight annotation -->
+    <div id="hlSelectToolbar" role="toolbar" aria-label="Opções de destaque">
+      <input  type="color" id="hlColorPicker" value="#facc15" title="Mudar cor" aria-label="Cor do destaque">
+      <div class="sel-sep" aria-hidden="true"></div>
+      <button type="button" class="sel-btn" id="hlDelete" title="Excluir" aria-label="Excluir destaque"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/><path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/></svg></button>
+    </div>
+
+    <!-- Mobile text sheet — bottom sheet for text tool on touch devices.
+         Desktop uses #textInputOverlay (floating, position:fixed).
+         JS picks via _isTouchDevice(); both elements always present in DOM. -->
+    <div id="mtsBackdrop" hidden></div>
+    <div id="mobileTextSheet" hidden role="dialog" aria-label="Anotação de texto">
+      <div class="mts-bar" aria-hidden="true"></div>
+      <div class="mts-header"><span id="mtsTitle">Adicionar texto</span></div>
+      <textarea id="mtsTextarea" rows="3" placeholder="Digite o texto…" aria-label="Entrada de texto"
+        autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
+      <div class="mts-controls">
+        <button type="button" class="mts-size-btn" id="mtsSizeDown" aria-label="Diminuir tamanho da fonte">A−</button>
+        <span   id="mtsSizeLabel" aria-live="polite">16px</span>
+        <button type="button" class="mts-size-btn" id="mtsSizeUp"   aria-label="Aumentar tamanho da fonte">A+</button>
+        <input  type="color" id="mtsColor" aria-label="Cor do texto">
+        <button type="button" id="mtsDelete" class="mts-delete-btn" hidden aria-label="Excluir anotação">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/><path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/></svg>
+        </button>
+      </div>
+      <div class="mts-actions">
+        <button type="button" id="mtsCancel">Cancelar</button>
+        <button type="button" id="mtsOk">Adicionar</button>
+      </div>
+    </div>
+
+    <!-- Editor (revealed by drawUI.js after file loads) -->
+    <div id="editorShell" hidden>
+
+      <!-- Toolbar -->
+      <aside id="drawToolbar" aria-label="Ferramentas de desenho">
+        <!-- Primary: most-used tools and actions — always visible on mobile -->
+        <div class="toolbar-row primary-tools">
+          <button type="button" class="tool-btn" id="btnPen"   data-draw-tool="pen"   title="Caneta"    aria-label="Caneta"    aria-pressed="true" >✏️</button>
+          <button type="button" class="tool-btn" id="btnErase" data-draw-tool="erase" title="Borracha" aria-label="Borracha"><svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8.086 2.207a2 2 0 0 1 2.828 0l3.879 3.879a2 2 0 0 1 0 2.828l-5.5 5.5A2 2 0 0 1 7.879 15H5.12a2 2 0 0 1-1.414-.586l-2.5-2.5a2 2 0 0 1 0-2.828zm.66 11.34L3.453 8.254 1.914 9.793a1 1 0 0 0 0 1.414l2.5 2.5a1 1 0 0 0 .707.293H7.88a1 1 0 0 0 .707-.293z"/></svg></button>
+          <input  type="color" id="colorPicker" value="#e53e3e" title="Cor do traço" aria-label="Cor do traço">
+          <button type="button" class="tool-btn" id="btnUndo"  title="Desfazer (Ctrl+Z)"   aria-label="Desfazer">↩</button>
+          <button type="button" class="tool-btn" id="btnRedo"  title="Refazer (Ctrl+Y)"   aria-label="Refazer">↪</button>
+          <button type="button" class="tool-btn" id="btnClear" title="Limpar esta página" aria-label="Limpar página">🗑️</button>
+        </div>
+        <hr class="toolbar-sep">
+        <!-- Secondary: shape and annotation tools -->
+        <div class="toolbar-row secondary-tools">
+          <button type="button" class="tool-btn" id="btnMarker"    data-draw-tool="marker"    title="Marcador"    aria-label="Marcador"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M3 15 L15 3" stroke="currentColor" stroke-width="5" stroke-linecap="round"/></svg></button>
+          <button type="button" class="tool-btn" id="btnArrow"     data-draw-tool="arrow"     title="Seta"     aria-label="Seta"><svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor" aria-hidden="true"><line x1="3" y1="15" x2="13" y2="5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><polygon points="13,5 7,5 13,11"/></svg></button>
+          <button type="button" class="tool-btn" id="btnLine"      data-draw-tool="line"      title="Linha"      aria-label="Linha">╱</button>
+          <button type="button" class="tool-btn" id="btnRect"      data-draw-tool="rect"      title="Retângulo" aria-label="Retângulo">□</button>
+          <button type="button" class="tool-btn" id="btnOval"      data-draw-tool="oval"      title="Oval"      aria-label="Oval">○</button>
+          <button type="button" class="tool-btn" id="btnText"      data-draw-tool="text"      title="Texto"      aria-label="Texto">T</button>
+          <button type="button" class="tool-btn" id="btnHighlight" data-draw-tool="highlight" title="Destaque" aria-label="Destaque">🖍️</button>
+        </div>
+        <hr class="toolbar-sep">
+        <!-- Settings: stroke width and eyedropper -->
+        <div class="toolbar-row settings-tools">
+          <button type="button" class="tool-btn" id="btnEye" data-draw-tool="eye" title="Escolher cor" aria-label="Escolher cor"><svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M13.354.646a1.207 1.207 0 0 0-1.708 0L8.5 3.793l-.646-.647a.5.5 0 1 0-.708.708L8.293 5l-7.146 7.146A.5.5 0 0 0 1 12.5v1.793l-.854.853a.5.5 0 1 0 .708.707L1.707 15H3.5a.5.5 0 0 0 .354-.146L11 7.707l1.146 1.147a.5.5 0 0 0 .708-.708l-.647-.646 3.147-3.146a1.207 1.207 0 0 0 0-1.708z"/></svg></button>
+          <input  type="range" id="widthSlider" min="1" max="20" value="3" title="Espessura do traço" aria-label="Espessura do traço">
+        </div>
+      </aside>
+
+      <!-- canvas-col: flex:1, position:relative, min-width:0 prevents flex overflow -->
+      <div class="canvas-col">
+
+        <div id="canvasArea">
+          <div id="canvasWrap">
+            <canvas id="pdfCanvas"></canvas>
+            <canvas id="drawCanvas" data-draw-tool="pen"></canvas>
+            <div    id="canvasLoading">Carregando PDF…</div>
+          </div>
+          <nav id="pageNav" aria-label="Navegação de páginas do PDF">
+            <button type="button" class="nav-btn" id="btnPrev" title="Página anterior" disabled>‹</button>
+            <span   id="pageLabel">1 / 1</span>
+            <button type="button" class="nav-btn" id="btnNext" title="Próxima página"     disabled>›</button>
+          </nav>
+        </div>
+
+        <!-- FAB stack: fixed on mobile, footer on desktop.
+             Outside #canvasArea → position:fixed bypasses contain:layout.
+             pointer-events:none on wrapper — only child buttons receive touch. -->
+        <div id="fabStack">
+          <button type="button" id="fabUp" aria-label="Rolar para cima" title="Rolar para cima">
+            <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" focusable="false">
+              <path fill-rule="evenodd" d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708z"/>
+            </svg>
+          </button>
+          <button type="button" id="fabDown" aria-label="Rolar para baixo" title="Rolar para baixo">
+            <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" focusable="false">
+              <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+            </svg>
+          </button>
+          <button type="button" id="downloadPdfBtn" disabled>✏️ Baixar PDF anotado</button>
+        </div>
+
+      </div><!-- /.canvas-col -->
+
+    </div><!-- /editorShell -->
   </main>
 
   <!-- SEO article -->

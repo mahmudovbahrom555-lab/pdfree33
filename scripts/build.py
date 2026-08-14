@@ -193,8 +193,12 @@ def _build_nav_items(lang, all_tools):
             # (e.g. /fr/ + ../fr/dessiner-sur-pdf/ = /fr/fr/dessiner-sur-pdf/,
             # or for langs with no draw page at all, resolves under the
             # wrong locale instead of falling back to the EN absolute path).
-            _draw_slugs = {'en': 'draw-on-pdf', 'de': 'de/pdf-zeichnen', 'es': 'es/dibujar-en-pdf', 'fr': 'fr/dessiner-sur-pdf', 'pt': 'pt/desenhar-no-pdf'}
-            _draw_labels = {'en': 'Draw', 'de': 'Zeichnen', 'es': 'Dibujar', 'fr': 'Dessiner', 'pt': 'Desenhar'}
+            _draw_slugs = {'en': 'draw-on-pdf', 'de': 'de/pdf-zeichnen', 'es': 'es/dibujar-en-pdf', 'fr': 'fr/dessiner-sur-pdf', 'pt': 'pt/desenhar-no-pdf',
+                           'id': 'id/gambar-pdf', 'vi': 'vi/ve-pdf', 'ru': 'ru/risovat-pdf', 'ja': 'ja/pdf-byouga', 'it': 'it/disegna-pdf',
+                           'ko': 'ko/pdf-geurigi', 'nl': 'nl/pdf-tekenen', 'pl': 'pl/rysuj-pdf', 'tr': 'tr/pdf-ciz'}
+            _draw_labels = {'en': 'Draw', 'de': 'Zeichnen', 'es': 'Dibujar', 'fr': 'Dessiner', 'pt': 'Desenhar',
+                            'id': 'Gambar', 'vi': 'Vẽ', 'ru': 'Рисовать', 'ja': '描画', 'it': 'Disegna',
+                            'ko': '그리기', 'nl': 'Tekenen', 'pl': 'Rysuj', 'tr': 'Çizim'}
             _draw_slug = _draw_slugs.get(lang, _draw_slugs['en'])
             _draw_href = f'/{_draw_slug}/'
             items.append({'href': _draw_href, 'label': _draw_labels.get(lang, 'Draw'), 'tool_key': 'draw-pdf'})
@@ -648,6 +652,15 @@ def _write_sitemap(config, out_dir):
             'es': 'es/dibujar-en-pdf',
             'fr': 'fr/dessiner-sur-pdf',
             'pt': 'pt/desenhar-no-pdf',
+            'id': 'id/gambar-pdf',
+            'vi': 'vi/ve-pdf',
+            'ru': 'ru/risovat-pdf',
+            'ja': 'ja/pdf-byouga',
+            'it': 'it/disegna-pdf',
+            'ko': 'ko/pdf-geurigi',
+            'nl': 'nl/pdf-tekenen',
+            'pl': 'pl/rysuj-pdf',
+            'tr': 'tr/pdf-ciz',
         },
         'pdf-tools-no-upload': {
             'en': 'pdf-tools-no-upload',
