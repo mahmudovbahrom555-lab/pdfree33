@@ -33,6 +33,14 @@
   },
   {
     "@type": "Question",
+    "name": "PDF'im “şifre gerekmiyor” diyorsa ne olur?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Bazı PDF'lerde yalnızca sahip düzeyinde kısıtlamalar (yazdırma veya kopyalamanın kapatılması gibi) bulunur ve dosyayı açmak için şifre gerekmez. PDFree bunu otomatik olarak algılar ve hiçbir şey yazmanıza gerek kalmadan bu kısıtlamaları kaldırmanızı sağlar — şifre yalnızca dosyayı açmak için gerçekten gerekiyorsa istenir."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "Şifremi unuttuysam ne yapabilirim?",
     "acceptedAnswer": {
       "@type": "Answer",

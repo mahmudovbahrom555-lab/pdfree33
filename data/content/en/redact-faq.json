@@ -62,5 +62,13 @@
       "@type": "Answer",
       "text": "Yes. The redaction removes the PDF content stream data for the covered area, including any searchable text within the box bounds."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "What personal information should I redact before sharing a PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Common examples: Social Security numbers, bank account numbers, dates of birth, and signatures. If you're sending a document to a bank, employer, or government office, redacting these first is usually the safest default."
+    }
   }
 ]

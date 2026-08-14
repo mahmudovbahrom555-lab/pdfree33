@@ -78,5 +78,13 @@
       "@type": "Answer",
       "text": "Sì. Seleziona o trascina più file PDF e PDFree numererà le pagine di ognuno nel formato scelto, direttamente nel tuo browser. I file numerati vengono raggruppati in un unico ZIP da scaricare. Nessun caricamento, nessun limite giornaliero."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso usare i numeri romani per il frontespizio e quelli arabi per il corpo, come in una tesi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì, in due passaggi: aggiungi prima la numerazione solo alle pagine iniziali (ad esempio le pagine 1–8) in formato romano. Poi carica di nuovo il risultato e numera il resto del documento (ad esempio dalla pagina 9) in formato arabo, partendo da 1. Ogni passaggio riguarda solo l'intervallo di pagine scelto, quindi le due numerazioni non si sovrappongono."
+    }
   }
 ]

@@ -70,5 +70,13 @@
       "@type": "Answer",
       "text": "L'ordre de tabulation détermine la séquence dans laquelle les champs sont visités lors d'une navigation au clavier plutôt qu'à la souris. Il est surtout important pour les scripts de saisie automatisée qui remplissent un formulaire en appuyant sur Tab un nombre fixe de fois — si l'ordre change, le script remplit les mauvais champs. Un ordre prévisible rend aussi tout formulaire plus rapide à remplir à la main."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "En quoi est-ce différent de l'outil gratuit Fill & Sign d'Adobe ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Fill & Sign d'Adobe est gratuit pour remplir et signer votre propre PDF, mais nécessite un compte Adobe gratuit et envoie votre fichier sur les serveurs d'Adobe. PDFree ne demande ni compte ni connexion, et votre fichier ne quitte jamais votre appareil. (La limite de 2 par mois chez Adobe ne s'applique que si vous envoyez un document à quelqu'un d'autre pour signature, pas si vous le remplissez vous-même.)"
+    }
   }
 ]

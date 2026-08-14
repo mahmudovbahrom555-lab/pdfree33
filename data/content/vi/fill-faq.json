@@ -78,5 +78,13 @@
       "@type": "Answer",
       "text": "Thứ tự Tab kiểm soát trình tự các trường được truy cập khi điều hướng bằng bàn phím thay vì chuột. Điều này đặc biệt quan trọng với các script nhập liệu tự động điền biểu mẫu bằng cách nhấn Tab một số lần cố định — nếu thứ tự thay đổi, script sẽ điền sai trường. Thứ tự có thể dự đoán được cũng giúp điền bất kỳ biểu mẫu nào nhanh hơn bằng tay."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Điều này khác gì so với Fill & Sign miễn phí của Adobe?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Fill & Sign của Adobe miễn phí để điền và ký file PDF của chính bạn, nhưng yêu cầu tài khoản Adobe miễn phí và tải file của bạn lên máy chủ của Adobe. PDFree không cần tài khoản hay đăng nhập, và file của bạn không bao giờ rời khỏi thiết bị. (Giới hạn 2 lần/tháng của Adobe chỉ áp dụng khi bạn gửi tài liệu cho người khác ký, không áp dụng khi bạn tự điền.)"
+    }
   }
 ]

@@ -46,5 +46,13 @@
       "@type": "Answer",
       "text": "Não. O PDFree não tem limites artificiais. A única restrição é a memória RAM disponível no seu dispositivo."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Que dados pessoais devo censurar antes de compartilhar um PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Exemplos comuns: CPF, dados bancários, data de nascimento e assinatura. Antes de enviar um documento para um banco, empregador ou órgão público, o mais seguro costuma ser censurar esses dados primeiro."
+    }
   }
 ]

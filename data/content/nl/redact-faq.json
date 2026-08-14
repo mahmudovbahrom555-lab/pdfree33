@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "Nee. Zwartmaken is een eenrichtingsbewerking — dat is precies wat het veilig maakt. Werk vanaf het originele, niet-bewerkte bestand als je iets moet terugdraaien. Bewaar het origineel op een veilige plek totdat je hebt bevestigd dat de bewerkte versie klopt."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Welke persoonlijke gegevens moet ik zwart maken voordat ik een PDF deel?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Veelvoorkomende voorbeelden: BSN, bankrekeningnummer, geboortedatum en handtekening. Voordat je een document naar een bank, werkgever of overheidsinstantie stuurt, is het meestal het veiligst om deze gegevens eerst zwart te maken."
+    }
   }
 ]

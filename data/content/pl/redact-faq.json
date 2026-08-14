@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "Nie. Zaczernienie to operacja jednokierunkowa — właśnie to czyni ją bezpieczną. Jeśli musisz cofnąć zmiany, pracuj na oryginalnym, niezaczernionym pliku. Przechowuj oryginał w bezpiecznym miejscu, dopóki nie zweryfikujesz poprawności zaczernionej wersji."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Jakie dane osobowe warto zaczernić przed udostępnieniem pliku PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Typowe przykłady: numer PESEL, numer konta bankowego, data urodzenia i podpis. Przed wysłaniem dokumentu do banku, pracodawcy lub urzędu najbezpieczniej jest najpierw zaczernić te dane."
+    }
   }
 ]

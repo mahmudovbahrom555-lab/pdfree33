@@ -78,5 +78,13 @@
       "@type": "Answer",
       "text": "Tak. Wybierz lub przeciągnij kilka plików PDF, a PDFree ponumeruje strony każdego z nich w wybranym formacie, bezpośrednio w przeglądarce. Ponumerowane pliki są pakowane do jednego archiwum ZIP do pobrania. Bez przesyłania, bez dziennego limitu."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy mogę użyć cyfr rzymskich na stronach wstępnych i arabskich w treści głównej, tak jak w pracy dyplomowej?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak, w dwóch etapach: najpierw dodaj numerację tylko na stronach wstępnych (np. strony 1–8) w formacie rzymskim. Następnie prześlij ten wynik ponownie i ponumeruj resztę dokumentu (np. od strony 9) w formacie arabskim, zaczynając od 1. Każdy etap dotyczy tylko wybranego zakresu stron, więc oba style numeracji się nie nakładają."
+    }
   }
 ]

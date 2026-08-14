@@ -94,5 +94,13 @@
       "@type": "Answer",
       "text": "Urutan tab mengontrol urutan kolom yang dikunjungi saat menavigasi dengan keyboard, bukan mouse. Ini sangat penting untuk skrip entri data otomatis yang mengisi formulir dengan menekan Tab sejumlah kali tetap — jika urutannya berubah, skrip akan mengisi kolom yang salah. Urutan yang dapat diprediksi juga membuat formulir apa pun lebih cepat diisi secara manual."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Apa bedanya dengan Fill & Sign gratis dari Adobe?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Fill & Sign dari Adobe gratis untuk mengisi dan menandatangani PDF Anda sendiri, tetapi mengharuskan akun Adobe gratis dan mengunggah file Anda ke server Adobe. PDFree tidak memerlukan akun atau login, dan file Anda tidak pernah meninggalkan perangkat Anda. (Batas 2 per bulan dari Adobe hanya berlaku jika Anda mengirim dokumen ke orang lain untuk ditandatangani, bukan untuk mengisi sendiri.)"
+    }
   }
 ]

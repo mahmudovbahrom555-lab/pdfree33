@@ -46,5 +46,13 @@
       "@type": "Answer",
       "text": "Nein, es gibt keine künstlichen Limits. Die einzige Begrenzung ist der verfügbare Arbeitsspeicher deines Computers oder Smartphones."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Welche persönlichen Daten sollte ich vor dem Teilen aus einer PDF schwärzen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Typische Beispiele: IBAN und Kontonummern, Geburtsdatum, Sozialversicherungsnummer und Unterschrift. Bevor du ein Dokument an eine Bank, einen Arbeitgeber oder eine Behörde schickst, ist es meist am sichersten, diese Angaben zuerst zu schwärzen."
+    }
   }
 ]

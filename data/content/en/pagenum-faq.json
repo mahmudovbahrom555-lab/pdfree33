@@ -110,5 +110,13 @@
       "@type": "Answer",
       "text": "Yes. Select or drag in multiple PDF files and PDFree numbers the pages of each one using your chosen format and position, entirely in your browser. The numbered files are bundled into a single ZIP for download — no upload, no daily limit."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I use Roman numerals for the front matter and Arabic numbers for the body, like a thesis?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes, in two passes: first, add page numbers to just the front-matter pages (e.g. pages 1–8) using Roman numeral format. Then upload that result again and add numbers to the body pages (e.g. page 9 onward) using Arabic format, starting at 1. Each pass only touches the page range you set, so the two numbering styles won't overlap."
+    }
   }
 ]

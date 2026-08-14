@@ -78,5 +78,13 @@
       "@type": "Answer",
       "text": "Ja. Wähle oder ziehe mehrere PDF-Dateien hinein, und PDFree nummeriert die Seiten jeder Datei im gewählten Format — direkt im Browser. Die nummerierten Dateien werden als ZIP heruntergeladen."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann ich für den Anfangsteil römische Ziffern und für den Hauptteil arabische Zahlen verwenden, wie bei einer Abschlussarbeit?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja, in zwei Durchgängen: Füge zuerst nur den einleitenden Seiten (z. B. Seiten 1–8) römische Ziffern hinzu. Lade das Ergebnis danach erneut hoch und nummeriere die restlichen Seiten (z. B. ab Seite 9) im arabischen Format, beginnend bei 1. Jeder Durchgang betrifft nur den eingestellten Seitenbereich, sodass sich die beiden Nummerierungen nicht überschneiden."
+    }
   }
 ]

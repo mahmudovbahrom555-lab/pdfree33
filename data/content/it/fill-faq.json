@@ -86,5 +86,13 @@
       "@type": "Answer",
       "text": "L'ordine di tabulazione controlla la sequenza in cui i campi vengono raggiunti quando si naviga con la tastiera invece che con il mouse. È particolarmente importante per gli script di inserimento dati automatizzati che compilano un modulo premendo Tab un numero fisso di volte — se l'ordine cambia, lo script compila i campi sbagliati. Un ordine prevedibile rende inoltre qualsiasi modulo più veloce da compilare a mano."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "In cosa è diverso da Fill & Sign gratuito di Adobe?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Fill & Sign di Adobe è gratuito per compilare e firmare il proprio PDF, ma richiede un account Adobe gratuito e carica il file sui server di Adobe. PDFree non richiede né account né accesso, e il file non lascia mai il tuo dispositivo. (Il limite di 2 al mese di Adobe si applica solo se invii un documento a qualcun altro per farlo firmare, non se lo compili tu stesso.)"
+    }
   }
 ]

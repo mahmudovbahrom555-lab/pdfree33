@@ -62,5 +62,13 @@
       "@type": "Answer",
       "text": "Hayır. Gizleme tek yönlü bir işlemdir — onu güvenli yapan da budur. Geri almanız gerekiyorsa orijinal, gizlenmemiş dosyayla çalışın. Gizlenmiş sürüm doğrulanana kadar orijinali güvenli bir yerde saklayın."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Bir PDF'yi paylaşmadan önce hangi kişisel bilgileri gizlemeliyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yaygın örnekler: TC kimlik numarası, banka hesap bilgileri, doğum tarihi ve imza. Bir belgeyi bankaya, işverene veya bir kamu kurumuna göndermeden önce genellikle bu bilgileri önce gizlemek en güvenlisidir."
+    }
   }
 ]

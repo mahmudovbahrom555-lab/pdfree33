@@ -86,5 +86,13 @@
       "@type": "Answer",
       "text": "Tab order controls the sequence fields are visited in when navigating with the keyboard instead of the mouse. It matters most for automated data-entry scripts that fill a form by pressing Tab a fixed number of times — if the order changes, the script fills the wrong fields. A predictable order also makes any form faster to fill by hand."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "How is this different from Adobe's free Fill & Sign?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Adobe's Fill & Sign is free to use for filling and signing your own PDF, but it requires a free Adobe account and uploads your file to Adobe's servers. PDFree needs neither — no account, no sign-in, and your file never leaves your device. (Adobe's 2-per-month limit only applies if you're sending a document to someone else for their signature, not to filling one yourself.)"
+    }
   }
 ]

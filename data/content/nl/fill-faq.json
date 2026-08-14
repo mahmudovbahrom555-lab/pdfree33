@@ -86,5 +86,13 @@
       "@type": "Answer",
       "text": "De tabvolgorde bepaalt in welke volgorde velden worden bezocht bij navigeren met het toetsenbord in plaats van de muis. Dit is vooral belangrijk voor geautomatiseerde data-invoerscripts die een formulier invullen door een vast aantal keer op Tab te drukken — verandert de volgorde, dan vult het script de verkeerde velden in. Een voorspelbare volgorde maakt elk formulier ook sneller om handmatig in te vullen."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Wat is het verschil met Adobe's gratis Fill & Sign?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Adobe's Fill & Sign is gratis om je eigen PDF in te vullen en te ondertekenen, maar vereist een gratis Adobe-account en uploadt je bestand naar Adobe's servers. PDFree heeft geen account of login nodig, en je bestand verlaat nooit je apparaat. (De limiet van 2 per maand bij Adobe geldt alleen als je een document naar iemand anders stuurt om te laten ondertekenen, niet als je het zelf invult.)"
+    }
   }
 ]

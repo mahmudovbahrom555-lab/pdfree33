@@ -46,5 +46,13 @@
       "@type": "Answer",
       "text": "Non. PDFree n'a pas de limites artificielles. La seule contrainte est la mémoire vive disponible sur votre appareil."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Quelles informations personnelles faut-il caviarder avant de partager un PDF ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Exemples courants : RIB/IBAN, numéro de sécurité sociale, date de naissance et signature. Avant d'envoyer un document à une banque, un employeur ou une administration, il est généralement plus sûr de caviarder ces informations en premier."
+    }
   }
 ]

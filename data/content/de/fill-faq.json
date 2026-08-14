@@ -70,5 +70,13 @@
       "@type": "Answer",
       "text": "Die Tab-Reihenfolge bestimmt, in welcher Reihenfolge Felder angesteuert werden, wenn man mit der Tastatur statt mit der Maus navigiert. Besonders wichtig ist das für automatisierte Dateneingabe-Skripte, die ein Formular durch eine feste Anzahl an Tab-Tastendrücken ausfüllen — ändert sich die Reihenfolge, füllt das Skript die falschen Felder aus. Eine vorhersehbare Reihenfolge macht jedes Formular außerdem schneller von Hand ausfüllbar."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Was unterscheidet das von Adobes kostenlosem Fill & Sign?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Adobes Fill & Sign ist kostenlos, um ein eigenes PDF auszufüllen und zu unterschreiben — erfordert dafür aber ein kostenloses Adobe-Konto und lädt die Datei auf Adobes Server hoch. Bei PDFree brauchst du weder ein Konto noch eine Anmeldung, und deine Datei verlässt nie dein Gerät. (Das Limit von 2 pro Monat bei Adobe gilt nur, wenn du ein Dokument zur Unterschrift an jemand anderen sendest, nicht fürs eigene Ausfüllen.)"
+    }
   }
 ]

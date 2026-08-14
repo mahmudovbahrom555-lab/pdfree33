@@ -86,5 +86,13 @@
       "@type": "Answer",
       "text": "Sim. Selecione ou arraste vários arquivos PDF e o PDFree numerará as páginas de cada um no formato escolhido, direto no seu navegador. Os arquivos numerados são reunidos em um único ZIP para download. Sem envio, sem limite diário."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso usar algarismos romanos na parte pré-textual e arábicos no corpo, como em uma tese?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim, em duas passagens: primeiro adicione numeração apenas às páginas pré-textuais (por exemplo, páginas 1 a 8) em formato romano. Depois envie esse resultado novamente e numere o restante do documento (por exemplo, a partir da página 9) em formato arábico, começando em 1. Cada passagem afeta só o intervalo de páginas escolhido, então as duas numerações não se sobrepõem."
+    }
   }
 ]

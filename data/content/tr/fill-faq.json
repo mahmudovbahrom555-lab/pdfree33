@@ -86,5 +86,13 @@
       "@type": "Answer",
       "text": "Sekme sırası, fare yerine klavyeyle gezinirken alanların ziyaret edilme sırasını kontrol eder. Bu, bir formu Tab tuşuna sabit sayıda basarak dolduran otomatik veri girişi betikleri için özellikle önemlidir — sıra değişirse betik yanlış alanları doldurur. Öngörülebilir bir sıra, herhangi bir formu elle doldurmayı da hızlandırır."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Bu, Adobe'nin ücretsiz Fill & Sign aracından ne bakımdan farklı?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Adobe'nin Fill & Sign aracı, kendi PDF'inizi doldurup imzalamak için ücretsizdir ama ücretsiz bir Adobe hesabı gerektirir ve dosyanızı Adobe'nin sunucularına yükler. PDFree'de hesaba ya da giriş yapmaya gerek yoktur ve dosyanız cihazınızdan asla ayrılmaz. (Adobe'nin aylık 2 sınırı, yalnızca bir belgeyi imzalaması için başka birine gönderdiğinizde geçerlidir, kendiniz doldururken geçerli değildir.)"
+    }
   }
 ]

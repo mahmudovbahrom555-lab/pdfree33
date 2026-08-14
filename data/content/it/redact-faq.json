@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "No. L'oscuramento è un'operazione a senso unico — è proprio questo che lo rende sicuro. Se devi annullarlo, riparti dal file originale non oscurato. Conserva l'originale in un luogo sicuro finché non hai verificato che la versione oscurata sia corretta."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Quali dati personali dovrei oscurare prima di condividere un PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Esempi comuni: codice fiscale, dati bancari, data di nascita e firma. Prima di inviare un documento a una banca, al datore di lavoro o a un ente pubblico, di solito è più sicuro oscurare prima questi dati."
+    }
   }
 ]

@@ -78,5 +78,13 @@
       "@type": "Answer",
       "text": "Có. Chọn hoặc kéo thả nhiều file PDF và PDFree đánh số trang cho từng file theo định dạng bạn chọn, ngay trong trình duyệt. Các file đã đánh số được đóng gói thành một file ZIP duy nhất để tải xuống. Không tải lên, không giới hạn hàng ngày."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Tôi có thể dùng số La Mã cho phần mở đầu và số Ả Rập cho phần nội dung, như luận văn không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có, làm qua hai bước: đầu tiên đánh số chỉ cho các trang mở đầu (ví dụ trang 1–8) theo định dạng số La Mã. Sau đó tải kết quả đó lên lại và đánh số cho phần nội dung (ví dụ từ trang 9) theo định dạng số Ả Rập, bắt đầu từ 1. Mỗi lần chỉ áp dụng cho khoảng trang bạn chọn, nên hai kiểu đánh số sẽ không chồng lên nhau."
+    }
   }
 ]

@@ -110,5 +110,13 @@
       "@type": "Answer",
       "text": "Evet. Birden fazla PDF dosyası seçin veya sürükleyin, PDFree her dosyanın sayfalarını seçtiğiniz formatta numaralandırır, doğrudan tarayıcınızda. Numaralandırılmış dosyalar indirilebilir tek bir ZIP'te toplanır. Yükleme yok, günlük limit yok."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Bir tez gibi ön kısımlarda Romen rakamı, ana metinde ise Arap rakamı kullanabilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet, iki aşamada: önce yalnızca ön sayfalara (örneğin 1–8. sayfalar) Romen rakamı biçiminde numara ekleyin. Ardından bu sonucu tekrar yükleyip belgenin geri kalanını (örneğin 9. sayfadan itibaren) 1'den başlayan Arap rakamı biçiminde numaralandırın. Her aşama yalnızca belirlediğiniz sayfa aralığını etkiler, bu yüzden iki numaralandırma biçimi çakışmaz."
+    }
   }
 ]

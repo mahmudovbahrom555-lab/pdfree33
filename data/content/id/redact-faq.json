@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "Tidak. PDFree tidak memiliki batas ukuran file atau jumlah halaman. Satu-satunya batasan praktis adalah memori perangkat Anda."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Data pribadi apa saja yang sebaiknya disensor sebelum membagikan PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Contoh umum: NIK, nomor rekening bank, tanggal lahir, dan tanda tangan. Sebelum mengirim dokumen ke bank, tempat kerja, atau instansi pemerintah, biasanya lebih aman untuk menyensor data ini terlebih dahulu."
+    }
   }
 ]

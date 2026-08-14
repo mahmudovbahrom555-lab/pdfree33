@@ -78,5 +78,13 @@
       "@type": "Answer",
       "text": "Sí. Selecciona o arrastra varios archivos PDF y PDFree numerará las páginas de cada uno con el formato elegido, directamente en tu navegador. Los archivos numerados se agrupan en un único ZIP para descargar. Sin subida, sin límite diario."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Puedo usar números romanos para las páginas preliminares y arábigos para el cuerpo, como en una tesis?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sí, en dos pasadas: primero añade numeración solo a las páginas preliminares (por ejemplo, de la 1 a la 8) con formato romano. Después vuelve a subir ese resultado y numera el resto del documento (por ejemplo, desde la página 9) con formato arábigo, empezando en 1. Cada pasada solo afecta al rango de páginas que elijas, así que las dos numeraciones no se solapan."
+    }
   }
 ]

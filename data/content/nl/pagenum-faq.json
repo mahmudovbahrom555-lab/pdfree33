@@ -78,5 +78,13 @@
       "@type": "Answer",
       "text": "Ja. Selecteer of sleep meerdere PDF-bestanden en PDFree nummert de pagina's van elk bestand in het gekozen formaat, direct in je browser. De genummerde bestanden worden gebundeld in één ZIP om te downloaden. Geen upload, geen dagelijkse limiet."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik Romeinse cijfers gebruiken voor het voorwerk en Arabische cijfers voor de hoofdtekst, zoals bij een scriptie?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja, in twee stappen: voeg eerst nummering toe aan alleen de voorpagina's (bijvoorbeeld pagina 1–8) met Romeinse cijfers. Upload dat resultaat daarna opnieuw en nummer de rest van het document (bijvoorbeeld vanaf pagina 9) met Arabische cijfers, beginnend bij 1. Elke stap raakt alleen het paginabereik dat je instelt, dus de twee nummeringen overlappen elkaar niet."
+    }
   }
 ]

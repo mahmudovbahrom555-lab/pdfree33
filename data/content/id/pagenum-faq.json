@@ -70,5 +70,13 @@
       "@type": "Answer",
       "text": "Ya. Pilih atau seret beberapa file PDF dan PDFree menomori halaman setiap file dengan format pilihan Anda, langsung di browser Anda. File yang telah diberi nomor dikemas dalam satu ZIP untuk diunduh. Tanpa unggah, tanpa batas harian."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah saya memakai angka Romawi untuk bagian awal dan angka Arab untuk isi, seperti pada skripsi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Bisa, dengan dua tahap: pertama, tambahkan penomoran hanya pada halaman awal (misalnya halaman 1–8) dengan format Romawi. Lalu unggah kembali hasilnya dan beri nomor pada halaman isi (misalnya mulai halaman 9) dengan format Arab, dimulai dari 1. Setiap tahap hanya memengaruhi rentang halaman yang Anda tentukan, jadi kedua gaya penomoran tidak akan tumpang tindih."
+    }
   }
 ]

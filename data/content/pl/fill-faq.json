@@ -86,5 +86,13 @@
       "@type": "Answer",
       "text": "Kolejność Tab kontroluje sekwencję, w jakiej odwiedzane są pola podczas nawigacji za pomocą klawiatury zamiast myszy. Ma to szczególne znaczenie dla zautomatyzowanych skryptów wprowadzania danych, które wypełniają formularz, naciskając Tab określoną liczbę razy — jeśli kolejność się zmieni, skrypt wypełni niewłaściwe pola. Przewidywalna kolejność sprawia też, że każdy formularz szybciej wypełnia się ręcznie."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Czym różni się to od darmowego Fill & Sign od Adobe?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Fill & Sign od Adobe jest darmowy do wypełniania i podpisywania własnego pliku PDF, ale wymaga darmowego konta Adobe i przesyła plik na serwery Adobe. PDFree nie wymaga konta ani logowania, a Twój plik nigdy nie opuszcza urządzenia. (Limit 2 na miesiąc u Adobe dotyczy tylko wysyłania dokumentu do innej osoby do podpisu, a nie samodzielnego wypełniania.)"
+    }
   }
 ]

@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "Không. PDFree không giới hạn kích thước file hay số trang. Giới hạn thực tế duy nhất là bộ nhớ thiết bị của bạn."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Nên che thông tin cá nhân nào trước khi chia sẻ file PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Các thông tin thường gặp: số CMND/CCCD, số tài khoản ngân hàng, ngày sinh và chữ ký. Trước khi gửi tài liệu cho ngân hàng, nơi làm việc hoặc cơ quan nhà nước, che các thông tin này trước thường là lựa chọn an toàn nhất."
+    }
   }
 ]
