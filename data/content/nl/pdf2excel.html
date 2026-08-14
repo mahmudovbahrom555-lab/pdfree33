@@ -7,11 +7,50 @@
 <h3>Geen account, geen watermerk</h3>
 <p>Je hoeft je niet te registreren of een e-mailadres op te geven om te converteren. Het gedownloade .xlsx-bestand is schoon — geen watermerk, geen branding, geen regel "Geconverteerd met [servicenaam]". Het bestand is volledig van jou.</p>
 
-<h3>Hoe het werkt</h3>
-<p>De PDF wordt direct in de browser geanalyseerd met JavaScript. Het algoritme van PDFree detecteert coördinaten van cellen, rijen en kolommen op basis van tekstposities in de PDF. Elke gedetecteerde tabel wordt op een apart werkblad in het .xlsx-bestand geschreven — als je PDF 5 tabellen op verschillende pagina's heeft, is het resultaat een Excel-bestand met 5 werkbladen.</p>
+<h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">PDF naar Excel Converteren in 3 Stappen</h2>
+<div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
+  <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">1</div>
+  <div>
+    <strong style="color:var(--text);font-size:15px;">Open je PDF</strong>
+    <p style="margin:6px 0 0;font-size:14px;">Klik op <strong>Bestand kiezen</strong> of sleep je PDF naar de dropzone. PDFree scant het document en toont hoeveel tabellen er zijn gevonden voordat je converteert.</p>
+  </div>
+</div>
+<div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
+  <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">2</div>
+  <div>
+    <strong style="color:var(--text);font-size:15px;">Controleer het aantal tabellen</strong>
+    <p style="margin:6px 0 0;font-size:14px;">Een badge toont hoeveel tabellen zijn gedetecteerd. Als er geen worden gevonden, laat PDFree dat vooraf weten — geen nutteloze download.</p>
+  </div>
+</div>
+<div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
+  <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">3</div>
+  <div>
+    <strong style="color:var(--text);font-size:15px;">Download het .xlsx-bestand</strong>
+    <p style="margin:6px 0 0;font-size:14px;">Klik op <strong>Converteren naar Excel</strong>. Elke gedetecteerde tabel wordt een eigen werkblad ("Tabel 1", "Tabel 2"...); al het overige op de pagina wordt bewaard in een apart "Tekst"-werkblad, zodat niets verloren gaat.</p>
+  </div>
+</div>
 
-<h3>Wanneer handig</h3>
-<p>Financiële rapporten in PDF die je in Excel wilt analyseren. Facturen met prijstabellen. Data-exports uit legacy-systemen die alleen PDF-downloads bieden. Onderzoeksrapporten met datatabellen. Alles met gestructureerde data gevangen in een PDF.</p>
+<h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">Voor Welke PDF's Werkt Dit Het Best?</h2>
+<div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+  <strong style="color:var(--text);font-size:15px;">Bank- en financiële overzichten</strong>
+  <p style="margin:6px 0 0;font-size:14px;">Transactietabellen met uitgelijnde kolommen (datum, omschrijving, bedrag, saldo) zijn precies waarvoor deze detector is gebouwd.</p>
+</div>
+<div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+  <strong style="color:var(--text);font-size:15px;">Facturen en prijslijsten</strong>
+  <p style="margin:6px 0 0;font-size:14px;">Regelitem-tabellen (artikel, aantal, stukprijs, totaal) worden omgezet in een werkend spreadsheet dat je kunt optellen en sorteren.</p>
+</div>
+<div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+  <strong style="color:var(--text);font-size:15px;">Rapporten met datatabellen</strong>
+  <p style="margin:6px 0 0;font-size:14px;">Onderzoeksartikelen, bedrijfsrapporten en overheidsdocumenten combineren vaak tekst met datatabellen — de tabellen worden werkbladen, de tekst wordt een leesbaar reserveblad.</p>
+</div>
+<div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+  <strong style="color:var(--text);font-size:15px;">Klassenlijsten, roosters en cijferlijsten</strong>
+  <p style="margin:6px 0 0;font-size:14px;">Tabellen in lijstvorm met consistente kolommen worden betrouwbaar gedetecteerd en zijn direct na export klaar om te filteren of sorteren.</p>
+</div>
+<div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+  <strong style="color:var(--text);font-size:15px;">Wat niet goed werkt</strong>
+  <p style="margin:6px 0 0;font-size:14px;">Documenten met alleen platte tekst zonder tabeldata, en gescande PDF-afbeeldingen zonder tekstlaag — voer voor gescande documenten eerst <a href="/nl/pdf-tekstherkenning/" style="color:var(--green)">OCR</a> uit.</p>
+</div>
 
 <h3>Beperkingen</h3>
 <p>Gescande PDF's (foto's van pagina's) kunnen niet worden geconverteerd — er is geen leesbare tekst. PDF's met complexe lay-outs zoals samengevoegde cellen kunnen na conversie handmatige aanpassingen vereisen.</p>
@@ -29,6 +68,44 @@
 <li>Geen aanmelding, geen dagelijkse gebruikslimiet, voor altijd gratis</li>
 <li>Alles wordt voor 100% op je eigen apparaat verwerkt — er wordt niets geüpload</li>
 </ul>
+
+<h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">Hoe PDFree Verschilt van Cloudconverters</h2>
+<div style="overflow-x:auto;margin:0 0 32px;">
+<table style="width:100%;border-collapse:collapse;font-size:14px;min-width:520px;">
+<thead><tr style="border-bottom:2px solid var(--border);">
+  <th style="text-align:left;padding:10px 14px;color:var(--text);font-weight:600;">Functie</th>
+  <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">PDFree</th>
+  <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">Typische cloudtools</th>
+</tr></thead>
+<tbody>
+<tr style="background:var(--green-light);">
+  <td style="padding:10px 14px;color:var(--text);font-weight:500;border-bottom:1px solid var(--border);">Waar je data naartoe gaat</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;border-bottom:1px solid var(--border);">Blijft op je apparaat</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--text2);border-bottom:1px solid var(--border);">Geüpload naar externe servers</td>
+</tr>
+<tr>
+  <td style="padding:10px 14px;color:var(--text);font-weight:500;border-bottom:1px solid var(--border);">Tabeldetectie</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;border-bottom:1px solid var(--border);">Gebaseerd op kolomuitlijning, met betrouwbaarheidsscore</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--text2);border-bottom:1px solid var(--border);">Wisselend — vaak gewoon een tekstdump</td>
+</tr>
+<tr>
+  <td style="padding:10px 14px;color:var(--text);font-weight:500;border-bottom:1px solid var(--border);">Registratie vereist</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;border-bottom:1px solid var(--border);">Nee</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--text2);border-bottom:1px solid var(--border);">Meestal vereist</td>
+</tr>
+<tr>
+  <td style="padding:10px 14px;color:var(--text);font-weight:500;border-bottom:1px solid var(--border);">Dagelijkse gebruikslimiet</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;border-bottom:1px solid var(--border);">Geen</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--text2);border-bottom:1px solid var(--border);">Vaak beperkt in het gratis plan</td>
+</tr>
+<tr>
+  <td style="padding:10px 14px;color:var(--text);font-weight:500;border-bottom:1px solid var(--border);">Prijs</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;border-bottom:1px solid var(--border);">Voor altijd gratis</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--text2);border-bottom:1px solid var(--border);">Gratis met limieten / betaalde plannen</td>
+</tr>
+</tbody>
+</table>
+</div>
 
 <h2>Veelgestelde vragen</h2>
 <h3>Zijn de tabellen echt bewerkbaar in Excel?</h3>

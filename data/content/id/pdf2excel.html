@@ -7,11 +7,50 @@
 <h3>Tanpa akun, tanpa watermark</h3>
 <p>Tidak perlu mendaftar atau memberikan email untuk mengkonversi file. File .xlsx yang Anda unduh bersih — tanpa watermark, tanpa branding, tanpa baris "Diubah dengan [nama layanan]". File adalah milik Anda sepenuhnya.</p>
 
-<h3>Bagaimana cara kerjanya</h3>
-<p>PDF diurai langsung di browser menggunakan JavaScript. Algoritma PDFree mendeteksi koordinat sel, baris, dan kolom berdasarkan posisi teks di dalam PDF. Setiap tabel yang terdeteksi ditulis ke sheet terpisah dalam satu file .xlsx — jadi jika PDF Anda memiliki 5 tabel di berbagai halaman, hasilnya adalah file Excel dengan 5 sheet.</p>
+<h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">Cara Konversi PDF ke Excel dalam 3 Langkah</h2>
+<div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
+  <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">1</div>
+  <div>
+    <strong style="color:var(--text);font-size:15px;">Buka PDF Anda</strong>
+    <p style="margin:6px 0 0;font-size:14px;">Klik <strong>Pilih file</strong> atau seret PDF Anda ke area unggah. PDFree memindai dokumen dan menampilkan jumlah tabel yang ditemukan sebelum Anda mengonversi.</p>
+  </div>
+</div>
+<div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
+  <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">2</div>
+  <div>
+    <strong style="color:var(--text);font-size:15px;">Periksa jumlah tabel</strong>
+    <p style="margin:6px 0 0;font-size:14px;">Sebuah lencana menunjukkan berapa banyak tabel yang terdeteksi. Jika tidak ada yang ditemukan, PDFree memberi tahu Anda lebih dulu — tidak ada unduhan yang sia-sia.</p>
+  </div>
+</div>
+<div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
+  <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">3</div>
+  <div>
+    <strong style="color:var(--text);font-size:15px;">Unduh file .xlsx</strong>
+    <p style="margin:6px 0 0;font-size:14px;">Klik <strong>Konversi ke Excel</strong>. Setiap tabel yang terdeteksi menjadi sheet-nya sendiri ("Table 1", "Table 2"...); apa pun yang lain di halaman disimpan di sheet "Text" terpisah agar tidak ada yang hilang.</p>
+  </div>
+</div>
 
-<h3>Kapan ini berguna</h3>
-<p>Laporan keuangan dalam PDF yang perlu dianalisis di Excel. Faktur dengan tabel harga. Ekspor data dari sistem lama yang hanya menawarkan unduhan PDF. Laporan penelitian dengan tabel data. Apapun dengan data terstruktur yang terjebak di dalam PDF.</p>
+<h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">Jenis PDF Apa yang Paling Cocok?</h2>
+<div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+  <strong style="color:var(--text);font-size:15px;">Laporan bank dan keuangan</strong>
+  <p style="margin:6px 0 0;font-size:14px;">Tabel transaksi dengan kolom yang sejajar (tanggal, keterangan, jumlah, saldo) adalah persis yang dirancang untuk dideteksi oleh alat ini.</p>
+</div>
+<div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+  <strong style="color:var(--text);font-size:15px;">Faktur dan daftar harga</strong>
+  <p style="margin:6px 0 0;font-size:14px;">Tabel item (barang, jumlah, harga satuan, total) dikonversi menjadi spreadsheet yang bisa Anda jumlahkan dan urutkan.</p>
+</div>
+<div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+  <strong style="color:var(--text);font-size:15px;">Laporan dengan tabel data</strong>
+  <p style="margin:6px 0 0;font-size:14px;">Makalah penelitian, laporan bisnis, dan dokumen pemerintah sering mencampur teks naratif dengan tabel data — tabelnya menjadi sheet, teksnya menjadi sheet cadangan yang bisa dibaca.</p>
+</div>
+<div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+  <strong style="color:var(--text);font-size:15px;">Daftar kelas, jadwal, dan buku nilai</strong>
+  <p style="margin:6px 0 0;font-size:14px;">Tabel bergaya daftar dengan kolom konsisten terdeteksi dengan andal dan siap difilter atau diurutkan segera setelah diekspor.</p>
+</div>
+<div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+  <strong style="color:var(--text);font-size:15px;">Yang tidak bekerja dengan baik</strong>
+  <p style="margin:6px 0 0;font-size:14px;">Dokumen teks murni tanpa data tabel, dan PDF hasil scan gambar tanpa lapisan teks — untuk dokumen hasil scan, jalankan <a href="/id/ocr-pdf/" style="color:var(--green)">OCR</a> terlebih dahulu.</p>
+</div>
 
 <h3>Keterbatasan</h3>
 <p>PDF yang dipindai (gambar yang difoto) tidak dapat dikonversi — tidak ada teks yang bisa dibaca. PDF dengan tata letak yang sangat kompleks seperti penggabungan sel yang rumit mungkin memerlukan penyesuaian manual setelah konversi. Konversi terbaik untuk tabel bergaris sederhana.</p>
@@ -29,6 +68,44 @@
 <li>Tanpa pendaftaran, tanpa batas penggunaan harian, gratis selamanya</li>
 <li>Semua diproses 100% di perangkat Anda — tidak ada yang diunggah</li>
 </ul>
+
+<h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">Perbedaan PDFree dengan Konverter Cloud</h2>
+<div style="overflow-x:auto;margin:0 0 32px;">
+<table style="width:100%;border-collapse:collapse;font-size:14px;min-width:520px;">
+<thead><tr style="border-bottom:2px solid var(--border);">
+  <th style="text-align:left;padding:10px 14px;color:var(--text);font-weight:600;">Fitur</th>
+  <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">PDFree</th>
+  <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">Alat cloud pada umumnya</th>
+</tr></thead>
+<tbody>
+<tr style="background:var(--green-light);">
+  <td style="padding:10px 14px;color:var(--text);font-weight:500;border-bottom:1px solid var(--border);">Ke mana data Anda pergi</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;border-bottom:1px solid var(--border);">Tetap di perangkat Anda</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--text2);border-bottom:1px solid var(--border);">Diunggah ke server jarak jauh</td>
+</tr>
+<tr>
+  <td style="padding:10px 14px;color:var(--text);font-weight:500;border-bottom:1px solid var(--border);">Deteksi tabel</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;border-bottom:1px solid var(--border);">Berdasarkan kesejajaran kolom, dengan skor kepercayaan</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--text2);border-bottom:1px solid var(--border);">Bervariasi — sering hanya berupa dump teks</td>
+</tr>
+<tr>
+  <td style="padding:10px 14px;color:var(--text);font-weight:500;border-bottom:1px solid var(--border);">Perlu mendaftar</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;border-bottom:1px solid var(--border);">Tidak</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--text2);border-bottom:1px solid var(--border);">Biasanya diperlukan</td>
+</tr>
+<tr>
+  <td style="padding:10px 14px;color:var(--text);font-weight:500;border-bottom:1px solid var(--border);">Batas penggunaan harian</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;border-bottom:1px solid var(--border);">Tidak ada</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--text2);border-bottom:1px solid var(--border);">Sering dibatasi pada paket gratis</td>
+</tr>
+<tr>
+  <td style="padding:10px 14px;color:var(--text);font-weight:500;border-bottom:1px solid var(--border);">Harga</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;border-bottom:1px solid var(--border);">Gratis selamanya</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--text2);border-bottom:1px solid var(--border);">Gratis dengan batasan / berbayar</td>
+</tr>
+</tbody>
+</table>
+</div>
 
 <h2>Pertanyaan yang Sering Diajukan</h2>
 <h3>Apakah tabel benar-benar bisa diedit di Excel?</h3>

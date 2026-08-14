@@ -7,11 +7,50 @@
 <h3>アカウント不要、透かしなし</h3>
 <p>変換にメールアドレスや登録は必要ありません。ダウンロードした.xlsxファイルはクリーンです — 透かしなし、サービスのブランドなし、「〇〇で変換」という行もありません。ファイルは完全にあなたのものです。</p>
 
-<h3>仕組み</h3>
-<p>PDFはJavaScriptを使ってブラウザ内で直接解析されます。PDFreeのアルゴリズムはPDF内のテキスト位置に基づいてセル、行、列の座標を検出します。検出された各表は.xlsxの個別シートに書き出されます — PDF内に5つの表がある場合、結果は5つのシートを持つExcelファイルになります。</p>
+<h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">PDFをExcelに変換する3つのステップ</h2>
+<div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
+  <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">1</div>
+  <div>
+    <strong style="color:var(--text);font-size:15px;">PDFを開く</strong>
+    <p style="margin:6px 0 0;font-size:14px;">「ファイルを選択」をクリックするか、PDFをドロップゾーンにドラッグします。PDFreeが文書をスキャンし、変換前に見つかった表の数を表示します。</p>
+  </div>
+</div>
+<div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
+  <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">2</div>
+  <div>
+    <strong style="color:var(--text);font-size:15px;">表の数を確認する</strong>
+    <p style="margin:6px 0 0;font-size:14px;">バッジで検出された表の数がわかります。表が見つからない場合、PDFreeは事前に知らせます — 無駄なダウンロードはありません。</p>
+  </div>
+</div>
+<div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
+  <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">3</div>
+  <div>
+    <strong style="color:var(--text);font-size:15px;">.xlsxファイルをダウンロードする</strong>
+    <p style="margin:6px 0 0;font-size:14px;">「Excelに変換」をクリックします。検出された各表はそれぞれ独自のシート（「Table 1」「Table 2」…）になります。それ以外のページ内容は別の「Text」シートに保存されるため、何も失われません。</p>
+  </div>
+</div>
 
-<h3>活用シーン</h3>
-<p>Excelで分析が必要なPDF形式の財務報告書。価格表が含まれた請求書。PDFダウンロードしか提供しないレガシーシステムからのデータエクスポート。データ表を含む研究報告書。PDFに閉じ込められた構造化データすべて。</p>
+<h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">どんなPDFに最も向いているか</h2>
+<div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+  <strong style="color:var(--text);font-size:15px;">銀行明細・財務諸表</strong>
+  <p style="margin:6px 0 0;font-size:14px;">列が揃った取引明細表（日付、摘要、金額、残高）は、まさにこの検出機能が想定している対象です。</p>
+</div>
+<div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+  <strong style="color:var(--text);font-size:15px;">請求書・価格表</strong>
+  <p style="margin:6px 0 0;font-size:14px;">明細行の表（品目、数量、単価、合計）は、合計や並べ替えができる実用的な表計算に変換されます。</p>
+</div>
+<div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+  <strong style="color:var(--text);font-size:15px;">データ表を含むレポート</strong>
+  <p style="margin:6px 0 0;font-size:14px;">研究論文、ビジネスレポート、行政文書は文章とデータ表が混在することが多く — 表はシートに、文章は読みやすい予備シートになります。</p>
+</div>
+<div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+  <strong style="color:var(--text);font-size:15px;">クラス名簿・時間割・成績表</strong>
+  <p style="margin:6px 0 0;font-size:14px;">列が一定した名簿形式の表は確実に検出され、書き出し後すぐにフィルターや並べ替えができます。</p>
+</div>
+<div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+  <strong style="color:var(--text);font-size:15px;">うまく機能しないケース</strong>
+  <p style="margin:6px 0 0;font-size:14px;">表形式データを含まない純粋な文章のみの文書、そしてテキスト層のないスキャン画像PDF — スキャン文書の場合は、先に<a href="/ja/pdf-moji-ninshiki/" style="color:var(--green)">OCR</a>を実行してください。</p>
+</div>
 
 <h3>制限事項</h3>
 <p>スキャンされたPDF（写真画像）は変換できません — 読み取れるテキストがないためです。複雑な結合セルを持つPDFは変換後に手動調整が必要な場合があります。</p>
@@ -29,6 +68,44 @@
 <li>登録不要、1日の利用制限なし、永久無料です</li>
 <li>すべての処理はあなたの端末で100%完結します — 何もアップロードされません</li>
 </ul>
+
+<h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">PDFreeとクラウド変換ツールの違い</h2>
+<div style="overflow-x:auto;margin:0 0 32px;">
+<table style="width:100%;border-collapse:collapse;font-size:14px;min-width:520px;">
+<thead><tr style="border-bottom:2px solid var(--border);">
+  <th style="text-align:left;padding:10px 14px;color:var(--text);font-weight:600;">機能</th>
+  <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">PDFree</th>
+  <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">一般的なクラウドツール</th>
+</tr></thead>
+<tbody>
+<tr style="background:var(--green-light);">
+  <td style="padding:10px 14px;color:var(--text);font-weight:500;border-bottom:1px solid var(--border);">データの行き先</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;border-bottom:1px solid var(--border);">デバイス内にとどまる</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--text2);border-bottom:1px solid var(--border);">リモートサーバーにアップロード</td>
+</tr>
+<tr>
+  <td style="padding:10px 14px;color:var(--text);font-weight:500;border-bottom:1px solid var(--border);">表の検出方法</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;border-bottom:1px solid var(--border);">列の整列に基づき、信頼度スコア付き</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--text2);border-bottom:1px solid var(--border);">様々 — 単なるテキストの書き出しのことが多い</td>
+</tr>
+<tr>
+  <td style="padding:10px 14px;color:var(--text);font-weight:500;border-bottom:1px solid var(--border);">登録が必要</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;border-bottom:1px solid var(--border);">不要</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--text2);border-bottom:1px solid var(--border);">通常必要</td>
+</tr>
+<tr>
+  <td style="padding:10px 14px;color:var(--text);font-weight:500;border-bottom:1px solid var(--border);">1日の利用制限</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;border-bottom:1px solid var(--border);">なし</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--text2);border-bottom:1px solid var(--border);">無料プランでは制限されることが多い</td>
+</tr>
+<tr>
+  <td style="padding:10px 14px;color:var(--text);font-weight:500;border-bottom:1px solid var(--border);">料金</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;border-bottom:1px solid var(--border);">永久無料</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--text2);border-bottom:1px solid var(--border);">制限付き無料 / 有料プラン</td>
+</tr>
+</tbody>
+</table>
+</div>
 
 <h2>よくある質問</h2>
 <h3>Excelで本当に編集できますか？</h3>

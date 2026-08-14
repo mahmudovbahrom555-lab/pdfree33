@@ -7,11 +7,50 @@
 <h3>Без регистрации, без водяных знаков</h3>
 <p>Не нужно регистрироваться или давать email. Скачанный .xlsx файл чистый — без водяных знаков, без брендинга сервиса, без строки «Конвертировано через [название сервиса]». Файл полностью ваш.</p>
 
-<h3>Как это работает</h3>
-<p>PDF разбирается прямо в браузере на JavaScript. Алгоритм PDFree определяет координаты ячеек, строк и столбцов по позиции текста в PDF. Каждая найденная таблица записывается на отдельный лист — если в PDF пять таблиц на разных страницах, на выходе будет Excel с пятью листами.</p>
+<h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">Как конвертировать PDF в Excel за 3 шага</h2>
+<div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
+  <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">1</div>
+  <div>
+    <strong style="color:var(--text);font-size:15px;">Откройте свой PDF</strong>
+    <p style="margin:6px 0 0;font-size:14px;">Нажмите <strong>Выбрать файл</strong> или перетащите PDF в область загрузки. PDFree сканирует документ и показывает, сколько таблиц найдено, ещё до конвертации.</p>
+  </div>
+</div>
+<div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
+  <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">2</div>
+  <div>
+    <strong style="color:var(--text);font-size:15px;">Проверьте количество таблиц</strong>
+    <p style="margin:6px 0 0;font-size:14px;">Значок показывает, сколько таблиц обнаружено. Если ничего не найдено, PDFree сразу предупредит вас — никаких бесполезных загрузок.</p>
+  </div>
+</div>
+<div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
+  <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">3</div>
+  <div>
+    <strong style="color:var(--text);font-size:15px;">Скачайте файл .xlsx</strong>
+    <p style="margin:6px 0 0;font-size:14px;">Нажмите <strong>Конвертировать в Excel</strong>. Каждая обнаруженная таблица становится отдельным листом («Таблица 1», «Таблица 2»...); всё остальное на странице сохраняется на отдельном листе «Текст», чтобы ничего не потерялось.</p>
+  </div>
+</div>
 
-<h3>Когда это нужно</h3>
-<p>Финансовые отчёты в PDF, которые нужно анализировать в Excel. Счета с таблицами цен. Выгрузки из старых систем, которые отдают только PDF. Исследовательские отчёты с таблицами данных. Всё, где структурированные данные застряли в PDF.</p>
+<h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">Для каких PDF это лучше всего подходит?</h2>
+<div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+  <strong style="color:var(--text);font-size:15px;">Банковские и финансовые выписки</strong>
+  <p style="margin:6px 0 0;font-size:14px;">Таблицы транзакций с выровненными столбцами (дата, описание, сумма, остаток) — именно то, для чего создан этот детектор.</p>
+</div>
+<div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+  <strong style="color:var(--text);font-size:15px;">Счета и прайс-листы</strong>
+  <p style="margin:6px 0 0;font-size:14px;">Построчные таблицы (товар, количество, цена за единицу, итого) превращаются в рабочую таблицу, которую можно суммировать и сортировать.</p>
+</div>
+<div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+  <strong style="color:var(--text);font-size:15px;">Отчёты с таблицами данных</strong>
+  <p style="margin:6px 0 0;font-size:14px;">Научные статьи, бизнес-отчёты и госдокументы часто сочетают текст с таблицами данных — таблицы становятся листами, а текст — читаемым резервным листом.</p>
+</div>
+<div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+  <strong style="color:var(--text);font-size:15px;">Списки классов, расписания и журналы оценок</strong>
+  <p style="margin:6px 0 0;font-size:14px;">Табличные списки с одинаковыми столбцами распознаются надёжно и готовы к фильтрации или сортировке сразу после экспорта.</p>
+</div>
+<div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+  <strong style="color:var(--text);font-size:15px;">Что работает плохо</strong>
+  <p style="margin:6px 0 0;font-size:14px;">Документы из сплошного текста без табличных данных и отсканированные PDF-изображения без текстового слоя — для сканов сначала запустите <a href="/ru/raspoznat-tekst-pdf/" style="color:var(--green)">OCR</a>.</p>
+</div>
 
 <h3>Ограничения</h3>
 <p>Сканированные PDF (фотографии страниц) не конвертируются — в них нет текста для чтения. PDF со сложной структурой — многоуровневыми объединёнными ячейками — может потребовать ручной доработки после конвертации.</p>
@@ -29,6 +68,44 @@
 <li>Без регистрации, без дневных лимитов, бесплатно навсегда</li>
 <li>Всё обрабатывается на 100% на вашем устройстве — ничего не загружается</li>
 </ul>
+
+<h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">Чем PDFree отличается от облачных конвертеров</h2>
+<div style="overflow-x:auto;margin:0 0 32px;">
+<table style="width:100%;border-collapse:collapse;font-size:14px;min-width:520px;">
+<thead><tr style="border-bottom:2px solid var(--border);">
+  <th style="text-align:left;padding:10px 14px;color:var(--text);font-weight:600;">Функция</th>
+  <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">PDFree</th>
+  <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">Типичные облачные инструменты</th>
+</tr></thead>
+<tbody>
+<tr style="background:var(--green-light);">
+  <td style="padding:10px 14px;color:var(--text);font-weight:500;border-bottom:1px solid var(--border);">Куда уходят ваши данные</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;border-bottom:1px solid var(--border);">Остаются на вашем устройстве</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--text2);border-bottom:1px solid var(--border);">Загружаются на удалённые серверы</td>
+</tr>
+<tr>
+  <td style="padding:10px 14px;color:var(--text);font-weight:500;border-bottom:1px solid var(--border);">Определение таблиц</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;border-bottom:1px solid var(--border);">По выравниванию столбцов, с оценкой уверенности</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--text2);border-bottom:1px solid var(--border);">По-разному — часто просто дамп текста</td>
+</tr>
+<tr>
+  <td style="padding:10px 14px;color:var(--text);font-weight:500;border-bottom:1px solid var(--border);">Нужна регистрация</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;border-bottom:1px solid var(--border);">Нет</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--text2);border-bottom:1px solid var(--border);">Обычно требуется</td>
+</tr>
+<tr>
+  <td style="padding:10px 14px;color:var(--text);font-weight:500;border-bottom:1px solid var(--border);">Дневной лимит использования</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;border-bottom:1px solid var(--border);">Нет</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--text2);border-bottom:1px solid var(--border);">Часто ограничен на бесплатном тарифе</td>
+</tr>
+<tr>
+  <td style="padding:10px 14px;color:var(--text);font-weight:500;border-bottom:1px solid var(--border);">Цена</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;border-bottom:1px solid var(--border);">Бесплатно навсегда</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--text2);border-bottom:1px solid var(--border);">Бесплатно с ограничениями / платно</td>
+</tr>
+</tbody>
+</table>
+</div>
 
 <h2>Часто задаваемые вопросы</h2>
 <h3>Таблицы действительно редактируемые в Excel?</h3>

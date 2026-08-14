@@ -7,11 +7,50 @@
 <h3>Không cần tài khoản, không watermark</h3>
 <p>Không cần đăng ký hay cung cấp email để chuyển đổi file. File .xlsx bạn tải xuống hoàn toàn sạch — không watermark, không thương hiệu, không dòng "Được chuyển đổi bởi [tên dịch vụ]". File hoàn toàn là của bạn.</p>
 
-<h3>Cách hoạt động</h3>
-<p>PDF được phân tích trực tiếp trong trình duyệt bằng JavaScript. Thuật toán của PDFree phát hiện tọa độ ô, hàng và cột dựa trên vị trí văn bản trong PDF. Mỗi bảng được phát hiện được ghi vào một sheet riêng trong file .xlsx — vì vậy nếu PDF có 5 bảng trên các trang khác nhau, kết quả là file Excel với 5 sheet.</p>
+<h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">Cách Chuyển Đổi PDF sang Excel trong 3 Bước</h2>
+<div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
+  <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">1</div>
+  <div>
+    <strong style="color:var(--text);font-size:15px;">Mở file PDF của bạn</strong>
+    <p style="margin:6px 0 0;font-size:14px;">Nhấp <strong>Chọn file</strong> hoặc kéo PDF vào vùng thả file. PDFree quét tài liệu và hiển thị số bảng tìm thấy trước khi bạn chuyển đổi.</p>
+  </div>
+</div>
+<div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
+  <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">2</div>
+  <div>
+    <strong style="color:var(--text);font-size:15px;">Kiểm tra số lượng bảng</strong>
+    <p style="margin:6px 0 0;font-size:14px;">Một huy hiệu hiển thị số bảng đã được phát hiện. Nếu không tìm thấy bảng nào, PDFree sẽ báo trước — không tải về vô ích.</p>
+  </div>
+</div>
+<div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
+  <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">3</div>
+  <div>
+    <strong style="color:var(--text);font-size:15px;">Tải file .xlsx</strong>
+    <p style="margin:6px 0 0;font-size:14px;">Nhấp <strong>Chuyển sang Excel</strong>. Mỗi bảng được phát hiện trở thành một sheet riêng ("Table 1", "Table 2"...); phần còn lại trên trang được lưu vào sheet "Text" riêng để không mất dữ liệu.</p>
+  </div>
+</div>
 
-<h3>Khi nào hữu ích</h3>
-<p>Báo cáo tài chính trong PDF cần phân tích trong Excel. Hóa đơn với bảng giá. Xuất dữ liệu từ hệ thống cũ chỉ cung cấp tải xuống PDF. Báo cáo nghiên cứu với bảng dữ liệu. Bất kỳ thứ gì có dữ liệu có cấu trúc bị kẹt trong PDF.</p>
+<h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">Loại PDF Nào Phù Hợp Nhất?</h2>
+<div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+  <strong style="color:var(--text);font-size:15px;">Sao kê ngân hàng và báo cáo tài chính</strong>
+  <p style="margin:6px 0 0;font-size:14px;">Các bảng giao dịch với cột thẳng hàng (ngày, mô tả, số tiền, số dư) chính là thứ công cụ phát hiện này được xây dựng để xử lý.</p>
+</div>
+<div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+  <strong style="color:var(--text);font-size:15px;">Hóa đơn và bảng giá</strong>
+  <p style="margin:6px 0 0;font-size:14px;">Bảng chi tiết từng mục (mặt hàng, số lượng, đơn giá, tổng) được chuyển thành bảng tính có thể tính tổng và sắp xếp.</p>
+</div>
+<div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+  <strong style="color:var(--text);font-size:15px;">Báo cáo có bảng dữ liệu</strong>
+  <p style="margin:6px 0 0;font-size:14px;">Bài nghiên cứu, báo cáo doanh nghiệp và văn bản chính phủ thường trộn lẫn văn bản với bảng dữ liệu — các bảng trở thành sheet riêng, văn bản trở thành sheet dự phòng dễ đọc.</p>
+</div>
+<div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+  <strong style="color:var(--text);font-size:15px;">Danh sách lớp học, lịch học và sổ điểm</strong>
+  <p style="margin:6px 0 0;font-size:14px;">Bảng dạng danh sách với cột nhất quán được phát hiện đáng tin cậy và sẵn sàng để lọc hoặc sắp xếp ngay sau khi xuất.</p>
+</div>
+<div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+  <strong style="color:var(--text);font-size:15px;">Trường hợp không hoạt động tốt</strong>
+  <p style="margin:6px 0 0;font-size:14px;">Tài liệu toàn văn bản không có dữ liệu dạng bảng, và PDF dạng ảnh scan không có lớp văn bản — với tài liệu scan, hãy chạy <a href="/vi/nhan-dang-van-ban-pdf/" style="color:var(--green)">OCR</a> trước.</p>
+</div>
 
 <h3>Giới hạn</h3>
 <p>PDF được quét (ảnh chụp) không thể chuyển đổi — không có văn bản nào để đọc. PDF với bố cục phức tạp như ô được gộp có thể cần điều chỉnh thủ công sau khi chuyển đổi.</p>
@@ -29,6 +68,44 @@
 <li>Không đăng ký, không giới hạn sử dụng hằng ngày, miễn phí mãi mãi</li>
 <li>Mọi thứ được xử lý 100% trên thiết bị của bạn — không có gì được tải lên</li>
 </ul>
+
+<h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">PDFree Khác Gì So Với Công Cụ Đám Mây</h2>
+<div style="overflow-x:auto;margin:0 0 32px;">
+<table style="width:100%;border-collapse:collapse;font-size:14px;min-width:520px;">
+<thead><tr style="border-bottom:2px solid var(--border);">
+  <th style="text-align:left;padding:10px 14px;color:var(--text);font-weight:600;">Tính năng</th>
+  <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">PDFree</th>
+  <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">Công cụ đám mây thông thường</th>
+</tr></thead>
+<tbody>
+<tr style="background:var(--green-light);">
+  <td style="padding:10px 14px;color:var(--text);font-weight:500;border-bottom:1px solid var(--border);">Dữ liệu của bạn đi đâu</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;border-bottom:1px solid var(--border);">Ở lại trên thiết bị của bạn</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--text2);border-bottom:1px solid var(--border);">Được tải lên máy chủ từ xa</td>
+</tr>
+<tr>
+  <td style="padding:10px 14px;color:var(--text);font-weight:500;border-bottom:1px solid var(--border);">Phát hiện bảng</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;border-bottom:1px solid var(--border);">Dựa trên căn chỉnh cột, có điểm tin cậy</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--text2);border-bottom:1px solid var(--border);">Khác nhau — thường chỉ là dump văn bản</td>
+</tr>
+<tr>
+  <td style="padding:10px 14px;color:var(--text);font-weight:500;border-bottom:1px solid var(--border);">Yêu cầu đăng ký</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;border-bottom:1px solid var(--border);">Không</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--text2);border-bottom:1px solid var(--border);">Thường yêu cầu</td>
+</tr>
+<tr>
+  <td style="padding:10px 14px;color:var(--text);font-weight:500;border-bottom:1px solid var(--border);">Giới hạn sử dụng hàng ngày</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;border-bottom:1px solid var(--border);">Không có</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--text2);border-bottom:1px solid var(--border);">Thường bị giới hạn ở gói miễn phí</td>
+</tr>
+<tr>
+  <td style="padding:10px 14px;color:var(--text);font-weight:500;border-bottom:1px solid var(--border);">Giá</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;border-bottom:1px solid var(--border);">Miễn phí mãi mãi</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--text2);border-bottom:1px solid var(--border);">Miễn phí có giới hạn / trả phí</td>
+</tr>
+</tbody>
+</table>
+</div>
 
 <h2>Câu Hỏi Thường Gặp</h2>
 <h3>Bảng có thực sự chỉnh sửa được trong Excel không?</h3>

@@ -7,11 +7,50 @@
 <h3>Nessun account, nessuna filigrana</h3>
 <p>Non serve registrarsi o fornire un'email per convertire. Il file .xlsx scaricato è pulito — nessuna filigrana, nessun branding, nessuna riga "Convertito con [nome servizio]". Il file è completamente tuo.</p>
 
-<h3>Come funziona</h3>
-<p>Il PDF viene analizzato direttamente nel browser tramite JavaScript. L'algoritmo di PDFree rileva le coordinate di celle, righe e colonne in base alla posizione del testo nel PDF. Ogni tabella rilevata viene scritta in un foglio separato del file .xlsx — se il PDF ha 5 tabelle su pagine diverse, il risultato è un file Excel con 5 fogli.</p>
+<h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">Come Convertire PDF in Excel in 3 Passaggi</h2>
+<div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
+  <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">1</div>
+  <div>
+    <strong style="color:var(--text);font-size:15px;">Apri il tuo PDF</strong>
+    <p style="margin:6px 0 0;font-size:14px;">Clicca su <strong>Scegli file</strong> o trascina il PDF nell'area di rilascio. PDFree analizza il documento e mostra quante tabelle ha trovato prima della conversione.</p>
+  </div>
+</div>
+<div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
+  <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">2</div>
+  <div>
+    <strong style="color:var(--text);font-size:15px;">Controlla il numero di tabelle</strong>
+    <p style="margin:6px 0 0;font-size:14px;">Un badge mostra quante tabelle sono state rilevate. Se non ne viene trovata nessuna, PDFree te lo dice subito — nessun download inutile.</p>
+  </div>
+</div>
+<div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
+  <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">3</div>
+  <div>
+    <strong style="color:var(--text);font-size:15px;">Scarica il file .xlsx</strong>
+    <p style="margin:6px 0 0;font-size:14px;">Clicca su <strong>Converti in Excel</strong>. Ogni tabella rilevata diventa un foglio a sé stante ("Tabella 1", "Tabella 2"...); tutto il resto della pagina viene salvato in un foglio "Testo" separato, così nulla va perso.</p>
+  </div>
+</div>
 
-<h3>Quando è utile</h3>
-<p>Rapporti finanziari in PDF da analizzare in Excel. Fatture con tabelle prezzi. Export di dati da sistemi legacy che offrono solo download PDF. Report di ricerca con tabelle dati. Qualsiasi cosa con dati strutturati intrappolati in un PDF.</p>
+<h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">Con Quali PDF Funziona Meglio?</h2>
+<div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+  <strong style="color:var(--text);font-size:15px;">Estratti conto bancari e finanziari</strong>
+  <p style="margin:6px 0 0;font-size:14px;">Le tabelle di transazioni con colonne allineate (data, descrizione, importo, saldo) sono esattamente ciò per cui è stato progettato questo rilevatore.</p>
+</div>
+<div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+  <strong style="color:var(--text);font-size:15px;">Fatture e listini prezzi</strong>
+  <p style="margin:6px 0 0;font-size:14px;">Le tabelle a voci (articolo, quantità, prezzo unitario, totale) diventano un foglio di calcolo funzionante che puoi sommare e ordinare.</p>
+</div>
+<div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+  <strong style="color:var(--text);font-size:15px;">Report con tabelle di dati</strong>
+  <p style="margin:6px 0 0;font-size:14px;">Articoli di ricerca, report aziendali e documenti governativi spesso mescolano testo e tabelle di dati — le tabelle diventano fogli, il testo diventa un foglio di riserva leggibile.</p>
+</div>
+<div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+  <strong style="color:var(--text);font-size:15px;">Elenchi classe, orari e registri voti</strong>
+  <p style="margin:6px 0 0;font-size:14px;">Le tabelle in stile elenco con colonne coerenti vengono rilevate in modo affidabile e sono pronte per essere filtrate o ordinate subito dopo l'esportazione.</p>
+</div>
+<div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+  <strong style="color:var(--text);font-size:15px;">Cosa non funziona bene</strong>
+  <p style="margin:6px 0 0;font-size:14px;">Documenti di puro testo senza dati tabellari, e PDF scansionati come immagine senza livello di testo — per i documenti scansionati, esegui prima l'<a href="/it/riconosci-testo-pdf/" style="color:var(--green)">OCR</a>.</p>
+</div>
 
 <h3>Limitazioni</h3>
 <p>I PDF scansionati (fotografie di pagine) non possono essere convertiti — non contengono testo leggibile. I PDF con layout molto complessi come celle unite possono richiedere correzioni manuali dopo la conversione.</p>
@@ -29,6 +68,44 @@
 <li>Nessuna registrazione, nessun limite giornaliero, gratis per sempre</li>
 <li>Tutto viene elaborato al 100% sul tuo dispositivo — niente viene caricato</li>
 </ul>
+
+<h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">In Cosa PDFree è Diverso dai Convertitori Cloud</h2>
+<div style="overflow-x:auto;margin:0 0 32px;">
+<table style="width:100%;border-collapse:collapse;font-size:14px;min-width:520px;">
+<thead><tr style="border-bottom:2px solid var(--border);">
+  <th style="text-align:left;padding:10px 14px;color:var(--text);font-weight:600;">Funzione</th>
+  <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">PDFree</th>
+  <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">Strumenti cloud tipici</th>
+</tr></thead>
+<tbody>
+<tr style="background:var(--green-light);">
+  <td style="padding:10px 14px;color:var(--text);font-weight:500;border-bottom:1px solid var(--border);">Dove vanno i tuoi dati</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;border-bottom:1px solid var(--border);">Restano sul tuo dispositivo</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--text2);border-bottom:1px solid var(--border);">Caricati su server remoti</td>
+</tr>
+<tr>
+  <td style="padding:10px 14px;color:var(--text);font-weight:500;border-bottom:1px solid var(--border);">Rilevamento tabelle</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;border-bottom:1px solid var(--border);">Basato sull'allineamento delle colonne, con punteggio di affidabilità</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--text2);border-bottom:1px solid var(--border);">Variabile — spesso solo un dump di testo</td>
+</tr>
+<tr>
+  <td style="padding:10px 14px;color:var(--text);font-weight:500;border-bottom:1px solid var(--border);">Registrazione richiesta</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;border-bottom:1px solid var(--border);">No</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--text2);border-bottom:1px solid var(--border);">Solitamente richiesta</td>
+</tr>
+<tr>
+  <td style="padding:10px 14px;color:var(--text);font-weight:500;border-bottom:1px solid var(--border);">Limite di utilizzo giornaliero</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;border-bottom:1px solid var(--border);">Nessuno</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--text2);border-bottom:1px solid var(--border);">Spesso limitato nel piano gratuito</td>
+</tr>
+<tr>
+  <td style="padding:10px 14px;color:var(--text);font-weight:500;border-bottom:1px solid var(--border);">Prezzo</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;border-bottom:1px solid var(--border);">Gratis per sempre</td>
+  <td style="text-align:center;padding:10px 14px;color:var(--text2);border-bottom:1px solid var(--border);">Gratis con limiti / piani a pagamento</td>
+</tr>
+</tbody>
+</table>
+</div>
 
 <h2>Domande Frequenti</h2>
 <h3>Le tabelle sono davvero modificabili in Excel?</h3>
