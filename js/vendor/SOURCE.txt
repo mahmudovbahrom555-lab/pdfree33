@@ -12,3 +12,24 @@ Used by:     js/pdfaWorker.js — embedded as the /DestOutputProfile stream
              (see js/pdf2pdfaUI.js).
 
 See LICENSE.txt in this directory for redistribution terms.
+
+----------------------------------------------------------------
+
+File:        libheif-bundle.mjs
+Source:      libheif-js npm package v1.19.8 (LGPL-3.0), an Emscripten/WASM
+             build of libheif — package/libheif-wasm/libheif-bundle.mjs
+             from the npm tarball, copied unmodified.
+Downloaded:  2026-08-14
+Size:        ~1.46 MB (WASM binary embedded inline as base64)
+Verified:    Confirmed via `npm view libheif-js` + tarball inspection that
+             this is the pre-bundled browser ESM build (self-contained,
+             no separate .wasm fetch); file starts with Emscripten
+             module-loader boilerplate and ends with `export{y_ as
+             default}`, matching the package's own documented usage.
+
+Used by:     js/heicDecode.js — lazy `import()`, only loaded the first
+             time a user selects a .heic/.heif file for the jpg2pdf tool.
+             Decodes HEIC/HEIF to JPEG entirely client-side.
+
+See LICENSE.txt in this directory for redistribution terms (LGPL-3.0,
+full text in libheif-license/LICENSE-LGPL-3.0.txt).

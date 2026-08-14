@@ -20,6 +20,7 @@ import { detectTables, groupItemsIntoLines, looksLikeProseNotData, looksLikeEnum
 import { detectTableGrids } from './pdf2wordBorders.js';
 import { detectColumnRegions, pageIsRtl, regionIndexForX } from './pdf2wordColumns.js';
 import { openFeedback } from './feedback.js';
+import { isHeicFile, decodeHeicToJpegBlob } from './heicDecode.js';
 import { evaluateStructural } from './eriScore.js';
 import { evaluateXlsxStructural } from './eriScoreXlsx.js';
 
@@ -1097,8 +1098,18 @@ async function _runJpg2Pdf(filesSnapshot, params) {
     showToast(t('warn_file_too_large', { size: fmtSize(oversized.size), max: 50 }), 8000);
     isProcessing = false; setFilesLocked(false); hideCancelBtn(); return;
   }
-  // Read all images as ArrayBuffers and transfer to worker
-  const buffers = await Promise.all(filesSnapshot.map(f => f.arrayBuffer()));
+  // Read all images as ArrayBuffers and transfer to worker. HEIC/HEIF files
+  // are decoded to JPEG first (js/heicDecode.js, cached — shares the decode
+  // already done for the thumbnail preview in jpg2pdfUI.js): worker.js is
+  // off-limits and its createImageBitmap()-based decode can't read HEIC in
+  // any browser except Safari. A failed decode becomes a zero-length
+  // buffer, which worker.js's own existing empty-buffer guard already
+  // skips and reports — no worker.js changes needed either way.
+  const buffers = await Promise.all(filesSnapshot.map(async f => {
+    if (!isHeicFile(f)) return f.arrayBuffer();
+    const jpegBlob = await decodeHeicToJpegBlob(f);
+    return jpegBlob ? jpegBlob.arrayBuffer() : new ArrayBuffer(0);
+  }));
   setProgress(5, t('prog_loading_imgs'));
 
   _worker.postMessage(

@@ -1,5 +1,30 @@
-This file documents the license for js/vendor/sRGB2014.icc only —
-it does not apply to any other file in js/vendor/.
+This file documents licenses for individual js/vendor/ files that don't
+carry their own inline license banner. Each section applies only to the
+file(s) it names.
+
+================================================================
+js/vendor/libheif-bundle.mjs
+================================================================
+
+Source:  libheif-js npm package, v1.19.8 (https://www.npmjs.com/package/libheif-js)
+         — an Emscripten/WASM build of libheif (https://github.com/strukturag/libheif)
+Copied:  package/libheif-wasm/libheif-bundle.mjs from the npm tarball, unmodified,
+         to js/vendor/libheif-bundle.mjs — the browser ESM build with the .wasm
+         binary embedded inline as base64 (no separate .wasm fetch needed).
+License: LGPL-3.0. Full license text: js/vendor/libheif-license/LICENSE-LGPL-3.0.txt
+         (copied verbatim from the npm package's libheif-wasm/LICENSE).
+Used by: js/heicDecode.js — lazy dynamic `import()`, only loaded the first
+         time a user actually selects a .heic/.heif file in the jpg2pdf
+         tool. Decodes entirely client-side (WASM in the browser); no file
+         or pixel data is ever sent to a server. Loaded and used as-is,
+         not modified or relinked into another binary — LGPL-3.0 §4/§5
+         "aggregation"/"combined work" terms are satisfied by this exact
+         usage (dynamically loaded, unmodified, source available at the
+         URL above).
+
+================================================================
+js/vendor/sRGB2014.icc
+================================================================
 
 Copyright, as embedded directly in the profile's own 'cprt' tag
 (extracted and verified from the binary before this file was written):

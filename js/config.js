@@ -40,7 +40,7 @@ export const IMAGE_DIM_PRESETS = {
  */
 export const ACCEPTED_MIME = {
   '.pdf,application/pdf': ['application/pdf'],
-  '.jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp': ['image/jpeg', 'image/png', 'image/webp'],
+  '.jpg,.jpeg,.png,.webp,.heic,.heif,image/jpeg,image/png,image/webp,image/heic,image/heif': ['image/jpeg', 'image/png', 'image/webp', 'image/heic', 'image/heif'],
 };
 
 /**
@@ -123,13 +123,14 @@ export const TOOLS = {
     title:  'JPG to PDF',
     desc:   'Convert images to PDF — EXIF rotation corrected automatically',
     tags:   ['image to pdf', 'photo to pdf', 'png to pdf', 'picture to pdf',
-             'jpg', 'jpeg', 'png', 'image', 'photo', 'scan to pdf', 'convert image'],
+             'jpg', 'jpeg', 'png', 'image', 'photo', 'scan to pdf', 'convert image',
+             'heic', 'heic to pdf', 'iphone photo to pdf'],
     btn:    '🖼️ Convert to PDF',
     titles: { en: 'JPG to PDF', es: 'JPG a PDF', pt: 'JPG para PDF', de: 'JPG zu PDF', fr: 'JPG en PDF', id: 'JPG ke PDF', vi: 'JPG sang PDF', ru: 'JPG в PDF', ja: 'JPGをPDFに', it: 'JPG in PDF', ko: 'JPG를 PDF로', nl: 'JPG naar PDF', pl: 'JPG do PDF', tr: "JPG'den PDF'ye" },
     descs:  { en: 'Convert images to PDF instantly', es: 'Convierte imágenes a PDF al instante', pt: 'Converta imagens em PDF instantaneamente', de: 'Bilder sofort in PDF umwandeln', fr: 'Convertir des images en PDF instantanément', id: 'Konversi gambar ke PDF secara instan', vi: 'Chuyển đổi ảnh sang PDF tức thì', ru: 'Конвертируйте изображения в PDF мгновенно', ja: '画像を瞬時にPDFに変換する', it: 'Converti immagini in PDF — nessun upload', ko: '이미지를 PDF로 변환 — 업로드 없음', nl: 'Afbeeldingen naar PDF converteren — geen upload', pl: 'Konwertuj obrazy do PDF — bez przesyłania', tr: "Resimleri PDF'ye dönüştür — yükleme yok" },
     btns:   { en: '🖼️ Convert to PDF', es: '🖼️ Convertir a PDF', pt: '🖼️ Converter para PDF', de: '🖼️ In PDF konvertieren', fr: '🖼️ Convertir en PDF', id: '🖼️ JPG ke PDF', vi: '🖼️ JPG sang PDF', ru: '🖼️ JPG в PDF', ja: '🖼️ JPGをPDFに', it: '🖼️ JPG in PDF', ko: '🖼️ JPG를 PDF로', nl: '🖼️ JPG naar PDF', pl: '🖼️ JPG do PDF', tr: "🖼️ JPG'den PDF'ye" },
     multi:       true,
-    accept:      '.jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp',
+    accept:      '.jpg,.jpeg,.png,.webp,.heic,.heif,image/jpeg,image/png,image/webp,image/heic,image/heif',
     implemented: true,
   },
   pdf2jpg: {

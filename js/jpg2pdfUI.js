@@ -21,6 +21,7 @@ import { selectedFiles, isFilesLocked } from './files.js';
 import { bindDragReorder } from './dragReorder.js';
 import { presetRememberCard } from './uiComponents.js';
 import { loadPreset, clearPreset } from './presets.js';
+import { isHeicFile, decodeHeicToJpegBlob } from './heicDecode.js';
 
 // Soft, non-blocking heads-up — not a hard cap. Canvas thumbnail decoding
 // happens one file at a time (see _renderPreviews), so memory pressure is
@@ -221,7 +222,13 @@ async function _loadImage(file) {
   const cached = _imgCache.get(file);
   if (cached) return cached;
 
-  const url = URL.createObjectURL(file);
+  // HEIC/HEIF: no browser except Safari can decode it into an <img>, so
+  // decode to JPEG first via the vendored libheif WASM build. Cached
+  // inside heicDecode.js itself, so this costs nothing extra when
+  // _runJpg2Pdf (processor.js) decodes the same file again at conversion time.
+  const source = isHeicFile(file) ? (await decodeHeicToJpegBlob(file)) ?? file : file;
+
+  const url = URL.createObjectURL(source);
   const img = new Image();
   // onerror = res (not rej) is intentional: preview is cosmetic, we don't
   // want one broken image to abort the entire preview loop. Resolving on
