@@ -70,5 +70,13 @@
       "@type": "Answer",
       "text": "Ya. Setelah mesin Tesseract.js diunduh saat OCR pertama Anda, PDFree bekerja sepenuhnya offline sebagai Progressive Web App."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Apa perbedaan antara PDF yang bisa dicari dan file .txt?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDF yang bisa dicari mempertahankan gambar hasil pindaian asli Anda dan menambahkan lapisan teks tak terlihat di atasnya — berguna untuk pengarsipan, pencarian di dalam pembaca PDF, atau berbagi. File .txt hanya berisi teks polos yang diekstrak dengan pemisah halaman — berguna untuk diedit di Word, diimpor ke alat lain, atau disalin. Unduh keduanya sekaligus dengan mencentang \"Unduh juga salinan .txt\"."
+    }
   }
 ]

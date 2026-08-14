@@ -69,6 +69,51 @@
 <h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">Используйте OCR PDFree офлайн</h2>
 <p style="font-size:15px;margin:0 0 24px;">После того как движок Tesseract.js будет загружен при первом запуске распознавания (~17 МБ, кешируется браузером), OCR PDFree полностью работает офлайн. Для обработки следующих документов интернет не нужен — это подходит для сред с ограниченным доступом к сети: юридических офисов, медицинских учреждений или проверки конфиденциальных документов.</p>
 
+<h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">PDFree OCR против типичных онлайн-инструментов OCR</h2>
+<div style="overflow-x:auto;margin:0 0 24px;">
+  <table style="width:100%;border-collapse:collapse;font-size:14px;min-width:480px;">
+    <thead>
+      <tr style="background:var(--surface);border-bottom:2px solid var(--border);">
+        <th style="text-align:left;padding:10px 12px;font-weight:600;">Функция</th>
+        <th style="text-align:left;padding:10px 12px;font-weight:600;">PDFree</th>
+        <th style="text-align:left;padding:10px 12px;font-weight:600;">Типичный онлайн-OCR</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:10px 12px;">Обработка файла</td>
+        <td style="padding:10px 12px;color:var(--green);font-weight:500;">В вашем браузере — только локально</td>
+        <td style="padding:10px 12px;color:var(--text2);">Файл загружается на сервер</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);background:var(--surface);">
+        <td style="padding:10px 12px;">Выбор языка</td>
+        <td style="padding:10px 12px;color:var(--green);font-weight:500;">Определяется автоматически по документу</td>
+        <td style="padding:10px 12px;color:var(--text2);">Вручную, легко выбрать неверно</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:10px 12px;">Нужен аккаунт</td>
+        <td style="padding:10px 12px;color:var(--green);font-weight:500;">Нет</td>
+        <td style="padding:10px 12px;color:var(--text2);">Часто требуется</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);background:var(--surface);">
+        <td style="padding:10px 12px;">Результат</td>
+        <td style="padding:10px 12px;color:var(--green);font-weight:500;">PDF с возможностью поиска + опционально .txt</td>
+        <td style="padding:10px 12px;color:var(--text2);">Во многих инструментах — только .txt</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:10px 12px;">Исходный макет</td>
+        <td style="padding:10px 12px;color:var(--green);font-weight:500;">Сохраняется точно</td>
+        <td style="padding:10px 12px;color:var(--text2);">Часто переформатируется</td>
+      </tr>
+      <tr style="background:var(--surface);">
+        <td style="padding:10px 12px;">Работает офлайн</td>
+        <td style="padding:10px 12px;color:var(--green);font-weight:500;">Да, после первой загрузки</td>
+        <td style="padding:10px 12px;color:var(--text2);">Нет</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
 <h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">Как превратить отсканированный PDF в редактируемый текст</h2>
 <p style="font-size:15px;margin:0 0 24px;">Чтобы превратить отсканированный PDF в редактируемый текст, используйте PDFree в два шага: сначала запустите распознавание, чтобы создать PDF с возможностью поиска (см. выше), затем откройте результат в разделе <a href="/ru/pdf-v-word/" style="color:var(--green)">PDF в Word</a> — инструмент преобразует встроенный текстовый слой в полностью редактируемый документ .docx. Весь процесс происходит локально; ваш документ никуда не загружается.</p>
 

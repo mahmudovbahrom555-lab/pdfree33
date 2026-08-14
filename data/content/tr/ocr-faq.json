@@ -70,5 +70,13 @@
       "@type": "Answer",
       "text": "Evet. İlk OCR çalıştırmanızda Tesseract.js motoru indirildikten sonra, PDFree bir Progressive Web App olarak tamamen çevrimdışı çalışır."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Aranabilir PDF ile .txt dosyası arasındaki fark nedir?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Aranabilir PDF, orijinal taranmış görüntülerinizi korur ve üzerine görünmez bir metin katmanı ekler — arşivleme, bir PDF okuyucu içinde arama yapma veya paylaşma için kullanışlıdır. .txt dosyası yalnızca sayfa ayırıcılarıyla birlikte çıkarılmış düz metni içerir — Word'de düzenleme, başka araçlara aktarma veya içeriği kopyalama için kullanışlıdır. \"Ayrıca .txt kopyası indir\" kutusunu işaretleyerek ikisini birden indirebilirsiniz."
+    }
   }
 ]

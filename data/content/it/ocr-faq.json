@@ -70,5 +70,13 @@
       "@type": "Answer",
       "text": "Sì. Una volta scaricato il motore Tesseract.js al primo utilizzo dell'OCR, PDFree funziona completamente offline come Progressive Web App."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Qual è la differenza tra un PDF ricercabile e un file .txt?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Il PDF ricercabile mantiene le immagini scansionate originali e aggiunge sopra un livello di testo invisibile — utile per l'archiviazione, la ricerca all'interno di un lettore PDF o la condivisione. Il file .txt contiene solo il testo semplice estratto con separatori di pagina — utile per modificare in Word, importare in altri strumenti o copiare il contenuto. Scarica entrambi contemporaneamente con la casella \"Scarica anche una copia .txt\"."
+    }
   }
 ]

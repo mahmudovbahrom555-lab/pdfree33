@@ -70,5 +70,13 @@
       "@type": "Answer",
       "text": "Ja. Zodra de Tesseract.js-engine bij je eerste OCR-run is gedownload, werkt PDFree volledig offline als Progressive Web App."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Wat is het verschil tussen een doorzoekbare PDF en een .txt-bestand?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "De doorzoekbare PDF behoudt je originele gescande afbeeldingen en voegt daar een onzichtbare tekstlaag aan toe — handig voor archivering, zoeken in een PDF-lezer of delen. Het .txt-bestand bevat alleen de geëxtraheerde platte tekst met paginascheidingen — handig om te bewerken in Word, te importeren in andere tools of inhoud te kopiëren. Download beide tegelijk met het vakje \"Download ook .txt-kopie\"."
+    }
   }
 ]

@@ -70,5 +70,13 @@
       "@type": "Answer",
       "text": "Có. Sau khi bộ máy Tesseract.js được tải về ở lần chạy OCR đầu tiên, PDFree hoạt động hoàn toàn ngoại tuyến như một Progressive Web App."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Sự khác biệt giữa PDF có thể tìm kiếm và file .txt là gì?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDF có thể tìm kiếm giữ nguyên ảnh scan gốc của bạn và thêm một lớp văn bản vô hình lên trên — hữu ích để lưu trữ, tìm kiếm trong trình đọc PDF, hoặc chia sẻ. File .txt chỉ chứa văn bản thuần đã trích xuất kèm dấu phân trang — hữu ích để chỉnh sửa trong Word, nhập vào công cụ khác, hoặc sao chép nội dung. Tải cả hai cùng lúc bằng cách chọn ô \"Tải thêm bản sao .txt\"."
+    }
   }
 ]

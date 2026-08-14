@@ -70,5 +70,13 @@
       "@type": "Answer",
       "text": "Tak. Gdy silnik Tesseract.js zostanie pobrany przy pierwszym uruchomieniu OCR, PDFree działa całkowicie offline jako Progressive Web App."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Jaka jest różnica między przeszukiwalnym PDF-em a plikiem .txt?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Przeszukiwalny PDF zachowuje oryginalne zeskanowane obrazy i dodaje na nich niewidoczną warstwę tekstu — przydatne do archiwizacji, wyszukiwania w czytniku PDF lub udostępniania. Plik .txt zawiera tylko wyodrębniony zwykły tekst z separatorami stron — przydatne do edycji w Wordzie, importowania do innych narzędzi lub kopiowania treści. Pobierz oba naraz, zaznaczając \"Pobierz też kopię .txt\"."
+    }
   }
 ]

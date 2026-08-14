@@ -69,6 +69,51 @@
 <h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">PDFree OCR을 오프라인으로 사용하기</h2>
 <p style="font-size:15px;margin:0 0 24px;">처음 OCR을 실행할 때 Tesseract.js 엔진(약 17MB, 브라우저에 캐시됨)이 다운로드되고 나면 PDFree OCR은 완전히 오프라인으로 작동합니다. 이후 문서를 처리할 때는 인터넷 연결이 필요 없습니다 — 법률 사무소, 의료 시설, 기밀 문서 검토처럼 네트워크 접근이 제한된 환경에 적합합니다.</p>
 
+<h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">PDFree OCR와 일반 온라인 OCR 도구 비교</h2>
+<div style="overflow-x:auto;margin:0 0 24px;">
+  <table style="width:100%;border-collapse:collapse;font-size:14px;min-width:480px;">
+    <thead>
+      <tr style="background:var(--surface);border-bottom:2px solid var(--border);">
+        <th style="text-align:left;padding:10px 12px;font-weight:600;">기능</th>
+        <th style="text-align:left;padding:10px 12px;font-weight:600;">PDFree</th>
+        <th style="text-align:left;padding:10px 12px;font-weight:600;">일반 온라인 OCR</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:10px 12px;">파일 처리</td>
+        <td style="padding:10px 12px;color:var(--green);font-weight:500;">브라우저 내에서 — 로컬로만</td>
+        <td style="padding:10px 12px;color:var(--text2);">서버에 파일 업로드</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);background:var(--surface);">
+        <td style="padding:10px 12px;">언어 선택</td>
+        <td style="padding:10px 12px;color:var(--green);font-weight:500;">문서에서 자동 감지</td>
+        <td style="padding:10px 12px;color:var(--text2);">수동, 잘못 선택하기 쉬움</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:10px 12px;">계정 필요 여부</td>
+        <td style="padding:10px 12px;color:var(--green);font-weight:500;">불필요</td>
+        <td style="padding:10px 12px;color:var(--text2);">필요한 경우가 많음</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);background:var(--surface);">
+        <td style="padding:10px 12px;">출력</td>
+        <td style="padding:10px 12px;color:var(--green);font-weight:500;">검색 가능한 PDF + 선택적 .txt</td>
+        <td style="padding:10px 12px;color:var(--text2);">많은 도구에서 .txt만 제공</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:10px 12px;">원본 레이아웃</td>
+        <td style="padding:10px 12px;color:var(--green);font-weight:500;">정확히 유지</td>
+        <td style="padding:10px 12px;color:var(--text2);">재포맷되는 경우가 많음</td>
+      </tr>
+      <tr style="background:var(--surface);">
+        <td style="padding:10px 12px;">오프라인 작동</td>
+        <td style="padding:10px 12px;color:var(--green);font-weight:500;">최초 로드 후 가능</td>
+        <td style="padding:10px 12px;color:var(--text2);">불가능</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
 <h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">스캔한 PDF를 편집 가능한 텍스트로 변환하는 방법</h2>
 <p style="font-size:15px;margin:0 0 24px;">스캔한 PDF를 편집 가능한 텍스트로 변환하려면 PDFree를 두 단계로 사용하세요: 먼저 OCR을 실행해 검색 가능한 PDF를 만들고(위 참조), 그 결과를 <a href="/ko/pdf-word-byeonhwan/" style="color:var(--green)">PDF를 Word로 변환</a>에서 엽니다 — 이 도구는 내장된 텍스트 레이어를 완전히 편집 가능한 .docx 문서로 변환합니다. 전체 과정은 로컬에서 실행되며 문서는 어디로도 업로드되지 않습니다.</p>
 
