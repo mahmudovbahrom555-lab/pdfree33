@@ -24,6 +24,7 @@ import {
   getCurrentPage, getPageCommandsRef, getEffectiveCommands, getPageTextCache,
   // actions
   clearRedoForCurrentPage, redrawPage, setColor, activatePrevTool, setSelectedId, setSelectedHighlightId, undo, redo,
+  setLassoSelection, computeMovePatch, computeGroupBounds,
   // constants
   HIGHLIGHT_OPACITY, MARKER_OPACITY,
 } from './drawUI.js';
@@ -37,9 +38,10 @@ let _textOverlay  = null;
 let _textInput    = null;
 let _textCallback = null;   // (text: string|null) => void
 let _fontSize     = 16;     // independent of widthSlider; persists between text clicks
-let _textCmdId    = 0;      // monotonic ID for text commands — required for drag-to-reposition
-let _shapeCmdId   = 0;      // monotonic ID for numbered arrows — required for drag-to-reposition
-                            // TODO: restore from max existing arrow id after document load (needed for future persistence)
+let _cmdId        = 0;      // monotonic ID for every command — required for drag-to-reposition,
+                            // style edits, and lasso multi-select (a single shared counter, not
+                            // per-type, so ids stay unique across all command types on a page)
+                            // TODO: restore from max existing id after document load (needed for future persistence)
 
 // ── Mobile text sheet ─────────────────────────────────────────
 // DOM refs filled once in _initMobileSheet(); runtime fields via _resetMtsState().
@@ -74,6 +76,9 @@ let _selToolbar      = null;   // #textSelectToolbar element
 let _selColorPicker  = null;   // #selColorPicker element
 const SEL_SIZES = [8, 10, 12, 14, 16, 18, 20, 24, 28, 32, 36, 48, 60, 72];
 
+// ── Lasso multi-select state ───────────────────────────────────
+let _lassoIds = [];   // ids currently selected by the lasso tool — mirrored into drawUI via setLassoSelection
+
 // ── Public API ─────────────────────────────────────────────────
 
 export function initPointer() {
@@ -99,9 +104,15 @@ export function initPointer() {
     if (mod && key === 'z')               { e.preventDefault(); undo(); return; }
     if (mod && key === 'y')               { e.preventDefault(); redo(); return; }
 
-    if (!_selectedTextId) return;
-    if (key === 'delete' || key === 'backspace') { e.preventDefault(); _deleteSelected(); }
-    else if (key === 'escape')                   { _dismissSelection(); }
+    if (!_selectedTextId && !_lassoIds.length) return;
+    if (key === 'delete' || key === 'backspace') {
+      e.preventDefault();
+      if (_selectedTextId) _deleteSelected();
+      else                 _deleteLassoSelection();
+    } else if (key === 'escape') {
+      if (_selectedTextId) _dismissSelection();
+      if (_lassoIds.length) _dismissLassoSelection();
+    }
   });
 }
 
@@ -291,6 +302,24 @@ function _deleteSelected() {
   _dismissSelection();
 }
 
+// ── Lasso selection lifecycle ──────────────────────────────────
+
+function _dismissLassoSelection() {
+  const had = !!_lassoIds.length;
+  _lassoIds = [];
+  setLassoSelection([]);
+  if (had) redrawPage();
+}
+
+function _deleteLassoSelection() {
+  if (!_lassoIds.length) return;
+  clearRedoForCurrentPage();
+  _pushCommand({ type: 'batch', ops: _lassoIds.map(targetId => ({ type: 'delete', targetId })) });
+  _lassoIds = [];
+  setLassoSelection([]);
+  redrawPage();
+}
+
 function _showSelToolbar(cmd, _screenX, _screenY) {
   // Position toolbar just below the text in screen coordinates
   const canvas  = getDrawCanvas();
@@ -333,6 +362,8 @@ export function resetPointer() {
   _selectedHighlightId = null;
   setSelectedHighlightId(null);
   if (_hlToolbar) _hlToolbar.style.display = 'none';
+  _lassoIds = [];
+  setLassoSelection([]);
   _closeMobileSheet({ action: 'cancel' });
 }
 
@@ -468,6 +499,24 @@ function _onDown(e) {
   // Dismiss selections on any canvas tap (toolbar buttons use stopPropagation to prevent this)
   if (_selectedTextId)      _dismissSelection();
   if (_selectedHighlightId) _dismissHighlightSelection();
+  if (_lassoIds.length && tool !== 'lasso') _dismissLassoSelection();
+
+  if (tool === 'lasso') {
+    // Tap inside the current selection's bounding box → drag the whole group.
+    // Tap outside (or no active selection) → start a fresh lasso loop.
+    if (_lassoIds.length) {
+      const selCmds = getEffectiveCommands().filter(c => _lassoIds.includes(c.id));
+      const b = computeGroupBounds(selCmds, getDrawCanvas().getContext('2d'));
+      const pad = 6;
+      if (b && x >= b.x0 - pad && x <= b.x1 + pad && y >= b.y0 - pad && y <= b.y1 + pad) {
+        _current = { type: 'lasso-drag', ids: _lassoIds.slice(), startX: x, startY: y, dx: 0, dy: 0 };
+        return;
+      }
+      _dismissLassoSelection();
+    }
+    _current = { type: 'lasso', points: [[x, y]] };
+    return;
+  }
 
   // Text: quick-tap existing text = select; drag existing text = move; tap empty area = place new
   if (tool === 'text') {
@@ -489,7 +538,7 @@ function _onDown(e) {
           if (action !== 'save' || !text?.trim()) return;
           clearRedoForCurrentPage();
           _pushCommand({
-            type: 'text', id: ++_textCmdId, x, y, text,
+            type: 'text', id: ++_cmdId, x, y, text,
             color, size: fontSize, fontWeight: 'normal', fontFamily: 'system-ui, sans-serif',
           });
           redrawPage();
@@ -500,7 +549,7 @@ function _onDown(e) {
         if (!text?.trim()) return;
         clearRedoForCurrentPage();
         _pushCommand({
-          type: 'text', id: ++_textCmdId, x, y, text,
+          type: 'text', id: ++_cmdId, x, y, text,
           color: getColor(), size: _fontSize,
           fontWeight: 'normal', fontFamily: 'system-ui, sans-serif',
         });
@@ -512,13 +561,13 @@ function _onDown(e) {
 
   if (tool === 'pen') {
     clearRedoForCurrentPage();
-    _current = { type: 'pen', points: [[x, y]], color: getColor(), width: getWidth() };
+    _current = { type: 'pen', id: ++_cmdId, points: [[x, y]], color: getColor(), width: getWidth() };
   } else if (tool === 'marker') {
     clearRedoForCurrentPage();
-    _current = { type: 'marker', id: ++_shapeCmdId, points: [[x, y]], color: getColor(), width: Math.max(6, getWidth() * 3), opacity: MARKER_OPACITY };
+    _current = { type: 'marker', id: ++_cmdId, points: [[x, y]], color: getColor(), width: Math.max(6, getWidth() * 3), opacity: MARKER_OPACITY };
   } else if (tool === 'erase') {
     clearRedoForCurrentPage();
-    _current = { type: 'erase', points: [[x, y]], width: Math.max(20, getWidth() * 6) };
+    _current = { type: 'erase', id: ++_cmdId, points: [[x, y]], width: Math.max(20, getWidth() * 6) };
   } else if (tool === 'arrow' || tool === 'line') {
     const hit = tool === 'arrow' ? _hitTestArrow(x, y) : null;
     if (hit) {
@@ -526,15 +575,15 @@ function _onDown(e) {
       _current = { type: 'shape-drag', cmd: hit, startX: x, startY: y, dx: 0, dy: 0 };
     } else if (tool === 'arrow') {
       clearRedoForCurrentPage();
-      _current = { type: 'arrow', id: ++_shapeCmdId, number: _nextArrowNumber(),
+      _current = { type: 'arrow', id: ++_cmdId, number: _nextArrowNumber(),
                    x1: x, y1: y, x2: x, y2: y, color: getColor(), width: getWidth() };
     } else {
       clearRedoForCurrentPage();
-      _current = { type: 'line', x1: x, y1: y, x2: x, y2: y, color: getColor(), width: getWidth() };
+      _current = { type: 'line', id: ++_cmdId, x1: x, y1: y, x2: x, y2: y, color: getColor(), width: getWidth() };
     }
   } else if (tool === 'rect') {
     clearRedoForCurrentPage();
-    _current = { type: 'rect', _ox: x, _oy: y, x, y, w: 0, h: 0, color: getColor(), width: getWidth() };
+    _current = { type: 'rect', id: ++_cmdId, _ox: x, _oy: y, x, y, w: 0, h: 0, color: getColor(), width: getWidth() };
   } else if (tool === 'highlight') {
     const hit = _hitTestHighlight(x, y);
     if (hit) {
@@ -545,7 +594,7 @@ function _onDown(e) {
     _current = { type: 'highlight', _ox: x, _oy: y, x, y, w: 0, h: 0, color: getColor(), opacity: HIGHLIGHT_OPACITY };
   } else if (tool === 'oval') {
     clearRedoForCurrentPage();
-    _current = { type: 'oval', _ox: x, _oy: y, x, y, rx: 0, ry: 0, color: getColor(), width: getWidth() };
+    _current = { type: 'oval', id: ++_cmdId, _ox: x, _oy: y, x, y, rx: 0, ry: 0, color: getColor(), width: getWidth() };
   }
 }
 
@@ -604,6 +653,11 @@ function _onMove(e) {
     _current.x = x - _current._ox;
     _current.y = y - _current._oy;
   } else if (type === 'shape-drag') {
+    _current.dx = x - _current.startX;
+    _current.dy = y - _current.startY;
+  } else if (type === 'lasso') {
+    _current.points.push([x, y]);
+  } else if (type === 'lasso-drag') {
     _current.dx = x - _current.startX;
     _current.dy = y - _current.startY;
   }
@@ -680,6 +734,32 @@ function _onUp(e) {
     return;
   }
 
+  // Lasso loop finished: select every command with a probe point inside the polygon.
+  // A degenerate loop (<3 points) selects nothing, same as clicking without dragging.
+  if (_current.type === 'lasso') {
+    const polygon = _current.points;
+    _lassoIds = polygon.length >= 3 ? _lassoSelect(polygon) : [];
+    setLassoSelection(_lassoIds);
+    _current = null;
+    redrawPage();
+    return;
+  }
+
+  // Lasso group drag: commit one 'batch' move covering every selected command,
+  // so Undo restores the whole group in a single step, not one item at a time.
+  if (_current.type === 'lasso-drag') {
+    const { ids, dx, dy } = _current;
+    if (Math.hypot(dx, dy) >= 3) {
+      clearRedoForCurrentPage();
+      const selCmds = getEffectiveCommands().filter(c => ids.includes(c.id));
+      const ops = selCmds.map(c => ({ type: 'move', targetId: c.id, ...computeMovePatch(c, dx, dy) }));
+      _pushCommand({ type: 'batch', ops });
+    }
+    _current = null;
+    redrawPage();
+    return;
+  }
+
   if (_isMeaningful(_current)) {
     const { type } = _current;
     let cmd;
@@ -717,6 +797,58 @@ function _isMeaningful(cmd) {
     case 'oval':   return cmd.rx >= 3 && cmd.ry >= 3;
     default:       return true;
   }
+}
+
+// ── Lasso hit-test ──────────────────────────────────────────────
+// PNPOLY (W. Randolph Franklin) — standard point-in-polygon ray-casting test.
+function _pointInPolygon(x, y, poly) {
+  let inside = false;
+  for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+    const [xi, yi] = poly[i];
+    const [xj, yj] = poly[j];
+    if (((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi)) {
+      inside = !inside;
+    }
+  }
+  return inside;
+}
+
+// Representative points per command type — a command is selected by the lasso
+// if ANY of its probe points falls inside the loop (standard lasso-select
+// semantics: touching the loop is enough, the shape needn't be fully enclosed).
+function _commandProbePoints(cmd) {
+  switch (cmd.type) {
+    case 'pen': case 'erase': case 'marker':
+      return cmd.points;
+    case 'line': case 'arrow':
+      return [[cmd.x1, cmd.y1], [cmd.x2, cmd.y2], [(cmd.x1 + cmd.x2) / 2, (cmd.y1 + cmd.y2) / 2]];
+    case 'rect':
+      return [
+        [cmd.x, cmd.y], [cmd.x + cmd.w, cmd.y], [cmd.x, cmd.y + cmd.h], [cmd.x + cmd.w, cmd.y + cmd.h],
+        [cmd.x + cmd.w / 2, cmd.y + cmd.h / 2],
+      ];
+    case 'oval':
+      return [
+        [cmd.x, cmd.y],
+        [cmd.x - cmd.rx, cmd.y], [cmd.x + cmd.rx, cmd.y],
+        [cmd.x, cmd.y - cmd.ry], [cmd.x, cmd.y + cmd.ry],
+      ];
+    case 'highlight':
+      return (cmd.rects ?? [{ x: cmd.x, y: cmd.y, w: cmd.w, h: cmd.h }])
+        .flatMap(r => [[r.x, r.y], [r.x + r.w, r.y + r.h], [r.x + r.w / 2, r.y + r.h / 2]]);
+    case 'text':
+      return [[cmd.x, cmd.y]];
+    default:
+      return [];
+  }
+}
+
+function _lassoSelect(polygon) {
+  const ids = [];
+  for (const cmd of getEffectiveCommands()) {
+    if (_commandProbePoints(cmd).some(([px, py]) => _pointInPolygon(px, py, polygon))) ids.push(cmd.id);
+  }
+  return ids;
 }
 
 // ── Arrow hit-test and geometry ───────────────────────────────
@@ -790,7 +922,7 @@ function _buildHighlightCmd(baseCmd) {
     : [{ x: baseCmd.x, y: baseCmd.y, w: baseCmd.w, h: baseCmd.h }];
   return {
     type:    'highlight',
-    id:      ++_shapeCmdId,
+    id:      ++_cmdId,
     rects:   finalRects,
     color:   baseCmd.color,
     opacity: baseCmd.opacity ?? HIGHLIGHT_OPACITY,

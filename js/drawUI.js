@@ -42,6 +42,7 @@ let _color        = '#e53e3e';
 let _width        = 3;
 let _selectedId          = null;   // UI state only — selected text id; never stored as command
 let _selectedHighlightId = null;   // UI state only — selected highlight id; never stored as command
+let _lassoSelection       = [];    // UI state only — ids selected by the lasso tool; never stored as command
 let _pageTextCache = new Map(); // Map<pageNum, {x,y,w,h}[]> — canvas-space text rects for smart highlight
 
 // DOM refs — filled by initDraw()
@@ -159,6 +160,8 @@ export function getPageCommandsRef()   { return _pageCommands; }
 export function getEffectiveCommands() { return _resolveScene(_pageCommands.get(_currentPage) ?? []); }
 export function setSelectedId(id)           { _selectedId = id; }
 export function setSelectedHighlightId(id)  { _selectedHighlightId = id; }
+export function getLassoSelection()         { return _lassoSelection; }
+export function setLassoSelection(ids)      { _lassoSelection = ids; }
 export function getRedoStackRef()    { return _redoStack; }
 export function getOriginalBuffer()  { return _originalBuf; }
 export function getPageCount()       { return _pdfJsDoc ? _pdfJsDoc.numPages : 0; }
@@ -204,6 +207,7 @@ export function resetDraw() {
   _color               = '#e53e3e';
   _width               = 3;
   _selectedHighlightId = null;
+  _lassoSelection      = [];
 
   // Clear canvas bitmaps — setting width=0 resets the bitmap and hints GC to release memory
   for (const canvas of [_pdfCanvas, _drawCanvas]) {
@@ -333,29 +337,119 @@ async function _renderPage(pageNum) {
   }
 }
 
+// Applies a single move/style/delete override into the accumulator maps.
+// Shared by _resolveScene's top-level loop and its 'batch' case (lasso multi-select
+// move/delete pushes one 'batch' command whose .ops are each shaped exactly like a
+// top-level move/style/delete command — same field contract, just nested).
+function _applyOp(op, deleted, pos, style) {
+  if (op.type === 'delete') { deleted.add(op.targetId); return; }
+  if (op.type === 'move')   { const { type: _t, targetId, ...coords } = op; pos.set(targetId, coords); return; }
+  if (op.type === 'style')  { style.set(op.targetId, { ...style.get(op.targetId), ...op.patch }); }
+}
+
 // Resolves the effective scene from raw command history.
 // Applies position (move), style (color/size/…), and delete overrides in one pass.
 // Fast path when no overrides exist — avoids all allocations on clean pages.
 function _resolveScene(cmds) {
   const hasOverrides = cmds.some(
-    c => c.type === 'move' || c.type === 'style' || c.type === 'delete'
+    c => c.type === 'move' || c.type === 'style' || c.type === 'delete' || c.type === 'batch'
   );
   if (!hasOverrides) return cmds;
   const deleted = new Set();
   const pos     = new Map();   // id → coordinate patch ({ x,y } for text; { x1,y1,x2,y2 } for shapes)
   const style   = new Map();   // id → merged patch (last style per id wins, partial ok)
   cmds.forEach(c => {
-    if (c.type === 'delete') { deleted.add(c.targetId); return; }
-    if (c.type === 'move')   { const { type: _t, targetId, ...coords } = c; pos.set(targetId, coords); return; }
-    if (c.type === 'style')  { style.set(c.targetId, { ...style.get(c.targetId), ...c.patch }); }
+    if (c.type === 'batch') { c.ops.forEach(op => _applyOp(op, deleted, pos, style)); return; }
+    _applyOp(c, deleted, pos, style);
   });
   return cmds
-    .filter(c => c.type !== 'move' && c.type !== 'style' && c.type !== 'delete' && !deleted.has(c.id))
+    .filter(c => c.type !== 'move' && c.type !== 'style' && c.type !== 'delete' && c.type !== 'batch' && !deleted.has(c.id))
     .map(c => {
       const p = pos.get(c.id)   ?? null;
       const s = style.get(c.id) ?? null;
       return (p || s) ? { ...c, ...p, ...s } : c;
     });
+}
+
+// Returns the delta-shifted position fields for `cmd`, shaped to match exactly
+// what _resolveScene's move-merge spreads onto the original command (same
+// contract as the existing shape-drag/text-drag move commands). Used both to
+// build a lasso group-move's batch ops and to render its live drag preview.
+export function computeMovePatch(cmd, dx, dy) {
+  switch (cmd.type) {
+    case 'text':
+    case 'rect':
+    case 'oval':
+      return { x: cmd.x + dx, y: cmd.y + dy };
+    case 'line':
+    case 'arrow':
+      return { x1: cmd.x1 + dx, y1: cmd.y1 + dy, x2: cmd.x2 + dx, y2: cmd.y2 + dy };
+    case 'pen':
+    case 'erase':
+    case 'marker':
+      return { points: cmd.points.map(([x, y]) => [x + dx, y + dy]) };
+    case 'highlight':
+      return { rects: (cmd.rects ?? [{ x: cmd.x, y: cmd.y, w: cmd.w, h: cmd.h }]).map(r => ({ ...r, x: r.x + dx, y: r.y + dy })) };
+    default:
+      return {};
+  }
+}
+
+// Bounding box (canvas-space) of a group of commands — used for the lasso
+// selection outline and for hit-testing "did this tap land inside the
+// current selection" in drawPointer.js. ctx is required only for the 'text'
+// case (font metrics via measureText), matching _drawSelectionOutline.
+export function computeGroupBounds(cmds, ctx) {
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  for (const cmd of cmds) {
+    const b = _commandBounds(cmd, ctx);
+    if (!b) continue;
+    x0 = Math.min(x0, b.x0); y0 = Math.min(y0, b.y0);
+    x1 = Math.max(x1, b.x1); y1 = Math.max(y1, b.y1);
+  }
+  return isFinite(x0) ? { x0, y0, x1, y1 } : null;
+}
+
+function _commandBounds(cmd, ctx) {
+  switch (cmd.type) {
+    case 'pen': case 'erase': case 'marker': {
+      const xs = cmd.points.map(p => p[0]), ys = cmd.points.map(p => p[1]);
+      return { x0: Math.min(...xs), y0: Math.min(...ys), x1: Math.max(...xs), y1: Math.max(...ys) };
+    }
+    case 'line': case 'arrow':
+      return {
+        x0: Math.min(cmd.x1, cmd.x2), y0: Math.min(cmd.y1, cmd.y2),
+        x1: Math.max(cmd.x1, cmd.x2), y1: Math.max(cmd.y1, cmd.y2),
+      };
+    case 'rect':
+      return { x0: cmd.x, y0: cmd.y, x1: cmd.x + cmd.w, y1: cmd.y + cmd.h };
+    case 'oval':
+      return {
+        x0: cmd.x - Math.abs(cmd.rx), y0: cmd.y - Math.abs(cmd.ry),
+        x1: cmd.x + Math.abs(cmd.rx), y1: cmd.y + Math.abs(cmd.ry),
+      };
+    case 'highlight': {
+      const rects = cmd.rects ?? [{ x: cmd.x, y: cmd.y, w: cmd.w, h: cmd.h }];
+      return {
+        x0: Math.min(...rects.map(r => r.x)),         y0: Math.min(...rects.map(r => r.y)),
+        x1: Math.max(...rects.map(r => r.x + r.w)),    y1: Math.max(...rects.map(r => r.y + r.h)),
+      };
+    }
+    case 'text': {
+      if (!ctx) return null;
+      const size  = cmd.size ?? 16;
+      const lines = (cmd.text ?? '').replace(/\n+$/, '').split('\n');
+      ctx.save();
+      ctx.font = `${cmd.fontWeight ?? 'normal'} ${size}px ${cmd.fontFamily ?? 'system-ui, sans-serif'}`;
+      const widths = lines.map(l => ctx.measureText(l).width);
+      ctx.restore();
+      const w = widths.length ? Math.max(...widths) : 0;
+      const h = size * 1.25 * lines.length;
+      return { x0: cmd.x, y0: cmd.y, x1: cmd.x + w, y1: cmd.y + h };
+    }
+    default:
+      return null;
+  }
 }
 
 // Draws a dashed border around every rect of a selected highlight command.
@@ -394,6 +488,38 @@ function _drawSelectionOutline(ctx, cmd) {
   ctx.restore();
 }
 
+// Dashed outline around the union bounding box of a group of commands —
+// used for the lasso tool's multi-select outline (both the settled selection
+// and its live drag preview).
+function _drawGroupSelectionOutline(ctx, cmds) {
+  const b = computeGroupBounds(cmds, ctx);
+  if (!b) return;
+  ctx.save();
+  ctx.strokeStyle = '#2D7A4F';
+  ctx.lineWidth   = 1.5;
+  ctx.setLineDash([5, 3]);
+  const pad = 6;
+  ctx.beginPath();
+  ctx.roundRect(b.x0 - pad, b.y0 - pad, (b.x1 - b.x0) + pad * 2, (b.y1 - b.y0) + pad * 2, 4);
+  ctx.stroke();
+  ctx.restore();
+}
+
+// In-progress lasso loop — dashed path following the pointer, closed back to start.
+function _drawLassoPath(ctx, points) {
+  if (points.length < 2) return;
+  ctx.save();
+  ctx.strokeStyle = '#2D7A4F';
+  ctx.lineWidth   = 1.5;
+  ctx.setLineDash([6, 4]);
+  ctx.beginPath();
+  ctx.moveTo(points[0][0], points[0][1]);
+  for (let i = 1; i < points.length; i++) ctx.lineTo(points[i][0], points[i][1]);
+  ctx.closePath();
+  ctx.stroke();
+  ctx.restore();
+}
+
 // Clears draw canvas and replays all commands for the current page.
 // overlay — optional in-progress command rendered after history (live preview).
 // Render order: annotations → selection outline → live interaction overlay.
@@ -401,11 +527,13 @@ function _redrawPage(overlay = null) {
   const ctx    = _drawCanvas.getContext('2d');
   ctx.clearRect(0, 0, _drawCanvas.width, _drawCanvas.height);
   const cmds   = _resolveScene(_pageCommands.get(_currentPage) ?? []);
-  // During drag: skip the dragged command, re-render below at new position
-  const dragId = (overlay?.type === 'text-drag' || overlay?.type === 'shape-drag')
-    ? overlay.cmd.id : null;
+  // During drag: skip the dragged command(s), re-rendered below at their new position
+  const dragIds =
+    (overlay?.type === 'text-drag' || overlay?.type === 'shape-drag') ? new Set([overlay.cmd.id]) :
+    overlay?.type === 'lasso-drag'                                    ? new Set(overlay.ids) :
+    null;
   for (const cmd of cmds) {
-    if (cmd.id === dragId) continue;
+    if (dragIds?.has(cmd.id)) continue;
     renderCommand(ctx, cmd);
   }
   // Selection outline — after annotations, before live interaction
@@ -417,12 +545,23 @@ function _redrawPage(overlay = null) {
     const sel = cmds.find(c => c.id === _selectedHighlightId);
     if (sel) _drawHighlightSelectionOutline(ctx, sel);
   }
+  if (_lassoSelection.length && overlay?.type !== 'lasso-drag') {
+    const selCmds = cmds.filter(c => _lassoSelection.includes(c.id));
+    if (selCmds.length) _drawGroupSelectionOutline(ctx, selCmds);
+  }
   if (overlay) {
     if (overlay.type === 'text-drag') {
       renderCommand(ctx, { ...overlay.cmd, x: overlay.x, y: overlay.y });
     } else if (overlay.type === 'shape-drag') {
       const { cmd, dx = 0, dy = 0 } = overlay;
       renderCommand(ctx, { ...cmd, x1: cmd.x1 + dx, y1: cmd.y1 + dy, x2: cmd.x2 + dx, y2: cmd.y2 + dy });
+    } else if (overlay.type === 'lasso') {
+      _drawLassoPath(ctx, overlay.points);
+    } else if (overlay.type === 'lasso-drag') {
+      const { ids, dx = 0, dy = 0 } = overlay;
+      const shifted = cmds.filter(c => ids.includes(c.id)).map(c => ({ ...c, ...computeMovePatch(c, dx, dy) }));
+      for (const c of shifted) renderCommand(ctx, c);
+      if (shifted.length) _drawGroupSelectionOutline(ctx, shifted);
     } else {
       renderCommand(ctx, overlay);
     }

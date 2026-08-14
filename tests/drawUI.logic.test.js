@@ -19,11 +19,17 @@
 //  only surfaced via manual browser testing.
 //
 //    • _resolveScene    — applies move/style/delete overlay
-//                          commands onto the base command list
+//                          commands onto the base command list,
+//                          including 'batch' (lasso multi-select
+//                          move/delete — one command, N nested ops)
 //                          (drawUI.js:339)
 //    • _isMeaningful     — degenerate-stroke/shape filter that
 //                          gates what actually gets committed
 //                          (drawPointer.js:708)
+//    • computeMovePatch  — per-type delta-shift used to build a
+//                          lasso group-move's batch ops (drawUI.js)
+//    • _pointInPolygon   — PNPOLY ray-casting test backing the
+//                          lasso tool's selection (drawPointer.js)
 //    • command-stack     — push / undo / redo / clear semantics
 //                          on the real Map<pageNum, Command[]>
 //                          shape (drawUI.js:683-709,
@@ -57,26 +63,67 @@ function expect(actual) {
 
 // ── Pure copy from js/drawUI.js:339 ─────────────────────────────
 
+function _applyOp(op, deleted, pos, style) {
+  if (op.type === 'delete') { deleted.add(op.targetId); return; }
+  if (op.type === 'move')   { const { type: _t, targetId, ...coords } = op; pos.set(targetId, coords); return; }
+  if (op.type === 'style')  { style.set(op.targetId, { ...style.get(op.targetId), ...op.patch }); }
+}
+
 function _resolveScene(cmds) {
   const hasOverrides = cmds.some(
-    c => c.type === 'move' || c.type === 'style' || c.type === 'delete'
+    c => c.type === 'move' || c.type === 'style' || c.type === 'delete' || c.type === 'batch'
   );
   if (!hasOverrides) return cmds;
   const deleted = new Set();
   const pos     = new Map();
   const style   = new Map();
   cmds.forEach(c => {
-    if (c.type === 'delete') { deleted.add(c.targetId); return; }
-    if (c.type === 'move')   { const { type: _t, targetId, ...coords } = c; pos.set(targetId, coords); return; }
-    if (c.type === 'style')  { style.set(c.targetId, { ...style.get(c.targetId), ...c.patch }); }
+    if (c.type === 'batch') { c.ops.forEach(op => _applyOp(op, deleted, pos, style)); return; }
+    _applyOp(c, deleted, pos, style);
   });
   return cmds
-    .filter(c => c.type !== 'move' && c.type !== 'style' && c.type !== 'delete' && !deleted.has(c.id))
+    .filter(c => c.type !== 'move' && c.type !== 'style' && c.type !== 'delete' && c.type !== 'batch' && !deleted.has(c.id))
     .map(c => {
       const p = pos.get(c.id)   ?? null;
       const s = style.get(c.id) ?? null;
       return (p || s) ? { ...c, ...p, ...s } : c;
     });
+}
+
+// ── Pure copy from js/drawUI.js's computeMovePatch ──────────────
+
+function computeMovePatch(cmd, dx, dy) {
+  switch (cmd.type) {
+    case 'text':
+    case 'rect':
+    case 'oval':
+      return { x: cmd.x + dx, y: cmd.y + dy };
+    case 'line':
+    case 'arrow':
+      return { x1: cmd.x1 + dx, y1: cmd.y1 + dy, x2: cmd.x2 + dx, y2: cmd.y2 + dy };
+    case 'pen':
+    case 'erase':
+    case 'marker':
+      return { points: cmd.points.map(([x, y]) => [x + dx, y + dy]) };
+    case 'highlight':
+      return { rects: (cmd.rects ?? [{ x: cmd.x, y: cmd.y, w: cmd.w, h: cmd.h }]).map(r => ({ ...r, x: r.x + dx, y: r.y + dy })) };
+    default:
+      return {};
+  }
+}
+
+// ── Pure copy from js/drawPointer.js's _pointInPolygon ──────────
+
+function _pointInPolygon(x, y, poly) {
+  let inside = false;
+  for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+    const [xi, yi] = poly[i];
+    const [xj, yj] = poly[j];
+    if (((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi)) {
+      inside = !inside;
+    }
+  }
+  return inside;
 }
 
 // ── Pure copy from js/drawPointer.js:708 ────────────────────────
@@ -290,6 +337,102 @@ test('_isMeaningful: oval needs both radii >= 3px', () => {
 
 test('_isMeaningful: unrecognized types (e.g. text) default to always meaningful', () => {
   expect(_isMeaningful({ type: 'text' })).toBeTruthy();
+});
+
+// ── computeMovePatch (lasso group-move per-type deltas) ─────────
+
+test('computeMovePatch: text/rect/oval shift x/y by the delta', () => {
+  expect(computeMovePatch({ type: 'text', x: 10, y: 20 }, 5, -3)).toEqual({ x: 15, y: 17 });
+  expect(computeMovePatch({ type: 'rect', x: 10, y: 20, w: 40, h: 30 }, 5, -3)).toEqual({ x: 15, y: 17 });
+});
+
+test('computeMovePatch: line/arrow shift both endpoints', () => {
+  const patch = computeMovePatch({ type: 'arrow', x1: 0, y1: 0, x2: 10, y2: 10 }, 5, 5);
+  expect(patch).toEqual({ x1: 5, y1: 5, x2: 15, y2: 15 });
+});
+
+test('computeMovePatch: pen/erase/marker shift every point in the stroke', () => {
+  const patch = computeMovePatch({ type: 'pen', points: [[0, 0], [10, 10]] }, 2, 3);
+  expect(patch).toEqual({ points: [[2, 3], [12, 13]] });
+});
+
+test('computeMovePatch: highlight shifts every rect, keeping w/h unchanged', () => {
+  const patch = computeMovePatch({ type: 'highlight', rects: [{ x: 0, y: 0, w: 10, h: 5 }] }, 4, 4);
+  expect(patch).toEqual({ rects: [{ x: 4, y: 4, w: 10, h: 5 }] });
+});
+
+// ── _pointInPolygon (PNPOLY — backs lasso selection) ─────────────
+
+test('_pointInPolygon: point clearly inside a square is inside', () => {
+  const square = [[0, 0], [10, 0], [10, 10], [0, 10]];
+  expect(_pointInPolygon(5, 5, square)).toBeTruthy();
+});
+
+test('_pointInPolygon: point clearly outside a square is outside', () => {
+  const square = [[0, 0], [10, 0], [10, 10], [0, 10]];
+  expect(_pointInPolygon(50, 50, square)).toBeFalsy();
+});
+
+test('_pointInPolygon: works for a non-convex (concave) loop, not just rectangles', () => {
+  // "L" shape (concave) — a point inside the notch must NOT be reported as inside
+  const lShape = [[0, 0], [10, 0], [10, 5], [5, 5], [5, 10], [0, 10]];
+  expect(_pointInPolygon(2, 2, lShape)).toBeTruthy();   // inside the L's filled area
+  expect(_pointInPolygon(8, 8, lShape)).toBeFalsy();    // inside the notch — not filled
+});
+
+// ── _resolveScene: 'batch' (lasso multi-select move/delete/style) ──
+
+test('_resolveScene: a batch move relocates every targeted command in one command', () => {
+  const cmds = [
+    { type: 'text', id: 1, x: 0, y: 0 },
+    { type: 'rect', id: 2, x: 0, y: 0, w: 10, h: 10 },
+    { type: 'batch', ops: [
+      { type: 'move', targetId: 1, x: 5, y: 5 },
+      { type: 'move', targetId: 2, x: 3, y: 3 },
+    ] },
+  ];
+  const result = _resolveScene(cmds);
+  expect(result).toHaveLength(2);
+  expect(result.find(c => c.id === 1)).toEqual({ type: 'text', id: 1, x: 5, y: 5 });
+  expect(result.find(c => c.id === 2)).toEqual({ type: 'rect', id: 2, x: 3, y: 3, w: 10, h: 10 });
+});
+
+test('_resolveScene: a batch delete removes every targeted command in one command', () => {
+  const cmds = [
+    { type: 'pen', id: 1, points: [[0, 0]] },
+    { type: 'pen', id: 2, points: [[1, 1]] },
+    { type: 'pen', id: 3, points: [[2, 2]] },
+    { type: 'batch', ops: [{ type: 'delete', targetId: 1 }, { type: 'delete', targetId: 3 }] },
+  ];
+  const result = _resolveScene(cmds);
+  expect(result).toHaveLength(1);
+  expect(result[0].id).toBe(2);
+});
+
+test('_resolveScene: the batch command itself never appears in the resolved output', () => {
+  const cmds = [
+    { type: 'text', id: 1, x: 0, y: 0 },
+    { type: 'batch', ops: [{ type: 'move', targetId: 1, x: 1, y: 1 }] },
+  ];
+  const types = _resolveScene(cmds).map(c => c.type);
+  expect(types).toEqual(['text']);
+});
+
+test('_resolveScene: a batch can mix move, style and delete ops targeting different ids', () => {
+  const cmds = [
+    { type: 'text', id: 1, x: 0, y: 0, size: 16 },
+    { type: 'rect', id: 2, x: 0, y: 0, w: 10, h: 10 },
+    { type: 'pen',  id: 3, points: [[0, 0]] },
+    { type: 'batch', ops: [
+      { type: 'move',   targetId: 1, x: 9, y: 9 },
+      { type: 'style',  targetId: 2, patch: { color: '#f00' } },
+      { type: 'delete', targetId: 3 },
+    ] },
+  ];
+  const result = _resolveScene(cmds);
+  expect(result).toHaveLength(2);
+  expect(result.find(c => c.id === 1)).toEqual({ type: 'text', id: 1, x: 9, y: 9, size: 16 });
+  expect(result.find(c => c.id === 2).color).toBe('#f00');
 });
 
 // ── Command-stack: push / undo / redo / clear ───────────────────
