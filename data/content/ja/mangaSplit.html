@@ -1,0 +1,55 @@
+<div class="seo-content" style="max-width:800px;margin:60px auto 40px;padding:0 24px;color:var(--text2);line-height:1.75;">
+
+        <h1 id="seoH1_split-manga-pages" style="font-size:clamp(22px,3.5vw,30px);color:var(--text);margin:0 0 16px;font-weight:700;">マンガページを分割 — 見開きページを正しい順序の2ページに</h1>
+        <p style="font-size:15px;margin:0 0 40px;">スキャンされたマンガの単行本や多くの電子版は、見開き2ページを1枚の横長画像や1ページのPDFとして保存しています。画面で見る分には問題ありませんが、印刷や電子書籍リーダーでの表示、1ページずつの読書には不向きです — ノドの部分がコマの真ん中に来てしまいます。PDFreeの「マンガページを分割」ツールは、各見開きをきれいに中央で分割し、フルサイズの2ページにします。デフォルトで正しい右から左への読み順になり、すべてブラウザ内で処理されます。</p>
+
+        <!-- How to use -->
+        <h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">3ステップでマンガの見開きを分割する方法</h2>
+
+        <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
+          <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">1</div>
+          <div>
+            <strong style="color:var(--text);font-size:15px;">PDFを開く</strong>
+            <p style="margin:6px 0 0;font-size:14px;"><strong>ファイルを選択</strong>をクリックするか、PDFをドロップゾーンにドラッグしてください。全ページのサムネイル一覧がブラウザ内に読み込まれます — ファイルがサーバーに送信されることはありません。</p>
+          </div>
+        </div>
+        <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
+          <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">2</div>
+          <div>
+            <strong style="color:var(--text);font-size:15px;">読み順を確認し、分割せず残したいページを選ぶ</strong>
+            <p style="margin:6px 0 0;font-size:14px;">マンガの読み順（右ページが先）はデフォルトでオンになっています — 左から右に読む欧米コミックや一部のマンファではオフにしてください。表紙、扉ページ、または単独ページをサムネイル一覧でクリックすると、分割せずそのまま残せます。</p>
+          </div>
+        </div>
+        <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
+          <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">3</div>
+          <div>
+            <strong style="color:var(--text);font-size:15px;">分割済みPDFをダウンロード</strong>
+            <p style="margin:6px 0 0;font-size:14px;">各見開きが新しいPDF内の2つのフルページになり、デバイスで1ページずつ読んだり、印刷したりできます。テキスト、ページ番号、レイアウトなどは一切追加されません — 分割することだけが、このツールが意図的に行う唯一の処理です。</p>
+          </div>
+        </div>
+
+        <!-- Differentiator -->
+        <h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">なぜ分割はスクリーンショットではなくベクターである必要があるのか</h2>
+        <p style="font-size:15px;margin:0 0 24px;">見開きを分割する方法として、各ページを画像として描画してから半分に切り取るやり方もありますが、それでは元のテキストや線の品質が失われ、そのスクリーンショットの解像度で固定されてしまいます。PDFreeはそうではなく、実際のPDFページのコンテンツ自体を切り取るため、元のPDFに本物のテキストがあった箇所ではテキストが選択可能なまま残り、画質は元のページとまったく同じになります — この過程で再エンコードや再サンプリングは一切行われません。</p>
+
+        <!-- When to use -->
+        <h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">こんなときに使えます</h2>
+
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">自分のスキャンをスマホや電子書籍リーダーで1ページずつ読む</strong>
+          <p style="margin:6px 0 0;font-size:14px;">横長の見開きはスマホの画面では小さくなり文字が読めなくなります。2ページに分割すれば、各ページが読みやすいサイズで画面いっぱいに表示されます。</p>
+        </div>
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">購入した電子版や自作の同人誌を印刷する</strong>
+          <p style="margin:6px 0 0;font-size:14px;">家庭用プリンターや印刷店は見開きではなく単独ページを想定しています。先にファイルを分割しておけば、すべてのページが正しく印刷・製本されます。</p>
+        </div>
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">個人のスキャンや教材を1ページずつのファイルとして保存する</strong>
+          <p style="margin:6px 0 0;font-size:14px;">1ページごとのファイルは、見開きに固定されたPDFよりも参照や引用、並べ替えがしやすくなります。</p>
+        </div>
+
+        <!-- Legal / intended use -->
+        <h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">自分のコンテンツのために</h2>
+        <p style="font-size:15px;margin:0 0 24px;">このツールは、自分が使う権利を持つファイル内の見開きを分割するために作られています — 自分が所有する紙の本を自分でスキャンしたもの、購入した電子版、自作の同人誌やオリジナル作品、教育・アーカイブ用の資料などです。マンガを取得・保存・配布することはなく、すでに手元にあるファイルをあなた自身の端末上で処理するだけです。</p>
+
+</div>

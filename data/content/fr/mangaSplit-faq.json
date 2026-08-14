@@ -1,0 +1,58 @@
+[
+  {
+    "@type": "Question",
+    "name": "La division d'un PDF de manga envoie-t-elle mon fichier sur un serveur ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non. Chaque page est divisée entièrement dans votre navigateur. Votre fichier n'est jamais envoyé nulle part."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Dans quel ordre ressortent les pages divisées ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Par défaut, dans l'ordre de lecture manga — la moitié droite de chaque double page en premier, puis la moitié gauche. Désactivez le mode manga pour un contenu à lecture de gauche à droite comme les bandes dessinées occidentales ou certains manhwas, et c'est alors la moitié gauche qui vient en premier."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Puis-je empêcher qu'une couverture ou une page isolée soit divisée ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui. Cliquez sur n'importe quelle page dans la grille de miniatures pour la marquer « ne pas diviser » — utile pour les couvertures, pages de titre, ou toute page isolée mêlée à un scan composé de doubles pages. Elle reste inchangée, à sa taille d'origine."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "La division réduit-elle la qualité de l'image ou du texte ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non. L'outil recadre le contenu réel de la page PDF plutôt que de la rendre d'abord en image, donc le texte reste sélectionnable là où la source avait du vrai texte, et la qualité d'image ne change pas — rien n'est réencodé ni rééchantillonné."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Cet outil ajoute-t-il du texte, une numérotation ou une mise en page d'impression ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non — cette version ne fait que diviser les doubles pages en deux pages. Elle n'ajoute délibérément ni superposition de texte, ni numérotation, ni mise en page de livret/imposition."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Puis-je utiliser cet outil pour des scanlations ou du manga téléchargé ailleurs ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Cet outil est destiné à un contenu que vous avez le droit d'utiliser — vos propres scans de livres que vous possédez, des volumes numériques achetés, votre propre doujinshi ou œuvre originale, et du matériel pédagogique. Il ne télécharge ni n'héberge de manga ; il traite uniquement un fichier déjà présent sur votre appareil."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Y a-t-il une limite de nombre de pages ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Aucune limite de pages et aucun compte requis. Les très gros volumes scannés peuvent prendre plus de temps puisque tout s'exécute sur votre propre appareil."
+    }
+  }
+]

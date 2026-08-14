@@ -1,0 +1,58 @@
+[
+  {
+    "@type": "Question",
+    "name": "Bir manga PDF'ini bölmek dosyamı bir sunucuya yüklüyor mu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. Her sayfa tamamen tarayıcınızda bölünür. Dosyanız asla hiçbir yere gönderilmez."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bölünmüş sayfalar hangi sırayla çıkıyor?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Varsayılan olarak manga okuma sırasıyla — önce her çift sayfanın sağ yarısı, sonra sol yarısı. Batı çizgi romanları veya bazı manhwalar gibi soldan sağa okunan içerikler için manga anahtarını kapatın; bu durumda önce sol yarı gelir."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bir kapağın veya tekli sayfanın bölünmesini engelleyebilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. Küçük resim ızgarasındaki herhangi bir sayfaya tıklayarak “bölme” olarak işaretleyebilirsiniz — kapaklar, başlık sayfaları veya tamamen çift sayfalardan oluşan bir taramaya karışmış herhangi bir tekli sayfa için kullanışlıdır. Bu sayfa orijinal boyutunda değişmeden kalır."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bölme, görüntü veya metin kalitesini düşürür mü?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. Araç, önce görsele dönüştürmek yerine gerçek PDF sayfa içeriğini kırpar; böylece kaynakta gerçek metin bulunan yerlerde metin seçilebilir kalır ve görüntü kalitesi değişmez — hiçbir şey yeniden kodlanmaz veya yeniden örneklenmez."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bu araç metin, sayfa numarası veya baskı düzeni ekliyor mu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır — bu sürüm yalnızca çift sayfaları iki sayfaya böler. Bilinçli olarak metin katmanı, sayfa numarası veya kitapçık/baskı düzeni eklemez."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bunu başka bir yerden indirdiğim scanlation veya manga için kullanabilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Bu araç, kullanma hakkınız olan içerikler için tasarlanmıştır — sahibi olduğunuz kitapların kendi taramalarınız, satın alınmış dijital ciltler, kendi doujinshi'niz veya özgün eseriniz ve eğitim materyalleri. Manga getirmez veya barındırmaz; yalnızca cihazınızda zaten bulunan bir dosyayı işler."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Sayfa sayısı sınırı var mı?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sayfa sayısı sınırı yok ve hesap gerekmiyor. Her şey kendi cihazınızda çalıştığından, çok büyük taranmış ciltler daha uzun sürebilir."
+    }
+  }
+]

@@ -1,0 +1,58 @@
+[
+  {
+    "@type": "Question",
+    "name": "Lädt das Teilen einer Manga-PDF meine Datei auf einen Server hoch?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nein. Jede Seite wird komplett in deinem Browser geteilt. Deine Datei wird nirgendwohin gesendet."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "In welcher Reihenfolge kommen die geteilten Seiten heraus?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Standardmäßig in der Manga-Lesereihenfolge — zuerst die rechte Hälfte jeder Doppelseite, dann die linke. Schalte den Manga-Umschalter für Inhalte mit Links-nach-rechts-Leserichtung wie westliche Comics oder manche Manhwa aus, dann kommt stattdessen die linke Hälfte zuerst."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann ich ein Cover oder eine Einzelseite vom Teilen ausnehmen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Klicke im Miniaturraster auf eine beliebige Seite, um sie als „nicht teilen“ zu markieren — nützlich für Cover, Titelseiten oder Einzelseiten, die zwischen lauter Doppelseiten liegen. Sie bleibt in Originalgröße unverändert."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Verschlechtert das Teilen die Bild- oder Textqualität?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nein. Das Tool schneidet den eigentlichen PDF-Seiteninhalt zu, statt ihn erst als Bild zu rendern, sodass Text dort auswählbar bleibt, wo die Quelle echten Text hatte, und die Bildqualität unverändert bleibt — nichts wird neu kodiert oder neu abgetastet."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Fügt dieses Tool Text, Seitenzahlen oder ein Drucklayout hinzu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nein — diese Version teilt nur Doppelseiten in zwei Seiten. Es werden bewusst keine Textüberlagerungen, Seitenzahlen oder Booklet-/Ausschieß-Layouts hinzugefügt."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann ich das für Scanlations oder Manga verwenden, die ich woanders heruntergeladen habe?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Dieses Tool ist für Inhalte gedacht, die du nutzen darfst — eigene Scans von Büchern, die dir gehören, gekaufte digitale Bände, dein eigenes Doujinshi oder Originalwerk sowie Lehrmaterial. Es lädt keinen Manga herunter und hostet keinen — es verarbeitet nur eine Datei, die bereits auf deinem Gerät liegt."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Gibt es ein Limit für die Seitenzahl?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Kein Limit für die Seitenzahl und kein Konto nötig. Sehr große gescannte Bände können länger dauern, da alles auf deinem eigenen Gerät läuft."
+    }
+  }
+]

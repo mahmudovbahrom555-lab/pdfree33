@@ -1,0 +1,58 @@
+[
+  {
+    "@type": "Question",
+    "name": "Tách file PDF manga có tải file của tôi lên máy chủ không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không. Mỗi trang được tách hoàn toàn ngay trong trình duyệt của bạn. File của bạn không bao giờ được gửi đi đâu cả."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Các trang sau khi tách ra theo thứ tự nào?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Mặc định là theo thứ tự đọc manga — nửa phải của mỗi trang đôi trước, rồi đến nửa trái. Tắt chế độ manga cho nội dung đọc từ trái sang phải như truyện tranh phương Tây hoặc một số manhwa, khi đó nửa trái sẽ ra trước."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Tôi có thể giữ trang bìa hoặc trang đơn không bị tách không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có. Nhấp vào bất kỳ trang nào trong lưới ảnh thu nhỏ để đánh dấu “không tách” — hữu ích cho trang bìa, trang tiêu đề, hoặc bất kỳ trang đơn nào xen giữa bản scan toàn trang đôi. Trang đó sẽ được giữ nguyên kích thước gốc."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Việc tách có làm giảm chất lượng ảnh hoặc văn bản không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không. Công cụ cắt trực tiếp nội dung trang PDF thực thay vì render thành ảnh trước, nên văn bản vẫn có thể chọn được ở những chỗ bản gốc có văn bản thật, và chất lượng ảnh không thay đổi — không có gì bị mã hóa lại hay lấy mẫu lại."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Công cụ này có thêm văn bản, số trang hay bố cục in không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không — phiên bản này chỉ tách trang đôi thành hai trang. Nó cố tình không thêm lớp văn bản chồng lên, số trang, hay bố cục dạng tập sách/dàn trang in."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Tôi có thể dùng công cụ này cho bản scanlation hoặc manga tải từ nơi khác không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Công cụ này dành cho nội dung mà bạn có quyền sử dụng — bản scan sách của riêng bạn, các tập truyện số đã mua, doujinshi hoặc tác phẩm gốc của riêng bạn, và tài liệu giáo dục. Nó không tải về hay lưu trữ manga; nó chỉ xử lý file đã có sẵn trên thiết bị của bạn."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Có giới hạn số trang không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không giới hạn số trang và không cần tài khoản. Các tập scan rất lớn có thể mất nhiều thời gian hơn vì mọi thứ đều chạy trên chính thiết bị của bạn."
+    }
+  }
+]

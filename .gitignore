@@ -6,3 +6,6 @@ node_modules/
 *.local
 dist/
 
+
+# Local SEO research notes (not part of the deployed site)
+seo-research/

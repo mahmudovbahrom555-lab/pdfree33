@@ -1,0 +1,58 @@
+[
+  {
+    "@type": "Question",
+    "name": "Apakah memisahkan PDF manga mengunggah file saya ke server?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak. Setiap halaman dipisahkan sepenuhnya di browser Anda. File Anda tidak pernah dikirim ke mana pun."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Halaman hasil pisah keluar dengan urutan seperti apa?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Secara default, mengikuti urutan baca manga — separuh kanan dari setiap spread lebih dulu, lalu separuh kiri. Matikan opsi manga untuk konten dengan urutan baca kiri-ke-kanan seperti komik Barat atau beberapa manhwa, maka separuh kiri akan didahulukan."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah saya mencegah sampul atau halaman tunggal ikut dipisah?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Bisa. Klik halaman mana pun di kisi thumbnail untuk menandainya “jangan dipisah” — berguna untuk sampul, halaman judul, atau halaman tunggal yang tercampur di antara hasil scan berupa spread. Halaman itu tetap utuh dengan ukuran aslinya."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah pemisahan mengurangi kualitas gambar atau teks?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak. Alat ini memotong konten halaman PDF yang sebenarnya, bukan me-render-nya sebagai gambar terlebih dahulu, sehingga teks tetap bisa dipilih di bagian yang sumbernya berisi teks asli, dan kualitas gambar tidak berubah — tidak ada yang di-encode ulang atau di-resample."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah alat ini menambahkan teks, nomor halaman, atau tata letak cetak?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak — versi ini hanya memisahkan spread menjadi dua halaman. Alat ini sengaja tidak menambahkan overlay teks, nomor halaman, atau tata letak booklet/imposisi."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah saya memakai ini untuk scanlation atau manga yang saya unduh dari tempat lain?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Alat ini ditujukan untuk konten yang berhak Anda gunakan — hasil scan buku milik Anda sendiri, volume digital yang dibeli, doujinshi atau karya orisinal Anda sendiri, serta materi edukasi. Alat ini tidak mengambil atau menyimpan manga; ia hanya memproses file yang sudah ada di perangkat Anda."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah ada batas jumlah halaman?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak ada batas jumlah halaman dan tidak perlu akun. Volume hasil scan yang sangat besar mungkin butuh waktu lebih lama karena semuanya berjalan di perangkat Anda sendiri."
+    }
+  }
+]

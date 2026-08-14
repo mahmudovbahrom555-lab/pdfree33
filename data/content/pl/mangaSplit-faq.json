@@ -1,0 +1,58 @@
+[
+  {
+    "@type": "Question",
+    "name": "Czy dzielenie pliku PDF z mangą wysyła mój plik na serwer?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie. Każda strona jest dzielona całkowicie w Twojej przeglądarce. Twój plik nigdy nigdzie nie jest wysyłany."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "W jakiej kolejności wychodzą podzielone strony?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Domyślnie w kolejności czytania mangi — najpierw prawa połowa każdej podwójnej strony, potem lewa. Wyłącz przełącznik mangi dla treści czytanych od lewej do prawej, jak zachodnie komiksy lub niektóre mangi koreańskie, a wtedy lewa połowa pojawi się jako pierwsza."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy mogę uchronić okładkę lub pojedynczą stronę przed podzieleniem?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. Kliknij dowolną stronę w siatce miniatur, aby oznaczyć ją jako „nie dziel” — przydatne dla okładek, stron tytułowych lub dowolnej pojedynczej strony wmieszanej w skan złożony w większości z podwójnych stron. Pozostaje ona nietknięta, w oryginalnym rozmiarze."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy podział obniża jakość obrazu lub tekstu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie. Narzędzie przycina rzeczywistą zawartość strony PDF zamiast najpierw renderować ją jako obraz, więc tekst pozostaje zaznaczalny tam, gdzie źródło miało prawdziwy tekst, a jakość obrazu się nie zmienia — nic nie jest ponownie kodowane ani przepróbkowywane."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy to narzędzie dodaje tekst, numerację stron lub układ do druku?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie — ta wersja tylko dzieli podwójne strony na dwie strony. Celowo nie dodaje nakładek tekstowych, numeracji stron ani układów broszury/spadu."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy mogę użyć tego do skanlacji lub mangi pobranej skądinąd?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "To narzędzie jest przeznaczone dla treści, do których masz prawo — Twoich własnych skanów posiadanych książek, zakupionych tomów cyfrowych, własnego doujinshi lub oryginalnej twórczości oraz materiałów edukacyjnych. Nie pobiera ani nie hostuje mangi — przetwarza jedynie plik już znajdujący się na Twoim urządzeniu."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy istnieje limit liczby stron?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Brak limitu liczby stron i nie jest wymagane konto. Bardzo duże zeskanowane tomy mogą wymagać więcej czasu, ponieważ wszystko działa na Twoim własnym urządzeniu."
+    }
+  }
+]

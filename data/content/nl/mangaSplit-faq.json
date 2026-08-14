@@ -1,0 +1,58 @@
+[
+  {
+    "@type": "Question",
+    "name": "Wordt mijn bestand naar een server geüpload als ik een manga-PDF splits?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. Elke pagina wordt volledig in je browser gesplitst. Je bestand wordt nooit ergens naartoe verzonden."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "In welke volgorde komen de gesplitste pagina's eruit?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Standaard in de manga-leesvolgorde — eerst de rechterhelft van elke dubbele pagina, dan de linkerhelft. Zet de manga-schakelaar uit voor links-naar-rechts content zoals westerse strips of sommige manhwa, dan komt de linkerhelft juist eerst."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik voorkomen dat een cover of losse pagina wordt gesplitst?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Klik op een pagina in het miniaturenrooster om die te markeren als “niet splitsen” — handig voor covers, titelpagina's of losse pagina's tussen een verder volledig uit dubbele pagina's bestaande scan. Die pagina blijft ongewijzigd op zijn originele formaat."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Vermindert splitsen de beeld- of tekstkwaliteit?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. De tool snijdt de daadwerkelijke PDF-pagina-inhoud in plaats van deze eerst als afbeelding te renderen, dus tekst blijft selecteerbaar waar de bron echte tekst had, en de beeldkwaliteit verandert niet — er wordt niets opnieuw gecodeerd of opnieuw bemonsterd."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Voegt deze tool tekst, paginanummering of een afdruklayout toe?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee — deze versie splitst alleen dubbele pagina's in twee pagina's. Er worden bewust geen tekstoverlays, paginanummering of boekje-/uitschietlayouts toegevoegd."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik dit gebruiken voor scanlations of manga die ik elders heb gedownload?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Deze tool is bedoeld voor content die je het recht hebt te gebruiken — je eigen scans van boeken die je bezit, gekochte digitale bundels, je eigen doujinshi of origineel werk, en lesmateriaal. De tool haalt geen manga op en host er geen; hij verwerkt alleen een bestand dat al op je apparaat staat."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is er een limiet op het aantal pagina's?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Geen paginalimiet en geen account nodig. Zeer grote gescande bundels kunnen langer duren omdat alles op je eigen apparaat draait."
+    }
+  }
+]

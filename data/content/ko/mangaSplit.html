@@ -1,0 +1,55 @@
+<div class="seo-content" style="max-width:800px;margin:60px auto 40px;padding:0 24px;color:var(--text2);line-height:1.75;">
+
+        <h1 id="seoH1_split-manga-pages" style="font-size:clamp(22px,3.5vw,30px);color:var(--text);margin:0 0 16px;font-weight:700;">만화 페이지 분할 — 스프레드를 올바른 순서의 두 페이지로 나누기</h1>
+        <p style="font-size:15px;margin:0 0 40px;">스캔한 만화 단행본과 많은 전자책 판본은 스프레드(두 페이지)를 하나의 넓은 이미지나 하나의 PDF 페이지로 저장합니다. 화면에서 보기엔 괜찮지만, 인쇄와 전자책 리더기, 페이지 단위 읽기에는 문제가 됩니다 — 책등 부분이 컷 한가운데에 오게 됩니다. PDFree의 만화 페이지 분할 도구는 각 스프레드를 정확히 가운데에서 깔끔하게 잘라 풀사이즈 두 페이지로 만들어 주며, 기본적으로 올바른 오른쪽에서 왼쪽 읽기 순서로, 모두 브라우저 안에서 처리됩니다.</p>
+
+        <!-- How to use -->
+        <h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">3단계로 만화 스프레드 분할하기</h2>
+
+        <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
+          <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">1</div>
+          <div>
+            <strong style="color:var(--text);font-size:15px;">PDF 열기</strong>
+            <p style="margin:6px 0 0;font-size:14px;"><strong>파일 선택</strong>을 클릭하거나 PDF를 드롭 영역으로 드래그하세요. 모든 페이지의 썸네일 격자가 브라우저에 로드됩니다 — 파일이 서버로 전송되는 일은 절대 없습니다.</p>
+          </div>
+        </div>
+        <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
+          <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">2</div>
+          <div>
+            <strong style="color:var(--text);font-size:15px;">읽기 순서를 확인하고, 그대로 둘 페이지를 표시하세요</strong>
+            <p style="margin:6px 0 0;font-size:14px;">만화 읽기 순서(오른쪽 페이지 먼저)는 기본으로 켜져 있습니다 — 왼쪽에서 오른쪽으로 읽는 서양 만화나 일부 만화(만화책)에서는 꺼 주세요. 표지, 속표지, 또는 임의의 단일 페이지를 썸네일 격자에서 클릭하면 분할하지 않고 그대로 둘 수 있습니다.</p>
+          </div>
+        </div>
+        <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
+          <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">3</div>
+          <div>
+            <strong style="color:var(--text);font-size:15px;">분할된 PDF 다운로드</strong>
+            <p style="margin:6px 0 0;font-size:14px;">각 스프레드가 새 PDF 안에서 두 개의 완전한 페이지가 되며, 기기에서 페이지 단위로 읽거나 인쇄로 보낼 준비가 됩니다. 텍스트, 페이지 번호, 레이아웃 등은 추가되지 않습니다 — 분할이 이 도구가 의도적으로 하는 유일한 작업입니다.</p>
+          </div>
+        </div>
+
+        <!-- Differentiator -->
+        <h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">왜 분할은 스크린샷이 아니라 벡터 방식이어야 하는가</h2>
+        <p style="font-size:15px;margin:0 0 24px;">스프레드는 각 페이지를 이미지로 렌더링한 뒤 반으로 자르는 방식으로도 분할할 수 있지만, 그렇게 하면 원본 텍스트와 선의 품질이 손상되고 그 스크린샷의 해상도로 고정되어 버립니다. PDFree는 대신 실제 PDF 페이지 콘텐츠 자체를 잘라내므로, 원본 PDF에 실제 텍스트가 있던 부분은 텍스트가 그대로 선택 가능하게 남고, 이미지 품질도 원본 페이지와 정확히 동일하게 유지됩니다 — 이 과정에서 어떤 것도 재인코딩되거나 재샘플링되지 않습니다.</p>
+
+        <!-- When to use -->
+        <h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">이럴 때 사용하세요</h2>
+
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">자신의 스캔본을 휴대폰이나 전자책 리더기에서 페이지 단위로 읽을 때</strong>
+          <p style="margin:6px 0 0;font-size:14px;">넓은 스프레드는 휴대폰 화면에서 읽을 수 없을 만큼 작아집니다. 두 페이지로 분할하면 각 페이지가 읽기 좋은 크기로 화면을 채웁니다.</p>
+        </div>
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">구매한 전자책이나 본인이 만든 동인지를 인쇄할 때</strong>
+          <p style="margin:6px 0 0;font-size:14px;">가정용 프린터나 인쇄소는 스프레드가 아니라 단일 페이지를 기준으로 작동합니다. 먼저 파일을 분할하면 모든 페이지가 올바르게 인쇄되고 제본됩니다.</p>
+        </div>
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">개인 스캔본이나 교육 자료를 개별 페이지로 보관할 때</strong>
+          <p style="margin:6px 0 0;font-size:14px;">페이지 단위 파일은 스프레드로 고정된 PDF보다 참조하거나 인용하거나 재정렬하기가 더 쉽습니다.</p>
+        </div>
+
+        <!-- Legal / intended use -->
+        <h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">본인 소유 콘텐츠를 위한 도구입니다</h2>
+        <p style="font-size:15px;margin:0 0 24px;">이 도구는 사용할 권리가 있는 파일의 스프레드를 분할하기 위해 만들어졌습니다 — 본인이 소유한 실물 책을 직접 스캔한 것, 구매한 전자책, 본인이 만든 동인지나 창작물, 그리고 교육·보관용 자료 등입니다. 만화를 가져오거나 저장, 배포하지 않으며, 이미 가지고 있는 파일을 오직 본인의 기기에서만 처리합니다.</p>
+
+</div>

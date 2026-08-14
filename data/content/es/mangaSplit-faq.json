@@ -1,0 +1,58 @@
+[
+  {
+    "@type": "Question",
+    "name": "¿Dividir un PDF de manga sube mi archivo a un servidor?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Cada página se divide completamente en tu navegador. Tu archivo nunca se envía a ningún sitio."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿En qué orden salen las páginas divididas?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Por defecto, en el orden de lectura manga — primero la mitad derecha de cada página doble, luego la izquierda. Desactiva el interruptor de manga para contenido de izquierda a derecha, como cómics occidentales o algunos manhwa, y entonces sale primero la mitad izquierda."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Puedo evitar que se divida una portada o una página individual?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sí. Haz clic en cualquier página de la cuadrícula de miniaturas para marcarla como «no dividir» — útil para portadas, páginas de título o cualquier página individual mezclada en un escaneo de páginas dobles. Se mantiene intacta en su tamaño original."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿La división reduce la calidad de imagen o texto?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. La herramienta recorta el contenido real de la página del PDF en lugar de renderizarlo primero como imagen, así que el texto sigue siendo seleccionable donde el original tenía texto real, y la calidad de imagen no cambia — nada se recodifica ni se remuestrea."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Esta herramienta añade texto, numeración de página o maquetación de impresión?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No — esta versión solo divide páginas dobles en dos páginas. Deliberadamente no añade superposiciones de texto, numeración ni maquetaciones de folleto/imposición."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Puedo usar esto para scanlations o manga que descargué de otro sitio?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Esta herramienta está pensada para contenido que tienes derecho a usar — tus propios escaneos de libros que posees, volúmenes digitales que compraste, tu propio doujinshi u obra original, y material educativo. No descarga ni aloja manga; solo procesa un archivo que ya está en tu dispositivo."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Hay un límite de número de páginas?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sin límite de páginas y sin necesidad de cuenta. Los volúmenes escaneados muy grandes pueden tardar más, ya que todo se ejecuta en tu propio dispositivo."
+    }
+  }
+]
