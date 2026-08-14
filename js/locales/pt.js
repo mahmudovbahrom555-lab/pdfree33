@@ -206,6 +206,7 @@ window.PDFREE_LOCALE = {
   err_enc_unavailable: 'A biblioteca de cifragem não pôde ser carregada. Por favor recarregue a página.',
   err_enc_failed:      'Cifragem falhou. O PDF pode estar num formato não suportado.',
   err_encrypted_pdf:   'Este PDF tem uma estrutura incomum ou corrompida (isso também pode acontecer com arquivos protegidos por senha). Tente salvá-lo novamente em outro aplicativo de PDF, ou remova a senha, e tente novamente.',
+  err_unlock_wrong_password: 'A senha está incorreta. Tente novamente.',
   err_watermark_unsupported_chars: "Este texto de marca d'água não pode ser exibido — tente um texto sem caracteres chineses, japoneses ou coreanos.",
   err_cdn_lib_unavailable: 'Biblioteca do {lib} indisponível — verifique sua conexão com a internet',
   err_compress_timeout: '⏱ Compressão cancelada — o ficheiro tem demasiadas imagens para o navegador. Tente o preset Light ou divida o PDF primeiro.',

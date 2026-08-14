@@ -2815,7 +2815,7 @@ async function _runUnlock(filesSnapshot, { password } = {}) {
 
   if (!decrypted) {
     isProcessing = false; setFilesLocked(false); hideCancelBtn();
-    _handleError('unlock', 'The password is incorrect. Please try again.', 'wrong_password');
+    _handleError('unlock', t('err_unlock_wrong_password'), 'wrong_password');
     return;
   }
 
@@ -4265,14 +4265,24 @@ function _handleError(tool, message, errorType = null) {
   hideProgress();
   setButtonReady(TOOLS[tool]?.btn || 'Try again');
 
-  // Classify + translate worker error codes into user-friendly messages
+  // Classify + translate worker error codes into user-friendly messages.
+  // Skipped entirely when the caller already passed an explicit errorType —
+  // that means the caller already knows exactly what went wrong and built
+  // the right message for it (e.g. unlock's "The password is incorrect"),
+  // so re-sniffing that message for keywords must not run: it used to
+  // clobber that exact message, because it contains the substring
+  // "password", with the generic encrypted/corrupted-PDF text below —
+  // showing "unusual or corrupted structure" for an ordinary wrong-password
+  // case (real bug, reported by a user via feedback).
   let friendly = message;
-  if (message?.includes('ENCRYPTOR_UNAVAILABLE')) {
+  if (errorType !== null) {
+    // caller already classified this — trust their message as-is.
+  } else if (message?.includes('ENCRYPTOR_UNAVAILABLE')) {
     friendly   = t('err_enc_unavailable');
-    errorType ??= 'enc_lib_failed';
+    errorType  = 'enc_lib_failed';
   } else if (message?.includes('ENCRYPTOR_')) {
     friendly   = t('err_enc_failed');
-    errorType ??= 'enc_failed';
+    errorType  = 'enc_failed';
   } else if (
     // pdf-lib throws this when AES-encrypted objects can't be parsed.
     // The PDF has owner-password restrictions (e.g. copy:no, change:no).
@@ -4283,11 +4293,11 @@ function _handleError(tool, message, errorType = null) {
     message?.toLowerCase().includes('password')
   ) {
     friendly   = t('err_encrypted_pdf');
-    errorType ??= 'pdf_restricted';
+    errorType  = 'pdf_restricted';
   } else if (message?.includes('Unexpected result')) {
-    errorType ??= 'worker_crash';
+    errorType  = 'worker_crash';
   } else if (message?.toLowerCase().includes('worker error') || message?.toLowerCase().includes('worker crash')) {
-    errorType ??= 'worker_crash';
+    errorType  = 'worker_crash';
   }
 
   const resolvedType = errorType ?? 'unknown';
