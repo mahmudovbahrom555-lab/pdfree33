@@ -70,5 +70,13 @@
       "@type": "Answer",
       "text": "Oui. PDFree est gratuit, sans abonnement, sans limites quotidiennes ou horaires, et sans inscription. Aucun filigrane n'est ajouté au résultat et il n'y a aucune restriction de taille de fichier."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Puis-je corriger un document déjà scanné sans Photoshop ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui — c'est exactement à ça que sert cet outil. Si vous avez déjà le scan et avez seulement besoin de blanchir le fond et d'améliorer la netteté du texte, vous n'avez besoin d'aucun logiciel de retouche photo : importez le fichier ici et téléchargez une version nettoyée en quelques secondes, sans rien installer."
+    }
   }
 ]

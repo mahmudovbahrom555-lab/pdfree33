@@ -86,5 +86,13 @@
       "@type": "Answer",
       "text": "Evet. PDFree abonelik olmadan, günlük limit olmadan ve kayıt olmadan ücretsizdir."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Üniversitem veya kurumum tezim ya da başvurum için PDF/A istiyor mu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Bu kuruma göre değişir — tek bir küresel kural yoktur. Bazı üniversite arşivleri ve devlet portalları uzun süreli arşivleme için özellikle PDF/A ister, bazıları ise normal bir PDF'i kabul eder. Tam gereksinimi öğrenmek için tez danışmanlığınızın veya portalın teslim yönergelerini kontrol edin, ardından dosyanızın zaten uygun olup olmadığını görmek için PDFree'nin uyumluluk kontrolünü, ya da uyumlu hale getirmek için dönüştürücüyü kullanın."
+    }
   }
 ]

@@ -86,5 +86,13 @@
       "@type": "Answer",
       "text": "Sí. PDFree es gratis, sin suscripción, sin límites diarios y sin registro."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Mi universidad o institución exige PDF/A para mi tesis o entrega?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Depende de la institución — no existe una regla global única. Algunos repositorios universitarios y portales gubernamentales exigen específicamente PDF/A para el archivo a largo plazo, mientras que otros aceptan un PDF normal. Consulta las pautas de entrega de tu oficina de tesis o portal para conocer el requisito exacto, y luego usa la verificación de conformidad de PDFree para ver si tu archivo ya cumple, o el conversor para adaptarlo."
+    }
   }
 ]

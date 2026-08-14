@@ -86,5 +86,13 @@
       "@type": "Answer",
       "text": "Sim. O PDFree é gratuito, sem assinatura, sem limites diários e sem cadastro."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Minha universidade ou instituição exige PDF/A para minha tese ou submissão?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Depende da instituição — não existe uma regra global única. Alguns repositórios universitários e portais governamentais exigem especificamente PDF/A para arquivamento de longo prazo, enquanto outros aceitam um PDF comum. Verifique as diretrizes de submissão da sua secretaria de teses ou portal para saber o requisito exato, e depois use a verificação de conformidade do PDFree para ver se seu arquivo já se qualifica, ou o conversor para adequá-lo."
+    }
   }
 ]

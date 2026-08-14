@@ -86,5 +86,13 @@
       "@type": "Answer",
       "text": "Oui. PDFree est gratuit, sans abonnement, sans limite quotidienne et sans inscription."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Mon université ou mon établissement exige-t-il le PDF/A pour ma thèse ou mon dépôt ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Cela dépend de l'établissement — il n'existe pas de règle globale unique. Certains dépôts universitaires et portails administratifs exigent spécifiquement le PDF/A pour l'archivage à long terme, tandis que d'autres acceptent un PDF classique. Vérifiez les consignes de dépôt de votre bureau des thèses ou du portail concerné, puis utilisez la vérification de conformité de PDFree pour voir si votre fichier est déjà conforme, ou le convertisseur pour le rendre conforme."
+    }
   }
 ]

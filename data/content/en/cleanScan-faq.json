@@ -70,5 +70,13 @@
       "@type": "Answer",
       "text": "Yes. PDFree is free with no subscription, no daily or hourly limits, and no signup. No watermark is added to the output and there's no file size restriction."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I fix an already-scanned document without Photoshop?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes — that's exactly what this tool is for. If you already have the scan and just need to whiten the background and sharpen the text, you don't need any photo-editing software: upload the file here and download a cleaned version in seconds, nothing to install."
+    }
   }
 ]

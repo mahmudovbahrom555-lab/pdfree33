@@ -86,5 +86,13 @@
       "@type": "Answer",
       "text": "Ja. PDFree is gratis zonder abonnement, zonder dagelijkse limieten en zonder registratie."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Vereist mijn universiteit of instelling PDF/A voor mijn scriptie of inzending?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Dat hangt af van de instelling — er is geen wereldwijde standaardregel. Sommige universiteitsarchieven en overheidsportalen vereisen specifiek PDF/A voor langdurige archivering, terwijl andere een gewoon PDF accepteren. Controleer de inzendrichtlijnen van je scriptiebureau of portaal voor de exacte eis, en gebruik vervolgens de conformiteitscontrole van PDFree om te zien of je bestand al voldoet, of de converter om het conform te maken."
+    }
   }
 ]

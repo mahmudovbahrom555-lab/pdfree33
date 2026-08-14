@@ -86,5 +86,13 @@
       "@type": "Answer",
       "text": "Ya. PDFree gratis tanpa langganan, tanpa batas harian, dan tanpa pendaftaran."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah universitas atau institusi saya mewajibkan PDF/A untuk skripsi atau pengumpulan dokumen saya?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tergantung institusinya — tidak ada aturan global tunggal. Beberapa repositori universitas dan portal pemerintah secara khusus mewajibkan PDF/A untuk pengarsipan jangka panjang, sementara yang lain menerima PDF biasa. Periksa panduan pengumpulan dari kantor skripsi atau portal Anda untuk mengetahui persyaratan pastinya, lalu gunakan pemeriksaan kepatuhan PDFree untuk melihat apakah file Anda sudah memenuhi syarat, atau gunakan konverter untuk menyesuaikannya."
+    }
   }
 ]

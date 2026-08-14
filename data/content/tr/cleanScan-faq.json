@@ -70,5 +70,13 @@
       "@type": "Answer",
       "text": "Evet. PDFree abonelik olmadan, günlük veya saatlik sınır olmadan ve kayıt olmadan ücretsizdir. Sonuca hiçbir filigran eklenmez ve dosya boyutu kısıtlaması yoktur."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Zaten taranmış bir belgeyi Photoshop olmadan düzeltebilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet — bu araç tam olarak bunun için var. Taramanız zaten elinizdeyse ve sadece arka planı beyazlatıp metni netleştirmeniz gerekiyorsa, herhangi bir fotoğraf düzenleme yazılımına ihtiyacınız yok: dosyayı buraya yükleyin ve saniyeler içinde temizlenmiş bir sürümü indirin, hiçbir şey kurmadan."
+    }
   }
 ]

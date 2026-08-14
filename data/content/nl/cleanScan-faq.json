@@ -70,5 +70,13 @@
       "@type": "Answer",
       "text": "Ja. PDFree is gratis zonder abonnement, zonder dagelijkse of uurlijkse limieten en zonder aanmelding. Er wordt geen watermerk aan het resultaat toegevoegd en er is geen beperking op bestandsgrootte."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik een al gescand document herstellen zonder Photoshop?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja — daar is deze tool precies voor bedoeld. Als je de scan al hebt en alleen de achtergrond wit wilt maken en de tekst scherper wilt maken, heb je helemaal geen fotobewerkingssoftware nodig: upload het bestand hier en download binnen enkele seconden een opgeschoonde versie, zonder iets te installeren."
+    }
   }
 ]

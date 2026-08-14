@@ -70,5 +70,13 @@
       "@type": "Answer",
       "text": "Ja. PDFree ist kostenlos ohne Abo, ohne tägliche oder stündliche Limits und ohne Anmeldung. Der Ausgabe wird kein Wasserzeichen hinzugefügt, und es gibt keine Dateigrößenbeschränkung."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann ich ein bereits gescanntes Dokument ohne Photoshop korrigieren?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja — genau dafür ist dieses Tool da. Wenn du den Scan schon hast und nur den Hintergrund aufhellen und den Text schärfen musst, brauchst du keine Bildbearbeitungssoftware: Datei hier hochladen und in Sekunden eine bereinigte Version herunterladen, ohne etwas zu installieren."
+    }
   }
 ]

@@ -70,5 +70,13 @@
       "@type": "Answer",
       "text": "Ya. PDFree gratis tanpa langganan, tanpa batas harian atau per jam, dan tanpa pendaftaran. Tidak ada watermark yang ditambahkan pada hasil dan tidak ada batasan ukuran file."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah saya memperbaiki dokumen yang sudah discan tanpa Photoshop?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Bisa — memang untuk itulah alat ini dibuat. Jika Anda sudah punya hasil scan dan hanya perlu memutihkan latar belakang serta mempertajam teks, Anda tidak perlu perangkat lunak edit foto sama sekali: unggah file di sini dan unduh versi yang sudah dibersihkan dalam hitungan detik, tanpa perlu menginstal apa pun."
+    }
   }
 ]

@@ -70,5 +70,13 @@
       "@type": "Answer",
       "text": "Sí. PDFree es gratis, sin suscripción, sin límites diarios ni por hora, y sin registro. No se añade marca de agua al resultado y no hay restricción de tamaño de archivo."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Puedo corregir un documento ya escaneado sin Photoshop?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sí — para eso está exactamente esta herramienta. Si ya tienes el escaneo y solo necesitas blanquear el fondo y agudizar el texto, no necesitas ningún software de edición de fotos: sube el archivo aquí y descarga una versión limpia en segundos, sin instalar nada."
+    }
   }
 ]

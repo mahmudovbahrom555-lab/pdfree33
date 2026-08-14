@@ -86,5 +86,13 @@
       "@type": "Answer",
       "text": "Tak. PDFree jest darmowe, bez subskrypcji, bez dziennych limitów i bez rejestracji."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy moja uczelnia lub instytucja wymaga formatu PDF/A do pracy dyplomowej lub zgłoszenia?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "To zależy od instytucji — nie ma jednej globalnej zasady. Niektóre repozytoria uczelniane i portale rządowe wymagają konkretnie PDF/A do długoterminowej archiwizacji, inne akceptują zwykły PDF. Sprawdź dokładne wymagania w wytycznych dziekanatu lub portalu, a następnie użyj kontroli zgodności PDFree, aby sprawdzić, czy Twój plik już spełnia wymogi, lub konwertera, aby dostosować go do wymagań."
+    }
   }
 ]

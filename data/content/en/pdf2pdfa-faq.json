@@ -86,5 +86,13 @@
       "@type": "Answer",
       "text": "Yes. PDFree is free with no subscription, no daily limits, and no signup."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Does my university or institution require PDF/A for my thesis or submission?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "It depends on the institution — there's no single global rule. Some university repositories and government portals require PDF/A specifically for long-term archiving, while others accept a regular PDF. Check your thesis office's or portal's submission guidelines for the exact requirement, then use PDFree's compliance check to see if your file already qualifies, or the converter to make it comply either way."
+    }
   }
 ]

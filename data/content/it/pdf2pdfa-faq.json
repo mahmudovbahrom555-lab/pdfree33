@@ -86,5 +86,13 @@
       "@type": "Answer",
       "text": "Sì. PDFree è gratuito senza abbonamento, senza limiti giornalieri e senza registrazione."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "La mia università o istituzione richiede il PDF/A per la tesi o per la consegna?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Dipende dall'istituzione — non esiste una regola globale unica. Alcuni archivi universitari e portali governativi richiedono specificamente il PDF/A per l'archiviazione a lungo termine, mentre altri accettano un PDF normale. Controlla le linee guida di consegna del tuo ufficio tesi o portale per conoscere il requisito esatto, poi usa il controllo di conformità di PDFree per vedere se il tuo file è già idoneo, oppure il convertitore per renderlo conforme."
+    }
   }
 ]

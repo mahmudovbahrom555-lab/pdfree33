@@ -86,5 +86,13 @@
       "@type": "Answer",
       "text": "Có. PDFree miễn phí, không có đăng ký, không có giới hạn hàng ngày và không cần đăng ký tài khoản."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Trường đại học hoặc tổ chức của tôi có yêu cầu PDF/A cho luận văn hoặc hồ sơ nộp không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Điều này tùy thuộc vào từng tổ chức — không có quy định chung áp dụng cho tất cả. Một số kho lưu trữ của trường đại học và cổng thông tin chính phủ yêu cầu cụ thể định dạng PDF/A để lưu trữ lâu dài, trong khi những nơi khác chấp nhận PDF thông thường. Hãy kiểm tra hướng dẫn nộp hồ sơ của phòng đào tạo hoặc cổng thông tin để biết yêu cầu chính xác, sau đó dùng công cụ kiểm tra tuân thủ của PDFree để xem file của bạn đã đạt chuẩn chưa, hoặc dùng công cụ chuyển đổi để làm cho nó tuân thủ."
+    }
   }
 ]

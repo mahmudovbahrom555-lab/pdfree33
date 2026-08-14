@@ -70,5 +70,13 @@
       "@type": "Answer",
       "text": "Tak. PDFree jest darmowe, bez subskrypcji, bez dziennych lub godzinowych limitów i bez rejestracji. Do wyniku nie dodaje się znaku wodnego i nie ma ograniczenia rozmiaru pliku."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy mogę poprawić już zeskanowany dokument bez Photoshopa?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak — dokładnie do tego służy to narzędzie. Jeśli masz już skan i musisz tylko rozjaśnić tło oraz wyostrzyć tekst, nie potrzebujesz żadnego oprogramowania do edycji zdjęć: prześlij plik tutaj i pobierz oczyszczoną wersję w kilka sekund, bez instalowania czegokolwiek."
+    }
   }
 ]

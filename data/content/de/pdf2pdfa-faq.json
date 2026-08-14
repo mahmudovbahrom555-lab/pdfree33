@@ -86,5 +86,13 @@
       "@type": "Answer",
       "text": "Ja. PDFree ist kostenlos, ohne Abonnement, ohne Tageslimit und ohne Anmeldung."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Verlangt meine Universität oder Institution PDF/A für meine Abschlussarbeit oder Einreichung?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Das hängt von der Institution ab — es gibt keine einheitliche globale Regel. Manche Universitätsarchive und Behördenportale verlangen speziell PDF/A für die Langzeitarchivierung, andere akzeptieren ein normales PDF. Prüfe die genauen Vorgaben deines Prüfungsamts oder Portals und nutze dann PDFrees Konformitätsprüfung, um zu sehen, ob deine Datei bereits geeignet ist, oder den Konverter, um sie entsprechend anzupassen."
+    }
   }
 ]

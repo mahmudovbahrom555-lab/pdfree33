@@ -70,5 +70,13 @@
       "@type": "Answer",
       "text": "Sim. O PDFree é grátis, sem assinatura, sem limites diários ou por hora, e sem cadastro. Nenhuma marca d'água é adicionada ao resultado e não há restrição de tamanho de arquivo."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso corrigir um documento já digitalizado sem Photoshop?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim — é exatamente para isso que esta ferramenta serve. Se você já tem a digitalização e só precisa clarear o fundo e deixar o texto mais nítido, não precisa de nenhum software de edição de fotos: envie o arquivo aqui e baixe uma versão limpa em segundos, sem instalar nada."
+    }
   }
 ]

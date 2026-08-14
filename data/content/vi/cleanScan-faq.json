@@ -70,5 +70,13 @@
       "@type": "Answer",
       "text": "Có. PDFree miễn phí, không đăng ký gói, không giới hạn hàng ngày hoặc hàng giờ, và không cần đăng ký tài khoản. Không có watermark nào được thêm vào kết quả và không có giới hạn kích thước tệp."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Tôi có thể sửa một tài liệu đã scan mà không cần Photoshop không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có — công cụ này sinh ra chính là để làm việc đó. Nếu bạn đã có bản scan và chỉ cần làm trắng nền, làm rõ nét chữ, bạn hoàn toàn không cần phần mềm chỉnh sửa ảnh nào: tải file lên đây và tải về bản đã làm sạch chỉ trong vài giây, không cần cài đặt gì cả."
+    }
   }
 ]
