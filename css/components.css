@@ -264,6 +264,10 @@ button,
 .reorder-hint  { font-size: 11px; color: var(--text3); margin: 4px 0 0 2px; }
 
 /* ── Action button (merge/process) ── */
+/* position:sticky keeps this reachable without scrolling past a long file
+   list, but only while its container (main#toolArea) is still in view —
+   it releases back to normal flow once the user scrolls into the SEO
+   content below, since that content is a sibling, not a descendant. */
 .merge-btn {
   width: 100%;
   margin-top: 20px;
@@ -281,6 +285,10 @@ button,
   align-items: center;
   justify-content: center;
   gap: 8px;
+  position: sticky;
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  z-index: 10;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
 }
 .merge-btn:hover:not(:disabled) {
   background: #235f3c;
