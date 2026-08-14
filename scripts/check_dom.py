@@ -10,9 +10,29 @@ Exit code 0 = all good. Exit code 1 = missing IDs found.
 
 import sys
 import re
+import json
 from pathlib import Path
 
 ROOT = Path(__file__).parent.parent
+
+# Every slug tools-config.json actually generates a Jinja tool page for, across
+# all locales — e.g. 'pdf-zeichnen' (draw's DE slug), 'merge-pdf' (merge's EN
+# slug). A "<code>/<slug>/index.html" path is only safe to skip as "generated,
+# already covered by the template" if <slug> is genuinely one of these —
+# otherwise it's a hand-written specialty page that only HAPPENS to live at a
+# path shaped like a generated one (see _is_generated_tool_page's docstring).
+def _real_tool_slugs() -> set[str]:
+    config_path = ROOT / 'data' / 'tools-config.json'
+    with open(config_path, encoding='utf-8') as f:
+        config = json.load(f)
+    slugs = set()
+    for tool in config['tools']:
+        for slug in tool.get('slugs', {}).values():
+            if slug:
+                slugs.add(slug)
+    return slugs
+
+REAL_TOOL_SLUGS = _real_tool_slugs()
 
 # IDs every page that loads app.js must have.
 # Home-page sections (hero, trustAlert, etc.) are NOT required — tool pages
@@ -85,7 +105,30 @@ def check_file(html_path: Path) -> tuple[list[str], list[str]]:
     missing_theme = []
     if 'theme.js' not in text:
         missing_theme = ['theme.js missing — page will always render with default (dark) theme, ignoring user preference']
-    return missing_ids, missing_tool + bad_cards + missing_theme
+    # Hand-written specialty pages (compare-pdf, draw-on-pdf's locale variants,
+    # merge-scanned-pdf, etc.) live outside the Jinja tool-page.html template
+    # and don't automatically inherit nav updates the way generated tool pages
+    # do. This exact gap shipped for real (compare-pdf, draw-on-pdf's DE/ES/
+    # FR/PT variants, and 33 more _lang_specialty pages had no way for a user
+    # to switch language — some were missing dark mode entirely too, having
+    # never included theme.js at all) — caught only by a live user report,
+    # not CI, because these paths were being silently skipped below (see
+    # the `len(rel_parts) == 3` exclusion in main() — it used to assume ANY
+    # "<code>/<slug>/index.html" was Jinja-generated, which was wrong for
+    # slugs that aren't real tools-config.json entries).
+    # noindex pages are deliberately excluded from this specific check: embed/
+    # widgets (embed/compress) have no <nav> at all by design (meant to be
+    # embedded inside someone else's page), and 404/doorway-placeholder pages
+    # (highlight-pdf) aren't meant to be discovered/browsed the normal way —
+    # adding nav chrome to them doesn't serve the thing this check protects
+    # against (a real, linked-to page silently losing its language switcher).
+    missing_nav = []
+    if 'noindex' not in text:
+        if 'lang-switch' not in text:
+            missing_nav.append('lang-switch missing — language switcher disappears on this page (see js/priorityNav.js\'s sibling .nav-more for the matching "More tools" overflow menu, likely missing too)')
+        if 'nav-more' not in text:
+            missing_nav.append('nav-more missing — tools beyond the hardcoded nav-links list are unreachable from this page without going back to the homepage')
+    return missing_ids, missing_tool + bad_cards + missing_theme + missing_nav
 
 
 # ── Homepage tool-options-container parity ─────────────────────
@@ -190,10 +233,19 @@ def main():
         # must not cause every file to be skipped.
         if any(p.startswith('.') or p in ('node_modules', 'dist', 'data') for p in rel_parts):
             continue
-        # Skip .template.html files and generated localized tool pages (de/slug/, es/slug/, etc.)
         if path.name.endswith('.template.html'):
             continue
-        if len(rel_parts) == 3 and rel_parts[0] in LANG_CODES:
+        # Skip genuinely Jinja-generated localized tool
+        # pages (de/pdf-zusammenfuehren/, es/pdf-a-word/, etc.) — anything whose
+        # middle path segment is a real tools-config.json slug, regardless of
+        # locale code. NOT just "any <code>/<slug>/index.html shape starting
+        # with one of 5 hardcoded codes" — that used to silently wave through
+        # hand-written specialty pages (draw-on-pdf's DE/ES/FR/PT variants,
+        # merge-scanned-pdf, compress-pdf-for-email, etc.) that only happen to
+        # live at a path shaped like a generated one, letting them drift out of
+        # sync with the template with zero build-time signal. See check_file()'s
+        # lang-switch/nav-more checks for what this exact gap let ship for real.
+        if len(rel_parts) == 3 and rel_parts[1] in REAL_TOOL_SLUGS:
             continue
         missing_ids, missing_tool = check_file(path)
         issues = missing_ids + missing_tool

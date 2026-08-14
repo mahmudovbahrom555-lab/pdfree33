@@ -64,6 +64,7 @@
 
 
   <script src="../js/theme.js"></script>
+  <script src="../js/priorityNav.js" defer></script>
 
   <script type="application/ld+json">
   {
@@ -179,6 +180,20 @@
       <a href="../protect-pdf/" class="nav-link" data-tool="protect">Protect</a>
       <a href="../pdf-to-word/" class="nav-link" data-tool="pdf2word">PDF→Word</a>
     </div>
+        <details class="nav-more" id="navMore">
+      <summary aria-label="More tools">More <span class="nav-more__badge"></span></summary>
+      <div class="nav-more__menu"></div>
+    </details>
+    <details class="lang-switch" id="langSwitch">
+      <summary aria-label="Change language">🌐 EN</summary>
+      <div class="lang-switch__menu" role="menu">
+        <a href="https://pdfree.io/pdf-tools-no-upload/" role="menuitem" aria-current="true">English</a>
+        <a href="https://pdfree.io/de/pdf-tools-ohne-upload/" role="menuitem">Deutsch</a>
+        <a href="https://pdfree.io/es/herramientas-pdf-sin-subir/" role="menuitem">Español</a>
+        <a href="https://pdfree.io/fr/outils-pdf-sans-upload/" role="menuitem">Français</a>
+        <a href="https://pdfree.io/pt/ferramentas-pdf-sem-upload/" role="menuitem">Português</a>
+      </div>
+    </details>
     <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode"></button>
   </nav>
 

@@ -69,6 +69,7 @@
 
 
   <script src="../../js/theme.js"></script>
+  <script src="../../js/priorityNav.js" defer></script>
 
   <script type="application/ld+json">
   {
@@ -185,6 +186,20 @@
       <a href="/pt/proteger-pdf/" class="nav-link" data-tool="protect">Proteger</a>
       <a href="/pt/pdf-para-word/" class="nav-link" data-tool="pdf2word">PDF→Word</a>
     </div>
+    <details class="nav-more" id="navMore">
+      <summary aria-label="More tools">Mais <span class="nav-more__badge"></span></summary>
+      <div class="nav-more__menu"></div>
+    </details>
+    <details class="lang-switch" id="langSwitch">
+      <summary aria-label="Change language">🌐 PT</summary>
+      <div class="lang-switch__menu" role="menu">
+        <a href="https://pdfree.io/pdf-tools-no-upload/" role="menuitem">English</a>
+        <a href="https://pdfree.io/de/pdf-tools-ohne-upload/" role="menuitem">Deutsch</a>
+        <a href="https://pdfree.io/es/herramientas-pdf-sin-subir/" role="menuitem">Español</a>
+        <a href="https://pdfree.io/fr/outils-pdf-sans-upload/" role="menuitem">Français</a>
+        <a href="https://pdfree.io/pt/ferramentas-pdf-sem-upload/" role="menuitem" aria-current="true">Português</a>
+      </div>
+    </details>
     <button id="themeToggle" class="theme-toggle" aria-label="Alternar modo escuro" title="Alternar modo escuro"></button>
   </nav>
 

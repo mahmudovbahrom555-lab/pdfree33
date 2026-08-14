@@ -161,11 +161,12 @@
 }
   </script>
   <script src="../../js/theme.js"></script>
+  <script src="../../js/priorityNav.js" defer></script>
 </head>
 <body data-tool="split">
 
   <nav>
-    <a href="../" class="logo" aria-label="Go to homepage" style="text-decoration:none">
+    <a href="../" class="logo" id="logo" aria-label="Go to homepage" style="text-decoration:none">
       <span class="logo-text">PDF<span>ree</span></span>
     </a>
     <div class="nav-links">
@@ -182,6 +183,20 @@
       <a href="/pt/girar-pdf/" class="nav-link" data-tool="rotate">Rotate</a>
       <a href="/pt/proteger-pdf/" class="nav-link" data-tool="protect">Protect</a>
     </div>
+    <details class="nav-more" id="navMore">
+      <summary aria-label="More tools">Mais <span class="nav-more__badge"></span></summary>
+      <div class="nav-more__menu"></div>
+    </details>
+    <details class="lang-switch" id="langSwitch">
+      <summary aria-label="Change language">🌐 PT</summary>
+      <div class="lang-switch__menu" role="menu">
+        <a href="https://pdfree.io/split-pdf-into-multiple-files/" role="menuitem">English</a>
+        <a href="https://pdfree.io/de/pdf-aufteilen-mehrere-dateien/" role="menuitem">Deutsch</a>
+        <a href="https://pdfree.io/fr/diviser-pdf-plusieurs-fichiers/" role="menuitem">Français</a>
+        <a href="https://pdfree.io/es/dividir-pdf-en-varios-archivos/" role="menuitem">Español</a>
+        <a href="https://pdfree.io/pt/dividir-pdf-em-varios-arquivos/" role="menuitem" aria-current="true">Português</a>
+      </div>
+    </details>
     <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode"></button>
   </nav>
 

@@ -60,6 +60,7 @@
 
 
   <script src="../js/theme.js"></script>
+  <script src="../js/priorityNav.js" defer></script>
 
   <script type="application/ld+json">
   {
@@ -175,6 +176,16 @@
       <a href="../protect-pdf/" class="nav-link" data-tool="protect">Protect</a>
       <a href="../pdf-to-word/" class="nav-link" data-tool="pdf2word">PDF→Word</a>
     </div>
+        <details class="nav-more" id="navMore">
+      <summary aria-label="More tools">More <span class="nav-more__badge"></span></summary>
+      <div class="nav-more__menu"></div>
+    </details>
+    <details class="lang-switch" id="langSwitch">
+      <summary aria-label="Change language">🌐 EN</summary>
+      <div class="lang-switch__menu" role="menu">
+        <a href="https://pdfree.io/free-pdf-tools-no-signup/" role="menuitem" aria-current="true">English</a>
+      </div>
+    </details>
     <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode"></button>
   </nav>
 

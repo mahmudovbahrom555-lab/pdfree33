@@ -78,6 +78,9 @@
   <link rel="stylesheet" href="../../css/layout.css">
   <link rel="stylesheet" href="../../css/components.css">
 
+  <script src="../../js/theme.js"></script>
+  <script src="../../js/priorityNav.js" defer></script>
+
   <script type="application/ld+json">
   {
   "@context": "https://schema.org",
@@ -181,6 +184,21 @@
       <a href="../pdf-zu-word/" class="nav-link" data-tool="pdf2word">PDF→Word</a>
       <a href="../pdf-abflachen/" class="nav-link" data-tool="flatten">Flatten</a>
     </div>
+    <details class="nav-more" id="navMore">
+      <summary aria-label="More tools">Mehr <span class="nav-more__badge"></span></summary>
+      <div class="nav-more__menu"></div>
+    </details>
+    <details class="lang-switch" id="langSwitch">
+      <summary aria-label="Change language">🌐 DE</summary>
+      <div class="lang-switch__menu" role="menu">
+        <a href="https://pdfree.io/draw-on-pdf/" role="menuitem">English</a>
+        <a href="https://pdfree.io/de/pdf-zeichnen/" role="menuitem" aria-current="true">Deutsch</a>
+        <a href="https://pdfree.io/es/dibujar-en-pdf/" role="menuitem">Español</a>
+        <a href="https://pdfree.io/fr/dessiner-sur-pdf/" role="menuitem">Français</a>
+        <a href="https://pdfree.io/pt/desenhar-no-pdf/" role="menuitem">Português</a>
+      </div>
+    </details>
+    <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode"></button>
   </nav>
 
   <!-- ── Tool workspace ── -->

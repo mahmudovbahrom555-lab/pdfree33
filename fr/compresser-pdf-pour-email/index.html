@@ -161,11 +161,12 @@
 }
   </script>
   <script src="../../js/theme.js"></script>
+  <script src="../../js/priorityNav.js" defer></script>
 </head>
 <body data-tool="compress-email">
 
   <nav>
-    <a href="../" class="logo" aria-label="Go to homepage" style="text-decoration:none">
+    <a href="../" class="logo" id="logo" aria-label="Go to homepage" style="text-decoration:none">
       <span class="logo-text">PDF<span>ree</span></span>
     </a>
     <div class="nav-links">
@@ -182,6 +183,20 @@
       <a href="/fr/rotation-pdf/" class="nav-link" data-tool="rotate">Rotate</a>
       <a href="/fr/proteger-pdf/" class="nav-link" data-tool="protect">Protect</a>
     </div>
+    <details class="nav-more" id="navMore">
+      <summary aria-label="More tools">Plus <span class="nav-more__badge"></span></summary>
+      <div class="nav-more__menu"></div>
+    </details>
+    <details class="lang-switch" id="langSwitch">
+      <summary aria-label="Change language">🌐 FR</summary>
+      <div class="lang-switch__menu" role="menu">
+        <a href="https://pdfree.io/compress-pdf-for-email/" role="menuitem">English</a>
+        <a href="https://pdfree.io/de/pdf-fuer-email-komprimieren/" role="menuitem">Deutsch</a>
+        <a href="https://pdfree.io/fr/compresser-pdf-pour-email/" role="menuitem" aria-current="true">Français</a>
+        <a href="https://pdfree.io/es/comprimir-pdf-para-email/" role="menuitem">Español</a>
+        <a href="https://pdfree.io/pt/comprimir-pdf-para-email/" role="menuitem">Português</a>
+      </div>
+    </details>
     <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode"></button>
   </nav>
 
