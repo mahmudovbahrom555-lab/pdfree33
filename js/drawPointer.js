@@ -771,6 +771,20 @@ function _onUp(e) {
       cmd = type === 'highlight' ? _buildHighlightCmd(rest) : rest;
     }
     _pushCommand(cmd);
+  } else if (_current.type === 'marker' && _current.points.length === 1) {
+    // Tap (no drag) with the marker tool on a text line — auto-mark the whole
+    // line instead of discarding the tap, so users don't have to hand-drag
+    // precisely across text just to underline/mark one line.
+    const [x, y] = _current.points[0];
+    const line = _lineRectAtPoint(x, y);
+    if (line) {
+      const midY = line.y + line.h / 2;
+      _pushCommand({
+        type: 'marker', id: ++_cmdId,
+        points: [[line.x, midY], [line.x + line.w, midY]],
+        color: _current.color, width: _current.width, opacity: MARKER_OPACITY, comment: '',
+      });
+    }
   }
 
   _current = null;
@@ -910,6 +924,21 @@ function _hitTestText(x, y) {
   }
   ctx.restore();
   return null;
+}
+
+// Finds the full text line at a click point (marker's tap-to-underline shortcut).
+// Same "same line = top-y within 70% of item height" grouping as _textRectsFromDrag,
+// just seeded from a single point instead of a drag rectangle's hit-set.
+function _lineRectAtPoint(x, y) {
+  const items = getPageTextCache().get(getCurrentPage()) ?? [];
+  const hitItem = items.find(it => x >= it.x && x <= it.x + it.w && y >= it.y && y <= it.y + it.h);
+  if (!hitItem) return null;
+  const lineItems = items.filter(it => Math.abs(it.y - hitItem.y) <= hitItem.h * 0.7);
+  const xs = lineItems.map(it => it.x);
+  const xe = lineItems.map(it => it.x + it.w);
+  const ys = lineItems.map(it => it.y);
+  const ye = lineItems.map(it => it.y + it.h);
+  return { x: Math.min(...xs), y: Math.min(...ys), w: Math.max(...xe) - Math.min(...xs), h: Math.max(...ye) - Math.min(...ys) };
 }
 
 // ── Smart highlight ────────────────────────────────────────────
