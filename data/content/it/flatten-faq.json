@@ -70,5 +70,13 @@
       "@type": "Answer",
       "text": "Sì. La modalità batch di PDFree appiattisce i campi modulo e le annotazioni di quanti file PDF selezioni, elaborando ognuno localmente nel tuo browser. Scarica tutti i file appiattiti insieme in uno ZIP, senza limiti di dimensione."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Come blocco un PDF compilato in modo che nessuno possa modificarlo?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "È esattamente ciò che fa l'appiattimento — è il modo standard per bloccare un modulo PDF compilato. Fai clic su «Appiattisci PDF» e ogni valore dei campi diventa contenuto di pagina permanente e non modificabile; non esiste un pulsante «blocca» separato, perché l'appiattimento è il blocco."
+    }
   }
 ]

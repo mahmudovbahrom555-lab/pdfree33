@@ -78,5 +78,13 @@
       "@type": "Answer",
       "text": "Yes. PDFree's batch mode flattens form fields and annotations across as many PDF files as you select, processing each one locally in your browser. Download all the flattened files together as a ZIP — no size cap, no signup required."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "How do I lock a filled-out PDF so no one can edit it?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "That's exactly what flattening does — it's the standard way to lock a filled PDF form. Click Flatten PDF and every field value becomes permanent, non-editable page content; there's no separate \"lock\" button because flattening is the lock."
+    }
   }
 ]

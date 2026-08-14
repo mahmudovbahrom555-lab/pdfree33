@@ -62,5 +62,13 @@
       "@type": "Answer",
       "text": "Có. Chế độ xử lý hàng loạt của PDFree làm phẳng các trường biểu mẫu và chú thích trên bao nhiêu file PDF bạn chọn, xử lý từng file ngay trong trình duyệt. Tải xuống tất cả các file đã làm phẳng cùng nhau trong một ZIP, không giới hạn dung lượng."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Làm sao để khóa một file PDF đã điền để không ai chỉnh sửa được?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Đó chính xác là điều mà việc làm phẳng làm — đây là cách chuẩn để khóa một biểu mẫu PDF đã điền. Nhấn \"Làm phẳng PDF\" và mọi giá trị trong trường sẽ trở thành nội dung trang cố định, không thể chỉnh sửa; không có nút \"khóa\" riêng vì làm phẳng chính là cách khóa."
+    }
   }
 ]

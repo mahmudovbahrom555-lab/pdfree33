@@ -70,5 +70,13 @@
       "@type": "Answer",
       "text": "Tak. Tryb wsadowy PDFree spłaszcza pola formularzy i adnotacje w dowolnej liczbie wybranych plików PDF, przetwarzając każdy lokalnie w przeglądarce. Pobierz wszystkie spłaszczone pliki razem jako jedno archiwum ZIP, bez limitu rozmiaru."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Jak zablokować wypełniony PDF, aby nikt nie mógł go edytować?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "To właśnie robi spłaszczanie — to standardowy sposób na zablokowanie wypełnionego formularza PDF. Kliknij „Spłaszcz PDF”, a wartość każdego pola stanie się trwałą, nieedytowalną treścią strony; nie ma osobnego przycisku „zablokuj”, ponieważ spłaszczanie samo w sobie jest blokadą."
+    }
   }
 ]

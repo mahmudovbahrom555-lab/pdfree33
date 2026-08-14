@@ -62,5 +62,13 @@
       "@type": "Answer",
       "text": "Ya. Mode batch PDFree meratakan bidang formulir dan anotasi di sebanyak mungkin file PDF yang Anda pilih, memproses masing-masing secara lokal di browser Anda. Unduh semua file yang telah diratakan bersama dalam satu ZIP, tanpa batas ukuran."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Bagaimana cara mengunci PDF yang sudah diisi agar tidak bisa diedit orang lain?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Itulah sebenarnya yang dilakukan proses meratakan (flatten) — cara standar untuk mengunci formulir PDF yang sudah diisi. Klik \"Ratakan PDF\" dan setiap nilai kolom akan menjadi konten halaman permanen yang tidak bisa diedit; tidak ada tombol \"kunci\" terpisah, karena meratakan itu sendiri adalah kuncinya."
+    }
   }
 ]

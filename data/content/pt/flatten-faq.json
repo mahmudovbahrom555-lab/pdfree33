@@ -86,5 +86,13 @@
       "@type": "Answer",
       "text": "Sim. O modo em lote do PDFree achata campos de formulário e anotações em quantos arquivos PDF você selecionar, processando cada um localmente no seu navegador. Baixe todos os arquivos achatados juntos em um ZIP, sem limite de tamanho."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Como bloqueio um PDF preenchido para que ninguém possa editá-lo?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "É exatamente isso que o achatamento faz — é a forma padrão de bloquear um formulário PDF preenchido. Clique em «Achatar PDF» e cada valor de campo se torna conteúdo permanente e não editável da página; não existe um botão «bloquear» separado, porque o achatamento é o bloqueio."
+    }
   }
 ]

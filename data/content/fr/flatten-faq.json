@@ -86,5 +86,13 @@
       "@type": "Answer",
       "text": "Oui. Le mode par lots de PDFree aplatit les champs de formulaire et annotations d'autant de fichiers PDF que vous sélectionnez, chacun traité localement dans votre navigateur. Téléchargez tous les fichiers aplatis ensemble dans un ZIP, sans limite de taille."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Comment verrouiller un PDF rempli pour que personne ne puisse le modifier ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "C'est exactement ce que fait l'aplatissement — c'est la méthode standard pour verrouiller un formulaire PDF rempli. Cliquez sur « Aplatir le PDF » et chaque valeur de champ devient un contenu de page permanent, non modifiable ; il n'y a pas de bouton « verrouiller » séparé, car l'aplatissement est le verrouillage."
+    }
   }
 ]

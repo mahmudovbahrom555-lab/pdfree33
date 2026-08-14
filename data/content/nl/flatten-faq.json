@@ -70,5 +70,13 @@
       "@type": "Answer",
       "text": "Ja. PDFree's batchmodus vlakt formuliervelden en annotaties af in zoveel PDF-bestanden als je selecteert, elk lokaal verwerkt in je browser. Download alle afgevlakte bestanden samen als één ZIP, zonder groottelimiet."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Hoe vergrendel ik een ingevulde PDF zodat niemand deze kan bewerken?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Dat is precies wat afvlakken doet — het is de standaardmanier om een ingevuld PDF-formulier te vergrendelen. Klik op \"PDF afvlakken\" en elke veldwaarde wordt permanente, niet-bewerkbare pagina-inhoud; er is geen apart \"vergrendel\"-knop, want afvlakken ís de vergrendeling."
+    }
   }
 ]

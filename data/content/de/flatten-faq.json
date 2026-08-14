@@ -78,5 +78,13 @@
       "@type": "Answer",
       "text": "Ja. Der Stapelmodus flacht Formularfelder und Anmerkungen in beliebig vielen PDF-Dateien ab, jede einzeln im Browser verarbeitet. Lade alle abgeflachten Dateien gemeinsam als ZIP herunter — ohne Größenbegrenzung."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Wie sperre ich ein ausgefülltes PDF, damit es niemand mehr bearbeiten kann?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Genau das macht das Abflachen — es ist der Standardweg, um ein ausgefülltes PDF-Formular zu sperren. Klicke auf „PDF abflachen“, und jeder Feldwert wird zu dauerhaftem, nicht bearbeitbarem Seiteninhalt — einen separaten „Sperren“-Button gibt es nicht, weil das Abflachen selbst die Sperre ist."
+    }
   }
 ]

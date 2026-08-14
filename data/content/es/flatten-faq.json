@@ -86,5 +86,13 @@
       "@type": "Answer",
       "text": "Sí. El modo por lotes de PDFree aplana campos de formulario y anotaciones en tantos archivos PDF como selecciones, procesando cada uno localmente en tu navegador. Descarga todos los archivos aplanados juntos en un ZIP, sin límite de tamaño ni registro."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Cómo bloqueo un PDF rellenado para que nadie pueda editarlo?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Eso es exactamente lo que hace el aplanado — es la forma estándar de bloquear un formulario PDF rellenado. Haz clic en «Aplanar PDF» y cada valor de campo se convierte en contenido de página permanente y no editable; no hay un botón de «bloquear» aparte, porque el aplanado es el bloqueo."
+    }
   }
 ]

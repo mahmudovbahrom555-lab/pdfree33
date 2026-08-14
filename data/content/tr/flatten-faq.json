@@ -78,5 +78,13 @@
       "@type": "Answer",
       "text": "Evet. PDFree'nin toplu modu, seçtiğiniz kadar PDF dosyasındaki form alanlarını ve notları düzleştirir, her birini tarayıcınızda yerel olarak işler. Tüm düzleştirilmiş dosyaları tek bir ZIP olarak birlikte indirirsiniz, boyut sınırı yoktur."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Doldurulmuş bir PDF'yi kimse düzenleyemesin diye nasıl kilitlerim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Düzleştirme tam olarak bunu yapar — doldurulmuş bir PDF formunu kilitlemenin standart yoludur. \"PDF'yi Düzleştir\"e tıklayın, her alan değeri kalıcı, düzenlenemeyen sayfa içeriğine dönüşür; ayrı bir \"kilitle\" düğmesi yoktur, çünkü düzleştirme zaten kilitlemenin kendisidir."
+    }
   }
 ]
