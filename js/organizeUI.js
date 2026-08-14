@@ -50,6 +50,16 @@ import { t, tp } from './i18n.js';
 const _LARGE_DOC_WARN_THRESHOLD = 150; // soft warning only, matches rotateUI.js
 const MAX_RENDERS = 3;                 // concurrent lazy thumb renders
 
+// A pixel counts as "ink" once it deviates from pure white by more than
+// this much (sum of the three RGB deltas) — tolerant of light scanner
+// grain/JPEG noise on a genuinely blank page, still catches real text.
+const _INK_PIXEL_THRESHOLD = 30;
+// A page is flagged "looks blank" once its ink-pixel ratio falls below
+// this — deliberately generous (catches a lone page number/stamp too):
+// this only pre-selects candidates for the user to review, never deletes
+// anything on its own, so a false positive costs one click to deselect.
+const _BLANK_INK_RATIO = 0.006;
+
 // ── State ──────────────────────────────────────────────────────
 let _pageCount        = 0;
 let _originalIndex    = []; // position → source page index
@@ -57,6 +67,7 @@ let _deltas            = []; // position → rotation delta
 let _deletedFlags       = []; // position → 0|1
 let _initialRotations = []; // origIdx → rotation baked into source PDF
 let _thumbnailURLs    = []; // origIdx → objectURL | null
+let _blankFlags       = []; // origIdx → true|false|undefined (undefined = not yet rendered)
 let _selected          = new Set(); // Set<position>
 let _prevSnapshot      = null; // {originalIndex, deltas, deletedFlags} — single-level undo
 let _useThumbs         = false;
@@ -106,6 +117,7 @@ export async function initOrganizeOptions(file) {
     _deltas        = new Array(_pageCount).fill(0);
     _deletedFlags  = new Array(_pageCount).fill(0);
     _thumbnailURLs = new Array(_pageCount).fill(null);
+    _blankFlags    = new Array(_pageCount).fill(undefined);
     _selected      = new Set();
     _prevSnapshot  = null;
 
@@ -200,10 +212,15 @@ async function _renderThumb(origIdx) {
     const page     = await _pdfJsDoc.getPage(origIdx + 1);
     const viewport = page.getViewport({ scale: 0.4 });
 
-    const canvas  = document.createElement('canvas');
+    const canvas = document.createElement('canvas');
     canvas.width  = viewport.width;
     canvas.height = viewport.height;
-    await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+    const ctx = canvas.getContext('2d');
+    await page.render({ canvasContext: ctx, viewport }).promise;
+
+    // Piggybacks on the render this thumbnail needed anyway — no extra
+    // page.render() call. See _INK_PIXEL_THRESHOLD/_BLANK_INK_RATIO above.
+    _blankFlags[origIdx] = _looksBlank(ctx, canvas.width, canvas.height);
 
     const blob = await new Promise(res => canvas.toBlob(res, 'image/jpeg', 0.72));
     _thumbnailURLs[origIdx] = URL.createObjectURL(blob);
@@ -212,6 +229,18 @@ async function _renderThumb(origIdx) {
     const pos = _originalIndex.indexOf(origIdx);
     if (pos !== -1) _updateCard(pos); // content-only — safe, doesn't touch drag listeners
   } catch { /* leave placeholder — cosmetic only */ }
+}
+
+function _looksBlank(ctx, w, h) {
+  if (w === 0 || h === 0) return false;
+  const { data } = ctx.getImageData(0, 0, w, h);
+  let inkPixels = 0;
+  const totalPixels = w * h;
+  for (let i = 0; i < data.length; i += 4) {
+    const deviation = (255 - data[i]) + (255 - data[i + 1]) + (255 - data[i + 2]);
+    if (deviation > _INK_PIXEL_THRESHOLD) inkPixels++;
+  }
+  return (inkPixels / totalPixels) < _BLANK_INK_RATIO;
 }
 
 // ── Main render ────────────────────────────────────────────────
@@ -239,6 +268,7 @@ function _render(file) {
         <button type="button" class="split-action-btn" id="orgSelAll">${t('select_all_short')}</button>
         <button type="button" class="split-action-btn" id="orgSelOdd">${t('rot_odd')}</button>
         <button type="button" class="split-action-btn" id="orgSelEven">${t('rot_even')}</button>
+        ${_useThumbs ? `<button type="button" class="split-action-btn" id="orgSelBlank">${t('org_sel_blank')}</button>` : ''}
         <button type="button" class="split-action-btn" id="orgSelNone">${t('deselect_all_short')}</button>
         <button type="button" class="split-action-btn org-delete-sel-btn" id="orgDeleteSel">${t('org_delete_selected')}</button>
       </div>
@@ -283,9 +313,13 @@ function _thumbInnerHTML(pos) {
   const deleted = !!_deletedFlags[pos];
   const visual  = ((_initialRotations[origIdx] + delta) % 360 + 360) % 360;
   const changed = delta !== 0;
+  const blank   = !!_blankFlags[origIdx];
 
   const badgeHTML = (!deleted && changed)
     ? `<span class="rot-badge" aria-label="${t('rot_badge_aria', { delta })}">${delta > 0 ? '+' : ''}${delta}°</span>`
+    : '';
+  const blankBadgeHTML = (!deleted && blank)
+    ? `<span class="org-blank-badge" aria-label="${t('org_blank_badge_aria')}">${t('org_blank_badge')}</span>`
     : '';
   const actionBtnHTML = deleted
     ? `<button type="button" class="org-card__action org-card__action--restore" data-act="restore" aria-label="${esc(t('org_restore_btn'))}">↺</button>`
@@ -296,20 +330,23 @@ function _thumbInnerHTML(pos) {
     const img = url
       ? `<img src="${esc(url)}" alt="${t('org_page_alt', { n: pos + 1 })}" style="transform:rotate(${visual}deg)" loading="lazy">`
       : '';
-    return `${img}${badgeHTML}${actionBtnHTML}`;
+    return `${img}${badgeHTML}${blankBadgeHTML}${actionBtnHTML}`;
   }
-  return `<span class="rot-numbox__n" style="transform:rotate(${visual}deg)">${pos + 1}</span>${badgeHTML}${actionBtnHTML}`;
+  return `<span class="rot-numbox__n" style="transform:rotate(${visual}deg)">${pos + 1}</span>${badgeHTML}${blankBadgeHTML}${actionBtnHTML}`;
 }
 
 function _ariaLabelFor(pos) {
+  const origIdx  = _originalIndex[pos];
   const deleted  = !!_deletedFlags[pos];
   const selected = _selected.has(pos);
   const delta    = _deltas[pos];
   const changed  = delta !== 0;
+  const blank    = !!_blankFlags[origIdx];
   return t('org_page_aria', { n: pos + 1 })
     + (deleted  ? t('org_deleted_suffix')   : '')
     + (selected ? t('rot_selected_suffix')  : '')
-    + (changed  ? t('rot_rotated_suffix', { delta }) : '');
+    + (changed  ? t('rot_rotated_suffix', { delta }) : '')
+    + (!deleted && blank ? t('org_blank_suffix') : '');
 }
 
 function _cardHTML(pos) {
@@ -344,6 +381,7 @@ function _bindEvents() {
   id('orgSelAll') ?.addEventListener('click', () => _quickSelect('all'));
   id('orgSelOdd') ?.addEventListener('click', () => _quickSelect('odd'));
   id('orgSelEven')?.addEventListener('click', () => _quickSelect('even'));
+  id('orgSelBlank')?.addEventListener('click', () => _quickSelect('blank'));
   id('orgSelNone')?.addEventListener('click', () => _quickSelect('none'));
   id('orgDeleteSel')?.addEventListener('click', _deleteSelected);
 
@@ -453,17 +491,50 @@ function _deleteSelected() {
   _updateSubmitBtn();
 }
 
-function _quickSelect(mode) {
+async function _quickSelect(mode) {
+  // 'blank' needs every page's ink-ratio computed first — the lazy
+  // IntersectionObserver flow (_setupLazyThumbs) only renders pages the
+  // user has actually scrolled to, so anything still off-screen would
+  // otherwise silently be skipped from detection.
+  if (mode === 'blank') {
+    const btn = id('orgSelBlank');
+    if (btn) { btn.disabled = true; btn.textContent = t('org_scanning'); }
+    await _ensureBlankFlagsComputed();
+    if (btn) { btn.disabled = false; btn.textContent = t('org_sel_blank'); }
+  }
+
   _selected.clear();
   for (let pos = 0; pos < _originalIndex.length; pos++) {
     if (_deletedFlags[pos]) continue; // never auto-select a deleted page
     if (mode === 'all')                        _selected.add(pos);
     else if (mode === 'odd'  && pos % 2 === 0)  _selected.add(pos); // page 1,3,5… = position 0,2,4
     else if (mode === 'even' && pos % 2 === 1)  _selected.add(pos);
+    else if (mode === 'blank' && _blankFlags[_originalIndex[pos]]) _selected.add(pos);
     // 'none' — already cleared
   }
+  if (mode === 'blank' && _selected.size === 0) showToast(t('org_select_blank_none'));
   for (let pos = 0; pos < _originalIndex.length; pos++) _updateCard(pos);
   _updateHint();
+}
+
+// Renders (if needed) every page that hasn't had its ink ratio measured
+// yet, bounded to MAX_RENDERS concurrent — same cap _drainThumbs() uses
+// for the passive scroll-triggered path, kept as a separate worker pool
+// here so this one-off burst doesn't fight over _renderQueue/_activeRenders
+// state with any lazy loads still in flight.
+async function _ensureBlankFlagsComputed() {
+  const pending = [];
+  for (let origIdx = 0; origIdx < _pageCount; origIdx++) {
+    if (_blankFlags[origIdx] === undefined) pending.push(origIdx);
+  }
+  if (pending.length === 0) return;
+  let next = 0;
+  async function worker() {
+    while (next < pending.length) {
+      await _renderThumb(pending[next++]);
+    }
+  }
+  await Promise.all(Array.from({ length: MAX_RENDERS }, worker));
 }
 
 // _undo/_reset mutate the arrays IN PLACE (splice, not reassignment) —

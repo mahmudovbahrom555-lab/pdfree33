@@ -299,6 +299,12 @@ window.PDFREE_LOCALE = {
   org_btn_one:            '🗂️ Salva {n} pagina',
   org_btn_many:           '🗂️ Salva {n} pagine',
   val_organize_no_pages:  'Elimina meno pagine — deve rimanerne almeno una.',
+  org_sel_blank:          'Pagine vuote',
+  org_scanning:           'Scansione…',
+  org_select_blank_none:  'Nessuna pagina vuota rilevata',
+  org_blank_badge:        'vuota?',
+  org_blank_badge_aria:   'Sembra vuota',
+  org_blank_suffix:       ' (sembra vuota)',
 
   // ── resizeUI.js ──────────────────────────────────────────────
   rsz_loading: 'Caricamento PDF…',

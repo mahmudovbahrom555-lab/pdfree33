@@ -299,6 +299,12 @@ window.PDFREE_LOCALE = {
   org_btn_one:            '🗂️ Enregistrer {n} page',
   org_btn_many:           '🗂️ Enregistrer {n} pages',
   val_organize_no_pages:  'Supprimez moins de pages — au moins une doit rester.',
+  org_sel_blank:          'Pages vides',
+  org_scanning:           'Analyse…',
+  org_select_blank_none:  'Aucune page vide détectée',
+  org_blank_badge:        'vide ?',
+  org_blank_badge_aria:   'Semble vide',
+  org_blank_suffix:       ' (semble vide)',
 
   // ── resizeUI.js ──────────────────────────────────────────────
   rsz_loading: 'Chargement du PDF…',

@@ -301,6 +301,12 @@ window.PDFREE_LOCALE = {
   org_btn_one:            '🗂️ {n}페이지 저장',
   org_btn_many:           '🗂️ {n}페이지 저장',
   val_organize_no_pages:  '삭제하는 페이지 수를 줄이세요 — 최소 한 페이지는 남아 있어야 합니다.',
+  org_sel_blank:          '빈 페이지',
+  org_scanning:           '스캔 중…',
+  org_select_blank_none:  '빈 페이지가 감지되지 않았습니다',
+  org_blank_badge:        '빈 페이지?',
+  org_blank_badge_aria:   '빈 페이지로 보임',
+  org_blank_suffix:       ' (빈 페이지로 보임)',
 
   // ── resizeUI.js ──────────────────────────────────────────────
   rsz_loading: 'PDF 불러오는 중…',

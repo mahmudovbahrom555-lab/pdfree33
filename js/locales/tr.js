@@ -299,6 +299,12 @@ window.PDFREE_LOCALE = {
   org_btn_one:            '🗂️ {n} sayfayı kaydet',
   org_btn_many:           '🗂️ {n} sayfayı kaydet',
   val_organize_no_pages:  'Daha az sayfa silin — en az bir sayfa kalmalı.',
+  org_sel_blank:          'Boş sayfalar',
+  org_scanning:           'Taranıyor…',
+  org_select_blank_none:  'Boş sayfa tespit edilmedi',
+  org_blank_badge:        'boş mu?',
+  org_blank_badge_aria:   'Boş görünüyor',
+  org_blank_suffix:       ' (boş görünüyor)',
 
   // ── resizeUI.js ──────────────────────────────────────────────
   rsz_loading: 'PDF yükleniyor…',

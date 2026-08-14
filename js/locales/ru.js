@@ -300,6 +300,12 @@ window.PDFREE_LOCALE = {
   org_btn_one:            '🗂️ Сохранить {n} страницу',
   org_btn_many:           '🗂️ Сохранить страниц: {n}',
   val_organize_no_pages:  'Удалите меньше страниц — должна остаться хотя бы одна.',
+  org_sel_blank:          'Пустые страницы',
+  org_scanning:           'Сканирование…',
+  org_select_blank_none:  'Пустые страницы не обнаружены',
+  org_blank_badge:        'пусто?',
+  org_blank_badge_aria:   'Похоже, пустая',
+  org_blank_suffix:       ' (похоже, пустая)',
 
   // ── resizeUI.js ──────────────────────────────────────────────
   rsz_loading: 'Загрузка PDF…',

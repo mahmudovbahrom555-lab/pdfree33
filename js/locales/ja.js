@@ -302,6 +302,12 @@ window.PDFREE_LOCALE = {
   org_btn_one:            '🗂️ {n}ページを保存',
   org_btn_many:           '🗂️ {n}ページを保存',
   val_organize_no_pages:  '削除するページを減らしてください — 少なくとも1ページ残す必要があります。',
+  org_sel_blank:          '空白ページ',
+  org_scanning:           'スキャン中…',
+  org_select_blank_none:  '空白ページは見つかりませんでした',
+  org_blank_badge:        '空白?',
+  org_blank_badge_aria:   '空白のようです',
+  org_blank_suffix:       '（空白のようです）',
 
   // ── resizeUI.js ──────────────────────────────────────────────
   rsz_loading: 'PDFを読み込んでいます…',

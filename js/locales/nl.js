@@ -299,6 +299,12 @@ window.PDFREE_LOCALE = {
   org_btn_one:            '🗂️ {n} pagina opslaan',
   org_btn_many:           "🗂️ {n} pagina's opslaan",
   val_organize_no_pages:  "Verwijder minder pagina's — er moet er minstens één overblijven.",
+  org_sel_blank:          'Lege pagina\'s',
+  org_scanning:           'Scannen…',
+  org_select_blank_none:  'Geen lege pagina\'s gevonden',
+  org_blank_badge:        'leeg?',
+  org_blank_badge_aria:   'Lijkt leeg',
+  org_blank_suffix:       ' (lijkt leeg)',
 
   // ── resizeUI.js ──────────────────────────────────────────────
   rsz_loading: 'PDF laden…',

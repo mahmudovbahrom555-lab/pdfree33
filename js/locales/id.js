@@ -300,6 +300,12 @@ window.PDFREE_LOCALE = {
   org_btn_one:            '🗂️ Simpan {n} halaman',
   org_btn_many:           '🗂️ Simpan {n} halaman',
   val_organize_no_pages:  'Hapus lebih sedikit halaman — minimal satu harus tersisa.',
+  org_sel_blank:          'Halaman kosong',
+  org_scanning:           'Memindai…',
+  org_select_blank_none:  'Tidak ada halaman kosong terdeteksi',
+  org_blank_badge:        'kosong?',
+  org_blank_badge_aria:   'Tampak kosong',
+  org_blank_suffix:       ' (tampak kosong)',
 
   // ── resizeUI.js ──────────────────────────────────────────────
   rsz_loading: 'Memuat PDF…',

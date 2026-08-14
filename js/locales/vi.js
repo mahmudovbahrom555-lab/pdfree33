@@ -300,6 +300,12 @@ window.PDFREE_LOCALE = {
   org_btn_one:            '🗂️ Lưu {n} trang',
   org_btn_many:           '🗂️ Lưu {n} trang',
   val_organize_no_pages:  'Xóa ít trang hơn — phải còn lại ít nhất một trang.',
+  org_sel_blank:          'Trang trống',
+  org_scanning:           'Đang quét…',
+  org_select_blank_none:  'Không phát hiện trang trống nào',
+  org_blank_badge:        'trống?',
+  org_blank_badge_aria:   'Có vẻ trống',
+  org_blank_suffix:       ' (có vẻ trống)',
 
   // ── resizeUI.js ──────────────────────────────────────────────
   rsz_loading: 'Đang tải PDF…',

@@ -299,6 +299,12 @@ window.PDFREE_LOCALE = {
   org_btn_one:            '🗂️ Guardar {n} página',
   org_btn_many:           '🗂️ Guardar {n} páginas',
   val_organize_no_pages:  'Elimine menos páginas — pelo menos uma deve permanecer.',
+  org_sel_blank:          'Páginas em branco',
+  org_scanning:           'Analisando…',
+  org_select_blank_none:  'Nenhuma página em branco detectada',
+  org_blank_badge:        'em branco?',
+  org_blank_badge_aria:   'Parece em branco',
+  org_blank_suffix:       ' (parece em branco)',
 
   // ── resizeUI.js ──────────────────────────────────────────────
   rsz_loading: 'A carregar PDF…',

@@ -299,6 +299,12 @@ window.PDFREE_LOCALE = {
   org_btn_one:            '🗂️ Zapisz {n} stronę',
   org_btn_many:           '🗂️ Zapisz stron: {n}',
   val_organize_no_pages:  'Usuń mniej stron — musi zostać przynajmniej jedna.',
+  org_sel_blank:          'Puste strony',
+  org_scanning:           'Skanowanie…',
+  org_select_blank_none:  'Nie wykryto pustych stron',
+  org_blank_badge:        'pusta?',
+  org_blank_badge_aria:   'Wygląda na pustą',
+  org_blank_suffix:       ' (wygląda na pustą)',
 
   // ── resizeUI.js ──────────────────────────────────────────────
   rsz_loading: 'Wczytywanie PDF…',

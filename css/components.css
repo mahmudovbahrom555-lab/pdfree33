@@ -2237,6 +2237,22 @@ button,
 
 .org-delete-sel-btn { color: #dc2626; }
 
+/* Likely-blank badge — bottom-left, opposite .org-card__action (top-left)
+   and .rot-badge (top-right), so all three can coexist without collision */
+.org-blank-badge {
+  position: absolute;
+  bottom: 4px;
+  left: 4px;
+  background: var(--text2);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 10px;
+  text-transform: uppercase;
+  letter-spacing: .02em;
+}
+
 @media (max-width: 600px) {
   .org-grid { grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); }
 }

@@ -300,6 +300,12 @@ window.PDFREE_LOCALE = {
   org_btn_one:            '🗂️ {n} Seite speichern',
   org_btn_many:           '🗂️ {n} Seiten speichern',
   val_organize_no_pages:  'Lösche weniger Seiten — mindestens eine muss übrig bleiben.',
+  org_sel_blank:          'Leere Seiten',
+  org_scanning:           'Scanne…',
+  org_select_blank_none:  'Keine leeren Seiten gefunden',
+  org_blank_badge:        'leer?',
+  org_blank_badge_aria:   'Wirkt leer',
+  org_blank_suffix:       ' (wirkt leer)',
 
   // ── resizeUI.js ──────────────────────────────────────────────
   rsz_loading: 'PDF wird geladen…',

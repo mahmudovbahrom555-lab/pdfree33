@@ -282,6 +282,12 @@ export const EN = {
   org_btn_one:           '🗂️ Save {n} page',
   org_btn_many:          '🗂️ Save {n} pages',
   val_organize_no_pages: 'Delete fewer pages — at least one must remain.',
+  org_sel_blank:         'Blank pages',
+  org_scanning:          'Scanning…',
+  org_select_blank_none: 'No blank pages detected',
+  org_blank_badge:       'blank?',
+  org_blank_badge_aria:  'Looks blank',
+  org_blank_suffix:      ' (looks blank)',
 
   // ── resizeUI.js ──────────────────────────────────────────────
   rsz_loading:           'Loading PDF…',
