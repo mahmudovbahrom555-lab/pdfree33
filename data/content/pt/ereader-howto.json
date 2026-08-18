@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Como otimizar um PDF para um e-reader",
+  "description": "Corte margens e otimize o contraste para Kindle, Kobo e reMarkable — grátis, sem necessidade de upload.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Abra seu PDF",
+      "text": "Clique em 'Escolher arquivos' ou arraste seu PDF para a área de soltar."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Escolha seu dispositivo e ajuste o contraste",
+      "text": "Escolha Kindle, reMarkable / Boox ou Kobo / Nook, depois ajuste o controle de contraste. A prévia antes/depois ao vivo é atualizada enquanto você faz isso."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Baixe seu PDF otimizado",
+      "text": "Clique em 'Otimizar para E-Reader'. Cada página é processada e fica pronta para baixar instantaneamente."
+    }
+  ]
+}

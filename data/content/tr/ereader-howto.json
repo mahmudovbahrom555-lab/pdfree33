@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Bir PDF bir e-okuyucu için nasıl optimize edilir",
+  "description": "Kindle, Kobo ve reMarkable için kenar boşluklarını kırpın ve kontrastı optimize edin — ücretsiz, yükleme gerekmez.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDF'nizi açın",
+      "text": "'Dosya Seç'e tıklayın veya PDF'nizi bırakma alanına sürükleyin."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Cihazınızı seçin ve kontrastı ayarlayın",
+      "text": "Kindle, reMarkable / Boox veya Kobo / Nook'u seçin, ardından kontrast kaydırıcısını ayarlayın. Canlı önce/sonra önizlemesi bunu yaparken güncellenir."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Optimize edilmiş PDF'nizi indirin",
+      "text": "'E-Okuyucu için Optimize Et'e tıklayın. Her sayfa işlenir ve anında indirmeye hazır olur."
+    }
+  ]
+}

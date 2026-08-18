@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Cách tối ưu PDF cho máy đọc sách",
+  "description": "Cắt lề và tối ưu độ tương phản cho Kindle, Kobo & reMarkable — miễn phí, không cần tải lên.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Mở tệp PDF của bạn",
+      "text": "Nhấp vào 'Chọn tệp' hoặc kéo PDF của bạn vào khu vực thả."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Chọn thiết bị và điều chỉnh độ tương phản",
+      "text": "Chọn Kindle, reMarkable / Boox, hoặc Kobo / Nook, sau đó điều chỉnh thanh trượt tương phản. Bản xem trước trước/sau trực tiếp cập nhật khi bạn thực hiện."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Tải xuống PDF đã tối ưu",
+      "text": "Nhấp vào 'Tối Ưu Cho Máy Đọc Sách'. Mỗi trang được xử lý và sẵn sàng tải xuống ngay lập tức."
+    }
+  ]
+}

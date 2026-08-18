@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "Ottimizzare un PDF carica il mio file su un server?",
+    "acceptedAnswer": { "@type": "Answer", "text": "No. Ogni pagina viene renderizzata, ritagliata e ricostruita interamente nel tuo browser. Il tuo file non viene mai inviato da nessuna parte." }
+  },
+  {
+    "@type": "Question",
+    "name": "Il testo rimarrà selezionabile o ricercabile dopo?",
+    "acceptedAnswer": { "@type": "Answer", "text": "No — il risultato è un PDF rasterizzato, basato su immagini, lo stesso compromesso che fa lo strumento Pulisci Scansione di PDFree. Ritagliare e ridisporre un vero PDF a impaginazione fissa senza trasformarlo in immagini non è affidabile; se devi mantenere il testo selezionabile, non usare questo strumento." }
+  },
+  {
+    "@type": "Question",
+    "name": "Come funziona il rilevamento automatico dei margini?",
+    "acceptedAnswer": { "@type": "Answer", "text": "PDFree campiona le pagine in tutto il documento, rileva l'area di contenuto reale di ciascuna e calcola la mediana su quei campioni — così una singola foto a piena pagina o una pagina divisoria quasi vuota non possono rendere il riquadro di ritaglio troppo stretto o troppo largo per il resto del libro." }
+  },
+  {
+    "@type": "Question",
+    "name": "Per quali dispositivi sono tarati i preset?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Kindle (schermi da 6/7 pollici), reMarkable e Onyx Boox (schermi da 10,3 pollici), e lettori Kobo/Nook. Ogni preset corrisponde al rapporto d'aspetto dello schermo del dispositivo target, così le pagine riempiono lo schermo senza bande nere superflue." }
+  },
+  {
+    "@type": "Question",
+    "name": "Potrebbe tagliare contenuto reale, come una nota a piè di pagina vicino al bordo?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Il ritaglio si allarga solo verso l'esterno dal riquadro di contenuto rilevato in direzione del rapporto d'aspetto del tuo dispositivo — non si restringe mai ulteriormente per forzare un adattamento. Se il contenuto di una pagina si trova proprio al bordo del riquadro rilevato, controlla l'anteprima live prima di scaricare." }
+  },
+  {
+    "@type": "Question",
+    "name": "C'è un limite al numero di pagine che posso ottimizzare?",
+    "acceptedAnswer": { "@type": "Answer", "text": "No. Non c'è alcun limite al numero di pagine o alla dimensione del file, né un limite orario di operazioni. Ottimizza un PDF di una pagina o un libro di diverse centinaia di pagine tutte le volte che ti serve." }
+  },
+  {
+    "@type": "Question",
+    "name": "Devo disattivare la scala di grigi per le pagine a colori?",
+    "acceptedAnswer": { "@type": "Answer", "text": "La scala di grigi è attiva di default poiché la maggior parte degli e-reader ha schermi in scala di grigi o E Ink, ma puoi disattivarla se stai leggendo su un tablet a colori come un Boox Tab o vuoi mantenere intatti i diagrammi a colori." }
+  },
+  {
+    "@type": "Question",
+    "name": "L'Ottimizzatore per E-Reader è completamente gratuito?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Sì. PDFree è gratuito senza abbonamento, senza limiti giornalieri o orari, e senza registrazione. Nessuna filigrana viene aggiunta al risultato e non c'è alcuna restrizione sulla dimensione del file." }
+  }
+]

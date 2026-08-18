@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Wie man ein PDF für einen E-Reader optimiert",
+  "description": "Ränder zuschneiden und Kontrast optimieren für Kindle, Kobo & reMarkable — kostenlos, kein Upload nötig.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDF öffnen",
+      "text": "Klicke auf 'Dateien auswählen' oder ziehe dein PDF in die Ablagefläche."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Gerät wählen und Kontrast anpassen",
+      "text": "Wähle Kindle, reMarkable / Boox oder Kobo / Nook und passe dann den Kontrast-Regler an. Die Live-Vorher/Nachher-Vorschau aktualisiert sich währenddessen."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Optimiertes PDF herunterladen",
+      "text": "Klicke auf 'Für E-Reader optimieren'. Jede Seite wird verarbeitet und ist sofort zum Download bereit."
+    }
+  ]
+}

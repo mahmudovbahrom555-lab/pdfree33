@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "Bir PDF'yi optimize etmek dosyamı bir sunucuya yüklüyor mu?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Hayır. Her sayfa tamamen tarayıcınızda oluşturulur, kırpılır ve yeniden oluşturulur. Dosyanız hiçbir yere gönderilmez." }
+  },
+  {
+    "@type": "Question",
+    "name": "Metin işlemden sonra hâlâ seçilebilir veya aranabilir olacak mı?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Hayır — sonuç, PDFree'nin Taramayı Temizle aracının yaptığı aynı ödünü veren, rasterleştirilmiş, görüntü tabanlı bir PDF'dir. Gerçek, sabit düzenli bir PDF'yi görüntülere dönüştürmeden kırpmak ve yeniden akıtmak güvenilir şekilde mümkün değildir; seçilebilir metni korumanız gerekiyorsa bu aracı kullanmayın." }
+  },
+  {
+    "@type": "Question",
+    "name": "Otomatik kenar boşluğu algılama nasıl çalışır?",
+    "acceptedAnswer": { "@type": "Answer", "text": "PDFree, belge genelinde sayfaları örnekler, her birinin gerçek içerik alanını tespit eder ve bu örnekler arasındaki medyanı hesaplar — böylece tek bir kenardan kenara fotoğraf veya neredeyse boş bir ayırıcı sayfa, kırpma kutusunu kitabın geri kalanı için çok dar veya çok geniş hale getiremez." }
+  },
+  {
+    "@type": "Question",
+    "name": "Ön ayarlar hangi cihazlara göre ayarlanmış?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Kindle (6/7 inç ekranlar), reMarkable ve Onyx Boox (10,3 inç ekranlar) ve Kobo/Nook okuyucular. Her ön ayar, hedef cihazın ekran en-boy oranıyla eşleşir, böylece sayfalar gereksiz siyah bantlar olmadan ekranı doldurur." }
+  },
+  {
+    "@type": "Question",
+    "name": "Bu, kenara yakın bir dipnot gibi gerçek içeriği kırpabilir mi?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Kırpma yalnızca algılanan içerik kutusundan cihazınızın en-boy oranına doğru dışarı doğru büyür — bir uyum zorlamak için asla daha fazla küçülmez. Bir sayfanın içeriği algılanan kutunun tam kenarındaysa, indirmeden önce canlı önizlemeyi kontrol edin." }
+  },
+  {
+    "@type": "Question",
+    "name": "Kaç sayfa optimize edebileceğime dair bir sınır var mı?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Hayır. Sayfa sayısı veya dosya boyutu sınırı yoktur ve saatlik görev sınırı yoktur. İhtiyacınız kadar sık, tek sayfalık bir PDF'yi veya birkaç yüz sayfalık bir kitabı optimize edin." }
+  },
+  {
+    "@type": "Question",
+    "name": "Renkli sayfalar için gri tonlamayı kapatmam gerekir mi?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Çoğu e-okuyucu gri tonlama veya E Ink ekranlara sahip olduğundan gri tonlama varsayılan olarak açıktır, ancak bir Boox Tab gibi renkli bir tablette okuyorsanız veya renkli diyagramları korumak istiyorsanız kapatabilirsiniz." }
+  },
+  {
+    "@type": "Question",
+    "name": "E-Okuyucu Optimize Edici tamamen ücretsiz mi?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Evet. PDFree abonelik olmadan, günlük veya saatlik sınır olmadan ve kayıt olmadan ücretsizdir. Sonuca herhangi bir filigran eklenmez ve dosya boyutu kısıtlaması yoktur." }
+  }
+]

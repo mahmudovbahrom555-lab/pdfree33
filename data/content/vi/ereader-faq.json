@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "Tối ưu PDF có tải tệp của tôi lên máy chủ không?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Không. Mỗi trang được render, cắt và dựng lại hoàn toàn trong trình duyệt của bạn. Tệp của bạn không bao giờ được gửi đi bất cứ đâu." }
+  },
+  {
+    "@type": "Question",
+    "name": "Văn bản có còn chọn được hay tìm kiếm được sau đó không?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Không — kết quả là một PDF dạng hình ảnh đã raster hóa, cùng một sự đánh đổi mà công cụ Làm Sạch Bản Scan của PDFree thực hiện. Việc cắt và bố lại một PDF bố cục cố định thực sự mà không biến nó thành hình ảnh không phải là điều đáng tin cậy; nếu bạn cần giữ văn bản có thể chọn, đừng dùng công cụ này." }
+  },
+  {
+    "@type": "Question",
+    "name": "Việc phát hiện lề tự động hoạt động như thế nào?",
+    "acceptedAnswer": { "@type": "Answer", "text": "PDFree lấy mẫu các trang trên toàn bộ tài liệu, phát hiện vùng nội dung thực tế của từng trang, và tính trung vị trên các mẫu đó — nhờ vậy một tấm ảnh tràn lề duy nhất hoặc một trang phân cách gần như trống không thể khiến khung cắt quá chặt hoặc quá rộng cho phần còn lại của cuốn sách." }
+  },
+  {
+    "@type": "Question",
+    "name": "Các cài đặt sẵn được tinh chỉnh cho thiết bị nào?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Kindle (màn hình 6/7 inch), reMarkable và Onyx Boox (màn hình 10,3 inch), và các máy đọc Kobo/Nook. Mỗi cài đặt sẵn khớp với tỷ lệ khung hình màn hình của thiết bị mục tiêu, để các trang lấp đầy màn hình mà không có viền đen thừa." }
+  },
+  {
+    "@type": "Question",
+    "name": "Điều này có thể cắt mất nội dung thật, như chú thích gần mép không?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Việc cắt chỉ bao giờ mở rộng ra ngoài từ khung nội dung đã phát hiện hướng tới tỷ lệ khung hình thiết bị của bạn — nó không bao giờ thu nhỏ thêm để ép vừa. Nếu nội dung của một trang nằm ngay ở mép khung đã phát hiện, hãy kiểm tra bản xem trước trực tiếp trước khi tải xuống." }
+  },
+  {
+    "@type": "Question",
+    "name": "Có giới hạn số trang tôi có thể tối ưu không?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Không. Không có giới hạn số trang hay dung lượng tệp, và không có giới hạn tác vụ theo giờ. Tối ưu một PDF một trang hay một cuốn sách vài trăm trang bao nhiêu lần tùy bạn cần." }
+  },
+  {
+    "@type": "Question",
+    "name": "Tôi có cần tắt thang xám cho các trang màu không?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Thang xám được bật mặc định vì hầu hết máy đọc sách có màn hình thang xám hoặc E Ink, nhưng bạn có thể tắt nó nếu đang đọc trên máy tính bảng màu như Boox Tab hoặc muốn giữ nguyên các sơ đồ màu." }
+  },
+  {
+    "@type": "Question",
+    "name": "Công cụ Tối Ưu Cho Máy Đọc Sách có hoàn toàn miễn phí không?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Có. PDFree miễn phí, không đăng ký thuê bao, không giới hạn hàng ngày hay hàng giờ, và không cần đăng ký tài khoản. Không có watermark nào được thêm vào kết quả và không có giới hạn dung lượng tệp." }
+  }
+]

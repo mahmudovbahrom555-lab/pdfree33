@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Jak zoptymalizować PDF do e-czytnika",
+  "description": "Przytnij marginesy i zoptymalizuj kontrast dla Kindle, Kobo i reMarkable — za darmo, bez konieczności przesyłania.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Otwórz swój PDF",
+      "text": "Kliknij 'Wybierz pliki' lub przeciągnij PDF do obszaru upuszczania."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Wybierz swoje urządzenie i dostosuj kontrast",
+      "text": "Wybierz Kindle, reMarkable / Boox lub Kobo / Nook, a następnie dostosuj suwak kontrastu. Podgląd przed/po na żywo aktualizuje się w miarę wprowadzania zmian."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Pobierz zoptymalizowany PDF",
+      "text": "Kliknij 'Zoptymalizuj do E-Czytnika'. Każda strona jest przetwarzana i natychmiast gotowa do pobrania."
+    }
+  ]
+}

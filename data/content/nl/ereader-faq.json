@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "Wordt mijn bestand geüpload naar een server bij het optimaliseren van een PDF?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Nee. Elke pagina wordt volledig in je browser gerenderd, bijgesneden en opnieuw opgebouwd. Je bestand wordt nooit ergens naartoe gestuurd." }
+  },
+  {
+    "@type": "Question",
+    "name": "Blijft de tekst daarna nog selecteerbaar of doorzoekbaar?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Nee — het resultaat is een gerasteriseerde, op afbeeldingen gebaseerde PDF, dezelfde afweging die PDFree's Scan opschonen-tool maakt. Een echte PDF met vaste opmaak bijsnijden en herschikken zonder er afbeeldingen van te maken is niet betrouwbaar mogelijk; als je selecteerbare tekst moet behouden, gebruik deze tool dan niet." }
+  },
+  {
+    "@type": "Question",
+    "name": "Hoe werkt de automatische margedetectie?",
+    "acceptedAnswer": { "@type": "Answer", "text": "PDFree neemt steekproeven van pagina's door het hele document, detecteert het werkelijke inhoudsgebied van elke pagina, en berekent de mediaan over die steekproeven — zo kan één full-bleed foto of een bijna lege scheidingspagina het bijsnijdkader niet te krap of te ruim maken voor de rest van het boek." }
+  },
+  {
+    "@type": "Question",
+    "name": "Voor welke apparaten zijn de voorinstellingen afgestemd?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Kindle (6/7-inch schermen), reMarkable en Onyx Boox (10,3-inch schermen), en Kobo/Nook-lezers. Elke voorinstelling komt overeen met de schermverhouding van het doelapparaat, zodat pagina's het scherm vullen zonder onnodige zwarte randen." }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan hierdoor echte inhoud worden weggesneden, zoals een voetnoot bij de rand?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Het bijsnijden wordt alleen ooit naar buiten toe uitgebreid vanaf het gedetecteerde inhoudskader richting de beeldverhouding van je apparaat — het wordt nooit verder verkleind om iets passend te forceren. Als de inhoud van een pagina precies op de rand van het gedetecteerde kader staat, controleer dan de live preview voordat je downloadt." }
+  },
+  {
+    "@type": "Question",
+    "name": "Is er een limiet aan het aantal pagina's dat ik kan optimaliseren?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Nee. Er is geen limiet op het aantal pagina's of de bestandsgrootte, en geen limiet per uur. Optimaliseer een PDF van één pagina of een boek van honderden pagina's zo vaak als je nodig hebt." }
+  },
+  {
+    "@type": "Question",
+    "name": "Moet ik grijstinten uitschakelen voor kleurenpagina's?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Grijstinten staan standaard aan omdat de meeste e-readers grijstinten- of E Ink-schermen hebben, maar je kunt ze uitschakelen als je op een kleurentablet zoals een Boox Tab leest of kleurendiagrammen intact wilt houden." }
+  },
+  {
+    "@type": "Question",
+    "name": "Is de E-reader-optimalisatie helemaal gratis?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Ja. PDFree is gratis zonder abonnement, zonder dagelijkse of uurlijkse limieten, en zonder aanmelding. Er wordt geen watermerk toegevoegd aan het resultaat en er is geen beperking op de bestandsgrootte." }
+  }
+]

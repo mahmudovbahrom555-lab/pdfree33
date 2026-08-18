@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Cara mengoptimalkan PDF untuk e-reader",
+  "description": "Pangkas margin dan optimalkan kontras untuk Kindle, Kobo & reMarkable — gratis, tanpa perlu unggah.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Buka PDF Anda",
+      "text": "Klik 'Pilih file' atau seret PDF Anda ke area unggah."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Pilih perangkat Anda dan sesuaikan kontras",
+      "text": "Pilih Kindle, reMarkable / Boox, atau Kobo / Nook, lalu sesuaikan penggeser kontras. Pratinjau sebelum/sesudah langsung diperbarui saat Anda melakukannya."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Unduh PDF hasil optimasi Anda",
+      "text": "Klik 'Optimalkan untuk E-Reader'. Setiap halaman diproses dan siap diunduh secara instan."
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "Apakah mengoptimalkan PDF mengunggah file saya ke server?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Tidak. Setiap halaman dirender, dipangkas, dan dibangun ulang sepenuhnya di browser Anda. File Anda tidak pernah dikirim ke mana pun." }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah teksnya masih bisa dipilih atau dicari setelahnya?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Tidak — hasilnya adalah PDF yang dirasterisasi, berbasis gambar, kompromi yang sama yang dibuat alat Bersihkan Scan milik PDFree. Memangkas dan menata ulang PDF tata letak tetap yang asli tanpa mengubahnya menjadi gambar bukanlah hal yang bisa diandalkan; jika Anda perlu mempertahankan teks yang bisa dipilih, jangan gunakan alat ini." }
+  },
+  {
+    "@type": "Question",
+    "name": "Bagaimana cara kerja deteksi margin otomatis?",
+    "acceptedAnswer": { "@type": "Answer", "text": "PDFree mengambil sampel halaman di seluruh dokumen, mendeteksi area konten sebenarnya di masing-masing, lalu menghitung median dari sampel-sampel tersebut — sehingga satu foto penuh bidang atau halaman pembatas yang hampir kosong tidak bisa membuat kotak pemangkasan terlalu ketat atau terlalu longgar untuk sisa buku." }
+  },
+  {
+    "@type": "Question",
+    "name": "Perangkat apa saja yang menjadi acuan preset ini?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Kindle (layar 6/7 inci), reMarkable dan Onyx Boox (layar 10,3 inci), serta pembaca Kobo/Nook. Setiap preset disesuaikan dengan rasio aspek layar perangkat target, agar halaman memenuhi layar tanpa bidang hitam yang tidak perlu." }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah ini memangkas konten asli, seperti catatan kaki di dekat tepi?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Pemangkasan hanya pernah membesar ke luar dari kotak konten yang terdeteksi menuju rasio aspek perangkat Anda — tidak pernah menyusut lebih jauh untuk memaksakan kecocokan. Jika konten suatu halaman berada tepat di tepi kotak yang terdeteksi, periksa pratinjau langsung sebelum mengunduh." }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah ada batas berapa banyak halaman yang bisa saya optimalkan?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Tidak. Tidak ada batas jumlah halaman atau ukuran file, dan tidak ada batas tugas per jam. Optimalkan PDF satu halaman atau buku beratus-ratus halaman sesering yang Anda butuhkan." }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah saya perlu mematikan skala abu-abu untuk halaman berwarna?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Skala abu-abu aktif secara default karena kebanyakan e-reader memiliki layar skala abu-abu atau E Ink, tapi Anda bisa mematikannya jika membaca di tablet berwarna seperti Boox Tab atau ingin mempertahankan diagram berwarna." }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah Pengoptimal E-Reader benar-benar gratis?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Ya. PDFree gratis tanpa langganan, tanpa batas harian atau per jam, dan tanpa pendaftaran. Tidak ada watermark yang ditambahkan ke hasil dan tidak ada batasan ukuran file." }
+  }
+]

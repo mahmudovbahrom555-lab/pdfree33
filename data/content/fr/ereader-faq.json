@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "Optimiser un PDF envoie-t-il mon fichier sur un serveur ?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Non. Chaque page est restituée, recadrée et reconstruite entièrement dans votre navigateur. Votre fichier n'est jamais envoyé nulle part." }
+  },
+  {
+    "@type": "Question",
+    "name": "Le texte restera-t-il sélectionnable ou cherchable après ?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Non — le résultat est un PDF rastérisé, basé sur des images, le même compromis que fait l'outil Nettoyer le Scan de PDFree. Recadrer et reformater un vrai PDF à mise en page fixe sans le transformer en images n'est pas fiable ; si vous devez conserver du texte sélectionnable, n'utilisez pas cet outil." }
+  },
+  {
+    "@type": "Question",
+    "name": "Comment fonctionne la détection automatique des marges ?",
+    "acceptedAnswer": { "@type": "Answer", "text": "PDFree échantillonne des pages dans tout le document, détecte la zone de contenu réelle de chacune, et calcule la médiane sur ces échantillons — ainsi une seule photo pleine page ou une page de séparation quasi vide ne peut pas rendre le cadre de recadrage trop serré ou trop large pour le reste du livre." }
+  },
+  {
+    "@type": "Question",
+    "name": "Pour quels appareils les préréglages sont-ils calibrés ?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Kindle (écrans 6/7 pouces), reMarkable et Onyx Boox (écrans 10,3 pouces), et liseuses Kobo/Nook. Chaque préréglage correspond au format d'écran de l'appareil ciblé, pour que les pages remplissent l'écran sans marges noires superflues." }
+  },
+  {
+    "@type": "Question",
+    "name": "Cela pourrait-il recadrer du contenu réel, comme une note de bas de page près du bord ?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Le recadrage ne fait que s'agrandir vers l'extérieur depuis la zone de contenu détectée en direction du format d'écran de votre appareil — il ne se réduit jamais davantage pour forcer un ajustement. Si le contenu d'une page se trouve juste au bord de la zone détectée, vérifiez l'aperçu en direct avant de télécharger." }
+  },
+  {
+    "@type": "Question",
+    "name": "Y a-t-il une limite au nombre de pages que je peux optimiser ?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Non. Il n'y a aucune limite de nombre de pages ni de taille de fichier, ni de limite de tâches par heure. Optimisez un PDF d'une page ou un livre de plusieurs centaines de pages aussi souvent que nécessaire." }
+  },
+  {
+    "@type": "Question",
+    "name": "Dois-je désactiver les niveaux de gris pour les pages en couleur ?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Les niveaux de gris sont activés par défaut car la plupart des liseuses ont des écrans en niveaux de gris ou E Ink, mais vous pouvez les désactiver si vous lisez sur une tablette couleur comme une Boox Tab ou souhaitez conserver des diagrammes en couleur." }
+  },
+  {
+    "@type": "Question",
+    "name": "L'Optimiseur pour Liseuse est-il entièrement gratuit ?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Oui. PDFree est gratuit, sans abonnement, sans limites quotidiennes ni horaires, et sans inscription. Aucun filigrane n'est ajouté au résultat et il n'y a aucune restriction de taille de fichier." }
+  }
+]

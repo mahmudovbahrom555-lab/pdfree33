@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "Czy optymalizacja PDF przesyła mój plik na serwer?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Nie. Każda strona jest renderowana, przycinana i przebudowywana całkowicie w Twojej przeglądarce. Twój plik nigdy nigdzie nie jest wysyłany." }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy tekst nadal będzie zaznaczalny lub przeszukiwalny po optymalizacji?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Nie — wynikiem jest zrasteryzowany PDF oparty na obrazach, ten sam kompromis, na jaki idzie narzędzie PDFree Wyczyść Skan. Przycinanie i przeformatowanie prawdziwego PDF o stałym układzie bez zamiany go w obrazy nie jest niezawodnie możliwe; jeśli musisz zachować zaznaczalny tekst, nie używaj tego narzędzia." }
+  },
+  {
+    "@type": "Question",
+    "name": "Jak działa automatyczne wykrywanie marginesów?",
+    "acceptedAnswer": { "@type": "Answer", "text": "PDFree próbkuje strony w całym dokumencie, wykrywa rzeczywisty obszar treści każdej z nich i oblicza medianę z tych próbek — dzięki temu pojedyncze zdjęcie na całą stronę lub niemal pusta strona rozdzielająca nie mogą sprawić, że ramka przycinania będzie zbyt ciasna lub zbyt szeroka dla reszty książki." }
+  },
+  {
+    "@type": "Question",
+    "name": "Dla jakich urządzeń dostrojone są ustawienia predefiniowane?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Kindle (ekrany 6/7 cali), reMarkable i Onyx Boox (ekrany 10,3 cala) oraz czytniki Kobo/Nook. Każde ustawienie predefiniowane odpowiada proporcjom ekranu docelowego urządzenia, dzięki czemu strony wypełniają ekran bez zbędnych czarnych pasków." }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy to może przyciąć rzeczywistą treść, np. przypis blisko krawędzi?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Przycinanie zawsze tylko powiększa się na zewnątrz od wykrytego obszaru treści w kierunku proporcji ekranu Twojego urządzenia — nigdy nie zmniejsza się dalej, aby wymusić dopasowanie. Jeśli treść jakiejś strony znajduje się dokładnie na krawędzi wykrytego obszaru, sprawdź podgląd na żywo przed pobraniem." }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy jest limit liczby stron, które mogę zoptymalizować?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Nie. Nie ma limitu liczby stron ani rozmiaru pliku, ani godzinowego limitu zadań. Optymalizuj jednostronicowy PDF lub liczącą kilkaset stron książkę tak często, jak potrzebujesz." }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy muszę wyłączyć skalę szarości dla kolorowych stron?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Skala szarości jest domyślnie włączona, ponieważ większość e-czytników ma ekrany w skali szarości lub E Ink, ale możesz ją wyłączyć, jeśli czytasz na kolorowym tablecie, takim jak Boox Tab, lub chcesz zachować kolorowe diagramy." }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy Optymalizator do E-Czytnika jest całkowicie darmowy?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Tak. PDFree jest darmowe, bez subskrypcji, bez dziennych ani godzinowych limitów i bez rejestracji. Do wyniku nie jest dodawany żaden znak wodny i nie ma ograniczenia rozmiaru pliku." }
+  }
+]

@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "電子書籍リーダー用にPDFを最適化する方法",
+  "description": "Kindle・Kobo・reMarkable向けに余白をトリミングしコントラストを最適化 — 無料、アップロード不要。",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDFを開く",
+      "text": "「ファイルを選択」をクリックするか、PDFをドロップ領域にドラッグしてください。"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "デバイスを選び、コントラストを調整する",
+      "text": "Kindle、reMarkable / Boox、Kobo / Nookのいずれかを選び、コントラストのスライダーを調整してください。ライブのビフォー/アフタープレビューがその都度更新されます。"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "最適化されたPDFをダウンロードする",
+      "text": "「電子書籍リーダー用に最適化」をクリックしてください。各ページが処理され、即座にダウンロードできます。"
+    }
+  ]
+}

@@ -1,0 +1,153 @@
+<div class="seo-content" style="max-width:800px;margin:60px auto 40px;padding:0 24px;color:var(--text2);line-height:1.75;">
+
+        <h1 id="seoH1_optimizatsiya-pdf-dlya-ridera" style="font-size:clamp(22px,3.5vw,30px);color:var(--text);margin:0 0 16px;font-weight:700;">Оптимизация PDF для Ридеров — Обрезка Полей для Kindle, Kobo и reMarkable</h1>
+        <p style="font-size:15px;margin:0 0 40px;">PDF создавался как формат макета страницы — он показывает именно то, как будет выглядеть напечатанная страница, вместе с широкими полями, потому что размер страницы зашит прямо в файл. Это отлично для печати и неудобно на экране e-ink диагональю 6–10 дюймов, где эти же поля просто съедают и без того небольшую область чтения. Оптимизация для ридера от PDFree определяет реальную область контента на каждой странице, обрезает лишнее пространство вокруг неё и пересобирает PDF под размер вашего устройства — полностью в браузере, без загрузки куда-либо.</p>
+
+        <!-- How to use -->
+        <h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">Как оптимизировать PDF для ридера за 3 шага</h2>
+
+        <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
+          <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">1</div>
+          <div>
+            <strong style="color:var(--text);font-size:15px;">Откройте свой PDF</strong>
+            <p style="margin:6px 0 0;font-size:14px;">Нажмите Выбрать файлы или перетащите PDF в область загрузки. PDFree анализирует страницы по всему документу и автоматически определяет реальную область контента — файл никогда не отправляется на сервер.</p>
+          </div>
+        </div>
+        <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
+          <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">2</div>
+          <div>
+            <strong style="color:var(--text);font-size:15px;">Выберите устройство и настройте контраст</strong>
+            <p style="margin:6px 0 0;font-size:14px;">Выберите Kindle, reMarkable / Boox или Kobo / Nook, чтобы страницы получились под размер вашего экрана. Оттенки серого включены по умолчанию для e-ink; перетащите ползунок контраста и наблюдайте, как предпросмотр «до/после» обновляется в реальном времени, с автоматически определённой рамкой обрезки прямо на странице.</p>
+          </div>
+        </div>
+        <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
+          <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">3</div>
+          <div>
+            <strong style="color:var(--text);font-size:15px;">Скачайте оптимизированный PDF</strong>
+            <p style="margin:6px 0 0;font-size:14px;">Нажмите Оптимизировать для ридера. Каждая страница обрезается, переводится в оттенки серого, получает усиленный контраст и пересобирается под соотношение сторон вашего устройства — готова к скачиванию мгновенно, а затем к переносу на ваш Kindle, Kobo или reMarkable.</p>
+          </div>
+        </div>
+
+        <!-- Differentiator -->
+        <h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">Почему это не «reflow» — и почему это честный ответ</h2>
+        <p style="font-size:15px;margin:0 0 24px;">Некоторые PDF-читалки рекламируют режим «reflow», который перестраивает текст под меньший экран, как это делает EPUB. На практике это редко работает хорошо, потому что макет страницы PDF не хранится как текучий текст, в отличие от HTML-формата EPUB — это фиксированное расположение глифов и координат, и восстановить структуру абзацев из этого в лучшем случае ненадёжно. Вместо того чтобы обещать разочаровывающий reflow, Оптимизация для ридера делает нечто более надёжное: находит реальный контент на каждой странице — используя медиану по выборке страниц, чтобы одна нетипичная фотография на весь разворот или пустая разделительная страница не сбили весь расчёт для книги, — обрезает поля до этого контента и подгоняет результат под соотношение сторон экрана вашего устройства. Результат — PDF на основе изображений, тот же компромисс, на который идёт инструмент PDFree «Очистить скан» при восстановлении сканов: текст больше не выделяется и не ищется, но каждая страница читается чисто и на весь экран на вашем устройстве.</p>
+
+        <!-- When to use -->
+        <h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">Когда это нужно</h2>
+
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">Научные статьи и отчёты с широкими полями</strong>
+          <p style="margin:6px 0 0;font-size:14px;">PDF из журналов вёрстаются под печатную страницу, с полями, которые могут занимать треть небольшого экрана ридера. Обрезка возвращает реальному тексту больше места.</p>
+        </div>
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">Отсканированные книги и сфотографированные страницы</strong>
+          <p style="margin:6px 0 0;font-size:14px;">Неравномерное освещение и бледный текст плохо читаются на E Ink. Оттенки серого плюс контраст делают страницу такой же чёткой, как в настоящей электронной книге.</p>
+        </div>
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">Документы в формате Letter/A4 на 6-дюймовом экране</strong>
+          <p style="margin:6px 0 0;font-size:14px;">Страница US Letter или A4 без масштабирования на 6-дюймовом Kindle получается крошечной и заставляет постоянно масштабировать. Подгонка контента под собственное соотношение сторон устройства убирает это неудобство.</p>
+        </div>
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">Подготовка PDF для переноса по кабелю</strong>
+          <p style="margin:6px 0 0;font-size:14px;">Перед копированием файла на Kindle, Kobo или reMarkable через USB однократная оптимизация делает каждое последующее чтение на этом устройстве полноэкранным и разборчивым.</p>
+        </div>
+
+        <!-- Comparison table -->
+        <h2 style="font-size:22px;color:var(--text);margin:48px 0 16px;font-weight:700;">Чем PDFree отличается от настольных инструментов вроде k2pdfopt</h2>
+        <div style="overflow-x:auto;margin:0 0 32px;">
+          <table style="width:100%;border-collapse:collapse;font-size:14px;min-width:520px;">
+            <thead>
+              <tr style="border-bottom:2px solid var(--border);">
+                <th style="text-align:left;padding:10px 14px;color:var(--text);font-weight:600;">Функция</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">PDFree</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">Настольные CLI/GUI-инструменты</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom:1px solid var(--border);background:var(--green-light);">
+                <td style="padding:10px 14px;color:var(--text);font-weight:500;">Установка</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;">Не нужна — работает в браузере</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Требуется скачивание и установка</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 14px;color:var(--text);font-weight:500;">Конфиденциальность файла</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;">Без загрузки — остаётся на устройстве</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Локально, но зависит от платформы</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);background:var(--green-light);">
+                <td style="padding:10px 14px;color:var(--text);font-weight:500;">Платформа</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;">Любое устройство с браузером</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Только бинарник Windows/Mac/Linux</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 14px;color:var(--text);font-weight:500;">Живой предпросмотр «до/после»</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;">Есть</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Командная строка, без живого предпросмотра</td>
+              </tr>
+              <tr>
+                <td style="padding:10px 14px;color:var(--text);font-weight:500;">Цена</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:600;">Бесплатно навсегда</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Бесплатно, но требует навыков настройки</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="font-size:12px;color:var(--text3);margin:8px 0 0 0 0;">Отражает типичные настольные утилиты оптимизации PDF; функции и лицензирование у разных инструментов различаются.</p>
+
+        <!-- FAQ -->
+        <h2 style="font-size:22px;color:var(--text);margin:48px 0 20px;font-weight:700;">Часто задаваемые вопросы</h2>
+
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Загружает ли оптимизация PDF мой файл на сервер?</h3>
+          <p style="margin:0;font-size:14px;">Нет. Каждая страница рендерится, обрезается и пересобирается полностью в вашем браузере. Ваш файл никуда не отправляется.</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Останется ли текст выделяемым или доступным для поиска после этого?</h3>
+          <p style="margin:0;font-size:14px;">Нет — результат представляет собой растрированный PDF на основе изображений, тот же компромисс, на который идёт инструмент PDFree «Очистить скан». Обрезать и перестроить настоящий PDF с фиксированной вёрсткой без превращения его в изображения надёжно невозможно; если вам нужно сохранить выделяемый текст, не используйте этот инструмент.</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Как работает автоматическое определение полей?</h3>
+          <p style="margin:0;font-size:14px;">PDFree анализирует страницы по всему документу, определяет реальную область контента на каждой и вычисляет медиану по этим образцам — так, чтобы одна фотография на весь разворот или почти пустая разделительная страница не могли сделать рамку обрезки слишком тесной или слишком широкой для остальной части книги.</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Под какие устройства настроены пресеты?</h3>
+          <p style="margin:0;font-size:14px;">Kindle (экраны 6/7 дюймов), reMarkable и Onyx Boox (экраны 10,3 дюйма), а также ридеры Kobo/Nook. Каждый пресет соответствует соотношению сторон экрана целевого устройства, чтобы страницы заполняли экран без лишних чёрных полос.</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Может ли это обрезать реальный контент, например сноску у края?</h3>
+          <p style="margin:0;font-size:14px;">Обрезка всегда только расширяется наружу от обнаруженной области контента в сторону соотношения сторон вашего устройства — она никогда не уменьшается дальше, чтобы принудительно подогнать размер. Если контент страницы оказывается прямо на краю обнаруженной области, проверьте живой предпросмотр перед скачиванием.</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Есть ли ограничение на количество страниц для оптимизации?</h3>
+          <p style="margin:0;font-size:14px;">Нет. Нет ограничений по количеству страниц или размеру файла, а также нет почасового лимита задач. Оптимизируйте одностраничный PDF или книгу на несколько сотен страниц так часто, как вам нужно.</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Нужно ли отключать оттенки серого для цветных страниц?</h3>
+          <p style="margin:0;font-size:14px;">Оттенки серого включены по умолчанию, поскольку у большинства ридеров экраны в оттенках серого или E Ink, но вы можете отключить их, если читаете на цветном планшете вроде Boox Tab или хотите сохранить цветные диаграммы.</p>
+        </div>
+        <div style="margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Полностью ли бесплатна Оптимизация для ридера?</h3>
+          <p style="margin:0;font-size:14px;">Да. PDFree бесплатен, без подписки, без дневных или почасовых лимитов и без регистрации. К результату не добавляется водяной знак, и нет ограничения на размер файла.</p>
+        </div>
+
+        <!-- Why PDFree -->
+        <h2 style="font-size:22px;color:var(--text);margin:48px 0 16px;font-weight:700;">Почему стоит использовать PDFree для оптимизации PDF под ридеры?</h2>
+        <p style="font-size:14px;margin:0 0 16px;">PDFree — бесплатный онлайн-оптимизатор PDF для ридеров: обрезайте поля и усиливайте контраст для Kindle, Kobo и reMarkable без регистрации, без аккаунта и без установки. В отличие от настольных утилит, PDFree обрабатывает ваш PDF мгновенно прямо в браузере — ваш файл никогда не покидает устройство. Нет почасовых или дневных лимитов, не добавляются водяные знаки, и нет ограничений на размер файла. Работает на Windows, Mac, Linux, iOS и Android.</p>
+        <ul style="margin:0 0 32px;padding-left:24px;display:flex;flex-direction:column;gap:8px;font-size:14px;">
+          <li><strong>Бесплатно навсегда</strong> — без подписки, без премиум-уровня для базовой оптимизации</li>
+          <li><strong>Регистрация не требуется</strong> — откройте инструмент и начните мгновенно</li>
+          <li><strong>100% конфиденциально</strong> — ваш PDF обрабатывается локально и никогда не загружается на сервер</li>
+          <li><strong>Без лимита страниц или по времени</strong> — оптимизируйте одну страницу или целую книгу так часто, как нужно</li>
+          <li><strong>Живой предпросмотр «до/после»</strong> — посмотрите автоматически определённую рамку обрезки перед подтверждением</li>
+        </ul>
+
+        <!-- Related tools -->
+        <h2 style="font-size:22px;color:var(--text);margin:48px 0 12px;font-weight:700;">Похожие инструменты</h2>
+        <ul style="margin:0 0 40px;padding-left:24px;display:flex;flex-direction:column;gap:8px;">
+        <li><a href="/ru/ochistit-skan/" style="color:var(--green);font-weight:500;">Очистить скан</a> — Отбелите фон отсканированной страницы перед дальнейшей оптимизацией</li>
+        <li><a href="/ru/izmenit-razmer-pdf/" style="color:var(--green);font-weight:500;">Изменить размер PDF</a> — Подгоните PDF под стандартный размер бумаги вместо экрана устройства</li>
+        <li><a href="/ru/szhat-pdf/" style="color:var(--green);font-weight:500;">Сжать PDF</a> — Уменьшите размер файла ещё сильнее после оптимизации</li>
+        <li><a href="/ru/organizovat-pdf/" style="color:var(--green);font-weight:500;">Упорядочить PDF</a> — Измените порядок или удалите страницы перед оптимизацией</li>
+        </ul>
+
+      </div>

@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "전자책 리더용으로 PDF를 최적화하는 방법",
+  "description": "Kindle, Kobo, reMarkable용으로 여백을 자르고 대비를 최적화 — 무료, 업로드 불필요.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDF 열기",
+      "text": "'파일 선택'을 클릭하거나 PDF를 드롭 영역으로 끌어다 놓으세요."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "기기를 선택하고 대비를 조정하기",
+      "text": "Kindle, reMarkable / Boox, 또는 Kobo / Nook을 선택한 뒤 대비 슬라이더를 조정하세요. 조정하는 동안 실시간 전후 미리보기가 업데이트됩니다."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "최적화된 PDF 다운로드하기",
+      "text": "'전자책 리더용으로 최적화'를 클릭하세요. 모든 페이지가 처리되어 즉시 다운로드할 수 있습니다."
+    }
+  ]
+}

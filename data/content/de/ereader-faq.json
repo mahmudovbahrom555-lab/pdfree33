@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "Wird beim Optimieren eines PDFs meine Datei auf einen Server hochgeladen?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Nein. Jede Seite wird vollständig in deinem Browser gerendert, zugeschnitten und neu aufgebaut. Deine Datei wird nie irgendwohin gesendet." }
+  },
+  {
+    "@type": "Question",
+    "name": "Ist der Text danach noch auswählbar oder durchsuchbar?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Nein — das Ergebnis ist ein rasterisiertes, bildbasiertes PDF, derselbe Kompromiss, den PDFrees Clean-Scan-Werkzeug eingeht. Ein echtes PDF mit festem Layout zuzuschneiden und neu anzuordnen, ohne es in Bilder umzuwandeln, ist nicht zuverlässig möglich; wenn du auswählbaren Text behalten musst, nutze dieses Werkzeug nicht." }
+  },
+  {
+    "@type": "Question",
+    "name": "Wie funktioniert die automatische Randerkennung?",
+    "acceptedAnswer": { "@type": "Answer", "text": "PDFree analysiert Seiten im gesamten Dokument, erkennt den tatsächlichen Inhaltsbereich jeder einzelnen und bildet den Median über diese Stichproben — so kann ein einzelnes randfüllendes Foto oder eine fast leere Trennseite den Zuschneiderahmen nicht zu eng oder zu weit für den Rest des Buches ziehen." }
+  },
+  {
+    "@type": "Question",
+    "name": "Für welche Geräte sind die Voreinstellungen abgestimmt?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Kindle (6-/7-Zoll-Bildschirme), reMarkable und Onyx Boox (10,3-Zoll-Bildschirme) sowie Kobo/Nook-Reader. Jede Voreinstellung entspricht dem Bildschirmverhältnis des Zielgeräts, damit Seiten den Bildschirm ohne unnötige Ränder ausfüllen." }
+  },
+  {
+    "@type": "Question",
+    "name": "Könnte dabei echter Inhalt wie eine Fußnote am Rand abgeschnitten werden?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Der Zuschnitt wächst immer nur nach außen vom erkannten Inhaltsbereich in Richtung des Seitenverhältnisses deines Geräts — er schrumpft nie weiter, um eine Passform zu erzwingen. Wenn der Inhalt einer Seite direkt am Rand des erkannten Bereichs liegt, prüfe die Live-Vorschau vor dem Download." }
+  },
+  {
+    "@type": "Question",
+    "name": "Gibt es ein Limit, wie viele Seiten ich optimieren kann?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Nein. Es gibt kein Limit für Seitenzahl oder Dateigröße und keine stündliche Aufgabenbegrenzung. Optimiere ein einseitiges PDF oder ein mehrere hundert Seiten starkes Buch, so oft du willst." }
+  },
+  {
+    "@type": "Question",
+    "name": "Muss ich Graustufen für farbige Seiten ausschalten?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Graustufen sind standardmäßig aktiviert, da die meisten E-Reader Graustufen- oder E-Ink-Displays haben, aber du kannst sie ausschalten, wenn du auf einem Farbtablet wie einem Boox Tab liest oder farbige Diagramme erhalten möchtest." }
+  },
+  {
+    "@type": "Question",
+    "name": "Ist der E-Reader-Optimierer wirklich kostenlos?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Ja. PDFree ist kostenlos ohne Abo, ohne tägliche oder stündliche Limits und ohne Anmeldung. Der Ausgabe wird kein Wasserzeichen hinzugefügt und es gibt keine Dateigrößenbeschränkung." }
+  }
+]

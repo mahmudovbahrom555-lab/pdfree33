@@ -1,0 +1,42 @@
+[
+  {
+    "@type": "Question",
+    "name": "Otimizar um PDF envia meu arquivo para um servidor?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Não. Cada página é renderizada, cortada e reconstruída inteiramente no seu navegador. Seu arquivo nunca é enviado para lugar nenhum." }
+  },
+  {
+    "@type": "Question",
+    "name": "O texto ainda será selecionável ou pesquisável depois?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Não — o resultado é um PDF rasterizado, baseado em imagens, a mesma escolha que a ferramenta Limpar Digitalização da PDFree faz. Cortar e refluir um PDF real de layout fixo sem transformá-lo em imagens não é algo confiável; se você precisa manter texto selecionável, não use esta ferramenta." }
+  },
+  {
+    "@type": "Question",
+    "name": "Como funciona a detecção automática de margens?",
+    "acceptedAnswer": { "@type": "Answer", "text": "A PDFree amostra páginas de todo o documento, detecta a área de conteúdo real de cada uma e calcula a mediana entre essas amostras — assim uma única foto de sangria total ou uma página divisória quase em branco não consegue deixar a caixa de corte apertada ou larga demais para o resto do livro." }
+  },
+  {
+    "@type": "Question",
+    "name": "Para quais dispositivos os predefinidos são ajustados?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Kindle (telas de 6/7 polegadas), reMarkable e Onyx Boox (telas de 10,3 polegadas), e leitores Kobo/Nook. Cada predefinição corresponde à proporção de tela do dispositivo alvo, para que as páginas preencham a tela sem mais faixas pretas do que o necessário." }
+  },
+  {
+    "@type": "Question",
+    "name": "Isso poderia cortar conteúdo real, como uma nota de rodapé perto da borda?",
+    "acceptedAnswer": { "@type": "Answer", "text": "O corte só cresce para fora a partir da caixa de conteúdo detectada em direção à proporção de tela do seu dispositivo — nunca encolhe mais para forçar um ajuste. Se o conteúdo de uma página ficar bem na borda da caixa detectada, confira a prévia ao vivo antes de baixar." }
+  },
+  {
+    "@type": "Question",
+    "name": "Há um limite de quantas páginas posso otimizar?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Não. Não há limite de número de páginas ou de tamanho de arquivo, nem limite de tarefas por hora. Otimize um PDF de uma página ou um livro de várias centenas de páginas quantas vezes precisar." }
+  },
+  {
+    "@type": "Question",
+    "name": "Preciso desativar a escala de cinza para páginas coloridas?",
+    "acceptedAnswer": { "@type": "Answer", "text": "A escala de cinza vem ativada por padrão porque a maioria dos e-readers tem telas em escala de cinza ou E Ink, mas você pode desativá-la se estiver lendo num tablet colorido como um Boox Tab ou quiser manter diagramas coloridos." }
+  },
+  {
+    "@type": "Question",
+    "name": "O Otimizador para E-Reader é totalmente gratuito?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Sim. A PDFree é gratuita, sem assinatura, sem limites diários ou por hora, e sem cadastro. Nenhuma marca d'água é adicionada ao resultado e não há restrição de tamanho de arquivo." }
+  }
+]

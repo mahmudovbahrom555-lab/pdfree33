@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Comment optimiser un PDF pour une liseuse",
+  "description": "Recadrez les marges et optimisez le contraste pour Kindle, Kobo et reMarkable — gratuit, aucun envoi requis.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Ouvrez votre PDF",
+      "text": "Cliquez sur « Choisir des fichiers » ou glissez votre PDF dans la zone de dépôt."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Choisissez votre appareil et ajustez le contraste",
+      "text": "Choisissez Kindle, reMarkable / Boox, ou Kobo / Nook, puis ajustez le curseur de contraste. L'aperçu avant/après en direct se met à jour au fur et à mesure."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Téléchargez votre PDF optimisé",
+      "text": "Cliquez sur « Optimiser pour Liseuse ». Chaque page est traitée et prête à télécharger instantanément."
+    }
+  ]
+}
