@@ -1,0 +1,66 @@
+[
+  {
+    "@type": "Question",
+    "name": "Does optimizing a PDF upload my file to a server?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Every page is rendered, cropped, and rebuilt entirely in your browser. Your file is never sent anywhere."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Will the text still be selectable or searchable afterward?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No — the output is a rasterized, image-based PDF, the same trade-off PDFree's Clean Scan tool makes. Cropping and reflowing a real fixed-layout PDF without turning it into images isn't reliably possible; if you need to keep selectable text, don't run it through this tool."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "How does the automatic margin detection work?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree samples pages across the document, detects each one's actual content area, and takes the median across those samples — so a single full-bleed photo or a near-blank divider page can't drag the crop box too tight or too loose for the rest of the book."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Which devices are the presets tuned for?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Kindle (6\"/7\" screens), reMarkable and Onyx Boox (10.3\" screens), and Kobo/Nook readers. Each preset matches the target device's screen aspect ratio so pages fill the screen without letterboxing more than necessary."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Could this crop off real content, like a footnote near the edge?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "The crop only ever grows outward from the detected content box toward your device's aspect ratio — it never shrinks further to force a fit. If a page's content sits right at the edge of the detected box, check the live preview before downloading."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is there a limit on how many pages I can optimize?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. There's no page-count or file-size limit, and no per-hour task limit. Optimize a single-page PDF or a several-hundred-page book as often as you need."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Do I need to turn off grayscale for color pages?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Grayscale is on by default since most e-readers are grayscale or E Ink displays, but you can turn it off if you're reading on a color tablet like a Boox Tab or want to keep color diagrams intact."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is the E-Reader Optimizer completely free?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. PDFree is free with no subscription, no daily or hourly limits, and no signup. No watermark is added to the output and there's no file size restriction."
+    }
+  }
+]

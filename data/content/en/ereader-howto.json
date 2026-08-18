@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to Optimize a PDF for an E-Reader",
+  "description": "Crop margins and optimize contrast for Kindle, Kobo & reMarkable — free, no upload required.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Open your PDF",
+      "text": "Click 'Choose files' or drag your PDF into the drop zone."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Pick your device and adjust contrast",
+      "text": "Choose Kindle, reMarkable / Boox, or Kobo / Nook, then adjust the contrast slider. The live before/after preview updates as you go."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Download your optimized PDF",
+      "text": "Click 'Optimize for E-Reader'. Every page is processed and ready to download instantly."
+    }
+  ]
+}

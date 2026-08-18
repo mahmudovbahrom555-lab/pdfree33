@@ -23,6 +23,7 @@ import { openFeedback } from './feedback.js';
 import { isHeicFile, decodeHeicToJpegBlob } from './heicDecode.js';
 import { evaluateStructural } from './eriScore.js';
 import { evaluateXlsxStructural } from './eriScoreXlsx.js';
+import { contentBBox, reconcileGlobalCrop, padBBox, composeWithAspect, DEVICE_PRESETS } from './ereaderCrop.js';
 
 // Below this ERI "tables" score, the text-detected/border-grid tables in the
 // first-pass docx are more likely mis-detected layout (garbled/ghost tables)
@@ -305,6 +306,7 @@ export async function doProcess(currentTool, extraParams = {}) {
     mangaSplit:   () => _runMangaSplit(filesSnapshot, extraParams),
     fillOrder:    () => _runFillOrder(filesSnapshot, extraParams),
     cleanScan:    () => _runCleanScan(filesSnapshot, extraParams),
+    ereader:      () => _runEreader(filesSnapshot, extraParams),
     'redact-true': () => _runRedactTrue(filesSnapshot, extraParams),
   };
 
@@ -976,6 +978,152 @@ async function _runCleanScan(filesSnapshot, { mode = 'clean', strength = 0.5, sc
     setFilesLocked(false);
     hideCancelBtn();
     _handleError('cleanScan', err.message || 'Processing error');
+  }
+}
+
+// ── E-Reader Optimizer ────────────────────────────────────────
+// Dedicated js/ereaderWorker.js, not the shared js/worker.js — same
+// reasoning as Clean Scan above (pdf.js rendering stays main-thread here).
+
+let _ereaderWorker = null;
+function _ensureEreaderWorker() {
+  if (!_ereaderWorker) {
+    _ereaderWorker = new Worker(new URL('./ereaderWorker.js', import.meta.url));
+  }
+  return _ereaderWorker;
+}
+
+function _ereaderWorkerRequest(worker, message, transfer, onProgress) {
+  return new Promise((resolve, reject) => {
+    worker.onmessage = (e) => {
+      const d = e.data;
+      if (d.type === 'progress') { onProgress?.(d.value, d.label); return; }
+      if (d.type === 'error') { reject(new Error(d.message)); return; }
+      resolve(d);
+    };
+    worker.onerror = (e) => reject(new Error(e.message || 'Worker error'));
+    worker.postMessage(message, transfer);
+  });
+}
+
+const _EREADER_SAMPLE_MAX     = 12;   // pages sampled to compute the one global crop rect
+const _EREADER_BBOX_EDGE      = 560;  // downsample long edge for bbox detection — cheap, doesn't need full DPI
+const _EREADER_RENDER_SCALE   = 2.5;  // main-thread render scale for the real per-page pass
+const _EREADER_OUTPUT_HEIGHT  = 1800; // fixed output pixel height, every page — sharp enough for e-ink
+const _EREADER_PAGE_HEIGHT_PT = 792;  // fixed output PDF page height (points), every page
+
+// Evenly spaced sample indices (1-indexed), capped at `max`, always
+// including the first and last page.
+function _ereaderSampleIndices(pageCount, max) {
+  if (pageCount <= max) return Array.from({ length: pageCount }, (_, i) => i + 1);
+  const step = (pageCount - 1) / (max - 1);
+  const indices = new Set();
+  for (let i = 0; i < max; i++) indices.add(1 + Math.round(i * step));
+  return [...indices].sort((a, b) => a - b);
+}
+
+async function _runEreader(filesSnapshot, { device = 'kindle', grayscale = true, contrast = 0.5, quality = 0.85 } = {}) {
+  if (!_checkSize(filesSnapshot[0], 150)) { _abortUI(); return; }
+  const file = filesSnapshot[0];
+
+  try {
+    setProgress(2, t('prog_ereader_load'));
+    await loadPdfJs();
+    const buffer = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await file.arrayBuffer());
+    const pdfDoc = await window.pdfjsLib.getDocument({ data: new Uint8Array(buffer) }).promise;
+    const pageCount = pdfDoc.numPages;
+    if (pageCount === 0) throw new Error('PDF has no pages');
+
+    const targetAspect = (DEVICE_PRESETS[device] || DEVICE_PRESETS.kindle).aspect;
+
+    // ── Sample pages, detect per-page content bbox, reconcile to one global crop ──
+    // (main thread only — pdf.js never runs inside a Worker in this codebase, see
+    // ereaderWorker.js's header comment)
+    setProgress(4, t('prog_ereader_analyze'));
+    const sampleIndices = _ereaderSampleIndices(pageCount, _EREADER_SAMPLE_MAX);
+    const bboxes = [];
+    let firstPageVp1 = null;
+
+    for (const i of sampleIndices) {
+      const page = await pdfDoc.getPage(i);
+      const vp1  = page.getViewport({ scale: 1 });
+      if (!firstPageVp1) firstPageVp1 = vp1;
+      const scale  = _EREADER_BBOX_EDGE / Math.max(vp1.width, vp1.height);
+      const vp     = page.getViewport({ scale });
+      const canvas = document.createElement('canvas');
+      canvas.width  = Math.max(1, Math.round(vp.width));
+      canvas.height = Math.max(1, Math.round(vp.height));
+      const ctx = canvas.getContext('2d');
+      await page.render({ canvasContext: ctx, viewport: vp }).promise;
+      page.cleanup?.();
+      const { data } = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      bboxes.push(contentBBox(data, canvas.width, canvas.height));
+    }
+
+    const reconciled = padBBox(reconcileGlobalCrop(bboxes));
+    const cropRect    = composeWithAspect(reconciled, firstPageVp1.width, firstPageVp1.height, targetAspect);
+
+    const outputHeight = _EREADER_OUTPUT_HEIGHT;
+    const outputWidth  = Math.round(outputHeight * targetAspect);
+    const pageSize = {
+      width:  Math.round(_EREADER_PAGE_HEIGHT_PT * targetAspect),
+      height: _EREADER_PAGE_HEIGHT_PT,
+    };
+
+    const worker = _ensureEreaderWorker();
+    const pages  = [];
+
+    // Sequential, one page fully round-tripped (render → worker → response)
+    // before starting the next — same reasoning as _runCleanScan.
+    for (let i = 1; i <= pageCount; i++) {
+      const page = await pdfDoc.getPage(i);
+      const vp     = page.getViewport({ scale: _EREADER_RENDER_SCALE });
+      const canvas = document.createElement('canvas');
+      canvas.width  = Math.round(vp.width);
+      canvas.height = Math.round(vp.height);
+      await page.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
+      page.cleanup?.();
+
+      const bitmap = await createImageBitmap(canvas);
+      const result = await _ereaderWorkerRequest(
+        worker,
+        { type: 'processPage', index: i - 1, bitmap, cropRect, grayscale, contrast, quality, outputWidth, outputHeight },
+        [bitmap]
+      );
+      pages.push(result);
+
+      setProgress(8 + Math.round((i / pageCount) * 77), t('prog_ereader_page', { n: i, total: pageCount }));
+    }
+
+    const done = await _ereaderWorkerRequest(
+      worker,
+      { type: 'assemble', pages, pageSize },
+      pages.map(p => p.bytes),
+      (value, label) => setProgress(Math.max(85, value), label)
+    );
+
+    if (!(done.result instanceof ArrayBuffer)) {
+      _handleError('ereader', 'Unexpected result from worker'); return;
+    }
+
+    isProcessing = false;
+    setFilesLocked(false);
+    hideCancelBtn();
+    setProgress(100, t('prog_done'));
+
+    const blob     = new Blob([done.result], { type: 'application/pdf' });
+    const base     = file.name.replace(/\.pdf$/i, '');
+    const filename = `${base}-ereader.pdf`;
+    const desc     = t('desc_ereader', { pages: done.pageCount, size: fmtSize(blob.size) });
+
+    document.dispatchEvent(new CustomEvent('pdfree:success', {
+      detail: { tool: 'ereader', blob, desc, filename }
+    }));
+  } catch (err) {
+    isProcessing = false;
+    setFilesLocked(false);
+    hideCancelBtn();
+    _handleError('ereader', err.message || 'Processing error');
   }
 }
 

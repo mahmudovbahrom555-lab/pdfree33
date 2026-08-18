@@ -46,6 +46,8 @@ import { initMangaSplitOptions, hideMangaSplitOptions,
          getMangaSplitParams, renderMangaSurvey } from './mangaSplitUI.js';
 import { initCleanScanOptions, hideCleanScanOptions,
          getCleanScanParams }           from './cleanScanUI.js';
+import { initEreaderOptions, hideEreaderOptions,
+         getEreaderParams }              from './ereaderUI.js';
 import { initRedactOptions, hideRedactOptions,
          getRedactParams }                from './redactUI.js';
 import { initDraw, loadPdfFile, resetDraw } from './drawUI.js';
@@ -355,6 +357,14 @@ registerTool('cleanScan', {
   hide:      hideCleanScanOptions,
   getParams: getCleanScanParams,
   validate:  p => !p.hasFile ? t('val_cs_loading') : null,
+});
+
+registerTool('ereader', {
+  runner:    'ereader', // dedicated js/ereaderWorker.js, not the shared js/worker.js — see processor.js's _runEreader
+  init:      initEreaderOptions,
+  hide:      hideEreaderOptions,
+  getParams: getEreaderParams,
+  validate:  p => !p.hasFile ? t('val_er_loading') : null,
 });
 
 registerTool('protect', {

@@ -66,6 +66,7 @@ const TOOL_SLUGS = {
   flatten:          '/flatten-pdf/',
   compare:          '/compare-pdf/',
   cleanScan:        '/clean-scan/',
+  ereader:          '/optimize-pdf-for-ereader/',
   organize:         '/organize-pdf/',
   resize:           '/resize-pdf-for-printing/',
   mangaSplit:       '/split-manga-pages/',

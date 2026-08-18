@@ -248,6 +248,24 @@ export const TOOLS = {
     accept:      '.pdf,application/pdf',
     implemented: true,
   },
+  ereader: {
+    icon:   '📱',
+    title:  'E-Reader Optimizer',
+    desc:   'Crop margins and optimize contrast for Kindle, Kobo & reMarkable',
+    tags:   ['ereader', 'e-reader', 'kindle', 'kobo', 'remarkable', 'boox',
+             'crop margins', 'optimize for kindle', 'e-ink', 'shrink margins',
+             'pdf for kindle', 'reflow pdf', 'grayscale pdf'],
+    btn:    '📱 Optimize for E-Reader',
+    // Output is a rasterized (image-based) PDF, same trade-off Clean Scan
+    // already makes for scanned docs — true text reflow isn't achievable
+    // for fixed-layout PDF without OCR+layout reconstruction.
+    titles: { en: 'E-Reader Optimizer', es: 'Optimizador para E-Reader', pt: 'Otimizador para E-Reader', de: 'E-Reader-Optimierer', fr: 'Optimiseur pour liseuse', id: 'Pengoptimal E-Reader', vi: 'Tối ưu cho máy đọc sách', ru: 'Оптимизация для ридеров', ja: '電子書籍リーダー最適化', it: 'Ottimizzatore per e-reader', ko: '전자책 리더 최적화', nl: 'E-reader-optimalisatie', pl: 'Optymalizator do e-czytników', tr: 'E-Okuyucu Optimize Edici' },
+    descs:  { en: 'Crop margins and optimize contrast for Kindle, Kobo & reMarkable', es: 'Recorta márgenes y optimiza el contraste para Kindle, Kobo y reMarkable', pt: 'Corte as margens e otimize o contraste para Kindle, Kobo e reMarkable', de: 'Ränder zuschneiden und Kontrast optimieren für Kindle, Kobo & reMarkable', fr: 'Recadrez les marges et optimisez le contraste pour Kindle, Kobo et liseuses reMarkable', id: 'Pangkas margin dan optimalkan kontras untuk Kindle, Kobo & reMarkable', vi: 'Cắt lề và tối ưu độ tương phản cho Kindle, Kobo & reMarkable', ru: 'Обрежьте поля и оптимизируйте контраст для Kindle, Kobo и reMarkable', ja: 'Kindle・Kobo・reMarkable向けに余白をトリミングしコントラストを最適化', it: 'Ritaglia i margini e ottimizza il contrasto per Kindle, Kobo e reMarkable', ko: 'Kindle, Kobo, reMarkable용으로 여백을 자르고 대비를 최적화하세요', nl: 'Marges bijsnijden en contrast optimaliseren voor Kindle, Kobo & reMarkable', pl: 'Przytnij marginesy i zoptymalizuj kontrast dla Kindle, Kobo i reMarkable', tr: 'Kindle, Kobo ve reMarkable için kenar boşluklarını kırpın ve kontrastı optimize edin' },
+    btns:   { en: '📱 Optimize for E-Reader', es: '📱 Optimizar para E-Reader', pt: '📱 Otimizar para E-Reader', de: '📱 Für E-Reader optimieren', fr: '📱 Optimiser pour liseuse', id: '📱 Optimalkan untuk E-Reader', vi: '📱 Tối ưu cho máy đọc sách', ru: '📱 Оптимизировать для ридера', ja: '📱 電子書籍リーダー用に最適化', it: '📱 Ottimizza per e-reader', ko: '📱 전자책 리더용으로 최적화', nl: '📱 Optimaliseren voor e-reader', pl: '📱 Zoptymalizuj do e-czytnika', tr: '📱 E-Okuyucu için Optimize Et' },
+    multi:       false,
+    accept:      '.pdf,application/pdf',
+    implemented: true,
+  },
   extract: {
     icon:   '📑',
     title:  'Extract Pages',
