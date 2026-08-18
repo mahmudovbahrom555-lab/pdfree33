@@ -392,6 +392,10 @@ window.PDFREE_LOCALE = {
   er_crop_caption: '자동 감지된 콘텐츠 영역 — 전체 {n}페이지 기준',
   er_banner: '🔒 브라우저에서 완전히 처리 · 업로드 없음',
   er_rasterize_warning: '결과물은 전자책 리더에 최적화된 이미지 기반 PDF입니다 — 텍스트를 더 이상 선택하거나 검색할 수 없습니다.',
+  er_columns: '단(칼럼)',
+  er_columns_auto: '자동',
+  er_columns_off: '끄기',
+  er_columns_detected_note: '2단 레이아웃이 감지되었습니다 — 각 페이지가 읽는 순서대로 두 개로 분할됩니다.',
   val_er_loading: '페이지 여백을 분석하는 중입니다 — 잠시만 기다려 주세요…',
 
   // search

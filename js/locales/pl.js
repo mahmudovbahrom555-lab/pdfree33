@@ -390,6 +390,10 @@ window.PDFREE_LOCALE = {
   er_crop_caption: 'Automatycznie wykryty obszar treści — na podstawie wszystkich {n} stron',
   er_banner: '🔒 Przetwarzane całkowicie w Twojej przeglądarce · Bez przesyłania',
   er_rasterize_warning: 'Wynik to PDF oparty na obrazach, zoptymalizowany pod czytniki e-booków — tekst nie jest już zaznaczalny ani przeszukiwalny.',
+  er_columns: 'Kolumny',
+  er_columns_auto: 'Automatycznie',
+  er_columns_off: 'Wyłączone',
+  er_columns_detected_note: 'Wykryto układ dwukolumnowy — każda strona zostanie podzielona na dwie, w kolejności czytania.',
   val_er_loading: 'Analizowanie marginesów stron — proszę chwilę poczekać…',
 
   // search

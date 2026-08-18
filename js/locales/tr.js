@@ -390,6 +390,10 @@ window.PDFREE_LOCALE = {
   er_crop_caption: 'Otomatik algılanan içerik alanı — tüm {n} sayfaya dayalı',
   er_banner: '🔒 Tamamen tarayıcınızda işlenir · Yükleme yok',
   er_rasterize_warning: "Çıktı, e-okuyucular için optimize edilmiş görüntü tabanlı bir PDF'dir — metin artık seçilebilir veya aranabilir değildir.",
+  er_columns: 'Sütunlar',
+  er_columns_auto: 'Otomatik',
+  er_columns_off: 'Kapalı',
+  er_columns_detected_note: 'İki sütunlu düzen algılandı — her sayfa okuma sırasına göre ikiye bölünecek.',
   val_er_loading: 'Sayfa kenar boşlukları analiz ediliyor — lütfen bir dakika bekleyin…',
 
   // search

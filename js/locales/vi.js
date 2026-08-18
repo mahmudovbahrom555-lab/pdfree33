@@ -391,6 +391,10 @@ window.PDFREE_LOCALE = {
   er_crop_caption: 'Vùng nội dung được tự động phát hiện — dựa trên tất cả {n} trang',
   er_banner: '🔒 Xử lý hoàn toàn trong trình duyệt của bạn · Không tải lên',
   er_rasterize_warning: 'Kết quả là PDF dạng hình ảnh được tối ưu cho máy đọc sách — văn bản không còn chọn được hoặc tìm kiếm được.',
+  er_columns: 'Cột',
+  er_columns_auto: 'Tự động',
+  er_columns_off: 'Tắt',
+  er_columns_detected_note: 'Đã phát hiện bố cục hai cột — mỗi trang sẽ được tách thành hai, theo thứ tự đọc.',
   val_er_loading: 'Đang phân tích lề trang — vui lòng đợi trong giây lát…',
 
   // search

@@ -391,6 +391,10 @@ window.PDFREE_LOCALE = {
   er_crop_caption: 'Automatisch erkannter Inhaltsbereich — basierend auf allen {n} Seiten',
   er_banner: '🔒 Vollständig in deinem Browser verarbeitet · Kein Upload',
   er_rasterize_warning: 'Die Ausgabe ist ein bildbasiertes PDF, optimiert für E-Reader — Text ist nicht mehr auswählbar oder durchsuchbar.',
+  er_columns: 'Spalten',
+  er_columns_auto: 'Automatisch',
+  er_columns_off: 'Aus',
+  er_columns_detected_note: 'Zweispaltiges Layout erkannt — jede Seite wird in Leserichtung in zwei geteilt.',
   val_er_loading: 'Seitenränder werden analysiert — bitte einen Moment warten…',
 
   // search

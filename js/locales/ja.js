@@ -393,6 +393,10 @@ window.PDFREE_LOCALE = {
   er_crop_caption: '自動検出されたコンテンツ領域 — 全{n}ページに基づく',
   er_banner: '🔒 すべてブラウザ内で処理 — アップロードなし',
   er_rasterize_warning: '出力は電子書籍リーダー向けに最適化された画像ベースのPDFです — テキストの選択・検索はできなくなります。',
+  er_columns: '段組み',
+  er_columns_auto: '自動',
+  er_columns_off: 'オフ',
+  er_columns_detected_note: '2段組みレイアウトを検出しました — 各ページは読み順で2つに分割されます。',
   val_er_loading: 'ページの余白を解析しています — 少々お待ちください…',
 
   // search

@@ -390,6 +390,10 @@ window.PDFREE_LOCALE = {
   er_crop_caption: 'Zone de contenu détectée automatiquement — basée sur les {n} pages',
   er_banner: '🔒 Traité entièrement dans votre navigateur · Aucun envoi',
   er_rasterize_warning: "Le résultat est un PDF basé sur des images optimisé pour liseuses — le texte n'est plus sélectionnable ni cherchable.",
+  er_columns: 'Colonnes',
+  er_columns_auto: 'Auto',
+  er_columns_off: 'Désactivé',
+  er_columns_detected_note: "Mise en page à deux colonnes détectée — chaque page sera divisée en deux, dans l'ordre de lecture.",
   val_er_loading: 'Analyse des marges des pages — veuillez patienter…',
 
   // search

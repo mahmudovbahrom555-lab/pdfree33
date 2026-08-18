@@ -154,6 +154,113 @@ export function composeWithAspect(cropRect, pageWidthPt, pageHeightPt, targetAsp
   return { top, bottom, left, right };
 }
 
+// ── 2-column gutter detection ────────────────────────────────────
+//
+// v2 addition, gated on real signal: a Reddit thread pasted by the user
+// specifically recommended k2pdfopt for this exact case (2-column academic
+// PDFs unreadable on small screens) — the one thing v1's plain crop+resize
+// doesn't handle. Detection is pixel-based (this module never sees text
+// runs, only rendered bitmaps), and deliberately global-per-document, not
+// per-page — same "one decision, applied uniformly" pattern as the crop
+// rect and device-aspect composition above, not a per-page adaptive
+// system. That's a real, accepted trade-off: an occasional full-bleed
+// figure page on an otherwise 2-column document will still get split
+// down the middle. The Auto/Off toggle in the UI is the escape hatch.
+
+const GUTTER_BAND_START     = 0.25; // only search the central 25%-75% of the
+const GUTTER_BAND_END       = 0.75; // crop width — rejects a paragraph indent
+                                     // or ordinary side margin from ever being
+                                     // mistaken for an inter-column gutter
+const GUTTER_INK_THRESHOLD  = 0.01; // column counts as "gutter" if <1% ink
+const GUTTER_MIN_WIDTH_FRAC = 0.015; // must be at least 1.5% of crop width —
+                                      // rejects single-pixel noise gaps
+
+/**
+ * Look for a vertical whitespace gutter within the central band of a
+ * page's content area — the signature of a genuine 2-column layout, as
+ * opposed to a single column with ordinary margins.
+ *
+ * @param {Uint8ClampedArray|Uint8Array} rgba
+ * @param {number} width
+ * @param {number} height
+ * @param {{top:number,bottom:number,left:number,right:number}} cropRect - page-fraction content bbox for THIS page
+ * @param {{tolerance?: number}} [opts]
+ * @returns {{hasGutter:boolean, centerFrac:number|null}} centerFrac is a
+ *   page-fraction X position (not relative to cropRect), or null if no
+ *   gutter was found.
+ */
+export function detectColumnGutter(rgba, width, height, cropRect, opts = {}) {
+  const tolerance = opts.tolerance ?? DEFAULT_TOLERANCE;
+  const threshold = 255 - tolerance;
+
+  const y0 = Math.max(0, Math.round(cropRect.top * height));
+  const y1 = Math.min(height, Math.round(cropRect.bottom * height));
+  const x0 = Math.max(0, Math.round(cropRect.left * width));
+  const x1 = Math.min(width, Math.round(cropRect.right * width));
+  const cropWidth = x1 - x0;
+  if (cropWidth <= 0 || y1 <= y0) return { hasGutter: false, centerFrac: null };
+
+  const bandX0 = x0 + Math.round(cropWidth * GUTTER_BAND_START);
+  const bandX1 = x0 + Math.round(cropWidth * GUTTER_BAND_END);
+  const rowCount = y1 - y0;
+
+  // Column ink counts, restricted to the crop's own row range — same
+  // projection technique as contentBBox, just scoped to the central band.
+  const colInk = new Uint32Array(bandX1 - bandX0);
+  for (let y = y0; y < y1; y++) {
+    const rowBase = y * width;
+    for (let x = bandX0; x < bandX1; x++) {
+      const i = (rowBase + x) * 4;
+      const lum = 0.299 * rgba[i] + 0.587 * rgba[i + 1] + 0.114 * rgba[i + 2];
+      if (lum < threshold) colInk[x - bandX0]++;
+    }
+  }
+
+  const inkFloor = Math.max(1, Math.round(rowCount * GUTTER_INK_THRESHOLD));
+  const minGutterPx = Math.max(1, Math.round(cropWidth * GUTTER_MIN_WIDTH_FRAC));
+
+  // Widest contiguous run of near-blank columns within the band.
+  let bestStart = -1, bestLen = 0;
+  let runStart = -1;
+  for (let i = 0; i <= colInk.length; i++) {
+    const isBlank = i < colInk.length && colInk[i] <= inkFloor;
+    if (isBlank) {
+      if (runStart < 0) runStart = i;
+    } else if (runStart >= 0) {
+      const len = i - runStart;
+      if (len > bestLen) { bestLen = len; bestStart = runStart; }
+      runStart = -1;
+    }
+  }
+
+  if (bestLen < minGutterPx) return { hasGutter: false, centerFrac: null };
+
+  const gutterCenterPx = bandX0 + bestStart + bestLen / 2;
+  return { hasGutter: true, centerFrac: gutterCenterPx / width };
+}
+
+const DEFAULT_COLUMN_THRESHOLD = 0.6; // fraction of sampled pages needing a
+                                       // detected gutter before treating the
+                                       // whole document as 2-column
+
+/**
+ * Reconcile per-page gutter detections into one document-level decision.
+ *
+ * @param {Array<{hasGutter:boolean, centerFrac:number|null}>} gutters
+ * @param {{threshold?: number}} [opts]
+ * @returns {{enabled:boolean, centerFrac:number|null}}
+ */
+export function reconcileColumnSplit(gutters, opts = {}) {
+  const threshold = opts.threshold ?? DEFAULT_COLUMN_THRESHOLD;
+  if (!gutters.length) return { enabled: false, centerFrac: null };
+
+  const withGutter = gutters.filter(g => g.hasGutter);
+  if (withGutter.length / gutters.length < threshold) {
+    return { enabled: false, centerFrac: null };
+  }
+  return { enabled: true, centerFrac: median(withGutter.map(g => g.centerFrac)) };
+}
+
 // ── Device presets ────────────────────────────────────────────
 
 export const DEVICE_PRESETS = {

@@ -378,6 +378,10 @@ export const EN = {
   er_crop_caption:       'Auto-detected content area — based on all {n} pages',
   er_banner:             '🔒 Processed entirely in your browser · No upload',
   er_rasterize_warning:  'Output is an image-based PDF optimized for e-readers — text is no longer selectable or searchable.',
+  er_columns:            'Columns',
+  er_columns_auto:       'Auto',
+  er_columns_off:        'Off',
+  er_columns_detected_note: 'Two-column layout detected — each page will be split into two, in reading order.',
 
   // ── search (homepage intent search) ───────────────────────────
   search_placeholder:     'merge pdf, compress, rotate, watermark, pdf to word…',

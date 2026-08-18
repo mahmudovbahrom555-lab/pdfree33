@@ -22,7 +22,8 @@ import { loadingRow, infoBanner }    from './uiComponents.js';
 import { loadPdfJs }                 from './pdf2jpgUI.js';
 import { TOOLS, getLocalizedTool }   from './config.js';
 import { t, tp }                     from './i18n.js';
-import { contentBBox, reconcileGlobalCrop, padBBox, composeWithAspect, DEVICE_PRESETS } from './ereaderCrop.js';
+import { contentBBox, reconcileGlobalCrop, padBBox, composeWithAspect, DEVICE_PRESETS,
+         detectColumnGutter, reconcileColumnSplit } from './ereaderCrop.js';
 
 const PREVIEW_WIDTH = 900;
 const SAMPLE_MAX = 8; // fewer than processor.js's export-time sample — UI only needs a quick estimate
@@ -34,12 +35,14 @@ const PREVIEW_DEBOUNCE_MS = 150;
 let _device       = 'kindle';   // 'kindle' | 'remarkable' | 'kobo'
 let _grayscale    = true;
 let _contrast     = 0.5;
+let _columnMode   = 'auto';     // 'auto' | 'off'
 let _pageCount    = 0;
 let _pdfJsDoc     = null;
 let _previewPage  = 1;
 let _beforeURL    = null;
 let _afterURL     = null;
 let _reconciled   = null; // device-independent bbox, computed once per file
+let _columnSplit  = { enabled: false, centerFrac: null }; // computed once per file, same sampling pass as _reconciled
 let _previewGen   = 0;
 let _previewTimer = null;
 
@@ -47,11 +50,12 @@ let _previewTimer = null;
 
 export function getEreaderParams() {
   return {
-    device:    _device,
-    grayscale: _grayscale,
-    contrast:  _contrast,
-    hasFile:   !!_pdfJsDoc,
-    pageCount: _pageCount,
+    device:     _device,
+    grayscale:  _grayscale,
+    contrast:   _contrast,
+    columnMode: _columnMode,
+    hasFile:    !!_pdfJsDoc,
+    pageCount:  _pageCount,
   };
 }
 
@@ -93,8 +97,9 @@ export function hideEreaderOptions() {
   _cleanup();
   const container = id('ereaderOptions');
   if (container) { container.style.display = 'none'; container.innerHTML = ''; }
-  _device = 'kindle'; _grayscale = true; _contrast = 0.5;
+  _device = 'kindle'; _grayscale = true; _contrast = 0.5; _columnMode = 'auto';
   _pageCount = 0; _pdfJsDoc = null; _previewPage = 1; _reconciled = null;
+  _columnSplit = { enabled: false, centerFrac: null };
 }
 
 // ── Global crop detection (device-independent part, cached) ────
@@ -109,7 +114,8 @@ function _sampleIndices(pageCount, max) {
 
 async function _detectGlobalCrop() {
   const indices = _sampleIndices(_pageCount, SAMPLE_MAX);
-  const bboxes = [];
+  const bboxes  = [];
+  const gutters = [];
   for (const i of indices) {
     const page = await _pdfJsDoc.getPage(i);
     const vp1  = page.getViewport({ scale: 1 });
@@ -122,9 +128,12 @@ async function _detectGlobalCrop() {
     await page.render({ canvasContext: ctx, viewport: vp }).promise;
     page.cleanup?.();
     const { data } = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    bboxes.push(contentBBox(data, canvas.width, canvas.height));
+    const bbox = contentBBox(data, canvas.width, canvas.height);
+    bboxes.push(bbox);
+    gutters.push(detectColumnGutter(data, canvas.width, canvas.height, bbox));
   }
-  _reconciled = padBBox(reconcileGlobalCrop(bboxes));
+  _reconciled  = padBBox(reconcileGlobalCrop(bboxes));
+  _columnSplit = reconcileColumnSplit(gutters);
 }
 
 function _currentCropRect(pageWidthPt, pageHeightPt) {
@@ -284,6 +293,14 @@ function _render(file) {
       <input type="range" id="erContrast" class="cs-slider" min="0" max="1" step="0.05" value="${_contrast}" aria-label="${t('er_contrast')}">
     </div>
 
+    ${_chipGroup('er_columns', 'erColumns', _columnMode, [
+      { value: 'auto', label: t('er_columns_auto') },
+      { value: 'off',  label: t('er_columns_off') },
+    ])}
+    <div id="erColumnsNote" style="display:${_columnSplit.enabled && _columnMode !== 'off' ? 'block' : 'none'}">
+      ${infoBanner(t('er_columns_detected_note'), 'info')}
+    </div>
+
     ${_pageCount > 1 ? `
     <div class="j2p-group">
       <span class="j2p-group__label">${t('er_preview_page')}</span>
@@ -334,6 +351,11 @@ function _syncChips(name, value) {
   });
 }
 
+function _syncColumnNote() {
+  const el = id('erColumnsNote');
+  if (el) el.style.display = (_columnSplit.enabled && _columnMode !== 'off') ? 'block' : 'none';
+}
+
 // ── Events ─────────────────────────────────────────────────────
 
 function _bindEvents() {
@@ -349,6 +371,11 @@ function _bindEvents() {
     if (e.target.id === 'erGrayscale') {
       _grayscale = e.target.checked;
       _schedulePreview();
+    }
+    if (e.target.name === 'erColumns') {
+      _columnMode = e.target.value;
+      _syncChips('erColumns', _columnMode);
+      _syncColumnNote();
     }
     if (e.target.id === 'erPreviewPage') {
       _previewPage = parseInt(e.target.value, 10) || 1;

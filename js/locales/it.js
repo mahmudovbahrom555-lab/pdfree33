@@ -390,6 +390,10 @@ window.PDFREE_LOCALE = {
   er_crop_caption: 'Area di contenuto rilevata automaticamente — basata su tutte le {n} pagine',
   er_banner: '🔒 Elaborato interamente nel tuo browser · Nessun caricamento',
   er_rasterize_warning: 'Il risultato è un PDF basato su immagini ottimizzato per e-reader — il testo non è più selezionabile né ricercabile.',
+  er_columns: 'Colonne',
+  er_columns_auto: 'Automatico',
+  er_columns_off: 'Disattivato',
+  er_columns_detected_note: "Rilevato layout a due colonne — ogni pagina verrà divisa in due, nell'ordine di lettura.",
   val_er_loading: 'Analisi dei margini delle pagine — attendere un momento…',
 
   // search

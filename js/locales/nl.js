@@ -390,6 +390,10 @@ window.PDFREE_LOCALE = {
   er_crop_caption: "Automatisch gedetecteerd inhoudsgebied — gebaseerd op alle {n} pagina's",
   er_banner: '🔒 Volledig verwerkt in je browser · Geen upload',
   er_rasterize_warning: 'De uitvoer is een op afbeeldingen gebaseerde PDF, geoptimaliseerd voor e-readers — tekst is niet meer selecteerbaar of doorzoekbaar.',
+  er_columns: 'Kolommen',
+  er_columns_auto: 'Automatisch',
+  er_columns_off: 'Uit',
+  er_columns_detected_note: 'Layout met twee kolommen gedetecteerd — elke pagina wordt in leesvolgorde in tweeën gesplitst.',
   val_er_loading: 'Paginamarges worden geanalyseerd — een moment geduld…',
 
   // search

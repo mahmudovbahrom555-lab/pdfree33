@@ -391,6 +391,10 @@ window.PDFREE_LOCALE = {
   er_crop_caption: 'Area konten terdeteksi otomatis — berdasarkan semua {n} halaman',
   er_banner: '🔒 Diproses sepenuhnya di browser Anda · Tanpa upload',
   er_rasterize_warning: 'Hasilnya adalah PDF berbasis gambar yang dioptimalkan untuk e-reader — teks tidak lagi dapat dipilih atau dicari.',
+  er_columns: 'Kolom',
+  er_columns_auto: 'Otomatis',
+  er_columns_off: 'Nonaktif',
+  er_columns_detected_note: 'Tata letak dua kolom terdeteksi — setiap halaman akan dipisah menjadi dua, sesuai urutan baca.',
   val_er_loading: 'Menganalisis margin halaman — mohon tunggu sebentar…',
 
   // search

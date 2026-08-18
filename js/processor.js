@@ -23,7 +23,8 @@ import { openFeedback } from './feedback.js';
 import { isHeicFile, decodeHeicToJpegBlob } from './heicDecode.js';
 import { evaluateStructural } from './eriScore.js';
 import { evaluateXlsxStructural } from './eriScoreXlsx.js';
-import { contentBBox, reconcileGlobalCrop, padBBox, composeWithAspect, DEVICE_PRESETS } from './ereaderCrop.js';
+import { contentBBox, reconcileGlobalCrop, padBBox, composeWithAspect, DEVICE_PRESETS,
+         detectColumnGutter, reconcileColumnSplit } from './ereaderCrop.js';
 
 // Below this ERI "tables" score, the text-detected/border-grid tables in the
 // first-pass docx are more likely mis-detected layout (garbled/ghost tables)
@@ -1022,7 +1023,7 @@ function _ereaderSampleIndices(pageCount, max) {
   return [...indices].sort((a, b) => a - b);
 }
 
-async function _runEreader(filesSnapshot, { device = 'kindle', grayscale = true, contrast = 0.5, quality = 0.85 } = {}) {
+async function _runEreader(filesSnapshot, { device = 'kindle', grayscale = true, contrast = 0.5, quality = 0.85, columnMode = 'auto' } = {}) {
   if (!_checkSize(filesSnapshot[0], 150)) { _abortUI(); return; }
   const file = filesSnapshot[0];
 
@@ -1036,12 +1037,14 @@ async function _runEreader(filesSnapshot, { device = 'kindle', grayscale = true,
 
     const targetAspect = (DEVICE_PRESETS[device] || DEVICE_PRESETS.kindle).aspect;
 
-    // ── Sample pages, detect per-page content bbox, reconcile to one global crop ──
-    // (main thread only — pdf.js never runs inside a Worker in this codebase, see
-    // ereaderWorker.js's header comment)
+    // ── Sample pages, detect per-page content bbox + 2-column gutter,
+    // reconcile to one global crop + one global column-split decision ──
+    // (main thread only — pdf.js never runs inside a Worker in this codebase,
+    // see ereaderWorker.js's header comment)
     setProgress(4, t('prog_ereader_analyze'));
     const sampleIndices = _ereaderSampleIndices(pageCount, _EREADER_SAMPLE_MAX);
-    const bboxes = [];
+    const bboxes  = [];
+    const gutters = [];
     let firstPageVp1 = null;
 
     for (const i of sampleIndices) {
@@ -1057,11 +1060,22 @@ async function _runEreader(filesSnapshot, { device = 'kindle', grayscale = true,
       await page.render({ canvasContext: ctx, viewport: vp }).promise;
       page.cleanup?.();
       const { data } = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      bboxes.push(contentBBox(data, canvas.width, canvas.height));
+      const bbox = contentBBox(data, canvas.width, canvas.height);
+      bboxes.push(bbox);
+      gutters.push(detectColumnGutter(data, canvas.width, canvas.height, bbox));
     }
 
-    const reconciled = padBBox(reconcileGlobalCrop(bboxes));
-    const cropRect    = composeWithAspect(reconciled, firstPageVp1.width, firstPageVp1.height, targetAspect);
+    const reconciled  = padBBox(reconcileGlobalCrop(bboxes));
+    const columnSplit = columnMode === 'off' ? { enabled: false, centerFrac: null } : reconcileColumnSplit(gutters);
+    // When splitting, skip the whole-page aspect composition below — expanding
+    // the FULL width toward a single-page device ratio before the cut would
+    // waste padding on content about to be split in half anyway. Each half
+    // gets its own device-aspect fit for free via the worker's existing
+    // "contain" letterbox step (see ereaderWorker.js), no separate
+    // composeWithAspect call needed per half.
+    const cropRect = columnSplit.enabled
+      ? reconciled
+      : composeWithAspect(reconciled, firstPageVp1.width, firstPageVp1.height, targetAspect);
 
     const outputHeight = _EREADER_OUTPUT_HEIGHT;
     const outputWidth  = Math.round(outputHeight * targetAspect);
@@ -1072,9 +1086,13 @@ async function _runEreader(filesSnapshot, { device = 'kindle', grayscale = true,
 
     const worker = _ensureEreaderWorker();
     const pages  = [];
+    let outIdx   = 0;
 
     // Sequential, one page fully round-tripped (render → worker → response)
-    // before starting the next — same reasoning as _runCleanScan.
+    // before starting the next — same reasoning as _runCleanScan. Each
+    // source page yields 1 output page normally, or 2 (left/right column)
+    // when columnSplit is active — outIdx assigns the final, flattened
+    // page order the assembled PDF actually uses.
     for (let i = 1; i <= pageCount; i++) {
       const page = await pdfDoc.getPage(i);
       const vp     = page.getViewport({ scale: _EREADER_RENDER_SCALE });
@@ -1087,10 +1105,16 @@ async function _runEreader(filesSnapshot, { device = 'kindle', grayscale = true,
       const bitmap = await createImageBitmap(canvas);
       const result = await _ereaderWorkerRequest(
         worker,
-        { type: 'processPage', index: i - 1, bitmap, cropRect, grayscale, contrast, quality, outputWidth, outputHeight },
+        {
+          type: 'processPage', index: i - 1, bitmap, cropRect,
+          columnSplit: columnSplit.enabled ? { centerFrac: columnSplit.centerFrac } : null,
+          grayscale, contrast, quality, outputWidth, outputHeight,
+        },
         [bitmap]
       );
-      pages.push(result);
+      for (const p of result.pages) {
+        pages.push({ index: outIdx++, bytes: p.bytes, format: p.format, width: p.width, height: p.height });
+      }
 
       setProgress(8 + Math.round((i / pageCount) * 77), t('prog_ereader_page', { n: i, total: pageCount }));
     }

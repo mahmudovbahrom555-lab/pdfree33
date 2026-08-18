@@ -17,14 +17,32 @@
 //    in  → { type: 'processPage', index, bitmap: ImageBitmap,
 //            cropRect: {top,bottom,left,right},  // 0..1 fractions of the
 //                                                 // SOURCE bitmap — already
-//                                                 // global+reconciled+
-//                                                 // aspect-composed on the
+//                                                 // global+reconciled on the
 //                                                 // main thread
+//            columnSplit: {centerFrac: number} | null,  // page-absolute
+//                                                 // fraction (not relative to
+//                                                 // cropRect) — v2 addition,
+//                                                 // see js/ereaderCrop.js's
+//                                                 // detectColumnGutter/
+//                                                 // reconcileColumnSplit.
+//                                                 // When present, this ONE
+//                                                 // source page produces TWO
+//                                                 // output pages (left column,
+//                                                 // then right), each already
+//                                                 // aspect-composed toward the
+//                                                 // device ratio independently
+//                                                 // — composeWithAspect on a
+//                                                 // full page doesn't apply
+//                                                 // to a column-width crop.
 //            grayscale: boolean, contrast: 0..1, quality: 0..1,
 //            outputWidth, outputHeight }          // one fixed size for
-//                                                  // every page (the target
-//                                                  // device aspect ratio)
-//    out → { type: 'pageDone', index, bytes: ArrayBuffer, format: 'jpeg', width, height }
+//                                                  // every output page (the
+//                                                  // target device aspect
+//                                                  // ratio)
+//    out → { type: 'pageDone', index, pages: [{bytes: ArrayBuffer, format: 'jpeg', width, height}, ...] }
+//                                          // 1 entry normally, 2 when
+//                                          // columnSplit produced a left+
+//                                          // right pair
 //
 //    in  → { type: 'assemble', pages: [{index, bytes, format, width, height}],
 //            pageSize: {width, height} }  // ONE shared size, not a per-page
@@ -60,16 +78,54 @@ function progress(value, label) {
 
 // ── Per-page pixel pipeline ─────────────────────────────────────
 
-async function handleProcessPage({ index, bitmap, cropRect, grayscale, contrast, quality, outputWidth, outputHeight }) {
+async function handleProcessPage({ index, bitmap, cropRect, columnSplit, grayscale, contrast, quality, outputWidth, outputHeight }) {
   const srcW = bitmap.width, srcH = bitmap.height;
   const src = new OffscreenCanvas(srcW, srcH);
   src.getContext('2d').drawImage(bitmap, 0, 0);
   bitmap.close?.();
 
-  const sx = Math.round(cropRect.left * srcW);
+  const cropSx = cropRect.left * srcW;
+  const cropEx = cropRect.right * srcW;
   const sy = Math.round(cropRect.top * srcH);
-  const sw = Math.max(1, Math.round((cropRect.right - cropRect.left) * srcW));
   const sh = Math.max(1, Math.round((cropRect.bottom - cropRect.top) * srcH));
+
+  const pages = [];
+  const transfer = [];
+
+  if (columnSplit) {
+    // Split point is clamped inside the crop, and each half must clear a
+    // small minimum width — protects a page that doesn't actually have the
+    // document's detected gutter (e.g. a full-bleed figure) from collapsing
+    // to a near-zero-width sliver; falls back to a single uncut page instead.
+    const splitXpx  = Math.min(cropEx - 1, Math.max(cropSx + 1, columnSplit.centerFrac * srcW));
+    const minHalfPx = (cropEx - cropSx) * 0.1;
+    const leftW  = splitXpx - cropSx;
+    const rightW = cropEx - splitXpx;
+
+    if (leftW >= minHalfPx && rightW >= minHalfPx) {
+      const left  = await _renderSubPage(src, cropSx, sy, leftW, sh, outputWidth, outputHeight, grayscale, contrast, quality);
+      const right = await _renderSubPage(src, splitXpx, sy, rightW, sh, outputWidth, outputHeight, grayscale, contrast, quality);
+      pages.push(left, right);
+      transfer.push(left.bytes, right.bytes);
+    }
+  }
+
+  if (!pages.length) {
+    const single = await _renderSubPage(src, cropSx, sy, cropEx - cropSx, sh, outputWidth, outputHeight, grayscale, contrast, quality);
+    pages.push(single);
+    transfer.push(single.bytes);
+  }
+
+  self.postMessage({ type: 'pageDone', index, pages }, transfer);
+}
+
+// Crop one source rect (in source-bitmap pixels), "contain" fit it into the
+// fixed output canvas, apply grayscale/contrast, encode JPEG. Shared by both
+// the normal single-page path and each half of a column split.
+async function _renderSubPage(src, sx, sy, sw, sh, outputWidth, outputHeight, grayscale, contrast, quality) {
+  sw = Math.max(1, Math.round(sw));
+  sh = Math.max(1, Math.round(sh));
+  sx = Math.round(sx);
 
   const out = new OffscreenCanvas(outputWidth, outputHeight);
   const octx = out.getContext('2d');
@@ -79,9 +135,10 @@ async function handleProcessPage({ index, bitmap, cropRect, grayscale, contrast,
   // "Contain" fit: scale the cropped region to fit fully inside the fixed
   // output canvas, centered, preserving its aspect ratio. Any residual
   // mismatch between the cropped box's aspect and the device target
-  // (composeWithAspect on the main thread already minimized this, but
-  // clamping at the page edge can leave some) becomes plain white
-  // letterbox/pillarbox margin here — never a crop, never a stretch.
+  // (composeWithAspect on the main thread already minimized this for the
+  // non-split case, but clamping at the page edge can leave some — and a
+  // column half never goes through composeWithAspect at all) becomes plain
+  // white letterbox/pillarbox margin here — never a crop, never a stretch.
   const scale = Math.min(outputWidth / sw, outputHeight / sh);
   const drawW = sw * scale, drawH = sh * scale;
   const dx = (outputWidth - drawW) / 2, dy = (outputHeight - drawH) / 2;
@@ -92,11 +149,7 @@ async function handleProcessPage({ index, bitmap, cropRect, grayscale, contrast,
 
   const blob  = await out.convertToBlob({ type: 'image/jpeg', quality: quality ?? 0.85 });
   const bytes = await blob.arrayBuffer();
-
-  self.postMessage(
-    { type: 'pageDone', index, bytes, format: 'jpeg', width: outputWidth, height: outputHeight },
-    [bytes]
-  );
+  return { bytes, format: 'jpeg', width: outputWidth, height: outputHeight };
 }
 
 // Grayscale — same ITU-R BT.601 weights as cleanScanWorker.js's

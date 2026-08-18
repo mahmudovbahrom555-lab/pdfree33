@@ -18,7 +18,8 @@ function expect(actual) {
   };
 }
 
-const { contentBBox, reconcileGlobalCrop, padBBox, composeWithAspect, DEVICE_PRESETS } =
+const { contentBBox, reconcileGlobalCrop, padBBox, composeWithAspect, DEVICE_PRESETS,
+        detectColumnGutter, reconcileColumnSplit } =
   await import('../js/ereaderCrop.js');
 
 // ── Helpers: build a synthetic white RGBA buffer with a black rect ──
@@ -169,6 +170,84 @@ test('never crops further than the input box (only ever grows edges outward)', (
   expect(result.bottom >= cropRect.bottom).toBeTruthy();
   expect(result.left <= cropRect.left).toBeTruthy();
   expect(result.right >= cropRect.right).toBeTruthy();
+});
+
+// ── detectColumnGutter ───────────────────────────────────────────
+console.log('\ndetectColumnGutter:');
+
+test('detects a clear central gutter between two text columns', () => {
+  const w = 400, h = 600;
+  const rgba = makeWhitePage(w, h);
+  paintRect(rgba, w, 40, 60, 180, 540);  // left column
+  paintRect(rgba, w, 220, 60, 360, 540); // right column — gap 180-220 is central
+  const cropRect = { top: 0.05, bottom: 0.95, left: 0.05, right: 0.95 };
+  const result = detectColumnGutter(rgba, w, h, cropRect);
+  expect(result.hasGutter).toBe(true);
+  expect(result.centerFrac).toBeCloseTo(0.5, 0.03);
+});
+
+test('reports no gutter for a single full-width column', () => {
+  const w = 400, h = 600;
+  const rgba = makeWhitePage(w, h);
+  paintRect(rgba, w, 40, 60, 360, 540); // one solid block, no gap
+  const cropRect = { top: 0.05, bottom: 0.95, left: 0.05, right: 0.95 };
+  const result = detectColumnGutter(rgba, w, h, cropRect);
+  expect(result.hasGutter).toBe(false);
+  expect(result.centerFrac).toBe(null);
+});
+
+test('rejects a gap narrower than the minimum gutter width (noise, not a real column break)', () => {
+  const w = 400, h = 600;
+  const rgba = makeWhitePage(w, h);
+  paintRect(rgba, w, 40, 60, 198, 540);
+  paintRect(rgba, w, 201, 60, 360, 540); // only a 3px gap — below the ~5-6px floor
+  const cropRect = { top: 0.05, bottom: 0.95, left: 0.05, right: 0.95 };
+  const result = detectColumnGutter(rgba, w, h, cropRect);
+  expect(result.hasGutter).toBe(false);
+});
+
+test('ignores real blank gaps that fall outside the central search band (ordinary margins, not a gutter)', () => {
+  const w = 400, h = 600; // crop band (0.25-0.75 of the 360px-wide crop) is x=110..290
+  const rgba = makeWhitePage(w, h);
+  paintRect(rgba, w, 40, 60, 100, 540);  // left content — blank sliver 100-110 is outside the band
+  paintRect(rgba, w, 110, 60, 290, 540); // content fills the entire band solidly — no in-band gap
+  paintRect(rgba, w, 310, 60, 360, 540); // right content — blank gap 290-310 is also outside the band
+  const cropRect = { top: 0.05, bottom: 0.95, left: 0.05, right: 0.95 };
+  const result = detectColumnGutter(rgba, w, h, cropRect);
+  expect(result.hasGutter).toBe(false);
+});
+
+// ── reconcileColumnSplit ─────────────────────────────────────────
+console.log('\nreconcileColumnSplit:');
+
+test('enables split when most sampled pages show a gutter, using the median center', () => {
+  const gutters = [
+    { hasGutter: true, centerFrac: 0.49 },
+    { hasGutter: true, centerFrac: 0.50 },
+    { hasGutter: true, centerFrac: 0.51 },
+    { hasGutter: false, centerFrac: null }, // one outlier (e.g. a full-bleed figure page)
+  ];
+  const result = reconcileColumnSplit(gutters);
+  expect(result.enabled).toBe(true);
+  expect(result.centerFrac).toBeCloseTo(0.50, 0.01);
+});
+
+test('does not enable split when only a minority of pages show a gutter', () => {
+  const gutters = [
+    { hasGutter: true, centerFrac: 0.5 },
+    { hasGutter: false, centerFrac: null },
+    { hasGutter: false, centerFrac: null },
+    { hasGutter: false, centerFrac: null },
+  ];
+  const result = reconcileColumnSplit(gutters);
+  expect(result.enabled).toBe(false);
+  expect(result.centerFrac).toBe(null);
+});
+
+test('empty input returns disabled', () => {
+  const result = reconcileColumnSplit([]);
+  expect(result.enabled).toBe(false);
+  expect(result.centerFrac).toBe(null);
 });
 
 // ── DEVICE_PRESETS ────────────────────────────────────────────
