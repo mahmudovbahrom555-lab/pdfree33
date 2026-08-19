@@ -2709,7 +2709,29 @@ export async function _p2mdExtractText(pdfDoc) {
 
     const page    = await pdfDoc.getPage(p);
     const pageW   = page.getViewport({ scale: 1 }).width;
-    const content = await page.getTextContent({ normalizeWhitespace: false });
+    // getOperatorList() runs alongside getTextContent() purely to force pdf.js
+    // to resolve font objects into page.commonObjs — same fix pdf2word's
+    // _p2wBuildPageData applies, and for the same confirmed reason: without
+    // it, every font's style reports a generic CSS fallback family
+    // ("sans-serif") instead of the real embedded name, so the fontFamily-
+    // string-only check below silently fails to detect bold on any PDF whose
+    // fonts pdf.js can't map to a known family (confirmed there on a real
+    // contract where headings were same-size-but-bold and indistinguishable
+    // from body text by fontFamily alone).
+    const [content] = await Promise.all([
+      page.getTextContent({ normalizeWhitespace: false }),
+      page.getOperatorList().catch(() => {}),
+    ]);
+    const _boldFontCache = new Map(); // fontName -> boolean, one commonObjs lookup per unique font per page
+    const _isFontBold = fontName => {
+      if (_boldFontCache.has(fontName)) return _boldFontCache.get(fontName);
+      let bold = false;
+      try {
+        bold = /bold|heavy|black/i.test(page.commonObjs.get(fontName)?.name || '');
+      } catch { /* font object failed to resolve — fall through to false */ }
+      _boldFontCache.set(fontName, bold);
+      return bold;
+    };
     const items = content.items
       .filter(item => 'str' in item && item.str.split(' ').join('').trim())
       .map(item => {
@@ -2720,7 +2742,9 @@ export async function _p2mdExtractText(pdfDoc) {
           .split(' ').join('');
         return {
           str, x: item.transform[4], y: item.transform[5], width: item.width || 0,
-          fontSize, bold: /bold|heavy|black/.test(fam), italic: /italic|oblique/.test(fam),
+          fontSize,
+          bold:   _isFontBold(item.fontName) || /bold|heavy|black/.test(fam),
+          italic: /italic|oblique/.test(fam),
         };
       });
 
@@ -2774,6 +2798,35 @@ export async function _p2mdExtractText(pdfDoc) {
     return text;
   };
 
+  // Same walk as _lineText, but keeps per-item bold/italic instead of
+  // collapsing straight to a flat string — consecutive items sharing the
+  // same (bold, italic) pair merge into one run. This is what lets a
+  // paragraph with one bold word in the middle of plain text come out as
+  // "plain **bold** plain" instead of pdf2md's old all-or-nothing
+  // `allItems.every(i => i.bold)` flag (matches pdf2word's per-run TextRun
+  // approach, which never had that limitation). Runs never span a line
+  // boundary — kept deliberately simple (a bold phrase wrapping across two
+  // source lines renders as two adjacent **runs** instead of one merged
+  // run) to avoid having to re-collapse whitespace that's been split across
+  // a run boundary; still 100% valid Markdown, just marginally less compact.
+  const _lineRuns = ln => {
+    const runs = [];
+    for (let idx = 0; idx < ln.items.length; idx++) {
+      const item = ln.items[idx];
+      const prev = ln.items[idx - 1];
+      let s = item.str;
+      if (prev && !ln.rtl && !prev.str.endsWith(' ') && !s.startsWith(' ')) {
+        const prevW = (prev.width > 0) ? prev.width : prev.fontSize * prev.str.length * 0.5;
+        const gap   = item.x - (prev.x + prevW);
+        if (gap > item.fontSize * 0.2) s = ' ' + s;
+      }
+      const last = runs[runs.length - 1];
+      if (last && last.bold === item.bold && last.italic === item.italic) last.text += s;
+      else runs.push({ text: s, bold: item.bold, italic: item.italic });
+    }
+    return runs;
+  };
+
   // Repeated header/footer/page-number suppression — same technique as
   // _p2wExtractText: short text on ≥⅔ of pages (min 3) is a watermark.
   const _normWatermark = t =>
@@ -2815,10 +2868,24 @@ export async function _p2mdExtractText(pdfDoc) {
     const text = linesCopy.map(_lineText).join(' ').replace(/\s+/g, ' ').trim();
     if (!text) return;
 
-    const allItems = linesCopy.flatMap(ln => ln.items);
-    const bold   = allItems.every(i => i.bold);
-    const italic = allItems.every(i => i.italic);
-    blocks.push({ type: 'para', text, bold, italic });
+    // One flat run array for the whole paragraph — lines joined by a plain
+    // (never-bold/italic) space run, matching _lineText's own `.join(' ')`.
+    const runs = [];
+    for (let i = 0; i < linesCopy.length; i++) {
+      if (i > 0) runs.push({ text: ' ', bold: false, italic: false });
+      runs.push(..._lineRuns(linesCopy[i]));
+    }
+    // Trim leading/trailing whitespace off the paragraph as a whole (mirrors
+    // the flat `text`'s own `.trim()`) without disturbing interior runs.
+    while (runs.length && !runs[0].text.trim()) runs.shift();
+    while (runs.length && !runs[runs.length - 1].text.trim()) runs.pop();
+    if (runs.length) {
+      runs[0].text = runs[0].text.replace(/^\s+/, '');
+      runs[runs.length - 1].text = runs[runs.length - 1].text.replace(/\s+$/, '');
+    }
+    if (!runs.length) return;
+
+    blocks.push({ type: 'para', runs });
   };
 
   // Processes one column's worth of lines (or a whole page's, when no
@@ -2946,24 +3013,37 @@ export async function _p2mdExtractText(pdfDoc) {
 
   if (!blocks.length) {
     blocks.push({
-      type: 'para', bold: false, italic: false,
-      text: 'No extractable text was found in this PDF. It may be a scanned/image-only document — try OCR first, then convert the result.',
+      type: 'para',
+      runs: [{
+        text: 'No extractable text was found in this PDF. It may be a scanned/image-only document — try OCR first, then convert the result.',
+        bold: false, italic: false,
+      }],
     });
   }
 
   return blocks;
 }
 
-// Pure string builder: heading/list/para blocks → Markdown text. Whole-block
-// bold/italic wrapping only (no per-character run tracking) — headings are
-// left unwrapped since the '#' prefix already conveys emphasis; list items
-// are left unwrapped to keep list syntax unambiguous.
+// Pure string builder: heading/list/para blocks → Markdown text. Paragraphs
+// wrap per-run (a 'para' block's `runs` array — see _lineRuns/_flushPara
+// above), so a single bold word in the middle of otherwise-plain text stays
+// bold instead of pdf2md's old all-or-nothing whole-paragraph flag. Headings
+// are left unwrapped since the '#' prefix already conveys emphasis; list
+// items are left unwrapped to keep list syntax unambiguous.
 export function _p2mdRender(blocks) {
-  const wrap = (text, bold, italic) => {
-    if (bold && italic) return `***${text}***`;
-    if (bold)            return `**${text}**`;
-    if (italic)           return `*${text}*`;
-    return text;
+  // CommonMark requires no whitespace immediately inside **/* delimiters
+  // ("** bold**" won't render as bold in most parsers) — split leading/
+  // trailing whitespace off the run's core and emit it outside the markers,
+  // regardless of which side of a word-boundary the space landed on.
+  const wrapRun = (run) => {
+    const m = run.text.match(/^(\s*)([\s\S]*?)(\s*)$/);
+    const [, lead, core, trail] = m;
+    if (!core) return run.text; // whitespace-only run — nothing to wrap
+    let wrapped = core;
+    if (run.bold && run.italic) wrapped = `***${core}***`;
+    else if (run.bold)          wrapped = `**${core}**`;
+    else if (run.italic)        wrapped = `*${core}*`;
+    return lead + wrapped + trail;
   };
 
   const lines = [];
@@ -2989,7 +3069,7 @@ export function _p2mdRender(blocks) {
       for (const row of body) lines.push(`| ${row.map(cell).join(' | ')} |`);
     } else {
       if (lines.length) lines.push('');
-      lines.push(wrap(b.text, b.bold, b.italic));
+      lines.push(b.runs.map(wrapRun).join(''));
     }
     prevType = b.type;
   }

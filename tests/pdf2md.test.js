@@ -48,24 +48,29 @@ function expect(actual) {
   };
 }
 
-// Flattens any block type's text content — 'para'/'heading'/'list' carry
-// `.text`, 'table' carries `.rows` (array of arrays of cell strings) —
+// Flattens any block type's text content — 'heading'/'list' carry `.text`,
+// 'para' carries `.runs` (array of {text,bold,italic}, see _lineRuns/
+// _flushPara), 'table' carries `.rows` (array of arrays of cell strings) —
 // so a block-type change (e.g. detectTables() classifying a clean small
 // grid as a table instead of prose, which is correct, separate behavior
 // this file isn't testing) can't be mistaken for lost data.
 function allText(blocks) {
-  return blocks.map(b => b.type === 'table' ? b.rows.flat().join(' ') : (b.text || '')).join(' ');
+  return blocks.map(b => {
+    if (b.type === 'table') return b.rows.flat().join(' ');
+    if (b.type === 'para')  return b.runs.map(r => r.text).join('');
+    return b.text || '';
+  }).join(' ');
 }
 
 // ── Fake pdf.js plumbing ──────────────────────────────────────────
 
-function makeItem(str, x, y, fontSize = 10) {
+function makeItem(str, x, y, fontSize = 10, fontName = 'F1') {
   return {
     str,
     transform: [fontSize, 0, 0, fontSize, x, y],
     width: str.length * fontSize * 0.5,
     height: fontSize,
-    fontName: 'F1',
+    fontName,
     dir: 'ltr',
   };
 }
@@ -74,6 +79,8 @@ function makeFakePage(items, pageWidth = 600) {
   return {
     getViewport: () => ({ width: pageWidth, height: 800 }),
     getTextContent: async () => ({ items, styles: { F1: { fontFamily: 'sans-serif' } } }),
+    getOperatorList: async () => {},
+    commonObjs: { get: () => undefined },
     cleanup: () => {},
   };
 }
@@ -83,6 +90,30 @@ function makeFakePdfDoc(pagesItems, pageWidth = 600) {
     numPages: pagesItems.length,
     getPage: async (n) => makeFakePage(pagesItems[n - 1], pageWidth),
   };
+}
+
+// A page whose fonts all report the SAME generic CSS fallback family
+// ("sans-serif") via content.styles — the exact scenario pdf2word's own
+// comment documents as breaking fontFamily-string-only bold detection —
+// but whose commonObjs correctly resolves each font's real embedded name
+// (e.g. "...-Bold" vs "...-Regular"), the way real pdf.js does once
+// getOperatorList() has run. Only a working _isFontBold (commonObjs-based)
+// can tell these two items apart; the old fontFamily-only check could not.
+function makeFakePageWithFonts(items, fontBoldMap) {
+  return {
+    getViewport: () => ({ width: 600, height: 800 }),
+    getTextContent: async () => ({
+      items,
+      styles: Object.fromEntries(Object.keys(fontBoldMap).map(f => [f, { fontFamily: 'sans-serif' }])),
+    }),
+    getOperatorList: async () => {},
+    commonObjs: { get: (fontName) => ({ name: fontBoldMap[fontName] ? 'ABCDEF+NotoSans-Bold' : 'ABCDEF+NotoSans-Regular' }) },
+    cleanup: () => {},
+  };
+}
+
+function makeFakePdfDocWithFonts(items, fontBoldMap) {
+  return { numPages: 1, getPage: async () => makeFakePageWithFonts(items, fontBoldMap) };
 }
 
 // A real 2-column page: 12 rows, each with a left-column item (x=50) and a
@@ -178,6 +209,75 @@ await test('a short page (below the column-detection line-count floor) is not mi
   for (const t of ['LeftA', 'RightA', 'LeftB', 'RightB', 'LeftC', 'RightC']) {
     expect(text.includes(t)).toBeTruthy();
   }
+});
+
+console.log('\nBold detection (commonObjs, not just fontFamily):');
+
+await test('detects bold via page.commonObjs even when fontFamily is a generic fallback for both fonts', async () => {
+  // Both fonts report the SAME "sans-serif" fontFamily in content.styles —
+  // exactly the scenario that broke the old fontFamily-only check. Only
+  // commonObjs (real embedded font name) tells "F-Bold" and "F-Regular"
+  // apart here.
+  const items = [
+    makeItem('Plain text is here ', 50, 700, 10, 'F-Regular'),
+    makeItem('important', 250, 700, 10, 'F-Bold'),
+    makeItem(' word.', 350, 700, 10, 'F-Regular'),
+  ];
+  const pdfDoc = makeFakePdfDocWithFonts(items, { 'F-Regular': false, 'F-Bold': true });
+  const blocks = await _p2mdExtractText(pdfDoc);
+  const md = _p2mdRender(blocks);
+  expect(md.includes('**important**')).toBeTruthy();
+  // Surrounding plain text must NOT be swept into the bold run.
+  expect(md.includes('**Plain')).toBe(false);
+  expect(md.includes('word.**')).toBe(false);
+});
+
+console.log('\nPer-run bold/italic in rendered Markdown:');
+
+await test('a single bold word in the middle of a plain paragraph stays bold — rest stays plain (not old all-or-nothing)', async () => {
+  const items = [
+    makeItem('The quick ', 50, 700, 10, 'F-Plain'),
+    makeItem('brown', 200, 700, 10, 'F-Bold'),
+    makeItem(' fox jumps.', 280, 700, 10, 'F-Plain'),
+  ];
+  const pdfDoc = makeFakePdfDocWithFonts(items, { 'F-Plain': false, 'F-Bold': true });
+  const blocks = await _p2mdExtractText(pdfDoc);
+  const md = _p2mdRender(blocks);
+  expect(md.includes('The quick **brown** fox jumps.')).toBeTruthy();
+});
+
+await test('a fully bold line renders as one merged run, not one **wrap** per word', async () => {
+  const items = [
+    makeItem('All of this ', 50, 700, 10, 'F-Bold'),
+    makeItem('is bold.', 180, 700, 10, 'F-Bold'),
+  ];
+  const pdfDoc = makeFakePdfDocWithFonts(items, { 'F-Bold': true });
+  const blocks = await _p2mdExtractText(pdfDoc);
+  const md = _p2mdRender(blocks);
+  // Exactly one "**" pair, not several — confirms adjacent same-format
+  // items merged into a single run instead of wrapping each item alone.
+  expect((md.match(/\*\*/g) || []).length).toBe(2);
+  expect(md.includes('**All of this is bold.**')).toBeTruthy();
+});
+
+await test('a bold run with its own embedded leading/trailing spaces still wraps CommonMark-valid (markers touch real text, not whitespace)', async () => {
+  // Item 2 deliberately carries its own leading/trailing space characters
+  // (unusual, but pdf.js items can) — wrapRun must trim them OUTSIDE the
+  // ** markers rather than wrapping "** bold phrase **", which most
+  // Markdown parsers won't render as bold at all (whitespace immediately
+  // inside the delimiters).
+  const items = [
+    makeItem('before', 50, 700, 10, 'F-Plain'),
+    makeItem(' bold phrase ', 150, 700, 10, 'F-Bold'),
+    makeItem('after', 300, 700, 10, 'F-Plain'),
+  ];
+  const pdfDoc = makeFakePdfDocWithFonts(items, { 'F-Plain': false, 'F-Bold': true });
+  const blocks = await _p2mdExtractText(pdfDoc);
+  const md = _p2mdRender(blocks);
+  // The exact valid form: markers directly against "bold phrase", not
+  // "** bold phrase **" (which fails to parse as emphasis in CommonMark).
+  expect(md.includes('**bold phrase**')).toBeTruthy();
+  expect(md.includes('** bold') || md.includes('phrase **')).toBe(false);
 });
 
 // ── Summary ────────────────────────────────────────────────────
