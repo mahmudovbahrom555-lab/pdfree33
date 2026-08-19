@@ -20,7 +20,7 @@
     "name": "Les tableaux et les images sont-ils convertis ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Les tableaux simples sont détectés automatiquement et convertis en syntaxe de tableau Markdown. Les images ne sont pas incluses dans le résultat. Pour une extraction de tableaux plus fiable, utilisez PDF en Excel ; pour les documents complets avec images, utilisez PDF en Word."
+      "text": "Les tableaux simples sont détectés automatiquement et convertis en syntaxe de tableau Markdown. Les images sont également extraites — le téléchargement devient un fichier .zip (document.md + un dossier images) dès que le PDF contient des images extractibles, ou reste un simple .md sinon. Pour une extraction de tableaux plus fiable, utilisez PDF en Excel ; pour les documents complets, utilisez PDF en Word."
     }
   },
   {

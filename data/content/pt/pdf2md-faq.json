@@ -20,7 +20,7 @@
     "name": "Tabelas e imagens são convertidas?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Tabelas simples são detectadas automaticamente e convertidas para sintaxe de tabela Markdown. As imagens não são incluídas no resultado. Para uma extração de tabelas mais confiável, use PDF para Excel; para documentos completos com imagens, use PDF para Word."
+      "text": "Tabelas simples são detectadas automaticamente e convertidas para sintaxe de tabela Markdown. As imagens também são extraídas — o download se torna um arquivo .zip (document.md + uma pasta images) sempre que o PDF tiver imagens extraíveis, ou continua sendo um .md simples quando não tiver. Para uma extração de tabelas mais confiável, use PDF para Excel; para documentos completos, use PDF para Word."
     }
   },
   {

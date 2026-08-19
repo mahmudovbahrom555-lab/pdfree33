@@ -20,7 +20,7 @@
     "name": "Werden Tabellen und Bilder konvertiert?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Einfache Tabellen werden automatisch erkannt und in Markdown-Tabellensyntax umgewandelt. Bilder werden nicht in die Ausgabe übernommen. Für zuverlässigere Tabellenextraktion nutze PDF zu Excel, für vollständige Dokumente mit Bildern PDF zu Word."
+      "text": "Einfache Tabellen werden automatisch erkannt und in Markdown-Tabellensyntax umgewandelt. Bilder werden ebenfalls extrahiert — der Download wird zu einer .zip-Datei (document.md + einem images-Ordner), sobald das PDF extrahierbare Bilder enthält, oder bleibt eine einfache .md-Datei, wenn nicht. Für zuverlässigere Tabellenextraktion nutze PDF zu Excel, für vollständige Dokumente PDF zu Word."
     }
   },
   {

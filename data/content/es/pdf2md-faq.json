@@ -20,7 +20,7 @@
     "name": "¿Se convierten tablas e imágenes?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Las tablas simples se detectan automáticamente y se convierten a sintaxis de tabla Markdown. Las imágenes no se incluyen en el resultado. Para una extracción de tablas más fiable, usa PDF a Excel; para documentos completos con imágenes, usa PDF a Word."
+      "text": "Las tablas simples se detectan automáticamente y se convierten a sintaxis de tabla Markdown. Las imágenes también se extraen — la descarga se convierte en un archivo .zip (document.md + una carpeta images) cuando el PDF tiene imágenes extraíbles, o sigue siendo un simple .md cuando no las tiene. Para una extracción de tablas más fiable, usa PDF a Excel; para documentos completos, usa PDF a Word."
     }
   },
   {
