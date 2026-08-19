@@ -378,6 +378,24 @@ await test('detects bold via page.commonObjs even when fontFamily is a generic f
   expect(md.includes('word.**')).toBe(false);
 });
 
+await test('detects bold via LaTeX Computer Modern\'s "BX" naming (CMBX), which contains no literal "bold"/"heavy"/"black"', async () => {
+  // Found on a real arXiv two-column paper: a section heading used font
+  // "XSNTAV+CMBX9" (Computer Modern Bold Extended) -- the old
+  // /bold|heavy|black/i regex never matches "CMBX9" at all, silently
+  // scoring the heading as non-bold.
+  const items = [
+    makeItem('Plain body text ', 50, 700, 10, 'F-Regular'),
+    makeItem('Section Title', 250, 700, 10, 'F-CM-Bold'),
+  ];
+  const pdfDoc = makeFakePdfDocWithFontNames(items, {
+    'F-Regular': 'ABCDEF+CMR10',
+    'F-CM-Bold': 'XSNTAV+CMBX9',
+  });
+  const blocks = await _p2mdExtractText(pdfDoc);
+  const md = _p2mdRender(blocks);
+  expect(md.includes('**Section Title**')).toBeTruthy();
+});
+
 console.log('\nPer-run bold/italic in rendered Markdown:');
 
 await test('a single bold word in the middle of a plain paragraph stays bold — rest stays plain (not old all-or-nothing)', async () => {
@@ -482,6 +500,42 @@ await test('a long all-bold line (over the 100-char cap) is not promoted — too
   ];
   const pdfDoc = makeFakePdfDocWithFonts(items, { 'F-Bold': true, 'F1': false });
   const blocks = await _p2mdExtractText(pdfDoc);
+  expect(blocks.some(b => b.type === 'heading')).toBe(false);
+});
+
+console.log('\nNumbered-heading vs numbered-list disambiguation:');
+
+await test('an isolated bold numbered line ("1. Introduction") followed by a paragraph becomes a heading, not a list item', async () => {
+  const items = [
+    makeItem('1. Introduction', 50, 700, 10, 'F-Bold'),
+    ...fillerItems(4, 680),
+  ];
+  const pdfDoc = makeFakePdfDocWithFonts(items, { 'F-Bold': true, 'F1': false });
+  const blocks = await _p2mdExtractText(pdfDoc);
+  expect(blocks.some(b => b.type === 'list')).toBe(false);
+  const heading = blocks.find(b => b.type === 'heading');
+  expect(!!heading).toBeTruthy();
+  expect(heading.text.includes('1. Introduction')).toBeTruthy();
+});
+
+await test('a real numbered list (consecutive numbered lines) stays a list even when bold, not promoted to headings', async () => {
+  const items = [
+    makeItem('1. First bold step', 50, 700, 10, 'F-Bold'),
+    makeItem('2. Second bold step', 50, 680, 10, 'F-Bold'),
+    makeItem('3. Third bold step', 50, 660, 10, 'F-Bold'),
+  ];
+  const pdfDoc = makeFakePdfDocWithFonts(items, { 'F-Bold': true });
+  const blocks = await _p2mdExtractText(pdfDoc);
+  expect(blocks.filter(b => b.type === 'list').length).toBe(3);
+  expect(blocks.some(b => b.type === 'heading')).toBe(false);
+});
+
+await test('a plain (non-bold, non-oversized) numbered line stays a list item — unchanged regression guard', async () => {
+  const items = [makeItem('1. First numbered item', 50, 700), ...fillerItems(4, 680)];
+  const pdfDoc = makeFakePdfDoc([items]);
+  const blocks = await _p2mdExtractText(pdfDoc);
+  const list = blocks.find(b => b.type === 'list');
+  expect(!!list).toBeTruthy();
   expect(blocks.some(b => b.type === 'heading')).toBe(false);
 });
 

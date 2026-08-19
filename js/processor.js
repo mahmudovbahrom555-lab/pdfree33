@@ -91,6 +91,22 @@ const _P2W_IMAGE_CAP = 500;
 export const BULLET_RE   = /^[•◦▪‣●○]\s*/;
 export const NUMBERED_RE = /^\d{1,3}[.)](?!\d)/;
 
+// Shared bold-font-name detector — both pdf2word's and pdf2md's _isFontBold
+// resolve a font's real embedded PostScript/CFF name via page.commonObjs
+// (content.styles' fontFamily alone reports a generic CSS fallback for these,
+// see either _isFontBold's own comment) and test it against this pattern.
+// "bold|heavy|black" alone misses a real, common case: LaTeX's default
+// Computer Modern family (and XeLaTeX/LuaLaTeX's Latin Modern) names its bold
+// weight "BX" (Bold Extended), never spelling out "bold" — e.g. "CMBX9",
+// "CMBXTI10" (bold extended italic), "LMBX10". Found directly on a real
+// arXiv two-column paper (tests/fixtures/columns' organic corpus, mirrored in
+// Atlas_DR's md_corpus/002-two-column-paper): a section heading using CMBX9
+// was silently scored as non-bold, which cascaded into it never qualifying
+// for the bold-heading fallback either. No trailing \b after "bx" — real
+// names append a point-size digit suffix directly ("CMBX9"), and \b can't
+// match between two \w characters (letter, then digit).
+export const BOLD_FONT_NAME_RE = /bold|heavy|black|\b(?:cm|lm)(?:ss)?bx/i;
+
 // docx.js reference id linking a numbered-list Paragraph (in
 // _p2wBuildParagraphs) to the Document-level numbering definition that
 // actually supplies the "1. 2. 3." auto-numbering (built in _runPdf2Word's
@@ -2756,7 +2772,7 @@ export async function _p2mdExtractText(pdfDoc) {
       if (_boldFontCache.has(fontName)) return _boldFontCache.get(fontName);
       let bold = false;
       try {
-        bold = /bold|heavy|black/i.test(page.commonObjs.get(fontName)?.name || '');
+        bold = BOLD_FONT_NAME_RE.test(page.commonObjs.get(fontName)?.name || '');
       } catch { /* font object failed to resolve — fall through to false */ }
       _boldFontCache.set(fontName, bold);
       return bold;
@@ -2787,7 +2803,7 @@ export async function _p2mdExtractText(pdfDoc) {
         return {
           str, x: item.transform[4], y: item.transform[5], width: item.width || 0,
           fontSize,
-          bold:    !isFormula && (_isFontBold(item.fontName) || /bold|heavy|black/.test(fam)),
+          bold:    !isFormula && (_isFontBold(item.fontName) || BOLD_FONT_NAME_RE.test(fam)),
           italic:  !isFormula && /italic|oblique/.test(fam),
           formula: isFormula,
         };
@@ -2994,7 +3010,24 @@ export async function _p2mdExtractText(pdfDoc) {
       if (!normText || _repeatTextSet.has(normText)) continue;
 
       const bulletMatch   = BULLET_RE.test(rawText);
-      const numberedMatch = !bulletMatch && NUMBERED_RE.test(rawText);
+      let numberedMatch = !bulletMatch && NUMBERED_RE.test(rawText);
+
+      // A numbered line ("1. Introduction") is indistinguishable on the
+      // surface from a numbered list marker — demote it out of the list
+      // branch when it's BOTH isolated (no numbered neighbor immediately
+      // before or after — a real numbered list item almost always has one;
+      // a numbered section heading almost never does) AND heading-shaped
+      // (font-size ratio or all-bold, the same two signals the heading
+      // classification below already uses), so that classification gets a
+      // chance at it instead. Reuses the existing heading logic rather than
+      // duplicating it — this only decides which branch runs, not the level.
+      if (numberedMatch) {
+        const prevNumbered = li > 0 && NUMBERED_RE.test(_lineText(lines[li - 1]).trim());
+        const nextNumbered = li + 1 < lines.length && NUMBERED_RE.test(_lineText(lines[li + 1]).trim());
+        const maxFontHere  = Math.max(...ln.items.map(i => i.fontSize));
+        const headingShaped = maxFontHere >= median * 1.3 || _isBoldHeadingLine(ln.items);
+        if (!prevNumbered && !nextNumbered && headingShaped) numberedMatch = false;
+      }
 
       if (bulletMatch || numberedMatch) {
         _flushPara();
@@ -3350,7 +3383,7 @@ export async function _p2wBuildPageData(pdfDoc) {
       if (_boldFontCache.has(fontName)) return _boldFontCache.get(fontName);
       let bold = false;
       try {
-        bold = /bold|heavy|black/i.test(page.commonObjs.get(fontName)?.name || '');
+        bold = BOLD_FONT_NAME_RE.test(page.commonObjs.get(fontName)?.name || '');
       } catch { /* font object failed to resolve — fall through to false */ }
       _boldFontCache.set(fontName, bold);
       return bold;
@@ -3377,7 +3410,7 @@ export async function _p2wBuildPageData(pdfDoc) {
           width:    item.width || 0,
           fontSize,
           rotated:  isRotated,
-          bold:     _isFontBold(item.fontName) || /bold|heavy|black/.test(fam),
+          bold:     _isFontBold(item.fontName) || BOLD_FONT_NAME_RE.test(fam),
           italic:   /italic|oblique/.test(fam),
         };
       });
