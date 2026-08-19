@@ -32,7 +32,7 @@ global.document = {
 };
 global.Worker = class { postMessage(){} terminate(){} addEventListener(){} };
 
-const { _p2mdExtractText, _p2mdRender, _setProcessingForTests } = await import('../js/processor.js');
+const { _p2mdExtractText, _p2mdRender, _setProcessingForTests, _detectPageImages } = await import('../js/processor.js');
 _setProcessingForTests(true);
 
 let passed = 0, failed = 0;
@@ -537,6 +537,80 @@ await test('a plain (non-bold, non-oversized) numbered line stays a list item �
   const list = blocks.find(b => b.type === 'list');
   expect(!!list).toBeTruthy();
   expect(blocks.some(b => b.type === 'heading')).toBe(false);
+});
+
+console.log('\nImage detection (position via operator-list CTM tracking):');
+
+// Fake operator-list opcodes — must match the real pdfjs 3.x numeric values
+// _detectPageImages hardcodes (see its own comment): save=10, restore=11,
+// transform=12, paintFormXObjectBegin=74, paintFormXObjectEnd=75,
+// paintImageXObject=85.
+const OP_SAVE = 10, OP_RESTORE = 11, OP_TRANSFORM = 12, OP_FORM_BEGIN = 74, OP_FORM_END = 75, OP_PAINT = 85;
+function makeOpList(fnArray, argsArray) { return { fnArray, argsArray }; }
+
+await test('a simple unrotated image (transform + paint) gets the correct bounding box', async () => {
+  // cm [200,0,0,150,50,600] places the unit square at x=50,y=600, 200x150.
+  const opList = makeOpList([OP_TRANSFORM, OP_PAINT], [[200, 0, 0, 150, 50, 600], ['img1']]);
+  const found = _detectPageImages(opList);
+  expect(found.length).toBe(1);
+  expect(found[0].x).toBe(50);
+  expect(found[0].yTop).toBe(750);   // PDF Y increases upward — top = y + height
+  expect(found[0].width).toBe(200);
+  expect(found[0].height).toBe(150);
+});
+
+await test('a 90°-rotated image gets a correct (non-zero) bounding box — NOT Math.abs(ctm.a)/Math.abs(ctm.d)', async () => {
+  // cm [0,100,-150,0,300,400] is a pure rotation+scale with a==0 and d==0 —
+  // the naive Math.abs(ctm[0])/Math.abs(ctm[3]) approach (rejected during
+  // review) would compute a 0×0 box here and silently drop the image
+  // entirely. The correct 4-corner-transform approach must not.
+  const opList = makeOpList([OP_TRANSFORM, OP_PAINT], [[0, 100, -150, 0, 300, 400], ['img-rot']]);
+  const found = _detectPageImages(opList);
+  expect(found.length).toBe(1);
+  expect(found[0].x).toBe(150);
+  expect(found[0].yTop).toBe(500);
+  expect(found[0].width).toBe(150);
+  expect(found[0].height).toBe(100);
+});
+
+await test('save/restore nesting isolates a transform to its own scope', async () => {
+  // Inner image is scaled+placed inside a save/restore pair; after restore,
+  // a second image painted with NO further transform must use the
+  // OUTER (identity) CTM, not leak the inner one.
+  const opList = makeOpList(
+    [OP_SAVE, OP_TRANSFORM, OP_PAINT, OP_RESTORE, OP_TRANSFORM, OP_PAINT],
+    [[], [50, 0, 0, 50, 0, 0], ['img-inner'], [], [60, 0, 0, 60, 0, 0], ['img-outer']]
+  );
+  const found = _detectPageImages(opList);
+  expect(found.length).toBe(2);
+  expect(found[0].width).toBe(50);
+  expect(found[1].width).toBe(60); // NOT 50*60 or otherwise contaminated by the inner scope
+});
+
+await test('an image inside a Form XObject composes the form\'s own placement matrix on top of the outer CTM', async () => {
+  // Form XObject begin carries its own [a,b,c,d,e,f] placement matrix
+  // (args[0]) applied like an implicit extra "cm" — pdf.js flattens a form's
+  // operators into the page's own operator list bracketed by these two ops
+  // (see js/pdf2wordBorders.js's detectTableGrids, which solves the exact
+  // same problem for table-border lines). A naive save/restore-only stack
+  // that ignores paintFormXObjectBegin's own matrix would place this image
+  // at the wrong (unshifted) position.
+  const opList = makeOpList(
+    [OP_SAVE, OP_FORM_BEGIN, OP_TRANSFORM, OP_PAINT, OP_FORM_END, OP_RESTORE],
+    [[], [[1, 0, 0, 1, 20, 20]], [100, 0, 0, 80, 0, 0], ['img-in-form'], [], []]
+  );
+  const found = _detectPageImages(opList);
+  expect(found.length).toBe(1);
+  expect(found[0].x).toBe(20);
+  expect(found[0].yTop).toBe(100);
+  expect(found[0].width).toBe(100);
+  expect(found[0].height).toBe(80);
+});
+
+await test('an icon/bullet-sized image (below the 40pt floor) is filtered out', async () => {
+  const opList = makeOpList([OP_TRANSFORM, OP_PAINT], [[20, 0, 0, 15, 0, 0], ['img-tiny']]);
+  const found = _detectPageImages(opList);
+  expect(found.length).toBe(0);
 });
 
 console.log('\nFormula detection (honest flattening — see js/processor.js\'s isFormula comment):');

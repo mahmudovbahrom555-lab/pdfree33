@@ -2643,18 +2643,21 @@ async function _runPdf2Ppt(filesSnapshot, { dpi = 150 } = {}) {
 }
 
 // ── PDF → Markdown ───────────────────────────────────────────────
-// Lightest of the four PDF→Office/text tools: Markdown is plain text, so
-// there is no binary container to build and no CDN library to load.
 // Reuses pdf2word's line-grouping technique, font-size-ratio heading
-// classifier (2.2×/1.7×/1.3× of median font size → H1/H2/H3), watermark/
-// page-number suppression, and — since the priority-2/3 fixes below —
-// its column-split (_splitCrossColumnLines/detectColumnRegions) and
-// commonObjs-based bold detection too. Simple tables ARE detected
-// (detectTables()/looksLikeProseNotData(), shared with pdf2word) and
-// rendered as real GFM pipe-table syntax — this comment used to say
-// otherwise; that was stale relative to the code even before this pass,
-// see the pdf2md analysis in memory. Images remain genuinely dropped —
-// no canvas render anywhere in this path.
+// classifier (2.2×/1.7×/1.3× of median font size → H1/H2/H3, plus a
+// same-size-but-bold fallback), watermark/page-number suppression, and —
+// since the priority-2/3 fixes below — its column-split
+// (_splitCrossColumnLines/detectColumnRegions) and commonObjs-based bold
+// detection too. Simple tables ARE detected (detectTables()/
+// looksLikeProseNotData(), shared with pdf2word) and rendered as real GFM
+// pipe-table syntax. Images ARE extracted (_detectPageImages/
+// _p2mdExtractImageBlob below) and referenced via ![](images/...) — output
+// becomes a .zip (document.md + images/) instead of a plain .md the moment
+// there's at least one image; see the pdf2md analysis in memory for the
+// scope this shipped with (XObject images only, not inline/masked/rotated)
+// and why. No longer "the lightest of the four PDF→Office/text tools" now
+// that it has its own CDN-library (JSZip, image path only) and canvas-based
+// image re-encoding step — that used to be true, isn't anymore.
 
 async function _runPdf2Md(filesSnapshot) {
   const file = filesSnapshot[0];
@@ -2697,10 +2700,35 @@ async function _runPdf2Md(filesSnapshot) {
   setProgress(92, 'Building Markdown…');
 
   const md       = _p2mdRender(blocks);
-  const blob     = new Blob([md], { type: 'text/markdown' });
+  const images   = blocks.filter(b => b.type === 'image' && b.blob);
   const baseName = file.name.replace(/\.pdf$/i, '');
-  const filename = `${baseName}.md`;
-  const desc     = `${pdfDoc.numPages} page${pdfDoc.numPages !== 1 ? 's' : ''} · ${fmtSize(blob.size)}`;
+
+  // Output contract: plain .md when there are no images (unchanged
+  // behavior), .zip (document.md + images/*.png) when there are — same
+  // "several files -> ZIP via JSZip" pattern _runSplit already uses, not a
+  // new one invented for this tool. Base64-inlining images into the .md
+  // directly was deliberately rejected: it would keep the single-file
+  // simplicity but directly fights this tool's own AI/RAG-readiness goal —
+  // base64 massively inflates token count, exactly the "noise" this tool
+  // already goes out of its way to strip elsewhere (watermarks, page
+  // numbers, repeated headers).
+  let blob, filename;
+  if (images.length) {
+    setProgress(95, 'Packaging images…');
+    await loadJSZip();
+    const zip = new window.JSZip();
+    zip.file('document.md', md);
+    const imgFolder = zip.folder('images');
+    for (const img of images) imgFolder.file(img.filename.replace(/^images\//, ''), img.blob);
+    blob     = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE' });
+    filename = `${baseName}.zip`;
+  } else {
+    blob     = new Blob([md], { type: 'text/markdown' });
+    filename = `${baseName}.md`;
+  }
+  const desc = `${pdfDoc.numPages} page${pdfDoc.numPages !== 1 ? 's' : ''}` +
+    (images.length ? ` · ${images.length} image${images.length !== 1 ? 's' : ''}` : '') +
+    ` · ${fmtSize(blob.size)}`;
 
   isProcessing = false;
   setFilesLocked(false);
@@ -2710,6 +2738,179 @@ async function _runPdf2Md(filesSnapshot) {
   document.dispatchEvent(new CustomEvent('pdfree:success', {
     detail: { tool: 'pdf2md', blob, desc, filename }
   }));
+}
+
+// ── Image extraction (position detection) ──────────────────────────────────
+// Same CTM-stack pattern as js/pdf2wordBorders.js's detectTableGrids —
+// including the Form XObject begin/end handling that a naive save/restore-
+// only stack silently gets wrong for: pdf.js flattens a Form XObject's own
+// operators into the page's operator list, bracketed by paintFormXObjectBegin/
+// End, and an image drawn inside one (letterheads, stamped figures, some PDF
+// generators wrap whole page content in a form) needs that form's own
+// placement matrix composed on top of the current CTM or its position lands
+// in the wrong space entirely — pdf2wordBorders.js already had to solve this
+// for table-border lines; images need the identical fix, not a simpler one.
+// Numeric opcodes hardcoded rather than importing pdfjsLib.OPS, matching that
+// file's own convention (its comment: "these are NOT raw PDF spec op
+// numbers", pdfjs 3.x-specific) — verified directly against pdfjs-dist
+// 3.11.174, the exact version js/pdf2jpgUI.js's PDFJS_VERSION loads from CDN.
+const _IMG_OPS_SAVE        = 10;
+const _IMG_OPS_RESTORE     = 11;
+const _IMG_OPS_TRANSFORM   = 12;
+const _IMG_OPS_FORM_BEGIN  = 74;
+const _IMG_OPS_FORM_END    = 75;
+const _IMG_OPS_PAINT_IMAGE = 85; // paintImageXObject
+// paintInlineImageXObject (86) deliberately NOT handled: its argsArray[0] is
+// raw decoded pixel data directly, not an objs-cache id — a genuinely
+// different extraction path. Every real PDF in this repo's own test corpus
+// (tests/fixtures/columns/*.pdf) had zero inline images when checked
+// directly against pdfjs-dist's real operator lists — scoped out because
+// there's no real example to build and verify against yet, not guessed at.
+
+function _composeImgCtm(m, [a, b, c, d, e, f]) {
+  return {
+    a: m.a * a + m.c * b,  b: m.b * a + m.d * b,
+    c: m.a * c + m.c * d,  d: m.b * c + m.d * d,
+    e: m.a * e + m.c * f + m.e,
+    f: m.b * e + m.d * f + m.f,
+  };
+}
+
+// Real bounding box of the image unit square [0,1]×[0,1] transformed by the
+// CTM — NOT Math.abs(ctm.a)/Math.abs(ctm.d), which gives a wrong box under
+// rotation, skew, or reflection (all four corners must be transformed and
+// min/maxed, not just the diagonal scale factors read off the matrix).
+function _imgBBoxFromCtm(m) {
+  const corners = [[0, 0], [1, 0], [0, 1], [1, 1]].map(([x, y]) => [
+    m.a * x + m.c * y + m.e,
+    m.b * x + m.d * y + m.f,
+  ]);
+  const xs = corners.map(p => p[0]);
+  const ys = corners.map(p => p[1]);
+  return {
+    x:     Math.min(...xs),
+    yTop:  Math.max(...ys), // PDF Y increases upward — "top" is the max
+    width:  Math.max(...xs) - Math.min(...xs),
+    height: Math.max(...ys) - Math.min(...ys),
+  };
+}
+
+const _MIN_IMG_DIM = 40; // pt — filters bullet/icon/rule-line-sized noise
+                          // (a real, common case: decorative small images
+                          // scattered through a page shouldn't each become
+                          // a Markdown image reference)
+
+// Pure position-detection pass over an already-fetched operator list — no
+// pixel data touched yet, deliberately split from the (heavier, async)
+// pixel-extraction step below, same "detect cheap, extract only what's
+// needed" shape as detectTableGrids. Returns page-space (PDF coordinates,
+// Y-up — the SAME convention _p2mdExtractText's own `item.y` already uses,
+// so these merge into the same `lines` array with zero coordinate
+// conversion needed, unlike a top-down/screen-space design would require).
+export function _detectPageImages(opList) {
+  const { fnArray, argsArray } = opList;
+  const ctmStack = [{ a: 1, b: 0, c: 0, d: 1, e: 0, f: 0 }];
+  const ctm = () => ctmStack[ctmStack.length - 1];
+  const found = [];
+  for (let i = 0; i < fnArray.length; i++) {
+    const fn = fnArray[i];
+    const args = argsArray[i];
+    switch (fn) {
+      case _IMG_OPS_SAVE:
+        ctmStack.push({ ...ctm() });
+        break;
+      case _IMG_OPS_RESTORE:
+        if (ctmStack.length > 1) ctmStack.pop();
+        break;
+      case _IMG_OPS_TRANSFORM:
+        ctmStack[ctmStack.length - 1] = _composeImgCtm(ctm(), args);
+        break;
+      case _IMG_OPS_FORM_BEGIN: {
+        ctmStack.push({ ...ctm() });
+        const matrix = args[0];
+        if (Array.isArray(matrix) && matrix.length === 6) {
+          ctmStack[ctmStack.length - 1] = _composeImgCtm(ctm(), matrix);
+        }
+        break;
+      }
+      case _IMG_OPS_FORM_END:
+        if (ctmStack.length > 1) ctmStack.pop();
+        break;
+      case _IMG_OPS_PAINT_IMAGE: {
+        const bbox = _imgBBoxFromCtm(ctm());
+        if (bbox.width >= _MIN_IMG_DIM && bbox.height >= _MIN_IMG_DIM) {
+          found.push({ imgId: args[0], x: bbox.x, yTop: bbox.yTop, width: bbox.width, height: bbox.height });
+        }
+        break;
+      }
+    }
+  }
+  return found;
+}
+
+const _MAX_IMG_EDGE = 1800; // px cap on the long edge when re-encoding — a
+                             // high-res embedded scan/figure (real example
+                             // found: 5236×3541 px) would otherwise produce
+                             // a multi-ten-MB PNG from a single page image
+
+// Pulls decoded pixel data for one image out of pdf.js's internal object
+// cache and re-encodes it as a PNG Blob via an offscreen canvas. Confirmed
+// directly (not assumed) against real embedded images in this repo's own
+// test corpus (tests/fixtures/columns/2608.11694.pdf, via a real pdfjs-dist
+// 3.11.174 load): page.objs.get() returns {width, height, kind, data} where
+// `data` is ALREADY fully decoded raw pixel bytes (dataLen matches
+// width*height*3 for kind 2 / width*height*4 for kind 3 exactly) — pdf.js
+// has done the JPEG/whatever decode itself by this point, so there is no
+// original-encoded-bytes path to preserve through this API; every image is
+// necessarily re-encoded here, not just optionally for a size win.
+async function _p2mdExtractImageBlob(page, imgId) {
+  const imgData = await new Promise(resolve => {
+    try { page.objs.get(imgId, resolve); } catch { resolve(null); }
+  });
+  if (!imgData || !imgData.width || !imgData.height) return null;
+  const { width, height, kind, data, bitmap } = imgData;
+
+  const src  = document.createElement('canvas');
+  src.width  = width;
+  src.height = height;
+  const sctx = src.getContext('2d');
+
+  // Real, browser-verified: pdf.js returns ONE of two shapes depending on
+  // environment/decode path, not always the same one — {bitmap} (a real
+  // ImageBitmap, no `data`/`kind` at all) is what a real Chromium browser
+  // (this tool's actual runtime) gives back; {data, kind} (raw decoded
+  // pixels, RGB_24BPP=2 / RGB_32BPP=3) is what pdf.js's Node/no-OffscreenCanvas
+  // fallback path gives back. Handling only one of these silently drops
+  // every image in whichever environment doesn't match — confirmed directly
+  // by testing both, not assumed from either shape alone.
+  if (bitmap) {
+    sctx.drawImage(bitmap, 0, 0);
+  } else if (data && (kind === 2 || kind === 3)) {
+    const rgba = sctx.createImageData(width, height);
+    if (kind === 2) {
+      for (let i = 0, j = 0; i < data.length; i += 3, j += 4) {
+        rgba.data[j] = data[i]; rgba.data[j + 1] = data[i + 1]; rgba.data[j + 2] = data[i + 2]; rgba.data[j + 3] = 255;
+      }
+    } else {
+      rgba.data.set(data);
+    }
+    sctx.putImageData(rgba, 0, 0);
+  } else {
+    // GRAYSCALE_1BPP (kind 1, bit-packed) and any unrecognized shape are
+    // skipped rather than guessed at — graceful degradation: this image is
+    // silently dropped, not inserted as a broken Markdown reference (see
+    // the caller).
+    return null;
+  }
+
+  const scale = Math.min(1, _MAX_IMG_EDGE / Math.max(width, height));
+  if (scale === 1) return await new Promise(resolve => src.toBlob(resolve, 'image/png'));
+
+  const out    = document.createElement('canvas');
+  out.width    = Math.max(1, Math.round(width * scale));
+  out.height   = Math.max(1, Math.round(height * scale));
+  out.getContext('2d').drawImage(src, 0, 0, out.width, out.height);
+  return await new Promise(resolve => out.toBlob(resolve, 'image/png'));
 }
 
 // Pass 1: identical line-grouping technique to _p2wExtractText (YTOL=6,
@@ -2763,9 +2964,9 @@ export async function _p2mdExtractText(pdfDoc) {
     // fonts pdf.js can't map to a known family (confirmed there on a real
     // contract where headings were same-size-but-bold and indistinguishable
     // from body text by fontFamily alone).
-    const [content] = await Promise.all([
+    const [content, opList] = await Promise.all([
       page.getTextContent({ normalizeWhitespace: false }),
-      page.getOperatorList().catch(() => {}),
+      page.getOperatorList().catch(() => null),
     ]);
     const _boldFontCache = new Map(); // fontName -> boolean, one commonObjs lookup per unique font per page
     const _isFontBold = fontName => {
@@ -2831,6 +3032,29 @@ export async function _p2mdExtractText(pdfDoc) {
     // no-op when detectColumnRegions() finds no confident multi-column
     // layout (the common case).
     _splitCrossColumnLines(lines, pageW);
+
+    // Images — inserted as synthetic single-item "lines" (isImage:true) so
+    // they ride the SAME Y-sort/column-dispatch machinery real text lines
+    // already use below, rather than a separate geometry/interleaving system.
+    // Extracted here, before page.cleanup() a few lines down: pdf.js's
+    // page.objs cache (needed by _p2mdExtractImageBlob) is released by that
+    // call, so extraction can't be deferred to a later pass over `blocks`
+    // once every page has already been visited and cleaned up. Sequential
+    // (not Promise.all'd) deliberately — caps peak memory to one decoded
+    // image at a time instead of every image on the page at once.
+    if (opList) {
+      for (const d of _detectPageImages(opList)) {
+        const blob = await _p2mdExtractImageBlob(page, d.imgId).catch(() => null);
+        if (!blob) continue; // graceful degradation — dropped silently, not
+                              // inserted as a broken Markdown image reference
+        lines.push({
+          y: d.yTop, rtl: false,
+          items: [{ str: '', x: d.x, y: d.yTop, width: d.width, fontSize: 10, bold: false, italic: false, formula: false }],
+          isImage: true, imgWidth: Math.round(d.width), imgHeight: Math.round(d.height), imgBlob: blob, imgPage: p,
+        });
+      }
+      lines.sort((a, b) => b.y - a.y);
+    }
 
     allSizes.push(...items.map(i => i.fontSize).filter(s => s > 0));
     pageData.push({ lines, pageW });
@@ -2915,6 +3139,7 @@ export async function _p2mdExtractText(pdfDoc) {
 
   const blocks      = [];
   const _paraBuffer = [];
+  let _imgSeq       = 0; // running counter across the whole doc -> unique filenames
 
   const _flushPara = () => {
     if (!_paraBuffer.length) return;
@@ -2985,6 +3210,21 @@ export async function _p2mdExtractText(pdfDoc) {
 
     for (let li = 0; li < lines.length; li++) {
       const ln = lines[li];
+
+      // Images short-circuit everything else — checked first so an empty-str
+      // synthetic image "line" (see its construction above) never reaches
+      // the table/list/heading text checks below, which all assume real
+      // text content.
+      if (ln.isImage) {
+        _flushPara();
+        _imgSeq++;
+        blocks.push({
+          type: 'image', blob: ln.imgBlob,
+          filename: `images/page${ln.imgPage}-img${_imgSeq}.png`,
+          width: ln.imgWidth, height: ln.imgHeight,
+        });
+        continue;
+      }
 
       // Table lines never fall through to heading/list/paragraph
       // classification — emit one 'table' block at the first line, then
@@ -3185,6 +3425,9 @@ export function _p2mdRender(blocks) {
       lines.push(`| ${header.map(cell).join(' | ')} |`);
       lines.push(`| ${header.map(() => '---').join(' | ')} |`);
       for (const row of body) lines.push(`| ${row.map(cell).join(' | ')} |`);
+    } else if (b.type === 'image') {
+      if (lines.length) lines.push('');
+      lines.push(`![](${b.filename})`);
     } else {
       if (lines.length) lines.push('');
       lines.push(b.runs.map(wrapRun).join(''));

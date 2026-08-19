@@ -20,7 +20,7 @@
     "name": "Does it preserve tables and images?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Simple tables are detected automatically and converted to Markdown table syntax. Images are not included in the output. Use PDF to Excel for more reliable table extraction, or PDF to Word for a fully editable document with images."
+      "text": "Simple tables are detected automatically and converted to Markdown table syntax. Images/figures are extracted too — the download becomes a .zip (document.md + an images folder) whenever the PDF has extractable images, or a plain .md when it doesn't. If you need more reliable table extraction, use PDF to Excel; for a fully editable document, use PDF to Word."
     }
   },
   {
