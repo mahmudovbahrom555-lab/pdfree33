@@ -3965,8 +3965,26 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
     // (_ERI_TABLE_RETRY_THRESHOLD below) but that only rebuilds the WHOLE
     // document tables-free on a bad aggregate score — too blunt to fix
     // individual false positives sitting next to genuinely good tables.
+    // Text-detected tables that Y-overlap a border grid are dropped in favor
+    // of the grid — border grids carry real merge/span line data
+    // (colDividers) that pure X-position clustering can never recover (a
+    // merged cell just looks like "an item missing from this column" to
+    // detectTables(), indistinguishable from ordinary sparse/optional data).
+    // This precedence gap was always latent but only surfaced once
+    // detectTables()'s _columnAlignScore stopped over-penalizing legitimately
+    // sparse rows (see its own comment) — before that fix, a row genuinely
+    // missing a column-grid's merged cell's "item" was ALSO usually rejected
+    // outright by the old stricter scoring, so this conflict never fired in
+    // practice. Confirmed via tests/pdf2wordParagraphs.test.js's real
+    // gridSpan-merge regression test, which failed without this filter.
     const tables = useTables
-      ? detectTables(lines).filter(t => !looksLikeProseNotData(t.rows) && !looksLikeEnumeratedList(t.rows))
+      ? detectTables(lines)
+          .filter(t => !looksLikeProseNotData(t.rows) && !looksLikeEnumeratedList(t.rows))
+          .filter(t => {
+            const tMinY = Math.min(lines[t.startIdx].y, lines[t.endIdx].y);
+            const tMaxY = Math.max(lines[t.startIdx].y, lines[t.endIdx].y);
+            return !borderGrids.some(g => tMinY <= g.y + g.h && g.y <= tMaxY);
+          })
       : [];
 
     // Build set: lineIdx → table object (for O(1) lookup)

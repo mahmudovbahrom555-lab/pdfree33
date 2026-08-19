@@ -250,6 +250,48 @@ test('менее MIN_ROWS строк не формирует таблицу', ()
   expect(tables.length).toBe(0);
 });
 
+// Precise X control (makeLine's auto-increment is fragile to hand-verify for
+// these) — same {y, items:[{str,x,width}]} shape detectTables expects.
+function makeLineAt(y, cellsWithX) {
+  return { y, items: cellsWithX.map(([str, x]) => ({ str, x, width: str.length * 6 })) };
+}
+
+// Real, confirmed case (Atlas_DR's md_corpus/003-multipage-ledger, a real
+// debit/credit financial ledger): every data row is missing one of two
+// mutually-exclusive numeric columns by design (a transaction is either a
+// debit or a credit, never both), and the very first data row (an opening
+// balance) has neither. The OLD _columnAlignScore
+// (matched / Math.max(baseCols.length, lineCols.length)) scored the
+// opening-balance row 3/5=0.6 -- below ALIGN_THRESHOLD -- collapsing the
+// whole candidate to 1 row before it ever reached rows that WOULD have
+// matched, so this real 16-row table went completely undetected in
+// production. See _columnAlignScore's own comment for the fix.
+test('a debit/credit-ledger shape (mutually exclusive sparse columns, one row missing both) is still detected as one table', () => {
+  const lines = [
+    makeLineAt(700, [['Date', 0], ['Description', 60], ['Debit', 200], ['Credit', 280], ['Balance', 360]]),
+    makeLineAt(680, [['01', 0], ['Opening Balance', 60], ['1000.00', 360]]),               // neither debit nor credit
+    makeLineAt(660, [['02', 0], ['Payment', 60], ['50.00', 200], ['950.00', 360]]),         // debit only
+    makeLineAt(640, [['03', 0], ['Deposit', 60], ['200.00', 280], ['1150.00', 360]]),       // credit only
+    makeLineAt(620, [['04', 0], ['Payment', 60], ['30.00', 200], ['1120.00', 360]]),        // debit only
+  ];
+  const tables = detectTables(lines);
+  expect(tables.length).toBe(1);
+  expect(tables[0].rows.length).toBe(5);
+});
+
+test('a genuinely unrelated line (matching only 1 of 4 base columns) is excluded, not absorbed — coverage floor still protects', () => {
+  const lines = [
+    makeLineAt(700, [['Name', 0], ['Role', 44], ['Score', 88], ['Year', 138]]),
+    makeLineAt(680, [['Alice', 0], ['Eng', 44], ['92', 88], ['2024', 138]]),
+    makeLineAt(660, [['Bob', 0], ['PM', 44], ['87', 88], ['2023', 138]]),
+    makeLineAt(640, [['Carol', 0], ['QA', 44], ['81', 88], ['2022', 138]]),
+    makeLineAt(620, [['Score', 88], ['Unrelated', 500]]), // only 1/4 base columns match (coverage 0.25) -- must end the table, not extend into it
+  ];
+  const tables = detectTables(lines);
+  expect(tables.length).toBe(1);
+  expect(tables[0].rows.length).toBe(4); // header + 3 real data rows only
+});
+
 // ── Summary ────────────────────────────────────────────────
 console.log(`\n${'─'.repeat(40)}`);
 console.log(`Tests: ${passed + failed} | ✓ ${passed} | ${failed > 0 ? '✗ ' + failed : '0 failed'}`);

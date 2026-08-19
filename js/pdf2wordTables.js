@@ -26,6 +26,13 @@ const MIN_COLS         = 2;    // minimum columns
 const COL_TOLERANCE    = 25;   // px — items within this X-distance → same column
 const ALIGN_THRESHOLD  = 0.80; // fraction of rows that must share the column pattern
 const CONF_THRESHOLD   = 0.72; // minimum confidence to emit a table result
+// Real, confirmed case (Atlas_DR's md_corpus/003-multipage-ledger, a real
+// debit/credit financial ledger): a genuine data row can legitimately have
+// FEWER items than the header when columns are mutually exclusive (a
+// transaction is either a debit or a credit, never both — so every data row
+// is missing one of those two columns by design, not by accident). See
+// _columnAlignScore's own comment for how this floor is used.
+const MIN_COVERAGE_FRACTION = 0.5;
 
 // ── Public API ────────────────────────────────────────────────────────────────
 
@@ -184,8 +191,29 @@ function _clusterColumns(items, tolerance) {
 }
 
 /**
- * Fraction of line's columns that match at least one base column.
- * Symmetric: also penalises if the line has far more columns than the base.
+ * How well a line's columns match the established base pattern. Two
+ * separate signals, not one ratio, because they protect against two
+ * different failure modes:
+ *
+ *   precision — of THIS line's own items, how many land on a real, known
+ *     column. Low precision means the line has extra/unrelated items that
+ *     only coincidentally overlap a couple of base positions (protects
+ *     against a spurious short line being absorbed into the table).
+ *
+ *   coverage  — how much of the base pattern this line actually represents
+ *     (matched ÷ baseCols.length). A genuine data row can legitimately have
+ *     FEWER columns than the header when columns are mutually exclusive —
+ *     confirmed on a real debit/credit ledger (Atlas_DR's
+ *     md_corpus/003-multipage-ledger) where every transaction row fills
+ *     only ONE of the Debit/Credit columns, so the very first data row
+ *     (an opening-balance line with no Debit/Credit at all) has just 3 of
+ *     the header's 5 columns. The OLD single-ratio design
+ *     (matched / Math.max(baseCols.length, lineCols.length)) scored that
+ *     row 3/5=0.6 — below ALIGN_THRESHOLD — collapsing the whole table
+ *     candidate to 1 row before it ever reached the rows that WOULD have
+ *     matched, so the entire 28-row table went undetected. Below
+ *     MIN_COVERAGE_FRACTION, though, a short line is more likely unrelated
+ *     than a genuine sparse row of THIS table, so coverage still gates it.
  */
 function _columnAlignScore(baseCols, lineCols, tolerance) {
   if (lineCols.length === 0) return 0;
@@ -195,8 +223,10 @@ function _columnAlignScore(baseCols, lineCols, tolerance) {
     if (baseCols.some(bc => Math.abs(bc - lc) <= tolerance)) matched++;
   }
 
-  // Use the larger set as denominator — penalises wildly different column counts
-  return matched / Math.max(baseCols.length, lineCols.length);
+  const coverage = matched / baseCols.length;
+  if (coverage < MIN_COVERAGE_FRACTION) return coverage; // forces a reject below ALIGN_THRESHOLD
+
+  return matched / lineCols.length; // precision — fewer-but-all-matching no longer penalised
 }
 
 // ── Column boundary computation ───────────────────────────────────────────────
