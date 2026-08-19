@@ -52,7 +52,7 @@
     "name": "Czy nadaje się do przygotowywania plików PDF dla narzędzi AI, RAG lub kontekstu LLM?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Tak — Markdown to lekki, powszechnie używany format do wprowadzania dokumentów do okna kontekstu LLM lub potoku RAG, a konwersja lokalna oznacza, że treść nie musi opuszczać Twojego urządzenia tylko po to, by zmienić format. Ponieważ PDFree nie zachowuje tabel, dokumenty z gęstymi tabelami mogą stracić strukturę w wyniku — w takich przypadkach warto najpierw uruchomić OCR, jeśli PDF jest skanem, albo sprawdzić wynik przed przekazaniem go do modelu."
+      "text": "Tak — Markdown to lekki, powszechnie używany format do wprowadzania dokumentów do okna kontekstu LLM lub potoku RAG, a konwersja lokalna oznacza, że treść nie musi opuszczać Twojego urządzenia tylko po to, by zmienić format. Wykrywanie tabel opiera się na heurystyce, więc złożone lub gęste tabele mogą nadal tracić część struktury — w takich przypadkach sprawdź wynik przed przekazaniem go do modelu, albo najpierw uruchom OCR, jeśli PDF jest skanem."
     }
   }
 ]

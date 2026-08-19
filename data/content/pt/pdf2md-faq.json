@@ -20,7 +20,7 @@
     "name": "Tabelas e imagens são convertidas?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Não — esta ferramenta foca em texto, títulos e listas. As tabelas não são convertidas para sintaxe Markdown; as imagens não são incorporadas. Para tabelas, use PDF para Excel; para documentos completos com imagens, use PDF para Word."
+      "text": "Tabelas simples são detectadas automaticamente e convertidas para sintaxe de tabela Markdown. As imagens não são incluídas no resultado. Para uma extração de tabelas mais confiável, use PDF para Excel; para documentos completos com imagens, use PDF para Word."
     }
   },
   {
@@ -60,7 +60,7 @@
     "name": "Isso serve para preparar PDFs para ferramentas de IA, RAG ou contexto de LLM?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sim — o Markdown é um formato leve e muito usado para alimentar a janela de contexto de um LLM ou um pipeline de RAG, e converter localmente significa que o conteúdo não precisa sair do seu dispositivo só para mudar de formato. Como o PDFree não preserva tabelas, documentos com tabelas densas podem perder a estrutura no resultado — para esses casos, considere rodar o OCR antes se o PDF for digitalizado, ou revisar o resultado antes de usá-lo em um modelo."
+      "text": "Sim — o Markdown é um formato leve e muito usado para alimentar a janela de contexto de um LLM ou um pipeline de RAG, e converter localmente significa que o conteúdo não precisa sair do seu dispositivo só para mudar de formato. A detecção de tabelas é baseada em heurísticas, então tabelas complexas ou densas podem perder parte da estrutura — para esses casos, revise o resultado antes de usá-lo em um modelo, ou rode o OCR antes se o PDF for digitalizado."
     }
   }
 ]

@@ -20,7 +20,7 @@
     "name": "Does it preserve tables and images?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No — this tool focuses on text, headings and lists. Tables and images are not converted to Markdown syntax. Use PDF to Excel for tables, or PDF to Word for a fully editable document with images."
+      "text": "Simple tables are detected automatically and converted to Markdown table syntax. Images are not included in the output. Use PDF to Excel for more reliable table extraction, or PDF to Word for a fully editable document with images."
     }
   },
   {
@@ -60,7 +60,7 @@
     "name": "Is this good for preparing PDFs for AI tools, RAG, or LLM context?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Yes — Markdown is a common, lightweight format for feeding documents into an LLM's context window or a RAG pipeline, and converting locally means the document's content never has to leave your device just to reformat it. Since PDFree doesn't preserve tables, dense data tables may lose their structure in the output — for table-heavy documents, consider running OCR first if the PDF is scanned, or checking the result before feeding it to a model."
+      "text": "Yes — Markdown is a common, lightweight format for feeding documents into an LLM's context window or a RAG pipeline, and converting locally means the document's content never has to leave your device just to reformat it. Table detection is heuristic-based, so complex or densely formatted tables may still lose some structure — for table-heavy documents, check the output before feeding it to a model, or run OCR first if the PDF is scanned."
     }
   }
 ]

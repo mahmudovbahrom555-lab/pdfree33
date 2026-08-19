@@ -4116,7 +4116,7 @@
         "es": "Convierte texto, encabezados y listas de PDF a Markdown — funciona en tu navegador, sin subida.",
         "fr": "Convertissez le texte, les titres et les listes PDF en Markdown — s'exécute dans votre navigateur, sans envoi.",
         "pt": "Converta texto, títulos e listas do PDF para Markdown — funciona no seu navegador, sem upload.",
-        "tr": "PDF'yi Markdown formatına dönüştürün. Başlıklar, listeler ve tablo yapısı korunur. Tarayıcıda işleme — yükleme yok.",
+        "tr": "PDF'yi Markdown formatına dönüştürün. Başlıklar, listeler ve basit tablolar algılanır. Tarayıcıda işleme — yükleme yok.",
         "id": "Ubah PDF menjadi teks .md. Diproses di browser, tanpa unggah.",
         "vi": "Chuyển PDF thành văn bản .md. Chạy trong trình duyệt, không tải lên.",
         "ru": "Конвертируйте PDF в текст .md. Работает в браузере, без загрузки.",

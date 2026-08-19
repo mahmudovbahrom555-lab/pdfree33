@@ -52,7 +52,7 @@
     "name": "È adatto per preparare PDF da usare con strumenti AI, RAG o il contesto di un LLM?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sì — il Markdown è un formato leggero molto usato per inserire documenti nella finestra di contesto di un LLM o in una pipeline RAG, e convertire localmente significa che il contenuto non deve lasciare il tuo dispositivo solo per cambiare formato. Poiché PDFree non conserva le tabelle, i documenti con tabelle dense possono perdere la struttura nel risultato — in questi casi, esegui prima l'OCR se il PDF è scansionato, oppure controlla il risultato prima di darlo in pasto a un modello."
+      "text": "Sì — il Markdown è un formato leggero molto usato per inserire documenti nella finestra di contesto di un LLM o in una pipeline RAG, e convertire localmente significa che il contenuto non deve lasciare il tuo dispositivo solo per cambiare formato. Il rilevamento delle tabelle si basa su euristiche, quindi tabelle complesse o molto dense possono comunque perdere parte della struttura — per questi documenti, controlla il risultato prima di darlo in pasto a un modello, oppure esegui prima l'OCR se il PDF è scansionato."
     }
   }
 ]

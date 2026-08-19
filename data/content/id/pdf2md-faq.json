@@ -52,7 +52,7 @@
     "name": "Apakah ini cocok untuk menyiapkan PDF bagi alat AI, RAG, atau konteks LLM?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ya — Markdown adalah format ringan yang umum dipakai untuk memasukkan dokumen ke jendela konteks LLM atau pipeline RAG, dan mengonversi secara lokal berarti isi dokumen tidak perlu keluar dari perangkat Anda hanya untuk mengubah formatnya. Karena PDFree tidak mempertahankan tabel, dokumen dengan tabel padat bisa kehilangan strukturnya pada hasil akhir — untuk dokumen semacam ini, jalankan OCR dulu jika PDF-nya hasil scan, atau periksa hasilnya sebelum digunakan pada model."
+      "text": "Ya — Markdown adalah format ringan yang umum dipakai untuk memasukkan dokumen ke jendela konteks LLM atau pipeline RAG, dan mengonversi secara lokal berarti isi dokumen tidak perlu keluar dari perangkat Anda hanya untuk mengubah formatnya. Deteksi tabel bersifat heuristik, jadi tabel yang kompleks atau padat mungkin tetap kehilangan sebagian strukturnya — untuk dokumen semacam ini, periksa hasilnya sebelum digunakan pada model, atau jalankan OCR dulu jika PDF-nya hasil scan."
     }
   }
 ]

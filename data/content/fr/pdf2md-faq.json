@@ -20,7 +20,7 @@
     "name": "Les tableaux et les images sont-ils convertis ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Non — cet outil se concentre sur le texte, les titres et les listes. Les tableaux ne sont pas convertis en syntaxe Markdown ; les images ne sont pas intégrées. Pour les tableaux, utilisez PDF en Excel ; pour les documents complets avec images, utilisez PDF en Word."
+      "text": "Les tableaux simples sont détectés automatiquement et convertis en syntaxe de tableau Markdown. Les images ne sont pas incluses dans le résultat. Pour une extraction de tableaux plus fiable, utilisez PDF en Excel ; pour les documents complets avec images, utilisez PDF en Word."
     }
   },
   {
@@ -60,7 +60,7 @@
     "name": "Est-ce adapté pour préparer des PDF destinés à des outils d'IA, du RAG ou le contexte d'un LLM ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Oui — le Markdown est un format léger très utilisé pour alimenter la fenêtre de contexte d'un LLM ou un pipeline RAG, et convertir le fichier localement signifie que son contenu n'a pas besoin de quitter votre appareil juste pour changer de format. Comme PDFree ne conserve pas les tableaux, les documents riches en tableaux peuvent perdre leur structure dans le résultat — pour ces documents, pensez à passer d'abord par l'OCR si le PDF est scanné, ou à vérifier le résultat avant de l'envoyer à un modèle."
+      "text": "Oui — le Markdown est un format léger très utilisé pour alimenter la fenêtre de contexte d'un LLM ou un pipeline RAG, et convertir le fichier localement signifie que son contenu n'a pas besoin de quitter votre appareil juste pour changer de format. La détection des tableaux repose sur des heuristiques, donc les tableaux complexes ou très denses peuvent perdre une partie de leur structure — pour ces documents, vérifiez le résultat avant de l'envoyer à un modèle, ou passez d'abord par l'OCR si le PDF est scanné."
     }
   }
 ]
