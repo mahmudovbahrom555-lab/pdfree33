@@ -426,6 +426,65 @@ await test('a bold run with its own embedded leading/trailing spaces still wraps
   expect(md.includes('** bold') || md.includes('phrase **')).toBe(false);
 });
 
+console.log('\nBold-heading fallback (same-size-but-bold section titles, ported from pdf2word\'s _isBoldHeadingLine):');
+
+await test('a same-size all-bold ALL-CAPS line followed by a paragraph becomes an H1', async () => {
+  const items = [
+    makeItem('SECTION OVERVIEW', 50, 700, 10, 'F-Bold'),
+    ...fillerItems(4, 680),
+  ];
+  const pdfDoc = makeFakePdfDocWithFonts(items, { 'F-Bold': true, 'F1': false });
+  const blocks = await _p2mdExtractText(pdfDoc);
+  const heading = blocks.find(b => b.type === 'heading');
+  expect(!!heading).toBeTruthy();
+  expect(heading.level).toBe(1);
+});
+
+await test('a same-size all-bold mixed-case line followed by a paragraph becomes an H2, not H1', async () => {
+  const items = [
+    makeItem('Section Overview', 50, 700, 10, 'F-Bold'),
+    ...fillerItems(4, 680),
+  ];
+  const pdfDoc = makeFakePdfDocWithFonts(items, { 'F-Bold': true, 'F1': false });
+  const blocks = await _p2mdExtractText(pdfDoc);
+  const heading = blocks.find(b => b.type === 'heading');
+  expect(!!heading).toBeTruthy();
+  expect(heading.level).toBe(2);
+});
+
+await test('a same-size all-bold line with nothing after it (end of page) is NOT promoted — the fallback requires a following line', async () => {
+  const items = [
+    ...fillerItems(4, 700),
+    makeItem('Trailing Bold Signature', 50, 700 - 4 * 20, 10, 'F-Bold'),
+  ];
+  const pdfDoc = makeFakePdfDocWithFonts(items, { 'F-Bold': true, 'F1': false });
+  const blocks = await _p2mdExtractText(pdfDoc);
+  expect(blocks.some(b => b.type === 'heading')).toBe(false);
+});
+
+await test('a partial-line bold phrase (not the whole line) is never promoted via the bold-heading fallback', async () => {
+  const items = [
+    makeItem('Please note the ', 50, 700, 10, 'F-Plain'),
+    makeItem('important detail', 220, 700, 10, 'F-Bold'),
+    makeItem(' before continuing.', 380, 700, 10, 'F-Plain'),
+    ...fillerItems(4, 680),
+  ];
+  const pdfDoc = makeFakePdfDocWithFonts(items, { 'F-Plain': false, 'F-Bold': true, 'F1': false });
+  const blocks = await _p2mdExtractText(pdfDoc);
+  expect(blocks.some(b => b.type === 'heading')).toBe(false);
+});
+
+await test('a long all-bold line (over the 100-char cap) is not promoted — too long to be a real heading', async () => {
+  const longText = 'This is a long all-bold sentence that goes on for quite a while and should not be mistaken for a short section heading, since real headings are short.';
+  const items = [
+    makeItem(longText, 50, 700, 10, 'F-Bold'),
+    ...fillerItems(4, 680),
+  ];
+  const pdfDoc = makeFakePdfDocWithFonts(items, { 'F-Bold': true, 'F1': false });
+  const blocks = await _p2mdExtractText(pdfDoc);
+  expect(blocks.some(b => b.type === 'heading')).toBe(false);
+});
+
 console.log('\nFormula detection (honest flattening — see js/processor.js\'s isFormula comment):');
 
 await test('a run in a known LaTeX math font (resolved via commonObjs) is wrapped as inline $...$', async () => {

@@ -2933,6 +2933,19 @@ export async function _p2mdExtractText(pdfDoc) {
     blocks.push({ type: 'para', runs });
   };
 
+  // Same-size-but-bold section headings — verbatim port of pdf2word's
+  // _isBoldHeadingLine (see its own comment: found on a real 19-page
+  // contract where every heading used the EXACT same point size as body
+  // text, only distinguished by bold; the font-size-ratio check below never
+  // fires there). Checking the WHOLE line (not just some items) matters:
+  // inline emphasis mid-sentence is bold only within a longer non-bold
+  // line, not a heading — a partial-line bold run must not qualify.
+  const _isBoldHeadingLine = (items) => {
+    if (!items.every(i => i.bold)) return false;
+    const len = items.map(i => i.str).join('').replace(/\s+/g, '').length;
+    return len > 3 && len <= 100;
+  };
+
   // Processes one column's worth of lines (or a whole page's, when no
   // column split applies) — table detection + per-line classification.
   // Extracted so the outer loop below can call it once per detected column
@@ -3001,13 +3014,35 @@ export async function _p2mdExtractText(pdfDoc) {
       }
 
       const maxFont = Math.max(...ln.items.map(i => i.fontSize));
-      const isHead  = maxFont >= median * 1.3 && rawText.replace(/\s+/g, '').length > 3;
+      let isHead      = maxFont >= median * 1.3 && rawText.replace(/\s+/g, '').length > 3;
+      let boldOnlyHead = false;
+      if (!isHead && _isBoldHeadingLine(ln.items)) {
+        // Extra guard pdf2word's own fallback doesn't need: pdf2word buffers
+        // a whole paragraph before classifying it, so a trailing bold line
+        // with nothing after it never reaches this check on its own. pdf2md
+        // classifies one line at a time, so require a real, non-suppressed
+        // line to follow — otherwise a bold signature/footer line at the end
+        // of a page or column gets promoted on formatting alone with nothing
+        // to distinguish it from an actual section heading.
+        const next = lines[li + 1];
+        const nextRaw = next ? _normWatermark(_lineText(next).trim()) : '';
+        if (nextRaw && !_repeatTextSet.has(nextRaw)) { isHead = true; boldOnlyHead = true; }
+      }
 
       if (isHead) {
         _flushPara();
         let level = 3;
-        if      (maxFont >= median * 2.2) level = 1;
-        else if (maxFont >= median * 1.7) level = 2;
+        if (boldOnlyHead) {
+          // No font-size signal available — fall back to the same ALL-CAPS
+          // heuristic pdf2word's own bold-heading fallback uses to separate
+          // top-level sections from sub-labels in real formal/legal PDFs.
+          const letters   = rawText.replace(/[^\p{L}]/gu, '');
+          const isAllCaps = letters.length > 0 && letters === letters.toUpperCase() && letters !== letters.toLowerCase();
+          level = isAllCaps ? 1 : 2;
+        } else {
+          if      (maxFont >= median * 2.2) level = 1;
+          else if (maxFont >= median * 1.7) level = 2;
+        }
         blocks.push({ type: 'heading', level, text: rawText });
         continue;
       }

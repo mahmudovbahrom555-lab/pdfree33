@@ -168,19 +168,32 @@ CASES.push({
     return { marker, needle: `important${marker}phrase` };
   },
 });
-// Same-size-but-bold line: a MEASURED data point for a known, accepted
-// limitation — pdf2md (unlike pdf2word's _isBoldHeadingLine) has no
-// bold-implies-heading path, so this must render as a bold PARAGRAPH, not
-// get promoted to a Markdown heading. Documents the gap with a real number
-// instead of leaving it as an assumption.
+// Same-size-but-bold line, followed by a paragraph: previously a documented
+// gap (pdf2md had no bold-implies-heading path, unlike pdf2word's
+// _isBoldHeadingLine) — now ported in, so this must be promoted to a real
+// heading. Mixed-case marker text -> H2 (the ALL-CAPS-only path stays H1).
 CASES.push({
-  id: 'bold-same-size-not-promoted-to-heading', category: 'boldRun', expectBold: true, expectNotHeading: true,
+  id: 'bold-same-size-heading-fallback', category: 'headingLevel', expectLevel: 2,
   async build(doc, font, fontBold) {
     const marker = nextMarker();
     const page = doc.addPage([612, 792]);
     page.drawText(`BoldSameSize${marker}Lookalike`, { x: 50, y: 700, size: BODY_SIZE, font: fontBold, color: rgb(0, 0, 0) });
     addFiller(page, font, 6, 660);
-    return { marker, needle: `BoldSameSize${marker}Lookalike` };
+    return { marker };
+  },
+});
+
+// The fallback's own guard: a same-size all-bold line with NOTHING after it
+// (page ends right there) must NOT be promoted — real production coverage
+// for the same guard tests/pdf2md.test.js already pins at the unit level.
+CASES.push({
+  id: 'bold-trailing-line-not-promoted', category: 'boldRun', expectBold: true, expectNotHeading: true,
+  async build(doc, font, fontBold) {
+    const marker = nextMarker();
+    const page = doc.addPage([612, 792]);
+    addFiller(page, font, 6, 700);
+    page.drawText(`TrailingBold${marker}Signature`, { x: 50, y: 700 - 6 * 20, size: BODY_SIZE, font: fontBold, color: rgb(0, 0, 0) });
+    return { marker, needle: `TrailingBold${marker}Signature` };
   },
 });
 
