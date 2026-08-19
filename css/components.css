@@ -3431,6 +3431,63 @@ button,
 }
 .p2w-confidence__warn-item::before { content: '⚠ '; }
 
+.atlas-check {
+  padding: 10px 20px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  line-height: 1.6;
+}
+.atlas-check__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.atlas-check__title {
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text3);
+}
+.atlas-check__badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 7px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.atlas-check__badge--ready   { background: #dcfce7; color: #15803d; }
+.atlas-check__badge--minor   { background: #dbeafe; color: #1d4ed8; }
+.atlas-check__badge--notable { background: #fef9c3; color: #854d0e; }
+.atlas-check__badge--heavy   { background: #fee2e2; color: #b91c1c; }
+
+:root[data-theme="dark"] .atlas-check__badge--ready   { background: #14532d; color: #86efac; }
+:root[data-theme="dark"] .atlas-check__badge--minor   { background: #1e3a8a; color: #93c5fd; }
+:root[data-theme="dark"] .atlas-check__badge--notable { background: #713f12; color: #fde68a; }
+:root[data-theme="dark"] .atlas-check__badge--heavy   { background: #7f1d1d; color: #fca5a5; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .atlas-check__badge--ready   { background: #14532d; color: #86efac; }
+  :root:not([data-theme="light"]) .atlas-check__badge--minor   { background: #1e3a8a; color: #93c5fd; }
+  :root:not([data-theme="light"]) .atlas-check__badge--notable { background: #713f12; color: #fde68a; }
+  :root:not([data-theme="light"]) .atlas-check__badge--heavy   { background: #7f1d1d; color: #fca5a5; }
+}
+
+.atlas-check__scope {
+  margin: 4px 0 0;
+  color: var(--text3);
+  font-size: 11px;
+}
+.atlas-check__findings {
+  margin: 6px 0 0;
+  padding-left: 18px;
+  color: var(--text2);
+  font-size: 11px;
+}
+.atlas-check__findings li { margin-bottom: 2px; }
+
 .fb-row {
   display: flex;
   gap: 8px;

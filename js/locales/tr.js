@@ -892,6 +892,14 @@ window.PDFREE_LOCALE = {
   p2w_confidence_limited:    'Sınırlı',
   p2w_detected_label:        'Tespit edilen',
 
+  // ── pdf2wordUI.js — Atlas structural check ──────────────────
+  atlas_check_title:       '🔬 Yapısal kontrol',
+  atlas_check_scope_note:  'Tabloların, paragrafların ve metin akışının gerçekte ne kadar düzenlenebilir olduğu — tam bir belge incelemesi değildir.',
+  atlas_verdict_ready:     'Hazır',
+  atlas_verdict_minor:     'Küçük sorunlar',
+  atlas_verdict_notable:   'Belirgin sorunlar',
+  atlas_verdict_heavy:     'Ciddi sorunlar',
+
   // ── pdf2excelUI.js ───────────────────────────────────────
   p2e_mode_hint:              '📊 Tespit edilen tablolar ayrı Excel sayfalarına dönüştürülür. Diğer tüm metinler hiçbir şey kaybolmadan bir "Metin" sayfasında tutulur.',
   p2e_ocr_hint:               '⚠️ Metin katmanı tespit edilmedi — bu PDF taranmış bir görüntü, bu nedenle hiçbir tablo çıkarılamaz. ',

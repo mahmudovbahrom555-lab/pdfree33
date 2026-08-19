@@ -892,6 +892,14 @@ window.PDFREE_LOCALE = {
   p2w_confidence_limited:    'Limitata',
   p2w_detected_label:        'Rilevato',
 
+  // ── pdf2wordUI.js — Atlas structural check ──────────────────
+  atlas_check_title:       '🔬 Controllo strutturale',
+  atlas_check_scope_note:  'Quanto sono realmente modificabili tabelle, paragrafi e flusso del testo — non una revisione completa del documento.',
+  atlas_verdict_ready:     'Pronto',
+  atlas_verdict_minor:     'Problemi minori',
+  atlas_verdict_notable:   'Problemi rilevanti',
+  atlas_verdict_heavy:     'Problemi gravi',
+
   // ── pdf2excelUI.js ───────────────────────────────────────
   p2e_mode_hint:              '📊 Le tabelle rilevate vengono convertite in fogli Excel separati. Il resto del testo viene mantenuto in un foglio "Testo" così da non perdere nulla.',
   p2e_ocr_hint:               '⚠️ Nessun livello di testo rilevato — questo PDF è un\'immagine scansionata, quindi non è possibile estrarre alcuna tabella. ',

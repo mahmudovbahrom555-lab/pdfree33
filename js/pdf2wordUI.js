@@ -102,6 +102,7 @@ export function hidePdf2WordOptions() {
   _pageCount = 0; _vpW = 0; _vpH = 0; _loading = false;
   ++_scanGen; // cancel any in-flight background scan
   clearP2wConfidence();
+  clearAtlasCheck();
 }
 
 // ── Size estimation ───────────────────────────────────────────────────────────
@@ -360,6 +361,66 @@ export function renderP2wConfidence({ score, level, detected, warnings }) {
 
 export function clearP2wConfidence() {
   const el = id('p2wConfidence');
+  if (!el) return;
+  el.innerHTML    = '';
+  el.style.display = 'none';
+}
+
+// ── Atlas structural check ──────────────────────────────────────────────────
+// Surfaces eriScore.js's evaluateStructural() result (see _runPdf2Word's
+// `atlasEri`) — real, measured structural editability of the ACTUAL shipped
+// DOCX (tables real vs. layout-mis-detected, paragraphs trapped in text
+// boxes, flow chopped by hard breaks). Deliberately named/framed as a
+// "structural check," not a quality score or review — it covers 3 of
+// Atlas's 5 channels (see Atlas_DR/ROADMAP.md Stage 2), not the full
+// benchmark. Verdict thresholds match Atlas_DR's own eri_core/evaluate.py
+// verdict() function (READY>=95 / MINOR>=80 / NOTABLE>=60 / HEAVY<60) —
+// same bar, not invented separately for this UI. Deliberately shows NO time
+// estimate ("~3-5 minutes to fix") — ROADMAP.md is explicit that this would
+// be a real, user-facing overclaim until manual_fix_minutes is measured
+// against real human editing time, which hasn't happened yet.
+function _atlasVerdict(eri) {
+  if (eri >= 95) return { key: 'ready',   labelKey: 'atlas_verdict_ready' };
+  if (eri >= 80) return { key: 'minor',   labelKey: 'atlas_verdict_minor' };
+  if (eri >= 60) return { key: 'notable', labelKey: 'atlas_verdict_notable' };
+  return { key: 'heavy', labelKey: 'atlas_verdict_heavy' };
+}
+
+export function renderAtlasCheck(atlasEri) {
+  const el = id('atlasCheck');
+  if (!el) return;
+  if (!atlasEri || atlasEri.error) { clearAtlasCheck(); return; }
+
+  const { eri, findings } = atlasEri;
+  const verdict = _atlasVerdict(eri);
+
+  // The one always-present findings.flow entry ("channels L/O aren't scored
+  // without a profile") is an internal scope note aimed at this codebase's
+  // own future readers, not end users — atlas_check_scope_note below covers
+  // the same disclosure in user-facing language, so it's filtered here
+  // rather than shown twice in two different tones.
+  const items = [
+    ...(findings.tables || []),
+    ...(findings.paragraphs || []),
+    ...(findings.flow || []).filter(f => !f.startsWith('channels L')),
+  ];
+
+  let html = `<div class="atlas-check__header">
+    <span class="atlas-check__title">${t('atlas_check_title')}</span>
+    <span class="atlas-check__badge atlas-check__badge--${verdict.key}">${Math.round(eri)}% ${t(verdict.labelKey)}</span>
+  </div>
+  <p class="atlas-check__scope">${t('atlas_check_scope_note')}</p>`;
+
+  if (items.length) {
+    html += `<ul class="atlas-check__findings">${items.map(f => `<li>${f}</li>`).join('')}</ul>`;
+  }
+
+  el.innerHTML     = html;
+  el.style.display = '';
+}
+
+export function clearAtlasCheck() {
+  const el = id('atlasCheck');
   if (!el) return;
   el.innerHTML    = '';
   el.style.display = 'none';

@@ -337,7 +337,7 @@ function resetState() {
 
 // ── Success handler ───────────────────────────────────────────
 
-function _handleSuccess({ tool, blob, desc, filename, compressionReport, batchCompressSummary, pageCounts }) {
+function _handleSuccess({ tool, blob, desc, filename, compressionReport, batchCompressSummary, pageCounts, confidence, atlasEri }) {
   _freeResultUrl();
   _resultUrl      = URL.createObjectURL(blob);
   _resultBlob     = blob;
@@ -447,7 +447,7 @@ function _handleSuccess({ tool, blob, desc, filename, compressionReport, batchCo
   hide('progressLabel');
   card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
-  notifyToolSuccess(tool, { compressionReport, batchCompressSummary });
+  notifyToolSuccess(tool, { compressionReport, batchCompressSummary, confidence, atlasEri });
 
   if (tool === 'merge' && pageCounts?.length > 1) {
     const breakdown = pageCounts

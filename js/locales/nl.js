@@ -892,6 +892,14 @@ window.PDFREE_LOCALE = {
   p2w_confidence_limited:    'Beperkt',
   p2w_detected_label:        'Gedetecteerd',
 
+  // ── pdf2wordUI.js — Atlas structural check ──────────────────
+  atlas_check_title:       '🔬 Structurele controle',
+  atlas_check_scope_note:  'Hoe bewerkbaar tabellen, alinea\'s en tekststroom werkelijk zijn — geen volledige documentcontrole.',
+  atlas_verdict_ready:     'Klaar',
+  atlas_verdict_minor:     'Kleine problemen',
+  atlas_verdict_notable:   'Opvallende problemen',
+  atlas_verdict_heavy:     'Ernstige problemen',
+
   // ── pdf2excelUI.js ───────────────────────────────────────
   p2e_mode_hint:              '📊 Gedetecteerde tabellen worden omgezet in aparte Excel-werkbladen. Overige tekst blijft bewaard in een blad "Tekst", zodat niets verloren gaat.',
   p2e_ocr_hint:               '⚠️ Geen tekstlaag gedetecteerd — dit PDF-bestand is een gescande afbeelding, waardoor er geen tabellen kunnen worden geëxtraheerd. ',

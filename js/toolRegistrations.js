@@ -56,7 +56,8 @@ import { initOcrOptions, hideOcrOptions,
          getOcrParams }                     from './ocrUI.js';
 import { initPdf2WordOptions, hidePdf2WordOptions,
          getPdf2WordParams,
-         renderP2wConfidence, clearP2wConfidence } from './pdf2wordUI.js';
+         renderP2wConfidence, clearP2wConfidence,
+         renderAtlasCheck } from './pdf2wordUI.js';
 import { initPdf2ExcelOptions, hidePdf2ExcelOptions,
          getPdf2ExcelParams,
          renderP2eConfidence } from './pdf2excelUI.js';
@@ -448,8 +449,9 @@ registerTool('pdf2word', {
     if (!p.pageCount) return null;
     return null;
   },
-  onSuccess: ({ confidence }) => {
+  onSuccess: ({ confidence, atlasEri }) => {
     if (confidence) renderP2wConfidence(confidence);
+    if (atlasEri) renderAtlasCheck(atlasEri);
   },
 });
 

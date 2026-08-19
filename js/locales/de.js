@@ -895,6 +895,14 @@ window.PDFREE_LOCALE = {
   p2w_confidence_limited:    'Begrenzt',
   p2w_detected_label:        'Erkannt',
 
+  // ── pdf2wordUI.js — Atlas structural check ──────────────────
+  atlas_check_title:       '🔬 Strukturprüfung',
+  atlas_check_scope_note:  'Wie bearbeitbar Tabellen, Absätze und Textfluss wirklich sind — keine vollständige Dokumentprüfung.',
+  atlas_verdict_ready:     'Bereit',
+  atlas_verdict_minor:     'Kleinere Probleme',
+  atlas_verdict_notable:   'Deutliche Probleme',
+  atlas_verdict_heavy:     'Erhebliche Probleme',
+
   // ── pdf2excelUI.js ───────────────────────────────────────
   p2e_mode_hint:              '📊 Erkannte Tabellen werden in separate Excel-Tabellenblätter umgewandelt. Anderer Text bleibt in einem Blatt "Text" erhalten, damit nichts verloren geht.',
   p2e_ocr_hint:               '⚠️ Keine Textebene erkannt — dieses PDF ist ein gescanntes Bild, daher können keine Tabellen extrahiert werden. ',

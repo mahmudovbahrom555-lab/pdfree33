@@ -894,6 +894,14 @@ window.PDFREE_LOCALE = {
   p2w_confidence_limited:    '제한적',
   p2w_detected_label:        '감지됨',
 
+  // ── pdf2wordUI.js — Atlas structural check ──────────────────
+  atlas_check_title:       '🔬 구조 검사',
+  atlas_check_scope_note:  '표, 단락, 텍스트 흐름이 실제로 얼마나 편집 가능한지 확인합니다 — 전체 문서 검토는 아닙니다.',
+  atlas_verdict_ready:     '준비됨',
+  atlas_verdict_minor:     '경미한 문제',
+  atlas_verdict_notable:   '주목할 문제',
+  atlas_verdict_heavy:     '심각한 문제',
+
   // ── pdf2excelUI.js ───────────────────────────────────────
   p2e_mode_hint:              '📊 감지된 표는 각각 별도의 Excel 시트로 변환됩니다. 다른 텍스트는 손실 없이 "텍스트" 시트에 보관됩니다.',
   p2e_ocr_hint:               '⚠️ 텍스트 레이어가 감지되지 않았습니다 — 이 PDF는 스캔된 이미지이므로 표를 추출할 수 없습니다. ',

@@ -893,6 +893,14 @@ window.PDFREE_LOCALE = {
   p2w_confidence_limited:    'Terbatas',
   p2w_detected_label:        'Terdeteksi',
 
+  // ── pdf2wordUI.js — Atlas structural check ──────────────────
+  atlas_check_title:       '🔬 Pemeriksaan struktural',
+  atlas_check_scope_note:  'Seberapa dapat diedit tabel, paragraf, dan alur teks sebenarnya — bukan tinjauan dokumen lengkap.',
+  atlas_verdict_ready:     'Siap',
+  atlas_verdict_minor:     'Masalah kecil',
+  atlas_verdict_notable:   'Masalah signifikan',
+  atlas_verdict_heavy:     'Masalah berat',
+
   // ── pdf2excelUI.js ───────────────────────────────────────
   p2e_mode_hint:              '📊 Tabel yang terdeteksi akan diubah menjadi sheet Excel terpisah. Teks lainnya disimpan dalam sheet "Teks" agar tidak ada yang hilang.',
   p2e_ocr_hint:               '⚠️ Tidak ada lapisan teks terdeteksi — PDF ini adalah gambar hasil pindaian, sehingga tidak ada tabel yang dapat diekstrak. ',

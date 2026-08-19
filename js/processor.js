@@ -1984,25 +1984,38 @@ async function _runPdf2Word(filesSnapshot, { mode = 'text', dpi = 150 } = {}) {
   // toBuffer() uses type:"nodebuffer" which JSZip does not support in browsers.
   let blob = await Packer.toBlob(_buildDoc(paragraphs));
 
-  // Self-check: if this document has tables, verify with Atlas's ERI structural
-  // scorer that they're real tables, not layout mis-detected as one (see
-  // checkTablesStruct() in eriChecks.js). If the score looks bad, rebuild
-  // paragraphs-only (no PDF re-parse needed — pageData is already extracted)
-  // and keep whichever variant actually scores higher. Best-effort: any
-  // failure here just ships the original conversion, never blocks success.
-  if (mode === 'text' && cs.totalTables > 0 && isProcessing) {
+  // Atlas structural check — scores the ACTUAL shipped DOCX (tables real vs.
+  // layout-mis-detected, paragraphs trapped in text boxes, flow chopped by
+  // hard breaks) via eriScore.js's evaluateStructural(), the same JS port
+  // of Atlas_DR's evaluate_structural() already used below for the
+  // table-retry decision — now also surfaced to the user (see
+  // renderAtlasCheck in pdf2wordUI.js), not just consumed internally.
+  // Computed unconditionally for mode==='text' (image mode has no editable
+  // structure to score at all). Best-effort throughout: any scoring failure
+  // here never blocks a conversion that already succeeded — `atlasEri`
+  // simply stays null and the UI shows nothing for it.
+  let atlasEri = null;
+  if (mode === 'text' && isProcessing) {
     try {
-      const eri = await evaluateStructural(await blob.arrayBuffer());
-      if (eri.components.tables < _ERI_TABLE_RETRY_THRESHOLD) {
+      atlasEri = await evaluateStructural(await blob.arrayBuffer());
+
+      // Self-check: if this document has tables and they score badly, verify
+      // whether rebuilding paragraphs-only (no PDF re-parse needed —
+      // pageData is already extracted) scores higher, and keep whichever
+      // variant actually does — same retry this block already ran, now just
+      // also keeping the winning variant's OWN atlasEri for display instead
+      // of silently keeping the pre-retry score.
+      if (cs.totalTables > 0 && atlasEri.components.tables < _ERI_TABLE_RETRY_THRESHOLD) {
         setProgress(95, 'Verifying table structure…');
         const retry = await _p2wBuildParagraphs(
           pdfDoc, pageData, median, repeatTextSet, cs, { useTables: false }
         );
         const retryBlob = await Packer.toBlob(_buildDoc(retry.paragraphs));
         const retryEri = await evaluateStructural(await retryBlob.arrayBuffer());
-        if (retryEri.eri > eri.eri) {
+        if (retryEri.eri > atlasEri.eri) {
           blob       = retryBlob;
           confidence = _p2wConfidence(retry.cs, median);
+          atlasEri   = retryEri;
         }
       }
     } catch {
@@ -2025,7 +2038,7 @@ async function _runPdf2Word(filesSnapshot, { mode = 'text', dpi = 150 } = {}) {
   setProgress(100, t('prog_done'));
 
   document.dispatchEvent(new CustomEvent('pdfree:success', {
-    detail: { tool: 'pdf2word', blob, desc, filename, confidence }
+    detail: { tool: 'pdf2word', blob, desc, filename, confidence, atlasEri }
   }));
 }
 

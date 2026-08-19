@@ -892,6 +892,14 @@ window.PDFREE_LOCALE = {
   p2w_confidence_limited:    'Ograniczone',
   p2w_detected_label:        'Wykryto',
 
+  // ── pdf2wordUI.js — Atlas structural check ──────────────────
+  atlas_check_title:       '🔬 Kontrola strukturalna',
+  atlas_check_scope_note:  'Jak faktycznie edytowalne są tabele, akapity i przepływ tekstu — nie pełny przegląd dokumentu.',
+  atlas_verdict_ready:     'Gotowe',
+  atlas_verdict_minor:     'Drobne problemy',
+  atlas_verdict_notable:   'Zauważalne problemy',
+  atlas_verdict_heavy:     'Poważne problemy',
+
   // ── pdf2excelUI.js ───────────────────────────────────────
   p2e_mode_hint:              '📊 Wykryte tabele są konwertowane na osobne arkusze Excel. Pozostały tekst jest zachowywany w arkuszu "Tekst", dzięki czemu nic nie ginie.',
   p2e_ocr_hint:               '⚠️ Nie wykryto warstwy tekstu — ten plik PDF to zeskanowany obraz, więc nie można wyodrębnić żadnych tabel. ',

@@ -916,6 +916,18 @@ export const EN = {
   p2w_confidence_limited:   'Limited',
   p2w_detected_label:       'Detected',
 
+  // ── pdf2wordUI.js — Atlas structural check ──────────────────────
+  // "Structural check" (not "quality check"/"review") is deliberate — this
+  // scores 3 of Atlas's 5 channels (tables/paragraphs/flow) on the actual
+  // produced document; it doesn't imply the full-benchmark rigor a name
+  // like "Atlas score" alone would suggest. See Atlas_DR/ROADMAP.md Stage 2.
+  atlas_check_title:       '🔬 Structural check',
+  atlas_check_scope_note:  'How editable the tables, paragraphs, and text flow actually are — not a full document review.',
+  atlas_verdict_ready:     'Ready',
+  atlas_verdict_minor:     'Minor issues',
+  atlas_verdict_notable:   'Notable issues',
+  atlas_verdict_heavy:     'Heavy issues',
+
   // ── pdf2excelUI.js ─────────────────────────────────────────────
   p2e_mode_hint:              '📊 Detected tables are converted into separate Excel sheets. Any other text is kept in a "Text" sheet so nothing is lost.',
   p2e_ocr_hint:                '⚠️ No text layer detected — this PDF is a scanned image, so no tables can be extracted. ',

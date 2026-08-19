@@ -893,6 +893,14 @@ window.PDFREE_LOCALE = {
   p2w_confidence_limited:    'Hạn chế',
   p2w_detected_label:        'Đã phát hiện',
 
+  // ── pdf2wordUI.js — Atlas structural check ──────────────────
+  atlas_check_title:       '🔬 Kiểm tra cấu trúc',
+  atlas_check_scope_note:  'Mức độ có thể chỉnh sửa thực sự của bảng, đoạn văn và luồng văn bản — không phải đánh giá toàn bộ tài liệu.',
+  atlas_verdict_ready:     'Sẵn sàng',
+  atlas_verdict_minor:     'Vấn đề nhỏ',
+  atlas_verdict_notable:   'Vấn đề đáng chú ý',
+  atlas_verdict_heavy:     'Vấn đề nghiêm trọng',
+
   // ── pdf2excelUI.js ───────────────────────────────────────
   p2e_mode_hint:              '📊 Các bảng được phát hiện sẽ chuyển thành các trang tính Excel riêng biệt. Văn bản còn lại được giữ trong một trang tính "Văn bản" để không bị mất dữ liệu.',
   p2e_ocr_hint:               '⚠️ Không phát hiện lớp văn bản — PDF này là hình ảnh được quét, do đó không thể trích xuất bảng nào. ',

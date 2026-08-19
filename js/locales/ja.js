@@ -895,6 +895,14 @@ window.PDFREE_LOCALE = {
   p2w_confidence_limited:    '限定的',
   p2w_detected_label:        '検出',
 
+  // ── pdf2wordUI.js — Atlas structural check ──────────────────
+  atlas_check_title:       '🔬 構造チェック',
+  atlas_check_scope_note:  '表、段落、テキストの流れが実際にどれだけ編集可能かを示します — 文書全体のレビューではありません。',
+  atlas_verdict_ready:     '準備完了',
+  atlas_verdict_minor:     '軽微な問題',
+  atlas_verdict_notable:   '目立つ問題',
+  atlas_verdict_heavy:     '深刻な問題',
+
   // ── pdf2excelUI.js ───────────────────────────────────────
   p2e_mode_hint:              '📊 検出された表はそれぞれ個別のExcelシートに変換されます。それ以外のテキストは「テキスト」シートに保持されるため、何も失われません。',
   p2e_ocr_hint:               '⚠️ テキストレイヤーが検出されません — このPDFはスキャンされた画像のため、表を抽出できません。',
