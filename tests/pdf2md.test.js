@@ -211,6 +211,131 @@ await test('a short page (below the column-detection line-count floor) is not mi
   }
 });
 
+console.log('\nHeading level detection (font-size ratio vs. page median):');
+
+// Enough size-10 filler lines that the median stays anchored at 10 despite
+// one larger heading line — matches _p2mdExtractText's real median (computed
+// across ALL text on the page, not just the line under test).
+function fillerItems(n, startY = 600) {
+  const items = [];
+  for (let i = 0; i < n; i++) {
+    items.push(makeItem(`Filler body sentence number ${i + 1} of ordinary length.`, 50, startY - i * 20));
+  }
+  return items;
+}
+
+await test('a line at >=2.2x median font size becomes an H1', async () => {
+  const items = [makeItem('Top Level Heading Text', 50, 700, 22), ...fillerItems(6)];
+  const pdfDoc = makeFakePdfDoc([items]);
+  const blocks = await _p2mdExtractText(pdfDoc);
+  const heading = blocks.find(b => b.type === 'heading');
+  expect(!!heading).toBeTruthy();
+  expect(heading.level).toBe(1);
+});
+
+await test('a line at >=1.7x (but <2.2x) median font size becomes an H2', async () => {
+  const items = [makeItem('Second Level Heading Text', 50, 700, 17), ...fillerItems(6)];
+  const pdfDoc = makeFakePdfDoc([items]);
+  const blocks = await _p2mdExtractText(pdfDoc);
+  const heading = blocks.find(b => b.type === 'heading');
+  expect(!!heading).toBeTruthy();
+  expect(heading.level).toBe(2);
+});
+
+await test('a line at >=1.3x (but <1.7x) median font size becomes an H3', async () => {
+  const items = [makeItem('Third Level Heading Text', 50, 700, 13), ...fillerItems(6)];
+  const pdfDoc = makeFakePdfDoc([items]);
+  const blocks = await _p2mdExtractText(pdfDoc);
+  const heading = blocks.find(b => b.type === 'heading');
+  expect(!!heading).toBeTruthy();
+  expect(heading.level).toBe(3);
+});
+
+await test('a line below 1.3x median font size stays a normal paragraph, not a heading', async () => {
+  const items = [makeItem('Not Quite Big Enough To Be A Heading', 50, 700, 11), ...fillerItems(6)];
+  const pdfDoc = makeFakePdfDoc([items]);
+  const blocks = await _p2mdExtractText(pdfDoc);
+  expect(blocks.some(b => b.type === 'heading')).toBe(false);
+});
+
+console.log('\nList detection (bullet / numbered / plain):');
+
+await test('a bulleted line becomes a Markdown list item', async () => {
+  const items = [makeItem('• First bulleted item', 50, 700), ...fillerItems(4, 680)];
+  const pdfDoc = makeFakePdfDoc([items]);
+  const blocks = await _p2mdExtractText(pdfDoc);
+  const list = blocks.find(b => b.type === 'list');
+  expect(!!list).toBeTruthy();
+  expect(list.text.startsWith('- ')).toBeTruthy();
+});
+
+await test('a numbered line becomes a Markdown ordered-list item', async () => {
+  const items = [makeItem('1. First numbered item', 50, 700), ...fillerItems(4, 680)];
+  const pdfDoc = makeFakePdfDoc([items]);
+  const blocks = await _p2mdExtractText(pdfDoc);
+  const list = blocks.find(b => b.type === 'list');
+  expect(!!list).toBeTruthy();
+  expect(/^\d+\.\s/.test(list.text)).toBeTruthy();
+});
+
+await test('an ordinary sentence starting with a number followed by a decimal is NOT mistaken for a list (e.g. "3.14 is pi")', async () => {
+  const items = [makeItem('3.14 is an approximation of pi.', 50, 700), ...fillerItems(4, 680)];
+  const pdfDoc = makeFakePdfDoc([items]);
+  const blocks = await _p2mdExtractText(pdfDoc);
+  expect(blocks.some(b => b.type === 'list')).toBe(false);
+});
+
+console.log('\nTable structure detection:');
+
+await test('a clean multi-row, multi-column grid of text becomes a table block', async () => {
+  const items = [];
+  const rows = [['Name', 'Role', 'Score'], ['Alice', 'Engineer', '92'], ['Bob', 'Designer', '87'], ['Carol', 'Analyst', '81']];
+  rows.forEach((row, r) => {
+    items.push(makeItem(row[0], 50, 700 - r * 20));
+    items.push(makeItem(row[1], 200, 700 - r * 20));
+    items.push(makeItem(row[2], 350, 700 - r * 20));
+  });
+  const pdfDoc = makeFakePdfDoc([items]);
+  const blocks = await _p2mdExtractText(pdfDoc);
+  const table = blocks.find(b => b.type === 'table');
+  expect(!!table).toBeTruthy();
+  expect(table.rows.length).toBe(4);
+  const md = _p2mdRender(blocks);
+  expect(md.includes('| --- | --- | --- |')).toBeTruthy();
+  expect(md.includes('Alice')).toBeTruthy();
+});
+
+console.log('\nWatermark / repeated-header suppression:');
+
+await test('a short line repeated on all 3+ pages is suppressed from the output entirely', async () => {
+  const pagesItems = [1, 2, 3].map(p => [
+    makeItem('CONFIDENTIAL DRAFT', 250, 750),
+    ...fillerItems(3, 700).map(it => ({ ...it, str: it.str.replace('number', `on page ${p} number`) })),
+  ]);
+  const pdfDoc = makeFakePdfDoc(pagesItems);
+  const blocks = await _p2mdExtractText(pdfDoc);
+  const md = _p2mdRender(blocks);
+  expect(md.includes('CONFIDENTIAL DRAFT')).toBe(false);
+  expect(md.includes('page 1')).toBeTruthy();
+  expect(md.includes('page 3')).toBeTruthy();
+});
+
+console.log('\nEmbedded page-number suppression:');
+
+await test('a bare integer alone on its own line near the bottom of the page is dropped as a page number', async () => {
+  const items = [
+    ...fillerItems(4, 700),
+    makeItem('42', 300, 100), // isolated single-item line near the bottom
+  ];
+  const pdfDoc = makeFakePdfDoc([items]);
+  const blocks = await _p2mdExtractText(pdfDoc);
+  const md = _p2mdRender(blocks);
+  // The bare "42" page number must not appear as its own block; a "42" that
+  // happened to be part of ordinary body text elsewhere would be a separate,
+  // legitimate case this test isn't constructing.
+  expect(blocks.some(b => b.type === 'para' && b.runs.some(r => r.text.trim() === '42'))).toBe(false);
+});
+
 console.log('\nBold detection (commonObjs, not just fontFamily):');
 
 await test('detects bold via page.commonObjs even when fontFamily is a generic fallback for both fonts', async () => {

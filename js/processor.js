@@ -2629,12 +2629,16 @@ async function _runPdf2Ppt(filesSnapshot, { dpi = 150 } = {}) {
 // ── PDF → Markdown ───────────────────────────────────────────────
 // Lightest of the four PDF→Office/text tools: Markdown is plain text, so
 // there is no binary container to build and no CDN library to load.
-// Reuses _p2wExtractText's line-grouping + font-size-ratio heading
-// classifier (2.2×/1.7×/1.3× of median font size → H1/H2/H3) and its
-// watermark/page-number suppression. The one genuinely new piece is
-// bullet/numbered list-line detection. Scoped to text, headings and
-// lists — tables/images fall through as plain text lines rather than
-// Markdown table syntax.
+// Reuses pdf2word's line-grouping technique, font-size-ratio heading
+// classifier (2.2×/1.7×/1.3× of median font size → H1/H2/H3), watermark/
+// page-number suppression, and — since the priority-2/3 fixes below —
+// its column-split (_splitCrossColumnLines/detectColumnRegions) and
+// commonObjs-based bold detection too. Simple tables ARE detected
+// (detectTables()/looksLikeProseNotData(), shared with pdf2word) and
+// rendered as real GFM pipe-table syntax — this comment used to say
+// otherwise; that was stale relative to the code even before this pass,
+// see the pdf2md analysis in memory. Images remain genuinely dropped —
+// no canvas render anywhere in this path.
 
 async function _runPdf2Md(filesSnapshot) {
   const file = filesSnapshot[0];
