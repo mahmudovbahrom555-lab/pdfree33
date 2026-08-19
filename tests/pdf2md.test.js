@@ -503,6 +503,20 @@ await test('a long all-bold line (over the 100-char cap) is not promoted — too
   expect(blocks.some(b => b.type === 'heading')).toBe(false);
 });
 
+await test('a bold line containing a comma-grouped currency amount is NOT promoted — real financial ledger subtotal/closing-balance rows, not a heading', async () => {
+  // Real case: Atlas_DR's md_corpus/003-multipage-ledger had
+  // "Subtotal thru 04/23 28,971.05 21,945.70" and
+  // "04/30 Closing Balance 38,744.05" both wrongly promoted to H2 before
+  // this guard.
+  const items = [
+    makeItem('Subtotal thru 04/23 28,971.05 21,945.70', 50, 700, 10, 'F-Bold'),
+    ...fillerItems(4, 680),
+  ];
+  const pdfDoc = makeFakePdfDocWithFonts(items, { 'F-Bold': true, 'F1': false });
+  const blocks = await _p2mdExtractText(pdfDoc);
+  expect(blocks.some(b => b.type === 'heading')).toBe(false);
+});
+
 console.log('\nNumbered-heading vs numbered-list disambiguation:');
 
 await test('an isolated bold numbered line ("1. Introduction") followed by a paragraph becomes a heading, not a list item', async () => {

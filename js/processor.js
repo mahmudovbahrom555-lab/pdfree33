@@ -107,6 +107,21 @@ export const NUMBERED_RE = /^\d{1,3}[.)](?!\d)/;
 // match between two \w characters (letter, then digit).
 export const BOLD_FONT_NAME_RE = /bold|heavy|black|\b(?:cm|lm)(?:ss)?bx/i;
 
+// Shared guard for both pdf2word's and pdf2md's _isBoldHeadingLine — a bold,
+// short, isolated line is usually a real section title, but a real financial
+// table's bold subtotal/closing-balance row looks identical to that
+// heuristic (bold, short-ish, followed by more content). Found directly on a
+// real 28-row debit/credit ledger (Atlas_DR's md_corpus/003-multipage-ledger,
+// the same document the table-detection fix above targets): "Subtotal thru
+// 04/23 28,971.05 21,945.70" and "04/30 Closing Balance 38,744.05" both got
+// wrongly promoted to Markdown/Word headings. A comma-grouped, 2-decimal
+// currency-formatted number (e.g. "28,971.05") is a strong, precise signal
+// that a line is tabular/financial data, not a real heading — real section
+// titles essentially never contain a specifically-formatted amount like
+// that. Requires the comma group (excludes bare "5.11", a real numbered
+// heading/clause reference) so ordinary numbered headings stay unaffected.
+export const MONEY_TOKEN_RE = /\d{1,3}(?:,\d{3})+\.\d{2}\b/;
+
 // docx.js reference id linking a numbered-list Paragraph (in
 // _p2wBuildParagraphs) to the Document-level numbering definition that
 // actually supplies the "1. 2. 3." auto-numbering (built in _runPdf2Word's
@@ -3196,7 +3211,9 @@ export async function _p2mdExtractText(pdfDoc) {
   // line, not a heading — a partial-line bold run must not qualify.
   const _isBoldHeadingLine = (items) => {
     if (!items.every(i => i.bold)) return false;
-    const len = items.map(i => i.str).join('').replace(/\s+/g, '').length;
+    const text = items.map(i => i.str).join('');
+    if (MONEY_TOKEN_RE.test(text)) return false; // tabular/financial data, not a real heading
+    const len = text.replace(/\s+/g, '').length;
     return len > 3 && len <= 100;
   };
 
@@ -3846,7 +3863,9 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
   // sentence, not a heading — a partial-line bold run must not qualify.
   const _isBoldHeadingLine = (items) => {
     if (!items.every(i => i.bold)) return false;
-    const len = items.map(i => i.str).join('').replace(/\s+/g, '').length;
+    const text = items.map(i => i.str).join('');
+    if (MONEY_TOKEN_RE.test(text)) return false; // tabular/financial data, not a real heading
+    const len = text.replace(/\s+/g, '').length;
     return len > 3 && len <= 100;
   };
 

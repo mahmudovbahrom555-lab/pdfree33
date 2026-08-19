@@ -210,6 +210,16 @@ await test('whole-line bold but over 100 chars does NOT promote', async () => {
   expect(headingStyle(paragraphs[0])).toBeUndefined();
 });
 
+await test('a bold line containing a comma-grouped currency amount does NOT promote — financial ledger subtotal row, not a heading', async () => {
+  // Real case: Atlas_DR's md_corpus/003-multipage-ledger had
+  // "Subtotal thru 04/23 28,971.05 21,945.70" wrongly promoted to Heading2
+  // before this guard (same failure mode, same source document as
+  // tests/pdf2excel.logic.test.js's sparse-column detectTables() fix).
+  const lines = [mkLine(mkItem('Subtotal thru 04/23 28,971.05 21,945.70', 50, 12, { bold: true }), 700)];
+  const { paragraphs } = await build(lines);
+  expect(headingStyle(paragraphs[0])).toBeUndefined();
+});
+
 console.log('\n_p2wBuildParagraphs — paragraph-break Y-gap thresholds (median=12, fontSize=12):');
 
 await test('LTR/Cyrillic: gap just under 2.0x (23.99) merges into one paragraph', async () => {
