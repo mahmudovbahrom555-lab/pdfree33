@@ -116,6 +116,27 @@ function makeFakePdfDocWithFonts(items, fontBoldMap) {
   return { numPages: 1, getPage: async () => makeFakePageWithFonts(items, fontBoldMap) };
 }
 
+// Same shape as makeFakePageWithFonts, but resolves each font to an arbitrary
+// commonObjs name instead of a fixed Bold/Regular pair — needed to simulate a
+// real math font (e.g. "ABCDEF+CMMI10") the way pdf.js resolves embedded
+// LaTeX fonts, for formula-detection tests.
+function makeFakePageWithFontNames(items, fontNameMap) {
+  return {
+    getViewport: () => ({ width: 600, height: 800 }),
+    getTextContent: async () => ({
+      items,
+      styles: Object.fromEntries(Object.keys(fontNameMap).map(f => [f, { fontFamily: 'sans-serif' }])),
+    }),
+    getOperatorList: async () => {},
+    commonObjs: { get: (fontName) => ({ name: fontNameMap[fontName] }) },
+    cleanup: () => {},
+  };
+}
+
+function makeFakePdfDocWithFontNames(items, fontNameMap) {
+  return { numPages: 1, getPage: async () => makeFakePageWithFontNames(items, fontNameMap) };
+}
+
 // A real 2-column page: 12 rows, each with a left-column item (x=50) and a
 // right-column item (x=350) at the SAME y — this is the exact merged-line
 // shape _splitCrossColumnLines exists to un-merge (same Y per row is the
@@ -403,6 +424,59 @@ await test('a bold run with its own embedded leading/trailing spaces still wraps
   // "** bold phrase **" (which fails to parse as emphasis in CommonMark).
   expect(md.includes('**bold phrase**')).toBeTruthy();
   expect(md.includes('** bold') || md.includes('phrase **')).toBe(false);
+});
+
+console.log('\nFormula detection (honest flattening — see js/processor.js\'s isFormula comment):');
+
+await test('a run in a known LaTeX math font (resolved via commonObjs) is wrapped as inline $...$', async () => {
+  const items = [
+    makeItem('The formula is ', 50, 700, 10, 'F-Plain'),
+    makeItem('x=y+z', 220, 700, 10, 'F-Math'),
+    makeItem(' in this paper.', 320, 700, 10, 'F-Plain'),
+  ];
+  const pdfDoc = makeFakePdfDocWithFontNames(items, {
+    'F-Plain': 'ABCDEF+NotoSans',
+    'F-Math':  'ABCDEF+CMMI10',
+  });
+  const blocks = await _p2mdExtractText(pdfDoc);
+  const md = _p2mdRender(blocks);
+  expect(md.includes('$x=y+z$')).toBeTruthy();
+});
+
+await test('a math-operator glyph in an ordinary font is wrapped, even with no math-font hint', async () => {
+  const items = [
+    makeItem('The sum ', 50, 700),
+    makeItem('∑x', 150, 700),
+    makeItem(' converges.', 220, 700),
+  ];
+  const pdfDoc = makeFakePdfDoc([items]);
+  const blocks = await _p2mdExtractText(pdfDoc);
+  const md = _p2mdRender(blocks);
+  expect(md.includes('$∑x$')).toBeTruthy();
+});
+
+await test('an arrow in ordinary UI-style instruction text is NOT wrapped as a formula (deliberate false-negative)', async () => {
+  const items = [makeItem('Click File → Export to continue.', 50, 700), ...fillerItems(4, 680)];
+  const pdfDoc = makeFakePdfDoc([items]);
+  const blocks = await _p2mdExtractText(pdfDoc);
+  const md = _p2mdRender(blocks);
+  expect(md.includes('$')).toBe(false);
+});
+
+await test('formula wins over bold — a math-font run that also matches the bold-name pattern renders as $...$, not **...**', async () => {
+  const items = [
+    makeItem('See equation ', 50, 700, 10, 'F-Plain'),
+    makeItem('a+b=c', 250, 700, 10, 'F-MathBold'),
+    makeItem(' below.', 350, 700, 10, 'F-Plain'),
+  ];
+  const pdfDoc = makeFakePdfDocWithFontNames(items, {
+    'F-Plain':    'ABCDEF+NotoSans',
+    'F-MathBold': 'ABCDEF+CMBSY10-Bold', // matches both MATH_FONT_RE and the bold heuristic
+  });
+  const blocks = await _p2mdExtractText(pdfDoc);
+  const md = _p2mdRender(blocks);
+  expect(md.includes('$a+b=c$')).toBeTruthy();
+  expect(md.includes('**a+b=c**')).toBe(false);
 });
 
 // ── Summary ────────────────────────────────────────────────────

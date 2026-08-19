@@ -2706,6 +2706,31 @@ export async function _p2mdExtractText(pdfDoc) {
   const pageData = [];
   const allSizes = [];
 
+  // Formula detection — "honest flattening" only (see pdf2md analysis memory):
+  // real LaTeX reconstruction needs OCR/ML (out of scope, no in-browser math
+  // model exists in this codebase), so the bar here is "mark it as math and
+  // preserve the raw extracted glyphs inside $...$" instead of letting a
+  // formula silently decay into ungrammatical plain-text prose. Two signals,
+  // either sufficient on its own:
+  // 1. Font name — LaTeX/AMS math fonts (Computer Modern Math Italic/Symbol/
+  //    Extension, Latin Modern equivalents, AMS msam/msbm, common OpenType
+  //    math fonts) resolved the same way _isFontBold resolves bold, via
+  //    page.commonObjs (content.styles' fontFamily alone reports a generic
+  //    CSS fallback for embedded math fonts just like it does for bold, see
+  //    _isFontBold's own comment above).
+  // 2. Glyph content — a conservative, curated set of math operator symbols
+  //    that essentially never appear in ordinary prose in any of this
+  //    product's 14 supported languages. Deliberately excludes arrows (→/←)
+  //    and superscript digits: both appear in genuine non-math prose
+  //    elsewhere in this product's own content ("File → Export", "5 km²"),
+  //    so including them would be a real, not hypothetical, false-positive
+  //    source — "prefer false negatives" per this file's established rule.
+  // No trailing \b: real font names append a subset digit suffix with no
+  // word-boundary before it (e.g. "CMMI10", "CMBSY10-Bold") since letters and
+  // digits are both \w — a trailing \b would silently never match those.
+  const MATH_FONT_RE  = /\b(cmmi|cmsy|cmex|cmbsy|msam|msbm|lmmi|lmsy|lmex|eufm|eusm|rsfs|stix.?math|xits.?math|asana.?math|cambria.?math|latinmodernmath|mt-?extra)/i;
+  const MATH_GLYPH_RE = /[∑∫∬∭∏√∛∜±×÷≤≥≠≈≡∞∂∇∈∉⊂⊆⊃⊇∪∩∀∃¬∧∨⇒⇔]/;
+
   for (let p = 1; p <= pdfDoc.numPages; p++) {
     if (!isProcessing) break;
     setProgress(10 + Math.round((p / pdfDoc.numPages) * 70),
@@ -2736,6 +2761,16 @@ export async function _p2mdExtractText(pdfDoc) {
       _boldFontCache.set(fontName, bold);
       return bold;
     };
+    const _mathFontCache = new Map(); // fontName -> boolean, same one-lookup-per-font pattern as _isFontBold
+    const _isFontMath = (fontName, fam) => {
+      if (_mathFontCache.has(fontName)) return _mathFontCache.get(fontName);
+      let math = false;
+      try {
+        math = MATH_FONT_RE.test(page.commonObjs.get(fontName)?.name || '') || MATH_FONT_RE.test(fam);
+      } catch { /* font object failed to resolve — fall through to false */ }
+      _mathFontCache.set(fontName, math);
+      return math;
+    };
     const items = content.items
       .filter(item => 'str' in item && item.str.split(' ').join('').trim())
       .map(item => {
@@ -2744,11 +2779,17 @@ export async function _p2mdExtractText(pdfDoc) {
         const fam      = (style.fontFamily || '').toLowerCase();
         const str = ((item.dir === 'rtl') ? _visualRTLToLogical(item.str) : item.str)
           .split(' ').join('');
+        // Formula wins over bold/italic when both would otherwise apply —
+        // math-italic glyphs (variables) are a font-design artifact, not a
+        // real emphasis signal, and letting both fire would nest ** / * markers
+        // around a $...$ span, which most Markdown parsers render incorrectly.
+        const isFormula = _isFontMath(item.fontName, fam) || MATH_GLYPH_RE.test(str);
         return {
           str, x: item.transform[4], y: item.transform[5], width: item.width || 0,
           fontSize,
-          bold:   _isFontBold(item.fontName) || /bold|heavy|black/.test(fam),
-          italic: /italic|oblique/.test(fam),
+          bold:    !isFormula && (_isFontBold(item.fontName) || /bold|heavy|black/.test(fam)),
+          italic:  !isFormula && /italic|oblique/.test(fam),
+          formula: isFormula,
         };
       });
 
@@ -2825,8 +2866,8 @@ export async function _p2mdExtractText(pdfDoc) {
         if (gap > item.fontSize * 0.2) s = ' ' + s;
       }
       const last = runs[runs.length - 1];
-      if (last && last.bold === item.bold && last.italic === item.italic) last.text += s;
-      else runs.push({ text: s, bold: item.bold, italic: item.italic });
+      if (last && last.bold === item.bold && last.italic === item.italic && last.formula === item.formula) last.text += s;
+      else runs.push({ text: s, bold: item.bold, italic: item.italic, formula: item.formula });
     }
     return runs;
   };
@@ -2876,7 +2917,7 @@ export async function _p2mdExtractText(pdfDoc) {
     // (never-bold/italic) space run, matching _lineText's own `.join(' ')`.
     const runs = [];
     for (let i = 0; i < linesCopy.length; i++) {
-      if (i > 0) runs.push({ text: ' ', bold: false, italic: false });
+      if (i > 0) runs.push({ text: ' ', bold: false, italic: false, formula: false });
       runs.push(..._lineRuns(linesCopy[i]));
     }
     // Trim leading/trailing whitespace off the paragraph as a whole (mirrors
@@ -3044,7 +3085,12 @@ export function _p2mdRender(blocks) {
     const [, lead, core, trail] = m;
     if (!core) return run.text; // whitespace-only run — nothing to wrap
     let wrapped = core;
-    if (run.bold && run.italic) wrapped = `***${core}***`;
+    // Formula wins over bold/italic (see _p2mdExtractText's isFormula
+    // comment) — inline math delimiter, not emphasis. Escape a stray literal
+    // '$' so it can't prematurely close the span (rare in math-glyph text,
+    // cheap to guard).
+    if (run.formula)            wrapped = `$${core.replace(/\$/g, '\\$')}$`;
+    else if (run.bold && run.italic) wrapped = `***${core}***`;
     else if (run.bold)          wrapped = `**${core}**`;
     else if (run.italic)        wrapped = `*${core}*`;
     return lead + wrapped + trail;
