@@ -260,22 +260,50 @@ async function buildGroundTruth(workDir) {
 //  Stage 2 — drive the real site via Playwright, capture the produced .md
 // ═══════════════════════════════════════════════════════════════════════
 
-// pdf2md's Blob is text/markdown — read as TEXT directly (no base64/binary
-// decode needed, unlike pdf2word's docx capture), same in-page
+// pdf2md's Blob is plain text/markdown UNLESS the source PDF has extractable
+// images, in which case it's a real .zip (document.md + images/*.png, see
+// commit 8a5aa43) — reading every blob as text (the original approach here)
+// silently corrupts scoring for any such case: a zip's binary bytes decoded
+// as UTF-8 text balloon into hundreds of KB of garbage that no anchor/marker
+// search will ever match, discovered directly when this script started
+// reporting 0/4 anchors found on real papers that used to score fine.
+// Capture as base64 + the real filename (via the download click, same
 // createObjectURL hook technique pdf2word_capability_map.mjs already proved
-// reliable (page.waitForEvent('download') on blob: URLs was flaky there).
+// reliable) so a .zip can be unzipped for real instead of misread as text.
 const BLOB_HOOK = () => {
-  window.__cmapText = null;
+  window.__cmapB64 = null;
+  window.__cmapFilename = null;
   const origCreate = URL.createObjectURL.bind(URL);
   URL.createObjectURL = function (blob) {
     if (blob instanceof Blob) {
-      const reader = new FileReader();
-      reader.onload = () => { window.__cmapText = reader.result; };
-      reader.readAsText(blob);
+      blob.arrayBuffer().then(buf => {
+        let binary = '';
+        const bytes = new Uint8Array(buf);
+        for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+        window.__cmapB64 = btoa(binary);
+      });
     }
     return origCreate(blob);
   };
+  const origClick = HTMLAnchorElement.prototype.click;
+  HTMLAnchorElement.prototype.click = function (...args) {
+    if (this.download) window.__cmapFilename = this.download;
+    return origClick.apply(this, args);
+  };
 };
+
+// Extracts document.md's real text whether the capture was a plain .md
+// (base64 of the text itself) or a .zip (unzipped for real — `unzip` used
+// directly rather than adding a JSZip Node dependency to this script).
+function extractMarkdownText(base64, filename, workDir) {
+  const buf = Buffer.from(base64, 'base64');
+  if (!filename || !filename.endsWith('.zip')) return buf.toString('utf8');
+  const zipWork = mkdtempSync(path.join(workDir, 'zip-'));
+  const zipPath = path.join(zipWork, 'out.zip');
+  writeFileSync(zipPath, buf);
+  execSync(`unzip -o -q ${JSON.stringify(zipPath)} -d ${JSON.stringify(zipWork)}`);
+  return readFileSync(path.join(zipWork, 'document.md'), 'utf8');
+}
 
 async function runConversions(cases, workDir, pwPath, port) {
   const { chromium } = await import(pathToFileURL(pwPath).href);
@@ -295,7 +323,7 @@ async function runConversions(cases, workDir, pwPath, port) {
     await warmPage.waitForTimeout(400);
     await warmPage.click('#mergeBtn');
     for (let i = 0; i < 150; i++) {
-      const t = await warmPage.evaluate(() => window.__cmapText).catch(() => null);
+      const t = await warmPage.evaluate(() => window.__cmapB64).catch(() => null);
       if (t) break;
       await warmPage.waitForTimeout(200);
     }
@@ -315,15 +343,16 @@ async function runConversions(cases, workDir, pwPath, port) {
           await page.waitForTimeout(400);
           await page.click('#mergeBtn');
 
-          let text = null;
+          let b64 = null;
           for (let i = 0; i < 150; i++) {
-            text = await page.evaluate(() => window.__cmapText);
-            if (text) break;
+            b64 = await page.evaluate(() => window.__cmapB64);
+            if (b64) break;
             await page.waitForTimeout(200);
           }
-          if (!text) throw new Error('no blob captured within 30s (conversion did not complete)');
+          if (!b64) throw new Error('no blob captured within 30s (conversion did not complete)');
+          const filename = await page.evaluate(() => window.__cmapFilename);
 
-          c.producedText = text;
+          c.producedText = extractMarkdownText(b64, filename, workDir);
           console.log(`  ✓ ${c.id}${attempt > 1 ? ` (attempt ${attempt})` : ''}`);
           lastErr = null;
           break;

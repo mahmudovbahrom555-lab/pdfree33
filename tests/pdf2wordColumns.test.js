@@ -95,6 +95,33 @@ test('detected regions correctly bucket a mid-column-1 point and a mid-column-2 
   expect(lineRegionIndex({ items: [{ x: 320 }] }, regions)).toBe(1);
 });
 
+console.log('\ndetectColumnRegions — Y-disjoint extra cluster is merged into its neighbor, not a whole-page rejection:');
+
+// Real shape found on a real arXiv paper (Atlas_DR's md_corpus/
+// 002-two-column-paper, page 1): the main left column (x≈54) spans the
+// lower/middle of the page; a differently-indented block (x≈119 — e.g. an
+// abstract paragraph with its own margin) sits ABOVE it, Y-disjoint from
+// it; the real right column (x≈318) spans a Y range that overlaps the
+// COMBINED (merged) left-side range almost perfectly. Before this fix,
+// detectColumnRegions rejected the whole page the moment it compared the
+// FIRST adjacent x-pair (54 vs 119, which don't Y-overlap) — even though
+// the true 54/318 pair is a clean 2-column match.
+test('a real-shaped 3-cluster page (main column + Y-disjoint indent-shifted block + real second column) still detects 2 columns', () => {
+  const colMain  = mkColumn(54, 30, 468, 12);   // Y 120-468 (lower/mid page)
+  const colIndent = mkColumn(119, 20, 760, 12); // Y 532-760 (upper page, Y-disjoint from colMain)
+  const colRight = mkColumn(318, 32, 490, 12);  // Y 118-490 (overlaps colMain's combined range)
+  const regions = detectColumnRegions([...colMain, ...colIndent, ...colRight], 612);
+  expect(regions === null).toBe(false);
+  expect(regions.length).toBe(2);
+});
+
+test('a genuine 3-column layout (all three Y-overlapping) still correctly detects 3 columns, not wrongly merged', () => {
+  const lines = [...mkColumn(50, 15, 760, 12), ...mkColumn(230, 15, 760, 12), ...mkColumn(410, 15, 760, 12)];
+  const regions = detectColumnRegions(lines, 612);
+  expect(regions === null).toBe(false);
+  expect(regions.length).toBe(3);
+});
+
 console.log('\ndetectColumnRegions — must return null (prefer false negatives):');
 
 test('a single-column page with normal indentation variance is NOT split', () => {

@@ -103,18 +103,49 @@ export function detectColumnRegions(lines, pageWidth) {
   // shouldn't out-vote a genuine but sparser column.
   const minLines = Math.max(MIN_LINES_ABS, Math.ceil(lines.length * MIN_LINES_FRACTION));
   const real = clusters.filter(c => c.ys.size >= minLines).sort((a, b) => a.center - b.center);
-  if (real.length < 2 || real.length > MAX_COLUMNS) return null;
 
-  // Reject unless surviving clusters substantially overlap in Y — genuine
-  // parallel columns coexist across most of the page height; a title block
-  // above single-column body text would otherwise produce two clusters
-  // (title's own line + body's lines) that never overlap in Y at all.
-  for (let i = 1; i < real.length; i++) {
-    const a = real[i - 1], b = real[i];
-    const overlap = Math.min(a.maxY, b.maxY) - Math.max(a.minY, b.minY);
-    const shorterSpan = Math.min(a.maxY - a.minY, b.maxY - b.minY) || 1;
-    if (overlap / shorterSpan < MIN_Y_OVERLAP_FRACTION) return null;
+  // Adjacent clusters that DON'T substantially overlap in Y are merged into
+  // one before being rejected outright — genuine parallel columns coexist
+  // across most of the page height, but a real 2-column page can still
+  // legitimately produce 3+ x-clusters when the SAME logical column shifts
+  // indent partway down the page (a References section's hanging indent, a
+  // block-quote, a sub-list) rather than actually gaining a third
+  // simultaneous column. Confirmed directly on a real arXiv paper (page 1
+  // of Atlas_DR's md_corpus/002-two-column-paper): body text clustered at
+  // x≈54 (Y122-469) and a lower-page indent shift at x≈119 (Y492-763) are
+  // Y-DISJOINT from each other, yet both sit far left of the genuine right
+  // column at x≈318 (Y122-492, which overlaps x≈54 almost perfectly) —
+  // rejecting outright the moment the FIRST adjacent pair (x≈54 vs x≈119)
+  // fails Y-overlap silently threw away correct 2-column detection on the
+  // whole page. Two clusters that never coexist in Y cannot be two
+  // SIMULTANEOUS side-by-side columns by definition, so folding them into
+  // one logical column (rather than abandoning the whole page) preserves
+  // this check's original protective intent — a real title block above
+  // single-column body text still correctly resolves to null below, since
+  // merging title+body collapses them to ONE cluster, which then fails the
+  // `real.length < 2` check same as before this fix.
+  let mergedAny = true;
+  while (mergedAny && real.length > 1) {
+    mergedAny = false;
+    for (let i = 1; i < real.length; i++) {
+      const a = real[i - 1], b = real[i];
+      const overlap = Math.min(a.maxY, b.maxY) - Math.max(a.minY, b.minY);
+      const shorterSpan = Math.min(a.maxY - a.minY, b.maxY - b.minY) || 1;
+      if (overlap / shorterSpan < MIN_Y_OVERLAP_FRACTION) {
+        const combined = {
+          sum: a.sum + b.sum,
+          ys: new Set([...a.ys, ...b.ys]),
+          minY: Math.min(a.minY, b.minY),
+          maxY: Math.max(a.maxY, b.maxY),
+        };
+        combined.center = combined.sum / combined.ys.size;
+        real.splice(i - 1, 2, combined);
+        mergedAny = true;
+        break; // indices shifted after splice — restart the scan
+      }
+    }
   }
+  if (real.length < 2 || real.length > MAX_COLUMNS) return null;
 
   return real.map((c, idx) => ({
     left:  idx === 0                ? 0          : (c.center + real[idx - 1].center) / 2,
