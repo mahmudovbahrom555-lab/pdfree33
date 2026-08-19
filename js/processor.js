@@ -2697,7 +2697,7 @@ async function _runPdf2Md(filesSnapshot) {
 // classifies each line as list / heading / body and buffers consecutive
 // body lines into paragraphs using the same gap-based merge threshold
 // (CJK/RTL-aware) _p2wExtractText uses for docx paragraph breaks.
-async function _p2mdExtractText(pdfDoc) {
+export async function _p2mdExtractText(pdfDoc) {
   const YTOL = 6;
   const pageData = [];
   const allSizes = [];
@@ -2708,6 +2708,7 @@ async function _p2mdExtractText(pdfDoc) {
                 `Reading page ${p}/${pdfDoc.numPages}…`);
 
     const page    = await pdfDoc.getPage(p);
+    const pageW   = page.getViewport({ scale: 1 }).width;
     const content = await page.getTextContent({ normalizeWhitespace: false });
     const items = content.items
       .filter(item => 'str' in item && item.str.split(' ').join('').trim())
@@ -2738,8 +2739,16 @@ async function _p2mdExtractText(pdfDoc) {
       if (rtlCnt === 0) ln.items.sort((a, b) => a.x - b.x);
     });
 
+    // Column-aware re-splitting — same fix pdf2word's _p2wBuildPageData
+    // applies and for the same reason (see _splitCrossColumnLines's own
+    // comment): plain Y-proximity grouping above frequently merges BOTH
+    // columns' items into one line object on a genuine 2-column page. A
+    // no-op when detectColumnRegions() finds no confident multi-column
+    // layout (the common case).
+    _splitCrossColumnLines(lines, pageW);
+
     allSizes.push(...items.map(i => i.fontSize).filter(s => s > 0));
-    pageData.push({ lines });
+    pageData.push({ lines, pageW });
     page.cleanup?.();
   }
 
@@ -2812,7 +2821,14 @@ async function _p2mdExtractText(pdfDoc) {
     blocks.push({ type: 'para', text, bold, italic });
   };
 
-  for (const { lines } of pageData) {
+  // Processes one column's worth of lines (or a whole page's, when no
+  // column split applies) — table detection + per-line classification.
+  // Extracted so the outer loop below can call it once per detected column
+  // region, in reading order, instead of once per page: without that,
+  // lines from two columns that _splitCrossColumnLines already separated
+  // into distinct line objects would still interleave by Y the moment this
+  // function walked `lines` as one flat array again.
+  const _emitLines = (lines) => {
     // Same text-based detector pdf2excel uses (no border-grid pass — that's
     // only worth the extra render cost in pdf2word's richer visual pipeline).
     // Filtered through looksLikeProseNotData(): two unrelated prose lists
@@ -2902,6 +2918,30 @@ async function _p2mdExtractText(pdfDoc) {
       _paraBuffer.push(ln);
     }
     _flushPara();
+  };
+
+  for (const { lines, pageW } of pageData) {
+    // Column-aware dispatch — same "prefer false negatives" detector as
+    // pdf2word's _p2wBuildParagraphs: detectColumnRegions() only returns
+    // non-null on confident multi-column evidence, so the overwhelming
+    // majority of pages (single-column) take the unsplit path below
+    // unchanged. When it IS confident, each region is walked as its own
+    // independent unit, in reading order (RTL pages read their rightmost
+    // column first) — this is the part that actually fixes interleaving:
+    // _splitCrossColumnLines above only separates merged lines into
+    // distinct objects, it doesn't reorder `lines` itself, so without this
+    // dispatch they'd still come out interleaved by Y.
+    const regions = pageW ? detectColumnRegions(lines, pageW) : null;
+    if (!regions) {
+      _emitLines(lines);
+    } else {
+      const ordered = pageIsRtl(lines) ? [...regions].reverse() : regions;
+      for (const region of ordered) {
+        const colLines = lines.filter(ln =>
+          ln.items.length && ln.items[0].x >= region.left && ln.items[0].x < region.right);
+        if (colLines.length) _emitLines(colLines);
+      }
+    }
   }
 
   if (!blocks.length) {
@@ -2918,7 +2958,7 @@ async function _p2mdExtractText(pdfDoc) {
 // bold/italic wrapping only (no per-character run tracking) — headings are
 // left unwrapped since the '#' prefix already conveys emphasis; list items
 // are left unwrapped to keep list syntax unambiguous.
-function _p2mdRender(blocks) {
+export function _p2mdRender(blocks) {
   const wrap = (text, bold, italic) => {
     if (bold && italic) return `***${text}***`;
     if (bold)            return `**${text}**`;
