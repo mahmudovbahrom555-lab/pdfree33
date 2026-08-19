@@ -28,11 +28,16 @@
 //                                                 // When present, this ONE
 //                                                 // source page produces TWO
 //                                                 // output pages (left column,
-//                                                 // then right), each already
-//                                                 // aspect-composed toward the
-//                                                 // device ratio independently
-//                                                 // — composeWithAspect on a
-//                                                 // full page doesn't apply
+//                                                 // then right) — or THREE if
+//                                                 // _findHeaderBottom detects
+//                                                 // a full-width title/byline
+//                                                 // band above the real column
+//                                                 // body (header, then left,
+//                                                 // then right) — each output
+//                                                 // page already independently
+//                                                 // "contain"-fit toward the
+//                                                 // device ratio — composeWithAspect
+//                                                 // on a full page doesn't apply
 //                                                 // to a column-width crop.
 //            grayscale: boolean, contrast: 0..1, quality: 0..1,
 //            outputWidth, outputHeight }          // one fixed size for
@@ -40,9 +45,10 @@
 //                                                  // target device aspect
 //                                                  // ratio)
 //    out → { type: 'pageDone', index, pages: [{bytes: ArrayBuffer, format: 'jpeg', width, height}, ...] }
-//                                          // 1 entry normally, 2 when
-//                                          // columnSplit produced a left+
-//                                          // right pair
+//                                          // 1 entry normally, 2 or 3 when
+//                                          // columnSplit produced a
+//                                          // left+right pair (optionally
+//                                          // preceded by a header page)
 //
 //    in  → { type: 'assemble', pages: [{index, bytes, format, width, height}],
 //            pageSize: {width, height} }  // ONE shared size, not a per-page
@@ -103,10 +109,30 @@ async function handleProcessPage({ index, bitmap, cropRect, columnSplit, graysca
     const rightW = cropEx - splitXpx;
 
     if (leftW >= minHalfPx && rightW >= minHalfPx) {
-      const left  = await _renderSubPage(src, cropSx, sy, leftW, sh, outputWidth, outputHeight, grayscale, contrast, quality);
-      const right = await _renderSubPage(src, splitXpx, sy, rightW, sh, outputWidth, outputHeight, grayscale, contrast, quality);
-      pages.push(left, right);
-      transfer.push(left.bytes, right.bytes);
+      // A title/byline block spanning the FULL page width (common on a
+      // paper's first page, sitting above the real 2-column body) would
+      // otherwise get sliced in half at splitXpx — neither resulting page
+      // shows the complete title. Found on a real test paper, not a
+      // synthetic edge case. _findHeaderBottom looks for where the gutter
+      // itself actually starts being reliably blank top-to-bottom; anything
+      // above that is real full-width content and gets its own page instead
+      // of being split.
+      const headerBottom = _findHeaderBottom(src, cropSx, cropEx, sy, sh, splitXpx);
+
+      if (headerBottom !== null) {
+        const header    = await _renderSubPage(src, cropSx, sy, cropEx - cropSx, headerBottom - sy, outputWidth, outputHeight, grayscale, contrast, quality);
+        const bodySy    = headerBottom;
+        const bodySh    = sy + sh - headerBottom;
+        const left      = await _renderSubPage(src, cropSx, bodySy, leftW, bodySh, outputWidth, outputHeight, grayscale, contrast, quality);
+        const right     = await _renderSubPage(src, splitXpx, bodySy, rightW, bodySh, outputWidth, outputHeight, grayscale, contrast, quality);
+        pages.push(header, left, right);
+        transfer.push(header.bytes, left.bytes, right.bytes);
+      } else {
+        const left  = await _renderSubPage(src, cropSx, sy, leftW, sh, outputWidth, outputHeight, grayscale, contrast, quality);
+        const right = await _renderSubPage(src, splitXpx, sy, rightW, sh, outputWidth, outputHeight, grayscale, contrast, quality);
+        pages.push(left, right);
+        transfer.push(left.bytes, right.bytes);
+      }
     }
   }
 
@@ -117,6 +143,61 @@ async function handleProcessPage({ index, bitmap, cropRect, columnSplit, graysca
   }
 
   self.postMessage({ type: 'pageDone', index, pages }, transfer);
+}
+
+// Detect a full-width header band sitting above the real 2-column body, by
+// probing a thin vertical strip centered on the split point: real column
+// body rows have the gutter genuinely blank (that's what made splitXpx get
+// detected in the first place), but a full-width title/byline row has ink
+// running straight through where the gutter would be. Walk down from the
+// crop's own top and find where a SUSTAINED run of gutter-blank rows
+// begins — not just one blank row, so a stray gap between the title and
+// the abstract heading can't be mistaken for the real column start.
+// Returns an absolute source-pixel Y, or null if no header band is found
+// (the common case — most pages are body-only, gutter blank from the top).
+const _HEADER_PROBE_FRAC    = 0.01; // half-width of the probe strip, as a fraction of crop width
+const _HEADER_INK_TOLERANCE = 12;   // same "ink" definition as ereaderCrop.js's contentBBox
+const _HEADER_MIN_RUN_FRAC  = 0.03; // minimum consecutive blank rows to trust as "body started"
+const _HEADER_MIN_RUN_PX    = 20;
+const _HEADER_MAX_FRAC      = 0.5;  // never treat more than half the page as "header" — a false
+                                     // positive here is far more costly (destroys real content)
+                                     // than occasionally missing a genuine header band
+
+function _findHeaderBottom(src, cropSx, cropEx, sy, sh, splitXpx) {
+  const cropWidth = cropEx - cropSx;
+  const probeHalf = Math.max(2, Math.round(cropWidth * _HEADER_PROBE_FRAC));
+  const px0 = Math.max(cropSx, Math.round(splitXpx - probeHalf));
+  const px1 = Math.min(cropEx, Math.max(px0 + 1, Math.round(splitXpx + probeHalf)));
+  const probeWidth = px1 - px0;
+  if (probeWidth <= 0 || sh <= 0) return null;
+
+  const ctx = src.getContext('2d');
+  const { data } = ctx.getImageData(px0, sy, probeWidth, sh);
+  const threshold = 255 - _HEADER_INK_TOLERANCE;
+
+  const rowHasInk = new Uint8Array(sh);
+  for (let row = 0; row < sh; row++) {
+    const rowBase = row * probeWidth;
+    for (let x = 0; x < probeWidth; x++) {
+      const i = (rowBase + x) * 4;
+      const lum = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
+      if (lum < threshold) { rowHasInk[row] = 1; break; }
+    }
+  }
+
+  const minRun = Math.max(_HEADER_MIN_RUN_PX, Math.round(sh * _HEADER_MIN_RUN_FRAC));
+  let blankRun = 0;
+  for (let row = 0; row < sh; row++) {
+    if (rowHasInk[row]) { blankRun = 0; continue; }
+    blankRun++;
+    if (blankRun >= minRun) {
+      const headerBottom = row - minRun + 1;
+      if (headerBottom <= 0) return null; // gutter already blank from the top — no header
+      if (headerBottom > sh * _HEADER_MAX_FRAC) return null; // implausibly large, don't trust it
+      return sy + headerBottom;
+    }
+  }
+  return null; // gutter never reliably clears — can't confirm a body start, leave unsplit-header behavior
 }
 
 // Crop one source rect (in source-bitmap pixels), "contain" fit it into the
