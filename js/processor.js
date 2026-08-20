@@ -3140,6 +3140,16 @@ export async function _p2mdExtractText(pdfDoc) {
       const maxX = Math.max(...ln.items.map(i => i.x + i.width));
       if ((maxX - minX) > pageW * FORMULA_MAX_WIDTH_FRACTION) continue;
       const maxSize = Math.max(...ln.items.map(i => i.fontSize));
+      // Best-effort raw text as alt text — a pure-text (non-vision) AI/RAG
+      // consumer can't open the PNG, but markdown alt text IS plain text in
+      // the .md source itself, so it still gets SOME signal instead of an
+      // opaque filename. Same left-to-right glyph concatenation as the
+      // $...$ flattening path (may be imperfectly ordered for a genuinely
+      // 2D layout — that's exactly why this line became an image instead of
+      // staying inline text — but imperfect text beats zero text for a
+      // consumer with no vision capability).
+      const altText = ln.items.map(i => i.str).join(' ').replace(/\s+/g, ' ').trim()
+        .replace(/[[\]]/g, '').slice(0, 300);
       try {
         const { canvas, viewport } = await _renderPageCanvas();
         const padTop = maxSize * 0.9, padBot = maxSize * 0.6, padX = maxSize * 0.3;
@@ -3158,6 +3168,7 @@ export async function _p2mdExtractText(pdfDoc) {
         const blob = await new Promise(resolve => crop.toBlob(resolve, 'image/png'));
         if (!blob) continue;
         ln.isImage = true; ln.imgKind = 'formula'; ln.imgWidth = cw; ln.imgHeight = ch; ln.imgBlob = blob; ln.imgPage = p;
+        ln.imgAlt = altText;
       } catch { /* rendering/crop failed — line falls through to normal $...$ flattening below */ }
     }
 
@@ -3353,7 +3364,7 @@ export async function _p2mdExtractText(pdfDoc) {
           type: 'image', blob: ln.imgBlob,
           filename: `images/page${ln.imgPage}-${isFormula ? 'formula' : 'img'}${_imgSeq}.png`,
           width: ln.imgWidth, height: ln.imgHeight,
-          alt: isFormula ? 'formula' : '',
+          alt: isFormula ? (ln.imgAlt || 'formula') : '',
         });
         continue;
       }
