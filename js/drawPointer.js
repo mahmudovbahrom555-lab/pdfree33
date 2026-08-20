@@ -802,6 +802,23 @@ function _onUp(e) {
     return;
   }
 
+  // A plain tap (pointerdown immediately followed by pointerup, no pointermove
+  // in between) leaves pen/marker with exactly ONE point — _isMeaningful()
+  // requires >=2, so the tap was silently discarded: no mark, no error, no
+  // feedback at all. Real Analytics Engine data (2026-08-20) showed this is
+  // the single largest rage-click source site-wide by a wide margin (43 on
+  // #drawCanvas, plus 7 on #btnUndo — consistent with someone tapping
+  // repeatedly, seeing nothing, then mashing undo). Every mainstream drawing
+  // app (Preview, Paint, Procreate) draws a dot on a plain click — duplicate
+  // the sole point so the stroke has a real (zero-length) segment. Canvas's
+  // existing lineCap:'round' (js/drawUI.js) renders that as a visible dot
+  // with zero rendering-side changes needed. Scoped to pen/marker (freehand
+  // tools where "tap = dot" is the universal convention) — not erase, which
+  // has no such convention and no evidence in the data of the same problem.
+  if (_current && (_current.type === 'pen' || _current.type === 'marker') && _current.points.length === 1) {
+    _current.points.push(_current.points[0]);
+  }
+
   if (_isMeaningful(_current)) {
     const { type } = _current;
     let cmd;

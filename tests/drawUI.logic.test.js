@@ -344,6 +344,42 @@ test('_isMeaningful: unrecognized types (e.g. text) default to always meaningful
   expect(_isMeaningful({ type: 'text' })).toBeTruthy();
 });
 
+// ── Tap-to-dot normalization (drawPointer.js:819, added after real Analytics
+// Engine data showed #drawCanvas as the single largest rage-click source
+// site-wide — a plain tap left a 1-point pen/marker stroke that
+// _isMeaningful rejected outright: no mark, no feedback, nothing. Pure copy
+// of the normalization that now runs immediately before the _isMeaningful
+// check in _onUp. ────────────────────────────────────────────────
+
+function _normalizeTapStroke(current) {
+  if (current && (current.type === 'pen' || current.type === 'marker') && current.points.length === 1) {
+    current.points.push(current.points[0]);
+  }
+  return current;
+}
+
+test('tap normalization: a 1-point pen tap becomes a meaningful 2-point (dot) stroke', () => {
+  const cmd = _normalizeTapStroke({ type: 'pen', points: [[5, 7]] });
+  expect(cmd.points).toEqual([[5, 7], [5, 7]]);
+  expect(_isMeaningful(cmd)).toBeTruthy();
+});
+
+test('tap normalization: applies to marker too, not just pen', () => {
+  const cmd = _normalizeTapStroke({ type: 'marker', points: [[2, 2]] });
+  expect(_isMeaningful(cmd)).toBeTruthy();
+});
+
+test('tap normalization: does NOT apply to erase — no evidence of the same problem, no dot-tap convention', () => {
+  const cmd = _normalizeTapStroke({ type: 'erase', points: [[1, 1]] });
+  expect(cmd.points).toEqual([[1, 1]]); // untouched
+  expect(_isMeaningful(cmd)).toBeFalsy(); // still rejected, same as before this fix
+});
+
+test('tap normalization: a real 2+ point drag is left untouched (no double-duplication)', () => {
+  const cmd = _normalizeTapStroke({ type: 'pen', points: [[0, 0], [4, 4]] });
+  expect(cmd.points).toEqual([[0, 0], [4, 4]]);
+});
+
 // ── computeMovePatch (lasso group-move per-type deltas) ─────────
 
 test('computeMovePatch: text/rect/oval shift x/y by the delta', () => {
