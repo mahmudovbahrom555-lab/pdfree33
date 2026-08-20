@@ -754,11 +754,14 @@ await test('a narrow, all-formula standalone line becomes an image block, not $.
   const blocks = await _p2mdExtractText(pdfDoc);
   const img = blocks.find(b => b.type === 'image');
   expect(!!img).toBeTruthy();
-  expect(img.alt).toBe('E=mc2'); // best-effort raw text as alt — non-vision text consumers still get a signal
+  // Best-effort raw text as alt — non-vision text consumers still get a signal — but
+  // labeled "approx." rather than presented as a faithful transcription (see
+  // js/processor.js's rawAlt/altText comment).
+  expect(img.alt).toBe('formula (approx., may not preserve exact layout): E=mc2');
   expect(/formula\d+\.png$/.test(img.filename)).toBeTruthy();
   const md = _p2mdRender(blocks);
   expect(md.includes('$E=mc2$')).toBe(false); // consumed by the image, not also flattened as text
-  expect(md.includes('![E=mc2](')).toBeTruthy();
+  expect(md.includes('![formula (approx., may not preserve exact layout): E=mc2](')).toBeTruthy();
 });
 
 await test('an all-formula line WIDER than the page-fraction cap stays as $...$ text, not an image', async () => {

@@ -3144,12 +3144,18 @@ export async function _p2mdExtractText(pdfDoc) {
       // consumer can't open the PNG, but markdown alt text IS plain text in
       // the .md source itself, so it still gets SOME signal instead of an
       // opaque filename. Same left-to-right glyph concatenation as the
-      // $...$ flattening path (may be imperfectly ordered for a genuinely
-      // 2D layout — that's exactly why this line became an image instead of
-      // staying inline text — but imperfect text beats zero text for a
-      // consumer with no vision capability).
-      const altText = ln.items.map(i => i.str).join(' ').replace(/\s+/g, ' ').trim()
-        .replace(/[[\]]/g, '').slice(0, 300);
+      // $...$ flattening path — labeled "approx." rather than presented as
+      // a clean transcription: this line became an image specifically
+      // because it may have real vertical structure (super/subscripts, a
+      // stacked fraction's numerator/denominator sharing this Y-cluster)
+      // that left-to-right concatenation cannot represent, so the flattened
+      // string can read as plausible but wrong (e.g. a lost superscript
+      // silently turning "dx^μ dx^ν" into "dx dx") rather than obviously
+      // incomplete — worth flagging explicitly rather than letting a reader
+      // (human or AI) mistake it for a faithful transcription.
+      const rawAlt = ln.items.map(i => i.str).join(' ').replace(/\s+/g, ' ').trim()
+        .replace(/[[\]]/g, '').slice(0, 250);
+      const altText = rawAlt ? `formula (approx., may not preserve exact layout): ${rawAlt}` : 'formula';
       try {
         const { canvas, viewport } = await _renderPageCanvas();
         const padTop = maxSize * 0.9, padBot = maxSize * 0.6, padX = maxSize * 0.3;
