@@ -365,7 +365,7 @@ async function handleFeedback(request, env) {
 // Safari reports a desktop-class "Macintosh" UA with no "iPad" token, so
 // recent iPads are indistinguishable from real Macs by UA alone — this
 // bucket is directionally useful, not perfectly accurate.
-function _classifyUserAgent(ua) {
+export function _classifyUserAgent(ua) {
   ua = ua || '';
   let device = 'desktop';
   if (/iPad/i.test(ua)) device = 'tablet';
@@ -382,7 +382,7 @@ function _classifyUserAgent(ua) {
   return { device, browser };
 }
 
-function _dataPointFromEvent(eventName, props) {
+export function _dataPointFromEvent(eventName, props) {
   const { locale = '', tool = '', session = '', ...rest } = props;
   const blobs = [String(locale).slice(0, 100), String(tool).slice(0, 100), String(session).slice(0, 100)];
   const doubles = [];
