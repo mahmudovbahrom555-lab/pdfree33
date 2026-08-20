@@ -353,6 +353,35 @@ async function handleFeedback(request, env) {
 // Limits (per Cloudflare docs): 20 blobs, 20 doubles, 1 index per write,
 // index ≤ 96 bytes, 16 KB total blob size per call — truncated defensively
 // below, well under those ceilings for anything this site actually sends.
+// Coarse, privacy-bucketed device/browser classification from the User-
+// Agent header — same "round it into a bucket, not the raw value" posture
+// this codebase already uses for file sizes (_sizeBucket in js/analytics.js).
+// Server-side only, same reasoning as country: request.headers is the only
+// source that can't be spoofed by editing client-side props. Order matters
+// for browser detection — Edge/Opera UAs also contain "Chrome" and
+// "Safari" tokens, so they must be checked first, and Chrome UAs also
+// contain "Safari", so Chrome must be checked before Safari.
+// Known real limitation, stated honestly rather than silently: iPadOS 13+
+// Safari reports a desktop-class "Macintosh" UA with no "iPad" token, so
+// recent iPads are indistinguishable from real Macs by UA alone — this
+// bucket is directionally useful, not perfectly accurate.
+function _classifyUserAgent(ua) {
+  ua = ua || '';
+  let device = 'desktop';
+  if (/iPad/i.test(ua)) device = 'tablet';
+  else if (/Android/i.test(ua)) device = /Mobile/i.test(ua) ? 'mobile' : 'tablet';
+  else if (/iPhone|iPod|Mobi/i.test(ua)) device = 'mobile';
+
+  let browser = 'other';
+  if (/Edg\//i.test(ua)) browser = 'edge';
+  else if (/OPR\/|Opera/i.test(ua)) browser = 'opera';
+  else if (/Firefox\//i.test(ua)) browser = 'firefox';
+  else if (/Chrome\//i.test(ua)) browser = 'chrome';
+  else if (/Safari\//i.test(ua)) browser = 'safari';
+
+  return { device, browser };
+}
+
 function _dataPointFromEvent(eventName, props) {
   const { locale = '', tool = '', session = '', ...rest } = props;
   const blobs = [String(locale).slice(0, 100), String(tool).slice(0, 100), String(session).slice(0, 100)];
@@ -426,17 +455,27 @@ async function handleAnalytics(request, env) {
   if (!eventName) {
     return new Response('Bad request', { status: 400 });
   }
+  // Internal/testing traffic (Uzbekistan) is dropped outright, not just
+  // tagged — after repeatedly having to remember a UZ filter in every ad
+  // hoc query during the 2026-08-20 analytics review, excluding it at
+  // write time means the dataset itself never accumulates the noise in
+  // the first place, mirroring the existing UZ exclusion in
+  // scripts/analytics.py's separate GraphQL-based pipeline (that script
+  // filters live HTTP-request traffic after the fact; this prevents the
+  // behavioral-events dataset from ever recording it).
+  if (request.cf?.country === 'UZ') {
+    return new Response('OK', { status: 200 });
+  }
+
   const props = (body.props && typeof body.props === 'object') ? body.props : {};
-  // Server-side geo, never client-supplied — request.cf.country is the only
-  // trustworthy source (a client could otherwise just lie about its own
-  // country in props). Overwrites any client-sent `country` key on purpose.
-  // Added specifically so internal/testing traffic (Uzbekistan) can be
-  // filtered out of pdfree_events queries, mirroring the existing UZ
-  // exclusion in scripts/analytics.py's separate GraphQL-based pipeline —
-  // that script filters live HTTP-request traffic; this makes the same
-  // filter possible for Analytics Engine's custom behavioral events, which
-  // had no geo field at all until now.
+  // Server-side geo/device/browser, never client-supplied — request.cf and
+  // the User-Agent header are the only trustworthy sources (a client could
+  // otherwise just lie about its own country/device in props). Overwrites
+  // any client-sent keys of the same name on purpose.
   props.country = request.cf?.country || '';
+  const { device, browser } = _classifyUserAgent(request.headers.get('User-Agent'));
+  props.device  = device;
+  props.browser = browser;
 
   if (!env.ANALYTICS) {
     console.log(`[analytics] ANALYTICS binding missing, event=${eventName} — dropped`);
