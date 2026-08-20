@@ -27,7 +27,18 @@ global.document = {
   addEventListener: () => {},
   removeEventListener: () => {},
   getElementById: () => null,
-  createElement: () => ({ style: {}, classList: { add(){}, remove(){}, contains(){ return false; } }, appendChild(){}, removeChild(){}, setAttribute(){} }),
+  // Canvas-shaped enough for the display-formula-crop path in
+  // _p2mdExtractText (page.render + crop + toBlob) — drawImage/getContext
+  // are no-ops, toBlob resolves a real (tiny, content-irrelevant) Blob so
+  // the "did this line become an image block" assertion path works without
+  // a real Canvas implementation in Node.
+  createElement: () => ({
+    style: {}, classList: { add(){}, remove(){}, contains(){ return false; } },
+    appendChild(){}, removeChild(){}, setAttribute(){},
+    width: 0, height: 0,
+    getContext: () => ({ drawImage(){} }),
+    toBlob: (cb) => cb(new Blob(['fake-png'], { type: 'image/png' })),
+  }),
   body: { appendChild(){}, removeChild(){} },
 };
 global.Worker = class { postMessage(){} terminate(){} addEventListener(){} };
@@ -75,12 +86,27 @@ function makeItem(str, x, y, fontSize = 10, fontName = 'F1') {
   };
 }
 
+// Real pdf.js's PageViewport.convertToViewportPoint maps PDF user-space
+// (bottom-left origin) to canvas pixel space (top-left origin) — a plain
+// scale + Y-flip for an unrotated page, which is all the fake needs to
+// mimic for the display-formula-crop path's corner-transform to produce a
+// sane (non-zero, non-NaN) crop rect.
+function _fakeViewport(scale, pageWidth, pageHeight = 800) {
+  return {
+    width: pageWidth * scale, height: pageHeight * scale,
+    convertToViewportPoint: (x, y) => [x * scale, (pageHeight - y) * scale],
+  };
+}
+
 function makeFakePage(items, pageWidth = 600) {
   return {
-    getViewport: () => ({ width: pageWidth, height: 800 }),
+    getViewport: ({ scale = 1 } = {}) => scale === 1
+      ? { width: pageWidth, height: 800 }
+      : _fakeViewport(scale, pageWidth),
     getTextContent: async () => ({ items, styles: { F1: { fontFamily: 'sans-serif' } } }),
     getOperatorList: async () => {},
     commonObjs: { get: () => undefined },
+    render: () => ({ promise: Promise.resolve() }),
     cleanup: () => {},
   };
 }
@@ -120,21 +146,24 @@ function makeFakePdfDocWithFonts(items, fontBoldMap) {
 // commonObjs name instead of a fixed Bold/Regular pair — needed to simulate a
 // real math font (e.g. "ABCDEF+CMMI10") the way pdf.js resolves embedded
 // LaTeX fonts, for formula-detection tests.
-function makeFakePageWithFontNames(items, fontNameMap) {
+function makeFakePageWithFontNames(items, fontNameMap, pageWidth = 600) {
   return {
-    getViewport: () => ({ width: 600, height: 800 }),
+    getViewport: ({ scale = 1 } = {}) => scale === 1
+      ? { width: pageWidth, height: 800 }
+      : _fakeViewport(scale, pageWidth),
     getTextContent: async () => ({
       items,
       styles: Object.fromEntries(Object.keys(fontNameMap).map(f => [f, { fontFamily: 'sans-serif' }])),
     }),
     getOperatorList: async () => {},
     commonObjs: { get: (fontName) => ({ name: fontNameMap[fontName] }) },
+    render: () => ({ promise: Promise.resolve() }),
     cleanup: () => {},
   };
 }
 
-function makeFakePdfDocWithFontNames(items, fontNameMap) {
-  return { numPages: 1, getPage: async () => makeFakePageWithFontNames(items, fontNameMap) };
+function makeFakePdfDocWithFontNames(items, fontNameMap, pageWidth = 600) {
+  return { numPages: 1, getPage: async () => makeFakePageWithFontNames(items, fontNameMap, pageWidth) };
 }
 
 // A real 2-column page: 12 rows, each with a left-column item (x=50) and a
@@ -678,6 +707,49 @@ await test('formula wins over bold — a math-font run that also matches the bol
   const md = _p2mdRender(blocks);
   expect(md.includes('$a+b=c$')).toBeTruthy();
   expect(md.includes('**a+b=c**')).toBe(false);
+});
+
+console.log('\nDisplay-formula crop (standalone equation line -> image, see js/processor.js\'s FORMULA_MIN_FRACTION comment):');
+
+await test('a narrow, all-formula standalone line becomes an image block, not $...$ text', async () => {
+  const items = [makeItem('E=mc2', 250, 700, 14, 'F-Math')];
+  const pdfDoc = makeFakePdfDocWithFontNames(items, { 'F-Math': 'ABCDEF+CMMI10' });
+  const blocks = await _p2mdExtractText(pdfDoc);
+  const img = blocks.find(b => b.type === 'image');
+  expect(!!img).toBeTruthy();
+  expect(img.alt).toBe('formula');
+  expect(/formula\d+\.png$/.test(img.filename)).toBeTruthy();
+  const md = _p2mdRender(blocks);
+  expect(md.includes('$E=mc2$')).toBe(false); // consumed by the image, not also flattened as text
+  expect(md.includes('![formula](')).toBeTruthy();
+});
+
+await test('an all-formula line WIDER than the page-fraction cap stays as $...$ text, not an image', async () => {
+  const items = [
+    makeItem('∑(x)', 50, 700, 10, 'F-Math'),
+    makeItem('∫(y)dy', 480, 700, 10, 'F-Math'),
+  ];
+  const pdfDoc = makeFakePdfDocWithFontNames(items, { 'F-Math': 'ABCDEF+CMMI10' });
+  const blocks = await _p2mdExtractText(pdfDoc);
+  expect(blocks.some(b => b.type === 'image')).toBe(false);
+  const md = _p2mdRender(blocks);
+  expect(md.includes('$')).toBeTruthy();
+});
+
+await test('a short formula run mixed into a longer prose line (existing inline case) is unaffected — stays $...$, no image', async () => {
+  const items = [
+    makeItem('The formula is ', 50, 700, 10, 'F-Plain'),
+    makeItem('x=y+z', 220, 700, 10, 'F-Math'),
+    makeItem(' in this paper.', 320, 700, 10, 'F-Plain'),
+  ];
+  const pdfDoc = makeFakePdfDocWithFontNames(items, {
+    'F-Plain': 'ABCDEF+NotoSans',
+    'F-Math':  'ABCDEF+CMMI10',
+  });
+  const blocks = await _p2mdExtractText(pdfDoc);
+  expect(blocks.some(b => b.type === 'image')).toBe(false);
+  const md = _p2mdRender(blocks);
+  expect(md.includes('$x=y+z$')).toBeTruthy();
 });
 
 // ── Summary ────────────────────────────────────────────────────

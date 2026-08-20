@@ -2975,6 +2975,11 @@ export async function _p2mdExtractText(pdfDoc) {
   // digits are both \w — a trailing \b would silently never match those.
   const MATH_FONT_RE  = /\b(cmmi|cmsy|cmex|cmbsy|msam|msbm|lmmi|lmsy|lmex|eufm|eusm|rsfs|stix.?math|xits.?math|asana.?math|cambria.?math|latinmodernmath|mt-?extra)/i;
   const MATH_GLYPH_RE = /[∑∫∬∭∏√∛∜±×÷≤≥≠≈≡∞∂∇∈∉⊂⊆⊃⊇∪∩∀∃¬∧∨⇒⇔]/;
+  // Display-formula crop thresholds — see the per-page loop below (right
+  // after _splitCrossColumnLines) for the full rationale comment.
+  const FORMULA_MIN_FRACTION = 0.7;       // share of the line's characters that must be formula-tagged
+  const FORMULA_MAX_WIDTH_FRACTION = 0.6; // wider than this = a formula-heavy PROSE line, not a standalone equation — keep as text
+  const FORMULA_RENDER_SCALE = 2.5;       // crop regions are small — bias toward legibility over file size
 
   for (let p = 1; p <= pdfDoc.numPages; p++) {
     if (!isProcessing) break;
@@ -3060,6 +3065,63 @@ export async function _p2mdExtractText(pdfDoc) {
     // no-op when detectColumnRegions() finds no confident multi-column
     // layout (the common case).
     _splitCrossColumnLines(lines, pageW);
+
+    // Display-formula crop — a standalone equation line (e.g. a centered
+    // "E = mc^2") gets rendered+cropped as an image instead of flattened to
+    // $...$: honest-flattening (above) reliably preserves reading order for
+    // INLINE math (a few symbols inside a sentence), but a standalone
+    // equation built from 2D glyph layout (stacked fractions, integral
+    // bounds, matrices) often can't be linearized correctly by left-to-right
+    // concatenation — and a confidently-wrong flattening is worse for a
+    // downstream AI reader than an honestly-labeled image: silently-wrong
+    // text gets trusted as ground truth, an image doesn't assert false
+    // content. Scoped to a SINGLE Y-cluster (this file's existing YTOL=6
+    // line-grouping, a few lines up) — true multi-baseline formulas
+    // (matrices, stacked fractions spanning 2+ line clusters) aren't merged
+    // into one crop here and fall through to the existing $...$ flattening
+    // unchanged; there's no real multi-line-formula corpus yet to validate a
+    // merge heuristic against ("prefer false negatives", this file's own
+    // established rule — see MATH_GLYPH_RE's comment above).
+    let _pageCanvas = null; // rendered lazily, at most once per page, only if a candidate line exists
+    const _renderPageCanvas = async () => {
+      if (_pageCanvas) return _pageCanvas;
+      const vp = page.getViewport({ scale: FORMULA_RENDER_SCALE });
+      const canvas = document.createElement('canvas');
+      canvas.width = vp.width; canvas.height = vp.height;
+      await page.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
+      _pageCanvas = { canvas, viewport: vp };
+      return _pageCanvas;
+    };
+    for (const ln of lines) {
+      if (ln.isImage || ln.rtl) continue; // RTL formula layout is out of scope — no real test document to verify against
+      const totalLen = ln.items.reduce((s, i) => s + i.str.length, 0);
+      if (totalLen < 3) continue;
+      const formulaLen = ln.items.reduce((s, i) => s + (i.formula ? i.str.length : 0), 0);
+      if (formulaLen / totalLen < FORMULA_MIN_FRACTION) continue;
+      const minX = Math.min(...ln.items.map(i => i.x));
+      const maxX = Math.max(...ln.items.map(i => i.x + i.width));
+      if ((maxX - minX) > pageW * FORMULA_MAX_WIDTH_FRACTION) continue;
+      const maxSize = Math.max(...ln.items.map(i => i.fontSize));
+      try {
+        const { canvas, viewport } = await _renderPageCanvas();
+        const padTop = maxSize * 0.9, padBot = maxSize * 0.6, padX = maxSize * 0.3;
+        const corners = [
+          [minX - padX, ln.y + padTop], [maxX + padX, ln.y + padTop],
+          [minX - padX, ln.y - padBot], [maxX + padX, ln.y - padBot],
+        ].map(([x, y]) => viewport.convertToViewportPoint(x, y));
+        const px = corners.map(c => c[0]), py = corners.map(c => c[1]);
+        const cx = Math.max(0, Math.floor(Math.min(...px))), cy = Math.max(0, Math.floor(Math.min(...py)));
+        const cw = Math.min(canvas.width, Math.ceil(Math.max(...px))) - cx;
+        const ch = Math.min(canvas.height, Math.ceil(Math.max(...py))) - cy;
+        if (cw < 4 || ch < 4) continue;
+        const crop = document.createElement('canvas');
+        crop.width = cw; crop.height = ch;
+        crop.getContext('2d').drawImage(canvas, cx, cy, cw, ch, 0, 0, cw, ch);
+        const blob = await new Promise(resolve => crop.toBlob(resolve, 'image/png'));
+        if (!blob) continue;
+        ln.isImage = true; ln.imgKind = 'formula'; ln.imgWidth = cw; ln.imgHeight = ch; ln.imgBlob = blob; ln.imgPage = p;
+      } catch { /* rendering/crop failed — line falls through to normal $...$ flattening below */ }
+    }
 
     // Images — inserted as synthetic single-item "lines" (isImage:true) so
     // they ride the SAME Y-sort/column-dispatch machinery real text lines
@@ -3248,10 +3310,12 @@ export async function _p2mdExtractText(pdfDoc) {
       if (ln.isImage) {
         _flushPara();
         _imgSeq++;
+        const isFormula = ln.imgKind === 'formula';
         blocks.push({
           type: 'image', blob: ln.imgBlob,
-          filename: `images/page${ln.imgPage}-img${_imgSeq}.png`,
+          filename: `images/page${ln.imgPage}-${isFormula ? 'formula' : 'img'}${_imgSeq}.png`,
           width: ln.imgWidth, height: ln.imgHeight,
+          alt: isFormula ? 'formula' : '',
         });
         continue;
       }
@@ -3457,7 +3521,7 @@ export function _p2mdRender(blocks) {
       for (const row of body) lines.push(`| ${row.map(cell).join(' | ')} |`);
     } else if (b.type === 'image') {
       if (lines.length) lines.push('');
-      lines.push(`![](${b.filename})`);
+      lines.push(`![${b.alt || ''}](${b.filename})`);
     } else {
       if (lines.length) lines.push('');
       lines.push(b.runs.map(wrapRun).join(''));
