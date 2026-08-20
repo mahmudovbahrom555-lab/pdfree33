@@ -3001,6 +3001,32 @@ export async function _p2mdExtractText(pdfDoc) {
       page.getTextContent({ normalizeWhitespace: false }),
       page.getOperatorList().catch(() => null),
     ]);
+    // Greek-letter formula signal, gated per page — real STEM formulas use
+    // Greek variables constantly (θ, λ, α, β, Ω, Σ...) and MATH_GLYPH_RE's
+    // curated symbol set doesn't cover them, but a bare Greek-letter check
+    // would misfire on every line of an actual Greek-LANGUAGE PDF (a real,
+    // not hypothetical, upload — this product has no Greek UI locale, but
+    // still accepts any PDF a user hands it). Distinguish the two by density:
+    // Greek PROSE is overwhelmingly Greek letters; Greek used as isolated
+    // math variables amid otherwise-Latin content is a tiny fraction of the
+    // page's characters. Computed once per page (not per document) so a
+    // document mixing scripts across pages still gets a locally-correct call.
+    const GREEK_LETTER_RE  = /[Ͱ-Ͽἀ-῿]/;  // Greek and Coptic + Greek Extended blocks
+    const GREEK_COUNT_RE   = /[Ͱ-Ͽἀ-῿]/g; // same ranges, separate 'g'-flagged instance for
+                                            // counting below — sharing one regex object between
+                                            // a global .match() loop and later .test() calls
+                                            // would leak .lastIndex state between them (classic
+                                            // stateful-global-regex bug: .test() would silently
+                                            // start returning false every other call)
+    const GREEK_DOC_RATIO  = 0.15;
+    let _greekChars = 0, _totalChars = 0;
+    for (const item of content.items) {
+      if (!('str' in item)) continue;
+      _totalChars += item.str.length;
+      _greekChars += (item.str.match(GREEK_COUNT_RE) || []).length;
+    }
+    const pageIsGreekProse = _totalChars > 0 && (_greekChars / _totalChars) > GREEK_DOC_RATIO;
+
     const _boldFontCache = new Map(); // fontName -> boolean, one commonObjs lookup per unique font per page
     const _isFontBold = fontName => {
       if (_boldFontCache.has(fontName)) return _boldFontCache.get(fontName);
@@ -3033,7 +3059,8 @@ export async function _p2mdExtractText(pdfDoc) {
         // math-italic glyphs (variables) are a font-design artifact, not a
         // real emphasis signal, and letting both fire would nest ** / * markers
         // around a $...$ span, which most Markdown parsers render incorrectly.
-        const isFormula = _isFontMath(item.fontName, fam) || MATH_GLYPH_RE.test(str);
+        const isFormula = _isFontMath(item.fontName, fam) || MATH_GLYPH_RE.test(str) ||
+          (!pageIsGreekProse && GREEK_LETTER_RE.test(str));
         return {
           str, x: item.transform[4], y: item.transform[5], width: item.width || 0,
           fontSize,

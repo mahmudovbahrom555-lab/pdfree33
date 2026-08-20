@@ -709,6 +709,28 @@ await test('formula wins over bold — a math-font run that also matches the bol
   expect(md.includes('**a+b=c**')).toBe(false);
 });
 
+await test('a Greek letter in an ordinary font is wrapped as a formula (real STEM variable, e.g. θ), on an otherwise-Latin page', async () => {
+  const items = [
+    makeItem('The value ', 50, 700),
+    makeItem('θ', 150, 700),
+    makeItem(' is small.', 170, 700),
+  ];
+  const pdfDoc = makeFakePdfDoc([items]);
+  const blocks = await _p2mdExtractText(pdfDoc);
+  const md = _p2mdRender(blocks);
+  expect(md.includes('$θ$')).toBeTruthy();
+});
+
+await test('a genuinely Greek-LANGUAGE page (high Greek character density) does NOT get its Greek letters wrapped as formula', async () => {
+  const items = [
+    makeItem('Αυτό είναι ένα κείμενο γραμμένο εξ ολοκλήρου στα ελληνικά χωρίς μαθηματικούς τύπους.', 50, 700),
+  ];
+  const pdfDoc = makeFakePdfDoc([items]);
+  const blocks = await _p2mdExtractText(pdfDoc);
+  const md = _p2mdRender(blocks);
+  expect(md.includes('$')).toBe(false);
+});
+
 console.log('\nDisplay-formula crop (standalone equation line -> image, see js/processor.js\'s FORMULA_MIN_FRACTION comment):');
 
 await test('a narrow, all-formula standalone line becomes an image block, not $...$ text', async () => {
