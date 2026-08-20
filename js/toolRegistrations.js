@@ -155,12 +155,32 @@ function _bindFilenameInput() {
 function _initMerge(files) {
   const c = id('mergeOptions');
   if (!c) return;
-  // Compute default only if not yet touched by user
-  if (!_outputNameTouched) _outputStem = _computeDefaultStem(files || _lastFiles);
-  c.innerHTML     = _filenameHtml() + wmRemoveHtml();
-  c.style.display = 'block';
-  bindWmRemove();
-  _bindFilenameInput();
+  // Real bug found via Analytics Engine rage-click data (2026-08-20):
+  // initToolOptions() re-runs this on EVERY 'pdfree:files-added' /
+  // 'pdfree:file-removed' / 'pdfree:file-decrypted' event — i.e. every
+  // time a file is added or removed from the merge list, not just once.
+  // The old code unconditionally rebuilt c.innerHTML every single call,
+  // tearing out and recreating #mergeFilenameInput each time. The typed
+  // VALUE survived (restored via _outputStem), but a user mid-typing a
+  // custom filename — then adding one more file, a completely natural
+  // sequence — got their cursor/focus yanked away mid-edit, over and
+  // over, on every file added. Now only does the full (re)build once;
+  // subsequent calls just keep the auto-generated default in sync (same
+  // "only if not touched by user" rule as before), without ever touching
+  // the DOM node the user might currently be focused in.
+  const alreadyRendered = !!document.getElementById('mergeFilenameInput');
+  if (!alreadyRendered) {
+    if (!_outputNameTouched) _outputStem = _computeDefaultStem(files || _lastFiles);
+    c.innerHTML     = _filenameHtml() + wmRemoveHtml();
+    c.style.display = 'block';
+    bindWmRemove();
+    _bindFilenameInput();
+    return;
+  }
+  if (_outputNameTouched) return;
+  _outputStem = _computeDefaultStem(files || _lastFiles);
+  const input = document.getElementById('mergeFilenameInput');
+  if (input && document.activeElement !== input) input.value = _outputStem;
 }
 
 function _hideMerge() {
