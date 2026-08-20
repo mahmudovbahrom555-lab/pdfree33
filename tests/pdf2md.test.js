@@ -731,6 +731,21 @@ await test('a genuinely Greek-LANGUAGE page (high Greek character density) does 
   expect(md.includes('$')).toBe(false);
 });
 
+await test('a real English sentence carrying ONE Greek-letter acronym (e.g. "flat ΛCDM") as a single merged text item is NOT wrapped whole', async () => {
+  // Regression guard for a real false positive found on a real arXiv paper:
+  // pdf.js can return an entire justified sentence as ONE text item, and a
+  // bare "does this item contain any Greek codepoint" check flagged the
+  // WHOLE ~50-character item as formula over one embedded acronym letter,
+  // silently swallowing a readable sentence into an unrelated image crop.
+  const items = [makeItem('an impressive agreement with the standard flat ΛCDM model for angular scales', 50, 700)];
+  const pdfDoc = makeFakePdfDoc([items]);
+  const blocks = await _p2mdExtractText(pdfDoc);
+  expect(blocks.some(b => b.type === 'image')).toBe(false);
+  const md = _p2mdRender(blocks);
+  expect(md.includes('$')).toBe(false);
+  expect(md.includes('ΛCDM')).toBeTruthy();
+});
+
 console.log('\nDisplay-formula crop (standalone equation line -> image, see js/processor.js\'s FORMULA_MIN_FRACTION comment):');
 
 await test('a narrow, all-formula standalone line becomes an image block, not $...$ text', async () => {

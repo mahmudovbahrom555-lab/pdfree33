@@ -3011,14 +3011,14 @@ export async function _p2mdExtractText(pdfDoc) {
     // math variables amid otherwise-Latin content is a tiny fraction of the
     // page's characters. Computed once per page (not per document) so a
     // document mixing scripts across pages still gets a locally-correct call.
-    const GREEK_LETTER_RE  = /[Ͱ-Ͽἀ-῿]/;  // Greek and Coptic + Greek Extended blocks
-    const GREEK_COUNT_RE   = /[Ͱ-Ͽἀ-῿]/g; // same ranges, separate 'g'-flagged instance for
-                                            // counting below — sharing one regex object between
-                                            // a global .match() loop and later .test() calls
-                                            // would leak .lastIndex state between them (classic
-                                            // stateful-global-regex bug: .test() would silently
-                                            // start returning false every other call)
+    // 'g'-flagged so .match() below counts ALL occurrences, not just the
+    // first — every use of this regex goes through .match(), never .test(),
+    // so there's no risk of the classic stateful-global-regex .lastIndex bug
+    // (that bug is specific to reusing a global regex across .test()/.exec()
+    // calls; .match() doesn't carry state between calls).
+    const GREEK_COUNT_RE   = /[Ͱ-Ͽἀ-῿]/g;
     const GREEK_DOC_RATIO  = 0.15;
+    const GREEK_ITEM_RATIO = 0.2; // Greek chars must be a real fraction of a SINGLE item's own text — see isFormula's comment below
     let _greekChars = 0, _totalChars = 0;
     for (const item of content.items) {
       if (!('str' in item)) continue;
@@ -3059,8 +3059,19 @@ export async function _p2mdExtractText(pdfDoc) {
         // math-italic glyphs (variables) are a font-design artifact, not a
         // real emphasis signal, and letting both fire would nest ** / * markers
         // around a $...$ span, which most Markdown parsers render incorrectly.
+        //
+        // Greek-letter check is ratio-gated PER ITEM, not a bare .test() —
+        // confirmed on a real paper: a whole justified sentence can come
+        // back from pdf.js as ONE text item ("...standard flat ΛCDM"), and a
+        // single embedded Greek acronym letter would otherwise flag the
+        // ENTIRE item (all ~50 characters) as formula, silently swallowing a
+        // real, readable prose sentence into an unrelated image crop. Real
+        // formula fragments are overwhelmingly Greek within their OWN item
+        // (a lone "θ", a "jθ" superscript run); real prose borrows at most
+        // one Greek letter in an acronym amid dozens of Latin characters.
+        const greekInItem = (str.match(GREEK_COUNT_RE) || []).length;
         const isFormula = _isFontMath(item.fontName, fam) || MATH_GLYPH_RE.test(str) ||
-          (!pageIsGreekProse && GREEK_LETTER_RE.test(str));
+          (!pageIsGreekProse && str.length > 0 && (greekInItem / str.length) >= GREEK_ITEM_RATIO);
         return {
           str, x: item.transform[4], y: item.transform[5], width: item.width || 0,
           fontSize,
