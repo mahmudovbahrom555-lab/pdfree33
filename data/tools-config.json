@@ -4095,7 +4095,7 @@
         "pl": "pdf-do-markdown"
       },
       "titles": {
-        "en": "Convert PDF to Markdown Without Uploading — Free & Private | PDFree",
+        "en": "PDF to Markdown for AI & RAG — Free, No Upload | PDFree",
         "de": "PDF zu Markdown Konvertieren — Kostenlos & Privat | PDFree",
         "es": "Convertir PDF a Markdown — Gratis, Sin Registro | PDFree",
         "fr": "Convertir PDF en Markdown — Gratuit & Privé | PDFree",
@@ -4159,7 +4159,7 @@
         "pl": "PDF do Markdown"
       },
       "cardDescs": {
-        "en": "Turn PDF text into clean .md files locally",
+        "en": "Turn PDF into AI-ready Markdown — locally, free",
         "de": "PDF-Text lokal in saubere .md-Dateien umwandeln",
         "es": "Convierte texto PDF en archivos .md limpios localmente",
         "fr": "Convertir le texte PDF en fichiers .md propres localement",
@@ -4191,7 +4191,7 @@
         "pl": "PDF do Markdown"
       },
       "metaDescs": {
-        "en": "Convert PDF to Markdown free — headings, lists, bold text become clean .md syntax. Runs in your browser, nothing uploaded or stored. No account.",
+        "en": "Convert PDF to Markdown for ChatGPT, Claude & RAG pipelines — tables, formulas and images preserved. 100% private, runs in your browser. Free, no account.",
         "de": "PDF in Markdown umwandeln — Überschriften, Listen und Fettschrift werden zu sauberem .md-Code. Im Browser, nichts hochgeladen oder gespeichert. Kein Konto.",
         "es": "Convertir PDF a Markdown gratis — encabezados, listas y negrita se convierten en sintaxis .md limpia. En el navegador, nada subido ni almacenado. Sin cuenta.",
         "fr": "Convertir PDF en Markdown gratuitement — titres, listes et gras deviennent une syntaxe .md propre. Dans le navigateur, rien téléchargé ni stocké. Sans compte.",
@@ -4207,7 +4207,7 @@
         "pl": "Konwertuj PDF do Markdown za darmo — nagłówki, listy i pogrubienie stają się czystą składnią .md. W przeglądarce, nic nie przesyłane ani przechowywane. Bez konta."
       },
       "ogTitles": {
-        "en": "Convert PDF to Markdown Free — Headings & Lists, No Upload",
+        "en": "PDF to Markdown for AI & RAG — Free, No Upload",
         "de": "PDF zu Markdown Kostenlos — Überschriften & Listen, Kein Upload",
         "es": "Convertir PDF a Markdown Gratis — Títulos y Listas, Sin Subir",
         "fr": "Convertir PDF en Markdown Gratuit — Titres et Listes, Sans Envoi",
@@ -4223,7 +4223,7 @@
         "pl": "PDF do Markdown Za Darmo — Bez Przesyłania | PDFree"
       },
       "ogDescs": {
-        "en": "PDF to Markdown conversion that runs entirely in your browser. No upload, no server, no account. 100% private.",
+        "en": "Structured Markdown for RAG and LLM context — tables, formulas, and images preserved. Runs entirely in your browser, nothing uploaded.",
         "de": "PDF zu Markdown Konvertierung läuft vollständig im Browser. Kein Upload, kein Server, kein Konto. 100 % privat.",
         "es": "La conversión de PDF a Markdown se ejecuta completamente en tu navegador. Sin subida, sin servidor, sin cuenta. 100% privado.",
         "fr": "La conversion PDF en Markdown s'exécute entièrement dans votre navigateur. Sans envoi, sans serveur, sans compte. 100 % privé.",
@@ -4239,7 +4239,7 @@
         "pl": "Konwertuj zawartość PDF do tekstu Markdown .md. Przetwarzanie w przeglądarce."
       },
       "keywords": {
-        "en": "pdf to markdown, pdf to md, convert pdf to markdown, pdf to md converter, extract pdf text as markdown, pdf to markdown for ai, rag document prep, markdown for llm context",
+        "en": "pdf to markdown, pdf to md, convert pdf to markdown, pdf to md converter, extract pdf text as markdown, pdf to markdown for ai, rag document prep, markdown for llm context, pdf to markdown for chatgpt, pdf to markdown for claude, pdf to markdown no upload",
         "es": "pdf a markdown, convertir pdf a markdown, pdf a md, extraer texto de pdf como markdown, convertidor pdf markdown, pdf a markdown para ia, preparar documentos para rag, markdown para contexto de llm",
         "pt": "pdf para markdown, converter pdf em markdown, pdf para md, extrair texto de pdf como markdown, conversor pdf markdown, pdf para markdown para ia, preparação de documentos rag, markdown para contexto de llm",
         "de": "pdf zu markdown, pdf in markdown umwandeln, pdf zu md, pdf text als markdown extrahieren, pdf markdown konverter, pdf zu markdown für ki, rag dokumentenaufbereitung, markdown für llm kontext",

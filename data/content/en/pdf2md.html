@@ -1,8 +1,8 @@
 <div class="seo-content" style="max-width:800px;margin:60px auto 40px;padding:0 24px;color:var(--text2);line-height:1.75;">
 
-        <h1 id="seoH1_pdf-to-markdown" style="font-size:clamp(22px,3.5vw,30px);color:var(--text);margin:0 0 16px;font-weight:700;">Convert PDF to Markdown Free — No Upload, No Account</h1>
-        <p style="font-size:15px;margin:0 0 12px;">Need clean Markdown from a PDF? PDFree reads your PDF's text and automatically detects headings, bullet lists, numbered lists, and bold/italic emphasis — then outputs a plain .md file ready to paste into Obsidian, Notion, a README, or any static site generator. Everything runs in your browser. Nothing is uploaded to any server.</p>
-        <p style="font-size:12px;margin:0 0 40px;color:var(--text3);">This tool detects text, headings, lists, simple tables, and figures/images (as ![](images/…) references) — the download becomes a .zip with a document.md and an images folder whenever the PDF has extractable images, or a plain .md when it doesn't. See <a href="/pdf-to-excel/" style="color:var(--green)">PDF to Excel</a> for more reliable table extraction, or <a href="/pdf-to-word/" style="color:var(--green)">PDF to Word</a> for a fully editable document. Last verified: August 2026.</p>
+        <h1 id="seoH1_pdf-to-markdown" style="font-size:clamp(22px,3.5vw,30px);color:var(--text);margin:0 0 16px;font-weight:700;">PDF to Markdown for AI, RAG & ChatGPT — Free, No Upload</h1>
+        <p style="font-size:15px;margin:0 0 12px;">Need clean Markdown from a PDF to paste into ChatGPT, Claude, or a RAG pipeline? PDFree reads your PDF's text and automatically detects headings, bullet lists, numbered lists, bold/italic emphasis, tables, images, and math formulas — then outputs a plain .md file (or a .zip with images/formulas alongside it). Everything runs in your browser. Your document is never uploaded to any server — including PDFree's own — which matters if what you're feeding an AI is internal, unpublished, or otherwise not something you want passing through a third party first.</p>
+        <p style="font-size:12px;margin:0 0 40px;color:var(--text3);">This tool detects text, headings, lists, tables, figures/images, and inline/display math formulas — the download becomes a .zip with a document.md and an images folder whenever the PDF has extractable images or cropped formulas, or a plain .md when it doesn't. See <a href="/pdf-to-excel/" style="color:var(--green)">PDF to Excel</a> for more reliable table extraction, or <a href="/pdf-to-word/" style="color:var(--green)">PDF to Word</a> for a fully editable document. Last verified: August 2026.</p>
 
         <!-- How to use -->
         <h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">How to Convert PDF to Markdown in 3 Steps</h2>
@@ -45,13 +45,18 @@
           <p style="margin:6px 0 0;font-size:14px;">Jekyll, Hugo, and other static site generators consume Markdown natively — this skips manual reformatting when migrating PDF content to a site.</p>
         </div>
         <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
-          <strong style="color:var(--text);font-size:15px;">Feeding text to AI tools</strong>
-          <p style="margin:6px 0 0;font-size:14px;">Markdown's lightweight structure (headings, lists) is easier for language models to parse accurately than a raw PDF text dump.</p>
+          <strong style="color:var(--text);font-size:15px;">Feeding text to ChatGPT, Claude, or a RAG pipeline</strong>
+          <p style="margin:6px 0 0;font-size:14px;">Markdown's lightweight structure (headings, lists, real tables) gives a language model correct chunk boundaries and reading order — a plain PDF text dump doesn't, since PDF stores glyph positions, not document structure. Math formulas are kept inline as <code>$...$</code> where they can be flattened correctly, or cropped as a labeled image where they can't (matrices, stacked fractions) — so nothing decays into misleading, silently-wrong text.</p>
         </div>
         <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
           <strong style="color:var(--text);font-size:15px;">What to expect</strong>
-          <p style="margin:6px 0 0;font-size:14px;">Headings, paragraphs, bullet lists, numbered lists, simple tables, and figures are detected automatically and converted to Markdown syntax — figures come with their extracted images in a .zip. For complex tables, try <a href="/pdf-to-excel/" style="color:var(--green)">PDF to Excel</a>; for a fully editable document, try <a href="/pdf-to-word/" style="color:var(--green)">PDF to Word</a>.</p>
+          <p style="margin:6px 0 0;font-size:14px;">Headings, paragraphs, bullet lists, numbered lists, tables, figures, and math formulas are detected automatically and converted to Markdown syntax — figures and cropped formulas come with their images in a .zip, each with descriptive alt text. For complex tables, try <a href="/pdf-to-excel/" style="color:var(--green)">PDF to Excel</a>; for a fully editable document, try <a href="/pdf-to-word/" style="color:var(--green)">PDF to Word</a>.</p>
         </div>
+
+        <!-- AI / RAG -->
+        <h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">Why Markdown Instead of Raw PDF Text for AI?</h2>
+        <p style="font-size:14px;margin:0 0 16px;">A PDF has no real concept of "paragraph" or "table" internally — it's positioned glyphs on a page. Extracting raw text from a PDF often concatenates columns wrong, merges footnotes into body text, and turns tables into a wall of unaligned numbers. None of that helps a language model, and it actively hurts retrieval quality in a RAG pipeline, where chunk boundaries depend on structure the source format never had.</p>
+        <p style="font-size:14px;margin:0 0 32px;">PDFree's PDF to Markdown detects that structure directly from font size, position, and layout — real <code>#</code>/<code>##</code> headings (not just bigger text), GitHub-flavored Markdown tables (not flattened rows), and math formulas marked as <code>$...$</code> or cropped as an image with the flattened text kept as alt text — so a text-only consumer still gets a signal, and a vision-capable model reads the image correctly. Everything happens locally, so documents you'd rather not upload to a third party — internal reports, drafts, unpublished research — never have to leave your device just to get AI-ready formatting.</p>
 
         <!-- Privacy -->
         <h2 style="font-size:22px;color:var(--text);margin:48px 0 16px;font-weight:700;">Why Convert Here Instead of a Cloud Tool?</h2>
@@ -111,8 +116,8 @@
           <p style="margin:0;font-size:14px;">No. PDFree runs entirely in your browser — there is no backend server that receives your files. Because nothing is uploaded, nothing can be stored, logged, or retained. Your document exists only in your browser's memory for the duration of the session and is cleared when you close the tab.</p>
         </div>
         <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
-          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Does it preserve tables and images?</h3>
-          <p style="margin:0;font-size:14px;">Simple tables are detected automatically and converted to Markdown table syntax. Images/figures are extracted too — the download becomes a .zip (document.md + an images folder) whenever the PDF has extractable images, or a plain .md when it doesn't. If you need more reliable table extraction, use <a href="/pdf-to-excel/" style="color:var(--green)">PDF to Excel</a>; for a fully editable document, use <a href="/pdf-to-word/" style="color:var(--green)">PDF to Word</a>.</p>
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Does it preserve tables, images, and formulas?</h3>
+          <p style="margin:0;font-size:14px;">Tables are detected automatically and converted to GitHub-flavored Markdown table syntax. Images/figures are extracted too, and math formulas are marked as <code>$...$</code> where they can be flattened correctly, or cropped as a labeled image (with the flattened text kept as alt text) where they can't — the download becomes a .zip (document.md + an images folder) whenever the PDF has extractable images or cropped formulas, or a plain .md when it doesn't. If you need more reliable table extraction, use <a href="/pdf-to-excel/" style="color:var(--green)">PDF to Excel</a>; for a fully editable document, use <a href="/pdf-to-word/" style="color:var(--green)">PDF to Word</a>.</p>
         </div>
         <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
           <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">How are headings detected?</h3>
@@ -126,9 +131,13 @@
           <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Is this a free PDF to Markdown converter with no sign up?</h3>
           <p style="margin:0;font-size:14px;">Yes. PDFree is completely free — no sign up, no account, no installation. Open the tool, load your PDF, and download the .md file.</p>
         </div>
-        <div style="margin-bottom:20px;">
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
           <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Will scanned PDFs work?</h3>
           <p style="margin:0;font-size:14px;">Only if the PDF already has a text layer. Scanned, image-only PDFs have no extractable text — run <a href="/ocr-pdf/" style="color:var(--green)">OCR PDF</a> first, then convert the result.</p>
+        </div>
+        <div style="margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Is this good for preparing PDFs for AI tools, RAG, or LLM context?</h3>
+          <p style="margin:0;font-size:14px;">Yes. Markdown gives a language model real structure — headings, lists, GitHub-flavored tables — instead of a flat PDF text dump, which improves both how accurately a model reads the content and how a RAG pipeline chunks it. Math formulas are preserved as <code>$...$</code> or a labeled image rather than silently decaying into garbled text, and converting locally means the document's content never has to leave your device just to reformat it — useful for internal or unpublished material you're feeding to ChatGPT, Claude, or your own pipeline. Table and formula detection are heuristic-based, so unusually dense or complex layouts may still lose some structure — check the output before relying on it for a table-heavy or formula-heavy document.</p>
         </div>
 
         <!-- Related tools -->

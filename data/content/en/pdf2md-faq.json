@@ -17,10 +17,10 @@
   },
   {
     "@type": "Question",
-    "name": "Does it preserve tables and images?",
+    "name": "Does it preserve tables, images, and formulas?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Simple tables are detected automatically and converted to Markdown table syntax. Images/figures are extracted too — the download becomes a .zip (document.md + an images folder) whenever the PDF has extractable images, or a plain .md when it doesn't. If you need more reliable table extraction, use PDF to Excel; for a fully editable document, use PDF to Word."
+      "text": "Tables are detected automatically and converted to GitHub-flavored Markdown table syntax. Images/figures are extracted too, and math formulas are marked as $...$ where they can be flattened correctly, or cropped as a labeled image (with the flattened text kept as alt text) where they can't — the download becomes a .zip (document.md + an images folder) whenever the PDF has extractable images or cropped formulas, or a plain .md when it doesn't. If you need more reliable table extraction, use PDF to Excel; for a fully editable document, use PDF to Word."
     }
   },
   {
@@ -60,7 +60,7 @@
     "name": "Is this good for preparing PDFs for AI tools, RAG, or LLM context?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Yes — Markdown is a common, lightweight format for feeding documents into an LLM's context window or a RAG pipeline, and converting locally means the document's content never has to leave your device just to reformat it. Table detection is heuristic-based, so complex or densely formatted tables may still lose some structure — for table-heavy documents, check the output before feeding it to a model, or run OCR first if the PDF is scanned."
+      "text": "Yes. Markdown gives a language model real structure — headings, lists, GitHub-flavored tables — instead of a flat PDF text dump, which improves both how accurately a model reads the content and how a RAG pipeline chunks it. Math formulas are preserved as $...$ or a labeled image rather than silently decaying into garbled text, and converting locally means the document's content never has to leave your device just to reformat it — useful for internal or unpublished material you're feeding to ChatGPT, Claude, or your own pipeline. Table and formula detection are heuristic-based, so unusually dense or complex layouts may still lose some structure — check the output before relying on it for a table-heavy or formula-heavy document."
     }
   }
 ]
