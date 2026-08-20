@@ -610,12 +610,21 @@ function initEvents() {
 
   // Background compress scan: runs in worker as soon as a file is dropped,
   // so recommendations and preset auto-selection appear before the user clicks Compress.
+  // Real race condition found while auditing this for the 2026-08-20/21
+  // testing pass: startCompressScan(file) is async and can take real time
+  // on a large file — if the user removes that file and drops a different
+  // one before the scan resolves, the OLD file's scan (wrong page count,
+  // wrong recommended preset, wrong encrypted badge) would render onto the
+  // panel for the NEW file, since renderWorkerScanReport only checked that
+  // the panel was visible, never that the report still matched the current
+  // selection. Guarded by capturing the file reference before awaiting and
+  // discarding the result if it no longer matches selectedFiles[0].
   document.addEventListener('pdfree:files-added', async () => {
     if (currentTool !== 'compress' && currentTool !== 'compress-email') return;
     const file = selectedFiles[0];
     if (!file) return;
     const report = await startCompressScan(file);
-    if (report) renderWorkerScanReport(report);
+    if (report && selectedFiles[0] === file) renderWorkerScanReport(report);
   });
 
   // Background merge page-count scan: runs as soon as files are added to the merge list,
