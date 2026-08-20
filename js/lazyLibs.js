@@ -10,12 +10,22 @@ const _promises = {};
 
 function _load(key, url) {
   if (_promises[key]) return _promises[key];
+  // Real bug found during the 2026-08-20/21 Lazy-Load audit: a rejected
+  // promise used to stay cached in _promises[key] FOREVER — one transient
+  // CDN hiccup (network blip, momentary CDN outage) permanently broke this
+  // loader for the rest of the page session, since every later call just
+  // returned the same already-rejected promise instead of trying again.
+  // loadDocx/loadExcelJs/loadPptxGenJs below already clear their cache on
+  // failure; this shared helper (used by loadPdfLib/loadJSZip) didn't.
   _promises[key] = new Promise((resolve, reject) => {
     const s = document.createElement('script');
     s.src = url;
     s.onload  = resolve;
     s.onerror = () => reject(new Error(`Failed to load ${key} from CDN`));
     document.head.appendChild(s);
+  }).catch(err => {
+    delete _promises[key]; // allow a later call to actually retry, not replay this same failure
+    throw err;
   });
   return _promises[key];
 }
