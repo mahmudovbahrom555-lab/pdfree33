@@ -38,6 +38,7 @@ let _compress    = true;
 let _quality     = 0.82;       // JPEG quality 0–1
 let _exifAngles  = [];         // cached EXIF rotation per file (degrees)
 let _rememberLoaded = false;   // "Remember my settings" applied once per tool session
+let _settingsRendered = false; // see _render()'s split-render comment
 
 export function getJpg2PdfParams() {
   return { pageSize: _pageSize, orientation: _orientation,
@@ -71,12 +72,19 @@ export async function initJpg2PdfOptions(files) {
     }
   }
 
-  container.innerHTML = `
-    <div class="j2p-loading">
-      <span class="compress-loading__spinner" aria-hidden="true"></span>
-      ${t('j2p_reading_images')}
-    </div>
-  `;
+  // Loading spinner only on the very first call — a full destructive
+  // rebuild here would wipe the settings panel (including an in-progress
+  // quality-slider drag) on every later file add/remove too, before
+  // _render() even runs. EXIF reading is fast (first 64KB per file only,
+  // per the comment below), so later calls don't need a spinner at all.
+  if (!_settingsRendered) {
+    container.innerHTML = `
+      <div class="j2p-loading">
+        <span class="compress-loading__spinner" aria-hidden="true"></span>
+        ${t('j2p_reading_images')}
+      </div>
+    `;
+  }
   container.style.display = 'block';
 
   // Read EXIF in parallel — fast, only first 64KB per file
@@ -106,24 +114,30 @@ export function hideJpg2PdfOptions() {
   _exifAngles  = [];
   _warnedManyImages = false;
   _rememberLoaded = false;
+  _settingsRendered = false;
 }
 
 // ── Render ─────────────────────────────────────────────────────
+// Split into two independently-updatable regions — real bug found during
+// the 2026-08-20/21 UI-glue audit (same class as merge's #mergeFilenameInput
+// focus-loss, fixed in 8122056): _render() used to be ONE innerHTML
+// assignment covering both the thumbnail grid (which genuinely needs to
+// refresh on every file add/remove/reorder) and the settings panel — page
+// size, orientation, compress toggle, quality slider. A user mid-drag on
+// the quality slider who added or removed one more image got the drag
+// silently interrupted, since the slider node itself was destroyed and
+// recreated. Now the settings panel is built exactly once; only the
+// thumbnail-grid wrapper is replaced on later calls.
 
-function _render(files) {
-  const container = id('jpg2pdfOptions');
-  if (!container) return;
-
+function _previewsHtml(files) {
   const rotated = _exifAngles.filter(a => a !== 0).length;
   const exifNote = rotated > 0
     ? `<div class="j2p-exif-note" role="status">
          ${tp(rotated, 'j2p_exif_note_one', 'j2p_exif_note_many', { n: rotated })}
        </div>`
     : '';
-
-  container.innerHTML = `
+  return `
     ${exifNote}
-
     <div class="j2p-previews" aria-label="${t('j2p_image_preview')}" role="list">
       ${files.map((f, i) => `
         <div class="j2p-thumb" role="listitem" data-index="${i}" data-i="${i}" title="${_esc(f.name)}">
@@ -134,7 +148,11 @@ function _render(files) {
         </div>
       `).join('')}
     </div>
+  `;
+}
 
+function _settingsHtml() {
+  return `
     <div class="j2p-row">
       <div class="j2p-group">
         <span class="j2p-group__label">${t('j2p_page_size')}</span>
@@ -202,8 +220,22 @@ function _render(files) {
       ariaLabel: t('preset_remember_title'),
     })}
   `;
+}
 
-  _bindEvents();
+function _render(files) {
+  const container = id('jpg2pdfOptions');
+  if (!container) return;
+
+  if (!_settingsRendered) {
+    _settingsRendered = true;
+    container.innerHTML = `<div id="j2pPreviewsWrap">${_previewsHtml(files)}</div>${_settingsHtml()}`;
+    _bindSettingsEvents();
+  } else {
+    const wrap = id('j2pPreviewsWrap');
+    if (wrap) wrap.innerHTML = _previewsHtml(files);
+  }
+
+  _bindThumbGridEvents();
   _renderPreviews(files);
 }
 
@@ -266,8 +298,18 @@ async function _renderPreviews(files) {
 }
 
 // ── Events ─────────────────────────────────────────────────────
+// Split to match _render()'s two regions: settings events are delegated on
+// the (never-destroyed) #jpg2pdfOptions container itself, so binding them
+// once on first render is sufficient — a click on a LATER-created radio/
+// checkbox still bubbles up to this same listener. The quality slider is
+// bound directly (not delegated) but lives in the settings region, which
+// is now only ever built once, so this binding stays valid for the whole
+// tool session too. Thumb-grid events (drag-reorder) DO need re-binding on
+// every refresh, since dragReorder.js's own doc comment is explicit that
+// its listeners are per-item, not delegated, and thumbnails are real DOM
+// nodes that get recreated on every file add/remove/reorder.
 
-function _bindEvents() {
+function _bindSettingsEvents() {
   const container = id('jpg2pdfOptions');
 
   container.addEventListener('change', e => {
@@ -304,6 +346,11 @@ function _bindEvents() {
       // (label update removed — new design shows percentage in the slider header only)
     });
   }
+}
+
+function _bindThumbGridEvents() {
+  const container = id('jpg2pdfOptions');
+  if (!container) return;
 
   // Drag-to-reorder the thumbnail grid — mouse + touch, shared with merge's
   // file list (dragReorder.js). selectedFiles and _exifAngles are spliced
@@ -315,7 +362,7 @@ function _bindEvents() {
       container:    previews,
       itemSelector: '.j2p-thumb',
       arrays:       [selectedFiles, _exifAngles],
-      onReorder:    () => _render(selectedFiles), // _render() already re-binds events + redraws previews
+      onReorder:    () => _render(selectedFiles), // _render() only refreshes the thumb grid now — settings untouched
       isLocked:     isFilesLocked,
       mode:         'grid',
     });
