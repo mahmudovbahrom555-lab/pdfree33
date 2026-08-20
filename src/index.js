@@ -427,6 +427,16 @@ async function handleAnalytics(request, env) {
     return new Response('Bad request', { status: 400 });
   }
   const props = (body.props && typeof body.props === 'object') ? body.props : {};
+  // Server-side geo, never client-supplied — request.cf.country is the only
+  // trustworthy source (a client could otherwise just lie about its own
+  // country in props). Overwrites any client-sent `country` key on purpose.
+  // Added specifically so internal/testing traffic (Uzbekistan) can be
+  // filtered out of pdfree_events queries, mirroring the existing UZ
+  // exclusion in scripts/analytics.py's separate GraphQL-based pipeline —
+  // that script filters live HTTP-request traffic; this makes the same
+  // filter possible for Analytics Engine's custom behavioral events, which
+  // had no geo field at all until now.
+  props.country = request.cf?.country || '';
 
   if (!env.ANALYTICS) {
     console.log(`[analytics] ANALYTICS binding missing, event=${eventName} — dropped`);
