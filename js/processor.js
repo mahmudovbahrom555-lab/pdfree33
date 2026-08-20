@@ -1396,7 +1396,7 @@ function _yieldToUI() {
 
 const _FRAME_BUDGET_MS = 16;   // ≈ one 60 FPS frame
 
-async function _runPdf2Jpg(filesSnapshot, { pages, format, dpi, zip }) {
+async function _runPdf2Jpg(filesSnapshot, { pages, format, dpi }) {
   const file   = filesSnapshot[0];
   if (!_checkSize(file, 100)) { _abortUI(); return; }
   const scale  = dpi / 72;
@@ -1453,9 +1453,11 @@ async function _runPdf2Jpg(filesSnapshot, { pages, format, dpi, zip }) {
   // drop the reference. Peak RAM stays at ~2 pages at a time.
   //
   // Two modes:
-  //   zip=true   → streaming into JSZip as pages render
-  //   zip=false  → buffer only 1 page (already bounded)
-  if (zip) await loadJSZip();
+  //   >1 page  → streaming into JSZip as pages render (regardless of the
+  //              `zip` checkbox — see the page-loop comment below for why
+  //              packaging can't be skipped just because zip=false)
+  //   1 page   → buffer only that page (already bounded), no ZIP needed
+  if (validPages.length > 1) await loadJSZip();
   let streamZip   = null;
   let streamCount = 0;
   let singleResult = null;
@@ -1493,8 +1495,19 @@ async function _runPdf2Jpg(filesSnapshot, { pages, format, dpi, zip }) {
         const baseName = file.name.replace(/\.pdf$/i, '');
         const name     = `${baseName}-page${pageNum}.${ext}`;
 
-        if (!zip || validPages.length === 1) {
-          if (!singleResult) singleResult = { name, buffer: buf }; // zip=false: first page only
+        // Real bug fixed here: this used to key off `!zip` alone, so
+        // unchecking "pack into ZIP" (js/pdf2jpgUI.js's p2jZipCheck — its
+        // own label promises "pack all images", implying OFF means
+        // "give them to me separately") on a multi-page selection silently
+        // kept only the FIRST rendered page and discarded the rest with no
+        // warning. There's no reliable individual-file-download path in
+        // this codebase yet (looped programmatic <a download> clicks are
+        // known-unreliable on iOS Safari — only the first tends to fire),
+        // so for >1 page the only currently-safe delivery mechanism is a
+        // ZIP regardless of the checkbox; `zip` alone (without the page-
+        // count check) must never gate which pages get kept.
+        if (validPages.length === 1) {
+          if (!singleResult) singleResult = { name, buffer: buf };
         } else {
           if (!streamZip) streamZip = new (window.JSZip)();
           streamZip.file(name, buf);
@@ -1532,7 +1545,7 @@ async function _runPdf2Jpg(filesSnapshot, { pages, format, dpi, zip }) {
   setProgress(93, t('prog_packaging'));
 
   let blob, filename, desc;
-  if (!zip || validPages.length === 1) {
+  if (validPages.length === 1) {
     blob     = new Blob([singleResult.buffer], { type: mime });
     filename = singleResult.name;
     desc     = t('desc_pdf2jpg_one', { ext: ext.toUpperCase(), size: fmtSize(blob.size) });
