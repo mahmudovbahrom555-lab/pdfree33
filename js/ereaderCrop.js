@@ -268,3 +268,20 @@ export const DEVICE_PRESETS = {
   remarkable: { aspect: 4 / 5 },
   kobo:       { aspect: 3 / 4 },
 };
+
+// ── Global-crop sample selection ─────────────────────────────────
+
+/**
+ * Evenly spaced page indices (1-indexed), capped at `max`, always
+ * including the first and last page — used by processor.js's _runEreader
+ * to pick which pages to sample for the one global crop rect. Lives here
+ * (not in processor.js) because it's pure page-index math with no
+ * worker/DOM dependency, same reasoning as the rest of this module.
+ */
+export function ereaderSampleIndices(pageCount, max) {
+  if (pageCount <= max) return Array.from({ length: pageCount }, (_, i) => i + 1);
+  const step = (pageCount - 1) / (max - 1);
+  const indices = new Set();
+  for (let i = 0; i < max; i++) indices.add(1 + Math.round(i * step));
+  return [...indices].sort((a, b) => a - b);
+}

@@ -24,7 +24,7 @@ import { isHeicFile, decodeHeicToJpegBlob } from './heicDecode.js';
 import { evaluateStructural } from './eriScore.js';
 import { evaluateXlsxStructural } from './eriScoreXlsx.js';
 import { contentBBox, reconcileGlobalCrop, padBBox, composeWithAspect, DEVICE_PRESETS,
-         detectColumnGutter, reconcileColumnSplit } from './ereaderCrop.js';
+         detectColumnGutter, reconcileColumnSplit, ereaderSampleIndices } from './ereaderCrop.js';
 
 // Below this ERI "tables" score, the text-detected/border-grid tables in the
 // first-pass docx are more likely mis-detected layout (garbled/ghost tables)
@@ -1044,16 +1044,6 @@ const _EREADER_RENDER_SCALE   = 2.5;  // main-thread render scale for the real p
 const _EREADER_OUTPUT_HEIGHT  = 1800; // fixed output pixel height, every page — sharp enough for e-ink
 const _EREADER_PAGE_HEIGHT_PT = 792;  // fixed output PDF page height (points), every page
 
-// Evenly spaced sample indices (1-indexed), capped at `max`, always
-// including the first and last page.
-function _ereaderSampleIndices(pageCount, max) {
-  if (pageCount <= max) return Array.from({ length: pageCount }, (_, i) => i + 1);
-  const step = (pageCount - 1) / (max - 1);
-  const indices = new Set();
-  for (let i = 0; i < max; i++) indices.add(1 + Math.round(i * step));
-  return [...indices].sort((a, b) => a - b);
-}
-
 async function _runEreader(filesSnapshot, { device = 'kindle', grayscale = true, contrast = 0.5, quality = 0.85, columnMode = 'auto' } = {}) {
   if (!_checkSize(filesSnapshot[0], 150)) { _abortUI(); return; }
   const file = filesSnapshot[0];
@@ -1073,7 +1063,7 @@ async function _runEreader(filesSnapshot, { device = 'kindle', grayscale = true,
     // (main thread only — pdf.js never runs inside a Worker in this codebase,
     // see ereaderWorker.js's header comment)
     setProgress(4, t('prog_ereader_analyze'));
-    const sampleIndices = _ereaderSampleIndices(pageCount, _EREADER_SAMPLE_MAX);
+    const sampleIndices = ereaderSampleIndices(pageCount, _EREADER_SAMPLE_MAX);
     const bboxes  = [];
     const gutters = [];
     let firstPageVp1 = null;
