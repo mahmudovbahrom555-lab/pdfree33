@@ -17,11 +17,12 @@
 import { id }       from './utils.js';
 import { t, tp }    from './i18n.js';
 import { showToast } from './ui.js';
-import { selectedFiles, isFilesLocked } from './files.js';
+import { selectedFiles, isFilesLocked, addFiles } from './files.js';
 import { bindDragReorder } from './dragReorder.js';
 import { presetRememberCard } from './uiComponents.js';
 import { loadPreset, clearPreset } from './presets.js';
 import { isHeicFile, decodeHeicToJpegBlob } from './heicDecode.js';
+import { filterScanPhoto } from './scanFilter.js';
 
 // Soft, non-blocking heads-up — not a hard cap. Canvas thumbnail decoding
 // happens one file at a time (see _renderPreviews), so memory pressure is
@@ -153,6 +154,11 @@ function _previewsHtml(files) {
 
 function _settingsHtml() {
   return `
+    <div class="j2p-row">
+      <button type="button" class="split-action-btn" id="j2pScanBtn">${t('j2p_scan_camera')}</button>
+      <input type="file" accept="image/*" capture="environment" id="j2pScanInput" style="display:none">
+    </div>
+
     <div class="j2p-row">
       <div class="j2p-group">
         <span class="j2p-group__label">${t('j2p_page_size')}</span>
@@ -346,6 +352,51 @@ function _bindSettingsEvents() {
       // (label update removed — new design shows percentage in the slider header only)
     });
   }
+
+  _bindScanButton();
+}
+
+// "Scan with Camera" — opens the phone's native camera (capture="environment"
+// falls back to a normal file picker on desktop, harmless). The captured
+// photo is filtered through scanFilter.js's clean-scan-style enhance
+// pipeline BEFORE it ever reaches addFiles(), so everything downstream
+// (thumbnail grid, drag-reorder, handleJpg2Pdf assembly) treats it exactly
+// like any gallery-picked image — no tagging/branching needed elsewhere.
+function _bindScanButton() {
+  const scanBtn   = id('j2pScanBtn');
+  const scanInput = id('j2pScanInput');
+  if (!scanBtn || !scanInput) return;
+
+  scanBtn.addEventListener('click', () => scanInput.click());
+
+  scanInput.addEventListener('change', async () => {
+    const file = scanInput.files?.[0];
+    scanInput.value = ''; // reset so capturing again fires 'change' even for the "same" photo slot
+    if (!file) return;
+
+    const originalLabel = scanBtn.textContent;
+    scanBtn.disabled = true;
+    scanBtn.textContent = t('j2p_scan_processing');
+    try {
+      // HEIC-safe decode — same pattern as _loadImage's preview decode below
+      // (iOS camera capture can occasionally hand back HEIC depending on
+      // device settings, even via capture="environment").
+      const source = isHeicFile(file) ? (await decodeHeicToJpegBlob(file)) ?? file : file;
+      const url = URL.createObjectURL(source);
+      const img = new Image();
+      await new Promise((res, rej) => { img.onload = res; img.onerror = rej; img.src = url; });
+      URL.revokeObjectURL(url);
+
+      const blob = await filterScanPhoto(img);
+      const scanFile = new File([blob], `scan-${Date.now()}.jpg`, { type: 'image/jpeg' });
+      addFiles([scanFile]);
+    } catch {
+      showToast(t('j2p_scan_failed'));
+    } finally {
+      scanBtn.disabled = false;
+      scanBtn.textContent = originalLabel;
+    }
+  });
 }
 
 function _bindThumbGridEvents() {
