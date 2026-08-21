@@ -551,9 +551,11 @@ def generate_index(locale_code):
     default-src 'self';
     script-src  'self'
                 'wasm-unsafe-eval'
+                'unsafe-eval'
                 blob:
                 https://cdnjs.cloudflare.com
                 https://plausible.io
+                https://docs.opencv.org
                 https://pagead2.googlesyndication.com
                 https://static.cloudflareinsights.com;
     style-src   'self' 'unsafe-inline'
@@ -561,6 +563,7 @@ def generate_index(locale_code):
     font-src    https://fonts.gstatic.com;
     img-src     'self' data: blob: https:;
     connect-src 'self'
+                data:
                 https://cdnjs.cloudflare.com
                 https://*.workers.dev
                 https://plausible.io

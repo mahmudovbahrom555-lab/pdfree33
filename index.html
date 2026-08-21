@@ -43,22 +43,57 @@
 
     frame-src: googlesyndication/doubleclick
       AdSense renders ad creatives inside cross-origin iframes.
+
+    script-src: https://docs.opencv.org + 'unsafe-eval' REQUIRED for
+      jpg2pdf's live-camera scan (document-edge auto-detection —
+      js/lazyLibs.js's loadOpenCv()). The docs.opencv.org CDN build's
+      Emscripten runtime calls `new Function(...)` in its own top-level
+      boilerplate (createNamedFunction, used to set up error subclasses)
+      — this fires on every load, before any cv.* function is even
+      called, so 'wasm-unsafe-eval' alone (already present, for WASM
+      compilation) is NOT enough; confirmed via a real Playwright stack
+      trace during the 2026-08-22 QA pass, not assumed.
+      ⚠ REAL CONSTRAINT THIS CREATES, not hypothetical scaremongering:
+      confirmed via `grep -rn "eval(\|new Function(" js/*.js` (excl.
+      vendor/) that this project's OWN code has ZERO such calls today —
+      that's WHY this is currently a low/theoretical risk despite the
+      relaxed policy. That grep result is the thing that must stay true.
+      Do NOT ever write `eval(...)` or `new Function(...)` against
+      user-controlled data anywhere in js/*.js (a filename, a URL param,
+      an uploaded file's contents, a translated string) — with
+      'unsafe-eval' now present, doing so would turn a theoretical CSP
+      gap into a real, directly exploitable XSS execution path. If this
+      project ever needs dynamic code evaluation for something
+      first-party, treat it as a hard design review trigger, not a
+      quick add.
+
+    connect-src: data: REQUIRED for the same OpenCV.js flow — its
+      Emscripten runtime fetches its own WASM bytes via a `data:`
+      base64 URI internally (not a real network request, no data
+      leaves the browser), confirmed via a real Playwright console
+      violation. Low-risk relaxation compared to script-src/unsafe-eval
+      above — data: in connect-src only permits reading an inline
+      payload already present in the page/script, not executing
+      anything or reaching a new network origin.
     ════════════════════════════════════════════════════════════════
   -->
   <meta http-equiv="Content-Security-Policy" content="
     default-src 'self';
     script-src  'self'
                 'wasm-unsafe-eval'
+                'unsafe-eval'
                 blob:
                 https://cdnjs.cloudflare.com
                 https://cdn.jsdelivr.net
                 https://unpkg.com
+                https://docs.opencv.org
                 https://pagead2.googlesyndication.com
                 https://static.cloudflareinsights.com;
     style-src   'self' 'unsafe-inline';
     font-src    'self';
     img-src     'self' data: blob: https:;
     connect-src 'self'
+                data:
                 https://cdnjs.cloudflare.com
                 https://cdn.jsdelivr.net
                 https://*.workers.dev

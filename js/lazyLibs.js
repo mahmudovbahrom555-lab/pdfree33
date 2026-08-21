@@ -145,3 +145,39 @@ async function _loadPptxGenJsWithFallback() {
   }
   throw new Error(t('err_cdn_lib_unavailable', { lib: 'PowerPoint' }));
 }
+
+// OpenCV.js — used by js/scanGeometry.js for the jpg2pdf live-camera
+// scan flow (document-quad detection + perspective warp). Only ever
+// loaded when that flow actually opens — costs nothing for every
+// other page/tool. Pinned version (verified live via curl before
+// adding: https://docs.opencv.org/4.9.0/opencv.js returns 200,
+// ~9.8MB; 4.10.0 404s) — same "never a moving latest alias" policy as
+// every other CDN lib in this file.
+//
+// Different from every other loader here: OpenCV's Emscripten runtime
+// checks for a PRE-EXISTING global `Module` object with an
+// onRuntimeInitialized callback — the <script> tag's own `onload`
+// firing only means the JS downloaded, not that the WASM runtime has
+// actually finished initializing (cv.Mat/cv.Canny/etc. would still be
+// unavailable). `Module` must be set up BEFORE the script is created.
+const OPENCV_URL = 'https://docs.opencv.org/4.9.0/opencv.js';
+
+export function loadOpenCv() {
+  if (window.cv?.Mat) return Promise.resolve();
+  if (_promises['openCv']) return _promises['openCv'];
+
+  _promises['openCv'] = new Promise((resolve, reject) => {
+    window.Module = {
+      onRuntimeInitialized: resolve,
+    };
+    const s = document.createElement('script');
+    s.src     = OPENCV_URL;
+    s.onerror = () => reject(new Error('Failed to load openCv from CDN'));
+    document.head.appendChild(s);
+  }).catch(err => {
+    delete _promises['openCv']; // allow a later call to actually retry
+    delete window.Module;
+    throw err;
+  });
+  return _promises['openCv'];
+}

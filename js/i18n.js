@@ -715,6 +715,18 @@ export const EN = {
   j2p_scan_camera:     '📷 Scan with Camera',
   j2p_scan_processing: 'Processing…',
   j2p_scan_failed:     'Could not process that photo — try again',
+
+  // ── scanCameraUI.js — live viewfinder + corner-detection modal ──
+  scan_cam_title:            'Scan document',
+  scan_cam_close:            'Close',
+  scan_cam_take_photo:       'Take Photo',
+  scan_cam_permission_denied: 'Camera access denied — falling back to file picker',
+  scan_cam_retake:           'Retake',
+  scan_cam_use_crop:         'Use this crop',
+  scan_cam_detecting:        'Detecting document edges…',
+  scan_cam_detect_fallback:  "Couldn't auto-detect edges — drag the corners to match your document",
+  scan_cam_processing:       'Processing…',
+  scan_cam_processing_failed: 'Could not process this photo — try again',
   j2p_page_size:       'Page size',
   j2p_size_auto:       '📐 Auto',
   j2p_fit:             '⤡ Fit',

@@ -23,6 +23,7 @@ import { presetRememberCard } from './uiComponents.js';
 import { loadPreset, clearPreset } from './presets.js';
 import { isHeicFile, decodeHeicToJpegBlob } from './heicDecode.js';
 import { filterScanPhoto } from './scanFilter.js';
+import { openScanCamera } from './scanCameraUI.js';
 
 // Soft, non-blocking heads-up — not a hard cap. Canvas thumbnail decoding
 // happens one file at a time (see _renderPreviews), so memory pressure is
@@ -356,47 +357,71 @@ function _bindSettingsEvents() {
   _bindScanButton();
 }
 
-// "Scan with Camera" — opens the phone's native camera (capture="environment"
-// falls back to a normal file picker on desktop, harmless). The captured
-// photo is filtered through scanFilter.js's clean-scan-style enhance
-// pipeline BEFORE it ever reaches addFiles(), so everything downstream
-// (thumbnail grid, drag-reorder, handleJpg2Pdf assembly) treats it exactly
-// like any gallery-picked image — no tagging/branching needed elsewhere.
+// "Scan with Camera" — two entry points feed the same filter+addFiles
+// pipeline (below): the live in-browser viewfinder (js/scanCameraUI.js,
+// getUserMedia + auto corner-detection + perspective correction) when
+// supported, falling back to the phone's native camera app
+// (capture="environment", Phase 1's original behavior — also the
+// desktop fallback, harmless there) when it isn't, or if the user
+// denies camera permission. Either way, the resulting image is
+// filtered through scanFilter.js's clean-scan-style enhance pipeline
+// BEFORE it ever reaches addFiles(), so everything downstream
+// (thumbnail grid, drag-reorder, handleJpg2Pdf assembly) treats it
+// exactly like any gallery-picked image — no tagging/branching needed
+// elsewhere.
 function _bindScanButton() {
   const scanBtn   = id('j2pScanBtn');
   const scanInput = id('j2pScanInput');
   if (!scanBtn || !scanInput) return;
 
-  scanBtn.addEventListener('click', () => scanInput.click());
+  scanBtn.addEventListener('click', () => {
+    if (navigator.mediaDevices?.getUserMedia) {
+      openScanCamera({
+        onConfirm:  canvas => _processScanSource(scanBtn, canvas),
+        onFallback: () => scanInput.click(),
+      });
+    } else {
+      scanInput.click();
+    }
+  });
 
-  scanInput.addEventListener('change', async () => {
+  scanInput.addEventListener('change', () => {
     const file = scanInput.files?.[0];
     scanInput.value = ''; // reset so capturing again fires 'change' even for the "same" photo slot
     if (!file) return;
+    _processScanSource(scanBtn, file);
+  });
+}
 
-    const originalLabel = scanBtn.textContent;
-    scanBtn.disabled = true;
-    scanBtn.textContent = t('j2p_scan_processing');
-    try {
-      // HEIC-safe decode — same pattern as _loadImage's preview decode below
-      // (iOS camera capture can occasionally hand back HEIC depending on
-      // device settings, even via capture="environment").
-      const source = isHeicFile(file) ? (await decodeHeicToJpegBlob(file)) ?? file : file;
-      const url = URL.createObjectURL(source);
+// Accepts either a File (from the native capture input — needs HEIC-safe
+// decode first, since iOS camera capture can occasionally hand back HEIC
+// depending on device settings) or a canvas (already decoded/corrected —
+// from js/scanCameraUI.js's live-viewfinder flow, which already produced
+// a perspective-warped canvas and has nothing left to decode).
+async function _processScanSource(scanBtn, source) {
+  const originalLabel = scanBtn.textContent;
+  scanBtn.disabled = true;
+  scanBtn.textContent = t('j2p_scan_processing');
+  try {
+    let imgSource = source;
+    if (source instanceof File) {
+      const decoded = isHeicFile(source) ? (await decodeHeicToJpegBlob(source)) ?? source : source;
+      const url = URL.createObjectURL(decoded);
       const img = new Image();
       await new Promise((res, rej) => { img.onload = res; img.onerror = rej; img.src = url; });
       URL.revokeObjectURL(url);
-
-      const blob = await filterScanPhoto(img);
-      const scanFile = new File([blob], `scan-${Date.now()}.jpg`, { type: 'image/jpeg' });
-      addFiles([scanFile]);
-    } catch {
-      showToast(t('j2p_scan_failed'));
-    } finally {
-      scanBtn.disabled = false;
-      scanBtn.textContent = originalLabel;
+      imgSource = img;
     }
-  });
+
+    const blob = await filterScanPhoto(imgSource);
+    const scanFile = new File([blob], `scan-${Date.now()}.jpg`, { type: 'image/jpeg' });
+    addFiles([scanFile]);
+  } catch {
+    showToast(t('j2p_scan_failed'));
+  } finally {
+    scanBtn.disabled = false;
+    scanBtn.textContent = originalLabel;
+  }
 }
 
 function _bindThumbGridEvents() {
