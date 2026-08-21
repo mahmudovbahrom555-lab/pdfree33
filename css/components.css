@@ -5141,6 +5141,13 @@ body:not(.has-files) #heroChipsLabel { display: none !important; }
   overflow: hidden;
 }
 
+.scan-cam-video-wrap {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+  max-height: 60vh;
+}
+
 .scan-cam-video {
   width: 100%;
   max-height: 60vh;

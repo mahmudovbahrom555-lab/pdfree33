@@ -17,8 +17,20 @@
 //  Deliberately 'enhance' mode only (contrast/brightness boost, no Otsu
 //  threshold/binarization/despeckle) — matches Clean Scan's non-destructive
 //  branch, appropriate for a freshly-captured photo of unknown quality.
-//  Output is always grayscale (js/cleanScanWorker.js's own pipeline does
-//  this unconditionally too, before either mode branch) — no color mode.
+//
+//  filterScanPhoto(imgEl, mode) supports 'grayscale' (default, as above)
+//  and 'color' — a real competitive gap found 2026-08-22 testing against
+//  PDF24's camera scanner, which offers Color/Grayscale/B&W (no B&W here
+//  yet — would need Clean Scan's Otsu-threshold/despeckle path ported too,
+//  not done in this pass). Color mode reuses the SAME background-estimate
+//  step (computed from a grayscale copy — flat-field correction is
+//  inherently a luminance/shading concept) but applies the resulting
+//  per-pixel shading-correction ratio multiplicatively to each R/G/B
+//  channel independently, instead of collapsing to gray — standard
+//  technique, fixes uneven lighting/shadow while preserving real color.
+//  Median filter + unsharp mask (aimed at printed-text sharpening) are
+//  skipped for color mode — appropriate for a mode about preserving
+//  photographic content, not maximizing text crispness.
 // ============================================================
 
 const BG_LONG_EDGE = 64;
@@ -169,19 +181,65 @@ function _applyEnhance(canvas, strength) {
   ctx.putImageData(img, 0, 0);
 }
 
+// Same flat-field correction as _flatFieldCorrect, generalized to color:
+// applies the SAME per-pixel ratio (255/background) to all three of
+// R/G/B instead of collapsing to one gray value — brightens/darkens
+// local shading without altering hue/saturation.
+function _flatFieldCorrectColor(src, bg) {
+  const w = src.width, h = src.height;
+  const sctx = src.getContext('2d'), bctx = bg.getContext('2d');
+  const sImg = sctx.getImageData(0, 0, w, h), bImg = bctx.getImageData(0, 0, w, h);
+  const sd = sImg.data, bd = bImg.data;
+  for (let i = 0; i < sd.length; i += 4) {
+    const bgv  = bd[i] < 1 ? 1 : bd[i];
+    const ratio = 255 / bgv;
+    sd[i]     = Math.min(255, Math.max(0, sd[i]     * ratio));
+    sd[i + 1] = Math.min(255, Math.max(0, sd[i + 1] * ratio));
+    sd[i + 2] = Math.min(255, Math.max(0, sd[i + 2] * ratio));
+  }
+  sctx.putImageData(sImg, 0, 0);
+  return src;
+}
+
+// Same contrast/brightness formula as _applyEnhance, applied per-channel
+// independently instead of forcing R=G=B — preserves color.
+function _applyEnhanceColor(canvas, strength) {
+  const w = canvas.width, h = canvas.height;
+  const ctx = canvas.getContext('2d');
+  const img = ctx.getImageData(0, 0, w, h);
+  const d = img.data;
+  const contrast   = 1 + strength * 1.2;
+  const brightness = strength * 40;
+  for (let i = 0; i < d.length; i += 4) {
+    d[i]     = Math.min(255, Math.max(0, (d[i]     - 128) * contrast + 128 + brightness));
+    d[i + 1] = Math.min(255, Math.max(0, (d[i + 1] - 128) * contrast + 128 + brightness));
+    d[i + 2] = Math.min(255, Math.max(0, (d[i + 2] - 128) * contrast + 128 + brightness));
+  }
+  ctx.putImageData(img, 0, 0);
+}
+
 /**
- * Runs the full clean-scan-style enhance pipeline on a decoded photo and
+ * Runs the clean-scan-style filter pipeline on a decoded photo and
  * returns a filtered JPEG Blob. `imgEl` can be any CanvasImageSource with
  * natural dimensions (a decoded <img>, an ImageBitmap, ...).
  * @param {CanvasImageSource & {naturalWidth?: number, width?: number}} imgEl
+ * @param {'grayscale'|'color'} [mode='grayscale']
  * @returns {Promise<Blob>}
  */
-export function filterScanPhoto(imgEl) {
+export function filterScanPhoto(imgEl, mode = 'grayscale') {
   const w = imgEl.naturalWidth || imgEl.width;
   const h = imgEl.naturalHeight || imgEl.height;
   const src = document.createElement('canvas');
   src.width = w; src.height = h;
   src.getContext('2d').drawImage(imgEl, 0, 0);
+
+  if (mode === 'color') {
+    const gray = _toGrayscaleCanvas(src);
+    const bg   = _estimateBackground(gray);
+    _flatFieldCorrectColor(src, bg);
+    _applyEnhanceColor(src, _STRENGTH);
+    return new Promise(res => src.toBlob(res, 'image/jpeg', 0.87));
+  }
 
   const gray = _toGrayscaleCanvas(src);
   const bg   = _estimateBackground(gray);

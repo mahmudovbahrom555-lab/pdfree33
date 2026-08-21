@@ -689,6 +689,9 @@ window.PDFREE_LOCALE = {
   j2p_image_preview:   'Anteprima immagini — trascina per riordinare',
   j2p_will_be_rotated: 'Verrà ruotata',
   j2p_scan_camera:     '📷 Scansiona con la fotocamera',
+  j2p_scan_filter:           'Filtro',
+  j2p_scan_filter_grayscale: 'Scala di grigi',
+  j2p_scan_filter_color:     'Colore',
   j2p_scan_processing: 'Elaborazione…',
   j2p_scan_failed:     'Impossibile elaborare la foto — riprova',
 

@@ -13,6 +13,7 @@ export default [
         console: 'readonly', fetch: 'readonly', URL: 'readonly',
         URLSearchParams: 'readonly', CustomEvent: 'readonly',
         setTimeout: 'readonly', clearTimeout: 'readonly',
+        setInterval: 'readonly', clearInterval: 'readonly',
         requestAnimationFrame: 'readonly', cancelAnimationFrame: 'readonly',
         requestIdleCallback: 'readonly',
         Worker: 'readonly', File: 'readonly', Blob: 'readonly',

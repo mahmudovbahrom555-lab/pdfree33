@@ -36,6 +36,7 @@ let _warnedManyImages = false;
 // ── State ──────────────────────────────────────────────────────
 let _pageSize    = 'auto';      // 'auto' | 'a4' | 'letter' | 'fit'
 let _orientation = 'auto';     // 'auto' | 'portrait' | 'landscape'
+let _scanFilterMode = 'grayscale'; // 'grayscale' | 'color' — jpg2pdf's own "Scan with Camera" filter (js/scanFilter.js), unrelated to page image compression above
 let _compress    = true;
 let _quality     = 0.82;       // JPEG quality 0–1
 let _exifAngles  = [];         // cached EXIF rotation per file (degrees)
@@ -111,6 +112,7 @@ export function hideJpg2PdfOptions() {
   container.innerHTML = '';
   _pageSize    = 'auto';
   _orientation = 'auto';
+  _scanFilterMode = 'grayscale';
   _compress    = true;
   _quality     = 0.82;
   _exifAngles  = [];
@@ -158,6 +160,20 @@ function _settingsHtml() {
     <div class="j2p-row">
       <button type="button" class="split-action-btn" id="j2pScanBtn">${t('j2p_scan_camera')}</button>
       <input type="file" accept="image/*" capture="environment" id="j2pScanInput" style="display:none">
+      <div class="j2p-group">
+        <span class="j2p-group__label">${t('j2p_scan_filter')}</span>
+        <div class="j2p-chips" role="group" aria-label="${t('j2p_scan_filter')}">
+          ${[
+            { value: 'grayscale', label: t('j2p_scan_filter_grayscale') },
+            { value: 'color',     label: t('j2p_scan_filter_color') },
+          ].map(o => `
+            <label class="j2p-chip${_scanFilterMode === o.value ? ' j2p-chip--active' : ''}" data-value="${o.value}" data-name="j2pScanFilter">
+              <input type="radio" name="j2pScanFilter" value="${o.value}"${_scanFilterMode === o.value ? ' checked' : ''}>
+              ${o.label}
+            </label>
+          `).join('')}
+        </div>
+      </div>
     </div>
 
     <div class="j2p-row">
@@ -332,6 +348,12 @@ function _bindSettingsEvents() {
         el.classList.toggle('j2p-chip--active', el.dataset.value === _orientation);
       });
     }
+    if (e.target.name === 'j2pScanFilter') {
+      _scanFilterMode = e.target.value;
+      container.querySelectorAll('[data-name="j2pScanFilter"]').forEach(el => {
+        el.classList.toggle('j2p-chip--active', el.dataset.value === _scanFilterMode);
+      });
+    }
     if (e.target.id === 'j2pCompressCheck') {
       _compress = e.target.checked;
       const row = id('j2pQualityRow');
@@ -413,7 +435,7 @@ async function _processScanSource(scanBtn, source) {
       imgSource = img;
     }
 
-    const blob = await filterScanPhoto(imgSource);
+    const blob = await filterScanPhoto(imgSource, _scanFilterMode);
     const scanFile = new File([blob], `scan-${Date.now()}.jpg`, { type: 'image/jpeg' });
     addFiles([scanFile]);
   } catch {

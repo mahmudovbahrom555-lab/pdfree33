@@ -691,6 +691,9 @@ window.PDFREE_LOCALE = {
   j2p_image_preview:   '이미지 미리보기 — 드래그하여 순서 변경',
   j2p_will_be_rotated: '회전됨',
   j2p_scan_camera:     '📷 카메라로 스캔',
+  j2p_scan_filter:           '필터',
+  j2p_scan_filter_grayscale: '회색조',
+  j2p_scan_filter_color:     '컬러',
   j2p_scan_processing: '처리 중…',
   j2p_scan_failed:     '사진을 처리할 수 없습니다 — 다시 시도해 주세요',
 

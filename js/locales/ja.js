@@ -692,6 +692,9 @@ window.PDFREE_LOCALE = {
   j2p_image_preview:   '画像プレビュー — ドラッグして並べ替え',
   j2p_will_be_rotated: '回転されます',
   j2p_scan_camera:     '📷 カメラでスキャン',
+  j2p_scan_filter:           'フィルター',
+  j2p_scan_filter_grayscale: 'グレースケール',
+  j2p_scan_filter_color:     'カラー',
   j2p_scan_processing: '処理中…',
   j2p_scan_failed:     '写真を処理できませんでした — もう一度お試しください',
 

@@ -690,6 +690,9 @@ window.PDFREE_LOCALE = {
   j2p_image_preview:   'Предпросмотр изображений — перетащите для изменения порядка',
   j2p_will_be_rotated: 'Будет повёрнуто',
   j2p_scan_camera:     '📷 Сканировать камерой',
+  j2p_scan_filter:           'Фильтр',
+  j2p_scan_filter_grayscale: 'Оттенки серого',
+  j2p_scan_filter_color:     'Цвет',
   j2p_scan_processing: 'Обработка…',
   j2p_scan_failed:     'Не удалось обработать фото — попробуйте снова',
 

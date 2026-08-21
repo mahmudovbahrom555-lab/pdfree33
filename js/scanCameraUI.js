@@ -6,12 +6,18 @@
 //  corner-detection/correction modal for jpg2pdf's "Scan with
 //  Camera" flow.
 //
-//  Flow: 'live' (getUserMedia video preview + capture button) →
-//  freeze frame → 'review' (frozen frame + 4 draggable corner
-//  handles, auto-detected via js/scanGeometry.js's detectDocumentQuad,
-//  falling back to defaultInsetQuad if nothing confident was found) →
-//  confirm → js/scanGeometry.js's warpToRect() → callback with the
-//  corrected canvas.
+//  Flow: 'live' (getUserMedia video preview + capture button, with a
+//  continuously-updating live corner-tracking overlay — added
+//  2026-08-22 after a competitive test against PDF24's camera scanner
+//  showed it doing the same; throttled to ~5fps, non-interactive, just
+//  a framing guide) → freeze frame → 'review' (frozen frame + 4
+//  draggable corner handles, auto-detected via js/scanGeometry.js's
+//  detectDocumentQuad, falling back to defaultInsetQuad if nothing
+//  confident was found) → confirm → js/scanGeometry.js's warpToRect()
+//  → callback with the corrected canvas. The live overlay is purely a
+//  visual guide during framing — the actual quad used for the warp is
+//  still (re-)detected once on the frozen, full-resolution frame,
+//  unchanged from before.
 //
 //  Modal DOM is created fresh on open and torn down on close (same
 //  create/appendChild(document.body)/remove pattern as js/feedback.js's
@@ -36,6 +42,9 @@ let _displayScale    = 1;      // displayed CSS px per full-res px
 let _onConfirm       = null;
 let _onFallback       = null;
 let _resizeHandler    = null;
+let _liveTrackInterval = null;
+
+const _LIVE_TRACK_INTERVAL_MS = 200; // ~5fps — a framing guide doesn't need real video framerate
 
 /**
  * Opens the live-camera scan modal.
@@ -59,6 +68,7 @@ function _stopStream() {
 
 function _closeModal() {
   _stopStream();
+  _stopLiveTracking();
   window.removeEventListener('resize', _resizeHandler);
   document.removeEventListener('keydown', _onKeydown);
   _modal?.remove();
@@ -99,7 +109,14 @@ async function _startLiveView() {
   const status = document.getElementById('scanCamStatus');
   const actions = document.getElementById('scanCamActions');
 
-  stage.innerHTML = `<video id="scanCamVideo" class="scan-cam-video" autoplay playsinline muted></video>`;
+  stage.innerHTML = `
+    <div class="scan-cam-video-wrap" id="scanCamVideoWrap">
+      <video id="scanCamVideo" class="scan-cam-video" autoplay playsinline muted></video>
+      <svg class="scan-cam-outline" id="scanCamLiveOutline" preserveAspectRatio="none">
+        <polygon id="scanCamLivePolygon"></polygon>
+      </svg>
+    </div>
+  `;
   status.textContent = '';
   actions.innerHTML = `<button type="button" class="split-action-btn" id="scanCamCaptureBtn" disabled>${t('scan_cam_take_photo')}</button>`;
 
@@ -108,6 +125,14 @@ async function _startLiveView() {
     _onFallback?.();
     return;
   }
+
+  // Starts loading in parallel with the camera permission prompt below —
+  // doesn't block the video preview either way. The live tracking overlay
+  // just doesn't appear until this resolves (checked each tick via
+  // window.cv?.Mat, not a separate readiness flag — avoids the overlay
+  // getting stuck "not ready" if the modal is closed and reopened after
+  // OpenCV already loaded once).
+  loadOpenCv().catch(() => {});
 
   try {
     _stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
@@ -122,11 +147,55 @@ async function _startLiveView() {
   video.srcObject = _stream;
 
   const captureBtn = document.getElementById('scanCamCaptureBtn');
-  video.addEventListener('loadedmetadata', () => { if (captureBtn) captureBtn.disabled = false; });
+  video.addEventListener('loadedmetadata', () => {
+    if (captureBtn) captureBtn.disabled = false;
+    _startLiveTracking(video);
+  });
   captureBtn.addEventListener('click', () => _capture(video));
 }
 
+// Continuously re-detects the document quad on the live video feed as a
+// non-interactive framing guide — throttled (not per-frame; video is
+// ~30fps, far more than a guide overlay needs) and cleared on capture/
+// retake/close so it never keeps running against a stopped/gone video.
+function _startLiveTracking(video) {
+  _stopLiveTracking();
+  const probe = document.createElement('canvas');
+  _liveTrackInterval = setInterval(() => {
+    if (!window.cv?.Mat || !video.videoWidth) return;
+    probe.width  = video.videoWidth;
+    probe.height = video.videoHeight;
+    probe.getContext('2d').drawImage(video, 0, 0);
+
+    let quad = null;
+    try { quad = detectDocumentQuad(probe); } catch { /* skip this tick, try again next */ }
+    _renderLiveOverlay(quad, video);
+  }, _LIVE_TRACK_INTERVAL_MS);
+}
+
+function _stopLiveTracking() {
+  if (_liveTrackInterval) { clearInterval(_liveTrackInterval); _liveTrackInterval = null; }
+}
+
+function _renderLiveOverlay(quad, video) {
+  const svg = document.getElementById('scanCamLiveOutline');
+  const polygon = document.getElementById('scanCamLivePolygon');
+  if (!svg || !polygon) return;
+  if (!quad) { polygon.setAttribute('points', ''); return; } // nothing confident this tick — don't show a stale/wrong guide
+
+  const rect  = video.getBoundingClientRect();
+  const scale = rect.width / video.videoWidth;
+  svg.setAttribute('width', rect.width);
+  svg.setAttribute('height', rect.height);
+  svg.style.width  = rect.width + 'px';
+  svg.style.height = rect.height + 'px';
+
+  const pts = ['tl', 'tr', 'br', 'bl'].map(k => `${quad[k].x * scale},${quad[k].y * scale}`).join(' ');
+  polygon.setAttribute('points', pts);
+}
+
 function _capture(video) {
+  _stopLiveTracking();
   const canvas = document.createElement('canvas');
   canvas.width  = video.videoWidth;
   canvas.height = video.videoHeight;

@@ -689,6 +689,9 @@ window.PDFREE_LOCALE = {
   j2p_image_preview:   'Afbeeldingsvoorbeeld — sleep om te herschikken',
   j2p_will_be_rotated: 'Wordt gedraaid',
   j2p_scan_camera:     '📷 Scannen met camera',
+  j2p_scan_filter:           'Filter',
+  j2p_scan_filter_grayscale: 'Grijswaarden',
+  j2p_scan_filter_color:     'Kleur',
   j2p_scan_processing: 'Verwerken…',
   j2p_scan_failed:     'Kon de foto niet verwerken — probeer het opnieuw',
 
