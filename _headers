@@ -5,11 +5,20 @@
 # HTML: short TTL with stale-while-revalidate (fast CDN serving with freshness)
 
 # Global security headers applied to every response
+# Permissions-Policy: camera=(self) — jpg2pdf's live-camera scan flow
+# (js/scanCameraUI.js, getUserMedia) needs camera access on pdfree.io's
+# own pages; (self) still blocks any third-party embed of this site
+# from ever requesting it. Real production-only bug found via
+# Playwright during the 2026-08-22 QA pass: this header can't be set
+# via a <meta> tag (unlike CSP), so it never showed up testing against
+# a local dist/ server (which sends no such header at all) — worked
+# locally, silently failed camera access in production until fixed
+# here. microphone/geolocation stay fully disabled — nothing uses them.
 /*
   X-Content-Type-Options: nosniff
   X-Frame-Options: SAMEORIGIN
   Referrer-Policy: strict-origin-when-cross-origin
-  Permissions-Policy: camera=(), microphone=(), geolocation=()
+  Permissions-Policy: camera=(self), microphone=(), geolocation=()
   Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 
 /*.html
