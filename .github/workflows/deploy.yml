@@ -42,6 +42,23 @@ jobs:
       - name: Lint JavaScript
         run: npm run lint -- --quiet
 
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: E2E — protect password survives a batch file add
+        # Real-browser regression gate for the security-relevant bug fixed
+        # in commit 873f63c (js/protectUI.js's initProtectOptions rebuilding
+        # the panel — and silently clearing a typed password — every time a
+        # 2nd file joined the batch queue). tests/protect.logic.test.js
+        # already pins the fixed state machine in isolation; this drives the
+        # real module through a real browser so a future refactor that
+        # breaks the same property fails the build, not just gets noticed
+        # after shipping. See tests/e2e/protect.e2e.mjs's header comment.
+        run: |
+          python3 -m http.server 8934 --directory dist &
+          sleep 2
+          PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:protect
+
       - name: Guard — no conflicting wrangler configs
         run: |
           for f in wrangler.jsonc wrangler.json; do
