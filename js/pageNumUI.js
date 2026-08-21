@@ -62,6 +62,16 @@ export function initPageNumOptions() {
   const container = id('pageNumOptions');
   if (!container) return;
   container.style.display = 'block';
+  // pagenum is multi:true/batch:true — dropping a 2nd file into the queue
+  // re-fires 'pdfree:files-added' → this function again, while the panel
+  // (file-independent: no filename/page-count content) is already open.
+  // Same bug class as protectUI.js's fix in this same audit pass: an
+  // unconditional _render() here rebuilds every input from scratch,
+  // dropping focus/cursor position on whichever field the user is
+  // mid-typing (From/To page, Start at, font size). State values
+  // themselves survive (closure vars, not reset here), but the DOM node
+  // identity doesn't — skip the rebuild entirely if already rendered.
+  if (id('pnFromInput')) return;
   _render();
 }
 

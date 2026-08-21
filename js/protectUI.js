@@ -51,6 +51,19 @@ export function initProtectOptions() {
   const container = id('protectOptions');
   if (!container) return;
   container.style.display = 'block';
+  // protect is multi:true/batch:true — dropping a 2nd file into the queue
+  // re-fires 'pdfree:files-added' → this function again, while the panel
+  // (file-independent: no filename/page-count content) is already open.
+  // Real bug found during the 2026-08-21 Phase 3 audit: an unconditional
+  // _render() here wiped #protUserPwd/#protOwnerPwd back to their empty
+  // template (no `value` attribute — passwords are deliberately never
+  // baked into the HTML, see getProtectParams' header comment). Since
+  // getProtectParams() reads the password straight from the live DOM at
+  // submit time, a password typed before the 2nd file lands would
+  // silently revert to empty — a file could ship with NO open password
+  // while the user believed they'd set one. Skip the rebuild entirely if
+  // already rendered; nothing here depends on which/how many files are queued.
+  if (id('protUserPwd')) return;
   _render(container);
 }
 
