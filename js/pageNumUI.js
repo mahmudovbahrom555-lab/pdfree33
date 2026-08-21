@@ -71,6 +71,12 @@ export function initPageNumOptions() {
   // mid-typing (From/To page, Start at, font size). State values
   // themselves survive (closure vars, not reset here), but the DOM node
   // identity doesn't — skip the rebuild entirely if already rendered.
+  //
+  // CAUTION — same as protectUI.js's identical guard: if this panel ever
+  // grows file-dependent content (e.g. From/To page caps actually clamped
+  // to the real page count instead of a hardcoded 9999), this guard would
+  // silently stop updating that content when a later file joins the batch.
+  // Switch to a static/per-file split (merge.js/jpg2pdf.js's pattern) then.
   if (id('pnFromInput')) return;
   _render();
 }

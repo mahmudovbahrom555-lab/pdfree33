@@ -63,6 +63,13 @@ export function initProtectOptions() {
   // silently revert to empty — a file could ship with NO open password
   // while the user believed they'd set one. Skip the rebuild entirely if
   // already rendered; nothing here depends on which/how many files are queued.
+  //
+  // CAUTION if this panel ever grows file-dependent content (a filename or
+  // page-count display, like organizeUI.js/compressUI.js have): this guard
+  // would then silently stop updating that content on later files. At that
+  // point switch to merge.js's/jpg2pdf.js's pattern instead — split into a
+  // static part (rendered once, e.g. passwords/permissions) and a per-file
+  // part (its own wrapper element, refreshed every call) — not a full skip.
   if (id('protUserPwd')) return;
   _render(container);
 }
