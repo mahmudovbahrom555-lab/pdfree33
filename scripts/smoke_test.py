@@ -78,6 +78,12 @@ check("'ocr'" in app_js and 'SELF_MANAGED_TOOLS' in app_js,
       "app.js: 'ocr' отсутствует в SELF_MANAGED_TOOLS")
 
 # ── git: нет незапушенных коммитов ────────────────────────────────────────────
+# This script is local-dev-only today (not wired into .github/workflows/deploy.yml),
+# so a shallow CI checkout never affects it. If it's ever added to a CI job,
+# that job's checkout step needs `fetch-depth: 0` (or at least enough depth to
+# reach origin/main) — a shallow clone breaks this exact `git log` call the
+# same way it broke scripts/build.py's _git_lastmod() (see
+# gsc_crawled_not_indexed_2026_08 memory / deploy.yml's checkout comment).
 import subprocess
 result = subprocess.run(
     ['git', 'log', '--oneline', 'origin/main..HEAD'],

@@ -23,6 +23,18 @@
 //  dates, max single-date share 22.7% as of 2026-08-22) while still being
 //  decisively tripped by the bug's signature (collapses to ~1-3 dates,
 //  ~95%+ on one).
+//
+//  These thresholds are tuned to TODAY's content update cadence, not a
+//  law of nature — as the site matures and content is edited less
+//  frequently (fewer commits touching data/content/**), the number of
+//  distinct dates will naturally shrink and could eventually approach
+//  these limits on its own, with no bug involved. If this test starts
+//  failing without a corresponding CI/build.py change, first check
+//  whether that's what happened (re-run the "current baseline" log line
+//  below against real recent history) before assuming a regression — and
+//  if the site has genuinely slowed down, loosen the thresholds
+//  deliberately with a comment explaining the new baseline, rather than
+//  deleting or silencing the test.
 // ============================================================
 
 import { existsSync, readFileSync } from 'fs';
