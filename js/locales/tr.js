@@ -706,12 +706,9 @@ window.PDFREE_LOCALE = {
   j2p_exif_note_many:  '📐 {n} görsel otomatik olarak döndürülecek (EXIF düzeltmesi)',
   j2p_image_preview:   'Görsel önizleme — sıralamak için sürükleyin',
   j2p_will_be_rotated: 'Döndürülecek',
-  j2p_scan_camera:     '📷 Kamerayla Tara',
   j2p_scan_filter:           'Filtre',
   j2p_scan_filter_grayscale: 'Gri Tonlama',
   j2p_scan_filter_color:     'Renkli',
-  j2p_scan_processing: 'İşleniyor…',
-  j2p_scan_failed:     'Fotoğraf işlenemedi — tekrar deneyin',
 
   scan_cam_title:            'Belgeyi tara',
   scan_cam_close:            'Kapat',

@@ -14,53 +14,23 @@
     worker-src: blob: REQUIRED — pdf.js ≥ 3.x creates worker via blob URL.
     connect-src: *.doubleclick.net REQUIRED for AdSense reporting.
     img-src: data: blob: REQUIRED — pdf.js thumbnails + JPG→PDF previews.
-    docs.opencv.org REQUIRED in script-src — jpg2pdf's live-camera scan
-      flow lazy-loads OpenCV.js from there (js/lazyLibs.js's
-      loadOpenCv()) for document-edge detection; real CSP violation
-      found via Playwright during the 2026-08-22 QA pass, not a
-      hypothetical — the script load was silently blocked in every
-      browser respecting this policy, production included.
-    'unsafe-eval' REQUIRED in script-src too — the docs.opencv.org CDN
-      build's Emscripten runtime calls `new Function(...)` in its own
-      top-level boilerplate (createNamedFunction, sets up error
-      subclasses) on every load, before any cv.* function runs, so
-      'wasm-unsafe-eval' (WASM-compile only) isn't enough — confirmed
-      via a real Playwright stack trace, not assumed.
-      ⚠ REAL CONSTRAINT, not hypothetical: confirmed via
-      `grep -rn "eval(\|new Function(" js/*.js` (excl. vendor/) that
-      this project's OWN code has ZERO such calls today — that's WHY
-      this is currently low-risk despite the relaxed policy. Never
-      write eval()/new Function() against user-controlled data
-      (filename, URL param, uploaded content, translated string)
-      anywhere in js/*.js — with 'unsafe-eval' now present, doing so
-      would turn this into a directly exploitable XSS path, not a
-      theoretical one. Treat any future need for dynamic evaluation as
-      a design-review trigger, not a quick add. See index.html's CSP
-      comment block for the full explanation.
-    connect-src: data: also REQUIRED — OpenCV.js's runtime fetches its
-      own WASM bytes via a data: base64 URI internally (no network
-      request, nothing leaves the browser). Low-risk relaxation
-      compared to the script-src ones above.
     ════════════════════════════════════════════════════════════════
   -->
   <meta http-equiv="Content-Security-Policy" content="
     default-src 'self';
     script-src  'self'
                 'wasm-unsafe-eval'
-                'unsafe-eval'
                 blob:
                 https://cdnjs.cloudflare.com
                 https://esm.sh
                 https://cdn.jsdelivr.net
                 https://unpkg.com
-                https://docs.opencv.org
                 https://pagead2.googlesyndication.com
                 https://static.cloudflareinsights.com;
     style-src   'self' 'unsafe-inline';
     font-src    'self';
     img-src     'self' data: blob: https:;
     connect-src 'self'
-                data:
                 https://cdnjs.cloudflare.com
                 https://cdn.jsdelivr.net
                 https://fonts.gstatic.com

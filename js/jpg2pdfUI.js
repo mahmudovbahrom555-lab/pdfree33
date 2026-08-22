@@ -17,13 +17,11 @@
 import { id }       from './utils.js';
 import { t, tp }    from './i18n.js';
 import { showToast } from './ui.js';
-import { selectedFiles, isFilesLocked, addFiles } from './files.js';
+import { selectedFiles, isFilesLocked } from './files.js';
 import { bindDragReorder } from './dragReorder.js';
 import { presetRememberCard } from './uiComponents.js';
 import { loadPreset, clearPreset } from './presets.js';
 import { isHeicFile, decodeHeicToJpegBlob } from './heicDecode.js';
-import { filterScanPhoto } from './scanFilter.js';
-import { openScanCamera } from './scanCameraUI.js';
 
 // Soft, non-blocking heads-up — not a hard cap. Canvas thumbnail decoding
 // happens one file at a time (see _renderPreviews), so memory pressure is
@@ -36,7 +34,6 @@ let _warnedManyImages = false;
 // ── State ──────────────────────────────────────────────────────
 let _pageSize    = 'auto';      // 'auto' | 'a4' | 'letter' | 'fit'
 let _orientation = 'auto';     // 'auto' | 'portrait' | 'landscape'
-let _scanFilterMode = 'grayscale'; // 'grayscale' | 'color' — jpg2pdf's own "Scan with Camera" filter (js/scanFilter.js), unrelated to page image compression above
 let _compress    = true;
 let _quality     = 0.82;       // JPEG quality 0–1
 let _exifAngles  = [];         // cached EXIF rotation per file (degrees)
@@ -112,7 +109,6 @@ export function hideJpg2PdfOptions() {
   container.innerHTML = '';
   _pageSize    = 'auto';
   _orientation = 'auto';
-  _scanFilterMode = 'grayscale';
   _compress    = true;
   _quality     = 0.82;
   _exifAngles  = [];
@@ -157,25 +153,6 @@ function _previewsHtml(files) {
 
 function _settingsHtml() {
   return `
-    <div class="j2p-row">
-      <button type="button" class="split-action-btn" id="j2pScanBtn">${t('j2p_scan_camera')}</button>
-      <input type="file" accept="image/*" capture="environment" id="j2pScanInput" style="display:none">
-      <div class="j2p-group">
-        <span class="j2p-group__label">${t('j2p_scan_filter')}</span>
-        <div class="j2p-chips" role="group" aria-label="${t('j2p_scan_filter')}">
-          ${[
-            { value: 'grayscale', label: t('j2p_scan_filter_grayscale') },
-            { value: 'color',     label: t('j2p_scan_filter_color') },
-          ].map(o => `
-            <label class="j2p-chip${_scanFilterMode === o.value ? ' j2p-chip--active' : ''}" data-value="${o.value}" data-name="j2pScanFilter">
-              <input type="radio" name="j2pScanFilter" value="${o.value}"${_scanFilterMode === o.value ? ' checked' : ''}>
-              ${o.label}
-            </label>
-          `).join('')}
-        </div>
-      </div>
-    </div>
-
     <div class="j2p-row">
       <div class="j2p-group">
         <span class="j2p-group__label">${t('j2p_page_size')}</span>
@@ -348,12 +325,6 @@ function _bindSettingsEvents() {
         el.classList.toggle('j2p-chip--active', el.dataset.value === _orientation);
       });
     }
-    if (e.target.name === 'j2pScanFilter') {
-      _scanFilterMode = e.target.value;
-      container.querySelectorAll('[data-name="j2pScanFilter"]').forEach(el => {
-        el.classList.toggle('j2p-chip--active', el.dataset.value === _scanFilterMode);
-      });
-    }
     if (e.target.id === 'j2pCompressCheck') {
       _compress = e.target.checked;
       const row = id('j2pQualityRow');
@@ -376,74 +347,6 @@ function _bindSettingsEvents() {
     });
   }
 
-  _bindScanButton();
-}
-
-// "Scan with Camera" — two entry points feed the same filter+addFiles
-// pipeline (below): the live in-browser viewfinder (js/scanCameraUI.js,
-// getUserMedia + auto corner-detection + perspective correction) when
-// supported, falling back to the phone's native camera app
-// (capture="environment", Phase 1's original behavior — also the
-// desktop fallback, harmless there) when it isn't, or if the user
-// denies camera permission. Either way, the resulting image is
-// filtered through scanFilter.js's clean-scan-style enhance pipeline
-// BEFORE it ever reaches addFiles(), so everything downstream
-// (thumbnail grid, drag-reorder, handleJpg2Pdf assembly) treats it
-// exactly like any gallery-picked image — no tagging/branching needed
-// elsewhere.
-function _bindScanButton() {
-  const scanBtn   = id('j2pScanBtn');
-  const scanInput = id('j2pScanInput');
-  if (!scanBtn || !scanInput) return;
-
-  scanBtn.addEventListener('click', () => {
-    if (navigator.mediaDevices?.getUserMedia) {
-      openScanCamera({
-        onConfirm:  canvas => _processScanSource(scanBtn, canvas),
-        onFallback: () => scanInput.click(),
-      });
-    } else {
-      scanInput.click();
-    }
-  });
-
-  scanInput.addEventListener('change', () => {
-    const file = scanInput.files?.[0];
-    scanInput.value = ''; // reset so capturing again fires 'change' even for the "same" photo slot
-    if (!file) return;
-    _processScanSource(scanBtn, file);
-  });
-}
-
-// Accepts either a File (from the native capture input — needs HEIC-safe
-// decode first, since iOS camera capture can occasionally hand back HEIC
-// depending on device settings) or a canvas (already decoded/corrected —
-// from js/scanCameraUI.js's live-viewfinder flow, which already produced
-// a perspective-warped canvas and has nothing left to decode).
-async function _processScanSource(scanBtn, source) {
-  const originalLabel = scanBtn.textContent;
-  scanBtn.disabled = true;
-  scanBtn.textContent = t('j2p_scan_processing');
-  try {
-    let imgSource = source;
-    if (source instanceof File) {
-      const decoded = isHeicFile(source) ? (await decodeHeicToJpegBlob(source)) ?? source : source;
-      const url = URL.createObjectURL(decoded);
-      const img = new Image();
-      await new Promise((res, rej) => { img.onload = res; img.onerror = rej; img.src = url; });
-      URL.revokeObjectURL(url);
-      imgSource = img;
-    }
-
-    const blob = await filterScanPhoto(imgSource, _scanFilterMode);
-    const scanFile = new File([blob], `scan-${Date.now()}.jpg`, { type: 'image/jpeg' });
-    addFiles([scanFile]);
-  } catch {
-    showToast(t('j2p_scan_failed'));
-  } finally {
-    scanBtn.disabled = false;
-    scanBtn.textContent = originalLabel;
-  }
 }
 
 function _bindThumbGridEvents() {

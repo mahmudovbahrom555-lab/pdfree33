@@ -707,12 +707,9 @@ window.PDFREE_LOCALE = {
   j2p_exif_note_many:  '📐 {n} ảnh sẽ được tự động xoay (hiệu chỉnh EXIF)',
   j2p_image_preview:   'Xem trước hình ảnh — kéo để sắp xếp lại',
   j2p_will_be_rotated: 'Sẽ được xoay',
-  j2p_scan_camera:     '📷 Quét bằng Camera',
   j2p_scan_filter:           'Bộ lọc',
   j2p_scan_filter_grayscale: 'Thang xám',
   j2p_scan_filter_color:     'Màu',
-  j2p_scan_processing: 'Đang xử lý…',
-  j2p_scan_failed:     'Không thể xử lý ảnh đó — hãy thử lại',
 
   scan_cam_title:            'Quét tài liệu',
   scan_cam_close:            'Đóng',

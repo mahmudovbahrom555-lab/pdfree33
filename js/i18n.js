@@ -728,12 +728,9 @@ export const EN = {
   j2p_exif_note_many:  '📐 {n} images will be auto-rotated (EXIF correction)',
   j2p_image_preview:   'Image preview — drag to reorder',
   j2p_will_be_rotated: 'Will be rotated',
-  j2p_scan_camera:     '📷 Scan with Camera',
   j2p_scan_filter:           'Filter',
   j2p_scan_filter_grayscale: 'Grayscale',
   j2p_scan_filter_color:     'Color',
-  j2p_scan_processing: 'Processing…',
-  j2p_scan_failed:     'Could not process that photo — try again',
 
   // ── scanCameraUI.js — live viewfinder + corner-detection modal ──
   scan_cam_title:            'Scan document',

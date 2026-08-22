@@ -707,12 +707,9 @@ window.PDFREE_LOCALE = {
   j2p_exif_note_many:  '📐 {n} gambar akan diputar otomatis (koreksi EXIF)',
   j2p_image_preview:   'Pratinjau gambar — seret untuk mengatur ulang',
   j2p_will_be_rotated: 'Akan diputar',
-  j2p_scan_camera:     '📷 Pindai dengan Kamera',
   j2p_scan_filter:           'Filter',
   j2p_scan_filter_grayscale: 'Skala Abu-abu',
   j2p_scan_filter_color:     'Warna',
-  j2p_scan_processing: 'Memproses…',
-  j2p_scan_failed:     'Tidak dapat memproses foto itu — coba lagi',
 
   scan_cam_title:            'Pindai dokumen',
   scan_cam_close:            'Tutup',

@@ -708,12 +708,9 @@ window.PDFREE_LOCALE = {
   j2p_exif_note_many:  '📐 {n} images seront automatiquement pivotées (correction EXIF)',
   j2p_image_preview:   'Aperçu des images — glissez pour réorganiser',
   j2p_will_be_rotated: 'Sera pivotée',
-  j2p_scan_camera:     "📷 Scanner avec l'appareil photo",
   j2p_scan_filter:           'Filtre',
   j2p_scan_filter_grayscale: 'Niveaux de gris',
   j2p_scan_filter_color:     'Couleur',
-  j2p_scan_processing: 'Traitement en cours…',
-  j2p_scan_failed:     'Impossible de traiter cette photo — réessayez',
 
   scan_cam_title:            'Scanner un document',
   scan_cam_close:            'Fermer',
