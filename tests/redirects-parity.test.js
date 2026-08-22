@@ -45,7 +45,7 @@
 //      matching priority-list update).
 // ============================================================
 
-import { existsSync, readdirSync } from 'fs';
+import { existsSync, appendFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import path from 'path';
 import {
@@ -181,6 +181,44 @@ test('no bare-slug ties are left genuinely unresolved', () => {
     throw new Error(`${AMBIGUOUS_BARE_SLUGS.length} unresolved (no candidate locale in LOCALE_TIE_BREAK_PRIORITY): ${detail}`);
   }
 });
+
+// ── CI job summary ─────────────────────────────────────────────────────────
+// GitHub Actions renders whatever markdown gets appended to the file at
+// $GITHUB_STEP_SUMMARY on the run's summary page — no separate workflow step
+// needed. Every tie-break decision this deploy relies on becomes visible for
+// a quick human re-check without digging through raw `npm test` log output.
+// No-ops locally (env var unset outside CI).
+if (process.env.GITHUB_STEP_SUMMARY) {
+  const lines = ['## Redirect parity check', ''];
+  lines.push(`MANUAL_REDIRECTS: ${Object.keys(MANUAL_REDIRECTS).length} entries · GUESS_REDIRECTS: ${Object.keys(GUESS_REDIRECTS).length} entries`, '');
+
+  if (TIE_BREAK_RESOLVED.length) {
+    lines.push(`### ${TIE_BREAK_RESOLVED.length} bare-slug tie(s) auto-resolved via LOCALE_TIE_BREAK_PRIORITY`, '');
+    lines.push('| Slug | Winner | All candidates |', '|---|---|---|');
+    for (const { slug, winner, candidates } of TIE_BREAK_RESOLVED) {
+      lines.push(`| \`/${slug}/\` | \`${winner}\` | ${candidates.map(c => `\`${c}\``).join(', ')} |`);
+    }
+    lines.push('');
+  }
+  if (overlapKeys.length) {
+    lines.push(`### ${overlapKeys.length} MANUAL_REDIRECTS key(s) overlapping GUESS_REDIRECTS`, '');
+    lines.push('| Key | Manual target | Auto-derived target | |', '|---|---|---|---|');
+    for (const key of overlapKeys) {
+      const manual = MANUAL_REDIRECTS[key], guess = GUESS_REDIRECTS[key];
+      lines.push(`| \`${key}\` | \`${manual}\` | \`${guess}\` | ${manual === guess ? '⚠ REDUNDANT — safe to delete' : '⚠ OVERRIDE — confirm intentional'} |`);
+    }
+    lines.push('');
+  }
+  if (manualRealPageShadows.length) {
+    lines.push(`### ${manualRealPageShadows.length} MANUAL_REDIRECTS key(s) shadowing a real page (confirm intentional)`, '');
+    for (const k of manualRealPageShadows) lines.push(`- \`${k}\` -> \`${MANUAL_REDIRECTS[k]}\``);
+    lines.push('');
+  }
+  lines.push(`**${failed > 0 ? `✗ ${failed} check(s) failed` : '✓ all checks passed'}**`);
+  try {
+    appendFileSync(process.env.GITHUB_STEP_SUMMARY, lines.join('\n') + '\n');
+  } catch { /* best-effort — never fail the test run over the summary write itself */ }
+}
 
 // ── Summary ────────────────────────────────────────────────
 console.log(`\n${'─'.repeat(40)}`);
