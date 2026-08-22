@@ -34,6 +34,7 @@ window.PDFREE_LOCALE = {
     unlock:           ['pdf entsperren', 'passwort entfernen', 'pdf passwort entfernen'],
     flatten:          ['abflachen', 'formular sperren', 'nicht bearbeitbar', 'felder fixieren', 'pdf sperren'],
     compare:          ['vergleichen', 'unterschied', 'unterschiede', 'änderungen', 'pdfs vergleichen', 'änderungen finden'],
+    scanDocument:     ['scannen', 'scanner', 'dokument scannen', 'scan zu pdf', 'kamera scan', 'foto scannen'],
     pdf2pdfa:         ['pdf/a', 'pdfa', 'archivierung', 'archivtauglich', 'pdf/a prüfen', 'iso 19005', 'langzeitarchivierung'],
   },
 
@@ -615,6 +616,8 @@ window.PDFREE_LOCALE = {
   val_fill_required_prefix: 'Erforderlich:',
   val_analysing_pdf:        'PDF wird analysiert…',
   val_enter_password:       'Gib das PDF-Passwort ein',
+  val_scan_review_pending:  'Bitte zuerst die gescannten Seiten überprüfen',
+  val_scan_no_files:        'Füge mindestens ein Foto zum Scannen hinzu',
 
   // extractUI.js (backs split + extract)
   ext_loading:            'Seiten werden geladen…',
@@ -703,11 +706,18 @@ window.PDFREE_LOCALE = {
   scan_cam_take_photo:       'Foto aufnehmen',
   scan_cam_permission_denied: 'Kamerazugriff verweigert — Dateiauswahl wird stattdessen geöffnet',
   scan_cam_retake:           'Erneut aufnehmen',
+  scan_cam_skip:             'Überspringen — so verwenden',
   scan_cam_use_crop:         'Diesen Ausschnitt verwenden',
   scan_cam_detecting:        'Dokumentkanten werden erkannt…',
   scan_cam_detect_fallback:  'Kanten konnten nicht automatisch erkannt werden — ziehe die Ecken an dein Dokument',
   scan_cam_processing:       'Wird verarbeitet…',
   scan_cam_processing_failed: 'Foto konnte nicht verarbeitet werden — bitte erneut versuchen',
+
+  sd_loading:              'Bilder werden geladen…',
+  sd_take_photo:           '📷 Foto aufnehmen',
+  sd_pending_review:       'Prüfung erforderlich',
+  sd_review_decode_failed: '{name} konnte nicht gelesen werden — übersprungen',
+  sd_capture_failed:       'Foto konnte nicht verarbeitet werden — bitte erneut versuchen',
   j2p_page_size:       'Seitengröße',
   j2p_size_auto:       '📐 Auto',
   j2p_fit:             '⤡ Anpassen',

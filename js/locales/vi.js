@@ -34,6 +34,7 @@ window.PDFREE_LOCALE = {
     unlock:           ['mở khóa pdf', 'gỡ mật khẩu', 'xóa mật khẩu', 'mở file khóa', 'bỏ khóa pdf'],
     flatten:          ['khóa biểu mẫu', 'không chỉnh sửa được', 'khóa pdf', 'cố định trường', 'không cho sửa nữa'],
     compare:          ['so sánh', 'khác biệt', 'so sánh pdf', 'tìm thay đổi', 'đối chiếu'],
+    scanDocument:     ['quét', 'máy quét', 'quét tài liệu', 'quét sang pdf', 'quét bằng camera', 'quét ảnh'],
     pdf2pdfa:         ['pdf/a', 'pdfa', 'lưu trữ', 'lưu trữ lâu dài', 'kiểm tra pdf/a', 'iso 19005'],
   },
 
@@ -613,6 +614,8 @@ window.PDFREE_LOCALE = {
   val_fill_required_prefix: 'Bắt buộc:',
   val_analysing_pdf:        'Đang phân tích PDF…',
   val_enter_password:       'Nhập mật khẩu PDF',
+  val_scan_review_pending:  'Hãy hoàn tất việc xem lại các trang đã quét trước',
+  val_scan_no_files:        'Thêm ít nhất một ảnh để quét',
 
   // extractUI.js (backs split + extract)
   ext_loading:            'Đang tải trang…',
@@ -701,11 +704,18 @@ window.PDFREE_LOCALE = {
   scan_cam_take_photo:       'Chụp ảnh',
   scan_cam_permission_denied: 'Quyền truy cập camera bị từ chối — đang chuyển sang chọn tệp',
   scan_cam_retake:           'Chụp lại',
+  scan_cam_skip:             'Bỏ qua — dùng nguyên trạng',
   scan_cam_use_crop:         'Dùng vùng cắt này',
   scan_cam_detecting:        'Đang phát hiện cạnh tài liệu…',
   scan_cam_detect_fallback:  'Không thể tự động phát hiện cạnh — hãy kéo các góc cho khớp với tài liệu của bạn',
   scan_cam_processing:       'Đang xử lý…',
   scan_cam_processing_failed: 'Không thể xử lý ảnh này — hãy thử lại',
+
+  sd_loading:              'Đang tải hình ảnh…',
+  sd_take_photo:           '📷 Chụp ảnh',
+  sd_pending_review:       'Cần xem lại',
+  sd_review_decode_failed: 'Không thể đọc {name} — đã bỏ qua',
+  sd_capture_failed:       'Không thể xử lý ảnh này — hãy thử lại',
   j2p_page_size:       'Kích thước trang',
   j2p_size_auto:       '📐 Tự động',
   j2p_fit:             '⤡ Vừa khít',

@@ -35,6 +35,7 @@ window.PDFREE_LOCALE = {
     unlock:           ['pdf 잠금 해제', '비밀번호 제거', 'pdf 비밀번호 삭제'],
     flatten:          ['평탄화', '양식 잠금', '편집 불가', '필드 고정', 'pdf 잠금'],
     compare:          ['비교', '차이점', '변경 사항', 'pdf 비교', '차이 찾기', '비교하기'],
+    scanDocument:     ['스캔', '스캐너', '문서 스캔', 'PDF로 스캔', '카메라 스캔', '사진 스캔'],
     pdf2pdfa:         ['pdf/a', '아카이브', '장기보존', 'pdf/a 확인', '보존용 pdf'],
   },
 
@@ -614,6 +615,8 @@ window.PDFREE_LOCALE = {
   val_fill_required_prefix: '필수:',
   val_analysing_pdf:        'PDF 분석 중…',
   val_enter_password:       'PDF 비밀번호를 입력해 주세요',
+  val_scan_review_pending:  '먼저 스캔한 페이지 검토를 완료해주세요',
+  val_scan_no_files:        '스캔할 사진을 하나 이상 추가해주세요',
 
   // extractUI.js (backs split + extract)
   ext_loading:            '페이지를 불러오는 중…',
@@ -702,11 +705,18 @@ window.PDFREE_LOCALE = {
   scan_cam_take_photo:       '사진 촬영',
   scan_cam_permission_denied: '카메라 접근이 거부되었습니다 — 파일 선택으로 전환합니다',
   scan_cam_retake:           '다시 찍기',
+  scan_cam_skip:             '건너뛰기 — 그대로 사용',
   scan_cam_use_crop:         '이 영역 사용',
   scan_cam_detecting:        '문서 가장자리 감지 중…',
   scan_cam_detect_fallback:  '가장자리를 자동으로 감지하지 못했습니다 — 모서리를 드래그하여 문서에 맞춰주세요',
   scan_cam_processing:       '처리 중…',
   scan_cam_processing_failed: '이 사진을 처리할 수 없습니다 — 다시 시도해 주세요',
+
+  sd_loading:              '이미지 로드 중…',
+  sd_take_photo:           '📷 사진 촬영',
+  sd_pending_review:       '검토 필요',
+  sd_review_decode_failed: '{name}을(를) 읽을 수 없습니다 — 건너뜀',
+  sd_capture_failed:       '이 사진을 처리할 수 없습니다 — 다시 시도해 주세요',
   j2p_page_size:       '페이지 크기',
   j2p_size_auto:       '📐 자동',
   j2p_fit:             '⤡ 맞춤',

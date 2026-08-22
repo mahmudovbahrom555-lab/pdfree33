@@ -502,6 +502,27 @@ export const TOOLS = {
     accept:      '.pdf,application/pdf',
     implemented: true,
   },
+  // EN-only, no dedicated locale pages or homepage tool-card in v1 (2026-08-22,
+  // AskUserQuestion-confirmed scope) — reachable via search/tags and direct URL
+  // only, same "EN-only, no locale slugs" pattern scripts/build.py already
+  // documents for draw/compare. getLocalizedTool() (below) falls back to these
+  // en-only titles/descs/btns for any other active UI language, so this is
+  // fully functional site-wide, just not translated yet.
+  scanDocument: {
+    icon:        '📷',
+    title:       'Document Scanner',
+    desc:        'Scan documents with your camera or photos — auto-crop, straighten, and save as PDF',
+    tags:        ['scan', 'scanner', 'document scanner', 'camera scan', 'scan to pdf',
+                  'scanner app', 'phone scanner', 'mobile scanner', 'scan photo to pdf',
+                  'auto crop scan', 'straighten photo', 'scan document'],
+    titles: { en: 'Document Scanner' },
+    descs:  { en: 'Scan documents with your camera or photos — auto-crop, straighten, and save as PDF' },
+    btns:   { en: '📷 Save as PDF' },
+    btn:         '📷 Save as PDF',
+    multi:       true,
+    accept:      '.jpg,.jpeg,.png,.webp,.heic,.heif,image/jpeg,image/png,image/webp,image/heic,image/heif',
+    implemented: true,
+  },
   // Analysis + conversion (Phases 1-2 of the PDF/A plan) done; tool-grid
   // card + this dict's titles/descs/btns are Phase 3. The dedicated SEO
   // page (data/content/*/pdf2pdfa.html) is still EN-only — see

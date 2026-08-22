@@ -33,6 +33,7 @@ window.PDFREE_LOCALE = {
     unlock:           ['déverrouiller pdf', 'supprimer le mot de passe', 'retirer le mot de passe pdf'],
     flatten:          ['aplatir', 'verrouiller le formulaire', 'non modifiable', 'figer les champs', 'verrouiller le pdf'],
     compare:          ['comparer', 'différence', 'différences', 'changements', 'comparer des pdf', 'trouver les différences'],
+    scanDocument:     ['scanner', 'numériser', 'scanner un document', 'numériser en pdf', 'scan avec caméra', 'numériser une photo'],
     pdf2pdfa:         ['pdf/a', 'pdfa', 'archivage', 'archivable', 'vérifier pdf/a', 'iso 19005', 'archivage à long terme'],
   },
 
@@ -614,6 +615,8 @@ window.PDFREE_LOCALE = {
   val_fill_required_prefix: 'Requis :',
   val_analysing_pdf:        'Analyse du PDF…',
   val_enter_password:       'Saisissez le mot de passe du PDF',
+  val_scan_review_pending:  "Terminez d'abord de vérifier vos pages numérisées",
+  val_scan_no_files:        'Ajoutez au moins une photo à scanner',
 
   // extractUI.js (backs split + extract)
   ext_loading:            'Chargement des pages…',
@@ -702,11 +705,18 @@ window.PDFREE_LOCALE = {
   scan_cam_take_photo:       'Prendre une photo',
   scan_cam_permission_denied: "Accès à la caméra refusé — ouverture du sélecteur de fichiers",
   scan_cam_retake:           'Reprendre',
+  scan_cam_skip:             'Ignorer — utiliser tel quel',
   scan_cam_use_crop:         'Utiliser ce recadrage',
   scan_cam_detecting:        'Détection des bords du document…',
   scan_cam_detect_fallback:  "Impossible de détecter les bords automatiquement — faites glisser les coins pour les ajuster à votre document",
   scan_cam_processing:       'Traitement en cours…',
   scan_cam_processing_failed: 'Impossible de traiter cette photo — réessayez',
+
+  sd_loading:              'Chargement des images…',
+  sd_take_photo:           '📷 Prendre une photo',
+  sd_pending_review:       'Vérification requise',
+  sd_review_decode_failed: 'Impossible de lire {name} — ignoré',
+  sd_capture_failed:       'Impossible de traiter cette photo — réessayez',
   j2p_page_size:       'Taille de page',
   j2p_size_auto:       '📐 Auto',
   j2p_fit:             '⤡ Ajuster',

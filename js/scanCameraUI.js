@@ -24,6 +24,17 @@
 //  modal) — this flow opens rarely, no reason to keep it in the DOM
 //  between uses like jpg2pdfUI.js's persistent options panel.
 //
+//  openCropReview({sourceCanvas, onConfirm, onSkip}) — added 2026-08-22
+//  for js/scanDocumentUI.js's gallery-photo review flow — starts
+//  directly at the 'review' stage on an already-decoded image, skipping
+//  'live'/capture entirely. Reuses the exact same review-stage code
+//  (_startReview/_renderHandles/_bindHandleDrag/_confirm) as the camera
+//  flow — only the action buttons differ (gallery mode shows "Skip"
+//  instead of "Retake": a real gallery photo might not be a document at
+//  all, needs an escape hatch that just uses it unprocessed, whereas
+//  "Retake" only makes sense when a live camera is actually available
+//  to go back to).
+//
 //  Pointer handling copies js/drawPointer.js's pattern: native Pointer
 //  Events + setPointerCapture (not js/redactUI.js's mousedown/touchstart
 //  dual-listener style) — simpler, and each corner here moves
@@ -41,6 +52,8 @@ let _quad           = null;   // full-resolution pixel-space {tl,tr,br,bl}
 let _displayScale    = 1;      // displayed CSS px per full-res px
 let _onConfirm       = null;
 let _onFallback       = null;
+let _onSkip            = null;
+let _reviewMode        = 'camera'; // 'camera' | 'gallery' — controls Retake vs Skip in the review stage's action row
 let _resizeHandler    = null;
 let _liveTrackInterval = null;
 
@@ -55,10 +68,31 @@ const _LIVE_TRACK_INTERVAL_MS = 200; // ~5fps — a framing guide doesn't need r
  *   no device) — caller should fall back to the native capture input.
  */
 export function openScanCamera({ onConfirm, onFallback }) {
+  _reviewMode = 'camera';
   _onConfirm  = onConfirm;
   _onFallback = onFallback;
+  _onSkip     = null;
   _buildModal();
   _startLiveView();
+}
+
+/**
+ * Opens the review modal directly on an already-decoded image (no live
+ * camera) — for js/scanDocumentUI.js's gallery-photo review flow.
+ * @param {{sourceCanvas: HTMLCanvasElement, onConfirm: (canvas: HTMLCanvasElement) => void, onSkip: () => void}} handlers
+ *   onConfirm receives the perspective-corrected canvas, same as
+ *   openScanCamera. onSkip is called (and the modal closes) if the user
+ *   decides this photo doesn't need cropping — resolves with nothing;
+ *   caller is responsible for using the original, unprocessed image.
+ */
+export function openCropReview({ sourceCanvas, onConfirm, onSkip }) {
+  _reviewMode      = 'gallery';
+  _capturedCanvas  = sourceCanvas;
+  _onConfirm       = onConfirm;
+  _onSkip          = onSkip;
+  _onFallback      = null;
+  _buildModal();
+  _startReview();
 }
 
 function _stopStream() {
@@ -227,14 +261,20 @@ async function _startReview() {
       <div class="scan-cam-handle" id="scanCamHandle-bl" data-corner="bl"></div>
     </div>
   `;
-  actions.innerHTML = `
-    <button type="button" class="split-action-btn" id="scanCamRetakeBtn">${t('scan_cam_retake')}</button>
-    <button type="button" class="split-action-btn" id="scanCamConfirmBtn" disabled>${t('scan_cam_use_crop')}</button>
-  `;
-  document.getElementById('scanCamRetakeBtn').addEventListener('click', () => {
+  actions.innerHTML = _reviewMode === 'gallery'
+    ? `
+      <button type="button" class="split-action-btn" id="scanCamSkipBtn">${t('scan_cam_skip')}</button>
+      <button type="button" class="split-action-btn" id="scanCamConfirmBtn" disabled>${t('scan_cam_use_crop')}</button>
+    `
+    : `
+      <button type="button" class="split-action-btn" id="scanCamRetakeBtn">${t('scan_cam_retake')}</button>
+      <button type="button" class="split-action-btn" id="scanCamConfirmBtn" disabled>${t('scan_cam_use_crop')}</button>
+    `;
+  document.getElementById('scanCamRetakeBtn')?.addEventListener('click', () => {
     URL.revokeObjectURL(url);
     _startLiveView();
   });
+  document.getElementById('scanCamSkipBtn')?.addEventListener('click', () => _skip(url));
   document.getElementById('scanCamConfirmBtn').addEventListener('click', () => _confirm(url));
 
   status.textContent = t('scan_cam_detecting');
@@ -321,4 +361,11 @@ async function _confirm(reviewUrl) {
   } catch {
     status.textContent = t('scan_cam_processing_failed');
   }
+}
+
+function _skip(reviewUrl) {
+  URL.revokeObjectURL(reviewUrl);
+  const cb = _onSkip;
+  _closeModal();
+  cb?.();
 }

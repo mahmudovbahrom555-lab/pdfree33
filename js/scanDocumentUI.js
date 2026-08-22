@@ -1,0 +1,533 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// Copyright (C) 2025 PDFree Contributors  https://github.com/mahmudovbahrom555-lab/pdfree33
+
+// ============================================================
+//  scanDocumentUI.js — "Document Scanner" tool: camera + gallery
+//  photos, EVERY image goes through the corner-detect/crop-review
+//  modal (js/scanCameraUI.js) before being accepted — unlike jpg2pdf,
+//  where that review is opt-in per-photo (Scan with Camera button
+//  only) so gallery-picking stays fast/frictionless for its "quickly
+//  combine existing images" use case. Split into two separate tools
+//  2026-08-22 specifically to keep that distinction real, not force
+//  review friction onto jpg2pdf's users.
+//
+//  Assembly reuses jpg2pdf's PDF-building path unmodified — registered
+//  with runner:'jpg2pdf' in js/toolRegistrations.js, so getParams()
+//  here returns the exact same shape getJpg2PdfParams() does and
+//  handleJpg2Pdf (js/worker.js) runs with zero changes. Zero new
+//  worker code for this whole tool.
+//
+//  Review-gating: every File that lands in selectedFiles gets tagged
+//  file._scanReviewed = true once it's been through SOME form of
+//  review (camera output arrives already tagged; gallery-picked files
+//  start untagged). initScanDocumentOptions() diffs incoming files
+//  against that tag, queues untagged ones, and processes the queue
+//  SEQUENTIALLY (one review modal at a time, not all at once) via
+//  js/scanCameraUI.js's openCropReview() — confirm crops+filters+
+//  replaces the entry in selectedFiles; skip tags the original
+//  unprocessed file reviewed and leaves it alone (a real photo might
+//  not be a document at all — must have an escape hatch).
+// ============================================================
+
+import { id, esc as _esc } from './utils.js';
+import { t } from './i18n.js';
+import { showToast } from './ui.js';
+import { selectedFiles, isFilesLocked, addFiles } from './files.js';
+import { bindDragReorder } from './dragReorder.js';
+import { presetRememberCard } from './uiComponents.js';
+import { loadPreset, clearPreset } from './presets.js';
+import { isHeicFile, decodeHeicToJpegBlob } from './heicDecode.js';
+import { filterScanPhoto } from './scanFilter.js';
+import { openScanCamera, openCropReview } from './scanCameraUI.js';
+
+const _MANY_IMAGES_WARN_THRESHOLD = 80; // same soft heads-up as jpg2pdfUI.js
+let _warnedManyImages = false;
+
+// ── State ──────────────────────────────────────────────────────
+let _pageSize    = 'auto';
+let _orientation = 'auto';
+let _scanFilterMode = 'grayscale';
+let _compress    = true;
+let _quality     = 0.82;
+let _exifAngles  = [];
+let _rememberLoaded   = false;
+let _settingsRendered = false;
+let _reviewQueue  = [];   // File[] waiting to go through openCropReview
+let _reviewingNow = false; // guards against starting a 2nd review modal while one is open
+
+export function getScanDocumentParams() {
+  return { pageSize: _pageSize, orientation: _orientation,
+           compress: _compress, quality: _quality, exifAngles: _exifAngles,
+           // Not a real assembly param — read by toolRegistrations.js's
+           // validate() to block submitting while a review modal is
+           // still queued/open, so a page can't slip through unreviewed.
+           reviewPending: _reviewingNow || _reviewQueue.length > 0,
+           hasFiles: selectedFiles.length > 0 };
+}
+
+// ── Public API ─────────────────────────────────────────────────
+
+export async function initScanDocumentOptions(files) {
+  const container = id('scanDocumentOptions');
+  if (!container) return;
+
+  if (files.length === 0) { container.style.display = 'none'; return; }
+
+  if (!_rememberLoaded) {
+    _rememberLoaded = true;
+    const saved = loadPreset('scanDocument');
+    if (saved) {
+      _pageSize    = saved.pageSize    ?? _pageSize;
+      _orientation = saved.orientation ?? _orientation;
+      _compress    = saved.compress    ?? _compress;
+      _quality     = saved.quality     ?? _quality;
+    }
+  }
+
+  if (!_settingsRendered) {
+    container.innerHTML = `
+      <div class="j2p-loading">
+        <span class="compress-loading__spinner" aria-hidden="true"></span>
+        ${t('sd_loading')}
+      </div>
+    `;
+  }
+  container.style.display = 'block';
+
+  _exifAngles = await Promise.all(files.map(_readExifAngle));
+
+  if (files.length > _MANY_IMAGES_WARN_THRESHOLD && !_warnedManyImages) {
+    _warnedManyImages = true;
+    showToast(t('warn_many_images', { n: files.length }), 7000);
+  }
+  if (files.length <= _MANY_IMAGES_WARN_THRESHOLD) _warnedManyImages = false;
+
+  _render(files);
+  _queueUnreviewedFiles(files);
+}
+
+export function hideScanDocumentOptions() {
+  const container = id('scanDocumentOptions');
+  if (!container) return;
+  container.style.display = 'none';
+  container.innerHTML = '';
+  _pageSize = 'auto'; _orientation = 'auto'; _scanFilterMode = 'grayscale';
+  _compress = true; _quality = 0.82; _exifAngles = [];
+  _warnedManyImages = false; _rememberLoaded = false; _settingsRendered = false;
+  _reviewQueue = []; _reviewingNow = false;
+}
+
+// ── Review-gating queue ───────────────────────────────────────
+// Every new, untagged file gets queued and reviewed ONE AT A TIME —
+// confirmed via AskUserQuestion during planning: showing N review
+// modals back-to-back is real friction, but it's expected friction
+// here (this tool's whole point), unlike showing them simultaneously
+// which would just be confusing.
+
+function _queueUnreviewedFiles(files) {
+  const unreviewed = files.filter(f => !f._scanReviewed && !_reviewQueue.includes(f));
+  _reviewQueue.push(...unreviewed);
+  _drainReviewQueue();
+}
+
+async function _drainReviewQueue() {
+  if (_reviewingNow || _reviewQueue.length === 0) return;
+  _reviewingNow = true;
+  const file = _reviewQueue.shift();
+
+  // The file may have been removed from selectedFiles while queued
+  // (user deleted it before its review turn came up) — skip silently.
+  if (!selectedFiles.includes(file)) { _reviewingNow = false; _drainReviewQueue(); return; }
+
+  try {
+    const sourceCanvas = await _decodeWithExifRotation(file);
+    openCropReview({
+      sourceCanvas,
+      onConfirm: async warpedCanvas => {
+        const blob = await filterScanPhoto(warpedCanvas, _scanFilterMode);
+        const reviewedFile = new File([blob], file.name.replace(/\.\w+$/, '') + '-scan.jpg', { type: 'image/jpeg' });
+        reviewedFile._scanReviewed = true;
+        const idx = selectedFiles.indexOf(file);
+        if (idx !== -1) {
+          selectedFiles[idx] = reviewedFile;
+          _exifAngles[idx] = 0; // baked into the warp already — no rotation left to apply at assembly time
+        }
+        _reviewingNow = false;
+        _render(selectedFiles);
+        _drainReviewQueue();
+      },
+      onSkip: () => {
+        file._scanReviewed = true; // leave the original file + its real EXIF angle untouched
+        _reviewingNow = false;
+        _render(selectedFiles);
+        _drainReviewQueue();
+      },
+    });
+  } catch {
+    // Decode failure (corrupt image, unsupported format) — tag reviewed
+    // so it doesn't loop forever, leave it in the list as-is, let the
+    // final assembly step surface any real problem with it.
+    file._scanReviewed = true;
+    showToast(t('sd_review_decode_failed', { name: file.name }));
+    _reviewingNow = false;
+    _drainReviewQueue();
+  }
+}
+
+// EXIF-aware decode: unlike jpg2pdf (which passes exifAngles to the
+// worker and lets handleJpg2Pdf rotate at assembly time), the crop
+// review here needs a CORRECTLY-oriented image up front — corner
+// detection on a sideways photo would be meaningless. Draws into a
+// canvas pre-rotated by the EXIF angle (swapping width/height for
+// 90/270) so what the user sees in the review modal is right-side-up.
+async function _decodeWithExifRotation(file) {
+  const angle  = await _readExifAngle(file);
+  const source = isHeicFile(file) ? (await decodeHeicToJpegBlob(file)) ?? file : file;
+  const url = URL.createObjectURL(source);
+  const img = new Image();
+  await new Promise((res, rej) => { img.onload = res; img.onerror = rej; img.src = url; });
+  URL.revokeObjectURL(url);
+
+  if (angle === 0) {
+    const canvas = document.createElement('canvas');
+    canvas.width = img.naturalWidth; canvas.height = img.naturalHeight;
+    canvas.getContext('2d').drawImage(img, 0, 0);
+    return canvas;
+  }
+
+  const swap = angle === 90 || angle === 270;
+  const canvas = document.createElement('canvas');
+  canvas.width  = swap ? img.naturalHeight : img.naturalWidth;
+  canvas.height = swap ? img.naturalWidth  : img.naturalHeight;
+  const ctx = canvas.getContext('2d');
+  ctx.translate(canvas.width / 2, canvas.height / 2);
+  ctx.rotate(angle * Math.PI / 180);
+  ctx.drawImage(img, -img.naturalWidth / 2, -img.naturalHeight / 2);
+  return canvas;
+}
+
+// ── "Take Photo" — always goes through the live camera + review
+//    modal (this tool's whole point). Falls back to a plain native
+//    capture input (no review — same graceful-degradation reasoning
+//    as jpg2pdf's fallback) only when getUserMedia isn't supported.
+//
+//    Lives in scan-document/index.html's STATIC HTML (like the
+//    drop-zone itself), not inside #scanDocumentOptions — real bug
+//    found+fixed during the 2026-08-22 QA pass: the panel (and
+//    anything inside it) only ever renders once files.length > 0, so a
+//    "Take Photo" button INSIDE it could never be clicked for the
+//    FIRST photo — a chicken-and-egg dead end. Bound once here, at
+//    module load, not inside _render().
+//
+//    Adds the resulting file via the real addFiles() (js/files.js) —
+//    same choke point every other file-add path in this codebase goes
+//    through — rather than manually pushing to selectedFiles/_exifAngles
+//    and calling _render() directly, so initScanDocumentOptions() runs
+//    for real (sets container display:block, computes EXIF, etc.) even
+//    on the very first photo, when the panel has never rendered before. ──
+
+function _bindTakePhotoButton() {
+  const btn   = id('sdTakePhotoBtn');
+  const input = id('sdTakePhotoInput');
+  if (!btn || !input) return;
+
+  btn.addEventListener('click', () => {
+    if (navigator.mediaDevices?.getUserMedia) {
+      openScanCamera({
+        onConfirm: async canvas => {
+          const blob = await filterScanPhoto(canvas, _scanFilterMode);
+          const file = new File([blob], `scan-${Date.now()}.jpg`, { type: 'image/jpeg' });
+          file._scanReviewed = true;
+          addFiles([file]);
+        },
+        onFallback: () => input.click(),
+      });
+    } else {
+      input.click();
+    }
+  });
+
+  input.addEventListener('change', async () => {
+    const file = input.files?.[0];
+    input.value = '';
+    if (!file) return;
+    try {
+      const source = isHeicFile(file) ? (await decodeHeicToJpegBlob(file)) ?? file : file;
+      const url = URL.createObjectURL(source);
+      const img = new Image();
+      await new Promise((res, rej) => { img.onload = res; img.onerror = rej; img.src = url; });
+      URL.revokeObjectURL(url);
+      const blob = await filterScanPhoto(img, _scanFilterMode);
+      const scanFile = new File([blob], `scan-${Date.now()}.jpg`, { type: 'image/jpeg' });
+      scanFile._scanReviewed = true;
+      addFiles([scanFile]);
+    } catch {
+      showToast(t('sd_capture_failed'));
+    }
+  });
+}
+
+_bindTakePhotoButton(); // module-load time — see comment block above
+
+// ── Render — split static/dynamic, same pattern as jpg2pdfUI.js's
+//    _settingsRendered guard (real bug found+fixed there earlier this
+//    session: a full rebuild on every file-list change silently
+//    interrupts an in-progress settings interaction, e.g. a slider
+//    drag). Settings panel built once; only the thumbnail grid wrapper
+//    is replaced on later calls. ──
+
+function _settingsHtml() {
+  return `
+    <div class="j2p-row">
+      <div class="j2p-group">
+        <span class="j2p-group__label">${t('j2p_scan_filter')}</span>
+        <div class="j2p-chips" role="group" aria-label="${t('j2p_scan_filter')}">
+          ${[
+            { value: 'grayscale', label: t('j2p_scan_filter_grayscale') },
+            { value: 'color',     label: t('j2p_scan_filter_color') },
+          ].map(o => `
+            <label class="j2p-chip${_scanFilterMode === o.value ? ' j2p-chip--active' : ''}" data-value="${o.value}" data-name="sdScanFilter">
+              <input type="radio" name="sdScanFilter" value="${o.value}"${_scanFilterMode === o.value ? ' checked' : ''}>
+              ${o.label}
+            </label>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+
+    <div class="j2p-row">
+      <div class="j2p-group">
+        <span class="j2p-group__label">${t('j2p_page_size')}</span>
+        <div class="j2p-chips" role="group" aria-label="${t('j2p_page_size')}">
+          ${[
+            { value: 'auto',   label: t('j2p_size_auto') },
+            { value: 'a4',     label: 'A4'       },
+            { value: 'letter', label: 'Letter'   },
+            { value: 'fit',    label: t('j2p_fit') },
+          ].map(o => `
+            <label class="j2p-chip${_pageSize === o.value ? ' j2p-chip--active' : ''}" data-value="${o.value}" data-name="sdSize">
+              <input type="radio" name="sdSize" value="${o.value}"${_pageSize === o.value ? ' checked' : ''}>
+              ${o.label}
+            </label>
+          `).join('')}
+        </div>
+      </div>
+
+      <div class="j2p-group">
+        <span class="j2p-group__label">${t('j2p_orientation')}</span>
+        <div class="j2p-chips" role="group" aria-label="${t('j2p_orientation')}">
+          ${[
+            { value: 'auto',      label: t('j2p_orient_auto')      },
+            { value: 'portrait',  label: t('j2p_orient_portrait')  },
+            { value: 'landscape', label: t('j2p_orient_landscape') },
+          ].map(o => `
+            <label class="j2p-chip${_orientation === o.value ? ' j2p-chip--active' : ''}" data-value="${o.value}" data-name="sdOrient">
+              <input type="radio" name="sdOrient" value="${o.value}"${_orientation === o.value ? ' checked' : ''}>
+              ${o.label}
+            </label>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+
+    <div class="j2p-compress-block">
+      <div class="j2p-compress-row">
+        <div class="j2p-compress-label">
+          <strong>${t('j2p_compress_images')}</strong>
+          <small>${t('j2p_compress_desc')}</small>
+        </div>
+        <label class="j2p-toggle" aria-label="${t('j2p_compress_images')}">
+          <input type="checkbox" id="sdCompressCheck"${_compress ? ' checked' : ''}>
+          <span class="j2p-toggle__track"></span>
+          <span class="j2p-toggle__thumb"></span>
+        </label>
+      </div>
+      <div class="j2p-quality-row${_compress ? '' : ' j2p-quality-row--disabled'}" id="sdQualityRow">
+        <div class="j2p-quality-header">
+          <span>${t('j2p_quality')}</span>
+          <span class="j2p-quality-val" id="sdQualityVal">${Math.round(_quality * 100)}%</span>
+        </div>
+        <input type="range" id="sdQuality" class="j2p-quality-slider"
+               min="40" max="100" step="1" value="${Math.round(_quality * 100)}"
+               aria-label="${t('j2p_aria_quality', { pct: Math.round(_quality * 100) })}">
+      </div>
+    </div>
+
+    ${presetRememberCard({
+      id:       'scanDocumentRememberCheck',
+      checked:  loadPreset('scanDocument') !== null,
+      title:    '💾 ' + t('preset_remember_title'),
+      subtitle: t('preset_remember_sub'),
+      ariaLabel: t('preset_remember_title'),
+    })}
+  `;
+}
+
+function _previewsHtml(files) {
+  return `
+    <div class="j2p-previews" aria-label="${t('j2p_image_preview')}" role="list">
+      ${files.map((f, i) => `
+        <div class="j2p-thumb" role="listitem" data-index="${i}" data-i="${i}" title="${_esc(f.name)}">
+          <canvas class="j2p-thumb__canvas" data-index="${i}" width="48" height="48" aria-hidden="true"></canvas>
+          <span class="j2p-thumb__name">${_truncName(f.name, 12)}</span>
+          ${!f._scanReviewed ? `<span class="j2p-thumb__badge" aria-label="${t('sd_pending_review')}">⏳</span>` : ''}
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+function _render(files) {
+  const container = id('scanDocumentOptions');
+  if (!container) return;
+
+  if (!_settingsRendered) {
+    _settingsRendered = true;
+    container.innerHTML = `<div id="sdPreviewsWrap">${_previewsHtml(files)}</div>${_settingsHtml()}`;
+    _bindSettingsEvents();
+  } else {
+    const wrap = id('sdPreviewsWrap');
+    if (wrap) wrap.innerHTML = _previewsHtml(files);
+  }
+  _bindThumbGridEvents();
+  _renderThumbnails(files);
+}
+
+const _imgCache = new WeakMap();
+async function _loadThumbImage(file) {
+  const cached = _imgCache.get(file);
+  if (cached) return cached;
+  const source = isHeicFile(file) ? (await decodeHeicToJpegBlob(file)) ?? file : file;
+  const url = URL.createObjectURL(source);
+  const img = new Image();
+  await new Promise(res => { img.onload = res; img.onerror = res; img.src = url; });
+  URL.revokeObjectURL(url);
+  _imgCache.set(file, img);
+  return img;
+}
+
+async function _renderThumbnails(files) {
+  for (let i = 0; i < files.length; i++) {
+    const canvas = document.querySelector(`.j2p-thumb__canvas[data-index="${i}"]`);
+    if (!canvas) continue;
+    try {
+      const img = await _loadThumbImage(files[i]);
+      if (!img.naturalWidth) continue;
+      const ctx = canvas.getContext('2d');
+      const scale = Math.min(48 / img.naturalWidth, 48 / img.naturalHeight);
+      const w = img.naturalWidth * scale, h = img.naturalHeight * scale;
+      ctx.clearRect(0, 0, 48, 48);
+      ctx.drawImage(img, (48 - w) / 2, (48 - h) / 2, w, h);
+    } catch { /* thumbnail is cosmetic only */ }
+  }
+}
+
+function _bindSettingsEvents() {
+  const container = id('scanDocumentOptions');
+
+  container.addEventListener('change', e => {
+    if (e.target.name === 'sdSize') {
+      _pageSize = e.target.value;
+      container.querySelectorAll('[data-name="sdSize"]').forEach(el => {
+        el.classList.toggle('j2p-chip--active', el.dataset.value === _pageSize);
+      });
+    }
+    if (e.target.name === 'sdOrient') {
+      _orientation = e.target.value;
+      container.querySelectorAll('[data-name="sdOrient"]').forEach(el => {
+        el.classList.toggle('j2p-chip--active', el.dataset.value === _orientation);
+      });
+    }
+    if (e.target.name === 'sdScanFilter') {
+      _scanFilterMode = e.target.value;
+      container.querySelectorAll('[data-name="sdScanFilter"]').forEach(el => {
+        el.classList.toggle('j2p-chip--active', el.dataset.value === _scanFilterMode);
+      });
+    }
+    if (e.target.id === 'sdCompressCheck') {
+      _compress = e.target.checked;
+      const row = id('sdQualityRow');
+      if (row) row.classList.toggle('j2p-quality-row--disabled', !_compress);
+    }
+    if (e.target.id === 'scanDocumentRememberCheck' && !e.target.checked) {
+      clearPreset('scanDocument');
+    }
+  });
+
+  const slider = id('sdQuality');
+  if (slider) {
+    slider.addEventListener('input', () => {
+      _quality = slider.value / 100;
+      const val = id('sdQualityVal');
+      if (val) val.textContent = slider.value + '%';
+    });
+  }
+}
+
+function _bindThumbGridEvents() {
+  const container = id('scanDocumentOptions');
+  if (!container) return;
+  const previews = container.querySelector('.j2p-previews');
+  if (previews) {
+    bindDragReorder({
+      container:    previews,
+      itemSelector: '.j2p-thumb',
+      arrays:       [selectedFiles, _exifAngles],
+      onReorder:    () => _render(selectedFiles),
+      isLocked:     isFilesLocked,
+      mode:         'grid',
+    });
+  }
+}
+
+function _truncName(name, max) {
+  return name.length > max ? name.slice(0, max - 1) + '…' : name;
+}
+
+// ── EXIF angle extraction — identical to jpg2pdfUI.js's own (kept as
+//    a real, accepted small duplication rather than a cross-tool
+//    import, consistent with this codebase's established per-tool-
+//    owns-its-UI-code pattern) ──
+
+async function _readExifAngle(file) {
+  if (!file.type.includes('jpeg') && !file.name.toLowerCase().endsWith('.jpg')) return 0;
+  try {
+    const slice = file.slice(0, 65536);
+    const buf   = await slice.arrayBuffer();
+    const view  = new DataView(buf);
+    if (view.getUint16(0) !== 0xFFD8) return 0;
+    let offset = 2;
+    while (offset < buf.byteLength - 1) {
+      const marker = view.getUint16(offset);
+      if (marker === 0xFFE1) {
+        const segLen = view.getUint16(offset + 2);
+        const exifHeader = String.fromCharCode(
+          view.getUint8(offset + 4), view.getUint8(offset + 5),
+          view.getUint8(offset + 6), view.getUint8(offset + 7)
+        );
+        if (exifHeader === 'Exif') {
+          const tiffOffset = offset + 10;
+          const little = view.getUint16(tiffOffset) === 0x4949;
+          const ifdOffset = tiffOffset + view.getUint32(tiffOffset + 4, little);
+          const numEntries = view.getUint16(ifdOffset, little);
+          for (let i = 0; i < numEntries; i++) {
+            const entryOffset = ifdOffset + 2 + i * 12;
+            if (view.getUint16(entryOffset, little) === 0x0112) {
+              const orientation = view.getUint16(entryOffset + 8, little);
+              if (orientation === 3) return 180;
+              if (orientation === 6) return 90;
+              if (orientation === 8) return 270;
+              return 0;
+            }
+          }
+        }
+        offset += 2 + segLen;
+      } else if ((marker & 0xFF00) !== 0xFF00) {
+        break;
+      } else {
+        offset += 2 + view.getUint16(offset + 2);
+      }
+    }
+  } catch { /* not a real JPEG or truncated — no rotation */ }
+  return 0;
+}

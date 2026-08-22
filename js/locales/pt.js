@@ -33,6 +33,7 @@ window.PDFREE_LOCALE = {
     unlock:           ['desbloquear pdf', 'remover senha', 'remover senha do pdf'],
     flatten:          ['achatar', 'bloquear formulário', 'não editável', 'fixar campos', 'bloquear pdf'],
     compare:          ['comparar', 'diferença', 'diferenças', 'mudanças', 'comparar pdf', 'encontrar diferenças'],
+    scanDocument:     ['digitalizar', 'scanner', 'digitalizar documento', 'digitalizar para pdf', 'digitalizar com câmera', 'digitalizar foto'],
     pdf2pdfa:         ['pdf/a', 'pdfa', 'arquivamento', 'arquivo', 'verificar pdf/a', 'iso 19005', 'arquivamento de longo prazo'],
   },
 
@@ -614,6 +615,8 @@ window.PDFREE_LOCALE = {
   val_fill_required_prefix: 'Obrigatório:',
   val_analysing_pdf:        'Analisando PDF…',
   val_enter_password:       'Digite a senha do PDF',
+  val_scan_review_pending:  'Termine de revisar suas páginas digitalizadas primeiro',
+  val_scan_no_files:        'Adicione pelo menos uma foto para digitalizar',
 
   // extractUI.js (backs split + extract)
   ext_loading:            'Carregando páginas…',
@@ -702,11 +705,18 @@ window.PDFREE_LOCALE = {
   scan_cam_take_photo:       'Tirar foto',
   scan_cam_permission_denied: 'Acesso à câmera negado — abrindo o seletor de arquivos',
   scan_cam_retake:           'Tirar novamente',
+  scan_cam_skip:             'Pular — usar como está',
   scan_cam_use_crop:         'Usar este recorte',
   scan_cam_detecting:        'Detectando as bordas do documento…',
   scan_cam_detect_fallback:  'Não foi possível detectar as bordas automaticamente — arraste os cantos para ajustá-los ao documento',
   scan_cam_processing:       'Processando…',
   scan_cam_processing_failed: 'Não foi possível processar esta foto — tente novamente',
+
+  sd_loading:              'Carregando imagens…',
+  sd_take_photo:           '📷 Tirar foto',
+  sd_pending_review:       'Precisa de revisão',
+  sd_review_decode_failed: 'Não foi possível ler {name} — ignorado',
+  sd_capture_failed:       'Não foi possível processar esta foto — tente novamente',
   j2p_page_size:       'Tamanho da página',
   j2p_size_auto:       '📐 Automático',
   j2p_fit:             '⤡ Ajustar',

@@ -22,6 +22,8 @@ import { initCompressOptions, hideCompressOptions,
          renderEmailVerdict }              from './compressUI.js';
 import { initJpg2PdfOptions, hideJpg2PdfOptions,
          getJpg2PdfParams }               from './jpg2pdfUI.js';
+import { initScanDocumentOptions, hideScanDocumentOptions,
+         getScanDocumentParams }          from './scanDocumentUI.js';
 import { initPdf2JpgOptions, hidePdf2JpgOptions,
          getPdf2JpgParams }               from './pdf2jpgUI.js';
 import { initWatermarkOptions, hideWatermarkOptions,
@@ -254,6 +256,25 @@ registerTool('jpg2pdf', {
   getParams: getJpg2PdfParams,
   // exifAngles is per-image rotation for this specific batch, not a reusable
   // setting — stripped, leaving only jpg2pdfUI.js's own layout/quality settings.
+  presetFilter: ({ pageSize, orientation, compress, quality }) =>
+    ({ pageSize, orientation, compress, quality }),
+});
+
+registerTool('scanDocument', {
+  // Shares jpg2pdf's exact assembly path (handleJpg2Pdf in js/worker.js) —
+  // getScanDocumentParams() returns the same shape getJpg2PdfParams() does.
+  // Zero new worker code for this whole tool. See js/scanDocumentUI.js.
+  runner:    'jpg2pdf',
+  multiFile: true,
+  minFiles:  1,
+  init:      initScanDocumentOptions,
+  hide:      hideScanDocumentOptions,
+  getParams: getScanDocumentParams,
+  validate:  p => {
+    if (p.reviewPending) return t('val_scan_review_pending');
+    if (!p.hasFiles) return t('val_scan_no_files');
+    return null;
+  },
   presetFilter: ({ pageSize, orientation, compress, quality }) =>
     ({ pageSize, orientation, compress, quality }),
 });

@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+  <!--
+    ════════════════════════════════════════════════════════════════
+    Content Security Policy — defence-in-depth against XSS
+
+    Same as jpg2pdf's tool-page.html template (this tool shares the
+    live-camera + OpenCV.js scan flow — js/scanCameraUI.js,
+    js/scanGeometry.js) — docs.opencv.org + 'unsafe-eval' + connect-src
+    data: all required for the same reasons documented in full in
+    index.html's own CSP comment block (2026-08-22 additions).
+    ════════════════════════════════════════════════════════════════
+  -->
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src  'self'
+                'wasm-unsafe-eval'
+                'unsafe-eval'
+                blob:
+                https://cdnjs.cloudflare.com
+                https://esm.sh
+                https://docs.opencv.org
+                https://pagead2.googlesyndication.com
+                https://static.cloudflareinsights.com;
+    style-src   'self' 'unsafe-inline';
+    font-src    'self';
+    img-src     'self' data: blob: https:;
+    connect-src 'self'
+                data:
+                https://cdnjs.cloudflare.com
+                https://*.workers.dev
+                https://pagead2.googlesyndication.com
+                https://www.googletagservices.com
+                https://*.doubleclick.net
+                https://cloudflareinsights.com;
+    frame-src   https://googleads.g.doubleclick.net
+                https://tpc.googlesyndication.com;
+    media-src   'self' blob:;
+    worker-src  'self' blob:;
+    object-src  'none';
+  ">
+
+  <title>Document Scanner — Scan with Camera or Photos to PDF | PDFree</title>
+  <meta name="description" content="Scan documents with your camera or existing photos — automatic edge detection, straighten, and save as PDF. 100% private, nothing uploaded, no account needed.">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title"        content="Document Scanner — Scan to PDF Online | PDFree">
+  <meta property="og:description"  content="Scan documents with your camera or gallery photos. Auto-crop, straighten, save as PDF — 100% private, runs entirely in your browser.">
+  <meta property="og:type"         content="website">
+  <meta property="og:url"          content="https://pdfree.io/scan-document/">
+  <meta property="og:site_name"    content="PDFree">
+  <meta property="og:locale"       content="en_US">
+  <meta property="og:image"        content="https://pdfree.io/icons/og-image.jpg">
+  <meta property="og:image:width"  content="1200">
+  <meta property="og:image:height" content="633">
+  <meta property="og:image:alt"    content="Document Scanner — Scan to PDF Online | PDFree">
+  <meta name="twitter:card"        content="summary_large_image">
+  <meta name="twitter:site"        content="@pdfree_io">
+  <meta name="twitter:image"       content="https://pdfree.io/icons/og-image.jpg">
+  <meta name="twitter:title"       content="Document Scanner — Scan to PDF Online | PDFree">
+  <meta name="twitter:description" content="Scan documents with your camera or gallery photos. Auto-crop, straighten, save as PDF — 100% private, runs entirely in your browser.">
+
+  <link rel="canonical" href="https://pdfree.io/scan-document/">
+  <link rel="alternate" hreflang="en"        href="https://pdfree.io/scan-document/">
+  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/scan-document/">
+
+  <!-- PWA -->
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="PDFree">
+  <link rel="apple-touch-icon" href="../icons/icon-192.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <!-- Resource hints -->
+  <link rel="preconnect" href="https://static.cloudflareinsights.com">
+  <link rel="preload" href="../fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="modulepreload" href="../js/app.js">
+
+  <link rel="stylesheet" href="../css/fonts.css">
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/animations.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+
+  <script src="../js/theme.js"></script>
+  <script src="../js/priorityNav.js" defer></script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Document Scanner — PDFree",
+    "url": "https://pdfree.io/scan-document/",
+    "description": "Scan documents with your camera or existing photos. Automatic edge detection, perspective correction, and grayscale/color enhancement, all in your browser — no upload, no account required.",
+    "applicationCategory": "UtilityApplication",
+    "operatingSystem": "Any",
+    "browserRequirements": "Requires a modern browser with JavaScript enabled",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "featureList": [
+      "Live camera scanning with automatic document edge detection",
+      "Scan existing gallery photos with the same auto-crop review",
+      "Draggable corner adjustment for the detected crop",
+      "Perspective correction — straightens an angled photo",
+      "Color and grayscale enhancement modes",
+      "Combine multiple scanned pages into one PDF",
+      "No file upload required",
+      "100% private — files processed locally",
+      "No account or signup needed"
+    ],
+    "dateModified": "2026-08-22",
+    "provider": {
+      "@type": "Organization",
+      "name": "PDFree",
+      "url": "https://pdfree.io",
+      "description": "PDFree is a free, privacy-first PDF toolkit that runs entirely in the browser — files are processed locally and never uploaded to a server.",
+      "logo": "https://pdfree.io/icons/icon-512.png"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "PDFree", "item": "https://pdfree.io/" },
+      { "@type": "ListItem", "position": 2, "name": "Document Scanner", "item": "https://pdfree.io/scan-document/" }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Does scanning a document upload it anywhere?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Every step — the camera capture, the corner detection, the crop, the perspective correction — happens locally in your browser. Nothing is uploaded to PDFree's servers or anywhere else. You can verify this yourself by opening your browser's DevTools Network tab while scanning."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why does every photo I add show a crop screen, even from my gallery?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "This tool is built specifically for scanning documents, so every photo — camera or gallery — goes through the same edge-detection and crop review, exactly like a dedicated scanner app. If you just want to combine existing photos into a PDF without cropping, use PDFree's JPG to PDF tool instead — it skips the review screen for a faster, simpler combine."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What if the automatic edge detection gets it wrong?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Drag any of the four corner handles to adjust the crop before confirming. If detection doesn't find a confident edge at all, the tool starts you with a safe default crop that you can freely reshape."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I skip cropping for a photo that isn't a document?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. On the review screen, choose Skip instead of confirming a crop — the original photo is added to your PDF unprocessed."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does it work in color, or only black and white?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Both. Choose Grayscale (the default — whitens the background and sharpens text, best for plain documents) or Color (corrects uneven lighting while keeping the real colors of the page)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I scan multiple pages into one PDF?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Add as many photos as you need — from the camera, your gallery, or both — reorder them by dragging, and they're combined into a single PDF when you save."
+      }
+    }
+  ]
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to Scan a Document to PDF",
+  "description": "Scan a document with your camera or an existing photo — automatic edge detection and perspective correction, free, no upload required.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Take a photo or choose one from your gallery",
+      "text": "Tap Take Photo to use your camera, or drop/choose an existing photo of a document."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Review the detected crop",
+      "text": "The document's edges are detected automatically. Drag any corner to adjust, or choose Skip if the photo doesn't need cropping."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Confirm and save as PDF",
+      "text": "Add more pages the same way if needed, choose Color or Grayscale, then save your scan as a PDF."
+    }
+  ]
+}
+  </script>
+</head>
+<body data-tool="scanDocument">
+
+  <nav>
+    <a href="../" class="logo" id="logo" aria-label="Go to homepage" style="text-decoration:none"><span class="logo-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></span><span class="logo-text">PDF<span>ree</span></span></a>
+    <div class="nav-links">
+      <a href="../merge-pdf/"    class="nav-link" data-tool="merge">Merge</a>
+      <a href="../split-pdf/"    class="nav-link" data-tool="split">Split</a>
+      <a href="../compress-pdf/" class="nav-link" data-tool="compress">Compress</a>
+      <a href="../jpg2pdf/"      class="nav-link" data-tool="jpg2pdf">JPG→PDF</a>
+      <a href="../pdf2jpg/"      class="nav-link" data-tool="pdf2jpg">PDF→JPG</a>
+      <a href="../watermark-pdf/" class="nav-link" data-tool="watermark">Watermark</a>
+      <a href="../pagenum-pdf/"  class="nav-link" data-tool="pagenum">Page №</a>
+      <a href="../metadata-pdf/" class="nav-link" data-tool="meta">Metadata</a>
+      <a href="../extract-pdf/"  class="nav-link" data-tool="extract">Extract</a>
+      <a href="../draw-on-pdf/"  class="nav-link" data-tool="draw-pdf">Draw</a>
+      <a href="../rotate-pdf/"   class="nav-link" data-tool="rotate">Rotate</a>
+      <a href="../protect-pdf/"  class="nav-link" data-tool="protect">Protect</a>
+      <a href="../pdf-to-word/"  class="nav-link" data-tool="pdf2word">PDF→Word</a>
+    </div>
+    <details class="nav-more" id="navMore">
+      <summary aria-label="More tools">More <span class="nav-more__badge"></span></summary>
+      <div class="nav-more__menu"></div>
+    </details>
+    <details class="lang-switch" id="langSwitch">
+      <summary aria-label="Change language">🌐 EN</summary>
+      <div class="lang-switch__menu" role="menu">
+        <a href="https://pdfree.io/scan-document/" role="menuitem" aria-current="true">English</a>
+      </div>
+    </details>
+    <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode"></button>
+  </nav>
+
+  <nav aria-label="Breadcrumb" style="position:static;padding:8px 24px;border-bottom:1px solid var(--border);background:var(--surface);">
+    <ol style="list-style:none;margin:0;padding:0;display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text3);"
+        itemscope itemtype="https://schema.org/BreadcrumbList">
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a href="/" itemprop="item" style="color:var(--green);text-decoration:none;font-weight:500;">
+          <span itemprop="name">PDFree</span>
+        </a>
+        <meta itemprop="position" content="1">
+      </li>
+      <li aria-hidden="true" style="color:var(--border);">›</li>
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a href="/scan-document/" itemprop="item" style="color:var(--text2);text-decoration:none;" aria-current="page">
+          <span itemprop="name">Document Scanner</span>
+        </a>
+        <meta itemprop="position" content="2">
+      </li>
+    </ol>
+  </nav>
+
+  <!-- ── Tool workspace ── -->
+  <main id="toolArea" class="main-area" aria-busy="false">
+
+    <div class="tool-header">
+      <div class="tool-header-icon" id="toolIcon" aria-hidden="true">📷</div>
+      <div class="tool-header-text">
+        <h2 id="toolTitle">Document Scanner</h2>
+        <p  id="toolDesc">Scan with your camera or gallery photos — auto-crop, straighten, and save as PDF, entirely in your browser.</p>
+      </div>
+    </div>
+
+    <div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-label="Drop photos here, choose files, or take a photo">
+      <input type="file" id="fileInput" multiple accept="image/*" aria-hidden="true">
+      <span class="drop-icon" aria-hidden="true">📷</span>
+      <div class="drop-title">Drop photos here</div>
+      <div class="drop-sub">or choose from your gallery — every photo gets a crop review, just like the camera</div>
+      <label class="drop-btn" id="chooseFilesBtn" for="fileInput">Choose Photos</label>
+    </div>
+
+    <!-- "Take Photo" lives here, in static markup alongside the drop zone
+         itself — not inside #scanDocumentOptions, which only renders once
+         a file already exists. This is meant to be usable for the FIRST
+         photo too, same as "Choose Photos" above. Bound once at module
+         load in js/scanDocumentUI.js, not gated behind any render cycle. -->
+    <div style="text-align:center;margin:12px 0 24px;">
+      <button type="button" class="split-action-btn" id="sdTakePhotoBtn" style="font-size:14px;padding:10px 20px;">📷 Take Photo</button>
+      <input type="file" accept="image/*" capture="environment" id="sdTakePhotoInput" style="display:none">
+    </div>
+
+    <div id="fileList"    class="file-list" aria-live="polite" aria-label="Selected files"></div>
+    <div id="fileCount"   class="file-count"   style="display:none"></div>
+    <div id="reorderHint" class="reorder-hint" style="display:none"></div>
+
+    <div id="mergeOptions"     class="j2p-options"     style="display:none" aria-label="Merge options"></div>
+    <div id="splitOptions"     class="split-options"   style="display:none" aria-label="Split options"></div>
+    <div id="compressOptions"  class="compress-options" style="display:none" aria-label="Compression options"></div>
+    <div id="jpg2pdfOptions"   class="j2p-options"     style="display:none" aria-label="JPG to PDF options"></div>
+    <div id="scanDocumentOptions" class="j2p-options"  style="display:none" aria-label="Document Scanner options"></div>
+    <div id="pdf2jpgOptions"   class="j2p-options"     style="display:none" aria-label="PDF to JPG options"></div>
+    <div id="watermarkOptions" class="j2p-options"     style="display:none" aria-label="Watermark options"></div>
+    <div id="pageNumOptions"   class="j2p-options"     style="display:none" aria-label="Page numbers options"></div>
+    <div id="metaOptions"      class="j2p-options"     style="display:none" aria-label="Metadata editor"></div>
+    <div id="protectOptions"   class="j2p-options"     style="display:none" aria-label="Protect PDF options"></div>
+    <div id="redactOptions"    class="j2p-options"     style="display:none" aria-label="Cover area options"></div>
+    <div id="rotateOptions"    class="j2p-options"     style="display:none" aria-label="Rotate PDF options"></div>
+    <div id="fillOptions"      class="j2p-options"     style="display:none" aria-label="Fill PDF form options"></div>
+    <div id="ocrOptions"       class="j2p-options"     style="display:none" aria-label="OCR options"></div>
+    <div id="pdf2wordOptions"  class="j2p-options"     style="display:none" aria-label="PDF to Word options"></div>
+    <div id="compareOptions"   class="j2p-options"     style="display:none" aria-label="Compare PDF options"></div>
+
+    <button id="mergeBtn"  class="merge-btn"  type="button" disabled data-mode="process">📷 Save as PDF</button>
+    <button id="cancelBtn" class="cancel-btn" type="button" style="display:none" aria-label="Cancel">Cancel</button>
+
+    <div id="progressBar"   class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+    <div id="progressLabel" class="progress-label"></div>
+
+    <div id="successCard" class="success-card" role="alert" aria-live="polite" style="display:none">
+      <div class="success-top">
+        <div class="success-icon" aria-hidden="true">✓</div>
+        <div class="success-text">
+          <h3 id="successTitle">Done!</h3>
+          <p  id="successDesc"></p>
+        </div>
+        <button id="downloadBtn" class="download-btn" type="button" style="display:none">Download</button>
+        <button id="shareBtn"    class="share-btn"    type="button" style="display:none" aria-label="Send file via device apps"></button>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ── SEO Content (for indexing) ── -->
+  <hr style="border:none;border-top:2px solid var(--border);margin:48px 24px 0;" aria-hidden="true">
+  <section class="seo-article" aria-label="Document Scanner">
+    <div class="seo-article__inner" style="max-width:800px;margin:0 auto;padding:0 24px 60px;color:var(--text2);line-height:1.75;">
+
+      <h1 style="font-size:clamp(22px,3.5vw,30px);color:var(--text);margin:40px 0 16px;font-weight:700;">Document Scanner — Turn Photos into a Clean PDF</h1>
+
+      <p style="font-size:15px;margin:0 0 20px;">Need to scan a contract, receipt, ID, or handwritten note but don't have a scanner? PDFree's Document Scanner turns your phone or webcam into one — take a photo (or use an existing one from your gallery), and the tool automatically finds the document's edges, straightens out any angle, and cleans it up for you.</p>
+      <p style="font-size:15px;margin:0 0 40px;">Unlike PDFree's <a href="../jpg2pdf/" style="color:var(--green)">JPG to PDF</a> tool — built for quickly combining photos you already have exactly as they are — every photo added here goes through the same crop-and-straighten review, camera or gallery, because that's the whole point of a scanner: turning an imperfect photo of a page into something that reads like it came off an actual scanner.</p>
+
+      <h3 style="font-size:18px;color:var(--text);margin:32px 0 12px;font-weight:700;">How it works</h3>
+      <ol style="font-size:15px;padding-left:20px;margin:0 0 32px;">
+        <li style="margin-bottom:10px;"><strong>Take a photo or pick one from your gallery.</strong> The camera view works right in your browser — no app to install.</li>
+        <li style="margin-bottom:10px;"><strong>Review the auto-detected crop.</strong> Drag any of the four corners if the automatic edge detection needs a nudge, or choose Skip if the photo doesn't need cropping at all.</li>
+        <li style="margin-bottom:10px;"><strong>Choose Color or Grayscale</strong>, add more pages the same way, then save the whole thing as one PDF.</li>
+      </ol>
+
+      <h3 style="font-size:18px;color:var(--text);margin:32px 0 12px;font-weight:700;">Why it's different from a phone's built-in scanner app</h3>
+      <p style="font-size:15px;margin:0 0 32px;">Nothing leaves your device. The photo, the edge detection, the perspective correction — it all happens locally in your browser, the same way every PDFree tool works. There's no account, no app download, and no file size limit.</p>
+
+    </div>
+  </section>
+
+  <section aria-label="All PDF tools" style="text-align:center;padding:32px 24px;border-top:1px solid var(--border);">
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:16px;">All PDF Tools</div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:800px;margin:0 auto;">
+      <a href="../merge-pdf/"               class="tool-pill">Merge PDF</a>
+      <a href="../split-pdf/"               class="tool-pill">Split PDF</a>
+      <a href="../compress-pdf/"            class="tool-pill">Compress PDF</a>
+      <a href="../jpg2pdf/"                 class="tool-pill">JPG to PDF</a>
+      <a href="../pdf2jpg/"                 class="tool-pill">PDF to JPG</a>
+      <a href="../extract-pdf/"             class="tool-pill">Extract Pages</a>
+      <a href="../watermark-pdf/"           class="tool-pill">Watermark PDF</a>
+      <a href="../pagenum-pdf/"             class="tool-pill">Page Numbers</a>
+      <a href="../metadata-pdf/"            class="tool-pill">Edit Metadata</a>
+      <a href="../redact-pdf/"              class="tool-pill">Redact PDF</a>
+      <a href="../rotate-pdf/"              class="tool-pill">Rotate PDF</a>
+      <a href="../protect-pdf/"             class="tool-pill">Protect PDF</a>
+      <a href="../draw-on-pdf/"             class="tool-pill">Draw on PDF</a>
+      <a href="../fill/"                    class="tool-pill">Fill PDF Form</a>
+      <a href="../ocr-pdf/"                 class="tool-pill">OCR PDF</a>
+      <a href="../compare-pdf/"             class="tool-pill">Compare PDF</a>
+      <a href="../clean-scan/"              class="tool-pill">Clean Scan</a>
+    </div>
+  </section>
+
+  <footer>
+    <div style="display:flex;gap:48px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;font-size:13px;border-top:1px solid var(--border);padding-top:20px;">
+      <div>
+        <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Alternatives</div>
+        <a href="/ilovepdf-alternative/" style="display:block;color:var(--green);text-decoration:none;margin-bottom:4px;">iLovePDF Alternative</a>
+        <a href="/smallpdf-alternative/" style="display:block;color:var(--green);text-decoration:none;">Smallpdf Alternative</a>
+      </div>
+      <div>
+        <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Solutions</div>
+        <a href="/hipaa-pdf-tools/" style="display:block;color:var(--green);text-decoration:none;margin-bottom:4px;">HIPAA Compliant PDF</a>
+        <a href="/secure-pdf-tools/" style="display:block;color:var(--green);text-decoration:none;">Secure PDF Tools</a>
+      </div>
+    </div>
+    PDFree · <strong>All processing happens 100% in your browser</strong> · Files are <strong>never uploaded</strong><br>
+    <span style="color:var(--green)">🔒</span> Your documents never leave your device &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> Built to be free for everyone, forever<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
+      <a href="/privacy.html" style="color:var(--green)">Privacy</a>
+      &nbsp;·&nbsp;
+      <a href="/terms.html" style="color:var(--green)">Terms</a>
+      &nbsp;·&nbsp;
+      <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a>
+      &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green)">GitHub</a>
+    </span>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <!-- SW update banner — shown when a new version is waiting -->
+  <div id="swUpdateBanner" role="alert" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:200;background:var(--green);color:#fff;padding:12px 20px;align-items:center;justify-content:center;gap:12px;font-size:14px;flex-wrap:wrap;">
+    <span>A new version of PDFree is ready.</span>
+    <button id="swUpdateNow" type="button" style="background:#fff;color:var(--green);border:none;border-radius:6px;padding:5px 16px;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit;">Update now</button>
+    <button id="swUpdateLater" type="button" style="background:transparent;color:#fff;border:1px solid rgba(255,255,255,.6);border-radius:6px;padding:5px 16px;font-size:13px;cursor:pointer;font-family:inherit;">Later</button>
+  </div>
+
+  <!-- tool detected via <body data-tool="scanDocument"> — no inline script needed -->
+  <script type="module" src="../js/app.js"></script>
+
+<!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

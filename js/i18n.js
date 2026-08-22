@@ -636,6 +636,8 @@ export const EN = {
   val_fill_required_prefix: 'Required:',
   val_analysing_pdf:        'Analysing PDF…',
   val_enter_password:       'Enter the PDF password',
+  val_scan_review_pending:  'Finish reviewing your scanned pages first',
+  val_scan_no_files:        'Add at least one photo to scan',
 
   // ── extractUI.js (backs split + extract) ──────────────────────
   ext_loading:            'Loading pages…',
@@ -725,11 +727,19 @@ export const EN = {
   scan_cam_take_photo:       'Take Photo',
   scan_cam_permission_denied: 'Camera access denied — falling back to file picker',
   scan_cam_retake:           'Retake',
+  scan_cam_skip:             'Skip — use as-is',
   scan_cam_use_crop:         'Use this crop',
   scan_cam_detecting:        'Detecting document edges…',
   scan_cam_detect_fallback:  "Couldn't auto-detect edges — drag the corners to match your document",
   scan_cam_processing:       'Processing…',
   scan_cam_processing_failed: 'Could not process this photo — try again',
+
+  // ── scanDocumentUI.js — Document Scanner tool ──
+  sd_loading:              'Loading images…',
+  sd_take_photo:           '📷 Take Photo',
+  sd_pending_review:       'Needs review',
+  sd_review_decode_failed: "Couldn't read {name} — skipped",
+  sd_capture_failed:       'Could not process that photo — try again',
   j2p_page_size:       'Page size',
   j2p_size_auto:       '📐 Auto',
   j2p_fit:             '⤡ Fit',

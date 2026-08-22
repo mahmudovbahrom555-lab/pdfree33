@@ -36,6 +36,7 @@ window.PDFREE_LOCALE = {
     unlock:           ['ロック解除', 'パスワード解除', 'パスワードを削除', 'PDFのロックを外す', '制限解除'],
     flatten:          ['フォームを固定', '編集不可にする', 'PDFを固定化', 'フィールドを固定', '編集できなくする'],
     compare:          ['比較', '差分', '違いを比較', 'PDFを比較', '変更点を見つける'],
+    scanDocument:     ['スキャン', 'スキャナー', '文書をスキャン', 'PDFにスキャン', 'カメラでスキャン', '写真をスキャン'],
     pdf2pdfa:         ['pdf/a', 'アーカイブ', '長期保存', 'pdf/a確認', 'アーカイブ用pdf'],
   },
 
@@ -615,6 +616,8 @@ window.PDFREE_LOCALE = {
   val_fill_required_prefix: '必須:',
   val_analysing_pdf:        'PDFを解析しています…',
   val_enter_password:       'PDFのパスワードを入力してください',
+  val_scan_review_pending:  '先にスキャンしたページの確認を完了してください',
+  val_scan_no_files:        'スキャンする写真を少なくとも1枚追加してください',
 
   // extractUI.js (backs split + extract)
   ext_loading:            'ページを読み込んでいます…',
@@ -703,11 +706,18 @@ window.PDFREE_LOCALE = {
   scan_cam_take_photo:       '撮影',
   scan_cam_permission_denied: 'カメラへのアクセスが拒否されました — ファイル選択に切り替えます',
   scan_cam_retake:           '撮り直す',
+  scan_cam_skip:             'スキップ — そのまま使用',
   scan_cam_use_crop:         'この範囲を使用',
   scan_cam_detecting:        'ドキュメントの端を検出中…',
   scan_cam_detect_fallback:  '端を自動検出できませんでした — 角をドラッグしてドキュメントに合わせてください',
   scan_cam_processing:       '処理中…',
   scan_cam_processing_failed: 'この写真を処理できませんでした — もう一度お試しください',
+
+  sd_loading:              '画像を読み込み中…',
+  sd_take_photo:           '📷 撮影',
+  sd_pending_review:       '確認が必要',
+  sd_review_decode_failed: '{name} を読み込めませんでした — スキップしました',
+  sd_capture_failed:       'この写真を処理できませんでした — もう一度お試しください',
   j2p_page_size:       'ページサイズ',
   j2p_size_auto:       '📐 自動',
   j2p_fit:             '⤡ フィット',

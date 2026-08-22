@@ -33,6 +33,7 @@ window.PDFREE_LOCALE = {
     unlock:           ['sblocca pdf', 'rimuovi password', 'rimuovi password pdf'],
     flatten:          ['appiattire', 'blocca modulo', 'non modificabile', 'fissa campi', 'blocca pdf'],
     compare:          ['confrontare', 'diff', 'differenza', 'modifiche', 'confronta pdf', 'trova modifiche'],
+    scanDocument:     ['scansiona', 'scanner', 'scansiona documento', 'scansiona in pdf', 'scansione con fotocamera', 'scansiona foto'],
     pdf2pdfa:         ['pdf/a', 'pdfa', 'archiviazione', 'archiviabile', 'verifica pdf/a', 'iso 19005', 'archiviazione a lungo termine'],
   },
 
@@ -612,6 +613,8 @@ window.PDFREE_LOCALE = {
   val_fill_required_prefix: 'Obbligatorio:',
   val_analysing_pdf:        'Analisi del PDF…',
   val_enter_password:       'Inserisci la password del PDF',
+  val_scan_review_pending:  'Completa prima la revisione delle pagine scansionate',
+  val_scan_no_files:        'Aggiungi almeno una foto da scansionare',
 
   // extractUI.js (backs split + extract)
   ext_loading:            'Caricamento pagine…',
@@ -700,11 +703,18 @@ window.PDFREE_LOCALE = {
   scan_cam_take_photo:       'Scatta foto',
   scan_cam_permission_denied: 'Accesso alla fotocamera negato — verrà aperto il selettore file',
   scan_cam_retake:           'Ripeti',
+  scan_cam_skip:             "Salta — usa così com'è",
   scan_cam_use_crop:         'Usa questo ritaglio',
   scan_cam_detecting:        'Rilevamento dei bordi del documento…',
   scan_cam_detect_fallback:  'Impossibile rilevare i bordi automaticamente — trascina gli angoli per adattarli al documento',
   scan_cam_processing:       'Elaborazione…',
   scan_cam_processing_failed: 'Impossibile elaborare questa foto — riprova',
+
+  sd_loading:              'Caricamento immagini…',
+  sd_take_photo:           '📷 Scatta foto',
+  sd_pending_review:       'Richiede revisione',
+  sd_review_decode_failed: 'Impossibile leggere {name} — saltato',
+  sd_capture_failed:       'Impossibile elaborare la foto — riprova',
   j2p_page_size:       'Dimensione pagina',
   j2p_size_auto:       '📐 Auto',
   j2p_fit:             '⤡ Adatta',

@@ -33,6 +33,7 @@ window.PDFREE_LOCALE = {
     unlock:           ['pdf ontgrendelen', 'wachtwoord verwijderen', 'pdf-wachtwoord verwijderen'],
     flatten:          ['afvlakken', 'formulier vergrendelen', 'niet bewerkbaar', 'velden vastzetten', 'pdf vergrendelen'],
     compare:          ['vergelijken', 'diff', 'verschil', 'wijzigingen', 'pdf\'s vergelijken', 'wijzigingen vinden'],
+    scanDocument:     ['scannen', 'scanner', 'document scannen', 'scannen naar pdf', 'camera scan', 'foto scannen'],
     pdf2pdfa:         ['pdf/a', 'pdfa', 'archivering', 'archiveerbaar', 'pdf/a controleren', 'iso 19005', 'langetermijnarchivering'],
   },
 
@@ -612,6 +613,8 @@ window.PDFREE_LOCALE = {
   val_fill_required_prefix: 'Vereist:',
   val_analysing_pdf:        'PDF wordt geanalyseerd…',
   val_enter_password:       'Voer het PDF-wachtwoord in',
+  val_scan_review_pending:  "Controleer eerst je gescande pagina's",
+  val_scan_no_files:        'Voeg minstens één foto toe om te scannen',
 
   // extractUI.js (backs split + extract)
   ext_loading:            "Pagina's laden…",
@@ -700,11 +703,18 @@ window.PDFREE_LOCALE = {
   scan_cam_take_photo:       'Foto maken',
   scan_cam_permission_denied: 'Cameratoegang geweigerd — bestandskiezer wordt geopend',
   scan_cam_retake:           'Opnieuw',
+  scan_cam_skip:             'Overslaan — zo gebruiken',
   scan_cam_use_crop:         'Dit bijsnijden gebruiken',
   scan_cam_detecting:        'Documentranden worden gedetecteerd…',
   scan_cam_detect_fallback:  'Randen konden niet automatisch worden gedetecteerd — sleep de hoeken naar je document',
   scan_cam_processing:       'Verwerken…',
   scan_cam_processing_failed: 'Kon deze foto niet verwerken — probeer het opnieuw',
+
+  sd_loading:              'Afbeeldingen laden…',
+  sd_take_photo:           '📷 Foto maken',
+  sd_pending_review:       'Controle nodig',
+  sd_review_decode_failed: 'Kon {name} niet lezen — overgeslagen',
+  sd_capture_failed:       'Kon deze foto niet verwerken — probeer het opnieuw',
   j2p_page_size:       'Paginaformaat',
   j2p_size_auto:       '📐 Auto',
   j2p_fit:             '⤡ Passend',

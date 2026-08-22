@@ -34,6 +34,7 @@ window.PDFREE_LOCALE = {
     unlock:           ['buka kunci pdf', 'hapus kata sandi', 'buka proteksi', 'buka pdf terkunci', 'hapus password'],
     flatten:          ['kunci formulir', 'tidak bisa diedit', 'kunci field', 'flatten pdf'],
     compare:          ['bandingkan', 'perbedaan', 'cari perubahan', 'bandingkan pdf', 'perbedaan pdf'],
+    scanDocument:     ['pindai', 'pemindai', 'pindai dokumen', 'pindai ke pdf', 'pindai dengan kamera', 'pindai foto'],
     pdf2pdfa:         ['pdf/a', 'pdfa', 'arsip', 'pengarsipan', 'periksa pdf/a', 'iso 19005', 'arsip jangka panjang'],
   },
 
@@ -613,6 +614,8 @@ window.PDFREE_LOCALE = {
   val_fill_required_prefix: 'Wajib:',
   val_analysing_pdf:        'Menganalisis PDF…',
   val_enter_password:       'Masukkan kata sandi PDF',
+  val_scan_review_pending:  'Selesaikan tinjauan halaman yang dipindai terlebih dahulu',
+  val_scan_no_files:        'Tambahkan minimal satu foto untuk dipindai',
 
   // extractUI.js (backs split + extract)
   ext_loading:            'Memuat halaman…',
@@ -701,11 +704,18 @@ window.PDFREE_LOCALE = {
   scan_cam_take_photo:       'Ambil Foto',
   scan_cam_permission_denied: 'Akses kamera ditolak — beralih ke pemilih file',
   scan_cam_retake:           'Ambil ulang',
+  scan_cam_skip:             'Lewati — gunakan apa adanya',
   scan_cam_use_crop:         'Gunakan crop ini',
   scan_cam_detecting:        'Mendeteksi tepi dokumen…',
   scan_cam_detect_fallback:  'Tidak dapat mendeteksi tepi secara otomatis — seret sudut agar sesuai dengan dokumen Anda',
   scan_cam_processing:       'Memproses…',
   scan_cam_processing_failed: 'Tidak dapat memproses foto ini — coba lagi',
+
+  sd_loading:              'Memuat gambar…',
+  sd_take_photo:           '📷 Ambil Foto',
+  sd_pending_review:       'Perlu ditinjau',
+  sd_review_decode_failed: 'Tidak dapat membaca {name} — dilewati',
+  sd_capture_failed:       'Tidak dapat memproses foto itu — coba lagi',
   j2p_page_size:       'Ukuran halaman',
   j2p_size_auto:       '📐 Otomatis',
   j2p_fit:             '⤡ Sesuaikan',

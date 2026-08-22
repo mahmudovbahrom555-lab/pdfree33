@@ -33,6 +33,7 @@ window.PDFREE_LOCALE = {
     unlock:           ['odblokuj pdf', 'usuń hasło', 'usuń hasło pdf'],
     flatten:          ['spłaszcz', 'zablokuj formularz', 'nieedytowalny', 'zablokuj pola', 'zablokuj pdf'],
     compare:          ['porównaj', 'różnica', 'różnice', 'zmiany', 'porównaj pdf', 'znajdź zmiany'],
+    scanDocument:     ['skanuj', 'skaner', 'skanuj dokument', 'skanuj do pdf', 'skanowanie aparatem', 'skanuj zdjęcie'],
     pdf2pdfa:         ['pdf/a', 'pdfa', 'archiwizacja', 'archiwalny', 'sprawdź pdf/a', 'iso 19005', 'archiwizacja długoterminowa'],
   },
 
@@ -612,6 +613,8 @@ window.PDFREE_LOCALE = {
   val_fill_required_prefix: 'Wymagane:',
   val_analysing_pdf:        'Analizowanie PDF…',
   val_enter_password:       'Wprowadź hasło do PDF',
+  val_scan_review_pending:  'Najpierw zakończ przeglądanie zeskanowanych stron',
+  val_scan_no_files:        'Dodaj co najmniej jedno zdjęcie do zeskanowania',
 
   // extractUI.js (backs split + extract)
   ext_loading:            'Wczytywanie stron…',
@@ -700,11 +703,18 @@ window.PDFREE_LOCALE = {
   scan_cam_take_photo:       'Zrób zdjęcie',
   scan_cam_permission_denied: 'Odmówiono dostępu do aparatu — otwieram wybór pliku',
   scan_cam_retake:           'Powtórz',
+  scan_cam_skip:             'Pomiń — użyj bez zmian',
   scan_cam_use_crop:         'Użyj tego kadru',
   scan_cam_detecting:        'Wykrywanie krawędzi dokumentu…',
   scan_cam_detect_fallback:  'Nie udało się automatycznie wykryć krawędzi — przeciągnij rogi, aby dopasować je do dokumentu',
   scan_cam_processing:       'Przetwarzanie…',
   scan_cam_processing_failed: 'Nie udało się przetworzyć tego zdjęcia — spróbuj ponownie',
+
+  sd_loading:              'Wczytywanie obrazów…',
+  sd_take_photo:           '📷 Zrób zdjęcie',
+  sd_pending_review:       'Wymaga sprawdzenia',
+  sd_review_decode_failed: 'Nie udało się odczytać {name} — pominięto',
+  sd_capture_failed:       'Nie udało się przetworzyć tego zdjęcia — spróbuj ponownie',
   j2p_page_size:       'Rozmiar strony',
   j2p_size_auto:       '📐 Automatyczny',
   j2p_fit:             '⤡ Dopasuj',

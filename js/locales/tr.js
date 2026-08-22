@@ -33,6 +33,7 @@ window.PDFREE_LOCALE = {
     unlock:           ['kilidi aç', 'şifreyi kaldır', 'parolayı kaldır', 'pdf kilidini kaldır', 'kilidi kaldır'],
     flatten:          ['formu kilitle', 'düzenlenemez yap', 'pdf kilitle', 'alanları sabitle', 'formu sabitle'],
     compare:          ['karşılaştır', 'fark', 'farkları bul', 'pdf karşılaştır', 'değişiklikleri bul'],
+    scanDocument:     ['tara', 'tarayıcı', 'belge tara', 'pdf olarak tara', 'kamera ile tara', 'fotoğraf tara'],
     pdf2pdfa:         ['pdf/a', 'pdfa', 'arşiv', 'arşivleme', 'pdf/a kontrol', 'iso 19005', 'uzun süreli arşivleme'],
   },
 
@@ -612,6 +613,8 @@ window.PDFREE_LOCALE = {
   val_fill_required_prefix: 'Gerekli:',
   val_analysing_pdf:        'PDF analiz ediliyor…',
   val_enter_password:       'PDF şifresini girin',
+  val_scan_review_pending:  'Önce taranan sayfalarınızı incelemeyi tamamlayın',
+  val_scan_no_files:        'Taramak için en az bir fotoğraf ekleyin',
 
   // extractUI.js (backs split + extract)
   ext_loading:            'Sayfalar yükleniyor…',
@@ -700,11 +703,18 @@ window.PDFREE_LOCALE = {
   scan_cam_take_photo:       'Fotoğraf Çek',
   scan_cam_permission_denied: 'Kamera erişimi reddedildi — dosya seçiciye geçiliyor',
   scan_cam_retake:           'Yeniden çek',
+  scan_cam_skip:             'Atla — olduğu gibi kullan',
   scan_cam_use_crop:         'Bu kırpmayı kullan',
   scan_cam_detecting:        'Belge kenarları algılanıyor…',
   scan_cam_detect_fallback:  'Kenarlar otomatik algılanamadı — köşeleri belgenize göre sürükleyin',
   scan_cam_processing:       'İşleniyor…',
   scan_cam_processing_failed: 'Bu fotoğraf işlenemedi — tekrar deneyin',
+
+  sd_loading:              'Görüntüler yükleniyor…',
+  sd_take_photo:           '📷 Fotoğraf Çek',
+  sd_pending_review:       'İnceleme gerekli',
+  sd_review_decode_failed: '{name} okunamadı — atlandı',
+  sd_capture_failed:       'Bu fotoğraf işlenemedi — tekrar deneyin',
   j2p_page_size:       'Sayfa boyutu',
   j2p_size_auto:       '📐 Otomatik',
   j2p_fit:             '⤡ Sığdır',
