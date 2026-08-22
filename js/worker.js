@@ -1340,13 +1340,19 @@ async function handleJpg2Pdf(fileBuffers, options) {
       const mime   = isJpeg ? 'image/jpeg' : isWebp ? 'image/webp' : 'image/png';
       const blobA  = new Blob([buf], { type: mime });
       try {
-        bitmap = await createImageBitmap(blobA, { imageOrientation: 'none' });
+        // 'from-image': ask the browser to apply the file's own EXIF orientation
+        // during decode. This is the only reliably cross-browser way to get
+        // correctly-oriented pixels — imageOrientation:'none' does NOT reliably
+        // suppress EXIF auto-rotation in current Chromium (it silently corrects
+        // orientation anyway), which was doubling up with the manual rotation
+        // below and producing images rotated by an extra 180°.
+        bitmap = await createImageBitmap(blobA, { imageOrientation: 'from-image' });
       } catch (e1) {
         // Fallback b: no MIME type — Windows ANGLE sometimes decodes untyped blobs
         self.postMessage({ type: 'warn',
           message: `Image #${i + 1}: typed-blob failed (${e1.name}: ${e1.message}), trying untyped fallback` });
         const blobB = new Blob([buf]);
-        bitmap = await createImageBitmap(blobB, { imageOrientation: 'none' });
+        bitmap = await createImageBitmap(blobB, { imageOrientation: 'from-image' });
       }
       if (!bitmap.width || !bitmap.height) throw new Error('zero-size bitmap after decode');
     } catch (e) {
@@ -1366,27 +1372,26 @@ async function handleJpg2Pdf(fileBuffers, options) {
     let canvasW = 0, canvasH = 0;
 
     try {
-      const origW = bitmap.width;
-      const origH = bitmap.height;
+      // bitmap was decoded with imageOrientation:'from-image', so it is ALREADY
+      // correctly oriented by the browser — bitmap.width/height are the final,
+      // post-EXIF dimensions. No manual rotation is applied to it below.
+      //
+      // `angle` (from EXIF, read in jpg2pdfUI.js) is still used, but only to decide
+      // whether the fast path is safe: the fast path embeds the file's ORIGINAL
+      // bytes directly (bypassing the canvas/bitmap entirely), and raw JPEG bytes
+      // still have their original, uncorrected pixel data — that's only safe to
+      // embed as-is when the file needed no rotation in the first place.
+      const normAngle = ((angle % 360) + 360) % 360;    // 0 unless EXIF rotation is needed
 
-      // 2. Normalise angle: handle 0/90/180/270 and negatives (-90 = 270, etc.)
-      // Math.abs(angle) === 90 misses 270° — normalise first to be safe.
-      const normAngle  = ((angle % 360) + 360) % 360;    // always 0..359
-      const isRotated90 = normAngle === 90 || normAngle === 270;
-
-      // After EXIF rotation, width/height swap for 90° and 270°
-      const realW = isRotated90 ? origH : origW;
-      const realH = isRotated90 ? origW : origH;
-
-      // 3. Canvas output size (post-EXIF, pre-scale)
-      canvasW = realW;
-      canvasH = realH;
+      // 3. Canvas output size (already-correct orientation, pre-scale)
+      canvasW = bitmap.width;
+      canvasH = bitmap.height;
       if (compress) {
         // Mirror of IMAGE_DIM_PRESETS.medium — update both if you change the value
         const maxDim = 2400;
-        const scale  = Math.min(1, maxDim / Math.max(realW, realH));
-        canvasW      = Math.round(realW * scale);
-        canvasH      = Math.round(realH * scale);
+        const scale  = Math.min(1, maxDim / Math.max(canvasW, canvasH));
+        canvasW      = Math.round(canvasW * scale);
+        canvasH      = Math.round(canvasH * scale);
       }
 
       if (!compress && normAngle === 0 && !isWebp) {
@@ -1413,20 +1418,12 @@ async function handleJpg2Pdf(fileBuffers, options) {
           : await doc.embedPng(buf);
 
       } else {
-        // ── Canvas path: rotation and/or compression needed ─────────────────
+        // ── Canvas path: compression and/or EXIF rotation needed ────────────
+        // bitmap is already correctly oriented (see above) — straight draw,
+        // no rotation transform needed here.
         const canvas = new OffscreenCanvas(canvasW, canvasH);
         const ctx    = canvas.getContext('2d');
-
-        ctx.save();
-        ctx.translate(canvasW / 2, canvasH / 2);
-        ctx.rotate(normAngle * Math.PI / 180);
-        // For 90° / 270° the bitmap dimensions are swapped relative to canvas
-        if (isRotated90) {
-          ctx.drawImage(bitmap, -canvasH / 2, -canvasW / 2, canvasH, canvasW);
-        } else {
-          ctx.drawImage(bitmap, -canvasW / 2, -canvasH / 2, canvasW, canvasH);
-        }
-        ctx.restore();
+        ctx.drawImage(bitmap, 0, 0, canvasW, canvasH);
 
         const exportType = (compress || isJpeg || isWebp) ? 'image/jpeg' : 'image/png';
         const exportOpts = { type: exportType };
