@@ -7,7 +7,13 @@
 // 200'd literally any path with the English homepage (a soft-404 that
 // was polluting Search Console with duplicate-content noise).
 
-const REDIRECTS = {
+import toolsConfig from '../data/tools-config.json' with { type: 'json' };
+
+// Hand-maintained: legacy slugs, renamed pages, blog aliases, and other
+// one-off cases the auto-generated GUESS_REDIRECTS below can't derive from
+// data/tools-config.json. Takes precedence over GUESS_REDIRECTS on overlap
+// (see REDIRECTS below) — so a correction here always wins.
+const MANUAL_REDIRECTS = {
   // Locale slugs at root → correct locale URL
   '/nivelar-pdf':    '/pt/nivelar-pdf/',
   '/nivelar-pdf/':   '/pt/nivelar-pdf/',
@@ -58,10 +64,11 @@ const REDIRECTS = {
   '/pt/jpg2pdf/':       '/pt/jpg-para-pdf/',
   '/ja/pdf2jpg':        '/ja/pdf-jpg-henkan/',
   '/ja/pdf2jpg/':       '/ja/pdf-jpg-henkan/',
-  '/ja/draw-on-pdf':    '/draw-on-pdf/',
-  '/ja/draw-on-pdf/':   '/draw-on-pdf/',
-  '/id/draw-on-pdf':    '/draw-on-pdf/',
-  '/id/draw-on-pdf/':   '/draw-on-pdf/',
+  // ja/draw-on-pdf and id/draw-on-pdf used to redirect here to the EN root
+  // (draw had no ja/id locale pages yet) — now covered correctly by
+  // GUESS_REDIRECTS below (→ /ja/pdf-byouga/, /id/gambar-pdf/), since draw
+  // now has real pages for both. Removed to avoid shadowing the correct
+  // generated redirect with this stale EN-root fallback.
   // Old ES redact slug (before it was renamed to censurar-pdf)
   '/es/tachar-pdf':     '/es/censurar-pdf/',
   '/es/tachar-pdf/':    '/es/censurar-pdf/',
@@ -76,6 +83,19 @@ const REDIRECTS = {
   '/blog/extract-pdf/': '/blog/how-to-extract-pages-from-pdf/',
   '/blog/redact-pdf':   '/blog/',
   '/blog/redact-pdf/':  '/blog/',
+  '/blog/protect-pdf':   '/blog/how-to-password-protect-a-pdf/',
+  '/blog/protect-pdf/':  '/blog/how-to-password-protect-a-pdf/',
+  '/blog/watermark-pdf':  '/blog/how-to-add-watermark-to-pdf/',
+  '/blog/watermark-pdf/': '/blog/how-to-add-watermark-to-pdf/',
+  // No matching blog post exists for page numbering — send to the real tool page
+  '/blog/pagenum-pdf':   '/pagenum-pdf/',
+  '/blog/pagenum-pdf/':  '/pagenum-pdf/',
+  // split's translated slug is identical for es and pt ('dividir-pdf') — the
+  // bare, unprefixed URL is genuinely ambiguous between them, so
+  // GUESS_REDIRECTS below deliberately skips it rather than guess wrong.
+  // Tie-broken to es here (larger es-speaking search audience).
+  '/dividir-pdf':   '/es/dividir-pdf/',
+  '/dividir-pdf/':  '/es/dividir-pdf/',
   // Legacy English slugs
   '/index.html':     '/',
   '/annotate':       '/annotate-pdf/',
@@ -135,6 +155,88 @@ const REDIRECTS = {
   '/edit-metadata':  '/metadata-pdf/',
   '/edit-metadata/': '/metadata-pdf/',
 };
+
+// ── Auto-derived locale-slug guess redirects ────────────────────────────────
+// Googlebot has crawled a handful of real pages where a locale's translated
+// slug happens to equal the EN slug (e.g. /id/metadata-pdf/, /id/ocr-pdf/,
+// /de/ocr-pdf/ are genuinely real) and learned "{locale}/{EN-slug}/" as a
+// URL pattern for this site. It then guesses the same pattern against every
+// OTHER tool — most of which use a genuinely different translated slug — and
+// reports the misses as 404s in Search Console (a report that kept growing,
+// 19→21 pages, as new tools shipped and Google tried the pattern against
+// them too). Rebuilt from data/tools-config.json on every deploy so a newly
+// added localized tool is covered automatically, with zero manual upkeep —
+// same self-healing philosophy as scripts/check_dom.py's homepage-container
+// guard. See also MANUAL_REDIRECTS above for cases this can't derive
+// (renamed slugs, blog aliases, EN-only tools not in tools-config.json).
+function _buildGuessRedirects(config) {
+  const redirects = {};
+  const langDirs = {};
+  for (const [lc, cfg] of Object.entries(config.languages)) {
+    if (lc !== 'en') langDirs[lc] = cfg.dir;
+  }
+  const allEnSlugs = new Set(config.tools.map(t => t.slugs.en));
+  // slug (no locale prefix) → set of distinct real targets it could mean;
+  // only emit a bare-slug redirect when every tool+locale that uses this
+  // slug agrees on the same target — otherwise guessing would send some
+  // fraction of visitors to the wrong language, worse than a 404.
+  const bareSlugTargets = {};
+
+  for (const tool of config.tools) {
+    const enSlug = tool.slugs.en;
+    for (const [lc, dir] of Object.entries(langDirs)) {
+      const slug = tool.slugs[lc];
+      if (!slug || slug === enSlug) continue;
+      const real = `/${dir}/${slug}/`;
+
+      // Pattern 1: {locale}/{EN-slug}/ → {locale}/{real-slug}/
+      const guess1 = `/${dir}/${enSlug}`;
+      redirects[guess1] = real;
+      redirects[`${guess1}/`] = real;
+
+      // Pattern 2: {real-slug}/ (no locale prefix) → {locale}/{real-slug}/
+      if (!allEnSlugs.has(slug)) {
+        (bareSlugTargets[slug] ??= new Set()).add(real);
+      }
+    }
+  }
+  for (const [slug, targets] of Object.entries(bareSlugTargets)) {
+    if (targets.size !== 1) continue;
+    const target = [...targets][0];
+    redirects[`/${slug}`] = target;
+    redirects[`/${slug}/`] = target;
+  }
+
+  // Tools absent from tools-config.json's `tools` list (EN-only, or with a
+  // hand-maintained slug map elsewhere) can't be derived above — mirror them
+  // explicitly so their locale-guesses resolve too.
+  const drawSlugs = { // mirrors scripts/build.py's _draw_slugs
+    de: 'de/pdf-zeichnen', es: 'es/dibujar-en-pdf', fr: 'fr/dessiner-sur-pdf', pt: 'pt/desenhar-no-pdf',
+    id: 'id/gambar-pdf', vi: 'vi/ve-pdf', ru: 'ru/risovat-pdf', ja: 'ja/pdf-byouga', it: 'it/disegna-pdf',
+    ko: 'ko/pdf-geurigi', nl: 'nl/pdf-tekenen', pl: 'pl/rysuj-pdf', tr: 'tr/pdf-ciz',
+  };
+  for (const [lc, path] of Object.entries(drawSlugs)) {
+    const guess = `/${lc}/draw-on-pdf`;
+    redirects[guess] = `/${path}/`;
+    redirects[`${guess}/`] = `/${path}/`;
+  }
+  // compare + scanDocument: genuinely EN-only, no locale page exists at all —
+  // send any locale-guess to the real EN page rather than 404.
+  for (const lc of Object.keys(langDirs)) {
+    redirects[`/${lc}/compare-pdf`] = '/compare-pdf/';
+    redirects[`/${lc}/compare-pdf/`] = '/compare-pdf/';
+    redirects[`/${lc}/scan-document`] = '/scan-document/';
+    redirects[`/${lc}/scan-document/`] = '/scan-document/';
+  }
+
+  return redirects;
+}
+
+const GUESS_REDIRECTS = _buildGuessRedirects(toolsConfig);
+
+// MANUAL_REDIRECTS wins on overlap — a hand-added correction should never be
+// silently shadowed by the derived guess table.
+const REDIRECTS = { ...GUESS_REDIRECTS, ...MANUAL_REDIRECTS };
 
 // ── Feedback relay — POST /api/feedback → Telegram ─────────────────────────
 // No database: each submission is forwarded as a Telegram message via the
