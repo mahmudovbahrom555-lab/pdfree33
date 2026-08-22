@@ -58,7 +58,7 @@ const TOOL_SLUGS = {
   merge:    '/merge-pdf/',             split:    '/split-pdf/',
   compress: '/compress-pdf/',          extract: '/extract-pdf/',
   watermark:'/watermark-pdf/', pagenum: '/pagenum-pdf/',
-  meta:     '/meta-pdf/', redact:   '/redact-pdf/',
+  meta:     '/metadata-pdf/', redact:   '/redact-pdf/',
   rotate:   '/rotate-pdf/', protect: '/protect-pdf/',
   fill:     '/fill/',
   'compress-email': '/compress-pdf-for-email/',
