@@ -474,6 +474,14 @@ SPECIALTY_PAGES = [
     'atlas',
     # Developer SDK waitlist landing page (validation experiment, EN-only)
     'pdf-sdk',
+    # Document Scanner — EN-only tool page, same as compare-pdf above.
+    # Was missing from this list since the tool shipped (2026-08-22) —
+    # found while adding glossary-pdf below and checking sitemap.xml
+    # against production; a real, pre-existing gap, not new.
+    'scan-document',
+    # Document Glossary — EN-only tool page, same pattern as compare-pdf/
+    # scan-document above.
+    'glossary-pdf',
     # Static pages
     'privacy.html',
     'terms.html',
