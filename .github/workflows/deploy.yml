@@ -8,7 +8,19 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      # fetch-depth: 0 (full history) — scripts/build.py's _git_lastmod()
+      # runs `git log -- <path>` per source file to compute each sitemap
+      # <url>'s real <lastmod>. actions/checkout@v4 defaults to a shallow
+      # (depth-1) clone, under which `git log` finds no history for any file
+      # not touched in that single fetched commit and _git_lastmod() falls
+      # back to today's date — meaning virtually every page in the sitemap
+      # silently showed "last deploy date" instead of its true last-changed
+      # date. Confirmed live: watermark-pdf/ and a blog post both showed
+      # today's date in production despite real last commits from 2 weeks
+      # earlier. Full history costs nothing meaningful here (.git is ~76MB).
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
