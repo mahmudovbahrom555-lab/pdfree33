@@ -9,6 +9,26 @@
 
 import toolsConfig from '../data/tools-config.json' with { type: 'json' };
 
+// ── Redirect system overview ────────────────────────────────────────────────
+// (Read this before touching anything below. Full incident history and
+// reasoning: gsc_redirect_report_meta_slug_bug memory / git log on this file.)
+//
+// REDIRECTS = { ...GUESS_REDIRECTS, ...MANUAL_REDIRECTS } (MANUAL_REDIRECTS
+// always wins on overlap). Two tables, two different trust levels:
+//   MANUAL_REDIRECTS — hand-written below. You edit this by hand for cases
+//     the generator structurally can't know about: renamed slugs, blog
+//     aliases, deliberate page consolidation.
+//   GUESS_REDIRECTS  — auto-derived by _buildGuessRedirects() further down
+//     from data/tools-config.json, on every deploy, with zero manual
+//     upkeep. Covers Googlebot's URL-pattern guesses (see that function's
+//     own comment) and auto-resolves cross-locale slug collisions via
+//     LOCALE_TIE_BREAK_PRIORITY (also further down).
+// tests/redirects-parity.test.js is the safety net over both — it runs on
+// every `npm test`/CI run and checks things this file alone can't
+// self-verify (real-page collisions, staleness, target validity). Read its
+// own file-header comment for the full list of what it checks and why each
+// one is FAILING vs WARNING vs informational.
+
 // Hand-maintained: legacy slugs, renamed pages, blog aliases, and other
 // one-off cases the auto-generated GUESS_REDIRECTS below can't derive from
 // data/tools-config.json. Takes precedence over GUESS_REDIRECTS on overlap
@@ -108,12 +128,25 @@ const MANUAL_REDIRECTS = {
 // dividir-pdf precedent — and 9 more just like it were found completely
 // unhandled the same way, see gsc_redirect_report_meta_slug_bug memory),
 // the highest-priority locale among the actual colliding candidates wins
-// automatically. This is a deliberate, single, documented policy — es/pt/fr
-// are ordered from real evidence (every collision found so far only
-// involves these three); the rest are a reasonable default by rough global
-// search-audience size for PDF-tool-type queries, not individually
-// measured. Change this one list if that assumption turns out wrong —
-// don't add another one-off MANUAL_REDIRECTS entry to relitigate it.
+// automatically. This is a deliberate, single, documented policy — change
+// THIS list if it turns out wrong; don't add a one-off MANUAL_REDIRECTS
+// entry to relitigate a single case.
+//
+// Basis, honestly scoped — two different kinds of evidence, not one:
+//  - {es, pt, fr} being the front group IS real evidence: every bare-slug
+//    collision found so far (10, see gsc_redirect_report_meta_slug_bug
+//    memory) involves only these three, because Romance-language PDF-tool
+//    vocabulary happens to overlap heavily across them (e.g. "proteger",
+//    "dividir") — de/ja/etc. slugs turned out distinct enough from each
+//    other to never collide at all. That's a structural fact about this
+//    site's actual translated-slug data, not a guess.
+//  - es-over-pt-over-fr, and the entire order of the other 10 locales, is
+//    NOT independently measured — no real per-locale traffic split was
+//    available when this was written (this session had no CF_TOKEN to run
+//    scripts/analytics.py's Cloudflare GraphQL query). It's a plausible
+//    default by rough global language prevalence, nothing more. If real
+//    per-locale traffic data becomes available later, re-rank this list
+//    against it rather than assume the current order is correct.
 const LOCALE_TIE_BREAK_PRIORITY = [
   'es', 'pt', 'fr', 'de', 'ru', 'ja', 'it', 'id', 'tr', 'ko', 'vi', 'nl', 'pl',
 ];

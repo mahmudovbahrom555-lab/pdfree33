@@ -29,9 +29,15 @@
 //   5. WARNING — MANUAL_REDIRECTS entries GUESS_REDIRECTS now derives too
 //      (would otherwise accumulate dead/stale overrides forever).
 //   6. FAILING — every MANUAL_REDIRECTS target resolves to a real page
-//      (checked against dist/ — the only complete ground truth, since
-//      targets include blog posts and landing pages tools-config.json
-//      doesn't know about; skipped gracefully if dist/ hasn't been built).
+//      (checked against dist/, not the tools-config.json-derived realPages
+//      set above — dist/ is the only complete ground truth, since targets
+//      routinely include blog posts and landing pages tools-config.json
+//      doesn't know about at all). Skipped with a message ONLY outside CI
+//      (so `npm test` still runs standalone without a prior build, matching
+//      this project's other tests) — inside CI (dist/ is always built
+//      before tests run there), a missing dist/ instead FAILS this check,
+//      since silently skipping would defeat it exactly when it matters:
+//      gating an actual deploy.
 //   7. Informational — bare-slug ties LOCALE_TIE_BREAK_PRIORITY resolved
 //      automatically, and any left genuinely unresolved (should be none,
 //      since the priority list covers all 13 locales — kept as a guard in
@@ -131,10 +137,16 @@ if (overlapKeys.length === 0) {
 }
 
 // ── 6. Every MANUAL_REDIRECTS target must be a real page ──────────────────
+// Checked against dist/, not the tools-config.json-derived `realPages` set
+// above — MANUAL_REDIRECTS targets routinely include blog posts and landing
+// pages (e.g. /blog/how-to-split-a-pdf/, /annotate-pdf/) that aren't tools
+// and so aren't in tools-config.json at all; dist/ is the only complete
+// ground truth for "does this page really exist."
 
 const DIST = path.join(ROOT, 'dist');
-if (!existsSync(DIST)) {
-  console.log('  – skipped: MANUAL_REDIRECTS target-validity check (dist/ not built — run scripts/build.py first)');
+const inCI = !!(process.env.CI || process.env.GITHUB_ACTIONS);
+if (!existsSync(DIST) && !inCI) {
+  console.log('  – skipped: MANUAL_REDIRECTS target-validity check (dist/ not built — run scripts/build.py first; this check is mandatory in CI, where dist/ is always built before tests run)');
 } else {
   function pageExists(targetPath) {
     // targetPath like '/foo/bar/' → dist/foo/bar/index.html
@@ -143,6 +155,9 @@ if (!existsSync(DIST)) {
     return existsSync(file);
   }
   test('every MANUAL_REDIRECTS target resolves to a real page in dist/', () => {
+    if (!existsSync(DIST)) {
+      throw new Error('dist/ does not exist in CI — the build step must have failed or been skipped before tests ran');
+    }
     const broken = [...new Set(Object.values(MANUAL_REDIRECTS))].filter(t => !pageExists(t));
     if (broken.length) {
       throw new Error(`${broken.length} MANUAL_REDIRECTS target(s) don't exist in dist/: ${broken.join(', ')}`);
