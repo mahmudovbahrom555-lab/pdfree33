@@ -4,11 +4,12 @@
 // ============================================================
 //  unlockUI.js — Unlock PDF (remove password) options panel
 //
-//  file._pdfMeta.isEncrypted (set by files.js's silent owner-only
-//  preflight) decides which state renders first, but it's only a hint —
-//  _runUnlock() in processor.js always makes the real QPDF call and
-//  reacts to its actual result, so a stale flag can't produce a wrong
-//  outcome.
+//  file._pdfMeta.mayBeEncrypted (set by files.js's preflight — broader
+//  than .isEncrypted, which is AES-specific and used by other tools'
+//  warning banners) decides which state renders first, but it's only a
+//  hint — _runUnlock() in processor.js always makes the real QPDF call
+//  and reacts to its actual result, so a stale flag can't produce a
+//  wrong outcome.
 //
 //  Unlike protectUI.js, the password field is NOT wiped after a failed
 //  attempt (only on success or file change) — a wrong-password retry is
@@ -42,7 +43,7 @@ export function hideUnlockOptions() {
 }
 
 export function getUnlockParams() {
-  const needsPassword = !!_file?._pdfMeta?.isEncrypted;
+  const needsPassword = !!_file?._pdfMeta?.mayBeEncrypted;
   const input = id('unlockPwd');
   const password = (input?.value || '').normalize('NFC');
   return { password, needsPassword };
@@ -61,7 +62,7 @@ document.addEventListener('pdfree:success', e => {
 // ── Render ────────────────────────────────────────────────────
 
 function _render(container) {
-  const needsPassword = !!_file?._pdfMeta?.isEncrypted;
+  const needsPassword = !!_file?._pdfMeta?.mayBeEncrypted;
 
   if (!needsPassword) {
     container.innerHTML = infoBanner(t('unlk_no_password_needed'), 'clean');

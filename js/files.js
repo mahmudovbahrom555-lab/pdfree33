@@ -77,8 +77,18 @@ async function _preflightPDF(file) {
     const hasStandard   = /\/Filter\s*\/Standard/.test(tail);
     const hasAES        = /\/AESV[23]/.test(tail);
 
-    // Only flag as problematic if all three match.
-    if (!hasEncryptRef || !hasStandard || !hasAES) return { isEncrypted: false };
+    // `isEncrypted` below stays AES-specific (see WHY ONLY AES above) — every
+    // other tool's warning banner depends on that meaning and must not start
+    // firing for RC4 files that actually work fine with ignoreEncryption:true.
+    //
+    // `mayBeEncrypted` is broader on purpose: just "/Encrypt N N R" present,
+    // regardless of algorithm — same signal _looksEncrypted() in decryptPdf.js
+    // already uses. unlockUI.js needs this wider flag specifically, because an
+    // RC4-encrypted PDF can still require a real user password to open (only
+    // AES-vs-RC4 determines whether OTHER tools can process it without one).
+    if (!hasEncryptRef || !hasStandard || !hasAES) {
+      return { isEncrypted: false, mayBeEncrypted: hasEncryptRef };
+    }
 
     // Distinguish AES-128 (AESV2) from AES-256 (AESV3) for the UX message.
     const aesVersion = /\/AESV3/.test(tail) ? 'AES-256' : 'AES-128';
@@ -93,7 +103,7 @@ async function _preflightPDF(file) {
       if (!(P & 0x10)) restrictions.push('copy');
     }
 
-    return { isEncrypted: true, hasAES: true, aesVersion, restrictions };
+    return { isEncrypted: true, hasAES: true, aesVersion, restrictions, mayBeEncrypted: true };
   } catch (err) {
     // Any error here (e.g. a cloud-sync placeholder file — OneDrive/Google Drive
     // "Files On-Demand" — that hasn't actually downloaded yet, so file.slice()
@@ -205,8 +215,8 @@ export function addFiles(files) {
   renderList();
 
   // Run preflight on newly added PDFs — async, non-blocking.
-  // Annotates file._pdfMeta. For AES-encrypted files, tries QPDF silent
-  // decryption (owner-only / empty user password) before showing badge.
+  // Annotates file._pdfMeta. For AES- or RC4-encrypted files, tries QPDF
+  // silent decryption (owner-only / empty user password) before showing badge.
   for (const f of added) {
     _preflightPDF(f).then(async meta => {
       if (!meta) return;
@@ -219,17 +229,23 @@ export function addFiles(files) {
         return;
       }
       f._pdfMeta = meta;
-      if (meta.isEncrypted) {
+      if (meta.isEncrypted || meta.mayBeEncrypted) {
         // Try silent decryption — owner-only PDFs (empty user password) open fine.
+        // Runs for RC4 too (meta.mayBeEncrypted), not just AES (meta.isEncrypted):
+        // qpdf handles both, and an RC4 file can be owner-only just like an AES one
+        // — without this, Unlock would show a password field for RC4 files that
+        // actually need none, since mayBeEncrypted alone can't tell owner-only
+        // apart from a real user password.
         // QPDF WASM loads lazily here; only fires on first encrypted PDF.
         try {
           const bytes = new Uint8Array(await f.arrayBuffer());
           const decrypted = await decryptOwnerOnly(bytes);
           if (decrypted) {
             f._decryptedBuffer = decrypted.buffer;  // cache for processor.js
-            f._pdfMeta.isEncrypted = false;          // suppress lock badge
+            f._pdfMeta.isEncrypted    = false;       // suppress lock badge
+            f._pdfMeta.mayBeEncrypted = false;       // suppress Unlock's password field
           }
-        } catch { /* WASM init failure — keep isEncrypted = true */ }
+        } catch { /* WASM init failure — keep flags as detected */ }
         // Re-init tool options either way — the first init ran before this
         // resolved and saw no _pdfMeta at all. Owner-only success clears the
         // lock (tools can now process the file); a real password staying
