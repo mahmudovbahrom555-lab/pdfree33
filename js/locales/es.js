@@ -618,6 +618,7 @@ window.PDFREE_LOCALE = {
   // toolRegistrations.js
   val_output_filename:      'Nombre del archivo de salida',
   val_select_page:          'Selecciona al menos una página',
+  val_pagenum_out_of_range: 'El rango de páginas está fuera de límites — este documento tiene {n} páginas.',
   val_light_no_savings:     '⚠️ El preajuste Ligero no encontró nada que eliminar en este PDF. Usa Estándar para un ahorro real.',
   val_wm_upload_logo:       'Sube una imagen de logo',
   val_wm_enter_text:        'Introduce el texto de la marca de agua',

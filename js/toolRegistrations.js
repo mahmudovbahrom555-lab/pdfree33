@@ -314,6 +314,21 @@ registerTool('pagenum', {
   init:       initPageNumOptions,
   hide:       hidePageNumOptions,
   getParams:  getPageNumParams,
+  // Catches a From/To range outside the real document (e.g. "from page 50"
+  // on a 2-page PDF) — previously nothing did, so the worker just clamped to
+  // an empty range and numbered zero pages while still reporting success.
+  // pageCount===0 means pageNumUI hasn't finished reading it yet (or
+  // couldn't) — skip the check rather than risk a false-positive block; the
+  // worker's own clamp stays the last-resort safety net regardless.
+  validate: p => {
+    if (p.pageCount > 0) {
+      const to = p.toPage ?? p.pageCount;
+      if (p.fromPage > p.pageCount || to < p.fromPage) {
+        return t('val_pagenum_out_of_range', { n: p.pageCount });
+      }
+    }
+    return null;
+  },
   // fromPage/toPage are this document's page range, not a reusable setting —
   // the next file re-applies the saved format/position from page 1.
   presetFilter: ({ position, format, fontSize, showTotal }) => ({ position, format, fontSize, showTotal }),

@@ -617,6 +617,7 @@ window.PDFREE_LOCALE = {
   // toolRegistrations.js
   val_output_filename:      'Имя выходного файла',
   val_select_page:          'Выберите хотя бы одну страницу',
+  val_pagenum_out_of_range: 'Диапазон страниц вне допустимых границ — в этом документе {n} стр.',
   val_light_no_savings:     '⚠️ Пресет «Лёгкое» не нашёл ничего для удаления в этом PDF. Используйте «Стандартное» для реальной экономии.',
   val_wm_upload_logo:       'Загрузите изображение логотипа',
   val_wm_enter_text:        'Введите текст водяного знака',

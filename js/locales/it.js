@@ -616,6 +616,7 @@ window.PDFREE_LOCALE = {
   // toolRegistrations.js
   val_output_filename:      'Nome file di output',
   val_select_page:          'Seleziona almeno una pagina',
+  val_pagenum_out_of_range: "L'intervallo di pagine non è valido — questo documento ha {n} pagine.",
   val_light_no_savings:     "⚠️ Il preset Leggero non ha trovato nulla da rimuovere in questo PDF. Usa Standard per un risparmio reale.",
   val_wm_upload_logo:       "Carica un'immagine logo",
   val_wm_enter_text:        'Inserisci il testo della filigrana',

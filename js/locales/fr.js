@@ -618,6 +618,7 @@ window.PDFREE_LOCALE = {
   // toolRegistrations.js
   val_output_filename:      'Nom du fichier de sortie',
   val_select_page:          'Sélectionnez au moins une page',
+  val_pagenum_out_of_range: 'La plage de pages est hors limites — ce document compte {n} pages.',
   val_light_no_savings:     "⚠️ Le préréglage Léger n'a rien trouvé à supprimer dans ce PDF. Utilisez Standard pour de vraies économies.",
   val_wm_upload_logo:       'Importez une image de logo',
   val_wm_enter_text:        'Saisissez le texte du filigrane',

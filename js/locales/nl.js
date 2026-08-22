@@ -616,6 +616,7 @@ window.PDFREE_LOCALE = {
   // toolRegistrations.js
   val_output_filename:      'Bestandsnaam output',
   val_select_page:          'Selecteer ten minste één pagina',
+  val_pagenum_out_of_range: "Paginabereik valt buiten het bereik — dit document heeft {n} pagina's.",
   val_light_no_savings:     '⚠️ De voorinstelling Licht heeft niets gevonden om te verwijderen in deze PDF. Gebruik Standaard voor echte besparingen.',
   val_wm_upload_logo:       'Upload een logo-afbeelding',
   val_wm_enter_text:        'Voer watermerktekst in',

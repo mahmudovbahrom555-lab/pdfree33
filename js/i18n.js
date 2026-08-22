@@ -637,6 +637,7 @@ export const EN = {
   // ── toolRegistrations.js — merge filename + validate() messages ──
   val_output_filename:      'Output filename',
   val_select_page:          'Please select at least one page',
+  val_pagenum_out_of_range: 'Page range is out of bounds — this document has {n} page(s).',
   val_light_no_savings:     '⚠️ Light preset found nothing to remove in this PDF. Try Standard for real savings.',
   val_wm_upload_logo:       'Please upload a logo image',
   val_wm_enter_text:        'Please enter watermark text',

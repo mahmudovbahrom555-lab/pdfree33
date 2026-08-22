@@ -619,6 +619,7 @@ window.PDFREE_LOCALE = {
   // toolRegistrations.js
   val_output_filename:      'Ausgabedateiname',
   val_select_page:          'Bitte mindestens eine Seite auswählen',
+  val_pagenum_out_of_range: 'Seitenbereich liegt außerhalb — dieses Dokument hat {n} Seiten.',
   val_light_no_savings:     '⚠️ Die Voreinstellung „Gering" hat in diesem PDF nichts zu entfernen gefunden. Für echte Einsparungen „Standard" verwenden.',
   val_wm_upload_logo:       'Bitte ein Logo-Bild hochladen',
   val_wm_enter_text:        'Bitte einen Wasserzeichentext eingeben',

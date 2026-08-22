@@ -15,6 +15,7 @@ import { chipGroup, sliderRow, checkbox, presetRememberCard } from './uiComponen
 import { formatPageNumber } from './pageNumUtils.js';
 import { t } from './i18n.js';
 import { loadPreset, clearPreset } from './presets.js';
+import { loadPdfLib } from './lazyLibs.js';
 
 // ── State ──────────────────────────────────────────────────────
 let _position  = 'bottom-center'; // 'bottom-center'|'bottom-right'|'bottom-left'|'top-center'|'book'
@@ -26,6 +27,11 @@ let _autoStart = true;            // true = startAt mirrors fromPage automatical
 let _fontSize  = 10;
 let _showTotal = false;           // show "1 / N" instead of just "1"
 let _rememberLoaded = false;      // "Remember my settings" applied once per tool session
+// 0 = not known yet (or read failed) — validate() in toolRegistrations.js skips
+// the bounds check in that case rather than risk a false-positive block; the
+// worker's own clamp (js/worker.js) stays the last-resort safety net either way.
+let _pageCount = 0;
+let _pageCountGen = 0; // guards against a slower earlier read overwriting a later file's count
 
 export function getPageNumParams() {
   return {
@@ -38,12 +44,17 @@ export function getPageNumParams() {
     showTotal: _showTotal,
     // legacy compat: skipFirst = fromPage > 1
     skipFirst: _fromPage > 1,
+    // Real page count of the current (first/representative) file, once known —
+    // 0 means "not read yet or unreadable". See toolRegistrations.js's pagenum
+    // `validate`, which uses this to catch an out-of-range From/To that would
+    // otherwise silently number zero pages (see js/worker.js's own clamp).
+    pageCount: _pageCount,
   };
 }
 
 // ── Public API ─────────────────────────────────────────────────
 
-export function initPageNumOptions() {
+export function initPageNumOptions(file) {
   // Restore saved settings once per tool session — fromPage/toPage are never
   // part of the saved preset (this document's own page range, see
   // presetFilter in toolRegistrations.js), so numbering always starts fresh
@@ -62,6 +73,31 @@ export function initPageNumOptions() {
   const container = id('pageNumOptions');
   if (!container) return;
   container.style.display = 'block';
+
+  // Lightweight page-count read (for validate()'s bounds check only — no
+  // thumbnails/rotation-reading like rotateUI.js, this panel doesn't need
+  // them). Runs on every init call, independent of the render-guard below,
+  // so it stays current even when a later file replaces files[0] in the
+  // batch queue while the panel is already open. Generation-guarded so a
+  // slower read for an earlier file can't clobber a newer one that resolved
+  // first.
+  if (file) {
+    const myGen = ++_pageCountGen;
+    (async () => {
+      try {
+        await loadPdfLib();
+        const { PDFDocument } = window.PDFLib;
+        const buf = await file.arrayBuffer();
+        const doc = await PDFDocument.load(buf, { ignoreEncryption: true });
+        if (myGen !== _pageCountGen) return; // superseded by a newer file
+        _pageCount = doc.getPageCount();
+      } catch {
+        if (myGen !== _pageCountGen) return;
+        _pageCount = 0; // unknown — validate() skips the bounds check
+      }
+    })();
+  }
+
   // pagenum is multi:true/batch:true — dropping a 2nd file into the queue
   // re-fires 'pdfree:files-added' → this function again, while the panel
   // (file-independent: no filename/page-count content) is already open.
@@ -72,11 +108,12 @@ export function initPageNumOptions() {
   // themselves survive (closure vars, not reset here), but the DOM node
   // identity doesn't — skip the rebuild entirely if already rendered.
   //
-  // CAUTION — same as protectUI.js's identical guard: if this panel ever
-  // grows file-dependent content (e.g. From/To page caps actually clamped
-  // to the real page count instead of a hardcoded 9999), this guard would
-  // silently stop updating that content when a later file joins the batch.
-  // Switch to a static/per-file split (merge.js/jpg2pdf.js's pattern) then.
+  // The From/To inputs' visible `max` stays the hardcoded 9999 even after
+  // _pageCount is known — this guard is exactly why (see CAUTION above this
+  // comment previously): switch to merge.js/jpg2pdf.js's static/per-file
+  // split if this panel ever needs to reflect the real count in the DOM
+  // itself. validate() below is what actually catches an out-of-range value
+  // regardless, so this doesn't reopen the silent-no-op bug.
   if (id('pnFromInput')) return;
   _render();
 }
@@ -95,6 +132,8 @@ export function hidePageNumOptions() {
   _fontSize  = 10;
   _showTotal = false;
   _rememberLoaded = false;
+  _pageCount = 0;
+  _pageCountGen++; // invalidate any in-flight read from the file that just left
 }
 
 // ── Render ─────────────────────────────────────────────────────

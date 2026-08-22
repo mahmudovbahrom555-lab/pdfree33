@@ -617,6 +617,7 @@ window.PDFREE_LOCALE = {
   // toolRegistrations.js
   val_output_filename:      'Tên file đầu ra',
   val_select_page:          'Vui lòng chọn ít nhất một trang',
+  val_pagenum_out_of_range: 'Phạm vi trang nằm ngoài giới hạn — tài liệu này có {n} trang.',
   val_light_no_savings:     '⚠️ Cấu hình Nhẹ không tìm thấy gì để loại bỏ trong PDF này. Dùng Tiêu chuẩn để tiết kiệm thực sự.',
   val_wm_upload_logo:       'Vui lòng tải lên ảnh logo',
   val_wm_enter_text:        'Vui lòng nhập văn bản hình mờ',

@@ -616,6 +616,7 @@ window.PDFREE_LOCALE = {
   // toolRegistrations.js
   val_output_filename:      'Nazwa pliku wyjściowego',
   val_select_page:          'Wybierz co najmniej jedną stronę',
+  val_pagenum_out_of_range: 'Zakres stron jest nieprawidłowy — ten dokument ma {n} stron.',
   val_light_no_savings:     '⚠️ Ustawienie Lekkie nie znalazło niczego do usunięcia w tym pliku PDF. Użyj ustawienia Standardowe, aby uzyskać realne oszczędności.',
   val_wm_upload_logo:       'Prześlij obraz logo',
   val_wm_enter_text:        'Wpisz tekst znaku wodnego',

@@ -617,6 +617,7 @@ window.PDFREE_LOCALE = {
   // toolRegistrations.js
   val_output_filename:      'Nama file output',
   val_select_page:          'Pilih setidaknya satu halaman',
+  val_pagenum_out_of_range: 'Rentang halaman di luar batas — dokumen ini memiliki {n} halaman.',
   val_light_no_savings:     '⚠️ Preset Ringan tidak menemukan apa pun untuk dihapus di PDF ini. Gunakan Standar untuk penghematan nyata.',
   val_wm_upload_logo:       'Unggah gambar logo',
   val_wm_enter_text:        'Masukkan teks tanda air',

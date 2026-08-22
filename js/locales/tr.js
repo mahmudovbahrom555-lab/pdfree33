@@ -616,6 +616,7 @@ window.PDFREE_LOCALE = {
   // toolRegistrations.js
   val_output_filename:      'Çıktı dosya adı',
   val_select_page:          'Lütfen en az bir sayfa seçin',
+  val_pagenum_out_of_range: 'Sayfa aralığı sınırların dışında — bu belgede {n} sayfa var.',
   val_light_no_savings:     "⚠️ Hafif ön ayarı bu PDF'de kaldırılacak bir şey bulamadı. Gerçek tasarruf için Standart'ı kullanın.",
   val_wm_upload_logo:       'Bir logo görseli yükleyin',
   val_wm_enter_text:        'Filigran metnini girin',

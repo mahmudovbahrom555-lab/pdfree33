@@ -618,6 +618,7 @@ window.PDFREE_LOCALE = {
   // toolRegistrations.js
   val_output_filename:      '출력 파일 이름',
   val_select_page:          '최소 한 페이지를 선택해 주세요',
+  val_pagenum_out_of_range: '페이지 범위가 잘못되었습니다 — 이 문서는 {n}페이지입니다.',
   val_light_no_savings:     '⚠️ "가벼움" 프리셋으로 이 PDF에서 제거할 항목을 찾지 못했습니다. 실제로 용량을 줄이려면 "표준"을 사용해 주세요.',
   val_wm_upload_logo:       '로고 이미지를 업로드해 주세요',
   val_wm_enter_text:        '워터마크 텍스트를 입력해 주세요',

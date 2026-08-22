@@ -619,6 +619,7 @@ window.PDFREE_LOCALE = {
   // toolRegistrations.js
   val_output_filename:      '出力ファイル名',
   val_select_page:          '少なくとも1ページ選択してください',
+  val_pagenum_out_of_range: 'ページ範囲が範囲外です — この文書には{n}ページあります。',
   val_light_no_savings:     '⚠️「軽度」プリセットでは、このPDFから削除できるものが見つかりませんでした。実際に削減するには「標準」を使用してください。',
   val_wm_upload_logo:       'ロゴ画像をアップロードしてください',
   val_wm_enter_text:        '透かしテキストを入力してください',
