@@ -41,12 +41,6 @@ const MANUAL_REDIRECTS = {
   // No matching blog post exists for page numbering — send to the real tool page
   '/blog/pagenum-pdf':   '/pagenum-pdf/',
   '/blog/pagenum-pdf/':  '/pagenum-pdf/',
-  // split's translated slug is identical for es and pt ('dividir-pdf') — the
-  // bare, unprefixed URL is genuinely ambiguous between them, so
-  // GUESS_REDIRECTS below deliberately skips it rather than guess wrong.
-  // Tie-broken to es here (larger es-speaking search audience).
-  '/dividir-pdf':   '/es/dividir-pdf/',
-  '/dividir-pdf/':  '/es/dividir-pdf/',
   // Legacy English slugs
   '/index.html':     '/',
   '/annotate':       '/annotate-pdf/',
@@ -107,6 +101,23 @@ const MANUAL_REDIRECTS = {
   '/edit-metadata/': '/metadata-pdf/',
 };
 
+// Tie-break priority for bare (no locale-prefix) slug guesses shared
+// identically by 2+ locales — e.g. es and pt both translate "split" to
+// "dividir-pdf". Rather than leave every such collision 404ing forever
+// waiting on a human to notice and add a MANUAL_REDIRECTS entry (the
+// dividir-pdf precedent — and 9 more just like it were found completely
+// unhandled the same way, see gsc_redirect_report_meta_slug_bug memory),
+// the highest-priority locale among the actual colliding candidates wins
+// automatically. This is a deliberate, single, documented policy — es/pt/fr
+// are ordered from real evidence (every collision found so far only
+// involves these three); the rest are a reasonable default by rough global
+// search-audience size for PDF-tool-type queries, not individually
+// measured. Change this one list if that assumption turns out wrong —
+// don't add another one-off MANUAL_REDIRECTS entry to relitigate it.
+const LOCALE_TIE_BREAK_PRIORITY = [
+  'es', 'pt', 'fr', 'de', 'ru', 'ja', 'it', 'id', 'tr', 'ko', 'vi', 'nl', 'pl',
+];
+
 // ── Auto-derived locale-slug guess redirects ────────────────────────────────
 // Googlebot has crawled a handful of real pages where a locale's translated
 // slug happens to equal the EN slug (e.g. /id/metadata-pdf/, /id/ocr-pdf/,
@@ -122,16 +133,29 @@ const MANUAL_REDIRECTS = {
 // (renamed slugs, blog aliases, EN-only tools not in tools-config.json).
 function _buildGuessRedirects(config) {
   const redirects = {};
+  // Tracks every write so a same-key-different-value collision INTERNAL to
+  // this function (e.g. two tools accidentally configured with the same EN
+  // slug in tools-config.json) is caught rather than silently overwritten —
+  // structurally shouldn't be possible given valid config, but cheap to
+  // assert rather than assume. Distinct from the ambiguous-bare-slug case
+  // below, which is an expected, handled situation, not a bug.
+  const internalCollisions = [];
+  function set(key, value) {
+    if (key in redirects && redirects[key] !== value) {
+      internalCollisions.push({ key, existing: redirects[key], attempted: value });
+      return;
+    }
+    redirects[key] = value;
+  }
+
   const langDirs = {};
   for (const [lc, cfg] of Object.entries(config.languages)) {
     if (lc !== 'en') langDirs[lc] = cfg.dir;
   }
   const allEnSlugs = new Set(config.tools.map(t => t.slugs.en));
-  // slug (no locale prefix) → set of distinct real targets it could mean;
-  // only emit a bare-slug redirect when every tool+locale that uses this
-  // slug agrees on the same target — otherwise guessing would send some
-  // fraction of visitors to the wrong language, worse than a 404.
-  const bareSlugTargets = {};
+  // slug (no locale prefix) → every {lc, real} candidate that uses this
+  // slug as its translated slug.
+  const bareSlugCandidates = {};
 
   for (const tool of config.tools) {
     const enSlug = tool.slugs.en;
@@ -142,24 +166,35 @@ function _buildGuessRedirects(config) {
 
       // Pattern 1: {locale}/{EN-slug}/ → {locale}/{real-slug}/
       const guess1 = `/${dir}/${enSlug}`;
-      redirects[guess1] = real;
-      redirects[`${guess1}/`] = real;
+      set(guess1, real);
+      set(`${guess1}/`, real);
 
       // Pattern 2: {real-slug}/ (no locale prefix) → {locale}/{real-slug}/
       if (!allEnSlugs.has(slug)) {
-        (bareSlugTargets[slug] ??= new Set()).add(real);
+        (bareSlugCandidates[slug] ??= []).push({ lc, real });
       }
     }
   }
-  const ambiguousBareSlugs = [];
-  for (const [slug, targets] of Object.entries(bareSlugTargets)) {
-    if (targets.size !== 1) {
-      ambiguousBareSlugs.push({ slug, targets: [...targets] });
+
+  const ambiguousBareSlugs = []; // no candidate locale is even in the priority list — truly unresolved
+  const tieBreakResolved = [];   // resolved via LOCALE_TIE_BREAK_PRIORITY — visible, not a "problem"
+  for (const [slug, candidates] of Object.entries(bareSlugCandidates)) {
+    const distinctTargets = new Set(candidates.map(c => c.real));
+    if (distinctTargets.size === 1) {
+      set(`/${slug}`, candidates[0].real);
+      set(`/${slug}/`, candidates[0].real);
       continue;
     }
-    const target = [...targets][0];
-    redirects[`/${slug}`] = target;
-    redirects[`/${slug}/`] = target;
+    const ranked = candidates
+      .filter(c => LOCALE_TIE_BREAK_PRIORITY.includes(c.lc))
+      .sort((a, b) => LOCALE_TIE_BREAK_PRIORITY.indexOf(a.lc) - LOCALE_TIE_BREAK_PRIORITY.indexOf(b.lc));
+    if (ranked.length) {
+      set(`/${slug}`, ranked[0].real);
+      set(`/${slug}/`, ranked[0].real);
+      tieBreakResolved.push({ slug, winner: ranked[0].real, candidates: [...distinctTargets] });
+    } else {
+      ambiguousBareSlugs.push({ slug, targets: [...distinctTargets] });
+    }
   }
 
   // Tools absent from tools-config.json's `tools` list (EN-only, or with a
@@ -172,41 +207,42 @@ function _buildGuessRedirects(config) {
   };
   for (const [lc, path] of Object.entries(drawSlugs)) {
     const guess = `/${lc}/draw-on-pdf`;
-    redirects[guess] = `/${path}/`;
-    redirects[`${guess}/`] = `/${path}/`;
+    set(guess, `/${path}/`);
+    set(`${guess}/`, `/${path}/`);
   }
   // compare + scanDocument: genuinely EN-only, no locale page exists at all —
   // send any locale-guess to the real EN page rather than 404.
   for (const lc of Object.keys(langDirs)) {
-    redirects[`/${lc}/compare-pdf`] = '/compare-pdf/';
-    redirects[`/${lc}/compare-pdf/`] = '/compare-pdf/';
-    redirects[`/${lc}/scan-document`] = '/scan-document/';
-    redirects[`/${lc}/scan-document/`] = '/scan-document/';
+    set(`/${lc}/compare-pdf`, '/compare-pdf/');
+    set(`/${lc}/compare-pdf/`, '/compare-pdf/');
+    set(`/${lc}/scan-document`, '/scan-document/');
+    set(`/${lc}/scan-document/`, '/scan-document/');
   }
 
-  return { redirects, ambiguousBareSlugs };
+  return { redirects, ambiguousBareSlugs, tieBreakResolved, internalCollisions };
 }
 
-const { redirects: GUESS_REDIRECTS, ambiguousBareSlugs: AMBIGUOUS_BARE_SLUGS } = _buildGuessRedirects(toolsConfig);
+const {
+  redirects: GUESS_REDIRECTS,
+  ambiguousBareSlugs: AMBIGUOUS_BARE_SLUGS,
+  tieBreakResolved: TIE_BREAK_RESOLVED,
+  internalCollisions: INTERNAL_COLLISIONS,
+} = _buildGuessRedirects(toolsConfig);
 
 // MANUAL_REDIRECTS wins on overlap — a hand-added correction should never be
 // silently shadowed by the derived guess table.
 const REDIRECTS = { ...GUESS_REDIRECTS, ...MANUAL_REDIRECTS };
 
 // Exported (in addition to the default fetch handler below) purely so
-// tests/redirects-parity.test.js can check for two things nothing else
-// would ever surface:
-//  - MANUAL_REDIRECTS entries that have become redundant now that
-//    GUESS_REDIRECTS derives the same key (would otherwise accumulate dead
-//    overrides forever)
-//  - bare (no locale-prefix) slugs shared identically by 2+ locales/tools —
-//    _buildGuessRedirects already skips emitting a redirect for these rather
-//    than guess wrong, but that skip is otherwise invisible; a future new
-//    tool could introduce a fresh one that never gets a MANUAL_REDIRECTS
-//    tie-break because nobody knew it existed
-// Unused by the Worker runtime itself (Wrangler only bundles the default
-// export).
-export { MANUAL_REDIRECTS, GUESS_REDIRECTS, REDIRECTS, AMBIGUOUS_BARE_SLUGS, toolsConfig };
+// tests/redirects-parity.test.js can check for things nothing else would
+// ever surface: MANUAL_REDIRECTS entries now redundant with GUESS_REDIRECTS,
+// bare-slug collisions the tie-break policy couldn't resolve, and internal
+// generation collisions (a tools-config.json data mistake). Unused by the
+// Worker runtime itself (Wrangler only bundles the default export).
+export {
+  MANUAL_REDIRECTS, GUESS_REDIRECTS, REDIRECTS, toolsConfig,
+  LOCALE_TIE_BREAK_PRIORITY, AMBIGUOUS_BARE_SLUGS, TIE_BREAK_RESOLVED, INTERNAL_COLLISIONS,
+};
 
 // ── Feedback relay — POST /api/feedback → Telegram ─────────────────────────
 // No database: each submission is forwarded as a Telegram message via the
