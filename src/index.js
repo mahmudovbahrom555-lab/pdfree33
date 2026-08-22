@@ -15,68 +15,19 @@ import toolsConfig from '../data/tools-config.json' with { type: 'json' };
 // (see REDIRECTS below) — so a correction here always wins.
 const MANUAL_REDIRECTS = {
   // Locale slugs at root → correct locale URL
-  '/nivelar-pdf':    '/pt/nivelar-pdf/',
-  '/nivelar-pdf/':   '/pt/nivelar-pdf/',
-  '/pdf-abflachen':  '/de/pdf-abflachen/',
-  '/pdf-abflachen/': '/de/pdf-abflachen/',
-  '/aplanar-pdf':    '/es/aplanar-pdf/',
-  '/aplanar-pdf/':   '/es/aplanar-pdf/',
-  '/aplatir-pdf':    '/fr/aplatir-pdf/',
-  '/aplatir-pdf/':   '/fr/aplatir-pdf/',
-  '/pdf-zu-word':    '/de/pdf-zu-word/',
-  '/pdf-zu-word/':   '/de/pdf-zu-word/',
-  '/pdf-a-word':     '/es/pdf-a-word/',
-  '/pdf-a-word/':    '/es/pdf-a-word/',
-  '/pdf-en-word':    '/fr/pdf-en-word/',
-  '/pdf-en-word/':   '/fr/pdf-en-word/',
-  '/pdf-para-word':  '/pt/pdf-para-word/',
-  '/pdf-para-word/': '/pt/pdf-para-word/',
-  '/jpg-a-pdf':        '/es/jpg-a-pdf/',
-  '/jpg-a-pdf/':       '/es/jpg-a-pdf/',
-  '/pdf-a-jpg':        '/es/pdf-a-jpg/',
-  '/pdf-a-jpg/':       '/es/pdf-a-jpg/',
-  '/diviser-pdf':      '/fr/diviser-pdf/',
-  '/diviser-pdf/':     '/fr/diviser-pdf/',
-  '/seitenzahlen-pdf':  '/de/seitenzahlen-pdf/',
-  '/seitenzahlen-pdf/': '/de/seitenzahlen-pdf/',
-  '/pdf-metadaten':     '/de/pdf-metadaten/',
-  '/pdf-metadaten/':    '/de/pdf-metadaten/',
-  '/pdf-aufteilen':     '/de/pdf-aufteilen/',
-  '/pdf-aufteilen/':    '/de/pdf-aufteilen/',
-  '/pdf-komprimieren':  '/de/pdf-komprimieren/',
-  '/pdf-komprimieren/': '/de/pdf-komprimieren/',
-  // Old EN-slug-under-locale-prefix pages (predate per-locale slug localization)
-  '/fr/watermark-pdf':  '/fr/filigrane-pdf/',
-  '/fr/watermark-pdf/': '/fr/filigrane-pdf/',
-  '/fr/metadata-pdf':   '/fr/metadonnees-pdf/',
-  '/fr/metadata-pdf/':  '/fr/metadonnees-pdf/',
-  '/de/split-pdf':      '/de/pdf-aufteilen/',
-  '/de/split-pdf/':     '/de/pdf-aufteilen/',
-  '/de/merge-pdf':      '/de/pdf-zusammenfuehren/',
-  '/de/merge-pdf/':     '/de/pdf-zusammenfuehren/',
-  '/blog/split-pdf':    '/blog/how-to-split-a-pdf/',
-  '/blog/split-pdf/':   '/blog/how-to-split-a-pdf/',
-  '/de/pagenum-pdf':    '/de/seitenzahlen-pdf/',
-  '/de/pagenum-pdf/':   '/de/seitenzahlen-pdf/',
-  '/de/redact-pdf':     '/de/pdf-schwaerzen/',
-  '/de/redact-pdf/':    '/de/pdf-schwaerzen/',
-  '/pt/jpg2pdf':        '/pt/jpg-para-pdf/',
-  '/pt/jpg2pdf/':       '/pt/jpg-para-pdf/',
-  '/ja/pdf2jpg':        '/ja/pdf-jpg-henkan/',
-  '/ja/pdf2jpg/':       '/ja/pdf-jpg-henkan/',
-  // ja/draw-on-pdf and id/draw-on-pdf used to redirect here to the EN root
-  // (draw had no ja/id locale pages yet) — now covered correctly by
-  // GUESS_REDIRECTS below (→ /ja/pdf-byouga/, /id/gambar-pdf/), since draw
-  // now has real pages for both. Removed to avoid shadowing the correct
-  // generated redirect with this stale EN-root fallback.
-  // Old ES redact slug (before it was renamed to censurar-pdf)
+  // Old ES redact slug (before it was renamed to censurar-pdf) — not
+  // derivable by GUESS_REDIRECTS below (redact isn't in this pattern; it's a
+  // renamed-slug case, not a locale-prefix guess).
   '/es/tachar-pdf':     '/es/censurar-pdf/',
   '/es/tachar-pdf/':    '/es/censurar-pdf/',
-  // Bare blog slugs (real posts live at /blog/how-to-.../)
+  // Bare blog slugs (real posts live at /blog/how-to-.../) — blog content
+  // isn't in data/tools-config.json, so none of these are derivable either.
   '/blog/jpg2pdf':      '/blog/how-to-convert-pdf-to-jpg/',
   '/blog/jpg2pdf/':     '/blog/how-to-convert-pdf-to-jpg/',
   '/blog/merge-pdf':    '/blog/how-to-merge-pdf-files-for-free/',
   '/blog/merge-pdf/':   '/blog/how-to-merge-pdf-files-for-free/',
+  '/blog/split-pdf':    '/blog/how-to-split-a-pdf/',
+  '/blog/split-pdf/':   '/blog/how-to-split-a-pdf/',
   '/blog/rotate-pdf':   '/blog/how-to-rotate-pdf-pages/',
   '/blog/rotate-pdf/':  '/blog/how-to-rotate-pdf-pages/',
   '/blog/extract-pdf':  '/blog/how-to-extract-pages-from-pdf/',
@@ -237,6 +188,14 @@ const GUESS_REDIRECTS = _buildGuessRedirects(toolsConfig);
 // MANUAL_REDIRECTS wins on overlap — a hand-added correction should never be
 // silently shadowed by the derived guess table.
 const REDIRECTS = { ...GUESS_REDIRECTS, ...MANUAL_REDIRECTS };
+
+// Exported (in addition to the default fetch handler below) purely so
+// tests/redirects-parity.test.js can check MANUAL_REDIRECTS for entries that
+// have become redundant now that GUESS_REDIRECTS derives the same key —
+// otherwise MANUAL_REDIRECTS silently accumulates dead overrides nothing
+// ever prompts anyone to remove. Unused by the Worker runtime itself
+// (Wrangler only bundles the default export).
+export { MANUAL_REDIRECTS, GUESS_REDIRECTS, REDIRECTS };
 
 // ── Feedback relay — POST /api/feedback → Telegram ─────────────────────────
 // No database: each submission is forwarded as a Telegram message via the
