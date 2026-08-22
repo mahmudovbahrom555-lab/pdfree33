@@ -56,6 +56,7 @@ let _onSkip            = null;
 let _reviewMode        = 'camera'; // 'camera' | 'gallery' — controls Retake vs Skip in the review stage's action row
 let _resizeHandler    = null;
 let _liveTrackInterval = null;
+let _reviewGen          = 0;   // bumped on every close — lets in-flight _startReview() awaits bail out
 
 const _LIVE_TRACK_INTERVAL_MS = 200; // ~5fps — a framing guide doesn't need real video framerate
 
@@ -100,7 +101,14 @@ function _stopStream() {
   _stream = null;
 }
 
-function _closeModal() {
+// suppressOnSkip: true when the caller (_confirm/_skip) already resolved the
+// review itself — otherwise (✕ button, Escape, backdrop click) an explicit
+// close in gallery mode is treated the same as clicking Skip: without this,
+// dismissing the modal any way other than its own buttons left the calling
+// tool's review queue permanently stuck (onSkip/onConfirm never fired), with
+// the process button staying enabled but unable to ever complete.
+function _closeModal({ suppressOnSkip = false } = {}) {
+  _reviewGen++;  // invalidate any _startReview() awaits still in flight
   _stopStream();
   _stopLiveTracking();
   window.removeEventListener('resize', _resizeHandler);
@@ -109,6 +117,11 @@ function _closeModal() {
   _modal = null;
   _capturedCanvas = null;
   _quad = null;
+  if (!suppressOnSkip && _reviewMode === 'gallery') {
+    const cb = _onSkip;
+    _onSkip = null;  // guard against any possible double-invocation
+    cb?.();
+  }
 }
 
 function _onKeydown(e) {
@@ -242,11 +255,13 @@ function _capture(video) {
 // ── 'review' stage — frozen frame + draggable corner handles ────
 
 async function _startReview() {
+  const myGen   = ++_reviewGen;  // see _closeModal — bailed out if the modal closes mid-await below
   const stage   = document.getElementById('scanCamStage');
   const status  = document.getElementById('scanCamStatus');
   const actions = document.getElementById('scanCamActions');
 
   const blob = await new Promise(res => _capturedCanvas.toBlob(res, 'image/jpeg', 0.92));
+  if (myGen !== _reviewGen) { return; }  // modal closed while encoding the frame
   const url  = URL.createObjectURL(blob);
 
   stage.innerHTML = `
@@ -281,14 +296,17 @@ async function _startReview() {
 
   const img = document.getElementById('scanCamFrame');
   await new Promise(res => { img.onload = res; img.onerror = res; });
+  if (myGen !== _reviewGen) { return; }  // modal closed while the frame image loaded
 
   let detected = null;
   try {
     await loadOpenCv();
+    if (myGen !== _reviewGen) { return; }  // modal closed while OpenCV loaded
     detected = detectDocumentQuad(_capturedCanvas);
   } catch {
     // CDN failure or detection error — defaultInsetQuad below covers it
   }
+  if (myGen !== _reviewGen) { return; }  // modal closed while detecting the quad
   _quad = detected || defaultInsetQuad(_capturedCanvas.width, _capturedCanvas.height);
   status.textContent = detected ? '' : t('scan_cam_detect_fallback');
 
@@ -356,7 +374,7 @@ async function _confirm(reviewUrl) {
     const warped = warpToRect(_capturedCanvas, _quad);
     URL.revokeObjectURL(reviewUrl);
     const cb = _onConfirm;
-    _closeModal();
+    _closeModal({ suppressOnSkip: true });  // resolved via Confirm, not Skip
     cb?.(warped);
   } catch {
     status.textContent = t('scan_cam_processing_failed');
@@ -365,7 +383,5 @@ async function _confirm(reviewUrl) {
 
 function _skip(reviewUrl) {
   URL.revokeObjectURL(reviewUrl);
-  const cb = _onSkip;
-  _closeModal();
-  cb?.();
+  _closeModal();  // gallery-mode close already fires onSkip — see _closeModal
 }
