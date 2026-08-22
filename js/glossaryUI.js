@@ -24,10 +24,22 @@ import { t } from './i18n.js';
 let _file = null;
 
 export function initGlossaryOptions(file) {
-  _file = file;
   const container = id('glossaryOptions');
   if (!container) return;
 
+  // Preserve any already-typed dictionary text across a re-init for the
+  // SAME file. js/app.js's global 'pdfree:file-decrypted' listener calls
+  // initToolOptions() — and therefore this function — again whenever any
+  // encrypted PDF's async owner-only-decrypt check settles, REGARDLESS of
+  // whether it actually succeeded. Confirmed via a real Playwright test:
+  // without this, a user who starts typing their dictionary before that
+  // async check resolves has their input silently wiped by the
+  // unconditional innerHTML rebuild below. A genuinely different file
+  // (the common, non-racy case) still starts blank, as before.
+  const existingTextarea = id('glsDictionary');
+  const preservedDictionary = (existingTextarea && _file === file) ? existingTextarea.value : '';
+
+  _file = file;
   container.style.display = 'block';
   container.innerHTML = `
     <div style="padding:12px;background:var(--surface);border:1px solid var(--border);border-radius:8px;margin-bottom:12px;font-size:13px;color:var(--text2);">
@@ -46,6 +58,7 @@ export function initGlossaryOptions(file) {
 
   const textarea = id('glsDictionary');
   if (textarea) {
+    textarea.value = preservedDictionary;
     textarea.addEventListener('input', _updateParsedCount);
     _updateParsedCount();
   }
