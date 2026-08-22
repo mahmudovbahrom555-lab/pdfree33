@@ -650,6 +650,11 @@ function initEvents() {
     initToolOptions(currentTool, [...selectedFiles]);
   });
 
+  // Merge's process button depends partly on the shared watermark-removal toggle
+  // (see files.js's _updateMeta) — refresh it the moment the toggle changes, not
+  // just on the next file add/remove.
+  document.addEventListener('pdfree:wm-remove-changed', () => renderList(true));
+
   document.addEventListener('pdfree:success', e => _handleSuccess(e.detail));
 
   // Cross-sell handoff: when user clicks a link with data-handoff and a result

@@ -11,6 +11,7 @@ import { ACCEPTED_MIME, TOOLS } from './config.js';
 import { t, tp } from './i18n.js';
 import { decryptOwnerOnly } from './decryptPdf.js';
 import { bindDragReorder } from './dragReorder.js';
+import { getWmRemove } from './watermarkRemoveUI.js';
 
 // ── PDF encryption preflight ──────────────────────────────────
 //
@@ -401,7 +402,12 @@ function _updateMeta() {
 
     // Не снимаем disabled если идёт обработка
     if (!_locked) {
-      btn.disabled = count < (_currentTool === 'merge' ? 2 : 1);
+      // Merge normally needs 2+ files, but a single file is a valid input when the
+      // user just wants to strip watermarks (handleMerge in worker.js runs fine on
+      // one file) — the watermark-removal toggle is visible and interactive at
+      // count===1, so requiring 2 files unconditionally made that toggle a dead end.
+      const mergeMin = _currentTool === 'merge' && !getWmRemove() ? 2 : 1;
+      btn.disabled = count < mergeMin;
     }
   } else {
     hide('fileCount');

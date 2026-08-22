@@ -38,5 +38,8 @@ export function wmRemoveHtml() {
 export function bindWmRemove() {
   document.getElementById(WM_TOGGLE_ID)?.addEventListener('change', e => {
     _active = e.target.checked;
+    // Merge's process button is enabled/disabled based partly on this toggle
+    // (see files.js's _updateMeta) — refresh it now, not just on file add/remove.
+    document.dispatchEvent(new CustomEvent('pdfree:wm-remove-changed'));
   });
 }
