@@ -151,8 +151,12 @@ function _buildGuessRedirects(config) {
       }
     }
   }
+  const ambiguousBareSlugs = [];
   for (const [slug, targets] of Object.entries(bareSlugTargets)) {
-    if (targets.size !== 1) continue;
+    if (targets.size !== 1) {
+      ambiguousBareSlugs.push({ slug, targets: [...targets] });
+      continue;
+    }
     const target = [...targets][0];
     redirects[`/${slug}`] = target;
     redirects[`/${slug}/`] = target;
@@ -180,22 +184,29 @@ function _buildGuessRedirects(config) {
     redirects[`/${lc}/scan-document/`] = '/scan-document/';
   }
 
-  return redirects;
+  return { redirects, ambiguousBareSlugs };
 }
 
-const GUESS_REDIRECTS = _buildGuessRedirects(toolsConfig);
+const { redirects: GUESS_REDIRECTS, ambiguousBareSlugs: AMBIGUOUS_BARE_SLUGS } = _buildGuessRedirects(toolsConfig);
 
 // MANUAL_REDIRECTS wins on overlap — a hand-added correction should never be
 // silently shadowed by the derived guess table.
 const REDIRECTS = { ...GUESS_REDIRECTS, ...MANUAL_REDIRECTS };
 
 // Exported (in addition to the default fetch handler below) purely so
-// tests/redirects-parity.test.js can check MANUAL_REDIRECTS for entries that
-// have become redundant now that GUESS_REDIRECTS derives the same key —
-// otherwise MANUAL_REDIRECTS silently accumulates dead overrides nothing
-// ever prompts anyone to remove. Unused by the Worker runtime itself
-// (Wrangler only bundles the default export).
-export { MANUAL_REDIRECTS, GUESS_REDIRECTS, REDIRECTS };
+// tests/redirects-parity.test.js can check for two things nothing else
+// would ever surface:
+//  - MANUAL_REDIRECTS entries that have become redundant now that
+//    GUESS_REDIRECTS derives the same key (would otherwise accumulate dead
+//    overrides forever)
+//  - bare (no locale-prefix) slugs shared identically by 2+ locales/tools —
+//    _buildGuessRedirects already skips emitting a redirect for these rather
+//    than guess wrong, but that skip is otherwise invisible; a future new
+//    tool could introduce a fresh one that never gets a MANUAL_REDIRECTS
+//    tie-break because nobody knew it existed
+// Unused by the Worker runtime itself (Wrangler only bundles the default
+// export).
+export { MANUAL_REDIRECTS, GUESS_REDIRECTS, REDIRECTS, AMBIGUOUS_BARE_SLUGS, toolsConfig };
 
 // ── Feedback relay — POST /api/feedback → Telegram ─────────────────────────
 // No database: each submission is forwarded as a Telegram message via the
