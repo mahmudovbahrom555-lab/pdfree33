@@ -42,6 +42,8 @@ import { initRotateOptions, hideRotateOptions,
          getRotateParams }              from './rotateUI.js';
 import { initOrganizeOptions, hideOrganizeOptions,
          getOrganizeParams }            from './organizeUI.js';
+import { initGlossaryOptions, hideGlossaryOptions,
+         getGlossaryParams }            from './glossaryUI.js';
 import { initResizeOptions, hideResizeOptions,
          getResizeParams }              from './resizeUI.js';
 import { initMangaSplitOptions, hideMangaSplitOptions,
@@ -369,6 +371,20 @@ registerTool('organize', {
   // No presetFilter — page order/deletions/rotations are 100% specific to
   // this document, same reasoning that excludes rotate entirely and strips
   // exifAngles/pages from jpg2pdf's and pdf2jpg's presets.
+});
+
+registerTool('glossary', {
+  runner:     'glossary', // dedicated js/glossaryWorker.js, not the shared js/worker.js — see processor.js's _runGlossary
+  init:       initGlossaryOptions,
+  hide:       hideGlossaryOptions,
+  getParams:  getGlossaryParams,
+  validate:   (p) => {
+    if (!p.hasFile) return t('val_glossary_no_dictionary');
+    if (p.dictionary.length === 0) return t('val_glossary_no_dictionary');
+    return null;
+  },
+  // No presetFilter — the dictionary is pasted fresh per document, same
+  // reasoning as organize's page order: nothing here generalizes.
 });
 
 registerTool('resize', {

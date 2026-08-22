@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+  <!--
+    ════════════════════════════════════════════════════════════════
+    Content Security Policy — defence-in-depth against XSS
+    Same baseline as compare-pdf/index.html — no camera/OpenCV, this
+    tool only needs pdf.js (cdnjs) + pdf-lib (vendored locally).
+    ════════════════════════════════════════════════════════════════
+  -->
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src  'self'
+                'wasm-unsafe-eval'
+                blob:
+                https://cdnjs.cloudflare.com
+                https://esm.sh
+                https://pagead2.googlesyndication.com
+                https://static.cloudflareinsights.com;
+    style-src   'self' 'unsafe-inline';
+    font-src    'self';
+    img-src     'self' data: blob: https:;
+    connect-src 'self'
+                https://cdnjs.cloudflare.com
+                https://*.workers.dev
+                https://pagead2.googlesyndication.com
+                https://www.googletagservices.com
+                https://*.doubleclick.net
+                https://cloudflareinsights.com;
+    frame-src   https://googleads.g.doubleclick.net
+                https://tpc.googlesyndication.com;
+    worker-src  'self' blob:;
+    object-src  'none';
+  ">
+
+  <title>Document Glossary — Add Clickable Term Definitions to a PDF | PDFree</title>
+  <meta name="description" content="Add clickable definitions to terms in a PDF — highlight a term, attach a popup note with its meaning, without editing the original text. Free, private, no upload.">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title"        content="Document Glossary — Add Clickable Term Definitions | PDFree">
+  <meta property="og:description"  content="Paste a term/definition list and PDFree highlights every matching term in your PDF with a clickable popup definition — no editing, no upload.">
+  <meta property="og:type"         content="website">
+  <meta property="og:url"          content="https://pdfree.io/glossary-pdf/">
+  <meta property="og:site_name"    content="PDFree">
+  <meta property="og:locale"       content="en_US">
+  <meta property="og:image"        content="https://pdfree.io/icons/og-image.jpg">
+  <meta property="og:image:width"  content="1200">
+  <meta property="og:image:height" content="633">
+  <meta property="og:image:alt"    content="Document Glossary — Add Clickable Term Definitions | PDFree">
+  <meta name="twitter:card"        content="summary_large_image">
+  <meta name="twitter:site"        content="@pdfree_io">
+  <meta name="twitter:image"       content="https://pdfree.io/icons/og-image.jpg">
+  <meta name="twitter:title"       content="Document Glossary — Add Clickable Term Definitions | PDFree">
+  <meta name="twitter:description" content="Paste a term/definition list and PDFree highlights every matching term in your PDF with a clickable popup definition — no editing, no upload.">
+
+  <link rel="canonical" href="https://pdfree.io/glossary-pdf/">
+  <link rel="alternate" hreflang="en"        href="https://pdfree.io/glossary-pdf/">
+  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/glossary-pdf/">
+
+  <!-- PWA -->
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="PDFree">
+  <link rel="apple-touch-icon" href="../icons/icon-192.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <!-- Resource hints -->
+  <link rel="preconnect" href="https://static.cloudflareinsights.com">
+  <link rel="preload" href="../fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="modulepreload" href="../js/app.js">
+
+  <link rel="stylesheet" href="../css/fonts.css">
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/animations.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+
+  <script src="../js/theme.js"></script>
+  <script src="../js/priorityNav.js" defer></script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Document Glossary — PDFree",
+    "url": "https://pdfree.io/glossary-pdf/",
+    "description": "Add clickable definitions to terms in a PDF. Paste a term/definition list and PDFree highlights every matching occurrence with a popup note — the original text is never edited, everything runs in your browser.",
+    "applicationCategory": "UtilityApplication",
+    "operatingSystem": "Any",
+    "browserRequirements": "Requires a modern browser with JavaScript enabled",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "featureList": [
+      "Highlights every occurrence of each dictionary term automatically",
+      "Attaches a standard PDF popup annotation with the definition",
+      "Original document text is never modified",
+      "Works with any language and script the PDF's own font supports",
+      "No file upload required",
+      "100% private — files processed locally",
+      "No account or signup needed"
+    ],
+    "dateModified": "2026-08-23",
+    "provider": {
+      "@type": "Organization",
+      "name": "PDFree",
+      "url": "https://pdfree.io",
+      "description": "PDFree is a free, privacy-first PDF toolkit that runs entirely in the browser — files are processed locally and never uploaded to a server.",
+      "logo": "https://pdfree.io/icons/icon-512.png"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "PDFree", "item": "https://pdfree.io/" },
+      { "@type": "ListItem", "position": 2, "name": "Document Glossary", "item": "https://pdfree.io/glossary-pdf/" }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Does this upload my PDF or my definitions anywhere?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. The term search and the annotation writing both happen locally in your browser. Nothing is uploaded to PDFree's servers or anywhere else."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does this tool edit the original text of my PDF?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. It adds standard PDF Highlight and Popup annotations on top of the existing page — the underlying text, layout, and fonts are untouched. Your document stays searchable and selectable exactly as before."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do popups behave — do they open on hover or on click?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "On click or tap. True hover-only tooltips aren't reliably supported across PDF viewers (and don't mean anything on a touchscreen), so every highlighted term opens its definition when clicked — the one interaction every major PDF viewer supports for annotations."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Will the definitions show up in any PDF viewer?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The Highlight and Popup annotations this tool creates are part of the standard PDF specification, supported by Adobe Acrobat/Reader, Apple Preview, most mobile PDF apps, and browser PDF viewers including Chrome and Firefox. Exactly how the popup is presented (a small note box, a sidebar entry) varies by viewer, since that's each viewer's own choice, not something a PDF file controls."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What format does the term list need to be in?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "One entry per line: the term, then a dash, then its definition — for example \"karma - the principle of cause and effect governing action.\" Paste your existing list directly; no file upload or special formatting is required."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What if a term appears many times in the document?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Every occurrence gets its own highlight and its own popup with the same definition — you don't need to list a term more than once in your dictionary."
+      }
+    }
+  ]
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to Add Clickable Term Definitions to a PDF",
+  "description": "Paste a term/definition list and highlight every matching term in a PDF with a clickable popup definition — free, no upload required.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Upload your PDF",
+      "text": "Drop the PDF you want to annotate, or choose it from your device."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Paste your term list",
+      "text": "One entry per line: term, dash, definition — for example \"dharma - cosmic law and duty.\""
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Generate and download",
+      "text": "PDFree finds every matching term, highlights it, and attaches a clickable popup with its definition — then you download the result."
+    }
+  ]
+}
+  </script>
+</head>
+<body data-tool="glossary">
+
+  <nav>
+    <a href="../" class="logo" id="logo" aria-label="Go to homepage" style="text-decoration:none"><span class="logo-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></span><span class="logo-text">PDF<span>ree</span></span></a>
+    <div class="nav-links">
+      <a href="../merge-pdf/"    class="nav-link" data-tool="merge">Merge</a>
+      <a href="../split-pdf/"    class="nav-link" data-tool="split">Split</a>
+      <a href="../compress-pdf/" class="nav-link" data-tool="compress">Compress</a>
+      <a href="../jpg2pdf/"      class="nav-link" data-tool="jpg2pdf">JPG→PDF</a>
+      <a href="../pdf2jpg/"      class="nav-link" data-tool="pdf2jpg">PDF→JPG</a>
+      <a href="../watermark-pdf/" class="nav-link" data-tool="watermark">Watermark</a>
+      <a href="../pagenum-pdf/"  class="nav-link" data-tool="pagenum">Page №</a>
+      <a href="../metadata-pdf/" class="nav-link" data-tool="meta">Metadata</a>
+      <a href="../extract-pdf/"  class="nav-link" data-tool="extract">Extract</a>
+      <a href="../draw-on-pdf/"  class="nav-link" data-tool="draw-pdf">Draw</a>
+      <a href="../rotate-pdf/"   class="nav-link" data-tool="rotate">Rotate</a>
+      <a href="../protect-pdf/"  class="nav-link" data-tool="protect">Protect</a>
+      <a href="../pdf-to-word/"  class="nav-link" data-tool="pdf2word">PDF→Word</a>
+    </div>
+    <details class="nav-more" id="navMore">
+      <summary aria-label="More tools">More <span class="nav-more__badge"></span></summary>
+      <div class="nav-more__menu"></div>
+    </details>
+    <details class="lang-switch" id="langSwitch">
+      <summary aria-label="Change language">🌐 EN</summary>
+      <div class="lang-switch__menu" role="menu">
+        <a href="https://pdfree.io/glossary-pdf/" role="menuitem" aria-current="true">English</a>
+      </div>
+    </details>
+    <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode"></button>
+  </nav>
+
+  <nav aria-label="Breadcrumb" style="position:static;padding:8px 24px;border-bottom:1px solid var(--border);background:var(--surface);">
+    <ol style="list-style:none;margin:0;padding:0;display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text3);"
+        itemscope itemtype="https://schema.org/BreadcrumbList">
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a href="/" itemprop="item" style="color:var(--green);text-decoration:none;font-weight:500;">
+          <span itemprop="name">PDFree</span>
+        </a>
+        <meta itemprop="position" content="1">
+      </li>
+      <li aria-hidden="true" style="color:var(--border);">›</li>
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a href="/glossary-pdf/" itemprop="item" style="color:var(--text2);text-decoration:none;" aria-current="page">
+          <span itemprop="name">Document Glossary</span>
+        </a>
+        <meta itemprop="position" content="2">
+      </li>
+    </ol>
+  </nav>
+
+  <!-- ── Tool workspace ── -->
+  <main id="toolArea" class="main-area" aria-busy="false">
+
+    <div class="tool-header">
+      <div class="tool-header-icon" id="toolIcon" aria-hidden="true">📖</div>
+      <div class="tool-header-text">
+        <h2 id="toolTitle">Document Glossary</h2>
+        <p  id="toolDesc">Add clickable term definitions to a PDF — highlight terms, attach a popup note, no editing of the original text.</p>
+      </div>
+    </div>
+
+    <div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-label="Drop a PDF here or choose a file">
+      <input type="file" id="fileInput" accept=".pdf,application/pdf" aria-hidden="true">
+      <span class="drop-icon" aria-hidden="true">📖</span>
+      <div class="drop-title">Drop your PDF here</div>
+      <div class="drop-sub">or choose a file to add term definitions</div>
+      <label class="drop-btn" id="chooseFilesBtn" for="fileInput">Choose PDF</label>
+    </div>
+
+    <div id="fileList"    class="file-list" aria-live="polite" aria-label="Selected files"></div>
+    <div id="fileCount"   class="file-count"   style="display:none"></div>
+    <div id="reorderHint" class="reorder-hint" style="display:none"></div>
+
+    <div id="mergeOptions"     class="j2p-options"     style="display:none" aria-label="Merge options"></div>
+    <div id="splitOptions"     class="split-options"   style="display:none" aria-label="Split options"></div>
+    <div id="compressOptions"  class="compress-options" style="display:none" aria-label="Compression options"></div>
+    <div id="jpg2pdfOptions"   class="j2p-options"     style="display:none" aria-label="JPG to PDF options"></div>
+    <div id="scanDocumentOptions" class="j2p-options"  style="display:none" aria-label="Document Scanner options"></div>
+    <div id="pdf2jpgOptions"   class="j2p-options"     style="display:none" aria-label="PDF to JPG options"></div>
+    <div id="watermarkOptions" class="j2p-options"     style="display:none" aria-label="Watermark options"></div>
+    <div id="pageNumOptions"   class="j2p-options"     style="display:none" aria-label="Page numbers options"></div>
+    <div id="metaOptions"      class="j2p-options"     style="display:none" aria-label="Metadata editor"></div>
+    <div id="protectOptions"   class="j2p-options"     style="display:none" aria-label="Protect PDF options"></div>
+    <div id="redactOptions"    class="j2p-options"     style="display:none" aria-label="Cover area options"></div>
+    <div id="rotateOptions"    class="j2p-options"     style="display:none" aria-label="Rotate PDF options"></div>
+    <div id="fillOptions"      class="j2p-options"     style="display:none" aria-label="Fill PDF form options"></div>
+    <div id="ocrOptions"       class="j2p-options"     style="display:none" aria-label="OCR options"></div>
+    <div id="pdf2wordOptions"  class="j2p-options"     style="display:none" aria-label="PDF to Word options"></div>
+    <div id="compareOptions"   class="j2p-options"     style="display:none" aria-label="Compare PDF options"></div>
+    <div id="organizeOptions"  class="j2p-options"     style="display:none" aria-label="Organize PDF options"></div>
+    <div id="glossaryOptions"  class="j2p-options"     style="display:none" aria-label="Document Glossary options"></div>
+
+    <button id="mergeBtn"  class="merge-btn"  type="button" disabled data-mode="process">📖 Add Definitions</button>
+    <button id="cancelBtn" class="cancel-btn" type="button" style="display:none" aria-label="Cancel">Cancel</button>
+
+    <div id="progressBar"   class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+    <div id="progressLabel" class="progress-label"></div>
+
+    <div id="successCard" class="success-card" role="alert" aria-live="polite" style="display:none">
+      <div class="success-top">
+        <div class="success-icon" aria-hidden="true">✓</div>
+        <div class="success-text">
+          <h3 id="successTitle">Done!</h3>
+          <p  id="successDesc"></p>
+        </div>
+        <button id="downloadBtn" class="download-btn" type="button" style="display:none">Download</button>
+        <button id="shareBtn"    class="share-btn"    type="button" style="display:none" aria-label="Send file via device apps"></button>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ── SEO Content (for indexing) ── -->
+  <hr style="border:none;border-top:2px solid var(--border);margin:48px 24px 0;" aria-hidden="true">
+  <section class="seo-article" aria-label="Document Glossary">
+    <div class="seo-article__inner" style="max-width:800px;margin:0 auto;padding:0 24px 60px;color:var(--text2);line-height:1.75;">
+
+      <h1 style="font-size:clamp(22px,3.5vw,30px);color:var(--text);margin:40px 0 16px;font-weight:700;">Document Glossary — Clickable Term Definitions in a PDF</h1>
+
+      <p style="font-size:15px;margin:0 0 20px;">Editing a text for newcomers — a religious text, a textbook, a technical manual — usually means the same specialized terms come up again and again, and not every reader already knows them. PDFree's Document Glossary lets you paste a list of term/definition pairs and automatically highlights every matching occurrence in your PDF, attaching a standard clickable popup with the definition — without changing a single word of your original text.</p>
+      <p style="font-size:15px;margin:0 0 40px;">The output is a normal PDF. It opens in Adobe Acrobat, Apple Preview, browser PDF viewers, and most mobile apps — the highlights and definitions use the PDF format's own built-in annotation system, not anything custom that only works in one viewer.</p>
+
+      <h3 style="font-size:18px;color:var(--text);margin:32px 0 12px;font-weight:700;">How it works</h3>
+      <ol style="font-size:15px;padding-left:20px;margin:0 0 32px;">
+        <li style="margin-bottom:10px;"><strong>Upload your PDF.</strong> The one you want to add definitions to.</li>
+        <li style="margin-bottom:10px;"><strong>Paste your term list.</strong> One entry per line: the term, a dash, then its definition.</li>
+        <li style="margin-bottom:10px;"><strong>Download the result.</strong> Every matching term is highlighted with a clickable definition attached — open it in any PDF viewer and click a highlighted term to see its meaning.</li>
+      </ol>
+
+      <h3 style="font-size:18px;color:var(--text);margin:32px 0 12px;font-weight:700;">What this tool deliberately doesn't do</h3>
+      <p style="font-size:15px;margin:0 0 32px;">It doesn't rewrite or reflow your document's text, and it doesn't rely on hover-only tooltips or PDF JavaScript — both are unreliable outside one specific desktop viewer. Every definition opens on click or tap, the one interaction every major PDF viewer supports for annotations.</p>
+
+    </div>
+  </section>
+
+  <section aria-label="All PDF tools" style="text-align:center;padding:32px 24px;border-top:1px solid var(--border);">
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:16px;">All PDF Tools</div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:800px;margin:0 auto;">
+      <a href="../merge-pdf/"               class="tool-pill">Merge PDF</a>
+      <a href="../split-pdf/"               class="tool-pill">Split PDF</a>
+      <a href="../compress-pdf/"            class="tool-pill">Compress PDF</a>
+      <a href="../jpg2pdf/"                 class="tool-pill">JPG to PDF</a>
+      <a href="../pdf2jpg/"                 class="tool-pill">PDF to JPG</a>
+      <a href="../extract-pdf/"             class="tool-pill">Extract Pages</a>
+      <a href="../watermark-pdf/"           class="tool-pill">Watermark PDF</a>
+      <a href="../pagenum-pdf/"             class="tool-pill">Page Numbers</a>
+      <a href="../metadata-pdf/"            class="tool-pill">Edit Metadata</a>
+      <a href="../redact-pdf/"              class="tool-pill">Redact PDF</a>
+      <a href="../rotate-pdf/"              class="tool-pill">Rotate PDF</a>
+      <a href="../protect-pdf/"             class="tool-pill">Protect PDF</a>
+      <a href="../draw-on-pdf/"             class="tool-pill">Draw on PDF</a>
+      <a href="../fill/"                    class="tool-pill">Fill PDF Form</a>
+      <a href="../ocr-pdf/"                 class="tool-pill">OCR PDF</a>
+      <a href="../compare-pdf/"             class="tool-pill">Compare PDF</a>
+      <a href="../organize-pdf/"            class="tool-pill">Organize PDF</a>
+      <a href="../scan-document/"           class="tool-pill">Document Scanner</a>
+    </div>
+  </section>
+
+  <footer>
+    <div style="display:flex;gap:48px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;font-size:13px;border-top:1px solid var(--border);padding-top:20px;">
+      <div>
+        <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Alternatives</div>
+        <a href="/ilovepdf-alternative/" style="display:block;color:var(--green);text-decoration:none;margin-bottom:4px;">iLovePDF Alternative</a>
+        <a href="/smallpdf-alternative/" style="display:block;color:var(--green);text-decoration:none;">Smallpdf Alternative</a>
+      </div>
+      <div>
+        <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Solutions</div>
+        <a href="/hipaa-pdf-tools/" style="display:block;color:var(--green);text-decoration:none;margin-bottom:4px;">HIPAA Compliant PDF</a>
+        <a href="/secure-pdf-tools/" style="display:block;color:var(--green);text-decoration:none;">Secure PDF Tools</a>
+      </div>
+    </div>
+    PDFree · <strong>All processing happens 100% in your browser</strong> · Files are <strong>never uploaded</strong><br>
+    <span style="color:var(--green)">🔒</span> Your documents never leave your device &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> Built to be free for everyone, forever<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
+      <a href="/privacy.html" style="color:var(--green)">Privacy</a>
+      &nbsp;·&nbsp;
+      <a href="/terms.html" style="color:var(--green)">Terms</a>
+      &nbsp;·&nbsp;
+      <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a>
+      &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green)">GitHub</a>
+    </span>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <!-- SW update banner — shown when a new version is waiting -->
+  <div id="swUpdateBanner" role="alert" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:200;background:var(--green);color:#fff;padding:12px 20px;align-items:center;justify-content:center;gap:12px;font-size:14px;flex-wrap:wrap;">
+    <span>A new version of PDFree is ready.</span>
+    <button id="swUpdateNow" type="button" style="background:#fff;color:var(--green);border:none;border-radius:6px;padding:5px 16px;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit;">Update now</button>
+    <button id="swUpdateLater" type="button" style="background:transparent;color:#fff;border:1px solid rgba(255,255,255,.6);border-radius:6px;padding:5px 16px;font-size:13px;cursor:pointer;font-family:inherit;">Later</button>
+  </div>
+
+  <!-- tool detected via <body data-tool="glossary"> — no inline script needed -->
+  <script type="module" src="../js/app.js"></script>
+
+<!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

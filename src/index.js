@@ -243,13 +243,15 @@ function _buildGuessRedirects(config) {
     set(guess, `/${path}/`);
     set(`${guess}/`, `/${path}/`);
   }
-  // compare + scanDocument: genuinely EN-only, no locale page exists at all —
-  // send any locale-guess to the real EN page rather than 404.
+  // compare + scanDocument + glossary: genuinely EN-only, no locale page
+  // exists at all — send any locale-guess to the real EN page rather than 404.
   for (const lc of Object.keys(langDirs)) {
     set(`/${lc}/compare-pdf`, '/compare-pdf/');
     set(`/${lc}/compare-pdf/`, '/compare-pdf/');
     set(`/${lc}/scan-document`, '/scan-document/');
     set(`/${lc}/scan-document/`, '/scan-document/');
+    set(`/${lc}/glossary-pdf`, '/glossary-pdf/');
+    set(`/${lc}/glossary-pdf/`, '/glossary-pdf/');
   }
 
   return { redirects, ambiguousBareSlugs, tieBreakResolved, internalCollisions };

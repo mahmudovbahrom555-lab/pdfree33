@@ -102,6 +102,7 @@ for (const tool of toolsConfig.tools) {
 // special-cased real pages src/index.js's _buildGuessRedirects hand-adds.
 realPages.add('/compare-pdf/');
 realPages.add('/scan-document/');
+realPages.add('/glossary-pdf/');
 
 test('no GUESS_REDIRECTS key shadows a real tool page (auto-generated — hard gate)', () => {
   const collisions = Object.keys(GUESS_REDIRECTS).filter(k => k.endsWith('/') && realPages.has(k));

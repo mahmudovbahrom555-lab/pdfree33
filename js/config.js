@@ -523,6 +523,21 @@ export const TOOLS = {
     accept:      '.jpg,.jpeg,.png,.webp,.heic,.heif,image/jpeg,image/png,image/webp,image/heic,image/heif',
     implemented: true,
   },
+  glossary: {
+    icon:        '📖',
+    title:       'Document Glossary',
+    desc:        'Add clickable term definitions to a PDF — highlight terms, attach a popup note, no editing of the original text',
+    tags:        ['glossary', 'definitions', 'annotate terms', 'term definitions',
+                  'highlight and define', 'popup annotation', 'clickable definitions',
+                  'study guide pdf', 'add definitions to pdf'],
+    titles: { en: 'Document Glossary' },
+    descs:  { en: 'Add clickable term definitions to a PDF — highlight terms, attach a popup note, no editing of the original text' },
+    btns:   { en: '📖 Add Definitions' },
+    btn:         '📖 Add Definitions',
+    multi:       false,
+    accept:      '.pdf,application/pdf',
+    implemented: true,
+  },
   // Analysis + conversion (Phases 1-2 of the PDF/A plan) done; tool-grid
   // card + this dict's titles/descs/btns are Phase 3. The dedicated SEO
   // page (data/content/*/pdf2pdfa.html) is still EN-only — see

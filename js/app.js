@@ -55,6 +55,7 @@ import { saveHandoff, restoreHandoff }            from './handoff.js';
 const TOOL_SLUGS = {
   jpg2pdf:  '/jpg2pdf/',   pdf2jpg:  '/pdf2jpg/',
   scanDocument: '/scan-document/',
+  glossary: '/glossary-pdf/',
   merge:    '/merge-pdf/',             split:    '/split-pdf/',
   compress: '/compress-pdf/',          extract: '/extract-pdf/',
   watermark:'/watermark-pdf/', pagenum: '/pagenum-pdf/',
