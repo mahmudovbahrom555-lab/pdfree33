@@ -290,6 +290,24 @@ button,
   z-index: 10;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
 }
+/* .merge-btn's sticky bottom offset pins it to the same screen position
+   (roughly the viewport's last ~75px) from the very first frame, for any
+   page long enough that its natural position is further down than that —
+   true here immediately on file load (this options panel is well short of
+   one viewport, but the page overall, with its SEO content, is long). That
+   pinned strip is intentionally over trailing hint text elsewhere in the
+   codebase (components.css's own note above) — harmless there. For OCR and
+   Glossary specifically it landed on top of the actual primary control
+   (Install OCR button / dictionary textarea), intercepting taps on first
+   view. Pushing extra space in BEFORE these controls (not after — a
+   sticky-pinned element's screen position doesn't depend on content that
+   follows it) moves them below that pinned strip so they render fully
+   visible on first view instead of needing an unprompted scroll first. */
+@media (max-width: 700px) {
+  #btnInstallOcr, #glsDictionary {
+    margin-top: 120px;
+  }
+}
 .merge-btn:hover:not(:disabled) {
   background: #235f3c;
   transform: translateY(-2px);
