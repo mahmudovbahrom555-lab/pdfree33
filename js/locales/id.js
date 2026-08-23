@@ -724,6 +724,13 @@ window.PDFREE_LOCALE = {
   scan_cam_use_crop:         'Gunakan crop ini',
   scan_cam_detecting:        'Mendeteksi tepi dokumen…',
   scan_cam_detect_fallback:  'Tidak dapat mendeteksi tepi secara otomatis — seret sudut agar sesuai dengan dokumen Anda',
+  scan_cam_clipped_hint:     'Dokumen tampak terpotong — mundur agar seluruh halaman terlihat',
+  scan_cam_blurry_hint:      'Foto ini tampak buram — pertimbangkan untuk mengambil ulang',
+  scan_cam_hold_steady:      'Tahan tetap diam…',
+  scan_cam_mode_single:      '📄 Halaman Tunggal',
+  scan_cam_mode_book:        '📖 Dua Halaman Buku',
+  scan_cam_split_use:        'Pisah & Gunakan',
+  scan_cam_spine_fallback_hint: 'Tidak dapat menemukan celah buku secara otomatis — seret garis ke tulang punggung buku',
   scan_cam_processing:       'Memproses…',
   scan_cam_processing_failed: 'Tidak dapat memproses foto ini — coba lagi',
 

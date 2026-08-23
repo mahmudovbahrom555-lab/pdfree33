@@ -725,6 +725,13 @@ window.PDFREE_LOCALE = {
   scan_cam_use_crop:         '이 영역 사용',
   scan_cam_detecting:        '문서 가장자리 감지 중…',
   scan_cam_detect_fallback:  '가장자리를 자동으로 감지하지 못했습니다 — 모서리를 드래그하여 문서에 맞춰주세요',
+  scan_cam_clipped_hint:     '문서가 잘린 것 같습니다 — 페이지 전체가 보이도록 뒤로 이동하세요',
+  scan_cam_blurry_hint:      '이 사진은 흐릿해 보입니다 — 다시 촬영을 고려해 보세요',
+  scan_cam_hold_steady:      '움직이지 말고 잠시만요…',
+  scan_cam_mode_single:      '📄 단일 페이지',
+  scan_cam_mode_book:        '📖 책 펼침면',
+  scan_cam_split_use:        '분할 후 사용',
+  scan_cam_spine_fallback_hint: '책의 접힌 부분을 자동으로 찾지 못했습니다 — 선을 책등으로 드래그하세요',
   scan_cam_processing:       '처리 중…',
   scan_cam_processing_failed: '이 사진을 처리할 수 없습니다 — 다시 시도해 주세요',
 

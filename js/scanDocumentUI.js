@@ -143,14 +143,25 @@ async function _drainReviewQueue() {
     const sourceCanvas = await _decodeWithExifRotation(file);
     openCropReview({
       sourceCanvas,
-      onConfirm: async warpedCanvas => {
-        const blob = await filterScanPhoto(warpedCanvas, _scanFilterMode);
-        const reviewedFile = new File([blob], file.name.replace(/\.\w+$/, '') + '-scan.jpg', { type: 'image/jpeg' });
-        reviewedFile._scanReviewed = true;
+      // warpedCanvases: 1 entry for single-page mode, 2 for book-spread
+      // mode (left/right page, already split — see scanCameraUI.js's
+      // _startSpineAdjust). Either way, replace the one queued `file`
+      // with however many reviewed pages came out of it.
+      onConfirm: async warpedCanvases => {
         const idx = selectedFiles.indexOf(file);
+        const baseName = file.name.replace(/\.\w+$/, '');
+        const newFiles = [];
+        for (let i = 0; i < warpedCanvases.length; i++) {
+          const blob = await filterScanPhoto(warpedCanvases[i], _scanFilterMode);
+          const suffix = warpedCanvases.length > 1 ? `-scan-${i + 1}` : '-scan';
+          const reviewedFile = new File([blob], baseName + suffix + '.jpg', { type: 'image/jpeg' });
+          reviewedFile._scanReviewed = true;
+          newFiles.push(reviewedFile);
+        }
         if (idx !== -1) {
-          selectedFiles[idx] = reviewedFile;
-          _exifAngles[idx] = 0; // baked into the warp already — no rotation left to apply at assembly time
+          // Baked into the warp already — no rotation left to apply at assembly time.
+          selectedFiles.splice(idx, 1, ...newFiles);
+          _exifAngles.splice(idx, 1, ...newFiles.map(() => 0));
         }
         _reviewingNow = false;
         _render(selectedFiles);
@@ -234,11 +245,19 @@ function _bindTakePhotoButton() {
   btn.addEventListener('click', () => {
     if (navigator.mediaDevices?.getUserMedia) {
       openScanCamera({
-        onConfirm: async canvas => {
-          const blob = await filterScanPhoto(canvas, _scanFilterMode);
-          const file = new File([blob], `scan-${Date.now()}.jpg`, { type: 'image/jpeg' });
-          file._scanReviewed = true;
-          addFiles([file]);
+        // canvases: 1 for single-page, 2 for book-spread mode (already
+        // split left/right — see scanCameraUI.js's _startSpineAdjust).
+        onConfirm: async canvases => {
+          const stamp = Date.now();
+          const files = [];
+          for (let i = 0; i < canvases.length; i++) {
+            const blob = await filterScanPhoto(canvases[i], _scanFilterMode);
+            const suffix = canvases.length > 1 ? `-${i + 1}` : '';
+            const file = new File([blob], `scan-${stamp}${suffix}.jpg`, { type: 'image/jpeg' });
+            file._scanReviewed = true;
+            files.push(file);
+          }
+          addFiles(files);
         },
         onFallback: () => input.click(),
       });

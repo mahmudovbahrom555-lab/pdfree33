@@ -5173,11 +5173,53 @@ body:not(.has-files) #heroChipsLabel { display: none !important; }
   display: block;
 }
 
+.scan-cam-stage-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  max-width: 100%;
+}
+
+.scan-cam-mode-row {
+  display: flex;
+  gap: 8px;
+}
+.scan-cam-mode-chip {
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1.5px solid rgba(255,255,255,.25);
+  background: rgba(255,255,255,.08);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.scan-cam-mode-chip--active {
+  background: var(--green);
+  border-color: var(--green);
+}
+
 .scan-cam-frame-wrap {
   position: relative;
   display: inline-block;
   max-width: 100%;
   max-height: 60vh;
+}
+
+/* Book-spread spine adjustment — a single draggable vertical line over the
+   already-rectified spread, same drag mechanics as the corner handles
+   above (setPointerCapture + pointermove/up), just constrained to one axis. */
+.scan-cam-spine-line {
+  position: absolute;
+  top: 0;
+  width: 6px;
+  margin-left: -3px;
+  background: rgba(240, 173, 78, 0.85);
+  border-left: 1px solid #fff;
+  border-right: 1px solid #fff;
+  cursor: ew-resize;
+  touch-action: none;
 }
 
 .scan-cam-frame {
@@ -5197,6 +5239,13 @@ body:not(.has-files) #heroChipsLabel { display: none !important; }
   fill: rgba(45, 122, 79, 0.15);
   stroke: var(--green);
   stroke-width: 2;
+}
+/* Document appears to be cut off by the frame edge (2+ corners near an
+   edge) — warn, don't block. Same amber already used for warning badges
+   elsewhere (compress-info__badge--warn / hero-det-badge--warn). */
+.scan-cam-outline polygon.scan-cam-outline--clipped {
+  fill: rgba(240, 173, 78, 0.18);
+  stroke: #f0ad4e;
 }
 
 .scan-cam-handle {

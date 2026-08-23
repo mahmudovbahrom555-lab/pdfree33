@@ -723,6 +723,13 @@ window.PDFREE_LOCALE = {
   scan_cam_use_crop:         'Bu kırpmayı kullan',
   scan_cam_detecting:        'Belge kenarları algılanıyor…',
   scan_cam_detect_fallback:  'Kenarlar otomatik algılanamadı — köşeleri belgenize göre sürükleyin',
+  scan_cam_clipped_hint:     'Belge kesilmiş görünüyor — sayfanın tamamı görünecek şekilde geriye gidin',
+  scan_cam_blurry_hint:      'Bu fotoğraf bulanık görünüyor — yeniden çekmeyi düşünün',
+  scan_cam_hold_steady:      'Sabit tutun…',
+  scan_cam_mode_single:      '📄 Tek Sayfa',
+  scan_cam_mode_book:        '📖 Kitap Yayılımı',
+  scan_cam_split_use:        'Ayır ve kullan',
+  scan_cam_spine_fallback_hint: 'Kitap ortası otomatik bulunamadı — çizgiyi kitabın sırtına sürükleyin',
   scan_cam_processing:       'İşleniyor…',
   scan_cam_processing_failed: 'Bu fotoğraf işlenemedi — tekrar deneyin',
 

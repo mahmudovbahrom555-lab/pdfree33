@@ -723,6 +723,13 @@ window.PDFREE_LOCALE = {
   scan_cam_use_crop:         'Dit bijsnijden gebruiken',
   scan_cam_detecting:        'Documentranden worden gedetecteerd…',
   scan_cam_detect_fallback:  'Randen konden niet automatisch worden gedetecteerd — sleep de hoeken naar je document',
+  scan_cam_clipped_hint:     'Document lijkt afgesneden — ga naar achteren zodat de hele pagina zichtbaar is',
+  scan_cam_blurry_hint:      'Deze foto lijkt onscherp — overweeg opnieuw te fotograferen',
+  scan_cam_hold_steady:      'Stil houden…',
+  scan_cam_mode_single:      '📄 Enkele Pagina',
+  scan_cam_mode_book:        '📖 Boekspread',
+  scan_cam_split_use:        'Splitsen & gebruiken',
+  scan_cam_spine_fallback_hint: 'Kon de vouw niet automatisch vinden — sleep de lijn naar de rug van het boek',
   scan_cam_processing:       'Verwerken…',
   scan_cam_processing_failed: 'Kon deze foto niet verwerken — probeer het opnieuw',
 

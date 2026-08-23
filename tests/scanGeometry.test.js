@@ -23,7 +23,23 @@ function expect(actual) {
   };
 }
 
-const { orderQuadPoints, defaultInsetQuad } = await import('../js/scanGeometry.js');
+const { orderQuadPoints, defaultInsetQuad, detectSpineX } = await import('../js/scanGeometry.js');
+
+// Builds a flat RGBA buffer from a 1D array of per-column gray values,
+// repeated down every row — matches detectSpineX's "column-average
+// luminance" model with a trivial single-row-worth-of-signal image.
+function makeColumns(cols, h = 10) {
+  const w = cols.length;
+  const data = new Uint8ClampedArray(w * h * 4);
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      const i = (y * w + x) * 4;
+      data[i] = data[i + 1] = data[i + 2] = cols[x];
+      data[i + 3] = 255;
+    }
+  }
+  return data;
+}
 
 console.log('\norderQuadPoints:');
 
@@ -84,6 +100,49 @@ test('the result is always inside the original bounds, never outside', () => {
       throw new Error(`Corner ${JSON.stringify(corner)} is outside the 640x480 frame`);
     }
   }
+});
+
+console.log('\ndetectSpineX:');
+
+test('finds a clear dark gutter band in the middle of the page', () => {
+  const w = 100;
+  const cols = new Array(w).fill(230); // bright page on both sides
+  for (let x = 48; x <= 52; x++) cols[x] = 40; // dark gutter shadow, centered
+  const { xFrac, confident } = detectSpineX(makeColumns(cols), w, 10);
+  expect(confident).toBe(true);
+  expect(xFrac).toBeCloseTo(0.5, 0.03);
+});
+
+test('an off-center gutter is still found at its real position', () => {
+  const w = 100;
+  const cols = new Array(w).fill(230);
+  for (let x = 33; x <= 37; x++) cols[x] = 35; // gutter at ~35%, not dead center
+  const { xFrac, confident } = detectSpineX(makeColumns(cols), w, 10);
+  expect(confident).toBe(true);
+  expect(xFrac).toBeCloseTo(0.35, 0.03);
+});
+
+test('a flat page with no real gutter reports low confidence', () => {
+  const w = 100;
+  const cols = new Array(w).fill(230); // uniform — nothing to find
+  const { confident } = detectSpineX(makeColumns(cols), w, 10);
+  expect(confident).toBe(false);
+});
+
+test('minor noise (not a real gutter) still reports low confidence', () => {
+  const w = 100;
+  const cols = new Array(w).fill(0).map((_, i) => 225 + (i % 3)); // +/-3 jitter, no real dip
+  const { confident } = detectSpineX(makeColumns(cols), w, 10);
+  expect(confident).toBe(false);
+});
+
+test('a dark band near the outer edge (not the gutter) is ignored — search is limited to the middle 60%', () => {
+  const w = 100;
+  const cols = new Array(w).fill(230);
+  for (let x = 0; x < 5; x++) cols[x] = 10; // dark strip right at the left edge (e.g. warp artifact)
+  const { xFrac } = detectSpineX(makeColumns(cols), w, 10);
+  // Should NOT report the edge artifact — falls back to the (flat, low-confidence) middle
+  if (xFrac < 0.2) throw new Error(`Expected the edge artifact at x<0.05 to be excluded, got xFrac=${xFrac}`);
 });
 
 // ── Summary ────────────────────────────────────────────────────

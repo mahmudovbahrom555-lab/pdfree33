@@ -63,6 +63,59 @@ function _dist(a, b) {
   return Math.hypot(a.x - b.x, a.y - b.y);
 }
 
+// Estimates the vertical gutter (spine) position in an already-warped book-
+// spread image, as the fraction (0-1) of width from the left edge. Pure
+// pixel math on a raw RGBA buffer (stride 4, like scanFilter.js's
+// medianFilterGray/clahePlane) — no OpenCV or canvas needed, so it's
+// directly Node-testable. See tests/scanGeometry.test.js.
+//
+// Heuristic (deliberately simple, not ClearScan's full gutter-darkness +
+// cross-gutter-luminance-transition + page-texture-non-uniformity scoring —
+// that needs live-camera validation this project doesn't have the setup
+// for yet): the gutter usually casts a shadow, so it reads as the darkest
+// vertical band in the middle portion of the page. Only trusted when that
+// dip is meaningfully darker than the surrounding average — a flat/noisy
+// band (no real gutter, e.g. a single page mistakenly warped in book mode)
+// falls back to `confident: false`, and the caller should default to a
+// plain center line rather than trust a spurious detection.
+/**
+ * @param {Uint8ClampedArray} data RGBA (stride 4) pixel buffer of the
+ *   warped spread image.
+ * @param {number} w
+ * @param {number} h
+ * @returns {{xFrac: number, confident: boolean}}
+ */
+export function detectSpineX(data, w, h) {
+  // Sample the vertical middle band — avoids header/footer noise (running
+  // titles, page numbers) that doesn't reflect the actual gutter position.
+  const y0 = Math.round(h * 0.3), y1 = Math.round(h * 0.7);
+  const bandH = Math.max(1, y1 - y0);
+
+  const colLum = new Float32Array(w);
+  for (let x = 0; x < w; x++) {
+    let sum = 0;
+    for (let y = y0; y < y1; y++) {
+      const idx = (y * w + x) * 4;
+      sum += 0.299 * data[idx] + 0.587 * data[idx + 1] + 0.114 * data[idx + 2];
+    }
+    colLum[x] = sum / bandH;
+  }
+
+  // Search the middle 60% of columns — the gutter is rarely near the outer
+  // edges, and excluding them avoids the page's own outer-edge shadow (from
+  // the perspective warp/lighting falloff) being mistaken for the gutter.
+  const x0 = Math.round(w * 0.2), x1 = Math.round(w * 0.8);
+  let minX = Math.round(w / 2), minVal = Infinity, avgVal = 0;
+  for (let x = x0; x < x1; x++) {
+    if (colLum[x] < minVal) { minVal = colLum[x]; minX = x; }
+    avgVal += colLum[x];
+  }
+  avgVal /= Math.max(1, x1 - x0);
+
+  const confident = (avgVal - minVal) > 15; // real dip vs. flat/noisy band
+  return { xFrac: minX / w, confident };
+}
+
 // ── OpenCV.js-dependent (browser only) ──────────────────────────
 
 const _DETECT_LONG_EDGE   = 800;  // downsample for detection only — mirrors processor.js's _EREADER_BBOX_EDGE pattern

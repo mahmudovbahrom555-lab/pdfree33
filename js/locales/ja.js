@@ -726,6 +726,13 @@ window.PDFREE_LOCALE = {
   scan_cam_use_crop:         'この範囲を使用',
   scan_cam_detecting:        'ドキュメントの端を検出中…',
   scan_cam_detect_fallback:  '端を自動検出できませんでした — 角をドラッグしてドキュメントに合わせてください',
+  scan_cam_clipped_hint:     'ドキュメントが切れているようです — ページ全体が見えるように離れてください',
+  scan_cam_blurry_hint:      'この写真はぼやけているようです — 撮り直しをご検討ください',
+  scan_cam_hold_steady:      'そのまま動かさないでください…',
+  scan_cam_mode_single:      '📄 1ページ',
+  scan_cam_mode_book:        '📖 見開きページ',
+  scan_cam_split_use:        '分割して使用',
+  scan_cam_spine_fallback_hint: 'ノド（綴じ目）を自動検出できませんでした — 線を本の背にドラッグしてください',
   scan_cam_processing:       '処理中…',
   scan_cam_processing_failed: 'この写真を処理できませんでした — もう一度お試しください',
 

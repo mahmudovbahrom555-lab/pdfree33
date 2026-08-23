@@ -725,6 +725,13 @@ window.PDFREE_LOCALE = {
   scan_cam_use_crop:         'Utiliser ce recadrage',
   scan_cam_detecting:        'Détection des bords du document…',
   scan_cam_detect_fallback:  "Impossible de détecter les bords automatiquement — faites glisser les coins pour les ajuster à votre document",
+  scan_cam_clipped_hint:     "Le document semble coupé — reculez pour voir la page entière",
+  scan_cam_blurry_hint:      'Cette photo semble floue — envisagez de la reprendre',
+  scan_cam_hold_steady:      'Ne bougez plus…',
+  scan_cam_mode_single:      '📄 Page unique',
+  scan_cam_mode_book:        '📖 Double Page',
+  scan_cam_split_use:        'Diviser et utiliser',
+  scan_cam_spine_fallback_hint: 'Impossible de trouver la reliure automatiquement — faites glisser la ligne vers la reliure du livre',
   scan_cam_processing:       'Traitement en cours…',
   scan_cam_processing_failed: 'Impossible de traiter cette photo — réessayez',
 

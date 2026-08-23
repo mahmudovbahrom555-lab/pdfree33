@@ -43,7 +43,7 @@
 
 import { t } from './i18n.js';
 import { loadOpenCv } from './lazyLibs.js';
-import { detectDocumentQuad, defaultInsetQuad, warpToRect } from './scanGeometry.js';
+import { detectDocumentQuad, defaultInsetQuad, warpToRect, detectSpineX } from './scanGeometry.js';
 
 let _modal        = null;
 let _stream        = null;
@@ -54,6 +54,7 @@ let _onConfirm       = null;
 let _onFallback       = null;
 let _onSkip            = null;
 let _reviewMode        = 'camera'; // 'camera' | 'gallery' — controls Retake vs Skip in the review stage's action row
+let _scanSubMode       = 'single'; // 'single' | 'book' — set per-review, not sticky across captures (see _startReview)
 let _resizeHandler    = null;
 let _liveTrackInterval = null;
 let _reviewGen          = 0;   // bumped on every close — lets in-flight _startReview() awaits bail out
@@ -117,6 +118,8 @@ function _closeModal({ suppressOnSkip = false } = {}) {
   _modal = null;
   _capturedCanvas = null;
   _quad = null;
+  _consensusQueue = [];
+  _autoCaptureArmed = true;
   if (!suppressOnSkip && _reviewMode === 'gallery') {
     const cb = _onSkip;
     _onSkip = null;  // guard against any possible double-invocation
@@ -196,6 +199,8 @@ async function _startLiveView() {
   const captureBtn = document.getElementById('scanCamCaptureBtn');
   video.addEventListener('loadedmetadata', () => {
     if (captureBtn) captureBtn.disabled = false;
+    _consensusQueue = [];
+    _autoCaptureArmed = true;
     _startLiveTracking(video);
   });
   captureBtn.addEventListener('click', () => _capture(video));
@@ -216,7 +221,9 @@ function _startLiveTracking(video) {
 
     let quad = null;
     try { quad = detectDocumentQuad(probe); } catch { /* skip this tick, try again next */ }
-    _renderLiveOverlay(quad, video);
+    const clipped = quad ? isClippedQuad(quad, video.videoWidth, video.videoHeight) : false;
+    _renderLiveOverlay(quad, video, clipped);
+    _updateAutoCapture(quad, clipped, video);
   }, _LIVE_TRACK_INTERVAL_MS);
 }
 
@@ -224,11 +231,34 @@ function _stopLiveTracking() {
   if (_liveTrackInterval) { clearInterval(_liveTrackInterval); _liveTrackInterval = null; }
 }
 
-function _renderLiveOverlay(quad, video) {
-  const svg = document.getElementById('scanCamLiveOutline');
+// A corner within this fraction of the frame's own width/height from any
+// edge counts as "touching" it — matches the class of check documented in
+// ClearScan's docs/DETECTION_CASES.md ("Partially clipped single page"):
+// 2+ corners near the frame edge means the shot is very likely missing part
+// of the document, so warn (don't block — the user may want it anyway).
+const _CLIP_EDGE_MARGIN_FRAC = 0.02;
+const _CLIP_MIN_CORNERS = 2;
+
+export function isClippedQuad(quad, videoWidth, videoHeight) {
+  const mx = videoWidth * _CLIP_EDGE_MARGIN_FRAC;
+  const my = videoHeight * _CLIP_EDGE_MARGIN_FRAC;
+  let nearEdge = 0;
+  for (const k of ['tl', 'tr', 'br', 'bl']) {
+    const p = quad[k];
+    if (p.x <= mx || p.x >= videoWidth - mx || p.y <= my || p.y >= videoHeight - my) nearEdge++;
+  }
+  return nearEdge >= _CLIP_MIN_CORNERS;
+}
+
+function _renderLiveOverlay(quad, video, clipped) {
+  const svg     = document.getElementById('scanCamLiveOutline');
   const polygon = document.getElementById('scanCamLivePolygon');
   if (!svg || !polygon) return;
-  if (!quad) { polygon.setAttribute('points', ''); return; } // nothing confident this tick — don't show a stale/wrong guide
+  if (!quad) {
+    polygon.setAttribute('points', ''); // nothing confident this tick — don't show a stale/wrong guide
+    polygon.classList.remove('scan-cam-outline--clipped');
+    return;
+  }
 
   const rect  = video.getBoundingClientRect();
   const scale = rect.width / video.videoWidth;
@@ -239,6 +269,152 @@ function _renderLiveOverlay(quad, video) {
 
   const pts = ['tl', 'tr', 'br', 'bl'].map(k => `${quad[k].x * scale},${quad[k].y * scale}`).join(' ');
   polygon.setAttribute('points', pts);
+  polygon.classList.toggle('scan-cam-outline--clipped', clipped);
+}
+
+// ── Auto-capture: temporal consensus ────────────────────────────
+//
+// Inspired by WeScan's RectangleFeaturesFunnel (see docs referenced in this
+// feature's commit) — compared against ClearScan's own comparison of
+// open-source scanners, which specifically warns against a naive
+// "only compare to the last frame" approach (one missed detection resets
+// everything). Instead: keep a bounded queue of recent quad "signatures"
+// (normalized center + area) and check how many of the RECENT ones agree
+// with the latest — tolerant of a single noisy/missed frame without losing
+// all progress, same rationale as ClearScan's documented design.
+//
+// Safety gate (also from ClearScan's docs/DETECTION_CASES.md): a clipped
+// (cut-off) frame clears the queue outright — "every agreeing sample must
+// be safe before automatic capture can resume", so one clean frame can't
+// reuse an older clipped-frame's consensus progress.
+//
+// Tolerances/window size are reasoned defaults (not yet validated against
+// a real physical camera in this environment — see this feature's memory
+// note), verified instead via direct logic tests with synthetic quad
+// sequences (tests/scanCameraConsensus.test.js-style coverage in this
+// commit's Playwright verification).
+const _CONSENSUS_QUEUE_SIZE  = 8;
+const _CONSENSUS_MIN_AGREE   = 5;
+const _CONSENSUS_CENTER_TOL  = 0.03; // fraction of frame width/height
+const _CONSENSUS_AREA_TOL    = 0.08; // fraction of frame area
+
+let _consensusQueue   = [];
+let _autoCaptureArmed = true;
+
+function _quadSignature(quad, w, h) {
+  const cx = (quad.tl.x + quad.tr.x + quad.br.x + quad.bl.x) / 4 / w;
+  const cy = (quad.tl.y + quad.tr.y + quad.br.y + quad.bl.y) / 4 / h;
+  // Shoelace formula, normalized to frame area — order-independent measure
+  // of "how big is this quad", used alongside center position to detect a
+  // stable, unmoving framing (not just a stationary centroid).
+  const pts = [quad.tl, quad.tr, quad.br, quad.bl];
+  let area2 = 0;
+  for (let i = 0; i < 4; i++) {
+    const p = pts[i], q = pts[(i + 1) % 4];
+    area2 += p.x * q.y - q.x * p.y;
+  }
+  const area = Math.abs(area2) / 2 / (w * h);
+  return { cx, cy, area };
+}
+
+function _signaturesAgree(a, b) {
+  return Math.hypot(a.cx - b.cx, a.cy - b.cy) < _CONSENSUS_CENTER_TOL
+      && Math.abs(a.area - b.area) < _CONSENSUS_AREA_TOL;
+}
+
+// Exported for direct logic testing (like isClippedQuad above) — feeds a
+// sequence of quads/clipped-flags through the same state this module uses
+// internally, so the consensus behavior is verifiable without a real
+// camera. Resets the module's queue as a side effect, matching how a real
+// capture session starts fresh — tests should account for that.
+export function __resetConsensusForTest() { _consensusQueue = []; }
+export function __stepConsensusForTest(quad, clipped, w, h) {
+  return _stepConsensus(quad, clipped, w, h);
+}
+
+function _stepConsensus(quad, clipped, w, h) {
+  if (!quad || clipped) { _consensusQueue = []; return 0; }
+  const sig = _quadSignature(quad, w, h);
+  _consensusQueue.push(sig);
+  if (_consensusQueue.length > _CONSENSUS_QUEUE_SIZE) _consensusQueue.shift();
+  let agreeCount = 0;
+  for (const s of _consensusQueue) if (_signaturesAgree(s, sig)) agreeCount++;
+  return agreeCount;
+}
+
+function _updateAutoCapture(quad, clipped, video) {
+  if (!_autoCaptureArmed) return;
+  const agreeCount = _stepConsensus(quad, clipped, video.videoWidth, video.videoHeight);
+  const status = document.getElementById('scanCamStatus');
+
+  if (agreeCount >= _CONSENSUS_MIN_AGREE) {
+    _autoCaptureArmed = false; // capture() tears down the interval — prevent a double-trigger race
+    if (status) status.textContent = '';
+    _capture(video);
+    return;
+  }
+
+  if (!status) return;
+  // Priority: clipped warning > hold-steady progress > nothing. Clipped
+  // always wins since it's the more actionable message (repositioning
+  // fixes both problems at once anyway).
+  if (clipped) {
+    status.textContent = t('scan_cam_clipped_hint');
+  } else if (agreeCount >= 2) {
+    status.textContent = t('scan_cam_hold_steady');
+  } else {
+    status.textContent = '';
+  }
+}
+
+// Variance of the Laplacian — a standard, well-known blur metric (low
+// variance = few sharp edges = likely out of focus/motion-blurred; high
+// variance = lots of sharp edges = likely in focus). Runs on a downscaled
+// copy — blur is a low-frequency judgment, full resolution isn't needed and
+// would be far slower for no real accuracy gain.
+// Threshold calibrated empirically against real sharp vs. blurred test
+// images (see the memory note referenced in this feature's commit) — not
+// copied from an OpenCV tutorial's default, which assumes a different
+// kernel/resolution than this one.
+const _BLUR_WORK_DIM = 400;
+// Calibrated against real synthetic sharp/blurred text renders (not a
+// borrowed tutorial default): Gaussian-blur radius 2 (still legible, real
+// text like "84213" readable) scored ~2183; radius 3 (genuinely hard to
+// read) scored ~556. 1000 sits between the two, biased toward the
+// "genuinely blurry" side to avoid false-positiving on borderline-OK
+// photos. Real phone photos have more natural texture/grain than a clean
+// synthetic render, so this may need revisiting against real camera
+// captures — not yet tested against those.
+const _BLUR_VARIANCE_THRESHOLD = 1000;
+// Exported (like scanFilter.js's medianFilterGray/clahePlane) so the
+// calibration itself is verifiable against real sharp/blurred images
+// instead of trusting a borrowed tutorial default.
+export function computeBlurVariance(canvas) {
+  const scale = Math.min(1, _BLUR_WORK_DIM / Math.max(canvas.width, canvas.height));
+  const w = Math.max(3, Math.round(canvas.width * scale));
+  const h = Math.max(3, Math.round(canvas.height * scale));
+  const small = document.createElement('canvas');
+  small.width = w; small.height = h;
+  const ctx = small.getContext('2d');
+  ctx.drawImage(canvas, 0, 0, w, h);
+  const d = ctx.getImageData(0, 0, w, h).data;
+
+  const gray = new Float32Array(w * h);
+  for (let i = 0, p = 0; i < d.length; i += 4, p++) {
+    gray[p] = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2];
+  }
+
+  let sum = 0, sumSq = 0, count = 0;
+  for (let y = 1; y < h - 1; y++) {
+    const row = y * w;
+    for (let x = 1; x < w - 1; x++) {
+      const idx = row + x;
+      const lap = gray[idx - 1] + gray[idx + 1] + gray[idx - w] + gray[idx + w] - 4 * gray[idx];
+      sum += lap; sumSq += lap * lap; count++;
+    }
+  }
+  const mean = sum / count;
+  return sumSq / count - mean * mean;
 }
 
 function _capture(video) {
@@ -264,18 +440,27 @@ async function _startReview() {
   if (myGen !== _reviewGen) { return; }  // modal closed while encoding the frame
   const url  = URL.createObjectURL(blob);
 
+  _scanSubMode = 'single';
   stage.innerHTML = `
-    <div class="scan-cam-frame-wrap" id="scanCamFrameWrap">
-      <img class="scan-cam-frame" id="scanCamFrame" src="${url}" alt="">
-      <svg class="scan-cam-outline" id="scanCamOutline" preserveAspectRatio="none">
-        <polygon id="scanCamPolygon"></polygon>
-      </svg>
-      <div class="scan-cam-handle" id="scanCamHandle-tl" data-corner="tl"></div>
-      <div class="scan-cam-handle" id="scanCamHandle-tr" data-corner="tr"></div>
-      <div class="scan-cam-handle" id="scanCamHandle-br" data-corner="br"></div>
-      <div class="scan-cam-handle" id="scanCamHandle-bl" data-corner="bl"></div>
+    <div class="scan-cam-stage-col">
+      <div class="scan-cam-mode-row" id="scanCamModeRow">
+        <button type="button" class="scan-cam-mode-chip scan-cam-mode-chip--active" id="scanCamModeSingle">${t('scan_cam_mode_single')}</button>
+        <button type="button" class="scan-cam-mode-chip" id="scanCamModeBook">${t('scan_cam_mode_book')}</button>
+      </div>
+      <div class="scan-cam-frame-wrap" id="scanCamFrameWrap">
+        <img class="scan-cam-frame" id="scanCamFrame" src="${url}" alt="">
+        <svg class="scan-cam-outline" id="scanCamOutline" preserveAspectRatio="none">
+          <polygon id="scanCamPolygon"></polygon>
+        </svg>
+        <div class="scan-cam-handle" id="scanCamHandle-tl" data-corner="tl"></div>
+        <div class="scan-cam-handle" id="scanCamHandle-tr" data-corner="tr"></div>
+        <div class="scan-cam-handle" id="scanCamHandle-br" data-corner="br"></div>
+        <div class="scan-cam-handle" id="scanCamHandle-bl" data-corner="bl"></div>
+      </div>
     </div>
   `;
+  document.getElementById('scanCamModeSingle').addEventListener('click', () => _setScanSubMode('single'));
+  document.getElementById('scanCamModeBook').addEventListener('click', () => _setScanSubMode('book'));
   actions.innerHTML = _reviewMode === 'gallery'
     ? `
       <button type="button" class="split-action-btn" id="scanCamSkipBtn">${t('scan_cam_skip')}</button>
@@ -308,7 +493,17 @@ async function _startReview() {
   }
   if (myGen !== _reviewGen) { return; }  // modal closed while detecting the quad
   _quad = detected || defaultInsetQuad(_capturedCanvas.width, _capturedCanvas.height);
-  status.textContent = detected ? '' : t('scan_cam_detect_fallback');
+
+  // Detection fallback is the more actionable message (affects the crop
+  // itself) — only show the blur warning when detection succeeded, so the
+  // status line never has to choose between two unrelated warnings at once.
+  if (!detected) {
+    status.textContent = t('scan_cam_detect_fallback');
+  } else {
+    let blurry = false;
+    try { blurry = computeBlurVariance(_capturedCanvas) < _BLUR_VARIANCE_THRESHOLD; } catch { /* skip on any canvas error */ }
+    status.textContent = blurry ? t('scan_cam_blurry_hint') : '';
+  }
 
   _resizeHandler = () => _renderHandles();
   window.addEventListener('resize', _resizeHandler);
@@ -367,18 +562,123 @@ function _bindHandleDrag() {
   });
 }
 
+function _setScanSubMode(mode) {
+  _scanSubMode = mode;
+  document.getElementById('scanCamModeSingle')?.classList.toggle('scan-cam-mode-chip--active', mode === 'single');
+  document.getElementById('scanCamModeBook')?.classList.toggle('scan-cam-mode-chip--active', mode === 'book');
+}
+
 async function _confirm(reviewUrl) {
   const status = document.getElementById('scanCamStatus');
   status.textContent = t('scan_cam_processing');
   try {
     const warped = warpToRect(_capturedCanvas, _quad);
     URL.revokeObjectURL(reviewUrl);
+    if (_scanSubMode === 'book') {
+      _startSpineAdjust(warped);
+      return;
+    }
     const cb = _onConfirm;
     _closeModal({ suppressOnSkip: true });  // resolved via Confirm, not Skip
-    cb?.(warped);
+    cb?.([warped]);
   } catch {
     status.textContent = t('scan_cam_processing_failed');
   }
+}
+
+// ── Book-spread mode: spine adjustment + split ──────────────────
+//
+// Runs AFTER the normal 4-corner crop is confirmed — the whole visible
+// spread has already been perspective-corrected into `warped` by this
+// point, same as single-page mode. This stage only asks "where's the
+// gutter", then splits the already-rectified image in two at that x.
+// Scoped-down vs. ClearScan's own book-mode design (see this feature's
+// memory note): no gutter-darkness/texture confidence scoring beyond
+// detectSpineX's own simple check, no live recovery for asymmetric/
+// border-filling spreads — the user's own draggable adjustment is the
+// safety net here instead.
+async function _startSpineAdjust(warped) {
+  const myGen   = _reviewGen; // still valid — _confirm didn't bump it (only _closeModal/openX do)
+  const stage   = document.getElementById('scanCamStage');
+  const status  = document.getElementById('scanCamStatus');
+  const actions = document.getElementById('scanCamActions');
+  if (!stage || myGen !== _reviewGen) return;
+
+  const blob = await new Promise(res => warped.toBlob(res, 'image/jpeg', 0.92));
+  if (myGen !== _reviewGen) return; // modal closed while encoding
+  const url = URL.createObjectURL(blob);
+
+  let xFrac = 0.5, confident = false;
+  try {
+    const ctx = warped.getContext('2d');
+    const data = ctx.getImageData(0, 0, warped.width, warped.height).data;
+    ({ xFrac, confident } = detectSpineX(data, warped.width, warped.height));
+  } catch { /* keep the 0.5 fallback */ }
+
+  stage.innerHTML = `
+    <div class="scan-cam-frame-wrap" id="scanCamSpineWrap">
+      <img class="scan-cam-frame" id="scanCamSpineFrame" src="${url}" alt="">
+      <div class="scan-cam-spine-line" id="scanCamSpineLine"></div>
+    </div>
+  `;
+  actions.innerHTML = `
+    <button type="button" class="split-action-btn" id="scanCamSpineConfirmBtn">${t('scan_cam_split_use')}</button>
+  `;
+  status.textContent = confident ? '' : t('scan_cam_spine_fallback_hint');
+
+  const img = document.getElementById('scanCamSpineFrame');
+  await new Promise(res => { img.onload = res; img.onerror = res; });
+  if (myGen !== _reviewGen) return;
+
+  const renderSpine = () => {
+    const rect = img.getBoundingClientRect();
+    const line = document.getElementById('scanCamSpineLine');
+    if (!line) return;
+    line.style.left = (xFrac * rect.width) + 'px';
+    line.style.height = rect.height + 'px';
+  };
+  renderSpine();
+  const onResize = () => renderSpine();
+  window.addEventListener('resize', onResize);
+
+  const line = document.getElementById('scanCamSpineLine');
+  line.addEventListener('pointerdown', e => {
+    e.preventDefault();
+    line.setPointerCapture(e.pointerId);
+    const onMove = ev => {
+      const rect = img.getBoundingClientRect();
+      const x = Math.min(Math.max(0, ev.clientX - rect.left), rect.width);
+      xFrac = x / rect.width;
+      renderSpine();
+    };
+    const onUp = () => {
+      line.removeEventListener('pointermove', onMove);
+      line.removeEventListener('pointerup', onUp);
+      line.removeEventListener('pointercancel', onUp);
+    };
+    line.addEventListener('pointermove', onMove);
+    line.addEventListener('pointerup', onUp);
+    line.addEventListener('pointercancel', onUp);
+  });
+
+  document.getElementById('scanCamSpineConfirmBtn').addEventListener('click', () => {
+    window.removeEventListener('resize', onResize);
+    URL.revokeObjectURL(url);
+    const splitX = Math.round(warped.width * xFrac);
+    const left  = document.createElement('canvas');
+    left.width  = Math.max(1, splitX);
+    left.height = warped.height;
+    left.getContext('2d').drawImage(warped, 0, 0);
+
+    const right = document.createElement('canvas');
+    right.width  = Math.max(1, warped.width - splitX);
+    right.height = warped.height;
+    right.getContext('2d').drawImage(warped, -splitX, 0);
+
+    const cb = _onConfirm;
+    _closeModal({ suppressOnSkip: true });
+    cb?.([left, right]);
+  });
 }
 
 function _skip(reviewUrl) {

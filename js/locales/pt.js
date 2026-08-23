@@ -725,6 +725,13 @@ window.PDFREE_LOCALE = {
   scan_cam_use_crop:         'Usar este recorte',
   scan_cam_detecting:        'Detectando as bordas do documento…',
   scan_cam_detect_fallback:  'Não foi possível detectar as bordas automaticamente — arraste os cantos para ajustá-los ao documento',
+  scan_cam_clipped_hint:     'O documento parece cortado — afaste-se para ver a página inteira',
+  scan_cam_blurry_hint:      'Esta foto parece desfocada — considere tirá-la novamente',
+  scan_cam_hold_steady:      'Mantenha firme…',
+  scan_cam_mode_single:      '📄 Página Única',
+  scan_cam_mode_book:        '📖 Página Dupla',
+  scan_cam_split_use:        'Dividir e usar',
+  scan_cam_spine_fallback_hint: 'Não foi possível encontrar a dobra automaticamente — arraste a linha até a lombada do livro',
   scan_cam_processing:       'Processando…',
   scan_cam_processing_failed: 'Não foi possível processar esta foto — tente novamente',
 

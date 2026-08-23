@@ -724,6 +724,13 @@ window.PDFREE_LOCALE = {
   scan_cam_use_crop:         'Dùng vùng cắt này',
   scan_cam_detecting:        'Đang phát hiện cạnh tài liệu…',
   scan_cam_detect_fallback:  'Không thể tự động phát hiện cạnh — hãy kéo các góc cho khớp với tài liệu của bạn',
+  scan_cam_clipped_hint:     'Tài liệu có vẻ bị cắt — hãy lùi lại để thấy toàn bộ trang',
+  scan_cam_blurry_hint:      'Bức ảnh này trông bị mờ — hãy cân nhắc chụp lại',
+  scan_cam_hold_steady:      'Giữ yên…',
+  scan_cam_mode_single:      '📄 Một Trang',
+  scan_cam_mode_book:        '📖 Trang Sách Đôi',
+  scan_cam_split_use:        'Tách & Sử dụng',
+  scan_cam_spine_fallback_hint: 'Không thể tự động tìm gáy sách — hãy kéo đường kẻ đến gáy sách',
   scan_cam_processing:       'Đang xử lý…',
   scan_cam_processing_failed: 'Không thể xử lý ảnh này — hãy thử lại',
 

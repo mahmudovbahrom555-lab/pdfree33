@@ -723,6 +723,13 @@ window.PDFREE_LOCALE = {
   scan_cam_use_crop:         'Użyj tego kadru',
   scan_cam_detecting:        'Wykrywanie krawędzi dokumentu…',
   scan_cam_detect_fallback:  'Nie udało się automatycznie wykryć krawędzi — przeciągnij rogi, aby dopasować je do dokumentu',
+  scan_cam_clipped_hint:     'Dokument wygląda na przycięty — odsuń się, aby cała strona była widoczna',
+  scan_cam_blurry_hint:      'To zdjęcie wygląda na rozmazane — rozważ zrobienie go ponownie',
+  scan_cam_hold_steady:      'Nie ruszaj się…',
+  scan_cam_mode_single:      '📄 Pojedyncza Strona',
+  scan_cam_mode_book:        '📖 Rozkładówka',
+  scan_cam_split_use:        'Podziel i użyj',
+  scan_cam_spine_fallback_hint: 'Nie udało się automatycznie znaleźć grzbietu — przeciągnij linię do grzbietu książki',
   scan_cam_processing:       'Przetwarzanie…',
   scan_cam_processing_failed: 'Nie udało się przetworzyć tego zdjęcia — spróbuj ponownie',
 

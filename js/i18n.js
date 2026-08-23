@@ -746,6 +746,13 @@ export const EN = {
   scan_cam_use_crop:         'Use this crop',
   scan_cam_detecting:        'Detecting document edges…',
   scan_cam_detect_fallback:  "Couldn't auto-detect edges — drag the corners to match your document",
+  scan_cam_clipped_hint:     'Document looks cut off — move back so the whole page is visible',
+  scan_cam_blurry_hint:      'This photo looks blurry — consider retaking it',
+  scan_cam_hold_steady:      'Hold steady…',
+  scan_cam_mode_single:      '📄 Single Page',
+  scan_cam_mode_book:        '📖 Book Spread',
+  scan_cam_split_use:        'Split & Use',
+  scan_cam_spine_fallback_hint: "Couldn't find the gutter automatically — drag the line to the book's spine",
   scan_cam_processing:       'Processing…',
   scan_cam_processing_failed: 'Could not process this photo — try again',
 

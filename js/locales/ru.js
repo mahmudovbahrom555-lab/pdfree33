@@ -724,6 +724,13 @@ window.PDFREE_LOCALE = {
   scan_cam_use_crop:         'Использовать эту область',
   scan_cam_detecting:        'Определение краёв документа…',
   scan_cam_detect_fallback:  'Не удалось автоматически определить края — перетащите углы под свой документ',
+  scan_cam_clipped_hint:     'Похоже, документ обрезан — отойдите, чтобы вся страница была видна',
+  scan_cam_blurry_hint:      'Это фото выглядит размытым — возможно, стоит переснять',
+  scan_cam_hold_steady:      'Держите ровно…',
+  scan_cam_mode_single:      '📄 Одна страница',
+  scan_cam_mode_book:        '📖 Разворот книги',
+  scan_cam_split_use:        'Разделить и использовать',
+  scan_cam_spine_fallback_hint: 'Не удалось автоматически найти сгиб — перетащите линию на корешок книги',
   scan_cam_processing:       'Обработка…',
   scan_cam_processing_failed: 'Не удалось обработать это фото — попробуйте снова',
 

@@ -726,6 +726,13 @@ window.PDFREE_LOCALE = {
   scan_cam_use_crop:         'Diesen Ausschnitt verwenden',
   scan_cam_detecting:        'Dokumentkanten werden erkannt…',
   scan_cam_detect_fallback:  'Kanten konnten nicht automatisch erkannt werden — ziehe die Ecken an dein Dokument',
+  scan_cam_clipped_hint:     'Dokument wirkt abgeschnitten — geh zurück, damit die ganze Seite sichtbar ist',
+  scan_cam_blurry_hint:      'Dieses Foto wirkt unscharf — vielleicht noch einmal aufnehmen',
+  scan_cam_hold_steady:      'Ruhig halten…',
+  scan_cam_mode_single:      '📄 Einzelseite',
+  scan_cam_mode_book:        '📖 Buchdoppelseite',
+  scan_cam_split_use:        'Teilen & verwenden',
+  scan_cam_spine_fallback_hint: 'Der Bundsteg konnte nicht automatisch gefunden werden — ziehe die Linie an den Buchrücken',
   scan_cam_processing:       'Wird verarbeitet…',
   scan_cam_processing_failed: 'Foto konnte nicht verarbeitet werden — bitte erneut versuchen',
 
