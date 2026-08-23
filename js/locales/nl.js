@@ -464,17 +464,20 @@ window.PDFREE_LOCALE = {
   pdfa_aria_label:             'PDF/A-conformiteitsrapport',
 
   // hero drop zone
-  hero_drop:          'Sleep je PDF hier naartoe',
+  hero_drop:          'Begin met je bestand',
   hero_or:            'of',
   hero_drop_choose:   'Bestand kiezen',
   hero_file_single:   '{name} ({size})',
-  hero_file_multi:    '{n} PDF\'s geselecteerd',
+  hero_file_multi:    '{n} bestanden geselecteerd',
   hero_or_search:     'of zoek op naam',
   hero_pick_which:    'welk bestand?',
   hero_pick_back:     '← Terug',
   hero_hint_multi:    'Aanbevolen: {tool}',
   hero_chip_one_file: '1 bestand',
-  hero_img_hint:      '🖼️ Heb je een afbeelding?',
+  hero_unsupported_file: 'Kies een PDF- of afbeeldingsbestand (JPG/PNG).',
+  hero_mixed_files:      'Voeg alleen PDF\'s of alleen afbeeldingen toe — niet beide tegelijk.',
+  hero_multi_pdf_label:   '{n} PDF-bestanden',
+  hero_multi_image_label: '{n} afbeeldingsbestanden',
   home_title:         'PDFree — Gratis PDF-tools, Zonder Limieten',
 
   fb_intro:              'Gaat rechtstreeks naar Murod op Telegram — geen ticketsysteem, geen CRM. Ik lees elk bericht persoonlijk.',

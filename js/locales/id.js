@@ -465,17 +465,20 @@ window.PDFREE_LOCALE = {
   pdfa_aria_label:             'Laporan kepatuhan PDF/A',
 
   // hero drop zone
-  hero_drop:          'Mulai dengan PDF Anda',
+  hero_drop:          'Mulai dengan file Anda',
   hero_or:            'atau',
   hero_drop_choose:   'Pilih file',
   hero_file_single:   '{name} ({size})',
-  hero_file_multi:    '{n} PDF dipilih',
+  hero_file_multi:    '{n} file dipilih',
   hero_or_search:     'atau cari berdasarkan nama',
   hero_pick_which:    'file mana?',
   hero_pick_back:     '← Kembali',
   hero_hint_multi:    'Disarankan: {tool}',
   hero_chip_one_file: '1 file',
-  hero_img_hint:      'Punya gambar?',
+  hero_unsupported_file: 'Pilih file PDF atau gambar (JPG/PNG).',
+  hero_mixed_files:      'Tambahkan semua PDF atau semua gambar — jangan campur keduanya.',
+  hero_multi_pdf_label:   '{n} file PDF',
+  hero_multi_image_label: '{n} file gambar',
   home_title:         'PDFree — Alat PDF Gratis, Tanpa Batasan',
 
   fb_intro:              'Langsung ke Murod di Telegram — tanpa sistem tiket, tanpa CRM. Saya membaca setiap pesan sendiri.',

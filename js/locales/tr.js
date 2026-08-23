@@ -464,17 +464,20 @@ window.PDFREE_LOCALE = {
   pdfa_aria_label:             'PDF/A uyumluluk raporu',
 
   // hero drop zone
-  hero_drop:          'PDF\'inizi buraya sürükleyin',
+  hero_drop:          'Dosyanızla başlayın',
   hero_or:            'veya',
   hero_drop_choose:   'Dosya Seç',
   hero_file_single:   '{name} ({size})',
-  hero_file_multi:    '{n} PDF dosyası seçildi',
+  hero_file_multi:    '{n} dosya seçildi',
   hero_or_search:     'veya ada göre arayın',
   hero_pick_which:    'hangi dosya?',
   hero_pick_back:     '← Geri',
   hero_hint_multi:    'Önerilen: {tool}',
   hero_chip_one_file: '1 dosya',
-  hero_img_hint:      '🖼️ Bir resminiz mi var?',
+  hero_unsupported_file: 'Lütfen bir PDF veya resim (JPG/PNG) dosyası seçin.',
+  hero_mixed_files:      'Yalnızca PDF veya yalnızca resim ekleyin — ikisini birlikte eklemeyin.',
+  hero_multi_pdf_label:   '{n} PDF dosyası',
+  hero_multi_image_label: '{n} resim dosyası',
   home_title:         'PDFree — Ücretsiz PDF Araçları, Sınırsız',
 
   fb_intro:              'Doğrudan Telegram\'da Murod\'a gider — bilet sistemi yok, CRM yok. Her mesajı kişisel olarak okuyorum.',

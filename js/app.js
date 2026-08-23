@@ -718,7 +718,6 @@ function initSearch() {
   const heroDropLabel   = id('heroDropLabel');
   const heroDropOr      = id('heroDropOr');
   const heroDropChoose  = id('heroDropChooseBtn');
-  const heroImgHint     = id('heroImgHint');
   const searchOrLabel   = id('searchOrLabel');
 
   if (!searchEl) return;
@@ -733,22 +732,28 @@ function initSearch() {
   if (heroDropLabel)  heroDropLabel.textContent  = t('hero_drop');
   if (heroDropOr)     heroDropOr.textContent     = t('hero_or');
   if (heroDropChoose) heroDropChoose.textContent = t('hero_drop_choose');
-  if (heroImgHint)    heroImgHint.textContent    = t('hero_img_hint');
   if (searchOrLabel)  searchOrLabel.textContent  = t('hero_or_search');
-
-  // jpg2pdf is the only image-input tool — hero zone itself stays PDF-only,
-  // this link is the escape hatch for users who land here with a JPG/PNG.
-  if (heroImgHint) {
-    heroImgHint.addEventListener('click', () => trackChipClick('jpg2pdf', 'image-hint'));
-  }
 
   const lang  = document.documentElement.lang || 'en';
   const index = buildIndex(TOOLS, lang, window.PDFREE_LOCALE?.search_tags);
 
   // ── Hero drop zone ──────────────────────────────────────────────
   let _pendingFiles     = null;
+  let _pendingKind      = null;   // 'pdf' | 'image' — which flow _pendingFiles belongs to
   let _heroHintEl       = null;   // created once, reused
   let _bannerDismissed  = false;  // stays true once user closes banner this session
+
+  // Hero accepts PDF or image (JPG/PNG) — routes to the right tool by type.
+  // MIME type is trusted first (reliable in Chromium/Firefox drag&drop and
+  // most file pickers); extension is the fallback for the cases noted
+  // elsewhere in this file where MIME can be empty (e.g. iOS PDFs).
+  const _isPdfFile   = f => f.type === 'application/pdf' || /\.pdf$/i.test(f.name);
+  const _isImageFile = f => /^image\/(jpeg|png)$/.test(f.type) || /\.(jpe?g|png)$/i.test(f.name);
+  function _classifyHeroFiles(files) {
+    if (files.every(_isPdfFile))   return 'pdf';
+    if (files.every(_isImageFile)) return 'image';
+    return 'mixed';
+  }
 
   id('heroBannerClose')?.addEventListener('click', () => {
     _bannerDismissed = true;
@@ -766,7 +771,9 @@ function initSearch() {
 
     heroDetected.innerHTML = '';
 
-    // Multi-file: summary card + Merge-first grid
+    const kind = _classifyHeroFiles(files); // 'mixed' can't reach here — _setHeroFiles rejects it first
+
+    // Multi-file: summary card + type-appropriate recs grid
     if (files.length > 1) {
       const totalSize = files.reduce((s, f) => s + f.size, 0);
       const summary = document.createElement('div');
@@ -775,12 +782,12 @@ function initSearch() {
       row.className = 'hero-det-row';
       const iconEl = document.createElement('span');
       iconEl.className = 'hero-det-icon';
-      iconEl.textContent = '📄';
+      iconEl.textContent = kind === 'image' ? '🖼️' : '📄';
       const metaEl = document.createElement('div');
       metaEl.className = 'hero-det-meta';
       const nameEl = document.createElement('span');
       nameEl.className = 'hero-det-name';
-      nameEl.textContent = `${files.length} PDF files`;
+      nameEl.textContent = t(kind === 'image' ? 'hero_multi_image_label' : 'hero_multi_pdf_label', { n: files.length });
       const sizeEl = document.createElement('span');
       sizeEl.className = 'hero-det-size';
       sizeEl.textContent = _fmtSize(totalSize);
@@ -793,12 +800,15 @@ function initSearch() {
       row.append(iconEl, metaEl, changeBtn);
       summary.appendChild(row);
       heroDetected.appendChild(summary);
-      heroDetected.appendChild(_buildRecsGrid(['merge', 'compress', 'protect', 'split'], 'merge'));
+      heroDetected.appendChild(kind === 'image'
+        ? _buildRecsGrid(['jpg2pdf'], 'jpg2pdf')
+        : _buildRecsGrid(['merge', 'compress', 'protect', 'split'], 'merge'));
       heroDetected.hidden = false;
       return;
     }
 
-    // Single file: card immediately, grid appended after scan
+    // Single file: card immediately, grid appended after scan (PDF only —
+    // an image has nothing to scan, its recs grid is immediate too)
     const file = files[0];
     const card = document.createElement('div');
     card.className = 'hero-det-card';
@@ -808,7 +818,7 @@ function initSearch() {
 
     const iconEl = document.createElement('span');
     iconEl.className = 'hero-det-icon';
-    iconEl.textContent = '📄';
+    iconEl.textContent = kind === 'image' ? '🖼️' : '📄';
 
     const metaEl = document.createElement('div');
     metaEl.className = 'hero-det-meta';
@@ -822,6 +832,16 @@ function initSearch() {
 
     const badgesEl = document.createElement('div');
     badgesEl.className = 'hero-det-badges';
+
+    if (kind === 'image') {
+      row.append(iconEl, metaEl);
+      card.appendChild(row);
+      heroDetected.appendChild(card);
+      heroDetected.appendChild(_buildRecsGrid(['jpg2pdf'], 'jpg2pdf'));
+      heroDetected.hidden = false;
+      return;
+    }
+
     const loadingBadge = document.createElement('span');
     loadingBadge.className = 'hero-det-badge';
     loadingBadge.textContent = 'Analyzing…';
@@ -971,7 +991,13 @@ function initSearch() {
   }
 
   function _setHeroFiles(files, source = 'drop') {
+    const kind = _classifyHeroFiles(files);
+    if (kind === 'mixed') {
+      showToast(t('hero_mixed_files'));
+      return;
+    }
     _pendingFiles = files;
+    _pendingKind  = kind;
     heroFileInput.value = ''; // reset so re-selecting the same file fires change
     heroDropIdle.hidden = true;
     heroFileName.textContent = files.length === 1
@@ -984,10 +1010,10 @@ function initSearch() {
     // Recommendation hint for multi-file context (clickable shortcut)
     const hintEl = _getHintEl();
     if (files.length > 1) {
-      const mergeEntry = index.find(e => e.key === 'merge');
-      if (mergeEntry) {
-        hintEl.textContent = t('hero_hint_multi', { tool: `${mergeEntry.icon} ${mergeEntry.displayName}` });
-        hintEl.dataset.toolKey = mergeEntry.key;
+      const recEntry = index.find(e => e.key === (kind === 'image' ? 'jpg2pdf' : 'merge'));
+      if (recEntry) {
+        hintEl.textContent = t('hero_hint_multi', { tool: `${recEntry.icon} ${recEntry.displayName}` });
+        hintEl.dataset.toolKey = recEntry.key;
         hintEl.style.cursor = 'pointer';
         hintEl.hidden = false;
       }
@@ -1006,6 +1032,7 @@ function initSearch() {
 
   function _clearHeroFiles() {
     _pendingFiles = null;
+    _pendingKind  = null;
     heroDropIdle.hidden = false;
     heroDropReady.hidden = true;
     heroDropZone.classList.remove('has-file');
@@ -1021,7 +1048,9 @@ function initSearch() {
   }
 
   heroFileInput.addEventListener('change', () => {
-    // Trust the accept=".pdf" attribute — iOS PDFs may have empty MIME type
+    // accept=".pdf,image/*" filters the OS picker, but a picker can still
+    // return a mix (some let you multi-select across an "All files" toggle)
+    // — _setHeroFiles rejects that explicitly rather than guessing.
     const files = Array.from(heroFileInput.files);
     if (files.length) _setHeroFiles(files, 'button');
   });
@@ -1038,8 +1067,16 @@ function initSearch() {
   heroDropZone.addEventListener('drop', e => {
     e.preventDefault();
     heroDropZone.classList.remove('drag-over');
-    const files = Array.from(e.dataTransfer.files).filter(f => f.type === 'application/pdf');
-    if (files.length) _setHeroFiles(files, 'drop');
+    const allFiles = Array.from(e.dataTransfer.files);
+    const files = allFiles.filter(f => _isPdfFile(f) || _isImageFile(f));
+    if (files.length) {
+      _setHeroFiles(files, 'drop');
+    } else if (allFiles.length) {
+      // Previously a silent no-op — dropping e.g. a .docx just reset back to
+      // idle with zero explanation. Real bug, found via drag&drop testing
+      // (accept= only filters the native picker dialog, never drag&drop).
+      showToast(t('hero_unsupported_file'));
+    }
   });
 
   // ── File picker (shown when multi-files + single-file tool clicked) ─

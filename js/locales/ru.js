@@ -465,17 +465,20 @@ window.PDFREE_LOCALE = {
   pdfa_aria_label:             'Отчёт о соответствии PDF/A',
 
   // hero drop zone
-  hero_drop:          'Начните с вашего PDF',
+  hero_drop:          'Начните с вашего файла',
   hero_or:            'или',
   hero_drop_choose:   'Выбрать файл',
   hero_file_single:   '{name} ({size})',
-  hero_file_multi:    'Выбрано PDF: {n}',
+  hero_file_multi:    'Выбрано файлов: {n}',
   hero_or_search:     'или найдите по названию',
   hero_pick_which:    'какой файл?',
   hero_pick_back:     '← Назад',
   hero_hint_multi:    'Рекомендуем: {tool}',
   hero_chip_one_file: '1 файл',
-  hero_img_hint:      '🖼️ Есть изображение вместо PDF?',
+  hero_unsupported_file: 'Выберите файл PDF или изображение (JPG/PNG).',
+  hero_mixed_files:      'Добавьте только PDF или только изображения — не вместе.',
+  hero_multi_pdf_label:   'PDF-файлов: {n}',
+  hero_multi_image_label: 'Изображений: {n}',
   home_title:         'PDFree — Бесплатные PDF-инструменты, Без ограничений',
 
   fb_intro:              'Идёт напрямую Муроду в Telegram — без тикет-системы, без CRM. Я лично читаю каждое сообщение.',

@@ -464,17 +464,20 @@ window.PDFREE_LOCALE = {
   pdfa_aria_label:             'Informe de conformidad PDF/A',
 
   // hero drop zone
-  hero_drop:          'Empieza con tu PDF',
+  hero_drop:          'Empieza con tu archivo',
   hero_or:            'o',
   hero_drop_choose:   'Elegir archivo',
   hero_file_single:   '{name} ({size})',
-  hero_file_multi:    '{n} PDFs seleccionados',
+  hero_file_multi:    '{n} archivos seleccionados',
   hero_or_search:     'o busca por nombre',
   hero_pick_which:    '¿qué archivo?',
   hero_pick_back:     '← Volver',
   hero_hint_multi:    'Recomendado: {tool}',
   hero_chip_one_file: '1 archivo',
-  hero_img_hint:      '¿Tienes una imagen?',
+  hero_unsupported_file: 'Elige un archivo PDF o de imagen (JPG/PNG).',
+  hero_mixed_files:      'Añade solo PDF o solo imágenes — no ambos a la vez.',
+  hero_multi_pdf_label:   '{n} archivos PDF',
+  hero_multi_image_label: '{n} archivos de imagen',
   home_title:         'PDFree — Herramientas PDF Gratis, Sin Límites',
 
   fb_intro:              'Va directo a Murod por Telegram — sin sistema de tickets, sin CRM. Leo cada mensaje personalmente.',

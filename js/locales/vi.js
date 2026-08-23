@@ -465,17 +465,20 @@ window.PDFREE_LOCALE = {
   pdfa_aria_label:             'Báo cáo tuân thủ PDF/A',
 
   // hero drop zone
-  hero_drop:          'Thả PDF vào đây',
+  hero_drop:          'Bắt đầu với tệp của bạn',
   hero_or:            'hoặc',
   hero_drop_choose:   'Chọn file',
   hero_file_single:   '{name} ({size})',
-  hero_file_multi:    'Đã chọn {n} PDF',
+  hero_file_multi:    'Đã chọn {n} tệp',
   hero_or_search:     'hoặc tìm theo tên',
   hero_pick_which:    'file nào?',
   hero_pick_back:     '← Quay lại',
   hero_hint_multi:    'Gợi ý: {tool}',
   hero_chip_one_file: '1 file',
-  hero_img_hint:      '🖼️ Bạn có ảnh không?',
+  hero_unsupported_file: 'Vui lòng chọn tệp PDF hoặc hình ảnh (JPG/PNG).',
+  hero_mixed_files:      'Chỉ thêm PDF hoặc chỉ thêm hình ảnh — không trộn lẫn cả hai.',
+  hero_multi_pdf_label:   '{n} tệp PDF',
+  hero_multi_image_label: '{n} tệp hình ảnh',
   home_title:         'PDFree — Công Cụ PDF Miễn Phí, Không Giới Hạn',
 
   fb_intro:              'Gửi thẳng đến Murod trên Telegram — không hệ thống ticket, không CRM. Tôi tự đọc từng tin nhắn.',

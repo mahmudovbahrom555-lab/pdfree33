@@ -13,10 +13,10 @@
 //       the actual built pages (19 of 23 tools, plus `compress-email`
 //       which isn't tracked in data/tools-config.json at all) — English
 //       silently overwrote correctly-localized SSR text on every load.
-//    2. js/i18n.js's hero_drop/hero_img_hint and the hardcoded document.title
-//       in goHome() had drifted out of sync with the actual homepage HTML —
-//       not a missing translation, but a second, independently-maintained
-//       copy of the same string that nobody kept in sync.
+//    2. js/i18n.js's hero_drop and the hardcoded document.title in goHome()
+//       had drifted out of sync with the actual homepage HTML — not a
+//       missing translation, but a second, independently-maintained copy
+//       of the same string that nobody kept in sync.
 //
 //  This test guards against both recurring, by scanning the actual
 //  git-tracked HTML (not dist/, so it runs without a prior build step) for
@@ -112,7 +112,7 @@ test('every page with <body data-tool> has full js/config.js locale coverage for
 
 // ── 2. Homepage hero text must match js/i18n.js / js/locales/*.js exactly ──
 // (initSearch() runs unconditionally on every homepage load and overwrites
-// these elements with t('hero_drop')/t('hero_img_hint')/t('home_title').)
+// these elements with t('hero_drop')/t('home_title').)
 
 console.log('\nHomepage hero text parity (SSR vs. i18n source):');
 
@@ -123,7 +123,7 @@ function extractValue(source, key) {
 }
 
 const i18nSource = readFileSync(path.join(ROOT, 'js/i18n.js'), 'utf-8');
-const HERO_KEYS = ['hero_drop', 'hero_img_hint', 'home_title'];
+const HERO_KEYS = ['hero_drop', 'home_title'];
 
 const HOMEPAGE_LOCALES = ['en', 'de', 'es', 'fr', 'pt', 'id'];
 for (const locale of HOMEPAGE_LOCALES) {
@@ -141,19 +141,12 @@ for (const locale of HOMEPAGE_LOCALES) {
   }
 
   const ssrDrop  = html.match(/id="heroDropLabel">([^<]*)</)?.[1];
-  const ssrHint  = html.match(/id="heroImgHint">([^<]*)</)?.[1];
   const ssrTitle = html.match(/<title>([^<]*)<\/title>/)?.[1];
 
   test(`${locale}: heroDropLabel matches t('hero_drop')`, () => {
     const expected = resolve('hero_drop');
     if (ssrDrop !== expected) {
       throw new Error(`SSR="${ssrDrop}" but i18n source resolves to "${expected}" — initSearch() will overwrite the SSR text with a different phrase on load`);
-    }
-  });
-  test(`${locale}: heroImgHint matches t('hero_img_hint')`, () => {
-    const expected = resolve('hero_img_hint');
-    if (ssrHint !== expected) {
-      throw new Error(`SSR="${ssrHint}" but i18n source resolves to "${expected}"`);
     }
   });
   test(`${locale}: <title> matches t('home_title') (what goHome() sets)`, () => {

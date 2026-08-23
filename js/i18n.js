@@ -449,17 +449,20 @@ export const EN = {
   pdfa_aria_label:        'PDF/A compliance report',
 
   // ── hero drop zone ────────────────────────────────────────────
-  hero_drop:          'Start with your PDF',
+  hero_drop:          'Start with your file',
   hero_or:            'or',
   hero_drop_choose:   'Choose File',
   hero_file_single:   '{name} ({size})',
-  hero_file_multi:    '{n} PDFs selected',
+  hero_file_multi:    '{n} files selected',
   hero_or_search:     'or search by name',
   hero_pick_which:    'which file?',
   hero_pick_back:     '← Back',
   hero_hint_multi:    'Recommended: {tool}',
   hero_chip_one_file: '1 file',
-  hero_img_hint:      'Have an image instead?',
+  hero_unsupported_file: 'Please choose a PDF or image (JPG/PNG) file.',
+  hero_mixed_files:      'Please add all PDFs or all images — not both at once.',
+  hero_multi_pdf_label:   '{n} PDF files',
+  hero_multi_image_label: '{n} image files',
   home_title:         'PDFree — Free PDF Tools, No Limits',
 
   // ── feedback.js — personalized modal ──────────────────────────

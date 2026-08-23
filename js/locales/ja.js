@@ -467,17 +467,20 @@ window.PDFREE_LOCALE = {
   pdfa_aria_label:             'PDF/A準拠レポート',
 
   // hero drop zone
-  hero_drop:          'PDFファイルから始めましょう',
+  hero_drop:          'ファイルを選んで始めましょう',
   hero_or:            'または',
   hero_drop_choose:   'ファイルを選択',
   hero_file_single:   '{name}（{size}）',
-  hero_file_multi:    '{n}件のPDFを選択中',
+  hero_file_multi:    '{n}件のファイルを選択中',
   hero_or_search:     'または名前で検索',
   hero_pick_which:    'どのファイルですか？',
   hero_pick_back:     '← 戻る',
   hero_hint_multi:    'おすすめ: {tool}',
   hero_chip_one_file: '1件のファイル',
-  hero_img_hint:      '🖼️ 画像をお持ちですか？',
+  hero_unsupported_file: 'PDFまたは画像（JPG/PNG）ファイルを選んでください。',
+  hero_mixed_files:      'PDFのみ、または画像のみを追加してください — 混在はできません。',
+  hero_multi_pdf_label:   '{n}件のPDFファイル',
+  hero_multi_image_label: '{n}件の画像ファイル',
   home_title:         'PDFree — 無料のPDFツール、無制限',
 
   fb_intro:              'TelegramでMurodに直接届きます — チケット制度もCRMもありません。すべて私自身が読みます。',

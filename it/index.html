@@ -261,16 +261,15 @@
 
     <div class="search-hero" id="searchHero">
       <div class="hero-drop-zone" id="heroDropZone">
-        <input type="file" id="heroFileInput" accept=".pdf,application/pdf" multiple hidden>
+        <input type="file" id="heroFileInput" accept=".pdf,application/pdf,.jpg,.jpeg,.png,image/jpeg,image/png" multiple hidden>
         <div class="hero-drop-zone__idle" id="heroDropIdle">
           <span class="hero-drop-zone__upload-icon" aria-hidden="true"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></span>
-          <span class="hero-drop-zone__label" id="heroDropLabel">Inizia con il tuo PDF</span>
+          <span class="hero-drop-zone__label" id="heroDropLabel">Inizia con il tuo file</span>
           <div class="hero-drop-zone__choose-row">
             <span class="hero-drop-zone__drop-text">Trascina il PDF qui</span>
             <span class="hero-drop-zone__sep" id="heroDropOr">oppure</span>
             <label class="hero-drop-zone__btn" for="heroFileInput" id="heroDropChooseBtn">Scegli file</label>
           </div>
-          <a href="/it/jpg-in-pdf/" class="hero-drop-zone__img-link" id="heroImgHint">Hai un'immagine?</a>
         </div>
         <div class="hero-drop-zone__ready" id="heroDropReady" hidden>
           <span class="hero-drop-zone__check">✓</span>

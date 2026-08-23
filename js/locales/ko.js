@@ -466,17 +466,20 @@ window.PDFREE_LOCALE = {
   pdfa_aria_label:             'PDF/A 준수 보고서',
 
   // hero drop zone
-  hero_drop:          '여기로 PDF를 끌어오세요',
+  hero_drop:          '여기로 파일을 끌어오세요',
   hero_or:            '또는',
   hero_drop_choose:   'PDF 선택',
   hero_file_single:   '{name} ({size})',
-  hero_file_multi:    '{n}개 PDF 선택됨',
+  hero_file_multi:    '{n}개 파일 선택됨',
   hero_or_search:     '또는 이름으로 검색',
   hero_pick_which:    '어떤 파일인가요?',
   hero_pick_back:     '← 뒤로',
   hero_hint_multi:    '추천: {tool}',
   hero_chip_one_file: '파일 1개',
-  hero_img_hint:      '🖼️ 이미지가 있나요?',
+  hero_unsupported_file: 'PDF 또는 이미지(JPG/PNG) 파일을 선택해 주세요.',
+  hero_mixed_files:      'PDF만 또는 이미지만 추가해 주세요 — 함께 섞을 수 없습니다.',
+  hero_multi_pdf_label:   '{n}개 PDF 파일',
+  hero_multi_image_label: '{n}개 이미지 파일',
   home_title:         'PDFree — 무료 PDF 도구, 제한 없음',
 
   fb_intro:              '텔레그램으로 Murod에게 직접 전달됩니다 — 티켓 시스템도 CRM도 없어요. 제가 직접 모든 메시지를 읽습니다.',
