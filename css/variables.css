@@ -20,6 +20,7 @@
   --green-dark:   #1A5C38;
   --green-light:  #E8F5EE;
   --green-mid:    #4CAF78;
+  --green-text:   var(--green);  /* small text/links on --bg or --surface — must stay WCAG AA (4.5:1); dark mode brightens it below, --green itself is unchanged since it's also used for backgrounds/borders (129 other call sites) that shouldn't shift */
 
   /* Spacing */
   --radius:    14px;
@@ -50,6 +51,7 @@
   --text2:       #97978F;
   --text3:       #88887E;
   --green-light: #192B20;
+  --green-text:  var(--green-mid);
   --shadow-lg:   0 8px 40px rgba(0, 0, 0, 0.50);
 }
 
@@ -65,6 +67,7 @@
     --text2:       #97978F;
     --text3:       #88887E;
     --green-light: #192B20;
+    --green-text:  var(--green-mid);
     --shadow-lg:   0 8px 40px rgba(0, 0, 0, 0.50);
   }
 }

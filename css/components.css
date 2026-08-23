@@ -44,7 +44,7 @@ button,
 .tool-card:active { transform: translateY(-1px); }
 
 .tool-card.featured { border-color: rgba(45,122,79,0.35); }
-.tool-card.featured .tool-name { color: var(--green); }
+.tool-card.featured .tool-name { color: var(--green-text); }
 
 /* Icon wrapper: rounded square that reacts on card hover */
 .tool-icon-wrapper {
@@ -3542,7 +3542,7 @@ button,
   background: none;
   border: none;
   padding: 0;
-  color: var(--green);
+  color: var(--green-text);
   font-size: inherit;
   font-family: inherit;
   cursor: pointer;
@@ -3551,7 +3551,7 @@ button,
   text-decoration-color: transparent;
   transition: text-decoration-color 0.15s;
 }
-.fb-footer-btn:hover { text-decoration-color: var(--green); }
+.fb-footer-btn:hover { text-decoration-color: var(--green-text); }
 
 /* ── Feedback modal ── */
 .fb-modal {

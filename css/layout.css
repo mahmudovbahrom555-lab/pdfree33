@@ -237,7 +237,7 @@ nav {
   gap: 7px;
   background: var(--green-light);
   border: 1px solid rgba(45,122,79,0.2);
-  color: var(--green);
+  color: var(--green-text);
   font-size: 13px;
   font-weight: 500;
   padding: 6px 16px;
@@ -738,7 +738,7 @@ footer {
   color: var(--text3);
   min-height: 80px; /* prevent CLS 0.102 caused by late content shift */
 }
-footer a { color: var(--green); text-decoration: none; }
+footer a { color: var(--green-text); text-decoration: none; }
 footer a:hover { text-decoration: underline; }
 .footer-links {
   display: flex;
