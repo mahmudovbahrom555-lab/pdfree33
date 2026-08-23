@@ -11,22 +11,28 @@
   var MIN_WIDTH_FOR_PRIORITY = 701;
   var GAP = 4;
 
-  document.addEventListener('DOMContentLoaded', function () {
-    var links = document.getElementById('navLinks');
-    var more  = document.getElementById('navMore');
-    if (!links || !more) return;
-
+  // No DOMContentLoaded wait: this script is already loaded via <script defer>,
+  // which the HTML spec guarantees runs after DOM parsing and before
+  // DOMContentLoaded fires — waiting for that event on top of defer only adds
+  // delay. That delay was measured causing a real layout shift in production
+  // RUM data: the browser paints the pre-collapse "all links visible" frame,
+  // then this script finally runs and visibly snaps overflow links into
+  // #navMore, moving everything after it (lang switch, theme toggle). Running
+  // immediately shrinks that window to the minimum the DOM/JS engine allows.
+  var links = document.getElementById('navLinks');
+  var more  = document.getElementById('navMore');
+  if (links && more) {
     var badge = more.querySelector('.nav-more__badge');
     var menu  = more.querySelector('.nav-more__menu');
     var items = Array.prototype.slice.call(links.querySelectorAll('.nav-link'));
     var widths = null;
 
-    function measure() {
+    var measure = function () {
       items.forEach(function (el) { el.style.display = ''; });
       widths = items.map(function (el) { return el.getBoundingClientRect().width; });
-    }
+    };
 
-    function layout() {
+    var layout = function () {
       if (window.innerWidth < MIN_WIDTH_FOR_PRIORITY) {
         items.forEach(function (el) { el.style.display = ''; });
         more.style.visibility = 'hidden';
@@ -58,10 +64,10 @@
         more.removeAttribute('open');
         menu.innerHTML = '';
       }
-    }
+    };
 
     measure();
     layout();
     window.addEventListener('resize', layout);
-  });
+  }
 }());
