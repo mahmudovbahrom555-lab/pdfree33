@@ -199,7 +199,7 @@
 
   <!-- ── Navigation ── -->
   <nav>
-    <div class="logo" id="logo" tabindex="0" role="button" aria-label="ホームへ">
+    <div class="logo" id="logo" tabindex="0" role="button">
       <div class="logo-icon" aria-hidden="true">
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
       </div>
@@ -227,11 +227,11 @@
     </div>
     <div class="nav-right">
       <details class="nav-more" id="navMore">
-        <summary aria-label="その他のツール">その他 <span class="nav-more__badge"></span></summary>
+        <summary>その他 <span class="nav-more__badge"></span></summary>
         <div class="nav-more__menu"></div>
       </details>
       <details class="lang-switch" id="langSwitch">
-        <summary aria-label="言語を切り替え">🌐 JA</summary>
+        <summary><span class="sr-only">言語を切り替え: </span>🌐 JA</summary>
         <div class="lang-switch__menu" role="menu">
           <a href="/" role="menuitem">English</a>
           <a href="/es/" role="menuitem">Español</a>
@@ -408,87 +408,87 @@
   <section id="toolsGrid" class="tools-section js-home-only">
     <div class="section-label">すべてのツール</div>
     <div class="tools-grid">
-      <a href="/ja/pdf-ketsugou/" class="tool-card featured" data-tool="merge" aria-label="PDFを結合">
+      <a href="/ja/pdf-ketsugou/" class="tool-card featured" data-tool="merge">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
         <div class="tool-name">PDFを結合</div>
         <div class="tool-desc">無制限のPDFファイルを結合 — 制限なし</div>
       </a>
-      <a href="/ja/pdf-bunkatsu/" class="tool-card" data-tool="split" aria-label="PDFを分割">
+      <a href="/ja/pdf-bunkatsu/" class="tool-card" data-tool="split">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg></div>
         <div class="tool-name">PDFを分割</div>
         <div class="tool-desc">ページを抽出するか個別ファイルに瞬時に分割</div>
       </a>
-      <a href="/ja/pdf-atsuryoku/" class="tool-card" data-tool="compress" aria-label="PDF圧縮">
+      <a href="/ja/pdf-atsuryoku/" class="tool-card" data-tool="compress">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/><path d="M5 2h14"/><path d="M5 22h14"/></svg></div>
         <div class="tool-name">PDF圧縮</div>
         <div class="tool-desc">品質を落とさずローカルでファイルサイズを削減</div>
       </a>
-      <a href="/ja/jpg-pdf-henkan/" class="tool-card" data-tool="jpg2pdf" aria-label="JPGをPDFに">
+      <a href="/ja/jpg-pdf-henkan/" class="tool-card" data-tool="jpg2pdf">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
         <div class="tool-name">JPGをPDFに</div>
         <div class="tool-desc">画像を瞬時に1つのPDFに変換</div>
       </a>
-      <a href="/ja/pdf-jpg-henkan/" class="tool-card" data-tool="pdf2jpg" aria-label="PDFをJPGに">
+      <a href="/ja/pdf-jpg-henkan/" class="tool-card" data-tool="pdf2jpg">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg></div>
         <div class="tool-name">PDFをJPGに</div>
         <div class="tool-desc">ページを高品質な画像として書き出す</div>
       </a>
-      <a href="/ja/pdf-chushutsu/" class="tool-card" data-tool="extract" aria-label="ページを抽出">
+      <a href="/ja/pdf-chushutsu/" class="tool-card" data-tool="extract">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="M12 12v6"/><path d="m9 15 3-3 3 3"/></svg></div>
         <div class="tool-name">ページを抽出</div>
         <div class="tool-desc">選択したページを新しいクリーンなPDFにまとめる</div>
       </a>
-      <a href="/ja/pdf-sukashi/" class="tool-card" data-tool="watermark" aria-label="透かし追加">
+      <a href="/ja/pdf-sukashi/" class="tool-card" data-tool="watermark">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg></div>
         <div class="tool-name">透かし追加</div>
         <div class="tool-desc">すべてのページにテキストを押す — 斜めまたはタイル状</div>
       </a>
-      <a href="/ja/pdf-page-bango/" class="tool-card" data-tool="pagenum" aria-label="ページ番号">
+      <a href="/ja/pdf-page-bango/" class="tool-card" data-tool="pagenum">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 22h14a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v4"/><polyline points="14 2 14 8 20 8"/><path d="M2 15h4v4"/><path d="M4 15v6"/><path d="M10 15v6"/><path d="M14 15v6"/></svg></div>
         <div class="tool-name">ページ番号</div>
         <div class="tool-desc">番号付きフッターを追加 — アラビア数字、ローマ数字、ABC</div>
       </a>
-      <a href="/ja/pdf-metadeta/" class="tool-card" data-tool="meta" aria-label="メタデータを編集">
+      <a href="/ja/pdf-metadeta/" class="tool-card" data-tool="meta">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"/><path d="M7 7h.01"/></svg></div>
         <div class="tool-name">メタデータを編集</div>
         <div class="tool-desc">タイトル、作成者、キーワードを表示・編集</div>
       </a>
-      <a href="/ja/pdf-kurotsubushi/" class="tool-card" data-tool="redact" aria-label="PDFを黒塗り">
+      <a href="/ja/pdf-kurotsubushi/" class="tool-card" data-tool="redact">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 14l2 2 4-4"/></svg></div>
         <div class="tool-name">PDFを黒塗り</div>
         <div class="tool-desc">透かし、署名、機密データをローカルで隠す</div>
       </a>
-      <a href="/ja/pdf-kaiten/" class="tool-card" data-tool="rotate" aria-label="PDFを回転">
+      <a href="/ja/pdf-kaiten/" class="tool-card" data-tool="rotate">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg></div>
         <div class="tool-name">PDFを回転</div>
         <div class="tool-desc">どのPDFでもページの向きを修正</div>
       </a>
-      <a href="/ja/pdf-narabekae/" class="tool-card" data-tool="organize" aria-label="PDFを整理">
+      <a href="/ja/pdf-narabekae/" class="tool-card" data-tool="organize">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg></div>
         <div class="tool-name">PDFを整理</div>
         <div class="tool-desc">ページの並べ替え・削除・回転を一か所で</div>
       </a>
-      <a href="/ja/pdf-size-henkou/" class="tool-card" data-tool="resize" aria-label="PDFのサイズ変更">
+      <a href="/ja/pdf-size-henkou/" class="tool-card" data-tool="resize">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg></div>
         <div class="tool-name">PDFのサイズ変更</div>
         <div class="tool-desc">どのPDFもA4・Letter・Legal・A3・A5に合わせて印刷用に調整</div>
       </a>
-      <a href="/ja/manga-page-bunkatsu/" class="tool-card" data-tool="mangaSplit" aria-label="マンガページを分割">
+      <a href="/ja/manga-page-bunkatsu/" class="tool-card" data-tool="mangaSplit">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div>
         <div class="tool-name">マンガページを分割</div>
         <div class="tool-desc">マンガの見開きページを正しい順序の2ページに分割</div>
       </a>
-      <a href="/ja/scan-clean/" class="tool-card" data-tool="cleanScan" aria-label="スキャンをクリーン化">
+      <a href="/ja/scan-clean/" class="tool-card" data-tool="cleanScan">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg></div>
         <div class="tool-name">スキャンをクリーン化</div>
         <div class="tool-desc">スキャンページの背景を白くし、文字をくっきりさせます</div>
       </a>
-      <a href="/ja/pdf-ereader-saitekika/" class="tool-card" data-tool="ereader" aria-label="電子書籍リーダー最適化">
+      <a href="/ja/pdf-ereader-saitekika/" class="tool-card" data-tool="ereader">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></div>
         <div class="tool-name">電子書籍リーダー最適化</div>
         <div class="tool-desc">Kindle・Kobo・reMarkable向けに余白をトリミングしコントラストを最適化</div>
       </a>
-      <a href="/ja/pdf-password/" class="tool-card" data-tool="protect" aria-label="PDFを保護">
+      <a href="/ja/pdf-password/" class="tool-card" data-tool="protect">
         <div class="tool-card-pulse" aria-hidden="true">
           <div class="tool-card-pulse__ring"></div>
           <div class="tool-card-pulse__dot"></div>
@@ -497,57 +497,57 @@
         <div class="tool-name">PDFを保護</div>
         <div class="tool-desc">パスワード & アクセス権 — 100%プライベート</div>
       </a>
-      <a href="/ja/pdf-kinyuu/" class="tool-card" data-tool="fill" aria-label="PDFフォームに入力">
+      <a href="/ja/pdf-kinyuu/" class="tool-card" data-tool="fill">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg></div>
         <div class="tool-name">PDFに記入</div>
         <div class="tool-desc">フォームに入力してPDFにローカルで署名</div>
       </a>
-      <a href="/draw-on-pdf/" class="tool-card" data-tool="draw-pdf" aria-label="PDFに描画">
+      <a href="/draw-on-pdf/" class="tool-card" data-tool="draw-pdf">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></div>
         <div class="tool-name">PDFに描画</div>
         <div class="tool-desc">矢印・テキスト・図形でPDFに注釈 — プライベート、アップロード不要</div>
       </a>
-      <a href="/ja/pdf-moji-ninshiki/" class="tool-card" data-tool="ocr" aria-label="PDF文字認識">
+      <a href="/ja/pdf-moji-ninshiki/" class="tool-card" data-tool="ocr">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M11 8v6"/><path d="M8 11h6"/></svg></div>
         <div class="tool-name">PDF文字認識</div>
         <div class="tool-desc">スキャンPDFからテキストを抽出 — アップロード不要</div>
       </a>
-      <a href="/ja/pdf-word-henkan/" class="tool-card" data-tool="pdf2word" aria-label="PDFをWordに">
+      <a href="/ja/pdf-word-henkan/" class="tool-card" data-tool="pdf2word">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div>
         <div class="tool-name">PDFをWordに</div>
         <div class="tool-desc">編集可能な.docxに変換 — アップロード不要</div>
       </a>
-      <a href="/ja/pdf-heitanka/" class="tool-card" data-tool="flatten" aria-label="PDFをフラット化">
+      <a href="/ja/pdf-heitanka/" class="tool-card" data-tool="flatten">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><line x1="8" y1="15" x2="16" y2="15"/></svg></div>
         <div class="tool-name">PDFをフラット化</div>
         <div class="tool-desc">フォームフィールドを固定 — 編集不可のPDFに</div>
       </a>
-      <a href="/compare-pdf/" class="tool-card" data-tool="compare" aria-label="PDFを比較">
+      <a href="/compare-pdf/" class="tool-card" data-tool="compare">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="8" height="18" rx="1"/><rect x="14" y="3" width="8" height="18" rx="1"/><path d="M10 8h4M10 12h4M10 16h4"/></svg></div>
         <div class="tool-name">PDFを比較</div>
         <div class="tool-desc">2つのPDFを比較して差分をハイライト — アップロード不要</div>
       </a>
-      <a href="/ja/pdf-excel-henkan/" class="tool-card" data-tool="pdf2excel" aria-label="PDFからExcel">
+      <a href="/ja/pdf-excel-henkan/" class="tool-card" data-tool="pdf2excel">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg></div>
         <div class="tool-name">PDFからExcel</div>
         <div class="tool-desc">PDFの表をローカルでスプレッドシートに変換</div>
       </a>
-      <a href="/ja/pdf-powerpoint-henkan/" class="tool-card" data-tool="pdf2ppt" aria-label="PDFからPowerPoint">
+      <a href="/ja/pdf-powerpoint-henkan/" class="tool-card" data-tool="pdf2ppt">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
         <div class="tool-name">PDFからPowerPoint</div>
         <div class="tool-desc">PDFページをローカルでプレゼンテーションに変換</div>
       </a>
-      <a href="/ja/pdf-markdown-henkan/" class="tool-card" data-tool="pdf2md" aria-label="PDFからMarkdown">
+      <a href="/ja/pdf-markdown-henkan/" class="tool-card" data-tool="pdf2md">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg></div>
         <div class="tool-name">PDFからMarkdown</div>
         <div class="tool-desc">PDFテキストをローカルでクリーンな.mdファイルに変換</div>
       </a>
-      <a href="/ja/pdf-kaijo/" class="tool-card" data-tool="unlock" aria-label="PDFのロック解除">
+      <a href="/ja/pdf-kaijo/" class="tool-card" data-tool="unlock">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg></div>
         <div class="tool-name">PDFのロック解除</div>
         <div class="tool-desc">パスワード保護をローカルで削除</div>
       </a>
-      <a href="/ja/pdf-pdfa/" class="tool-card" data-tool="pdf2pdfa" aria-label="PDF/A準拠チェック">
+      <a href="/ja/pdf-pdfa/" class="tool-card" data-tool="pdf2pdfa">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="m9 15 2 2 4-4"/></svg></div>
         <div class="tool-name">PDF/A準拠チェック</div>
         <div class="tool-desc">PDF/A-2b/2u へ変換 — アップロード不要</div>
@@ -629,7 +629,7 @@
       </div>
     </div>
 
-    <div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-label="ファイルをアップロード — クリックまたはドラッグ&ドロップ">
+    <div id="dropZone" class="drop-zone" tabindex="0" role="button">
       <input type="file" id="fileInput" multiple accept=".pdf,application/pdf" aria-hidden="true">
       <span class="drop-icon" aria-hidden="true">📂</span>
       <div class="drop-title">ここにファイルをドロップ</div>

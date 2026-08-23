@@ -198,7 +198,7 @@
 
   <!-- ── Navigation ── -->
   <nav>
-    <div class="logo" id="logo" tabindex="0" role="button" aria-label="Ir a inicio">
+    <div class="logo" id="logo" tabindex="0" role="button">
       <div class="logo-icon" aria-hidden="true">
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
       </div>
@@ -226,11 +226,11 @@
     </div>
     <div class="nav-right">
       <details class="nav-more" id="navMore">
-        <summary aria-label="Más herramientas">Más <span class="nav-more__badge"></span></summary>
+        <summary>Más <span class="nav-more__badge"></span></summary>
         <div class="nav-more__menu"></div>
       </details>
       <details class="lang-switch" id="langSwitch">
-        <summary aria-label="Cambiar idioma">🌐 ES</summary>
+        <summary><span class="sr-only">Cambiar idioma: </span>🌐 ES</summary>
         <div class="lang-switch__menu" role="menu">
           <a href="/" role="menuitem">English</a>
           <a href="/es/" role="menuitem" aria-current="true">Español</a>
@@ -407,87 +407,87 @@
   <section id="toolsGrid" class="tools-section js-home-only">
     <div class="section-label">Todas las herramientas</div>
     <div class="tools-grid">
-      <a href="/es/unir-pdf/" class="tool-card featured" data-tool="merge" aria-label="Unir PDF">
+      <a href="/es/unir-pdf/" class="tool-card featured" data-tool="merge">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
         <div class="tool-name">Unir PDF</div>
         <div class="tool-desc">Combina cualquier cantidad de PDFs — sin restricciones</div>
       </a>
-      <a href="/es/dividir-pdf/" class="tool-card" data-tool="split" aria-label="Dividir PDF">
+      <a href="/es/dividir-pdf/" class="tool-card" data-tool="split">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg></div>
         <div class="tool-name">Dividir PDF</div>
         <div class="tool-desc">Extrae páginas o divide en archivos separados al instante</div>
       </a>
-      <a href="/es/comprimir-pdf/" class="tool-card" data-tool="compress" aria-label="Comprimir PDF">
+      <a href="/es/comprimir-pdf/" class="tool-card" data-tool="compress">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/><path d="M5 2h14"/><path d="M5 22h14"/></svg></div>
         <div class="tool-name">Comprimir PDF</div>
         <div class="tool-desc">Reduce el tamaño sin perder calidad — localmente</div>
       </a>
-      <a href="/es/jpg-a-pdf/" class="tool-card" data-tool="jpg2pdf" aria-label="JPG a PDF">
+      <a href="/es/jpg-a-pdf/" class="tool-card" data-tool="jpg2pdf">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
         <div class="tool-name">JPG a PDF</div>
         <div class="tool-desc">Convierte tus imágenes a un único PDF al instante</div>
       </a>
-      <a href="/es/pdf-a-jpg/" class="tool-card" data-tool="pdf2jpg" aria-label="PDF a JPG">
+      <a href="/es/pdf-a-jpg/" class="tool-card" data-tool="pdf2jpg">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg></div>
         <div class="tool-name">PDF a JPG</div>
         <div class="tool-desc">Extrae páginas como imágenes de alta calidad</div>
       </a>
-      <a href="/es/extraer-pdf/" class="tool-card" data-tool="extract" aria-label="Extraer Páginas">
+      <a href="/es/extraer-pdf/" class="tool-card" data-tool="extract">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="M12 12v6"/><path d="m9 15 3-3 3 3"/></svg></div>
         <div class="tool-name">Extraer Páginas</div>
         <div class="tool-desc">Saca las páginas seleccionadas en un nuevo PDF limpio</div>
       </a>
-      <a href="/es/marca-de-agua-pdf/" class="tool-card" data-tool="watermark" aria-label="Marca de Agua">
+      <a href="/es/marca-de-agua-pdf/" class="tool-card" data-tool="watermark">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg></div>
         <div class="tool-name">Marca de Agua</div>
         <div class="tool-desc">Estampa texto en cada página — diagonal o en mosaico</div>
       </a>
-      <a href="/es/numeros-de-pagina-pdf/" class="tool-card" data-tool="pagenum" aria-label="Números de Página">
+      <a href="/es/numeros-de-pagina-pdf/" class="tool-card" data-tool="pagenum">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 22h14a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v4"/><polyline points="14 2 14 8 20 8"/><path d="M2 15h4v4"/><path d="M4 15v6"/><path d="M10 15v6"/><path d="M14 15v6"/></svg></div>
         <div class="tool-name">Números de Página</div>
         <div class="tool-desc">Añade pies de página numerados — Arábigo, Romano o ABC</div>
       </a>
-      <a href="/es/metadatos-pdf/" class="tool-card" data-tool="meta" aria-label="Editar Metadatos">
+      <a href="/es/metadatos-pdf/" class="tool-card" data-tool="meta">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"/><path d="M7 7h.01"/></svg></div>
         <div class="tool-name">Editar Metadatos</div>
         <div class="tool-desc">Ver y editar título, autor y palabras clave</div>
       </a>
-      <a href="/es/censurar-pdf/" class="tool-card" data-tool="redact" aria-label="Censurar PDF">
+      <a href="/es/censurar-pdf/" class="tool-card" data-tool="redact">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 14l2 2 4-4"/></svg></div>
         <div class="tool-name">Censurar PDF</div>
         <div class="tool-desc">Oculta marcas de agua, firmas o datos sensibles localmente</div>
       </a>
-      <a href="/es/rotar-pdf/" class="tool-card" data-tool="rotate" aria-label="Rotar PDF">
+      <a href="/es/rotar-pdf/" class="tool-card" data-tool="rotate">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg></div>
         <div class="tool-name">Rotar PDF</div>
         <div class="tool-desc">Corrige la orientación de páginas en cualquier PDF</div>
       </a>
-      <a href="/es/organizar-pdf/" class="tool-card" data-tool="organize" aria-label="Organizar PDF">
+      <a href="/es/organizar-pdf/" class="tool-card" data-tool="organize">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg></div>
         <div class="tool-name">Organizar PDF</div>
         <div class="tool-desc">Reordena, elimina y rota páginas en un solo lugar</div>
       </a>
-      <a href="/es/redimensionar-pdf/" class="tool-card" data-tool="resize" aria-label="Redimensionar PDF">
+      <a href="/es/redimensionar-pdf/" class="tool-card" data-tool="resize">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg></div>
         <div class="tool-name">Redimensionar PDF</div>
         <div class="tool-desc">Ajusta cualquier PDF a A4, Carta, Legal, A3 o A5 para imprimir</div>
       </a>
-      <a href="/es/dividir-paginas-manga/" class="tool-card" data-tool="mangaSplit" aria-label="Dividir páginas de manga">
+      <a href="/es/dividir-paginas-manga/" class="tool-card" data-tool="mangaSplit">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div>
         <div class="tool-name">Dividir páginas de manga</div>
         <div class="tool-desc">Divide páginas dobles de manga en dos páginas en el orden correcto</div>
       </a>
-      <a href="/es/limpiar-escaneo/" class="tool-card" data-tool="cleanScan" aria-label="Limpiar Escaneo">
+      <a href="/es/limpiar-escaneo/" class="tool-card" data-tool="cleanScan">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg></div>
         <div class="tool-name">Limpiar Escaneo</div>
         <div class="tool-desc">Blanquea el fondo de páginas escaneadas y agudiza el texto</div>
       </a>
-      <a href="/es/optimizar-pdf-para-ereader/" class="tool-card" data-tool="ereader" aria-label="Optimizador para E-Reader">
+      <a href="/es/optimizar-pdf-para-ereader/" class="tool-card" data-tool="ereader">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></div>
         <div class="tool-name">Optimizador para E-Reader</div>
         <div class="tool-desc">Recorta márgenes y optimiza el contraste para Kindle, Kobo y reMarkable</div>
       </a>
-      <a href="/es/proteger-pdf/" class="tool-card" data-tool="protect" aria-label="Proteger PDF">
+      <a href="/es/proteger-pdf/" class="tool-card" data-tool="protect">
         <div class="tool-card-pulse" aria-hidden="true">
           <div class="tool-card-pulse__ring"></div>
           <div class="tool-card-pulse__dot"></div>
@@ -496,57 +496,57 @@
         <div class="tool-name">Proteger PDF</div>
         <div class="tool-desc">Contraseña y permisos — 100% privado</div>
       </a>
-      <a href="/es/rellenar-pdf/" class="tool-card" data-tool="fill" aria-label="Rellenar formulario PDF">
+      <a href="/es/rellenar-pdf/" class="tool-card" data-tool="fill">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg></div>
         <div class="tool-name">Rellenar Formulario</div>
         <div class="tool-desc">Rellena campos y firma PDFs localmente</div>
       </a>
-      <a href="/es/dibujar-en-pdf/" class="tool-card" data-tool="draw-pdf" aria-label="Dibujar en PDF">
+      <a href="/es/dibujar-en-pdf/" class="tool-card" data-tool="draw-pdf">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></div>
         <div class="tool-name">Dibujar en PDF</div>
         <div class="tool-desc">Anota PDFs con flechas, texto y formas — privado, sin subida</div>
       </a>
-      <a href="/es/ocr-pdf/" class="tool-card" data-tool="ocr" aria-label="OCR PDF">
+      <a href="/es/ocr-pdf/" class="tool-card" data-tool="ocr">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M11 8v6"/><path d="M8 11h6"/></svg></div>
         <div class="tool-name">OCR PDF</div>
         <div class="tool-desc">Extrae texto de PDFs escaneados — sin subida</div>
       </a>
-      <a href="/es/pdf-a-word/" class="tool-card" data-tool="pdf2word" aria-label="PDF a Word">
+      <a href="/es/pdf-a-word/" class="tool-card" data-tool="pdf2word">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div>
         <div class="tool-name">PDF a Word</div>
         <div class="tool-desc">Convierte PDF a .docx editable — sin subida</div>
       </a>
-      <a href="/es/aplanar-pdf/" class="tool-card" data-tool="flatten" aria-label="Aplanar PDF">
+      <a href="/es/aplanar-pdf/" class="tool-card" data-tool="flatten">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><line x1="8" y1="15" x2="16" y2="15"/></svg></div>
         <div class="tool-name">Aplanar PDF</div>
         <div class="tool-desc">Bloquear campos de formulario — hacer PDF no editable</div>
       </a>
-      <a href="/compare-pdf/" class="tool-card" data-tool="compare" aria-label="Comparar PDF">
+      <a href="/compare-pdf/" class="tool-card" data-tool="compare">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="8" height="18" rx="1"/><rect x="14" y="3" width="8" height="18" rx="1"/><path d="M10 8h4M10 12h4M10 16h4"/></svg></div>
         <div class="tool-name">Comparar PDF</div>
         <div class="tool-desc">Compara dos PDFs y resalta las diferencias — sin subir archivos</div>
       </a>
-      <a href="/es/pdf-a-excel/" class="tool-card" data-tool="pdf2excel" aria-label="PDF a Excel">
+      <a href="/es/pdf-a-excel/" class="tool-card" data-tool="pdf2excel">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg></div>
         <div class="tool-name">PDF a Excel</div>
         <div class="tool-desc">Extrae tablas de PDF a una hoja de cálculo localmente</div>
       </a>
-      <a href="/es/pdf-a-powerpoint/" class="tool-card" data-tool="pdf2ppt" aria-label="PDF a PowerPoint">
+      <a href="/es/pdf-a-powerpoint/" class="tool-card" data-tool="pdf2ppt">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
         <div class="tool-name">PDF a PowerPoint</div>
         <div class="tool-desc">Convierte páginas PDF en una presentación localmente</div>
       </a>
-      <a href="/es/pdf-a-markdown/" class="tool-card" data-tool="pdf2md" aria-label="PDF a Markdown">
+      <a href="/es/pdf-a-markdown/" class="tool-card" data-tool="pdf2md">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg></div>
         <div class="tool-name">PDF a Markdown</div>
         <div class="tool-desc">Convierte texto PDF en archivos .md limpios localmente</div>
       </a>
-      <a href="/es/desbloquear-pdf/" class="tool-card" data-tool="unlock" aria-label="Desbloquear PDF">
+      <a href="/es/desbloquear-pdf/" class="tool-card" data-tool="unlock">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg></div>
         <div class="tool-name">Desbloquear PDF</div>
         <div class="tool-desc">Elimina la protección por contraseña localmente</div>
       </a>
-      <a href="/es/pdf-a-pdfa/" class="tool-card" data-tool="pdf2pdfa" aria-label="Comprobar Conformidad PDF/A">
+      <a href="/es/pdf-a-pdfa/" class="tool-card" data-tool="pdf2pdfa">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="m9 15 2 2 4-4"/></svg></div>
         <div class="tool-name">Comprobar Conformidad PDF/A</div>
         <div class="tool-desc">Comprobar y convertir a PDF/A-2b/2u — sin subida</div>
@@ -628,7 +628,7 @@
       </div>
     </div>
 
-    <div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-label="Subir archivos — clic o arrastra y suelta">
+    <div id="dropZone" class="drop-zone" tabindex="0" role="button">
       <input type="file" id="fileInput" multiple accept=".pdf,application/pdf" aria-hidden="true">
       <span class="drop-icon" aria-hidden="true">📂</span>
       <div class="drop-title">Suelta los archivos aquí</div>
