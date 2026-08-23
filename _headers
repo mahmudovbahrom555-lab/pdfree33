@@ -17,6 +17,19 @@
 # since folded into the dedicated Document Scanner tool and reverted out
 # of jpg2pdf — this header stays, now serving Document Scanner instead.)
 # microphone/geolocation stay fully disabled — nothing uses them.
+#
+# Strict-Transport-Security below is NOT what's actually served — verified
+# live 2026-08-24, response sends max-age=31536000; includeSubDomains, no
+# preload. Cloudflare's own dashboard-level HSTS zone setting (SSL/TLS →
+# Edge Certificates → HSTS) overrides this specific header at the edge,
+# after _headers/Workers has already set it; every OTHER header on this
+# block (X-Content-Type-Options, X-Frame-Options, Referrer-Policy,
+# Permissions-Policy) is confirmed live-matching, so this is specific to
+# HSTS having its own dedicated Cloudflare feature, not _headers being
+# generally ignored. The value below is the intended target — to actually
+# apply it (notably `preload`, which is required for HSTS preload-list
+# eligibility), change the dashboard setting directly; editing this line
+# alone won't take effect.
 /*
   X-Content-Type-Options: nosniff
   X-Frame-Options: SAMEORIGIN
@@ -36,7 +49,6 @@
 
 
 /js/vendor/qpdf/lib/qpdf.wasm
-  Cache-Control: public, max-age=31536000, immutable
   Content-Type: application/wasm
 
 /js/*
