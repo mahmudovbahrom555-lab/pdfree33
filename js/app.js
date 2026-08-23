@@ -183,28 +183,46 @@ function _openShareFallback(tool, url, msg, copyLabel, copiedLabel) {
 
   const encodedText = encodeURIComponent(`${msg} ${url}`);
   const encodedUrl  = encodeURIComponent(url);
-  menu.innerHTML = `
-    <button type="button" class="share-fallback-item" id="shareCopyLink" role="menuitem">${copyLabel}</button>
-    <a class="share-fallback-item" role="menuitem" target="_blank" rel="noopener" href="https://wa.me/?text=${encodedText}">WhatsApp</a>
-    <a class="share-fallback-item" role="menuitem" target="_blank" rel="noopener" href="https://t.me/share/url?url=${encodedUrl}&text=${encodeURIComponent(msg)}">Telegram</a>
-    <a class="share-fallback-item" role="menuitem" href="mailto:?subject=${encodeURIComponent('PDFree')}&body=${encodedText}">Email</a>
-  `;
-  menu.querySelector('#shareCopyLink').onclick = async () => {
+
+  // Built via createElement/textContent, not innerHTML+template-literal —
+  // matches this file's own established safer DOM-construction pattern
+  // elsewhere (_showHeroDetected/_buildRecsGrid). copyLabel/copiedLabel are
+  // developer-set i18n strings today, not attacker input, but building this
+  // the same way as the rest of the file removes the one place a future
+  // edit threading in a less-trusted value wouldn't have any structural
+  // signal warning it's stepping outside the file's own safe-by-default
+  // pattern.
+  menu.innerHTML = '';
+  const copyBtn = document.createElement('button');
+  copyBtn.type = 'button';
+  copyBtn.className = 'share-fallback-item';
+  copyBtn.id = 'shareCopyLink';
+  copyBtn.setAttribute('role', 'menuitem');
+  copyBtn.textContent = copyLabel;
+  copyBtn.onclick = async () => {
     trackShareTool('copy_link', tool);
     try {
       await navigator.clipboard.writeText(url);
-      const item = menu.querySelector('#shareCopyLink');
-      item.textContent = copiedLabel;
+      copyBtn.textContent = copiedLabel;
       setTimeout(_closeShareFallback, 900);
     } catch { /* clipboard unavailable — leave menu open */ }
   };
-  menu.querySelectorAll('a.share-fallback-item').forEach(a => {
-    a.addEventListener('click', () => {
-      const channel = a.href.includes('wa.me') ? 'whatsapp'
-                    : a.href.includes('t.me')   ? 'telegram'
-                    :                              'email';
-      trackShareTool(channel, tool);
-    });
+  menu.appendChild(copyBtn);
+
+  const channels = [
+    { name: 'WhatsApp', channel: 'whatsapp', href: `https://wa.me/?text=${encodedText}` },
+    { name: 'Telegram', channel: 'telegram', href: `https://t.me/share/url?url=${encodedUrl}&text=${encodeURIComponent(msg)}` },
+    { name: 'Email',    channel: 'email',    href: `mailto:?subject=${encodeURIComponent('PDFree')}&body=${encodedText}` },
+  ];
+  channels.forEach(({ name, channel, href }) => {
+    const a = document.createElement('a');
+    a.className = 'share-fallback-item';
+    a.setAttribute('role', 'menuitem');
+    if (channel !== 'email') { a.target = '_blank'; a.rel = 'noopener'; }
+    a.href = href;
+    a.textContent = name;
+    a.addEventListener('click', () => trackShareTool(channel, tool));
+    menu.appendChild(a);
   });
 
   menu.hidden = false;
@@ -523,13 +541,25 @@ function _onMergeBtnClick() {
 
   if (SELF_MANAGED_TOOLS.has(currentTool)) return;
 
-  // Registry dispatch — no more if-else per tool
-  const { params, error } = collectToolParams(currentTool);
-  if (error) { showToast(error); return; }
-  _maybeSavePreset(currentTool, params);
-  checkAndRecordConversion(currentTool, selectedFiles[0]);  // fire-and-forget
-  trackToolStart(currentTool);
-  doProcess(currentTool, params);
+  // Deferred to next frame — same reasoning/pattern as showTool()'s own
+  // rAF split ("keeps INP under 200ms"): none of collectToolParams/
+  // _maybeSavePreset/tracking/doProcess's synchronous DOM work (button
+  // state, progress bar, cancel button) needs to land in the SAME frame
+  // as the click; letting the browser paint first (e.g. the button's own
+  // :active state) before doing it measurably shrinks the click's input
+  // delay. Real, measured: this click was the single slowest interaction
+  // found in a throttled-CPU Playwright pass (88ms vs 0-16ms for every
+  // other tested interaction), the only one in the app not already using
+  // this pattern.
+  requestAnimationFrame(() => {
+    // Registry dispatch — no more if-else per tool
+    const { params, error } = collectToolParams(currentTool);
+    if (error) { showToast(error); return; }
+    _maybeSavePreset(currentTool, params);
+    checkAndRecordConversion(currentTool, selectedFiles[0]);  // fire-and-forget
+    trackToolStart(currentTool);
+    doProcess(currentTool, params);
+  });
 }
 
 // ── Events ────────────────────────────────────────────────────

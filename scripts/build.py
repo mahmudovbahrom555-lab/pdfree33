@@ -91,14 +91,19 @@ def _compute_hashes():
     # the old cached HTML — self-healing only after a 2nd navigation via
     # stale-while-revalidate — instead of getting the immediate reload/
     # update-banner that JS/CSS changes trigger.
-    combined = b''
+    # Collected as chunks + joined once at the end, not built via repeated
+    # `combined += f.read()` — bytes concatenation in a loop isn't guaranteed
+    # O(n) the way list-append + one join is; harmless at today's file count
+    # (build-time only, not user-facing) but the idiomatic form costs nothing
+    # to use and doesn't get worse as the file count grows.
+    chunks = []
     js_dir = os.path.join(ROOT, 'js')
     for fname in sorted(os.listdir(js_dir)):
         if fname.endswith('.js') and fname != 'vendor':
             fpath = os.path.join(js_dir, fname)
             if os.path.isfile(fpath):
                 with open(fpath, 'rb') as f:
-                    combined += f.read()
+                    chunks.append(f.read())
     # js/locales/*.js — os.listdir(js_dir) above only sees the top-level js/
     # directory, so locale-only edits (i18n text changes) never bumped
     # cache_version. Combined with /js/* being served immutable + 1yr with no
@@ -111,18 +116,18 @@ def _compute_hashes():
                 fpath = os.path.join(locales_dir, fname)
                 if os.path.isfile(fpath):
                     with open(fpath, 'rb') as f:
-                        combined += f.read()
+                        chunks.append(f.read())
     css_dir = os.path.join(ROOT, 'css')
     for fname in sorted(os.listdir(css_dir)):
         if fname.endswith('.css'):
             fpath = os.path.join(css_dir, fname)
             if os.path.isfile(fpath):
                 with open(fpath, 'rb') as f:
-                    combined += f.read()
+                    chunks.append(f.read())
     sw_path = os.path.join(ROOT, 'sw.js')
     if os.path.exists(sw_path):
         with open(sw_path, 'rb') as f:
-            combined += f.read()
+            chunks.append(f.read())
     # Every locale in HOMEPAGE_LANGS has a real homepage shell — this used to
     # be a hardcoded 5-locale list (de/es/fr/pt/id) that silently fell out of
     # sync with HOMEPAGE_LANGS actually having 14. A CSS/HTML-only edit to
@@ -139,8 +144,8 @@ def _compute_hashes():
         fpath = os.path.join(ROOT, rel)
         if os.path.isfile(fpath):
             with open(fpath, 'rb') as f:
-                combined += f.read()
-    cache_version = hashlib.md5(combined).hexdigest()[:8]
+                chunks.append(f.read())
+    cache_version = hashlib.md5(b''.join(chunks)).hexdigest()[:8]
     return {
         'app':            app_hash,
         'cache_version':  cache_version,
