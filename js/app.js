@@ -801,7 +801,7 @@ function initSearch() {
       summary.appendChild(row);
       heroDetected.appendChild(summary);
       heroDetected.appendChild(kind === 'image'
-        ? _buildRecsGrid(['jpg2pdf'], 'jpg2pdf')
+        ? _buildRecsGrid(['jpg2pdf', 'scanDocument'], 'jpg2pdf')
         : _buildRecsGrid(['merge', 'compress', 'protect', 'split'], 'merge'));
       heroDetected.hidden = false;
       return;
@@ -837,7 +837,11 @@ function initSearch() {
       row.append(iconEl, metaEl);
       card.appendChild(row);
       heroDetected.appendChild(card);
-      heroDetected.appendChild(_buildRecsGrid(['jpg2pdf'], 'jpg2pdf'));
+      // A single photo is very plausibly "just photographed a document" —
+      // scanDocument (crop/perspective-correct) is the better default there
+      // than jpg2pdf (embeds the raw image as-is), but both stay one tap
+      // away since we can't reliably tell camera-capture from gallery-pick.
+      heroDetected.appendChild(_buildRecsGrid(['scanDocument', 'jpg2pdf'], 'scanDocument'));
       heroDetected.hidden = false;
       return;
     }
@@ -925,14 +929,16 @@ function initSearch() {
 
   function _buildRecsGrid(tools, bestMatchKey) {
     const REC_CTA = {
-      compress: 'Compress',
-      pdf2word: 'Convert to Word',
-      merge:    'Merge',
-      split:    'Split',
-      ocr:      'Extract text',
-      pdf2jpg:  'Export images',
-      protect:  'Protect',
-      fill:     'Fill form',
+      compress:     'Compress',
+      pdf2word:     'Convert to Word',
+      merge:        'Merge',
+      split:        'Split',
+      ocr:          'Extract text',
+      pdf2jpg:      'Export images',
+      protect:      'Protect',
+      fill:         'Fill form',
+      jpg2pdf:      'Convert to PDF',
+      scanDocument: 'Scan & Save',
     };
     const wrapper = document.createElement('div');
     const labelEl = document.createElement('p');
