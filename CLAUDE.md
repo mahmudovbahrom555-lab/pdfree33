@@ -95,6 +95,38 @@ If you add a tool and want it reachable from the homepage tool-card grid (not ju
 URL — the grid itself is hand-maintained HTML, not auto-generated), you still need to add the
 `<a class="tool-card">` entry to all 14 homepage files by hand — that part isn't automated.
 
+## Adding a tool with a new raw input file type — hero routing checklist (MANDATORY)
+
+The homepage hero drop zone (`#heroDropZone`/`#heroFileInput`) only recognizes **PDF and image
+(JPG/PNG)** today — see `_classifyHeroFiles()` in `js/app.js`. Anything else is classified `'mixed'`
+and rejected with a generic `hero_unsupported_file` toast, even if a real tool on the site can
+process it (this was itself a real bug fixed 2026-08-23 — see `hero_unified_file_input_2026_08`
+memory: dropping a JPG used to be silently discarded because `accept=` only filters the native file
+picker, never drag&drop).
+
+**If a new tool's primary input is a genuinely new raw file type** (not already PDF or image — e.g.
+a hypothetical docx-to-pdf tool taking `.docx`), you MUST also update the hero's classifier, or
+dropping that file type on the homepage will hit the generic rejection toast even though the site
+can actually handle it. Same failure shape as the missing-homepage-container bug above: works
+everywhere else (search, tool-card grid, direct tool page), silently wrong specifically at the
+homepage's primary entry point.
+
+**What to update, all in `js/app.js` near `_classifyHeroFiles`:**
+1. Add an `_isXFile(f)` predicate for the new type (mirror `_isPdfFile`/`_isImageFile` — check MIME
+   first, extension as fallback).
+2. Add it to `_classifyHeroFiles()`'s branches.
+3. Widen `heroFileInput`'s `accept` attribute on **all 14 homepages** — same file-touch discipline as
+   the container checklist above, easy to fix root `index.html` and forget the other 13.
+4. Add a recs-grid branch in `_setHeroFiles()`/`_showHeroDetected()` pointing at the new tool (reuse
+   `_buildRecsGrid([...], bestKey)` — same pattern already used for PDF→merge and image→jpg2pdf).
+5. Add matching `hero_multi_<type>_label` / adjust `hero_mixed_files` copy across **all 14 locales**
+   if the new type needs its own multi-file wording (see `hero_multi_image_label` in `js/i18n.js` +
+   `js/locales/*.js` for the pattern to copy).
+
+Not every new tool needs this — most take PDF as their sole input (already covered) or are reasonably
+reached only via search/tool-card-grid, not raw drag&drop onto the homepage. This applies
+specifically when the new tool's primary input is a raw format not already PDF or image.
+
 ## Architecture patterns
 - **Tool Registry**: `js/toolRegistry.js` + `js/toolRegistrations.js`
 - **Tool config**: `js/config.js` — TOOLS dict + i18n slugs + language config
