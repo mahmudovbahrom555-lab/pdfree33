@@ -449,6 +449,9 @@ SPECIALTY_PAGES = [
     'smallpdf-alternative',
     'pdf24-alternative',
     'adobe-acrobat-alternative',
+    # Roundup comparing PDFree against the 3 alternative pages above +
+    # Adobe — AI-SEO content type (ItemList schema), EN-only
+    'best-free-pdf-tools',
     # Stage 5 long-tail landing pages
     # merge-pdf-no-size-limit: consolidated into merge-large-pdf-files (301
     # redirect in _redirects) — near-zero internal linking, near-duplicate

@@ -2,17 +2,21 @@
 
 > Free, privacy-first PDF toolkit. Every tool runs entirely inside the browser using WebAssembly and a Web Worker — files are never uploaded to a server, there is no account, no daily limit, and no subscription. Verifiable by inspecting the Network tab during use: no file-content requests leave the device.
 
-PDFree offers merge, split, compress, rotate, watermark, redact, OCR, format conversion (PDF↔JPG/Word/Excel/PowerPoint/Markdown), metadata editing, page numbering, annotation, digital signing, form filling, and PDF/A archival compliance checking — all client-side. Available in English, German, Spanish, French, Portuguese, Indonesian, Vietnamese, Russian, Japanese, Italian, Korean, Dutch, Polish, and Turkish.
+PDFree offers merge, split, compress, rotate, watermark, redact, protect/unlock, flatten, organize, resize, add page numbers, edit metadata, extract pages, draw/annotate, fill & sign forms, OCR, scan documents with a camera, compare two PDFs, split manga page spreads, prepare PDFs for e-readers, check PDF/A archival compliance, look up PDF terminology, and convert between PDF and JPG/Word/Excel/PowerPoint/Markdown — all client-side. Available in English, German, Spanish, French, Portuguese, Indonesian, Vietnamese, Russian, Japanese, Italian, Korean, Dutch, Polish, and Turkish.
 
 ## Key pages
 
 - [Merge PDF](https://pdfree.io/merge-pdf/): combine multiple PDFs into one, locally in the browser.
 - [Split PDF](https://pdfree.io/split-pdf/): split a PDF into separate files or page ranges.
 - [Compress PDF](https://pdfree.io/compress-pdf/): reduce PDF file size without uploading.
-- [Check PDF/A Compliance](https://pdfree.io/pdf2pdfa/): check and convert a PDF to PDF/A-2b or PDF/A-2u for long-term archiving.
+- [OCR PDF](https://pdfree.io/ocr-pdf/): extract searchable text from scanned PDFs locally.
+- [Check PDF/A Compliance](https://pdfree.io/pdf-to-pdfa/): check and convert a PDF to PDF/A-2b or PDF/A-2u for long-term archiving.
 - [Redact PDF](https://pdfree.io/redact-pdf/): permanently remove sensitive content, not just visually cover it.
+- [Document Scanner](https://pdfree.io/scan-document/): turn camera or gallery photos into a cropped, cleaned-up PDF.
+- [Document Glossary](https://pdfree.io/glossary-pdf/): clickable definitions for PDF and document terminology.
 - [PDF Tools with No Upload](https://pdfree.io/pdf-tools-no-upload/): explanation of the local-processing architecture.
 - [HIPAA-Considerations PDF Tools](https://pdfree.io/hipaa-pdf-tools/): why local processing matters for regulated documents.
+- [Secure PDF Tools](https://pdfree.io/secure-pdf-tools/): overview of the site's privacy/security model.
 
 ## Notes
 

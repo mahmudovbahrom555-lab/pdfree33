@@ -156,7 +156,7 @@ button,
 
 .drop-batch-hint {
   font-size: 12px;
-  color: var(--green);
+  color: var(--green-text);
   margin-top: 10px;
   line-height: 1.4;
 }
