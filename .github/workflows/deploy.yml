@@ -30,6 +30,18 @@ jobs:
       - name: Install Python dependencies
         run: pip3 install jinja2
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        # Moved before "Build site": scripts/build.py now shells out to
+        # terser (node_modules/.bin) to minify dist/js/*.js — it must be
+        # installed before build.py runs, not after.
+        run: npm ci
+
       - name: Validate source pages (DOM + i18n + SW)
         run: |
           python3 scripts/check_dom.py
@@ -38,15 +50,6 @@ jobs:
 
       - name: Build site
         run: python3 scripts/build.py
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
 
       - name: Run JS tests
         run: npm test

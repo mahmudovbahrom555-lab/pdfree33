@@ -1131,6 +1131,88 @@ def _copy_dir_filtered(src, dst, tool_dirs):
             shutil.copy2(entry.path, dst_path)
 
 
+# ── JS minification ──────────────────────────────────────────────────────────
+# Runs on the dist/ output only — source files under js/ are never touched.
+# Scope is deliberately narrow: js/*.js + js/locales/*.js. Excluded, matching
+# CLAUDE.md's off-limits list: js/vendor/ (third-party, already minified),
+# js/worker.js and sw.js (both named off-limits — a build-time transform of
+# their *output* isn't technically "editing the source", but these files are
+# protected because they're fragile/high-blast-radius, so the same caution
+# applies to not risking an unexpected transform of them either).
+_MINIFY_EXCLUDE = {'worker.js'}
+
+def _minify_one(path):
+    """Minify a single JS file in place. Returns (ok, before_bytes, after_bytes,
+    error). On any failure — terser errors, or the output failing a basic
+    syntax check — the original file is left untouched rather than risking a
+    corrupted-but-plausible-looking file reaching production."""
+    with open(path, 'rb') as f:
+        original = f.read()
+    before = len(original)
+    result = subprocess.run(
+        ['npx', '--no-install', 'terser', path,
+         '--compress', '--mangle', '--module',
+         '--comments', '/SPDX|Copyright/i',
+         '-o', path],
+        cwd=ROOT, capture_output=True, text=True,
+    )
+    if result.returncode == 0:
+        check = subprocess.run(['node', '--check', path], capture_output=True, text=True)
+    if result.returncode != 0 or check.returncode != 0:
+        with open(path, 'wb') as f:
+            f.write(original)  # restore — never leave a broken/unminified-looking file
+        err = (result.stderr or (check.stderr if result.returncode == 0 else '')).strip()
+        return False, before, before, (err.splitlines()[-1] if err else 'unknown error')
+    return True, before, os.path.getsize(path), None
+
+
+def _minify_js(out_dir):
+    """Minify dist/js/*.js and dist/js/locales/*.js with terser. Degrades
+    gracefully (skips with a warning, doesn't fail the build) if terser can't
+    be resolved — e.g. a fresh checkout before `npm install` has run — since
+    unminified JS is still a working site, and this shouldn't block every
+    other use of build.py."""
+    preflight = subprocess.run(
+        ['npx', '--no-install', 'terser', '--version'],
+        cwd=ROOT, capture_output=True, text=True,
+    )
+    if preflight.returncode != 0:
+        print('  WARN: terser not available (run `npm install`) — skipping minification')
+        return
+
+    js_dir = os.path.join(out_dir, 'js')
+    targets = [
+        os.path.join(js_dir, f) for f in sorted(os.listdir(js_dir))
+        if f.endswith('.js') and f not in _MINIFY_EXCLUDE
+    ]
+    locales_dir = os.path.join(js_dir, 'locales')
+    if os.path.isdir(locales_dir):
+        targets += [
+            os.path.join(locales_dir, f) for f in sorted(os.listdir(locales_dir))
+            if f.endswith('.js')
+        ]
+
+    before_total = after_total = 0
+    failed = []
+    for path in targets:
+        ok, before, after, err = _minify_one(path)
+        before_total += before
+        after_total += after
+        if not ok:
+            failed.append((os.path.relpath(path, out_dir), err))
+
+    if failed:
+        print(f'  WARN: {len(failed)} file(s) failed to minify (left unminified):')
+        for rel, err in failed:
+            print(f'    {rel}: {err}')
+
+    saved = before_total - after_total
+    pct = (saved / before_total * 100) if before_total else 0
+    print(f'  minified {len(targets) - len(failed)}/{len(targets)} files: '
+          f'{before_total / 1024:.0f}KB → {after_total / 1024:.0f}KB '
+          f'(-{saved / 1024:.0f}KB, {pct:.0f}%)')
+
+
 # ── Tool page generation ──────────────────────────────────────────────────────
 
 def _generate_pages(config, hashes, env, out_dir, dry_run=False):
@@ -1241,6 +1323,10 @@ def main():
         # Inject computed hashes into sw.js and processor.js
         print('Injecting hashes...')
         _inject_hashes(hashes, DIST)
+
+        # Minify own JS in dist/ (source under js/ is untouched)
+        print('Minifying JS...')
+        _minify_js(DIST)
 
     # Generate tool pages
     print(f'Generating tool pages{"  (dry run)" if dry_run else ""}...')
