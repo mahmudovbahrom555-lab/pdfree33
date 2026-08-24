@@ -62,7 +62,13 @@ const _targetQuality = { 25: 0.60, 10: 0.50, 5: 0.42 };
 // it "Mixed" — the imageRatio would be low and correctly classify as Text.
 function _docType(scan) {
   const ratio = scan?.imageRatio ?? 0;
-  if (ratio >= 0.5) return { icon: '📷', label: 'Scanned document', type: 'scan' };
+  // High image-byte ratio alone isn't "scanned" — a report full of chart/
+  // diagram PNGs is image-dominant by bytes but has a real text layer and
+  // won't compress the way an actual scan does (its images are often
+  // already smaller than a JPEG re-encode). Found via real-document testing:
+  // an arXiv paper with text on 12/13 pages was mislabeled "Scanned
+  // document" and promised "High savings" it couldn't deliver.
+  if (ratio >= 0.5 && !scan?.hasFonts) return { icon: '📷', label: 'Scanned document', type: 'scan' };
   if (ratio >= 0.1) return { icon: '📚', label: 'Mixed document',   type: 'mixed' };
   return              { icon: '📄', label: 'Text document',     type: 'text' };
 }

@@ -935,6 +935,31 @@ async function _recompressImages(pdf, jpegQuality, targetDpi, medianPageSize) {
   return { recompressed, skipped, savedBytes };
 }
 
+// A real scanned PDF (from a scanner/camera, no OCR) has no /Font resources
+// at all — every page is just an embedded raster image. A PDF with real
+// embedded text (even an image-heavy one, e.g. a report full of chart/
+// diagram PNGs) will have /Font entries on at least one page. Checked only
+// on each page's own Resources (not inherited from the Pages tree) — same
+// shortcut already used elsewhere in this file for Resources/XObject lookup
+// — cheap and correct for the overwhelming majority of real-world producers
+// (LaTeX, Word, etc.). Found via real-document testing: an arXiv paper
+// (text on 12/13 pages) was mislabeled "Scanned document" purely because
+// its chart PNGs pushed imageRatio over 0.5 — this catches that case.
+function _hasFonts(pdf, pages) {
+  const { PDFName } = PDFLib;
+  for (const page of pages) {
+    let res = page.node.get(PDFName.of('Resources'));
+    if (!res) continue;
+    res = pdf.context.lookup(res);
+    if (!res?.get) continue;
+    let fonts = res.get(PDFName.of('Font'));
+    if (!fonts) continue;
+    fonts = pdf.context.lookup(fonts);
+    if (fonts?.entries && [...fonts.entries()].length > 0) return true;
+  }
+  return false;
+}
+
 // ── Background pre-scan ────────────────────────────────────────
 // Called via 'compress-scan' case when user drops a file — runs before
 // they click Compress so the UI can show recommendations immediately.
@@ -952,6 +977,7 @@ async function _runCompressScan(file) {
     if (page.node.has(PDFName.of('Thumb')))     thumbnails++;
     if (page.node.has(PDFName.of('PieceInfo'))) hasPieceInfo = true;
   }
+  const hasFonts = _hasFonts(pdf, pages_);
 
   // Compute median page size for DPI estimation (same approach as handleCompress)
   const sizes_ = pages_.map(p => {
@@ -992,6 +1018,7 @@ async function _runCompressScan(file) {
     imageCount:    imgCount,
     imageRatio,
     imageDominant: imageRatio > 0.5,
+    hasFonts,
     medianDpi,
     fileSize,
     opportunities: (hasXMP ? 1 : 0) + (thumbnails > 0 ? 1 : 0) + (hasPieceInfo ? 1 : 0),
@@ -1062,6 +1089,7 @@ async function handleCompress(fileBuffer, options) {
         imageCount:    _imgCount,
         imageRatio:    _imageRatio,
         imageDominant: _imageRatio > 0.5,
+        hasFonts:      _hasFonts(pdf, pages),
         fileSize:      originalSize,
         opportunities: (report.hasXMP ? 1 : 0) + (report.thumbnails > 0 ? 1 : 0) + (report.hasPieceInfo ? 1 : 0),
       },
