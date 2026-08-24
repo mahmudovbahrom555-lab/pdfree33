@@ -1,0 +1,42 @@
+{
+  "name": "@pdfree/pdf2md-server",
+  "version": "0.1.0",
+  "description": "Self-hosted REST API for @pdfree/pdf2md-core — POST a PDF, get Markdown back. Runs on your own infrastructure; no file ever touches pdfree.io.",
+  "type": "module",
+  "license": "AGPL-3.0-only",
+  "author": "PDFree Contributors",
+  "homepage": "https://pdfree.io/pdf-to-markdown/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mahmudovbahrom555-lab/pdfree33.git",
+    "directory": "packages/pdf2md-server"
+  },
+  "keywords": [
+    "pdf",
+    "markdown",
+    "pdf-to-markdown",
+    "rag",
+    "llm",
+    "ai",
+    "self-hosted",
+    "rest-api",
+    "docker"
+  ],
+  "main": "server.js",
+  "files": [
+    "server.js",
+    "README.md",
+    "LICENSE",
+    "Dockerfile"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "@pdfree/pdf2md-core": "file:../pdf2md-core"
+  }
+}

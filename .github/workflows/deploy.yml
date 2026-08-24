@@ -67,6 +67,20 @@ jobs:
           npm run sync
           npm test
 
+      - name: Test packages/pdf2md-server (self-hosted REST wrapper)
+        # Depends on pdf2md-core via a `file:` link, installed above — real
+        # HTTP round-trip tests (spawns the actual server.js, real fetch
+        # requests, real PDFs), including the two real security paths
+        # (body-size limit, worker_threads-enforced timeout). Catches
+        # exactly the class of bug the pdf2md-core step above already has
+        # once (a Node-version-specific CJS-import failure that only
+        # surfaced in CI, not local dev on a newer Node) — same reason to
+        # run it here too, not just trust local testing.
+        run: |
+          cd packages/pdf2md-server
+          npm install --omit=optional
+          npm test
+
       - name: Lint JavaScript
         run: npm run lint -- --quiet
 

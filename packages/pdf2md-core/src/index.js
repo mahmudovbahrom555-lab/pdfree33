@@ -39,9 +39,27 @@ const { getDocument } = pdfjsLib;
  * Converts a PDF (file path or raw bytes) to Markdown.
  * @param {string|Uint8Array|ArrayBuffer|Buffer} input — a file path, or
  *   the PDF's raw bytes.
+ * @param {{ signal?: AbortSignal }} [options] — optional AbortSignal.
+ *   COOPERATIVE cancellation only, checked once per page via
+ *   `_p2mdExtractText`'s existing `isCancelled` hook (built for the
+ *   browser tool's Cancel button — reused here unchanged): if the signal
+ *   is ALREADY aborted when passed in, or becomes aborted during a real
+ *   `await` gap between pages, extraction stops and this throws instead of
+ *   returning partial Markdown silently. Do NOT rely on this for a hard,
+ *   real-time timeout on a CPU-bound-enough PDF — verified directly (a
+ *   real 130-page/20MB document) that a `setTimeout`/`AbortSignal.timeout`
+ *   scheduled mid-conversion can fail to fire AT ALL until the whole
+ *   conversion finishes, because pdf.js's per-page await chain resolves
+ *   fast enough to stay entirely in the microtask queue, starving the
+ *   timer/macrotask phase for the full duration. For a real, enforced
+ *   deadline (e.g. a server processing untrusted uploads), run the
+ *   conversion in a `worker_threads` Worker and call `worker.terminate()`
+ *   on timeout instead — see `packages/pdf2md-server/convertWorker.js` for
+ *   the pattern that actually works, and why this same-thread `signal`
+ *   doesn't.
  * @returns {Promise<string>} the rendered Markdown.
  */
-export async function pdfToMarkdown(input) {
+export async function pdfToMarkdown(input, { signal } = {}) {
   const data = await _resolveInput(input);
 
   const loadingTask = getDocument({
@@ -86,7 +104,12 @@ export async function pdfToMarkdown(input) {
   }
 
   try {
-    const blocks = await _p2mdExtractText(pdfDoc);
+    const blocks = await _p2mdExtractText(pdfDoc, {
+      isCancelled: signal ? () => signal.aborted : undefined,
+    });
+    if (signal?.aborted) {
+      throw new Error('pdfToMarkdown: cancelled (signal aborted before extraction finished)');
+    }
     return _p2mdRender(blocks);
   } finally {
     await pdfDoc.destroy();

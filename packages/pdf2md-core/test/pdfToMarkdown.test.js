@@ -107,3 +107,21 @@ test('SECURITY: isEvalSupported: false is set on the getDocument() call (CVE-202
   const src = await readFile(join(here, '..', 'src', 'index.js'), 'utf8');
   assert.match(src, /isEvalSupported:\s*false/, 'isEvalSupported: false must stay set — see CVE-2024-4367');
 });
+
+// The `signal` option is COOPERATIVE only (checked once per page) — a real,
+// verified limitation, not a guess: an AbortSignal.timeout() scheduled
+// mid-conversion can fail to fire at all until the whole conversion
+// finishes (pdf.js's per-page await chain stays in the microtask queue,
+// starving the timer phase — reproduced on a real 130-page/20MB PDF). The
+// one case that DOES reliably work is an already-aborted signal passed in
+// before extraction starts — that's what this test covers. Real enforced
+// deadlines need worker_threads + terminate() instead — see
+// packages/pdf2md-server/convertWorker.js.
+test('an already-aborted signal short-circuits before extraction, without silently returning partial output', async () => {
+  const controller = new AbortController();
+  controller.abort();
+  await assert.rejects(
+    () => pdfToMarkdown(fixture('2608.11433.pdf'), { signal: controller.signal }),
+    /cancelled/
+  );
+});
