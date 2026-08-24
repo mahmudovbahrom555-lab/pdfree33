@@ -235,6 +235,28 @@
         <h2 style="font-size:22px;color:var(--text);margin:32px 0 16px;font-weight:600;">Why this matters for AI/RAG use specifically</h2>
         <p>Searching for "best PDF to Markdown for RAG" today surfaces almost entirely developer-facing tools — Marker, Docling, HURIDOCS, nanonets — things you self-host or call via an API. There's real value in that segment, but it locks out anyone who just wants to paste a clean, well-structured document into ChatGPT or Claude right now, from a browser, without installing Python or standing up a GPU. That's the audience pdfree's PDF-to-Markdown tool is actually built for: open the tool, drop a PDF, get Markdown with headings, tables, and (flattened, readable) formulas intact — nothing leaves your device.</p>
 
+        <h2 id="outside-the-browser" style="font-size:22px;color:var(--text);margin:32px 0 16px;font-weight:600;">Use it outside the browser</h2>
+        <p>The browser tool is the whole product for most people, but the exact same extraction engine benchmarked above also runs as a plain Node library/CLI, and as a self-hosted Docker REST API — for anyone who wants this in a script, a cron job, or an actual RAG pipeline instead of a browser tab. Same guarantee both ways: nothing is uploaded to pdfree.io or anywhere else — the code just runs on your own machine or your own server instead of a browser tab.</p>
+        <p style="margin-top:16px;">Not published to a package registry yet, but the source is real, tested, and buildable today:</p>
+        <div style="overflow-x:auto;margin:16px 0;">
+          <pre style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:16px;font-size:13px;line-height:1.6;white-space:pre;"><code>git clone https://github.com/mahmudovbahrom555-lab/pdfree33
+cd pdfree33/packages/pdf2md-core &amp;&amp; npm install --omit=optional
+node bin/pdf2md.js report.pdf --out report.md          # CLI
+
+# or the self-hosted REST API (from the repo root):
+docker build -f packages/pdf2md-server/Dockerfile -t pdf2md-server .
+docker run -p 8080:8080 pdf2md-server
+curl --data-binary @report.pdf -H "Content-Type: application/pdf" \
+  http://localhost:8080/convert -o report.md</code></pre>
+        </div>
+        <p>Full docs, environment variables, and the REST API's security notes (it ships with no
+        built-in auth by design, matching how self-hosted tools like this are normally deployed —
+        put it behind your own reverse proxy if it's reachable from anywhere untrusted) are in each
+        package's own README:
+        <a href="https://github.com/mahmudovbahrom555-lab/pdfree33/tree/main/packages/pdf2md-core" style="color:var(--green-text);">pdf2md-core</a>
+        and
+        <a href="https://github.com/mahmudovbahrom555-lab/pdfree33/tree/main/packages/pdf2md-server" style="color:var(--green-text);">pdf2md-server</a>.</p>
+
         <h2 style="font-size:22px;color:var(--text);margin:32px 0 16px;font-weight:600;">Reproduce this yourself</h2>
         <p>We're not asking you to take our word for it. pdfree's PDF-to-Markdown tool is free and runs in your browser — take any of your own real documents (a two-column paper, a table-heavy report, a legal document with footnotes) and compare the output against whatever you're using today. The whole point of a client-side tool is that there's nothing to sign up for before you can check.</p>
 
