@@ -27,9 +27,18 @@ import { dirname, join } from 'node:path';
 const __dirname   = dirname(fileURLToPath(import.meta.url));
 const WORKER_PATH = join(__dirname, 'convertWorker.js');
 
-const PORT            = Number(process.env.PORT) || 8080;
-const MAX_BODY_BYTES  = Number(process.env.MAX_BODY_BYTES) || 50 * 1024 * 1024; // 50 MB
-const TIMEOUT_MS      = Number(process.env.TIMEOUT_MS) || 60_000; // 60 s
+const PORT             = Number(process.env.PORT) || 8080;
+const MAX_BODY_BYTES   = Number(process.env.MAX_BODY_BYTES) || 50 * 1024 * 1024; // 50 MB
+const TIMEOUT_MS       = Number(process.env.TIMEOUT_MS) || 60_000; // 60 s
+// Each in-flight conversion is a real worker_threads Worker — its own V8
+// isolate, real memory/CPU overhead beyond just the PDF bytes. With no cap,
+// N simultaneous large-PDF requests spawn N simultaneous workers with no
+// bound at all — a real OOM path, not hypothetical. Requests beyond
+// MAX_CONCURRENT queue (FIFO) rather than being rejected outright, but
+// don't wait forever — QUEUE_TIMEOUT_MS bounds how long a queued request
+// waits for a slot before giving up with a clear 503.
+const MAX_CONCURRENT   = Number(process.env.MAX_CONCURRENT) || 4;
+const QUEUE_TIMEOUT_MS = Number(process.env.QUEUE_TIMEOUT_MS) || 30_000; // 30 s
 
 const server = createServer((req, res) => {
   _route(req, res).catch(err => {
@@ -92,19 +101,83 @@ async function _handleConvert(req, res) {
     return;
   }
 
+  // Real PDF signature check ("%PDF-", the required magic bytes at the
+  // start of every valid PDF per the spec), not just a client-supplied,
+  // trivially-spoofable Content-Type header. Failing fast here, before
+  // ever acquiring a conversion slot or spawning a worker, means an
+  // obviously-not-a-PDF upload can't consume a concurrency slot or CPU at
+  // all — a cheap, real defense-in-depth check, not just a nicer error
+  // message (pdf.js would eventually reject it too, but only after a full
+  // worker spawn).
+  if (bytes.length < 5 || bytes.toString('latin1', 0, 5) !== '%PDF-') {
+    res.writeHead(400, { 'Content-Type': 'text/plain' });
+    res.end("Bad request: not a PDF (missing the required '%PDF-' signature at the start of the file).");
+    return;
+  }
+
+  let slotAcquired = false;
   try {
+    await _acquireSlot(QUEUE_TIMEOUT_MS);
+    slotAcquired = true;
     const markdown = await _convertWithTimeout(bytes, TIMEOUT_MS);
     res.writeHead(200, { 'Content-Type': 'text/markdown; charset=utf-8' });
     res.end(markdown);
   } catch (err) {
-    if (err.code === 'TIMEOUT') {
+    if (err.code === 'QUEUE_TIMEOUT') {
+      res.writeHead(503, { 'Content-Type': 'text/plain' });
+      res.end(`Server is at its concurrency limit (${MAX_CONCURRENT}) and no slot freed up within ${QUEUE_TIMEOUT_MS}ms — try again shortly.`);
+    } else if (err.code === 'TIMEOUT') {
       res.writeHead(504, { 'Content-Type': 'text/plain' });
       res.end(`Conversion exceeded the ${TIMEOUT_MS}ms timeout.`);
     } else {
       res.writeHead(422, { 'Content-Type': 'text/plain' });
       res.end(`Conversion failed: ${err.message}`);
     }
+  } finally {
+    if (slotAcquired) _releaseSlot();
   }
+}
+
+// ── Concurrency limiter ──────────────────────────────────────────────
+// A plain in-process counting semaphore + FIFO queue — no external
+// dependency needed for this. `activeCount` tracks in-flight conversions;
+// a request beyond MAX_CONCURRENT waits in `queue` for a slot to free up,
+// bounded by queueTimeoutMs so a queued request can't wait forever behind
+// a backlog of slow/adversarial conversions.
+let _activeCount = 0;
+const _queue = [];
+
+function _acquireSlot(queueTimeoutMs) {
+  if (_activeCount < MAX_CONCURRENT) {
+    _activeCount++;
+    return Promise.resolve();
+  }
+  return new Promise((resolve, reject) => {
+    const entry = { settled: false };
+    entry.timer = setTimeout(() => {
+      if (entry.settled) return;
+      entry.settled = true;
+      const idx = _queue.indexOf(entry);
+      if (idx !== -1) _queue.splice(idx, 1);
+      const err = new Error('queue wait timed out');
+      err.code = 'QUEUE_TIMEOUT';
+      reject(err);
+    }, queueTimeoutMs);
+    entry.grant = () => {
+      if (entry.settled) return;
+      entry.settled = true;
+      clearTimeout(entry.timer);
+      _activeCount++;
+      resolve();
+    };
+    _queue.push(entry);
+  });
+}
+
+function _releaseSlot() {
+  _activeCount--;
+  const next = _queue.shift();
+  if (next) next.grant();
 }
 
 // Streams the request body, rejecting as soon as MAX_BODY_BYTES is exceeded
@@ -190,5 +263,5 @@ server.listen(PORT, () => {
   // server.address().port, not PORT itself — PORT=0 (used by tests to get
   // an OS-assigned ephemeral port) would otherwise log the literal "0".
   const actualPort = server.address().port;
-  console.log(`pdf2md-server listening on :${actualPort} (max body ${MAX_BODY_BYTES} bytes, timeout ${TIMEOUT_MS}ms)`);
+  console.log(`pdf2md-server listening on :${actualPort} (max body ${MAX_BODY_BYTES} bytes, timeout ${TIMEOUT_MS}ms, max concurrent ${MAX_CONCURRENT})`);
 });

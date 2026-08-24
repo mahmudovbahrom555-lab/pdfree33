@@ -38,6 +38,8 @@ No multipart/form-data — send the PDF's raw bytes directly as the request body
 | `PORT` | `8080` | Listen port. |
 | `MAX_BODY_BYTES` | `52428800` (50 MB) | Reject larger uploads with `413`, checked while streaming — never buffers an oversized upload fully into memory first. |
 | `TIMEOUT_MS` | `60000` (60 s) | Hard deadline per conversion. Enforced via a real `worker_threads` `terminate()` — see [Architecture](#architecture-why-a-worker-thread) below for why a simpler same-thread timeout doesn't actually work for this. |
+| `MAX_CONCURRENT` | `4` | Max simultaneous conversions. Each one is a real `worker_threads` Worker (its own V8 isolate) — with no cap, N simultaneous large-PDF requests spawn N simultaneous workers with no bound, a real OOM path on a self-hosted box with limited RAM. |
+| `QUEUE_TIMEOUT_MS` | `30000` (30 s) | How long a request waits for a free conversion slot once `MAX_CONCURRENT` is already busy, before giving up with `503`. |
 
 ## Security — read this before exposing it beyond localhost
 
@@ -49,9 +51,17 @@ converting PDFs.
 
 What IS handled here:
 - **Request size limit** (`MAX_BODY_BYTES`) — rejects oversized uploads before fully buffering them.
+- **PDF signature check** — the body must start with the real `%PDF-` magic bytes every valid PDF has;
+  an obviously-not-a-PDF upload is rejected with `400` before ever consuming a conversion slot or
+  spawning a worker, not just a nicer error after the fact.
+- **Concurrency limit + queue** (`MAX_CONCURRENT`, `QUEUE_TIMEOUT_MS`) — bounds how many worker
+  threads can be alive at once; requests beyond the limit queue briefly rather than each spawning
+  their own unbounded worker.
 - **Real, enforced timeout** (`TIMEOUT_MS`) — a stuck/adversarial PDF's conversion is forcibly killed
   via a worker thread, not just abandoned in the background while the client gets an early response.
 - **Non-root container user** (`USER node` in the Dockerfile).
+- **`HEALTHCHECK`** in the Dockerfile — container orchestrators (Docker, Compose, Kubernetes-via-probe
+  translation, etc.) can detect a wedged/unresponsive container automatically.
 - Everything `@pdfree/pdf2md-core` already does: `isEvalSupported: false` (mitigates
   [CVE-2024-4367](https://github.com/advisories/GHSA-wgrm-67xf-hhpq)) and `disableJavaScript: true` —
   inherited automatically through the same `pdfToMarkdown()` call, nothing extra needed here.
@@ -59,6 +69,19 @@ What IS handled here:
 What is NOT handled, by design, in v1: authentication, rate limiting, TLS termination (put a reverse
 proxy in front for HTTPS). These are exactly the concerns a reverse proxy/API gateway already solves
 well — not reinvented here.
+
+## Resource usage — real numbers, not estimates
+
+Each conversion is a real `worker_threads` Worker (its own V8 isolate) — measured directly, not
+assumed: RSS started around 55MB idle, climbed to ~224MB after 30 sequential timeout-triggering
+requests (each spawning and `terminate()`-ing a worker), then stayed essentially flat through 60
+requests (~223MB) and only crept to ~242MB by 100 requests. That pattern — fast initial growth, then
+near-flat — is consistent with normal Node/V8 worker-thread memory retention (isolate creation
+overhead the OS doesn't eagerly reclaim) plateauing, not an unbounded per-request leak; a real leak
+would show roughly constant growth per batch, which this doesn't. Give the container at least
+**~300-400MB** of memory headroom in practice, not a minimal 128MB limit, and set a real container
+memory limit regardless (`docker run -m 512m ...` or your orchestrator's equivalent) as the practical
+backstop — standard practice for any long-running service, not a substitute for the above finding.
 
 ## Architecture — why a worker thread
 

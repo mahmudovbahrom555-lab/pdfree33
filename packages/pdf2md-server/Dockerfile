@@ -61,6 +61,12 @@ WORKDIR /repo/packages/pdf2md-server
 EXPOSE 8080
 ENV PORT=8080
 
+# Node's built-in fetch, not curl/wget — alpine has neither installed by
+# default, and adding one just for this would be a real extra package for
+# a single GET request Node can already do natively (18+).
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD node -e "fetch('http://localhost:'+(process.env.PORT||8080)+'/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+
 # Runs as the non-root 'node' user the base image already provides —
 # converting an arbitrary uploaded PDF is exactly the kind of untrusted
 # input that shouldn't run as root.

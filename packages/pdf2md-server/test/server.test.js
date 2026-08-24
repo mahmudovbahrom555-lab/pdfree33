@@ -117,13 +117,28 @@ test('POST /convert with an empty body returns 400', async () => {
   }
 });
 
-test('POST /convert with a non-PDF body (wrong content, right Content-Type) returns 422, not a crash', async () => {
+test('POST /convert with a non-PDF body (wrong content, right Content-Type) is rejected by the %PDF- signature check, before ever spawning a worker', async () => {
   const { proc, baseUrl } = await startServer();
   try {
     const res = await fetch(`${baseUrl}/convert`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/pdf' },
       body: 'this is not really a pdf file',
+    });
+    assert.equal(res.status, 400);
+    assert.match(await res.text(), /not a PDF.*signature/);
+  } finally {
+    await stopServer(proc);
+  }
+});
+
+test('a body that passes the %PDF- signature check but is structurally broken still reaches the worker and gets a proper 422, not a crash', async () => {
+  const { proc, baseUrl } = await startServer();
+  try {
+    const res = await fetch(`${baseUrl}/convert`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/pdf' },
+      body: '%PDF-1.4\nthis has the right magic bytes but nothing else valid',
     });
     assert.equal(res.status, 422);
     assert.match(await res.text(), /Invalid PDF/);
@@ -178,6 +193,50 @@ test('SECURITY: a slow conversion is really cut off by TIMEOUT_MS, not just clie
     // response must come back close to TIMEOUT_MS, not after however long
     // the real conversion would have taken.
     assert.ok(elapsed < 3000, `expected a fast timeout response, took ${elapsed}ms`);
+  } finally {
+    await stopServer(proc);
+  }
+});
+
+test('SECURITY: with MAX_CONCURRENT=1, a second simultaneous request queues and still succeeds once the first finishes', async () => {
+  const { proc, baseUrl } = await startServer({ MAX_CONCURRENT: '1', QUEUE_TIMEOUT_MS: '10000' });
+  try {
+    const pdfBytes = await readFile(fixture('2608.11433.pdf'));
+    const post = () => fetch(`${baseUrl}/convert`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/pdf' },
+      body: pdfBytes,
+    });
+    // Real concurrency, not sequential awaits — both requests are in
+    // flight at once; with MAX_CONCURRENT=1 the second one must queue
+    // behind the first rather than spawning a second worker immediately.
+    const [a, b] = await Promise.all([post(), post()]);
+    assert.equal(a.status, 200);
+    assert.equal(b.status, 200);
+    const [mdA, mdB] = await Promise.all([a.text(), b.text()]);
+    assert.equal(mdA, mdB, 'both requests convert the same file — output must match');
+  } finally {
+    await stopServer(proc);
+  }
+});
+
+test('SECURITY: with MAX_CONCURRENT=1 and a short QUEUE_TIMEOUT_MS, a request that cannot get a slot in time gets a clear 503, not a hang', async () => {
+  const { proc, baseUrl } = await startServer({ MAX_CONCURRENT: '1', QUEUE_TIMEOUT_MS: '50' });
+  try {
+    const pdfBytes = await readFile(fixture('2608.11433.pdf')); // real conversion takes well over 50ms
+    const post = () => fetch(`${baseUrl}/convert`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/pdf' },
+      body: pdfBytes,
+    });
+    const [a, b] = await Promise.all([post(), post()]);
+    const statuses = [a.status, b.status].sort();
+    // One request occupies the only slot (200); the other can't get a
+    // slot within the 50ms queue timeout (503) — order between the two
+    // parallel fetches isn't guaranteed, so check the pair, not which one.
+    assert.deepEqual(statuses, [200, 503]);
+    const rejected = a.status === 503 ? a : b;
+    assert.match(await rejected.text(), /concurrency limit/);
   } finally {
     await stopServer(proc);
   }
