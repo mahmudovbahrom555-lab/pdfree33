@@ -1,0 +1,47 @@
+{
+  "name": "@pdfree/pdf2md-core",
+  "version": "0.1.0",
+  "description": "Convert PDF to Markdown for AI/RAG — the same extraction engine behind pdfree.io's browser tool, runnable locally. Your files never leave your machine.",
+  "type": "module",
+  "license": "AGPL-3.0-only",
+  "author": "PDFree Contributors",
+  "homepage": "https://pdfree.io/pdf-to-markdown/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mahmudovbahrom555-lab/pdfree33.git",
+    "directory": "packages/pdf2md-core"
+  },
+  "keywords": [
+    "pdf",
+    "markdown",
+    "pdf-to-markdown",
+    "rag",
+    "llm",
+    "ai",
+    "pdfjs"
+  ],
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "bin": {
+    "pdf2md-core": "bin/pdf2md.js"
+  },
+  "files": [
+    "src",
+    "bin",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "prepublishOnly": "node scripts/copy-core.mjs",
+    "sync": "node scripts/copy-core.mjs",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "pdfjs-dist": "3.11.174"
+  }
+}
