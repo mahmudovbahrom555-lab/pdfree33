@@ -49,6 +49,9 @@ SKIP_DIRS = {
     'annotate',
     # Internal research files — never serve publicly
     'research',
+    # Standalone npm packages (e.g. packages/pdf2md-core/) — published to npm,
+    # not part of the static site; would otherwise get wrongly copied into dist/.
+    'packages',
 }
 SKIP_FILES = {
     'wrangler.toml', 'wrangler.jsonc', 'wrangler.json',  # deployment configs — never serve as static

@@ -43,8 +43,11 @@ global.document = {
 };
 global.Worker = class { postMessage(){} terminate(){} addEventListener(){} };
 
-const { _p2mdExtractText, _p2mdRender, _setProcessingForTests, _detectPageImages } = await import('../js/processor.js');
-_setProcessingForTests(true);
+// _p2mdExtractText/_p2mdRender/_detectPageImages moved to js/pdf2mdCore.js
+// (browser-independent core, reused by packages/pdf2md-core/). Default
+// isCancelled (never-cancel) matches this test's previous reliance on
+// _setProcessingForTests(true) keeping module-level isProcessing truthy.
+const { _p2mdExtractText, _p2mdRender, _detectPageImages } = await import('../js/pdf2mdCore.js');
 
 let passed = 0, failed = 0;
 async function test(name, fn) {
