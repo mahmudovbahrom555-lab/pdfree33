@@ -22,8 +22,18 @@
 //  unaffected — none of that code path needs a canvas.
 // ============================================================
 
-import { getDocument } from 'pdfjs-dist/legacy/build/pdf.js';
+// Default-import + destructure, NOT `import { getDocument } from '...'` —
+// pdfjs-dist's legacy Node build is a webpack-bundled CommonJS module, and
+// Node's static cjs-module-lexer named-export detection is version-
+// dependent: this exact named-import syntax resolves fine on Node 26
+// (used during local development) but throws
+// "SyntaxError: Named export 'getDocument' not found" on Node 20 (what
+// this repo's CI actually runs) — found only because CI caught it, not
+// local testing. The default-import form works uniformly across both.
+import pdfjsLib from 'pdfjs-dist/legacy/build/pdf.js';
 import { _p2mdExtractText, _p2mdRender } from './core/pdf2mdCore.js';
+
+const { getDocument } = pdfjsLib;
 
 /**
  * Converts a PDF (file path or raw bytes) to Markdown.
