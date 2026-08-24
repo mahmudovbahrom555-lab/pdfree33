@@ -68,3 +68,42 @@ test('the same file produces byte-identical output across two independent runs (
 test('an invalid input type throws a clear TypeError, not a cryptic internal one', async () => {
   await assert.rejects(() => pdfToMarkdown(12345), /must be a file path, Uint8Array, ArrayBuffer, or Buffer/);
 });
+
+// ── Real-world edge cases (found no fixtures for these existed anywhere in
+//    the repo — built small, purpose-specific ones under test/fixtures/) ──
+
+test('a missing file throws a clear filesystem error', async () => {
+  await assert.rejects(
+    () => pdfToMarkdown('/nonexistent/path/does-not-exist.pdf'),
+    /ENOENT/
+  );
+});
+
+test('a corrupted/non-PDF file throws a clear parse error, not a crash', async () => {
+  const fakeBytes = new Uint8Array(Buffer.from('this is not a real pdf file'));
+  await assert.rejects(() => pdfToMarkdown(fakeBytes), /Invalid PDF/);
+});
+
+test('a password-protected PDF throws a clear, actionable error (v1 has no --password support)', async () => {
+  await assert.rejects(
+    () => pdfToMarkdown(join(here, 'fixtures', 'password-protected.pdf')),
+    /password-protected — pdf2md-core does not support decrypting/
+  );
+});
+
+test('a PDF with no extractable text (scanned/image-only) does not throw — returns the same graceful "try OCR" message the browser tool shows', async () => {
+  const md = await pdfToMarkdown(join(here, 'fixtures', 'no-text-layer.pdf'));
+  assert.match(md, /No extractable text was found/);
+});
+
+// Regression guard for CVE-2024-4367 (GHSA-wgrm-67xf-hhpq, CVSS 8.8) — pdfjs-dist
+// is pinned to 3.11.174, which is within the affected range; `isEvalSupported: false`
+// is the documented mitigation (Mozilla's own workaround before the real fix at
+// 4.2.67+, which removes the vulnerable eval() call entirely). A structural check
+// on the source, not a functional exploit test — deliberately not constructing a
+// real CVE-2024-4367 trigger PDF just to prove a negative. If this ever fails, the
+// flag was removed from src/index.js — put it back before doing anything else.
+test('SECURITY: isEvalSupported: false is set on the getDocument() call (CVE-2024-4367 mitigation)', async () => {
+  const src = await readFile(join(here, '..', 'src', 'index.js'), 'utf8');
+  assert.match(src, /isEvalSupported:\s*false/, 'isEvalSupported: false must stay set — see CVE-2024-4367');
+});

@@ -21,8 +21,18 @@ can be scripted, piped, and dropped into a pipeline.
 ## Install
 
 ```
-npm install @pdfree/pdf2md-core
+npm install @pdfree/pdf2md-core --omit=optional
 ```
+
+`--omit=optional` is recommended, not just tolerated: `pdfjs-dist` lists
+`canvas` as an optional dependency for rendering features this package
+doesn't use in v1 (see [Limitations](#limitations-v1--read-this-before-relying-on-it)
+below) — installing it pulls in `tar`/`@mapbox/node-pre-gyp` as its own
+install-time tooling, which `npm audit` currently flags (unrelated to
+`canvas` itself; those packages are never imported or executed by anything
+this package does). Plain `npm install` still works — canvas's build just
+fails harmlessly and pdf.js logs a couple of startup warnings about it —
+`--omit=optional` just skips attempting it.
 
 Requires Node 18+.
 
@@ -80,6 +90,22 @@ You may see harmless startup warnings like `Cannot polyfill DOMMatrix` /
 `Cannot polyfill Path2D` in stderr — that's pdf.js's own Node build
 reporting the same "no canvas installed" fact above. It does not affect the
 Markdown output.
+
+## Security note
+
+`pdfjs-dist` is pinned to `3.11.174` — deliberately, not out of neglect. The
+PDF-to-Markdown core (`src/core/pdf2mdCore.js`) hardcodes a few pdf.js
+operator-list opcode numbers for image-position detection, tied to that
+exact version; jumping to a newer major version needs its own real
+verification pass against the new opcodes before it's safe, not just a
+version bump. That version is within the range affected by
+[CVE-2024-4367](https://github.com/advisories/GHSA-wgrm-67xf-hhpq) (a
+malicious PDF could trigger arbitrary JS execution via pdf.js's own `eval`
+use) — this package sets `isEvalSupported: false`, Mozilla's own published
+workaround, on every `getDocument()` call, which fully mitigates it. A
+regression test in `test/` checks this flag stays set. `disableJavaScript:
+true` is also set (blocks the PDF's own embedded `/JavaScript` actions,
+a separate, unrelated safeguard).
 
 ## Relationship to pdfree.io
 

@@ -54,6 +54,19 @@ jobs:
       - name: Run JS tests
         run: npm test
 
+      - name: Test packages/pdf2md-core (standalone npm package)
+        # Separate package.json/deps from the site's own — installs and
+        # syncs its own src/core/ (generated from js/, gitignored — see
+        # packages/pdf2md-core/scripts/copy-core.mjs) before testing.
+        # Real end-to-end tests against real PDFs, not mocks — this is
+        # what actually proves pdfjs-dist's Node build stays compatible
+        # with js/pdf2mdCore.js as both evolve.
+        run: |
+          cd packages/pdf2md-core
+          npm install --omit=optional
+          npm run sync
+          npm test
+
       - name: Lint JavaScript
         run: npm run lint -- --quiet
 

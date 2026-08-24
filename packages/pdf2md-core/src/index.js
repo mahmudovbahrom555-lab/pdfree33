@@ -43,9 +43,37 @@ export async function pdfToMarkdown(input) {
     // the main thread ("fake worker") when it can't spawn a real Worker,
     // which is exactly what a short-lived CLI/script process wants (no
     // benefit to a separate thread for a single one-shot conversion).
+    //
+    // isEvalSupported: false is REQUIRED, not just defensive — pdfjs-dist
+    // is pinned to 3.11.174 (see package.json's comment on why), which is
+    // within the affected range of CVE-2024-4367 (GHSA-wgrm-67xf-hhpq,
+    // CVSS 8.8): a malicious PDF can trigger arbitrary JS execution via
+    // pdf.js's own `eval` use, DEFAULT ON (isEvalSupported defaults to
+    // true) if not explicitly disabled. Mozilla's own published workaround
+    // for versions before the real fix (4.2.67+, removes eval entirely) is
+    // exactly this flag. Verified directly against the GitHub Security
+    // Advisory text, not assumed from the CVE title alone.
     isEvalSupported: false,
   });
-  const pdfDoc = await loadingTask.promise;
+
+  let pdfDoc;
+  try {
+    pdfDoc = await loadingTask.promise;
+  } catch (err) {
+    // pdf.js throws a real, named PasswordException for both "needs a
+    // password" (code 1) and "wrong password" (code 2) — this package has
+    // no --password flag in v1, so both cases are equally unsupported.
+    // Re-thrown as a plain Error with a clear, actionable message instead
+    // of pdf.js's own terse "No password given" / "Incorrect Password".
+    if (err?.name === 'PasswordException') {
+      throw new Error(
+        `${input instanceof Uint8Array || Buffer.isBuffer(input) ? 'This PDF' : input} is password-protected — ` +
+        'pdf2md-core does not support decrypting PDFs yet. Remove the password first (e.g. with qpdf ' +
+        '--decrypt) and try again.'
+      );
+    }
+    throw err;
+  }
 
   try {
     const blocks = await _p2mdExtractText(pdfDoc);
