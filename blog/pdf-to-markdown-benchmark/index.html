@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src  'self' 'wasm-unsafe-eval' blob:
+                https://cdnjs.cloudflare.com https://esm.sh
+                https://pagead2.googlesyndication.com
+                https://static.cloudflareinsights.com;
+    style-src   'self' 'unsafe-inline';
+    font-src    'self';
+    img-src     'self' data: blob: https:;
+    connect-src 'self' https://cdnjs.cloudflare.com https://*.workers.dev
+                https://pagead2.googlesyndication.com
+                https://www.googletagservices.com https://*.doubleclick.net
+                https://cloudflareinsights.com;
+    frame-src   https://googleads.g.doubleclick.net https://tpc.googlesyndication.com;
+    worker-src  'self' blob:;
+    object-src  'none';
+  ">
+
+  <title>PDF to Markdown for AI & RAG — Real Benchmark vs pymupdf4llm, Docling, Marker | PDFree</title>
+  <meta name="description" content="We benchmarked pdfree's PDF-to-Markdown tool against pymupdf4llm, Docling, and Marker on 7 real documents using an independent scorer. Real numbers, including where we lose.">
+
+  <meta property="og:title"       content="PDF to Markdown for AI & RAG — Real Benchmark vs pymupdf4llm, Docling, Marker">
+  <meta property="og:description" content="7 real documents, one independent scorer, four converters. pdfree scores 91.6/100 — within 1.1 points of Docling, clearly ahead of pymupdf4llm. Full numbers, including the losses.">
+  <meta property="og:type"        content="article">
+  <meta property="og:url"         content="https://pdfree.io/blog/pdf-to-markdown-benchmark/">
+  <meta property="og:site_name"   content="PDFree">
+  <meta property="og:image"        content="https://pdfree.io/icons/og-image.jpg">
+  <meta property="og:image:width"  content="1200">
+  <meta property="og:image:height" content="633">
+  <meta property="og:image:alt"    content="PDF to Markdown for AI & RAG — Real Benchmark | PDFree">
+  <meta name="twitter:card"       content="summary_large_image">
+  <meta name="twitter:site"       content="@pdfree_io">
+  <meta name="twitter:title"      content="PDF to Markdown Benchmark — pdfree vs pymupdf4llm, Docling, Marker">
+  <meta name="twitter:description" content="Real numbers from 7 real documents. pdfree: 91.6/100, within 1.1 points of Docling. See where we win and where we don't.">
+  <meta name="twitter:image"      content="https://pdfree.io/icons/og-image.jpg">
+  <meta name="twitter:image:alt"  content="PDF to Markdown Benchmark — PDFree">
+
+  <link rel="canonical" href="https://pdfree.io/blog/pdf-to-markdown-benchmark/">
+  <link rel="alternate" hreflang="en"        href="https://pdfree.io/blog/pdf-to-markdown-benchmark/">
+  <link rel="alternate" hreflang="x-default" href="https://pdfree.io/blog/pdf-to-markdown-benchmark/">
+
+  <link rel="manifest" href="../../manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="PDFree">
+  <link rel="apple-touch-icon" href="../../icons/icon-192.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <link rel="preconnect" href="https://static.cloudflareinsights.com">
+  <link rel="preload" href="../../fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../css/fonts.css">
+  <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/animations.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/components.css">
+
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "PDF to Markdown for AI & RAG — Real Benchmark vs pymupdf4llm, Docling, and Marker",
+  "description": "We benchmarked pdfree's PDF-to-Markdown tool against pymupdf4llm, Docling, and Marker on 7 real documents using an independent scorer, including where we lose.",
+  "url": "https://pdfree.io/blog/pdf-to-markdown-benchmark/",
+  "datePublished": "2026-08-24",
+  "dateModified": "2026-08-24",
+  "publisher": {
+    "@type": "Organization",
+    "name": "PDFree",
+    "url": "https://pdfree.io"
+  },
+  "author": {
+    "@type": "Organization",
+    "name": "PDFree"
+  },
+  "image": {
+    "@type": "ImageObject",
+    "url": "https://pdfree.io/icons/og-image.jpg",
+    "width": 1200,
+    "height": 633
+  },
+  "keywords": "pdf to markdown for RAG, pdf to markdown benchmark, pdf to markdown for LLM, pdf to markdown ChatGPT, docling vs pymupdf4llm, pdf to markdown converter comparison"
+}
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "PDFree", "item": "https://pdfree.io/" },
+      { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://pdfree.io/blog/" },
+      { "@type": "ListItem", "position": 3, "name": "PDF to Markdown Benchmark", "item": "https://pdfree.io/blog/pdf-to-markdown-benchmark/" }
+    ]
+  }
+  </script>
+  <script src="../../js/theme.js"></script>
+</head>
+<body>
+
+  <nav>
+    <a href="../../" class="logo" id="logo" aria-label="Go to homepage" style="text-decoration:none"><span class="logo-text">PDF<span>ree</span></span></a>
+    <div class="nav-links">
+      <a href="/merge-pdf/" class="nav-link" data-tool="merge">Merge</a>
+      <a href="/split-pdf/" class="nav-link" data-tool="split">Split</a>
+      <a href="/compress-pdf/" class="nav-link" data-tool="compress">Compress</a>
+      <a href="/pdf-to-markdown/" class="nav-link" data-tool="pdf2md">PDF→MD</a>
+      <a href="/pdf2jpg/" class="nav-link" data-tool="pdf2jpg">PDF→JPG</a>
+      <a href="/ocr-pdf/" class="nav-link" data-tool="ocr">OCR</a>
+      <a href="/pagenum-pdf/" class="nav-link" data-tool="pagenum">Page №</a>
+      <a href="/metadata-pdf/" class="nav-link" data-tool="meta">Metadata</a>
+      <a href="/extract-pdf/" class="nav-link" data-tool="extract">Extract</a>
+      <a href="/draw-on-pdf/" class="nav-link" data-tool="draw-pdf">Draw</a>
+      <a href="/rotate-pdf/" class="nav-link" data-tool="rotate">Rotate</a>
+      <a href="/protect-pdf/" class="nav-link" data-tool="protect">Protect</a>
+    </div>
+    <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode"></button>
+  </nav>
+
+  <section class="seo-article" aria-labelledby="articleTitle">
+    <div class="seo-article__inner">
+      <div style="max-width:800px;margin:60px auto 40px;padding:0 24px;color:var(--text2);line-height:1.8;">
+
+        <p style="font-size:13px;color:var(--text3);margin:0 0 16px;">
+          <a href="../../" style="color:var(--text3);text-decoration:none;">PDFree</a> ›
+          <a href="../" style="color:var(--text3);text-decoration:none;">Blog</a> ›
+          PDF to Markdown Benchmark
+        </p>
+
+        <h1 id="articleTitle" style="font-size:32px;color:var(--text);margin:0 0 16px;font-weight:700;line-height:1.25;">PDF to Markdown for AI & RAG<br>— a Real Benchmark, Not Marketing Copy</h1>
+
+        <p style="font-size:15px;color:var(--text3);margin:0 0 32px;">7-minute read · Published August 2026</p>
+
+        <p style="font-size:18px;margin:0 0 24px;color:var(--text);">Feeding a PDF to ChatGPT or Claude, or chunking it for a RAG pipeline, works far better as clean Markdown than as raw extracted text — headings stay headings, tables stay tables, reading order stays intact. We tested pdfree's PDF-to-Markdown tool against three widely-used converters — <strong>pymupdf4llm</strong>, <strong>Docling</strong>, and <strong>Marker</strong> — on 7 real documents, scored by the same independent evaluator all three were already benchmarked with. Here are the actual numbers, including the ones we don't win.</p>
+
+        <!-- Inline CTA -->
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:28px;margin:0 0 40px;text-align:center;">
+          <p style="font-size:16px;font-weight:600;color:var(--text);margin:0 0 8px;">Try it on your own PDF</p>
+          <p style="font-size:14px;color:var(--text2);margin:0 0 20px;">No account. No upload. Runs entirely in your browser.</p>
+          <a href="../../pdf-to-markdown/" style="background:var(--green);color:#fff;padding:13px 28px;border-radius:10px;font-weight:600;font-size:15px;text-decoration:none;display:inline-block;">Convert PDF to Markdown — Free</a>
+        </div>
+
+        <h2 style="font-size:22px;color:var(--text);margin:0 0 16px;font-weight:600;">Methodology — apples to apples, not vibes</h2>
+        <p>We didn't invent our own scoring to flatter the result. We used an existing PDF-to-Markdown evaluation harness that pymupdf4llm, Docling, and Marker had already been scored against on the same 7-document corpus — real papers and reports covering a two-column academic layout, a formula-heavy paper, a multi-page financial ledger, a legal brief with footnotes, book front matter, a columned scientific paper, and a mixed-layout journal page. Each output is scored 0–100 (we call it ARI) across five channels: heading structure, reading order, text flow, table fidelity, and formula handling.</p>
+        <p style="margin-top:16px;">Seven documents is a real but modest corpus — enough to catch genuine structural failure modes (a table that gets flattened to prose, a heading that gets missed), not enough to claim statistical significance the way a thousand-document benchmark could. We're publishing the exact numbers rather than a summary claim so you can judge that for yourself.</p>
+
+        <h2 style="font-size:22px;color:var(--text);margin:32px 0 16px;font-weight:600;">The headline number</h2>
+        <p><strong style="color:var(--text);">pdfree: 91.6 / 100 average</strong> — within 1.1 points of Docling (92.7), clearly ahead of pymupdf4llm (80.2) on every single document, behind Marker (95.1), which uses OCR-based LaTeX formula reconstruction we deliberately don't attempt.</p>
+
+        <div style="overflow-x:auto;margin:16px 0 32px;">
+          <table style="width:100%;border-collapse:collapse;font-size:13px;min-width:520px;">
+            <thead>
+              <tr style="border-bottom:2px solid var(--border);">
+                <th style="text-align:left;padding:10px 10px;color:var(--text);font-weight:600;">Document</th>
+                <th style="text-align:center;padding:10px 8px;color:var(--text);font-weight:600;">pdfree</th>
+                <th style="text-align:center;padding:10px 8px;color:var(--text);font-weight:600;">pymupdf4llm</th>
+                <th style="text-align:center;padding:10px 8px;color:var(--text);font-weight:600;">Docling</th>
+                <th style="text-align:center;padding:10px 8px;color:var(--text);font-weight:600;">Marker</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom:1px solid var(--border);background:var(--green-light);">
+                <td style="padding:10px 10px;">Multi-page financial ledger</td>
+                <td style="text-align:center;padding:10px 8px;font-weight:700;color:var(--green-text);">100.0</td>
+                <td style="text-align:center;padding:10px 8px;">97.0</td>
+                <td style="text-align:center;padding:10px 8px;">97.0</td>
+                <td style="text-align:center;padding:10px 8px;">95.2</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 10px;">Legal brief with footnotes</td>
+                <td style="text-align:center;padding:10px 8px;font-weight:700;color:var(--green-text);">100.0</td>
+                <td style="text-align:center;padding:10px 8px;">85.1</td>
+                <td style="text-align:center;padding:10px 8px;">100.0</td>
+                <td style="text-align:center;padding:10px 8px;">97.6</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);background:var(--green-light);">
+                <td style="padding:10px 10px;">Mixed-layout journal page</td>
+                <td style="text-align:center;padding:10px 8px;font-weight:700;color:var(--green-text);">92.0</td>
+                <td style="text-align:center;padding:10px 8px;">88.9</td>
+                <td style="text-align:center;padding:10px 8px;">80.1</td>
+                <td style="text-align:center;padding:10px 8px;">87.6</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 10px;">Book front matter</td>
+                <td style="text-align:center;padding:10px 8px;">97.6</td>
+                <td style="text-align:center;padding:10px 8px;">93.3</td>
+                <td style="text-align:center;padding:10px 8px;">93.3</td>
+                <td style="text-align:center;padding:10px 8px;font-weight:700;">100.0</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);background:var(--green-light);">
+                <td style="padding:10px 10px;">Two-column academic paper</td>
+                <td style="text-align:center;padding:10px 8px;">87.5</td>
+                <td style="text-align:center;padding:10px 8px;">68.8</td>
+                <td style="text-align:center;padding:10px 8px;font-weight:700;">98.4</td>
+                <td style="text-align:center;padding:10px 8px;">94.8</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 10px;">Scientific paper (columns)</td>
+                <td style="text-align:center;padding:10px 8px;">84.0</td>
+                <td style="text-align:center;padding:10px 8px;">66.8</td>
+                <td style="text-align:center;padding:10px 8px;font-weight:700;">88.0</td>
+                <td style="text-align:center;padding:10px 8px;">93.0</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);background:var(--green-light);">
+                <td style="padding:10px 10px;">Formula-heavy paper</td>
+                <td style="text-align:center;padding:10px 8px;">80.0</td>
+                <td style="text-align:center;padding:10px 8px;">61.2</td>
+                <td style="text-align:center;padding:10px 8px;">92.0</td>
+                <td style="text-align:center;padding:10px 8px;font-weight:700;">97.6</td>
+              </tr>
+              <tr style="border-top:2px solid var(--border);font-weight:700;">
+                <td style="padding:10px 10px;color:var(--text);">Average</td>
+                <td style="text-align:center;padding:10px 8px;color:var(--green-text);">91.6</td>
+                <td style="text-align:center;padding:10px 8px;">80.2</td>
+                <td style="text-align:center;padding:10px 8px;">92.7</td>
+                <td style="text-align:center;padding:10px 8px;">95.1</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2 style="font-size:22px;color:var(--text);margin:32px 0 16px;font-weight:600;">Where we actually win</h2>
+        <p>On the financial ledger, pdfree scores a clean 100 — beating all three other converters, including Marker. The document has two mutually-exclusive columns (debit/credit), which trips up naive table detectors; ours handles it correctly. On the mixed-layout journal page, pdfree beats both Docling and Marker. On the legal brief, we tie Docling exactly.</p>
+
+        <h2 style="font-size:22px;color:var(--text);margin:32px 0 16px;font-weight:600;">Where we lose — and why, honestly</h2>
+        <p>Docling and Marker both pull ahead on the formula-heavy paper and the columned scientific paper. The reason is architectural, not a bug: pdfree's formula handling is <strong>honest flattening</strong> — a formula is preserved as readable text rather than silently dropped, but we don't run OCR-based LaTeX reconstruction the way Marker does. That's a deliberate scope decision, not an oversight — building a math-OCR pipeline that runs entirely in-browser (no server, per how pdfree works) is a real, unsolved engineering problem, not a quick fix.</p>
+        <p style="margin-top:16px;">On the two-column paper, Docling's column detection is currently more robust in one specific edge case (a page that mixes a full-width title block with two columns below it). We know exactly why — it's a documented, open item, not a mystery — and it's a smaller gap than it was a few weeks ago, not a static number.</p>
+
+        <h2 style="font-size:22px;color:var(--text);margin:32px 0 16px;font-weight:600;">Why this matters for AI/RAG use specifically</h2>
+        <p>Searching for "best PDF to Markdown for RAG" today surfaces almost entirely developer-facing tools — Marker, Docling, HURIDOCS, nanonets — things you self-host or call via an API. There's real value in that segment, but it locks out anyone who just wants to paste a clean, well-structured document into ChatGPT or Claude right now, from a browser, without installing Python or standing up a GPU. That's the audience pdfree's PDF-to-Markdown tool is actually built for: open the tool, drop a PDF, get Markdown with headings, tables, and (flattened, readable) formulas intact — nothing leaves your device.</p>
+
+        <h2 style="font-size:22px;color:var(--text);margin:32px 0 16px;font-weight:600;">Reproduce this yourself</h2>
+        <p>We're not asking you to take our word for it. pdfree's PDF-to-Markdown tool is free and runs in your browser — take any of your own real documents (a two-column paper, a table-heavy report, a legal document with footnotes) and compare the output against whatever you're using today. The whole point of a client-side tool is that there's nothing to sign up for before you can check.</p>
+
+        <!-- Second CTA -->
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:28px;margin:40px 0;text-align:center;">
+          <p style="font-size:16px;font-weight:600;color:var(--text);margin:0 0 8px;">Convert your PDF to Markdown</p>
+          <p style="font-size:14px;color:var(--text2);margin:0 0 20px;">Free, instant, private — no account required.</p>
+          <a href="../../pdf-to-markdown/" style="background:var(--green);color:#fff;padding:13px 28px;border-radius:10px;font-weight:600;font-size:15px;text-decoration:none;display:inline-block;">PDF to Markdown — Free</a>
+        </div>
+
+        <!-- Related -->
+        <div style="padding-top:24px;border-top:1px solid var(--border);">
+          <p style="font-size:12px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin:0 0 10px;">Related reading</p>
+          <ul style="margin:0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:6px;">
+            <li><a href="/pdf-to-markdown/" style="color:var(--green-text);">PDF to Markdown tool</a> — try it on your own document</li>
+            <li><a href="/blog/how-to-batch-process-pdf-documents-safely/" style="color:var(--green-text);">How to batch process sensitive PDF documents safely</a></li>
+            <li><a href="/blog/best-free-ocr-pdf-tools/" style="color:var(--green-text);">Best free OCR PDF tools</a></li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div style="display:flex;gap:48px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;font-size:13px;border-top:1px solid var(--border);padding-top:20px;">
+      <div>
+        <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Alternatives</div>
+        <a href="/ilovepdf-alternative/" style="display:block;color:var(--green-text);text-decoration:none;margin-bottom:4px;">iLovePDF Alternative</a>
+      </div>
+      <div>
+        <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Solutions</div>
+        <a href="/hipaa-pdf-tools/" style="display:block;color:var(--green-text);text-decoration:none;margin-bottom:4px;">HIPAA Compliant PDF</a>
+        <a href="/secure-pdf-tools/" style="display:block;color:var(--green-text);text-decoration:none;">Secure PDF Tools</a>
+      </div>
+    </div>
+    PDFree · <strong>All processing happens 100% in your browser</strong> · Files are <strong>never uploaded</strong><br>
+    <span style="color:var(--green)">🔒</span> Your documents never leave your device &nbsp;·&nbsp;
+    <span style="color:var(--green)">♥</span> Built to be free for everyone, forever<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
+      <a href="/privacy.html" style="color:var(--green)">Privacy</a> &nbsp;·&nbsp;
+      <a href="/terms.html" style="color:var(--green)">Terms</a> &nbsp;·&nbsp;
+      <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a> &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green)">GitHub</a>
+    </span>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script>
+</body>
+</html>

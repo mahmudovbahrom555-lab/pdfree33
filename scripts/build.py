@@ -518,6 +518,7 @@ SPECIALTY_PAGES = [
     'blog/free-vs-paid-batch-pdf-tools',
     'blog/how-to-batch-process-pdf-documents-safely',
     'blog/how-to-edit-pdf-contract-without-uploading',
+    'blog/pdf-to-markdown-benchmark',
 ]
 
 # NOTE (Sitemap Index): If the site ever grows beyond 50,000 URLs, split the sitemap
