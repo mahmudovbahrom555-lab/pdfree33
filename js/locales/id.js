@@ -1006,6 +1006,8 @@ window.PDFREE_LOCALE = {
   p2m_mode_hint:         '📝 Heading, daftar berpoin/bernomor, dan teks tebal/miring terdeteksi secara otomatis. Tabel dan gambar tidak dikonversi — coba PDF ke Excel atau PDF ke Word untuk itu.',
   p2m_formula_ocr_title:    'Kenali rumus sebagai LaTeX (beta)',
   p2m_formula_ocr_subtitle: 'Mengunduh model AI berukuran ~76MB saat pertama kali digunakan. Dalam pengujian kami sendiri, sekitar 7 dari 10 rumus dikenali dengan benar — setiap rumus yang dikenali ditandai jelas sebagai hasil AI agar Anda bisa memeriksanya kembali, dan yang tidak bisa dibaca akan kembali menjadi gambar seperti sebelumnya.',
+  p2m_formula_ocr_fail_one:  '1 rumus tidak dapat dikenali sebagai LaTeX — tetap disimpan sebagai gambar.',
+  p2m_formula_ocr_fail_many: '{n} rumus tidak dapat dikenali sebagai LaTeX — tetap disimpan sebagai gambar.',
 
   // ── fillUI.js ────────────────────────────────────────────
   fill_analysing:             'Menganalisis kolom formulir…',

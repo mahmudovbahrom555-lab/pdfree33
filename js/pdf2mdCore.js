@@ -845,6 +845,16 @@ export async function _p2mdExtractText(pdfDoc, {
   return blocks;
 }
 
+// Single source of truth for the formula-OCR disclosure text — always
+// visible, never a silent HTML comment, because no confidence signal exists
+// for this model (see ocrFormula's comment above _p2mdExtractText). Kept as
+// one named constant, not inlined in the block-rendering switch below, so
+// that IF a future model/approach ever legitimately earns a real confidence
+// signal, there is exactly one place to change or conditionally drop this —
+// no such signal exists today, so it is unconditional.
+export const FORMULA_OCR_DISCLOSURE =
+  '*(AI-recognized formula — extracted via automated OCR, not manually verified; double-check before relying on it)*';
+
 // Pure string builder: heading/list/para blocks → Markdown text. Paragraphs
 // wrap per-run (a 'para' block's `runs` array — see _lineRuns/_flushPara
 // above), so a single bold word in the middle of otherwise-plain text stays
@@ -905,7 +915,7 @@ export function _p2mdRender(blocks) {
       lines.push('$$');
       lines.push(b.latex);
       lines.push('$$');
-      lines.push('*(AI-recognized formula — extracted via automated OCR, not manually verified; double-check before relying on it)*');
+      lines.push(FORMULA_OCR_DISCLOSURE);
     } else {
       if (lines.length) lines.push('');
       lines.push(b.runs.map(wrapRun).join(''));

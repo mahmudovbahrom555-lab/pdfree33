@@ -2854,17 +2854,45 @@ async function _runPdf2Ppt(filesSnapshot, { dpi = 150 } = {}) {
 // _runPdf2Md below. Reuses the same progress bar pdf2md's own extraction
 // already drives (getPct() returns the last real percentage that loop
 // reported) rather than passing an undefined percent into setProgress,
-// which would write an invalid "undefined%" CSS width — this is a real,
-// sometimes-slow first-use download+load, worth surfacing with a label
-// even though it can't own its own slice of the percentage.
+// which would write an invalid "undefined%" CSS width — the bar's fill
+// stays put at that percentage while a real download percentage (from
+// transformers.js's own progress_callback: {status, file, progress,
+// loaded, total} — confirmed directly from the library's real source,
+// not assumed) drives the LABEL text, since a first-time ~76MB download
+// is slow enough that "Loading formula recognition model…" alone left
+// the user with no sense of whether it was working or stuck.
+//
+// Real failures (network, CORS/CSP, corrupt cache, inference error) are
+// swallowed by pdf2mdCore.js's own try/catch around this callback — that
+// is correct for THAT single formula (falls back to the existing image
+// crop, unchanged), but the user was previously given no signal that
+// anything went wrong at all. ocrFailures is bumped on every failure and
+// surfaced once, after the whole document finishes, as a real toast (see
+// _runPdf2Md below) rather than per-formula noise.
 function _makeOcrFormulaCallback(getPct) {
   let modelReady = false;
-  return async (imageBlob) => {
+  const state = { ocrFailures: 0 };
+  state.fn = async (imageBlob) => {
     if (!modelReady) setProgress(getPct(), 'Loading formula recognition model…');
-    const result = await recognizeFormula(imageBlob, modelReady ? undefined : () => {});
-    modelReady = true;
-    return result;
+    const onModelProgress = modelReady ? undefined : (info) => {
+      if (info?.status === 'progress' && typeof info.progress === 'number') {
+        setProgress(getPct(), `Loading formula recognition model… ${Math.round(info.progress)}%`);
+      }
+    };
+    try {
+      const result = await recognizeFormula(imageBlob, onModelProgress);
+      modelReady = true;
+      return result;
+    } catch (err) {
+      // modelReady deliberately NOT set here — if the model genuinely never
+      // finished loading, the NEXT formula candidate should still show real
+      // loading progress on its own retry, not silently fail with no
+      // feedback because a stale flag claimed it was already ready.
+      state.ocrFailures++;
+      throw err; // pdf2mdCore.js's own catch turns this into the existing image-crop fallback
+    }
   };
+  return state;
 }
 
 async function _runPdf2Md(filesSnapshot, { enableFormulaOcr = false } = {}) {
@@ -2896,13 +2924,15 @@ async function _runPdf2Md(filesSnapshot, { enableFormulaOcr = false } = {}) {
   }
 
   let blocks;
+  let _ocrState = null;
   try {
     let _lastPct = 8;
+    _ocrState = enableFormulaOcr ? _makeOcrFormulaCallback(() => _lastPct) : null;
     blocks = await _p2mdExtractText(pdfDoc, {
       onProgress:    (pct, label) => { _lastPct = pct; setProgress(pct, label); },
       isCancelled:   () => !isProcessing,
       canvasFactory: browserCanvasFactory,
-      ocrFormula:    enableFormulaOcr ? _makeOcrFormulaCallback(() => _lastPct) : undefined,
+      ocrFormula:    _ocrState?.fn,
     });
   } catch (err) {
     isProcessing = false; setFilesLocked(false); hideCancelBtn();
@@ -2952,6 +2982,26 @@ async function _runPdf2Md(filesSnapshot, { enableFormulaOcr = false } = {}) {
   document.dispatchEvent(new CustomEvent('pdfree:success', {
     detail: { tool: 'pdf2md', blob, desc, filename }
   }));
+
+  // Real OCR failures (network/model/inference) are swallowed per-formula by
+  // pdf2mdCore.js's own fallback — correct for that formula (unchanged image
+  // crop), but the user previously had no signal anything went wrong at all.
+  // Deliberately NOT shown immediately: app.js's own success handler (just
+  // triggered above) fires an auto-download confirmation toast at +400ms for
+  // ~3000ms (`download_toast`) that reuses the SAME #toast element — showing
+  // this one right away would just get silently clobbered a moment later
+  // (confirmed for real via Playwright: a forced-failure run correctly fell
+  // back to the image crop, but the warning toast never became visible at
+  // all before the download toast overwrote it). Anchored to THIS dispatch
+  // point specifically, not to extraction finishing earlier in this
+  // function — packaging (zip) time between the two would otherwise let the
+  // ordering vary run to run.
+  if (_ocrState?.ocrFailures > 0) {
+    const failCount = _ocrState.ocrFailures;
+    setTimeout(() => {
+      showToast(tp(failCount, 'p2m_formula_ocr_fail_one', 'p2m_formula_ocr_fail_many', { n: failCount }), 6000);
+    }, 4000);
+  }
 }
 
 // pdf2md's extraction/render core (_detectPageImages/_p2mdExtractImageBlob/

@@ -1007,6 +1007,8 @@ window.PDFREE_LOCALE = {
   p2m_mode_hint:         '📝 제목, 글머리 기호/번호 매기기 목록, 굵게/기울임꼴 텍스트가 자동으로 감지됩니다. 표와 이미지는 변환되지 않습니다 — 이를 위해서는 PDF를 Excel로 또는 PDF를 Word로 사용해 보세요.',
   p2m_formula_ocr_title:    '수식을 LaTeX로 인식 (베타)',
   p2m_formula_ocr_subtitle: '처음 사용할 때 약 76MB 크기의 AI 모델을 다운로드합니다. 자체 테스트에서 약 10개 중 7개의 수식이 정확했습니다 — 인식된 모든 수식은 AI가 생성했음을 명확히 표시하므로 다시 확인할 수 있으며, 읽지 못한 수식은 이전처럼 이미지로 대체됩니다.',
+  p2m_formula_ocr_fail_one:  '수식 1개를 LaTeX로 인식하지 못했습니다 — 대신 이미지로 유지됩니다.',
+  p2m_formula_ocr_fail_many: '수식 {n}개를 LaTeX로 인식하지 못했습니다 — 대신 이미지로 유지됩니다.',
 
   // ── fillUI.js ────────────────────────────────────────────
   fill_analysing:             '양식 필드를 분석하는 중…',

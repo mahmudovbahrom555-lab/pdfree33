@@ -1006,6 +1006,8 @@ window.PDFREE_LOCALE = {
   p2m_mode_hint:         '📝 Tiêu đề, danh sách có dấu đầu dòng/đánh số, và văn bản in đậm/in nghiêng được phát hiện tự động. Bảng và hình ảnh không được chuyển đổi — hãy thử PDF sang Excel hoặc PDF sang Word cho những nội dung đó.',
   p2m_formula_ocr_title:    'Nhận dạng công thức thành LaTeX (beta)',
   p2m_formula_ocr_subtitle: 'Tải xuống một mô hình AI khoảng 76MB trong lần sử dụng đầu tiên. Trong quá trình thử nghiệm của chúng tôi, khoảng 7 trên 10 công thức được nhận dạng đúng — mọi công thức được nhận dạng đều được đánh dấu rõ ràng là do AI tạo ra để bạn có thể kiểm tra lại, và những gì không đọc được sẽ quay lại thành hình ảnh như trước.',
+  p2m_formula_ocr_fail_one:  '1 công thức không thể nhận dạng thành LaTeX — vẫn giữ dưới dạng hình ảnh.',
+  p2m_formula_ocr_fail_many: '{n} công thức không thể nhận dạng thành LaTeX — vẫn giữ dưới dạng hình ảnh.',
 
   // ── fillUI.js ────────────────────────────────────────────
   fill_analysing:             'Đang phân tích các trường biểu mẫu…',

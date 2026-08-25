@@ -1005,6 +1005,8 @@ window.PDFREE_LOCALE = {
   p2m_mode_hint:         '📝 Koppen, opsommings-/genummerde lijsten en vet/cursief worden automatisch gedetecteerd. Tabellen en afbeeldingen worden niet geconverteerd — probeer daarvoor PDF naar Excel of PDF naar Word.',
   p2m_formula_ocr_title:    'Formules herkennen als LaTeX (bèta)',
   p2m_formula_ocr_subtitle: 'Downloadt bij het eerste gebruik een AI-model van ongeveer 76 MB. In onze eigen tests was ongeveer 7 van de 10 formules correct — elke herkende formule wordt duidelijk gemarkeerd als door AI gegenereerd, zodat je het kunt controleren, en alles wat niet gelezen kan worden valt terug op een afbeelding zoals voorheen.',
+  p2m_formula_ocr_fail_one:  '1 formule kon niet als LaTeX worden herkend — als afbeelding behouden.',
+  p2m_formula_ocr_fail_many: '{n} formules konden niet als LaTeX worden herkend — als afbeeldingen behouden.',
 
   // ── fillUI.js ────────────────────────────────────────────
   fill_analysing:             'Formuliervelden analyseren…',

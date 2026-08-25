@@ -1008,6 +1008,8 @@ window.PDFREE_LOCALE = {
   p2m_mode_hint:         '📝 Überschriften, Aufzählungs-/nummerierte Listen sowie Fett-/Kursivschrift werden automatisch erkannt. Tabellen und Bilder werden nicht konvertiert — probiere dafür PDF zu Excel oder PDF zu Word.',
   p2m_formula_ocr_title:    'Formeln als LaTeX erkennen (Beta)',
   p2m_formula_ocr_subtitle: 'Lädt beim ersten Gebrauch ein ca. 76 MB großes KI-Modell herunter. In unseren eigenen Tests waren etwa 7 von 10 Formeln korrekt — jede erkannte Formel wird deutlich als KI-generiert gekennzeichnet, damit du sie prüfen kannst; alles, was nicht erkannt wird, fällt wie bisher auf ein Bild zurück.',
+  p2m_formula_ocr_fail_one:  '1 Formel konnte nicht als LaTeX erkannt werden — stattdessen als Bild beibehalten.',
+  p2m_formula_ocr_fail_many: '{n} Formeln konnten nicht als LaTeX erkannt werden — stattdessen als Bilder beibehalten.',
 
   // ── fillUI.js ────────────────────────────────────────────
   fill_analysing:             'Formularfelder werden analysiert…',

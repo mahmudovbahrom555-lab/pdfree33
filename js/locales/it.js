@@ -1005,6 +1005,8 @@ window.PDFREE_LOCALE = {
   p2m_mode_hint:         '📝 Titoli, elenchi puntati/numerati e testo in grassetto/corsivo vengono rilevati automaticamente. Tabelle e immagini non vengono convertite — prova PDF in Excel o PDF in Word per quelle.',
   p2m_formula_ocr_title:    'Riconosci le formule come LaTeX (beta)',
   p2m_formula_ocr_subtitle: "Scarica un modello IA di circa 76 MB al primo utilizzo. Nei nostri test, circa 7 formule su 10 sono risultate corrette — ogni formula riconosciuta è chiaramente contrassegnata come generata dall'IA così puoi verificarla, e ciò che non riesce a leggere torna a essere un'immagine come prima.",
+  p2m_formula_ocr_fail_one:  'Non è stato possibile riconoscere 1 formula come LaTeX — mantenuta come immagine.',
+  p2m_formula_ocr_fail_many: 'Non è stato possibile riconoscere {n} formule come LaTeX — mantenute come immagini.',
 
   // ── fillUI.js ────────────────────────────────────────────
   fill_analysing:             'Analisi dei campi del modulo…',

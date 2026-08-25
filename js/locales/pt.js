@@ -1007,6 +1007,8 @@ window.PDFREE_LOCALE = {
   p2m_mode_hint:         '📝 Títulos, listas com marcadores/numeradas e texto em negrito/itálico são detectados automaticamente. Tabelas e imagens não são convertidas — experimente PDF para Excel ou PDF para Word para isso.',
   p2m_formula_ocr_title:    'Reconhecer fórmulas como LaTeX (beta)',
   p2m_formula_ocr_subtitle: 'Baixa um modelo de IA de ~76 MB no primeiro uso. Em nossos próprios testes, cerca de 7 em cada 10 fórmulas foram reconhecidas corretamente — toda fórmula reconhecida é claramente marcada como gerada por IA para que você possa conferir, e o que não conseguir ler volta a ser uma imagem, como antes.',
+  p2m_formula_ocr_fail_one:  'Não foi possível reconhecer 1 fórmula como LaTeX — mantida como imagem.',
+  p2m_formula_ocr_fail_many: 'Não foi possível reconhecer {n} fórmulas como LaTeX — mantidas como imagens.',
 
   // ── fillUI.js ────────────────────────────────────────────
   fill_analysing:             'Analisando campos do formulário…',

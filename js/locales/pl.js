@@ -1005,6 +1005,8 @@ window.PDFREE_LOCALE = {
   p2m_mode_hint:         '📝 Nagłówki, listy punktowane/numerowane oraz pogrubiony/kursywowy tekst są wykrywane automatycznie. Tabele i obrazy nie są konwertowane — spróbuj PDF do Excel lub PDF do Word dla nich.',
   p2m_formula_ocr_title:    'Rozpoznawaj wzory jako LaTeX (beta)',
   p2m_formula_ocr_subtitle: 'Przy pierwszym użyciu pobiera model AI o rozmiarze ok. 76 MB. W naszych własnych testach około 7 na 10 wzorów zostało rozpoznanych poprawnie — każdy rozpoznany wzór jest wyraźnie oznaczony jako wygenerowany przez AI, abyś mógł go zweryfikować, a to, czego nie da się odczytać, jak dawniej trafia z powrotem jako obraz.',
+  p2m_formula_ocr_fail_one:  'Nie udało się rozpoznać 1 wzoru jako LaTeX — pozostawiono jako obraz.',
+  p2m_formula_ocr_fail_many: 'Nie udało się rozpoznać {n} wzorów jako LaTeX — pozostawiono jako obrazy.',
 
   // ── fillUI.js ────────────────────────────────────────────
   fill_analysing:             'Analizowanie pól formularza…',
