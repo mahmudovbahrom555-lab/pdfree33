@@ -860,6 +860,77 @@ await test('a math-font run ending in a hyphen-like glyph is never rewritten (fo
   expect(md.includes('$a-$')).toBeTruthy();
 });
 
+// ── Markdown-special-character escaping (_escapeMdText, js/pdf2mdCore.js) ──
+// Real bug found via scripts/pdf2md_benchmark.mjs's first real-document run:
+// a real academic paper's footnote marker ("*indicates the corresponding
+// author") produced Markdown with an unbalanced "**" count — the literal
+// "*" from the source PDF was never escaped before being emitted.
+
+await test('a literal "*" in ordinary (non-bold) extracted text is escaped, not left to corrupt Markdown', async () => {
+  const items = [makeItem('See the *footnote marker for details.', 50, 700), ...fillerItems(4, 680)];
+  const pdfDoc = makeFakePdfDoc([items]);
+  const blocks = await _p2mdExtractText(pdfDoc);
+  const md = _p2mdRender(blocks);
+  expect(md.includes('\\*footnote')).toBeTruthy();
+  expect(md.includes('*footnote') && !md.includes('\\*footnote')).toBe(false);
+});
+
+await test('a literal "*" immediately before a real bold run is escaped, leaving the bold markers correctly paired', async () => {
+  // The exact real-world shape that caught this: plain text ending in a
+  // literal "*" (a footnote/citation marker), followed elsewhere on the
+  // page by a genuinely bold run — before the fix, the source "*" was
+  // emitted raw, an UNESCAPED asterisk sitting right next to the bold
+  // run's own "**" markers. Counting every "*" char (escaped or not, as an
+  // earlier version of this test did) is the wrong check — "\*" is exactly
+  // one correctly-neutralized literal character, not half of a broken
+  // pair. The real invariant: no UNESCAPED "*" should be left unpaired.
+  const items = [
+    makeItem('Results were significant *', 50, 700, 10, 'F-Plain'),
+    makeItem('Important', 50, 688, 10, 'F-Bold'),
+    makeItem(' finding follows.', 200, 688, 10, 'F-Plain'),
+  ];
+  const pdfDoc = makeFakePdfDocWithFonts(items, { 'F-Plain': false, 'F-Bold': true });
+  const blocks = await _p2mdExtractText(pdfDoc);
+  const md = _p2mdRender(blocks);
+  expect(md.includes('significant \\*')).toBeTruthy();
+  const unescapedStarCount = (md.match(/(?<!\\)\*/g) || []).length;
+  expect(unescapedStarCount % 2).toBe(0);
+});
+
+await test('a literal "*" in a heading is escaped', async () => {
+  const items = [makeItem('Section *1: Overview', 50, 700, 22), ...fillerItems(6)];
+  const pdfDoc = makeFakePdfDoc([items]);
+  const blocks = await _p2mdExtractText(pdfDoc);
+  const md = _p2mdRender(blocks);
+  expect(md.includes('# Section \\*1: Overview')).toBeTruthy();
+});
+
+await test('a literal "*" in a bulleted list item is escaped, marker itself stays unescaped', async () => {
+  const items = [makeItem('• Item with a *marker in it', 50, 700)];
+  const pdfDoc = makeFakePdfDoc([items]);
+  const blocks = await _p2mdExtractText(pdfDoc);
+  const md = _p2mdRender(blocks);
+  expect(md.includes('- Item with a \\*marker in it')).toBeTruthy();
+});
+
+await test('bold/italic formatting markers this code adds itself are never escaped (only source text is)', async () => {
+  const items = [makeItem('All of this is bold.', 50, 700, 10, 'F-Bold')];
+  const pdfDoc = makeFakePdfDocWithFonts(items, { 'F-Bold': true });
+  const blocks = await _p2mdExtractText(pdfDoc);
+  const md = _p2mdRender(blocks);
+  expect(md.includes('**All of this is bold.**')).toBeTruthy();
+});
+
+await test('a literal underscore/backtick/bracket in extracted text is also escaped', async () => {
+  const items = [makeItem('The variable my_var uses `code` and [brackets].', 50, 700), ...fillerItems(4, 680)];
+  const pdfDoc = makeFakePdfDoc([items]);
+  const blocks = await _p2mdExtractText(pdfDoc);
+  const md = _p2mdRender(blocks);
+  expect(md.includes('my\\_var')).toBeTruthy();
+  expect(md.includes('\\`code\\`')).toBeTruthy();
+  expect(md.includes('\\[brackets\\]')).toBeTruthy();
+});
+
 // ── Summary ────────────────────────────────────────────────────
 console.log(`\n${'─'.repeat(40)}`);
 console.log(`Tests: ${passed + failed} | ✓ ${passed} | ${failed > 0 ? '✗ ' + failed : '0 failed'}`);

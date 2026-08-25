@@ -49,6 +49,22 @@ import { BULLET_RE, NUMBERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
          _visualRTLToLogical, _splitCrossColumnLines, _isCjk,
          joinHyphenatedLineEnd } from './textLayoutUtils.js';
 
+// Escapes literal CommonMark-special characters found in TEXT EXTRACTED
+// FROM THE SOURCE PDF, before that text is emitted into the rendered
+// Markdown — real bug found via scripts/pdf2md_benchmark.mjs's own first
+// run: a real academic paper's footnote marker ("*indicates the
+// corresponding author") contains a literal "*" that, left unescaped, can
+// combine with an adjacent bold/italic run's own "**"/"*" delimiters and
+// produce genuinely unbalanced/corrupted Markdown — exactly the kind of
+// structural noise a downstream Markdown/RAG consumer is more sensitive to
+// than plain whitespace noise. Deliberately NOT applied to formula/LaTeX
+// runs (see wrapRun's own `$`-only escape below) — inside a `$...$` math
+// span, `*`/`_` are LaTeX content, not CommonMark emphasis markers, and
+// escaping them would corrupt the LaTeX itself.
+function _escapeMdText(s) {
+  return s.replace(/[\\`*_[\]]/g, '\\$&');
+}
+
 // Real HTMLCanvasElement satisfies the canvasFactory contract natively —
 // this is the default used by processor.js's browser tool (and by this
 // module's own default parameter when `document` exists, e.g. under a
@@ -771,9 +787,16 @@ export async function _p2mdExtractText(pdfDoc, {
         // plain text, not an item) — normalize exactly one space here so
         // detection and valid Markdown output stay in sync regardless of
         // whether the source line already had one.
-        const text = bulletMatch
-          ? `- ${rawText.replace(BULLET_RE, '').trim()}`
-          : rawText.replace(/^(\d{1,3}[.)])\s*/, '$1 ');
+        // Escape the CONTENT only — never the marker this code just built
+        // ("- " / "N. "), which is real, intentional Markdown syntax, not
+        // extracted text.
+        let text;
+        if (bulletMatch) {
+          text = `- ${_escapeMdText(rawText.replace(BULLET_RE, '').trim())}`;
+        } else {
+          const markerMatch = rawText.match(/^\d{1,3}[.)]\s*/);
+          text = `${markerMatch[0].replace(/\s*$/, ' ')}${_escapeMdText(rawText.slice(markerMatch[0].length))}`;
+        }
         if (text.replace(/^[-\d.)\s]+/, '').trim()) blocks.push({ type: 'list', text });
         continue;
       }
@@ -894,15 +917,27 @@ export function _p2mdRender(blocks) {
     const m = run.text.match(/^(\s*)([\s\S]*?)(\s*)$/);
     const [, lead, core, trail] = m;
     if (!core) return run.text; // whitespace-only run — nothing to wrap
-    let wrapped = core;
+    let wrapped;
     // Formula wins over bold/italic (see _p2mdExtractText's isFormula
     // comment) — inline math delimiter, not emphasis. Escape a stray literal
     // '$' so it can't prematurely close the span (rare in math-glyph text,
-    // cheap to guard).
-    if (run.formula)            wrapped = `$${core.replace(/\$/g, '\\$')}$`;
-    else if (run.bold && run.italic) wrapped = `***${core}***`;
-    else if (run.bold)          wrapped = `**${core}**`;
-    else if (run.italic)        wrapped = `*${core}*`;
+    // cheap to guard). LaTeX content is deliberately NOT run through
+    // _escapeMdText — '*'/'_' there are math syntax, not CommonMark emphasis.
+    if (run.formula) {
+      wrapped = `$${core.replace(/\$/g, '\\$')}$`;
+    } else {
+      // _escapeMdText guards the PLAIN (most common) case too, not just
+      // bold/italic — a literal '*' in ordinary extracted text (e.g. a
+      // footnote marker like "*Corresponding author", the real case
+      // scripts/pdf2md_benchmark.mjs's first run caught) previously went
+      // through unescaped here, real risk regardless of this run's own
+      // formatting.
+      const escaped = _escapeMdText(core);
+      if      (run.bold && run.italic) wrapped = `***${escaped}***`;
+      else if (run.bold)               wrapped = `**${escaped}**`;
+      else if (run.italic)             wrapped = `*${escaped}*`;
+      else                             wrapped = escaped;
+    }
     return lead + wrapped + trail;
   };
 
@@ -912,7 +947,7 @@ export function _p2mdRender(blocks) {
   for (const b of blocks) {
     if (b.type === 'heading') {
       if (lines.length) lines.push('');
-      lines.push(`${'#'.repeat(b.level)} ${b.text}`);
+      lines.push(`${'#'.repeat(b.level)} ${_escapeMdText(b.text)}`);
     } else if (b.type === 'list') {
       if (prevType !== 'list' && lines.length) lines.push('');
       lines.push(b.text);
@@ -921,8 +956,11 @@ export function _p2mdRender(blocks) {
       // GFM pipe-table syntax. A literal '|' in cell text would otherwise
       // be read as a column boundary; a raw newline would break the row
       // onto multiple lines — both are rare in a single detected table
-      // cell, but cheap to guard against.
-      const cell = c => (c || '').replace(/\|/g, '\\|').replace(/\r?\n/g, ' ');
+      // cell, but cheap to guard against. _escapeMdText handles the same
+      // '*'/'_'/backtick risk wrapRun/headings guard against — a cell's
+      // raw extracted text is just as capable of containing a stray
+      // footnote-marker asterisk as a paragraph run is.
+      const cell = c => _escapeMdText((c || '').replace(/\r?\n/g, ' ')).replace(/\|/g, '\\|');
       const [header, ...body] = b.rows;
       lines.push(`| ${header.map(cell).join(' | ')} |`);
       lines.push(`| ${header.map(() => '---').join(' | ')} |`);
