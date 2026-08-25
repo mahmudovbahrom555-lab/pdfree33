@@ -879,8 +879,19 @@ export async function _p2mdExtractText(pdfDoc, {
     }
   }
 
-  if (!blocks.length) {
-    blocks.push({
+  // Real gap found via scripts/pdf2md_benchmark.mjs's own scanned.pdf case:
+  // this used to only fire when `blocks` was COMPLETELY empty — but a
+  // genuine full-page scan almost never produces that in the browser tool,
+  // since canvasFactory (real, always available there) successfully
+  // extracts the page as a real embedded IMAGE block. That left the most
+  // realistic real-world scanned-document shape with no guidance at all:
+  // just a lone `![](images/...)` reference and no hint that OCR would
+  // recover real, searchable text. Checking "no block carries real text"
+  // (not just "no blocks at all") catches that case too — prepended, not
+  // replacing the image, so no extracted content is lost either way.
+  const hasRealText = blocks.some(b => b.type !== 'image');
+  if (!hasRealText) {
+    blocks.unshift({
       type: 'para',
       runs: [{
         text: 'No extractable text was found in this PDF. It may be a scanned/image-only document — try OCR first, then convert the result.',

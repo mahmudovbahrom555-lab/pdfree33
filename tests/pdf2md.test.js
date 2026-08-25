@@ -931,6 +931,59 @@ await test('a literal underscore/backtick/bracket in extracted text is also esca
   expect(md.includes('\\[brackets\\]')).toBeTruthy();
 });
 
+// ── "No extractable text" OCR hint — reachable for a real scan, not just ──
+// a fully-empty page. Real gap found via scripts/pdf2md_benchmark.mjs's own
+// scanned.pdf case: the hint used to only fire when `blocks` was completely
+// empty, but a genuine full-page scan successfully extracts as a real
+// embedded IMAGE block in the browser (canvasFactory is always available
+// there) — leaving the most realistic real-world scanned-document shape
+// with zero guidance. Full end-to-end fixture (not just _detectPageImages
+// in isolation, unlike the earlier image-detection tests above): a page
+// with NO text items at all, but a real image paint op + a resolvable
+// page.objs.get(), so the image genuinely makes it through
+// _p2mdExtractImageBlob into a real 'image' block.
+function makeFakeImageOnlyPage(pageWidth = 600, pageHeight = 800) {
+  const opList = { fnArray: [OP_TRANSFORM, OP_PAINT], argsArray: [[200, 0, 0, 150, 50, 600], ['img1']] };
+  return {
+    getViewport: ({ scale = 1 } = {}) => scale === 1
+      ? { width: pageWidth, height: pageHeight }
+      : _fakeViewport(scale, pageWidth, pageHeight),
+    getTextContent: async () => ({ items: [], styles: {} }),
+    getOperatorList: async () => opList,
+    commonObjs: { get: () => undefined },
+    objs: { get: (id, cb) => cb({ bitmap: {}, width: 200, height: 150 }) },
+    render: () => ({ promise: Promise.resolve() }),
+    cleanup: () => {},
+  };
+}
+
+await test('a fully empty page (no text, no image) still gets the "no extractable text" hint — unchanged baseline', async () => {
+  const pdfDoc = makeFakePdfDoc([[]]);
+  const blocks = await _p2mdExtractText(pdfDoc);
+  const md = _p2mdRender(blocks);
+  expect(md.includes('No extractable text was found')).toBeTruthy();
+});
+
+await test('a real full-page scan (no text, but a real extracted image) ALSO gets the OCR hint, alongside the image — not silently just the image', async () => {
+  const pdfDoc = { numPages: 1, getPage: async () => makeFakeImageOnlyPage() };
+  // No explicit canvasFactory — relies on _p2mdExtractText's own default
+  // (browserCanvasFactory, since `document` exists in this test's fake
+  // global), same as every other test in this file.
+  const blocks = await _p2mdExtractText(pdfDoc);
+  expect(blocks.some(b => b.type === 'image')).toBeTruthy(); // image itself still preserved
+  const md = _p2mdRender(blocks);
+  expect(md.includes('No extractable text was found')).toBeTruthy();
+  expect(md.includes('images/')).toBeTruthy(); // real image reference still present, not replaced
+});
+
+await test('a page with real extractable text is NOT given the OCR hint, even if it also has images', async () => {
+  const items = [makeItem('This page has real, genuine body text.', 50, 700), ...fillerItems(4, 680)];
+  const pdfDoc = makeFakePdfDoc([items]);
+  const blocks = await _p2mdExtractText(pdfDoc);
+  const md = _p2mdRender(blocks);
+  expect(md.includes('No extractable text was found')).toBe(false);
+});
+
 // ── Summary ────────────────────────────────────────────────────
 console.log(`\n${'─'.repeat(40)}`);
 console.log(`Tests: ${passed + failed} | ✓ ${passed} | ${failed > 0 ? '✗ ' + failed : '0 failed'}`);
