@@ -386,7 +386,11 @@ function _atlasVerdict(eri) {
   return { key: 'heavy', labelKey: 'atlas_verdict_heavy' };
 }
 
-export function renderAtlasCheck(atlasEri) {
+// scopeNoteKey: lets a non-DOCX caller (js/eriScoreMd.js's pdf2md result)
+// substitute wording that fits its own format — the default DOCX copy talks
+// about "editability", a concept that doesn't apply to Markdown text the
+// same way (see eriScoreMd.js's header comment for why).
+export function renderAtlasCheck(atlasEri, scopeNoteKey = 'atlas_check_scope_note') {
   const el = id('atlasCheck');
   if (!el) return;
   if (!atlasEri || atlasEri.error) { clearAtlasCheck(); return; }
@@ -409,7 +413,7 @@ export function renderAtlasCheck(atlasEri) {
     <span class="atlas-check__title">${t('atlas_check_title')}</span>
     <span class="atlas-check__badge atlas-check__badge--${verdict.key}">${Math.round(eri)}% ${t(verdict.labelKey)}</span>
   </div>
-  <p class="atlas-check__scope">${t('atlas_check_scope_note')}</p>`;
+  <p class="atlas-check__scope">${t(scopeNoteKey)}</p>`;
 
   if (items.length) {
     html += `<ul class="atlas-check__findings">${items.map(f => `<li>${f}</li>`).join('')}</ul>`;

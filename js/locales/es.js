@@ -947,6 +947,7 @@ window.PDFREE_LOCALE = {
   // ── pdf2wordUI.js — Atlas structural check ──────────────────
   atlas_check_title:       '🔬 Verificación estructural',
   atlas_check_scope_note:  'Qué tan editables son realmente las tablas, párrafos y el flujo de texto — no es una revisión completa del documento.',
+  atlas_check_scope_note_md: 'Con qué fiabilidad se capturaron las tablas y el flujo de párrafos — no es una revisión completa del documento.',
   atlas_verdict_ready:     'Listo',
   atlas_verdict_minor:     'Problemas menores',
   atlas_verdict_notable:   'Problemas notables',

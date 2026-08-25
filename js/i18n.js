@@ -973,6 +973,7 @@ export const EN = {
   // like "Atlas score" alone would suggest. See Atlas_DR/ROADMAP.md Stage 2.
   atlas_check_title:       '🔬 Structural check',
   atlas_check_scope_note:  'How editable the tables, paragraphs, and text flow actually are — not a full document review.',
+  atlas_check_scope_note_md: 'How reliably the tables and paragraph flow were captured — not a full document review.',
   atlas_verdict_ready:     'Ready',
   atlas_verdict_minor:     'Minor issues',
   atlas_verdict_notable:   'Notable issues',

@@ -523,7 +523,12 @@ registerTool('pdf2word', {
   },
   onSuccess: ({ confidence, atlasEri }) => {
     if (confidence) renderP2wConfidence(confidence);
-    if (atlasEri) renderAtlasCheck(atlasEri);
+    // Always called (not gated on atlasEri being truthy): renderAtlasCheck
+    // clears the shared #atlasCheck div itself when passed a falsy/errored
+    // value — matters now that TWO tools (this one and pdf2md) can populate
+    // the same div, so switching between them must always leave it in sync
+    // with whichever tool just actually ran, not stale from the other.
+    renderAtlasCheck(atlasEri);
   },
 });
 
@@ -560,6 +565,10 @@ registerTool('pdf2md', {
   hide:      hidePdf2MdOptions,
   getParams: getPdf2MdParams,
   validate:  p => p.loading ? t('val_analysing_pdf') : null,
+  // Same shared #atlasCheck div pdf2word uses (js/eriScoreMd.js computes the
+  // score for Markdown output instead of DOCX) — always called, not gated,
+  // so it self-clears correctly when switching to/from pdf2word.
+  onSuccess: ({ atlasEri }) => renderAtlasCheck(atlasEri, 'atlas_check_scope_note_md'),
 });
 
 registerTool('unlock', {

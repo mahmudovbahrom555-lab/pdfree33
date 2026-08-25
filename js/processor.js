@@ -23,6 +23,7 @@ import { openFeedback } from './feedback.js';
 import { isHeicFile, decodeHeicToJpegBlob } from './heicDecode.js';
 import { evaluateStructural } from './eriScore.js';
 import { evaluateXlsxStructural } from './eriScoreXlsx.js';
+import { evaluateMarkdownStructural } from './eriScoreMd.js';
 import { contentBBox, reconcileGlobalCrop, padBBox, composeWithAspect, DEVICE_PRESETS,
          detectColumnGutter, reconcileColumnSplit, ereaderSampleIndices } from './ereaderCrop.js';
 import { BULLET_RE, NUMBERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
@@ -2941,6 +2942,16 @@ async function _runPdf2Md(filesSnapshot, { enableFormulaOcr = false } = {}) {
 
   if (!isProcessing) return;
 
+  // Atlas structural check — same eri_core-derived scoring pdf2word already
+  // surfaces (js/eriScoreMd.js, adapted for Markdown output — see its own
+  // header for exactly what's reused vs. dropped from the DOCX version).
+  // Best-effort, same pattern as pdf2word's own: a scoring failure never
+  // blocks a conversion that already succeeded, atlasEri just stays null.
+  let atlasEri = null;
+  try {
+    atlasEri = evaluateMarkdownStructural(blocks);
+  } catch { /* ERI check is best-effort — see comment above */ }
+
   setProgress(92, 'Building Markdown…');
 
   const md       = _p2mdRender(blocks);
@@ -2980,7 +2991,7 @@ async function _runPdf2Md(filesSnapshot, { enableFormulaOcr = false } = {}) {
   setProgress(100, t('prog_done'));
 
   document.dispatchEvent(new CustomEvent('pdfree:success', {
-    detail: { tool: 'pdf2md', blob, desc, filename }
+    detail: { tool: 'pdf2md', blob, desc, filename, atlasEri }
   }));
 
   // Real OCR failures (network/model/inference) are swallowed per-formula by

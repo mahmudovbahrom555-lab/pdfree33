@@ -945,6 +945,7 @@ window.PDFREE_LOCALE = {
   // ── pdf2wordUI.js — Atlas structural check ──────────────────
   atlas_check_title:       '🔬 Yapısal kontrol',
   atlas_check_scope_note:  'Tabloların, paragrafların ve metin akışının gerçekte ne kadar düzenlenebilir olduğu — tam bir belge incelemesi değildir.',
+  atlas_check_scope_note_md: 'Tabloların ve paragraf akışının ne kadar güvenilir şekilde yakalandığı — tam bir belge incelemesi değildir.',
   atlas_verdict_ready:     'Hazır',
   atlas_verdict_minor:     'Küçük sorunlar',
   atlas_verdict_notable:   'Belirgin sorunlar',

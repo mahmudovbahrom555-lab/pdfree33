@@ -945,6 +945,7 @@ window.PDFREE_LOCALE = {
   // ── pdf2wordUI.js — Atlas structural check ──────────────────
   atlas_check_title:       '🔬 Structurele controle',
   atlas_check_scope_note:  'Hoe bewerkbaar tabellen, alinea\'s en tekststroom werkelijk zijn — geen volledige documentcontrole.',
+  atlas_check_scope_note_md: 'Hoe betrouwbaar tabellen en tekststroom daadwerkelijk zijn vastgelegd — geen volledige documentcontrole.',
   atlas_verdict_ready:     'Klaar',
   atlas_verdict_minor:     'Kleine problemen',
   atlas_verdict_notable:   'Opvallende problemen',

@@ -946,6 +946,7 @@ window.PDFREE_LOCALE = {
   // ── pdf2wordUI.js — Atlas structural check ──────────────────
   atlas_check_title:       '🔬 Pemeriksaan struktural',
   atlas_check_scope_note:  'Seberapa dapat diedit tabel, paragraf, dan alur teks sebenarnya — bukan tinjauan dokumen lengkap.',
+  atlas_check_scope_note_md: 'Seberapa andal tabel dan alur paragraf berhasil ditangkap — bukan tinjauan dokumen lengkap.',
   atlas_verdict_ready:     'Siap',
   atlas_verdict_minor:     'Masalah kecil',
   atlas_verdict_notable:   'Masalah signifikan',

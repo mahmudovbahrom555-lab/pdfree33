@@ -948,6 +948,7 @@ window.PDFREE_LOCALE = {
   // ── pdf2wordUI.js — Atlas structural check ──────────────────
   atlas_check_title:       '🔬 構造チェック',
   atlas_check_scope_note:  '表、段落、テキストの流れが実際にどれだけ編集可能かを示します — 文書全体のレビューではありません。',
+  atlas_check_scope_note_md: '表と段落の流れがどれだけ確実に取得されたかを示します — 文書全体のレビューではありません。',
   atlas_verdict_ready:     '準備完了',
   atlas_verdict_minor:     '軽微な問題',
   atlas_verdict_notable:   '目立つ問題',
