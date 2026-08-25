@@ -1004,6 +1004,8 @@ window.PDFREE_LOCALE = {
   p2p_size_normal:       '📦 Kích thước .pptx ước tính: ~{mb} MB',
   p2m_one_markdown_file: '1 tệp Markdown',
   p2m_mode_hint:         '📝 Tiêu đề, danh sách có dấu đầu dòng/đánh số, và văn bản in đậm/in nghiêng được phát hiện tự động. Bảng và hình ảnh không được chuyển đổi — hãy thử PDF sang Excel hoặc PDF sang Word cho những nội dung đó.',
+  p2m_formula_ocr_title:    'Nhận dạng công thức thành LaTeX (beta)',
+  p2m_formula_ocr_subtitle: 'Tải xuống một mô hình AI khoảng 76MB trong lần sử dụng đầu tiên. Trong quá trình thử nghiệm của chúng tôi, khoảng 7 trên 10 công thức được nhận dạng đúng — mọi công thức được nhận dạng đều được đánh dấu rõ ràng là do AI tạo ra để bạn có thể kiểm tra lại, và những gì không đọc được sẽ quay lại thành hình ảnh như trước.',
 
   // ── fillUI.js ────────────────────────────────────────────
   fill_analysing:             'Đang phân tích các trường biểu mẫu…',

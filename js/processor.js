@@ -28,6 +28,7 @@ import { contentBBox, reconcileGlobalCrop, padBBox, composeWithAspect, DEVICE_PR
 import { BULLET_RE, NUMBERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
          _visualRTLToLogical, _splitCrossColumnLines, _isCjk } from './textLayoutUtils.js';
 import { _p2mdExtractText, _p2mdRender, _detectPageImages, browserCanvasFactory } from './pdf2mdCore.js';
+import { recognizeFormula } from './formulaOcr.js';
 export { BULLET_RE, NUMBERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE, _splitCrossColumnLines };
 
 // Below this ERI "tables" score, the text-detected/border-grid tables in the
@@ -2847,7 +2848,26 @@ async function _runPdf2Ppt(filesSnapshot, { dpi = 150 } = {}) {
 // that it has its own CDN-library (JSZip, image path only) and canvas-based
 // image re-encoding step — that used to be true, isn't anymore.
 
-async function _runPdf2Md(filesSnapshot) {
+// Formula-OCR callback handed to _p2mdExtractText's `ocrFormula` option —
+// only constructed (and only ever lazy-loads the ~76MB Texo/FormulaNet
+// engine) when the user has actually opted in via pdf2md's toggle, per
+// _runPdf2Md below. Reuses the same progress bar pdf2md's own extraction
+// already drives (getPct() returns the last real percentage that loop
+// reported) rather than passing an undefined percent into setProgress,
+// which would write an invalid "undefined%" CSS width — this is a real,
+// sometimes-slow first-use download+load, worth surfacing with a label
+// even though it can't own its own slice of the percentage.
+function _makeOcrFormulaCallback(getPct) {
+  let modelReady = false;
+  return async (imageBlob) => {
+    if (!modelReady) setProgress(getPct(), 'Loading formula recognition model…');
+    const result = await recognizeFormula(imageBlob, modelReady ? undefined : () => {});
+    modelReady = true;
+    return result;
+  };
+}
+
+async function _runPdf2Md(filesSnapshot, { enableFormulaOcr = false } = {}) {
   const file = filesSnapshot[0];
   if (!_checkSize(file, 150)) { _abortUI(); return; }
 
@@ -2877,10 +2897,12 @@ async function _runPdf2Md(filesSnapshot) {
 
   let blocks;
   try {
+    let _lastPct = 8;
     blocks = await _p2mdExtractText(pdfDoc, {
-      onProgress:    setProgress,
+      onProgress:    (pct, label) => { _lastPct = pct; setProgress(pct, label); },
       isCancelled:   () => !isProcessing,
       canvasFactory: browserCanvasFactory,
+      ocrFormula:    enableFormulaOcr ? _makeOcrFormulaCallback(() => _lastPct) : undefined,
     });
   } catch (err) {
     isProcessing = false; setFilesLocked(false); hideCancelBtn();

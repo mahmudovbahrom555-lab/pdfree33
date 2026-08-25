@@ -1003,6 +1003,8 @@ window.PDFREE_LOCALE = {
   p2p_size_normal:       '📦 Tahmini .pptx boyutu: ~{mb} MB',
   p2m_one_markdown_file: '1 Markdown dosyası',
   p2m_mode_hint:         '📝 Başlıklar, madde işaretli/numaralı listeler ve kalın/italik metin otomatik olarak algılanır. Tablolar ve görüntüler dönüştürülmez — bunlar için PDF\'den Excel\'e veya PDF\'den Word\'e araçlarını deneyin.',
+  p2m_formula_ocr_title:    'Formülleri LaTeX olarak tanı (beta)',
+  p2m_formula_ocr_subtitle: 'İlk kullanımda yaklaşık 76 MB\'lık bir yapay zeka modeli indirir. Kendi testlerimizde yaklaşık 10 formülden 7\'si doğru tanındı — tanınan her formül, tekrar kontrol edebilmeniz için açıkça yapay zeka tarafından oluşturulduğu belirtilerek işaretlenir; okunamayanlar ise eskisi gibi görsele döner.',
 
   // ── fillUI.js ────────────────────────────────────────────
   fill_analysing:             'Form alanları analiz ediliyor…',

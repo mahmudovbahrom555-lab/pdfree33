@@ -1033,6 +1033,8 @@ export const EN = {
   // ── pdf2mdUI.js ────────────────────────────────────────────────
   p2m_one_markdown_file: '1 Markdown file',
   p2m_mode_hint:          "📝 Headings, bullet/numbered lists and bold/italic text are detected automatically. Tables and images aren't converted — try PDF to Excel or PDF to Word for those.",
+  p2m_formula_ocr_title:    'Recognize formulas as LaTeX (beta)',
+  p2m_formula_ocr_subtitle: 'Downloads a ~76MB AI model on first use. In our own testing it got about 7 in 10 formulas right — every recognized formula is clearly marked as AI-generated so you can double-check it, and anything it can\'t read falls back to an image like before.',
 
   // ── fillUI.js ──────────────────────────────────────────────────
   fill_analysing:            'Analysing form fields…',

@@ -1006,6 +1006,8 @@ window.PDFREE_LOCALE = {
   p2p_size_normal:       '📦 推定.pptxサイズ: 約{mb} MB',
   p2m_one_markdown_file: 'Markdownファイル1件',
   p2m_mode_hint:         '📝 見出し、箇条書き/番号付きリスト、太字/斜体は自動的に検出されます。表と画像は変換されません — その場合はPDFからExcelまたはPDFからWordをお試しください。',
+  p2m_formula_ocr_title:    '数式をLaTeXとして認識(ベータ版)',
+  p2m_formula_ocr_subtitle: '初回利用時に約76MBのAIモデルをダウンロードします。独自のテストでは約10個中7個の数式が正しく認識されました — 認識された数式には必ずAI生成である旨が明示されるため、確認のうえご利用ください。読み取れなかった場合は、これまで通り画像として出力されます。',
 
   // ── fillUI.js ────────────────────────────────────────────
   fill_analysing:             'フォームフィールドを解析しています…',

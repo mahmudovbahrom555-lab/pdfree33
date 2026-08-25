@@ -5,13 +5,14 @@ import { id } from './utils.js';
 import { loadPdfJs } from './pdf2jpgUI.js';
 import { preprocessPdfBuffer } from './decryptPdf.js';
 import { t, tp } from './i18n.js';
+import { getFormulaOcr, resetFormulaOcr, formulaOcrToggleHtml, bindFormulaOcr } from './formulaOcrToggle.js';
 
 // ── State ─────────────────────────────────────────────────────────────────────
 let _pageCount = 0;
 let _loading   = false;
 
 export function getPdf2MdParams() {
-  return { pageCount: _pageCount, loading: _loading };
+  return { pageCount: _pageCount, loading: _loading, enableFormulaOcr: getFormulaOcr() };
 }
 
 // ── Public API ────────────────────────────────────────────────────────────────
@@ -52,6 +53,7 @@ export function hidePdf2MdOptions() {
   const el = id('pdf2mdOptions');
   if (el) { el.style.display = 'none'; el.innerHTML = ''; }
   _pageCount = 0; _loading = false;
+  resetFormulaOcr();
 }
 
 // ── Render ────────────────────────────────────────────────────────────────────
@@ -72,7 +74,10 @@ function _render(file) {
     <div class="compress-scan compress-scan--ok" role="status" aria-live="polite" style="margin-top:8px">
       ${t('p2m_mode_hint')}
     </div>
+
+    <div style="margin-top:10px">${formulaOcrToggleHtml()}</div>
   `;
+  bindFormulaOcr();
 }
 
 function _esc(str) {

@@ -13,6 +13,13 @@
       set in JS; inline style= attributes throughout HTML.
     worker-src: blob: REQUIRED — pdf.js ≥ 3.x creates worker via blob URL.
     connect-src: *.doubleclick.net REQUIRED for AdSense reporting.
+    connect-src: huggingface.co + *.hf.co REQUIRED for pdf2md's opt-in
+      Formula OCR (js/formulaOcr.js) — huggingface.co/.../resolve/... 302s to
+      a *.hf.co CDN subdomain (verified directly via curl, not assumed —
+      redirect target seen: us.aws.cdn.hf.co) to fetch the real model
+      weights; CSP connect-src is enforced per redirect hop, so both origins
+      are needed or the download is silently blocked with no fallback UI
+      (found for real during this feature's own browser testing).
     img-src: data: blob: REQUIRED — pdf.js thumbnails + JPG→PDF previews.
     ════════════════════════════════════════════════════════════════
   -->
@@ -38,6 +45,8 @@
                 https://pagead2.googlesyndication.com
                 https://www.googletagservices.com
                 https://*.doubleclick.net
+                https://huggingface.co
+                https://*.hf.co
                 https://cloudflareinsights.com;
     frame-src   https://googleads.g.doubleclick.net
                 https://tpc.googlesyndication.com;

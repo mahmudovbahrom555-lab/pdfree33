@@ -12,7 +12,7 @@
 //  browser, or packages/pdf2md-core/src/index.js in Node) owns loading the
 //  PDF and producing that object.
 //
-//  Browser-coupling is limited to 3 injectable seams, all optional:
+//  Browser-coupling is limited to 4 injectable seams, all optional:
 //    onProgress(pct, label)   — UI progress callback; no-op by default.
 //    isCancelled()            — mid-run cancellation check; never-cancel default.
 //    canvasFactory(w, h)      — returns a canvas-shaped object (.getContext,
@@ -24,6 +24,23 @@
 //                               gracefully (images dropped, formulas fall
 //                               back to the existing $...$ text flattening),
 //                               it does not error.
+//    ocrFormula(imageBlob)    — optional real math-OCR (Texo/FormulaNet, see
+//                               js/formulaOcr.js), browser-only and opt-in.
+//                               Returns Promise<{latex}> or throws/rejects.
+//                               Called on a display-formula crop candidate
+//                               (the same crop canvasFactory already produces
+//                               for the image-embed fallback below); on
+//                               success, real LaTeX replaces the image crop,
+//                               always paired with a visible disclosure in
+//                               the rendered Markdown — no per-token
+//                               confidence signal is available from this
+//                               model (verified directly: transformers.js's
+//                               output_scores/return_dict_in_generate returns
+//                               no .scores for it), so nothing is silently
+//                               trusted. undefined by default — zero behavior
+//                               change for every existing caller (Node/CLI/
+//                               Docker packages, and the browser tool with
+//                               its opt-in toggle off).
 // ============================================================
 
 import { detectTables, looksLikeProseNotData } from './pdf2wordTables.js';
@@ -223,6 +240,7 @@ export async function _p2mdExtractText(pdfDoc, {
   onProgress = () => {},
   isCancelled = () => false,
   canvasFactory = (typeof document !== 'undefined' ? browserCanvasFactory : null),
+  ocrFormula = null,
 } = {}) {
   const YTOL = 6;
   const pageData = [];
@@ -448,6 +466,23 @@ export async function _p2mdExtractText(pdfDoc, {
         crop.getContext('2d').drawImage(canvas, cx, cy, cw, ch, 0, 0, cw, ch);
         const blob = await new Promise(resolve => crop.toBlob(resolve, 'image/png'));
         if (!blob) continue;
+        // Real math-OCR (opt-in, browser-only — see ocrFormula's own comment
+        // above). No confidence signal exists for this model (verified
+        // directly this session), so success here is never silently trusted:
+        // _emitLines below always pairs ln.ocrLatex with a visible disclosure
+        // in the rendered Markdown. Any failure (network, model load,
+        // inference, or an empty result) falls through unchanged to the
+        // existing image-crop embed — the same safe default as today.
+        if (ocrFormula) {
+          try {
+            const { latex } = await ocrFormula(blob);
+            if (latex && latex.trim()) {
+              ln.ocrFormula = true;
+              ln.ocrLatex = latex.trim();
+              continue;
+            }
+          } catch { /* OCR failed — fall through to the image-crop embed below */ }
+        }
         ln.isImage = true; ln.imgKind = 'formula'; ln.imgWidth = cw; ln.imgHeight = ch; ln.imgBlob = blob; ln.imgPage = p;
         ln.imgAlt = altText;
       } catch { /* rendering/crop failed — line falls through to normal $...$ flattening below */ }
@@ -632,6 +667,15 @@ export async function _p2mdExtractText(pdfDoc, {
 
     for (let li = 0; li < lines.length; li++) {
       const ln = lines[li];
+
+      // Real math-OCR result — checked before the image branch below since
+      // this is the SAME display-formula crop candidate, just resolved to
+      // real LaTeX instead of an image (see ocrFormula's comment above).
+      if (ln.ocrFormula) {
+        _flushPara();
+        blocks.push({ type: 'formula-latex', latex: ln.ocrLatex });
+        continue;
+      }
 
       // Images short-circuit everything else — checked first so an empty-str
       // synthetic image "line" (see its construction above) never reaches
@@ -852,6 +896,16 @@ export function _p2mdRender(blocks) {
     } else if (b.type === 'image') {
       if (lines.length) lines.push('');
       lines.push(`![${b.alt || ''}](${b.filename})`);
+    } else if (b.type === 'formula-latex') {
+      // Always-visible disclosure, not a silent HTML comment — there is no
+      // confidence signal for this model (see ocrFormula's comment above),
+      // so every OCR'd formula must honestly tell the reader it's automated
+      // and unverified, every time, with no silent high-confidence path.
+      if (lines.length) lines.push('');
+      lines.push('$$');
+      lines.push(b.latex);
+      lines.push('$$');
+      lines.push('*(AI-recognized formula — extracted via automated OCR, not manually verified; double-check before relying on it)*');
     } else {
       if (lines.length) lines.push('');
       lines.push(b.runs.map(wrapRun).join(''));

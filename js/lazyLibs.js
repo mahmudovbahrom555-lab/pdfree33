@@ -181,3 +181,24 @@ export function loadOpenCv() {
   });
   return _promises['openCv'];
 }
+
+// @huggingface/transformers — used by js/formulaOcr.js for pdf2md's
+// opt-in Formula OCR feature (Texo/FormulaNet, ONNX Runtime Web/WASM).
+// ~76MB total (JS + model weights) — only ever loaded once a real
+// formula-crop candidate is found AND the user has opted in via the
+// pdf2md toggle. Different from every other loader here: this CDN
+// build ships real ESM named exports (verified directly, this
+// session, via a live Playwright test — model loaded and ran
+// correctly through this exact import), so a plain dynamic import()
+// is used instead of the <script> tag + window-global pattern the
+// other (UMD-style) libraries above need.
+const TRANSFORMERS_URL = 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3/dist/transformers.min.js';
+
+export function loadFormulaOcr() {
+  if (_promises['formulaOcr']) return _promises['formulaOcr'];
+  _promises['formulaOcr'] = import(/* webpackIgnore: true */ TRANSFORMERS_URL).catch(err => {
+    delete _promises['formulaOcr']; // allow a later call to actually retry
+    throw new Error(`Failed to load formula OCR engine: ${err.message}`);
+  });
+  return _promises['formulaOcr'];
+}

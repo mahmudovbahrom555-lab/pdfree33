@@ -1005,6 +1005,8 @@ window.PDFREE_LOCALE = {
   p2p_size_normal:       '📦 Tamanho estimado do .pptx: ~{mb} MB',
   p2m_one_markdown_file: '1 arquivo Markdown',
   p2m_mode_hint:         '📝 Títulos, listas com marcadores/numeradas e texto em negrito/itálico são detectados automaticamente. Tabelas e imagens não são convertidas — experimente PDF para Excel ou PDF para Word para isso.',
+  p2m_formula_ocr_title:    'Reconhecer fórmulas como LaTeX (beta)',
+  p2m_formula_ocr_subtitle: 'Baixa um modelo de IA de ~76 MB no primeiro uso. Em nossos próprios testes, cerca de 7 em cada 10 fórmulas foram reconhecidas corretamente — toda fórmula reconhecida é claramente marcada como gerada por IA para que você possa conferir, e o que não conseguir ler volta a ser uma imagem, como antes.',
 
   // ── fillUI.js ────────────────────────────────────────────
   fill_analysing:             'Analisando campos do formulário…',

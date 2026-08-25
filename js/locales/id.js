@@ -1004,6 +1004,8 @@ window.PDFREE_LOCALE = {
   p2p_size_normal:       '📦 Perkiraan ukuran .pptx: ~{mb} MB',
   p2m_one_markdown_file: '1 file Markdown',
   p2m_mode_hint:         '📝 Heading, daftar berpoin/bernomor, dan teks tebal/miring terdeteksi secara otomatis. Tabel dan gambar tidak dikonversi — coba PDF ke Excel atau PDF ke Word untuk itu.',
+  p2m_formula_ocr_title:    'Kenali rumus sebagai LaTeX (beta)',
+  p2m_formula_ocr_subtitle: 'Mengunduh model AI berukuran ~76MB saat pertama kali digunakan. Dalam pengujian kami sendiri, sekitar 7 dari 10 rumus dikenali dengan benar — setiap rumus yang dikenali ditandai jelas sebagai hasil AI agar Anda bisa memeriksanya kembali, dan yang tidak bisa dibaca akan kembali menjadi gambar seperti sebelumnya.',
 
   // ── fillUI.js ────────────────────────────────────────────
   fill_analysing:             'Menganalisis kolom formulir…',

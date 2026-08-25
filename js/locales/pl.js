@@ -1003,6 +1003,8 @@ window.PDFREE_LOCALE = {
   p2p_size_normal:       '📦 Szacowany rozmiar .pptx: ~{mb} MB',
   p2m_one_markdown_file: '1 plik Markdown',
   p2m_mode_hint:         '📝 Nagłówki, listy punktowane/numerowane oraz pogrubiony/kursywowy tekst są wykrywane automatycznie. Tabele i obrazy nie są konwertowane — spróbuj PDF do Excel lub PDF do Word dla nich.',
+  p2m_formula_ocr_title:    'Rozpoznawaj wzory jako LaTeX (beta)',
+  p2m_formula_ocr_subtitle: 'Przy pierwszym użyciu pobiera model AI o rozmiarze ok. 76 MB. W naszych własnych testach około 7 na 10 wzorów zostało rozpoznanych poprawnie — każdy rozpoznany wzór jest wyraźnie oznaczony jako wygenerowany przez AI, abyś mógł go zweryfikować, a to, czego nie da się odczytać, jak dawniej trafia z powrotem jako obraz.',
 
   // ── fillUI.js ────────────────────────────────────────────
   fill_analysing:             'Analizowanie pól formularza…',
