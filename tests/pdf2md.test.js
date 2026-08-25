@@ -1060,6 +1060,22 @@ await test('a small-font line NOT at the bottom of the page is NOT misclassified
   expect(md.includes('*Small caption text')).toBe(false);
 });
 
+// ── Ligature folding — real, narrow companion to NFC normalization ──────
+// (see js/pdf2mdCore.js's LIGATURE_MAP comment): a PDF commonly encodes
+// "fi"/"fl"/"ffi" etc. as a single Alphabetic-Presentation-Forms glyph
+// (U+FB01 etc.) rather than the separate letters, which would otherwise
+// silently break a plain-text search/match downstream.
+
+await test('common Latin ligatures (fi, fl, ffi, ffl) are folded to plain letters', async () => {
+  const words = `di\ufb03cult wa\ufb04e o\ufb00 \ufb01nal ba\ufb04e`; // "difficult waffle off final baffle"
+  const items = [makeItem(`The word is ${words} today.`, 50, 700), ...fillerItems(4, 680)];
+  const pdfDoc = makeFakePdfDoc([items]);
+  const blocks = await _p2mdExtractText(pdfDoc);
+  const md = _p2mdRender(blocks);
+  expect(md.includes('difficult waffle off final baffle')).toBeTruthy();
+  expect(/[\ufb00-\ufb06]/.test(md)).toBe(false); // no raw ligature codepoints survive
+});
+
 // ── Summary ────────────────────────────────────────────────────
 console.log(`\n${'─'.repeat(40)}`);
 console.log(`Tests: ${passed + failed} | ✓ ${passed} | ${failed > 0 ? '✗ ' + failed : '0 failed'}`);

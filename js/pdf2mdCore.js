@@ -49,6 +49,28 @@ import { BULLET_RE, NUMBERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
          _visualRTLToLogical, _splitCrossColumnLines, _isCjk,
          joinHyphenatedLineEnd } from './textLayoutUtils.js';
 
+// Latin typographic ligatures (Unicode "Alphabetic Presentation Forms" block,
+// U+FB00-FB06) — a PDF commonly encodes "fi"/"fl"/"ffi" etc. as ONE of these
+// single glyphs rather than the two-or-three separate letters, so a naive
+// downstream word-boundary/dictionary/search match on the extracted text
+// silently misses them (e.g. "difficult" extracted with the U+FB03 "ffi"
+// ligature won't match a search for "difficult" or a dehyphenation
+// dictionary lookup for "ffi"-containing words). Deliberately a small,
+// explicit map rather than blanket NFKC normalization: NFKC also folds
+// superscripts, fullwidth forms, and other compatibility characters this
+// project hasn't verified are safe to silently rewrite everywhere — same
+// "prefer false negatives" reasoning as every other detector in this file.
+const LIGATURE_MAP = {
+  'ﬀ': 'ff', 'ﬁ': 'fi', 'ﬂ': 'fl',
+  'ﬃ': 'ffi', 'ﬄ': 'ffl', 'ﬅ': 'st', 'ﬆ': 'st',
+};
+// String.replace with a global regex is safe to call directly on every
+// string (no shared .lastIndex state risk the way reused .test()/.exec()
+// calls have) — no pre-check needed before this.
+function _foldLigatures(s) {
+  return s.replace(/[ﬀ-ﬆ]/g, ch => LIGATURE_MAP[ch]);
+}
+
 // Escapes literal CommonMark-special characters found in TEXT EXTRACTED
 // FROM THE SOURCE PDF, before that text is emitted into the rendered
 // Markdown — real bug found via scripts/pdf2md_benchmark.mjs's own first
@@ -375,7 +397,7 @@ export async function _p2mdExtractText(pdfDoc, {
         // extraction never got the equivalent fix until now. Real,
         // independently-documented failure mode for this exact
         // dependency (pdf.js): mozilla/pdf.js#11016, #11779, #18201.
-        const nfcStr = item.str.normalize('NFC');
+        const nfcStr = _foldLigatures(item.str.normalize('NFC'));
         const str = ((item.dir === 'rtl') ? _visualRTLToLogical(nfcStr) : nfcStr)
           .split(' ').join('');
         // Formula wins over bold/italic when both would otherwise apply —
