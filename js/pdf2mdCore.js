@@ -46,7 +46,8 @@
 import { detectTables, looksLikeProseNotData } from './pdf2wordTables.js';
 import { detectColumnRegions, pageIsRtl } from './pdf2wordColumns.js';
 import { BULLET_RE, NUMBERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
-         _visualRTLToLogical, _splitCrossColumnLines, _isCjk } from './textLayoutUtils.js';
+         _visualRTLToLogical, _splitCrossColumnLines, _isCjk,
+         joinHyphenatedLineEnd } from './textLayoutUtils.js';
 
 // Real HTMLCanvasElement satisfies the canvasFactory contract natively —
 // this is the default used by processor.js's browser tool (and by this
@@ -610,11 +611,34 @@ export async function _p2mdExtractText(pdfDoc, {
     if (!text) return;
 
     // One flat run array for the whole paragraph — lines joined by a plain
-    // (never-bold/italic) space run, matching _lineText's own `.join(' ')`.
+    // (never-bold/italic) space run, matching _lineText's own `.join(' ')`
+    // — UNLESS the previous line ends mid-word with a soft PDF line-wrap
+    // hyphen (joinHyphenatedLineEnd, js/textLayoutUtils.js), in which case
+    // the two runs merge directly with no join-space at all. Guarded on
+    // RTL (no real test coverage for hyphenation in RTL scripts — same
+    // "leave RTL alone" policy this file already follows elsewhere),
+    // formula runs (never rewrite math), and matching bold/italic (a real
+    // hyphen break essentially never switches formatting mid-word; if it
+    // did, merging would silently pick one side's formatting for both).
     const runs = [];
     for (let i = 0; i < linesCopy.length; i++) {
-      if (i > 0) runs.push({ text: ' ', bold: false, italic: false, formula: false });
-      runs.push(..._lineRuns(linesCopy[i]));
+      const curRuns = _lineRuns(linesCopy[i]);
+      if (i > 0) {
+        const prevRun = runs[runs.length - 1];
+        const nextRun = curRuns[0];
+        const canTryHyphen = prevRun && nextRun &&
+          !linesCopy[i - 1].rtl && !linesCopy[i].rtl &&
+          !prevRun.formula && !nextRun.formula &&
+          prevRun.bold === nextRun.bold && prevRun.italic === nextRun.italic;
+        const hyphenResult = canTryHyphen ? joinHyphenatedLineEnd(prevRun.text, nextRun.text) : null;
+        if (hyphenResult) {
+          prevRun.text = hyphenResult.text;
+          curRuns.shift(); // merged into prevRun — don't push its own copy too
+        } else {
+          runs.push({ text: ' ', bold: false, italic: false, formula: false });
+        }
+      }
+      runs.push(...curRuns);
     }
     // Trim leading/trailing whitespace off the paragraph as a whole (mirrors
     // the flat `text`'s own `.trim()`) without disturbing interior runs.

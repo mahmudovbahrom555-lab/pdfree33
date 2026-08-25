@@ -146,3 +146,99 @@ export function _splitCrossColumnLines(lines, pageW) {
 export function _isCjk(str) {
   return /[\u3040-\u30FF\u4E00-\u9FFF\uAC00-\uD7AF\u3400-\u4DBF\uF900-\uFAFF]/.test(str);
 }
+
+// \u2500\u2500 Hyphen-orphan repair \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+// A justified/narrow-column PDF (common in academic papers, the same corpus
+// column-detection above was calibrated against) routinely breaks a word
+// across a line with a soft, appearance-only hyphen: "informa-" / "tion".
+// Left unfixed, pdf2md's line-join (a plain space between lines) turns this
+// into "informa- tion" in the output Markdown \u2014 exactly the kind of
+// structural noise that corrupts token/embedding quality for a downstream
+// RAG consumer worse than the whitespace noise older cleanup passes
+// targeted (see the Atlas structural-check discussion this shipped
+// alongside: real, measured paragraph fragmentation already showed up as a
+// checkFlow finding on real documents).
+//
+// Deliberately text-only (no PDF geometry/right-margin check): a real
+// hard-hyphenated compound ("well-known") landing at a line break is
+// genuinely ambiguous from text alone, and false positives here are the
+// prevention target \u2014 see the two guards below (ALL-CAPS stem, exception
+// dictionary) for how that ambiguity is resolved. "Prefer false negatives"
+// \u2014 the same philosophy this file's other detectors already follow \u2014
+// applies in reverse here: defaulting to STRIP-when-ambiguous is correct
+// specifically because soft breaks are the overwhelming real-world case
+// (this is the one hypothesis of this kind confirmed safe to apply
+// unconditionally, unlike inferring column order or table-vs-prose from
+// text patterns alone \u2014 both of those are already solved upstream via real
+// geometry, see pdf2wordColumns.js/pdf2wordTables.js).
+//
+// Common English hard-hyphenated compounds that must NOT be de-hyphenated
+// even when they happen to break at their own hyphen \u2014 a small, curated
+// list (not exhaustive; a compound missing from this list still gets
+// joined, just without its hyphen, a minor quality ding, not a regression
+// from today's "leave it broken" default).
+const HYPHEN_COMPOUND_EXCEPTIONS = new Set([
+  'e-mail', 'x-ray', 't-shirt', 'a-list', 'u-turn',
+  'state-of-the-art', 'well-known', 'well-being', 'well-defined', 'well-established',
+  'self-driving', 'self-aware', 'self-esteem', 'self-employed', 'self-service',
+  'co-founder', 'co-author', 'co-worker', 'co-operate', 'co-exist',
+  'non-profit', 'non-existent', 'non-negotiable', 'non-linear', 'non-native',
+  'up-to-date', 'long-term', 'short-term', 'high-quality', 'low-cost',
+  'real-time', 'full-time', 'part-time', 'one-time', 'follow-up', 'check-in',
+  'check-out', 'built-in', 'hands-on', 'in-depth', 'pre-existing', 'post-war',
+  'editor-in-chief', 'mother-in-law', 'father-in-law', 'over-the-counter',
+]);
+
+// URL/email/identifier-shaped text must never be de-hyphenated \u2014 a hyphen
+// there is virtually always semantic (a real path/slug segment), and
+// splicing it out would corrupt the token, not just misjudge a compound
+// word. Checked against the FULL prevText/nextText, not just the narrow
+// stem+continuation match: a domain suffix like ".com" routinely falls
+// outside `continuation` (the match stops at the first non-letter), so a
+// break like "example-" / "site.com" would otherwise slip through with
+// ".com" sitting unchecked in the leftover tail. Deliberately errs toward
+// over-blocking (a real hyphen elsewhere in the same run, unrelated to a
+// URL mentioned nearby, also gets skipped) \u2014 "prefer false negatives",
+// same policy this file's other detectors already follow; the cost is one
+// unjoined word, not a corrupted URL/email token.
+const _LOOKS_LIKE_CODE_OR_URL_RE = /https?:|www\.|@|_|\.[a-z]{2,4}\b/i;
+
+/**
+ * joinHyphenatedLineEnd(prevText, nextText) -> { text, hyphenKept } | null
+ *
+ * Pure text decision, no PDF geometry or run/formatting concerns \u2014 the
+ * caller (js/pdf2mdCore.js's _flushPara) owns deciding WHETHER to even ask
+ * (skipping RTL lines, formula-tagged runs) and how to splice the result
+ * back into its own run array. Returns null when `prevText`/`nextText`
+ * don't look like a genuine line-wrap hyphen break at all (the overwhelming
+ * common case \u2014 this function is a no-op for ordinary text).
+ */
+export function joinHyphenatedLineEnd(prevText, nextText) {
+  const stemMatch = /(\p{L}{2,})-$/u.exec(prevText);
+  if (!stemMatch) return null;
+  const contMatch = /^\p{Ll}[\p{L}]*/u.exec(nextText);
+  if (!contMatch) return null; // continuation must start lowercase \u2014 a capitalized
+                                // word starting the next line is a new sentence/proper
+                                // noun, not a broken word's continuation.
+
+  const stem         = stemMatch[1];
+  const continuation = contMatch[0];
+  const withHyphen   = `${stem}-${continuation}`;
+  const withoutHyphen = `${stem}${continuation}`;
+  const restOfNext   = nextText.slice(continuation.length);
+  const restOfPrev   = prevText.slice(0, prevText.length - stemMatch[0].length);
+
+  if (_LOOKS_LIKE_CODE_OR_URL_RE.test(prevText) || _LOOKS_LIKE_CODE_OR_URL_RE.test(nextText)) return null;
+
+  // An ALL-CAPS stem (an acronym/initialism \u2014 "NASA-approved") is a real,
+  // semantic hyphen almost by definition: a genuine soft line-break happens
+  // mid-word, and mid-word fragments of ordinary prose are essentially
+  // never all-caps on their own.
+  const stemIsAllCaps = stem === stem.toUpperCase() && stem !== stem.toLowerCase();
+  const keepHyphen = stemIsAllCaps || HYPHEN_COMPOUND_EXCEPTIONS.has(withHyphen.toLowerCase());
+
+  return {
+    text: restOfPrev + (keepHyphen ? withHyphen : withoutHyphen) + restOfNext,
+    hyphenKept: keepHyphen,
+  };
+}

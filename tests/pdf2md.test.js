@@ -795,6 +795,71 @@ await test('a short formula run mixed into a longer prose line (existing inline 
   expect(md.includes('$x=y+z$')).toBeTruthy();
 });
 
+// ── Hyphen-orphan repair (joinHyphenatedLineEnd wired into _flushPara) ──
+// Unit coverage for the pure decision function itself lives in
+// tests/textLayoutUtils.test.js — these are end-to-end: real pdf.js-shaped
+// two-line input, through the full paragraph-merge + run-join pipeline.
+
+await test('a word broken across two lines by a soft PDF line-wrap hyphen is rejoined, hyphen dropped', async () => {
+  const items = [
+    makeItem('This word is informa-', 50, 700, 10, 'F-Plain'),
+    makeItem('tion that continues normally.', 50, 688, 10, 'F-Plain'),
+  ];
+  const pdfDoc = makeFakePdfDoc([items]);
+  const blocks = await _p2mdExtractText(pdfDoc);
+  const md = _p2mdRender(blocks);
+  expect(md.includes('This word is information that continues normally.')).toBeTruthy();
+  expect(md.includes('informa-')).toBe(false);
+});
+
+await test('a real hard-hyphenated compound word broken at its own hyphen keeps the hyphen (exception dictionary)', async () => {
+  const items = [
+    makeItem('We used a well-', 50, 700, 10, 'F-Plain'),
+    makeItem('known approach for this.', 50, 688, 10, 'F-Plain'),
+  ];
+  const pdfDoc = makeFakePdfDoc([items]);
+  const blocks = await _p2mdExtractText(pdfDoc);
+  const md = _p2mdRender(blocks);
+  expect(md.includes('We used a well-known approach for this.')).toBeTruthy();
+});
+
+await test('an ALL-CAPS stem (acronym) keeps its hyphen even outside the exception dictionary', async () => {
+  const items = [
+    makeItem('The system is NASA-', 50, 700, 10, 'F-Plain'),
+    makeItem('approved for launch.', 50, 688, 10, 'F-Plain'),
+  ];
+  const pdfDoc = makeFakePdfDoc([items]);
+  const blocks = await _p2mdExtractText(pdfDoc);
+  const md = _p2mdRender(blocks);
+  expect(md.includes('The system is NASA-approved for launch.')).toBeTruthy();
+});
+
+await test('a line ending in a hyphen followed by a CAPITALIZED next line is NOT joined (new sentence, not a broken word)', async () => {
+  const items = [
+    makeItem('The results were inconclusive-', 50, 700, 10, 'F-Plain'),
+    makeItem('Further study is needed.', 50, 688, 10, 'F-Plain'),
+  ];
+  const pdfDoc = makeFakePdfDoc([items]);
+  const blocks = await _p2mdExtractText(pdfDoc);
+  const md = _p2mdRender(blocks);
+  expect(md.includes('inconclusive- Further') || md.includes('inconclusive-\nFurther')).toBeTruthy();
+});
+
+await test('a math-font run ending in a hyphen-like glyph is never rewritten (formula protection)', async () => {
+  const items = [
+    makeItem('a-', 50, 700, 10, 'F-Math'),
+    makeItem('b continues the expression.', 50, 688, 10, 'F-Plain'),
+  ];
+  const pdfDoc = makeFakePdfDocWithFontNames(items, {
+    'F-Math':  'ABCDEF+CMMI10',
+    'F-Plain': 'ABCDEF+NotoSans',
+  });
+  const blocks = await _p2mdExtractText(pdfDoc);
+  const md = _p2mdRender(blocks);
+  // formula run stays intact ($a-$), never silently merged into the next word
+  expect(md.includes('$a-$')).toBeTruthy();
+});
+
 // ── Summary ────────────────────────────────────────────────────
 console.log(`\n${'─'.repeat(40)}`);
 console.log(`Tests: ${passed + failed} | ✓ ${passed} | ${failed > 0 ? '✗ ' + failed : '0 failed'}`);
