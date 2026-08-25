@@ -299,7 +299,9 @@ export async function _p2mdExtractText(pdfDoc, {
                 `Reading page ${p}/${pdfDoc.numPages}…`);
 
     const page    = await pdfDoc.getPage(p);
-    const pageW   = page.getViewport({ scale: 1 }).width;
+    const pageVp1 = page.getViewport({ scale: 1 });
+    const pageW   = pageVp1.width;
+    const pageH   = pageVp1.height; // needed for the footnote Y-band check below
     // getOperatorList() runs alongside getTextContent() purely to force pdf.js
     // to resolve font objects into page.commonObjs — same fix pdf2word's
     // _p2wBuildPageData applies, and for the same confirmed reason: without
@@ -365,7 +367,16 @@ export async function _p2mdExtractText(pdfDoc, {
         const fontSize = (item.height > 0 ? item.height : Math.abs(item.transform[3])) || 10;
         const style    = content.styles[item.fontName] || {};
         const fam      = (style.fontFamily || '').toLowerCase();
-        const str = ((item.dir === 'rtl') ? _visualRTLToLogical(item.str) : item.str)
+        // NFC-normalize before anything else touches this string — a PDF
+        // commonly encodes diacritic-heavy scripts as decomposed (NFD)
+        // combining-character sequences; pdf2word's own DOCX path
+        // (eriAnatomy.js's ownParagraphText) already had to fix the exact
+        // same bug class for real Vietnamese text, but pdf2md's own
+        // extraction never got the equivalent fix until now. Real,
+        // independently-documented failure mode for this exact
+        // dependency (pdf.js): mozilla/pdf.js#11016, #11779, #18201.
+        const nfcStr = item.str.normalize('NFC');
+        const str = ((item.dir === 'rtl') ? _visualRTLToLogical(nfcStr) : nfcStr)
           .split(' ').join('');
         // Formula wins over bold/italic when both would otherwise apply —
         // math-italic glyphs (variables) are a font-design artifact, not a
@@ -529,7 +540,7 @@ export async function _p2mdExtractText(pdfDoc, {
     }
 
     allSizes.push(...items.map(i => i.fontSize).filter(s => s > 0));
-    pageData.push({ lines, pageW });
+    pageData.push({ lines, pageW, pageH });
     page.cleanup?.();
   }
 
@@ -855,7 +866,48 @@ export async function _p2mdExtractText(pdfDoc, {
     _flushPara();
   };
 
-  for (const { lines, pageW } of pageData) {
+  // Footnote/marginal-text separation — real gap found via literature
+  // research (GROBID, PDFBoT arXiv:2010.12647 — both use bottom-of-page-Y +
+  // below-median-font-size as the real, precision-favoring signal, not text
+  // patterns): a footnote paragraph sitting at the bottom of the page in a
+  // smaller font currently just flows straight into the ordinary paragraph
+  // stream wherever its Y-coordinate happens to sort, interrupting body-text
+  // flow — exactly the fragmentation eriChecks.js's own checkFlow already
+  // penalizes downstream, never fixed upstream. Both signals required
+  // (precision-first, "prefer false negatives" — same policy this file's
+  // other detectors already follow): a real body paragraph that merely ends
+  // near the bottom of a page must never be misclassified as a footnote.
+  const FOOTNOTE_Y_BAND_FRACTION  = 0.15; // bottom 15% of page height (PDF Y=0 is the page BOTTOM)
+  const FOOTNOTE_FONT_RATIO       = 0.85; // must be meaningfully smaller than the document's own median
+  // Real false-positive found via a dense, formula-heavy physics paper
+  // (scripts/pdf2md_benchmark.mjs's Atlas_DR corpus run): stray equation
+  // fragments/sub/superscript glyphs near a page's bottom margin can also
+  // be small relative to the document median, which is otherwise
+  // dominated by body-prose font size — but a real footnote is citation
+  // PROSE, not a chunk of an equation. Excluding lines that are mostly
+  // formula-tagged keeps the legal-brief-footnotes real-world case
+  // (verified working — citations correctly separated) while dropping
+  // this false-positive class.
+  const FOOTNOTE_MAX_FORMULA_FRACTION = 0.5;
+
+  for (const { lines, pageW, pageH } of pageData) {
+    let bodyLines = lines;
+    let footnoteLines = [];
+    if (pageH) {
+      const yThreshold = pageH * FOOTNOTE_Y_BAND_FRACTION;
+      footnoteLines = lines.filter(ln => {
+        if (!ln.items.length || ln.isImage || ln.y > yThreshold) return false;
+        if (Math.max(...ln.items.map(i => i.fontSize)) >= median * FOOTNOTE_FONT_RATIO) return false;
+        const totalLen   = ln.items.reduce((s, i) => s + i.str.length, 0);
+        const formulaLen = ln.items.reduce((s, i) => s + (i.formula ? i.str.length : 0), 0);
+        return totalLen > 0 && (formulaLen / totalLen) < FOOTNOTE_MAX_FORMULA_FRACTION;
+      });
+      if (footnoteLines.length) {
+        const footnoteSet = new Set(footnoteLines);
+        bodyLines = lines.filter(ln => !footnoteSet.has(ln));
+      }
+    }
+
     // Column-aware dispatch — same "prefer false negatives" detector as
     // pdf2word's _p2wBuildParagraphs: detectColumnRegions() only returns
     // non-null on confident multi-column evidence, so the overwhelming
@@ -866,15 +918,34 @@ export async function _p2mdExtractText(pdfDoc, {
     // _splitCrossColumnLines above only separates merged lines into
     // distinct objects, it doesn't reorder `lines` itself, so without this
     // dispatch they'd still come out interleaved by Y.
-    const regions = pageW ? detectColumnRegions(lines, pageW) : null;
+    const regions = pageW ? detectColumnRegions(bodyLines, pageW) : null;
     if (!regions) {
-      _emitLines(lines);
+      _emitLines(bodyLines);
     } else {
-      const ordered = pageIsRtl(lines) ? [...regions].reverse() : regions;
+      const ordered = pageIsRtl(bodyLines) ? [...regions].reverse() : regions;
       for (const region of ordered) {
-        const colLines = lines.filter(ln =>
+        const colLines = bodyLines.filter(ln =>
           ln.items.length && ln.items[0].x >= region.left && ln.items[0].x < region.right);
         if (colLines.length) _emitLines(colLines);
+      }
+    }
+
+    // Emitted as its own trailing paragraph for the page, AFTER the body
+    // content above and flushed first — never spliced mid-flow — so a real
+    // footnote's own text isn't lost (unlike silently dropping it), just
+    // kept out of the way of the body paragraph it would otherwise corrupt.
+    // Italicized as the one, minimal visual/semantic distinction from body
+    // text — no added heading, no horizontal rule, deliberately avoiding
+    // visual clutter on documents with a footnote on every page.
+    if (footnoteLines.length) {
+      _flushPara();
+      footnoteLines.sort((a, b) => b.y - a.y);
+      const footnoteText = footnoteLines.map(_lineText).join(' ').replace(/\s+/g, ' ').trim();
+      if (footnoteText) {
+        // Raw text, NOT pre-escaped here — wrapRun (_p2mdRender) already
+        // escapes every run's own text at render time; escaping here too
+        // would double-escape (e.g. "\*" becoming "\\\*").
+        blocks.push({ type: 'para', runs: [{ text: footnoteText, bold: false, italic: true, formula: false }] });
       }
     }
   }

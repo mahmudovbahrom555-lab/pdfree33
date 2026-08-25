@@ -984,6 +984,82 @@ await test('a page with real extractable text is NOT given the OCR hint, even if
   expect(md.includes('No extractable text was found')).toBe(false);
 });
 
+// ── NFC Unicode normalization — real bug found by scripts/*/agent research: ──
+// a PDF commonly encodes diacritic-heavy scripts as decomposed (NFD)
+// combining-character sequences; the DOCX path (eriAnatomy.js) already had to
+// fix the identical bug class for real Vietnamese text, but pdf2md's own
+// extraction never got the equivalent fix until now.
+
+await test('a decomposed (NFD) diacritic is normalized to its precomposed (NFC) form', async () => {
+  // Built from explicit code points, never a pasted character (so the
+  // test file's own encoding can't quietly precompose it first): base
+  // "e" (U+0065) + a standalone COMBINING ACUTE ACCENT (U+0301) — the
+  // exact decomposed shape a real PDF's text stream can legitimately
+  // contain — must come out as the single precomposed "\u00e9" in the
+  // rendered Markdown.
+  const precomposedE = '\u00e9';
+  const decomposedE   = 'e\u0301';
+  const decomposedWord = `caf${decomposedE}`; // decomposed "caf\u0065\u0301"
+  const precomposedWord = `caf${precomposedE}`;
+  const items = [makeItem(`This is a ${decomposedWord} shop.`, 50, 700), ...fillerItems(4, 680)];
+  const pdfDoc = makeFakePdfDoc([items]);
+  const blocks = await _p2mdExtractText(pdfDoc);
+  const md = _p2mdRender(blocks);
+  expect(md.includes(precomposedWord)).toBeTruthy(); // precomposed form present
+  expect(md.includes(decomposedWord)).toBe(false);   // decomposed form gone
+  expect(md.normalize('NFC') === md).toBeTruthy();   // whole output is already NFC-stable
+});
+
+// ── Footnote/marginal-text separation — real gap found by literature ──────
+// research (GROBID, PDFBoT arXiv:2010.12647): bottom-of-page Y-band AND
+// below-median font size, both required (precision-first, "prefer false
+// negatives") — geometry pdf2mdCore.js already computes for other purposes
+// (median font size for heading detection), just never applied here before.
+// Default fake page height is 800 (see makeFakePage), so the bottom-15%
+// band is y <= 120.
+
+await test('a real footnote-shaped line (bottom of page, small font) is separated from body flow, not merged mid-paragraph', async () => {
+  const items = [
+    makeItem('This is the main body paragraph text on the page.', 50, 700, 10),
+    ...fillerItems(3, 680),
+    makeItem('1 This is a footnote at the bottom of the page.', 50, 50, 7), // y=50 (bottom band), fontSize=7 (< 10*0.85)
+  ];
+  const pdfDoc = makeFakePdfDoc([items]);
+  const blocks = await _p2mdExtractText(pdfDoc);
+  const md = _p2mdRender(blocks);
+  // content preserved, not silently dropped...
+  expect(md.includes('This is a footnote at the bottom of the page.')).toBeTruthy();
+  // ...but rendered as its own italicized paragraph (the one, minimal visual
+  // distinction from body text), not spliced into the body paragraph above it
+  expect(md.includes('*1 This is a footnote at the bottom of the page.*')).toBeTruthy();
+  expect(md.includes('main body paragraph text on the page. 1 This is a footnote')).toBe(false);
+});
+
+await test('body text near the bottom of the page (same font size as the rest) is NOT misclassified as a footnote', async () => {
+  const items = [
+    makeItem('This is the main body paragraph text on the page.', 50, 700, 10),
+    ...fillerItems(3, 680),
+    makeItem('This is still real body text near the bottom, same font size.', 50, 50, 10),
+  ];
+  const pdfDoc = makeFakePdfDoc([items]);
+  const blocks = await _p2mdExtractText(pdfDoc);
+  const md = _p2mdRender(blocks);
+  expect(md.includes('*This is still real body text')).toBe(false);
+  expect(md.includes('This is still real body text near the bottom, same font size.')).toBeTruthy();
+});
+
+await test('a small-font line NOT at the bottom of the page is NOT misclassified as a footnote (both signals required)', async () => {
+  const items = [
+    makeItem('This is the main body paragraph text on the page.', 50, 700, 10),
+    makeItem('Small caption text mid-page.', 50, 400, 7), // small font, but well outside the bottom band
+    ...fillerItems(3, 300),
+  ];
+  const pdfDoc = makeFakePdfDoc([items]);
+  const blocks = await _p2mdExtractText(pdfDoc);
+  const md = _p2mdRender(blocks);
+  expect(md.includes('*Small caption text')).toBe(false);
+});
+
 // ── Summary ────────────────────────────────────────────────────
 console.log(`\n${'─'.repeat(40)}`);
 console.log(`Tests: ${passed + failed} | ✓ ${passed} | ${failed > 0 ? '✗ ' + failed : '0 failed'}`);
