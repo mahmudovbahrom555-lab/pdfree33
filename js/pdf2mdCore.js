@@ -423,6 +423,19 @@ export async function _p2mdExtractText(pdfDoc, {
           bold:    !isFormula && (_isFontBold(item.fontName) || BOLD_FONT_NAME_RE.test(fam)),
           italic:  !isFormula && /italic|oblique/.test(fam),
           formula: isFormula,
+          // A PDF text-showing matrix [a,b,c,d,e,f] has a/d as the dominant
+          // scale terms for ordinary horizontal text (b/c ~0); a text run
+          // rotated ~90° (common: arXiv's vertical "arXiv:2026.NNNNN [cs.CL]
+          // ..." identifier printed as a sidebar along the page's left
+          // margin) has that reversed — b/c dominate, a/d ~0. Found via a
+          // real arXiv fixture (tests/fixtures/columns/2608.11441.pdf):
+          // that vertical sidebar spans nearly the page's full height, so
+          // its Y-coordinate coincides with an unrelated horizontal body
+          // line purely by chance, and the line-grouping below (Y-proximity
+          // only, no rotation check) fused the two into one "line" —
+          // corrupting real body text mid-word ("2026tuned on one or
+          // more..." instead of a normal line break between them).
+          rotated: Math.abs(item.transform[1]) > Math.abs(item.transform[0]),
         };
       });
 
@@ -430,9 +443,16 @@ export async function _p2mdExtractText(pdfDoc, {
     for (const item of [...items].sort((a, b) => b.y - a.y)) {
       let merged = false;
       for (const ln of lines) {
-        if (Math.abs(ln.y - item.y) <= YTOL) { ln.items.push(item); merged = true; break; }
+        // Same rotation bucket required alongside Y-proximity — see the
+        // `rotated` field's own comment above. A genuinely single line of
+        // text never mixes horizontal and ~90°-rotated glyphs; requiring
+        // both to agree costs nothing on the overwhelming majority (all-
+        // horizontal) case and only ever prevents a cross-orientation glue.
+        if (Math.abs(ln.y - item.y) <= YTOL && !!ln.rotated === !!item.rotated) {
+          ln.items.push(item); merged = true; break;
+        }
       }
-      if (!merged) lines.push({ y: item.y, items: [item] });
+      if (!merged) lines.push({ y: item.y, items: [item], rotated: item.rotated });
     }
     lines.forEach(ln => {
       const txt    = ln.items.map(i => i.str).join('');
