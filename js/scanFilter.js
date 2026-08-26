@@ -36,6 +36,17 @@
 const BG_LONG_EDGE = 64;
 const _STRENGTH = 0.5; // fixed default — no exposed UI control in v1
 
+// Backstop, not the primary fix — js/scanDocumentUI.js's own decode paths
+// already cap resolution before calling in here (see its
+// MAX_SCAN_LONG_EDGE's comment for the real-device OOM this guards
+// against: a raw camera photo — 12-48MP on many phones now, budget
+// devices included — flowing uncapped through this multi-pass full-
+// resolution filter chain, each pass allocating its own ImageData
+// buffer). Kept here too as defense-in-depth for any caller that decodes
+// its own source without going through that cap (e.g. a live-camera
+// capture canvas).
+const MAX_FILTER_LONG_EDGE = 2200;
+
 function _toGrayscaleCanvas(src) {
   const dst = document.createElement('canvas');
   dst.width = src.width; dst.height = src.height;
@@ -227,11 +238,14 @@ function _applyEnhanceColor(canvas, strength) {
  * @returns {Promise<Blob>}
  */
 export function filterScanPhoto(imgEl, mode = 'grayscale') {
-  const w = imgEl.naturalWidth || imgEl.width;
-  const h = imgEl.naturalHeight || imgEl.height;
+  const rawW = imgEl.naturalWidth || imgEl.width;
+  const rawH = imgEl.naturalHeight || imgEl.height;
+  const scale = Math.min(1, MAX_FILTER_LONG_EDGE / Math.max(rawW, rawH));
+  const w = Math.max(1, Math.round(rawW * scale));
+  const h = Math.max(1, Math.round(rawH * scale));
   const src = document.createElement('canvas');
   src.width = w; src.height = h;
-  src.getContext('2d').drawImage(imgEl, 0, 0);
+  src.getContext('2d').drawImage(imgEl, 0, 0, w, h);
 
   if (mode === 'color') {
     const gray = _toGrayscaleCanvas(src);

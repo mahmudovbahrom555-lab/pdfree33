@@ -43,6 +43,49 @@ import { openScanCamera, openCropReview } from './scanCameraUI.js';
 const _MANY_IMAGES_WARN_THRESHOLD = 80; // same soft heads-up as jpg2pdfUI.js
 let _warnedManyImages = false;
 
+// Long-edge cap applied to a decoded source photo before ANY geometry or
+// filter processing touches it. Found via a real user report: a raw camera
+// photo (many phones now ship 12-48MP main sensors — a "budget" device is
+// not exempt, e.g. a Redmi 8's 12MP main camera already decodes to
+// ~4000x3000) flows completely uncapped through this tool's whole pipeline
+// today — corner-detection/crop-review, js/scanGeometry.js's OpenCV.js
+// perspective warp (cv.imread/warpPerspective allocate a full-resolution
+// Mat), and js/scanFilter.js's multi-pass grayscale/background-estimate/
+// median-filter/unsharp-mask/enhance chain (each pass allocates a new
+// full-size ImageData buffer) — all on the main thread. On a multi-page
+// scan this reliably exhausted the tab's memory budget on a real
+// low-RAM device, while js/cleanScanUI.js (a different tool, PDF-page
+// based) never hit the same wall because it always renders at a
+// deliberately capped scale, never raw camera-native resolution.
+// 2200px long edge is comfortably print/OCR quality — ≈190 DPI on an
+// A4/Letter page's long edge (297mm ≈ 11.7in × 190dpi ≈ 2223px) — while
+// cutting memory for every downstream full-resolution operation by
+// 3-10x+ depending on the source camera's real resolution.
+const MAX_SCAN_LONG_EDGE = 2200;
+
+// Draws `img` (already known to be `rawW`×`rawH` in its final, post-EXIF-
+// rotation orientation) into a NEW canvas capped to MAX_SCAN_LONG_EDGE,
+// scaled uniformly so it never upscales a source that's already smaller.
+// Shared by every decode path below so the cap can't be missed on one of
+// them — see MAX_SCAN_LONG_EDGE's own comment for why this matters.
+function _capLongEdge(img, rawW, rawH, angle = 0) {
+  const scale = Math.min(1, MAX_SCAN_LONG_EDGE / Math.max(rawW, rawH));
+  const outW  = Math.max(1, Math.round(rawW * scale));
+  const outH  = Math.max(1, Math.round(rawH * scale));
+  const canvas = document.createElement('canvas');
+  canvas.width = outW; canvas.height = outH;
+  const ctx = canvas.getContext('2d');
+  if (angle === 0) {
+    ctx.drawImage(img, 0, 0, outW, outH);
+    return canvas;
+  }
+  ctx.translate(outW / 2, outH / 2);
+  ctx.rotate(angle * Math.PI / 180);
+  ctx.scale(scale, scale);
+  ctx.drawImage(img, -img.naturalWidth / 2, -img.naturalHeight / 2);
+  return canvas;
+}
+
 // ── State ──────────────────────────────────────────────────────
 let _pageSize    = 'auto';
 let _orientation = 'auto';
@@ -199,22 +242,10 @@ async function _decodeWithExifRotation(file) {
   await new Promise((res, rej) => { img.onload = res; img.onerror = rej; img.src = url; });
   URL.revokeObjectURL(url);
 
-  if (angle === 0) {
-    const canvas = document.createElement('canvas');
-    canvas.width = img.naturalWidth; canvas.height = img.naturalHeight;
-    canvas.getContext('2d').drawImage(img, 0, 0);
-    return canvas;
-  }
-
   const swap = angle === 90 || angle === 270;
-  const canvas = document.createElement('canvas');
-  canvas.width  = swap ? img.naturalHeight : img.naturalWidth;
-  canvas.height = swap ? img.naturalWidth  : img.naturalHeight;
-  const ctx = canvas.getContext('2d');
-  ctx.translate(canvas.width / 2, canvas.height / 2);
-  ctx.rotate(angle * Math.PI / 180);
-  ctx.drawImage(img, -img.naturalWidth / 2, -img.naturalHeight / 2);
-  return canvas;
+  const rawW = swap ? img.naturalHeight : img.naturalWidth;
+  const rawH = swap ? img.naturalWidth  : img.naturalHeight;
+  return _capLongEdge(img, rawW, rawH, angle);
 }
 
 // ── "Take Photo" — always goes through the live camera + review
@@ -276,7 +307,11 @@ function _bindTakePhotoButton() {
       const img = new Image();
       await new Promise((res, rej) => { img.onload = res; img.onerror = rej; img.src = url; });
       URL.revokeObjectURL(url);
-      const blob = await filterScanPhoto(img, _scanFilterMode);
+      // No crop-review step in this fallback path (native camera app, used
+      // when getUserMedia isn't available) — cap resolution here directly,
+      // same as _decodeWithExifRotation does for the gallery/review path.
+      const capped = _capLongEdge(img, img.naturalWidth, img.naturalHeight);
+      const blob = await filterScanPhoto(capped, _scanFilterMode);
       const scanFile = new File([blob], `scan-${Date.now()}.jpg`, { type: 'image/jpeg' });
       scanFile._scanReviewed = true;
       addFiles([scanFile]);
