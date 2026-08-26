@@ -22,6 +22,21 @@
 // common outcome whenever detection is remotely ambiguous.
 // ─────────────────────────────────────────────────────────────────────────────
 
+import { detectTables } from './pdf2wordTables.js';
+
+// A confident detectTables() match covering at least this fraction of the
+// candidate lines means this is tabular data (e.g. a financial statement's
+// label|amount rows), not two independent reading-flow columns — see the
+// guard at the bottom of detectColumnRegions() for the real-document
+// evidence behind this number: on financial-nested-subtotals.pdf (a real
+// label|amount table, 13 lines) detectTables() confidently covers 92% of
+// them, while the worst false-positive across 5 real, license-verified
+// 2-column academic PDFs (tests/fixtures/columns/ — mostly stray
+// references/bibliography lines that already have a separate, known,
+// unrelated mis-detection issue) tops out at 25%. 50% sits with a wide
+// margin on both sides of that real, measured gap.
+const TABLE_GUARD_FRACTION = 0.5;
+
 const TOLERANCE          = 40;   // pt — candidate column-start X's within this → same column
 const MIN_LINES_ABS      = 5;    // a column needs at least this many lines...
 const MIN_LINES_FRACTION = 0.15; // ...or this fraction of the page's lines, whichever is stricter
@@ -146,6 +161,19 @@ export function detectColumnRegions(lines, pageWidth) {
     }
   }
   if (real.length < 2 || real.length > MAX_COLUMNS) return null;
+
+  // Table guard — see TABLE_GUARD_FRACTION's own comment above. Reuses
+  // detectTables() (pdf2wordTables.js, already tuned + regression-guarded,
+  // e.g. the debit/credit ledger case) rather than inventing a new
+  // heuristic here: a real 2-column table has every row's items align
+  // consistently at both cluster X-positions, exactly what that function
+  // is built to recognize. Checked against the ORIGINAL, unsplit `lines`
+  // (not the per-cluster candidates) since that's what a real table's rows
+  // still look like at this point in the pipeline — the caller hasn't
+  // split anything yet.
+  const tableLineCount = detectTables(lines)
+    .reduce((n, t) => n + (t.endIdx - t.startIdx + 1), 0);
+  if (tableLineCount >= lines.length * TABLE_GUARD_FRACTION) return null;
 
   return real.map((c, idx) => ({
     left:  idx === 0                ? 0          : (c.center + real[idx - 1].center) / 2,

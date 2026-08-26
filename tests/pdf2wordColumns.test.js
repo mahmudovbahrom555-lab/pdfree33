@@ -184,29 +184,40 @@ console.log('\n_splitCrossColumnLines — the real bug this whole file exists to
 // col1-positioned item AND a col2-positioned item at the same Y — the exact
 // shape _p2wBuildPageData's plain Y-proximity grouping produces on a real
 // 2-column page (confirmed: 70-85% of lines, not a rare edge case).
+// Every row gets a col1 item; roughly 70% (never 3 rows in a row) also get
+// a col2 item at the same Y — the "merged line" shape _p2wBuildPageData
+// really produces on a genuine 2-column page (measured 70-85%, see this
+// file's header comment), NOT literally every single row. That distinction
+// matters here specifically: a fixture where EVERY row has both columns
+// present at identical X, run after run, is geometrically what a real
+// TABLE looks like (detectColumnRegions()'s own table guard — see
+// js/pdf2wordColumns.js — correctly refuses to split that, "prefer false
+// negatives"). Capping the run length under detectTables()'s MIN_ROWS=3
+// keeps this fixture honestly representative of flowing prose instead of
+// accidentally re-describing a table.
 function mkMergedLines(col1X, col2X, count, yStart, yStep = 12) {
   const out = [];
   for (let i = 0; i < count; i++) {
-    out.push({
-      y: yStart - i * yStep, rtl: false,
-      items: [{ x: col1X, str: `C1-${i}` }, { x: col2X, str: `C2-${i}` }],
-    });
+    const items = [{ x: col1X, str: `C1-${i}` }];
+    if (i % 3 !== 2) items.push({ x: col2X, str: `C2-${i}` });
+    out.push({ y: yStart - i * yStep, rtl: false, items });
   }
   return out;
 }
 
 test('a page of merged cross-column lines is split into clean per-column lines', () => {
   const lines = mkMergedLines(72, 320, 20, 760, 12);
-  const before = lines.length;
+  const mergedCount = lines.filter(l => l.items.length === 2).length; // 14 of 20
+  const singleCount = lines.length - mergedCount;                     // 6 of 20
   _splitCrossColumnLines(lines, 612);
-  expect(lines.length).toBe(before * 2); // every merged line becomes exactly 2
+  expect(lines.length).toBe(singleCount + mergedCount * 2); // each merged line becomes exactly 2; singles untouched
   for (const ln of lines) {
     expect(ln.items.length).toBe(1); // no line still holds both columns' items
   }
   const col1Texts = lines.filter(l => l.items[0].x < 200).map(l => l.items[0].str);
   const col2Texts = lines.filter(l => l.items[0].x >= 200).map(l => l.items[0].str);
-  expect(col1Texts.length).toBe(20);
-  expect(col2Texts.length).toBe(20);
+  expect(col1Texts.length).toBe(20);          // every row has a col1 item
+  expect(col2Texts.length).toBe(mergedCount); // only the merged rows have a col2 item
   if (!col1Texts.every(t => t.startsWith('C1-'))) throw new Error('column 1 split contains column 2 content');
   if (!col2Texts.every(t => t.startsWith('C2-'))) throw new Error('column 2 split contains column 1 content');
 });

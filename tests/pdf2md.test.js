@@ -169,21 +169,28 @@ function makeFakePdfDocWithFontNames(items, fontNameMap, pageWidth = 600) {
   return { numPages: 1, getPage: async () => makeFakePageWithFontNames(items, fontNameMap, pageWidth) };
 }
 
-// A real 2-column page: 12 rows, each with a left-column item (x=50) and a
-// right-column item (x=350) at the SAME y — this is the exact merged-line
-// shape _splitCrossColumnLines exists to un-merge (same Y per row is the
-// common case on a real 2-column page, per its own doc comment). 12 rows
-// clears detectColumnRegions' `lines.length >= MIN_LINES_ABS*2` (10) gate
-// on the pre-split merged-line count, not just the post-split candidate
-// count — matters because that gate runs once during _splitCrossColumnLines
-// (on the still-merged 12 lines) and again during block-building dispatch
-// (on the post-split 24 lines).
+// A real 2-column page: 12 rows, each with a left-column item (x=50); ~2 in
+// 3 also get a right-column item (x=350) at the SAME y — this is the exact
+// merged-line shape _splitCrossColumnLines exists to un-merge (same Y per
+// row is the common case on a real 2-column page, per its own doc comment,
+// measured 70-85%, NOT literally every row). That distinction matters here
+// specifically: detectColumnRegions() has its own table guard (js/
+// pdf2wordColumns.js) that correctly refuses to split a page where EVERY
+// single row has both an x=50 AND an x=350 item — that shape is
+// geometrically what a real 2-column TABLE looks like, not flowing prose.
+// Skipping the right-column item every 3rd row keeps this fixture honestly
+// representative of prose instead of accidentally re-describing a table.
+// 12 rows clears detectColumnRegions' `lines.length >= MIN_LINES_ABS*2` (10)
+// gate on the pre-split merged-line count, not just the post-split
+// candidate count — matters because that gate runs once during
+// _splitCrossColumnLines (on the still-merged 12 lines) and again during
+// block-building dispatch (on the post-split lines).
 function twoColumnPageItems() {
   const items = [];
   for (let row = 0; row < 12; row++) {
     const y = 700 - row * 20;
     items.push(makeItem(`Left${row}`, 50, y));
-    items.push(makeItem(`Right${row}`, 350, y));
+    if (row % 3 !== 2) items.push(makeItem(`Right${row}`, 350, y));
   }
   return items;
 }
@@ -225,7 +232,7 @@ await test('rendered Markdown: two-column page still produces valid, non-empty o
   const md = _p2mdRender(blocks);
   expect(md.length > 0).toBeTruthy();
   expect(md.includes('Left0')).toBeTruthy();
-  expect(md.includes('Right11')).toBeTruthy();
+  expect(md.includes('Right10')).toBeTruthy(); // row 11 % 3 === 2 — deliberately no right-column item there
 });
 
 console.log('\n_p2mdExtractText — single-column pages (regression guard):');
