@@ -5277,3 +5277,48 @@ body:not(.has-files) #heroChipsLabel { display: none !important; }
   justify-content: center;
   margin-top: 12px;
 }
+
+/* Full-screen on mobile — a real user request while actively using this
+   for a real document (an ID card): the default centered-card layout
+   caps the working image at 60vh, leaving corner-drag handles cramped
+   on a phone screen with real page content visible (and distracting)
+   around the card's edges. Below this breakpoint the card fills the
+   whole viewport instead, and the stage/frame chain switches from a
+   fixed 60vh cap to flex-filling whatever vertical space is actually
+   left after the mode-row/status/action rows — real screen space in,
+   real image size out, on any phone regardless of its exact height. */
+@media (max-width: 700px) {
+  .scan-cam-modal { padding: 0; }
+  .scan-cam-modal__card {
+    max-width: none;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh; /* progressive enhancement — accounts for mobile browser chrome */
+    border-radius: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .scan-cam-stage {
+    flex: 1;
+    min-height: 0;
+    max-height: none;
+  }
+  .scan-cam-stage-col {
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+  }
+  .scan-cam-video-wrap,
+  .scan-cam-frame-wrap {
+    flex: 1;
+    min-height: 0;
+    max-height: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .scan-cam-video,
+  .scan-cam-frame {
+    max-height: 100%;
+  }
+}
