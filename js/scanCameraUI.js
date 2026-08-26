@@ -548,6 +548,71 @@ function _renderHandles() {
   document.getElementById('scanCamPolygon').setAttribute('points', pts);
 }
 
+// Magnifier loupe, shown while dragging a corner handle — a real user
+// request comparing this to a competing scanner app's implementation:
+// on a touchscreen, a finger dragging a small handle covers the exact
+// point being placed, making precise corner placement genuinely hard to
+// judge. The loupe shows a zoomed crop of the SOURCE image (not the
+// on-screen scaled <img>, so it stays sharp at zoom) centered on the
+// live corner position, offset above the actual touch point so the
+// finger never covers it — flips below if the point is too close to the
+// frame's top edge to fit above.
+const _MAGNIFIER_SIZE       = 100; // CSS px, both the canvas and its visual diameter
+const _MAGNIFIER_ZOOM       = 2.5;
+const _MAGNIFIER_OFFSET_Y   = 90;  // px above the touch point, center to center
+
+let _magnifierEl = null;
+
+function _showMagnifier(displayX, displayY, fullResX, fullResY) {
+  const wrap = document.getElementById('scanCamFrameWrap');
+  if (!wrap) return;
+  if (!_magnifierEl) {
+    _magnifierEl = document.createElement('canvas');
+    _magnifierEl.className = 'scan-cam-magnifier';
+    _magnifierEl.width  = _MAGNIFIER_SIZE;
+    _magnifierEl.height = _MAGNIFIER_SIZE;
+    wrap.appendChild(_magnifierEl);
+  }
+
+  const cropSize = _MAGNIFIER_SIZE / _MAGNIFIER_ZOOM;
+  const ctx = _magnifierEl.getContext('2d');
+  ctx.clearRect(0, 0, _MAGNIFIER_SIZE, _MAGNIFIER_SIZE);
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(_MAGNIFIER_SIZE / 2, _MAGNIFIER_SIZE / 2, _MAGNIFIER_SIZE / 2, 0, Math.PI * 2);
+  ctx.clip();
+  ctx.drawImage(
+    _capturedCanvas,
+    fullResX - cropSize / 2, fullResY - cropSize / 2, cropSize, cropSize,
+    0, 0, _MAGNIFIER_SIZE, _MAGNIFIER_SIZE
+  );
+  ctx.restore();
+
+  // Crosshair at dead center — marks the exact point being placed,
+  // independent of whatever's in the underlying image at that spot.
+  ctx.strokeStyle = '#fff';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(_MAGNIFIER_SIZE / 2 - 10, _MAGNIFIER_SIZE / 2);
+  ctx.lineTo(_MAGNIFIER_SIZE / 2 + 10, _MAGNIFIER_SIZE / 2);
+  ctx.moveTo(_MAGNIFIER_SIZE / 2, _MAGNIFIER_SIZE / 2 - 10);
+  ctx.lineTo(_MAGNIFIER_SIZE / 2, _MAGNIFIER_SIZE / 2 + 10);
+  ctx.stroke();
+  ctx.strokeStyle = 'rgba(0,0,0,.55)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  const fitsAbove = displayY - _MAGNIFIER_OFFSET_Y - _MAGNIFIER_SIZE / 2 >= 0;
+  const magY = fitsAbove ? displayY - _MAGNIFIER_OFFSET_Y : displayY + _MAGNIFIER_OFFSET_Y;
+  _magnifierEl.style.left = displayX + 'px';
+  _magnifierEl.style.top  = magY + 'px';
+}
+
+function _hideMagnifier() {
+  _magnifierEl?.remove();
+  _magnifierEl = null;
+}
+
 function _bindHandleDrag() {
   ['tl', 'tr', 'br', 'bl'].forEach(corner => {
     const handle = document.getElementById(`scanCamHandle-${corner}`);
@@ -560,13 +625,16 @@ function _bindHandleDrag() {
         const rect = img.getBoundingClientRect();
         const x = Math.min(Math.max(0, ev.clientX - rect.left), rect.width);
         const y = Math.min(Math.max(0, ev.clientY - rect.top),  rect.height);
-        _quad[corner] = { x: x / _displayScale, y: y / _displayScale };
+        const fullX = x / _displayScale, fullY = y / _displayScale;
+        _quad[corner] = { x: fullX, y: fullY };
         _renderHandles();
+        _showMagnifier(x, y, fullX, fullY);
       };
       const onUp = () => {
         handle.removeEventListener('pointermove', onMove);
         handle.removeEventListener('pointerup', onUp);
         handle.removeEventListener('pointercancel', onUp);
+        _hideMagnifier();
       };
       handle.addEventListener('pointermove', onMove);
       handle.addEventListener('pointerup', onUp);

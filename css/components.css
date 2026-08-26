@@ -5263,6 +5263,23 @@ body:not(.has-files) #heroChipsLabel { display: none !important; }
 }
 .scan-cam-handle:active { cursor: grabbing; }
 
+/* Magnifier loupe shown while dragging a corner handle — see
+   _showMagnifier's own comment in js/scanCameraUI.js for why (a real
+   user-requested feature, comparing against a competing scanner app):
+   a finger covers the exact point it's placing on a touchscreen, so the
+   loupe shows a zoomed, offset preview of that spot instead. */
+.scan-cam-magnifier {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 3px solid #fff;
+  box-shadow: 0 2px 10px rgba(0,0,0,.5);
+  pointer-events: none;
+  z-index: 5;
+}
+
 .scan-cam-status {
   min-height: 18px;
   text-align: center;
