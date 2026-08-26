@@ -657,15 +657,21 @@ function _showMagnifier(displayX, displayY, fullResX, fullResY) {
 
   // Crosshair at dead center — marks the exact point being placed,
   // independent of whatever's in the underlying image at that spot.
-  ctx.strokeStyle = '#fff';
+  // Same green as the corner handles/crop outline (--green, #2D7A4F —
+  // canvas 2D can't read a CSS custom property, hardcoded to match) and
+  // a bigger arm length — a real user comparison found the original
+  // small white crosshair harder to align by than the reference app's
+  // bigger, brand-colored one.
+  const armLen = 16;
+  ctx.strokeStyle = '#2D7A4F';
   ctx.lineWidth = 3;
   ctx.beginPath();
-  ctx.moveTo(_MAGNIFIER_SIZE / 2 - 10, _MAGNIFIER_SIZE / 2);
-  ctx.lineTo(_MAGNIFIER_SIZE / 2 + 10, _MAGNIFIER_SIZE / 2);
-  ctx.moveTo(_MAGNIFIER_SIZE / 2, _MAGNIFIER_SIZE / 2 - 10);
-  ctx.lineTo(_MAGNIFIER_SIZE / 2, _MAGNIFIER_SIZE / 2 + 10);
+  ctx.moveTo(_MAGNIFIER_SIZE / 2 - armLen, _MAGNIFIER_SIZE / 2);
+  ctx.lineTo(_MAGNIFIER_SIZE / 2 + armLen, _MAGNIFIER_SIZE / 2);
+  ctx.moveTo(_MAGNIFIER_SIZE / 2, _MAGNIFIER_SIZE / 2 - armLen);
+  ctx.lineTo(_MAGNIFIER_SIZE / 2, _MAGNIFIER_SIZE / 2 + armLen);
   ctx.stroke();
-  ctx.strokeStyle = 'rgba(0,0,0,.55)';
+  ctx.strokeStyle = 'rgba(255,255,255,.85)';
   ctx.lineWidth = 1;
   ctx.stroke();
 
