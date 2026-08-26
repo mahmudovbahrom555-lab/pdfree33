@@ -228,6 +228,30 @@ async function _drainReviewQueue() {
   }
 }
 
+// Real, observed failure mode on memory-constrained devices: decoding a
+// very large source image can leave the browser's own internal decoder
+// stuck — neither onload nor onerror ever fires (a known Chromium
+// behavior under memory pressure, separate from — and upstream of —
+// MAX_SCAN_LONG_EDGE's cap, which only shrinks the canvas AFTER this
+// decode already succeeded). An un-timed-out await here hangs the whole
+// review queue FOREVER: no toast, no visible change, and retrying does
+// nothing since _reviewingNow never resets — reported for real as
+// "ничего не меняется" (nothing visibly happens), sometimes, on
+// "Choose File". Wrapping with a timeout converts that into the SAME
+// recoverable decode-failure path _drainReviewQueue's catch already
+// handles (tags the file reviewed, shows a toast, unblocks the queue).
+const _DECODE_TIMEOUT_MS = 20000;
+
+function _loadImageWithTimeout(url) {
+  return new Promise((res, rej) => {
+    const img = new Image();
+    const timer = setTimeout(() => rej(new Error('image decode timed out')), _DECODE_TIMEOUT_MS);
+    img.onload  = () => { clearTimeout(timer); res(img); };
+    img.onerror = () => { clearTimeout(timer); rej(new Error('image decode failed')); };
+    img.src = url;
+  });
+}
+
 // EXIF-aware decode: unlike jpg2pdf (which passes exifAngles to the
 // worker and lets handleJpg2Pdf rotate at assembly time), the crop
 // review here needs a CORRECTLY-oriented image up front — corner
@@ -238,9 +262,12 @@ async function _decodeWithExifRotation(file) {
   const angle  = await _readExifAngle(file);
   const source = isHeicFile(file) ? (await decodeHeicToJpegBlob(file)) ?? file : file;
   const url = URL.createObjectURL(source);
-  const img = new Image();
-  await new Promise((res, rej) => { img.onload = res; img.onerror = rej; img.src = url; });
-  URL.revokeObjectURL(url);
+  let img;
+  try {
+    img = await _loadImageWithTimeout(url);
+  } finally {
+    URL.revokeObjectURL(url);
+  }
 
   const swap = angle === 90 || angle === 270;
   const rawW = swap ? img.naturalHeight : img.naturalWidth;
@@ -304,9 +331,12 @@ function _bindTakePhotoButton() {
     try {
       const source = isHeicFile(file) ? (await decodeHeicToJpegBlob(file)) ?? file : file;
       const url = URL.createObjectURL(source);
-      const img = new Image();
-      await new Promise((res, rej) => { img.onload = res; img.onerror = rej; img.src = url; });
-      URL.revokeObjectURL(url);
+      let img;
+      try {
+        img = await _loadImageWithTimeout(url); // see its own comment — same silent-hang risk as the review path
+      } finally {
+        URL.revokeObjectURL(url);
+      }
       // No crop-review step in this fallback path (native camera app, used
       // when getUserMedia isn't available) — cap resolution here directly,
       // same as _decodeWithExifRotation does for the gallery/review path.
