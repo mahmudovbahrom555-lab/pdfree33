@@ -290,7 +290,17 @@ export function renderList(keepSuccess = false) {
   // the numbered row list would just duplicate the same files a second
   // time on screen. Meta line / success-card / body-class side effects
   // below still need to run, so this isn't a full early return.
-  if (_currentTool === 'jpg2pdf') {
+  //
+  // scanDocument reuses that exact same thumbnail-grid UI (js/scanDocumentUI.js's
+  // _previewsHtml, deliberately copied from jpg2pdfUI.js's own — see that
+  // file's header) but was missing from this check, a real gap found via
+  // real Playwright testing: #fileList rendered a second, fully redundant
+  // "1. receipt_shadow.jpg  400 KB  ×" / "2. contract_brightcorner.jpg ..."
+  // row list directly ABOVE the tool's own thumbnail grid showing the exact
+  // same 2 files, on every real scan (confirmed live, not just in theory) —
+  // wasted vertical space and visibly confusing on a small phone screen,
+  // worse in Telegram Mini App's already-constrained WebView viewport.
+  if (_currentTool === 'jpg2pdf' || _currentTool === 'scanDocument') {
     _updateMeta();
     if (!keepSuccess) id('successCard').style.display = 'none';
     document.body.classList.toggle('has-files', selectedFiles.length > 0);
