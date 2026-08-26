@@ -39,6 +39,8 @@ import { loadPreset, clearPreset } from './presets.js';
 import { isHeicFile, decodeHeicToJpegBlob } from './heicDecode.js';
 import { filterScanPhoto } from './scanFilter.js';
 import { openScanCamera, openCropReview } from './scanCameraUI.js';
+import { detectDocumentQuad, defaultInsetQuad, warpToRect } from './scanGeometry.js';
+import { loadOpenCv } from './lazyLibs.js';
 
 const _MANY_IMAGES_WARN_THRESHOLD = 80; // same soft heads-up as jpg2pdfUI.js
 let _warnedManyImages = false;
@@ -176,8 +178,83 @@ export function hideScanDocumentOptions() {
 
 function _queueUnreviewedFiles(files) {
   const unreviewed = files.filter(f => !f._scanReviewed && !_reviewQueue.includes(f));
+  if (unreviewed.length === 0) return;
+
+  // Real user request: reviewing many photos one modal at a time is real
+  // friction for a big batch (e.g. a folder of diplomas/ID pages/medical
+  // records). Only offered on a genuinely fresh batch (idle queue, 2+
+  // photos) — a single photo, or more arriving mid-review, just joins the
+  // queue as before; the choice would be noise there.
+  if (unreviewed.length > 1 && !_reviewingNow && _reviewQueue.length === 0) {
+    _promptBatchMode(unreviewed);
+    return;
+  }
+
   _reviewQueue.push(...unreviewed);
   _drainReviewQueue();
+}
+
+// Auto-crop path deliberately reuses the exact same real functions the
+// interactive review modal calls (detectDocumentQuad/defaultInsetQuad/
+// warpToRect/filterScanPhoto) — same detection, same fallback, same
+// filter pipeline, just without stopping for a human to look at each
+// one. Single-page only (book-spread's gutter split needs the user's own
+// adjustment — no reasonable default exists there, so that mode is
+// simply not offered for batch auto-apply).
+async function _promptBatchMode(files) {
+  await loadOpenCv().catch(() => {}); // best-effort warmup; a failure just means defaultInsetQuad is used for every photo below
+  const modal = document.createElement('div');
+  modal.className = 'scan-cam-modal scan-cam-modal--open';
+  modal.innerHTML = `
+    <div class="scan-cam-modal__card" role="dialog" aria-modal="true" aria-label="${t('sd_batch_title')}">
+      <p style="margin:0 0 16px;text-align:center;">${t('sd_batch_prompt', { n: files.length })}</p>
+      <div class="scan-cam-actions">
+        <button type="button" class="split-action-btn" id="sdBatchReviewEach">${t('sd_batch_review_each')}</button>
+        <button type="button" class="split-action-btn" id="sdBatchAutoAll">${t('sd_batch_auto_all')}</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+
+  id('sdBatchReviewEach').addEventListener('click', () => {
+    modal.remove();
+    _reviewQueue.push(...files);
+    _drainReviewQueue();
+  });
+  id('sdBatchAutoAll').addEventListener('click', () => {
+    modal.remove();
+    _autoProcessAll(files);
+  });
+}
+
+async function _autoProcessAll(files) {
+  for (const file of files) {
+    // Same "removed while queued" escape hatch _drainReviewQueue already has.
+    if (!selectedFiles.includes(file)) continue;
+    try {
+      const sourceCanvas = await _decodeSourcePhoto(file);
+      let quad = null;
+      try { quad = detectDocumentQuad(sourceCanvas); } catch { /* falls through to defaultInsetQuad below */ }
+      quad = quad || defaultInsetQuad(sourceCanvas.width, sourceCanvas.height);
+      const warped = warpToRect(sourceCanvas, quad);
+      const blob = await filterScanPhoto(warped, _scanFilterMode);
+
+      const idx = selectedFiles.indexOf(file);
+      const baseName = file.name.replace(/\.\w+$/, '');
+      const reviewedFile = new File([blob], baseName + '-scan.jpg', { type: 'image/jpeg' });
+      reviewedFile._scanReviewed = true;
+      if (idx !== -1) {
+        selectedFiles.splice(idx, 1, reviewedFile);
+        _exifAngles.splice(idx, 1, 0); // baked into the warp already, same as the reviewed-confirm path
+      }
+    } catch {
+      // Same recovery as _drainReviewQueue's catch: tag reviewed so it's
+      // never retried in a loop, leave the file as-is, surface a toast.
+      file._scanReviewed = true;
+      showToast(t('sd_review_decode_failed', { name: file.name }));
+    }
+    _render(selectedFiles); // per-photo, not just at the end — batch progress stays visible
+  }
 }
 
 async function _drainReviewQueue() {
