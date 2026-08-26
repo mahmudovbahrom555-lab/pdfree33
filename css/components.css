@@ -5207,6 +5207,29 @@ body:not(.has-files) #heroChipsLabel { display: none !important; }
   display: flex;
   gap: 8px;
 }
+
+/* Rotate-left/reset-crop/rotate-right row — see js/scanCameraUI.js's
+   _rotateCapturedImage/_resetCrop comments for why (a real user
+   comparison against a competing scanner app's toolbar). Same visual
+   language as .scan-cam-mode-chip (dark stage background, light
+   translucent pill) rather than a custom icon-button style — one less
+   thing to keep visually consistent. */
+.scan-cam-tool-row {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0; /* never squeezed by the frame-wrap's flex:1 on mobile */
+}
+.scan-cam-tool-btn {
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1.5px solid rgba(255,255,255,.25);
+  background: rgba(255,255,255,.08);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.scan-cam-tool-btn:hover { background: rgba(255,255,255,.16); }
 .scan-cam-mode-chip {
   padding: 6px 14px;
   border-radius: 999px;

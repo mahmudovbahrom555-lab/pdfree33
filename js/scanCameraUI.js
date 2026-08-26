@@ -58,6 +58,7 @@ let _scanSubMode       = 'single'; // 'single' | 'book' — set per-review, not 
 let _resizeHandler    = null;
 let _liveTrackInterval = null;
 let _reviewGen          = 0;   // bumped on every close — lets in-flight _startReview() awaits bail out
+let _frameUrl           = null; // current #scanCamFrame object URL — module-level so rotation can swap it mid-review
 
 const _LIVE_TRACK_INTERVAL_MS = 200; // ~5fps — a framing guide doesn't need real video framerate
 
@@ -451,7 +452,7 @@ async function _startReview() {
 
   const blob = await new Promise(res => _capturedCanvas.toBlob(res, 'image/jpeg', 0.92));
   if (myGen !== _reviewGen) { return; }  // modal closed while encoding the frame
-  const url  = URL.createObjectURL(blob);
+  _frameUrl = URL.createObjectURL(blob);
 
   _scanSubMode = 'single';
   stage.innerHTML = `
@@ -461,7 +462,7 @@ async function _startReview() {
         <button type="button" class="scan-cam-mode-chip" id="scanCamModeBook">${t('scan_cam_mode_book')}</button>
       </div>
       <div class="scan-cam-frame-wrap" id="scanCamFrameWrap">
-        <img class="scan-cam-frame" id="scanCamFrame" src="${url}" alt="">
+        <img class="scan-cam-frame" id="scanCamFrame" src="${_frameUrl}" alt="">
         <svg class="scan-cam-outline" id="scanCamOutline" preserveAspectRatio="none">
           <polygon id="scanCamPolygon"></polygon>
         </svg>
@@ -470,10 +471,18 @@ async function _startReview() {
         <div class="scan-cam-handle" id="scanCamHandle-br" data-corner="br"></div>
         <div class="scan-cam-handle" id="scanCamHandle-bl" data-corner="bl"></div>
       </div>
+      <div class="scan-cam-tool-row" id="scanCamToolRow">
+        <button type="button" class="scan-cam-tool-btn" id="scanCamRotateLeft" aria-label="${t('scan_cam_rotate_left')}">↺</button>
+        <button type="button" class="scan-cam-tool-btn" id="scanCamResetCrop" aria-label="${t('scan_cam_reset_crop')}">${t('scan_cam_reset_crop')}</button>
+        <button type="button" class="scan-cam-tool-btn" id="scanCamRotateRight" aria-label="${t('scan_cam_rotate_right')}">↻</button>
+      </div>
     </div>
   `;
   document.getElementById('scanCamModeSingle').addEventListener('click', () => _setScanSubMode('single'));
   document.getElementById('scanCamModeBook').addEventListener('click', () => _setScanSubMode('book'));
+  document.getElementById('scanCamRotateLeft').addEventListener('click', () => _rotateCapturedImage(-1));
+  document.getElementById('scanCamRotateRight').addEventListener('click', () => _rotateCapturedImage(1));
+  document.getElementById('scanCamResetCrop').addEventListener('click', () => _resetCrop());
   actions.innerHTML = _reviewMode === 'gallery'
     ? `
       <button type="button" class="split-action-btn" id="scanCamSkipBtn">${t('scan_cam_skip')}</button>
@@ -484,11 +493,11 @@ async function _startReview() {
       <button type="button" class="split-action-btn" id="scanCamConfirmBtn" disabled>${t('scan_cam_use_crop')}</button>
     `;
   document.getElementById('scanCamRetakeBtn')?.addEventListener('click', () => {
-    URL.revokeObjectURL(url);
+    URL.revokeObjectURL(_frameUrl);
     _startLiveView();
   });
-  document.getElementById('scanCamSkipBtn')?.addEventListener('click', () => _skip(url));
-  document.getElementById('scanCamConfirmBtn').addEventListener('click', () => _confirm(url));
+  document.getElementById('scanCamSkipBtn')?.addEventListener('click', () => _skip());
+  document.getElementById('scanCamConfirmBtn').addEventListener('click', () => _confirm());
 
   status.textContent = t('scan_cam_detecting');
 
@@ -496,33 +505,91 @@ async function _startReview() {
   await new Promise(res => { img.onload = res; img.onerror = res; });
   if (myGen !== _reviewGen) { return; }  // modal closed while the frame image loaded
 
-  let detected = null;
-  try {
-    await loadOpenCv();
-    if (myGen !== _reviewGen) { return; }  // modal closed while OpenCV loaded
-    detected = detectDocumentQuad(_capturedCanvas);
-  } catch {
-    // CDN failure or detection error — defaultInsetQuad below covers it
-  }
+  await _detectAndSetQuad();
   if (myGen !== _reviewGen) { return; }  // modal closed while detecting the quad
-  _quad = detected || defaultInsetQuad(_capturedCanvas.width, _capturedCanvas.height);
-
-  // Detection fallback is the more actionable message (affects the crop
-  // itself) — only show the blur warning when detection succeeded, so the
-  // status line never has to choose between two unrelated warnings at once.
-  if (!detected) {
-    status.textContent = t('scan_cam_detect_fallback');
-  } else {
-    let blurry = false;
-    try { blurry = computeBlurVariance(_capturedCanvas) < _BLUR_VARIANCE_THRESHOLD; } catch { /* skip on any canvas error */ }
-    status.textContent = blurry ? t('scan_cam_blurry_hint') : '';
-  }
 
   _resizeHandler = () => _renderHandles();
   window.addEventListener('resize', _resizeHandler);
   _renderHandles();
   _bindHandleDrag();
   document.getElementById('scanCamConfirmBtn').disabled = false;
+}
+
+// Shared by _startReview (initial detection) and _rotateCapturedImage/
+// _resetCrop (re-detection after the working image changes, or on a
+// plain "start over" request) — same detect-or-fallback logic, same
+// status-line reporting, one place to keep them consistent.
+async function _detectAndSetQuad() {
+  const status = document.getElementById('scanCamStatus');
+  let detected = null;
+  try {
+    await loadOpenCv();
+    detected = detectDocumentQuad(_capturedCanvas);
+  } catch {
+    // CDN failure or detection error — defaultInsetQuad below covers it
+  }
+  _quad = detected || defaultInsetQuad(_capturedCanvas.width, _capturedCanvas.height);
+
+  // Detection fallback is the more actionable message (affects the crop
+  // itself) — only show the blur warning when detection succeeded, so the
+  // status line never has to choose between two unrelated warnings at once.
+  if (status) {
+    if (!detected) {
+      status.textContent = t('scan_cam_detect_fallback');
+    } else {
+      let blurry = false;
+      try { blurry = computeBlurVariance(_capturedCanvas) < _BLUR_VARIANCE_THRESHOLD; } catch { /* skip on any canvas error */ }
+      status.textContent = blurry ? t('scan_cam_blurry_hint') : '';
+    }
+  }
+  return detected;
+}
+
+// Rotates the WORKING image itself (not just the crop quad) 90° in the
+// given direction — a real user request comparing against a competing
+// scanner app's rotate-left/rotate-right toolbar buttons: EXIF-based
+// auto-orientation only covers a photo that was actually taken sideways
+// per the camera's own sensor; a document photographed upright but
+// deliberately rotated (or a source image with no/wrong EXIF at all)
+// has no other recovery path today short of retaking the photo.
+// Re-detects the quad on the newly-rotated image afterward (same
+// reasoning as the initial detection: an old quad's coordinates don't
+// meaningfully transfer across a dimension-swapping 90° rotation).
+async function _rotateCapturedImage(direction) {
+  const myGen = _reviewGen; // not bumped by rotation itself, only by _closeModal
+  const src = _capturedCanvas;
+  const rotated = document.createElement('canvas');
+  rotated.width  = src.height;
+  rotated.height = src.width;
+  const ctx = rotated.getContext('2d');
+  ctx.translate(rotated.width / 2, rotated.height / 2);
+  ctx.rotate(direction * Math.PI / 2);
+  ctx.drawImage(src, -src.width / 2, -src.height / 2);
+  _capturedCanvas = rotated;
+
+  const img = document.getElementById('scanCamFrame');
+  const oldUrl = _frameUrl;
+  const blob = await new Promise(res => _capturedCanvas.toBlob(res, 'image/jpeg', 0.92));
+  if (myGen !== _reviewGen || !img) { return; } // modal closed mid-rotation
+  _frameUrl = URL.createObjectURL(blob);
+  img.src = _frameUrl;
+  await new Promise(res => { img.onload = res; img.onerror = res; });
+  URL.revokeObjectURL(oldUrl);
+  if (myGen !== _reviewGen) { return; }
+
+  await _detectAndSetQuad();
+  if (myGen !== _reviewGen) { return; }
+  _renderHandles();
+}
+
+// Re-runs detection on the CURRENT working image without touching it —
+// "start the crop over" for when manual corner-dragging has gone wrong,
+// same real user request/comparison as rotation above.
+async function _resetCrop() {
+  const myGen = _reviewGen;
+  await _detectAndSetQuad();
+  if (myGen !== _reviewGen) { return; }
+  _renderHandles();
 }
 
 function _renderHandles() {
@@ -649,12 +716,12 @@ function _setScanSubMode(mode) {
   document.getElementById('scanCamModeBook')?.classList.toggle('scan-cam-mode-chip--active', mode === 'book');
 }
 
-async function _confirm(reviewUrl) {
+async function _confirm() {
   const status = document.getElementById('scanCamStatus');
   status.textContent = t('scan_cam_processing');
   try {
     const warped = warpToRect(_capturedCanvas, _quad);
-    URL.revokeObjectURL(reviewUrl);
+    URL.revokeObjectURL(_frameUrl);
     if (_scanSubMode === 'book') {
       _startSpineAdjust(warped);
       return;
@@ -762,7 +829,7 @@ async function _startSpineAdjust(warped) {
   });
 }
 
-function _skip(reviewUrl) {
-  URL.revokeObjectURL(reviewUrl);
+function _skip() {
+  URL.revokeObjectURL(_frameUrl);
   _closeModal();  // gallery-mode close already fires onSkip — see _closeModal
 }
