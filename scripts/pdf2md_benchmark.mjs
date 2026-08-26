@@ -107,6 +107,34 @@ const CORPUS = [
   // reference?) that's for the user to decide, not this script.
   { file: path.join(CORPUS_DIR, 'scanned.pdf'), name: 'scanned.pdf', category: 'synthetic',
     note: 'real rasterized page, genuinely no text layer', expect: { scan: true } },
+
+  // ── Round 2 additions (2026-08) — new document categories the original
+  // 6 synthetic + 5 arXiv fixtures didn't stress. Ground truth verified
+  // directly against each generated PDF's real font-size ratios via
+  // pymupdf (see scripts/gen_benchmark_corpus.py's own per-fixture
+  // comments) before being written here — an earlier draft of
+  // captioned-images.pdf used a 9pt caption that measured a 0.9 size
+  // ratio, ABOVE pdf2mdCore.js's 0.85 footnote gate, which would have
+  // silently failed to exercise the scenario it was built for; caught by
+  // that verification step, not assumed.
+  { file: path.join(CORPUS_DIR, 'magazine-multicolumn.pdf'), name: 'magazine-multicolumn.pdf', category: 'synthetic',
+    note: 'dense 3-column newsletter — masthead + 3 same-size-but-bold headlines',
+    expect: { headings: 4, tables: 0, images: 0, formulas: 0 } },
+  { file: path.join(CORPUS_DIR, 'financial-nested-subtotals.pdf'), name: 'financial-nested-subtotals.pdf', category: 'synthetic',
+    note: 'income statement, subtotal/total rows inside one contiguous table',
+    expect: { headings: 1, tables: 1, images: 0, formulas: 0 } },
+  { file: path.join(CORPUS_DIR, 'contract-nested-clauses.pdf'), name: 'contract-nested-clauses.pdf', category: 'synthetic',
+    note: 'deeply nested numbered clauses (1., 1.1, 1.1.1) under 4 ALL-CAPS ARTICLE headers',
+    expect: { headings: 5, tables: 0, images: 0, formulas: 0 } },
+  { file: path.join(CORPUS_DIR, 'captioned-images.pdf'), name: 'captioned-images.pdf', category: 'synthetic',
+    note: 'real images with real captions — Figure 2\'s caption deliberately mimics a footnote (small font + bottom-of-page) to stress the footnote/marginal-text separator',
+    expect: { headings: 1, tables: 0, images: 2, formulas: 0 } },
+  { file: path.join(CORPUS_DIR, 'cjk-heavy.pdf'), name: 'cjk-heavy.pdf', category: 'synthetic',
+    note: 'Chinese-heavy document (CID font), font-size-ratio heading path only, no bold variant available',
+    expect: { headings: 4, tables: 0, images: 0, formulas: 0 } },
+  { file: path.join(CORPUS_DIR, 'footnotes-and-endnotes.pdf'), name: 'footnotes-and-endnotes.pdf', category: 'synthetic',
+    note: 'real per-page footnotes (small font, genuine bottom-margin Y) + a same-body-size Endnotes section at document end',
+    expect: { headings: 2, tables: 0, images: 0, formulas: 0 } },
 ];
 
 // ── Markdown structural signal extraction (no ground truth needed) ──────

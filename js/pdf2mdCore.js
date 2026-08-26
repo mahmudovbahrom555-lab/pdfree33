@@ -669,6 +669,26 @@ export async function _p2mdExtractText(pdfDoc, {
     // formula runs (never rewrite math), and matching bold/italic (a real
     // hyphen break essentially never switches formatting mid-word; if it
     // did, merging would silently pick one side's formatting for both).
+    //
+    // A second, separate join-suppression case: CJK scripts (Chinese/
+    // Japanese/Korean) don't use interword spaces at all, so a plain-line
+    // wrap boundary inside a CJK paragraph must NOT get the same join space
+    // Latin text needs — found via this project's own CJK benchmark
+    // fixture (scripts/gen_benchmark_corpus.py's cjk-heavy.pdf), which
+    // rendered "取得了显著进展。大规模预训练语言模型的出现，使得机器在文本
+    // 理解、 生成和翻译" with a real, visible stray space mid-sentence.
+    // Gated on BOTH sides of the break having CJK content immediately
+    // around it (not just one side) — a mixed CJK/Latin line boundary
+    // (e.g. a Latin citation or code token wrapping against CJK prose)
+    // keeps the existing space, so this can't regress any non-CJK or
+    // mixed-script document. Checks a short 2-character window, not just
+    // the single boundary character: a line can legitimately wrap right
+    // after CJK punctuation ("、" U+3001, "。" U+3002 etc.), which isn't a
+    // Han ideograph itself and isn't in _isCjk's own character ranges —
+    // found via this project's own cjk-heavy.pdf fixture, where a wrap
+    // right after "、" still got a stray space because the lone boundary
+    // character wasn't recognized as CJK even though the surrounding text
+    // plainly was.
     const runs = [];
     for (let i = 0; i < linesCopy.length; i++) {
       const curRuns = _lineRuns(linesCopy[i]);
@@ -680,12 +700,16 @@ export async function _p2mdExtractText(pdfDoc, {
           !prevRun.formula && !nextRun.formula &&
           prevRun.bold === nextRun.bold && prevRun.italic === nextRun.italic;
         const hyphenResult = canTryHyphen ? joinHyphenatedLineEnd(prevRun.text, nextRun.text) : null;
+        const bothCjk = prevRun && nextRun && !prevRun.formula && !nextRun.formula &&
+          _isCjk(prevRun.text.slice(-2)) && _isCjk(nextRun.text.slice(0, 2));
         if (hyphenResult) {
           prevRun.text = hyphenResult.text;
           curRuns.shift(); // merged into prevRun — don't push its own copy too
-        } else {
+        } else if (!bothCjk) {
           runs.push({ text: ' ', bold: false, italic: false, formula: false });
         }
+        // else: bothCjk — no join run at all, not even an empty one; the
+        // two runs simply sit adjacent, exactly like real CJK prose.
       }
       runs.push(...curRuns);
     }
