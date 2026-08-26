@@ -417,12 +417,25 @@ export function computeBlurVariance(canvas) {
   return sumSq / count - mean * mean;
 }
 
+// Same long-edge cap and same real reason as js/scanDocumentUI.js's
+// MAX_SCAN_LONG_EDGE (see that constant's own comment for the full
+// real-device OOM history) — applied here too since this live-camera
+// path's captured frame skips scanDocumentUI.js's decode step entirely
+// and would otherwise reach js/scanGeometry.js's warpToRect() (an OpenCV
+// perspective warp, its own real full-resolution Mat allocation)
+// completely uncapped. getUserMedia is opened here with no explicit
+// width/height constraint, so the frame size is whatever the browser/
+// driver negotiates — not guaranteed to already be small.
+const _CAPTURE_MAX_LONG_EDGE = 2200;
+
 function _capture(video) {
   _stopLiveTracking();
+  const rawW = video.videoWidth, rawH = video.videoHeight;
+  const scale = Math.min(1, _CAPTURE_MAX_LONG_EDGE / Math.max(rawW, rawH));
   const canvas = document.createElement('canvas');
-  canvas.width  = video.videoWidth;
-  canvas.height = video.videoHeight;
-  canvas.getContext('2d').drawImage(video, 0, 0);
+  canvas.width  = Math.max(1, Math.round(rawW * scale));
+  canvas.height = Math.max(1, Math.round(rawH * scale));
+  canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
   _stopStream();
   _capturedCanvas = canvas;
   _startReview();
