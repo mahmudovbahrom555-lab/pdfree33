@@ -447,8 +447,20 @@ button,
   display: none; /* shown via JS only when navigator.canShare({files}) is true */
   align-items: center;
   gap: 5px;
-  background: transparent;
-  color: var(--green);
+  /* Filled, not just outlined — a real user comparison against a native
+     scanner app's always-visible Share icon found this button genuinely
+     easy to miss next to the solid Download CTA. Two lighter fills were
+     tried and rejected first: --green-light (#E8F5EE) read as basically
+     white against the page background in an actual screenshot check;
+     --green-mid (#4CAF78) with white text looked properly bold but only
+     hits a 2.72:1 contrast ratio — fails WCAG AA's 4.5:1 (this project
+     has a whole prior audit dedicated to exactly this class of bug, see
+     color_contrast_fix_2026_08 memory — not repeating it here). Same
+     --green fill as Download itself (already-verified 5.24:1) — the two
+     stay distinguished by icon + label text, not by a second color that
+     would need its own contrast audit. */
+  background: var(--green);
+  color: #fff;
   border: 1.5px solid var(--green);
   border-radius: 24px;
   padding: 9px 16px;
@@ -460,8 +472,18 @@ button,
   transition: all var(--transition-normal);
   flex-shrink: 0;
 }
-.share-btn:hover  { background: var(--green-light); }
+.share-btn:hover  { background: var(--green-dark); border-color: var(--green-dark); }
 .share-btn:disabled { opacity: 0.45; cursor: default; }
+
+@media (max-width: 700px) {
+  /* Share is often the more natural action than Download on mobile
+     specifically (straight into WhatsApp/Telegram/email's own share
+     sheet) — same real user comparison, sized up to match. */
+  .share-btn {
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+}
 
 /* ── Privacy cleared banner ── */
 .privacy-cleared {
