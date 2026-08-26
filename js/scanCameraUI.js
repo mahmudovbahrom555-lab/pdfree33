@@ -669,9 +669,20 @@ function _showMagnifier(displayX, displayY, fullResX, fullResY) {
   ctx.lineWidth = 1;
   ctx.stroke();
 
-  const fitsAbove = displayY - _MAGNIFIER_OFFSET_Y - _MAGNIFIER_SIZE / 2 >= 0;
-  const magY = fitsAbove ? displayY - _MAGNIFIER_OFFSET_Y : displayY + _MAGNIFIER_OFFSET_Y;
-  _magnifierEl.style.left = displayX + 'px';
+  // Clamped on BOTH axes to the wrap's own bounds — a real gap found via
+  // a real user comparison (dragging a bottom-row handle, or one near the
+  // left/right edge, could otherwise push the loupe partway off the
+  // visible frame). Half the loupe's own size, since it's centered on
+  // (left, top) via CSS transform:translate(-50%,-50%).
+  const half = _MAGNIFIER_SIZE / 2;
+  const wrapW = wrap.clientWidth, wrapH = wrap.clientHeight;
+
+  const fitsAbove = displayY - _MAGNIFIER_OFFSET_Y - half >= 0;
+  const rawY = fitsAbove ? displayY - _MAGNIFIER_OFFSET_Y : displayY + _MAGNIFIER_OFFSET_Y;
+  const magY = Math.min(Math.max(rawY, half), Math.max(half, wrapH - half));
+  const magX = Math.min(Math.max(displayX, half), Math.max(half, wrapW - half));
+
+  _magnifierEl.style.left = magX + 'px';
   _magnifierEl.style.top  = magY + 'px';
 }
 
