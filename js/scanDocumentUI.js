@@ -63,26 +63,33 @@ let _warnedManyImages = false;
 // 3-10x+ depending on the source camera's real resolution.
 const MAX_SCAN_LONG_EDGE = 2200;
 
-// Draws `img` (already known to be `rawW`×`rawH` in its final, post-EXIF-
-// rotation orientation) into a NEW canvas capped to MAX_SCAN_LONG_EDGE,
-// scaled uniformly so it never upscales a source that's already smaller.
-// Shared by every decode path below so the cap can't be missed on one of
-// them — see MAX_SCAN_LONG_EDGE's own comment for why this matters.
-function _capLongEdge(img, rawW, rawH, angle = 0) {
+// Draws `img` into a NEW canvas capped to MAX_SCAN_LONG_EDGE, scaled
+// uniformly so it never upscales a source that's already smaller. Shared
+// by every decode path below so the cap can't be missed on one of them —
+// see MAX_SCAN_LONG_EDGE's own comment for why this matters.
+//
+// No manual EXIF-rotation step here. This function used to also take an
+// `angle` param and manually re-rotate via ctx.rotate() for a nonzero
+// EXIF orientation, on the (wrong) assumption that `img` was still in
+// its raw, un-rotated sensor orientation. Real, shipped bug — found via
+// a real user report ("vertical photo becomes horizontal"), root-caused
+// by verifying directly (real JPEG, EXIF orientation=6, real Chromium):
+// the browser's own <img> decode ALREADY auto-applies EXIF orientation
+// — naturalWidth/naturalHeight and everything drawImage() draws are
+// already correctly, permanently rotated by the time onload fires. The
+// old manual rotation was a real double-rotation on top of that — same
+// class of bug already fixed once in this project for a DIFFERENT tool
+// (jpg2pdf's handleJpg2Pdf; see the feedback_image_orientation_single_source
+// lesson: never layer manual EXIF rotation on top of the browser's own —
+// trust exactly one source).
+function _capLongEdge(img) {
+  const rawW = img.naturalWidth, rawH = img.naturalHeight;
   const scale = Math.min(1, MAX_SCAN_LONG_EDGE / Math.max(rawW, rawH));
   const outW  = Math.max(1, Math.round(rawW * scale));
   const outH  = Math.max(1, Math.round(rawH * scale));
   const canvas = document.createElement('canvas');
   canvas.width = outW; canvas.height = outH;
-  const ctx = canvas.getContext('2d');
-  if (angle === 0) {
-    ctx.drawImage(img, 0, 0, outW, outH);
-    return canvas;
-  }
-  ctx.translate(outW / 2, outH / 2);
-  ctx.rotate(angle * Math.PI / 180);
-  ctx.scale(scale, scale);
-  ctx.drawImage(img, -img.naturalWidth / 2, -img.naturalHeight / 2);
+  canvas.getContext('2d').drawImage(img, 0, 0, outW, outH);
   return canvas;
 }
 
@@ -183,7 +190,7 @@ async function _drainReviewQueue() {
   if (!selectedFiles.includes(file)) { _reviewingNow = false; _drainReviewQueue(); return; }
 
   try {
-    const sourceCanvas = await _decodeWithExifRotation(file);
+    const sourceCanvas = await _decodeSourcePhoto(file);
     openCropReview({
       sourceCanvas,
       // warpedCanvases: 1 entry for single-page mode, 2 for book-spread
@@ -252,14 +259,12 @@ function _loadImageWithTimeout(url) {
   });
 }
 
-// EXIF-aware decode: unlike jpg2pdf (which passes exifAngles to the
-// worker and lets handleJpg2Pdf rotate at assembly time), the crop
-// review here needs a CORRECTLY-oriented image up front — corner
-// detection on a sideways photo would be meaningless. Draws into a
-// canvas pre-rotated by the EXIF angle (swapping width/height for
-// 90/270) so what the user sees in the review modal is right-side-up.
-async function _decodeWithExifRotation(file) {
-  const angle  = await _readExifAngle(file);
+// The crop review needs a correctly-oriented image up front — corner
+// detection on a sideways photo would be meaningless. No manual EXIF
+// rotation needed here (see _capLongEdge's own comment for the real bug
+// that used to live here): the browser's own <img> decode already
+// applies it.
+async function _decodeSourcePhoto(file) {
   const source = isHeicFile(file) ? (await decodeHeicToJpegBlob(file)) ?? file : file;
   const url = URL.createObjectURL(source);
   let img;
@@ -268,11 +273,7 @@ async function _decodeWithExifRotation(file) {
   } finally {
     URL.revokeObjectURL(url);
   }
-
-  const swap = angle === 90 || angle === 270;
-  const rawW = swap ? img.naturalHeight : img.naturalWidth;
-  const rawH = swap ? img.naturalWidth  : img.naturalHeight;
-  return _capLongEdge(img, rawW, rawH, angle);
+  return _capLongEdge(img);
 }
 
 // ── "Take Photo" — always goes through the live camera + review
@@ -339,8 +340,8 @@ function _bindTakePhotoButton() {
       }
       // No crop-review step in this fallback path (native camera app, used
       // when getUserMedia isn't available) — cap resolution here directly,
-      // same as _decodeWithExifRotation does for the gallery/review path.
-      const capped = _capLongEdge(img, img.naturalWidth, img.naturalHeight);
+      // same as _decodeSourcePhoto does for the gallery/review path.
+      const capped = _capLongEdge(img);
       const blob = await filterScanPhoto(capped, _scanFilterMode);
       const scanFile = new File([blob], `scan-${Date.now()}.jpg`, { type: 'image/jpeg' });
       scanFile._scanReviewed = true;
