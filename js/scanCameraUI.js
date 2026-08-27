@@ -59,6 +59,8 @@ let _resizeHandler    = null;
 let _liveTrackInterval = null;
 let _reviewGen          = 0;   // bumped on every close — lets in-flight _startReview() awaits bail out
 let _frameUrl           = null; // current #scanCamFrame object URL — module-level so rotation can swap it mid-review
+let _spineUrl           = null; // book-mode spine-adjust stage's own object URL — separate from _frameUrl, own stage
+let _spineResizeHandler = null; // book-mode spine-adjust stage's own resize listener — separate from _resizeHandler
 
 const _LIVE_TRACK_INTERVAL_MS = 200; // ~5fps — a framing guide doesn't need real video framerate
 
@@ -115,6 +117,19 @@ function _closeModal({ suppressOnSkip = false } = {}) {
   _stopLiveTracking();
   window.removeEventListener('resize', _resizeHandler);
   document.removeEventListener('keydown', _onKeydown);
+  // Real leaks found via code review, all from the same root cause: closing
+  // the modal any way OTHER than a stage's own confirm button (X/Escape/
+  // backdrop) used to skip that stage's own cleanup entirely, since each
+  // stage only released its own resources inside its own confirm handler.
+  // Book-spread's spine-adjust stage has its own separate object URL and
+  // resize listener from the crop-review stage above it (_frameUrl/
+  // _resizeHandler) — both need the same treatment here.
+  if (_spineUrl) { URL.revokeObjectURL(_spineUrl); _spineUrl = null; }
+  if (_spineResizeHandler) { window.removeEventListener('resize', _spineResizeHandler); _spineResizeHandler = null; }
+  // A handle drag in progress (pointerdown fired, pointerup never did)
+  // left _magnifierEl pointing at a canvas in the now-removed modal — null
+  // it out explicitly rather than relying on pointerup, which never comes.
+  _magnifierEl = null;
   _modal?.remove();
   _modal = null;
   _capturedCanvas = null;
@@ -771,7 +786,7 @@ async function _startSpineAdjust(warped) {
 
   const blob = await new Promise(res => warped.toBlob(res, 'image/jpeg', 0.92));
   if (myGen !== _reviewGen) return; // modal closed while encoding
-  const url = URL.createObjectURL(blob);
+  _spineUrl = URL.createObjectURL(blob);
 
   let xFrac = 0.5, confident = false;
   try {
@@ -782,7 +797,7 @@ async function _startSpineAdjust(warped) {
 
   stage.innerHTML = `
     <div class="scan-cam-frame-wrap" id="scanCamSpineWrap">
-      <img class="scan-cam-frame" id="scanCamSpineFrame" src="${url}" alt="">
+      <img class="scan-cam-frame" id="scanCamSpineFrame" src="${_spineUrl}" alt="">
       <div class="scan-cam-spine-line" id="scanCamSpineLine"></div>
     </div>
   `;
@@ -803,8 +818,8 @@ async function _startSpineAdjust(warped) {
     line.style.height = rect.height + 'px';
   };
   renderSpine();
-  const onResize = () => renderSpine();
-  window.addEventListener('resize', onResize);
+  _spineResizeHandler = () => renderSpine();
+  window.addEventListener('resize', _spineResizeHandler);
 
   const line = document.getElementById('scanCamSpineLine');
   line.addEventListener('pointerdown', e => {
@@ -827,8 +842,10 @@ async function _startSpineAdjust(warped) {
   });
 
   document.getElementById('scanCamSpineConfirmBtn').addEventListener('click', () => {
-    window.removeEventListener('resize', onResize);
-    URL.revokeObjectURL(url);
+    window.removeEventListener('resize', _spineResizeHandler);
+    _spineResizeHandler = null;
+    URL.revokeObjectURL(_spineUrl);
+    _spineUrl = null;
     const splitX = Math.round(warped.width * xFrac);
     const left  = document.createElement('canvas');
     left.width  = Math.max(1, splitX);
