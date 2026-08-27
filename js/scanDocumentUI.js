@@ -41,34 +41,15 @@ import { filterScanPhoto } from './scanFilter.js';
 import { openScanCamera, openCropReview } from './scanCameraUI.js';
 import { detectDocumentQuad, defaultInsetQuad, warpToRect } from './scanGeometry.js';
 import { loadOpenCv } from './lazyLibs.js';
+import { SCAN_MAX_LONG_EDGE } from './scanConstants.js';
 
 const _MANY_IMAGES_WARN_THRESHOLD = 80; // same soft heads-up as jpg2pdfUI.js
 let _warnedManyImages = false;
 
-// Long-edge cap applied to a decoded source photo before ANY geometry or
-// filter processing touches it. Found via a real user report: a raw camera
-// photo (many phones now ship 12-48MP main sensors — a "budget" device is
-// not exempt, e.g. a Redmi 8's 12MP main camera already decodes to
-// ~4000x3000) flows completely uncapped through this tool's whole pipeline
-// today — corner-detection/crop-review, js/scanGeometry.js's OpenCV.js
-// perspective warp (cv.imread/warpPerspective allocate a full-resolution
-// Mat), and js/scanFilter.js's multi-pass grayscale/background-estimate/
-// median-filter/unsharp-mask/enhance chain (each pass allocates a new
-// full-size ImageData buffer) — all on the main thread. On a multi-page
-// scan this reliably exhausted the tab's memory budget on a real
-// low-RAM device, while js/cleanScanUI.js (a different tool, PDF-page
-// based) never hit the same wall because it always renders at a
-// deliberately capped scale, never raw camera-native resolution.
-// 2200px long edge is comfortably print/OCR quality — ≈190 DPI on an
-// A4/Letter page's long edge (297mm ≈ 11.7in × 190dpi ≈ 2223px) — while
-// cutting memory for every downstream full-resolution operation by
-// 3-10x+ depending on the source camera's real resolution.
-const MAX_SCAN_LONG_EDGE = 2200;
-
-// Draws `img` into a NEW canvas capped to MAX_SCAN_LONG_EDGE, scaled
-// uniformly so it never upscales a source that's already smaller. Shared
-// by every decode path below so the cap can't be missed on one of them —
-// see MAX_SCAN_LONG_EDGE's own comment for why this matters.
+// Draws `img` into a NEW canvas capped to SCAN_MAX_LONG_EDGE (see
+// js/scanConstants.js for why), scaled uniformly so it never upscales a
+// source that's already smaller. Shared by every decode path below so
+// the cap can't be missed on one of them.
 //
 // No manual EXIF-rotation step here. This function used to also take an
 // `angle` param and manually re-rotate via ctx.rotate() for a nonzero
@@ -86,7 +67,7 @@ const MAX_SCAN_LONG_EDGE = 2200;
 // trust exactly one source).
 function _capLongEdge(img) {
   const rawW = img.naturalWidth, rawH = img.naturalHeight;
-  const scale = Math.min(1, MAX_SCAN_LONG_EDGE / Math.max(rawW, rawH));
+  const scale = Math.min(1, SCAN_MAX_LONG_EDGE / Math.max(rawW, rawH));
   const outW  = Math.max(1, Math.round(rawW * scale));
   const outH  = Math.max(1, Math.round(rawH * scale));
   const canvas = document.createElement('canvas');
@@ -316,7 +297,7 @@ async function _drainReviewQueue() {
 // very large source image can leave the browser's own internal decoder
 // stuck — neither onload nor onerror ever fires (a known Chromium
 // behavior under memory pressure, separate from — and upstream of —
-// MAX_SCAN_LONG_EDGE's cap, which only shrinks the canvas AFTER this
+// SCAN_MAX_LONG_EDGE's cap, which only shrinks the canvas AFTER this
 // decode already succeeded). An un-timed-out await here hangs the whole
 // review queue FOREVER: no toast, no visible change, and retrying does
 // nothing since _reviewingNow never resets — reported for real as

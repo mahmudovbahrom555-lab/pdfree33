@@ -208,8 +208,17 @@ export function detectDocumentQuad(sourceCanvas) {
  */
 export function warpToRect(sourceCanvas, quad) {
   const cv = window.cv;
-  const outW = Math.round(Math.max(_dist(quad.tl, quad.tr), _dist(quad.bl, quad.br)));
-  const outH = Math.round(Math.max(_dist(quad.tl, quad.bl), _dist(quad.tr, quad.br)));
+  // Clamped to a minimum of 1 — same guard _capture() (scanCameraUI.js)
+  // and the book-split logic in _startSpineAdjust already apply to their
+  // own size computations. Found missing here via code review: a user
+  // dragging the quad's corners into near-coincidence (all four handles
+  // bunched together) rounds outW/outH to 0, and
+  // cv.warpPerspective(..., new cv.Size(0, outH), ...) throws inside
+  // OpenCV.js — caught by _confirm()'s try/catch (surfaces
+  // scan_cam_processing_failed, modal stays open to retry), so this was
+  // recoverable rather than a crash, but avoidable.
+  const outW = Math.max(1, Math.round(Math.max(_dist(quad.tl, quad.tr), _dist(quad.bl, quad.br))));
+  const outH = Math.max(1, Math.round(Math.max(_dist(quad.tl, quad.bl), _dist(quad.tr, quad.br))));
 
   const src = cv.imread(sourceCanvas);
   const dst = new cv.Mat();

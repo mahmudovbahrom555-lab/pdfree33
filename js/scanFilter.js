@@ -33,16 +33,13 @@
 //  photographic content, not maximizing text crispness.
 // ============================================================
 
+import { SCAN_MAX_LONG_EDGE } from './scanConstants.js';
+
 // Backstop, not the primary fix — js/scanDocumentUI.js's own decode paths
-// already cap resolution before calling in here (see its
-// MAX_SCAN_LONG_EDGE's comment for the real-device OOM this guards
-// against: a raw camera photo — 12-48MP on many phones now, budget
-// devices included — flowing uncapped through this multi-pass full-
-// resolution filter chain, each pass allocating its own ImageData
-// buffer). Kept here too as defense-in-depth for any caller that decodes
-// its own source without going through that cap (e.g. a live-camera
-// capture canvas).
-const MAX_FILTER_LONG_EDGE = 2200;
+// already cap resolution before calling in here (see js/scanConstants.js's
+// SCAN_MAX_LONG_EDGE for the real-device OOM this guards against). Kept
+// here too as defense-in-depth for any caller that decodes its own source
+// without going through that cap (e.g. a live-camera capture canvas).
 
 // Exported (unlike filterScanPhoto's own pipeline, which now runs inside
 // js/scanFilterWorker.js and needs a real OffscreenCanvas — no polyfill in
@@ -146,7 +143,7 @@ function _filterWorkerRequest(worker, message, transfer) {
 export async function filterScanPhoto(imgEl, mode = 'grayscale') {
   const rawW = imgEl.naturalWidth || imgEl.width;
   const rawH = imgEl.naturalHeight || imgEl.height;
-  const scale = Math.min(1, MAX_FILTER_LONG_EDGE / Math.max(rawW, rawH));
+  const scale = Math.min(1, SCAN_MAX_LONG_EDGE / Math.max(rawW, rawH));
   const w = Math.max(1, Math.round(rawW * scale));
   const h = Math.max(1, Math.round(rawH * scale));
 
