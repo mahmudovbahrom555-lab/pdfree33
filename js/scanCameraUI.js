@@ -43,7 +43,7 @@
 
 import { t } from './i18n.js';
 import { loadOpenCv } from './lazyLibs.js';
-import { detectDocumentQuad, defaultInsetQuad, warpToRect, detectSpineX } from './scanGeometry.js';
+import { detectDocumentQuad, defaultInsetQuad, warpToRect, detectSpineX, DETECT_LONG_EDGE } from './scanGeometry.js';
 import { SCAN_MAX_LONG_EDGE } from './scanConstants.js';
 
 let _modal        = null;
@@ -194,12 +194,15 @@ async function _startLiveView() {
   }
 
   // Starts loading in parallel with the camera permission prompt below —
-  // doesn't block the video preview either way. The live tracking overlay
-  // just doesn't appear until this resolves (checked each tick via
-  // window.cv?.Mat, not a separate readiness flag — avoids the overlay
-  // getting stuck "not ready" if the modal is closed and reopened after
-  // OpenCV already loaded once).
+  // doesn't block the video preview either way. Pre-warms the MAIN-thread
+  // OpenCV load (loadOpenCv() caches its promise) for _startReview()'s
+  // later one-shot post-capture detection, which still runs main-thread
+  // (a single call per photo, not the ongoing per-tick cost the live
+  // overlay itself used to be) — the live overlay now runs in its own
+  // js/scanDetectWorker.js with its own independent OpenCV load, so this
+  // call no longer gates it the way it used to.
   loadOpenCv().catch(() => {});
+  _ensureDetectWorker(); // pre-create so its own OpenCV load can start now too, not on the live overlay's first tick
 
   try {
     _stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
@@ -227,25 +230,80 @@ async function _startLiveView() {
 // non-interactive framing guide — throttled (not per-frame; video is
 // ~30fps, far more than a guide overlay needs) and cleared on capture/
 // retake/close so it never keeps running against a stopped/gone video.
+//
+// Runs in js/scanDetectWorker.js, not the main thread — found via code
+// review to be a real, ongoing (not one-shot) main-thread cost for the
+// entire time the live preview stays open (same risk class the filter
+// pipeline was already moved off-thread for, see js/scanFilterWorker.js).
+// This function still does the downscale-for-detection step itself
+// (cheap canvas draw, using the SAME DETECT_LONG_EDGE the main-thread
+// detectDocumentQuad() uses for its own one-shot post-capture detection)
+// and un-scales the returned quad back to full-frame coordinates — the
+// worker only runs the actual Canny/contour pipeline on whatever size
+// ImageData it's handed.
+let _detectWorker = null;
+let _detectBusy   = false;
+let _liveTrackGen = 0; // bumped on stop — discards a stale in-flight worker response from a previous session
+
+function _ensureDetectWorker() {
+  if (!_detectWorker) {
+    _detectWorker = new Worker(new URL('./scanDetectWorker.js', import.meta.url));
+  }
+  return _detectWorker;
+}
+
 function _startLiveTracking(video) {
   _stopLiveTracking();
+  const myGen = ++_liveTrackGen;
   const probe = document.createElement('canvas');
+  const small = document.createElement('canvas');
   _liveTrackInterval = setInterval(() => {
-    if (!window.cv?.Mat || !video.videoWidth) return;
+    // Busy guard — skip this tick rather than queueing a second request;
+    // a slightly stale overlay is fine for a non-interactive framing
+    // guide, a growing backlog of unprocessed frames is not.
+    if (!video.videoWidth || _detectBusy) return;
     probe.width  = video.videoWidth;
     probe.height = video.videoHeight;
     probe.getContext('2d').drawImage(video, 0, 0);
 
-    let quad = null;
-    try { quad = detectDocumentQuad(probe); } catch { /* skip this tick, try again next */ }
-    const clipped = quad ? isClippedQuad(quad, video.videoWidth, video.videoHeight) : false;
-    _renderLiveOverlay(quad, video, clipped);
-    _updateAutoCapture(quad, clipped, video);
+    const scale = Math.min(1, DETECT_LONG_EDGE / Math.max(probe.width, probe.height));
+    const dw = Math.max(1, Math.round(probe.width  * scale));
+    const dh = Math.max(1, Math.round(probe.height * scale));
+    small.width = dw; small.height = dh;
+    const sctx = small.getContext('2d');
+    sctx.drawImage(probe, 0, 0, dw, dh);
+    const imageData = sctx.getImageData(0, 0, dw, dh);
+
+    _detectBusy = true;
+    const worker = _ensureDetectWorker();
+    worker.onmessage = (e) => {
+      _detectBusy = false;
+      if (myGen !== _liveTrackGen) return; // a newer (or no) session has started since this request went out
+      if (e.data.type !== 'quadResult') return; // error this tick — try again next
+      let quad = e.data.quad;
+      if (quad) {
+        const inv = 1 / scale;
+        quad = {
+          tl: { x: quad.tl.x * inv, y: quad.tl.y * inv },
+          tr: { x: quad.tr.x * inv, y: quad.tr.y * inv },
+          br: { x: quad.br.x * inv, y: quad.br.y * inv },
+          bl: { x: quad.bl.x * inv, y: quad.bl.y * inv },
+        };
+      }
+      const clipped = quad ? isClippedQuad(quad, video.videoWidth, video.videoHeight) : false;
+      _renderLiveOverlay(quad, video, clipped);
+      _updateAutoCapture(quad, clipped, video);
+    };
+    // imageData.data.buffer transferred (zero-copy) — imageData itself is
+    // not touched again on this side after posting.
+    worker.postMessage({ type: 'detectQuad', data: imageData.data, w: dw, h: dh }, [imageData.data.buffer]);
   }, _LIVE_TRACK_INTERVAL_MS);
 }
 
 function _stopLiveTracking() {
   if (_liveTrackInterval) { clearInterval(_liveTrackInterval); _liveTrackInterval = null; }
+  _liveTrackGen++;
+  _detectBusy = false;
 }
 
 // A corner within this fraction of the frame's own width/height from any

@@ -118,7 +118,14 @@ export function detectSpineX(data, w, h) {
 
 // ── OpenCV.js-dependent (browser only) ──────────────────────────
 
-const _DETECT_LONG_EDGE   = 800;  // downsample for detection only — mirrors processor.js's _EREADER_BBOX_EDGE pattern
+// Exported (unlike _MIN_AREA_FRACTION/_CANNY_LOW/_CANNY_HIGH below, which
+// stay private) — js/scanCameraUI.js's live-tracking loop needs the SAME
+// value to downscale a frame before sending it to js/scanDetectWorker.js,
+// which runs the Canny/contour pipeline directly on whatever size it's
+// given rather than downscaling itself. One shared constant, not two
+// independently-tuned copies — same reasoning as js/scanConstants.js's
+// SCAN_MAX_LONG_EDGE consolidation.
+export const DETECT_LONG_EDGE = 800;  // downsample for detection only — mirrors processor.js's _EREADER_BBOX_EDGE pattern
 const _MIN_AREA_FRACTION  = 0.20; // reject contours smaller than 20% of the frame — too small to plausibly be "the document"
 const _CANNY_LOW          = 75;
 const _CANNY_HIGH         = 200;
@@ -133,7 +140,7 @@ const _CANNY_HIGH         = 200;
  */
 export function detectDocumentQuad(sourceCanvas) {
   const cv = window.cv;
-  const scale = Math.min(1, _DETECT_LONG_EDGE / Math.max(sourceCanvas.width, sourceCanvas.height));
+  const scale = Math.min(1, DETECT_LONG_EDGE / Math.max(sourceCanvas.width, sourceCanvas.height));
   const dw = Math.max(1, Math.round(sourceCanvas.width  * scale));
   const dh = Math.max(1, Math.round(sourceCanvas.height * scale));
 
