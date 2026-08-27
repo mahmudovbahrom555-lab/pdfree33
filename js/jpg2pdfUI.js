@@ -129,6 +129,16 @@ export function hideJpg2PdfOptions() {
 // recreated. Now the settings panel is built exactly once; only the
 // thumbnail-grid wrapper is replaced on later calls.
 
+// CSS renders .j2p-thumb__canvas at 56x56 (css/components.css) — the
+// canvas's own raster width/height must match that, scaled by
+// devicePixelRatio, or the browser upscales a lower-res bitmap into the
+// CSS box and every thumbnail comes out visibly soft (worse on a real
+// phone's retina display). Found via code review of js/scanDocumentUI.js
+// (this file's own thumbnail grid + EXIF preview markup was copied
+// there) — same bug, same shared CSS class/markup, fixed in both.
+const _THUMB_CSS_SIZE = 56;
+const _THUMB_RASTER_SIZE = Math.round(_THUMB_CSS_SIZE * (window.devicePixelRatio || 1));
+
 function _previewsHtml(files) {
   const rotated = _exifAngles.filter(a => a !== 0).length;
   const exifNote = rotated > 0
@@ -142,7 +152,7 @@ function _previewsHtml(files) {
       ${files.map((f, i) => `
         <div class="j2p-thumb" role="listitem" data-index="${i}" data-i="${i}" title="${_esc(f.name)}">
           <canvas class="j2p-thumb__canvas" data-index="${i}"
-                  width="48" height="48" aria-hidden="true"></canvas>
+                  width="${_THUMB_RASTER_SIZE}" height="${_THUMB_RASTER_SIZE}" aria-hidden="true"></canvas>
           <span class="j2p-thumb__name">${_truncName(f.name, 12)}</span>
           ${_exifAngles[i] !== 0 ? `<span class="j2p-thumb__badge" aria-label="${t('j2p_will_be_rotated')}">↺</span>` : ''}
         </div>
@@ -281,15 +291,16 @@ async function _renderPreviews(files) {
       if (!img.naturalWidth) continue; // failed to decode — leave canvas blank
 
       const ctx = canvas.getContext('2d');
-      const s   = Math.min(48 / img.naturalWidth, 48 / img.naturalHeight);
+      const s   = Math.min(_THUMB_RASTER_SIZE / img.naturalWidth, _THUMB_RASTER_SIZE / img.naturalHeight);
       const w   = img.naturalWidth  * s;
       const h   = img.naturalHeight * s;
 
       // Apply EXIF rotation on preview
       const angle = _exifAngles[i] || 0;
-      ctx.clearRect(0, 0, 48, 48);
+      const half = _THUMB_RASTER_SIZE / 2;
+      ctx.clearRect(0, 0, _THUMB_RASTER_SIZE, _THUMB_RASTER_SIZE);
       ctx.save();
-      ctx.translate(24, 24);
+      ctx.translate(half, half);
       ctx.rotate(angle * Math.PI / 180);
       ctx.drawImage(img, -w / 2, -h / 2, w, h);
       ctx.restore();

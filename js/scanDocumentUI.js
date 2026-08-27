@@ -525,12 +525,23 @@ function _settingsHtml() {
   `;
 }
 
+// CSS renders .j2p-thumb__canvas at 56x56 (css/components.css) — the
+// canvas's own raster width/height must match that, scaled by
+// devicePixelRatio, or the browser upscales a lower-res bitmap into the
+// CSS box and every thumbnail comes out visibly soft (worse on a real
+// phone's retina display, which is most of this tool's actual traffic).
+// Found via code review: this canvas used a flat 48x48 raster with no
+// DPR scaling at all — same bug, same shared CSS class/markup pattern,
+// also present in js/jpg2pdfUI.js (fixed there too, see that file).
+const _THUMB_CSS_SIZE = 56;
+const _THUMB_RASTER_SIZE = Math.round(_THUMB_CSS_SIZE * (window.devicePixelRatio || 1));
+
 function _previewsHtml(files) {
   return `
     <div class="j2p-previews" aria-label="${t('j2p_image_preview')}" role="list">
       ${files.map((f, i) => `
         <div class="j2p-thumb" role="listitem" data-index="${i}" data-i="${i}" title="${_esc(f.name)}">
-          <canvas class="j2p-thumb__canvas" data-index="${i}" width="48" height="48" aria-hidden="true"></canvas>
+          <canvas class="j2p-thumb__canvas" data-index="${i}" width="${_THUMB_RASTER_SIZE}" height="${_THUMB_RASTER_SIZE}" aria-hidden="true"></canvas>
           <span class="j2p-thumb__name">${_truncName(f.name, 12)}</span>
           ${!f._scanReviewed ? `<span class="j2p-thumb__badge" aria-label="${t('sd_pending_review')}">⏳</span>` : ''}
         </div>
@@ -576,10 +587,10 @@ async function _renderThumbnails(files) {
       const img = await _loadThumbImage(files[i]);
       if (!img.naturalWidth) continue;
       const ctx = canvas.getContext('2d');
-      const scale = Math.min(48 / img.naturalWidth, 48 / img.naturalHeight);
+      const scale = Math.min(_THUMB_RASTER_SIZE / img.naturalWidth, _THUMB_RASTER_SIZE / img.naturalHeight);
       const w = img.naturalWidth * scale, h = img.naturalHeight * scale;
-      ctx.clearRect(0, 0, 48, 48);
-      ctx.drawImage(img, (48 - w) / 2, (48 - h) / 2, w, h);
+      ctx.clearRect(0, 0, _THUMB_RASTER_SIZE, _THUMB_RASTER_SIZE);
+      ctx.drawImage(img, (_THUMB_RASTER_SIZE - w) / 2, (_THUMB_RASTER_SIZE - h) / 2, w, h);
     } catch { /* thumbnail is cosmetic only */ }
   }
 }

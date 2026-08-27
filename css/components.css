@@ -5254,17 +5254,31 @@ body:not(.has-files) #heroChipsLabel { display: none !important; }
 
 /* Book-spread spine adjustment — a single draggable vertical line over the
    already-rectified spread, same drag mechanics as the corner handles
-   above (setPointerCapture + pointermove/up), just constrained to one axis. */
+   above (setPointerCapture + pointermove/up), just constrained to one axis.
+   Hit area widened to the same 24px tap-target minimum as the corner
+   handles (found via code review: the visible line itself was only 6px,
+   with no separate touch target — easy to miss with a finger on a real
+   phone) — the ::after pseudo-element keeps the VISIBLE line thin, the
+   element itself is the wider, invisible grab area. */
 .scan-cam-spine-line {
   position: absolute;
   top: 0;
+  width: 24px;
+  margin-left: -12px;
+  cursor: ew-resize;
+  touch-action: none;
+}
+.scan-cam-spine-line::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
   width: 6px;
   margin-left: -3px;
   background: rgba(240, 173, 78, 0.85);
   border-left: 1px solid #fff;
   border-right: 1px solid #fff;
-  cursor: ew-resize;
-  touch-action: none;
 }
 
 .scan-cam-frame {
@@ -5295,10 +5309,14 @@ body:not(.has-files) #heroChipsLabel { display: none !important; }
 
 .scan-cam-handle {
   position: absolute;
-  width: 22px;
-  height: 22px;
-  margin-left: -11px;
-  margin-top: -11px;
+  /* 24px — this project's own established WCAG 2.5.8 tap-target minimum
+     (see the "Target-Size + Color-Contrast Gap 2026-08" sitewide sweep);
+     found via code review to be 22px here, a real regression against
+     that bar on the tool's primary mobile drag interaction. */
+  width: 24px;
+  height: 24px;
+  margin-left: -12px;
+  margin-top: -12px;
   border-radius: 50%;
   background: var(--green);
   border: 2px solid #fff;
