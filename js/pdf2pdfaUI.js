@@ -309,7 +309,7 @@ function _reportHtml(r) {
       </button>
       <div id="pdf2pdfaConvertStatus" style="margin-top:8px;font-size:12px;color:var(--text2);"></div>`
     : `<div style="margin-top:10px;padding:10px 14px;background:var(--yellow-light,#fef8e7);border:1px solid rgba(202,138,4,.25);
-        border-radius:10px;color:#8a6d1a;font-size:13px;font-weight:600;">
+        border-radius:10px;color:var(--yellow-text,#8a6d1a);font-size:13px;font-weight:600;">
         ${esc(t('pdfa_not_compliant'))}
       </div>`;
 

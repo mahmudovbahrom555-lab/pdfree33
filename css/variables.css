@@ -21,6 +21,15 @@
   --green-light:  #E8F5EE;
   --green-mid:    #4CAF78;
   --green-text:   var(--green);  /* small text/links on --bg or --surface — must stay WCAG AA (4.5:1); dark mode brightens it below, --green itself is unchanged since it's also used for backgrounds/borders (129 other call sites) that shouldn't shift */
+  /* pdf2pdfaUI.js's "not compliant yet" banner was the only call site for
+     these two tokens and had no dark-mode pair at all — var(--yellow-light)
+     always resolved to its own hardcoded fallback (#fef8e7), so the banner
+     stayed pale-yellow-on-white even in dark mode. Fixed 2026-08 (dark-mode
+     spot-check sweep). Dark values reuse the same amber pairing already
+     shipped for .p2w-confidence__badge--medium (components.css) rather than
+     inventing a new one. */
+  --yellow-light: #fef8e7;
+  --yellow-text:  #8a6d1a;
 
   /* Spacing */
   --radius:    14px;
@@ -52,6 +61,8 @@
   --text3:       #88887E;
   --green-light: #192B20;
   --green-text:  var(--green-mid);
+  --yellow-light: #713f12;
+  --yellow-text:  #fde68a;
   --shadow-lg:   0 8px 40px rgba(0, 0, 0, 0.50);
 }
 
@@ -68,6 +79,8 @@
     --text3:       #88887E;
     --green-light: #192B20;
     --green-text:  var(--green-mid);
+    --yellow-light: #713f12;
+    --yellow-text:  #fde68a;
     --shadow-lg:   0 8px 40px rgba(0, 0, 0, 0.50);
   }
 }
