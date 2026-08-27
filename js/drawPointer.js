@@ -38,6 +38,8 @@ let _textOverlay  = null;
 let _textInput    = null;
 let _textCallback = null;   // (text: string|null) => void
 let _fontSize     = 16;     // independent of widthSlider; persists between text clicks
+let _textSizeUpBtn   = null;   // #textSizeUp element — module scope so _showTextInput (open time) and _updateSize (step time) can both refresh its disabled state
+let _textSizeDownBtn = null;   // #textSizeDown element
 let _cmdId        = 0;      // monotonic ID for every command — required for drag-to-reposition,
                             // style edits, and lasso multi-select (a single shared counter, not
                             // per-type, so ids stay unique across all command types on a page)
@@ -74,6 +76,8 @@ let _pendingTextHit  = null;   // { cmd, startX, startY, clientX, clientY } — 
 let _longPressTimer  = 0;      // setTimeout id for long-press detection
 let _selToolbar      = null;   // #textSelectToolbar element
 let _selColorPicker  = null;   // #selColorPicker element
+let _selSizeUpBtn    = null;   // #selSizeUp element — needs module scope so _showSelToolbar (selection time) and _stepSize (step time) can both refresh its disabled state
+let _selSizeDownBtn  = null;   // #selSizeDown element
 const SEL_SIZES = [8, 10, 12, 14, 16, 18, 20, 24, 28, 32, 36, 48, 60, 72];
 
 // ── Lasso multi-select state ───────────────────────────────────
@@ -123,27 +127,29 @@ function _initTextInput() {
   _textInput   = document.getElementById('floatingTextInput');
   const okBtn       = document.getElementById('textInputOk');
   const cnBtn       = document.getElementById('textInputCancel');
-  const sizeUpBtn   = document.getElementById('textSizeUp');
-  const sizeDownBtn = document.getElementById('textSizeDown');
+  _textSizeUpBtn    = document.getElementById('textSizeUp');
+  _textSizeDownBtn  = document.getElementById('textSizeDown');
   const sizeLabel   = document.getElementById('textSizeLabel');
 
   // stopPropagation prevents button clicks from reaching canvas _onDown
   okBtn.addEventListener('pointerdown', (e) => { e.stopPropagation(); _finalizeTextInput(false); });
   cnBtn.addEventListener('pointerdown', (e) => { e.stopPropagation(); _finalizeTextInput(true);  });
 
-  // A+ / A− step through preset sizes
-  const SIZES = [8, 10, 12, 14, 16, 18, 20, 24, 28, 32, 36, 48, 60, 72];
+  // A+ / A− step through preset sizes (SEL_SIZES — shared with the
+  // selected-annotation toolbar's own stepper, same preset scale)
   const _updateSize = (delta) => {
-    let idx = SIZES.indexOf(_fontSize);
+    let idx = SEL_SIZES.indexOf(_fontSize);
     if (idx === -1) {
-      idx = SIZES.findIndex(s => s >= _fontSize);
-      if (idx === -1) idx = SIZES.length - 1;
+      idx = SEL_SIZES.findIndex(s => s >= _fontSize);
+      if (idx === -1) idx = SEL_SIZES.length - 1;
     }
-    _fontSize = SIZES[Math.max(0, Math.min(SIZES.length - 1, idx + delta))];
+    _fontSize = SEL_SIZES[Math.max(0, Math.min(SEL_SIZES.length - 1, idx + delta))];
     sizeLabel.textContent = _fontSize + 'px';
+    _textSizeUpBtn.disabled   = _fontSize >= SEL_SIZES[SEL_SIZES.length - 1];
+    _textSizeDownBtn.disabled = _fontSize <= SEL_SIZES[0];
   };
-  sizeUpBtn  .addEventListener('pointerdown', (e) => { e.stopPropagation(); _updateSize(+1); });
-  sizeDownBtn.addEventListener('pointerdown', (e) => { e.stopPropagation(); _updateSize(-1); });
+  _textSizeUpBtn  .addEventListener('pointerdown', (e) => { e.stopPropagation(); _updateSize(+1); });
+  _textSizeDownBtn.addEventListener('pointerdown', (e) => { e.stopPropagation(); _updateSize(-1); });
 
   // textarea: Enter = newline, Ctrl/Shift+Enter = confirm, Escape = cancel
   _textInput.addEventListener('keydown', (e) => {
@@ -159,6 +165,11 @@ function _initTextInput() {
 function _showTextInput(screenX, screenY, callback) {
   _textCallback = callback;
   _textInput.value = '';
+
+  // _fontSize persists between text clicks (not reset per-annotation), so the
+  // boundary state from a previous session can already be in effect here.
+  _textSizeUpBtn.disabled   = _fontSize >= SEL_SIZES[SEL_SIZES.length - 1];
+  _textSizeDownBtn.disabled = _fontSize <= SEL_SIZES[0];
 
   // Measure overlay size before painting (visibility:hidden avoids flash)
   _textOverlay.style.visibility = 'hidden';
@@ -214,8 +225,8 @@ function _finalizeTextInput(cancel) {
 function _initSelToolbar() {
   _selToolbar     = document.getElementById('textSelectToolbar');
   _selColorPicker = document.getElementById('selColorPicker');
-  const sizeUp    = document.getElementById('selSizeUp');
-  const sizeDown  = document.getElementById('selSizeDown');
+  _selSizeUpBtn   = document.getElementById('selSizeUp');
+  _selSizeDownBtn = document.getElementById('selSizeDown');
   const delBtn    = document.getElementById('selDelete');
 
   _selColorPicker.addEventListener('input', () => {
@@ -236,11 +247,23 @@ function _initSelToolbar() {
     clearRedoForCurrentPage();
     _pushCommand({ type: 'style', targetId: _selectedTextId, patch: { size: next } });
     redrawPage();
+    _updateSelSizeButtons(next);
   };
 
-  sizeUp  .addEventListener('pointerdown', (e) => { e.stopPropagation(); _stepSize(+1); });
-  sizeDown.addEventListener('pointerdown', (e) => { e.stopPropagation(); _stepSize(-1); });
-  delBtn  .addEventListener('pointerdown', (e) => { e.stopPropagation(); _deleteSelected(); });
+  _selSizeUpBtn  .addEventListener('pointerdown', (e) => { e.stopPropagation(); _stepSize(+1); });
+  _selSizeDownBtn.addEventListener('pointerdown', (e) => { e.stopPropagation(); _stepSize(-1); });
+  delBtn         .addEventListener('pointerdown', (e) => { e.stopPropagation(); _deleteSelected(); });
+}
+
+// Same disabled-at-boundary pattern already proven by js/drawUI.js's
+// _btnPrev/_btnNext page navigation — found missing here via a real rage-click
+// cluster in production analytics (#selSizeUp/#selSizeDown), confirmed via a
+// byte-identical-screenshot test: clicking past SEL_SIZES' min/max produced
+// zero visual change and zero indication of the limit.
+function _updateSelSizeButtons(size) {
+  if (!_selSizeUpBtn || !_selSizeDownBtn) return;
+  _selSizeUpBtn.disabled   = size >= SEL_SIZES[SEL_SIZES.length - 1];
+  _selSizeDownBtn.disabled = size <= SEL_SIZES[0];
 }
 
 function _selectText(cmd, clientX, clientY) {
@@ -341,12 +364,15 @@ function _showSelToolbar(cmd, _screenX, _screenY) {
   _selToolbar.style.top        = Math.max(margin, Math.min(preferY, window.innerHeight - oh - margin)) + 'px';
   _selToolbar.style.visibility = '';
 
-  // Sync color picker to effective color of selected text
+  // Sync color picker + size-button disabled state to the effective values of
+  // the newly-selected text — each annotation can start at a different size,
+  // so this can't just be left at whatever the previous selection set.
   const eff = getEffectiveCommands().find(c => c.id === cmd.id);
   if (eff) {
     const color = eff.color ?? '#000000';
     if (/^#[0-9a-f]{6}$/i.test(color)) _selColorPicker.value = color;
   }
+  _updateSelSizeButtons(eff?.size ?? cmd.size ?? 16);
 }
 
 // ── Вызывается из toolRegistrations hide() — сбрасывает in-flight stroke и RAF ──
