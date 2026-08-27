@@ -757,6 +757,17 @@ export function initCompressEmailOptions(file) {
   if (!container) return;
   container.style.display = 'block';
 
+  // Email mode's getParams (toolRegistrations.js) hardcodes targetDpi: 96 —
+  // but _targetDpi defaults to 150 and is normally only changed by the DPI
+  // chip/preset radio controls in the full compress panel, which email mode
+  // never renders. Left at 150, renderWorkerScanReport()'s shared scan
+  // banner (called for both 'compress' and 'compress-email' from app.js)
+  // showed "→ will downsample to 150 DPI" directly above a "96 DPI" line
+  // from the email-locked notice below — a real on-page contradiction for
+  // any scanned PDF with medianDpi > 150. Sync it here so the banner always
+  // reports the DPI email mode actually uses.
+  _targetDpi = 96;
+
   if (file.size > MAX_COMPRESS_MB * 1024 * 1024) {
     container.innerHTML = `
       <div class="compress-info">
