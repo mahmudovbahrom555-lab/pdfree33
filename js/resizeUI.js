@@ -48,6 +48,11 @@ let _pageCount     = 0;
 let _srcW = 0, _srcH = 0;     // page 1 size in pt — drives the live preview
 let _pdfJsDoc       = null;
 let _thumbURL        = null;   // objectURL of the rendered page-1 thumbnail
+let _initGen         = 0;      // bumped on every initResizeOptions() call — lets a stale
+                                // in-flight call detect it's been superseded and bail out
+                                // instead of overwriting a newer file's state (same race
+                                // class already found+fixed for compress's background scan
+                                // in app.js's pdfree:files-added listener)
 
 // ── Public API ─────────────────────────────────────────────────
 
@@ -64,14 +69,21 @@ export async function initResizeOptions(file) {
   const container = id('resizeOptions');
   if (!container) return;
 
+  // Captured before any await — a later call (user swapped files again while
+  // this one was still loading) bumps _initGen, and every checkpoint below
+  // bails out rather than clobbering the newer file's state with stale data.
+  const gen = ++_initGen;
+
   container.innerHTML = loadingRow(t('rsz_loading'));
   container.style.display = 'block';
 
   try {
     await loadPdfLib();
+    if (gen !== _initGen) return;
     const { PDFDocument } = window.PDFLib;
     const buf = await file.arrayBuffer();
     const doc = await PDFDocument.load(buf, { ignoreEncryption: true });
+    if (gen !== _initGen) return;
 
     _pageCount = doc.getPageCount();
     if (_pageCount === 0) { showToast(t('no_pages_pdf')); _hide(container); return; }
@@ -101,24 +113,30 @@ export async function initResizeOptions(file) {
     // (no thumbnail image) instead of hiding the whole tool.
     try {
       await loadPdfJs();
+      if (gen !== _initGen) return;
       _pdfJsDoc = await window.pdfjsLib.getDocument({
         data: new Uint8Array(buf.slice(0)),
         disableWorker: true,
       }).promise;
+      if (gen !== _initGen) return;
       await _renderThumb();
+      if (gen !== _initGen) return;
     } catch (thumbErr) {
+      if (gen !== _initGen) return;
       _pdfJsDoc = null;
       console.warn('[resizeUI] pdf.js unavailable, preview will show frame only:', thumbErr.message);
     }
 
     _render(file);
   } catch (err) {
+    if (gen !== _initGen) return;
     showToast(t('rsz_err_load', { msg: err.message }), 5000);
     _hide(container);
   }
 }
 
 export function hideResizeOptions() {
+  _initGen++; // invalidate any in-flight initResizeOptions() call
   _cleanup();
   const container = id('resizeOptions');
   if (!container) return;
