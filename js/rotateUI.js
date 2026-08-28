@@ -53,6 +53,19 @@ import { t, tp } from './i18n.js';
 const _LARGE_DOC_WARN_THRESHOLD = 150;
 const MAX_RENDERS = 3; // concurrent lazy thumb renders, mirrors pdf2jpgUI.js
 
+// _applyRotation() below touches every selected card. Above this many,
+// one _updateCard() per card (querySelector + outerHTML replace, each a
+// separate reflow) becomes real main-thread jank on large documents —
+// measured via real Playwright + CDP 4x throttle: "Select All" + rotate
+// on a 600-page doc produced a 107ms single-frame gap (300 pages: ~40ms,
+// under the same test's own noise floor). A single _refreshAllCards()
+// call is one reflow instead of N and empirically faster past this size,
+// so it takes over once a selection crosses this threshold. Below it,
+// the existing content-only _updateCard() path stays — it's the better
+// choice for a handful of individual toggles (avoids the drag-listener
+// rebind + IntersectionObserver re-setup that a full rebuild carries).
+const _BULK_UPDATE_THRESHOLD = 20;
+
 // ── State ──────────────────────────────────────────────────────
 
 let _pageCount       = 0;
@@ -403,7 +416,14 @@ function _applyRotation(angle) {
 
   for (const idx of _selected) {
     _deltas[idx] = ((_deltas[idx] + angle) % 360 + 360) % 360;
-    _updateCard(idx);
+  }
+
+  // See _BULK_UPDATE_THRESHOLD above — one full-grid rebuild beats N
+  // individual card updates once the selection is large.
+  if (_selected.size > _BULK_UPDATE_THRESHOLD) {
+    _refreshAllCards();
+  } else {
+    for (const idx of _selected) _updateCard(idx);
   }
 
   _updateHistoryButtons();

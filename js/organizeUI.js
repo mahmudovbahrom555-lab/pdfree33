@@ -50,6 +50,15 @@ import { t, tp } from './i18n.js';
 const _LARGE_DOC_WARN_THRESHOLD = 150; // soft warning only, matches rotateUI.js
 const MAX_RENDERS = 3;                 // concurrent lazy thumb renders
 
+// Same threshold + same rationale as rotateUI.js's _BULK_UPDATE_THRESHOLD:
+// _applyRotation()/_deleteSelected() below call _updateCard() once per
+// touched card (querySelector + innerHTML write, each a separate reflow).
+// Measured via real Playwright + CDP 4x throttle: "Select All" + rotate on
+// a 600-page doc produced a 160ms single-frame gap (300 pages: ~80ms).
+// Past this many touched cards, a single _refreshAllCards() call (one
+// reflow) is faster than N individual ones.
+const _BULK_UPDATE_THRESHOLD = 20;
+
 // A pixel counts as "ink" once it deviates from pure white by more than
 // this much (sum of the three RGB deltas) — tolerant of light scanner
 // grain/JPEG noise on a genuinely blank page, still catches real text.
@@ -454,7 +463,12 @@ function _applyRotation(angle) {
   _snapshotForUndo();
   for (const pos of _selected) {
     _deltas[pos] = ((_deltas[pos] + angle) % 360 + 360) % 360;
-    _updateCard(pos);
+  }
+  // See _BULK_UPDATE_THRESHOLD above.
+  if (_selected.size > _BULK_UPDATE_THRESHOLD) {
+    _refreshAllCards();
+  } else {
+    for (const pos of _selected) _updateCard(pos);
   }
   _updateHistoryButtons();
   _updateSubmitBtn();
@@ -483,7 +497,12 @@ function _deleteSelected() {
   _snapshotForUndo();
   for (const pos of _selected) {
     _deletedFlags[pos] = 1;
-    _updateCard(pos);
+  }
+  // See _BULK_UPDATE_THRESHOLD above.
+  if (_selected.size > _BULK_UPDATE_THRESHOLD) {
+    _refreshAllCards();
+  } else {
+    for (const pos of _selected) _updateCard(pos);
   }
   _selected.clear();
   _updateHint();
@@ -513,7 +532,15 @@ async function _quickSelect(mode) {
     // 'none' — already cleared
   }
   if (mode === 'blank' && _selected.size === 0) showToast(t('org_select_blank_none'));
-  for (let pos = 0; pos < _originalIndex.length; pos++) _updateCard(pos);
+  // Unlike _applyRotation()/_deleteSelected(), this loop always touches
+  // EVERY card regardless of mode (each pass has to check every position
+  // to know whether it belongs in the new selection) — so there's no
+  // small-selection case where per-card _updateCard() wins. One
+  // _refreshAllCards() call (single reflow) is strictly better here; see
+  // _BULK_UPDATE_THRESHOLD above for the measured rationale. Order/content
+  // don't change, only selection state, so the full rebuild is safe —
+  // rotateUI.js's own _quickSelect() already uses this same pattern.
+  _refreshAllCards();
   _updateHint();
 }
 
