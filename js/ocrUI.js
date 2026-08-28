@@ -1175,8 +1175,7 @@ async function _runOcr(file, gen) {
       const pageRotation = page.rotate || 0;
       ocrCanvas = pageRotation !== 0 ? _counterRotateCanvas(canvas, pageRotation) : canvas;
 
-      const gray = _toGrayscale(ocrCanvas);
-      if (CJK_LANGS.has(_primaryScript(resolvedLang))) _binarizeInPlace(gray);
+      const gray = await _toGrayscaleAsync(ocrCanvas, CJK_LANGS.has(_primaryScript(resolvedLang)));
       const result = await worker.recognize(gray);
       // Adaptive confidence threshold — see COMPLEX_LANGS constant.
       // Latin (eng/fra/…): 55% — Tesseract is reliable; below 55% is almost always garbage.
@@ -1307,6 +1306,55 @@ async function _extractTextDirect(file) {
 
 // ── Canvas preprocessing ──────────────────────────────────────────────────────
 
+// Runs _toGrayscale/_binarizeInPlace (below) in a dedicated Worker instead of
+// blocking the main thread. Found via a real main-thread-jank audit (same
+// methodology as the Document Scanner perspective-warp fix, commit
+// 956c0fb1): a real ~6.3MB scanned PDF page, rendered up to SCRIPT_PROFILE's
+// resolution cap, produced a 240.2ms main-thread frame gap on the OCR
+// button click under 4x CPU throttle — traced to this grayscale pixel loop
+// running synchronously BEFORE Tesseract's own worker.recognize() call ever
+// started (Tesseract.js's recognition itself already runs off-thread; this
+// pre-processing step didn't). Same lazy-singleton worker + ImageData
+// transfer pattern js/scanGeometry.js's warpToRectAsync/scanWarpWorker.js
+// pair already established for this class of fix. _toGrayscale/
+// _otsuThreshold/_binarizeInPlace below stay as the reference
+// implementation (verbatim-ported into js/ocrGrayscaleWorker.js) — same
+// "sync version kept as reference" precedent as scanGeometry.js's
+// warpToRect().
+let _grayscaleWorker = null;
+function _ensureGrayscaleWorker() {
+  if (!_grayscaleWorker) {
+    _grayscaleWorker = new Worker(new URL('./ocrGrayscaleWorker.js', import.meta.url));
+  }
+  return _grayscaleWorker;
+}
+
+async function _toGrayscaleAsync(src, binarize) {
+  const w = src.width, h = src.height;
+  const ctx = src.getContext('2d');
+  const imageData = ctx.getImageData(0, 0, w, h);
+  const worker = _ensureGrayscaleWorker();
+
+  const result = await new Promise((resolve, reject) => {
+    worker.onmessage = (e) => {
+      const d = e.data;
+      if (d.type === 'error') { reject(new Error(d.message)); return; }
+      resolve(d);
+    };
+    worker.onerror = (e) => reject(new Error(e.message || 'Worker error'));
+    worker.postMessage(
+      { type: 'grayscale', data: imageData.data, w, h, binarize },
+      [imageData.data.buffer]
+    );
+  });
+
+  const dst = document.createElement('canvas');
+  dst.width  = w;
+  dst.height = h;
+  dst.getContext('2d').putImageData(new ImageData(result.data, w, h), 0, 0);
+  return dst;
+}
+
 // Convert rendered page to grayscale before passing to Tesseract.
 // Benefits:
 //   1. Removes color noise introduced by scanner or CamScanner processing.
@@ -1316,6 +1364,8 @@ async function _extractTextDirect(file) {
 //      as RGBA, but the uniform channels help Tesseract's thresholding.
 // The source canvas is NOT modified — a new canvas is returned and released
 // by the caller immediately after recognize().
+// Reference implementation only — see _toGrayscaleAsync() above, which is
+// what the real OCR pipeline actually calls now.
 function _toGrayscale(src) {
   const dst = document.createElement('canvas');
   dst.width  = src.width;
