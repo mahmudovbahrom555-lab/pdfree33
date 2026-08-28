@@ -590,109 +590,31 @@ async function _runOrganize(filesSnapshot, { pageOrder = [] } = {}) {
 // ── Glossary (find dictionary terms, attach Highlight+Popup annotations) ─
 //
 // Own persistent Worker instance, same rationale as _organizeWorker above.
-// Text search deliberately happens HERE, on the main thread, not inside
-// glossaryWorker.js — confirmed empirically that pdf.js can't run inside
-// an already-running Worker with this project's pdf.js build (see
-// glossaryWorker.js's own header comment for the exact error). Same shape
-// _runCleanScan already uses (pdf.js/rendering on the main thread, only
-// the pdf-lib write happens in the dedicated worker).
+// pdf.js text EXTRACTION (getPage/getTextContent) deliberately still
+// happens HERE, on the main thread, not inside glossaryWorker.js —
+// confirmed empirically that pdf.js can't run inside an already-running
+// Worker with this project's pdf.js build (see glossaryWorker.js's own
+// header comment for the exact error). Same shape _runCleanScan uses
+// (pdf.js/rendering on the main thread, only the pdf-lib write happens in
+// the dedicated worker).
 //
-// Verified empirically (real Playwright run, not assumed): 500 pages /
-// 35,000 matches / 70,000 annotation objects completed correctly in
-// ~10s with no memory or UI issues — this cap exists purely as a
-// backstop against pathological input, not a routine limit.
-const _GLOSSARY_MAX_MATCHES = 20000;
+// The actual term-MATCHING (regex scan over every line × every dictionary
+// term) is a different story: it has zero pdf.js dependency — it only
+// touches the plain {str, transform, width} objects pdf.js already handed
+// back — so there's no reason it needs the main thread at all. It used to
+// run here too (moved into glossaryWorker.js instead, see that file's
+// `_findGlossaryMatches`) after a real Playwright measurement (4x CPU
+// throttle, 200 pages / worst-case repeated-vocabulary text, "Use this
+// crop"-style rAF heartbeat) found a 211ms single-frame main-thread gap —
+// smaller than the scan-document warpToRect case (368ms) but the same
+// class of bug, found in the same audit pass. pageItemsByPage is now
+// handed to the worker instead of the already-computed matches array.
 let _glossaryWorker = null;
 function _ensureGlossaryWorker() {
   if (!_glossaryWorker) {
     _glossaryWorker = new Worker(new URL('./glossaryWorker.js', import.meta.url));
   }
   return _glossaryWorker;
-}
-
-// Groups pdf.js text items by baseline (same y, within tolerance), then
-// matches each dictionary term against the CONCATENATED line text rather
-// than per-item — a term split across two items (a real, common case:
-// kerning/font-run boundaries, verified against a real generated PDF, not
-// hypothetical) would otherwise be silently missed entirely, not just
-// mis-positioned. A match's boxes[] can be >1 when it spans an item
-// boundary — glossaryWorker.js turns that into one Highlight annotation
-// with one QuadPoints quad per box, which is exactly what QuadPoints is
-// for. Does NOT handle a term split across two lines (word wrap/hyphen at
-// line end) — a real, known, narrower gap, left for later.
-function _findGlossaryMatches(pageItemsByPage, dictionary, yTolerance = 2) {
-  const terms = dictionary.map(d => ({
-    ...d,
-    re: new RegExp(`\\b${d.term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'giu'),
-  }));
-  const matches = [];
-
-  pageItemsByPage.forEach((items, pageIndex) => {
-    const lines = [];
-    // Fast path: check the most-recently-created line before falling back to
-    // the full scan. pdf.js emits items in roughly reading order, so
-    // consecutive items usually belong to the same line as the previous one
-    // — this is the exact same lines.find() semantics as a fallback (never
-    // skipped, never changes which line an item lands in), just short-
-    // circuited for the common case. Verified byte-identical output against
-    // the plain linear scan on both sequential and adversarial (interleaved
-    // two-column) synthetic inputs; ~3x faster on a realistic dense page.
-    let _lastLine = null;
-    for (const item of items) {
-      if (!item.str) continue;
-      const ty = item.transform[5];
-      let line = (_lastLine && Math.abs(_lastLine.y - ty) <= yTolerance)
-        ? _lastLine
-        : lines.find(l => Math.abs(l.y - ty) <= yTolerance);
-      if (!line) { line = { y: ty, items: [] }; lines.push(line); }
-      line.items.push(item);
-      _lastLine = line;
-    }
-    for (const line of lines) line.items.sort((a, b) => a.transform[4] - b.transform[4]);
-
-    for (const line of lines) {
-      let lineText = '';
-      const charToItem = [];
-      for (const item of line.items) {
-        const start = lineText.length;
-        lineText += item.str;
-        for (let i = 0; i < item.str.length; i++) charToItem[start + i] = item;
-      }
-
-      for (const { term, definition, re } of terms) {
-        re.lastIndex = 0;
-        let m;
-        while ((m = re.exec(lineText)) !== null) {
-          const matchStart = m.index;
-          const matchEnd   = m.index + m[0].length;
-          const boxes = [];
-          let i = matchStart;
-          while (i < matchEnd) {
-            const item = charToItem[i];
-            if (!item) { i++; continue; }
-            let j = i;
-            while (j < matchEnd && charToItem[j] === item) j++;
-            const itemStartInLine = charToItem.indexOf(item);
-            const [, , , scaleY, tx] = item.transform;
-            const charW = item.width / (item.str.length || 1);
-            const offsetInItem = i - itemStartInLine;
-            const lenInItem    = j - i;
-            const h = Math.max(Math.abs(scaleY) * 1.2, 4);
-            boxes.push({
-              x: tx + offsetInItem * charW,
-              y: item.transform[5] - h * 0.1,
-              w: Math.max(lenInItem * charW, 2),
-              h,
-            });
-            i = j;
-          }
-          if (boxes.length) matches.push({ pageIndex, definition, boxes, term, matchedText: m[0] });
-        }
-      }
-    }
-  });
-
-  return matches;
 }
 
 async function _runGlossary(filesSnapshot, { dictionary = [] } = {}) {
@@ -734,30 +656,20 @@ async function _runGlossary(filesSnapshot, { dictionary = [] } = {}) {
       return;
     }
 
-    let matches = _findGlossaryMatches(pageItemsByPage, dictionary);
-    if (matches.length === 0) {
-      _handleError('glossary', t('val_glossary_no_matches'));
-      return;
-    }
-    // Defensive cap, not a routine limit — real-world testing (500 pages,
-    // 35,000 matches, 70,000 annotation objects) completed correctly in
-    // ~10s with no memory/UI issues, so this only guards against a
-    // genuinely pathological input (e.g. a 1-2 letter "term" that matches
-    // thousands of times across a huge document), not realistic large
-    // documents like the actual target use case (a long scripture text).
-    if (matches.length > _GLOSSARY_MAX_MATCHES) {
-      showToast(t('warn_glossary_truncated', { n: _GLOSSARY_MAX_MATCHES }), 6000);
-      matches = matches.slice(0, _GLOSSARY_MAX_MATCHES);
-    }
-
+    // Matching (regex scan over every line × every dictionary term) and
+    // annotation-writing both happen inside glossaryWorker.js now — see
+    // the comment above _ensureGlossaryWorker for why matching moved off
+    // the main thread. pageItemsByPage (plain, structured-cloneable
+    // {str, transform, width} objects — no pdf.js dependency) is handed
+    // over instead of an already-computed matches array.
     setProgress(45, t('prog_glossary_write'));
     const worker = _ensureGlossaryWorker();
-    worker.postMessage({ file: buffer, options: { matches } }, [buffer]);
+    worker.postMessage({ file: buffer, options: { pageItemsByPage, dictionary } }, [buffer]);
 
     worker.onmessage = (e) => {
       const data = e.data;
       if (data.type === 'progress') {
-        setProgress(Math.max(45, data.value), data.label);
+        setProgress(Math.max(15, data.value), data.label);
       } else if (data.type === 'done') {
         if (!(data.result instanceof ArrayBuffer)) {
           _handleError('glossary', 'Unexpected result from worker'); return;
@@ -775,11 +687,17 @@ async function _runGlossary(filesSnapshot, { dictionary = [] } = {}) {
         document.dispatchEvent(new CustomEvent('pdfree:success', {
           detail: { tool: 'glossary', blob, desc, filename }
         }));
+        // Same defensive cap the worker enforces (see glossaryWorker.js's
+        // _GLOSSARY_MAX_MATCHES) — only fires on genuinely pathological
+        // input, not realistic large documents.
+        if (data.truncated) {
+          showToast(t('warn_glossary_truncated', { n: data.matchCount }), 6000);
+        }
       } else if (data.type === 'error') {
         isProcessing = false;
         setFilesLocked(false);
         hideCancelBtn();
-        _handleError('glossary', data.message);
+        _handleError('glossary', data.code === 'no_matches' ? t('val_glossary_no_matches') : data.message);
       }
     };
     worker.onerror = (e) => {

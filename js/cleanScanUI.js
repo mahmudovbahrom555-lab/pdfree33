@@ -4,14 +4,26 @@
 // ============================================================
 //  cleanScanUI.js — Clean Scan (whiten scanned-document backgrounds)
 //
-//  Live before/after preview runs the SAME grayscale/background-estimate/
-//  threshold-or-enhance algorithm as js/cleanScanWorker.js, duplicated
-//  here against a plain <canvas> instead of OffscreenCanvas — same
-//  precedent as resizeUI.js/resizeWorker.js's duplicated _fitRect: worker
-//  files use importScripts (classic worker, no ES modules), so sharing
-//  via import isn't possible; small, pure functions, kept in sync
-//  manually. Preview runs on a small (~900px) downscaled copy regardless
-//  of the export quality setting, so slider drags stay responsive.
+//  Live before/after preview reuses js/cleanScanWorker.js's REAL
+//  'processPage' pipeline (grayscale/background-estimate/threshold-or-
+//  enhance) via its own dedicated Worker instance, on a small (~900px)
+//  downscaled copy regardless of the export quality setting — same idea
+//  as before (small canvas keeps the actual pixel work cheap), but the
+//  pixel work itself now runs off the main thread instead of duplicated
+//  inline here.
+//
+//  This replaces an earlier version that duplicated the whole algorithm
+//  against a plain <canvas> synchronously on the main thread (same
+//  precedent resizeUI.js/resizeWorker.js's duplicated _fitRect still
+//  uses for genuinely small functions). That was fine for a cheap
+//  function; it wasn't for this one — a real Playwright measurement (4x
+//  CPU throttle, rAF heartbeat, same methodology as the scan-document
+//  warpToRect fix) found a 920ms single main-thread frame gap on every
+//  slider drag, worse than the original scan-document bug. Reusing
+//  cleanScanWorker.js's existing off-main-thread 'processPage' handler
+//  fixes the jank AND removes the duplicate-algorithm-drift risk in one
+//  change — the preview now produces byte-identical output to a real
+//  export at preview resolution, since it's literally the same code path.
 // ============================================================
 
 import { id, esc }                   from './utils.js';
@@ -22,7 +34,6 @@ import { TOOLS, getLocalizedTool }   from './config.js';
 import { t, tp }                     from './i18n.js';
 
 const PREVIEW_WIDTH = 900;
-const BG_LONG_EDGE   = 64;
 const PREVIEW_DEBOUNCE_MS = 150; // heavier than watermarkUI's 60ms — this redraw re-runs the whole algorithm, not just a cheap overlay
 
 // ── State ──────────────────────────────────────────────────────
@@ -117,7 +128,7 @@ async function _checkLooksDigital() {
   } catch { _looksDigital = false; }
 }
 
-// ── Preview rendering + algorithm (duplicated from cleanScanWorker.js) ──
+// ── Preview rendering ─────────────────────────────────────────
 
 async function _renderPreviewSource(pageNum) {
   const page = await _pdfJsDoc.getPage(pageNum);
@@ -145,228 +156,38 @@ function _detectColor(canvas) {
   return sampled > 0 && (colored / sampled) > 0.02;
 }
 
-function _toGrayscaleCanvas(src) {
-  const dst = document.createElement('canvas');
-  dst.width = src.width; dst.height = src.height;
-  const ctx = dst.getContext('2d');
-  ctx.drawImage(src, 0, 0);
-  const img = ctx.getImageData(0, 0, dst.width, dst.height);
-  const d = img.data;
-  for (let i = 0; i < d.length; i += 4) {
-    const g = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2];
-    d[i] = d[i + 1] = d[i + 2] = g;
+// ── Preview worker ─────────────────────────────────────────────
+// Own dedicated Worker instance running the REAL cleanScanWorker.js —
+// separate from the instance processor.js's _runCleanScan uses for the
+// actual export (different lifetime/concern: this one only ever gets
+// 'processPage' messages, never 'assemble', and can be torn down whenever
+// the user leaves this tool). Reusing the export worker's own message
+// type keeps preview and export byte-for-byte the same algorithm with
+// zero duplicated pixel-math code to drift out of sync.
+
+let _previewWorker = null;
+function _ensurePreviewWorker() {
+  if (!_previewWorker) {
+    _previewWorker = new Worker(new URL('./cleanScanWorker.js', import.meta.url));
   }
-  ctx.putImageData(img, 0, 0);
-  return dst;
+  return _previewWorker;
 }
 
-function _estimateBackground(gray) {
-  const w = gray.width, h = gray.height;
-  const scale = Math.min(1, BG_LONG_EDGE / Math.max(w, h));
-  const sw = Math.max(1, Math.round(w * scale)), sh = Math.max(1, Math.round(h * scale));
-
-  const small = document.createElement('canvas');
-  small.width = sw; small.height = sh;
-  const sctx = small.getContext('2d');
-  sctx.imageSmoothingEnabled = true; sctx.imageSmoothingQuality = 'high';
-  sctx.drawImage(gray, 0, 0, sw, sh);
-
-  const bg = document.createElement('canvas');
-  bg.width = w; bg.height = h;
-  const bctx = bg.getContext('2d');
-  bctx.imageSmoothingEnabled = true; bctx.imageSmoothingQuality = 'high';
-  bctx.drawImage(small, 0, 0, w, h);
-  return bg;
-}
-
-function _flatFieldCorrect(gray, bg) {
-  const w = gray.width, h = gray.height;
-  const gctx = gray.getContext('2d'), bctx = bg.getContext('2d');
-  const gImg = gctx.getImageData(0, 0, w, h), bImg = bctx.getImageData(0, 0, w, h);
-  const gd = gImg.data, bd = bImg.data;
-  for (let i = 0; i < gd.length; i += 4) {
-    const bgv = bd[i] < 1 ? 1 : bd[i];
-    const v   = Math.min(255, Math.max(0, (gd[i] / bgv) * 255));
-    gd[i] = gd[i + 1] = gd[i + 2] = v;
-  }
-  gctx.putImageData(gImg, 0, 0);
-  return gray;
-}
-
-// Kept in sync with js/cleanScanWorker.js's _medianFilterGray — must run
-// BEFORE _unsharpMask below, see that file's comment for why (sharpening
-// amplifies noise into small connected blobs that survive despeckling
-// unless it's denoised first).
-function _medianFilterGray(data, w, h) {
-  const out = new Uint8ClampedArray(w * h);
-  const win = new Uint8Array(9);
-  for (let y = 0; y < h; y++) {
-    for (let x = 0; x < w; x++) {
-      let n = 0;
-      for (let dy = -1; dy <= 1; dy++) {
-        const ny = y + dy;
-        if (ny < 0 || ny >= h) continue;
-        const rowBase = ny * w;
-        for (let dx = -1; dx <= 1; dx++) {
-          const nx = x + dx;
-          if (nx < 0 || nx >= w) continue;
-          win[n++] = data[(rowBase + nx) * 4];
-        }
-      }
-      for (let a = 1; a < n; a++) {
-        const key = win[a];
-        let b = a - 1;
-        while (b >= 0 && win[b] > key) { win[b + 1] = win[b]; b--; }
-        win[b + 1] = key;
-      }
-      out[y * w + x] = win[n >> 1];
-    }
-  }
-  return out;
-}
-
-function _applyMedianFilter(gray) {
-  const w = gray.width, h = gray.height;
-  const ctx = gray.getContext('2d');
-  const img = ctx.getImageData(0, 0, w, h);
-  const d = img.data;
-  const med = _medianFilterGray(d, w, h);
-  for (let i = 0, p = 0; i < d.length; i += 4, p++) d[i] = d[i + 1] = d[i + 2] = med[p];
-  ctx.putImageData(img, 0, 0);
-  return gray;
-}
-
-// Kept in sync with js/cleanScanWorker.js's _unsharpMask/_boxBlurGray —
-// see its comment for the High-Pass+Linear-Light-collapses-to-unsharp-mask
-// derivation.
-function _boxBlurGray(data, w, h, radius) {
-  const out = new Float32Array(w * h);
-  for (let y = 0; y < h; y++) {
-    for (let x = 0; x < w; x++) {
-      let sum = 0, count = 0;
-      for (let dy = -radius; dy <= radius; dy++) {
-        const ny = y + dy;
-        if (ny < 0 || ny >= h) continue;
-        const rowBase = ny * w;
-        for (let dx = -radius; dx <= radius; dx++) {
-          const nx = x + dx;
-          if (nx < 0 || nx >= w) continue;
-          sum += data[(rowBase + nx) * 4];
-          count++;
-        }
-      }
-      out[y * w + x] = sum / count;
-    }
-  }
-  return out;
-}
-
-function _unsharpMask(gray, radius, amount) {
-  const w = gray.width, h = gray.height;
-  const ctx = gray.getContext('2d');
-  const img = ctx.getImageData(0, 0, w, h);
-  const d = img.data;
-  const blurred = _boxBlurGray(d, w, h, radius);
-  for (let i = 0, p = 0; i < d.length; i += 4, p++) {
-    const v = d[i] + amount * (d[i] - blurred[p]);
-    const c = Math.min(255, Math.max(0, v));
-    d[i] = d[i + 1] = d[i + 2] = c;
-  }
-  ctx.putImageData(img, 0, 0);
-  return gray;
-}
-
-function _otsuThreshold(data) {
-  const hist = new Array(256).fill(0);
-  for (let i = 0; i < data.length; i += 4) hist[data[i]]++;
-  const total = data.length / 4;
-  let sum = 0;
-  for (let i = 0; i < 256; i++) sum += i * hist[i];
-  let wB = 0, sumB = 0, varMax = 0, threshold = 128;
-  for (let t2 = 0; t2 < 256; t2++) {
-    wB += hist[t2];
-    if (!wB) continue;
-    const wF = total - wB;
-    if (!wF) break;
-    sumB += t2 * hist[t2];
-    const mB = sumB / wB;
-    const mF = (sum - sumB) / wF;
-    const varBetween = wB * wF * (mB - mF) ** 2;
-    if (varBetween > varMax) { varMax = varBetween; threshold = t2; }
-  }
-  return threshold;
-}
-
-// Kept in sync with js/cleanScanWorker.js's _applyClean/_despeckleMask —
-// see its comment for why this is a soft-erosion rank filter (keep a dark
-// pixel only if its 3x3 window has >= minDarkNeighbors dark pixels) rather
-// than classic morphological erosion (which requires all 8 neighbors dark
-// and was tried, then reverted for deleting thin/faint strokes outright).
-const _MIN_DARK_NEIGHBORS = 3;
-
-function _despeckleMask(mask, w, h, minDarkNeighbors) {
-  const out = new Uint8Array(mask.length);
-  for (let y = 0; y < h; y++) {
-    for (let x = 0; x < w; x++) {
-      const p = y * w + x;
-      if (!mask[p]) continue;
-      let count = 0;
-      for (let dy = -1; dy <= 1; dy++) {
-        const ny = y + dy;
-        if (ny < 0 || ny >= h) continue;
-        const nrow = ny * w;
-        for (let dx = -1; dx <= 1; dx++) {
-          const nx = x + dx;
-          if (nx < 0 || nx >= w) continue;
-          if (mask[nrow + nx]) count++;
-        }
-      }
-      out[p] = count >= minDarkNeighbors ? 1 : 0;
-    }
-  }
-  return out;
-}
-
-function _applyClean(canvas, strength) {
-  const w = canvas.width, h = canvas.height;
-  const ctx = canvas.getContext('2d');
-  const img = ctx.getImageData(0, 0, w, h);
-  const d = img.data;
-  const base  = _otsuThreshold(d);
-  const shift = (strength - 0.5) * 80;
-  const th = Math.min(250, Math.max(5, base + shift));
-  const gamma   = 3.0;
-  const darkCap = 20;
-
-  const n = w * h;
-  let mask = new Uint8Array(n);
-  for (let p = 0, i = 0; p < n; p++, i += 4) mask[p] = d[i] < th ? 1 : 0;
-  mask = _despeckleMask(mask, w, h, _MIN_DARK_NEIGHBORS);
-
-  for (let p = 0, i = 0; p < n; p++, i += 4) {
-    if (!mask[p]) { d[i] = d[i + 1] = d[i + 2] = 255; }
-    else {
-      const v = d[i];
-      const dark = Math.round(((v / th) ** gamma) * darkCap);
-      d[i] = d[i + 1] = d[i + 2] = dark;
-    }
-  }
-  ctx.putImageData(img, 0, 0);
-}
-
-function _applyEnhance(canvas, strength) {
-  const w = canvas.width, h = canvas.height;
-  const ctx = canvas.getContext('2d');
-  const img = ctx.getImageData(0, 0, w, h);
-  const d = img.data;
-  const contrast   = 1 + strength * 1.2;
-  const brightness = strength * 40;
-  for (let i = 0; i < d.length; i += 4) {
-    const v = d[i];
-    const c = Math.min(255, Math.max(0, (v - 128) * contrast + 128 + brightness));
-    d[i] = d[i + 1] = d[i + 2] = c;
-  }
-  ctx.putImageData(img, 0, 0);
+// Single-flight request/response wrapper — reassigns onmessage/onerror per
+// call, same shape as processor.js's _cleanScanWorkerRequest. A stale
+// in-flight request whose response arrives after a newer one has already
+// taken over onmessage just never resolves, which is fine: _updatePreview's
+// myGen check means a stale response would have been discarded anyway.
+function _previewWorkerRequest(worker, message, transfer) {
+  return new Promise((resolve, reject) => {
+    worker.onmessage = (e) => {
+      const d = e.data;
+      if (d.type === 'error') { reject(new Error(d.message)); return; }
+      if (d.type === 'pageDone') resolve(d);
+    };
+    worker.onerror = (e) => reject(new Error(e.message || 'Worker error'));
+    worker.postMessage(message, transfer);
+  });
 }
 
 async function _updatePreview() {
@@ -383,19 +204,21 @@ async function _updatePreview() {
   if (myGen !== _previewGen) return;
   _setPreviewImg('csBeforeImg', beforeBlob, false);
 
-  const gray = _toGrayscaleCanvas(src);
-  const bg   = _estimateBackground(gray);
-  _flatFieldCorrect(gray, bg);
-  _applyMedianFilter(gray);
-  _unsharpMask(gray, 2, 2.0);
-  if (_mode === 'enhance') _applyEnhance(gray, _strength);
-  else _applyClean(gray, _strength);
-
-  const afterBlob = await new Promise(res =>
-    gray.toBlob(res, _mode === 'enhance' ? 'image/jpeg' : 'image/png', 0.87)
-  );
-  if (myGen !== _previewGen) return;
-  _setPreviewImg('csAfterImg', afterBlob, true);
+  try {
+    const bitmap = await createImageBitmap(src);
+    const worker = _ensurePreviewWorker();
+    const result = await _previewWorkerRequest(
+      worker,
+      { type: 'processPage', index: 0, bitmap, mode: _mode, strength: _strength },
+      [bitmap]
+    );
+    if (myGen !== _previewGen) return;
+    const afterBlob = new Blob([result.bytes], { type: result.format === 'jpeg' ? 'image/jpeg' : 'image/png' });
+    _setPreviewImg('csAfterImg', afterBlob, true);
+  } catch {
+    // Preview is best-effort — leave the previous "after" image in place
+    // rather than surfacing a toast for a non-critical redraw.
+  }
 }
 
 function _setPreviewImg(elId, blob, isAfter) {
@@ -552,6 +375,7 @@ function _cleanup() {
   _pdfJsDoc = null;
   if (_beforeURL) { URL.revokeObjectURL(_beforeURL); _beforeURL = null; }
   if (_afterURL)  { URL.revokeObjectURL(_afterURL);  _afterURL  = null; }
+  if (_previewWorker) { _previewWorker.terminate(); _previewWorker = null; }
 }
 
 function _hide(container) {

@@ -5,12 +5,15 @@
 //  glossaryUI.js — Document Glossary tool UI
 //
 //  Single PDF in, single PDF out. User pastes a term/definition
-//  dictionary (one entry per line: "term - definition"); the actual
-//  term matching runs on the main thread inside processor.js's
-//  _runGlossary() when the user submits (needs pdf.js, which this
-//  module deliberately does NOT load itself — no reason to duplicate
-//  that work before the user has even entered a dictionary). This file
-//  only owns the dictionary textarea + file-info display + parsing.
+//  dictionary (one entry per line: "term - definition"); processor.js's
+//  _runGlossary() extracts page text via pdf.js (main-thread only, see
+//  glossaryWorker.js's header for why) when the user submits, then hands
+//  dictionary + extracted text over to glossaryWorker.js, which does the
+//  actual term-matching AND annotation-writing off the main thread. This
+//  module deliberately does NOT load pdf.js itself — no reason to
+//  duplicate that work before the user has even entered a dictionary.
+//  This file only owns the dictionary textarea + file-info display +
+//  parsing.
 //
 //  Dictionary format is deliberately the simplest possible to parse and
 //  to type by hand: one entry per line, "term - definition". Split on
