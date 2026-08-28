@@ -252,34 +252,65 @@ function _render(files) {
 
 // ── Canvas previews ────────────────────────────────────────────
 // Рендерим миниатюры после того как DOM готов.
-// createImageBitmap не блокирует — идеально.
 
-// File → decoded <img> element. Keyed by the File object itself (not index,
-// which changes on every reorder) so dragging to reorder redraws instantly
-// from cache instead of re-fetching + re-decoding every image again — this
-// matters more now that the old 20-file cap is gone and a batch can be large.
+// File → decoded+downscaled ImageBitmap. Keyed by the File object itself
+// (not index, which changes on every reorder) so dragging to reorder
+// redraws instantly from cache instead of re-fetching + re-decoding every
+// image again — this matters more now that the old 20-file cap is gone and
+// a batch can be large.
+//
+// Real bug found+fixed here (2026-08-28, same audit pass that found the
+// scan-document warpToRect() main-thread block, commit 956c0fb1): this used
+// to decode via `new Image()` at FULL source resolution, then downscale to
+// the 56x56 thumbnail synchronously inside ctx.drawImage() in
+// _renderPreviews() below. For real phone photos (3000-4000px), that
+// synchronous downscale is expensive — measured via the same Playwright
+// 4x-CPU-throttle + rAF-heartbeat methodology as the scan-document fix,
+// with 20 realistic 3024x4032 test photos: repeated 100-160ms main-thread
+// frame gaps DURING FILE ADD, before the user ever touches the "Convert"
+// button (mergeBtn enables independently/earlier, so a fast click could
+// even race this ongoing work). createImageBitmap's resizeWidth option
+// moves the downscale into the same off-main-thread decode step, so the
+// canvas draw below operates on an already-thumbnail-sized bitmap.
+// resizeWidth alone (not resizeHeight) lets the browser preserve aspect
+// ratio automatically; real photo aspect ratios are bounded enough that
+// constraining one axis keeps both dimensions small regardless of
+// portrait/landscape orientation.
+//
+// imageOrientation:'from-image' is deliberately the single source of EXIF
+// truth here (see feedback_image_orientation_single_source memory / the
+// real jpg2pdf EXIF-rotation bug it documents, fixed in 5f66644) — no
+// separate manual ctx.rotate() layered on top the way the old <img>-based
+// path needed (canvas drawImage from an <img> never applied EXIF, hence
+// the old code's own manual rotation via _exifAngles). Layering manual
+// rotation on top of an already-auto-rotated source is exactly the
+// double-rotation anti-pattern that memory warns against.
 const _imgCache = new WeakMap();
 
 async function _loadImage(file) {
   const cached = _imgCache.get(file);
   if (cached) return cached;
 
-  // HEIC/HEIF: no browser except Safari can decode it into an <img>, so
-  // decode to JPEG first via the vendored libheif WASM build. Cached
-  // inside heicDecode.js itself, so this costs nothing extra when
-  // _runJpg2Pdf (processor.js) decodes the same file again at conversion time.
+  // HEIC/HEIF: no browser except Safari can decode it directly, so decode
+  // to JPEG first via the vendored libheif WASM build. Cached inside
+  // heicDecode.js itself, so this costs nothing extra when _runJpg2Pdf
+  // (processor.js) decodes the same file again at conversion time.
   const source = isHeicFile(file) ? (await decodeHeicToJpegBlob(file)) ?? file : file;
 
-  const url = URL.createObjectURL(source);
-  const img = new Image();
-  // onerror = res (not rej) is intentional: preview is cosmetic, we don't
-  // want one broken image to abort the entire preview loop. Resolving on
-  // error also guarantees URL.revokeObjectURL runs in all cases without
-  // needing a try/finally — the promise always resolves, revoke always runs.
-  await new Promise(res => { img.onload = res; img.onerror = res; img.src = url; });
-  URL.revokeObjectURL(url);
-  _imgCache.set(file, img);
-  return img;
+  try {
+    const bitmap = await createImageBitmap(source, {
+      resizeWidth: _THUMB_RASTER_SIZE,
+      resizeQuality: 'medium',
+      imageOrientation: 'from-image',
+    });
+    _imgCache.set(file, bitmap);
+    return bitmap;
+  } catch {
+    // Preview is cosmetic — a source createImageBitmap can't decode at all
+    // just leaves that thumbnail blank, same silent-failure contract the
+    // old <img>-based path had.
+    return null;
+  }
 }
 
 async function _renderPreviews(files) {
@@ -287,23 +318,16 @@ async function _renderPreviews(files) {
     const canvas = document.querySelector(`.j2p-thumb__canvas[data-index="${i}"]`);
     if (!canvas) continue;
     try {
-      const img = await _loadImage(files[i]);
-      if (!img.naturalWidth) continue; // failed to decode — leave canvas blank
+      const bitmap = await _loadImage(files[i]);
+      if (!bitmap) continue; // failed to decode — leave canvas blank
 
       const ctx = canvas.getContext('2d');
-      const s   = Math.min(_THUMB_RASTER_SIZE / img.naturalWidth, _THUMB_RASTER_SIZE / img.naturalHeight);
-      const w   = img.naturalWidth  * s;
-      const h   = img.naturalHeight * s;
+      const s   = Math.min(_THUMB_RASTER_SIZE / bitmap.width, _THUMB_RASTER_SIZE / bitmap.height);
+      const w   = bitmap.width  * s;
+      const h   = bitmap.height * s;
 
-      // Apply EXIF rotation on preview
-      const angle = _exifAngles[i] || 0;
-      const half = _THUMB_RASTER_SIZE / 2;
       ctx.clearRect(0, 0, _THUMB_RASTER_SIZE, _THUMB_RASTER_SIZE);
-      ctx.save();
-      ctx.translate(half, half);
-      ctx.rotate(angle * Math.PI / 180);
-      ctx.drawImage(img, -w / 2, -h / 2, w, h);
-      ctx.restore();
+      ctx.drawImage(bitmap, (_THUMB_RASTER_SIZE - w) / 2, (_THUMB_RASTER_SIZE - h) / 2, w, h);
     } catch { /* silent — preview is cosmetic */ }
   }
 }
