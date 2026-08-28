@@ -247,3 +247,62 @@ export function warpToRect(sourceCanvas, quad) {
   }
   return outCanvas;
 }
+
+// ── Worker-offloaded warp (preferred entry point for real callers) ──
+//
+// warpToRect() above stays as the synchronous reference implementation
+// (kept for clarity/potential future Node testing once cv gets a
+// headless build), but every real caller should use warpToRectAsync()
+// instead — warpPerspective on a full SCAN_MAX_LONG_EDGE-capped (2200px)
+// frame is real, measurable main-thread work. Found via a real user
+// report ("Use this crop feels very slow") and confirmed with a live
+// Playwright measurement at 4x CPU throttle: a single 368ms main-thread
+// frame gap on confirm-click. Same class of fix already applied to this
+// tool's other two OpenCV-heavy steps (js/scanDetectWorker.js,
+// js/scanFilterWorker.js) — this was the one still running synchronously.
+//
+// Same lazy-singleton + single-shot-request pattern js/scanFilter.js's
+// _ensureFilterWorker/_filterWorkerRequest already establish. Centralized
+// here (not in each caller) since both js/scanCameraUI.js and
+// js/scanDocumentUI.js call warpToRect.
+let _warpWorker = null;
+function _ensureWarpWorker() {
+  if (!_warpWorker) {
+    _warpWorker = new Worker(new URL('./scanWarpWorker.js', import.meta.url));
+  }
+  return _warpWorker;
+}
+
+/**
+ * Same contract as warpToRect(), but runs the actual warpPerspective call
+ * in a Worker instead of blocking the main thread.
+ * @param {HTMLCanvasElement} sourceCanvas
+ * @param {{tl,tr,br,bl}} quad
+ * @returns {Promise<HTMLCanvasElement>}
+ */
+export async function warpToRectAsync(sourceCanvas, quad) {
+  const w = sourceCanvas.width, h = sourceCanvas.height;
+  const imageData = sourceCanvas.getContext('2d').getImageData(0, 0, w, h);
+  const worker = _ensureWarpWorker();
+
+  const result = await new Promise((resolve, reject) => {
+    worker.onmessage = (e) => {
+      const d = e.data;
+      if (d.type === 'error') { reject(new Error(d.message)); return; }
+      resolve(d);
+    };
+    worker.onerror = (e) => reject(new Error(e.message || 'Worker error'));
+    worker.postMessage(
+      { type: 'warp', data: imageData.data, w, h, quad },
+      [imageData.data.buffer]
+    );
+  });
+
+  const outCanvas = document.createElement('canvas');
+  outCanvas.width = result.outW;
+  outCanvas.height = result.outH;
+  outCanvas.getContext('2d').putImageData(
+    new ImageData(result.data, result.outW, result.outH), 0, 0
+  );
+  return outCanvas;
+}

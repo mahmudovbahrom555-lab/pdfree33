@@ -39,7 +39,7 @@ import { loadPreset, clearPreset } from './presets.js';
 import { isHeicFile, decodeHeicToJpegBlob } from './heicDecode.js';
 import { filterScanPhoto } from './scanFilter.js';
 import { openScanCamera, openCropReview } from './scanCameraUI.js';
-import { detectDocumentQuad, defaultInsetQuad, warpToRect } from './scanGeometry.js';
+import { detectDocumentQuad, defaultInsetQuad, warpToRectAsync } from './scanGeometry.js';
 import { loadOpenCv } from './lazyLibs.js';
 import { SCAN_MAX_LONG_EDGE } from './scanConstants.js';
 
@@ -217,7 +217,7 @@ async function _autoProcessAll(files) {
       let quad = null;
       try { quad = detectDocumentQuad(sourceCanvas); } catch { /* falls through to defaultInsetQuad below */ }
       quad = quad || defaultInsetQuad(sourceCanvas.width, sourceCanvas.height);
-      const warped = warpToRect(sourceCanvas, quad);
+      const warped = await warpToRectAsync(sourceCanvas, quad);
       const blob = await filterScanPhoto(warped, _scanFilterMode);
 
       const idx = selectedFiles.indexOf(file);

@@ -43,7 +43,7 @@
 
 import { t } from './i18n.js';
 import { loadOpenCv } from './lazyLibs.js';
-import { detectDocumentQuad, defaultInsetQuad, warpToRect, detectSpineX, DETECT_LONG_EDGE } from './scanGeometry.js';
+import { detectDocumentQuad, defaultInsetQuad, warpToRectAsync, detectSpineX, DETECT_LONG_EDGE } from './scanGeometry.js';
 import { SCAN_MAX_LONG_EDGE } from './scanConstants.js';
 
 let _modal        = null;
@@ -805,10 +805,19 @@ function _setScanSubMode(mode) {
 }
 
 async function _confirm() {
+  const myGen = _reviewGen;
   const status = document.getElementById('scanCamStatus');
+  const confirmBtn = document.getElementById('scanCamConfirmBtn');
+  // warpToRectAsync now has a real await point before the heavy work starts
+  // (unlike the old synchronous warpToRect, which blocked the event loop
+  // immediately) — a second click could otherwise interleave and call
+  // _confirm() again mid-flight. Disabling here is new specifically
+  // because of that, not a pre-existing gap the sync version already had.
+  if (confirmBtn) confirmBtn.disabled = true;
   status.textContent = t('scan_cam_processing');
   try {
-    const warped = warpToRect(_capturedCanvas, _quad);
+    const warped = await warpToRectAsync(_capturedCanvas, _quad);
+    if (myGen !== _reviewGen) return; // modal closed while warping
     URL.revokeObjectURL(_frameUrl);
     if (_scanSubMode === 'book') {
       _startSpineAdjust(warped);
@@ -818,7 +827,9 @@ async function _confirm() {
     _closeModal({ suppressOnSkip: true });  // resolved via Confirm, not Skip
     cb?.([warped]);
   } catch {
+    if (myGen !== _reviewGen) return;
     status.textContent = t('scan_cam_processing_failed');
+    if (confirmBtn) confirmBtn.disabled = false;
   }
 }
 
