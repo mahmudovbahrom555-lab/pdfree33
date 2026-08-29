@@ -7,16 +7,12 @@
     default-src 'self';
     script-src  'self' 'wasm-unsafe-eval' blob:
                 https://cdnjs.cloudflare.com https://esm.sh
-                https://pagead2.googlesyndication.com
                 https://static.cloudflareinsights.com;
     style-src   'self' 'unsafe-inline';
     font-src    'self';
     img-src     'self' data: blob: https:;
     connect-src 'self' https://cdnjs.cloudflare.com https://*.workers.dev
-                https://pagead2.googlesyndication.com
-                https://www.googletagservices.com https://*.doubleclick.net
                 https://cloudflareinsights.com;
-    frame-src   https://googleads.g.doubleclick.net https://tpc.googlesyndication.com;
     worker-src  'self' blob:;
     object-src  'none';
   ">
@@ -161,6 +157,7 @@
     <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode"></button>
   </nav>
 
+  <main>
   <!-- Hero -->
   <section style="background:var(--green-light);border-bottom:1px solid rgba(45,122,79,0.15);padding:52px 24px 44px;text-align:center;">
     <div style="max-width:720px;margin:0 auto;">
@@ -317,6 +314,7 @@
       </div>
     </div>
   </section>
+  </main>
 
   <footer>
     <div style="display:flex;gap:48px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;font-size:13px;border-top:1px solid var(--border);padding-top:20px;">
