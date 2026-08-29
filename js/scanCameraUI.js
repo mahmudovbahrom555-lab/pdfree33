@@ -125,6 +125,13 @@ function _closeModal({ suppressOnSkip = false } = {}) {
   // Book-spread's spine-adjust stage has its own separate object URL and
   // resize listener from the crop-review stage above it (_frameUrl/
   // _resizeHandler) — both need the same treatment here.
+  //
+  // _frameUrl itself was missed in that same pass (only _resizeHandler got
+  // removed above) — confirmed via a real revokeObjectURL call log: closing
+  // via the ✕ button left the review-stage frame's blob URL alive for the
+  // rest of the page's lifetime, every single time, since _confirm/_skip/
+  // Retake are the only paths that ever revoked it.
+  if (_frameUrl) { URL.revokeObjectURL(_frameUrl); _frameUrl = null; }
   if (_spineUrl) { URL.revokeObjectURL(_spineUrl); _spineUrl = null; }
   if (_spineResizeHandler) { window.removeEventListener('resize', _spineResizeHandler); _spineResizeHandler = null; }
   // A handle drag in progress (pointerdown fired, pointerup never did)
@@ -565,6 +572,7 @@ async function _startReview() {
     `;
   document.getElementById('scanCamRetakeBtn')?.addEventListener('click', () => {
     URL.revokeObjectURL(_frameUrl);
+    _frameUrl = null;
     _startLiveView();
   });
   document.getElementById('scanCamSkipBtn')?.addEventListener('click', () => _skip());
@@ -819,6 +827,7 @@ async function _confirm() {
     const warped = await warpToRectAsync(_capturedCanvas, _quad);
     if (myGen !== _reviewGen) return; // modal closed while warping
     URL.revokeObjectURL(_frameUrl);
+    _frameUrl = null;
     if (_scanSubMode === 'book') {
       _startSpineAdjust(warped);
       return;
@@ -932,5 +941,6 @@ async function _startSpineAdjust(warped) {
 
 function _skip() {
   URL.revokeObjectURL(_frameUrl);
+  _frameUrl = null;
   _closeModal();  // gallery-mode close already fires onSkip — see _closeModal
 }
