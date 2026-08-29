@@ -114,6 +114,20 @@ let _sharedRects = [];  // used when applyAll=true (same on every page)
 let _currentPage = 1;   // 1-based page being shown
 let _pdfDoc = null;     // cached pdf.js document for fast page-switching
 let _renderInProgress = null;  // promise of current render to allow cancel
+let _initGen = 0;   // bumped on every initRedactOptions() call — _renderInProgress above only
+                     // sequences renders WITHIN one file's session, it does nothing to stop a
+                     // stale initRedactOptions() call (a previous file's own pdfjsLib.getDocument()
+                     // resolving late) from overwriting _pdfDoc with the WRONG file's document.
+                     // Real bug found+confirmed via Playwright: remove a large/slow file, add a
+                     // different small one quickly, and without this guard the preview canvas kept
+                     // rendering the FIRST file's pages (visually, "SECRET-FILE-A-CONTENT" stayed on
+                     // screen) while the file actually selected for processing was the second one —
+                     // the user draws redaction boxes against the wrong file's layout entirely,
+                     // then Redact PDF applies those box coordinates to a completely different
+                     // document. Same race class as resize's 1ee544a9 and meta's ee84b704, but with
+                     // a false-sense-of-privacy consequence: the user believes they covered
+                     // something they visually saw and boxed, but the real output file never had
+                     // that content in the first place.
 
 // Color & opacity state
 let _colorKey   = 'black';
@@ -255,6 +269,11 @@ export async function initRedactOptions(file) {
   const container = id('redactOptions');
   if (!container) return;
 
+  // Captured before any await — see _initGen's own comment (state block
+  // above) for the real bug this closes: a stale call finishing last used
+  // to overwrite _pdfDoc with the WRONG file's document.
+  const gen = ++_initGen;
+
   // Apply SEO preset BEFORE rendering
   const preset = _detectPreset();
   _colorKey     = preset.color;
@@ -269,11 +288,15 @@ export async function initRedactOptions(file) {
     // Page sizes are populated lazily per page in _renderPage (scale=1 viewport = PDF points).
     // Previously pdfree 12 used pdf-lib + pdf.js = 2 full copies in RAM (OOM on mobile).
     await loadPdfJs();
+    if (gen !== _initGen) return;
     const buf = await file.arrayBuffer();
-    _pdfDoc = await window.pdfjsLib.getDocument({
+    if (gen !== _initGen) return;
+    const newDoc = await window.pdfjsLib.getDocument({
       data: new Uint8Array(buf),
       disableWorker: true,
     }).promise;
+    if (gen !== _initGen) return;
+    _pdfDoc = newDoc;
 
     _pageCount = _pdfDoc.numPages;
     if (_pageCount === 0) { showToast(t('no_pages_pdf')); _collapse(container); return; }
@@ -282,12 +305,16 @@ export async function initRedactOptions(file) {
     // _humanPosition/_sizeDescription have A4 fallbacks so no upfront load needed.
     _pageSizes = new Array(_pageCount).fill(null);
 
-    // Reset state
+    // Reset state. _pageTextCache is keyed by page NUMBER, not by file identity —
+    // found missing here via the same investigation: without this, click-to-redact
+    // on a freshly-swapped file could resolve token positions against the
+    // PREVIOUS file's cached text content for that same page number.
     _sharedRects = [];
     _rectsByPage = {};
     _applyAll = true;
     _currentPage = 1;
     _previewLoaded = false;
+    _pageTextCache = {};
     _history = [];
     _historyIdx = -1;
     _saveHistory();
@@ -296,19 +323,23 @@ export async function initRedactOptions(file) {
 
     try {
       await _renderPage(_currentPage);
+      if (gen !== _initGen) return;
       _previewLoaded = true;
     } catch (e) {
+      if (gen !== _initGen) return;
       console.warn('[redactUI] Preview failed:', e.message);
       _showNoPreview();
     }
 
   } catch (err) {
+    if (gen !== _initGen) return;
     showToast(t('rdct_err_read', {msg: err.message}), 5000);
     _collapse(container);
   }
 }
 
 export function hideRedactOptions() {
+  _initGen++; // invalidate any in-flight initRedactOptions() call
   _cleanup();
   const container = id('redactOptions');
   if (!container) return;
