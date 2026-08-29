@@ -5460,6 +5460,22 @@ body:not(.has-files) #heroChipsLabel { display: none !important; }
     flex: 1;
     min-height: 0;
     max-height: none;
+    /* Base rule (used outside this breakpoint too) has no flex-direction,
+       defaulting to row — .scan-cam-stage-col's own `flex:1;min-height:0`
+       only affects ITS height if the axis it's sized on on IS the height
+       axis. In a row-direction parent, height is the CROSS axis, where
+       align-items:center (not stretch) makes a flex item hug its own
+       content size instead of being constrained — so the whole
+       flex:1/min-height:0 chain below this point did nothing, and a tall
+       portrait photo just rendered at its full aspect-ratio height,
+       uncapped, with the excess silently clipped by this element's own
+       overflow:hidden. That clipped-off top/bottom band is exactly where
+       the crop-review's top/bottom corner handles ended up — unreachable,
+       not just visually cramped (a real user report: could grab left/right
+       handles fine, top/bottom not at all). Making this axis vertical to
+       match its child's own column layout is what the rest of this
+       breakpoint's flex chain already assumed. */
+    flex-direction: column;
   }
   .scan-cam-stage-col {
     flex: 1;
