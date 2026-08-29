@@ -31,6 +31,25 @@ let _pdfJsDoc     = null;
 let _currentPage  = 1;
 let _originalBuf  = null;        // ArrayBuffer — kept pristine for export
 let _renderId     = 0;           // incremented each _renderPage call; stale renders abort
+let _loadGen      = 0;           // bumped on every loadPdfFile() call — same shape as the
+                                  // stale-init race already found+fixed this session in resize/
+                                  // meta/redact/clean-scan: loadPdfFile(file) had no staleness
+                                  // guard, so a slow-loading file's stale getDocument() call
+                                  // resolving after a newer file's own load could overwrite
+                                  // _pdfJsDoc/_originalBuf with the WRONG file — and unlike
+                                  // resize/clean-scan, _exportToPdf() reads _originalBuf directly
+                                  // (not a fresh per-file read), so this would be the wrong-DATA
+                                  // class of bug (matching meta/redact), not just a wrong preview.
+                                  // Unlike those, a real live repro (multiple realistic trigger
+                                  // attempts: rapid tool-switch-away-and-back mid-load, 4x/6x CPU
+                                  // throttle, a 2500-page fixture) did NOT reproduce actual
+                                  // corruption here — this tool's own UI has no in-session
+                                  // "remove file" affordance the other four tools all expose, and
+                                  // pdf.js's getDocument() appears to resolve fast enough in
+                                  // practice that the window never stayed open long enough to
+                                  // observe. Fixed defensively anyway (same zero-risk pattern,
+                                  // real structural gap by inspection) — but disclosed here
+                                  // honestly as unconfirmed-by-repro, unlike the other four.
 
 let _pageCommands = new Map();   // Map<pageNum, Command[]>
 let _redoStack    = new Map();   // Map<pageNum, Command[]>
@@ -105,34 +124,47 @@ function _initFab() {
 }
 
 export async function loadPdfFile(file) {
+  // Captured before any await — see _loadGen's own comment (state block above).
+  const gen = ++_loadGen;
+
   try {
     await loadPdfJs();
   } catch {
+    if (gen !== _loadGen) return;
     showToast(t('draw_load_renderer_failed'));
     return;
   }
+  if (gen !== _loadGen) return;
 
   let buf;
   try {
     buf = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await file.arrayBuffer();
   } catch {
+    if (gen !== _loadGen) return;
     showToast(t('draw_read_file_failed'));
     return;
   }
+  if (gen !== _loadGen) return;
 
-  _originalBuf = buf.slice(0);   // pristine copy — never mutated
+  const newOriginalBuf = buf.slice(0);   // pristine copy — never mutated
 
+  let newDoc;
   try {
-    _pdfJsDoc = await window.pdfjsLib.getDocument({
+    newDoc = await window.pdfjsLib.getDocument({
       data:              new Uint8Array(buf),
       useSystemFonts:    false,
       verbosity:         0,
       disableJavaScript: true,
     }).promise;
   } catch (err) {
+    if (gen !== _loadGen) return;
     showToast(t('draw_open_pdf_failed', { msg: err.message }));
     return;
   }
+  if (gen !== _loadGen) return;
+
+  _originalBuf = newOriginalBuf;
+  _pdfJsDoc    = newDoc;
 
   _currentPage   = 1;
   _pageCommands  = new Map();
@@ -195,6 +227,7 @@ export function redo() { _redo(); }
 // Called by toolRegistrations hide() — resets all state when switching away from draw-pdf.
 // toolRegistrations also calls resetPointer() from drawPointer.js (avoids circular import).
 export function resetDraw() {
+  _loadGen++; // invalidate any in-flight loadPdfFile() call
   _pdfJsDoc      = null;
   _currentPage   = 1;
   _originalBuf   = null;
