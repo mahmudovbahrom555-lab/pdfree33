@@ -37,7 +37,7 @@ import { initExtractOptions, hideExtractOptions,
 import { initProtectOptions, hideProtectOptions,
          getProtectParams }              from './protectUI.js';
 import { initFillOptions, hideFillOptions,
-         getFillParams }                 from './fillUI.js';
+         getFillParams, clearFillDraft } from './fillUI.js';
 import { initRotateOptions, hideRotateOptions,
          getRotateParams }              from './rotateUI.js';
 import { initOrganizeOptions, hideOrganizeOptions,
@@ -467,6 +467,7 @@ registerTool('fill', {
   init:       initFillOptions,
   hide:       hideFillOptions,
   getParams:  getFillParams,
+  onSuccess:  () => clearFillDraft(),
   validate:   p => p.loading
                 ? t('val_fill_loading')
                 : !p.hasFields

@@ -89,6 +89,16 @@ export function hideFillOptions() {
   _tabOrderMode = null; _fieldOrder = [];
 }
 
+// Called via the 'fill' tool's onSuccess hook (toolRegistrations.js) once the
+// filled PDF has actually downloaded — the draft's job (surviving an accidental
+// tab close mid-fill) is done, and this tool can carry real PII (name/email/SSN,
+// see _detectInputMeta), so it shouldn't linger in localStorage indefinitely
+// after a successful export. Without this, drafts previously never expired.
+export function clearFillDraft() {
+  if (!_draftKey) return;
+  try { localStorage.removeItem(_draftKey); } catch { /* storage unavailable */ }
+}
+
 export function getFillParams() {
   _syncValuesFromDOM();
   return {
