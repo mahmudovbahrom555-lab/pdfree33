@@ -63,6 +63,66 @@ function _dist(a, b) {
   return Math.hypot(a.x - b.x, a.y - b.y);
 }
 
+// ── Crop-review "rotate view" geometry (Node-testable) ──────────
+//
+// A tall portrait photo, reviewed on a narrow phone screen, renders small
+// if displayed at its natural orientation — real user report (Redmi 8):
+// couldn't grab the top/bottom corner handles at all on some photos simply
+// because the whole crop shrank to fit the available height, leaving very
+// little room to work with. js/scanCameraUI.js addresses this by
+// optionally displaying the working image (and its corner-handle overlay)
+// CSS-rotated -90° inside a wrapper sized to use the AVAILABLE BOX's
+// larger dimension — same "rotate the interaction surface to fit a
+// portrait screen" trick js/fillUI.js's signature pad already uses for
+// its own drawing canvas. The underlying `_quad`/`_capturedCanvas` never
+// rotate — only this display/interaction layer needs the math below.
+
+/**
+ * Decides whether displaying an image ROTATED -90° would make better use
+ * of an available box than displaying it at its natural orientation, and
+ * returns the resulting scale (CSS px per original image px) either way.
+ * @param {number} imgW - original (unrotated) image width
+ * @param {number} imgH - original (unrotated) image height
+ * @param {number} boxW - available display box width
+ * @param {number} boxH - available display box height
+ * @param {number} [rotateBenefitThreshold=1.15] - only rotate if it yields
+ *   a meaningfully bigger result (avoids flip-flopping near parity)
+ * @returns {{rotated: boolean, scale: number}}
+ */
+export function chooseCropViewLayout(imgW, imgH, boxW, boxH, rotateBenefitThreshold = 1.15) {
+  const unrotatedScale = Math.min(boxW / imgW, boxH / imgH);
+  const rotatedScale   = Math.min(boxW / imgH, boxH / imgW);
+  const rotated = rotatedScale > unrotatedScale * rotateBenefitThreshold;
+  return { rotated, scale: rotated ? rotatedScale : unrotatedScale };
+}
+
+/**
+ * Maps a point in ORIGINAL image coordinate space to its position relative
+ * to the top-left corner of a wrapper that displays that image CSS-rotated
+ * -90° (`transform: rotate(-90deg)`) at the given scale — i.e. the wrapper's
+ * own (pre-rotation) box is sized `imgW*scale` × `imgH*scale`, and this
+ * returns where (x,y) ends up once rotated into view.
+ * @param {number} x, y - point in original image space
+ * @param {number} imgW - original image width (the axis the rotation pivots against)
+ * @param {number} scale - CSS px per original image px
+ * @returns {{x:number, y:number}}
+ */
+export function rotatedViewPoint(x, y, imgW, scale) {
+  return { x: y * scale, y: (imgW - x) * scale };
+}
+
+/**
+ * Inverse of rotatedViewPoint — converts a screen position (relative to the
+ * same rotated wrapper's top-left corner) back to original image space.
+ * @param {number} sx, sy - position relative to the rotated wrapper's top-left
+ * @param {number} imgW - original image width
+ * @param {number} scale - CSS px per original image px
+ * @returns {{x:number, y:number}}
+ */
+export function unrotatedImagePoint(sx, sy, imgW, scale) {
+  return { x: imgW - sy / scale, y: sx / scale };
+}
+
 // Estimates the vertical gutter (spine) position in an already-warped book-
 // spread image, as the fraction (0-1) of width from the left edge. Pure
 // pixel math on a raw RGBA buffer (stride 4, like scanFilter.js's

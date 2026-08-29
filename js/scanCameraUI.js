@@ -43,7 +43,8 @@
 
 import { t } from './i18n.js';
 import { loadOpenCv } from './lazyLibs.js';
-import { detectDocumentQuad, defaultInsetQuad, warpToRectAsync, detectSpineX, DETECT_LONG_EDGE } from './scanGeometry.js';
+import { detectDocumentQuad, defaultInsetQuad, warpToRectAsync, detectSpineX, DETECT_LONG_EDGE,
+         chooseCropViewLayout, unrotatedImagePoint } from './scanGeometry.js';
 import { SCAN_MAX_LONG_EDGE } from './scanConstants.js';
 
 let _modal        = null;
@@ -51,6 +52,12 @@ let _stream        = null;
 let _capturedCanvas = null;
 let _quad           = null;   // full-resolution pixel-space {tl,tr,br,bl}
 let _displayScale    = 1;      // displayed CSS px per full-res px
+let _viewRotated     = false;  // mobile-only: #scanCamFrameInner is CSS-rotated -90°
+                                // to use the available box's larger dimension — see
+                                // _computeFrameLayout()'s own comment for the full
+                                // rationale (real user report, Redmi 8: top/bottom
+                                // corner handles unreachable on a portrait photo
+                                // squeezed into a short viewport).
 let _onConfirm       = null;
 let _onFallback       = null;
 let _onSkip            = null;
@@ -142,6 +149,7 @@ function _closeModal({ suppressOnSkip = false } = {}) {
   _modal = null;
   _capturedCanvas = null;
   _quad = null;
+  _viewRotated = false;
   _consensusQueue = [];
   _autoCaptureArmed = true;
   if (!suppressOnSkip && _reviewMode === 'gallery') {
@@ -540,14 +548,16 @@ async function _startReview() {
         <button type="button" class="scan-cam-mode-chip" id="scanCamModeBook">${t('scan_cam_mode_book')}</button>
       </div>
       <div class="scan-cam-frame-wrap" id="scanCamFrameWrap">
-        <img class="scan-cam-frame" id="scanCamFrame" src="${_frameUrl}" alt="">
-        <svg class="scan-cam-outline" id="scanCamOutline" preserveAspectRatio="none">
-          <polygon id="scanCamPolygon"></polygon>
-        </svg>
-        <div class="scan-cam-handle" id="scanCamHandle-tl" data-corner="tl"></div>
-        <div class="scan-cam-handle" id="scanCamHandle-tr" data-corner="tr"></div>
-        <div class="scan-cam-handle" id="scanCamHandle-br" data-corner="br"></div>
-        <div class="scan-cam-handle" id="scanCamHandle-bl" data-corner="bl"></div>
+        <div class="scan-cam-frame-inner" id="scanCamFrameInner">
+          <img class="scan-cam-frame" id="scanCamFrame" src="${_frameUrl}" alt="">
+          <svg class="scan-cam-outline" id="scanCamOutline" preserveAspectRatio="none">
+            <polygon id="scanCamPolygon"></polygon>
+          </svg>
+          <div class="scan-cam-handle" id="scanCamHandle-tl" data-corner="tl"></div>
+          <div class="scan-cam-handle" id="scanCamHandle-tr" data-corner="tr"></div>
+          <div class="scan-cam-handle" id="scanCamHandle-br" data-corner="br"></div>
+          <div class="scan-cam-handle" id="scanCamHandle-bl" data-corner="bl"></div>
+        </div>
       </div>
       <div class="scan-cam-tool-row" id="scanCamToolRow">
         <button type="button" class="scan-cam-tool-btn" id="scanCamRotateLeft" aria-label="${t('scan_cam_rotate_left')}">↺</button>
@@ -587,7 +597,8 @@ async function _startReview() {
   await _detectAndSetQuad();
   if (myGen !== _reviewGen) { return; }  // modal closed while detecting the quad
 
-  _resizeHandler = () => _renderHandles();
+  _computeFrameLayout();
+  _resizeHandler = () => { _computeFrameLayout(); _renderHandles(); };
   window.addEventListener('resize', _resizeHandler);
   _renderHandles();
   _bindHandleDrag();
@@ -645,6 +656,7 @@ async function _rotateCapturedImage(direction) {
   ctx.rotate(direction * Math.PI / 2);
   ctx.drawImage(src, -src.width / 2, -src.height / 2);
   _capturedCanvas = rotated;
+  _computeFrameLayout(); // dimensions swapped — the rotate-to-fit decision can flip too
 
   const img = document.getElementById('scanCamFrame');
   const oldUrl = _frameUrl;
@@ -671,17 +683,81 @@ async function _resetCrop() {
   _renderHandles();
 }
 
+// Mobile-only: decides whether displaying the working image CSS-rotated
+// -90° would use the available box better than its natural orientation
+// (see js/scanGeometry.js's chooseCropViewLayout for the full geometry
+// rationale — same "rotate the interaction surface" trick js/fillUI.js's
+// signature pad already uses for its own drawing canvas), and if so,
+// explicitly sizes+rotates #scanCamFrameInner to match.
+//
+// Deliberately scoped to the mobile breakpoint (window.innerWidth<=700,
+// matching css/components.css's own @media boundary for this modal's
+// full-height layout): on desktop, .scan-cam-frame-wrap stays a plain
+// content-sized (inline-block) box with plenty of headroom under its
+// existing 60vh cap, and #scanCamFrameInner is left unstyled so the
+// ORIGINAL, unrelated content-based sizing chain (.scan-cam-frame's own
+// width:auto/height:auto/max-width/max-height) keeps working exactly as
+// before this feature existed — _renderHandles() falls back to measuring
+// the live rect there, same as it always did.
+//
+// #scanCamFrameInner (not #scanCamFrameWrap itself) gets the explicit
+// size+rotation specifically so the flex-managed outer wrap (already
+// fixed to correctly shrink to available space) keeps doing that job
+// unmodified — the inner div's img/svg/handles are positioned using
+// perfectly ordinary, UNROTATED local coordinates (see _renderHandles
+// below, unchanged either way) and the CSS transform on this one element
+// carries all of them along together as a rigid group. Only
+// _bindHandleDrag's screen-to-local inverse (real touch/mouse
+// coordinates, which reflect the POST-rotation visual bounds) needs
+// rotation-aware math.
+function _computeFrameLayout() {
+  const wrap  = document.getElementById('scanCamFrameWrap');
+  const inner = document.getElementById('scanCamFrameInner');
+  const img   = document.getElementById('scanCamFrame');
+  if (!wrap || !inner || !_capturedCanvas) return;
+
+  if (window.innerWidth > 700) {
+    _viewRotated = false;
+    inner.style.cssText = '';
+    if (img) img.style.cssText = '';
+    return;
+  }
+
+  const boxW = wrap.clientWidth, boxH = wrap.clientHeight;
+  if (boxW <= 0 || boxH <= 0) return; // not laid out yet — next resize/render will retry
+
+  const { rotated, scale } = chooseCropViewLayout(_capturedCanvas.width, _capturedCanvas.height, boxW, boxH);
+  _viewRotated  = rotated;
+  _displayScale = scale;
+
+  inner.style.width     = `${_capturedCanvas.width  * scale}px`;
+  inner.style.height    = `${_capturedCanvas.height * scale}px`;
+  inner.style.transform = rotated ? 'rotate(-90deg)' : '';
+  if (img) img.style.cssText = 'display:block;width:100%;height:100%;max-width:none;max-height:none;';
+}
+
 function _renderHandles() {
-  const img = document.getElementById('scanCamFrame');
-  if (!img || !_quad) return;
-  const rect = img.getBoundingClientRect();
-  _displayScale = rect.width / _capturedCanvas.width;
+  const inner = document.getElementById('scanCamFrameInner');
+  if (!inner || !_quad) return;
+
+  // Desktop leaves #scanCamFrameInner unsized (see _computeFrameLayout's
+  // own comment) — it just hugs the img's own content-based size, so the
+  // scale must still be measured live here, exactly as before this
+  // feature existed. Mobile already precomputed an exact _displayScale
+  // (and sized the inner to match) in _computeFrameLayout().
+  if (window.innerWidth > 700) {
+    const rect = inner.getBoundingClientRect();
+    _displayScale = rect.width / _capturedCanvas.width;
+  }
+
+  const localW = _capturedCanvas.width  * _displayScale;
+  const localH = _capturedCanvas.height * _displayScale;
 
   const svg = document.getElementById('scanCamOutline');
-  svg.setAttribute('width', rect.width);
-  svg.setAttribute('height', rect.height);
-  svg.style.width  = rect.width + 'px';
-  svg.style.height = rect.height + 'px';
+  svg.setAttribute('width', localW);
+  svg.setAttribute('height', localH);
+  svg.style.width  = localW + 'px';
+  svg.style.height = localH + 'px';
 
   const pts = ['tl', 'tr', 'br', 'bl'].map(k => {
     const p = _quad[k];
@@ -782,16 +858,38 @@ function _bindHandleDrag() {
     handle.addEventListener('pointerdown', e => {
       e.preventDefault();
       handle.setPointerCapture(e.pointerId);
-      const img = document.getElementById('scanCamFrame');
+      const inner = document.getElementById('scanCamFrameInner');
+      const wrap  = document.getElementById('scanCamFrameWrap');
 
       const onMove = ev => {
-        const rect = img.getBoundingClientRect();
-        const x = Math.min(Math.max(0, ev.clientX - rect.left), rect.width);
-        const y = Math.min(Math.max(0, ev.clientY - rect.top),  rect.height);
-        const fullX = x / _displayScale, fullY = y / _displayScale;
+        // inner's own rect reflects whatever's actually on screen right now
+        // (its natural content-sized box on desktop, or its explicitly
+        // sized + possibly CSS-rotated box on mobile — either way this is
+        // the real, current POST-transform bounding box).
+        const innerRect = inner.getBoundingClientRect();
+        const x = Math.min(Math.max(0, ev.clientX - innerRect.left), innerRect.width);
+        const y = Math.min(Math.max(0, ev.clientY - innerRect.top),  innerRect.height);
+
+        let fullX, fullY;
+        if (_viewRotated) {
+          ({ x: fullX, y: fullY } = unrotatedImagePoint(x, y, _capturedCanvas.width, _displayScale));
+        } else {
+          fullX = x / _displayScale;
+          fullY = y / _displayScale;
+        }
         _quad[corner] = { x: fullX, y: fullY };
         _renderHandles();
-        _showMagnifier(x, y, fullX, fullY);
+
+        // The magnifier is appended to #scanCamFrameWrap, not the
+        // (possibly smaller/rotated) inner — convert this touch's
+        // inner-relative position to wrap-relative by adding the inner's
+        // own offset within the wrap (0,0 on desktop, where inner fills
+        // the wrap exactly; a real offset on mobile, where inner is
+        // centered within a wrap that may not match its own aspect ratio).
+        const wrapRect = wrap.getBoundingClientRect();
+        const offsetX = innerRect.left - wrapRect.left;
+        const offsetY = innerRect.top  - wrapRect.top;
+        _showMagnifier(x + offsetX, y + offsetY, fullX, fullY);
       };
       const onUp = () => {
         handle.removeEventListener('pointermove', onMove);

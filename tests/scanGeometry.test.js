@@ -23,7 +23,8 @@ function expect(actual) {
   };
 }
 
-const { orderQuadPoints, defaultInsetQuad, detectSpineX } = await import('../js/scanGeometry.js');
+const { orderQuadPoints, defaultInsetQuad, detectSpineX,
+        chooseCropViewLayout, rotatedViewPoint, unrotatedImagePoint } = await import('../js/scanGeometry.js');
 
 // Builds a flat RGBA buffer from a 1D array of per-column gray values,
 // repeated down every row — matches detectSpineX's "column-average
@@ -143,6 +144,83 @@ test('a dark band near the outer edge (not the gutter) is ignored — search is 
   const { xFrac } = detectSpineX(makeColumns(cols), w, 10);
   // Should NOT report the edge artifact — falls back to the (flat, low-confidence) middle
   if (xFrac < 0.2) throw new Error(`Expected the edge artifact at x<0.05 to be excluded, got xFrac=${xFrac}`);
+});
+
+console.log('\nchooseCropViewLayout:');
+
+test('a tall portrait photo in a clearly landscape-shaped box prefers rotating', () => {
+  // 1080x1920 photo, box that's actually WIDER than tall (e.g. a landscape
+  // phone orientation, or very little vertical chrome room left) — this is
+  // the case where rotating the portrait photo to landscape gives a real,
+  // unambiguous win (~78% bigger), not just a marginal one.
+  const { rotated, scale } = chooseCropViewLayout(1080, 1920, 500, 250);
+  expect(rotated).toBe(true);
+  // rotated fit: min(500/1920, 250/1080) = min(0.2604, 0.2315) = 0.2315
+  expect(scale).toBeCloseTo(250 / 1080, 0.001);
+});
+
+test('a landscape photo in a tall box prefers rotating (symmetric case)', () => {
+  const { rotated, scale } = chooseCropViewLayout(1920, 1080, 250, 500);
+  expect(rotated).toBe(true);
+  expect(scale).toBeCloseTo(250 / 1080, 0.001);
+});
+
+test('a near-square photo in a near-square box does not rotate (no real benefit)', () => {
+  const { rotated } = chooseCropViewLayout(1000, 1100, 350, 350);
+  expect(rotated).toBe(false);
+});
+
+test('a portrait photo in a box that is ALSO portrait-shaped enough does not rotate', () => {
+  // box itself is taller than wide, roughly matching the photo's own
+  // orientation — rotating would not meaningfully help here.
+  const { rotated, scale } = chooseCropViewLayout(1000, 1400, 300, 500);
+  expect(rotated).toBe(false);
+  expect(scale).toBeCloseTo(Math.min(300 / 1000, 500 / 1400), 0.001);
+});
+
+test('the benefit threshold prevents flip-flopping near parity', () => {
+  // Construct a box where rotated and unrotated scales are nearly equal —
+  // should NOT rotate despite rotated being marginally bigger.
+  const { rotated } = chooseCropViewLayout(1000, 1050, 400, 420, 1.15);
+  expect(rotated).toBe(false);
+});
+
+console.log('\nrotatedViewPoint / unrotatedImagePoint (round-trip + known values):');
+
+test('the original top-left corner maps to the rotated wrapper\'s top-right edge', () => {
+  // imgW=1080, imgH=1920, scale=0.2 → wrapper's rotated bounds are
+  // imgH*scale=384 wide, imgW*scale=216 tall.
+  const p = rotatedViewPoint(0, 0, 1080, 0.2);
+  expect(p.x).toBe(0);
+  expect(p.y).toBeCloseTo(1080 * 0.2, 0.001);
+});
+
+test('the original bottom-right corner maps to the rotated wrapper\'s bottom-left edge', () => {
+  const p = rotatedViewPoint(1080, 1920, 1080, 0.2);
+  expect(p.x).toBeCloseTo(1920 * 0.2, 0.001);
+  expect(p.y).toBeCloseTo(0, 0.001);
+});
+
+test('round-trips exactly for an arbitrary interior point', () => {
+  const imgW = 1080, scale = 0.234;
+  const orig = { x: 412.5, y: 1337.2 };
+  const screen = rotatedViewPoint(orig.x, orig.y, imgW, scale);
+  const back = unrotatedImagePoint(screen.x, screen.y, imgW, scale);
+  expect(back.x).toBeCloseTo(orig.x, 0.001);
+  expect(back.y).toBeCloseTo(orig.y, 0.001);
+});
+
+test('round-trips for all 4 corners of a real portrait image size', () => {
+  const imgW = 1080, imgH = 1920, scale = 0.171875; // an arbitrary realistic scale value
+  const corners = [
+    { x: 0, y: 0 }, { x: imgW, y: 0 }, { x: imgW, y: imgH }, { x: 0, y: imgH },
+  ];
+  for (const c of corners) {
+    const screen = rotatedViewPoint(c.x, c.y, imgW, scale);
+    const back = unrotatedImagePoint(screen.x, screen.y, imgW, scale);
+    expect(back.x).toBeCloseTo(c.x, 0.01);
+    expect(back.y).toBeCloseTo(c.y, 0.01);
+  }
 });
 
 // ── Summary ────────────────────────────────────────────────────

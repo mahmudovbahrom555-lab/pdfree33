@@ -5330,6 +5330,16 @@ body:not(.has-files) #heroChipsLabel { display: none !important; }
   max-height: 60vh;
 }
 
+/* Holds the img/svg-outline/corner-handles as one rigid group — sized and
+   optionally CSS-rotated -90° by js/scanCameraUI.js's _computeFrameLayout()
+   on mobile only (see that function's own comment for the full
+   rationale). Unstyled by default so desktop's plain content-based sizing
+   chain (.scan-cam-frame's own width:auto/height:auto/max-width/
+   max-height, untouched) keeps working exactly as before this existed. */
+.scan-cam-frame-inner {
+  position: relative;
+}
+
 /* Book-spread spine adjustment — a single draggable vertical line over the
    already-rectified spread, same drag mechanics as the corner handles
    above (setPointerCapture + pointermove/up), just constrained to one axis.
