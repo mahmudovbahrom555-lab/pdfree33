@@ -780,12 +780,22 @@ function initSearch() {
   let _heroHintEl       = null;   // created once, reused
   let _bannerDismissed  = false;  // stays true once user closes banner this session
 
-  // Hero accepts PDF or image (JPG/PNG) — routes to the right tool by type.
-  // MIME type is trusted first (reliable in Chromium/Firefox drag&drop and
-  // most file pickers); extension is the fallback for the cases noted
-  // elsewhere in this file where MIME can be empty (e.g. iOS PDFs).
+  // Hero accepts PDF or image, routing to the right tool by type. MIME type
+  // is trusted first (reliable in Chromium/Firefox drag&drop and most file
+  // pickers); extension is the fallback for the cases noted elsewhere in
+  // this file where MIME can be empty (e.g. iOS PDFs).
+  //
+  // Real gap found via a live user report (Android/Redmi 8, hero "Choose
+  // File"): this only recognized jpeg/png, while jpg2pdf's and
+  // scanDocument's own accept lists (config.js) both already include
+  // webp/heic/heif — a real photo in one of those formats got rejected as
+  // 'mixed' right at the hero gate, before ever reaching either tool's own
+  // (already-capable) pipeline. Broadened to match, plus a generic
+  // image/* MIME fallback for any other browser-native-decodable format —
+  // safe for both tools since their actual decode step (a plain <img> src)
+  // never special-cases the format itself.
   const _isPdfFile   = f => f.type === 'application/pdf' || /\.pdf$/i.test(f.name);
-  const _isImageFile = f => /^image\/(jpeg|png)$/.test(f.type) || /\.(jpe?g|png)$/i.test(f.name);
+  const _isImageFile = f => /^image\//.test(f.type) || /\.(jpe?g|png|webp|heic|heif)$/i.test(f.name);
   function _classifyHeroFiles(files) {
     if (files.every(_isPdfFile))   return 'pdf';
     if (files.every(_isImageFile)) return 'image';
