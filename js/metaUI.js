@@ -21,6 +21,12 @@ import { t } from './i18n.js';
 // ── State ──────────────────────────────────────────────────────
 let _meta = { title: '', author: '', subject: '', keywords: '', creator: '', producer: '' };
 let _originalSize = 0;
+let _initGen = 0;   // bumped on every initMetaOptions() call — see below for why this matters
+                     // more here than in most tools: _meta isn't just a preview, it's the exact
+                     // data getMetaParams() hands to the worker to WRITE into whichever file is
+                     // currently selected — a stale call finishing last doesn't just show the
+                     // wrong title in the form, it can silently write one file's real
+                     // title/author/subject into a completely different file's output.
 
 export function getMetaParams() {
   return { meta: { ..._meta } };
@@ -31,6 +37,16 @@ export function getMetaParams() {
 export async function initMetaOptions(file) {
   const container = id('metaOptions');
   if (!container) return;
+
+  // Captured before any await — real bug found+confirmed via Playwright:
+  // remove a large/slow-to-parse file, add a different one quickly, and
+  // without this guard the FIRST file's title/author could finish parsing
+  // last and overwrite the second file's correctly-empty _meta — then
+  // "Save Metadata" writes the first file's real metadata into the
+  // second file's actual output PDF. Same race class as resize's
+  // 1ee544a9 fix, but with a genuine wrong-output consequence here
+  // instead of just a misleading preview.
+  const gen = ++_initGen;
 
   _originalSize = file.size;
   container.innerHTML = `
@@ -43,9 +59,12 @@ export async function initMetaOptions(file) {
 
   try {
     await loadPdfLib();
+    if (gen !== _initGen) return;
     const { PDFDocument } = window.PDFLib;
     const buf = await file.arrayBuffer();
+    if (gen !== _initGen) return;
     const pdf = await PDFDocument.load(buf, { ignoreEncryption: true });
+    if (gen !== _initGen) return;
 
     _meta = {
       title:    _safe(pdf.getTitle()),
@@ -58,6 +77,7 @@ export async function initMetaOptions(file) {
       producer: _safe(pdf.getProducer()),
     };
   } catch {
+    if (gen !== _initGen) return;
     _meta = { title: '', author: '', subject: '', keywords: '', creator: '', producer: '' };
     showToast(t('meta_read_failed'), 4000);
   }
@@ -66,6 +86,7 @@ export async function initMetaOptions(file) {
 }
 
 export function hideMetaOptions() {
+  _initGen++; // invalidate any in-flight initMetaOptions() call
   const container = id('metaOptions');
   if (!container) return;
   container.style.display = 'none';
