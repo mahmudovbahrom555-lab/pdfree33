@@ -631,6 +631,57 @@ function _bindThumbGridEvents() {
       isLocked:     isFilesLocked,
       mode:         'grid',
     });
+    // Real user request: let a reviewed photo be re-opened for a second look —
+    // e.g. to confirm the crop actually landed correctly before assembling the
+    // PDF. Only for already-reviewed files (the ⏳ badge ones get their own
+    // review automatically via _queueUnreviewedFiles — clicking one of THOSE
+    // here would race the queue, so this deliberately no-ops for them).
+    previews.addEventListener('click', e => {
+      const thumb = e.target.closest('.j2p-thumb');
+      if (!thumb) return;
+      _openThumbPreview(+thumb.dataset.index);
+    });
+  }
+}
+
+// Reuses the exact same review UI (js/scanCameraUI.js's openCropReview) and
+// confirm/skip splice logic as the initial automatic review — the only
+// difference is there's no queue to drain afterward, just a single file
+// re-opened on demand. Shares _reviewingNow with _drainReviewQueue so the
+// two can never both have a modal open at once.
+async function _openThumbPreview(idx) {
+  if (isFilesLocked() || _reviewingNow) return;
+  const file = selectedFiles[idx];
+  if (!file || !file._scanReviewed) return;
+
+  _reviewingNow = true;
+  try {
+    const sourceCanvas = await _decodeSourcePhoto(file);
+    openCropReview({
+      sourceCanvas,
+      onConfirm: async warpedCanvases => {
+        const curIdx = selectedFiles.indexOf(file);
+        const baseName = file.name.replace(/\.\w+$/, '');
+        const newFiles = [];
+        for (let i = 0; i < warpedCanvases.length; i++) {
+          const blob = await filterScanPhoto(warpedCanvases[i], _scanFilterMode);
+          const suffix = warpedCanvases.length > 1 ? `-scan-${i + 1}` : '-scan';
+          const reviewedFile = new File([blob], baseName + suffix + '.jpg', { type: 'image/jpeg' });
+          reviewedFile._scanReviewed = true;
+          newFiles.push(reviewedFile);
+        }
+        if (curIdx !== -1) {
+          selectedFiles.splice(curIdx, 1, ...newFiles);
+          _exifAngles.splice(curIdx, 1, ...newFiles.map(() => 0));
+        }
+        _reviewingNow = false;
+        _render(selectedFiles);
+      },
+      onSkip: () => { _reviewingNow = false; }, // no changes — file stays exactly as it was
+    });
+  } catch {
+    _reviewingNow = false;
+    showToast(t('sd_review_decode_failed', { name: file.name }));
   }
 }
 
