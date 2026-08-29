@@ -50,6 +50,17 @@ let _hasColor     = false;
 let _looksDigital = false;
 let _previewGen   = 0;
 let _previewTimer = null;
+let _initGen      = 0;   // bumped on every initCleanScanOptions() call — separate from
+                          // _previewGen above, which only guards _updatePreview()'s slider-driven
+                          // re-renders WITHIN one file's session. Real bug found+confirmed via
+                          // Playwright: swap files quickly and _pdfJsDoc could end up holding the
+                          // FIRST file's document while the filename label (passed as a plain
+                          // argument to _render(), unaffected by this race) correctly showed the
+                          // second file's name — label and preview image visibly contradicting
+                          // each other. _runCleanScan() (processor.js) re-reads the file fresh from
+                          // its own filesSnapshot at click time, so the actual EXPORTED output was
+                          // never wrong here — same "misleading preview only" class as resize's
+                          // 1ee544a9, not meta's/redact's worse "wrong data" class.
 
 // ── Public API ─────────────────────────────────────────────────
 
@@ -67,6 +78,9 @@ export async function initCleanScanOptions(file) {
   const container = id('cleanScanOptions');
   if (!container) return;
   if (!file) { container.innerHTML = ''; return; }
+
+  // Captured before any await — see _initGen's own comment (state block above).
+  const gen = ++_initGen;
 
   container.innerHTML = loadingRow(t('cs_loading'));
   container.style.display = 'block';
@@ -86,26 +100,33 @@ export async function initCleanScanOptions(file) {
 
   try {
     await loadPdfJs();
+    if (gen !== _initGen) return;
     const buf = await file.arrayBuffer();
-    _pdfJsDoc = await window.pdfjsLib.getDocument({
+    if (gen !== _initGen) return;
+    const newDoc = await window.pdfjsLib.getDocument({
       data: new Uint8Array(buf), disableWorker: true,
     }).promise;
+    if (gen !== _initGen) return;
+    _pdfJsDoc = newDoc;
 
     _pageCount = _pdfJsDoc.numPages;
     if (_pageCount === 0) { showToast(t('no_pages_pdf')); _hide(container); return; }
 
     _previewPage = 1;
     await _checkLooksDigital();
+    if (gen !== _initGen) return;
     _render(file);
     setButtonReady(getLocalizedTool(TOOLS.cleanScan).btn);
     await _updatePreview();
   } catch (err) {
+    if (gen !== _initGen) return;
     showToast(t('cs_err_load', { msg: err.message }), 5000);
     _hide(container);
   }
 }
 
 export function hideCleanScanOptions() {
+  _initGen++; // invalidate any in-flight initCleanScanOptions() call
   _cleanup();
   const container = id('cleanScanOptions');
   if (container) { container.style.display = 'none'; container.innerHTML = ''; }
