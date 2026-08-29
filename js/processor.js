@@ -2341,8 +2341,21 @@ async function _p2eExtractTables(pdfDoc) {
   const textRows = [];
   let pagesWithNoText = 0;
 
+  // Checked at the TOP of each iteration (not the bottom, unlike
+  // _p2wBuildPageData's identical idiom) because this loop has an early
+  // `continue` for no-text pages — a bottom-of-loop check would be skipped
+  // on that path. No yield point existed anywhere here before — a real
+  // user report (161.0ms max single-frame gap on a 25-page table-heavy
+  // PDF, 4x CPU throttle) traced back to this being the one remaining
+  // unchunked per-page loop in pdf2excel. Same budget-checked idiom
+  // _runPdf2Jpg already uses.
+  let frameStart = performance.now();
   for (let p = 1; p <= pdfDoc.numPages; p++) {
     if (!isProcessing) break;
+    if (performance.now() - frameStart >= _FRAME_BUDGET_MS) {
+      await _yieldToUI();
+      frameStart = performance.now();
+    }
     setProgress(10 + Math.round((p / pdfDoc.numPages) * 75),
                 `Reading page ${p}/${pdfDoc.numPages}…`);
 
@@ -3026,6 +3039,7 @@ export async function _p2wBuildPageData(pdfDoc) {
     totalInlineVisuals: 0,   // filled in Pass 2
   };
 
+  let frameStart = performance.now();   // tracks time since last yield — same idiom as _runPdf2Jpg
   for (let p = 1; p <= pdfDoc.numPages; p++) {
     if (!isProcessing) break;
     setProgress(10 + Math.round((p / pdfDoc.numPages) * 40),
@@ -3136,6 +3150,19 @@ export async function _p2wBuildPageData(pdfDoc) {
     }
 
     page.cleanup?.();
+
+    // No yield point existed anywhere in this loop before — a real user
+    // report (413.5ms max single-frame gap on a 25-page table-heavy PDF,
+    // measured with 4x CPU throttle) traced back to this being the one
+    // remaining unchunked per-page loop in the whole pdf2word/pdf2excel
+    // family. Same budget-checked yield idiom _runPdf2Jpg already uses —
+    // caps the worst single frame gap at roughly "one page's cost" instead
+    // of "the whole document's cost", without moving any code off-thread.
+    const now = performance.now();
+    if (now - frameStart >= _FRAME_BUDGET_MS) {
+      await _yieldToUI();
+      frameStart = performance.now();
+    }
   }
 
   const sorted = [...allSizes].sort((a, b) => a - b);
