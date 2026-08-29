@@ -39,6 +39,12 @@ export function showToast(message, duration = 3000, onClick = null) {
  * @param {string} [label]
  */
 export function setProgress(percent, label = '') {
+  // Drives .merge-btn--processing's own fill (css/components.css) — real
+  // percent, not a timer, so the button's fill and the thin bar below it
+  // always agree.
+  const mergeBtn = id('mergeBtn');
+  if (mergeBtn) mergeBtn.style.setProperty('--fill-pct', percent + '%');
+
   const bar  = id('progressBar');
   const fill = id('progressFill');
   const lbl  = id('progressLabel');
@@ -55,6 +61,7 @@ export function hideProgress() {
   hide('progressBar');
   hide('progressLabel');
   id('progressFill').style.width = '0%';
+  id('mergeBtn')?.style.setProperty('--fill-pct', '0%');
   clearLongOpHint();
 }
 
@@ -122,6 +129,8 @@ export function setButtonProcessing() {
   if (!btn) return;
   btn.disabled = true;
   btn.textContent = t('btn_processing');
+  btn.style.setProperty('--fill-pct', '0%');
+  btn.classList.add('merge-btn--processing');
 }
 
 /**
@@ -132,6 +141,8 @@ export function setButtonReady(label) {
   const btn = id('mergeBtn');
   btn.disabled = false;
   btn.textContent = label;
+  btn.classList.remove('merge-btn--processing');
+  btn.style.setProperty('--fill-pct', '0%');
 }
 
 /**

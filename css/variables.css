@@ -20,6 +20,7 @@
   --green-dark:   #1A5C38;
   --green-light:  #E8F5EE;
   --green-mid:    #4CAF78;
+  --green-bright: #6FDB9F;  /* .merge-btn--processing's fill leading-edge + ambient pulse glow only — a punchier accent than --green-mid, not used for text (no WCAG contrast requirement), same "stays constant across themes" treatment as --green/--green-mid below */
   --green-text:   var(--green);  /* small text/links on --bg or --surface — must stay WCAG AA (4.5:1); dark mode brightens it below, --green itself is unchanged since it's also used for backgrounds/borders (129 other call sites) that shouldn't shift */
   /* pdf2pdfaUI.js's "not compliant yet" banner was the only call site for
      these two tokens and had no dark-mode pair at all — var(--yellow-light)

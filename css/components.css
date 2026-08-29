@@ -320,6 +320,84 @@ button,
   box-shadow: none;
 }
 
+/* ── Processing feedback: fill + glowing edge + pulse ──────────────
+   Shared by every tool that goes through doProcess()/setButtonProcessing()
+   (js/processor.js + js/ui.js) — a single change here covers ~28 tools at
+   once, since they all share #mergeBtn. OCR/compare bind their own click
+   handlers directly (see .ocr-btn--busy above/below) and never add
+   .merge-btn--processing, so they keep their own existing shimmer
+   treatment untouched — no conflict.
+
+   Design approved via a live mockup (button-click-feedback iteration,
+   2026-08-29): kick + fast-start fill + glowing leading edge + ambient
+   pulse, chosen over 4 other candidates (plain pulse, ripple, spinner,
+   shimmer-only) specifically for being unmissable within the first
+   ~200ms after click without feeling harsh.
+
+   ::before is the fill itself (driven by --fill-pct, set from
+   setProgress()'s real percent — not a fake timer, unlike the mockup).
+   ::after is a 3px bright line at the fill's leading edge with its own
+   glow, the strongest "something is actively moving" cue. Both sit at
+   z-index:-1 so the button's own text/icon always paints on top —
+   .merge-btn's position:sticky already establishes the positioning
+   context these need, no extra position:relative required. */
+.merge-btn {
+  overflow: hidden;
+  isolation: isolate;
+}
+.merge-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, var(--green-mid), var(--green));
+  width: 0%;
+  z-index: -1;
+}
+.merge-btn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--fill-pct, 0%);
+  width: 3px;
+  transform: translateX(-1.5px);
+  background: var(--green-bright);
+  box-shadow: 0 0 10px 2px var(--green-bright);
+  opacity: 0;
+  z-index: -1;
+  transition: left 0.9s cubic-bezier(.08, .85, .25, 1), opacity 0.15s ease;
+}
+/* :disabled needed in the selector to outrank .merge-btn:disabled's own
+   background override above (same specificity otherwise, source order
+   would decide — this makes it unambiguous regardless of order). */
+.merge-btn.merge-btn--processing:disabled {
+  background: var(--green-dark);
+  cursor: wait;
+}
+.merge-btn--processing::before {
+  width: var(--fill-pct, 0%);
+  transition: width 0.9s cubic-bezier(.08, .85, .25, 1);
+}
+.merge-btn--processing::after {
+  opacity: 1;
+}
+.merge-btn--processing {
+  animation: merge-btn-kick 0.22s ease, merge-btn-glow-pulse 1s ease-in-out infinite;
+}
+@keyframes merge-btn-kick {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(0.96); }
+  100% { transform: scale(1); }
+}
+@keyframes merge-btn-glow-pulse {
+  0%, 100% { box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18), 0 0 0 0 rgba(76, 175, 120, 0.45); }
+  50%      { box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18), 0 0 0 9px rgba(76, 175, 120, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .merge-btn--processing { animation: none; }
+  .merge-btn::before, .merge-btn::after { transition: none; }
+}
+
 /* OCR processing state — green shimmer shows work is in progress */
 @keyframes ocr-shimmer {
   0%   { background-position: -200% center; }

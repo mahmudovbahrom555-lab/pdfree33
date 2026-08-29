@@ -462,6 +462,13 @@ function _handleSuccess({ tool, blob, desc, filename, compressionReport, batchCo
   btn.textContent  = t('process_again');
   btn.disabled     = false;
   btn.dataset.mode = 'reset';
+  // Bypasses ui.js's setButtonReady() (this handler sets its own label/mode),
+  // so the processing-feedback class/fill it applies (css/components.css's
+  // .merge-btn--processing) needs the same manual cleanup here — found via
+  // real Playwright testing: without this, a successful run left the button
+  // stuck fully-filled and still pulsing after processing had already ended.
+  btn.classList.remove('merge-btn--processing');
+  btn.style.setProperty('--fill-pct', '0%');
 
   hide('progressBar');
   hide('progressLabel');
