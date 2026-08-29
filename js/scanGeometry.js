@@ -267,7 +267,7 @@ export function detectDocumentQuad(sourceCanvas) {
   const enhanced = new cv.Mat();
   const blurred  = new cv.Mat();
   const edges    = new cv.Mat();
-  const morphKernel = cv.getStructuringElement(cv.MORPH_RECT, new cv.Size(5, 5));
+  const morphKernel = cv.getStructuringElement(cv.MORPH_RECT, new cv.Size(9, 9));
   const closed   = new cv.Mat();
   const contours   = new cv.MatVector();
   const hierarchy  = new cv.Mat();
@@ -290,7 +290,14 @@ export function detectDocumentQuad(sourceCanvas) {
     // bridges small gaps where a real document edge briefly drops below
     // the Canny threshold (a partially-broken contour never reaches
     // findContours as one closed shape), while still shrinking back down
-    // afterward instead of permanently thickening every edge.
+    // afterward instead of permanently thickening every edge. Kernel size
+    // (9x9, up from an initial 5x5) matters more than it might look —
+    // found via live testing across several low-contrast stress photos
+    // that a 5x5 kernel reliably fixed some but not all of them: the
+    // surviving failures had genuinely MORE fragmented edges (same total
+    // edge-pixel count, just broken into more, smaller disconnected
+    // pieces depending on the exact noise realization) that needed a
+    // wider bridge to reconnect into one contour.
     cv.morphologyEx(edges, closed, cv.MORPH_CLOSE, morphKernel);
     cv.findContours(closed, contours, hierarchy, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE);
 
