@@ -187,8 +187,62 @@ export function detectSpineX(data, w, h) {
 // SCAN_MAX_LONG_EDGE consolidation.
 export const DETECT_LONG_EDGE = 800;  // downsample for detection only — mirrors processor.js's _EREADER_BBOX_EDGE pattern
 const _MIN_AREA_FRACTION  = 0.20; // reject contours smaller than 20% of the frame — too small to plausibly be "the document"
-const _CANNY_LOW          = 75;
-const _CANNY_HIGH         = 200;
+// Lowered from the old fixed (75,200) after a live stress test (pale
+// document on a similarly light, textured background — the real failure
+// shape a user reported live) showed detection silently falling all the
+// way back to defaultInsetQuad: the old thresholds required a stronger
+// gradient than a genuinely low-contrast document/background boundary
+// ever produces, CLAHE-enhanced or not.
+//
+// The textbook "auto Canny" technique (scale thresholds around the
+// image's own median PIXEL INTENSITY) was tried first and made this
+// specific failure WORSE, not better — confirmed via direct instrumentation
+// (median=191 on the stress photo → thresholds ~128/254 → zero edge pixels
+// detected at all). That heuristic silently assumes median intensity
+// correlates with typical GRADIENT magnitude, which breaks down exactly
+// for a bright, low-contrast image like this one: pixel values run high
+// even though the actual edge strength between paper and background is
+// small. Simple lower fixed thresholds, combined with CLAHE actually
+// strengthening the real gradient beforehand, is what worked in practice —
+// confirmed by re-detecting the stress photo's true quad almost exactly
+// (within ~3px of the drawn corners after scaling back up).
+const _CANNY_LOW  = 30;
+const _CANNY_HIGH = 90;
+
+// Median of a single-channel 8-bit Mat's pixel values, via a 256-bin
+// histogram (O(n), fast enough for a one-shot call on an at-most-800px
+// downscaled frame) — feeds the auto-Canny threshold below. Not exported;
+// only meaningful paired with this file's own detection pipeline.
+function _medianGray(mat) {
+  const hist = new Uint32Array(256);
+  const data = mat.data;
+  for (let i = 0; i < data.length; i++) hist[data[i]]++;
+  const half = data.length / 2;
+  let cum = 0;
+  for (let v = 0; v < 256; v++) {
+    cum += hist[v];
+    if (cum >= half) return v;
+  }
+  return 128;
+}
+
+// Reconstructs a RotatedRect's 4 corners from OpenCV.js's
+// {center,size,angle} return shape — hand-rolled rather than assuming
+// cv.RotatedRect/cv.boxPoints exists in the WASM build actually shipped,
+// since that's a real difference from desktop cv2 this project can't
+// verify without a live browser test anyway. Standard rotation formula,
+// same one this project already uses elsewhere for point math.
+function _rotatedRectPoints({ center, size, angle }) {
+  const rad = angle * Math.PI / 180;
+  const cos = Math.cos(rad), sin = Math.sin(rad);
+  const w2 = size.width / 2, h2 = size.height / 2;
+  return [
+    { x: -w2, y: -h2 }, { x: w2, y: -h2 }, { x: w2, y: h2 }, { x: -w2, y: h2 },
+  ].map(p => ({
+    x: center.x + p.x * cos - p.y * sin,
+    y: center.y + p.x * sin + p.y * cos,
+  }));
+}
 
 /**
  * Detects the largest plausible 4-corner document quad in a captured
@@ -208,30 +262,54 @@ export function detectDocumentQuad(sourceCanvas) {
   small.width = dw; small.height = dh;
   small.getContext('2d').drawImage(sourceCanvas, 0, 0, dw, dh);
 
-  const src     = cv.imread(small);
-  const gray    = new cv.Mat();
-  const blurred = new cv.Mat();
-  const edges   = new cv.Mat();
-  const kernel  = cv.Mat.ones(3, 3, cv.CV_8U);
-  const dilated = new cv.Mat();
+  const src      = cv.imread(small);
+  const gray     = new cv.Mat();
+  const enhanced = new cv.Mat();
+  const blurred  = new cv.Mat();
+  const edges    = new cv.Mat();
+  const morphKernel = cv.getStructuringElement(cv.MORPH_RECT, new cv.Size(5, 5));
+  const closed   = new cv.Mat();
   const contours   = new cv.MatVector();
   const hierarchy  = new cv.Mat();
+  const clahe = new cv.CLAHE(2.0, new cv.Size(8, 8));
 
   let result = null;
   try {
     cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
-    cv.GaussianBlur(gray, blurred, new cv.Size(5, 5), 0);
+    // Pulls apart a low-contrast document/background boundary (e.g. a pale
+    // document on a similarly light, textured surface) BEFORE edge
+    // detection — found via a live stress test to be the single biggest
+    // real gap in this pipeline; a fixed downstream Canny threshold can't
+    // recover an edge that's simply too weak in the source image.
+    clahe.apply(gray, enhanced);
+    cv.GaussianBlur(enhanced, blurred, new cv.Size(5, 5), 0);
+
     cv.Canny(blurred, edges, _CANNY_LOW, _CANNY_HIGH);
-    cv.dilate(edges, dilated, kernel);
-    cv.findContours(dilated, contours, hierarchy, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE);
+
+    // Morphological CLOSE (dilate then erode) instead of a bare dilate —
+    // bridges small gaps where a real document edge briefly drops below
+    // the Canny threshold (a partially-broken contour never reaches
+    // findContours as one closed shape), while still shrinking back down
+    // afterward instead of permanently thickening every edge.
+    cv.morphologyEx(edges, closed, cv.MORPH_CLOSE, morphKernel);
+    cv.findContours(closed, contours, hierarchy, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE);
 
     const frameArea = dw * dh;
     let best = null, bestArea = 0;
+    let fallbackContour = null, fallbackArea = 0; // largest big-enough contour, any shape
 
     for (let i = 0; i < contours.size(); i++) {
       const contour = contours.get(i);
       const area = cv.contourArea(contour);
-      if (area < frameArea * _MIN_AREA_FRACTION || area <= bestArea) { contour.delete(); continue; }
+      if (area < frameArea * _MIN_AREA_FRACTION) { contour.delete(); continue; }
+
+      if (area > fallbackArea) {
+        fallbackContour?.delete();
+        fallbackArea = area;
+        fallbackContour = contour.clone();
+      }
+
+      if (area <= bestArea) { contour.delete(); continue; }
 
       const approx = new cv.Mat();
       const perimeter = cv.arcLength(contour, true);
@@ -247,6 +325,21 @@ export function detectDocumentQuad(sourceCanvas) {
       contour.delete();
     }
 
+    // Fallback: no cleanly-4-cornered contour found (a real edge can come
+    // back as 5-6 points from a corner-rounding artifact, or slightly
+    // non-convex from noise) but a single big, plausible blob still
+    // dominates the frame — its minAreaRect is a reasonable approximate
+    // quad, strictly better than the OLD behavior here (silently giving up
+    // to defaultInsetQuad, which ignores the document's real position
+    // entirely). Only used when the primary, more reliable path found
+    // nothing, so this can only improve on today's fallback, never regress
+    // a case that already worked.
+    if (!best && fallbackContour) {
+      const rect = cv.minAreaRect(fallbackContour);
+      best = _rotatedRectPoints(rect);
+    }
+    fallbackContour?.delete();
+
     if (best) {
       const ordered = orderQuadPoints(best);
       const inv = 1 / scale;
@@ -258,8 +351,8 @@ export function detectDocumentQuad(sourceCanvas) {
       };
     }
   } finally {
-    src.delete(); gray.delete(); blurred.delete(); edges.delete();
-    kernel.delete(); dilated.delete(); contours.delete(); hierarchy.delete();
+    src.delete(); gray.delete(); enhanced.delete(); blurred.delete(); edges.delete();
+    morphKernel.delete(); closed.delete(); contours.delete(); hierarchy.delete(); clahe.delete();
   }
   return result;
 }
