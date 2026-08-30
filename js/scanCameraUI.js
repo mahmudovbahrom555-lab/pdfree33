@@ -569,6 +569,10 @@ async function _startReview() {
           <div class="scan-cam-handle" id="scanCamHandle-tr" data-corner="tr"></div>
           <div class="scan-cam-handle" id="scanCamHandle-br" data-corner="br"></div>
           <div class="scan-cam-handle" id="scanCamHandle-bl" data-corner="bl"></div>
+          <div class="scan-cam-handle scan-cam-handle--mid" id="scanCamHandle-mid-tl-tr" data-edge-a="tl" data-edge-b="tr"></div>
+          <div class="scan-cam-handle scan-cam-handle--mid" id="scanCamHandle-mid-tr-br" data-edge-a="tr" data-edge-b="br"></div>
+          <div class="scan-cam-handle scan-cam-handle--mid" id="scanCamHandle-mid-br-bl" data-edge-a="br" data-edge-b="bl"></div>
+          <div class="scan-cam-handle scan-cam-handle--mid" id="scanCamHandle-mid-bl-tl" data-edge-a="bl" data-edge-b="tl"></div>
           <canvas class="scan-cam-erase-overlay" id="scanCamEraseOverlay"></canvas>
         </div>
       </div>
@@ -611,6 +615,7 @@ async function _startReview() {
   window.addEventListener('resize', _resizeHandler);
   _renderHandles();
   _bindHandleDrag();
+  _bindMidEdgeDrag();
   document.getElementById('scanCamConfirmBtn').disabled = false;
 }
 
@@ -895,6 +900,15 @@ function _computeFrameLayout() {
   if (img) img.style.cssText = 'display:block;width:100%;height:100%;max-width:none;max-height:none;';
 }
 
+// Mid-edge handles — one per quad edge, [cornerA, cornerB] pairs in the
+// same tl/tr/br/bl order _quad itself uses. Dragging one moves BOTH its
+// corners together along the edge's own perpendicular axis, letting a user
+// straighten a whole tilted edge in one gesture instead of nudging each
+// corner individually — a real mobile crop-review UX gap found comparing
+// against CleanSCAN's (github.com/clean-apps/CleanSCAN) PolygonView, a
+// reference scanner app that has had this since 2015.
+const _MID_EDGES = [['tl', 'tr'], ['tr', 'br'], ['br', 'bl'], ['bl', 'tl']];
+
 function _renderHandles() {
   const inner = document.getElementById('scanCamFrameInner');
   if (!inner || !_quad) return;
@@ -918,15 +932,28 @@ function _renderHandles() {
   svg.style.width  = localW + 'px';
   svg.style.height = localH + 'px';
 
+  const corners = {};
   const pts = ['tl', 'tr', 'br', 'bl'].map(k => {
     const p = _quad[k];
     const dx = p.x * _displayScale, dy = p.y * _displayScale;
+    corners[k] = { dx, dy };
     const handle = document.getElementById(`scanCamHandle-${k}`);
     handle.style.left = dx + 'px';
     handle.style.top  = dy + 'px';
     return `${dx},${dy}`;
   }).join(' ');
   document.getElementById('scanCamPolygon').setAttribute('points', pts);
+
+  // Mid-edge handles — positioned at the midpoint between their two corners'
+  // CURRENT display positions (not full-res quad midpoint scaled down —
+  // same value either way since scaling is linear, but computed from the
+  // already-scaled corners here to avoid a second pass over _quad).
+  _MID_EDGES.forEach(([a, b]) => {
+    const handle = document.getElementById(`scanCamHandle-mid-${a}-${b}`);
+    if (!handle) return;
+    handle.style.left = (corners[a].dx + corners[b].dx) / 2 + 'px';
+    handle.style.top  = (corners[a].dy + corners[b].dy) / 2 + 'px';
+  });
 }
 
 // Magnifier loupe, shown while dragging a corner handle — a real user
@@ -1049,6 +1076,86 @@ function _bindHandleDrag() {
         const offsetX = innerRect.left - wrapRect.left;
         const offsetY = innerRect.top  - wrapRect.top;
         _showMagnifier(x + offsetX, y + offsetY, fullX, fullY);
+      };
+      const onUp = () => {
+        handle.removeEventListener('pointermove', onMove);
+        handle.removeEventListener('pointerup', onUp);
+        handle.removeEventListener('pointercancel', onUp);
+        _hideMagnifier();
+      };
+      handle.addEventListener('pointermove', onMove);
+      handle.addEventListener('pointerup', onUp);
+      handle.addEventListener('pointercancel', onUp);
+    });
+  });
+}
+
+// How far a scalar offset `t` along direction `p` (from starting coordinate
+// `s`) can go before hitting an axis bound of [0, max] — used to clamp the
+// mid-edge drag below so BOTH corners stay in bounds by the same amount
+// (clamping each corner independently could move them by different
+// amounts, breaking the "shift this edge, keep it straight" point).
+function _axisOffsetBounds(s, p, max) {
+  if (p === 0) return [-Infinity, Infinity];
+  const t1 = (0 - s) / p, t2 = (max - s) / p;
+  return p > 0 ? [t1, t2] : [t2, t1];
+}
+
+function _bindMidEdgeDrag() {
+  _MID_EDGES.forEach(([a, b]) => {
+    const handle = document.getElementById(`scanCamHandle-mid-${a}-${b}`);
+    if (!handle) return;
+    handle.addEventListener('pointerdown', e => {
+      e.preventDefault();
+      handle.setPointerCapture(e.pointerId);
+      const inner = document.getElementById('scanCamFrameInner');
+      const wrap  = document.getElementById('scanCamFrameWrap');
+
+      const toFullRes = ev => {
+        const innerRect = inner.getBoundingClientRect();
+        const x = Math.min(Math.max(0, ev.clientX - innerRect.left), innerRect.width);
+        const y = Math.min(Math.max(0, ev.clientY - innerRect.top),  innerRect.height);
+        return _viewRotated
+          ? unrotatedImagePoint(x, y, _capturedCanvas.width, _displayScale)
+          : { x: x / _displayScale, y: y / _displayScale };
+      };
+
+      const startPointer = toFullRes(e);
+      const startA = { ..._quad[a] };
+      const startB = { ..._quad[b] };
+      // Edge direction and its perpendicular, both in full-res (rotation-
+      // invariant) space — the handle only moves the edge perpendicular to
+      // itself, never slides it along its own length (the corner handles
+      // already cover that).
+      const edgeX = startB.x - startA.x, edgeY = startB.y - startA.y;
+      const edgeLen = Math.hypot(edgeX, edgeY) || 1;
+      const perpX = -edgeY / edgeLen, perpY = edgeX / edgeLen;
+
+      const maxW = _capturedCanvas.width, maxH = _capturedCanvas.height;
+      const [ax1, ax2] = _axisOffsetBounds(startA.x, perpX, maxW);
+      const [ay1, ay2] = _axisOffsetBounds(startA.y, perpY, maxH);
+      const [bx1, bx2] = _axisOffsetBounds(startB.x, perpX, maxW);
+      const [by1, by2] = _axisOffsetBounds(startB.y, perpY, maxH);
+      const tMin = Math.max(ax1, ay1, bx1, by1);
+      const tMax = Math.min(ax2, ay2, bx2, by2);
+
+      const onMove = ev => {
+        const p = toFullRes(ev);
+        const dx = p.x - startPointer.x, dy = p.y - startPointer.y;
+        const rawProj = dx * perpX + dy * perpY;
+        const t = Math.min(Math.max(rawProj, tMin), tMax);
+
+        _quad[a] = { x: startA.x + perpX * t, y: startA.y + perpY * t };
+        _quad[b] = { x: startB.x + perpX * t, y: startB.y + perpY * t };
+        _renderHandles();
+
+        const innerRect = inner.getBoundingClientRect();
+        const wrapRect  = wrap.getBoundingClientRect();
+        const offsetX = innerRect.left - wrapRect.left;
+        const offsetY = innerRect.top  - wrapRect.top;
+        const dispX = Math.min(Math.max(0, ev.clientX - innerRect.left), innerRect.width);
+        const dispY = Math.min(Math.max(0, ev.clientY - innerRect.top),  innerRect.height);
+        _showMagnifier(dispX + offsetX, dispY + offsetY, p.x, p.y);
       };
       const onUp = () => {
         handle.removeEventListener('pointermove', onMove);

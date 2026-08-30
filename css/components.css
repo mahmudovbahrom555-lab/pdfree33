@@ -5473,6 +5473,12 @@ body:not(.has-files) #heroChipsLabel { display: none !important; }
 }
 .scan-cam-handle:active { cursor: grabbing; }
 
+/* Mid-edge handles — same 24px tap target as the corner handles (this
+   project's own WCAG 2.5.8 minimum, see the comment above); only the fill
+   is translucent so they read as "secondary" to the 4 corner handles
+   without shrinking the actual touch target below that established bar. */
+.scan-cam-handle--mid { background: rgba(45, 122, 79, 0.55); }
+
 /* Magnifier loupe shown while dragging a corner handle — see
    _showMagnifier's own comment in js/scanCameraUI.js for why (a real
    user-requested feature, comparing against a competing scanner app):
