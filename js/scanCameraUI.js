@@ -1023,11 +1023,13 @@ function _showMagnifier(displayX, displayY, fullResX, fullResY) {
   // Crosshair at dead center — marks the exact point being placed,
   // independent of whatever's in the underlying image at that spot.
   // Same green as the corner handles/crop outline (--green, #2D7A4F —
-  // canvas 2D can't read a CSS custom property, hardcoded to match) and
-  // a bigger arm length — a real user comparison found the original
-  // small white crosshair harder to align by than the reference app's
-  // bigger, brand-colored one.
-  const armLen = 16;
+  // canvas 2D can't read a CSS custom property, hardcoded to match).
+  // Arms span the full circle diameter (a "sniper scope" reticle look,
+  // matching a real competitor app screenshot comparison) rather than a
+  // short center-only cross — a full-diameter line is easier to sight
+  // along when aligning a corner against a straight document edge that
+  // runs near, but not exactly through, the magnifier's center.
+  const armLen = _MAGNIFIER_SIZE / 2;
   ctx.strokeStyle = '#2D7A4F';
   ctx.lineWidth = 3;
   ctx.beginPath();
