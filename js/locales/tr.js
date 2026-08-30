@@ -715,6 +715,9 @@ window.PDFREE_LOCALE = {
   j2p_scan_filter_color:     'Renkli',
   j2p_scan_filter_original:  'Orijinal',
   j2p_scan_filter_bw:        'S/B',
+  j2p_scan_brightness:       'Parlaklık',
+  j2p_scan_contrast:         'Kontrast',
+  j2p_scan_reset:            'Sıfırla',
 
   scan_cam_title:            'Belgeyi tara',
   scan_cam_close:            'Kapat',

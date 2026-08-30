@@ -1135,6 +1135,28 @@ button,
   cursor: pointer;
 }
 
+/* Reset (↺) button for the Document Scanner's brightness/contrast sliders
+   — disabled (not just hidden) at the 0/baseline value so there's never a
+   dead click. */
+.j2p-slider-reset {
+  border: none;
+  background: none;
+  color: var(--text3);
+  font-size: 15px;
+  line-height: 1;
+  padding: 2px 4px;
+  cursor: pointer;
+  border-radius: 6px;
+}
+.j2p-slider-reset:hover:not(:disabled) {
+  background: var(--surface);
+  color: var(--text2);
+}
+.j2p-slider-reset:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
 @media (max-width: 540px) {
   .j2p-row { flex-direction: column; gap: 12px; }
   .j2p-chip { min-width: 50px; padding: 8px 10px; font-size: 12px; }

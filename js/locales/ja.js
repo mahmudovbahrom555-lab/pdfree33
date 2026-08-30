@@ -718,6 +718,9 @@ window.PDFREE_LOCALE = {
   j2p_scan_filter_color:     'カラー',
   j2p_scan_filter_original:  'オリジナル',
   j2p_scan_filter_bw:        '白黒',
+  j2p_scan_brightness:       '明るさ',
+  j2p_scan_contrast:         'コントラスト',
+  j2p_scan_reset:            'リセット',
 
   scan_cam_title:            'ドキュメントをスキャン',
   scan_cam_close:            '閉じる',

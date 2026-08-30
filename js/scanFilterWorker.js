@@ -35,14 +35,17 @@
 self.onmessage = async (e) => {
   try {
     if (e.data.type === 'filterPhoto') {
-      await handleFilterPhoto(e.data.bitmap, e.data.mode);
+      await handleFilterPhoto(e.data.bitmap, e.data.mode, e.data.adjust);
     }
   } catch (err) {
     self.postMessage({ type: 'error', message: err.message });
   }
 };
 
-async function handleFilterPhoto(bitmap, mode) {
+// adjust: {brightness, contrast}, both -50..50, 0=baseline — see
+// js/scanFilter.js's own JSDoc for the full contract. Ignored for
+// 'original' (nothing to adjust — the whole point of that mode).
+async function handleFilterPhoto(bitmap, mode, adjust) {
   const w = bitmap.width, h = bitmap.height;
   const src = new OffscreenCanvas(w, h);
   src.getContext('2d').drawImage(bitmap, 0, 0);
@@ -60,7 +63,7 @@ async function handleFilterPhoto(bitmap, mode) {
     const gray = _toGrayscaleCanvas(src);
     const bg   = _estimateBackground(gray);
     _flatFieldCorrectColor(src, bg);
-    _applyEnhanceColor(src, _STRENGTH);
+    _applyEnhanceColor(src, _STRENGTH, adjust);
     blob = await src.convertToBlob({ type: 'image/jpeg', quality: 0.87 });
   } else if (mode === 'bw') {
     // Real competitive gap found comparing against a competitor app's
@@ -75,7 +78,7 @@ async function handleFilterPhoto(bitmap, mode) {
     _flatFieldCorrect(gray, bg);
     _applyMedianFilter(gray);
     _unsharpMask(gray, 2, 2.0);
-    _applyBw(gray, _STRENGTH);
+    _applyBw(gray, _STRENGTH, adjust);
     blob = await gray.convertToBlob({ type: 'image/png' });
   } else {
     const gray = _toGrayscaleCanvas(src);
@@ -83,7 +86,7 @@ async function handleFilterPhoto(bitmap, mode) {
     _flatFieldCorrect(gray, bg);
     _applyMedianFilter(gray);
     _unsharpMask(gray, 2, 2.0);
-    _applyEnhance(gray, _STRENGTH);
+    _applyEnhance(gray, _STRENGTH, adjust);
     blob = await gray.convertToBlob({ type: 'image/jpeg', quality: 0.87 });
   }
 
@@ -100,7 +103,12 @@ async function handleFilterPhoto(bitmap, mode) {
 //    import isn't possible here (classic Worker, no ES modules). ──
 
 const BG_LONG_EDGE = 64;
-const _STRENGTH = 0.5; // fixed default — no exposed UI control in v1
+// Fixed baseline strength — the real brightness/contrast knob is now the
+// user-facing adjust param (js/scanDocumentUI.js's Brightness/Contrast
+// sliders, -50..50 each), layered on TOP of this constant rather than
+// replacing it — 0 on both sliders must reproduce exactly what shipped
+// before they existed.
+const _STRENGTH = 0.5;
 
 function _toGrayscaleCanvas(src) {
   const dst = new OffscreenCanvas(src.width, src.height);
@@ -223,13 +231,23 @@ function _unsharpMask(gray, radius, amount) {
   return gray;
 }
 
-function _applyEnhance(canvas, strength) {
+// Shared by _applyEnhance/_applyEnhanceColor — adjust.contrast scales the
+// strength-derived contrast multiplicatively (±50 ≈ ±50% swing around
+// whatever _STRENGTH already produces), adjust.brightness adds directly
+// in the same 0-255 units strength's own brightness term already uses.
+// Both are 0 by default, reproducing the exact pre-slider baseline.
+function _computeContrastBrightness(strength, adjust) {
+  const contrast   = (1 + strength * 1.2) * (1 + (adjust?.contrast ?? 0) / 100);
+  const brightness = strength * 40 + (adjust?.brightness ?? 0);
+  return { contrast, brightness };
+}
+
+function _applyEnhance(canvas, strength, adjust) {
   const w = canvas.width, h = canvas.height;
   const ctx = canvas.getContext('2d');
   const img = ctx.getImageData(0, 0, w, h);
   const d = img.data;
-  const contrast   = 1 + strength * 1.2;
-  const brightness = strength * 40;
+  const { contrast, brightness } = _computeContrastBrightness(strength, adjust);
   for (let i = 0; i < d.length; i += 4) {
     const v = d[i];
     const c = Math.min(255, Math.max(0, (v - 128) * contrast + 128 + brightness));
@@ -254,13 +272,12 @@ function _flatFieldCorrectColor(src, bg) {
   return src;
 }
 
-function _applyEnhanceColor(canvas, strength) {
+function _applyEnhanceColor(canvas, strength, adjust) {
   const w = canvas.width, h = canvas.height;
   const ctx = canvas.getContext('2d');
   const img = ctx.getImageData(0, 0, w, h);
   const d = img.data;
-  const contrast   = 1 + strength * 1.2;
-  const brightness = strength * 40;
+  const { contrast, brightness } = _computeContrastBrightness(strength, adjust);
   for (let i = 0; i < d.length; i += 4) {
     d[i]     = Math.min(255, Math.max(0, (d[i]     - 128) * contrast + 128 + brightness));
     d[i + 1] = Math.min(255, Math.max(0, (d[i + 1] - 128) * contrast + 128 + brightness));
@@ -326,14 +343,23 @@ function _despeckleMask(mask, w, h, minDarkNeighbors) {
   return out;
 }
 
-function _applyBw(canvas, strength) {
+function _applyBw(canvas, strength, adjust) {
   const w = canvas.width, h = canvas.height;
   const ctx = canvas.getContext('2d');
   const img = ctx.getImageData(0, 0, w, h);
   const d = img.data;
-  const base  = _otsuThreshold(d);
-  const shift = ((strength ?? 0.5) - 0.5) * 80; // ±40 around the auto baseline
+  const base = _otsuThreshold(d);
+  // Brightness slider shifts the Otsu threshold — INVERTED (raising
+  // brightness must make the output lighter/less ink, but the mask test
+  // below is d[i]<t, so a HIGHER t classifies MORE pixels as dark).
+  // ±50 maps to a ∓40 shift, comparable magnitude to the pre-existing
+  // ±40 strength-only swing this replaces at adjust=0.
+  const shift = ((strength ?? 0.5) - 0.5) * 80 - (adjust?.brightness ?? 0) * 0.8;
   const t = Math.min(250, Math.max(5, base + shift));
+  // Contrast slider adjusts how dark classified-as-ink pixels render —
+  // higher contrast = lower darkCap = blacker text, same direction a
+  // real contrast increase has on any other mode.
+  const darkCap = Math.min(60, Math.max(0, _BW_DARK_CAP - (adjust?.contrast ?? 0) * 0.3));
 
   const n = w * h;
   let mask = new Uint8Array(n);
@@ -344,7 +370,7 @@ function _applyBw(canvas, strength) {
     if (!mask[p]) { d[i] = d[i + 1] = d[i + 2] = 255; }
     else {
       const v = d[i];
-      const dark = Math.round(((v / t) ** _BW_GAMMA) * _BW_DARK_CAP);
+      const dark = Math.round(((v / t) ** _BW_GAMMA) * darkCap);
       d[i] = d[i + 1] = d[i + 2] = dark;
     }
   }

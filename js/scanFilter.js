@@ -137,9 +137,12 @@ function _filterWorkerRequest(worker, message, transfer) {
  * <img>, a canvas, ...).
  * @param {CanvasImageSource & {naturalWidth?: number, width?: number}} imgEl
  * @param {'grayscale'|'color'|'bw'|'original'} [mode='grayscale']
+ * @param {{brightness?: number, contrast?: number}} [adjust] - -50..50 each,
+ *   0 = the same baseline js/scanFilterWorker.js's fixed _STRENGTH already
+ *   produced before these were user-adjustable. Ignored in 'original' mode.
  * @returns {Promise<Blob>}
  */
-export async function filterScanPhoto(imgEl, mode = 'grayscale') {
+export async function filterScanPhoto(imgEl, mode = 'grayscale', adjust) {
   const rawW = imgEl.naturalWidth || imgEl.width;
   const rawH = imgEl.naturalHeight || imgEl.height;
   const scale = Math.min(1, SCAN_MAX_LONG_EDGE / Math.max(rawW, rawH));
@@ -151,6 +154,13 @@ export async function filterScanPhoto(imgEl, mode = 'grayscale') {
   // full-size buffer touched on the main thread before handing off.
   const bitmap = await createImageBitmap(imgEl, { resizeWidth: w, resizeHeight: h, resizeQuality: 'high' });
   const worker = _ensureFilterWorker();
-  const result = await _filterWorkerRequest(worker, { type: 'filterPhoto', bitmap, mode }, [bitmap]);
-  return new Blob([result.bytes], { type: 'image/jpeg' });
+  const result = await _filterWorkerRequest(worker, { type: 'filterPhoto', bitmap, mode, adjust }, [bitmap]);
+  // 'bw' mode's worker output is PNG (matches js/cleanScanWorker.js's own
+  // choice for its binarized mode — compresses flat black/white regions
+  // far better, losslessly, unlike JPEG's blocky artifacts on sharp text
+  // edges). js/worker.js's own jpg2pdf assembly sniffs real magic bytes
+  // (see _isJpeg there) rather than trusting a Blob's .type, so a
+  // mismatched label wouldn't actually have broken the PDF — but the type
+  // should still honestly describe the bytes it's attached to.
+  return new Blob([result.bytes], { type: mode === 'bw' ? 'image/png' : 'image/jpeg' });
 }

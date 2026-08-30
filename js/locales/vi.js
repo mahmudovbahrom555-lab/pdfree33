@@ -716,6 +716,9 @@ window.PDFREE_LOCALE = {
   j2p_scan_filter_color:     'Màu',
   j2p_scan_filter_original:  'Gốc',
   j2p_scan_filter_bw:        'Đen trắng',
+  j2p_scan_brightness:       'Độ sáng',
+  j2p_scan_contrast:         'Độ tương phản',
+  j2p_scan_reset:            'Đặt lại',
 
   scan_cam_title:            'Quét tài liệu',
   scan_cam_close:            'Đóng',

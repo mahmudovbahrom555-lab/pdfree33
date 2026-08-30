@@ -80,6 +80,14 @@ function _capLongEdge(img) {
 let _pageSize    = 'auto';
 let _orientation = 'auto';
 let _scanFilterMode = 'grayscale';
+// Phase 2 of the competitor catch-up (see [[scandoc_competitor_catchup_plan_2026_08]]
+// memory) — manual brightness/contrast, previously baked into
+// js/scanFilterWorker.js's fixed _STRENGTH=0.5 with "no exposed UI
+// control in v1". -50..50, 0 = the same baseline look that constant
+// already produced (an ADJUSTMENT on top of it, not a from-scratch
+// value — 0 must reproduce exactly what shipped before this existed).
+let _scanBrightness = 0;
+let _scanContrast   = 0;
 let _compress    = true;
 let _quality     = 0.82;
 let _exifAngles  = [];
@@ -87,6 +95,10 @@ let _rememberLoaded   = false;
 let _settingsRendered = false;
 let _reviewQueue  = [];   // File[] waiting to go through openCropReview
 let _reviewingNow = false; // guards against starting a 2nd review modal while one is open
+
+function _scanAdjust() {
+  return { brightness: _scanBrightness, contrast: _scanContrast };
+}
 
 export function getScanDocumentParams() {
   return { pageSize: _pageSize, orientation: _orientation,
@@ -145,6 +157,7 @@ export function hideScanDocumentOptions() {
   container.style.display = 'none';
   container.innerHTML = '';
   _pageSize = 'auto'; _orientation = 'auto'; _scanFilterMode = 'grayscale';
+  _scanBrightness = 0; _scanContrast = 0;
   _compress = true; _quality = 0.82; _exifAngles = [];
   _warnedManyImages = false; _rememberLoaded = false; _settingsRendered = false;
   _reviewQueue = []; _reviewingNow = false;
@@ -218,7 +231,7 @@ async function _autoProcessAll(files) {
       try { quad = detectDocumentQuad(sourceCanvas); } catch { /* falls through to defaultInsetQuad below */ }
       quad = quad || defaultInsetQuad(sourceCanvas.width, sourceCanvas.height);
       const warped = await warpToRectAsync(sourceCanvas, quad);
-      const blob = await filterScanPhoto(warped, _scanFilterMode);
+      const blob = await filterScanPhoto(warped, _scanFilterMode, _scanAdjust());
 
       const idx = selectedFiles.indexOf(file);
       const baseName = file.name.replace(/\.\w+$/, '');
@@ -260,7 +273,7 @@ async function _drainReviewQueue() {
         const baseName = file.name.replace(/\.\w+$/, '');
         const newFiles = [];
         for (let i = 0; i < warpedCanvases.length; i++) {
-          const blob = await filterScanPhoto(warpedCanvases[i], _scanFilterMode);
+          const blob = await filterScanPhoto(warpedCanvases[i], _scanFilterMode, _scanAdjust());
           const suffix = warpedCanvases.length > 1 ? `-scan-${i + 1}` : '-scan';
           const reviewedFile = new File([blob], baseName + suffix + '.jpg', { type: 'image/jpeg' });
           reviewedFile._scanReviewed = true;
@@ -368,7 +381,7 @@ function _bindTakePhotoButton() {
           const stamp = Date.now();
           const files = [];
           for (let i = 0; i < canvases.length; i++) {
-            const blob = await filterScanPhoto(canvases[i], _scanFilterMode);
+            const blob = await filterScanPhoto(canvases[i], _scanFilterMode, _scanAdjust());
             const suffix = canvases.length > 1 ? `-${i + 1}` : '';
             const file = new File([blob], `scan-${stamp}${suffix}.jpg`, { type: 'image/jpeg' });
             file._scanReviewed = true;
@@ -400,7 +413,7 @@ function _bindTakePhotoButton() {
       // when getUserMedia isn't available) — cap resolution here directly,
       // same as _decodeSourcePhoto does for the gallery/review path.
       const capped = _capLongEdge(img);
-      const blob = await filterScanPhoto(capped, _scanFilterMode);
+      const blob = await filterScanPhoto(capped, _scanFilterMode, _scanAdjust());
       const scanFile = new File([blob], `scan-${Date.now()}.jpg`, { type: 'image/jpeg' });
       scanFile._scanReviewed = true;
       addFiles([scanFile]);
@@ -436,6 +449,35 @@ function _settingsHtml() {
               ${o.label}
             </label>
           `).join('')}
+        </div>
+      </div>
+    </div>
+
+    <div class="j2p-row">
+      <div class="j2p-group" style="flex:1;">
+        <div class="j2p-quality-row" id="sdBrightnessRow">
+          <div class="j2p-quality-header">
+            <span>${t('j2p_scan_brightness')}</span>
+            <span style="display:flex;align-items:center;gap:8px;">
+              <span class="j2p-quality-val" id="sdBrightnessVal">${_scanBrightness}</span>
+              <button type="button" class="j2p-slider-reset" id="sdBrightnessReset" aria-label="${t('j2p_scan_reset')}"${_scanBrightness === 0 ? ' disabled' : ''}>↺</button>
+            </span>
+          </div>
+          <input type="range" id="sdBrightness" class="j2p-quality-slider"
+                 min="-50" max="50" step="1" value="${_scanBrightness}"
+                 aria-label="${t('j2p_scan_brightness')}">
+        </div>
+        <div class="j2p-quality-row" id="sdContrastRow" style="margin-top:12px;">
+          <div class="j2p-quality-header">
+            <span>${t('j2p_scan_contrast')}</span>
+            <span style="display:flex;align-items:center;gap:8px;">
+              <span class="j2p-quality-val" id="sdContrastVal">${_scanContrast}</span>
+              <button type="button" class="j2p-slider-reset" id="sdContrastReset" aria-label="${t('j2p_scan_reset')}"${_scanContrast === 0 ? ' disabled' : ''}>↺</button>
+            </span>
+          </div>
+          <input type="range" id="sdContrast" class="j2p-quality-slider"
+                 min="-50" max="50" step="1" value="${_scanContrast}"
+                 aria-label="${t('j2p_scan_contrast')}">
         </div>
       </div>
     </div>
@@ -618,6 +660,34 @@ function _bindSettingsEvents() {
       if (val) val.textContent = slider.value + '%';
     });
   }
+
+  _bindAdjustSlider('sdBrightness', v => { _scanBrightness = v; });
+  _bindAdjustSlider('sdContrast',   v => { _scanContrast   = v; });
+}
+
+// Shared by the brightness/contrast sliders — each pairs a <input type=range>
+// with a live value label and a reset (↺) button that snaps back to 0 (the
+// baseline js/scanFilterWorker.js already produced before these existed —
+// see _scanBrightness/_scanContrast's own comment). Reset button is
+// disabled at 0 rather than just inert-looking, so there's no dead click.
+function _bindAdjustSlider(idPrefix, setValue) {
+  const slider = id(idPrefix);
+  const val    = id(`${idPrefix}Val`);
+  const reset  = id(`${idPrefix}Reset`);
+  if (!slider) return;
+
+  slider.addEventListener('input', () => {
+    setValue(+slider.value);
+    if (val) val.textContent = slider.value;
+    if (reset) reset.disabled = +slider.value === 0;
+  });
+
+  reset?.addEventListener('click', () => {
+    setValue(0);
+    slider.value = 0;
+    if (val) val.textContent = '0';
+    reset.disabled = true;
+  });
 }
 
 function _bindThumbGridEvents() {
@@ -666,7 +736,7 @@ async function _openThumbPreview(idx) {
         const baseName = file.name.replace(/\.\w+$/, '');
         const newFiles = [];
         for (let i = 0; i < warpedCanvases.length; i++) {
-          const blob = await filterScanPhoto(warpedCanvases[i], _scanFilterMode);
+          const blob = await filterScanPhoto(warpedCanvases[i], _scanFilterMode, _scanAdjust());
           const suffix = warpedCanvases.length > 1 ? `-scan-${i + 1}` : '-scan';
           const reviewedFile = new File([blob], baseName + suffix + '.jpg', { type: 'image/jpeg' });
           reviewedFile._scanReviewed = true;
