@@ -5330,6 +5330,43 @@ body:not(.has-files) #heroChipsLabel { display: none !important; }
   cursor: pointer;
 }
 .scan-cam-tool-btn:hover { background: rgba(255,255,255,.16); }
+.scan-cam-tool-btn--active {
+  background: var(--green);
+  border-color: var(--green);
+}
+
+/* Blemish-eraser overlay — a transparent canvas living inside the SAME
+   rotating #scanCamFrameInner as the SVG outline/handles (see
+   js/scanCameraUI.js's own comment on _showEraseOverlay), so it needs no
+   independent rotation transform of its own. Hidden by default; shown/
+   sized only while erase mode is active. */
+.scan-cam-erase-overlay {
+  position: absolute;
+  top: 0; left: 0;
+  display: none;
+  cursor: crosshair;
+  touch-action: none;
+}
+.scan-cam-erase-label {
+  color: #aaa;
+  font-size: 12px;
+  padding: 0 4px;
+  white-space: nowrap;
+}
+.scan-cam-brush-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+}
+.scan-cam-brush-dot {
+  display: block;
+  border-radius: 50%;
+  background: currentColor;
+}
+.scan-cam-brush-dot--small  { width: 6px;  height: 6px; }
+.scan-cam-brush-dot--medium { width: 11px; height: 11px; }
+.scan-cam-brush-dot--large  { width: 16px; height: 16px; }
 .scan-cam-mode-chip {
   padding: 6px 14px;
   border-radius: 999px;

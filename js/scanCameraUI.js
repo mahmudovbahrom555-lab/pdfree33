@@ -61,6 +61,17 @@ let _viewRotated     = false;  // mobile-only: #scanCamFrameInner is CSS-rotated
 let _onConfirm       = null;
 let _onFallback       = null;
 let _onSkip            = null;
+// Phase 3 of the competitor catch-up (see scandoc_competitor_catchup_plan_2026_08
+// memory for the full TZ) — a blemish-eraser: paint white over a smudge/
+// shadow/stray mark before confirming, instead of retaking the photo.
+// Operates on _capturedCanvas directly (same pre-warp source the corner
+// crop/rotate buttons already mutate) via a transparent overlay canvas
+// that lives inside #scanCamFrameInner — same rigid-group rotation
+// treatment as the SVG outline/handles, so it needs zero extra rotation
+// math of its own; only the pointer-drag coordinate conversion (screen to
+// local) is shared with _bindHandleDrag's own _viewRotated-aware logic.
+let _eraseMode       = false;
+let _eraseBrushSize  = 'medium'; // 'small' | 'medium' | 'large' — see _ERASE_BRUSH_RADII
 let _reviewMode        = 'camera'; // 'camera' | 'gallery' — controls Retake vs Skip in the review stage's action row
 let _scanSubMode       = 'single'; // 'single' | 'book' — set per-review, not sticky across captures (see _startReview)
 let _resizeHandler    = null;
@@ -150,6 +161,7 @@ function _closeModal({ suppressOnSkip = false } = {}) {
   _capturedCanvas = null;
   _quad = null;
   _viewRotated = false;
+  _eraseMode = false;
   _consensusQueue = [];
   _autoCaptureArmed = true;
   if (!suppressOnSkip && _reviewMode === 'gallery') {
@@ -557,20 +569,17 @@ async function _startReview() {
           <div class="scan-cam-handle" id="scanCamHandle-tr" data-corner="tr"></div>
           <div class="scan-cam-handle" id="scanCamHandle-br" data-corner="br"></div>
           <div class="scan-cam-handle" id="scanCamHandle-bl" data-corner="bl"></div>
+          <canvas class="scan-cam-erase-overlay" id="scanCamEraseOverlay"></canvas>
         </div>
       </div>
       <div class="scan-cam-tool-row" id="scanCamToolRow">
-        <button type="button" class="scan-cam-tool-btn" id="scanCamRotateLeft" aria-label="${t('scan_cam_rotate_left')}">↺</button>
-        <button type="button" class="scan-cam-tool-btn" id="scanCamResetCrop" aria-label="${t('scan_cam_reset_crop')}">${t('scan_cam_reset_crop')}</button>
-        <button type="button" class="scan-cam-tool-btn" id="scanCamRotateRight" aria-label="${t('scan_cam_rotate_right')}">↻</button>
+        ${_eraseToolRowHtml()}
       </div>
     </div>
   `;
   document.getElementById('scanCamModeSingle').addEventListener('click', () => _setScanSubMode('single'));
   document.getElementById('scanCamModeBook').addEventListener('click', () => _setScanSubMode('book'));
-  document.getElementById('scanCamRotateLeft').addEventListener('click', () => _rotateCapturedImage(-1));
-  document.getElementById('scanCamRotateRight').addEventListener('click', () => _rotateCapturedImage(1));
-  document.getElementById('scanCamResetCrop').addEventListener('click', () => _resetCrop());
+  _bindEraseToolRow();
   actions.innerHTML = _reviewMode === 'gallery'
     ? `
       <button type="button" class="split-action-btn" id="scanCamSkipBtn">${t('scan_cam_skip')}</button>
@@ -681,6 +690,156 @@ async function _resetCrop() {
   await _detectAndSetQuad();
   if (myGen !== _reviewGen) { return; }
   _renderHandles();
+}
+
+// ── Blemish eraser ───────────────────────────────────────────
+// Local (pre-scale, display-space) brush radii — same units _renderHandles
+// already draws in (image px × _displayScale), so these look consistent
+// regardless of how zoomed in/out the current photo happens to be.
+const _ERASE_BRUSH_RADII = { small: 16, medium: 32, large: 56 };
+
+function _eraseToolRowHtml() {
+  if (_eraseMode) {
+    return `
+      <span class="scan-cam-erase-label">${t('scan_cam_erase_brush')}</span>
+      ${['small', 'medium', 'large'].map(size => `
+        <button type="button" class="scan-cam-tool-btn scan-cam-brush-btn${_eraseBrushSize === size ? ' scan-cam-tool-btn--active' : ''}" data-brush="${size}" aria-label="${t(`scan_cam_brush_${size}`)}">
+          <span class="scan-cam-brush-dot scan-cam-brush-dot--${size}"></span>
+        </button>
+      `).join('')}
+      <button type="button" class="scan-cam-tool-btn" id="scanCamEraseDone">${t('scan_cam_erase_done')}</button>
+    `;
+  }
+  return `
+    <button type="button" class="scan-cam-tool-btn" id="scanCamRotateLeft" aria-label="${t('scan_cam_rotate_left')}">↺</button>
+    <button type="button" class="scan-cam-tool-btn" id="scanCamResetCrop" aria-label="${t('scan_cam_reset_crop')}">${t('scan_cam_reset_crop')}</button>
+    <button type="button" class="scan-cam-tool-btn" id="scanCamErase" aria-label="${t('scan_cam_erase')}">🧹</button>
+    <button type="button" class="scan-cam-tool-btn" id="scanCamRotateRight" aria-label="${t('scan_cam_rotate_right')}">↻</button>
+  `;
+}
+
+function _bindEraseToolRow() {
+  document.getElementById('scanCamRotateLeft')?.addEventListener('click', () => _rotateCapturedImage(-1));
+  document.getElementById('scanCamRotateRight')?.addEventListener('click', () => _rotateCapturedImage(1));
+  document.getElementById('scanCamResetCrop')?.addEventListener('click', () => _resetCrop());
+  document.getElementById('scanCamErase')?.addEventListener('click', () => _setEraseMode(true));
+  document.getElementById('scanCamEraseDone')?.addEventListener('click', () => _setEraseMode(false));
+  document.querySelectorAll('.scan-cam-brush-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      _eraseBrushSize = btn.dataset.brush;
+      document.querySelectorAll('.scan-cam-brush-btn').forEach(b =>
+        b.classList.toggle('scan-cam-tool-btn--active', b.dataset.brush === _eraseBrushSize));
+    });
+  });
+}
+
+function _setEraseMode(on) {
+  _eraseMode = on;
+  const toolRow = document.getElementById('scanCamToolRow');
+  if (toolRow) { toolRow.innerHTML = _eraseToolRowHtml(); _bindEraseToolRow(); }
+
+  const overlay = document.getElementById('scanCamEraseOverlay');
+  const confirmBtn = document.getElementById('scanCamConfirmBtn');
+  const skipOrRetakeBtn = document.getElementById('scanCamSkipBtn') || document.getElementById('scanCamRetakeBtn');
+  if (on) {
+    _showEraseOverlay(overlay);
+    _bindEraseDrag(overlay);
+    // Corner handles + confirm/skip stay in the DOM (so layout doesn't
+    // jump) but shouldn't be interactive while painting — same
+    // "disable, don't hide" reasoning as the slider reset buttons.
+    document.querySelectorAll('.scan-cam-handle').forEach(h => h.style.pointerEvents = 'none');
+    if (confirmBtn) confirmBtn.disabled = true;
+    if (skipOrRetakeBtn) skipOrRetakeBtn.disabled = true;
+  } else {
+    _commitErase(overlay);
+    document.querySelectorAll('.scan-cam-handle').forEach(h => h.style.pointerEvents = '');
+    if (confirmBtn) confirmBtn.disabled = false;
+    if (skipOrRetakeBtn) skipOrRetakeBtn.disabled = false;
+  }
+}
+
+// Overlay is sized to the SAME local box _renderHandles/_computeFrameLayout
+// already establish (image px × _displayScale) and lives inside the same
+// rotating #scanCamFrameInner — it's carried along by that element's own
+// CSS transform exactly like the SVG outline, no separate rotation math.
+function _showEraseOverlay(overlay) {
+  if (!overlay || !_capturedCanvas) return;
+  const localW = Math.round(_capturedCanvas.width  * _displayScale);
+  const localH = Math.round(_capturedCanvas.height * _displayScale);
+  overlay.width  = localW;
+  overlay.height = localH;
+  overlay.style.width  = localW + 'px';
+  overlay.style.height = localH + 'px';
+  overlay.style.display = 'block';
+  overlay.getContext('2d').clearRect(0, 0, localW, localH);
+}
+
+function _bindEraseDrag(overlay) {
+  if (!overlay) return;
+  const ctx = overlay.getContext('2d');
+  ctx.fillStyle = '#fff';
+
+  const paintAt = (clientX, clientY) => {
+    const rect = overlay.getBoundingClientRect();
+    const sx = Math.min(Math.max(0, clientX - rect.left), rect.width);
+    const sy = Math.min(Math.max(0, clientY - rect.top),  rect.height);
+    let lx, ly;
+    if (_viewRotated) {
+      ({ x: lx, y: ly } = unrotatedImagePoint(sx, sy, _capturedCanvas.width, _displayScale));
+      lx *= _displayScale; ly *= _displayScale; // back to LOCAL (display) px — unrotatedImagePoint returns full-res image px
+    } else {
+      lx = sx; ly = sy;
+    }
+    // Radii are already in local/display px (see _ERASE_BRUSH_RADII's own
+    // comment) — stays visually the same on-screen brush size regardless
+    // of the photo's real resolution, no further scaling needed here.
+    const radius = _ERASE_BRUSH_RADII[_eraseBrushSize] ?? _ERASE_BRUSH_RADII.medium;
+    ctx.beginPath();
+    ctx.arc(lx, ly, radius, 0, Math.PI * 2);
+    ctx.fill();
+  };
+
+  let drawing = false;
+  const onDown = e => {
+    if (!_eraseMode) return;
+    e.preventDefault();
+    overlay.setPointerCapture(e.pointerId);
+    drawing = true;
+    paintAt(e.clientX, e.clientY);
+  };
+  const onMove = e => {
+    if (!drawing) return;
+    e.preventDefault();
+    paintAt(e.clientX, e.clientY);
+  };
+  const onUp = () => { drawing = false; };
+  overlay.addEventListener('pointerdown', onDown);
+  overlay.addEventListener('pointermove', onMove);
+  overlay.addEventListener('pointerup', onUp);
+  overlay.addEventListener('pointercancel', onUp);
+}
+
+// Composites the overlay's white strokes onto _capturedCanvas at full
+// resolution (drawImage's own dest-size scaling handles the
+// local-px-to-real-px upscale) and regenerates _frameUrl from the result
+// — same "mutate _capturedCanvas, re-encode, swap the <img> src" pattern
+// _rotateCapturedImage already established, just without re-detecting the
+// quad afterward (erasing a blemish shouldn't move the document's edges).
+async function _commitErase(overlay) {
+  if (!overlay || !_capturedCanvas) return;
+  const ctx = _capturedCanvas.getContext('2d');
+  ctx.drawImage(overlay, 0, 0, _capturedCanvas.width, _capturedCanvas.height);
+  overlay.getContext('2d').clearRect(0, 0, overlay.width, overlay.height);
+  overlay.style.display = 'none';
+
+  const img = document.getElementById('scanCamFrame');
+  const oldUrl = _frameUrl;
+  const blob = await new Promise(res => _capturedCanvas.toBlob(res, 'image/jpeg', 0.92));
+  if (!img) return; // modal closed mid-commit
+  _frameUrl = URL.createObjectURL(blob);
+  img.src = _frameUrl;
+  await new Promise(res => { img.onload = res; img.onerror = res; });
+  URL.revokeObjectURL(oldUrl);
 }
 
 // Mobile-only: decides whether displaying the working image CSS-rotated
