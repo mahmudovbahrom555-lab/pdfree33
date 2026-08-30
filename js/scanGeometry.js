@@ -257,46 +257,52 @@ function _rotatedRectPoints({ center, size, angle }) {
   }));
 }
 
-/**
- * Detects the largest plausible 4-corner document quad in a captured
- * frame. Runs on a downscaled copy for speed, returns coordinates
- * already scaled back to the source canvas's own resolution.
- * @param {HTMLCanvasElement} sourceCanvas - the full-resolution capture
- * @returns {{tl,tr,br,bl}|null} null if no confident quad was found —
- *   caller should fall back to defaultInsetQuad in that case.
- */
-export function detectDocumentQuad(sourceCanvas) {
-  const cv = window.cv;
-  const scale = Math.min(1, DETECT_LONG_EDGE / Math.max(sourceCanvas.width, sourceCanvas.height));
-  const dw = Math.max(1, Math.round(sourceCanvas.width  * scale));
-  const dh = Math.max(1, Math.round(sourceCanvas.height * scale));
+// Rejects 4-point candidates whose corners deviate too far from 90° —
+// `cosine` here is the (absolute) cosine of the angle at one corner between
+// its two adjacent edges: near 0 means close to a right angle, near 1 means
+// a degenerate sliver. Threshold (0.3, ≈corners within roughly 73°-107°) is
+// OpenCV's own long-standing constant from its classic square-detection
+// sample — CleanSCAN's (github.com/clean-apps/CleanSCAN) native getPoints()
+// uses the identical check. A genuine document photo's corners are rarely
+// exactly 90° (perspective), but a real quad rarely deviates this far — a
+// noisy/degenerate contour usually does. This check would likely have
+// caught scandoc_falsepositive_fullframe_crop_2026_08's false-positive
+// full-frame contour too, via a different signal than the extent-ratio
+// fix that actually shipped for it — kept as a second, independent guard.
+const _MAX_CORNER_COSINE = 0.3;
 
-  const small = document.createElement('canvas');
-  small.width = dw; small.height = dh;
-  small.getContext('2d').drawImage(sourceCanvas, 0, 0, dw, dh);
+function _quadMaxCornerCosine(pts) {
+  let maxCosine = 0;
+  for (let i = 0; i < 4; i++) {
+    const p0 = pts[i], p1 = pts[(i + 1) % 4], p2 = pts[(i + 3) % 4];
+    const dx1 = p1.x - p0.x, dy1 = p1.y - p0.y;
+    const dx2 = p2.x - p0.x, dy2 = p2.y - p0.y;
+    const cosine = Math.abs((dx1 * dx2 + dy1 * dy2) /
+      (Math.sqrt((dx1 * dx1 + dy1 * dy1) * (dx2 * dx2 + dy2 * dy2)) + 1e-10));
+    if (cosine > maxCosine) maxCosine = cosine;
+  }
+  return maxCosine;
+}
 
-  const src      = cv.imread(small);
-  const gray     = new cv.Mat();
-  const enhanced = new cv.Mat();
-  const blurred  = new cv.Mat();
-  const edges    = new cv.Mat();
+// Runs the shared blur→Canny→morph-close→contour pipeline on a single
+// already-CLAHE-enhanced channel (true grayscale, or one raw color channel
+// — see detectDocumentQuad's per-channel fallback below) and returns the
+// best {points, area} found in it, or null. Factored out so the per-channel
+// fallback can reuse the EXACT same detection logic (including the area-
+// fraction/extent-ratio/corner-angle guards) instead of a second, easier-
+// to-drift-out-of-sync copy.
+function _findQuadInChannel(enhanced, dw, dh, cv) {
+  const blurred = new cv.Mat();
+  const edges   = new cv.Mat();
   const morphKernel = cv.getStructuringElement(cv.MORPH_RECT, new cv.Size(9, 9));
-  const closed   = new cv.Mat();
-  const contours   = new cv.MatVector();
-  const hierarchy  = new cv.Mat();
-  const clahe = new cv.CLAHE(2.0, new cv.Size(8, 8));
+  const closed    = new cv.Mat();
+  const contours  = new cv.MatVector();
+  const hierarchy = new cv.Mat();
 
-  let result = null;
+  let best = null, bestArea = 0;
+  let fallbackContour = null, fallbackArea = 0; // largest big-enough contour, any shape
   try {
-    cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
-    // Pulls apart a low-contrast document/background boundary (e.g. a pale
-    // document on a similarly light, textured surface) BEFORE edge
-    // detection — found via a live stress test to be the single biggest
-    // real gap in this pipeline; a fixed downstream Canny threshold can't
-    // recover an edge that's simply too weak in the source image.
-    clahe.apply(gray, enhanced);
     cv.GaussianBlur(enhanced, blurred, new cv.Size(5, 5), 0);
-
     cv.Canny(blurred, edges, _CANNY_LOW, _CANNY_HIGH);
 
     // Morphological CLOSE (dilate then erode) instead of a bare dilate —
@@ -315,9 +321,6 @@ export function detectDocumentQuad(sourceCanvas) {
     cv.findContours(closed, contours, hierarchy, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE);
 
     const frameArea = dw * dh;
-    let best = null, bestArea = 0;
-    let fallbackContour = null, fallbackArea = 0; // largest big-enough contour, any shape
-
     for (let i = 0; i < contours.size(); i++) {
       const contour = contours.get(i);
       const area = cv.contourArea(contour);
@@ -338,8 +341,10 @@ export function detectDocumentQuad(sourceCanvas) {
       if (approx.rows === 4 && cv.isContourConvex(approx)) {
         const points = [];
         for (let p = 0; p < 4; p++) points.push({ x: approx.data32S[p * 2], y: approx.data32S[p * 2 + 1] });
-        best = points;
-        bestArea = area;
+        if (_quadMaxCornerCosine(points) < _MAX_CORNER_COSINE) {
+          best = points;
+          bestArea = area;
+        }
       }
       approx.delete();
       contour.delete();
@@ -369,25 +374,95 @@ export function detectDocumentQuad(sourceCanvas) {
       // rectangle to trust as an approximate document quad.
       if (rectArea > 0 && fallbackArea / rectArea >= 0.5) {
         best = _rotatedRectPoints(rect);
+        bestArea = fallbackArea;
       }
     }
     fallbackContour?.delete();
+  } finally {
+    blurred.delete(); edges.delete(); morphKernel.delete();
+    closed.delete(); contours.delete(); hierarchy.delete();
+  }
+  return best ? { points: best, area: bestArea } : null;
+}
 
-    if (best) {
-      const ordered = orderQuadPoints(best);
-      const inv = 1 / scale;
-      result = {
-        tl: { x: ordered.tl.x * inv, y: ordered.tl.y * inv },
-        tr: { x: ordered.tr.x * inv, y: ordered.tr.y * inv },
-        br: { x: ordered.br.x * inv, y: ordered.br.y * inv },
-        bl: { x: ordered.bl.x * inv, y: ordered.bl.y * inv },
-      };
+/**
+ * Detects the largest plausible 4-corner document quad in a captured
+ * frame. Runs on a downscaled copy for speed, returns coordinates
+ * already scaled back to the source canvas's own resolution.
+ * @param {HTMLCanvasElement} sourceCanvas - the full-resolution capture
+ * @returns {{tl,tr,br,bl}|null} null if no confident quad was found —
+ *   caller should fall back to defaultInsetQuad in that case.
+ */
+export function detectDocumentQuad(sourceCanvas) {
+  const cv = window.cv;
+  const scale = Math.min(1, DETECT_LONG_EDGE / Math.max(sourceCanvas.width, sourceCanvas.height));
+  const dw = Math.max(1, Math.round(sourceCanvas.width  * scale));
+  const dh = Math.max(1, Math.round(sourceCanvas.height * scale));
+
+  const small = document.createElement('canvas');
+  small.width = dw; small.height = dh;
+  small.getContext('2d').drawImage(sourceCanvas, 0, 0, dw, dh);
+
+  const src      = cv.imread(small);
+  const gray     = new cv.Mat();
+  const enhanced = new cv.Mat();
+  const clahe = new cv.CLAHE(2.0, new cv.Size(8, 8));
+
+  let found = null;
+  try {
+    cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
+    // Pulls apart a low-contrast document/background boundary (e.g. a pale
+    // document on a similarly light, textured surface) BEFORE edge
+    // detection — found via a live stress test to be the single biggest
+    // real gap in this pipeline; a fixed downstream Canny threshold can't
+    // recover an edge that's simply too weak in the source image.
+    clahe.apply(gray, enhanced);
+    found = _findQuadInChannel(enhanced, dw, dh, cv);
+
+    // Per-channel fallback — only pays this extra ~3x detection cost when
+    // the fast, common-case grayscale pass above found nothing (a case
+    // that would otherwise already fall through to the honest-but-
+    // unhelpful defaultInsetQuad, so the extra latency is a reasonable
+    // trade for a real chance at detection). Real robustness gap found
+    // analyzing CleanSCAN's (github.com/clean-apps/CleanSCAN) own
+    // getPoints(): grayscale conversion (0.299R+0.587G+0.114B) can wash
+    // out an edge that's genuinely visible in one raw color channel — e.g.
+    // a bluish/yellowish document against a background of similar
+    // luminance but different hue. Splits into R/G/B and retries the same
+    // (CLAHE-enhanced, unlike the reference's raw-channel approach — kept
+    // for consistency with the low-contrast fix above, which is cheap at
+    // this downscaled size) pipeline on each, keeping whichever channel
+    // yields the largest valid quad.
+    if (!found) {
+      const channels = new cv.MatVector();
+      cv.split(src, channels);
+      try {
+        for (let c = 0; c < 3; c++) {
+          const channelMat = channels.get(c);
+          const channelEnhanced = new cv.Mat();
+          clahe.apply(channelMat, channelEnhanced);
+          const candidate = _findQuadInChannel(channelEnhanced, dw, dh, cv);
+          channelMat.delete();
+          channelEnhanced.delete();
+          if (candidate && (!found || candidate.area > found.area)) found = candidate;
+        }
+      } finally {
+        channels.delete();
+      }
     }
   } finally {
-    src.delete(); gray.delete(); enhanced.delete(); blurred.delete(); edges.delete();
-    morphKernel.delete(); closed.delete(); contours.delete(); hierarchy.delete(); clahe.delete();
+    src.delete(); gray.delete(); enhanced.delete(); clahe.delete();
   }
-  return result;
+
+  if (!found) return null;
+  const ordered = orderQuadPoints(found.points);
+  const inv = 1 / scale;
+  return {
+    tl: { x: ordered.tl.x * inv, y: ordered.tl.y * inv },
+    tr: { x: ordered.tr.x * inv, y: ordered.tr.y * inv },
+    br: { x: ordered.br.x * inv, y: ordered.br.y * inv },
+    bl: { x: ordered.bl.x * inv, y: ordered.bl.y * inv },
+  };
 }
 
 /**
