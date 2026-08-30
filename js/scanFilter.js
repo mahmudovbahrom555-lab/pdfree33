@@ -14,15 +14,14 @@
 //  the EXACT SAME exported signature/behavior as before this move — every
 //  caller (js/scanDocumentUI.js) needed zero changes.
 //
-//  Deliberately 'enhance' mode only (contrast/brightness boost, no Otsu
-//  threshold/binarization/despeckle) — matches Clean Scan's non-destructive
-//  branch, appropriate for a freshly-captured photo of unknown quality.
-//
-//  filterScanPhoto(imgEl, mode) supports 'grayscale' (default, as above)
-//  and 'color' — a real competitive gap found 2026-08-22 testing against
-//  PDF24's camera scanner, which offers Color/Grayscale/B&W (no B&W here
-//  yet — would need Clean Scan's Otsu-threshold/despeckle path ported too,
-//  not done in this pass). Color mode reuses the SAME background-estimate
+//  filterScanPhoto(imgEl, mode) supports 'grayscale' (default), 'color' —
+//  a real competitive gap found 2026-08-22 testing against PDF24's camera
+//  scanner, which offers Color/Grayscale/B&W — plus 'bw' and 'original',
+//  added 2026-08-30 after a live comparison against a different
+//  competitor's Original/Photo/Document/B&W tabs. 'bw' reuses Clean
+//  Scan's own Otsu-threshold/despeckle pipeline verbatim (ported into
+//  js/scanFilterWorker.js's own _applyBw — see that file); 'original'
+//  skips all processing. Color mode reuses the SAME background-estimate
 //  step (computed from a grayscale copy — flat-field correction is
 //  inherently a luminance/shading concept) but applies the resulting
 //  per-pixel shading-correction ratio multiplicatively to each R/G/B
@@ -137,7 +136,7 @@ function _filterWorkerRequest(worker, message, transfer) {
  * `imgEl` can be any CanvasImageSource with natural dimensions (a decoded
  * <img>, a canvas, ...).
  * @param {CanvasImageSource & {naturalWidth?: number, width?: number}} imgEl
- * @param {'grayscale'|'color'} [mode='grayscale']
+ * @param {'grayscale'|'color'|'bw'|'original'} [mode='grayscale']
  * @returns {Promise<Blob>}
  */
 export async function filterScanPhoto(imgEl, mode = 'grayscale') {

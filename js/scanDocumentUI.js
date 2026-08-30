@@ -426,8 +426,10 @@ function _settingsHtml() {
         <span class="j2p-group__label">${t('j2p_scan_filter')}</span>
         <div class="j2p-chips" role="group" aria-label="${t('j2p_scan_filter')}">
           ${[
+            { value: 'original',  label: t('j2p_scan_filter_original') },
             { value: 'grayscale', label: t('j2p_scan_filter_grayscale') },
             { value: 'color',     label: t('j2p_scan_filter_color') },
+            { value: 'bw',        label: t('j2p_scan_filter_bw') },
           ].map(o => `
             <label class="j2p-chip${_scanFilterMode === o.value ? ' j2p-chip--active' : ''}" data-value="${o.value}" data-name="sdScanFilter">
               <input type="radio" name="sdScanFilter" value="${o.value}"${_scanFilterMode === o.value ? ' checked' : ''}>

@@ -714,6 +714,8 @@ window.PDFREE_LOCALE = {
   j2p_scan_filter:           'Filter',
   j2p_scan_filter_grayscale: 'Skala Abu-abu',
   j2p_scan_filter_color:     'Warna',
+  j2p_scan_filter_original:  'Asli',
+  j2p_scan_filter_bw:        'Hitam-Putih',
 
   scan_cam_title:            'Pindai dokumen',
   scan_cam_close:            'Tutup',

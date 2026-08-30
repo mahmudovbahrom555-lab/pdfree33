@@ -735,6 +735,8 @@ export const EN = {
   j2p_scan_filter:           'Filter',
   j2p_scan_filter_grayscale: 'Grayscale',
   j2p_scan_filter_color:     'Color',
+  j2p_scan_filter_original:  'Original',
+  j2p_scan_filter_bw:        'B&W',
 
   // ── scanCameraUI.js — live viewfinder + corner-detection modal ──
   scan_cam_title:            'Scan document',

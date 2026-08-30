@@ -23,8 +23,13 @@
 //  following that file's own proven OffscreenCanvas pattern exactly).
 //
 //  Message contract:
-//    in  → { type: 'filterPhoto', bitmap: ImageBitmap, mode: 'grayscale'|'color' }
+//    in  → { type: 'filterPhoto', bitmap: ImageBitmap, mode: 'grayscale'|'color'|'bw'|'original' }
 //    out → { type: 'filtered', bytes: ArrayBuffer } | { type: 'error', message }
+//
+//  'bw' and 'original' added after a live competitor comparison (a
+//  scanner app's Original/Photo/Document/B&W tabs) — 'bw' reuses
+//  js/cleanScanWorker.js's own proven Otsu-binarize pipeline (see
+//  _applyBw below), 'original' skips all processing entirely.
 // ============================================================
 
 self.onmessage = async (e) => {
@@ -44,12 +49,34 @@ async function handleFilterPhoto(bitmap, mode) {
   bitmap.close?.();
 
   let blob;
-  if (mode === 'color') {
+  if (mode === 'original') {
+    // No processing at all — real competitive gap found comparing against
+    // a competitor app's "Original" tab: a user who deliberately wants
+    // their untouched photo (e.g. a document with color-coded stamps/
+    // highlights the flat-field/grayscale pipeline would otherwise strip)
+    // had no way to opt out of every other mode's processing.
+    blob = await src.convertToBlob({ type: 'image/jpeg', quality: 0.92 });
+  } else if (mode === 'color') {
     const gray = _toGrayscaleCanvas(src);
     const bg   = _estimateBackground(gray);
     _flatFieldCorrectColor(src, bg);
     _applyEnhanceColor(src, _STRENGTH);
     blob = await src.convertToBlob({ type: 'image/jpeg', quality: 0.87 });
+  } else if (mode === 'bw') {
+    // Real competitive gap found comparing against a competitor app's
+    // "Ч/Б" (B&W) toggle — a true binarized scan look, not just a
+    // grayscale photo. Reuses js/cleanScanWorker.js's own Otsu-threshold +
+    // despeckle + gamma-darken pipeline verbatim (_applyBw below) instead
+    // of inventing new constants — that algorithm was already tuned
+    // across 3 real rounds against an actual scanned book page before
+    // shipping there; no reason to re-derive it from scratch here.
+    const gray = _toGrayscaleCanvas(src);
+    const bg   = _estimateBackground(gray);
+    _flatFieldCorrect(gray, bg);
+    _applyMedianFilter(gray);
+    _unsharpMask(gray, 2, 2.0);
+    _applyBw(gray, _STRENGTH);
+    blob = await gray.convertToBlob({ type: 'image/png' });
   } else {
     const gray = _toGrayscaleCanvas(src);
     const bg   = _estimateBackground(gray);
@@ -238,6 +265,88 @@ function _applyEnhanceColor(canvas, strength) {
     d[i]     = Math.min(255, Math.max(0, (d[i]     - 128) * contrast + 128 + brightness));
     d[i + 1] = Math.min(255, Math.max(0, (d[i + 1] - 128) * contrast + 128 + brightness));
     d[i + 2] = Math.min(255, Math.max(0, (d[i + 2] - 128) * contrast + 128 + brightness));
+  }
+  ctx.putImageData(img, 0, 0);
+}
+
+// ── B&W (Otsu binarize + despeckle) — verbatim port of
+//    js/cleanScanWorker.js's own _otsuThreshold/_despeckleMask/_applyClean
+//    (same "classic Worker, no ES modules" duplication this file's own
+//    header already explains for its other pixel functions). Kept in
+//    sync manually if that algorithm ever changes; not re-derived or
+//    re-tuned here — see that file's own extensive comments for the real
+//    reasoning behind gamma=3.0/darkCap=20/minDarkNeighbors=3, each
+//    settled via multiple rounds of testing against a real scanned page. ──
+
+function _otsuThreshold(data) {
+  const hist = new Array(256).fill(0);
+  for (let i = 0; i < data.length; i += 4) hist[data[i]]++;
+  const total = data.length / 4;
+  let sum = 0;
+  for (let i = 0; i < 256; i++) sum += i * hist[i];
+  let wB = 0, sumB = 0, varMax = 0, threshold = 128;
+  for (let t = 0; t < 256; t++) {
+    wB += hist[t];
+    if (!wB) continue;
+    const wF = total - wB;
+    if (!wF) break;
+    sumB += t * hist[t];
+    const mB = sumB / wB;
+    const mF = (sum - sumB) / wF;
+    const varBetween = wB * wF * (mB - mF) ** 2;
+    if (varBetween > varMax) { varMax = varBetween; threshold = t; }
+  }
+  return threshold;
+}
+
+const _BW_GAMMA          = 3.0;
+const _BW_DARK_CAP       = 20;
+const _BW_MIN_DARK_NEIGHBORS = 3;
+
+function _despeckleMask(mask, w, h, minDarkNeighbors) {
+  const out = new Uint8Array(mask.length);
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      const p = y * w + x;
+      if (!mask[p]) continue;
+      let count = 0;
+      for (let dy = -1; dy <= 1; dy++) {
+        const ny = y + dy;
+        if (ny < 0 || ny >= h) continue;
+        const nrow = ny * w;
+        for (let dx = -1; dx <= 1; dx++) {
+          const nx = x + dx;
+          if (nx < 0 || nx >= w) continue;
+          if (mask[nrow + nx]) count++;
+        }
+      }
+      out[p] = count >= minDarkNeighbors ? 1 : 0;
+    }
+  }
+  return out;
+}
+
+function _applyBw(canvas, strength) {
+  const w = canvas.width, h = canvas.height;
+  const ctx = canvas.getContext('2d');
+  const img = ctx.getImageData(0, 0, w, h);
+  const d = img.data;
+  const base  = _otsuThreshold(d);
+  const shift = ((strength ?? 0.5) - 0.5) * 80; // ±40 around the auto baseline
+  const t = Math.min(250, Math.max(5, base + shift));
+
+  const n = w * h;
+  let mask = new Uint8Array(n);
+  for (let p = 0, i = 0; p < n; p++, i += 4) mask[p] = d[i] < t ? 1 : 0;
+  mask = _despeckleMask(mask, w, h, _BW_MIN_DARK_NEIGHBORS);
+
+  for (let p = 0, i = 0; p < n; p++, i += 4) {
+    if (!mask[p]) { d[i] = d[i + 1] = d[i + 2] = 255; }
+    else {
+      const v = d[i];
+      const dark = Math.round(((v / t) ** _BW_GAMMA) * _BW_DARK_CAP);
+      d[i] = d[i + 1] = d[i + 2] = dark;
+    }
   }
   ctx.putImageData(img, 0, 0);
 }

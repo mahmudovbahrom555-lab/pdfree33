@@ -715,6 +715,8 @@ window.PDFREE_LOCALE = {
   j2p_scan_filter:           '필터',
   j2p_scan_filter_grayscale: '회색조',
   j2p_scan_filter_color:     '컬러',
+  j2p_scan_filter_original:  '원본',
+  j2p_scan_filter_bw:        '흑백',
 
   scan_cam_title:            '문서 스캔',
   scan_cam_close:            '닫기',
