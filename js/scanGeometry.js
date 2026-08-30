@@ -58,6 +58,57 @@ export function defaultInsetQuad(width, height, marginFraction = 0.05) {
   };
 }
 
+/**
+ * Whether a quad (tl/tr/br/bl order — the same order every caller in this
+ * codebase already keeps them in) is a plausible, usable crop shape: convex
+ * (not a self-intersecting "bowtie", which a user CAN produce by dragging
+ * one corner past an adjacent one — nothing upstream prevents it, each
+ * corner/edge handle only clamps to the frame bounds) and not degenerately
+ * tiny (e.g. all four corners dragged into a near-coincident cluster).
+ * Pure geometry, no image data needed — js/scanCameraUI.js's crop-review
+ * UI uses this to warn (recolor the outline) while the user is still
+ * dragging, same idea as CleanSCAN's (github.com/clean-apps/CleanSCAN)
+ * PolygonView turning its outline orange on an invalid shape, but with a
+ * real geometric check behind it — CleanSCAN's own `isValidShape` is
+ * trivially just "4 points exist," which is always true for a quad by
+ * construction and wouldn't have caught anything.
+ * @param {{tl:{x,y}, tr:{x,y}, br:{x,y}, bl:{x,y}}} quad
+ * @returns {boolean}
+ */
+export function isValidQuadShape(quad) {
+  const pts = [quad.tl, quad.tr, quad.br, quad.bl];
+
+  // Convexity/non-self-intersection: walking the 4 edges in order, the
+  // cross product (z-component) of each consecutive edge pair must all
+  // share the same sign — a sign flip means the polygon crosses itself.
+  // Collinear edges (cross ~0) are skipped rather than treated as a flip;
+  // they're a degenerate-but-not-crossed case, caught by the area check
+  // below instead.
+  let sign = 0;
+  for (let i = 0; i < 4; i++) {
+    const a = pts[i], b = pts[(i + 1) % 4], c = pts[(i + 2) % 4];
+    const cross = (b.x - a.x) * (c.y - b.y) - (b.y - a.y) * (c.x - b.x);
+    if (Math.abs(cross) < 1e-9) continue;
+    const s = Math.sign(cross);
+    if (sign === 0) sign = s;
+    else if (s !== sign) return false;
+  }
+
+  // Degenerate-area guard (shoelace formula) — a fixed, small absolute
+  // floor rather than a fraction of image size: any REAL crop the user
+  // actually wants is always far bigger than this in practice, so it only
+  // catches genuine "handles bunched together" degeneracy, the same case
+  // warpToRect's own outW/outH min-1 clamp exists to survive downstream —
+  // this catches it earlier, with an actual warning instead of a silent
+  // near-zero-size warp.
+  let area2 = 0;
+  for (let i = 0; i < 4; i++) {
+    const p = pts[i], n = pts[(i + 1) % 4];
+    area2 += p.x * n.y - n.x * p.y;
+  }
+  return Math.abs(area2) / 2 > 100;
+}
+
 /** Euclidean distance between two points. */
 function _dist(a, b) {
   return Math.hypot(a.x - b.x, a.y - b.y);

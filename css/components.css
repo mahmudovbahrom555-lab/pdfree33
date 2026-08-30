@@ -5453,6 +5453,14 @@ body:not(.has-files) #heroChipsLabel { display: none !important; }
   fill: rgba(240, 173, 78, 0.18);
   stroke: #f0ad4e;
 }
+/* Self-intersecting or degenerately tiny crop shape (isValidQuadShape in
+   js/scanGeometry.js) — a real error, not just advisory like --clipped
+   above, since Confirm is disabled while this is showing. Same red already
+   used for form-field errors elsewhere (.fb-modal__textarea--error). */
+.scan-cam-outline polygon.scan-cam-outline--invalid {
+  fill: rgba(224, 82, 82, 0.18);
+  stroke: #e05252;
+}
 
 .scan-cam-handle {
   position: absolute;

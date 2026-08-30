@@ -23,7 +23,7 @@ function expect(actual) {
   };
 }
 
-const { orderQuadPoints, defaultInsetQuad, detectSpineX,
+const { orderQuadPoints, defaultInsetQuad, detectSpineX, isValidQuadShape,
         chooseCropViewLayout, rotatedViewPoint, unrotatedImagePoint } = await import('../js/scanGeometry.js');
 
 // Builds a flat RGBA buffer from a 1D array of per-column gray values,
@@ -221,6 +221,46 @@ test('round-trips for all 4 corners of a real portrait image size', () => {
     expect(back.x).toBeCloseTo(c.x, 0.01);
     expect(back.y).toBeCloseTo(c.y, 0.01);
   }
+});
+
+// ── isValidQuadShape ─────────────────────────────────────────────
+
+test('a normal axis-aligned rectangle is valid', () => {
+  expect(isValidQuadShape(defaultInsetQuad(1000, 1000))).toBe(true);
+});
+
+test('a normal skewed (perspective-photographed) quad is valid', () => {
+  const quad = {
+    tl: { x: 90, y: 120 }, tr: { x: 520, y: 100 },
+    br: { x: 540, y: 700 }, bl: { x: 70, y: 720 },
+  };
+  expect(isValidQuadShape(quad)).toBe(true);
+});
+
+test('a self-intersecting "bowtie" quad (tl/tr swapped past each other) is invalid', () => {
+  const quad = {
+    tl: { x: 500, y: 100 }, tr: { x: 100, y: 100 }, // crossed with the row below
+    br: { x: 500, y: 500 }, bl: { x: 100, y: 500 },
+  };
+  expect(isValidQuadShape(quad)).toBe(false);
+});
+
+test('a degenerate quad with all 4 corners bunched together is invalid', () => {
+  const quad = {
+    tl: { x: 200, y: 200 }, tr: { x: 201, y: 200 },
+    br: { x: 201, y: 201 }, bl: { x: 200, y: 201 },
+  };
+  expect(isValidQuadShape(quad)).toBe(false);
+});
+
+test('a valid quad stays valid after ordinary corner-handle dragging', () => {
+  // Simulates a user nudging one corner (tl) — still convex, still a
+  // reasonable size.
+  const quad = {
+    tl: { x: 60, y: 90 }, tr: { x: 900, y: 50 },
+    br: { x: 950, y: 950 }, bl: { x: 50, y: 900 },
+  };
+  expect(isValidQuadShape(quad)).toBe(true);
 });
 
 // ── Summary ────────────────────────────────────────────────────

@@ -44,7 +44,7 @@
 import { t } from './i18n.js';
 import { loadOpenCv } from './lazyLibs.js';
 import { detectDocumentQuad, defaultInsetQuad, warpToRectAsync, detectSpineX, DETECT_LONG_EDGE,
-         chooseCropViewLayout, unrotatedImagePoint } from './scanGeometry.js';
+         chooseCropViewLayout, unrotatedImagePoint, isValidQuadShape } from './scanGeometry.js';
 import { SCAN_MAX_LONG_EDGE } from './scanConstants.js';
 
 let _modal        = null;
@@ -613,10 +613,15 @@ async function _startReview() {
   _computeFrameLayout();
   _resizeHandler = () => { _computeFrameLayout(); _renderHandles(); };
   window.addEventListener('resize', _resizeHandler);
+  // _renderHandles() (below) already sets scanCamConfirmBtn.disabled based
+  // on the initial quad's validity (isValidQuadShape) — both
+  // detectDocumentQuad and defaultInsetQuad always produce a valid shape,
+  // so this naturally clears the template's initial `disabled` attribute
+  // without a separate unconditional enable here that could mask an
+  // invalid state.
   _renderHandles();
   _bindHandleDrag();
   _bindMidEdgeDrag();
-  document.getElementById('scanCamConfirmBtn').disabled = false;
 }
 
 // Shared by _startReview (initial detection) and _rotateCapturedImage/
@@ -942,7 +947,26 @@ function _renderHandles() {
     handle.style.top  = dy + 'px';
     return `${dx},${dy}`;
   }).join(' ');
-  document.getElementById('scanCamPolygon').setAttribute('points', pts);
+  const polygon = document.getElementById('scanCamPolygon');
+  polygon.setAttribute('points', pts);
+
+  // Invalid-shape warning — a user CAN drag a corner or mid-edge handle
+  // into a self-intersecting ("bowtie") or degenerately tiny shape (nothing
+  // upstream prevents it; each handle only clamps to the frame bounds).
+  // Recolors the outline (reusing the same amber already established for
+  // the live-tracking "near edge of frame" warning, isClippedQuad/
+  // scan-cam-outline--clipped above) and disables Confirm while invalid —
+  // sourced from analyzing CleanSCAN's (github.com/clean-apps/CleanSCAN)
+  // PolygonView, which does the same blue/orange recolor, but backed here
+  // by a real convexity+area check rather than their trivial "4 points
+  // exist" (always true for a quad by construction, so it never actually
+  // caught anything there).
+  const valid = isValidQuadShape(_quad);
+  polygon.classList.toggle('scan-cam-outline--invalid', !valid);
+  if (!_eraseMode) {
+    const confirmBtn = document.getElementById('scanCamConfirmBtn');
+    if (confirmBtn) confirmBtn.disabled = !valid;
+  }
 
   // Mid-edge handles — positioned at the midpoint between their two corners'
   // CURRENT display positions (not full-res quad midpoint scaled down —
