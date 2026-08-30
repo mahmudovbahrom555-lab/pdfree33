@@ -182,23 +182,24 @@ export function loadOpenCv() {
   return _promises['openCv'];
 }
 
-// @huggingface/transformers — used by js/formulaOcr.js for pdf2md's
-// opt-in Formula OCR feature (Texo/FormulaNet, ONNX Runtime Web/WASM).
-// ~76MB total (JS + model weights) — only ever loaded once a real
-// formula-crop candidate is found AND the user has opted in via the
-// pdf2md toggle. Different from every other loader here: this CDN
-// build ships real ESM named exports (verified directly, this
-// session, via a live Playwright test — model loaded and ran
-// correctly through this exact import), so a plain dynamic import()
-// is used instead of the <script> tag + window-global pattern the
-// other (UMD-style) libraries above need.
+// @huggingface/transformers — generic loader for this project's two
+// opt-in, client-side ML features: js/formulaOcr.js (pdf2md's Formula
+// OCR, Texo/FormulaNet) and js/redactNer.js (Redact's AI Name
+// Detection, bert-base-NER), both ONNX Runtime Web/WASM via the same
+// library, just different models loaded by their own callers. Neither
+// is ever loaded until its own opt-in toggle/button fires. Different
+// from every other loader here: this CDN build ships real ESM named
+// exports (verified directly via a live Playwright test — models
+// loaded and ran correctly through this exact import), so a plain
+// dynamic import() is used instead of the <script> tag + window-global
+// pattern the other (UMD-style) libraries above need.
 const TRANSFORMERS_URL = 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3/dist/transformers.min.js';
 
-export function loadFormulaOcr() {
-  if (_promises['formulaOcr']) return _promises['formulaOcr'];
-  _promises['formulaOcr'] = import(/* webpackIgnore: true */ TRANSFORMERS_URL).catch(err => {
-    delete _promises['formulaOcr']; // allow a later call to actually retry
-    throw new Error(`Failed to load formula OCR engine: ${err.message}`);
+export function loadTransformersJs() {
+  if (_promises['transformersJs']) return _promises['transformersJs'];
+  _promises['transformersJs'] = import(/* webpackIgnore: true */ TRANSFORMERS_URL).catch(err => {
+    delete _promises['transformersJs']; // allow a later call to actually retry
+    throw new Error(`Failed to load ML engine: ${err.message}`);
   });
-  return _promises['formulaOcr'];
+  return _promises['transformersJs'];
 }

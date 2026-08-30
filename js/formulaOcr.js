@@ -30,7 +30,7 @@
 //  symbols) — see pdf2md_formula_ocr_feasibility_2026_08 memory.
 // ============================================================
 
-import { loadFormulaOcr } from './lazyLibs.js';
+import { loadTransformersJs } from './lazyLibs.js';
 
 const MODEL_NAME     = 'alephpi/FormulaNet';
 const UNIMERNET_MEAN = 0.7931;
@@ -42,7 +42,7 @@ let _tokenizer = null;
 
 async function _ensureModel(onProgress) {
   if (_model && _tokenizer) return;
-  const { VisionEncoderDecoderModel, PreTrainedTokenizer, env } = await loadFormulaOcr();
+  const { VisionEncoderDecoderModel, PreTrainedTokenizer, env } = await loadTransformersJs();
   env.allowLocalModels = false;
   _model = await VisionEncoderDecoderModel.from_pretrained(MODEL_NAME, {
     dtype: 'fp32',
@@ -189,7 +189,7 @@ async function _preprocess(blob) {
 export async function recognizeFormula(imageBlob, onProgress) {
   await _ensureModel(onProgress);
   const array = await _preprocess(imageBlob);
-  const { Tensor, cat } = await loadFormulaOcr();
+  const { Tensor, cat } = await loadTransformersJs();
   const tensor = new Tensor('float32', array, [1, 1, TARGET, TARGET]);
   const pixel_values = cat([tensor, tensor, tensor], 1);
   const outputs = await _model.generate({ inputs: pixel_values });

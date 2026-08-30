@@ -32,6 +32,7 @@ import { showToast }                from './ui.js';
 import { loadingRow, infoBanner } from './uiComponents.js';
 import { loadPdfJs }                from './pdf2jpgUI.js';
 import { t, tp }                    from './i18n.js';
+import { detectEntitiesBatch }      from './redactNer.js';
 
 // ── Constants ──────────────────────────────────────────────────
 
@@ -509,6 +510,9 @@ function _render(container, fileName, preset) {
           <div style="display:flex;flex-wrap:wrap;gap:5px;">
             ${PII_PATTERNS.map(p => `<button type="button" class="rdct-pii-btn" data-pii="${p.id}"
               style="padding:4px 8px;border:1px solid var(--border);border-radius:5px;background:var(--surface2);color:var(--text);font-size:11px;cursor:pointer;white-space:nowrap;">${t('rdct_pii_' + p.id)}</button>`).join('')}
+            <button type="button" class="rdct-pii-btn" id="rdctAiNameBtn"
+              title="${t('rdct_ai_name_disclosure')}"
+              style="padding:4px 8px;border:1px solid var(--border);border-radius:5px;background:var(--surface2);color:var(--text);font-size:11px;cursor:pointer;white-space:nowrap;">${t('rdct_pii_ai_name')}</button>
           </div>
           <div id="rdctSearchHint" style="font-size:11px;color:var(--text3);margin-top:5px;"></div>
 
@@ -1352,6 +1356,7 @@ function _bindEvents(container) {
       if (pii) _runPatternSearch(new RegExp(pii.regex.source, pii.regex.flags), pii.id, pii.validate || null);
     });
   });
+  id('rdctAiNameBtn')?.addEventListener('click', () => _runAiNameSearch());
 
   id('rdctHideRedactions')?.addEventListener('change', e => {
     const overlay = id('rdctOverlay');
@@ -1460,6 +1465,98 @@ async function _runPatternSearch(regex, source, validateFn = null) {
 
   if (hint) hint.textContent = '';
   _showMatchPanel(source);
+}
+
+// AI Name Detection (Beta) — js/redactNer.js's client-side NER, catching
+// PERSON/LOCATION entities that PII_PATTERNS' regexes structurally can't
+// (no reliable format for a name, unlike email/phone/card/IBAN/URL).
+// English-only by design — see js/redactNer.js's header for why (tested
+// live against a real non-English document; the model doesn't just do
+// worse elsewhere, it misses real names and produces false positives).
+// The disclosure is shown up front, not hidden — this is a privacy tool,
+// a user trusting an unstated language limitation is the real risk here.
+async function _runAiNameSearch() {
+  if (!_pdfDoc) return;
+  const gen = _initGen; // same stale-async guard this file's own _initGen
+                         // comment documents — the ~1-2min model download
+                         // can easily outlive the user switching files.
+  const hint = id('rdctSearchHint');
+  const btn  = id('rdctAiNameBtn');
+  if (btn) btn.disabled = true;
+  if (hint) hint.textContent = t('rdct_ai_name_disclosure');
+
+  const itemRefs = []; // parallel to texts below: {pageNum, item}
+  const texts = [];
+  for (let p = 1; p <= _pageCount; p++) {
+    const page = await _pdfDoc.getPage(p);
+    if (gen !== _initGen) return; // file changed mid-flight
+    const content = await page.getTextContent();
+    if (gen !== _initGen) return;
+    for (const item of content.items) {
+      if (!item.str) continue;
+      texts.push(item.str);
+      itemRefs.push({ pageNum: p, item });
+    }
+  }
+
+  if (texts.length === 0) {
+    if (hint) hint.textContent = t('rdct_no_matches');
+    if (btn) btn.disabled = false;
+    return;
+  }
+
+  let spansPerText;
+  try {
+    spansPerText = await detectEntitiesBatch(texts, (p) => {
+      if (gen !== _initGen || !hint) return;
+      if (p.status === 'progress') {
+        hint.textContent = `${t('rdct_ai_name_loading')} ${Math.round(p.progress || 0)}%`;
+      }
+    });
+  } catch {
+    if (gen !== _initGen) return;
+    if (hint) hint.textContent = t('rdct_ai_name_error');
+    if (btn) btn.disabled = false;
+    return;
+  }
+  if (gen !== _initGen) return;
+
+  _pendingMatches = [];
+  spansPerText.forEach((spans, i) => {
+    if (spans.length === 0) return;
+    const { pageNum, item } = itemRefs[i];
+    const str = item.str;
+    const [,, , scaleY, tx, ty] = item.transform;
+    const charW = item.width / (str.length || 1);
+    const lowerStr = str.toLowerCase();
+
+    for (const span of spans) {
+      // Reconstructed from merged subword tokens — may occasionally not
+      // be an exact substring (e.g. a hyphen dropped between merged
+      // words). Skip rather than guess a position when that happens; the
+      // regex-based PII buttons and manual click-to-redact remain the
+      // fallback for anything AI misses.
+      const idx = lowerStr.indexOf(span.text.toLowerCase());
+      if (idx === -1) continue;
+      const matchLen = span.text.length;
+      const x = tx + idx * charW;
+      const w = Math.max(matchLen * charW, 4);
+      const h = Math.max(Math.abs(scaleY) * 1.2, 4);
+      const y = ty - h * 0.1;
+
+      _pendingMatches.push({
+        idx: _pendingMatches.length,
+        text: str.slice(idx, idx + matchLen),
+        pageNum,
+        rect: { type: 'rect', x, y, w, h, source: 'ai_name' },
+        source: 'ai_name',
+        checked: true,
+      });
+    }
+  });
+
+  if (btn) btn.disabled = false;
+  _showMatchPanel('ai_name');
 }
 
 function _showMatchPanel(source) {
