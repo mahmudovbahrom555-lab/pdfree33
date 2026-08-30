@@ -187,6 +187,19 @@ export function detectSpineX(data, w, h) {
 // SCAN_MAX_LONG_EDGE consolidation.
 export const DETECT_LONG_EDGE = 800;  // downsample for detection only — mirrors processor.js's _EREADER_BBOX_EDGE pattern
 const _MIN_AREA_FRACTION  = 0.20; // reject contours smaller than 20% of the frame — too small to plausibly be "the document"
+// Reject contours filling nearly the whole frame. Found via a real user
+// photo (document on a textured carpet, with a clothes rack + knee also in
+// frame): the CLAHE + low Canny thresholds + wide 9x9 CLOSE kernel above
+// (tuned for recovering genuinely weak low-contrast document edges) also
+// makes background texture noise (carpet pattern, wrinkled fabric, skin)
+// generate enough edges to CLOSE into one giant blob spanning nearly the
+// entire frame — which then wins the "largest 4-point convex contour"
+// selection outright over the real, smaller document contour, since area
+// alone was the only ranking signal. A document photographed with visible
+// margin — the entire reason this crop-review flow exists — never
+// legitimately spans edge-to-edge, so a contour this large is background
+// noise, not the document.
+const _MAX_AREA_FRACTION  = 0.92;
 // Lowered from the old fixed (75,200) after a live stress test (pale
 // document on a similarly light, textured background — the real failure
 // shape a user reported live) showed detection silently falling all the
@@ -308,7 +321,7 @@ export function detectDocumentQuad(sourceCanvas) {
     for (let i = 0; i < contours.size(); i++) {
       const contour = contours.get(i);
       const area = cv.contourArea(contour);
-      if (area < frameArea * _MIN_AREA_FRACTION) { contour.delete(); continue; }
+      if (area < frameArea * _MIN_AREA_FRACTION || area > frameArea * _MAX_AREA_FRACTION) { contour.delete(); continue; }
 
       if (area > fallbackArea) {
         fallbackContour?.delete();
@@ -343,7 +356,20 @@ export function detectDocumentQuad(sourceCanvas) {
     // a case that already worked.
     if (!best && fallbackContour) {
       const rect = cv.minAreaRect(fallbackContour);
-      best = _rotatedRectPoints(rect);
+      const rectArea = rect.size.width * rect.size.height;
+      // A real document's contour (even if not cleanly 4-cornered — corner
+      // rounding, slight noise) fills most of its own minimal bounding
+      // rotated rect. A sparse/diagonal background-noise blob (e.g. a
+      // clothes-rack bar or carpet texture running corner-to-corner) can
+      // pass the frame-area checks above (its own contourArea stays modest)
+      // while its bounding rect still balloons out to nearly the whole
+      // frame — found via a real user photo where a 29%-of-frame contour
+      // produced a ~100%-of-frame minAreaRect (extent ratio ~0.29). Below
+      // this extent threshold, the blob's shape is too unlike a filled
+      // rectangle to trust as an approximate document quad.
+      if (rectArea > 0 && fallbackArea / rectArea >= 0.5) {
+        best = _rotatedRectPoints(rect);
+      }
     }
     fallbackContour?.delete();
 
