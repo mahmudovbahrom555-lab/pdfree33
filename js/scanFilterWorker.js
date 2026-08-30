@@ -4,7 +4,9 @@
 // ============================================================
 //  scanFilterWorker.js — Dedicated Web Worker for Document Scanner's
 //  photo filter pipeline (grayscale → background-estimate →
-//  flat-field-correct → median-filter → unsharp-mask → enhance).
+//  flat-field-correct → unsharp-mask → enhance — no median filter for the
+//  default Document/grayscale mode, see the comment at its call site for
+//  why; 'bw' mode still uses one).
 //
 //  Moved off the main thread 2026-08-26 after a real, measured finding:
 //  on a throttled/weak CPU (6x, proxying a real low-end device), this
@@ -81,10 +83,28 @@ async function handleFilterPhoto(bitmap, mode, adjust) {
     _applyBw(gray, _STRENGTH, adjust);
     blob = await gray.convertToBlob({ type: 'image/png' });
   } else {
+    // No _applyMedianFilter here (unlike 'bw' above) — a real user photo
+    // comparison (a document with two QR codes of different module density)
+    // found the 3x3 median filter destroying the finer/denser QR into pure
+    // noise while the coarser one survived: an isolated 1-2px dark QR module
+    // surrounded by white pixels reads as "noise" to a median filter and
+    // gets erased, exactly like camera sensor grain would. Cross-checked
+    // against CleanSCAN (github.com/clean-apps/CleanSCAN, a real reference
+    // scanner app's native OpenCV pipeline) — its own Document-equivalent
+    // mode (getGrayBitmap) is a bare grayscale conversion with NO denoising
+    // step at all, and its B&W mode's only cleanup is Otsu thresholding, no
+    // median filter either. flatFieldCorrect (shadow/lighting correction,
+    // divides against a heavily downscaled 64px background estimate) and
+    // unsharpMask (edge-enhancing, the opposite direction from a median
+    // filter) don't share this failure mode — only the median filter step
+    // targeted fine-detail-sized features specifically. Verified live: the
+    // same real photo now decodes/renders the previously-destroyed QR code
+    // correctly. 'bw' mode above keeps its own median-filter pre-pass —
+    // out of scope here, and _applyBw already does its own dedicated
+    // despeckle step, so it isn't relying on this one for its only cleanup.
     const gray = _toGrayscaleCanvas(src);
     const bg   = _estimateBackground(gray);
     _flatFieldCorrect(gray, bg);
-    _applyMedianFilter(gray);
     _unsharpMask(gray, 2, 2.0);
     _applyEnhance(gray, _STRENGTH, adjust);
     blob = await gray.convertToBlob({ type: 'image/jpeg', quality: 0.87 });
