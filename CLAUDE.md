@@ -169,6 +169,28 @@ Apply all of these to any new tool's options panel before shipping.
    messages, `#successCard` for the result panel, `#cancelBtn` for cancellation. Consistency here is
    also what keeps this project's own audit/test tooling working against new tools without changes.
 
+## Adding a feature to an EXISTING tool — update its SEO content too
+
+Shipping a new option on an existing tool (not a whole new tool) is easy to treat as "just code" and
+forget the content layer entirely — this happened for real: Merge's Create Bookmarks + Insert Blank
+Pages options (2026-08) and Draw-on-PDF's signature-image-upload feature both shipped with zero
+content updates, and worse, `data/content/en/merge-faq.json` had a pre-existing FAQ answer ("bookmarks
+aren't currently combined") that became actively misleading once the bookmark feature shipped —
+not just incomplete, wrong.
+
+**Whenever a new option/capability is added to a tool that already has content, check and update, in
+English at minimum (matching this project's own "new features start EN-only, backlog other locales"
+convention — see e.g. `glossary_pdf_tool` in memory):**
+- `data/content/en/<tool>.html` — does the description still accurately describe what the tool does?
+- `data/content/en/<tool>-faq.json` — does any EXISTING answer now contradict the new behavior (the
+  actively-wrong case, worse than merely stale)? Does the new capability deserve its own FAQ entry?
+- `data/content/en/<tool>-howto.json` — do the steps still match the real UI?
+- For a tool with hand-authored static HTML instead of the templated `data/content` pattern (e.g.
+  `draw-on-pdf/index.html`), check that file directly.
+
+Don't expand to all 14 locales unless asked — that's a separate, larger decision the user makes
+explicitly each time, consistent with this project's general pause-on-expansion stance.
+
 ## Architecture patterns
 - **Tool Registry**: `js/toolRegistry.js` + `js/toolRegistrations.js`
 - **Tool config**: `js/config.js` — TOOLS dict + i18n slugs + language config

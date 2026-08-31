@@ -76,7 +76,15 @@
     "name": "Are bookmarks and hyperlinks preserved when I merge PDFs?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Links are preserved, including links that point to a specific page — even across files, they're correctly remapped to the merged document. Bookmarks (the sidebar outline/table of contents panel some PDFs have) aren't currently combined — each source file's own bookmark list doesn't carry over into the merged file."
+      "text": "Links are preserved, including links that point to a specific page — even across files, they're correctly remapped to the merged document. Each source file's own pre-existing bookmarks don't carry over automatically, but turning on \"Create bookmarks\" before merging adds a fresh bookmark for every file, named after it, so you can jump straight to where each original document starts inside the combined PDF — visible in your PDF reader's Bookmarks or Table of Contents panel."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I insert a blank page between each merged file?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. Turn on \"Insert blank pages\" and choose Always (a blank page after every file except the last) or On odd page count (only when a file's own page count is odd). This is mainly useful for double-sided printing — each original document starts on a fresh sheet instead of partway through the previous one."
     }
   }
 ]
