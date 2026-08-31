@@ -38,6 +38,14 @@
 
 const SIGNATURE_MAX_EDGE = 900; // downscale cap — a signature never needs more detail than this
 const MIN_DARK_NEIGHBORS = 3;
+// Gray-level half-width of the soft alpha ramp around the Otsu threshold —
+// see removeBackground()'s header comment for why this exists. Deliberately
+// modest: a wider value can eat into an entire tightly-clustered ink color
+// (confirmed live — a flat, barely-anti-aliased ink cluster spanning only
+// gray 14-28 sat entirely inside a threshold-28±24 ramp, so NO pixel ever
+// reached full opacity, silently washing out the whole signature instead of
+// smoothing its edge).
+const EDGE_RAMP = 10;
 
 // Median-of-histogram Otsu threshold — ported from js/scanFilterWorker.js's
 // _otsuThreshold, with one deliberate change: that original builds its
@@ -116,8 +124,38 @@ export function hasRealAlpha(data) {
 }
 
 /**
- * Classifies pixels into ink (dark, kept at original color, fully opaque)
- * vs. background (made fully transparent) via Otsu threshold + despeckle.
+ * Classifies pixels into ink (dark, kept at original color) vs. background
+ * (made transparent) via an Otsu threshold, despeckle, and a SOFT alpha ramp
+ * around the threshold — not a hard 0/255 cutoff.
+ *
+ * A binary cutout (every pixel either fully opaque or fully transparent) was
+ * the original design here, ported from the scan-document B&W filter — but
+ * that filter's job is a crisp black/white page for OCR, where hard edges
+ * are correct. A signature is a natural pen stroke: real photos have a
+ * genuine antialiased gradient between ink and paper (focus blur, JPEG
+ * compression, the pen's own edge). A hard cutoff throws that gradient away
+ * — every softer, partially-blended edge pixel gets classified as pure
+ * background and discarded, leaving only the darkest core of each stroke.
+ * Confirmed live on a real phone photo: the result looked visibly
+ * pixelated/blocky ("stairstepped" stroke edges), and because the discarded
+ * edge pixels were disproportionately the *lighter, more color-saturated*
+ * part of a dark-blue stroke, the surviving core read as noticeably darker/
+ * blacker than the original ink — not an actual color change (RGB is never
+ * touched here), a perceptual one from only keeping the darkest pixels.
+ *
+ * Fix: pixels within EDGE_RAMP gray levels of the threshold get a partial
+ * alpha (linearly interpolated), not a binary decision — reproducing the
+ * source photo's own antialiasing instead of discarding it.
+ *
+ * Despeckle still needs a binary mask to find isolated noise specks, but it
+ * has to be computed over the WIDE "could plausibly be ink or its soft edge"
+ * range (threshold + EDGE_RAMP), not just the strict "is ink" range —
+ * otherwise despeckle itself would strip the very edge pixels this fix
+ * exists to keep (a genuine antialiased edge pixel has real ink as its
+ * neighbor and survives; an isolated stray light-gray JPEG artifact with no
+ * real ink nearby does not — same discrimination as before, just evaluated
+ * on the wider range this fix now cares about).
+ *
  * Mutates `data` (RGBA, stride 4) in place and returns it.
  * @param {Uint8ClampedArray} data
  * @param {number} w
@@ -126,21 +164,22 @@ export function hasRealAlpha(data) {
 export function removeBackground(data, w, h) {
   const threshold = otsuThreshold(data);
   const n = w * h;
-  let mask = new Uint8Array(n); // 1 = ink (keep), 0 = background (make transparent)
+  const gray = new Float32Array(n);
+  let roughMask = new Uint8Array(n); // wide net: real ink core AND its soft edge
   for (let p = 0, i = 0; p < n; p++, i += 4) {
-    const gray = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
-    // Round to match otsuThreshold's own histogram bucketing (Math.round(gray)),
-    // and use <= to match its wB/class-B accumulation convention (hist[t] belongs
-    // to the "at or below t" class) — comparing a raw float against an integer
-    // threshold with strict < silently excludes any pixel whose rounded gray
-    // lands exactly on the threshold bucket (confirmed live: real data at
-    // gray=16.14 rounds into the threshold-16 bucket for the histogram, but
-    // fails a raw `16.14 < 16` check, wrongly dropping it as background).
-    mask[p] = Math.round(gray) <= threshold ? 1 : 0;
+    const g = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
+    gray[p] = g;
+    roughMask[p] = g <= threshold + EDGE_RAMP ? 1 : 0;
   }
-  mask = despeckleMask(mask, w, h);
+  const keepMask = despeckleMask(roughMask, w, h);
   for (let p = 0, i = 0; p < n; p++, i += 4) {
-    data[i + 3] = mask[p] ? 255 : 0;
+    if (!keepMask[p]) { data[i + 3] = 0; continue; }
+    const g = gray[p];
+    let alpha;
+    if (g <= threshold - EDGE_RAMP) alpha = 255;
+    else if (g >= threshold + EDGE_RAMP) alpha = 0;
+    else alpha = Math.round(255 * (threshold + EDGE_RAMP - g) / (2 * EDGE_RAMP));
+    data[i + 3] = alpha;
   }
   return data;
 }
