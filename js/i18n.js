@@ -490,7 +490,7 @@ export const EN = {
 
   // Banners
   rdct_banner_true:        '🔒 <strong>True PDF Redaction</strong> — permanently removes content from the document. Redacted pages are converted to images so underlying text cannot be recovered. Files never leave your device.',
-  rdct_banner_cover:       '🛡️ <strong>Cover Area</strong> — draws an opaque rectangle over the selected region. The content underneath is hidden visually but <em>not cryptographically deleted</em>. For legal redaction use the <a href="/redact-pdf/" style="color:var(--green)">Redact PDF</a> tool.',
+  rdct_banner_cover:       '🛡️ <strong>Cover Area</strong> — draws an opaque rectangle over the selected region. The content underneath is hidden visually but <em>not cryptographically deleted</em>. For legal redaction use the <a href="/redact-pdf/" style="color:var(--green-text)">Redact PDF</a> tool.',
   rdct_banner_annotate:    '✏️ <strong>Annotate PDF</strong> — draw colored boxes, highlights, or covers on any page. Everything runs locally in your browser — your PDF never leaves your device.',
   rdct_footer_true:        '🔒 Processed entirely in your browser · Files never leave your device · Content permanently removed',
   rdct_footer:             '🔒 Processed entirely in your browser · Files never leave your device',

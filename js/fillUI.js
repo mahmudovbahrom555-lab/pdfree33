@@ -1046,7 +1046,7 @@ function _noFieldsHTML() {
     <p style="margin:0 0 8px;font-weight:600;color:var(--text);">${t('fill_no_fields_title')}</p>
     <p style="margin:0;font-size:13px;color:var(--text3);line-height:1.5;">
       ${t('fill_no_fields_body')}
-      <a href="${_redactHref()}" style="color:var(--green);">${t('fill_no_fields_link')}</a>${t('fill_no_fields_suffix')}
+      <a href="${_redactHref()}" style="color:var(--green-text);">${t('fill_no_fields_link')}</a>${t('fill_no_fields_suffix')}
     </p>
   </div>`;
 }

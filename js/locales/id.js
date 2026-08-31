@@ -501,7 +501,7 @@ window.PDFREE_LOCALE = {
   rdct_loading:            'Memuat PDF…',
   rdct_err_read:           'Tidak dapat membaca PDF: {msg}',
   rdct_banner_true:        '🔒 <strong>Redaksi PDF Sejati</strong> — menghapus konten secara permanen dari dokumen. Halaman yang diredaksi dikonversi ke gambar sehingga teks yang mendasarinya tidak dapat dipulihkan. File tidak pernah meninggalkan perangkat Anda.',
-  rdct_banner_cover:       '🛡️ <strong>Tutup Area</strong> — menggambar persegi panjang buram di atas wilayah yang dipilih. Konten di bawahnya disembunyikan secara visual tetapi <em>tidak dihapus secara kriptografis</em>. Untuk redaksi legal gunakan alat <a href="/id/hapus-teks-pdf/" style="color:var(--green)">Redact PDF</a>.',
+  rdct_banner_cover:       '🛡️ <strong>Tutup Area</strong> — menggambar persegi panjang buram di atas wilayah yang dipilih. Konten di bawahnya disembunyikan secara visual tetapi <em>tidak dihapus secara kriptografis</em>. Untuk redaksi legal gunakan alat <a href="/id/hapus-teks-pdf/" style="color:var(--green-text)">Redact PDF</a>.',
   rdct_banner_annotate:    '✏️ <strong>Anotasi PDF</strong> — gambar kotak berwarna, sorotan, atau penutup di halaman mana pun. Semuanya berjalan secara lokal di browser Anda — PDF Anda tidak pernah meninggalkan perangkat Anda.',
   rdct_footer_true:        '🔒 Diproses sepenuhnya di browser Anda · File tidak pernah meninggalkan perangkat · Konten dihapus permanen',
   rdct_footer:             '🔒 Diproses sepenuhnya di browser Anda · File tidak pernah meninggalkan perangkat',

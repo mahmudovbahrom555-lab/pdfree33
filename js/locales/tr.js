@@ -500,7 +500,7 @@ window.PDFREE_LOCALE = {
   rdct_loading:            'PDF yükleniyor…',
   rdct_err_read:           'PDF okunamadı: {msg}',
   rdct_banner_true:        '🔒 <strong>Kalıcı PDF Gizleme</strong> — içeriği belgeden kalıcı olarak kaldırır. Gizlenen sayfalar görüntülere dönüştürülerek altta yatan metnin kurtarılması önlenir. Dosyalar hiçbir zaman cihazınızı terk etmez.',
-  rdct_banner_cover:       '🛡️ <strong>Alanı Kapat</strong> — seçili bölgenin üzerine opak bir dikdörtgen çizer. Alttaki içerik görsel olarak gizlenir ancak <em>kriptografik olarak silinmez</em>. Yasal düzenleme için <a href="/tr/pdf-gizle/" style="color:var(--green)">Redact PDF</a> aracını kullanın.',
+  rdct_banner_cover:       '🛡️ <strong>Alanı Kapat</strong> — seçili bölgenin üzerine opak bir dikdörtgen çizer. Alttaki içerik görsel olarak gizlenir ancak <em>kriptografik olarak silinmez</em>. Yasal düzenleme için <a href="/tr/pdf-gizle/" style="color:var(--green-text)">Redact PDF</a> aracını kullanın.',
   rdct_banner_annotate:    '✏️ <strong>PDF\'ye Açıklama Ekle</strong> — herhangi bir sayfaya renkli kutular, vurgular veya kapaklar çizin. Her şey tarayıcınızda yerel olarak çalışır — PDF\'niz hiçbir zaman cihazınızı terk etmez.',
   rdct_footer_true:        '🔒 Tamamen tarayıcınızda işlendi · Dosyalar hiçbir zaman cihazı terk etmez · İçerik kalıcı olarak kaldırıldı',
   rdct_footer:             '🔒 Tamamen tarayıcınızda işlendi · Dosyalar hiçbir zaman cihazı terk etmez',

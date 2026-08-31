@@ -13,14 +13,14 @@
   padding: 8px 16px;
   font-size: 12px;
   font-weight: 500;
-  color: var(--green);
+  color:var(--green-text);
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
 }
 .support-banner a {
-  color: var(--green);
+  color:var(--green-text);
   font-weight: 600;
   text-decoration: underline;
   text-underline-offset: 2px;
@@ -66,7 +66,7 @@ nav {
   letter-spacing: -0.5px;
   color: var(--text);
 }
-.logo-text span { color: var(--green); }
+.logo-text span { color:var(--green-text); }
 
 .nav-links { display: flex; gap: 4px; flex: 1 1 auto; min-width: 0; overflow: hidden; }
 
@@ -132,7 +132,7 @@ nav {
 }
 .lang-switch__menu a:hover,
 .lang-switch__menu a:focus-visible { background: var(--surface2); outline: none; }
-.lang-switch__menu a[aria-current="true"] { color: var(--green); font-weight: 600; }
+.lang-switch__menu a[aria-current="true"] { color: var(--green-text); font-weight: 600; }
 
 /* ── "More" overflow menu — collapses nav-links that don't fit (js/priorityNav.js) ── */
 .nav-more { position: relative; flex-shrink: 0; visibility: hidden; }
@@ -262,7 +262,7 @@ nav {
   margin-bottom: 16px;
   transition: opacity 0.25s ease, transform 0.25s ease;
 }
-.hero h1 em { font-style: normal; color: var(--green); }
+.hero h1 em { font-style: normal; color:var(--green-text); }
 
 .hero p {
   font-size: 17px;
@@ -303,7 +303,7 @@ nav {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  color: var(--green);
+  color:var(--green-text);
 }
 .trust-alert-text strong {
   display: block;
@@ -357,7 +357,7 @@ nav {
   border-radius: 10px;
   padding: 10px 12px 10px 14px;
   font-size: 13px;
-  color: var(--green);
+  color:var(--green-text);
 }
 
 .hero-banner__icon {
@@ -376,7 +376,7 @@ nav {
   flex-shrink: 0;
   background: none;
   border: none;
-  color: var(--green);
+  color:var(--green-text);
   font-size: 18px;
   line-height: 1;
   cursor: pointer;
@@ -455,7 +455,7 @@ nav {
 
 .hero-det-replace:hover {
   border-color: var(--green);
-  color: var(--green);
+  color:var(--green-text);
 }
 
 .hero-det-badges {
@@ -477,7 +477,7 @@ nav {
 
 .hero-det-badge--ok {
   background: var(--green-light);
-  color: var(--green);
+  color:var(--green-text);
 }
 
 .hero-det-badge--warn {
@@ -545,7 +545,7 @@ nav {
 .hero-rec-match {
   font-size: 10px;
   font-weight: 600;
-  color: var(--green);
+  color:var(--green-text);
   margin-top: 2px;
 }
 
@@ -558,7 +558,7 @@ nav {
 }
 
 .hero-rec-card--best .hero-rec-cta {
-  color: var(--green);
+  color:var(--green-text);
   font-weight: 600;
 }
 
@@ -611,7 +611,7 @@ body.has-files #privacyBar {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--green);
+  color:var(--green-text);
   margin-top: 2px;
 }
 
@@ -655,7 +655,7 @@ body.has-files #privacyBar {
   font-weight: 500;
   color: var(--text2);
 }
-.no-limit-item svg { color: var(--green); flex-shrink: 0; }
+.no-limit-item svg { color:var(--green-text); flex-shrink: 0; }
 
 /* ── Tools grid ── */
 .tools-section {

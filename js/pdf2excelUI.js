@@ -191,7 +191,7 @@ async function _scanTablesBackground(doc, gen) {
       div.style.cssText = 'margin-top:8px;font-size:12px;color:var(--text3);padding:6px 10px';
       div.innerHTML =
         t('p2e_no_table_hint') +
-        `<a href="${_crossToolHref(PDF2WORD_SLUGS)}" style="color:var(--green);font-weight:600">${t('p2e_pdf_to_word_link')}</a>${t('p2e_instead_suffix')}`;
+        `<a href="${_crossToolHref(PDF2WORD_SLUGS)}" style="color:var(--green-text);font-weight:600">${t('p2e_pdf_to_word_link')}</a>${t('p2e_instead_suffix')}`;
       hint.after(div);
     }
   }

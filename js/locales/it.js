@@ -500,7 +500,7 @@ window.PDFREE_LOCALE = {
   rdct_loading:            'Caricamento PDF…',
   rdct_err_read:           'Impossibile leggere il PDF: {msg}',
   rdct_banner_true:        '🔒 <strong>Redazione PDF Vera</strong> — rimuove definitivamente il contenuto dal documento. Le pagine redatte vengono convertite in immagini in modo che il testo sottostante non possa essere recuperato. I file non lasciano mai il tuo dispositivo.',
-  rdct_banner_cover:       '🛡️ <strong>Copri Area</strong> — disegna un rettangolo opaco sulla regione selezionata. Il contenuto sottostante è nascosto visivamente ma <em>non eliminato crittograficamente</em>. Per la redazione legale usa lo strumento <a href="/it/oscura-pdf/" style="color:var(--green)">Redact PDF</a>.',
+  rdct_banner_cover:       '🛡️ <strong>Copri Area</strong> — disegna un rettangolo opaco sulla regione selezionata. Il contenuto sottostante è nascosto visivamente ma <em>non eliminato crittograficamente</em>. Per la redazione legale usa lo strumento <a href="/it/oscura-pdf/" style="color:var(--green-text)">Redact PDF</a>.',
   rdct_banner_annotate:    '✏️ <strong>Annota PDF</strong> — disegna caselle colorate, evidenziazioni o coperture su qualsiasi pagina. Tutto funziona localmente nel tuo browser — il tuo PDF non lascia mai il tuo dispositivo.',
   rdct_footer_true:        '🔒 Elaborato interamente nel tuo browser · I file non lasciano mai il dispositivo · Contenuto rimosso definitivamente',
   rdct_footer:             '🔒 Elaborato interamente nel tuo browser · I file non lasciano mai il dispositivo',

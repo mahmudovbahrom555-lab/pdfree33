@@ -414,7 +414,7 @@ export function renderCompressionReport(data) {
            ${items.map((it, i) => `
              <div class="compress-report__item" style="animation-delay:${i * 60}ms">
                <span class="compress-report__item-icon" aria-hidden="true">${it.icon}</span>
-               <span class="compress-report__item-label">${it.label}${it.href ? ` <a href="${it.href}" class="compress-report__explain" title="${t('cmp_explain_title')}" aria-label="${t('cmp_explain_aria')}" style="font-size:11px;color:var(--green);text-decoration:none;opacity:0.7;vertical-align:middle">?</a>` : ''}</span>
+               <span class="compress-report__item-label">${it.label}${it.href ? ` <a href="${it.href}" class="compress-report__explain" title="${t('cmp_explain_title')}" aria-label="${t('cmp_explain_aria')}" style="font-size:11px;color:var(--green-text);text-decoration:none;opacity:0.7;vertical-align:middle">?</a>` : ''}</span>
                <span class="compress-report__item-check" aria-hidden="true">✓</span>
              </div>
            `).join('')}

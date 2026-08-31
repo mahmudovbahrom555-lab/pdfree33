@@ -503,7 +503,7 @@ window.PDFREE_LOCALE = {
   rdct_loading:            'PDF wird geladen…',
   rdct_err_read:           'PDF konnte nicht gelesen werden: {msg}',
   rdct_banner_true:        '🔒 <strong>Echte PDF-Schwärzung</strong> — entfernt Inhalte dauerhaft aus dem Dokument. Geschwärzte Seiten werden in Bilder umgewandelt, sodass der zugrundeliegende Text nicht wiederhergestellt werden kann. Dateien verlassen niemals dein Gerät.',
-  rdct_banner_cover:       '🛡️ <strong>Bereich abdecken</strong> — zeichnet ein undurchsichtiges Rechteck über den ausgewählten Bereich. Der darunter liegende Inhalt ist visuell verborgen, aber <em>nicht kryptografisch gelöscht</em>. Für rechtliche Schwärzung verwende das <a href="/de/pdf-schwaerzen/" style="color:var(--green)">PDF schwärzen</a>-Tool.',
+  rdct_banner_cover:       '🛡️ <strong>Bereich abdecken</strong> — zeichnet ein undurchsichtiges Rechteck über den ausgewählten Bereich. Der darunter liegende Inhalt ist visuell verborgen, aber <em>nicht kryptografisch gelöscht</em>. Für rechtliche Schwärzung verwende das <a href="/de/pdf-schwaerzen/" style="color:var(--green-text)">PDF schwärzen</a>-Tool.',
   rdct_banner_annotate:    '✏️ <strong>PDF annotieren</strong> — zeichne farbige Boxen, Markierungen oder Abdeckungen auf jede Seite. Alles läuft lokal in deinem Browser — deine PDF verlässt niemals dein Gerät.',
   rdct_footer_true:        '🔒 Vollständig im Browser verarbeitet · Dateien verlassen dein Gerät nie · Inhalt dauerhaft entfernt',
   rdct_footer:             '🔒 Vollständig im Browser verarbeitet · Dateien verlassen dein Gerät nie',

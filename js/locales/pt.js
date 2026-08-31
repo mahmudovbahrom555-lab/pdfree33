@@ -502,7 +502,7 @@ window.PDFREE_LOCALE = {
   rdct_loading:            'Carregando PDF…',
   rdct_err_read:           'Não foi possível ler o PDF: {msg}',
   rdct_banner_true:        '🔒 <strong>Redação PDF verdadeira</strong> — remove permanentemente o conteúdo do documento. As páginas redigidas são convertidas em imagens para que o texto subjacente não possa ser recuperado. Os arquivos nunca saem do seu dispositivo.',
-  rdct_banner_cover:       '🛡️ <strong>Cobrir área</strong> — desenha um retângulo opaco sobre a região selecionada. O conteúdo abaixo está oculto visualmente mas <em>não deletado criptograficamente</em>. Para redação legal use a ferramenta <a href="/pt/censurar-pdf/" style="color:var(--green)">Redigir PDF</a>.',
+  rdct_banner_cover:       '🛡️ <strong>Cobrir área</strong> — desenha um retângulo opaco sobre a região selecionada. O conteúdo abaixo está oculto visualmente mas <em>não deletado criptograficamente</em>. Para redação legal use a ferramenta <a href="/pt/censurar-pdf/" style="color:var(--green-text)">Redigir PDF</a>.',
   rdct_banner_annotate:    '✏️ <strong>Anotar PDF</strong> — desenhe caixas coloridas, destaques ou coberturas em qualquer página. Tudo é executado localmente no seu navegador — seu PDF nunca sai do seu dispositivo.',
   rdct_footer_true:        '🔒 Processado inteiramente no seu navegador · Os arquivos nunca saem do dispositivo · Conteúdo removido permanentemente',
   rdct_footer:             '🔒 Processado inteiramente no seu navegador · Os arquivos nunca saem do dispositivo',

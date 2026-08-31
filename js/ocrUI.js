@@ -527,7 +527,7 @@ function _renderUI(container) {
         <p style="margin:0 0 10px;font-size:13px;color:var(--text);">${t('ocr_ios_hint')}</p>
         <button id="btnDownloadOcrOnly" type="button" style="
           display:block;width:100%;padding:10px 14px;
-          background:var(--surface);color:var(--green);border:1.5px solid var(--green);border-radius:8px;
+          background:var(--surface);color:var(--green-text);border:1.5px solid var(--green);border-radius:8px;
           font-size:13px;font-weight:600;cursor:pointer;text-align:center;">
           ${t('ocr_download_engine_btn')}
         </button>
@@ -603,7 +603,7 @@ function _showLangInfo(lang) {
   const installed = _isLangInstalled(lang.code);
   const lines = [];
   if (installed) {
-    lines.push(`<p style="margin:0;font-size:12px;color:var(--green);">✓ ${t('ocr_lang_installed', { lang: lang.name })}</p>`);
+    lines.push(`<p style="margin:0;font-size:12px;color:var(--green-text);">✓ ${t('ocr_lang_installed', { lang: lang.name })}</p>`);
   } else {
     lines.push(`<p style="margin:0;font-size:12px;color:var(--text3);">ⓘ ${t('ocr_lang_download_note', { size: lang.size })}</p>`);
   }
@@ -925,13 +925,13 @@ function _showSuccess(desc) {
     nextSteps.innerHTML = `
       <div style="font-weight:600;color:var(--text2);margin-bottom:10px;">${t('ocr_next_steps_title')}</div>
       <div style="display:flex;flex-direction:column;gap:8px;">
-        <a href="${_nextStepHref('pdf2word')}" data-handoff style="display:flex;align-items:center;gap:8px;color:var(--green);text-decoration:none;font-weight:500;">
+        <a href="${_nextStepHref('pdf2word')}" data-handoff style="display:flex;align-items:center;gap:8px;color:var(--green-text);text-decoration:none;font-weight:500;">
           <span style="font-size:16px">📝</span> ${t('ocr_next_word')}
         </a>
-        <a href="${_nextStepHref('split')}" data-handoff style="display:flex;align-items:center;gap:8px;color:var(--green);text-decoration:none;font-weight:500;">
+        <a href="${_nextStepHref('split')}" data-handoff style="display:flex;align-items:center;gap:8px;color:var(--green-text);text-decoration:none;font-weight:500;">
           <span style="font-size:16px">✂️</span> ${t('ocr_next_split')}
         </a>
-        <a href="${_nextStepHref('compress')}" data-handoff style="display:flex;align-items:center;gap:8px;color:var(--green);text-decoration:none;font-weight:500;">
+        <a href="${_nextStepHref('compress')}" data-handoff style="display:flex;align-items:center;gap:8px;color:var(--green-text);text-decoration:none;font-weight:500;">
           <span style="font-size:16px">🗜️</span> ${t('ocr_next_compress')}
         </a>
       </div>`;

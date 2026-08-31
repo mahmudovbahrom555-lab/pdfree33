@@ -502,7 +502,7 @@ window.PDFREE_LOCALE = {
   rdct_loading:            'PDF 로딩 중…',
   rdct_err_read:           'PDF를 읽을 수 없습니다: {msg}',
   rdct_banner_true:        '🔒 <strong>완전한 PDF 편집</strong> — 문서에서 내용을 영구적으로 제거합니다. 편집된 페이지는 이미지로 변환되어 기본 텍스트를 복구할 수 없습니다. 파일은 기기를 벗어나지 않습니다.',
-  rdct_banner_cover:       '🛡️ <strong>영역 덮기</strong> — 선택한 영역 위에 불투명한 직사각형을 그립니다. 아래 내용은 시각적으로 숨겨지지만 <em>암호학적으로 삭제되지 않습니다</em>. 법적 편집에는 <a href="/ko/pdf-garigi/" style="color:var(--green)">Redact PDF</a> 도구를 사용하세요.',
+  rdct_banner_cover:       '🛡️ <strong>영역 덮기</strong> — 선택한 영역 위에 불투명한 직사각형을 그립니다. 아래 내용은 시각적으로 숨겨지지만 <em>암호학적으로 삭제되지 않습니다</em>. 법적 편집에는 <a href="/ko/pdf-garigi/" style="color:var(--green-text)">Redact PDF</a> 도구를 사용하세요.',
   rdct_banner_annotate:    '✏️ <strong>PDF 주석</strong> — 어느 페이지에나 색상 상자, 하이라이트 또는 커버를 그립니다. 모든 것이 브라우저에서 로컬로 실행됩니다 — PDF가 기기를 벗어나지 않습니다.',
   rdct_footer_true:        '🔒 브라우저에서 완전히 처리 · 파일이 기기를 벗어나지 않음 · 내용 영구 제거',
   rdct_footer:             '🔒 브라우저에서 완전히 처리 · 파일이 기기를 벗어나지 않음',

@@ -501,7 +501,7 @@ window.PDFREE_LOCALE = {
   rdct_loading:            'Đang tải PDF…',
   rdct_err_read:           'Không thể đọc PDF: {msg}',
   rdct_banner_true:        '🔒 <strong>Biên tập PDF thực sự</strong> — xóa vĩnh viễn nội dung khỏi tài liệu. Các trang được biên tập được chuyển đổi thành hình ảnh để văn bản bên dưới không thể được khôi phục. Tệp không bao giờ rời khỏi thiết bị của bạn.',
-  rdct_banner_cover:       '🛡️ <strong>Che phủ khu vực</strong> — vẽ hình chữ nhật mờ đục lên vùng được chọn. Nội dung bên dưới bị ẩn về mặt hình ảnh nhưng <em>không bị xóa về mặt mật mã</em>. Để biên tập pháp lý hãy dùng công cụ <a href="/vi/xoa-van-ban-pdf/" style="color:var(--green)">Redact PDF</a>.',
+  rdct_banner_cover:       '🛡️ <strong>Che phủ khu vực</strong> — vẽ hình chữ nhật mờ đục lên vùng được chọn. Nội dung bên dưới bị ẩn về mặt hình ảnh nhưng <em>không bị xóa về mặt mật mã</em>. Để biên tập pháp lý hãy dùng công cụ <a href="/vi/xoa-van-ban-pdf/" style="color:var(--green-text)">Redact PDF</a>.',
   rdct_banner_annotate:    '✏️ <strong>Chú thích PDF</strong> — vẽ hộp màu, tô sáng hoặc che phủ trên bất kỳ trang nào. Mọi thứ chạy cục bộ trong trình duyệt của bạn — PDF không bao giờ rời khỏi thiết bị của bạn.',
   rdct_footer_true:        '🔒 Xử lý hoàn toàn trong trình duyệt của bạn · Tệp không bao giờ rời khỏi thiết bị · Nội dung đã xóa vĩnh viễn',
   rdct_footer:             '🔒 Xử lý hoàn toàn trong trình duyệt của bạn · Tệp không bao giờ rời khỏi thiết bị',
