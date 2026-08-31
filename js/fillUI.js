@@ -333,15 +333,15 @@ function _buildFormHTML(fields) {
   }
 
   html += `
-    <div style="margin-top:16px;padding:12px 16px;background:var(--surface);
-      border:1px solid var(--border);border-radius:10px;display:flex;align-items:center;gap:10px;">
+    <label style="margin-top:16px;padding:12px 16px;background:var(--surface);
+      border:1px solid var(--border);border-radius:10px;display:flex;align-items:center;gap:10px;cursor:pointer;">
       <input type="checkbox" id="fillFlattenToggle" checked
         style="width:18px;height:18px;accent-color:var(--green);cursor:pointer;flex-shrink:0;">
-      <label for="fillFlattenToggle" style="font-size:13px;color:var(--text2);cursor:pointer;line-height:1.4;">
+      <span style="font-size:13px;color:var(--text2);line-height:1.4;">
         ${t('fill_flatten_label')}
         <span style="color:var(--text3);font-size:12px;">${t('fill_flatten_hint')}</span>
-      </label>
-    </div>`;
+      </span>
+    </label>`;
 
   html += _tabOrderBlockHTML(fields);
 
@@ -460,14 +460,17 @@ function _fieldHTML(f) {
     font-family:inherit;outline:none;transition:border-color .15s;`;
 
   if (f.type === 'checkbox') {
-    return `<div style="display:flex;align-items:center;gap:12px;padding:4px 0;">
+    // A single wrapping <label> (not a <div> + separate <input>/<label for>) so
+    // the whole row is the tap target — the previous version measured 22x22px
+    // on the checkbox itself, below WCAG 2.5.8's 24px minimum, confirmed live.
+    return `<label style="display:flex;align-items:center;gap:12px;padding:6px 0;min-height:24px;cursor:pointer;">
       <input type="checkbox" id="fill_${_esc(f.name)}"
         data-field-name="${_esc(f.name)}" data-export-value="${_esc(f.exportValue)}"
         style="width:22px;height:22px;min-width:22px;accent-color:var(--green);cursor:pointer;">
-      <label for="fill_${_esc(f.name)}" style="font-size:15px;cursor:pointer;line-height:1.4;">
+      <span style="font-size:15px;line-height:1.4;">
         ${_esc(f.label)}${req}
-      </label>
-    </div>`;
+      </span>
+    </label>`;
   }
 
   if (f.type === 'radio') {

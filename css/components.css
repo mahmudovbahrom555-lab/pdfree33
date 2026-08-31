@@ -224,7 +224,7 @@ button,
   flex-shrink: 0;
 }
 .file-item-del {
-  width: 20px; height: 20px;
+  width: 24px; height: 24px; /* was 20px — below WCAG 2.5.8's 24px tap-target minimum */
   border-radius: 50%;
   background: transparent;
   border: none;
@@ -1145,6 +1145,11 @@ button,
   font-size: 15px;
   line-height: 1;
   padding: 2px 4px;
+  min-width: 24px;  /* was an unconstrained ~17x19px from padding alone — below WCAG 2.5.8's 24px minimum */
+  min-height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
   border-radius: 6px;
 }
@@ -1521,7 +1526,7 @@ button,
 .compress-dpi__chip.active {
   border-color: var(--green);
   background: rgba(45, 122, 79, .08);
-  color: var(--green);
+  color: var(--green-dark); /* plain --green measures 4.37:1 here, below WCAG AA's 4.5:1 */
 }
 
 .compress-dpi__hint {
@@ -1531,8 +1536,11 @@ button,
 }
 
 .compress-dpi__chip.active .compress-dpi__hint {
-  color: var(--green);
-  opacity: .8;
+  /* --green-dark alone measures 6.66:1 here, but the opacity:.8 this rule used
+     to carry blends it back down to 4.26:1 — dropped the opacity instead of
+     hunting for an even darker color, since a legible hint beats a de-emphasized
+     one that fails WCAG AA. */
+  color: var(--green-dark);
 }
 
 /* ── Watermark: side-by-side controls + preview ──────────────── */
@@ -2365,8 +2373,8 @@ button,
   position: absolute;
   top: 4px;
   left: 4px;
-  width: 20px;
-  height: 20px;
+  width: 24px; /* was 20px — below WCAG 2.5.8's 24px tap-target minimum */
+  height: 24px;
   border: none;
   border-radius: 50%;
   font-size: 12px;
@@ -4692,7 +4700,7 @@ body:not(.has-files) #heroChipsLabel { display: none !important; }
 .ext-clear-btn {
   font-size: 12px;
   font-weight: 500;
-  color: var(--text3);
+  color: var(--text2); /* --text3 measures 4.33:1 against --surface2 here, below WCAG AA's 4.5:1 */
   background: none;
   border: 1px solid var(--border);
   border-radius: 6px;

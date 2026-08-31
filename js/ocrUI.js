@@ -463,16 +463,20 @@ function _langSelectHTML() {
 }
 
 function _txtCheckboxHTML() {
+  // Each row is a single <label> (not a <div> + separate <input>/<label for>) so
+  // the WHOLE row is the tap target, not just the 14-16px checkbox glyph itself —
+  // that raw-checkbox-only version measured 144x20px, below WCAG 2.5.8's 24px
+  // minimum (confirmed live via a real accessibility audit).
   return `
-  <div style="margin-top:10px;display:flex;flex-direction:column;gap:8px;">
-    <div style="display:flex;align-items:center;gap:8px;">
-      <input type="checkbox" id="ocrTxtCheck" style="width:16px;height:16px;cursor:pointer;accent-color:var(--green);">
-      <label for="ocrTxtCheck" style="font-size:13px;color:var(--text2);cursor:pointer;">${t('ocr_txt_checkbox')}</label>
-    </div>
-    <div style="display:flex;align-items:center;gap:8px;margin-left:24px;">
-      <input type="checkbox" id="ocrHeaderCheck" style="width:14px;height:14px;cursor:pointer;accent-color:var(--green);">
-      <label for="ocrHeaderCheck" style="font-size:12px;color:var(--text3);cursor:pointer;">${t('ocr_txt_header_checkbox')}</label>
-    </div>
+  <div style="margin-top:10px;display:flex;flex-direction:column;gap:4px;">
+    <label style="display:flex;align-items:center;gap:8px;min-height:24px;cursor:pointer;">
+      <input type="checkbox" id="ocrTxtCheck" style="width:18px;height:18px;flex-shrink:0;cursor:pointer;accent-color:var(--green);">
+      <span style="font-size:13px;color:var(--text2);">${t('ocr_txt_checkbox')}</span>
+    </label>
+    <label style="display:flex;align-items:center;gap:8px;min-height:24px;margin-left:24px;cursor:pointer;">
+      <input type="checkbox" id="ocrHeaderCheck" style="width:16px;height:16px;flex-shrink:0;cursor:pointer;accent-color:var(--green);">
+      <span style="font-size:12px;color:var(--text3);">${t('ocr_txt_header_checkbox')}</span>
+    </label>
   </div>`;
 }
 
