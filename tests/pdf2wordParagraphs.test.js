@@ -321,6 +321,33 @@ await test('a numbered line between two prose lines stays separate, marker strip
   if (/^\d/.test(txt)) throw new Error('numbered marker should be stripped from list paragraph text');
 });
 
+await test('a numbered line that is ALSO a heading (bold, or a real font-size jump) is kept as a heading, not downgraded to a list', async () => {
+  // The debatable finding from the pdf2word-vs-pdf2docx benchmark
+  // (pdf2word_pdf2excel_quality_benchmark_2026_08): "1. Section Heading 1"
+  // was silently converted into a numbered-list Paragraph, stripping the
+  // "1. " prefix, because the numbered-marker check ran BEFORE heading
+  // detection and always won. A numbered SECTION TITLE should stay a
+  // heading, "1. " and all — real numbered ITEMS in body text (covered by
+  // the sibling test above, non-bold/body-sized) must still become lists.
+  const boldLines = [
+    mkLine(mkItem('1. Section Heading 1', 50, 12, { bold: true }), 700),
+    mkLine(mkItem('Body text right after the heading.', 50, 12), 680),
+  ];
+  const { paragraphs: boldResult } = await build(boldLines);
+  expect(isListItem(boldResult[0])).toBe(false);
+  expect(headingStyle(boldResult[0])).toBe('Heading2');
+  expect(paragraphText(boldResult[0])).toBe('1. Section Heading 1');
+
+  const bigFontLines = [
+    mkLine(mkItem('2. Section Heading 2', 50, 20), 700),   // 20 >= 12*1.3 -> Heading3
+    mkLine(mkItem('Body text right after the heading.', 50, 12), 670),
+  ];
+  const { paragraphs: bigFontResult } = await build(bigFontLines);
+  expect(isListItem(bigFontResult[0])).toBe(false);
+  expect(headingStyle(bigFontResult[0])).toBe('Heading3');
+  expect(paragraphText(bigFontResult[0])).toBe('2. Section Heading 2');
+});
+
 await test('a numbered line where the marker and text are SEPARATE items with no space between them still becomes a list item', async () => {
   // Real-world pdf.js extraction shape found via scripts/pdf2word_capability_map.mjs:
   // LibreOffice's rendered auto-number and the item text often come out as two

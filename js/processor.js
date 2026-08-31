@@ -3618,14 +3618,26 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
             if (/^\d+$/.test(t)) continue;
           }
 
+          const maxFont = Math.max(...ln.items.map(i => i.fontSize));
+          const isHead  = maxFont >= median * 1.3 || _isBoldHeadingLine(ln.items);
+
           // List items never merge into the surrounding paragraph, and get
           // real Word list formatting (native bullet, or auto-numbering for
           // flat "1./2./3." markers) instead of the marker surviving as
           // literal text — same "never merge" treatment headings already get.
+          //
+          // Exception: a numbered line that ALSO reads as a heading (bold or
+          // a real font-size jump — same isHead signal used just above/below)
+          // is kept as a heading instead, "1. " prefix and all, so it falls
+          // through to the normal buffering path below. A numbered SECTION
+          // TITLE ("1. Scope of Work") should stay a heading; a numbered
+          // ITEM in body text ("1. Bring photo ID") should still become a
+          // real Word list. Bullets are left alone — a bulleted heading is
+          // not a real-world pattern worth the extra branch.
           const lnRawText     = ln.items.map(i => i.str).join('').trim();
           const bulletMatch   = BULLET_RE.test(lnRawText);
           const numberedMatch = !bulletMatch && NUMBERED_RE.test(lnRawText);
-          if (bulletMatch || numberedMatch) {
+          if (bulletMatch || (numberedMatch && !isHead)) {
             _flushPara();
             const p = bulletMatch
               ? _buildListParagraph(ln, BULLET_RE, { bullet: { level: 0 } })
@@ -3633,9 +3645,6 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
             if (p) paragraphs.push(p);
             continue;
           }
-
-          const maxFont = Math.max(...ln.items.map(i => i.fontSize));
-          const isHead  = maxFont >= median * 1.3 || _isBoldHeadingLine(ln.items);
 
           if (_paraBuffer.length > 0) {
             const lastLn      = _paraBuffer[_paraBuffer.length - 1];
