@@ -624,6 +624,12 @@ window.PDFREE_LOCALE = {
 
   // toolRegistrations.js
   val_output_filename:      'Nom du fichier de sortie',
+  merge_bookmarks_title:    'Créer des signets',
+  merge_bookmarks_subtitle: 'Ajoute un signet pour chaque fichier afin de naviguer entre eux dans le PDF fusionné.',
+  merge_blank_pages_title:  'Insérer des pages vierges',
+  merge_blank_pages_none:   'Aucune',
+  merge_blank_pages_always: 'Toujours',
+  merge_blank_pages_odd:    'Si nombre de pages impair',
   val_select_page:          'Sélectionnez au moins une page',
   val_pagenum_out_of_range: 'La plage de pages est hors limites — ce document compte {n} pages.',
   val_light_no_savings:     "⚠️ Le préréglage Léger n'a rien trouvé à supprimer dans ce PDF. Utilisez Standard pour de vraies économies.",

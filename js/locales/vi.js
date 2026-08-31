@@ -623,6 +623,12 @@ window.PDFREE_LOCALE = {
 
   // toolRegistrations.js
   val_output_filename:      'Tên file đầu ra',
+  merge_bookmarks_title:    'Tạo dấu trang',
+  merge_bookmarks_subtitle: 'Thêm một dấu trang cho mỗi file để bạn có thể chuyển giữa chúng trong PDF đã ghép.',
+  merge_blank_pages_title:  'Chèn trang trống',
+  merge_blank_pages_none:   'Không',
+  merge_blank_pages_always: 'Luôn luôn',
+  merge_blank_pages_odd:    'Khi số trang lẻ',
   val_select_page:          'Vui lòng chọn ít nhất một trang',
   val_pagenum_out_of_range: 'Phạm vi trang nằm ngoài giới hạn — tài liệu này có {n} trang.',
   val_light_no_savings:     '⚠️ Cấu hình Nhẹ không tìm thấy gì để loại bỏ trong PDF này. Dùng Tiêu chuẩn để tiết kiệm thực sự.',

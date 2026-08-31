@@ -623,6 +623,12 @@ window.PDFREE_LOCALE = {
 
   // toolRegistrations.js
   val_output_filename:      'Nama file output',
+  merge_bookmarks_title:    'Buat bookmark',
+  merge_bookmarks_subtitle: 'Menambahkan bookmark untuk setiap file agar Anda dapat berpindah di antaranya dalam PDF gabungan.',
+  merge_blank_pages_title:  'Sisipkan halaman kosong',
+  merge_blank_pages_none:   'Tidak ada',
+  merge_blank_pages_always: 'Selalu',
+  merge_blank_pages_odd:    'Jika jumlah halaman ganjil',
   val_select_page:          'Pilih setidaknya satu halaman',
   val_pagenum_out_of_range: 'Rentang halaman di luar batas — dokumen ini memiliki {n} halaman.',
   val_light_no_savings:     '⚠️ Preset Ringan tidak menemukan apa pun untuk dihapus di PDF ini. Gunakan Standar untuk penghematan nyata.',

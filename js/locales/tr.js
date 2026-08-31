@@ -622,6 +622,12 @@ window.PDFREE_LOCALE = {
 
   // toolRegistrations.js
   val_output_filename:      'Çıktı dosya adı',
+  merge_bookmarks_title:    'Yer imleri oluştur',
+  merge_bookmarks_subtitle: 'Birleştirilmiş PDF\'de dosyalar arasında geçiş yapabilmeniz için her dosya için bir yer imi ekler.',
+  merge_blank_pages_title:  'Boş sayfa ekle',
+  merge_blank_pages_none:   'Yok',
+  merge_blank_pages_always: 'Her zaman',
+  merge_blank_pages_odd:    'Sayfa sayısı tek olduğunda',
   val_select_page:          'Lütfen en az bir sayfa seçin',
   val_pagenum_out_of_range: 'Sayfa aralığı sınırların dışında — bu belgede {n} sayfa var.',
   val_light_no_savings:     "⚠️ Hafif ön ayarı bu PDF'de kaldırılacak bir şey bulamadı. Gerçek tasarruf için Standart'ı kullanın.",

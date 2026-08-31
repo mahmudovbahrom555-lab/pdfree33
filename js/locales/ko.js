@@ -624,6 +624,12 @@ window.PDFREE_LOCALE = {
 
   // toolRegistrations.js
   val_output_filename:      '출력 파일 이름',
+  merge_bookmarks_title:    '북마크 만들기',
+  merge_bookmarks_subtitle: '병합된 PDF에서 파일 간 이동할 수 있도록 각 파일에 북마크를 추가합니다.',
+  merge_blank_pages_title:  '빈 페이지 삽입',
+  merge_blank_pages_none:   '없음',
+  merge_blank_pages_always: '항상',
+  merge_blank_pages_odd:    '페이지 수가 홀수일 때',
   val_select_page:          '최소 한 페이지를 선택해 주세요',
   val_pagenum_out_of_range: '페이지 범위가 잘못되었습니다 — 이 문서는 {n}페이지입니다.',
   val_light_no_savings:     '⚠️ "가벼움" 프리셋으로 이 PDF에서 제거할 항목을 찾지 못했습니다. 실제로 용량을 줄이려면 "표준"을 사용해 주세요.',

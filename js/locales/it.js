@@ -622,6 +622,12 @@ window.PDFREE_LOCALE = {
 
   // toolRegistrations.js
   val_output_filename:      'Nome file di output',
+  merge_bookmarks_title:    'Crea segnalibri',
+  merge_bookmarks_subtitle: 'Aggiunge un segnalibro per ogni file per passare facilmente da uno all\'altro nel PDF unito.',
+  merge_blank_pages_title:  'Inserisci pagine vuote',
+  merge_blank_pages_none:   'Nessuna',
+  merge_blank_pages_always: 'Sempre',
+  merge_blank_pages_odd:    'Con numero di pagine dispari',
   val_select_page:          'Seleziona almeno una pagina',
   val_pagenum_out_of_range: "L'intervallo di pagine non è valido — questo documento ha {n} pagine.",
   val_light_no_savings:     "⚠️ Il preset Leggero non ha trovato nulla da rimuovere in questo PDF. Usa Standard per un risparmio reale.",

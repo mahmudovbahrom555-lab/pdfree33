@@ -622,6 +622,12 @@ window.PDFREE_LOCALE = {
 
   // toolRegistrations.js
   val_output_filename:      'Bestandsnaam output',
+  merge_bookmarks_title:    'Bladwijzers maken',
+  merge_bookmarks_subtitle: 'Voegt een bladwijzer toe voor elk bestand, zodat u ertussen kunt springen in de samengevoegde PDF.',
+  merge_blank_pages_title:  'Lege pagina\'s invoegen',
+  merge_blank_pages_none:   'Geen',
+  merge_blank_pages_always: 'Altijd',
+  merge_blank_pages_odd:    'Bij een oneven aantal pagina\'s',
   val_select_page:          'Selecteer ten minste één pagina',
   val_pagenum_out_of_range: "Paginabereik valt buiten het bereik — dit document heeft {n} pagina's.",
   val_light_no_savings:     '⚠️ De voorinstelling Licht heeft niets gevonden om te verwijderen in deze PDF. Gebruik Standaard voor echte besparingen.',

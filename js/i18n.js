@@ -643,6 +643,12 @@ export const EN = {
 
   // ── toolRegistrations.js — merge filename + validate() messages ──
   val_output_filename:      'Output filename',
+  merge_bookmarks_title:    'Create bookmarks',
+  merge_bookmarks_subtitle: 'Adds a bookmark for each file so you can jump between them in the merged PDF.',
+  merge_blank_pages_title:  'Insert blank pages',
+  merge_blank_pages_none:   'None',
+  merge_blank_pages_always: 'Always',
+  merge_blank_pages_odd:    'On odd page count',
   val_select_page:          'Please select at least one page',
   val_pagenum_out_of_range: 'Page range is out of bounds — this document has {n} page(s).',
   val_light_no_savings:     '⚠️ Light preset found nothing to remove in this PDF. Try Standard for real savings.',

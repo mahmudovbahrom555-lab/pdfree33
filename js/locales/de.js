@@ -625,6 +625,12 @@ window.PDFREE_LOCALE = {
 
   // toolRegistrations.js
   val_output_filename:      'Ausgabedateiname',
+  merge_bookmarks_title:    'Lesezeichen erstellen',
+  merge_bookmarks_subtitle: 'Fügt für jede Datei ein Lesezeichen hinzu, damit Sie im zusammengeführten PDF zwischen ihnen springen können.',
+  merge_blank_pages_title:  'Leere Seiten einfügen',
+  merge_blank_pages_none:   'Keine',
+  merge_blank_pages_always: 'Immer',
+  merge_blank_pages_odd:    'Bei ungerader Seitenzahl',
   val_select_page:          'Bitte mindestens eine Seite auswählen',
   val_pagenum_out_of_range: 'Seitenbereich liegt außerhalb — dieses Dokument hat {n} Seiten.',
   val_light_no_savings:     '⚠️ Die Voreinstellung „Gering" hat in diesem PDF nichts zu entfernen gefunden. Für echte Einsparungen „Standard" verwenden.',

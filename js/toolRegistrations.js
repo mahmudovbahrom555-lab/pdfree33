@@ -13,6 +13,7 @@ import { registerTool } from './toolRegistry.js';
 import { id, esc }      from './utils.js';
 import { t }             from './i18n.js';
 import { getWmRemove, wmRemoveHtml, bindWmRemove, resetWmRemove } from './watermarkRemoveUI.js';
+import { checkbox, chipGroup } from './uiComponents.js';
 
 // ── UI modules ─────────────────────────────────────────────────
 import { initCompressOptions, hideCompressOptions,
@@ -154,6 +155,55 @@ function _bindFilenameInput() {
   });
 }
 
+// ── Merge: bookmarks + blank pages — inline, same rationale as the
+//    filename field above (no separate mergeUI.js needed) ─────────
+
+let _createBookmarks   = false;   // off by default — same opt-in convention as wmRemove
+let _insertBlankPages  = 'none';  // 'none' | 'always' | 'odd' — 'none' is a zero-behavior-change default
+
+const BOOKMARKS_TOGGLE_ID  = 'mergeBookmarksToggle';
+const BLANK_PAGES_GROUP_ID = 'mergeBlankPages';
+
+function _bookmarksHtml() {
+  return checkbox({
+    id:       BOOKMARKS_TOGGLE_ID,
+    checked:  _createBookmarks,
+    title:    t('merge_bookmarks_title'),
+    subtitle: t('merge_bookmarks_subtitle'),
+  });
+}
+
+function _blankPagesHtml() {
+  return `
+    <div style="margin-top:14px;">
+      <label style="display:block;font-size:12px;font-weight:600;color:var(--text2);
+        margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em;">
+        ${t('merge_blank_pages_title')}
+      </label>
+      ${chipGroup(BLANK_PAGES_GROUP_ID, [
+        { value: 'none',   label: t('merge_blank_pages_none') },
+        { value: 'always', label: t('merge_blank_pages_always') },
+        { value: 'odd',    label: t('merge_blank_pages_odd') },
+      ], _insertBlankPages, t('merge_blank_pages_title'))}
+    </div>`;
+}
+
+function _bindMergeExtras() {
+  document.getElementById(BOOKMARKS_TOGGLE_ID)?.addEventListener('change', e => {
+    _createBookmarks = e.target.checked;
+  });
+  document.querySelectorAll(`input[name="${BLANK_PAGES_GROUP_ID}"]`).forEach(input => {
+    input.addEventListener('change', e => {
+      if (e.target.checked) _insertBlankPages = e.target.value;
+    });
+  });
+}
+
+function _resetMergeExtras() {
+  _createBookmarks  = false;
+  _insertBlankPages = 'none';
+}
+
 // ── Merge options — inline (no separate mergeUI.js needed) ─────
 
 function _initMerge(files) {
@@ -175,10 +225,11 @@ function _initMerge(files) {
   const alreadyRendered = !!document.getElementById('mergeFilenameInput');
   if (!alreadyRendered) {
     if (!_outputNameTouched) _outputStem = _computeDefaultStem(files || _lastFiles);
-    c.innerHTML     = _filenameHtml() + wmRemoveHtml();
+    c.innerHTML     = _filenameHtml() + wmRemoveHtml() + _bookmarksHtml() + _blankPagesHtml();
     c.style.display = 'block';
     bindWmRemove();
     _bindFilenameInput();
+    _bindMergeExtras();
     return;
   }
   if (_outputNameTouched) return;
@@ -191,6 +242,7 @@ function _hideMerge() {
   const c = id('mergeOptions');
   if (c) { c.style.display = 'none'; c.innerHTML = ''; }
   resetWmRemove();
+  _resetMergeExtras();
   _outputStem        = '';
   _outputNameTouched = false;
   _lastFiles         = [];
@@ -204,7 +256,12 @@ registerTool('merge', {
   minFiles:  1,
   init:      _initMerge,
   hide:      _hideMerge,
-  getParams: () => ({ removeWatermarks: getWmRemove(), outputFilename: getMergeFilename() }),
+  getParams: () => ({
+    removeWatermarks: getWmRemove(),
+    outputFilename:   getMergeFilename(),
+    createBookmarks:  _createBookmarks,
+    insertBlankPages: _insertBlankPages,
+  }),
 });
 
 registerTool('split', {

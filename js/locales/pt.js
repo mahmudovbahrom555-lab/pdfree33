@@ -624,6 +624,12 @@ window.PDFREE_LOCALE = {
 
   // toolRegistrations.js
   val_output_filename:      'Nome do arquivo de saída',
+  merge_bookmarks_title:    'Criar marcadores',
+  merge_bookmarks_subtitle: 'Adiciona um marcador para cada arquivo para você navegar entre eles no PDF mesclado.',
+  merge_blank_pages_title:  'Inserir páginas em branco',
+  merge_blank_pages_none:   'Nenhuma',
+  merge_blank_pages_always: 'Sempre',
+  merge_blank_pages_odd:    'Com número ímpar de páginas',
   val_select_page:          'Selecione pelo menos uma página',
   val_pagenum_out_of_range: 'O intervalo de páginas está fora dos limites — este documento tem {n} páginas.',
   val_light_no_savings:     '⚠️ O predefinido Leve não encontrou nada para remover neste PDF. Use Padrão para uma economia real.',

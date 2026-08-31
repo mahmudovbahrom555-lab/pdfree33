@@ -622,6 +622,12 @@ window.PDFREE_LOCALE = {
 
   // toolRegistrations.js
   val_output_filename:      'Nazwa pliku wyjściowego',
+  merge_bookmarks_title:    'Utwórz zakładki',
+  merge_bookmarks_subtitle: 'Dodaje zakładkę dla każdego pliku, aby można było przeskakiwać między nimi w połączonym pliku PDF.',
+  merge_blank_pages_title:  'Wstaw puste strony',
+  merge_blank_pages_none:   'Brak',
+  merge_blank_pages_always: 'Zawsze',
+  merge_blank_pages_odd:    'Przy nieparzystej liczbie stron',
   val_select_page:          'Wybierz co najmniej jedną stronę',
   val_pagenum_out_of_range: 'Zakres stron jest nieprawidłowy — ten dokument ma {n} stron.',
   val_light_no_savings:     '⚠️ Ustawienie Lekkie nie znalazło niczego do usunięcia w tym pliku PDF. Użyj ustawienia Standardowe, aby uzyskać realne oszczędności.',

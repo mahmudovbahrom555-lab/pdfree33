@@ -327,7 +327,20 @@ function _checkTotalSize(files, maxMb) {
 
 // ── Merge ──────────────────────────────────────────────────────
 
-async function _runMerge(filesSnapshot, { removeWatermarks = false, outputFilename = '' } = {}) {
+// Deliberately its own Worker instance, NOT the shared `_worker` above —
+// js/worker.js is off-limits per CLAUDE.md. js/mergeWorker.js is a
+// standalone classic worker, same pattern as js/organizeWorker.js/
+// js/resizeWorker.js. Created once and kept alive for the session, same
+// rationale as `_organizeWorker` below.
+let _mergeWorker = null;
+function _ensureMergeWorker() {
+  if (!_mergeWorker) {
+    _mergeWorker = new Worker(new URL('./mergeWorker.js', import.meta.url));
+  }
+  return _mergeWorker;
+}
+
+async function _runMerge(filesSnapshot, { removeWatermarks = false, outputFilename = '', createBookmarks = false, insertBlankPages = 'none' } = {}) {
   if (!_checkTotalSize(filesSnapshot, 300)) { _abortUI(); return; }
   // Use pre-decrypted buffer when files.js already ran QPDF at file-add time.
   // .slice(0) copies so the cached buffer survives the postMessage transfer.
@@ -366,10 +379,11 @@ async function _runMerge(filesSnapshot, { removeWatermarks = false, outputFilena
   //     They are DETACHED here immediately after postMessage — do not read them.
   //     Filenames are passed separately (plain strings, not Transferable) so the
   //     worker can include them in error reports for the "skipped files" toast.
-  const names = filesSnapshot.map(f => f.name);
-  _worker.postMessage({ tool: 'merge', files: buffers, names, removeWatermarks }, buffers);
+  const names  = filesSnapshot.map(f => f.name);
+  const worker = _ensureMergeWorker();
+  worker.postMessage({ files: buffers, names, removeWatermarks, createBookmarks, insertBlankPages }, buffers);
 
-  _worker.onmessage = (e) => {
+  worker.onmessage = (e) => {
     const data = e.data;
     if (data.type === 'progress') {
       _resetWatchdog();
@@ -425,7 +439,7 @@ async function _runMerge(filesSnapshot, { removeWatermarks = false, outputFilena
       _handleError('merge', data.message);
     }
   };
-  _worker.onerror = (e) => {
+  worker.onerror = (e) => {
     clearTimeout(watchdog);
     isProcessing = false;
     setFilesLocked(false);

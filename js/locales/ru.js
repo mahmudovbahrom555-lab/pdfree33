@@ -623,6 +623,12 @@ window.PDFREE_LOCALE = {
 
   // toolRegistrations.js
   val_output_filename:      'Имя выходного файла',
+  merge_bookmarks_title:    'Создавать закладки',
+  merge_bookmarks_subtitle: 'Добавляет закладку для каждого файла, чтобы переходить между ними в объединённом PDF.',
+  merge_blank_pages_title:  'Вставлять пустые страницы',
+  merge_blank_pages_none:   'Нет',
+  merge_blank_pages_always: 'Всегда',
+  merge_blank_pages_odd:    'При нечётном числе страниц',
   val_select_page:          'Выберите хотя бы одну страницу',
   val_pagenum_out_of_range: 'Диапазон страниц вне допустимых границ — в этом документе {n} стр.',
   val_light_no_savings:     '⚠️ Пресет «Лёгкое» не нашёл ничего для удаления в этом PDF. Используйте «Стандартное» для реальной экономии.',
