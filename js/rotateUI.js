@@ -253,7 +253,7 @@ function _render(file) {
 
   container.innerHTML = `
     <div class="compress-info">
-      <span class="compress-info__name" title="${esc(file.name)}">${_truncName(file.name)}</span>
+      <span class="compress-info__name" title="${esc(file.name)}">${esc(_truncName(file.name))}</span>
       <span class="compress-info__dot">·</span>
       <span class="compress-info__meta">${tp(_pageCount, 'split_info_page', 'split_info_pages', { n: _pageCount })}</span>
     </div>

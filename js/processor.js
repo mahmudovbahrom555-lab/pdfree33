@@ -4471,7 +4471,9 @@ async function _runRedactTrue(filesSnapshot, params) {
   const file = filesSnapshot[0];
   if (!file) { _abortUI(); return; }
 
-  const { rectsByPage = {}, applyAll = false, fillColor = [0,0,0], opacity = 1, removeMetadata = false } = params;
+  // opacity intentionally not destructured from params — see the fillHex comment below,
+  // true-redact always fills fully opaque regardless of what the UI would have sent.
+  const { rectsByPage = {}, applyAll = false, fillColor = [0,0,0], removeMetadata = false } = params;
 
   setProgress(8, 'Reading PDF…');
   const pdfBytes = await (file._decryptedBuffer ? file._decryptedBuffer.slice(0) : file.arrayBuffer());
@@ -4516,7 +4518,12 @@ async function _runRedactTrue(filesSnapshot, params) {
   const RENDER_SCALE = 2; // 2× for good print quality
 
   const [fr, fg, fb] = fillColor;
-  const fillHex = `rgba(${Math.round(fr*255)},${Math.round(fg*255)},${Math.round(fb*255)},${opacity})`;
+  // Security invariant, not a style choice: this is the TRUE-redact path (canvas-flatten,
+  // "cannot be recovered" per rdct_banner_true) — the fill MUST be fully opaque. At any
+  // opacity < 1, ctx.fillRect's source-over alpha compositing leaves the original pixel
+  // value linearly recoverable (original = result / (1 - alpha)), so params.opacity is
+  // deliberately ignored here regardless of what the UI slider was set to.
+  const fillHex = `rgba(${Math.round(fr*255)},${Math.round(fg*255)},${Math.round(fb*255)},1)`;
 
   for (const pageIdx of redactedPageSet) {
     const pageNum = pageIdx + 1; // pdf.js is 1-based

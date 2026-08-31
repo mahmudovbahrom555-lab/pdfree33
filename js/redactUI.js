@@ -397,7 +397,7 @@ function _render(container, fileName, preset) {
 
   container.innerHTML = `
     <div class="compress-info">
-      <span class="compress-info__name" title="${esc(fileName)}">${_truncName(fileName)}</span>
+      <span class="compress-info__name" title="${esc(fileName)}">${esc(_truncName(fileName))}</span>
       <span class="compress-info__dot">·</span>
       <span class="compress-info__meta">${_pageCount} page${_pageCount !== 1 ? 's' : ''}</span>
     </div>
@@ -459,7 +459,11 @@ function _render(container, fileName, preset) {
           </div>
         </div>
 
-        <!-- Opacity slider -->
+        <!-- Opacity slider — true-redact mode always fills at 100% (enforced again,
+             independently, in processor.js's _runRedactTrue); the control is hidden here
+             rather than just left at its default, since offering it at all on a tool that
+             promises unrecoverable removal invites a user to weaken their own redaction. -->
+        ${isTrueRedact ? '' : `
         <div class="rdct-tools">
           <div class="rdct-tool-label">
             ${t('rdct_opacity')}
@@ -470,7 +474,7 @@ function _render(container, fileName, preset) {
                  min="50" max="100" step="5"
                  value="${Math.round(_opacity * 100)}"
                  aria-label="Opacity">
-        </div>
+        </div>`}
 
         <!-- Selected areas list -->
         <div class="rdct-rects-wrap">

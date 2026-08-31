@@ -198,7 +198,7 @@ export function initCompressOptions(file) {
   if (file.size > MAX_COMPRESS_MB * 1024 * 1024) {
     container.innerHTML = `
       <div class="compress-info">
-        <span class="compress-info__name" title="${_esc(file.name)}">${_truncName(file.name)}</span>
+        <span class="compress-info__name" title="${_esc(file.name)}">${_esc(_truncName(file.name))}</span>
         <span class="compress-info__dot" aria-hidden="true">·</span>
         <span class="compress-info__meta">${fmtSize(file.size)}</span>
       </div>
@@ -482,7 +482,7 @@ function _render(file, scan) {
 
   container.innerHTML = `
     <div class="compress-info">
-      <span class="compress-info__name" title="${_esc(file.name)}">${_truncName(file.name)}</span>
+      <span class="compress-info__name" title="${_esc(file.name)}">${_esc(_truncName(file.name))}</span>
       <span class="compress-info__dot" aria-hidden="true">·</span>
       <span class="compress-info__meta">${fmtSize(file.size)}<span id="compressPageCount">${scan ? ` · ${scan.pageCount} page${scan.pageCount !== 1 ? 's' : ''}` : ''}</span></span>
       ${scan?.isEncrypted ? '<span class="compress-info__badge compress-info__badge--warn">🔒 encrypted</span>' : ''}
@@ -771,7 +771,7 @@ export function initCompressEmailOptions(file) {
   if (file.size > MAX_COMPRESS_MB * 1024 * 1024) {
     container.innerHTML = `
       <div class="compress-info">
-        <span class="compress-info__name" title="${_esc(file.name)}">${_truncName(file.name)}</span>
+        <span class="compress-info__name" title="${_esc(file.name)}">${_esc(_truncName(file.name))}</span>
         <span class="compress-info__dot" aria-hidden="true">·</span>
         <span class="compress-info__meta">${fmtSize(file.size)}</span>
       </div>
@@ -785,7 +785,7 @@ export function initCompressEmailOptions(file) {
 
   container.innerHTML = `
     <div class="compress-info">
-      <span class="compress-info__name" title="${_esc(file.name)}">${_truncName(file.name)}</span>
+      <span class="compress-info__name" title="${_esc(file.name)}">${_esc(_truncName(file.name))}</span>
       <span class="compress-info__dot" aria-hidden="true">·</span>
       <span class="compress-info__meta">${fmtSize(file.size)}</span>
     </div>

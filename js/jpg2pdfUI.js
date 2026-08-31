@@ -153,7 +153,7 @@ function _previewsHtml(files) {
         <div class="j2p-thumb" role="listitem" data-index="${i}" data-i="${i}" title="${_esc(f.name)}">
           <canvas class="j2p-thumb__canvas" data-index="${i}"
                   width="${_THUMB_RASTER_SIZE}" height="${_THUMB_RASTER_SIZE}" aria-hidden="true"></canvas>
-          <span class="j2p-thumb__name">${_truncName(f.name, 12)}</span>
+          <span class="j2p-thumb__name">${_esc(_truncName(f.name, 12))}</span>
           ${_exifAngles[i] !== 0 ? `<span class="j2p-thumb__badge" aria-label="${t('j2p_will_be_rotated')}">↺</span>` : ''}
         </div>
       `).join('')}
