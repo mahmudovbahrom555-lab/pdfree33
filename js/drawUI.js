@@ -64,6 +64,7 @@ let _selectedHighlightId = null;   // UI state only — selected highlight id; n
 let _selectedImageId     = null;   // UI state only — selected signature-image id; never stored as command
 let _lassoSelection       = [];    // UI state only — ids selected by the lasso tool; never stored as command
 let _pageTextCache = new Map(); // Map<pageNum, {x,y,w,h}[]> — canvas-space text rects for smart highlight
+let _scaledBitmapCache = new Map(); // id -> {w,h,canvas} — see _getScaledImageBitmap
 
 // DOM refs — filled by initDraw()
 let _pdfCanvas, _drawCanvas, _canvasLoading;
@@ -240,6 +241,7 @@ export function resetDraw() {
   _redoStack     = new Map();
   _pageSize      = new Map();
   _pageTextCache = new Map();
+  _scaledBitmapCache = new Map();
   _activeTool          = 'pen';
   _color               = '#e53e3e';
   _width               = 3;
@@ -739,6 +741,52 @@ function _contrastText(hex) {
   return (r * 299 + g * 587 + b * 114) / 1000 > 128 ? '#000000' : '#ffffff';
 }
 
+// A single ctx.drawImage() call scaling straight from the source bitmap
+// (up to SIGNATURE_MAX_EDGE=900px) down to a small placed/resized size loses
+// thin ink strokes — real report + reproduced live: shrink a signature to
+// roughly the size seen on an actual small-certificate placement (~7% of
+// page width) and the stroke breaks into disconnected dots/dashes in the
+// exported PDF. This is a well-known browser-canvas artifact, not a bug in
+// the background-removal alpha ramp: a single-pass resize sampling a source
+// pixel grid far coarser than the destination can skip over a stroke that's
+// only 1-2 source pixels wide between sample points. Mitigated the standard
+// way — progressive 2x-at-a-time downscaling (each halving step properly
+// box-averages 2x2 blocks) instead of one drastic jump straight to the
+// final small size. Only kicks in below a 0.5 scale factor; a normal-sized
+// placement (the common case) takes the original direct-draw fast path.
+// Cached per command id + target size (not on the resolved command object,
+// which _resolveScene recreates via spread on every redraw) since redraw
+// happens on nearly every canvas interaction, not just when this image
+// actually changes size.
+function _getScaledImageBitmap(cmd) {
+  const bitmap = cmd.bitmap;
+  const targetW = Math.max(1, Math.round(cmd.w));
+  const targetH = Math.max(1, Math.round(cmd.h));
+  const cached = _scaledBitmapCache.get(cmd.id);
+  if (cached && cached.w === targetW && cached.h === targetH) return cached.canvas;
+
+  const scale = Math.min(targetW / bitmap.width, targetH / bitmap.height);
+  if (scale >= 0.5) {
+    _scaledBitmapCache.delete(cmd.id);
+    return bitmap;
+  }
+
+  let src = bitmap, srcW = bitmap.width, srcH = bitmap.height;
+  while (srcW / 2 > targetW && srcH / 2 > targetH) {
+    const halfW = Math.max(1, Math.round(srcW / 2));
+    const halfH = Math.max(1, Math.round(srcH / 2));
+    const step = document.createElement('canvas');
+    step.width = halfW; step.height = halfH;
+    step.getContext('2d').drawImage(src, 0, 0, halfW, halfH);
+    src = step; srcW = halfW; srcH = halfH;
+  }
+  const final = document.createElement('canvas');
+  final.width = targetW; final.height = targetH;
+  final.getContext('2d').drawImage(src, 0, 0, targetW, targetH);
+  _scaledBitmapCache.set(cmd.id, { w: targetW, h: targetH, canvas: final });
+  return final;
+}
+
 // ── Command renderer ───────────────────────────────────────────
 // Exported so step 6 can replay commands on an OffscreenCanvas during PDF export.
 
@@ -933,7 +981,9 @@ export function renderCommand(ctx, cmd) {
       // A user-uploaded signature image (js/drawSignatureImage.js already
       // stripped its background if needed) — placed/moved/resized like any
       // other shape via cmd.x/y/w/h, but rendered as a bitmap, not a path.
-      if (cmd.bitmap) ctx.drawImage(cmd.bitmap, cmd.x, cmd.y, cmd.w, cmd.h);
+      // Goes through _getScaledImageBitmap rather than a direct drawImage —
+      // see its own header comment for why a small placement needs that.
+      if (cmd.bitmap) ctx.drawImage(_getScaledImageBitmap(cmd), cmd.x, cmd.y, cmd.w, cmd.h);
       break;
     }
     default: break;
