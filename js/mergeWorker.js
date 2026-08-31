@@ -371,12 +371,23 @@ async function handleMerge(files, names, removeWatermarks = false, createBookmar
     throw new Error(`All files failed to load: ${summary}`);
   }
 
-  if (createBookmarks && bookmarkEntries.length > 0) {
+  const hasBookmarks = createBookmarks && bookmarkEntries.length > 0;
+  if (hasBookmarks) {
     _addBookmarks(merged, bookmarkEntries);
   }
 
   self.postMessage({ type: 'progress', value: 95, label: 'Saving…' });
-  const bytes = await merged.save();
+  // useObjectStreams:false when bookmarks are present — real bug, confirmed by
+  // direct testing against this exact vendored pdf-lib build: its object-stream
+  // compaction (the default) silently DROPS manually-registered low-level dict
+  // objects that aren't part of pdf-lib's own tracked object model (Pages,
+  // Fonts, ...) — the /Outlines tree built by _addBookmarks vanished from the
+  // saved bytes entirely with useObjectStreams left at its default true, even
+  // though the in-memory catalog correctly pointed at it right before saving.
+  // Identical code, only this flag changed, produced a working /Outlines with
+  // false and a byte-for-byte absent one with true. No such issue for plain
+  // merges (no custom low-level objects involved), so only disabled here.
+  const bytes = await merged.save(hasBookmarks ? { useObjectStreams: false } : undefined);
 
   // ⚠️  TRANSFERABLE: bytes.buffer transferred to main thread — DETACHED after this line.
   self.postMessage(
