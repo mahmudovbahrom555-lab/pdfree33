@@ -127,6 +127,48 @@ Not every new tool needs this — most take PDF as their sole input (already cov
 reached only via search/tool-card-grid, not raw drag&drop onto the homepage. This applies
 specifically when the new tool's primary input is a raw format not already PDF or image.
 
+## Adding a new tool — UX/UI requirements checklist
+
+These are checkable rules, not vibes — each is grounded in a named source, and each was written
+because a real, measured bug slipped through without it (2026-08 sitewide UX audit, see memory).
+Apply all of these to any new tool's options panel before shipping.
+
+1. **Contrast — light AND dark theme, not just one.** WCAG AA: 4.5:1 for normal text, 3:1 for large
+   text (≥24px, or ≥18.66px bold). `--green` and `--red` intentionally have **no dark-mode
+   override** in `css/variables.css` (they're reused for borders/backgrounds elsewhere that must
+   not shift) — any new TEXT color must use the paired `-text` token (`--green-text`, not raw
+   `--green`) or it will measure ~3.2–3.5:1 in dark mode, below AA, every time. This exact mistake
+   shipped in ~26 places across the codebase (and all 14 locale files) before being caught by
+   testing with Playwright's `colorScheme: 'dark'` — a plain visual light-mode check will not catch
+   it.
+2. **Tap targets — 24px WCAG 2.5.8 minimum, 44px comfort (Fitts's Law).** A checkbox/radio's real
+   target is the wrapping `<label>`, not the raw `<input>` — check this even for small-but-visible
+   native inputs (13–17px), not just 0×0 hidden ones. Native `<input type=range>` thumbs are exempt
+   from box-based measurement (the browser renders a touch-friendly thumb regardless of a thin
+   CSS-specified track height). An inline link embedded in a sentence is WCAG-exempt from the
+   minimum; a standalone link on its own line is not.
+3. **Test BOTH mobile (~390px) and desktop (~1440px) viewports.** This site's CSS is desktop-first —
+   zero `min-width` media queries, ~30 `max-width` overrides. The base/unqualified styles ARE the
+   desktop styles; mobile is the override layer. A mobile-only check exercises the *overridden*
+   styles and never touches the base ones — real bugs have shipped that only existed at desktop
+   width.
+4. **Golden-path efficiency (Nielsen heuristic #7).** File-select + one click should produce a
+   working result whenever the tool's defaults can reasonably do so. 2 real user actions is the
+   sitewide norm; 3 is acceptable only for a genuinely required input (e.g. a password).
+5. **Sensible defaults, or a clear block — never a silent no-op (Nielsen #6 and #9).** If a tool
+   inherently needs user input before it can do anything (Redact needs an area drawn, Watermark
+   needs text entered), clicking process with nothing set must show a specific, actionable toast
+   (`showToast(...)`) — never fail silently, never a generic "Something went wrong."
+6. **Progress visibility on real work (Doherty Threshold — under ~400ms to first feedback).**
+   Anything that can take more than ~1–2s on a realistic large file needs a progress indicator that
+   visibly moves (not stuck at one value) and a working Cancel button. Reuse the existing
+   `setProgress()` / `#cancelBtn` mechanism — don't build a new one.
+7. **Reuse the shared UI contract — don't invent new element IDs (Jakob's Law).** `#mergeBtn` is the
+   one universal process button every tool binds to (even self-managed tools like OCR/Compare/
+   PDF-to-PDF/A bind their own handler to this same physical button); `#toast`/`showToast()` for
+   messages, `#successCard` for the result panel, `#cancelBtn` for cancellation. Consistency here is
+   also what keeps this project's own audit/test tooling working against new tools without changes.
+
 ## Architecture patterns
 - **Tool Registry**: `js/toolRegistry.js` + `js/toolRegistrations.js`
 - **Tool config**: `js/config.js` — TOOLS dict + i18n slugs + language config
