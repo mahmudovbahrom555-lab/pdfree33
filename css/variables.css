@@ -31,6 +31,13 @@
      inventing a new one. */
   --yellow-light: #fef8e7;
   --yellow-text:  #8a6d1a;
+  /* pdf2pdfaUI.js's fail-state icon + error banner were the only call sites
+     for these two — no variable was ever defined at all, both always fell
+     back to their hardcoded #c0392b/#fdecea regardless of theme (same class
+     of gap the yellow pair above was fixed for). Dark-mode pair added below
+     since the light fallback values weren't legible in dark mode. */
+  --red:          #c0392b;
+  --red-light:    #fdecea;
 
   /* Spacing */
   --radius:    14px;
@@ -59,11 +66,13 @@
   --border-strong: rgba(255, 255, 255, 0.18);
   --text:        #E4E4E0;
   --text2:       #97978F;
-  --text3:       #88887E;
+  --text3:       #94948A;  /* was #88887E — measured 4.24:1 against --surface2/--green-light dark, below WCAG AA's 4.5:1 (dark-theme contrast sweep) */
   --green-light: #192B20;
   --green-text:  var(--green-mid);
   --yellow-light: #713f12;
   --yellow-text:  #fde68a;
+  --red:          #E86A5C;
+  --red-light:    #3A1712;
   --shadow-lg:   0 8px 40px rgba(0, 0, 0, 0.50);
 }
 
@@ -77,11 +86,13 @@
     --border-strong: rgba(255, 255, 255, 0.18);
     --text:        #E4E4E0;
     --text2:       #97978F;
-    --text3:       #88887E;
+    --text3:       #94948A;  /* was #88887E — see :root[data-theme="dark"] above */
     --green-light: #192B20;
     --green-text:  var(--green-mid);
     --yellow-light: #713f12;
     --yellow-text:  #fde68a;
+    --red:          #E86A5C;
+    --red-light:    #3A1712;
     --shadow-lg:   0 8px 40px rgba(0, 0, 0, 0.50);
   }
 }

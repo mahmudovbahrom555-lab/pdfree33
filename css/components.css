@@ -4632,7 +4632,12 @@ body:not(.has-files) #heroChipsLabel { display: none !important; }
   text-align: center;
   font-size: 10px;
   font-weight: 600;
-  color: var(--text2);
+  /* Fixed, not var(--text2) — background is a hardcoded near-white chip
+     (deliberately theme-independent, since it sits over a page thumbnail
+     that's white regardless of site theme). var(--text2) turns light gray
+     in dark mode, which read at 2.94:1 against this white chip — below
+     WCAG AA's 4.5:1. */
+  color: #6B6B62;
   background: rgba(255,255,255,.9);
   padding: 2px 0 3px;
   line-height: 1.4;
@@ -4880,7 +4885,7 @@ body:not(.has-files) #heroChipsLabel { display: none !important; }
   font-weight: 700;
   color: var(--text);
 }
-.p2j-dpi-card--on .p2j-dpi-card__val { color: var(--green); }
+.p2j-dpi-card--on .p2j-dpi-card__val { color: var(--green-text); }
 
 .p2j-dpi-card__lbl {
   font-size: 11px;
@@ -4969,7 +4974,7 @@ body:not(.has-files) #heroChipsLabel { display: none !important; }
 .p2j-preset:hover { border-color: var(--green-mid); color: var(--green); }
 .p2j-preset--on {
   border-color: var(--green);
-  color: var(--green);
+  color: var(--green-text);
   background: var(--green-light);
   font-weight: 600;
 }

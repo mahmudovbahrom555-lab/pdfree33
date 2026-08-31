@@ -237,7 +237,7 @@ function _render() {
         <!-- Auto body -->
         <div id="pnAutoStartRow" style="display:${_autoStart ? 'flex' : 'none'};align-items:flex-start;justify-content:space-between;gap:8px;transition:opacity .15s">
           <div>
-            <span style="font-size:11px;font-weight:600;background:var(--green-light);color:var(--green);padding:2px 8px;border-radius:10px;display:inline-block;margin-bottom:4px">${t('pn_auto_tag')}</span>
+            <span style="font-size:11px;font-weight:600;background:var(--green-light);color:var(--green-text);padding:2px 8px;border-radius:10px;display:inline-block;margin-bottom:4px">${t('pn_auto_tag')}</span>
             <div id="pnAutoStartHint" style="font-size:22px;font-weight:700;color:var(--text);line-height:1.1;transition:opacity .15s">
               ${_formatNum(_startAt, _format)}
             </div>

@@ -252,7 +252,7 @@ function _errorHtml(message) {
 // state: 'ok' (green ✓) | 'warn' (amber ⚠, informational — not blocking
 // conversion) | 'fail' (red ✗, blocks conversion until the user acts).
 const _ROW_STYLE = {
-  ok:   { icon: '✓', color: 'var(--green,#2d7a4f)' },
+  ok:   { icon: '✓', color: 'var(--green-text,#2d7a4f)' },
   warn: { icon: '⚠', color: '#a17a00' },
   fail: { icon: '✗', color: 'var(--red,#c0392b)' },
 };
@@ -269,7 +269,7 @@ function _reportHtml(r) {
   const rows = [];
 
   const encryptionDetail = r.encrypted
-    ? `${esc(t('pdfa_row_encryption_detail'))} <a href="${esc(_unlockHref())}" style="color:var(--green,#2d7a4f);font-weight:600;">${esc(t('pdfa_unlock_link'))}</a>`
+    ? `${esc(t('pdfa_row_encryption_detail'))} <a href="${esc(_unlockHref())}" style="color:var(--green-text,#2d7a4f);font-weight:600;">${esc(t('pdfa_unlock_link'))}</a>`
     : null;
   rows.push(_row(r.encrypted ? 'fail' : 'ok', t('pdfa_row_encryption'), encryptionDetail));
 
@@ -300,7 +300,7 @@ function _reportHtml(r) {
   const level = r.unicodeOk ? 'PDF/A-2u' : 'PDF/A-2b';
   const verdict = !r.blocking
     ? `<div style="margin-top:10px;padding:10px 14px;background:var(--green-light);border:1px solid rgba(45,122,79,.18);
-        border-radius:10px;color:var(--green);font-size:13px;font-weight:600;">
+        border-radius:10px;color:var(--green-text);font-size:13px;font-weight:600;">
         ${esc(t('pdfa_compliant', { level }))}
       </div>
       <button id="pdf2pdfaConvertBtn" type="button" style="margin-top:10px;padding:10px 18px;background:var(--green,#2d7a4f);
@@ -344,7 +344,7 @@ function _reportHtml(r) {
       ${esc(t('pdfa_disclaimer'))}
     </p>
     <a href="https://verapdf.org/home/" target="_blank" rel="noopener noreferrer"
-       style="display:inline-block;margin-top:8px;font-size:11px;color:var(--green,#2d7a4f);font-weight:600;">
+       style="display:inline-block;margin-top:8px;font-size:11px;color:var(--green-text,#2d7a4f);font-weight:600;">
       ${esc(t('pdfa_verapdf_link'))}
     </a>
   </div>`;
