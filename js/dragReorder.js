@@ -53,7 +53,10 @@ export function bindDragReorder({ container, itemSelector, arrays, onReorder, is
 
 // ── Mouse / HTML5 drag-and-drop ─────────────────────────────
 
-let _dragFrom = null;
+let _dragFrom   = null;
+let _dragOverEl = null; // currently-highlighted drop target — mirrors the
+                         // touch path's own _touchOverEl tracking below, so
+                         // only ONE item shows 'drag-target' at a time
 
 function _onDragStart(el) {
   _dragFrom = +el.dataset.i;
@@ -62,13 +65,22 @@ function _onDragStart(el) {
 
 function _onDragOver(e, el) {
   e.preventDefault();
+  // Real bug found via code review: dragover fires repeatedly on whatever
+  // item is currently under the cursor, but nothing ever removed the class
+  // from items the drag had ALREADY passed over — dragging a file down
+  // through a list left every row it crossed highlighted green
+  // simultaneously (visible via .drag-target's border+background) until
+  // the whole gesture ended, instead of showing just the current target.
+  if (_dragOverEl && _dragOverEl !== el) _dragOverEl.classList.remove('drag-target');
   el.classList.add('drag-target');
+  _dragOverEl = el;
 }
 
 function _onDrop(e, el, { arrays, onReorder, isLocked }) {
   if (isLocked()) return;
   e.preventDefault();
   el.classList.remove('drag-target');
+  _dragOverEl = null;
   const to = +el.dataset.i;
   if (_dragFrom === null || _dragFrom === to) return;
 
@@ -84,6 +96,7 @@ function _onDrop(e, el, { arrays, onReorder, isLocked }) {
 }
 
 function _onDragEnd(container, itemSelector) {
+  _dragOverEl = null;
   container.querySelectorAll(itemSelector).forEach(el => {
     el.classList.remove('dragging', 'drag-target');
   });
