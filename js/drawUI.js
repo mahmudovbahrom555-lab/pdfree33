@@ -176,6 +176,7 @@ export async function loadPdfFile(file) {
   _editorShell.hidden        = false;
   id('preEditorArea').hidden = true;
   _downloadBtn.disabled = false;
+  _refreshToolbarScrollFades();
 
   await _renderPage(1);
 }
@@ -964,6 +965,31 @@ function _bindToolbar() {
   id('btnUndo').addEventListener('click',  _undo);
   id('btnRedo').addEventListener('click',  _redo);
   id('btnClear').addEventListener('click', _clearPage);
+
+  _bindToolbarScrollFade();
+}
+
+// Toggles .scroll-fade-left/-right on every toolbar row so the CSS fade hint
+// (see draw-on-pdf's mobile media query) only shows while there's actually
+// more content past that edge — a row that fits fully never shows either.
+// Re-run after a file loads (see _refreshToolbarScrollFades call below),
+// not just once at bind time: #editorShell is still `hidden` (zero width)
+// when _bindToolbar() first runs, so an initial scrollWidth/clientWidth
+// read here would always compute a stale "nothing to scroll" state.
+function _refreshToolbarScrollFades() {
+  document.querySelectorAll('.toolbar-row').forEach(row => {
+    const max = row.scrollWidth - row.clientWidth;
+    row.classList.toggle('scroll-fade-left',  row.scrollLeft > 2);
+    row.classList.toggle('scroll-fade-right', row.scrollLeft < max - 2);
+  });
+}
+
+function _bindToolbarScrollFade() {
+  document.querySelectorAll('.toolbar-row').forEach(row => {
+    row.addEventListener('scroll', _refreshToolbarScrollFades, { passive: true });
+  });
+  window.addEventListener('resize', _refreshToolbarScrollFades);
+  _refreshToolbarScrollFades();
 }
 
 // ── Navigation ─────────────────────────────────────────────────

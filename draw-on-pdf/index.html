@@ -532,6 +532,7 @@
       /* Rows become horizontal strips; overflow-x:auto is a safety net
          if a future tool or locale pushes the row over 360px */
       .toolbar-row {
+        position: relative;
         flex-direction: row;
         align-items: center;
         gap: 4px;
@@ -541,6 +542,25 @@
         scrollbar-width: none;
       }
       .toolbar-row::-webkit-scrollbar { display: none; }
+      /* Scroll-edge fade hints — shown only while a row actually has more
+         content past that edge (toggled via .scroll-fade-left/-right by
+         drawUI.js), so a row too wide for the screen doesn't silently end
+         with no indication more tools are reachable by swiping. */
+      .toolbar-row::before,
+      .toolbar-row::after {
+        content: '';
+        position: absolute;
+        top: 0; bottom: 0;
+        width: 20px;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity .15s ease;
+        z-index: 1;
+      }
+      .toolbar-row::before { left: 0;  background: linear-gradient(to right, var(--surface), transparent); }
+      .toolbar-row::after  { right: 0; background: linear-gradient(to left,  var(--surface), transparent); }
+      .toolbar-row.scroll-fade-left::before  { opacity: 1; }
+      .toolbar-row.scroll-fade-right::after  { opacity: 1; }
       .primary-tools   { justify-content: center; }
       .secondary-tools,
       .settings-tools  { justify-content: flex-start; }
