@@ -1083,6 +1083,7 @@ window.PDFREE_LOCALE = {
   draw_2d_context_unavailable: '2D 컨텍스트를 사용할 수 없습니다',
   draw_png_export_failed:      'PNG 내보내기 실패',
   draw_worker_error:           '워커 오류',
+  draw_signature_load_failed:  '이미지를 불러오지 못했습니다 — 다른 PNG나 JPG를 시도해 보세요.',
   draw_edit_text:              '텍스트 편집',
   draw_add_text:               '텍스트 추가',
   draw_save_btn:               '저장',

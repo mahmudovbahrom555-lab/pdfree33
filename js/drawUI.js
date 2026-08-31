@@ -61,6 +61,7 @@ let _color        = '#e53e3e';
 let _width        = 3;
 let _selectedId          = null;   // UI state only — selected text id; never stored as command
 let _selectedHighlightId = null;   // UI state only — selected highlight id; never stored as command
+let _selectedImageId     = null;   // UI state only — selected signature-image id; never stored as command
 let _lassoSelection       = [];    // UI state only — ids selected by the lasso tool; never stored as command
 let _pageTextCache = new Map(); // Map<pageNum, {x,y,w,h}[]> — canvas-space text rects for smart highlight
 
@@ -192,6 +193,8 @@ export function getPageCommandsRef()   { return _pageCommands; }
 export function getEffectiveCommands() { return _resolveScene(_pageCommands.get(_currentPage) ?? []); }
 export function setSelectedId(id)           { _selectedId = id; }
 export function setSelectedHighlightId(id)  { _selectedHighlightId = id; }
+export function setSelectedImageId(id)      { _selectedImageId = id; }
+export function getSelectedImageId()        { return _selectedImageId; }
 export function getLassoSelection()         { return _lassoSelection; }
 export function setLassoSelection(ids)      { _lassoSelection = ids; }
 export function getRedoStackRef()    { return _redoStack; }
@@ -240,6 +243,7 @@ export function resetDraw() {
   _color               = '#e53e3e';
   _width               = 3;
   _selectedHighlightId = null;
+  _selectedImageId     = null;
   _lassoSelection      = [];
 
   // Clear canvas bitmaps — setting width=0 resets the bitmap and hints GC to release memory
@@ -430,6 +434,8 @@ export function computeMovePatch(cmd, dx, dy) {
       return { points: cmd.points.map(([x, y]) => [x + dx, y + dy]) };
     case 'highlight':
       return { rects: (cmd.rects ?? [{ x: cmd.x, y: cmd.y, w: cmd.w, h: cmd.h }]).map(r => ({ ...r, x: r.x + dx, y: r.y + dy })) };
+    case 'image':
+      return { x: cmd.x + dx, y: cmd.y + dy };
     default:
       return {};
   }
@@ -487,9 +493,73 @@ function _commandBounds(cmd, ctx) {
       const h = size * 1.25 * lines.length;
       return { x0: cmd.x, y0: cmd.y, x1: cmd.x + w, y1: cmd.y + h };
     }
+    case 'image':
+      return { x0: cmd.x, y0: cmd.y, x1: cmd.x + cmd.w, y1: cmd.y + cmd.h };
     default:
       return null;
   }
+}
+
+// Signature-image resize + delete handles — bottom-right resize, top-left
+// delete (mobile has no Delete key, unlike the existing keyboard-only
+// delete for text/lasso selections). Both sized to this project's own
+// 24px WCAG 2.5.8 tap-target minimum (established for scan-document's crop
+// handles). Exported so drawPointer.js's hit-testing uses the EXACT same
+// geometry the render side draws, rather than a second, easy-to-drift copy.
+export const IMAGE_HANDLE_SIZE = 24;
+
+export function getImageHandleRect(cmd) {
+  const s = IMAGE_HANDLE_SIZE;
+  return { x: cmd.x + cmd.w - s / 2, y: cmd.y + cmd.h - s / 2, size: s };
+}
+
+export function getImageDeleteRect(cmd) {
+  const s = IMAGE_HANDLE_SIZE;
+  return { x: cmd.x - s / 2, y: cmd.y - s / 2, size: s };
+}
+
+// Dashed outline + resize/delete handles around a selected signature-image command.
+function _drawImageSelection(ctx, cmd) {
+  ctx.save();
+  ctx.strokeStyle = '#2D7A4F';
+  ctx.lineWidth   = 1.5;
+  ctx.setLineDash([5, 3]);
+  ctx.beginPath();
+  ctx.roundRect(cmd.x, cmd.y, cmd.w, cmd.h, 2);
+  ctx.stroke();
+  ctx.restore();
+
+  const h = getImageHandleRect(cmd);
+  ctx.save();
+  ctx.fillStyle   = '#2D7A4F';
+  ctx.strokeStyle = '#fff';
+  ctx.lineWidth   = 2;
+  ctx.beginPath();
+  ctx.roundRect(h.x, h.y, h.size, h.size, 4);
+  ctx.fill();
+  ctx.stroke();
+  ctx.restore();
+
+  const d = getImageDeleteRect(cmd);
+  ctx.save();
+  ctx.fillStyle   = '#e53e3e';
+  ctx.strokeStyle = '#fff';
+  ctx.lineWidth   = 2;
+  ctx.beginPath();
+  ctx.roundRect(d.x, d.y, d.size, d.size, 4);
+  ctx.fill();
+  ctx.stroke();
+  ctx.strokeStyle = '#fff';
+  ctx.lineWidth   = 1.5;
+  ctx.lineCap     = 'round';
+  const pad = d.size * 0.28;
+  ctx.beginPath();
+  ctx.moveTo(d.x + pad, d.y + pad);
+  ctx.lineTo(d.x + d.size - pad, d.y + d.size - pad);
+  ctx.moveTo(d.x + d.size - pad, d.y + pad);
+  ctx.lineTo(d.x + pad, d.y + d.size - pad);
+  ctx.stroke();
+  ctx.restore();
 }
 
 // Draws a dashed border around every rect of a selected highlight command.
@@ -570,6 +640,7 @@ function _redrawPage(overlay = null) {
   // During drag: skip the dragged command(s), re-rendered below at their new position
   const dragIds =
     (overlay?.type === 'text-drag' || overlay?.type === 'shape-drag') ? new Set([overlay.cmd.id]) :
+    (overlay?.type === 'image-drag' || overlay?.type === 'image-resize') ? new Set([overlay.cmd.id]) :
     overlay?.type === 'lasso-drag'                                    ? new Set(overlay.ids) :
     null;
   for (const cmd of cmds) {
@@ -584,6 +655,10 @@ function _redrawPage(overlay = null) {
   if (_selectedHighlightId) {
     const sel = cmds.find(c => c.id === _selectedHighlightId);
     if (sel) _drawHighlightSelectionOutline(ctx, sel);
+  }
+  if (_selectedImageId && overlay?.type !== 'image-drag' && overlay?.type !== 'image-resize') {
+    const sel = cmds.find(c => c.id === _selectedImageId);
+    if (sel) _drawImageSelection(ctx, sel);
   }
   if (_lassoSelection.length && overlay?.type !== 'lasso-drag') {
     const selCmds = cmds.filter(c => _lassoSelection.includes(c.id));
@@ -609,10 +684,48 @@ function _redrawPage(overlay = null) {
       ctx.setLineDash([4, 3]);
       ctx.strokeRect(overlay.x, overlay.y, overlay.w, overlay.h);
       ctx.restore();
+    } else if (overlay.type === 'image-drag') {
+      const { cmd, dx = 0, dy = 0, guides } = overlay;
+      const moved = { ...cmd, x: cmd.x + dx, y: cmd.y + dy };
+      renderCommand(ctx, moved);
+      _drawImageSelection(ctx, moved);
+      if (guides) _drawSmartGuides(ctx, guides);
+    } else if (overlay.type === 'image-resize') {
+      const { cmd, w, h, guides } = overlay;
+      const resized = { ...cmd, w, h };
+      renderCommand(ctx, resized);
+      _drawImageSelection(ctx, resized);
+      if (guides) _drawSmartGuides(ctx, guides);
     } else {
       renderCommand(ctx, overlay);
     }
   }
+}
+
+// Smart-guide lines shown while dragging/resizing a signature image — a
+// thin line appears when the moved/resized object's edge or center lines
+// up with the page's own center or another layer's bounds (see
+// js/drawPointer.js's _computeSmartGuides for the geometry). `guides` is
+// { h: number[] (canvas Y positions), v: number[] (canvas X positions) }.
+function _drawSmartGuides(ctx, guides) {
+  if (!guides.h?.length && !guides.v?.length) return;
+  ctx.save();
+  ctx.strokeStyle = '#e53e3e';
+  ctx.lineWidth   = 1;
+  ctx.setLineDash([4, 4]);
+  for (const y of guides.h ?? []) {
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(ctx.canvas.width, y);
+    ctx.stroke();
+  }
+  for (const x of guides.v ?? []) {
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, ctx.canvas.height);
+    ctx.stroke();
+  }
+  ctx.restore();
 }
 
 // Returns black or white depending on background luminance (W3C approximation).
@@ -813,6 +926,13 @@ export function renderCommand(ctx, cmd) {
         ctx.lineTo(cmd.points[i][0], cmd.points[i][1]);
       }
       ctx.stroke();
+      break;
+    }
+    case 'image': {
+      // A user-uploaded signature image (js/drawSignatureImage.js already
+      // stripped its background if needed) — placed/moved/resized like any
+      // other shape via cmd.x/y/w/h, but rendered as a bitmap, not a path.
+      if (cmd.bitmap) ctx.drawImage(cmd.bitmap, cmd.x, cmd.y, cmd.w, cmd.h);
       break;
     }
     default: break;

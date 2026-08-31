@@ -1082,6 +1082,7 @@ window.PDFREE_LOCALE = {
   draw_2d_context_unavailable: 'Konteks 2D tidak tersedia',
   draw_png_export_failed:      'Ekspor PNG gagal',
   draw_worker_error:           'Kesalahan worker',
+  draw_signature_load_failed:  'Gagal memuat gambar itu — coba PNG atau JPG lain.',
   draw_edit_text:              'Edit teks',
   draw_add_text:               'Tambah teks',
   draw_save_btn:               'Simpan',

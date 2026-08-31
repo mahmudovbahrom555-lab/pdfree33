@@ -1082,6 +1082,7 @@ window.PDFREE_LOCALE = {
   draw_2d_context_unavailable: 'Không có ngữ cảnh 2D',
   draw_png_export_failed:      'Xuất PNG thất bại',
   draw_worker_error:           'Lỗi worker',
+  draw_signature_load_failed:  'Không thể tải hình ảnh đó — hãy thử một tệp PNG hoặc JPG khác.',
   draw_edit_text:              'Chỉnh sửa văn bản',
   draw_add_text:               'Thêm văn bản',
   draw_save_btn:               'Lưu',

@@ -1082,6 +1082,7 @@ window.PDFREE_LOCALE = {
   draw_2d_context_unavailable: '2D-контекст недоступен',
   draw_png_export_failed:      'Ошибка экспорта PNG',
   draw_worker_error:           'Ошибка воркера',
+  draw_signature_load_failed:  'Не удалось загрузить изображение — попробуйте другой PNG или JPG.',
   draw_edit_text:              'Изменить текст',
   draw_add_text:               'Добавить текст',
   draw_save_btn:               'Сохранить',

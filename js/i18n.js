@@ -1111,6 +1111,7 @@ export const EN = {
   draw_2d_context_unavailable: '2D context unavailable',
   draw_png_export_failed:      'PNG export failed',
   draw_worker_error:           'Worker error',
+  draw_signature_load_failed:  "Couldn't load that image — try a different PNG or JPG.",
   draw_edit_text:              'Edit text',
   draw_add_text:               'Add text',
   draw_save_btn:               'Save',

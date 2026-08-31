@@ -1081,6 +1081,7 @@ window.PDFREE_LOCALE = {
   draw_2d_context_unavailable: 'Contesto 2D non disponibile',
   draw_png_export_failed:      'Esportazione PNG non riuscita',
   draw_worker_error:           'Errore del worker',
+  draw_signature_load_failed:  'Impossibile caricare questa immagine — prova un altro PNG o JPG.',
   draw_edit_text:              'Modifica testo',
   draw_add_text:               'Aggiungi testo',
   draw_save_btn:               'Salva',

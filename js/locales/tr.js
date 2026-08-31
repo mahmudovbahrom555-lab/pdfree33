@@ -1081,6 +1081,7 @@ window.PDFREE_LOCALE = {
   draw_2d_context_unavailable: '2D bağlam kullanılamıyor',
   draw_png_export_failed:      'PNG dışa aktarma başarısız',
   draw_worker_error:           'Worker hatası',
+  draw_signature_load_failed:  'Bu görsel yüklenemedi — başka bir PNG veya JPG deneyin.',
   draw_edit_text:              'Metni düzenle',
   draw_add_text:               'Metin ekle',
   draw_save_btn:               'Kaydet',

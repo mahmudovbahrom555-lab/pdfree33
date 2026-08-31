@@ -25,10 +25,13 @@ import {
   // actions
   clearRedoForCurrentPage, redrawPage, setColor, activatePrevTool, setSelectedId, setSelectedHighlightId, undo, redo,
   setLassoSelection, computeMovePatch, computeGroupBounds,
+  setSelectedImageId, getSelectedImageId, getImageHandleRect, getImageDeleteRect,
   // constants
   HIGHLIGHT_OPACITY, MARKER_OPACITY,
 } from './drawUI.js';
 import { t } from './i18n.js';
+import { loadSignatureImage } from './drawSignatureImage.js';
+import { showToast } from './ui.js';
 
 let _current = null;   // { type, ...fields } | null — command in progress
 let _rafId   = 0;      // pending requestAnimationFrame id (0 = none)
@@ -96,6 +99,7 @@ export function initPointer() {
   _initSelToolbar();
   _initHlToolbar();
   _initMobileSheet();
+  initImageTool();
 
   document.addEventListener('keydown', (e) => {
     const tag = document.activeElement?.tagName;
@@ -108,14 +112,16 @@ export function initPointer() {
     if (mod && key === 'z')               { e.preventDefault(); undo(); return; }
     if (mod && key === 'y')               { e.preventDefault(); redo(); return; }
 
-    if (!_selectedTextId && !_lassoIds.length) return;
+    if (!_selectedTextId && !_lassoIds.length && getSelectedImageId() == null) return;
     if (key === 'delete' || key === 'backspace') {
       e.preventDefault();
-      if (_selectedTextId) _deleteSelected();
-      else                 _deleteLassoSelection();
+      if (_selectedTextId)               _deleteSelected();
+      else if (_lassoIds.length)         _deleteLassoSelection();
+      else if (getSelectedImageId() != null) _deleteSelectedImage();
     } else if (key === 'escape') {
       if (_selectedTextId) _dismissSelection();
       if (_lassoIds.length) _dismissLassoSelection();
+      if (getSelectedImageId() != null) { setSelectedImageId(null); redrawPage(); }
     }
   });
 }
@@ -526,6 +532,42 @@ function _onDown(e) {
   if (_selectedTextId)      _dismissSelection();
   if (_selectedHighlightId) _dismissHighlightSelection();
   if (_lassoIds.length && tool !== 'lasso') _dismissLassoSelection();
+  if (getSelectedImageId() && tool !== 'image') { setSelectedImageId(null); redrawPage(); }
+
+  // Signature image: no draw-via-drag gesture (placement happens via the
+  // toolbar's file picker, see initImageTool) — a tap here only interacts
+  // with an ALREADY-placed image: its resize handle, its delete handle, its
+  // body (drag to move), or empty space (deselect).
+  if (tool === 'image') {
+    const selId = getSelectedImageId();
+    const selCmd = selId != null ? getEffectiveCommands().find(c => c.id === selId && c.type === 'image') : null;
+    if (selCmd) {
+      const del = getImageDeleteRect(selCmd);
+      if (x >= del.x && x <= del.x + del.size && y >= del.y && y <= del.y + del.size) {
+        _deleteSelectedImage();
+        return;
+      }
+      const handle = getImageHandleRect(selCmd);
+      if (x >= handle.x && x <= handle.x + handle.size && y >= handle.y && y <= handle.y + handle.size) {
+        _current = { type: 'image-resize', cmd: selCmd, startX: x, w: selCmd.w, h: selCmd.h,
+                     aspect: selCmd.w / selCmd.h };
+        return;
+      }
+      if (x >= selCmd.x && x <= selCmd.x + selCmd.w && y >= selCmd.y && y <= selCmd.y + selCmd.h) {
+        _current = { type: 'image-drag', cmd: selCmd, startX: x, startY: y, dx: 0, dy: 0 };
+        return;
+      }
+    }
+    const hit = _hitTestImage(x, y);
+    if (hit) {
+      setSelectedImageId(hit.id);
+      _current = { type: 'image-drag', cmd: hit, startX: x, startY: y, dx: 0, dy: 0 };
+      redrawPage();
+      return;
+    }
+    if (selId != null) { setSelectedImageId(null); redrawPage(); }
+    return;
+  }
 
   if (tool === 'lasso') {
     // Tap inside the current selection's bounding box → drag the whole group.
@@ -695,6 +737,25 @@ function _onMove(e) {
   } else if (type === 'lasso-drag') {
     _current.dx = x - _current.startX;
     _current.dy = y - _current.startY;
+  } else if (type === 'image-drag') {
+    _current.dx = x - _current.startX;
+    _current.dy = y - _current.startY;
+    const { cmd, dx, dy } = _current;
+    _current.guides = _guidesFor(
+      { x0: cmd.x + dx, y0: cmd.y + dy, x1: cmd.x + cmd.w + dx, y1: cmd.y + cmd.h + dy },
+      cmd.id
+    );
+  } else if (type === 'image-resize') {
+    const dx = x - _current.startX;
+    const newW = Math.max(24, _current.cmd.w + dx);
+    const newH = Math.max(24, newW / _current.aspect);
+    _current.w = newW;
+    _current.h = newH;
+    const { cmd } = _current;
+    _current.guides = _guidesFor(
+      { x0: cmd.x, y0: cmd.y, x1: cmd.x + newW, y1: cmd.y + newH },
+      cmd.id
+    );
   }
 
   // RAF batching: один render pass на animation frame, не на каждый pointermove
@@ -775,6 +836,33 @@ function _onUp(e) {
     const polygon = _current.points;
     _lassoIds = polygon.length >= 3 ? _lassoSelect(polygon) : [];
     setLassoSelection(_lassoIds);
+    _current = null;
+    redrawPage();
+    return;
+  }
+
+  // Signature image drag/resize: commit the FULL absolute x/y/w/h (not just
+  // the changed fields) in one 'move' override — the existing override
+  // system replaces, not merges, a target's patch on each new 'move', so a
+  // later resize-only commit would otherwise silently discard an earlier
+  // move's position (and vice versa) if either commit only carried its own
+  // changed fields.
+  if (_current.type === 'image-drag') {
+    const { cmd, dx, dy } = _current;
+    if (Math.hypot(dx, dy) >= 3) {
+      clearRedoForCurrentPage();
+      _pushCommand({ type: 'move', targetId: cmd.id, x: cmd.x + dx, y: cmd.y + dy, w: cmd.w, h: cmd.h });
+    }
+    _current = null;
+    redrawPage();
+    return;
+  }
+  if (_current.type === 'image-resize') {
+    const { cmd, w, h } = _current;
+    if (Math.abs(w - cmd.w) >= 2 || Math.abs(h - cmd.h) >= 2) {
+      clearRedoForCurrentPage();
+      _pushCommand({ type: 'move', targetId: cmd.id, x: cmd.x, y: cmd.y, w, h });
+    }
     _current = null;
     redrawPage();
     return;
@@ -939,6 +1027,133 @@ function _lassoSelect(polygon) {
 // ── Arrow hit-test and geometry ───────────────────────────────
 // Returns the topmost numbered arrow whose line or start-circle contains (x, y).
 // Only arrows with an id are returned — required for shape-drag move command.
+// ── Signature image (upload, move, resize, smart guides) ────────
+//
+// Unlike every other tool here, 'image' doesn't create its content via a
+// canvas drag gesture — clicking its toolbar button opens a file picker
+// (see initImageTool below); the uploaded image is placed immediately,
+// selected, and can then be dragged (body) or resized (bottom-right
+// handle) while the 'image' tool stays active, same "hit-test an existing
+// shape while its own tool is active" pattern _hitTestArrow already uses
+// for dragging an existing arrow.
+
+const SMART_GUIDE_SNAP = 6; // px — how close an edge/center must be to show a guide line
+
+// Pure geometry (Node-tested, see tests/drawPointer.test.js): compares a
+// dragged/resized object's bounds against every other layer's bounds (plus
+// the page's own center) and returns which guide LINES should be shown —
+// one per axis where something lines up within SMART_GUIDE_SNAP. Bounds
+// shape matches js/drawUI.js's own _commandBounds/computeGroupBounds
+// contract ({x0,y0,x1,y1}), not {x,y,w,h}, so callers can feed either
+// straight through computeGroupBounds([cmd], ctx) without conversion.
+export function computeSmartGuides(dragged, others, pageW, pageH) {
+  const dCenterX = (dragged.x0 + dragged.x1) / 2;
+  const dCenterY = (dragged.y0 + dragged.y1) / 2;
+
+  const hLines = new Set();
+  const vLines = new Set();
+
+  const pageCenterX = pageW / 2, pageCenterY = pageH / 2;
+  if (Math.abs(dCenterX - pageCenterX) <= SMART_GUIDE_SNAP) vLines.add(pageCenterX);
+  if (Math.abs(dCenterY - pageCenterY) <= SMART_GUIDE_SNAP) hLines.add(pageCenterY);
+
+  for (const o of others) {
+    const oCenterX = (o.x0 + o.x1) / 2, oCenterY = (o.y0 + o.y1) / 2;
+    const vCandidates = [[dCenterX, oCenterX], [dragged.x0, o.x0], [dragged.x1, o.x1], [dragged.x0, o.x1], [dragged.x1, o.x0]];
+    for (const [dv, ov] of vCandidates) {
+      if (Math.abs(dv - ov) <= SMART_GUIDE_SNAP) vLines.add(ov);
+    }
+    const hCandidates = [[dCenterY, oCenterY], [dragged.y0, o.y0], [dragged.y1, o.y1], [dragged.y0, o.y1], [dragged.y1, o.y0]];
+    for (const [dv, ov] of hCandidates) {
+      if (Math.abs(dv - ov) <= SMART_GUIDE_SNAP) hLines.add(ov);
+    }
+  }
+  return { h: [...hLines], v: [...vLines] };
+}
+
+function _hitTestImage(x, y) {
+  const cmds = getEffectiveCommands();
+  for (let i = cmds.length - 1; i >= 0; i--) {
+    const c = cmds[i];
+    if (c.type !== 'image' || c.id == null) continue;
+    if (x >= c.x && x <= c.x + c.w && y >= c.y && y <= c.y + c.h) return c;
+  }
+  return null;
+}
+
+// Bounds of every OTHER command on the current page (any type, not just
+// images) — signature placement should be able to align against a text
+// label or another shape, not just other images. Reuses computeGroupBounds
+// per-command (a "group of 1") instead of a second bounds implementation.
+function _otherLayerBounds(excludeId) {
+  const ctx = getDrawCanvas().getContext('2d');
+  return getEffectiveCommands()
+    .filter(c => c.id !== excludeId)
+    .map(c => computeGroupBounds([c], ctx))
+    .filter(Boolean);
+}
+
+function _guidesFor(bounds, excludeId) {
+  const canvas = getDrawCanvas();
+  return computeSmartGuides(bounds, _otherLayerBounds(excludeId), canvas.width, canvas.height);
+}
+
+/**
+ * Wires the toolbar's image button + hidden file input. Call once from
+ * initPointer(). Separate from the generic _bindToolbar() tool-select
+ * listener in drawUI.js (which already fires on the same click, via the
+ * button's own data-draw-tool="image" attribute) — this only adds the
+ * file-picker trigger + placement, doesn't duplicate tool-switching.
+ */
+export function initImageTool() {
+  const btn   = document.getElementById('btnImage');
+  const input = document.getElementById('signatureImageInput');
+  if (!btn || !input) return;
+
+  btn.addEventListener('click', () => input.click());
+  input.addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    input.value = ''; // allow re-selecting the same file next time
+    if (!file) return;
+    await _placeSignatureImage(file);
+  });
+}
+
+async function _placeSignatureImage(file) {
+  let bitmap;
+  try {
+    bitmap = await loadSignatureImage(file);
+  } catch {
+    showToast(t('draw_signature_load_failed'));
+    return;
+  }
+  const pageCanvas = getDrawCanvas();
+  const pageW = pageCanvas.width, pageH = pageCanvas.height;
+
+  // Default placement: centered, sized to fit comfortably within the page
+  // (35% of width / 20% of height) without needing an immediate resize for
+  // the common case, preserving the source's own aspect ratio.
+  const maxW = pageW * 0.35, maxH = pageH * 0.2;
+  const scale = Math.min(1, maxW / bitmap.width, maxH / bitmap.height);
+  const w = bitmap.width * scale, h = bitmap.height * scale;
+  const x = (pageW - w) / 2, y = (pageH - h) / 2;
+
+  clearRedoForCurrentPage();
+  const cmd = { type: 'image', id: ++_cmdId, x, y, w, h, bitmap };
+  _pushCommand(cmd);
+  setSelectedImageId(cmd.id);
+  redrawPage();
+}
+
+function _deleteSelectedImage() {
+  const targetId = getSelectedImageId();
+  if (targetId == null) return;
+  clearRedoForCurrentPage();
+  _pushCommand({ type: 'delete', targetId });
+  setSelectedImageId(null);
+  redrawPage();
+}
+
 function _hitTestArrow(x, y) {
   const cmds = getEffectiveCommands();
   const pad  = _isTouchDevice() ? 20 : 10;
