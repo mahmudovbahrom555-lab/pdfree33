@@ -194,7 +194,15 @@ function _bindMergeExtras() {
   });
   document.querySelectorAll(`input[name="${BLANK_PAGES_GROUP_ID}"]`).forEach(input => {
     input.addEventListener('change', e => {
-      if (e.target.checked) _insertBlankPages = e.target.value;
+      if (!e.target.checked) return;
+      _insertBlankPages = e.target.value;
+      // chip()'s active class is only set at initial-render time (see uiComponents.js) —
+      // every other chipGroup consumer (pageNumUI, jpg2pdfUI, resizeUI, …) re-toggles it
+      // here on change; this one didn't, so a real click silently updated the selection
+      // (and what actually merges) while the UI kept showing "None" highlighted — a real
+      // user reported clicking Always/Odd "did nothing" for exactly this reason.
+      document.querySelectorAll(`[data-name="${BLANK_PAGES_GROUP_ID}"]`).forEach(el =>
+        el.classList.toggle('j2p-chip--active', el.dataset.value === _insertBlankPages));
     });
   });
 }
