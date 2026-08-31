@@ -324,8 +324,8 @@ function _reportHtml(r) {
         <p style="margin:0 0 10px;font-size:12px;color:var(--text2);line-height:1.5;">
           ${esc(t('pdfa_substitute_offer', { fonts: r.substitutableFonts.join(', ') }))}
         </p>
-        <label style="display:flex;gap:8px;align-items:flex-start;font-size:13px;color:var(--text);cursor:pointer;">
-          <input type="checkbox" id="pdf2pdfaSubstituteCheck" style="margin-top:2px;">
+        <label style="display:flex;gap:8px;align-items:center;min-height:24px;font-size:13px;color:var(--text);cursor:pointer;">
+          <input type="checkbox" id="pdf2pdfaSubstituteCheck">
           <span>${esc(t('pdfa_substitute_checkbox'))}</span>
         </label>
         <button id="pdf2pdfaSubstituteBtn" type="button" disabled style="margin-top:10px;padding:10px 18px;background:var(--green,#2d7a4f);
@@ -344,7 +344,7 @@ function _reportHtml(r) {
       ${esc(t('pdfa_disclaimer'))}
     </p>
     <a href="https://verapdf.org/home/" target="_blank" rel="noopener noreferrer"
-       style="display:inline-block;margin-top:8px;font-size:11px;color:var(--green-text,#2d7a4f);font-weight:600;">
+       style="display:inline-flex;align-items:center;min-height:24px;margin-top:8px;font-size:11px;color:var(--green-text,#2d7a4f);font-weight:600;">
       ${esc(t('pdfa_verapdf_link'))}
     </a>
   </div>`;
