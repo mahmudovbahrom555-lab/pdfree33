@@ -34,7 +34,7 @@
     "LICENSE"
   ],
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "scripts": {
     "prepublishOnly": "node scripts/copy-core.mjs",
@@ -42,6 +42,6 @@
     "test": "node --test"
   },
   "dependencies": {
-    "pdfjs-dist": "5.4.149"
+    "pdfjs-dist": "5.0.375"
   }
 }

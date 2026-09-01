@@ -25,16 +25,14 @@ npm install @pdfree/pdf2md-core --omit=optional
 ```
 
 `--omit=optional` is recommended, not just tolerated: `pdfjs-dist` lists
-`canvas` as an optional dependency for rendering features this package
-doesn't use in v1 (see [Limitations](#limitations-v1--read-this-before-relying-on-it)
-below) — installing it pulls in `tar`/`@mapbox/node-pre-gyp` as its own
-install-time tooling, which `npm audit` currently flags (unrelated to
-`canvas` itself; those packages are never imported or executed by anything
-this package does). Plain `npm install` still works — canvas's build just
-fails harmlessly and pdf.js logs a couple of startup warnings about it —
-`--omit=optional` just skips attempting it.
+`@napi-rs/canvas` as an optional dependency for rendering features this
+package doesn't use in v1 (see [Limitations](#limitations-v1--read-this-before-relying-on-it)
+below). Plain `npm install` still works — if a prebuilt binary for your
+platform isn't available, the install just fails harmlessly and pdf.js
+logs a couple of startup warnings about it — `--omit=optional` just skips
+attempting it entirely.
 
-Requires Node 18+.
+Requires Node 20+ (pdfjs-dist 5.x's own floor).
 
 ## Usage — library
 

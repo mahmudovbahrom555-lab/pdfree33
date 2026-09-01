@@ -113,7 +113,7 @@ export function browserCanvasFactory(w, h) {
 // numbers" — pdf.js's own internal enum, not a stable public contract).
 // Verified against pdfjs-dist 3.11.174 (the version js/pdf2jpgUI.js's
 // PDFJS_VERSION loads from CDN for this browser tool — unchanged) AND
-// re-verified against pdfjs-dist@5.4.149 (what packages/pdf2md-core's npm
+// re-verified against pdfjs-dist@5.0.375 (what packages/pdf2md-core's npm
 // package bumped its own separate Node dependency to, for CVE-2024-4367 —
 // this shared file gets copied into that package's src/core/ by
 // scripts/copy-core.mjs, so both consumers' pdf.js versions matter here).

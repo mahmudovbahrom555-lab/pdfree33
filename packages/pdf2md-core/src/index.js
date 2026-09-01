@@ -22,21 +22,41 @@
 //  unaffected — none of that code path needs a canvas.
 // ============================================================
 
-// pdfjs-dist bumped from 3.11.174 to 5.4.149 as part of the CVE-2024-4367
+// pdfjs-dist bumped from 3.11.174 to 5.0.375 as part of the CVE-2024-4367
 // clean fix — see the isEvalSupported comment below, which is now defense-
-// in-depth rather than the only mitigation. NOT 6.x: 6.3.289 (the actual
-// latest at the time of this bump) requires Node >=22.13.0 || >=24 and
-// uses Promise.withResolvers() internally, which doesn't exist on Node 20
-// — confirmed by actually running this package's test suite under a real
-// downloaded Node v20.20.2 binary (matching .github/workflows/deploy.yml's
-// pinned CI version exactly), which is hard-pinned to Node 20 for its own
-// unrelated reason (wrangler's own Node-version floor — see that workflow
-// file's comment on the wrangler 4.86.0 pin). It failed immediately with
-// "Promise.withResolvers is not a function". 5.4.149 is the newest release
-// whose own package.json still declares Node 20 support (`>=20.16.0 ||
-// >=22.3.0`) — re-confirmed against that same real Node 20.20.2 binary,
-// all 13 of this package's tests pass. Re-check this ceiling on any future
-// pdfjs-dist bump; don't assume the latest release stays Node-20-compatible.
+// in-depth rather than the only mitigation. This exact version was chosen
+// only after two rejected candidates, both confirmed broken by actually
+// running this package's test suite under a real downloaded Node v20.20.2
+// binary (matching .github/workflows/deploy.yml's pinned CI version
+// exactly — that workflow is hard-pinned to Node 20 for an unrelated
+// reason, wrangler's own Node-version floor; see that workflow file's
+// comment on the wrangler 4.86.0 pin) with the SAME `--omit=optional` flag
+// CI actually installs with (a first attempt using a plain local
+// `npm install` silently pulled in the optional `@napi-rs/canvas` package
+// and produced a false-pass that didn't reproduce CI at all — don't skip
+// the exact install flags when reproducing a CI-only failure):
+//   - 6.3.289 (latest at the time) requires Node >=22.13.0 || >=24 and
+//     uses Promise.withResolvers() internally, undefined on Node 20 —
+//     "Promise.withResolvers is not a function" at getDocument() call time.
+//   - 5.4.149 (newest release still declaring Node 20 support in its own
+//     engines field) crashes at MODULE LOAD, before any of this package's
+//     code even runs: pdf.js's own legacy Node build unconditionally runs
+//     `new DOMMatrix()` at the top level of pdf.mjs (not lazily, not gated
+//     behind whether a canvas is actually needed) to build a scale-matrix
+//     constant, and without `@napi-rs/canvas` installed (this package
+//     deliberately omits it — no image/canvas support in v1, see the file
+//     header above) nothing polyfills the DOMMatrix global on Node — so it
+//     throws "DOMMatrix is not defined" immediately on import, for every
+//     single call this package makes, not just image extraction. Verified
+//     by bisecting real published pdfjs-dist versions (5.0.375 through
+//     5.4.149) against this exact Node 20.20.2 binary: the eager
+//     `new DOMMatrix()` was introduced somewhere between 5.0.375 and
+//     5.1.91. 5.0.375 itself doesn't have that code path at all yet, and
+//     is the last version before it appears — all 13 of this package's
+//     tests pass against it, with the exact `--omit=optional` install CI
+//     uses. Re-run this same bisection on any future pdfjs-dist bump —
+//     this specific regression window is version-specific, not a one-time
+//     fluke, and the newest release is not guaranteed to still avoid it.
 //
 // Separately, this version restructured pdf.js's legacy Node build from a
 // webpack-bundled CommonJS file (pdf.js) to a genuine ESM file (pdf.mjs).
@@ -88,7 +108,7 @@ export async function pdfToMarkdown(input, { signal } = {}) {
     // which is exactly what a short-lived CLI/script process wants (no
     // benefit to a separate thread for a single one-shot conversion).
     //
-    // isEvalSupported: false — pdfjs-dist was bumped to 5.4.149 specifically
+    // isEvalSupported: false — pdfjs-dist was bumped to 5.0.375 specifically
     // to get a real fix for CVE-2024-4367 (GHSA-wgrm-67xf-hhpq, CVSS 8.8:
     // a malicious PDF could trigger arbitrary JS execution via pdf.js's own
     // `eval` use; GitHub's advisory lists 4.2.67 as the first patched
