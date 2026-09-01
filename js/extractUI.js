@@ -70,7 +70,7 @@ export async function initExtractOptions(file, defaultMode = 'single') {
     if (myGen !== _renderGen) return;
 
     const buf = await file.arrayBuffer();
-    _pdfDoc = await window.pdfjsLib.getDocument({
+    _pdfDoc = await window.pdfjsLib.getDocument({ isEvalSupported: false,
       data: new Uint8Array(buf),
       verbosity: 0,
       disableJavaScript: true,

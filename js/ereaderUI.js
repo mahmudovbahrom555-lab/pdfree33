@@ -75,7 +75,7 @@ export async function initEreaderOptions(file) {
   try {
     await loadPdfJs();
     const buf = await file.arrayBuffer();
-    _pdfJsDoc = await window.pdfjsLib.getDocument({
+    _pdfJsDoc = await window.pdfjsLib.getDocument({ isEvalSupported: false,
       data: new Uint8Array(buf), disableWorker: true,
     }).promise;
 

@@ -292,7 +292,7 @@ export async function initRedactOptions(file) {
     if (gen !== _initGen) return;
     const buf = await file.arrayBuffer();
     if (gen !== _initGen) return;
-    const newDoc = await window.pdfjsLib.getDocument({
+    const newDoc = await window.pdfjsLib.getDocument({ isEvalSupported: false,
       data: new Uint8Array(buf),
       disableWorker: true,
     }).promise;

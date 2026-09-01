@@ -177,7 +177,7 @@ export function hideRotateOptions() {
 // blob-URL access error on localhost and file:// origins.
 async function _initPdfJsDoc(buf) {
   await loadPdfJs(); // shared with pdf2jpgUI — no double CDN hit if already loaded
-  _pdfJsDoc = await window.pdfjsLib.getDocument({
+  _pdfJsDoc = await window.pdfjsLib.getDocument({ isEvalSupported: false,
     data:          new Uint8Array(buf.slice(0)),
     disableWorker: true,
   }).promise;

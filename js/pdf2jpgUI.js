@@ -61,7 +61,7 @@ export async function initPdf2JpgOptions(file) {
 
     _setMsg(t('p2j_parsing_pdf'));
     _pdfDoc?.destroy();
-    _pdfDoc = await window.pdfjsLib.getDocument({
+    _pdfDoc = await window.pdfjsLib.getDocument({ isEvalSupported: false,
       data:              new Uint8Array(rawBuf),
       useSystemFonts:    false,
       verbosity:         0,

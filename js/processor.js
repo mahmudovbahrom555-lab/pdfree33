@@ -651,7 +651,7 @@ async function _runGlossary(filesSnapshot, { dictionary = [] } = {}) {
     // "ArrayBuffer at index 0 is already detached"). Give pdf.js its own
     // independent copy so `buffer` itself stays valid for the transfer
     // to glossaryWorker.js afterwards.
-    const pdfJsDoc = await window.pdfjsLib.getDocument({ data: new Uint8Array(buffer.slice(0)) }).promise;
+    const pdfJsDoc = await window.pdfjsLib.getDocument({ isEvalSupported: false, data: new Uint8Array(buffer.slice(0)) }).promise;
     const pageCount = pdfJsDoc.numPages;
     if (pageCount === 0) throw new Error('PDF has no pages');
 
@@ -1039,7 +1039,7 @@ async function _runCleanScan(filesSnapshot, { mode = 'clean', strength = 0.5, sc
     setProgress(2, t('prog_clean_scan_load'));
     await loadPdfJs();
     const buffer = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await file.arrayBuffer());
-    const pdfDoc = await window.pdfjsLib.getDocument({ data: new Uint8Array(buffer) }).promise;
+    const pdfDoc = await window.pdfjsLib.getDocument({ isEvalSupported: false, data: new Uint8Array(buffer) }).promise;
     const pageCount = pdfDoc.numPages;
     if (pageCount === 0) throw new Error('PDF has no pages');
 
@@ -1143,7 +1143,7 @@ async function _runEreader(filesSnapshot, { device = 'kindle', grayscale = true,
     setProgress(2, t('prog_ereader_load'));
     await loadPdfJs();
     const buffer = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await file.arrayBuffer());
-    const pdfDoc = await window.pdfjsLib.getDocument({ data: new Uint8Array(buffer) }).promise;
+    const pdfDoc = await window.pdfjsLib.getDocument({ isEvalSupported: false, data: new Uint8Array(buffer) }).promise;
     const pageCount = pdfDoc.numPages;
     if (pageCount === 0) throw new Error('PDF has no pages');
 
@@ -1500,7 +1500,7 @@ async function _runPdf2Jpg(filesSnapshot, { pages, format, dpi }) {
   let pdfDoc;
   try {
     const rawBuf = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await file.arrayBuffer());
-    pdfDoc = await window.pdfjsLib.getDocument({
+    pdfDoc = await window.pdfjsLib.getDocument({ isEvalSupported: false,
       data:              new Uint8Array(rawBuf),
       useSystemFonts:    false,
       verbosity:         0,
@@ -2020,7 +2020,7 @@ async function _runPdf2Word(filesSnapshot, { mode = 'text', dpi = 150 } = {}) {
     const rawBuf = file._decryptedBuffer
       ? file._decryptedBuffer.slice(0)
       : await preprocessPdfBuffer(await file.arrayBuffer());
-    pdfDoc = await window.pdfjsLib.getDocument({
+    pdfDoc = await window.pdfjsLib.getDocument({ isEvalSupported: false,
       data:              new Uint8Array(rawBuf),
       useSystemFonts:    false,
       verbosity:         0,
@@ -2190,7 +2190,7 @@ async function _runPdf2Excel(filesSnapshot) {
     const rawBuf = file._decryptedBuffer
       ? file._decryptedBuffer.slice(0)
       : await preprocessPdfBuffer(await file.arrayBuffer());
-    pdfDoc = await window.pdfjsLib.getDocument({
+    pdfDoc = await window.pdfjsLib.getDocument({ isEvalSupported: false,
       data:              new Uint8Array(rawBuf),
       useSystemFonts:    false,
       verbosity:         0,
@@ -2643,7 +2643,7 @@ async function _runPdf2Ppt(filesSnapshot, { dpi = 150 } = {}) {
     const rawBuf = file._decryptedBuffer
       ? file._decryptedBuffer.slice(0)
       : await preprocessPdfBuffer(await file.arrayBuffer());
-    pdfDoc = await window.pdfjsLib.getDocument({
+    pdfDoc = await window.pdfjsLib.getDocument({ isEvalSupported: false,
       data:              new Uint8Array(rawBuf),
       useSystemFonts:    false,
       verbosity:         0,
@@ -2858,7 +2858,7 @@ async function _runPdf2Md(filesSnapshot, { enableFormulaOcr = false } = {}) {
     const rawBuf = file._decryptedBuffer
       ? file._decryptedBuffer.slice(0)
       : await preprocessPdfBuffer(await file.arrayBuffer());
-    pdfDoc = await window.pdfjsLib.getDocument({
+    pdfDoc = await window.pdfjsLib.getDocument({ isEvalSupported: false,
       data:              new Uint8Array(rawBuf),
       useSystemFonts:    false,
       verbosity:         0,
@@ -4501,7 +4501,7 @@ async function _runRedactTrue(filesSnapshot, params) {
   setProgress(15, 'Loading PDF renderer…');
   await loadPdfJs();
 
-  const pdfDoc = await window.pdfjsLib.getDocument({
+  const pdfDoc = await window.pdfjsLib.getDocument({ isEvalSupported: false,
     data: new Uint8Array(pdfBytes.slice(0)),
     disableWorker: true,
   }).promise;

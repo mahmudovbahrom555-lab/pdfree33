@@ -52,7 +52,7 @@ export async function initPdf2ExcelOptions(file) {
     const rawBuf = file._decryptedBuffer
       ? file._decryptedBuffer.slice(0)
       : await preprocessPdfBuffer(await file.arrayBuffer());
-    const doc = await window.pdfjsLib.getDocument({
+    const doc = await window.pdfjsLib.getDocument({ isEvalSupported: false,
       data:              new Uint8Array(rawBuf),
       useSystemFonts:    false,
       verbosity:         0,

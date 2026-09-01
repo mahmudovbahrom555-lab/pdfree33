@@ -377,7 +377,7 @@ async function _loadPageBackground(file) {
     if (!window.pdfjsLib) return;
 
     const buf  = await file.arrayBuffer();
-    doc        = await window.pdfjsLib.getDocument({ data: new Uint8Array(buf) }).promise;
+    doc        = await window.pdfjsLib.getDocument({ isEvalSupported: false, data: new Uint8Array(buf) }).promise;
     const page = await doc.getPage(1);
     const vp1  = page.getViewport({ scale: 1 });
     _pageW = vp1.width;

@@ -131,7 +131,7 @@ async function _extractAndRender(file, container) {
     if (!window.pdfjsLib) throw new Error(t('fill_pdfjs_unavailable'));
 
     const rawBuf = await file.arrayBuffer();
-    const pdfDoc = await window.pdfjsLib.getDocument({
+    const pdfDoc = await window.pdfjsLib.getDocument({ isEvalSupported: false,
       data: new Uint8Array(rawBuf), useSystemFonts: false,
       verbosity: 0, disableJavaScript: true,
     }).promise;

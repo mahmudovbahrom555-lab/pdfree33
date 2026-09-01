@@ -152,7 +152,7 @@ export async function loadPdfFile(file) {
 
   let newDoc;
   try {
-    newDoc = await window.pdfjsLib.getDocument({
+    newDoc = await window.pdfjsLib.getDocument({ isEvalSupported: false,
       data:              new Uint8Array(buf),
       useSystemFonts:    false,
       verbosity:         0,

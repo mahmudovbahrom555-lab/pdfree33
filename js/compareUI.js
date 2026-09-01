@@ -213,7 +213,7 @@ async function _runCompare() {
 async function _openPdf(file) {
   const buf = await file.arrayBuffer();
   return new Promise((resolve, reject) => {
-    const task = window.pdfjsLib.getDocument({
+    const task = window.pdfjsLib.getDocument({ isEvalSupported: false,
       data:              new Uint8Array(buf),
       verbosity:         0,
       disableJavaScript: true,

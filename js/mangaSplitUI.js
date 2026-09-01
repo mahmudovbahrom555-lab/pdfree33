@@ -106,7 +106,7 @@ export function hideMangaSplitOptions() {
 
 async function _initPdfJsDoc(buf) {
   await loadPdfJs();
-  _pdfJsDoc = await window.pdfjsLib.getDocument({
+  _pdfJsDoc = await window.pdfjsLib.getDocument({ isEvalSupported: false,
     data:          new Uint8Array(buf.slice(0)),
     disableWorker: true,
   }).promise;

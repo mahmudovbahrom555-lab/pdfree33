@@ -186,7 +186,7 @@ async function _analyse(file, container) {
     const buf = await file.arrayBuffer();
     let pdfDoc;
     try {
-      pdfDoc = await window.pdfjsLib.getDocument({
+      pdfDoc = await window.pdfjsLib.getDocument({ isEvalSupported: false,
         data: new Uint8Array(buf), verbosity: 0, disableJavaScript: true, ignoreEncryption: true,
       }).promise;
 
@@ -1012,7 +1012,7 @@ async function _runOcr(file, gen) {
   const buf    = await file.arrayBuffer();
   let pdfDoc;
   try {
-    pdfDoc = await window.pdfjsLib.getDocument({
+    pdfDoc = await window.pdfjsLib.getDocument({ isEvalSupported: false,
       data: new Uint8Array(buf), verbosity: 0, disableJavaScript: true, ignoreEncryption: true,
     }).promise;
   } catch (err) {
@@ -1283,7 +1283,7 @@ async function _extractTextDirect(file) {
   }
   await loadPdfJs();
   const buf    = await file.arrayBuffer();
-  const pdfDoc = await window.pdfjsLib.getDocument({
+  const pdfDoc = await window.pdfjsLib.getDocument({ isEvalSupported: false,
     data: new Uint8Array(buf), verbosity: 0, disableJavaScript: true, ignoreEncryption: true,
   }).promise;
 
