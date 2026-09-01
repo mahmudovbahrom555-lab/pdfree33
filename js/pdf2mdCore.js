@@ -110,8 +110,15 @@ export function browserCanvasFactory(w, h) {
 // for table-border lines; images need the identical fix, not a simpler one.
 // Numeric opcodes hardcoded rather than importing pdfjsLib.OPS, matching that
 // file's own convention (its comment: "these are NOT raw PDF spec op
-// numbers", pdfjs 3.x-specific) — verified directly against pdfjs-dist
-// 3.11.174, the exact version js/pdf2jpgUI.js's PDFJS_VERSION loads from CDN.
+// numbers" — pdf.js's own internal enum, not a stable public contract).
+// Verified against pdfjs-dist 3.11.174 (the version js/pdf2jpgUI.js's
+// PDFJS_VERSION loads from CDN for this browser tool — unchanged) AND
+// re-verified against pdfjs-dist@6.3.289 (what packages/pdf2md-core's npm
+// package bumped its own separate Node dependency to, for CVE-2024-4367 —
+// this shared file gets copied into that package's src/core/ by
+// scripts/copy-core.mjs, so both consumers' pdf.js versions matter here).
+// All 6 values unchanged across both — but re-check on any future bump of
+// either version, this is an internal enum with no stability guarantee.
 const _IMG_OPS_SAVE        = 10;
 const _IMG_OPS_RESTORE     = 11;
 const _IMG_OPS_TRANSFORM   = 12;

@@ -22,18 +22,20 @@
 //  unaffected — none of that code path needs a canvas.
 // ============================================================
 
-// Default-import + destructure, NOT `import { getDocument } from '...'` —
-// pdfjs-dist's legacy Node build is a webpack-bundled CommonJS module, and
-// Node's static cjs-module-lexer named-export detection is version-
-// dependent: this exact named-import syntax resolves fine on Node 26
-// (used during local development) but throws
-// "SyntaxError: Named export 'getDocument' not found" on Node 20 (what
-// this repo's CI actually runs) — found only because CI caught it, not
-// local testing. The default-import form works uniformly across both.
-import pdfjsLib from 'pdfjs-dist/legacy/build/pdf.js';
+// pdfjs-dist 6.x (bumped from 3.11.174 as part of the CVE-2024-4367 clean
+// fix — see the isEvalSupported comment below, which is now defense-in-
+// depth rather than the only mitigation) restructured its legacy Node
+// build from a webpack-bundled CommonJS file (pdf.js) to a genuine ESM
+// file (pdf.mjs). The OLD default-import-then-destructure pattern here
+// existed specifically to dodge a real, CI-caught Node-version-dependent
+// cjs-module-lexer quirk on the CJS build (named-export static detection
+// for CJS modules is a heuristic, and it disagreed between Node 20 and 26).
+// That workaround no longer applies: a `.mjs` file is unambiguously real
+// ESM to Node's loader regardless of Node version — no lexer heuristic is
+// involved at all — so the plain named import is not just simpler, it's
+// actually the more version-safe form now, not less.
+import { getDocument } from 'pdfjs-dist/legacy/build/pdf.mjs';
 import { _p2mdExtractText, _p2mdRender } from './core/pdf2mdCore.js';
-
-const { getDocument } = pdfjsLib;
 
 /**
  * Converts a PDF (file path or raw bytes) to Markdown.
@@ -72,15 +74,16 @@ export async function pdfToMarkdown(input, { signal } = {}) {
     // which is exactly what a short-lived CLI/script process wants (no
     // benefit to a separate thread for a single one-shot conversion).
     //
-    // isEvalSupported: false is REQUIRED, not just defensive — pdfjs-dist
-    // is pinned to 3.11.174 (see package.json's comment on why), which is
-    // within the affected range of CVE-2024-4367 (GHSA-wgrm-67xf-hhpq,
-    // CVSS 8.8): a malicious PDF can trigger arbitrary JS execution via
-    // pdf.js's own `eval` use, DEFAULT ON (isEvalSupported defaults to
-    // true) if not explicitly disabled. Mozilla's own published workaround
-    // for versions before the real fix (4.2.67+, removes eval entirely) is
-    // exactly this flag. Verified directly against the GitHub Security
-    // Advisory text, not assumed from the CVE title alone.
+    // isEvalSupported: false — pdfjs-dist was bumped to 6.3.289 specifically
+    // to get a real fix for CVE-2024-4367 (GHSA-wgrm-67xf-hhpq, CVSS 8.8:
+    // a malicious PDF could trigger arbitrary JS execution via pdf.js's own
+    // `eval` use), which Mozilla fixed for real in 4.2.67+ by removing the
+    // eval path entirely — this flag is no longer the ONLY thing standing
+    // between a crafted PDF and code execution the way it was on the old
+    // pinned 3.11.174. Kept anyway as explicit defense-in-depth (costs
+    // nothing, and matches the same flag already set on every pdf.js call
+    // site in the browser tool's own js/*.js — see that codebase's own
+    // CVE-2024-4367 fix commit for the fuller history).
     isEvalSupported: false,
   });
 
@@ -112,7 +115,13 @@ export async function pdfToMarkdown(input, { signal } = {}) {
     }
     return _p2mdRender(blocks);
   } finally {
-    await pdfDoc.destroy();
+    // pdfjs-dist 6.x moved teardown from the resolved document
+    // (`pdfDoc.destroy()`, pdf.js 3.x) onto the loading task itself —
+    // `pdfDoc.destroy` no longer exists on PDFDocumentProxy at all (only
+    // `.cleanup()` remains there, a lighter-weight operation). Confirmed by
+    // inspecting the real resolved object's own method list directly
+    // against the installed package, not assumed from a changelog.
+    await loadingTask.destroy();
   }
 }
 

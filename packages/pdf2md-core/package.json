@@ -42,6 +42,6 @@
     "test": "node --test"
   },
   "dependencies": {
-    "pdfjs-dist": "3.11.174"
+    "pdfjs-dist": "6.3.289"
   }
 }
