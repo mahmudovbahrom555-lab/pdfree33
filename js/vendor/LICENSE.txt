@@ -23,6 +23,30 @@ Used by: js/heicDecode.js — lazy dynamic `import()`, only loaded the first
          URL above).
 
 ================================================================
+js/vendor/qpdf/worker.js, js/vendor/qpdf/lib/qpdf.js, js/vendor/qpdf/lib/qpdf.wasm
+================================================================
+
+Source:  qpdf-run npm package, v0.2.1 (https://www.npmjs.com/package/qpdf-run)
+         — an Emscripten/WASM build of qpdf (https://github.com/qpdf/qpdf).
+         Bundled qpdf core: 11.7.0 (confirmed via the version string embedded
+         directly in qpdf.wasm, not assumed from the wrapper's own version).
+Copied:  Origin tarball qpdf-run-0.2.1.tgz sits at the repo root; added in
+         commit 7b4b09d9 ("Phase 2"). See js/vendor/SOURCE.txt for full
+         provenance/usage notes and a known-CVE tracking entry.
+License: Two licenses apply, since this bundles two separate works:
+         - qpdf-run (the wrapper/build tooling itself): MIT.
+         - qpdf (the compiled code making up the bulk of qpdf.wasm): Apache
+           License 2.0 — confirmed via the license text compiled directly
+           into the binary's own `--copyright` CLI output strings. qpdf
+           offers Artistic License 2.0 as an alternative at the licensee's
+           option, per that same embedded text ("you may continue to
+           consider qpdf to be licensed under those terms").
+Used by: js/decryptPdf.js (owner-only decrypt preflight on every uploaded
+         PDF, via js/files.js) and the Unlock PDF tool (js/processor.js's
+         _runUnlock). Runs entirely client-side inside a Web Worker; no
+         file is ever sent to a server. Loaded and used as-is, not modified.
+
+================================================================
 js/vendor/sRGB2014.icc
 ================================================================
 
