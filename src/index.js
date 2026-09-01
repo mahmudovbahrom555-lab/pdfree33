@@ -305,14 +305,32 @@ function _looksLikeSpam(text) {
   return false;
 }
 
+// The screenshot field (base64 data URL, decoded/capped separately below at
+// MAX_SCREENSHOT_BYTES = 6MB) is the only field that legitimately gets
+// large — base64 overhead brings that to ~8MB on the wire, plus a few KB of
+// text fields. Checked before request.json() parses anything, same posture
+// as handleAnalytics' MAX_ANALYTICS_BODY_BYTES check right below in this
+// file — that one already guarded its (much smaller) endpoint this way,
+// this one hadn't.
+const MAX_FEEDBACK_BODY_BYTES = 9 * 1024 * 1024;
+
 async function handleFeedback(request, env) {
   if (request.method !== 'POST') {
     return new Response('Method not allowed', { status: 405 });
   }
 
+  const contentLength = Number(request.headers.get('Content-Length') || 0);
+  if (contentLength > MAX_FEEDBACK_BODY_BYTES) {
+    return new Response('Payload too large', { status: 413 });
+  }
+
   let body;
   try {
-    body = await request.json();
+    const text = await request.text();
+    if (text.length > MAX_FEEDBACK_BODY_BYTES) {
+      return new Response('Payload too large', { status: 413 });
+    }
+    body = JSON.parse(text);
   } catch {
     return new Response('Bad request', { status: 400 });
   }
