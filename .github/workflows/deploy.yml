@@ -115,7 +115,14 @@ jobs:
           echo "All nav pages present in dist/"
 
       - name: Deploy to Cloudflare Workers
-        run: npx wrangler@4 deploy --config wrangler.toml
+        # Pinned to an exact version, not the floating `@4` tag this used to be —
+        # this step holds CLOUDFLARE_API_TOKEN with real production deploy rights,
+        # the single highest-blast-radius credential in this whole pipeline. A
+        # compromised wrangler publish under the un-pinned tag would run with
+        # that token. Same "never a moving latest alias" policy this project
+        # already applies to every CDN library version (js/lazyLibs.js,
+        # js/pdf2jpgUI.js) — bump deliberately, not automatically.
+        run: npx wrangler@4.127.1 deploy --config wrangler.toml
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
