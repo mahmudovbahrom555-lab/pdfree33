@@ -670,6 +670,7 @@ export const EN = {
   // ── extractUI.js (backs split + extract) ──────────────────────
   ext_loading:            'Loading pages…',
   ext_load_failed:        'Failed to load PDF: {msg}',
+  ext_too_many_pages:     "This PDF declares an unusually large page count ({n}) and can't be displayed safely.",
   ext_step_output_format: 'Output format',
   ext_mode_single:        'Single file',
   ext_mode_single_desc:   'All selected pages in one PDF',

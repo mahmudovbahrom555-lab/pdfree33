@@ -648,6 +648,7 @@ window.PDFREE_LOCALE = {
   // extractUI.js (backs split + extract)
   ext_loading:            'Wczytywanie stron…',
   ext_load_failed:        'Nie udało się wczytać PDF: {msg}',
+  ext_too_many_pages:     'Ten plik PDF deklaruje niezwykle dużą liczbę stron ({n}) i nie może zostać bezpiecznie wyświetlony.',
   ext_step_output_format: 'Format wyjściowy',
   ext_mode_single:        'Jeden plik',
   ext_mode_single_desc:   'Wszystkie zaznaczone strony w jednym PDF',

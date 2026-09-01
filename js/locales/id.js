@@ -649,6 +649,7 @@ window.PDFREE_LOCALE = {
   // extractUI.js (backs split + extract)
   ext_loading:            'Memuat halaman…',
   ext_load_failed:        'Gagal memuat PDF: {msg}',
+  ext_too_many_pages:     'PDF ini mendeklarasikan jumlah halaman yang tidak wajar banyaknya ({n}) dan tidak dapat ditampilkan dengan aman.',
   ext_step_output_format: 'Format output',
   ext_mode_single:        'Satu file',
   ext_mode_single_desc:   'Semua halaman terpilih dalam satu PDF',

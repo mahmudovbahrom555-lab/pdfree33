@@ -649,6 +649,7 @@ window.PDFREE_LOCALE = {
   // extractUI.js (backs split + extract)
   ext_loading:            'Đang tải trang…',
   ext_load_failed:        'Không thể tải PDF: {msg}',
+  ext_too_many_pages:     'Tệp PDF này khai báo số trang bất thường ({n}) và không thể hiển thị an toàn.',
   ext_step_output_format: 'Định dạng đầu ra',
   ext_mode_single:        'Một file',
   ext_mode_single_desc:   'Tất cả trang đã chọn trong một PDF',

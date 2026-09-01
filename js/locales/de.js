@@ -651,6 +651,7 @@ window.PDFREE_LOCALE = {
   // extractUI.js (backs split + extract)
   ext_loading:            'Seiten werden geladen…',
   ext_load_failed:        'PDF konnte nicht geladen werden: {msg}',
+  ext_too_many_pages:     'Dieses PDF enthält eine ungewöhnlich hohe Seitenzahl ({n}) und kann nicht sicher angezeigt werden.',
   ext_step_output_format: 'Ausgabeformat',
   ext_mode_single:        'Einzelne Datei',
   ext_mode_single_desc:   'Alle ausgewählten Seiten in einem PDF',

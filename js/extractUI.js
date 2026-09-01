@@ -15,9 +15,16 @@ import {
   wmRemoveHtml, bindWmRemove, resetWmRemove, getWmRemove,
 } from './watermarkRemoveUI.js';
 import { t, tp } from './i18n.js';
+import { esc } from './utils.js';
 
 const THUMBS_PER_PAGE = 16;   // 4-column grid of 4 rows
 const THUMB_SCALE     = 0.18;
+// Sanity ceiling on page count — pdf.js's own page-tree traversal already
+// resists naive /Count inflation and repeated-Kids-reference tricks (tested
+// directly, not assumed), but this is still cheap defense-in-depth against
+// `Array.from({length: _pageCount})` below ever running on an absurd value
+// from a source we don't fully control the future behavior of.
+const MAX_PAGES        = 20000;
 
 let _pageCount     = 0;
 let _selectedPages = new Set();
@@ -70,7 +77,11 @@ export async function initExtractOptions(file, defaultMode = 'single') {
     }).promise;
     if (myGen !== _renderGen) return;
 
-    _pageCount     = _pdfDoc.numPages;
+    _pageCount = _pdfDoc.numPages;
+    if (_pageCount > MAX_PAGES) {
+      _container.innerHTML = `<div class="split-loading">${esc(t('ext_too_many_pages', { n: _pageCount }))}</div>`;
+      return;
+    }
     _selectedPages = new Set(Array.from({ length: _pageCount }, (_, i) => i + 1));
 
     _container.innerHTML = _panelHTML();
@@ -80,7 +91,7 @@ export async function initExtractOptions(file, defaultMode = 'single') {
     await _renderThumbPage(myGen);
   } catch (err) {
     if (myGen !== _renderGen) return;
-    _container.innerHTML = `<div class="split-loading">${t('ext_load_failed', { msg: err.message })}</div>`;
+    _container.innerHTML = `<div class="split-loading">${esc(t('ext_load_failed', { msg: err.message }))}</div>`;
   }
 }
 

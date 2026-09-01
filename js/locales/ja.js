@@ -651,6 +651,7 @@ window.PDFREE_LOCALE = {
   // extractUI.js (backs split + extract)
   ext_loading:            'ページを読み込んでいます…',
   ext_load_failed:        'PDFを読み込めませんでした: {msg}',
+  ext_too_many_pages:     'このPDFには異常に多いページ数（{n}）が含まれており、安全に表示できません。',
   ext_step_output_format: '出力形式',
   ext_mode_single:        '単一ファイル',
   ext_mode_single_desc:   '選択したすべてのページを1つのPDFに',

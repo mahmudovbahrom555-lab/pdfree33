@@ -648,6 +648,7 @@ window.PDFREE_LOCALE = {
   // extractUI.js (backs split + extract)
   ext_loading:            'Sayfalar yükleniyor…',
   ext_load_failed:        'PDF yüklenemedi: {msg}',
+  ext_too_many_pages:     'Bu PDF alışılmadık derecede fazla sayfa ({n}) içeriyor ve güvenli şekilde görüntülenemiyor.',
   ext_step_output_format: 'Çıktı biçimi',
   ext_mode_single:        'Tek dosya',
   ext_mode_single_desc:   "Seçilen tüm sayfalar tek bir PDF'de",

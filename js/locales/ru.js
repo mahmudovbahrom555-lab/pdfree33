@@ -649,6 +649,7 @@ window.PDFREE_LOCALE = {
   // extractUI.js (backs split + extract)
   ext_loading:            'Загрузка страниц…',
   ext_load_failed:        'Не удалось загрузить PDF: {msg}',
+  ext_too_many_pages:     'Этот PDF содержит необычно большое количество страниц ({n}) и не может быть безопасно отображён.',
   ext_step_output_format: 'Формат вывода',
   ext_mode_single:        'Один файл',
   ext_mode_single_desc:   'Все выбранные страницы в одном PDF',

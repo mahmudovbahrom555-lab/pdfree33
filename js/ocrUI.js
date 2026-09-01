@@ -5,10 +5,14 @@ import { loadPdfJs } from './pdf2jpgUI.js';
 import { loadPdfLib } from './lazyLibs.js';
 import { t } from './i18n.js';
 import { saveHandoff } from './handoff.js';
-import { truncateMiddle } from './utils.js';
+import { truncateMiddle, esc } from './utils.js';
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 const TESSERACT_CDN       = 'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js';
+// Subresource Integrity — same reasoning as every loader in js/lazyLibs.js (see that
+// file's header comment): CSP allowlists jsdelivr but doesn't verify WHAT it serves.
+// Hash computed by curling this exact pinned-version URL.
+const TESSERACT_SRI       = 'sha384-GJqSu7vueQ9qN0E9yLPb3Wtpd7OrgK8KmYzC8T1IysG1bcvxvIO4qtYR/D3A991F';
 const TEXT_CHAR_THRESHOLD = 100; // min chars across sampled pages → classified as text PDF (items-count was 5 — too low)
 
 // Locale-correct slugs for the "What to do next" handoff links below. The OCR
@@ -150,7 +154,9 @@ async function _autoLoadIfInstalled() {
   try {
     await new Promise((resolve, reject) => {
       const s = document.createElement('script');
-      s.src     = TESSERACT_CDN;
+      s.src         = TESSERACT_CDN;
+      s.integrity   = TESSERACT_SRI;
+      s.crossOrigin = 'anonymous';
       s.onload  = resolve;
       s.onerror = reject;
       document.head.appendChild(s);
@@ -638,7 +644,9 @@ async function _loadTesseract() {
   try {
     await new Promise((resolve, reject) => {
       const s = document.createElement('script');
-      s.src = TESSERACT_CDN;
+      s.src         = TESSERACT_CDN;
+      s.integrity   = TESSERACT_SRI;
+      s.crossOrigin = 'anonymous';
       s.onload  = resolve;
       s.onerror = () => reject(new Error('Failed to load Tesseract.js'));
       document.head.appendChild(s);
@@ -1730,7 +1738,7 @@ function _isPasswordError(err) {
 
 function _errorHTML(msg, title = t('ocr_error_title')) {
   return `<div style="padding:16px;border:1px solid #fca5a5;border-radius:10px;background:#fff1f2;color:#dc2626;font-size:13px;">
-    <strong>${title}</strong><br>${msg}
+    <strong>${esc(title)}</strong><br>${esc(msg)}
   </div>`;
 }
 

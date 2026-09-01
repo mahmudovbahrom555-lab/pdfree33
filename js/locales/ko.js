@@ -650,6 +650,7 @@ window.PDFREE_LOCALE = {
   // extractUI.js (backs split + extract)
   ext_loading:            '페이지를 불러오는 중…',
   ext_load_failed:        'PDF를 불러오지 못했습니다: {msg}',
+  ext_too_many_pages:     '이 PDF는 비정상적으로 많은 페이지 수({n}페이지)를 포함하고 있어 안전하게 표시할 수 없습니다.',
   ext_step_output_format: '출력 형식',
   ext_mode_single:        '단일 파일',
   ext_mode_single_desc:   '선택한 모든 페이지를 하나의 PDF로',
