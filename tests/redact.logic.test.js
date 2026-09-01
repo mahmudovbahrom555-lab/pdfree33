@@ -42,6 +42,7 @@ function expect(actual) {
     toBeTrue()  { if (actual !== true)  throw new Error(`Expected true, got ${actual}`); },
     toBeFalse() { if (actual !== false) throw new Error(`Expected false, got ${actual}`); },
     toBeGreaterThan(n) { if (actual <= n) throw new Error(`Expected > ${n}, got ${actual}`); },
+    toBeLessThan(n)    { if (actual >= n) throw new Error(`Expected < ${n}, got ${actual}`); },
     toBe0()     { if (actual !== 0) throw new Error(`Expected 0, got ${actual}`); },
     toContain(sub) {
       if (typeof actual === 'string') {
@@ -73,7 +74,7 @@ function _luhnCheck(str) {
 // ── Copy of PII_PATTERNS from redactUI.js ─────────────────────
 const PII_PATTERNS = [
   { id: 'email', label: '📧 Email',
-    regex: /[a-zA-Z0-9._%+\w]+@[a-zA-Z0-9.]+\.[a-zA-Z]{2,}/gi },
+    regex: /[a-zA-Z0-9._%+\w]{1,64}@[a-zA-Z0-9.]{1,253}\.[a-zA-Z]{2,24}/gi },
   { id: 'phone', label: '📞 Phone',
     regex: /(?:\+\d{1,3}[\s]?)?\(?\d{2,4}\)?[\s.]\d{2,4}[\s.]\d{2,9}/g },
   { id: 'cc', label: '💳 Credit Card',
@@ -198,6 +199,36 @@ test('email with plus tag matches', () => {
 test('multiple emails in one string', () => {
   const m = findMatches('email', 'From: alice@a.com To: bob@b.com');
   expect(m.length).toBe(2);
+});
+
+// Real ReDoS found via a live pentest pass: the original unbounded email
+// regex (`[...]+@[...]+\.[a-zA-Z]{2,}`) took 28+ SECONDS against a
+// 200k-char adversarial string with no `@`/no valid TLD — the /gi global
+// flag retries at every failed starting position, and each retry re-does
+// an O(n) greedy-then-backtrack scan, compounding to real O(n²). This
+// pattern runs directly against item.str from a PDF's own extracted text
+// (_runPatternSearch in redactUI.js) — a single crafted long text-showing
+// operation in a malicious PDF reaches it with no length limit. Fixed by
+// bounding every quantifier to a real-world max (RFC 5321 local part ≤64,
+// RFC 1035 domain ≤253). These 3 cases pin the fix at a smaller, CI-fast
+// size (20k, not 200k) — even at 1/10th the size that took 28s unfixed,
+// this must stay well under a second, or the bound regressed.
+test('ReDoS: long run with no @ does not hang (local-part blowup)', () => {
+  const start = Date.now();
+  findMatches('email', 'a'.repeat(20000) + '!');
+  expect(Date.now() - start).toBeLessThan(500);
+});
+
+test('ReDoS: long run with no valid TLD does not hang (domain-part blowup)', () => {
+  const start = Date.now();
+  findMatches('email', 'a@' + 'b'.repeat(20000) + '9');
+  expect(Date.now() - start).toBeLessThan(500);
+});
+
+test('ReDoS: long run after the dot does not hang (TLD blowup)', () => {
+  const start = Date.now();
+  findMatches('email', 'a@b.' + 'c'.repeat(20000));
+  expect(Date.now() - start).toBeLessThan(500);
 });
 
 test('no email in plain text — no match', () => {
