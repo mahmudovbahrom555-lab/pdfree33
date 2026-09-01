@@ -1,0 +1,24 @@
+version: 2
+updates:
+  # npm devDependencies (eslint/vitest/playwright/terser/pdf-lib/docx/jszip/
+  # xmldom — everything in package.json's own "devDependencies"; the site
+  # itself is static HTML/JS built by scripts/build.py, none of this ships
+  # to users). Weekly PRs, not daily — this project reviews changes by hand
+  # (no PR-required branch protection), so a slower cadence keeps the queue
+  # reviewable instead of a constant stream.
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+
+  # GitHub Actions — checkout/setup-node/setup-python, all pinned to exact
+  # commit SHAs (see .github/workflows/deploy.yml's own comments on why).
+  # Dependabot understands the `@<sha> # vX.Y.Z` convention and proposes a
+  # real SHA-to-SHA bump with the version comment updated, not a silent
+  # reversion to a floating tag — same pinning discipline stays intact
+  # through automated updates, not just the one-time manual pin.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
