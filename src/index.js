@@ -337,6 +337,20 @@ async function handleFeedback(request, env) {
     return new Response('Method not allowed', { status: 405 });
   }
 
+  // Same check as handleAnalytics below, extended to this endpoint too —
+  // found via a real pentest pass: this was the one public POST endpoint
+  // in the file WITHOUT it, meaning any site (or a plain script, no
+  // browser needed) could POST directly and land a real message in the
+  // owner's actual Telegram bot and Google Sheet. The honeypot/spam
+  // heuristics below still apply regardless, and remain the real
+  // abuse-rate defense — Origin is trivially spoofable by a determined
+  // attacker (documented on _hasValidOrigin itself) — but there's no
+  // reason this endpoint should be laxer than the other one in the same
+  // file for zero added cost.
+  if (!_hasValidOrigin(request, new URL(request.url))) {
+    return new Response('Forbidden', { status: 403 });
+  }
+
   const contentLength = Number(request.headers.get('Content-Length') || 0);
   if (contentLength > MAX_FEEDBACK_BODY_BYTES) {
     return new Response('Payload too large', { status: 413 });
