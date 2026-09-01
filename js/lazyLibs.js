@@ -4,11 +4,23 @@
 // Lazy script loader — loads CDN libraries on demand (not on page load).
 // Handles both SPA (home page preloads them) and direct landing (no preload).
 
+// Subresource Integrity, sitewide: every loader below pins `integrity` (sha384)
+// alongside its URL. CSP's script-src allowlists these CDN domains, but that
+// only restricts WHERE a script may load from — it does nothing to stop a
+// compromised CDN from serving different bytes at an already-allowlisted URL,
+// which would then run with full access to whatever file the user is
+// currently processing (this app's core "never uploads" privacy promise
+// protects the network path, not a compromised script's DOM access). SRI
+// closes that gap: the browser refuses to execute anything that doesn't hash
+// to the exact bytes pinned here. Every hash below was computed by curling
+// the real, exact pinned-version URL and hashing the response — not copied
+// from an unverified source.
+
 import { t } from './i18n.js';
 
 const _promises = {};
 
-function _load(key, url) {
+function _load(key, url, integrity) {
   if (_promises[key]) return _promises[key];
   // Real bug found during the 2026-08-20/21 Lazy-Load audit: a rejected
   // promise used to stay cached in _promises[key] FOREVER — one transient
@@ -20,6 +32,7 @@ function _load(key, url) {
   _promises[key] = new Promise((resolve, reject) => {
     const s = document.createElement('script');
     s.src = url;
+    if (integrity) { s.integrity = integrity; s.crossOrigin = 'anonymous'; }
     s.onload  = resolve;
     s.onerror = () => reject(new Error(`Failed to load ${key} from CDN`));
     document.head.appendChild(s);
@@ -32,12 +45,20 @@ function _load(key, url) {
 
 export function loadPdfLib() {
   if (window.PDFLib) return Promise.resolve();
-  return _load('pdfLib', 'https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js');
+  return _load(
+    'pdfLib',
+    'https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js',
+    'sha384-weMABwrltA6jWR8DDe9Jp5blk+tZQh7ugpCsF3JwSA53WZM9/14PjS5LAJNHNjAI',
+  );
 }
 
 export function loadJSZip() {
   if (window.JSZip) return Promise.resolve();
-  return _load('jsZip', 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js');
+  return _load(
+    'jsZip',
+    'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js',
+    'sha384-+mbV2IY1Zk/X1p/nWllGySJSUN8uMs+gUAN10Or95UBH0fpj6GfKgPmgC5EXieXG',
+  );
 }
 
 // docx uses a two-URL fallback chain (jsdelivr → unpkg).
@@ -56,6 +77,10 @@ export function loadDocx() {
 }
 
 async function _loadDocxWithFallback() {
+  // jsdelivr and unpkg both mirror the same npm tarball for a pinned version —
+  // verified byte-identical (same sha384) at the time this hash was computed,
+  // so both fallback URLs share one integrity value.
+  const DOCX_SRI = 'sha384-4xaIisuLEy2lo2HkB2C4rEf7v8jbTb2kuogX6TkuEt9feTWKBSFSOzsqNNbV+sKh';
   const CDNS = [
     'https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js',
     'https://unpkg.com/docx@8.5.0/build/index.umd.js',
@@ -65,7 +90,9 @@ async function _loadDocxWithFallback() {
       await new Promise((resolve, reject) => {
         if (document.querySelector(`script[src="${url}"]`)) { resolve(); return; }
         const s = document.createElement('script');
-        s.src     = url;
+        s.src         = url;
+        s.integrity   = DOCX_SRI;
+        s.crossOrigin = 'anonymous';
         s.onload  = resolve;
         s.onerror = () => reject(new Error(`CDN unavailable: ${url}`));
         document.head.appendChild(s);
@@ -89,6 +116,8 @@ export function loadExcelJs() {
 }
 
 async function _loadExcelJsWithFallback() {
+  // Same jsdelivr/unpkg byte-identical verification as docx above.
+  const EXCELJS_SRI = 'sha384-Pqp51FUN2/qzfxZxBCtF0stpc9ONI6MYZpVqmo8m20SoaQCzf+arZvACkLkirlPz';
   const CDNS = [
     'https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js',
     'https://unpkg.com/exceljs@4.4.0/dist/exceljs.min.js',
@@ -98,7 +127,9 @@ async function _loadExcelJsWithFallback() {
       await new Promise((resolve, reject) => {
         if (document.querySelector(`script[src="${url}"]`)) { resolve(); return; }
         const s = document.createElement('script');
-        s.src     = url;
+        s.src         = url;
+        s.integrity   = EXCELJS_SRI;
+        s.crossOrigin = 'anonymous';
         s.onload  = resolve;
         s.onerror = () => reject(new Error(`CDN unavailable: ${url}`));
         document.head.appendChild(s);
@@ -126,6 +157,8 @@ export function loadPptxGenJs() {
 
 async function _loadPptxGenJsWithFallback() {
   await loadJSZip();
+  // Same jsdelivr/unpkg byte-identical verification as docx/exceljs above.
+  const PPTXGENJS_SRI = 'sha384-MKtHyQQnXtUFOKSavqQmtt5Qvk6cGeMJekOw28rk1RHMaEeFU5t0sG2KxvlG4Zue';
   const CDNS = [
     'https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.min.js',
     'https://unpkg.com/pptxgenjs@3.12.0/dist/pptxgen.min.js',
@@ -135,7 +168,9 @@ async function _loadPptxGenJsWithFallback() {
       await new Promise((resolve, reject) => {
         if (document.querySelector(`script[src="${url}"]`)) { resolve(); return; }
         const s = document.createElement('script');
-        s.src     = url;
+        s.src         = url;
+        s.integrity   = PPTXGENJS_SRI;
+        s.crossOrigin = 'anonymous';
         s.onload  = resolve;
         s.onerror = () => reject(new Error(`CDN unavailable: ${url}`));
         document.head.appendChild(s);
@@ -161,6 +196,7 @@ async function _loadPptxGenJsWithFallback() {
 // actually finished initializing (cv.Mat/cv.Canny/etc. would still be
 // unavailable). `Module` must be set up BEFORE the script is created.
 const OPENCV_URL = 'https://docs.opencv.org/4.9.0/opencv.js';
+const OPENCV_SRI = 'sha384-zJHzYPWolUG4i2tYEdlq9VcmS1lGtE2r0o3EtIM+dGvmHjm0tC/DY1V1h+qSGXj9';
 
 export function loadOpenCv() {
   if (window.cv?.Mat) return Promise.resolve();
@@ -171,7 +207,9 @@ export function loadOpenCv() {
       onRuntimeInitialized: resolve,
     };
     const s = document.createElement('script');
-    s.src     = OPENCV_URL;
+    s.src         = OPENCV_URL;
+    s.integrity   = OPENCV_SRI;
+    s.crossOrigin = 'anonymous';
     s.onerror = () => reject(new Error('Failed to load openCv from CDN'));
     document.head.appendChild(s);
   }).catch(err => {
@@ -193,7 +231,18 @@ export function loadOpenCv() {
 // loaded and ran correctly through this exact import), so a plain
 // dynamic import() is used instead of the <script> tag + window-global
 // pattern the other (UMD-style) libraries above need.
-const TRANSFORMERS_URL = 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3/dist/transformers.min.js';
+//
+// Pinned to an exact version (was a floating `@3` major-version tag until
+// this security pass — resolved to 3.8.1 at the time, verified via
+// jsdelivr's own resolve API) for the same "never a moving latest alias"
+// reason as every other loader here, and because a floating tag can't be
+// integrity-checked at all (the bytes it serves are expected to change).
+// KNOWN LIMITATION, not fixed here: native `<script integrity>` doesn't
+// apply to dynamic import() — there's no standard SRI mechanism for ESM
+// imports in browsers today, so this one URL is pinned-by-version but not
+// hash-verified like the others. Lower baseline exposure than the others
+// since both features gating this are opt-in, not loaded by default.
+const TRANSFORMERS_URL = 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1/dist/transformers.min.js';
 
 export function loadTransformersJs() {
   if (_promises['transformersJs']) return _promises['transformersJs'];
