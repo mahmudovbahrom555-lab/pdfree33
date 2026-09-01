@@ -34,6 +34,39 @@ Required sequence:
 **Never assume local success means production success.**
 Local tests passing ≠ production running the new code.
 
+## Verifying a CI-only failure — match the environment EXACTLY, not approximately
+
+If something passes locally but fails only in CI (or only in `packages/pdf2md-core` /
+`packages/pdf2md-server`, which run their own separate `npm install --omit=optional` + `npm test`
+steps in `deploy.yml`, distinct from the root project's `npm ci`), don't trust a "close enough"
+local repro. Match the exact thing CI does, not an approximation of it — two dimensions, both
+required, one is not enough:
+
+1. **Exact runtime version.** `deploy.yml`'s `setup-node` step is pinned to Node 20, deliberately
+   (wrangler 4.86.0's own floor — see that step's own comment on why setup-node isn't just bumped
+   to ride a newer wrangler). If your own machine runs a newer Node (this session's dev machine is
+   on 26), a real, version-gated failure can be invisible locally. Download the exact pinned
+   version directly (`nodejs.org/dist/v<version>/node-v<version>-<platform>.tar.gz`) if no version
+   manager (nvm/n/volta/asdf/fnm) is available, and run the actual test suite through that binary.
+2. **Exact install command, including flags.** Matching the Node version is not sufficient by
+   itself. `packages/pdf2md-core`/`packages/pdf2md-server` CI steps run
+   `npm install --omit=optional` — a plain `npm install` locally can silently pull in an optional
+   dependency (e.g. `@napi-rs/canvas`, prebuilt binary available for macOS) that changes runtime
+   behavior (in one real case, providing a `DOMMatrix` global CI never gets), producing a false
+   pass that doesn't reproduce CI's actual behavior at all. Copy the CI step's install command
+   verbatim, not "npm install and it'll be close enough."
+
+**Verify by inspecting the installed state directly, don't assume from the command's exit code.**
+An empty leftover scope directory (e.g. `node_modules/@napi-rs/` with zero packages inside it)
+can look "present" to a careless `ls | grep`; check what's actually inside before trusting a
+negative result.
+
+This exact two-step trap (right Node version, wrong install flags) cost two extra failed CI runs
+during the 2026-09 pdfjs-dist upgrade in `packages/pdf2md-core` — see
+`security_audit_pilot_redact_fill_merge_2026_09.md` in memory for the full trace, including how
+the eventual fix was found (bisecting real published dependency versions with `npm view <pkg>
+versions --json`, not guessing).
+
 ## Homepage UX — CRITICAL CONSTRAINT
 **The hero section (`#hero`) must always be the first thing a user sees.**
 
