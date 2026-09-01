@@ -122,7 +122,22 @@ jobs:
         # that token. Same "never a moving latest alias" policy this project
         # already applies to every CDN library version (js/lazyLibs.js,
         # js/pdf2jpgUI.js) — bump deliberately, not automatically.
-        run: npx wrangler@4.127.1 deploy --config wrangler.toml
+        #
+        # 4.86.0, NOT the actual latest (4.127.1 as of this pin) — wrangler
+        # raised its own minimum from Node >=20.3.0 to >=22.0.0 starting at
+        # 4.87.0 (confirmed via `npm view wrangler@<version> engines.node`
+        # across the range), and this workflow's own setup-node step above is
+        # still on Node 20. First attempt at this pin used 4.127.1 and broke
+        # the very next deploy ("Wrangler requires at least Node.js v22.0.0")
+        # — did not catch it beforehand because the local sanity check
+        # (`npx wrangler@4.127.1 --version`) ran on a dev machine with a
+        # newer Node than CI actually uses, not the same lesson-shape as the
+        # earlier CSP-severity correction this session (verify against the
+        # real target environment, not a convenient stand-in). Bumping
+        # setup-node to 22 instead, to ride the real latest wrangler, is a
+        # reasonable follow-up but touches more of this pipeline than an
+        # already-broken deploy should be fixed with under time pressure.
+        run: npx wrangler@4.86.0 deploy --config wrangler.toml
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
