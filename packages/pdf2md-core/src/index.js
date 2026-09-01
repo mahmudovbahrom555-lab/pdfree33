@@ -22,18 +22,32 @@
 //  unaffected — none of that code path needs a canvas.
 // ============================================================
 
-// pdfjs-dist 6.x (bumped from 3.11.174 as part of the CVE-2024-4367 clean
-// fix — see the isEvalSupported comment below, which is now defense-in-
-// depth rather than the only mitigation) restructured its legacy Node
-// build from a webpack-bundled CommonJS file (pdf.js) to a genuine ESM
-// file (pdf.mjs). The OLD default-import-then-destructure pattern here
-// existed specifically to dodge a real, CI-caught Node-version-dependent
-// cjs-module-lexer quirk on the CJS build (named-export static detection
-// for CJS modules is a heuristic, and it disagreed between Node 20 and 26).
-// That workaround no longer applies: a `.mjs` file is unambiguously real
-// ESM to Node's loader regardless of Node version — no lexer heuristic is
-// involved at all — so the plain named import is not just simpler, it's
-// actually the more version-safe form now, not less.
+// pdfjs-dist bumped from 3.11.174 to 5.4.149 as part of the CVE-2024-4367
+// clean fix — see the isEvalSupported comment below, which is now defense-
+// in-depth rather than the only mitigation. NOT 6.x: 6.3.289 (the actual
+// latest at the time of this bump) requires Node >=22.13.0 || >=24 and
+// uses Promise.withResolvers() internally, which doesn't exist on Node 20
+// — confirmed by actually running this package's test suite under a real
+// downloaded Node v20.20.2 binary (matching .github/workflows/deploy.yml's
+// pinned CI version exactly), which is hard-pinned to Node 20 for its own
+// unrelated reason (wrangler's own Node-version floor — see that workflow
+// file's comment on the wrangler 4.86.0 pin). It failed immediately with
+// "Promise.withResolvers is not a function". 5.4.149 is the newest release
+// whose own package.json still declares Node 20 support (`>=20.16.0 ||
+// >=22.3.0`) — re-confirmed against that same real Node 20.20.2 binary,
+// all 13 of this package's tests pass. Re-check this ceiling on any future
+// pdfjs-dist bump; don't assume the latest release stays Node-20-compatible.
+//
+// Separately, this version restructured pdf.js's legacy Node build from a
+// webpack-bundled CommonJS file (pdf.js) to a genuine ESM file (pdf.mjs).
+// The OLD default-import-then-destructure pattern here existed specifically
+// to dodge a real, CI-caught Node-version-dependent cjs-module-lexer quirk
+// on the CJS build (named-export static detection for CJS modules is a
+// heuristic, and it disagreed between Node 20 and 26). That workaround no
+// longer applies: a `.mjs` file is unambiguously real ESM to Node's loader
+// regardless of Node version — no lexer heuristic is involved at all — so
+// the plain named import is not just simpler, it's actually the more
+// version-safe form now, not less.
 import { getDocument } from 'pdfjs-dist/legacy/build/pdf.mjs';
 import { _p2mdExtractText, _p2mdRender } from './core/pdf2mdCore.js';
 
@@ -74,15 +88,16 @@ export async function pdfToMarkdown(input, { signal } = {}) {
     // which is exactly what a short-lived CLI/script process wants (no
     // benefit to a separate thread for a single one-shot conversion).
     //
-    // isEvalSupported: false — pdfjs-dist was bumped to 6.3.289 specifically
+    // isEvalSupported: false — pdfjs-dist was bumped to 5.4.149 specifically
     // to get a real fix for CVE-2024-4367 (GHSA-wgrm-67xf-hhpq, CVSS 8.8:
     // a malicious PDF could trigger arbitrary JS execution via pdf.js's own
-    // `eval` use), which Mozilla fixed for real in 4.2.67+ by removing the
-    // eval path entirely — this flag is no longer the ONLY thing standing
-    // between a crafted PDF and code execution the way it was on the old
-    // pinned 3.11.174. Kept anyway as explicit defense-in-depth (costs
-    // nothing, and matches the same flag already set on every pdf.js call
-    // site in the browser tool's own js/*.js — see that codebase's own
+    // `eval` use; GitHub's advisory lists 4.2.67 as the first patched
+    // version), which Mozilla fixed for real by removing the eval path
+    // entirely — this flag is no longer the ONLY thing standing between a
+    // crafted PDF and code execution the way it was on the old pinned
+    // 3.11.174. Kept anyway as explicit defense-in-depth (costs nothing,
+    // and matches the same flag already set on every pdf.js call site in
+    // the browser tool's own js/*.js — see that codebase's own
     // CVE-2024-4367 fix commit for the fuller history).
     isEvalSupported: false,
   });
@@ -115,7 +130,7 @@ export async function pdfToMarkdown(input, { signal } = {}) {
     }
     return _p2mdRender(blocks);
   } finally {
-    // pdfjs-dist 6.x moved teardown from the resolved document
+    // pdfjs-dist 5.x moved teardown from the resolved document
     // (`pdfDoc.destroy()`, pdf.js 3.x) onto the loading task itself —
     // `pdfDoc.destroy` no longer exists on PDFDocumentProxy at all (only
     // `.cleanup()` remains there, a lighter-weight operation). Confirmed by
