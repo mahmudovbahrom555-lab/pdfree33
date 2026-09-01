@@ -1,0 +1,10 @@
+# PDFree security policy (RFC 9116) — https://securitytxt.org
+#
+# PDFree is a static, 100%-client-side PDF toolkit — no file ever leaves
+# your device, no server-side upload, no database. If you find a real
+# vulnerability affecting pdfree.io or its client-side tools, please report
+# it privately before any public disclosure so it can be fixed first.
+Contact: mailto:privacy@pdfree.io
+Expires: 2027-09-01T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://pdfree.io/.well-known/security.txt
