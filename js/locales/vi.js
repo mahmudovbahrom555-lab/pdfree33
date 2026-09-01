@@ -1071,6 +1071,7 @@ window.PDFREE_LOCALE = {
   fill_no_fields_link:        'Xóa văn bản / Chú thích',
   fill_no_fields_suffix:      ' để phủ văn bản lên.',
   fill_error_prefix:          'Không thể đọc các trường biểu mẫu: {msg}',
+  fill_too_many_fields:      'Tệp PDF này khai báo một số lượng trường biểu mẫu bất thường ({n}) và không thể hiển thị an toàn. Hãy thử công cụ Xóa văn bản / Chú thích thay thế.',
   fill_tab_order_label:      'Thứ tự Tab',
   fill_tab_order_hint:       'Kiểm soát trường nào phím Tab sẽ chuyển đến tiếp theo — hữu ích cho quy trình macro/RPA',
   fill_tab_order_auto:       'Sửa (tự động)',

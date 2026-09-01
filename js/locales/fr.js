@@ -1072,6 +1072,7 @@ window.PDFREE_LOCALE = {
   fill_no_fields_link:        'Caviarder / Annoter',
   fill_no_fields_suffix:      ' pour superposer du texte.',
   fill_error_prefix:          'Impossible de lire les champs du formulaire : {msg}',
+  fill_too_many_fields:      'Ce PDF déclare un nombre inhabituellement élevé de champs de formulaire ({n}) et ne peut pas être affiché en toute sécurité. Essayez plutôt l\'outil Rédiger / Annoter.',
   fill_tab_order_label:      'Ordre de tabulation',
   fill_tab_order_hint:       'Détermine vers quel champ la touche Tab passe ensuite — utile pour les workflows macro/RPA',
   fill_tab_order_auto:       'Corriger (auto)',

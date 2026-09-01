@@ -1070,6 +1070,7 @@ window.PDFREE_LOCALE = {
   fill_no_fields_link:        'Zaczernij / Adnotuj',
   fill_no_fields_suffix:      ', aby nałożyć tekst.',
   fill_error_prefix:          'Nie udało się odczytać pól formularza: {msg}',
+  fill_too_many_fields:      'Ten plik PDF deklaruje niezwykle dużą liczbę pól formularza ({n}) i nie może zostać bezpiecznie wyświetlony. Spróbuj zamiast tego narzędzia Zaczernij / Adnotuj.',
   fill_tab_order_label:      'Kolejność Tab',
   fill_tab_order_hint:       'Określa, do którego pola przeskoczy klawisz Tab — przydatne w procesach makro/RPA',
   fill_tab_order_auto:       'Napraw (automatycznie)',

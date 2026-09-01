@@ -1073,6 +1073,7 @@ window.PDFREE_LOCALE = {
   fill_no_fields_link:        'Schwärzen / Kommentieren',
   fill_no_fields_suffix:      '-Tool, um Text zu überlagern.',
   fill_error_prefix:          'Formularfelder konnten nicht gelesen werden: {msg}',
+  fill_too_many_fields:      'Dieses PDF enthält eine ungewöhnlich große Anzahl an Formularfeldern ({n}) und kann nicht sicher angezeigt werden. Verwenden Sie stattdessen das Werkzeug Schwärzen / Kommentieren.',
   fill_tab_order_label:      'Tab-Reihenfolge',
   fill_tab_order_hint:       'Bestimmt, zu welchem Feld die Tab-Taste als Nächstes springt – nützlich für Makro-/RPA-Workflows',
   fill_tab_order_auto:       'Automatisch korrigieren',

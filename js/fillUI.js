@@ -43,6 +43,9 @@ function _redactHref() {
   return lc === 'en' ? `/${slug}/` : `/${lc}/${slug}/`;
 }
 
+// Sanity ceiling on AcroForm field count — see the check in _extractAndRender.
+const MAX_FIELDS = 1000;
+
 // ── Saved signature ───────────────────────────────────────────
 const _SIG_STORAGE_KEY = 'pdfree_saved_sig';
 
@@ -150,6 +153,20 @@ async function _extractAndRender(file, container) {
 
     if (_fields.length === 0) {
       container.innerHTML = _noFieldsHTML();
+      setButtonDisabled();
+      return;
+    }
+
+    // A malformed/adversarial PDF can declare an absurd AcroForm field count
+    // (real ones are rarely more than a few hundred) — rendering one DOM
+    // node + event listeners per field with no ceiling can hang the tab.
+    // 1000 is comfortably above any legitimate form seen in this tool.
+    if (_fields.length > MAX_FIELDS) {
+      const n = _fields.length;
+      _fields = [];
+      container.innerHTML = `<div style="padding:16px;border:1px solid #fca5a5;border-radius:10px;background:#fff1f2;color:#dc2626;font-size:13px;">
+        ${_esc(t('fill_too_many_fields', { n }))}
+      </div>`;
       setButtonDisabled();
       return;
     }

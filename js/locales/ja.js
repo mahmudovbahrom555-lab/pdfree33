@@ -1073,6 +1073,7 @@ window.PDFREE_LOCALE = {
   fill_no_fields_link:        '黒塗り / 注釈',
   fill_no_fields_suffix:      'ツールを使用してテキストを重ねてください。',
   fill_error_prefix:          'フォームフィールドを読み込めませんでした: {msg}',
+  fill_too_many_fields:      'このPDFには異常に多いフォームフィールド数（{n}）が含まれており、安全に表示できません。代わりに「黒塗り・注釈」ツールをお試しください。',
   fill_tab_order_label:      'タブ順',
   fill_tab_order_hint:       'Tabキーで次に移動するフィールドを制御します — マクロ/RPAワークフローに便利です',
   fill_tab_order_auto:       '自動修正',

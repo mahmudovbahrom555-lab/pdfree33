@@ -1100,6 +1100,7 @@ export const EN = {
   fill_no_fields_link:       'Redact / Annotate',
   fill_no_fields_suffix:     ' tool to overlay text.',
   fill_error_prefix:         'Could not read form fields: {msg}',
+  fill_too_many_fields:      "This PDF declares an unusually large number of form fields ({n}) and can't be displayed safely. Try the Redact / Annotate tool instead.",
   fill_tab_order_label:      'Tab order',
   fill_tab_order_hint:       'Controls what field the Tab key jumps to next — useful for macro/RPA workflows',
   fill_tab_order_auto:       'Fix (auto)',

@@ -1070,6 +1070,7 @@ window.PDFREE_LOCALE = {
   fill_no_fields_link:        'Zwartmaken / Annoteren',
   fill_no_fields_suffix:      '-tool om tekst overheen te plaatsen.',
   fill_error_prefix:          'Kan formuliervelden niet lezen: {msg}',
+  fill_too_many_fields:      'Deze PDF bevat een ongewoon groot aantal formuliervelden ({n}) en kan niet veilig worden weergegeven. Probeer in plaats daarvan de tool Zwartmaken / Annoteren.',
   fill_tab_order_label:      'Tabvolgorde',
   fill_tab_order_hint:       'Bepaalt naar welk veld de Tab-toets vervolgens springt — handig voor macro-/RPA-workflows',
   fill_tab_order_auto:       'Herstellen (automatisch)',

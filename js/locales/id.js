@@ -1071,6 +1071,7 @@ window.PDFREE_LOCALE = {
   fill_no_fields_link:        'Hapus Teks / Anotasi',
   fill_no_fields_suffix:      ' untuk menumpangkan teks.',
   fill_error_prefix:          'Tidak dapat membaca kolom formulir: {msg}',
+  fill_too_many_fields:      'PDF ini mendeklarasikan jumlah kolom formulir yang tidak wajar banyaknya ({n}) dan tidak dapat ditampilkan dengan aman. Coba gunakan alat Hapus Teks / Anotasi sebagai gantinya.',
   fill_tab_order_label:      'Urutan tab',
   fill_tab_order_hint:       'Menentukan bidang mana yang dituju tombol Tab berikutnya — berguna untuk alur kerja makro/RPA',
   fill_tab_order_auto:       'Perbaiki (otomatis)',

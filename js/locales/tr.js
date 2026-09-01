@@ -1070,6 +1070,7 @@ window.PDFREE_LOCALE = {
   fill_no_fields_link:        'PDF Gizle / Not Ekle',
   fill_no_fields_suffix:      ' aracını kullanarak metin ekleyebilirsiniz.',
   fill_error_prefix:          'Form alanları okunamadı: {msg}',
+  fill_too_many_fields:      'Bu PDF alışılmadık derecede fazla form alanı ({n}) içeriyor ve güvenli şekilde görüntülenemiyor. Bunun yerine Gizle / Not Ekle aracını deneyin.',
   fill_tab_order_label:      'Sekme sırası',
   fill_tab_order_hint:       'Tab tuşunun sırada hangi alana geçeceğini belirler — makro/RPA iş akışları için kullanışlıdır',
   fill_tab_order_auto:       'Düzelt (otomatik)',

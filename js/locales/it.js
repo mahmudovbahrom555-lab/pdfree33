@@ -1070,6 +1070,7 @@ window.PDFREE_LOCALE = {
   fill_no_fields_link:        'Oscura / Annota',
   fill_no_fields_suffix:      ' per sovrapporre del testo.',
   fill_error_prefix:          'Impossibile leggere i campi del modulo: {msg}',
+  fill_too_many_fields:      'Questo PDF dichiara un numero insolitamente elevato di campi modulo ({n}) e non può essere visualizzato in sicurezza. Prova invece lo strumento Oscura / Annota.',
   fill_tab_order_label:      'Ordine di tabulazione',
   fill_tab_order_hint:       'Controlla a quale campo salta il tasto Tab successivamente — utile per flussi di lavoro macro/RPA',
   fill_tab_order_auto:       'Correggi (automatico)',

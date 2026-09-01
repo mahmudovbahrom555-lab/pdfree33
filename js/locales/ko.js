@@ -1072,6 +1072,7 @@ window.PDFREE_LOCALE = {
   fill_no_fields_link:        'PDF 가리기 / 주석',
   fill_no_fields_suffix:      ' 도구를 사용해 텍스트를 겹쳐보세요.',
   fill_error_prefix:          '양식 필드를 읽을 수 없습니다: {msg}',
+  fill_too_many_fields:      '이 PDF는 비정상적으로 많은 양식 필드({n}개)를 포함하고 있어 안전하게 표시할 수 없습니다. 대신 검열/주석 도구를 사용해 보세요.',
   fill_tab_order_label:      '탭 순서',
   fill_tab_order_hint:       'Tab 키가 다음으로 이동할 필드를 제어합니다 — 매크로/RPA 워크플로우에 유용합니다',
   fill_tab_order_auto:       '수정 (자동)',

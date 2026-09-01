@@ -1072,6 +1072,7 @@ window.PDFREE_LOCALE = {
   fill_no_fields_link:        'Censurar / Anotar',
   fill_no_fields_suffix:      ' para superponer texto.',
   fill_error_prefix:          'No se pudieron leer los campos del formulario: {msg}',
+  fill_too_many_fields:      'Este PDF declara una cantidad inusualmente grande de campos de formulario ({n}) y no se puede mostrar de forma segura. Prueba la herramienta Redactar / Anotar.',
   fill_tab_order_label:      'Orden de tabulación',
   fill_tab_order_hint:       'Controla a qué campo salta la tecla Tab a continuación — útil para flujos de macros/RPA',
   fill_tab_order_auto:       'Corregir (automático)',
