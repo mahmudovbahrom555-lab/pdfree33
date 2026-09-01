@@ -39,6 +39,7 @@ let _color    = 'gray';         // 'gray' | 'red' | 'blue'
 let _logoBytes   = null;  // Uint8Array — raw file bytes, sent to the worker as-is
 let _logoMime    = null;  // 'image/png' | 'image/jpeg'
 let _logoImg     = null;  // cached HTMLImageElement, for preview drawing only
+let _logoObjectUrl = null; // the blob: URL currently backing _logoImg.src — revoke before replacing
 let _logoSize    = 0.25;  // logo width as a fraction of page width (0..1)
 // Separate, lower-range opacity for logo mode. A text watermark is thin
 // font strokes with lots of empty space, so 30-80% still reads fine
@@ -65,6 +66,16 @@ export function getWatermarkParams() {
 
 // ── Public API ─────────────────────────────────────────────────
 
+// Revokes whatever blob: URL is currently backing the logo preview, if any —
+// call before every reassignment of _logoImg's source. Without this, every
+// new logo upload (or tool re-open) orphaned the previous blob: URL for the
+// life of the tab; same leak class as [[scan_document_code_review_2026_08]]'s
+// crop-review modal, found the same way (grep createObjectURL vs revokeObjectURL
+// counts sitewide, then checked which files never matched).
+function _clearLogoObjectUrl() {
+  if (_logoObjectUrl) { URL.revokeObjectURL(_logoObjectUrl); _logoObjectUrl = null; }
+}
+
 export function initWatermarkOptions(file) {
   _bgImageData = null;
   _pageW = 595;
@@ -72,6 +83,7 @@ export function initWatermarkOptions(file) {
   _kind = 'text';
   _logoBytes = null;
   _logoMime = null;
+  _clearLogoObjectUrl();
   _logoImg = null;
   _logoOpacity = 0.15;
   // Restore saved text-watermark settings once per tool session — image
@@ -104,6 +116,8 @@ export function hideWatermarkOptions() {
   container.innerHTML = '';
   _bgImageData = null;
   _rememberLoaded = false;
+  _clearLogoObjectUrl();
+  _logoImg = null;
 }
 
 // ── Render ─────────────────────────────────────────────────────
@@ -280,6 +294,7 @@ function _bindEvents() {
     }
 
     const img = new Image();
+    const _rawObjectUrl = URL.createObjectURL(file);
     img.onload = async () => {
       if (file.type === 'image/png') {
         // Some PNGs (indexed/palette color, 16-bit depth — common from
@@ -292,6 +307,11 @@ function _bindEvents() {
         canvas.height = img.naturalHeight;
         const ctx = canvas.getContext('2d');
         ctx.drawImage(img, 0, 0);
+        // img (and its blob: URL) has done its job — everything from here
+        // draws from the canvas. This URL was never the persistent
+        // _logoObjectUrl, so revoke it directly rather than through
+        // _clearLogoObjectUrl().
+        URL.revokeObjectURL(_rawObjectUrl);
 
         // De-matte: many exported PNGs bake a white background into the
         // RGB of every semi-transparent (anti-aliased edge) pixel, rather
@@ -320,17 +340,21 @@ function _bindEvents() {
         // Preview from the de-matted canvas, not the raw upload, so the
         // preview matches what actually gets embedded in the PDF.
         const correctedImg = new Image();
+        _clearLogoObjectUrl();  // revoke whatever logo (if any) was loaded before this one
+        _logoObjectUrl = URL.createObjectURL(blob);
         correctedImg.onload = () => { _logoImg = correctedImg; _render(); };
-        correctedImg.src = URL.createObjectURL(blob);
+        correctedImg.src = _logoObjectUrl;
         return;
       }
 
       _logoBytes = new Uint8Array(await file.arrayBuffer());
       _logoMime  = file.type;
       _logoImg   = img;
+      _clearLogoObjectUrl();  // revoke whatever logo (if any) was loaded before this one
+      _logoObjectUrl = _rawObjectUrl;  // JPEG path uses the raw upload directly, no de-matte pass
       _render();  // re-render to swap the upload placeholder for the preview thumbnail
     };
-    img.src = URL.createObjectURL(file);
+    img.src = _rawObjectUrl;
   });
 }
 
