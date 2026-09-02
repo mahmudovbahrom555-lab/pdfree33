@@ -722,10 +722,8 @@ button,
 }
 
 /* ── Next-step cross-sell row (e.g. Merge → Extract, same file, no re-upload) ──
-   Sits between privacy-cleared and share-tool-row: the user has already gotten
-   their download and the privacy reassurance ("moment of value") — a natural,
-   low-pressure point to offer a next step that extends THEIR file, ranked above
-   share-tool-row because it serves the user's own task, not a referral ask.
+   Sits right after the download/share button row — visible early, without
+   sitting above/competing with Download or Process-again themselves.
    Deliberately NOT green — the download button is the one primary CTA in this
    card; a second green element would dilute that hierarchy (isolation effect
    needs exactly one visual outlier). Neutral surface + green hover-accent
@@ -776,6 +774,27 @@ button,
 
 @media (max-width: 700px) {
   .next-step-row { padding: 12px 16px; }
+}
+
+/* ── data-handoff busy state — any cross-sell link that hands a result blob to
+   another tool page (this row, the specialty pages' pill links, etc.) ──
+   saveHandoff() writes the blob to IndexedDB before navigating; on a large
+   merged/converted file that write is real work with no native progress event
+   (IndexedDB transactions don't expose one, unlike setProgress()'s worker-driven
+   percent) — without any feedback, a big file makes the click look inert/broken.
+   Reuses .merge-btn--processing's own kick + glow-pulse keyframes (established
+   2026-08-29, see that rule's own comment) for visual consistency, but WITHOUT
+   the fill (::before/::after) half of that treatment — there's no real percent
+   to drive it honestly, and per this project's own hard rule elsewhere
+   (setProgress()), a fake/timer-based fill is worse than no fill. Pulse alone is
+   the honest "actively working, unknown duration" idiom. */
+.handoff-link--busy {
+  cursor: wait;
+  pointer-events: none;
+  animation: merge-btn-kick 0.22s ease, merge-btn-glow-pulse 1s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .handoff-link--busy { animation: none; }
 }
 
 /* ── Toast notification ── */

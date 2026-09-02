@@ -725,9 +725,16 @@ function initEvents() {
     if (e.ctrlKey || e.metaKey || e.shiftKey || e.button !== 0) return; // let new-tab intent through
     const link = e.target.closest('a[data-handoff]');
     if (!link) return;
+    if (link.classList.contains('handoff-link--busy')) { e.preventDefault(); return; } // already in flight
     const result = _getResultForHandoff();
     if (!result) return;              // blob already revoked → normal navigation
     e.preventDefault();
+    // A big merged/converted blob makes the IndexedDB write real, visible work
+    // with no native progress event — kick+pulse (no fill, no real percent to
+    // drive one) says "working" instead of leaving the click looking inert.
+    // Always torn down by the navigation below, success or failure alike.
+    link.classList.add('handoff-link--busy');
+    link.setAttribute('aria-busy', 'true');
     saveHandoff(result.blob, result.filename, currentTool, link.href)
       .catch(() => {})               // IDB failure → still navigate
       .then(() => { location.href = link.href; });
