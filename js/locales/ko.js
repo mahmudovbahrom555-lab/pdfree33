@@ -780,6 +780,8 @@ window.PDFREE_LOCALE = {
   j2p_orient_landscape: '▭ 가로',
   j2p_compress_images: '이미지 압축',
   j2p_compress_desc:   'PDF 크기 감소 — JPEG 품질은 높게 유지',
+  j2p_separate_pdfs:   'Separate PDFs',
+  j2p_separate_desc:   'One PDF per image, downloaded as a ZIP — instead of one merged file',
   j2p_quality:         '품질',
   j2p_aria_quality:    'JPEG 품질 {pct}%',
 

@@ -1398,6 +1398,10 @@ async function _runJpg2Pdf(filesSnapshot, params) {
   }));
   setProgress(5, t('prog_loading_imgs'));
 
+  if (params.separate && filesSnapshot.length > 1) {
+    return _runJpg2PdfSeparate(filesSnapshot, buffers, params);
+  }
+
   _worker.postMessage(
     { tool: 'jpg2pdf', files: buffers, options: params },
     buffers   // All buffers as Transferables (zero-copy)
@@ -1446,6 +1450,89 @@ async function _runJpg2Pdf(filesSnapshot, params) {
     isProcessing = false; setFilesLocked(false); hideCancelBtn();
     _handleError('jpg2pdf', e.message || 'Worker error');
   };
+}
+
+// "Separate PDFs" mode (one PDF per image instead of one merged PDF) —
+// worker.js's handleJpg2Pdf (off-limits, never edited) only ever produces a
+// single combined PDF from N images, so this calls that SAME unmodified
+// contract once per image (a 1-element files array — exactly the code path
+// already exercised whenever someone converts a single image today) and
+// zips the N individual results together client-side. Same "several
+// outputs -> ZIP via JSZip" idiom _runSplit already uses for its own
+// separate mode (see the comment there re: transferred-buffer lifetime).
+// Sequential, not parallel: _worker is one shared instance with a single
+// reassignable onmessage handler, not per-call message IDs.
+async function _runJpg2PdfSeparate(filesSnapshot, buffers, params) {
+  const zipEntries = [];
+  const skipped    = [];
+
+  for (let i = 0; i < filesSnapshot.length; i++) {
+    if (!isProcessing) return; // cancelled between images
+    setProgress(5 + Math.round((i / filesSnapshot.length) * 85), t('prog_loading_imgs'));
+
+    const singleOptions = { ...params, exifAngles: [params.exifAngles?.[i] ?? 0] };
+    const result = await new Promise((resolve) => {
+      _worker.postMessage({ tool: 'jpg2pdf', files: [buffers[i]], options: singleOptions }, [buffers[i]]);
+      _worker.onmessage = (e) => {
+        const data = e.data;
+        if (data.type === 'done' || data.type === 'error') resolve(data);
+        // 'progress'/'warn' from a single-image call aren't worth surfacing
+        // individually — the outer per-image loop progress above covers it.
+      };
+      _worker.onerror = (e) => resolve({ type: 'error', message: e.message || 'Worker error' });
+    });
+
+    if (result.type !== 'done' || !(result.result instanceof ArrayBuffer)) {
+      skipped.push(i + 1);
+      continue;
+    }
+    const baseName = filesSnapshot[i].name.replace(/\.[^.]+$/, '');
+    zipEntries.push({ name: `${baseName}.pdf`, buffer: result.result });
+  }
+
+  if (!isProcessing) return;
+
+  if (zipEntries.length === 0) {
+    isProcessing = false; setFilesLocked(false); hideCancelBtn();
+    _handleError('jpg2pdf', 'All images failed to convert');
+    return;
+  }
+
+  setProgress(92, t('prog_zip'));
+  await loadJSZip();
+  const JSZip = window.JSZip;
+  const zip = new JSZip();
+  // De-dupe identical base names (e.g. two "photo.jpg" from different
+  // source folders) — JSZip silently overwrites a same-name entry
+  // otherwise, silently dropping a successfully-converted file.
+  const usedNames = new Set();
+  for (const entry of zipEntries) {
+    let name = entry.name, n = 2;
+    while (usedNames.has(name)) { name = entry.name.replace(/\.pdf$/, ` (${n}).pdf`); n++; }
+    usedNames.add(name);
+    zip.file(name, entry.buffer);
+  }
+
+  const blob = await zip.generateAsync(
+    { type: 'blob', compression: 'DEFLATE' },
+    meta => setProgress(92 + Math.round(meta.percent / 100 * 6), t('prog_compressing'))
+  );
+
+  isProcessing = false;
+  setFilesLocked(false);
+  hideCancelBtn();
+  setProgress(100, t('prog_done'));
+
+  if (skipped.length > 0) {
+    const nums = skipped.join(', ');
+    showToast(tp(skipped.length, 'skipped_imgs_one', 'skipped_imgs_many', { nums }), 6000);
+  }
+
+  const imagesWord = tp(zipEntries.length, 'word_image', 'word_images');
+  const desc = `${zipEntries.length} ${imagesWord} · ${fmtSize(blob.size)}`;
+  document.dispatchEvent(new CustomEvent('pdfree:success', {
+    detail: { tool: 'jpg2pdf', blob, desc, filename: 'converted_images.zip' }
+  }));
 }
 
 // ── PDF → JPG ──────────────────────────────────────────────────

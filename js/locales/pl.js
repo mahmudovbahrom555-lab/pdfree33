@@ -778,6 +778,8 @@ window.PDFREE_LOCALE = {
   j2p_orient_landscape: '▭ Pozioma',
   j2p_compress_images: 'Kompresuj obrazy',
   j2p_compress_desc:   'Zmniejsza rozmiar PDF — jakość JPEG pozostaje wysoka',
+  j2p_separate_pdfs:   'Separate PDFs',
+  j2p_separate_desc:   'One PDF per image, downloaded as a ZIP — instead of one merged file',
   j2p_quality:         'Jakość',
   j2p_aria_quality:    'Jakość JPEG {pct}%',
 

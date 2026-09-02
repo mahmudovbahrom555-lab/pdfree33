@@ -36,13 +36,14 @@ let _pageSize    = 'auto';      // 'auto' | 'a4' | 'letter' | 'fit'
 let _orientation = 'auto';     // 'auto' | 'portrait' | 'landscape'
 let _compress    = true;
 let _quality     = 0.82;       // JPEG quality 0–1
+let _separate    = false;      // one PDF per image (as a ZIP) instead of one merged PDF
 let _exifAngles  = [];         // cached EXIF rotation per file (degrees)
 let _rememberLoaded = false;   // "Remember my settings" applied once per tool session
 let _settingsRendered = false; // see _render()'s split-render comment
 
 export function getJpg2PdfParams() {
   return { pageSize: _pageSize, orientation: _orientation,
-           compress: _compress, quality: _quality, exifAngles: _exifAngles };
+           compress: _compress, quality: _quality, separate: _separate, exifAngles: _exifAngles };
 }
 
 // ── Public API ─────────────────────────────────────────────────
@@ -111,6 +112,7 @@ export function hideJpg2PdfOptions() {
   _orientation = 'auto';
   _compress    = true;
   _quality     = 0.82;
+  _separate    = false;
   _exifAngles  = [];
   _warnedManyImages = false;
   _rememberLoaded = false;
@@ -198,6 +200,20 @@ function _settingsHtml() {
       </div>
     </div>
 
+    <div class="j2p-compress-block" id="j2pSeparateBlock" style="display:${selectedFiles.length > 1 ? '' : 'none'}">
+      <div class="j2p-compress-row">
+        <div class="j2p-compress-label">
+          <strong>${t('j2p_separate_pdfs')}</strong>
+          <small>${t('j2p_separate_desc')}</small>
+        </div>
+        <label class="j2p-toggle" aria-label="${t('j2p_separate_pdfs')}">
+          <input type="checkbox" id="j2pSeparateCheck"${_separate ? ' checked' : ''}>
+          <span class="j2p-toggle__track"></span>
+          <span class="j2p-toggle__thumb"></span>
+        </label>
+      </div>
+    </div>
+
     <div class="j2p-compress-block">
       <div class="j2p-compress-row">
         <div class="j2p-compress-label">
@@ -244,6 +260,14 @@ function _render(files) {
     const wrap = id('j2pPreviewsWrap');
     if (wrap) wrap.innerHTML = _previewsHtml(files);
   }
+
+  // Settings HTML is only ever built once (see comment above) — but whether
+  // "Separate PDFs" makes sense depends on live file count (meaningless at
+  // 1 file), which changes on every add/remove. Toggle visibility directly
+  // instead of rebuilding the settings panel, so this doesn't reintroduce
+  // the mid-drag-slider bug that split rendering into two regions to avoid.
+  const sepBlock = id('j2pSeparateBlock');
+  if (sepBlock) sepBlock.style.display = files.length > 1 ? '' : 'none';
 
   _bindThumbGridEvents();
   _renderPreviews(files);
@@ -364,6 +388,9 @@ function _bindSettingsEvents() {
       _compress = e.target.checked;
       const row = id('j2pQualityRow');
       if (row) row.classList.toggle('j2p-quality-row--disabled', !_compress);
+    }
+    if (e.target.id === 'j2pSeparateCheck') {
+      _separate = e.target.checked;
     }
     // Unchecking forgets immediately — saving happens centrally in app.js
     // (_maybeSavePreset) right before processing starts.

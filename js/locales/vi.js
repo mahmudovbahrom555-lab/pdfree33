@@ -779,6 +779,8 @@ window.PDFREE_LOCALE = {
   j2p_orient_landscape: '▭ Ngang',
   j2p_compress_images: 'Nén hình ảnh',
   j2p_compress_desc:   'Giảm dung lượng PDF — chất lượng JPEG vẫn cao',
+  j2p_separate_pdfs:   'Separate PDFs',
+  j2p_separate_desc:   'One PDF per image, downloaded as a ZIP — instead of one merged file',
   j2p_quality:         'Chất lượng',
   j2p_aria_quality:    'Chất lượng JPEG {pct}%',
 
