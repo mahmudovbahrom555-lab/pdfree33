@@ -21,7 +21,7 @@ export function initDocx2PdfOptions(file) {
   const name = file.name.length > 35 ? file.name.slice(0, 32) + '…' : file.name;
   el.innerHTML = `
     <div class="compress-info">
-      <span class="compress-info__name" title="${_esc(file.name)}">${name}</span>
+      <span class="compress-info__name" title="${_esc(file.name)}">${_esc(name)}</span>
       <span class="compress-info__dot">·</span>
       <span class="compress-info__meta">${t('d2p_output_label')}</span>
     </div>
