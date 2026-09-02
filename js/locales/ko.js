@@ -1044,6 +1044,10 @@ window.PDFREE_LOCALE = {
   d2p_output_label: '\u2192 PDF file',
   d2p_mode_hint:     '\ud83d\udcc4 Text, formatting, tables, images and lists convert automatically. Some rare features (footnotes appear at the end, not per-page; exact column line-flow is approximated) may not look pixel-identical to the original.',
 
+  // ── app.js — next-step cross-sell after Merge success ───────────
+  merge_next_extract_title: 'Continue in Extract Pages',
+  merge_next_extract_sub:   'Pick exactly the pages you need from this merged file — opens instantly, no re-upload.',
+
   // ── fillUI.js ────────────────────────────────────────────
   fill_analysing:             '양식 필드를 분석하는 중…',
   fill_pdfjs_unavailable:     'pdf.js 렌더러를 사용할 수 없습니다',

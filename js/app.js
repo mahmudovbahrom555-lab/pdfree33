@@ -458,6 +458,30 @@ function _handleSuccess({ tool, blob, desc, filename, compressionReport, batchCo
     shareToolBtn.onclick = () => _doShareTool(tool);
   }
 
+  // Next-step cross-sell — currently only Merge → Extract. Reuses the existing
+  // data-handoff mechanism (see the document click listener below): the click
+  // saves the still-in-memory result blob to IndexedDB and navigates, so
+  // Extract's own init (pdf.js thumbnail render) picks it up with zero extra
+  // clicks — no new plumbing needed here beyond the markup + i18n text.
+  const nextStepEl = id('nextStepRow');
+  if (nextStepEl) {
+    if (tool === 'merge') {
+      nextStepEl.innerHTML = `
+        <a href="/extract-pdf/" class="next-step-row" data-handoff>
+          <div class="next-step-row__icon" aria-hidden="true">📑</div>
+          <div class="next-step-row__body">
+            <p class="next-step-row__title">${t('merge_next_extract_title')}</p>
+            <p class="next-step-row__sub">${t('merge_next_extract_sub')}</p>
+          </div>
+          <div class="next-step-row__arrow" aria-hidden="true">→</div>
+        </a>`;
+      nextStepEl.style.display = '';
+    } else {
+      nextStepEl.style.display = 'none';
+      nextStepEl.innerHTML     = '';
+    }
+  }
+
   const btn        = id('mergeBtn');
   btn.textContent  = t('process_again');
   btn.disabled     = false;
