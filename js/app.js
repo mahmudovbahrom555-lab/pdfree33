@@ -19,7 +19,7 @@ console.info(`[PDFree] v${APP_VERSION} loaded — rotate implemented: ${TOOLS.ro
 import { showHomePage, showToolPage,
          renderToolHeader, setButtonReady,
          setButtonDisabled, hideCancelBtn,
-         showToast, setDropHint, setBatchHint }    from './ui.js';
+         showToast, setDropHint, setBatchHint, clearLongOpHint } from './ui.js';
 import { initFileListeners, setCurrentTool,
          clearFiles, selectedFiles, addFiles,
          renderList }                             from './files.js';
@@ -346,6 +346,7 @@ function resetState() {
   hide('progressBar');
   hide('progressLabel');
   id('progressFill').style.width = '0%';
+  clearLongOpHint();
 
   hideCancelBtn();
 
@@ -496,11 +497,29 @@ function _handleSuccess({ tool, blob, desc, filename, compressionReport, batchCo
 
   hide('progressBar');
   hide('progressLabel');
+  // Real bug found via a user report + screenshot: a slow merge that had
+  // armed the 12s "Still working…" hint (startLongOpHint in processor.js's
+  // doProcess) left it stuck visible after success — this function hid the
+  // progress bar/label directly instead of going through ui.js's own
+  // hideProgress(), which is the only place that also calls
+  // clearLongOpHint(). Same class of bug already fixed once for the batch
+  // runner specifically (see processor.js:1955's comment) but not at this
+  // shared, sitewide success handler — so it recurred for every other tool.
+  clearLongOpHint();
   card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
   notifyToolSuccess(tool, { compressionReport, batchCompressSummary, confidence, atlasEri });
 
-  if (tool === 'merge' && pageCounts?.length > 1) {
+  // Per-file breakdown is genuinely useful to verify a small merge (which
+  // files, what order, how many pages each) — but past a handful of files it
+  // turns into an unreadable wall of text that inflates .success-top's height
+  // and pushes everything below it (including #nextStepRow) past what
+  // card.scrollIntoView({block:'nearest'}) actually brings into view, since
+  // that call only guarantees the card's TOP is visible, not its full height.
+  // Found via a real report: a 13-file merge made the Extract cross-sell
+  // "disappear" — it was still there, just scrolled out of reach below a
+  // dozen-file-name list nobody was going to read anyway.
+  if (tool === 'merge' && pageCounts?.length > 1 && pageCounts.length <= 5) {
     const breakdown = pageCounts
       .map(f => `${f.name.replace(/\.pdf$/i, '')} (${f.pages}p)`)
       .join(' + ');
