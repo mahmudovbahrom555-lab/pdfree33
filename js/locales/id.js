@@ -1060,6 +1060,7 @@ window.PDFREE_LOCALE = {
   fill_tap_to_sign:           'Ketuk untuk tanda tangan',
   fill_sig_disclaimer:        'Tanda tangan visual — bukan tanda tangan digital bersertifikat',
   fill_use_saved:             'Gunakan yang tersimpan ↑',
+  fill_forget_saved:         'Forget saved signature',
   fill_tab_draw:              'Gambar',
   fill_tab_type:              'Ketik',
   fill_tab_upload:            'Unggah',

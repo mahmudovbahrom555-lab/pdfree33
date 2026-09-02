@@ -1060,6 +1060,7 @@ window.PDFREE_LOCALE = {
   fill_tap_to_sign:           'Нажмите, чтобы подписать',
   fill_sig_disclaimer:        'Визуальная подпись — не является сертифицированной цифровой подписью',
   fill_use_saved:             'Использовать сохранённую ↑',
+  fill_forget_saved:         'Forget saved signature',
   fill_tab_draw:              'Рисовать',
   fill_tab_type:              'Ввести',
   fill_tab_upload:            'Загрузить',

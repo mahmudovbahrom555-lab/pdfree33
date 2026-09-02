@@ -1059,6 +1059,7 @@ window.PDFREE_LOCALE = {
   fill_tap_to_sign:           'İmzalamak için dokunun',
   fill_sig_disclaimer:        'Görsel imza — sertifikalı dijital imza değildir',
   fill_use_saved:             'Kayıtlıyı kullan ↑',
+  fill_forget_saved:         'Forget saved signature',
   fill_tab_draw:              'Çiz',
   fill_tab_type:              'Yaz',
   fill_tab_upload:            'Yükle',

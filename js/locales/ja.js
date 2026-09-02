@@ -1062,6 +1062,7 @@ window.PDFREE_LOCALE = {
   fill_tap_to_sign:           'タップして署名',
   fill_sig_disclaimer:        '視覚的な署名です — 認定されたデジタル署名ではありません',
   fill_use_saved:             '保存済みを使用 ↑',
+  fill_forget_saved:         'Forget saved signature',
   fill_tab_draw:              '描く',
   fill_tab_type:              '入力',
   fill_tab_upload:            'アップロード',

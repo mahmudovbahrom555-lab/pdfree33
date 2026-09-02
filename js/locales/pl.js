@@ -1059,6 +1059,7 @@ window.PDFREE_LOCALE = {
   fill_tap_to_sign:           'Dotknij, aby podpisać',
   fill_sig_disclaimer:        'Podpis wizualny — nie jest to certyfikowany podpis cyfrowy',
   fill_use_saved:             'Użyj zapisanego ↑',
+  fill_forget_saved:         'Forget saved signature',
   fill_tab_draw:              'Rysuj',
   fill_tab_type:              'Wpisz',
   fill_tab_upload:            'Prześlij',

@@ -1060,6 +1060,7 @@ window.PDFREE_LOCALE = {
   fill_tap_to_sign:           'Chạm để ký',
   fill_sig_disclaimer:        'Chữ ký hình ảnh — không phải chữ ký số được chứng nhận',
   fill_use_saved:             'Dùng chữ ký đã lưu ↑',
+  fill_forget_saved:         'Forget saved signature',
   fill_tab_draw:              'Vẽ',
   fill_tab_type:              'Nhập',
   fill_tab_upload:            'Tải lên',

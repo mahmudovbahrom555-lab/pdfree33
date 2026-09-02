@@ -1061,6 +1061,7 @@ window.PDFREE_LOCALE = {
   fill_tap_to_sign:           'Toca para firmar',
   fill_sig_disclaimer:        'Firma visual — no es una firma digital certificada',
   fill_use_saved:             'Usar guardada ↑',
+  fill_forget_saved:         'Forget saved signature',
   fill_tab_draw:              'Dibujar',
   fill_tab_type:              'Escribir',
   fill_tab_upload:            'Subir',

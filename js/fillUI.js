@@ -57,6 +57,16 @@ function _loadSignatureFromStorage() {
   try { return localStorage.getItem(_SIG_STORAGE_KEY); } catch { return null; }
 }
 
+// Unlike the per-document draft (cleared automatically on export — see
+// clearFillDraft()), a saved signature is DELIBERATELY persistent across
+// documents/sessions for reuse — but that means it had no expiry AND no
+// user-facing way to remove it, the only real "leak" class of bug that
+// makes sense for something opt-in-persistent by design. A signature image
+// is about as personal as this site's data ever gets.
+function _clearSignatureFromStorage() {
+  try { localStorage.removeItem(_SIG_STORAGE_KEY); } catch { /* storage unavailable */ }
+}
+
 // ── Module state ──────────────────────────────────────────────
 let _fields      = [];
 let _values      = {};
@@ -712,12 +722,25 @@ function _openSigPad(fieldName, rect, pageIndex) {
   const baselineInsetX = Math.round(logW * 0.06);
 
   const savedSig    = _loadSignatureFromStorage();
+  // "Use saved" + a small "forget" icon button, both wrapped in one flex:1
+  // container so they occupy the same slot the lone button used to. A saved
+  // signature persists across sessions by design (that's the point) but had
+  // no way to remove it from the site's own UI — real gap for something
+  // this personal, found alongside the handoff-blob leak fix in the same
+  // session (2026-09).
   const useSavedBtn = savedSig ? `
-    <button data-sig-action="use-saved"
-      style="flex:1;padding:13px;background:#1a3a2a;color:#b6f5d0;border:none;border-radius:10px;
-             font-size:13px;font-weight:500;cursor:pointer;">
-      ${t('fill_use_saved')}
-    </button>` : '';
+    <div style="flex:1;display:flex;gap:6px;">
+      <button data-sig-action="use-saved"
+        style="flex:1;padding:13px;background:#1a3a2a;color:#b6f5d0;border:none;border-radius:10px;
+               font-size:13px;font-weight:500;cursor:pointer;">
+        ${t('fill_use_saved')}
+      </button>
+      <button data-sig-action="forget-saved" aria-label="${t('fill_forget_saved')}" title="${t('fill_forget_saved')}"
+        style="flex-shrink:0;width:44px;padding:13px 0;background:#2a1a1a;color:#f5b6b6;border:none;
+               border-radius:10px;font-size:15px;cursor:pointer;">
+        🗑
+      </button>
+    </div>` : '';
 
   const TAB_LABELS = { draw: t('fill_tab_draw'), type: t('fill_tab_type'), upload: t('fill_tab_upload') };
   const _tabBtn = (tab, active) =>
@@ -928,6 +951,12 @@ function _openSigPad(fieldName, rect, pageIndex) {
       _sigImages[fieldName] = { dataUrl: savedSig, rect, pageIndex };
       _closeSigPad();
       _updateSigBtn(fieldName, savedSig);
+
+    } else if (action === 'forget-saved') {
+      _clearSignatureFromStorage();
+      // Remove the whole use-saved/forget pair immediately — nothing left
+      // to "use saved" once the underlying signature is gone.
+      e.target.closest('[data-sig-action="forget-saved"]')?.parentElement.remove();
 
     } else if (action === 'save') {
       let dataUrl = null;

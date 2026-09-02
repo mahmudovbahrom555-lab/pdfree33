@@ -1090,6 +1090,7 @@ export const EN = {
   fill_tap_to_sign:          'Tap to sign',
   fill_sig_disclaimer:       'Visual signature — not a certified digital signature',
   fill_use_saved:            'Use saved ↑',
+  fill_forget_saved:         'Forget saved signature',
   fill_tab_draw:             'Draw',
   fill_tab_type:             'Type',
   fill_tab_upload:           'Upload',

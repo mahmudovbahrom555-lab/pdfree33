@@ -1062,6 +1062,7 @@ window.PDFREE_LOCALE = {
   fill_tap_to_sign:           'Zum Unterschreiben tippen',
   fill_sig_disclaimer:        'Visuelle Unterschrift — keine zertifizierte digitale Signatur',
   fill_use_saved:             'Gespeicherte verwenden ↑',
+  fill_forget_saved:         'Forget saved signature',
   fill_tab_draw:              'Zeichnen',
   fill_tab_type:              'Tippen',
   fill_tab_upload:            'Hochladen',

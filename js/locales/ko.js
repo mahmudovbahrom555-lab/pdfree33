@@ -1061,6 +1061,7 @@ window.PDFREE_LOCALE = {
   fill_tap_to_sign:           '탭하여 서명',
   fill_sig_disclaimer:        '시각적 서명입니다 — 인증된 디지털 서명이 아닙니다',
   fill_use_saved:             '저장된 서명 사용 ↑',
+  fill_forget_saved:         'Forget saved signature',
   fill_tab_draw:              '그리기',
   fill_tab_type:              '입력',
   fill_tab_upload:            '업로드',

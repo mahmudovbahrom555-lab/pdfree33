@@ -1059,6 +1059,7 @@ window.PDFREE_LOCALE = {
   fill_tap_to_sign:           'Tik om te ondertekenen',
   fill_sig_disclaimer:        'Visuele handtekening — geen gecertificeerde digitale handtekening',
   fill_use_saved:             'Opgeslagen gebruiken ↑',
+  fill_forget_saved:         'Forget saved signature',
   fill_tab_draw:              'Tekenen',
   fill_tab_type:              'Typen',
   fill_tab_upload:            'Uploaden',
