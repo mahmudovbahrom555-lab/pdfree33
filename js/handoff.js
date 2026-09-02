@@ -83,3 +83,26 @@ export async function restoreHandoff() {
     tx.onabort    = () => resolve(null);
   });
 }
+
+// Best-effort cleanup for an ABANDONED handoff: user clicked a cross-sell
+// link (saveHandoff already wrote the blob), then never actually landed on
+// the destination page — closed the tab, hit back, network hiccup. The TTL
+// check above only runs as a side effect of a LATER restoreHandoff() call,
+// which only ever fires on a tool-page load — if the user's next page isn't
+// one, or they never come back at all, a stale file blob would otherwise sit
+// in IndexedDB on their own disk well past its 5-minute TTL, indefinitely.
+// That's a real gap against this site's own "cleared when you close the tab"
+// promise, even though it's local-only storage (not a server/cross-user
+// leak). Call unconditionally on every page load, not just tool pages, so
+// the TTL is an actual guarantee instead of an opportunistic one.
+export async function sweepExpiredHandoff() {
+  let db;
+  try { db = await _openDb(); } catch { return; }
+  const tx    = db.transaction(STORE_NAME, 'readwrite');
+  const store = tx.objectStore(STORE_NAME);
+  const get   = store.get(ENTRY_KEY);
+  get.onsuccess = () => {
+    const e = get.result;
+    if (e && e.expires < Date.now()) store.delete(ENTRY_KEY);
+  };
+}

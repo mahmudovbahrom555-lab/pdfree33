@@ -49,7 +49,7 @@ import { checkReturnVisit, recordDownload,
 import { initHomepageEngagement }                 from './homepageEngagement.js';
 import { initRageClickDetection }                 from './rageClicks.js';
 import { t }                                      from './i18n.js';
-import { saveHandoff, restoreHandoff }            from './handoff.js';
+import { saveHandoff, restoreHandoff, sweepExpiredHandoff } from './handoff.js';
 
 // ── Module-level constants ────────────────────────────────────
 const TOOL_SLUGS = {
@@ -1479,6 +1479,14 @@ function initSearch() {
 
 document.addEventListener('DOMContentLoaded', () => {
   checkReturnVisit();   // check if user returned shortly after downloading
+  // Abandoned handoff cleanup (user clicked a cross-sell link, then never
+  // landed on the destination page) — restoreHandoff() below only clears an
+  // expired entry as a side effect of running on the CORRECT tool page, so
+  // it can't be relied on alone to enforce the 5-minute TTL. Runs on every
+  // page load, not just tool pages, so an abandoned blob never outlives its
+  // TTL by more than "however long until the next page load" — see
+  // handoff.js's own comment for the full reasoning.
+  sweepExpiredHandoff().catch(() => {});
   // Detect tool via data-tool attribute or URL — both CSP-safe.
   const requestedTool = _detectTool();
 
