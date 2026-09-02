@@ -699,6 +699,9 @@
         <button id="shareBtn" class="share-btn" type="button" style="display:none" aria-label="Send file via device apps"></button>
       </div>
 
+      <!-- Next-step cross-sell (e.g. Merge → Extract) — hidden except for tools that define one, populated by app.js's _handleSuccess() -->
+      <div id="nextStepRow" style="display:none"></div>
+
       <!-- PDF→Word confidence report (hidden for other tools) -->
       <div id="p2wConfidence" class="p2w-confidence" style="display:none" aria-live="polite"></div>
 
@@ -717,9 +720,6 @@
         <button type="button" class="fb-row-btn fb-row-btn--idea" data-open-feedback data-fb-type="idea">💡 Heb een idee</button>
         <button type="button" class="fb-row-btn fb-row-btn--good" data-open-feedback data-fb-type="other">👍 Alles goed!</button>
       </div>
-
-      <!-- Next-step cross-sell (e.g. Merge → Extract) — hidden except for tools that define one, populated by app.js's _handleSuccess() -->
-      <div id="nextStepRow" style="display:none"></div>
 
       <!-- Share this tool — shown after every successful conversion -->
       <div class="share-tool-row" id="shareToolRow">
