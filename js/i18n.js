@@ -459,10 +459,11 @@ export const EN = {
   hero_pick_back:     '← Back',
   hero_hint_multi:    'Recommended: {tool}',
   hero_chip_one_file: '1 file',
-  hero_unsupported_file: 'Please choose a PDF or image (JPG/PNG) file.',
-  hero_mixed_files:      'Please add all PDFs or all images — not both at once.',
+  hero_unsupported_file: 'Please choose a PDF, image (JPG/PNG) or Word (.docx) file.',
+  hero_mixed_files:      'Please add all PDFs, all images, or all Word files — not a mix.',
   hero_multi_pdf_label:   '{n} PDF files',
   hero_multi_image_label: '{n} image files',
+  hero_multi_docx_label:  '{n} Word files',
   home_title:         'PDFree — Free PDF Tools, No Limits',
 
   // ── feedback.js — personalized modal ──────────────────────────
@@ -1067,6 +1068,10 @@ export const EN = {
   p2m_formula_ocr_subtitle: 'Downloads a ~76MB AI model on first use. In our own testing it got about 7 in 10 formulas right — every recognized formula is clearly marked as AI-generated so you can double-check it, and anything it can\'t read falls back to an image like before.',
   p2m_formula_ocr_fail_one:  "1 formula couldn't be recognized as LaTeX — kept as an image instead.",
   p2m_formula_ocr_fail_many: "{n} formulas couldn't be recognized as LaTeX — kept as images instead.",
+
+  // ── docx2pdfUI.js ──────────────────────────────────────────────
+  d2p_output_label: '→ PDF file',
+  d2p_mode_hint:     '📄 Text, formatting, tables, images and lists convert automatically. Some rare features (footnotes appear at the end, not per-page; exact column line-flow is approximated) may not look pixel-identical to the original.',
 
   // ── fillUI.js ──────────────────────────────────────────────────
   fill_analysing:            'Analysing form fields…',

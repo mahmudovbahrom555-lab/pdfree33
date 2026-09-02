@@ -36,6 +36,7 @@ window.PDFREE_LOCALE = {
     compare:          ['so sánh', 'khác biệt', 'so sánh pdf', 'tìm thay đổi', 'đối chiếu'],
     scanDocument:     ['quét', 'máy quét', 'quét tài liệu', 'quét sang pdf', 'quét bằng camera', 'quét ảnh'],
     glossary:         ['từ điển', 'định nghĩa', 'từ điển pdf', 'đánh dấu thuật ngữ', 'thêm định nghĩa'],
+    docx2pdf:         ['word to pdf', 'docx to pdf', 'convert word to pdf', 'doc to pdf', 'docx converter', 'word converter'],
     pdf2pdfa:         ['pdf/a', 'pdfa', 'lưu trữ', 'lưu trữ lâu dài', 'kiểm tra pdf/a', 'iso 19005'],
   },
 
@@ -479,6 +480,7 @@ window.PDFREE_LOCALE = {
   hero_mixed_files:      'Chỉ thêm PDF hoặc chỉ thêm hình ảnh — không trộn lẫn cả hai.',
   hero_multi_pdf_label:   '{n} tệp PDF',
   hero_multi_image_label: '{n} tệp hình ảnh',
+  hero_multi_docx_label:  '{n} Word files',
   home_title:         'PDFree — Công Cụ PDF Miễn Phí, Không Giới Hạn',
 
   fb_intro:              'Gửi thẳng đến Murod trên Telegram — không hệ thống ticket, không CRM. Tôi tự đọc từng tin nhắn.',
@@ -1038,6 +1040,8 @@ window.PDFREE_LOCALE = {
   p2m_formula_ocr_subtitle: 'Tải xuống một mô hình AI khoảng 76MB trong lần sử dụng đầu tiên. Trong quá trình thử nghiệm của chúng tôi, khoảng 7 trên 10 công thức được nhận dạng đúng — mọi công thức được nhận dạng đều được đánh dấu rõ ràng là do AI tạo ra để bạn có thể kiểm tra lại, và những gì không đọc được sẽ quay lại thành hình ảnh như trước.',
   p2m_formula_ocr_fail_one:  '1 công thức không thể nhận dạng thành LaTeX — vẫn giữ dưới dạng hình ảnh.',
   p2m_formula_ocr_fail_many: '{n} công thức không thể nhận dạng thành LaTeX — vẫn giữ dưới dạng hình ảnh.',
+  d2p_output_label: '\u2192 PDF file',
+  d2p_mode_hint:     '\ud83d\udcc4 Text, formatting, tables, images and lists convert automatically. Some rare features (footnotes appear at the end, not per-page; exact column line-flow is approximated) may not look pixel-identical to the original.',
 
   // ── fillUI.js ────────────────────────────────────────────
   fill_analysing:             'Đang phân tích các trường biểu mẫu…',

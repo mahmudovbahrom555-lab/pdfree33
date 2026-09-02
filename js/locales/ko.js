@@ -37,6 +37,7 @@ window.PDFREE_LOCALE = {
     compare:          ['비교', '차이점', '변경 사항', 'pdf 비교', '차이 찾기', '비교하기'],
     scanDocument:     ['스캔', '스캐너', '문서 스캔', 'PDF로 스캔', '카메라 스캔', '사진 스캔'],
     glossary:         ['용어집', '정의', 'PDF 용어집', '용어 강조', '정의 추가'],
+    docx2pdf:         ['word to pdf', 'docx to pdf', 'convert word to pdf', 'doc to pdf', 'docx converter', 'word converter'],
     pdf2pdfa:         ['pdf/a', '아카이브', '장기보존', 'pdf/a 확인', '보존용 pdf'],
   },
 
@@ -480,6 +481,7 @@ window.PDFREE_LOCALE = {
   hero_mixed_files:      'PDF만 또는 이미지만 추가해 주세요 — 함께 섞을 수 없습니다.',
   hero_multi_pdf_label:   '{n}개 PDF 파일',
   hero_multi_image_label: '{n}개 이미지 파일',
+  hero_multi_docx_label:  '{n} Word files',
   home_title:         'PDFree — 무료 PDF 도구, 제한 없음',
 
   fb_intro:              '텔레그램으로 Murod에게 직접 전달됩니다 — 티켓 시스템도 CRM도 없어요. 제가 직접 모든 메시지를 읽습니다.',
@@ -1039,6 +1041,8 @@ window.PDFREE_LOCALE = {
   p2m_formula_ocr_subtitle: '처음 사용할 때 약 76MB 크기의 AI 모델을 다운로드합니다. 자체 테스트에서 약 10개 중 7개의 수식이 정확했습니다 — 인식된 모든 수식은 AI가 생성했음을 명확히 표시하므로 다시 확인할 수 있으며, 읽지 못한 수식은 이전처럼 이미지로 대체됩니다.',
   p2m_formula_ocr_fail_one:  '수식 1개를 LaTeX로 인식하지 못했습니다 — 대신 이미지로 유지됩니다.',
   p2m_formula_ocr_fail_many: '수식 {n}개를 LaTeX로 인식하지 못했습니다 — 대신 이미지로 유지됩니다.',
+  d2p_output_label: '\u2192 PDF file',
+  d2p_mode_hint:     '\ud83d\udcc4 Text, formatting, tables, images and lists convert automatically. Some rare features (footnotes appear at the end, not per-page; exact column line-flow is approximated) may not look pixel-identical to the original.',
 
   // ── fillUI.js ────────────────────────────────────────────
   fill_analysing:             '양식 필드를 분석하는 중…',

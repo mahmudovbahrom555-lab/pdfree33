@@ -38,6 +38,7 @@ window.PDFREE_LOCALE = {
     compare:          ['比較', '差分', '違いを比較', 'PDFを比較', '変更点を見つける'],
     scanDocument:     ['スキャン', 'スキャナー', '文書をスキャン', 'PDFにスキャン', 'カメラでスキャン', '写真をスキャン'],
     glossary:         ['用語集', '定義', 'PDF用語集', '用語をハイライト', '定義を追加'],
+    docx2pdf:         ['word to pdf', 'docx to pdf', 'convert word to pdf', 'doc to pdf', 'docx converter', 'word converter'],
     pdf2pdfa:         ['pdf/a', 'アーカイブ', '長期保存', 'pdf/a確認', 'アーカイブ用pdf'],
   },
 
@@ -481,6 +482,7 @@ window.PDFREE_LOCALE = {
   hero_mixed_files:      'PDFのみ、または画像のみを追加してください — 混在はできません。',
   hero_multi_pdf_label:   '{n}件のPDFファイル',
   hero_multi_image_label: '{n}件の画像ファイル',
+  hero_multi_docx_label:  '{n} Word files',
   home_title:         'PDFree — 無料のPDFツール、無制限',
 
   fb_intro:              'TelegramでMurodに直接届きます — チケット制度もCRMもありません。すべて私自身が読みます。',
@@ -1040,6 +1042,8 @@ window.PDFREE_LOCALE = {
   p2m_formula_ocr_subtitle: '初回利用時に約76MBのAIモデルをダウンロードします。独自のテストでは約10個中7個の数式が正しく認識されました — 認識された数式には必ずAI生成である旨が明示されるため、確認のうえご利用ください。読み取れなかった場合は、これまで通り画像として出力されます。',
   p2m_formula_ocr_fail_one:  '1個の数式をLaTeXとして認識できませんでした — 代わりに画像として保持されます。',
   p2m_formula_ocr_fail_many: '{n}個の数式をLaTeXとして認識できませんでした — 代わりに画像として保持されます。',
+  d2p_output_label: '\u2192 PDF file',
+  d2p_mode_hint:     '\ud83d\udcc4 Text, formatting, tables, images and lists convert automatically. Some rare features (footnotes appear at the end, not per-page; exact column line-flow is approximated) may not look pixel-identical to the original.',
 
   // ── fillUI.js ────────────────────────────────────────────
   fill_analysing:             'フォームフィールドを解析しています…',

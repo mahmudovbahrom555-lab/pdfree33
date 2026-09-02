@@ -4797,6 +4797,44 @@
         "tr": "pdf pdfa dönüştürme, pdfa dönüştürücü, pdf/a uyumluluk kontrolü, pdf/a-2b, pdf/a-2u, pdf arşivleme",
         "vi": "pdf sang pdfa, chuyển đổi pdfa, kiểm tra tuân thủ pdf/a, pdf/a-2b, pdf/a-2u, lưu trữ pdf"
       }
+    },
+    {
+      "id": "docx2pdf",
+      "icon": "📄",
+      "toolKey": "docx2pdf",
+      "slugs": {
+        "en": "word-to-pdf"
+      },
+      "titles": {
+        "en": "Word to PDF Converter — Free, No Upload | PDFree"
+      },
+      "descs": {
+        "en": "Convert a .docx file to PDF — runs entirely in your browser, no upload."
+      },
+      "navLabels": {
+        "en": "Word to PDF"
+      },
+      "cardNames": {
+        "en": "Word to PDF"
+      },
+      "cardDescs": {
+        "en": "Convert a .docx file to PDF locally"
+      },
+      "breadcrumb": {
+        "en": "Word→PDF"
+      },
+      "metaDescs": {
+        "en": "Convert Word (.docx) documents to PDF for free — text, tables, images and formatting preserved. 100% private, runs in your browser. No upload, no account."
+      },
+      "ogTitles": {
+        "en": "Word to PDF Converter — Free, No Upload"
+      },
+      "ogDescs": {
+        "en": "Word to PDF conversion runs entirely in your browser. No upload, no server, no account. 100% private."
+      },
+      "keywords": {
+        "en": "word to pdf, docx to pdf, convert word to pdf, doc to pdf, docx converter, word to pdf online, word to pdf no upload, convert docx to pdf free"
+      }
     }
   ],
   "ui": {

@@ -70,6 +70,8 @@ import { initPdf2PptOptions, hidePdf2PptOptions,
          getPdf2PptParams }                 from './pdf2pptUI.js';
 import { initPdf2MdOptions, hidePdf2MdOptions,
          getPdf2MdParams }                  from './pdf2mdUI.js';
+import { initDocx2PdfOptions, hideDocx2PdfOptions,
+         getDocx2PdfParams }                from './docx2pdfUI.js';
 import { initUnlockOptions, hideUnlockOptions,
          getUnlockParams }                  from './unlockUI.js';
 import { initCompareOptions, hideCompareOptions,
@@ -635,6 +637,13 @@ registerTool('pdf2md', {
   // score for Markdown output instead of DOCX) — always called, not gated,
   // so it self-clears correctly when switching to/from pdf2word.
   onSuccess: ({ atlasEri }) => renderAtlasCheck(atlasEri, 'atlas_check_scope_note_md'),
+});
+
+registerTool('docx2pdf', {
+  runner:    'docx2pdf',
+  init:      initDocx2PdfOptions,
+  hide:      hideDocx2PdfOptions,
+  getParams: getDocx2PdfParams,
 });
 
 registerTool('unlock', {

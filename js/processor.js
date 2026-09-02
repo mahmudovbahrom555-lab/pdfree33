@@ -30,6 +30,7 @@ import { BULLET_RE, NUMBERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
          _visualRTLToLogical, _splitCrossColumnLines, _isCjk } from './textLayoutUtils.js';
 import { _p2mdExtractText, _p2mdRender, _detectPageImages, browserCanvasFactory } from './pdf2mdCore.js';
 import { recognizeFormula } from './formulaOcr.js';
+import { docxToPdf } from './docxToPdfCore.js';
 export { BULLET_RE, NUMBERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE, _splitCrossColumnLines };
 
 // Below this ERI "tables" score, the text-detected/border-grid tables in the
@@ -280,6 +281,7 @@ export async function doProcess(currentTool, extraParams = {}) {
     pdf2excel: () => _runPdf2Excel(filesSnapshot, extraParams),
     pdf2ppt:  () => _runPdf2Ppt(filesSnapshot, extraParams),
     pdf2md:   () => _runPdf2Md(filesSnapshot, extraParams),
+    docx2pdf: () => _runDocx2Pdf(filesSnapshot, extraParams),
     unlock:       () => _runUnlock(filesSnapshot, extraParams),
     worker:       () => _runWorkerTool(getWorkerTool(currentTool) ?? currentTool, filesSnapshot, extraParams),
     organize:     () => _runOrganize(filesSnapshot, extraParams),
@@ -2958,6 +2960,45 @@ async function _runPdf2Md(filesSnapshot, { enableFormulaOcr = false } = {}) {
       showToast(tp(failCount, 'p2m_formula_ocr_fail_one', 'p2m_formula_ocr_fail_many', { n: failCount }), 6000);
     }, 4000);
   }
+}
+
+// Word (.docx) -> PDF, entirely client-side — see js/docxToPdfCore.js for
+// the real conversion (docx-preview renders into DOM, walked into a
+// pdfmake document definition -> real vector PDF, not a rasterized
+// image). 60MB cap: generous for a real Word document (even one with
+// several embedded images) while still guarding against something
+// absurd hanging docx-preview's DOM rendering in the browser tab.
+async function _runDocx2Pdf(filesSnapshot, _extraParams) {
+  const file = filesSnapshot[0];
+  if (!_checkSize(file, 60)) { _abortUI(); return; }
+
+  setProgress(5, 'Reading document…');
+
+  let blob;
+  try {
+    blob = await docxToPdf(file, {
+      isCancelled: () => !isProcessing,
+      onProgress:  (pct) => setProgress(pct, pct < 60 ? 'Reading document…' : 'Building PDF…'),
+    });
+  } catch (err) {
+    isProcessing = false; setFilesLocked(false); hideCancelBtn();
+    if (err.message === 'cancelled') return; // isCancelled() bail — not a real error, no toast
+    _handleError('docx2pdf', err.message); return;
+  }
+
+  if (!isProcessing) return;
+
+  const filename = file.name.replace(/\.docx$/i, '.pdf');
+  const desc = fmtSize(blob.size);
+
+  isProcessing = false;
+  setFilesLocked(false);
+  hideCancelBtn();
+  setProgress(100, t('prog_done'));
+
+  document.dispatchEvent(new CustomEvent('pdfree:success', {
+    detail: { tool: 'docx2pdf', blob, desc, filename }
+  }));
 }
 
 // pdf2md's extraction/render core (_detectPageImages/_p2mdExtractImageBlob/

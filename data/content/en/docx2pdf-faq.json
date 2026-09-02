@@ -1,0 +1,58 @@
+[
+  {
+    "@type": "Question",
+    "name": "Is my Word document uploaded anywhere to convert it?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. The .docx file is parsed and rendered into a PDF entirely in your browser. Your document never leaves your device."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Does PDFree store or log my files after processing?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. PDFree runs entirely in your browser — there is no backend server that receives your files. Because nothing is uploaded, nothing can be stored, logged, or retained. Your document exists only in your browser's memory for the duration of the session and is cleared when you close the tab."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Does the PDF text stay selectable and searchable, or is it just an image?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "The text stays real, selectable and searchable — this isn't a screenshot or rasterized image of your document. Paragraphs, headings, bold/italic, tables, bulleted and numbered lists (including nested levels and Word's own numbering rules) all convert to genuine PDF text."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "What formatting might not convert perfectly?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "A few rarer cases are approximated rather than pixel-perfect: multi-column sections are balanced by measured paragraph height rather than Word's exact line-by-line flow, so a section with one very long paragraph among several short ones can look uneven. Footnote text is collected into a \"Footnotes\" section at the end of the document rather than pinned to the bottom of the specific page it's referenced on. Table borders use the first cell's width and color for the whole table. An image placed inline in the middle of a sentence (rather than on its own line) is skipped. Page-number fields (like \"Page X of Y\") don't resolve to an actual number. Everyday documents — reports, letters, resumes, articles — convert cleanly."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I convert multiple Word documents at once?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "This tool converts one .docx file at a time. Drop in another file to convert it separately."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is this a free Word to PDF converter with no sign up?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. PDFree is completely free — no sign up, no account, no installation. Open the tool, load your .docx file, and download the PDF."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Does it work with .doc (the older Word format), not just .docx?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Not currently — only the modern .docx format (Word 2007 and later) is supported. If you have an older .doc file, re-save it as .docx in Word first."
+    }
+  }
+]

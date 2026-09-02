@@ -41,6 +41,7 @@ export const IMAGE_DIM_PRESETS = {
 export const ACCEPTED_MIME = {
   '.pdf,application/pdf': ['application/pdf'],
   '.jpg,.jpeg,.png,.webp,.heic,.heif,image/jpeg,image/png,image/webp,image/heic,image/heif': ['image/jpeg', 'image/png', 'image/webp', 'image/heic', 'image/heif'],
+  '.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
 };
 
 /**
@@ -457,6 +458,22 @@ export const TOOLS = {
     btn:         '📝 Convert to Markdown',
     multi:       false,
     accept:      '.pdf,application/pdf',
+    implemented: true,
+  },
+  // EN-only, no titles/descs/btns dicts — getLocalizedTool() (above) falls
+  // back to title/desc/btn for any locale, same pattern already documented
+  // on scanDocument below. Has a real homepage tool-card (see index.html +
+  // all 13 other homepages) unlike scanDocument's "search/tags only" v1 —
+  // just not translated into the other 13 locales yet.
+  docx2pdf: {
+    icon:        '📄',
+    title:       'Word to PDF',
+    desc:        'Convert a .docx file to PDF — runs in your browser, no upload',
+    tags:        ['word to pdf', 'docx to pdf', 'convert word to pdf', 'doc to pdf',
+                  'docx converter', 'word converter'],
+    btn:         '📄 Convert to PDF',
+    multi:       false,
+    accept:      '.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document',
     implemented: true,
   },
   unlock: {

@@ -36,6 +36,7 @@ window.PDFREE_LOCALE = {
     compare:          ['vergleichen', 'unterschied', 'unterschiede', 'änderungen', 'pdfs vergleichen', 'änderungen finden'],
     scanDocument:     ['scannen', 'scanner', 'dokument scannen', 'scan zu pdf', 'kamera scan', 'foto scannen'],
     glossary:         ['glossar', 'begriffe', 'definitionen', 'pdf glossar', 'begriffe hervorheben', 'definitionen hinzufügen'],
+    docx2pdf:         ['word to pdf', 'docx to pdf', 'convert word to pdf', 'doc to pdf', 'docx converter', 'word converter'],
     pdf2pdfa:         ['pdf/a', 'pdfa', 'archivierung', 'archivtauglich', 'pdf/a prüfen', 'iso 19005', 'langzeitarchivierung'],
   },
 
@@ -479,6 +480,7 @@ window.PDFREE_LOCALE = {
   hero_mixed_files:      'Bitte füge entweder nur PDFs oder nur Bilder hinzu — nicht beides zusammen.',
   hero_multi_pdf_label:   '{n} PDF-Dateien',
   hero_multi_image_label: '{n} Bilddateien',
+  hero_multi_docx_label:  '{n} Word files',
   home_title:         'PDFree — Kostenlose PDF-Tools, Keine Limits',
 
   fb_intro:              'Geht direkt an Murod auf Telegram — kein Ticketsystem, kein CRM. Ich lese jede Nachricht persönlich.',
@@ -1040,6 +1042,8 @@ window.PDFREE_LOCALE = {
   p2m_formula_ocr_subtitle: 'Lädt beim ersten Gebrauch ein ca. 76 MB großes KI-Modell herunter. In unseren eigenen Tests waren etwa 7 von 10 Formeln korrekt — jede erkannte Formel wird deutlich als KI-generiert gekennzeichnet, damit du sie prüfen kannst; alles, was nicht erkannt wird, fällt wie bisher auf ein Bild zurück.',
   p2m_formula_ocr_fail_one:  '1 Formel konnte nicht als LaTeX erkannt werden — stattdessen als Bild beibehalten.',
   p2m_formula_ocr_fail_many: '{n} Formeln konnten nicht als LaTeX erkannt werden — stattdessen als Bilder beibehalten.',
+  d2p_output_label: '\u2192 PDF file',
+  d2p_mode_hint:     '\ud83d\udcc4 Text, formatting, tables, images and lists convert automatically. Some rare features (footnotes appear at the end, not per-page; exact column line-flow is approximated) may not look pixel-identical to the original.',
 
   // ── fillUI.js ────────────────────────────────────────────
   fill_analysing:             'Formularfelder werden analysiert…',

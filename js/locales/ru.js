@@ -36,6 +36,7 @@ window.PDFREE_LOCALE = {
     compare:          ['сравнить', 'сравнение', 'разница', 'различия', 'сравнить pdf', 'найти изменения'],
     scanDocument:     ['сканировать', 'сканер', 'сканировать документ', 'сканировать в pdf', 'скан камерой', 'сканировать фото'],
     glossary:         ['глоссарий', 'определения', 'глоссарий pdf', 'выделить термины', 'добавить определения'],
+    docx2pdf:         ['word to pdf', 'docx to pdf', 'convert word to pdf', 'doc to pdf', 'docx converter', 'word converter'],
     pdf2pdfa:         ['pdf/a', 'архив', 'архивирование', 'проверить pdf/a', 'исо 19005', 'долгосрочное хранение'],
   },
 
@@ -479,6 +480,7 @@ window.PDFREE_LOCALE = {
   hero_mixed_files:      'Добавьте только PDF или только изображения — не вместе.',
   hero_multi_pdf_label:   'PDF-файлов: {n}',
   hero_multi_image_label: 'Изображений: {n}',
+  hero_multi_docx_label:  '{n} Word files',
   home_title:         'PDFree — Бесплатные PDF-инструменты, Без ограничений',
 
   fb_intro:              'Идёт напрямую Муроду в Telegram — без тикет-системы, без CRM. Я лично читаю каждое сообщение.',
@@ -1038,6 +1040,8 @@ window.PDFREE_LOCALE = {
   p2m_formula_ocr_subtitle: 'При первом использовании загружается ИИ-модель размером около 76 МБ. В наших собственных тестах верно распознавались примерно 7 из 10 формул — каждая распознанная формула явно помечается как сгенерированная ИИ, чтобы вы могли её перепроверить, а всё, что не удалось распознать, как и раньше, остаётся изображением.',
   p2m_formula_ocr_fail_one:  'Не удалось распознать 1 формулу как LaTeX — она осталась в виде изображения.',
   p2m_formula_ocr_fail_many: 'Не удалось распознать {n} формул как LaTeX — они остались в виде изображений.',
+  d2p_output_label: '\u2192 PDF file',
+  d2p_mode_hint:     '\ud83d\udcc4 Text, formatting, tables, images and lists convert automatically. Some rare features (footnotes appear at the end, not per-page; exact column line-flow is approximated) may not look pixel-identical to the original.',
 
   // ── fillUI.js ────────────────────────────────────────────
   fill_analysing:             'Анализ полей формы…',

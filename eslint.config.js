@@ -32,6 +32,7 @@ export default [
         DOMParser: 'readonly',
         // Standard browser/worker APIs
         Image: 'readonly', prompt: 'readonly', alert: 'readonly',
+        getComputedStyle: 'readonly',
         TextEncoder: 'readonly', crypto: 'readonly',
         structuredClone: 'readonly', queueMicrotask: 'readonly',
         btoa: 'readonly', atob: 'readonly', module: 'readonly',

@@ -35,6 +35,7 @@ window.PDFREE_LOCALE = {
     compare:          ['confrontare', 'diff', 'differenza', 'modifiche', 'confronta pdf', 'trova modifiche'],
     scanDocument:     ['scansiona', 'scanner', 'scansiona documento', 'scansiona in pdf', 'scansione con fotocamera', 'scansiona foto'],
     glossary:         ['glossario', 'definizioni', 'glossario pdf', 'evidenzia termini', 'aggiungi definizioni'],
+    docx2pdf:         ['word to pdf', 'docx to pdf', 'convert word to pdf', 'doc to pdf', 'docx converter', 'word converter'],
     pdf2pdfa:         ['pdf/a', 'pdfa', 'archiviazione', 'archiviabile', 'verifica pdf/a', 'iso 19005', 'archiviazione a lungo termine'],
   },
 
@@ -478,6 +479,7 @@ window.PDFREE_LOCALE = {
   hero_mixed_files:      'Aggiungi solo PDF o solo immagini — non entrambi insieme.',
   hero_multi_pdf_label:   '{n} file PDF',
   hero_multi_image_label: '{n} file immagine',
+  hero_multi_docx_label:  '{n} Word files',
   home_title:         'PDFree — Strumenti PDF Gratuiti, Senza Limiti',
 
   fb_intro:              'Arriva direttamente a Murod su Telegram — niente ticket, niente CRM. Leggo ogni messaggio personalmente.',
@@ -1037,6 +1039,8 @@ window.PDFREE_LOCALE = {
   p2m_formula_ocr_subtitle: "Scarica un modello IA di circa 76 MB al primo utilizzo. Nei nostri test, circa 7 formule su 10 sono risultate corrette — ogni formula riconosciuta è chiaramente contrassegnata come generata dall'IA così puoi verificarla, e ciò che non riesce a leggere torna a essere un'immagine come prima.",
   p2m_formula_ocr_fail_one:  'Non è stato possibile riconoscere 1 formula come LaTeX — mantenuta come immagine.',
   p2m_formula_ocr_fail_many: 'Non è stato possibile riconoscere {n} formule come LaTeX — mantenute come immagini.',
+  d2p_output_label: '\u2192 PDF file',
+  d2p_mode_hint:     '\ud83d\udcc4 Text, formatting, tables, images and lists convert automatically. Some rare features (footnotes appear at the end, not per-page; exact column line-flow is approximated) may not look pixel-identical to the original.',
 
   // ── fillUI.js ────────────────────────────────────────────
   fill_analysing:             'Analisi dei campi del modulo…',

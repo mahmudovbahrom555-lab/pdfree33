@@ -35,6 +35,7 @@ window.PDFREE_LOCALE = {
     compare:          ['comparer', 'différence', 'différences', 'changements', 'comparer des pdf', 'trouver les différences'],
     scanDocument:     ['scanner', 'numériser', 'scanner un document', 'numériser en pdf', 'scan avec caméra', 'numériser une photo'],
     glossary:         ['glossaire', 'définitions', 'glossaire pdf', 'surligner termes', 'ajouter définitions'],
+    docx2pdf:         ['word to pdf', 'docx to pdf', 'convert word to pdf', 'doc to pdf', 'docx converter', 'word converter'],
     pdf2pdfa:         ['pdf/a', 'pdfa', 'archivage', 'archivable', 'vérifier pdf/a', 'iso 19005', 'archivage à long terme'],
   },
 
@@ -478,6 +479,7 @@ window.PDFREE_LOCALE = {
   hero_mixed_files:      'Ajoutez uniquement des PDF ou uniquement des images — pas les deux à la fois.',
   hero_multi_pdf_label:   '{n} fichiers PDF',
   hero_multi_image_label: '{n} fichiers image',
+  hero_multi_docx_label:  '{n} Word files',
   home_title:         'PDFree — Outils PDF Gratuits, Sans Limites',
 
   fb_intro:              'Va directement à Murod sur Telegram — pas de ticket, pas de CRM. Je lis chaque message personnellement.',
@@ -1039,6 +1041,8 @@ window.PDFREE_LOCALE = {
   p2m_formula_ocr_subtitle: "Télécharge un modèle IA d'environ 76 Mo lors de la première utilisation. Dans nos propres tests, environ 7 formules sur 10 étaient correctes — chaque formule reconnue est clairement indiquée comme générée par IA afin que vous puissiez la vérifier, et tout ce qu'elle ne parvient pas à lire revient à une image comme avant.",
   p2m_formula_ocr_fail_one:  "1 formule n'a pas pu être reconnue en LaTeX — conservée sous forme d'image à la place.",
   p2m_formula_ocr_fail_many: "{n} formules n'ont pas pu être reconnues en LaTeX — conservées sous forme d'images à la place.",
+  d2p_output_label: '\u2192 PDF file',
+  d2p_mode_hint:     '\ud83d\udcc4 Text, formatting, tables, images and lists convert automatically. Some rare features (footnotes appear at the end, not per-page; exact column line-flow is approximated) may not look pixel-identical to the original.',
 
   // ── fillUI.js ────────────────────────────────────────────
   fill_analysing:             'Analyse des champs du formulaire…',

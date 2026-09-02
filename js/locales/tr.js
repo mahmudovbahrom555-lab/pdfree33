@@ -35,6 +35,7 @@ window.PDFREE_LOCALE = {
     compare:          ['karşılaştır', 'fark', 'farkları bul', 'pdf karşılaştır', 'değişiklikleri bul'],
     scanDocument:     ['tara', 'tarayıcı', 'belge tara', 'pdf olarak tara', 'kamera ile tara', 'fotoğraf tara'],
     glossary:         ['sözlük', 'tanımlar', 'pdf sözlük', 'terimleri vurgula', 'tanım ekle'],
+    docx2pdf:         ['word to pdf', 'docx to pdf', 'convert word to pdf', 'doc to pdf', 'docx converter', 'word converter'],
     pdf2pdfa:         ['pdf/a', 'pdfa', 'arşiv', 'arşivleme', 'pdf/a kontrol', 'iso 19005', 'uzun süreli arşivleme'],
   },
 
@@ -478,6 +479,7 @@ window.PDFREE_LOCALE = {
   hero_mixed_files:      'Yalnızca PDF veya yalnızca resim ekleyin — ikisini birlikte eklemeyin.',
   hero_multi_pdf_label:   '{n} PDF dosyası',
   hero_multi_image_label: '{n} resim dosyası',
+  hero_multi_docx_label:  '{n} Word files',
   home_title:         'PDFree — Ücretsiz PDF Araçları, Sınırsız',
 
   fb_intro:              'Doğrudan Telegram\'da Murod\'a gider — bilet sistemi yok, CRM yok. Her mesajı kişisel olarak okuyorum.',
@@ -1037,6 +1039,8 @@ window.PDFREE_LOCALE = {
   p2m_formula_ocr_subtitle: 'İlk kullanımda yaklaşık 76 MB\'lık bir yapay zeka modeli indirir. Kendi testlerimizde yaklaşık 10 formülden 7\'si doğru tanındı — tanınan her formül, tekrar kontrol edebilmeniz için açıkça yapay zeka tarafından oluşturulduğu belirtilerek işaretlenir; okunamayanlar ise eskisi gibi görsele döner.',
   p2m_formula_ocr_fail_one:  '1 formül LaTeX olarak tanınamadı — bunun yerine görsel olarak tutuldu.',
   p2m_formula_ocr_fail_many: '{n} formül LaTeX olarak tanınamadı — bunun yerine görsel olarak tutuldu.',
+  d2p_output_label: '\u2192 PDF file',
+  d2p_mode_hint:     '\ud83d\udcc4 Text, formatting, tables, images and lists convert automatically. Some rare features (footnotes appear at the end, not per-page; exact column line-flow is approximated) may not look pixel-identical to the original.',
 
   // ── fillUI.js ────────────────────────────────────────────
   fill_analysing:             'Form alanları analiz ediliyor…',

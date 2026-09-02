@@ -35,6 +35,7 @@ window.PDFREE_LOCALE = {
     compare:          ['porównaj', 'różnica', 'różnice', 'zmiany', 'porównaj pdf', 'znajdź zmiany'],
     scanDocument:     ['skanuj', 'skaner', 'skanuj dokument', 'skanuj do pdf', 'skanowanie aparatem', 'skanuj zdjęcie'],
     glossary:         ['słownik', 'definicje', 'słownik pdf', 'podświetl terminy', 'dodaj definicje'],
+    docx2pdf:         ['word to pdf', 'docx to pdf', 'convert word to pdf', 'doc to pdf', 'docx converter', 'word converter'],
     pdf2pdfa:         ['pdf/a', 'pdfa', 'archiwizacja', 'archiwalny', 'sprawdź pdf/a', 'iso 19005', 'archiwizacja długoterminowa'],
   },
 
@@ -478,6 +479,7 @@ window.PDFREE_LOCALE = {
   hero_mixed_files:      'Dodaj same pliki PDF albo same obrazy — nie mieszaj obu naraz.',
   hero_multi_pdf_label:   '{n} plików PDF',
   hero_multi_image_label: '{n} plików obrazów',
+  hero_multi_docx_label:  '{n} Word files',
   home_title:         'PDFree — Darmowe Narzędzia PDF, Bez Limitów',
 
   fb_intro:              'Trafia bezpośrednio do Muroda na Telegramie — bez systemu zgłoszeń, bez CRM. Osobiście czytam każdą wiadomość.',
@@ -1037,6 +1039,8 @@ window.PDFREE_LOCALE = {
   p2m_formula_ocr_subtitle: 'Przy pierwszym użyciu pobiera model AI o rozmiarze ok. 76 MB. W naszych własnych testach około 7 na 10 wzorów zostało rozpoznanych poprawnie — każdy rozpoznany wzór jest wyraźnie oznaczony jako wygenerowany przez AI, abyś mógł go zweryfikować, a to, czego nie da się odczytać, jak dawniej trafia z powrotem jako obraz.',
   p2m_formula_ocr_fail_one:  'Nie udało się rozpoznać 1 wzoru jako LaTeX — pozostawiono jako obraz.',
   p2m_formula_ocr_fail_many: 'Nie udało się rozpoznać {n} wzorów jako LaTeX — pozostawiono jako obrazy.',
+  d2p_output_label: '\u2192 PDF file',
+  d2p_mode_hint:     '\ud83d\udcc4 Text, formatting, tables, images and lists convert automatically. Some rare features (footnotes appear at the end, not per-page; exact column line-flow is approximated) may not look pixel-identical to the original.',
 
   // ── fillUI.js ────────────────────────────────────────────
   fill_analysing:             'Analizowanie pól formularza…',

@@ -220,6 +220,131 @@ export function loadOpenCv() {
   return _promises['openCv'];
 }
 
+// docx-preview — parses/renders .docx into real DOM+CSS in-browser, the
+// first stage of the Word→PDF tool's pipeline (js/docxToPdfCore.js walks
+// this rendered DOM to build a pdfmake document definition). Needs
+// window.JSZip already present (its own UMD factory takes JSZip as a
+// constructor arg, confirmed by inspecting the bundle directly — it
+// doesn't bundle its own copy the way docx@8.5.0 above does), so this
+// reuses the SAME loadJSZip() already used elsewhere on this site rather
+// than adding a second jszip source. Same jsdelivr/unpkg byte-identical
+// verification as docx/exceljs/pptxgenjs above.
+export function loadDocxPreview() {
+  if (window.docx) return Promise.resolve();
+  if (_promises['docxPreview']) return _promises['docxPreview'];
+
+  _promises['docxPreview'] = _loadDocxPreviewWithFallback().catch(err => {
+    delete _promises['docxPreview'];
+    throw err;
+  });
+  return _promises['docxPreview'];
+}
+
+async function _loadDocxPreviewWithFallback() {
+  await loadJSZip();
+  const DOCX_PREVIEW_SRI = 'sha384-UkwbeBm1NknJfLd5UU4RI1j7PidBeZE3tIiKY1k+n7RQ+kEJ0dkTC0u53xTtRC9r';
+  const CDNS = [
+    'https://cdn.jsdelivr.net/npm/docx-preview@0.4.0/dist/docx-preview.min.js',
+    'https://unpkg.com/docx-preview@0.4.0/dist/docx-preview.min.js',
+  ];
+  for (const url of CDNS) {
+    try {
+      await new Promise((resolve, reject) => {
+        if (document.querySelector(`script[src="${url}"]`)) { resolve(); return; }
+        const s = document.createElement('script');
+        s.src         = url;
+        s.integrity   = DOCX_PREVIEW_SRI;
+        s.crossOrigin = 'anonymous';
+        s.onload  = resolve;
+        s.onerror = () => reject(new Error(`CDN unavailable: ${url}`));
+        document.head.appendChild(s);
+      });
+      if (window.docx) return;
+    } catch (_) { /* try next */ }
+  }
+  throw new Error(t('err_cdn_lib_unavailable', { lib: 'Word' }));
+}
+
+// pdfmake — the Word→PDF tool's PDF-generation stage (real vector text,
+// not a rasterized image — see js/docxToPdfCore.js). Two real files, in
+// a REQUIRED order: pdfmake.min.js itself, then vfs_fonts.js (embedded
+// base64 Roboto — self-contained, no extra font CDN/CSP entry needed).
+// Confirmed directly by reading vfs_fonts.js's own tail: it guards on
+// `typeof pdfMake !== 'undefined'` and calls
+// `pdfMake.addVirtualFileSystem(vfs)` — loading it before pdfmake.min.js
+// would silently no-op, not error, so the ordering here matters even
+// though nothing would throw if it were wrong.
+export function loadPdfMake() {
+  if (Object.keys(window.pdfMake?.virtualfs || {}).length > 0) return Promise.resolve();
+  if (_promises['pdfMake']) return _promises['pdfMake'];
+
+  _promises['pdfMake'] = _loadPdfMakeWithFallback().catch(err => {
+    delete _promises['pdfMake'];
+    throw err;
+  });
+  return _promises['pdfMake'];
+}
+
+async function _loadScriptWithFallback(urls, integrity, checkGlobal) {
+  for (const url of urls) {
+    try {
+      await new Promise((resolve, reject) => {
+        if (document.querySelector(`script[src="${url}"]`)) { resolve(); return; }
+        const s = document.createElement('script');
+        s.src         = url;
+        s.integrity   = integrity;
+        s.crossOrigin = 'anonymous';
+        s.onload  = resolve;
+        s.onerror = () => reject(new Error(`CDN unavailable: ${url}`));
+        document.head.appendChild(s);
+      });
+      // Real bug found via a live E2E test: this used to be a bare
+      // `return;` (implicit `return undefined`) on success — every
+      // caller checks `if (!ok)`, and `undefined` is falsy, so this
+      // function reported failure on EVERY successful load, not just
+      // the genuinely-failed ones. loadPdfMake()/loadDocxPreview() threw
+      // "library unavailable" unconditionally, even though the actual
+      // script had loaded correctly and the library fully worked
+      // (confirmed directly: createPdf().getBlob() succeeded while this
+      // wrapper still reported failure) — this broke the Word→PDF tool
+      // completely until caught by testing the real end-to-end flow in a
+      // browser, not just unit-testing the individual pieces.
+      if (checkGlobal()) return true;
+    } catch (_) { /* try next */ }
+  }
+  return false;
+}
+
+async function _loadPdfMakeWithFallback() {
+  const PDFMAKE_SRI = 'sha384-vsaIaEjAOZA6uoCQ2pryCKIc8YGpQ/0HK5krdezL4PYvnmLzrizBMDJCZulvIomS';
+  const ok1 = await _loadScriptWithFallback(
+    ['https://cdn.jsdelivr.net/npm/pdfmake@0.3.11/build/pdfmake.min.js',
+     'https://unpkg.com/pdfmake@0.3.11/build/pdfmake.min.js'],
+    PDFMAKE_SRI,
+    () => !!window.pdfMake,
+  );
+  if (!ok1) throw new Error(t('err_cdn_lib_unavailable', { lib: 'PDF' }));
+
+  const VFS_SRI = 'sha384-pkBUW1wxcm6m7ZjKDxADnNHqnz+Sx9sAL1ndsLNv/GZnWZgodPYsju1yxeyQnn0c';
+  const ok2 = await _loadScriptWithFallback(
+    ['https://cdn.jsdelivr.net/npm/pdfmake@0.3.11/build/vfs_fonts.js',
+     'https://unpkg.com/pdfmake@0.3.11/build/vfs_fonts.js'],
+    VFS_SRI,
+    // Real bug found via a live E2E test: vfs_fonts.js's own tail-end
+    // guard calls `pdfMake.addVirtualFileSystem(vfs)`, which stores the
+    // fonts under `pdfMake.virtualfs` (confirmed by inspecting the real
+    // object directly) — NOT `pdfMake.vfs`, despite that being the
+    // property name shown in older tutorials/docs. The original
+    // `() => !!window.pdfMake?.vfs` check here was always false, so this
+    // loader always reported failure even when the script genuinely
+    // loaded and fonts genuinely worked (createPdf().getBlob() succeeded
+    // in the same test) — a real false-negative that broke every actual
+    // conversion in production, not just a cosmetic wrong-name issue.
+    () => Object.keys(window.pdfMake?.virtualfs || {}).length > 0,
+  );
+  if (!ok2) throw new Error(t('err_cdn_lib_unavailable', { lib: 'PDF' }));
+}
+
 // @huggingface/transformers — generic loader for this project's two
 // opt-in, client-side ML features: js/formulaOcr.js (pdf2md's Formula
 // OCR, Texo/FormulaNet) and js/redactNer.js (Redact's AI Name

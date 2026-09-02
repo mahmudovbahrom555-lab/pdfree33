@@ -35,6 +35,7 @@ window.PDFREE_LOCALE = {
     compare:          ['vergelijken', 'diff', 'verschil', 'wijzigingen', 'pdf\'s vergelijken', 'wijzigingen vinden'],
     scanDocument:     ['scannen', 'scanner', 'document scannen', 'scannen naar pdf', 'camera scan', 'foto scannen'],
     glossary:         ['woordenlijst', 'definities', 'pdf woordenlijst', 'termen markeren', 'definities toevoegen'],
+    docx2pdf:         ['word to pdf', 'docx to pdf', 'convert word to pdf', 'doc to pdf', 'docx converter', 'word converter'],
     pdf2pdfa:         ['pdf/a', 'pdfa', 'archivering', 'archiveerbaar', 'pdf/a controleren', 'iso 19005', 'langetermijnarchivering'],
   },
 
@@ -478,6 +479,7 @@ window.PDFREE_LOCALE = {
   hero_mixed_files:      'Voeg alleen PDF\'s of alleen afbeeldingen toe — niet beide tegelijk.',
   hero_multi_pdf_label:   '{n} PDF-bestanden',
   hero_multi_image_label: '{n} afbeeldingsbestanden',
+  hero_multi_docx_label:  '{n} Word files',
   home_title:         'PDFree — Gratis PDF-tools, Zonder Limieten',
 
   fb_intro:              'Gaat rechtstreeks naar Murod op Telegram — geen ticketsysteem, geen CRM. Ik lees elk bericht persoonlijk.',
@@ -1037,6 +1039,8 @@ window.PDFREE_LOCALE = {
   p2m_formula_ocr_subtitle: 'Downloadt bij het eerste gebruik een AI-model van ongeveer 76 MB. In onze eigen tests was ongeveer 7 van de 10 formules correct — elke herkende formule wordt duidelijk gemarkeerd als door AI gegenereerd, zodat je het kunt controleren, en alles wat niet gelezen kan worden valt terug op een afbeelding zoals voorheen.',
   p2m_formula_ocr_fail_one:  '1 formule kon niet als LaTeX worden herkend — als afbeelding behouden.',
   p2m_formula_ocr_fail_many: '{n} formules konden niet als LaTeX worden herkend — als afbeeldingen behouden.',
+  d2p_output_label: '\u2192 PDF file',
+  d2p_mode_hint:     '\ud83d\udcc4 Text, formatting, tables, images and lists convert automatically. Some rare features (footnotes appear at the end, not per-page; exact column line-flow is approximated) may not look pixel-identical to the original.',
 
   // ── fillUI.js ────────────────────────────────────────────
   fill_analysing:             'Formuliervelden analyseren…',

@@ -796,9 +796,15 @@ function initSearch() {
   // never special-cases the format itself.
   const _isPdfFile   = f => f.type === 'application/pdf' || /\.pdf$/i.test(f.name);
   const _isImageFile = f => /^image\//.test(f.type) || /\.(jpe?g|png|webp|heic|heif)$/i.test(f.name);
+  // Word to PDF is the first hero-reachable tool whose input isn't PDF or
+  // image — MIME first, extension fallback (same pattern as the other two
+  // predicates above), per CLAUDE.md's "hero routing checklist" for a new
+  // raw input file type.
+  const _isDocxFile  = f => f.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || /\.docx$/i.test(f.name);
   function _classifyHeroFiles(files) {
     if (files.every(_isPdfFile))   return 'pdf';
     if (files.every(_isImageFile)) return 'image';
+    if (files.every(_isDocxFile))  return 'docx';
     return 'mixed';
   }
 
@@ -834,7 +840,7 @@ function initSearch() {
       metaEl.className = 'hero-det-meta';
       const nameEl = document.createElement('span');
       nameEl.className = 'hero-det-name';
-      nameEl.textContent = t(kind === 'image' ? 'hero_multi_image_label' : 'hero_multi_pdf_label', { n: files.length });
+      nameEl.textContent = t(kind === 'image' ? 'hero_multi_image_label' : kind === 'docx' ? 'hero_multi_docx_label' : 'hero_multi_pdf_label', { n: files.length });
       const sizeEl = document.createElement('span');
       sizeEl.className = 'hero-det-size';
       sizeEl.textContent = _fmtSize(totalSize);
@@ -849,6 +855,8 @@ function initSearch() {
       heroDetected.appendChild(summary);
       heroDetected.appendChild(kind === 'image'
         ? _buildRecsGrid(['jpg2pdf', 'scanDocument'], 'jpg2pdf')
+        : kind === 'docx'
+        ? _buildRecsGrid(['docx2pdf'], 'docx2pdf')
         : _buildRecsGrid(['merge', 'compress', 'protect', 'split'], 'merge'));
       heroDetected.hidden = false;
       return;
@@ -889,6 +897,19 @@ function initSearch() {
       // than jpg2pdf (embeds the raw image as-is), but both stay one tap
       // away since we can't reliably tell camera-capture from gallery-pick.
       heroDetected.appendChild(_buildRecsGrid(['scanDocument', 'jpg2pdf'], 'scanDocument'));
+      heroDetected.hidden = false;
+      return;
+    }
+
+    if (kind === 'docx') {
+      // No _scanHeroFile() here — that path is PDF-specific (pdf-lib
+      // PDFDocument.load()), would throw on a .docx. Nothing meaningful to
+      // pre-scan for this tool anyway (same reasoning as docx2pdfUI.js's
+      // own init — the conversion itself IS the analysis).
+      row.append(iconEl, metaEl);
+      card.appendChild(row);
+      heroDetected.appendChild(card);
+      heroDetected.appendChild(_buildRecsGrid(['docx2pdf'], 'docx2pdf'));
       heroDetected.hidden = false;
       return;
     }
@@ -986,6 +1007,7 @@ function initSearch() {
       fill:         'Fill form',
       jpg2pdf:      'Convert to PDF',
       scanDocument: 'Scan & Save',
+      docx2pdf:     'Convert to PDF',
     };
     const wrapper = document.createElement('div');
     const labelEl = document.createElement('p');
@@ -1063,7 +1085,7 @@ function initSearch() {
     // Recommendation hint for multi-file context (clickable shortcut)
     const hintEl = _getHintEl();
     if (files.length > 1) {
-      const recEntry = index.find(e => e.key === (kind === 'image' ? 'jpg2pdf' : 'merge'));
+      const recEntry = index.find(e => e.key === (kind === 'image' ? 'jpg2pdf' : kind === 'docx' ? 'docx2pdf' : 'merge'));
       if (recEntry) {
         hintEl.textContent = t('hero_hint_multi', { tool: `${recEntry.icon} ${recEntry.displayName}` });
         hintEl.dataset.toolKey = recEntry.key;
@@ -1121,13 +1143,15 @@ function initSearch() {
     e.preventDefault();
     heroDropZone.classList.remove('drag-over');
     const allFiles = Array.from(e.dataTransfer.files);
-    const files = allFiles.filter(f => _isPdfFile(f) || _isImageFile(f));
+    const files = allFiles.filter(f => _isPdfFile(f) || _isImageFile(f) || _isDocxFile(f));
     if (files.length) {
       _setHeroFiles(files, 'drop');
     } else if (allFiles.length) {
       // Previously a silent no-op — dropping e.g. a .docx just reset back to
       // idle with zero explanation. Real bug, found via drag&drop testing
       // (accept= only filters the native picker dialog, never drag&drop).
+      // .docx itself is now a real supported hero input (Word to PDF) —
+      // this toast now only fires for genuinely unsupported types.
       showToast(t('hero_unsupported_file'));
     }
   });

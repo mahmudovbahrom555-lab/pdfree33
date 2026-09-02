@@ -36,6 +36,7 @@ window.PDFREE_LOCALE = {
     compare:          ['bandingkan', 'perbedaan', 'cari perubahan', 'bandingkan pdf', 'perbedaan pdf'],
     scanDocument:     ['pindai', 'pemindai', 'pindai dokumen', 'pindai ke pdf', 'pindai dengan kamera', 'pindai foto'],
     glossary:         ['glosarium', 'definisi', 'glosarium pdf', 'sorot istilah', 'tambah definisi'],
+    docx2pdf:         ['word to pdf', 'docx to pdf', 'convert word to pdf', 'doc to pdf', 'docx converter', 'word converter'],
     pdf2pdfa:         ['pdf/a', 'pdfa', 'arsip', 'pengarsipan', 'periksa pdf/a', 'iso 19005', 'arsip jangka panjang'],
   },
 
@@ -479,6 +480,7 @@ window.PDFREE_LOCALE = {
   hero_mixed_files:      'Tambahkan semua PDF atau semua gambar — jangan campur keduanya.',
   hero_multi_pdf_label:   '{n} file PDF',
   hero_multi_image_label: '{n} file gambar',
+  hero_multi_docx_label:  '{n} Word files',
   home_title:         'PDFree — Alat PDF Gratis, Tanpa Batasan',
 
   fb_intro:              'Langsung ke Murod di Telegram — tanpa sistem tiket, tanpa CRM. Saya membaca setiap pesan sendiri.',
@@ -1038,6 +1040,8 @@ window.PDFREE_LOCALE = {
   p2m_formula_ocr_subtitle: 'Mengunduh model AI berukuran ~76MB saat pertama kali digunakan. Dalam pengujian kami sendiri, sekitar 7 dari 10 rumus dikenali dengan benar — setiap rumus yang dikenali ditandai jelas sebagai hasil AI agar Anda bisa memeriksanya kembali, dan yang tidak bisa dibaca akan kembali menjadi gambar seperti sebelumnya.',
   p2m_formula_ocr_fail_one:  '1 rumus tidak dapat dikenali sebagai LaTeX — tetap disimpan sebagai gambar.',
   p2m_formula_ocr_fail_many: '{n} rumus tidak dapat dikenali sebagai LaTeX — tetap disimpan sebagai gambar.',
+  d2p_output_label: '\u2192 PDF file',
+  d2p_mode_hint:     '\ud83d\udcc4 Text, formatting, tables, images and lists convert automatically. Some rare features (footnotes appear at the end, not per-page; exact column line-flow is approximated) may not look pixel-identical to the original.',
 
   // ── fillUI.js ────────────────────────────────────────────
   fill_analysing:             'Menganalisis kolom formulir…',

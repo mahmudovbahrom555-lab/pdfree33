@@ -266,7 +266,7 @@
 
     <div class="search-hero" id="searchHero">
       <div class="hero-drop-zone" id="heroDropZone">
-        <input type="file" id="heroFileInput" accept=".pdf,application/pdf,.jpg,.jpeg,.png,.webp,.heic,.heif,image/jpeg,image/png,image/webp,image/heic,image/heif" multiple hidden>
+        <input type="file" id="heroFileInput" accept=".pdf,application/pdf,.jpg,.jpeg,.png,.webp,.heic,.heif,image/jpeg,image/png,image/webp,image/heic,image/heif,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document" multiple hidden>
         <div class="hero-drop-zone__idle" id="heroDropIdle">
           <span class="hero-drop-zone__upload-icon" aria-hidden="true"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></span>
           <span class="hero-drop-zone__label" id="heroDropLabel">Begin met je bestand</span>
@@ -545,6 +545,11 @@
         <div class="tool-name">PDF naar Markdown</div>
         <div class="tool-desc">Converteer PDF-tekst naar schone .md-bestanden lokaal</div>
       </a>
+      <a href="/word-to-pdf/" class="tool-card" data-tool="docx2pdf">
+        <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="m9 15 3 3 3-3"/><line x1="12" y1="12" x2="12" y2="18"/></svg></div>
+        <div class="tool-name">Word to PDF</div>
+        <div class="tool-desc">Convert a .docx file to PDF locally</div>
+      </a>
       <a href="/nl/pdf-ontgrendelen/" class="tool-card" data-tool="unlock">
         <div class="tool-icon-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg></div>
         <div class="tool-name">PDF Ontgrendelen</div>
@@ -668,6 +673,7 @@
     <div id="pdf2excelOptions" class="j2p-options"     style="display:none" aria-label="PDF to Excel options"></div>
     <div id="pdf2pptOptions"   class="j2p-options"     style="display:none" aria-label="PDF to PowerPoint options"></div>
     <div id="pdf2mdOptions"    class="j2p-options"     style="display:none" aria-label="PDF to Markdown options"></div>
+    <div id="docx2pdfOptions"  class="j2p-options"     style="display:none" aria-label="Word to PDF options"></div>
     <div id="unlockOptions"    class="j2p-options"     style="display:none" aria-label="Unlock PDF options"></div>
     <div id="mangaSplitOptions" class="j2p-options"    style="display:none" aria-label="Split Manga Pages options"></div>
     <div id="ocrOptions"       class="j2p-options"     style="display:none" aria-label="OCR options"></div>

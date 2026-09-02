@@ -35,6 +35,7 @@ window.PDFREE_LOCALE = {
     compare:          ['comparar', 'diferença', 'diferenças', 'mudanças', 'comparar pdf', 'encontrar diferenças'],
     scanDocument:     ['digitalizar', 'scanner', 'digitalizar documento', 'digitalizar para pdf', 'digitalizar com câmera', 'digitalizar foto'],
     glossary:         ['glossário', 'definições', 'glossário pdf', 'destacar termos', 'adicionar definições'],
+    docx2pdf:         ['word to pdf', 'docx to pdf', 'convert word to pdf', 'doc to pdf', 'docx converter', 'word converter'],
     pdf2pdfa:         ['pdf/a', 'pdfa', 'arquivamento', 'arquivo', 'verificar pdf/a', 'iso 19005', 'arquivamento de longo prazo'],
   },
 
@@ -478,6 +479,7 @@ window.PDFREE_LOCALE = {
   hero_mixed_files:      'Adicione apenas PDFs ou apenas imagens — não os dois juntos.',
   hero_multi_pdf_label:   '{n} arquivos PDF',
   hero_multi_image_label: '{n} arquivos de imagem',
+  hero_multi_docx_label:  '{n} Word files',
   home_title:         'PDFree — Ferramentas PDF Grátis, Sem Limites',
 
   fb_intro:              'Vai direto para o Murod no Telegram — sem sistema de tickets, sem CRM. Leio cada mensagem pessoalmente.',
@@ -1039,6 +1041,8 @@ window.PDFREE_LOCALE = {
   p2m_formula_ocr_subtitle: 'Baixa um modelo de IA de ~76 MB no primeiro uso. Em nossos próprios testes, cerca de 7 em cada 10 fórmulas foram reconhecidas corretamente — toda fórmula reconhecida é claramente marcada como gerada por IA para que você possa conferir, e o que não conseguir ler volta a ser uma imagem, como antes.',
   p2m_formula_ocr_fail_one:  'Não foi possível reconhecer 1 fórmula como LaTeX — mantida como imagem.',
   p2m_formula_ocr_fail_many: 'Não foi possível reconhecer {n} fórmulas como LaTeX — mantidas como imagens.',
+  d2p_output_label: '\u2192 PDF file',
+  d2p_mode_hint:     '\ud83d\udcc4 Text, formatting, tables, images and lists convert automatically. Some rare features (footnotes appear at the end, not per-page; exact column line-flow is approximated) may not look pixel-identical to the original.',
 
   // ── fillUI.js ────────────────────────────────────────────
   fill_analysing:             'Analisando campos do formulário…',

@@ -35,6 +35,7 @@ window.PDFREE_LOCALE = {
     compare:          ['comparar', 'diferencia', 'diferencias', 'cambios', 'comparar pdf', 'encontrar cambios'],
     scanDocument:     ['escanear', 'escáner', 'escanear documento', 'escanear a pdf', 'escaneo con cámara', 'escanear foto'],
     glossary:         ['glosario', 'definiciones', 'glosario pdf', 'resaltar términos', 'añadir definiciones'],
+    docx2pdf:         ['word to pdf', 'docx to pdf', 'convert word to pdf', 'doc to pdf', 'docx converter', 'word converter'],
     pdf2pdfa:         ['pdf/a', 'pdfa', 'archivo', 'archivado', 'comprobar pdf/a', 'iso 19005', 'archivo a largo plazo'],
   },
 
@@ -478,6 +479,7 @@ window.PDFREE_LOCALE = {
   hero_mixed_files:      'Añade solo PDF o solo imágenes — no ambos a la vez.',
   hero_multi_pdf_label:   '{n} archivos PDF',
   hero_multi_image_label: '{n} archivos de imagen',
+  hero_multi_docx_label:  '{n} Word files',
   home_title:         'PDFree — Herramientas PDF Gratis, Sin Límites',
 
   fb_intro:              'Va directo a Murod por Telegram — sin sistema de tickets, sin CRM. Leo cada mensaje personalmente.',
@@ -1039,6 +1041,8 @@ window.PDFREE_LOCALE = {
   p2m_formula_ocr_subtitle: 'Descarga un modelo de IA de ~76 MB la primera vez que se usa. En nuestras propias pruebas, acertó en unas 7 de cada 10 fórmulas — cada fórmula reconocida se marca claramente como generada por IA para que puedas verificarla, y lo que no puede leer vuelve a convertirse en imagen como antes.',
   p2m_formula_ocr_fail_one:  'No se pudo reconocer 1 fórmula como LaTeX — se mantuvo como imagen.',
   p2m_formula_ocr_fail_many: 'No se pudieron reconocer {n} fórmulas como LaTeX — se mantuvieron como imágenes.',
+  d2p_output_label: '\u2192 PDF file',
+  d2p_mode_hint:     '\ud83d\udcc4 Text, formatting, tables, images and lists convert automatically. Some rare features (footnotes appear at the end, not per-page; exact column line-flow is approximated) may not look pixel-identical to the original.',
 
   // ── fillUI.js ────────────────────────────────────────────
   fill_analysing:             'Analizando campos del formulario…',
