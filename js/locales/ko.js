@@ -216,6 +216,7 @@ window.PDFREE_LOCALE = {
   err_enc_unavailable:  '암호화 라이브러리를 로드할 수 없습니다. 페이지를 새로고침해 주세요.',
   err_enc_failed:       '암호화에 실패했습니다. PDF가 지원되지 않는 형식일 수 있습니다.',
   err_encrypted_pdf:    '이 PDF는 구조가 특이하거나 손상되었습니다(비밀번호로 보호된 파일에서도 발생할 수 있음). 다른 PDF 앱에서 다시 저장하거나 비밀번호를 제거한 후 다시 시도하세요.',
+  err_out_of_memory:   "Your device ran out of memory processing this file — not a bug, just a real hardware limit. Try a smaller page range, close other browser tabs, or (for multi-file output) switch to a single combined file instead of separate files, then try again.",
   err_unlock_wrong_password: '비밀번호가 올바르지 않습니다. 다시 시도하세요.',
   err_watermark_unsupported_chars: '이 워터마크 텍스트는 표시할 수 없습니다 — 중국어, 일본어, 한국어 문자가 없는 텍스트로 시도해 주세요.',
   err_cdn_lib_unavailable: '{lib} 라이브러리를 사용할 수 없습니다 — 인터넷 연결을 확인해 주세요',

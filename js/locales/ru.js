@@ -215,6 +215,7 @@ window.PDFREE_LOCALE = {
   err_enc_unavailable: 'Не удалось загрузить библиотеку шифрования. Обновите страницу и попробуйте снова.',
   err_enc_failed:      'Шифрование не удалось. Возможно, PDF имеет неподдерживаемый формат.',
   err_encrypted_pdf:   'У этого PDF необычная или повреждённая структура (это также может случиться с файлами, защищёнными паролем). Попробуйте пересохранить его в другом PDF-приложении или снять пароль, затем попробуйте снова.',
+  err_out_of_memory:   "Your device ran out of memory processing this file — not a bug, just a real hardware limit. Try a smaller page range, close other browser tabs, or (for multi-file output) switch to a single combined file instead of separate files, then try again.",
   err_unlock_wrong_password: 'Неверный пароль. Попробуйте снова.',
   err_watermark_unsupported_chars: 'Этот текст водяного знака не может быть отображён — попробуйте текст без китайских, японских или корейских символов.',
   err_cdn_lib_unavailable: 'Библиотека {lib} недоступна — проверьте подключение к интернету',

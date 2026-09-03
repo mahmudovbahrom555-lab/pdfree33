@@ -217,6 +217,7 @@ window.PDFREE_LOCALE = {
   err_enc_unavailable: '暗号化ライブラリの読み込みに失敗しました。ページを再読み込みして再度お試しください。',
   err_enc_failed:      '暗号化に失敗しました。PDFがサポート対象外の形式である可能性があります。',
   err_encrypted_pdf:   'このPDFは構造が特殊か破損しています(パスワードで保護されたファイルでも起こることがあります)。別のPDFアプリで保存し直すか、パスワードを解除してから、もう一度お試しください。',
+  err_out_of_memory:   "Your device ran out of memory processing this file — not a bug, just a real hardware limit. Try a smaller page range, close other browser tabs, or (for multi-file output) switch to a single combined file instead of separate files, then try again.",
   err_unlock_wrong_password: 'パスワードが正しくありません。もう一度お試しください。',
   err_watermark_unsupported_chars: 'この透かしテキストは表示できません — 中国語・日本語・韓国語の文字を含まないテキストでお試しください。',
   err_cdn_lib_unavailable: '{lib}ライブラリが利用できません — インターネット接続を確認してください',

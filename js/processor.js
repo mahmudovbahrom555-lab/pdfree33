@@ -4571,6 +4571,22 @@ function _handleError(tool, message, errorType = null) {
   ) {
     friendly   = t('err_encrypted_pdf');
     errorType  = 'pdf_restricted';
+  } else if (
+    // Raw JS-engine error text (V8/JSC), not something this app's own code
+    // constructs — thrown directly by `new ArrayBuffer(n)` (or an internal
+    // equivalent inside pdf-lib/JSZip) when the browser can't get the
+    // requested memory block. Real device/browser memory ceiling, most
+    // common on large multi-hundred-page PDFs in a "separate files" mode
+    // (many buffers held at once) or on a low-RAM device. Previously fell
+    // through with no classification — the user saw this exact raw engine
+    // string verbatim, no explanation, no suggested next step.
+    message?.toLowerCase().includes('array buffer allocation failed') ||
+    message?.toLowerCase().includes('invalid array buffer length') ||
+    message?.toLowerCase().includes('out of memory') ||
+    message?.toLowerCase().includes('allocation failed')
+  ) {
+    friendly   = t('err_out_of_memory');
+    errorType  = 'out_of_memory';
   } else if (message?.includes('Unexpected result')) {
     errorType  = 'worker_crash';
   } else if (message?.toLowerCase().includes('worker error') || message?.toLowerCase().includes('worker crash')) {

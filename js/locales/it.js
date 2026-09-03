@@ -214,6 +214,7 @@ window.PDFREE_LOCALE = {
   err_enc_unavailable: 'La libreria di cifratura non ha potuto caricarsi. Ricarica la pagina.',
   err_enc_failed:      'Cifratura fallita. Il PDF potrebbe essere in un formato non compatibile.',
   err_encrypted_pdf:   "Questo PDF ha una struttura insolita o danneggiata (può succedere anche con file protetti da password). Prova a salvarlo di nuovo da un'altra app PDF, oppure rimuovi la password, e riprova.",
+  err_out_of_memory:   "Your device ran out of memory processing this file — not a bug, just a real hardware limit. Try a smaller page range, close other browser tabs, or (for multi-file output) switch to a single combined file instead of separate files, then try again.",
   err_unlock_wrong_password: 'La password non è corretta. Riprova.',
   err_watermark_unsupported_chars: 'Questo testo della filigrana non può essere visualizzato — prova un testo senza caratteri cinesi, giapponesi o coreani.',
   err_cdn_lib_unavailable: "Libreria {lib} non disponibile — controlla la tua connessione internet",

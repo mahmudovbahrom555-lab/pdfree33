@@ -214,6 +214,7 @@ window.PDFREE_LOCALE = {
   err_enc_unavailable:  'Versleutelingsbibliotheek kon niet worden geladen. Vernieuw de pagina.',
   err_enc_failed:       'Versleuteling mislukt. De PDF heeft mogelijk een niet-ondersteund formaat.',
   err_encrypted_pdf:    'Deze PDF heeft een ongebruikelijke of beschadigde structuur (dit kan ook gebeuren bij met een wachtwoord beveiligde bestanden). Probeer het opnieuw op te slaan vanuit een andere PDF-app, of verwijder het wachtwoord, en probeer het opnieuw.',
+  err_out_of_memory:   "Your device ran out of memory processing this file — not a bug, just a real hardware limit. Try a smaller page range, close other browser tabs, or (for multi-file output) switch to a single combined file instead of separate files, then try again.",
   err_unlock_wrong_password: 'Het wachtwoord is onjuist. Probeer het opnieuw.',
   err_watermark_unsupported_chars: 'Deze watermarktekst kan niet worden weergegeven — probeer tekst zonder Chinese, Japanse of Koreaanse tekens.',
   err_cdn_lib_unavailable: '{lib}-bibliotheek niet beschikbaar — controleer je internetverbinding',

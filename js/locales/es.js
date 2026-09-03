@@ -214,6 +214,7 @@ window.PDFREE_LOCALE = {
   err_enc_unavailable: 'La biblioteca de cifrado no pudo cargarse. Por favor recarga la página.',
   err_enc_failed:      'Cifrado fallido. El PDF puede estar en un formato no compatible.',
   err_encrypted_pdf:   'Este PDF tiene una estructura inusual o dañada (esto también puede ocurrir con archivos protegidos con contraseña). Intenta guardarlo de nuevo desde otra aplicación de PDF, o elimina la contraseña, y vuelve a intentarlo.',
+  err_out_of_memory:   "Your device ran out of memory processing this file — not a bug, just a real hardware limit. Try a smaller page range, close other browser tabs, or (for multi-file output) switch to a single combined file instead of separate files, then try again.",
   err_unlock_wrong_password: 'La contraseña es incorrecta. Inténtalo de nuevo.',
   err_watermark_unsupported_chars: 'Este texto de marca de agua no se puede representar — prueba con texto sin caracteres chinos, japoneses o coreanos.',
   err_cdn_lib_unavailable: 'Biblioteca de {lib} no disponible — comprueba tu conexión a internet',
