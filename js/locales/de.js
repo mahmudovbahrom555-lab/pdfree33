@@ -215,7 +215,7 @@ window.PDFREE_LOCALE = {
   err_enc_unavailable: 'Verschlüsselungsbibliothek konnte nicht geladen werden. Bitte Seite neu laden.',
   err_enc_failed:      'Verschlüsselung fehlgeschlagen. Das PDF-Format wird möglicherweise nicht unterstützt.',
   err_encrypted_pdf:   'Diese PDF hat eine ungewöhnliche oder beschädigte Struktur (das kann auch bei passwortgeschützten Dateien vorkommen). Speichere sie in einer anderen PDF-App neu oder entferne ein eventuelles Passwort und versuche es erneut.',
-  err_out_of_memory:   "Your device ran out of memory processing this file — not a bug, just a real hardware limit. Try a smaller page range, close other browser tabs, or (for multi-file output) switch to a single combined file instead of separate files, then try again.",
+  err_out_of_memory:   "Your device ran out of memory processing this file — a real hardware limit, not a bug. Try a smaller page range, close other browser tabs, or (for multi-file output) switch to a single combined file instead of separate files. Thanks for using PDFree — sorry this one didn't go smoothly.",
   err_unlock_wrong_password: 'Das Passwort ist falsch. Bitte versuche es erneut.',
   err_watermark_unsupported_chars: 'Dieser Wasserzeichentext kann nicht dargestellt werden — versuche es ohne chinesische, japanische oder koreanische Zeichen.',
   err_cdn_lib_unavailable: '{lib}-Bibliothek nicht verfügbar — bitte Internetverbindung prüfen',

@@ -215,7 +215,7 @@ window.PDFREE_LOCALE = {
   err_enc_unavailable: 'Pustaka enkripsi tidak dapat dimuat. Silakan muat ulang halaman.',
   err_enc_failed:      'Enkripsi gagal. Format PDF mungkin tidak didukung.',
   err_encrypted_pdf:   'PDF ini memiliki struktur yang tidak biasa atau rusak (ini juga bisa terjadi pada file yang dilindungi kata sandi). Coba simpan ulang dari aplikasi PDF lain, atau hapus kata sandinya, lalu coba lagi.',
-  err_out_of_memory:   "Your device ran out of memory processing this file — not a bug, just a real hardware limit. Try a smaller page range, close other browser tabs, or (for multi-file output) switch to a single combined file instead of separate files, then try again.",
+  err_out_of_memory:   "Your device ran out of memory processing this file — a real hardware limit, not a bug. Try a smaller page range, close other browser tabs, or (for multi-file output) switch to a single combined file instead of separate files. Thanks for using PDFree — sorry this one didn't go smoothly.",
   err_unlock_wrong_password: 'Kata sandi salah. Silakan coba lagi.',
   err_watermark_unsupported_chars: 'Teks watermark ini tidak dapat dirender — coba teks tanpa karakter Tionghoa, Jepang, atau Korea.',
   err_cdn_lib_unavailable: 'Pustaka {lib} tidak tersedia — periksa koneksi internet Anda',

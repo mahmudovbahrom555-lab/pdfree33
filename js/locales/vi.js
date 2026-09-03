@@ -215,7 +215,7 @@ window.PDFREE_LOCALE = {
   err_enc_unavailable: 'Không thể tải thư viện mã hóa. Vui lòng tải lại trang.',
   err_enc_failed:      'Mã hóa thất bại. Định dạng PDF có thể không được hỗ trợ.',
   err_encrypted_pdf:   'PDF này có cấu trúc bất thường hoặc bị hỏng (điều này cũng có thể xảy ra với các tệp được bảo vệ bằng mật khẩu). Hãy thử lưu lại tệp bằng một ứng dụng PDF khác, hoặc xóa mật khẩu, rồi thử lại.',
-  err_out_of_memory:   "Your device ran out of memory processing this file — not a bug, just a real hardware limit. Try a smaller page range, close other browser tabs, or (for multi-file output) switch to a single combined file instead of separate files, then try again.",
+  err_out_of_memory:   "Your device ran out of memory processing this file — a real hardware limit, not a bug. Try a smaller page range, close other browser tabs, or (for multi-file output) switch to a single combined file instead of separate files. Thanks for using PDFree — sorry this one didn't go smoothly.",
   err_unlock_wrong_password: 'Mật khẩu không đúng. Vui lòng thử lại.',
   err_watermark_unsupported_chars: 'Không thể hiển thị văn bản hình mờ này — hãy thử văn bản không có ký tự Trung, Nhật hoặc Hàn.',
   err_cdn_lib_unavailable: 'Không thể tải thư viện {lib} — vui lòng kiểm tra kết nối internet',

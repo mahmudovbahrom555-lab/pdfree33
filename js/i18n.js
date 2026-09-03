@@ -199,7 +199,7 @@ export const EN = {
   err_enc_unavailable:  'Encryption library failed to load. Please refresh the page and try again.',
   err_enc_failed:       'Encryption failed. The PDF may be in an unsupported format.',
   err_encrypted_pdf:    'This PDF has an unusual or corrupted structure (this can also happen with password-protected files). Try re-saving it from another PDF app, or removing any password, then try again.',
-  err_out_of_memory:    "Your device ran out of memory processing this file — not a bug, just a real hardware limit. Try a smaller page range, close other browser tabs, or (for multi-file output) switch to a single combined file instead of separate files, then try again.",
+  err_out_of_memory:    "Your device ran out of memory processing this file — a real hardware limit, not a bug. Try a smaller page range, close other browser tabs, or (for multi-file output) switch to a single combined file instead of separate files. Thanks for using PDFree — sorry this one didn't go smoothly.",
   err_unlock_wrong_password: 'The password is incorrect. Please try again.',
   err_watermark_unsupported_chars: 'This watermark text can’t be rendered — try text without Chinese, Japanese, or Korean characters.',
   err_cdn_lib_unavailable: '{lib} library unavailable — check your internet connection',
