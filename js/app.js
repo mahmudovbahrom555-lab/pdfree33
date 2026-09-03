@@ -459,20 +459,26 @@ function _handleSuccess({ tool, blob, desc, filename, compressionReport, batchCo
     shareToolBtn.onclick = () => _doShareTool(tool);
   }
 
-  // Next-step cross-sell — currently only Merge → Extract. Reuses the existing
-  // data-handoff mechanism (see the document click listener below): the click
-  // saves the still-in-memory result blob to IndexedDB and navigates, so
-  // Extract's own init (pdf.js thumbnail render) picks it up with zero extra
+  // Next-step cross-sell — Merge → Extract, Clean Scan → OCR. Reuses the
+  // existing data-handoff mechanism (see the document click listener below):
+  // the click saves the still-in-memory result blob to IndexedDB and
+  // navigates, so the destination tool's own init (Extract's pdf.js
+  // thumbnail render / OCR's own analysis) picks it up with zero extra
   // clicks — no new plumbing needed here beyond the markup + i18n text.
+  const NEXT_STEP = {
+    merge:     { href: '/extract-pdf/', icon: '📑', titleKey: 'merge_next_extract_title',     subKey: 'merge_next_extract_sub' },
+    cleanScan: { href: '/ocr-pdf/',     icon: '🔍', titleKey: 'cleanscan_next_ocr_title',      subKey: 'cleanscan_next_ocr_sub' },
+  };
   const nextStepEl = id('nextStepRow');
   if (nextStepEl) {
-    if (tool === 'merge') {
+    const step = NEXT_STEP[tool];
+    if (step) {
       nextStepEl.innerHTML = `
-        <a href="/extract-pdf/" class="next-step-row" data-handoff>
-          <div class="next-step-row__icon" aria-hidden="true">📑</div>
+        <a href="${step.href}" class="next-step-row" data-handoff>
+          <div class="next-step-row__icon" aria-hidden="true">${step.icon}</div>
           <div class="next-step-row__body">
-            <p class="next-step-row__title">${t('merge_next_extract_title')}</p>
-            <p class="next-step-row__sub">${t('merge_next_extract_sub')}</p>
+            <p class="next-step-row__title">${t(step.titleKey)}</p>
+            <p class="next-step-row__sub">${t(step.subKey)}</p>
           </div>
           <div class="next-step-row__arrow" aria-hidden="true">→</div>
         </a>`;

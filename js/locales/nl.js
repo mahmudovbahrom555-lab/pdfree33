@@ -1048,6 +1048,8 @@ window.PDFREE_LOCALE = {
   // ── app.js — next-step cross-sell after Merge success ───────────
   merge_next_extract_title: 'Continue in Extract Pages',
   merge_next_extract_sub:   'Pick exactly the pages you need from this merged file — opens instantly, no re-upload.',
+  cleanscan_next_ocr_title: 'Continue in OCR PDF',
+  cleanscan_next_ocr_sub:   'Make the cleaned text selectable and searchable — a whiter, sharper scan recognizes more accurately.',
 
   // ── fillUI.js ────────────────────────────────────────────
   fill_analysing:             'Formuliervelden analyseren…',
