@@ -70,6 +70,7 @@ let _deferredInstall = null;
 let _selectedLang      = 'auto';  // 'auto' or specific lang code
 let _detectedLang      = null;    // set after auto-detection; null when user chose manually
 let _requiresManualLang = false;  // true when auto-detection was inconclusive — blocks OCR
+let _langPickerShown    = false;  // true once the picker was opened for the current inconclusive gate
 let _downloadAsTxt      = false;
 let _includeTxtHeader   = false;
 const _langCache       = new Map(); // "filename:size" → detected lang — avoids re-detection
@@ -736,8 +737,10 @@ function _showLangRequired(detectedLang) {
   sel.focus();
   sel.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
-  // Block OCR until user explicitly picks from the dropdown
+  // Block OCR until user explicitly picks from the dropdown (or confirms the
+  // pre-selected guess — see _langPickerShown handling in _bindMergeBtn).
   _requiresManualLang = true;
+  _langPickerShown    = false;
   _syncBtnLabel();
 }
 
@@ -773,13 +776,27 @@ function _bindMergeBtn() {
     // If previous detection was inconclusive, open the language picker here —
     // we're still in the synchronous user-gesture stack so showPicker() is allowed.
     if (_requiresManualLang) {
-      const selEl = document.getElementById('ocrLangSelect');
-      if (selEl) {
-        try { selEl.showPicker(); } catch { /* unsupported / sandbox — visual fallback stays */ }
-        selEl.focus();
-        selEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      if (!_langPickerShown) {
+        _langPickerShown = true;
+        const selEl = document.getElementById('ocrLangSelect');
+        if (selEl) {
+          try { selEl.showPicker(); } catch { /* unsupported / sandbox — visual fallback stays */ }
+          selEl.focus();
+          selEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        return;
       }
-      return;
+      // Picker was already opened once. A native <select> fires no "change"
+      // event when the user reopens it and re-confirms the SAME option — which
+      // is exactly what happens when the pre-selected guess already looks
+      // correct to them. Without this, the button stays stuck on "Select a
+      // language first" forever with no further action available. Clicking
+      // Process again after having seen the picker counts as confirmation of
+      // whatever language is currently shown.
+      _requiresManualLang = false;
+      const selEl = document.getElementById('ocrLangSelect');
+      if (selEl) { selEl.style.borderColor = ''; selEl.style.boxShadow = ''; }
+      document.querySelectorAll('.detect-hint').forEach(el => el.remove());
     }
 
     // Clear any "suggest language" visual state — user is actually running OCR now
