@@ -29,7 +29,7 @@
 //
 // Run: node tests/pdf2wordTables.test.js
 
-const { looksLikeProseNotData, looksLikeEnumeratedList } =
+const { looksLikeProseNotData, looksLikeEnumeratedList, detectTables } =
   await import('../js/pdf2wordTables.js');
 
 let passed = 0, failed = 0;
@@ -208,6 +208,79 @@ test('a real Japanese price table (short CJK cells, real numeric data) is NOT ' 
   ];
   expect(looksLikeProseNotData(rows)).toBe(false);
   expect(looksLikeEnumeratedList(rows)).toBe(false);
+});
+
+// ── detectTables: wrap-continuation + repeated-header (2026-09) ────────────
+// Both found via a real multi-page purchase-order PDF fed through pdf2excel
+// as part of a documented-user-pain-point-driven competitor comparison
+// (see the "PDF to Excel" competitor-comparison memory) — pdfree.io's own
+// output silently dropped 3 of 30 rows and let a re-printed page-2 header
+// row leak into the data as if it were row 16. Fixture columns below use
+// the same #/Description/Qty/Price shape as the real PDF, at representative
+// X positions (col1=50, col2=90 — a materially WIDER col2 so its own wrapped
+// continuation lands well past COL_TOLERANCE=25 from col1, same real-world
+// shape a Description column has relative to a narrow # column).
+console.log('\ndetectTables — wrap-continuation and repeated-header (real multi-page PO bug):');
+
+function mkRow(y, cells) {
+  // cells: [x, str] pairs
+  return { y, items: cells.map(([x, str]) => ({ x, str })) };
+}
+
+test('a long Description cell wrapped onto its own line is merged into the same row, not dropped or split', () => {
+  const lines = [
+    mkRow(700, [[50, '1'], [90, 'Premium bracket set with mounting'], [260, '4'], [340, '13.87']]),
+    mkRow(688, [[90, 'hardware included for industrial use']]), // wrap continuation — single item, col2 X
+    mkRow(670, [[50, '2'], [90, 'Cable ties'], [260, '7'], [340, '15.24']]),
+    mkRow(652, [[50, '3'], [90, 'Steel bolt M6x20'], [260, '10'], [340, '16.61']]),
+  ];
+  const tables = detectTables(lines);
+  expect(tables.length).toBe(1);
+  expect(tables[0].rows.length).toBe(3); // NOT 4 — the wrap line merges into row 1, doesn't become its own row
+  const row1Desc = tables[0].rows[0][1];
+  if (!row1Desc.includes('Premium bracket set with mounting') || !row1Desc.includes('hardware included for industrial use')) {
+    throw new Error(`Expected merged wrapped text in row 1's Description cell, got: ${JSON.stringify(row1Desc)}`);
+  }
+  // startIdx/endIdx must still span the wrap line so the caller (which marks
+  // every index in that range "consumed") doesn't leak it into textRows too.
+  expect(tables[0].endIdx).toBe(3);
+});
+
+test('a single stray item in the LEFTMOST column is NOT treated as a wrap-continuation (sparse-row case, not text wrap)', () => {
+  // Mirrors a real sparse-column-region fixture shape (tests/pdf2wordColumns.test.js's
+  // _splitCrossColumnLines fixture) — a lone leftmost-column item on its own
+  // line must not silently merge into the previous row and inflate this
+  // into one long confident "table", since that's what a real 2-column body
+  // text page legitimately looks like too.
+  const lines = [
+    mkRow(700, [[50, 'A'], [90, 'B']]),
+    mkRow(688, [[50, 'C']]), // single item, leftmost column only
+    mkRow(676, [[50, 'D'], [90, 'E']]),
+  ];
+  const tables = detectTables(lines);
+  // The lone leftmost-only line breaks table extension (as before this
+  // change) rather than merging — table candidate is just the first 1 row,
+  // below MIN_ROWS=3, so no table at all should be reported here.
+  expect(tables.length).toBe(0);
+});
+
+test('a header row re-printed on page 2 of a multi-page table is consumed, not absorbed as a data row', () => {
+  const lines = [
+    mkRow(700, [[50, '#'], [90, 'Description'], [260, 'Qty'], [340, 'Price']]),
+    mkRow(688, [[50, '16'], [90, 'Widget'], [260, '49'], [340, '34.42']]),
+    mkRow(676, [[50, '17'], [90, 'Bracket'], [260, '2'], [340, '35.79']]),
+    // Re-printed header, exact same text — must be skipped, not become row 4
+    mkRow(664, [[50, '#'], [90, 'Description'], [260, 'Qty'], [340, 'Price']]),
+    mkRow(652, [[50, '18'], [90, 'Ties'], [260, '5'], [340, '37.16']]),
+    mkRow(640, [[50, '19'], [90, 'Bolt'], [260, '8'], [340, '38.53']]),
+  ];
+  const tables = detectTables(lines);
+  expect(tables.length).toBe(1);
+  expect(tables[0].rows.length).toBe(5); // header + 4 data rows — NOT 6 (the repeat is dropped)
+  const headerReappearances = tables[0].rows.filter(r => r[0] === '#').length;
+  expect(headerReappearances).toBe(1); // only the real header, once
+  // Still must span the repeated-header line's index for consumed-range bookkeeping.
+  expect(tables[0].endIdx).toBe(5);
 });
 
 // ── Summary ──────────────────────────────────────────────────

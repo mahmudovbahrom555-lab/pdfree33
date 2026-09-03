@@ -57,8 +57,25 @@ export function detectTables(lines, { debug = false } = {}) {
     const baseCols = _clusterColumns(line.items, COL_TOLERANCE);
     if (baseCols.length < MIN_COLS) { i++; continue; }
 
-    // Extend forward while subsequent lines align with the base column pattern
+    // Extend forward while subsequent lines align with the base column pattern.
+    // effectiveLines (not a plain lines.slice(i,j)) is what actually becomes
+    // rows — a wrap-continuation line gets merged into the previous accepted
+    // line's own item instead of appearing here, and a repeated header row
+    // gets consumed (still advances j, still ends up inside [i, j) so the
+    // caller's consumed-index bookkeeping still covers it) without being
+    // pushed at all. Both are real bugs found via a real multi-page
+    // purchase-order test, not hypothetical:
+    //  - A wrapped 2nd line of a table cell (long Description text) used to
+    //    always break table extension right there (single stray item, not a
+    //    stub row) — if the fragment before or after the break was itself
+    //    under MIN_ROWS, that whole chunk (including real data rows) was
+    //    silently dropped, not merely mis-formatted.
+    //  - A header row re-printed on every page of a multi-page table (a
+    //    very common real PDF-generator pattern) satisfied the ordinary
+    //    column-alignment check just like a data row, so it got absorbed
+    //    as literal data ("Description", "Qty", … sitting mid-table).
     let j = i + 1;
+    const effectiveLines = [line];
     // Track how many consecutive stub rows we've accepted.
     // A stub row = exactly 1 item that is a positive sequential integer.
     // This handles blank template tables (school forms, contracts) where
@@ -74,8 +91,14 @@ export function detectTables(lines, { debug = false } = {}) {
         const nextCols   = _clusterColumns(next.items, COL_TOLERANCE);
         const alignScore = _columnAlignScore(baseCols, nextCols, COL_TOLERANCE);
         if (alignScore >= ALIGN_THRESHOLD) {
+          if (_looksLikeRepeatedHeader(effectiveLines[0], next)) {
+            stubSeq = 0;
+            j++;
+            continue; // consumed, deliberately not added as a data row
+          }
           // Reset stub sequence when we see a properly-filled row
           stubSeq = 0;
+          effectiveLines.push(next);
           j++;
           continue;
         }
@@ -87,6 +110,45 @@ export function detectTables(lines, { debug = false } = {}) {
       const stubN = _stubRowNumber(next);
       if (stubN !== null && (stubSeq === 0 ? stubN === 1 : stubN === stubSeq + 1)) {
         stubSeq = stubN;
+        effectiveLines.push(next);
+        j++;
+        continue;
+      }
+
+      // Wrap-continuation: a single stray item landing on one of the
+      // table's own established column positions (but NOT the leftmost —
+      // see below), most likely the tail of a multi-line cell (e.g. a long
+      // Description) wrapped onto its own line. Merge its text onto that
+      // column's item on the last accepted line rather than treating it as
+      // a new row or breaking the table.
+      //
+      // Excluding baseCols[0] specifically is load-bearing, not incidental:
+      // a single leftover item sitting in the LEFTMOST column is exactly
+      // the shape of a genuinely sparse row (a category/ID column with
+      // nothing else on that row — the same real, already-handled pattern
+      // _columnAlignScore's MIN_COVERAGE_FRACTION comment documents for
+      // debit/credit ledgers, just at the 1-item extreme). Wrapped text
+      // continuations are overwhelmingly a body-text-column phenomenon
+      // (descriptions, names, addresses), not the leftmost ID/number
+      // column, which by nature holds short tokens that don't wrap. Found
+      // via a real regression: without this exclusion, a page whose
+      // left-column items happen to line up at the same X as an unrelated
+      // table's leftmost column (tests/pdf2wordColumns.test.js's
+      // _splitCrossColumnLines fixture) got misread as one long confident
+      // table instead of two real parallel columns, since detectColumnRegions()
+      // deliberately refuses to split anything detectTables() is confident
+      // about (its own "prefer false negatives" table guard).
+      const wrapItem = next.items[0];
+      const candidateCols = baseCols.slice(1); // exclude the leftmost column
+      const nearestCol = candidateCols.length
+        ? candidateCols.reduce((best, bc) =>
+            Math.abs(bc - wrapItem.x) < Math.abs(best - wrapItem.x) ? bc : best, candidateCols[0])
+        : null;
+      if (nearestCol !== null && Math.abs(nearestCol - wrapItem.x) <= COL_TOLERANCE) {
+        const lastLine   = effectiveLines[effectiveLines.length - 1];
+        const targetItem = lastLine.items.reduce((best, it) =>
+          Math.abs(it.x - nearestCol) < Math.abs(best.x - nearestCol) ? it : best, lastLine.items[0]);
+        targetItem.str = `${targetItem.str} ${wrapItem.str}`;
         j++;
         continue;
       }
@@ -94,11 +156,10 @@ export function detectTables(lines, { debug = false } = {}) {
       break;
     }
 
-    const rowCount = j - i;
+    const rowCount = effectiveLines.length;
     if (rowCount >= MIN_ROWS) {
-      const tableLines = lines.slice(i, j);
-      const colBounds  = _detectColumnBoundaries(tableLines, COL_TOLERANCE);
-      const rows       = tableLines.map(ln => _assignToCells(ln.items, colBounds));
+      const colBounds  = _detectColumnBoundaries(effectiveLines, COL_TOLERANCE);
+      const rows       = effectiveLines.map(ln => _assignToCells(ln.items, colBounds));
 
       // Stub rows lower fillScore — compensate by boosting alignScore weight
       // when the table is mostly empty (template form pattern).
@@ -144,6 +205,26 @@ export function groupItemsIntoLines(items, ytol = DEFAULT_LINE_YTOL) {
   }
   lines.forEach(ln => ln.items.sort((a, b) => a.x - b.x));
   return lines;
+}
+
+// ── Repeated header detection ─────────────────────────────────────────────────
+
+/**
+ * Does `candidate` look like the table's own header row (`headerLine`)
+ * printed again mid-table? Real, common pattern: PDF generators re-print
+ * column headers at the top of every page a table spans. Exact text-set
+ * match (order-independent, case/whitespace-insensitive) rather than a
+ * fuzzy/partial match — deliberately conservative, same "false negatives
+ * over false positives" stance as the rest of this file. A genuine data
+ * row coincidentally containing the exact same text as every single header
+ * cell simultaneously is effectively impossible.
+ */
+function _looksLikeRepeatedHeader(headerLine, candidate) {
+  if (!headerLine?.items || headerLine.items.length !== candidate.items.length) return false;
+  const norm = (s) => s.trim().toLowerCase();
+  const headerTexts = headerLine.items.map(it => norm(it.str)).sort();
+  const candTexts    = candidate.items.map(it => norm(it.str)).sort();
+  return headerTexts.every((t, idx) => t === candTexts[idx]);
 }
 
 // ── Stub row detection ────────────────────────────────────────────────────────
