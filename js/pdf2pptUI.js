@@ -4,7 +4,7 @@
 import { id } from './utils.js';
 import { loadPdfJs } from './pdf2jpgUI.js';
 import { preprocessPdfBuffer } from './decryptPdf.js';
-import { group } from './uiComponents.js';
+import { chipGroup, group } from './uiComponents.js';
 import { t, tp } from './i18n.js';
 
 // ── Constants ─────────────────────────────────────────────────────────────────
@@ -16,6 +16,7 @@ const DANGER_MB  = 200;
 
 // ── State ─────────────────────────────────────────────────────────────────────
 let _file      = null;
+let _mode      = 'image';
 let _dpi       = 150;
 let _pageCount = 0;
 let _vpW       = 0;
@@ -23,7 +24,7 @@ let _vpH       = 0;
 let _loading   = false;
 
 export function getPdf2PptParams() {
-  return { dpi: _dpi, pageCount: _pageCount, loading: _loading };
+  return { mode: _mode, dpi: _dpi, pageCount: _pageCount, loading: _loading };
 }
 
 // ── Public API ────────────────────────────────────────────────────────────────
@@ -71,7 +72,7 @@ export async function initPdf2PptOptions(file) {
 export function hidePdf2PptOptions() {
   const el = id('pdf2pptOptions');
   if (el) { el.style.display = 'none'; el.innerHTML = ''; }
-  _file = null; _dpi = 150; _pageCount = 0; _vpW = 0; _vpH = 0; _loading = false;
+  _file = null; _mode = 'image'; _dpi = 150; _pageCount = 0; _vpW = 0; _vpH = 0; _loading = false;
 }
 
 // ── Size estimation ───────────────────────────────────────────────────────────
@@ -98,6 +99,11 @@ function _render(file) {
       <span class="compress-info__meta">${tp(_pageCount, 'split_info_page', 'split_info_pages', { n: _pageCount })} → ${tp(_pageCount, 'p2p_slide_one', 'p2p_slide_many', { n: _pageCount })}</span>
     </div>
 
+    ${group(t('p2p_output_mode'), chipGroup('p2pMode', [
+      { value: 'image', label: t('p2p_mode_image') },
+      { value: 'text',  label: t('p2p_mode_text') },
+    ], _mode, t('p2p_conversion_mode_aria')))}
+
     ${group(t('p2p_quality_label'), `
       <div class="j2p-chips" role="group" aria-label="${t('p2p_quality_aria')}">
         ${_dpiChip('72',  t('p2w_dpi_compact'),  '72',  _dpi)}
@@ -107,13 +113,25 @@ function _render(file) {
     `)}
     <div id="p2pSizeHint" style="margin-top:8px">${_sizeHintHTML(_dpi)}</div>
 
-    <div class="compress-scan compress-scan--ok" role="status" aria-live="polite" style="margin-top:8px">
-      ${t('p2p_mode_hint')}
+    <div id="p2pModeHint" class="compress-scan compress-scan--ok" role="status" aria-live="polite" style="margin-top:8px">
+      ${_modeHintText()}
     </div>
   `;
 
   el.removeEventListener('change', _onChange);
   el.addEventListener('change', _onChange);
+}
+
+// Unlike pdf2word's own image/text toggle (js/pdf2wordUI.js), the DPI/
+// quality picker here stays visible in BOTH modes, not hidden in text mode:
+// Stage 1's "Editable text" reconstruction is a HYBRID — tables, multi-
+// column pages, and diagrams still embed a cropped raster image alongside
+// the real text shapes (see _p2pBuildSlideShapes's own comment in
+// js/processor.js), so image quality still matters in text mode too. Don't
+// "fix" this to match pdf2word's pattern exactly — the two tools' text
+// modes have genuinely different content mixes.
+function _modeHintText() {
+  return _mode === 'text' ? t('p2p_mode_text_hint') : t('p2p_mode_hint');
 }
 
 function _dpiChip(value, label, display, current, recommended = false) {
@@ -159,6 +177,13 @@ function _onChange(e) {
     });
     const sizeHint = id('p2pSizeHint');
     if (sizeHint) sizeHint.innerHTML = _sizeHintHTML(_dpi);
+  } else if (e.target.name === 'p2pMode') {
+    _mode = e.target.value;
+    document.querySelectorAll('[data-name="p2pMode"]').forEach(el => {
+      el.classList.toggle('j2p-chip--active', el.dataset.value === _mode);
+    });
+    const hint = id('p2pModeHint');
+    if (hint) hint.textContent = _modeHintText();
   }
 }
 

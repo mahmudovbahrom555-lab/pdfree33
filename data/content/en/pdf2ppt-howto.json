@@ -13,8 +13,8 @@
     {
       "@type": "HowToStep",
       "position": 2,
-      "name": "Choose a slide quality",
-      "text": "Pick Compact, Balanced, or High quality depending on your needs."
+      "name": "Choose an output mode and slide quality",
+      "text": "Pick Image (default) or Editable text (beta), then Compact, Balanced, or High quality depending on your needs."
     },
     {
       "@type": "HowToStep",

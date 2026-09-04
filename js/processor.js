@@ -2733,7 +2733,252 @@ async function _p2pExtractTextBlocks(page) {
   return blocks.length > _P2P_MAX_TEXT_BLOCKS ? [] : blocks;
 }
 
-async function _runPdf2Ppt(filesSnapshot, { dpi = 150 } = {}) {
+// ── Stage 1 "Editable text" mode: real, positioned, formatted PPTX text
+// shapes instead of an invisible search layer over a raster image ─────────
+//
+// Reuses pdf2word's already-proven detectors (detectTables, detectColumnRegions,
+// BULLET_RE/NUMBERED_RE/LETTERED_RE, the same heading font-ratio threshold and
+// same-size-bold heading detection, the same repeatTextSet/repeatPatternSet
+// footer suppression shipped earlier today) rather than re-deriving any of
+// them. Deliberately simpler than _p2wBuildParagraphs in a few disclosed
+// ways (Stage 1 scope, not an oversight — see this feature's own plan file):
+//   - A multi-column page (detectColumnRegions() returns non-null) becomes
+//     ONE whole-page image region — real per-column text reconstruction is
+//     a Stage 2 candidate, not attempted here.
+//   - A detected table becomes ONE image region spanning its own lines — no
+//     native PPTX table (addTable) this round.
+//   - RTL/CJK-specific paragraph-merge threshold tuning is not replicated
+//     (plain LTR/Cyrillic 2.0x threshold used for every language) — a
+//     disclosed simplification, not a correctness requirement for Stage 1.
+//
+// Unlike a flowing Word document, a PPTX slide has no reading-order
+// constraint — every shape carries its own absolute x/y — so text shapes
+// and image regions are returned as two independent, unordered lists; the
+// caller (_runPdf2Ppt) places each at its own position without needing them
+// pre-interleaved.
+//
+// Returns { textShapes, imageRegions, scanned } for ONE page:
+//   textShapes:   [{ y0, y1, runs:[{text,bold,italic,fontSize}], heading, bullet }]
+//                 y0/y1 in PDF points, origin bottom-left (y0 = top edge,
+//                 y1 = bottom edge — y0 > y1, same convention as the rest of
+//                 this codebase).
+//   imageRegions: [{ y0, y1 }] — a Y-band to crop from the page's already-
+//                 rendered canvas and place as one picture shape. Covers
+//                 detected tables, multi-column pages (whole page), and
+//                 ordinary whitespace gaps between text (diagrams/charts) —
+//                 without this last case, any diagram/chart with no table
+//                 border and no accompanying text would be silently
+//                 dropped instead of merely left unreconstructed, which
+//                 would be a real regression against today's always-safe
+//                 raster fallback, not just a missed enhancement.
+//   scanned:      true when the page has no extractable text at all — the
+//                 caller renders the whole page as one image slide, same as
+//                 today's existing scanned-page handling.
+export function _p2pBuildSlideShapes(page, median, repeatTextSet, repeatPatternSet) {
+  const { lines, pageW, pageH } = page;
+  if (!lines.length) return { textShapes: [], imageRegions: [], scanned: true };
+
+  // Multi-column layout: Stage 1 scope excludes real per-column text
+  // reconstruction (see block comment above) — the whole page becomes one
+  // image region, never worse than today's always-image behavior.
+  const columnRegions = pageW ? detectColumnRegions(lines, pageW) : null;
+  if (columnRegions) return { textShapes: [], imageRegions: [{ y0: pageH, y1: 0 }], scanned: false };
+
+  const tables = detectTables(lines)
+    .filter(t => !looksLikeProseNotData(t.rows) && !looksLikeEnumeratedList(t.rows));
+  const lineToTable = new Map();
+  for (const t of tables) {
+    for (let li = t.startIdx; li <= t.endIdx; li++) lineToTable.set(li, t);
+  }
+
+  // Baseline left margin — same concept _processLines (pdf2word) already
+  // uses for LETTERED_RE's indent gate (a genuine sub-item is indented past
+  // this; a false positive like "A. Smith wrote..." sits flush with it).
+  let pageBaselineX = 0;
+  {
+    const xFreq = new Map();
+    for (const ln of lines) {
+      const x = ln.items[0]?.x;
+      if (x === undefined) continue;
+      const rounded = Math.round(x);
+      xFreq.set(rounded, (xFreq.get(rounded) || 0) + 1);
+    }
+    let bestCount = 0;
+    for (const [x, count] of xFreq) if (count > bestCount) { bestCount = count; pageBaselineX = x; }
+  }
+
+  // Same adaptive gap heuristic _p2wBuildParagraphs uses for visual-region
+  // detection (js/processor.js's own _GAP_FACTOR/_MIN_GAP_PT), simplified
+  // here to a single Y-band per gap rather than that function's full
+  // render+ink-tightening refinement — a disclosed Stage 1 simplification
+  // (see block comment above), not a correctness gap: the region still gets
+  // captured as an image, just with a slightly looser crop box.
+  const gapFactor = (() => {
+    const t = Math.min(1, Math.max(0, (median - 8) / (14 - 8)));
+    return 1.6 + t * (2.5 - 1.6);
+  })();
+  const gapThreshold = Math.max(20, median * gapFactor);
+
+  const _isBoldHeadingLine = (items) => {
+    if (!items.every(i => i.bold)) return false;
+    const text = items.map(i => i.str).join('');
+    if (MONEY_TOKEN_RE.test(text)) return false; // tabular/financial data, not a real heading
+    const len = text.replace(/\s+/g, '').length;
+    return len > 3 && len <= 100;
+  };
+
+  const textShapes   = [];
+  const imageRegions = [];
+  let buffer = []; // accumulates lines for the current text shape
+
+  const flush = () => {
+    if (!buffer.length) return;
+    if (buffer.length === 1) {
+      const raw = buffer[0].items.map(i => i.str).join('').trim();
+      const t   = _normWatermark(raw);
+      if (t === '' || repeatTextSet.has(t) || repeatPatternSet.has(_normDigits(t))) { buffer = []; return; }
+    }
+    const allItems = buffer.flatMap(ln => ln.items);
+    const allText  = allItems.map(i => i.str).join(' ').replace(/\s+/g, ' ').trim();
+    if (!allText) { buffer = []; return; }
+    const maxSize = Math.max(...allItems.map(i => i.fontSize));
+
+    let heading = false;
+    if (allText.length > 3) {
+      if (maxSize >= median * 1.3) heading = true;
+      else if (allText.length <= 100 && buffer.every(ln => _isBoldHeadingLine(ln.items))) heading = true;
+    }
+
+    const runs = buffer
+      .map(ln => ({
+        text:     ln.items.map(i => i.str).join(' ').replace(/\s+/g, ' ').trim(),
+        bold:     ln.items.every(i => i.bold),
+        italic:   ln.items.every(i => i.italic),
+        fontSize: Math.max(...ln.items.map(i => i.fontSize)),
+      }))
+      .filter(r => r.text);
+    if (!runs.length) { buffer = []; return; }
+
+    textShapes.push({
+      x0: Math.min(...allItems.map(i => i.x)),
+      x1: Math.max(...allItems.map(i => i.x + (i.width > 0 ? i.width : i.fontSize * i.str.length * 0.5))),
+      y0: Math.max(...buffer.map(ln => ln.y)) + maxSize,
+      y1: Math.min(...buffer.map(ln => ln.y)),
+      runs, heading,
+    });
+    buffer = [];
+  };
+
+  // Gap scan BETWEEN consecutive text lines only — deliberately NOT
+  // sentinel-padded from the page's top/bottom edge the way
+  // _p2wBuildParagraphs's visualGaps is. That padding makes sense for a
+  // flowing Word document (margins are just margins, never rendered as
+  // literal blank page space), but a PPTX slide IS a literal fixed canvas —
+  // ordinary, generous top/bottom margin whitespace (routine on real
+  // slide-style source PDFs, not just report pages) would otherwise get
+  // flagged as an "image region" and cropped into a pointless blank
+  // picture. A genuine diagram sitting above the first line or below the
+  // last line of a page with no other content is a real but rarer case,
+  // deliberately left uncaptured here — a disclosed Stage 1 simplification.
+  const _isHeadingSized = (ln) => Math.max(...ln.items.map(i => i.fontSize)) >= median * 1.3;
+  for (let li = 0; li < lines.length - 1; li++) {
+    if (lineToTable.has(li) || lineToTable.has(li + 1)) continue;
+    // A heading naturally carries extra leading space before/after it —
+    // real, ordinary document structure, not evidence of a hidden diagram.
+    // Without this, a normal heading-to-body gap (a large-font heading
+    // directly followed by body text well below it) can exceed
+    // gapThreshold on its own and get wrongly cropped as an image region.
+    if (_isHeadingSized(lines[li]) || _isHeadingSized(lines[li + 1])) continue;
+    const yAbove = lines[li].y, yBelow = lines[li + 1].y;
+    if (yAbove - yBelow >= gapThreshold) imageRegions.push({ y0: yAbove, y1: yBelow });
+  }
+
+  for (let lineIdx = 0; lineIdx < lines.length; lineIdx++) {
+    const ln  = lines[lineIdx];
+    const tbl = lineToTable.get(lineIdx);
+    if (tbl) {
+      flush();
+      if (lineIdx === tbl.startIdx) {
+        const tblLines = lines.slice(tbl.startIdx, tbl.endIdx + 1);
+        imageRegions.push({
+          y0: Math.max(...tblLines.map(l => l.y)) + median,
+          y1: Math.min(...tblLines.map(l => l.y)) - median * 0.3,
+        });
+      }
+      continue;
+    }
+
+    // Page-number footer/header skip — same near-edge position proxy
+    // (first/last 3 lines) _processLines already uses for this.
+    const nearEdge = lineIdx < 3 || lineIdx >= lines.length - 3;
+    if (nearEdge) {
+      const raw = ln.items.map(i => i.str).join('').trim();
+      if (/^\d+$/.test(raw) || repeatPatternSet.has(_normDigits(_normWatermark(raw)))) continue;
+    }
+
+    const lnRawText     = ln.items.map(i => i.str).join('').trim();
+    const bulletMatch    = BULLET_RE.test(lnRawText);
+    const numberedMatch  = !bulletMatch && NUMBERED_RE.test(lnRawText);
+    const letteredMatch  = !bulletMatch && !numberedMatch && LETTERED_RE.test(lnRawText) &&
+      (ln.items[0]?.x ?? 0) > pageBaselineX + 10;
+
+    if (bulletMatch || letteredMatch || numberedMatch) {
+      flush();
+      const markerRe = bulletMatch ? BULLET_RE : letteredMatch ? LETTERED_RE : NUMBERED_RE;
+      const text = lnRawText.replace(markerRe, '').trim();
+      if (text) {
+        const fontSize = Math.max(...ln.items.map(i => i.fontSize));
+        textShapes.push({
+          x0: Math.min(...ln.items.map(i => i.x)),
+          x1: Math.max(...ln.items.map(i => i.x + (i.width > 0 ? i.width : i.fontSize * i.str.length * 0.5))),
+          y0: ln.y + fontSize, y1: ln.y,
+          runs: [{ text, bold: ln.items.every(i => i.bold), italic: ln.items.every(i => i.italic), fontSize }],
+          heading: false,
+          // Lettered sub-items ("a."/"b.") render as bullet-style, not
+          // pptxgenjs auto-numbering — they read as a nested list under a
+          // numbered parent item, not their own independent 1/2/3 sequence.
+          bullet: numberedMatch ? 'number' : 'bullet',
+        });
+      }
+      continue;
+    }
+
+    if (buffer.length > 0) {
+      const lastLn      = buffer[buffer.length - 1];
+      const lastMaxFont = Math.max(...lastLn.items.map(i => i.fontSize));
+      const curMaxFont  = Math.max(...ln.items.map(i => i.fontSize));
+      const gap         = lastLn.y - ln.y;
+      const lastIsHead  = lastMaxFont >= median * 1.3 || _isBoldHeadingLine(lastLn.items);
+      const isHead      = curMaxFont  >= median * 1.3 || _isBoldHeadingLine(ln.items);
+      if (isHead || lastIsHead || gap > lastMaxFont * 2.0) flush();
+    }
+    buffer.push(ln);
+  }
+  flush();
+
+  return { textShapes, imageRegions, scanned: false };
+}
+
+// Crops a Y-band (full page width) out of an already-rendered page canvas
+// and returns a PNG data URL. PNG (not the JPEG tiering the full-page image
+// uses) — these crops are typically small (a table or diagram region, not a
+// whole page), so the file-size cost of lossless output stays bounded, and
+// it avoids JPEG block artifacts on what's often text-heavy table content.
+function _p2pCropCanvasRegion(sourceCanvas, xPx, yPx, wPx, hPx) {
+  if (wPx <= 0 || hPx <= 0) return null;
+  const clampedY = Math.max(0, Math.min(yPx, sourceCanvas.height - 1));
+  const clampedH = Math.max(1, Math.min(hPx, sourceCanvas.height - clampedY));
+  const temp = document.createElement('canvas');
+  temp.width  = wPx;
+  temp.height = clampedH;
+  const tctx = temp.getContext('2d');
+  tctx.drawImage(sourceCanvas, xPx, clampedY, wPx, clampedH, 0, 0, wPx, clampedH);
+  const url = temp.toDataURL('image/png');
+  temp.width = 0; temp.height = 0;
+  return url;
+}
+
+async function _runPdf2Ppt(filesSnapshot, { dpi = 150, mode = 'image' } = {}) {
   const file = filesSnapshot[0];
   if (!_checkSize(file, 150)) { _abortUI(); return; }
 
@@ -2792,6 +3037,21 @@ async function _runPdf2Ppt(filesSnapshot, { dpi = 150 } = {}) {
   const quality = pageCount > 300 ? 0.60 : pageCount > 150 ? 0.72 : 0.85;
   const scale   = dpi / 72;
 
+  // "Editable text (beta)" mode: extract real structure ONCE for the whole
+  // document up front, reusing pdf2word's own page-data pass (headings,
+  // flat lists, tables, columns, footer suppression — see
+  // _p2pBuildSlideShapes's own comment for exactly what's reused and what's
+  // deliberately simplified for this first pass). This is a separate
+  // pdf.js call (getTextContent+getOperatorList) from the per-page render
+  // loop below (page.render, for the visual canvas) — not a redundant
+  // re-parse of the same data, a genuinely different extraction.
+  let textPageData = null, textMedian = 10, textRepeatSet = new Set(), textPatternSet = new Set();
+  if (mode === 'text') {
+    setProgress(8, 'Analyzing document structure…');
+    ({ pageData: textPageData, median: textMedian, repeatTextSet: textRepeatSet,
+       repeatPatternSet: textPatternSet } = await _p2wBuildPageData(pdfDoc));
+  }
+
   let canvas = document.createElement('canvas');
   const ctx  = canvas.getContext('2d', { willReadFrequently: true });
 
@@ -2808,15 +3068,7 @@ async function _runPdf2Ppt(filesSnapshot, { dpi = 150 } = {}) {
       canvas.height  = Math.round(viewport.height);
       await page.render({ canvasContext: ctx, viewport }).promise;
 
-      // Must run before cleanup() — pulls from the same page object the
-      // render just used.
-      const textBlocks = await _p2pExtractTextBlocks(page);
       const pageHeightPt = viewport.height / scale; // undo the dpi/72 render scale, points
-
-      page.cleanup?.();
-
-      const fmt     = _p2wDetectFormat(canvas);
-      const dataUrl = canvas.toDataURL(`image/${fmt}`, fmt === 'jpeg' ? quality : undefined);
 
       // viewport is already this page's own size at scale=dpi/72, so
       // width/dpi and height/dpi recover its size in inches directly —
@@ -2827,41 +3079,124 @@ async function _runPdf2Ppt(filesSnapshot, { dpi = 150 } = {}) {
 
       const slide = pptx.addSlide();
 
-      // Tried using slide.background here for the common uniform-page-size
-      // case (fit.scale === 1) instead of addImage, since pptxgenjs has no
-      // lock/noSelect option for addImage and a real OOXML <p:bg> can't be
-      // click-dragged the way a regular picture shape can. Verified against
-      // the actual generated XML before keeping it, though — pptxgenjs
-      // 3.12.0's slide.background silently emits the exact same <p:pic>
-      // shape addImage would, not a <p:bg> element, so there was no locking
-      // benefit to have. Reverted to always using the positioned addImage
-      // path below (needed unconditionally anyway for the mixed-page-size
-      // fit/letterbox fix — it's already correct for both cases).
-      slide.addImage({ data: dataUrl, x: fit.x, y: fit.y, w: fit.w, h: fit.h });
+      const shapes = (mode === 'text' && textPageData)
+        ? _p2pBuildSlideShapes(textPageData[p - 1], textMedian, textRepeatSet, textPatternSet)
+        : null;
 
-      for (const block of textBlocks) {
-        // PDF points, origin bottom-left → inches, origin top-left, then
-        // through the same scale+offset the image itself was fit with, so
-        // the invisible text stays aligned to the (possibly letterboxed)
-        // image beneath it.
-        const xIn    = block.x / 72;
-        const yTopIn = (pageHeightPt - block.y - block.height) / 72;
-        const wIn    = block.width  / 72;
-        const hIn    = block.height / 72;
+      if (!shapes || shapes.scanned) {
+        // Whole-page raster fallback — Image mode's own path (unchanged),
+        // and Text mode's per-page fallback for a scanned/no-text page or a
+        // multi-column page (Stage 1 scope, see _p2pBuildSlideShapes).
+        // Must run before cleanup() — pulls from the same page object the
+        // render just used. Always extracted here regardless of mode: a
+        // scanned/multi-column page falling back to a raster slide in Text
+        // mode should still get the same invisible search/copy layer Image
+        // mode always provides — no reason to omit it just because the
+        // OVERALL mode is 'text'.
+        const textBlocks = await _p2pExtractTextBlocks(page);
+        page.cleanup?.();
 
-        slide.addText(block.text, {
-          x: fit.x + xIn * fit.scale,
-          y: fit.y + yTopIn * fit.scale,
-          w: Math.max(0.05, wIn * fit.scale),
-          h: Math.max(0.05, hIn * fit.scale),
-          fontSize:    Math.max(1, block.fontSize * fit.scale),
-          color:       '000000',
-          transparency: 100,
-          fill:        { type: 'none' },
-          line:        { type: 'none' },
-          margin:      0,
-          wrap:        false,
-        });
+        // Tried using slide.background here for the common uniform-page-size
+        // case (fit.scale === 1) instead of addImage, since pptxgenjs has no
+        // lock/noSelect option for addImage and a real OOXML <p:bg> can't be
+        // click-dragged the way a regular picture shape can. Verified against
+        // the actual generated XML before keeping it, though — pptxgenjs
+        // 3.12.0's slide.background silently emits the exact same <p:pic>
+        // shape addImage would, not a <p:bg> element, so there was no locking
+        // benefit to have. Reverted to always using the positioned addImage
+        // path below (needed unconditionally anyway for the mixed-page-size
+        // fit/letterbox fix — it's already correct for both cases).
+        const fmt     = _p2wDetectFormat(canvas);
+        const dataUrl = canvas.toDataURL(`image/${fmt}`, fmt === 'jpeg' ? quality : undefined);
+        slide.addImage({ data: dataUrl, x: fit.x, y: fit.y, w: fit.w, h: fit.h });
+
+        for (const block of textBlocks) {
+          // PDF points, origin bottom-left → inches, origin top-left, then
+          // through the same scale+offset the image itself was fit with, so
+          // the invisible text stays aligned to the (possibly letterboxed)
+          // image beneath it.
+          const xIn    = block.x / 72;
+          const yTopIn = (pageHeightPt - block.y - block.height) / 72;
+          const wIn    = block.width  / 72;
+          const hIn    = block.height / 72;
+
+          slide.addText(block.text, {
+            x: fit.x + xIn * fit.scale,
+            y: fit.y + yTopIn * fit.scale,
+            w: Math.max(0.05, wIn * fit.scale),
+            h: Math.max(0.05, hIn * fit.scale),
+            fontSize:    Math.max(1, block.fontSize * fit.scale),
+            color:       '000000',
+            transparency: 100,
+            fill:        { type: 'none' },
+            line:        { type: 'none' },
+            margin:      0,
+            wrap:        false,
+          });
+        }
+      } else {
+        // Real, positioned, formatted text shapes + cropped image regions
+        // (tables/diagrams) — no whole-page background image at all here,
+        // since the real text shapes already cover that same content;
+        // adding the raster too would duplicate it underneath.
+        page.cleanup?.();
+
+        for (const shape of shapes.textShapes) {
+          const xIn = shape.x0 / 72;
+          const yTopIn = (pageHeightPt - shape.y0) / 72;
+          const wIn = Math.max(0.1, (shape.x1 - shape.x0) / 72);
+          const hIn = Math.max(0.1, (shape.y0 - shape.y1) / 72);
+
+          const textRuns = shape.runs.map((r, i) => ({
+            text: r.text + (i < shape.runs.length - 1 ? '\n' : ''),
+            options: {
+              bold:     r.bold,
+              italic:   r.italic,
+              fontSize: Math.max(1, Math.round(r.fontSize * fit.scale)),
+            },
+          }));
+
+          const opts = {
+            x: fit.x + xIn * fit.scale,
+            y: fit.y + yTopIn * fit.scale,
+            w: wIn * fit.scale,
+            h: hIn * fit.scale,
+            fontSize: Math.max(1, Math.round((shape.runs[0]?.fontSize ?? 12) * fit.scale)),
+            color:    '000000',
+            align:    'left',
+            valign:   'top',
+            margin:   0,
+            wrap:     true,
+          };
+          // pptxgenjs 3.12.0's own XML generator has a real bug: passing
+          // `bullet: { type: 'bullet' }` silently produces NO bullet
+          // character at all — its internal branch only fills in real XML
+          // for `type: 'number'`; any other `.type` value falls through
+          // every remaining branch as a no-op (verified directly against
+          // the library's own bundled source, not assumed). `bullet: true`
+          // (no `type` key) hits a DIFFERENT, working branch that emits the
+          // library's own default bullet character correctly — used here
+          // for bullet/lettered items; `{ type: 'number', ... }` is the one
+          // shape.bullet value that genuinely needs the object form, and
+          // does work as documented.
+          if (shape.bullet === 'number') opts.bullet = { type: 'number' };
+          else if (shape.bullet)         opts.bullet = true;
+          slide.addText(textRuns, opts);
+        }
+
+        for (const region of shapes.imageRegions) {
+          const yTopPx = Math.round((pageHeightPt - region.y0) * scale);
+          const yBotPx = Math.round((pageHeightPt - region.y1) * scale);
+          const cropUrl = _p2pCropCanvasRegion(canvas, 0, yTopPx, canvas.width, yBotPx - yTopPx);
+          if (!cropUrl) continue;
+          const yTopIn = (pageHeightPt - region.y0) / 72;
+          const hIn    = Math.max(0.05, (region.y0 - region.y1) / 72);
+          slide.addImage({
+            data: cropUrl,
+            x: fit.x, y: fit.y + yTopIn * fit.scale,
+            w: fit.w, h: hIn * fit.scale,
+          });
+        }
       }
 
       const now = performance.now();
