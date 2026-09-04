@@ -3942,7 +3942,23 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
       for (const region of ordered) {
         if (!isProcessing) break;
         const inRegion = (it) => !!it && it.x >= region.left && it.x < region.right;
-        const colLines        = lines.filter(ln => ln.items.length && inRegion(ln.items[0]));
+        // Filter ITEMS WITHIN each line, not whole lines by their first item.
+        // In the normal case _splitCrossColumnLines() (textLayoutUtils.js,
+        // called from _p2wBuildPageData before this pass ever runs) has
+        // already re-split every Y-merged line into clean single-region
+        // lines using this SAME detectColumnRegions() call, so by the time
+        // this loop runs, ln.items[0] alone is usually enough. But that
+        // pre-split is itself keyed to detectColumnRegions() returning the
+        // same regions both times — gating on just the first item here has
+        // no upside over filtering the line's own items and is one
+        // incorrect edge case away from silently routing a still-merged
+        // line's FULL content (both columns concatenated) into whichever
+        // region contains its leftmost item, and leaving the other region's
+        // pass empty for that row. Filtering items directly costs nothing
+        // and stays correct even if that invariant ever breaks.
+        const colLines = lines
+          .map(ln => ({ y: ln.y, items: ln.items.filter(inRegion) }))
+          .filter(ln => ln.items.length);
         const colRotatedItems = rotatedItems.filter(inRegion);
         const colBorderGrids  = borderGrids.filter(g => g.x >= region.left && (g.x + g.w) <= region.right);
         await _processLines(pi, colLines, colRotatedItems, colBorderGrids, textItems, pageH);

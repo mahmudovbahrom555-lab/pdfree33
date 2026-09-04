@@ -22,7 +22,7 @@
 // common outcome whenever detection is remotely ambiguous.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { detectTables } from './pdf2wordTables.js';
+import { detectTables, looksLikeProseNotData, looksLikeEnumeratedList } from './pdf2wordTables.js';
 
 // A confident detectTables() match covering at least this fraction of the
 // candidate lines means this is tabular data (e.g. a financial statement's
@@ -171,7 +171,28 @@ export function detectColumnRegions(lines, pageWidth) {
   // (not the per-cluster candidates) since that's what a real table's rows
   // still look like at this point in the pipeline — the caller hasn't
   // split anything yet.
+  //
+  // Filtered through looksLikeProseNotData()/looksLikeEnumeratedList() —
+  // the same two guards _processLines() (processor.js) already applies
+  // before treating a detectTables() match as a real table — because a
+  // genuine 2-column prose page (a newsletter, an academic paper) can align
+  // just as consistently row-to-row as a real table when both columns'
+  // paragraphs happen to run the same length for a stretch: measured
+  // directly on a synthetic-but-realistic 2-column newsletter fixture
+  // (varying paragraph lengths per column, a full-width heading — not a
+  // pathologically uniform case) at 56% raw coverage, comfortably above
+  // TABLE_GUARD_FRACTION, which silently discarded a real, correctly
+  // detectable 2-column split and fell back to unsplit output — merged
+  // rows of two independent columns read as scrambled, unreadable text
+  // (confirmed both live against iLovePDF/Smallpdf, which correctly split
+  // the identical fixture, and via a direct detectTables()/
+  // looksLikeProseNotData() trace on the same extracted lines). Without
+  // this filter, prose cells (multi-word sentences, no numeric anchor)
+  // still counted toward "this is a table" evidence even though the exact
+  // same rows would already be rejected as a real Table by the main
+  // pipeline for the identical reason.
   const tableLineCount = detectTables(lines)
+    .filter(t => !looksLikeProseNotData(t.rows) && !looksLikeEnumeratedList(t.rows))
     .reduce((n, t) => n + (t.endIdx - t.startIdx + 1), 0);
   if (tableLineCount >= lines.length * TABLE_GUARD_FRACTION) return null;
 

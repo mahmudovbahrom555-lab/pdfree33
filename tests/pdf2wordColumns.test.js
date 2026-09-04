@@ -122,6 +122,76 @@ test('a genuine 3-column layout (all three Y-overlapping) still correctly detect
   expect(regions.length).toBe(3);
 });
 
+console.log('\ndetectColumnRegions — a long uninterrupted merged run of real prose is not mistaken for a table:');
+
+// Real bug, found via a live competitor comparison (pdfree.io's own
+// pdf-to-word output vs iLovePDF/Smallpdf on an identical file): a genuine
+// 2-column newsletter — two independent paragraphs per column, DIFFERENT
+// lengths so the columns' heights diverge partway down the page, exactly
+// what real 2-column documents look like — still produced a long
+// uninterrupted run of merged (both-columns-present) lines, well past
+// detectTables()'s MIN_ROWS. mkMergedLines above (used by every
+// _splitCrossColumnLines test in this file) deliberately caps merged runs
+// under 3 rows specifically to dodge the table guard — meaning the guard's
+// behavior on a REALISTIC longer run was never actually exercised by this
+// suite before. detectTables() confidently read one such run (94% coverage
+// on the original repro, 56% even on a version with paragraph breaks) as a
+// label|value table, and detectColumnRegions() returned null, silently
+// falling back to unsplit output — two independent columns' text
+// interleaved line-by-line into unreadable garbage. Fixed by filtering the
+// table guard's detectTables() matches through looksLikeProseNotData()/
+// looksLikeEnumeratedList() — the same two guards the main pipeline already
+// applies before treating a match as a real table (js/processor.js's
+// _processLines) — so multi-word prose cells no longer count as table
+// evidence just because both columns happen to be present for many rows.
+function mkProseLine(y, col1Text, col2Text) {
+  const items = [{ x: 60, str: col1Text, width: col1Text.length * 5 }];
+  if (col2Text) items.push({ x: 330, str: col2Text, width: col2Text.length * 5 });
+  return { y, rtl: false, items };
+}
+
+test('a 12-row uninterrupted merged run of real multi-word prose (no numeric anchor) is still detected as 2 columns', () => {
+  const leftLines = [
+    'The archive project began in January',
+    'with a full inventory of the collection.',
+    'Volunteers catalogued over three thousand',
+    'items across the first two months, sorting',
+    'each piece by decade and by donor family.',
+    'A digital scan was made of every fragile',
+    'document before it returned to storage.',
+    'The team also built a searchable index',
+    'so researchers could query by keyword.',
+    'Weekly progress reports went out to the',
+    'board summarizing counts and condition.',
+    'By March the backlog had been cleared',
+  ];
+  const rightLines = [
+    'Funding for the second phase was',
+    'approved by the board in March, covering',
+    'a new climate-controlled storage wing.',
+    'Construction on the new wing is expected',
+    'to finish by next spring, weather allowing.',
+    'The architect presented three design',
+    'options at the February town meeting.',
+    'Residents voted to preserve the original',
+    'facade while modernizing the interior.',
+    'A temporary storage tent was rented for',
+    'the transition period between phases.',
+    'Insurance coverage was extended to cover',
+  ];
+  const lines = leftLines.map((t, i) => mkProseLine(740 - i * 16, t, rightLines[i]));
+  const regions = detectColumnRegions(lines, 612);
+  expect(regions === null).toBe(false);
+  expect(regions.length).toBe(2);
+});
+
+test('a genuine label|value table (short cells, numeric anchors, no real prose) is still correctly NOT split — prefer false negatives holds', () => {
+  const labels = ['Revenue', 'Cost of goods', 'Gross profit', 'Operating expenses', 'Net income', 'Tax provision', 'Free cash flow'];
+  const values = ['$482,000', '$210,500', '$271,500', '$98,300', '$173,200', '$41,600', '$131,600'];
+  const lines = labels.map((t, i) => mkProseLine(740 - i * 16, t, values[i]));
+  expect(detectColumnRegions(lines, 612)).toBeNull();
+});
+
 console.log('\ndetectColumnRegions — must return null (prefer false negatives):');
 
 test('a single-column page with normal indentation variance is NOT split', () => {
