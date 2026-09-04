@@ -142,6 +142,22 @@ await test('a real label|value table (no visible border) produces a tableShapes 
   if (!textShapes.some(s => s.runs[0].text === 'Prepared by the finance team.')) throw new Error('the paragraph below the table should still be a real text shape');
 });
 
+await test('a text-detected table whose cells carry a resolved fontFamily propagates it table-wide as fontFace (competitor-verified gap, iLovePDF preserves per-cell font, pdfree previously did not)', () => {
+  const labels = ['Revenue', 'Cost of goods', 'Gross profit', 'Net income'];
+  const values = ['$482,000', '$210,500', '$271,500', '$173,200'];
+  const lines = [
+    mkLine(mkItem('Financial Summary', 50, 16), 750),
+    ...labels.map((label, i) => mkLine([
+      mkItem(label, 50, 11, { fontFamily: 'Times New Roman' }),
+      mkItem(values[i], 300, 11, { fontFamily: 'Times New Roman' }),
+    ], 700 - i * 16)),
+    mkLine(mkItem('Prepared by the finance team.', 50, 12), 600),
+  ];
+  const { tableShapes } = _p2pBuildSlideShapes(mkPage(lines), 12, new Set(), new Set());
+  expect(tableShapes.length).toBe(1);
+  expect(tableShapes[0].fontFace).toBe('Times New Roman');
+});
+
 await test('a border-grid row with a missing internal divider produces a real colspan cell, unmerged rows stay separate', () => {
   // Exact same fixture shape as tests/pdf2wordParagraphs.test.js's own
   // gridSpan regression test (real page-18-tariff-table shape, already
@@ -178,6 +194,25 @@ await test('a border-grid row with a missing internal divider produces a real co
 
   expect(rows[2].map(c => c.text).join('|')).toBe('Row3A|Row3B|Row3C');
   if (rows[2].some(c => c.span > 1)) throw new Error('row 3 has no merge — every cell should have span 1');
+});
+
+await test('a border-grid table whose lines carry a resolved fontFamily propagates it table-wide as fontFace', () => {
+  const lines = [
+    mkLine([mkItem('Header', 80, 11, { fontFamily: 'Courier New' }), mkItem('Q1', 220, 11, { fontFamily: 'Courier New' }), mkItem('Q2', 380, 11, { fontFamily: 'Courier New' })], 700),
+    mkLine([mkItem('Row2A', 80, 11, { fontFamily: 'Courier New' }), mkItem('Row2B', 220, 11, { fontFamily: 'Courier New' }), mkItem('Row2C', 380, 11, { fontFamily: 'Courier New' })], 680),
+  ];
+  const grid = {
+    x: 60, y: 670, w: 400, h: 40, colCount: 3, rowCount: 2,
+    colXs: [60, 200, 340, 460],
+    rowYs: [710, 690, 670],
+    colDividers: [
+      { x: 200, spans: [[670, 710]] },
+      { x: 340, spans: [[670, 710]] },
+    ],
+  };
+  const { tableShapes } = _p2pBuildSlideShapes(mkPage(lines, 792, 612, [grid]), 11, new Set(), new Set());
+  expect(tableShapes.length).toBe(1);
+  expect(tableShapes[0].fontFace).toBe('Courier New');
 });
 
 console.log('\n_p2pBuildSlideShapes — scanned pages fall back per the standing scope:');

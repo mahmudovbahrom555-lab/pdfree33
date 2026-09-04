@@ -2860,7 +2860,14 @@ function _p2pBuildRegionShapes(lines, borderGrids, xBounds, median, repeatTextSe
     });
     for (const { li } of gridLines) gridConsumedLines.add(li);
 
-    tableShapes.push({ x0: grid.x, x1: grid.x + grid.w, y0: grid.y + grid.h, y1: grid.y, rows });
+    // Table-wide (not per-cell) font preservation — competitor-verified:
+    // iLovePDF's own real table output preserves the source font at the
+    // individual-cell level; approximated here as one shared font for the
+    // whole table (the majority real-world case — most tables use one
+    // consistent typeface throughout) rather than per-cell, which would
+    // need column-bound tracking this grid path doesn't otherwise need.
+    const fontFace = gridLines.flatMap(({ ln }) => ln.items).find(i => i.fontFamily)?.fontFamily;
+    tableShapes.push({ x0: grid.x, x1: grid.x + grid.w, y0: grid.y + grid.h, y1: grid.y, rows, fontFace });
   }
 
   // Baseline left margin — same concept _processLines (pdf2word) already
@@ -2974,11 +2981,17 @@ function _p2pBuildRegionShapes(lines, borderGrids, xBounds, median, repeatTextSe
       flush();
       if (lineIdx === tbl.startIdx) {
         const tblLines = lines.slice(tbl.startIdx, tbl.endIdx + 1);
+        // Table-wide font preservation — see the grid-table path's own
+        // comment above for why this is one shared font per table, not
+        // per-cell (detectTables()'s rows are already plain strings with
+        // no column-bound tracking to attribute a font per cell against).
+        const fontFace = tblLines.flatMap(l => l.items).find(i => i.fontFamily)?.fontFamily;
         tableShapes.push({
           x0: xBounds.x0, x1: xBounds.x1,
           y0: Math.max(...tblLines.map(l => l.y)) + median,
           y1: Math.min(...tblLines.map(l => l.y)) - median * 0.3,
           rows: tbl.rows.map(row => row.map(text => ({ text: text || '', span: 1, bold: false }))),
+          fontFace,
         });
       }
       continue;
@@ -3338,6 +3351,7 @@ async function _runPdf2Ppt(filesSnapshot, { dpi = 150, mode = 'image' } = {}) {
               bold:     cell.bold,
               fontSize,
               colspan:  cell.span > 1 ? cell.span : undefined,
+              ...(tableShape.fontFace ? { fontFace: tableShape.fontFace } : {}),
             },
           })));
 
