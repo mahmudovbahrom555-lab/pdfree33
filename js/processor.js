@@ -2775,20 +2775,71 @@ async function _p2pExtractTextBlocks(page) {
 //                 caller renders the whole page as one image slide, same as
 //                 today's existing scanned-page handling.
 export function _p2pBuildSlideShapes(page, median, repeatTextSet, repeatPatternSet) {
-  const { lines, pageW, pageH } = page;
-  if (!lines.length) return { textShapes: [], imageRegions: [], scanned: true };
+  const { lines, pageW, pageH, borderGrids = [] } = page;
+  if (!lines.length) return { textShapes: [], tableShapes: [], imageRegions: [], scanned: true };
 
-  // Multi-column layout: Stage 1 scope excludes real per-column text
+  // Multi-column layout: Stage 1/2 scope excludes real per-column text
   // reconstruction (see block comment above) — the whole page becomes one
   // image region, never worse than today's always-image behavior.
   const columnRegions = pageW ? detectColumnRegions(lines, pageW) : null;
-  if (columnRegions) return { textShapes: [], imageRegions: [{ y0: pageH, y1: 0 }], scanned: false };
+  if (columnRegions) return { textShapes: [], tableShapes: [], imageRegions: [{ y0: pageH, y1: 0 }], scanned: false };
 
+  // Text-detected tables that Y-overlap a border grid are dropped in favor
+  // of the grid — same precedence pdf2word's own _processLines uses, and
+  // for the identical reason: border grids carry real merge/span line data
+  // (colDividers) that pure X-position clustering can never recover (a
+  // merged cell just looks like "an item missing from this column" to
+  // detectTables(), indistinguishable from ordinary sparse/optional data).
+  // Verified directly — without this filter, this file's own gridSpan test
+  // (mirrors tests/pdf2wordParagraphs.test.js's real regression case)
+  // failed: the text-detected path won the overlap and produced an empty
+  // cell instead of a real colspan.
   const tables = detectTables(lines)
-    .filter(t => !looksLikeProseNotData(t.rows) && !looksLikeEnumeratedList(t.rows));
+    .filter(t => !looksLikeProseNotData(t.rows) && !looksLikeEnumeratedList(t.rows))
+    .filter(t => {
+      const tMinY = Math.min(lines[t.startIdx].y, lines[t.endIdx].y);
+      const tMaxY = Math.max(lines[t.startIdx].y, lines[t.endIdx].y);
+      return !borderGrids.some(g => tMinY <= g.y + g.h && g.y <= tMaxY);
+    });
   const lineToTable = new Map();
   for (const t of tables) {
     for (let li = t.startIdx; li <= t.endIdx; li++) lineToTable.set(li, t);
+  }
+
+  const tableShapes = [];
+
+  // ── Border-grid tables (visually-bordered, may have merged cells) ───────
+  // Stage 2: same dual-path table handling pdf2word's _processLines already
+  // uses — text-detected tables above catch tables with no visible border
+  // lines; border grids (detectTableGrids, js/pdf2wordBorders.js) catch the
+  // reverse: a bordered table whose cells may be sparse or empty (no text
+  // content at all). Reuses _assignLineToGridCols/_activeDividersForY/
+  // _groupGridCellsWithSpans exactly as pdf2word does for its own real
+  // docx gridSpan tables — pure, output-format-agnostic helpers. No
+  // "covered by a text table" skip needed here (unlike an earlier version
+  // of this code) — the filter above already removes any text-table that
+  // would have overlapped, so every grid below is always the winning path
+  // for its own Y-range.
+  const gridConsumedLines = new Set();
+  for (const grid of borderGrids) {
+    const gridLines = [];
+    for (let li = 0; li < lines.length; li++) {
+      if (lineToTable.has(li)) continue;
+      const ln = lines[li];
+      if (ln.y >= grid.y - 4 && ln.y <= grid.y + grid.h + 4) gridLines.push({ li, ln });
+    }
+    if (!gridLines.length) continue;
+    gridLines.sort((a, b) => b.ln.y - a.ln.y); // top first
+
+    const rows = gridLines.map(({ ln }, idx) => {
+      const rawCells      = _assignLineToGridCols(ln.items, grid.colXs);
+      const activeDivider = _activeDividersForY(grid, ln.y);
+      const cellGroups    = _groupGridCellsWithSpans(rawCells, activeDivider);
+      return cellGroups.map(({ text, span }) => ({ text, span, bold: idx === 0 }));
+    });
+    for (const { li } of gridLines) gridConsumedLines.add(li);
+
+    tableShapes.push({ x0: grid.x, x1: grid.x + grid.w, y0: grid.y + grid.h, y1: grid.y, rows });
   }
 
   // Baseline left margin — same concept _processLines (pdf2word) already
@@ -2882,7 +2933,7 @@ export function _p2pBuildSlideShapes(page, median, repeatTextSet, repeatPatternS
   // deliberately left uncaptured here — a disclosed Stage 1 simplification.
   const _isHeadingSized = (ln) => Math.max(...ln.items.map(i => i.fontSize)) >= median * 1.3;
   for (let li = 0; li < lines.length - 1; li++) {
-    if (lineToTable.has(li) || lineToTable.has(li + 1)) continue;
+    if (lineToTable.has(li) || lineToTable.has(li + 1) || gridConsumedLines.has(li) || gridConsumedLines.has(li + 1)) continue;
     // A heading naturally carries extra leading space before/after it —
     // real, ordinary document structure, not evidence of a hidden diagram.
     // Without this, a normal heading-to-body gap (a large-font heading
@@ -2895,14 +2946,17 @@ export function _p2pBuildSlideShapes(page, median, repeatTextSet, repeatPatternS
 
   for (let lineIdx = 0; lineIdx < lines.length; lineIdx++) {
     const ln  = lines[lineIdx];
+    if (gridConsumedLines.has(lineIdx)) continue; // already emitted as a tableShape above
     const tbl = lineToTable.get(lineIdx);
     if (tbl) {
       flush();
       if (lineIdx === tbl.startIdx) {
         const tblLines = lines.slice(tbl.startIdx, tbl.endIdx + 1);
-        imageRegions.push({
+        tableShapes.push({
+          x0: 0, x1: pageW || Math.max(...tblLines.flatMap(l => l.items.map(i => i.x + (i.width > 0 ? i.width : i.fontSize * i.str.length * 0.5)))),
           y0: Math.max(...tblLines.map(l => l.y)) + median,
           y1: Math.min(...tblLines.map(l => l.y)) - median * 0.3,
+          rows: tbl.rows.map(row => row.map(text => ({ text: text || '', span: 1, bold: false }))),
         });
       }
       continue;
@@ -2956,7 +3010,7 @@ export function _p2pBuildSlideShapes(page, median, repeatTextSet, repeatPatternS
   }
   flush();
 
-  return { textShapes, imageRegions, scanned: false };
+  return { textShapes, tableShapes, imageRegions, scanned: false };
 }
 
 // Crops a Y-band (full page width) out of an already-rendered page canvas
@@ -3182,6 +3236,40 @@ async function _runPdf2Ppt(filesSnapshot, { dpi = 150, mode = 'image' } = {}) {
           if (shape.bullet === 'number') opts.bullet = { type: 'number' };
           else if (shape.bullet)         opts.bullet = true;
           slide.addText(textRuns, opts);
+        }
+
+        for (const tableShape of shapes.tableShapes) {
+          const xIn = tableShape.x0 / 72;
+          const yTopIn = (pageHeightPt - tableShape.y0) / 72;
+          const wIn = Math.max(0.1, (tableShape.x1 - tableShape.x0) / 72);
+          const hIn = Math.max(0.1, (tableShape.y0 - tableShape.y1) / 72);
+          const fontSize = Math.max(1, Math.round(11 * fit.scale));
+
+          const rows = tableShape.rows.map(row => row.map(cell => ({
+            text: cell.text,
+            options: {
+              bold:     cell.bold,
+              fontSize,
+              colspan:  cell.span > 1 ? cell.span : undefined,
+            },
+          })));
+
+          // pptxgenjs tables render with NO border by default (unlike
+          // docx.js's own implicit table grid lines) — an explicit light
+          // border keeps the reconstructed table visually usable rather
+          // than looking like unaligned floating text. Confirmed directly
+          // against the real generated OOXML before relying on it (see this
+          // feature's own plan file).
+          slide.addTable(rows, {
+            x: fit.x + xIn * fit.scale,
+            y: fit.y + yTopIn * fit.scale,
+            w: wIn * fit.scale,
+            h: hIn * fit.scale,
+            fontSize,
+            color:  '000000',
+            border: { type: 'solid', color: 'D0D0D0', pt: 0.75 },
+            autoPage: false,
+          });
         }
 
         for (const region of shapes.imageRegions) {

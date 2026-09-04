@@ -41,7 +41,7 @@ const mkItem = (str, x, fontSize = 12, extra = {}) => ({
   str, x, width: str.length * fontSize * 0.5, fontSize, bold: false, italic: false, ...extra,
 });
 const mkLine = (items, y) => ({ y, rtl: false, items: Array.isArray(items) ? items : [items] });
-const mkPage = (lines, pageH = 792, pageW = 612) => ({ lines, pageH, pageW });
+const mkPage = (lines, pageH = 792, pageW = 612, borderGrids = []) => ({ lines, pageH, pageW, borderGrids });
 
 console.log('\n_p2pBuildSlideShapes — heading + body paragraph become separate text shapes:');
 
@@ -102,9 +102,9 @@ await test('an indented lettered sub-item becomes its own shape; a flush-left in
   if (initial.bullet) throw new Error('a flush-left "A. Smith..." sentence must not be treated as a lettered list item');
 });
 
-console.log('\n_p2pBuildSlideShapes — a detected table becomes ONE image region, not text shapes for its cells:');
+console.log('\n_p2pBuildSlideShapes — Stage 2: a detected table becomes a real tableShapes entry, not an image or loose text:');
 
-await test('a real label|value table produces an imageRegions entry, no text shapes for its own rows', () => {
+await test('a real label|value table (no visible border) produces a tableShapes entry with its rows intact', () => {
   const labels = ['Revenue', 'Cost of goods', 'Gross profit', 'Net income'];
   const values = ['$482,000', '$210,500', '$271,500', '$173,200'];
   const lines = [
@@ -112,13 +112,55 @@ await test('a real label|value table produces an imageRegions entry, no text sha
     ...labels.map((label, i) => mkLine([mkItem(label, 50, 11), mkItem(values[i], 300, 11)], 700 - i * 16)),
     mkLine(mkItem('Prepared by the finance team.', 50, 12), 600),
   ];
-  const { textShapes, imageRegions, scanned } = _p2pBuildSlideShapes(mkPage(lines), 12, new Set(), new Set());
+  const { textShapes, tableShapes, imageRegions, scanned } = _p2pBuildSlideShapes(mkPage(lines), 12, new Set(), new Set());
   expect(scanned).toBe(false);
-  expect(imageRegions.length).toBe(1);
+  expect(imageRegions.length).toBe(0);
+  expect(tableShapes.length).toBe(1);
+  expect(tableShapes[0].rows.length).toBe(4);
+  expect(tableShapes[0].rows[0].map(c => c.text).join('|')).toBe('Revenue|$482,000');
+  expect(tableShapes[0].rows[3].map(c => c.text).join('|')).toBe('Net income|$173,200');
   const tableText = textShapes.map(s => s.runs.map(r => r.text).join(' ')).join(' ');
-  if (tableText.includes('482,000')) throw new Error('table cell content leaked into a text shape instead of becoming an image region');
+  if (tableText.includes('482,000')) throw new Error('table cell content leaked into a text shape instead of becoming a real table');
   if (!textShapes.some(s => s.runs[0].text === 'Financial Summary')) throw new Error('the heading above the table should still be a real text shape');
   if (!textShapes.some(s => s.runs[0].text === 'Prepared by the finance team.')) throw new Error('the paragraph below the table should still be a real text shape');
+});
+
+await test('a border-grid row with a missing internal divider produces a real colspan cell, unmerged rows stay separate', () => {
+  // Exact same fixture shape as tests/pdf2wordParagraphs.test.js's own
+  // gridSpan regression test (real page-18-tariff-table shape, already
+  // covered at the detectTableGrids() level by tests/pdf2wordBorders.test.js)
+  // — proves the SAME reused helpers (_assignLineToGridCols/
+  // _activeDividersForY/_groupGridCellsWithSpans) wire correctly into this
+  // pptx-shaped output too, not just docx's.
+  const lines = [
+    mkLine([mkItem('Header', 80, 11), mkItem('Q1', 220, 11), mkItem('Q2', 380, 11)], 700),
+    mkLine([mkItem('Merged Region', 80, 11), mkItem('Note', 380, 11)], 680),
+    mkLine([mkItem('Row3A', 80, 11), mkItem('Row3B', 220, 11), mkItem('Row3C', 380, 11)], 660),
+  ];
+  const grid = {
+    x: 60, y: 650, w: 400, h: 60, colCount: 3, rowCount: 3,
+    colXs: [60, 200, 340, 460],
+    rowYs: [710, 690, 670, 650],
+    colDividers: [
+      { x: 200, spans: [[690, 710], [650, 670]] }, // present for row1 & row3, absent for row2
+      { x: 340, spans: [[650, 710]] },              // present for all rows
+    ],
+  };
+  const { tableShapes } = _p2pBuildSlideShapes(mkPage(lines, 792, 612, [grid]), 11, new Set(), new Set());
+  expect(tableShapes.length).toBe(1);
+  const rows = tableShapes[0].rows;
+  expect(rows.length).toBe(3);
+
+  expect(rows[0].map(c => c.text).join('|')).toBe('Header|Q1|Q2');
+  if (rows[0].some(c => c.span > 1)) throw new Error('row 1 has no merge — every cell should have span 1');
+
+  expect(rows[1].length).toBe(2);
+  expect(rows[1][0].text).toBe('Merged Region');
+  expect(rows[1][0].span).toBe(2);
+  expect(rows[1][1].text).toBe('Note');
+
+  expect(rows[2].map(c => c.text).join('|')).toBe('Row3A|Row3B|Row3C');
+  if (rows[2].some(c => c.span > 1)) throw new Error('row 3 has no merge — every cell should have span 1');
 });
 
 console.log('\n_p2pBuildSlideShapes — multi-column and scanned pages fall back per Stage 1\'s disclosed scope:');
