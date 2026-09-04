@@ -71,6 +71,28 @@ const _normWatermark = t =>
 // _repeatTextSet's exact-string check.
 const _normDigits = t => t.replace(/\d+/g, '#');
 
+// Maps a PDF's real embedded font name + pdf.js's generic CSS-fallback
+// family to one of a small set of font names virtually every PowerPoint
+// installation already has — used by pdf2ppt's "Editable text" mode
+// (_p2pBuildSlideShapes/_runPdf2Ppt) so reconstructed text doesn't silently
+// lose a genuinely serif or monospace source typeface to PptxGenJS's own
+// default sans-serif font. Real, competitor-verified gap: iLovePDF's own
+// editable-text PPTX output preserves "Times New Roman"/"Courier New" for
+// the same source fonts pdfree was emitting with no typeface at all.
+// Deliberately narrow (serif/mono only, no attempt to preserve an exact
+// embedded font by name) — most real body/serif/monospace documents map
+// cleanly onto one of these three buckets, and guessing at an EXACT font
+// name PowerPoint may not even have installed risks a worse, unpredictable
+// substitution than just staying on the safe sans-serif default.
+function _pptxSafeFontFace(rawName, cssFamily) {
+  const s = `${rawName} ${cssFamily}`.toLowerCase();
+  if (/mono|courier|consolas/.test(s)) return 'Courier New';
+  // "serif" alone would also match "sans-serif" as a substring — must
+  // exclude that case explicitly before testing for a real serif signal.
+  if (!/sans/.test(s) && /serif|times|georgia|garamond|cambria|minion/.test(s)) return 'Times New Roman';
+  return undefined; // let PptxGenJS use its own default — today's existing behavior
+}
+
 // Hard cap for image mode — defined here to avoid coupling with pdf2wordUI.js.
 // Must match MAX_IMAGE_PAGES in pdf2wordUI.js.
 const _P2W_IMAGE_CAP = 500;
@@ -2905,6 +2927,7 @@ function _p2pBuildRegionShapes(lines, borderGrids, xBounds, median, repeatTextSe
         bold:     ln.items.every(i => i.bold),
         italic:   ln.items.every(i => i.italic),
         fontSize: Math.max(...ln.items.map(i => i.fontSize)),
+        fontFace: ln.items.find(i => i.fontFamily)?.fontFamily,
       }))
       .filter(r => r.text);
     if (!runs.length) { buffer = []; return; }
@@ -2985,7 +3008,8 @@ function _p2pBuildRegionShapes(lines, borderGrids, xBounds, median, repeatTextSe
           x0: Math.min(...ln.items.map(i => i.x)),
           x1: Math.max(...ln.items.map(i => i.x + (i.width > 0 ? i.width : i.fontSize * i.str.length * 0.5))),
           y0: ln.y + fontSize, y1: ln.y,
-          runs: [{ text, bold: ln.items.every(i => i.bold), italic: ln.items.every(i => i.italic), fontSize }],
+          runs: [{ text, bold: ln.items.every(i => i.bold), italic: ln.items.every(i => i.italic), fontSize,
+                   fontFace: ln.items.find(i => i.fontFamily)?.fontFamily }],
           heading: false,
           // Lettered sub-items ("a."/"b.") render as bullet-style, not
           // pptxgenjs auto-numbering — they read as a nested list under a
@@ -3260,6 +3284,7 @@ async function _runPdf2Ppt(filesSnapshot, { dpi = 150, mode = 'image' } = {}) {
               bold:     r.bold,
               italic:   r.italic,
               fontSize: Math.max(1, Math.round(r.fontSize * fit.scale)),
+              ...(r.fontFace ? { fontFace: r.fontFace } : {}),
             },
           }));
 
@@ -3275,6 +3300,15 @@ async function _runPdf2Ppt(filesSnapshot, { dpi = 150, mode = 'image' } = {}) {
             margin:   0,
             wrap:     true,
           };
+          // Preserve a genuinely serif/monospace source font (mapped to a
+          // universally-installed PowerPoint equivalent by _pptxSafeFontFace,
+          // js/processor.js) — real, competitor-verified gap: iLovePDF's own
+          // editable-text output does this, pdfree previously emitted no
+          // typeface at all, always falling back to PptxGenJS's own default.
+          // Set at the paragraph level too (not just per-run) since a
+          // single-run shape's own run-level fontFace can be overridden by
+          // paragraph defaults in some pptxgenjs code paths.
+          if (shape.runs[0]?.fontFace) opts.fontFace = shape.runs[0].fontFace;
           // pptxgenjs 3.12.0's own XML generator has a real bug: passing
           // `bullet: { type: 'bullet' }` silently produces NO bullet
           // character at all — its internal branch only fills in real XML
@@ -3731,6 +3765,19 @@ export async function _p2wBuildPageData(pdfDoc) {
       _boldFontCache.set(fontName, bold);
       return bold;
     };
+    // Real embedded font name (e.g. "Times-Roman", "CAAAAA+NotoSans-Bold") —
+    // a much stronger signal than pdf.js's own style.fontFamily, which is
+    // usually just a generic CSS fallback ("serif"/"sans-serif"/"monospace"),
+    // not the actual typeface. Cached per unique font per page, same idiom
+    // as _isFontBold above (one commonObjs lookup, not one per item).
+    const _rawNameCache = new Map();
+    const _rawFontName = fontName => {
+      if (_rawNameCache.has(fontName)) return _rawNameCache.get(fontName);
+      let name = '';
+      try { name = page.commonObjs.get(fontName)?.name || ''; } catch { /* unresolved font object */ }
+      _rawNameCache.set(fontName, name);
+      return name;
+    };
     const allMapped = content.items
       .filter(item => 'str' in item && item.str.split('\u0000').join('').trim())
       .map(item => {
@@ -3755,6 +3802,7 @@ export async function _p2wBuildPageData(pdfDoc) {
           rotated:  isRotated,
           bold:     _isFontBold(item.fontName) || BOLD_FONT_NAME_RE.test(fam),
           italic:   /italic|oblique/.test(fam),
+          fontFamily: _pptxSafeFontFace(_rawFontName(item.fontName), fam),
         };
       });
 

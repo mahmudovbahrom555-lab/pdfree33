@@ -102,6 +102,23 @@ await test('an indented lettered sub-item becomes its own shape; a flush-left in
   if (initial.bullet) throw new Error('a flush-left "A. Smith..." sentence must not be treated as a lettered list item');
 });
 
+console.log('\n_p2pBuildSlideShapes — real font-family preservation (competitor-verified gap, iLovePDF preserves it, pdfree previously did not):');
+
+await test('a line whose items carry a resolved fontFamily propagates it to the text shape\'s run as fontFace', () => {
+  const lines = [
+    mkLine(mkItem('This paragraph uses a serif typeface throughout.', 50, 12, { fontFamily: 'Times New Roman' }), 700),
+  ];
+  const { textShapes } = _p2pBuildSlideShapes(mkPage(lines), 12, new Set(), new Set());
+  expect(textShapes.length).toBe(1);
+  expect(textShapes[0].runs[0].fontFace).toBe('Times New Roman');
+});
+
+await test('a line with no resolved fontFamily (plain body text) leaves fontFace unset — no forced/guessed font', () => {
+  const lines = [mkLine(mkItem('Ordinary body text with no special font signal.', 50, 12), 700)];
+  const { textShapes } = _p2pBuildSlideShapes(mkPage(lines), 12, new Set(), new Set());
+  expect(textShapes[0].runs[0].fontFace).toBe(undefined);
+});
+
 console.log('\n_p2pBuildSlideShapes — Stage 2: a detected table becomes a real tableShapes entry, not an image or loose text:');
 
 await test('a real label|value table (no visible border) produces a tableShapes entry with its rows intact', () => {
