@@ -31,11 +31,31 @@ import { detectColumnRegions, regionIndexForX } from './pdf2wordColumns.js';
 // fell through to plain-paragraph text while bullets (BULLET_RE's `\s*`)
 // worked fine. `(?!\d)` keeps both original safety properties (verified
 // against every case in tests/pdf2wordLists.test.js) while fixing this.
-// Letter/roman enumeration ("a.", "iv.") is deliberately excluded — too
-// easy to confuse with initials or headers, and detectTables()'s own
-// "prefer false negatives" philosophy applies here too.
+// Letter/roman enumeration ("a.", "iv.") is deliberately excluded here —
+// too easy to confuse with initials or headers on the marker shape alone,
+// and detectTables()'s own "prefer false negatives" philosophy applies
+// here too. LETTERED_RE below exists specifically for pdf2word's own,
+// separately-gated use (indentation-checked at the call site, not usable
+// standalone) — see that constant's own comment for why an indent
+// requirement changes the risk calculus enough to reintroduce it there.
 export const BULLET_RE   = /^[•◦▪‣●○]\s*/;
 export const NUMBERED_RE = /^\d{1,3}[.)](?!\d)/;
+
+// A single-letter marker ("a.", "b)", "A."), used ONLY by pdf2word
+// (js/processor.js's _processLines) and ONLY when the line is also
+// indented past the page's own baseline left margin — never standalone.
+// Real, competitor-verified gap: a lettered sub-list under a numbered
+// parent item ("1. Complete setup" / "  a. Verify email" / "  b. Choose a
+// name") had its sub-items silently merged into ONE paragraph, since
+// neither BULLET_RE nor NUMBERED_RE recognized them as list markers at
+// all — iLovePDF and Smallpdf both split them into separate list items.
+// The indentation requirement at the call site is what makes this safe to
+// add despite the exclusion note above: a false positive like "A. Smith
+// wrote the report." sits at the SAME x as ordinary body text (no real
+// PDF indent, unlike a genuine sub-item), so it fails the indent gate and
+// is correctly left as plain prose — verified directly against that exact
+// fixture (tests/pdf2wordParagraphs.test.js).
+export const LETTERED_RE = /^[a-zA-Z][.)](?!\w)/;
 
 // Shared bold-font-name detector — both pdf2word's and pdf2md's _isFontBold
 // resolve a font's real embedded PostScript/CFF name via page.commonObjs

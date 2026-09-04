@@ -388,6 +388,54 @@ await test('a decimal number at the start of a line is NOT treated as a numbered
   expect(paragraphs.length).toBe(1);
 });
 
+console.log('\n_p2wBuildParagraphs — lettered sub-list items ("a.", "b.") split when indented, real gap fix:');
+
+// Real, competitor-verified gap: a lettered sub-list under a numbered
+// parent item had its sub-items silently merged into ONE paragraph, since
+// neither BULLET_RE nor NUMBERED_RE recognized "a."/"b." as a list marker
+// at all — iLovePDF and Smallpdf both correctly split them. Fixed via
+// LETTERED_RE (textLayoutUtils.js), gated on indentation past the page's
+// baseline left margin (mkItem's x=50 here matches the numbered parent
+// item, x=75 the indented sub-items — a 25pt indent, comfortably past the
+// 10pt gate).
+await test('indented lettered sub-items become separate list Paragraphs, not merged into one', async () => {
+  const lines = [
+    mkLine(mkItem('1. Complete the account setup form', 50, 12), 700),
+    mkLine(mkItem('a. Verify your email address', 75, 12), 680),
+    mkLine(mkItem('b. Choose a workspace name', 75, 12), 660),
+    mkLine(mkItem('2. Invite your team members', 50, 12), 640),
+  ];
+  const { paragraphs } = await build(lines);
+  expect(paragraphs.length).toBe(4);
+  expect(isListItem(paragraphs[0])).toBe(true); // "1. Complete..." (NUMBERED_RE)
+  expect(isListItem(paragraphs[1])).toBe(true);
+  expect(isListItem(paragraphs[2])).toBe(true);
+  expect(paragraphText(paragraphs[1])).toBe('Verify your email address');
+  expect(paragraphText(paragraphs[2])).toBe('Choose a workspace name');
+  if (paragraphText(paragraphs[1]).includes('a.')) throw new Error('lettered marker should be stripped, like bullet/numbered markers already are');
+});
+
+await test('a single-letter initial at the SAME left margin as body text is NOT treated as a list item (indent gate holds)', async () => {
+  // The exact false-positive LETTERED_RE's own exclusion note warns about:
+  // "A. Smith wrote..." sits flush with ordinary body text (x=50, same as
+  // every other line here) — no real PDF indent, unlike a genuine
+  // sub-item — so it must stay plain prose.
+  const lines = [
+    mkLine(mkItem('Project History', 50, 16), 720), // heading, font jump
+    mkLine(mkItem('A. Smith wrote the original proposal in 2019.', 50, 12), 690),
+    mkLine(mkItem('B. Chen reviewed it and added the budget section.', 50, 12), 675),
+    mkLine(mkItem('The final version was approved later that year.', 50, 12), 660),
+  ];
+  const { paragraphs } = await build(lines);
+  const bodyParas = paragraphs.filter(p => !headingStyle(p));
+  for (const p of bodyParas) {
+    if (isListItem(p)) throw new Error(`"${paragraphText(p)}" was wrongly treated as a list item — indent gate failed`);
+  }
+  const joined = bodyParas.map(paragraphText).join(' ');
+  expect(joined).toContain('A. Smith wrote the original proposal in 2019.');
+  expect(joined).toContain('B. Chen reviewed it and added the budget section.');
+});
+
 console.log('\n_p2wBuildParagraphs — numbered-legal-clause false positive stays prose, not a table:');
 
 // Same shape as tests/pdf2wordTables.test.js's rows_clause6 fixture (copied
@@ -478,6 +526,53 @@ await test('a border-grid row with a missing internal divider renders as one spa
   expect(rows[2].length).toBe(3);
   expect(rows[2].map(c => c.text).join('|')).toBe('Row3A|Row3B|Row3C');
   if (rows[2].some(c => c.span > 1)) throw new Error('row 3 has no merge — every cell should have span 1');
+});
+
+console.log('\n_p2wBuildParagraphs — variable page-number footers/headers (repeatPatternSet):');
+
+// Real, competitor-verified gap (js/pdf2wordColumns.js's sibling day-8
+// finding): a page-number footer like "Page 1 of 4" differs per page by
+// design, so it never matches repeatTextSet's exact-string check and used
+// to leak into the body as its own paragraph on every page — iLovePDF and
+// Smallpdf both strip it, pdfree didn't. Fixed via a digit-normalized
+// ("Page # of #") pattern set, built in _p2wBuildPageData from lines near
+// the page edges that recur across most pages once digits are stripped,
+// consumed here in _p2wBuildParagraphs via the same edge-of-page (first/
+// last 3 lines) position check the existing bare-integer page-number skip
+// already uses.
+await test('a "Page N of M"-shaped footer near the bottom of the page is suppressed when its digit-normalized form is a known repeat pattern', async () => {
+  const lines = [
+    mkLine(mkItem('Body paragraph text goes here for this page.', 50, 12), 650),
+    mkLine(mkItem('Page 3 of 4', 270, 9), 40),
+  ];
+  const { paragraphs } = await build(lines, 12, { repeatPatternSet: new Set(['Page # of #']) });
+  expect(paragraphs.length).toBe(1);
+  expect(paragraphText(paragraphs[0])).toContain('Body paragraph text goes here for this page.');
+});
+
+await test('the same "Page N of M" text is NOT suppressed when repeatPatternSet is empty (never confirmed to repeat)', async () => {
+  const lines = [
+    mkLine(mkItem('Body paragraph text goes here for this page.', 50, 12), 650),
+    mkLine(mkItem('Page 3 of 4', 270, 9), 40),
+  ];
+  const { paragraphs } = await build(lines, 12, {});
+  expect(paragraphs.length).toBe(2);
+  expect(paragraphText(paragraphs[1])).toBe('Page 3 of 4');
+});
+
+await test('a page-number-shaped line in the MIDDLE of the page (not near an edge) is never suppressed, even with a matching pattern', async () => {
+  const lines = [
+    mkLine(mkItem('Intro line at the top of the page.', 50, 12), 700),
+    mkLine(mkItem('Another intro line right after it.', 50, 12), 685),
+    mkLine(mkItem('A third line still near the top.', 50, 12), 670),
+    mkLine(mkItem('Page 3 of 4', 270, 9), 400), // same text, but mid-page — must survive
+    mkLine(mkItem('More body content continues below it here.', 50, 12), 300),
+    mkLine(mkItem('Another line of body content follows.', 50, 12), 285),
+    mkLine(mkItem('Final closing line of the page here.', 50, 12), 270),
+  ];
+  const { paragraphs } = await build(lines, 12, { repeatPatternSet: new Set(['Page # of #']) });
+  const found = paragraphs.some(p => paragraphText(p).includes('Page 3 of 4'));
+  if (!found) throw new Error('a mid-page line must never be suppressed by the edge-only page-number filter');
 });
 
 // ── Summary ──────────────────────────────────────────────────

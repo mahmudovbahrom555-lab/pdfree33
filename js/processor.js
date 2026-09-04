@@ -26,12 +26,12 @@ import { evaluateXlsxStructural } from './eriScoreXlsx.js';
 import { evaluateMarkdownStructural } from './eriScoreMd.js';
 import { contentBBox, reconcileGlobalCrop, padBBox, composeWithAspect, DEVICE_PRESETS,
          detectColumnGutter, reconcileColumnSplit, ereaderSampleIndices } from './ereaderCrop.js';
-import { BULLET_RE, NUMBERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
+import { BULLET_RE, NUMBERED_RE, LETTERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
          _visualRTLToLogical, _splitCrossColumnLines, _isCjk } from './textLayoutUtils.js';
 import { _p2mdExtractText, _p2mdRender, _detectPageImages, browserCanvasFactory } from './pdf2mdCore.js';
 import { recognizeFormula } from './formulaOcr.js';
 import { docxToPdf } from './docxToPdfCore.js';
-export { BULLET_RE, NUMBERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE, _splitCrossColumnLines };
+export { BULLET_RE, NUMBERED_RE, LETTERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE, _splitCrossColumnLines };
 
 // Below this ERI "tables" score, the text-detected/border-grid tables in the
 // first-pass docx are more likely mis-detected layout (garbled/ghost tables)
@@ -63,6 +63,13 @@ const _normWatermark = t =>
   t.replace(/^(CamScanner)+$/i, 'CamScanner')
    .replace(/^[Cc][Ss]\]?$/, 'CamScanner')
    .replace(/^-$/, '');
+
+// Digit-normalized form of an already-_normWatermark'd string, e.g.
+// "Page 1 of 4" -> "Page # of #" — lets the page-number footer/header
+// detector below (js/processor.js's _repeatPatternSet) catch VARIABLE
+// page-number text that differs per page by design and so never matches
+// _repeatTextSet's exact-string check.
+const _normDigits = t => t.replace(/\d+/g, '#');
 
 // Hard cap for image mode — defined here to avoid coupling with pdf2wordUI.js.
 // Must match MAX_IMAGE_PAGES in pdf2wordUI.js.
@@ -2135,12 +2142,12 @@ async function _runPdf2Word(filesSnapshot, { mode = 'text', dpi = 150 } = {}) {
 
   let paragraphs;
   let confidence = null;
-  let pageData, median, repeatTextSet, cs;   // text mode only — kept for the ERI retry below
+  let pageData, median, repeatTextSet, repeatPatternSet, cs;   // text mode only — kept for the ERI retry below
   try {
     if (mode === 'text') {
       setProgress(10, 'Extracting text…');
-      ({ pageData, median, repeatTextSet, cs } = await _p2wBuildPageData(pdfDoc));
-      ({ paragraphs, cs } = await _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSet, cs));
+      ({ pageData, median, repeatTextSet, repeatPatternSet, cs } = await _p2wBuildPageData(pdfDoc));
+      ({ paragraphs, cs } = await _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSet, cs, { repeatPatternSet }));
       confidence = _p2wConfidence(cs, median);
     } else {
       setProgress(10, 'Rendering pages…');
@@ -2206,7 +2213,7 @@ async function _runPdf2Word(filesSnapshot, { mode = 'text', dpi = 150 } = {}) {
       if (cs.totalTables > 0 && atlasEri.components.tables < _ERI_TABLE_RETRY_THRESHOLD) {
         setProgress(95, 'Verifying table structure…');
         const retry = await _p2wBuildParagraphs(
-          pdfDoc, pageData, median, repeatTextSet, cs, { useTables: false }
+          pdfDoc, pageData, median, repeatTextSet, cs, { useTables: false, repeatPatternSet }
         );
         const retryBlob = await Packer.toBlob(_buildDoc(retry.paragraphs));
         const retryEri = await evaluateStructural(await retryBlob.arrayBuffer());
@@ -3371,7 +3378,48 @@ export async function _p2wBuildPageData(pdfDoc) {
     }
   }
 
-  return { pageData, median, repeatTextSet: _repeatTextSet, cs: _cs };
+  // ── Post-Pass-1: build page-number PATTERN filter ─────────────────────────
+  // A variable page-number footer/header ("Page 1 of 4", "Page 2 of 4", ...,
+  // "1/4", "- 4 -") differs per page by design, so it never matches the
+  // exact-string _repeatTextSet above and used to leak into the body as its
+  // own paragraph on every page (real, competitor-verified gap — iLovePDF
+  // and Smallpdf both strip this). Digit-normalizing ("Page # of #") lets
+  // the same cross-page-repetition idea catch it, restricted to lines near
+  // the top or bottom of the page (first/last 3 lines by index — same
+  // position proxy the bare-integer page-number skip below already uses)
+  // so a real recurring heading with a changing number ("Q1 Results" / "Q2
+  // Results" as a body section title) is never at risk: it would digit-
+  // normalize to the same pattern too, but sits in the body, not the edge.
+  const _repeatPatternSet = new Set();
+  {
+    const freq = new Map(); // digit-normalized pattern -> number of pages it appeared on (edge lines only)
+    for (const { lines } of pageData) {
+      const seenOnPage = new Set();
+      const edgeIdxs = new Set([
+        ...lines.slice(0, 3).map((_, i) => i),
+        ...lines.slice(-3).map((_, i) => lines.length - 3 + i),
+      ]);
+      for (const idx of edgeIdxs) {
+        const ln  = lines[idx];
+        if (!ln) continue;
+        const raw = ln.items.map(i => i.str).join('').trim();
+        const t   = _normWatermark(raw);
+        if (!t || t.length > 60) continue;
+        const pattern = _normDigits(t);
+        if (pattern === t) continue; // no digits at all — _repeatTextSet above already covers this
+        if (!seenOnPage.has(pattern)) {
+          seenOnPage.add(pattern);
+          freq.set(pattern, (freq.get(pattern) || 0) + 1);
+        }
+      }
+    }
+    const minPages = Math.max(3, Math.ceil(pageData.length * 2 / 3));
+    for (const [pattern, cnt] of freq) {
+      if (cnt >= minPages) _repeatPatternSet.add(pattern);
+    }
+  }
+
+  return { pageData, median, repeatTextSet: _repeatTextSet, repeatPatternSet: _repeatPatternSet, cs: _cs };
 }
 
 // Pass 2: builds Word paragraphs/tables from pageData already extracted by
@@ -3379,10 +3427,11 @@ export async function _p2wBuildPageData(pdfDoc) {
 // useTables:false skips text-detected AND border-grid tables entirely (all
 // their lines flow through the normal paragraph path instead) — used as the
 // conservative fallback when the first attempt's tables look mis-detected.
-export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSet, cs, { useTables = true } = {}) {
+export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSet, cs, { useTables = true, repeatPatternSet = new Set() } = {}) {
   const { Paragraph, TextRun, HeadingLevel,
           Table, TableRow, TableCell, WidthType, ImageRun } = window.docx;
-  const _repeatTextSet = repeatTextSet;
+  const _repeatTextSet    = repeatTextSet;
+  const _repeatPatternSet = repeatPatternSet;
   const _cs = { ...cs, totalTables: 0, totalGapVisuals: 0, totalInlineVisuals: 0 };
 
   // Adaptive gap factor: linearly interpolates from 1.6 (small fonts / dense technical
@@ -3536,6 +3585,28 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
   async function _processLines(pi, lines, rotatedItems, borderGrids, textItems, pageH) {
     setProgress(50 + Math.round((pi / pageData.length) * 40),
                 `Building page ${pi + 1}/${pageData.length}…`);
+
+    // Baseline left margin for THIS lines set (whole page, or one column
+    // region after a column split) — the most common first-item X. Used
+    // below to gate lettered sub-list detection (LETTERED_RE): a line only
+    // counts as a lettered list marker when it's indented past this
+    // baseline, which is what separates a real sub-item from a false
+    // positive like "A. Smith wrote the report." sitting flush with
+    // ordinary body text.
+    let pageBaselineX = 0;
+    {
+      const xFreq = new Map();
+      for (const ln of lines) {
+        const x = ln.items[0]?.x;
+        if (x === undefined) continue;
+        const rounded = Math.round(x);
+        xFreq.set(rounded, (xFreq.get(rounded) || 0) + 1);
+      }
+      let bestCount = 0;
+      for (const [x, count] of xFreq) {
+        if (count > bestCount) { bestCount = count; pageBaselineX = x; }
+      }
+    }
 
     // Detect tables on this page (skipped entirely in the conservative retry —
     // useTables:false means every line below falls through to the normal
@@ -3760,6 +3831,19 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
             if (/^\d+$/.test(t)) continue;
           }
 
+          // Skip variable page-number footers/headers ("Page 1 of 4", "1/4",
+          // "- 4 -", ...): near the top or bottom of the page (first/last 3
+          // lines, same edge proxy as the bare-integer check above) AND
+          // already confirmed to recur across most pages once its own digits
+          // are normalized away (_repeatPatternSet, built in
+          // _p2wBuildPageData — see that block's own comment for why the
+          // recurrence check keeps this safe for a genuinely one-off body
+          // line that happens to contain a number).
+          if ((lineIdx < 3 || lineIdx >= lines.length - 3) && !lineToTable.has(lineIdx)) {
+            const raw = ln.items.map(i => i.str).join('').trim();
+            if (_repeatPatternSet.has(_normDigits(_normWatermark(raw)))) continue;
+          }
+
           const maxFont = Math.max(...ln.items.map(i => i.fontSize));
           const isHead  = maxFont >= median * 1.3 || _isBoldHeadingLine(ln.items);
 
@@ -3779,10 +3863,18 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
           const lnRawText     = ln.items.map(i => i.str).join('').trim();
           const bulletMatch   = BULLET_RE.test(lnRawText);
           const numberedMatch = !bulletMatch && NUMBERED_RE.test(lnRawText);
-          if (bulletMatch || (numberedMatch && !isHead)) {
+          // Lettered sub-item ("a.", "b)") — only when ALSO indented past
+          // this region's baseline left margin (pageBaselineX above). See
+          // LETTERED_RE's own comment (textLayoutUtils.js) for why the
+          // indent requirement is what makes this safe to detect at all.
+          const letteredMatch = !bulletMatch && !numberedMatch && LETTERED_RE.test(lnRawText) &&
+            (ln.items[0]?.x ?? 0) > pageBaselineX + 10;
+          if (bulletMatch || letteredMatch || (numberedMatch && !isHead)) {
             _flushPara();
             const p = bulletMatch
               ? _buildListParagraph(ln, BULLET_RE, { bullet: { level: 0 } })
+              : letteredMatch
+              ? _buildListParagraph(ln, LETTERED_RE, { bullet: { level: 0 } })
               : _buildListParagraph(ln, NUMBERED_RE, { numbering: { reference: _P2W_NUMBERED_LIST_REF, level: 0 } });
             if (p) paragraphs.push(p);
             continue;
