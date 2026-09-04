@@ -163,7 +163,7 @@ await test('a border-grid row with a missing internal divider produces a real co
   if (rows[2].some(c => c.span > 1)) throw new Error('row 3 has no merge — every cell should have span 1');
 });
 
-console.log('\n_p2pBuildSlideShapes — multi-column and scanned pages fall back per Stage 1\'s disclosed scope:');
+console.log('\n_p2pBuildSlideShapes — scanned pages fall back per the standing scope:');
 
 await test('a scanned page (no extractable text) reports scanned:true with no shapes', () => {
   const { textShapes, imageRegions, scanned } = _p2pBuildSlideShapes(mkPage([]), 12, new Set(), new Set());
@@ -172,29 +172,98 @@ await test('a scanned page (no extractable text) reports scanned:true with no sh
   expect(imageRegions.length).toBe(0);
 });
 
-await test('a genuine 2-column page becomes ONE whole-page image region (Stage 1 scope — no per-column text reconstruction)', () => {
-  // detectColumnRegions() needs >=10 lines total before it even attempts
-  // detection (MIN_LINES_ABS*2, js/pdf2wordColumns.js) — a too-sparse
-  // fixture here would trivially return null for an unrelated reason (not
-  // enough content to judge), not prove anything about column handling.
-  const leftLines = [
-    'The archive project began in January', 'with a full inventory of the collection.',
-    'Volunteers catalogued over three thousand', 'items across the first two months, sorting',
-    'each piece by decade and by donor family.', 'A digital scan was made of every fragile',
-    'document before it returned to storage.', 'The team also built a searchable index',
-    'so researchers could query by keyword.', 'Weekly progress reports went to the board.',
-  ];
-  const rightLines = [
-    'Funding for the second phase was', 'approved by the board in March, covering',
-    'a new climate-controlled storage wing.', 'Construction on the new wing is expected',
-    'to finish by next spring, weather allowing.', 'The architect presented three designs.',
-    'Residents voted to preserve the original', 'facade while modernizing the interior.',
-    'A temporary storage tent was rented for', 'the transition period between phases.',
-  ];
+// ── Stage 3: real per-column text reconstruction ────────────────────────
+// detectColumnRegions() needs >=10 lines total before it even attempts
+// detection (MIN_LINES_ABS*2, js/pdf2wordColumns.js) — a too-sparse fixture
+// would trivially return null for an unrelated reason (not enough content
+// to judge), not prove anything about column handling. Same 10+10-line
+// real-prose shape (independent paragraph lengths, not a pathologically
+// uniform fixture) as the day-8 pdf2word column fix used.
+const leftLines = [
+  'The archive project began in January', 'with a full inventory of the collection.',
+  'Volunteers catalogued over three thousand', 'items across the first two months, sorting',
+  'each piece by decade and by donor family.', 'A digital scan was made of every fragile',
+  'document before it returned to storage.', 'The team also built a searchable index',
+  'so researchers could query by keyword.', 'Weekly progress reports went to the board.',
+];
+const rightLines = [
+  'Funding for the second phase was', 'approved by the board in March, covering',
+  'a new climate-controlled storage wing.', 'Construction on the new wing is expected',
+  'to finish by next spring, weather allowing.', 'The architect presented three designs.',
+  'Residents voted to preserve the original', 'facade while modernizing the interior.',
+  'A temporary storage tent was rented for', 'the transition period between phases.',
+];
+
+console.log('\n_p2pBuildSlideShapes — Stage 3: a genuine 2-column page reconstructs real per-column text, not one whole-page image:');
+
+await test('left-column text and right-column text both become real, non-interleaved text shapes bounded within their own column', () => {
   const lines = leftLines.map((t, i) => mkLine([mkItem(t, 60, 10), mkItem(rightLines[i], 330, 10)], 740 - i * 16));
-  const { textShapes, imageRegions, scanned } = _p2pBuildSlideShapes(mkPage(lines), 10, new Set(), new Set());
+  const { textShapes, tableShapes, imageRegions, scanned } = _p2pBuildSlideShapes(mkPage(lines), 10, new Set(), new Set());
+  expect(scanned).toBe(false);
+  expect(tableShapes.length).toBe(0);
+  expect(imageRegions.length).toBe(0);
+  if (!textShapes.length) throw new Error('expected real text shapes for a 2-column page, got none');
+
+  const fullText = textShapes.map(s => s.runs.map(r => r.text).join(' ')).join(' | ');
+  // Left column's own text must never contain a right-column sentence
+  // fragment mid-paragraph (the exact interleaving bug this mirrors,
+  // day-8 pdf2word fix) — check by finding where each side's FIRST and
+  // LAST distinctive word appears in the combined shape order.
+  const leftShapeIdx  = textShapes.findIndex(s => s.runs.some(r => r.text.includes('archive project')));
+  const rightShapeIdx = textShapes.findIndex(s => s.runs.some(r => r.text.includes('Funding for the second phase')));
+  if (leftShapeIdx === -1 || rightShapeIdx === -1) throw new Error('expected both columns\' opening lines to appear as real text');
+  if (!textShapes[leftShapeIdx].runs.some(r => r.text.includes('searchable index')))
+    throw new Error('left column text got cut short — sign of item-filtering leaking across the column boundary');
+  if (!textShapes[rightShapeIdx].runs.some(r => r.text.includes('transition period')))
+    throw new Error('right column text got cut short — sign of item-filtering leaking across the column boundary');
+
+  // Every shape must sit fully within ONE column's x-range (60ish or
+  // 330ish), never straddling both — proves item-level (not whole-line)
+  // region filtering is what actually built each shape.
+  for (const s of textShapes) {
+    if (s.x0 > 300) continue; // right column shape
+    if (s.x1 > 300) throw new Error(`a "left column" shape (x0=${s.x0}) extends to x1=${s.x1}, crossing into the right column`);
+  }
+});
+
+await test('a table inside just the right column of a 2-column page becomes a tableShapes entry scoped to that column\'s width', () => {
+  const rightWithTable = [...rightLines];
+  const labels = ['Q1', 'Q2', 'Q3'];
+  const values = ['$10k', '$12k', '$14k'];
+  // Replace the last 3 right-column lines with a small table (2-item lines,
+  // consistently aligned — same shape the Stage 2 test already proves
+  // detectTables() recognizes).
+  const lines = leftLines.map((t, i) => mkLine([mkItem(t, 60, 10)], 740 - i * 16));
+  for (let i = 0; i < 7; i++) lines[i].items.push(mkItem(rightLines[i], 330, 10));
+  for (let i = 0; i < labels.length; i++) {
+    lines[7 + i].items.push(mkItem(labels[i], 330, 10));
+    lines[7 + i].items.push(mkItem(values[i], 380, 10));
+  }
+  const { tableShapes, scanned } = _p2pBuildSlideShapes(mkPage(lines), 10, new Set(), new Set());
+  expect(scanned).toBe(false);
+  if (!tableShapes.length) throw new Error('expected the right-column table to become a real tableShapes entry');
+  const tbl = tableShapes[0];
+  // Region boundaries extend to the midpoint between columns (detectColumnRegions'
+  // own documented rule), so the right region's left edge is NOT exactly the
+  // table's own x=330 — the meaningful check is that it's scoped to a region
+  // at all (x0 > 0, i.e. NOT the full page width the pre-Stage-3 fallback used).
+  if (tbl.x0 <= 0) throw new Error(`table x0=${tbl.x0} spans from the page's left edge — not scoped to the right column region`);
+  const cellText = tbl.rows.map(r => r.map(c => c.text).join('|')).join(' / ');
+  if (!cellText.includes('Q1') || !cellText.includes('$10k')) throw new Error(`table cell content missing/garbled: ${cellText}`);
+});
+
+console.log('\n_p2pBuildSlideShapes — Stage 3: a grid straddling both columns falls back to one whole-page image (un-splittable):');
+
+await test('a border grid whose x/w spans across the detected column boundary makes the page un-splittable', () => {
+  const lines = leftLines.map((t, i) => mkLine([mkItem(t, 60, 10), mkItem(rightLines[i], 330, 10)], 740 - i * 16));
+  // A grid starting inside the left column and extending well into the
+  // right column's territory — no single region fully contains it.
+  const straddlingGrid = { x: 50, y: 400, w: 350, h: 100, colCount: 1, rowCount: 1, colXs: [50, 400], rowYs: [500, 400], colDividers: [] };
+  const { textShapes, tableShapes, imageRegions, scanned } =
+    _p2pBuildSlideShapes(mkPage(lines, 792, 612, [straddlingGrid]), 10, new Set(), new Set());
   expect(scanned).toBe(false);
   expect(textShapes.length).toBe(0);
+  expect(tableShapes.length).toBe(0);
   expect(imageRegions.length).toBe(1);
 });
 

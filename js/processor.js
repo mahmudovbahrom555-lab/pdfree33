@@ -2774,16 +2774,15 @@ async function _p2pExtractTextBlocks(page) {
 //   scanned:      true when the page has no extractable text at all — the
 //                 caller renders the whole page as one image slide, same as
 //                 today's existing scanned-page handling.
-export function _p2pBuildSlideShapes(page, median, repeatTextSet, repeatPatternSet) {
-  const { lines, pageW, pageH, borderGrids = [] } = page;
-  if (!lines.length) return { textShapes: [], tableShapes: [], imageRegions: [], scanned: true };
-
-  // Multi-column layout: Stage 1/2 scope excludes real per-column text
-  // reconstruction (see block comment above) — the whole page becomes one
-  // image region, never worse than today's always-image behavior.
-  const columnRegions = pageW ? detectColumnRegions(lines, pageW) : null;
-  if (columnRegions) return { textShapes: [], tableShapes: [], imageRegions: [{ y0: pageH, y1: 0 }], scanned: false };
-
+// Stage 3: builds shapes for ONE region's worth of lines — either the whole
+// page (xBounds = {x0:0, x1:pageW}, the common single-column case) or one
+// detected column region (xBounds = {x0:region.left, x1:region.right}).
+// Extracted from _p2pBuildSlideShapes so the outer dispatcher below can call
+// it once per page OR once per column, mirroring exactly how pdf2word's own
+// _p2wBuildParagraphs dispatches its per-page body (_processLines) once per
+// detected column region — see that function's outer loop for the pattern
+// this mirrors.
+function _p2pBuildRegionShapes(lines, borderGrids, xBounds, median, repeatTextSet, repeatPatternSet) {
   // Text-detected tables that Y-overlap a border grid are dropped in favor
   // of the grid — same precedence pdf2word's own _processLines uses, and
   // for the identical reason: border grids carry real merge/span line data
@@ -2941,7 +2940,7 @@ export function _p2pBuildSlideShapes(page, median, repeatTextSet, repeatPatternS
     // gapThreshold on its own and get wrongly cropped as an image region.
     if (_isHeadingSized(lines[li]) || _isHeadingSized(lines[li + 1])) continue;
     const yAbove = lines[li].y, yBelow = lines[li + 1].y;
-    if (yAbove - yBelow >= gapThreshold) imageRegions.push({ y0: yAbove, y1: yBelow });
+    if (yAbove - yBelow >= gapThreshold) imageRegions.push({ x0: xBounds.x0, x1: xBounds.x1, y0: yAbove, y1: yBelow });
   }
 
   for (let lineIdx = 0; lineIdx < lines.length; lineIdx++) {
@@ -2953,7 +2952,7 @@ export function _p2pBuildSlideShapes(page, median, repeatTextSet, repeatPatternS
       if (lineIdx === tbl.startIdx) {
         const tblLines = lines.slice(tbl.startIdx, tbl.endIdx + 1);
         tableShapes.push({
-          x0: 0, x1: pageW || Math.max(...tblLines.flatMap(l => l.items.map(i => i.x + (i.width > 0 ? i.width : i.fontSize * i.str.length * 0.5)))),
+          x0: xBounds.x0, x1: xBounds.x1,
           y0: Math.max(...tblLines.map(l => l.y)) + median,
           y1: Math.min(...tblLines.map(l => l.y)) - median * 0.3,
           rows: tbl.rows.map(row => row.map(text => ({ text: text || '', span: 1, bold: false }))),
@@ -3010,6 +3009,60 @@ export function _p2pBuildSlideShapes(page, median, repeatTextSet, repeatPatternS
   }
   flush();
 
+  return { textShapes, tableShapes, imageRegions };
+}
+
+// ── Stage 1-3 outer dispatcher: whole page, or once per detected column ────
+// region — mirrors _p2wBuildParagraphs's own outer per-page loop (see that
+// function's "Column-aware split" block) exactly: a straddling grid/table
+// (spans across a column boundary) makes the page un-splittable, in which
+// case it falls back to a single whole-page image region — never worse
+// than pre-Stage-3 behavior. Otherwise each region gets its own
+// _p2pBuildRegionShapes() call with region-scoped lines/grids/bounds, RTL-
+// reversed via pageIsRtl() when the page reads right-to-left. A PPTX slide
+// has no reading-order constraint (every shape carries its own absolute x/y
+// — unlike a flowing Word document), so concatenating each region's shapes
+// is correct with no interleaving step needed.
+export function _p2pBuildSlideShapes(page, median, repeatTextSet, repeatPatternSet) {
+  const { lines, pageW, pageH, borderGrids = [] } = page;
+  if (!lines.length) return { textShapes: [], tableShapes: [], imageRegions: [], scanned: true };
+
+  const regions = pageW ? detectColumnRegions(lines, pageW) : null;
+  const splittable = regions && !borderGrids.some(g =>
+    regions.filter(r => g.x < r.right && (g.x + g.w) > r.left).length > 1
+  );
+
+  if (!splittable) {
+    if (regions) {
+      // Column layout detected but a grid/table straddles a boundary — the
+      // page can't be cleanly split. Whole page becomes one image region,
+      // same fallback Stage 1/2 always used for every column page.
+      return { textShapes: [], tableShapes: [], imageRegions: [{ x0: 0, x1: pageW, y0: pageH, y1: 0 }], scanned: false };
+    }
+    const result = _p2pBuildRegionShapes(lines, borderGrids, { x0: 0, x1: pageW }, median, repeatTextSet, repeatPatternSet);
+    return { ...result, scanned: false };
+  }
+
+  const ordered = pageIsRtl(lines) ? [...regions].reverse() : regions;
+  const textShapes = [], tableShapes = [], imageRegions = [];
+  for (const region of ordered) {
+    const inRegion = (it) => !!it && it.x >= region.left && it.x < region.right;
+    // Filter ITEMS WITHIN each line, not whole lines by their first item —
+    // the exact bug shipped fixed for pdf2word's own column handling
+    // (commit 0cac6bda): a merged line's leftmost item is always the left
+    // column's, so gating on it alone would route a still-merged line's
+    // FULL content into whichever region contains its first item.
+    const regionLines = lines
+      .map(ln => ({ y: ln.y, items: ln.items.filter(inRegion) }))
+      .filter(ln => ln.items.length);
+    const regionGrids = borderGrids.filter(g => g.x >= region.left && (g.x + g.w) <= region.right);
+    const result = _p2pBuildRegionShapes(
+      regionLines, regionGrids, { x0: region.left, x1: region.right }, median, repeatTextSet, repeatPatternSet
+    );
+    textShapes.push(...result.textShapes);
+    tableShapes.push(...result.tableShapes);
+    imageRegions.push(...result.imageRegions);
+  }
   return { textShapes, tableShapes, imageRegions, scanned: false };
 }
 
@@ -3273,16 +3326,27 @@ async function _runPdf2Ppt(filesSnapshot, { dpi = 150, mode = 'image' } = {}) {
         }
 
         for (const region of shapes.imageRegions) {
+          // x0/x1 are always real PDF-point bounds set by
+          // _p2pBuildSlideShapes (full page width for a non-column page,
+          // one column's own width for a Stage-3 column region) — a
+          // diagram inside one column crops only that column's width, not
+          // the whole page (which would otherwise pull in blank space or
+          // the other column's content).
+          const { x0, x1 } = region;
+          const xLeftPx  = Math.round(x0 * scale);
+          const xRightPx = Math.round(x1 * scale);
           const yTopPx = Math.round((pageHeightPt - region.y0) * scale);
           const yBotPx = Math.round((pageHeightPt - region.y1) * scale);
-          const cropUrl = _p2pCropCanvasRegion(canvas, 0, yTopPx, canvas.width, yBotPx - yTopPx);
+          const cropUrl = _p2pCropCanvasRegion(canvas, xLeftPx, yTopPx, xRightPx - xLeftPx, yBotPx - yTopPx);
           if (!cropUrl) continue;
-          const yTopIn = (pageHeightPt - region.y0) / 72;
-          const hIn    = Math.max(0.05, (region.y0 - region.y1) / 72);
+          const xLeftIn = x0 / 72;
+          const yTopIn  = (pageHeightPt - region.y0) / 72;
+          const wIn     = Math.max(0.05, (x1 - x0) / 72);
+          const hIn     = Math.max(0.05, (region.y0 - region.y1) / 72);
           slide.addImage({
             data: cropUrl,
-            x: fit.x, y: fit.y + yTopIn * fit.scale,
-            w: fit.w, h: hIn * fit.scale,
+            x: fit.x + xLeftIn * fit.scale, y: fit.y + yTopIn * fit.scale,
+            w: wIn * fit.scale, h: hIn * fit.scale,
           });
         }
       }

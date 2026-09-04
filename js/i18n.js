@@ -1064,7 +1064,7 @@ export const EN = {
   p2p_mode_image:          '🖼️ Image',
   p2p_mode_text:           '📝 Editable text (beta)',
   p2p_mode_hint:      '📽️ Each page becomes one full-slide image — always looks exactly like the source, but text is not editable (only searchable/copyable).',
-  p2p_mode_text_hint: '📝 Headings, paragraphs, lists, and tables become real, editable PowerPoint objects. Multi-column pages and diagrams still appear as an embedded picture within the slide.',
+  p2p_mode_text_hint: '📝 Headings, paragraphs, lists, and tables become real, editable PowerPoint objects — including multi-column layouts. Diagrams and photos still appear as an embedded picture within the slide.',
   p2p_size_danger:    '⚠️ Estimated .pptx: <strong>~{mb} MB</strong> — very large. Your browser may run out of memory. Try <strong>Compact</strong> quality.',
   p2p_size_warn:      '📦 Estimated .pptx: <strong>~{mb} MB</strong>{safari}.',
   p2p_size_normal:    '📦 Estimated .pptx: ~{mb} MB',
