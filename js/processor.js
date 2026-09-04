@@ -2602,7 +2602,7 @@ function _p2pFitRect(srcW, srcH, availW, availH) {
 // ordinary body text, which is most of what real documents are).
 const _P2P_MAX_TEXT_BLOCKS = 400; // safety cap — skip the layer entirely past this, not truncate it
 
-function _p2pMergeLineItems(line) {
+export function _p2pMergeLineItems(line) {
   line.sort((a, b) => a.x - b.x);
   const blocks = [];
   let cur = null;
@@ -2631,7 +2631,7 @@ function _p2pMergeLineItems(line) {
 // font size) — anything a real paragraph wouldn't do (a heading followed
 // by body text, a table row, two side-by-side columns) fails at least one
 // of these and is deliberately left as separate boxes.
-function _p2pMergeParagraphs(lineBlockGroups) {
+export function _p2pMergeParagraphs(lineBlockGroups) {
   const out = [];
   for (const group of lineBlockGroups) {
     if (group.length !== 1) { out.push(...group); continue; }
@@ -2668,6 +2668,27 @@ function _p2pMergeParagraphs(lineBlockGroups) {
     block._topY        = block.y + block.height;
     block._bottomY      = block.y;
     out.push(block);
+  }
+
+  // block.y is only ever the FIRST merged line's own baseline — never
+  // updated while later lines merge in (only .height and ._bottomY are).
+  // The consumer (_runPdf2Ppt) derives each shape's top edge as
+  // `y + height`, which is correct for a single untouched line (top =
+  // baseline + own height) but wrong for a merged multi-line paragraph:
+  // .height has grown to span the WHOLE paragraph while .y is still just
+  // the topmost line's baseline, so `y + height` overshoots downward by
+  // roughly the paragraph's own height — verified directly on a real
+  // title+paragraph fixture where this pushed the paragraph's invisible
+  // search/copy box ABOVE the title's, inverted from the source PDF's
+  // actual top-to-bottom order (real, functional bug: Ctrl+F highlight and
+  // drag-select land on the wrong on-slide position, even though the
+  // rendered image itself always looks correct — the box is invisible).
+  // Re-deriving y from the already-correct ._topY (fixed once, at the
+  // paragraph's first line, and never touched again — see the comment
+  // above) keeps the existing `y + height` formula downstream valid for
+  // every block, merged or not, without changing that formula at all.
+  for (const block of out) {
+    if (block._topY !== undefined) block.y = block._topY - block.height;
   }
   return out;
 }
