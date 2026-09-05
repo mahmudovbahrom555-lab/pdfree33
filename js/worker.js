@@ -460,7 +460,7 @@ async function handleMerge(files, names, removeWatermarks = false) {
 
 // ── Split handler ──
 async function handleSplit(fileBuffer, options) {
-  const { PDFDocument } = PDFLib;
+  const { PDFDocument, PDFName } = PDFLib;
 
   // Measure page count before consuming fileBuffer in any load call.
   // We peek via a temporary load; fileBuffer itself is not detached by pdf-lib.
@@ -488,6 +488,18 @@ async function handleSplit(fileBuffer, options) {
     for (let i = pageCount - 1; i >= 0; i--) {
       if (!keepSet.has(i)) srcDoc.removePage(i);
     }
+    // removePage() only unlinks a page from the /Pages tree — the source
+    // document's /Outlines (bookmarks) still reference the removed pages by
+    // object ref, and those refs still resolve (pdf-lib's save() doesn't
+    // garbage-collect objects reachable from ANY part of the catalog, not
+    // just /Pages). Left alone, the exported file both shows dangling
+    // bookmarks pointing outside the visible page range AND keeps the
+    // "removed" pages' full content recoverable through them — a real
+    // content-retention bug for the common case of extracting a subset to
+    // deliberately exclude other pages before sharing. Dropping /Outlines
+    // whenever pages were actually removed matches how the no-bookmarks case
+    // already behaves (nothing left referencing the excluded pages).
+    if (pages.length < pageCount) srcDoc.catalog.delete(PDFName.of('Outlines'));
     self.postMessage({ type: 'progress', value: 90, label: 'Saving...' });
     const bytes = await srcDoc.save();
     self.postMessage(
@@ -508,6 +520,10 @@ async function handleSplit(fileBuffer, options) {
       for (let j = pageCount - 1; j >= 0; j--) {
         if (j !== pageNum - 1) pageDoc.removePage(j);
       }
+      // Same dangling-bookmark/content-retention fix as the 'single' branch
+      // above — every per-page split here removes all but 1 page, so this is
+      // unconditional whenever the source had more than 1 page.
+      if (pageCount > 1) pageDoc.catalog.delete(PDFName.of('Outlines'));
       const bytes = await pageDoc.save();
       results.push({ name: `page_${pageNum}.pdf`, buffer: bytes.buffer });
       self.postMessage({

@@ -282,6 +282,40 @@ const workerSrc2 = readFileSync(join(__dir, '../js/worker.js'), 'utf8')
 const workerModule2 = new AsyncFunction(workerSrc2 + '\nreturn { handleSplit, handleWatermark, handlePageNum, handleMeta, handleProtect };');
 const { handleSplit, handleWatermark, handlePageNum, handleMeta, handleProtect } = await workerModule2();
 
+// A real /Outlines (bookmarks) tree, one item per page — pdf-lib has no
+// high-level bookmark API, so this is built the same way worker.js itself
+// manipulates the catalog: low-level PDFDict/PDFArray objects registered
+// directly on the document's context.
+async function _buildBookmarked3Page() {
+  const { PDFDocument, PDFName, PDFString } = PDFLib;
+  const doc = await PDFDocument.load(_normal3.slice(0));
+  const pages = doc.getPages();
+  const itemRefs = pages.map(() => doc.context.nextRef());
+  pages.forEach((page, i) => {
+    const item = doc.context.obj({
+      Title: PDFString.of(`Bookmark ${i + 1}`),
+      Dest:  [page.ref, PDFName.of('Fit')],
+    });
+    if (i < pages.length - 1) item.set(PDFName.of('Next'), itemRefs[i + 1]);
+    if (i > 0) item.set(PDFName.of('Prev'), itemRefs[i - 1]);
+    doc.context.assign(itemRefs[i], item);
+  });
+  const outlineRef = doc.context.register(doc.context.obj({
+    Type:  PDFName.of('Outlines'),
+    First: itemRefs[0],
+    Last:  itemRefs[itemRefs.length - 1],
+    Count: pages.length,
+  }));
+  itemRefs.forEach(ref => {
+    doc.context.lookup(ref).set(PDFName.of('Parent'), outlineRef);
+  });
+  doc.catalog.set(PDFName.of('Outlines'), outlineRef);
+  const bytes = await doc.save();
+  return bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength);
+}
+const _bookmarked3 = await _buildBookmarked3Page();
+const bookmarked3 = () => clone(_bookmarked3);
+
 console.log('\n✂️  handleSplit:');
 
 await test('split single mode: extracts subset of pages', async () => {
@@ -308,6 +342,44 @@ await test('split throws on no valid pages', async () => {
   try { await handleSplit(normal1(), { pages: [99], mode: 'single' }); }
   catch { threw = true; }
   expect(threw).toBeTruthy();
+});
+
+// Real bug found via a competitor-comparison pass on the Split tool: source
+// PDFs with real bookmarks (/Outlines) kept ALL of them after a split/extract
+// removed some pages — several pointing at pages no longer in the visible
+// document, and those bookmark targets still resolved to the REMOVED pages'
+// full original content (removePage() only unlinks from /Pages; pdf-lib's
+// save() doesn't garbage-collect anything still reachable from elsewhere in
+// the catalog, like /Outlines). Confirmed live on pdfree.io with a real
+// 6-page/6-bookmark PDF before fixing.
+console.log('\n🔖 handleSplit — dangling /Outlines after page removal:');
+
+await test('single mode: extracting a SUBSET of a bookmarked PDF drops /Outlines entirely', async () => {
+  const { PDFDocument, PDFName } = PDFLib;
+  await handleSplit(bookmarked3(), { pages: [1, 2], mode: 'single' }); // page 3 removed
+  const done = lastDone();
+  const out  = await PDFDocument.load(done.result);
+  expect(out.catalog.get(PDFName.of('Outlines'))).toBe(undefined);
+  expect(out.getPageCount()).toBe(2);
+});
+
+await test('separate mode: each per-page split of a bookmarked PDF drops /Outlines entirely', async () => {
+  const { PDFDocument, PDFName } = PDFLib;
+  await handleSplit(bookmarked3(), { pages: [1, 2, 3], mode: 'separate' });
+  const done = lastDone();
+  for (const { buffer } of done.result) {
+    const out = await PDFDocument.load(buffer);
+    expect(out.catalog.get(PDFName.of('Outlines'))).toBe(undefined);
+    expect(out.getPageCount()).toBe(1);
+  }
+});
+
+await test('single mode: keeping ALL pages of a bookmarked PDF leaves /Outlines untouched (nothing was actually removed)', async () => {
+  const { PDFDocument, PDFName } = PDFLib;
+  await handleSplit(bookmarked3(), { pages: [1, 2, 3], mode: 'single' });
+  const done = lastDone();
+  const out  = await PDFDocument.load(done.result);
+  expect(out.catalog.get(PDFName.of('Outlines')) !== undefined).toBeTruthy();
 });
 
 await test('split page 1 only: single-page PDF is valid', async () => {
