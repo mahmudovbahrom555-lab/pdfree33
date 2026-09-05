@@ -1,0 +1,47 @@
+{
+  "name": "@pdfree/pdf2read-core",
+  "version": "0.1.0",
+  "description": "Reflow a fixed-layout PDF into structured reading blocks (headings/paragraphs/lists/tables) — the same extraction engine behind pdfree.io's Read PDF tool, runnable locally. Your files never leave your machine.",
+  "type": "module",
+  "license": "AGPL-3.0-only",
+  "author": "PDFree Contributors",
+  "homepage": "https://pdfree.io/?tool=read",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mahmudovbahrom555-lab/pdfree33.git",
+    "directory": "packages/pdf2read-core"
+  },
+  "keywords": [
+    "pdf",
+    "pdf-reflow",
+    "reflow",
+    "reading-mode",
+    "liquid-mode",
+    "mobile-reading",
+    "pdfjs"
+  ],
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "bin": {
+    "pdf2read-core": "bin/pdf2read.js"
+  },
+  "files": [
+    "src",
+    "bin",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "prepublishOnly": "node scripts/copy-core.mjs",
+    "sync": "node scripts/copy-core.mjs",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "pdfjs-dist": "5.0.375"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "name": "@pdfree/pdf2read-server",
+  "version": "0.1.0",
+  "description": "Self-hosted REST API for @pdfree/pdf2read-core — POST a PDF, get structured reading blocks back. Runs on your own infrastructure; no file ever touches pdfree.io.",
+  "type": "module",
+  "license": "AGPL-3.0-only",
+  "author": "PDFree Contributors",
+  "homepage": "https://pdfree.io/?tool=read",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mahmudovbahrom555-lab/pdfree33.git",
+    "directory": "packages/pdf2read-server"
+  },
+  "keywords": [
+    "pdf",
+    "pdf-reflow",
+    "reflow",
+    "reading-mode",
+    "liquid-mode",
+    "self-hosted",
+    "rest-api",
+    "docker"
+  ],
+  "main": "server.js",
+  "files": [
+    "server.js",
+    "README.md",
+    "LICENSE",
+    "Dockerfile"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "@pdfree/pdf2read-core": "file:../pdf2read-core"
+  }
+}

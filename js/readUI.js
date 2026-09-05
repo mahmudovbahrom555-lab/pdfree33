@@ -13,14 +13,16 @@
 // sibling of pdf2ppt's _p2pBuildSlideShapes — _rpBuildPageBlocks — which
 // applies the exact same heading/list/table/column detectors already proven
 // twice (pdf2word, pdf2ppt) but emits plain reading blocks instead of
-// PPTX shapes or docx.js objects. See js/processor.js's own comments on
-// both functions for the detection heuristics themselves.
+// PPTX shapes or docx.js objects. Both now live in js/pdf2readCore.js (moved
+// out of processor.js so packages/pdf2read-core/ can reuse them in Node) —
+// see that file's own comments for the detection heuristics themselves.
 
 import { loadPdfJs } from './pdf2jpgUI.js';
 import { id, esc } from './utils.js';
-import { _p2wBuildPageData, _rpBuildPageBlocks, _p2pCropCanvasRegion, _setProcessingFlag } from './processor.js';
+import { _p2pCropCanvasRegion, _setProcessingFlag } from './processor.js';
+import { _p2wBuildPageData, _rpBuildPageBlocks } from './pdf2readCore.js';
 import { t } from './i18n.js';
-import { hideProgress } from './ui.js';
+import { setProgress, hideProgress } from './ui.js';
 
 const RENDER_SCALE = 1.5; // matches compareUI's own canvas render scale
 
@@ -90,13 +92,18 @@ async function _runRead(container) {
   });
   if (_cancelled) return;
 
-  // _p2wBuildPageData()/its per-page loop gate on isProcessing (normally
-  // only ever true inside doProcess()'s own orchestration) — this tool
-  // never calls doProcess() at all, so it must flip the flag itself.
+  // _setProcessingFlag keeps the site-wide isProcessing state honest for
+  // anything ELSE that reads it (this tool never calls doProcess(), so
+  // nothing else would flip it) — _p2wBuildPageData's own cancellation now
+  // comes from the injected isCancelled callback below, wired to this
+  // module's own local _cancelled flag, not the global.
   _setProcessingFlag(true);
   let pageData, median, repeatTextSet, repeatPatternSet;
   try {
-    ({ pageData, median, repeatTextSet, repeatPatternSet } = await _p2wBuildPageData(pdfDoc));
+    ({ pageData, median, repeatTextSet, repeatPatternSet } = await _p2wBuildPageData(pdfDoc, {
+      onProgress:  (pct, label) => setProgress(pct, label),
+      isCancelled: () => _cancelled,
+    }));
   } finally {
     _setProcessingFlag(false);
   }

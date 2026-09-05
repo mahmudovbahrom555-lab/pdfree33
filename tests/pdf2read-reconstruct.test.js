@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // ============================================================
 //  tests/pdf2read-reconstruct.test.js — regression tests for
-//  _rpBuildPageBlocks() (js/processor.js), the block-builder behind the
-//  "Read PDF" reflow reading view: a THIRD consumer of the exact same
+//  _rpBuildPageBlocks() (js/pdf2readCore.js — moved out of processor.js so
+//  packages/pdf2read-core/ can reuse it in Node), the block-builder behind
+//  the "Read PDF" reflow reading view: a THIRD consumer of the exact same
 //  detectors pdf2word (_p2wBuildParagraphs) and pdf2ppt
 //  (_p2pBuildSlideShapes) already reuse (detectTables, detectColumnRegions,
 //  BULLET_RE/NUMBERED_RE/LETTERED_RE, heading font-ratio/bold-heading
@@ -11,8 +12,12 @@
 //
 // Run: node tests/pdf2read-reconstruct.test.js
 
-// processor.js has module-level code that touches window/document/Worker
-// regardless of which exported function is actually called — same mocks
+// pdf2readCore.js is DOM-free (confirmed — no window/document/Worker
+// reference anywhere in it or its own imports), unlike processor.js itself,
+// so unlike this file's pdf2ppt-reconstruct.test.js sibling (which imports
+// the same functions from processor.js and needs these mocks), no DOM
+// stubbing should be needed here. Kept anyway, harmless if unused, in case a
+// future change reintroduces a processor.js import into this test file.
 // tests/pdf2ppt-reconstruct.test.js already needs for the identical reason.
 global.window = { PDFREE_LOCALE: {} };
 global.document = {
@@ -25,7 +30,7 @@ global.Worker = class { postMessage(){} terminate(){} addEventListener(){} };
 const docx = await import('docx');
 global.window.docx = docx;
 
-const { _rpBuildPageBlocks } = await import('../js/processor.js');
+const { _rpBuildPageBlocks } = await import('../js/pdf2readCore.js');
 
 let passed = 0, failed = 0;
 async function test(name, fn) {
