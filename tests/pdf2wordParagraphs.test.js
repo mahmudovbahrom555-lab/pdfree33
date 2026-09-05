@@ -49,7 +49,7 @@
 // to change) — minimal stubs let it import cleanly under plain Node.
 // _p2wBuildParagraphs also gates its per-page loop on the module-level
 // isProcessing flag (only ever true inside the real doProcess()
-// orchestration) — _setProcessingForTests() is a small test-only seam
+// orchestration) — _setProcessingFlag() is a small test-only seam
 // added alongside it for exactly this purpose (js/processor.js:89-95).
 global.window = { PDFREE_LOCALE: {} };
 global.document = {
@@ -64,8 +64,8 @@ global.Worker = class { postMessage(){} terminate(){} addEventListener(){} };
 const docx = await import('docx');
 global.window.docx = docx;
 
-const { _p2wBuildParagraphs, _setProcessingForTests } = await import('../js/processor.js');
-_setProcessingForTests(true);
+const { _p2wBuildParagraphs, _setProcessingFlag } = await import('../js/processor.js');
+_setProcessingFlag(true);
 
 let passed = 0, failed = 0;
 async function test(name, fn) {

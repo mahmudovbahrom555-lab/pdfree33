@@ -37,6 +37,7 @@ window.PDFREE_LOCALE = {
     glossary:         ['słownik', 'definicje', 'słownik pdf', 'podświetl terminy', 'dodaj definicje'],
     docx2pdf:         ['word to pdf', 'docx to pdf', 'convert word to pdf', 'doc to pdf', 'docx converter', 'word converter'],
     pdf2pdfa:         ['pdf/a', 'pdfa', 'archiwizacja', 'archiwalny', 'sprawdź pdf/a', 'iso 19005', 'archiwizacja długoterminowa'],
+    read:             ['czytać', 'tryb czytania', 'czytać na telefonie', 'czytać pdf na komórce', 'widok czytania', 'przepływ tekstu'],
   },
 
   // app
@@ -1113,4 +1114,17 @@ window.PDFREE_LOCALE = {
   draw_add_text:               'Dodaj tekst',
   draw_save_btn:               'Zapisz',
   draw_add_btn:                'Dodaj',
+
+  // -- Read PDF (reflow reading view) -- EN placeholder, backlog translation
+  read_loading:               'Extracting text...',
+  read_font_size:             'Text size',
+  read_no_text_title:         'No readable text found',
+  read_no_text_desc:          "This looks like a scanned document -- there's no text layer to reflow. Run OCR first, then come back to read it.",
+  read_try_ocr:               'Try OCR',
+  read_error:                 "Couldn't read this PDF.",
+  read_password_title:        'Password protected',
+  read_password_retry:        'Incorrect password -- try again.',
+  read_password_placeholder:  'Enter password...',
+  read_password_open:         'Open',
+  read_cancel:                'Cancel',
 };

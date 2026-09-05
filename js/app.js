@@ -573,7 +573,7 @@ function _maybeShowPwaNudge() {
 // phase. The guard below is the reliable fix.
 //
 // To add a new self-managed tool: append its key here + build its own UI module.
-const SELF_MANAGED_TOOLS = new Set(['ocr', 'compare', 'pdf2pdfa']);
+const SELF_MANAGED_TOOLS = new Set(['ocr', 'compare', 'pdf2pdfa', 'read']);
 
 // "Remember my settings" — only tools with a registered presetFilter are
 // eligible (see toolRegistrations.js). The checkbox lives in that tool's

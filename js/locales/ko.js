@@ -39,6 +39,7 @@ window.PDFREE_LOCALE = {
     glossary:         ['용어집', '정의', 'PDF 용어집', '용어 강조', '정의 추가'],
     docx2pdf:         ['word to pdf', 'docx to pdf', 'convert word to pdf', 'doc to pdf', 'docx converter', 'word converter'],
     pdf2pdfa:         ['pdf/a', '아카이브', '장기보존', 'pdf/a 확인', '보존용 pdf'],
+    read:             ['읽기', '읽기 모드', '모바일로 읽기', '휴대폰에서 pdf 읽기', '읽기 화면', '텍스트 재배열'],
   },
 
   // app
@@ -1115,4 +1116,17 @@ window.PDFREE_LOCALE = {
   draw_add_text:               '텍스트 추가',
   draw_save_btn:               '저장',
   draw_add_btn:                '추가',
+
+  // -- Read PDF (reflow reading view) -- EN placeholder, backlog translation
+  read_loading:               'Extracting text...',
+  read_font_size:             'Text size',
+  read_no_text_title:         'No readable text found',
+  read_no_text_desc:          "This looks like a scanned document -- there's no text layer to reflow. Run OCR first, then come back to read it.",
+  read_try_ocr:               'Try OCR',
+  read_error:                 "Couldn't read this PDF.",
+  read_password_title:        'Password protected',
+  read_password_retry:        'Incorrect password -- try again.',
+  read_password_placeholder:  'Enter password...',
+  read_password_open:         'Open',
+  read_cancel:                'Cancel',
 };

@@ -38,6 +38,7 @@ window.PDFREE_LOCALE = {
     glossary:         ['từ điển', 'định nghĩa', 'từ điển pdf', 'đánh dấu thuật ngữ', 'thêm định nghĩa'],
     docx2pdf:         ['word to pdf', 'docx to pdf', 'convert word to pdf', 'doc to pdf', 'docx converter', 'word converter'],
     pdf2pdfa:         ['pdf/a', 'pdfa', 'lưu trữ', 'lưu trữ lâu dài', 'kiểm tra pdf/a', 'iso 19005'],
+    read:             ['chế độ đọc', 'đọc trên điện thoại', 'đọc pdf trên điện thoại', 'chế độ xem đọc', 'sắp xếp lại văn bản'],
   },
 
   // app
@@ -1114,4 +1115,17 @@ window.PDFREE_LOCALE = {
   draw_add_text:               'Thêm văn bản',
   draw_save_btn:               'Lưu',
   draw_add_btn:                'Thêm',
+
+  // -- Read PDF (reflow reading view) -- EN placeholder, backlog translation
+  read_loading:               'Extracting text...',
+  read_font_size:             'Text size',
+  read_no_text_title:         'No readable text found',
+  read_no_text_desc:          "This looks like a scanned document -- there's no text layer to reflow. Run OCR first, then come back to read it.",
+  read_try_ocr:               'Try OCR',
+  read_error:                 "Couldn't read this PDF.",
+  read_password_title:        'Password protected',
+  read_password_retry:        'Incorrect password -- try again.',
+  read_password_placeholder:  'Enter password...',
+  read_password_open:         'Open',
+  read_cancel:                'Cancel',
 };

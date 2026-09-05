@@ -519,6 +519,20 @@ export const TOOLS = {
     accept:      '.pdf,application/pdf',
     implemented: true,
   },
+  read: {
+    icon:        '📖',
+    title:       'Read PDF',
+    desc:        'Reflow any PDF into a clean, mobile-friendly reading view — right in your browser',
+    tags:        ['read', 'reflow', 'reader mode', 'mobile reading', 'read on phone',
+                  'read pdf on mobile', 'reading view', 'liquid mode', 'reflow pdf'],
+    titles: { en: 'Read PDF' },
+    descs:  { en: 'Reflow any PDF into a clean, mobile-friendly reading view — right in your browser' },
+    btns:   { en: '📖 Read' },
+    btn:         '📖 Read',
+    multi:       false,
+    accept:      '.pdf,application/pdf',
+    implemented: true,
+  },
   // EN-only, no dedicated locale pages or homepage tool-card in v1 (2026-08-22,
   // AskUserQuestion-confirmed scope) — reachable via search/tags and direct URL
   // only, same "EN-only, no locale slugs" pattern scripts/build.py already

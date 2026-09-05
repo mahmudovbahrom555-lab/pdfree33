@@ -77,6 +77,8 @@ import { initUnlockOptions, hideUnlockOptions,
 import { initCompareOptions, hideCompareOptions,
          getCompareParams }               from './compareUI.js';
 import { initPdf2PdfaOptions, hidePdf2PdfaOptions } from './pdf2pdfaUI.js';
+import { initReadOptions, hideReadOptions,
+         getReadParams }                    from './readUI.js';
 
 // ── Merge filename ─────────────────────────────────────────────
 
@@ -664,6 +666,20 @@ registerTool('compare', {
     if (!p.hasFiles) return 'Please select two PDF files to compare';
     return null;
   },
+});
+
+// No runner — self-managed like compare/ocr/pdf2pdfa (see SELF_MANAGED_TOOLS
+// in js/app.js). Auto-runs on file load (mirrors pdf2pdfa's own precedent,
+// not compare's click-to-confirm — there's nothing to configure beforehand),
+// so validate() never actually blocks a click here in practice.
+registerTool('read', {
+  init:      initReadOptions,
+  hide:      hideReadOptions,
+  getParams: getReadParams,
+  // init() only ever runs once a file is already selected, and doProcess()
+  // is never called for a self-managed tool — there's no reachable invalid
+  // state for this to report.
+  validate:  () => null,
 });
 
 // Analysis-only — no runner, no getParams. See pdf2pdfaUI.js header.

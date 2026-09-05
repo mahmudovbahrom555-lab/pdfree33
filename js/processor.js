@@ -110,12 +110,14 @@ const _P2W_NUMBERED_LIST_REF = 'p2w-numbered-list';
 
 let _worker = _createWorker();
 export let isProcessing = false;
-// Test-only seam: _p2wBuildPageData/_p2wBuildParagraphs check isProcessing
-// per-page to support mid-run cancellation. It's only ever set true inside
-// doProcess()'s real orchestration, so tests calling these functions
-// directly (bypassing doProcess) need a way to flip it without invoking the
-// full side-effecting pipeline (DOM events, worker messaging, etc.).
-export function _setProcessingForTests(v) { isProcessing = v; }
+// _p2wBuildPageData/_p2wBuildParagraphs check isProcessing per-page to
+// support mid-run cancellation. It's normally only ever set true inside
+// doProcess()'s real orchestration — anything calling these functions
+// directly and bypassing doProcess() (tests, and self-managed tools like
+// Read that never go through the worker/registry runner pipeline at all)
+// needs a way to flip it without invoking the full side-effecting pipeline
+// (DOM events, worker messaging, etc.).
+export function _setProcessingFlag(v) { isProcessing = v; }
 let _currentTool = '';
 let _processStartMs = null;
 export function getProcessStartMs() { return _processStartMs; }
@@ -3101,7 +3103,7 @@ export function _p2pBuildSlideShapes(page, median, repeatTextSet, repeatPatternS
 // uses) — these crops are typically small (a table or diagram region, not a
 // whole page), so the file-size cost of lossless output stays bounded, and
 // it avoids JPEG block artifacts on what's often text-heavy table content.
-function _p2pCropCanvasRegion(sourceCanvas, xPx, yPx, wPx, hPx) {
+export function _p2pCropCanvasRegion(sourceCanvas, xPx, yPx, wPx, hPx) {
   if (wPx <= 0 || hPx <= 0) return null;
   const clampedY = Math.max(0, Math.min(yPx, sourceCanvas.height - 1));
   const clampedH = Math.max(1, Math.min(hPx, sourceCanvas.height - clampedY));
@@ -3113,6 +3115,261 @@ function _p2pCropCanvasRegion(sourceCanvas, xPx, yPx, wPx, hPx) {
   const url = temp.toDataURL('image/png');
   temp.width = 0; temp.height = 0;
   return url;
+}
+
+// A line whose non-space characters are mostly Unicode Private-Use-Area
+// glyphs (the range LaTeX/PDF math fonts inject for symbols that never
+// round-trip to real Unicode text) can't be rendered as text at all — it
+// would show up as garbled tofu. Routed to an image block instead of real
+// equation OCR (out of scope for v1); cheap insurance, not full math support.
+const _PUA_RE = /[-\u{F0000}-\u{FFFFD}\u{100000}-\u{10FFFD}]/gu;
+function _isMostlyPUA(str) {
+  const nonSpace = str.replace(/\s/g, '');
+  if (!nonSpace) return false;
+  return (nonSpace.match(_PUA_RE) || []).length / nonSpace.length > 0.4;
+}
+
+// Read-mode's per-region block builder — same dispatch shape as
+// _p2pBuildRegionShapes (mirrors its table/list/heading/footer-suppression
+// heuristics exactly, reusing the same detectors), but emits a flat, ordered
+// array of plain reading blocks instead of PPTX shapes with absolute x/y.
+// Paragraph text is joined across all of a buffered block's ORIGINAL lines
+// into one continuous string (not one block per original line) — a PDF's own
+// line breaks are just where the fixed-width source column happened to wrap,
+// not real paragraph breaks, and preserving them would defeat the point of a
+// reflowing view.
+function _rpBuildRegionBlocks(lines, borderGrids, xBounds, median, repeatTextSet, repeatPatternSet) {
+  const tables = detectTables(lines)
+    .filter(t => !looksLikeProseNotData(t.rows) && !looksLikeEnumeratedList(t.rows))
+    .filter(t => {
+      const tMinY = Math.min(lines[t.startIdx].y, lines[t.endIdx].y);
+      const tMaxY = Math.max(lines[t.startIdx].y, lines[t.endIdx].y);
+      return !borderGrids.some(g => tMinY <= g.y + g.h && g.y <= tMaxY);
+    });
+  const lineToTable = new Map();
+  for (const t of tables) {
+    for (let li = t.startIdx; li <= t.endIdx; li++) lineToTable.set(li, t);
+  }
+
+  const blocks = [];
+  const gridConsumedLines = new Set();
+
+  for (const grid of borderGrids) {
+    const gridLines = [];
+    for (let li = 0; li < lines.length; li++) {
+      if (lineToTable.has(li)) continue;
+      const ln = lines[li];
+      if (ln.y >= grid.y - 4 && ln.y <= grid.y + grid.h + 4) gridLines.push({ li, ln });
+    }
+    if (!gridLines.length) continue;
+    gridLines.sort((a, b) => b.ln.y - a.ln.y);
+
+    const rows = gridLines.map(({ ln }, idx) => {
+      const rawCells      = _assignLineToGridCols(ln.items, grid.colXs);
+      const rawFonts      = _assignLineToGridColsFonts(ln.items, grid.colXs);
+      const activeDivider = _activeDividersForY(grid, ln.y);
+      const cellGroups    = _groupGridCellsWithSpans(rawCells, activeDivider);
+      const fontGroups    = _groupGridCellsWithSpans(rawFonts, activeDivider, (a, b) => a ?? b, undefined);
+      return cellGroups.map(({ text, span }, ci) => ({ text, span, bold: idx === 0, fontFace: fontGroups[ci]?.text }));
+    });
+    for (const { li } of gridLines) gridConsumedLines.add(li);
+    blocks.push({ type: 'table', rows, y: grid.y });
+  }
+
+  let pageBaselineX = 0;
+  {
+    const xFreq = new Map();
+    for (const ln of lines) {
+      const x = ln.items[0]?.x;
+      if (x === undefined) continue;
+      const rounded = Math.round(x);
+      xFreq.set(rounded, (xFreq.get(rounded) || 0) + 1);
+    }
+    let bestCount = 0;
+    for (const [x, count] of xFreq) if (count > bestCount) { bestCount = count; pageBaselineX = x; }
+  }
+
+  const _isBoldHeadingLine = (items) => {
+    if (!items.every(i => i.bold)) return false;
+    const text = items.map(i => i.str).join('');
+    if (MONEY_TOKEN_RE.test(text)) return false;
+    const len = text.replace(/\s+/g, '').length;
+    return len > 3 && len <= 100;
+  };
+
+  // Deliberately NOT porting _p2pBuildRegionShapes's gap-based visual-region
+  // detection here. That heuristic fits an absolute-positioned slide/page —
+  // an image crop and any nearby caption text can coexist as two separate
+  // overlaid shapes without looking wrong. In a flowing reading view the
+  // same gap would produce an image block AND the caption text rendering
+  // again as its own paragraph right next to it — confirmed via a real
+  // Playwright screenshot during this feature's own build: a small,
+  // low-value image crop sat directly above the identical caption text,
+  // and an ordinary bold-but-same-size sub-heading with generous spacing
+  // (common in real documents, not just this test fixture) produced a
+  // false-positive near-blank image block, since the heading-sized guard
+  // only protects LARGER-font headings, not bold same-size ones. A real
+  // diagram/photo simply has no picture in this v1 — its caption/surrounding
+  // text still reads fine, which is an honest, disclosed limitation rather
+  // than a broken-looking duplicate. The PUA-character guard above (for
+  // formula-heavy lines specifically) stays — narrower, precise, and
+  // verified not to have this failure mode.
+
+  let buffer = [];
+  const flush = () => {
+    if (!buffer.length) return;
+    if (buffer.length === 1) {
+      const raw = buffer[0].items.map(i => i.str).join('').trim();
+      const t   = _normWatermark(raw);
+      if (t === '' || repeatTextSet.has(t) || repeatPatternSet.has(_normDigits(t))) { buffer = []; return; }
+    }
+    const allItems = buffer.flatMap(ln => ln.items);
+    const allText  = allItems.map(i => i.str).join(' ').replace(/\s+/g, ' ').trim();
+    if (!allText) { buffer = []; return; }
+    const maxSize = Math.max(...allItems.map(i => i.fontSize));
+
+    let heading = false;
+    if (allText.length > 3) {
+      if (maxSize >= median * 1.3) heading = true;
+      else if (allText.length <= 100 && buffer.every(ln => _isBoldHeadingLine(ln.items))) heading = true;
+    }
+
+    blocks.push({
+      type: heading ? 'heading' : 'paragraph',
+      text: allText,
+      bold: allItems.every(i => i.bold),
+      italic: allItems.every(i => i.italic),
+      fontFace: allItems.find(i => i.fontFamily)?.fontFamily,
+      y: Math.max(...buffer.map(ln => ln.y)),
+    });
+    buffer = [];
+  };
+
+  for (let lineIdx = 0; lineIdx < lines.length; lineIdx++) {
+    const ln = lines[lineIdx];
+    if (gridConsumedLines.has(lineIdx)) continue;
+    const tbl = lineToTable.get(lineIdx);
+    if (tbl) {
+      flush();
+      if (lineIdx === tbl.startIdx) {
+        blocks.push({
+          type: 'table',
+          rows: tbl.rows.map((row, ri) => row.map((text, ci) => ({
+            text: text || '', span: 1, bold: false, fontFace: tbl.cellFonts?.[ri]?.[ci],
+          }))),
+          y: Math.max(...lines.slice(tbl.startIdx, tbl.endIdx + 1).map(l => l.y)),
+        });
+      }
+      continue;
+    }
+
+    const nearEdge = lineIdx < 3 || lineIdx >= lines.length - 3;
+    if (nearEdge) {
+      const raw = ln.items.map(i => i.str).join('').trim();
+      if (/^\d+$/.test(raw) || repeatPatternSet.has(_normDigits(_normWatermark(raw)))) continue;
+    }
+
+    const lnRawText = ln.items.map(i => i.str).join('').trim();
+
+    // PUA guard — a formula-heavy line can't be rendered as text at all.
+    // Flush whatever body text was buffered first, emit this line as its
+    // own image block (bbox = the line's own extent), then move on.
+    if (_isMostlyPUA(lnRawText)) {
+      flush();
+      const xs = ln.items.map(i => i.x);
+      const maxFont = Math.max(...ln.items.map(i => i.fontSize));
+      blocks.push({
+        type: 'image',
+        region: { x0: Math.min(...xs), x1: Math.max(...xs) + maxFont * 4, y0: ln.y + maxFont, y1: ln.y - maxFont * 0.3 },
+        y: ln.y,
+      });
+      continue;
+    }
+
+    const bulletMatch   = BULLET_RE.test(lnRawText);
+    const numberedMatch = !bulletMatch && NUMBERED_RE.test(lnRawText);
+    const letteredMatch = !bulletMatch && !numberedMatch && LETTERED_RE.test(lnRawText) &&
+      (ln.items[0]?.x ?? 0) > pageBaselineX + 10;
+
+    if (bulletMatch || letteredMatch || numberedMatch) {
+      flush();
+      // Numbered items keep their own marker text ("1.", "2.5.1.") — real
+      // sequence information a reading view shouldn't discard (unlike PPTX,
+      // there's no per-block auto-numbering container here to rebuild it
+      // from). Bullet/lettered markers carry no sequence meaning, so they're
+      // stripped and rendered via the list-item's own CSS bullet instead —
+      // same "lettered sub-items render as bullet-style" convention pdf2ppt
+      // already established.
+      const text = numberedMatch ? lnRawText.trim() : lnRawText.replace(bulletMatch ? BULLET_RE : LETTERED_RE, '').trim();
+      if (text) {
+        blocks.push({
+          type: 'list-item',
+          ordinal: numberedMatch ? 'number' : 'bullet',
+          text,
+          bold: ln.items.every(i => i.bold),
+          italic: ln.items.every(i => i.italic),
+          fontFace: ln.items.find(i => i.fontFamily)?.fontFamily,
+          y: ln.y,
+        });
+      }
+      continue;
+    }
+
+    if (buffer.length > 0) {
+      const lastLn      = buffer[buffer.length - 1];
+      const lastMaxFont = Math.max(...lastLn.items.map(i => i.fontSize));
+      const curMaxFont  = Math.max(...ln.items.map(i => i.fontSize));
+      const gap         = lastLn.y - ln.y;
+      const lastIsHead  = lastMaxFont >= median * 1.3 || _isBoldHeadingLine(lastLn.items);
+      const isHead      = curMaxFont  >= median * 1.3 || _isBoldHeadingLine(ln.items);
+      if (isHead || lastIsHead || gap > lastMaxFont * 2.0) flush();
+    }
+    buffer.push(ln);
+  }
+  flush();
+
+  // Reading order within a region is top-to-bottom by each block's own Y
+  // (grid-tables and the main line walk build blocks in different, already
+  // top-first passes — sorting once here by descending Y, PDF's own
+  // bottom-to-top axis, gives one final consistent order regardless of
+  // which pass produced each block).
+  blocks.sort((a, b) => b.y - a.y);
+  return blocks;
+}
+
+// Read-mode's outer dispatcher — same column/straddle-guard shape as
+// _p2pBuildSlideShapes, but concatenates each region's blocks in region
+// order (not absolute-position shapes) since a reading view has no
+// "canvas" to place shapes on, only a reading sequence.
+export function _rpBuildPageBlocks(page, median, repeatTextSet, repeatPatternSet) {
+  const { lines, pageW, pageH, borderGrids = [] } = page;
+  if (!lines.length) return { blocks: [], scanned: true };
+
+  const regions = pageW ? detectColumnRegions(lines, pageW) : null;
+  const splittable = regions && !borderGrids.some(g =>
+    regions.filter(r => g.x < r.right && (g.x + g.w) > r.left).length > 1
+  );
+
+  if (!splittable) {
+    if (regions) {
+      // A grid/table straddles a column boundary — can't split cleanly.
+      // Whole page becomes one image block rather than mangling it.
+      return { blocks: [{ type: 'image', region: { x0: 0, x1: pageW, y0: pageH, y1: 0 }, y: pageH }], scanned: false };
+    }
+    return { blocks: _rpBuildRegionBlocks(lines, borderGrids, { x0: 0, x1: pageW }, median, repeatTextSet, repeatPatternSet), scanned: false };
+  }
+
+  const ordered = pageIsRtl(lines) ? [...regions].reverse() : regions;
+  const blocks = [];
+  for (const region of ordered) {
+    const inRegion = (it) => !!it && it.x >= region.left && it.x < region.right;
+    const regionLines = lines
+      .map(ln => ({ y: ln.y, items: ln.items.filter(inRegion) }))
+      .filter(ln => ln.items.length);
+    const regionGrids = borderGrids.filter(g => g.x >= region.left && (g.x + g.w) <= region.right);
+    blocks.push(..._rpBuildRegionBlocks(regionLines, regionGrids, { x0: region.left, x1: region.right }, median, repeatTextSet, repeatPatternSet));
+  }
+  return { blocks, scanned: false };
 }
 
 async function _runPdf2Ppt(filesSnapshot, { dpi = 150, mode = 'image' } = {}) {

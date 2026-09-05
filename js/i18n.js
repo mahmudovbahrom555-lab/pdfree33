@@ -1144,6 +1144,19 @@ export const EN = {
   draw_add_text:               'Add text',
   draw_save_btn:               'Save',
   draw_add_btn:                'Add',
+
+  // ── Read PDF (reflow reading view) ────────────────────────────────────
+  read_loading:               'Extracting text…',
+  read_font_size:             'Text size',
+  read_no_text_title:         'No readable text found',
+  read_no_text_desc:          "This looks like a scanned document — there's no text layer to reflow. Run OCR first, then come back to read it.",
+  read_try_ocr:               'Try OCR',
+  read_error:                 "Couldn't read this PDF.",
+  read_password_title:        'Password protected',
+  read_password_retry:        'Incorrect password — try again.',
+  read_password_placeholder:  'Enter password…',
+  read_password_open:         'Open',
+  read_cancel:                'Cancel',
 };
 
 const L = { ...EN, ...((typeof window !== 'undefined' ? window.PDFREE_LOCALE : null) ?? {}) };

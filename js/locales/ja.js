@@ -40,6 +40,7 @@ window.PDFREE_LOCALE = {
     glossary:         ['用語集', '定義', 'PDF用語集', '用語をハイライト', '定義を追加'],
     docx2pdf:         ['word to pdf', 'docx to pdf', 'convert word to pdf', 'doc to pdf', 'docx converter', 'word converter'],
     pdf2pdfa:         ['pdf/a', 'アーカイブ', '長期保存', 'pdf/a確認', 'アーカイブ用pdf'],
+    read:             ['読む', '読書モード', 'スマホで読む', 'pdfをスマホで読む', '読みやすい表示', 'リフロー'],
   },
 
   // app
@@ -1116,4 +1117,17 @@ window.PDFREE_LOCALE = {
   draw_add_text:               'テキストを追加',
   draw_save_btn:               '保存',
   draw_add_btn:                '追加',
+
+  // -- Read PDF (reflow reading view) -- EN placeholder, backlog translation
+  read_loading:               'Extracting text...',
+  read_font_size:             'Text size',
+  read_no_text_title:         'No readable text found',
+  read_no_text_desc:          "This looks like a scanned document -- there's no text layer to reflow. Run OCR first, then come back to read it.",
+  read_try_ocr:               'Try OCR',
+  read_error:                 "Couldn't read this PDF.",
+  read_password_title:        'Password protected',
+  read_password_retry:        'Incorrect password -- try again.',
+  read_password_placeholder:  'Enter password...',
+  read_password_open:         'Open',
+  read_cancel:                'Cancel',
 };

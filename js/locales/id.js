@@ -38,6 +38,7 @@ window.PDFREE_LOCALE = {
     glossary:         ['glosarium', 'definisi', 'glosarium pdf', 'sorot istilah', 'tambah definisi'],
     docx2pdf:         ['word to pdf', 'docx to pdf', 'convert word to pdf', 'doc to pdf', 'docx converter', 'word converter'],
     pdf2pdfa:         ['pdf/a', 'pdfa', 'arsip', 'pengarsipan', 'periksa pdf/a', 'iso 19005', 'arsip jangka panjang'],
+    read:             ['baca', 'mode baca', 'baca di ponsel', 'baca pdf di hp', 'tampilan baca', 'susun ulang teks'],
   },
 
   // app
@@ -1114,4 +1115,17 @@ window.PDFREE_LOCALE = {
   draw_add_text:               'Tambah teks',
   draw_save_btn:               'Simpan',
   draw_add_btn:                'Tambah',
+
+  // -- Read PDF (reflow reading view) -- EN placeholder, backlog translation
+  read_loading:               'Extracting text...',
+  read_font_size:             'Text size',
+  read_no_text_title:         'No readable text found',
+  read_no_text_desc:          "This looks like a scanned document -- there's no text layer to reflow. Run OCR first, then come back to read it.",
+  read_try_ocr:               'Try OCR',
+  read_error:                 "Couldn't read this PDF.",
+  read_password_title:        'Password protected',
+  read_password_retry:        'Incorrect password -- try again.',
+  read_password_placeholder:  'Enter password...',
+  read_password_open:         'Open',
+  read_cancel:                'Cancel',
 };
