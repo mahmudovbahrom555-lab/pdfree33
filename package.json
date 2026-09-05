@@ -26,7 +26,7 @@
     "@eslint/js": "^10.0.1",
     "@xmldom/xmldom": "^0.9.8",
     "docx": "^8.5.0",
-    "eslint": "^10.4.0",
+    "eslint": "^10.9.1",
     "eslint-plugin-compat": "^7.0.2",
     "husky": "^9.1.7",
     "jszip": "^3.10.1",
