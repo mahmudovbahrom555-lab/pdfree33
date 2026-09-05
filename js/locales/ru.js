@@ -1128,4 +1128,8 @@ window.PDFREE_LOCALE = {
   read_password_placeholder:  'Enter password...',
   read_password_open:         'Open',
   read_cancel:                'Cancel',
+  read_reading_mode:          'Reading mode',
+  read_exit_reading_mode:     'Exit reading mode',
+  read_exit_hint_esc:         'Press Esc to exit reading mode',
+  read_exit_hint_tap:         'Tap the close button to exit reading mode',
 };

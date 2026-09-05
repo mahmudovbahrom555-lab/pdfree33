@@ -35,6 +35,22 @@ let _generation   = 0; // bumped on every new file load or close — lets an in-
 let _resolvePw    = null;
 let _fontScale    = 1.15; // starting size — deliberately larger than a normal paragraph default
 
+// ── Reading mode (distraction-free full-screen) ─────────────────────────
+// null | 'native' (real Fullscreen API) | 'pseudo' (same-page fixed-overlay
+// fallback for iOS Safari and any other context that denies fullscreen).
+// Single source of truth for whether reading mode is active AND which path,
+// doubling as a re-entrancy guard in _enterReadingMode.
+let _fsMode      = null;
+let _fsHintShown = false; // rate-limits the "press Esc / tap X" hint to once per session
+
+// Verbatim copies of js/theme.js's own MOON/SUN icons (same visual language)
+// — duplicated, not imported, because theme.js is a plain synchronous
+// <script> (deliberately not a module, to avoid flash-of-unstyled-content —
+// see that file's own header comment) and can't export anything.
+const _MOON = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+const _SUN  = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg>';
+const _EXPAND = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M16 3h3a2 2 0 0 1 2 2v3"/><path d="M8 21H5a2 2 0 0 1-2-2v-3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>';
+
 export function getReadParams() {
   return { hasFile: !!_file };
 }
@@ -46,6 +62,7 @@ export function getReadParams() {
 // which Read never uses. Bumping _generation is what actually makes the
 // in-flight _runRead() bail at its next checkpoint (see that function).
 export function cancelRead() {
+  _exitReadingMode();
   _generation++;
   hideCancelBtn();
   hideProgress();
@@ -56,6 +73,7 @@ export function cancelRead() {
 }
 
 export function hideReadOptions() {
+  _exitReadingMode();
   _generation++;
   if (_resolvePw) { _resolvePw(null); _resolvePw = null; }
   const el = id('readOptions');
@@ -69,6 +87,7 @@ export function hideReadOptions() {
 export async function initReadOptions(file) {
   const el = id('readOptions');
   if (!el) return;
+  _exitReadingMode(); // a replaced file's container is about to be wiped below
   el.style.display = '';
   _file      = file;
   const myGen = ++_generation; // toolRegistry may call initReadOptions again for a
@@ -93,6 +112,7 @@ export async function initReadOptions(file) {
     // (its own onCancel rejects with this exact message) — either way, not
     // a real error worth showing; leave whatever's already on screen.
     if (myGen !== _generation || err?.message === 'cancelled') return;
+    _exitReadingMode(); // reachable if page.render()/getPage() throws after _renderShell ran
     el.innerHTML = _errorHtml(err?.message);
   } finally {
     // Only the run that's still current tears down shared UI state — a
@@ -237,17 +257,31 @@ function _promptPassword(filename, reason, onSubmit, onCancel) {
 
 // ── Reading-view shell + controls ───────────────────────────────────────────
 
+// Recessed icon-button style shared by the reading-mode toggle in the
+// sticky header and the mini controls injected once reading mode is
+// active (_buildReadingModeChrome) — mirrors .theme-toggle (css/layout.css)
+// inline, matching this file's own all-inline-styles convention.
+const _ICON_BTN_STYLE = 'width:44px;height:44px;flex-shrink:0;padding:0;display:flex;' +
+  'align-items:center;justify-content:center;border:1px solid var(--border);' +
+  'border-radius:var(--radius-sm);background:var(--surface2);color:var(--text2);' +
+  'cursor:pointer;font-family:inherit;';
+
 function _renderShell(container) {
   container.innerHTML = `
-    <div id="readView" style="max-width:640px;margin:0 auto;">
-      <div style="position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:12px;
-        padding:10px 4px;margin-bottom:8px;background:var(--bg);border-bottom:1px solid var(--border);">
-        <label for="readFontSlider" style="font-size:12px;color:var(--text2);white-space:nowrap;">${esc(t('read_font_size'))}</label>
-        <input id="readFontSlider" type="range" min="0.85" max="2" step="0.05" value="${_fontScale}"
-          style="flex:1;min-height:44px;">
+    <div id="readView">
+      <div id="readColumn" style="max-width:640px;margin:0 auto;">
+        <div style="position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:12px;
+          padding:10px 4px;margin-bottom:8px;background:var(--bg);border-bottom:1px solid var(--border);">
+          <label for="readFontSlider" style="font-size:12px;color:var(--text2);white-space:nowrap;">${esc(t('read_font_size'))}</label>
+          <input id="readFontSlider" type="range" min="0.85" max="2" step="0.05" value="${_fontScale}"
+            style="flex:1;min-height:44px;">
+          <button id="readFsToggle" type="button" aria-pressed="false"
+            title="${esc(t('read_reading_mode'))}" aria-label="${esc(t('read_reading_mode'))}"
+            style="${_ICON_BTN_STYLE}">${_EXPAND}</button>
+        </div>
+        <div id="readContent" style="font-size:${_fontScale}rem;line-height:1.6;color:var(--text);
+          padding:4px 4px 40px;word-wrap:break-word;overflow-wrap:break-word;"></div>
       </div>
-      <div id="readContent" style="font-size:${_fontScale}rem;line-height:1.6;color:var(--text);
-        padding:4px 4px 40px;word-wrap:break-word;overflow-wrap:break-word;"></div>
     </div>`;
 
   container.querySelector('#readFontSlider').addEventListener('input', e => {
@@ -255,6 +289,167 @@ function _renderShell(container) {
     const contentEl = container.querySelector('#readContent');
     if (contentEl) contentEl.style.fontSize = `${_fontScale}rem`;
   });
+  container.querySelector('#readFsToggle').addEventListener('click', () => {
+    _enterReadingMode(container.querySelector('#readView'));
+  });
+}
+
+// ── Reading mode (distraction-free full screen) ─────────────────────────
+// Real Fullscreen API when it's available — this hides the BROWSER's own
+// chrome too (tabs/address bar), not just this site's nav/hero/footer —
+// falling back to a same-page fixed overlay ('pseudo') when it isn't: iOS
+// Safari never implements Element.requestFullscreen() at all, and some
+// embed contexts may deny it. Feature-detected via the actual outcome of
+// the request, never UA-sniffing.
+
+function _fsElement() {
+  return document.fullscreenElement || document.webkitFullscreenElement || null;
+}
+function _fsRequest(el) {
+  try { return (el.requestFullscreen || el.webkitRequestFullscreen)?.call(el); }
+  catch { return null; } // some sandboxed iframe contexts throw synchronously rather than reject
+}
+function _fsExit() {
+  try { return (document.exitFullscreen || document.webkitExitFullscreen)?.call(document); }
+  catch { return null; }
+}
+
+async function _enterReadingMode(view) {
+  if (_fsMode || !view) return; // already active, or the shell isn't rendered (shouldn't happen)
+  // Must be the very first thing that happens — Fullscreen API requires a
+  // real user gesture on the call stack, so nothing may be awaited before it.
+  const req = _fsRequest(view);
+  if (req && typeof req.then === 'function') {
+    try { await req; } catch { /* rejection just means we fall back below */ }
+  } else {
+    // No promise at all (old prefixed WebKit, or the API doesn't exist) —
+    // give the browser one tick to actually apply it before checking.
+    await new Promise(r => setTimeout(r, 0));
+  }
+  // Verify against real state rather than trusting a bare resolve — some
+  // prefixed implementations "succeed" without actually entering fullscreen.
+  _fsMode = (_fsElement() === view) ? 'native' : 'pseudo';
+  _fsHintShown = false;
+  _applyReadingModeStyles(view, _fsMode);
+  _buildReadingModeChrome(view);
+  document.addEventListener('keydown', _onReadingKeydown);
+  document.addEventListener('fullscreenchange', _onFullscreenChange);
+  document.addEventListener('webkitfullscreenchange', _onFullscreenChange);
+  view.querySelector('#readFsToggle')?.setAttribute('aria-pressed', 'true');
+}
+
+// Exactly the properties either mode can set — removed unconditionally on
+// exit via removeProperty (a no-op for ones that were never set), rather
+// than clobbering the element's style wholesale.
+const _RM_STYLE_PROPS = ['background', 'color', 'overflow-y', 'overscroll-behavior',
+  '-webkit-overflow-scrolling', 'padding', 'position', 'inset', 'z-index', 'padding-top'];
+
+function _applyReadingModeStyles(view, mode) {
+  // position/inset/width/height in native mode come from the browser's own
+  // `:fullscreen` UA-stylesheet rules — don't fight them here.
+  view.style.setProperty('background', 'var(--bg)');
+  view.style.setProperty('color', 'var(--text)');
+  view.style.setProperty('overflow-y', 'auto');
+  view.style.setProperty('overscroll-behavior', 'contain');
+  view.style.setProperty('-webkit-overflow-scrolling', 'touch');
+  view.style.setProperty('padding', '0 16px calc(24px + env(safe-area-inset-bottom))');
+  if (mode === 'pseudo') {
+    view.style.setProperty('position', 'fixed');
+    view.style.setProperty('inset', '0');
+    view.style.setProperty('z-index', '250'); // above nav(100)/#swUpdateBanner(200), below #toast(300)
+    view.style.setProperty('padding-top', 'env(safe-area-inset-top)');
+  }
+}
+
+function _buildReadingModeChrome(view) {
+  const bar = document.createElement('div');
+  bar.id = 'readFsBar';
+  bar.style.cssText = 'position:fixed;top:calc(10px + env(safe-area-inset-top));' +
+    'right:calc(10px + env(safe-area-inset-right));z-index:3;display:flex;gap:8px;';
+  bar.innerHTML = `
+    <button id="readFsTheme" type="button" style="${_ICON_BTN_STYLE}box-shadow:var(--shadow-lg);"></button>
+    <button id="readFsExit" type="button" aria-label="${esc(t('read_exit_reading_mode'))}"
+      title="${esc(t('read_exit_reading_mode'))}"
+      style="${_ICON_BTN_STYLE}box-shadow:var(--shadow-lg);font-size:18px;">&#10005;</button>`;
+  view.appendChild(bar);
+
+  const themeBtn = bar.querySelector('#readFsTheme');
+  _readSyncMiniTheme(themeBtn);
+  themeBtn.addEventListener('click', () => {
+    // Delegates to the real nav toggle (js/theme.js) instead of duplicating
+    // its toggle/localStorage logic — zero drift risk, this button only
+    // reflects the resulting state afterward.
+    document.getElementById('themeToggle')?.click();
+    _readSyncMiniTheme(themeBtn);
+  });
+  bar.querySelector('#readFsExit').addEventListener('click', _exitReadingMode);
+
+  // A separate hint element, NOT the shared #toast: a real fullscreened
+  // element is promoted to the browser's top layer, so #toast (outside it)
+  // would be invisible in 'native' mode — and re-parenting the shared node
+  // in and out risks destroying the site's only toast if the container
+  // gets wiped while it's adopted. `.toast` is already a plain, global CSS
+  // class (not scoped to the #toast id), so this gets identical styling
+  // for free without touching shared state.
+  const hint = document.createElement('div');
+  hint.id = 'readFsHint';
+  hint.className = 'toast';
+  view.appendChild(hint);
+}
+
+function _readIsDark() {
+  return document.documentElement.dataset.theme === 'dark';
+}
+function _readSyncMiniTheme(btn) {
+  if (!btn) return;
+  btn.innerHTML = _readIsDark() ? _SUN : _MOON;
+  btn.setAttribute('aria-label', _readIsDark() ? 'Switch to light mode' : 'Switch to dark mode');
+}
+
+function _onReadingKeydown(e) {
+  if (e.target?.id === 'readFontSlider') return; // arrow keys resize the font there, not exit
+  if (e.key === 'Escape') {
+    // Native mode: the browser already exits on its own (no action needed).
+    // Pseudo mode has no native Escape handling at all, so wire it here —
+    // otherwise a keyboard user would have zero keyboard way out.
+    if (_fsMode === 'pseudo') _exitReadingMode();
+    return;
+  }
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  if (['Shift', 'Control', 'Alt', 'Meta', 'CapsLock', 'Tab', 'F11'].includes(e.key)) return;
+  if (_fsHintShown) return; // once per session — a discoverability nudge, not a nag
+  _fsHintShown = true;
+  const hint = document.getElementById('readFsHint');
+  if (!hint) return;
+  hint.textContent = t(_fsMode === 'pseudo' ? 'read_exit_hint_tap' : 'read_exit_hint_esc');
+  hint.classList.add('show');
+  setTimeout(() => hint.classList.remove('show'), 3000);
+}
+
+function _onFullscreenChange() {
+  // Fires on native Escape, browser-UI exit, or the element leaving the
+  // DOM — any of which means reading mode is no longer really active.
+  if (_fsMode === 'native' && _fsElement() !== id('readView')) _exitReadingMode();
+}
+
+// The one teardown path — idempotent, called by the exit button, native
+// Escape (via _onFullscreenChange), pseudo-mode Escape, and defensively
+// from every place that's about to wipe #readOptions's content.
+function _exitReadingMode() {
+  if (!_fsMode) return;
+  const mode = _fsMode;
+  _fsMode = null; // null first so the fullscreenchange _fsExit() below triggers is a no-op
+  document.removeEventListener('keydown', _onReadingKeydown);
+  document.removeEventListener('fullscreenchange', _onFullscreenChange);
+  document.removeEventListener('webkitfullscreenchange', _onFullscreenChange);
+  document.getElementById('readFsBar')?.remove();
+  document.getElementById('readFsHint')?.remove();
+  const view = id('readView');
+  if (view) {
+    for (const prop of _RM_STYLE_PROPS) view.style.removeProperty(prop);
+    view.querySelector('#readFsToggle')?.setAttribute('aria-pressed', 'false');
+  }
+  if (mode === 'native' && _fsElement()) _fsExit()?.catch?.(() => {});
 }
 
 // ── Block → HTML ─────────────────────────────────────────────────────────
