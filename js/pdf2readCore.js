@@ -72,6 +72,62 @@ export const _normWatermark = t =>
 
 const _normDigits = t => t.replace(/\d+/g, '#');
 
+// Some legacy-authored PDFs embed a Cyrillic font with no proper ToUnicode
+// CMap; pdf.js then falls back to decoding its glyph bytes via
+// WinAnsiEncoding (~CP1252), but the font's bytes were actually authored to
+// be read as CP1251 (Windows Cyrillic) — producing accented-Latin garbage,
+// e.g. byte 0xDD comes out as 'Ý' where the font intended the Cyrillic
+// letter 'Э'. Verified against a real user-reported textbook: every
+// affected character reverse-decodes cleanly through CP1251. Table built by
+// computing, for every byte 0x80-0xFF, its CP1252 decoding (the garbled
+// char pdf.js actually emits) and its CP1251 decoding (the real intended
+// Cyrillic letter), keeping only entries where the two differ and CP1251
+// gives a genuine Cyrillic letter (U+0400-04FF) — real correctly-encoded
+// Cyrillic text is immune to this map by construction, since its codepoints
+// live outside this range entirely.
+const _CYR_MOJIBAKE_MAP = {
+  '¡': 'Ў', '¢': 'ў', '£': 'Ј', '¥': 'Ґ',
+  '¨': 'Ё', 'ª': 'Є', '¯': 'Ї', '²': 'І',
+  '³': 'і', '´': 'ґ', '¸': 'ё', 'º': 'є',
+  '¼': 'ј', '½': 'Ѕ', '¾': 'ѕ', '¿': 'ї',
+  'À': 'А', 'Á': 'Б', 'Â': 'В', 'Ã': 'Г',
+  'Ä': 'Д', 'Å': 'Е', 'Æ': 'Ж', 'Ç': 'З',
+  'È': 'И', 'É': 'Й', 'Ê': 'К', 'Ë': 'Л',
+  'Ì': 'М', 'Í': 'Н', 'Î': 'О', 'Ï': 'П',
+  'Ð': 'Р', 'Ñ': 'С', 'Ò': 'Т', 'Ó': 'У',
+  'Ô': 'Ф', 'Õ': 'Х', 'Ö': 'Ц', '×': 'Ч',
+  'Ø': 'Ш', 'Ù': 'Щ', 'Ú': 'Ъ', 'Û': 'Ы',
+  'Ü': 'Ь', 'Ý': 'Э', 'Þ': 'Ю', 'ß': 'Я',
+  'à': 'а', 'á': 'б', 'â': 'в', 'ã': 'г',
+  'ä': 'д', 'å': 'е', 'æ': 'ж', 'ç': 'з',
+  'è': 'и', 'é': 'й', 'ê': 'к', 'ë': 'л',
+  'ì': 'м', 'í': 'н', 'î': 'о', 'ï': 'п',
+  'ð': 'р', 'ñ': 'с', 'ò': 'т', 'ó': 'у',
+  'ô': 'ф', 'õ': 'х', 'ö': 'ц', '÷': 'ч',
+  'ø': 'ш', 'ù': 'щ', 'ú': 'ъ', 'û': 'ы',
+  'ü': 'ь', 'ý': 'э', 'þ': 'ю', 'ÿ': 'я',
+  'Œ': 'Њ', 'œ': 'њ', 'Š': 'Љ', 'š': 'љ',
+  'Ÿ': 'џ', 'Ž': 'Ћ', 'ž': 'ћ', 'ƒ': 'ѓ',
+  '€': 'Ђ',
+};
+
+// Applies the reverse-mapping unconditionally to one string — safe to call
+// on any text, since it only ever touches the specific Latin-1-supplement
+// codepoints above (real ASCII and real Cyrillic pass through untouched).
+// Callers are responsible for the document-wide gate that decides WHETHER
+// a given document should have this applied at all (see the Post-Pass-1
+// block in _p2wBuildPageData below) — this function has no gate of its own
+// because a per-call gate would need document-wide context it doesn't have.
+export function _fixCyrillicMojibake(str) {
+  let out = '', changed = false;
+  for (const ch of str) {
+    const mapped = _CYR_MOJIBAKE_MAP[ch];
+    if (mapped) { out += mapped; changed = true; }
+    else out += ch;
+  }
+  return changed ? out : str;
+}
+
 // rIC vs setTimeout(0): rIC yields at idle (better for the quiet case);
 // Node/older browsers fall back to setTimeout(0), which always yields.
 function _yieldToUI() {
@@ -623,6 +679,40 @@ export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCance
               .replace(/oâ/g, 'oʻ').replace(/Oâ/g, 'Oʻ')
               .replace(/gâ/g, 'gʻ').replace(/Gâ/g, 'Gʻ');
           }
+        }
+      }
+    }
+  }
+
+  // ── Post-Pass-1: CP1251-as-CP1252 Cyrillic mojibake correction ────────────
+  // Gated document-wide (same shape as the Uzbek pass above), not per-item:
+  // the correction itself (_fixCyrillicMojibake) is already safe to call on
+  // any string since it only touches a specific Latin-1-supplement codepoint
+  // range, so the only real risk is misfiring on genuine French/German/
+  // Spanish/Portuguese text that legitimately uses those same accented
+  // letters. Those languages mix accented letters into otherwise mostly-
+  // plain-ASCII running text (ratio well under half); a document where this
+  // bug is real instead has entire Cyrillic words rendered as a wall of
+  // accented-Latin substitutes, so the ratio sits far higher. Counting only
+  // ASCII-or-mapped letters (ignoring already-correct Cyrillic elsewhere in
+  // the same document, e.g. a differently-encoded heading) keeps the ratio
+  // from being diluted by text this pass has no opinion about either way.
+  {
+    let relevantLetters = 0, garbledLetters = 0;
+    for (const { lines } of pageData) {
+      for (const ln of lines) {
+        for (const item of ln.items) {
+          for (const ch of item.str) {
+            if (_CYR_MOJIBAKE_MAP[ch]) { garbledLetters++; relevantLetters++; }
+            else if (/[A-Za-z]/.test(ch)) relevantLetters++;
+          }
+        }
+      }
+    }
+    if (relevantLetters >= 20 && garbledLetters / relevantLetters > 0.5) {
+      for (const { lines } of pageData) {
+        for (const ln of lines) {
+          for (const item of ln.items) item.str = _fixCyrillicMojibake(item.str);
         }
       }
     }

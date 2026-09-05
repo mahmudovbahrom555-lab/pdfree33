@@ -30,7 +30,7 @@ global.Worker = class { postMessage(){} terminate(){} addEventListener(){} };
 const docx = await import('docx');
 global.window.docx = docx;
 
-const { _rpBuildPageBlocks, _normWatermark } = await import('../js/pdf2readCore.js');
+const { _rpBuildPageBlocks, _normWatermark, _fixCyrillicMojibake } = await import('../js/pdf2readCore.js');
 
 let passed = 0, failed = 0;
 async function test(name, fn) {
@@ -264,6 +264,28 @@ await test('the jitter-tolerant normalization does not over-suppress a genuinely
   const { blocks } = _rpBuildPageBlocks(mkPage(lines), 12, repeatTextSet, new Set());
   expect(blocks.length).toBe(1);
   expect(blocks[0].text).toBe('Chapter 3: Networking Basics');
+});
+
+console.log('\n_fixCyrillicMojibake — real user-reported CP1251-as-CP1252 textbook garbling (2026-09):');
+
+await test('reverses real reported names garbled through a CP1251 font decoded as CP1252', () => {
+  // Real report: a legitimate economics textbook ("iqtisodiy_bilim_asoslari_9_rus.pdf")
+  // rendered author names as "Ý. Ñàðèêîâ, Á. Õàéäàðîâ" instead of "Э. Сариков, Б. Хайдаров" —
+  // confirmed byte-level: this font's Cyrillic glyphs decode correctly via CP1251 but pdf.js
+  // falls back to WinAnsiEncoding (~CP1252) for it.
+  expect(_fixCyrillicMojibake('Ý. Ñàðèêîâ, Á. Õàéäàðîâ')).toBe('Э. Сариков, Б. Хайдаров');
+});
+
+await test('leaves plain ASCII/English text completely untouched', () => {
+  const s = 'Chapter 3: Networking Basics (RFC 791)';
+  expect(_fixCyrillicMojibake(s)).toBe(s);
+});
+
+await test('leaves already-correctly-encoded Cyrillic text untouched (different codepoints entirely)', () => {
+  // The same real document has SOME text (e.g. a heading in a different, properly-mapped
+  // font) that renders correctly already — this must never be double-processed/corrupted.
+  const s = 'ЭКОНОМИЧЕСКИХ';
+  expect(_fixCyrillicMojibake(s)).toBe(s);
 });
 
 console.log(`\n${'─'.repeat(50)}`);
