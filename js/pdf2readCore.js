@@ -46,8 +46,27 @@ import { BULLET_RE, NUMBERED_RE, LETTERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
 // not an oversight. If one of these ever needs a real bug fix, both copies
 // need it (js/processor.js's own copy, and this one).
 
-const _normWatermark = t =>
-  t.replace(/^(CamScanner)+$/i, 'CamScanner')
+// Repeated stamps/watermarks/footers inserted by an external tool (a
+// download-tracking site's own script, a scan/OCR pipeline, CamScanner)
+// often look byte-identical across pages to a human but aren't: (1) some
+// tracking stamps deliberately vary an invisible Unicode character per
+// occurrence as an anti-redistribution fingerprint, so exact-string
+// matching never sees them as "the same" text at all; (2) plain formatting
+// jitter (NBSP vs regular space, double- vs single-space, a differently-
+// composed accent) from a script re-rendering the same stamp text per page.
+// Both defeat the repeat-detection Set-based exact match below (and the
+// digit-pattern variant) unless stripped/normalized first. A real report:
+// a pirated textbook's per-page "downloaded from <site>" stamp rendered as
+// a heading on every single page instead of being suppressed — this was
+// the fix, verified to leave ordinary running text completely unaffected
+// (NFKC/whitespace-collapse are no-ops on already-clean text).
+const _INVISIBLE_RE = /[\u200B-\u200F\u202A-\u202E\u2060-\u2064\uFEFF\u00AD]/g;
+export const _normWatermark = t =>
+  t.normalize('NFKC')
+   .replace(_INVISIBLE_RE, '')
+   .replace(/\s+/g, ' ')
+   .trim()
+   .replace(/^(CamScanner)+$/i, 'CamScanner')
    .replace(/^[Cc][Ss]\]?$/, 'CamScanner')
    .replace(/^-$/, '');
 
@@ -242,14 +261,26 @@ function _rpBuildRegionBlocks(lines, borderGrids, xBounds, median, repeatTextSet
   // formula-heavy lines specifically) stays — narrower, precise, and
   // verified not to have this failure mode.
 
+  // A watermark/stamp line that happens to sit close enough to real body
+  // text (small Y-gap, same font size) merges into the SAME buffer as that
+  // real content per the paragraph-grouping loop below — so checking
+  // repeatTextSet only when the WHOLE buffer is a single isolated line
+  // (as this used to) misses it: the stamp leaks through joined onto real
+  // text as one paragraph. Filtering matching lines out of the buffer
+  // individually, regardless of how many other lines share it, catches
+  // both shapes with one check. Real report: a pirated textbook's per-page
+  // "downloaded from <site>" stamp.
+  const _isRepeatLine = (ln) => {
+    const raw = ln.items.map(i => i.str).join('').trim();
+    const t   = _normWatermark(raw);
+    return t === '' || repeatTextSet.has(t) || repeatPatternSet.has(_normDigits(t));
+  };
+
   let buffer = [];
   const flush = () => {
     if (!buffer.length) return;
-    if (buffer.length === 1) {
-      const raw = buffer[0].items.map(i => i.str).join('').trim();
-      const t   = _normWatermark(raw);
-      if (t === '' || repeatTextSet.has(t) || repeatPatternSet.has(_normDigits(t))) { buffer = []; return; }
-    }
+    buffer = buffer.filter(ln => !_isRepeatLine(ln));
+    if (!buffer.length) return;
     const allItems = buffer.flatMap(ln => ln.items);
     const allText  = allItems.map(i => i.str).join(' ').replace(/\s+/g, ' ').trim();
     if (!allText) { buffer = []; return; }
@@ -470,7 +501,7 @@ export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCance
       return name;
     };
     const allMapped = content.items
-      .filter(item => 'str' in item && item.str.split(' ').join('').trim())
+      .filter(item => 'str' in item && item.str.split('\0').join('').trim())
       .map(item => {
         const fontSize  = (item.height > 0 ? item.height : Math.abs(item.transform[3])) || 10;
         const style     = content.styles[item.fontName] || {};
@@ -483,7 +514,7 @@ export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCance
         // LTR words (plain reverse() would corrupt e.g. "(Arabic)" → "(cibarA)").
         // Strip NUL bytes produced by fonts without ToUnicode CMap — they corrupt DOCX XML.
         const str = ((item.dir === 'rtl') ? _visualRTLToLogical(item.str) : item.str)
-          .split(' ').join('');
+          .split('\0').join('');
         return {
           str,
           x:        item.transform[4],

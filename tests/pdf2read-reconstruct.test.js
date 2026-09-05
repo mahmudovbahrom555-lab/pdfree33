@@ -30,7 +30,7 @@ global.Worker = class { postMessage(){} terminate(){} addEventListener(){} };
 const docx = await import('docx');
 global.window.docx = docx;
 
-const { _rpBuildPageBlocks } = await import('../js/pdf2readCore.js');
+const { _rpBuildPageBlocks, _normWatermark } = await import('../js/pdf2readCore.js');
 
 let passed = 0, failed = 0;
 async function test(name, fn) {
@@ -214,6 +214,56 @@ await test('a line made mostly of PUA glyphs (LaTeX/math-font symbols with no re
   expect(!!imageBlock).toBe(true);
   const anyParagraphHasGarbage = blocks.some(b => b.type === 'paragraph' && b.text.includes(puaChar));
   expect(anyParagraphHasGarbage).toBe(false);
+});
+
+console.log('\n_rpBuildPageBlocks — repeat-text suppression survives per-occurrence jitter (real report, 2026-09):');
+
+await test('a watermark line with a zero-width-space inserted differently than the canonical repeatTextSet entry is still suppressed', () => {
+  // Real report: a pirated textbook's per-page "downloaded from <site>"
+  // stamp rendered as a heading on EVERY page instead of being suppressed.
+  // Root cause: some watermarking scripts insert an invisible Unicode
+  // character (here simulated with a zero-width space, U+200B) at a
+  // different position per occurrence — a plausible anti-redistribution
+  // fingerprinting technique — which used to defeat the exact-string Set
+  // match in _normWatermark entirely, since no two occurrences were
+  // byte-identical. The canonical entry in repeatTextSet (as if built by
+  // _p2wBuildPageData from a DIFFERENT page's own jittered occurrence)
+  // has the invisible character in yet another position.
+  const zwsp = String.fromCharCode(0x200B);
+  const canonicalOccurrence = `скачано${zwsp} с сайта www.idum.uz`;
+  const thisPagesOccurrence = `скачано с${zwsp} сайта www.idum.uz`;
+  // Matches how _p2wBuildPageData really populates repeatTextSet — with
+  // ALREADY-NORMALIZED keys (it calls _normWatermark before adding), never
+  // a raw, un-normalized occurrence.
+  const repeatTextSet = new Set([_normWatermark(canonicalOccurrence)]);
+
+  const lines = [
+    mkLine(mkItem(thisPagesOccurrence, 50, 12), 700),
+    mkLine(mkItem('Real chapter content that must still render normally.', 50, 12), 680),
+  ];
+  const { blocks } = _rpBuildPageBlocks(mkPage(lines), 12, repeatTextSet, new Set());
+  const stampLeaked = blocks.some(b => b.text?.includes('idum.uz'));
+  expect(stampLeaked).toBe(false);
+  expect(blocks.length).toBe(1);
+  expect(blocks[0].text).toBe('Real chapter content that must still render normally.');
+});
+
+await test('a watermark line with ordinary double-space jitter (no invisible chars) is still suppressed', () => {
+  const canonical = 'downloaded from example.com';
+  const thisPagesOccurrence = 'downloaded  from   example.com'; // extra spaces
+  const repeatTextSet = new Set([canonical]);
+
+  const lines = [mkLine(mkItem(thisPagesOccurrence, 50, 12), 700)];
+  const { blocks } = _rpBuildPageBlocks(mkPage(lines), 12, repeatTextSet, new Set());
+  expect(blocks.length).toBe(0);
+});
+
+await test('the jitter-tolerant normalization does not over-suppress a genuinely different, non-repeated heading', () => {
+  const repeatTextSet = new Set(['downloaded from example.com']);
+  const lines = [mkLine(mkItem('Chapter 3: Networking Basics', 50, 18), 700)];
+  const { blocks } = _rpBuildPageBlocks(mkPage(lines), 12, repeatTextSet, new Set());
+  expect(blocks.length).toBe(1);
+  expect(blocks[0].text).toBe('Chapter 3: Networking Basics');
 });
 
 console.log(`\n${'─'.repeat(50)}`);
