@@ -8,6 +8,8 @@
 
 [pdfree.io](https://pdfree.io) — merge, split, compress, convert, and 25+ other PDF operations, processed 100% client-side with WebAssembly and Web Workers. No file is ever uploaded to a server: open the Network tab while using any tool and there's nothing to see. No account, no daily limits, no subscription, no ads-driven upsell — free forever.
 
+![Merging two PDFs on pdfree.io — drop files, click merge, done in under a second, nothing uploaded](.github/assets/demo.gif)
+
 ## Why PDFree
 
 - **Nothing leaves your device.** Every tool runs in-browser via `pdf-lib`/`pdf.js`/WebAssembly inside a Web Worker. There is no upload endpoint to send a file to, by construction — not "we delete it after," genuinely never transmitted.
