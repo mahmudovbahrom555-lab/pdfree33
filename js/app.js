@@ -29,7 +29,7 @@ import { doProcess, isProcessing,
          getProcessStartMs }                      from './processor.js';
 import { hideAllToolOptions, initToolOptions,
          collectToolParams, notifyToolSuccess,
-         getPresetFilter }                        from './toolRegistry.js';
+         getPresetFilter, getToolDescriptor }      from './toolRegistry.js';
 import { savePreset } from './presets.js';
 import { updateMergeDefaultFilename } from './toolRegistrations.js';
 import { renderWorkerScanReport }               from './compressUI.js';
@@ -651,6 +651,12 @@ function initEvents() {
   const cancelBtn = id('cancelBtn');
   if (cancelBtn) cancelBtn.addEventListener('click', () => {
     trackToolCancel(currentTool);
+    // A self-managed tool (e.g. Read) runs its own pipeline outside
+    // doProcess()/js/worker.js — cancelProcess() only knows how to stop
+    // that shared worker, so it can't cancel one of these. Use the tool's
+    // own `cancel` registry hook when it declares one (see toolRegistry.js).
+    const ownCancel = getToolDescriptor(currentTool)?.cancel;
+    if (ownCancel) { ownCancel(); return; }
     cancelProcess(currentTool);
   });
 

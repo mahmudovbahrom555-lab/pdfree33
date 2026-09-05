@@ -18,6 +18,15 @@
 //    // UI lifecycle
 //    init?:      (file|files) => Promise<void>   — called when files added
 //    hide?:      () => void                      — called on tool switch / reset
+//    cancel?:    () => void                      — called when #cancelBtn is clicked
+//               WHILE this tool is active. Only needed by self-managed tools
+//               (SELF_MANAGED_TOOLS in app.js) that run their own async
+//               pipeline outside doProcess()/js/worker.js — cancelProcess()
+//               in processor.js only knows how to stop that shared worker,
+//               so it can't cancel a self-managed tool's own in-flight run.
+//               Omit this and app.js's shared handler falls back to
+//               cancelProcess(currentTool) — the right default for every
+//               tool that DOES go through doProcess().
 //    getParams?: () => object                    — called before doProcess
 //    validate?:  (params) => string|null         — error message or null if ok
 //    presetFilter?: (params) => object|null      — "Remember my settings" support.

@@ -22,12 +22,16 @@ import { id, esc } from './utils.js';
 import { _p2pCropCanvasRegion, _setProcessingFlag } from './processor.js';
 import { _p2wBuildPageData, _rpBuildPageBlocks } from './pdf2readCore.js';
 import { t } from './i18n.js';
-import { setProgress, hideProgress } from './ui.js';
+import { setProgress, hideProgress, showCancelBtn, hideCancelBtn, showToast } from './ui.js';
 
 const RENDER_SCALE = 1.5; // matches compareUI's own canvas render scale
 
 let _file        = null;
-let _cancelled    = false;
+let _generation   = 0; // bumped on every new file load or close — lets an in-flight
+                        // run (still awaiting mid-pipeline) detect it's been superseded
+                        // and bail instead of racing its results into the shared
+                        // #readOptions container on top of a newer file. Same pattern
+                        // already used by ocrUI.js/fillUI.js for the same real bug class.
 let _resolvePw    = null;
 let _fontScale    = 1.15; // starting size — deliberately larger than a normal paragraph default
 
@@ -35,8 +39,24 @@ export function getReadParams() {
   return { hasFile: !!_file };
 }
 
+// Wired as this tool's `cancel` registry hook (see toolRegistry.js's own
+// comment on that field) — app.js's shared #cancelBtn click handler calls
+// this INSTEAD of cancelProcess() while Read is the active tool, since
+// cancelProcess() only knows how to stop the shared js/worker.js pipeline,
+// which Read never uses. Bumping _generation is what actually makes the
+// in-flight _runRead() bail at its next checkpoint (see that function).
+export function cancelRead() {
+  _generation++;
+  hideCancelBtn();
+  hideProgress();
+  _setProcessingFlag(false);
+  showToast(t('cancelled'));
+  const el = id('readOptions');
+  if (el) el.innerHTML = _cancelledHtml();
+}
+
 export function hideReadOptions() {
-  _cancelled = true;
+  _generation++;
   if (_resolvePw) { _resolvePw(null); _resolvePw = null; }
   const el = id('readOptions');
   if (el) { el.style.display = 'none'; el.innerHTML = ''; }
@@ -51,25 +71,45 @@ export async function initReadOptions(file) {
   if (!el) return;
   el.style.display = '';
   _file      = file;
-  _cancelled = false;
+  const myGen = ++_generation; // toolRegistry may call initReadOptions again for a
+                                // replaced file without ever calling hideReadOptions
+                                // first — this generation bump is what actually
+                                // invalidates the still-running previous call.
 
   const btn = id('mergeBtn');
   if (btn) btn.style.display = 'none';
 
   el.innerHTML = _loadingHtml();
+  // Spans the WHOLE pipeline (pdf load + extraction + per-page render loop),
+  // not just the extraction step — cancelRead() and this tool's `cancel`
+  // registry hook both rely on isProcessing/#cancelBtn being accurate for
+  // as long as _runRead() can still be usefully interrupted.
+  _setProcessingFlag(true);
+  showCancelBtn();
   try {
-    await _runRead(el);
+    await _runRead(el, myGen);
   } catch (err) {
-    if (_cancelled) return;
+    // Superseded by a newer run, or the user dismissed the password prompt
+    // (its own onCancel rejects with this exact message) — either way, not
+    // a real error worth showing; leave whatever's already on screen.
+    if (myGen !== _generation || err?.message === 'cancelled') return;
     el.innerHTML = _errorHtml(err?.message);
+  } finally {
+    // Only the run that's still current tears down shared UI state — a
+    // superseded run's finally must not hide the cancel button / flip
+    // isProcessing off out from under the newer run that replaced it.
+    if (myGen === _generation) {
+      _setProcessingFlag(false);
+      hideCancelBtn();
+    }
   }
 }
 
 // ── Main pipeline ────────────────────────────────────────────────────────
 
-async function _runRead(container) {
+async function _runRead(container, myGen) {
   await loadPdfJs();
-  if (_cancelled) return;
+  if (myGen !== _generation) return;
 
   const buf = await _file.arrayBuffer();
   const pdfDoc = await new Promise((resolve, reject) => {
@@ -81,33 +121,27 @@ async function _runRead(container) {
       onPassword: (updateCallback, reason) => {
         _promptPassword(_file?.name || '', reason,
           pw => updateCallback(pw),
-          ()  => { _cancelled = true; task.destroy(); reject(new Error('cancelled')); }
+          ()  => { task.destroy(); reject(new Error('cancelled')); }
         );
       },
     });
     task.promise.then(resolve).catch(err => {
-      if (_cancelled) { reject(new Error('cancelled')); return; }
+      if (myGen !== _generation) { reject(new Error('cancelled')); return; }
       reject(err);
     });
   });
-  if (_cancelled) return;
+  if (myGen !== _generation) return;
 
-  // _setProcessingFlag keeps the site-wide isProcessing state honest for
-  // anything ELSE that reads it (this tool never calls doProcess(), so
-  // nothing else would flip it) — _p2wBuildPageData's own cancellation now
-  // comes from the injected isCancelled callback below, wired to this
-  // module's own local _cancelled flag, not the global.
-  _setProcessingFlag(true);
+  // isProcessing/#cancelBtn are already set for the whole pipeline by the
+  // caller (initReadOptions) — _p2wBuildPageData's own cancellation comes
+  // from the injected isCancelled callback below, wired to this run's own
+  // captured generation.
   let pageData, median, repeatTextSet, repeatPatternSet;
-  try {
-    ({ pageData, median, repeatTextSet, repeatPatternSet } = await _p2wBuildPageData(pdfDoc, {
-      onProgress:  (pct, label) => setProgress(pct, label),
-      isCancelled: () => _cancelled,
-    }));
-  } finally {
-    _setProcessingFlag(false);
-  }
-  if (_cancelled) return;
+  ({ pageData, median, repeatTextSet, repeatPatternSet } = await _p2wBuildPageData(pdfDoc, {
+    onProgress:  (pct, label) => { if (myGen === _generation) setProgress(pct, label); },
+    isCancelled: () => myGen !== _generation,
+  }));
+  if (myGen !== _generation) { pdfDoc.destroy(); return; }
 
   const perPage = pageData.map(page => _rpBuildPageBlocks(page, median, repeatTextSet, repeatPatternSet));
   const anyText = perPage.some(p => p.blocks.length > 0);
@@ -123,7 +157,7 @@ async function _runRead(container) {
   const contentEl = container.querySelector('#readContent');
 
   for (let i = 0; i < perPage.length; i++) {
-    if (_cancelled) { pdfDoc.destroy(); return; }
+    if (myGen !== _generation) { pdfDoc.destroy(); return; }
     const { blocks } = perPage[i];
     if (!blocks.length) continue;
 
@@ -133,11 +167,13 @@ async function _runRead(container) {
     let canvas = null, pageHeightPt = pageData[i].pageH;
     if (blocks.some(b => b.type === 'image')) {
       const page = await pdfDoc.getPage(i + 1);
+      if (myGen !== _generation) { pdfDoc.destroy(); return; } // getPage() is its own await gap
       const vp   = page.getViewport({ scale: RENDER_SCALE });
       canvas = document.createElement('canvas');
       canvas.width  = Math.round(vp.width);
       canvas.height = Math.round(vp.height);
       await page.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
+      if (myGen !== _generation) { pdfDoc.destroy(); return; } // render() too — don't write a stale run's canvas into the container below
     }
 
     for (const block of blocks) {
@@ -173,8 +209,8 @@ function _promptPassword(filename, reason, onSubmit, onCancel) {
       <p style="margin:0 0 4px;font-size:15px;font-weight:700;color:var(--text);">${esc(t('read_password_title'))}</p>
       <p style="margin:0 0 16px;font-size:12px;color:var(--text2);word-break:break-all;">${esc(shortName)}</p>
       ${isRetry ? `
-        <div style="margin:0 0 14px;padding:8px 10px;background:#fef2f2;
-          border:1px solid #fecaca;border-radius:6px;font-size:13px;color:#dc2626;">
+        <div style="margin:0 0 14px;padding:8px 10px;background:var(--red-light,#fdecea);
+          border:1px solid var(--red,#c0392b);border-radius:6px;font-size:13px;color:var(--red,#c0392b);">
           ${esc(t('read_password_retry'))}
         </div>` : ''}
       <input id="readPwInput" type="password" placeholder="${esc(t('read_password_placeholder'))}" autocomplete="current-password"
@@ -295,4 +331,13 @@ function _errorHtml(msg) {
     background:var(--surface);font-size:13px;color:var(--text2);">
     ${esc(t('read_error'))}${msg ? `<br><span style="color:var(--text3);font-size:12px;">${esc(msg)}</span>` : ''}
   </div>`;
+}
+
+function _cancelledHtml() {
+  // Reuses the existing 'cancelled' key (already shown as a toast
+  // site-wide by processor.js's own cancelProcess()) rather than adding a
+  // new i18n key that would need translating across all 14 locales for
+  // a one-line message.
+  return `<div style="padding:14px 16px;border:1px solid var(--border);border-radius:10px;
+    background:var(--surface);font-size:13px;color:var(--text2);">${esc(t('cancelled'))}</div>`;
 }

@@ -78,7 +78,7 @@ import { initCompareOptions, hideCompareOptions,
          getCompareParams }               from './compareUI.js';
 import { initPdf2PdfaOptions, hidePdf2PdfaOptions } from './pdf2pdfaUI.js';
 import { initReadOptions, hideReadOptions,
-         getReadParams }                    from './readUI.js';
+         cancelRead, getReadParams }         from './readUI.js';
 
 // ── Merge filename ─────────────────────────────────────────────
 
@@ -675,6 +675,7 @@ registerTool('compare', {
 registerTool('read', {
   init:      initReadOptions,
   hide:      hideReadOptions,
+  cancel:    cancelRead,
   getParams: getReadParams,
   // init() only ever runs once a file is already selected, and doProcess()
   // is never called for a self-managed tool — there's no reachable invalid
