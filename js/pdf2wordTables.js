@@ -159,7 +159,9 @@ export function detectTables(lines, { debug = false } = {}) {
     const rowCount = effectiveLines.length;
     if (rowCount >= MIN_ROWS) {
       const colBounds  = _detectColumnBoundaries(effectiveLines, COL_TOLERANCE);
-      const rows       = effectiveLines.map(ln => _assignToCells(ln.items, colBounds));
+      const perLine    = effectiveLines.map(ln => _assignToCellsWithFonts(ln.items, colBounds));
+      const rows       = perLine.map(r => r.texts);
+      const cellFonts  = perLine.map(r => r.fonts);
 
       // Stub rows lower fillScore — compensate by boosting alignScore weight
       // when the table is mostly empty (template form pattern).
@@ -171,6 +173,10 @@ export function detectTables(lines, { debug = false } = {}) {
           startIdx:   i,
           endIdx:     j - 1,    // inclusive
           rows,
+          cellFonts,  // parallel to rows — cellFonts[r][c] is item.fontFamily or undefined.
+                      // Purely additive: pdf2word/pdf2excel/pdf2md only ever read `rows`,
+                      // so this is inert for them. Consumed by pdf2ppt for per-cell font
+                      // preservation in reconstructed PPTX tables.
           colCount:   colBounds.length,
           alignScore: scores.alignScore,
           fillScore:  scores.fillScore,
@@ -334,10 +340,14 @@ function _detectColumnBoundaries(lines, tolerance) {
 
 /**
  * Assign each text item to the nearest column by X-distance to column center.
- * Returns a string[] with one entry per column (concatenated text in cell).
+ * Returns { texts, fonts }: texts is a string[] (concatenated text per cell),
+ * fonts is a parallel (string|undefined)[] — the first resolved fontFamily
+ * seen among the items assigned to that cell, or undefined if none carry one
+ * (plain-text extraction paths that never set item.fontFamily at all).
  */
-function _assignToCells(items, colBounds) {
-  const cells = colBounds.map(() => []);
+function _assignToCellsWithFonts(items, colBounds) {
+  const texts = colBounds.map(() => []);
+  const fonts = colBounds.map(() => undefined);
 
   for (const item of items) {
     let bestCol = 0, bestDist = Infinity;
@@ -345,10 +355,11 @@ function _assignToCells(items, colBounds) {
       const d = Math.abs(item.x - colBounds[c].center);
       if (d < bestDist) { bestDist = d; bestCol = c; }
     }
-    cells[bestCol].push(item.str);
+    texts[bestCol].push(item.str);
+    if (fonts[bestCol] === undefined && item.fontFamily) fonts[bestCol] = item.fontFamily;
   }
 
-  return cells.map(parts => parts.join(' ').trim());
+  return { texts: texts.map(parts => parts.join(' ').trim()), fonts };
 }
 
 // ── Confidence scoring ────────────────────────────────────────────────────────

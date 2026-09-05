@@ -142,20 +142,27 @@ await test('a real label|value table (no visible border) produces a tableShapes 
   if (!textShapes.some(s => s.runs[0].text === 'Prepared by the finance team.')) throw new Error('the paragraph below the table should still be a real text shape');
 });
 
-await test('a text-detected table whose cells carry a resolved fontFamily propagates it table-wide as fontFace (competitor-verified gap, iLovePDF preserves per-cell font, pdfree previously did not)', () => {
+await test('a text-detected table whose cells carry a resolved fontFamily propagates it PER-CELL as fontFace (competitor-verified gap, iLovePDF preserves per-cell font, pdfree previously did not)', () => {
+  // Column 1 (labels) is Courier New, column 2 (values) is Times New Roman —
+  // deliberately DIFFERENT per column, to prove this is real per-cell
+  // attribution and not just one font copied across the whole table.
   const labels = ['Revenue', 'Cost of goods', 'Gross profit', 'Net income'];
   const values = ['$482,000', '$210,500', '$271,500', '$173,200'];
   const lines = [
     mkLine(mkItem('Financial Summary', 50, 16), 750),
     ...labels.map((label, i) => mkLine([
-      mkItem(label, 50, 11, { fontFamily: 'Times New Roman' }),
+      mkItem(label, 50, 11, { fontFamily: 'Courier New' }),
       mkItem(values[i], 300, 11, { fontFamily: 'Times New Roman' }),
     ], 700 - i * 16)),
     mkLine(mkItem('Prepared by the finance team.', 50, 12), 600),
   ];
   const { tableShapes } = _p2pBuildSlideShapes(mkPage(lines), 12, new Set(), new Set());
   expect(tableShapes.length).toBe(1);
-  expect(tableShapes[0].fontFace).toBe('Times New Roman');
+  const rows = tableShapes[0].rows;
+  expect(rows[0][0].fontFace).toBe('Courier New');
+  expect(rows[0][1].fontFace).toBe('Times New Roman');
+  expect(rows[3][0].fontFace).toBe('Courier New');
+  expect(rows[3][1].fontFace).toBe('Times New Roman');
 });
 
 await test('a border-grid row with a missing internal divider produces a real colspan cell, unmerged rows stay separate', () => {
@@ -196,10 +203,13 @@ await test('a border-grid row with a missing internal divider produces a real co
   if (rows[2].some(c => c.span > 1)) throw new Error('row 3 has no merge — every cell should have span 1');
 });
 
-await test('a border-grid table whose lines carry a resolved fontFamily propagates it table-wide as fontFace', () => {
+await test('a border-grid table whose lines carry a resolved fontFamily propagates it PER-CELL as fontFace', () => {
+  // Column 1 is Courier New, column 3 is Times New Roman, column 2 has no
+  // resolved font at all — proves per-cell attribution (not table-wide) and
+  // that an unresolved cell leaves fontFace unset rather than guessing.
   const lines = [
-    mkLine([mkItem('Header', 80, 11, { fontFamily: 'Courier New' }), mkItem('Q1', 220, 11, { fontFamily: 'Courier New' }), mkItem('Q2', 380, 11, { fontFamily: 'Courier New' })], 700),
-    mkLine([mkItem('Row2A', 80, 11, { fontFamily: 'Courier New' }), mkItem('Row2B', 220, 11, { fontFamily: 'Courier New' }), mkItem('Row2C', 380, 11, { fontFamily: 'Courier New' })], 680),
+    mkLine([mkItem('Header', 80, 11, { fontFamily: 'Courier New' }), mkItem('Q1', 220, 11), mkItem('Q2', 380, 11, { fontFamily: 'Times New Roman' })], 700),
+    mkLine([mkItem('Row2A', 80, 11, { fontFamily: 'Courier New' }), mkItem('Row2B', 220, 11), mkItem('Row2C', 380, 11, { fontFamily: 'Times New Roman' })], 680),
   ];
   const grid = {
     x: 60, y: 670, w: 400, h: 40, colCount: 3, rowCount: 2,
@@ -212,7 +222,12 @@ await test('a border-grid table whose lines carry a resolved fontFamily propagat
   };
   const { tableShapes } = _p2pBuildSlideShapes(mkPage(lines, 792, 612, [grid]), 11, new Set(), new Set());
   expect(tableShapes.length).toBe(1);
-  expect(tableShapes[0].fontFace).toBe('Courier New');
+  const rows = tableShapes[0].rows;
+  expect(rows[0][0].fontFace).toBe('Courier New');
+  expect(rows[0][1].fontFace).toBe(undefined);
+  expect(rows[0][2].fontFace).toBe('Times New Roman');
+  expect(rows[1][0].fontFace).toBe('Courier New');
+  expect(rows[1][2].fontFace).toBe('Times New Roman');
 });
 
 console.log('\n_p2pBuildSlideShapes — scanned pages fall back per the standing scope:');

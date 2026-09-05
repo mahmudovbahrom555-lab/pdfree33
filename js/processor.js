@@ -2854,20 +2854,14 @@ function _p2pBuildRegionShapes(lines, borderGrids, xBounds, median, repeatTextSe
 
     const rows = gridLines.map(({ ln }, idx) => {
       const rawCells      = _assignLineToGridCols(ln.items, grid.colXs);
+      const rawFonts      = _assignLineToGridColsFonts(ln.items, grid.colXs);
       const activeDivider = _activeDividersForY(grid, ln.y);
       const cellGroups    = _groupGridCellsWithSpans(rawCells, activeDivider);
-      return cellGroups.map(({ text, span }) => ({ text, span, bold: idx === 0 }));
+      const fontGroups    = _groupGridCellsWithSpans(rawFonts, activeDivider, (a, b) => a ?? b, undefined);
+      return cellGroups.map(({ text, span }, ci) => ({ text, span, bold: idx === 0, fontFace: fontGroups[ci]?.text }));
     });
     for (const { li } of gridLines) gridConsumedLines.add(li);
-
-    // Table-wide (not per-cell) font preservation — competitor-verified:
-    // iLovePDF's own real table output preserves the source font at the
-    // individual-cell level; approximated here as one shared font for the
-    // whole table (the majority real-world case — most tables use one
-    // consistent typeface throughout) rather than per-cell, which would
-    // need column-bound tracking this grid path doesn't otherwise need.
-    const fontFace = gridLines.flatMap(({ ln }) => ln.items).find(i => i.fontFamily)?.fontFamily;
-    tableShapes.push({ x0: grid.x, x1: grid.x + grid.w, y0: grid.y + grid.h, y1: grid.y, rows, fontFace });
+    tableShapes.push({ x0: grid.x, x1: grid.x + grid.w, y0: grid.y + grid.h, y1: grid.y, rows });
   }
 
   // Baseline left margin — same concept _processLines (pdf2word) already
@@ -2981,17 +2975,16 @@ function _p2pBuildRegionShapes(lines, borderGrids, xBounds, median, repeatTextSe
       flush();
       if (lineIdx === tbl.startIdx) {
         const tblLines = lines.slice(tbl.startIdx, tbl.endIdx + 1);
-        // Table-wide font preservation — see the grid-table path's own
-        // comment above for why this is one shared font per table, not
-        // per-cell (detectTables()'s rows are already plain strings with
-        // no column-bound tracking to attribute a font per cell against).
-        const fontFace = tblLines.flatMap(l => l.items).find(i => i.fontFamily)?.fontFamily;
+        // Per-cell font preservation, sourced from detectTables()'s own
+        // parallel cellFonts[r][c] (matches competitor iLovePDF, whose real
+        // TABLE shapes preserve font at the individual-cell-run level).
         tableShapes.push({
           x0: xBounds.x0, x1: xBounds.x1,
           y0: Math.max(...tblLines.map(l => l.y)) + median,
           y1: Math.min(...tblLines.map(l => l.y)) - median * 0.3,
-          rows: tbl.rows.map(row => row.map(text => ({ text: text || '', span: 1, bold: false }))),
-          fontFace,
+          rows: tbl.rows.map((row, ri) => row.map((text, ci) => ({
+            text: text || '', span: 1, bold: false, fontFace: tbl.cellFonts?.[ri]?.[ci],
+          }))),
         });
       }
       continue;
@@ -3351,7 +3344,7 @@ async function _runPdf2Ppt(filesSnapshot, { dpi = 150, mode = 'image' } = {}) {
               bold:     cell.bold,
               fontSize,
               colspan:  cell.span > 1 ? cell.span : undefined,
-              ...(tableShape.fontFace ? { fontFace: tableShape.fontFace } : {}),
+              ...(cell.fontFace ? { fontFace: cell.fontFace } : {}),
             },
           })));
 
@@ -4741,6 +4734,26 @@ export function _assignLineToGridCols(items, colXs) {
   return cells.map(parts => parts.join(' '));
 }
 
+// Sibling of _assignLineToGridCols() above — identical column-bucketing (same
+// GRID_SLACK-based assignment) but collects each column's first resolved
+// fontFamily instead of joining text. Kept as a separate function rather than
+// changing _assignLineToGridCols()'s own return shape, since that function is
+// also called from pdf2word's own grid-table path, which has no use for font
+// info — this keeps that call site untouched. Only pdf2ppt calls this one, for
+// per-cell font preservation in reconstructed PPTX tables.
+export function _assignLineToGridColsFonts(items, colXs) {
+  const colCount = colXs.length - 1;
+  const fonts = Array.from({ length: colCount }, () => undefined);
+  for (const item of items) {
+    let col = colCount - 1;
+    for (let c = 0; c < colCount; c++) {
+      if (item.x >= colXs[c] - GRID_SLACK && item.x < colXs[c + 1] + GRID_SLACK) { col = c; break; }
+    }
+    if (fonts[col] === undefined && item.fontFamily) fonts[col] = item.fontFamily;
+  }
+  return fonts;
+}
+
 // For a text line at Y, finds which of grid.rowYs' row-bands it falls into,
 // then reports — per internal column divider — whether that divider's line
 // segment(s) cover a majority of that row-band's height. A divider that's
@@ -4768,17 +4781,34 @@ export function _activeDividersForY(grid, y) {
 // row has no real divider between raw columns i and i+1. Returns
 // {text, span}[]; span > 1 becomes a real docx columnSpan, not an empty
 // neighboring cell hiding a merge.
-export function _groupGridCellsWithSpans(rawCells, activeDividers) {
+//
+// `mergeFn`/`emptyValue` default to the original text-joining behavior
+// (unchanged for pdf2word's own call site, which never passes a 3rd/4th
+// argument). pdf2ppt reuses this same span-grouping logic for
+// _assignLineToGridColsFonts()'s parallel font array too — passing
+// `(a, b) => a ?? b` ("first resolved font wins") and an explicit
+// `emptyValue: undefined` (an unresolved cell must stay undefined, not
+// become the text path's '' placeholder) — rather than duplicating the
+// activeDividers walk a second time.
+//
+// emptyValue is deliberately read via arguments.length, NOT a `= ''` default
+// parameter: JS defaults trigger on an explicitly-passed `undefined` too, so
+// a default parameter here would silently turn pdf2ppt's real
+// `emptyValue: undefined` argument back into '', reintroducing exactly the
+// bug this parameter exists to avoid.
+export function _groupGridCellsWithSpans(rawCells, activeDividers, mergeFn, emptyValue) {
+  const join  = mergeFn ?? ((a, b) => [a, b].filter(Boolean).join(' '));
+  const empty = arguments.length >= 4 ? emptyValue : '';
   const out = [];
-  let buf = rawCells[0] ?? '';
+  let buf = rawCells[0] ?? empty;
   let span = 1;
   for (let i = 0; i < activeDividers.length; i++) {
     if (activeDividers[i]) {
       out.push({ text: buf, span });
-      buf = rawCells[i + 1] ?? '';
+      buf = rawCells[i + 1] ?? empty;
       span = 1;
     } else {
-      buf = [buf, rawCells[i + 1] ?? ''].filter(Boolean).join(' ');
+      buf = join(buf, rawCells[i + 1] ?? empty);
       span++;
     }
   }
