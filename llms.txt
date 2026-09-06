@@ -2,7 +2,7 @@
 
 > Free, privacy-first PDF toolkit. Every tool runs entirely inside the browser using WebAssembly and a Web Worker — files are never uploaded to a server, there is no account, no daily limit, and no subscription. Verifiable by inspecting the Network tab during use: no file-content requests leave the device.
 
-PDFree offers merge, split, compress, rotate, watermark, redact, protect/unlock, flatten, organize, resize, add page numbers, edit metadata, extract pages, draw/annotate, fill & sign forms, OCR, scan documents with a camera, compare two PDFs, split manga page spreads, prepare PDFs for e-readers, check PDF/A archival compliance, look up PDF terminology, and convert between PDF and JPG/Word/Excel/PowerPoint/Markdown — all client-side. Available in English, German, Spanish, French, Portuguese, Indonesian, Vietnamese, Russian, Japanese, Italian, Korean, Dutch, Polish, and Turkish.
+PDFree offers merge, split, compress, rotate, watermark, redact, protect/unlock, flatten, organize, resize, add page numbers, edit metadata, extract pages, draw/annotate, fill & sign forms, OCR, scan documents with a camera, compare two PDFs, split manga page spreads, prepare PDFs for e-readers, check PDF/A archival compliance, look up PDF terminology, read PDFs in a distraction-free reflow reading mode, and convert between PDF and JPG/Word/Excel/PowerPoint/Markdown — all client-side. Available in English, German, Spanish, French, Portuguese, Indonesian, Vietnamese, Russian, Japanese, Italian, Korean, Dutch, Polish, and Turkish.
 
 ## Key pages
 
@@ -17,6 +17,13 @@ PDFree offers merge, split, compress, rotate, watermark, redact, protect/unlock,
 - [PDF Tools with No Upload](https://pdfree.io/pdf-tools-no-upload/): explanation of the local-processing architecture.
 - [HIPAA-Considerations PDF Tools](https://pdfree.io/hipaa-pdf-tools/): why local processing matters for regulated documents.
 - [Secure PDF Tools](https://pdfree.io/secure-pdf-tools/): overview of the site's privacy/security model.
+
+## Comparisons
+
+- [iLovePDF Alternative](https://pdfree.io/ilovepdf-alternative/): no upload, no daily limits, direct feature-by-feature comparison.
+- [Smallpdf Alternative](https://pdfree.io/smallpdf-alternative/): free, no upload, no daily limit — direct comparison.
+- [Adobe Acrobat Alternative](https://pdfree.io/adobe-acrobat-alternative/): fill, sign, edit PDF without a subscription.
+- [PDF24 Alternative](https://pdfree.io/pdf24-alternative/): browser-based, no upload, no install.
 
 ## Notes
 
