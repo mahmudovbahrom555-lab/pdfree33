@@ -418,16 +418,28 @@ function _applyRotation(angle) {
     _deltas[idx] = ((_deltas[idx] + angle) % 360 + 360) % 360;
   }
 
+  // Real bug found via analytics (2 of 8 sessions with a rotate quick-retry
+  // did 6 each — a "stuck in a loop" concentration, not independent users):
+  // selection used to survive past applying a rotation, so selecting one
+  // MORE page afterward silently re-rotated every already-rotated page too,
+  // a second time. Clearing here matches the universal select-act-reset
+  // convention (Gmail archive, Google Photos delete, …) and also removes
+  // the ambiguous "still selected AND already changed" combined card style
+  // (.rot-card--changed.rot-card--selected) as a side effect.
+  const rotated = [..._selected];
+  _selected.clear();
+
   // See _BULK_UPDATE_THRESHOLD above — one full-grid rebuild beats N
   // individual card updates once the selection is large.
-  if (_selected.size > _BULK_UPDATE_THRESHOLD) {
+  if (rotated.length > _BULK_UPDATE_THRESHOLD) {
     _refreshAllCards();
   } else {
-    for (const idx of _selected) _updateCard(idx);
+    for (const idx of rotated) _updateCard(idx);
   }
 
   _updateHistoryButtons();
   _updateMergeBtn();
+  _updateHint();
 }
 
 function _undo() {
