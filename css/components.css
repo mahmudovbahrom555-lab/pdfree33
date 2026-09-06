@@ -2408,6 +2408,42 @@ button,
   text-align: center;
 }
 
+/* Selection checkbox badge — separate visual channel from the card's
+   border-color selected/changed styling above (see the JS comment next to
+   selBadgeHTML in _cardHTML): a page that's both selected AND already
+   rotated used to share one ambiguous combined border color. Bottom-left,
+   the one corner .rot-badge (top-right) and organize's own top-left
+   .org-card__action don't already use. */
+.rot-selbadge {
+  position: absolute;
+  bottom: 4px;
+  left: 4px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, .9);
+  background: rgba(0, 0, 0, .25);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .25);
+  pointer-events: none;
+}
+
+.rot-selbadge--on {
+  background: var(--green);
+  border-color: var(--green);
+}
+
+.rot-selbadge--on::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 9px;
+  height: 5px;
+  border-left: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+  transform: translate(-50%, -65%) rotate(-45deg);
+}
+
 @media (max-width: 600px) {
   .rot-controls { gap: 8px; }
   .rot-history { margin-left: 0; }

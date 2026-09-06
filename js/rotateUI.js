@@ -324,6 +324,17 @@ function _cardHTML(i) {
     ? `<span class="rot-badge" aria-label="${t('rot_badge_aria', { delta })}">${delta > 0 ? '+' : ''}${delta}°</span>`
     : '';
 
+  // Separate visual channel from the border-color selected/changed styling
+  // above — a page that's both selected AND already rotated used to share
+  // one ambiguous combined color (border-color doing double duty for two
+  // different meanings), which analytics + a real user report tied to
+  // rotate's highest quick-retry sessions (see js/rotateUI.js's
+  // _applyRotation comment). A dedicated checkbox-style badge, like a photo
+  // gallery's multi-select picker, makes "selected" legible on its own —
+  // aria-hidden since the card's own aria-label below already states
+  // selected/rotated status for assistive tech.
+  const selBadgeHTML = `<span class="rot-selbadge${selected ? ' rot-selbadge--on' : ''}" aria-hidden="true"></span>`;
+
   const ariaLabel = t('rot_page_aria', { n: i + 1 })
     + (selected ? t('rot_selected_suffix') : '')
     + (changed  ? t('rot_rotated_suffix', { delta }) : '');
@@ -343,6 +354,7 @@ function _cardHTML(i) {
         <div class="rot-thumb">
           ${thumbInner}
           ${badgeHTML}
+          ${selBadgeHTML}
         </div>
         <span class="rot-card__num">${i + 1}</span>
       </div>`;
@@ -354,6 +366,7 @@ function _cardHTML(i) {
         <div class="rot-numbox">
           <span class="rot-numbox__n" style="transform:rotate(${visual}deg)">${i + 1}</span>
           ${badgeHTML}
+          ${selBadgeHTML}
         </div>
         <span class="rot-card__num">${i + 1}</span>
       </div>`;
