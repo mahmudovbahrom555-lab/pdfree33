@@ -191,6 +191,27 @@ function _render() {
       .pn-divider { border:none;border-top:1px solid var(--border);margin:16px 0; }
       input[type=number]::-webkit-inner-spin-button,
       input[type=number]::-webkit-outer-spin-button { -webkit-appearance:none; }
+
+      /* Visual page mockup — real position/size feedback, not just the
+         numeral sequence below. Analytics found pagenum has the highest
+         quick-retry rate of any tool (real users, not bot noise — see
+         memory analytics_review_2026_09); the panel previously had no way
+         to see WHERE the number lands or how big it looks without
+         downloading first. */
+      .pn-mock-spread { display:flex;gap:6px; }
+      .pn-mock-page {
+        position:relative;width:84px;aspect-ratio:3/4;flex-shrink:0;
+        background:var(--surface2);border:1px solid var(--border);
+        border-radius:6px;overflow:hidden;
+      }
+      .pn-mock-page__line {
+        position:absolute;left:12%;height:3px;
+        background:var(--border);border-radius:2px;
+      }
+      .pn-mock-page__num {
+        position:absolute;font-weight:700;color:var(--text2);line-height:1;
+        white-space:nowrap;
+      }
     </style>
 
     <!-- ── PAGE RANGE ── -->
@@ -298,12 +319,45 @@ function _render() {
     })}
 
     <!-- ── PREVIEW ── -->
-    <div class="pn-preview" aria-hidden="true">
-      ${_previewHTML()}
+    <div class="pn-preview-wrap" aria-hidden="true">
+      ${_mockPreviewHTML()}
+      <div class="pn-preview">${_previewHTML()}</div>
     </div>
   `;
 
   _bindEvents();
+}
+
+// 'book' mirrors the outer margin per page side (see js/worker.js's own
+// position==='book' branch: odd 1-based page -> right edge, even -> left
+// edge) — isRightPage selects which of the two mock pages this call is for.
+function _mockNumStyle(isRightPage) {
+  const horiz = _position === 'book' ? (isRightPage ? 'right:8%;' : 'left:8%;')
+              : _position === 'bottom-right' ? 'right:8%;'
+              : _position === 'bottom-left'  ? 'left:8%;'
+              :                                'left:50%;transform:translateX(-50%);';
+  const vert = _position === 'top-center' ? 'top:6%;' : 'bottom:6%;';
+  return horiz + vert;
+}
+
+function _mockPageHTML(isRightPage) {
+  const label   = _formatNum(_startAt, _format) + (_showTotal ? ` / ${_formatNum(_startAt + 9, _format)}` : '');
+  // Visual size only — not meant to be physically exact, just convey
+  // relative "bigger slider = bigger number" (7-16pt real range).
+  const fontPx  = Math.round(9 + (_fontSize - 7) * (17 - 9) / (16 - 7));
+  return `
+    <div class="pn-mock-page">
+      <span class="pn-mock-page__line" style="top:14%;width:70%"></span>
+      <span class="pn-mock-page__line" style="top:24%;width:55%"></span>
+      <span class="pn-mock-page__line" style="top:34%;width:62%"></span>
+      <span class="pn-mock-page__num" style="${_mockNumStyle(isRightPage)}font-size:${fontPx}px">${label}</span>
+    </div>`;
+}
+
+function _mockPreviewHTML() {
+  return _position === 'book'
+    ? `<div class="pn-mock-spread">${_mockPageHTML(false)}${_mockPageHTML(true)}</div>`
+    : _mockPageHTML(false);
 }
 
 function _previewHTML() {
@@ -345,6 +399,7 @@ function _bindEvents() {
       _position = e.target.value;
       container.querySelectorAll('[data-name="pnPos"]').forEach(el =>
         el.classList.toggle('j2p-chip--active', el.dataset.value === _position));
+      _refreshPreview();
     }
     if (e.target.name === 'pnFmt') {
       _format = e.target.value;
@@ -460,12 +515,14 @@ function _bindEvents() {
     _fontSize = parseInt(e.target.value, 10);
     const val = id('pnFontSizeVal');
     if (val) val.textContent = e.target.value + 'pt';
+    _refreshPreview();
   });
 }
 
 function _refreshPreview() {
-  const prev = id('pageNumOptions')?.querySelector('.pn-preview');
-  if (prev) prev.innerHTML = _previewHTML();
+  const wrap = id('pageNumOptions')?.querySelector('.pn-preview-wrap');
+  if (!wrap) return;
+  wrap.innerHTML = `${_mockPreviewHTML()}<div class="pn-preview">${_previewHTML()}</div>`;
 }
 
 // ── Numeral formatters ─────────────────────────────────────────
