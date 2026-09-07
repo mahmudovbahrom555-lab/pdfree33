@@ -5,8 +5,9 @@
 [![Deploy to Cloudflare Workers](https://github.com/mahmudovbahrom555-lab/pdfree33/actions/workflows/deploy.yml/badge.svg)](https://github.com/mahmudovbahrom555-lab/pdfree33/actions/workflows/deploy.yml)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](LICENSE)
 [![Live site](https://img.shields.io/badge/live-pdfree.io-2D7A4F)](https://pdfree.io)
+[![Built with Cloudflare Workers](https://www.cloudflare.com/built-with-cloudflare.svg)](https://workers.cloudflare.com/)
 
-[pdfree.io](https://pdfree.io) — merge, split, compress, convert, and 25+ other PDF operations, processed 100% client-side with WebAssembly and Web Workers. No file is ever uploaded to a server: open the Network tab while using any tool and there's nothing to see. No account, no daily limits, no subscription, no ads-driven upsell — free forever.
+[pdfree.io](https://pdfree.io) — merge, split, compress, convert, and 30+ other PDF operations, processed 100% client-side with WebAssembly and Web Workers. No file is ever uploaded to a server: open the Network tab while using any tool and there's nothing to see. No account, no daily limits, no subscription, no ads-driven upsell — free forever.
 
 ![Merging two PDFs on pdfree.io — drop files, click merge, done in under a second, nothing uploaded](.github/assets/demo.gif)
 
