@@ -96,8 +96,8 @@ const STATIC_ASSETS = [
   '/icons/icon-128.png',
   '/icons/icon-192.png',
   '/icons/icon-512.png',
-  '/privacy/',
-  '/terms/',
+  '/privacy.html',
+  '/terms.html',
 ];
 
 // CDN assets — cache on first use (versioned URLs, safe to store)
@@ -175,7 +175,7 @@ self.addEventListener('fetch', event => {
 
   // Legal pages: let browser fetch directly from network — no SW caching.
   // Bypassing SW avoids mode:navigate and stale-cache issues for these pages.
-  if (url.pathname === '/privacy/' || url.pathname === '/terms/') return;
+  if (url.pathname === '/privacy.html' || url.pathname === '/terms.html') return;
 
   // CDN resources: cache-first
   if (CDN_PREFIXES.some(p => request.url.startsWith(p))) {

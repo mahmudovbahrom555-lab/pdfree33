@@ -494,8 +494,8 @@ SPECIALTY_PAGES = [
     # scan-document above.
     'glossary-pdf',
     # Static pages
-    'privacy',
-    'terms',
+    'privacy.html',
+    'terms.html',
     # Blog index + Blog posts
     'blog',
     'blog/how-to-annotate-pdf-on-mobile',
@@ -624,8 +624,13 @@ def _write_sitemap(config, out_dir):
     }
 
     for slug in SPECIALTY_PAGES:
-        url = f"{BASE_URL}/{slug}/"
-        lastmod_path = f"{slug}/index.html"
+        # .html files don't use trailing slashes; directories do
+        if slug.endswith('.html'):
+            url = f"{BASE_URL}/{slug}"
+            lastmod_path = slug
+        else:
+            url = f"{BASE_URL}/{slug}/"
+            lastmod_path = f"{slug}/index.html"
         loc_alts = _localized_specialty.get(slug)
         if loc_alts:
             alts = [('en', url)]
@@ -637,7 +642,7 @@ def _write_sitemap(config, out_dir):
         # Determine priority & changefreq by page type
         if slug.startswith('blog/'):
             _sp_priority, _sp_freq = '0.6', 'monthly'
-        elif slug in ('privacy', 'terms'):
+        elif slug.endswith('.html'):
             _sp_priority, _sp_freq = '0.3', 'yearly'
         else:
             _sp_priority, _sp_freq = '0.7', 'monthly'

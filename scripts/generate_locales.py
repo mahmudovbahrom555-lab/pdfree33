@@ -884,9 +884,9 @@ def generate_index(locale_code):
     <span style="color:var(--green)">🔒</span> {t['footer_lock']} &nbsp;·&nbsp;
     <span style="color:var(--green)">♥</span> {t['footer_heart']}<br>
     <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
-      <a href="/privacy/" style="color:var(--green)">{t['footer_privacy']}</a>
+      <a href="/privacy.html" style="color:var(--green)">{t['footer_privacy']}</a>
       &nbsp;·&nbsp;
-      <a href="/terms/" style="color:var(--green)">{t['footer_terms']}</a>
+      <a href="/terms.html" style="color:var(--green)">{t['footer_terms']}</a>
       &nbsp;·&nbsp;
       <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green)">GNU AGPLv3</a>
       &nbsp;·&nbsp;
