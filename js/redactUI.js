@@ -173,7 +173,9 @@ let _pendingMatches = [];  // [{idx, text, pageNum, rect, source, checked}]
 
 // Text content cache per page — populated lazily on first click, used for click-to-redact
 let _pageTextCache = {};   // {pageNum: TextContent}
-let _isTrueRedact  = false;
+// Always true — see initRedactOptions()'s own comment on why this is no
+// longer conditional on a data-true-redact body attribute.
+let _isTrueRedact  = true;
 let _hoverRaf      = null;
 
 function _saveHistory() {
@@ -293,7 +295,21 @@ export async function initRedactOptions(file) {
   const preset = _detectPreset();
   _colorKey     = preset.color;
   _opacity      = preset.opacity;
-  _isTrueRedact = document.body.hasAttribute('data-true-redact');
+  // Always true-redact (canvas-flatten, real text removal), regardless of entry
+  // point. Previously gated on document.body.hasAttribute('data-true-redact'),
+  // set only by tool-page.html for a direct /redact-pdf/ navigation — reaching
+  // this SAME (and only) registered 'redact' tool via the homepage's search
+  // widget or hero-drop recommendation calls showTool('redact', ...) purely
+  // client-side (see js/app.js), never touching that attribute, so it silently
+  // fell back to the weak page.drawRectangle()-only overlay in js/worker.js's
+  // handleRedact() — original text stays fully intact and extractable
+  // underneath, the exact "black-box redaction" failure real redaction tools
+  // are criticized for (found 2026-09-07 researching real user complaints
+  // about fake PDF redaction). It also silently hid the PII search/AI-name-
+  // detection/remove-metadata panel below (see _render()) on that same path.
+  // There is no other registered tool this would incorrectly strengthen —
+  // tools-config.json has exactly one 'redact' entry.
+  _isTrueRedact = true;
 
   container.innerHTML = loadingRow(t('rdct_loading'));
   container.style.display = 'block';
@@ -367,7 +383,7 @@ export function hideRedactOptions() {
 function _render(container, fileName, preset) {
   const tone = preset.tone;
 
-  const isTrueRedact = document.body.hasAttribute('data-true-redact');
+  const isTrueRedact = true; // see initRedactOptions()'s comment
 
   const bannerText = isTrueRedact
     ? t('rdct_banner_true')
@@ -1792,7 +1808,7 @@ function _updateMergeBtn() {
   const btn = id('mergeBtn');
   if (!btn) return;
 
-  const isTrueRedact = document.body.hasAttribute('data-true-redact');
+  const isTrueRedact = true; // see initRedactOptions()'s comment
   const preset = _detectPreset();
   const tone = preset.tone;
   const btnKey = isTrueRedact ? 'rdct_btn_redact' : (tone === 'privacy' ? 'rdct_btn_cover' : 'rdct_btn_apply');
@@ -1824,7 +1840,7 @@ function _cleanup() {
   _rectsByPage = {};
   _pendingMatches  = [];
   _pageTextCache   = {};
-  _isTrueRedact    = false;
+  _isTrueRedact    = true;
   if (_hoverRaf) { cancelAnimationFrame(_hoverRaf); _hoverRaf = null; }
   _currentPage = 1;
   _dragging  = false;

@@ -22,7 +22,7 @@ const ROOT      = path.join(__dirname, '..');
 
 // Known runner keys in processor.js runnerMap.
 // If you add a new runner there, add it here too.
-const KNOWN_RUNNERS = new Set(['merge', 'split', 'compress', 'jpg2pdf', 'pdf2jpg', 'pdf2word', 'pdf2excel', 'pdf2ppt', 'pdf2md', 'docx2pdf', 'unlock', 'worker', 'organize', 'resize', 'fillOrder', 'cleanScan', 'mangaSplit', 'ereader', 'glossary']);
+const KNOWN_RUNNERS = new Set(['merge', 'split', 'compress', 'jpg2pdf', 'pdf2jpg', 'pdf2word', 'pdf2excel', 'pdf2ppt', 'pdf2md', 'docx2pdf', 'unlock', 'worker', 'organize', 'resize', 'fillOrder', 'cleanScan', 'mangaSplit', 'ereader', 'glossary', 'redact-true']);
 
 // ── Parse sources ─────────────────────────────────────────────────
 
@@ -41,7 +41,9 @@ const declaredRunners = [...regsSource.matchAll(/\brunner\s*:\s*['"]([^'"]+)['"]
 
 // runnerMap keys from processor.js (e.g. merge:, split:, ...)
 const runnerMapBlock   = procSource.match(/const runnerMap\s*=\s*\{([\s\S]*?)\};/)?.[1] ?? '';
-const processorRunners = [...runnerMapBlock.matchAll(/^\s+(\w[\w\d]+)\s*:/gm)].map(m => m[1]);
+// Bare identifier keys (merge:) or quoted keys (e.g. 'redact-true':, needed
+// since object keys with a hyphen can't be a bare identifier).
+const processorRunners = [...runnerMapBlock.matchAll(/^\s+(?:['"]([\w-]+)['"]|(\w[\w\d]*))\s*:/gm)].map(m => m[1] ?? m[2]);
 
 // ── Test runner ───────────────────────────────────────────────────
 

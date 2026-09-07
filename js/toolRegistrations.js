@@ -412,16 +412,19 @@ registerTool('meta', {
 });
 
 registerTool('redact', {
-  // True redact (canonical /redact-pdf/ tool page, any locale) uses canvas-flatten
-  // via dedicated worker. Visual cover (/annotate-pdf/, /cover-pdf/, /highlight-pdf/)
-  // keeps worker runner. Gated on data-true-redact (set by tool-page.html only for
-  // tool.id === 'redact') rather than an English-only pathname substring — the
-  // canonical redact page is served at a translated slug in every non-English
-  // locale (e.g. /de/pdf-schwaerzen/), so a literal '/redact-pdf/' check silently
-  // fell through to cover-only (recoverable) behavior on all 13 non-English pages
-  // while their SEO copy explicitly promised permanent, unrecoverable redaction.
-  runner:     document.body.hasAttribute('data-true-redact') ? 'redact-true' : 'worker',
-  workerTool: 'redact',
+  // Always true-redact (canvas-flatten via dedicated redact-worker.js — real
+  // text removal, not a page.drawRectangle() overlay). Previously conditional
+  // on a data-true-redact body attribute set only by tool-page.html for a
+  // direct /redact-pdf/ page load, which meant reaching this SAME (and only
+  // registered) 'redact' tool via the homepage's search widget or hero-drop
+  // recommendation (showTool() called client-side, no page navigation — see
+  // js/app.js) silently used the weak 'worker' runner instead: original text
+  // stayed fully intact and extractable underneath the drawn box, the exact
+  // "black-box redaction" failure real redaction tools are criticized for.
+  // Found 2026-09-07 researching real user complaints about fake PDF
+  // redaction. tools-config.json has exactly one 'redact' entry, so there is
+  // no other real tool this would incorrectly strengthen.
+  runner:     'redact-true',
   init:       initRedactOptions,
   hide:       hideRedactOptions,
   getParams:  () => ({ ...getRedactParams(), removeMetadata: !!document.getElementById('rdctRemoveMeta')?.checked }),
