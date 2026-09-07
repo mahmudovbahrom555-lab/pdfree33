@@ -63,6 +63,15 @@ const MANUAL_REDIRECTS = {
   '/blog/pagenum-pdf/':  '/pagenum-pdf/',
   // Legacy English slugs
   '/index.html':     '/',
+  // privacy.html/terms.html moved to directory-style privacy/index.html,
+  // terms/index.html (2026-09) — anything still hitting the old flat path
+  // gets one clean 301 straight to the real canonical, instead of relying
+  // on Cloudflare's own asset-routing default (which produced a live
+  // redirect loop between /privacy/ and /privacy.html for these two
+  // specific paths post-move — see the explicit ASSETS.fetch() rewrite
+  // near the bottom of this file for the other half of this fix).
+  '/privacy.html':   '/privacy/',
+  '/terms.html':     '/terms/',
   '/annotate':       '/annotate-pdf/',
   '/annotate/':      '/annotate-pdf/',
   '/add-page-numbers-to-pdf':  '/pagenum-pdf/',
@@ -731,6 +740,23 @@ export default {
 
     if (url.pathname.startsWith('/embed/')) {
       return withEmbedFrameHeaders(await env.ASSETS.fetch(request));
+    }
+
+    // privacy/terms were just moved from a flat privacy.html/terms.html to
+    // directory-style privacy/index.html, terms/index.html. Cloudflare's own
+    // asset-routing default (html_handling: auto-trailing-slash) produced a
+    // live infinite redirect loop between /privacy/ and /privacy.html for
+    // these two specific paths after the move (confirmed via curl well after
+    // deploy + cache purge — not simple edge-propagation lag). Rewriting the
+    // request to the fully-resolved index.html path before handing it to
+    // ASSETS.fetch() sidesteps whatever ambiguous internal resolution
+    // Cloudflare was doing, without touching the general directory-style
+    // asset-serving path every other page on the site already relies on.
+    if (url.pathname === '/privacy' || url.pathname === '/privacy/') {
+      return env.ASSETS.fetch(new Request(new URL('/privacy/index.html', url.origin), request));
+    }
+    if (url.pathname === '/terms' || url.pathname === '/terms/') {
+      return env.ASSETS.fetch(new Request(new URL('/terms/index.html', url.origin), request));
     }
 
     return env.ASSETS.fetch(request);
