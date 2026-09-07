@@ -200,7 +200,7 @@ function _render() {
          downloading first. */
       .pn-mock-spread { display:flex;gap:6px; }
       .pn-mock-page {
-        position:relative;width:84px;aspect-ratio:3/4;flex-shrink:0;
+        position:relative;width:112px;aspect-ratio:3/4;flex-shrink:0;
         background:var(--surface2);border:1px solid var(--border);
         border-radius:6px;overflow:hidden;
       }
@@ -307,11 +307,16 @@ function _render() {
                   valText: _fontSize + 'pt', min: 7, max: 16, step: 1,
                   value: _fontSize, ariaLabel: t('pn_aria_font_size', { size: _fontSize }) })}
 
-    <!-- ── PREVIEW ── — placed immediately after Position/Size, not at the
-         bottom of the panel, so changing either is visible without
-         scrolling (real user report: the mockup used to sit below Options
-         and the Remember-settings card, off-screen from the very controls
-         it's meant to give feedback on). -->
+    <!-- ── PREVIEW ── — placed directly after Position/Size (real user
+         report: the mockup used to sit below Options and the
+         Remember-settings card, off-screen from the controls it reflects).
+         "Show total" (below) also changes the mockup's text, but stays
+         AFTER it deliberately: it's one infrequently-toggled switch, not
+         explored back-and-forth like the 5-way Position chips or the Size
+         slider — moving it above the preview too (tried, then reverted)
+         pushed the whole block tall enough to clip under the sticky
+         process button on a real ~900px desktop viewport, trading one
+         visibility bug for another. -->
     <div class="pn-preview-wrap" aria-hidden="true">
       ${_mockPreviewHTML()}
       <div class="pn-preview">${_previewHTML()}</div>
@@ -352,9 +357,17 @@ function _mockNumStyle(isRightPage) {
 
 function _mockPageHTML(isRightPage) {
   const label   = _formatNum(_startAt, _format) + (_showTotal ? ` / ${_formatNum(_startAt + 9, _format)}` : '');
-  // Visual size only — not meant to be physically exact, just convey
-  // relative "bigger slider = bigger number" (7-16pt real range).
-  const fontPx  = Math.round(9 + (_fontSize - 7) * (17 - 9) / (16 - 7));
+  // A real, literally-to-page-scale font size would be sub-pixel and
+  // invisible at this thumbnail size (a 10pt number on a real ~612pt-wide
+  // Letter page is a tiny fraction of the page). Instead of chasing true
+  // physical scale, this uses a plain linear multiplier — real font size
+  // × a fixed zoom factor — which is the one thing that actually matters
+  // for "no disappointment": doubling the real pt size must double the
+  // mockup size too. The previous version instead remapped 7-16pt onto an
+  // arbitrary fixed 9-17px band, which silently DISTORTED that relationship
+  // (14pt, genuinely 2× of 7pt, rendered only ~1.7× bigger) — a real user
+  // report, confirmed by computing both formulas' output side by side.
+  const fontPx  = Math.round(_fontSize * 1.2);
   return `
     <div class="pn-mock-page">
       <span class="pn-mock-page__line" style="top:14%;width:70%"></span>
