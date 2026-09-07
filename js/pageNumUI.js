@@ -209,7 +209,13 @@ function _render() {
         background:var(--border);border-radius:2px;
       }
       .pn-mock-page__num {
-        position:absolute;font-weight:700;color:var(--text2);line-height:1;
+        /* font-weight intentionally normal, not bold — matches the real
+           output exactly: js/worker.js's handlePageNum() always embeds
+           plain StandardFonts.Helvetica, never a bold/italic variant (no
+           style choice exists yet). A bold mockup previously implied a
+           result the tool can't actually produce — a real user-reported
+           mismatch. */
+        position:absolute;font-weight:400;color:var(--text2);line-height:1;
         white-space:nowrap;
       }
     </style>
@@ -296,6 +302,21 @@ function _render() {
       ${chipGroup('pnPos', posOpts, _position, t('pn_section_position'), { vertical: true, radius: '8px' })}
     </div>
 
+    <!-- ── SIZE ── -->
+    ${sliderRow({ id: 'pnFontSize', label: t('pn_size_label'), valId: 'pnFontSizeVal',
+                  valText: _fontSize + 'pt', min: 7, max: 16, step: 1,
+                  value: _fontSize, ariaLabel: t('pn_aria_font_size', { size: _fontSize }) })}
+
+    <!-- ── PREVIEW ── — placed immediately after Position/Size, not at the
+         bottom of the panel, so changing either is visible without
+         scrolling (real user report: the mockup used to sit below Options
+         and the Remember-settings card, off-screen from the very controls
+         it's meant to give feedback on). -->
+    <div class="pn-preview-wrap" aria-hidden="true">
+      ${_mockPreviewHTML()}
+      <div class="pn-preview">${_previewHTML()}</div>
+    </div>
+
     <hr class="pn-divider">
 
     <!-- ── OPTIONS ── -->
@@ -305,11 +326,6 @@ function _render() {
                    title: t('pn_show_total_title'), subtitle: t('pn_show_total_subtitle') })}
     </div>
 
-    <!-- ── SIZE ── -->
-    ${sliderRow({ id: 'pnFontSize', label: t('pn_size_label'), valId: 'pnFontSizeVal',
-                  valText: _fontSize + 'pt', min: 7, max: 16, step: 1,
-                  value: _fontSize, ariaLabel: t('pn_aria_font_size', { size: _fontSize }) })}
-
     ${presetRememberCard({
       id:       'pagenumRememberCheck',
       checked:  loadPreset('pagenum') !== null,
@@ -317,12 +333,6 @@ function _render() {
       subtitle: t('preset_remember_sub'),
       ariaLabel: t('preset_remember_title'),
     })}
-
-    <!-- ── PREVIEW ── -->
-    <div class="pn-preview-wrap" aria-hidden="true">
-      ${_mockPreviewHTML()}
-      <div class="pn-preview">${_previewHTML()}</div>
-    </div>
   `;
 
   _bindEvents();
