@@ -6,6 +6,7 @@ import { loadPdfLib } from './lazyLibs.js';
 import { t } from './i18n.js';
 import { saveHandoff } from './handoff.js';
 import { truncateMiddle, esc } from './utils.js';
+import { showCancelBtn, hideCancelBtn } from './ui.js';
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 const TESSERACT_CDN       = 'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js';
@@ -128,7 +129,27 @@ export function initOcrOptions(file) {
   _analyse(file, el);
 }
 
+// Wired as this tool's `cancel` registry hook (see toolRegistry.js) — app.js's
+// shared #cancelBtn click handler calls this instead of cancelProcess() while
+// OCR is active, since cancelProcess() only knows how to stop the shared
+// js/worker.js pipeline, which OCR never uses. Bumping _generation is what
+// actually stops the in-flight per-page Tesseract loop in _runOcr() — it
+// already checks `gen !== _generation` at the end of every page (added for
+// the stale-file-swap case), so this reuses that same, already-tested guard.
+export function cancelOcr() {
+  _generation++;
+  hideCancelBtn();
+  const bar = document.getElementById('progressBar');
+  if (bar) bar.hidden = true;
+  const btn = document.getElementById('mergeBtn');
+  if (btn) btn.classList.remove('ocr-btn--busy');
+  _showToast(t('cancelled'));
+  _syncBtnLabel();
+}
+
 export function hideOcrOptions() {
+  _generation++; // invalidate any in-flight analysis or OCR run
+  hideCancelBtn();
   const el = document.getElementById('ocrOptions');
   if (el) { el.style.display = 'none'; el.innerHTML = ''; }
   _file = null; _isTextPdf = false; _loading = false;
@@ -809,6 +830,7 @@ function _bindMergeBtn() {
     btn.classList.add('ocr-btn--busy');
     const bar = document.getElementById('progressBar');
     if (bar) bar.hidden = false;
+    showCancelBtn();
     _updateProgress(3, t('ocr_starting'));
 
     try {
@@ -872,6 +894,7 @@ function _bindMergeBtn() {
       // _syncBtnLabel() checks _requiresManualLang — if set, keeps button disabled
       btn.classList.remove('ocr-btn--busy');
       if (bar) bar.hidden = true;
+      hideCancelBtn();
       _syncBtnLabel();
     }
   }, true);
@@ -1754,7 +1777,7 @@ function _isPasswordError(err) {
 }
 
 function _errorHTML(msg, title = t('ocr_error_title')) {
-  return `<div style="padding:16px;border:1px solid #fca5a5;border-radius:10px;background:#fff1f2;color:#dc2626;font-size:13px;">
+  return `<div style="padding:16px;border:1px solid var(--red);border-radius:10px;background:var(--red-light);color:var(--red);font-size:13px;">
     <strong>${esc(title)}</strong><br>${esc(msg)}
   </div>`;
 }

@@ -58,7 +58,7 @@ import { initRedactOptions, hideRedactOptions,
 import { initDraw, loadPdfFile, resetDraw } from './drawUI.js';
 import { initPointer, resetPointer }        from './drawPointer.js';
 import { initOcrOptions, hideOcrOptions,
-         getOcrParams }                     from './ocrUI.js';
+         cancelOcr, getOcrParams }          from './ocrUI.js';
 import { initPdf2WordOptions, hidePdf2WordOptions,
          getPdf2WordParams,
          renderP2wConfidence, clearP2wConfidence,
@@ -75,7 +75,7 @@ import { initDocx2PdfOptions, hideDocx2PdfOptions,
 import { initUnlockOptions, hideUnlockOptions,
          getUnlockParams }                  from './unlockUI.js';
 import { initCompareOptions, hideCompareOptions,
-         getCompareParams }               from './compareUI.js';
+         cancelCompare, getCompareParams } from './compareUI.js';
 import { initPdf2PdfaOptions, hidePdf2PdfaOptions } from './pdf2pdfaUI.js';
 import { initReadOptions, hideReadOptions,
          cancelRead, getReadParams }         from './readUI.js';
@@ -572,6 +572,7 @@ registerTool('draw-pdf', {
 registerTool('ocr', {
   init:      initOcrOptions,
   hide:      hideOcrOptions,
+  cancel:    cancelOcr,
   getParams: getOcrParams,
   validate:  p => {
     if (p.loading)                      return t('val_analysing_pdf');
@@ -661,6 +662,7 @@ registerTool('compare', {
   minFiles:  1,
   init:      initCompareOptions,
   hide:      hideCompareOptions,
+  cancel:    cancelCompare,
   getParams: getCompareParams,
   validate:  p => {
     if (!p.hasFiles) return 'Please select two PDF files to compare';

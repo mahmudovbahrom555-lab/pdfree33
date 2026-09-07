@@ -2,7 +2,7 @@
 // Copyright (C) 2025 PDFree Contributors
 
 import { loadPdfJs }  from './pdf2jpgUI.js';
-import { showToast }  from './ui.js';
+import { showToast, showCancelBtn, hideCancelBtn } from './ui.js';
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 const RENDER_SCALE   = 1.5;
@@ -17,6 +17,7 @@ let _n1                 = 0;
 let _n2                 = 0;
 let _clickHandler       = null;
 let _cancelled          = false;
+let _running            = false; // true only while _runCompare() is actually in flight
 let _resolveChoice      = null;
 let _startTime          = 0;
 let _changedPageIndices = []; // page indices with diffPct >= 0.05 or missing page
@@ -28,14 +29,45 @@ let _filterActive       = false;
 export function initCompareOptions(files) {
   const el = document.getElementById('compareOptions');
   if (!el) return;
+  if (_running) cancelCompare(); // stale run from a swapped file — stop it now
   el.style.display = '';
   _files = Array.isArray(files) ? files : [files];
   _bindCompareBtn();
   _renderInitUI(el);
 }
 
+// Wired as this tool's `cancel` registry hook (see toolRegistry.js) — app.js's
+// shared #cancelBtn click handler calls this instead of cancelProcess() while
+// Compare is active, since cancelProcess() only knows how to stop the shared
+// js/worker.js pipeline, which Compare never uses. Also called internally at
+// the top of initCompareOptions() below, since toolRegistry may call it again
+// for a swapped file WITHOUT calling hideCompareOptions() first (same trigger
+// as the Read/resize/redact stale-run class) — without this, an abandoned
+// in-flight compare keeps animating the shared progress bar over whatever
+// screen the new file pair is showing until its loop happens to finish.
+export function cancelCompare() {
+  _cancelled = true;
+  _running   = false;
+  if (_resolveChoice) { _resolveChoice(0); _resolveChoice = null; }
+  hideCancelBtn();
+  const bar = document.getElementById('progressBar');
+  if (bar) bar.hidden = true;
+  const btn = document.getElementById('mergeBtn');
+  if (btn) btn.disabled = false;
+  const summary = document.getElementById('compareSummary');
+  if (summary) {
+    summary.insertAdjacentHTML('afterbegin',
+      '<div style="margin-bottom:8px;font-size:13px;color:var(--text2);">Comparison cancelled — showing pages compared so far.</div>');
+  } else {
+    const el = document.getElementById('compareOptions');
+    if (el) _renderInitUI(el);
+  }
+  showToast('Comparison cancelled.');
+}
+
 export function hideCompareOptions() {
   _cancelled = true;
+  hideCancelBtn();
   if (_resolveChoice) { _resolveChoice(0); _resolveChoice = null; }
   const el = document.getElementById('compareOptions');
   if (el) { el.style.display = 'none'; el.innerHTML = ''; }
@@ -107,13 +139,17 @@ function _bindCompareBtn() {
     btn.disabled = true;
     const bar = document.getElementById('progressBar');
     if (bar) bar.hidden = false;
+    showCancelBtn();
+    _running = true;
     try {
       await _runCompare();
     } catch (err) {
       if (!_cancelled) showToast('Error: ' + err.message);
     } finally {
+      _running = false;
       btn.disabled = false;
       if (bar) bar.hidden = true;
+      hideCancelBtn();
     }
   };
 
@@ -252,8 +288,8 @@ function _promptPassword(filename, reason, onSubmit, onCancel) {
       <p style="margin:0 0 4px;font-size:15px;font-weight:700;color:var(--text);">Password protected</p>
       <p style="margin:0 0 16px;font-size:12px;color:var(--text2);word-break:break-all;">${_esc(shortName)}</p>
       ${isRetry ? `
-        <div style="margin:0 0 14px;padding:8px 10px;background:#fef2f2;
-          border:1px solid #fecaca;border-radius:6px;font-size:13px;color:#dc2626;">
+        <div style="margin:0 0 14px;padding:8px 10px;background:var(--red-light);
+          border:1px solid var(--red);border-radius:6px;font-size:13px;color:var(--red);">
           Incorrect password — try again.
         </div>` : ''}
       <input id="pwInput" type="password" placeholder="Enter password…" autocomplete="current-password"
@@ -479,7 +515,7 @@ function _finalizeSummary() {
 
   const parts = [`<strong style="color:var(--text)">${total} page${total !== 1 ? 's' : ''} compared</strong>`];
   if (identical > 0) parts.push(`<span style="color:#16a34a;">&#x2713; ${identical} identical</span>`);
-  if (changed   > 0) parts.push(`<span style="color:#dc2626;">&#x26A0;&#xFE0E; ${changed} changed</span>`);
+  if (changed   > 0) parts.push(`<span style="color:var(--red);">&#x26A0;&#xFE0E; ${changed} changed</span>`);
   if (onlyA     > 0) parts.push(`<span style="color:#92400e;">${onlyA} only in ${_esc(_tabLabel(0))}</span>`);
   if (onlyB     > 0) parts.push(`<span style="color:#92400e;">${onlyB} only in ${_esc(_tabLabel(1))}</span>`);
 
