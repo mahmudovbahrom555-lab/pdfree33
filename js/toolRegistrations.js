@@ -14,6 +14,7 @@ import { id, esc }      from './utils.js';
 import { t }             from './i18n.js';
 import { getWmRemove, wmRemoveHtml, bindWmRemove, resetWmRemove } from './watermarkRemoveUI.js';
 import { checkbox, chipGroup } from './uiComponents.js';
+import { cancelEreader } from './processor.js';
 
 // ── UI modules ─────────────────────────────────────────────────
 import { initCompressOptions, hideCompressOptions,
@@ -505,9 +506,14 @@ registerTool('cleanScan', {
 });
 
 registerTool('ereader', {
-  runner:    'ereader', // dedicated js/ereaderWorker.js, not the shared js/worker.js — see processor.js's _runEreader
+  runner:    'ereader', // dedicated js/ereaderWorker.js pool, not the shared js/worker.js — see processor.js's _runEreader
   init:      initEreaderOptions,
   hide:      hideEreaderOptions,
+  // Own cancel hook: ereader's worker POOL is never the shared js/worker.js
+  // instance the default cancelProcess() terminates, so without this,
+  // clicking Cancel mid-run silently did nothing to the in-flight pages —
+  // see processor.js's cancelEreader() for the full story.
+  cancel:    cancelEreader,
   getParams: getEreaderParams,
   validate:  p => !p.hasFile ? t('val_er_loading') : null,
 });

@@ -1122,25 +1122,64 @@ async function _runCleanScan(filesSnapshot, { mode = 'clean', strength = 0.5, sc
 // Dedicated js/ereaderWorker.js, not the shared js/worker.js — same
 // reasoning as Clean Scan above (pdf.js rendering stays main-thread here).
 
-let _ereaderWorker = null;
-function _ensureEreaderWorker() {
-  if (!_ereaderWorker) {
-    _ereaderWorker = new Worker(new URL('./ereaderWorker.js', import.meta.url));
-  }
-  return _ereaderWorker;
+// A fresh pool, sized to the device, is created per run (not a persistent
+// singleton like most other worker helpers in this file) and terminated at
+// the end of every run — successful, errored, or cancelled. See _runEreader
+// below for why a pool instead of one worker: large books were genuinely
+// slow with only one page in flight at a time.
+let _ereaderPool = null; // Worker[] | null
+
+function _createEreaderPool(size) {
+  return Array.from({ length: size }, () => new Worker(new URL('./ereaderWorker.js', import.meta.url)));
 }
+
+function _terminateEreaderPool() {
+  if (_ereaderPool) { _ereaderPool.forEach(w => w.terminate()); _ereaderPool = null; }
+}
+
+// Every in-flight request's reject is tracked here (not just the latest
+// one, unlike _batchCancelReject above) — with a pool, several requests are
+// genuinely in flight at once, and cancelEreader() below must unstick ALL
+// of them, not just whichever one happened to be assigned last.
+const _ereaderPendingRejects = new Set();
 
 function _ereaderWorkerRequest(worker, message, transfer, onProgress) {
   return new Promise((resolve, reject) => {
+    const settle = (fn, val) => { _ereaderPendingRejects.delete(reject); fn(val); };
+    _ereaderPendingRejects.add(reject);
     worker.onmessage = (e) => {
       const d = e.data;
       if (d.type === 'progress') { onProgress?.(d.value, d.label); return; }
-      if (d.type === 'error') { reject(new Error(d.message)); return; }
-      resolve(d);
+      if (d.type === 'error') { settle(reject, new Error(d.message)); return; }
+      settle(resolve, d);
     };
-    worker.onerror = (e) => reject(new Error(e.message || 'Worker error'));
+    worker.onerror = (e) => settle(reject, new Error(e.message || 'Worker error'));
     worker.postMessage(message, transfer);
   });
+}
+
+// Wired as this tool's `cancel` registry hook (see toolRegistry.js) — ereader
+// uses its own dedicated worker pool, never the shared js/worker.js instance
+// the default cancelProcess() terminates, so without this hook clicking
+// Cancel mid-run silently did nothing to the actual in-flight crop/encode
+// work (found while rewriting this function for pool-based parallelism,
+// unrelated to that change but the same rewrite touched every code path
+// that needed to know about it). Rejects every in-flight worker request
+// (there can be several at once with a pool) so _runEreader's Promise.all
+// unwinds instead of hanging, then terminates every pool worker outright —
+// discarding whatever page(s) were mid-flight is fine, the whole point is
+// stopping immediately.
+export function cancelEreader() {
+  const err = new _BatchCancelled();
+  for (const reject of _ereaderPendingRejects) reject(err);
+  _ereaderPendingRejects.clear();
+  _terminateEreaderPool();
+  isProcessing = false;
+  setFilesLocked(false);
+  hideProgress();
+  hideCancelBtn();
+  setButtonReady(TOOLS.ereader.btn);
+  showToast(t('cancelled'));
 }
 
 const _EREADER_SAMPLE_MAX     = 12;   // pages sampled to compute the one global crop rect
@@ -1210,47 +1249,75 @@ async function _runEreader(filesSnapshot, { device = 'kindle', grayscale = true,
       height: _EREADER_PAGE_HEIGHT_PT,
     };
 
-    const worker = _ensureEreaderWorker();
-    const pages  = [];
-    let outIdx   = 0;
+    // ── Parallel page processing across a worker pool ──────────────
+    // Large books (500+ pages) were genuinely slow here: the old code fully
+    // round-tripped one page (render → worker → response) before even
+    // starting the next page's render, so total time was ~pageCount ×
+    // (render + crop/grayscale/contrast/encode) with zero overlap. The
+    // render step still has to stay on the main thread (pdf.js never runs
+    // inside a Worker in this codebase — see ereaderWorker.js's header
+    // comment), but the actual CPU cost — crop/grayscale/contrast/JPEG-
+    // encode — now runs on up to hardwareConcurrency workers concurrently.
+    //
+    // A composite index (sourcePage×10 + subPage) is used instead of a
+    // simple incrementing counter, because pages can now complete in ANY
+    // order (inherent with a worker pool) — the old outIdx++ scheme relied
+    // on strictly sequential completion. Each source page can independently
+    // produce 1-3 output pages (single / left+right column split / header+
+    // left+right), a decision the worker only makes mid-processing, so this
+    // is the simplest scheme that sorts correctly at assembly time
+    // regardless of arrival order, without needing to know other pages'
+    // sub-page counts in advance. handleAssemble() already sorts by .index
+    // before building the PDF, so no change needed on that side.
+    const POOL_SIZE = Math.max(1, Math.min(navigator.hardwareConcurrency || 4, 6));
+    _ereaderPool = _createEreaderPool(POOL_SIZE);
 
-    // Sequential, one page fully round-tripped (render → worker → response)
-    // before starting the next — same reasoning as _runCleanScan. Each
-    // source page yields 1 output page normally, or 2 (left/right column)
-    // when columnSplit is active — outIdx assigns the final, flattened
-    // page order the assembled PDF actually uses.
-    for (let i = 1; i <= pageCount; i++) {
-      const page = await pdfDoc.getPage(i);
-      const vp     = page.getViewport({ scale: _EREADER_RENDER_SCALE });
-      const canvas = document.createElement('canvas');
-      canvas.width  = Math.round(vp.width);
-      canvas.height = Math.round(vp.height);
-      await page.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
-      page.cleanup?.();
+    const pages = [];
+    let nextPageNum = 1;
+    let completedSourcePages = 0;
 
-      const bitmap = await createImageBitmap(canvas);
-      const result = await _ereaderWorkerRequest(
-        worker,
-        {
-          type: 'processPage', index: i - 1, bitmap, cropRect,
-          columnSplit: columnSplit.enabled ? { centerFrac: columnSplit.centerFrac } : null,
-          grayscale, contrast, quality, outputWidth, outputHeight,
-        },
-        [bitmap]
-      );
-      for (const p of result.pages) {
-        pages.push({ index: outIdx++, bytes: p.bytes, format: p.format, width: p.width, height: p.height });
+    async function workerLane(worker) {
+      for (;;) {
+        const pageNum = nextPageNum++;
+        if (pageNum > pageCount) return;
+
+        const page = await pdfDoc.getPage(pageNum);
+        const vp     = page.getViewport({ scale: _EREADER_RENDER_SCALE });
+        const canvas = document.createElement('canvas');
+        canvas.width  = Math.round(vp.width);
+        canvas.height = Math.round(vp.height);
+        await page.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
+        page.cleanup?.();
+
+        const bitmap = await createImageBitmap(canvas);
+        const result = await _ereaderWorkerRequest(
+          worker,
+          {
+            type: 'processPage', index: pageNum - 1, cropRect, bitmap,
+            columnSplit: columnSplit.enabled ? { centerFrac: columnSplit.centerFrac } : null,
+            grayscale, contrast, quality, outputWidth, outputHeight,
+          },
+          [bitmap]
+        );
+        result.pages.forEach((p, sub) => {
+          pages.push({ index: (pageNum - 1) * 10 + sub, bytes: p.bytes, format: p.format, width: p.width, height: p.height });
+        });
+
+        completedSourcePages++;
+        setProgress(8 + Math.round((completedSourcePages / pageCount) * 77), t('prog_ereader_page', { n: completedSourcePages, total: pageCount }));
       }
-
-      setProgress(8 + Math.round((i / pageCount) * 77), t('prog_ereader_page', { n: i, total: pageCount }));
     }
 
+    await Promise.all(_ereaderPool.map(workerLane));
+
     const done = await _ereaderWorkerRequest(
-      worker,
+      _ereaderPool[0],
       { type: 'assemble', pages, pageSize },
       pages.map(p => p.bytes),
       (value, label) => setProgress(Math.max(85, value), label)
     );
+
+    _terminateEreaderPool();
 
     if (!(done.result instanceof ArrayBuffer)) {
       _handleError('ereader', 'Unexpected result from worker'); return;
@@ -1270,6 +1337,8 @@ async function _runEreader(filesSnapshot, { device = 'kindle', grayscale = true,
       detail: { tool: 'ereader', blob, desc, filename }
     }));
   } catch (err) {
+    _terminateEreaderPool();
+    if (err instanceof _BatchCancelled) return; // cancelEreader() already did all cleanup + toast
     isProcessing = false;
     setFilesLocked(false);
     hideCancelBtn();
