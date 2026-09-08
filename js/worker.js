@@ -459,8 +459,119 @@ async function handleMerge(files, names, removeWatermarks = false) {
 }
 
 // ── Split handler ──
+// ── Bookmark-preserving Outlines filter ───────────────────────────
+// Used by handleSplit below instead of unconditionally deleting /Outlines
+// whenever pages are removed (see that fix's own history: dangling bookmarks
+// pointing at excluded pages leaked their full content, since removePage()
+// only unlinks a page from /Pages — the page object itself, and anything
+// still referencing it from elsewhere in the catalog like /Outlines, is
+// untouched and still resolves).
+//
+// This keeps whichever bookmarks still point at a SURVIVING page, dropping
+// only the ones that pointed at excluded pages — matches Smallpdf's observed
+// behavior (competitor comparison, 2026-09), a real UX improvement over
+// blanket-deleting every bookmark just because SOME page was removed.
+//
+// No page-index renumbering is needed: a PDF /Dest array's first element is
+// a direct object reference to the target page dictionary, not an ordinal
+// index — removePage() never reassigns a surviving page's object identity,
+// only its position in the /Pages tree, so a kept page's bookmark reference
+// is still exactly correct regardless of where that page ends up.
+//
+// Deliberately scoped, fail-closed: only handles the two destination shapes
+// pdf-lib itself and virtually every real-world PDF generator use — a direct
+// /Dest array, or a /GoTo action's /D array. Named destinations (resolved via
+// the catalog's /Names/Dests tree) and any other action type (/GoToR, /URI,
+// …) are NOT resolved here — if a bookmark's target page can't be proven to
+// survive, it's dropped rather than kept, matching the original fix's own
+// priority: losing a benign bookmark is an acceptable cost, leaking excluded
+// content through an unhandled destination shape is not.
+//
+// Also doesn't promote orphaned grandchildren: if a bookmark's OWN target
+// page was removed, its entire subtree is dropped too, even if some
+// descendant bookmark pointed at a surviving page — a real but rare shape
+// (a removed section's own heading bookmark with a kept sub-bookmark inside
+// it), not handled to keep this correct and reviewable rather than exhaustive.
+function _filterOutlinesForSurvivors(doc, survivingRefTags) {
+  const { PDFName, PDFDict, PDFArray, PDFRef, PDFNumber } = PDFLib;
+  const outlinesObj = doc.catalog.get(PDFName.of('Outlines'));
+  if (!outlinesObj) return; // no bookmarks at all — nothing to do
+
+  const outlinesDict = doc.context.lookup(outlinesObj, PDFDict);
+  if (!outlinesDict) return;
+
+  function destPageRef(itemDict) {
+    let destArr = itemDict.lookupMaybe(PDFName.of('Dest'), PDFArray);
+    if (!destArr) {
+      const action = itemDict.lookupMaybe(PDFName.of('A'), PDFDict);
+      destArr = action?.lookupMaybe(PDFName.of('D'), PDFArray);
+    }
+    if (!destArr || destArr.size() === 0) return null;
+    const first = destArr.get(0);
+    return first instanceof PDFRef ? first : null;
+  }
+
+  // Prunes the sibling chain starting at `firstRef` (mutating items in place
+  // to relink around dropped siblings/children). Returns the new
+  // { first, last, count } for this level, or null if nothing survived.
+  function prune(firstRef) {
+    let curRef = firstRef;
+    let newFirst = null, newLast = null, count = 0;
+    while (curRef) {
+      const item    = doc.context.lookup(curRef, PDFDict);
+      const nextRef = item.get(PDFName.of('Next'));
+
+      const childFirstRef = item.get(PDFName.of('First'));
+      let childResult = null;
+      if (childFirstRef) {
+        childResult = prune(childFirstRef);
+        if (childResult) {
+          item.set(PDFName.of('First'), childResult.first);
+          item.set(PDFName.of('Last'), childResult.last);
+          item.set(PDFName.of('Count'), PDFNumber.of(childResult.count));
+        } else {
+          item.delete(PDFName.of('First'));
+          item.delete(PDFName.of('Last'));
+          item.delete(PDFName.of('Count'));
+        }
+      }
+
+      const pageRef = destPageRef(item);
+      if (pageRef && survivingRefTags.has(pageRef.tag)) {
+        if (newFirst === null) {
+          item.delete(PDFName.of('Prev'));
+        } else {
+          item.set(PDFName.of('Prev'), newLast);
+          doc.context.lookup(newLast, PDFDict).set(PDFName.of('Next'), curRef);
+        }
+        newFirst = newFirst ?? curRef;
+        newLast  = curRef;
+        count   += 1 + (childResult ? childResult.count : 0);
+      }
+      // else: drop this item — its Next is simply never followed into the
+      // new chain, and (since it's now unreachable from the catalog) neither
+      // is whatever remained of its own already-pruned subtree.
+
+      curRef = nextRef;
+    }
+    if (newLast !== null) doc.context.lookup(newLast, PDFDict).delete(PDFName.of('Next'));
+    return newFirst ? { first: newFirst, last: newLast, count } : null;
+  }
+
+  const firstRef = outlinesDict.get(PDFName.of('First'));
+  const result    = firstRef ? prune(firstRef) : null;
+
+  if (result) {
+    outlinesDict.set(PDFName.of('First'), result.first);
+    outlinesDict.set(PDFName.of('Last'), result.last);
+    outlinesDict.set(PDFName.of('Count'), PDFNumber.of(result.count));
+  } else {
+    doc.catalog.delete(PDFName.of('Outlines'));
+  }
+}
+
 async function handleSplit(fileBuffer, options) {
-  const { PDFDocument, PDFName } = PDFLib;
+  const { PDFDocument } = PDFLib;
 
   // Measure page count before consuming fileBuffer in any load call.
   // We peek via a temporary load; fileBuffer itself is not detached by pdf-lib.
@@ -485,6 +596,13 @@ async function handleSplit(fileBuffer, options) {
     const srcDoc = await PDFDocument.load(fileBuffer, { ignoreEncryption: true });
     if (options.removeWatermarks) _removeWatermarks(srcDoc);
     const keepSet = new Set(pages.map(p => p - 1)); // convert to 0-indexed
+    // Captured BEFORE removePage() — page object identity (and therefore a
+    // bookmark's /Dest reference to it) is unaffected by removal, only the
+    // /Pages tree linkage changes, so these refs stay valid for the filter
+    // below regardless of the pages' new ordinal positions.
+    const survivingRefTags = new Set();
+    const pagesBeforeRemoval = srcDoc.getPages();
+    for (const idx of keepSet) survivingRefTags.add(pagesBeforeRemoval[idx].ref.tag);
     for (let i = pageCount - 1; i >= 0; i--) {
       if (!keepSet.has(i)) srcDoc.removePage(i);
     }
@@ -496,10 +614,11 @@ async function handleSplit(fileBuffer, options) {
     // bookmarks pointing outside the visible page range AND keeps the
     // "removed" pages' full content recoverable through them — a real
     // content-retention bug for the common case of extracting a subset to
-    // deliberately exclude other pages before sharing. Dropping /Outlines
-    // whenever pages were actually removed matches how the no-bookmarks case
-    // already behaves (nothing left referencing the excluded pages).
-    if (pages.length < pageCount) srcDoc.catalog.delete(PDFName.of('Outlines'));
+    // deliberately exclude other pages before sharing. Filtering /Outlines
+    // down to only the bookmarks whose target page survived (see
+    // _filterOutlinesForSurvivors's own header comment) closes the same leak
+    // while preserving navigation for the pages that are actually still here.
+    if (pages.length < pageCount) _filterOutlinesForSurvivors(srcDoc, survivingRefTags);
     self.postMessage({ type: 'progress', value: 90, label: 'Saving...' });
     const bytes = await srcDoc.save();
     self.postMessage(
@@ -517,13 +636,24 @@ async function handleSplit(fileBuffer, options) {
       const pageNum = pages[i];
       const pageDoc = await PDFDocument.load(fileBuffer, { ignoreEncryption: true });
       if (options.removeWatermarks) _removeWatermarks(pageDoc);
+      // Captured BEFORE removePage() — pdf-lib's getPages() is backed by a
+      // cache that removePage() never invalidates (only insert/add paths do,
+      // confirmed by reading pdf-lib's own source), so reading it AFTER the
+      // removal loop below would silently return the stale pre-removal
+      // array every time, always resolving to the wrong (original index 0)
+      // page. Matches the same "capture refs before mutating" approach the
+      // 'single' branch above already uses for this exact reason.
+      const survivingRefTag = pageDoc.getPages()[pageNum - 1].ref.tag;
       for (let j = pageCount - 1; j >= 0; j--) {
         if (j !== pageNum - 1) pageDoc.removePage(j);
       }
       // Same dangling-bookmark/content-retention fix as the 'single' branch
       // above — every per-page split here removes all but 1 page, so this is
-      // unconditional whenever the source had more than 1 page.
-      if (pageCount > 1) pageDoc.catalog.delete(PDFName.of('Outlines'));
+      // unconditional whenever the source had more than 1 page. Only one page
+      // object survives per output, so the surviving set is just that page's
+      // own ref — any bookmark that was pointing at THIS specific page (there
+      // may be more than one) is kept, everything else dropped.
+      if (pageCount > 1) _filterOutlinesForSurvivors(pageDoc, new Set([survivingRefTag]));
       const bytes = await pageDoc.save();
       results.push({ name: `page_${pageNum}.pdf`, buffer: bytes.buffer });
       self.postMessage({

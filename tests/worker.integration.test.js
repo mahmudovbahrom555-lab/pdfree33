@@ -316,6 +316,36 @@ async function _buildBookmarked3Page() {
 const _bookmarked3 = await _buildBookmarked3Page();
 const bookmarked3 = () => clone(_bookmarked3);
 
+// Walks a loaded document's /Outlines chain (top-level + nested), returning
+// [{ title, pageRef }] — used to verify _filterOutlinesForSurvivors kept
+// exactly the right bookmarks and that each one's /Dest still resolves to a
+// real page inside THIS document (not a dangling ref to something excluded).
+function _collectOutlineEntries(doc) {
+  const { PDFName, PDFDict, PDFArray, PDFRef, PDFString } = PDFLib;
+  const entries = [];
+  const outlinesObj = doc.catalog.get(PDFName.of('Outlines'));
+  if (!outlinesObj) return entries;
+  const outlinesDict = doc.context.lookup(outlinesObj, PDFDict);
+
+  function walk(ref) {
+    let cur = ref;
+    while (cur) {
+      const item  = doc.context.lookup(cur, PDFDict);
+      const titleObj = item.lookup(PDFName.of('Title'));
+      const title = titleObj instanceof PDFString ? titleObj.decodeText() : titleObj.toString();
+      const destArr = item.lookupMaybe(PDFName.of('Dest'), PDFArray);
+      const first = destArr && destArr.size() > 0 ? destArr.get(0) : null;
+      entries.push({ title, pageRef: first instanceof PDFRef ? first : null });
+      const childFirst = item.get(PDFName.of('First'));
+      if (childFirst) walk(childFirst);
+      cur = item.get(PDFName.of('Next'));
+    }
+  }
+  const first = outlinesDict.get(PDFName.of('First'));
+  if (first) walk(first);
+  return entries;
+}
+
 console.log('\n✂️  handleSplit:');
 
 await test('split single mode: extracts subset of pages', async () => {
@@ -351,26 +381,62 @@ await test('split throws on no valid pages', async () => {
 // full original content (removePage() only unlinks from /Pages; pdf-lib's
 // save() doesn't garbage-collect anything still reachable from elsewhere in
 // the catalog, like /Outlines). Confirmed live on pdfree.io with a real
-// 6-page/6-bookmark PDF before fixing.
+// 6-page/6-bookmark PDF before fixing (first shipped as "drop all bookmarks
+// whenever any page was removed" — since upgraded, see below, to keep the
+// bookmarks that still point at a surviving page, matching Smallpdf's
+// observed behavior from a later competitor-comparison pass).
 console.log('\n🔖 handleSplit — dangling /Outlines after page removal:');
 
-await test('single mode: extracting a SUBSET of a bookmarked PDF drops /Outlines entirely', async () => {
-  const { PDFDocument, PDFName } = PDFLib;
+await test('single mode: extracting a SUBSET of a bookmarked PDF keeps ONLY the surviving pages\' bookmarks', async () => {
+  const { PDFDocument } = PDFLib;
   await handleSplit(bookmarked3(), { pages: [1, 2], mode: 'single' }); // page 3 removed
   const done = lastDone();
   const out  = await PDFDocument.load(done.result);
-  expect(out.catalog.get(PDFName.of('Outlines'))).toBe(undefined);
   expect(out.getPageCount()).toBe(2);
+
+  const entries = _collectOutlineEntries(out);
+  expect(entries.length).toBe(2);
+  expect(entries.map(e => e.title).sort().join(',')).toBe('Bookmark 1,Bookmark 2');
+  expect(entries.some(e => e.title === 'Bookmark 3')).toBeFalsy();
+
+  // Every surviving bookmark must resolve to one of THIS document's own
+  // pages — not a dangling ref to the excluded page's content (the original
+  // leak this whole fix closes).
+  const pageRefTags = new Set(out.getPages().map(p => p.ref.tag));
+  for (const e of entries) {
+    expect(e.pageRef !== null).toBeTruthy();
+    expect(pageRefTags.has(e.pageRef.tag)).toBeTruthy();
+  }
 });
 
-await test('separate mode: each per-page split of a bookmarked PDF drops /Outlines entirely', async () => {
-  const { PDFDocument, PDFName } = PDFLib;
+await test('single mode: non-contiguous keep (drop the MIDDLE page) still resolves the surviving bookmarks correctly', async () => {
+  const { PDFDocument } = PDFLib;
+  await handleSplit(bookmarked3(), { pages: [1, 3], mode: 'single' }); // page 2 removed
+  const done = lastDone();
+  const out  = await PDFDocument.load(done.result);
+  expect(out.getPageCount()).toBe(2);
+
+  const entries = _collectOutlineEntries(out);
+  expect(entries.map(e => e.title).sort().join(',')).toBe('Bookmark 1,Bookmark 3');
+  // "Bookmark 3" now targets the SECOND page of the output (original page 3
+  // shifted down), not the FIRST — proves no renumbering was needed: the
+  // /Dest ref still points at the same page object, which pdf-lib simply
+  // relinked to a new /Pages tree position.
+  const b3 = entries.find(e => e.title === 'Bookmark 3');
+  expect(b3.pageRef.tag).toBe(out.getPages()[1].ref.tag);
+});
+
+await test('separate mode: each per-page split of a bookmarked PDF keeps ONLY that page\'s own bookmark', async () => {
+  const { PDFDocument } = PDFLib;
   await handleSplit(bookmarked3(), { pages: [1, 2, 3], mode: 'separate' });
   const done = lastDone();
-  for (const { buffer } of done.result) {
-    const out = await PDFDocument.load(buffer);
-    expect(out.catalog.get(PDFName.of('Outlines'))).toBe(undefined);
+  for (let i = 0; i < done.result.length; i++) {
+    const out = await PDFDocument.load(done.result[i].buffer);
     expect(out.getPageCount()).toBe(1);
+    const entries = _collectOutlineEntries(out);
+    expect(entries.length).toBe(1);
+    expect(entries[0].title).toBe(`Bookmark ${i + 1}`);
+    expect(entries[0].pageRef.tag).toBe(out.getPages()[0].ref.tag);
   }
 });
 
