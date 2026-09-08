@@ -455,6 +455,55 @@ await test('split page 1 only: single-page PDF is valid', async () => {
   expect(done.result.byteLength).toBeGreaterThan(100);
 });
 
+// Real bug found while auditing Extract Pages (which reuses this same
+// handleSplit 'single' branch): the "reverse page order" option sends its
+// already-reversed `pages` array straight through, but the extraction logic
+// only ever used that array as an unordered Set to decide what to KEEP —
+// removePage() leaves survivors in their original relative order no matter
+// what sequence they were requested in, so reverse silently did nothing to
+// the actual output. Confirmed with a standalone pdf-lib reproduction before
+// touching worker.js: identical output for `pages:[1,2,3,4,5]` and
+// `pages:[5,4,3,2,1]`. Fixed by reordering the survivors to match the
+// requested sequence whenever it isn't already ascending.
+console.log('\n🔀 handleSplit — single mode respects a non-ascending `pages` order:');
+
+await test('single mode: pages=[3,1,2] (full reorder, nothing removed) outputs in that exact order', async () => {
+  const { PDFDocument } = PDFLib;
+  await handleSplit(bookmarked3(), { pages: [3, 1, 2], mode: 'single' });
+  const done = lastDone();
+  const out  = await PDFDocument.load(done.result);
+  expect(out.getPageCount()).toBe(3);
+
+  const entries = _collectOutlineEntries(out);
+  const titleForRef = tag => entries.find(e => e.pageRef.tag === tag)?.title;
+  const outputOrder = out.getPages().map(p => titleForRef(p.ref.tag));
+  expect(outputOrder.join(',')).toBe('Bookmark 3,Bookmark 1,Bookmark 2');
+});
+
+await test('single mode: pages=[3,1] (partial selection + reverse) outputs page 3 then page 1', async () => {
+  const { PDFDocument } = PDFLib;
+  await handleSplit(bookmarked3(), { pages: [3, 1], mode: 'single' }); // page 2 dropped, 1&3 reversed
+  const done = lastDone();
+  const out  = await PDFDocument.load(done.result);
+  expect(out.getPageCount()).toBe(2);
+
+  const entries = _collectOutlineEntries(out);
+  const titleForRef = tag => entries.find(e => e.pageRef.tag === tag)?.title;
+  const outputOrder = out.getPages().map(p => titleForRef(p.ref.tag));
+  expect(outputOrder.join(',')).toBe('Bookmark 3,Bookmark 1');
+});
+
+await test('single mode: ascending pages=[1,3] (no reverse) is unaffected by the reorder fix', async () => {
+  const { PDFDocument } = PDFLib;
+  await handleSplit(bookmarked3(), { pages: [1, 3], mode: 'single' });
+  const done = lastDone();
+  const out  = await PDFDocument.load(done.result);
+  const entries = _collectOutlineEntries(out);
+  const titleForRef = tag => entries.find(e => e.pageRef.tag === tag)?.title;
+  const outputOrder = out.getPages().map(p => titleForRef(p.ref.tag));
+  expect(outputOrder.join(',')).toBe('Bookmark 1,Bookmark 3');
+});
+
 // ══════════════════════════════════════════════════════════════
 // handleWatermark
 // ══════════════════════════════════════════════════════════════

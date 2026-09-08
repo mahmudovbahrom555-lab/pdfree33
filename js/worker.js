@@ -603,8 +603,26 @@ async function handleSplit(fileBuffer, options) {
     const survivingRefTags = new Set();
     const pagesBeforeRemoval = srcDoc.getPages();
     for (const idx of keepSet) survivingRefTags.add(pagesBeforeRemoval[idx].ref.tag);
+    // Captured BEFORE removal for the same reason as survivingRefTags above —
+    // these PDFPage objects stay valid (same doc, same underlying refs) no
+    // matter what removePage() does below, and this is the sequence Extract's
+    // "reverse page order" option (and any future out-of-order selection)
+    // actually needs in the output.
+    const orderedPageObjs = pages.map(p => pagesBeforeRemoval[p - 1]);
     for (let i = pageCount - 1; i >= 0; i--) {
       if (!keepSet.has(i)) srcDoc.removePage(i);
+    }
+    // removePage() only removes pages, it never reorders the survivors — they
+    // stay in their original relative order regardless of what sequence
+    // `pages` was given in. That's correct for a plain subset extraction, but
+    // silently ignores the "reverse" option and any other non-ascending
+    // selection. Only pay for a reorder pass when the requested order and the
+    // now-ascending survivor order actually differ (the common case — no
+    // reverse, ascending pick — needs none).
+    const needsReorder = pages.some((p, i) => i > 0 && p <= pages[i - 1]);
+    if (needsReorder) {
+      for (let i = srcDoc.getPageCount() - 1; i >= 0; i--) srcDoc.removePage(i);
+      for (const pageObj of orderedPageObjs) srcDoc.addPage(pageObj);
     }
     // removePage() only unlinks a page from the /Pages tree — the source
     // document's /Outlines (bookmarks) still reference the removed pages by
