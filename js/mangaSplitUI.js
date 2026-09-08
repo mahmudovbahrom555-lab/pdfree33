@@ -66,7 +66,29 @@ export async function initMangaSplitOptions(file) {
     _pageCount = doc.getPageCount();
     if (_pageCount === 0) { showToast(t('no_pages_pdf')); _hide(container); return; }
 
+    // Auto-pre-mark pages that aren't actually double-page spreads (covers,
+    // title pages, single-page inserts mixed into an otherwise all-spreads
+    // scan) as "don't split" by default, instead of requiring the user to
+    // manually click every single one — a real manga volume can have
+    // hundreds of spreads plus a handful of single pages. A genuine spread
+    // is inherently landscape (width > height); a single manga/comic page
+    // or cover is portrait or square. Comparing each page's OWN aspect
+    // ratio (already known instantly via pdf-lib's getSize(), no
+    // rasterization needed) rather than to a batch average correctly
+    // classifies a lone outlier page in either direction, unlike a
+    // "wider than the group's mean width" comparison. Inspired by a real
+    // open-source reference's "detect" mode (christofferaakre/
+    // split_manga_pages, which classifies by comparing each image's pixel
+    // width against the batch mean) — adapted here since PDF page
+    // dimensions are already free to read and per-page aspect ratio is a
+    // more direct, batch-composition-independent signal for this data.
+    // Still fully overridable — clicking any page toggles it either way.
     _skipped = new Set();
+    const pagesForDetect = doc.getPages();
+    for (let i = 0; i < pagesForDetect.length; i++) {
+      const { width, height } = pagesForDetect[i].getSize();
+      if (width <= height) _skipped.add(i);
+    }
     _rtl = true;
     _thumbnailURLs = new Array(_pageCount).fill(null);
 

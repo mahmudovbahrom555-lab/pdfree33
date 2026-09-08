@@ -343,7 +343,7 @@ export const EN = {
   ms_skipped_suffix:     ' (not split)',
   ms_skip_title:         'Keep this page uncut',
   ms_restore_title:      'Split this page',
-  ms_hint:               'Click a page to keep it uncut — useful for covers or single pages',
+  ms_hint:               'Covers and single pages are detected and kept uncut automatically — click any page to override',
   ms_banner:             '🔒 Processed entirely in your browser · No upload',
   ms_survey_title:       'Quick question (optional)',
   ms_survey_why:         'Why did you split these pages?',

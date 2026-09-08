@@ -20,7 +20,7 @@
     "name": "Can I keep a cover or single page from being split?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Yes. Click any page in the thumbnail grid to mark it \"don't split\" — useful for covers, title pages, or any single page mixed into an otherwise all-spreads scan. It stays untouched at its original size."
+      "text": "Yes — and covers, title pages, and single pages mixed into an otherwise all-spreads scan are detected and marked \"don't split\" automatically, based on page shape (a spread is wider than it is tall; a single page isn't). Click any page in the thumbnail grid to override the detection either way. Pages marked \"don't split\" stay untouched at their original size."
     }
   },
   {
