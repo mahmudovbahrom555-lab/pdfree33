@@ -99,26 +99,26 @@
   
 
   <!-- PWA -->
-  <link rel="manifest" href="manifest.json">
+  <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#2D7A4F">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="PDFree">
-  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
   <link rel="icon" href="/favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
   <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
 
   <!-- Replace pdfree.com with your actual domain after deployment -->
   <link rel="preload" href="/fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="css/fonts.css">
-  <link rel="stylesheet" href="css/variables.css">
-  <link rel="stylesheet" href="css/animations.css">
-  <link rel="stylesheet" href="css/layout.css">
-  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="/css/fonts.css">
+  <link rel="stylesheet" href="/css/variables.css">
+  <link rel="stylesheet" href="/css/animations.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="stylesheet" href="/css/components.css">
 
-  <script src="js/theme.js"></script>
+  <script src="/js/theme.js"></script>
 
   <!--
     ══════════════════════════════════════════════════════
@@ -138,21 +138,21 @@
 <body>
 
   <nav>
-    <a href="./" class="logo" id="logo" aria-label="Go to homepage" style="text-decoration:none"><span class="logo-text">PDF<span>ree</span></span></a>
+    <a href="/" class="logo" id="logo" aria-label="Go to homepage" style="text-decoration:none"><span class="logo-text">PDF<span>ree</span></span></a>
     <div class="nav-links">
-      <a href="../merge-pdf/" class="nav-link" data-tool="merge">Merge</a>
-      <a href="../split-pdf/" class="nav-link" data-tool="split">Split</a>
-      <a href="../compress-pdf/" class="nav-link" data-tool="compress">Compress</a>
-      <a href="../jpg2pdf/" class="nav-link" data-tool="jpg2pdf">JPG→PDF</a>
-      <a href="../pdf2jpg/" class="nav-link" data-tool="pdf2jpg">PDF→JPG</a>
-      <a href="../watermark-pdf/" class="nav-link" data-tool="watermark">Watermark</a>
-      <a href="../pagenum-pdf/" class="nav-link" data-tool="pagenum">Page №</a>
-      <a href="../metadata-pdf/" class="nav-link" data-tool="meta">Metadata</a>
-      <a href="../extract-pdf/" class="nav-link" data-tool="extract">Extract</a>
-      <a href="../draw-on-pdf/" class="nav-link" data-tool="draw-pdf">Draw</a>
-      <a href="../rotate-pdf/" class="nav-link" data-tool="rotate">Rotate</a>
-      <a href="../protect-pdf/" class="nav-link" data-tool="protect">Protect</a>
-      <a href="../pdf-to-word/" class="nav-link" data-tool="pdf2word">PDF→Word</a>
+      <a href="/merge-pdf/" class="nav-link" data-tool="merge">Merge</a>
+      <a href="/split-pdf/" class="nav-link" data-tool="split">Split</a>
+      <a href="/compress-pdf/" class="nav-link" data-tool="compress">Compress</a>
+      <a href="/jpg2pdf/" class="nav-link" data-tool="jpg2pdf">JPG→PDF</a>
+      <a href="/pdf2jpg/" class="nav-link" data-tool="pdf2jpg">PDF→JPG</a>
+      <a href="/watermark-pdf/" class="nav-link" data-tool="watermark">Watermark</a>
+      <a href="/pagenum-pdf/" class="nav-link" data-tool="pagenum">Page №</a>
+      <a href="/metadata-pdf/" class="nav-link" data-tool="meta">Metadata</a>
+      <a href="/extract-pdf/" class="nav-link" data-tool="extract">Extract</a>
+      <a href="/draw-on-pdf/" class="nav-link" data-tool="draw-pdf">Draw</a>
+      <a href="/rotate-pdf/" class="nav-link" data-tool="rotate">Rotate</a>
+      <a href="/protect-pdf/" class="nav-link" data-tool="protect">Protect</a>
+      <a href="/pdf-to-word/" class="nav-link" data-tool="pdf2word">PDF→Word</a>
     </div>
   </nav>
 
@@ -208,22 +208,22 @@
   <section id="toolsGrid" class="tools-section">
     <div class="section-label">All tools</div>
     <div class="tools-grid">
-      <a href="./merge-large-pdf-files/" class="tool-card featured" data-tool="merge" aria-label="Merge PDF">
+      <a href="/merge-large-pdf-files/" class="tool-card featured" data-tool="merge" aria-label="Merge PDF">
         <span class="tool-icon">🔗</span>
         <div class="tool-name">Merge PDF files</div>
         <div class="tool-desc">Combine unlimited PDF files — no restrictions</div>
       </a>
-      <a href="./split-pdf/" class="tool-card" data-tool="split"><span class="tool-icon">✂️</span><div class="tool-name">Split PDF</div><div class="tool-desc">Extract pages or split into separate files</div></a>
-      <a href="./compress-large-pdf-free/" class="tool-card" data-tool="compress"><span class="tool-icon">🗜️</span><div class="tool-name">Compress PDF</div><div class="tool-desc">Reduce file size without losing quality</div></a>
-      <a href="./jpg2pdf/" class="tool-card" data-tool="jpg2pdf"><span class="tool-icon">🖼️</span><div class="tool-name">JPG to PDF</div><div class="tool-desc">Convert images to PDF instantly</div></a>
-      <a href="./pdf2jpg/" class="tool-card" data-tool="pdf2jpg"><span class="tool-icon">📸</span><div class="tool-name">PDF to JPG</div><div class="tool-desc">Extract pages as high-quality images</div></a>
-      <a href="./extract-pdf/" class="tool-card" data-tool="extract"><span class="tool-icon">📑</span><div class="tool-name">Extract Pages</div><div class="tool-desc">Pull selected pages into a new PDF</div></a>
-      <a href="./watermark-pdf/" class="tool-card" data-tool="watermark"><span class="tool-icon">💧</span><div class="tool-name">Watermark</div><div class="tool-desc">Stamp text on every page — diagonal or tiled</div></a>
-      <a href="./pagenum-pdf/" class="tool-card" data-tool="pagenum"><span class="tool-icon">🔢</span><div class="tool-name">Page Numbers</div><div class="tool-desc">Add numbered footers — Arabic, Roman or ABC</div></a>
-      <a href="./metadata-pdf/" class="tool-card" data-tool="meta"><span class="tool-icon">🏷️</span><div class="tool-name">Edit Metadata</div><div class="tool-desc">View and edit title, author, keywords</div></a>
-      <a href="./redact-pdf/" class="tool-card" data-tool="redact"><span class="tool-icon">🖌️</span><div class="tool-name">Redact PDF</div><div class="tool-desc">Hide watermarks, signatures or sensitive data locally</div></a>
-      <a href="./rotate-pdf/" class="tool-card" data-tool="rotate"><span class="tool-icon">🔄</span><div class="tool-name">Rotate PDF</div><div class="tool-desc">Fix page orientation in any PDF</div></a>
-      <a href="./protect-pdf/" class="tool-card" data-tool="protect"><span class="tool-icon">🔒</span><div class="tool-name">Protect PDF</div><div class="tool-desc">Password & permissions — 100% private</div></a>
+      <a href="/split-pdf/" class="tool-card" data-tool="split"><span class="tool-icon">✂️</span><div class="tool-name">Split PDF</div><div class="tool-desc">Extract pages or split into separate files</div></a>
+      <a href="/compress-large-pdf-free/" class="tool-card" data-tool="compress"><span class="tool-icon">🗜️</span><div class="tool-name">Compress PDF</div><div class="tool-desc">Reduce file size without losing quality</div></a>
+      <a href="/jpg2pdf/" class="tool-card" data-tool="jpg2pdf"><span class="tool-icon">🖼️</span><div class="tool-name">JPG to PDF</div><div class="tool-desc">Convert images to PDF instantly</div></a>
+      <a href="/pdf2jpg/" class="tool-card" data-tool="pdf2jpg"><span class="tool-icon">📸</span><div class="tool-name">PDF to JPG</div><div class="tool-desc">Extract pages as high-quality images</div></a>
+      <a href="/extract-pdf/" class="tool-card" data-tool="extract"><span class="tool-icon">📑</span><div class="tool-name">Extract Pages</div><div class="tool-desc">Pull selected pages into a new PDF</div></a>
+      <a href="/watermark-pdf/" class="tool-card" data-tool="watermark"><span class="tool-icon">💧</span><div class="tool-name">Watermark</div><div class="tool-desc">Stamp text on every page — diagonal or tiled</div></a>
+      <a href="/pagenum-pdf/" class="tool-card" data-tool="pagenum"><span class="tool-icon">🔢</span><div class="tool-name">Page Numbers</div><div class="tool-desc">Add numbered footers — Arabic, Roman or ABC</div></a>
+      <a href="/metadata-pdf/" class="tool-card" data-tool="meta"><span class="tool-icon">🏷️</span><div class="tool-name">Edit Metadata</div><div class="tool-desc">View and edit title, author, keywords</div></a>
+      <a href="/redact-pdf/" class="tool-card" data-tool="redact"><span class="tool-icon">🖌️</span><div class="tool-name">Redact PDF</div><div class="tool-desc">Hide watermarks, signatures or sensitive data locally</div></a>
+      <a href="/rotate-pdf/" class="tool-card" data-tool="rotate"><span class="tool-icon">🔄</span><div class="tool-name">Rotate PDF</div><div class="tool-desc">Fix page orientation in any PDF</div></a>
+      <a href="/protect-pdf/" class="tool-card" data-tool="protect"><span class="tool-icon">🔒</span><div class="tool-name">Protect PDF</div><div class="tool-desc">Password & permissions — 100% private</div></a>
     </div>
   </section>
 
@@ -425,8 +425,8 @@
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
   <!-- JSZip and pdf-lib are now dynamically imported via ESM when needed -->
-  <script type="module" src="js/feedback.js"></script>
-  <script type="module" src="js/app.js"></script>
+  <script type="module" src="/js/feedback.js"></script>
+  <script type="module" src="/js/app.js"></script>
 
 
 <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script><!-- End Cloudflare Web Analytics -->
