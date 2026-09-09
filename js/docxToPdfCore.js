@@ -56,6 +56,37 @@ function _parseRun(span) {
   return run;
 }
 
+// Real bug found via a live test conversion (not disclosed as a known
+// limitation — a genuine regression to fix): Word's default bullet-list
+// styles set the `::before` bullet glyph using a Private-Use-Area
+// codepoint from the "Symbol" or "Wingdings" font (confirmed live via
+// docx-preview's own computed style: U+F0B7 with font-family "Symbol" for
+// a plain default bullet list) — a codepoint that only means anything
+// inside THAT specific font's private mapping. docxToPdfCore.js emitted
+// it as plain text with no font override, and pdfmake's default font has
+// no glyph for a Symbol-font PUA codepoint at all, rendering a visible
+// "missing glyph" tofu box instead of a bullet in every bulleted list.
+// Map the handful of codepoints Word's built-in list styles actually use
+// in practice to their real Unicode equivalents; anything else in the
+// Private Use Area (any codepoint Word/a dingbat font could plausibly
+// emit that isn't in this table) falls back to a plain bullet rather than
+// a tofu box — always closer to correct than leaving it untranslated.
+const SYMBOL_BULLET_MAP = {
+  0xf0b7: '•', // Symbol "l" — the default Word bullet (•)
+  0xf0a7: '▪', // Wingdings solid square (▪)
+  0xf0d8: '▸', // Wingdings small right arrow (▸)
+  0xf075: '○', // Wingdings open circle (○)
+  0xf0fc: '✓', // Wingdings check mark (✓)
+};
+function _normalizeBulletPrefix(str) {
+  return Array.from(str).map(ch => {
+    const cp = ch.codePointAt(0);
+    if (SYMBOL_BULLET_MAP[cp]) return SYMBOL_BULLET_MAP[cp];
+    if (cp >= 0xe000 && cp <= 0xf8ff) return '•'; // any other PUA codepoint — safe fallback
+    return ch;
+  }).join('');
+}
+
 function _toAlpha(n, upper) {
   let s = '';
   while (n > 0) { n--; s = String.fromCharCode(97 + (n % 26)) + s; n = Math.floor(n / 26); }
@@ -190,7 +221,7 @@ async function _docxToPdfmakeContent(file, { isCancelled } = {}) {
           const styleMatch = beforeContent.match(/counter\([^,)]+,\s*([a-z-]+)\)/);
           listPrefix = `${_formatCounter(listCounters[listClass], styleMatch?.[1])}.  `;
         } else {
-          const cleaned = beforeContent.replace(/^"|"$/g, '').replace(/\\9\s*/g, '').trim();
+          const cleaned = _normalizeBulletPrefix(beforeContent.replace(/^"|"$/g, '').replace(/\\9\s*/g, '').trim());
           listPrefix = cleaned ? `${cleaned}  ` : '';
         }
       }
