@@ -66,6 +66,15 @@ jobs:
           python3 scripts/check_i18n.py
           python3 scripts/check_sw.py
 
+      - name: Validate js/vendor/pdf-lib.min.js matches the pinned devDependency
+        # js/vendor/pdf-lib.min.js is a manually-copied file, not tracked by
+        # package-lock.json — Dependabot/npm can bump node_modules/pdf-lib
+        # with zero visibility into it, silently shipping browser users a
+        # different pdf-lib build than what the test suite actually ran
+        # against. See scripts/check_vendor_sync.py's own header for the
+        # fix procedure if this ever fails.
+        run: python3 scripts/check_vendor_sync.py
+
       - name: Build site
         run: python3 scripts/build.py
 
