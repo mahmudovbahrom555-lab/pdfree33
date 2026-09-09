@@ -279,8 +279,8 @@ if (failed > 0) process.exit(1);
 const workerSrc2 = readFileSync(join(__dir, '../js/worker.js'), 'utf8')
   .replace(/importScripts\([^)]+\);?/g, '')
   .replace(/self\.onmessage\s*=[\s\S]*?^};/m, '');
-const workerModule2 = new AsyncFunction(workerSrc2 + '\nreturn { handleSplit, handleWatermark, handlePageNum, handleMeta, handleProtect };');
-const { handleSplit, handleWatermark, handlePageNum, handleMeta, handleProtect } = await workerModule2();
+const workerModule2 = new AsyncFunction(workerSrc2 + '\nreturn { handleSplit, handleWatermark, handlePageNum, handleMeta, handleProtect, handleFill };');
+const { handleSplit, handleWatermark, handlePageNum, handleMeta, handleProtect, handleFill } = await workerModule2();
 
 // A real /Outlines (bookmarks) tree, one item per page — pdf-lib has no
 // high-level bookmark API, so this is built the same way worker.js itself
@@ -872,6 +872,86 @@ await test('stream keyword inside literal string does not trigger bounds', async
   const afterKw   = objStr[streamIdx + 6];
   if (afterKw === '\n' || afterKw === '\r') throw new Error('Keyword check should fail — stream is inside a string');
   // The '(' before 'stream' means our parser would have skipped it
+});
+
+// ══════════════════════════════════════════════════════════════
+// handleFill — two real bugs found via a market-research-driven pass
+// (real user pain points about PDF form filling researched first, then
+// a realistic multi-field AcroForm built to match them, filled through
+// the real UI, and cross-checked against independent parsers — qpdf,
+// MuPDF/PyMuPDF, pdf.js — not just this project's own code agreeing
+// with itself).
+// ══════════════════════════════════════════════════════════════
+
+async function _buildRadioForm() {
+  const { PDFDocument } = PDFLib;
+  const doc  = await PDFDocument.create();
+  const page = doc.addPage([300, 300]);
+  const form = doc.getForm();
+  const radio = form.createRadioGroup('choice');
+  radio.addOptionToPage('opt-a', page, { x: 20, y: 200, width: 16, height: 16 });
+  radio.addOptionToPage('opt-b', page, { x: 20, y: 160, width: 16, height: 16 });
+  radio.addOptionToPage('opt-c', page, { x: 20, y: 120, width: 16, height: 16 });
+  const bytes = await doc.save();
+  return bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength);
+}
+
+console.log('\n📝 handleFill:');
+
+await test("radio group: pdf-lib's own numeric widget export value (\"1\") resolves to the 2nd /Opt entry", async () => {
+  // pdf-lib's own addOptionToPage() names each widget's appearance state
+  // "0"/"1"/"2"… (see PDFAcroButton.addWidgetWithOpt) — that numeric name,
+  // not the semantic "opt-a"/"opt-b"/"opt-c" /Opt-array string, is what
+  // pdf.js's getAnnotations()/getFieldObjects() reports back to the UI as
+  // the option's export value. Sending that straight to
+  // RadioGroup.select() used to always throw (it validates against the
+  // /Opt-array strings), silently dropping the selection.
+  const { PDFDocument } = PDFLib;
+  await handleFill(await _buildRadioForm(), {
+    fieldValues: { choice: '1' }, flatten: false,
+  });
+  const done = lastDone();
+  const out  = await PDFDocument.load(done.result);
+  const selected = out.getForm().getRadioGroup('choice').getSelected();
+  expect(selected).toBe('opt-b');
+});
+
+await test('radio group: a genuinely unresolvable value is skipped and counted, not thrown', async () => {
+  await handleFill(await _buildRadioForm(), {
+    fieldValues: { choice: 'not-a-real-option' }, flatten: false,
+  });
+  const done = lastDone();
+  expect(done.skippedFields).toBe(1);
+});
+
+await test("flatten leaves no dangling /Annots refs (independently checked via pdf-lib's own context.lookup)", async () => {
+  // Real bug found by reading pdf-lib's vendored source directly (not
+  // guessed): form.flatten() → removeField() removes the WRONG ref from
+  // each page's /Annots array (findWidgetAppearanceRef()'s normal-
+  // appearance XObject ref, not the widget annotation's own ref) while
+  // still deleting the actual widget object from the document — leaving
+  // /Annots pointing at a now-nonexistent object. Confirmed independently
+  // with qpdf (--show-xref: the object is genuinely absent) and MuPDF
+  // (throws "cannot find object in xref" while rendering) before fixing.
+  // This test reproduces the same independent-resolution check inline.
+  const { PDFDocument, PDFArray, PDFRef } = PDFLib;
+  await handleFill(await _buildRadioForm(), {
+    fieldValues: { choice: '0' }, flatten: true,
+  });
+  const done = lastDone();
+  const out  = await PDFDocument.load(done.result);
+  for (const page of out.getPages()) {
+    const annots = page.node.Annots?.();
+    if (!(annots instanceof PDFArray)) continue;
+    for (let i = 0; i < annots.size(); i++) {
+      const entry = annots.get(i);
+      if (entry instanceof PDFRef) {
+        if (!out.context.lookup(entry)) throw new Error(`Dangling /Annots ref at page annot index ${i}`);
+      } else if (!entry) {
+        throw new Error(`Null /Annots entry at index ${i} (unresolved ref qpdf would have nulled)`);
+      }
+    }
+  }
 });
 
 console.log(`\n${'─'.repeat(50)}`);

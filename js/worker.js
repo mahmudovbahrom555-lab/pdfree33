@@ -2111,7 +2111,35 @@ async function handleFill(fileBuffer, { fieldValues = {}, sigImages = {}, fieldM
       } else if (field instanceof PDFCheckBox) {
         value ? field.check() : field.uncheck();
       } else if (field instanceof PDFRadioGroup) {
-        if (value) field.select(String(value));
+        // Real bug found via a market-research-driven pass on Fill: the UI's
+        // pdf.js-reported "export value" for a radio option is that OPTION
+        // WIDGET's own per-annotation appearance-state name — for pdf-lib-
+        // authored PDFs (and many other real-world generators using the same
+        // "numeric AP state + separate /Opt array of human values" pattern,
+        // confirmed via pdf-lib's own addWidgetWithOpt(), which always names
+        // widget states "0"/"1"/"2"…), that numeric name does NOT match any
+        // of pdf-lib's own getOptions() (which reads the /Opt array's
+        // semantic strings) — so field.select(value) always threw here,
+        // silently landing in the catch below with zero user-visible
+        // indication the selection was dropped. Confirmed live: filling a
+        // real 3-option radio group and flattening produced a PDF where NONE
+        // of the options render as selected, despite the UI reporting
+        // success. Fall back to resolving by POSITION when the direct value
+        // doesn't match — pdf.js's per-widget appearance-state index and
+        // pdf-lib's /Opt array are both populated in the same widget-
+        // creation order, so the Nth widget's numeric export value reliably
+        // corresponds to the Nth /Opt entry.
+        if (value) {
+          const opts = field.getOptions();
+          const str  = String(value);
+          if (opts.includes(str)) {
+            field.select(str);
+          } else {
+            const idx = Number(str);
+            if (Number.isInteger(idx) && opts[idx] !== undefined) field.select(opts[idx]);
+            else throw new Error('radio option unresolvable'); // → skippedFields, same as any other rejected value
+          }
+        }
       } else if (field instanceof PDFDropdown) {
         if (value) {
           const opts = field.getOptions();
@@ -2150,6 +2178,34 @@ async function handleFill(fileBuffer, { fieldValues = {}, sigImages = {}, fieldM
 
   if (flatten) {
     try { form.flatten(); } catch { /* flatten fails on some encrypted forms; skip */ }
+    // Real bug found via a market-research-driven pass on Fill (checkbox/
+    // radio-button rendering being one of the most commonly reported PDF
+    // form-filling complaints): pdf-lib's own form.flatten() → removeField()
+    // deletes each widget's underlying object from the document but removes
+    // the WRONG ref from the page's /Annots array (findWidgetAppearanceRef()
+    // — the widget's normal-appearance XObject ref — instead of the widget
+    // annotation's own ref, which is what /Annots actually lists) — verified
+    // by reading pdf-lib's vendored source directly, not guessed. Left
+    // uncleaned, /Annots keeps a reference to a now-deleted object; lenient
+    // parsers (pdf.js, browsers) silently skip it, but confirmed independently
+    // with BOTH qpdf's own --show-xref (the object is genuinely absent from
+    // the xref table) and MuPDF (throws "cannot find object in xref" while
+    // rendering) that the saved file is structurally broken — a real risk for
+    // any downstream tool stricter than a browser (archival/validation
+    // pipelines, some mobile/desktop viewers — plausibly the technical root
+    // of "checkbox looks empty when reopened in a different app" reports
+    // found during this round's market research). Defensive cleanup since
+    // this is vendored, unpatchable-in-place third-party code: strip any
+    // /Annots entry that no longer resolves to a real object.
+    for (const page of pdfDoc.getPages()) {
+      const annots = page.node.Annots?.();
+      if (!(annots instanceof PDFLib.PDFArray)) continue;
+      for (let i = annots.size() - 1; i >= 0; i--) {
+        const entry    = annots.get(i);
+        const resolved = entry instanceof PDFLib.PDFRef ? pdfDoc.context.lookup(entry) : entry;
+        if (!resolved) annots.remove(i);
+      }
+    }
   }
 
   // Embed signature images after flatten (visual, not cryptographic)
