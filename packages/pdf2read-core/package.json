@@ -1,6 +1,6 @@
 {
   "name": "@pdfree/pdf2read-core",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Reflow a fixed-layout PDF into structured reading blocks (headings/paragraphs/lists/tables) — the same extraction engine behind pdfree.io's Read PDF tool, runnable locally. Your files never leave your machine.",
   "type": "module",
   "license": "AGPL-3.0-only",
