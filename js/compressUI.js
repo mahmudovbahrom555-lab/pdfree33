@@ -823,13 +823,23 @@ export function hideCompressEmailOptions() {
 export function renderEmailVerdict(compressedSize) {
   id('emailVerdict')?.remove();
 
-  const mb    = compressedSize / (1024 * 1024);
+  // Gmail's 25MB and Outlook's 20MB caps apply to the email-encoded size, not
+  // the raw file — mail clients base64-encode attachments before sending,
+  // which inflates size by 4/3 (confirmed by Google's own support docs at
+  // support.google.com/mail/answer/6584). Comparing raw bytes directly
+  // against 20/25MB let files as large as ~24.9MB show a green "fits Gmail"
+  // verdict that would actually encode to ~33MB and get silently converted
+  // to a Drive link instead of attaching directly. Dividing the provider
+  // limits by 4/3 gives the raw-file size that's actually safe.
+  const mb           = compressedSize / (1024 * 1024);
+  const outlookSafeMb = 20 * 3 / 4; // 15
+  const gmailSafeMb   = 25 * 3 / 4; // 18.75
   let cls, msg;
 
-  if (mb < 20) {
+  if (mb < outlookSafeMb) {
     cls = 'compress-scan--found';
     msg = t('cmp_email_ok', { size: fmtSize(compressedSize) });
-  } else if (mb < 25) {
+  } else if (mb < gmailSafeMb) {
     cls = 'compress-scan--warn';
     msg = t('cmp_email_warn_outlook', { size: fmtSize(compressedSize) });
   } else {
