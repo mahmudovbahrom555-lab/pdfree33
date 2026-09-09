@@ -101,19 +101,40 @@ function _looksEncrypted(bytes) {
  * @param {string} password
  * @returns {Promise<Uint8Array|null>} Decrypted bytes on success, null on failure.
  */
+// Real bug found via a code-audit + live pass on Unlock: a PDF encrypted
+// with a non-ASCII password (Cyrillic, Turkish, CJK, even an accented
+// "café") — correctly, by our own now-fixed Protect tool (see
+// pdfEncrypt.js's _padPwd()) or by any spec-compliant reader like Acrobat
+// — could not be unlocked here even with the exact correct password.
+// `password` was passed straight into the qpdf-wasm argv, which the
+// Emscripten runtime UTF-8-encodes; the classic PDF security handler's key
+// derivation instead expects each UTF-16 code unit truncated to a single
+// byte (confirmed empirically live: the file's real decrypted bytes come
+// back for the byte-truncated form of "пароль123", and null/"incorrect
+// password" for the plain UTF-8 form of the exact same string) — the
+// mirror-image of the Protect encoding bug on the decrypt side. ASCII
+// passwords are byte-identical either way, so this changes nothing for
+// the common case.
+export function _toByteTruncatedPassword(password) {
+  let out = '';
+  for (let i = 0; i < password.length; i++) out += String.fromCharCode(password.charCodeAt(i) & 0xff);
+  return out;
+}
+
 async function _qpdfDecrypt(bytes, password) {
   await _init();
 
   // qpdf-run worker transfers input bytes — make an owned copy first
   // so the caller's buffer is not detached by postMessage.
   const input = new Uint8Array(bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength));
+  const pwArg = _toByteTruncatedPassword(password);
 
   try {
     const result = await _send(
       {
         type:    'run',
         inputs:  { 'in.pdf': input },
-        args:    ['--decrypt', `--password=${password}`, 'in.pdf', 'out.pdf'],
+        args:    ['--decrypt', `--password=${pwArg}`, 'in.pdf', 'out.pdf'],
         outputs: ['out.pdf'],
       },
       [input.buffer]
