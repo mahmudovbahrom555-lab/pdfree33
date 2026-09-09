@@ -85,8 +85,27 @@ const _PAD32 = new Uint8Array([
   0x2F,0x0C,0xA9,0xFE,0x64,0x53,0x69,0x7A,
 ]);
 
+// Real bug found via a competitor-comparison pass on Protect: this used to
+// UTF-8-encode the password (`TextEncoder`) before padding, which is NOT what
+// any real PDF reader does for the classic RC4 security handler (R=3/V=2) —
+// they encode each UTF-16 code unit as a single byte (a byte-truncation
+// convention documented for PDFDocEncoding on Latin-1-range code points, but
+// applied by real-world readers to ANY code unit, not just ones with a
+// well-defined PDFDocEncoding mapping). A password containing anything
+// outside ASCII — Cyrillic, CJK, Turkish İ/ğ/ş, even just an accented café —
+// produced a DIFFERENT derived key than what pdf.js (verified directly) and
+// presumably Acrobat/Preview/Chrome derive from the exact same password
+// text, silently locking the user out of their own file with the password
+// they correctly remember and typed. Verified independently with pdf.js
+// (not this project's own decrypt logic, which would trivially agree with
+// itself): the OLD UTF-8 encoding was rejected as "Incorrect Password" for
+// a Cyrillic password; switching to per-code-unit truncation below fixed
+// Cyrillic, Turkish, Japanese, and accented-Latin passwords alike, all
+// confirmed to open correctly via a fresh pdf.js instance.
 function _padPwd(pwd) {
-  const enc = new TextEncoder().encode((pwd || '').normalize('NFC'));
+  const s   = (pwd || '').normalize('NFC');
+  const enc = new Uint8Array(s.length);
+  for (let i = 0; i < s.length; i++) enc[i] = s.charCodeAt(i) & 0xff;
   const out = new Uint8Array(32);
   for (let i = 0; i < 32; i++)
     out[i] = i < enc.length ? enc[i] : _PAD32[i - enc.length];
@@ -558,6 +577,9 @@ function encryptPDF(inputBytes, opts = {}) {
   return result;
 }
 
-// Expose globally for importScripts() in worker.js and module systems
+// Expose globally for importScripts() in worker.js and module systems.
+// _padPwd also exported (test-only consumer) so the Unicode-password
+// byte-truncation fix has a direct, deterministic regression test instead
+// of only an end-to-end one — see tests/worker.integration.test.js.
 if (typeof self   !== 'undefined') self.encryptPDF = encryptPDF;
-if (typeof module !== 'undefined') module.exports = { encryptPDF };
+if (typeof module !== 'undefined') module.exports = { encryptPDF, _padPwd };

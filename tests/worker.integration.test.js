@@ -609,7 +609,7 @@ const encryptMod = {};
 new Function('module', 'exports', 'self', encryptModSrc)(
   encryptMod, encryptMod, global.self
 );
-const { encryptPDF } = encryptMod.exports ?? encryptMod;
+const { encryptPDF, _padPwd } = encryptMod.exports ?? encryptMod;
 
 // Make encryptPDF available as global.encryptPDF so worker eval can reach it
 global.encryptPDF = encryptPDF;
@@ -715,6 +715,48 @@ await test('qpdf validates the encrypted output (password check)', async () => {
   expect(passwordOk).toBeTruthy();
   expect(noErrors).toBeTruthy();
 });
+
+// Real bug found via a competitor-comparison pass on Protect: `_padPwd()` used
+// to UTF-8-encode the password before padding (`new TextEncoder().encode(...)`),
+// but real PDF readers encode each UTF-16 code unit as a single byte for the
+// classic RC4 security handler (R=3/V=2) — verified directly against pdf.js
+// (a fully independent implementation, not this project's own decrypt logic):
+// the OLD UTF-8 encoding made pdf.js reject the EXACT correct Cyrillic password
+// as "Incorrect Password", silently locking a user out of their own file with
+// a password they typed correctly. qpdf's CLI isn't a useful oracle for this
+// specific regression (it passes raw OS-locale bytes for its own --password=
+// argument, which happens to equal UTF-8 on this test machine and would
+// coincidentally "pass" with either the old buggy encoding or the fix) — so
+// this tests `_padPwd`'s actual byte output directly, deterministically,
+// against hand-computed expected bytes instead.
+console.log('\n🔐 _padPwd — Unicode password byte-truncation (not UTF-8):');
+
+await test('Cyrillic password truncates each code unit to its low byte', () => {
+  // п=U+043F а=U+0430 р=U+0440 о=U+043E л=U+043B ь=U+044C
+  const padded = _padPwd('парол ь');
+  // (using a space instead of ь+123 to keep the expected-bytes list short and readable)
+  const expected = [0x3F, 0x30, 0x40, 0x3E, 0x3B, 0x20, 0x4C];
+  expect(Array.from(padded.slice(0, expected.length)).join(',')).toBe(expected.join(','));
+  // Bytes 7..31 must be the standard PDF padding string (Table 3.2), unaffected.
+  expect(padded[7]).toBe(0x28); // _PAD32[0]
+  expect(padded.length).toBe(32);
+});
+
+await test('ASCII password is byte-identical whether UTF-8 or truncated (no regression for the common case)', () => {
+  const padded = _padPwd('test123');
+  expect(Array.from(padded.slice(0, 7)).join(',')).toBe([116, 101, 115, 116, 49, 50, 51].join(',')); // 't','e','s','t','1','2','3'
+});
+
+// Live cross-check performed manually before shipping (not committed here as
+// an automated test — would add a network+browser dependency, and thus real
+// flakiness risk, to every `npm test` run, unlike this suite's existing
+// qpdf checks which only shell out to an already-required local binary):
+// encrypted a real file with password 'пароль123' via this exact code path,
+// then opened it with a completely independent implementation (pdf.js, via
+// a fresh headless Chromium + the CDN build) — confirmed it opens correctly
+// post-fix, and confirmed the OLD (UTF-8) encoding was rejected as
+// "Incorrect Password" pre-fix. Also spot-checked Turkish (İ/ğ/ş), Japanese,
+// and accented-Latin (café) passwords the same way — all open correctly.
 
 await test('protect emits progress messages', async () => {
   await handleProtectEnc(normal1(), {

@@ -119,6 +119,66 @@ await test('single-file happy path still produces a real protected PDF (guard do
   }
 });
 
+await test('a Cyrillic password opens correctly in an independent PDF engine (pdf.js)', async () => {
+  // Real bug found via a competitor-comparison pass on Protect: js/pdfEncrypt.js's
+  // _padPwd() used to UTF-8-encode the password before padding, but real PDF
+  // readers encode each UTF-16 code unit as a single byte for the classic RC4
+  // security handler this tool uses (R=3/V=2) — verified directly against
+  // pdf.js (independent of this project's own code): the OLD encoding made a
+  // password like "пароль123" open as "Incorrect Password" in pdf.js even
+  // though the user typed the exact password they set. Fixed in _padPwd();
+  // this drives the REAL js/protectUI.js UI end to end (not the standalone
+  // repro used while diagnosing the bug) and checks the real downloaded file
+  // against a completely separate PDF engine, the same methodology as this
+  // file's other tests.
+  const context = await browser.newContext({ serviceWorkers: 'block' });
+  const page = await context.newPage();
+  try {
+    await page.addInitScript(BLOB_HOOK);
+    await page.goto(`${BASE_URL}/protect-pdf/`, { waitUntil: 'load', timeout: 30000 });
+    await page.setInputFiles('#fileInput', FILE_1);
+    await page.waitForSelector('#protUserPwd', { state: 'visible', timeout: 15000 });
+    await page.fill('#protUserPwd', 'пароль123');
+    await page.evaluate(() => { window.__blob = null; });
+    await page.click('#mergeBtn');
+
+    let result = null;
+    for (let i = 0; i < 40; i++) {
+      result = await page.evaluate(() => window.__blob ? true : null).catch(() => null);
+      if (result) break;
+      await page.waitForTimeout(500);
+    }
+    if (!result) throw new Error('conversion did not complete in time');
+
+    const b64 = await page.evaluate(async () => {
+      const buf = await window.__blob.arrayBuffer();
+      let binary = '';
+      const bytes = new Uint8Array(buf);
+      for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+      return btoa(binary);
+    });
+
+    // Independent verification: fresh page, pdf.js from CDN, zero shared
+    // state/code with this project's own encrypt/decrypt logic.
+    const verifyPage = await context.newPage();
+    await verifyPage.goto('about:blank');
+    await verifyPage.addScriptTag({ url: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js' });
+    await verifyPage.evaluate(() => {
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    });
+    const outcome = await verifyPage.evaluate(async ({ b64, password }) => {
+      function b64ToBytes(s) { const bin = atob(s); const arr = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i); return arr; }
+      try {
+        await window.pdfjsLib.getDocument({ data: b64ToBytes(b64), password }).promise;
+        return 'opened';
+      } catch (e) { return 'rejected:' + e.message; }
+    }, { b64, password: 'пароль123' });
+    expect(outcome).toBe('opened');
+  } finally {
+    await context.close();
+  }
+});
+
 await browser.close();
 
 console.log(`\n${'─'.repeat(40)}`);
