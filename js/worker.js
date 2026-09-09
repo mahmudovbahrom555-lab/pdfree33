@@ -2076,6 +2076,40 @@ async function handleRedact(fileBuffer, options) {
 // fieldValues: { fieldName: value } — strings for text/select,
 // truthy/falsy for checkboxes, string matching exportValue for radios.
 
+// Real bug found via a market-research-driven pass on Fill (checkbox/
+// radio-button rendering being one of the most commonly reported PDF
+// form-filling complaints): pdf-lib's own form.flatten() → removeField()
+// deletes each widget's underlying object from the document but removes
+// the WRONG ref from the page's /Annots array (findWidgetAppearanceRef()
+// — the widget's normal-appearance XObject ref — instead of the widget
+// annotation's own ref, which is what /Annots actually lists) — verified
+// by reading pdf-lib's vendored source directly, not guessed. Left
+// uncleaned, /Annots keeps a reference to a now-deleted object; lenient
+// parsers (pdf.js, browsers) silently skip it, but confirmed independently
+// with BOTH qpdf's own --show-xref (the object is genuinely absent from
+// the xref table) and MuPDF (throws "cannot find object in xref" while
+// rendering) that the saved file is structurally broken — a real risk for
+// any downstream tool stricter than a browser (archival/validation
+// pipelines, some mobile/desktop viewers — plausibly the technical root
+// of "checkbox looks empty when reopened in a different app" reports
+// found during this round's market research). Shared by every caller of
+// form.flatten() in this file (handleFill below, and the standalone
+// handleFlatten further down — same pdf-lib call, same bug, confirmed
+// live to reproduce identically there too) since this is vendored,
+// unpatchable-in-place third-party code: strip any /Annots entry that no
+// longer resolves to a real object.
+function _cleanDanglingAnnots(pdfDoc) {
+  for (const page of pdfDoc.getPages()) {
+    const annots = page.node.Annots?.();
+    if (!(annots instanceof PDFLib.PDFArray)) continue;
+    for (let i = annots.size() - 1; i >= 0; i--) {
+      const entry    = annots.get(i);
+      const resolved = entry instanceof PDFLib.PDFRef ? pdfDoc.context.lookup(entry) : entry;
+      if (!resolved) annots.remove(i);
+    }
+  }
+}
+
 async function handleFill(fileBuffer, { fieldValues = {}, sigImages = {}, fieldMeta = {}, flatten = true } = {}) {
   const {
     PDFDocument, PDFTextField, PDFCheckBox, PDFRadioGroup, PDFDropdown, PDFOptionList,
@@ -2178,34 +2212,7 @@ async function handleFill(fileBuffer, { fieldValues = {}, sigImages = {}, fieldM
 
   if (flatten) {
     try { form.flatten(); } catch { /* flatten fails on some encrypted forms; skip */ }
-    // Real bug found via a market-research-driven pass on Fill (checkbox/
-    // radio-button rendering being one of the most commonly reported PDF
-    // form-filling complaints): pdf-lib's own form.flatten() → removeField()
-    // deletes each widget's underlying object from the document but removes
-    // the WRONG ref from the page's /Annots array (findWidgetAppearanceRef()
-    // — the widget's normal-appearance XObject ref — instead of the widget
-    // annotation's own ref, which is what /Annots actually lists) — verified
-    // by reading pdf-lib's vendored source directly, not guessed. Left
-    // uncleaned, /Annots keeps a reference to a now-deleted object; lenient
-    // parsers (pdf.js, browsers) silently skip it, but confirmed independently
-    // with BOTH qpdf's own --show-xref (the object is genuinely absent from
-    // the xref table) and MuPDF (throws "cannot find object in xref" while
-    // rendering) that the saved file is structurally broken — a real risk for
-    // any downstream tool stricter than a browser (archival/validation
-    // pipelines, some mobile/desktop viewers — plausibly the technical root
-    // of "checkbox looks empty when reopened in a different app" reports
-    // found during this round's market research). Defensive cleanup since
-    // this is vendored, unpatchable-in-place third-party code: strip any
-    // /Annots entry that no longer resolves to a real object.
-    for (const page of pdfDoc.getPages()) {
-      const annots = page.node.Annots?.();
-      if (!(annots instanceof PDFLib.PDFArray)) continue;
-      for (let i = annots.size() - 1; i >= 0; i--) {
-        const entry    = annots.get(i);
-        const resolved = entry instanceof PDFLib.PDFRef ? pdfDoc.context.lookup(entry) : entry;
-        if (!resolved) annots.remove(i);
-      }
-    }
+    _cleanDanglingAnnots(pdfDoc);
   }
 
   // Embed signature images after flatten (visual, not cryptographic)
@@ -2287,6 +2294,7 @@ async function handleFlatten(fileBuffer) {
   try {
     form.flatten();
   } catch { /* partial flatten on complex form — save best effort */ }
+  _cleanDanglingAnnots(pdfDoc); // see this function's header comment — same pdf-lib bug as handleFill
 
   progress(85, 'Saving…');
   const bytes = await pdfDoc.save({ useObjectStreams: true });

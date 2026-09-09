@@ -279,8 +279,8 @@ if (failed > 0) process.exit(1);
 const workerSrc2 = readFileSync(join(__dir, '../js/worker.js'), 'utf8')
   .replace(/importScripts\([^)]+\);?/g, '')
   .replace(/self\.onmessage\s*=[\s\S]*?^};/m, '');
-const workerModule2 = new AsyncFunction(workerSrc2 + '\nreturn { handleSplit, handleWatermark, handlePageNum, handleMeta, handleProtect, handleFill };');
-const { handleSplit, handleWatermark, handlePageNum, handleMeta, handleProtect, handleFill } = await workerModule2();
+const workerModule2 = new AsyncFunction(workerSrc2 + '\nreturn { handleSplit, handleWatermark, handlePageNum, handleMeta, handleProtect, handleFill, handleFlatten };');
+const { handleSplit, handleWatermark, handlePageNum, handleMeta, handleProtect, handleFill, handleFlatten } = await workerModule2();
 
 // A real /Outlines (bookmarks) tree, one item per page — pdf-lib has no
 // high-level bookmark API, so this is built the same way worker.js itself
@@ -952,6 +952,41 @@ await test("flatten leaves no dangling /Annots refs (independently checked via p
       }
     }
   }
+});
+
+// ══════════════════════════════════════════════════════════════
+// handleFlatten — same dangling-/Annots pdf-lib bug as handleFill above
+// (both call form.flatten()), found by checking the standalone Flatten
+// tool for the same issue immediately after fixing it in Fill. Confirmed
+// live to reproduce identically before sharing the fix via
+// _cleanDanglingAnnots() (defined once, called from both handlers).
+// ══════════════════════════════════════════════════════════════
+
+console.log('\n🗒️  handleFlatten:');
+
+await test('flatten leaves no dangling /Annots refs (same shared cleanup as handleFill)', async () => {
+  const { PDFDocument, PDFArray, PDFRef } = PDFLib;
+  await handleFlatten(await _buildRadioForm());
+  const done = lastDone();
+  const out  = await PDFDocument.load(done.result);
+  for (const page of out.getPages()) {
+    const annots = page.node.Annots?.();
+    if (!(annots instanceof PDFArray)) continue;
+    for (let i = 0; i < annots.size(); i++) {
+      const entry = annots.get(i);
+      if (entry instanceof PDFRef) {
+        if (!out.context.lookup(entry)) throw new Error(`Dangling /Annots ref at page annot index ${i}`);
+      } else if (!entry) {
+        throw new Error(`Null /Annots entry at index ${i}`);
+      }
+    }
+  }
+});
+
+await test('a PDF with no AcroForm fields is returned unchanged (info: no_fields)', async () => {
+  await handleFlatten(normal1());
+  const done = lastDone();
+  expect(done.info).toBe('no_fields');
 });
 
 console.log(`\n${'─'.repeat(50)}`);
