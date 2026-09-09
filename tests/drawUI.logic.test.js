@@ -596,5 +596,75 @@ test('per-page isolation: each page keeps its own independent redo stack', () =>
   expect(s.redoLength(1)).toBe(1);
 });
 
+// ── renderCommand — 'pen' stroke smoothing ───────────────────────
+// Real UX gap found via a market-research-driven pass on Draw on PDF
+// (freehand curve quality — a smooth gesture rendering as visibly
+// straight-segmented instead of smooth — is a commonly reported PDF-
+// annotation-tool complaint): 'pen' used raw ctx.lineTo() between every
+// captured point while 'marker' already smoothed via midpoint quadratic
+// Bezier. Confirmed live with a sparse-point freehand arc (the realistic
+// case — a fast real stroke captures fewer points relative to the
+// curve's size): visibly faceted for 'pen', smooth for 'marker', on the
+// exact same input. Fixed by giving 'pen' the same smoothing 'marker'
+// already had. This test copies just the geometry decision (verbatim
+// from drawUI.js's renderCommand 'pen' case) against a minimal mock ctx
+// that records which drawing calls happened — proving the fix takes the
+// curved path instead of a straight-segment one for a real multi-point
+// stroke, without needing a real Canvas (no DOM/canvas in plain Node,
+// matching this file's own established pattern).
+
+function _mockCtx() {
+  const calls = [];
+  return {
+    calls,
+    beginPath: () => calls.push(['beginPath']),
+    moveTo: (x, y) => calls.push(['moveTo', x, y]),
+    lineTo: (x, y) => calls.push(['lineTo', x, y]),
+    quadraticCurveTo: (cx, cy, x, y) => calls.push(['quadraticCurveTo', cx, cy, x, y]),
+    stroke: () => calls.push(['stroke']),
+  };
+}
+
+// Copied verbatim from js/drawUI.js's renderCommand() 'pen' case (just the
+// path-building geometry, not the full function's style/save/restore).
+function _renderPenPath(ctx, pts) {
+  if (pts.length < 2) return;
+  ctx.beginPath();
+  ctx.moveTo(pts[0][0], pts[0][1]);
+  if (pts.length === 2) {
+    ctx.lineTo(pts[1][0], pts[1][1]);
+  } else {
+    for (let i = 0; i < pts.length - 1; i++) {
+      const midX = (pts[i][0] + pts[i + 1][0]) / 2;
+      const midY = (pts[i][1] + pts[i + 1][1]) / 2;
+      ctx.quadraticCurveTo(pts[i][0], pts[i][1], midX, midY);
+    }
+    ctx.lineTo(pts[pts.length - 1][0], pts[pts.length - 1][1]);
+  }
+  ctx.stroke();
+}
+
+test("pen stroke with 3+ points uses quadraticCurveTo (smoothed), not lineTo-only (faceted)", () => {
+  const ctx = _mockCtx();
+  _renderPenPath(ctx, [[0, 0], [10, 5], [20, 0], [30, 5], [40, 0]]);
+  const curveCalls = ctx.calls.filter(c => c[0] === 'quadraticCurveTo');
+  const lineCalls  = ctx.calls.filter(c => c[0] === 'lineTo');
+  expect(curveCalls.length).toBe(4); // one per consecutive point pair
+  expect(lineCalls.length).toBe(1);  // only the final segment to the last point
+});
+
+test('pen stroke with exactly 2 points is a plain line (no midpoint to smooth toward)', () => {
+  const ctx = _mockCtx();
+  _renderPenPath(ctx, [[0, 0], [10, 10]]);
+  expect(ctx.calls.filter(c => c[0] === 'quadraticCurveTo').length).toBe(0);
+  expect(ctx.calls.filter(c => c[0] === 'lineTo').length).toBe(1);
+});
+
+test('pen stroke with fewer than 2 points draws nothing', () => {
+  const ctx = _mockCtx();
+  _renderPenPath(ctx, [[0, 0]]);
+  expect(ctx.calls.length).toBe(0);
+});
+
 console.log(`\n${'─'.repeat(50)}\nTests: ${passed + failed} | ✓ ${passed} | ${failed} failed`);
 if (failed > 0) process.exit(1);

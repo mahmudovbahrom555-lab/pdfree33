@@ -800,11 +800,35 @@ export function renderCommand(ctx, cmd) {
 
   switch (cmd.type) {
     case 'pen': {
-      if (cmd.points.length < 2) break;
+      // Real UX gap found via a market-research-driven pass (freehand
+      // stroke quality — curves rendering as visibly straight-segmented
+      // instead of smooth — is a commonly reported PDF-annotation-tool
+      // complaint): this used raw ctx.lineTo() between every captured
+      // point, unlike 'marker' below (and the signature pad, per that
+      // case's own comment) which already smooths via midpoint quadratic
+      // Bezier. Confirmed live: a sparse-point freehand arc (the realistic
+      // case — a fast real stroke or a low-sample-rate input device
+      // captures fewer points relative to the curve's size) rendered with
+      // visible angular facets for 'pen' while the identical arc drawn
+      // with 'marker' looked smooth. renderCommand() is the single replay
+      // path for both the live in-progress stroke (redrawPage runs every
+      // RAF frame while drawing) and the final PDF export, so this one
+      // change fixes what the user sees while drawing AND what gets
+      // baked into the output — same algorithm as 'marker', just no
+      // opacity/comment-icon handling since 'pen' doesn't have those.
+      const pts = cmd.points;
+      if (pts.length < 2) break;
       ctx.beginPath();
-      ctx.moveTo(cmd.points[0][0], cmd.points[0][1]);
-      for (let i = 1; i < cmd.points.length; i++) {
-        ctx.lineTo(cmd.points[i][0], cmd.points[i][1]);
+      ctx.moveTo(pts[0][0], pts[0][1]);
+      if (pts.length === 2) {
+        ctx.lineTo(pts[1][0], pts[1][1]);
+      } else {
+        for (let i = 0; i < pts.length - 1; i++) {
+          const midX = (pts[i][0] + pts[i + 1][0]) / 2;
+          const midY = (pts[i][1] + pts[i + 1][1]) / 2;
+          ctx.quadraticCurveTo(pts[i][0], pts[i][1], midX, midY);
+        }
+        ctx.lineTo(pts[pts.length - 1][0], pts[pts.length - 1][1]);
       }
       ctx.stroke();
       break;
