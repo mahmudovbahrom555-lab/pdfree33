@@ -51,6 +51,15 @@ jobs:
         # installed before build.py runs, not after.
         run: npm ci
 
+      - name: Install qpdf
+        # tests/worker.integration.test.js (wired into `npm test` below as of
+        # this commit) shells out to `qpdf --check` to validate Protect's
+        # encrypted output against an independent implementation — not
+        # preinstalled on ubuntu-latest. Discovered by this exact step
+        # failing the first time this test file actually ran in CI (it
+        # existed but was never part of the `npm test` chain before).
+        run: sudo apt-get update && sudo apt-get install -y qpdf
+
       - name: Validate source pages (DOM + i18n + SW)
         run: |
           python3 scripts/check_dom.py
