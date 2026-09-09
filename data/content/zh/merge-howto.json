@@ -1,0 +1,28 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "如何免费合并 PDF 文件",
+  "description": "免费将 2 个、50 个甚至 100 多个 PDF 文件合并为一个文档 — 无需上传,无需注册,100% 隐私保护。",
+  "totalTime": "PT1M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — 免费的浏览器端 PDF 合并工具,无需上传" }],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "添加您的 PDF 文件",
+      "text": "点击“选择文件”或将 PDF 文件拖入拖放区域。您可以添加所需数量的文件 — 2 个、50 个甚至 100 多个 — 没有文件数量限制。"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "如有需要,调整顺序",
+      "text": "拖动文件卡片以设置您希望合并的确切顺序。在点击“合并”之前,可以随意多次调整顺序。"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "合并并下载",
+      "text": "点击“合并 PDF 文件”。小批量文件处理只需几秒钟,50 个以上大文件最多需要一分钟。合并后的 PDF 会自动下载到您的设备 — 不会上传到任何服务器。"
+    }
+  ]
+}

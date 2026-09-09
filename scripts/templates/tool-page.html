@@ -464,7 +464,7 @@
   </div>
 
   {% if lang != 'en' %}
-  <script type="module" src="{{ prefix }}js/locales/{{ lang }}.js"></script>
+  <script type="module" src="{{ prefix }}js/locales/{{ lang }}.js?v={{ hashes.css }}"></script>
   {% endif %}
   <script type="module" src="{{ prefix }}js/app.js?v={{ hashes.app }}"></script>
 

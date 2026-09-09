@@ -401,7 +401,7 @@ LANG_NAMES = {
     'en': 'English', 'es': 'Español', 'pt': 'Português', 'de': 'Deutsch',
     'fr': 'Français', 'id': 'Bahasa Indonesia', 'vi': 'Tiếng Việt',
     'ru': 'Русский', 'ja': '日本語', 'it': 'Italiano', 'ko': '한국어',
-    'nl': 'Nederlands', 'pl': 'Polski', 'tr': 'Türkçe',
+    'nl': 'Nederlands', 'pl': 'Polski', 'tr': 'Türkçe', 'zh-CN': '中文',
 }
 
 SPECIALTY_PAGES = [
@@ -996,7 +996,7 @@ def _inject_hashes(hashes, out_dir):
             path = os.path.join(root, fname)
             content = open(path, encoding='utf-8').read()
             new_content = re.sub(
-                r'(src="[^"]*js/locales/[a-z]{2}\.js)(?:\?v=[^"]*)?(")',
+                r'(src="[^"]*js/locales/[a-zA-Z-]+\.js)(?:\?v=[^"]*)?(")',
                 rf'\g<1>?v={css_hash}\g<2>',
                 content,
             )

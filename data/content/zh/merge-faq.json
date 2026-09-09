@@ -1,0 +1,90 @@
+[
+  {
+    "@type": "Question",
+    "name": "合并 PDF 文件有大小限制吗?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "没有任何人为的付费墙限制。PDFree 在您的浏览器中本地处理文件 — 无需订阅。为获得最佳体验,建议将文件总大小控制在 300 MB 以内;更大的批量在低内存设备上可能会较慢。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFree 会在处理后存储或记录我的文件吗?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "不会。PDFree 完全在您的浏览器中运行 — 没有接收您文件的后端服务器。由于没有任何内容被上传,自然也就无法被存储、记录或保留。您的文档仅存在于浏览器内存中,会话结束、关闭标签页后即被清除。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "合并 PDF 支持离线使用吗?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "支持。PDFree 是一款渐进式网络应用(PWA)。首次加载后即可完全离线使用 — 处理过程无需联网。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "一次最多可以合并多少个 PDF 文件?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "没有限制。PDFree 在浏览器内存中处理所有内容,因此您可以一次合并 2 个、50 个甚至 100 多个文件。对于大批量文件(50+ 个文件或总大小超过 500MB),建议关闭其他浏览器标签页以释放内存。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "合并后格式和字体会保留吗?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "会的。PDFree 使用 pdf-lib 库,在 PDF 对象级别复制页面 — 字体、图像、矢量图形和格式都会与原文件完全一致地保留。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "可以合并有密码保护的 PDF 吗?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "不可以。加密的 PDF 在没有密码的情况下无法被读取或修改。请先使用 PDF 工具移除密码,然后再进行合并。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "每天可以合并的次数有限制吗?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "没有。PDFree 没有每日使用上限。您可以根据需要随时合并任意数量的 PDF — 没有任务次数限制,也没有文件数量限制。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "合并过程会将我的文件上传到服务器吗?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "不会。PDFree 使用 pdf-lib 完全在您的浏览器中合并 PDF 文件。您的文件永远不会离开您的设备,也不会被发送到任何服务器。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "可以在手机或平板电脑上合并 PDF 吗?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "可以。PDFree 支持移动端浏览器 — Android 上的 Chrome 和 iOS 上的 Safari。文件选择使用系统自带的文件选择器,并可通过屏幕上的按钮调整文件顺序。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "合并 PDF 时书签和超链接会保留吗?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "链接会被保留,包括指向特定页面的链接 — 即使跨文件,也会被正确重新映射到合并后的文档中。每个源文件原有的书签不会自动带入,但在合并前打开“创建书签”选项,会为每个文件添加一个以其命名的新书签,方便您在合并后的 PDF 中直接跳转到每份原始文档的起始位置 — 可在您的 PDF 阅读器的书签或目录面板中查看。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "可以在每个合并文件之间插入空白页吗?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "可以。打开“插入空白页”选项,并选择“始终”(除最后一个文件外,每个文件后都插入一页空白页)或“页数为奇数时”(仅当某文件页数为奇数时插入)。这主要适用于双面打印 — 让每份原始文档都从新的一页开始,而不是接在上一份文档的某一面上。"
+    }
+  }
+]

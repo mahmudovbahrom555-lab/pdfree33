@@ -84,6 +84,12 @@
       "locale": "tr_TR",
       "dir": "tr",
       "depth": 2
+    },
+    "zh-CN": {
+      "code": "zh-CN",
+      "locale": "zh_CN",
+      "dir": "zh",
+      "depth": 2
     }
   },
   "tools": [
@@ -105,7 +111,8 @@
         "ko": "pdf-hapchigi",
         "nl": "pdf-samenvoegen",
         "pl": "polacz-pdf",
-        "tr": "pdf-birlestir"
+        "tr": "pdf-birlestir",
+        "zh-CN": "hebing-pdf"
       },
       "titles": {
         "en": "Merge PDF Files Free — No Size Limit, No Upload | PDFree",
@@ -121,7 +128,8 @@
         "ko": "PDF 합치기 무료 — 크기 제한 없이, 업로드 없이, 회원가입 없이 브라우저에서 | PDFree",
         "nl": "PDF samenvoegen — Gratis, Zonder Uploaden | PDFree",
         "pl": "Połącz PDF — Darmowy, Bez Przesyłania Plików | PDFree",
-        "tr": "PDF Birleştir — Ücretsiz, Yükleme Yapmadan | PDFree"
+        "tr": "PDF Birleştir — Ücretsiz, Yükleme Yapmadan | PDFree",
+        "zh-CN": "免费合并 PDF 文件 — 无大小限制,无需上传 | PDFree"
       },
       "descs": {
         "en": "Combine unlimited PDF files instantly. 100% private, no uploads, no file size limits.",
@@ -137,7 +145,8 @@
         "ko": "PDF 파일을 즉시 무제한으로 합칩니다. 100% 비공개 — 파일이 브라우저에 그대로 남아 있습니다. 업로드 없음, 회원가입 없음.",
         "nl": "Voeg onbeperkt PDF-bestanden direct samen. 100% privé — bestanden blijven in je browser. Zonder uploaden, zonder registratie.",
         "pl": "Połącz nieograniczoną liczbę plików PDF bezpośrednio w przeglądarce. 100% prywatne — pliki pozostają na urządzeniu. Bez przesyłania, bez rejestracji.",
-        "tr": "Sınırsız PDF dosyasını doğrudan tarayıcınızda birleştirin. %100 gizli — dosyalar cihazınızda kalır. Yükleme yok, kayıt yok."
+        "tr": "Sınırsız PDF dosyasını doğrudan tarayıcınızda birleştirin. %100 gizli — dosyalar cihazınızda kalır. Yükleme yok, kayıt yok.",
+        "zh-CN": "即时合并任意数量的 PDF 文件。100% 隐私保护,无需上传,无文件大小限制。"
       },
       "navLabels": {
         "en": "Merge",
@@ -153,7 +162,8 @@
         "ko": "합치기",
         "nl": "Samenvoegen",
         "pl": "Połącz PDF",
-        "tr": "PDF Birleştir"
+        "tr": "PDF Birleştir",
+        "zh-CN": "合并"
       },
       "cardNames": {
         "en": "Merge PDF files",
@@ -169,7 +179,8 @@
         "ko": "PDF 합치기",
         "nl": "PDF samenvoegen",
         "pl": "Połącz PDF",
-        "tr": "PDF Birleştir"
+        "tr": "PDF Birleştir",
+        "zh-CN": "合并 PDF 文件"
       },
       "cardDescs": {
         "en": "Combine unlimited PDF files — no restrictions",
@@ -185,7 +196,8 @@
         "ko": "PDF 파일을 무제한으로 합치기 — 제한 없음",
         "nl": "Combineer onbeperkte PDF-bestanden — zonder beperkingen",
         "pl": "Łącz nieograniczone pliki PDF — bez ograniczeń",
-        "tr": "Sınırsız PDF dosyasını birleştirin — limit yok"
+        "tr": "Sınırsız PDF dosyasını birleştirin — limit yok",
+        "zh-CN": "合并任意数量的 PDF 文件 — 没有限制"
       },
       "breadcrumb": {
         "en": "Merge PDF",
@@ -201,7 +213,8 @@
         "ko": "PDF 합치기",
         "nl": "PDF samenvoegen",
         "pl": "Połącz PDF",
-        "tr": "PDF Birleştir"
+        "tr": "PDF Birleştir",
+        "zh-CN": "合并 PDF"
       },
       "metaDescs": {
         "en": "Merge PDF files free — no size limit, no daily limit, no upload. Combine large PDFs or 100+ files at once in your browser. Works offline. No signup.",
@@ -217,7 +230,8 @@
         "ko": "PDF 파일을 무료로 합치기 — 크기 제한 없음, 일일 제한 없음, 업로드 없음. 100개 이상의 파일을 한 번에 합칠 수 있고, 오프라인에서도 작동합니다. 브라우저에서 처리, 100% 비공개, 가입 불필요.",
         "nl": "PDF samenvoegen gratis online — zonder uploaden, zonder registratie. Combineer 2, 50 of 100+ PDF's met één klik. 100% privé.",
         "pl": "Połącz PDF za darmo online — bez przesyłania, bez rejestracji. Połącz 2, 50 lub 100+ plików jednym kliknięciem. 100% prywatne, w przeglądarce.",
-        "tr": "PDF birleştir ücretsiz online — yükleme yok, kayıt yok. 2, 50 veya 100+ PDF'yi tek tıkla birleştirin. %100 gizli, tarayıcıda işlenir. Sınır yok."
+        "tr": "PDF birleştir ücretsiz online — yükleme yok, kayıt yok. 2, 50 veya 100+ PDF'yi tek tıkla birleştirin. %100 gizli, tarayıcıda işlenir. Sınır yok.",
+        "zh-CN": "免费合并 PDF 文件 — 无大小限制,无每日次数限制,无需上传。在浏览器中一次性合并大文件或 100+ 个文件。支持离线使用,无需注册。"
       },
       "ogTitles": {
         "en": "Merge PDF Free — No Size Limit, Combine Large Files, No Upload",
@@ -233,7 +247,8 @@
         "ko": "PDF 합치기 무료 — 업로드 없이, 회원가입 불필요 | PDFree",
         "nl": "PDF samenvoegen Gratis — Zonder Uploaden, Zonder Registratie | PDFree",
         "pl": "Połącz PDF Za Darmo — Bez Przesyłania, Bez Rejestracji | PDFree",
-        "tr": "PDF Birleştir Ücretsiz — Yükleme Yok, Kayıt Yok | PDFree"
+        "tr": "PDF Birleştir Ücretsiz — Yükleme Yok, Kayıt Yok | PDFree",
+        "zh-CN": "免费合并 PDF — 无大小限制,合并大文件,无需上传"
       },
       "ogDescs": {
         "en": "Combine unlimited PDFs instantly. 100% private — files never leave your browser. No signup, no limits.",
@@ -249,7 +264,8 @@
         "ko": "PDF를 즉시 무제한으로 합칩니다. 100% 비공개 — 파일이 브라우저를 절대 벗어나지 않습니다. 계정 없음, 제한 없음.",
         "nl": "Combineer onbeperkte PDF's direct. 100% privé — bestanden verlaten nooit je browser. Geen account, geen limieten.",
         "pl": "Połącz nieograniczone pliki PDF bezpośrednio. 100% prywatne — pliki nigdy nie opuszczają przeglądarki. Bez konta, bez limitów.",
-        "tr": "Sınırsız PDF'yi doğrudan birleştirin. %100 gizli — dosyalar tarayıcıyı asla terk etmez. Hesap yok, limit yok."
+        "tr": "Sınırsız PDF'yi doğrudan birleştirin. %100 gizli — dosyalar tarayıcıyı asla terk etmez. Hesap yok, limit yok.",
+        "zh-CN": "即时合并任意数量的 PDF。100% 隐私 — 文件永不离开您的浏览器。无需注册,无限制。"
       },
       "keywords": {
         "en": "merge pdf, combine pdf files, join pdf, merge pdf files free, combine pdf online, merge pdf without uploading",
@@ -265,7 +281,8 @@
         "ko": "pdf 합치기, pdf 파일 병합, pdf 온라인 합치기, pdf 무료 합치기, 여러 pdf 하나로 합치기",
         "nl": "pdf samenvoegen, pdf bestanden combineren, pdf online samenvoegen, pdf gratis samenvoegen, meerdere pdf's samenvoegen",
         "pl": "łączenie plików pdf, scal pdf, połącz pdf online, scal pdf za darmo, połącz kilka plików pdf",
-        "tr": "pdf birleştir, pdf dosyalarını birleştir, pdf birleştirme online, ücretsiz pdf birleştir, birden fazla pdf'yi birleştir"
+        "tr": "pdf birleştir, pdf dosyalarını birleştir, pdf birleştirme online, ücretsiz pdf birleştir, birden fazla pdf'yi birleştir",
+        "zh-CN": "合并pdf, pdf合并, pdf文件合并, 免费合并pdf, 在线合并pdf, 无需上传合并pdf"
       }
     },
     {
@@ -5831,6 +5848,77 @@
       "whyFree": "Sonsuza kadar ücretsiz",
       "whyFreeDesc": "Deneme süresi yok, freemium yok. PDFree tamamen ücretsizdir — AGPLv3 lisanslı açık kaynak.",
       "whyBatch": "Toplu işleme"
+    },
+    "zh-CN": {
+      "moreNav": "更多",
+      "changeLanguageLabel": "切换语言",
+      "heroBadge": "🔒 100% 隐私保护 · 无需上传 · 无需注册 · 无限制",
+      "heroH1": "真正好用的<br><em>PDF 工具</em>",
+      "heroP": "合并、拆分、压缩、加水印、转换 — 所有操作都在<strong>您的浏览器中</strong>完成。文件永远不会离开您的设备。无需服务器,无需账号,只有结果。",
+      "privacyBannerStrong": "您的文件始终保留在您的设备上。",
+      "privacyBannerText": "我们使用 Web Worker 和客户端库处理文件 — 任何内容都不会发送到服务器。",
+      "noLimit": [
+        "无文件限制",
+        "无水印",
+        "无需注册",
+        "文件永不离开您的设备"
+      ],
+      "sectionLabel": "全部工具",
+      "privacy1Title": "从设计上做到 100% 隐私",
+      "privacy1Desc": "您的文件完全在浏览器中处理。绝不上传。",
+      "privacy2Title": "在您的设备上运行",
+      "privacy2Desc": "所有 PDF 操作都在 Web Worker 中运行 — 这是您自己硬件上的一个沙盒线程。",
+      "privacy3Title": "即刻清除",
+      "privacy3Desc": "文件仅存在于内存中。关闭标签页后即会消失 — 没有日志,没有痕迹。",
+      "dropTitle": "将文件拖放到此处",
+      "dropSub": "或点击浏览 — 文件数量不限",
+      "chooseBtn": "选择文件",
+      "reorderHint": "↕ 合并前可拖动调整文件顺序",
+      "cancelBtn": "✕ 取消",
+      "successTitle": "完成!",
+      "downloadBtn": "⬇ 下载",
+      "footerLine1": "所有处理都 100% 在您的浏览器中完成",
+      "footerLine2": "文件<strong>永不上传</strong>",
+      "footerGuarantee": "您的文档永远不会离开您的设备",
+      "footerFree": "为所有人永久免费打造",
+      "footerOpenSource": "开源协议:",
+      "footerGitHub": "在 GitHub 上查看源代码",
+      "privacyBadge": "您的文件永不离开浏览器 — 本地处理,无需上传",
+      "privacyClearedTitle": "文档已从内存中清除",
+      "privacyClearedSub": "本地处理 · 从未上传 · 不留痕迹",
+      "shareToolLabel": "认识需要处理 PDF 的朋友吗?",
+      "shareToolBtn": "分享此工具",
+      "shareToolMessage": "我使用 PDFree 处理 PDF 文件 — 免费、私密,完全在浏览器中运行。",
+      "shareCopyLink": "复制链接",
+      "shareLinkCopied": "链接已复制!",
+      "fbBugBtn": "🐛 发现问题",
+      "fbIdeaBtn": "💡 提个建议",
+      "fbGoodBtn": "👍 一切正常!",
+      "swUpdateMsg": "PDFree 有新版本可用。",
+      "swUpdateNow": "立即更新",
+      "swUpdateLater": "稍后",
+      "seoH2": "安全隐私方面最好的免费 PDF 工具",
+      "seoP1": "PDFree 旨在提供专业级的 PDF 处理能力,同时避免云端上传带来的风险。使用我们的工具时,处理过程直接在您的网页浏览器中通过 WebAssembly 完成。这意味着您的敏感文档 — 例如法律合同、财务报表或身份证扫描件 — 永远不会通过互联网传输。",
+      "seoP2": "我们相信每个人都应该能使用到必要的工具。因此,PDFree 完全没有文件大小限制、每日使用次数限制,也不会强制添加水印。这是一款完全免费、无限制的工具,专为学生、职场人士以及任何重视数字隐私的人打造。",
+      "faqTitle": "常见问题",
+      "faqQ1": "我的文件会存储在你们的服务器上吗?",
+      "faqA1": "不会。PDFree 完全在您的设备上运行(客户端处理)。我们没有处理您文件的服务器,这确保了 100% 的隐私安全。",
+      "faqQ2": "文件大小或页数有限制吗?",
+      "faqA2": "没有,不存在人为限制。唯一的限制是您电脑或手机可用的内存(RAM)。",
+      "whySectionTitle": "为什么选择 PDFree 而不是其他 PDF 工具?",
+      "whyNoSizeLimit": "无文件大小限制",
+      "whyNoSizeLimitDesc": "合并、压缩或转换任意大小的 PDF 文件 — 500 MB、1 GB 均无限制。",
+      "whyNoUpload": "文件永不离开您的设备",
+      "whyNoUploadDesc": "一切都在您的浏览器中运行。无需上传,没有服务器,不会泄露数据 — 离线也能使用。",
+      "whyNoAccount": "无需注册账号",
+      "whyNoAccountDesc": "无需注册,无需邮箱,无需登录。打开页面即可使用工具 — 就是这么简单。",
+      "whyNoWatermark": "不添加水印",
+      "whyNoWatermarkDesc": "输出文件干净整洁。没有品牌标识,没有水印图章,没有隐藏文本层。",
+      "whyNoDailyLimit": "无每日次数限制",
+      "whyNoDailyLimitDesc": "可根据需要多次使用。没有每日配额,没有每月上限,没有付费升级推销。",
+      "whyFree": "永久免费",
+      "whyFreeDesc": "没有免费试用期,没有增值付费层级。PDFree 完全免费 — 基于 AGPLv3 协议开源。",
+      "whyBatch": "批量处理"
     }
   }
 }

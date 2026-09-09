@@ -33,6 +33,14 @@ const enKeys  = new Set(Object.keys(EN));
 const LOCALES_DIR = path.join(ROOT, 'js/locales');
 const localeFiles  = readdirSync(LOCALES_DIR).filter(f => f.endsWith('.js')).sort();
 
+// zh-CN is a deliberately scoped, partial locale — see its own file header.
+// Unlike the other 13 (full sitewide UI translation, checked for full
+// parity below), zh-CN currently backs exactly one dedicated tool page
+// (/zh/merge-pdf/, no homepage) and intentionally translates only the keys
+// that page's interactive flow renders, relying on i18n.js's EN fallback
+// for the rest. Full parity is still enforced for every other locale.
+const PARTIAL_LOCALES = new Set(['zh-CN']);
+
 // Extracts top-level `  key:` names from a `window.PDFREE_LOCALE = { ... };`
 // block. Restricted to the block itself (not the whole file) so a future
 // nested object or comment mentioning "foo:" elsewhere can't leak in.
@@ -69,12 +77,14 @@ for (const file of localeFiles) {
   });
   if (!localeKeys) continue;
 
-  test(`${lang}: no missing keys (present in EN, absent here)`, () => {
-    const missing = [...enKeys].filter(k => !localeKeys.has(k));
-    if (missing.length) {
-      throw new Error(`missing ${missing.length} key(s): ${missing.slice(0, 10).join(', ')}${missing.length > 10 ? ', ...' : ''}`);
-    }
-  });
+  if (!PARTIAL_LOCALES.has(lang)) {
+    test(`${lang}: no missing keys (present in EN, absent here)`, () => {
+      const missing = [...enKeys].filter(k => !localeKeys.has(k));
+      if (missing.length) {
+        throw new Error(`missing ${missing.length} key(s): ${missing.slice(0, 10).join(', ')}${missing.length > 10 ? ', ...' : ''}`);
+      }
+    });
+  }
 
   test(`${lang}: no orphan keys (present here, absent from EN — likely a typo)`, () => {
     const orphans = [...localeKeys].filter(k => !enKeys.has(k));
@@ -83,11 +93,19 @@ for (const file of localeFiles) {
     }
   });
 
-  test(`${lang}: exact key count matches EN (${enKeys.size})`, () => {
-    if (localeKeys.size !== enKeys.size) {
-      throw new Error(`${localeKeys.size} keys, expected ${enKeys.size}`);
-    }
-  });
+  if (!PARTIAL_LOCALES.has(lang)) {
+    test(`${lang}: exact key count matches EN (${enKeys.size})`, () => {
+      if (localeKeys.size !== enKeys.size) {
+        throw new Error(`${localeKeys.size} keys, expected ${enKeys.size}`);
+      }
+    });
+  } else {
+    test(`${lang}: scoped locale has a non-trivial key set (not accidentally near-empty)`, () => {
+      if (localeKeys.size < 10) {
+        throw new Error(`only ${localeKeys.size} keys — looks broken, not just intentionally scoped`);
+      }
+    });
+  }
 }
 
 // ── Summary ────────────────────────────────────────────────
