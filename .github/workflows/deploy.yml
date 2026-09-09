@@ -58,7 +58,22 @@ jobs:
         # preinstalled on ubuntu-latest. Discovered by this exact step
         # failing the first time this test file actually ran in CI (it
         # existed but was never part of the `npm test` chain before).
-        run: sudo apt-get update && sudo apt-get install -y qpdf
+        #
+        # The runner image's own pre-baked google-chrome apt source (used for
+        # Chrome, unrelated to us — we only want qpdf from Ubuntu's repos)
+        # intermittently serves a stale/mismatched Packages.gz, which fails
+        # the plain `apt-get update` this step needs for ALL configured repos
+        # and blocks even an unrelated `apt-get install`. Real 2-run failure
+        # (2026-09-09, identical Hash Sum mismatch both times — a mirror-sync
+        # lag on Google's end, not per-request flakiness a retry would fix)
+        # while shipping the zh-CN locale feature. Removing that one repo
+        # file before updating scopes the update to the repos we actually
+        # need and stops depending on Google's mirror being in a consistent
+        # state at the exact moment this step runs.
+        run: |
+          sudo rm -f /etc/apt/sources.list.d/google-chrome.list
+          sudo apt-get update
+          sudo apt-get install -y qpdf
 
       - name: Validate source pages (DOM + i18n + SW)
         run: |
