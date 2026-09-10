@@ -217,6 +217,61 @@ test('ignores real blank gaps that fall outside the central search band (ordinar
   expect(result.hasGutter).toBe(false);
 });
 
+test('does not mistake a single narrow centered content block for 2-column (regression)', () => {
+  // A sparse page (e.g. a title/section-break page) with only a short, centered
+  // line of text and nothing else — no real second column, but the whitespace
+  // on either side of the text happens to fall inside the central band, which
+  // used to be mistaken for a genuine inter-column gutter (found via direct
+  // synthetic-pixel repro, not just observed once — see js/ereaderCrop.js's
+  // GUTTER_OUTER_INK_MIN comment). Both "gutter" sides here are actually just
+  // the outer margins of one single content block — neither side has any real
+  // column content near the crop's own edges.
+  const w = 400, h = 600;
+  const rgba = makeWhitePage(w, h);
+  paintRect(rgba, w, 160, 60, 240, 100); // one short centered title line only
+  const cropRect = { top: 0.05, bottom: 0.95, left: 0.05, right: 0.95 };
+  const result = detectColumnGutter(rgba, w, h, cropRect);
+  expect(result.hasGutter).toBe(false);
+});
+
+test('rejects gutter search entirely on a narrow crop (a single short line, not a 2-column page)', () => {
+  // Real repro (not just theoretical): a 6-page "title-only" book (each page
+  // just a short line like "Chapter 1") rendered through the actual pdf.js
+  // pipeline gave contentBBox() a tight per-page crop spanning only ~17% of
+  // the page width — and detectColumnGutter, searching for a gutter *inside*
+  // that narrow crop, found the ordinary inter-word gap ("Chapter" | "1")
+  // and mistook it for a column break. A genuine 2-column layout's own
+  // per-page crop measured ~83% of page width in the same real pipeline —
+  // this test's 0.42-0.59 cropRect (17% wide) matches the real failing case
+  // almost exactly. The band/outer-ink checks alone don't catch this (both
+  // "sides" of an inter-word gap have real letter ink), so the width guard
+  // is the primary fix, checked first.
+  const w = 400, h = 600;
+  const rgba = makeWhitePage(w, h);
+  paintRect(rgba, w, 168, 250, 196, 270); // "Chapter" — left word block
+  paintRect(rgba, w, 204, 250, 236, 270); // "1" — right word block, gap 196-204 in between
+  const cropRect = { top: 0.40, bottom: 0.48, left: 0.42, right: 0.59 }; // ~17% of width, matches the real repro
+  const result = detectColumnGutter(rgba, w, h, cropRect);
+  expect(result.hasGutter).toBe(false);
+});
+
+test('still detects a real 2-column gutter when column text is sparse, not a solid block', () => {
+  // Real body text isn't a 100% solid rectangle — simulate ~40% ink coverage
+  // per column (horizontal stripes) to confirm the outer-ink-density check
+  // (added for the regression above) doesn't require unrealistically dense
+  // text to still recognize a genuine 2-column layout.
+  const w = 400, h = 600;
+  const rgba = makeWhitePage(w, h);
+  for (let y = 60; y < 540; y += 5) {
+    paintRect(rgba, w, 40, y, 180, y + 2);  // left column, striped
+    paintRect(rgba, w, 220, y, 360, y + 2); // right column, striped
+  }
+  const cropRect = { top: 0.05, bottom: 0.95, left: 0.05, right: 0.95 };
+  const result = detectColumnGutter(rgba, w, h, cropRect);
+  expect(result.hasGutter).toBe(true);
+  expect(result.centerFrac).toBeCloseTo(0.5, 0.03);
+});
+
 // ── reconcileColumnSplit ─────────────────────────────────────────
 console.log('\nreconcileColumnSplit:');
 

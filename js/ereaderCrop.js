@@ -174,6 +174,25 @@ const GUTTER_BAND_END       = 0.75; // crop width — rejects a paragraph indent
 const GUTTER_INK_THRESHOLD  = 0.01; // column counts as "gutter" if <1% ink
 const GUTTER_MIN_WIDTH_FRAC = 0.015; // must be at least 1.5% of crop width —
                                       // rejects single-pixel noise gaps
+const GUTTER_OUTER_INK_MIN  = 0.03; // each outer region (crop edge → band
+                                     // start, band end → crop edge) must
+                                     // average at least 3% ink density —
+                                     // a real 2-column page has actual
+                                     // column text filling toward both
+                                     // outer edges; a single narrow,
+                                     // centered content block (e.g. a
+                                     // title-only page, or any sparse page
+                                     // whose content happens to sit inside
+                                     // the band) leaves one or both outer
+                                     // regions essentially blank, which is
+                                     // how a document made mostly of such
+                                     // pages was getting mis-split into two
+                                     // columns despite having no real second
+                                     // column anywhere — found via a direct
+                                     // unit-level repro (synthetic pixel
+                                     // data: a lone centered text block
+                                     // returned hasGutter:true), not just
+                                     // observed once and guessed at.
 
 /**
  * Look for a vertical whitespace gutter within the central band of a
@@ -199,6 +218,24 @@ export function detectColumnGutter(rgba, width, height, cropRect, opts = {}) {
   const x1 = Math.min(width, Math.round(cropRect.right * width));
   const cropWidth = x1 - x0;
   if (cropWidth <= 0 || y1 <= y0) return { hasGutter: false, centerFrac: null };
+
+  // A genuine 2-column layout necessarily uses most of the page's width (two
+  // columns side by side, typically 70-90% combined) — contentBBox's own
+  // per-page bbox for a page whose real content is just one short line (a
+  // chapter heading, a lone page number, any sparse title/section-break
+  // page) comes back MUCH narrower than that, tightly wrapping only that
+  // line. Searching for a "gutter" inside such a narrow crop just finds the
+  // ordinary inter-word gap within that one line — real production repro
+  // (a 6-page "Chapter N" title-only book, rendered via the real pdf.js
+  // pipeline) measured a genuine 2-column page's crop at ~83% of page width
+  // vs. ~17% for a title-only page, a wide margin either side of this
+  // threshold. Checked before the (cheaper on its own, but insufficient
+  // alone — see GUTTER_OUTER_INK_MIN below) band/outer-ink checks since it's
+  // the more direct signal and the actual root cause this was found against.
+  const GUTTER_MIN_CROP_WIDTH_FRAC = 0.5;
+  if (cropWidth / width < GUTTER_MIN_CROP_WIDTH_FRAC) {
+    return { hasGutter: false, centerFrac: null };
+  }
 
   const bandX0 = x0 + Math.round(cropWidth * GUTTER_BAND_START);
   const bandX1 = x0 + Math.round(cropWidth * GUTTER_BAND_END);
@@ -235,8 +272,36 @@ export function detectColumnGutter(rgba, width, height, cropRect, opts = {}) {
 
   if (bestLen < minGutterPx) return { hasGutter: false, centerFrac: null };
 
+  // A real 2-column page has actual column content filling toward BOTH
+  // outer edges of the crop, not just inside the band — reject a candidate
+  // gutter if either outer region is essentially blank, which is what a
+  // single narrow/centered content block (no real second column) looks
+  // like once its surrounding whitespace happens to fall inside the band.
+  if (_outerInkDensity(rgba, width, x0, bandX0, y0, y1, threshold) < GUTTER_OUTER_INK_MIN) {
+    return { hasGutter: false, centerFrac: null };
+  }
+  if (_outerInkDensity(rgba, width, bandX1, x1, y0, y1, threshold) < GUTTER_OUTER_INK_MIN) {
+    return { hasGutter: false, centerFrac: null };
+  }
+
   const gutterCenterPx = bandX0 + bestStart + bestLen / 2;
   return { hasGutter: true, centerFrac: gutterCenterPx / width };
+}
+
+/** Fraction of pixels darker than `threshold` within rgba[y0..y1)×[xStart..xEnd). */
+function _outerInkDensity(rgba, width, xStart, xEnd, y0, y1, threshold) {
+  const area = (xEnd - xStart) * (y1 - y0);
+  if (area <= 0) return 0;
+  let ink = 0;
+  for (let y = y0; y < y1; y++) {
+    const rowBase = y * width;
+    for (let x = xStart; x < xEnd; x++) {
+      const i = (rowBase + x) * 4;
+      const lum = 0.299 * rgba[i] + 0.587 * rgba[i + 1] + 0.114 * rgba[i + 2];
+      if (lum < threshold) ink++;
+    }
+  }
+  return ink / area;
 }
 
 const DEFAULT_COLUMN_THRESHOLD = 0.6; // fraction of sampled pages needing a
