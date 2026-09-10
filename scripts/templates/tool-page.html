@@ -99,8 +99,14 @@
   <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com">
   <link rel="preload" href="{{ prefix }}fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="{{ prefix }}fonts/dm-sans-latin-ext.woff2" as="font" type="font/woff2" crossorigin>
-  {% if lang_cfg.direction == 'rtl' %}
+  {% if lang in ['ar', 'fa'] %}
   <link rel="preload" href="{{ prefix }}fonts/vazirmatn-arabic-400.woff2" as="font" type="font/woff2" crossorigin>
+  {% elif lang == 'ur' %}
+  <link rel="preload" href="{{ prefix }}fonts/noto-sans-arabic-400.woff2" as="font" type="font/woff2" crossorigin>
+  {% elif lang == 'he' %}
+  <link rel="preload" href="{{ prefix }}fonts/rubik-hebrew-400.woff2" as="font" type="font/woff2" crossorigin>
+  {% elif lang == 'bn' %}
+  <link rel="preload" href="{{ prefix }}fonts/hind-siliguri-bengali-400.woff2" as="font" type="font/woff2" crossorigin>
   {% endif %}
   <link rel="modulepreload" href="{{ prefix }}js/app.js?v={{ hashes.app }}">
 

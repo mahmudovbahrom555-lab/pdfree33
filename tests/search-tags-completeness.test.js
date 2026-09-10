@@ -58,7 +58,7 @@ const LOCALES_DIR = path.join(ROOT, 'js/locales');
 // own header) with exactly one dedicated tool page and no homepage — the
 // search widget this test audits is homepage-only, so search_tags coverage
 // doesn't apply to them. Every other locale still gets the full audit below.
-const SCOPED_LOCALE_FILES = new Set(['zh-CN.js', 'ar.js', 'fa.js']);
+const SCOPED_LOCALE_FILES = new Set(['zh-CN.js', 'ar.js', 'fa.js', 'he.js', 'ur.js', 'bn.js']);
 const locales = readdirSync(LOCALES_DIR).filter(f => f.endsWith('.js') && !SCOPED_LOCALE_FILES.has(f)).map(f => f.replace(/\.js$/, ''));
 
 function loadSearchTags(lc) {

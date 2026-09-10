@@ -76,3 +76,64 @@
   src: url('/fonts/vazirmatn-arabic-500.woff2') format('woff2');
   unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
 }
+
+/* Noto Sans Arabic (SIL OFL) — used for Urdu specifically, not shared with
+   Vazirmatn above: Vazirmatn's glyph set is scoped for Persian and isn't
+   guaranteed to cover Urdu-only retroflex letters (ٹ ڈ ڑ ں ھ ے). Noto's own
+   language-coverage docs list Urdu as supported. Same Arabic-script
+   unicode-range as Vazirmatn since Urdu is written in extended Arabic script. */
+@font-face {
+  font-family: 'Noto Sans Arabic';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/noto-sans-arabic-400.woff2') format('woff2');
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
+}
+@font-face {
+  font-family: 'Noto Sans Arabic';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/noto-sans-arabic-500.woff2') format('woff2');
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
+}
+
+/* Rubik (SIL OFL) — Hebrew script, self-hosted. unicode-range scopes it to
+   the Hebrew block + presentation forms, same lazy-load-only-when-needed
+   technique as Vazirmatn/Noto Sans Arabic above. */
+@font-face {
+  font-family: 'Rubik';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/rubik-hebrew-400.woff2') format('woff2');
+  unicode-range: U+0590-05FF, U+FB1D-FB4F;
+}
+@font-face {
+  font-family: 'Rubik';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/rubik-hebrew-500.woff2') format('woff2');
+  unicode-range: U+0590-05FF, U+FB1D-FB4F;
+}
+
+/* Hind Siliguri (SIL OFL) — Bengali script, self-hosted. unicode-range
+   scopes it to the Bengali Unicode block only. */
+@font-face {
+  font-family: 'Hind Siliguri';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/hind-siliguri-bengali-400.woff2') format('woff2');
+  unicode-range: U+0980-09FF;
+}
+@font-face {
+  font-family: 'Hind Siliguri';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/hind-siliguri-bengali-500.woff2') format('woff2');
+  unicode-range: U+0980-09FF;
+}

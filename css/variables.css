@@ -50,6 +50,9 @@
   --font-sans: 'DM Sans', sans-serif;
   --font-mono: 'DM Mono', monospace;
   --font-arabic: 'Vazirmatn', 'DM Sans', sans-serif;
+  --font-urdu: 'Noto Sans Arabic', 'DM Sans', sans-serif;
+  --font-hebrew: 'Rubik', 'DM Sans', sans-serif;
+  --font-bengali: 'Hind Siliguri', 'DM Sans', sans-serif;
 
   /* Transitions */
   --transition-fast:   0.15s ease;
@@ -131,9 +134,22 @@ body {
   line-height: 1.5;
 }
 
-/* RTL locales (ar, fa) — Vazirmatn's unicode-range (css/fonts.css) only engages
-   for actual Arabic-block glyphs, so Latin/numeral UI chrome mixed into RTL
-   pages still renders in DM Sans via this same font-family's own fallback. */
-[dir="rtl"] body {
+/* Non-Latin locales — each font's unicode-range (css/fonts.css) only engages
+   for glyphs actually in its own script block, so Latin/numeral UI chrome
+   mixed into these pages still renders in DM Sans via each font-family's own
+   fallback. Keyed on [lang], not [dir="rtl"]: he/ur share the RTL CSS
+   overrides below with ar/fa, but each script needs its own font — a single
+   [dir="rtl"] rule can't tell Hebrew and Urdu apart. */
+[lang="ar"] body,
+[lang="fa"] body {
   font-family: var(--font-arabic);
+}
+[lang="ur"] body {
+  font-family: var(--font-urdu);
+}
+[lang="he"] body {
+  font-family: var(--font-hebrew);
+}
+[lang="bn"] body {
+  font-family: var(--font-bengali);
 }
