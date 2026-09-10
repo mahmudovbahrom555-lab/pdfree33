@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ lang_cfg.code }}">
+<html lang="{{ lang_cfg.code }}"{% if lang_cfg.direction == 'rtl' %} dir="rtl"{% endif %}>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -99,6 +99,9 @@
   <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com">
   <link rel="preload" href="{{ prefix }}fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="{{ prefix }}fonts/dm-sans-latin-ext.woff2" as="font" type="font/woff2" crossorigin>
+  {% if lang_cfg.direction == 'rtl' %}
+  <link rel="preload" href="{{ prefix }}fonts/vazirmatn-arabic-400.woff2" as="font" type="font/woff2" crossorigin>
+  {% endif %}
   <link rel="modulepreload" href="{{ prefix }}js/app.js?v={{ hashes.app }}">
 
   <!-- Privacy-first analytics: pageviews via Cloudflare Web Analytics;
@@ -165,14 +168,14 @@
         <meta itemprop="position" content="1">
       </li>
       {% if lang != 'en' and has_homepage %}
-      <li aria-hidden="true" style="color:var(--border);">›</li>
+      <li aria-hidden="true" style="color:var(--border);{% if lang_cfg.direction == 'rtl' %}display:inline-block;transform:scaleX(-1);{% endif %}">›</li>
       <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
         <a href="/{{ lang_cfg.dir }}/" itemprop="item" style="color:var(--text2);text-decoration:none;display:inline-block;padding:12px 4px;margin:-12px -4px;">
           <span itemprop="name">{{ lang_cfg.code | upper }}</span>
         </a>
         <meta itemprop="position" content="2">
       </li>
-      <li aria-hidden="true" style="color:var(--border);">›</li>
+      <li aria-hidden="true" style="color:var(--border);{% if lang_cfg.direction == 'rtl' %}display:inline-block;transform:scaleX(-1);{% endif %}">›</li>
       <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
         <a href="/{{ canonical_path }}" itemprop="item" style="color:var(--text2);text-decoration:none;display:inline-block;padding:12px 4px;margin:-12px -4px;" aria-current="page">
           <span itemprop="name">{{ tool.breadcrumb[lang] }}</span>
@@ -180,7 +183,7 @@
         <meta itemprop="position" content="3">
       </li>
       {% else %}
-      <li aria-hidden="true" style="color:var(--border);">›</li>
+      <li aria-hidden="true" style="color:var(--border);{% if lang_cfg.direction == 'rtl' %}display:inline-block;transform:scaleX(-1);{% endif %}">›</li>
       <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
         <a href="/{{ canonical_path }}" itemprop="item" style="color:var(--text2);text-decoration:none;display:inline-block;padding:12px 4px;margin:-12px -4px;" aria-current="page">
           <span itemprop="name">{{ tool.breadcrumb[lang] }}</span>

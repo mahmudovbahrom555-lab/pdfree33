@@ -49,6 +49,7 @@
   /* Typography */
   --font-sans: 'DM Sans', sans-serif;
   --font-mono: 'DM Mono', monospace;
+  --font-arabic: 'Vazirmatn', 'DM Sans', sans-serif;
 
   /* Transitions */
   --transition-fast:   0.15s ease;
@@ -128,4 +129,11 @@ body {
   min-height: 100vh;
   font-size: 15px;
   line-height: 1.5;
+}
+
+/* RTL locales (ar, fa) — Vazirmatn's unicode-range (css/fonts.css) only engages
+   for actual Arabic-block glyphs, so Latin/numeral UI chrome mixed into RTL
+   pages still renders in DM Sans via this same font-family's own fallback. */
+[dir="rtl"] body {
+  font-family: var(--font-arabic);
 }

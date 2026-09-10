@@ -402,6 +402,7 @@ LANG_NAMES = {
     'fr': 'Français', 'id': 'Bahasa Indonesia', 'vi': 'Tiếng Việt',
     'ru': 'Русский', 'ja': '日本語', 'it': 'Italiano', 'ko': '한국어',
     'nl': 'Nederlands', 'pl': 'Polski', 'tr': 'Türkçe', 'zh-CN': '中文',
+    'ar': 'العربية', 'fa': 'فارسی',
 }
 
 SPECIALTY_PAGES = [

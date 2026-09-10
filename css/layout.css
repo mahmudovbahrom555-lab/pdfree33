@@ -772,3 +772,15 @@ footer a:hover { text-decoration: underline; }
   .trust-alert          { flex-direction: column; text-align: center; }
   .support-banner       { font-size: 11px; }
 }
+
+/* ══════════════════════════════════════════════════════════════
+   RTL (ar, fa) — [dir="rtl"] set on <html> by scripts/templates/
+   tool-page.html. Flex/block layout mirrors automatically; only
+   absolutely-positioned dropdowns anchored to a physical edge need
+   an explicit override here.
+   ══════════════════════════════════════════════════════════════ */
+[dir="rtl"] .lang-switch__menu,
+[dir="rtl"] .nav-more__menu {
+  right: auto;
+  left: 0;
+}

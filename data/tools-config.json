@@ -90,6 +90,20 @@
       "locale": "zh_CN",
       "dir": "zh",
       "depth": 2
+    },
+    "ar": {
+      "code": "ar",
+      "locale": "ar_SA",
+      "dir": "ar",
+      "depth": 2,
+      "direction": "rtl"
+    },
+    "fa": {
+      "code": "fa",
+      "locale": "fa_IR",
+      "dir": "fa",
+      "depth": 2,
+      "direction": "rtl"
     }
   },
   "tools": [
@@ -112,7 +126,9 @@
         "nl": "pdf-samenvoegen",
         "pl": "polacz-pdf",
         "tr": "pdf-birlestir",
-        "zh-CN": "hebing-pdf"
+        "zh-CN": "hebing-pdf",
+        "ar": "damj-pdf",
+        "fa": "edgham-pdf"
       },
       "titles": {
         "en": "Merge PDF Files Free — No Size Limit, No Upload | PDFree",
@@ -129,7 +145,9 @@
         "nl": "PDF samenvoegen — Gratis, Zonder Uploaden | PDFree",
         "pl": "Połącz PDF — Darmowy, Bez Przesyłania Plików | PDFree",
         "tr": "PDF Birleştir — Ücretsiz, Yükleme Yapmadan | PDFree",
-        "zh-CN": "免费合并 PDF 文件 — 无大小限制,无需上传 | PDFree"
+        "zh-CN": "免费合并 PDF 文件 — 无大小限制,无需上传 | PDFree",
+        "ar": "دمج ملفات PDF مجانًا — بدون حد للحجم، بدون رفع | PDFree",
+        "fa": "ادغام رایگان فایل‌های PDF — بدون محدودیت حجم، بدون آپلود | PDFree"
       },
       "descs": {
         "en": "Combine unlimited PDF files instantly. 100% private, no uploads, no file size limits.",
@@ -146,7 +164,9 @@
         "nl": "Voeg onbeperkt PDF-bestanden direct samen. 100% privé — bestanden blijven in je browser. Zonder uploaden, zonder registratie.",
         "pl": "Połącz nieograniczoną liczbę plików PDF bezpośrednio w przeglądarce. 100% prywatne — pliki pozostają na urządzeniu. Bez przesyłania, bez rejestracji.",
         "tr": "Sınırsız PDF dosyasını doğrudan tarayıcınızda birleştirin. %100 gizli — dosyalar cihazınızda kalır. Yükleme yok, kayıt yok.",
-        "zh-CN": "即时合并任意数量的 PDF 文件。100% 隐私保护,无需上传,无文件大小限制。"
+        "zh-CN": "即时合并任意数量的 PDF 文件。100% 隐私保护,无需上传,无文件大小限制。",
+        "ar": "ادمج أي عدد من ملفات PDF فورًا. خصوصية كاملة 100%، بدون رفع، بدون حد لحجم الملفات.",
+        "fa": "هر تعداد فایل PDF را فوراً ادغام کنید. حریم خصوصی ۱۰۰٪، بدون آپلود، بدون محدودیت حجم فایل."
       },
       "navLabels": {
         "en": "Merge",
@@ -163,7 +183,9 @@
         "nl": "Samenvoegen",
         "pl": "Połącz PDF",
         "tr": "PDF Birleştir",
-        "zh-CN": "合并"
+        "zh-CN": "合并",
+        "ar": "دمج",
+        "fa": "ادغام"
       },
       "cardNames": {
         "en": "Merge PDF files",
@@ -180,7 +202,9 @@
         "nl": "PDF samenvoegen",
         "pl": "Połącz PDF",
         "tr": "PDF Birleştir",
-        "zh-CN": "合并 PDF 文件"
+        "zh-CN": "合并 PDF 文件",
+        "ar": "دمج ملفات PDF",
+        "fa": "ادغام فایل‌های PDF"
       },
       "cardDescs": {
         "en": "Combine unlimited PDF files — no restrictions",
@@ -197,7 +221,9 @@
         "nl": "Combineer onbeperkte PDF-bestanden — zonder beperkingen",
         "pl": "Łącz nieograniczone pliki PDF — bez ograniczeń",
         "tr": "Sınırsız PDF dosyasını birleştirin — limit yok",
-        "zh-CN": "合并任意数量的 PDF 文件 — 没有限制"
+        "zh-CN": "合并任意数量的 PDF 文件 — 没有限制",
+        "ar": "دمج أي عدد من ملفات PDF — بدون قيود",
+        "fa": "ادغام هر تعداد فایل PDF — بدون محدودیت"
       },
       "breadcrumb": {
         "en": "Merge PDF",
@@ -214,7 +240,9 @@
         "nl": "PDF samenvoegen",
         "pl": "Połącz PDF",
         "tr": "PDF Birleştir",
-        "zh-CN": "合并 PDF"
+        "zh-CN": "合并 PDF",
+        "ar": "دمج PDF",
+        "fa": "ادغام PDF"
       },
       "metaDescs": {
         "en": "Merge PDF files free — no size limit, no daily limit, no upload. Combine large PDFs or 100+ files at once in your browser. Works offline. No signup.",
@@ -231,7 +259,9 @@
         "nl": "PDF samenvoegen gratis online — zonder uploaden, zonder registratie. Combineer 2, 50 of 100+ PDF's met één klik. 100% privé.",
         "pl": "Połącz PDF za darmo online — bez przesyłania, bez rejestracji. Połącz 2, 50 lub 100+ plików jednym kliknięciem. 100% prywatne, w przeglądarce.",
         "tr": "PDF birleştir ücretsiz online — yükleme yok, kayıt yok. 2, 50 veya 100+ PDF'yi tek tıkla birleştirin. %100 gizli, tarayıcıda işlenir. Sınır yok.",
-        "zh-CN": "免费合并 PDF 文件 — 无大小限制,无每日次数限制,无需上传。在浏览器中一次性合并大文件或 100+ 个文件。支持离线使用,无需注册。"
+        "zh-CN": "免费合并 PDF 文件 — 无大小限制,无每日次数限制,无需上传。在浏览器中一次性合并大文件或 100+ 个文件。支持离线使用,无需注册。",
+        "ar": "دمج ملفات PDF مجانًا — بدون حد للحجم، بدون حد للاستخدام اليومي، بدون رفع. ادمج ملفات كبيرة أو أكثر من 100 ملف دفعة واحدة في متصفحك. يعمل دون اتصال، بدون تسجيل.",
+        "fa": "ادغام رایگان فایل‌های PDF — بدون محدودیت حجم، بدون محدودیت روزانه، بدون آپلود. فایل‌های بزرگ یا بیش از ۱۰۰ فایل را یکجا در مرورگر خود ادغام کنید. آفلاین کار می‌کند، بدون ثبت‌نام."
       },
       "ogTitles": {
         "en": "Merge PDF Free — No Size Limit, Combine Large Files, No Upload",
@@ -248,7 +278,9 @@
         "nl": "PDF samenvoegen Gratis — Zonder Uploaden, Zonder Registratie | PDFree",
         "pl": "Połącz PDF Za Darmo — Bez Przesyłania, Bez Rejestracji | PDFree",
         "tr": "PDF Birleştir Ücretsiz — Yükleme Yok, Kayıt Yok | PDFree",
-        "zh-CN": "免费合并 PDF — 无大小限制,合并大文件,无需上传"
+        "zh-CN": "免费合并 PDF — 无大小限制,合并大文件,无需上传",
+        "ar": "دمج PDF مجانًا — بدون حد للحجم، ادمج ملفات كبيرة بدون رفع",
+        "fa": "ادغام رایگان PDF — بدون محدودیت حجم، ادغام فایل‌های بزرگ بدون آپلود"
       },
       "ogDescs": {
         "en": "Combine unlimited PDFs instantly. 100% private — files never leave your browser. No signup, no limits.",
@@ -265,7 +297,9 @@
         "nl": "Combineer onbeperkte PDF's direct. 100% privé — bestanden verlaten nooit je browser. Geen account, geen limieten.",
         "pl": "Połącz nieograniczone pliki PDF bezpośrednio. 100% prywatne — pliki nigdy nie opuszczają przeglądarki. Bez konta, bez limitów.",
         "tr": "Sınırsız PDF'yi doğrudan birleştirin. %100 gizli — dosyalar tarayıcıyı asla terk etmez. Hesap yok, limit yok.",
-        "zh-CN": "即时合并任意数量的 PDF。100% 隐私 — 文件永不离开您的浏览器。无需注册,无限制。"
+        "zh-CN": "即时合并任意数量的 PDF。100% 隐私 — 文件永不离开您的浏览器。无需注册,无限制。",
+        "ar": "ادمج أي عدد من ملفات PDF فورًا. خصوصية 100% — ملفاتك لا تغادر متصفحك أبدًا. بدون تسجيل، بدون قيود.",
+        "fa": "هر تعداد فایل PDF را فوراً ادغام کنید. حریم خصوصی ۱۰۰٪ — فایل‌های شما هرگز از مرورگرتان خارج نمی‌شوند. بدون ثبت‌نام، بدون محدودیت."
       },
       "keywords": {
         "en": "merge pdf, combine pdf files, join pdf, merge pdf files free, combine pdf online, merge pdf without uploading",
@@ -282,7 +316,9 @@
         "nl": "pdf samenvoegen, pdf bestanden combineren, pdf online samenvoegen, pdf gratis samenvoegen, meerdere pdf's samenvoegen",
         "pl": "łączenie plików pdf, scal pdf, połącz pdf online, scal pdf za darmo, połącz kilka plików pdf",
         "tr": "pdf birleştir, pdf dosyalarını birleştir, pdf birleştirme online, ücretsiz pdf birleştir, birden fazla pdf'yi birleştir",
-        "zh-CN": "合并pdf, pdf合并, pdf文件合并, 免费合并pdf, 在线合并pdf, 无需上传合并pdf"
+        "zh-CN": "合并pdf, pdf合并, pdf文件合并, 免费合并pdf, 在线合并pdf, 无需上传合并pdf",
+        "ar": "دمج pdf, دمج ملفات pdf, ضم ملفات pdf, دمج pdf مجاني, دمج pdf اونلاين, دمج pdf بدون رفع",
+        "fa": "ادغام pdf, ترکیب فایل pdf, ادغام فایل های pdf, ادغام رایگان pdf, ادغام pdf آنلاین, ادغام pdf بدون آپلود"
       }
     },
     {
@@ -5919,6 +5955,148 @@
       "whyFree": "永久免费",
       "whyFreeDesc": "没有免费试用期,没有增值付费层级。PDFree 完全免费 — 基于 AGPLv3 协议开源。",
       "whyBatch": "批量处理"
+    },
+    "ar": {
+      "moreNav": "المزيد",
+      "changeLanguageLabel": "تغيير اللغة",
+      "heroBadge": "🔒 خصوصية 100% · بدون رفع · بدون تسجيل · بدون قيود",
+      "heroH1": "أدوات PDF حقيقية<br><em>تعمل فعلاً</em>",
+      "heroP": "دمج، تقسيم، ضغط، إضافة علامة مائية، تحويل — كل ذلك يتم في متصفحك. ملفاتك لا تغادر جهازك أبدًا. بدون خوادم، بدون حسابات، فقط النتائج.",
+      "privacyBannerStrong": "ملفاتك تبقى دائمًا على جهازك.",
+      "privacyBannerText": "نستخدم Web Workers ومكتبات من جانب العميل لمعالجة الملفات — لا يُرسل أي شيء إلى خادم.",
+      "noLimit": [
+        "بدون حدود للملفات",
+        "بدون علامات مائية",
+        "بدون تسجيل",
+        "الملفات لا تغادر جهازك أبدًا"
+      ],
+      "sectionLabel": "كل الأدوات",
+      "privacy1Title": "خصوصية 100% بالتصميم",
+      "privacy1Desc": "تتم معالجة ملفاتك بالكامل داخل متصفحك. لا يتم رفعها أبدًا.",
+      "privacy2Title": "يعمل على جهازك",
+      "privacy2Desc": "تعمل جميع عمليات PDF داخل Web Worker — خيط معزول على جهازك الخاص.",
+      "privacy3Title": "يُمسح فورًا",
+      "privacy3Desc": "توجد الملفات في الذاكرة فقط. تختفي بمجرد إغلاق علامة التبويب — بدون سجلات، بدون أثر.",
+      "dropTitle": "أسقط الملفات هنا",
+      "dropSub": "أو انقر للتصفح — أي عدد من الملفات",
+      "chooseBtn": "اختر الملفات",
+      "reorderHint": "↕ اسحب لإعادة ترتيب الملفات قبل الدمج",
+      "cancelBtn": "✕ إلغاء",
+      "successTitle": "تم!",
+      "downloadBtn": "⬇ تنزيل",
+      "footerLine1": "تتم كل المعالجة 100% داخل متصفحك",
+      "footerLine2": "الملفات <strong>لا تُرفع أبدًا</strong>",
+      "footerGuarantee": "مستنداتك لا تغادر جهازك أبدًا",
+      "footerFree": "صُمم ليكون مجانيًا إلى الأبد، للجميع",
+      "footerOpenSource": "مفتوح المصدر بموجب:",
+      "footerGitHub": "عرض الكود المصدري على GitHub",
+      "privacyBadge": "ملفاتك لا تغادر المتصفح أبدًا — معالجة محلية، بدون رفع",
+      "privacyClearedTitle": "تم مسح المستند من الذاكرة",
+      "privacyClearedSub": "معالجة محلية · لم تُرفع أبدًا · بدون أثر",
+      "shareToolLabel": "هل تعرف شخصًا يحتاج إلى التعامل مع ملفات PDF؟",
+      "shareToolBtn": "شارك هذه الأداة",
+      "shareToolMessage": "أستخدم PDFree للتعامل مع ملفات PDF — مجاني وخاص ويعمل بالكامل داخل المتصفح.",
+      "shareCopyLink": "نسخ الرابط",
+      "shareLinkCopied": "تم نسخ الرابط!",
+      "fbBugBtn": "🐛 وجدت خطأ",
+      "fbIdeaBtn": "💡 اقترح فكرة",
+      "fbGoodBtn": "👍 يعمل بشكل رائع!",
+      "swUpdateMsg": "تتوفر نسخة جديدة من PDFree.",
+      "swUpdateNow": "تحديث الآن",
+      "swUpdateLater": "لاحقًا",
+      "seoH2": "أفضل أداة PDF مجانية للأمان والخصوصية",
+      "seoP1": "صُمم PDFree لتقديم إمكانات معالجة PDF احترافية دون مخاطر الرفع إلى السحابة. عند استخدام أدواتنا، تتم المعالجة مباشرة داخل متصفح الويب الخاص بك عبر WebAssembly. هذا يعني أن مستنداتك الحساسة — مثل العقود القانونية أو البيانات المالية أو صور بطاقات الهوية — لا تنتقل عبر الإنترنت أبدًا.",
+      "seoP2": "نؤمن بأن الجميع يستحق الوصول إلى الأدوات الأساسية. لهذا السبب لا يفرض PDFree أي حدود لحجم الملفات، ولا حدودًا للاستخدام اليومي، ولا علامات مائية إجبارية. إنها أداة مجانية تمامًا وغير محدودة، مصممة للطلاب والمحترفين وأي شخص يقدّر خصوصيته الرقمية.",
+      "faqTitle": "الأسئلة الشائعة",
+      "faqQ1": "هل يتم تخزين ملفاتي على خوادمكم؟",
+      "faqA1": "لا. يعمل PDFree بالكامل على جهازك (معالجة من جانب العميل). ليس لدينا خادم يعالج ملفاتك، مما يضمن خصوصية 100%.",
+      "faqQ2": "هل يوجد حد لحجم الملف أو عدد الصفحات؟",
+      "faqA2": "لا، لا توجد حدود اصطناعية. الحد الوحيد هو الذاكرة (RAM) المتاحة على جهاز الكمبيوتر أو الهاتف الخاص بك.",
+      "whySectionTitle": "لماذا تختار PDFree على أدوات PDF الأخرى؟",
+      "whyNoSizeLimit": "بدون حدود لحجم الملفات",
+      "whyNoSizeLimitDesc": "ادمج أو اضغط أو حوّل ملفات PDF بأي حجم — بدون حد عند 500 ميجابايت أو 1 جيجابايت أو أكثر.",
+      "whyNoUpload": "الملفات لا تغادر جهازك أبدًا",
+      "whyNoUploadDesc": "كل شيء يعمل داخل متصفحك. بدون رفع، بدون خوادم، بدون تسريب بيانات — يعمل أيضًا دون اتصال.",
+      "whyNoAccount": "بدون حاجة لإنشاء حساب",
+      "whyNoAccountDesc": "بدون تسجيل، بدون بريد إلكتروني، بدون تسجيل دخول. افتح الصفحة واستخدم الأداة — بهذه البساطة.",
+      "whyNoWatermark": "بدون إضافة علامات مائية",
+      "whyNoWatermarkDesc": "الملفات الناتجة نظيفة. بدون علامات تجارية، بدون أختام مائية، بدون طبقات نص مخفية.",
+      "whyNoDailyLimit": "بدون حد يومي",
+      "whyNoDailyLimitDesc": "استخدمه بقدر ما تحتاج. بدون حصص يومية، بدون حدود شهرية، بدون ترويج للترقية المدفوعة.",
+      "whyFree": "مجاني إلى الأبد",
+      "whyFreeDesc": "بدون فترة تجريبية، بدون مستويات مدفوعة. PDFree مجاني تمامًا — مفتوح المصدر بموجب رخصة AGPLv3.",
+      "whyBatch": "معالجة دفعية"
+    },
+    "fa": {
+      "moreNav": "بیشتر",
+      "changeLanguageLabel": "تغییر زبان",
+      "heroBadge": "🔒 حریم خصوصی ۱۰۰٪ · بدون آپلود · بدون ثبت‌نام · بدون محدودیت",
+      "heroH1": "ابزارهای واقعی PDF<br><em>که واقعاً کار می‌کنند</em>",
+      "heroP": "ادغام، تقسیم، فشرده‌سازی، افزودن واترمارک، تبدیل — همه در مرورگر شما انجام می‌شود. فایل‌های شما هرگز از دستگاهتان خارج نمی‌شوند. بدون سرور، بدون حساب کاربری، فقط نتیجه.",
+      "privacyBannerStrong": "فایل‌های شما همیشه روی دستگاه شما باقی می‌مانند.",
+      "privacyBannerText": "ما از Web Worker و کتابخانه‌های سمت کاربر برای پردازش فایل‌ها استفاده می‌کنیم — هیچ‌چیز به سروری ارسال نمی‌شود.",
+      "noLimit": [
+        "بدون محدودیت فایل",
+        "بدون واترمارک",
+        "بدون ثبت‌نام",
+        "فایل‌ها هرگز از دستگاه شما خارج نمی‌شوند"
+      ],
+      "sectionLabel": "همه ابزارها",
+      "privacy1Title": "حریم خصوصی ۱۰۰٪ از طراحی",
+      "privacy1Desc": "فایل‌های شما به‌طور کامل در مرورگرتان پردازش می‌شوند. هرگز آپلود نمی‌شوند.",
+      "privacy2Title": "روی دستگاه شما اجرا می‌شود",
+      "privacy2Desc": "همه عملیات PDF در یک Web Worker اجرا می‌شوند — یک ریسه ایزوله روی سخت‌افزار خودتان.",
+      "privacy3Title": "بلافاصله پاک می‌شود",
+      "privacy3Desc": "فایل‌ها فقط در حافظه وجود دارند. با بستن تب ناپدید می‌شوند — بدون لاگ، بدون ردپا.",
+      "dropTitle": "فایل‌ها را اینجا رها کنید",
+      "dropSub": "یا برای انتخاب کلیک کنید — هر تعداد فایل",
+      "chooseBtn": "انتخاب فایل‌ها",
+      "reorderHint": "↕ برای تغییر ترتیب فایل‌ها قبل از ادغام بکشید",
+      "cancelBtn": "✕ انصراف",
+      "successTitle": "انجام شد!",
+      "downloadBtn": "⬇ دانلود",
+      "footerLine1": "همه پردازش‌ها ۱۰۰٪ در مرورگر شما انجام می‌شود",
+      "footerLine2": "فایل‌ها <strong>هرگز آپلود نمی‌شوند</strong>",
+      "footerGuarantee": "اسناد شما هرگز از دستگاهتان خارج نمی‌شوند",
+      "footerFree": "برای همیشه و برای همه، رایگان ساخته شده",
+      "footerOpenSource": "متن‌باز تحت مجوز:",
+      "footerGitHub": "مشاهده کد منبع در GitHub",
+      "privacyBadge": "فایل‌های شما هرگز از مرورگر خارج نمی‌شوند — پردازش محلی، بدون آپلود",
+      "privacyClearedTitle": "سند از حافظه پاک شد",
+      "privacyClearedSub": "پردازش محلی · هرگز آپلود نشد · بدون ردپا",
+      "shareToolLabel": "کسی را می‌شناسید که به کار با PDF نیاز دارد؟",
+      "shareToolBtn": "این ابزار را به اشتراک بگذارید",
+      "shareToolMessage": "من از PDFree برای کار با فایل‌های PDF استفاده می‌کنم — رایگان، خصوصی و کاملاً در مرورگر اجرا می‌شود.",
+      "shareCopyLink": "کپی لینک",
+      "shareLinkCopied": "لینک کپی شد!",
+      "fbBugBtn": "🐛 یک باگ پیدا کردم",
+      "fbIdeaBtn": "💡 پیشنهاد یک ایده",
+      "fbGoodBtn": "👍 عالی کار می‌کند!",
+      "swUpdateMsg": "نسخه جدیدی از PDFree در دسترس است.",
+      "swUpdateNow": "اکنون به‌روزرسانی کنید",
+      "swUpdateLater": "بعداً",
+      "seoH2": "بهترین ابزار رایگان PDF برای امنیت و حریم خصوصی",
+      "seoP1": "PDFree طوری طراحی شده که قابلیت‌های حرفه‌ای پردازش PDF را بدون خطرات آپلود در فضای ابری ارائه دهد. هنگام استفاده از ابزارهای ما، پردازش مستقیماً در مرورگر وب شما از طریق WebAssembly انجام می‌شود. این یعنی اسناد حساس شما — مانند قراردادهای حقوقی، صورت‌های مالی یا اسکن مدارک هویتی — هرگز از طریق اینترنت منتقل نمی‌شوند.",
+      "seoP2": "ما معتقدیم همه باید به ابزارهای ضروری دسترسی داشته باشند. به همین دلیل PDFree هیچ محدودیت حجم فایل، محدودیت استفاده روزانه یا واترمارک اجباری ندارد. این ابزاری کاملاً رایگان و بدون محدودیت است که برای دانش‌آموزان، متخصصان و هر کسی که به حریم خصوصی دیجیتال خود اهمیت می‌دهد طراحی شده است.",
+      "faqTitle": "سوالات متداول",
+      "faqQ1": "آیا فایل‌های من روی سرورهای شما ذخیره می‌شوند؟",
+      "faqA1": "خیر. PDFree به‌طور کامل روی دستگاه شما اجرا می‌شود (پردازش سمت کاربر). ما هیچ سروری برای پردازش فایل‌های شما نداریم که این تضمین‌کننده حریم خصوصی ۱۰۰٪ است.",
+      "faqQ2": "آیا محدودیتی برای حجم فایل یا تعداد صفحات وجود دارد؟",
+      "faqA2": "خیر، هیچ محدودیت مصنوعی وجود ندارد. تنها محدودیت، حافظه (RAM) موجود در رایانه یا گوشی شماست.",
+      "whySectionTitle": "چرا PDFree را به سایر ابزارهای PDF ترجیح دهیم؟",
+      "whyNoSizeLimit": "بدون محدودیت حجم فایل",
+      "whyNoSizeLimitDesc": "فایل‌های PDF با هر حجمی را ادغام، فشرده یا تبدیل کنید — بدون محدودیت در ۵۰۰ مگابایت، ۱ گیگابایت یا بیشتر.",
+      "whyNoUpload": "فایل‌ها هرگز از دستگاه شما خارج نمی‌شوند",
+      "whyNoUploadDesc": "همه‌چیز در مرورگر شما اجرا می‌شود. بدون آپلود، بدون سرور، بدون نشت داده — حتی به‌صورت آفلاین هم کار می‌کند.",
+      "whyNoAccount": "بدون نیاز به حساب کاربری",
+      "whyNoAccountDesc": "بدون ثبت‌نام، بدون ایمیل، بدون ورود. صفحه را باز کنید و از ابزار استفاده کنید — همین‌قدر ساده.",
+      "whyNoWatermark": "بدون افزودن واترمارک",
+      "whyNoWatermarkDesc": "فایل‌های خروجی تمیز هستند. بدون برندینگ، بدون مهر واترمارک، بدون لایه متن پنهان.",
+      "whyNoDailyLimit": "بدون محدودیت روزانه",
+      "whyNoDailyLimitDesc": "هر چند بار که نیاز دارید از آن استفاده کنید. بدون سهمیه روزانه، بدون سقف ماهانه، بدون تبلیغ ارتقای پولی.",
+      "whyFree": "برای همیشه رایگان",
+      "whyFreeDesc": "بدون دوره آزمایشی، بدون سطوح ویژه. PDFree کاملاً رایگان است — متن‌باز تحت مجوز AGPLv3.",
+      "whyBatch": "پردازش دسته‌ای"
     }
   }
 }

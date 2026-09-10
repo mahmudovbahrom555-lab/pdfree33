@@ -5704,3 +5704,50 @@ body:not(.has-files) #heroChipsLabel { display: none !important; }
     max-height: 100%;
   }
 }
+
+/* ══════════════════════════════════════════════════════════════
+   RTL (ar, fa) — [dir="rtl"] set on <html> by scripts/templates/
+   tool-page.html (merge tool only, for now). Everything laid out
+   with plain flex/block flow already mirrors on its own; these are
+   only the components with an absolute left/right anchor, a
+   directional gradient, or a directional glyph that don't.
+   ══════════════════════════════════════════════════════════════ */
+[dir="rtl"] .j2p-toggle__thumb {
+  left: auto;
+  right: 2px;
+}
+[dir="rtl"] .j2p-toggle input:checked ~ .j2p-toggle__thumb {
+  transform: translateX(-20px);
+}
+
+[dir="rtl"] .merge-btn::before {
+  background: linear-gradient(270deg, var(--green-mid), var(--green));
+}
+[dir="rtl"] .merge-btn::after {
+  left: auto;
+  right: var(--fill-pct, 0%);
+}
+
+[dir="rtl"] .download-btn {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+[dir="rtl"] .file-item-num {
+  text-align: left;
+}
+
+[dir="rtl"] .share-fallback-menu {
+  right: auto;
+  left: 0;
+}
+[dir="rtl"] .share-fallback-item {
+  text-align: right;
+}
+
+[dir="rtl"] .next-step-row__arrow {
+  transform: scaleX(-1);
+}
+[dir="rtl"] .next-step-row:hover .next-step-row__arrow {
+  transform: scaleX(-1) translateX(3px);
+}

@@ -39,7 +39,7 @@ const localeFiles  = readdirSync(LOCALES_DIR).filter(f => f.endsWith('.js')).sor
 // (/zh/merge-pdf/, no homepage) and intentionally translates only the keys
 // that page's interactive flow renders, relying on i18n.js's EN fallback
 // for the rest. Full parity is still enforced for every other locale.
-const PARTIAL_LOCALES = new Set(['zh-CN']);
+const PARTIAL_LOCALES = new Set(['zh-CN', 'ar', 'fa']);
 
 // Extracts top-level `  key:` names from a `window.PDFREE_LOCALE = { ... };`
 // block. Restricted to the block itself (not the whole file) so a future
