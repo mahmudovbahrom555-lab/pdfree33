@@ -690,6 +690,35 @@ function initEvents() {
     initToolOptions(currentTool, [...selectedFiles]);
   });
 
+  // Real mobile bug found live (reported on 2 real devices, reproduced with
+  // Playwright's iPhone 13 emulation + a real filechooser interaction —
+  // setInputFiles() alone didn't surface it): #mergeBtn's position:sticky
+  // (bottom: 16px, see css/components.css) pins it to a fixed VIEWPORT
+  // position, not a document position. On a short mobile viewport, the
+  // page's fixed preceding content (nav + hero + drop-zone + privacy badge)
+  // happens to total almost exactly one viewport height — so right after
+  // the FIRST file is added, #fileList renders into the exact same on-
+  // screen band the sticky button is pinned to. The file gets added
+  // correctly (confirmed via direct DOM inspection: real filename/size/page
+  // count all present), it's just invisible AND untappable underneath the
+  // button — from the user's perspective, tapping "Choose files" appeared
+  // to do nothing. Scrolling the newly-populated list into view on the
+  // FIRST add only (not on every subsequent add — that would yank the
+  // viewport away from a user who's already scrolled down to review
+  // options) is the standard fix for a sticky-bottom-CTA covering
+  // just-added content; 'center' avoids re-landing right back under the
+  // same sticky band that 'start'/'nearest' could.
+  //
+  // `e.detail.wasEmpty` (set by files.js's addFiles(), captured BEFORE its
+  // push loop) — not `selectedFiles.length === 1` — because a first pick
+  // that selects several files at once jumps straight from 0 to N, never
+  // passing through exactly 1, which would silently skip the scroll on
+  // exactly the multi-select-first-pick case real users hit.
+  document.addEventListener('pdfree:files-added', (e) => {
+    if (!e.detail?.wasEmpty) return;
+    id('fileList')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  });
+
   // Re-init after a file is removed so the active tool always uses the current files[0].
   // Without this, tools like OCR keep a stale _file reference to the removed file.
   document.addEventListener('pdfree:file-removed', () => {

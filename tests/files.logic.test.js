@@ -119,6 +119,42 @@ test('перемещает средний элемент', () => {
   expect(result[1].name).toBe('c.pdf');
 });
 
+// ── 'files-added' event's wasEmpty detail (regression) ──────
+// Real mobile bug: #mergeBtn's position:sticky pins it to a fixed viewport
+// position, and on a short mobile viewport the newly-added #fileList used
+// to render right under it — invisible and untappable — on the first file
+// add. Fixed in js/app.js by scrolling #fileList into view, gated on
+// files.js's addFiles() reporting whether selectedFiles was genuinely
+// empty BEFORE this add (not `selectedFiles.length === 1` after, which
+// misses a first pick that selects several files at once — jumping
+// straight from 0 to N never passes through exactly 1).
+console.log("\n'files-added' event wasEmpty detail:");
+
+/** Mirrors files.js's addFiles(): capture emptiness BEFORE the push loop. */
+function addFilesWithWasEmpty(existing, incoming) {
+  const wasEmpty = existing.length === 0;
+  const result = [...existing, ...incoming];
+  return { files: result, wasEmpty };
+}
+
+test('single first file: wasEmpty is true', () => {
+  const { wasEmpty } = addFilesWithWasEmpty([], [makeFile('a.pdf')]);
+  expect(wasEmpty).toBe(true);
+});
+
+test('multi-select first pick (3 files at once): wasEmpty is still true', () => {
+  // The exact case a naive `selectedFiles.length === 1` check misses —
+  // length jumps straight from 0 to 3, never passing through 1.
+  const { files, wasEmpty } = addFilesWithWasEmpty([], [makeFile('a.pdf'), makeFile('b.pdf'), makeFile('c.pdf')]);
+  expect(files.length).toBe(3);
+  expect(wasEmpty).toBe(true);
+});
+
+test('adding a file when one already exists: wasEmpty is false (no re-scroll)', () => {
+  const { wasEmpty } = addFilesWithWasEmpty([makeFile('a.pdf')], [makeFile('b.pdf')]);
+  expect(wasEmpty).toBe(false);
+});
+
 // ── Summary ────────────────────────────────────────────────
 console.log(`\n${'─'.repeat(40)}`);
 console.log(`Tests: ${passed + failed} | ✓ ${passed} | ${failed > 0 ? '✗ ' + failed : '0 failed'}`);

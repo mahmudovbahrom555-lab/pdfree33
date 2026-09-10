@@ -166,6 +166,15 @@ export function isFilesLocked() {
 export function addFiles(files) {
   if (_locked) return; // (п.2) игнорируем добавление во время обработки
 
+  // Captured before the push loop below — NOT the same as "selectedFiles.
+  // length === 1 after adding", which misses a multi-select first pick
+  // (e.g. a user's very first "Choose files" tap selecting 3 files at once
+  // jumps straight from 0 to 3, never passing through exactly 1). Consumers
+  // that care about "was this genuinely the first add" (e.g. app.js's
+  // scroll-into-view fix for #fileList rendering under the sticky
+  // #mergeBtn) need the real before/after transition, not a length snapshot.
+  const _wasEmpty = selectedFiles.length === 0;
+
   // Tools with multi:false (config.js) accept exactly one file — a second
   // "Choose file" pick must replace-or-block, not silently append to a list
   // the tool's UI never re-reads past files[0]. split keeps its own wording;
@@ -209,7 +218,7 @@ export function addFiles(files) {
   if (dupes > 0) showToast(tp(dupes, 'dupe_skip_one', 'dupe_skip_many'));
 
   if (selectedFiles.length > 0) {
-    document.dispatchEvent(new CustomEvent('pdfree:files-added'));
+    document.dispatchEvent(new CustomEvent('pdfree:files-added', { detail: { wasEmpty: _wasEmpty } }));
   }
 
   renderList();
