@@ -143,6 +143,18 @@ jobs:
           sleep 2
           PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:protect
 
+      - name: E2E — mobile sticky-button/file-list overlap
+        # Real-browser regression gate for the mobile bug fixed in commit
+        # 0934fc9b, reported live by the user on 2 physical devices:
+        # selecting a file on mobile appeared to do nothing. #mergeBtn's
+        # position:sticky pins it to a fixed viewport position; on a short
+        # mobile viewport the newly-added #fileList used to render into the
+        # exact same on-screen band, completely covering it. Verified this
+        # test genuinely catches the regression by reverting the fix locally
+        # and confirming 4/6 cases fail — not just trivially passing. See
+        # tests/e2e/mobile-sticky-overlap.e2e.mjs's header comment.
+        run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:mobile-sticky-overlap
+
       - name: Guard — no conflicting wrangler configs
         run: |
           for f in wrangler.jsonc wrangler.json; do

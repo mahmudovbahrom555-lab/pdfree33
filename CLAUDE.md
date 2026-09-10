@@ -216,6 +216,21 @@ Apply all of these to any new tool's options panel before shipping.
    PDF-to-PDF/A bind their own handler to this same physical button); `#toast`/`showToast()` for
    messages, `#successCard` for the result panel, `#cancelBtn` for cancellation. Consistency here is
    also what keeps this project's own audit/test tooling working against new tools without changes.
+8. **A `position:sticky` bottom bar can silently cover newly-rendered content on a short mobile
+   viewport — test the actual first-content-appears moment, not just the empty and fully-scrolled
+   states.** `#mergeBtn`'s `position: sticky; bottom: 16px` pins it to a fixed VIEWPORT position, not
+   a document position. This has bitten the codebase twice: once for `#btnInstallOcr`/
+   `#glsDictionary` (fixed with a `margin-top` push, see `css/components.css`'s own comment), and
+   again for `#fileList` sitewide (a real user-reported bug, fixed 2026-09-10 commit `0934fc9b` by
+   scrolling the newly-added content into view on the first file add — see
+   `js/app.js`'s `pdfree:files-added` listener). **Any new always-visible sticky/fixed element, or
+   any new content that can render tall enough to reach the viewport's bottom ~90px on a short
+   device, needs an explicit check**: add a file/trigger the new content on a real mobile viewport
+   (~390×664, matching a real short device, not just ~390×844) and confirm via
+   `document.elementFromPoint()` that a tap on the new content actually hits it, not whatever's
+   sticky-pinned on top of it. `tests/e2e/mobile-sticky-overlap.e2e.mjs` (CI-gated, blocks deploy)
+   covers the shared `#fileList` case for every tool automatically — extend it (or add a similar
+   check) if a NEW sticky/fixed element is introduced elsewhere.
 
 ## Adding a feature to an EXISTING tool — update its SEO content too
 
