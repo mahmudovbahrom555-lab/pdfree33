@@ -44,10 +44,14 @@
     frame-src: googlesyndication/doubleclick
       AdSense renders ad creatives inside cross-origin iframes.
 
-    script-src: https://docs.opencv.org + 'unsafe-eval' REQUIRED for
-      jpg2pdf's live-camera scan (document-edge auto-detection —
-      js/lazyLibs.js's loadOpenCv()). The docs.opencv.org CDN build's
-      Emscripten runtime calls `new Function(...)` in its own top-level
+    script-src: 'unsafe-eval' REQUIRED for jpg2pdf's live-camera scan
+      (document-edge auto-detection — js/lazyLibs.js's loadOpenCv()).
+      OpenCV.js is vendored locally now (js/vendor/opencv.js — no longer
+      fetched from docs.opencv.org at runtime, see loadOpenCv()'s own
+      comment for why), so 'self' already covers loading the script —
+      but 'unsafe-eval' is still required regardless of where the file
+      comes from: its Emscripten runtime calls `new Function(...)` in
+      its own top-level
       boilerplate (createNamedFunction, used to set up error subclasses)
       — this fires on every load, before any cv.* function is even
       called, so 'wasm-unsafe-eval' alone (already present, for WASM
@@ -86,7 +90,6 @@
                 https://cdnjs.cloudflare.com
                 https://cdn.jsdelivr.net
                 https://unpkg.com
-                https://docs.opencv.org
                 https://pagead2.googlesyndication.com
                 https://static.cloudflareinsights.com;
     style-src   'self' 'unsafe-inline';

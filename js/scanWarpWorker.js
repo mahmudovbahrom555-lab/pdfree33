@@ -34,10 +34,15 @@
 //        | { type: 'error', message }
 // ============================================================
 
+// Vendored locally (js/vendor/opencv.js) rather than fetched from
+// docs.opencv.org at runtime — see js/lazyLibs.js's loadOpenCv() for the
+// full reasoning (silent quality degradation on a weak/no connection,
+// broken offline support, and an SRI gap importScripts() has no native
+// mechanism to close for a cross-origin script in the first place).
 let _cvReady = new Promise((resolve, reject) => {
   self.Module = { onRuntimeInitialized: resolve };
   try {
-    importScripts('https://docs.opencv.org/4.9.0/opencv.js');
+    importScripts('./vendor/opencv.js');
   } catch (e) {
     reject(e);
   }

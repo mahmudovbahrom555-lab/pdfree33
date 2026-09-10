@@ -10,9 +10,11 @@
 
     Same as jpg2pdf's tool-page.html template (this tool shares the
     live-camera + OpenCV.js scan flow — js/scanCameraUI.js,
-    js/scanGeometry.js) — docs.opencv.org + 'unsafe-eval' + connect-src
-    data: all required for the same reasons documented in full in
-    index.html's own CSP comment block (2026-08-22 additions).
+    js/scanGeometry.js) — 'unsafe-eval' + connect-src data: required for
+    the same reasons documented in full in index.html's own CSP comment
+    block (2026-08-22 additions; docs.opencv.org itself is no longer
+    needed here — OpenCV.js is vendored locally now, js/vendor/opencv.js,
+    see js/lazyLibs.js's loadOpenCv()).
     ════════════════════════════════════════════════════════════════
   -->
   <meta http-equiv="Content-Security-Policy" content="
@@ -23,7 +25,6 @@
                 blob:
                 https://cdnjs.cloudflare.com
                 https://esm.sh
-                https://docs.opencv.org
                 https://pagead2.googlesyndication.com
                 https://static.cloudflareinsights.com;
     style-src   'self' 'unsafe-inline';

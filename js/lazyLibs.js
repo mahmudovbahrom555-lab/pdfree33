@@ -184,10 +184,21 @@ async function _loadPptxGenJsWithFallback() {
 // OpenCV.js — used by js/scanGeometry.js for the jpg2pdf live-camera
 // scan flow (document-quad detection + perspective warp). Only ever
 // loaded when that flow actually opens — costs nothing for every
-// other page/tool. Pinned version (verified live via curl before
-// adding: https://docs.opencv.org/4.9.0/opencv.js returns 200,
-// ~9.8MB; 4.10.0 404s) — same "never a moving latest alias" policy as
-// every other CDN lib in this file.
+// other page/tool.
+//
+// Vendored locally (js/vendor/opencv.js, v4.9.0 — same version + exact
+// bytes previously loaded from https://docs.opencv.org/4.9.0/opencv.js,
+// hash-verified against that CDN copy's own SRI before switching) rather
+// than fetched from Google's CDN at runtime. This was a real, previously-
+// flagged-but-unresolved gap: on a weak/no mobile connection, a failed
+// fetch here silently degraded Document Scanner to a cruder guessed crop
+// (the `.catch(() => {})` at every call site) with no visible error, and
+// broke true offline use for this one tool despite the site's own PWA
+// "works offline" claim. Vendoring also closes an SRI gap that had no
+// fix otherwise: js/scanDetectWorker.js and js/scanWarpWorker.js load
+// this same file via `importScripts()`, which has no browser-native
+// integrity-checking mechanism at all — a same-origin local file sidesteps
+// the question entirely (no cross-origin trust boundary to verify).
 //
 // Different from every other loader here: OpenCV's Emscripten runtime
 // checks for a PRE-EXISTING global `Module` object with an
@@ -195,8 +206,7 @@ async function _loadPptxGenJsWithFallback() {
 // firing only means the JS downloaded, not that the WASM runtime has
 // actually finished initializing (cv.Mat/cv.Canny/etc. would still be
 // unavailable). `Module` must be set up BEFORE the script is created.
-const OPENCV_URL = 'https://docs.opencv.org/4.9.0/opencv.js';
-const OPENCV_SRI = 'sha384-zJHzYPWolUG4i2tYEdlq9VcmS1lGtE2r0o3EtIM+dGvmHjm0tC/DY1V1h+qSGXj9';
+const OPENCV_URL = new URL('./vendor/opencv.js', import.meta.url).href;
 
 export function loadOpenCv() {
   if (window.cv?.Mat) return Promise.resolve();
@@ -207,10 +217,8 @@ export function loadOpenCv() {
       onRuntimeInitialized: resolve,
     };
     const s = document.createElement('script');
-    s.src         = OPENCV_URL;
-    s.integrity   = OPENCV_SRI;
-    s.crossOrigin = 'anonymous';
-    s.onerror = () => reject(new Error('Failed to load openCv from CDN'));
+    s.src = OPENCV_URL;
+    s.onerror = () => reject(new Error('Failed to load vendored OpenCV.js'));
     document.head.appendChild(s);
   }).catch(err => {
     delete _promises['openCv']; // allow a later call to actually retry

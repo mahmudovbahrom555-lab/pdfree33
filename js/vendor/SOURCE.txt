@@ -1,3 +1,37 @@
+File:        opencv.js
+Source:      OpenCV.js official build, v4.9.0 — https://docs.opencv.org/4.9.0/opencv.js
+             (an Emscripten/WASM build of OpenCV, https://github.com/opencv/opencv)
+Downloaded:  2026-09-10, moved here from a runtime CDN fetch (previously loaded
+             directly from https://docs.opencv.org/4.9.0/opencv.js at runtime — see
+             js/lazyLibs.js's loadOpenCv() for why that was changed: silent quality
+             degradation on a weak/no mobile connection, broken offline support for
+             Document Scanner, and an SRI gap importScripts() has no native
+             mechanism to close for a cross-origin script in Web Workers).
+Size:        ~9.8 MB (WASM binary embedded inline as base64, no separate .wasm fetch)
+Verified:    Downloaded fresh via `curl`, computed its SHA-384 and confirmed it
+             matches byte-for-byte the SRI hash this project had already been
+             pinning against the CDN copy for months
+             (sha384-zJHzYPWolUG4i2tYEdlq9VcmS1lGtE2r0o3EtIM+dGvmHjm0tC/DY1V1h+qSGXj9)
+             — the exact same bytes already trusted, not a different build.
+License:     Apache License 2.0 (OpenCV's project-wide license since v4.5.0; this
+             bundled build does not embed its own license text — see OpenCV's
+             own LICENSE at https://github.com/opencv/opencv/blob/4.9.0/LICENSE
+             for the authoritative full text, not reproduced here since it wasn't
+             found embedded in the distributed .js file itself to copy verbatim).
+
+Used by:     js/scanCameraUI.js (loaded via js/lazyLibs.js's loadOpenCv(), main
+             thread — one-shot post-capture quad detection) and two dedicated
+             Web Workers that load this same file via importScripts():
+             js/scanDetectWorker.js (live-camera ~5fps framing-guide loop) and
+             js/scanWarpWorker.js (perspective-warp on crop confirm). All three
+             are Document Scanner's own quad-detection/perspective-correction
+             pipeline (js/scanGeometry.js's detectDocumentQuad()/warpToRect())
+             — lazy-loaded, costs nothing for any other page/tool.
+
+See LICENSE.txt in this directory for redistribution terms.
+
+----------------------------------------------------------------
+
 Profile:     sRGB2014.icc
 Source:      International Color Consortium (ICC) — color.org reference sRGB profile
 Downloaded:  2026-08-02
