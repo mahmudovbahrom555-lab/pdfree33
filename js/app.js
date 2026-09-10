@@ -1636,10 +1636,33 @@ function _initPWA() {
       // Re-check whenever the tab regains focus (the common "left it open,
       // came back later" case) and on a slow interval as a backstop for
       // tabs that are simply never backgrounded.
-      const _recheckForUpdate = () => reg.update().catch(() => {});
+      //
+      // visibilitychange alone is not enough for an installed PWA
+      // (manifest.json display:"standalone"): iOS/WebKit has long-standing
+      // bugs where visibilitychange does not reliably fire when a
+      // home-screen web app is resumed from the app switcher — the page
+      // never re-visible-izes from the SW's point of view, so it can sit on
+      // a stale worker indefinitely even though the user is actively using
+      // it. Real report (2026-09): a user on iOS said the site worked fine
+      // in a fresh incognito tab (nothing to be stale) but stayed stale in
+      // both the installed PWA and the regular (non-incognito) browser tab
+      // — exactly the shape this gap produces. pageshow/focus fire more
+      // reliably across engines and cover both the installed-PWA and the
+      // plain-backgrounded-tab case as extra signals, not replacements.
+      // Debounced to avoid 2-3 of these events firing back-to-back on a
+      // single app-switch and issuing redundant network checks.
+      let _lastRecheck = 0;
+      const _recheckForUpdate = () => {
+        const now = Date.now();
+        if (now - _lastRecheck < 5000) return;
+        _lastRecheck = now;
+        reg.update().catch(() => {});
+      };
       document.addEventListener('visibilitychange', () => {
         if (document.visibilityState === 'visible') _recheckForUpdate();
       });
+      window.addEventListener('pageshow', _recheckForUpdate);
+      window.addEventListener('focus', _recheckForUpdate);
       // 30 min backstop for tabs that are simply never backgrounded.
       // Codebase convention here is self-rescheduling setTimeout, not
       // setInterval (see eslint globals — setInterval isn't allow-listed).
