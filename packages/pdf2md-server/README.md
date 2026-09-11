@@ -8,6 +8,15 @@ through. See [the real output-quality benchmark](https://pdfree.io/blog/pdf-to-m
 
 ## Quick start (Docker)
 
+Pull the published image — no build step needed:
+
+```bash
+docker pull ghcr.io/mahmudovbahrom555-lab/pdf2md-server:latest
+docker run -p 8080:8080 ghcr.io/mahmudovbahrom555-lab/pdf2md-server:latest
+```
+
+Or build it yourself from source:
+
 ```bash
 # Build from the REPO ROOT, not this directory — see the Dockerfile's own
 # header comment for why (it needs access to js/, same as `npm run sync`).
