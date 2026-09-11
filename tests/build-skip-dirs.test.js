@@ -36,8 +36,8 @@ const SRC_PKGS   = path.join(ROOT, 'packages');
 // production (confirmed via curl — 200s, not theoretical). Guard each one
 // the same way as the packages/ check below, so a future SKIP_DIRS/
 // SKIP_FILES refactor can't silently drop any of these again.
-const DEV_ONLY_DIRS  = ['src', 'tests', 'test-results', '.github'];
-const DEV_ONLY_FILES = ['CLAUDE.md', 'package.json'];
+const DEV_ONLY_DIRS  = ['src', 'tests', 'test-results', '.github', 'selfhost'];
+const DEV_ONLY_FILES = ['CLAUDE.md', 'package.json', 'Dockerfile', 'SELF_HOSTING.md'];
 
 let passed = 0, failed = 0;
 function test(name, fn) {

@@ -61,12 +61,16 @@ SKIP_DIRS = {
     # but real build hygiene sloppiness — and would have baked the same
     # leak into every self-hosted image too if left unfixed.
     'src', 'tests', 'test-results', '.github',
+    # selfhost/server.js's own package for the self-hosted Docker image —
+    # a Docker-build-time input, not a static site asset.
+    'selfhost',
 }
 SKIP_FILES = {
     'wrangler.toml', 'wrangler.jsonc', 'wrangler.json',  # deployment configs — never serve as static
     '.assetsignore', 'eslint.config.js',
     'package.json', 'package-lock.json', '.gitignore', 'vercel.json',
-    'CONTRIBUTING.md', 'LICENSE', 'README.md',
+    'CONTRIBUTING.md', 'LICENSE', 'README.md', 'SELF_HOSTING.md',
+    'Dockerfile',  # self-hosted Docker package build input, not a site asset
     # Internal Claude Code instructions — same "never serve publicly"
     # category as LICENSE/README above, found missing alongside the
     # SKIP_DIRS gap described above.
