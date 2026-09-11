@@ -51,13 +51,24 @@ async function handleProcessPage(index, bitmap, mode, strength) {
   bitmap.close?.();
 
   const gray = _toGrayscaleCanvas(src);
-  const bg   = _estimateBackground(gray);
-  _flatFieldCorrect(gray, bg);
-  _applyMedianFilter(gray);
-  _unsharpMask(gray, 2, 2.0);
 
-  if (mode === 'enhance') _applyEnhance(gray, strength);
-  else _applyClean(gray, strength);
+  if (mode === 'enhance') {
+    // Enhance stays continuous-tone (no binarization) — the coarse
+    // flat-field correction below is safe here: worst case is an
+    // imperfect shadow correction, not the false-ink blob artifacts a bad
+    // estimate causes once fed into Clean's threshold (see _applyClean's
+    // own header comment for why Clean uses a different, local approach
+    // instead of this global one).
+    const bg = _estimateBackground(gray);
+    _flatFieldCorrect(gray, bg);
+    _applyMedianFilter(gray);
+    _unsharpMask(gray, 2, 2.0);
+    _applyEnhance(gray, strength);
+  } else {
+    _applyMedianFilter(gray);
+    _unsharpMask(gray, 2, 2.0);
+    _applyClean(gray, strength);
+  }
 
   const format = mode === 'enhance' ? 'jpeg' : 'png';
   const blob   = mode === 'enhance'
@@ -92,10 +103,18 @@ function _toGrayscaleCanvas(srcCanvas) {
 // Gaussian blur needed) then upsample back to full size. This slowly-
 // varying result approximates the page's own uneven illumination/shadow
 // (e.g. the darker gutter near a book's spine), cheaply enough to run
-// live in a browser — the practical middle ground between a single global
-// threshold (too weak for uneven lighting) and full local-window adaptive
-// binarization (Sauvola et al — accurate but expensive; left for a future
-// version if this approximation proves insufficient on real scans).
+// live in a browser. Only used by Enhance mode now — Clean mode uses
+// Sauvola local-window thresholding instead (see _applyClean below) after
+// a real 2026-09 test against an actual photographed page with a sharp,
+// patterned shadow (tree-leaf dapple, not a smooth gutter gradient) showed
+// this coarse a background estimate can't resolve a shadow boundary finer
+// than its own downsample window: the "background" it computes ends up
+// partway between lit and shadowed for anything smaller than that window,
+// so flat-field division doesn't fully cancel the shadow, and Clean's
+// (then-global) threshold misclassified the residual darkness as ink —
+// large false-ink blobs exactly where the shadow was. Enhance never
+// binarizes, so an imperfect correction there just becomes part of the
+// continuous-tone output, not a hard-edged artifact — safe to keep.
 const _BG_LONG_EDGE = 64;
 
 function _estimateBackground(grayCanvas) {
@@ -241,35 +260,77 @@ function _unsharpMask(grayCanvas, radius, amount) {
   return grayCanvas;
 }
 
-// Otsu's method — verbatim port of js/ocrUI.js's _otsuThreshold (already
-// proven in production for scanned-page binarization there). Maximizes
-// between-class variance from a 256-bin histogram to find a page-adaptive
-// cutoff, rather than a single fixed value that works for one scan and
-// not the next.
-function _otsuThreshold(data) {
-  const hist = new Array(256).fill(0);
-  for (let i = 0; i < data.length; i += 4) hist[data[i]]++;
-  const total = data.length / 4;
-  let sum = 0;
-  for (let i = 0; i < 256; i++) sum += i * hist[i];
-  let wB = 0, sumB = 0, varMax = 0, threshold = 128;
-  for (let t = 0; t < 256; t++) {
-    wB += hist[t];
-    if (!wB) continue;
-    const wF = total - wB;
-    if (!wF) break;
-    sumB += t * hist[t];
-    const mB = sumB / wB;
-    const mF = (sum - sumB) / wF;
-    const varBetween = wB * wF * (mB - mF) ** 2;
-    if (varBetween > varMax) { varMax = varBetween; threshold = t; }
+// Sauvola local-window adaptive threshold — replaces the previous global
+// Otsu-on-flat-field-corrected-image approach for Clean mode (2026-09, see
+// _BG_LONG_EDGE's comment for why). Computes a per-pixel threshold from
+// the mean/stddev of a small neighborhood around each pixel, rather than
+// one number for the whole page — so a pixel is judged against its own
+// local surroundings, which is what actually makes it robust to a shadow
+// with a sharp/patterned edge (a global or coarsely-smoothed correction
+// can't localize to something smaller than its own smoothing window; a
+// per-pixel local window inherently can, at the cost of being more
+// arithmetic per pixel — kept tractable via a summed-area table so each
+// pixel's local mean/stddev is O(1) regardless of window size).
+//
+// Formula (Sauvola & Pietikäinen, 2000): T(x,y) = m(x,y) · (1 + k · (s(x,y)/R − 1))
+// where m/s are the local mean/stddev and R is the expected dynamic range
+// of s for an 8-bit image. k=0.5, R=128 are the paper's own published
+// defaults — used as-is, not re-tuned, since they already tested clean
+// (2026-09) against a real photographed page with a sharp tree-leaf-
+// shadow pattern, the exact case the previous global/flat-field approach
+// produced large false-ink blobs on. Window radius is expressed as ~2% of
+// the image's shorter edge rather than a fixed pixel count, so it scales
+// with actual capture resolution — pdf.js can render Clean Scan input at
+// more than one scale (see js/cleanScanUI.js).
+const _SAUVOLA_K = 0.5;
+const _SAUVOLA_R = 128;
+const _SAUVOLA_WINDOW_FRACTION = 0.02;
+const _SAUVOLA_MIN_RADIUS = 8;
+
+// Summed-area table (integral image) of both the pixel values and their
+// squares — the standard trick that turns "sum/mean/variance over an
+// arbitrary rectangular window" into 4 array reads regardless of window
+// size, instead of re-scanning the window per pixel (which would make a
+// per-pixel local-window threshold too slow to be worth it here).
+// (w+1)×(h+1), row 0/col 0 are the zero-padding a summed-area table needs.
+function _buildIntegralImage(data, w, h) {
+  const W = w + 1;
+  const sum   = new Float64Array(W * (h + 1));
+  const sumSq = new Float64Array(W * (h + 1));
+  for (let y = 1; y <= h; y++) {
+    let rowSum = 0, rowSumSq = 0;
+    const prevRow = (y - 1) * W, thisRow = y * W;
+    for (let x = 1; x <= w; x++) {
+      const v = data[((y - 1) * w + (x - 1)) * 4];
+      rowSum += v;
+      rowSumSq += v * v;
+      sum[thisRow + x]   = sum[prevRow + x]   + rowSum;
+      sumSq[thisRow + x] = sumSq[prevRow + x] + rowSumSq;
+    }
   }
-  return threshold;
+  return { sum, sumSq, w, h };
 }
 
-// Clean (Hard) mode: threshold the flat-field-corrected image. The
-// Strength slider (0..1, default 0.5) nudges the Otsu-computed baseline
-// rather than making the user pick a raw 0–255 number from scratch.
+// Mean/stddev of the (2r+1)×(2r+1) window centered on (x,y), clipped to
+// the image edges (a smaller real window there, not a wraparound or an
+// out-of-bounds read).
+function _windowStats(ii, x, y, r) {
+  const x0 = Math.max(0, x - r), y0 = Math.max(0, y - r);
+  const x1 = Math.min(ii.w - 1, x + r), y1 = Math.min(ii.h - 1, y + r);
+  const W = ii.w + 1;
+  const a = y0 * W + x0, b = y0 * W + (x1 + 1), c = (y1 + 1) * W + x0, d = (y1 + 1) * W + (x1 + 1);
+  const n = (x1 - x0 + 1) * (y1 - y0 + 1);
+  const s   = ii.sum[d]   - ii.sum[b]   - ii.sum[c]   + ii.sum[a];
+  const sq  = ii.sumSq[d] - ii.sumSq[b] - ii.sumSq[c] + ii.sumSq[a];
+  const mean = s / n;
+  return { mean, std: Math.sqrt(Math.max(0, sq / n - mean * mean)) };
+}
+
+// Clean (Hard) mode: local-adaptive threshold (see _SAUVOLA_* above). The
+// Strength slider (0..1, default 0.5) shifts the computed per-pixel
+// threshold by the same ±40 range the previous global-Otsu version used,
+// so existing UI copy/expectations ("higher = keeps more as text") still
+// hold — only what the baseline itself is computed from changed.
 //
 // Darkening is a gamma curve on each pixel's distance below the threshold,
 // not a flat offset or a hard 0/255 split — real-world feedback (across
@@ -336,20 +397,30 @@ function _applyClean(canvas, strength) {
   const ctx = canvas.getContext('2d');
   const img = ctx.getImageData(0, 0, w, h);
   const d = img.data;
-  const base  = _otsuThreshold(d);
-  const shift = ((strength ?? 0.5) - 0.5) * 80; // ±40 around the auto baseline
-  const t = Math.min(250, Math.max(5, base + shift));
+  const shift = ((strength ?? 0.5) - 0.5) * 80; // ±40 around each pixel's local baseline
+
+  const ii = _buildIntegralImage(d, w, h);
+  const radius = Math.max(_SAUVOLA_MIN_RADIUS, Math.round(Math.min(w, h) * _SAUVOLA_WINDOW_FRACTION));
 
   const n = w * h;
+  const localT = new Float64Array(n);
   let mask = new Uint8Array(n);
-  for (let p = 0, i = 0; p < n; p++, i += 4) mask[p] = d[i] < t ? 1 : 0;
+  for (let y = 0, p = 0; y < h; y++) {
+    for (let x = 0; x < w; x++, p++) {
+      const { mean, std } = _windowStats(ii, x, y, radius);
+      const t = Math.min(250, Math.max(5, mean * (1 + _SAUVOLA_K * (std / _SAUVOLA_R - 1)) + shift));
+      localT[p] = t;
+      mask[p] = d[p * 4] < t ? 1 : 0;
+    }
+  }
   mask = _despeckleMask(mask, w, h, _MIN_DARK_NEIGHBORS);
 
   for (let p = 0, i = 0; p < n; p++, i += 4) {
     if (!mask[p]) { d[i] = d[i + 1] = d[i + 2] = 255; }
     else {
       const v = d[i];
-      const dark = Math.round(((v / t) ** _CLEAN_GAMMA) * _CLEAN_DARK_CAP);
+      const t = Math.max(localT[p], 1);
+      const dark = Math.round(((Math.min(v, t) / t) ** _CLEAN_GAMMA) * _CLEAN_DARK_CAP);
       d[i] = d[i + 1] = d[i + 2] = dark;
     }
   }
