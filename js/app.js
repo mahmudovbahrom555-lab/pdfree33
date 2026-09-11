@@ -863,7 +863,22 @@ function initSearch() {
   if (searchOrLabel)  searchOrLabel.textContent  = t('hero_or_search');
 
   const lang  = document.documentElement.lang || 'en';
-  const index = buildIndex(TOOLS, lang, window.PDFREE_LOCALE?.search_tags);
+  // Merge two independent synonym sources into buildIndex()'s single
+  // localeTags slot: hand-written per-locale synonyms (window.PDFREE_LOCALE
+  // .search_tags, translator-curated) plus real SEO keyword research
+  // (window.PDFREE_SEO_KEYWORDS, generated at build time from data/
+  // tools-config.json's `keywords` field — see scripts/build.py's
+  // _generate_search_keywords()) — so a long-tail phrase a user would also
+  // type into Google (e.g. "merge pdf without uploading") finds the right
+  // tool from the homepage search box too, not just short hand-written
+  // synonyms. Neither source is required — both default to {} when a page
+  // has nothing for the current language, same as before this merge.
+  const seoKeywords = window.PDFREE_SEO_KEYWORDS?.[lang] || {};
+  const localeTags  = { ...(window.PDFREE_LOCALE?.search_tags || {}) };
+  for (const [key, phrases] of Object.entries(seoKeywords)) {
+    localeTags[key] = [...(localeTags[key] || []), ...phrases];
+  }
+  const index = buildIndex(TOOLS, lang, localeTags);
 
   // ── Hero drop zone ──────────────────────────────────────────────
   let _pendingFiles     = null;
