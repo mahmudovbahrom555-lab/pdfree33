@@ -1665,6 +1665,25 @@ async function _checkVersionMismatch() {
       return;
     }
     try { sessionStorage.setItem(attemptKey, data.cache_version); } catch { /* storage blocked — reload still proceeds, just without loop protection */ }
+
+    // A bare reload() is not enough: it fires a 'navigate' fetch event, and
+    // sw.js's navigateFallback() returns a cached HTML response IMMEDIATELY
+    // when one exists — the fresh fetch only updates the cache silently for
+    // NEXT time. If an old SW is still in control with a stale cache, reload()
+    // alone can re-serve the exact same stale page. Unregister the SW and
+    // wipe Cache Storage first so the reload's navigate request has nothing
+    // stale left to hit and goes straight to the network.
+    try {
+      if ('serviceWorker' in navigator) {
+        const regs = await navigator.serviceWorker.getRegistrations();
+        await Promise.all(regs.map(r => r.unregister()));
+      }
+      if ('caches' in window) {
+        const keys = await caches.keys();
+        await Promise.all(keys.map(k => caches.delete(k)));
+      }
+    } catch { /* best-effort — reload proceeds regardless */ }
+
     window.location.reload();
   } catch { /* offline/blocked — never let this break the app */ }
 }
