@@ -31,6 +31,14 @@ const DIST       = path.join(ROOT, 'dist');
 const DIST_PKGS  = path.join(DIST, 'packages');
 const SRC_PKGS   = path.join(ROOT, 'packages');
 
+// 2026-09-11: src/, tests/, test-results/, .github/, CLAUDE.md, package.json
+// were all missing from SKIP_DIRS/SKIP_FILES and got served live on
+// production (confirmed via curl — 200s, not theoretical). Guard each one
+// the same way as the packages/ check below, so a future SKIP_DIRS/
+// SKIP_FILES refactor can't silently drop any of these again.
+const DEV_ONLY_DIRS  = ['src', 'tests', 'test-results', '.github'];
+const DEV_ONLY_FILES = ['CLAUDE.md', 'package.json'];
+
 let passed = 0, failed = 0;
 function test(name, fn) {
   try   { fn(); console.log(`  ✓ ${name}`); passed++; }
@@ -57,6 +65,30 @@ if (!existsSync(DIST) && !inCI) {
         );
       }
     });
+
+    for (const d of DEV_ONLY_DIRS) {
+      test(`${d}/ is never copied into dist/`, () => {
+        const distPath = path.join(DIST, d);
+        if (existsSync(path.join(ROOT, d)) && existsSync(distPath)) {
+          throw new Error(
+            `dist/${d}/ exists — was served live on production before the 2026-09-11 fix. ` +
+            `Re-add '${d}' to SKIP_DIRS in scripts/build.py.`
+          );
+        }
+      });
+    }
+
+    for (const f of DEV_ONLY_FILES) {
+      test(`${f} is never copied into dist/`, () => {
+        const distPath = path.join(DIST, f);
+        if (existsSync(path.join(ROOT, f)) && existsSync(distPath)) {
+          throw new Error(
+            `dist/${f} exists — was served live on production before the 2026-09-11 fix. ` +
+            `Re-add '${f}' to SKIP_FILES in scripts/build.py.`
+          );
+        }
+      });
+    }
   }
 }
 

@@ -52,12 +52,25 @@ SKIP_DIRS = {
     # Standalone npm packages (e.g. packages/pdf2md-core/) — published to npm,
     # not part of the static site; would otherwise get wrongly copied into dist/.
     'packages',
+    # Server-side Worker source, test suite, CI configs — real production
+    # bug found 2026-09-11 while planning the self-hosted Docker package:
+    # these were never in this allowlist, so https://pdfree.io/src/index.js,
+    # /tests/*.test.js, and .github/ were all publicly served (confirmed
+    # live via curl, 200s). Not a secrets leak (the repo is public AGPLv3
+    # anyway, and wrangler.toml/.env/.git are correctly excluded elsewhere)
+    # but real build hygiene sloppiness — and would have baked the same
+    # leak into every self-hosted image too if left unfixed.
+    'src', 'tests', 'test-results', '.github',
 }
 SKIP_FILES = {
     'wrangler.toml', 'wrangler.jsonc', 'wrangler.json',  # deployment configs — never serve as static
     '.assetsignore', 'eslint.config.js',
-    'package-lock.json', '.gitignore', 'vercel.json',
+    'package.json', 'package-lock.json', '.gitignore', 'vercel.json',
     'CONTRIBUTING.md', 'LICENSE', 'README.md',
+    # Internal Claude Code instructions — same "never serve publicly"
+    # category as LICENSE/README above, found missing alongside the
+    # SKIP_DIRS gap described above.
+    'CLAUDE.md',
     '3c51839cdd6944c79259fdf6a0c383cc.txt',
     'qpdf-run-0.2.1.tgz',
     'seo-content.html',   # legacy dev artifact — content now lives in data/content/
