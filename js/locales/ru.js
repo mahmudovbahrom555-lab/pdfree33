@@ -216,7 +216,7 @@ window.PDFREE_LOCALE = {
   err_enc_unavailable: 'Не удалось загрузить библиотеку шифрования. Обновите страницу и попробуйте снова.',
   err_enc_failed:      'Шифрование не удалось. Возможно, PDF имеет неподдерживаемый формат.',
   err_encrypted_pdf:   'У этого PDF необычная или повреждённая структура (это также может случиться с файлами, защищёнными паролем). Попробуйте пересохранить его в другом PDF-приложении или снять пароль, затем попробуйте снова.',
-  err_out_of_memory:   "Your device ran out of memory processing this file — a real hardware limit, not a bug. Try a smaller page range, close other browser tabs, or (for multi-file output) switch to a single combined file instead of separate files. Thanks for using PDFree — sorry this one didn't go smoothly.",
+  err_out_of_memory:   "На вашем устройстве закончилась память при обработке этого файла — это реальное ограничение оборудования, а не ошибка. Попробуйте выбрать меньший диапазон страниц, закрыть другие вкладки браузера или (при выводе нескольких файлов) переключиться на один объединённый файл вместо отдельных. Спасибо, что пользуетесь PDFree — жаль, что в этот раз не получилось гладко.",
   err_unlock_wrong_password: 'Неверный пароль. Попробуйте снова.',
   err_watermark_unsupported_chars: 'Этот текст водяного знака не может быть отображён — попробуйте текст без китайских, японских или корейских символов.',
   err_cdn_lib_unavailable: 'Библиотека {lib} недоступна — проверьте подключение к интернету',

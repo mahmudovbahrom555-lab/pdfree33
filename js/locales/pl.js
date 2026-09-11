@@ -215,7 +215,7 @@ window.PDFREE_LOCALE = {
   err_enc_unavailable:  'Nie można załadować biblioteki szyfrowania. Odśwież stronę.',
   err_enc_failed:       'Szyfrowanie nie powiodło się. PDF może mieć nieobsługiwany format.',
   err_encrypted_pdf:    'Ten plik PDF ma nietypową lub uszkodzoną strukturę (może się tak zdarzyć również w przypadku plików chronionych hasłem). Spróbuj zapisać go ponownie w innej aplikacji PDF lub usuń hasło, a następnie spróbuj ponownie.',
-  err_out_of_memory:   "Your device ran out of memory processing this file — a real hardware limit, not a bug. Try a smaller page range, close other browser tabs, or (for multi-file output) switch to a single combined file instead of separate files. Thanks for using PDFree — sorry this one didn't go smoothly.",
+  err_out_of_memory:   "Twojemu urządzeniu zabrakło pamięci podczas przetwarzania tego pliku — to realne ograniczenie sprzętowe, a nie błąd. Spróbuj mniejszego zakresu stron, zamknij inne karty przeglądarki albo (przy generowaniu wielu plików) wybierz jeden połączony plik zamiast osobnych. Dziękujemy za korzystanie z PDFree — przepraszamy, że tym razem nie poszło gładko.",
   err_unlock_wrong_password: 'Nieprawidłowe hasło. Spróbuj ponownie.',
   err_watermark_unsupported_chars: 'Tego tekstu znaku wodnego nie można wyświetlić — spróbuj tekstu bez chińskich, japońskich lub koreańskich znaków.',
   err_cdn_lib_unavailable: 'Biblioteka {lib} niedostępna — sprawdź połączenie z internetem',

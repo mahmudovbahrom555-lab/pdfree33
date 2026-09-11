@@ -215,7 +215,7 @@ window.PDFREE_LOCALE = {
   err_enc_unavailable: "La bibliothèque de chiffrement n'a pas pu être chargée. Veuillez recharger la page.",
   err_enc_failed:      "Chiffrement échoué. Le PDF est peut-être dans un format non pris en charge.",
   err_encrypted_pdf:   "Ce PDF a une structure inhabituelle ou corrompue (cela peut aussi arriver avec des fichiers protégés par mot de passe). Essayez de le réenregistrer depuis une autre application PDF, ou de supprimer le mot de passe, puis réessayez.",
-  err_out_of_memory:   "Your device ran out of memory processing this file — a real hardware limit, not a bug. Try a smaller page range, close other browser tabs, or (for multi-file output) switch to a single combined file instead of separate files. Thanks for using PDFree — sorry this one didn't go smoothly.",
+  err_out_of_memory:   "Votre appareil a manqué de mémoire en traitant ce fichier — une vraie limite matérielle, pas un bug. Essayez une plage de pages plus petite, fermez d'autres onglets du navigateur, ou (pour une sortie multi-fichiers) passez à un seul fichier combiné au lieu de fichiers séparés. Merci d'utiliser PDFree — désolé que ça ne se soit pas bien passé cette fois.",
   err_unlock_wrong_password: 'Le mot de passe est incorrect. Veuillez réessayer.',
   err_watermark_unsupported_chars: 'Ce texte de filigrane ne peut pas être affiché — essayez un texte sans caractères chinois, japonais ou coréens.',
   err_cdn_lib_unavailable: "Bibliothèque {lib} indisponible — vérifiez votre connexion internet",

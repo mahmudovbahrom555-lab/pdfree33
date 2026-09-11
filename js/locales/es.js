@@ -215,7 +215,7 @@ window.PDFREE_LOCALE = {
   err_enc_unavailable: 'La biblioteca de cifrado no pudo cargarse. Por favor recarga la página.',
   err_enc_failed:      'Cifrado fallido. El PDF puede estar en un formato no compatible.',
   err_encrypted_pdf:   'Este PDF tiene una estructura inusual o dañada (esto también puede ocurrir con archivos protegidos con contraseña). Intenta guardarlo de nuevo desde otra aplicación de PDF, o elimina la contraseña, y vuelve a intentarlo.',
-  err_out_of_memory:   "Your device ran out of memory processing this file — a real hardware limit, not a bug. Try a smaller page range, close other browser tabs, or (for multi-file output) switch to a single combined file instead of separate files. Thanks for using PDFree — sorry this one didn't go smoothly.",
+  err_out_of_memory:   "A tu dispositivo se le acabó la memoria al procesar este archivo — es un límite real del hardware, no un error del programa. Prueba con un rango de páginas más pequeño, cierra otras pestañas del navegador o (si el resultado son varios archivos) cambia a un único archivo combinado en lugar de archivos separados. Gracias por usar PDFree — sentimos que esta vez no haya salido bien.",
   err_unlock_wrong_password: 'La contraseña es incorrecta. Inténtalo de nuevo.',
   err_watermark_unsupported_chars: 'Este texto de marca de agua no se puede representar — prueba con texto sin caracteres chinos, japoneses o coreanos.',
   err_cdn_lib_unavailable: 'Biblioteca de {lib} no disponible — comprueba tu conexión a internet',

@@ -215,7 +215,7 @@ window.PDFREE_LOCALE = {
   err_enc_unavailable:  'Şifreleme kütüphanesi yüklenemedi. Sayfayı yenileyin.',
   err_enc_failed:       'Şifreleme başarısız. PDF desteklenmeyen bir format kullanıyor olabilir.',
   err_encrypted_pdf:    'Bu PDF alışılmadık veya bozuk bir yapıya sahip (bu durum parola korumalı dosyalarda da olabilir). Başka bir PDF uygulamasından yeniden kaydetmeyi veya parolayı kaldırmayı deneyip tekrar deneyin.',
-  err_out_of_memory:   "Your device ran out of memory processing this file — a real hardware limit, not a bug. Try a smaller page range, close other browser tabs, or (for multi-file output) switch to a single combined file instead of separate files. Thanks for using PDFree — sorry this one didn't go smoothly.",
+  err_out_of_memory:   "Bu dosya işlenirken cihazınızın belleği yetersiz kaldı — bu gerçek bir donanım sınırıdır, hata değildir. Daha küçük bir sayfa aralığı deneyin, diğer tarayıcı sekmelerini kapatın veya (birden fazla dosya çıktısı için) ayrı dosyalar yerine tek bir birleştirilmiş dosyaya geçin. PDFree'yi kullandığınız için teşekkürler — bu seferki sorunsuz gitmediği için üzgünüz.",
   err_unlock_wrong_password: 'Parola yanlış. Lütfen tekrar deneyin.',
   err_watermark_unsupported_chars: 'Bu filigran metni oluşturulamıyor — Çince, Japonca veya Korece karakter içermeyen bir metin deneyin.',
   err_cdn_lib_unavailable: '{lib} kütüphanesi kullanılamıyor — internet bağlantınızı kontrol edin',
