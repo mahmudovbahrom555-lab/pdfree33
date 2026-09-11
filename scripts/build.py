@@ -1030,6 +1030,31 @@ def _inject_hashes(hashes, out_dir):
                 kw_count += 1
     print(f'  searchKeywords?v={css_hash} injected into {kw_count} HTML files')
 
+    # Substitute the __CACHE_VERSION__ placeholder in every HTML file's
+    # <meta name="pdfree-build"> tag — js/app.js's _checkVersionMismatch()
+    # reads this at runtime and compares it against a freshly fetched
+    # version.json to directly detect a stale deploy, independent of
+    # whether the Service Worker's own update lifecycle fires reliably on
+    # a given device (see that function's own comment for the real report
+    # that motivated it). Reuses the SAME cache_version value already
+    # computed for sw.js's own CACHE_VERSION substitution above — one
+    # canonical "did the deploy change" signal, not a second one to drift
+    # out of sync with the first.
+    build_meta_count = 0
+    for root, _dirs, files in os.walk(out_dir):
+        for fname in files:
+            if not fname.endswith('.html'):
+                continue
+            path = os.path.join(root, fname)
+            content = open(path, encoding='utf-8').read()
+            if '__CACHE_VERSION__' not in content:
+                continue
+            new_content = content.replace('__CACHE_VERSION__', hashes['cache_version'])
+            with open(path, 'w', encoding='utf-8') as f:
+                f.write(new_content)
+            build_meta_count += 1
+    print(f'  pdfree-build meta injected into {build_meta_count} HTML files')
+
 
 # ── Homepage search: merge real SEO keyword research into the search index ──
 

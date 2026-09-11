@@ -1613,6 +1613,62 @@ function _prefetchHeavyAssets() {
 
 let _installPromptEvent = null;
 
+// ── Direct version-mismatch check ───────────────────────────────
+// Complementary to the Service-Worker-lifecycle-based update path in
+// _initPWA() below (controllerchange + reg.update() on focus/pageshow/
+// timer) — this checks "does the server's actual current build differ
+// from what I'm running" directly, instead of inferring staleness from
+// SW events. Built after a real 2026-09 report where the SW-lifecycle
+// path didn't detect/apply an update even across a genuine full app
+// close+reopen on an Android Chrome PWA — the SW mechanism assumes
+// register()'s update check and controllerchange always fire reliably,
+// which isn't universally true in practice on every real device.
+//
+// `<meta name="pdfree-build">`'s content is the SAME cache_version hash
+// baked into every page at build time (scripts/build.py's _inject_hashes,
+// __CACHE_VERSION__ token — the one that already covers every js/*.js +
+// css/*.css + sw.js + HTML-shell change, not just app.js) — compared
+// against a freshly fetched dist/version.json, which carries the actual
+// current deploy's own cache_version. The `?t=` query param (not just
+// `cache: 'no-store'`) is required to actually get a fresh answer: a
+// Service Worker's fetch handler gets first refusal on every same-origin
+// request regardless of the page's own cache option, and version.json
+// isn't in STATIC_ASSETS, so an old SW's cacheFirst() strategy would
+// cache the FIRST check's response and keep serving that same stale
+// answer forever after — a unique query string guarantees a real cache
+// miss (and therefore a real network fetch) on every single check.
+function _currentBuildVersion() {
+  return document.querySelector('meta[name="pdfree-build"]')?.content || null;
+}
+
+async function _checkVersionMismatch() {
+  if (isProcessing) return;  // never yank a file mid-conversion
+  const current = _currentBuildVersion();
+  if (!current) return;
+  try {
+    const res = await fetch(`/version.json?t=${Date.now()}`, { cache: 'no-store' });
+    if (!res.ok) return;
+    const data = await res.json();
+    if (!data.cache_version || data.cache_version === current) return;
+
+    // Reload once per detected target version, not on every check — if
+    // we're STILL mismatched after that reload, the SW itself is stuck
+    // (this exact check would otherwise loop reload→detect→reload
+    // forever). sessionStorage (not a module variable) so the guard
+    // survives the reload it's guarding against, and clears itself on a
+    // genuine fresh session.
+    const attemptKey = 'pdfree_version_reload_attempted';
+    let alreadyTried = false;
+    try { alreadyTried = sessionStorage.getItem(attemptKey) === data.cache_version; } catch { /* storage blocked — treat as not-yet-tried */ }
+    if (alreadyTried) {
+      _showUpdateBanner(null);
+      return;
+    }
+    try { sessionStorage.setItem(attemptKey, data.cache_version); } catch { /* storage blocked — reload still proceeds, just without loop protection */ }
+    window.location.reload();
+  } catch { /* offline/blocked — never let this break the app */ }
+}
+
 function _initPWA() {
   // Register service worker
   if ('serviceWorker' in navigator) {
@@ -1672,6 +1728,7 @@ function _initPWA() {
         if (now - _lastRecheck < 5000) return;
         _lastRecheck = now;
         reg.update().catch(() => {});
+        _checkVersionMismatch();
       };
       document.addEventListener('visibilitychange', () => {
         if (document.visibilityState === 'visible') _recheckForUpdate();
@@ -1684,6 +1741,19 @@ function _initPWA() {
       (function _scheduleRecheck() {
         setTimeout(() => { _recheckForUpdate(); _scheduleRecheck(); }, 30 * 60 * 1000);
       })();
+      // Also run once immediately — a real 2026-09 report showed the
+      // SW-lifecycle path above (register()'s own update check +
+      // controllerchange) can fail to detect/apply an update even across a
+      // genuine full app close+reopen on Android Chrome PWA (not just the
+      // iOS visibilitychange gap this file already documents) — the user
+      // force-closed the installed app from the recent-apps switcher and
+      // relaunched it, and a bug from an earlier, already-fixed deploy was
+      // still reproducing. _checkVersionMismatch() below is a direct,
+      // SW-independent check ("does the server's actual current build
+      // differ from what I'm running") rather than inferring staleness
+      // from SW events that, per this report, aren't universally reliable
+      // — worth running on the very first load, not just later triggers.
+      _checkVersionMismatch();
 
       // ── Share Target: retrieve file sent via OS share sheet ─
       const sharedUuid = new URL(location.href).searchParams.get('shared');
