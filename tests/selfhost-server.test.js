@@ -157,6 +157,20 @@ if (!existsSync(DIST) && !inCI) {
       if (res.status === 200) throw new Error('path traversal attempt returned 200 — dist/ escape possible');
     });
 
+    await test('HEAD / returns real headers with an empty body, not the full page', async () => {
+      const res = await fetch(`${baseUrl}/`, { method: 'HEAD' });
+      expect(res.status).toBe(200);
+      const body = await res.text();
+      expect(body).toBe('');
+    });
+
+    await test('a Range request gets a clean 200 + full body fallback (RFC 7233 allows ignoring Range), not a corrupted response', async () => {
+      const res = await fetch(`${baseUrl}/js/vendor/qpdf/lib/qpdf.wasm`, { headers: { Range: 'bytes=0-99' } });
+      expect(res.status).toBe(200);
+      const body = await res.arrayBuffer();
+      if (body.byteLength < 1000) throw new Error(`expected the full file, got only ${body.byteLength} bytes`);
+    });
+
     await test('/embed/ strips X-Frame-Options and sets a permissive frame-ancestors CSP', async () => {
       const res = await fetch(`${baseUrl}/embed/`);
       if (res.headers.get('x-frame-options')) throw new Error('X-Frame-Options should be stripped on /embed/ paths');

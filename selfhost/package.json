@@ -1,0 +1,5 @@
+{
+  "_comment": "Docker-image-only — never copied into dist/ (see scripts/build.py's SKIP_FILES). Makes this image's module system explicit: without ANY package.json in the image, Node currently auto-detects ES module syntax and runs selfhost/server.js's `import` statements correctly, verified directly against this exact Dockerfile — but that auto-detection is Node-version-dependent behavior, not a guarantee. Declaring \"type\": \"module\" here removes the dependency on that implicit default entirely, regardless of which Node patch the pinned base image resolves to.",
+  "type": "module",
+  "private": true
+}

@@ -28,13 +28,24 @@
 # SELF_HOSTING.md) — this Dockerfile has no SITE_URL handling of its own
 # anymore; dist/ simply arrives already correct.
 
-FROM node:20-alpine
+# Pinned to a specific patch (not the floating `node:20-alpine` tag) —
+# verified via Docker Hub's own tag list at pin time, same "never a moving
+# alias" reasoning already applied to GitHub Actions in this repo's other
+# workflows. A floating tag means the base image's Node patch — and
+# therefore its exact module-system-detection behavior (see
+# selfhost/package.json's own comment for why that specifically matters
+# here) — can silently change under a rebuild with no corresponding commit
+# in this repo. Bump deliberately on a real version review, not silently.
+FROM node:20.20.2-alpine
 
 WORKDIR /repo
 COPY dist ./dist
 COPY src ./src
 COPY data/tools-config.json ./data/tools-config.json
 COPY selfhost ./selfhost
+# Makes this image's module system explicit rather than relying on Node's
+# own default-when-absent behavior — see selfhost/package.json's comment.
+COPY selfhost/package.json ./package.json
 
 # No built-in auth (matches packages/pdf2md-server's own self-hosted
 # posture) — put this behind your own reverse proxy/firewall if exposed

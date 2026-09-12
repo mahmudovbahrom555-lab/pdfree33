@@ -73,6 +73,25 @@ function sendWebResponse(response, res) {
   Readable.fromWeb(response.body).pipe(res);
 }
 
+// src/index.js's own fetch(request, env) signature never reads a third
+// (ctx) argument today — verified directly, not assumed — so this is pure
+// insurance, not a fix for an active bug: a future PR adding
+// ctx.waitUntil()/ctx.passThroughOnException() (real Cloudflare Workers
+// APIs) would otherwise throw here with no ctx argument supplied at all.
+// waitUntil has no real equivalent under Node (no isolate lifecycle to
+// extend past the response) — just run the promise in the background,
+// still catching a rejection so it can't become an unhandled rejection.
+const ctx = {
+  waitUntil(promise) {
+    Promise.resolve(promise).catch(err => console.error('[pdfree-selfhost] ctx.waitUntil rejection:', err));
+  },
+  passThroughOnException() {
+    // No Node equivalent — the try/catch around worker.fetch() below
+    // already keeps an uncaught exception from crashing the process,
+    // which is the practical effect this has on Cloudflare.
+  },
+};
+
 const server = createServer(async (req, res) => {
   if (req.url === '/health') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -82,7 +101,7 @@ const server = createServer(async (req, res) => {
 
   try {
     const request  = await toWebRequest(req);
-    const response = await worker.fetch(request, env);
+    const response = await worker.fetch(request, env, ctx);
     sendWebResponse(response, res);
   } catch (err) {
     console.error('[pdfree-selfhost] request failed:', err);

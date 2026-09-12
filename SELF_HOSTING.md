@@ -66,15 +66,18 @@ sets this is completely unaffected.
 
 ## Security — read this before exposing it beyond localhost
 
-**There is no built-in authentication**, matching this project's other self-hosted package
-([`@pdfree/pdf2md-server`](packages/pdf2md-server/README.md)). Put this behind your own reverse
-proxy, firewall, VPN, or SSO layer if it needs to be reachable from anywhere untrusted — this image
-does not include one.
+This image is deliberately minimal — it serves requests, nothing more. The following are **all**
+explicitly out of scope, all for the same reason: a reverse proxy (nginx, Caddy, Traefik) already
+does each of these well, and re-implementing any of them in `selfhost/server.js` would be duplicated,
+worse-maintained effort. Put one in front if you need:
 
-**There is also no response compression or TLS termination** — the Node server here does neither
-(Cloudflare does both automatically for the hosted site). A reverse proxy (nginx, Caddy, Traefik) in
-front is the right place for gzip/brotli and HTTPS, not something to add to `selfhost/server.js`
-itself — the same "put a proxy in front" posture already covers this, not a separate concern.
+- **Authentication** — no built-in auth, matching this project's other self-hosted package
+  ([`@pdfree/pdf2md-server`](packages/pdf2md-server/README.md)). Required if this is reachable from
+  anywhere untrusted.
+- **TLS termination** — this image only speaks plain HTTP.
+- **Response compression** — no gzip/brotli (Cloudflare does this automatically for the hosted site).
+- **Rate limiting** — no request throttling of any kind. Every request is served as fast as the
+  process can handle it, with no per-IP or global cap.
 
 Static assets ARE cache-controlled: anything requested with the `?v=`/`?t=` cache-busting query
 string this project already uses (JS/CSS/search-index files) gets `Cache-Control: public,
