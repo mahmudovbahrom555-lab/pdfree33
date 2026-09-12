@@ -5103,6 +5103,16 @@ function _handleError(tool, message, errorType = null) {
   const resolvedType = errorType ?? 'unknown';
   const errorId = _errorId(tool, resolvedType);
   trackToolError(tool, resolvedType);
+  // Mirrors the 'pdfree:success' dispatch below — found missing while
+  // adding embed-SDK contract tests: embed/sdk.js's public onError callback
+  // and js/embedBridge.js's listener both already existed and expected this
+  // event, but nothing ever dispatched it, so onError could never fire for
+  // an embedded tool's real failures. No change needed on the embed side —
+  // just this dispatch, so every existing consumer (including a future one)
+  // gets it automatically.
+  document.dispatchEvent(new CustomEvent('pdfree:error', {
+    detail: { tool, message: friendly, errorType: resolvedType, errorId }
+  }));
   // Clickable toast: the moment of an actual failure is the highest-signal
   // point to hear from a user — opens the same feedback modal used on
   // success, pre-filled with the tool + error as read-only context.

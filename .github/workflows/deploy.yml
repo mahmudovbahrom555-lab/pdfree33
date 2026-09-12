@@ -155,6 +155,20 @@ jobs:
         # tests/e2e/mobile-sticky-overlap.e2e.mjs's header comment.
         run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:mobile-sticky-overlap
 
+      - name: E2E — embed/SDK contract (CSP, sandbox, ready/result/error)
+        # Real-browser regression gate for the embed/SDK feature
+        # (embed/sdk.js, embed/compress/index.html, js/embedBridge.js). A
+        # security review (commit 765a0744) found the embed page's CSP was
+        # missing semicolons after script-src/connect-src — confirmed live
+        # via 10 real blocked inline-style violations in headless Chromium
+        # — and added a sandbox attribute the iframe never had. Writing
+        # this test then found a third bug: the SDK's documented onError
+        # callback could never fire because nothing in js/processor.js
+        # ever dispatched the 'pdfree:error' CustomEvent embedBridge.js was
+        # already listening for (fixed alongside this test). See
+        # tests/e2e/embed-sdk.e2e.mjs's own header comment.
+        run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:embed-sdk
+
       - name: Guard — no conflicting wrangler configs
         run: |
           for f in wrangler.jsonc wrangler.json; do

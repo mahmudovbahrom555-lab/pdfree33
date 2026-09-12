@@ -11,6 +11,7 @@
     "test:watch": "node --watch tests/splitUI.logic.test.js",
     "test:e2e:protect": "node tests/e2e/protect.e2e.mjs",
     "test:e2e:mobile-sticky-overlap": "node tests/e2e/mobile-sticky-overlap.e2e.mjs",
+    "test:e2e:embed-sdk": "node tests/e2e/embed-sdk.e2e.mjs",
     "lint": "eslint js/*.js --ignore-pattern 'js/vendor/**'",
     "check:dom": "python3 scripts/check_dom.py",
     "check:i18n": "python3 scripts/check_i18n.py",

@@ -55,5 +55,10 @@
     return iframe;
   }
 
-  window.PDFree = { create };
+  // Introspectable version marker — this file has no versioned URL path
+  // (embedders hardcode a single .../embed/sdk.js), so this is the one way
+  // to tell, from a bug report or support request, which behavior an
+  // embedder is actually running. Bump on any change to the public
+  // create()/postMessage contract, not on unrelated internal refactors.
+  window.PDFree = { create, version: '1.0.0' };
 })();
