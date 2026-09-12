@@ -32,6 +32,16 @@
     iframe.title = 'PDFree — ' + tool;
     iframe.style.cssText = `width:100%;height:${height}px;border:1px solid #e5e7eb;border-radius:12px;`;
     iframe.setAttribute('allow', '');
+    // Defense-in-depth: this iframe's own content is first-party (our own
+    // compress tool), but a future XSS bug there shouldn't be able to hijack
+    // the EMBEDDER's top-level page or spam popups. allow-scripts +
+    // allow-same-origin are both required (the tool's Web Worker needs
+    // same-origin script resolution) and, combined, are a well-known
+    // sandbox escape-hatch pair on their own — but neither grants
+    // top-navigation or popups on its own, so omitting those tokens still
+    // blocks exactly that scenario. allow-downloads is required for the
+    // real "Download" button on a successful compress.
+    iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-downloads allow-forms');
 
     window.addEventListener('message', (e) => {
       if (e.source !== iframe.contentWindow) return;
