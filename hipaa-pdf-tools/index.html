@@ -120,6 +120,11 @@
         "@type": "Question",
         "name": "Can I use PDFree without internet for patient documents?",
         "acceptedAnswer": { "@type": "Answer", "text": "Yes. PDFree is a Progressive Web App (PWA) that works fully offline after the first visit. This is especially useful in clinical settings with restricted internet access or when working with highly sensitive documents where network activity should be minimized." }
+      },
+      {
+        "@type": "Question",
+        "name": "Can our organization run PDFree on our own servers instead of pdfree.io?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes. A free, AGPLv3 Docker image is available for healthcare IT teams whose policy requires internal tools to run entirely on internal infrastructure, with no dependency on an external domain at all. See pdfree.io/enterprise-pdf-tools/ for the image and setup instructions." }
       }
     ]
   }
@@ -309,9 +314,13 @@
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Can I use PDFree without internet in a clinical setting?</h3>
             <p style="margin:0;font-size:14px;">Yes. PDFree is a PWA that works fully offline after the first visit. This is useful in restricted-network environments or when network activity should be minimized for sensitive documents.</p>
           </div>
-          <div>
+          <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Is PDFree free for healthcare organizations?</h3>
             <p style="margin:0;font-size:14px;">Yes. PDFree is completely free with no usage limits, no subscription, and no account required. Individual clinicians, small practices, and large healthcare organizations can all use it at no cost.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Can our organization run PDFree on our own servers instead of pdfree.io?</h3>
+            <p style="margin:0;font-size:14px;">Yes. A free, AGPLv3 Docker image is available for healthcare IT teams whose policy requires internal tools to run entirely on internal infrastructure, with no dependency on an external domain at all. See <a href="../enterprise-pdf-tools/" style="color:var(--green-text)">Self-Hosted / Enterprise</a> for the image and setup instructions.</p>
           </div>
         </div>
 
@@ -329,7 +338,8 @@
       <div>
         <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Solutions</div>
         <a href="/hipaa-pdf-tools/" style="display:block;color:var(--green-text);text-decoration:none;padding:3px 0;margin-bottom:4px;">HIPAA Compliant PDF</a>
-        <a href="/secure-pdf-tools/" style="display:block;color:var(--green-text);text-decoration:none;padding:3px 0;">Secure PDF Tools</a>
+        <a href="/secure-pdf-tools/" style="display:block;color:var(--green-text);text-decoration:none;padding:3px 0;margin-bottom:4px;">Secure PDF Tools</a>
+        <a href="/enterprise-pdf-tools/" style="display:block;color:var(--green-text);text-decoration:none;padding:3px 0;">Self-Hosted / Enterprise</a>
       </div>
     </div>
     PDFree · <strong>All processing happens 100% in your browser</strong> · Files are <strong>never uploaded</strong><br>

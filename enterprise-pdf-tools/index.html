@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src  'self' 'wasm-unsafe-eval' blob:
+                https://static.cloudflareinsights.com;
+    style-src   'self' 'unsafe-inline';
+    font-src    'self';
+    img-src     'self' data: blob: https:;
+    connect-src 'self' https://cloudflareinsights.com;
+    worker-src  'self' blob:;
+    object-src  'none';
+  ">
+
+  <title>PDFree Enterprise — Self-Hosted PDF Tools for Your Own Infrastructure</title>
+  <meta name="description" content="Run PDFree's PDF tools on your own servers — Docker image, AGPLv3, free forever. For healthcare, legal, finance, and HR teams who need on-prem deployment.">
+  <meta name="keywords" content="self-hosted PDF tools, on-prem PDF processing, enterprise PDF tools, private PDF server, HIPAA compliant PDF self-hosted, Docker PDF tools, air-gapped PDF tools">
+
+  <meta property="og:title"       content="PDFree Enterprise — Self-Hosted PDF Tools">
+  <meta property="og:description" content="Run the real PDFree tools on your own infrastructure. Docker image, AGPLv3, free forever — support and deployment help available.">
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://pdfree.io/enterprise-pdf-tools/">
+  <meta property="og:site_name"   content="PDFree">
+  <meta property="og:image"        content="https://pdfree.io/icons/og-image.jpg">
+  <meta property="og:image:width"  content="1200">
+  <meta property="og:image:height" content="633">
+  <meta property="og:image:alt"    content="PDFree Enterprise — Self-Hosted PDF Tools">
+  <meta name="twitter:card"       content="summary_large_image">
+  <meta name="twitter:site"       content="@pdfree_io">
+  <meta name="twitter:title"      content="PDFree Enterprise — Self-Hosted PDF Tools">
+  <meta name="twitter:description" content="Run the real PDFree tools on your own infrastructure. Docker image, AGPLv3, free forever.">
+  <meta name="twitter:image"       content="https://pdfree.io/icons/og-image.jpg">
+  <meta name="twitter:image:alt"   content="PDFree Enterprise — Self-Hosted PDF Tools">
+
+  <link rel="canonical" href="https://pdfree.io/enterprise-pdf-tools/">
+
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#2D7A4F">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="PDFree">
+  <link rel="apple-touch-icon" href="../icons/icon-192.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+  <link rel="preload" href="../fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../css/fonts.css">
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/animations.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+
+  <script src="../js/theme.js"></script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "PDFree Enterprise",
+    "url": "https://pdfree.io/enterprise-pdf-tools/",
+    "description": "Self-hosted PDF tools for enterprises — Docker image, AGPLv3, runs on your own infrastructure.",
+    "isPartOf": { "@type": "WebSite", "name": "PDFree", "url": "https://pdfree.io" }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Is the self-hosted image really free?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes. PDFree is AGPLv3 — the Docker image is free to pull, run, and even modify, forever, for anyone. There's no license key, no seat count, no feature gate. What's a paid conversation is optional deployment help or a support contract, not the software itself." }
+      },
+      {
+        "@type": "Question",
+        "name": "What does AGPLv3 mean for us specifically?",
+        "acceptedAnswer": { "@type": "Answer", "text": "You can run it privately inside your own network with no obligation at all. The one real requirement: if you modify the code and let others interact with your modified version over a network, you must offer them the corresponding source. Running it as-is (the common case) carries no source-sharing obligation beyond what's already public on GitHub." }
+      },
+      {
+        "@type": "Question",
+        "name": "Does this need internet access to run?",
+        "acceptedAnswer": { "@type": "Answer", "text": "No — once the image is running, PDF processing itself needs no external calls at all (same client-side engine as pdfree.io). The only optional network calls are for a feedback relay you can configure yourself or simply leave disabled." }
+      },
+      {
+        "@type": "Question",
+        "name": "How is this different from just pointing our team at pdfree.io directly?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Functionally identical tools. What changes is where it's served from — some organizations have policies requiring internal tools to be reachable only on an internal network, or want zero dependency on an external domain even for the initial page load, not just for file processing. This is for that requirement." }
+      },
+      {
+        "@type": "Question",
+        "name": "Does this include SSO or user accounts?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Not yet. The image is anonymous-by-design, same as the hosted site — there's no built-in authentication layer. Put it behind your own reverse proxy or SSO gateway if you need access control." }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+
+  <nav>
+    <a href="../" class="logo" aria-label="Go to homepage" style="text-decoration:none">
+      <div class="logo-icon" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+      </div>
+      <span class="logo-text">PDF<span>ree</span></span>
+    </a>
+    <div class="nav-links">
+      <span class="nav-link" style="cursor:default;color:var(--text);font-weight:600;">Enterprise / Self-Hosted</span>
+    </div>
+    <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode"></button>
+  </nav>
+  <main>
+
+  <!-- Hero -->
+  <section style="background:var(--green-light);border-bottom:1px solid rgba(45,122,79,0.15);padding:56px 24px 40px;text-align:center;">
+    <div style="max-width:720px;margin:0 auto;">
+      <div style="display:inline-flex;align-items:center;gap:8px;background:var(--surface);border:1px solid rgba(45,122,79,0.2);border-radius:24px;padding:6px 16px;font-size:13px;color:var(--green-text);font-weight:500;margin-bottom:20px;">
+        <span style="width:7px;height:7px;background:var(--green);border-radius:50%;display:inline-block;"></span>
+        Available now · Docker image published
+      </div>
+      <h1 style="font-size:clamp(28px,4.5vw,44px);font-weight:700;letter-spacing:-1px;line-height:1.15;color:var(--text);margin:0 0 16px;">Run PDFree Inside Your<br>Own Infrastructure</h1>
+      <p style="font-size:17px;color:var(--text2);max-width:600px;margin:0 auto 28px;line-height:1.6;">The same PDF tools your team already uses at pdfree.io, served from a server you control — internal network, no external domain dependency, no per-seat license. For healthcare, legal, finance, and HR teams whose policies require it.</p>
+    </div>
+  </section>
+
+  <!-- Quick start -->
+  <section style="padding:44px 24px;border-bottom:1px solid var(--border);background:var(--surface);">
+    <div style="max-width:640px;margin:0 auto;">
+      <div style="background:#1a1a18;border-radius:12px;padding:24px 28px;overflow-x:auto;">
+        <pre style="margin:0;font-family:'SFMono-Regular',Consolas,Menlo,monospace;font-size:14px;line-height:1.7;color:#e4e4e0;"><code><span style="color:#8a8a82;"># pull and run — no build step needed</span>
+<span style="color:#7ec9a3;">docker pull</span> ghcr.io/mahmudovbahrom555-lab/pdfree-selfhosted:latest
+<span style="color:#7ec9a3;">docker run</span> -p 8080:8080 ghcr.io/mahmudovbahrom555-lab/pdfree-selfhosted:latest</code></pre>
+      </div>
+      <p style="text-align:center;font-size:13px;color:var(--text3);margin-top:14px;">Open <code>http://localhost:8080/</code> — that's it. Full setup, environment variables, and security notes in <a href="https://github.com/mahmudovbahrom555-lab/pdfree33/blob/main/SELF_HOSTING.md" target="_blank" rel="noopener" style="color:var(--green-text)">SELF_HOSTING.md</a>.</p>
+    </div>
+  </section>
+
+  <!-- Why -->
+  <section style="padding:48px 24px;border-bottom:1px solid var(--border);">
+    <div style="max-width:760px;margin:0 auto;">
+      <h2 style="font-size:24px;font-weight:700;color:var(--text);margin:0 0 28px;text-align:center;">Why run it yourself</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:24px;">
+        <div>
+          <div style="font-size:20px;margin-bottom:8px;">🔒</div>
+          <h3 style="font-size:15px;font-weight:600;color:var(--text);margin:0 0 6px;">Stays on your network</h3>
+          <p style="font-size:14px;color:var(--text2);line-height:1.6;margin:0;">Files already never leave the browser on pdfree.io itself — this goes one step further, so even the page load and static assets never depend on an external domain.</p>
+        </div>
+        <div>
+          <div style="font-size:20px;margin-bottom:8px;">📖</div>
+          <h3 style="font-size:15px;font-weight:600;color:var(--text);margin:0 0 6px;">Fully inspectable, AGPLv3</h3>
+          <p style="font-size:14px;color:var(--text2);line-height:1.6;margin:0;">No black box. The exact source that's running is public on GitHub — your security team can read every line before it touches a real document.</p>
+        </div>
+        <div>
+          <div style="font-size:20px;margin-bottom:8px;">💸</div>
+          <h3 style="font-size:15px;font-weight:600;color:var(--text);margin:0 0 6px;">Free, no seat count</h3>
+          <p style="font-size:14px;color:var(--text2);line-height:1.6;margin:0;">The image itself has no license fee and no per-user gate. Support and deployment help are a separate, optional conversation — not something the software enforces.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Who -->
+  <section style="padding:48px 24px;border-bottom:1px solid var(--border);background:var(--surface);">
+    <div style="max-width:640px;margin:0 auto;">
+      <h2 style="font-size:22px;font-weight:700;color:var(--text);margin:0 0 20px;text-align:center;">Built for organizations that need it inside their own walls</h2>
+      <ul style="margin:0;padding-left:20px;color:var(--text2);font-size:15px;line-height:2;">
+        <li>Healthcare IT teams already reading our <a href="../hipaa-pdf-tools/" style="color:var(--green-text)">HIPAA-safety page</a>, who need the tool itself on an internal host</li>
+        <li>Legal and HR departments handling documents that policy says shouldn't touch an external domain at all</li>
+        <li>Finance teams under a data-residency or vendor-review requirement stricter than "processes client-side"</li>
+        <li>Any IT team that simply prefers running its own tools rather than depending on a third-party site's uptime</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- What's free vs what's a conversation -->
+  <section style="padding:48px 24px;border-bottom:1px solid var(--border);">
+    <div style="max-width:680px;margin:0 auto;">
+      <h2 style="font-size:22px;font-weight:700;color:var(--text);margin:0 0 24px;text-align:center;">What's free, and what's a conversation</h2>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+        <div>
+          <h3 style="font-size:15px;font-weight:600;color:var(--green-text);margin:0 0 10px;">Free, always</h3>
+          <ul style="margin:0;padding-left:18px;color:var(--text2);font-size:14px;line-height:1.9;">
+            <li>The Docker image itself</li>
+            <li>Running it in production, at any scale</li>
+            <li>Reading, forking, modifying the source</li>
+          </ul>
+        </div>
+        <div>
+          <h3 style="font-size:15px;font-weight:600;color:var(--text);margin:0 0 10px;">A conversation, not a checkout</h3>
+          <ul style="margin:0;padding-left:18px;color:var(--text2);font-size:14px;line-height:1.9;">
+            <li>Deployment help for your specific environment</li>
+            <li>A support/SLA contract</li>
+            <li>Custom branding or integration work</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section style="padding:48px 24px;border-bottom:1px solid var(--border);background:var(--surface);">
+    <div style="max-width:680px;margin:0 auto;">
+      <h2 style="font-size:22px;font-weight:700;color:var(--text);margin:0 0 24px;text-align:center;">Questions IT/procurement ask first</h2>
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div>
+          <h3 style="font-size:15px;font-weight:600;color:var(--text);margin:0 0 4px;">Is the self-hosted image really free?</h3>
+          <p style="font-size:14px;color:var(--text2);line-height:1.6;margin:0;">Yes. PDFree is AGPLv3 — the Docker image is free to pull, run, and even modify, forever, for anyone. There's no license key, no seat count, no feature gate. What's a paid conversation is optional deployment help or a support contract, not the software itself.</p>
+        </div>
+        <div>
+          <h3 style="font-size:15px;font-weight:600;color:var(--text);margin:0 0 4px;">What does AGPLv3 mean for us specifically?</h3>
+          <p style="font-size:14px;color:var(--text2);line-height:1.6;margin:0;">You can run it privately inside your own network with no obligation at all. The one real requirement: if you modify the code and let others interact with your modified version over a network, you must offer them the corresponding source. Running it as-is (the common case) carries no source-sharing obligation beyond what's already public on GitHub.</p>
+        </div>
+        <div>
+          <h3 style="font-size:15px;font-weight:600;color:var(--text);margin:0 0 4px;">Does this need internet access to run?</h3>
+          <p style="font-size:14px;color:var(--text2);line-height:1.6;margin:0;">No — once the image is running, PDF processing itself needs no external calls at all (same client-side engine as pdfree.io). The only optional network calls are for a feedback relay you can configure yourself or simply leave disabled.</p>
+        </div>
+        <div>
+          <h3 style="font-size:15px;font-weight:600;color:var(--text);margin:0 0 4px;">How is this different from just pointing our team at pdfree.io directly?</h3>
+          <p style="font-size:14px;color:var(--text2);line-height:1.6;margin:0;">Functionally identical tools. What changes is where it's served from — some organizations have policies requiring internal tools to be reachable only on an internal network, or want zero dependency on an external domain even for the initial page load, not just for file processing. This is for that requirement.</p>
+        </div>
+        <div>
+          <h3 style="font-size:15px;font-weight:600;color:var(--text);margin:0 0 4px;">Does this include SSO or user accounts?</h3>
+          <p style="font-size:14px;color:var(--text2);line-height:1.6;margin:0;">Not yet. The image is anonymous-by-design, same as the hosted site — there's no built-in authentication layer. Put it behind your own reverse proxy or SSO gateway if you need access control.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Lead capture -->
+  <section style="padding:56px 24px;">
+    <div style="max-width:480px;margin:0 auto;text-align:center;">
+      <h2 style="font-size:22px;font-weight:700;color:var(--text);margin:0 0 10px;">Want deployment help or a support conversation?</h2>
+      <p style="font-size:14px;color:var(--text2);margin:0 0 24px;">Leave your email — no spam, no drip campaign, just a real reply.</p>
+      <form id="waitlistForm" style="display:flex;flex-direction:column;gap:10px;">
+        <input type="text" id="waitlistHp" name="confirm_subject_line" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;" aria-hidden="true">
+        <input type="email" id="waitlistEmail" required placeholder="you@company.com" style="padding:12px 14px;border:1px solid var(--border);border-radius:10px;font-size:15px;background:var(--surface);color:var(--text);font-family:var(--font-sans);">
+        <input type="text" id="waitlistText" maxlength="300" placeholder="What are you looking to deploy? (optional)" style="padding:12px 14px;border:1px solid var(--border);border-radius:10px;font-size:15px;background:var(--surface);color:var(--text);font-family:var(--font-sans);">
+        <button type="submit" id="waitlistSubmit" style="background:var(--green);color:#fff;padding:13px 28px;border-radius:10px;font-weight:600;font-size:15px;border:none;cursor:pointer;font-family:var(--font-sans);">Get in touch</button>
+        <p id="waitlistStatus" role="status" aria-live="polite" style="font-size:13px;margin:4px 0 0;min-height:18px;"></p>
+      </form>
+      <p style="font-size:13px;color:var(--text3);margin-top:20px;">Prefer to self-serve? <a href="https://github.com/mahmudovbahrom555-lab/pdfree33/blob/main/SELF_HOSTING.md" target="_blank" rel="noopener" style="color:var(--green-text)">Read SELF_HOSTING.md</a> — no form needed, the image is public right now.</p>
+    </div>
+  </section>
+
+  <!-- Related -->
+  <section style="padding:0 24px 48px;">
+    <div style="max-width:640px;margin:0 auto;text-align:center;font-size:13px;color:var(--text3);">
+      Looking for something else? <a href="../hipaa-pdf-tools/" style="color:var(--green-text)">HIPAA-safety details</a> ·
+      <a href="../pdf-sdk/" style="color:var(--green-text)">Embed a PDF SDK in your own product</a>
+    </div>
+  </section>
+
+    </main>
+
+<footer>
+    PDFree · <strong>All processing happens 100% in your browser</strong> · Files are <strong>never uploaded</strong><br>
+    <span style="color:var(--green-text)">🔒</span> Your documents never leave your device &nbsp;·&nbsp;
+    <span style="color:var(--green-text)">♥</span> Built to be free for everyone, forever<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
+      <a href="/privacy/" style="color:var(--green-text)">Privacy</a> &nbsp;·&nbsp;
+      <a href="/terms/" style="color:var(--green-text)">Terms</a> &nbsp;·&nbsp;
+      <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green-text)">GNU AGPLv3</a> &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green-text)">GitHub</a>
+    </span>
+  </footer>
+
+  <script src="../js/enterprise-waitlist.js"></script>
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5cbef445bc6d4370af5d5ad3d9633534"}'></script>
+</body>
+</html>

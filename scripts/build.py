@@ -504,6 +504,10 @@ SPECIALTY_PAGES = [
     'atlas',
     # Developer SDK waitlist landing page (validation experiment, EN-only)
     'pdf-sdk',
+    # Enterprise/self-hosted waitlist landing page (validation experiment,
+    # EN-only) — links to the real self-hosted Docker package, see
+    # SELF_HOSTING.md and Dockerfile.
+    'enterprise-pdf-tools',
     # Document Scanner — EN-only tool page, same as compare-pdf above.
     # Was missing from this list since the tool shipped (2026-08-22) —
     # found while adding glossary-pdf below and checking sitemap.xml
