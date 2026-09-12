@@ -163,6 +163,29 @@
     </div>
   </section>
 
+  <!-- Real numbers -->
+  <section style="padding:48px 24px;border-bottom:1px solid var(--border);">
+    <div style="max-width:680px;margin:0 auto;">
+      <h2 style="font-size:22px;font-weight:700;color:var(--text);margin:0 0 8px;text-align:center;">A real number, not a marketing claim</h2>
+      <p style="font-size:14px;color:var(--text2);text-align:center;max-width:560px;margin:0 auto 24px;line-height:1.6;">Measured directly against this exact image, not estimated: idle memory use, then under a burst of 500 concurrent requests including repeated re-reads of the 1.7MB WASM binary <code style="font-family:'SFMono-Regular',Consolas,Menlo,monospace;font-size:0.9em;">qpdf.wasm</code> that PDFree's own Protect/Unlock tools depend on.</p>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;text-align:center;margin-bottom:20px;">
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 8px;">
+          <div style="font-size:22px;font-weight:700;color:var(--green-text);">~55 MB</div>
+          <div style="font-size:12px;color:var(--text2);margin-top:4px;">idle</div>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 8px;">
+          <div style="font-size:22px;font-weight:700;color:var(--green-text);">~200 MB</div>
+          <div style="font-size:12px;color:var(--text2);margin-top:4px;">peak under a 500-request burst</div>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 8px;">
+          <div style="font-size:22px;font-weight:700;color:var(--green-text);">~100 MB</div>
+          <div style="font-size:12px;color:var(--text2);margin-top:4px;">settles back to, seconds later</div>
+        </div>
+      </div>
+      <p style="font-size:13.5px;color:var(--text2);line-height:1.65;margin:0;">There's a structural reason it stays this low regardless of file size or how many people are using it: the actual PDF processing runs in each visitor's own browser, same as the public site — this container just serves pages, it never opens or processes a single PDF itself. That's a real, testable difference from self-hosted PDF tools that process files inside their own server process — <a href="https://docs.stirlingpdf.com/Paid-Offerings/" target="_blank" rel="noopener" style="color:var(--green-text)">Stirling-PDF's own docs</a>, for comparison, describe a Java heap sized to a quarter of visible system RAM by default, with real reported out-of-memory errors on large-file OCR jobs. Verify current numbers directly against whatever you're comparing before deciding — this isn't a knock on that project, just a different architecture.</p>
+    </div>
+  </section>
+
   <!-- Who -->
   <section style="padding:48px 24px;border-bottom:1px solid var(--border);background:var(--surface);">
     <div style="max-width:640px;margin:0 auto;">
