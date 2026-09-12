@@ -17,6 +17,17 @@ name: Publish pdfree self-hosted Docker image
 # land as private by default even on a public repo — if `docker pull` fails
 # after this run's first publish, flip the package to public once in the
 # repo's Packages settings.
+#
+# dist/ is built natively (this job's own runner, real amd64, no emulation)
+# BEFORE the multi-platform Docker step, not inside the Dockerfile. A real
+# incident on 2026-09-12 showed why: linux/arm64's `npm ci` hung under QEMU
+# emulation for 6 hours until GitHub's own job-level timeout killed the run
+# — a known class of issue for I/O-heavy npm installs under an emulated
+# architecture. Docker's job now is purely packaging an already-built dist/,
+# which is cheap even emulated; the actual heavy build work (npm ci, Python/
+# Jinja2, terser) runs once, natively, matching deploy.yml's own Node/Python
+# setup exactly (same pinned action SHAs — see that workflow's own comments
+# for why pinned, not tags).
 on:
   push:
     branches: [main]
@@ -32,7 +43,27 @@ jobs:
       contents: read
       packages: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: '3.12'
+
+      - name: Install Python dependencies
+        run: pip3 install jinja2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build site (produces dist/)
+        run: python3 scripts/build.py
 
       - name: Log in to GHCR
         uses: docker/login-action@v3

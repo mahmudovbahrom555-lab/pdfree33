@@ -13,11 +13,16 @@ docker pull ghcr.io/mahmudovbahrom555-lab/pdfree-selfhosted:latest
 docker run -p 8080:8080 ghcr.io/mahmudovbahrom555-lab/pdfree-selfhosted:latest
 ```
 
-Or build it yourself from source:
+Or build it yourself from source — this now has two steps, not one: build the site first, then build
+the image around it (the Dockerfile doesn't run the build itself anymore — see
+[Why the build happens outside Docker](#why-the-build-happens-outside-docker) below for why):
 
 ```bash
 git clone https://github.com/mahmudovbahrom555-lab/pdfree33
 cd pdfree33
+npm ci
+pip3 install jinja2
+python3 scripts/build.py        # produces dist/
 docker build -t pdfree-selfhosted .
 docker run -p 8080:8080 pdfree-selfhosted
 ```
@@ -39,18 +44,25 @@ hand-maintained copy of the same logic.
 |---|---|---|
 | `PORT` | `8080` | Listen port. |
 | `DIST_DIR` | the image's built-in `dist/` | Override to serve a different build output. |
-| `SITE_URL` (build-time `ARG`, not a runtime env var) | `https://pdfree.io` | Rewrites canonical/OG/hreflang URLs in the built HTML at image-build time. See [Known limitation](#known-limitation) below. |
 | `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` | unset | Optional — wire your own Telegram bot to receive `/api/feedback` submissions. Left unset by default; the endpoint stays a clean no-op (real `200`, message just isn't relayed anywhere) rather than an error. |
 | `GSHEET_WEBHOOK_URL`, `GSHEET_SECRET` | unset | Optional second feedback channel (Google Sheets via an Apps Script webhook), same no-op-when-unset behavior. |
 
 `ANALYTICS` is intentionally not configurable — Cloudflare Workers Analytics Engine is bound to a
 Cloudflare account and has no self-hostable equivalent. `/api/analytics` is a clean no-op without it.
 
-To build with a custom `SITE_URL`:
+**`PDFREE_SITE_URL`** is a *build-time* variable, but it's read by `scripts/build.py` itself (not the
+Dockerfile) — set it before running `python3 scripts/build.py` in the two-step source build above:
 
 ```bash
-docker build --build-arg SITE_URL=https://pdf.yourcompany.internal -t pdfree-selfhosted .
+PDFREE_SITE_URL=https://pdf.yourcompany.internal python3 scripts/build.py
+docker build -t pdfree-selfhosted .
 ```
+
+This rewrites canonical/OG/hreflang URLs correctly for both the ~350 generated tool pages (which
+already flow through a real `{{ base_url }}` template variable) and the 14 hand-copied homepage
+files (a literal, non-regex string substitution over just those 14 files — see
+`scripts/build.py`'s `_rewrite_site_url()`). Defaults to the real site, so a normal build that never
+sets this is completely unaffected.
 
 ## Security — read this before exposing it beyond localhost
 
@@ -58,6 +70,20 @@ docker build --build-arg SITE_URL=https://pdf.yourcompany.internal -t pdfree-sel
 ([`@pdfree/pdf2md-server`](packages/pdf2md-server/README.md)). Put this behind your own reverse
 proxy, firewall, VPN, or SSO layer if it needs to be reachable from anywhere untrusted — this image
 does not include one.
+
+**There is also no response compression or TLS termination** — the Node server here does neither
+(Cloudflare does both automatically for the hosted site). A reverse proxy (nginx, Caddy, Traefik) in
+front is the right place for gzip/brotli and HTTPS, not something to add to `selfhost/server.js`
+itself — the same "put a proxy in front" posture already covers this, not a separate concern.
+
+Static assets ARE cache-controlled: anything requested with the `?v=`/`?t=` cache-busting query
+string this project already uses (JS/CSS/search-index files) gets `Cache-Control: public,
+max-age=31536000, immutable` — safe because the URL itself changes whenever the content does, so a
+stale cached copy of an old URL is simply never requested again. Everything else gets a short
+`max-age=3600`, and HTML always gets `no-cache`. This matters more here than on a typical static
+site: PDFree's tools run via WebAssembly (a multi-megabyte `qpdf.wasm`) and several large JS
+bundles, and a corporate network with no cache headers at all would silently re-download them on
+every single page load.
 
 ## What's NOT included
 
@@ -72,14 +98,27 @@ does not include one.
   AGPLv3 §13 requires you to offer them the corresponding source. The unmodified project's source is
   always at <https://github.com/mahmudovbahrom555-lab/pdfree33>.
 
-## Known limitation
+## Known limitations
 
-`SITE_URL` is a blunt build-time find-and-replace over the already-rendered HTML output, not real
-per-deployment templating — the 14 homepage files hardcode `https://pdfree.io` directly in their
-source (unlike the ~350 generated tool pages, which already flow through a real template variable).
-Good enough to stop your self-hosted instance's pages from linking back to the public site; not a
-substitute for actually deploying to a real public domain if you need working SEO metadata of your
-own.
+- `selfhost/assets.js` doesn't support HTTP Range requests or `ETag`/`If-None-Match` conditional
+  requests, and doesn't auto-redirect a bare path to its trailing-slash form. Every internal link in
+  this codebase already uses trailing slashes, so the last one rarely matters in practice; Range
+  support would matter more for very large files served to a client that retries partial downloads —
+  not a common case for this site's asset sizes today.
+- `PDFREE_SITE_URL` (above) is good enough to stop your self-hosted instance's pages from linking
+  back to the public site; it's still a build-time value baked into static HTML, not a substitute for
+  actually deploying to a real public domain if you need working SEO metadata of your own.
+
+## Why the build happens outside Docker
+
+Earlier versions of this image ran `npm ci` and `python3 scripts/build.py` inside the Dockerfile's
+own builder stage. A real incident changed that: building for `linux/arm64` under QEMU emulation
+(needed so Apple Silicon / AWS Graviton / other arm64 machines can `docker pull` a native image) hit
+`npm ci` hanging for **6 hours** until GitHub Actions' own job timeout killed it — a known class of
+issue for I/O-heavy npm installs under an emulated architecture, not something specific to this
+project's dependencies. The fix: build `dist/` once, natively, on a real (non-emulated) machine —
+either your own shell (see the two-step source build above) or a native CI runner — and let Docker's
+job be purely packaging already-built files, which stays cheap even under emulation.
 
 ## Development (without Docker)
 

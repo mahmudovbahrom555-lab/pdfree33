@@ -19,7 +19,7 @@
 // ============================================================
 
 import { readFile } from 'node:fs/promises';
-import { join, normalize, extname } from 'node:path';
+import { join, resolve, sep, extname } from 'node:path';
 
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -52,27 +52,62 @@ async function readIfExists(path) {
   }
 }
 
+// Static assets referenced with a `?v=`/`?t=` cache-busting query string
+// (js/css/searchKeywords — see build.py's _inject_hashes) are safe to cache
+// for a year: the URL itself changes whenever the content does, so a stale
+// cache entry for an OLD url is simply never requested again. Anything
+// requested without one of those query params (a bare URL, or an asset type
+// this project doesn't version this way — favicons, manifest.json) gets a
+// short cache instead, so an update to it is picked up within the hour
+// rather than a full year.
+function cacheControlFor(pathname, hasVersionQuery) {
+  if (extname(pathname) === '.html') return 'no-cache';
+  return hasVersionQuery ? 'public, max-age=31536000, immutable' : 'public, max-age=3600';
+}
+
 export function createAssetsBinding(distDir) {
+  const resolvedDist = resolve(distDir);
+
   return {
     async fetch(request) {
       const url = new URL(request.url);
-      // Strip any ../ segments before joining — normalize() collapses them,
-      // and the startsWith(distDir) check below rejects anything that still
-      // escapes the dist/ root after normalization.
-      const decoded = decodeURIComponent(url.pathname);
-      const safePath = normalize(join('/', decoded)).slice(1);
+
+      let decoded;
+      try {
+        decoded = decodeURIComponent(url.pathname);
+      } catch {
+        // Malformed percent-encoding (e.g. a lone "%") throws — a real 400,
+        // not an unhandled exception that would otherwise 500.
+        return new Response('Bad Request', { status: 400 });
+      }
+
+      const safePath = decoded.startsWith('/') ? decoded.slice(1) : decoded;
       const base = join(distDir, safePath);
 
       const candidates = extname(safePath)
         ? [base]
         : [join(base, 'index.html'), `${base}.html`];
 
+      const hasVersionQuery = url.searchParams.has('v') || url.searchParams.has('t');
+
       for (const candidate of candidates) {
-        if (!(candidate === distDir || candidate.startsWith(distDir + '/'))) continue; // path traversal guard
-        const body = await readIfExists(candidate);
+        // path.resolve fully normalizes .. / . segments against an absolute
+        // base — any candidate that still escapes dist/ after that is a
+        // real traversal attempt, not normalize()'s narrower string-based
+        // collapsing.
+        const resolvedCandidate = resolve(candidate);
+        if (resolvedCandidate !== resolvedDist && !resolvedCandidate.startsWith(resolvedDist + sep)) continue;
+
+        const body = await readIfExists(resolvedCandidate);
         if (body) {
-          const type = MIME_TYPES[extname(candidate)] || 'application/octet-stream';
-          return new Response(body, { status: 200, headers: { 'Content-Type': type } });
+          const type = MIME_TYPES[extname(resolvedCandidate)] || 'application/octet-stream';
+          return new Response(body, {
+            status: 200,
+            headers: {
+              'Content-Type': type,
+              'Cache-Control': cacheControlFor(resolvedCandidate, hasVersionQuery),
+            },
+          });
         }
       }
 

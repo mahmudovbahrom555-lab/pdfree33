@@ -125,6 +125,38 @@ if (!existsSync(DIST) && !inCI) {
       expect(res.headers.get('content-type')).toContain('javascript');
     });
 
+    await test('the qpdf WASM binary is served with a real application/wasm content-type', async () => {
+      const res = await fetch(`${baseUrl}/js/vendor/qpdf/lib/qpdf.wasm`);
+      expect(res.status).toBe(200);
+      expect(res.headers.get('content-type')).toContain('application/wasm');
+    });
+
+    await test('a versioned asset (?v=) gets a long immutable Cache-Control', async () => {
+      const res = await fetch(`${baseUrl}/js/app.js?v=abc123`);
+      expect(res.headers.get('cache-control')).toContain('immutable');
+    });
+
+    await test('a bare asset (no ?v=) gets a short Cache-Control, not immutable', async () => {
+      const res = await fetch(`${baseUrl}/js/app.js`);
+      const cc = res.headers.get('cache-control') || '';
+      if (cc.includes('immutable')) throw new Error(`expected a short cache for a bare URL, got "${cc}"`);
+    });
+
+    await test('HTML responses get Cache-Control: no-cache', async () => {
+      const res = await fetch(`${baseUrl}/`);
+      expect(res.headers.get('cache-control')).toBe('no-cache');
+    });
+
+    await test('a malformed percent-encoded path returns 400, not an unhandled 500', async () => {
+      const res = await fetch(`${baseUrl}/%E0%A4%A`);
+      expect(res.status).toBe(400);
+    });
+
+    await test('a path-traversal attempt cannot escape dist/', async () => {
+      const res = await fetch(`${baseUrl}/../../../../etc/passwd`);
+      if (res.status === 200) throw new Error('path traversal attempt returned 200 — dist/ escape possible');
+    });
+
     await test('/embed/ strips X-Frame-Options and sets a permissive frame-ancestors CSP', async () => {
       const res = await fetch(`${baseUrl}/embed/`);
       if (res.headers.get('x-frame-options')) throw new Error('X-Frame-Options should be stripped on /embed/ paths');

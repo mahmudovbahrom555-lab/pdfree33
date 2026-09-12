@@ -7,52 +7,41 @@
 # re-deriving any of that logic — see selfhost/server.js's own header
 # comment for why, and SELF_HOSTING.md for what this does and doesn't cover.
 #
+# dist/ must already be built BEFORE this Dockerfile runs — it does NOT run
+# npm ci/scripts/build.py itself. This is a deliberate change from an
+# earlier version that did: a real CI incident (linux/arm64's `npm ci`
+# hanging under QEMU emulation for 6 hours until GitHub's own job timeout
+# killed it — a known class of issue for I/O-heavy npm installs under
+# emulated architectures) showed that heavy build work has no business
+# running per-platform inside a multi-arch Buildx build. The actual build
+# (Node + Python + Jinja2 + terser) now runs ONCE, natively, on the CI
+# runner's real architecture (see .github/workflows/pdfree-self-hosted-
+# docker.yml) — Docker's only job here is packaging already-built output,
+# which is cheap even under QEMU emulation.
+#
+#   python3 scripts/build.py            # produces dist/ — do this first
 #   docker build -t pdfree-selfhosted .
 #   docker run -p 8080:8080 pdfree-selfhosted
 #
-# Build from the REPO ROOT (this file lives there) — build.py walks the
-# whole repo (minus SKIP_DIRS/SKIP_FILES) to produce dist/, same as a real
-# pdfree.io deploy.
+# To build for a private domain instead of the public site, set
+# PDFREE_SITE_URL before the build step above (see scripts/build.py and
+# SELF_HOSTING.md) — this Dockerfile has no SITE_URL handling of its own
+# anymore; dist/ simply arrives already correct.
 
-FROM node:20-alpine AS builder
-
-RUN apk add --no-cache python3 py3-pip \
-    && pip3 install --no-cache-dir --break-system-packages jinja2
+FROM node:20-alpine
 
 WORKDIR /repo
-COPY . .
-
-# Full install (not --omit=dev) — build.py shells out to terser
-# (a devDependency) to minify dist/js/*.js, same as deploy.yml's own
-# "Install dependencies" step.
-RUN npm ci
-RUN python3 scripts/build.py
-
-# The 14 homepage files are hand-copied static HTML with
-# https://pdfree.io hardcoded directly in source (canonical, og:url,
-# hreflang alternates) — unlike the ~350 Jinja-generated tool pages, which
-# already flow through a real base_url template variable. This is a blunt
-# post-build string substitution covering both cases uniformly. Known
-# limitation, documented in SELF_HOSTING.md: not real per-deployment SEO
-# templating, good enough for internal/private use. Defaults to a no-op
-# (SITE_URL defaults to the real site) if never overridden at build time.
-ARG SITE_URL=https://pdfree.io
-RUN if [ "$SITE_URL" != "https://pdfree.io" ]; then \
-      grep -rl "https://pdfree.io" dist/ | xargs -r sed -i "s|https://pdfree.io|$SITE_URL|g"; \
-    fi
-
-
-FROM node:20-alpine AS final
-
-WORKDIR /repo
-COPY --from=builder /repo/dist ./dist
-COPY --from=builder /repo/src ./src
-COPY --from=builder /repo/data/tools-config.json ./data/tools-config.json
-COPY --from=builder /repo/selfhost ./selfhost
+COPY dist ./dist
+COPY src ./src
+COPY data/tools-config.json ./data/tools-config.json
+COPY selfhost ./selfhost
 
 # No built-in auth (matches packages/pdf2md-server's own self-hosted
 # posture) — put this behind your own reverse proxy/firewall if exposed
-# beyond localhost or a trusted network. See SELF_HOSTING.md.
+# beyond localhost or a trusted network; a reverse proxy is also where
+# gzip/brotli compression and TLS termination belong (Node's server here
+# does neither, same as packages/pdf2md-server's own posture). See
+# SELF_HOSTING.md.
 EXPOSE 8080
 ENV PORT=8080
 

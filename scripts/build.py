@@ -39,7 +39,12 @@ TEMPLATES = os.path.join(ROOT, 'scripts', 'templates')
 CONFIG    = os.path.join(DATA, 'tools-config.json')
 CONTENT   = os.path.join(DATA, 'content')
 
-BASE_URL = 'https://pdfree.io'
+# Overridable via PDFREE_SITE_URL — used by the self-hosted Docker package
+# (see SELF_HOSTING.md) so a private deployment's canonical/OG/hreflang URLs
+# point at its own domain instead of the public site. Defaults to the real
+# site, so the normal production build (which never sets this env var) is
+# byte-for-byte unaffected.
+BASE_URL = os.environ.get('PDFREE_SITE_URL', 'https://pdfree.io')
 
 # Dirs/files to skip when copying root → dist
 SKIP_DIRS = {
@@ -1219,6 +1224,41 @@ def _heal_homepage_options_containers(dist_root, homepage_langs):
     return healed
 
 
+def _rewrite_site_url(dist_root):
+    """Rewrite the literal 'https://pdfree.io' string in the 14 hand-copied
+    homepage files to match PDFREE_SITE_URL, for a self-hosted deployment on
+    a private domain (see SELF_HOSTING.md).
+
+    Only the homepages need this: the ~350 Jinja-generated tool pages already
+    render BASE_URL through a real {{ base_url }} template variable (see
+    _generate_pages), so they pick up PDFREE_SITE_URL correctly on their own.
+    The 14 homepage files are copied as-is (see _copy_static's own docstring)
+    with 'https://pdfree.io' hardcoded directly in source — canonical, og:url,
+    twitter:image, hreflang alternates — so they need an explicit rewrite pass.
+
+    A no-op (returns immediately) when PDFREE_SITE_URL is unset, so the real
+    production build — which never sets it — is byte-for-byte unaffected.
+    Uses a literal str.replace, not a regex or shell sed pass, so it can't
+    misinterpret regex metacharacters that might appear in a custom SITE_URL.
+    """
+    if BASE_URL == 'https://pdfree.io':
+        return 0
+    rewritten = 0
+    for lang in HOMEPAGE_LANGS:
+        rel = 'index.html' if lang == 'en' else f'{lang}/index.html'
+        path = os.path.join(dist_root, rel)
+        if not os.path.exists(path):
+            continue
+        with open(path, encoding='utf-8') as f:
+            text = f.read()
+        if 'https://pdfree.io' not in text:
+            continue
+        with open(path, 'w', encoding='utf-8') as f:
+            f.write(text.replace('https://pdfree.io', BASE_URL))
+        rewritten += 1
+    return rewritten
+
+
 def _copy_static(src_root, dst_root, tool_dirs):
     """Copy everything from src_root to dst_root, skipping SSG-generated tool dirs."""
     copied = 0
@@ -1439,6 +1479,10 @@ def main():
         print('Copying static assets...')
         _copy_static(ROOT, DIST, tool_dirs)
         print('  done')
+
+        if BASE_URL != 'https://pdfree.io':
+            n_rewritten = _rewrite_site_url(DIST)
+            print(f'  PDFREE_SITE_URL override: rewrote {n_rewritten} homepage files to {BASE_URL}')
 
         # Self-heal any homepage missing a tool's #<tool>Options container
         # (see _heal_homepage_options_containers's docstring) — a build-time
