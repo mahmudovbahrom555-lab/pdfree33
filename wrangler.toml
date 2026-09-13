@@ -2,8 +2,23 @@ name = "pdfree33"
 compatibility_date = "2026-05-07"
 main = "src/index.js"
 
-[placement]
-mode = "smart"
+# [placement] mode="smart" removed 2026-09-13: wrangler's own upload-time
+# warning already flags this exact combination (Smart Placement + assets +
+# run_worker_first=true) as likely to hurt performance ("your entire Worker
+# could be moved to run closer to your data source... could result in poor
+# performance"). Confirmed as the likely cause of real, repeated
+# importScripts() NetworkErrors (a different vendor file each time —
+# pdf-lib.min.js, pdfEncrypt.js, watermarkImage.js) while testing a staged-
+# rollout mechanism against real *.workers.dev preview URLs: an isolated
+# repro (bare Worker + importScripts, no app flow) never reproduced it, nor
+# did concurrent worker creation, and the exact failing URL passed cleanly
+# on a later manual retry — consistent with an unstable/relocating Worker
+# placement decision, not a code bug. Smart Placement's benefit (running
+# near a heavy backend/data source) doesn't apply here: this Worker has no
+# such dependency, just lightweight routing/redirects/analytics relay in
+# front of Cloudflare's own globally-distributed asset CDN, which needs no
+# placement optimization to begin with. Default placement is standard
+# edge-nearest-request execution.
 
 [assets]
 directory = "./dist"
