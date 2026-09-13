@@ -323,7 +323,7 @@ function _togglePage(p) {
     ?.classList.toggle('ext-thumb-card--sel', _selectedPages.has(p));
   _updateSelCount();
   _updateRangeInput();
-  _maybeSuggestSingleMode();
+  _maybeSuggestMode();
 }
 
 function _refreshThumbSelections() {
@@ -372,12 +372,20 @@ function _syncModeRadios() {
 // question: a plain contiguous "1-5" out of a larger document is just as
 // plausibly "give me this one piece" as a scattered range is — only
 // selecting literally every page reads unambiguously as "split it all
-// apart". Only nudges the default — never overrides a mode the user
-// already picked themselves (_modeTouched).
-function _maybeSuggestSingleMode() {
-  if (_modeTouched || _mode !== 'separate') return;
-  if (!_isProperSubset([..._selectedPages], _pageCount)) return;
-  _mode = 'single';
+// apart".
+//
+// Symmetric both ways — a subset nudges toward "single", selecting
+// everything (back) nudges toward "separate" — so re-selecting "All" after
+// an auto-suggested "single" un-does the suggestion instead of leaving it
+// stuck (a real gap a user found: clicking "All" again did nothing while
+// mode stayed on the auto-picked "single"). Only ever nudges the default —
+// never overrides a mode the user picked themselves (_modeTouched), in
+// either direction.
+function _maybeSuggestMode() {
+  if (_modeTouched) return;
+  const target = _isProperSubset([..._selectedPages], _pageCount) ? 'single' : 'separate';
+  if (_mode === target) return;
+  _mode = target;
   _syncModeRadios();
   // A silent default switch risks the exact quick-retry pattern this whole
   // fix targets — a user who doesn't notice the radio moved downloads the
@@ -386,13 +394,13 @@ function _maybeSuggestSingleMode() {
   // keyframe in components.css) moves that discovery moment to BEFORE
   // processing instead. Removed after the animation finishes so it can
   // play again on a later selection change, not just once ever.
-  const singleLabel = _container?.querySelector('.ext-mode input[value="single"]')?.closest('.ext-mode');
-  if (singleLabel) {
-    singleLabel.classList.remove('ext-mode--suggested');
-    void singleLabel.offsetWidth; // force reflow so re-adding the class restarts the animation
-    singleLabel.classList.add('ext-mode--suggested');
-    const clear = () => singleLabel.classList.remove('ext-mode--suggested');
-    singleLabel.addEventListener('animationend', clear, { once: true });
+  const label = _container?.querySelector(`.ext-mode input[value="${target}"]`)?.closest('.ext-mode');
+  if (label) {
+    label.classList.remove('ext-mode--suggested');
+    void label.offsetWidth; // force reflow so re-adding the class restarts the animation
+    label.classList.add('ext-mode--suggested');
+    const clear = () => label.classList.remove('ext-mode--suggested');
+    label.addEventListener('animationend', clear, { once: true });
     // Fallback, not just belt-and-suspenders: prefers-reduced-motion sets
     // `animation: none` in CSS, which means animationend never fires at
     // all — without this the class (harmless visually with no animation,
@@ -407,7 +415,7 @@ function _applyRange() {
   _selectedPages = new Set(parseRange(inp.value, _pageCount));
   _refreshThumbSelections();
   _updateSelCount();
-  _maybeSuggestSingleMode();
+  _maybeSuggestMode();
 }
 
 function _applyPreset(preset) {
@@ -423,5 +431,5 @@ function _applyPreset(preset) {
   _refreshThumbSelections();
   _updateSelCount();
   _updateRangeInput();
-  _maybeSuggestSingleMode();
+  _maybeSuggestMode();
 }
