@@ -267,9 +267,31 @@ jobs:
         # local http.server gate structurally cannot reach — confirmed via
         # the same spike run that this preview URL serves real pages (200),
         # a real 404 for an unmatched path, and the just-built version.json.
+        #
+        # Retries up to 3 times, 10s apart: the very first real run of this
+        # step hit exactly the class of issue this gate exists to catch —
+        # except this one instance was a real Cloudflare-infra transient, not
+        # a code bug. A brand-new preview subdomain's first-ever request
+        # failed a Worker's importScripts('vendor/pdf-lib.min.js') with a
+        # NetworkError; re-running the identical test against the identical
+        # URL seconds later passed cleanly, and `curl -I` on the same asset
+        # showed a normal 200 with `cf-cache-status: HIT` — consistent with a
+        # one-off cold-start/propagation blip on a never-before-hit
+        # *.workers.dev subdomain, not a real regression. A short retry
+        # absorbs that without weakening the gate: a genuine code regression
+        # fails deterministically on every attempt, so it still blocks
+        # cutover; only a transient first-hit hiccup gets a second chance.
         run: |
-          PDFREE_BASE_URL="${{ steps.upload_version.outputs.preview_url }}" \
-            npm run test:e2e:mobile-merge-golden-path
+          for attempt in 1 2 3; do
+            if PDFREE_BASE_URL="${{ steps.upload_version.outputs.preview_url }}" \
+              npm run test:e2e:mobile-merge-golden-path; then
+              exit 0
+            fi
+            echo "Attempt $attempt failed — waiting 10s before retry (see this step's own comment for why)."
+            sleep 10
+          done
+          echo "ERROR: preview-URL golden-path test failed 3 times in a row — treating as a real regression, not a transient."
+          exit 1
 
       - name: Cut traffic to the new version (100%)
         # Only reached if every gate above passed. Production has served the
