@@ -31,7 +31,24 @@
 //  Requires: dist/ already built (`python3 scripts/build.py`) and served
 //  at PDFREE_BASE_URL.
 //
+//  Dual purpose, same file, no duplication — PDFREE_BASE_URL decides which:
+//    - Default (localhost:8934, local dist/) — the pre-deploy CI gate in
+//      deploy.yml. Loops every embed/<tool>/ page (see ALL_TOOLS below),
+//      which is what would have caught the real cdnjs/CSP gap in rotate/
+//      pagenum/meta/watermark/split BEFORE it shipped, not after.
+//    - PDFREE_BASE_URL=https://pdfree.io (`npm run check:prod:embed-sdk`)
+//      — a genuine post-deploy production check. Added after a real
+//      lesson: confirming a deploy via `curl` 200s / version.json only
+//      proves the deploy *reached* production, not that the embedded
+//      tools *work* there — this runs the actual contract against the
+//      real domain. isRealCspViolation() below excludes Cloudflare's own
+//      edge-injected RUM beacon (static.cloudflareinsights.com, present
+//      on real pdfree.io traffic only, not local dist/) — a known-benign
+//      violation this page's CSP correctly blocks either way, confirmed
+//      by hand before encoding it here, not assumed.
+//
 //  Run: node tests/e2e/embed-sdk.e2e.mjs
+//       PDFREE_BASE_URL=https://pdfree.io node tests/e2e/embed-sdk.e2e.mjs
 // ============================================================
 
 import { chromium } from 'playwright';
@@ -44,11 +61,31 @@ const BASE_URL        = process.env.PDFREE_BASE_URL || 'http://localhost:8934';
 const EMBED_HOST_PORT = Number(process.env.EMBED_HOST_PORT) || 8935;
 const NORMAL_FILE     = path.join(__dirname, '..', 'fixtures', 'normal-3page.pdf');
 
+// Every embeddable tool as of this writing (see embed/sdk.js's own header
+// comment for the same list) — deliberately checked here too, not just
+// trusted from that comment, so this list drifting out of sync with the
+// real embed/<tool>/ directories is at least a visible "which tool did I
+// forget" gap rather than a silent one.
+const ALL_TOOLS = ['compress', 'rotate', 'split', 'watermark', 'pagenum', 'meta', 'protect', 'unlock', 'merge'];
+
 let passed = 0, failed = 0;
 async function test(name, fn) {
   try { await fn(); console.log(`  ✓ ${name}`); passed++; }
   catch (e) { console.error(`  ✗ ${name}\n    ${e.stack || e.message}`); failed++; }
 }
+// Cloudflare injects its own RUM beacon (static.cloudflareinsights.com)
+// into every response at the EDGE, on real pdfree.io traffic only — it's
+// not present when serving dist/ locally, and this page's CSP correctly
+// blocks it either way (embed pages deliberately want zero third-party
+// tracking). A known, previously-confirmed-benign violation class, not a
+// real bug — excluded here so a genuine new violation doesn't get lost in
+// the noise when this same file is pointed at production (see this file's
+// own header comment on why PDFREE_BASE_URL=https://pdfree.io is a
+// legitimate way to run it, not just against local dist/).
+function isRealCspViolation(text) {
+  return /Content Security Policy|Refused to apply/i.test(text) && !text.includes('static.cloudflareinsights.com');
+}
+
 function expect(actual) {
   return {
     toBe: (e) => { if (actual !== e) throw new Error(`Expected ${JSON.stringify(e)}, got ${JSON.stringify(actual)}`); },
@@ -59,15 +96,17 @@ function expect(actual) {
 // A real third-party embedder page — same iframe-creation shape as
 // embed/sdk.js's own create(), just pointed at BASE_URL instead of the
 // hardcoded production domain, and exposing results on `window` for the
-// test to read directly.
-const HOST_HTML = `<!doctype html><html><body>
+// test to read directly. One server, routed by path (/host/<tool>.html),
+// so every tool can be checked without spinning up a new process each time.
+function hostHtmlFor(tool) {
+  return `<!doctype html><html><body>
 <div id="my-widget"></div>
 <script>
   window.__ready = false;
   window.__result = null;
   window.__errorResult = null;
   const iframe = document.createElement('iframe');
-  iframe.src = '${BASE_URL}/embed/compress/';
+  iframe.src = '${BASE_URL}/embed/${tool}/';
   iframe.setAttribute('allow', '');
   iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-downloads allow-forms');
   window.addEventListener('message', (e) => {
@@ -80,16 +119,20 @@ const HOST_HTML = `<!doctype html><html><body>
   document.getElementById('my-widget').appendChild(iframe);
 </script>
 </body></html>`;
+}
 
 function startHostServer() {
   return new Promise((resolve) => {
     const server = createServer((req, res) => {
+      const m = /^\/host\/([a-z]+)\.html$/.exec(req.url);
+      const tool = m ? m[1] : 'compress';
       res.writeHead(200, { 'Content-Type': 'text/html' });
-      res.end(HOST_HTML);
+      res.end(hostHtmlFor(tool));
     });
     server.listen(EMBED_HOST_PORT, () => resolve(server));
   });
 }
+const hostUrl = (tool) => `http://localhost:${EMBED_HOST_PORT}/host/${tool}.html`;
 
 const hostServer = await startHostServer();
 const browser = await chromium.launch();
@@ -124,14 +167,48 @@ try {
     }
   });
 
+  // Loops every tool, not just compress — this is the check that would
+  // have caught the real CSP/cdnjs gap found while adding rotate/pagenum/
+  // meta/watermark/split (each needs cdnjs.cloudflare.com for its own
+  // options-panel preview; protect/unlock/merge don't) BEFORE it shipped,
+  // instead of discovering it live on production after the fact. Same
+  // reason this file is what should be pointed at PDFREE_BASE_URL=
+  // https://pdfree.io for a real post-deploy check — a version.json/
+  // curl-200 check confirms the deploy *reached* production, not that the
+  // embedded tools actually *work* there.
+  for (const tool of ALL_TOOLS) {
+    await test(`/embed/${tool}/: real embedder page loads, zero CSP violations, options panel renders after a real file`, async () => {
+      const page = await browser.newPage();
+      const cspViolations = [];
+      page.on('console', (msg) => {
+        if (msg.type() === 'error' && isRealCspViolation(msg.text())) cspViolations.push(msg.text());
+      });
+      try {
+        await page.goto(hostUrl(tool), { waitUntil: 'load' });
+        await page.waitForFunction(() => window.__ready === true, { timeout: 15000 });
+        const frame = page.frames().find((f) => f.url().includes(`/embed/${tool}/`));
+        await frame.locator('#fileInput').setInputFiles(NORMAL_FILE);
+        await page.waitForTimeout(1200);
+        const hasOptionsContent = await frame.evaluate(() => {
+          const el = document.querySelector('[id$="Options"]');
+          return !!el && el.innerHTML.trim().length > 0;
+        });
+        if (!hasOptionsContent) throw new Error('options panel is still empty after selecting a file');
+        if (cspViolations.length > 0) throw new Error(`${cspViolations.length} CSP violation(s): ${cspViolations[0]}`);
+      } finally {
+        await page.close();
+      }
+    });
+  }
+
   await test('a real embedder page: iframe loads, zero CSP violations, pdfree:ready fires', async () => {
     const page = await browser.newPage();
     const cspViolations = [];
     page.on('console', (msg) => {
-      if (msg.type() === 'error' && /Content Security Policy|Refused to apply/i.test(msg.text())) cspViolations.push(msg.text());
+      if (msg.type() === 'error' && isRealCspViolation(msg.text())) cspViolations.push(msg.text());
     });
     try {
-      await page.goto(`http://localhost:${EMBED_HOST_PORT}/`, { waitUntil: 'load' });
+      await page.goto(hostUrl('compress'), { waitUntil: 'load' });
       await page.waitForFunction(() => window.__ready === true, { timeout: 10000 });
       expect(await page.evaluate(() => window.__ready)).toBe(true);
       if (cspViolations.length > 0) throw new Error(`${cspViolations.length} CSP violation(s): ${cspViolations[0]}`);
@@ -143,7 +220,7 @@ try {
   await test('a successful compress relays pdfree:result with filename + size to the embedder', async () => {
     const page = await browser.newPage();
     try {
-      await page.goto(`http://localhost:${EMBED_HOST_PORT}/`, { waitUntil: 'load' });
+      await page.goto(hostUrl('compress'), { waitUntil: 'load' });
       await page.waitForFunction(() => window.__ready === true, { timeout: 10000 });
       const frame = page.frames().find((f) => f.url().includes('/embed/compress/'));
       await frame.locator('#fileInput').setInputFiles(NORMAL_FILE);
@@ -177,7 +254,7 @@ try {
     // that survives selection but fails deep inside a specific Worker.
     const page = await browser.newPage();
     try {
-      await page.goto(`http://localhost:${EMBED_HOST_PORT}/`, { waitUntil: 'load' });
+      await page.goto(hostUrl('compress'), { waitUntil: 'load' });
       await page.waitForFunction(() => window.__ready === true, { timeout: 10000 });
       const frame = page.frames().find((f) => f.url().includes('/embed/compress/'));
       await frame.evaluate(() => {
