@@ -303,6 +303,7 @@ window.PDFREE_LOCALE = {
   org_delete_selected:    '✕ Удалить выбранные',
   org_delete_btn:         'Удалить страницу',
   org_restore_btn:        'Восстановить страницу',
+  org_duplicate_btn:      'Дублировать страницу',
   org_grid_aria:          'Страницы PDF — перетащите, чтобы изменить порядок',
   org_page_alt:           'Страница {n}',
   org_page_aria:          'Страница {n}',

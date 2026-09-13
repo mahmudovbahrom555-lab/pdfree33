@@ -303,6 +303,7 @@ window.PDFREE_LOCALE = {
   org_delete_selected:    '✕ Auswahl löschen',
   org_delete_btn:         'Seite löschen',
   org_restore_btn:        'Seite wiederherstellen',
+  org_duplicate_btn:      'Seite duplizieren',
   org_grid_aria:          'PDF-Seiten — zum Ändern der Reihenfolge ziehen',
   org_page_alt:           'Seite {n}',
   org_page_aria:          'Seite {n}',

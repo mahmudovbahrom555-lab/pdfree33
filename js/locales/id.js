@@ -303,6 +303,7 @@ window.PDFREE_LOCALE = {
   org_delete_selected:    '✕ Hapus yang dipilih',
   org_delete_btn:         'Hapus halaman',
   org_restore_btn:        'Pulihkan halaman',
+  org_duplicate_btn:      'Duplikat halaman',
   org_grid_aria:          'Halaman PDF — seret untuk mengatur ulang urutan',
   org_page_alt:           'Halaman {n}',
   org_page_aria:          'Halaman {n}',

@@ -333,15 +333,22 @@ function _thumbInnerHTML(pos) {
   const actionBtnHTML = deleted
     ? `<button type="button" class="org-card__action org-card__action--restore" data-act="restore" aria-label="${esc(t('org_restore_btn'))}">↺</button>`
     : `<button type="button" class="org-card__action org-card__action--delete" data-act="delete" aria-label="${esc(t('org_delete_btn'))}">×</button>`;
+  // Duplicating a deleted card is ambiguous (duplicate the hidden page, or
+  // restore-then-duplicate?) — simplest, least-surprising rule: hide it
+  // alongside delete/restore's own state so a deleted card only ever shows
+  // one action (restore) at a time, same as before this feature existed.
+  const dupBtnHTML = !deleted
+    ? `<button type="button" class="org-card__action org-card__action--dup" data-act="duplicate" aria-label="${esc(t('org_duplicate_btn'))}">⧉</button>`
+    : '';
 
   if (_useThumbs) {
     const url = _thumbnailURLs[origIdx];
     const img = url
       ? `<img src="${esc(url)}" alt="${t('org_page_alt', { n: pos + 1 })}" style="transform:rotate(${visual}deg)" loading="lazy">`
       : '';
-    return `${img}${badgeHTML}${blankBadgeHTML}${actionBtnHTML}`;
+    return `${img}${badgeHTML}${blankBadgeHTML}${dupBtnHTML}${actionBtnHTML}`;
   }
-  return `<span class="rot-numbox__n" style="transform:rotate(${visual}deg)">${pos + 1}</span>${badgeHTML}${blankBadgeHTML}${actionBtnHTML}`;
+  return `<span class="rot-numbox__n" style="transform:rotate(${visual}deg)">${pos + 1}</span>${badgeHTML}${blankBadgeHTML}${dupBtnHTML}${actionBtnHTML}`;
 }
 
 function _ariaLabelFor(pos) {
@@ -408,8 +415,9 @@ function _bindEvents() {
     const pos = parseInt(card.dataset.i, 10);
 
     if (actBtn) {
-      if (actBtn.dataset.act === 'delete')       _deletePage(pos);
-      else if (actBtn.dataset.act === 'restore') _restorePage(pos);
+      if (actBtn.dataset.act === 'delete')          _deletePage(pos);
+      else if (actBtn.dataset.act === 'restore')    _restorePage(pos);
+      else if (actBtn.dataset.act === 'duplicate')  _duplicatePage(pos);
       return;
     }
 
@@ -488,6 +496,41 @@ function _restorePage(pos) {
   _snapshotForUndo();
   _deletedFlags[pos] = 0;
   _updateCard(pos);
+  _updateHistoryButtons();
+  _updateSubmitBtn();
+}
+
+// Inserting a new position shifts every later position's index by one —
+// _selected holds POSITIONS, not page identities, so anything at or past
+// the insertion point needs to move with it or it'll silently point at the
+// wrong (shifted) card afterward. Undo doesn't need the same treatment: it
+// unconditionally clears _selected already (see _undo below), so a stale
+// selection set is never actually reachable — no need to snapshot/restore
+// _selected itself, only shift it forward on insert.
+function _shiftSelectedFrom(insertPos) {
+  const shifted = new Set();
+  for (const pos of _selected) shifted.add(pos >= insertPos ? pos + 1 : pos);
+  _selected = shifted;
+}
+
+// Duplicates whatever is AT `pos` — copies _originalIndex as-is (the
+// worker's copyPages() already accepts the same source index appearing
+// more than once in `pageOrder`, see organizeWorker.js's own comment), plus
+// its current rotation delta. Deliberately generic: works identically
+// whether `pos` is a normal page or (once Add Blank Page ships) a blank
+// sentinel, since it never inspects what kind of page it is — just copies
+// the row. Never deleted, regardless of whether the source was — see the
+// dupBtnHTML guard in _thumbInnerHTML for why a deleted card can't trigger
+// this in the first place.
+function _duplicatePage(pos) {
+  _snapshotForUndo();
+  const insertPos = pos + 1;
+  _originalIndex.splice(insertPos, 0, _originalIndex[pos]);
+  _deltas.splice(insertPos, 0, _deltas[pos]);
+  _deletedFlags.splice(insertPos, 0, 0);
+  _shiftSelectedFrom(insertPos);
+  _refreshAllCards(); // page count changed — full rebuild, not a content-only update
+  _updateHint();
   _updateHistoryButtons();
   _updateSubmitBtn();
 }

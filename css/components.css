@@ -2503,6 +2503,18 @@ button,
 .org-card__action--restore       { background: var(--green-light); color: var(--green-dark); }
 .org-card__action--restore:hover { background: var(--green); color: #fff; }
 
+/* Duplicate — bottom-right, the one corner still free: top-left is
+   delete/restore, top-right is .rot-badge (rotation angle), bottom-left is
+   .org-blank-badge. */
+.org-card__action--dup {
+  top: auto;
+  left: auto;
+  bottom: 4px;
+  right: 4px;
+  font-size: 13px;
+}
+.org-card__action--dup:hover { background: var(--yellow-light); color: var(--yellow-text); }
+
 .org-delete-sel-btn { color: #dc2626; }
 
 /* Likely-blank badge — bottom-left, opposite .org-card__action (top-left)

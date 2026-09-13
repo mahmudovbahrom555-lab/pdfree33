@@ -302,6 +302,7 @@ window.PDFREE_LOCALE = {
   org_delete_selected:    '✕ Eliminar selecionadas',
   org_delete_btn:         'Eliminar página',
   org_restore_btn:        'Restaurar página',
+  org_duplicate_btn:      'Duplicar página',
   org_grid_aria:          'Páginas do PDF — arraste para reordenar',
   org_page_alt:           'Página {n}',
   org_page_aria:          'Página {n}',
