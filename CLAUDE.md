@@ -82,6 +82,57 @@ during the 2026-09 pdfjs-dist upgrade in `packages/pdf2md-core` — see
 the eventual fix was found (bisecting real published dependency versions with `npm view <pkg>
 versions --json`, not guessing).
 
+## Verify empirically — don't accept a claim (yours or anyone else's) at face value
+
+Whether the claim comes from an external code review, your own assumption, or something that
+"should" generalize from a previous fix — check it against real, running code before accepting or
+rejecting it. This is a stronger standard than "sounds plausible."
+
+**Applies in both directions — confirming AND refuting:**
+- A 2026-09 external review of the self-hosted Docker package raised several concerns at once.
+  Some were real and got fixed (a malformed-URI 500, missing `Cache-Control`, a fragile shell
+  `sed` for `SITE_URL`, a real QEMU/`npm ci` hang under multi-arch emulation). Others sounded
+  equally plausible but were wrong once actually checked: "no `package.json` will crash the
+  container with ESM errors" — disproved by literally building an isolated directory with zero
+  `package.json` anywhere in the tree and running it; "`ctx.waitUntil` compatibility" — disproved
+  by grepping the real handler and finding zero references to `ctx` at all. Accepting either
+  claim without checking would have meant either shipping a real bug unfixed, or wasting effort
+  "fixing" something that was never broken.
+- The embed/SDK security pass (2026-09) found a real CSP bug — a missing `;` in
+  `embed/compress/index.html`'s CSP meta tag — not by reading the CSP string carefully enough
+  to spot a missing character, but by loading the real page in headless Chromium and counting
+  actual console violations (10 of them). Reading code is necessary but not sufficient for this
+  class of bug: the failure only manifests when the browser actually parses the string.
+
+**The highest-signal review technique found this session: try to make the real feature actually
+run, end to end, through the real UI/API surface — not just read the code path or run it against a
+synthetic mock.** Writing `tests/e2e/embed-sdk.e2e.mjs` (a real Playwright browser driving the real
+`embed/sdk.js` against a real second HTTP origin, not `page.setContent()`) surfaced two more real,
+previously-invisible bugs this way: `embed/sdk.js`'s documented `onError` callback was dead code
+(nothing in `js/processor.js` ever dispatched the `pdfree:error` event it was listening for), and 5
+of the first 8 embeddable tools silently failed to render their options panel because their UI
+module lazy-loads `pdf-lib`/`pdf.js` from a CDN the embed page's CSP didn't allow — invisible from
+reading `embed/rotate/index.html` in isolation, obvious the moment a real file was dropped into a
+real running instance.
+
+**Verifying "it works" only in a local/dev environment is not the same as verifying it in
+production**, even when you're confident they're identical (see the CI-only-failure section
+above for the same principle applied to Node version/install-flag drift). A `curl` 200 or a
+`version.json` commit match only proves a deploy *reached* production — it says nothing about
+whether the feature actually *works* there. `npm run check:prod:embed-sdk` exists specifically
+because of this: the same real-browser contract test as the pre-deploy CI gate, just pointed at
+`https://pdfree.io` instead of local `dist/`, run *after* every deploy that touches `embed/`. When
+building an analogous check for a different feature, prefer reusing the exact same test file
+against a `PROD_BASE_URL`-style env var over writing a second, separate "production version" —
+duplicated test logic is itself a place for the two copies to quietly drift apart.
+
+**When adding N similar things (tools, locales, pages) via a proven template, verify one fully
+first, then batch-replicate — don't parallelize the first real usage.** Not because of demand
+uncertainty (see the pause-expansion strategy elsewhere in project memory for that separate
+concern) — because verifying the template against ONE real instance is what surfaces
+instance-specific gaps (like the CDN/CSP dependency above) that a batch copy would otherwise bake
+into all N copies at once, each needing its own separate fix instead of one.
+
 ## Homepage UX — CRITICAL CONSTRAINT
 **The hero section (`#hero`) must always be the first thing a user sees.**
 
