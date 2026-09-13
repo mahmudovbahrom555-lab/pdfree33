@@ -232,16 +232,42 @@ jobs:
         id: upload_version
         run: |
           set -euo pipefail
+          # --preview-alias pdfree-canary: two real runs without this (see
+          # this workflow's own git history) hit real, repeated flakiness on
+          # the auto-generated per-version *.workers.dev URL — a brand-new,
+          # never-before-hit subdomain intermittently failed random
+          # importScripts() calls (a different file each time: pdf-lib.min.js,
+          # then pdfEncrypt.js, then watermarkImage.js) with a generic
+          # NetworkError, even after 5 retries over ~100s. Ruled out a real
+          # code bug first: an isolated repro (bare Worker + importScripts,
+          # no app flow) never reproduced it, nor did 3 concurrent worker
+          # creations, and the exact same failing URL passed cleanly on a
+          # later manual retry. Consistent with Smart Placement (this
+          # project's own [placement] mode="smart" — wrangler's own
+          # upload-time warning: "your entire Worker could be moved to run
+          # closer to your data source... could result in poor performance")
+          # needing real traffic history to settle, which a fresh per-version
+          # hash subdomain never has. A fixed --preview-alias reuses the SAME
+          # hostname across every deploy instead, so it stays warm from
+          # continuous real use — much closer to how production itself
+          # behaves, rather than a cold subdomain hit for the first time.
           npx wrangler@4.86.0 versions upload --config wrangler.toml \
-            --message "${{ github.sha }}" 2>&1 | tee version_upload.log
+            --message "${{ github.sha }}" --preview-alias pdfree-canary \
+            2>&1 | tee version_upload.log
 
           # Patterns grounded in the real spike run's captured output, e.g.:
           #   Worker Version ID: b718812a-4300-4d22-863e-4785650f5a7e
           #   Version Preview URL: https://b718812a-pdfree33.mahmudovbahrom555.workers.dev
           # Not guessed — if wrangler ever changes this format, fail loudly
           # below rather than silently deploying an empty/wrong version id.
+          # PREVIEW_URL prefers an aliased URL (containing the fixed alias
+          # name) over the per-version hash URL, since both may be printed;
+          # falls back to whatever *.workers.dev URL is present either way.
           VERSION_ID=$(grep -oE 'Worker Version ID: [0-9a-f-]+' version_upload.log | awk '{print $NF}' | tail -1 || true)
-          PREVIEW_URL=$(grep -oE 'Version Preview URL: https://[A-Za-z0-9.-]+' version_upload.log | awk '{print $NF}' | tail -1 || true)
+          PREVIEW_URL=$(grep -oE 'https://pdfree-canary[A-Za-z0-9.-]*\.workers\.dev' version_upload.log | tail -1 || true)
+          if [ -z "$PREVIEW_URL" ]; then
+            PREVIEW_URL=$(grep -oE 'Version Preview URL: https://[A-Za-z0-9.-]+' version_upload.log | awk '{print $NF}' | tail -1 || true)
+          fi
 
           if [ -z "$VERSION_ID" ]; then
             echo "ERROR: could not parse a Worker Version ID out of wrangler's output above — refusing to proceed blind."
