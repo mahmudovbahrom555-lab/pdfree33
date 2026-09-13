@@ -9,13 +9,17 @@
 //  <script>
 //    PDFree.create({
 //      container: '#my-widget',
+//      tool: 'compress', // or 'rotate' | 'split' | 'watermark' | 'pagenum' |
+//                        // 'meta' | 'protect' | 'unlock' | 'merge'
 //      onComplete: (result) => console.log(result.filename, result.size),
 //    });
 //  </script>
 //
-//  Deliberately minimal: only `tool: 'compress'` exists today (no
-//  multi-tool checklist config — no dead code for tools that don't exist
-//  yet), no API key / auth (validation-phase MVP, see
+//  One embed/<tool>/index.html per tool (see each one's own header comment
+//  for whether its CSP needs cdnjs.cloudflare.com — some tools' UI modules
+//  call lazyLibs.js's loadPdfLib()/loadPdfJs() for their options panel and
+//  need it, some don't; verified per-tool, not assumed uniform). Still no
+//  API key / auth (validation-phase MVP, see
 //  /Users/murodjon/.claude/plans/crystalline-munching-galaxy.md).
 // ============================================================
 
