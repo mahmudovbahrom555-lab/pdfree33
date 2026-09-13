@@ -328,6 +328,9 @@ window.PDFREE_LOCALE = {
   org_blank_badge:        'leeg?',
   org_blank_badge_aria:   'Lijkt leeg',
   org_blank_suffix:       ' (lijkt leeg)',
+  org_add_blank_btn:      'Lege pagina hierna toevoegen',
+  org_blank_page_label:   'Lege pagina',
+  org_blank_page_suffix:  ' (lege pagina)',
 
   // ── resizeUI.js ──────────────────────────────────────────────
   rsz_loading: 'PDF laden…',

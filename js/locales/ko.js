@@ -330,6 +330,9 @@ window.PDFREE_LOCALE = {
   org_blank_badge:        '빈 페이지?',
   org_blank_badge_aria:   '빈 페이지로 보임',
   org_blank_suffix:       ' (빈 페이지로 보임)',
+  org_add_blank_btn:      '뒤에 빈 페이지 추가',
+  org_blank_page_label:   '빈 페이지',
+  org_blank_page_suffix:  ' (빈 페이지)',
 
   // ── resizeUI.js ──────────────────────────────────────────────
   rsz_loading: 'PDF 불러오는 중…',

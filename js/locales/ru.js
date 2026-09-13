@@ -329,6 +329,9 @@ window.PDFREE_LOCALE = {
   org_blank_badge:        'пусто?',
   org_blank_badge_aria:   'Похоже, пустая',
   org_blank_suffix:       ' (похоже, пустая)',
+  org_add_blank_btn:      'Добавить пустую страницу после',
+  org_blank_page_label:   'Пустая страница',
+  org_blank_page_suffix:  ' (пустая страница)',
 
   // ── resizeUI.js ──────────────────────────────────────────────
   rsz_loading: 'Загрузка PDF…',

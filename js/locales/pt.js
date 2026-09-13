@@ -328,6 +328,9 @@ window.PDFREE_LOCALE = {
   org_blank_badge:        'em branco?',
   org_blank_badge_aria:   'Parece em branco',
   org_blank_suffix:       ' (parece em branco)',
+  org_add_blank_btn:      'Adicionar página em branco depois',
+  org_blank_page_label:   'Página em branco',
+  org_blank_page_suffix:  ' (página em branco)',
 
   // ── resizeUI.js ──────────────────────────────────────────────
   rsz_loading: 'A carregar PDF…',

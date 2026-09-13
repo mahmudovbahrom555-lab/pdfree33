@@ -71,19 +71,69 @@ const _BLANK_INK_RATIO = 0.006;
 
 // ── State ──────────────────────────────────────────────────────
 let _pageCount        = 0;
-let _originalIndex    = []; // position → source page index
+let _originalIndex    = []; // position → source page index (meaningful only when _kind[pos]==='source')
+let _kind             = []; // position → 'source' | 'blank' — explicit, not a magic
+                             // originalIndex sentinel, so a stray unguarded
+                             // _initialRotations[origIdx]/_thumbnailURLs[origIdx]
+                             // lookup can't silently read undefined for a
+                             // blank position. Always read/write through the
+                             // isBlank()/getInitialRotation()/etc. helpers
+                             // below, never _kind directly, outside of them.
+let _blankSize        = []; // position → {width,height} | null — only set when
+                             // _kind[pos]==='blank'; a genuinely new blank page
+                             // has no source to read dimensions from, so the
+                             // UI captures them once at insert time instead
 let _deltas            = []; // position → rotation delta
 let _deletedFlags       = []; // position → 0|1
 let _initialRotations = []; // origIdx → rotation baked into source PDF
+let _initialSizes     = []; // origIdx → {width,height} — read once at load via
+                             // pdf-lib's own getSize(), reused as the default
+                             // size for a blank page inserted after that card
 let _thumbnailURLs    = []; // origIdx → objectURL | null
-let _blankFlags       = []; // origIdx → true|false|undefined (undefined = not yet rendered)
+let _blankFlags       = []; // origIdx → true|false|undefined (undefined = not yet rendered) —
+                             // "looks accidentally blank" ink-ratio detection on a REAL scanned
+                             // page, unrelated to _kind==='blank' (a deliberately inserted blank
+                             // page is never flagged by this — see isLikelyBlank())
 let _selected          = new Set(); // Set<position>
-let _prevSnapshot      = null; // {originalIndex, deltas, deletedFlags} — single-level undo
+let _prevSnapshot      = null; // {originalIndex, kind, blankSize, deltas, deletedFlags} — single-level undo
 let _useThumbs         = false;
 let _pdfJsDoc          = null;
 let _observer          = null;
 let _renderQueue       = [];
 let _activeRenders     = 0;
+
+// ── Position accessors ──────────────────────────────────────────
+// The only code allowed to read _kind/_originalIndex/_initialRotations/
+// _thumbnailURLs/_blankFlags directly — everything else goes through these,
+// so a blank position (no real origIdx to look anything up by) can never
+// produce a silent `undefined`/`NaN` from an unguarded array read.
+
+function isBlank(pos) {
+  return _kind[pos] === 'blank';
+}
+
+function getInitialRotation(pos) {
+  return isBlank(pos) ? 0 : _initialRotations[_originalIndex[pos]];
+}
+
+function getThumbnailUrl(pos) {
+  return isBlank(pos) ? null : _thumbnailURLs[_originalIndex[pos]];
+}
+
+// "Looks accidentally blank" (ink-ratio scan of a REAL scanned page) is a
+// distinct concept from _kind==='blank' (a page the user deliberately
+// inserted) — a deliberate blank is never flagged as an accident to review.
+function isLikelyBlank(pos) {
+  return isBlank(pos) ? false : !!_blankFlags[_originalIndex[pos]];
+}
+
+// The size a blank page inserted right after `pos` should use — a blank
+// position already carries its own recorded size (so duplicating/inserting
+// after an existing blank stays self-consistent); a source position reads
+// from _initialSizes, captured once at load via pdf-lib's own getSize().
+function pageSizeFor(pos) {
+  return isBlank(pos) ? _blankSize[pos] : _initialSizes[_originalIndex[pos]];
+}
 
 // ── Public API ─────────────────────────────────────────────────
 
@@ -91,8 +141,15 @@ export function getOrganizeParams() {
   const pageOrder = [];
   for (let pos = 0; pos < _originalIndex.length; pos++) {
     if (_deletedFlags[pos]) continue;
+    if (isBlank(pos)) {
+      const size = _blankSize[pos] || { width: 612, height: 792 }; // Letter fallback — only
+        // reachable if a blank's size was somehow never captured, shouldn't happen in practice
+      pageOrder.push({ kind: 'blank', width: size.width, height: size.height, rotation: 0 });
+      continue;
+    }
     const idx = _originalIndex[pos];
     pageOrder.push({
+      kind: 'source',
       originalIndex: idx,
       rotation: ((_initialRotations[idx] + _deltas[pos]) % 360 + 360) % 360,
     });
@@ -121,8 +178,14 @@ export async function initOrganizeOptions(file) {
       const r = p.getRotation();
       return r ? ((r.angle % 360) + 360) % 360 : 0;
     });
+    // Captured once, synchronously, from the same pdf-lib doc/pages already
+    // loaded for rotation above — the default size a blank page inserted
+    // after this card uses (Add Blank Page feature; see pageSizeFor()).
+    _initialSizes = pages.map(p => p.getSize());
 
     _originalIndex = Array.from({ length: _pageCount }, (_, i) => i);
+    _kind          = new Array(_pageCount).fill('source');
+    _blankSize     = new Array(_pageCount).fill(null);
     _deltas        = new Array(_pageCount).fill(0);
     _deletedFlags  = new Array(_pageCount).fill(0);
     _thumbnailURLs = new Array(_pageCount).fill(null);
@@ -161,9 +224,12 @@ export function hideOrganizeOptions() {
   container.innerHTML = '';
   _pageCount = 0;
   _originalIndex = [];
+  _kind = [];
+  _blankSize = [];
   _deltas = [];
   _deletedFlags = [];
   _initialRotations = [];
+  _initialSizes = [];
   _selected = new Set();
   _prevSnapshot = null;
   _useThumbs = false;
@@ -196,6 +262,7 @@ function _setupLazyThumbs() {
 
   id('orgGrid')?.querySelectorAll('[data-orig]').forEach(el => {
     const origIdx = parseInt(el.dataset.orig, 10);
+    if (origIdx === -1) return; // blank page — no source content to render a thumbnail from
     if (!_thumbnailURLs[origIdx]) _observer.observe(el);
   });
 }
@@ -235,8 +302,15 @@ async function _renderThumb(origIdx) {
     _thumbnailURLs[origIdx] = URL.createObjectURL(blob);
     page.cleanup?.();
 
-    const pos = _originalIndex.indexOf(origIdx);
-    if (pos !== -1) _updateCard(pos); // content-only — safe, doesn't touch drag listeners
+    // Real bug fixed here: Duplicate Page can put the same origIdx at more
+    // than one position, but a plain _originalIndex.indexOf(origIdx) only
+    // ever finds the FIRST one — any later duplicate of a page whose
+    // thumbnail hadn't rendered yet would stay on a stale placeholder
+    // forever once this render completed, since nothing else ever revisits
+    // an already-resolved origIdx. Update every position that maps to it.
+    for (let pos = 0; pos < _originalIndex.length; pos++) {
+      if (!isBlank(pos) && _originalIndex[pos] === origIdx) _updateCard(pos); // content-only — safe, doesn't touch drag listeners
+    }
   } catch { /* leave placeholder — cosmetic only */ }
 }
 
@@ -317,58 +391,85 @@ function _renderGrid() {
 }
 
 function _thumbInnerHTML(pos) {
-  const origIdx = _originalIndex[pos];
-  const delta   = _deltas[pos];
   const deleted = !!_deletedFlags[pos];
-  const visual  = ((_initialRotations[origIdx] + delta) % 360 + 360) % 360;
+  const blank   = isBlank(pos);
+  // Blank pages don't support rotation in v1 (scope cut — nobody rotates an
+  // intentionally-empty page yet, and it sidesteps ever needing a rotation
+  // badge on a card with no real source content to rotate) — delta stays 0
+  // for the lifetime of a blank position, so `changed` is always false here.
+  const delta   = blank ? 0 : _deltas[pos];
+  const visual  = ((getInitialRotation(pos) + delta) % 360 + 360) % 360;
   const changed = delta !== 0;
-  const blank   = !!_blankFlags[origIdx];
 
   const badgeHTML = (!deleted && changed)
     ? `<span class="rot-badge" aria-label="${t('rot_badge_aria', { delta })}">${delta > 0 ? '+' : ''}${delta}°</span>`
     : '';
-  const blankBadgeHTML = (!deleted && blank)
+  // "Looks accidentally blank" only ever applies to a real scanned page —
+  // see isLikelyBlank()'s own comment for why a deliberately-inserted blank
+  // is never flagged here.
+  const blankBadgeHTML = (!deleted && isLikelyBlank(pos))
     ? `<span class="org-blank-badge" aria-label="${t('org_blank_badge_aria')}">${t('org_blank_badge')}</span>`
     : '';
-  const actionBtnHTML = deleted
+
+  // All 3 actions live in one small cluster (not scattered to separate
+  // corners) specifically so they never visually collide with the rotation
+  // badge (top-right) or the likely-blank badge (bottom-left) above, which
+  // only render conditionally — an action button can't be allowed to
+  // sometimes overlap a badge depending on that card's state.
+  const restoreOrDeleteHTML = deleted
     ? `<button type="button" class="org-card__action org-card__action--restore" data-act="restore" aria-label="${esc(t('org_restore_btn'))}">↺</button>`
     : `<button type="button" class="org-card__action org-card__action--delete" data-act="delete" aria-label="${esc(t('org_delete_btn'))}">×</button>`;
-  // Duplicating a deleted card is ambiguous (duplicate the hidden page, or
-  // restore-then-duplicate?) — simplest, least-surprising rule: hide it
-  // alongside delete/restore's own state so a deleted card only ever shows
-  // one action (restore) at a time, same as before this feature existed.
-  const dupBtnHTML = !deleted
+  // Duplicating/inserting-after a deleted card is ambiguous (act on the
+  // hidden page, or restore-then-act?) — simplest, least-surprising rule:
+  // hide both alongside delete/restore's own state, same one-action-at-a-
+  // time rule that already applied before this feature existed.
+  const dupHTML = !deleted
     ? `<button type="button" class="org-card__action org-card__action--dup" data-act="duplicate" aria-label="${esc(t('org_duplicate_btn'))}">⧉</button>`
     : '';
+  const addBlankHTML = !deleted
+    ? `<button type="button" class="org-card__action org-card__action--addblank" data-act="add-blank" aria-label="${esc(t('org_add_blank_btn'))}">⊞</button>`
+    : '';
+  const actionsHTML = `<div class="org-card__actions">${restoreOrDeleteHTML}${dupHTML}${addBlankHTML}</div>`;
+
+  if (blank) {
+    // Deliberately NOT a plain white box — has to read as "intentionally
+    // inserted" at a glance, distinct from both an unrendered thumbnail
+    // placeholder (no border) and a genuinely blank real PDF page (solid
+    // white, no label) that _blankBadgeHTML already flags separately.
+    return `<div class="org-blank-page" aria-hidden="true">${t('org_blank_page_label')}</div>${actionsHTML}`;
+  }
 
   if (_useThumbs) {
-    const url = _thumbnailURLs[origIdx];
+    const url = getThumbnailUrl(pos);
     const img = url
       ? `<img src="${esc(url)}" alt="${t('org_page_alt', { n: pos + 1 })}" style="transform:rotate(${visual}deg)" loading="lazy">`
       : '';
-    return `${img}${badgeHTML}${blankBadgeHTML}${dupBtnHTML}${actionBtnHTML}`;
+    return `${img}${badgeHTML}${blankBadgeHTML}${actionsHTML}`;
   }
-  return `<span class="rot-numbox__n" style="transform:rotate(${visual}deg)">${pos + 1}</span>${badgeHTML}${blankBadgeHTML}${dupBtnHTML}${actionBtnHTML}`;
+  return `<span class="rot-numbox__n" style="transform:rotate(${visual}deg)">${pos + 1}</span>${badgeHTML}${blankBadgeHTML}${actionsHTML}`;
 }
 
 function _ariaLabelFor(pos) {
-  const origIdx  = _originalIndex[pos];
   const deleted  = !!_deletedFlags[pos];
   const selected = _selected.has(pos);
-  const delta    = _deltas[pos];
+  const delta    = isBlank(pos) ? 0 : _deltas[pos];
   const changed  = delta !== 0;
-  const blank    = !!_blankFlags[origIdx];
   return t('org_page_aria', { n: pos + 1 })
+    + (isBlank(pos) ? t('org_blank_page_suffix') : '')
     + (deleted  ? t('org_deleted_suffix')   : '')
     + (selected ? t('rot_selected_suffix')  : '')
     + (changed  ? t('rot_rotated_suffix', { delta }) : '')
-    + (!deleted && blank ? t('org_blank_suffix') : '');
+    + (!deleted && isLikelyBlank(pos) ? t('org_blank_suffix') : '');
 }
 
 function _cardHTML(pos) {
-  const origIdx  = _originalIndex[pos];
+  // origIdx is meaningless for a blank position (see isBlank()'s own
+  // header comment) — data-orig only feeds dragReorder.js's own generic
+  // itemSelector/data-i wiring and this file's own e2e-test introspection,
+  // neither of which reads it for a blank card, so -1 is a safe, honest value.
+  const origIdx  = isBlank(pos) ? -1 : _originalIndex[pos];
   const selected = _selected.has(pos);
-  const changed  = _deltas[pos] !== 0;
+  const changed  = !isBlank(pos) && _deltas[pos] !== 0;
   const deleted  = !!_deletedFlags[pos];
 
   const selClass  = selected ? ' rot-card--selected' : '';
@@ -418,6 +519,7 @@ function _bindEvents() {
       if (actBtn.dataset.act === 'delete')          _deletePage(pos);
       else if (actBtn.dataset.act === 'restore')    _restorePage(pos);
       else if (actBtn.dataset.act === 'duplicate')  _duplicatePage(pos);
+      else if (actBtn.dataset.act === 'add-blank')  _addBlankPageAfter(pos);
       return;
     }
 
@@ -448,7 +550,7 @@ function _bindDrag() {
   bindDragReorder({
     container:    grid,
     itemSelector: '.org-card',
-    arrays:       [_originalIndex, _deltas, _deletedFlags],
+    arrays:       [_originalIndex, _kind, _blankSize, _deltas, _deletedFlags],
     onReorder:    () => { _selected.clear(); _refreshAllCards(); _updateSubmitBtn(); },
     isLocked:     isFilesLocked,
     mode:         'grid',
@@ -461,6 +563,8 @@ function _bindDrag() {
 function _snapshotForUndo() {
   _prevSnapshot = {
     originalIndex: [..._originalIndex],
+    kind:          [..._kind],
+    blankSize:     [..._blankSize],
     deltas:        [..._deltas],
     deletedFlags:  [..._deletedFlags],
   };
@@ -469,7 +573,11 @@ function _snapshotForUndo() {
 function _applyRotation(angle) {
   if (_selected.size === 0) { showToast(t('rot_select_first')); return; }
   _snapshotForUndo();
+  // Blank pages don't support rotation in v1 (see _thumbInnerHTML's own
+  // comment) — silently skip them within a mixed selection rather than
+  // rotating something with no visual effect or erroring the whole action.
   for (const pos of _selected) {
+    if (isBlank(pos)) continue;
     _deltas[pos] = ((_deltas[pos] + angle) % 360 + 360) % 360;
   }
   // See _BULK_UPDATE_THRESHOLD above.
@@ -513,23 +621,45 @@ function _shiftSelectedFrom(insertPos) {
   _selected = shifted;
 }
 
-// Duplicates whatever is AT `pos` — copies _originalIndex as-is (the
-// worker's copyPages() already accepts the same source index appearing
-// more than once in `pageOrder`, see organizeWorker.js's own comment), plus
-// its current rotation delta. Deliberately generic: works identically
-// whether `pos` is a normal page or (once Add Blank Page ships) a blank
-// sentinel, since it never inspects what kind of page it is — just copies
-// the row. Never deleted, regardless of whether the source was — see the
-// dupBtnHTML guard in _thumbInnerHTML for why a deleted card can't trigger
-// this in the first place.
+// Duplicates whatever is AT `pos` — copies _originalIndex/_kind/_blankSize
+// as-is (the worker's copyPages() already accepts the same source index
+// appearing more than once in `pageOrder`, see organizeWorker.js's own
+// comment), plus its current rotation delta. Deliberately generic: works
+// identically whether `pos` is a normal page or a blank sentinel, since it
+// never inspects what kind of page it is — just copies the row. Never
+// deleted, regardless of whether the source was — see the dupHTML guard in
+// _thumbInnerHTML for why a deleted card can't trigger this in the first place.
 function _duplicatePage(pos) {
   _snapshotForUndo();
   const insertPos = pos + 1;
   _originalIndex.splice(insertPos, 0, _originalIndex[pos]);
+  _kind.splice(insertPos, 0, _kind[pos]);
+  _blankSize.splice(insertPos, 0, _blankSize[pos]);
   _deltas.splice(insertPos, 0, _deltas[pos]);
   _deletedFlags.splice(insertPos, 0, 0);
   _shiftSelectedFrom(insertPos);
   _refreshAllCards(); // page count changed — full rebuild, not a content-only update
+  _updateHint();
+  _updateHistoryButtons();
+  _updateSubmitBtn();
+}
+
+// Inserts a genuinely blank page right after `pos`. Size defaults to
+// whatever `pos` itself would use (pageSizeFor handles both a real source
+// page and an existing blank page transparently) — the useful default for
+// the common "insert a divider between two differently-sized scanned
+// sections" case, since it stays close to its neighbor's size rather than
+// some fixed global default.
+function _addBlankPageAfter(pos) {
+  _snapshotForUndo();
+  const insertPos = pos + 1;
+  _originalIndex.splice(insertPos, 0, -1); // never read for a blank position — see isBlank()
+  _kind.splice(insertPos, 0, 'blank');
+  _blankSize.splice(insertPos, 0, pageSizeFor(pos));
+  _deltas.splice(insertPos, 0, 0);
+  _deletedFlags.splice(insertPos, 0, 0);
+  _shiftSelectedFrom(insertPos);
+  _refreshAllCards();
   _updateHint();
   _updateHistoryButtons();
   _updateSubmitBtn();
@@ -571,7 +701,7 @@ async function _quickSelect(mode) {
     if (mode === 'all')                        _selected.add(pos);
     else if (mode === 'odd'  && pos % 2 === 0)  _selected.add(pos); // page 1,3,5… = position 0,2,4
     else if (mode === 'even' && pos % 2 === 1)  _selected.add(pos);
-    else if (mode === 'blank' && _blankFlags[_originalIndex[pos]]) _selected.add(pos);
+    else if (mode === 'blank' && isLikelyBlank(pos)) _selected.add(pos);
     // 'none' — already cleared
   }
   if (mode === 'blank' && _selected.size === 0) showToast(t('org_select_blank_none'));
@@ -615,6 +745,8 @@ async function _ensureBlankFlagsComputed() {
 function _undo() {
   if (!_prevSnapshot) return;
   _originalIndex.splice(0, _originalIndex.length, ..._prevSnapshot.originalIndex);
+  _kind.splice(0, _kind.length, ..._prevSnapshot.kind);
+  _blankSize.splice(0, _blankSize.length, ..._prevSnapshot.blankSize);
   _deltas.splice(0, _deltas.length, ..._prevSnapshot.deltas);
   _deletedFlags.splice(0, _deletedFlags.length, ..._prevSnapshot.deletedFlags);
   _prevSnapshot = null;
@@ -627,6 +759,8 @@ function _undo() {
 function _reset() {
   _snapshotForUndo();
   _originalIndex.splice(0, _originalIndex.length, ...Array.from({ length: _pageCount }, (_, i) => i));
+  _kind.splice(0, _kind.length, ...new Array(_pageCount).fill('source'));
+  _blankSize.splice(0, _blankSize.length, ...new Array(_pageCount).fill(null));
   _deltas.splice(0, _deltas.length, ...new Array(_pageCount).fill(0));
   _deletedFlags.splice(0, _deletedFlags.length, ...new Array(_pageCount).fill(0));
   _selected.clear();

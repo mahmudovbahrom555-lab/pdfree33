@@ -2480,13 +2480,23 @@ button,
   filter: grayscale(1);
 }
 
-/* Delete/restore — opposite corner from .rot-badge (top-right) to avoid collision */
-.org-card__action {
+/* All 3 actions (delete/restore, duplicate, add-blank-after) live in one
+   top-left cluster, not scattered to separate corners — top-right is
+   .rot-badge (rotation angle) and bottom-left is .org-blank-badge, both of
+   which only render conditionally, so an action button can never be
+   allowed to sometimes collide with one depending on that card's state. */
+.org-card__actions {
   position: absolute;
   top: 4px;
   left: 4px;
+  display: flex;
+  gap: 4px;
+  z-index: 2;
+}
+.org-card__action {
   width: 24px; /* was 20px — below WCAG 2.5.8's 24px tap-target minimum */
   height: 24px;
+  flex-shrink: 0;
   border: none;
   border-radius: 50%;
   font-size: 12px;
@@ -2502,18 +2512,30 @@ button,
 .org-card__action--delete:hover  { background: #fee2e2; color: #dc2626; }
 .org-card__action--restore       { background: var(--green-light); color: var(--green-dark); }
 .org-card__action--restore:hover { background: var(--green); color: #fff; }
+.org-card__action--dup:hover      { background: var(--yellow-light); color: var(--yellow-text); }
+.org-card__action--addblank:hover { background: var(--green-light); color: var(--green-dark); }
 
-/* Duplicate — bottom-right, the one corner still free: top-left is
-   delete/restore, top-right is .rot-badge (rotation angle), bottom-left is
-   .org-blank-badge. */
-.org-card__action--dup {
-  top: auto;
-  left: auto;
-  bottom: 4px;
-  right: 4px;
-  font-size: 13px;
+/* Add Blank Page's card visual — deliberately NOT a plain white box: a
+   dashed border + label so it reads as "intentionally inserted" at a
+   glance, distinct from both an unrendered thumbnail placeholder (flat
+   .rot-thumb background, no border, no text) and a genuinely blank real
+   scanned page (a real <img>, solid, no dashed border — flagged separately
+   by .org-blank-badge if it looks unintentionally empty). */
+.org-blank-page {
+  width: 82%;
+  height: 82%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed var(--border-strong);
+  border-radius: 4px;
+  background: var(--surface);
+  color: var(--text2);
+  font-size: 11px;
+  text-align: center;
+  padding: 6px;
+  box-sizing: border-box;
 }
-.org-card__action--dup:hover { background: var(--yellow-light); color: var(--yellow-text); }
 
 .org-delete-sel-btn { color: #dc2626; }
 

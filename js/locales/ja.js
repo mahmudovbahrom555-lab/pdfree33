@@ -331,6 +331,9 @@ window.PDFREE_LOCALE = {
   org_blank_badge:        '空白?',
   org_blank_badge_aria:   '空白のようです',
   org_blank_suffix:       '（空白のようです）',
+  org_add_blank_btn:      '後に空白ページを追加',
+  org_blank_page_label:   '空白ページ',
+  org_blank_page_suffix:  '（空白ページ）',
 
   // ── resizeUI.js ──────────────────────────────────────────────
   rsz_loading: 'PDFを読み込んでいます…',

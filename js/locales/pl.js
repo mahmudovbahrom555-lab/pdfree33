@@ -328,6 +328,9 @@ window.PDFREE_LOCALE = {
   org_blank_badge:        'pusta?',
   org_blank_badge_aria:   'Wygląda na pustą',
   org_blank_suffix:       ' (wygląda na pustą)',
+  org_add_blank_btn:      'Dodaj pustą stronę po tej',
+  org_blank_page_label:   'Pusta strona',
+  org_blank_page_suffix:  ' (pusta strona)',
 
   // ── resizeUI.js ──────────────────────────────────────────────
   rsz_loading: 'Wczytywanie PDF…',

@@ -328,6 +328,9 @@ window.PDFREE_LOCALE = {
   org_blank_badge:        'boş mu?',
   org_blank_badge_aria:   'Boş görünüyor',
   org_blank_suffix:       ' (boş görünüyor)',
+  org_add_blank_btn:      'Sonrasına boş sayfa ekle',
+  org_blank_page_label:   'Boş sayfa',
+  org_blank_page_suffix:  ' (boş sayfa)',
 
   // ── resizeUI.js ──────────────────────────────────────────────
   rsz_loading: 'PDF yükleniyor…',

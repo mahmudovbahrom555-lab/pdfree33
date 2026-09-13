@@ -310,6 +310,9 @@ export const EN = {
   org_blank_badge:       'blank?',
   org_blank_badge_aria:  'Looks blank',
   org_blank_suffix:      ' (looks blank)',
+  org_add_blank_btn:     'Add blank page after',
+  org_blank_page_label:  'Blank page',
+  org_blank_page_suffix: ' (blank page)',
 
   // ── resizeUI.js ──────────────────────────────────────────────
   rsz_loading:           'Loading PDF…',

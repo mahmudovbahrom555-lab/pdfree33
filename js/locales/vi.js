@@ -329,6 +329,9 @@ window.PDFREE_LOCALE = {
   org_blank_badge:        'trống?',
   org_blank_badge_aria:   'Có vẻ trống',
   org_blank_suffix:       ' (có vẻ trống)',
+  org_add_blank_btn:      'Thêm trang trống sau trang này',
+  org_blank_page_label:   'Trang trống',
+  org_blank_page_suffix:  ' (trang trống)',
 
   // ── resizeUI.js ──────────────────────────────────────────────
   rsz_loading: 'Đang tải PDF…',

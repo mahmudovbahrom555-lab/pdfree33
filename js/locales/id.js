@@ -329,6 +329,9 @@ window.PDFREE_LOCALE = {
   org_blank_badge:        'kosong?',
   org_blank_badge_aria:   'Tampak kosong',
   org_blank_suffix:       ' (tampak kosong)',
+  org_add_blank_btn:      'Tambah halaman kosong setelah ini',
+  org_blank_page_label:   'Halaman kosong',
+  org_blank_page_suffix:  ' (halaman kosong)',
 
   // ── resizeUI.js ──────────────────────────────────────────────
   rsz_loading: 'Memuat PDF…',

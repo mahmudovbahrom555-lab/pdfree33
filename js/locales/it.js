@@ -328,6 +328,9 @@ window.PDFREE_LOCALE = {
   org_blank_badge:        'vuota?',
   org_blank_badge_aria:   'Sembra vuota',
   org_blank_suffix:       ' (sembra vuota)',
+  org_add_blank_btn:      'Aggiungi pagina vuota dopo',
+  org_blank_page_label:   'Pagina vuota',
+  org_blank_page_suffix:  ' (pagina vuota)',
 
   // ── resizeUI.js ──────────────────────────────────────────────
   rsz_loading: 'Caricamento PDF…',

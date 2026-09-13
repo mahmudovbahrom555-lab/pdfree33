@@ -329,6 +329,9 @@ window.PDFREE_LOCALE = {
   org_blank_badge:        'leer?',
   org_blank_badge_aria:   'Wirkt leer',
   org_blank_suffix:       ' (wirkt leer)',
+  org_add_blank_btn:      'Leere Seite danach einfügen',
+  org_blank_page_label:   'Leere Seite',
+  org_blank_page_suffix:  ' (leere Seite)',
 
   // ── resizeUI.js ──────────────────────────────────────────────
   rsz_loading: 'PDF wird geladen…',

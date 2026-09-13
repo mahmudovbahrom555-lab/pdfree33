@@ -11,7 +11,10 @@
 //
 //  Message contract (mirrors js/worker.js's handlers, so processor.js
 //  can reuse the same progress/done/error handling shape):
-//    in  → { file: ArrayBuffer, options: { pageOrder: [{originalIndex, rotation}] } }
+//    in  → { file: ArrayBuffer, options: { pageOrder: [
+//              { kind: 'source', originalIndex, rotation } |
+//              { kind: 'blank', width, height, rotation: 0 }
+//            ] } }
 //    out → { type: 'progress', value, label } | { type: 'done', result, pageCount } | { type: 'error', message }
 //
 //  pageOrder's array ORDER is the output page order; a page simply
@@ -19,6 +22,9 @@
 //  needed on the wire. `rotation` is the final absolute angle
 //  (0/90/180/270), already resolved client-side (initial doc rotation
 //  + user delta), same convention rotateUI.js's getRotateParams() uses.
+//  A 'blank' entry has no source page at all (Add Blank Page feature) —
+//  width/height are resolved client-side too (organizeUI.js's pageSizeFor()),
+//  never guessed here.
 // ============================================================
 
 importScripts('./vendor/pdf-lib.min.js');
@@ -43,10 +49,9 @@ async function handleOrganize(fileBuffer, options) {
   const srcDoc = await PDFDocument.load(fileBuffer, { ignoreEncryption: true });
   const pageCount = srcDoc.getPageCount();
 
-  const indices = pageOrder
-    .map(p => p.originalIndex)
-    .filter(i => Number.isInteger(i) && i >= 0 && i < pageCount);
-  if (indices.length === 0) throw new Error('No pages to keep');
+  const validEntries = pageOrder.filter(p => p.kind === 'blank'
+    || (p.kind === 'source' && Number.isInteger(p.originalIndex) && p.originalIndex >= 0 && p.originalIndex < pageCount));
+  if (validEntries.length === 0) throw new Error('No pages to keep');
 
   // copyPages() only copies each page's own /Resources dict — fonts/images
   // that live at an inherited /Pages tree node come out blank without this.
@@ -55,21 +60,44 @@ async function handleOrganize(fileBuffer, options) {
   _flattenPageTreeResources(srcDoc);
 
   progress(40, 'Reordering pages…');
-  const outDoc  = await PDFDocument.create();
-  const copied  = await outDoc.copyPages(srcDoc, indices); // accepts ANY order/duplication in `indices`
-  copied.forEach((page, i) => {
-    outDoc.addPage(page);
-    const angle = pageOrder[i]?.rotation ?? 0;
+  const outDoc = await PDFDocument.create();
+
+  // Batch-copy every SOURCE entry, in the order it appears, INCLUDING
+  // repeats — copyPages() gives each occurrence in `sourceIndices` its own
+  // distinct copied object even when the same index appears more than once
+  // (this is exactly what already made Duplicate Page work with zero worker
+  // changes), so this must stay every real occurrence, never de-duplicated
+  // down to unique indices first.
+  const sourceIndices = validEntries.filter(p => p.kind === 'source').map(p => p.originalIndex);
+  const copiedSourcePages = sourceIndices.length > 0
+    ? await outDoc.copyPages(srcDoc, sourceIndices)
+    : [];
+
+  // Walk the requested order once, interleaving copied source pages with
+  // freshly-created blank ones (Add Blank Page) exactly where each was
+  // asked for — `nextCopied` advances only on 'source' entries, so a
+  // 'blank' entry never consumes one of the copied pages meant for a
+  // later source entry.
+  let nextCopied = 0;
+  for (const entry of validEntries) {
+    let page;
+    if (entry.kind === 'blank') {
+      page = outDoc.addPage([entry.width > 0 ? entry.width : 612, entry.height > 0 ? entry.height : 792]);
+    } else {
+      page = copiedSourcePages[nextCopied++];
+      outDoc.addPage(page);
+    }
+    const angle = entry.rotation ?? 0;
     if (angle !== 0) {
       const canonical = ((angle % 360) + 360) % 360;
       page.setRotation(degrees(canonical));
     }
-  });
+  }
 
   progress(85, 'Saving…');
   const bytes = await outDoc.save();
   self.postMessage(
-    { type: 'done', result: bytes.buffer, pageCount: copied.length },
+    { type: 'done', result: bytes.buffer, pageCount: validEntries.length },
     [bytes.buffer]
   );
 }
