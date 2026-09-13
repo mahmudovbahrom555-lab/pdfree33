@@ -117,6 +117,52 @@ test('round-trip: serialize then parse', () => {
 });
 
 // ══════════════════════════════════════════════════════════════
+// Curated-subset detection (copy of _looksLikeCuratedSubset from
+// extractUI.js) — added after real Analytics Engine data showed an
+// elevated Split quick-retry rate, and a real user's screenshot showed
+// why: typing a scattered range like "1-5, 9, 13" while "Separate files"
+// sat pre-selected produced a ZIP of 7 single-page PDFs, not the one
+// combined document that selection pattern actually suggests. Used to
+// auto-nudge the mode default (never override an explicit user choice —
+// see extractUI.js's own _modeTouched flag for that half, not testable
+// here without a DOM).
+// ══════════════════════════════════════════════════════════════
+
+function looksLikeCuratedSubset(pages) {
+  if (pages.length < 2) return false;
+  const sorted = [...pages].sort((a, b) => a - b);
+  for (let i = 1; i < sorted.length; i++) {
+    if (sorted[i] - sorted[i - 1] > 1) return true;
+  }
+  return false;
+}
+
+test('single page is never a curated subset', () => {
+  expect(looksLikeCuratedSubset([5])).toBeFalsy();
+});
+test('empty selection is never a curated subset', () => {
+  expect(looksLikeCuratedSubset([])).toBeFalsy();
+});
+test('a plain contiguous range is NOT a curated subset', () => {
+  expect(looksLikeCuratedSubset([1,2,3,4,5])).toBeFalsy();
+});
+test('"select all" (full contiguous run) is NOT a curated subset', () => {
+  expect(looksLikeCuratedSubset([1,2,3,4,5,6,7,8,9,10,11,12,13])).toBeFalsy();
+});
+test('a scattered range WITH gaps IS a curated subset (the real screenshot case)', () => {
+  expect(looksLikeCuratedSubset([1,2,3,4,5,9,13])).toBeTruthy();
+});
+test('two non-adjacent pages IS a curated subset', () => {
+  expect(looksLikeCuratedSubset([2, 9])).toBeTruthy();
+});
+test('unsorted input is still detected correctly (function sorts internally)', () => {
+  expect(looksLikeCuratedSubset([13, 1, 9, 2, 3, 4, 5])).toBeTruthy();
+});
+test('two adjacent pages is NOT a curated subset', () => {
+  expect(looksLikeCuratedSubset([4, 5])).toBeFalsy();
+});
+
+// ══════════════════════════════════════════════════════════════
 // Page number formatters (copy from pageNumUI.js / worker.js)
 // ══════════════════════════════════════════════════════════════
 

@@ -29,6 +29,10 @@ const MAX_PAGES        = 20000;
 let _pageCount     = 0;
 let _selectedPages = new Set();
 let _mode          = 'single';
+let _modeTouched   = false;   // true once the user picks a mode themselves —
+                               // an auto-suggested default should never
+                               // override an explicit choice, only the
+                               // other way around
 let _reverse       = false;
 let _thumbPage     = 0;       // 0-based current thumbnail page
 let _pdfDoc        = null;
@@ -54,6 +58,7 @@ export async function initExtractOptions(file, defaultMode = 'single') {
   _pageCount     = 0;
   _selectedPages = new Set();
   _mode          = defaultMode;
+  _modeTouched   = false;
   _reverse       = false;
   _thumbPage     = 0;
   _thumbsCache   = new Map();
@@ -192,7 +197,8 @@ function _panelHTML() {
 function _bindEvents() {
   _container.querySelectorAll('input[name="extMode"]').forEach(r => {
     r.addEventListener('change', e => {
-      _mode = e.target.value;
+      _mode        = e.target.value;
+      _modeTouched = true;
       _container.querySelectorAll('.ext-mode').forEach(el => {
         el.classList.toggle('ext-mode--active', el.querySelector('input').value === _mode);
       });
@@ -317,6 +323,7 @@ function _togglePage(p) {
     ?.classList.toggle('ext-thumb-card--sel', _selectedPages.has(p));
   _updateSelCount();
   _updateRangeInput();
+  _maybeSuggestSingleMode();
 }
 
 function _refreshThumbSelections() {
@@ -339,12 +346,46 @@ function _updateRangeInput() {
 
 // ── Presets & range ───────────────────────────────────────────
 
+// True when the sorted selection skips at least one page in between two
+// selected ones (e.g. "1-5, 9, 13") — a strong signal the user is curating
+// a specific subset to keep together, as opposed to a plain contiguous
+// range or "select all", which reads more like "break this whole thing up".
+function _looksLikeCuratedSubset(pages) {
+  if (pages.length < 2) return false;
+  const sorted = [...pages].sort((a, b) => a - b);
+  for (let i = 1; i < sorted.length; i++) {
+    if (sorted[i] - sorted[i - 1] > 1) return true;
+  }
+  return false;
+}
+
+function _syncModeRadios() {
+  _container?.querySelectorAll('input[name="extMode"]').forEach(r => { r.checked = r.value === _mode; });
+  _container?.querySelectorAll('.ext-mode').forEach(el => {
+    el.classList.toggle('ext-mode--active', el.querySelector('input').value === _mode);
+  });
+}
+
+// Found via real Analytics Engine data (elevated Split quick-retry rate)
+// plus a real user-shared screenshot: entering a scattered range like
+// "1-5, 9, 13" while "Separate files" sat pre-selected produced a ZIP of
+// 7 single-page PDFs, not the one combined document that selection pattern
+// actually suggested. Only nudges the default — never overrides a mode the
+// user already picked themselves (_modeTouched).
+function _maybeSuggestSingleMode() {
+  if (_modeTouched || _mode !== 'separate') return;
+  if (!_looksLikeCuratedSubset([..._selectedPages])) return;
+  _mode = 'single';
+  _syncModeRadios();
+}
+
 function _applyRange() {
   const inp = document.getElementById('extRangeInput');
   if (!inp) return;
   _selectedPages = new Set(parseRange(inp.value, _pageCount));
   _refreshThumbSelections();
   _updateSelCount();
+  _maybeSuggestSingleMode();
 }
 
 function _applyPreset(preset) {
