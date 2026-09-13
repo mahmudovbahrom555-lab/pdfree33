@@ -285,7 +285,7 @@ export async function doProcess(currentTool, extraParams = {}) {
   // Adding a new tool that uses an existing runner: only toolRegistrations.js.
   const runnerMap = {
     merge:    () => _runMerge(filesSnapshot, extraParams),
-    split:    () => _runSplit(filesSnapshot, extraParams),
+    split:    () => _runSplit(filesSnapshot, extraParams, currentTool),
     compress: () => _runCompress(filesSnapshot, extraParams, currentTool),
     jpg2pdf:  () => _runJpg2Pdf(filesSnapshot, extraParams),
     pdf2jpg:  () => _runPdf2Jpg(filesSnapshot, extraParams),
@@ -464,7 +464,18 @@ async function _runMerge(filesSnapshot, { removeWatermarks = false, outputFilena
 
 // ── Split ──────────────────────────────────────────────────────
 
-async function _runSplit(filesSnapshot, { pages, mode, removeWatermarks = false } = {}) {
+// toolKey defaults to 'split' but is the ACTUAL registered tool that invoked
+// this shared runner ('split' or 'extract' — both map to runner:'split' in
+// toolRegistrations.js) — same real bug class already fixed once for
+// _runCompress's own 'compress'/'compress-email' split (see its own toolKey
+// param): every dispatched event below used to hardcode the literal string
+// 'split' regardless of which tool actually ran, silently misattributing
+// every Extract success/error into Split's own analytics numbers instead of
+// Extract's. Found via a real Analytics Engine query showing Extract's
+// 'Tool Success' count at exactly zero despite real File Added/Retry
+// Conversion activity — the completions were happening, just counted as
+// 'split' the entire time.
+async function _runSplit(filesSnapshot, { pages, mode, removeWatermarks = false } = {}, toolKey = 'split') {
   if (!_checkSize(filesSnapshot[0], 200)) { _abortUI(); return; }
   const _sf = filesSnapshot[0];
   const buffer = _sf._decryptedBuffer ? _sf._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await _sf.arrayBuffer());
@@ -489,7 +500,7 @@ async function _runSplit(filesSnapshot, { pages, mode, removeWatermarks = false 
 
         if (data.mode === 'single') {
           if (!(data.result instanceof ArrayBuffer)) {
-            _handleError('split', 'Unexpected result type from worker'); return;
+            _handleError(toolKey, 'Unexpected result type from worker'); return;
           }
           // Один PDF
           blob     = new Blob([data.result], { type: 'application/pdf' });
@@ -497,7 +508,7 @@ async function _runSplit(filesSnapshot, { pages, mode, removeWatermarks = false 
           filename = 'extracted.pdf';
         } else {
           if (!Array.isArray(data.result)) {
-            _handleError('split', 'Unexpected result type from worker'); return;
+            _handleError(toolKey, 'Unexpected result type from worker'); return;
           }
           // Несколько PDF → ZIP через JSZip
           await loadJSZip();
@@ -525,26 +536,26 @@ async function _runSplit(filesSnapshot, { pages, mode, removeWatermarks = false 
         hideCancelBtn();
         setProgress(100, t('prog_done'));
         document.dispatchEvent(new CustomEvent('pdfree:success', {
-          detail: { tool: 'split', blob, desc, filename }
+          detail: { tool: toolKey, blob, desc, filename }
         }));
       } catch (err) {
         isProcessing = false;
         setFilesLocked(false);
         hideCancelBtn();
-        _handleError('split', err.message);
+        _handleError(toolKey, err.message);
       }
     } else if (data.type === 'error') {
       isProcessing = false;
       setFilesLocked(false);
       hideCancelBtn();
-      _handleError('split', data.message);
+      _handleError(toolKey, data.message);
     }
   };
   _worker.onerror = (e) => {
     isProcessing = false;
     setFilesLocked(false);
     hideCancelBtn();
-    _handleError('split', e.message || 'Worker error');
+    _handleError(toolKey, e.message || 'Worker error');
   };
 }
 
