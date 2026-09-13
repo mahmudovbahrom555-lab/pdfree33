@@ -169,6 +169,21 @@ jobs:
         # tests/e2e/embed-sdk.e2e.mjs's own header comment.
         run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:embed-sdk
 
+      - name: E2E — mobile golden path (merge) against local dist/
+        # Real-browser, real-mobile-viewport regression gate: add 2 files →
+        # click #mergeBtn → catch the real download → verify a genuinely
+        # valid, correctly-paged PDF. Added specifically to catch a "silently
+        # broken, no visible error" deploy — this repo's own history has one
+        # (a past deploy broke mobile merge with zero visible error, and some
+        # mobile clients' stuck Service Worker + Cache Storage couldn't
+        # self-heal even after the fix shipped — see memory
+        # pwa_direct_version_check_2026_09 for why a stuck client can never
+        # rescue itself). This same test file runs a second time later,
+        # against the real Cloudflare-hosted preview URL right before traffic
+        # cutover — see the "Upload Cloudflare Worker version" step below.
+        # See tests/e2e/mobile-merge-golden-path.e2e.mjs's own header comment.
+        run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:mobile-merge-golden-path
+
       - name: Guard — no conflicting wrangler configs
         run: |
           for f in wrangler.jsonc wrangler.json; do
@@ -182,14 +197,23 @@ jobs:
           done
           echo "All nav pages present in dist/"
 
-      - name: Deploy to Cloudflare Workers
-        # Pinned to an exact version, not the floating `@4` tag this used to be —
-        # this step holds CLOUDFLARE_API_TOKEN with real production deploy rights,
-        # the single highest-blast-radius credential in this whole pipeline. A
-        # compromised wrangler publish under the un-pinned tag would run with
-        # that token. Same "never a moving latest alias" policy this project
-        # already applies to every CDN library version (js/lazyLibs.js,
-        # js/pdf2jpgUI.js) — bump deliberately, not automatically.
+      - name: Upload Cloudflare Worker version (no traffic shift yet)
+        # Replaces the old single `wrangler deploy` (instant 100% cutover,
+        # same as this step's own pinned-version reasoning below). Staged-
+        # rollout mechanism added after a real incident: a past deploy broke
+        # mobile merge with NO visible error, and some mobile clients' stuck
+        # Service Worker + Cache Storage couldn't self-heal even after the
+        # bug was fixed server-side (see memory pwa_direct_version_check_2026_09
+        # — a device stuck on pre-fix JS can never run the code that would
+        # rescue it). `versions upload` stages code+config as an immutable,
+        # inert Version — confirmed for real against this exact account via a
+        # throwaway spike workflow (_spike_versions_upload.yml, since
+        # deleted): a clean upload, real "Worker Version ID" +
+        # "Version Preview URL" lines, and the printed *.workers.dev URL
+        # verified reachable (curl'd /version.json, homepage 200, a real
+        # 404 for an unmatched path) — this genuinely does not move
+        # production traffic. Same pinned 4.86.0, same two secrets, same
+        # blast-radius posture as the step this replaces.
         #
         # 4.86.0, NOT the actual latest (4.127.1 as of this pin) — wrangler
         # raised its own minimum from Node >=20.3.0 to >=22.0.0 starting at
@@ -205,7 +229,59 @@ jobs:
         # setup-node to 22 instead, to ride the real latest wrangler, is a
         # reasonable follow-up but touches more of this pipeline than an
         # already-broken deploy should be fixed with under time pressure.
-        run: npx wrangler@4.86.0 deploy --config wrangler.toml
+        id: upload_version
+        run: |
+          set -euo pipefail
+          npx wrangler@4.86.0 versions upload --config wrangler.toml \
+            --message "${{ github.sha }}" 2>&1 | tee version_upload.log
+
+          # Patterns grounded in the real spike run's captured output, e.g.:
+          #   Worker Version ID: b718812a-4300-4d22-863e-4785650f5a7e
+          #   Version Preview URL: https://b718812a-pdfree33.mahmudovbahrom555.workers.dev
+          # Not guessed — if wrangler ever changes this format, fail loudly
+          # below rather than silently deploying an empty/wrong version id.
+          VERSION_ID=$(grep -oE 'Worker Version ID: [0-9a-f-]+' version_upload.log | awk '{print $NF}' | tail -1 || true)
+          PREVIEW_URL=$(grep -oE 'Version Preview URL: https://[A-Za-z0-9.-]+' version_upload.log | awk '{print $NF}' | tail -1 || true)
+
+          if [ -z "$VERSION_ID" ]; then
+            echo "ERROR: could not parse a Worker Version ID out of wrangler's output above — refusing to proceed blind."
+            exit 1
+          fi
+          if [ -z "$PREVIEW_URL" ]; then
+            echo "ERROR: could not parse a preview URL out of wrangler's output above — refusing to proceed blind."
+            exit 1
+          fi
+
+          echo "version_id=$VERSION_ID" >> "$GITHUB_OUTPUT"
+          echo "preview_url=$PREVIEW_URL" >> "$GITHUB_OUTPUT"
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      - name: E2E — mobile golden path (merge) against the REAL uploaded preview version
+        # Same test as the earlier local-dist gate, same conventions, only
+        # PDFREE_BASE_URL differs — see tests/e2e/mobile-merge-golden-path.e2e.mjs.
+        # This is the gate that actually exercises Cloudflare's Worker/Assets
+        # serving layer (src/index.js routing, the [assets] binding's
+        # not_found_handling/run_worker_first, real edge headers) that the
+        # local http.server gate structurally cannot reach — confirmed via
+        # the same spike run that this preview URL serves real pages (200),
+        # a real 404 for an unmatched path, and the just-built version.json.
+        run: |
+          PDFREE_BASE_URL="${{ steps.upload_version.outputs.preview_url }}" \
+            npm run test:e2e:mobile-merge-golden-path
+
+      - name: Cut traffic to the new version (100%)
+        # Only reached if every gate above passed. Production has served the
+        # LAST-GOOD version this entire time — this is the single moment
+        # real users start seeing the new code. On any failure above, the
+        # job already stopped: nothing was ever promoted, so there is
+        # nothing to roll back, and the existing "Notify Telegram on
+        # failure" step below still fires.
+        run: |
+          npx wrangler@4.86.0 versions deploy \
+            "${{ steps.upload_version.outputs.version_id }}@100" -y \
+            --config wrangler.toml
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
