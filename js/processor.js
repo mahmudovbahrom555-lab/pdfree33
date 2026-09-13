@@ -287,7 +287,7 @@ export async function doProcess(currentTool, extraParams = {}) {
     merge:    () => _runMerge(filesSnapshot, extraParams),
     split:    () => _runSplit(filesSnapshot, extraParams, currentTool),
     compress: () => _runCompress(filesSnapshot, extraParams, currentTool),
-    jpg2pdf:  () => _runJpg2Pdf(filesSnapshot, extraParams),
+    jpg2pdf:  () => _runJpg2Pdf(filesSnapshot, extraParams, currentTool),
     pdf2jpg:  () => _runPdf2Jpg(filesSnapshot, extraParams),
     pdf2word: () => _runPdf2Word(filesSnapshot, extraParams),
     pdf2excel: () => _runPdf2Excel(filesSnapshot, extraParams),
@@ -1470,7 +1470,13 @@ async function _runCompress(filesSnapshot, { preset = 'medium', preserveText = t
 
 // ── JPG → PDF ──────────────────────────────────────────────────
 
-async function _runJpg2Pdf(filesSnapshot, params) {
+// toolKey defaults to 'jpg2pdf' but is the ACTUAL registered tool that
+// invoked this shared runner ('jpg2pdf' or 'scanDocument' — both map to
+// runner:'jpg2pdf' in toolRegistrations.js). Same misattribution bug class
+// found+fixed for _runSplit ('split'/'extract') — every dispatched event
+// below hardcoded the literal string 'jpg2pdf', silently counting every
+// real Clean Scan completion/error as jpg2pdf's instead.
+async function _runJpg2Pdf(filesSnapshot, params, toolKey = 'jpg2pdf') {
   const oversized = filesSnapshot.find(f => f.size > 50 * MB);
   if (oversized) {
     showToast(t('warn_file_too_large', { size: fmtSize(oversized.size), max: 50 }), 8000);
@@ -1491,7 +1497,7 @@ async function _runJpg2Pdf(filesSnapshot, params) {
   setProgress(5, t('prog_loading_imgs'));
 
   if (params.separate && filesSnapshot.length > 1) {
-    return _runJpg2PdfSeparate(filesSnapshot, buffers, params);
+    return _runJpg2PdfSeparate(filesSnapshot, buffers, params, toolKey);
   }
 
   _worker.postMessage(
@@ -1508,7 +1514,7 @@ async function _runJpg2Pdf(filesSnapshot, params) {
       console.warn('[jpg2pdf worker]', data.message);
     } else if (data.type === 'done') {
       if (!(data.result instanceof ArrayBuffer)) {
-        _handleError('jpg2pdf', 'Unexpected result from worker'); return;
+        _handleError(toolKey, 'Unexpected result from worker'); return;
       }
       isProcessing = false;
       setFilesLocked(false);
@@ -1531,16 +1537,16 @@ async function _runJpg2Pdf(filesSnapshot, params) {
       }
 
       document.dispatchEvent(new CustomEvent('pdfree:success', {
-        detail: { tool: 'jpg2pdf', blob, desc, filename }
+        detail: { tool: toolKey, blob, desc, filename }
       }));
     } else if (data.type === 'error') {
       isProcessing = false; setFilesLocked(false); hideCancelBtn();
-      _handleError('jpg2pdf', data.message);
+      _handleError(toolKey, data.message);
     }
   };
   _worker.onerror = (e) => {
     isProcessing = false; setFilesLocked(false); hideCancelBtn();
-    _handleError('jpg2pdf', e.message || 'Worker error');
+    _handleError(toolKey, e.message || 'Worker error');
   };
 }
 
@@ -1554,7 +1560,7 @@ async function _runJpg2Pdf(filesSnapshot, params) {
 // separate mode (see the comment there re: transferred-buffer lifetime).
 // Sequential, not parallel: _worker is one shared instance with a single
 // reassignable onmessage handler, not per-call message IDs.
-async function _runJpg2PdfSeparate(filesSnapshot, buffers, params) {
+async function _runJpg2PdfSeparate(filesSnapshot, buffers, params, toolKey = 'jpg2pdf') {
   const zipEntries = [];
   const skipped    = [];
 
@@ -1586,7 +1592,7 @@ async function _runJpg2PdfSeparate(filesSnapshot, buffers, params) {
 
   if (zipEntries.length === 0) {
     isProcessing = false; setFilesLocked(false); hideCancelBtn();
-    _handleError('jpg2pdf', 'All images failed to convert');
+    _handleError(toolKey, 'All images failed to convert');
     return;
   }
 
@@ -1623,7 +1629,7 @@ async function _runJpg2PdfSeparate(filesSnapshot, buffers, params) {
   const imagesWord = tp(zipEntries.length, 'word_image', 'word_images');
   const desc = `${zipEntries.length} ${imagesWord} · ${fmtSize(blob.size)}`;
   document.dispatchEvent(new CustomEvent('pdfree:success', {
-    detail: { tool: 'jpg2pdf', blob, desc, filename: 'converted_images.zip' }
+    detail: { tool: toolKey, blob, desc, filename: 'converted_images.zip' }
   }));
 }
 
