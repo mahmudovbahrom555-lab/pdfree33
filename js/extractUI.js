@@ -346,17 +346,14 @@ function _updateRangeInput() {
 
 // ── Presets & range ───────────────────────────────────────────
 
-// True when the sorted selection skips at least one page in between two
-// selected ones (e.g. "1-5, 9, 13") — a strong signal the user is curating
-// a specific subset to keep together, as opposed to a plain contiguous
-// range or "select all", which reads more like "break this whole thing up".
-function _looksLikeCuratedSubset(pages) {
-  if (pages.length < 2) return false;
-  const sorted = [...pages].sort((a, b) => a - b);
-  for (let i = 1; i < sorted.length; i++) {
-    if (sorted[i] - sorted[i - 1] > 1) return true;
-  }
-  return false;
+// True whenever the selection is a PROPER subset of the document — anything
+// other than literally every page. A contiguous range like "1-5" out of a
+// 20-page document is just as much "pick out this one piece" as a scattered
+// "1-5, 9, 13" is (a real user pointed this out — gap-based detection alone
+// missed the contiguous case entirely). Only selecting everything reads
+// unambiguously as "break the whole document apart".
+function _isProperSubset(pages, pageCount) {
+  return pages.length > 0 && pages.length < pageCount;
 }
 
 function _syncModeRadios() {
@@ -370,11 +367,16 @@ function _syncModeRadios() {
 // plus a real user-shared screenshot: entering a scattered range like
 // "1-5, 9, 13" while "Separate files" sat pre-selected produced a ZIP of
 // 7 single-page PDFs, not the one combined document that selection pattern
-// actually suggested. Only nudges the default — never overrides a mode the
-// user already picked themselves (_modeTouched).
+// actually suggested. Originally gap-based (only "1-5, 9, 13" style ranges
+// triggered it), revised to proper-subset-based after a real follow-up
+// question: a plain contiguous "1-5" out of a larger document is just as
+// plausibly "give me this one piece" as a scattered range is — only
+// selecting literally every page reads unambiguously as "split it all
+// apart". Only nudges the default — never overrides a mode the user
+// already picked themselves (_modeTouched).
 function _maybeSuggestSingleMode() {
   if (_modeTouched || _mode !== 'separate') return;
-  if (!_looksLikeCuratedSubset([..._selectedPages])) return;
+  if (!_isProperSubset([..._selectedPages], _pageCount)) return;
   _mode = 'single';
   _syncModeRadios();
 }
@@ -401,4 +403,5 @@ function _applyPreset(preset) {
   _refreshThumbSelections();
   _updateSelCount();
   _updateRangeInput();
+  _maybeSuggestSingleMode();
 }

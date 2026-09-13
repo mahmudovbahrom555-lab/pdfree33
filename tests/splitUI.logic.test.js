@@ -117,49 +117,44 @@ test('round-trip: serialize then parse', () => {
 });
 
 // ══════════════════════════════════════════════════════════════
-// Curated-subset detection (copy of _looksLikeCuratedSubset from
-// extractUI.js) — added after real Analytics Engine data showed an
-// elevated Split quick-retry rate, and a real user's screenshot showed
-// why: typing a scattered range like "1-5, 9, 13" while "Separate files"
-// sat pre-selected produced a ZIP of 7 single-page PDFs, not the one
-// combined document that selection pattern actually suggests. Used to
-// auto-nudge the mode default (never override an explicit user choice —
-// see extractUI.js's own _modeTouched flag for that half, not testable
-// here without a DOM).
+// Proper-subset detection (copy of _isProperSubset from extractUI.js) —
+// added after real Analytics Engine data showed an elevated Split
+// quick-retry rate, and a real user's screenshot showed why: typing a
+// scattered range like "1-5, 9, 13" while "Separate files" sat
+// pre-selected produced a ZIP of 7 single-page PDFs, not the one combined
+// document that selection pattern actually suggests. Originally gap-based
+// (only scattered ranges triggered it), revised after a real follow-up
+// question: a plain contiguous "1-5" out of a bigger document is just as
+// plausibly "give me this one piece" — only selecting literally every
+// page is unambiguous. Used to auto-nudge the mode default (never
+// override an explicit user choice — see extractUI.js's own _modeTouched
+// flag for that half, not testable here without a DOM).
 // ══════════════════════════════════════════════════════════════
 
-function looksLikeCuratedSubset(pages) {
-  if (pages.length < 2) return false;
-  const sorted = [...pages].sort((a, b) => a - b);
-  for (let i = 1; i < sorted.length; i++) {
-    if (sorted[i] - sorted[i - 1] > 1) return true;
-  }
-  return false;
+function isProperSubset(pages, pageCount) {
+  return pages.length > 0 && pages.length < pageCount;
 }
 
-test('single page is never a curated subset', () => {
-  expect(looksLikeCuratedSubset([5])).toBeFalsy();
+test('empty selection is not a proper subset', () => {
+  expect(isProperSubset([], 13)).toBeFalsy();
 });
-test('empty selection is never a curated subset', () => {
-  expect(looksLikeCuratedSubset([])).toBeFalsy();
+test('selecting every single page is NOT a proper subset', () => {
+  expect(isProperSubset([1,2,3,4,5,6,7,8,9,10,11,12,13], 13)).toBeFalsy();
 });
-test('a plain contiguous range is NOT a curated subset', () => {
-  expect(looksLikeCuratedSubset([1,2,3,4,5])).toBeFalsy();
+test('a single page out of many IS a proper subset', () => {
+  expect(isProperSubset([5], 13)).toBeTruthy();
 });
-test('"select all" (full contiguous run) is NOT a curated subset', () => {
-  expect(looksLikeCuratedSubset([1,2,3,4,5,6,7,8,9,10,11,12,13])).toBeFalsy();
+test('a plain CONTIGUOUS range out of a bigger doc IS a proper subset (the real follow-up case)', () => {
+  expect(isProperSubset([1,2,3,4,5], 13)).toBeTruthy();
 });
-test('a scattered range WITH gaps IS a curated subset (the real screenshot case)', () => {
-  expect(looksLikeCuratedSubset([1,2,3,4,5,9,13])).toBeTruthy();
+test('a scattered range WITH gaps IS a proper subset (the original screenshot case)', () => {
+  expect(isProperSubset([1,2,3,4,5,9,13], 20)).toBeTruthy();
 });
-test('two non-adjacent pages IS a curated subset', () => {
-  expect(looksLikeCuratedSubset([2, 9])).toBeTruthy();
+test('two non-adjacent pages IS a proper subset', () => {
+  expect(isProperSubset([2, 9], 13)).toBeTruthy();
 });
-test('unsorted input is still detected correctly (function sorts internally)', () => {
-  expect(looksLikeCuratedSubset([13, 1, 9, 2, 3, 4, 5])).toBeTruthy();
-});
-test('two adjacent pages is NOT a curated subset', () => {
-  expect(looksLikeCuratedSubset([4, 5])).toBeFalsy();
+test('a 1-page document selected in full is NOT a proper subset', () => {
+  expect(isProperSubset([1], 1)).toBeFalsy();
 });
 
 // ══════════════════════════════════════════════════════════════
