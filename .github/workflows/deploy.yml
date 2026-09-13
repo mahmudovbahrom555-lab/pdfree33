@@ -333,7 +333,17 @@ jobs:
           echo "Checking $PREVIEW/merge-pdf/ ..."
           BODY=$(curl -sf --max-time 15 "$PREVIEW/merge-pdf/")
           for marker in 'id="mergeBtn"' 'id="fileInput"' 'SoftwareApplication' 'FAQPage' 'HowTo' 'BreadcrumbList'; do
-            echo "$BODY" | grep -qF "$marker" || { echo "ERROR: /merge-pdf/ is missing expected marker: $marker"; exit 1; }
+            # <<< (here-string), not `echo "$BODY" | grep -q` — grep -q exits
+            # the instant it finds a match, and under `set -o pipefail` that
+            # early exit can SIGPIPE the still-writing `echo` side of a real
+            # pipe on a large body, which pipefail then reports as the WHOLE
+            # pipeline failing even though grep itself already matched. Real
+            # bug hit on the very first run of this exact script: it reported
+            # "$mergeBtn" missing (false) with a literal "Broken pipe" error
+            # right above it, on a page that plainly has it. A here-string
+            # has no such pipe between two processes, so grep's own exit
+            # code alone decides the outcome.
+            grep -qF "$marker" <<< "$BODY" || { echo "ERROR: /merge-pdf/ is missing expected marker: $marker"; exit 1; }
           done
           echo "OK — /merge-pdf/ has real content and all 4 JSON-LD schema types"
 
@@ -343,7 +353,8 @@ jobs:
           echo "OK — unmatched path returns a real 404"
 
           echo "Checking js/vendor/pdf-lib.min.js is served correctly..."
-          curl -sfI --max-time 15 "$PREVIEW/js/vendor/pdf-lib.min.js" | grep -qi "^content-type: text/javascript" \
+          HEADERS=$(curl -sfI --max-time 15 "$PREVIEW/js/vendor/pdf-lib.min.js")
+          grep -qi "^content-type: text/javascript" <<< "$HEADERS" \
             || { echo "ERROR: pdf-lib.min.js missing expected content-type"; exit 1; }
           echo "OK — vendor asset serves with the right content-type"
 
