@@ -379,6 +379,26 @@ function _maybeSuggestSingleMode() {
   if (!_isProperSubset([..._selectedPages], _pageCount)) return;
   _mode = 'single';
   _syncModeRadios();
+  // A silent default switch risks the exact quick-retry pattern this whole
+  // fix targets — a user who doesn't notice the radio moved downloads the
+  // "wrong" (for them, if this guess is wrong) result and only discovers it
+  // after the fact. A single brief pulse (see the .ext-mode--suggested
+  // keyframe in components.css) moves that discovery moment to BEFORE
+  // processing instead. Removed after the animation finishes so it can
+  // play again on a later selection change, not just once ever.
+  const singleLabel = _container?.querySelector('.ext-mode input[value="single"]')?.closest('.ext-mode');
+  if (singleLabel) {
+    singleLabel.classList.remove('ext-mode--suggested');
+    void singleLabel.offsetWidth; // force reflow so re-adding the class restarts the animation
+    singleLabel.classList.add('ext-mode--suggested');
+    const clear = () => singleLabel.classList.remove('ext-mode--suggested');
+    singleLabel.addEventListener('animationend', clear, { once: true });
+    // Fallback, not just belt-and-suspenders: prefers-reduced-motion sets
+    // `animation: none` in CSS, which means animationend never fires at
+    // all — without this the class (harmless visually with no animation,
+    // but still wrong state) would never get removed for those users.
+    setTimeout(clear, 700);
+  }
 }
 
 function _applyRange() {

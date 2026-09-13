@@ -4589,6 +4589,23 @@ body:not(.has-files) #heroChipsLabel { display: none !important; }
   background: var(--green-light);
 }
 
+/* One-time pulse when extractUI.js auto-suggests this mode (a proper-subset
+   page selection while "Separate files" was still selected) — noticeable
+   enough that the user catches the switch BEFORE processing, not after
+   downloading the wrong output, but a single soft glow in the site's own
+   brand green rather than a looping/flashing "warning" treatment, which
+   would read as an error instead of a suggestion. */
+@keyframes ext-mode-suggest-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(45, 122, 79, 0.45); }
+  100% { box-shadow: 0 0 0 10px rgba(45, 122, 79, 0); }
+}
+.ext-mode--suggested {
+  animation: ext-mode-suggest-pulse .6s ease-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ext-mode--suggested { animation: none; }
+}
+
 .ext-mode strong {
   font-size: 12px;
   color: var(--text);
