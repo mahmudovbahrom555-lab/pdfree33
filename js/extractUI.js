@@ -29,6 +29,11 @@ const MAX_PAGES        = 20000;
 let _pageCount     = 0;
 let _selectedPages = new Set();
 let _mode          = 'single';
+let _defaultMode   = 'single'; // this init's own configured default (see
+                                // registerTool callers) — the target a
+                                // full-selection reverts to, since it's
+                                // 'separate' for the Split tool but must
+                                // stay 'single' for the Extract Pages tool
 let _modeTouched   = false;   // true once the user picks a mode themselves —
                                // an auto-suggested default should never
                                // override an explicit choice, only the
@@ -58,6 +63,7 @@ export async function initExtractOptions(file, defaultMode = 'single') {
   _pageCount     = 0;
   _selectedPages = new Set();
   _mode          = defaultMode;
+  _defaultMode   = defaultMode;
   _modeTouched   = false;
   _reverse       = false;
   _thumbPage     = 0;
@@ -375,15 +381,21 @@ function _syncModeRadios() {
 // apart".
 //
 // Symmetric both ways — a subset nudges toward "single", selecting
-// everything (back) nudges toward "separate" — so re-selecting "All" after
-// an auto-suggested "single" un-does the suggestion instead of leaving it
-// stuck (a real gap a user found: clicking "All" again did nothing while
-// mode stayed on the auto-picked "single"). Only ever nudges the default —
+// everything (back) nudges toward this init's own _defaultMode — so
+// re-selecting "All" after an auto-suggested "single" un-does the
+// suggestion instead of leaving it stuck (a real gap a user found: clicking
+// "All" again did nothing while mode stayed on the auto-picked "single").
+// The full-selection target is _defaultMode, NOT a hardcoded 'separate':
+// hardcoding 'separate' was a real regression found right after shipping —
+// it silently flipped the dedicated Extract Pages tool (whose whole point,
+// per its registerTool comment, is "mode is always single") into
+// 'separate' after any subset-then-all cycle, even though nothing about
+// that tool should ever suggest 'separate'. Only ever nudges the default —
 // never overrides a mode the user picked themselves (_modeTouched), in
 // either direction.
 function _maybeSuggestMode() {
   if (_modeTouched) return;
-  const target = _isProperSubset([..._selectedPages], _pageCount) ? 'single' : 'separate';
+  const target = _isProperSubset([..._selectedPages], _pageCount) ? 'single' : _defaultMode;
   if (_mode === target) return;
   _mode = target;
   _syncModeRadios();
