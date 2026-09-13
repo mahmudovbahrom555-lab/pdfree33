@@ -2482,9 +2482,9 @@ button,
 
 /* All 3 actions (delete/restore, duplicate, add-blank-after) live in one
    top-left cluster, not scattered to separate corners — top-right is
-   .rot-badge (rotation angle) and bottom-left is .org-blank-badge, both of
-   which only render conditionally, so an action button can never be
-   allowed to sometimes collide with one depending on that card's state. */
+   .rot-badge (rotation angle), bottom-left is .rot-selbadge (selection
+   checkbox), bottom-right is .org-blank-badge, and none of the three only
+   render conditionally can ever collide with an always-visible action. */
 .org-card__actions {
   position: absolute;
   top: 4px;
@@ -2509,7 +2509,20 @@ button,
   color: var(--text2);
   box-shadow: 0 1px 3px rgba(0,0,0,.15);
 }
-.org-card__action--delete:hover  { background: #fee2e2; color: #dc2626; }
+/* Delete deliberately isn't left at the same low-contrast muted-gray
+   default as the other actions — a real user report called the × "too
+   small/invisible" (relying on :hover alone to reveal it doesn't help on
+   touch, where there is no hover). Persistently red-tinted, bigger, bolder
+   glyph, and uses the theme-aware --red/--red-light tokens (the ORIGINAL
+   :hover-only rule this replaces hardcoded #dc2626/#fee2e2 directly,
+   wrong in dark mode) instead. */
+.org-card__action--delete {
+  background: var(--red-light);
+  color: var(--red);
+  font-size: 16px;
+  font-weight: 700;
+}
+.org-card__action--delete:hover  { background: var(--red); color: #fff; }
 .org-card__action--restore       { background: var(--green-light); color: var(--green-dark); }
 .org-card__action--restore:hover { background: var(--green); color: #fff; }
 .org-card__action--dup:hover      { background: var(--yellow-light); color: var(--yellow-text); }
@@ -2539,12 +2552,14 @@ button,
 
 .org-delete-sel-btn { color: #dc2626; }
 
-/* Likely-blank badge — bottom-left, opposite .org-card__action (top-left)
-   and .rot-badge (top-right), so all three can coexist without collision */
+/* Likely-blank badge — bottom-right. Bottom-left is .rot-selbadge (shared
+   with rotateUI.js, same selection-checkbox convention — see _thumbInnerHTML's
+   selBadgeHTML), top-left is .org-card__actions, top-right is .rot-badge —
+   all four corners now spoken for, none collide. */
 .org-blank-badge {
   position: absolute;
   bottom: 4px;
-  left: 4px;
+  right: 4px;
   background: var(--text2);
   color: #fff;
   font-size: 9px;

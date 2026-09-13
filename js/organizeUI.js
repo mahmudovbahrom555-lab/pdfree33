@@ -410,12 +410,22 @@ function _thumbInnerHTML(pos) {
   const blankBadgeHTML = (!deleted && isLikelyBlank(pos))
     ? `<span class="org-blank-badge" aria-label="${t('org_blank_badge_aria')}">${t('org_blank_badge')}</span>`
     : '';
+  // Separate visual channel from the border-color .rot-card--selected/
+  // --changed styling — a page that's both selected AND already rotated
+  // used to share one ambiguous combined border color, the same real gap
+  // rotateUI.js's own analytics-driven fix addressed (see that file's
+  // _cardHTML comment) but organizeUI.js, a separate implementation, never
+  // got. Reuses the exact same shared .rot-selbadge/.rot-selbadge--on CSS —
+  // no new styling needed. aria-hidden since the card's own aria-label
+  // already states selected status for assistive tech.
+  const selBadgeHTML = `<span class="rot-selbadge${_selected.has(pos) ? ' rot-selbadge--on' : ''}" aria-hidden="true"></span>`;
 
   // All 3 actions live in one small cluster (not scattered to separate
   // corners) specifically so they never visually collide with the rotation
-  // badge (top-right) or the likely-blank badge (bottom-left) above, which
-  // only render conditionally — an action button can't be allowed to
-  // sometimes overlap a badge depending on that card's state.
+  // badge (top-right), the selection checkbox (bottom-left), or the
+  // likely-blank badge (bottom-right) — the latter two only render
+  // conditionally, so an action button can't be allowed to sometimes
+  // overlap one depending on that card's state.
   const restoreOrDeleteHTML = deleted
     ? `<button type="button" class="org-card__action org-card__action--restore" data-act="restore" aria-label="${esc(t('org_restore_btn'))}">↺</button>`
     : `<button type="button" class="org-card__action org-card__action--delete" data-act="delete" aria-label="${esc(t('org_delete_btn'))}">×</button>`;
@@ -436,7 +446,7 @@ function _thumbInnerHTML(pos) {
     // inserted" at a glance, distinct from both an unrendered thumbnail
     // placeholder (no border) and a genuinely blank real PDF page (solid
     // white, no label) that _blankBadgeHTML already flags separately.
-    return `<div class="org-blank-page" aria-hidden="true">${t('org_blank_page_label')}</div>${actionsHTML}`;
+    return `<div class="org-blank-page" aria-hidden="true">${t('org_blank_page_label')}</div>${selBadgeHTML}${actionsHTML}`;
   }
 
   if (_useThumbs) {
@@ -444,9 +454,9 @@ function _thumbInnerHTML(pos) {
     const img = url
       ? `<img src="${esc(url)}" alt="${t('org_page_alt', { n: pos + 1 })}" style="transform:rotate(${visual}deg)" loading="lazy">`
       : '';
-    return `${img}${badgeHTML}${blankBadgeHTML}${actionsHTML}`;
+    return `${img}${badgeHTML}${blankBadgeHTML}${selBadgeHTML}${actionsHTML}`;
   }
-  return `<span class="rot-numbox__n" style="transform:rotate(${visual}deg)">${pos + 1}</span>${badgeHTML}${blankBadgeHTML}${actionsHTML}`;
+  return `<span class="rot-numbox__n" style="transform:rotate(${visual}deg)">${pos + 1}</span>${badgeHTML}${blankBadgeHTML}${selBadgeHTML}${actionsHTML}`;
 }
 
 function _ariaLabelFor(pos) {
@@ -580,12 +590,25 @@ function _applyRotation(angle) {
     if (isBlank(pos)) continue;
     _deltas[pos] = ((_deltas[pos] + angle) % 360 + 360) % 360;
   }
+
+  // Real bug, same class as rotateUI.js's own (see that file's
+  // _applyRotation comment, fixed there in fce7ffca): selection used to
+  // survive past applying a rotation, so selecting one MORE page afterward
+  // silently re-rotated every already-rotated page too, a second time.
+  // Clearing here matches the universal select-act-reset convention
+  // (Gmail archive, Google Photos delete, …) that rotateUI.js already
+  // follows — organizeUI.js's own _applyRotation was a separate
+  // implementation and never got the same fix.
+  const rotated = [..._selected];
+  _selected.clear();
+
   // See _BULK_UPDATE_THRESHOLD above.
-  if (_selected.size > _BULK_UPDATE_THRESHOLD) {
+  if (rotated.length > _BULK_UPDATE_THRESHOLD) {
     _refreshAllCards();
   } else {
-    for (const pos of _selected) _updateCard(pos);
+    for (const pos of rotated) _updateCard(pos);
   }
+  _updateHint();
   _updateHistoryButtons();
   _updateSubmitBtn();
 }
