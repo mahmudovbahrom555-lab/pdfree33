@@ -313,6 +313,10 @@ export const EN = {
   org_add_blank_btn:     'Add blank page after',
   org_blank_page_label:  'Blank page',
   org_blank_page_suffix: ' (blank page)',
+  org_lightbox_aria:     'Page preview',
+  org_lightbox_close:    'Close preview',
+  org_lightbox_prev:     'Previous page',
+  org_lightbox_next:     'Next page',
 
   // ── resizeUI.js ──────────────────────────────────────────────
   rsz_loading:           'Loading PDF…',

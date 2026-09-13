@@ -334,6 +334,10 @@ window.PDFREE_LOCALE = {
   org_add_blank_btn:      '後に空白ページを追加',
   org_blank_page_label:   '空白ページ',
   org_blank_page_suffix:  '（空白ページ）',
+  org_lightbox_aria:      'ページプレビュー',
+  org_lightbox_close:     'プレビューを閉じる',
+  org_lightbox_prev:      '前のページ',
+  org_lightbox_next:      '次のページ',
 
   // ── resizeUI.js ──────────────────────────────────────────────
   rsz_loading: 'PDFを読み込んでいます…',

@@ -102,6 +102,17 @@ let _observer          = null;
 let _renderQueue       = [];
 let _activeRenders     = 0;
 
+// ── Lightbox (single-page zoom preview) ─────────────────────────
+const _DBLCLICK_MS   = 350; // window between two clicks/taps on the SAME
+                             // card counted as "open the preview" — see the
+                             // grid click handler's own comment for why this
+                             // is a from-scratch double-click detector, not
+                             // the native 'dblclick' event
+let _lastClickPos    = null;
+let _lastClickTime   = 0;
+let _lightboxPos     = null; // position currently shown, null when closed
+let _lightboxTask    = null; // in-flight pdf.js RenderTask, for cancellation
+
 // ── Position accessors ──────────────────────────────────────────
 // The only code allowed to read _kind/_originalIndex/_initialRotations/
 // _thumbnailURLs/_blankFlags directly — everything else goes through these,
@@ -374,6 +385,15 @@ function _render(file) {
     </div>
 
     ${infoBanner(t('org_banner'), 'info')}
+
+    ${_useThumbs ? `
+    <div class="org-lightbox" id="orgLightbox" hidden role="dialog" aria-modal="true" aria-label="${t('org_lightbox_aria')}">
+      <button type="button" class="org-lightbox__btn org-lightbox__close" id="orgLightboxClose" aria-label="${esc(t('org_lightbox_close'))}">×</button>
+      <button type="button" class="org-lightbox__btn org-lightbox__prev" id="orgLightboxPrev" aria-label="${esc(t('org_lightbox_prev'))}">‹</button>
+      <canvas id="orgLightboxCanvas" class="org-lightbox__canvas"></canvas>
+      <button type="button" class="org-lightbox__btn org-lightbox__next" id="orgLightboxNext" aria-label="${esc(t('org_lightbox_next'))}">›</button>
+      <div class="org-lightbox__counter" id="orgLightboxCounter"></div>
+    </div>` : ''}
   `;
 
   _bindEvents();
@@ -498,6 +518,116 @@ function _cardHTML(pos) {
     </div>`;
 }
 
+// ── Lightbox (single-page zoom preview) ─────────────────────────
+// Real user report: thumbnails are deliberately small/low-res (scale 0.4,
+// tuned for grid render speed — see _renderThumb) and sometimes too small
+// to tell what's actually on a page. Renders a fresh, high-DPI page image
+// on demand rather than upscaling the cached thumbnail, which would just
+// produce a blurrier version of the same low-res source.
+
+// Positions eligible for preview/navigation, in the user's CURRENT order —
+// not raw PDF page numbers, and not the array's raw index range. A blank
+// page has nothing to preview; a deleted page is (for now) hidden from the
+// document entirely, so stepping through preview shouldn't stop on either.
+function _lightboxNavPositions() {
+  const list = [];
+  for (let pos = 0; pos < _originalIndex.length; pos++) {
+    if (!isBlank(pos) && !_deletedFlags[pos]) list.push(pos);
+  }
+  return list;
+}
+
+async function _openLightbox(pos) {
+  const modal = id('orgLightbox');
+  if (!modal) return;
+  _lightboxPos = pos;
+  modal.hidden = false;
+  document.addEventListener('keydown', _onLightboxKeydown);
+  await _renderLightboxPage(pos);
+}
+
+function _closeLightbox() {
+  _lightboxPos = null;
+  const modal = id('orgLightbox');
+  if (modal) modal.hidden = true;
+  document.removeEventListener('keydown', _onLightboxKeydown);
+  if (_lightboxTask) { try { _lightboxTask.cancel(); } catch { /* already settled */ } _lightboxTask = null; }
+}
+
+function _onLightboxKeydown(e) {
+  if (e.key === 'Escape')     _closeLightbox();
+  if (e.key === 'ArrowLeft')  _stepLightbox(-1);
+  if (e.key === 'ArrowRight') _stepLightbox(1);
+}
+
+function _stepLightbox(direction) {
+  if (_lightboxPos === null) return;
+  const positions = _lightboxNavPositions();
+  const curIdx = positions.indexOf(_lightboxPos);
+  if (curIdx === -1) return;
+  const nextIdx = curIdx + direction;
+  if (nextIdx < 0 || nextIdx >= positions.length) return; // no wraparound — Prev/Next disable at the ends instead
+  _openLightbox(positions[nextIdx]);
+}
+
+async function _renderLightboxPage(pos) {
+  if (_lightboxTask) {
+    try { _lightboxTask.cancel(); } catch { /* already settled */ }
+    _lightboxTask = null;
+  }
+  if (!_pdfJsDoc) return;
+
+  const canvas = id('orgLightboxCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  const origIdx = _originalIndex[pos];
+  const page = await _pdfJsDoc.getPage(origIdx + 1);
+  if (_lightboxPos !== pos) { page.cleanup?.(); return; } // navigated away while awaiting getPage()
+
+  // Same rotation this page's THUMBNAIL already shows (getInitialRotation +
+  // user's delta) — passed straight into pdf.js's own `rotation` viewport
+  // option, not a CSS transform on the canvas. A CSS rotate would leave the
+  // canvas's pixel dimensions in the UNROTATED orientation (a portrait page
+  // rotated 90° needs a landscape-shaped canvas to fit without letterboxing
+  // or clipping) — getViewport({rotation}) has pdf.js do that math directly.
+  const rotation  = ((getInitialRotation(pos) + _deltas[pos]) % 360 + 360) % 360;
+  const unscaled  = page.getViewport({ scale: 1, rotation });
+  const maxW      = window.innerWidth  * 0.85;
+  const maxH      = window.innerHeight * 0.85;
+  const fitScale  = Math.max(0.1, Math.min(maxW / unscaled.width, maxH / unscaled.height));
+  const dpr       = window.devicePixelRatio || 1;
+  const viewport  = page.getViewport({ scale: fitScale * dpr, rotation });
+
+  canvas.width       = viewport.width;
+  canvas.height      = viewport.height;
+  canvas.style.width  = `${viewport.width  / dpr}px`;
+  canvas.style.height = `${viewport.height / dpr}px`;
+
+  _lightboxTask = page.render({ canvasContext: ctx, viewport });
+  try {
+    await _lightboxTask.promise;
+  } catch (err) {
+    // pdf.js's own signal for "a newer render cancelled this one" — routine
+    // when the user navigates quickly, not a real failure.
+    if (err?.name !== 'RenderingCancelledException') throw err;
+  } finally {
+    _lightboxTask = null;
+    page.cleanup?.();
+  }
+
+  if (_lightboxPos !== pos) return; // navigated away again while rendering
+
+  const positions = _lightboxNavPositions();
+  const curIdx    = positions.indexOf(pos);
+  const counterEl = id('orgLightboxCounter');
+  const prevBtn   = id('orgLightboxPrev');
+  const nextBtn   = id('orgLightboxNext');
+  if (counterEl) counterEl.textContent = `${curIdx + 1} / ${positions.length}`;
+  if (prevBtn)   prevBtn.disabled = curIdx <= 0;
+  if (nextBtn)   nextBtn.disabled = curIdx >= positions.length - 1;
+}
+
 // ── Events ─────────────────────────────────────────────────────
 
 function _bindEvents() {
@@ -538,6 +668,25 @@ function _bindEvents() {
     else                     _selected.add(pos);
     _updateCard(pos);
     _updateHint();
+
+    // Preview lightbox on a double-click/double-tap — deliberately NOT the
+    // native 'dblclick' event: verified empirically via Playwright + CDP's
+    // real touch input pipeline that two quick taps produce two 'click'
+    // events but NO 'dblclick' at all on touch (Chromium never synthesizes
+    // it there), so relying on 'dblclick' would silently never work on
+    // mobile. This also deliberately does NOT delay the toggle above by a
+    // single frame — selecting many pages quickly for a bulk rotate/delete
+    // is the tool's primary, frequent interaction and must stay instant;
+    // the double-click is detected as an independent side-channel on top,
+    // not by holding back the first click's effect.
+    const now = Date.now();
+    if (_lastClickPos === pos && now - _lastClickTime < _DBLCLICK_MS) {
+      _lastClickPos = null; // consumed — a 3rd rapid click starts fresh, not a false triple-trigger
+      if (!isBlank(pos) && !_deletedFlags[pos]) _openLightbox(pos);
+    } else {
+      _lastClickPos  = pos;
+      _lastClickTime = now;
+    }
   });
 
   grid?.addEventListener('keydown', e => {
@@ -547,6 +696,14 @@ function _bindEvents() {
       e.preventDefault();
       card.click();
     }
+  });
+
+  id('orgLightboxClose')?.addEventListener('click', _closeLightbox);
+  id('orgLightboxPrev') ?.addEventListener('click', () => _stepLightbox(-1));
+  id('orgLightboxNext') ?.addEventListener('click', () => _stepLightbox(1));
+  // Click on the backdrop itself (not the canvas or any of the buttons) closes.
+  id('orgLightbox')?.addEventListener('click', e => {
+    if (e.target.id === 'orgLightbox') _closeLightbox();
   });
 }
 
@@ -871,6 +1028,11 @@ function _cleanup() {
   _renderQueue   = [];
   _activeRenders = 0;
   _pdfJsDoc      = null;
+
+  // Leaving the tool with the lightbox still open would otherwise leak its
+  // document-level keydown listener forever (nothing else would ever call
+  // _closeLightbox to remove it).
+  if (_lightboxPos !== null) _closeLightbox();
 
   for (const url of _thumbnailURLs) {
     if (url) URL.revokeObjectURL(url);

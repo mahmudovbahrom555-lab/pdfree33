@@ -331,6 +331,10 @@ window.PDFREE_LOCALE = {
   org_add_blank_btn:      'Lege pagina hierna toevoegen',
   org_blank_page_label:   'Lege pagina',
   org_blank_page_suffix:  ' (lege pagina)',
+  org_lightbox_aria:      'Paginavoorbeeld',
+  org_lightbox_close:     'Voorbeeld sluiten',
+  org_lightbox_prev:      'Vorige pagina',
+  org_lightbox_next:      'Volgende pagina',
 
   // ── resizeUI.js ──────────────────────────────────────────────
   rsz_loading: 'PDF laden…',

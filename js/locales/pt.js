@@ -331,6 +331,10 @@ window.PDFREE_LOCALE = {
   org_add_blank_btn:      'Adicionar página em branco depois',
   org_blank_page_label:   'Página em branco',
   org_blank_page_suffix:  ' (página em branco)',
+  org_lightbox_aria:      'Pré-visualização da página',
+  org_lightbox_close:     'Fechar pré-visualização',
+  org_lightbox_prev:      'Página anterior',
+  org_lightbox_next:      'Próxima página',
 
   // ── resizeUI.js ──────────────────────────────────────────────
   rsz_loading: 'A carregar PDF…',

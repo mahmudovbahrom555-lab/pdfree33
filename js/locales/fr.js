@@ -331,6 +331,10 @@ window.PDFREE_LOCALE = {
   org_add_blank_btn:      'Ajouter une page vierge après',
   org_blank_page_label:   'Page vierge',
   org_blank_page_suffix:  ' (page vierge)',
+  org_lightbox_aria:      'Aperçu de la page',
+  org_lightbox_close:     "Fermer l'aperçu",
+  org_lightbox_prev:      'Page précédente',
+  org_lightbox_next:      'Page suivante',
 
   // ── resizeUI.js ──────────────────────────────────────────────
   rsz_loading: 'Chargement du PDF…',

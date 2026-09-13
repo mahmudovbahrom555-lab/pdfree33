@@ -331,6 +331,10 @@ window.PDFREE_LOCALE = {
   org_add_blank_btn:      'Aggiungi pagina vuota dopo',
   org_blank_page_label:   'Pagina vuota',
   org_blank_page_suffix:  ' (pagina vuota)',
+  org_lightbox_aria:      'Anteprima pagina',
+  org_lightbox_close:     'Chiudi anteprima',
+  org_lightbox_prev:      'Pagina precedente',
+  org_lightbox_next:      'Pagina successiva',
 
   // ── resizeUI.js ──────────────────────────────────────────────
   rsz_loading: 'Caricamento PDF…',

@@ -332,6 +332,10 @@ window.PDFREE_LOCALE = {
   org_add_blank_btn:      'Thêm trang trống sau trang này',
   org_blank_page_label:   'Trang trống',
   org_blank_page_suffix:  ' (trang trống)',
+  org_lightbox_aria:      'Xem trước trang',
+  org_lightbox_close:     'Đóng xem trước',
+  org_lightbox_prev:      'Trang trước',
+  org_lightbox_next:      'Trang sau',
 
   // ── resizeUI.js ──────────────────────────────────────────────
   rsz_loading: 'Đang tải PDF…',

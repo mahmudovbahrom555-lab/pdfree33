@@ -333,6 +333,10 @@ window.PDFREE_LOCALE = {
   org_add_blank_btn:      '뒤에 빈 페이지 추가',
   org_blank_page_label:   '빈 페이지',
   org_blank_page_suffix:  ' (빈 페이지)',
+  org_lightbox_aria:      '페이지 미리보기',
+  org_lightbox_close:     '미리보기 닫기',
+  org_lightbox_prev:      '이전 페이지',
+  org_lightbox_next:      '다음 페이지',
 
   // ── resizeUI.js ──────────────────────────────────────────────
   rsz_loading: 'PDF 불러오는 중…',

@@ -332,6 +332,10 @@ window.PDFREE_LOCALE = {
   org_add_blank_btn:      'Добавить пустую страницу после',
   org_blank_page_label:   'Пустая страница',
   org_blank_page_suffix:  ' (пустая страница)',
+  org_lightbox_aria:      'Просмотр страницы',
+  org_lightbox_close:     'Закрыть просмотр',
+  org_lightbox_prev:      'Предыдущая страница',
+  org_lightbox_next:      'Следующая страница',
 
   // ── resizeUI.js ──────────────────────────────────────────────
   rsz_loading: 'Загрузка PDF…',

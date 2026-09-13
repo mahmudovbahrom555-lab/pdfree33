@@ -332,6 +332,10 @@ window.PDFREE_LOCALE = {
   org_add_blank_btn:      'Tambah halaman kosong setelah ini',
   org_blank_page_label:   'Halaman kosong',
   org_blank_page_suffix:  ' (halaman kosong)',
+  org_lightbox_aria:      'Pratinjau halaman',
+  org_lightbox_close:     'Tutup pratinjau',
+  org_lightbox_prev:      'Halaman sebelumnya',
+  org_lightbox_next:      'Halaman berikutnya',
 
   // ── resizeUI.js ──────────────────────────────────────────────
   rsz_loading: 'Memuat PDF…',

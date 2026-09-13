@@ -2574,6 +2574,79 @@ button,
   .org-grid { grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); }
 }
 
+/* Single-page zoom preview — double-click/double-tap a card to open.
+   Same structural pattern as .scan-cam-modal (fixed inset:0, z-index:600,
+   dark backdrop, flex-centered) for consistency with the site's one other
+   full-screen modal. */
+.org-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, .82);
+}
+.org-lightbox[hidden] { display: none; }
+
+.org-lightbox__canvas {
+  max-width: 90vw;
+  max-height: 90vh;
+  box-shadow: 0 20px 48px rgba(0, 0, 0, .4);
+  border-radius: 2px;
+}
+
+.org-lightbox__btn {
+  position: absolute;
+  border: none;
+  background: rgba(255, 255, 255, .12);
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background .15s ease;
+}
+.org-lightbox__btn:hover:not(:disabled) { background: rgba(255, 255, 255, .25); }
+.org-lightbox__btn:disabled { opacity: .3; cursor: default; }
+
+.org-lightbox__close {
+  top: 16px;
+  right: 16px;
+  width: 40px;
+  height: 40px;
+  font-size: 22px;
+}
+.org-lightbox__prev,
+.org-lightbox__next {
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px;
+  height: 48px;
+  font-size: 28px;
+}
+.org-lightbox__prev { left: 16px; }
+.org-lightbox__next { right: 16px; }
+
+.org-lightbox__counter {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, .5);
+  color: #fff;
+  font-size: 13px;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 600px) {
+  .org-lightbox__prev, .org-lightbox__next { width: 40px; height: 40px; font-size: 22px; }
+  .org-lightbox__close { width: 36px; height: 36px; font-size: 20px; }
+}
+
 /* ══════════════════════════════════════════════════════════════
    SPLIT MANGA PAGES — thumbnail grid (extends .rot-card/.rot-thumb/
    .rot-numbox/.rot-badge above; only the skipped-state dimming and the

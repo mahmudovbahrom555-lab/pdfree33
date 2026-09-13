@@ -331,6 +331,10 @@ window.PDFREE_LOCALE = {
   org_add_blank_btn:      'Sonrasına boş sayfa ekle',
   org_blank_page_label:   'Boş sayfa',
   org_blank_page_suffix:  ' (boş sayfa)',
+  org_lightbox_aria:      'Sayfa önizleme',
+  org_lightbox_close:     'Önizlemeyi kapat',
+  org_lightbox_prev:      'Önceki sayfa',
+  org_lightbox_next:      'Sonraki sayfa',
 
   // ── resizeUI.js ──────────────────────────────────────────────
   rsz_loading: 'PDF yükleniyor…',

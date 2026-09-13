@@ -331,6 +331,10 @@ window.PDFREE_LOCALE = {
   org_add_blank_btn:      'Dodaj pustą stronę po tej',
   org_blank_page_label:   'Pusta strona',
   org_blank_page_suffix:  ' (pusta strona)',
+  org_lightbox_aria:      'Podgląd strony',
+  org_lightbox_close:     'Zamknij podgląd',
+  org_lightbox_prev:      'Poprzednia strona',
+  org_lightbox_next:      'Następna strona',
 
   // ── resizeUI.js ──────────────────────────────────────────────
   rsz_loading: 'Wczytywanie PDF…',

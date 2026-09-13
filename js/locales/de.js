@@ -332,6 +332,10 @@ window.PDFREE_LOCALE = {
   org_add_blank_btn:      'Leere Seite danach einfügen',
   org_blank_page_label:   'Leere Seite',
   org_blank_page_suffix:  ' (leere Seite)',
+  org_lightbox_aria:      'Seitenvorschau',
+  org_lightbox_close:     'Vorschau schließen',
+  org_lightbox_prev:      'Vorherige Seite',
+  org_lightbox_next:      'Nächste Seite',
 
   // ── resizeUI.js ──────────────────────────────────────────────
   rsz_loading: 'PDF wird geladen…',
