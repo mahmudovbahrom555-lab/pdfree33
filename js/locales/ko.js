@@ -173,7 +173,7 @@ window.PDFREE_LOCALE = {
   desc_split_separate:      '{n}개 파일로 분할됨 · {size}',
   desc_split_separate_many: '{n}개 파일로 분할됨 · {size}',
   desc_pdf2jpg_one:         '1페이지 · {ext} · {size}',
-  desc_pdf2jpg_many:        '{n}개 {ext} 이미지 · {size}',
+  desc_pdf2jpg_many:        '{n}/{total}개 {ext} 이미지 · {size}',
 
   // word units
   word_page:   '페이지',
@@ -192,6 +192,7 @@ window.PDFREE_LOCALE = {
   skipped_imgs_many:    '⚠️ {n}개 이미지 건너뜀 (디코딩 불가): #{nums}',
   warn_large_export:    '⏳ 대용량 내보내기 ({n}페이지, {dpi} DPI) — 처리에 시간이 걸릴 수 있습니다.',
   warn_page_fail:       '⚠️ {page}페이지 실패: {msg}',
+  warn_pages_failed_many: '⚠️ {n}개 페이지를 내보내지 못했습니다: {pages}',
   already_protected:    'ℹ️ 파일이 이미 보호되어 있었습니다 — 비밀번호가 업데이트되었습니다',
   warn_file_too_large:  '⚠️ 파일 크기 {size} — 브라우저는 PDF를 RAM에서 처리합니다. 한도: {max} MB. 팁: 먼저 PDF를 분할한 후 각 부분을 처리하세요.',
   warn_total_too_large: '⚠️ 총 크기: {size} — 브라우저 한도: {max} MB. 파일을 일부 제거하여 계속하세요.',

@@ -172,7 +172,7 @@ window.PDFREE_LOCALE = {
   desc_split_separate:      'Chia thành {n} file · {size}',
   desc_split_separate_many: 'Chia thành {n} file · {size}',
   desc_pdf2jpg_one:         '1 trang · {ext} · {size}',
-  desc_pdf2jpg_many:        '{n} ảnh {ext} · {size}',
+  desc_pdf2jpg_many:        '{n}/{total} ảnh {ext} · {size}',
 
   // word units
   word_page:   'trang',
@@ -191,6 +191,7 @@ window.PDFREE_LOCALE = {
   skipped_imgs_many:   '⚠️ Bỏ qua {n} ảnh (không thể giải mã): #{nums}',
   warn_large_export:   '⏳ Xuất lớn ({n} trang ở {dpi} DPI) — quá trình xử lý có thể mất một lúc.',
   warn_page_fail:      '⚠️ Trang {page} thất bại: {msg}',
+  warn_pages_failed_many: '⚠️ {n} trang xuất không thành công: {pages}',
   already_protected:   'ℹ️ File đã được bảo vệ — mật khẩu đã được cập nhật',
   warn_file_too_large:  '⚠️ File có kích thước {size} — trình duyệt xử lý PDF trong bộ nhớ, giới hạn: {max} MB. Mẹo: hãy tách PDF trước, sau đó xử lý từng phần.',
   warn_total_too_large: '⚠️ Tổng kích thước là {size} — giới hạn trình duyệt: {max} MB. Xóa một số file.',

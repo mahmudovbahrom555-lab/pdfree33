@@ -1712,6 +1712,7 @@ async function _runPdf2Jpg(filesSnapshot, { pages, format, dpi }) {
   let streamZip   = null;
   let streamCount = 0;
   let singleResult = null;
+  const failures = []; // { page, msg } — collected, not shown per-page (see below)
   let canvas = document.createElement('canvas');
   const ctx  = canvas.getContext('2d');
 
@@ -1775,7 +1776,13 @@ async function _runPdf2Jpg(filesSnapshot, { pages, format, dpi }) {
           frameStart = performance.now();   // reset budget after yield
         }
       } catch (err) {
-        showToast(t('warn_page_fail', { page: pageNum, msg: err.message }), 4000);
+        // Collected instead of shown immediately — showToast()'s #toast is a
+        // single DOM node (js/ui.js), not a queue, so a second failure in the
+        // same loop used to silently overwrite the first one's message before
+        // a user could ever read it. Shown as one aggregated toast after the
+        // loop instead (see below the successCount check).
+        console.warn(`[pdf2jpg] page ${pageNum} failed:`, err.message);
+        failures.push({ page: pageNum, msg: err.message });
       }
     }
   } finally {
@@ -1793,6 +1800,23 @@ async function _runPdf2Jpg(filesSnapshot, { pages, format, dpi }) {
     _handleError('pdf2jpg', t('err_no_render'), 'render_all_failed'); return;
   }
 
+  // Real bug fixed here: a partial failure (some pages rendered, some
+  // didn't — e.g. "canvas too large for device" on an oversized page) used
+  // to still fire a plain, undifferentiated success with a count that only
+  // ever reflected the SURVIVORS (desc_pdf2jpg_many's {n} was streamCount,
+  // never validPages.length) — a user who selected 4 pages and got 2 saw
+  // "2 JPG images" with no indication 2 were ever requested. Verified this
+  // silently reproduces via a real oversized-page PDF through the actual
+  // tool before fixing. One aggregated toast (not one per page, see above)
+  // plus the real "{n} of {total}" wording below now both surface it.
+  if (failures.length === 1) {
+    showToast(t('warn_page_fail', { page: failures[0].page, msg: failures[0].msg }), 5000);
+  } else if (failures.length > 1) {
+    showToast(t('warn_pages_failed_many', {
+      n: failures.length, pages: failures.map(f => f.page).join(', '),
+    }), 6000);
+  }
+
   setProgress(93, t('prog_packaging'));
 
   let blob, filename, desc;
@@ -1807,7 +1831,7 @@ async function _runPdf2Jpg(filesSnapshot, { pages, format, dpi }) {
     );
     const baseName = file.name.replace(/\.pdf$/i, '');
     filename = `${baseName}-images.zip`;
-    desc     = t('desc_pdf2jpg_many', { n: streamCount, ext: ext.toUpperCase(), size: fmtSize(blob.size) });
+    desc     = t('desc_pdf2jpg_many', { n: streamCount, total: validPages.length, ext: ext.toUpperCase(), size: fmtSize(blob.size) });
   }
 
   isProcessing = false;
@@ -1816,7 +1840,15 @@ async function _runPdf2Jpg(filesSnapshot, { pages, format, dpi }) {
   setProgress(100, t('prog_done'));
 
   document.dispatchEvent(new CustomEvent('pdfree:success', {
-    detail: { tool: 'pdf2jpg', blob, desc, filename }
+    detail: {
+      tool: 'pdf2jpg', blob, desc, filename,
+      // Optional, additive fields — only pdf2jpg's own render loop can
+      // partially fail per-page like this; other tools' dispatches simply
+      // omit them and _handleSuccess/trackToolSuccess treat them as
+      // undefined, same convention as pageCounts/confidence/atlasEri below.
+      requestedCount: validPages.length,
+      successCount,
+    }
   }));
 }
 

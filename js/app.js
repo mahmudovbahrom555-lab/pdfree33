@@ -358,14 +358,18 @@ function resetState() {
 
 // ── Success handler ───────────────────────────────────────────
 
-function _handleSuccess({ tool, blob, desc, filename, compressionReport, batchCompressSummary, pageCounts, confidence, atlasEri }) {
+function _handleSuccess({ tool, blob, desc, filename, compressionReport, batchCompressSummary, pageCounts, confidence, atlasEri, requestedCount, successCount }) {
   _freeResultUrl();
   _resultUrl      = URL.createObjectURL(blob);
   _resultBlob     = blob;
   _resultFilename = filename;
 
-  // Analytics: track success with file size bucket
-  trackToolSuccess(tool, { outputSize: blob.size });
+  // Analytics: track success with file size bucket. requestedCount/successCount
+  // are only ever set by pdf2jpg's per-page render loop (undefined otherwise,
+  // same convention as pageCounts/confidence/atlasEri above) — lets a partial
+  // render failure (some pages exported, some didn't) show up distinctly from
+  // a real full success in Analytics Engine instead of both looking identical.
+  trackToolSuccess(tool, { outputSize: blob.size, requestedCount, successCount });
 
   const card = id('successCard');
   card.style.display = 'block';

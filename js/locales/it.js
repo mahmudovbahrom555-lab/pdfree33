@@ -171,7 +171,7 @@ window.PDFREE_LOCALE = {
   desc_split_separate:      'Diviso in {n} file · {size}',
   desc_split_separate_many: 'Diviso in {n} file · {size}',
   desc_pdf2jpg_one:         '1 pagina · {ext} · {size}',
-  desc_pdf2jpg_many:        '{n} immagini {ext} · {size}',
+  desc_pdf2jpg_many:        '{n} di {total} immagini {ext} · {size}',
 
   // word units
   word_page:   'pagina',
@@ -190,6 +190,7 @@ window.PDFREE_LOCALE = {
   skipped_imgs_many:   '⚠️ {n} immagini ignorate (impossibile decodificare): #{nums}',
   warn_large_export:   '⏳ Esportazione grande ({n} pagine a {dpi} DPI) — l\'elaborazione potrebbe richiedere tempo.',
   warn_page_fail:      '⚠️ Pagina {page} fallita: {msg}',
+  warn_pages_failed_many: '⚠️ {n} pagine non esportate: {pages}',
   already_protected:   'ℹ️ Il file era già protetto — password aggiornata',
   warn_file_too_large:  '⚠️ Il file pesa {size} — il browser elabora i PDF in RAM, limite: {max} MB. Suggerimento: dividi il PDF prima ed elabora ogni parte.',
   warn_total_too_large: '⚠️ Dimensione totale: {size} — limite del browser: {max} MB. Rimuovi alcuni file per continuare.',

@@ -155,7 +155,7 @@ export const EN = {
   desc_split_separate:      'Split into {n} file · {size}',
   desc_split_separate_many: 'Split into {n} files · {size}',
   desc_pdf2jpg_one:         '1 page · {ext} · {size}',
-  desc_pdf2jpg_many:        '{n} {ext} images · {size}',
+  desc_pdf2jpg_many:        '{n} of {total} {ext} images · {size}',
 
   // word units for composing double-plural strings
   word_page:   'page',
@@ -174,6 +174,7 @@ export const EN = {
   skipped_imgs_many:   '⚠️ {n} images skipped (could not decode): #{nums}',
   warn_large_export:   '⏳ Large export ({n} pages at {dpi} DPI) — processing may take a minute.',
   warn_page_fail:      '⚠️ Page {page} failed: {msg}',
+  warn_pages_failed_many: '⚠️ {n} pages failed to export: {pages}',
   already_protected:   'ℹ️ File was already protected — password updated',
   warn_file_too_large:  '⚠️ File is {size} — browser processes PDFs in RAM, limit is {max} MB for this tool. Tip: use Split PDF first, then process each part.',
   warn_total_too_large: '⚠️ Total size is {size} — browser limit is {max} MB. Remove some files to continue.',

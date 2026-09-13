@@ -172,7 +172,7 @@ window.PDFREE_LOCALE = {
   desc_split_separate:      'Разделено на {n} файл · {size}',
   desc_split_separate_many: 'Разделено на файлов: {n} · {size}',
   desc_pdf2jpg_one:         '1 страница · {ext} · {size}',
-  desc_pdf2jpg_many:        'Изображений {ext}: {n} · {size}',
+  desc_pdf2jpg_many:        'Изображений {ext}: {n} из {total} · {size}',
 
   // word units
   word_page:   'страница',
@@ -191,6 +191,7 @@ window.PDFREE_LOCALE = {
   skipped_imgs_many:   '⚠️ Пропущено изображений: {n} (не удалось декодировать): #{nums}',
   warn_large_export:   '⏳ Большой экспорт ({n} стр. при {dpi} DPI) — обработка может занять минуту.',
   warn_page_fail:      '⚠️ Ошибка на странице {page}: {msg}',
+  warn_pages_failed_many: '⚠️ Не удалось экспортировать страниц: {n} ({pages})',
   already_protected:   'ℹ️ Файл уже был защищён — пароль обновлён',
   warn_file_too_large:  '⚠️ Размер файла {size} — браузер обрабатывает PDF в оперативной памяти, лимит для этого инструмента: {max} МБ. Совет: сначала разделите PDF, затем обработайте каждую часть.',
   warn_total_too_large: '⚠️ Общий размер {size} — лимит браузера: {max} МБ. Удалите часть файлов, чтобы продолжить.',

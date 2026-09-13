@@ -171,7 +171,7 @@ window.PDFREE_LOCALE = {
   desc_split_separate:      'Gesplitst in {n} bestand · {size}',
   desc_split_separate_many: 'Gesplitst in {n} bestanden · {size}',
   desc_pdf2jpg_one:         '1 pagina · {ext} · {size}',
-  desc_pdf2jpg_many:        '{n} {ext}-afbeeldingen · {size}',
+  desc_pdf2jpg_many:        '{n} van {total} {ext}-afbeeldingen · {size}',
 
   // word units
   word_page:   'pagina',
@@ -190,6 +190,7 @@ window.PDFREE_LOCALE = {
   skipped_imgs_many:    '⚠️ {n} afbeeldingen overgeslagen (konden niet decoderen): #{nums}',
   warn_large_export:    '⏳ Grote export ({n} pagina\'s op {dpi} DPI) — verwerking kan even duren.',
   warn_page_fail:       '⚠️ Pagina {page} mislukt: {msg}',
+  warn_pages_failed_many: '⚠️ {n} pagina\'s konden niet worden geëxporteerd: {pages}',
   already_protected:    'ℹ️ Bestand was al beveiligd — wachtwoord bijgewerkt',
   warn_file_too_large:  '⚠️ Bestand is {size} — de browser verwerkt PDF\'s in RAM, limiet: {max} MB. Tip: splits de PDF eerst en verwerk elk deel afzonderlijk.',
   warn_total_too_large: '⚠️ Totale grootte: {size} — browserlimiet: {max} MB. Verwijder enkele bestanden om door te gaan.',

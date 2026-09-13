@@ -92,9 +92,9 @@ export function trackToolStart(tool) {
 /**
  * Call when a tool completes successfully.
  * @param {string} tool
- * @param {{ inputSize?: number, outputSize?: number }} opts
+ * @param {{ inputSize?: number, outputSize?: number, requestedCount?: number, successCount?: number }} opts
  */
-export function trackToolSuccess(tool, { inputSize = 0, outputSize = 0 } = {}) {
+export function trackToolSuccess(tool, { inputSize = 0, outputSize = 0, requestedCount, successCount } = {}) {
   const durationMs = _timers[tool] ? performance.now() - _timers[tool] : null;
   delete _timers[tool];
 
@@ -105,6 +105,13 @@ export function trackToolSuccess(tool, { inputSize = 0, outputSize = 0 } = {}) {
   };
   if (durationMs !== null) {
     props.duration_s = _roundDuration(durationMs);
+  }
+  // Only set for a genuine shortfall (e.g. pdf2jpg: some pages rendered,
+  // some didn't) — a plain full success omits these two fields entirely,
+  // so existing queries against 'Tool Success' see no shape change at all.
+  if (requestedCount !== undefined && successCount !== undefined && successCount < requestedCount) {
+    props.requested_count = requestedCount;
+    props.success_count   = successCount;
   }
 
   _track('Tool Success', props);

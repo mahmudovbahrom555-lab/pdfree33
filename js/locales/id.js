@@ -172,7 +172,7 @@ window.PDFREE_LOCALE = {
   desc_split_separate:      'Dibagi menjadi {n} file · {size}',
   desc_split_separate_many: 'Dibagi menjadi {n} file · {size}',
   desc_pdf2jpg_one:         '1 halaman · {ext} · {size}',
-  desc_pdf2jpg_many:        '{n} gambar {ext} · {size}',
+  desc_pdf2jpg_many:        '{n} dari {total} gambar {ext} · {size}',
 
   // word units
   word_page:   'halaman',
@@ -191,6 +191,7 @@ window.PDFREE_LOCALE = {
   skipped_imgs_many:   '⚠️ {n} gambar dilewati (tidak dapat didekode): #{nums}',
   warn_large_export:   '⏳ Ekspor besar ({n} halaman pada {dpi} DPI) — pemrosesan mungkin memerlukan beberapa saat.',
   warn_page_fail:      '⚠️ Halaman {page} gagal: {msg}',
+  warn_pages_failed_many: '⚠️ {n} halaman gagal diekspor: {pages}',
   already_protected:   'ℹ️ File sudah dilindungi — kata sandi diperbarui',
   warn_file_too_large:  '⚠️ File berukuran {size} — browser memproses PDF di memori, batas: {max} MB. Tips: pisahkan PDF terlebih dahulu, lalu proses setiap bagian.',
   warn_total_too_large: '⚠️ Total ukuran adalah {size} — batas browser: {max} MB. Hapus beberapa file.',

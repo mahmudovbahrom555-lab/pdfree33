@@ -174,7 +174,7 @@ window.PDFREE_LOCALE = {
   desc_split_separate:      '{n}個のファイルに分割しました · {size}',
   desc_split_separate_many: '{n}個のファイルに分割しました · {size}',
   desc_pdf2jpg_one:         '1ページ · {ext} · {size}',
-  desc_pdf2jpg_many:        '{ext}画像{n}枚 · {size}',
+  desc_pdf2jpg_many:        '{ext}画像{n}/{total}枚 · {size}',
 
   // word units
   word_page:   'ページ',
@@ -193,6 +193,7 @@ window.PDFREE_LOCALE = {
   skipped_imgs_many:   '⚠️ {n}件の画像をスキップしました（デコード不可）: #{nums}',
   warn_large_export:   '⏳ 大きなエクスポートです（{n}ページ、{dpi} DPI）— 処理に1分ほどかかる場合があります。',
   warn_page_fail:      '⚠️ ページ{page}の処理に失敗しました: {msg}',
+  warn_pages_failed_many: '⚠️ {n}ページの書き出しに失敗しました: {pages}',
   already_protected:   'ℹ️ ファイルはすでに保護されていました — パスワードを更新しました',
   warn_file_too_large:  '⚠️ ファイルサイズは{size}です — ブラウザはPDFをメモリ上で処理するため、このツールの上限は{max}MBです。ヒント: 先にPDFを分割してから、それぞれを処理してください。',
   warn_total_too_large: '⚠️ 合計サイズは{size}です — ブラウザの上限は{max}MBです。続けるにはファイルを減らしてください。',

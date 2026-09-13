@@ -171,7 +171,7 @@ window.PDFREE_LOCALE = {
   desc_split_separate:      '{n} dosyaya bölündü · {size}',
   desc_split_separate_many: '{n} dosyaya bölündü · {size}',
   desc_pdf2jpg_one:         '1 sayfa · {ext} · {size}',
-  desc_pdf2jpg_many:        '{n} {ext} resmi · {size}',
+  desc_pdf2jpg_many:        '{total} üzerinden {n} {ext} resmi · {size}',
 
   // word units
   word_page:   'sayfa',
@@ -190,6 +190,7 @@ window.PDFREE_LOCALE = {
   skipped_imgs_many:    '⚠️ {n} resim atlandı (çözümlenemiyor): #{nums}',
   warn_large_export:    '⏳ Büyük dışa aktarma ({n} sayfa, {dpi} DPI) — işlem biraz sürebilir.',
   warn_page_fail:       '⚠️ Sayfa {page} başarısız: {msg}',
+  warn_pages_failed_many: '⚠️ {n} sayfa dışa aktarılamadı: {pages}',
   already_protected:    'ℹ️ Dosya zaten korumalıydı — parola güncellendi',
   warn_file_too_large:  '⚠️ Dosya {size} — tarayıcı PDF\'leri RAM\'de işler, limit: {max} MB. İpucu: PDF\'yi önce bölün ve her parçayı ayrı ayrı işleyin.',
   warn_total_too_large: '⚠️ Toplam boyut: {size} — tarayıcı limiti: {max} MB. Devam etmek için bazı dosyaları kaldırın.',
