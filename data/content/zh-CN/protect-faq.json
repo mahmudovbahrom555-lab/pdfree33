@@ -1,0 +1,74 @@
+[
+  {
+    "@type": "Question",
+    "name": "PDFree 使用什么加密方式？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree 使用 RC4-128 加密您的 PDF —— PDF 格式 Revision 3 标准安全处理方式（PDF 1.4–1.7）。在 Adobe Acrobat、预览及所有符合标准的 PDF 阅读器中打开时都需要密码。请注意这并非 AES-256：对于受监管或极度敏感的文档，请搭配额外的安全措施，而不要仅依赖它。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFree 会在处理后存储或记录我的文件吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "不会。PDFree 完全在浏览器中运行 —— 没有接收文件的后端服务器。既然没有任何内容被上传，自然也就无法被存储、记录或保留。文档只存在于浏览器内存中，会话期间有效，关闭标签页后即被清除。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "密码会被破解吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "强大且独特的密码（12 位以上，混合大小写、数字、符号）能抵御普通及自动化的破解尝试。RC4-128 比 AES-256 等现代加密算法更弱，因此对于高度敏感或受监管的文件，请将其作为多层保护中的一环，而非唯一的安全措施。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "可以移除受保护 PDF 的密码吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "可以 —— 上传加密后的 PDF，输入当前密码，将新密码字段留空，然后保存。这样会生成一份未加密的文件版本。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "设置密码后的 PDF 能在 Adobe Reader 中打开吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "可以。PDFree 生成的是符合标准的加密 PDF，可以在 Adobe Acrobat、Adobe Reader、macOS 预览以及所有现代 PDF 阅读器中打开。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "在 PDFree 网站上设置密码安全吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "安全。整个加密过程都在您的浏览器中运行 —— 您的密码和文档永远不会被传输到任何服务器。PDFree 根本无法看到它们。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "可以为打开和编辑分别设置不同的密码吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "可以。您可以单独设置所有者密码（用于限制编辑/打印）和用户密码（用于打开文件）。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "可以一次为多个 PDF 文件设置密码保护吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "可以。PDFree 的批量模式让您一次为多个 PDF 文件添加密码和权限 —— 选择或拖入多个文件，每个文件都会在您的浏览器中使用相同设置分别加密。您会获得一个包含所有受保护文件的 ZIP，且没有任何内容会被上传到服务器。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "RC4-128 加密足够安全来保护 PDF 吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "对于日常用途 —— 防止随意访问、与信任的人分享敏感文件，或限制打印/复制 —— 是的，RC4-128 是自 PDF 1.4 起就支持的真实、可用的 PDF 标准，任何阅读器都能打开。但它不如 AES-256 强大，资源充足的攻击者若获得加密文件仍有可能破解。对于病历、法律文件，或任何有实际监管风险的内容，不要仅依赖密码保护 —— 请搭配加密硬盘、安全的文件共享服务，或您所在机构自己的合规工具。RC4-128 的一个优势是：它能在不支持 AES-256 的旧版 PDF 阅读器中打开，因此您发送的带密码 PDF 能被尽可能多的收件人正常打开。"
+    }
+  }
+]

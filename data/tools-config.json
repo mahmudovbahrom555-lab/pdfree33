@@ -1907,7 +1907,9 @@
         "ko": "pdf-watermark",
         "nl": "watermerk-pdf",
         "pl": "znak-wodny-pdf",
-        "tr": "pdf-filigran"
+        "tr": "pdf-filigran",
+        "zh-CN": "shuiyin-pdf",
+        "ar": "alama-maiya-pdf"
       },
       "titles": {
         "en": "Watermark PDF Free — Add CONFIDENTIAL, DRAFT, or Custom Text | PDFree",
@@ -1923,7 +1925,9 @@
         "ko": "PDF 워터마크 무료로 추가 — 텍스트나 로고, 위치·투명도 조정, 업로드 없이 | PDFree",
         "nl": "Watermerk toevoegen aan PDF — Gratis, Zonder Uploaden | PDFree",
         "pl": "Dodaj Znak Wodny do PDF — Darmowy, Bez Przesyłania | PDFree",
-        "tr": "PDF'ye Filigran Ekle — Ücretsiz, Yükleme Yapmadan | PDFree"
+        "tr": "PDF'ye Filigran Ekle — Ücretsiz, Yükleme Yapmadan | PDFree",
+        "zh-CN": "免费为 PDF 添加水印 —— 添加机密、草稿或自定义文字 | PDFree",
+        "ar": "إضافة علامة مائية لـ PDF مجانًا — سري، مسودة، أو نص مخصص | PDFree"
       },
       "descs": {
         "en": "Add custom text or logo watermarks to every PDF page. 100% private — processed locally, no uploads.",
@@ -1939,7 +1943,9 @@
         "ko": "PDF의 모든 페이지에 텍스트 또는 로고 워터마크를 추가합니다. 브라우저에서 처리, 업로드 없음.",
         "nl": "Voeg tekst- of logowatermerken toe aan elke PDF-pagina. Verwerkt in de browser, geen upload.",
         "pl": "Dodaj tekstowe lub graficzne (logo) znaki wodne do każdej strony PDF. Przetwarzane w przeglądarce, bez przesyłania.",
-        "tr": "Her PDF sayfasına metin veya logo filigranı ekleyin. Tarayıcıda işlenir, yükleme yok."
+        "tr": "Her PDF sayfasına metin veya logo filigranı ekleyin. Tarayıcıda işlenir, yükleme yok.",
+        "zh-CN": "为每一页 PDF 添加自定义文字或 Logo 水印。100% 隐私保护 —— 本地处理，无需上传。",
+        "ar": "أضف علامات مائية نصية أو شعار مخصص إلى كل صفحة PDF. خصوصية 100% — معالجة محلية، بدون رفع."
       },
       "navLabels": {
         "en": "Watermark",
@@ -1955,7 +1961,9 @@
         "ko": "워터마크",
         "nl": "Watermerk",
         "pl": "Znak wodny",
-        "tr": "Filigran Ekle"
+        "tr": "Filigran Ekle",
+        "zh-CN": "水印",
+        "ar": "علامة مائية"
       },
       "cardNames": {
         "en": "Watermark",
@@ -1971,7 +1979,9 @@
         "ko": "PDF 워터마크",
         "nl": "Watermerk PDF",
         "pl": "Znak wodny PDF",
-        "tr": "PDF Filigran"
+        "tr": "PDF Filigran",
+        "zh-CN": "PDF 水印",
+        "ar": "علامة مائية PDF"
       },
       "cardDescs": {
         "en": "Stamp text on every page — diagonal or tiled",
@@ -1987,7 +1997,9 @@
         "ko": "PDF에 텍스트 도장 추가 — 업로드 없음",
         "nl": "Tekststempels toevoegen aan PDF — geen upload",
         "pl": "Dodaj tekstowe stemple do PDF — bez przesyłania",
-        "tr": "PDF'e metin damgası ekle — yükleme yok"
+        "tr": "PDF'e metin damgası ekle — yükleme yok",
+        "zh-CN": "在每一页盖上文字戳记 —— 对角或平铺",
+        "ar": "اختم كل صفحة بنص — قطري أو متجانب"
       },
       "breadcrumb": {
         "en": "Watermark PDF",
@@ -2003,7 +2015,9 @@
         "ko": "PDF 워터마크",
         "nl": "Watermerk PDF",
         "pl": "Znak wodny PDF",
-        "tr": "PDF Filigran"
+        "tr": "PDF Filigran",
+        "zh-CN": "PDF 水印",
+        "ar": "علامة مائية PDF"
       },
       "metaDescs": {
         "en": "Add a text or logo watermark to PDF free — set opacity, size, position. Runs in your browser, nothing uploaded or stored. No signup.",
@@ -2019,7 +2033,9 @@
         "ko": "PDF에 기밀, 초안, 로고 또는 사용자 지정 워터마크를 무료로 추가 — 불투명도, 크기, 위치 조정 가능. 브라우저에서 실행, 업로드 없음, 저장 없음, 가입 없음.",
         "nl": "Voeg VERTROUWELIJK, CONCEPT, een logo of een aangepast watermerk toe aan PDF — pas dekking, grootte en positie aan. In de browser, niets geüpload of opgeslagen. Geen aanmelding.",
         "pl": "Dodaj POUFNE, WERSJA ROBOCZA, logo lub niestandardowy znak wodny do PDF — ustaw przezroczystość, rozmiar, pozycję. W przeglądarce, nic nie przesyłane ani przechowywane.",
-        "tr": "PDF'ye GİZLİ, TASLAK, logo veya özel filigran ekleyin — saydamlık, boyut ve konum ayarlanabilir. Tarayıcıda, yükleme yok, depolama yok. Kayıt yok."
+        "tr": "PDF'ye GİZLİ, TASLAK, logo veya özel filigran ekleyin — saydamlık, boyut ve konum ayarlanabilir. Tarayıcıda, yükleme yok, depolama yok. Kayıt yok.",
+        "zh-CN": "免费为 PDF 添加“机密”“草稿”、Logo 或自定义水印文字 —— 可调整透明度、大小、位置。在浏览器中运行，不上传、不存储。无需注册。",
+        "ar": "أضف سري أو مسودة أو شعارًا أو نص علامة مائية مخصص إلى PDF مجانًا — اضبط الشفافية والحجم والموضع. في متصفحك، بدون رفع أو تخزين. بدون تسجيل."
       },
       "ogTitles": {
         "en": "Watermark PDF Free — CONFIDENTIAL, DRAFT, or Custom Text, No Upload",
@@ -2035,7 +2051,9 @@
         "ko": "PDF 워터마크 추가 무료 — 업로드 없이 | PDFree",
         "nl": "Watermerk toevoegen aan PDF Gratis — Zonder Uploaden | PDFree",
         "pl": "Dodaj Znak Wodny do PDF Za Darmo — Bez Przesyłania | PDFree",
-        "tr": "PDF'ye Filigran Ekle Ücretsiz — Yükleme Yok | PDFree"
+        "tr": "PDF'ye Filigran Ekle Ücretsiz — Yükleme Yok | PDFree",
+        "zh-CN": "免费为 PDF 添加水印 —— 机密、草稿或自定义文字，无需上传",
+        "ar": "إضافة علامة مائية لـ PDF مجانًا — سري أو مسودة أو نص مخصص، بدون رفع"
       },
       "ogDescs": {
         "en": "Add a text or image logo watermark to any PDF. Custom opacity, size, position — processed in your browser, nothing uploaded. Free forever.",
@@ -2051,7 +2069,9 @@
         "ko": "PDF에 즉시 텍스트 또는 로고 워터마크를 추가합니다. 100% 비공개 — 파일이 브라우저를 절대 벗어나지 않습니다.",
         "nl": "Voeg direct een tekst- of logowatermerk toe aan je PDF. 100% privé — bestanden verlaten nooit je browser.",
         "pl": "Dodaj tekstowy lub graficzny znak wodny (logo) do PDF bezpośrednio. 100% prywatne — pliki nigdy nie opuszczają przeglądarki.",
-        "tr": "PDF'e anında metin veya logo filigranı ekleyin. %100 gizli — dosyalar tarayıcıyı asla terk etmez."
+        "tr": "PDF'e anında metin veya logo filigranı ekleyin. %100 gizli — dosyalar tarayıcıyı asla terk etmez.",
+        "zh-CN": "为任意 PDF 添加文字或图片 Logo 水印。自定义透明度、大小、位置 —— 在浏览器中处理，不上传。永久免费。",
+        "ar": "أضف علامة مائية نصية أو شعارًا بصورة إلى أي ملف PDF. شفافية وحجم وموضع مخصصون — تتم المعالجة في متصفحك، بدون رفع. مجاني إلى الأبد."
       },
       "keywords": {
         "en": "watermark pdf, add watermark to pdf, pdf watermark online free, text watermark pdf, logo watermark pdf, add logo to pdf, image watermark pdf, confidential watermark",
@@ -2067,7 +2087,9 @@
         "ko": "pdf 워터마크, pdf에 워터마크 추가, pdf 워터마크 온라인, pdf 워터마크 무료, pdf 텍스트 워터마크, pdf 로고 워터마크, pdf에 로고 추가",
         "nl": "watermerk pdf, watermerk toevoegen aan pdf, pdf watermerk online, pdf watermerk gratis, tekst watermerk pdf, logo watermerk pdf, logo toevoegen aan pdf",
         "pl": "znak wodny pdf, dodaj znak wodny do pdf, znak wodny pdf online, znak wodny pdf za darmo, tekstowy znak wodny pdf, znak wodny logo pdf, dodaj logo do pdf",
-        "tr": "pdf filigran, pdf'ye filigran ekle, pdf filigran online, ücretsiz pdf filigran, pdf metin filigranı, pdf logo filigranı, pdf'ye logo ekle"
+        "tr": "pdf filigran, pdf'ye filigran ekle, pdf filigran online, ücretsiz pdf filigran, pdf metin filigranı, pdf logo filigranı, pdf'ye logo ekle",
+        "zh-CN": "pdf水印, 为pdf添加水印, 免费在线pdf水印, pdf文字水印, pdf logo水印, 为pdf添加logo, pdf图片水印, 机密水印",
+        "ar": "علامة مائية pdf, اضافة علامة مائية لـ pdf, علامة مائية pdf اونلاين مجاني, علامة مائية نصية pdf, علامة مائية شعار pdf, اضافة شعار لـ pdf"
       },
       "batch": true
     },
@@ -2089,7 +2111,9 @@
         "ko": "pdf-amho",
         "nl": "pdf-beveiligen",
         "pl": "zabezpiecz-pdf",
-        "tr": "pdf-koru"
+        "tr": "pdf-koru",
+        "zh-CN": "baohu-pdf",
+        "ar": "himaya-pdf"
       },
       "titles": {
         "en": "Protect PDF with Password — RC4-128, No Upload | PDFree",
@@ -2105,7 +2129,9 @@
         "ko": "PDF 비밀번호 설정 무료 — RC4-128 암호화로 보호, 업로드 없이, 브라우저에서 처리 | PDFree",
         "nl": "PDF beveiligen met Wachtwoord — Gratis, RC4-128, Zonder Uploaden | PDFree",
         "pl": "Zabezpiecz PDF Hasłem — Darmowy, RC4-128, Bez Przesyłania | PDFree",
-        "tr": "PDF'yi Parolayla Koru — Ücretsiz, RC4-128, Yükleme Yapmadan | PDFree"
+        "tr": "PDF'yi Parolayla Koru — Ücretsiz, RC4-128, Yükleme Yapmadan | PDFree",
+        "zh-CN": "为 PDF 设置密码保护 —— RC4-128，无需上传 | PDFree",
+        "ar": "حماية PDF بكلمة مرور — RC4-128، بدون رفع | PDFree"
       },
       "descs": {
         "en": "Add password and restrict permissions. RC4-128 encrypted in your browser — files never sent to a server.",
@@ -2121,7 +2147,9 @@
         "ko": "RC4-128 암호화로 PDF에 비밀번호를 설정합니다. 브라우저에서 처리, 업로드 없음.",
         "nl": "Beveilig je PDF met RC4-128-versleuteling. Verwerkt in de browser, geen upload.",
         "pl": "Zabezpiecz PDF szyfrowaniem RC4-128. Przetwarzane w przeglądarce, bez przesyłania.",
-        "tr": "PDF'inizi RC4-128 şifrelemeyle koruyun. Tarayıcıda işlenir, yükleme yok."
+        "tr": "PDF'inizi RC4-128 şifrelemeyle koruyun. Tarayıcıda işlenir, yükleme yok.",
+        "zh-CN": "添加密码并限制权限。在浏览器中以 RC4-128 加密 —— 文件永不发送到服务器。",
+        "ar": "أضف كلمة مرور وقيّد الصلاحيات. تشفير RC4-128 في متصفحك — الملفات لا تُرسل أبدًا إلى خادم."
       },
       "navLabels": {
         "en": "Protect",
@@ -2137,7 +2165,9 @@
         "ko": "보호",
         "nl": "Beveiligen",
         "pl": "Zabezpiecz",
-        "tr": "PDF Koru"
+        "tr": "PDF Koru",
+        "zh-CN": "保护",
+        "ar": "حماية"
       },
       "cardNames": {
         "en": "Protect PDF",
@@ -2153,7 +2183,9 @@
         "ko": "PDF 보호",
         "nl": "PDF beveiligen",
         "pl": "Zabezpiecz PDF",
-        "tr": "PDF Koru"
+        "tr": "PDF Koru",
+        "zh-CN": "保护 PDF",
+        "ar": "حماية PDF"
       },
       "cardDescs": {
         "en": "RC4-128 password & permissions — 100% private",
@@ -2169,7 +2201,9 @@
         "ko": "RC4-128로 PDF에 비밀번호 설정 — 업로드 없음",
         "nl": "PDF beveiligen met RC4-128-wachtwoord — geen upload",
         "pl": "Zabezpiecz PDF hasłem RC4-128 — bez przesyłania",
-        "tr": "PDF'i RC4-128 parolayla koru — yükleme yok"
+        "tr": "PDF'i RC4-128 parolayla koru — yükleme yok",
+        "zh-CN": "RC4-128 密码与权限 —— 100% 隐私保护",
+        "ar": "كلمة مرور وصلاحيات RC4-128 — خصوصية 100%"
       },
       "breadcrumb": {
         "en": "Protect PDF",
@@ -2185,7 +2219,9 @@
         "ko": "PDF 보호",
         "nl": "PDF beveiligen",
         "pl": "Zabezpiecz PDF",
-        "tr": "PDF Koru"
+        "tr": "PDF Koru",
+        "zh-CN": "保护 PDF",
+        "ar": "حماية PDF"
       },
       "metaDescs": {
         "en": "Password-protect your PDF with RC4-128 encryption. Files stay on your device — never uploaded to any server. Add permissions too.",
@@ -2201,7 +2237,9 @@
         "ko": "PDF 비밀번호 설정 무료 — RC4-128 암호화로 보호, 권한 설정도 가능. 브라우저에서 처리, 업로드 없음, 100% 비공개, 회원가입 불필요.",
         "nl": "PDF beveiligen gratis — RC4-128-versleuteling, verwerkt in de browser. Geen upload, 100% privé, zonder registratie.",
         "pl": "Zabezpiecz PDF za darmo — szyfrowanie RC4-128, przetwarzane w przeglądarce. Bez przesyłania, 100% prywatne, bez rejestracji.",
-        "tr": "PDF'yi parolayla koru ücretsiz — RC4-128 şifreleme, tarayıcıda işlenir. Yükleme yok, %100 gizli, kayıt yok."
+        "tr": "PDF'yi parolayla koru ücretsiz — RC4-128 şifreleme, tarayıcıda işlenir. Yükleme yok, %100 gizli, kayıt yok.",
+        "zh-CN": "免费为 PDF 设置密码保护 —— RC4-128 加密，在浏览器中处理。不上传，100% 隐私，无需注册。",
+        "ar": "احمِ PDF بكلمة مرور مجانًا — تشفير RC4-128، يعالج في متصفحك. بدون رفع، خصوصية 100%، بدون تسجيل."
       },
       "ogTitles": {
         "en": "Encrypt PDF with RC4-128 — Your Password Never Reaches Any Server",
@@ -2217,7 +2255,9 @@
         "ko": "PDF 비밀번호 설정 무료 — 업로드 없이 | PDFree",
         "nl": "PDF beveiligen Gratis — Zonder Uploaden | PDFree",
         "pl": "Zabezpiecz PDF Za Darmo — Bez Przesyłania | PDFree",
-        "tr": "PDF'yi Parolayla Koru Ücretsiz — Yükleme Yok | PDFree"
+        "tr": "PDF'yi Parolayla Koru Ücretsiz — Yükleme Yok | PDFree",
+        "zh-CN": "免费为 PDF 设置密码保护 —— RC4-128 加密，无需上传",
+        "ar": "احمِ PDF بكلمة مرور مجانًا — تشفير RC4-128، بدون رفع"
       },
       "ogDescs": {
         "en": "Password-protect your PDF with RC4-128 encryption. Files never uploaded. Free, no signup.",
@@ -2233,7 +2273,9 @@
         "ko": "RC4-128로 즉시 PDF를 암호화합니다. 100% 비공개 — 파일이 브라우저를 절대 벗어나지 않습니다.",
         "nl": "Versleutel PDF direct met RC4-128. 100% privé — bestanden verlaten nooit je browser.",
         "pl": "Zaszyfruj PDF RC4-128 bezpośrednio. 100% prywatne — pliki nigdy nie opuszczają przeglądarki.",
-        "tr": "PDF'i RC4-128 ile doğrudan şifreleyin. %100 gizli — dosyalar tarayıcıyı asla terk etmez."
+        "tr": "PDF'i RC4-128 ile doğrudan şifreleyin. %100 gizli — dosyalar tarayıcıyı asla terk etmez.",
+        "zh-CN": "使用 RC4-128 加密立即为 PDF 设置密码。100% 隐私 —— 文件永不离开您的浏览器。",
+        "ar": "شفّر PDF فورًا باستخدام RC4-128. خصوصية 100% — الملفات لا تغادر متصفحك أبدًا."
       },
       "keywords": {
         "en": "protect pdf, password protect pdf, encrypt pdf, add password to pdf, pdf password free, pdf encryption",
@@ -2249,7 +2291,9 @@
         "ko": "pdf 보호, pdf 비밀번호 설정, pdf 암호화, pdf 비밀번호 무료, pdf 온라인 암호화",
         "nl": "pdf beveiligen, wachtwoord op pdf zetten, pdf versleutelen, pdf beveiligen met wachtwoord gratis, pdf online versleutelen",
         "pl": "zabezpiecz pdf, ustaw hasło do pdf, zaszyfruj pdf, zabezpiecz pdf hasłem za darmo, szyfrowanie pdf online",
-        "tr": "pdf koru, pdf'ye şifre koy, pdf şifrele, ücretsiz pdf şifreleme, pdf online şifreleme"
+        "tr": "pdf koru, pdf'ye şifre koy, pdf şifrele, ücretsiz pdf şifreleme, pdf online şifreleme",
+        "zh-CN": "保护pdf, pdf密码保护, 加密pdf, 为pdf设置密码, pdf密码免费, pdf加密",
+        "ar": "حماية pdf, حماية pdf بكلمة مرور, تشفير pdf, اضافة كلمة مرور لـ pdf, كلمة مرور pdf مجانية, تشفير pdf اونلاين"
       },
       "batch": true
     },
@@ -2271,7 +2315,9 @@
         "ko": "pdf-garigi",
         "nl": "pdf-zwartmaken",
         "pl": "zaczernij-pdf",
-        "tr": "pdf-gizle"
+        "tr": "pdf-gizle",
+        "zh-CN": "tuhei-pdf",
+        "ar": "tatim-pdf"
       },
       "titles": {
         "en": "Redact PDF Online Free — Permanently Remove Sensitive Data, No Upload | PDFree",
@@ -2287,7 +2333,9 @@
         "ko": "PDF 가리기 온라인 — 민감한 데이터 가리기, 업로드 없음 | PDFree",
         "nl": "PDF Zwartmaken Online — Gevoelige Gegevens Afdekken, Geen Upload | PDFree",
         "pl": "Zaczernij PDF Online — Zakryj Wrażliwe Dane, Bez Przesyłania | PDFree",
-        "tr": "PDF Gizle — Hassas Bilgileri Kalıcı Olarak Sil, Yükleme Yok, Ücretsiz | PDFree"
+        "tr": "PDF Gizle — Hassas Bilgileri Kalıcı Olarak Sil, Yükleme Yok, Ücretsiz | PDFree",
+        "zh-CN": "在线涂黑 PDF 免费 —— 永久移除敏感数据，无需上传 | PDFree",
+        "ar": "تعتيم PDF مجانًا عبر الإنترنت — إزالة البيانات الحساسة بشكل دائم، بدون رفع | PDFree"
       },
       "descs": {
         "en": "Hide text, signatures, or sensitive data with opaque blocks. 100% local processing — files never uploaded.",
@@ -2303,7 +2351,9 @@
         "ko": "텍스트, 서명 또는 민감한 데이터를 불투명한 블록으로 가리세요. 100% 로컬 처리 — 파일이 업로드되지 않습니다.",
         "nl": "Verberg tekst, handtekeningen of gevoelige gegevens met ondoorzichtige blokken. 100% lokale verwerking — bestanden worden nooit geüpload.",
         "pl": "Ukryj tekst, podpisy lub wrażliwe dane za pomocą nieprzezroczystych bloków. 100% lokalne przetwarzanie — pliki nigdy nie są przesyłane.",
-        "tr": "PDF'deki hassas bilgileri kalıcı olarak gizleyin. Gizlenen sayfalar görüntüye dönüştürülür — metin kurtarılamaz. Yükleme yok, sunucu yok."
+        "tr": "PDF'deki hassas bilgileri kalıcı olarak gizleyin. Gizlenen sayfalar görüntüye dönüştürülür — metin kurtarılamaz. Yükleme yok, sunucu yok.",
+        "zh-CN": "用不透明色块隐藏文字、签名或敏感数据。100% 本地处理 —— 文件从不上传。",
+        "ar": "أخفِ النص أو التوقيعات أو البيانات الحساسة بمربعات معتمة. معالجة محلية 100% — الملفات لا تُرفع أبدًا."
       },
       "navLabels": {
         "en": "Redact",
@@ -2319,7 +2369,9 @@
         "ko": "가리기",
         "nl": "Zwartmaken",
         "pl": "Zaczernij",
-        "tr": "PDF Gizle"
+        "tr": "PDF Gizle",
+        "zh-CN": "涂黑",
+        "ar": "تعتيم"
       },
       "cardNames": {
         "en": "Redact PDF",
@@ -2335,7 +2387,9 @@
         "ko": "PDF 가리기",
         "nl": "PDF Zwartmaken",
         "pl": "Zaczernij PDF",
-        "tr": "PDF Gizle"
+        "tr": "PDF Gizle",
+        "zh-CN": "涂黑 PDF",
+        "ar": "تعتيم PDF"
       },
       "cardDescs": {
         "en": "Hide watermarks, signatures or sensitive data locally",
@@ -2351,7 +2405,9 @@
         "ko": "워터마크, 서명 또는 민감한 데이터를 로컬에서 가리기",
         "nl": "Verberg watermerken, handtekeningen of gevoelige gegevens lokaal",
         "pl": "Ukryj znaki wodne, podpisy lub wrażliwe dane lokalnie",
-        "tr": "PDF'den hassas bilgileri kalıcı olarak kaldırın"
+        "tr": "PDF'den hassas bilgileri kalıcı olarak kaldırın",
+        "zh-CN": "本地隐藏水印、签名或敏感数据",
+        "ar": "أخفِ العلامات المائية أو التوقيعات أو البيانات الحساسة محليًا"
       },
       "breadcrumb": {
         "en": "Redact PDF",
@@ -2367,7 +2423,9 @@
         "ko": "PDF 가리기",
         "nl": "PDF Zwartmaken",
         "pl": "Zaczernij PDF",
-        "tr": "PDF Gizle"
+        "tr": "PDF Gizle",
+        "zh-CN": "涂黑 PDF",
+        "ar": "تعتيم PDF"
       },
       "metaDescs": {
         "en": "Permanently redact sensitive text and images from PDFs. 100% local — nothing uploaded, nothing stored on any server. Opaque blocks baked in. Works offline.",
@@ -2383,7 +2441,9 @@
         "it": "Oscura permanentemente testo e immagini sensibili dai PDF. 100% locale — niente caricato né memorizzato sui server. Blocchi opachi integrati. Funziona offline.",
         "ko": "PDF에서 민감한 텍스트와 이미지를 영구적으로 삭제. 100% 로컬 처리 — 업로드 없음, 서버에 저장 없음. 불투명 블록 내장. 오프라인 작동.",
         "nl": "Bewerk gevoelige tekst en afbeeldingen permanent uit PDF's. 100% lokaal — niets geüpload of opgeslagen op servers. Ondoorzichtige blokken ingebakken. Werkt offline.",
-        "pl": "Trwale redaguj poufny tekst i obrazy z PDF-ów. 100% lokalnie — nic nie przesyłane ani przechowywane na serwerach. Nieprzezroczyste bloki wbudowane. Działa offline."
+        "pl": "Trwale redaguj poufny tekst i obrazy z PDF-ów. 100% lokalnie — nic nie przesyłane ani przechowywane na serwerach. Nieprzezroczyste bloki wbudowane. Działa offline.",
+        "zh-CN": "永久涂黑 PDF 中的敏感文字和图片。100% 本地处理 —— 不上传，不存储在任何服务器上。遮盖框永久写入。支持离线使用。",
+        "ar": "عتّم النصوص والصور الحساسة من ملفات PDF بشكل دائم. محلي 100% — لا شيء يُرفع أو يُخزَّن على أي خادم. مربعات معتمة مدمجة. يعمل دون اتصال."
       },
       "ogTitles": {
         "en": "Redact PDF Permanently — True Content Removal, Not Just a Cover",
@@ -2399,7 +2459,9 @@
         "ko": "PDF 영구 가리기 — 단순 덮기가 아닌 실제 콘텐츠 제거",
         "nl": "PDF Permanent Zwartmaken — Echte Contentverwijdering, Geen Simpele Afdekking",
         "pl": "Trwałe Zaczernienie PDF — Prawdziwe Usunięcie Treści, a nie Tylko Zakrycie",
-        "tr": "PDF Gizle Ücretsiz — Hassas Bilgileri Kalıcı Sil | PDFree"
+        "tr": "PDF Gizle Ücretsiz — Hassas Bilgileri Kalıcı Sil | PDFree",
+        "zh-CN": "永久涂黑 PDF —— 真正移除内容，而不仅仅是覆盖",
+        "ar": "تعتيم PDF بشكل دائم — إزالة حقيقية للمحتوى، وليس مجرد تغطية"
       },
       "ogDescs": {
         "en": "Permanently redact sensitive text from PDFs. 100% local — nothing leaves your device. Free, no signup.",
@@ -2415,7 +2477,9 @@
         "ko": "PDF에서 민감한 텍스트를 영구적으로 가리세요. 100% 로컬 — 아무것도 기기를 벗어나지 않습니다. 무료, 가입 불필요.",
         "nl": "Verberg gevoelige tekst permanent uit PDF's. 100% lokaal — niets verlaat je apparaat. Gratis, geen registratie.",
         "pl": "Trwale zaczernij wrażliwy tekst w PDF-ach. 100% lokalnie — nic nie opuszcza Twojego urządzenia. Za darmo, bez rejestracji.",
-        "tr": "PDF'deki hassas bilgileri kalıcı olarak gizleyin. Tarayıcıda işleme — dosyalar cihazınızı terk etmez."
+        "tr": "PDF'deki hassas bilgileri kalıcı olarak gizleyin. Tarayıcıda işleme — dosyalar cihazınızı terk etmez.",
+        "zh-CN": "永久涂黑 PDF 中的敏感文字。100% 本地处理 —— 内容永不离开您的设备。免费，无需注册。",
+        "ar": "عتّم النص الحساس من ملفات PDF بشكل دائم. محلي 100% — لا شيء يغادر جهازك. مجانًا، بدون تسجيل."
       },
       "keywords": {
         "en": "redact pdf, cover area pdf, hide text pdf, pdf redaction free, black out pdf text, pdf censor",
@@ -2431,7 +2495,9 @@
         "ko": "pdf 가리기, pdf 영역 가리기, pdf 텍스트 숨기기, pdf 무료 편집, pdf 텍스트 검게 칠하기, pdf 검열",
         "nl": "pdf zwartmaken, pdf gebied afdekken, tekst verbergen in pdf, pdf redigeren gratis, tekst zwart maken in pdf online, pdf censureren",
         "pl": "zaczernij pdf, zakryj obszar pdf, ukryj tekst w pdf, redakcja pdf za darmo, zaczernij tekst w pdf online, cenzura pdf",
-        "tr": "pdf gizle, pdf'de metni karart, pdf'de bilgi gizle, ücretsiz pdf gizleme, pdf metin karartma online"
+        "tr": "pdf gizle, pdf'de metni karart, pdf'de bilgi gizle, ücretsiz pdf gizleme, pdf metin karartma online",
+        "zh-CN": "pdf涂黑, 遮盖pdf区域, 隐藏pdf文字, 免费pdf涂黑, pdf文字涂黑, pdf审查",
+        "ar": "تعتيم pdf, تغطية منطقة pdf, اخفاء نص pdf, تعتيم pdf مجاني, تسويد نص pdf اونلاين, رقابة pdf"
       }
     },
     {

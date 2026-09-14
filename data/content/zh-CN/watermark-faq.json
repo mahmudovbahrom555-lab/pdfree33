@@ -1,0 +1,106 @@
+[
+  {
+    "@type": "Question",
+    "name": "添加水印会上传我的 PDF 吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "不会。水印添加完全使用 pdf-lib 在您的浏览器中完成。不会有任何内容上传到服务器。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFree 会在处理后存储或记录我的文件吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "不会。PDFree 完全在浏览器中运行 —— 没有接收文件的后端服务器。既然没有任何内容被上传，自然也就无法被存储、记录或保留。文档只存在于浏览器内存中，会话期间有效，关闭标签页后即被清除。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "可以从 PDF 中移除水印吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree 只能添加水印，不能从已有的 PDF 中移除水印。PDFree 添加的水印会作为页面内容嵌入，无法被基础工具自动移除。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "可以添加图片水印（Logo）吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "可以。切换到水印工具的 Logo 模式，上传 PNG 或 JPG 图片。它使用与文字水印相同的透明度、大小和位置控制，支持带透明背景的 PNG。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "可以控制水印的透明度和位置吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "可以。您可以调整透明度（5–80%）、字号、颜色和旋转角度。应用水印前，预览会实时更新。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "水印是永久性的吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "是的。水印会作为页面内容嵌入 PDF，标准工具无法轻易移除。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "水印会出现在每一页上吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "是的。默认情况下，水印会应用到 PDF 的所有页面。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "透明度控制的是什么？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "透明度为 100% 时，水印完全不透明（实心、深色）。透明度为 20–30% 时，会形成经典的“幽灵”水印效果 —— 清晰可见但不会遮挡下方内容。大多数场景使用 20–40% 效果最佳。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "可以设置水印颜色吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "可以。您可以设置任意十六进制颜色，或从常用预设中选择。浅灰色（#CCCCCC，透明度 30%）能带来专业、不打扰的效果。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "这款 PDF 水印工具完全免费吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "是的。PDFree 是一款完全免费的 PDF 水印工具 —— 无需订阅，无需注册，输出文件不会添加任何水印或署名标识。您可以根据需要为任意数量的 PDF 添加水印，没有每日次数限制。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "水印和印章在 PDF 中有什么区别？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "这两个术语常被混用。水印通常是半透明的文字，会以对角线方式重复出现在每一页（例如透明度 30% 的“草稿”字样）。印章通常是不透明的标签，只在固定位置出现一次（例如角落的“已批准”）。通过调整文字水印的透明度和位置，PDFree 可以实现这两种效果。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "可以一次为多个 PDF 文件添加水印吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "可以。选择或拖入多个 PDF 文件，PDFree 会逐一将相同的水印 —— 文字或图片 —— 应用到每个文件，全部在浏览器中完成。结果会打包成一个 ZIP 供下载。无需账号，无需上传，没有文件数量限制。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "可以在发票 PDF 上盖“已付款”或“未付款”的印章吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "可以。将文字设置为“已付款”（或“未付款”），选择一个角落位置，并将透明度设为 100%，即可获得实心的印章效果，而不是默认的半透明水印样式。这会应用到您选择的每一页，因此多页发票或对账单都能获得一致的标记。"
+    }
+  }
+]

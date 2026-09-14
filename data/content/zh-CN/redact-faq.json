@@ -1,0 +1,74 @@
+[
+  {
+    "@type": "Question",
+    "name": "涂黑是永久性的吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "是的。PDFree 会在 PDF 对象层面，用黑色矩形替换遮盖框下方的内容。原始文字或图片数据不会存储在文件的其他位置，无法恢复。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFree 会在处理后存储或记录我的文件吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "不会。PDFree 完全在浏览器中运行 —— 没有接收文件的后端服务器。既然没有任何内容被上传，自然也就无法被存储、记录或保留。文档只存在于浏览器内存中，会话期间有效，关闭标签页后即被清除。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDF 涂黑是在本地完成还是在服务器上完成？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "100% 本地完成。PDFree 完全在您的浏览器中处理涂黑操作 —— 不会有任何内容上传到服务器。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "涂黑 PDF 会同时移除元数据吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "不会。视觉涂黑不会移除文档元数据。请单独使用 PDFree 主页上的元数据工具来移除作者姓名和创建日期。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "涂黑和黑色矩形覆盖有什么区别？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "有些工具只是在文字上方绘制一张黑色图片，但原始文字在 PDF 的底层数据中仍可被访问。PDFree 会真正移除内容 —— 安全审查人员提取 PDF 文本流时，在涂黑框下方将找不到任何内容。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "可以一次涂黑多个页面吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "可以。使用翻页按钮在页面之间切换，并在任意页面上绘制遮盖框。点击“应用涂黑”后，所有遮盖框会一并生效。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "下载后可以撤销涂黑吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "不可以。涂黑是单向操作 —— 这正是它安全的原因。如果需要撤销，请使用原始未涂黑的文件重新操作。在确认涂黑后的版本正确无误之前，请将原始文件保存在安全的位置。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFree 也会涂黑可搜索的文本内容吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "会。涂黑操作会移除被覆盖区域的 PDF 内容流数据，包括遮盖框范围内的任何可搜索文本。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "分享 PDF 前应该涂黑哪些个人信息？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "常见的例子包括：社会安全号码、银行账号、出生日期和签名。如果您要将文档发送给银行、雇主或政府机构，先涂黑这些信息通常是最安全的默认做法。"
+    }
+  }
+]
