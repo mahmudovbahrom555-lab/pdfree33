@@ -33,13 +33,14 @@ const enKeys  = new Set(Object.keys(EN));
 const LOCALES_DIR = path.join(ROOT, 'js/locales');
 const localeFiles  = readdirSync(LOCALES_DIR).filter(f => f.endsWith('.js')).sort();
 
-// zh-CN is a deliberately scoped, partial locale — see its own file header.
-// Unlike the other 13 (full sitewide UI translation, checked for full
-// parity below), zh-CN currently backs exactly one dedicated tool page
-// (/zh/merge-pdf/, no homepage) and intentionally translates only the keys
-// that page's interactive flow renders, relying on i18n.js's EN fallback
-// for the rest. Full parity is still enforced for every other locale.
-const PARTIAL_LOCALES = new Set(['zh-CN', 'ar', 'fa', 'he', 'ur', 'bn']);
+// ar/fa/he/ur/bn are deliberately scoped, partial locales — see e.g. ar.js's
+// own file header. Unlike the full-UI locales (checked for full parity
+// below), each currently backs exactly one dedicated tool page (no
+// homepage) and intentionally translates only the keys that page's
+// interactive flow renders, relying on i18n.js's EN fallback for the rest.
+// zh-CN was promoted to a full locale (real homepage, all tool pages) and
+// now gets the same full-parity enforcement as every other full locale.
+const PARTIAL_LOCALES = new Set(['ar', 'fa', 'he', 'ur', 'bn']);
 
 // Extracts top-level `  key:` names from a `window.PDFREE_LOCALE = { ... };`
 // block. Restricted to the block itself (not the whole file) so a future

@@ -54,11 +54,12 @@ const CJK_RE = /[぀-ヿ一-鿿가-힣]/;
 const minLen = (s) => (CJK_RE.test(s) ? 2 : 3);
 
 const LOCALES_DIR = path.join(ROOT, 'js/locales');
-// zh-CN/ar/fa are deliberately scoped, partial locales (see js/locales/zh-CN.js's
+// ar/fa/he/ur/bn are deliberately scoped, partial locales (see js/locales/ar.js's
 // own header) with exactly one dedicated tool page and no homepage — the
 // search widget this test audits is homepage-only, so search_tags coverage
-// doesn't apply to them. Every other locale still gets the full audit below.
-const SCOPED_LOCALE_FILES = new Set(['zh-CN.js', 'ar.js', 'fa.js', 'he.js', 'ur.js', 'bn.js']);
+// doesn't apply to them. zh-CN was promoted to a full locale (real homepage,
+// all tool pages) — it gets the full audit below like every other full locale.
+const SCOPED_LOCALE_FILES = new Set(['ar.js', 'fa.js', 'he.js', 'ur.js', 'bn.js']);
 const locales = readdirSync(LOCALES_DIR).filter(f => f.endsWith('.js') && !SCOPED_LOCALE_FILES.has(f)).map(f => f.replace(/\.js$/, ''));
 
 function loadSearchTags(lc) {
