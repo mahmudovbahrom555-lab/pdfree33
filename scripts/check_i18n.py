@@ -30,6 +30,7 @@ def main():
         "pl": ROOT / "js/locales/pl.js",
         "tr": ROOT / "js/locales/tr.js",
         "zh-CN": ROOT / "js/locales/zh-CN.js",
+        "ar": ROOT / "js/locales/ar.js",
     }
 
     errors = []
