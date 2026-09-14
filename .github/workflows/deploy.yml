@@ -326,15 +326,34 @@ jobs:
           # aggressive `immutable, max-age=31536000` header Cloudflare's
           # Assets binding applies to every static file by default — a bare
           # request to a fixed --preview-alias hostname can return a PRIOR
-          # deploy's cached response. Real bug hit on the first run of this
+          # deploy's cached response. Real bug hit on an early run of this
           # check: it reported the previous commit's version, not this run's,
           # with no error otherwise — matches exactly how js/app.js's own
           # _checkVersionMismatch() already cache-busts this same URL with
           # `?t=<cachebust>` + `cache:'no-store'` for the identical reason.
-          REMOTE_VERSION=$(curl -sf --max-time 15 "$PREVIEW/version.json?_cb=${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}" | python3 -c "import sys,json; print(json.load(sys.stdin)['version'])")
+          #
+          # Retries up to 6 times, 5s apart (~30s total): even WITH
+          # cache-busting, a separate real run hit the identical symptom —
+          # the reused --preview-alias hostname's own DNS/routing pointer
+          # briefly still resolving to the PRIOR version immediately after
+          # `versions upload --preview-alias` reassigns it, before that
+          # reassignment has propagated to every Cloudflare edge node. A
+          # cache-busting query param can't fix a control-plane propagation
+          # delay — only waiting can. Once this specific check passes, the
+          # alias is confirmed fully repointed, so the checks below (which
+          # depend on the same alias serving fresh content) can trust it.
           EXPECTED="${GITHUB_SHA:0:8}"
+          REMOTE_VERSION=""
+          for attempt in 1 2 3 4 5 6; do
+            REMOTE_VERSION=$(curl -sf --max-time 15 "$PREVIEW/version.json?_cb=${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}-${attempt}" | python3 -c "import sys,json; print(json.load(sys.stdin)['version'])" || true)
+            if [ "$REMOTE_VERSION" = "$EXPECTED" ]; then
+              break
+            fi
+            echo "Attempt $attempt: preview version.json says '$REMOTE_VERSION', expected '$EXPECTED' — waiting 5s for alias propagation."
+            sleep 5
+          done
           if [ "$REMOTE_VERSION" != "$EXPECTED" ]; then
-            echo "ERROR: preview version.json says '$REMOTE_VERSION', expected '$EXPECTED'"
+            echo "ERROR: preview version.json still says '$REMOTE_VERSION' after 6 attempts, expected '$EXPECTED'"
             exit 1
           fi
           echo "OK — version.json matches ($REMOTE_VERSION)"
