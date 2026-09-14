@@ -1,0 +1,58 @@
+[
+  {
+    "@type": "Question",
+    "name": "我的 PDF 或密码会被上传到任何地方吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "不会。密码移除完全在您的浏览器中使用 QPDF（WebAssembly）完成。您的文件和密码都不会被发送到任何服务器。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFree 会在处理后存储或记录我的文件吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "不会。PDFree 完全在浏览器中运行 —— 没有接收文件的后端服务器。既然没有任何内容被上传，自然也就无法被存储、记录或保留。文档只存在于浏览器内存中，会话期间有效，关闭标签页后即被清除。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "这能恢复或破解我不知道的密码吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "不能。您必须知道 PDF 的正确密码。PDFree 只能为您已获授权打开的文件移除保护 —— 它不会猜测、恢复或绕过未知密码。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "如果我的 PDF 显示“无需密码”怎么办？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "有些 PDF 只有所有者级别的限制（例如禁止打印或复制），打开时不需要密码。PDFree 会自动检测这种情况，让您无需输入任何内容即可移除这些限制。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "我输入了密码但提示不正确，该怎么办？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "请检查是否有拼写错误、多余空格或大写锁定。密码区分大小写。您的文件会保持已选中状态，可以直接重试。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "这是一款无需注册的免费 PDF 密码移除工具吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "是的。PDFree 完全免费 —— 无需注册，无需账号，无需安装。打开工具，输入密码，下载解锁后的 PDF。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "之后可以重新添加密码吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "可以 —— 使用保护 PDF 工具为解锁后的文件添加新密码或限制。"
+    }
+  }
+]

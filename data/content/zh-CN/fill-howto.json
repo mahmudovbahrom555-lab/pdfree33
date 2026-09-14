@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "如何填写 PDF 表单",
+  "description": "填写任意 PDF 的 AcroForm 字段并添加签名 —— 100% 在浏览器中完成。",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "打开您可填写的 PDF",
+      "text": "点击“选择文件”或将 PDF 拖入拖放区域。所有交互字段会自动被检测并渲染。"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "填写字段",
+      "text": "在文本字段中输入内容，切换复选框，选择下拉选项。对于签名字段，点击“点击签名”并手绘、输入或上传您的签名。"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "下载已填写的 PDF",
+      "text": "点击“填写 PDF 表单”。已完成的文档会直接下载到您的设备 —— 不经过任何服务器。"
+    }
+  ]
+}

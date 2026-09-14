@@ -1,0 +1,98 @@
+[
+  {
+    "@type": "Question",
+    "name": "我填写好的 PDF 会被上传到任何地方吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "不会。一切都使用 pdf-lib 和 pdf.js 在您的浏览器中运行。您的原始 PDF 和填写后的版本都不会被发送到服务器。PDFree 无法访问您的文档。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFree 会在处理后存储或记录我的文件吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "不会。PDFree 完全在浏览器中运行 —— 没有接收文件的后端服务器。既然没有任何内容被上传，自然也就无法被存储、记录或保留。文档只存在于浏览器内存中，会话期间有效，关闭标签页后即被清除。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "支持哪些类型的 PDF 表单字段？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree 支持所有标准 AcroForm 字段类型：文本输入框、复选框、单选按钮、下拉列表和签名字段。签名字段会打开一个签名板，您可以用手指或鼠标绘制、以手写字体输入姓名，或上传签名图片。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "如果我的 PDF 没有可填写字段怎么办？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree 会检测 AcroForm 交互字段。如果 PDF 是扫描图片或没有内嵌表单字段的平面文档，您会看到“未找到可填写字段”的提示。对于平面 PDF，您可以使用批注或水印工具添加文字叠层。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "手绘签名具有法律效力吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "手绘签名图片属于电子签名。其法律效力取决于您所在的司法管辖区和文档类型。对于日常表单、同意文件和内部审批，它已被广泛接受。对于受监管的法律场景，请使用提供审计追踪的认证电子签名服务。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "可以填写有密码保护的 PDF 吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "只有在您拥有所有者密码的情况下才可以。带有编辑限制的加密 PDF，没有凭证无法填写。请先使用保护 PDF 工具移除密码（输入密码，然后不设置新密码直接保存）。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "这是一款无需注册的免费 PDF 表单填写工具吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "是的。PDFree 是一款完全免费的 PDF 表单填写工具，无需注册，无需账号，无需安装。打开工具，加载您的 PDF，填写字段，下载完成的表单 —— 无需提供邮箱地址。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "可以免费在线填写并签署 PDF 表单吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "可以。PDFree 支持一步完成填写和签署。填写文本字段和复选框，然后点击任意签名字段打开绘图板。在移动端用手指签名，在桌面端用鼠标签名。签名会嵌入到下载的 PDF 中。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "这真的能填写表单的真实字段，还是需要我手动放置文字？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree 会检测您 PDF 中真实的 AcroForm 字段 —— 文本框、复选框、单选按钮、下拉菜单和签名字段 —— 并将它们渲染为真正可填写的表单。您不需要手动绘制文本框或猜测位置。如果您的 PDF 没有内嵌字段，PDFree 会直接告知您，而不会假装检测到了并不存在的字段。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "可以更改 PDF 表单字段的 Tab 键顺序吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "可以。加载包含两个或更多字段的表单后，打开 Tab 顺序部分，选择“自动修正”按页面位置排序字段，或选择“自定义”将字段拖动到您自己的顺序。该顺序会被写入 PDF 本身，因此之后在任何 PDF 阅读器中都能保持一致。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "填写 PDF 表单时，Tab 顺序为什么重要？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tab 顺序控制使用键盘而非鼠标导航时字段的访问顺序。这对通过固定次数按 Tab 键来填写表单的自动化数据录入脚本尤为重要 —— 如果顺序发生变化，脚本就会填错字段。可预测的顺序也能让任何表单的手动填写速度更快。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "这与 Adobe 的免费 Fill & Sign 有什么不同？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Adobe 的 Fill & Sign 免费用于填写和签署您自己的 PDF，但需要一个免费的 Adobe 账号，并会将文件上传到 Adobe 的服务器。PDFree 两者都不需要 —— 无需账号，无需登录，文件永远不会离开您的设备。（Adobe 每月 2 次的限制仅适用于将文档发送给他人签署的情况，不适用于自己填写表单。）"
+    }
+  }
+]

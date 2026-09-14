@@ -3446,7 +3446,9 @@
         "ko": "pdf-jakseong",
         "nl": "pdf-invullen",
         "pl": "wypelnij-pdf",
-        "tr": "pdf-doldur"
+        "tr": "pdf-doldur",
+        "zh-CN": "tianxie-pdf",
+        "ar": "tabia-pdf"
       },
       "titles": {
         "en": "Fill and Sign PDF Free — Forms, Checkboxes, Signature, No Upload | PDFree",
@@ -3462,7 +3464,9 @@
         "ko": "PDF 양식 작성 및 서명 무료 — 업로드 없이, 회원가입 없이 | PDFree",
         "nl": "PDF Invullen & Ondertekenen — Gratis, Zonder Uploaden | PDFree",
         "pl": "Wypełnij i Podpisz PDF — Darmowy, Bez Przesyłania Plików | PDFree",
-        "tr": "PDF Doldur ve İmzala — Ücretsiz, Yükleme Yapmadan | PDFree"
+        "tr": "PDF Doldur ve İmzala — Ücretsiz, Yükleme Yapmadan | PDFree",
+        "zh-CN": "免费填写并签署 PDF —— 表单、复选框、签名，无需上传 | PDFree",
+        "ar": "تعبئة وتوقيع PDF مجانًا — نماذج، مربعات اختيار، توقيع، بدون رفع | PDFree"
       },
       "descs": {
         "en": "Fill AcroForm fields and add signatures to PDFs. Processed 100% in your browser — files never leave your device.",
@@ -3478,7 +3482,9 @@
         "ko": "AcroForm 필드를 채우고 PDF에 서명을 추가하세요. 100% 브라우저에서 처리 — 파일이 기기를 벗어나지 않습니다.",
         "nl": "Vul AcroForm-velden in en voeg handtekeningen toe aan PDF's. 100% verwerkt in de browser — bestanden verlaten je apparaat nooit.",
         "pl": "Wypełniaj pola AcroForm i dodawaj podpisy w plikach PDF. Przetwarzane w 100% w przeglądarce — pliki nigdy nie opuszczają Twojego urządzenia.",
-        "tr": "AcroForm alanlarını doldurun ve PDF'lere imza ekleyin. %100 tarayıcıda işlenir — dosyalar cihazınızdan asla ayrılmaz."
+        "tr": "AcroForm alanlarını doldurun ve PDF'lere imza ekleyin. %100 tarayıcıda işlenir — dosyalar cihazınızdan asla ayrılmaz.",
+        "zh-CN": "填写 AcroForm 字段并为 PDF 添加签名。100% 在您的浏览器中处理 —— 文件永不离开您的设备。",
+        "ar": "عبّئ حقول AcroForm وأضف توقيعات إلى ملفات PDF. معالجة 100% في متصفحك — الملفات لا تغادر جهازك أبدًا."
       },
       "navLabels": {
         "en": "Fill PDF",
@@ -3494,7 +3500,9 @@
         "ko": "PDF 작성",
         "nl": "PDF Invullen",
         "pl": "Wypełnij PDF",
-        "tr": "PDF Doldur"
+        "tr": "PDF Doldur",
+        "zh-CN": "填写",
+        "ar": "تعبئة"
       },
       "cardNames": {
         "en": "Fill PDF Form",
@@ -3510,7 +3518,9 @@
         "ko": "PDF 양식 작성",
         "nl": "PDF Invullen",
         "pl": "Wypełnij PDF",
-        "tr": "PDF Doldur"
+        "tr": "PDF Doldur",
+        "zh-CN": "填写 PDF 表单",
+        "ar": "تعبئة نموذج PDF"
       },
       "cardDescs": {
         "en": "Fill form fields and sign PDFs locally",
@@ -3526,7 +3536,9 @@
         "ko": "양식을 채우고 PDF에 로컬에서 서명",
         "nl": "Vul formuliervelden in en onderteken PDF's lokaal",
         "pl": "Wypełniaj pola formularza i podpisuj PDF lokalnie",
-        "tr": "Form alanlarını doldurun ve PDF'leri yerel olarak imzalayın"
+        "tr": "Form alanlarını doldurun ve PDF'leri yerel olarak imzalayın",
+        "zh-CN": "本地填写表单字段并签署 PDF",
+        "ar": "عبّئ حقول النماذج ووقّع ملفات PDF محليًا"
       },
       "breadcrumb": {
         "en": "Fill PDF Form",
@@ -3542,7 +3554,9 @@
         "ko": "PDF 양식 작성",
         "nl": "PDF Invullen",
         "pl": "Wypełnij PDF",
-        "tr": "PDF Doldur"
+        "tr": "PDF Doldur",
+        "zh-CN": "填写 PDF 表单",
+        "ar": "تعبئة نموذج PDF"
       },
       "metaDescs": {
         "en": "Fill and sign any PDF form free — type in fields, tick checkboxes, add your signature, download. Runs in your browser, nothing uploaded or stored. No signup.",
@@ -3558,7 +3572,9 @@
         "ko": "PDF 양식을 무료로 작성하고 서명 — 필드에 입력, 체크박스 선택, 서명 추가. 브라우저에서 실행, 업로드 없음, 저장 없음. 가입 없음.",
         "nl": "Vul gratis elk PDF-formulier in en onderteken het — typ in velden, vink vakjes aan, voeg je handtekening toe. In de browser, niets geüpload of opgeslagen. Geen aanmelding.",
         "pl": "Wypełnij i podpisz dowolny formularz PDF za darmo — wpisuj w pola, zaznaczaj pola wyboru, dodaj podpis. W przeglądarce, nic nie przesyłane ani przechowywane. Bez rejestracji.",
-        "tr": "PDF formunu ücretsiz doldurun ve imzalayın — alanlara yazın, kutuları işaretleyin, imza ekleyin. Tarayıcıda, yükleme yok, depolama yok. Kayıt yok."
+        "tr": "PDF formunu ücretsiz doldurun ve imzalayın — alanlara yazın, kutuları işaretleyin, imza ekleyin. Tarayıcıda, yükleme yok, depolama yok. Kayıt yok.",
+        "zh-CN": "免费填写并签署任意 PDF 表单 —— 输入字段、勾选复选框、添加签名，然后下载。在浏览器中运行，不上传、不存储。无需注册。",
+        "ar": "عبّئ ووقّع أي نموذج PDF مجانًا — اكتب في الحقول، حدد مربعات الاختيار، أضف توقيعك، ونزّل. في متصفحك، بدون رفع أو تخزين. بدون تسجيل."
       },
       "ogTitles": {
         "en": "Fill and Sign PDF Free — Text Fields, Checkboxes, Signature, No Upload",
@@ -3574,7 +3590,9 @@
         "ko": "PDF 양식 작성 및 서명 무료 — 텍스트 필드, 체크박스, 서명, 업로드 없이",
         "nl": "PDF Invullen & Ondertekenen Gratis — Tekstvelden, Selectievakjes, Handtekening, Zonder Uploaden",
         "pl": "Wypełnij i Podpisz PDF za Darmo — Pola Tekstowe, Checkboxy, Podpis, Bez Przesyłania",
-        "tr": "PDF Doldur ve İmzala Ücretsiz — Metin Alanları, Onay Kutuları, İmza, Yükleme Yapmadan"
+        "tr": "PDF Doldur ve İmzala Ücretsiz — Metin Alanları, Onay Kutuları, İmza, Yükleme Yapmadan",
+        "zh-CN": "免费填写并签署 PDF —— 文本字段、复选框、签名，无需上传",
+        "ar": "تعبئة وتوقيع PDF مجانًا — حقول نصية، مربعات اختيار، توقيع، بدون رفع"
       },
       "ogDescs": {
         "en": "Fill out or fill in PDF forms and sign — runs entirely in your browser, nothing uploaded. Free, no sign up, no limits.",
@@ -3590,7 +3608,9 @@
         "ko": "PDF 양식 필드를 채우고 서명을 추가하세요. 100% 로컬 처리 — 파일이 브라우저를 벗어나지 않습니다. 무료, 회원가입 불필요.",
         "nl": "Vul PDF-formuliervelden in en voeg een handtekening toe. 100% lokaal — bestanden verlaten je browser nooit. Gratis, zonder registratie.",
         "pl": "Wypełniaj pola formularza PDF i dodawaj podpis. 100% lokalnie — pliki nigdy nie opuszczają przeglądarki. Za darmo, bez rejestracji.",
-        "tr": "PDF form alanlarını doldurun ve imza ekleyin. %100 yerel — dosyalar tarayıcınızdan asla ayrılmaz. Ücretsiz, kayıt olmadan."
+        "tr": "PDF form alanlarını doldurun ve imza ekleyin. %100 yerel — dosyalar tarayıcınızdan asla ayrılmaz. Ücretsiz, kayıt olmadan.",
+        "zh-CN": "填写 PDF 表单字段并添加签名。100% 本地处理 —— 文件永不离开您的浏览器。免费，无需注册。",
+        "ar": "عبّئ حقول نموذج PDF وأضف توقيعًا. محلي 100% — الملفات لا تغادر متصفحك أبدًا. مجانًا، بدون تسجيل."
       },
       "keywords": {
         "en": "fill pdf form, fill pdf online free, fill out pdf, pdf form filler, complete pdf form online",
@@ -3606,7 +3626,9 @@
         "ko": "pdf 작성, pdf 양식 온라인 작성, pdf 무료 작성, 인쇄 없이 pdf 작성, pdf 양식 편집기",
         "nl": "pdf invullen, pdf formulier online invullen, pdf gratis invullen, pdf invullen zonder printen, pdf formulier editor",
         "pl": "wypełnij pdf, wypełnij formularz pdf online, wypełnij pdf za darmo, wypełnij pdf bez drukowania, edytor formularzy pdf",
-        "tr": "pdf doldur, pdf formu online doldur, ücretsiz pdf doldurma, yazdırmadan pdf doldur, pdf form düzenleyici"
+        "tr": "pdf doldur, pdf formu online doldur, ücretsiz pdf doldurma, yazdırmadan pdf doldur, pdf form düzenleyici",
+        "zh-CN": "填写pdf表单, 免费在线填写pdf, 填写pdf, pdf表单填写工具, 在线完成pdf表单",
+        "ar": "تعبئة نموذج pdf, تعبئة pdf اونلاين مجاني, تعبئة pdf, أداة تعبئة نماذج pdf, اكمال نموذج pdf اونلاين"
       }
     },
     {
@@ -3627,7 +3649,9 @@
         "ko": "pdf-pyeongmyeonhwa",
         "nl": "pdf-afvlakken",
         "pl": "splaszcz-pdf",
-        "tr": "pdf-duzlestir"
+        "tr": "pdf-duzlestir",
+        "zh-CN": "zhanping-pdf",
+        "ar": "tastih-pdf"
       },
       "titles": {
         "en": "Flatten PDF — Make PDF Non-Editable Online Free | PDFree",
@@ -3643,7 +3667,9 @@
         "ko": "PDF 평면화 — PDF 편집 불가능하게 온라인 무료로 | PDFree",
         "nl": "PDF Afvlakken — PDF Online Gratis Niet-bewerkbaar Maken | PDFree",
         "pl": "Spłaszcz PDF — Zrób PDF Nieedytowalny Online Za Darmo | PDFree",
-        "tr": "PDF Form Alanlarını Kilitle — Ücretsiz, Yükleme Yapmadan | PDFree"
+        "tr": "PDF Form Alanlarını Kilitle — Ücretsiz, Yükleme Yapmadan | PDFree",
+        "zh-CN": "展平 PDF —— 在线免费使 PDF 不可编辑 | PDFree",
+        "ar": "تسطيح PDF — اجعل PDF غير قابل للتحرير عبر الإنترنت مجانًا | PDFree"
       },
       "descs": {
         "en": "Lock your filled PDF form so fields can't be edited. Bakes form data into the page — no upload, 100% private, free.",
@@ -3659,7 +3685,9 @@
         "ko": "작성한 PDF 양식을 잠가 필드를 편집할 수 없게 하세요. 양식 데이터가 페이지에 영구 반영됩니다 — 업로드 없음, 100% 비공개, 무료.",
         "nl": "Vergrendel je ingevulde PDF-formulier zodat velden niet meer bewerkt kunnen worden. Formuliergegevens worden in de pagina ingebakken — geen upload, 100% privé, gratis.",
         "pl": "Zablokuj wypełniony formularz PDF, aby pól nie można było edytować. Dane formularza są wpisywane na stałe w stronę — bez przesyłania, 100% prywatności, za darmo.",
-        "tr": "PDF form alanlarını kalıcı olarak kilitleyin. Doldurulmuş veriler düz metin haline gelir ve değiştirilemez. Tarayıcıda işleme — yükleme yok."
+        "tr": "PDF form alanlarını kalıcı olarak kilitleyin. Doldurulmuş veriler düz metin haline gelir ve değiştirilemez. Tarayıcıda işleme — yükleme yok.",
+        "zh-CN": "锁定已填写的 PDF 表单，使字段无法编辑。将表单数据固化到页面中 —— 无需上传，100% 隐私保护，免费。",
+        "ar": "اقفل نموذج PDF المعبّأ حتى لا يمكن تحرير الحقول. يثبّت بيانات النموذج في الصفحة — بدون رفع، خصوصية 100%، مجاني."
       },
       "navLabels": {
         "en": "Lock PDF",
@@ -3675,7 +3703,9 @@
         "ko": "PDF 잠금",
         "nl": "PDF Vergrendelen",
         "pl": "Zablokuj PDF",
-        "tr": "Form Kilitle"
+        "tr": "Form Kilitle",
+        "zh-CN": "锁定",
+        "ar": "قفل"
       },
       "cardNames": {
         "en": "Flatten PDF",
@@ -3691,7 +3721,9 @@
         "ko": "PDF 평면화",
         "nl": "PDF Afvlakken",
         "pl": "Spłaszcz PDF",
-        "tr": "PDF Düzleştir"
+        "tr": "PDF Düzleştir",
+        "zh-CN": "展平 PDF",
+        "ar": "تسطيح PDF"
       },
       "cardDescs": {
         "en": "Bake form fields into the page — prevent editing",
@@ -3707,7 +3739,9 @@
         "ko": "양식 필드를 페이지에 영구 반영 — 편집 방지",
         "nl": "Bak formuliervelden in de pagina — voorkom bewerking",
         "pl": "Wpisz pola formularza na stałe w stronę — zapobiegaj edycji",
-        "tr": "PDF form alanlarını kalıcı olarak kilitleyin"
+        "tr": "PDF form alanlarını kalıcı olarak kilitleyin",
+        "zh-CN": "将表单字段固化到页面中 —— 防止编辑",
+        "ar": "ثبّت حقول النموذج في الصفحة — امنع التحرير"
       },
       "breadcrumb": {
         "en": "Flatten PDF",
@@ -3723,7 +3757,9 @@
         "ko": "PDF 평면화",
         "nl": "PDF Afvlakken",
         "pl": "Spłaszcz PDF",
-        "tr": "PDF Düzleştir"
+        "tr": "PDF Düzleştir",
+        "zh-CN": "展平 PDF",
+        "ar": "تسطيح PDF"
       },
       "metaDescs": {
         "en": "Flatten a filled PDF form free — lock fields permanently so no one can edit your document. Runs in your browser, no upload, 100% private. Instant download.",
@@ -3739,7 +3775,9 @@
         "ko": "작성된 PDF 양식을 무료로 평면화하세요 — 필드를 영구적으로 잠가 아무도 문서를 편집할 수 없게 합니다. 브라우저에서 실행, 업로드 없음, 100% 비공개. 즉시 다운로드.",
         "nl": "Vlak een ingevuld PDF-formulier gratis af — vergrendel velden permanent zodat niemand je document kan bewerken. Werkt in je browser, geen upload, 100% privé. Direct downloaden.",
         "pl": "Spłaszcz wypełniony formularz PDF za darmo — zablokuj pola na stałe, aby nikt nie mógł edytować dokumentu. Działa w przeglądarce, bez przesyłania, 100% prywatności. Natychmiastowe pobieranie.",
-        "tr": "PDF form alanlarını ücretsiz kilitleyin — doldurulmuş veriler kalıcı hale gelir. Yükleme yok, kayıt gerekmez."
+        "tr": "PDF form alanlarını ücretsiz kilitleyin — doldurulmuş veriler kalıcı hale gelir. Yükleme yok, kayıt gerekmez.",
+        "zh-CN": "免费展平已填写的 PDF 表单 —— 永久锁定字段，任何人都无法编辑您的文档。在浏览器中运行，无需上传，100% 隐私保护。即时下载。",
+        "ar": "سطّح نموذج PDF معبّأ مجانًا — اقفل الحقول بشكل دائم حتى لا يتمكن أحد من تحرير مستندك. يعمل في متصفحك، بدون رفع، خصوصية 100%. تنزيل فوري."
       },
       "ogTitles": {
         "en": "Flatten PDF — Lock Fillable PDF Form Online, No Upload",
@@ -3755,7 +3793,9 @@
         "ko": "PDF 평면화 — 작성 가능한 PDF 양식 온라인 잠금, 업로드 없음",
         "nl": "PDF Afvlakken — Invulbaar PDF-formulier Online Vergrendelen, Geen Upload",
         "pl": "Spłaszcz PDF — Zablokuj Wypełnialny Formularz PDF Online, Bez Przesyłania",
-        "tr": "PDF Form Alanlarını Kilitle Ücretsiz | PDFree"
+        "tr": "PDF Form Alanlarını Kilitle Ücretsiz | PDFree",
+        "zh-CN": "展平 PDF —— 在线锁定可填写表单，无需上传",
+        "ar": "تسطيح PDF — اقفل نموذج PDF قابل للتعبئة عبر الإنترنت، بدون رفع"
       },
       "ogDescs": {
         "en": "Make a fillable PDF non-editable. Form fields baked into the page — processed in your browser, never uploaded. Free.",
@@ -3771,7 +3811,9 @@
         "ko": "작성 가능한 PDF를 편집 불가능하게 만드세요. 양식 필드가 페이지에 영구 반영됩니다 — 브라우저에서 처리, 업로드 없음. 무료.",
         "nl": "Maak een invulbare PDF niet-bewerkbaar. Formuliervelden ingebakken in de pagina — verwerkt in je browser, nooit geüpload. Gratis.",
         "pl": "Spraw, by wypełnialny PDF stał się nieedytowalny. Pola formularza wpisane na stałe w stronę — przetwarzane w przeglądarce, nigdy nie przesyłane. Za darmo.",
-        "tr": "PDF form alanlarını kalıcı olarak kilitleyin. Tarayıcıda işleme — dosyalar cihazınızı terk etmez."
+        "tr": "PDF form alanlarını kalıcı olarak kilitleyin. Tarayıcıda işleme — dosyalar cihazınızı terk etmez.",
+        "zh-CN": "使可填写的 PDF 变为不可编辑。表单字段固化到页面中 —— 在浏览器中处理，从不上传。免费。",
+        "ar": "اجعل ملف PDF القابل للتعبئة غير قابل للتحرير. حقول النموذج مثبّتة في الصفحة — تتم المعالجة في متصفحك، لا تُرفع أبدًا. مجانًا."
       },
       "keywords": {
         "en": "flatten pdf, flatten filled pdf, make pdf non-editable, lock pdf form fields, flatten pdf online free, flatten pdf without uploading, how to flatten a pdf, make pdf not fillable, flatten pdf annotations, flatten pdf for printing, flatten pdf without adobe",
@@ -3787,7 +3829,9 @@
         "ko": "pdf 평면화, 작성된 pdf 평면화, pdf 편집 불가능하게 만들기, pdf 양식 필드 잠금, pdf 무료 온라인 평면화",
         "nl": "pdf afvlakken, ingevuld pdf afvlakken, pdf niet-bewerkbaar maken, pdf formuliervelden vergrendelen, pdf gratis online afvlakken",
         "pl": "spłaszcz pdf, spłaszcz wypełniony pdf, zrób pdf nieedytowalny, zablokuj pola formularza pdf, spłaszcz pdf online za darmo",
-        "tr": "pdf düzleştir, doldurulmuş pdf'yi düzleştir, pdf'yi düzenlenemez yap, pdf form alanlarını kilitle, ücretsiz online pdf düzleştirme"
+        "tr": "pdf düzleştir, doldurulmuş pdf'yi düzleştir, pdf'yi düzenlenemez yap, pdf form alanlarını kilitle, ücretsiz online pdf düzleştirme",
+        "zh-CN": "展平pdf, 展平已填写的pdf, 使pdf不可编辑, 锁定pdf表单字段, 免费在线展平pdf",
+        "ar": "تسطيح pdf, تسطيح pdf معبّأ, جعل pdf غير قابل للتحرير, قفل حقول نموذج pdf, تسطيح pdf اونلاين مجاني"
       },
       "batch": true
     },
@@ -4533,7 +4577,9 @@
         "ko": "pdf-jamgeum-haeje",
         "nl": "pdf-ontgrendelen",
         "pl": "odblokuj-pdf",
-        "tr": "pdf-sifre-kaldir"
+        "tr": "pdf-sifre-kaldir",
+        "zh-CN": "jiesuo-pdf",
+        "ar": "fath-qifl-pdf"
       },
       "titles": {
         "en": "Unlock PDF — Remove Password Protection, No Upload | PDFree",
@@ -4549,7 +4595,9 @@
         "ko": "PDF 잠금 해제 — 비밀번호 보호 제거, 업로드 없음 | PDFree",
         "nl": "PDF Ontgrendelen — Wachtwoordbeveiliging Verwijderen, Geen Upload | PDFree",
         "pl": "Odblokuj PDF — Usuń Zabezpieczenie Hasłem, Bez Przesyłania | PDFree",
-        "tr": "PDF Şifresini Kaldır — Ücretsiz, Yükleme Yapmadan | PDFree"
+        "tr": "PDF Şifresini Kaldır — Ücretsiz, Yükleme Yapmadan | PDFree",
+        "zh-CN": "在线解锁 PDF —— 移除密码保护，无需上传 | PDFree",
+        "ar": "فتح قفل PDF — إزالة حماية كلمة المرور، بدون رفع | PDFree"
       },
       "descs": {
         "en": "Remove PDF password protection — runs in your browser, no upload.",
@@ -4565,7 +4613,9 @@
         "ko": "PDF 비밀번호 보호를 제거하세요 — 브라우저에서 실행, 업로드 없음.",
         "nl": "Verwijder PDF-wachtwoordbeveiliging — werkt in je browser, geen upload.",
         "pl": "Usuń zabezpieczenie hasłem z PDF — działa w przeglądarce, bez przesyłania.",
-        "tr": "PDF'den parola korumasını kaldırın. Kullanıcı kısıtlamalarını ve şifreyi tek tıkla kaldırın. Tarayıcıda işleme — yükleme yok."
+        "tr": "PDF'den parola korumasını kaldırın. Kullanıcı kısıtlamalarını ve şifreyi tek tıkla kaldırın. Tarayıcıda işleme — yükleme yok.",
+        "zh-CN": "移除 PDF 密码保护 —— 在浏览器中运行，无需上传。",
+        "ar": "أزل حماية كلمة مرور PDF — يعمل في متصفحك، بدون رفع."
       },
       "navLabels": {
         "en": "Unlock PDF",
@@ -4581,7 +4631,9 @@
         "ko": "PDF 잠금 해제",
         "nl": "PDF Ontgrendelen",
         "pl": "Odblokuj PDF",
-        "tr": "PDF Kilidi Aç"
+        "tr": "PDF Kilidi Aç",
+        "zh-CN": "解锁 PDF",
+        "ar": "فتح قفل PDF"
       },
       "cardNames": {
         "en": "Unlock PDF",
@@ -4597,7 +4649,9 @@
         "ko": "PDF 잠금 해제",
         "nl": "PDF Ontgrendelen",
         "pl": "Odblokuj PDF",
-        "tr": "PDF Kilidi Aç"
+        "tr": "PDF Kilidi Aç",
+        "zh-CN": "解锁 PDF",
+        "ar": "فتح قفل PDF"
       },
       "cardDescs": {
         "en": "Remove password protection locally",
@@ -4613,7 +4667,9 @@
         "ko": "로컬에서 비밀번호 보호 제거",
         "nl": "Verwijder wachtwoordbeveiliging lokaal",
         "pl": "Usuń zabezpieczenie hasłem lokalnie",
-        "tr": "PDF'den parola ve kısıtlamaları kaldırın"
+        "tr": "PDF'den parola ve kısıtlamaları kaldırın",
+        "zh-CN": "本地移除密码保护",
+        "ar": "أزل حماية كلمة المرور محليًا"
       },
       "breadcrumb": {
         "en": "Unlock PDF",
@@ -4629,7 +4685,9 @@
         "ko": "PDF 잠금 해제",
         "nl": "PDF Ontgrendelen",
         "pl": "Odblokuj PDF",
-        "tr": "PDF Kilidi Aç"
+        "tr": "PDF Kilidi Aç",
+        "zh-CN": "解锁 PDF",
+        "ar": "فتح قفل PDF"
       },
       "metaDescs": {
         "en": "Remove PDF password protection free — enter the password, download an unlocked file. Runs in your browser, nothing uploaded or stored. No account.",
@@ -4645,7 +4703,9 @@
         "it": "Rimuovi la protezione con password da un PDF gratis — inserisci la password corretta e scarica il file sbloccato. Nel browser, niente caricato né memorizzato. Nessun account.",
         "ko": "PDF 비밀번호 보호 무료 해제 — 올바른 비밀번호를 입력하고 잠금 해제된 파일을 다운로드. 브라우저에서 실행, 업로드 없음, 저장 없음. 계정 불필요.",
         "nl": "Verwijder PDF-wachtwoordbeveiliging gratis — voer het juiste wachtwoord in en download het ontgrendelde bestand. In de browser, niets geüpload of opgeslagen. Geen account.",
-        "pl": "Usuń ochronę hasłem z PDF za darmo — wprowadź poprawne hasło i pobierz odblokowany plik. W przeglądarce, nic nie przesyłane ani przechowywane. Bez konta."
+        "pl": "Usuń ochronę hasłem z PDF za darmo — wprowadź poprawne hasło i pobierz odblokowany plik. W przeglądarce, nic nie przesyłane ani przechowywane. Bez konta.",
+        "zh-CN": "免费移除 PDF 密码保护 —— 输入密码，下载解锁后的文件。在浏览器中运行，不上传、不存储。无需账号。",
+        "ar": "أزل حماية كلمة مرور PDF مجانًا — أدخل كلمة المرور، نزّل الملف المفكوك. يعمل في متصفحك، بدون رفع أو تخزين. بدون حساب."
       },
       "ogTitles": {
         "en": "Unlock PDF Free — Remove Password Protection, No Upload",
@@ -4661,7 +4721,9 @@
         "ko": "PDF 잠금 해제 무료 — 비밀번호 보호 제거, 업로드 없음",
         "nl": "PDF Ontgrendelen Gratis — Wachtwoordbeveiliging Verwijderen, Geen Upload",
         "pl": "Odblokuj PDF Za Darmo — Usuń Zabezpieczenie Hasłem, Bez Przesyłania",
-        "tr": "PDF Şifresini Kaldır Ücretsiz — Yükleme Yok | PDFree"
+        "tr": "PDF Şifresini Kaldır Ücretsiz — Yükleme Yok | PDFree",
+        "zh-CN": "免费解锁 PDF —— 移除密码保护，无需上传",
+        "ar": "فتح قفل PDF مجانًا — إزالة حماية كلمة المرور، بدون رفع"
       },
       "ogDescs": {
         "en": "PDF password removal that runs entirely in your browser. No upload, no server, no account. 100% private.",
@@ -4677,7 +4739,9 @@
         "ko": "PDF 비밀번호 제거는 브라우저에서 완전히 실행됩니다. 업로드 없음, 서버 없음, 계정 불필요. 100% 비공개.",
         "nl": "Het verwijderen van het PDF-wachtwoord gebeurt volledig in je browser. Geen upload, geen server, geen account. 100% privé.",
         "pl": "Usuwanie hasła PDF odbywa się całkowicie w przeglądarce. Bez przesyłania, bez serwera, bez konta. 100% prywatności.",
-        "tr": "PDF'den parola korumasını kaldırın. Tarayıcıda işleme — dosyalar cihazınızı terk etmez."
+        "tr": "PDF'den parola korumasını kaldırın. Tarayıcıda işleme — dosyalar cihazınızı terk etmez.",
+        "zh-CN": "移除 PDF 密码。在浏览器中运行 —— 文件永不离开您的设备。100% 隐私保护。",
+        "ar": "أزل حماية كلمة مرور PDF. يعمل في متصفحك — الملفات لا تغادر جهازك أبدًا. خصوصية 100%."
       },
       "keywords": {
         "en": "unlock pdf, remove pdf password, remove password from pdf, open protected pdf, decrypt pdf, pdf password remover",
@@ -4693,7 +4757,9 @@
         "ko": "pdf 잠금 해제, pdf 비밀번호 제거, pdf에서 암호 삭제, 보호된 pdf 열기, pdf 복호화 온라인",
         "nl": "pdf ontgrendelen, wachtwoord verwijderen van pdf, pdf wachtwoord weghalen, beveiligde pdf openen, pdf online decoderen",
         "pl": "odblokuj pdf, usuń hasło z pdf, skasuj hasło pdf, otwórz zabezpieczony pdf, odszyfruj pdf online",
-        "tr": "pdf kilidini aç, pdf şifresini kaldır, pdf şifresini sil, korumalı pdf aç, pdf şifre çöz online"
+        "tr": "pdf kilidini aç, pdf şifresini kaldır, pdf şifresini sil, korumalı pdf aç, pdf şifre çöz online",
+        "zh-CN": "pdf解锁, 移除pdf密码, 从pdf中移除密码, 打开受保护的pdf, pdf解密, pdf密码移除工具",
+        "ar": "فتح قفل pdf, ازالة كلمة مرور pdf, ازالة كلمة مرور من pdf, فتح pdf محمي, فك تشفير pdf, أداة ازالة كلمة مرور pdf"
       }
     },
     {

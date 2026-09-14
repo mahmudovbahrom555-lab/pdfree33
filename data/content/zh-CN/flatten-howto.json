@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "如何展平 PDF",
+  "description": "将表单字段永久固化到 PDF 页面中 —— 免费，无需上传。",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "打开已填写的 PDF",
+      "text": "点击“选择文件”或将已填写的 PDF 拖入拖放区域。"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "点击展平 PDF",
+      "text": "按下展平 PDF 按钮。所有交互元素会在您的浏览器中被合并到静态页面内容中。"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "下载锁定后的 PDF",
+      "text": "展平后的 PDF 会立即下载。字段现已永久固定 —— 任何收件人都无法编辑该文档。"
+    }
+  ]
+}
