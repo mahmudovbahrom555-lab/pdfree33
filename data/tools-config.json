@@ -392,7 +392,9 @@
         "ko": "pdf-bunhal",
         "nl": "pdf-splitsen",
         "pl": "podziel-pdf",
-        "tr": "pdf-bol"
+        "tr": "pdf-bol",
+        "zh-CN": "chaifen-pdf",
+        "ar": "taqsim-pdf"
       },
       "titles": {
         "en": "Split PDF Free — Separate Pages Online, No Upload | PDFree",
@@ -408,7 +410,9 @@
         "ko": "PDF 분할 — 무료, 업로드 없이 | PDFree",
         "nl": "PDF splitsen — Gratis, Zonder Uploaden | PDFree",
         "pl": "Podziel PDF — Darmowy, Bez Przesyłania | PDFree",
-        "tr": "PDF Böl — Ücretsiz, Yükleme Yapmadan | PDFree"
+        "tr": "PDF Böl — Ücretsiz, Yükleme Yapmadan | PDFree",
+        "zh-CN": "免费拆分 PDF 文件 — 在线提取页面，无需上传 | PDFree",
+        "ar": "تقسيم ملفات PDF مجانًا — استخراج الصفحات عبر الإنترنت، بدون رفع | PDFree"
       },
       "descs": {
         "en": "Extract pages or split PDF into separate files. 100% private, no uploads, no limits.",
@@ -424,7 +428,9 @@
         "ko": "PDF를 여러 파일로 나누거나 특정 페이지를 추출합니다. 브라우저에서 처리, 업로드 없음.",
         "nl": "Splits een PDF in meerdere bestanden of extraheer specifieke pagina's. Verwerkt in de browser, geen upload.",
         "pl": "Podziel PDF na wiele plików lub wyodrębnij konkretne strony. Przetwarzane w przeglądarce, bez przesyłania.",
-        "tr": "PDF'i birden fazla dosyaya bölün veya belirli sayfaları çıkarın. Tarayıcıda işlenir, yükleme yok."
+        "tr": "PDF'i birden fazla dosyaya bölün veya belirli sayfaları çıkarın. Tarayıcıda işlenir, yükleme yok.",
+        "zh-CN": "提取页面或将 PDF 拆分为多个独立文件。100% 隐私保护，无需上传，无限制。",
+        "ar": "استخرج صفحات أو قسّم ملف PDF إلى ملفات منفصلة. خصوصية كاملة 100%، بدون رفع، بدون قيود."
       },
       "navLabels": {
         "en": "Split",
@@ -440,7 +446,9 @@
         "ko": "분할",
         "nl": "Splitsen",
         "pl": "Podziel PDF",
-        "tr": "PDF Böl"
+        "tr": "PDF Böl",
+        "zh-CN": "拆分",
+        "ar": "تقسيم"
       },
       "cardNames": {
         "en": "Split PDF",
@@ -456,7 +464,9 @@
         "ko": "PDF 분할",
         "nl": "PDF splitsen",
         "pl": "Podziel PDF",
-        "tr": "PDF Böl"
+        "tr": "PDF Böl",
+        "zh-CN": "拆分 PDF",
+        "ar": "تقسيم PDF"
       },
       "cardDescs": {
         "en": "Extract pages or split into separate files",
@@ -472,7 +482,9 @@
         "ko": "PDF 분할 또는 특정 페이지 추출 — 제한 없음",
         "nl": "PDF splitsen of specifieke pagina's extraheren — zonder beperkingen",
         "pl": "Podziel PDF lub wyodrębnij strony — bez ograniczeń",
-        "tr": "PDF'i böl veya sayfa çıkar — limit yok"
+        "tr": "PDF'i böl veya sayfa çıkar — limit yok",
+        "zh-CN": "提取页面或拆分为独立文件",
+        "ar": "استخرج صفحات أو قسّم إلى ملفات منفصلة"
       },
       "breadcrumb": {
         "en": "Split PDF",
@@ -488,7 +500,9 @@
         "ko": "PDF 분할",
         "nl": "PDF splitsen",
         "pl": "Podziel PDF",
-        "tr": "PDF Böl"
+        "tr": "PDF Böl",
+        "zh-CN": "拆分 PDF",
+        "ar": "تقسيم PDF"
       },
       "metaDescs": {
         "en": "Free PDF splitter — extract exact pages or page ranges online, no upload, no signup. All processed in your browser.",
@@ -504,7 +518,9 @@
         "ko": "PDF를 무료로 나누기 — 원하는 페이지나 범위만 정확히 추출. 브라우저에서 처리, 업로드 없음, 가입 불필요. 100% 비공개, 오프라인에서도 작동합니다.",
         "nl": "PDF splitsen gratis — pagina's scheiden of specifieke secties extraheren. Verwerkt in de browser, geen upload. 100% privé.",
         "pl": "Podziel PDF za darmo — oddziel strony lub wyodrębnij konkretne sekcje. Przetwarzane w przeglądarce, bez przesyłania. 100% prywatne.",
-        "tr": "PDF böl ücretsiz — sayfaları ayır veya belirli bölümleri çıkar. Tarayıcıda işlenir, yükleme yok. %100 gizli."
+        "tr": "PDF böl ücretsiz — sayfaları ayır veya belirli bölümleri çıkar. Tarayıcıda işlenir, yükleme yok. %100 gizli.",
+        "zh-CN": "免费 PDF 拆分工具 — 在线精确提取页面或页面范围，无需上传，无需注册。所有处理均在您的浏览器中完成。",
+        "ar": "أداة تقسيم PDF مجانية — استخرج صفحات محددة أو نطاقات صفحات عبر الإنترنت، بدون رفع، بدون تسجيل. تتم كل المعالجة داخل متصفحك."
       },
       "ogTitles": {
         "en": "Split PDF Free — Separate, Divide, or Extract Pages, No Upload",
@@ -520,7 +536,9 @@
         "ko": "PDF 나누기 무료 — 업로드 없이 | PDFree",
         "nl": "PDF splitsen Gratis — Zonder Uploaden | PDFree",
         "pl": "Podziel PDF Za Darmo — Bez Przesyłania | PDFree",
-        "tr": "PDF Böl Ücretsiz — Yükleme Yok | PDFree"
+        "tr": "PDF Böl Ücretsiz — Yükleme Yok | PDFree",
+        "zh-CN": "免费拆分 PDF — 分离、拆分或提取页面，无需上传",
+        "ar": "تقسيم PDF مجانًا — افصل أو قسّم أو استخرج الصفحات بدون رفع"
       },
       "ogDescs": {
         "en": "Split PDFs into separate pages or extract a page range. 100% private — files never uploaded. Free.",
@@ -536,7 +554,9 @@
         "ko": "PDF를 즉시 나눕니다. 100% 비공개 — 파일이 브라우저를 절대 벗어나지 않습니다.",
         "nl": "Splits PDF's direct. 100% privé — bestanden verlaten nooit je browser.",
         "pl": "Podziel PDF bezpośrednio. 100% prywatne — pliki nigdy nie opuszczają przeglądarki.",
-        "tr": "PDF'i doğrudan bölün. %100 gizli — dosyalar tarayıcıyı asla terk etmez."
+        "tr": "PDF'i doğrudan bölün. %100 gizli — dosyalar tarayıcıyı asla terk etmez.",
+        "zh-CN": "将 PDF 拆分为独立页面或提取页面范围。100% 隐私 — 文件永不上传。完全免费。",
+        "ar": "قسّم ملفات PDF إلى صفحات منفصلة أو استخرج نطاق صفحات. خصوصية 100% — لا تُرفع الملفات أبدًا. مجانًا."
       },
       "keywords": {
         "en": "split pdf, divide pdf, extract pages from pdf, split pdf online free, pdf splitter, split pdf without uploading",
@@ -552,7 +572,9 @@
         "ko": "pdf 분할, pdf 페이지 나누기, pdf 온라인 분할, pdf 무료 분할, pdf에서 페이지 추출",
         "nl": "pdf splitsen, pdf pagina's scheiden, pdf online splitsen, pdf gratis splitsen, pagina's uit pdf halen",
         "pl": "podziel pdf, rozdziel strony pdf, podziel pdf online, podziel pdf za darmo, wyodrębnij strony z pdf",
-        "tr": "pdf böl, pdf sayfalarını ayır, pdf bölme online, ücretsiz pdf böl, pdf'den sayfa çıkar"
+        "tr": "pdf böl, pdf sayfalarını ayır, pdf bölme online, ücretsiz pdf böl, pdf'den sayfa çıkar",
+        "zh-CN": "拆分pdf, 分割pdf, 从pdf提取页面, 免费在线拆分pdf, pdf拆分工具, 无需上传拆分pdf",
+        "ar": "تقسيم pdf, تجزئة pdf, استخراج صفحات من pdf, تقسيم pdf اونلاين مجاني, أداة تقسيم pdf, تقسيم pdf بدون رفع"
       }
     },
     {

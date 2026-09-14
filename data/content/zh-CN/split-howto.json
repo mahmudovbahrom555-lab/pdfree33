@@ -1,0 +1,38 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "如何免费拆分 PDF",
+  "description": "将 PDF 拆分为多个文件，或提取特定页面 —— 免费、无需上传，处理过程完全在浏览器本地完成。",
+  "totalTime": "PT1M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — 免费的浏览器端 PDF 拆分工具，无需上传" }],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "打开您的 PDF",
+      "text": "点击“选择文件”或将 PDF 拖入拖放区域。页面缩略图会在浏览器中渲染 —— 不会上传到任何服务器。",
+      "url": "https://pdfree.io/zh/chaifen-pdf/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "选择需要的页面",
+      "text": "点击单个页面缩略图以选中或取消选中，或输入范围，例如“1-3, 5, 8-10”。使用快速选择按钮选取奇数页、偶数页或前后半部分。要删除页面，选中除这些页面之外的所有页面。",
+      "url": "https://pdfree.io/zh/chaifen-pdf/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "选择输出方式：单个文件或多个文件",
+      "text": "选择“提取页面”，将所选页面合并为一个 PDF；或选择“拆分全部页面”，将每一页作为独立文件打包进 ZIP。",
+      "url": "https://pdfree.io/zh/chaifen-pdf/#step3"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 4,
+      "name": "下载结果",
+      "text": "点击“拆分 PDF”。提取出的页面会立即下载 —— 可以是单个 PDF，也可以是包含各独立页面的 ZIP。",
+      "url": "https://pdfree.io/zh/chaifen-pdf/#step4"
+    }
+  ]
+}

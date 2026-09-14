@@ -1,0 +1,122 @@
+[
+  {
+    "@type": "Question",
+    "name": "拆分 PDF 时文件会被上传吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "不会。PDFree 完全使用 JavaScript 在浏览器中拆分 PDF。文件永远不会离开您的设备。您可以自行验证：打开浏览器开发者工具 → Network 面板 —— 处理过程中您不应看到 PDF 被上传到远程服务器。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFree 会在处理后存储或记录我的文件吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "不会。PDFree 完全在浏览器中运行 —— 没有接收文件的后端服务器。既然没有任何内容被上传，自然也就无法被存储、记录或保留。文档只存在于浏览器内存中，会话期间有效，关闭标签页后即被清除。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFree 支持哪种页面范围格式？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "输入以逗号分隔的页码和范围：例如 1, 3-7, 12, 15-20。空格可省略。您也可以直接点击单个页面缩略图，以可视化方式选中或取消选中，或使用快速选择按钮选取奇数页、偶数页或文档的前后半部分。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "可以把 PDF 拆分成单独的每一页吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "可以。使用“拆分全部页面”选项，即可将每一页都变成独立的 PDF 文件。它们会打包成一个 ZIP 压缩包下载。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "拆分和提取（Extract）有什么区别？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "拆分工具用于选择并下载多组页面。提取是一个更简单的工具，专注于将指定页面范围提取为一个新 PDF。两者功能相近 —— 选择适合您工作流程的即可。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "拆分会影响 PDF 的画质吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "不会。页面是在 PDF 对象层面直接复制的 —— 图像、字体和矢量图形都会与原文件完全一致地保留。拆分不会重新渲染或重新压缩任何内容。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDF 大小或页数有限制吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "没有。PDFree 没有页数或文件大小限制。处理速度取决于您设备的可用内存。在现代电脑上，数百页的 PDF 也能在几秒内渲染出缩略图。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "如何从 PDF 中删除某一页？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "选中除要删除页面之外的所有页面，然后点击“拆分 PDF”仅提取您想保留的页面。例如，要从一份 10 页的 PDF 中删除第 3 页，只需选中第 1-2 页和第 4-10 页并提取。结果就是去掉被删除页面后的 PDF —— 画质保持不变。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "可以拆分有密码保护的 PDF 吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "可以，前提是您知道密码。打开受保护的 PDF 时，PDFree 会提示您输入密码。解锁后，即可正常选择并提取页面。PDFree 无法绕过或破解密码 —— 它只能打开您有权限打开的文件。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "如何在 iPhone、iPad 或 Mac 的浏览器中拆分 PDF？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "在 iPhone/iPad 上使用 Safari，或在 Mac 上使用任意浏览器打开 PDFree —— 无需下载应用或安装 Adobe Acrobat。工具完全在浏览器中运行：加载 PDF、选择页面、点击“拆分 PDF”。结果会保存到 iOS 的“文件”应用，或 Mac 的“下载”文件夹。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "可以同时拆分多个 PDF 文件吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "单次批处理不支持 —— PDFree 一次只处理一个 PDF。可以在新标签页中打开工具，并行拆分第二个文件。PDFree 还支持离线作为渐进式网络应用（PWA）运行，文件之间无需等待网络。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "这款 PDF 拆分工具完全免费吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "是的。PDFree 是一款完全免费的 PDF 拆分工具 —— 无需订阅，无需注册，输出文件没有水印，也没有每日次数限制。您可以根据需要拆分或分离任意数量的 PDF。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "可以把 PDF 重新拆分回原来的多个文件吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "可以。选中对应每份原始文档的页面范围，将它们提取为独立的 PDF。这样就能把合并后的文件还原为各个独立部分 —— 与拆分是同一种操作，只是反向应用。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "拆分后的每个页面文件是如何命名的？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "文件命名为 page-001.pdf、page-002.pdf 等，前面补零以确保按字母顺序正确排序。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFree 拆分 PDF 时会添加水印吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "不会。PDFree 从不在输出文件中添加水印。拆分后的页面就是您原始 PDF 的精确内容 —— 没有 Logo，没有“Created with PDFree”字样，也没有任何广告标记。许多免费在线 PDF 工具会添加水印以促使用户升级付费版；PDFree 不会这样做，因为它根本没有付费套餐可供升级。"
+    }
+  }
+]
