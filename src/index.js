@@ -706,6 +706,40 @@ function withEmbedFrameHeaders(response) {
   return new Response(response.body, { status: response.status, headers });
 }
 
+// env.ASSETS.fetch() (the Workers Assets binding) serves EVERY static file
+// with `Cache-Control: public, max-age=31536000, immutable` by default —
+// confirmed directly against production — regardless of whether the URL
+// carries this project's own `?v=<hash>` cache-busting query param
+// (scripts/build.py's _inject_hashes() only rewrites <script src>/<link
+// href> attributes inside generated HTML; it structurally cannot reach
+// `new Worker(new URL('./xWorker.js', import.meta.url))` or
+// `importScripts('./vendor/y.js')` calls living inside .js source files, so
+// ~15 first-party Worker files — worker.js, mergeWorker.js, pdfEncrypt.js,
+// organizeWorker.js, etc. — never get a cache-busting param at all). Left
+// unfixed, an already-visited browser would cache one of these files'
+// stale bytes for a full year past any future deploy that changes its
+// content — the exact same "silently stuck on old code" incident class as
+// pwa_direct_version_check_2026_09's Service-Worker case, just via plain
+// HTTP caching instead. Mirrors selfhost/assets.js's already-tested
+// cacheControlFor(pathname, hasVersionQuery) exactly (same 3 buckets), just
+// keyed off the response's own content-type instead of a resolved file
+// path (which this Worker doesn't have access to) — a text/html response
+// (including directory-style routes like /merge-pdf/ and the 404 page)
+// always gets a short no-cache; anything else gets the long immutable
+// cache ONLY if the request actually carries a `?v=`/`?t=` query param,
+// otherwise a short 1-hour cache instead of Cloudflare's 1-year default.
+export function _cacheControlFor(contentType, hasVersionQuery) {
+  if ((contentType || '').includes('text/html')) return 'no-cache';
+  return hasVersionQuery ? 'public, max-age=31536000, immutable' : 'public, max-age=3600';
+}
+
+function withAssetCacheControl(response, url) {
+  const hasVersionQuery = url.searchParams.has('v') || url.searchParams.has('t');
+  const headers = new Headers(response.headers);
+  headers.set('Cache-Control', _cacheControlFor(response.headers.get('content-type'), hasVersionQuery));
+  return new Response(response.body, { status: response.status, headers });
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -730,9 +764,9 @@ export default {
     }
 
     if (url.pathname.startsWith('/embed/')) {
-      return withEmbedFrameHeaders(await env.ASSETS.fetch(request));
+      return withAssetCacheControl(withEmbedFrameHeaders(await env.ASSETS.fetch(request)), url);
     }
 
-    return env.ASSETS.fetch(request);
+    return withAssetCacheControl(await env.ASSETS.fetch(request), url);
   },
 };
