@@ -1,0 +1,74 @@
+[
+  {
+    "@type": "Question",
+    "name": "页面范围格式是怎样的？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "输入以逗号分隔的页码和范围：1, 3-7, 12, 15-20。空格可省略。范围包含两端 —— 3-7 会提取第 3、4、5、6、7 页。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFree 会在处理后存储或记录我的文件吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "不会。PDFree 完全在浏览器中运行 —— 没有接收文件的后端服务器。既然没有任何内容被上传，自然也就无法被存储、记录或保留。文档只存在于浏览器内存中，会话期间有效，关闭标签页后即被清除。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "提取和拆分（Split）有什么区别？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "提取让您选择特定页面（例如第 2、5、8 页）并保存为一个新的 PDF。拆分则是将整份文档拆分成多个独立文件。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "提取出的页面会完全保留原有格式吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "会。页面是在 PDF 对象层面直接复制的 —— 字体、图片、链接和格式都与原文件完全一致。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "可以从有密码保护的 PDF 中提取页面吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "不可以。没有密码，加密的 PDF 无法被修改。请先移除密码，再提取页面。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "可以提取的页面数量有限制吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "没有。只要您的浏览器有足够的内存容纳该文件，就可以从任意大小的 PDF 中提取任意数量的页面。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "如何从 PDF 中提取单独一页？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "在范围输入框中输入页码 —— 例如输入 5 即可只提取第 5 页。结果是一份只包含该页的新 PDF。所有格式、图片和链接都会与原文件完全一致地保留。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "可以从扫描版 PDF 中提取页面吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "可以。扫描版 PDF 本质是内嵌在 PDF 容器中的图片 —— 提取方式与其他 PDF 完全相同。页面在对象层面被复制，因此输出文件中的扫描质量完全不变。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "提取页面会改变原始文件吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "不会。PDFree 在浏览器内存中读取您的文件，并创建一个包含所选页面的新 PDF。您设备上的原始文件永远不会被修改 —— 保持完全不变。"
+    }
+  }
+]

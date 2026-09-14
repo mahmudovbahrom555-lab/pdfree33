@@ -1,0 +1,31 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "如何免费压缩 PDF",
+  "description": "在不损失画质的情况下缩小 PDF 文件体积 —— 免费、无需上传，处理过程完全在浏览器本地完成。",
+  "totalTime": "PT1M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — 免费的浏览器端 PDF 压缩工具，无需上传" }],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "打开您的 PDF",
+      "text": "点击“选择文件”或将 PDF 拖入拖放区域。接受任意大小的文件 —— 文件会加载到浏览器中，永远不会被上传。",
+      "url": "https://pdfree.io/zh/yasuo-pdf/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "选择压缩级别",
+      "text": "选择轻度（仅移除元数据，图片不变）、标准（移除元数据并重新压缩图片 —— 适合大多数文件），或最大（最激进 —— 最适合扫描文档）。PDFree 会分析您的 PDF 并自动推荐最合适的预设。",
+      "url": "https://pdfree.io/zh/yasuo-pdf/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "压缩并下载",
+      "text": "点击“压缩 PDF”。处理在浏览器中只需几秒钟。压缩报告会准确显示移除了哪些内容 —— XMP 元数据、缩略图、重复图片，以及重新压缩的数据流。立即下载缩小后的 PDF。",
+      "url": "https://pdfree.io/zh/yasuo-pdf/#step3"
+    }
+  ]
+}

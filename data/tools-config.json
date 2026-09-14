@@ -595,7 +595,9 @@
         "ko": "pdf-apchuk",
         "nl": "pdf-comprimeren",
         "pl": "kompresuj-pdf",
-        "tr": "pdf-sikistir"
+        "tr": "pdf-sikistir",
+        "zh-CN": "yasuo-pdf",
+        "ar": "daght-pdf"
       },
       "titles": {
         "en": "Compress PDF Free — Reduce File Size Without Quality Loss | PDFree",
@@ -611,7 +613,9 @@
         "ko": "PDF 압축 무료 — 화질 손실 없이 크기 줄이기, 업로드 없이, 브라우저에서 처리 | PDFree",
         "nl": "PDF Comprimeren — Gratis, Zonder Uploaden | PDFree",
         "pl": "Kompresuj PDF — Darmowy, Bez Przesyłania | PDFree",
-        "tr": "PDF Sıkıştır — Ücretsiz, Yükleme Yapmadan | PDFree"
+        "tr": "PDF Sıkıştır — Ücretsiz, Yükleme Yapmadan | PDFree",
+        "zh-CN": "免费压缩 PDF — 缩小文件体积，不损失画质 | PDFree",
+        "ar": "ضغط PDF مجانًا — تقليل حجم الملف بدون فقدان الجودة | PDFree"
       },
       "descs": {
         "en": "Reduce PDF file size without losing quality. Processed locally in your browser — files never uploaded.",
@@ -627,7 +631,9 @@
         "ko": "품질 손실 없이 PDF 파일 크기를 줄입니다. 브라우저에서 처리, 업로드 없음.",
         "nl": "Comprimeer je PDF-bestand zonder kwaliteitsverlies. Verwerkt in de browser, geen upload.",
         "pl": "Kompresuj plik PDF bez utraty jakości. Przetwarzane w przeglądarce, bez przesyłania.",
-        "tr": "PDF dosyanızı kalite kaybetmeden sıkıştırın. Tarayıcıda işlenir, yükleme yok."
+        "tr": "PDF dosyanızı kalite kaybetmeden sıkıştırın. Tarayıcıda işlenir, yükleme yok.",
+        "zh-CN": "缩小 PDF 文件体积，不损失画质。完全在浏览器本地处理 —— 文件从不上传。",
+        "ar": "قلّل حجم ملف PDF بدون فقدان الجودة. تتم المعالجة محليًا في متصفحك — الملفات لا تُرفع أبدًا."
       },
       "navLabels": {
         "en": "Compress",
@@ -643,7 +649,9 @@
         "ko": "압축",
         "nl": "Comprimeren",
         "pl": "Kompresuj PDF",
-        "tr": "PDF Sıkıştır"
+        "tr": "PDF Sıkıştır",
+        "zh-CN": "压缩",
+        "ar": "ضغط"
       },
       "cardNames": {
         "en": "Compress PDF",
@@ -659,7 +667,9 @@
         "ko": "PDF 압축",
         "nl": "PDF comprimeren",
         "pl": "Kompresuj PDF",
-        "tr": "PDF Sıkıştır"
+        "tr": "PDF Sıkıştır",
+        "zh-CN": "压缩 PDF",
+        "ar": "ضغط PDF"
       },
       "cardDescs": {
         "en": "Reduce file size without losing quality",
@@ -675,7 +685,9 @@
         "ko": "품질 손실 없이 PDF 용량 줄이기 — 업로드 없음",
         "nl": "PDF comprimeren in je browser — geen upload",
         "pl": "Kompresuj PDF bez utraty jakości — bez przesyłania",
-        "tr": "PDF'i kalite kaybetmeden sıkıştır — yükleme yok"
+        "tr": "PDF'i kalite kaybetmeden sıkıştır — yükleme yok",
+        "zh-CN": "缩小文件体积，不损失画质",
+        "ar": "قلّل حجم الملف بدون فقدان الجودة"
       },
       "breadcrumb": {
         "en": "Compress PDF",
@@ -691,7 +703,9 @@
         "ko": "PDF 압축",
         "nl": "PDF comprimeren",
         "pl": "Kompresuj PDF",
-        "tr": "PDF Sıkıştır"
+        "tr": "PDF Sıkıştır",
+        "zh-CN": "压缩 PDF",
+        "ar": "ضغط PDF"
       },
       "metaDescs": {
         "en": "Reduce PDF file size 20–80% without quality loss — free PDF compressor that runs in your browser. Nothing uploaded or stored, no signup, no limits.",
@@ -707,7 +721,9 @@
         "ko": "PDF 크기를 화질 손실 없이 20–80% 줄이기 — 브라우저에서 실행되는 무료 PDF 압축기. 업로드 없음, 저장 없음, 가입 없음, 제한 없음.",
         "nl": "PDF-bestand 20–80% kleiner maken zonder kwaliteitsverlies — gratis PDF-compressor in de browser. Niets geüpload of opgeslagen, geen aanmelding.",
         "pl": "Zmniejsz rozmiar PDF o 20–80% bez utraty jakości — darmowy kompresor PDF w przeglądarce. Nic nie przesyłane ani przechowywane, bez rejestracji.",
-        "tr": "PDF boyutunu %20–80 küçültün — tarayıcıda çalışan ücretsiz PDF sıkıştırıcı. Yükleme yok, depolama yok, kayıt yok."
+        "tr": "PDF boyutunu %20–80 küçültün — tarayıcıda çalışan ücretsiz PDF sıkıştırıcı. Yükleme yok, depolama yok, kayıt yok.",
+        "zh-CN": "将 PDF 文件体积缩小 20–80%，不损失画质 —— 免费的浏览器端 PDF 压缩工具。不上传、不存储、无需注册、无限制。",
+        "ar": "قلّل حجم ملف PDF بنسبة 20–80% بدون فقدان الجودة — أداة ضغط PDF مجانية تعمل في متصفحك. لا رفع، لا تخزين، بدون تسجيل، بدون قيود."
       },
       "ogTitles": {
         "en": "Compress PDF Free — Smaller File, No Quality Loss, No Upload",
@@ -723,7 +739,9 @@
         "ko": "PDF 압축 무료 — 업로드 없이 | PDFree",
         "nl": "PDF Comprimeren Gratis — Zonder Uploaden | PDFree",
         "pl": "Kompresuj PDF Za Darmo — Bez Przesyłania | PDFree",
-        "tr": "PDF Sıkıştır Ücretsiz — Yükleme Yok | PDFree"
+        "tr": "PDF Sıkıştır Ücretsiz — Yükleme Yok | PDFree",
+        "zh-CN": "免费压缩 PDF —— 文件更小，画质不变，无需上传",
+        "ar": "ضغط PDF مجانًا — حجم أصغر، بدون فقدان الجودة، بدون رفع"
       },
       "ogDescs": {
         "en": "Free PDF compressor — reduce file size for email, web forms, or storage. 20–80% smaller. Runs in your browser, files never uploaded. No signup.",
@@ -739,7 +757,9 @@
         "ko": "PDF 파일 크기를 즉시 줄입니다. 100% 비공개 — 파일이 브라우저를 절대 벗어나지 않습니다.",
         "nl": "Comprimeer je PDF direct. 100% privé — bestanden verlaten nooit je browser.",
         "pl": "Kompresuj PDF bezpośrednio. 100% prywatne — pliki nigdy nie opuszczają przeglądarki.",
-        "tr": "PDF'i doğrudan sıkıştırın. %100 gizli — dosyalar tarayıcıyı asla terk etmez."
+        "tr": "PDF'i doğrudan sıkıştırın. %100 gizli — dosyalar tarayıcıyı asla terk etmez.",
+        "zh-CN": "免费 PDF 压缩工具 —— 缩小文件体积，方便邮件发送、网页上传或存储。体积缩小 20–80%。在浏览器中运行，文件从不上传。无需注册。",
+        "ar": "أداة ضغط PDF مجانية — قلّل حجم الملف للبريد الإلكتروني أو نماذج الويب أو التخزين. أصغر بنسبة 20–80%. تعمل في متصفحك، الملفات لا تُرفع أبدًا. بدون تسجيل."
       },
       "keywords": {
         "en": "compress pdf, reduce pdf size, compress pdf online free, pdf compressor, shrink pdf, make pdf smaller",
@@ -755,7 +775,9 @@
         "ko": "pdf 압축, pdf 용량 줄이기, pdf 온라인 압축, pdf 무료 압축, pdf 파일 크기 줄이기",
         "nl": "pdf comprimeren, pdf bestandsgrootte verkleinen, pdf online comprimeren, pdf gratis comprimeren, pdf kleiner maken",
         "pl": "kompresuj pdf, zmniejsz rozmiar pdf, kompresuj pdf online, kompresuj pdf za darmo, zmniejsz wagę pliku pdf",
-        "tr": "pdf sıkıştır, pdf boyutunu küçült, pdf sıkıştırma online, ücretsiz pdf sıkıştır, pdf dosyasını küçült"
+        "tr": "pdf sıkıştır, pdf boyutunu küçült, pdf sıkıştırma online, ücretsiz pdf sıkıştır, pdf dosyasını küçült",
+        "zh-CN": "压缩pdf, 缩小pdf体积, 免费在线压缩pdf, pdf压缩工具, pdf瘦身, 缩小pdf文件",
+        "ar": "ضغط pdf, تقليل حجم pdf, ضغط pdf اونلاين مجاني, أداة ضغط pdf, تصغير pdf, تقليل حجم ملف pdf"
       },
       "batch": true
     },
@@ -777,7 +799,9 @@
         "ko": "pdf-hoejeon",
         "nl": "pdf-draaien",
         "pl": "obroc-pdf",
-        "tr": "pdf-dondur"
+        "tr": "pdf-dondur",
+        "zh-CN": "xuanzhuan-pdf",
+        "ar": "tadwir-pdf"
       },
       "titles": {
         "en": "Rotate PDF Pages Free — Fix Sideways or Upside-Down Files Online, No Upload | PDFree",
@@ -793,7 +817,9 @@
         "ko": "PDF 회전 무료 — 옆으로 눕거나 뒤집힌 페이지 수정 | PDFree",
         "nl": "PDF Draaien Gratis — Scheve of Ondersteboven Pagina's Fixen | PDFree",
         "pl": "Obróć PDF Za Darmo — Popraw Przekrzywione Strony Online | PDFree",
-        "tr": "PDF Döndür — Ücretsiz, Yükleme Yapmadan | PDFree"
+        "tr": "PDF Döndür — Ücretsiz, Yükleme Yapmadan | PDFree",
+        "zh-CN": "免费旋转 PDF 页面 —— 在线修正侧向或颠倒的文件，无需上传 | PDFree",
+        "ar": "تدوير صفحات PDF مجانًا — أصلح الملفات المائلة أو المقلوبة عبر الإنترنت، بدون رفع | PDFree"
       },
       "descs": {
         "en": "Fix page orientation in any PDF. 100% private — processed locally, no uploads, no signup.",
@@ -809,7 +835,9 @@
         "ko": "모든 PDF의 페이지 방향을 수정하세요. 100% 비공개 — 로컬에서 처리, 업로드 없음, 가입 불필요.",
         "nl": "Corrigeer de pagina-oriëntatie in elke PDF. 100% privé — lokaal verwerkt, geen upload, geen registratie.",
         "pl": "Popraw orientację stron w dowolnym pliku PDF. 100% prywatności — przetwarzanie lokalne, bez przesyłania, bez rejestracji.",
-        "tr": "PDF sayfalarını 90°, 180° veya 270° döndürün. Tarayıcıda işleme — yükleme yok, sunucu yok. Ücretsiz, kayıt gerekmez."
+        "tr": "PDF sayfalarını 90°, 180° veya 270° döndürün. Tarayıcıda işleme — yükleme yok, sunucu yok. Ücretsiz, kayıt gerekmez.",
+        "zh-CN": "修正任意 PDF 的页面方向。100% 隐私保护 —— 本地处理，无需上传，无需注册。",
+        "ar": "أصلح اتجاه الصفحات في أي ملف PDF. خصوصية 100% — معالجة محلية، بدون رفع، بدون تسجيل."
       },
       "navLabels": {
         "en": "Rotate",
@@ -825,7 +853,9 @@
         "ko": "회전",
         "nl": "Draaien",
         "pl": "Obróć",
-        "tr": "PDF Döndür"
+        "tr": "PDF Döndür",
+        "zh-CN": "旋转",
+        "ar": "تدوير"
       },
       "cardNames": {
         "en": "Rotate PDF",
@@ -841,7 +871,9 @@
         "ko": "PDF 회전",
         "nl": "PDF Draaien",
         "pl": "Obróć PDF",
-        "tr": "PDF Döndür"
+        "tr": "PDF Döndür",
+        "zh-CN": "旋转 PDF",
+        "ar": "تدوير PDF"
       },
       "cardDescs": {
         "en": "Fix page orientation in any PDF",
@@ -857,7 +889,9 @@
         "ko": "모든 PDF의 페이지 방향을 수정하세요",
         "nl": "Corrigeer de pagina-oriëntatie in elke PDF",
         "pl": "Popraw orientację stron w dowolnym pliku PDF",
-        "tr": "PDF sayfalarının yönünü düzeltin"
+        "tr": "PDF sayfalarının yönünü düzeltin",
+        "zh-CN": "修正任意 PDF 的页面方向",
+        "ar": "أصلح اتجاه الصفحات في أي ملف PDF"
       },
       "breadcrumb": {
         "en": "Rotate PDF",
@@ -873,7 +907,9 @@
         "ko": "PDF 회전",
         "nl": "PDF Draaien",
         "pl": "Obróć PDF",
-        "tr": "PDF Döndür"
+        "tr": "PDF Döndür",
+        "zh-CN": "旋转 PDF",
+        "ar": "تدوير PDF"
       },
       "metaDescs": {
         "en": "Fix sideways or upside-down PDF pages — rotate 90°, 180°, or 270° free. Runs in your browser, nothing uploaded or stored. No signup, no limits.",
@@ -889,7 +925,9 @@
         "it": "Correggi le pagine PDF ruotate — gira di 90°, 180° o 270° gratis. Nel browser, niente caricato né memorizzato. Senza registrazione.",
         "ko": "잘못된 방향의 PDF 페이지 수정 — 90°, 180°, 270° 회전, 무료. 브라우저에서 실행, 업로드 없음, 저장 없음. 가입 없음, 제한 없음.",
         "nl": "Verkeerd georiënteerde PDF-pagina's corrigeren — 90°, 180° of 270° draaien, gratis. In de browser, niets geüpload of opgeslagen. Geen aanmelding.",
-        "pl": "Popraw orientację stron PDF — obróć o 90°, 180° lub 270°, za darmo. W przeglądarce, nic nie przesyłane ani przechowywane. Bez rejestracji."
+        "pl": "Popraw orientację stron PDF — obróć o 90°, 180° lub 270°, za darmo. W przeglądarce, nic nie przesyłane ani przechowywane. Bez rejestracji.",
+        "zh-CN": "修正侧向或颠倒的 PDF 页面 —— 免费旋转 90°、180° 或 270°。在浏览器中运行，不上传、不存储。无需注册，无限制。",
+        "ar": "أصلح صفحات PDF المائلة أو المقلوبة — دوّرها 90° أو 180° أو 270° مجانًا. يعمل في متصفحك، لا رفع ولا تخزين. بدون تسجيل، بدون قيود."
       },
       "ogTitles": {
         "en": "Rotate PDF Free — Fix Sideways or Upside-Down Pages",
@@ -905,7 +943,9 @@
         "ko": "PDF 회전 무료 — 옆으로 눕거나 뒤집힌 페이지 수정",
         "nl": "PDF Draaien Gratis — Scheve of Ondersteboven Pagina's Corrigeren",
         "pl": "Obróć PDF Za Darmo — Popraw Przekrzywione lub Odwrócone Strony",
-        "tr": "PDF Döndür Ücretsiz — Yükleme Yok, Kayıt Yok | PDFree"
+        "tr": "PDF Döndür Ücretsiz — Yükleme Yok, Kayıt Yok | PDFree",
+        "zh-CN": "免费旋转 PDF —— 修正侧向或颠倒的页面",
+        "ar": "تدوير PDF مجانًا — أصلح الصفحات المائلة أو المقلوبة"
       },
       "ogDescs": {
         "en": "Rotate PDF pages 90°, 180°, or 270°. Runs in your browser — nothing uploaded, nothing saved on a server. Free forever, no signup.",
@@ -921,7 +961,9 @@
         "ko": "PDF 페이지를 90°, 180°, 270° 회전하세요. 브라우저에서 실행 — 아무것도 업로드되거나 서버에 저장되지 않습니다. 영구 무료, 가입 불필요.",
         "nl": "Draai PDF-pagina's 90°, 180° of 270°. Werkt in je browser — niets geüpload, niets opgeslagen op een server. Voor altijd gratis, geen registratie.",
         "pl": "Obróć strony PDF o 90°, 180° lub 270°. Działa w przeglądarce — nic nie jest przesyłane ani zapisywane na serwerze. Za darmo na zawsze, bez rejestracji.",
-        "tr": "PDF sayfalarını döndürün. Tarayıcıda işleme — yükleme yok, sunucu yok."
+        "tr": "PDF sayfalarını döndürün. Tarayıcıda işleme — yükleme yok, sunucu yok.",
+        "zh-CN": "旋转 PDF 页面 90°、180° 或 270°。在浏览器中运行 —— 不上传，不保存到服务器。永久免费，无需注册。",
+        "ar": "دوّر صفحات PDF بزاوية 90° أو 180° أو 270°. يعمل في متصفحك — لا رفع، لا حفظ على خادم. مجاني إلى الأبد، بدون تسجيل."
       },
       "keywords": {
         "en": "rotate pdf, rotate pdf pages, fix pdf orientation, rotate pdf online free, pdf rotation, flip pdf",
@@ -937,7 +979,9 @@
         "ko": "pdf 회전, pdf 페이지 회전, pdf 방향 수정, pdf 회전 무료 온라인, pdf 돌리기",
         "nl": "pdf draaien, pdf pagina's draaien, pdf oriëntatie corrigeren, pdf draaien gratis online, pdf roteren",
         "pl": "obróć pdf, obracanie stron pdf, popraw orientację pdf, obróć pdf online za darmo, odwróć pdf",
-        "tr": "pdf döndür, pdf sayfa döndürme, pdf yön düzeltme, pdf döndürme ücretsiz online, pdf çevir"
+        "tr": "pdf döndür, pdf sayfa döndürme, pdf yön düzeltme, pdf döndürme ücretsiz online, pdf çevir",
+        "zh-CN": "旋转pdf, 旋转pdf页面, 修正pdf方向, 免费在线旋转pdf, pdf旋转, 翻转pdf",
+        "ar": "تدوير pdf, تدوير صفحات pdf, إصلاح اتجاه pdf, تدوير pdf اونلاين مجاني, دوران pdf, قلب pdf"
       }
     },
     {
@@ -2590,7 +2634,9 @@
         "ko": "pdf-chuchul",
         "nl": "pdf-extraheren",
         "pl": "wyodrebnij-pdf",
-        "tr": "sayfa-cikar"
+        "tr": "sayfa-cikar",
+        "zh-CN": "tiqu-pdf",
+        "ar": "istikhraj-pdf"
       },
       "titles": {
         "en": "Extract Pages from PDF Free — Pick Any Pages or Range | PDFree",
@@ -2606,7 +2652,9 @@
         "ko": "PDF에서 페이지 추출 무료 — 원하는 페이지나 범위 선택 | PDFree",
         "nl": "Pagina's uit PDF Extraheren Gratis — Kies Elke Pagina of Bereik | PDFree",
         "pl": "Wyodrębnij Strony z PDF Za Darmo — Wybierz Dowolne Strony lub Zakres | PDFree",
-        "tr": "PDF'den Sayfa Çıkar — Ücretsiz, Yükleme Yapmadan | PDFree"
+        "tr": "PDF'den Sayfa Çıkar — Ücretsiz, Yükleme Yapmadan | PDFree",
+        "zh-CN": "免费从 PDF 中提取页面 —— 任意选取页面或范围 | PDFree",
+        "ar": "استخراج صفحات من PDF مجانًا — اختر أي صفحات أو نطاق | PDFree"
       },
       "descs": {
         "en": "Extract specific pages from a PDF. 100% private — processed locally, no uploads, no signup.",
@@ -2622,7 +2670,9 @@
         "ko": "PDF에서 특정 페이지를 추출하세요. 100% 비공개 — 로컬 처리, 업로드 없음, 가입 불필요.",
         "nl": "Extraheer specifieke pagina's uit een PDF. 100% privé — lokaal verwerkt, geen upload, geen registratie.",
         "pl": "Wyodrębnij konkretne strony z PDF. 100% prywatności — przetwarzanie lokalne, bez przesyłania, bez rejestracji.",
-        "tr": "PDF'den belirli sayfaları çıkarın. Tek sayfa veya aralık seçin, yeni bir PDF olarak indirin. Tarayıcıda işleme — yükleme yok."
+        "tr": "PDF'den belirli sayfaları çıkarın. Tek sayfa veya aralık seçin, yeni bir PDF olarak indirin. Tarayıcıda işleme — yükleme yok.",
+        "zh-CN": "从 PDF 中提取特定页面。100% 隐私保护 —— 本地处理，无需上传，无需注册。",
+        "ar": "استخرج صفحات محددة من ملف PDF. خصوصية 100% — معالجة محلية، بدون رفع، بدون تسجيل."
       },
       "navLabels": {
         "en": "Extract",
@@ -2638,7 +2688,9 @@
         "ko": "추출",
         "nl": "Extraheren",
         "pl": "Wyodrębnij",
-        "tr": "Sayfa Çıkar"
+        "tr": "Sayfa Çıkar",
+        "zh-CN": "提取",
+        "ar": "استخراج"
       },
       "cardNames": {
         "en": "Extract Pages",
@@ -2654,7 +2706,9 @@
         "ko": "페이지 추출",
         "nl": "Pagina's Extraheren",
         "pl": "Wyodrębnij Strony",
-        "tr": "Sayfa Çıkar"
+        "tr": "Sayfa Çıkar",
+        "zh-CN": "提取页面",
+        "ar": "استخراج الصفحات"
       },
       "cardDescs": {
         "en": "Pull selected pages into a new PDF",
@@ -2670,7 +2724,9 @@
         "ko": "선택한 페이지를 새 PDF로 가져오기",
         "nl": "Haal geselecteerde pagina's in een nieuwe PDF",
         "pl": "Wyodrębnij wybrane strony do nowego pliku PDF",
-        "tr": "PDF'den belirli sayfaları çıkarın"
+        "tr": "PDF'den belirli sayfaları çıkarın",
+        "zh-CN": "将所选页面提取到新的 PDF",
+        "ar": "استخرج الصفحات المحددة إلى ملف PDF جديد"
       },
       "breadcrumb": {
         "en": "Extract Pages PDF",
@@ -2686,7 +2742,9 @@
         "ko": "PDF 페이지 추출",
         "nl": "Pagina's Extraheren PDF",
         "pl": "Wyodrębnij Strony PDF",
-        "tr": "Sayfa Çıkar"
+        "tr": "Sayfa Çıkar",
+        "zh-CN": "提取 PDF 页面",
+        "ar": "استخراج صفحات PDF"
       },
       "metaDescs": {
         "en": "Save any pages or page range from a PDF as a new file. Runs in your browser — files never leave your device, never stored on any server. No signup.",
@@ -2702,7 +2760,9 @@
         "it": "Salva qualsiasi pagina o intervallo di pagine di un PDF come nuovo file. Nel browser — i file non lasciano mai il tuo dispositivo né vengono memorizzati su nessun server. Senza registrazione.",
         "ko": "PDF의 모든 페이지 또는 페이지 범위를 새 파일로 저장. 브라우저에서 실행 — 파일은 기기를 벗어나지 않으며 어떤 서버에도 저장되지 않습니다. 가입 없음.",
         "nl": "Sla willekeurige pagina's of paginabereiken op als nieuw PDF-bestand. In de browser — bestanden verlaten nooit je apparaat en worden nergens opgeslagen. Geen aanmelding.",
-        "pl": "Zapisz dowolne strony lub zakresy stron z PDF jako nowy plik. W przeglądarce — pliki nigdy nie opuszczają Twojego urządzenia ani nie są przechowywane na żadnym serwerze. Bez rejestracji."
+        "pl": "Zapisz dowolne strony lub zakresy stron z PDF jako nowy plik. W przeglądarce — pliki nigdy nie opuszczają Twojego urządzenia ani nie są przechowywane na żadnym serwerze. Bez rejestracji.",
+        "zh-CN": "将 PDF 中的任意页面或页面范围另存为新文件。在浏览器中运行 —— 文件永不离开您的设备，也不会存储在任何服务器上。无需注册。",
+        "ar": "احفظ أي صفحات أو نطاق صفحات من ملف PDF كملف جديد. يعمل في متصفحك — الملفات لا تغادر جهازك أبدًا، ولا تُخزَّن على أي خادم. بدون تسجيل."
       },
       "ogTitles": {
         "en": "Extract Pages from PDF Free — Individual Pages or Ranges, No Upload",
@@ -2718,7 +2778,9 @@
         "ko": "PDF에서 페이지 추출 무료 — 개별 페이지 또는 범위, 업로드 없음",
         "nl": "Pagina's uit PDF Extraheren Gratis — Losse Pagina's of Bereiken, Geen Upload",
         "pl": "Wyodrębnij Strony z PDF Za Darmo — Pojedyncze Strony lub Zakresy, Bez Przesyłania",
-        "tr": "PDF'den Sayfa Çıkar Ücretsiz — Yükleme Yok | PDFree"
+        "tr": "PDF'den Sayfa Çıkar Ücretsiz — Yükleme Yok | PDFree",
+        "zh-CN": "免费从 PDF 中提取页面 —— 单独页面或范围，无需上传",
+        "ar": "استخراج صفحات من PDF مجانًا — صفحات فردية أو نطاقات، بدون رفع"
       },
       "ogDescs": {
         "en": "Extract specific pages from any PDF. Processed in your browser — files never leave your device. Free.",
@@ -2734,7 +2796,9 @@
         "ko": "모든 PDF에서 특정 페이지를 추출하세요. 브라우저에서 처리 — 파일이 기기를 벗어나지 않습니다. 무료.",
         "nl": "Extraheer specifieke pagina's uit elke PDF. Verwerkt in je browser — bestanden verlaten nooit je apparaat. Gratis.",
         "pl": "Wyodrębnij konkretne strony z dowolnego PDF. Przetwarzane w przeglądarce — pliki nigdy nie opuszczają Twojego urządzenia. Za darmo.",
-        "tr": "PDF'den belirli sayfaları çıkarın. Tarayıcıda işleme — dosyalar cihazınızı terk etmez."
+        "tr": "PDF'den belirli sayfaları çıkarın. Tarayıcıda işleme — dosyalar cihazınızı terk etmez.",
+        "zh-CN": "从任意 PDF 中提取特定页面。在浏览器中处理 —— 文件永不离开您的设备。免费。",
+        "ar": "استخرج صفحات محددة من أي ملف PDF. تتم المعالجة في متصفحك — الملفات لا تغادر جهازك. مجانًا."
       },
       "keywords": {
         "en": "extract pages from pdf, pdf page extractor, extract pdf pages online free, select pages from pdf",
@@ -2750,7 +2814,9 @@
         "ko": "pdf 페이지 추출, pdf 페이지 추출기, pdf 페이지 무료 온라인 추출, pdf에서 페이지 선택",
         "nl": "pagina's uit pdf extraheren, pdf pagina extractor, pdf pagina's gratis online extraheren, pagina's uit pdf selecteren",
         "pl": "wyodrębnij strony z pdf, ekstraktor stron pdf, wyodrębnij strony pdf online za darmo, wybierz strony z pdf",
-        "tr": "pdf sayfa çıkar, pdf sayfa çıkarma aracı, ücretsiz online pdf sayfa çıkarma, pdf'den sayfa seç"
+        "tr": "pdf sayfa çıkar, pdf sayfa çıkarma aracı, ücretsiz online pdf sayfa çıkarma, pdf'den sayfa seç",
+        "zh-CN": "从pdf提取页面, pdf页面提取工具, 免费在线提取pdf页面, 从pdf选择页面",
+        "ar": "استخراج صفحات من pdf, أداة استخراج صفحات pdf, استخراج صفحات pdf اونلاين مجاني, اختيار صفحات من pdf"
       }
     },
     {

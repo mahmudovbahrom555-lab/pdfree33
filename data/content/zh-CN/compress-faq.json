@@ -1,0 +1,90 @@
+[
+  {
+    "@type": "Question",
+    "name": "PDF 压缩在没有网络连接时也能用吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "可以。页面加载完成后，PDFree 可作为渐进式网络应用（PWA）完全离线运行。无需网络连接 —— 所有处理都在您的浏览器中完成。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDF 压缩能缩小多少文件体积？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "通常能缩小 20–70%。包含高分辨率图片的 PDF（扫描文档、照片画册）压缩效果最明显 —— 通常可节省 50–80%。纯文本 PDF 由于文字已经以矢量形式高效存储，压缩幅度会较小。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "压缩会损害文字质量吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "不会。PDF 中的文字是矢量数据，不受图片压缩影响。只有 PDF 中内嵌的位图图片会被重新压缩。在“轻度”设置下，连图片也不会被改动 —— 只会移除元数据和隐藏的冗余对象。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "为什么压缩后的 PDF 看起来一样，体积却变小了？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDF 文件中通常包含不可见的冗余内容：Adobe Reader 生成的页面缩略图、重复内嵌的字体、XMP 元数据流、内嵌颜色配置文件，以及来自 Adobe 应用的 PieceInfo 私有数据。PDFree 会移除这些隐藏的多余内容。可见内容 —— 文字、图片、排版 —— 完全不变。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "可以压缩有密码保护的 PDF 吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree 会尝试在可能的情况下优化加密的 PDF，但保护级别较高的文件可能无法完全压缩。为获得最佳效果，请先使用 PDFree 的保护 PDF 工具移除密码（该工具也可以移除已有密码），然后再进行压缩。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "压缩有文件大小限制吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "没有。由于没有任何内容会被上传，PDFree 没有上传限制。实际限制取决于您设备的可用内存。大多数电脑都能轻松处理体积达数百 MB 的 PDF。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFree 压缩 PDF 时会上传我的文件吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "不会。压缩完全使用 JavaScript 在您的浏览器中进行。您的 PDF 会被加载到浏览器内存中本地处理，结果以下载形式提供。没有任何数据会被发送到服务器。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "可以压缩 PDF 用于邮件发送吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "可以 —— 这是最常见的使用场景。大多数邮件服务商将附件上限设为 25MB。选择“标准”预设压缩您的 PDF 用于邮件发送：通常能缩小 30–50% 的体积，且不会有明显的画质损失。如果文件仍然过大，可以尝试“最大”预设，最多可缩小 50–80%，但会牺牲一些图片清晰度。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "这款 PDF 压缩工具完全免费吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "是的。PDFree 是一款完全免费的 PDF 压缩工具 —— 无需订阅，无需注册，输出文件没有水印。您可以根据需要压缩任意数量的 PDF，没有每日次数限制，也没有文件大小上限。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "可以同时压缩多个 PDF 文件吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "可以。PDFree 支持完整的批量压缩 —— 选择或拖入任意数量的 PDF 文件，每个文件都会使用您选择的预设在浏览器本地压缩。完成后，将所有结果打包为一个 ZIP 文件下载。没有每日次数限制，也没有可处理文件数量的上限。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "为什么有些政府或求职网站会因为文件过大而拒绝我的 PDF？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "许多在线表单（求职申请、美国移民局及其他政府门户、大学申请系统）会将上传上限设为 2–10MB，而且往往直到上传失败才会明确提示。先压缩 PDF —— 即使只是小幅缩小体积，通常就足以解决问题，且不会改变文档内容。"
+    }
+  }
+]
