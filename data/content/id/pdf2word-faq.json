@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "Ya. Setelah halaman dimuat, PDFree berfungsi sepenuhnya secara offline sebagai Progressive Web App. Tidak diperlukan koneksi internet untuk konversi."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah file Word hasil konversi menyimpan penulis atau metadata lain dari PDF saya?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Secara default, tidak — file .docx yang dihasilkan hanya berisi info file umum yang mengidentifikasinya sebagai hasil konversi PDFree, bukan dari properti PDF asli Anda. Jika Anda ingin tetap menyimpan penulis dan judul asli PDF Anda pada hasil, hapus centang \"Hapus info asli file\" pada opsi alat sebelum mengonversi."
+    }
   }
 ]

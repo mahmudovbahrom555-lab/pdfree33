@@ -94,5 +94,13 @@
       "@type": "Answer",
       "text": "Tak — PDFree. Cała konwersja działa w przeglądarce z użyciem PDF.js i WebAssembly. Twój PDF nigdy nie jest wysyłany na żaden serwer. Możesz to zweryfikować, otwierając zakładkę Sieć w narzędziach deweloperskich i obserwując, że podczas konwersji nie ma żadnego żądania przesłania pliku. Większość konwerterów online faktycznie przesyła Twój plik; PDFree tego nie robi."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy przekonwertowany plik Word zachowuje autora lub inne metadane mojego pliku PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Domyślnie nie — wygenerowany plik .docx zawiera tylko ogólne informacje o pliku identyfikujące go jako konwersję PDFree, nic z właściwości oryginalnego pliku PDF. Jeśli wolisz zachować oryginalnego autora i tytuł swojego PDF-a w wyniku, odznacz \"Usuń oryginalne informacje o pliku\" w opcjach narzędzia przed konwersją."
+    }
   }
 ]

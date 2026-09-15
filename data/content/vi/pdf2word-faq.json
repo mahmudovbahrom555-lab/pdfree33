@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "Có. Sau khi trang đã tải, PDFree hoạt động hoàn toàn offline như một Progressive Web App. Không cần kết nối internet để chuyển đổi."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Tệp Word sau khi chuyển đổi có giữ lại tác giả hoặc siêu dữ liệu khác của PDF không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Theo mặc định thì không — tệp .docx tạo ra chỉ chứa thông tin tệp chung nhận diện đây là bản chuyển đổi của PDFree, không có gì từ thuộc tính của PDF gốc. Nếu bạn muốn giữ lại tác giả và tiêu đề gốc của PDF trong kết quả, hãy bỏ chọn \"Xóa thông tin gốc của tệp\" trong tùy chọn của công cụ trước khi chuyển đổi."
+    }
   }
 ]

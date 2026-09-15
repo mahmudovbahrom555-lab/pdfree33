@@ -94,5 +94,13 @@
       "@type": "Answer",
       "text": "Ja — PDFree. De volledige conversie draait in je browser met PDF.js en WebAssembly. Je PDF wordt nooit naar een server verstuurd. Je kunt dit verifiëren door het tabblad Netwerk van de ontwikkelaarstools te openen en te zien dat er tijdens het converteren geen enkel uploadverzoek wordt gedaan. De meeste online converters uploaden je bestand wél; PDFree niet."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Behoudt het geconverteerde Word-bestand de auteur of andere metadata van mijn PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Standaard niet — het gegenereerde .docx-bestand bevat alleen algemene bestandsinformatie die het identificeert als een PDFree-conversie, niets uit de eigenschappen van je originele PDF. Als je liever de oorspronkelijke auteur en titel van je PDF in het resultaat behoudt, schakel dan \"Oorspronkelijke bestandsgegevens verwijderen\" uit in de opties van de tool voordat je converteert."
+    }
   }
 ]

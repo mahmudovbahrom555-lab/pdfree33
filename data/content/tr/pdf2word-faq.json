@@ -94,5 +94,13 @@
       "@type": "Answer",
       "text": "Evet — PDFree. Tüm dönüştürme, PDF.js ve WebAssembly kullanılarak tarayıcınızda çalışır. PDF'iniz hiçbir zaman bir sunucuya gönderilmez. Bunu, geliştirici araçlarında Ağ sekmesini açarak ve dönüştürme sırasında hiçbir dosya yükleme isteği yapılmadığını gözlemleyerek doğrulayabilirsiniz. Çoğu çevrimiçi dönüştürücü dosyanızı gerçekten yükler; PDFree yüklemez."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Dönüştürülen Word dosyası, PDF'imin yazarını veya diğer meta verilerini korur mu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Varsayılan olarak hayır — oluşturulan .docx dosyası yalnızca bunun bir PDFree dönüştürmesi olduğunu belirten genel dosya bilgilerini içerir, özgün PDF'inizin özelliklerinden hiçbir şey içermez. Sonuçta PDF'inizin özgün yazar ve başlık bilgisini korumak isterseniz, dönüştürmeden önce aracın seçeneklerinde \"Özgün dosya bilgilerini sil\" işaretini kaldırın."
+    }
   }
 ]

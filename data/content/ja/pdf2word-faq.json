@@ -94,5 +94,13 @@
       "@type": "Answer",
       "text": ".docxファイルはMicrosoft Word、Google Docs（アップロードして開く）、LibreOffice Writer、Office Open XMLをサポートする任意のエディターで開くことができます。"
     }
+  },
+  {
+    "@type": "Question",
+    "name": "変換されたWordファイルには、PDFの作成者やその他のメタデータが保持されますか?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "デフォルトでは保持されません — 出力される.docxファイルには、PDFree変換であることを示す一般的なファイル情報のみが含まれ、元のPDFのプロパティは一切含まれません。元のPDFの作成者とタイトルを結果に残しておきたい場合は、変換前にツールのオプションで「元のファイル情報を削除」のチェックを外してください。"
+    }
   }
 ]

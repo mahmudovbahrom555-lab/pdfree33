@@ -102,5 +102,13 @@
       "@type": "Answer",
       "text": "Sí — PDFree. La conversión se ejecuta en tu navegador con PDF.js y WebAssembly. Tu PDF nunca se envía a ningún servidor. Puedes verificarlo abriendo DevTools → pestaña Red y comprobando que no hay solicitud de subida durante la conversión. La mayoría de conversores en línea sí suben el archivo; PDFree no lo hace."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "¿El archivo Word convertido conserva el autor u otros metadatos de mi PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Por defecto, no — el archivo .docx generado solo contiene información genérica que lo identifica como una conversión de PDFree, nada de las propiedades de tu PDF original. Si prefieres conservar el autor y el título originales de tu PDF en el resultado, desmarca \"Eliminar la información original del archivo\" en las opciones de la herramienta antes de convertir."
+    }
   }
 ]
