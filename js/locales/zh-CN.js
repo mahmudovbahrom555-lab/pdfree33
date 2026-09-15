@@ -308,6 +308,7 @@ window.PDFREE_LOCALE = {
   org_delete_btn:        '删除页面',
   org_restore_btn:       '恢复页面',
   org_duplicate_btn:     '复制页面',
+  org_rotate_btn:   '旋转页面',
   org_grid_aria:         'PDF 页面 — 拖动以重新排序',
   org_page_alt:          '第 {n} 页',
   org_page_aria:         '第 {n} 页',

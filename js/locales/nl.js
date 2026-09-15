@@ -303,6 +303,7 @@ window.PDFREE_LOCALE = {
   org_delete_btn:         'Pagina verwijderen',
   org_restore_btn:        'Pagina herstellen',
   org_duplicate_btn:      'Pagina dupliceren',
+  org_rotate_btn:   'Pagina roteren',
   org_grid_aria:          "PDF-pagina's — sleep om te herschikken",
   org_page_alt:           'Pagina {n}',
   org_page_aria:          'Pagina {n}',

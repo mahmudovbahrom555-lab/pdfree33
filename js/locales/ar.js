@@ -310,6 +310,7 @@ window.PDFREE_LOCALE = {
   org_delete_btn:        'حذف الصفحة',
   org_restore_btn:       'استعادة الصفحة',
   org_duplicate_btn:     'نسخ الصفحة',
+  org_rotate_btn:   'تدوير الصفحة',
   org_grid_aria:         'صفحات PDF — اسحب لإعادة الترتيب',
   org_page_alt:          'صفحة {n}',
   org_page_aria:         'صفحة {n}',

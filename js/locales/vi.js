@@ -304,6 +304,7 @@ window.PDFREE_LOCALE = {
   org_delete_btn:         'Xóa trang',
   org_restore_btn:        'Khôi phục trang',
   org_duplicate_btn:      'Nhân bản trang',
+  org_rotate_btn:   'Xoay trang',
   org_grid_aria:          'Các trang PDF — kéo để sắp xếp lại',
   org_page_alt:           'Trang {n}',
   org_page_aria:          'Trang {n}',

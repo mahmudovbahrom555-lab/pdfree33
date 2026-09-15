@@ -306,6 +306,7 @@ window.PDFREE_LOCALE = {
   org_delete_btn:         'ページを削除',
   org_restore_btn:        'ページを復元',
   org_duplicate_btn:      'ページを複製',
+  org_rotate_btn:   'ページを回転',
   org_grid_aria:          'PDFのページ — ドラッグで並べ替え',
   org_page_alt:           'ページ{n}',
   org_page_aria:          'ページ{n}',

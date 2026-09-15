@@ -285,6 +285,7 @@ export const EN = {
   org_delete_btn:        'Delete page',
   org_restore_btn:       'Restore page',
   org_duplicate_btn:     'Duplicate page',
+  org_rotate_btn:   "Rotate page",
   org_grid_aria:         'PDF pages — drag to reorder',
   org_page_alt:          'Page {n}',
   org_page_aria:         'Page {n}',

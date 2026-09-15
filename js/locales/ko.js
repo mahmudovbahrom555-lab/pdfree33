@@ -305,6 +305,7 @@ window.PDFREE_LOCALE = {
   org_delete_btn:         '페이지 삭제',
   org_restore_btn:        '페이지 복원',
   org_duplicate_btn:      '페이지 복제',
+  org_rotate_btn:   '페이지 회전',
   org_grid_aria:          'PDF 페이지 — 드래그하여 순서 변경',
   org_page_alt:           '페이지 {n}',
   org_page_aria:          '페이지 {n}',

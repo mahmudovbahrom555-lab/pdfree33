@@ -2480,17 +2480,23 @@ button,
   filter: grayscale(1);
 }
 
-/* All 3 actions (delete/restore, duplicate, add-blank-after) live in one
-   top-left cluster, not scattered to separate corners — top-right is
+/* All 4 actions (delete/restore, duplicate, add-blank-after, rotate) live in
+   one top-left cluster, not scattered to separate corners — top-right is
    .rot-badge (rotation angle), bottom-left is .rot-selbadge (selection
-   checkbox), bottom-right is .org-blank-badge, and none of the three only
-   render conditionally can ever collide with an always-visible action. */
+   checkbox), bottom-right is .org-blank-badge, and none of the four only
+   render conditionally can ever collide with an always-visible action.
+   flex-wrap: on a narrow mobile card (measured 106px at 390px viewport) 4
+   icons at 24px + 4px gap (108px) no longer fit on one row — wraps to a
+   2nd row there instead of overflowing/clipping; desktop cards stay wide
+   enough for a single row, unaffected. */
 .org-card__actions {
   position: absolute;
   top: 4px;
   left: 4px;
   display: flex;
+  flex-wrap: wrap;
   gap: 4px;
+  max-width: calc(100% - 8px);
   z-index: 2;
 }
 .org-card__action {
@@ -2527,6 +2533,7 @@ button,
 .org-card__action--restore:hover { background: var(--green); color: #fff; }
 .org-card__action--dup:hover      { background: var(--yellow-light); color: var(--yellow-text); }
 .org-card__action--addblank:hover { background: var(--green-light); color: var(--green-dark); }
+.org-card__action--rotate:hover   { background: var(--green-light); color: var(--green-dark); }
 
 /* Add Blank Page's card visual — deliberately NOT a plain white box: a
    dashed border + label so it reads as "intentionally inserted" at a

@@ -459,7 +459,18 @@ function _thumbInnerHTML(pos) {
   const addBlankHTML = !deleted
     ? `<button type="button" class="org-card__action org-card__action--addblank" data-act="add-blank" aria-label="${esc(t('org_add_blank_btn'))}">⊞</button>`
     : '';
-  const actionsHTML = `<div class="org-card__actions">${restoreOrDeleteHTML}${dupHTML}${addBlankHTML}</div>`;
+  // Per-card rotate — independent of _selected (see _rotateOnePage's own
+  // comment): fixes the real reported bug where the shared bulk-rotate flow
+  // clears its selection after every use, so repeat-clicking the toolbar
+  // rotate button on the same single page silently does nothing past the
+  // first click. Hidden on blank pages, same "rotation not supported in v1"
+  // rule _applyRotation()/the delta-badge above already follow — a visible
+  // no-op button here would violate the never-silent-no-op UX rule instead
+  // of avoiding it.
+  const rotateHTML = (!deleted && !blank)
+    ? `<button type="button" class="org-card__action org-card__action--rotate" data-act="rotate" aria-label="${esc(t('org_rotate_btn'))}">↻</button>`
+    : '';
+  const actionsHTML = `<div class="org-card__actions">${restoreOrDeleteHTML}${dupHTML}${addBlankHTML}${rotateHTML}</div>`;
 
   if (blank) {
     // Deliberately NOT a plain white box — has to read as "intentionally
@@ -660,6 +671,7 @@ function _bindEvents() {
       else if (actBtn.dataset.act === 'restore')    _restorePage(pos);
       else if (actBtn.dataset.act === 'duplicate')  _duplicatePage(pos);
       else if (actBtn.dataset.act === 'add-blank')  _addBlankPageAfter(pos);
+      else if (actBtn.dataset.act === 'rotate')     _rotateOnePage(pos, 90);
       return;
     }
 
@@ -765,6 +777,23 @@ function _applyRotation(angle) {
   } else {
     for (const pos of rotated) _updateCard(pos);
   }
+  _updateHint();
+  _updateHistoryButtons();
+  _updateSubmitBtn();
+}
+
+// Per-card rotate — deliberately never reads or writes _selected, unlike
+// _applyRotation() above. That's the whole point: it can't reopen the old
+// double-rotation bug (extending a stale selection silently re-rotates
+// already-rotated pages, fixed in 3ff468c8) because it has no selection
+// state to go stale in the first place. See organize_rotate_not_working_bug_report
+// memory for the real user report this fixes and the competitor research
+// (iLovePDF/Smallpdf both use an equivalent per-card icon) behind this design.
+function _rotateOnePage(pos, angle) {
+  if (isBlank(pos)) return; // rotation not supported for blanks — see _thumbInnerHTML's own comment
+  _snapshotForUndo();
+  _deltas[pos] = ((_deltas[pos] + angle) % 360 + 360) % 360;
+  _updateCard(pos);
   _updateHint();
   _updateHistoryButtons();
   _updateSubmitBtn();

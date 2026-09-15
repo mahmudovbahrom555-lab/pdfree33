@@ -303,6 +303,7 @@ window.PDFREE_LOCALE = {
   org_delete_btn:         'Sayfayı sil',
   org_restore_btn:        'Sayfayı geri yükle',
   org_duplicate_btn:      'Sayfayı çoğalt',
+  org_rotate_btn:   'Sayfayı döndür',
   org_grid_aria:          'PDF sayfaları — sıralamak için sürükleyin',
   org_page_alt:           'Sayfa {n}',
   org_page_aria:          'Sayfa {n}',
