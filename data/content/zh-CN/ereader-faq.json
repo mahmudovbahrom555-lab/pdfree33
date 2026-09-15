@@ -1,0 +1,66 @@
+[
+  {
+    "@type": "Question",
+    "name": "优化 PDF 会把我的文件上传到服务器吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "不会。每一页的渲染、裁剪和重建都完全在您的浏览器中完成。您的文件永远不会被发送到任何地方。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "优化之后文字还能选中或搜索吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "不能——输出的是经过栅格化的图像型 PDF，这与 PDFree 清理扫描工具所做的取舍相同。在不转换成图像的情况下裁剪和重排一个真正固定版式的 PDF 并不是可靠可行的；如果您需要保留可选中的文字，请不要使用这个工具处理该文件。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "自动页边距检测是怎么工作的？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree 会在整个文档中抽样多页，检测每一页真正的内容区域，并取这些样本的中位数——这样单张出血照片或几乎空白的分隔页就不会把整本书的裁剪框拉得过紧或过松。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "预设方案是针对哪些设备调校的？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Kindle（6/7 英寸屏幕）、reMarkable 和 Onyx Boox（10.3 英寸屏幕），以及 Kobo/Nook 阅读器。每种预设都匹配目标设备的屏幕宽高比，让页面尽量填满屏幕而不产生过多黑边。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "这会不会裁掉边缘附近的真实内容，比如脚注？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "裁剪只会从检测到的内容框向外扩展以适配您设备的宽高比——绝不会为了强行适配而进一步收缩。如果某页内容正好在检测框的边缘，请在下载前查看实时预览。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "能优化的页数有限制吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "没有。没有页数或文件大小限制，也没有每小时任务次数限制。无论是单页 PDF 还是数百页的书籍，您都可以随时优化。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "彩色页面需要关闭灰度模式吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "灰度模式默认开启，因为大多数电子阅读器都是灰度或电子墨水屏，但如果您在彩色平板（比如 Boox Tab）上阅读，或想保留彩色图表，可以关闭它。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "电子阅读器优化工具完全免费吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "是的。PDFree 完全免费，无需订阅，没有每日或每小时限制，无需注册。输出结果不会添加水印，也没有文件大小限制。"
+    }
+  }
+]

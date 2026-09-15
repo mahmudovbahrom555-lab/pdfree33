@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "كيفية تحسين ملف PDF لقارئ إلكتروني",
+  "description": "قص الهوامش وتحسين التباين لأجهزة Kindle وKobo وreMarkable — مجانًا، بدون رفع.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "افتح ملف PDF الخاص بك",
+      "text": "انقر على 'اختر الملفات' أو اسحب ملف PDF إلى منطقة الإسقاط."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "اختر جهازك واضبط التباين",
+      "text": "اختر Kindle أو reMarkable / Boox أو Kobo / Nook، ثم اضبط شريط التباين. تتحدّث معاينة قبل/بعد المباشرة أثناء ذلك."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "نزّل ملف PDF المحسَّن",
+      "text": "انقر على 'تحسين للقارئ الإلكتروني'. تُعالَج كل صفحة وتكون جاهزة للتنزيل فورًا."
+    }
+  ]
+}

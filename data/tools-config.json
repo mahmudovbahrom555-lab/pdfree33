@@ -1408,7 +1408,9 @@
         "ko": "manhwa-peiji-bunhal",
         "nl": "mangapaginas-splitsen",
         "pl": "podziel-strony-mangi",
-        "tr": "manga-sayfalarini-bol"
+        "tr": "manga-sayfalarini-bol",
+        "zh-CN": "manhua-chaifen-pdf",
+        "ar": "taqsim-manga-pdf"
       },
       "titles": {
         "en": "Split Manga Pages Free — Divide Double-Page Spreads into Two | PDFree",
@@ -1424,7 +1426,9 @@
         "ko": "만화 페이지 분할 무료 — 스프레드를 두 페이지로 나누기 | PDFree",
         "nl": "Mangapagina's Splitsen Gratis — Dubbele Pagina's in Twee | PDFree",
         "pl": "Podziel Strony Mangi Za Darmo — Rozdziel Podwójne Strony | PDFree",
-        "tr": "Manga Sayfalarını Ücretsiz Böl — Çift Sayfaları İkiye Ayır | PDFree"
+        "tr": "Manga Sayfalarını Ücretsiz Böl — Çift Sayfaları İkiye Ayır | PDFree",
+        "zh-CN": "免费拆分漫画页面 —— 将双页跨页拆分为两页 | PDFree",
+        "ar": "تقسيم صفحات المانجا مجانًا — تحويل الصفحات المزدوجة إلى صفحتين | PDFree"
       },
       "descs": {
         "en": "Split double-page manga spreads into two correctly ordered pages, right-to-left aware. 100% private — processed locally, no uploads, no signup.",
@@ -1440,7 +1444,9 @@
         "ko": "만화 스프레드를 올바른 순서의 두 페이지로 분할, 오른쪽에서 왼쪽 읽기 지원. 100% 비공개 — 로컬에서 처리, 업로드 없음.",
         "nl": "Splits dubbele mangapagina's in twee pagina's in de juiste volgorde, met ondersteuning voor rechts-naar-links lezen. 100% privé — lokaal verwerkt, geen upload.",
         "pl": "Podziel podwójne strony mangi na dwie strony we właściwej kolejności, z obsługą czytania od prawej do lewej. 100% prywatności — przetwarzanie lokalne.",
-        "tr": "Çift manga sayfalarını doğru sırayla iki sayfaya bölün, sağdan sola okuma desteğiyle. %100 gizli — tarayıcıda işlenir, yükleme yok."
+        "tr": "Çift manga sayfalarını doğru sırayla iki sayfaya bölün, sağdan sola okuma desteğiyle. %100 gizli — tarayıcıda işlenir, yükleme yok.",
+        "zh-CN": "将双页漫画跨页拆分为两个顺序正确的页面，支持从右到左阅读顺序。100% 隐私 —— 本地处理，无需上传，无需注册。",
+        "ar": "قسّم الصفحات المزدوجة للمانجا إلى صفحتين بترتيب صحيح، مع مراعاة القراءة من اليمين إلى اليسار. خصوصية كاملة 100% — معالجة محلية، بدون رفع، بدون تسجيل."
       },
       "navLabels": {
         "en": "Manga Split",
@@ -1456,7 +1462,9 @@
         "ko": "만화 분할",
         "nl": "Manga splitsen",
         "pl": "Podziel mangę",
-        "tr": "Manga Böl"
+        "tr": "Manga Böl",
+        "zh-CN": "漫画拆分",
+        "ar": "تقسيم المانجا"
       },
       "cardNames": {
         "en": "Split Manga Pages",
@@ -1472,7 +1480,9 @@
         "ko": "만화 페이지 분할",
         "nl": "Mangapagina's splitsen",
         "pl": "Podziel strony mangi",
-        "tr": "Manga Sayfalarını Böl"
+        "tr": "Manga Sayfalarını Böl",
+        "zh-CN": "拆分漫画页面",
+        "ar": "تقسيم صفحات المانجا"
       },
       "cardDescs": {
         "en": "Split double-page manga spreads into two correctly ordered pages",
@@ -1488,7 +1498,9 @@
         "ko": "만화 스프레드를 올바른 순서의 두 페이지로 분할",
         "nl": "Splits dubbele mangapagina's in twee pagina's in de juiste volgorde",
         "pl": "Podziel podwójne strony mangi na dwie strony we właściwej kolejności",
-        "tr": "Çift manga sayfalarını doğru sırayla iki sayfaya bölün"
+        "tr": "Çift manga sayfalarını doğru sırayla iki sayfaya bölün",
+        "zh-CN": "将双页漫画跨页拆分为两个顺序正确的页面",
+        "ar": "قسّم الصفحات المزدوجة للمانجا إلى صفحتين بترتيب صحيح"
       },
       "breadcrumb": {
         "en": "Split Manga Pages",
@@ -1504,7 +1516,9 @@
         "ko": "만화 페이지 분할",
         "nl": "Mangapagina's splitsen",
         "pl": "Podziel strony mangi",
-        "tr": "Manga Sayfalarını Böl"
+        "tr": "Manga Sayfalarını Böl",
+        "zh-CN": "拆分漫画页面",
+        "ar": "تقسيم صفحات المانجا"
       },
       "metaDescs": {
         "en": "Split double-page manga spreads from your own scans, purchased digital volumes, or doujinshi into two correctly ordered pages — runs in your browser, nothing uploaded. No signup, no limits.",
@@ -1520,7 +1534,9 @@
         "ko": "직접 스캔한 파일, 구매한 디지털 단행본, 직접 만든 동인지의 스프레드를 올바른 순서의 두 페이지로 분할 — 브라우저에서 실행, 업로드 없음. 가입 불필요, 제한 없음.",
         "nl": "Splits dubbele mangapagina's van je eigen scans, gekochte digitale volumes of eigen doujinshi in twee pagina's in de juiste volgorde — in de browser, geen upload. Geen aanmelding, geen limieten.",
         "pl": "Podziel podwójne strony mangi z własnych skanów, kupionych tomów cyfrowych lub własnych doujinshi na dwie strony we właściwej kolejności — w przeglądarce, nic nie przesyłane. Bez rejestracji, bez limitów.",
-        "tr": "Kendi taramalarınızdan, satın aldığınız dijital ciltlerden veya kendi doujinshi'nizden çift manga sayfalarını doğru sırayla iki sayfaya bölün — tarayıcıda çalışır, yükleme yok. Kayıt yok, sınır yok."
+        "tr": "Kendi taramalarınızdan, satın aldığınız dijital ciltlerden veya kendi doujinshi'nizden çift manga sayfalarını doğru sırayla iki sayfaya bölün — tarayıcıda çalışır, yükleme yok. Kayıt yok, sınır yok.",
+        "zh-CN": "将您自己的扫描件、购买的数字单行本或同人志中的双页跨页拆分为两个顺序正确的页面——在浏览器中运行，不上传任何内容。无需注册，无限制。",
+        "ar": "قسّم الصفحات المزدوجة للمانجا من مسحك الضوئي الخاص أو مجلداتك الرقمية المشتراة أو دوجينشي الخاص بك إلى صفحتين بترتيب صحيح — يعمل في متصفحك، دون رفع أي شيء. بدون تسجيل، بدون حدود."
       },
       "ogTitles": {
         "en": "Split Manga Pages Free — Divide Double-Page Spreads into Two",
@@ -1536,7 +1552,9 @@
         "ko": "만화 페이지 분할 무료 — 스프레드를 두 페이지로 나누기",
         "nl": "Mangapagina's Splitsen Gratis — Dubbele Pagina's in Twee",
         "pl": "Podziel Strony Mangi Za Darmo — Rozdziel Podwójne Strony",
-        "tr": "Manga Sayfalarını Ücretsiz Böl — Çift Sayfaları İkiye Ayır"
+        "tr": "Manga Sayfalarını Ücretsiz Böl — Çift Sayfaları İkiye Ayır",
+        "zh-CN": "免费拆分漫画页面 —— 将双页跨页拆分为两页",
+        "ar": "تقسيم صفحات المانجا مجانًا — تحويل الصفحات المزدوجة إلى صفحتين"
       },
       "ogDescs": {
         "en": "Split manga spread pages into two correctly ordered pages, right-to-left aware. Runs in your browser — nothing uploaded, nothing saved on a server. Free forever, no signup.",
@@ -1552,7 +1570,9 @@
         "ko": "만화 스프레드를 올바른 순서의 두 페이지로 분할, 오른쪽에서 왼쪽 읽기 지원. 브라우저에서 실행 — 업로드 없음. 영구 무료.",
         "nl": "Splits dubbele mangapagina's in twee pagina's in de juiste volgorde, met ondersteuning voor rechts-naar-links lezen. In de browser — niets geüpload. Voor altijd gratis.",
         "pl": "Podziel podwójne strony mangi na dwie strony we właściwej kolejności, z obsługą czytania od prawej do lewej. W przeglądarce — nic nie przesyłane. Za darmo na zawsze.",
-        "tr": "Çift manga sayfalarını doğru sırayla iki sayfaya bölün, sağdan sola okuma desteğiyle. Tarayıcıda çalışır — yükleme yok. Sonsuza dek ücretsiz."
+        "tr": "Çift manga sayfalarını doğru sırayla iki sayfaya bölün, sağdan sola okuma desteğiyle. Tarayıcıda çalışır — yükleme yok. Sonsuza dek ücretsiz.",
+        "zh-CN": "将漫画跨页拆分为两个顺序正确的页面，支持从右到左阅读顺序。在浏览器中运行——不上传任何内容，不在服务器保存任何内容。永久免费，无需注册。",
+        "ar": "قسّم صفحات المانجا المزدوجة إلى صفحتين بترتيب صحيح، مع مراعاة القراءة من اليمين إلى اليسار. يعمل في متصفحك — لا شيء يُرفع، لا شيء يُحفظ على خادم. مجاني للأبد، بدون تسجيل."
       },
       "keywords": {
         "en": "split manga pages, manga spread splitter, split double page manga, manga pdf splitter, right to left page split, manhwa page split",
@@ -1568,7 +1588,9 @@
         "ko": "만화 페이지 분할, 만화 스프레드 분할, 만화 pdf 분할, 오른쪽에서 왼쪽 페이지 분할, 만화 페이지 나누기",
         "nl": "mangapagina's splitsen, dubbele pagina manga splitsen, manga pdf splitsen, pagina's rechts naar links splitsen, manhwa pagina's splitsen",
         "pl": "podziel strony mangi, rozdziel podwójną stronę mangi, podziel pdf mangi, podziel strony od prawej do lewej, podziel strony manhwa",
-        "tr": "manga sayfalarını böl, çift manga sayfası ayır, manga pdf böl, sağdan sola sayfa bölme, manhwa sayfa bölme"
+        "tr": "manga sayfalarını böl, çift manga sayfası ayır, manga pdf böl, sağdan sola sayfa bölme, manhwa sayfa bölme",
+        "zh-CN": "拆分漫画页面, 漫画跨页拆分, 拆分双页漫画, 漫画pdf拆分, 从右到左页面拆分, 漫画网页拆分",
+        "ar": "تقسيم صفحات المانجا, تقسيم الصفحة المزدوجة للمانجا, مقسّم pdf المانجا, تقسيم الصفحات من اليمين لليسار, تقسيم صفحات المانهوا"
       }
     },
     {
@@ -1589,7 +1611,9 @@
         "ko": "seukaen-jeongli",
         "nl": "scan-opschonen",
         "pl": "wyczysc-skan",
-        "tr": "taramayi-temizle"
+        "tr": "taramayi-temizle",
+        "zh-CN": "qingli-saomiao-pdf",
+        "ar": "tanzif-masah-pdf"
       },
       "titles": {
         "en": "Clean Scan Online Free — Whiten Scanned PDF Backgrounds | PDFree",
@@ -1605,7 +1629,9 @@
         "ko": "스캔 온라인 무료 정리 — 스캔한 PDF 배경 하얗게 만들기 | PDFree",
         "nl": "Scan Online Gratis Opschonen — Achtergrond van Gescande PDF Wit Maken | PDFree",
         "pl": "Wyczyść Skan Online za Darmo — Rozjaśnij Tło Zeskanowanego PDF | PDFree",
-        "tr": "Taramayı Ücretsiz Temizle — Taranan PDF Arka Planını Beyazlat | PDFree"
+        "tr": "Taramayı Ücretsiz Temizle — Taranan PDF Arka Planını Beyazlat | PDFree",
+        "zh-CN": "在线免费清理扫描件 —— 让扫描 PDF 背景变白 | PDFree",
+        "ar": "تنظيف المسح الضوئي مجانًا عبر الإنترنت — تبييض خلفية PDF الممسوح | PDFree"
       },
       "descs": {
         "en": "Whiten grey, yellowed, or shadowy scanned-page backgrounds while keeping text sharp. 100% private — processed locally, no uploads, no signup.",
@@ -1621,7 +1647,9 @@
         "ko": "회색, 누렇게 변색되거나 그림자가 있는 스캔 페이지 배경을 하얗게 만들고 텍스트는 선명하게 유지합니다. 100% 비공개 — 로컬에서 처리, 업로드 없음.",
         "nl": "Maak grijze, vergeelde of schaduwrijke achtergronden van gescande pagina's wit, tekst blijft scherp. 100% privé — lokaal verwerkt, geen upload.",
         "pl": "Rozjaśnij szare, pożółkłe lub zacienione tło zeskanowanych stron, zachowując ostry tekst. 100% prywatności — przetwarzanie lokalne.",
-        "tr": "Taranan sayfaların gri, sararmış veya gölgeli arka planını beyazlatın, metin keskin kalsın. Tarayıcıda işleme — yükleme yok."
+        "tr": "Taranan sayfaların gri, sararmış veya gölgeli arka planını beyazlatın, metin keskin kalsın. Tarayıcıda işleme — yükleme yok.",
+        "zh-CN": "让发灰、泛黄或有阴影的扫描页面背景变白，同时保持文字清晰。100% 隐私 —— 本地处理，无需上传，无需注册。",
+        "ar": "بيّض خلفية الصفحات الممسوحة الرمادية أو المصفرّة أو المظلَّلة مع إبقاء النص حادًا. خصوصية كاملة 100% — معالجة محلية، بدون رفع، بدون تسجيل."
       },
       "navLabels": {
         "en": "Clean Scan",
@@ -1637,7 +1665,9 @@
         "ko": "스캔 정리",
         "nl": "Scan Opschonen",
         "pl": "Wyczyść Skan",
-        "tr": "Taramayı Temizle"
+        "tr": "Taramayı Temizle",
+        "zh-CN": "清理扫描",
+        "ar": "تنظيف المسح الضوئي"
       },
       "cardNames": {
         "en": "Clean Scan",
@@ -1653,7 +1683,9 @@
         "ko": "스캔 정리",
         "nl": "Scan opschonen",
         "pl": "Wyczyść skan",
-        "tr": "Taramayı Temizle"
+        "tr": "Taramayı Temizle",
+        "zh-CN": "清理扫描件",
+        "ar": "تنظيف المسح الضوئي"
       },
       "cardDescs": {
         "en": "Whiten scanned-page backgrounds and sharpen text — 100% in your browser",
@@ -1669,7 +1701,9 @@
         "ko": "스캔한 페이지 배경을 하얗게 만들고 텍스트를 선명하게 — 100% 브라우저에서 처리",
         "nl": "Maak de achtergrond van gescande pagina's wit en scherp de tekst aan — 100% in je browser",
         "pl": "Rozjaśnij tło zeskanowanych stron i wyostrz tekst — w 100% w przeglądarce",
-        "tr": "Taranan sayfaların arka planını beyazlatın ve metni netleştirin — %100 tarayıcıda"
+        "tr": "Taranan sayfaların arka planını beyazlatın ve metni netleştirin — %100 tarayıcıda",
+        "zh-CN": "清理扫描页面背景并让文字更清晰 —— 100% 在浏览器完成",
+        "ar": "بيّض خلفيات الصفحات الممسوحة وزِد وضوح النص — 100% داخل متصفحك"
       },
       "breadcrumb": {
         "en": "Clean Scan",
@@ -1685,7 +1719,9 @@
         "ko": "스캔 정리",
         "nl": "Scan opschonen",
         "pl": "Wyczyść skan",
-        "tr": "Taramayı Temizle"
+        "tr": "Taramayı Temizle",
+        "zh-CN": "清理扫描",
+        "ar": "تنظيف المسح الضوئي"
       },
       "metaDescs": {
         "en": "Whiten grey, yellowed, or shadowy scanned-page backgrounds while keeping text sharp — runs in your browser, nothing uploaded or stored. No signup, no limits.",
@@ -1701,7 +1737,9 @@
         "ko": "회색, 누렇게 변색되거나 그림자가 있는 스캔 페이지 배경을 하얗게 — 브라우저에서 실행, 업로드 없음. 가입 불필요, 제한 없음.",
         "nl": "Maak grijze, vergeelde of schaduwrijke achtergronden van gescande pagina's wit — in de browser, niets geüpload. Geen aanmelding, geen limieten.",
         "pl": "Rozjaśnij szare, pożółkłe lub zacienione tło zeskanowanych stron — w przeglądarce, nic nie przesyłane. Bez rejestracji, bez limitów.",
-        "tr": "Taranan sayfaların gri, sararmış veya gölgeli arka planını beyazlatın — tarayıcıda, yükleme yok. Kayıt yok, sınır yok."
+        "tr": "Taranan sayfaların gri, sararmış veya gölgeli arka planını beyazlatın — tarayıcıda, yükleme yok. Kayıt yok, sınır yok.",
+        "zh-CN": "让发灰、泛黄或有阴影的扫描页面背景变白，同时保持文字清晰——在浏览器中运行，不上传或保存任何内容。无需注册，无限制。",
+        "ar": "بيّض خلفية الصفحات الممسوحة الرمادية أو المصفرّة أو المظلَّلة مع إبقاء النص حادًا — يعمل في متصفحك، دون رفع أو تخزين أي شيء. بدون تسجيل، بدون حدود."
       },
       "ogTitles": {
         "en": "Clean Scan Online Free — Whiten Scanned PDF Backgrounds",
@@ -1717,7 +1755,9 @@
         "ko": "스캔 온라인 무료 정리 — 스캔한 PDF 배경 하얗게 만들기",
         "nl": "Scan Online Gratis Opschonen — Achtergrond van Gescande PDF Wit Maken",
         "pl": "Wyczyść Skan Online za Darmo — Rozjaśnij Tło Zeskanowanego PDF",
-        "tr": "Taramayı Ücretsiz Temizle — Taranan PDF Arka Planını Beyazlat"
+        "tr": "Taramayı Ücretsiz Temizle — Taranan PDF Arka Planını Beyazlat",
+        "zh-CN": "在线免费清理扫描件 —— 让扫描 PDF 背景变白",
+        "ar": "تنظيف المسح الضوئي مجانًا عبر الإنترنت — تبييض خلفية PDF الممسوح"
       },
       "ogDescs": {
         "en": "Whiten scanned-page backgrounds and sharpen text. Runs in your browser — nothing uploaded, nothing saved on a server. Free forever, no signup.",
@@ -1733,7 +1773,9 @@
         "ko": "스캔 페이지 배경을 하얗게 만들고 텍스트를 선명하게 만드세요. 브라우저에서 실행 — 업로드 없음. 영구 무료, 가입 불필요.",
         "nl": "Maak de achtergrond van gescande pagina's wit en scherp de tekst aan. In de browser — niets geüpload. Voor altijd gratis, geen aanmelding.",
         "pl": "Rozjaśnij tło zeskanowanych stron i wyostrz tekst. W przeglądarce — nic nie przesyłane. Za darmo na zawsze, bez rejestracji.",
-        "tr": "Taranan sayfaların arka planını beyazlatın ve metni netleştirin. Tarayıcıda işlenir — yükleme yok. Sonsuza dek ücretsiz, kayıt yok."
+        "tr": "Taranan sayfaların arka planını beyazlatın ve metni netleştirin. Tarayıcıda işlenir — yükleme yok. Sonsuza dek ücretsiz, kayıt yok.",
+        "zh-CN": "清理扫描页面背景并让文字更清晰。在浏览器中运行——不上传任何内容，不在服务器保存任何内容。永久免费，无需注册。",
+        "ar": "بيّض خلفيات الصفحات الممسوحة وزِد وضوح النص. يعمل في متصفحك — لا شيء يُرفع، لا شيء يُحفظ على خادم. مجاني للأبد، بدون تسجيل."
       },
       "keywords": {
         "en": "clean scan, whiten scanned pdf background, remove gray background scan, brighten scanned document, scan cleanup online, whiten book scan background",
@@ -1749,7 +1791,9 @@
         "ko": "스캔 정리, pdf 스캔 배경 하얗게, 회색 배경 스캔 제거, 스캔 문서 밝게, 온라인 스캔 정리",
         "nl": "scan opschonen, pdf scan achtergrond wit maken, grijze achtergrond scan verwijderen, gescand document opfleuren, scan opschonen online",
         "pl": "wyczyść skan, rozjaśnij tło pdf skanu, usuń szare tło skanu, rozjaśnij zeskanowany dokument, czyszczenie skanu online",
-        "tr": "taramayı temizle, pdf tarama arka planını beyazlat, gri arka plan taramadan kaldır, taranan belgeyi aydınlat, çevrimiçi tarama temizleme"
+        "tr": "taramayı temizle, pdf tarama arka planını beyazlat, gri arka plan taramadan kaldır, taranan belgeyi aydınlat, çevrimiçi tarama temizleme",
+        "zh-CN": "清理扫描, 让扫描pdf背景变白, 去除扫描灰色背景, 扫描文档提亮, 在线扫描清理, 让书籍扫描背景变白",
+        "ar": "تنظيف المسح الضوئي, تبييض خلفية pdf الممسوح, إزالة الخلفية الرمادية من المسح, تفتيح المستند الممسوح, تنظيف المسح الضوئي عبر الإنترنت"
       }
     },
     {
@@ -1770,7 +1814,9 @@
         "ko": "pdf-ereader-choejeokhwa",
         "nl": "pdf-optimaliseren-voor-ereader",
         "pl": "optymalizuj-pdf-dla-e-czytnika",
-        "tr": "e-okuyucu-icin-pdf-optimize-et"
+        "tr": "e-okuyucu-icin-pdf-optimize-et",
+        "zh-CN": "dianzishu-youhua-pdf",
+        "ar": "tahsin-qari-pdf"
       },
       "titles": {
         "en": "E-Reader PDF Optimizer Online Free — Crop Margins for Kindle & Kobo | PDFree",
@@ -1786,7 +1832,9 @@
         "ko": "전자책 리더용 PDF 온라인 무료 최적화 — Kindle & Kobo 여백 자르기 | PDFree",
         "nl": "PDF voor E-Reader Optimaliseren — Marges Kindle & Kobo, Gratis | PDFree",
         "pl": "PDF dla E-Czytnika za Darmo — Przytnij Marginesy Kindle i Kobo | PDFree",
-        "tr": "E-Okuyucu için PDF Optimize Et — Kindle & Kobo Kenarlarını Kırp | PDFree"
+        "tr": "E-Okuyucu için PDF Optimize Et — Kindle & Kobo Kenarlarını Kırp | PDFree",
+        "zh-CN": "在线免费电子阅读器 PDF 优化工具 —— 裁剪 Kindle 和 Kobo 页边距 | PDFree",
+        "ar": "أداة تحسين PDF للقارئ الإلكتروني مجانًا — قص هوامش Kindle وKobo | PDFree"
       },
       "descs": {
         "en": "Automatically crop wide margins and optimize contrast for Kindle, Kobo & reMarkable screens. 100% private — processed locally, no uploads, no signup.",
@@ -1802,7 +1850,9 @@
         "ko": "Kindle, Kobo, reMarkable 화면에 맞춰 넓은 여백을 자동으로 자르고 대비를 최적화합니다. 100% 비공개 — 로컬에서 처리, 업로드 없음.",
         "nl": "Snijd brede marges automatisch bij en optimaliseer het contrast voor Kindle-, Kobo- & reMarkable-schermen. 100% privé — lokaal verwerkt, geen upload.",
         "pl": "Automatycznie przycinaj szerokie marginesy i optymalizuj kontrast dla ekranów Kindle, Kobo i reMarkable. 100% prywatności — przetwarzanie lokalne.",
-        "tr": "Kindle, Kobo ve reMarkable ekranları için geniş kenar boşluklarını otomatik kırpın ve kontrastı optimize edin. Tarayıcıda işleme — yükleme yok."
+        "tr": "Kindle, Kobo ve reMarkable ekranları için geniş kenar boşluklarını otomatik kırpın ve kontrastı optimize edin. Tarayıcıda işleme — yükleme yok.",
+        "zh-CN": "自动裁剪宽页边距并为 Kindle、Kobo 和 reMarkable 屏幕优化对比度。100% 隐私 —— 本地处理，无需上传，无需注册。",
+        "ar": "قص الهوامش العريضة تلقائيًا وحسِّن التباين لشاشات Kindle وKobo وreMarkable. خصوصية كاملة 100% — معالجة محلية، بدون رفع، بدون تسجيل."
       },
       "navLabels": {
         "en": "E-Reader Optimizer",
@@ -1818,7 +1868,9 @@
         "ko": "전자책 리더 최적화",
         "nl": "E-Reader-Optimalisatie",
         "pl": "Optymalizator E-Czytnika",
-        "tr": "E-Okuyucu Optimize Edici"
+        "tr": "E-Okuyucu Optimize Edici",
+        "zh-CN": "电子阅读器优化",
+        "ar": "محسّن القارئ الإلكتروني"
       },
       "cardNames": {
         "en": "E-Reader Optimizer",
@@ -1834,7 +1886,9 @@
         "ko": "전자책 리더 최적화",
         "nl": "E-reader-optimalisatie",
         "pl": "Optymalizator do e-czytników",
-        "tr": "E-Okuyucu Optimize Edici"
+        "tr": "E-Okuyucu Optimize Edici",
+        "zh-CN": "电子阅读器优化工具",
+        "ar": "محسّن القارئ الإلكتروني"
       },
       "cardDescs": {
         "en": "Crop margins and optimize contrast for Kindle, Kobo & reMarkable",
@@ -1850,7 +1904,9 @@
         "ko": "Kindle, Kobo, reMarkable용으로 여백을 자르고 대비를 최적화하세요",
         "nl": "Marges bijsnijden en contrast optimaliseren voor Kindle, Kobo & reMarkable",
         "pl": "Przytnij marginesy i zoptymalizuj kontrast dla Kindle, Kobo i reMarkable",
-        "tr": "Kindle, Kobo ve reMarkable için kenar boşluklarını kırpın ve kontrastı optimize edin"
+        "tr": "Kindle, Kobo ve reMarkable için kenar boşluklarını kırpın ve kontrastı optimize edin",
+        "zh-CN": "为 Kindle、Kobo 和 reMarkable 裁剪页边距并优化对比度",
+        "ar": "قص الهوامش وحسِّن التباين لأجهزة Kindle وKobo وreMarkable"
       },
       "breadcrumb": {
         "en": "E-Reader Optimizer",
@@ -1866,7 +1922,9 @@
         "ko": "전자책 리더 최적화",
         "nl": "E-reader-optimalisatie",
         "pl": "Optymalizator do e-czytników",
-        "tr": "E-Okuyucu Optimize Edici"
+        "tr": "E-Okuyucu Optimize Edici",
+        "zh-CN": "电子阅读器优化",
+        "ar": "محسّن القارئ الإلكتروني"
       },
       "metaDescs": {
         "en": "Automatically crop wide margins and boost contrast for Kindle, Kobo & reMarkable — runs in your browser, nothing uploaded. No signup, no limits.",
@@ -1882,7 +1940,9 @@
         "ko": "Kindle, Kobo, reMarkable용으로 넓은 여백을 자동으로 자르고 대비를 강화하세요 — 브라우저에서 실행, 업로드 없음. 가입 불필요, 제한 없음.",
         "nl": "Snijd brede marges automatisch bij en verbeter het contrast voor Kindle, Kobo & reMarkable — in de browser, niets geüpload. Geen aanmelding, geen limieten.",
         "pl": "Automatycznie przytnij szerokie marginesy i popraw kontrast dla Kindle, Kobo i reMarkable — w przeglądarce, nic nie przesyłane. Bez rejestracji, bez limitów.",
-        "tr": "Kindle, Kobo ve reMarkable için geniş kenar boşluklarını otomatik kırpın ve kontrastı artırın — tarayıcıda, yükleme yok. Kayıt yok, sınır yok."
+        "tr": "Kindle, Kobo ve reMarkable için geniş kenar boşluklarını otomatik kırpın ve kontrastı artırın — tarayıcıda, yükleme yok. Kayıt yok, sınır yok.",
+        "zh-CN": "自动裁剪宽页边距并为 Kindle、Kobo 和 reMarkable 增强对比度——在浏览器中运行，不上传任何内容。无需注册，无限制。",
+        "ar": "قص الهوامش العريضة تلقائيًا وعزِّز التباين لأجهزة Kindle وKobo وreMarkable — يعمل في متصفحك، دون رفع أي شيء. بدون تسجيل، بدون حدود."
       },
       "ogTitles": {
         "en": "E-Reader PDF Optimizer Online Free — Crop Margins for Kindle & Kobo",
@@ -1898,7 +1958,9 @@
         "ko": "전자책 리더용 PDF 온라인 무료 최적화 — Kindle & Kobo 여백 자르기",
         "nl": "PDF Online Gratis Optimaliseren voor E-Reader — Marges Bijsnijden voor Kindle & Kobo",
         "pl": "Optymalizacja PDF do E-Czytnika Online za Darmo — Przytnij Marginesy dla Kindle i Kobo",
-        "tr": "E-Okuyucu için PDF'yi Ücretsiz Optimize Et — Kindle & Kobo için Kenar Boşluklarını Kırpın"
+        "tr": "E-Okuyucu için PDF'yi Ücretsiz Optimize Et — Kindle & Kobo için Kenar Boşluklarını Kırpın",
+        "zh-CN": "在线免费电子阅读器 PDF 优化工具 —— 裁剪 Kindle 和 Kobo 页边距",
+        "ar": "أداة تحسين PDF للقارئ الإلكتروني مجانًا — قص هوامش Kindle وKobo"
       },
       "ogDescs": {
         "en": "Crop margins and optimize contrast for Kindle, Kobo & reMarkable. Runs in your browser — nothing uploaded, nothing saved on a server. Free forever, no signup.",
@@ -1914,7 +1976,9 @@
         "ko": "Kindle, Kobo, reMarkable용으로 여백을 자르고 대비를 최적화하세요. 브라우저에서 실행 — 업로드 없음. 영구 무료, 가입 불필요.",
         "nl": "Snijd marges bij en optimaliseer het contrast voor Kindle, Kobo & reMarkable. In de browser — niets geüpload. Voor altijd gratis, geen aanmelding.",
         "pl": "Przytnij marginesy i zoptymalizuj kontrast dla Kindle, Kobo i reMarkable. W przeglądarce — nic nie przesyłane. Za darmo na zawsze, bez rejestracji.",
-        "tr": "Kindle, Kobo ve reMarkable için kenar boşluklarını kırpın ve kontrastı optimize edin. Tarayıcıda işlenir — yükleme yok. Sonsuza dek ücretsiz, kayıt yok."
+        "tr": "Kindle, Kobo ve reMarkable için kenar boşluklarını kırpın ve kontrastı optimize edin. Tarayıcıda işlenir — yükleme yok. Sonsuza dek ücretsiz, kayıt yok.",
+        "zh-CN": "为 Kindle、Kobo 和 reMarkable 裁剪页边距并优化对比度。在浏览器中运行——不上传任何内容，不在服务器保存任何内容。永久免费，无需注册。",
+        "ar": "قص الهوامش وحسِّن التباين لأجهزة Kindle وKobo وreMarkable. يعمل في متصفحك — لا شيء يُرفع، لا شيء يُحفظ على خادم. مجاني للأبد، بدون تسجيل."
       },
       "keywords": {
         "en": "ereader pdf, kindle pdf margins, optimize pdf for kindle, crop pdf margins for kobo, remarkable pdf, e-ink pdf, shrink pdf margins, grayscale pdf ereader",
@@ -1930,7 +1994,9 @@
         "ko": "이북리더 pdf, 킨들 pdf 여백, 킨들용 pdf 최적화, 코보용 pdf 여백 자르기, 리마커블 pdf, e-ink pdf, pdf 여백 줄이기",
         "nl": "pdf voor ereader, kindle pdf marges, pdf optimaliseren voor kindle, pdf marges bijsnijden voor kobo, remarkable pdf, e-ink pdf, pdf marges verkleinen",
         "pl": "pdf do e-czytnika, marginesy pdf kindle, optymalizuj pdf dla kindle, przytnij marginesy pdf dla kobo, pdf remarkable, pdf e-ink, zmniejsz marginesy pdf",
-        "tr": "e-okuyucu pdf, kindle pdf kenar boşlukları, kindle için pdf optimize et, kobo için pdf kenar boşluklarını kırp, remarkable pdf, e-ink pdf, pdf kenar boşluklarını küçült"
+        "tr": "e-okuyucu pdf, kindle pdf kenar boşlukları, kindle için pdf optimize et, kobo için pdf kenar boşluklarını kırp, remarkable pdf, e-ink pdf, pdf kenar boşluklarını küçült",
+        "zh-CN": "电子阅读器pdf, kindle pdf页边距, 为kindle优化pdf, 为kobo裁剪pdf页边距, remarkable pdf, 电子墨水屏pdf, 缩小pdf页边距",
+        "ar": "pdf للقارئ الإلكتروني, هوامش pdf كيندل, تحسين pdf لكيندل, قص هوامش pdf لكوبو, pdf ريماركابل, pdf حبر إلكتروني, تصغير هوامش pdf"
       }
     },
     {

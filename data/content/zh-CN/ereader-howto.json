@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "如何为电子阅读器优化 PDF",
+  "description": "为 Kindle、Kobo 和 reMarkable 裁剪页边距并优化对比度——免费，无需上传。",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "打开您的 PDF",
+      "text": "点击“选择文件”或将 PDF 拖入拖放区域。"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "选择设备并调整对比度",
+      "text": "选择 Kindle、reMarkable / Boox 或 Kobo / Nook，然后调整对比度滑块。实时前后对比预览会随之更新。"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "下载优化后的 PDF",
+      "text": "点击“为电子阅读器优化”。每一页处理完成后即可立即下载。"
+    }
+  ]
+}

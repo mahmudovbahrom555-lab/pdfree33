@@ -1,0 +1,153 @@
+<div class="seo-content" style="max-width:800px;margin:60px auto 40px;padding:0 24px;color:var(--text2);line-height:1.75;">
+
+        <h1 id="seoH1_optimize-pdf-for-ereader" style="font-size:clamp(22px,3.5vw,30px);color:var(--text);margin:0 0 16px;font-weight:700;">电子书阅读器 PDF 优化工具 —— 为 Kindle、Kobo 和 reMarkable 裁剪页边距</h1>
+        <p style="font-size:15px;margin:0 0 40px;">PDF 本质上是一种页面排版格式——它精确还原打印页面的样子，包括宽宽的页边距，因为页面尺寸是固定写死在文件里的。这对打印来说很好，但在 6 到 10 英寸的电子墨水屏上就很尴尬，那些同样的页边距会直接占掉本就不多的阅读区域。PDFree 的电子阅读器优化工具会检测每一页真正的内容区域，裁掉周围的空白，并按您设备的尺寸重建 PDF——全部都在浏览器内完成，不上传任何内容。</p>
+
+        <!-- How to use -->
+        <h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">三步为电子阅读器优化 PDF</h2>
+
+        <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
+          <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">1</div>
+          <div>
+            <strong style="color:var(--text);font-size:15px;">打开您的 PDF</strong>
+            <p style="margin:6px 0 0;font-size:14px;">点击<strong>选择文件</strong>或将 PDF 拖入拖放区域。PDFree 会在整个文档中抽样多页并自动检测真正的内容区域——文件不会被发送到任何服务器。</p>
+          </div>
+        </div>
+        <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
+          <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">2</div>
+          <div>
+            <strong style="color:var(--text);font-size:15px;">选择设备并调整对比度</strong>
+            <p style="margin:6px 0 0;font-size:14px;">选择 <strong>Kindle</strong>、<strong>reMarkable / Boox</strong> 或 <strong>Kobo / Nook</strong>，页面会按您屏幕的尺寸生成。灰度模式默认为电子墨水屏开启；拖动对比度滑块，实时查看前后对比预览的更新，自动检测的裁剪框会直接绘制在页面上。</p>
+          </div>
+        </div>
+        <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
+          <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">3</div>
+          <div>
+            <strong style="color:var(--text);font-size:15px;">下载优化后的 PDF</strong>
+            <p style="margin:6px 0 0;font-size:14px;">点击<strong>为电子阅读器优化</strong>。每一页都会被裁剪、转换为灰度、增强对比度，并按您设备的宽高比重建——立即可以下载，然后传输到您的 Kindle、Kobo 或 reMarkable。</p>
+          </div>
+        </div>
+
+        <!-- Differentiator -->
+        <h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">为什么这不是“重排文字”——以及为什么这是诚实的答案</h2>
+        <p style="font-size:15px;margin:0 0 24px;">有些 PDF 阅读器宣称提供“重排”模式，可以像 EPUB 那样把文字重新换行以适配更小的屏幕。但实际效果往往并不理想，因为 PDF 的页面布局并不像 EPUB 基于 HTML 那样以流动文字的形式存储——它是字形和坐标的固定排布，从中重建段落结构充其量也只是不太可靠。与其承诺一个令人失望的重排效果，电子阅读器优化工具做了更可靠的事：它会找出每一页真正的内容区域——通过对采样页面取中位数，避免某一张出血照片或空白分隔页把整本书的判断带偏——把页边距裁剪到内容边界，再按您设备的屏幕比例适配结果。输出的是基于图像的 PDF，这与 PDFree 清理扫描工具在修复扫描件时所做的取舍相同：文字不再可选中或可搜索，但每一页在您的设备上都能全屏清晰地显示。</p>
+
+        <!-- When to use -->
+        <h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">什么时候需要用到它</h2>
+
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">页边距很宽的学术论文和报告</strong>
+          <p style="margin:6px 0 0;font-size:14px;">期刊 PDF 是按印刷页面排版的，页边距可能会占掉小屏电子阅读器三分之一的空间。裁掉这些边距能让真正的文字有更多呼吸空间。</p>
+        </div>
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">扫描的书籍和拍摄的页面</strong>
+          <p style="margin:6px 0 0;font-size:14px;">光照不均和文字模糊在电子墨水屏上很难阅读。灰度加对比度处理能让页面呈现出真正电子书的效果。</p>
+        </div>
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">在 6 英寸屏幕上阅读 Letter/A4 格式文档</strong>
+          <p style="margin:6px 0 0;font-size:14px;">未经缩放直接把 US Letter 或 A4 页面塞进 6 英寸的 Kindle 屏幕会显得非常小，还要不停放大。让内容适配设备自身的宽高比可以消除这个麻烦。</p>
+        </div>
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">为传输做准备</strong>
+          <p style="margin:6px 0 0;font-size:14px;">在通过 USB 把文件复制到 Kindle、Kobo 或 reMarkable 之前先优化一次，之后每次在该设备上阅读都会是全屏且清晰的。</p>
+        </div>
+
+        <!-- Comparison table -->
+        <h2 style="font-size:22px;color:var(--text);margin:48px 0 16px;font-weight:700;">PDFree 与 k2pdfopt 等桌面工具有何不同</h2>
+        <div style="overflow-x:auto;margin:0 0 32px;">
+          <table style="width:100%;border-collapse:collapse;font-size:14px;min-width:520px;">
+            <thead>
+              <tr style="border-bottom:2px solid var(--border);">
+                <th style="text-align:left;padding:10px 14px;color:var(--text);font-weight:600;">功能</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">PDFree</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">桌面命令行/图形工具</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom:1px solid var(--border);background:var(--green-light);">
+                <td style="padding:10px 14px;color:var(--text);font-weight:500;">是否需要安装</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green-text);font-weight:600;">无需安装——在浏览器中运行</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">需要下载并安装</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 14px;color:var(--text);font-weight:500;">文件隐私</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green-text);font-weight:600;">不上传——保留在设备上</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">本地运行，但依赖平台</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);background:var(--green-light);">
+                <td style="padding:10px 14px;color:var(--text);font-weight:500;">平台支持</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green-text);font-weight:600;">任何带浏览器的设备</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">仅限 Windows/Mac/Linux 二进制程序</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 14px;color:var(--text);font-weight:500;">实时前后对比预览</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green-text);font-weight:600;">包含</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">命令行操作，无实时预览</td>
+              </tr>
+              <tr>
+                <td style="padding:10px 14px;color:var(--text);font-weight:500;">价格</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green-text);font-weight:600;">永久免费</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">免费，但需要一定技术门槛才能配置</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="font-size:12px;color:var(--text3);margin:8px 0 0 0 0;">反映常见桌面 PDF 优化工具的典型情况；不同工具的功能和许可方式各不相同。</p>
+
+        <!-- FAQ -->
+        <h2 style="font-size:22px;color:var(--text);margin:48px 0 20px;font-weight:700;">常见问题</h2>
+
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">优化 PDF 会把我的文件上传到服务器吗？</h3>
+          <p style="margin:0;font-size:14px;">不会。每一页的渲染、裁剪和重建都完全在您的浏览器中完成。您的文件永远不会被发送到任何地方。</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">优化之后文字还能选中或搜索吗？</h3>
+          <p style="margin:0;font-size:14px;">不能——输出的是经过栅格化的图像型 PDF，这与 PDFree 清理扫描工具所做的取舍相同。在不转换成图像的情况下裁剪和重排一个真正固定版式的 PDF 并不是可靠可行的；如果您需要保留可选中的文字，请不要使用这个工具处理该文件。</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">自动页边距检测是怎么工作的？</h3>
+          <p style="margin:0;font-size:14px;">PDFree 会在整个文档中抽样多页，检测每一页真正的内容区域，并取这些样本的中位数——这样单张出血照片或几乎空白的分隔页就不会把整本书的裁剪框拉得过紧或过松。</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">预设方案是针对哪些设备调校的？</h3>
+          <p style="margin:0;font-size:14px;">Kindle（6/7 英寸屏幕）、reMarkable 和 Onyx Boox（10.3 英寸屏幕），以及 Kobo/Nook 阅读器。每种预设都匹配目标设备的屏幕宽高比，让页面尽量填满屏幕而不产生过多黑边。</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">这会不会裁掉边缘附近的真实内容，比如脚注？</h3>
+          <p style="margin:0;font-size:14px;">裁剪只会从检测到的内容框向外扩展以适配您设备的宽高比——绝不会为了强行适配而进一步收缩。如果某页内容正好在检测框的边缘，请在下载前查看实时预览。</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">能优化的页数有限制吗？</h3>
+          <p style="margin:0;font-size:14px;">没有。没有页数或文件大小限制，也没有每小时任务次数限制。无论是单页 PDF 还是数百页的书籍，您都可以随时优化。</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">彩色页面需要关闭灰度模式吗？</h3>
+          <p style="margin:0;font-size:14px;">灰度模式默认开启，因为大多数电子阅读器都是灰度或电子墨水屏，但如果您在彩色平板（比如 Boox Tab）上阅读，或想保留彩色图表，可以关闭它。</p>
+        </div>
+        <div style="margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">电子阅读器优化工具完全免费吗？</h3>
+          <p style="margin:0;font-size:14px;">是的。PDFree 完全免费，无需订阅，没有每日或每小时限制，无需注册。输出结果不会添加水印，也没有文件大小限制。</p>
+        </div>
+
+        <!-- Why PDFree -->
+        <h2 style="font-size:22px;color:var(--text);margin:48px 0 16px;font-weight:700;">为什么用 PDFree 为电子阅读器优化 PDF？</h2>
+        <p style="font-size:14px;margin:0 0 16px;">PDFree 是一款免费的在线电子阅读器 PDF 优化工具——为 Kindle、Kobo 和 reMarkable 裁剪页边距并增强对比度，无需注册、无需账号、无需安装。与桌面工具不同，PDFree 会立即在您的浏览器内处理您的 PDF——文件永远不会离开您的设备。没有每小时或每日限制，不会添加水印，也没有文件大小限制。支持 Windows、Mac、Linux、iOS 和 Android。</p>
+        <ul style="margin:0 0 32px;padding-left:24px;display:flex;flex-direction:column;gap:8px;font-size:14px;">
+          <li><strong>永久免费</strong> —— 基础优化无需订阅，无高级付费版</li>
+          <li><strong>无需注册</strong> —— 打开工具即可立即开始</li>
+          <li><strong>100% 隐私</strong> —— PDF 在本地处理，从不上传到任何服务器</li>
+          <li><strong>无页数或每小时限制</strong> —— 优化单页或整本书，随时需要随时用</li>
+          <li><strong>实时前后对比预览</strong> —— 在提交处理前就能看到自动检测的裁剪框</li>
+        </ul>
+
+        <!-- Related tools -->
+        <h2 style="font-size:22px;color:var(--text);margin:48px 0 12px;font-weight:700;">相关工具</h2>
+        <ul style="margin:0 0 40px;padding-left:24px;display:flex;flex-direction:column;gap:8px;">
+        <li><a href="/clean-scan/" style="color:var(--green-text);font-weight:500;">清理扫描件</a> —— 在进一步优化前先让扫描页面背景变白</li>
+        <li><a href="/resize-pdf-for-printing/" style="color:var(--green-text);font-weight:500;">调整 PDF 大小</a> —— 适配标准纸张尺寸而非设备屏幕</li>
+        <li><a href="/compress-pdf/" style="color:var(--green-text);font-weight:500;">压缩 PDF</a> —— 优化后进一步缩小文件体积</li>
+        <li><a href="/organize-pdf/" style="color:var(--green-text);font-weight:500;">整理 PDF</a> —— 优化前重新排序或删除页面</li>
+        </ul>
+
+      </div>
