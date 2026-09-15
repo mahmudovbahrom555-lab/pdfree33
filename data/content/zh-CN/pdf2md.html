@@ -1,0 +1,156 @@
+<div class="seo-content" style="max-width:800px;margin:60px auto 40px;padding:0 24px;color:var(--text2);line-height:1.75;">
+
+        <h1 id="seoH1_pdf-to-markdown" style="font-size:clamp(22px,3.5vw,30px);color:var(--text);margin:0 0 16px;font-weight:700;">面向 AI、RAG 和 ChatGPT 的 PDF 转 Markdown —— 免费，无需上传</h1>
+        <p style="font-size:15px;margin:0 0 12px;">需要从 PDF 中提取干净的 Markdown，粘贴到 ChatGPT、Claude 或 RAG 流程中吗？PDFree 会读取您 PDF 中的文字，自动检测标题、项目符号列表、编号列表、粗体/斜体强调、表格、图片和数学公式——然后输出一个纯文本 .md 文件（如果包含图片或公式，则输出附带图片/公式的 .zip）。全部过程都在您的浏览器中运行。您的文档永远不会被上传到任何服务器——包括 PDFree 自己的服务器——如果您喂给 AI 的内容是内部资料、未发布内容，或是其他不想先经过第三方的内容，这一点尤其重要。</p>
+        <p style="font-size:12px;margin:0 0 40px;color:var(--text3);">本工具会检测文字、标题、列表、表格、图表/图片以及行内/独立数学公式——只要 PDF 中含有可提取的图片或被裁剪的公式，下载结果就会是包含 document.md 和一个图片文件夹的 .zip；否则就是一个纯 .md 文件。如需更可靠的表格提取，请查看 <a href="/pdf-to-excel/" style="color:var(--green-text)">PDF 转 Excel</a>；如需完全可编辑的文档，请查看 <a href="/pdf-to-word/" style="color:var(--green-text)">PDF 转 Word</a>。最后验证时间：2026 年 8 月。</p>
+
+        <!-- How to use -->
+        <h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">三步将 PDF 转换为 Markdown</h2>
+
+        <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
+          <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">1</div>
+          <div>
+            <strong style="color:var(--text);font-size:15px;">打开您的 PDF</strong>
+            <p style="margin:6px 0 0;font-size:14px;">点击<strong>选择文件</strong>或将 PDF 拖入拖放区域。PDFree 会立即读取页数。</p>
+          </div>
+        </div>
+        <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
+          <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">2</div>
+          <div>
+            <strong style="color:var(--text);font-size:15px;">让 PDFree 检测结构</strong>
+            <p style="margin:6px 0 0;font-size:14px;">较大的文字会变成 <code>#</code>/<code>##</code>/<code>###</code> 标题，项目符号和编号行会变成 Markdown 列表语法，粗体/斜体文字也会被保留。</p>
+          </div>
+        </div>
+        <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
+          <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">3</div>
+          <div>
+            <strong style="color:var(--text);font-size:15px;">下载 .md 文件</strong>
+            <p style="margin:6px 0 0;font-size:14px;">点击<strong>转换为 Markdown</strong>。一个纯文本 .md 文件会立即下载。</p>
+          </div>
+        </div>
+
+        <!-- Use cases -->
+        <h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">什么时候需要把 PDF 转换为 Markdown</h2>
+
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">笔记应用和维基</strong>
+          <p style="margin:6px 0 0;font-size:14px;">把 PDF 报告或文章以干净、可编辑的 Markdown 形式导入 Obsidian、Logseq 或团队维基，而不是手动复制粘贴带格式的文字。</p>
+        </div>
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">文档和 README</strong>
+          <p style="margin:6px 0 0;font-size:14px;">把 PDF 规格文档、需求文档或导出的设计文档变成 README 或文档页面的初始版本。</p>
+        </div>
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">静态站点生成器</strong>
+          <p style="margin:6px 0 0;font-size:14px;">Jekyll、Hugo 等静态站点生成器原生支持 Markdown——这样在把 PDF 内容迁移到网站时，就无需手动重新排版。</p>
+        </div>
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">把文字提供给 ChatGPT、Claude 或 RAG 流程</strong>
+          <p style="margin:6px 0 0;font-size:14px;">Markdown 的轻量结构（标题、列表、真正的表格）能给语言模型提供正确的分块边界和阅读顺序——而纯粹的 PDF 文字转储做不到这一点，因为 PDF 存储的是字形位置，而不是文档结构。数学公式在能被正确展平的情况下会保留为行内 <code>$...$</code> 形式，在无法展平的情况下（如矩阵、堆叠分数）会被裁剪为带标注的图片——因此不会有任何内容悄悄退化成误导性的错误文字。</p>
+        </div>
+        <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
+          <strong style="color:var(--text);font-size:15px;">效果预期</strong>
+          <p style="margin:6px 0 0;font-size:14px;">标题、段落、项目符号列表、编号列表、表格和数学公式都会被自动检测并转换为 Markdown 语法——图表和被裁剪的公式会连同各自的图片一起打包进 .zip，并附带描述性的替代文字。若表格较为复杂，可以尝试 <a href="/pdf-to-excel/" style="color:var(--green-text)">PDF 转 Excel</a>；若需要完全可编辑的文档，可以尝试 <a href="/pdf-to-word/" style="color:var(--green-text)">PDF 转 Word</a>。</p>
+        </div>
+
+        <!-- AI / RAG -->
+        <h2 style="font-size:22px;color:var(--text);margin:40px 0 16px;font-weight:700;">为什么用于 AI 时 Markdown 比原始 PDF 文字更好？</h2>
+        <p style="font-size:14px;margin:0 0 16px;">PDF 内部其实没有“段落”或“表格”这样的真实概念——它只是页面上定位好的字形。从 PDF 中提取原始文字，常常会把多栏内容错误地拼接在一起，把脚注混入正文，把表格变成一堆没有对齐的数字。这些对语言模型都没有帮助，而且会实实在在地损害 RAG 流程的检索质量，因为分块边界依赖于源格式本来就不具备的结构信息。</p>
+        <p style="font-size:14px;margin:0 0 32px;">PDFree 的 PDF 转 Markdown 直接从字号、位置和版式中检测出这种结构——真正的 <code>#</code>/<code>##</code> 标题（而不只是变大的字），GitHub 风格的 Markdown 表格（而不是被拍平的行），以及标记为 <code>$...$</code> 或裁剪为图片（并保留展平后的文字作为替代文字）的数学公式——因此纯文本消费者依然能获得信号，而具备视觉能力的模型也能正确读取图片。全部处理都在本地完成，因此您不想上传给第三方的文档——内部报告、草稿、未发表的研究——不必为了获得适合 AI 使用的格式而离开您的设备。我们<a href="/blog/pdf-to-markdown-benchmark/" style="color:var(--green-text);">在 7 份真实文档上对实际输出质量做了基准测试</a>，与 pymupdf4llm、Docling 和 Marker 对比，得分 91.6/100，与 Docling 仅差 1.1 分。需要在脚本或流水线中使用，而不是浏览器标签页？<a href="/blog/pdf-to-markdown-benchmark/#outside-the-browser" style="color:var(--green-text);">同一引擎也可以作为 npm CLI/库或自托管的 Docker REST API 运行</a>——同样只在本地处理，不上传，只是换成在您自己的机器上运行。</p>
+
+        <!-- Privacy -->
+        <h2 style="font-size:22px;color:var(--text);margin:48px 0 16px;font-weight:700;">为什么在这里转换而不是用云端工具？</h2>
+        <p style="font-size:14px;margin:0 0 16px;">大多数在线 PDF 转 Markdown 工具会把您的文档上传到远程服务器提取文字，再把文件发回给您。无论 PDF 中是什么——内部笔记、草稿、私人研究——都会短暂地存在于您无法控制的硬件上。</p>
+        <p style="font-size:14px;margin:0 0 32px;">PDFree 的工作方式不同。每一页都在您的浏览器内使用开源库 <strong>pdf.js</strong> 被读取并结构化为 Markdown——甚至不需要其他任何库，因为 Markdown 本身就是纯文本。您的 PDF 永远不会离开您的设备。没有任何服务器会接收它——甚至 PDFree 自己的服务器也不会。</p>
+
+        <!-- Comparison table -->
+        <h2 style="font-size:22px;color:var(--text);margin:0 0 16px;font-weight:700;">PDFree 与云端转换工具有何不同</h2>
+        <div style="overflow-x:auto;margin:0 0 32px;">
+          <table style="width:100%;border-collapse:collapse;font-size:14px;min-width:520px;">
+            <thead>
+              <tr style="border-bottom:2px solid var(--border);">
+                <th style="text-align:left;padding:10px 14px;color:var(--text);font-weight:600;">功能</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">PDFree</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text);font-weight:600;">常见云端工具</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom:1px solid var(--border);background:var(--green-light);">
+                <td style="padding:10px 14px;color:var(--text);font-weight:500;">数据去向</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green-text);font-weight:600;">保留在您的设备上</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">上传到远程服务器</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 14px;color:var(--text);font-weight:500;">标题和列表检测</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green-text);font-weight:600;">自动完成</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">效果不一，常常只输出纯文字</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);background:var(--green-light);">
+                <td style="padding:10px 14px;color:var(--text);font-weight:500;">是否需要注册</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green-text);font-weight:600;">不需要</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">通常需要</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 14px;color:var(--text);font-weight:500;">每日使用限制</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green-text);font-weight:600;">无限制</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">免费版通常受限</td>
+              </tr>
+              <tr>
+                <td style="padding:10px 14px;color:var(--text);font-weight:500;">价格</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green-text);font-weight:600;">永久免费</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">有限制免费 / 付费方案</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- FAQ -->
+        <h2 style="font-size:22px;color:var(--text);margin:48px 0 20px;font-weight:700;">常见问题</h2>
+
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">转换时我的 PDF 会被上传到任何地方吗？</h3>
+          <p style="margin:0;font-size:14px;">不会。文字的读取和结构化为 Markdown 全部在您的浏览器中使用 pdf.js 完成。您的 PDF 永远不会离开您的设备。</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">PDFree 会在处理后存储或记录我的文件吗？</h3>
+          <p style="margin:0;font-size:14px;">不会。PDFree 完全在您的浏览器中运行——没有接收您文件的后端服务器。由于没有任何内容被上传，也就不可能被存储、记录或保留。您的文档只存在于浏览器内存中，仅在会话期间有效，关闭标签页后即被清除。</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">它能保留表格、图片和公式吗？</h3>
+          <p style="margin:0;font-size:14px;">表格会被自动检测并转换为 GitHub 风格的 Markdown 表格语法。图片/图表也会被提取出来，数学公式在能被正确展平的情况下标记为 <code>$...$</code>，无法展平时会被裁剪为带标注的图片（并保留展平后的文字作为替代文字）——只要 PDF 中含有可提取的图片或被裁剪的公式，下载结果就会是 .zip（document.md + 图片文件夹）；否则就是纯 .md 文件。如需更可靠的表格提取，请使用 <a href="/pdf-to-excel/" style="color:var(--green-text)">PDF 转 Excel</a>；如需完全可编辑的文档，请使用 <a href="/pdf-to-word/" style="color:var(--green-text)">PDF 转 Word</a>。</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">可选的“将公式识别为 LaTeX”开关会下载一个 AI 模型——这会破坏不上传的承诺吗？</h3>
+          <p style="margin:0;font-size:14px;">不会。这个可选开关会从 Hugging Face 的 CDN 一次性下载一个约 76MB 的 AI 模型（Texo/FormulaNet），以便公式识别能够在您的浏览器中本地运行——这与 PDFree 为 pdf.js 本身所做的一次性库下载性质相同。您的 PDF 永远不会成为该下载的一部分，也永远不会被上传到任何地方；只有模型自身的文件会朝相反方向移动，从 CDN 传输到您的浏览器。该功能默认关闭，且它识别出的每个公式都会被清楚标注为 AI 生成，方便您核对——无法确信识别的公式会回退为原有的图片裁剪方式。</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">标题是如何被检测出来的？</h3>
+          <p style="margin:0;font-size:14px;">PDFree 会把每一行的字号与文档典型正文字号进行比较。明显更大的文字会变成 Markdown 标题（根据大小程度不同，分别是 <code>#</code>、<code>##</code> 或 <code>###</code>）。</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">哪些类型的列表会被识别？</h3>
+          <p style="margin:0;font-size:14px;">带项目符号的行（•、◦、▪ 等类似标记）和编号行（“1.”、“2)”）会被转换为 Markdown 列表语法。字母或罗马数字列表（a.、iv.）会保留为纯文字，因为这类标记太容易与正文内容混淆。</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">这是一个无需注册的免费 PDF 转 Markdown 工具吗？</h3>
+          <p style="margin:0;font-size:14px;">是的。PDFree 完全免费——无需注册、无需账号、无需安装。打开工具，加载您的 PDF，然后下载 .md 文件即可。</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">扫描版 PDF 能处理吗？</h3>
+          <p style="margin:0;font-size:14px;">只有当 PDF 已经带有文字层时才可以。纯图片的扫描版 PDF 没有可提取的文字——请先运行 <a href="/ocr-pdf/" style="color:var(--green-text)">OCR PDF</a>，再转换结果。</p>
+        </div>
+        <div style="margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">这适合用来为 AI 工具、RAG 或 LLM 上下文准备 PDF 吗？</h3>
+          <p style="margin:0;font-size:14px;">适合。Markdown 能给语言模型提供真正的结构——标题、列表、GitHub 风格的表格——而不是一份扁平的 PDF 文字转储，这既能提高模型理解内容的准确度，也能改善 RAG 流程的分块效果。数学公式会被保留为 <code>$...$</code> 或带标注的图片，而不是悄悄退化为乱码文字，而且在本地转换意味着文档内容不必为了重新排版而离开您的设备——对于要喂给 ChatGPT、Claude 或您自己的流程的内部或未发表材料尤其有用。表格和公式的检测基于启发式方法，因此异常密集或复杂的版式仍可能丢失一些结构——在用于表格密集或公式密集的文档之前，请检查输出结果。</p>
+        </div>
+
+        <!-- Related tools -->
+        <h2 style="font-size:22px;color:var(--text);margin:48px 0 12px;font-weight:700;">相关工具</h2>
+        <ul style="margin:0 0 40px;padding-left:24px;display:flex;flex-direction:column;gap:8px;">
+          <li><a href="/pdf-to-word/" style="color:var(--green-text);font-weight:500;">PDF 转 Word</a> —— 完全可编辑的文档，包括图片和表格</li>
+          <li><a href="/pdf-to-excel/" style="color:var(--green-text);font-weight:500;">PDF 转 Excel</a> —— 改为把表格提取到真正的电子表格</li>
+          <li><a href="/ocr-pdf/" style="color:var(--green-text);font-weight:500;">OCR PDF</a> —— 先让扫描版 PDF 的文字可被提取</li>
+          <li><a href="/pdf-to-powerpoint/" style="color:var(--green-text);font-weight:500;">PDF 转 PowerPoint</a> —— 改为把 PDF 页面转换成幻灯片</li>
+        </ul>
+
+      </div>

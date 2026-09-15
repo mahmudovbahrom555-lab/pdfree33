@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "如何检查并将 PDF 转换为 PDF/A-2b 或 PDF/A-2u",
+  "description": "检查 PDF 是否符合 PDF/A 归档要求，并转换符合条件的文件——免费，无需上传。",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "打开您的 PDF",
+      "text": "点击“选择文件”或将 PDF 拖入拖放区域。文件完全在您的浏览器中分析。"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "查看合规性报告",
+      "text": "PDFree 会检查内嵌字体、加密、已应用的数字签名、文档/页面/注释级别的交互式操作或 JavaScript、LZW 压缩流以及 Unicode 文字映射。"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "如果符合要求就转换",
+      "text": "如果没有发现阻断性问题，点击“转换”以添加所需的 ICC 色彩配置文件、XMP 元数据和文件标识符，自动移除发现的任何交互式操作，并下载转换后的文件——如果您的字体支持，则为 PDF/A-2u，否则为 PDF/A-2b。"
+    }
+  ]
+}

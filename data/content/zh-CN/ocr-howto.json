@@ -1,0 +1,38 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "如何对 PDF 进行 OCR 识别并使其可被搜索",
+  "description": "让扫描版 PDF 可被搜索并提取其中的文字——免费，完全在浏览器中处理，支持自动检测文档语言。",
+  "totalTime": "PT5M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — 免费的浏览器端 OCR 工具，无需上传" }],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "打开您的扫描版 PDF",
+      "text": "点击“选择 PDF”或将扫描版 PDF 拖入拖放区域。PDFree 会自动检测您的 PDF 是扫描件还是已有文字层。",
+      "url": "https://pdfree.io/zh/pdf-wenzi-shibie/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "让 PDFree 检测语言，或自己选择",
+      "text": "对于扫描版 PDF，PDFree 会对页面取样并自动推荐文档语言——无需猜测。如有需要，可从下拉菜单中手动覆盖。已有文字层的 PDF 会跳过此步骤。",
+      "url": "https://pdfree.io/zh/pdf-wenzi-shibie/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "点击“让 PDF 可搜索”",
+      "text": "OCR 引擎（Tesseract.js）会在您的浏览器中本地逐页处理——不会上传任何内容。进度条会显示预计剩余时间。",
+      "url": "https://pdfree.io/zh/pdf-wenzi-shibie/#step3"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 4,
+      "name": "下载可搜索的 PDF",
+      "text": "OCR 完成后，您的可搜索 PDF 会自动下载。原始外观不会改变——只是添加了一层不可见的文字层，让您能在任何 PDF 阅读器中搜索、选中和复制文字。",
+      "url": "https://pdfree.io/zh/pdf-wenzi-shibie/#step4"
+    }
+  ]
+}

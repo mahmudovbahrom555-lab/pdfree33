@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "كيفية تحويل PDF إلى Markdown",
+  "description": "استخرج النص والعناوين والقوائم من PDF إلى ملف ‎.md‏ نظيف — 100% في متصفحك.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "افتح ملف PDF الخاص بك",
+      "text": "انقر على 'اختر ملفًا' أو اسحب ملف PDF إلى منطقة الإسقاط."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "دع PDFree يكتشف البنية",
+      "text": "تُكتشَف العناوين والقوائم النقطية والمرقّمة والنص الغامق/المائل تلقائيًا."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "نزّل ملف ‎.md‏",
+      "text": "انقر على 'تحويل إلى Markdown'. يُنزَّل ملف Markdown نصي بسيط فورًا."
+    }
+  ]
+}

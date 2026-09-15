@@ -1,0 +1,98 @@
+[
+  {
+    "@type": "Question",
+    "name": "什么是 PDF/A？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDF/A 是专为长期归档而设计的 ISO 标准化（ISO 19005）PDF 版本。它要求所有字体都必须嵌入，禁止加密和内嵌 JavaScript，并嵌入色彩配置文件和元数据信息，使文档在几十年后依然能独立于外部资源、完全一致地渲染。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDF/A-2b 和 PDF/A-2u 有什么区别？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDF/A-2u 在 2b 的基础上增加了一项要求：每种字体都必须有经过验证的 Unicode 映射，从而让您文档的文字保持真正可搜索、可复制粘贴，而不只是视觉上正确。PDFree 会自动检查这一点，只要字体符合条件就以 2u 为目标，否则回退到 2b——您无需自己选择。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "为什么我的 PDF 没有通过合规性检查？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "最常见的原因是字体未嵌入——许多 PDF 只是按名称引用 Helvetica 或 Arial 等标准字体，而不是把它们嵌入文件，而 PDF/A 不允许这样做。其他原因包括密码/加密、已应用的数字签名、内嵌的 JavaScript 或自动打开操作（包括隐藏在单个链接或表单字段中的操作），以及旧式的 LZW 压缩图像流。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFree 能修复缺少字体的 PDF 吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "有时可以，且需要您明确选择启用。如果缺失的字体是 Helvetica/Arial、Times 或 Courier，PDFree 可以提供一个免费的、度量兼容的替代字体（Liberation 字体家族）——但仅在验证您文档的确切字符宽度匹配之后才会这样做，以确保文字不会悄悄发生偏移。如果哪怕有一种字体验证失败，就不会做任何改动，转换仍会被拒绝。对于其他情况，PDFree 会准确告诉您哪些字体未嵌入，方便您重新导出源文档时把字体嵌入进去。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "转换会移除我 PDF 中的 JavaScript 或交互功能吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "如果存在的话，会移除——PDF/A 禁止内嵌 JavaScript 和自动操作，包括表单字段计算脚本（例如自动求和的总计字段）。PDFree 会在转换过程中自动移除这些内容，并准确告诉您移除了什么，因此您绝不会在归档后才惊讶地发现表单不再自动计算。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFree 会保留已有的数字签名吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree 会先检查是否存在签名。对已签名 PDF 的任何修改——包括本次转换——都会使其现有签名失效，因此如果 PDFree 检测到已应用的签名，它会拒绝转换，并告诉您之后为归档副本重新签名，而不是悄悄生成一个签名已损坏的文件。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "这个合规性检查是像 veraPDF 那样的完整 PDF/A 验证器吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "不是。这是对大多数 PDF 实际上会失败的结构性要求所做的自检，并不能替代完整的 ISO 19005 验证器。如果您需要用于监管或法律归档的经法律认证的 PDF/A 文件，PDFree 会在转换后直接链接到 veraPDF，供您进行独立、权威的检查。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "检查或转换我的 PDF 会把它上传到服务器吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "不会。合规性检查和转换都完全在您的浏览器中使用专用的 Web Worker 运行。您的文件永远不会被上传到任何地方。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFree 会在处理后存储或记录我的文件吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "不会。PDFree 完全在您的浏览器中运行——没有接收您文件的后端服务器。由于没有任何内容被上传，也就不可能被存储、记录或保留。您的文档只存在于浏览器内存中，仅在会话期间有效，关闭标签页后即被清除。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "转换后的 PDF/A 文件实际包含哪些内容？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "转换会嵌入一个标准的 sRGB ICC 色彩配置文件（通过 OutputIntent）、一个声明 PDF/A 合规性的 XMP 元数据包（与文档自身的标题/作者保持一致，避免两者不一致），以及一个文件标识符。它不会改变您文档的可见文字、图像或版式。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "检查和转换 PDF 为 PDF/A 是免费的吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "是的。PDFree 完全免费，无需订阅，没有每日限制，无需注册。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "我的大学或机构会要求我的论文或提交材料使用 PDF/A 吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "这取决于具体机构——没有统一的全球规则。一些大学资源库和政府门户网站确实要求使用 PDF/A 以便长期归档，而另一些则接受普通 PDF。请查看您学位论文办公室或提交门户的具体要求，然后使用 PDFree 的合规性检查确认您的文件是否已经符合要求，或使用转换器让它符合要求。"
+    }
+  }
+]

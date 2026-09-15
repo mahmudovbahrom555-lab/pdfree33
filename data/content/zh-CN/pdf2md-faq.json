@@ -1,0 +1,74 @@
+[
+  {
+    "@type": "Question",
+    "name": "转换时我的 PDF 会被上传到任何地方吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "不会。文字的读取和结构化为 Markdown 全部在您的浏览器中使用 pdf.js 完成。您的 PDF 永远不会离开您的设备。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFree 会在处理后存储或记录我的文件吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "不会。PDFree 完全在您的浏览器中运行——没有接收您文件的后端服务器。由于没有任何内容被上传，也就不可能被存储、记录或保留。您的文档只存在于浏览器内存中，仅在会话期间有效，关闭标签页后即被清除。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "它能保留表格、图片和公式吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "表格会被自动检测并转换为 GitHub 风格的 Markdown 表格语法。图片/图表也会被提取出来，数学公式在能被正确展平的情况下标记为 $...$，无法展平时会被裁剪为带标注的图片（并保留展平后的文字作为替代文字）——只要 PDF 中含有可提取的图片或被裁剪的公式，下载结果就会是 .zip（document.md + 图片文件夹）；否则就是纯 .md 文件。如需更可靠的表格提取，请使用 PDF 转 Excel；如需完全可编辑的文档，请使用 PDF 转 Word。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "可选的“将公式识别为 LaTeX”开关会下载一个 AI 模型——这会破坏不上传的承诺吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "不会。这个可选开关会从 Hugging Face 的 CDN 一次性下载一个约 76MB 的 AI 模型（Texo/FormulaNet），以便公式识别能够在您的浏览器中本地运行——这与 PDFree 为 pdf.js 本身所做的一次性库下载性质相同。您的 PDF 永远不会成为该下载的一部分，也永远不会被上传到任何地方；只有模型自身的文件会朝相反方向移动，从 CDN 传输到您的浏览器。该功能默认关闭，且它识别出的每个公式都会被清楚标注为 AI 生成，方便您核对——无法确信识别的公式会回退为原有的图片裁剪方式。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "标题是如何被检测出来的？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree 会把每一行的字号与文档典型正文字号进行比较。明显更大的文字会变成 Markdown 标题（根据大小程度不同，分别是 #、## 或 ###）。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "哪些类型的列表会被识别？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "带项目符号的行（•、◦、▪ 等类似标记）和编号行（“1.”、“2)”）会被转换为 Markdown 列表语法。字母或罗马数字列表（a.、iv.）会保留为纯文字，因为这类标记太容易与正文内容混淆。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "这是一个无需注册的免费 PDF 转 Markdown 工具吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "是的。PDFree 完全免费——无需注册、无需账号、无需安装。打开工具，加载您的 PDF，然后下载 .md 文件即可。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "扫描版 PDF 能处理吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "只有当 PDF 已经带有文字层时才可以。纯图片的扫描版 PDF 没有可提取的文字——请先运行 OCR PDF，再转换结果。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "这适合用来为 AI 工具、RAG 或 LLM 上下文准备 PDF 吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "适合。Markdown 能给语言模型提供真正的结构——标题、列表、GitHub 风格的表格——而不是一份扁平的 PDF 文字转储，这既能提高模型理解内容的准确度，也能改善 RAG 流程的分块效果。数学公式会被保留为 $...$ 或带标注的图片，而不是悄悄退化为乱码文字，而且在本地转换意味着文档内容不必为了重新排版而离开您的设备——对于要喂给 ChatGPT、Claude 或您自己的流程的内部或未发表材料尤其有用。表格和公式的检测基于启发式方法，因此异常密集或复杂的版式仍可能丢失一些结构——在用于表格密集或公式密集的文档之前，请检查输出结果。"
+    }
+  }
+]

@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "如何将 PDF 转换为 Markdown",
+  "description": "将 PDF 中的文字、标题和列表提取为干净的 .md 文件——100% 在您的浏览器中完成。",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "打开您的 PDF",
+      "text": "点击“选择文件”或将 PDF 拖入拖放区域。"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "让 PDFree 检测结构",
+      "text": "标题、项目符号列表、编号列表和粗体/斜体文字都会被自动检测。"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "下载 .md 文件",
+      "text": "点击“转换为 Markdown”。一个纯文本 Markdown 文件会立即下载。"
+    }
+  ]
+}

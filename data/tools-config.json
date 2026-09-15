@@ -4660,7 +4660,9 @@
         "it": "pdf-in-markdown",
         "ko": "pdf-markdown-byeonhwan",
         "nl": "pdf-naar-markdown",
-        "pl": "pdf-do-markdown"
+        "pl": "pdf-do-markdown",
+        "zh-CN": "pdf-zhuan-markdown",
+        "ar": "pdf-ila-markdown"
       },
       "titles": {
         "en": "PDF to Markdown for AI & RAG — Free, No Upload | PDFree",
@@ -4676,7 +4678,9 @@
         "it": "Convertire PDF in Markdown — Gratis, Senza Caricamento | PDFree",
         "ko": "PDF를 Markdown으로 변환 — 무료, 업로드 없음 | PDFree",
         "nl": "PDF naar Markdown Converteren — Gratis, Zonder Upload | PDFree",
-        "pl": "PDF do Markdown — Za Darmo, Bez Przesyłania | PDFree"
+        "pl": "PDF do Markdown — Za Darmo, Bez Przesyłania | PDFree",
+        "zh-CN": "面向 AI 和 RAG 的 PDF 转 Markdown —— 免费，无需上传 | PDFree",
+        "ar": "تحويل PDF إلى Markdown للذكاء الاصطناعي وRAG — مجانًا، بدون رفع | PDFree"
       },
       "descs": {
         "en": "Convert PDF text, headings and lists into Markdown — runs in your browser, no upload.",
@@ -4692,7 +4696,9 @@
         "it": "Converti PDF in testo .md. Funziona nel browser, senza caricamento.",
         "ko": "PDF를 텍스트 .md로 변환. 브라우저에서 실행, 업로드 없음.",
         "nl": "Converteer PDF naar tekst .md. Werkt in de browser, geen upload.",
-        "pl": "Konwertuj PDF do tekstu .md. Działa w przeglądarce, bez przesyłania."
+        "pl": "Konwertuj PDF do tekstu .md. Działa w przeglądarce, bez przesyłania.",
+        "zh-CN": "将 PDF 中的文字、标题和列表转换为 Markdown —— 在浏览器中运行，无需上传。",
+        "ar": "حوّل نص PDF وعناوينه وقوائمه إلى Markdown — يعمل في متصفحك، بدون رفع."
       },
       "navLabels": {
         "en": "PDF to Markdown",
@@ -4708,7 +4714,9 @@
         "it": "PDF in Markdown",
         "ko": "PDF를 Markdown으로",
         "nl": "PDF naar Markdown",
-        "pl": "PDF do Markdown"
+        "pl": "PDF do Markdown",
+        "zh-CN": "PDF 转 Markdown",
+        "ar": "PDF إلى Markdown"
       },
       "cardNames": {
         "en": "PDF to Markdown",
@@ -4724,7 +4732,9 @@
         "it": "PDF in Markdown",
         "ko": "PDF를 Markdown으로",
         "nl": "PDF naar Markdown",
-        "pl": "PDF do Markdown"
+        "pl": "PDF do Markdown",
+        "zh-CN": "PDF 转 Markdown",
+        "ar": "PDF إلى Markdown"
       },
       "cardDescs": {
         "en": "Turn PDF into AI-ready Markdown — locally, free",
@@ -4740,7 +4750,9 @@
         "it": "Converti PDF in testo Markdown leggero. Senza caricamento, senza account.",
         "ko": "PDF를 가벼운 Markdown 텍스트로 변환. 업로드 없음, 계정 불필요.",
         "nl": "Converteer PDF naar lichte Markdown-tekst. Zonder upload, zonder account.",
-        "pl": "Konwertuj PDF do lekkiego tekstu Markdown. Bez przesyłania, bez konta."
+        "pl": "Konwertuj PDF do lekkiego tekstu Markdown. Bez przesyłania, bez konta.",
+        "zh-CN": "将 PDF 转换为适合 AI 使用的 Markdown —— 本地处理，免费",
+        "ar": "حوّل PDF إلى Markdown جاهز للذكاء الاصطناعي — محليًا، مجانًا"
       },
       "breadcrumb": {
         "en": "PDF→Markdown",
@@ -4756,7 +4768,9 @@
         "it": "PDF in Markdown",
         "ko": "PDF를 Markdown으로",
         "nl": "PDF naar Markdown",
-        "pl": "PDF do Markdown"
+        "pl": "PDF do Markdown",
+        "zh-CN": "PDF→Markdown",
+        "ar": "PDF→Markdown"
       },
       "metaDescs": {
         "en": "Convert PDF to Markdown for ChatGPT, Claude & RAG pipelines — tables, formulas and images preserved. 100% private, runs in your browser. Free, no account.",
@@ -4772,7 +4786,9 @@
         "it": "Convertire PDF in Markdown gratis — titoli, liste e grassetto diventano sintassi .md pulita. Nel browser, niente caricato né memorizzato. Nessun account.",
         "ko": "PDF를 Markdown으로 무료 변환 — ChatGPT·Claude·RAG용. 표와 수식도 그대로 유지되는 깨끗한 .md 구문으로. 브라우저에서 실행, 업로드 없음, 계정 불필요.",
         "nl": "PDF naar Markdown converteren — koppen, lijsten en vet worden nette .md-syntax. In de browser, niets geüpload of opgeslagen. Geen account.",
-        "pl": "Konwertuj PDF do Markdown za darmo — nagłówki, listy i pogrubienie stają się czystą składnią .md. W przeglądarce, nic nie przesyłane ani przechowywane. Bez konta."
+        "pl": "Konwertuj PDF do Markdown za darmo — nagłówki, listy i pogrubienie stają się czystą składnią .md. W przeglądarce, nic nie przesyłane ani przechowywane. Bez konta.",
+        "zh-CN": "为 ChatGPT、Claude 和 RAG 流程将 PDF 转换为 Markdown —— 保留表格、公式和图片。100% 隐私，在浏览器中运行。免费，无需账号。",
+        "ar": "حوّل PDF إلى Markdown لـ ChatGPT وClaude ومسارات RAG — مع الحفاظ على الجداول والصيغ والصور. خصوصية كاملة 100%، يعمل في متصفحك. مجانًا، بدون حساب."
       },
       "ogTitles": {
         "en": "PDF to Markdown for AI & RAG — Free, No Upload",
@@ -4788,7 +4804,9 @@
         "it": "PDF in Markdown Gratis — Senza Caricamento | PDFree",
         "ko": "PDF를 Markdown으로 무료 변환 — 업로드 없음 | PDFree",
         "nl": "PDF naar Markdown Gratis — Zonder Upload | PDFree",
-        "pl": "PDF do Markdown Za Darmo — Bez Przesyłania | PDFree"
+        "pl": "PDF do Markdown Za Darmo — Bez Przesyłania | PDFree",
+        "zh-CN": "面向 AI 和 RAG 的 PDF 转 Markdown —— 免费，无需上传",
+        "ar": "تحويل PDF إلى Markdown للذكاء الاصطناعي وRAG — مجانًا، بدون رفع"
       },
       "ogDescs": {
         "en": "Structured Markdown for RAG and LLM context — tables, formulas, and images preserved. Runs entirely in your browser, nothing uploaded.",
@@ -4804,7 +4822,9 @@
         "it": "Converti il contenuto PDF in testo Markdown .md. Elaborazione nel browser.",
         "ko": "PDF 콘텐츠를 Markdown 텍스트 .md로 변환. 브라우저 처리.",
         "nl": "Converteer PDF-inhoud naar Markdown-tekst .md. Verwerking in de browser.",
-        "pl": "Konwertuj zawartość PDF do tekstu Markdown .md. Przetwarzanie w przeglądarce."
+        "pl": "Konwertuj zawartość PDF do tekstu Markdown .md. Przetwarzanie w przeglądarce.",
+        "zh-CN": "为 RAG 和 LLM 上下文提供结构化的 Markdown —— 保留表格、公式和图片。完全在浏览器中运行，不上传任何内容。",
+        "ar": "Markdown مُهيكَل لسياق RAG وLLM — مع الحفاظ على الجداول والصيغ والصور. يعمل بالكامل في متصفحك، لا شيء يُرفع."
       },
       "keywords": {
         "en": "pdf to markdown, pdf to md, convert pdf to markdown, pdf to md converter, extract pdf text as markdown, pdf to markdown for ai, rag document prep, markdown for llm context, pdf to markdown for chatgpt, pdf to markdown for claude, pdf to markdown no upload",
@@ -4820,7 +4840,9 @@
         "ko": "pdf markdown 변환, pdf를 markdown으로 변환, pdf md 변환, pdf 텍스트를 markdown으로 추출, pdf 마크다운 변환기, pdf markdown ai 변환, rag 문서 준비, llm 컨텍스트용 markdown",
         "nl": "pdf naar markdown, pdf omzetten naar markdown, pdf naar md, pdf tekst extraheren als markdown, pdf markdown converter, pdf naar markdown voor ai, rag documentvoorbereiding, markdown voor llm context",
         "pl": "pdf do markdown, konwertuj pdf do markdown, pdf do md, wyodrębnij tekst pdf jako markdown, konwerter pdf do markdown, pdf do markdown dla ai, przygotowanie dokumentów rag, markdown dla kontekstu llm",
-        "tr": "pdf markdown'a dönüştür, pdf'yi markdown yap, pdf md dönüştürücü, pdf metnini markdown olarak çıkar, pdf markdown dönüştürücü, pdf markdown ai için, rag belge hazırlama, llm bağlamı için markdown"
+        "tr": "pdf markdown'a dönüştür, pdf'yi markdown yap, pdf md dönüştürücü, pdf metnini markdown olarak çıkar, pdf markdown dönüştürücü, pdf markdown ai için, rag belge hazırlama, llm bağlamı için markdown",
+        "zh-CN": "pdf转markdown, pdf转md, pdf转换为markdown, pdf转md工具, 提取pdf文字为markdown, pdf转markdown用于ai, rag文档准备, llm上下文用markdown, pdf转markdown用于chatgpt, pdf转markdown无需上传",
+        "ar": "pdf إلى markdown, pdf إلى md, تحويل pdf إلى markdown, أداة تحويل pdf إلى md, استخراج نص pdf كـ markdown, pdf إلى markdown للذكاء الاصطناعي, تحضير مستندات rag, markdown لسياق llm, pdf إلى markdown بدون رفع"
       }
     },
     {
@@ -5044,7 +5066,9 @@
         "ko": "pdf-munja-insik",
         "nl": "pdf-tekstherkenning",
         "pl": "rozpoznaj-tekst-pdf",
-        "tr": "metin-tanima-pdf"
+        "tr": "metin-tanima-pdf",
+        "zh-CN": "pdf-wenzi-shibie",
+        "ar": "taarruf-dawi-pdf"
       },
       "titles": {
         "en": "OCR PDF Online — Make Scanned PDFs Searchable, No Upload | PDFree",
@@ -5060,7 +5084,9 @@
         "ko": "PDF OCR 온라인 — 스캔한 PDF를 검색 가능하게, 업로드 없음 | PDFree",
         "nl": "PDF OCR Online — Gescande PDF Doorzoekbaar Maken, Geen Upload | PDFree",
         "pl": "OCR PDF Online — Zeskanowany PDF z Rozpoznawaniem Tekstu | PDFree",
-        "tr": "PDF OCR Çevrimiçi — Taranan PDF'i Aranabilir Yapın | PDFree"
+        "tr": "PDF OCR Çevrimiçi — Taranan PDF'i Aranabilir Yapın | PDFree",
+        "zh-CN": "在线 OCR 识别 PDF —— 让扫描版 PDF 可被搜索，无需上传 | PDFree",
+        "ar": "التعرف الضوئي على PDF عبر الإنترنت — اجعل الملفات الممسوحة قابلة للبحث، بدون رفع | PDFree"
       },
       "descs": {
         "en": "Extract text from scanned PDFs and make them searchable. Auto-detects document language. 100% local — nothing uploaded.",
@@ -5076,7 +5102,9 @@
         "ko": "스캔한 PDF에서 텍스트를 추출하고 검색 가능하게 만듭니다. 문서 언어를 자동으로 감지합니다. 100% 로컬 처리 — 업로드 없음.",
         "nl": "Haal tekst uit gescande PDF's en maak ze doorzoekbaar. Detecteert automatisch de documenttaal. 100% lokaal — niets wordt geüpload.",
         "pl": "Rozpoznaj tekst w zeskanowanych plikach PDF i spraw, by dało się go wyszukiwać. Automatycznie wykrywa język dokumentu. 100% lokalnie — bez przesyłania.",
-        "tr": "Taranan PDF'lerden metin çıkarın ve aranabilir hale getirin. Belge dilini otomatik algılar. %100 yerel — yükleme yok."
+        "tr": "Taranan PDF'lerden metin çıkarın ve aranabilir hale getirin. Belge dilini otomatik algılar. %100 yerel — yükleme yok.",
+        "zh-CN": "从扫描版 PDF 中提取文字并使其可被搜索。自动检测文档语言。100% 本地处理——不上传任何内容。",
+        "ar": "استخرج النص من ملفات PDF الممسوحة ضوئيًا واجعلها قابلة للبحث. يكتشف لغة المستند تلقائيًا. محلي 100% — لا شيء يُرفع."
       },
       "navLabels": {
         "en": "OCR",
@@ -5092,7 +5120,9 @@
         "ko": "문자 인식",
         "nl": "Tekstherkenning",
         "pl": "Rozpoznaj Tekst",
-        "tr": "Metin Tanıma"
+        "tr": "Metin Tanıma",
+        "zh-CN": "OCR",
+        "ar": "التعرف الضوئي"
       },
       "cardNames": {
         "en": "OCR PDF",
@@ -5108,7 +5138,9 @@
         "ko": "PDF 문자 인식",
         "nl": "PDF Tekstherkenning",
         "pl": "Rozpoznaj Tekst PDF",
-        "tr": "PDF Metin Tanıma"
+        "tr": "PDF Metin Tanıma",
+        "zh-CN": "OCR 识别 PDF",
+        "ar": "التعرف الضوئي على PDF"
       },
       "cardDescs": {
         "en": "Make scanned PDFs searchable — extract text locally",
@@ -5124,7 +5156,9 @@
         "ko": "스캔한 PDF를 검색 가능하게 — 로컬에서 텍스트 추출",
         "nl": "Maak gescande PDF's doorzoekbaar — tekst lokaal herkennen",
         "pl": "Spraw, by zeskanowane PDF-y były przeszukiwalne — lokalnie",
-        "tr": "Taranan PDF'leri aranabilir yapın — yerel metin çıkarma"
+        "tr": "Taranan PDF'leri aranabilir yapın — yerel metin çıkarma",
+        "zh-CN": "让扫描版 PDF 可被搜索——本地提取文字",
+        "ar": "اجعل ملفات PDF الممسوحة ضوئيًا قابلة للبحث — استخرج النص محليًا"
       },
       "breadcrumb": {
         "en": "OCR PDF",
@@ -5140,7 +5174,9 @@
         "ko": "PDF OCR",
         "nl": "PDF OCR",
         "pl": "OCR PDF",
-        "tr": "PDF OCR"
+        "tr": "PDF OCR",
+        "zh-CN": "OCR 识别 PDF",
+        "ar": "التعرف الضوئي على PDF"
       },
       "metaDescs": {
         "en": "OCR a scanned PDF for free — extract and recognize text so it becomes selectable and searchable. Auto-detects the document language. 100% local, nothing uploaded, works offline.",
@@ -5156,7 +5192,9 @@
         "ko": "스캔한 PDF를 무료로 OCR 처리 — 텍스트를 추출하고 인식하여 선택 및 검색이 가능하게 만듭니다. 문서 언어를 자동으로 감지합니다. 100% 로컬 처리, 업로드 없음, 오프라인 작동.",
         "nl": "Gratis OCR voor gescande PDF's — tekst extraheren en herkennen zodat deze selecteerbaar en doorzoekbaar wordt. Detecteert automatisch de documenttaal. 100% lokaal, niets geüpload, werkt offline.",
         "pl": "Darmowy OCR dla zeskanowanych plików PDF — rozpoznaj i wyodrębnij tekst, aby można było go zaznaczać i wyszukiwać. Automatycznie wykrywa język dokumentu. 100% lokalnie, bez przesyłania, działa offline.",
-        "tr": "Taranan PDF için ücretsiz OCR — metni seçilebilir ve aranabilir hale getirmek için çıkarın ve tanıyın. Belge dilini otomatik algılar. %100 yerel, yükleme yok, çevrimdışı çalışır."
+        "tr": "Taranan PDF için ücretsiz OCR — metni seçilebilir ve aranabilir hale getirmek için çıkarın ve tanıyın. Belge dilini otomatik algılar. %100 yerel, yükleme yok, çevrimdışı çalışır.",
+        "zh-CN": "免费对扫描版 PDF 进行 OCR 识别——提取并识别文字，使其可选中、可搜索。自动检测文档语言。100% 本地处理，不上传，支持离线使用。",
+        "ar": "أجرِ تعرفًا ضوئيًا مجانيًا على ملف PDF ممسوح ضوئيًا — استخرج النص وتعرّف عليه ليصبح قابلًا للتحديد والبحث. يكتشف لغة المستند تلقائيًا. محلي 100%، لا شيء يُرفع، يعمل دون اتصال."
       },
       "ogTitles": {
         "en": "OCR PDF Free — Turn Scanned Pages into Searchable, Selectable Text",
@@ -5172,7 +5210,9 @@
         "ko": "PDF OCR 무료 — 스캔한 페이지를 검색 가능한 텍스트로 변환",
         "nl": "PDF OCR Gratis — Zet Gescande Pagina's om in Doorzoekbare Tekst",
         "pl": "OCR PDF za Darmo — Zamień Zeskanowane Strony w Przeszukiwalny Tekst",
-        "tr": "PDF OCR Ücretsiz — Taranan Sayfaları Aranabilir Metne Dönüştürün"
+        "tr": "PDF OCR Ücretsiz — Taranan Sayfaları Aranabilir Metne Dönüştürün",
+        "zh-CN": "免费 OCR 识别 PDF —— 把扫描页面变成可搜索、可选中的文字",
+        "ar": "التعرف الضوئي على PDF مجانًا — حوّل الصفحات الممسوحة إلى نص قابل للبحث والتحديد"
       },
       "ogDescs": {
         "en": "Extract text from scanned PDFs and make them searchable. Auto-detects document language. 100% local — nothing uploaded, free forever.",
@@ -5188,7 +5228,9 @@
         "ko": "스캔한 PDF에서 텍스트를 추출하고 검색 가능하게 만듭니다. 문서 언어를 자동으로 감지합니다. 100% 로컬 처리 — 영원히 무료.",
         "nl": "Haal tekst uit gescande PDF's en maak ze doorzoekbaar. Detecteert automatisch de documenttaal. 100% lokaal — voor altijd gratis.",
         "pl": "Rozpoznaj tekst w zeskanowanych plikach PDF i spraw, by dało się go wyszukiwać. Automatycznie wykrywa język dokumentu. 100% lokalnie — na zawsze za darmo.",
-        "tr": "Taranan PDF'lerden metin çıkarın ve aranabilir hale getirin. Belge dilini otomatik algılar. %100 yerel — sonsuza kadar ücretsiz."
+        "tr": "Taranan PDF'lerden metin çıkarın ve aranabilir hale getirin. Belge dilini otomatik algılar. %100 yerel — sonsuza kadar ücretsiz.",
+        "zh-CN": "从扫描版 PDF 中提取文字并使其可被搜索。自动检测文档语言。100% 本地处理——不上传任何内容，永久免费。",
+        "ar": "استخرج النص من ملفات PDF الممسوحة ضوئيًا واجعلها قابلة للبحث. يكتشف لغة المستند تلقائيًا. محلي 100% — لا شيء يُرفع، مجاني للأبد."
       },
       "keywords": {
         "en": "ocr pdf, ocr pdf online free, make scanned pdf searchable, extract text from scanned pdf, pdf text recognition, convert scanned pdf to text",
@@ -5204,7 +5246,9 @@
         "ko": "pdf ocr, pdf 문자 인식, 스캔 pdf 텍스트 변환, pdf ocr 무료, 스캔 문서 검색 가능, pdf 텍스트 추출",
         "nl": "pdf ocr, pdf ocr gratis, gescande pdf doorzoekbaar maken, tekstherkenning pdf, tekst uit gescande pdf halen, scan omzetten naar tekst",
         "pl": "ocr pdf, ocr pdf online za darmo, rozpoznawanie tekstu pdf, zeskanowany pdf na tekst, zrób przeszukiwalny pdf, wyodrębnij tekst ze skanu",
-        "tr": "pdf ocr, ücretsiz pdf ocr, taranan pdf'i metne çevir, pdf metin tanıma, taranan pdf aranabilir yap, pdf'den metin çıkar"
+        "tr": "pdf ocr, ücretsiz pdf ocr, taranan pdf'i metne çevir, pdf metin tanıma, taranan pdf aranabilir yap, pdf'den metin çıkar",
+        "zh-CN": "pdf ocr, 免费在线pdf ocr, 让扫描版pdf可搜索, 从扫描版pdf提取文字, pdf文字识别, 扫描版pdf转文字",
+        "ar": "pdf ocr, تعرف ضوئي على pdf مجاني عبر الإنترنت, اجعل pdf الممسوح قابلًا للبحث, استخراج نص من pdf ممسوح ضوئيًا, التعرف على نص pdf, تحويل pdf ممسوح إلى نص"
       }
     },
     {
@@ -5225,7 +5269,9 @@
         "pt": "pdf-para-pdfa",
         "ru": "pdf-v-pdfa",
         "tr": "pdf-pdfa-donustur",
-        "vi": "pdf-sang-pdfa"
+        "vi": "pdf-sang-pdfa",
+        "zh-CN": "pdf-zhuan-pdfa",
+        "ar": "pdf-ila-pdfa"
       },
       "breadcrumb": {
         "en": "PDF to PDF/A",
@@ -5241,7 +5287,9 @@
         "pt": "PDF para PDF/A",
         "ru": "PDF в PDF/A",
         "tr": "PDF/A Dönüştürme",
-        "vi": "PDF sang PDF/A"
+        "vi": "PDF sang PDF/A",
+        "zh-CN": "PDF 转 PDF/A",
+        "ar": "PDF إلى PDF/A"
       },
       "cardNames": {
         "en": "Check PDF/A Compliance",
@@ -5257,7 +5305,9 @@
         "pt": "Verificar conformidade PDF/A",
         "ru": "Проверить соответствие PDF/A",
         "tr": "PDF/A Uyumluluğunu Kontrol Et",
-        "vi": "Kiểm tra tuân thủ PDF/A"
+        "vi": "Kiểm tra tuân thủ PDF/A",
+        "zh-CN": "检查 PDF/A 合规性",
+        "ar": "التحقق من توافق PDF/A"
       },
       "cardDescs": {
         "en": "Check & convert to PDF/A-2b/2u — no upload",
@@ -5273,7 +5323,9 @@
         "pt": "Verifique e converta para PDF/A-2b/2u — sem envio",
         "ru": "Проверка и конвертация в PDF/A-2b/2u — без загрузки",
         "tr": "PDF/A-2b/2u'ya kontrol et ve dönüştür — yükleme yok",
-        "vi": "Kiểm tra và chuyển sang PDF/A-2b/2u — không tải lên"
+        "vi": "Kiểm tra và chuyển sang PDF/A-2b/2u — không tải lên",
+        "zh-CN": "检查并转换为 PDF/A-2b/2u —— 无需上传",
+        "ar": "تحقّق وحوّل إلى PDF/A-2b/2u — بدون رفع"
       },
       "navLabels": {
         "en": "PDF/A",
@@ -5289,7 +5341,9 @@
         "pt": "PDF/A",
         "ru": "PDF/A",
         "tr": "PDF/A",
-        "vi": "PDF/A"
+        "vi": "PDF/A",
+        "zh-CN": "PDF/A",
+        "ar": "PDF/A"
       },
       "titles": {
         "en": "PDF to PDF/A-2b/2u Converter Free — Check & Convert for Archiving | PDFree",
@@ -5305,7 +5359,9 @@
         "pt": "Converter PDF para PDF/A-2b/2u — Verificar e Arquivar Grátis | PDFree",
         "ru": "Конвертировать PDF в PDF/A-2b/2u — проверка и архивация бесплатно | PDFree",
         "tr": "PDF'yi PDF/A-2b/2u'ya Dönüştür — Ücretsiz Kontrol ve Arşivle | PDFree",
-        "vi": "Công cụ chuyển PDF sang PDF/A-2b/2u — Kiểm tra & Chuyển đổi để Lưu trữ Lâu dài"
+        "vi": "Công cụ chuyển PDF sang PDF/A-2b/2u — Kiểm tra & Chuyển đổi để Lưu trữ Lâu dài",
+        "zh-CN": "免费 PDF 转 PDF/A-2b/2u 转换器 —— 检查并转换以便归档 | PDFree",
+        "ar": "محوّل PDF إلى PDF/A-2b/2u مجانًا — تحقّق وحوّل للأرشفة | PDFree"
       },
       "descs": {
         "en": "Check if your PDF meets PDF/A archival requirements and convert compliant files instantly — targets PDF/A-2u when your fonts qualify. 100% private, nothing uploaded.",
@@ -5321,7 +5377,9 @@
         "pt": "Verifique se o seu PDF atende aos requisitos do PDF/A e converta para PDF/A-2b ou PDF/A-2u — grátis, sem envio, totalmente no navegador.",
         "ru": "Проверьте, соответствует ли ваш PDF требованиям PDF/A, и конвертируйте в PDF/A-2b или PDF/A-2u — бесплатно, без загрузки, полностью в браузере.",
         "tr": "PDF'inizin PDF/A gereksinimlerini karşılayıp karşılamadığını kontrol edin ve PDF/A-2b veya PDF/A-2u'ya dönüştürün — ücretsiz, yükleme yok, tamamen tarayıcıda.",
-        "vi": "Kiểm tra xem PDF của bạn có đáp ứng yêu cầu PDF/A không và chuyển sang PDF/A-2b hoặc PDF/A-2u — miễn phí, không tải lên, hoàn toàn trong trình duyệt."
+        "vi": "Kiểm tra xem PDF của bạn có đáp ứng yêu cầu PDF/A không và chuyển sang PDF/A-2b hoặc PDF/A-2u — miễn phí, không tải lên, hoàn toàn trong trình duyệt.",
+        "zh-CN": "检查您的 PDF 是否满足 PDF/A 归档要求，并立即转换符合条件的文件——如果字体符合条件会以 PDF/A-2u 为目标。100% 隐私，不上传任何内容。",
+        "ar": "تحقّق مما إذا كان ملف PDF الخاص بك يستوفي متطلبات أرشفة PDF/A، وحوّل الملفات المتوافقة فورًا — يستهدف PDF/A-2u عندما تكون خطوطك مؤهلة. خصوصية كاملة 100%، لا شيء يُرفع."
       },
       "metaDescs": {
         "en": "Check PDF/A compliance and convert eligible PDFs for long-term archiving — auto-targets PDF/A-2u, refuses instead of breaking signatures or fonts. Free, private, no upload.",
@@ -5337,7 +5395,9 @@
         "pt": "Verifique a conformidade com o PDF/A gratuitamente e converta para PDF/A-2b ou PDF/A-2u. Sem envio — processamento local no navegador. Recusa honesta se o arquivo não for elegível.",
         "ru": "Бесплатно проверьте соответствие PDF/A и конвертируйте в PDF/A-2b или PDF/A-2u. Без загрузки — локальная обработка в браузере. Честный отказ, если файл не подходит.",
         "tr": "PDF/A uyumluluğunu ücretsiz kontrol edin ve PDF/A-2b veya PDF/A-2u'ya dönüştürün. Yükleme yok — tarayıcıda yerel işleme. Dosya uygun değilse dürüst red.",
-        "vi": "Kiểm tra tuân thủ PDF/A miễn phí và chuyển sang PDF/A-2b hoặc PDF/A-2u. Không tải lên — xử lý cục bộ trong trình duyệt. Từ chối trung thực nếu tệp không đủ điều kiện."
+        "vi": "Kiểm tra tuân thủ PDF/A miễn phí và chuyển sang PDF/A-2b hoặc PDF/A-2u. Không tải lên — xử lý cục bộ trong trình duyệt. Từ chối trung thực nếu tệp không đủ điều kiện.",
+        "zh-CN": "检查 PDF/A 合规性，并将符合条件的 PDF 转换用于长期归档——自动以 PDF/A-2u 为目标，遇到问题时会拒绝转换而不是破坏签名或字体。免费、私密、无需上传。",
+        "ar": "تحقّق من توافق PDF/A وحوّل ملفات PDF المؤهلة للأرشفة طويلة الأمد — تستهدف تلقائيًا PDF/A-2u، وترفض بدلًا من إتلاف التوقيعات أو الخطوط. مجانًا، خاص، بدون رفع."
       },
       "ogTitles": {
         "en": "PDF to PDF/A-2b/2u Converter — Free, Private, No Upload",
@@ -5353,7 +5413,9 @@
         "pt": "Conversor de PDF para PDF/A — Verificação de Conformidade Grátis",
         "ru": "Конвертер PDF в PDF/A — бесплатная проверка соответствия",
         "tr": "PDF'den PDF/A Dönüştürücü — Ücretsiz Uyumluluk Kontrolü",
-        "vi": "Công cụ chuyển PDF sang PDF/A — Kiểm tra Tuân thủ Miễn phí"
+        "vi": "Công cụ chuyển PDF sang PDF/A — Kiểm tra Tuân thủ Miễn phí",
+        "zh-CN": "PDF 转 PDF/A-2b/2u 转换器 —— 免费、私密、无需上传",
+        "ar": "محوّل PDF إلى PDF/A-2b/2u — مجاني، خاص، بدون رفع"
       },
       "ogDescs": {
         "en": "Check PDF/A compliance and convert your PDF for long-term archiving, with automatic PDF/A-2u when possible. Runs in your browser — nothing uploaded. Free forever, no signup.",
@@ -5369,7 +5431,9 @@
         "pt": "Verifique se o seu PDF atende aos requisitos de arquivamento PDF/A e converta-o — grátis, sem necessidade de envio.",
         "ru": "Проверьте, соответствует ли ваш PDF требованиям архивирования PDF/A, и конвертируйте его — бесплатно, без необходимости загрузки.",
         "tr": "PDF'inizin PDF/A arşivleme gereksinimlerini karşılayıp karşılamadığını kontrol edin ve dönüştürün — ücretsiz, yükleme gerekmez.",
-        "vi": "Kiểm tra xem PDF của bạn có đáp ứng yêu cầu lưu trữ PDF/A không và chuyển đổi — miễn phí, không cần tải lên."
+        "vi": "Kiểm tra xem PDF của bạn có đáp ứng yêu cầu lưu trữ PDF/A không và chuyển đổi — miễn phí, không cần tải lên.",
+        "zh-CN": "检查 PDF/A 合规性，并将您的 PDF 转换用于长期归档，在可能的情况下自动使用 PDF/A-2u。在您的浏览器中运行——不上传任何内容。永久免费，无需注册。",
+        "ar": "تحقّق من توافق PDF/A وحوّل ملف PDF الخاص بك للأرشفة طويلة الأمد، مع استهداف PDF/A-2u تلقائيًا عند الإمكان. يعمل في متصفحك — لا شيء يُرفع. مجاني للأبد، بدون تسجيل."
       },
       "keywords": {
         "en": "pdf to pdfa, pdf/a converter, pdf/a-2u, pdf/a compliance checker, convert pdf to pdf/a-2b, iso 19005, pdf archiving, check pdf/a online free",
@@ -5385,7 +5449,9 @@
         "pt": "pdf para pdfa, conversor pdfa, verificação de conformidade pdf/a, pdf/a-2b, pdf/a-2u, arquivamento pdf",
         "ru": "pdf в pdfa, конвертер pdfa, проверка соответствия pdf/a, pdf/a-2b, pdf/a-2u, архивирование pdf",
         "tr": "pdf pdfa dönüştürme, pdfa dönüştürücü, pdf/a uyumluluk kontrolü, pdf/a-2b, pdf/a-2u, pdf arşivleme",
-        "vi": "pdf sang pdfa, chuyển đổi pdfa, kiểm tra tuân thủ pdf/a, pdf/a-2b, pdf/a-2u, lưu trữ pdf"
+        "vi": "pdf sang pdfa, chuyển đổi pdfa, kiểm tra tuân thủ pdf/a, pdf/a-2b, pdf/a-2u, lưu trữ pdf",
+        "zh-CN": "pdf转pdfa, pdfa转换器, pdf/a-2u, pdf/a合规检查, pdf转pdf/a-2b, iso 19005, pdf归档, 免费在线检查pdf/a",
+        "ar": "pdf إلى pdfa, محوّل pdfa, pdf/a-2u, فحص توافق pdfa, تحويل pdf إلى pdf/a-2b, iso 19005, أرشفة pdf, فحص pdf/a مجانًا عبر الإنترنت"
       }
     },
     {

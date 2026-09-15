@@ -1,0 +1,82 @@
+[
+  {
+    "@type": "Question",
+    "name": "这个 OCR 工具真的免费吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "是的，完全免费。无需订阅，没有高级版，不按文件收费。OCR 引擎（Tesseract.js）是开源的，完全在您的浏览器中运行。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFree 会在处理后存储或记录我的文件吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "不会。PDFree 没有接收您文件的后端服务器，因此没有任何内容能被存储、记录或保留。您的 PDF 和识别出的文字只存在于浏览器内存中，仅在会话期间有效，关闭标签页后即被清除。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "我的文件会被上传到服务器吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "绝不会。所有处理都在您的浏览器标签页内进行。您的 PDF 文件永远不会离开您的设备——没有任何服务器会接收它。Tesseract.js 引擎只需从 CDN 下载一次并缓存；之后即可完全离线运行。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "自动语言检测是如何工作的？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "在运行 OCR 之前，PDFree 会从您的扫描页面中取样文字，并推荐最有可能的文档语言——您无需事先知道它。这与站点界面语言完全独立地工作，因此即使您使用英文浏览 PDFree，西班牙语扫描件也能被正确检测。您随时可以从下拉菜单中手动覆盖建议结果。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "支持哪些语言？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "18 种语言：英语、法语、德语、西班牙语、意大利语、葡萄牙语、俄语、乌兹别克语、荷兰语、波兰语、土耳其语、阿拉伯语、日语、简体中文、繁体中文、韩语、印地语和泰语。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "OCR 后 PDF 的外观会改变吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "不会。PDFree 只是在您原始的扫描页面上添加一层不可见的文字层。外观不会改变——图像、版式和格式都会保持原样。您获得的是在任何 PDF 阅读器中搜索、选中和复制文字的能力。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "为什么我的 OCR 质量评分是“较差”或“一般”？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "OCR 准确率取决于原始扫描质量。低分辨率（低于 150 DPI）、模糊或倾斜的页面、彩色背景以及手写文字都会降低置信度评分。为获得最佳效果：请以 300 DPI 或更高分辨率扫描，保证光线充足、页面对齐平整，并让自动检测选择（或确认）正确的语言。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "可搜索 PDF 和 .txt 文件有什么区别？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "可搜索 PDF 保留您原始的扫描图像，并在其上添加一层不可见的文字层——适合归档、在 PDF 阅读器内搜索或分享。.txt 文件只包含提取出的纯文字，并带有分页符——适合在 Word 中编辑、导入其他工具或复制内容。勾选“同时下载 .txt 副本”即可一次获得两个文件。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "文件大小限制是多少？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree OCR 支持最大 200 MB 的文件。在移动端（iOS/iPadOS），处理会限制在前 30 页以防止内存问题——请先拆分 PDF 以处理剩余部分。桌面浏览器没有此限制。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "能离线使用吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "可以。首次运行 OCR 下载 Tesseract.js 引擎后，PDFree 就能作为渐进式网页应用（PWA）完全离线运行——处理后续文档不再需要网络连接。"
+    }
+  }
+]
