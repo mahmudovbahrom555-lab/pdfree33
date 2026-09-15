@@ -25,6 +25,14 @@
   },
   {
     "@type": "Question",
+    "name": "Does the converted Word file keep my PDF's author or other metadata?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. PDFree never reads your source PDF's metadata (author, creator, etc.) at all — the output .docx only carries generic file info identifying it as a PDFree conversion. Nothing from your original file's properties is copied into the result."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "What is the difference between Text mode and Image mode?",
     "acceptedAnswer": {
       "@type": "Answer",
