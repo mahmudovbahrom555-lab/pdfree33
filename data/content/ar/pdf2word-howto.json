@@ -1,0 +1,31 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "كيفية تحويل PDF إلى Word مجانًا",
+  "description": "حوّل ملف PDF إلى مستند Word قابل للتحرير (.docx) مجانًا — بدون رفع، بدون حساب، تتم المعالجة بالكامل في متصفحك.",
+  "totalTime": "PT2M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — أداة مجانية تعمل في المتصفح لتحويل PDF إلى Word، بدون رفع" }],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "افتح ملف PDF الخاص بك",
+      "text": "انقر على 'اختر PDF' أو اسحب ملفك إلى منطقة الإسقاط. يُحمَّل ملف PDF في متصفحك — لا شيء يُرفع إلى أي مكان.",
+      "url": "https://pdfree.io/ar/pdf-ila-word/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "اختر وضع النص أو الصورة",
+      "text": "يُنشئ وضع النص مستند Word قابلًا للتحرير بفقرات وعناوين وجداول. يحافظ وضع الصورة على التخطيط البصري بالضبط كصور للصفحات — مفيد لملفات PDF المعقّدة أو الممسوحة ضوئيًا.",
+      "url": "https://pdfree.io/ar/pdf-ila-word/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "نزّل ملف ‎.docx‏",
+      "text": "انقر على 'تحويل إلى Word'. يُنزَّل ملف ‎.docx‏ تلقائيًا. افتحه في Microsoft Word أو مستندات Google أو LibreOffice — بدون الحاجة إلى برامج مدفوعة.",
+      "url": "https://pdfree.io/ar/pdf-ila-word/#step3"
+    }
+  ]
+}

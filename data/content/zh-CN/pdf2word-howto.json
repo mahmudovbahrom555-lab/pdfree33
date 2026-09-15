@@ -1,0 +1,31 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "如何免费将 PDF 转换为 Word",
+  "description": "免费将 PDF 转换为可编辑的 Word 文档（.docx）——无需上传，无需账号，完全在浏览器中处理。",
+  "totalTime": "PT2M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — 免费的浏览器端 PDF 转 Word 工具，无需上传" }],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "打开您的 PDF",
+      "text": "点击“选择 PDF”或将文件拖入拖放区域。PDF 会在浏览器中加载——不会上传到任何地方。",
+      "url": "https://pdfree.io/zh/pdf-zhuan-word/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "选择文本模式或图片模式",
+      "text": "文本模式会创建带有段落、标题和表格的可编辑 Word 文档。图片模式将每页保留为图片以精确还原视觉版式——适用于复杂或扫描版 PDF。",
+      "url": "https://pdfree.io/zh/pdf-zhuan-word/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "下载 .docx 文件",
+      "text": "点击“转换为 Word”。.docx 文件会自动下载。可以用 Microsoft Word、Google 文档或 LibreOffice 打开——无需付费软件。",
+      "url": "https://pdfree.io/zh/pdf-zhuan-word/#step3"
+    }
+  ]
+}

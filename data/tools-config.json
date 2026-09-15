@@ -4051,7 +4051,9 @@
         "it": "pdf-in-word",
         "ko": "pdf-word-byeonhwan",
         "nl": "pdf-naar-word",
-        "pl": "pdf-do-word"
+        "pl": "pdf-do-word",
+        "zh-CN": "pdf-zhuan-word",
+        "ar": "pdf-ila-word"
       },
       "titles": {
         "en": "Convert PDF to Word Without Uploading — Free & Private | PDFree",
@@ -4067,7 +4069,9 @@
         "it": "Convertire PDF in Word — Gratis, Senza Caricamento | PDFree",
         "ko": "PDF를 Word로 변환 — 무료, 업로드 없음 | PDFree",
         "nl": "PDF naar Word Converteren — Gratis, Zonder Upload | PDFree",
-        "pl": "PDF do Word — Za Darmo, Bez Przesyłania | PDFree"
+        "pl": "PDF do Word — Za Darmo, Bez Przesyłania | PDFree",
+        "zh-CN": "无需上传即可将 PDF 转换为 Word —— 免费且私密 | PDFree",
+        "ar": "تحويل PDF إلى Word دون رفع الملف — مجانًا وخاص | PDFree"
       },
       "descs": {
         "en": "Convert PDF to editable .docx — runs in your browser, no upload.",
@@ -4083,7 +4087,9 @@
         "it": "Converti PDF in .docx modificabile. Funziona nel browser, senza caricamento.",
         "ko": "PDF를 편집 가능한 .docx로 변환. 브라우저에서 실행, 업로드 없음.",
         "nl": "Converteer PDF naar bewerkbaar .docx. Werkt in de browser, geen upload.",
-        "pl": "Konwertuj PDF do edytowalnego .docx. Działa w przeglądarce, bez przesyłania."
+        "pl": "Konwertuj PDF do edytowalnego .docx. Działa w przeglądarce, bez przesyłania.",
+        "zh-CN": "将 PDF 转换为可编辑的 .docx —— 在浏览器中运行，无需上传。",
+        "ar": "حوّل PDF إلى ‎.docx‏ قابل للتحرير — يعمل في متصفحك، بدون رفع."
       },
       "navLabels": {
         "en": "PDF→Word",
@@ -4099,7 +4105,9 @@
         "it": "PDF in Word",
         "ko": "PDF를 Word로",
         "nl": "PDF naar Word",
-        "pl": "PDF do Word"
+        "pl": "PDF do Word",
+        "zh-CN": "PDF→Word",
+        "ar": "PDF→Word"
       },
       "cardNames": {
         "en": "PDF to Word",
@@ -4115,7 +4123,9 @@
         "it": "PDF in Word",
         "ko": "PDF를 Word로",
         "nl": "PDF naar Word",
-        "pl": "PDF do Word"
+        "pl": "PDF do Word",
+        "zh-CN": "PDF 转 Word",
+        "ar": "PDF إلى Word"
       },
       "cardDescs": {
         "en": "Convert PDF to editable .docx — no upload, 100% private",
@@ -4131,7 +4141,9 @@
         "it": "Converti PDF in documento .docx modificabile. Senza caricamento, senza account.",
         "ko": "PDF를 편집 가능한 .docx 문서로 변환. 업로드 없음, 계정 불필요.",
         "nl": "Converteer PDF naar bewerkbaar .docx-document. Zonder upload, zonder account.",
-        "pl": "Konwertuj PDF do edytowalnego dokumentu .docx. Bez przesyłania, bez konta."
+        "pl": "Konwertuj PDF do edytowalnego dokumentu .docx. Bez przesyłania, bez konta.",
+        "zh-CN": "将 PDF 转换为可编辑的 .docx —— 无需上传，100% 隐私",
+        "ar": "حوّل PDF إلى ‎.docx‏ قابل للتحرير — بدون رفع، خصوصية 100%"
       },
       "breadcrumb": {
         "en": "PDF to Word",
@@ -4147,7 +4159,9 @@
         "it": "PDF in Word",
         "ko": "PDF를 Word로",
         "nl": "PDF naar Word",
-        "pl": "PDF do Word"
+        "pl": "PDF do Word",
+        "zh-CN": "PDF 转 Word",
+        "ar": "PDF إلى Word"
       },
       "metaDescs": {
         "en": "Convert PDF to Word (.docx) in your browser — nothing uploaded, nothing stored. Tables, RTL text, and 15+ languages supported.",
@@ -4163,7 +4177,9 @@
         "it": "Converti PDF in Word (.docx) nel browser — nessun caricamento, nessuna archiviazione. Supporto per tabelle, testo RTL e oltre 15 lingue.",
         "ko": "PDF를 Word(.docx)로 브라우저에서 무료 변환 — 업로드 없음, 저장되지 않음. 표, RTL 텍스트, 15개 이상 언어 지원, 가입 불필요.",
         "nl": "Converteer PDF naar Word (.docx) in je browser — geen upload, niets opgeslagen. Ondersteuning voor tabellen, RTL-tekst en meer dan 15 talen.",
-        "pl": "Konwertuj PDF do Word (.docx) w przeglądarce — bez przesyłania, bez przechowywania. Obsługa tabel, tekstu RTL i ponad 15 języków."
+        "pl": "Konwertuj PDF do Word (.docx) w przeglądarce — bez przesyłania, bez przechowywania. Obsługa tabel, tekstu RTL i ponad 15 języków.",
+        "zh-CN": "在浏览器中将 PDF 转换为 Word（.docx）—— 不上传、不存储任何内容。支持表格、从右到左文字以及 15 种以上语言。",
+        "ar": "حوّل PDF إلى Word (‎.docx‏) في متصفحك — لا شيء يُرفع، لا شيء يُخزَّن. دعم الجداول والنص من اليمين إلى اليسار وأكثر من 15 لغة."
       },
       "ogTitles": {
         "en": "Convert PDF to Word Without Uploading — Free & Private | PDFree",
@@ -4179,7 +4195,9 @@
         "it": "PDF in Word Gratis — Senza Caricamento | PDFree",
         "ko": "PDF를 Word로 무료 변환 — 업로드 없음 | PDFree",
         "nl": "PDF naar Word Gratis — Zonder Upload | PDFree",
-        "pl": "PDF do Word Za Darmo — Bez Przesyłania | PDFree"
+        "pl": "PDF do Word Za Darmo — Bez Przesyłania | PDFree",
+        "zh-CN": "无需上传即可将 PDF 转换为 Word —— 免费且私密 | PDFree",
+        "ar": "تحويل PDF إلى Word دون رفع الملف — مجانًا وخاص | PDFree"
       },
       "ogDescs": {
         "en": "PDF to Word conversion that runs entirely in your browser. No upload, no server, no account. Tables, Arabic, Chinese, and more. 100% private.",
@@ -4195,7 +4213,9 @@
         "it": "La conversione da PDF a Word avviene interamente nel browser. Nessun caricamento, nessun server, nessun account. Tabelle, arabo, cinese e altro. 100% privato.",
         "ko": "PDF를 Word로 변환이 브라우저 안에서 전부 처리됩니다. 업로드 없음, 서버 없음, 계정 없음. 표, 아랍어, 중국어 등 지원. 100% 프라이빗.",
         "nl": "PDF naar Word converteren gebeurt volledig in je browser. Geen upload, geen server, geen account. Tabellen, Arabisch, Chinees en meer. 100% privé.",
-        "pl": "Konwersja PDF do Word odbywa się całkowicie w przeglądarce. Bez przesyłania, bez serwera, bez konta. Tabele, arabski, chiński i więcej. 100% prywatności."
+        "pl": "Konwersja PDF do Word odbywa się całkowicie w przeglądarce. Bez przesyłania, bez serwera, bez konta. Tabele, arabski, chiński i więcej. 100% prywatności.",
+        "zh-CN": "完全在浏览器中运行的 PDF 转 Word 工具。无需上传、无需服务器、无需账号。支持表格、阿拉伯语、中文等。100% 隐私。",
+        "ar": "تحويل PDF إلى Word يعمل بالكامل في متصفحك. بدون رفع، بدون خادم، بدون حساب. جداول وعربية وصينية والمزيد. خصوصية 100%."
       },
       "keywords": {
         "en": "pdf to word, convert pdf to word, pdf to docx, pdf to word converter free, pdf to doc, editable word from pdf",
@@ -4211,7 +4231,9 @@
         "ko": "pdf word 변환, pdf를 word로 변환, pdf docx 변환, 무료 pdf word 변환기, 편집 가능한 word로 변환",
         "nl": "pdf naar word, pdf omzetten naar word, pdf naar docx, gratis pdf word converter, bewerkbaar word van pdf",
         "pl": "pdf do word, konwertuj pdf do word, pdf do docx, konwerter pdf do word za darmo, edytowalny word z pdf",
-        "tr": "pdf word'e dönüştür, pdf'yi word yap, pdf docx dönüştürücü, ücretsiz pdf word dönüştürücü, pdf'den düzenlenebilir word"
+        "tr": "pdf word'e dönüştür, pdf'yi word yap, pdf docx dönüştürücü, ücretsiz pdf word dönüştürücü, pdf'den düzenlenebilir word",
+        "zh-CN": "pdf转word, pdf转换为word, pdf转docx, 免费pdf转word工具, pdf转doc, pdf转可编辑word",
+        "ar": "pdf إلى word, تحويل pdf إلى word, pdf إلى docx, محول pdf إلى word مجاني, pdf إلى doc, word قابل للتحرير من pdf"
       }
     },
     {
@@ -4232,7 +4254,9 @@
         "it": "pdf-in-excel",
         "ko": "pdf-excel-byeonhwan",
         "nl": "pdf-naar-excel",
-        "pl": "pdf-do-excel"
+        "pl": "pdf-do-excel",
+        "zh-CN": "pdf-zhuan-excel",
+        "ar": "pdf-ila-excel"
       },
       "titles": {
         "en": "Convert PDF to Excel Without Uploading — Free & Private | PDFree",
@@ -4248,7 +4272,9 @@
         "it": "Convertire PDF in Excel — Gratis, Senza Caricamento | PDFree",
         "ko": "PDF를 Excel로 변환 — 무료, 업로드 없음 | PDFree",
         "nl": "PDF naar Excel Converteren — Gratis, Zonder Upload | PDFree",
-        "pl": "PDF do Excel — Za Darmo, Bez Przesyłania | PDFree"
+        "pl": "PDF do Excel — Za Darmo, Bez Przesyłania | PDFree",
+        "zh-CN": "免费将 PDF 转换为 Excel —— 无需上传，无需账号 | PDFree",
+        "ar": "تحويل PDF إلى Excel مجانًا — بدون رفع، بدون حساب | PDFree"
       },
       "descs": {
         "en": "Extract tables from PDF into an .xlsx spreadsheet — runs in your browser, no upload.",
@@ -4264,7 +4290,9 @@
         "it": "Estrai tabelle da PDF in un foglio .xlsx — funziona nel browser, senza caricamento.",
         "ko": "PDF의 표를 .xlsx 스프레드시트로 추출 — 브라우저에서 실행, 업로드 없음.",
         "nl": "Extraheer tabellen uit PDF naar een .xlsx-bestand — werkt in de browser, geen upload.",
-        "pl": "Wyodrębnij tabele z PDF do pliku .xlsx — działa w przeglądarce, bez przesyłania."
+        "pl": "Wyodrębnij tabele z PDF do pliku .xlsx — działa w przeglądarce, bez przesyłania.",
+        "zh-CN": "将 PDF 中的表格提取为 .xlsx 电子表格 —— 在浏览器中运行，无需上传。",
+        "ar": "استخرج الجداول من PDF إلى جدول بيانات ‎.xlsx‏ — يعمل في متصفحك، بدون رفع."
       },
       "navLabels": {
         "en": "PDF to Excel",
@@ -4280,7 +4308,9 @@
         "it": "PDF in Excel",
         "ko": "PDF를 Excel로",
         "nl": "PDF naar Excel",
-        "pl": "PDF do Excel"
+        "pl": "PDF do Excel",
+        "zh-CN": "PDF 转 Excel",
+        "ar": "PDF إلى Excel"
       },
       "cardNames": {
         "en": "PDF to Excel",
@@ -4296,7 +4326,9 @@
         "it": "PDF in Excel",
         "ko": "PDF를 Excel로",
         "nl": "PDF naar Excel",
-        "pl": "PDF do Excel"
+        "pl": "PDF do Excel",
+        "zh-CN": "PDF 转 Excel",
+        "ar": "PDF إلى Excel"
       },
       "cardDescs": {
         "en": "Extract tables from PDF into a spreadsheet locally",
@@ -4312,7 +4344,9 @@
         "it": "Converti le tabelle PDF in un vero file .xlsx. Senza caricamento, senza account.",
         "ko": "PDF 표를 실제 .xlsx 파일로 변환. 업로드 없음, 계정 불필요.",
         "nl": "Converteer PDF-tabellen naar een echt .xlsx-bestand. Zonder upload, zonder account.",
-        "pl": "Konwertuj tabele PDF do prawdziwego pliku .xlsx. Bez przesyłania, bez konta."
+        "pl": "Konwertuj tabele PDF do prawdziwego pliku .xlsx. Bez przesyłania, bez konta.",
+        "zh-CN": "在本地将 PDF 中的表格提取为电子表格",
+        "ar": "استخرج الجداول من PDF إلى جدول بيانات محليًا"
       },
       "breadcrumb": {
         "en": "PDF→Excel",
@@ -4328,7 +4362,9 @@
         "it": "PDF in Excel",
         "ko": "PDF를 Excel로",
         "nl": "PDF naar Excel",
-        "pl": "PDF do Excel"
+        "pl": "PDF do Excel",
+        "zh-CN": "PDF→Excel",
+        "ar": "PDF→Excel"
       },
       "metaDescs": {
         "en": "Convert PDF to Excel free — tables become separate .xlsx sheets. Runs in your browser, nothing uploaded or stored on any server. No account, no limits.",
@@ -4344,7 +4380,9 @@
         "it": "Convertire PDF in Excel gratis — le tabelle diventano fogli separati in un vero file .xlsx. Nel browser, niente caricato né memorizzato. Nessun account, nessun limite.",
         "ko": "PDF를 Excel로 무료 변환 — 감지된 표가 실제 .xlsx 파일의 별도 시트가 됩니다. 브라우저에서 실행, 업로드 없음, 저장 없음. 계정 불필요, 제한 없음, 오프라인 지원.",
         "nl": "PDF naar Excel converteren — tabellen worden aparte werkbladen in een echt .xlsx-bestand. In de browser, niets geüpload of opgeslagen. Geen account, geen limieten.",
-        "pl": "Konwertuj PDF do Excel za darmo — tabele stają się osobnymi arkuszami w prawdziwym pliku .xlsx. W przeglądarce, nic nie przesyłane ani przechowywane. Bez konta, bez limitów."
+        "pl": "Konwertuj PDF do Excel za darmo — tabele stają się osobnymi arkuszami w prawdziwym pliku .xlsx. W przeglądarce, nic nie przesyłane ani przechowywane. Bez konta, bez limitów.",
+        "zh-CN": "免费将 PDF 转换为 Excel —— 表格会变成真正 .xlsx 文件中的独立工作表。在浏览器中运行，不上传或存储任何内容。无需账号，无限制。",
+        "ar": "حوّل PDF إلى Excel مجانًا — تصبح الجداول أوراق عمل منفصلة في ملف ‎.xlsx‏ حقيقي. في متصفحك، لا شيء يُرفع أو يُخزَّن. بدون حساب، بدون حدود."
       },
       "ogTitles": {
         "en": "Convert PDF to Excel Free — Table Extraction, No Upload",
@@ -4360,7 +4398,9 @@
         "it": "PDF in Excel Gratis — Senza Caricamento | PDFree",
         "ko": "PDF를 Excel로 무료 변환 — 업로드 없음 | PDFree",
         "nl": "PDF naar Excel Gratis — Zonder Upload | PDFree",
-        "pl": "PDF do Excel Za Darmo — Bez Przesyłania | PDFree"
+        "pl": "PDF do Excel Za Darmo — Bez Przesyłania | PDFree",
+        "zh-CN": "免费将 PDF 转换为 Excel —— 提取表格，无需上传",
+        "ar": "تحويل PDF إلى Excel مجانًا — استخراج الجداول، بدون رفع"
       },
       "ogDescs": {
         "en": "PDF to Excel conversion that runs entirely in your browser. Detected tables become separate worksheets. No upload, no server, no account. 100% private.",
@@ -4376,7 +4416,9 @@
         "it": "Le tabelle PDF diventano un foglio .xlsx reale. Elaborazione nel browser — nessun file inviato al server.",
         "ko": "PDF 표를 실제 .xlsx 스프레드시트로 변환. 브라우저 처리 — 서버에 업로드되지 않습니다.",
         "nl": "PDF-tabellen worden een echt .xlsx-spreadsheet. Verwerking in de browser — niets geüpload naar een server.",
-        "pl": "Tabele PDF stają się prawdziwym arkuszem .xlsx. Przetwarzanie w przeglądarce — nic nie jest wysyłane na serwer."
+        "pl": "Tabele PDF stają się prawdziwym arkuszem .xlsx. Przetwarzanie w przeglądarce — nic nie jest wysyłane na serwer.",
+        "zh-CN": "完全在浏览器中运行的 PDF 转 Excel 工具。检测到的表格会变成独立工作表。无需上传、无需服务器、无需账号。100% 隐私。",
+        "ar": "تحويل PDF إلى Excel يعمل بالكامل في متصفحك. تصبح الجداول المكتشَفة أوراق عمل منفصلة. بدون رفع، بدون خادم، بدون حساب. خصوصية 100%."
       },
       "keywords": {
         "en": "pdf to excel, pdf to xlsx, convert pdf to excel, extract table from pdf, pdf table extractor, pdf to spreadsheet",
@@ -4392,7 +4434,9 @@
         "ko": "pdf excel 변환, pdf를 excel로 변환, pdf xlsx 변환, pdf에서 표 추출, pdf 스프레드시트 변환, pdf excel 변환기",
         "nl": "pdf naar excel, pdf omzetten naar excel, pdf naar xlsx, tabellen uit pdf halen, pdf naar spreadsheet, pdf excel converter",
         "pl": "pdf do excel, konwertuj pdf do excel, pdf do xlsx, wyodrębnij tabele z pdf, pdf do arkusza kalkulacyjnego, konwerter pdf do excel",
-        "tr": "pdf excel'e dönüştür, pdf'yi excel yap, pdf xlsx dönüştürücü, pdf'den tablo çıkar, pdf'yi e-tabloya çevir, pdf excel dönüştürücü"
+        "tr": "pdf excel'e dönüştür, pdf'yi excel yap, pdf xlsx dönüştürücü, pdf'den tablo çıkar, pdf'yi e-tabloya çevir, pdf excel dönüştürücü",
+        "zh-CN": "pdf转excel, pdf转xlsx, pdf转换为excel, 从pdf提取表格, pdf表格提取工具, pdf转电子表格",
+        "ar": "pdf إلى excel, تحويل pdf إلى excel, pdf إلى xlsx, استخراج جدول من pdf, أداة استخراج جداول pdf, pdf إلى جدول بيانات"
       }
     },
     {
@@ -4413,7 +4457,9 @@
         "it": "pdf-in-powerpoint",
         "ko": "pdf-powerpoint-byeonhwan",
         "nl": "pdf-naar-powerpoint",
-        "pl": "pdf-do-powerpoint"
+        "pl": "pdf-do-powerpoint",
+        "zh-CN": "pdf-zhuan-ppt",
+        "ar": "pdf-ila-ppt"
       },
       "titles": {
         "en": "Convert PDF to PowerPoint Without Uploading — Free & Private | PDFree",
@@ -4429,7 +4475,9 @@
         "it": "Convertire PDF in PowerPoint — Gratis, Senza Caricamento | PDFree",
         "ko": "PDF를 PowerPoint로 변환 — 무료, 업로드 없음 | PDFree",
         "nl": "PDF naar PowerPoint Converteren — Gratis, Zonder Upload | PDFree",
-        "pl": "PDF do PowerPoint — Za Darmo, Bez Przesyłania | PDFree"
+        "pl": "PDF do PowerPoint — Za Darmo, Bez Przesyłania | PDFree",
+        "zh-CN": "免费将 PDF 转换为 PowerPoint —— 无需上传，无需账号 | PDFree",
+        "ar": "تحويل PDF إلى PowerPoint مجانًا — بدون رفع، بدون حساب | PDFree"
       },
       "descs": {
         "en": "Convert PDF pages into PowerPoint slides — runs in your browser, no upload.",
@@ -4445,7 +4493,9 @@
         "it": "Converti PDF in slide .pptx. Funziona nel browser, senza caricamento.",
         "ko": "PDF를 슬라이드 .pptx로 변환. 브라우저에서 실행, 업로드 없음.",
         "nl": "Converteer PDF naar slides .pptx. Werkt in de browser, geen upload.",
-        "pl": "Konwertuj PDF do slajdów .pptx. Działa w przeglądarce, bez przesyłania."
+        "pl": "Konwertuj PDF do slajdów .pptx. Działa w przeglądarce, bez przesyłania.",
+        "zh-CN": "将 PDF 页面转换为 PowerPoint 幻灯片 —— 在浏览器中运行，无需上传。",
+        "ar": "حوّل صفحات PDF إلى شرائح PowerPoint — يعمل في متصفحك، بدون رفع."
       },
       "navLabels": {
         "en": "PDF to PowerPoint",
@@ -4461,7 +4511,9 @@
         "it": "PDF in PowerPoint",
         "ko": "PDF를 PowerPoint로",
         "nl": "PDF naar PowerPoint",
-        "pl": "PDF do PowerPoint"
+        "pl": "PDF do PowerPoint",
+        "zh-CN": "PDF 转 PowerPoint",
+        "ar": "PDF إلى PowerPoint"
       },
       "cardNames": {
         "en": "PDF to PowerPoint",
@@ -4477,7 +4529,9 @@
         "it": "PDF in PowerPoint",
         "ko": "PDF를 PowerPoint로",
         "nl": "PDF naar PowerPoint",
-        "pl": "PDF do PowerPoint"
+        "pl": "PDF do PowerPoint",
+        "zh-CN": "PDF 转 PowerPoint",
+        "ar": "PDF إلى PowerPoint"
       },
       "cardDescs": {
         "en": "Turn PDF pages into a slide deck locally",
@@ -4493,7 +4547,9 @@
         "it": "Converti pagine PDF in slide .pptx. Senza caricamento, senza account.",
         "ko": "PDF 페이지를 .pptx 슬라이드로 변환. 업로드 없음, 계정 불필요.",
         "nl": "Converteer PDF-pagina's naar .pptx-slides. Zonder upload, zonder account.",
-        "pl": "Konwertuj strony PDF do slajdów .pptx. Bez przesyłania, bez konta."
+        "pl": "Konwertuj strony PDF do slajdów .pptx. Bez przesyłania, bez konta.",
+        "zh-CN": "在本地将 PDF 页面转换为幻灯片",
+        "ar": "حوّل صفحات PDF إلى عرض شرائح محليًا"
       },
       "breadcrumb": {
         "en": "PDF→PowerPoint",
@@ -4509,7 +4565,9 @@
         "it": "PDF in PowerPoint",
         "ko": "PDF를 PowerPoint로",
         "nl": "PDF naar PowerPoint",
-        "pl": "PDF do PowerPoint"
+        "pl": "PDF do PowerPoint",
+        "zh-CN": "PDF→PowerPoint",
+        "ar": "PDF→PowerPoint"
       },
       "metaDescs": {
         "en": "Convert PDF to PowerPoint free — each page becomes a .pptx slide. Runs in your browser, nothing uploaded or stored on any server. No account, no limits.",
@@ -4525,7 +4583,9 @@
         "it": "Convertire PDF in PowerPoint gratis — ogni pagina diventa una slide .pptx. Nel browser, niente caricato né memorizzato. Nessun account, nessun limite.",
         "ko": "PDF를 PowerPoint로 무료 변환 — 각 페이지가 편집 가능한 .pptx 슬라이드가 됩니다. 브라우저에서 실행, 업로드 없음, 저장 없음. 계정 불필요, 제한 없음.",
         "nl": "PDF naar PowerPoint converteren — elke pagina wordt een .pptx-slide. In de browser, niets geüpload of opgeslagen. Geen account, geen limieten.",
-        "pl": "Konwertuj PDF do PowerPoint za darmo — każda strona staje się slajdem .pptx. W przeglądarce, nic nie przesyłane ani przechowywane. Bez konta, bez limitów."
+        "pl": "Konwertuj PDF do PowerPoint za darmo — każda strona staje się slajdem .pptx. W przeglądarce, nic nie przesyłane ani przechowywane. Bez konta, bez limitów.",
+        "zh-CN": "免费将 PDF 转换为 PowerPoint —— 每一页都会变成真正 .pptx 文件中的一张幻灯片。在浏览器中运行，不上传或存储任何内容。无需账号，无限制。",
+        "ar": "حوّل PDF إلى PowerPoint مجانًا — تصبح كل صفحة شريحة ‎.pptx‏ حقيقية. في متصفحك، لا شيء يُرفع أو يُخزَّن. بدون حساب، بدون حدود."
       },
       "ogTitles": {
         "en": "Convert PDF to PowerPoint Free — One Slide Per Page, No Upload",
@@ -4541,7 +4601,9 @@
         "it": "PDF in PowerPoint Gratis — Senza Caricamento | PDFree",
         "ko": "PDF를 PowerPoint로 무료 변환 — 업로드 없음 | PDFree",
         "nl": "PDF naar PowerPoint Gratis — Zonder Upload | PDFree",
-        "pl": "PDF do PowerPoint Za Darmo — Bez Przesyłania | PDFree"
+        "pl": "PDF do PowerPoint Za Darmo — Bez Przesyłania | PDFree",
+        "zh-CN": "免费将 PDF 转换为 PowerPoint —— 每页一张幻灯片，无需上传",
+        "ar": "تحويل PDF إلى PowerPoint مجانًا — شريحة لكل صفحة، بدون رفع"
       },
       "ogDescs": {
         "en": "PDF to PowerPoint conversion that runs entirely in your browser. No upload, no server, no account. 100% private.",
@@ -4557,7 +4619,9 @@
         "it": "Converti pagine PDF in slide di presentazione .pptx. Elaborazione nel browser.",
         "ko": "PDF 페이지를 프레젠테이션 슬라이드 .pptx로 변환. 브라우저 처리.",
         "nl": "Converteer PDF-pagina's naar presentatieslides .pptx. Verwerking in de browser.",
-        "pl": "Konwertuj strony PDF do slajdów prezentacji .pptx. Przetwarzanie w przeglądarce."
+        "pl": "Konwertuj strony PDF do slajdów prezentacji .pptx. Przetwarzanie w przeglądarce.",
+        "zh-CN": "完全在浏览器中运行的 PDF 转 PowerPoint 工具。无需上传、无需服务器、无需账号。100% 隐私。",
+        "ar": "تحويل PDF إلى PowerPoint يعمل بالكامل في متصفحك. بدون رفع، بدون خادم، بدون حساب. خصوصية 100%."
       },
       "keywords": {
         "en": "pdf to powerpoint, pdf to pptx, convert pdf to powerpoint, pdf to ppt, pdf to slides, pdf to presentation",
@@ -4573,7 +4637,9 @@
         "ko": "pdf powerpoint 변환, pdf를 powerpoint로 변환, pdf pptx 변환, pdf 슬라이드 변환, pdf 프레젠테이션 변환, pdf 파워포인트 변환기",
         "nl": "pdf naar powerpoint, pdf omzetten naar powerpoint, pdf naar pptx, pdf naar dia's, pdf naar presentatie, pdf powerpoint converter",
         "pl": "pdf do powerpoint, konwertuj pdf do powerpoint, pdf do pptx, pdf do slajdów, pdf do prezentacji, konwerter pdf do powerpoint",
-        "tr": "pdf powerpoint'e dönüştür, pdf'yi powerpoint yap, pdf pptx dönüştürücü, pdf'yi slayta çevir, pdf sunuma dönüştür, pdf powerpoint dönüştürücü"
+        "tr": "pdf powerpoint'e dönüştür, pdf'yi powerpoint yap, pdf pptx dönüştürücü, pdf'yi slayta çevir, pdf sunuma dönüştür, pdf powerpoint dönüştürücü",
+        "zh-CN": "pdf转powerpoint, pdf转pptx, pdf转换为powerpoint, pdf转ppt, pdf转幻灯片, pdf转演示文稿",
+        "ar": "pdf إلى powerpoint, تحويل pdf إلى powerpoint, pdf إلى pptx, pdf إلى ppt, pdf إلى شرائح, pdf إلى عرض تقديمي"
       }
     },
     {

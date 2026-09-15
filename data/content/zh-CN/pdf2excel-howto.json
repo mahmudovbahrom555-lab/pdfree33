@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "如何将 PDF 转换为 Excel",
+  "description": "将 PDF 中的表格提取到真正的 .xlsx 电子表格——100% 在您的浏览器中完成。",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "打开您的 PDF",
+      "text": "点击“选择文件”或将 PDF 拖入拖放区域。PDFree 会扫描文档并显示发现了多少个表格。"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "查看检测到的表格数量",
+      "text": "转换前，一个标记会显示检测到的表格数量。"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "下载 .xlsx 文件",
+      "text": "点击“转换为 Excel”。每个检测到的表格都会成为独立工作表；其余内容会放入“Text”工作表。"
+    }
+  ]
+}

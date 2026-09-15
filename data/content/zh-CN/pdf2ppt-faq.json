@@ -1,0 +1,58 @@
+[
+  {
+    "@type": "Question",
+    "name": "转换时我的 PDF 会被上传到任何地方吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "不会。每张幻灯片都在您的浏览器中使用 pdf.js 和 PptxGenJS 渲染并打包。您的 PDF 永远不会离开您的设备。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFree 会在处理后存储或记录我的文件吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "不会。PDFree 完全在您的浏览器中运行——没有接收您文件的后端服务器。由于没有任何内容被上传，也就不可能被存储、记录或保留。您的文档只存在于浏览器内存中，仅在会话期间有效，关闭标签页后即被清除。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "转换后可以编辑幻灯片上的文字吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "默认的图片模式下不能直接编辑——每张幻灯片都是原始 PDF 页面的图片，能精确保留版式，但文字不是独立、可编辑的 PowerPoint 对象。转换前切换到可编辑文字（测试版），即可为标题、段落、列表和表格生成真正可编辑的 PowerPoint 文字和表格，包括多栏页面——但在该模式下图表和照片仍以内嵌图片形式出现。如果您需要完全可编辑的文档，请改用 PDF 转 Word。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "我的幻灯片会是什么尺寸？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "幻灯片的尺寸与您 PDF 首页的尺寸和宽高比一致。如果每页尺寸相同，幻灯片会铺满整个画面，不会出现黑边。PowerPoint 每份文件只支持一种幻灯片尺寸，因此如果您的 PDF 混合了不同页面尺寸或方向，这些页面会被缩放以适应并居中显示，而不是被拉伸或扭曲。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "该选择哪个质量设置？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "均衡（150 DPI）对大多数演示文稿来说是不错的默认选项。如果有密集文字或小字，请选择高质量；如果要用邮件发送文件并希望体积更小，请选择紧凑。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "这是一个无需注册的免费 PDF 转 PowerPoint 工具吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "是的。PDFree 完全免费——无需注册、无需账号、无需安装。打开工具，加载您的 PDF，然后下载 .pptx 文件即可。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "这个工具能处理大文件的 PDF 吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "可以，不过页数非常多时会自动使用较低的图片质量，以避免浏览器内存耗尽。对于超大型演示文稿，紧凑质量是最可靠的选择。"
+    }
+  }
+]

@@ -1,0 +1,66 @@
+[
+  {
+    "@type": "Question",
+    "name": "转换时我的 PDF 会被上传到任何地方吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "不会。表格检测和电子表格生成都在您的浏览器中使用 pdf.js 和 exceljs 完成。您的 PDF 以及提取出的数据永远不会离开您的设备。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFree 会在处理后存储或记录我的文件吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "不会。PDFree 完全在您的浏览器中运行——没有接收您文件的后端服务器。由于没有任何内容被上传，也就不可能被存储、记录或保留。您的文档只存在于浏览器内存中，仅在会话期间有效，关闭标签页后即被清除。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "如果我的 PDF 中没有表格会怎样？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree 会在转换前提前告知您——预扫描标记会显示表格数量。如果没有检测到任何表格，所有文字仍会保存进一份单独的“Text”工作表，但对于以文字为主的文档，PDF 转 Word 通常更合适。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "可以把扫描版 PDF 转换为 Excel 吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "不能直接转换——扫描版 PDF 是没有文字层的图像，所以没有可供检测表格的数据。请先运行 OCR PDF 添加文字层，再把结果转换为 Excel。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFree 如何判断哪些是表格、哪些不是？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "它会检查文本行是否在至少 3 行范围内对齐成一致的列。每个候选表格都会获得一个置信度分数；置信度低的猜测会被直接拒绝，而不会以一个残缺的表格形式呈现出来。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "这是一个无需注册的免费 PDF 转 Excel 工具吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "是的。PDFree 完全免费——无需注册、无需账号、无需安装。打开工具，加载您的 PDF，然后下载 .xlsx 文件即可。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "转换后可以编辑公式或重新计算吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "提取出的数值是普通的数字和文字，而不是公式——PDF 本身没有可以恢复的底层公式，只有渲染后的结果。进入 Excel 后，您可以像平常一样在提取出的数据上添加自己的公式。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "如果我的 PDF 中有多个表格，它们会分别进入不同的工作表吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "会的。每个检测到的表格都会在输出的 .xlsx 文件中成为独立的工作表，其命名和顺序与它在 PDF 中的位置一致，因此来自不同页面或不同部分的表格不会混在一起。"
+    }
+  }
+]

@@ -1,0 +1,106 @@
+[
+  {
+    "@type": "Question",
+    "name": "这个 PDF 转 Word 工具真的免费吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "是的，完全免费。无需订阅，无水印，没有按页数的限制。整个转换过程都在您的浏览器中使用开源库完成。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFree 会在处理后存储或记录我的文件吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "不会。PDFree 完全在您的浏览器中运行——没有接收您文件的后端服务器。由于没有任何内容被上传，也就不可能被存储、记录或保留。您的文档只存在于浏览器内存中，仅在会话期间有效，关闭标签页后即被清除。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "我的 PDF 会被上传到任何地方吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "绝不会。您的文件由浏览器本地读取。转换的任何环节都不涉及服务器。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "文本模式和图片模式有什么区别？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "文本模式会从您的 PDF 中提取文字，创建一份带有段落、标题、粗体、斜体和表格的可编辑 Word 文档。图片模式会将每一页渲染为高分辨率图片并放入 Word 文档——视觉版式被精确保留，但文字无法编辑。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "在 Word 中格式会保持一致吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "在文本模式下，文字内容和基本格式（粗体、斜体、字号、标题、表格）会被保留。复杂的多栏版式可能无法完全匹配。若需要完美的版式还原，请使用图片模式。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "支持阿拉伯语、希伯来语、西里尔文或中文吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "支持。文本模式支持拉丁文、西里尔文（俄语、乌克兰语、保加利亚语）、阿拉伯语和希伯来语（保留正确的从右到左段落方向）、中日韩文字、天城文（印地语），以及标准 PDF 中大多数常见的 Unicode 文字系统。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "表格能被正确转换吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree 通过两种方式检测表格：将文字项目对齐成列（针对数据表格），以及检测绘制的边框线（针对网格表单）。检测到的表格会变成真正的 Word 表格，而不是纯文本。非常复杂或含有合并单元格的版式可能无法完美转换。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "文件大小有上限吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "没有硬性限制。不过非常大的 PDF（超过 100 MB）可能需要更长处理时间和更多内存。为获得最佳效果，文本模式下请将文件控制在 100 MB 以内，300 DPI 图片模式下请控制在 50 MB 以内。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "打开文件需要 Microsoft Word 吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "不需要。.docx 格式受 Microsoft Word、Google 文档（上传到云端硬盘后打开）、LibreOffice Writer（免费开源）和 Apple Pages 支持。您不需要付费的 Microsoft 365 订阅即可打开该文件。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "可以把扫描版 PDF 转换为可编辑 Word 吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "要看情况。如果扫描件已内嵌文字层（由 Adobe Scan、Microsoft Lens 或现代扫描仪添加），文本模式可以正确提取它。如果 PDF 纯粹是图像，请先使用 OCR PDF 工具添加文字层，再转换为 Word。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "能离线使用吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "可以。页面加载完成后，PDFree 就能作为渐进式网页应用（PWA）完全离线运行。转换过程不需要网络连接。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "转换质量评分是怎么计算的？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "转换完成后，PDFree 会根据文档中检测到的内容——文字层覆盖率、表格、图表和文字系统的复杂度——显示一个置信度评分（0–100%）。高（80% 及以上）表示输出完全可编辑。中等（55%–79%）表示部分页面可能仅为图片。低（低于 55%）通常意味着 PDF 大部分是扫描件——请先运行 OCR 以获得可编辑的 Word 输出。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "有不上传文件的 PDF 转 Word 工具吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "有——PDFree。整个转换过程使用 PDF.js 和 WebAssembly 在您的浏览器内运行。您的 PDF 永远不会被发送到任何服务器。您可以打开开发者工具 → Network 标签页自行验证，转换过程中不会发出任何文件上传请求。大多数在线转换工具会把您的文件上传到它们的服务器；PDFree 不会。"
+    }
+  }
+]
