@@ -1,0 +1,90 @@
+[
+  {
+    "@type": "Question",
+    "name": "应该选择哪种 DPI？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "72 DPI 适合网站和屏幕显示。150 DPI 适合大多数办公用途。当您需要印刷质量的输出，或希望转换后清楚阅读小字时，选择 300 DPI。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFree 会在处理后存储或记录我的文件吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "不会。PDFree 完全在您的浏览器中运行——没有接收您文件的后端服务器。由于没有任何内容被上传，也就不可能被存储、记录或保留。您的文档只存在于浏览器内存中，仅在会话期间有效，关闭标签页后即被清除。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "可以把 PDF 转换为 PNG 而不是 JPG 吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "可以。PDFree 同时支持 JPG 和 PNG 输出。PNG 是无损格式，更适合需要像素级清晰度的文字密集型文档或图表。JPG 生成的文件更小，更适合照片较多的页面。转换前选择所需格式。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "转换有页数限制吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "没有。没有页数或文件大小限制。非常大的 PDF（300 DPI 下超过 100 页）处理时间可能更长。为获得最佳效果，转换大文件前请关闭其他浏览器标签页。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "把 PDF 转换成 JPG 会损失质量吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "JPG 采用有损压缩——在 300 DPI 下质量非常高，文字依然清晰可读。如需完全无损输出，请改用 PNG 格式。PDFree 同时支持 JPG 和 PNG——转换前选择格式。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "10 页的 PDF 会生成 10 个独立的 JPG 文件吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "是的。每一页会生成一个 JPG 或 PNG 文件。如果您的 PDF 超过一页，所有图片会被打包成一个 ZIP 压缩包，一键下载。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "可以只转换特定页面吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "当前工具会一次性转换所有页面。如果只想导出特定页面，请先使用 PDFree 的拆分 PDF 工具把所需页面提取到一个单独的 PDF，再将该 PDF 转换为 JPG。两个步骤都免费，且都在浏览器本地运行。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "我的 PDF 文件会被上传到服务器吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "不会。PDFree 使用 PDF.js（Mozilla 的开源 PDF 渲染引擎），完全在您的浏览器中运行。页面会在本地渲染并导出为 JPG 文件——不会有任何内容离开您的设备。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDF 转 JPG 工具完全免费吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "是的。PDFree 完全免费，无需订阅，无需注册，输出结果也不会带水印。没有每日限制，也没有文件大小限制。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFree 支持 JPEG 输出吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "支持。JPG 和 JPEG 是同一种格式——JPEG 是全称，JPG 是常见的文件扩展名。PDFree 导出的 .jpg 文件可以在任何设备上的任何图片查看器、编辑器或应用中打开。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "最高输出分辨率是多少？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree 最高可导出 300 DPI，这是标准的印刷质量分辨率。在 300 DPI 下，PDF 文字和矢量图形都能清晰渲染——输出结果与原始文档看起来一致。"
+    }
+  }
+]

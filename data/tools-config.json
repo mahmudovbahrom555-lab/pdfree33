@@ -3035,7 +3035,9 @@
         "ko": "pdf-metadeiteo",
         "nl": "pdf-metadata",
         "pl": "metadane-pdf",
-        "tr": "pdf-meta-veri"
+        "tr": "pdf-meta-veri",
+        "zh-CN": "yuanshuju-pdf",
+        "ar": "bayanat-wasfiya-pdf"
       },
       "titles": {
         "en": "Edit PDF Metadata Online — Free, No Upload | PDFree",
@@ -3051,7 +3053,9 @@
         "ko": "PDF 메타데이터 온라인 편집 — 무료, 업로드 없음 | PDFree",
         "nl": "PDF Metadata Online Bewerken — Gratis, Geen Upload | PDFree",
         "pl": "Edytuj Metadane PDF Online — Za Darmo, Bez Przesyłania | PDFree",
-        "tr": "PDF Meta Verilerini Düzenle — Yazar, Başlık, Anahtar Kelimeler | PDFree"
+        "tr": "PDF Meta Verilerini Düzenle — Yazar, Başlık, Anahtar Kelimeler | PDFree",
+        "zh-CN": "在线编辑 PDF 元数据 —— 免费，无需上传 | PDFree",
+        "ar": "تعديل بيانات PDF الوصفية عبر الإنترنت — مجانًا، بدون رفع | PDFree"
       },
       "descs": {
         "en": "View and edit PDF metadata: title, author, subject, keywords. Processed locally — files never uploaded.",
@@ -3067,7 +3071,9 @@
         "ko": "PDF 메타데이터(제목, 작성자, 주제, 키워드)를 보고 편집하세요. 로컬 처리 — 파일이 업로드되지 않습니다.",
         "nl": "Bekijk en bewerk PDF-metadata: titel, auteur, onderwerp, trefwoorden. Lokaal verwerkt — bestanden worden nooit geüpload.",
         "pl": "Wyświetlaj i edytuj metadane PDF: tytuł, autor, temat, słowa kluczowe. Przetwarzanie lokalne — pliki nigdy nie są przesyłane.",
-        "tr": "PDF meta verilerini düzenleyin veya temizleyin: Yazar, Başlık, Konu, Anahtar Kelimeler. Tarayıcıda işleme — yükleme yok."
+        "tr": "PDF meta verilerini düzenleyin veya temizleyin: Yazar, Başlık, Konu, Anahtar Kelimeler. Tarayıcıda işleme — yükleme yok.",
+        "zh-CN": "查看并编辑 PDF 元数据：标题、作者、主题、关键词。本地处理——文件从不上传。",
+        "ar": "اعرض وعدّل بيانات PDF الوصفية: العنوان، المؤلف، الموضوع، الكلمات المفتاحية. معالجة محلية — الملفات لا تُرفع أبدًا."
       },
       "navLabels": {
         "en": "Metadata",
@@ -3083,7 +3089,9 @@
         "ko": "메타데이터",
         "nl": "Metadata",
         "pl": "Metadane",
-        "tr": "Meta Veri"
+        "tr": "Meta Veri",
+        "zh-CN": "元数据",
+        "ar": "البيانات الوصفية"
       },
       "cardNames": {
         "en": "Edit Metadata",
@@ -3099,7 +3107,9 @@
         "ko": "메타데이터 편집",
         "nl": "Metadata Bewerken",
         "pl": "Edytuj Metadane",
-        "tr": "PDF Meta Verisini Düzenle"
+        "tr": "PDF Meta Verisini Düzenle",
+        "zh-CN": "编辑元数据",
+        "ar": "تعديل البيانات الوصفية"
       },
       "cardDescs": {
         "en": "View and edit title, author, keywords",
@@ -3115,7 +3125,9 @@
         "ko": "제목, 작성자, 키워드 보기 및 편집",
         "nl": "Titel, auteur, trefwoorden bekijken en bewerken",
         "pl": "Wyświetlaj i edytuj tytuł, autora, słowa kluczowe",
-        "tr": "PDF'nin Yazar, Başlık ve anahtar kelimelerini düzenleyin"
+        "tr": "PDF'nin Yazar, Başlık ve anahtar kelimelerini düzenleyin",
+        "zh-CN": "查看并编辑标题、作者、关键词",
+        "ar": "اعرض وعدّل العنوان والمؤلف والكلمات المفتاحية"
       },
       "breadcrumb": {
         "en": "Edit PDF Metadata",
@@ -3131,7 +3143,9 @@
         "ko": "PDF 메타데이터",
         "nl": "PDF Metadata",
         "pl": "Metadane PDF",
-        "tr": "PDF Meta Verisini Düzenle"
+        "tr": "PDF Meta Verisini Düzenle",
+        "zh-CN": "编辑 PDF 元数据",
+        "ar": "تعديل بيانات PDF الوصفية"
       },
       "metaDescs": {
         "en": "View and edit PDF metadata — title, author, subject, keywords. Works offline in your browser, never uploaded. Remove personal info before sharing. Free.",
@@ -3147,7 +3161,9 @@
         "ko": "PDF 메타데이터(제목, 작성자, 주제, 키워드)를 보고 편집하세요. 브라우저에서 오프라인으로 작동, 업로드 없음. 공유 전에 개인정보 삭제. 무료.",
         "nl": "Bekijk en bewerk PDF-metadata — titel, auteur, onderwerp, trefwoorden. Werkt offline in je browser, nooit geüpload. Verwijder persoonlijke info voor het delen. Gratis.",
         "pl": "Wyświetlaj i edytuj metadane PDF — tytuł, autor, temat, słowa kluczowe. Działa offline w przeglądarce, nigdy nie przesyłane. Usuń dane osobowe przed udostępnieniem. Za darmo.",
-        "tr": "PDF meta verilerini ücretsiz düzenleyin — Yazar, Başlık, Konu, Anahtar Kelimeler. Yükleme yok, kayıt gerekmez."
+        "tr": "PDF meta verilerini ücretsiz düzenleyin — Yazar, Başlık, Konu, Anahtar Kelimeler. Yükleme yok, kayıt gerekmez.",
+        "zh-CN": "免费查看并编辑 PDF 元数据——标题、作者、主题、关键词。离线在浏览器中运行，从不上传。分享前删除个人信息。",
+        "ar": "اعرض وعدّل بيانات PDF الوصفية مجانًا — العنوان، المؤلف، الموضوع، الكلمات المفتاحية. يعمل دون اتصال في متصفحك، لا يُرفع أبدًا. احذف المعلومات الشخصية قبل المشاركة."
       },
       "ogTitles": {
         "en": "Remove Your Name from PDFs — Edit Metadata Privately, Free",
@@ -3163,7 +3179,9 @@
         "ko": "PDF에서 이름 삭제 — 메타데이터를 비공개로 편집, 무료",
         "nl": "Verwijder Je Naam uit PDF's — Bewerk Metadata Privé, Gratis",
         "pl": "Usuń Swoje Imię z PDF-ów — Edytuj Metadane Prywatnie, Za Darmo",
-        "tr": "PDF Meta Verilerini Düzenle Ücretsiz | PDFree"
+        "tr": "PDF Meta Verilerini Düzenle Ücretsiz | PDFree",
+        "zh-CN": "删除 PDF 中您的姓名 —— 私密编辑元数据，免费",
+        "ar": "احذف اسمك من ملفات PDF — عدّل البيانات الوصفية بخصوصية، مجانًا"
       },
       "ogDescs": {
         "en": "View and edit PDF metadata: title, author, subject, keywords. Processed in your browser — files never uploaded. Free.",
@@ -3179,7 +3197,9 @@
         "ko": "PDF 메타데이터(제목, 작성자, 주제, 키워드)를 보고 편집하세요. 브라우저에서 처리 — 파일이 업로드되지 않습니다. 무료.",
         "nl": "Bekijk en bewerk PDF-metadata: titel, auteur, onderwerp, trefwoorden. Verwerkt in je browser — bestanden worden nooit geüpload. Gratis.",
         "pl": "Wyświetlaj i edytuj metadane PDF: tytuł, autor, temat, słowa kluczowe. Przetwarzane w przeglądarce — pliki nigdy nie są przesyłane. Za darmo.",
-        "tr": "PDF meta verilerini düzenleyin veya temizleyin. Tarayıcıda işleme — dosyalar cihazınızı terk etmez."
+        "tr": "PDF meta verilerini düzenleyin veya temizleyin. Tarayıcıda işleme — dosyalar cihazınızı terk etmez.",
+        "zh-CN": "查看并编辑 PDF 元数据：标题、作者、主题、关键词。在浏览器中处理——文件从不上传。免费。",
+        "ar": "اعرض وعدّل بيانات PDF الوصفية: العنوان، المؤلف، الموضوع، الكلمات المفتاحية. تتم المعالجة في متصفحك — الملفات لا تُرفع أبدًا. مجانًا."
       },
       "keywords": {
         "en": "pdf metadata editor, edit pdf metadata, pdf properties editor, remove pdf metadata, pdf author editor",
@@ -3195,7 +3215,9 @@
         "ko": "pdf 메타데이터 편집기, pdf 메타데이터 편집, pdf 속성 편집기, pdf 메타데이터 삭제, pdf 작성자 편집",
         "nl": "pdf metadata editor, pdf metadata bewerken, pdf eigenschappen editor, pdf metadata verwijderen, pdf auteur bewerken",
         "pl": "edytor metadanych pdf, edytuj metadane pdf, właściwości pdf, usuń metadane pdf, edytor autora pdf",
-        "tr": "pdf meta verisi, pdf meta verisini düzenle, pdf özellikleri, pdf meta verisini kaldır, pdf yazar düzenleyici"
+        "tr": "pdf meta verisi, pdf meta verisini düzenle, pdf özellikleri, pdf meta verisini kaldır, pdf yazar düzenleyici",
+        "zh-CN": "pdf元数据编辑器, 编辑pdf元数据, pdf属性编辑器, 删除pdf元数据, pdf作者编辑器",
+        "ar": "محرّر بيانات pdf الوصفية, تعديل بيانات pdf الوصفية, خصائص pdf, إزالة بيانات pdf الوصفية, محرّر مؤلف pdf"
       }
     },
     {
@@ -3216,7 +3238,9 @@
         "ko": "jpg-pdf-byeonhwan",
         "nl": "jpg-naar-pdf",
         "pl": "jpg-do-pdf",
-        "tr": "jpg-den-pdf-ye"
+        "tr": "jpg-den-pdf-ye",
+        "zh-CN": "jpg-zhuan-pdf",
+        "ar": "jpg-ila-pdf"
       },
       "titles": {
         "en": "JPG to PDF Free — Convert Images to PDF, No Upload | PDFree",
@@ -3232,7 +3256,9 @@
         "ko": "JPG를 PDF로 무료 변환 — 여러 이미지를 하나의 PDF로, 업로드 없이 | PDFree",
         "nl": "JPG naar PDF — Gratis, Afbeelding naar PDF Online | PDFree",
         "pl": "JPG do PDF — Darmowy, Obraz do PDF Online | PDFree",
-        "tr": "JPG'den PDF'ye — Ücretsiz, Resim PDF'ye Online | PDFree"
+        "tr": "JPG'den PDF'ye — Ücretsiz, Resim PDF'ye Online | PDFree",
+        "zh-CN": "免费在线将 JPG 转换为 PDF —— 多张图片一个文件 | PDFree",
+        "ar": "تحويل JPG إلى PDF مجانًا — صور متعددة في ملف واحد | PDFree"
       },
       "descs": {
         "en": "Convert images to PDF instantly. Auto EXIF rotation. 100% private — processed locally, no uploads.",
@@ -3248,7 +3274,9 @@
         "ko": "JPG, PNG, WEBP 이미지를 PDF로 변환합니다. 업로드 없음, 브라우저에서 처리.",
         "nl": "Converteer JPG, PNG, WEBP-afbeeldingen naar PDF. Geen upload, verwerkt in de browser.",
         "pl": "Konwertuj obrazy JPG, PNG, WEBP do PDF. Bez przesyłania, przetwarzane w przeglądarce.",
-        "tr": "JPG, PNG, WEBP resimlerini PDF'ye dönüştürün. Yükleme yok, tarayıcıda işlenir."
+        "tr": "JPG, PNG, WEBP resimlerini PDF'ye dönüştürün. Yükleme yok, tarayıcıda işlenir.",
+        "zh-CN": "立即将图片转换为 PDF。自动修正 EXIF 旋转。100% 隐私 —— 本地处理，无需上传。",
+        "ar": "حوّل الصور إلى PDF فورًا. تصحيح تلقائي لاتجاه EXIF. خصوصية كاملة 100% — معالجة محلية، بدون رفع."
       },
       "navLabels": {
         "en": "JPG→PDF",
@@ -3264,7 +3292,9 @@
         "ko": "JPG → PDF",
         "nl": "JPG → PDF",
         "pl": "JPG → PDF",
-        "tr": "JPG → PDF"
+        "tr": "JPG → PDF",
+        "zh-CN": "JPG→PDF",
+        "ar": "JPG→PDF"
       },
       "cardNames": {
         "en": "JPG to PDF",
@@ -3280,7 +3310,9 @@
         "ko": "JPG를 PDF로",
         "nl": "JPG naar PDF",
         "pl": "JPG do PDF",
-        "tr": "JPG'den PDF'ye"
+        "tr": "JPG'den PDF'ye",
+        "zh-CN": "JPG 转 PDF",
+        "ar": "JPG إلى PDF"
       },
       "cardDescs": {
         "en": "Convert images to PDF instantly",
@@ -3296,7 +3328,9 @@
         "ko": "이미지를 PDF로 변환 — 업로드 없음",
         "nl": "Afbeeldingen naar PDF converteren — geen upload",
         "pl": "Konwertuj obrazy do PDF — bez przesyłania",
-        "tr": "Resimleri PDF'ye dönüştür — yükleme yok"
+        "tr": "Resimleri PDF'ye dönüştür — yükleme yok",
+        "zh-CN": "立即将图片转换为 PDF",
+        "ar": "حوّل الصور إلى PDF فورًا"
       },
       "breadcrumb": {
         "en": "JPG to PDF",
@@ -3312,7 +3346,9 @@
         "ko": "JPG를 PDF로",
         "nl": "JPG naar PDF",
         "pl": "JPG do PDF",
-        "tr": "JPG'den PDF'ye"
+        "tr": "JPG'den PDF'ye",
+        "zh-CN": "JPG 转 PDF",
+        "ar": "JPG إلى PDF"
       },
       "metaDescs": {
         "en": "Convert JPG, PNG and WebP images to PDF free — no upload, processed in your browser. Combine multiple photos into one PDF instantly. Works offline.",
@@ -3328,7 +3364,9 @@
         "ko": "JPG를 PDF로 무료 변환 — JPG, PNG, WEBP 지원, 여러 이미지를 하나의 PDF로 즉시 결합. 브라우저에서 처리, 업로드 없음, 100% 비공개.",
         "nl": "JPG naar PDF converteren gratis — zonder uploaden. Ondersteunt JPG, PNG, WEBP. Verwerkt in de browser, 100% privé.",
         "pl": "JPG do PDF za darmo — bez przesyłania. Obsługuje JPG, PNG, WEBP. Przetwarzane w przeglądarce, 100% prywatne.",
-        "tr": "JPG'den PDF'ye ücretsiz — yükleme yok. JPG, PNG, WEBP destekler. Tarayıcıda işlenir, %100 gizli."
+        "tr": "JPG'den PDF'ye ücretsiz — yükleme yok. JPG, PNG, WEBP destekler. Tarayıcıda işlenir, %100 gizli.",
+        "zh-CN": "免费将 JPG、PNG 和 WebP 图片转换为 PDF —— 无需上传，在浏览器中处理。即时将多张照片合并成一个 PDF。支持离线使用。",
+        "ar": "حوّل صور JPG وPNG وWebP إلى PDF مجانًا — بدون رفع، تتم المعالجة في متصفحك. ادمج عدة صور في PDF واحد فورًا. يعمل دون اتصال."
       },
       "ogTitles": {
         "en": "JPG to PDF — Convert Multiple Photos into One File, No Upload",
@@ -3344,7 +3382,9 @@
         "ko": "JPG를 PDF로 변환 무료 — 업로드 없이 | PDFree",
         "nl": "JPG naar PDF Gratis — Zonder Uploaden | PDFree",
         "pl": "JPG do PDF Za Darmo — Bez Przesyłania | PDFree",
-        "tr": "JPG'den PDF'ye Ücretsiz — Yükleme Yok | PDFree"
+        "tr": "JPG'den PDF'ye Ücretsiz — Yükleme Yok | PDFree",
+        "zh-CN": "JPG 转 PDF —— 将多张照片合并为一个文件，无需上传",
+        "ar": "JPG إلى PDF — ادمج عدة صور في ملف واحد، بدون رفع"
       },
       "ogDescs": {
         "en": "Convert JPG to PDF instantly. Files processed in your browser — never uploaded. Free, no limits.",
@@ -3360,7 +3400,9 @@
         "ko": "이미지를 즉시 PDF로 변환합니다. 100% 비공개 — 파일이 브라우저를 절대 벗어나지 않습니다.",
         "nl": "Converteer afbeeldingen direct naar PDF. 100% privé — bestanden verlaten nooit je browser.",
         "pl": "Konwertuj obrazy do PDF bezpośrednio. 100% prywatne — pliki nigdy nie opuszczają przeglądarki.",
-        "tr": "Resimleri doğrudan PDF'ye dönüştürün. %100 gizli — dosyalar tarayıcıyı asla terk etmez."
+        "tr": "Resimleri doğrudan PDF'ye dönüştürün. %100 gizli — dosyalar tarayıcıyı asla terk etmez.",
+        "zh-CN": "立即将 JPG 转换为 PDF。文件在浏览器中处理——从不上传。免费，无限制。",
+        "ar": "حوّل JPG إلى PDF فورًا. تُعالَج الملفات في متصفحك — لا تُرفع أبدًا. مجانًا، بدون حدود."
       },
       "keywords": {
         "en": "jpg to pdf, convert jpg to pdf, image to pdf, jpg to pdf free online, convert images to pdf, png to pdf",
@@ -3376,7 +3418,9 @@
         "ko": "jpg pdf 변환, jpg를 pdf로 변환, 이미지 pdf 변환, jpg pdf 무료 변환, 사진 pdf로 바꾸기",
         "nl": "jpg naar pdf, jpg omzetten naar pdf, afbeelding naar pdf, jpg naar pdf gratis online, foto's omzetten naar pdf",
         "pl": "jpg do pdf, konwertuj jpg do pdf, obraz do pdf, jpg do pdf online za darmo, zamień zdjęcia na pdf",
-        "tr": "jpg pdf'ye dönüştür, jpg'yi pdf yap, resim pdf'ye çevir, ücretsiz online jpg pdf dönüştürücü, fotoğrafı pdf'ye çevir"
+        "tr": "jpg pdf'ye dönüştür, jpg'yi pdf yap, resim pdf'ye çevir, ücretsiz online jpg pdf dönüştürücü, fotoğrafı pdf'ye çevir",
+        "zh-CN": "jpg转pdf, jpg转换为pdf, 图片转pdf, jpg转pdf免费在线, 图片转换为pdf, png转pdf",
+        "ar": "jpg إلى pdf, تحويل jpg إلى pdf, صورة إلى pdf, jpg إلى pdf مجانًا عبر الإنترنت, تحويل الصور إلى pdf"
       }
     },
     {
@@ -3397,7 +3441,9 @@
         "ko": "pdf-jpg-byeonhwan",
         "nl": "pdf-naar-jpg",
         "pl": "pdf-do-jpg",
-        "tr": "pdf-den-jpg-ye"
+        "tr": "pdf-den-jpg-ye",
+        "zh-CN": "pdf-zhuan-jpg",
+        "ar": "pdf-ila-jpg"
       },
       "titles": {
         "en": "Convert PDF to JPG Online Free — High Quality, No Upload, Up to 300 DPI | PDFree",
@@ -3413,7 +3459,9 @@
         "ko": "PDF를 JPG로 변환 무료 — 온라인, 업로드 없이 | PDFree",
         "nl": "PDF naar JPG — Gratis, PDF naar Afbeelding Online | PDFree",
         "pl": "PDF do JPG — Darmowy, PDF do Obrazu Online | PDFree",
-        "tr": "PDF'den JPG'ye — Ücretsiz, PDF'den Resme Online | PDFree"
+        "tr": "PDF'den JPG'ye — Ücretsiz, PDF'den Resme Online | PDFree",
+        "zh-CN": "免费在线将 PDF 转换为 JPG —— 最高 300 DPI，无需上传 | PDFree",
+        "ar": "تحويل PDF إلى JPG مجانًا — حتى 300 DPI، بدون رفع | PDFree"
       },
       "descs": {
         "en": "Extract PDF pages as high-quality JPG or PNG images. 100% private — processed locally, no uploads.",
@@ -3429,7 +3477,9 @@
         "ko": "PDF 페이지를 고화질 JPG 또는 PNG 이미지로 변환합니다. 업로드 없음, 브라우저에서 처리.",
         "nl": "Converteer PDF-pagina's naar hoge kwaliteit JPG of PNG afbeeldingen. Geen upload, verwerkt in de browser.",
         "pl": "Konwertuj strony PDF do wysokiej jakości obrazów JPG lub PNG. Bez przesyłania, przetwarzane w przeglądarce.",
-        "tr": "PDF sayfalarını yüksek kaliteli JPG veya PNG resimlerine dönüştürün. Yükleme yok, tarayıcıda işlenir."
+        "tr": "PDF sayfalarını yüksek kaliteli JPG veya PNG resimlerine dönüştürün. Yükleme yok, tarayıcıda işlenir.",
+        "zh-CN": "将 PDF 页面提取为高质量 JPG 或 PNG 图片。100% 隐私 —— 本地处理，无需上传。",
+        "ar": "استخرج صفحات PDF كصور JPG أو PNG عالية الجودة. خصوصية كاملة 100% — معالجة محلية، بدون رفع."
       },
       "navLabels": {
         "en": "PDF→JPG",
@@ -3445,7 +3495,9 @@
         "ko": "PDF → JPG",
         "nl": "PDF → JPG",
         "pl": "PDF → JPG",
-        "tr": "PDF → JPG"
+        "tr": "PDF → JPG",
+        "zh-CN": "PDF→JPG",
+        "ar": "PDF→JPG"
       },
       "cardNames": {
         "en": "PDF to JPG",
@@ -3461,7 +3513,9 @@
         "ko": "PDF를 JPG로",
         "nl": "PDF naar JPG",
         "pl": "PDF do JPG",
-        "tr": "PDF'den JPG'ye"
+        "tr": "PDF'den JPG'ye",
+        "zh-CN": "PDF 转 JPG",
+        "ar": "PDF إلى JPG"
       },
       "cardDescs": {
         "en": "Extract pages as high-quality images",
@@ -3477,7 +3531,9 @@
         "ko": "PDF 페이지를 JPG 이미지로 변환 — 업로드 없음",
         "nl": "PDF-pagina's converteren naar JPG afbeeldingen — geen upload",
         "pl": "Konwertuj strony PDF do obrazów JPG — bez przesyłania",
-        "tr": "PDF sayfalarını JPG resimlerine dönüştür — yükleme yok"
+        "tr": "PDF sayfalarını JPG resimlerine dönüştür — yükleme yok",
+        "zh-CN": "将页面提取为高质量图片",
+        "ar": "استخرج الصفحات كصور عالية الجودة"
       },
       "breadcrumb": {
         "en": "PDF to JPG",
@@ -3493,7 +3549,9 @@
         "ko": "PDF를 JPG로",
         "nl": "PDF naar JPG",
         "pl": "PDF do JPG",
-        "tr": "PDF'den JPG'ye"
+        "tr": "PDF'den JPG'ye",
+        "zh-CN": "PDF 转 JPG",
+        "ar": "PDF إلى JPG"
       },
       "metaDescs": {
         "en": "Convert PDF pages to JPG or PNG in your browser — no upload ever. Choose 72, 150, or 300 DPI. Multiple pages export as a ZIP. Works offline, no account.",
@@ -3509,7 +3567,9 @@
         "ko": "PDF를 JPG로 무료 변환 — 72, 150, 300 DPI 중 선택 가능, 여러 페이지는 ZIP으로 내보내기. 브라우저에서 처리, 업로드 없음, 100% 비공개.",
         "nl": "PDF naar JPG converteren gratis — hoge kwaliteit afbeeldingen extraheren. Verwerkt in de browser, geen upload. 100% privé.",
         "pl": "PDF do JPG za darmo — wyodrębnij obrazy wysokiej jakości. Przetwarzane w przeglądarce, bez przesyłania. 100% prywatne.",
-        "tr": "PDF'den JPG'ye ücretsiz — yüksek kaliteli resimler çıkar. Tarayıcıda işlenir, yükleme yok. %100 gizli."
+        "tr": "PDF'den JPG'ye ücretsiz — yüksek kaliteli resimler çıkar. Tarayıcıda işlenir, yükleme yok. %100 gizli.",
+        "zh-CN": "在浏览器中将 PDF 页面转换为 JPG 或 PNG —— 从不上传。可选 72、150 或 300 DPI。多页导出为 ZIP。支持离线使用，无需账号。",
+        "ar": "حوّل صفحات PDF إلى JPG أو PNG في متصفحك — بدون رفع مطلقًا. اختر 72 أو 150 أو 300 DPI. تُصدَّر الصفحات المتعددة كملف ZIP. يعمل دون اتصال، بدون حساب."
       },
       "ogTitles": {
         "en": "Convert PDF to JPG Free — No Upload, 300 DPI Quality",
@@ -3525,7 +3585,9 @@
         "ko": "PDF를 JPG로 변환 무료 — 업로드 없이 | PDFree",
         "nl": "PDF naar JPG Gratis — Zonder Uploaden | PDFree",
         "pl": "PDF do JPG Za Darmo — Bez Przesyłania | PDFree",
-        "tr": "PDF'den JPG'ye Ücretsiz — Yükleme Yok | PDFree"
+        "tr": "PDF'den JPG'ye Ücretsiz — Yükleme Yok | PDFree",
+        "zh-CN": "免费将 PDF 转换为 JPG —— 无需上传，300 DPI 高质量",
+        "ar": "تحويل PDF إلى JPG مجانًا — بدون رفع، بجودة 300 DPI"
       },
       "ogDescs": {
         "en": "Turn any PDF page into a sharp JPG or PNG. Runs in your browser — nothing uploaded. Choose 72, 150, or 300 DPI. Download all pages as ZIP. No account.",
@@ -3541,7 +3603,9 @@
         "ko": "PDF를 즉시 이미지로 변환합니다. 100% 비공개 — 파일이 브라우저를 절대 벗어나지 않습니다.",
         "nl": "Converteer PDF direct naar afbeeldingen. 100% privé — bestanden verlaten nooit je browser.",
         "pl": "Konwertuj PDF do obrazów bezpośrednio. 100% prywatne — pliki nigdy nie opuszczają przeglądarki.",
-        "tr": "PDF'i doğrudan resimlere dönüştürün. %100 gizli — dosyalar tarayıcıyı asla terk etmez."
+        "tr": "PDF'i doğrudan resimlere dönüştürün. %100 gizli — dosyalar tarayıcıyı asla terk etmez.",
+        "zh-CN": "立即将 PDF 转换为图片。100% 隐私 —— 文件从不离开您的浏览器。",
+        "ar": "حوّل PDF إلى صور فورًا. خصوصية كاملة 100% — الملفات لا تغادر متصفحك أبدًا."
       },
       "keywords": {
         "en": "pdf to jpg, convert pdf to jpg, pdf to image, export pdf pages as images, pdf to jpg free, pdf to png",
@@ -3557,7 +3621,9 @@
         "ko": "pdf jpg 변환, pdf를 jpg로 변환, pdf 이미지 변환, pdf 페이지를 이미지로 내보내기, pdf jpg 무료 변환, pdf png 변환",
         "nl": "pdf naar jpg, pdf omzetten naar jpg, pdf naar afbeelding, pdf pagina's exporteren als afbeelding, pdf naar jpg gratis, pdf naar png",
         "pl": "pdf do jpg, konwertuj pdf do jpg, pdf do obrazu, eksportuj strony pdf jako obrazy, pdf do jpg za darmo, pdf do png",
-        "tr": "pdf jpg'ye dönüştür, pdf'yi jpg yap, pdf resme çevir, pdf sayfalarını resim olarak dışa aktar, ücretsiz pdf jpg dönüştürücü, pdf png'ye çevir"
+        "tr": "pdf jpg'ye dönüştür, pdf'yi jpg yap, pdf resme çevir, pdf sayfalarını resim olarak dışa aktar, ücretsiz pdf jpg dönüştürücü, pdf png'ye çevir",
+        "zh-CN": "pdf转jpg, pdf转换为jpg, pdf转图片, 导出pdf页面为图片, pdf转jpg免费, pdf转png",
+        "ar": "pdf إلى jpg, تحويل pdf إلى jpg, pdf إلى صورة, تصدير صفحات pdf كصور, pdf إلى jpg مجانًا, pdf إلى png"
       }
     },
     {

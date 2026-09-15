@@ -1,0 +1,66 @@
+[
+  {
+    "@type": "Question",
+    "name": "可以将哪些图片格式转换为 PDF？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree 支持 JPG/JPEG、PNG 和 WebP。每张图片会成为输出 PDF 中的一页。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "有文件大小限制吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "没有。PDFree 没有文件大小或图片数量限制。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "图像质量会降低吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "默认情况下，PDFree 会对图片进行轻微压缩（JPEG 质量 82%，最长边限制在 2400 像素以内），以保持 PDF 文件大小合理——视觉上几乎不可察觉。如果需要精确的原始分辨率，在转换前关闭“压缩图片”选项。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "可以在一个 PDF 中混合 JPG 和 PNG 图片吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "可以。添加 JPG、PNG 和 WebP 文件的任意组合。无论格式如何，每张图片都会成为最终 PDF 中的一页。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDF 会使用什么页面尺寸？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "每一页的尺寸都精确匹配其源图片在 96 DPI 下的像素尺寸。一张 2480×3508 的图片（300 DPI 下的 A4 大小）会生成一个标准 A4 大小的页面。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "能转换的图片数量有限制吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "没有。您可以添加所需数量的图片。处理时间会随图片总大小而变化——几十张照片在较慢的设备上可能需要 10 到 20 秒。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "这个工具会把我的图片上传到任何地方吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "不会。所有处理都使用 pdf-lib JavaScript 库在您的浏览器中完成。图片会被加载到浏览器内存中，且从不会被传输出去。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFree 会在处理后存储或记录我的文件吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "不会。PDFree 完全在您的浏览器中运行——没有接收您文件的后端服务器。由于没有任何内容被上传，也就不可能被存储、记录或保留。您的文档只存在于浏览器内存中，仅在会话期间有效，关闭标签页后即被清除。"
+    }
+  }
+]

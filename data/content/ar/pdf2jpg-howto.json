@@ -1,0 +1,31 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "كيفية تحويل PDF إلى JPG أو PNG مجانًا",
+  "description": "صدّر كل صفحة من PDF كصورة JPG أو PNG عالية الجودة — مجانًا، بدون رفع، تتم المعالجة محليًا في متصفحك.",
+  "totalTime": "PT2M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — أداة مجانية تعمل في المتصفح لتحويل PDF إلى صور، بدون رفع" }],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "افتح ملف PDF الخاص بك",
+      "text": "انقر على 'اختر الملفات' أو اسحب ملف PDF إلى منطقة الإسقاط. يُحمَّل الملف في متصفحك — لا يُرفع أي شيء إلى أي خادم.",
+      "url": "https://pdfree.io/ar/pdf-ila-jpg/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "اختر التنسيق والدقة",
+      "text": "اختر تنسيق الإخراج JPG أو PNG. اختر الدقة المفضّلة لديك: 72 DPI (للشاشة/الويب)، أو 150 DPI (متوازن)، أو 300 DPI (جودة طباعة). الدقة الأعلى تنتج صورًا أوضح بحجم ملف أكبر.",
+      "url": "https://pdfree.io/ar/pdf-ila-jpg/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "حوّل ونزّل",
+      "text": "انقر على 'تحويل إلى JPG'. تُصيَّر كل صفحة كملف صورة منفصل. تُنزَّل الصفحات المتعددة كأرشيف ZIP. لا شيء يُرسَل إلى أي خادم في أي خطوة.",
+      "url": "https://pdfree.io/ar/pdf-ila-jpg/#step3"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "如何将 JPG 转换为 PDF",
+  "description": "将 JPG、PNG 和 WebP 图片转换为一个 PDF——免费，无需上传。",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "添加您的图片",
+      "text": "点击“选择文件”或将 JPG、PNG 或 WebP 图片拖入拖放区域。多张图片会被合并成一个 PDF。"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "调整图片顺序",
+      "text": "拖动图片卡片以设置输出 PDF 中的页面顺序。EXIF 旋转会自动应用。"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "下载 PDF",
+      "text": "点击“转换为 PDF”。您的图片会被打包成一个 PDF 并立即下载。"
+    }
+  ]
+}

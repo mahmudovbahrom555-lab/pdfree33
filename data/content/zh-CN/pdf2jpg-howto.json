@@ -1,0 +1,31 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "如何免费将 PDF 转换为 JPG 或 PNG",
+  "description": "将 PDF 的每一页导出为高质量 JPG 或 PNG 图片——免费，无需上传，在浏览器中本地处理。",
+  "totalTime": "PT2M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — 免费的浏览器端 PDF 转图片工具，无需上传" }],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "打开您的 PDF",
+      "text": "点击“选择文件”或将 PDF 拖入拖放区域。文件会在浏览器中加载——不会上传到任何服务器。",
+      "url": "https://pdfree.io/zh/pdf-zhuan-jpg/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "选择格式和分辨率",
+      "text": "选择 JPG 或 PNG 输出格式。选择您需要的分辨率：72 DPI（屏幕/网页）、150 DPI（均衡）或 300 DPI（印刷质量）。DPI 越高图像越清晰，文件也越大。",
+      "url": "https://pdfree.io/zh/pdf-zhuan-jpg/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "转换并下载",
+      "text": "点击“转换为 JPG”。每一页都会渲染成一个独立的图片文件。多页会打包成 ZIP 压缩包下载。整个过程不会向任何服务器发送任何内容。",
+      "url": "https://pdfree.io/zh/pdf-zhuan-jpg/#step3"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "كيفية تحويل JPG إلى PDF",
+  "description": "حوّل صور JPG وPNG وWebP إلى ملف PDF واحد — مجانًا، بدون رفع.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "أضف صورك",
+      "text": "انقر على 'اختر الملفات' أو اسحب صور JPG أو PNG أو WebP إلى منطقة الإسقاط. تُدمَج عدة صور في ملف PDF واحد."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "أعد ترتيب الصور",
+      "text": "اسحب بطاقات الصور لتحديد ترتيب الصفحات في ملف PDF الناتج. يُطبَّق تدوير EXIF تلقائيًا."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "نزّل ملف PDF",
+      "text": "انقر على 'تحويل إلى PDF'. تُحزَم صورك في ملف PDF واحد وتُنزَّل فورًا."
+    }
+  ]
+}

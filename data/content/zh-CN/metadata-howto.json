@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "如何编辑 PDF 元数据",
+  "description": "查看并修改 PDF 的标题、作者、主题和关键词——无需上传。",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "打开您的 PDF",
+      "text": "点击“选择文件”或将 PDF 拖入拖放区域。当前元数据会立即显示出来。"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "编辑或清空元数据字段",
+      "text": "更新标题、作者、主题和关键词字段。留空即可完全删除该项元数据。"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "下载更新后的 PDF",
+      "text": "点击“编辑元数据”。您的 PDF 会带着新的元数据一起下载——文件内容保持不变。"
+    }
+  ]
+}
