@@ -2369,7 +2369,7 @@ async function _runPdf2Word(filesSnapshot, { mode = 'text', dpi = 150 } = {}) {
   setProgress(100, t('prog_done'));
 
   document.dispatchEvent(new CustomEvent('pdfree:success', {
-    detail: { tool: 'pdf2word', blob, desc, filename, confidence, atlasEri }
+    detail: { tool: 'pdf2word', blob, desc, filename, confidence, atlasEri, mode }
   }));
 }
 

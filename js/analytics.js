@@ -92,9 +92,9 @@ export function trackToolStart(tool) {
 /**
  * Call when a tool completes successfully.
  * @param {string} tool
- * @param {{ inputSize?: number, outputSize?: number, requestedCount?: number, successCount?: number }} opts
+ * @param {{ inputSize?: number, outputSize?: number, requestedCount?: number, successCount?: number, mode?: string }} opts
  */
-export function trackToolSuccess(tool, { inputSize = 0, outputSize = 0, requestedCount, successCount } = {}) {
+export function trackToolSuccess(tool, { inputSize = 0, outputSize = 0, requestedCount, successCount, mode } = {}) {
   const durationMs = _timers[tool] ? performance.now() - _timers[tool] : null;
   delete _timers[tool];
 
@@ -112,6 +112,11 @@ export function trackToolSuccess(tool, { inputSize = 0, outputSize = 0, requeste
   if (requestedCount !== undefined && successCount !== undefined && successCount < requestedCount) {
     props.requested_count = requestedCount;
     props.success_count   = successCount;
+  }
+  // Only set by pdf2word today ('text'/'image') — absent for every other
+  // tool, same shape-stability convention as requested_count/success_count.
+  if (mode !== undefined) {
+    props.mode = mode;
   }
 
   _track('Tool Success', props);

@@ -370,7 +370,7 @@ function resetState() {
 
 // ── Success handler ───────────────────────────────────────────
 
-function _handleSuccess({ tool, blob, desc, filename, compressionReport, batchCompressSummary, pageCounts, confidence, atlasEri, requestedCount, successCount }) {
+function _handleSuccess({ tool, blob, desc, filename, compressionReport, batchCompressSummary, pageCounts, confidence, atlasEri, requestedCount, successCount, mode }) {
   _freeResultUrl();
   _resultUrl      = URL.createObjectURL(blob);
   _resultBlob     = blob;
@@ -381,7 +381,10 @@ function _handleSuccess({ tool, blob, desc, filename, compressionReport, batchCo
   // same convention as pageCounts/confidence/atlasEri above) — lets a partial
   // render failure (some pages exported, some didn't) show up distinctly from
   // a real full success in Analytics Engine instead of both looking identical.
-  trackToolSuccess(tool, { outputSize: blob.size, requestedCount, successCount });
+  // mode is only ever set by pdf2word ('text'/'image') — measures whether the
+  // Text/Image mode-label relabel (js/pdf2wordUI.js) actually shifted usage
+  // toward Image mode, since that toggle previously had no analytics at all.
+  trackToolSuccess(tool, { outputSize: blob.size, requestedCount, successCount, mode });
 
   const card = id('successCard');
   card.style.display = 'block';
