@@ -2212,7 +2212,7 @@ async function _runBatch(tool, filesSnapshot, extraParams) {
 // Runs entirely in main thread (like pdf2jpg): docx lib needs DOM
 // for Blob creation, and pdf.js rendering needs canvas.
 
-async function _runPdf2Word(filesSnapshot, { mode = 'text', dpi = 150 } = {}) {
+async function _runPdf2Word(filesSnapshot, { mode = 'text', dpi = 150, stripMetadata = true } = {}) {
   const file = filesSnapshot[0];
   if (!_checkSize(file, 150)) { _abortUI(); return; }
 
@@ -2248,6 +2248,18 @@ async function _runPdf2Word(filesSnapshot, { mode = 'text', dpi = 150 } = {}) {
   } catch (err) {
     isProcessing = false; setFilesLocked(false); hideCancelBtn();
     _handleError('pdf2word', err.message); return;
+  }
+
+  // Only read the source PDF's own metadata when the user opted OUT of the
+  // default strip behavior (js/pdf2wordUI.js's "Delete original file info"
+  // checkbox, unchecked). Best-effort: a read failure just falls back to
+  // the generic PDFree values below, same as never having asked at all.
+  let srcMeta = null;
+  if (!stripMetadata) {
+    try {
+      const { info } = await pdfDoc.getMetadata();
+      srcMeta = info;
+    } catch { /* fall back to generic PDFree metadata */ }
   }
 
   // Hard cap for image mode: rendering 500+ pages accumulates GB of ArrayBuffers
@@ -2289,8 +2301,13 @@ async function _runPdf2Word(filesSnapshot, { mode = 'text', dpi = 150 } = {}) {
   setProgress(92, 'Building Word document…');
 
   const { Document, Packer, AlignmentType, LevelFormat } = window.docx;
+  // srcMeta is only ever set when the user unchecked "Delete original file
+  // info" above — a source PDF field that's blank/absent still falls back
+  // to the generic PDFree value below rather than producing an empty field.
   const _buildDoc = children => new Document({
-    creator:     'PDFree',
+    creator:     (srcMeta && srcMeta.Author) || 'PDFree',
+    title:       (srcMeta && srcMeta.Title) || undefined,
+    subject:     (srcMeta && srcMeta.Subject) || undefined,
     description: 'Converted from PDF by PDFree.io',
     // Only referenced by paragraphs _p2wBuildParagraphs tags with
     // numbering:{reference:_P2W_NUMBERED_LIST_REF,level:0} (flat "1./2./3."

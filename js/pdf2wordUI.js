@@ -4,7 +4,7 @@
 import { id } from './utils.js';
 import { loadPdfJs } from './pdf2jpgUI.js';
 import { preprocessPdfBuffer } from './decryptPdf.js';
-import { chipGroup, group, loadingRow } from './uiComponents.js';
+import { chipGroup, group, loadingRow, checkbox } from './uiComponents.js';
 import { detectTables } from './pdf2wordTables.js';
 import { t, tp } from './i18n.js';
 
@@ -42,9 +42,15 @@ let _vpW       = 0;    // first page width in PDF points (for size estimation)
 let _vpH       = 0;    // first page height in PDF points
 let _loading   = false;
 let _scanGen   = 0;    // incremented on each new file — cancels stale background scans
+// Default true: strip the source PDF's own author/title/subject from the
+// result (matches this tool's original, still-current default behavior).
+// Unchecking lets a user who wants provenance preserved (matches what
+// iLovePDF/Smallpdf both do unconditionally — see
+// pdf2word_metadata_toggle_gated_idea_2026_09 memory) opt into that instead.
+let _stripMeta = true;
 
 export function getPdf2WordParams() {
-  return { mode: _mode, dpi: _dpi, pageCount: _pageCount, loading: _loading };
+  return { mode: _mode, dpi: _dpi, pageCount: _pageCount, loading: _loading, stripMetadata: _stripMeta };
 }
 
 // ── Public API ────────────────────────────────────────────────────────────────
@@ -98,7 +104,7 @@ export async function initPdf2WordOptions(file) {
 export function hidePdf2WordOptions() {
   const el = id('pdf2wordOptions');
   if (el) { el.style.display = 'none'; el.innerHTML = ''; }
-  _file = null; _mode = 'text'; _dpi = 150;
+  _file = null; _mode = 'text'; _dpi = 150; _stripMeta = true;
   _pageCount = 0; _vpW = 0; _vpH = 0; _loading = false;
   ++_scanGen; // cancel any in-flight background scan
   clearP2wConfidence();
@@ -151,7 +157,14 @@ function _render(file) {
       ${_modeHintText()}
     </div>
 
-    <div style="font-size:12px;color:var(--text3);padding:4px 0">${t('p2w_privacy_note')}</div>
+    ${checkbox({
+      id:       'p2wStripMeta',
+      checked:  _stripMeta,
+      title:    t('p2w_strip_meta_title'),
+      subtitle: t('p2w_strip_meta_subtitle'),
+    })}
+
+    <div id="p2wMetaHint" style="font-size:12px;color:var(--text3);padding:4px 0">${_metaHintText()}</div>
   `;
 
   el.removeEventListener('change', _onChange);
@@ -206,9 +219,19 @@ function _modeHintText() {
   return _mode === 'text' ? t('p2w_mode_text_hint') : t('p2w_mode_image_hint');
 }
 
+function _metaHintText() {
+  return _stripMeta ? t('p2w_privacy_note') : t('p2w_keep_meta_hint');
+}
+
 // ── Events ────────────────────────────────────────────────────────────────────
 
 function _onChange(e) {
+  if (e.target.id === 'p2wStripMeta') {
+    _stripMeta = e.target.checked;
+    const hint = id('p2wMetaHint');
+    if (hint) hint.textContent = _metaHintText();
+  }
+
   if (e.target.name === 'p2wMode') {
     _mode = e.target.value;
 
