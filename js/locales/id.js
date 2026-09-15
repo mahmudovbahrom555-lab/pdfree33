@@ -977,6 +977,7 @@ window.PDFREE_LOCALE = {
   p2w_size_normal:           '📦 Perkiraan ukuran .docx: ~{mb} MB',
   p2w_mode_text_hint:        '📄 Mode teks — dapat dibaca dan diedit di Word. Heading, tebal, dan miring tetap dipertahankan. Tata letak kompleks mungkin berbeda.',
   p2w_mode_image_hint:       '🖼️ Mode gambar — salinan visual presisi piksel dari setiap halaman. Teks tidak dapat diedit di Word.',
+  p2w_privacy_note:   '🔒 Informasi asli PDF Anda (penulis, dll.) tidak disalin ke hasil — file yang dihasilkan hanya berisi informasi file umum dari PDFree.',
   p2w_ocr_hint:              '⚠️ Tidak ada lapisan teks terdeteksi — PDF ini adalah gambar hasil pindaian. Output Word hanya akan berisi gambar. ',
   p2w_run_ocr_link:          'Jalankan OCR dulu\u00A0→',
   p2w_ocr_to_get_editable:   ' untuk mendapatkan teks yang dapat diedit di Word.',

@@ -998,6 +998,7 @@ export const EN = {
   p2w_size_normal:          '📦 Estimated .docx: ~{mb} MB',
   p2w_mode_text_hint:       '📄 Text mode — readable and editable in Word. Headings, bold, italic preserved. Complex layouts may differ.',
   p2w_mode_image_hint:      '🖼️ Image mode — pixel-perfect visual copy of each page. Text cannot be edited in Word.',
+  p2w_privacy_note:   "🔒 The source PDF's info (author, etc.) is not copied into the result — the output only carries generic PDFree file info.",
   p2w_ocr_hint:             '⚠️ No text layer detected — this PDF is a scanned image. Word output will contain images only. ',
   p2w_run_ocr_link:         'Run OCR first →',
   p2w_ocr_to_get_editable:  ' to get editable text in Word.',

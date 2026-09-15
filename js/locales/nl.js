@@ -976,6 +976,7 @@ window.PDFREE_LOCALE = {
   p2w_size_normal:           '📦 Geschatte .docx-grootte: ~{mb} MB',
   p2w_mode_text_hint:        '📄 Tekstmodus — leesbaar en bewerkbaar in Word. Koppen, vet en cursief blijven behouden. Complexe lay-outs kunnen afwijken.',
   p2w_mode_image_hint:       '🖼️ Afbeeldingsmodus — pixelgetrouwe visuele kopie van elke pagina. Tekst kan niet worden bewerkt in Word.',
+  p2w_privacy_note:   '🔒 De oorspronkelijke gegevens van je PDF (auteur enz.) worden niet naar het resultaat gekopieerd — het uitvoerbestand bevat alleen algemene PDFree-bestandsinformatie.',
   p2w_ocr_hint:              '⚠️ Geen tekstlaag gedetecteerd — dit PDF-bestand is een gescande afbeelding. De Word-uitvoer bevat alleen afbeeldingen. ',
   p2w_run_ocr_link:          'Voer eerst OCR uit\u00A0→',
   p2w_ocr_to_get_editable:   ' om bewerkbare tekst in Word te krijgen.',

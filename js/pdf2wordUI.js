@@ -150,6 +150,8 @@ function _render(file) {
     <div id="p2wModeHint" class="compress-scan compress-scan--ok" role="status" aria-live="polite">
       ${_modeHintText()}
     </div>
+
+    <div style="font-size:12px;color:var(--text3);padding:4px 0">${t('p2w_privacy_note')}</div>
   `;
 
   el.removeEventListener('change', _onChange);

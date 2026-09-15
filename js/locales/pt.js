@@ -978,6 +978,7 @@ window.PDFREE_LOCALE = {
   p2w_size_normal:           '📦 Tamanho estimado do .docx: ~{mb} MB',
   p2w_mode_text_hint:        '📄 Modo texto — legível e editável no Word. Títulos, negrito e itálico são preservados. Layouts complexos podem variar.',
   p2w_mode_image_hint:       '🖼️ Modo imagem — cópia visual fiel de cada página. O texto não pode ser editado no Word.',
+  p2w_privacy_note:   '🔒 As informações originais do seu PDF (autor, etc.) não são copiadas para o resultado — o arquivo gerado contém apenas informações genéricas do PDFree.',
   p2w_ocr_hint:              '⚠️ Nenhuma camada de texto detectada — este PDF é uma imagem digitalizada. A saída do Word conterá apenas imagens. ',
   p2w_run_ocr_link:          'Executar OCR primeiro\u00A0→',
   p2w_ocr_to_get_editable:   ' para obter texto editável no Word.',

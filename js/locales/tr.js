@@ -976,6 +976,7 @@ window.PDFREE_LOCALE = {
   p2w_size_normal:           '📦 Tahmini .docx boyutu: ~{mb} MB',
   p2w_mode_text_hint:        '📄 Metin modu — Word\'de okunabilir ve düzenlenebilir. Başlıklar, kalın ve italik yazılar korunur. Karmaşık düzenler farklılık gösterebilir.',
   p2w_mode_image_hint:       '🖼️ Görüntü modu — her sayfanın piksel piksel görsel kopyası. Metin Word\'de düzenlenemez.',
+  p2w_privacy_note:   '🔒 PDF\'inizin özgün bilgileri (yazar vb.) sonuca kopyalanmaz — çıktı dosyası yalnızca genel PDFree dosya bilgilerini içerir.',
   p2w_ocr_hint:              '⚠️ Metin katmanı tespit edilmedi — bu PDF taranmış bir görüntü. Word çıktısı yalnızca görüntü içerecek. ',
   p2w_run_ocr_link:          'Önce OCR çalıştırın\u00A0→',
   p2w_ocr_to_get_editable:   ' Word\'de düzenlenebilir metin elde etmek için.',

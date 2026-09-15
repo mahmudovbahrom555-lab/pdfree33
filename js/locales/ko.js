@@ -978,6 +978,7 @@ window.PDFREE_LOCALE = {
   p2w_size_normal:           '📦 예상 .docx 크기: 약 {mb}MB',
   p2w_mode_text_hint:        '📄 텍스트 모드 — Word에서 읽고 편집할 수 있습니다. 제목, 굵게, 기울임이 유지됩니다. 복잡한 레이아웃은 다를 수 있습니다.',
   p2w_mode_image_hint:       '🖼️ 이미지 모드 — 각 페이지의 픽셀 단위 시각적 복사본입니다. Word에서 텍스트를 편집할 수 없습니다.',
+  p2w_privacy_note:   '🔒 원본 PDF의 정보(작성자 등)는 결과물에 복사되지 않습니다 — 출력 파일에는 PDFree의 일반 파일 정보만 포함됩니다.',
   p2w_ocr_hint:              '⚠️ 텍스트 레이어가 감지되지 않았습니다 — 이 PDF는 스캔된 이미지입니다. Word 출력에는 이미지만 포함됩니다. ',
   p2w_run_ocr_link:          '먼저 OCR 실행\u00A0→',
   p2w_ocr_to_get_editable:   '하면 Word에서 편집 가능한 텍스트를 얻을 수 있습니다.',

@@ -979,6 +979,7 @@ window.PDFREE_LOCALE = {
   p2w_size_normal:           '📦 推定.docxサイズ: 約{mb} MB',
   p2w_mode_text_hint:        '📄 テキストモード — Wordで読み取り・編集が可能です。見出し、太字、斜体は保持されます。複雑なレイアウトは異なる場合があります。',
   p2w_mode_image_hint:       '🖼️ 画像モード — 各ページのピクセル単位の視覚コピーです。Wordではテキストを編集できません。',
+  p2w_privacy_note:   '🔒 元のPDFの情報(作成者など)は結果にコピーされません — 出力にはPDFreeの一般的なファイル情報のみが含まれます。',
   p2w_ocr_hint:              '⚠️ テキストレイヤーが検出されません — このPDFはスキャンされた画像です。Wordの出力には画像のみが含まれます。',
   p2w_run_ocr_link:          '先にOCRを実行\u00A0→',
   p2w_ocr_to_get_editable:   'すると、Wordで編集可能なテキストが得られます。',

@@ -1021,6 +1021,7 @@ window.PDFREE_LOCALE = {
   p2w_size_normal:          '📦 预估 .docx 大小：约 {mb} MB',
   p2w_mode_text_hint:       '📄 文本模式 — 在 Word 中可阅读并编辑，标题、加粗、斜体格式均会保留。复杂排版可能会有所差异。',
   p2w_mode_image_hint:      '🖼️ 图片模式 — 每页均为像素级精确的视觉副本。文本在 Word 中无法编辑。',
+  p2w_privacy_note:   '🔒 源 PDF 的原始信息（作者等）不会被复制到结果中 — 输出文件仅包含 PDFree 的通用文件信息。',
   p2w_ocr_hint:             '⚠️ 未检测到文本层 — 此 PDF 为扫描图像。Word 输出将仅包含图片。',
   p2w_run_ocr_link:         '先运行 OCR →',
   p2w_ocr_to_get_editable:  '以获得 Word 中可编辑的文本。',

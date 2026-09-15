@@ -977,6 +977,7 @@ window.PDFREE_LOCALE = {
   p2w_size_normal:           '📦 Kích thước .docx ước tính: ~{mb} MB',
   p2w_mode_text_hint:        '📄 Chế độ văn bản — có thể đọc và chỉnh sửa trong Word. Tiêu đề, chữ đậm và in nghiêng được giữ nguyên. Bố cục phức tạp có thể khác đi.',
   p2w_mode_image_hint:       '🖼️ Chế độ hình ảnh — bản sao hình ảnh chính xác từng pixel của mỗi trang. Không thể chỉnh sửa văn bản trong Word.',
+  p2w_privacy_note:   '🔒 Thông tin gốc của PDF (tác giả, v.v.) không được sao chép vào kết quả — tệp đầu ra chỉ chứa thông tin tệp chung của PDFree.',
   p2w_ocr_hint:              '⚠️ Không phát hiện lớp văn bản — PDF này là hình ảnh được quét. Đầu ra Word sẽ chỉ chứa hình ảnh. ',
   p2w_run_ocr_link:          'Chạy OCR trước\u00A0→',
   p2w_ocr_to_get_editable:   ' để có văn bản có thể chỉnh sửa trong Word.',

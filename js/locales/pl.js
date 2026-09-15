@@ -976,6 +976,7 @@ window.PDFREE_LOCALE = {
   p2w_size_normal:           '📦 Szacowany rozmiar .docx: ~{mb} MB',
   p2w_mode_text_hint:        '📄 Tryb tekstowy — czytelny i edytowalny w Wordzie. Nagłówki, pogrubienie i kursywa są zachowane. Złożone układy mogą się różnić.',
   p2w_mode_image_hint:       '🖼️ Tryb obrazu — wierna wizualna kopia każdej strony. Tekstu nie można edytować w Wordzie.',
+  p2w_privacy_note:   '🔒 Oryginalne informacje z Twojego pliku PDF (autor itp.) nie są kopiowane do wyniku — plik wynikowy zawiera tylko ogólne informacje pliku PDFree.',
   p2w_ocr_hint:              '⚠️ Nie wykryto warstwy tekstu — ten plik PDF to zeskanowany obraz. Wynik w Wordzie będzie zawierał tylko obrazy. ',
   p2w_run_ocr_link:          'Najpierw uruchom OCR\u00A0→',
   p2w_ocr_to_get_editable:   ', aby uzyskać edytowalny tekst w Wordzie.',
