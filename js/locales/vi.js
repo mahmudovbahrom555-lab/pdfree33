@@ -960,8 +960,8 @@ window.PDFREE_LOCALE = {
   // ── pdf2wordUI.js ────────────────────────────────────────
   p2w_cannot_read:           'Không thể đọc PDF: {msg}',
   p2w_output_mode:           'Chế độ đầu ra',
-  p2w_mode_text:             'Văn bản (có thể chỉnh sửa)',
-  p2w_mode_image:            'Các trang dưới dạng hình ảnh',
+  p2w_mode_text:             '📄 Văn bản (có thể chỉnh sửa)',
+  p2w_mode_image:            '🖼️ Bản sao chính xác (hình ảnh)',
   p2w_conversion_mode_aria:  'Chế độ chuyển đổi',
   p2w_resolution:            'Độ phân giải',
   p2w_image_resolution_aria: 'Độ phân giải hình ảnh',

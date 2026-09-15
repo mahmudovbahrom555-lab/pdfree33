@@ -959,8 +959,8 @@ window.PDFREE_LOCALE = {
   // ── pdf2wordUI.js ────────────────────────────────────────
   p2w_cannot_read:           'PDF okunamıyor: {msg}',
   p2w_output_mode:           'Çıktı modu',
-  p2w_mode_text:             'Metin (düzenlenebilir)',
-  p2w_mode_image:            'Sayfaları görüntü olarak',
+  p2w_mode_text:             '📄 Metin (düzenlenebilir)',
+  p2w_mode_image:            '🖼️ Birebir kopya (görüntü)',
   p2w_conversion_mode_aria:  'Dönüştürme modu',
   p2w_resolution:            'Çözünürlük',
   p2w_image_resolution_aria: 'Görüntü çözünürlüğü',

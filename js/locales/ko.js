@@ -961,8 +961,8 @@ window.PDFREE_LOCALE = {
   // ── pdf2wordUI.js ────────────────────────────────────────
   p2w_cannot_read:           'PDF를 읽을 수 없습니다: {msg}',
   p2w_output_mode:           '출력 모드',
-  p2w_mode_text:             '텍스트(편집 가능)',
-  p2w_mode_image:            '페이지를 이미지로',
+  p2w_mode_text:             '📄 텍스트(편집 가능)',
+  p2w_mode_image:            '🖼️ 정확한 복사본(이미지)',
   p2w_conversion_mode_aria:  '변환 모드',
   p2w_resolution:            '해상도',
   p2w_image_resolution_aria: '이미지 해상도',

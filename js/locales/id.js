@@ -960,8 +960,8 @@ window.PDFREE_LOCALE = {
   // ── pdf2wordUI.js ────────────────────────────────────────
   p2w_cannot_read:           'Tidak dapat membaca PDF: {msg}',
   p2w_output_mode:           'Mode output',
-  p2w_mode_text:             'Teks (dapat diedit)',
-  p2w_mode_image:            'Halaman sebagai gambar',
+  p2w_mode_text:             '📄 Teks (dapat diedit)',
+  p2w_mode_image:            '🖼️ Salinan persis (gambar)',
   p2w_conversion_mode_aria:  'Mode konversi',
   p2w_resolution:            'Resolusi',
   p2w_image_resolution_aria: 'Resolusi gambar',

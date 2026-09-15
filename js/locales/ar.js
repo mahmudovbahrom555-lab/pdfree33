@@ -1006,8 +1006,8 @@ window.PDFREE_LOCALE = {
   // ── pdf2wordUI.js ──────────────────────────────────────────────
   p2w_cannot_read:          'تعذّر قراءة ملف PDF: {msg}',
   p2w_output_mode:          'نمط المخرجات',
-  p2w_mode_text:            'نص (قابل للتعديل)',
-  p2w_mode_image:           'الصفحات كصور',
+  p2w_mode_text:            '📄 نص (قابل للتعديل)',
+  p2w_mode_image:           '🖼️ نسخة طبق الأصل (صورة)',
   p2w_conversion_mode_aria: 'نمط التحويل',
   p2w_resolution:           'الدقة',
   p2w_image_resolution_aria: 'دقة الصورة',

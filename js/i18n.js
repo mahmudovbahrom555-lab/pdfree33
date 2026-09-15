@@ -981,8 +981,8 @@ export const EN = {
   // ── pdf2wordUI.js ──────────────────────────────────────────────
   p2w_cannot_read:          'Cannot read PDF: {msg}',
   p2w_output_mode:          'Output mode',
-  p2w_mode_text:            'Text (editable)',
-  p2w_mode_image:           'Pages as images',
+  p2w_mode_text:            '📄 Text (editable)',
+  p2w_mode_image:           "🖼️ Exact copy (image)",
   p2w_conversion_mode_aria: 'Conversion mode',
   p2w_resolution:           'Resolution',
   p2w_image_resolution_aria: 'Image resolution',

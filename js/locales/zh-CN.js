@@ -1004,8 +1004,8 @@ window.PDFREE_LOCALE = {
   // ── pdf2wordUI.js ──────────────────────────────────────────────
   p2w_cannot_read:          '无法读取 PDF：{msg}',
   p2w_output_mode:          '输出模式',
-  p2w_mode_text:            '文本（可编辑）',
-  p2w_mode_image:           '页面作为图片',
+  p2w_mode_text:            '📄 文本（可编辑）',
+  p2w_mode_image:           '🖼️ 精确复制（图片）',
   p2w_conversion_mode_aria: '转换模式',
   p2w_resolution:           '分辨率',
   p2w_image_resolution_aria: '图片分辨率',

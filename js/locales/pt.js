@@ -961,8 +961,8 @@ window.PDFREE_LOCALE = {
   // ── pdf2wordUI.js ────────────────────────────────────────
   p2w_cannot_read:           'Não é possível ler o PDF: {msg}',
   p2w_output_mode:           'Modo de saída',
-  p2w_mode_text:             'Texto (editável)',
-  p2w_mode_image:            'Páginas como imagens',
+  p2w_mode_text:             '📄 Texto (editável)',
+  p2w_mode_image:            '🖼️ Cópia exata (imagem)',
   p2w_conversion_mode_aria:  'Modo de conversão',
   p2w_resolution:            'Resolução',
   p2w_image_resolution_aria: 'Resolução da imagem',

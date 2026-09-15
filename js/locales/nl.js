@@ -959,8 +959,8 @@ window.PDFREE_LOCALE = {
   // ── pdf2wordUI.js ────────────────────────────────────────
   p2w_cannot_read:           'Kan PDF niet lezen: {msg}',
   p2w_output_mode:           'Uitvoermodus',
-  p2w_mode_text:             'Tekst (bewerkbaar)',
-  p2w_mode_image:            'Pagina\'s als afbeeldingen',
+  p2w_mode_text:             '📄 Tekst (bewerkbaar)',
+  p2w_mode_image:            '🖼️ Exacte kopie (afbeelding)',
   p2w_conversion_mode_aria:  'Conversiemodus',
   p2w_resolution:            'Resolutie',
   p2w_image_resolution_aria: 'Afbeeldingsresolutie',
