@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "如何整理 PDF 页面",
+  "description": "通过拖动缩略图重新排序、删除并旋转 PDF 页面 —— 免费，无需上传。",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "打开您的 PDF",
+      "text": "点击“选择文件”或将 PDF 拖入拖放区域。"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "拖动以重新排序、删除或旋转",
+      "text": "拖动页面缩略图以新顺序排列，点击 × 删除不需要的页面，选中页面旋转 90°、180° 或 270°。"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "下载整理后的 PDF",
+      "text": "点击“保存”。重新排序、精简并旋转后的 PDF 立即可供下载。"
+    }
+  ]
+}

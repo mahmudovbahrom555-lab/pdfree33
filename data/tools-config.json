@@ -1002,7 +1002,9 @@
         "ko": "pdf-jeongli",
         "nl": "pdf-organiseren",
         "pl": "organizuj-pdf",
-        "tr": "pdf-duzenle"
+        "tr": "pdf-duzenle",
+        "zh-CN": "zhengli-pdf",
+        "ar": "tartib-pdf"
       },
       "titles": {
         "en": "Organize PDF Free — Reorder, Delete & Rotate Pages | PDFree",
@@ -1018,7 +1020,9 @@
         "ko": "PDF 정리 무료 — 페이지 순서 변경, 삭제, 회전 | PDFree",
         "nl": "PDF Organiseren Gratis — Pagina's Herschikken, Verwijderen, Draaien | PDFree",
         "pl": "Organizuj PDF Za Darmo — Zmień Kolejność, Usuń, Obróć Strony | PDFree",
-        "tr": "PDF Düzenle Ücretsiz — Sayfa Sırala, Sil, Döndür | PDFree"
+        "tr": "PDF Düzenle Ücretsiz — Sayfa Sırala, Sil, Döndür | PDFree",
+        "zh-CN": "免费整理 PDF —— 重新排序、删除并旋转页面 | PDFree",
+        "ar": "ترتيب PDF مجانًا — إعادة الترتيب، الحذف، والتدوير | PDFree"
       },
       "descs": {
         "en": "Reorder, delete, and rotate pages in any PDF by dragging thumbnails. 100% private — processed locally, no uploads, no signup.",
@@ -1034,7 +1038,9 @@
         "ko": "썸네일을 드래그하여 모든 PDF의 페이지 순서를 바꾸고, 삭제하고, 회전하세요. 100% 비공개 — 로컬에서 처리, 업로드 없음.",
         "nl": "Herschik, verwijder en draai pagina's in elke PDF door miniaturen te slepen. 100% privé — lokaal verwerkt, geen upload.",
         "pl": "Zmieniaj kolejność, usuwaj i obracaj strony w dowolnym pliku PDF, przeciągając miniatury. 100% prywatności — przetwarzanie lokalne.",
-        "tr": "Küçük resimleri sürükleyerek herhangi bir PDF'deki sayfaları yeniden sıralayın, silin ve döndürün. Tarayıcıda işleme — yükleme yok."
+        "tr": "Küçük resimleri sürükleyerek herhangi bir PDF'deki sayfaları yeniden sıralayın, silin ve döndürün. Tarayıcıda işleme — yükleme yok.",
+        "zh-CN": "通过拖动缩略图重新排序、删除并旋转任意 PDF 的页面。100% 隐私保护 —— 本地处理，无需上传，无需注册。",
+        "ar": "أعد ترتيب صفحات أي PDF واحذفها ودوّرها بسحب الصور المصغّرة. خصوصية 100% — معالجة محلية، بدون رفع، بدون تسجيل."
       },
       "navLabels": {
         "en": "Organize",
@@ -1050,7 +1056,9 @@
         "ko": "정리",
         "nl": "Organiseren",
         "pl": "Organizuj",
-        "tr": "Düzenle"
+        "tr": "Düzenle",
+        "zh-CN": "整理",
+        "ar": "ترتيب"
       },
       "cardNames": {
         "en": "Organize PDF",
@@ -1066,7 +1074,9 @@
         "ko": "PDF 정리",
         "nl": "PDF Organiseren",
         "pl": "Organizuj PDF",
-        "tr": "PDF Düzenle"
+        "tr": "PDF Düzenle",
+        "zh-CN": "整理 PDF",
+        "ar": "ترتيب PDF"
       },
       "cardDescs": {
         "en": "Reorder, delete, and rotate pages in one place",
@@ -1082,7 +1092,9 @@
         "ko": "페이지 순서 변경, 삭제, 회전을 한곳에서",
         "nl": "Pagina's herschikken, verwijderen en draaien op één plek",
         "pl": "Zmieniaj kolejność, usuwaj i obracaj strony w jednym miejscu",
-        "tr": "Sayfaları tek yerden yeniden sıralayın, silin ve döndürün"
+        "tr": "Sayfaları tek yerden yeniden sıralayın, silin ve döndürün",
+        "zh-CN": "在一处重新排序、删除并旋转页面",
+        "ar": "أعد ترتيب الصفحات واحذفها ودوّرها في مكان واحد"
       },
       "breadcrumb": {
         "en": "Organize PDF",
@@ -1098,7 +1110,9 @@
         "ko": "PDF 정리",
         "nl": "PDF Organiseren",
         "pl": "Organizuj PDF",
-        "tr": "PDF Düzenle"
+        "tr": "PDF Düzenle",
+        "zh-CN": "整理 PDF",
+        "ar": "ترتيب PDF"
       },
       "metaDescs": {
         "en": "Reorder, delete, and rotate PDF pages by dragging thumbnails — free. Runs in your browser, nothing uploaded or stored. No signup, no limits.",
@@ -1114,7 +1128,9 @@
         "ko": "썸네일을 드래그하여 PDF 페이지 순서 변경, 삭제, 회전 — 무료. 브라우저에서 실행, 업로드 없음. 가입 없음.",
         "nl": "Herschik, verwijder en draai PDF-pagina's door miniaturen te slepen — gratis. In de browser, niets geüpload. Geen aanmelding.",
         "pl": "Zmieniaj kolejność, usuwaj i obracaj strony PDF, przeciągając miniatury — za darmo. W przeglądarce, nic nie przesyłane. Bez rejestracji.",
-        "tr": "Küçük resimleri sürükleyerek PDF sayfalarını yeniden sıralayın, silin ve döndürün — ücretsiz. Tarayıcıda, yükleme yok. Kayıt yok."
+        "tr": "Küçük resimleri sürükleyerek PDF sayfalarını yeniden sıralayın, silin ve döndürün — ücretsiz. Tarayıcıda, yükleme yok. Kayıt yok.",
+        "zh-CN": "通过拖动缩略图重新排序、删除并旋转 PDF 页面 —— 免费。在浏览器中运行，不上传、不存储。无需注册，无限制。",
+        "ar": "أعد ترتيب صفحات PDF واحذفها ودوّرها بسحب الصور المصغّرة — مجانًا. في متصفحك، بدون رفع. بدون تسجيل، بدون قيود."
       },
       "ogTitles": {
         "en": "Organize PDF Free — Reorder, Delete & Rotate Pages",
@@ -1130,7 +1146,9 @@
         "ko": "PDF 정리 무료 — 페이지 순서 변경, 삭제, 회전",
         "nl": "PDF Organiseren Gratis — Pagina's Herschikken, Verwijderen, Draaien",
         "pl": "Organizuj PDF Za Darmo — Zmień Kolejność, Usuń, Obróć Strony",
-        "tr": "PDF Düzenle Ücretsiz — Yükleme Yok, Kayıt Yok | PDFree"
+        "tr": "PDF Düzenle Ücretsiz — Yükleme Yok, Kayıt Yok | PDFree",
+        "zh-CN": "免费整理 PDF —— 重新排序、删除并旋转页面",
+        "ar": "ترتيب PDF مجانًا — إعادة الترتيب، الحذف، والتدوير"
       },
       "ogDescs": {
         "en": "Reorder, delete, and rotate PDF pages by dragging thumbnails. Runs in your browser — nothing uploaded, nothing saved on a server. Free forever, no signup.",
@@ -1146,7 +1164,9 @@
         "ko": "썸네일을 드래그하여 PDF 페이지 순서를 바꾸고, 삭제하고, 회전하세요. 브라우저에서 실행 — 아무것도 업로드되지 않습니다. 영구 무료.",
         "nl": "Herschik, verwijder en draai PDF-pagina's door miniaturen te slepen. Werkt in je browser — niets geüpload. Voor altijd gratis.",
         "pl": "Zmieniaj kolejność, usuwaj i obracaj strony PDF, przeciągając miniatury. Działa w przeglądarce — nic nie jest przesyłane. Za darmo na zawsze.",
-        "tr": "PDF sayfalarını sürükleyerek yeniden sıralayın, silin ve döndürün. Tarayıcıda işleme — yükleme yok."
+        "tr": "PDF sayfalarını sürükleyerek yeniden sıralayın, silin ve döndürün. Tarayıcıda işleme — yükleme yok.",
+        "zh-CN": "通过拖动缩略图重新排序、删除并旋转 PDF 页面。在浏览器中运行 —— 不上传，不保存到服务器。永久免费。",
+        "ar": "أعد ترتيب صفحات PDF واحذفها ودوّرها بسحب الصور المصغّرة. يعمل في متصفحك — لا رفع، لا حفظ على خادم. مجاني إلى الأبد."
       },
       "keywords": {
         "en": "organize pdf, reorder pdf pages, delete pdf pages, rearrange pdf, pdf page organizer, sort pdf pages",
@@ -1162,7 +1182,9 @@
         "ko": "pdf 정리, pdf 페이지 순서 변경, pdf 페이지 삭제, pdf 재정렬, pdf 페이지 정렬",
         "nl": "pdf organiseren, pdf pagina's herschikken, pdf pagina's verwijderen, pdf online gratis, pdf pagina volgorde",
         "pl": "organizuj pdf, zmień kolejność stron pdf, usuń strony pdf, sortuj strony pdf, kolejność stron pdf",
-        "tr": "pdf düzenle, pdf sayfa sırala, pdf sayfa sil, pdf yeniden düzenle, pdf sayfa sırası"
+        "tr": "pdf düzenle, pdf sayfa sırala, pdf sayfa sil, pdf yeniden düzenle, pdf sayfa sırası",
+        "zh-CN": "整理pdf, 重新排序pdf页面, 删除pdf页面, 重新排列pdf, pdf页面整理工具, 排序pdf页面",
+        "ar": "ترتيب pdf, اعادة ترتيب صفحات pdf, حذف صفحات pdf, اعادة تنظيم pdf, أداة تنظيم صفحات pdf, فرز صفحات pdf"
       }
     },
     {
@@ -1183,7 +1205,9 @@
         "ko": "pdf-keugi-jojeong",
         "nl": "pdf-formaat-wijzigen",
         "pl": "zmien-rozmiar-pdf",
-        "tr": "pdf-boyutu-degistir"
+        "tr": "pdf-boyutu-degistir",
+        "zh-CN": "tiaozheng-pdf-daxiao",
+        "ar": "taghyir-hajm-pdf"
       },
       "titles": {
         "en": "Resize PDF for Printing — Fit Any PDF to A4, Letter & Legal | PDFree",
@@ -1199,7 +1223,9 @@
         "ko": "인쇄용 PDF 크기 조정 — A4, Letter, Legal에 맞추기 | PDFree",
         "nl": "PDF Formaat Wijzigen voor Afdrukken — A4, Letter, Legal | PDFree",
         "pl": "Zmień Rozmiar PDF do Druku — Dopasuj do A4, Letter, Legal | PDFree",
-        "tr": "Yazdırma için PDF Boyutunu Değiştir — A4, Letter, Legal'e Uydur | PDFree"
+        "tr": "Yazdırma için PDF Boyutunu Değiştir — A4, Letter, Legal'e Uydur | PDFree",
+        "zh-CN": "免费调整 PDF 大小以便打印 —— 适配 A4、Letter 和 Legal | PDFree",
+        "ar": "تغيير حجم PDF للطباعة — لائم أي PDF مع A4 وLetter وLegal | PDFree"
       },
       "descs": {
         "en": "Fit any PDF to A4, Letter, Legal, A3 or A5 for printing. 100% private — processed locally, no uploads, no signup.",
@@ -1215,7 +1241,9 @@
         "ko": "어떤 PDF든 A4, Letter, Legal, A3, A5 용지에 맞춰 인쇄 준비. 100% 비공개 — 로컬에서 처리, 업로드 없음.",
         "nl": "Pas elke PDF aan naar A4, Letter, Legal, A3 of A5 formaat om af te drukken. 100% privé — lokaal verwerkt, geen upload.",
         "pl": "Dopasuj dowolny PDF do formatu A4, Letter, Legal, A3 lub A5 do druku. 100% prywatności — przetwarzanie lokalne.",
-        "tr": "Herhangi bir PDF'yi yazdırmak için A4, Letter, Legal, A3 veya A5 boyutuna uydurun. Tarayıcıda işleme — yükleme yok."
+        "tr": "Herhangi bir PDF'yi yazdırmak için A4, Letter, Legal, A3 veya A5 boyutuna uydurun. Tarayıcıda işleme — yükleme yok.",
+        "zh-CN": "将任意 PDF 适配为 A4、Letter、Legal、A3 或 A5 以便打印。100% 隐私保护 —— 本地处理，无需上传，无需注册。",
+        "ar": "لائم أي PDF مع A4 أو Letter أو Legal أو A3 أو A5 للطباعة. خصوصية 100% — معالجة محلية، بدون رفع، بدون تسجيل."
       },
       "navLabels": {
         "en": "Resize",
@@ -1231,7 +1259,9 @@
         "ko": "크기 조정",
         "nl": "Formaat wijzigen",
         "pl": "Zmień rozmiar",
-        "tr": "Boyutlandır"
+        "tr": "Boyutlandır",
+        "zh-CN": "调整大小",
+        "ar": "تغيير الحجم"
       },
       "cardNames": {
         "en": "Resize PDF",
@@ -1247,7 +1277,9 @@
         "ko": "PDF 크기 조정",
         "nl": "PDF Formaat Wijzigen",
         "pl": "Zmień Rozmiar PDF",
-        "tr": "PDF Boyutunu Değiştir"
+        "tr": "PDF Boyutunu Değiştir",
+        "zh-CN": "调整 PDF 大小",
+        "ar": "تغيير حجم PDF"
       },
       "cardDescs": {
         "en": "Fit any PDF to A4, Letter, Legal, A3 or A5 for printing",
@@ -1263,7 +1295,9 @@
         "ko": "어떤 PDF든 A4, Letter, Legal, A3, A5 용지에 맞춰 인쇄 준비",
         "nl": "Pas elke PDF aan naar A4, Letter, Legal, A3 of A5 formaat om af te drukken",
         "pl": "Dopasuj dowolny PDF do formatu A4, Letter, Legal, A3 lub A5 do druku",
-        "tr": "Herhangi bir PDF'yi yazdırmak için A4, Letter, Legal, A3 veya A5 boyutuna uydurun"
+        "tr": "Herhangi bir PDF'yi yazdırmak için A4, Letter, Legal, A3 veya A5 boyutuna uydurun",
+        "zh-CN": "将任意 PDF 适配为 A4、Letter、Legal、A3 或 A5 以便打印",
+        "ar": "لائم أي PDF مع A4 أو Letter أو Legal أو A3 أو A5 للطباعة"
       },
       "breadcrumb": {
         "en": "Resize PDF",
@@ -1279,7 +1313,9 @@
         "ko": "PDF 크기 조정",
         "nl": "PDF Formaat Wijzigen",
         "pl": "Zmień Rozmiar PDF",
-        "tr": "PDF Boyutunu Değiştir"
+        "tr": "PDF Boyutunu Değiştir",
+        "zh-CN": "调整 PDF 大小",
+        "ar": "تغيير حجم PDF"
       },
       "metaDescs": {
         "en": "Resize any PDF to fit A4, Letter, Legal, A3 or A5 for printing — runs in your browser, nothing uploaded or stored. No signup, no limits.",
@@ -1295,7 +1331,9 @@
         "ko": "어떤 PDF든 A4, Letter, Legal, A3, A5 용지에 맞춰 인쇄용으로 무료로 조정 — 브라우저에서 실행, 업로드 없음, 저장 없음. 가입 불필요, 제한 없음.",
         "nl": "Pas elke PDF aan naar A4, Letter, Legal, A3 of A5 formaat om af te drukken — in de browser, niets geüpload. Geen aanmelding, geen limieten.",
         "pl": "Dopasuj dowolny PDF do formatu A4, Letter, Legal, A3 lub A5 do druku — w przeglądarce, nic nie przesyłane. Bez rejestracji, bez limitów.",
-        "tr": "Herhangi bir PDF'yi yazdırmak için A4, Letter, Legal, A3 veya A5 boyutuna uydurun — tarayıcıda, yükleme yok. Kayıt yok, sınır yok."
+        "tr": "Herhangi bir PDF'yi yazdırmak için A4, Letter, Legal, A3 veya A5 boyutuna uydurun — tarayıcıda, yükleme yok. Kayıt yok, sınır yok.",
+        "zh-CN": "将任意 PDF 适配为 A4、Letter、Legal、A3 或 A5 以便打印 —— 在浏览器中运行，不上传、不存储。无需注册，无限制。",
+        "ar": "غيّر حجم أي PDF ليلائم A4 أو Letter أو Legal أو A3 أو A5 للطباعة — يعمل في متصفحك، بدون رفع. بدون تسجيل، بدون قيود."
       },
       "ogTitles": {
         "en": "Resize PDF for Printing — Fit Any PDF to A4, Letter & Legal",
@@ -1311,7 +1349,9 @@
         "ko": "인쇄용 PDF 크기 조정 — A4, Letter, Legal에 맞추기",
         "nl": "PDF Formaat Wijzigen voor Afdrukken — A4, Letter, Legal",
         "pl": "Zmień Rozmiar PDF do Druku — Dopasuj do A4, Letter, Legal",
-        "tr": "Yazdırma için PDF Boyutunu Değiştir — A4, Letter, Legal'e Uydur"
+        "tr": "Yazdırma için PDF Boyutunu Değiştir — A4, Letter, Legal'e Uydur",
+        "zh-CN": "免费调整 PDF 大小以便打印 —— 适配任意 PDF 为 A4、Letter 和 Legal",
+        "ar": "تغيير حجم PDF للطباعة — لائم أي PDF مع A4 وLetter وLegal"
       },
       "ogDescs": {
         "en": "Resize PDF pages to fit any paper size for printing. Runs in your browser — nothing uploaded, nothing saved on a server. Free forever, no signup.",
@@ -1327,7 +1367,9 @@
         "ko": "인쇄를 위해 PDF 페이지를 원하는 용지 크기에 맞추세요. 브라우저에서 실행 — 업로드 없음. 영구 무료, 가입 불필요.",
         "nl": "Pas PDF-pagina's aan naar elk papierformaat om af te drukken. In de browser — niets geüpload. Voor altijd gratis, geen aanmelding.",
         "pl": "Dopasuj strony PDF do dowolnego formatu papieru do druku. W przeglądarce — nic nie przesyłane. Za darmo na zawsze, bez rejestracji.",
-        "tr": "PDF sayfalarını yazdırmak için herhangi bir kağıt boyutuna uydurun. Tarayıcıda işlenir — yükleme yok. Sonsuza dek ücretsiz, kayıt yok."
+        "tr": "PDF sayfalarını yazdırmak için herhangi bir kağıt boyutuna uydurun. Tarayıcıda işlenir — yükleme yok. Sonsuza dek ücretsiz, kayıt yok.",
+        "zh-CN": "将 PDF 页面调整为任意纸张尺寸以便打印。在浏览器中运行 —— 不上传，不保存到服务器。永久免费，无需注册。",
+        "ar": "غيّر حجم صفحات PDF لتلائم أي حجم ورق للطباعة. يعمل في متصفحك — لا رفع، لا حفظ على خادم. مجاني إلى الأبد، بدون تسجيل."
       },
       "keywords": {
         "en": "resize pdf, fit pdf to page, fit pdf to a4, resize pdf for printing, pdf prints cut off, scale pdf to paper size",
@@ -1343,7 +1385,9 @@
         "ko": "pdf 크기 조정, pdf 페이지에 맞추기, pdf a4에 맞추기, 인쇄용 pdf 크기 조정, pdf 인쇄 시 잘림",
         "nl": "pdf formaat wijzigen, pdf passend maken op pagina, pdf aanpassen naar a4, pdf formaat wijzigen voor afdrukken, pdf wordt afgesneden bij afdrukken",
         "pl": "zmień rozmiar pdf, dopasuj pdf do strony, dopasuj pdf do a4, zmień rozmiar pdf do druku, pdf przycięty przy druku",
-        "tr": "pdf boyutu değiştir, pdf sayfaya sığdır, pdf a4'e sığdır, yazdırma için pdf boyutlandır, pdf yazdırırken kırpılıyor"
+        "tr": "pdf boyutu değiştir, pdf sayfaya sığdır, pdf a4'e sığdır, yazdırma için pdf boyutlandır, pdf yazdırırken kırpılıyor",
+        "zh-CN": "调整pdf大小, 适配pdf到页面, 适配pdf到a4, 打印用pdf调整大小, pdf打印被裁切, 按纸张大小缩放pdf",
+        "ar": "تغيير حجم pdf, ملاءمة pdf مع الصفحة, ملاءمة pdf مع a4, تغيير حجم pdf للطباعة, pdf يطبع مقصوصًا"
       }
     },
     {
@@ -2518,7 +2562,9 @@
         "ko": "pdf-peiji-beonho",
         "nl": "paginanummers-pdf",
         "pl": "numeracja-stron-pdf",
-        "tr": "sayfa-numarasi-ekle"
+        "tr": "sayfa-numarasi-ekle",
+        "zh-CN": "yema-pdf",
+        "ar": "tarqim-pdf"
       },
       "titles": {
         "en": "Add Page Numbers to PDF Free — Paginate PDF Online | PDFree",
@@ -2534,7 +2580,9 @@
         "ko": "PDF 페이지 번호 추가 무료 — 온라인 페이지 매기기 | PDFree",
         "nl": "Paginanummers Toevoegen aan PDF Gratis — Online Pagineren | PDFree",
         "pl": "Dodaj Numery Stron do PDF Za Darmo — Paginacja Online | PDFree",
-        "tr": "PDF'ye Sayfa Numarası Ekle — Ücretsiz, Yükleme Yapmadan | PDFree"
+        "tr": "PDF'ye Sayfa Numarası Ekle — Ücretsiz, Yükleme Yapmadan | PDFree",
+        "zh-CN": "免费为 PDF 添加页码 —— 在线为 PDF 分页 | PDFree",
+        "ar": "إضافة أرقام الصفحات إلى PDF مجانًا — ترقيم PDF عبر الإنترنت | PDFree"
       },
       "descs": {
         "en": "Add page numbers to any PDF. Processed locally in your browser — no uploads, no signup, no limits. Free.",
@@ -2550,7 +2598,9 @@
         "ko": "모든 PDF에 페이지 번호를 추가하세요. 브라우저에서 처리 — 업로드 없음, 가입 불필요, 제한 없음. 무료.",
         "nl": "Voeg paginanummers toe aan elke PDF. Verwerkt in de browser — geen upload, geen registratie, geen limieten. Gratis.",
         "pl": "Dodaj numery stron do dowolnego PDF. Przetwarzanie w przeglądarce — bez przesyłania, bez rejestracji, bez limitów. Za darmo.",
-        "tr": "PDF'ye sayfa numarası ekleyin. Konum, stil ve başlangıç numarasını özelleştirin. Tarayıcıda işleme — yükleme yok."
+        "tr": "PDF'ye sayfa numarası ekleyin. Konum, stil ve başlangıç numarasını özelleştirin. Tarayıcıda işleme — yükleme yok.",
+        "zh-CN": "为任意 PDF 添加页码。在浏览器本地处理 —— 无需上传，无需注册，无限制。完全免费。",
+        "ar": "أضف أرقام الصفحات إلى أي ملف PDF. تتم المعالجة محليًا في متصفحك — بدون رفع، بدون تسجيل، بدون حدود. مجانًا."
       },
       "navLabels": {
         "en": "Page Nos",
@@ -2566,7 +2616,9 @@
         "ko": "페이지 번호",
         "nl": "Paginanr.",
         "pl": "Nr Strony",
-        "tr": "Sayfa Numarası"
+        "tr": "Sayfa Numarası",
+        "zh-CN": "页码",
+        "ar": "ترقيم الصفحات"
       },
       "cardNames": {
         "en": "Page Numbers",
@@ -2582,7 +2634,9 @@
         "ko": "페이지 번호",
         "nl": "Paginanummers",
         "pl": "Numery Stron",
-        "tr": "Sayfa Numarası Ekle"
+        "tr": "Sayfa Numarası Ekle",
+        "zh-CN": "页码",
+        "ar": "ترقيم الصفحات"
       },
       "cardDescs": {
         "en": "Add numbered footers — Arabic, Roman or ABC",
@@ -2598,7 +2652,9 @@
         "ko": "번호가 매겨진 바닥글 추가 — 아라비아, 로마 숫자 또는 ABC",
         "nl": "Genummerde voettekst toevoegen — Arabisch, Romeins of ABC",
         "pl": "Dodaj numerowane stopki — arabskie, rzymskie lub ABC",
-        "tr": "PDF'ye özelleştirilebilir sayfa numaraları ekleyin"
+        "tr": "PDF'ye özelleştirilebilir sayfa numaraları ekleyin",
+        "zh-CN": "添加编号页脚 —— 阿拉伯数字、罗马数字或字母",
+        "ar": "أضف تذييلات مرقّمة — عربية أو رومانية أو أبجدية"
       },
       "breadcrumb": {
         "en": "Page Numbers PDF",
@@ -2614,7 +2670,9 @@
         "ko": "PDF 페이지 번호",
         "nl": "Paginanummers PDF",
         "pl": "Numery Stron PDF",
-        "tr": "Sayfa Numarası Ekle"
+        "tr": "Sayfa Numarası Ekle",
+        "zh-CN": "PDF 页码",
+        "ar": "ترقيم صفحات PDF"
       },
       "metaDescs": {
         "en": "Add page numbers to PDF free — no upload, runs in browser, no account needed. Arabic, Roman or alphabetic formats. Custom position, prefix/suffix, skip cover.",
@@ -2630,7 +2688,9 @@
         "ko": "PDF에 페이지 번호를 무료로 추가 — 업로드 없음, 브라우저에서 실행, 계정 불필요. 아라비아 숫자, 로마 숫자, 알파벳 형식 지원. 위치 사용자 지정, 접두사/접미사, 표지 건너뛰기.",
         "nl": "Paginanummers toevoegen aan PDF gratis — geen upload, werkt in de browser, geen account nodig. Arabische, Romeinse of alfabetische indeling. Aangepaste positie, voorvoegsel/achtervoegsel, omslag overslaan.",
         "pl": "Dodaj numery stron do PDF za darmo — bez przesyłania, działa w przeglądarce, konto niepotrzebne. Formaty arabskie, rzymskie lub alfabetyczne. Własna pozycja, prefiks/sufiks, pomiń okładkę.",
-        "tr": "PDF'e sayfa numarası ekle — ücretsiz, yükleme yok, hesap gerekmez. Arap, Roma veya alfabetik format. Özel konum, kapak sayfasını atla."
+        "tr": "PDF'e sayfa numarası ekle — ücretsiz, yükleme yok, hesap gerekmez. Arap, Roma veya alfabetik format. Özel konum, kapak sayfasını atla.",
+        "zh-CN": "免费为 PDF 添加页码 —— 无需上传，浏览器内运行，无需账号。支持阿拉伯数字、罗马数字或字母格式。自定义位置、前缀/后缀，可跳过封面。",
+        "ar": "أضف أرقام الصفحات إلى PDF مجانًا — بدون رفع، يعمل في المتصفح، بدون حساب. تنسيقات عربية أو رومانية أو أبجدية. موضع مخصص، بادئة/لاحقة، تخطي الغلاف."
       },
       "ogTitles": {
         "en": "Paginate PDF Free — Add Page Numbers Online, No Upload",
@@ -2646,7 +2706,9 @@
         "ko": "PDF 페이지 매기기 무료 — 온라인으로 페이지 번호 추가, 업로드 없음",
         "nl": "PDF Pagineren Gratis — Paginanummers Online Toevoegen, Zonder Upload",
         "pl": "Paginacja PDF Za Darmo — Dodaj Numery Stron Online, Bez Przesyłania",
-        "tr": "PDF'ye Sayfa Numarası Ekle Ücretsiz | PDFree"
+        "tr": "PDF'ye Sayfa Numarası Ekle Ücretsiz | PDFree",
+        "zh-CN": "免费为 PDF 分页 —— 在线添加页码，无需上传",
+        "ar": "ترقيم صفحات PDF مجانًا — أضف أرقام الصفحات عبر الإنترنت، بدون رفع"
       },
       "ogDescs": {
         "en": "Paginate any PDF online — add page numbers with custom format, position, and prefix. Runs in your browser, nothing uploaded. Free, no signup.",
@@ -2662,7 +2724,9 @@
         "ko": "온라인으로 모든 PDF에 페이지를 매기세요 — 형식, 위치, 접두사를 사용자 지정. 브라우저에서 실행되며 아무것도 업로드되지 않습니다. 무료, 가입 불필요.",
         "nl": "Pagineer elke PDF online — voeg paginanummers toe met aangepaste indeling, positie en voorvoegsel. Werkt in je browser, niets wordt geüpload. Gratis, zonder registratie.",
         "pl": "Ponumeruj dowolny PDF online — dodaj numery stron z niestandardowym formatem, pozycją i prefiksem. Działa w przeglądarce, nic nie jest przesyłane. Za darmo, bez rejestracji.",
-        "tr": "PDF'ye sayfa numarası ekleyin. Tarayıcıda işleme — dosyalar cihazınızı terk etmez."
+        "tr": "PDF'ye sayfa numarası ekleyin. Tarayıcıda işleme — dosyalar cihazınızı terk etmez.",
+        "zh-CN": "在线为任意 PDF 分页 —— 添加自定义格式、位置和前缀的页码。在浏览器中运行，不上传任何内容。免费，无需注册。",
+        "ar": "رقّم أي ملف PDF عبر الإنترنت — أضف أرقام صفحات بتنسيق وموضع وبادئة مخصصة. يعمل في متصفحك، لا يُرفع أي شيء. مجانًا، بدون تسجيل."
       },
       "keywords": {
         "en": "add page numbers to pdf, number pdf pages, pdf page numbering free, pdf pagination online",
@@ -2678,7 +2742,9 @@
         "ko": "pdf 페이지 번호 추가, pdf 페이지 번호 매기기, pdf 페이지 번호 무료, pdf 페이지 매기기 온라인",
         "nl": "paginanummers toevoegen aan pdf, pdf paginanummering, pdf gratis pagineren, pdf paginering online",
         "pl": "dodaj numery stron do pdf, numeracja stron pdf, ponumeruj pdf za darmo, paginacja pdf online",
-        "tr": "pdf'ye sayfa numarası ekle, pdf sayfa numaralama, ücretsiz pdf sayfa numaralama, pdf sayfalama online"
+        "tr": "pdf'ye sayfa numarası ekle, pdf sayfa numaralama, ücretsiz pdf sayfa numaralama, pdf sayfalama online",
+        "zh-CN": "pdf添加页码, pdf页码, pdf页码免费, pdf分页在线, pdf页眉页脚编号",
+        "ar": "إضافة أرقام صفحات pdf, ترقيم صفحات pdf, ترقيم pdf مجانًا, ترقيم pdf عبر الإنترنت"
       },
       "batch": true
     },

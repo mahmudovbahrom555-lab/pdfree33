@@ -1,0 +1,90 @@
+[
+  {
+    "@type": "Question",
+    "name": "整理 PDF 会将我的文件上传到服务器吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "不会。重新排序、删除和旋转页面都完全在您的浏览器中处理。您的文件永远不会被发送到任何地方。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "如何重新排列 PDF 页面顺序？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "将任意页面缩略图拖到网格中的新位置 —— 其余页面会自动移动。放到您想要的位置，这就是下载后 PDF 中的新顺序。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "如何从 PDF 中删除页面？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "点击任意页面缩略图角落的 × 即可将其标记为待删除 —— 保存前再次点击可恢复该页。删除的页面只是不会出现在下载的 PDF 中。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "我能整理的页数有限制吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "没有。没有页数或文件大小限制。非常大的文档（150 页以上）会有简短提示，说明在较旧设备上缩略图加载可能稍慢 —— 重新排序和删除功能完全相同。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "重新排序时可以同时旋转页面吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "可以。选中一个或多个页面并旋转 90°、180° 或 270° —— 如果之后将该页拖到新位置，旋转效果会随之保留。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "重新排序或删除页面会降低画质吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "不会。保留的页面会被原样复制到新 PDF 中 —— 图片、文字和矢量图形不会被重新渲染或重新压缩。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "如果我操作错误，可以撤销吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "可以。撤销会还原您最后一步操作（重新排序、删除或旋转）。“全部重置”会将每一页恢复到原始位置、方向和（未）删除状态。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "可以一次整理多个 PDF 文件吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "整理工具一次处理一个 PDF，因为页面顺序和删除操作是针对该特定文档的。如果多个文件都需要完全相同的处理，PDFree 的其他工具（如压缩和水印）支持一次处理多个文件。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "可以在手机上整理 PDF 吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "可以。PDFree 支持移动端的 Safari（iOS）和 Chrome（Android）—— 用手指拖动缩略图，就像用鼠标一样。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "整理多个 PDF 需要账号吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "不需要，PDFree 永远不会要求。有些免费整理工具允许处理一个文件，之后要求您登录才能处理下一个，或将页数限制在 100–1,500 页左右。PDFree 没有账号，没有页数限制，也没有每日上限 —— 可以随心所欲地整理任意数量的 PDF。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "这款 PDF 页面整理工具完全免费吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "是的。PDFree 完全免费，无需订阅，没有每日次数限制，也无需注册。输出文件不会添加任何水印，也没有文件大小限制。"
+    }
+  }
+]

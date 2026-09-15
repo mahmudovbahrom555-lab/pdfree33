@@ -1,0 +1,122 @@
+[
+  {
+    "@type": "Question",
+    "name": "添加页码时文件会被上传吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "不会。页码添加完全使用 JavaScript 在您的浏览器中处理。文件永远不会离开您的设备。您可以自行验证：打开开发者工具 → Network 面板 —— 处理过程中您不应看到 PDF 被上传。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDFree 会在处理后存储或记录我的文件吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "不会。PDFree 完全在浏览器中运行 —— 没有接收文件的后端服务器。既然没有任何内容被上传，自然也就无法被存储、记录或保留。文档只存在于浏览器内存中，会话期间有效，关闭标签页后即被清除。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "添加页码有页数限制吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "没有。PDFree 没有页数或文件大小限制。唯一的实际限制是您设备的可用内存。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "可以从 1 以外的数字开始编号吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "可以。在“起始编号”字段中设置任意起始数字。这对于封面为第 0 页的文档，或需要延续上一部分编号的章节都很有用。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "可以跳过第一页（封面）不编号吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "可以。启用“跳过第一页”选项。第 1 页（封面）不会被编号，编号从第二页开始。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "有哪些编号格式可选？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "阿拉伯数字（1、2、3）、小写罗马数字（i、ii、iii）、大写罗马数字（I、II、III）、小写字母（a、b、c）和大写字母（A、B、C）。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "添加页码会改变现有内容吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "不会。页码会作为新的文字层叠加在现有内容之上。原始文字、图片和排版都不会改变。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "可以选择页码出现的位置吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "可以。位置选项包括底部居中、底部靠左、底部靠右、顶部居中、顶部靠左、顶部靠右。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "可以添加“第 1 页，共 20 页”这种格式，而不是只有“1”吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "可以。使用前缀字段在数字前添加文字（例如“第 ”），使用后缀字段在数字后添加文字（例如“页，共 20 页”）。这样就能生成专业打印文档和报告中常见的“第 1 页，共 20 页”格式。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "为 PDF 分页是什么意思？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "为 PDF 分页是指在文档的每一页添加可见的页码。分页能让长文档更容易导航、引用和打印。PDFree 提供免费的在线 PDF 分页服务 —— 选择编号格式、位置和起始编号，即可立即下载分页后的 PDF。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDF 页码工具是免费的吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "是的。PDFree 完全免费 —— 无需订阅，无需注册，输出文件没有水印。文件大小或页数没有任何限制。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "可以为扫描版 PDF 添加页码吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "可以。扫描版 PDF 与其他 PDF 的处理方式完全相同 —— 页码会作为文字元素叠加在每一页上。底层的扫描图像不会改变。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "可以移除我添加的页码吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDFree 添加的页码是嵌入 PDF 中的文字标注。使用此工具无法选择性地移除 —— 最简单的方法是保留原始未编号的文件，需要时使用修正后的设置重新运行工具。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "可以一次为多个 PDF 文件添加页码吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "可以。选择或拖入多个 PDF 文件，PDFree 会使用您选择的格式和位置，为每个文件的页面添加页码，全部在浏览器中完成。已编号的文件会打包成一个 ZIP 供下载 —— 无需上传，没有每日次数限制。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "可以像论文一样，前置内容用罗马数字，正文用阿拉伯数字吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "可以，分两次操作：首先只为前置内容页面（例如第 1–8 页）添加罗马数字页码。然后重新上传该结果，为正文页面（例如第 9 页起）添加阿拉伯数字页码，从 1 开始。每次操作只影响您设置的页面范围，因此两种编号样式不会重叠。"
+    }
+  }
+]
