@@ -7,9 +7,10 @@
 //  directly instead of the real Worker (postMessage doesn't exist
 //  in Node).
 //
-//  Standalone, not wired into `npm test` (matches the precedent —
-//  worker.integration.test.js isn't in package.json's test script
-//  either). Run: node tests/resizeWorker.integration.test.js
+//  Wired into `npm test` (package.json), same as its sibling
+//  worker.integration.test.js/mergeWorker.integration.test.js — the
+//  "not wired in" note that used to be here was stale, they're both in
+//  the chain. Run standalone: node tests/resizeWorker.integration.test.js
 // ============================================================
 
 const PDFLib = await import('pdf-lib');
@@ -26,6 +27,7 @@ global.PDFLib = PDFLib;
 const { readFileSync } = await import('fs');
 const { join, dirname } = await import('path');
 const { fileURLToPath } = await import('url');
+const zlib = await import('zlib');
 const __dir = dirname(fileURLToPath(import.meta.url));
 
 const workerSrc = readFileSync(join(__dir, '../js/resizeWorker.js'), 'utf8')
@@ -66,6 +68,32 @@ function expect(actual) {
 }
 
 function lastDone()  { return messages.findLast(m => m.type === 'done'); }
+
+// Extracts drawPage()'s ACTUAL applied scale by reading the real content
+// stream `cm` operator, not by inferring it from page geometry (addPage()
+// always creates a page of exactly the requested [w,h] regardless of
+// whether the CONTENT drawn onto it was correctly scaled — that's exactly
+// what the white-frame bug got wrong, so page-size-only assertions can't
+// catch it). Content streams are FlateDecode-compressed by default;
+// inflate then find the `cm` line whose values aren't the 1/0 identity —
+// drawPage() emits several `cm` ops (translate, then scale, both as
+// identity matrices when unused) but only the real scale one has non-1
+// diagonal values.
+function drawnScale(pdfDoc, page) {
+  const { PDFName } = PDFLib;
+  const contentRefs = page.node.Contents().array;
+  const cs = pdfDoc.context.lookup(contentRefs[0]);
+  const raw = Buffer.from(cs.getContents());
+  const text = zlib.inflateSync(raw).toString();
+  for (const line of text.split('\n')) {
+    const m = line.match(/^([\d.]+) 0 0 ([\d.]+) 0 0 cm$/);
+    if (m) {
+      const sx = parseFloat(m[1]), sy = parseFloat(m[2]);
+      if (Math.abs(sx - 1) > 0.001 || Math.abs(sy - 1) > 0.001) return { sx, sy };
+    }
+  }
+  return { sx: 1, sy: 1 }; // no non-identity scale line found — genuinely 1:1
+}
 
 const PAGE_SIZES = {
   a4:     [595.28, 841.89],
@@ -355,6 +383,130 @@ await test('mixed page resources: two pages with different own fonts stay isolat
     const xobj = out.context.lookup(res.get(PDFName.of('XObject')));
     expect(xobj).toBeTruthy();
   }
+});
+
+// ══════════════════════════════════════════════════════════════
+// CropBox vs MediaBox — real user bug (macOS/Safari 26 report,
+// "still having a white frame"), see resize_cropbox_white_frame_bug
+// memory for the full diagnosis. embedPage()/getSize() both default to
+// MediaBox — a print-ready PDF with a MediaBox larger than its CropBox
+// (bleed/trim margins, common Illustrator/InDesign export) used to get
+// fit-scaled against the bigger bleed box, insetting the real (smaller)
+// visible content inside a white frame. Pinned down here so this exact
+// regression can't silently reappear.
+// ══════════════════════════════════════════════════════════════
+
+console.log('\n🖨️  handleResize — CropBox vs MediaBox (white-frame regression):');
+
+// Builds a page whose MediaBox has `bleed`pt of extra margin on every side
+// beyond its CropBox — the exact shape of a real prepress export.
+function addBleedPage(doc, [cropW, cropH], bleed) {
+  const mediaW = cropW + bleed * 2, mediaH = cropH + bleed * 2;
+  const page = doc.addPage([mediaW, mediaH]);
+  page.setCropBox(bleed, bleed, cropW, cropH);
+  // Content fills the full MediaBox (including the "bleed" area) so a
+  // MediaBox-based fit would visibly under-scale the CropBox region —
+  // same red/blue contrast technique used in the live manual repro.
+  page.drawRectangle({ x: 0, y: 0, width: mediaW, height: mediaH, color: rgb(0.2, 0.4, 1) });
+  page.drawRectangle({ x: bleed, y: bleed, width: cropW, height: cropH, color: rgb(1, 0.2, 0.2) });
+  return page;
+}
+
+await test('CropBox-sized source onto a matching target: ACTUAL drawn scale is 1.0, not shrunk by the MediaBox bleed', async () => {
+  const doc = await PDFDocument.create();
+  addBleedPage(doc, PAGE_SIZES.a4, 20); // MediaBox = A4 + 20pt bleed, CropBox = exact A4
+  const buf = await toBuffer(doc);
+
+  await handleResize(buf, { targetSize: 'a4', mode: 'fit', marginPt: 0, orientation: 'portrait' });
+  const out = await PDFDocument.load(lastDone().result);
+  const outPage = out.getPages()[0];
+  expect(outPage.getSize().width).toBeCloseTo(PAGE_SIZES.a4[0]);
+  expect(outPage.getSize().height).toBeCloseTo(PAGE_SIZES.a4[1]);
+  // The real check: broken (MediaBox-based) code draws the content at
+  // ~0.937 scale here — a real, measured shrink — even though the PAGE
+  // itself is always exactly the target size regardless (addPage([w,h])
+  // alone can't reveal this bug). Reading the actual `cm` operator from
+  // the output's content stream is what would have caught the real
+  // reported bug; asserting only page geometry (as this test originally
+  // did) would NOT have.
+  const { sx, sy } = drawnScale(out, outPage);
+  expect(sx).toBeCloseTo(1, 0.01);
+  expect(sy).toBeCloseTo(1, 0.01);
+});
+
+await test('sanity: CropBox actually differs from MediaBox for the bleed fixture (confirms the test premise)', async () => {
+  const doc = await PDFDocument.create();
+  const page = addBleedPage(doc, PAGE_SIZES.a4, 20);
+  const cropBox  = page.getCropBox();
+  const mediaBox = page.getMediaBox();
+  expect(cropBox.width).toBeCloseTo(PAGE_SIZES.a4[0]);
+  expect(mediaBox.width).toBeCloseTo(PAGE_SIZES.a4[0] + 40); // +20pt each side
+  expect(mediaBox.width > cropBox.width).toBeTruthy();
+});
+
+await test('CropBox unset falls back to MediaBox — zero regression on ordinary (non-bleed) PDFs', async () => {
+  // Every other test in this file uses addPage()/addContentPage() with no
+  // explicit setCropBox() call — they already exercise this path — this
+  // test just makes the fallback assertion explicit and named.
+  const doc = await PDFDocument.create();
+  const page = addContentPage(doc, PAGE_SIZES.a4);
+  const cropBox = page.getCropBox();
+  expect(cropBox.width).toBeCloseTo(PAGE_SIZES.a4[0]);
+  expect(cropBox.height).toBeCloseTo(PAGE_SIZES.a4[1]);
+});
+
+// ══════════════════════════════════════════════════════════════
+// Custom page size (customSizePt) — user-entered width/height, not a
+// PAGE_SIZES preset. baseSize must prefer it over targetSize when present.
+// ══════════════════════════════════════════════════════════════
+
+console.log('\n🖨️  handleResize — custom page size (customSizePt):');
+
+await test('customSizePt overrides targetSize preset entirely', async () => {
+  const doc = await PDFDocument.create();
+  addContentPage(doc, PAGE_SIZES.a4);
+  const buf = await toBuffer(doc);
+
+  // orientation:'landscape' forces the frame to [max,min] = exactly this
+  // pair's own order — isolates "does customSizePt override targetSize"
+  // from portrait/landscape reordering (covered by its own test below).
+  const customPt = [300, 200]; // arbitrary, not close to any PAGE_SIZES entry
+  await handleResize(buf, {
+    targetSize: 'a4', // must be ignored — customSizePt wins
+    mode: 'fit', marginPt: 0, orientation: 'landscape', customSizePt: customPt,
+  });
+  const out = await PDFDocument.load(lastDone().result);
+  const { width, height } = out.getPages()[0].getSize();
+  expect(width).toBeCloseTo(300);
+  expect(height).toBeCloseTo(200);
+});
+
+await test('customSizePt + orientation auto: normalizes portrait/landscape same as a preset', async () => {
+  const doc = await PDFDocument.create();
+  addContentPage(doc, PAGE_SIZES.a4); // portrait source
+  const buf = await toBuffer(doc);
+
+  // customSizePt given as [wide, narrow] (landscape order) — auto
+  // orientation must still normalize the FRAME to match the portrait
+  // source, exactly like _resolveTargetSize already does for presets.
+  await handleResize(buf, {
+    mode: 'fit', marginPt: 0, orientation: 'auto', customSizePt: [300, 200],
+  });
+  const out = await PDFDocument.load(lastDone().result);
+  const { width, height } = out.getPages()[0].getSize();
+  expect(height).toBeGreaterThan(width); // portrait output, frame was reordered
+});
+
+await test('no customSizePt: falls back to the targetSize preset as before', async () => {
+  const doc = await PDFDocument.create();
+  addContentPage(doc, PAGE_SIZES.a4);
+  const buf = await toBuffer(doc);
+
+  await handleResize(buf, { targetSize: 'a5', mode: 'fit', marginPt: 0, orientation: 'portrait' });
+  const out = await PDFDocument.load(lastDone().result);
+  const { width, height } = out.getPages()[0].getSize();
+  expect(width).toBeCloseTo(PAGE_SIZES.a5[0]);
+  expect(height).toBeCloseTo(PAGE_SIZES.a5[1]);
 });
 
 // ══════════════════════════════════════════════════════════════

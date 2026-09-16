@@ -329,9 +329,16 @@ const NUM_INPUT_STYLE = `
   background:var(--surface);color:var(--text);
 `.replace(/\n\s*/g, '');
 
+// No aria-label here: both call sites already wrap this in a <label> whose
+// text content (the field's own visible "Width (mm)"/"Height (mm)" text)
+// is the correct accessible name. An aria-label of the raw element ID would
+// have WON over that correct label-wrapping (aria-label takes precedence
+// over a wrapping <label> in accessible-name computation) — screen readers
+// would announce "rszCustomW" instead of "Width (mm)". Caught in review,
+// not shipped.
 function _numInput(inputId, value) {
   return `<input type="number" id="${inputId}" min="${CUSTOM_MM_MIN}" max="${CUSTOM_MM_MAX}" step="1"
-    value="${value}" style="${NUM_INPUT_STYLE}" aria-label="${inputId}">`;
+    value="${value}" style="${NUM_INPUT_STYLE}">`;
 }
 
 function _clampCustomSize(n) {
