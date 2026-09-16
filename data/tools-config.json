@@ -156,7 +156,7 @@
       "titles": {
         "en": "Merge PDF Files Free — No Size Limit, No Upload | PDFree",
         "es": "Unir Archivos PDF Gratis Online — Sin Límite de Tamaño, Sin Registro | PDFree",
-        "pt": "Juntar Arquivos PDF Grátis Online — Sem Upload, Sem Registo, Sem Limites | PDFree",
+        "pt": "Juntar PDF Grátis — Sem Upload, Sem Registo, Sem Limite | PDFree",
         "de": "PDF Dateien Zusammenfügen — Kostenlos, Kein Upload | PDFree",
         "fr": "Fusionner PDF Gratuit — Sans Inscription, Sans Limite | PDFree",
         "id": "Gabungkan PDF Online Gratis — Tanpa Upload, Tanpa Akun | PDFree",
@@ -173,7 +173,7 @@
         "fa": "ادغام رایگان فایل‌های PDF — بدون محدودیت حجم، بدون آپلود | PDFree",
         "he": "מיזוג קבצי PDF בחינם — ללא הגבלת גודל, ללא העלאה | PDFree",
         "ur": "مفت PDF فائلیں ضم کریں — کوئی حد نہیں، اپلوڈ کی ضرورت نہیں | PDFree",
-        "bn": "বিনামূল্যে PDF ফাইল একত্রিত করুন — কোনো সাইজ সীমা নেই, আপলোড করার প্রয়োজন নেই | PDFree"
+        "bn": "বিনামূল্যে PDF একত্রিত করুন — কোনো সাইজ সীমা নেই | PDFree"
       },
       "descs": {
         "en": "Combine unlimited PDF files instantly. 100% private, no uploads, no file size limits.",
@@ -804,7 +804,7 @@
         "ar": "tadwir-pdf"
       },
       "titles": {
-        "en": "Rotate PDF Pages Free — Fix Sideways or Upside-Down Files Online, No Upload | PDFree",
+        "en": "Rotate PDF Free — Fix Sideways or Upside-Down Pages | PDFree",
         "es": "Rotar PDF Gratis — Corregir Páginas Giradas o al Revés | PDFree",
         "pt": "Girar PDF Grátis — Corrigir Orientação das Páginas | PDFree",
         "de": "PDF Drehen Kostenlos — Schräge Seiten sofort korrigieren | PDFree",
@@ -819,7 +819,7 @@
         "pl": "Obróć PDF Za Darmo — Popraw Przekrzywione Strony Online | PDFree",
         "tr": "PDF Döndür — Ücretsiz, Yükleme Yapmadan | PDFree",
         "zh-CN": "免费旋转 PDF 页面 —— 在线修正侧向或颠倒的文件，无需上传 | PDFree",
-        "ar": "تدوير صفحات PDF مجانًا — أصلح الملفات المائلة أو المقلوبة عبر الإنترنت، بدون رفع | PDFree"
+        "ar": "تدوير PDF مجانًا — أصلح الصفحات المائلة أو المقلوبة | PDFree"
       },
       "descs": {
         "en": "Fix page orientation in any PDF. 100% private — processed locally, no uploads, no signup.",
@@ -1620,12 +1620,12 @@
         "es": "Limpiar Escaneo Online Gratis — Blanquear Fondo de PDF Escaneado | PDFree",
         "pt": "Limpar Digitalização Online Grátis — Fundo Branco em PDF Escaneado | PDFree",
         "de": "Scan Online Kostenlos Säubern — Hintergrund von PDF-Scans Aufhellen | PDFree",
-        "fr": "Nettoyer un Scan en Ligne Gratuitement — Blanchir le Fond d'un PDF Scanné | PDFree",
+        "fr": "Nettoyer un Scan Gratuit — Fond Blanc | PDFree",
         "id": "Bersihkan Scan Online Gratis — Putihkan Latar Belakang PDF Hasil Scan | PDFree",
         "vi": "Làm Sạch Bản Scan Trực Tuyến Miễn Phí — Làm Trắng Nền PDF Đã Scan | PDFree",
         "ru": "Очистить Скан Онлайн Бесплатно — Отбелить Фон Отсканированного PDF | PDFree",
         "ja": "スキャンを無料でクリーン化 — スキャンPDFの背景を白く | PDFree",
-        "it": "Pulisci Scansione Online Gratis — Sbianca lo Sfondo di un PDF Scansionato | PDFree",
+        "it": "Pulisci Scansione Gratis — Sfondo Bianco | PDFree",
         "ko": "스캔 온라인 무료 정리 — 스캔한 PDF 배경 하얗게 만들기 | PDFree",
         "nl": "Scan Online Gratis Opschonen — Achtergrond van Gescande PDF Wit Maken | PDFree",
         "pl": "Wyczyść Skan Online za Darmo — Rozjaśnij Tło Zeskanowanego PDF | PDFree",
@@ -2445,7 +2445,7 @@
         "pl": "Zaczernij PDF Online — Zakryj Wrażliwe Dane, Bez Przesyłania | PDFree",
         "tr": "PDF Gizle — Hassas Bilgileri Kalıcı Olarak Sil, Yükleme Yok, Ücretsiz | PDFree",
         "zh-CN": "在线涂黑 PDF 免费 —— 永久移除敏感数据，无需上传 | PDFree",
-        "ar": "تعتيم PDF مجانًا عبر الإنترنت — إزالة البيانات الحساسة بشكل دائم، بدون رفع | PDFree"
+        "ar": "تعتيم PDF مجانًا — إزالة دائمة للمحتوى الحساس | PDFree"
       },
       "descs": {
         "en": "Hide text, signatures, or sensitive data with opaque blocks. 100% local processing — files never uploaded.",
@@ -5086,7 +5086,7 @@
         "pl": "OCR PDF Online — Zeskanowany PDF z Rozpoznawaniem Tekstu | PDFree",
         "tr": "PDF OCR Çevrimiçi — Taranan PDF'i Aranabilir Yapın | PDFree",
         "zh-CN": "在线 OCR 识别 PDF —— 让扫描版 PDF 可被搜索，无需上传 | PDFree",
-        "ar": "التعرف الضوئي على PDF عبر الإنترنت — اجعل الملفات الممسوحة قابلة للبحث، بدون رفع | PDFree"
+        "ar": "التعرف الضوئي (OCR) على PDF مجانًا — نص قابل للبحث | PDFree"
       },
       "descs": {
         "en": "Extract text from scanned PDFs and make them searchable. Auto-detects document language. 100% local — nothing uploaded.",
