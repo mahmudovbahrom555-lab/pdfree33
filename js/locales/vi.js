@@ -634,6 +634,11 @@ window.PDFREE_LOCALE = {
   wm_toast_invalid_type: 'Vui lòng chọn ảnh PNG hoặc JPG',
   wm_toast_too_large:    'Ảnh logo quá lớn — vui lòng dùng ảnh dưới {max} MB',
   wm_default_text:       'HÌNH MỜ',
+  wm_interest_title:      'Cần một bản sao riêng cho từng người nhận?',
+  wm_interest_desc:       'Chúng tôi đang cân nhắc các bản sao hàng loạt được cá nhân hóa — một cú nhấp cho chúng tôi biết điều này quan trọng.',
+  wm_interest_vote_btn:   'Tôi sẽ dùng tính năng này',
+  wm_interest_voted:      'Cảm ơn, đã ghi nhận!',
+  wm_interest_detail_btn: 'Thêm chi tiết',
 
   // watermarkRemoveUI.js
   wmrm_title:    'Xóa hình mờ dạng dấu và lớp',

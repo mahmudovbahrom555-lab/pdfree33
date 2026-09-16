@@ -633,6 +633,11 @@ window.PDFREE_LOCALE = {
   wm_toast_invalid_type: 'Wybierz obraz PNG lub JPG',
   wm_toast_too_large:    'Obraz logo jest zbyt duży — użyj pliku poniżej {max} MB',
   wm_default_text:       'ZNAK WODNY',
+  wm_interest_title:      'Potrzebujesz unikalnej kopii dla każdego odbiorcy?',
+  wm_interest_desc:       'Rozważamy spersonalizowane kopie zbiorcze — jedno kliknięcie pokaże nam, że to ważne.',
+  wm_interest_vote_btn:   'Skorzystałbym z tego',
+  wm_interest_voted:      'Dzięki, zanotowane!',
+  wm_interest_detail_btn: 'Dodaj szczegóły',
 
   // watermarkRemoveUI.js
   wmrm_title:    'Usuń znaki wodne typu stempel i warstwa',

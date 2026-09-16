@@ -670,6 +670,11 @@ window.PDFREE_LOCALE = {
   wm_toast_invalid_type: '请选择 PNG 或 JPG 图片',
   wm_toast_too_large:    '图标图片过大 — 请使用小于 {max} MB 的图片',
   wm_default_text:       '水印',
+  wm_interest_title:      '需要为每位收件人生成独立副本吗?',
+  wm_interest_desc:       '我们正在考虑个性化批量副本功能 — 点击一下告诉我们这对您很重要。',
+  wm_interest_vote_btn:   '我会使用这个功能',
+  wm_interest_voted:      '谢谢，已记录！',
+  wm_interest_detail_btn: '补充详情',
 
   // ── watermarkRemoveUI.js (shared by merge/compress/split/rotate) ──
   wmrm_title:    '移除印章和图层水印',

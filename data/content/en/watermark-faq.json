@@ -97,6 +97,14 @@
   },
   {
     "@type": "Question",
+    "name": "Can I create a personalized copy for each recipient (e.g. with their name or email)?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Not yet. Today, watermarking multiple files applies the same text or logo to every file. A separate \"batch personalization\" mode — a unique copy per recipient, useful for tracing where a leaked confidential document came from — is being considered but isn't built. Click \"I'd use this\" in the watermark tool's options panel to let us know it matters to you."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "Can I stamp \"PAID\" or \"UNPAID\" on an invoice PDF?",
     "acceptedAnswer": {
       "@type": "Answer",

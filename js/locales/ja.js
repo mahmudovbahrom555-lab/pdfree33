@@ -636,6 +636,11 @@ window.PDFREE_LOCALE = {
   wm_toast_invalid_type: 'PNGまたはJPG画像を選択してください',
   wm_toast_too_large:    'ロゴ画像が大きすぎます — {max}MB未満のファイルを使用してください',
   wm_default_text:       '透かし',
+  wm_interest_title:      '受信者ごとに固有のコピーが必要ですか?',
+  wm_interest_desc:       'パーソナライズされた一括コピーを検討中です — ワンクリックでニーズをお知らせください。',
+  wm_interest_vote_btn:   '使ってみたい',
+  wm_interest_voted:      'ありがとうございます、記録しました!',
+  wm_interest_detail_btn: '詳細を追加',
 
   // watermarkRemoveUI.js
   wmrm_title:    'スタンプ・レイヤー透かしを削除',

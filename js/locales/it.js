@@ -633,6 +633,11 @@ window.PDFREE_LOCALE = {
   wm_toast_invalid_type: "Scegli un'immagine PNG o JPG",
   wm_toast_too_large:    "L'immagine del logo è troppo grande — usane una sotto {max} MB",
   wm_default_text:       'FILIGRANA',
+  wm_interest_title:      'Serve una copia unica per ogni destinatario?',
+  wm_interest_desc:       'Stiamo valutando copie personalizzate in blocco — un clic ci dice che interessa.',
+  wm_interest_vote_btn:   'Lo userei',
+  wm_interest_voted:      'Grazie, annotato!',
+  wm_interest_detail_btn: 'Aggiungi dettagli',
 
   // watermarkRemoveUI.js
   wmrm_title:    'Rimuovi filigrane di timbro e livello',

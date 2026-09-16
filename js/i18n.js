@@ -647,6 +647,11 @@ export const EN = {
   wm_toast_invalid_type: 'Please choose a PNG or JPG image',
   wm_toast_too_large:    'Logo image is too large — please use one under {max} MB',
   wm_default_text:       'WATERMARK',
+  wm_interest_title:      'Need a unique copy per recipient?',
+  wm_interest_desc:       "We're considering personalized batch copies — one click tells us it matters.",
+  wm_interest_vote_btn:   "I'd use this",
+  wm_interest_voted:      'Thanks, noted!',
+  wm_interest_detail_btn: 'Add details',
 
   // ── watermarkRemoveUI.js (shared by merge/compress/split/rotate) ──
   wmrm_title:    'Remove stamp & layer watermarks',

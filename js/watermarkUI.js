@@ -21,11 +21,23 @@ import { computeWatermarkLayout } from './watermarkLayout.js';
 import { showToast } from './ui.js';
 import { t } from './i18n.js';
 import { loadPreset, clearPreset } from './presets.js';
+import { openFeedback } from './feedback.js';
+import { trackFeatureInterest } from './analytics.js';
 
 const LOGO_MAX_MB = 10;
 
 // ── Constants ──────────────────────────────────────────────────
 const PREVIEW_W = 280;  // preview canvas CSS width in px
+
+// Fake-door demand signal for personalized/batch watermark copies (one
+// unique output per recipient) — see memory watermark_batch_interest_signal.
+// Soft, client-only de-dupe (annoyance prevention, not a security boundary —
+// same posture as /api/feedback's own honeypot, which is the real defense).
+const INTEREST_VOTED_KEY = 'pdfree_interest_watermark_batch';
+function _hasVotedInterest() {
+  try { return localStorage.getItem(INTEREST_VOTED_KEY) === '1'; }
+  catch { return false; }
+}
 
 // ── State ──────────────────────────────────────────────────────
 let _kind     = 'text';         // 'text' | 'image'
@@ -205,6 +217,8 @@ function _render() {
           ariaLabel: t('preset_remember_title'),
         }) : ''}
 
+        ${_interestCard()}
+
       </div>
 
       <!-- Live preview -->
@@ -356,6 +370,47 @@ function _bindEvents() {
     };
     img.src = _rawObjectUrl;
   });
+
+  id('wmInterestVote')?.addEventListener('click', () => {
+    const card = id('wmInterestVote').closest('.wm-interest');
+    fetch('/api/feedback', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: 'idea',
+        tool: 'watermark-batch',
+        text: 'Interested: personalized/batch watermark copies (1-click vote)',
+        url: location.href,
+      }),
+    }).catch(() => { /* fake-door signal, fire-and-forget — never block the UI on it */ });
+    trackFeatureInterest('watermark-batch');
+    try { localStorage.setItem(INTEREST_VOTED_KEY, '1'); } catch { /* private-mode Safari etc — UI still swaps for this render */ }
+    if (card) card.outerHTML = _interestCard();
+  });
+
+  id('wmInterestDetail')?.addEventListener('click', () => {
+    openFeedback('idea', { tool: 'watermark-batch' });
+  });
+}
+
+// ── Interest card (fake-door demand signal) ─────────────────────
+
+function _interestCard() {
+  if (_hasVotedInterest()) {
+    return `<div class="wm-interest wm-interest--voted">
+      <span class="wm-interest__text">✓ ${t('wm_interest_voted')}</span>
+    </div>`;
+  }
+  return `<div class="wm-interest">
+    <div class="wm-interest__text">
+      <strong>${t('wm_interest_title')}</strong>
+      <span>${t('wm_interest_desc')}</span>
+    </div>
+    <div class="wm-interest__actions">
+      <button type="button" id="wmInterestVote" class="wm-interest__vote">${t('wm_interest_vote_btn')}</button>
+      <button type="button" id="wmInterestDetail" class="wm-interest__detail">${t('wm_interest_detail_btn')}</button>
+    </div>
+  </div>`;
 }
 
 // ── Canvas size helper ─────────────────────────────────────────

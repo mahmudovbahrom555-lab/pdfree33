@@ -175,6 +175,17 @@ export function trackShareTool(action, tool) {
   _track('Share Tool', { action, tool });
 }
 
+/**
+ * Fake-door demand signal — fired when a user clicks a "I'd use this"
+ * interest vote for a not-yet-built capability (e.g. personalized/batch
+ * watermark copies). `feature` identifies which unbuilt capability, so
+ * multiple fake-door tests can share this one event and still be told
+ * apart in Analytics Engine queries.
+ */
+export function trackFeatureInterest(feature) {
+  _track('Feature Interest', { feature });
+}
+
 // ── Behavioral quality signals ────────────────────────────────
 // These fire without asking the user — behavior reveals satisfaction.
 

@@ -635,6 +635,11 @@ window.PDFREE_LOCALE = {
   wm_toast_invalid_type: 'Choisissez une image PNG ou JPG',
   wm_toast_too_large:    "L'image du logo est trop grande — utilisez-en une de moins de {max} Mo",
   wm_default_text:       'FILIGRANE',
+  wm_interest_title:      "Besoin d'une copie unique par destinataire ?",
+  wm_interest_desc:       'Nous envisageons des copies personnalisées en lot — un clic nous montre que ça compte.',
+  wm_interest_vote_btn:   "Je l'utiliserais",
+  wm_interest_voted:      "Merci, c'est noté !",
+  wm_interest_detail_btn: 'Ajouter des détails',
 
   // watermarkRemoveUI.js
   wmrm_title:    'Supprimer les filigranes de tampon et de calque',

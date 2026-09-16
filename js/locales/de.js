@@ -636,6 +636,11 @@ window.PDFREE_LOCALE = {
   wm_toast_invalid_type: 'Bitte wähle ein PNG- oder JPG-Bild',
   wm_toast_too_large:    'Das Logo-Bild ist zu groß — bitte verwende eines unter {max} MB',
   wm_default_text:       'WASSERZEICHEN',
+  wm_interest_title:      'Brauchen Sie eine eigene Kopie pro Empfänger?',
+  wm_interest_desc:       'Wir prüfen personalisierte Sammel-Kopien – ein Klick zeigt uns, dass es gebraucht wird.',
+  wm_interest_vote_btn:   'Das würde ich nutzen',
+  wm_interest_voted:      'Danke, notiert!',
+  wm_interest_detail_btn: 'Details hinzufügen',
 
   // watermarkRemoveUI.js
   wmrm_title:    'Stempel- & Ebenen-Wasserzeichen entfernen',

@@ -633,6 +633,11 @@ window.PDFREE_LOCALE = {
   wm_toast_invalid_type: 'Kies een PNG- of JPG-afbeelding',
   wm_toast_too_large:    'De logo-afbeelding is te groot — gebruik er een onder {max} MB',
   wm_default_text:       'WATERMERK',
+  wm_interest_title:      'Heeft u een unieke kopie per ontvanger nodig?',
+  wm_interest_desc:       'We overwegen gepersonaliseerde batchkopieën — één klik laat ons weten dat het ertoe doet.',
+  wm_interest_vote_btn:   'Dit zou ik gebruiken',
+  wm_interest_voted:      'Bedankt, genoteerd!',
+  wm_interest_detail_btn: 'Details toevoegen',
 
   // watermarkRemoveUI.js
   wmrm_title:    'Stempel- en laagwatermerken verwijderen',

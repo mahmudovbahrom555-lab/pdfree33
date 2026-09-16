@@ -1744,6 +1744,74 @@ button,
   margin: -8px 0 0;
 }
 
+/* ── Interest card: fake-door demand signal (personalized/batch copies) ── */
+.wm-interest {
+  margin-top: 14px;
+  padding: 12px 16px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.wm-interest__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 13px;
+  color: var(--text2);
+  min-width: 0;
+}
+
+.wm-interest__text strong {
+  color: var(--text);
+  font-size: 13px;
+}
+
+.wm-interest--voted .wm-interest__text {
+  flex-direction: row;
+  color: var(--green-text);
+  font-weight: 600;
+}
+
+.wm-interest__actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+}
+
+.wm-interest__vote {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 6px 16px;
+  background: var(--green);
+  color: white;
+  border: none;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.wm-interest__vote:hover { background: #235f3c; }
+
+.wm-interest__detail {
+  background: none;
+  border: none;
+  padding: 6px 2px;
+  min-height: 32px;
+  font-size: 13px;
+  color: var(--text2);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 @media (max-width: 720px) {
   .wm-row { grid-template-columns: 1fr; }
   .wm-preview-wrap { min-height: 220px; }

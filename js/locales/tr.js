@@ -633,6 +633,11 @@ window.PDFREE_LOCALE = {
   wm_toast_invalid_type: 'Lütfen bir PNG veya JPG görseli seçin',
   wm_toast_too_large:    'Logo görseli çok büyük — lütfen {max} MB altında bir görsel kullanın',
   wm_default_text:       'FİLİGRAN',
+  wm_interest_title:      'Her alıcı için benzersiz bir kopya mı gerekiyor?',
+  wm_interest_desc:       'Kişiselleştirilmiş toplu kopyaları değerlendiriyoruz — tek tıkla bunun önemli olduğunu bize bildirin.',
+  wm_interest_vote_btn:   'Bunu kullanırdım',
+  wm_interest_voted:      'Teşekkürler, not edildi!',
+  wm_interest_detail_btn: 'Ayrıntı ekle',
 
   // watermarkRemoveUI.js
   wmrm_title:    'Damga ve katman filigranlarını kaldır',

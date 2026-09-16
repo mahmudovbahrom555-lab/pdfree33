@@ -635,6 +635,11 @@ window.PDFREE_LOCALE = {
   wm_toast_invalid_type: 'Elige una imagen PNG o JPG',
   wm_toast_too_large:    'La imagen del logo es demasiado grande — usa una de menos de {max} MB',
   wm_default_text:       'MARCA DE AGUA',
+  wm_interest_title:      '¿Necesitas una copia única por destinatario?',
+  wm_interest_desc:       'Estamos evaluando copias personalizadas en lote — un clic nos dice que interesa.',
+  wm_interest_vote_btn:   'Yo lo usaría',
+  wm_interest_voted:      '¡Gracias, anotado!',
+  wm_interest_detail_btn: 'Añadir detalles',
 
   // watermarkRemoveUI.js
   wmrm_title:    'Eliminar marcas de agua de sello y capa',

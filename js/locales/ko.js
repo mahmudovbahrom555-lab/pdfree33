@@ -635,6 +635,11 @@ window.PDFREE_LOCALE = {
   wm_toast_invalid_type: 'PNG 또는 JPG 이미지를 선택해 주세요',
   wm_toast_too_large:    '로고 이미지가 너무 큽니다 — {max}MB 미만 파일을 사용해 주세요',
   wm_default_text:       '워터마크',
+  wm_interest_title:      '수신자마다 고유한 사본이 필요하신가요?',
+  wm_interest_desc:       '개인화된 일괄 복사본을 검토 중입니다 — 클릭 한 번으로 필요성을 알려주세요.',
+  wm_interest_vote_btn:   '사용해보고 싶어요',
+  wm_interest_voted:      '감사합니다, 기록했어요!',
+  wm_interest_detail_btn: '자세히 알려주기',
 
   // watermarkRemoveUI.js
   wmrm_title:    '스탬프 및 레이어 워터마크 제거',

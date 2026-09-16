@@ -672,6 +672,11 @@ window.PDFREE_LOCALE = {
   wm_toast_invalid_type: 'يرجى اختيار صورة PNG أو JPG',
   wm_toast_too_large:    'صورة الشعار كبيرة جدًا — يرجى استخدام صورة أصغر من {max} ميجابايت',
   wm_default_text:       'علامة مائية',
+  wm_interest_title:      'هل تحتاج نسخة فريدة لكل مستلم؟',
+  wm_interest_desc:       'نفكر في نسخ دفعية مخصصة لكل مستلم — نقرة واحدة تخبرنا أن هذا مهم بالنسبة لك.',
+  wm_interest_vote_btn:   'سأستخدم هذه الميزة',
+  wm_interest_voted:      'شكرًا، تم التسجيل!',
+  wm_interest_detail_btn: 'إضافة تفاصيل',
 
   // ── watermarkRemoveUI.js (shared by merge/compress/split/rotate) ──
   wmrm_title:    'إزالة الأختام والعلامات المائية الطبقية',

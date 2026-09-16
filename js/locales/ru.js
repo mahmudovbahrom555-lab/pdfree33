@@ -634,6 +634,11 @@ window.PDFREE_LOCALE = {
   wm_toast_invalid_type: 'Выберите изображение PNG или JPG',
   wm_toast_too_large:    'Изображение логотипа слишком большое — используйте файл до {max} МБ',
   wm_default_text:       'ВОДЯНОЙ ЗНАК',
+  wm_interest_title:      'Нужна уникальная копия для каждого получателя?',
+  wm_interest_desc:       'Мы рассматриваем персонализированные пакетные копии — один клик покажет нам, что это важно.',
+  wm_interest_vote_btn:   'Я бы этим пользовался',
+  wm_interest_voted:      'Спасибо, учли!',
+  wm_interest_detail_btn: 'Добавить детали',
 
   // watermarkRemoveUI.js
   wmrm_title:    'Удалить водяные знаки-штампы и слои',

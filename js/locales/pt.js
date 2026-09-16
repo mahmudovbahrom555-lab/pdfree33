@@ -635,6 +635,11 @@ window.PDFREE_LOCALE = {
   wm_toast_invalid_type: 'Escolha uma imagem PNG ou JPG',
   wm_toast_too_large:    'A imagem do logo é muito grande — use uma com menos de {max} MB',
   wm_default_text:       "MARCA D'ÁGUA",
+  wm_interest_title:      'Precisa de uma cópia exclusiva por destinatário?',
+  wm_interest_desc:       'Estamos avaliando cópias personalizadas em lote — um clique nos mostra que isso importa.',
+  wm_interest_vote_btn:   'Eu usaria isso',
+  wm_interest_voted:      'Obrigado, anotado!',
+  wm_interest_detail_btn: 'Adicionar detalhes',
 
   // watermarkRemoveUI.js
   wmrm_title:    "Remover marcas d'água de carimbo e camada",

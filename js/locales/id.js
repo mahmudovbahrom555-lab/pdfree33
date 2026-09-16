@@ -634,6 +634,11 @@ window.PDFREE_LOCALE = {
   wm_toast_invalid_type: 'Pilih gambar PNG atau JPG',
   wm_toast_too_large:    'Gambar logo terlalu besar — gunakan yang di bawah {max} MB',
   wm_default_text:       'TANDA AIR',
+  wm_interest_title:      'Butuh salinan unik untuk tiap penerima?',
+  wm_interest_desc:       'Kami sedang mempertimbangkan salinan massal yang dipersonalisasi — satu klik memberi tahu kami ini penting.',
+  wm_interest_vote_btn:   'Saya akan memakainya',
+  wm_interest_voted:      'Terima kasih, sudah dicatat!',
+  wm_interest_detail_btn: 'Tambahkan detail',
 
   // watermarkRemoveUI.js
   wmrm_title:    'Hapus tanda air stempel & lapisan',
