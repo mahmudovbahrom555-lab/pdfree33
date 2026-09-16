@@ -766,14 +766,14 @@ function _ensureResizeWorker() {
   return _resizeWorker;
 }
 
-async function _runResize(filesSnapshot, { targetSize = 'a4', mode = 'fit', marginPt = 28, orientation = 'auto' } = {}) {
+async function _runResize(filesSnapshot, { targetSize = 'a4', mode = 'fit', marginPt = 28, orientation = 'auto', customSizePt } = {}) {
   if (!_checkSize(filesSnapshot[0], 200)) { _abortUI(); return; }
   const file   = filesSnapshot[0];
   const buffer = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await file.arrayBuffer());
   setProgress(5, t('prog_resize'));
 
   const worker = _ensureResizeWorker();
-  worker.postMessage({ file: buffer, options: { targetSize, mode, marginPt, orientation } }, [buffer]);
+  worker.postMessage({ file: buffer, options: { targetSize, mode, marginPt, orientation, customSizePt } }, [buffer]);
 
   worker.onmessage = (e) => {
     const data = e.data;

@@ -43,6 +43,8 @@ let _targetSize   = 'a4';
 let _mode         = 'fit';    // 'fit' | 'fill' | 'actual'
 let _marginKey    = 'normal'; // 'none' | 'small' | 'normal' | 'large'
 let _orientation  = 'auto';   // 'auto' | 'portrait' | 'landscape'
+let _customW      = 0;        // mm — only meaningful when _targetSize === 'custom'
+let _customH      = 0;        // mm
 let _rememberLoaded = false;
 let _pageCount     = 0;
 let _srcW = 0, _srcH = 0;     // page 1 size in pt — drives the live preview
@@ -57,12 +59,18 @@ let _initGen         = 0;      // bumped on every initResizeOptions() call — l
 // ── Public API ─────────────────────────────────────────────────
 
 export function getResizeParams() {
-  return {
+  const params = {
     targetSize: _targetSize,
     mode: _mode,
     marginPt: MARGIN_MM[_marginKey] * MM_TO_PT,
     orientation: _orientation,
   };
+  // targetSize stays 'custom' as a marker; the real dimensions ride in this
+  // separate field — resizeWorker.js's baseSize falls back to it when set.
+  if (_targetSize === 'custom') {
+    params.customSizePt = [_customW * MM_TO_PT, _customH * MM_TO_PT];
+  }
+  return params;
 }
 
 export async function initResizeOptions(file) {
@@ -88,8 +96,12 @@ export async function initResizeOptions(file) {
     _pageCount = doc.getPageCount();
     if (_pageCount === 0) { showToast(t('no_pages_pdf')); _hide(container); return; }
 
+    // CropBox, not getSize()/MediaBox — matches resizeWorker.js's own fix
+    // (same comment there for the full explanation). Without this half, the
+    // real download would be correctly frame-free but the preview would
+    // still show a stale, now-misleading frame.
     const first = doc.getPages()[0];
-    ({ width: _srcW, height: _srcH } = first.getSize());
+    ({ width: _srcW, height: _srcH } = first.getCropBox());
 
     // Restore saved layout settings once per tool session — these four
     // params are genuine cross-document preferences (unlike rotate/organize,
@@ -105,7 +117,21 @@ export async function initResizeOptions(file) {
           const mm = saved.marginPt / MM_TO_PT;
           _marginKey = Object.keys(MARGIN_MM).find(k => Math.abs(MARGIN_MM[k] - mm) < 1) ?? _marginKey;
         }
+        if (Array.isArray(saved.customSizePt) && saved.customSizePt.length === 2) {
+          _customW = _fmtMm(saved.customSizePt[0]);
+          _customH = _fmtMm(saved.customSizePt[1]);
+        }
       }
+    }
+
+    // First time "Custom" is reached on this file with no size chosen yet
+    // (never saved a preset, or the saved one wasn't 'custom') — default to
+    // the source's own real (CropBox) size, not an arbitrary placeholder.
+    // The most common reason to reach for a custom size at all is "keep my
+    // exact original dimensions" — this makes that a zero-typing default.
+    if (!_customW || !_customH) {
+      _customW = _fmtMm(_srcW);
+      _customH = _fmtMm(_srcH);
     }
 
     // Real page-1 thumbnail for the preview — wrapped in its own try/catch
@@ -148,6 +174,7 @@ export function hideResizeOptions() {
   _mode        = 'fit';
   _marginKey   = 'normal';
   _orientation = 'auto';
+  _customW = 0; _customH = 0;
   _rememberLoaded = false;
 }
 
@@ -225,7 +252,19 @@ function _render(file) {
           { value: 'legal',  label: 'Legal' },
           { value: 'a3',     label: 'A3' },
           { value: 'a5',     label: 'A5' },
+          { value: 'custom', label: t('rsz_size_custom') },
         ])}
+
+        <div id="rszCustomRow" style="display:${_targetSize === 'custom' ? 'flex' : 'none'};gap:8px;margin-top:-4px">
+          <label style="flex:1;display:flex;flex-direction:column;gap:2px;font-size:12px;color:var(--text2)">
+            ${t('rsz_custom_width')}
+            ${_numInput('rszCustomW', _customW)}
+          </label>
+          <label style="flex:1;display:flex;flex-direction:column;gap:2px;font-size:12px;color:var(--text2)">
+            ${t('rsz_custom_height')}
+            ${_numInput('rszCustomH', _customH)}
+          </label>
+        </div>
 
         ${_chipGroup('rsz_mode', 'rszMode', _mode, [
           { value: 'fit',    label: t('rsz_mode_fit') },
@@ -278,12 +317,36 @@ function _chipGroup(labelKey, name, current, options) {
     </div>`;
 }
 
+// Bounds match _clampCustomSize's own — a blank/zero/absurd value must not
+// silently produce a broken PDF (min="1" alone doesn't stop a pasted "0" or
+// an out-of-range value; enforced for real on blur, see _bindEvents).
+const CUSTOM_MM_MIN = 10;
+const CUSTOM_MM_MAX = 2000;
+const NUM_INPUT_STYLE = `
+  width:100%;box-sizing:border-box;text-align:center;
+  border:1px solid var(--border);border-radius:6px;
+  padding:5px 6px;font-size:14px;font-weight:500;
+  background:var(--surface);color:var(--text);
+`.replace(/\n\s*/g, '');
+
+function _numInput(inputId, value) {
+  return `<input type="number" id="${inputId}" min="${CUSTOM_MM_MIN}" max="${CUSTOM_MM_MAX}" step="1"
+    value="${value}" style="${NUM_INPUT_STYLE}" aria-label="${inputId}">`;
+}
+
+function _clampCustomSize(n) {
+  if (!Number.isFinite(n) || n <= 0) return CUSTOM_MM_MIN;
+  return Math.min(CUSTOM_MM_MAX, Math.max(CUSTOM_MM_MIN, Math.round(n)));
+}
+
 // ── Live preview update ───────────────────────────────────────
 
 function _updatePreview() {
   if (!_srcW || !_srcH) return;
 
-  const baseSize = PAGE_SIZES[_targetSize];
+  const baseSize = _targetSize === 'custom'
+    ? [_customW * MM_TO_PT, _customH * MM_TO_PT]
+    : PAGE_SIZES[_targetSize];
   const [w, h]    = _resolveTargetSize(baseSize, _srcW, _srcH, _orientation);
   const marginPt  = MARGIN_MM[_marginKey] * MM_TO_PT;
   const availW    = Math.max(1, w - marginPt * 2);
@@ -317,7 +380,8 @@ function _updatePreview() {
   const fromOrient = _srcW > _srcH ? t('rsz_orient_landscape') : t('rsz_orient_portrait');
   const toOrient    = w > h ? t('rsz_orient_landscape') : t('rsz_orient_portrait');
   const from = `${_fmtMm(_srcW)}×${_fmtMm(_srcH)}mm ${fromOrient}`;
-  const to   = `${PAPER_LABELS[_targetSize]} ${toOrient}`;
+  const toLabel = _targetSize === 'custom' ? `${_fmtMm(w)}×${_fmtMm(h)}mm` : PAPER_LABELS[_targetSize];
+  const to   = `${toLabel} ${toOrient}`;
 
   const summaryEl = id('rszSummary');
   if (summaryEl) {
@@ -342,6 +406,14 @@ function _bindEvents() {
     if (e.target.name === 'rszSize') {
       _targetSize = e.target.value;
       _syncChips('rszSize', _targetSize);
+      const customRow = id('rszCustomRow');
+      if (customRow) customRow.style.display = _targetSize === 'custom' ? 'flex' : 'none';
+      _updatePreview();
+    }
+    if (e.target.id === 'rszCustomW' || e.target.id === 'rszCustomH') {
+      const n = _clampCustomSize(parseFloat(e.target.value));
+      e.target.value = n; // reflect the clamp immediately — never a silent no-op on an invalid value
+      if (e.target.id === 'rszCustomW') _customW = n; else _customH = n;
       _updatePreview();
     }
     if (e.target.name === 'rszMode') {

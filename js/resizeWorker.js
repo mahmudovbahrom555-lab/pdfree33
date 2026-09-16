@@ -42,8 +42,10 @@ function progress(value, label) {
 
 async function handleResize(fileBuffer, options) {
   const { PDFDocument } = self.PDFLib;
-  const { targetSize = 'a4', mode = 'fit', marginPt = 28, orientation = 'auto' } = options || {};
-  const baseSize = PAGE_SIZES[targetSize] || PAGE_SIZES.a4;
+  const { targetSize = 'a4', mode = 'fit', marginPt = 28, orientation = 'auto', customSizePt } = options || {};
+  // customSizePt (from resizeUI.js's "Custom" chip) wins when present —
+  // targetSize stays 'custom' as a marker, the real [w,h] pair rides here.
+  const baseSize = customSizePt || PAGE_SIZES[targetSize] || PAGE_SIZES.a4;
 
   progress(10, 'Loading PDF…');
   const srcDoc = await PDFDocument.load(fileBuffer, { ignoreEncryption: true });
@@ -59,7 +61,15 @@ async function handleResize(fileBuffer, options) {
 
   for (let i = 0; i < srcPages.length; i++) {
     const srcPage = srcPages[i];
-    const { width: origW, height: origH } = srcPage.getSize();
+    // CropBox, not getSize()/MediaBox: a print-ready PDF (this tool's own
+    // namesake use case) commonly has a MediaBox larger than its CropBox —
+    // bleed/trim margins from Illustrator/InDesign exports. Fitting against
+    // the bigger bleed-inclusive MediaBox scales the real (smaller) visible
+    // content down and insets it — the exact reported "white frame" bug.
+    // getCropBox() transparently falls back to MediaBox when CropBox is
+    // unset (pdf-lib's own documented default), so this is a strict
+    // superset fix — zero behavior change for the common case.
+    const { x: cropX, y: cropY, width: origW, height: origH } = srcPage.getCropBox();
     const [w, h] = _resolveTargetSize(baseSize, origW, origH, orientation);
 
     const availW = Math.max(1, w - marginPt * 2);
@@ -67,7 +77,13 @@ async function handleResize(fileBuffer, options) {
     const { scale, x, y } = _fitRect(origW, origH, availW, availH, mode);
 
     const newPage = outDoc.addPage([w, h]);
-    const embedded = await outDoc.embedPage(srcPage);
+    // boundingBox clips the embed to exactly the CropBox rectangle — without
+    // this, embedPage() defaults to the full MediaBox regardless of the
+    // (now-correct) scale computed above, so the bleed area would still leak
+    // into the output even with the right size numbers.
+    const embedded = await outDoc.embedPage(srcPage, {
+      left: cropX, bottom: cropY, right: cropX + origW, top: cropY + origH,
+    });
     newPage.drawPage(embedded, {
       x: marginPt + x,
       y: marginPt + y,
