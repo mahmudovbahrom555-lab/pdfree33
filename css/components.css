@@ -2434,7 +2434,16 @@ button,
   box-shadow: 0 1px 3px rgba(0, 0, 0, .15);
   z-index: 2;
 }
-.rot-card__action--rotate:hover { background: var(--green-light); color: var(--green-dark); }
+/* Persistent (not hover-only) tint — same reasoning as Organize's
+   .org-card__action--delete/--rotate fix (see that comment): relying on
+   :hover alone doesn't help on touch, where there is no hover. Reuses
+   --yellow-light/--yellow-text (dark-mode-vetted pair) to visually echo
+   this same card's own .rot-badge #f59e0b rotation-angle indicator. */
+.rot-card__action--rotate {
+  background: var(--yellow-light);
+  color: var(--yellow-text);
+}
+.rot-card__action--rotate:hover { background: #f59e0b; color: #fff; }
 
 /* Selection checkbox badge — separate visual channel from the card's
    border-color selected/changed styling above (see the JS comment next to
@@ -2561,7 +2570,20 @@ button,
 .org-card__action--restore:hover { background: var(--green); color: #fff; }
 .org-card__action--dup:hover      { background: var(--yellow-light); color: var(--yellow-text); }
 .org-card__action--addblank:hover { background: var(--green-light); color: var(--green-dark); }
-.org-card__action--rotate:hover   { background: var(--green-light); color: var(--green-dark); }
+/* Persistent (not hover-only) tint, same reasoning as --delete above: a
+   real user report called delete "too small/invisible" because relying on
+   :hover alone doesn't help on touch, where there is no hover — the new
+   rotate icon started in that same quiet-until-hover state, so give it the
+   same always-visible treatment. Reuses --yellow-light/--yellow-text (an
+   already dark-mode-vetted pair, see variables.css) rather than red/green
+   — rotate is a neutral transform, not destructive/restorative, and this
+   amber family visually echoes .rot-badge's own #f59e0b rotation-angle
+   indicator instead of colliding with delete's or restore's meaning. */
+.org-card__action--rotate {
+  background: var(--yellow-light);
+  color: var(--yellow-text);
+}
+.org-card__action--rotate:hover { background: #f59e0b; color: #fff; }
 
 /* Add Blank Page's card visual — deliberately NOT a plain white box: a
    dashed border + label so it reads as "intentionally inserted" at a
