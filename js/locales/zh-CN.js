@@ -290,6 +290,7 @@ window.PDFREE_LOCALE = {
   rot_badge_aria:        '已旋转 {delta}°',
   rot_page_alt:          '第 {n} 页',
   rot_select_first:      '请先选择页面，然后旋转',
+  rot_rotate_page_btn: '旋转此页',
   rot_btn_one:           '🔄 旋转 {n} 页',
   rot_btn_many:          '🔄 旋转 {n} 页',
   rot_btn_disabled:      '🔄 选择并旋转页面',

@@ -286,6 +286,7 @@ window.PDFREE_LOCALE = {
   rot_badge_aria:         'Um {delta}° gedreht',
   rot_page_alt:           'Seite {n}',
   rot_select_first:       'Zuerst Seiten auswählen, dann drehen',
+  rot_rotate_page_btn: 'Diese Seite drehen',
   rot_btn_one:            '🔄 {n} Seite drehen',
   rot_btn_many:           '🔄 {n} Seiten drehen',
   rot_btn_disabled:       '🔄 Seiten zum Drehen auswählen',

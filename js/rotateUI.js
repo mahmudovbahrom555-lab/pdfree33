@@ -339,6 +339,17 @@ function _cardHTML(i) {
     + (selected ? t('rot_selected_suffix') : '')
     + (changed  ? t('rot_rotated_suffix', { delta }) : '');
 
+  // Per-card rotate — independent of _selected (see _rotateOnePage's own
+  // comment): fixes the same class of bug already fixed for Organize
+  // (organize_rotate_not_working_bug_report memory) — the bulk-rotate flow
+  // below clears its selection after every use (fce7ffca), so repeat-
+  // clicking the toolbar rotate button on the same single page silently
+  // does nothing past the first click. Top-left corner is free on this
+  // tool's card (only .rot-badge top-right / .rot-selbadge bottom-left
+  // exist here), unlike Organize's crowded 4-icon cluster — no wrap CSS
+  // needed.
+  const rotateHTML = `<button type="button" class="rot-card__action rot-card__action--rotate" data-act="rotate" aria-label="${esc(t('rot_rotate_page_btn'))}">↻</button>`;
+
   if (_useThumbs) {
     const url = _thumbnailURLs[i];
     // Not rendered yet — blank placeholder box (IntersectionObserver
@@ -355,6 +366,7 @@ function _cardHTML(i) {
           ${thumbInner}
           ${badgeHTML}
           ${selBadgeHTML}
+          ${rotateHTML}
         </div>
         <span class="rot-card__num">${i + 1}</span>
       </div>`;
@@ -367,6 +379,7 @@ function _cardHTML(i) {
           <span class="rot-numbox__n" style="transform:rotate(${visual}deg)">${i + 1}</span>
           ${badgeHTML}
           ${selBadgeHTML}
+          ${rotateHTML}
         </div>
         <span class="rot-card__num">${i + 1}</span>
       </div>`;
@@ -393,12 +406,14 @@ function _bindEvents(_container) {
   id('rotUndo') ?.addEventListener('click', _undo);
   id('rotReset')?.addEventListener('click', _reset);
 
-  // Card clicks — toggle selection
+  // Card clicks — toggle selection, or per-card rotate (data-act)
   // Delegation on grid — one listener, not N listeners
   id('rotGrid')?.addEventListener('click', e => {
-    const card = e.target.closest('[data-idx]');
+    const actBtn = e.target.closest('[data-act]');
+    const card   = e.target.closest('[data-idx]');
     if (!card) return;
     const idx = parseInt(card.dataset.idx, 10);
+    if (actBtn && actBtn.dataset.act === 'rotate') { _rotateOnePage(idx, 90); return; }
     if (_selected.has(idx)) _selected.delete(idx);
     else                     _selected.add(idx);
     _updateCard(idx);
@@ -417,6 +432,21 @@ function _bindEvents(_container) {
 }
 
 // ── Rotation logic ─────────────────────────────────────────────
+
+// Per-card rotate — deliberately never reads or writes _selected, unlike
+// _applyRotation() below. That's the whole point: it can't reopen the old
+// double-rotation bug (extending a stale selection silently re-rotates
+// already-rotated pages, fixed in fce7ffca) because it has no selection
+// state to go stale in the first place. See organize_rotate_not_working_bug_report
+// memory for the same fix already shipped on Organize, this tool's sister.
+function _rotateOnePage(idx, angle) {
+  _prevDeltas = [..._deltas];
+  _deltas[idx] = ((_deltas[idx] + angle) % 360 + 360) % 360;
+  _updateCard(idx);
+  _updateHint();
+  _updateHistoryButtons();
+  _updateMergeBtn();
+}
 
 function _applyRotation(angle) {
   if (_selected.size === 0) {

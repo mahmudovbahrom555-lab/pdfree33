@@ -286,6 +286,7 @@ window.PDFREE_LOCALE = {
   rot_badge_aria:         'Повёрнута на {delta}°',
   rot_page_alt:           'Страница {n}',
   rot_select_first:       'Сначала выберите страницы, затем поверните',
+  rot_rotate_page_btn: 'Повернуть эту страницу',
   rot_btn_one:            '🔄 Повернуть {n} страницу',
   rot_btn_many:           '🔄 Повернуть страниц: {n}',
   rot_btn_disabled:       '🔄 Выберите страницы для поворота',

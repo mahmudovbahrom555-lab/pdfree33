@@ -286,6 +286,7 @@ window.PDFREE_LOCALE = {
   rot_badge_aria:         'Đã xoay {delta}°',
   rot_page_alt:           'Trang {n}',
   rot_select_first:       'Chọn trang trước, sau đó xoay',
+  rot_rotate_page_btn: 'Xoay trang này',
   rot_btn_one:            '🔄 Xoay {n} trang',
   rot_btn_many:           '🔄 Xoay {n} trang',
   rot_btn_disabled:       '🔄 Chọn trang để xoay',

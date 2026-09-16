@@ -292,6 +292,7 @@ window.PDFREE_LOCALE = {
   rot_badge_aria:        'مدورة {delta}°',
   rot_page_alt:          'صفحة {n}',
   rot_select_first:      'حدد الصفحات أولاً، ثم قم بالتدوير',
+  rot_rotate_page_btn: 'تدوير هذه الصفحة',
   rot_btn_one:           '🔄 تدوير {n} صفحة',
   rot_btn_many:          '🔄 تدوير {n} صفحة',
   rot_btn_disabled:      '🔄 حدد الصفحات وقم بتدويرها',

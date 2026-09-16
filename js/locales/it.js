@@ -285,6 +285,7 @@ window.PDFREE_LOCALE = {
   rot_badge_aria:         'Ruotata di {delta}°',
   rot_page_alt:           'Pagina {n}',
   rot_select_first:       'Seleziona prima le pagine, poi ruota',
+  rot_rotate_page_btn: 'Ruota questa pagina',
   rot_btn_one:            '🔄 Ruota {n} pagina',
   rot_btn_many:           '🔄 Ruota {n} pagine',
   rot_btn_disabled:       '🔄 Seleziona le pagine da ruotare',

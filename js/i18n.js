@@ -267,6 +267,7 @@ export const EN = {
   rot_badge_aria:        'Rotated {delta}°',
   rot_page_alt:          'Page {n}',
   rot_select_first:      'Select pages first, then rotate',
+  rot_rotate_page_btn: "Rotate this page",
   rot_btn_one:           '🔄 Rotate {n} page',
   rot_btn_many:          '🔄 Rotate {n} pages',
   rot_btn_disabled:      '🔄 Select and rotate pages',

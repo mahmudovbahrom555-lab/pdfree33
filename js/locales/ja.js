@@ -288,6 +288,7 @@ window.PDFREE_LOCALE = {
   rot_badge_aria:         '{delta}°回転済み',
   rot_page_alt:           'ページ{n}',
   rot_select_first:       '先にページを選択してから回転してください',
+  rot_rotate_page_btn: 'このページを回転',
   rot_btn_one:            '🔄 {n}ページを回転',
   rot_btn_many:           '🔄 {n}ページを回転',
   rot_btn_disabled:       '🔄 回転するページを選択',

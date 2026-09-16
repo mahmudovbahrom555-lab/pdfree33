@@ -287,6 +287,7 @@ window.PDFREE_LOCALE = {
   rot_badge_aria:         '{delta}° 회전됨',
   rot_page_alt:           '페이지 {n}',
   rot_select_first:       '먼저 페이지를 선택한 후 회전하세요',
+  rot_rotate_page_btn: '이 페이지 회전',
   rot_btn_one:            '🔄 {n}페이지 회전',
   rot_btn_many:           '🔄 {n}페이지 회전',
   rot_btn_disabled:       '🔄 회전할 페이지 선택',

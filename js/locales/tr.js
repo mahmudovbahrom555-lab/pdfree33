@@ -285,6 +285,7 @@ window.PDFREE_LOCALE = {
   rot_badge_aria:         '{delta}° döndürüldü',
   rot_page_alt:           'Sayfa {n}',
   rot_select_first:       'Önce sayfaları seçin, sonra döndürün',
+  rot_rotate_page_btn: 'Bu sayfayı döndür',
   rot_btn_one:            '🔄 {n} sayfayı döndür',
   rot_btn_many:           '🔄 {n} sayfayı döndür',
   rot_btn_disabled:       '🔄 Döndürülecek sayfaları seçin',

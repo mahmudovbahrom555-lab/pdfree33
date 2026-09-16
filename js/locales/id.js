@@ -286,6 +286,7 @@ window.PDFREE_LOCALE = {
   rot_badge_aria:         'Diputar {delta}°',
   rot_page_alt:           'Halaman {n}',
   rot_select_first:       'Pilih halaman dahulu, lalu putar',
+  rot_rotate_page_btn: 'Putar halaman ini',
   rot_btn_one:            '🔄 Putar {n} halaman',
   rot_btn_many:           '🔄 Putar {n} halaman',
   rot_btn_disabled:       '🔄 Pilih halaman untuk diputar',

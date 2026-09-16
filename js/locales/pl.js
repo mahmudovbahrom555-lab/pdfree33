@@ -285,6 +285,7 @@ window.PDFREE_LOCALE = {
   rot_badge_aria:         'Obrócona o {delta}°',
   rot_page_alt:           'Strona {n}',
   rot_select_first:       'Najpierw zaznacz strony, a potem obróć',
+  rot_rotate_page_btn: 'Obróć tę stronę',
   rot_btn_one:            '🔄 Obróć {n} stronę',
   rot_btn_many:           '🔄 Obróć stron: {n}',
   rot_btn_disabled:       '🔄 Zaznacz strony do obrotu',
