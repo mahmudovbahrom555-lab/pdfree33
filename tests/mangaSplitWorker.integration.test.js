@@ -263,16 +263,24 @@ await test('emits progress messages and a final done message', async () => {
   expect(lastDone()).toBeTruthy();
 });
 
-await test('empty PDF (0 pages) throws', async () => {
+// This test's original premise ("PDFDocument.create() + save() round-trips
+// to a real 0-page file") turned out false for this pdf-lib version:
+// saving a 0-page doc and reloading it always yields 1 auto-added blank
+// page (verified directly — save() on 0 pages produces a 583-byte file
+// that reloads with getPageCount() === 1), so `srcPages.length === 0`
+// was never actually reachable through this construction. The test used
+// to pass anyway, by accident: that single auto-added page has no
+// /Contents, so the OLD (pre-blank-page-fix) code threw
+// MissingPageContentsEmbeddingError for an unrelated reason, which
+// happened to satisfy `expect(threw).toBeTruthy()`. Now that blank pages
+// are handled gracefully (see the blank-page test below), this exact
+// input correctly does NOT throw — updated to assert the real, intended
+// behavior instead of a coincidental one.
+await test('a PDF that round-trips to a single auto-added blank page does not throw (no genuine 0-page case is constructible via pdf-lib save/reload)', async () => {
   const doc = await PDFDocument.create();
   const buf = await toBuffer(doc);
-  let threw = false;
-  try {
-    await handleMangaSplit(buf, { rtl: true, skipPages: [] });
-  } catch {
-    threw = true;
-  }
-  expect(threw).toBeTruthy();
+  await handleMangaSplit(buf, { rtl: true, skipPages: [] });
+  expect(lastDone().pageCount).toBe(1);
 });
 
 // ══════════════════════════════════════════════════════════════
@@ -330,6 +338,24 @@ await test('font referenced only via inherited /Pages resources survives split',
     }
   }
   expect(foundFont).toBeTruthy();
+});
+
+// ══════════════════════════════════════════════════════════════
+// Blank pages (no /Contents) — real user report (same root cause as
+// resizeWorker.js's MissingPageContentsEmbeddingError fix)
+// ══════════════════════════════════════════════════════════════
+
+console.log('\n📖 handleMangaSplit — blank pages (no /Contents):');
+
+await test('a genuinely blank page (Merge\'s "Insert Blank Pages" style — addPage() with zero draw calls) is copied through, not embedded', async () => {
+  const doc = await PDFDocument.create();
+  addContentPage(doc, A4);
+  doc.addPage(A4); // deliberately no drawing
+  const buf = await toBuffer(doc);
+
+  await handleMangaSplit(buf, { rtl: true, skipPages: [] });
+  const done = lastDone();
+  expect(done.pageCount).toBe(3); // 2 (spread split) + 1 (blank copied through, not split)
 });
 
 // ══════════════════════════════════════════════════════════════

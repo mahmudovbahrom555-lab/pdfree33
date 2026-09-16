@@ -81,19 +81,30 @@ async function handleResize(fileBuffer, options) {
     const { scale, x, y } = _fitRect(origW, origH, availW, availH, mode);
 
     const newPage = outDoc.addPage([w, h]);
-    // boundingBox clips the embed to exactly the CropBox rectangle — without
-    // this, embedPage() defaults to the full MediaBox regardless of the
-    // (now-correct) scale computed above, so the bleed area would still leak
-    // into the output even with the right size numbers.
-    const embedded = await outDoc.embedPage(srcPage, {
-      left: cropX, bottom: cropY, right: cropX + origW, top: cropY + origH,
-    });
-    newPage.drawPage(embedded, {
-      x: marginPt + x,
-      y: marginPt + y,
-      width: origW * scale,
-      height: origH * scale,
-    });
+    // A page with zero draw calls (e.g. one inserted by Merge's "Insert
+    // Blank Pages" option — mergeWorker.js's addPage([w,h]) with nothing
+    // drawn, deliberately) has no /Contents entry at all — legal per the
+    // PDF spec (renders as blank either way), but pdf-lib's embedPage()
+    // unconditionally throws MissingPageContentsEmbeddingError
+    // ("Can't embed page with missing Contents") for it. Real user report:
+    // a 186-page multi-merge PDF hit this exact error. Nothing to embed or
+    // draw for a genuinely blank source page — the already-correctly-sized
+    // blank newPage IS the correct resized output.
+    if (srcPage.node.normalizedEntries().Contents) {
+      // boundingBox clips the embed to exactly the CropBox rectangle —
+      // without this, embedPage() defaults to the full MediaBox regardless
+      // of the (now-correct) scale computed above, so the bleed area would
+      // still leak into the output even with the right size numbers.
+      const embedded = await outDoc.embedPage(srcPage, {
+        left: cropX, bottom: cropY, right: cropX + origW, top: cropY + origH,
+      });
+      newPage.drawPage(embedded, {
+        x: marginPt + x,
+        y: marginPt + y,
+        width: origW * scale,
+        height: origH * scale,
+      });
+    }
 
     progress(Math.round(((i + 1) / srcPages.length) * 85) + 10, `Resizing page ${i + 1} of ${srcPages.length}...`);
   }

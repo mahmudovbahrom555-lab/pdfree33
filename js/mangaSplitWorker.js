@@ -64,7 +64,14 @@ async function handleMangaSplit(fileBuffer, options) {
     // part of its visible content.
     const { x: cropX, y: cropY, width: w, height: h } = srcPage.getCropBox();
 
-    if (skip.has(i)) {
+    if (skip.has(i) || !srcPage.node.normalizedEntries().Contents) {
+      // A page with zero draw calls (e.g. a blank page inserted by Merge's
+      // "Insert Blank Pages" option) has no /Contents entry at all — legal
+      // per the PDF spec, but pdf-lib's embedPage() unconditionally throws
+      // MissingPageContentsEmbeddingError for it. Same fix as
+      // resizeWorker.js's real user report on this exact error. Nothing
+      // meaningful to split for a genuinely blank page — copy it through
+      // unchanged, same as an explicitly skipped page.
       const [copied] = await outDoc.copyPages(srcDoc, [i]);
       outDoc.addPage(copied);
     } else {

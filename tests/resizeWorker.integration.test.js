@@ -248,16 +248,24 @@ await test('emits progress messages and a final done message', async () => {
   expect(lastDone()).toBeTruthy();
 });
 
-await test('empty PDF (0 pages) throws', async () => {
+// This test's original premise ("PDFDocument.create() + save() round-trips
+// to a real 0-page file") turned out false for this pdf-lib version:
+// saving a 0-page doc and reloading it always yields 1 auto-added blank
+// page (verified directly — save() on 0 pages produces a 583-byte file
+// that reloads with getPageCount() === 1), so the "0 pages" case was
+// never actually reachable through this construction. The test used to
+// pass anyway, by accident: that single auto-added page has no
+// /Contents, so the OLD (pre-blank-page-fix) code threw
+// MissingPageContentsEmbeddingError for an unrelated reason, which
+// happened to satisfy `expect(threw).toBeTruthy()`. Now that blank pages
+// are handled gracefully (see the blank-page test below), this exact
+// input correctly does NOT throw — updated to assert the real, intended
+// behavior instead of a coincidental one.
+await test('a PDF that round-trips to a single auto-added blank page does not throw (no genuine 0-page case is constructible via pdf-lib save/reload)', async () => {
   const doc = await PDFDocument.create();
   const buf = await toBuffer(doc);
-  let threw = false;
-  try {
-    await handleResize(buf, { targetSize: 'a4', mode: 'fit', marginPt: 14, orientation: 'auto' });
-  } catch {
-    threw = true;
-  }
-  expect(threw).toBeTruthy();
+  await handleResize(buf, { targetSize: 'a4', mode: 'fit', marginPt: 14, orientation: 'auto' });
+  expect(lastDone().pageCount).toBe(1);
 });
 
 // ══════════════════════════════════════════════════════════════
@@ -525,6 +533,28 @@ await test('new A0/A1/A2/A6 presets each resolve to their correct ISO 216 target
     expect(width).toBeCloseTo(PAGE_SIZES[size][0]);
     expect(height).toBeCloseTo(PAGE_SIZES[size][1]);
   }
+});
+
+// ══════════════════════════════════════════════════════════════
+// Blank pages (no /Contents) — real user report
+// ══════════════════════════════════════════════════════════════
+
+console.log('\n📐 handleResize — blank pages (no /Contents):');
+
+await test('a genuinely blank page (Merge\'s "Insert Blank Pages" style — addPage() with zero draw calls) does not throw', async () => {
+  const doc = await PDFDocument.create();
+  addContentPage(doc, PAGE_SIZES.a4);
+  doc.addPage(PAGE_SIZES.a4); // deliberately no drawing — matches mergeWorker.js's blank-page insert
+  addContentPage(doc, PAGE_SIZES.a4);
+  const buf = await toBuffer(doc);
+
+  await handleResize(buf, { targetSize: 'letter', mode: 'fit', marginPt: 0, orientation: 'portrait' });
+  const out = await PDFDocument.load(lastDone().result);
+  expect(out.getPageCount()).toBe(3);
+  // the blank page still gets resized to the target size, just with nothing drawn on it
+  const { width, height } = out.getPages()[1].getSize();
+  expect(width).toBeCloseTo(PAGE_SIZES.letter[0]);
+  expect(height).toBeCloseTo(PAGE_SIZES.letter[1]);
 });
 
 // ══════════════════════════════════════════════════════════════
