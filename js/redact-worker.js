@@ -54,9 +54,16 @@ self.onmessage = async (e) => {
         const { dataUrl } = redactedImages[i];
         const pngBytes = _dataUrlToBytes(dataUrl);
         const pngImage = await outPdf.embedPng(pngBytes);
-        // Use original page dimensions from the source PDF
+        // Use original page dimensions from the source PDF — CropBox, not
+        // MediaBox. The flattened PNG was rendered client-side via pdf.js's
+        // getViewport() (processor.js), which sizes against the page's real
+        // visible CropBox. Sizing this output page from getSize() (MediaBox)
+        // instead would stretch a CropBox-sized image to fill a larger
+        // MediaBox-sized page on any bleed/trim-margin PDF — same root cause
+        // as resizeWorker.js's white-frame bug, here showing up as a
+        // distorted/stretched redacted page instead of a white frame.
         const srcPage   = srcPdf.getPage(i);
-        const { width: pw, height: ph } = srcPage.getSize();
+        const { width: pw, height: ph } = srcPage.getCropBox();
         const newPage = outPdf.addPage([pw, ph]);
         newPage.drawImage(pngImage, { x: 0, y: 0, width: pw, height: ph });
       } else {

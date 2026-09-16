@@ -7,10 +7,8 @@
 //  directly instead of the real Worker (postMessage doesn't exist
 //  in Node).
 //
-//  Standalone, not wired into `npm test` (matches the precedent —
-//  resizeWorker.integration.test.js/worker.integration.test.js aren't in
-//  package.json's test script either).
-//  Run: node tests/mangaSplitWorker.integration.test.js
+//  Wired into `npm test` — see package.json's "test" script.
+//  Run standalone: node tests/mangaSplitWorker.integration.test.js
 // ============================================================
 
 const PDFLib = await import('pdf-lib');
@@ -115,6 +113,49 @@ await test('N spread pages produce 2N output pages', async () => {
 
   await handleMangaSplit(buf, { rtl: true, skipPages: [] });
   expect(lastDone().pageCount).toBe(6);
+});
+
+// ══════════════════════════════════════════════════════════════
+// CropBox vs MediaBox (bleed-margin regression — same bug class as
+// resizeWorker.js's white-frame fix: a scanned/print-ready spread can
+// have a MediaBox bigger than its real visible CropBox. Reading getSize()
+// (MediaBox) instead of getCropBox() both mis-computes the split point
+// AND embeds the bleed margin as part of each half's visible content.)
+// ══════════════════════════════════════════════════════════════
+
+console.log('\n📖 handleMangaSplit — CropBox vs MediaBox (bleed-margin regression):');
+
+function addBleedSpread(doc, [cropW, cropH], bleed) {
+  const mediaW = cropW + bleed * 2, mediaH = cropH + bleed * 2;
+  const page = doc.addPage([mediaW, mediaH]);
+  page.setCropBox(bleed, bleed, cropW, cropH);
+  page.drawRectangle({ x: 5, y: 5, width: 10, height: 10, color: rgb(0, 0, 0) });
+  return page;
+}
+
+await test('bleed spread: each half is sized from the real CropBox, not the bigger MediaBox', async () => {
+  const doc = await PDFDocument.create();
+  // CropBox = 900x500 (a "clean" spread), MediaBox = +50pt bleed all sides
+  // (1000x600) — old buggy code would compute halfW=500 (1000/2), height
+  // 600 from MediaBox; the fix must produce halfW=450 (900/2), height 500.
+  addBleedSpread(doc, [900, 500], 50);
+  const buf = await toBuffer(doc);
+
+  await handleMangaSplit(buf, { rtl: true, skipPages: [] });
+  const out = await PDFDocument.load(lastDone().result);
+  for (const p of out.getPages()) {
+    const { width, height } = p.getSize();
+    expect(width).toBeCloseTo(450);
+    expect(height).toBeCloseTo(500);
+  }
+});
+
+await test('sanity: CropBox actually differs from MediaBox for the bleed spread fixture', async () => {
+  const doc = await PDFDocument.create();
+  const page = addBleedSpread(doc, [900, 500], 50);
+  const media = page.getMediaBox();
+  const crop  = page.getCropBox();
+  expect(media.width === crop.width && media.height === crop.height ? 'same' : 'different').toBe('different');
 });
 
 // ══════════════════════════════════════════════════════════════

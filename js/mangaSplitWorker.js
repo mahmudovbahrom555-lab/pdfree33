@@ -52,25 +52,36 @@ async function handleMangaSplit(fileBuffer, options) {
 
   for (let i = 0; i < srcPages.length; i++) {
     const srcPage = srcPages[i];
-    const { width: w, height: h } = srcPage.getSize();
+    // getSize()/a boundingBox starting at (0,0) both silently assume
+    // CropBox === MediaBox — wrong for a scanned/print-ready spread with
+    // bleed or trim margins (MediaBox bigger than the real visible
+    // CropBox). Same root cause and fix as resizeWorker.js's white-frame
+    // bug: read the real visible box, and offset the split boundingBoxes
+    // by its own (cropX, cropY) origin instead of assuming (0,0). Without
+    // this, the split point is computed from the wrong (too-wide) width —
+    // shifting the actual cut line away from the true center of the
+    // visible spread — and each half still embeds the bleed margin as
+    // part of its visible content.
+    const { x: cropX, y: cropY, width: w, height: h } = srcPage.getCropBox();
 
     if (skip.has(i)) {
       const [copied] = await outDoc.copyPages(srcDoc, [i]);
       outDoc.addPage(copied);
     } else {
-      const midX = w / 2;
+      const halfW = w / 2;
+      const midX  = cropX + halfW;
       // embedPage's boundingBox clips the source page in its own
       // (untransformed) coordinate space and returns a reusable Form
       // XObject — fully vector-preserving, no rasterization.
-      const leftEmbed  = await outDoc.embedPage(srcPage, { left: 0,    right: midX, bottom: 0, top: h });
-      const rightEmbed = await outDoc.embedPage(srcPage, { left: midX, right: w,    bottom: 0, top: h });
+      const leftEmbed  = await outDoc.embedPage(srcPage, { left: cropX, right: midX,      bottom: cropY, top: cropY + h });
+      const rightEmbed = await outDoc.embedPage(srcPage, { left: midX,  right: cropX + w, bottom: cropY, top: cropY + h });
 
       // Manga/manhwa reads right-to-left — the right half of the spread
       // is the FIRST page in reading order when rtl is true.
       const halves = rtl ? [rightEmbed, leftEmbed] : [leftEmbed, rightEmbed];
       for (const embed of halves) {
-        const newPage = outDoc.addPage([midX, h]);
-        newPage.drawPage(embed, { x: 0, y: 0, width: midX, height: h });
+        const newPage = outDoc.addPage([halfW, h]);
+        newPage.drawPage(embed, { x: 0, y: 0, width: halfW, height: h });
       }
     }
 
