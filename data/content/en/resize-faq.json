@@ -25,6 +25,14 @@
   },
   {
     "@type": "Question",
+    "name": "Can I enter a custom page size instead of A4, Letter, or the other presets?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. Choose Custom in the paper size options and enter any width and height in millimeters — useful for non-standard formats like receipts, labels, or shipping documents. It defaults to your source PDF's own exact size, so selecting Custom without changing anything reproduces the original dimensions with zero scaling."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "What does \"Auto\" orientation do?",
     "acceptedAnswer": {
       "@type": "Answer",

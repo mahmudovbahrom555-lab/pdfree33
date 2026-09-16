@@ -1,7 +1,7 @@
 <div class="seo-content" style="max-width:800px;margin:60px auto 40px;padding:0 24px;color:var(--text2);line-height:1.75;">
 
         <h1 id="seoH1_resize-pdf-for-printing" style="font-size:clamp(22px,3.5vw,30px);color:var(--text);margin:0 0 16px;font-weight:700;">Resize PDF for Printing — Fix Pages That Print Cut Off or Too Large</h1>
-        <p style="font-size:15px;margin:0 0 40px;">Does your PDF print with the edges cut off, content shifted down the page, or shrunk into a corner? That usually isn't your printer's fault — it's the browser or driver's "Fit to Page" setting guessing wrong, and it can guess differently every time you print. PDFree's Resize PDF tool fixes this upstream: it permanently fits every page into A4, Letter, Legal, A3, or A5 and saves the result as a new file, so what you see in the preview is exactly what comes out of the printer — no more relying on a print dialog to get it right.</p>
+        <p style="font-size:15px;margin:0 0 40px;">Does your PDF print with the edges cut off, content shifted down the page, or shrunk into a corner? That usually isn't your printer's fault — it's the browser or driver's "Fit to Page" setting guessing wrong, and it can guess differently every time you print. PDFree's Resize PDF tool fixes this upstream: it permanently fits every page into A4, Letter, Legal, A3, A5, or a custom size you enter yourself, and saves the result as a new file, so what you see in the preview is exactly what comes out of the printer — no more relying on a print dialog to get it right.</p>
 
         <!-- How to use -->
         <h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">How to Resize a PDF in 3 Steps</h2>
@@ -17,7 +17,7 @@
           <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">2</div>
           <div>
             <strong style="color:var(--text);font-size:15px;">Pick a paper size and fit mode</strong>
-            <p style="margin:6px 0 0;font-size:14px;">Choose A4, Letter, Legal, A3, or A5, then choose <strong>Fit</strong> (whole page visible), <strong>Fill</strong> (edge-to-edge, may crop), or <strong>Actual size</strong> (no scaling, for documents that must stay true to scale). The preview updates live, showing the exact scale percentage before you commit to anything.</p>
+            <p style="margin:6px 0 0;font-size:14px;">Choose A4, Letter, Legal, A3, A5, or <strong>Custom</strong> to enter your own width and height, then choose <strong>Fit</strong> (whole page visible), <strong>Fill</strong> (edge-to-edge, may crop), or <strong>Actual size</strong> (no scaling, for documents that must stay true to scale). The preview updates live, showing the exact scale percentage before you commit to anything.</p>
           </div>
         </div>
         <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
@@ -113,6 +113,10 @@
         <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
           <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">What's the difference between Fit, Fill, and Actual size?</h3>
           <p style="margin:0;font-size:14px;"><strong>Fit</strong> shrinks the page so all of it is visible on the new paper size, leaving a border if the proportions don't match exactly. <strong>Fill</strong> scales up to cover the entire new page edge-to-edge, which can crop a small amount off the sides. <strong>Actual size</strong> applies no scaling at all — the original content is centered on the new paper size at true scale, which is correct for patterns, forms, or diagrams that must not change size.</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Can I enter a custom page size instead of A4, Letter, or the other presets?</h3>
+          <p style="margin:0;font-size:14px;">Yes. Choose <strong>Custom</strong> in the paper size options and enter any width and height in millimeters — useful for non-standard formats like receipts, labels, or shipping documents. It defaults to your source PDF's own exact size, so selecting Custom without changing anything reproduces the original dimensions with zero scaling.</p>
         </div>
         <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
           <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">What does "Auto" orientation do?</h3>
