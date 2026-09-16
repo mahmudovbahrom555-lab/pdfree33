@@ -21,9 +21,13 @@ importScripts('./vendor/pdf-lib.min.js');
 // kept consistent, not reinvented. A3/A5/Legal added for real, distinct
 // demand (A3 drawings/posters, A5 flyers/booklets, Legal US forms).
 const PAGE_SIZES = {
-  a4:     [595.28, 841.89],
+  a0:     [2383.94, 3370.40],
+  a1:     [1683.78, 2383.94],
+  a2:     [1190.55, 1683.78],
   a3:     [841.89, 1190.55],
+  a4:     [595.28, 841.89],
   a5:     [419.53, 595.28],
+  a6:     [297.64, 419.53],
   letter: [612, 792],
   legal:  [612, 1008],
 };

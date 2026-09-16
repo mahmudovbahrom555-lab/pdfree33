@@ -96,9 +96,13 @@ function drawnScale(pdfDoc, page) {
 }
 
 const PAGE_SIZES = {
-  a4:     [595.28, 841.89],
+  a0:     [2383.94, 3370.40],
+  a1:     [1683.78, 2383.94],
+  a2:     [1190.55, 1683.78],
   a3:     [841.89, 1190.55],
+  a4:     [595.28, 841.89],
   a5:     [419.53, 595.28],
+  a6:     [297.64, 419.53],
   letter: [612, 792],
   legal:  [612, 1008],
 };
@@ -507,6 +511,20 @@ await test('no customSizePt: falls back to the targetSize preset as before', asy
   const { width, height } = out.getPages()[0].getSize();
   expect(width).toBeCloseTo(PAGE_SIZES.a5[0]);
   expect(height).toBeCloseTo(PAGE_SIZES.a5[1]);
+});
+
+await test('new A0/A1/A2/A6 presets each resolve to their correct ISO 216 target dimensions', async () => {
+  for (const size of ['a0', 'a1', 'a2', 'a6']) {
+    const doc = await PDFDocument.create();
+    addContentPage(doc, PAGE_SIZES.a4);
+    const buf = await toBuffer(doc);
+
+    await handleResize(buf, { targetSize: size, mode: 'fit', marginPt: 0, orientation: 'portrait' });
+    const out = await PDFDocument.load(lastDone().result);
+    const { width, height } = out.getPages()[0].getSize();
+    expect(width).toBeCloseTo(PAGE_SIZES[size][0]);
+    expect(height).toBeCloseTo(PAGE_SIZES[size][1]);
+  }
 });
 
 // ══════════════════════════════════════════════════════════════

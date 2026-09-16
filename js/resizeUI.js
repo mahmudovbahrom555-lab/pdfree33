@@ -27,13 +27,17 @@ import { t, tp }            from './i18n.js';
 // ── Constants (mirrors resizeWorker.js's PAGE_SIZES — kept in sync manually) ──
 
 const PAGE_SIZES = {
-  a4:     [595.28, 841.89],
+  a0:     [2383.94, 3370.40],
+  a1:     [1683.78, 2383.94],
+  a2:     [1190.55, 1683.78],
   a3:     [841.89, 1190.55],
+  a4:     [595.28, 841.89],
   a5:     [419.53, 595.28],
+  a6:     [297.64, 419.53],
   letter: [612, 792],
   legal:  [612, 1008],
 };
-const PAPER_LABELS = { a4: 'A4', a3: 'A3', a5: 'A5', letter: 'Letter', legal: 'Legal' };
+const PAPER_LABELS = { a0: 'A0', a1: 'A1', a2: 'A2', a3: 'A3', a4: 'A4', a5: 'A5', a6: 'A6', letter: 'Letter', legal: 'Legal' };
 const MARGIN_MM = { none: 0, small: 5, normal: 10, large: 20 };
 const MM_TO_PT = 2.83465;
 
@@ -252,6 +256,10 @@ function _render(file) {
           { value: 'legal',  label: 'Legal' },
           { value: 'a3',     label: 'A3' },
           { value: 'a5',     label: 'A5' },
+          { value: 'a0',     label: 'A0' },
+          { value: 'a1',     label: 'A1' },
+          { value: 'a2',     label: 'A2' },
+          { value: 'a6',     label: 'A6' },
           { value: 'custom', label: t('rsz_size_custom') },
         ])}
 
