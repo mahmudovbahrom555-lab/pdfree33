@@ -1128,7 +1128,7 @@ window.PDFREE_LOCALE = {
   fill_field_fallback:        'Feld',
   fill_no_fields_title:       'Keine ausfüllbaren Felder gefunden',
   fill_no_fields_body:        'Dieses PDF hat keine AcroForm-Felder. Es könnte das veraltete XFA-Format verwenden (öffne es in Adobe Acrobat) oder es ist ein gescanntes/flaches PDF — verwende dafür das',
-  fill_no_fields_link:        'Schwärzen / Kommentieren',
+  fill_no_fields_link:        'Auf PDF zeichnen',
   fill_no_fields_suffix:      '-Tool, um Text zu überlagern.',
   fill_error_prefix:          'Formularfelder konnten nicht gelesen werden: {msg}',
   fill_too_many_fields:      'Dieses PDF enthält eine ungewöhnlich große Anzahl an Formularfeldern ({n}) und kann nicht sicher angezeigt werden. Verwenden Sie stattdessen das Werkzeug Schwärzen / Kommentieren.',

@@ -1127,7 +1127,7 @@ window.PDFREE_LOCALE = {
   fill_field_fallback:        'Champ',
   fill_no_fields_title:       'Aucun champ remplissable trouvé',
   fill_no_fields_body:        'Ce PDF n\'a pas de champs AcroForm. Il utilise peut-être l\'ancien format XFA (ouvrez-le dans Adobe Acrobat) ou c\'est un PDF scanné/plat — pour ces cas, utilisez l\'outil',
-  fill_no_fields_link:        'Caviarder / Annoter',
+  fill_no_fields_link:        'Dessiner sur PDF',
   fill_no_fields_suffix:      ' pour superposer du texte.',
   fill_error_prefix:          'Impossible de lire les champs du formulaire : {msg}',
   fill_too_many_fields:      'Ce PDF déclare un nombre inhabituellement élevé de champs de formulaire ({n}) et ne peut pas être affiché en toute sécurité. Essayez plutôt l\'outil Rédiger / Annoter.',

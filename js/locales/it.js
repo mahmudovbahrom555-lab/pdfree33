@@ -1125,7 +1125,7 @@ window.PDFREE_LOCALE = {
   fill_field_fallback:        'Campo',
   fill_no_fields_title:       'Nessun campo compilabile trovato',
   fill_no_fields_body:        'Questo PDF non ha campi AcroForm. Potrebbe usare il vecchio formato XFA (aprilo in Adobe Acrobat) oppure è un PDF scansionato/piatto — in tal caso usa lo strumento',
-  fill_no_fields_link:        'Oscura / Annota',
+  fill_no_fields_link:        'Disegna su PDF',
   fill_no_fields_suffix:      ' per sovrapporre del testo.',
   fill_error_prefix:          'Impossibile leggere i campi del modulo: {msg}',
   fill_too_many_fields:      'Questo PDF dichiara un numero insolitamente elevato di campi modulo ({n}) e non può essere visualizzato in sicurezza. Prova invece lo strumento Oscura / Annota.',

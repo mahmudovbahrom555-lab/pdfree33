@@ -1174,7 +1174,7 @@ window.PDFREE_LOCALE = {
   fill_field_fallback:       '字段',
   fill_no_fields_title:      '未找到可填写字段',
   fill_no_fields_body:       '此 PDF 没有 AcroForm 字段。可能使用了较旧的 XFA 格式（请在 Adobe Acrobat 中打开），或者是扫描/扁平化的 PDF — 遇到这两种情况，请使用',
-  fill_no_fields_link:       '涂黑/标注',
+  fill_no_fields_link:       'PDF 上绘图',
   fill_no_fields_suffix:     '工具来叠加文字。',
   fill_error_prefix:         '无法读取表单字段：{msg}',
   fill_too_many_fields:      '此 PDF 声明的表单字段数量异常庞大（{n} 个），无法安全显示。请改用涂黑/标注工具。',

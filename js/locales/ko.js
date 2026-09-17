@@ -1127,7 +1127,7 @@ window.PDFREE_LOCALE = {
   fill_field_fallback:        '필드',
   fill_no_fields_title:       '입력 가능한 필드를 찾을 수 없습니다',
   fill_no_fields_body:        '이 PDF에는 AcroForm 필드가 없습니다. 이전 XFA 형식을 사용하거나(Adobe Acrobat에서 열어보세요) 스캔된/평면 PDF일 수 있습니다 — 이 경우',
-  fill_no_fields_link:        'PDF 가리기 / 주석',
+  fill_no_fields_link:        'PDF에 그리기',
   fill_no_fields_suffix:      ' 도구를 사용해 텍스트를 겹쳐보세요.',
   fill_error_prefix:          '양식 필드를 읽을 수 없습니다: {msg}',
   fill_too_many_fields:      '이 PDF는 비정상적으로 많은 양식 필드({n}개)를 포함하고 있어 안전하게 표시할 수 없습니다. 대신 검열/주석 도구를 사용해 보세요.',

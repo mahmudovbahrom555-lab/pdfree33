@@ -1126,7 +1126,7 @@ window.PDFREE_LOCALE = {
   fill_field_fallback:        'Kolom',
   fill_no_fields_title:       'Tidak ada kolom yang dapat diisi ditemukan',
   fill_no_fields_body:        'PDF ini tidak memiliki kolom AcroForm. Mungkin menggunakan format XFA lama (buka di Adobe Acrobat) atau ini PDF hasil pindaian/datar — untuk itu, gunakan alat',
-  fill_no_fields_link:        'Hapus Teks / Anotasi',
+  fill_no_fields_link:        'Gambar di PDF',
   fill_no_fields_suffix:      ' untuk menumpangkan teks.',
   fill_error_prefix:          'Tidak dapat membaca kolom formulir: {msg}',
   fill_too_many_fields:      'PDF ini mendeklarasikan jumlah kolom formulir yang tidak wajar banyaknya ({n}) dan tidak dapat ditampilkan dengan aman. Coba gunakan alat Hapus Teks / Anotasi sebagai gantinya.',

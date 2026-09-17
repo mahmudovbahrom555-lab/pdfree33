@@ -1125,7 +1125,7 @@ window.PDFREE_LOCALE = {
   fill_field_fallback:        'Veld',
   fill_no_fields_title:       'Geen invulbare velden gevonden',
   fill_no_fields_body:        'Dit PDF-bestand heeft geen AcroForm-velden. Het gebruikt mogelijk het verouderde XFA-formaat (open het in Adobe Acrobat) of het is een gescand/plat PDF-bestand — gebruik daarvoor de',
-  fill_no_fields_link:        'Zwartmaken / Annoteren',
+  fill_no_fields_link:        'Tekenen op PDF',
   fill_no_fields_suffix:      '-tool om tekst overheen te plaatsen.',
   fill_error_prefix:          'Kan formuliervelden niet lezen: {msg}',
   fill_too_many_fields:      'Deze PDF bevat een ongewoon groot aantal formuliervelden ({n}) en kan niet veilig worden weergegeven. Probeer in plaats daarvan de tool Zwartmaken / Annoteren.',

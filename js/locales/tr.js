@@ -1125,7 +1125,7 @@ window.PDFREE_LOCALE = {
   fill_field_fallback:        'Alan',
   fill_no_fields_title:       'Doldurulabilir alan bulunamadı',
   fill_no_fields_body:        'Bu PDF\'de AcroForm alanları yok. Eski XFA biçimini kullanıyor olabilir (Adobe Acrobat\'ta açın) veya taranmış/düz bir PDF olabilir — bu durumlarda',
-  fill_no_fields_link:        'PDF Gizle / Not Ekle',
+  fill_no_fields_link:        "PDF'e Çiz",
   fill_no_fields_suffix:      ' aracını kullanarak metin ekleyebilirsiniz.',
   fill_error_prefix:          'Form alanları okunamadı: {msg}',
   fill_too_many_fields:      'Bu PDF alışılmadık derecede fazla form alanı ({n}) içeriyor ve güvenli şekilde görüntülenemiyor. Bunun yerine Gizle / Not Ekle aracını deneyin.',

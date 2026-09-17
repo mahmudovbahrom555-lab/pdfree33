@@ -1128,7 +1128,7 @@ window.PDFREE_LOCALE = {
   fill_field_fallback:        'フィールド',
   fill_no_fields_title:       '入力可能なフィールドが見つかりません',
   fill_no_fields_body:        'このPDFにはAcroFormフィールドがありません。古いXFA形式を使用している（Adobe Acrobatで開いてください）か、スキャンされた/フラットなPDFの可能性があります — その場合は',
-  fill_no_fields_link:        '黒塗り / 注釈',
+  fill_no_fields_link:        'PDFに描画',
   fill_no_fields_suffix:      'ツールを使用してテキストを重ねてください。',
   fill_error_prefix:          'フォームフィールドを読み込めませんでした: {msg}',
   fill_too_many_fields:      'このPDFには異常に多いフォームフィールド数（{n}）が含まれており、安全に表示できません。代わりに「黒塗り・注釈」ツールをお試しください。',

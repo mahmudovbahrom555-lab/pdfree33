@@ -1125,7 +1125,7 @@ window.PDFREE_LOCALE = {
   fill_field_fallback:        'Pole',
   fill_no_fields_title:       'Nie znaleziono pól do wypełnienia',
   fill_no_fields_body:        'Ten plik PDF nie ma pól AcroForm. Może używać starszego formatu XFA (otwórz go w Adobe Acrobat) lub jest zeskanowanym/płaskim plikiem PDF — w takim przypadku użyj narzędzia',
-  fill_no_fields_link:        'Zaczernij / Adnotuj',
+  fill_no_fields_link:        'Rysuj na PDF',
   fill_no_fields_suffix:      ', aby nałożyć tekst.',
   fill_error_prefix:          'Nie udało się odczytać pól formularza: {msg}',
   fill_too_many_fields:      'Ten plik PDF deklaruje niezwykle dużą liczbę pól formularza ({n}) i nie może zostać bezpiecznie wyświetlony. Spróbuj zamiast tego narzędzia Zaczernij / Adnotuj.',

@@ -1155,7 +1155,7 @@ export const EN = {
   fill_field_fallback:       'Field',
   fill_no_fields_title:      'No fillable fields found',
   fill_no_fields_body:       "This PDF doesn't have AcroForm fields. It may use the legacy XFA format (open in Adobe Acrobat) or it's a scanned/flat PDF — for those, use the",
-  fill_no_fields_link:       'Redact / Annotate',
+  fill_no_fields_link:       'Draw on PDF',
   fill_no_fields_suffix:     ' tool to overlay text.',
   fill_error_prefix:         'Could not read form fields: {msg}',
   fill_too_many_fields:      "This PDF declares an unusually large number of form fields ({n}) and can't be displayed safely. Try the Redact / Annotate tool instead.",

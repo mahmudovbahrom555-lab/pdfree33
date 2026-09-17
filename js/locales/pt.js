@@ -1127,7 +1127,7 @@ window.PDFREE_LOCALE = {
   fill_field_fallback:        'Campo',
   fill_no_fields_title:       'Nenhum campo preenchível encontrado',
   fill_no_fields_body:        'Este PDF não possui campos AcroForm. Pode usar o formato XFA legado (abra no Adobe Acrobat) ou ser um PDF digitalizado/plano — para esses casos, use a ferramenta',
-  fill_no_fields_link:        'Censurar / Anotar',
+  fill_no_fields_link:        'Desenhar no PDF',
   fill_no_fields_suffix:      ' para sobrepor texto.',
   fill_error_prefix:          'Não foi possível ler os campos do formulário: {msg}',
   fill_too_many_fields:      'Este PDF declara uma quantidade incomumente grande de campos de formulário ({n}) e não pode ser exibido com segurança. Experimente a ferramenta Redigir / Anotar.',

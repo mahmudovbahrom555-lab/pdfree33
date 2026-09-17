@@ -1126,7 +1126,7 @@ window.PDFREE_LOCALE = {
   fill_field_fallback:        'Trường',
   fill_no_fields_title:       'Không tìm thấy trường có thể điền',
   fill_no_fields_body:        'PDF này không có trường AcroForm. Có thể sử dụng định dạng XFA cũ (mở bằng Adobe Acrobat) hoặc là PDF dạng quét/phẳng — trong trường hợp đó, hãy dùng công cụ',
-  fill_no_fields_link:        'Xóa văn bản / Chú thích',
+  fill_no_fields_link:        'Vẽ lên PDF',
   fill_no_fields_suffix:      ' để phủ văn bản lên.',
   fill_error_prefix:          'Không thể đọc các trường biểu mẫu: {msg}',
   fill_too_many_fields:      'Tệp PDF này khai báo một số lượng trường biểu mẫu bất thường ({n}) và không thể hiển thị an toàn. Hãy thử công cụ Xóa văn bản / Chú thích thay thế.',

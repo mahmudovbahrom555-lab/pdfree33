@@ -1176,7 +1176,7 @@ window.PDFREE_LOCALE = {
   fill_field_fallback:       'حقل',
   fill_no_fields_title:      'لم يتم العثور على حقول قابلة للتعبئة',
   fill_no_fields_body:       'لا يحتوي ملف PDF هذا على حقول AcroForm. قد يستخدم تنسيق XFA القديم (افتحه في Adobe Acrobat) أو أنه ملف PDF ممسوح ضوئيًا/مسطّح — لهذه الحالات، استخدم أداة',
-  fill_no_fields_link:       'التعتيم / التعليق',
+  fill_no_fields_link:       'الرسم على PDF',
   fill_no_fields_suffix:     ' لإضافة نص فوقه.',
   fill_error_prefix:         'تعذّرت قراءة حقول النموذج: {msg}',
   fill_too_many_fields:      'يعلن ملف PDF هذا عن عدد حقول نماذج كبير بشكل غير معتاد ({n})، ولا يمكن عرضه بأمان. جرّب أداة التعتيم / التعليق بدلاً من ذلك.',

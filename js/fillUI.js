@@ -26,21 +26,35 @@ import { setButtonDisabled } from './ui.js';
 import { t, tp }             from './i18n.js';
 import { bindDragReorder }   from './dragReorder.js';
 
-// Locale-correct slug for the "Redact / Annotate" cross-link in the
+// Locale-correct slug for the "Draw on PDF" cross-link in the
 // no-fillable-fields hint below. This module is shared across every locale's
-// page, and the Redact PDF tool is served at a translated pathname in every
-// non-English locale — a bare '/redact-pdf/' href resolves to the English
-// page regardless of which locale the user is on. Mirrors the per-locale
-// slugs in data/tools-config.json (same table/pattern as the fix in
-// js/ocrUI.js).
-const REDACT_SLUGS = { en: 'redact-pdf', de: 'pdf-schwaerzen', es: 'censurar-pdf', fr: 'censurer-pdf', pt: 'censurar-pdf', id: 'hapus-teks-pdf', vi: 'xoa-van-ban-pdf', ru: 'skryt-tekst-pdf', ja: 'pdf-kurotsubushi', tr: 'pdf-gizle', it: 'oscura-pdf', ko: 'pdf-garigi', nl: 'pdf-zwartmaken', pl: 'zaczernij-pdf' };
+// page, and Draw on PDF is served at a translated pathname in most
+// non-English locales — a bare '/draw-on-pdf/' href would resolve to the
+// English page regardless of which locale the user is on. Mirrors the
+// per-locale slug table in scripts/build.py's _draw_slugs (same
+// table/pattern as the fix in js/ocrUI.js, and as this file used previously
+// when this link pointed at Redact instead — see fill_no_fields_link's own
+// comment for why the destination tool changed).
+//
+// Points at Draw, not Redact: a flat/scanned PDF with no AcroForm fields
+// needs a tool for ADDING visible text by hand, and Draw on PDF is the
+// tool actually built and branded for that job (multi-page, has a
+// dedicated Text tool). Redact's shared canvas component also has a Text
+// tool, but its own page is titled/branded "Redact PDF" — confusing to
+// land on when the user's job is the opposite of hiding content.
+//
+// zh-CN/ar have no localized draw-on-pdf page (same gap the old
+// REDACT_SLUGS table had for those two locales) — the link's translated
+// text still renders correctly, it just lands on the EN page, identical to
+// the pre-existing Redact case for those locales.
 const KNOWN_LOCALES = new Set(['de', 'es', 'fr', 'pt', 'id', 'vi', 'ru', 'ja', 'it', 'ko', 'nl', 'pl', 'tr']);
+const DRAW_SLUGS = { en: 'draw-on-pdf', de: 'de/pdf-zeichnen', es: 'es/dibujar-en-pdf', fr: 'fr/dessiner-sur-pdf', pt: 'pt/desenhar-no-pdf', id: 'id/gambar-pdf', vi: 'vi/ve-pdf', ru: 'ru/risovat-pdf', ja: 'ja/pdf-byouga', it: 'it/disegna-pdf', ko: 'ko/pdf-geurigi', nl: 'nl/pdf-tekenen', pl: 'pl/rysuj-pdf', tr: 'tr/pdf-ciz' };
 
-function _redactHref() {
+function _drawHref() {
   const seg = location.pathname.split('/')[1];
   const lc  = KNOWN_LOCALES.has(seg) ? seg : 'en';
-  const slug = REDACT_SLUGS[lc] || REDACT_SLUGS.en;
-  return lc === 'en' ? `/${slug}/` : `/${lc}/${slug}/`;
+  const slug = DRAW_SLUGS[lc] || DRAW_SLUGS.en;
+  return `/${slug}/`;
 }
 
 // Sanity ceiling on AcroForm field count — see the check in _extractAndRender.
@@ -1092,7 +1106,7 @@ function _noFieldsHTML() {
     <p style="margin:0 0 8px;font-weight:600;color:var(--text);">${t('fill_no_fields_title')}</p>
     <p style="margin:0;font-size:13px;color:var(--text3);line-height:1.5;">
       ${t('fill_no_fields_body')}
-      <a href="${_redactHref()}" style="color:var(--green-text);">${t('fill_no_fields_link')}</a>${t('fill_no_fields_suffix')}
+      <a href="${_drawHref()}" style="color:var(--green-text);">${t('fill_no_fields_link')}</a>${t('fill_no_fields_suffix')}
     </p>
   </div>`;
 }
