@@ -1102,7 +1102,7 @@ window.PDFREE_LOCALE = {
   fill_fields_count_one:      '{n} kolom',
   fill_fields_count_many:     '{n} kolom',
   fill_flatten_label:         'Ratakan kolom',
-  fill_flatten_hint:          '(mencegah pengeditan setelah diunduh)',
+  fill_flatten_hint:          '(mengunci isian Anda — matikan jika Anda akan mengedit file ini sendiri lagi nanti)',
   fill_readonly_suffix:       '(hanya baca)',
   fill_select_placeholder:    '— Pilih —',
   fill_tap_to_sign:           'Ketuk untuk tanda tangan',

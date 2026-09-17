@@ -1104,7 +1104,7 @@ window.PDFREE_LOCALE = {
   fill_fields_count_one:      '{n} Feld',
   fill_fields_count_many:     '{n} Felder',
   fill_flatten_label:         'Felder fixieren',
-  fill_flatten_hint:          '(verhindert Bearbeitung nach dem Download)',
+  fill_flatten_hint:          '(fixiert Ihre Eingaben — deaktivieren, wenn Sie diese Datei später selbst weiterbearbeiten möchten)',
   fill_readonly_suffix:       '(schreibgeschützt)',
   fill_select_placeholder:    '— Auswählen —',
   fill_tap_to_sign:           'Zum Unterschreiben tippen',

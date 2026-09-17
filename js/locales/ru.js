@@ -1102,7 +1102,7 @@ window.PDFREE_LOCALE = {
   fill_fields_count_one:      '{n} поле',
   fill_fields_count_many:     '{n} полей',
   fill_flatten_label:         'Зафиксировать поля',
-  fill_flatten_hint:          '(предотвращает редактирование после скачивания)',
+  fill_flatten_hint:          '(фиксирует введённые данные — выключите, если планируете сами редактировать этот файл ещё раз)',
   fill_readonly_suffix:       '(только чтение)',
   fill_select_placeholder:    '— Выбрать —',
   fill_tap_to_sign:           'Нажмите, чтобы подписать',

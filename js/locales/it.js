@@ -1101,7 +1101,7 @@ window.PDFREE_LOCALE = {
   fill_fields_count_one:      '{n} campo',
   fill_fields_count_many:     '{n} campi',
   fill_flatten_label:         'Appiattisci campi',
-  fill_flatten_hint:          '(impedisce la modifica dopo il download)',
+  fill_flatten_hint:          '(blocca i dati inseriti — disattivalo se prevedi di modificare di nuovo questo file tu stesso)',
   fill_readonly_suffix:       '(sola lettura)',
   fill_select_placeholder:    '— Seleziona —',
   fill_tap_to_sign:           'Tocca per firmare',

@@ -1103,7 +1103,7 @@ window.PDFREE_LOCALE = {
   fill_fields_count_one:      '{n} campo',
   fill_fields_count_many:     '{n} campos',
   fill_flatten_label:         'Nivelar campos',
-  fill_flatten_hint:          '(impede edição após o download)',
+  fill_flatten_hint:          '(trava os dados preenchidos — desative se for editar este arquivo você mesmo depois)',
   fill_readonly_suffix:       '(somente leitura)',
   fill_select_placeholder:    '— Selecionar —',
   fill_tap_to_sign:           'Toque para assinar',

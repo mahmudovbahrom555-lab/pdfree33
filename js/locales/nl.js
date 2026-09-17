@@ -1101,7 +1101,7 @@ window.PDFREE_LOCALE = {
   fill_fields_count_one:      '{n} veld',
   fill_fields_count_many:     '{n} velden',
   fill_flatten_label:         'Velden afvlakken',
-  fill_flatten_hint:          '(voorkomt bewerken na downloaden)',
+  fill_flatten_hint:          '(legt je invoer vast — zet uit als je dit bestand later zelf weer wilt bewerken)',
   fill_readonly_suffix:       '(alleen-lezen)',
   fill_select_placeholder:    '— Selecteer —',
   fill_tap_to_sign:           'Tik om te ondertekenen',

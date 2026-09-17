@@ -1104,7 +1104,7 @@ window.PDFREE_LOCALE = {
   fill_fields_count_one:      '{n}個のフィールド',
   fill_fields_count_many:     '{n}個のフィールド',
   fill_flatten_label:         'フィールドを固定化',
-  fill_flatten_hint:          '（ダウンロード後の編集を防止）',
+  fill_flatten_hint:          '（入力内容を固定します。自分で後から編集する予定ならオフにしてください）',
   fill_readonly_suffix:       '（読み取り専用）',
   fill_select_placeholder:    '— 選択してください —',
   fill_tap_to_sign:           'タップして署名',

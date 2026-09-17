@@ -1102,7 +1102,7 @@ window.PDFREE_LOCALE = {
   fill_fields_count_one:      '{n} trường',
   fill_fields_count_many:     '{n} trường',
   fill_flatten_label:         'Làm phẳng các trường',
-  fill_flatten_hint:          '(ngăn chỉnh sửa sau khi tải xuống)',
+  fill_flatten_hint:          '(khóa các mục đã nhập — tắt nếu bạn sẽ tự chỉnh sửa lại tệp này sau)',
   fill_readonly_suffix:       '(chỉ đọc)',
   fill_select_placeholder:    '— Chọn —',
   fill_tap_to_sign:           'Chạm để ký',

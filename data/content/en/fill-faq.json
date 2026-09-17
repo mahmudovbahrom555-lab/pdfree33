@@ -94,5 +94,13 @@
       "@type": "Answer",
       "text": "Adobe's Fill & Sign is free to use for filling and signing your own PDF, but it requires a free Adobe account and uploads your file to Adobe's servers. PDFree needs neither — no account, no sign-in, and your file never leaves your device. (Adobe's 2-per-month limit only applies if you're sending a document to someone else for their signature, not to filling one yourself.)"
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Will I be able to edit this PDF again after I download it?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "That depends on the Flatten fields option. It's checked by default, which locks in your entries as regular page content — good for a form you're submitting to someone else, since it can no longer be altered after the fact. If you're filling out something you plan to keep updating yourself over time, like a game character sheet, an inventory list, or a personal tracking form, uncheck Flatten fields before downloading. The form fields stay live, and reopening that file in Fill later will show your existing entries ready to edit."
+    }
   }
 ]

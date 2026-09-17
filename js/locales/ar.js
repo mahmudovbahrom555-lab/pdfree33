@@ -1152,7 +1152,7 @@ window.PDFREE_LOCALE = {
   fill_fields_count_one:     'حقل واحد',
   fill_fields_count_many:    '{n} حقل',
   fill_flatten_label:        'تثبيت الحقول',
-  fill_flatten_hint:         '(يمنع التعديل بعد التنزيل)',
+  fill_flatten_hint:         '(تثبّت البيانات المدخلة — أوقفها إذا كنت ستعدّل هذا الملف بنفسك مرة أخرى لاحقًا)',
   fill_readonly_suffix:      '(للقراءة فقط)',
   fill_select_placeholder:   '— اختر —',
   fill_tap_to_sign:          'اضغط للتوقيع',

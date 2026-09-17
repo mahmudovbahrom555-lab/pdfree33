@@ -1101,7 +1101,7 @@ window.PDFREE_LOCALE = {
   fill_fields_count_one:      '{n} pole',
   fill_fields_count_many:     '{n} pól',
   fill_flatten_label:         'Spłaszcz pola',
-  fill_flatten_hint:          '(uniemożliwia edycję po pobraniu)',
+  fill_flatten_hint:          '(blokuje wprowadzone dane — wyłącz, jeśli sam będziesz jeszcze edytować ten plik)',
   fill_readonly_suffix:       '(tylko do odczytu)',
   fill_select_placeholder:    '— Wybierz —',
   fill_tap_to_sign:           'Dotknij, aby podpisać',

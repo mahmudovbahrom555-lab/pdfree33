@@ -1101,7 +1101,7 @@ window.PDFREE_LOCALE = {
   fill_fields_count_one:      '{n} alan',
   fill_fields_count_many:     '{n} alan',
   fill_flatten_label:         'Alanları düzleştir',
-  fill_flatten_hint:          '(indirdikten sonra düzenlemeyi engeller)',
+  fill_flatten_hint:          '(girdiğiniz bilgileri sabitler — bu dosyayı daha sonra kendiniz tekrar düzenleyecekseniz kapatın)',
   fill_readonly_suffix:       '(salt okunur)',
   fill_select_placeholder:    '— Seçin —',
   fill_tap_to_sign:           'İmzalamak için dokunun',

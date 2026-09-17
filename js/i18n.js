@@ -1131,7 +1131,7 @@ export const EN = {
   fill_fields_count_one:     '{n} field',
   fill_fields_count_many:    '{n} fields',
   fill_flatten_label:        'Flatten fields',
-  fill_flatten_hint:         '(prevents editing after download)',
+  fill_flatten_hint:         "(locks in your entries — turn off if you'll edit this file again yourself)",
   fill_readonly_suffix:      '(read-only)',
   fill_select_placeholder:   '— Select —',
   fill_tap_to_sign:          'Tap to sign',

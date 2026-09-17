@@ -1150,7 +1150,7 @@ window.PDFREE_LOCALE = {
   fill_fields_count_one:     '{n} 个字段',
   fill_fields_count_many:    '{n} 个字段',
   fill_flatten_label:        '展平字段',
-  fill_flatten_hint:         '（下载后禁止再编辑）',
+  fill_flatten_hint:         '（锁定已填写内容——如果您之后还要自己继续编辑此文件，请关闭此选项）',
   fill_readonly_suffix:      '（只读）',
   fill_select_placeholder:   '— 请选择 —',
   fill_tap_to_sign:          '点击签名',

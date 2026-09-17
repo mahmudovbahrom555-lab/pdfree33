@@ -1103,7 +1103,7 @@ window.PDFREE_LOCALE = {
   fill_fields_count_one:      '필드 {n}개',
   fill_fields_count_many:     '필드 {n}개',
   fill_flatten_label:         '필드 평면화',
-  fill_flatten_hint:          '(다운로드 후 편집 방지)',
+  fill_flatten_hint:          '(입력한 내용을 고정합니다 — 나중에 직접 다시 편집할 계획이라면 꺼두세요)',
   fill_readonly_suffix:       '(읽기 전용)',
   fill_select_placeholder:    '— 선택 —',
   fill_tap_to_sign:           '탭하여 서명',
