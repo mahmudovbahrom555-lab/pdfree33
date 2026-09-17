@@ -1143,9 +1143,25 @@ async function _runCompressScan(file) {
   }
   const hasFonts = _hasFonts(pdf, pages_);
 
+  // page.getSize() calls pdf-lib's PDFArray.asRectangle(), which throws
+  // PDFArrayIsNotRectangleError for a /MediaBox that isn't exactly 4
+  // elements — a realistic risk for a PDF that's been through several
+  // rounds of merge/edit (same class of bug fixed in resizeWorker.js/
+  // mangaSplitWorker.js/mergeWorker.js/organizeUI.js/watermarkImage.js/
+  // watermarkTextWorker.js). Scoped INSIDE this function, not top-level:
+  // this file importScripts()'s pdfEncrypt.js and watermarkImage.js into
+  // ITS OWN shared classic-worker global scope, and a top-level name here
+  // would risk the exact same silent minified-name collision documented
+  // in tests/worker-scope-collision.test.js's own header (a real incident
+  // this session — a top-level helper in watermarkImage.js once clobbered
+  // pdfEncrypt.js's RC4 function this same way).
+  const safeSize_ = (p) => {
+    try { return p.getSize(); } catch { return { width: 595.28, height: 841.89 }; }
+  };
+
   // Compute median page size for DPI estimation (same approach as handleCompress)
   const sizes_ = pages_.map(p => {
-    const { width, height } = p.getSize();
+    const { width, height } = safeSize_(p);
     const rot = p.getRotation()?.angle ?? 0;
     return { w: width, h: height, rot };
   }).sort((a, b) => (a.w * a.h) - (b.w * b.h));
@@ -1368,8 +1384,20 @@ async function handleCompress(fileBuffer, options) {
   // Median is more robust than mean for documents with a cover page at a different size.
   let medianPageSize = null;
   if (targetDpi !== null && pages.length > 0) {
+    // page.getSize() calls pdf-lib's PDFArray.asRectangle(), which throws
+    // PDFArrayIsNotRectangleError for a /MediaBox that isn't exactly 4
+    // elements — a realistic risk for a PDF that's been through several
+    // rounds of merge/edit. Scoped INSIDE this block, not top-level — see
+    // _runCompressScan()'s own identical comment above for why (this
+    // file's importScripts()'d pdfEncrypt.js/watermarkImage.js share this
+    // worker's global scope; a top-level name here risks the exact
+    // minified-collision incident tests/worker-scope-collision.test.js
+    // now guards against).
+    const safeSize_ = (p) => {
+      try { return p.getSize(); } catch { return { width: 595.28, height: 841.89 }; }
+    };
     const sizes = pages.map(p => {
-      const { width, height } = p.getSize();
+      const { width, height } = safeSize_(p);
       const rot = p.getRotation()?.angle ?? 0;
       return { w: width, h: height, rot };
     });
@@ -1792,11 +1820,24 @@ async function handlePageNum(fileBuffer, options) {
     const toIdx   = toPage !== null ? Math.min(toPage - 1, pages.length - 1) : pages.length - 1;
     const visibleTotal = Math.max(0, toIdx - fromIdx + 1);
 
+    // page.getSize() calls pdf-lib's PDFArray.asRectangle(), which throws
+    // PDFArrayIsNotRectangleError for a /MediaBox that isn't exactly 4
+    // elements — a realistic risk for a PDF that's been through several
+    // rounds of merge/edit. Scoped INSIDE this block, not top-level — see
+    // _runCompressScan()'s own identical comment for why (this file's
+    // importScripts()'d pdfEncrypt.js/watermarkImage.js share this
+    // worker's global scope; a top-level name here risks the exact
+    // minified-collision incident tests/worker-scope-collision.test.js
+    // now guards against).
+    const safeSize_ = (p) => {
+      try { return p.getSize(); } catch { return { width: 595.28, height: 841.89 }; }
+    };
+
     for (let i = 0; i < pages.length; i++) {
       if (i < fromIdx || i > toIdx) continue;  // outside page range
       progress(10 + Math.round((i / pages.length) * 82), `Numbering page ${i + 1} of ${pages.length}…`);
       const page = pages[i];
-      const { width, height } = page.getSize();
+      const { width, height } = safeSize_(page);
       const pageNum   = (i - fromIdx) + startAt;
       const baseLabel = _formatPageNum(pageNum, format);
       const label     = showTotal
@@ -2318,11 +2359,24 @@ async function handleDraw(original, layers) {
   const pages = pdf.getPages();
   const total = layers.length;
 
+  // page.getSize() calls pdf-lib's PDFArray.asRectangle(), which throws
+  // PDFArrayIsNotRectangleError for a /MediaBox that isn't exactly 4
+  // elements — a realistic risk for a PDF that's been through several
+  // rounds of merge/edit. Scoped INSIDE this function, not top-level —
+  // see _runCompressScan()'s own identical comment for why (this file's
+  // importScripts()'d pdfEncrypt.js/watermarkImage.js share this worker's
+  // global scope; a top-level name here risks the exact minified-
+  // collision incident tests/worker-scope-collision.test.js now guards
+  // against).
+  const safeSize_ = (p) => {
+    try { return p.getSize(); } catch { return { width: 595.28, height: 841.89 }; }
+  };
+
   for (let i = 0; i < total; i++) {
     if (!layers[i]) continue;
     progress(10 + Math.round(80 * (i + 1) / total), `Embedding page ${i + 1} of ${total}…`);
     const img              = await pdf.embedPng(layers[i]);
-    const { width, height } = pages[i].getSize();
+    const { width, height } = safeSize_(pages[i]);
     pages[i].drawImage(img, { x: 0, y: 0, width, height });
   }
 
