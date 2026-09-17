@@ -47,6 +47,21 @@ let _position = 'center';       // 'center' | 'top' | 'bottom' | 'tile'
 let _fontSize = 40;
 let _color    = 'gray';         // 'gray' | 'red' | 'blue'
 
+// Competitor-parity additions (iLovePDF/Smallpdf/PDF24 all have these three
+// — see watermark_competitor_comparison_2026_09 memory). Defaults chosen to
+// be 100% behavior-identical to before these existed, so nobody's existing
+// workflow changes unless they touch the new controls:
+// 'auto' rotation mirrors the exact old hardcoded per-position values
+// (-25° center/tile, 0° top/bottom) — only an explicit numeric choice
+// overrides that. fromPage/toPage default to the whole document, matching
+// "watermark every page" (the only behavior that existed before). layer
+// defaults to 'front', matching the only behavior that existed before
+// (drawText/drawImage always append on top of existing content).
+let _rotation = 'auto';         // 'auto' | '0' | '45' | '90' | '180' | '270'
+let _fromPage = 1;              // 1-based, first page to watermark
+let _toPage   = null;           // 1-based, last page to watermark; null = last page
+let _layer    = 'front';        // 'front' | 'behind'
+
 // Logo (image) mode state
 let _logoBytes   = null;  // Uint8Array — raw file bytes, sent to the worker as-is
 let _logoMime    = null;  // 'image/png' | 'image/jpeg'
@@ -68,12 +83,13 @@ let _bgImageData = null;  // cached first-page render (physical canvas pixels)
 let _rememberLoaded = false; // "Remember my settings" applied once per tool session
 
 export function getWatermarkParams() {
+  const common = { rotation: _rotation, fromPage: _fromPage, toPage: _toPage, layer: _layer };
   if (_kind === 'image') {
     return { kind: 'image', bytes: _logoBytes, mime: _logoMime,
-              opacity: _logoOpacity, size: _logoSize, position: _position };
+              opacity: _logoOpacity, size: _logoSize, position: _position, ...common };
   }
   return { kind: 'text', text: _text, opacity: _opacity, position: _position,
-           fontSize: _fontSize, color: _color };
+           fontSize: _fontSize, color: _color, ...common };
 }
 
 // ── Public API ─────────────────────────────────────────────────
@@ -98,6 +114,10 @@ export function initWatermarkOptions(file) {
   _clearLogoObjectUrl();
   _logoImg = null;
   _logoOpacity = 0.15;
+  // fromPage/toPage always reset per document — a remembered page range
+  // from a previous file's page count would be meaningless here.
+  _fromPage = 1;
+  _toPage   = null;
   // Restore saved text-watermark settings once per tool session — image
   // mode is always reset above and never saved (see presetFilter in
   // toolRegistrations.js), so there's nothing to restore for it.
@@ -110,6 +130,8 @@ export function initWatermarkOptions(file) {
       _position = saved.position ?? _position;
       _fontSize = saved.fontSize ?? _fontSize;
       _color    = saved.color    ?? _color;
+      _rotation = saved.rotation ?? _rotation;
+      _layer    = saved.layer    ?? _layer;
     }
   }
 
@@ -176,6 +198,15 @@ function _render() {
           { value: 'tile',   label: `⠿ ${t('wm_pos_tile')}`   },
         ], _position, t('wm_position_label')))}
 
+        ${!isImage ? group(t('wm_rotation_label'), chipGroup('wmRotation', [
+          { value: 'auto', label: t('wm_rotation_auto') },
+          { value: '0',    label: '0°'   },
+          { value: '45',   label: '45°'  },
+          { value: '90',   label: '90°'  },
+          { value: '180',  label: '180°' },
+          { value: '270',  label: '270°' },
+        ], _rotation, t('wm_rotation_label'))) : ''}
+
         ${!isImage ? group(t('wm_color_label'), `
           <div class="wm-colors" role="group" aria-label="${_escAttr(t('wm_color_label'))}">
             ${[
@@ -209,6 +240,16 @@ function _render() {
                         valText: _fontSize + 'pt', min: 16, max: 80, step: 4,
                         value: _fontSize, ariaLabel: t('wm_aria_font_size', { size: _fontSize }) })}
 
+        ${group(t('wm_pagerange_label'), _pageRangeControl())}
+
+        ${group(t('wm_layer_label'), `
+          ${chipGroup('wmLayer', [
+            { value: 'front',  label: t('wm_layer_front')  },
+            { value: 'behind', label: t('wm_layer_behind') },
+          ], _layer, t('wm_layer_label'))}
+          ${_layer === 'behind' ? `<p class="wm-hint">${t('wm_layer_behind_hint')}</p>` : ''}
+        `)}
+
         ${!isImage ? presetRememberCard({
           id:       'watermarkRememberCheck',
           checked:  loadPreset('watermark') !== null,
@@ -233,6 +274,62 @@ function _render() {
 
   _bindEvents();
   _drawPreview();
+}
+
+// ── Page-range control ────────────────────────────────────────
+// Mirrors pageNumUI.js's fromPage/toPage stepper pattern (own CSS
+// namespace, own <style> tag injected per render — same idiom that file
+// already uses, harmless to re-inject on every full _render()).
+
+const WM_NUM_INPUT_STYLE = `
+  width:56px;height:30px;text-align:center;font-size:14px;
+  border:1px solid var(--border);border-radius:6px;
+  background:var(--surface);color:var(--text);
+  -moz-appearance:textfield;
+`.replace(/\n\s*/g, '');
+
+function _wmNumInput(inputId, value, placeholder = '') {
+  return `<input type="number" id="${inputId}" min="1" max="9999" step="1"
+    value="${value ?? ''}" placeholder="${placeholder}"
+    style="${WM_NUM_INPUT_STYLE}" aria-label="${inputId}">`;
+}
+
+function _pageRangeControl() {
+  return `
+    <style>
+      .wm-pr-row { display:flex;align-items:center;gap:8px;flex-wrap:wrap; }
+      .wm-pr-field { display:flex;flex-direction:column;gap:4px; }
+      .wm-pr-field-label { font-size:12px;color:var(--text2); }
+      .wm-pr-stepper {
+        width:28px;height:30px;border:1px solid var(--border);
+        border-radius:6px;background:var(--surface);color:var(--text);
+        font-size:16px;cursor:pointer;display:flex;align-items:center;
+        justify-content:center;flex-shrink:0;
+      }
+      .wm-pr-stepper:hover { background:var(--border); }
+      input[type=number]::-webkit-inner-spin-button,
+      input[type=number]::-webkit-outer-spin-button { -webkit-appearance:none; }
+    </style>
+    <div class="wm-pr-row">
+      <div class="wm-pr-field">
+        <span class="wm-pr-field-label">${t('wm_from_page')}</span>
+        <div class="wm-pr-row">
+          <button type="button" class="wm-pr-stepper" id="wmFromMinus" aria-label="${_escAttr(t('wm_aria_dec_from'))}">−</button>
+          ${_wmNumInput('wmFromInput', _fromPage)}
+          <button type="button" class="wm-pr-stepper" id="wmFromPlus" aria-label="${_escAttr(t('wm_aria_inc_from'))}">+</button>
+        </div>
+      </div>
+      <div style="font-size:18px;color:var(--text3);padding-top:18px">→</div>
+      <div class="wm-pr-field">
+        <span class="wm-pr-field-label">${t('wm_to_page')} <span style="opacity:.5;font-weight:400">${t('wm_to_page_all')}</span></span>
+        <div class="wm-pr-row">
+          <button type="button" class="wm-pr-stepper" id="wmToMinus" aria-label="${_escAttr(t('wm_aria_dec_to'))}">−</button>
+          ${_wmNumInput('wmToInput', _toPage, '∞')}
+          <button type="button" class="wm-pr-stepper" id="wmToPlus" aria-label="${_escAttr(t('wm_aria_inc_to'))}">+</button>
+        </div>
+      </div>
+    </div>
+  `;
 }
 
 // ── Events ─────────────────────────────────────────────────────
@@ -263,11 +360,73 @@ function _bindEvents() {
         el.classList.toggle('wm-color--active', el.dataset.value === _color));
       _drawPreview();  // immediate — discrete choice
     }
+    if (e.target.name === 'wmRotation') {
+      _rotation = e.target.value;
+      container.querySelectorAll('[data-name="wmRotation"]').forEach(el =>
+        el.classList.toggle('j2p-chip--active', el.dataset.value === _rotation));
+      _drawPreview();  // immediate — discrete choice
+    }
+    if (e.target.name === 'wmLayer') {
+      _layer = e.target.value;
+      // Full re-render (not just class toggling) — the behind-content hint
+      // text below the chips needs to appear/disappear with the choice.
+      _render();
+      return;
+    }
     // Unchecking forgets immediately — saving happens centrally in app.js
     // (_maybeSavePreset) right before processing starts.
     if (e.target.id === 'watermarkRememberCheck' && !e.target.checked) {
       clearPreset('watermark');
     }
+  });
+
+  id('wmFromInput')?.addEventListener('input', e => {
+    const v = parseInt(e.target.value, 10);
+    if (!isNaN(v) && v >= 1 && v <= 9999) { _fromPage = v; _drawPreview(); }
+  });
+  id('wmFromInput')?.addEventListener('change', e => {
+    let v = parseInt(e.target.value, 10);
+    if (isNaN(v) || v < 1) v = 1;
+    if (v > 9999) v = 9999;
+    _fromPage = v; e.target.value = v; _drawPreview();
+  });
+  id('wmFromMinus')?.addEventListener('click', () => {
+    if (_fromPage > 1) {
+      _fromPage--;
+      const el = id('wmFromInput'); if (el) el.value = _fromPage;
+      _drawPreview();
+    }
+  });
+  id('wmFromPlus')?.addEventListener('click', () => {
+    if (_fromPage < 9999) {
+      _fromPage++;
+      const el = id('wmFromInput'); if (el) el.value = _fromPage;
+      _drawPreview();
+    }
+  });
+
+  id('wmToInput')?.addEventListener('input', e => {
+    const raw = e.target.value;
+    _toPage = (raw === '') ? null : Math.max(1, Math.min(9999, parseInt(raw, 10) || 1));
+    _drawPreview();
+  });
+  id('wmToInput')?.addEventListener('change', e => {
+    const raw = e.target.value;
+    _toPage = (raw === '' || raw === '∞') ? null : Math.max(1, Math.min(9999, parseInt(raw, 10) || 1));
+    e.target.value = _toPage ?? ''; _drawPreview();
+  });
+  id('wmToMinus')?.addEventListener('click', () => {
+    const cur = _toPage ?? 2;
+    if (cur > 1) {
+      _toPage = cur - 1;
+      const el = id('wmToInput'); if (el) el.value = _toPage;
+      _drawPreview();
+    }
+  });
+  id('wmToPlus')?.addEventListener('click', () => {
+    _toPage = (_toPage ?? _fromPage) + 1;
+    const el = id('wmToInput'); if (el) el.value = _toPage;
+    _drawPreview();
   });
 
   id('wmOpacity')?.addEventListener('input', e => {
@@ -528,6 +687,11 @@ function _drawPreview() {
 //   canvasX = x * scaleX
 //   canvasY = H - y * scaleY
 function _drawWatermarkLayer(ctx, W, H) {
+  // The preview always renders page 1. If the selected page range excludes
+  // it (fromPage > 1), drawing the watermark here would be misleading —
+  // page 1 genuinely won't get one in the real output.
+  if (_fromPage > 1) return;
+
   if (_kind === 'image') {
     _drawLogoLayer(ctx, W, H);
     return;
@@ -543,6 +707,7 @@ function _drawWatermarkLayer(ctx, W, H) {
     pageHeight: _pageH,
     fontSize:   _fontSize,
     position:   _position,
+    rotation:   _rotation,
   });
 
   ctx.save();

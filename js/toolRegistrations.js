@@ -373,9 +373,14 @@ registerTool('watermark', {
     : (!p.text?.trim() ? t('val_wm_enter_text') : null),
   // Image-mode watermarks carry the logo's raw bytes — not practical to
   // persist in localStorage, so image mode simply isn't remembered.
+  // fromPage/toPage deliberately excluded — a remembered page range is
+  // meaningless for a different document's page count, unlike the other
+  // fields here which are pure style choices. rotation/layer included
+  // alongside them for the same reason color/position already are.
   presetFilter: p => p.kind === 'image'
     ? null
-    : { kind: p.kind, text: p.text, opacity: p.opacity, position: p.position, fontSize: p.fontSize, color: p.color },
+    : { kind: p.kind, text: p.text, opacity: p.opacity, position: p.position, fontSize: p.fontSize,
+        color: p.color, rotation: p.rotation, layer: p.layer },
 });
 
 registerTool('pagenum', {

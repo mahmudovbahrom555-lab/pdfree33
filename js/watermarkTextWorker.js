@@ -93,6 +93,34 @@ function _uncoveredChars(fkFont, text) {
   return missing;
 }
 
+// rotation === 'auto' reproduces the exact old hardcoded behavior (-25° for
+// tile/center, 0° for top/bottom) so shipping this doesn't change anyone's
+// existing output. Any explicit numeric choice from the UI overrides that
+// value uniformly, regardless of position.
+function _resolveRotationDeg(rotation, autoDeg) {
+  return (rotation !== undefined && rotation !== null && rotation !== 'auto')
+    ? Number(rotation) : autoDeg;
+}
+
+// pdf-lib's drawText()/drawImage() always append to a page's content stream
+// (PDFPage.prototype.getContentStream creates+registers exactly one new
+// stream on a page's first draw call, cached for every subsequent draw on
+// that same page object — so one watermark loop adds exactly one new
+// /Contents entry per page, always at the end, i.e. always painted last =
+// always on top). To render "behind" the page's pre-existing content
+// instead, move that one new entry from the end to the front of /Contents
+// once we're done drawing on this page — the same splice-based reorder
+// pdf-lib's own PDFPageLeaf.wrapContentStreams() uses internally, just
+// invoked from the outside via the public PDFArray insert/remove API.
+function _moveWatermarkBehind(page) {
+  const Contents = page.node.Contents();
+  if (Contents && Contents.size() > 1) {
+    const last = Contents.get(Contents.size() - 1);
+    Contents.remove(Contents.size() - 1);
+    Contents.insert(0, last);
+  }
+}
+
 // Renders `text` to a tightly-cropped, transparent-background PNG using the
 // browser's own font stack — 'sans-serif' lets the OS substitute whatever
 // covers the text's actual script (Noto/Hiragino/Malgun Gothic/etc.), the
@@ -136,7 +164,7 @@ function _renderTextToPng(text, fontSize, colorRgb) {
 // StandardFonts.HelveticaBold). Kept in sync manually, same precedent as
 // every other dedicated-worker/shared-worker duplication in this codebase
 // (worker.js is off-limits, so this can't import from it).
-function _drawVectorText(pages, { text, opacity, position, fontSize, font, rgb, degrees, color }) {
+function _drawVectorText(pages, { text, opacity, position, fontSize, font, rgb, degrees, color, rotation, layer }) {
   const [r, g, b] = WM_COLORS[color] || WM_COLORS.gray;
   for (const page of pages) {
     const { width, height } = _safeSize(page);
@@ -144,18 +172,21 @@ function _drawVectorText(pages, { text, opacity, position, fontSize, font, rgb, 
       const tileGapX = width / 2.5, tileGapY = 120;
       const cols = Math.ceil(width / tileGapX) + 2;
       const rows = Math.ceil(height / tileGapY) + 2;
+      const rot = degrees(_resolveRotationDeg(rotation, -25));
       for (let row = -1; row < rows; row++)
         for (let col = -1; col < cols; col++)
           page.drawText(text, { x: col * tileGapX + (row % 2) * (tileGapX / 2),
             y: row * tileGapY, size: fontSize * 0.7, font,
-            color: rgb(r, g, b), opacity, rotate: degrees(-25) });
+            color: rgb(r, g, b), opacity, rotate: rot });
     } else {
       const tw = font.widthOfTextAtSize(text, fontSize);
-      const pos = position === 'top'    ? { x: (width-tw)/2, y: height-50, rotate: degrees(0) }
-                : position === 'bottom' ? { x: (width-tw)/2, y: 30,        rotate: degrees(0) }
-                :                        { x: width/2-tw/2,  y: height/2,  rotate: degrees(-25) };
+      const rot = degrees(_resolveRotationDeg(rotation, position === 'center' ? -25 : 0));
+      const pos = position === 'top'    ? { x: (width-tw)/2, y: height-50, rotate: rot }
+                : position === 'bottom' ? { x: (width-tw)/2, y: 30,        rotate: rot }
+                :                        { x: width/2-tw/2,  y: height/2,  rotate: rot };
       page.drawText(text, { size: fontSize, font, color: rgb(r, g, b), opacity, ...pos });
     }
+    if (layer === 'behind') _moveWatermarkBehind(page);
   }
 }
 
@@ -165,7 +196,7 @@ function _drawVectorText(pages, { text, opacity, position, fontSize, font, rgb, 
 // adapted for an image instead of text: an image's (x,y) is its bottom-left
 // corner, not a text baseline, so center/top/bottom offsets are adjusted
 // to keep the image visually centered on the same target point.
-async function _drawImageText(pdf, pages, pngBytes, imgW, imgH, { opacity, position, degrees }) {
+async function _drawImageText(pdf, pages, pngBytes, imgW, imgH, { opacity, position, degrees, rotation, layer }) {
   const embeddedImage = await pdf.embedPng(pngBytes);
 
   for (const page of pages) {
@@ -177,21 +208,24 @@ async function _drawImageText(pdf, pages, pngBytes, imgW, imgH, { opacity, posit
       // Tiled copies render smaller (0.7x, matching the vector tile's own
       // font-size scale-down) so the pattern reads as a repeat, not a wall.
       const w = imgW * 0.7, h = imgH * 0.7;
+      const rot = degrees(_resolveRotationDeg(rotation, -25));
       for (let row = -1; row < rows; row++)
         for (let col = -1; col < cols; col++)
           page.drawImage(embeddedImage, {
             x: col * gapX + (row % 2) * (gapX / 2) - w / 2,
             y: row * gapY - h / 2,
-            width: w, height: h, opacity, rotate: degrees(-25),
+            width: w, height: h, opacity, rotate: rot,
           });
     } else {
+      const rot = degrees(_resolveRotationDeg(rotation, position === 'center' ? -25 : 0));
       const pos = position === 'top'
-        ? { x: (width - imgW) / 2, y: height - 50 - imgH / 2, rotate: degrees(0) }
+        ? { x: (width - imgW) / 2, y: height - 50 - imgH / 2, rotate: rot }
         : position === 'bottom'
-        ? { x: (width - imgW) / 2, y: 30 - imgH / 2, rotate: degrees(0) }
-        : { x: (width - imgW) / 2, y: (height - imgH) / 2, rotate: degrees(-25) };
+        ? { x: (width - imgW) / 2, y: 30 - imgH / 2, rotate: rot }
+        : { x: (width - imgW) / 2, y: (height - imgH) / 2, rotate: rot };
       page.drawImage(embeddedImage, { width: imgW, height: imgH, opacity, ...pos });
     }
+    if (layer === 'behind') _moveWatermarkBehind(page);
   }
 }
 
@@ -199,7 +233,8 @@ self.onmessage = async (e) => {
   try {
     const { fileBuffer, options, fontBytes } = e.data;
     const { text = 'CONFIDENTIAL', opacity = 0.3, position = 'center',
-            fontSize = 40, color = 'gray' } = options;
+            fontSize = 40, color = 'gray', rotation = 'auto',
+            fromPage = 1, toPage = null, layer = 'front' } = options;
 
     progress(5, 'Preparing…');
     const fkFont = self.fontkit.create(fontBytes);
@@ -211,17 +246,25 @@ self.onmessage = async (e) => {
     const pdf = await PDFDocument.load(fileBuffer, { ignoreEncryption: true });
     const pages = pdf.getPages();
 
+    // Same fromIdx/toIdx clamping idiom as worker.js's handlePageNum —
+    // toPage === null means "to the last page" (the only behavior that
+    // existed before this option was added).
+    const fromIdx = Math.max(0, (fromPage || 1) - 1);
+    const toIdx = (toPage !== null && toPage !== undefined)
+      ? Math.min(toPage - 1, pages.length - 1) : pages.length - 1;
+    const targetPages = pages.filter((_, i) => i >= fromIdx && i <= toIdx);
+
     if (missing.length === 0) {
       pdf.registerFontkit(self.fontkit);
       const font = await pdf.embedFont(fontBytes);
       progress(20, 'Watermarking…');
-      _drawVectorText(pages, { text, opacity, position, fontSize, font, rgb, degrees, color });
+      _drawVectorText(targetPages, { text, opacity, position, fontSize, font, rgb, degrees, color, rotation, layer });
     } else {
       progress(15, 'Rendering text…');
       const [r, g, b] = (WM_COLORS[color] || WM_COLORS.gray).map(v => Math.round(v * 255));
       const { bytes: pngBytes, width: imgW, height: imgH } = await _renderTextToPng(text, fontSize, [r, g, b]);
       progress(30, 'Watermarking…');
-      await _drawImageText(pdf, pages, pngBytes, imgW, imgH, { opacity, position, degrees });
+      await _drawImageText(pdf, targetPages, pngBytes, imgW, imgH, { opacity, position, degrees, rotation, layer });
     }
 
     progress(92, 'Saving…');

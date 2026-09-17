@@ -32,9 +32,13 @@ const IMG_TILE_GAP_FACTOR = 1.6; // spacing between tiled repeats, relative to l
  * @param {number} [opts.opacity]  0..1
  * @param {number} [opts.size]     logo width as a fraction of page width, e.g. 0.25
  * @param {string} [opts.position] 'center' | 'top' | 'bottom' | 'tile'
+ * @param {number} [opts.fromPage] 1-based first page to watermark
+ * @param {number} [opts.toPage]   1-based last page to watermark; null/omitted = last page
+ * @param {string} [opts.layer]    'front' | 'behind' — behind renders under the page's existing content
  */
 async function applyImageWatermark(pdf, pages, opts) {
-  const { bytes, mime, opacity = 0.3, size = 0.25, position = 'center' } = opts;
+  const { bytes, mime, opacity = 0.3, size = 0.25, position = 'center',
+          fromPage = 1, toPage = null, layer = 'front' } = opts;
 
   if (mime !== 'image/png' && mime !== 'image/jpeg') {
     throw new Error('Logo watermark supports PNG or JPG images only');
@@ -62,6 +66,22 @@ async function applyImageWatermark(pdf, pages, opts) {
     try { return page.getSize(); } catch { return { width: 595.28, height: 841.89 }; }
   };
 
+  // Same "move the one new /Contents entry from end to front" technique as
+  // watermarkTextWorker.js's _moveWatermarkBehind() — kept as a separate
+  // local copy (not a shared import) for the same importScripts()-shared-
+  // global-scope reason _safeSize/safeSize above is scoped locally: this
+  // file shares one classic-worker namespace with pdfEncrypt.js via
+  // worker.js, and a top-level declaration here risks a minified-name
+  // collision with that file's own top-level names.
+  const moveBehind = (page) => {
+    const Contents = page.node.Contents();
+    if (Contents && Contents.size() > 1) {
+      const last = Contents.get(Contents.size() - 1);
+      Contents.remove(Contents.size() - 1);
+      Contents.insert(0, last);
+    }
+  };
+
   // Embed once — pdf-lib dedupes the image resource across all drawImage() calls
   // that reference this same embedded object, so this stays cheap even with tile mode.
   const embeddedImage = mime === 'image/png'
@@ -70,7 +90,12 @@ async function applyImageWatermark(pdf, pages, opts) {
 
   const aspect = embeddedImage.height / embeddedImage.width;
 
+  const fromIdx = Math.max(0, (fromPage || 1) - 1);
+  const toIdx = (toPage !== null && toPage !== undefined)
+    ? Math.min(toPage - 1, pages.length - 1) : pages.length - 1;
+
   for (let i = 0; i < pages.length; i++) {
+    if (i < fromIdx || i > toIdx) continue;
     const page = pages[i];
     const { width: pageWidth, height: pageHeight } = safeSize(page);
     const w = pageWidth * size;
@@ -99,6 +124,7 @@ async function applyImageWatermark(pdf, pages, opts) {
               :                         (pageHeight - h) / 2;
       page.drawImage(embeddedImage, { x, y, width: w, height: h, opacity });
     }
+    if (layer === 'behind') moveBehind(page);
   }
 }
 
