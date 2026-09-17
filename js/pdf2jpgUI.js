@@ -34,6 +34,36 @@ export async function initPdf2JpgOptions(file) {
   const container = id('pdf2jpgOptions');
   if (!container) return;
 
+  // Real race found 2026-09: files.js's generic "files added" handler
+  // enables #mergeBtn as soon as a file is selected (correct for most
+  // tools — they don't need any async prep first). pdf2jpg does: it has
+  // to load pdf.js, parse the file, and count pages (all async, below)
+  // before _selectedPages is populated — _updateMergeBtn() only runs once
+  // that finishes, via _render() at the end of this function. In the
+  // window between those two things, #mergeBtn was genuinely clickable
+  // with _selectedPages still empty, so a click there silently failed
+  // toolRegistrations.js's `p.pages.length === 0` validation — no error
+  // the user would obviously connect to "I clicked too fast", no
+  // conversion, and therefore no Share button either (correctly nothing
+  // to share, but not what the click looked like it should do). Verified
+  // via real timed clicks against production: failed at 0ms/250ms after
+  // file-select, succeeded at 100ms/500ms/1000ms — a genuine race, not
+  // just "too fast for a human".
+  //
+  // Disabling synchronously right here does NOT work — verified by
+  // instrumenting the real call order: files.js's addFiles() does
+  // `dispatchEvent('pdfree:files-added')` (which synchronously runs this
+  // whole function up to its first `await`, including a naive disable
+  // here) and THEN, immediately after, calls `renderList()` — which
+  // unconditionally re-enables #mergeBtn for the generic case — in the
+  // SAME synchronous call stack. A same-tick disable gets silently undone
+  // a few lines later before control ever returns to the browser. Queuing
+  // the disable as a microtask defers it until after that whole
+  // synchronous stack (including renderList()) has finished, so it lands
+  // after the generic enable instead of before it.
+  const mergeBtn = id('mergeBtn');
+  if (mergeBtn) queueMicrotask(() => { mergeBtn.disabled = true; });
+
   container.style.display = 'block';
   container.innerHTML = `
     <div class="p2j-loading">
@@ -104,6 +134,10 @@ export async function initPdf2JpgOptions(file) {
       trackToolError('pdf2jpg', 'pdf_read_failed');
       showToast(t('error_msg', { msg: err.message }));
       container.style.display = 'none';
+      // _render() (which calls _updateMergeBtn()) never runs on this path —
+      // undo the disable from the top of this function so the button doesn't
+      // get stuck disabled forever with the file still selected.
+      if (mergeBtn) mergeBtn.disabled = false;
     }
   }
 }
