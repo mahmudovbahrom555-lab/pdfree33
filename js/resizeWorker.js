@@ -44,6 +44,21 @@ function progress(value, label) {
   self.postMessage({ type: 'progress', value, label });
 }
 
+// getCropBox()/getMediaBox() call pdf-lib's PDFArray.asRectangle(), which
+// throws PDFArrayIsNotRectangleError if the box array isn't exactly 4
+// elements, or a type error if an element isn't a real number — a
+// realistic failure mode for a PDF that's been through several rounds of
+// merge/edit by different tools (this exact bug class was found via a
+// user report on a "2_merged_merged_merged.pdf" — a file already known to
+// carry cumulative structural risk). Falls back to MediaBox, then to a
+// fixed A4 rectangle at the origin, rather than letting the whole resize
+// fail for one page's malformed box.
+function _safeCropBox(page) {
+  try { return page.getCropBox(); } catch { /* fall through */ }
+  try { return page.getMediaBox(); } catch { /* fall through */ }
+  return { x: 0, y: 0, width: PAGE_SIZES.a4[0], height: PAGE_SIZES.a4[1] };
+}
+
 async function handleResize(fileBuffer, options) {
   const { PDFDocument } = self.PDFLib;
   const { targetSize = 'a4', mode = 'fit', marginPt = 28, orientation = 'auto', customSizePt } = options || {};
@@ -72,8 +87,9 @@ async function handleResize(fileBuffer, options) {
     // content down and insets it — the exact reported "white frame" bug.
     // getCropBox() transparently falls back to MediaBox when CropBox is
     // unset (pdf-lib's own documented default), so this is a strict
-    // superset fix — zero behavior change for the common case.
-    const { x: cropX, y: cropY, width: origW, height: origH } = srcPage.getCropBox();
+    // superset fix — zero behavior change for the common case. Wrapped in
+    // _safeCropBox() for a malformed box array — see its own comment.
+    const { x: cropX, y: cropY, width: origW, height: origH } = _safeCropBox(srcPage);
     const [w, h] = _resolveTargetSize(baseSize, origW, origH, orientation);
 
     const availW = Math.max(1, w - marginPt * 2);

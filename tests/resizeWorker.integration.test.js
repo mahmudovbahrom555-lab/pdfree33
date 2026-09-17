@@ -14,7 +14,7 @@
 // ============================================================
 
 const PDFLib = await import('pdf-lib');
-const { PDFDocument, StandardFonts, rgb } = PDFLib;
+const { PDFDocument, StandardFonts, rgb, PDFName } = PDFLib;
 
 const messages = [];
 global.self = {
@@ -555,6 +555,32 @@ await test('a genuinely blank page (Merge\'s "Insert Blank Pages" style — addP
   const { width, height } = out.getPages()[1].getSize();
   expect(width).toBeCloseTo(PAGE_SIZES.letter[0]);
   expect(height).toBeCloseTo(PAGE_SIZES.letter[1]);
+});
+
+// ══════════════════════════════════════════════════════════════
+// Malformed CropBox array — a PDF that's been through several rounds of
+// merge/edit can end up with a structurally broken box entry. pdf-lib's
+// PDFArray.asRectangle() throws PDFArrayIsNotRectangleError for anything
+// other than exactly 4 elements — _safeCropBox() must not let that crash
+// the whole resize for one page.
+// ══════════════════════════════════════════════════════════════
+
+console.log('\n📐 handleResize — malformed CropBox array:');
+
+await test('a page with a malformed CropBox (wrong element count) does not throw — falls back gracefully', async () => {
+  const doc = await PDFDocument.create();
+  const page = addContentPage(doc, PAGE_SIZES.a4);
+  // 3 elements instead of the required 4 — pdf-lib's asRectangle() throws
+  // PDFArrayIsNotRectangleError for this on a real, otherwise-valid page.
+  page.node.set(PDFName.of('CropBox'), doc.context.obj([0, 0, 100]));
+  const buf = await toBuffer(doc);
+
+  await handleResize(buf, { targetSize: 'a4', mode: 'fit', marginPt: 0, orientation: 'portrait' });
+  const out = await PDFDocument.load(lastDone().result);
+  expect(out.getPageCount()).toBe(1);
+  const { width, height } = out.getPages()[0].getSize();
+  expect(width).toBeCloseTo(PAGE_SIZES.a4[0]);
+  expect(height).toBeCloseTo(PAGE_SIZES.a4[1]);
 });
 
 // ══════════════════════════════════════════════════════════════

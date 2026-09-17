@@ -33,6 +33,20 @@ function progress(value, label) {
   self.postMessage({ type: 'progress', value, label });
 }
 
+// getCropBox() calls pdf-lib's PDFArray.asRectangle(), which throws
+// PDFArrayIsNotRectangleError if the box array isn't exactly 4 elements,
+// or a type error if an element isn't a real number — a realistic
+// failure mode for a PDF that's been through several rounds of merge/edit
+// by different tools (same class of bug found via a real user report on
+// resizeWorker.js — see its own _safeCropBox() comment). Falls back to
+// MediaBox, then to a fixed A4 rectangle at the origin, rather than
+// letting the whole split fail for one page's malformed box.
+function _safeCropBox(page) {
+  try { return page.getCropBox(); } catch { /* fall through */ }
+  try { return page.getMediaBox(); } catch { /* fall through */ }
+  return { x: 0, y: 0, width: 595.28, height: 841.89 };
+}
+
 async function handleMangaSplit(fileBuffer, options) {
   const { PDFDocument } = self.PDFLib;
   const { rtl = true, skipPages = [] } = options || {};
@@ -61,8 +75,9 @@ async function handleMangaSplit(fileBuffer, options) {
     // this, the split point is computed from the wrong (too-wide) width —
     // shifting the actual cut line away from the true center of the
     // visible spread — and each half still embeds the bleed margin as
-    // part of its visible content.
-    const { x: cropX, y: cropY, width: w, height: h } = srcPage.getCropBox();
+    // part of its visible content. Wrapped in _safeCropBox() for a
+    // malformed box array — see its own comment.
+    const { x: cropX, y: cropY, width: w, height: h } = _safeCropBox(srcPage);
 
     if (skip.has(i) || !srcPage.node.normalizedEntries().Contents) {
       // A page with zero draw calls (e.g. a blank page inserted by Merge's

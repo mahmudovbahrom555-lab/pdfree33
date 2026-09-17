@@ -12,7 +12,7 @@
 // ============================================================
 
 const PDFLib = await import('pdf-lib');
-const { PDFDocument, StandardFonts, rgb } = PDFLib;
+const { PDFDocument, StandardFonts, rgb, PDFName } = PDFLib;
 
 const messages = [];
 global.self = {
@@ -356,6 +356,25 @@ await test('a genuinely blank page (Merge\'s "Insert Blank Pages" style — addP
   await handleMangaSplit(buf, { rtl: true, skipPages: [] });
   const done = lastDone();
   expect(done.pageCount).toBe(3); // 2 (spread split) + 1 (blank copied through, not split)
+});
+
+// ══════════════════════════════════════════════════════════════
+// Malformed CropBox array — same class of real-world risk as
+// resizeWorker.js's _safeCropBox() fix (a multi-merge PDF can end up with
+// a structurally broken box entry; pdf-lib throws PDFArrayIsNotRectangleError
+// for anything other than exactly 4 elements).
+// ══════════════════════════════════════════════════════════════
+
+console.log('\n📖 handleMangaSplit — malformed CropBox array:');
+
+await test('a spread with a malformed CropBox (wrong element count) does not throw — falls back gracefully', async () => {
+  const doc = await PDFDocument.create();
+  const page = addContentPage(doc, A4);
+  page.node.set(PDFName.of('CropBox'), doc.context.obj([0, 0, 100]));
+  const buf = await toBuffer(doc);
+
+  await handleMangaSplit(buf, { rtl: true, skipPages: [] });
+  expect(lastDone().pageCount).toBe(2);
 });
 
 // ══════════════════════════════════════════════════════════════
