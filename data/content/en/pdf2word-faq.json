@@ -28,7 +28,7 @@
     "name": "Does the converted Word file keep my PDF's author or other metadata?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "By default, no — the output .docx only carries generic file info identifying it as a PDFree conversion, not anything from your original PDF's properties. If you'd rather keep your PDF's original author and title in the result, uncheck \"Delete original file info\" in the tool's options before converting."
+      "text": "By default, yes — the output .docx keeps your original PDF's author and title, the same way other PDF-to-Word converters handle it. If you'd rather the result carry only generic PDFree file info instead (useful when redistributing a document and you don't want your own identifying details attached), check \"Delete original file info\" in the tool's options before converting."
     }
   },
   {

@@ -42,12 +42,19 @@ let _vpW       = 0;    // first page width in PDF points (for size estimation)
 let _vpH       = 0;    // first page height in PDF points
 let _loading   = false;
 let _scanGen   = 0;    // incremented on each new file — cancels stale background scans
-// Default true: strip the source PDF's own author/title/subject from the
-// result (matches this tool's original, still-current default behavior).
-// Unchecking lets a user who wants provenance preserved (matches what
-// iLovePDF/Smallpdf both do unconditionally — see
-// pdf2word_metadata_toggle_gated_idea_2026_09 memory) opt into that instead.
-let _stripMeta = true;
+// Default false (preserve): a live competitor check (real Playwright runs
+// against iLovePDF and Smallpdf, real docProps/core.xml read from the
+// downloaded .docx) confirmed both carry the source PDF's Author/Title into
+// the result unconditionally, zero clicks — see
+// pdf2word_metadata_toggle_gated_idea_2026_09 memory's own recorded critique
+// of the original default=strip choice: that was a deliberate divergence
+// from the industry norm, defensible only by brand positioning, not a
+// neutral technical default, with an asymmetric failure mode (a user who
+// wants their own Author/Title kept gets a worse result than every
+// competitor unless they find this checkbox). Flipped to match the norm;
+// checking the box opts into stripping for the privacy/redistribution case
+// this was originally built for.
+let _stripMeta = false;
 
 export function getPdf2WordParams() {
   return { mode: _mode, dpi: _dpi, pageCount: _pageCount, loading: _loading, stripMetadata: _stripMeta };

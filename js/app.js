@@ -11,6 +11,7 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 
 import { TOOLS, APP_VERSION, getLocalizedTool }   from './config.js';
 import { id, hide, setText, fmtSize, truncateMiddle } from './utils.js';
+import { wireShareButton, resetShareButton } from './shareButton.js';
 
 // Fires on every load — open DevTools Console to confirm active version.
 // If you see an old version here after deploying, clear SW cache:
@@ -120,52 +121,7 @@ function _freeResultUrl() {
   if (_resultUrl) { URL.revokeObjectURL(_resultUrl); _resultUrl = null; }
   _resultBlob    = null;
   _resultFilename = 'document.pdf';
-  // Hide share button — blob is gone, sharing would produce an empty file
-  const shareBtn = id('shareBtn');
-  if (shareBtn) shareBtn.style.display = 'none';
-}
-
-// Returns true only on devices/browsers that can share files natively.
-// Probes with the ACTUAL result type/filename, not a hardcoded PDF — most
-// tools output a PDF, but pdf2word/pdf2excel/pdf2ppt/pdf2md output .docx/
-// .xlsx/.pptx/.md, and canShare()'s shareable-type allowlist is not
-// guaranteed to match across formats (Windows' native share sheet in
-// particular filters by installed share targets per file type, unlike
-// macOS's more permissive general share sheet). Probing with the wrong
-// type let the Send button appear on a browser that can share PDFs but
-// not the tool's real output type, so clicking it silently failed inside
-// _doShare()'s catch block — reported as "will not send the file" on a
-// pdf-to-word conversion.
-function _canShareFiles(blob, filename) {
-  if (!navigator.share || !navigator.canShare) return false;
-  try {
-    const testFile = new File([new Uint8Array(1)], filename || 'test.pdf', {
-      type: (blob && blob.type) || 'application/pdf',
-    });
-    return navigator.canShare({ files: [testFile] });
-  } catch { return false; }
-}
-
-async function _doShare() {
-  if (!_resultBlob) return;
-  const shareBtn = id('shareBtn');
-
-  try {
-    const file = new File([_resultBlob], _resultFilename, {
-      type: _resultBlob.type || 'application/pdf',
-    });
-    await navigator.share({ files: [file] });
-
-    // User completed the share (didn't cancel)
-    if (shareBtn) {
-      shareBtn.disabled    = true;
-      shareBtn.textContent = t('sent');
-    }
-
-  } catch (err) {
-    // AbortError = user dismissed the share sheet — do nothing
-    if (err.name !== 'AbortError') console.warn('[PDFree] Share failed:', err.message);
-  }
+  resetShareButton();
 }
 
 // ── Share this tool (referral link, not the output file) ──────
@@ -459,17 +415,7 @@ function _handleSuccess({ tool, blob, desc, filename, compressionReport, batchCo
   }
 
   // Wire share button — show only where Web Share API supports files
-  const shareBtn = id('shareBtn');
-  if (shareBtn) {
-    if (_canShareFiles(blob, filename)) {
-      shareBtn.style.display = 'inline-flex';
-      shareBtn.disabled      = false;
-      shareBtn.innerHTML     = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg> Send';
-      shareBtn.onclick = _doShare;
-    } else {
-      shareBtn.style.display = 'none';
-    }
-  }
+  wireShareButton(blob, filename);
 
   // Wire "Share this tool" — always shown on real success, closed/reset on each new run.
   const shareToolBtn = id('shareToolBtn');

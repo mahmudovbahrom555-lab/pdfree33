@@ -2,6 +2,7 @@
 // Copyright (C) 2025 PDFree Contributors
 
 import { loadPdfJs } from './pdf2jpgUI.js';
+import { wireShareButton } from './shareButton.js';
 import { loadPdfLib } from './lazyLibs.js';
 import { t } from './i18n.js';
 import { saveHandoff } from './handoff.js';
@@ -935,6 +936,10 @@ function _showSuccess(desc) {
   // Second, more transient confirmation channel — matches app.js's shared
   // _handleSuccess() so OCR's independent success path doesn't diverge.
   setTimeout(() => _showToast(t('download_toast', { filename: _displayName })), 400);
+
+  // Self-managed tool — never fires pdfree:success, so app.js's own
+  // _handleSuccess() never wires #shareBtn for OCR. Wire it directly here.
+  wireShareButton(_lastResultBlob, _lastResultName);
 
   // Wire "Download again" fallback button
   const dlBtn = document.getElementById('downloadBtn');

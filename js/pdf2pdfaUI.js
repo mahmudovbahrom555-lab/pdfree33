@@ -29,6 +29,7 @@ import { id, esc } from './utils.js';
 import { t, tp } from './i18n.js';
 import { analyzePdfA, convertToPdfA } from './pdfaAnalyze.js';
 import { selectedFiles } from './files.js';
+import { wireShareButton } from './shareButton.js';
 
 // Locale-correct link to the Unlock tool from the encryption row — mirrors
 // the NEXT_STEP_SLUGS pattern in ocrUI.js. Sourced from data/tools-config.json.
@@ -185,7 +186,7 @@ async function _runConvert(myGen, btn, substituteFonts) {
     return;
   }
 
-  _triggerDownload(_file, result.fileBytes);
+  const { blob, name } = _triggerDownload(_file, result.fileBytes);
   btn.disabled = false;
   btn.textContent = originalLabel;
   const statusEl = id('pdf2pdfaConvertStatus') || id('pdf2pdfaSubstituteStatus');
@@ -196,6 +197,25 @@ async function _runConvert(myGen, btn, substituteFonts) {
     if (removedText) lines.push(removedText);
     if (result.substitution?.length) lines.push(t('pdfa_substitute_note', { fonts: result.substitution.join(', ') }));
     statusEl.textContent = lines.join(' ');
+
+    // Self-managed tool with its own custom completion UI (no shared
+    // #successCard, see this file's own header) — the shared #shareBtn
+    // stays hidden inside that card, so a dedicated button is created here
+    // instead, styled identically (same .share-btn class/icon convention).
+    let shareBtn = id('pdf2pdfaShareBtn');
+    if (!shareBtn) {
+      shareBtn = document.createElement('button');
+      shareBtn.id = 'pdf2pdfaShareBtn';
+      shareBtn.type = 'button';
+      shareBtn.className = 'share-btn';
+      shareBtn.style.marginTop = '8px';
+      // Matches the shared #shareBtn's own aria-label exactly (scripts/
+      // templates/tool-page.html) — that one is a literal string, not run
+      // through t(), so this one isn't either, for consistency.
+      shareBtn.setAttribute('aria-label', 'Send file via device apps');
+      statusEl.insertAdjacentElement('afterend', shareBtn);
+    }
+    wireShareButton(blob, name, 'pdf2pdfaShareBtn');
   }
 }
 
@@ -225,6 +245,7 @@ function _triggerDownload(sourceFile, fileBytes) {
   a.click();
   a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 30000);
+  return { blob, name };
 }
 
 export function hidePdf2PdfaOptions() {
