@@ -67,6 +67,7 @@ async function _doShare(shareBtn) {
       shareBtn.disabled = true;
       shareBtn.innerHTML = _SHARE_ICON_SENT;
       shareBtn.setAttribute('aria-label', t('sent'));
+      shareBtn.title = t('sent');
     }
 
   } catch (err) {
@@ -98,6 +99,15 @@ export function wireShareButton(blob, filename, buttonId = 'shareBtn') {
     shareBtn.disabled      = false;
     shareBtn.innerHTML     = _SHARE_ICON;
     shareBtn.onclick       = () => _doShare(shareBtn);
+    // No visible label (icon-only) — a native title tooltip is the only
+    // on-hover/long-press signal for what this specific circle does, which
+    // matters more than usual here: the page can also show a completely
+    // different, separately-labeled "Share this tool" referral button
+    // (shares a link to the TOOL, not the file — see app.js's own header
+    // comment on that feature) in the same view. Two unlabeled-looking
+    // "share" affordances side by side read as a duplicate/confusing UI —
+    // a real user report — even though they do genuinely different things.
+    if (!shareBtn.title) shareBtn.title = shareBtn.getAttribute('aria-label') || 'Send file via device apps';
   } else {
     shareBtn.style.display = 'none';
   }
