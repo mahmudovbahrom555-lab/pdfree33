@@ -184,6 +184,19 @@ export async function initOrganizeOptions(file) {
   const container = id('organizeOptions');
   if (!container) return;
 
+  // Same stale-init race as pdf2jpgUI.js/extractUI.js (see either file's own
+  // comment on this pattern): files.js's generic enable runs in the same
+  // synchronous call stack as this function's start, before the async
+  // pdf-lib load below has populated any real page state — a click in that
+  // window used to silently fail toolRegistrations.js's `pageOrder.length
+  // === 0` validation. queueMicrotask() (not a same-tick disable — verified
+  // not to work) defers the disable until after that stack finishes.
+  // _updateSubmitBtn() (called from _render() on the success path) already
+  // re-enables it correctly once ready — the error paths below need an
+  // explicit re-enable added since they bail before _render() ever runs.
+  const mergeBtn = id('mergeBtn');
+  if (mergeBtn) queueMicrotask(() => { mergeBtn.disabled = true; });
+
   container.innerHTML = loadingRow(t('org_loading'));
   container.style.display = 'block';
 
@@ -194,7 +207,12 @@ export async function initOrganizeOptions(file) {
     const doc = await PDFDocument.load(buf, { ignoreEncryption: true });
 
     _pageCount = doc.getPageCount();
-    if (_pageCount === 0) { showToast(t('no_pages_pdf')); _hide(container); return; }
+    if (_pageCount === 0) {
+      showToast(t('no_pages_pdf'));
+      if (mergeBtn) mergeBtn.disabled = false;
+      _hide(container);
+      return;
+    }
 
     const pages = doc.getPages();
     _initialRotations = pages.map(p => {
@@ -235,6 +253,7 @@ export async function initOrganizeOptions(file) {
 
   } catch (err) {
     showToast(t('org_err_load', { msg: err.message }), 5000);
+    if (mergeBtn) mergeBtn.disabled = false;
     _hide(container);
   }
 }

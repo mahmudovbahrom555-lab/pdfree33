@@ -60,6 +60,21 @@ export async function initExtractOptions(file, defaultMode = 'single') {
   _container = document.getElementById('splitOptions');
   if (!_container) return;
 
+  // Real race (same class as pdf2jpg's, see pdf2jpgUI.js's own comment on
+  // this exact pattern): files.js's addFiles() enables #mergeBtn generically
+  // right after this function starts (in the same synchronous call stack,
+  // via renderList() running just after the 'pdfree:files-added' dispatch
+  // that triggered this init) — but _selectedPages below only gets
+  // populated once pdf.js finishes loading + parsing (async, further down).
+  // A click in that window silently failed toolRegistrations.js's
+  // `pages.length === 0` validation for both split and extract (they share
+  // this function) — verified live on production for both tools before
+  // this fix. A same-tick synchronous disable here does NOT work (verified
+  // for pdf2jpg) — renderList()'s enable runs right after in the same
+  // stack and undoes it; queueMicrotask() defers past that.
+  const mergeBtn = document.getElementById('mergeBtn');
+  if (mergeBtn) queueMicrotask(() => { mergeBtn.disabled = true; });
+
   _pageCount     = 0;
   _selectedPages = new Set();
   _mode          = defaultMode;
@@ -91,9 +106,17 @@ export async function initExtractOptions(file, defaultMode = 'single') {
     _pageCount = _pdfDoc.numPages;
     if (_pageCount > MAX_PAGES) {
       _container.innerHTML = `<div class="split-loading">${esc(t('ext_too_many_pages', { n: _pageCount }))}</div>`;
+      // This file never had its own "re-enable once ready" logic before —
+      // it relied entirely on files.js's generic enable staying in effect
+      // forever, with toolRegistrations.js's validate() as the only real
+      // gate (that's what made the disable above necessary in the first
+      // place). Re-enable here so the too-many-pages error doesn't leave
+      // the button stuck disabled with no path back.
+      if (mergeBtn) mergeBtn.disabled = false;
       return;
     }
     _selectedPages = new Set(Array.from({ length: _pageCount }, (_, i) => i + 1));
+    if (mergeBtn) mergeBtn.disabled = false;
 
     _container.innerHTML = _panelHTML();
     _bindEvents();
@@ -102,6 +125,7 @@ export async function initExtractOptions(file, defaultMode = 'single') {
     await _renderThumbPage(myGen);
   } catch (err) {
     if (myGen !== _renderGen) return;
+    if (mergeBtn) mergeBtn.disabled = false;
     _container.innerHTML = `<div class="split-loading">${esc(t('ext_load_failed', { msg: err.message }))}</div>`;
   }
 }
