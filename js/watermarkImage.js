@@ -22,17 +22,6 @@
 
 const IMG_TILE_GAP_FACTOR = 1.6; // spacing between tiled repeats, relative to logo size
 
-// page.getSize() calls pdf-lib's PDFArray.asRectangle() under the hood,
-// which throws PDFArrayIsNotRectangleError for a /MediaBox that isn't
-// exactly 4 elements — a realistic risk for a PDF that's been through
-// several rounds of merge/edit (same class of bug fixed in
-// resizeWorker.js/mangaSplitWorker.js's own _safeCropBox()). Falls back
-// to a fixed A4 size rather than failing the whole watermark job for one
-// malformed page.
-function _safeSize(page) {
-  try { return page.getSize(); } catch { return { width: 595.28, height: 841.89 }; }
-}
-
 /**
  * Draw an image watermark on every page of a pdf-lib PDFDocument.
  * @param {PDFDocument} pdf
@@ -51,6 +40,28 @@ async function applyImageWatermark(pdf, pages, opts) {
     throw new Error('Logo watermark supports PNG or JPG images only');
   }
 
+  // page.getSize() calls pdf-lib's PDFArray.asRectangle() under the hood,
+  // which throws PDFArrayIsNotRectangleError for a /MediaBox that isn't
+  // exactly 4 elements — a realistic risk for a PDF that's been through
+  // several rounds of merge/edit (same class of bug fixed in
+  // resizeWorker.js/mangaSplitWorker.js's own _safeCropBox()). Falls back
+  // to a fixed A4 size rather than failing the whole watermark job for one
+  // malformed page.
+  //
+  // Deliberately scoped INSIDE this function, not a top-level declaration:
+  // this file is loaded via importScripts() into worker.js's shared classic-
+  // worker global scope alongside pdfEncrypt.js, and each file is minified
+  // independently — a top-level `function _safeSize(page)` here was
+  // minified to the SAME single-letter global name as pdfEncrypt.js's own
+  // top-level `_rc4` function, silently clobbering RC4 encryption for
+  // EVERY Protect operation (not just malformed-MediaBox files). Caught by
+  // tests/e2e/protect.e2e.mjs's CI gate before this ever reached
+  // production. A function scoped inside its only caller can't collide
+  // with another file's top-level names after minification.
+  const safeSize = (page) => {
+    try { return page.getSize(); } catch { return { width: 595.28, height: 841.89 }; }
+  };
+
   // Embed once — pdf-lib dedupes the image resource across all drawImage() calls
   // that reference this same embedded object, so this stays cheap even with tile mode.
   const embeddedImage = mime === 'image/png'
@@ -61,7 +72,7 @@ async function applyImageWatermark(pdf, pages, opts) {
 
   for (let i = 0; i < pages.length; i++) {
     const page = pages[i];
-    const { width: pageWidth, height: pageHeight } = _safeSize(page);
+    const { width: pageWidth, height: pageHeight } = safeSize(page);
     const w = pageWidth * size;
     const h = w * aspect;
 
