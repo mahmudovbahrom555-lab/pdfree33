@@ -33,6 +33,17 @@ self.onmessage = async (e) => {
   }
 };
 
+// page.getSize() calls pdf-lib's PDFArray.asRectangle() under the hood,
+// which throws PDFArrayIsNotRectangleError for a /MediaBox that isn't
+// exactly 4 elements — a realistic risk for a PDF that's been through
+// several rounds of merge/edit (same class of bug fixed in
+// resizeWorker.js/mangaSplitWorker.js's own _safeCropBox()). Falls back
+// to a fixed A4 size rather than failing the whole merge for one
+// malformed page.
+function _safeSize(page) {
+  try { return page.getSize(); } catch { return { width: 595.28, height: 841.89 }; }
+}
+
 // ── Watermark removal (duplicated from worker.js — see file header) ──
 
 function _stripAnnotations(pdf) {
@@ -336,7 +347,7 @@ async function handleMerge(files, names, removeWatermarks = false, createBookmar
           (insertBlankPages === 'odd' && prevPageCount % 2 === 1);
         if (shouldInsert) {
           const lastPage = merged.getPage(merged.getPageCount() - 1);
-          const { width, height } = lastPage.getSize();
+          const { width, height } = _safeSize(lastPage);
           merged.addPage([width, height]); // deliberately no drawing — a true blank page
           totalPages += 1;
         }

@@ -22,6 +22,17 @@
 
 const IMG_TILE_GAP_FACTOR = 1.6; // spacing between tiled repeats, relative to logo size
 
+// page.getSize() calls pdf-lib's PDFArray.asRectangle() under the hood,
+// which throws PDFArrayIsNotRectangleError for a /MediaBox that isn't
+// exactly 4 elements — a realistic risk for a PDF that's been through
+// several rounds of merge/edit (same class of bug fixed in
+// resizeWorker.js/mangaSplitWorker.js's own _safeCropBox()). Falls back
+// to a fixed A4 size rather than failing the whole watermark job for one
+// malformed page.
+function _safeSize(page) {
+  try { return page.getSize(); } catch { return { width: 595.28, height: 841.89 }; }
+}
+
 /**
  * Draw an image watermark on every page of a pdf-lib PDFDocument.
  * @param {PDFDocument} pdf
@@ -50,7 +61,7 @@ async function applyImageWatermark(pdf, pages, opts) {
 
   for (let i = 0; i < pages.length; i++) {
     const page = pages[i];
-    const { width: pageWidth, height: pageHeight } = page.getSize();
+    const { width: pageWidth, height: pageHeight } = _safeSize(page);
     const w = pageWidth * size;
     const h = w * aspect;
 

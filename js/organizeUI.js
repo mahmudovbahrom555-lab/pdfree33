@@ -113,6 +113,18 @@ let _lastClickTime   = 0;
 let _lightboxPos     = null; // position currently shown, null when closed
 let _lightboxTask    = null; // in-flight pdf.js RenderTask, for cancellation
 
+// page.getSize() calls pdf-lib's PDFArray.asRectangle() under the hood,
+// which throws PDFArrayIsNotRectangleError for a /MediaBox that isn't
+// exactly 4 elements — a realistic risk for a PDF that's been through
+// several rounds of merge/edit (same class of bug fixed in
+// resizeWorker.js/mangaSplitWorker.js's own _safeCropBox()). This runs on
+// every file load (captured alongside rotations, above), so an unguarded
+// throw here would break Organize's UI immediately on opening a file with
+// one malformed page. Falls back to a fixed A4 size instead.
+function _safeSize(page) {
+  try { return page.getSize(); } catch { return { width: 595.28, height: 841.89 }; }
+}
+
 // ── Position accessors ──────────────────────────────────────────
 // The only code allowed to read _kind/_originalIndex/_initialRotations/
 // _thumbnailURLs/_blankFlags directly — everything else goes through these,
@@ -192,7 +204,7 @@ export async function initOrganizeOptions(file) {
     // Captured once, synchronously, from the same pdf-lib doc/pages already
     // loaded for rotation above — the default size a blank page inserted
     // after this card uses (Add Blank Page feature; see pageSizeFor()).
-    _initialSizes = pages.map(p => p.getSize());
+    _initialSizes = pages.map(p => _safeSize(p));
 
     _originalIndex = Array.from({ length: _pageCount }, (_, i) => i);
     _kind          = new Array(_pageCount).fill('source');

@@ -219,6 +219,25 @@ await test('blank page matches the size of the preceding real page', async () =>
   expect(Math.round(r.height)).toBe(Math.round(b.height));
 });
 
+// page.getSize() (used to size the inserted blank page) calls pdf-lib's
+// PDFArray.asRectangle() under the hood, which throws
+// PDFArrayIsNotRectangleError for a /MediaBox that isn't exactly 4
+// elements — a realistic risk for a PDF that's been through several
+// rounds of merge/edit. _safeSize() must not let that crash the whole
+// merge for one malformed page.
+await test('blank-page insert does not throw when the preceding page has a malformed MediaBox', async () => {
+  const { PDFDocument, PDFName } = PDFLib;
+  const doc = await PDFDocument.load(normal3());
+  const lastPage = doc.getPage(doc.getPageCount() - 1);
+  // 3 elements instead of the required 4 — pdf-lib's asRectangle() throws
+  // PDFArrayIsNotRectangleError for this on a real, otherwise-valid page.
+  lastPage.node.set(PDFName.of('MediaBox'), doc.context.obj([0, 0, 100]));
+  const corrupted = toArrayBuffer(Buffer.from(await doc.save()));
+
+  await handleMerge([corrupted, normal1()], ['a.pdf', 'b.pdf'], false, false, 'always');
+  expect(lastDone().totalPages).toBe(5); // 3 + 1 blank + 1
+});
+
 console.log(`\n${'─'.repeat(50)}`);
 console.log(`mergeWorker integration tests: ${passed + failed} | ✓ ${passed} | ${failed > 0 ? '✗ ' + failed : '0 failed'}`);
 if (failed > 0) process.exit(1);

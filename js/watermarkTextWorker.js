@@ -73,6 +73,17 @@ function progress(value, label) {
 // Unicode-codepoint-aware iteration (not UTF-16 code units) — some
 // characters this needs to check are outside the BMP and would otherwise
 // split into two bogus "characters" via naive charCodeAt/index iteration.
+// page.getSize() calls pdf-lib's PDFArray.asRectangle() under the hood,
+// which throws PDFArrayIsNotRectangleError for a /MediaBox that isn't
+// exactly 4 elements — a realistic risk for a PDF that's been through
+// several rounds of merge/edit (same class of bug fixed in
+// resizeWorker.js/mangaSplitWorker.js's own _safeCropBox()). Falls back
+// to a fixed A4 size rather than failing the whole watermark job for one
+// malformed page.
+function _safeSize(page) {
+  try { return page.getSize(); } catch { return { width: 595.28, height: 841.89 }; }
+}
+
 function _uncoveredChars(fkFont, text) {
   const missing = [];
   for (const ch of text) {
@@ -128,7 +139,7 @@ function _renderTextToPng(text, fontSize, colorRgb) {
 function _drawVectorText(pages, { text, opacity, position, fontSize, font, rgb, degrees, color }) {
   const [r, g, b] = WM_COLORS[color] || WM_COLORS.gray;
   for (const page of pages) {
-    const { width, height } = page.getSize();
+    const { width, height } = _safeSize(page);
     if (position === 'tile') {
       const tileGapX = width / 2.5, tileGapY = 120;
       const cols = Math.ceil(width / tileGapX) + 2;
@@ -158,7 +169,7 @@ async function _drawImageText(pdf, pages, pngBytes, imgW, imgH, { opacity, posit
   const embeddedImage = await pdf.embedPng(pngBytes);
 
   for (const page of pages) {
-    const { width, height } = page.getSize();
+    const { width, height } = _safeSize(page);
     if (position === 'tile') {
       const gapX = width / 2.5, gapY = 120;
       const cols = Math.ceil(width / gapX) + 2;
