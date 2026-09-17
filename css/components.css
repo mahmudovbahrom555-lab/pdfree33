@@ -525,26 +525,22 @@ button,
   display: none; /* shown via JS only when navigator.canShare({files}) is true */
   align-items: center;
   justify-content: center;
-  /* Filled, not just outlined — a real user comparison against a native
-     scanner app's always-visible Share icon found this button genuinely
-     easy to miss next to the solid Download CTA. Two lighter fills were
-     tried and rejected first: --green-light (#E8F5EE) read as basically
-     white against the page background in an actual screenshot check;
-     --green-mid (#4CAF78) with white text looked properly bold but only
-     hits a 2.72:1 contrast ratio — fails WCAG AA's 4.5:1 (this project
-     has a whole prior audit dedicated to exactly this class of bug, see
-     color_contrast_fix_2026_08 memory — not repeating it here). Same
-     --green fill as Download itself (already-verified 5.24:1). Icon-only
-     (no label text as of this rule) — now distinguished from Download by
-     SHAPE (circular vs Download's rounded-rect pill) and the icon itself,
-     not by a text label; revisit if user testing ever shows the two get
-     confused, since removing the text label did remove one differentiator.
-     44x44 fixed size — WCAG 2.5.8 comfort target for an icon-only control,
-     not just the 24px minimum, since there's no surrounding label text to
-     widen the real tap area the way "🔗 Send" text used to. */
-  background: var(--green);
-  color: #fff;
-  border: 1.5px solid var(--green);
+  /* A same-green filled circle sitting directly next to the solid green
+     Download pill read as two competing primary actions (real user
+     feedback, 2026-09) — both buttons asking for attention at once, no
+     clear hierarchy. Download is the actual primary action; Share is
+     secondary. Switched to a neutral outline using the site's own
+     text-on-surface pair (--text on --surface via --border-strong) — the
+     exact combo used everywhere else on the page for body text, so
+     contrast is already proven, not a new pair to re-verify. Distinguished
+     from Download now by BOTH color weight (filled vs outline) and shape
+     (circular vs rounded-rect pill) and the icon itself. Icon-only, 44x44
+     fixed size — WCAG 2.5.8 comfort target for an icon-only control, not
+     just the 24px minimum, since there's no label text to widen the real
+     tap area the way "🔗 Send" text used to. */
+  background: var(--surface);
+  color: var(--text);
+  border: 1.5px solid var(--border-strong);
   border-radius: 50%;
   width: 44px;
   height: 44px;
@@ -553,18 +549,8 @@ button,
   transition: all var(--transition-normal);
   flex-shrink: 0;
 }
-.share-btn:hover  { background: var(--green-dark); border-color: var(--green-dark); }
+.share-btn:hover  { background: var(--surface2); border-color: var(--text2); }
 .share-btn:disabled { opacity: 0.45; cursor: default; }
-
-@media (max-width: 700px) {
-  /* Share is often the more natural action than Download on mobile
-     specifically (straight into WhatsApp/Telegram/email's own share
-     sheet) — same real user comparison, sized up to match. */
-  .share-btn {
-    padding: 12px 20px;
-    font-size: 14px;
-  }
-}
 
 /* ── Privacy cleared banner ── */
 .privacy-cleared {
