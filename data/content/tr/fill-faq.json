@@ -94,5 +94,13 @@
       "@type": "Answer",
       "text": "Adobe'nin Fill & Sign aracı, kendi PDF'inizi doldurup imzalamak için ücretsizdir ama ücretsiz bir Adobe hesabı gerektirir ve dosyanızı Adobe'nin sunucularına yükler. PDFree'de hesaba ya da giriş yapmaya gerek yoktur ve dosyanız cihazınızdan asla ayrılmaz. (Adobe'nin aylık 2 sınırı, yalnızca bir belgeyi imzalaması için başka birine gönderdiğinizde geçerlidir, kendiniz doldururken geçerli değildir.)"
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Bu PDF'yi indirdikten sonra tekrar düzenleyebilecek miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Bu, 'Alanları düzleştir' seçeneğine bağlıdır. Bu seçenek varsayılan olarak açıktır ve girdiğiniz bilgileri normal sayfa içeriği olarak sabitler — başka birine göndereceğiniz bir form için bu iyidir, çünkü daha sonra değiştirilemez. Bir oyun karakter kağıdı, envanter listesi veya kişisel bir takip formu gibi zamanla kendiniz güncellemeyi planladığınız bir şeyi dolduruyorsanız, indirmeden önce 'Alanları düzleştir' seçeneğini kapatın. Form alanları etkin kalır ve o dosyayı daha sonra Fill'de tekrar açtığınızda, önceki girdileriniz düzenlemeye hazır şekilde görünür."
+    }
   }
 ]

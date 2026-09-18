@@ -94,5 +94,13 @@
       "@type": "Answer",
       "text": "Fill & Sign od Adobe jest darmowy do wypełniania i podpisywania własnego pliku PDF, ale wymaga darmowego konta Adobe i przesyła plik na serwery Adobe. PDFree nie wymaga konta ani logowania, a Twój plik nigdy nie opuszcza urządzenia. (Limit 2 na miesiąc u Adobe dotyczy tylko wysyłania dokumentu do innej osoby do podpisu, a nie samodzielnego wypełniania.)"
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy będę mógł ponownie edytować ten plik PDF po jego pobraniu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Zależy to od opcji „Spłaszcz pola”. Jest ona domyślnie włączona, co blokuje wprowadzone dane jako zwykłą zawartość strony — to dobre rozwiązanie dla formularza, który wysyłasz komuś innemu, ponieważ nie będzie można go już zmienić. Jeśli wypełniasz coś, co planujesz samodzielnie aktualizować w czasie, na przykład kartę postaci z gry, listę inwentarza lub osobisty formularz śledzenia, wyłącz „Spłaszcz pola” przed pobraniem. Pola formularza pozostaną wtedy aktywne, a po ponownym otwarciu tego pliku w Fill zobaczysz swoje dotychczasowe dane gotowe do edycji."
+    }
   }
 ]

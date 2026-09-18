@@ -78,5 +78,13 @@
       "@type": "Answer",
       "text": "O Fill & Sign da Adobe é gratuito para preencher e assinar seu próprio PDF, mas exige uma conta Adobe gratuita e envia seu arquivo para os servidores da Adobe. O PDFree não exige conta nem login, e seu arquivo nunca sai do seu dispositivo. (O limite de 2 por mês da Adobe só se aplica se você enviar um documento para outra pessoa assinar, não para preencher você mesmo.)"
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Vou conseguir editar este PDF novamente depois de baixá-lo?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Isso depende da opção «Nivelar campos». Ela vem marcada por padrão, o que trava os dados preenchidos como conteúdo normal da página — bom para um formulário que você vai enviar para outra pessoa, já que ele não poderá mais ser alterado depois. Se você estiver preenchendo algo que pretende continuar atualizando você mesmo com o tempo, como uma ficha de personagem de jogo, uma lista de inventário ou um formulário de acompanhamento pessoal, desmarque «Nivelar campos» antes de baixar. Os campos do formulário permanecerão ativos, e ao reabrir esse arquivo no Fill mais tarde, você verá os dados já preenchidos, prontos para editar."
+    }
   }
 ]

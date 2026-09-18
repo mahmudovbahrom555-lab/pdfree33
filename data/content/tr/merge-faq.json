@@ -20,7 +20,7 @@
     "name": "Birleştirmeden sonra biçimlendirme korunacak mı?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Evet. PDFree sayfaları PDF nesne düzeyinde kopyalayan pdf-lib kullanır — yazı tipleri, resimler, vektör grafikler ve biçimlendirme orijinallerle birebir aynı kalır."
+      "text": "Evet. PDFree sayfaları PDF nesne düzeyinde kopyalayan pdf-lib kullanır — yazı tipleri, resimler, vektör grafikler ve biçimlendirme orijinallerle birebir aynı kalır. Bu, her sayfanın kendi boyutunu ve yönünü de kapsar: dikey ve yatay sayfaları veya farklı kağıt boyutlarını karıştırarak birleştirseniz bile, her sayfa birleştirilmiş dosyada diğerlerine uyacak şekilde gerilip küçültülmek yerine kendi orijinal boyutlarını korur."
     }
   },
   {

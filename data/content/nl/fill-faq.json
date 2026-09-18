@@ -94,5 +94,13 @@
       "@type": "Answer",
       "text": "Adobe's Fill & Sign is gratis om je eigen PDF in te vullen en te ondertekenen, maar vereist een gratis Adobe-account en uploadt je bestand naar Adobe's servers. PDFree heeft geen account of login nodig, en je bestand verlaat nooit je apparaat. (De limiet van 2 per maand bij Adobe geldt alleen als je een document naar iemand anders stuurt om te laten ondertekenen, niet als je het zelf invult.)"
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik dit PDF-bestand na het downloaden nog een keer bewerken?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Dat hangt af van de optie 'Velden afvlakken'. Deze staat standaard aan, waardoor je invoer wordt vastgelegd als gewone pagina-inhoud — handig voor een formulier dat je naar iemand anders stuurt, omdat het daarna niet meer kan worden gewijzigd. Vul je iets in dat je zelf na verloop van tijd wilt blijven bijwerken, zoals een personage-blad voor een spel, een inventarislijst of een persoonlijk trackingformulier, zet dan 'Velden afvlakken' uit vóór het downloaden. De formuliervelden blijven dan actief, en als je dat bestand later opnieuw opent in Fill, zie je je eerdere invoer klaar om te bewerken."
+    }
   }
 ]

@@ -36,7 +36,7 @@
     "name": "¿Se conservará el formato tras unir los PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sí. PDFree usa pdf-lib, que copia páginas a nivel de objeto PDF — fuentes, imágenes, gráficos vectoriales y formato se conservan exactamente como en los originales."
+      "text": "Sí. PDFree usa pdf-lib, que copia páginas a nivel de objeto PDF — fuentes, imágenes, gráficos vectoriales y formato se conservan exactamente como en los originales. Esto incluye el tamaño y la orientación de cada página: si combinas páginas verticales y horizontales, o distintos tamaños de papel, cada página conserva sus dimensiones originales en el archivo combinado en lugar de estirarse o encogerse para igualar a las demás."
     }
   },
   {

@@ -20,7 +20,7 @@
     "name": "Định dạng và font có được giữ nguyên sau khi ghép không?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Có. PDFree sử dụng pdf-lib, sao chép các trang ở cấp độ đối tượng PDF — font, hình ảnh, đồ họa vector và định dạng được bảo toàn chính xác như bản gốc."
+      "text": "Có. PDFree sử dụng pdf-lib, sao chép các trang ở cấp độ đối tượng PDF — font, hình ảnh, đồ họa vector và định dạng được bảo toàn chính xác như bản gốc. Điều này bao gồm cả kích thước và hướng của từng trang: nếu bạn gộp lẫn các trang dọc và ngang, hoặc các khổ giấy khác nhau, mỗi trang vẫn giữ nguyên kích thước gốc trong tệp đã gộp thay vì bị kéo giãn hoặc thu nhỏ cho khớp với các trang khác."
     }
   },
   {

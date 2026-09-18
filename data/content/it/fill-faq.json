@@ -94,5 +94,13 @@
       "@type": "Answer",
       "text": "Fill & Sign di Adobe è gratuito per compilare e firmare il proprio PDF, ma richiede un account Adobe gratuito e carica il file sui server di Adobe. PDFree non richiede né account né accesso, e il file non lascia mai il tuo dispositivo. (Il limite di 2 al mese di Adobe si applica solo se invii un documento a qualcun altro per farlo firmare, non se lo compili tu stesso.)"
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Potrò modificare di nuovo questo PDF dopo averlo scaricato?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Dipende dall'opzione «Appiattisci campi». È attivata per impostazione predefinita, il che blocca i tuoi dati come contenuto normale della pagina — utile per un modulo che stai inviando a qualcun altro, poiché non potrà più essere alterato in seguito. Se stai compilando qualcosa che prevedi di aggiornare tu stesso nel tempo, come una scheda personaggio di un gioco, un elenco d'inventario o un modulo di monitoraggio personale, disattiva «Appiattisci campi» prima di scaricare. I campi del modulo rimarranno attivi, e riaprendo quel file in Fill in seguito vedrai i tuoi dati già inseriti, pronti per essere modificati."
+    }
   }
 ]

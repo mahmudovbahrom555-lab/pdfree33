@@ -78,5 +78,13 @@
       "@type": "Answer",
       "text": "Fill & Sign de Adobe es gratis para rellenar y firmar tu propio PDF, pero requiere una cuenta gratuita de Adobe y sube tu archivo a los servidores de Adobe. PDFree no necesita ni cuenta ni inicio de sesión, y tu archivo nunca sale de tu dispositivo. (El límite de 2 al mes de Adobe solo se aplica si envías un documento a otra persona para que lo firme, no si lo rellenas tú mismo.)"
     }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Podré editar este PDF de nuevo después de descargarlo?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Eso depende de la opción «Aplanar campos». Está activada de forma predeterminada, lo que bloquea tus datos como contenido normal de la página — algo útil si vas a enviar el formulario a otra persona, ya que después no se podrá alterar. Si estás rellenando algo que planeas seguir actualizando tú mismo con el tiempo, como una hoja de personaje de un juego, una lista de inventario o un formulario de seguimiento personal, desactiva «Aplanar campos» antes de descargar. Los campos del formulario seguirán activos, y al volver a abrir ese archivo en Fill más adelante verás tus datos anteriores listos para editar."
+    }
   }
 ]

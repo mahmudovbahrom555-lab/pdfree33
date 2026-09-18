@@ -86,5 +86,13 @@
       "@type": "Answer",
       "text": "Fill & Sign của Adobe miễn phí để điền và ký file PDF của chính bạn, nhưng yêu cầu tài khoản Adobe miễn phí và tải file của bạn lên máy chủ của Adobe. PDFree không cần tài khoản hay đăng nhập, và file của bạn không bao giờ rời khỏi thiết bị. (Giới hạn 2 lần/tháng của Adobe chỉ áp dụng khi bạn gửi tài liệu cho người khác ký, không áp dụng khi bạn tự điền.)"
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Tôi có thể chỉnh sửa lại tệp PDF này sau khi tải xuống không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Điều này phụ thuộc vào tùy chọn 'Làm phẳng các trường'. Tùy chọn này được bật theo mặc định, giúp khóa các mục bạn đã nhập lại thành nội dung trang thông thường — phù hợp với biểu mẫu bạn gửi cho người khác, vì sau đó không thể bị thay đổi nữa. Nếu bạn đang điền vào thứ gì đó mà bạn dự định tự cập nhật theo thời gian, chẳng hạn như bảng nhân vật trò chơi, danh sách kiểm kê, hoặc biểu mẫu theo dõi cá nhân, hãy tắt 'Làm phẳng các trường' trước khi tải xuống. Các trường biểu mẫu sẽ vẫn hoạt động, và khi mở lại tệp đó trong Fill sau này, bạn sẽ thấy các mục đã nhập trước đó sẵn sàng để chỉnh sửa."
+    }
   }
 ]

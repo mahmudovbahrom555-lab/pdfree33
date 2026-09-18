@@ -28,7 +28,7 @@
     "name": "Blijft de opmaak bewaard na het samenvoegen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ja. PDFree gebruikt pdf-lib dat pagina's op PDF-objectniveau kopieert — lettertypen, afbeeldingen, vectorafbeeldingen en opmaak worden exact bewaard zoals in de originelen."
+      "text": "Ja. PDFree gebruikt pdf-lib dat pagina's op PDF-objectniveau kopieert — lettertypen, afbeeldingen, vectorafbeeldingen en opmaak worden exact bewaard zoals in de originelen. Dit geldt ook voor de grootte en oriëntatie van elke pagina: als je een mix van staande en liggende pagina's, of verschillende papierformaten samenvoegt, behoudt elke pagina zijn oorspronkelijke afmetingen in het samengevoegde bestand in plaats van uitgerekt of verkleind te worden om bij de andere te passen."
     }
   },
   {
