@@ -61,6 +61,7 @@ export const EN = {
   prog_rendering:    'Rendering page {i} of {n}...',
   prog_watermark:    'Applying watermark...',
   prog_pagenum:      'Adding page numbers...',
+  prog_formfields:   'Adding form fields...',
 
   // ── pageNumUI — start number card ────────────────────────────
   pn_apply_to_pages:  'Apply to pages',
@@ -145,6 +146,7 @@ export const EN = {
   desc_ereader:             'Optimized for e-reader · {pages} pages · {size}',
   desc_redact:              'Areas covered · {pages} pages · {size}',
   desc_fill:                'Form filled · {pages} pages · {size}',
+  desc_formfields:          'Form fields added · {pages} pages · {size}',
   desc_manga_split:         'Split · {pages} pages · {size}',
   warn_fill_skip_one:       "{n} field couldn't be filled and was skipped — please check the downloaded PDF.",
   warn_fill_skip_many:      "{n} fields couldn't be filled and were skipped — please check the downloaded PDF.",
@@ -693,6 +695,9 @@ export const EN = {
   val_rotate_select:        'Rotate at least one page',
   val_protect_required:     'Set an open password or restrict at least one permission',
   val_fill_loading:         'Reading PDF fields — please wait a moment…',
+  val_formfields_loading:     'Analysing PDF — please wait a moment…',
+  val_formfields_has_fields:  'This PDF already has fillable fields — use the Fill PDF tool instead',
+  val_formfields_empty:       'Click on the page to place at least one field first',
   val_cs_loading:           'Reading PDF pages — please wait a moment…',
   val_er_loading:           'Analyzing page margins — please wait a moment…',
   val_fill_no_fields:       'No fillable fields found in this PDF',
@@ -1164,6 +1169,20 @@ export const EN = {
   fill_tab_order_auto:       'Fix (auto)',
   fill_tab_order_manual:     'Customize',
   fill_tab_order_flatten_note: 'Turned off "Flatten" above — a flattened PDF has no fields left to tab through.',
+
+  // ── formFieldsUI.js ────────────────────────────────────────────
+  formfields_analysing:          'Analysing PDF…',
+  formfields_has_fields_title:   'This PDF already has fillable fields',
+  formfields_has_fields_body:    'PDFree detected existing form fields in this PDF. ',
+  formfields_has_fields_link:    'Use Fill PDF',
+  formfields_has_fields_suffix:  ' instead to fill them in.',
+  formfields_click_hint:         'Click anywhere on the page to place a text field. Drag a field to move it, or its corner to resize it. Type a name into the field to label it.',
+  formfields_name_placeholder:   'Field name',
+  formfields_delete_aria:        'Delete field',
+  formfields_count_one:          '{n} field placed',
+  formfields_count_many:         '{n} fields placed',
+  formfields_error_prefix:       'Could not process PDF: {msg}',
+  formfields_default_field_name: 'Field {n}',
 
   // ── drawUI.js + drawPointer.js ──────────────────────────────────
   draw_load_renderer_failed:   'Failed to load PDF renderer. Check your internet connection.',

@@ -63,6 +63,7 @@ const TOOL_SLUGS = {
   meta:     '/metadata-pdf/', redact:   '/redact-pdf/',
   rotate:   '/rotate-pdf/', protect: '/protect-pdf/',
   fill:     '/fill/',
+  formFields: '/add-form-fields/',
   'compress-email': '/compress-pdf-for-email/',
   'draw-pdf':       '/draw-on-pdf/',
   'ocr':            '/ocr-pdf/',

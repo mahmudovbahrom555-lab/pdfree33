@@ -30,6 +30,7 @@ window.PDFREE_LOCALE = {
     ereader:      ['تحسين pdf للقارئ الالكتروني', 'تحسين لـ كيندل'],
     protect:      ['تشفير pdf', 'وضع كلمة مرور'],
     fill:         ['تعبئة نماذج pdf', 'توقيع pdf'],
+    formFields:       ['إضافة حقول نموذج', 'إنشاء نموذج pdf', 'حقل قابل للتعبئة'],
     flatten:      ['تسطيح نماذج pdf'],
     'draw-pdf':   ['التعليق على pdf', 'الرسم على pdf'],
     ocr:          ['التعرف الضوئي على نصوص pdf', 'ocr'],
@@ -86,6 +87,7 @@ window.PDFREE_LOCALE = {
   prog_rendering:    'جارٍ عرض الصفحة {i} من {n}…',
   prog_watermark:    'جارٍ إضافة العلامة المائية…',
   prog_pagenum:      'جارٍ إضافة أرقام الصفحات…',
+  prog_formfields:   'جارٍ إضافة حقول النموذج...',
 
   // ── pageNumUI — start number card ────────────────────────────
   pn_apply_to_pages:  'تطبيق على الصفحات',
@@ -170,6 +172,7 @@ window.PDFREE_LOCALE = {
   desc_ereader:             'تم التحسين للقارئ الإلكتروني · {pages} صفحة · {size}',
   desc_redact:              'تمت تغطية المناطق · {pages} صفحة · {size}',
   desc_fill:                'تمت تعبئة النموذج · {pages} صفحة · {size}',
+  desc_formfields:          'تمت إضافة حقول النموذج · {pages} صفحة · {size}',
   desc_manga_split:         'تم التقسيم · {pages} صفحة · {size}',
   warn_fill_skip_one:       'تعذّرت تعبئة {n} حقل وتم تخطيه — يرجى مراجعة ملف PDF الذي تم تنزيله.',
   warn_fill_skip_many:      'تعذّرت تعبئة {n} حقول وتم تخطيها — يرجى مراجعة ملف PDF الذي تم تنزيله.',
@@ -718,6 +721,9 @@ window.PDFREE_LOCALE = {
   val_rotate_select:        'يرجى تحديد صفحة واحدة على الأقل للتدوير',
   val_protect_required:     'حدد كلمة مرور للفتح أو قيّد صلاحية واحدة على الأقل',
   val_fill_loading:         'جارٍ قراءة حقول ملف PDF — يرجى الانتظار قليلاً…',
+  val_formfields_loading:     'جارٍ تحليل PDF — يرجى الانتظار قليلاً…',
+  val_formfields_has_fields:  'يحتوي هذا الملف بالفعل على حقول قابلة للتعبئة — استخدم أداة تعبئة PDF بدلاً من ذلك',
+  val_formfields_empty:       'انقر على الصفحة لوضع حقل واحد على الأقل',
   val_cs_loading:           'جارٍ قراءة صفحات ملف PDF — يرجى الانتظار قليلاً…',
   val_er_loading:           'جارٍ تحليل هوامش الصفحة — يرجى الانتظار قليلاً…',
   val_fill_no_fields:       'لم يتم العثور على حقول قابلة للتعبئة في ملف PDF هذا',
@@ -1185,6 +1191,20 @@ window.PDFREE_LOCALE = {
   fill_tab_order_auto:       'إصلاح (تلقائي)',
   fill_tab_order_manual:     'تخصيص',
   fill_tab_order_flatten_note: 'تم إيقاف "التثبيت" أعلاه — ملف PDF المثبَّت لا يحتوي على حقول للتنقل بينها عبر Tab.',
+
+  // ── formFieldsUI.js ────────────────────────────────────────────
+  formfields_analysing:          'جارٍ تحليل PDF…',
+  formfields_has_fields_title:   'يحتوي هذا الملف بالفعل على حقول قابلة للتعبئة',
+  formfields_has_fields_body:    'اكتشف PDFree حقول نموذج موجودة بالفعل في هذا الملف. ',
+  formfields_has_fields_link:    'استخدام تعبئة PDF',
+  formfields_has_fields_suffix:  ' لتعبئتها بدلاً من ذلك.',
+  formfields_click_hint:         'انقر في أي مكان على الصفحة لوضع حقل نصي. اسحب الحقل لتحريكه، أو زاويته لتغيير حجمه. اكتب اسمًا في الحقل لتسميته.',
+  formfields_name_placeholder:   'اسم الحقل',
+  formfields_delete_aria:        'حذف الحقل',
+  formfields_count_one:          'تم وضع {n} حقل',
+  formfields_count_many:         'تم وضع {n} حقول',
+  formfields_error_prefix:       'تعذرت معالجة PDF: {msg}',
+  formfields_default_field_name: 'حقل {n}',
 
   // ── drawUI.js + drawPointer.js ──────────────────────────────────
   draw_load_renderer_failed:   'فشل تحميل عارض PDF. تحقق من اتصالك بالإنترنت.',

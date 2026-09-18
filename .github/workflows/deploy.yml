@@ -184,6 +184,17 @@ jobs:
         # See tests/e2e/mobile-merge-golden-path.e2e.mjs's own header comment.
         run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:mobile-merge-golden-path
 
+      - name: E2E — Add Form Fields (click-to-place produces a real AcroForm PDF)
+        # Real-browser regression gate for the "Add Form Fields" tool
+        # (js/formFieldsUI.js + js/formFieldsWorker.js): places 2 text
+        # fields via real clicks on the real rendered canvas, then verifies
+        # the downloaded PDF two independent ways — pdf-lib in plain Node
+        # sees real PDFTextField widgets at the expected names, AND this
+        # site's own real Fill tool (/fill/, separate code path) detects
+        # and can type into those exact fields. See
+        # tests/e2e/formFields.e2e.mjs's own header comment.
+        run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:formfields
+
       - name: Guard — no conflicting wrangler configs
         run: |
           for f in wrangler.jsonc wrangler.json; do

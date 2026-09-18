@@ -23,6 +23,7 @@ window.PDFREE_LOCALE = {
     meta:             ['meta veri', 'başlık', 'yazar', 'özellikler', 'dosya bilgisi'],
     protect:          ['koru', 'şifrele', 'parola', 'kilitle', 'güvenlik', 'kısıtla'],
     fill:             ['form doldur', 'form', 'onay kutusu', 'açılır liste', 'metin alanı'],
+    formFields:       ['form alanı ekle', 'pdf form oluştur', 'doldurulabilir pdf', 'alan ekle'],
     'compress-email': ['e-posta', 'gmail', 'outlook', 'pdf gönder', 'ek dosya', 'küçük dosya', 'mail için çok büyük'],
     'draw-pdf':       ['çiz', 'not al', 'açıklama ekle', 'işaretle', 'ok işareti', 'şekil', 'metin kutusu', 'serbest çizim', 'vurgula'],
     ocr:              ['ocr', 'metin çıkar', 'taranmış', 'taramayı metne çevir', 'metin tanıma', 'aranabilir'],
@@ -81,6 +82,7 @@ window.PDFREE_LOCALE = {
   prog_rendering:    '{n} sayfadan {i}. sayfa işleniyor...',
   prog_watermark:    'Filigran ekleniyor...',
   prog_pagenum:      'Sayfa numaraları ekleniyor...',
+  prog_formfields:   'Form alanları ekleniyor...',
 
   // pageNumUI
   pn_apply_to_pages: 'Sayfalara uygula',
@@ -161,6 +163,7 @@ window.PDFREE_LOCALE = {
   desc_clean_scan:              'Temizlendi · {pages} sayfa · {size}',
   desc_redact:              'Alanlar gizlendi · {pages} sayfa · {size}',
   desc_fill:                'Form dolduruldu · {pages} sayfa · {size}',
+  desc_formfields:          'Form alanları eklendi · {pages} sayfa · {size}',
   desc_manga_split:         'Bölündü · {pages} sayfa · {size}',
   warn_fill_skip_one:       "{n} alan doldurulamadı ve atlandı — lütfen indirilen PDF'yi kontrol edin.",
   warn_fill_skip_many:      "{n} alan doldurulamadı ve atlandı — lütfen indirilen PDF'yi kontrol edin.",
@@ -674,6 +677,9 @@ window.PDFREE_LOCALE = {
   val_rotate_select:        'En az bir sayfayı döndürün',
   val_protect_required:     'Bir açma şifresi belirleyin veya en az bir izni kısıtlayın',
   val_fill_loading:         'PDF alanları okunuyor — lütfen bir an bekleyin…',
+  val_formfields_loading:     'PDF analiz ediliyor — lütfen bir an bekleyin…',
+  val_formfields_has_fields:  "Bu PDF'de zaten doldurulabilir alanlar var — bunun yerine PDF Doldur aracını kullanın",
+  val_formfields_empty:       'En az bir alan yerleştirmek için sayfaya tıklayın',
   val_cs_loading:         'PDF sayfaları okunuyor — lütfen bir dakika bekleyin…',
   val_fill_no_fields:       "Bu PDF'de doldurulabilir alan bulunamadı",
   val_fill_required_prefix: 'Gerekli:',
@@ -1134,6 +1140,20 @@ window.PDFREE_LOCALE = {
   fill_tab_order_auto:       'Düzelt (otomatik)',
   fill_tab_order_manual:     'Özelleştir',
   fill_tab_order_flatten_note: "Yukarıdaki Alanları düzleştir seçeneği kapatıldı — düzleştirilmiş bir PDF'de Tab ile gezinilecek alan kalmaz.",
+
+  // ── formFieldsUI.js ────────────────────────────────────────────
+  formfields_analysing:          'PDF analiz ediliyor…',
+  formfields_has_fields_title:   "Bu PDF'de zaten doldurulabilir alanlar var",
+  formfields_has_fields_body:    "PDFree bu PDF'de mevcut form alanları algıladı. ",
+  formfields_has_fields_link:    'PDF Doldur Kullan',
+  formfields_has_fields_suffix:  ' ile bunun yerine doldurun.',
+  formfields_click_hint:         'Bir metin alanı yerleştirmek için sayfada herhangi bir yere tıklayın. Taşımak için bir alanı, yeniden boyutlandırmak için köşesini sürükleyin. Etiketlemek için alana bir ad yazın.',
+  formfields_name_placeholder:   'Alan adı',
+  formfields_delete_aria:        'Alanı sil',
+  formfields_count_one:          '{n} alan yerleştirildi',
+  formfields_count_many:         '{n} alan yerleştirildi',
+  formfields_error_prefix:       'PDF işlenemedi: {msg}',
+  formfields_default_field_name: 'Alan {n}',
 
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'PDF işleyicisi yüklenemedi. İnternet bağlantınızı kontrol edin.',

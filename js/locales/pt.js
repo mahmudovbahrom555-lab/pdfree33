@@ -23,6 +23,7 @@ window.PDFREE_LOCALE = {
     meta:             ['metadados', 'título', 'autor', 'propriedades', 'informações do arquivo'],
     protect:          ['proteger', 'senha', 'bloquear', 'criptografar', 'proteger com senha', 'restringir'],
     fill:             ['preencher', 'formulário', 'caixa de seleção', 'lista suspensa', 'campo de texto', 'preencher formulário'],
+    formFields:       ['adicionar campos', 'criar formulário pdf', 'pdf preenchível', 'adicionar campo'],
     'compress-email':  ['email', 'gmail', 'outlook', 'enviar pdf', 'anexo', 'arquivo pequeno', 'muito grande para email'],
     'draw-pdf':        ['desenhar', 'anotar', 'anotação', 'marcação', 'seta', 'forma', 'caixa de texto', 'à mão livre', 'destacar'],
     ocr:              ['ocr', 'extrair texto', 'digitalizado', 'escanear para texto', 'reconhecimento de texto', 'pesquisável'],
@@ -81,6 +82,7 @@ window.PDFREE_LOCALE = {
   prog_rendering:    'A renderizar página {i} de {n}...',
   prog_watermark:    'A aplicar marca de água...',
   prog_pagenum:      'A adicionar números de página...',
+  prog_formfields:   'Adicionando campos de formulário...',
 
   // ── pageNumUI — start number card ────────────────────────────
   pn_apply_to_pages:  'Aplicar às páginas',
@@ -161,6 +163,7 @@ window.PDFREE_LOCALE = {
   desc_clean_scan:              'Limpo · {pages} páginas · {size}',
   desc_redact:              'Áreas cobertas · {pages} páginas · {size}',
   desc_fill:                'Formulário preenchido · {pages} páginas · {size}',
+  desc_formfields:          'Campos de formulário adicionados · {pages} páginas · {size}',
   desc_manga_split:         'Dividido · {pages} páginas · {size}',
   warn_fill_skip_one:       '{n} campo não pôde ser preenchido e foi ignorado — verifique o PDF baixado.',
   warn_fill_skip_many:      '{n} campos não puderam ser preenchidos e foram ignorados — verifique o PDF baixado.',
@@ -676,6 +679,9 @@ window.PDFREE_LOCALE = {
   val_rotate_select:        'Gire pelo menos uma página',
   val_protect_required:     'Defina uma senha de abertura ou restrinja pelo menos uma permissão',
   val_fill_loading:         'Lendo campos do PDF — aguarde um momento…',
+  val_formfields_loading:     'Analisando PDF — aguarde um momento…',
+  val_formfields_has_fields:  'Este PDF já tem campos preenchíveis — use a ferramenta Preencher PDF',
+  val_formfields_empty:       'Clique na página para posicionar pelo menos um campo',
   val_cs_loading:         'Lendo as páginas do PDF — aguarde um momento…',
   val_fill_no_fields:       'Nenhum campo preenchível encontrado neste PDF',
   val_fill_required_prefix: 'Obrigatório:',
@@ -1136,6 +1142,20 @@ window.PDFREE_LOCALE = {
   fill_tab_order_auto:       'Corrigir (automático)',
   fill_tab_order_manual:     'Personalizar',
   fill_tab_order_flatten_note: 'A opção "Nivelar campos" acima foi desativada — um PDF nivelado não tem mais campos para navegar com Tab.',
+
+  // ── formFieldsUI.js ────────────────────────────────────────────
+  formfields_analysing:          'Analisando PDF…',
+  formfields_has_fields_title:   'Este PDF já tem campos preenchíveis',
+  formfields_has_fields_body:    'O PDFree detectou campos de formulário existentes neste PDF. ',
+  formfields_has_fields_link:    'Usar Preencher PDF',
+  formfields_has_fields_suffix:  ' para preenchê-los em vez disso.',
+  formfields_click_hint:         'Clique em qualquer lugar da página para posicionar um campo de texto. Arraste um campo para movê-lo, ou seu canto para redimensioná-lo. Digite um nome no campo para rotulá-lo.',
+  formfields_name_placeholder:   'Nome do campo',
+  formfields_delete_aria:        'Excluir campo',
+  formfields_count_one:          '{n} campo posicionado',
+  formfields_count_many:         '{n} campos posicionados',
+  formfields_error_prefix:       'Não foi possível processar o PDF: {msg}',
+  formfields_default_field_name: 'Campo {n}',
 
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Falha ao carregar o renderizador de PDF. Verifique sua conexão com a internet.',

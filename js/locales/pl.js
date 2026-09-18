@@ -23,6 +23,7 @@ window.PDFREE_LOCALE = {
     meta:             ['metadane', 'tytuł', 'autor', 'właściwości pliku', 'informacje o pliku'],
     protect:          ['zabezpiecz', 'hasło', 'zablokuj', 'zaszyfruj', 'bezpieczeństwo', 'ogranicz'],
     fill:             ['wypełnij', 'formularz', 'pole wyboru', 'lista rozwijana', 'pole tekstowe', 'wypełnij formularz'],
+    formFields:       ['dodaj pola formularza', 'utwórz formularz pdf', 'pdf do wypełnienia', 'dodaj pole'],
     'compress-email':  ['email', 'poczta', 'gmail', 'outlook', 'wyślij pdf', 'załącznik', 'mały plik'],
     'draw-pdf':        ['rysuj', 'rysowanie', 'adnotacja', 'zaznacz', 'strzałka', 'kształt', 'odręcznie', 'wyróżnij'],
     ocr:              ['rozpoznaj tekst', 'zeskanowany', 'skan na tekst', 'rozpoznawanie tekstu', 'przeszukiwalny pdf'],
@@ -81,6 +82,7 @@ window.PDFREE_LOCALE = {
   prog_rendering:    'Renderowanie strony {i} z {n}...',
   prog_watermark:    'Dodawanie znaku wodnego...',
   prog_pagenum:      'Dodawanie numerów stron...',
+  prog_formfields:   'Dodawanie pól formularza...',
 
   // pageNumUI
   pn_apply_to_pages: 'Zastosuj do stron',
@@ -161,6 +163,7 @@ window.PDFREE_LOCALE = {
   desc_clean_scan:              'Wyczyszczono · {pages} str. · {size}',
   desc_redact:              'Ukryto obszary · {pages} stron · {size}',
   desc_fill:                'Wypełniono formularz · {pages} stron · {size}',
+  desc_formfields:          'Dodano pola formularza · {pages} stron · {size}',
   desc_manga_split:         'Podzielono · {pages} stron · {size}',
   warn_fill_skip_one:       '{n} pole nie mogło zostać wypełnione i zostało pominięte — sprawdź pobrany plik PDF.',
   warn_fill_skip_many:      '{n} pola nie mogły zostać wypełnione i zostały pominięte — sprawdź pobrany plik PDF.',
@@ -674,6 +677,9 @@ window.PDFREE_LOCALE = {
   val_rotate_select:        'Obróć co najmniej jedną stronę',
   val_protect_required:     'Ustaw hasło otwarcia lub ogranicz co najmniej jedno uprawnienie',
   val_fill_loading:         'Odczytywanie pól PDF — proszę chwilę poczekać…',
+  val_formfields_loading:     'Analizowanie PDF — proszę chwilę poczekać…',
+  val_formfields_has_fields:  'Ten PDF ma już wypełnialne pola — użyj zamiast tego narzędzia Wypełnij PDF',
+  val_formfields_empty:       'Kliknij na stronie, aby umieścić co najmniej jedno pole',
   val_cs_loading:         'Wczytywanie stron PDF — proszę chwilę poczekać…',
   val_fill_no_fields:       'Nie znaleziono pól do wypełnienia w tym pliku PDF',
   val_fill_required_prefix: 'Wymagane:',
@@ -1134,6 +1140,20 @@ window.PDFREE_LOCALE = {
   fill_tab_order_auto:       'Napraw (automatycznie)',
   fill_tab_order_manual:     'Dostosuj',
   fill_tab_order_flatten_note: 'Opcja "Spłaszcz pola" powyżej została wyłączona — spłaszczony PDF nie ma już pól do przechodzenia klawiszem Tab.',
+
+  // ── formFieldsUI.js ────────────────────────────────────────────
+  formfields_analysing:          'Analizowanie PDF…',
+  formfields_has_fields_title:   'Ten PDF ma już wypełnialne pola',
+  formfields_has_fields_body:    'PDFree wykrył istniejące pola formularza w tym PDF. ',
+  formfields_has_fields_link:    'Użyj Wypełnij PDF',
+  formfields_has_fields_suffix:  ', aby je zamiast tego wypełnić.',
+  formfields_click_hint:         'Kliknij w dowolnym miejscu strony, aby umieścić pole tekstowe. Przeciągnij pole, aby je przesunąć, lub jego róg, aby zmienić rozmiar. Wpisz nazwę w polu, aby je oznaczyć.',
+  formfields_name_placeholder:   'Nazwa pola',
+  formfields_delete_aria:        'Usuń pole',
+  formfields_count_one:          '{n} pole umieszczone',
+  formfields_count_many:         '{n} pól umieszczonych',
+  formfields_error_prefix:       'Nie można przetworzyć PDF: {msg}',
+  formfields_default_field_name: 'Pole {n}',
 
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Nie udało się załadować renderera PDF. Sprawdź połączenie internetowe.',

@@ -24,6 +24,7 @@ window.PDFREE_LOCALE = {
     meta:             ['метаданные', 'название', 'автор', 'свойства файла', 'информация о файле'],
     protect:          ['защитить', 'пароль', 'заблокировать', 'зашифровать', 'безопасность', 'ограничить'],
     fill:             ['заполнить', 'форма', 'чекбокс', 'выпадающий список', 'текстовое поле', 'заполнить форму'],
+    formFields:       ['добавить поля формы', 'создать форму pdf', 'pdf для заполнения', 'добавить поле'],
     'compress-email':  ['для email', 'для почты', 'gmail', 'outlook', 'отправить pdf', 'вложение', 'маленький файл'],
     'draw-pdf':        ['рисовать', 'рисование', 'аннотация', 'разметка', 'стрелка', 'фигура', 'от руки', 'выделить'],
     ocr:              ['распознать текст', 'сканированный', 'скан в текст', 'распознавание текста', 'сделать доступным для поиска'],
@@ -82,6 +83,7 @@ window.PDFREE_LOCALE = {
   prog_rendering:    'Рендеринг страницы {i} из {n}...',
   prog_watermark:    'Нанесение водяного знака...',
   prog_pagenum:      'Добавление номеров страниц...',
+  prog_formfields:   'Добавление полей формы...',
 
   // ── pageNumUI — start number card ────────────────────────────
   pn_apply_to_pages:  'Применить к страницам',
@@ -162,6 +164,7 @@ window.PDFREE_LOCALE = {
   desc_clean_scan:              'Очищено · {pages} стр. · {size}',
   desc_redact:              'Области закрашены · {pages} стр. · {size}',
   desc_fill:                'Форма заполнена · {pages} стр. · {size}',
+  desc_formfields:          'Поля формы добавлены · {pages} стр. · {size}',
   desc_manga_split:         'Разделено · {pages} стр. · {size}',
   warn_fill_skip_one:       '{n} поле не удалось заполнить, оно было пропущено — проверьте скачанный PDF.',
   warn_fill_skip_many:      '{n} полей не удалось заполнить, они были пропущены — проверьте скачанный PDF.',
@@ -675,6 +678,9 @@ window.PDFREE_LOCALE = {
   val_rotate_select:        'Поверните хотя бы одну страницу',
   val_protect_required:     'Задайте пароль на открытие или ограничьте хотя бы одно разрешение',
   val_fill_loading:         'Чтение полей PDF — подождите немного…',
+  val_formfields_loading:     'Анализ PDF — подождите немного…',
+  val_formfields_has_fields:  'В этом PDF уже есть заполняемые поля — используйте инструмент Заполнить PDF',
+  val_formfields_empty:       'Нажмите на страницу, чтобы разместить хотя бы одно поле',
   val_cs_loading:         'Чтение страниц PDF — подождите немного…',
   val_fill_no_fields:       'В этом PDF не найдено заполняемых полей',
   val_fill_required_prefix: 'Обязательно:',
@@ -1135,6 +1141,20 @@ window.PDFREE_LOCALE = {
   fill_tab_order_auto:       'Исправить (авто)',
   fill_tab_order_manual:     'Настроить',
   fill_tab_order_flatten_note: 'Опция "Зафиксировать поля" выше была отключена — в зафиксированном PDF больше нет полей для перехода клавишей Tab.',
+
+  // ── formFieldsUI.js ────────────────────────────────────────────
+  formfields_analysing:          'Анализ PDF…',
+  formfields_has_fields_title:   'В этом PDF уже есть заполняемые поля',
+  formfields_has_fields_body:    'PDFree обнаружил в этом PDF уже существующие поля формы. ',
+  formfields_has_fields_link:    'Использовать Заполнить PDF',
+  formfields_has_fields_suffix:  ', чтобы заполнить их.',
+  formfields_click_hint:         'Нажмите в любом месте страницы, чтобы разместить текстовое поле. Перетащите поле, чтобы переместить его, или его угол, чтобы изменить размер. Введите имя в поле, чтобы подписать его.',
+  formfields_name_placeholder:   'Имя поля',
+  formfields_delete_aria:        'Удалить поле',
+  formfields_count_one:          '{n} поле размещено',
+  formfields_count_many:         '{n} полей размещено',
+  formfields_error_prefix:       'Не удалось обработать PDF: {msg}',
+  formfields_default_field_name: 'Поле {n}',
 
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Не удалось загрузить рендерер PDF. Проверьте подключение к интернету.',

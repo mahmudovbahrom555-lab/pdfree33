@@ -24,6 +24,7 @@ window.PDFREE_LOCALE = {
     meta:             ['metadaten', 'titel', 'autor', 'eigenschaften', 'informationen zur datei'],
     protect:          ['schützen', 'passwort', 'sperren', 'verschlüsseln', 'sichern', 'einschränken'],
     fill:             ['ausfüllen', 'formular', 'kontrollkästchen', 'dropdown', 'textfeld', 'formular ausfüllen'],
+    formFields:       ['formularfelder hinzufügen', 'pdf ausfüllbar machen', 'feld hinzufügen', 'formularfeld erstellen'],
     'compress-email':  ['für email', 'gmail', 'outlook', 'pdf senden', 'anhang', 'kleine datei', 'zu groß für email'],
     'draw-pdf':        ['zeichnen', 'markieren', 'anmerkung', 'markup', 'pfeil', 'freihand', 'hervorheben'],
     ocr:              ['ocr', 'text extrahieren', 'gescannt', 'scan in text', 'texterkennung', 'durchsuchbar'],
@@ -82,6 +83,7 @@ window.PDFREE_LOCALE = {
   prog_rendering:    'Seite {i} von {n} wird gerendert...',
   prog_watermark:    'Wasserzeichen wird angewendet...',
   prog_pagenum:      'Seitenzahlen werden hinzugefügt...',
+  prog_formfields:   'Formularfelder werden hinzugefügt...',
 
   // ── pageNumUI — start number card ────────────────────────────
   pn_apply_to_pages:  'Auf Seiten anwenden',
@@ -162,6 +164,7 @@ window.PDFREE_LOCALE = {
   desc_clean_scan:              'Bereinigt · {pages} Seiten · {size}',
   desc_redact:              'Bereiche abgedeckt · {pages} Seiten · {size}',
   desc_fill:                'Formular ausgefüllt · {pages} Seiten · {size}',
+  desc_formfields:          'Formularfelder hinzugefügt · {pages} Seiten · {size}',
   desc_manga_split:         'Geteilt · {pages} Seiten · {size}',
   warn_fill_skip_one:       '{n} Feld konnte nicht ausgefüllt werden und wurde übersprungen — bitte die heruntergeladene PDF prüfen.',
   warn_fill_skip_many:      '{n} Felder konnten nicht ausgefüllt werden und wurden übersprungen — bitte die heruntergeladene PDF prüfen.',
@@ -677,6 +680,9 @@ window.PDFREE_LOCALE = {
   val_rotate_select:        'Drehe mindestens eine Seite',
   val_protect_required:     'Lege ein Öffnen-Passwort fest oder schränke mindestens eine Berechtigung ein',
   val_fill_loading:         'PDF-Felder werden gelesen — bitte einen Moment warten…',
+  val_formfields_loading:     'PDF wird analysiert — bitte einen Moment warten…',
+  val_formfields_has_fields:  'Dieses PDF hat bereits ausfüllbare Felder — verwende stattdessen das Tool PDF Ausfüllen',
+  val_formfields_empty:       'Klicke auf die Seite, um mindestens ein Feld zu platzieren',
   val_cs_loading:         'PDF-Seiten werden gelesen — bitte einen Moment warten…',
   val_fill_no_fields:       'Keine ausfüllbaren Felder in diesem PDF gefunden',
   val_fill_required_prefix: 'Erforderlich:',
@@ -1137,6 +1143,20 @@ window.PDFREE_LOCALE = {
   fill_tab_order_auto:       'Automatisch korrigieren',
   fill_tab_order_manual:     'Anpassen',
   fill_tab_order_flatten_note: 'Option "Felder fixieren" oben wurde deaktiviert – ein fixiertes PDF hat keine Felder mehr zum Durchtabben.',
+
+  // ── formFieldsUI.js ────────────────────────────────────────────
+  formfields_analysing:          'PDF wird analysiert…',
+  formfields_has_fields_title:   'Dieses PDF hat bereits ausfüllbare Felder',
+  formfields_has_fields_body:    'PDFree hat in diesem PDF bereits vorhandene Formularfelder erkannt. ',
+  formfields_has_fields_link:    'PDF Ausfüllen verwenden',
+  formfields_has_fields_suffix:  ' um sie stattdessen auszufüllen.',
+  formfields_click_hint:         'Klicke auf die Seite, um ein Textfeld zu platzieren. Ziehe ein Feld, um es zu verschieben, oder seine Ecke, um es zu skalieren. Tippe einen Namen in das Feld, um es zu beschriften.',
+  formfields_name_placeholder:   'Feldname',
+  formfields_delete_aria:        'Feld löschen',
+  formfields_count_one:          '{n} Feld platziert',
+  formfields_count_many:         '{n} Felder platziert',
+  formfields_error_prefix:       'PDF konnte nicht verarbeitet werden: {msg}',
+  formfields_default_field_name: 'Feld {n}',
 
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'PDF-Renderer konnte nicht geladen werden. Überprüfe deine Internetverbindung.',

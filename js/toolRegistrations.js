@@ -40,6 +40,8 @@ import { initProtectOptions, hideProtectOptions,
          getProtectParams }              from './protectUI.js';
 import { initFillOptions, hideFillOptions,
          getFillParams, clearFillDraft } from './fillUI.js';
+import { initFormFieldsOptions, hideFormFieldsOptions,
+         getFormFieldsParams }          from './formFieldsUI.js';
 import { initRotateOptions, hideRotateOptions,
          getRotateParams }              from './rotateUI.js';
 import { initOrganizeOptions, hideOrganizeOptions,
@@ -557,6 +559,30 @@ registerTool('fill', {
                 ? t('val_fill_no_fields')
                 : p.missingRequired?.length
                 ? `${t('val_fill_required_prefix')} ${p.missingRequired.slice(0, 3).join(', ')}${p.missingRequired.length > 3 ? '…' : ''}`
+                : null,
+});
+
+// "Add Form Fields" — turns a flat/scanned PDF into one with real AcroForm
+// text fields, so it can later be filled (in this site's own Fill tool, or
+// any other PDF reader). runner:'worker'/workerTool:'formFields' routes
+// through processor.js's generic single-file pipeline, same as
+// fill/pagenum/protect — but _runWorkerTool special-cases this tool (exactly
+// like it already does for text watermarks) to a dedicated
+// js/formFieldsWorker.js instead of the shared js/worker.js, because it
+// needs a Unicode-capable embedded font for the fields it creates (see that
+// worker's own header comment).
+registerTool('formFields', {
+  runner:     'worker',
+  workerTool: 'formFields',
+  init:       initFormFieldsOptions,
+  hide:       hideFormFieldsOptions,
+  getParams:  getFormFieldsParams,
+  validate:   p => p.loading
+                ? t('val_formfields_loading')
+                : p.hasExistingFields
+                ? t('val_formfields_has_fields')
+                : (!p.fields || p.fields.length === 0)
+                ? t('val_formfields_empty')
                 : null,
 });
 

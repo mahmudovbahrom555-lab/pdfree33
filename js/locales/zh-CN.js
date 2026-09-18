@@ -28,6 +28,7 @@ window.PDFREE_LOCALE = {
     ereader:      ['电子书阅读器优化', 'kindle优化'],
     protect:      ['pdf加密', '设置密码'],
     fill:         ['填写pdf表单', 'pdf签名'],
+    formFields:       ['添加表单字段', '创建可填写pdf', '添加字段'],
     flatten:      ['展平pdf表单'],
     'draw-pdf':   ['pdf标注', 'pdf画图'],
     ocr:          ['pdf文字识别', 'ocr识别'],
@@ -84,6 +85,7 @@ window.PDFREE_LOCALE = {
   prog_rendering:    '正在渲染第 {i} / {n} 页…',
   prog_watermark:    '正在添加水印…',
   prog_pagenum:      '正在添加页码…',
+  prog_formfields:   '正在添加表单字段...',
 
   // ── pageNumUI — start number card ────────────────────────────
   pn_apply_to_pages:  '应用到页面',
@@ -168,6 +170,7 @@ window.PDFREE_LOCALE = {
   desc_ereader:             '已为电子阅读器优化 · {pages} 页 · {size}',
   desc_redact:              '区域已遮盖 · {pages} 页 · {size}',
   desc_fill:                '表单已填写 · {pages} 页 · {size}',
+  desc_formfields:          '已添加表单字段 · {pages} 页 · {size}',
   desc_manga_split:         '已拆分 · {pages} 页 · {size}',
   warn_fill_skip_one:       '{n} 个字段无法填写，已跳过 — 请检查下载的 PDF。',
   warn_fill_skip_many:      '{n} 个字段无法填写，已跳过 — 请检查下载的 PDF。',
@@ -716,6 +719,9 @@ window.PDFREE_LOCALE = {
   val_rotate_select:        '请至少选择一页进行旋转',
   val_protect_required:     '请设置打开密码或至少限制一项权限',
   val_fill_loading:         '正在读取 PDF 字段 — 请稍候…',
+  val_formfields_loading:     '正在分析 PDF — 请稍候…',
+  val_formfields_has_fields:  '此 PDF 已有可填写字段 — 请改用填写 PDF 表单工具',
+  val_formfields_empty:       '点击页面以放置至少一个字段',
   val_cs_loading:           '正在读取 PDF 页面 — 请稍候…',
   val_er_loading:           '正在分析页边距 — 请稍候…',
   val_fill_no_fields:       '此 PDF 中未找到可填写的字段',
@@ -1183,6 +1189,20 @@ window.PDFREE_LOCALE = {
   fill_tab_order_auto:       '自动修正',
   fill_tab_order_manual:     '自定义',
   fill_tab_order_flatten_note: '上方已关闭"展平" — 展平后的 PDF 没有可供 Tab 跳转的字段。',
+
+  // ── formFieldsUI.js ────────────────────────────────────────────
+  formfields_analysing:          '正在分析 PDF…',
+  formfields_has_fields_title:   '此 PDF 已有可填写字段',
+  formfields_has_fields_body:    'PDFree 检测到此 PDF 中已存在表单字段。',
+  formfields_has_fields_link:    '使用填写 PDF 表单',
+  formfields_has_fields_suffix:  '来填写它们。',
+  formfields_click_hint:         '点击页面任意位置以放置文本字段。拖动字段以移动，拖动其角部以调整大小。在字段中输入名称以标注。',
+  formfields_name_placeholder:   '字段名称',
+  formfields_delete_aria:        '删除字段',
+  formfields_count_one:          '已放置 {n} 个字段',
+  formfields_count_many:         '已放置 {n} 个字段',
+  formfields_error_prefix:       '无法处理 PDF：{msg}',
+  formfields_default_field_name: '字段 {n}',
 
   // ── drawUI.js + drawPointer.js ──────────────────────────────────
   draw_load_renderer_failed:   'PDF 渲染器加载失败。请检查您的网络连接。',

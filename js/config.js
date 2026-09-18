@@ -356,6 +356,22 @@ export const TOOLS = {
     implemented: true,
     inline:      false, // requires dedicated page HTML (fillOptions div)
   },
+  formFields: {
+    icon:        '📝',
+    title:       'Add Form Fields',
+    desc:        'Turn a flat or scanned PDF into a fillable form — click to place real text fields, no upload.',
+    tags:        ['add form fields', 'make pdf fillable', 'create form fields', 'add fillable fields',
+                  'flat pdf to form', 'acroform', 'form field editor', 'add text field',
+                  'create fillable pdf', 'pdf form creator', 'add input field'],
+    btn:         '📝 Add Fields & Download',
+    titles: { es: 'Añadir Campos de Formulario', pt: 'Adicionar Campos de Formulário', de: 'Formularfelder Hinzufügen', fr: 'Ajouter des Champs de Formulaire', id: 'Tambahkan Kolom Formulir', vi: 'Thêm Trường Biểu Mẫu', ru: 'Добавить Поля Формы', ja: 'フォームフィールドを追加', it: 'Aggiungi Campi Modulo', ko: '양식 필드 추가', nl: 'Formuliervelden Toevoegen', pl: 'Dodaj Pola Formularza', tr: 'Form Alanı Ekle', 'zh-CN': '添加表单字段', ar: 'إضافة حقول نموذج' },
+    descs:  { es: 'Convierte un PDF plano o escaneado en un formulario rellenable — coloca campos de texto con un clic, sin subir nada.', pt: 'Transforme um PDF simples ou digitalizado num formulário preenchível — clique para posicionar campos de texto, sem enviar nada.', de: 'Wandle ein einfaches PDF in ein ausfüllbares Formular um — platziere Textfelder per Klick, kein Upload.', fr: 'Transformez un PDF plat ou scanné en formulaire remplissable — placez des champs de texte en un clic, sans upload.', id: 'Ubah PDF datar atau hasil pindai menjadi formulir yang bisa diisi — klik untuk menempatkan kolom teks, tanpa unggah.', vi: 'Biến PDF phẳng hoặc quét thành biểu mẫu có thể điền — nhấp để đặt trường văn bản, không cần tải lên.', ru: 'Превратите плоский или сканированный PDF в заполняемую форму — кликните, чтобы разместить текстовые поля, без загрузки на сервер.', ja: 'フラットなPDFやスキャンしたPDFを入力可能なフォームに変換 — クリックしてテキストフィールドを配置、アップロード不要。', it: 'Trasforma un PDF piatto o scansionato in un modulo compilabile — clicca per posizionare campi di testo, senza caricamenti.', ko: '평면 또는 스캔한 PDF를 작성 가능한 양식으로 변환 — 클릭으로 텍스트 필드를 배치, 업로드 없이.', nl: "Maak van een plat of gescand PDF een invulbaar formulier — klik om tekstvelden te plaatsen, zonder uploaden.", pl: 'Zamień płaski lub zeskanowany PDF w formularz do wypełnienia — kliknij, aby umieścić pola tekstowe, bez przesyłania.', tr: "Düz veya taranmış bir PDF'yi doldurulabilir forma dönüştürün — metin alanlarını tıklayarak yerleştirin, yükleme yapmadan.", 'zh-CN': '将扁平或扫描的 PDF 转换为可填写表单 — 点击放置文本字段，无需上传。', ar: 'حوّل ملف PDF مسطحًا أو ممسوحًا ضوئيًا إلى نموذج قابل للتعبئة — انقر لوضع حقول نصية، دون رفع أي ملف.' },
+    btns:   { es: '📝 Añadir Campos y Descargar', pt: '📝 Adicionar Campos e Baixar', de: '📝 Felder Hinzufügen & Herunterladen', fr: '📝 Ajouter les Champs et Télécharger', id: '📝 Tambah Kolom & Unduh', vi: '📝 Thêm Trường & Tải Xuống', ru: '📝 Добавить Поля и Скачать', ja: '📝 フィールドを追加してダウンロード', it: '📝 Aggiungi Campi e Scarica', ko: '📝 필드 추가 후 다운로드', nl: '📝 Velden Toevoegen & Downloaden', pl: '📝 Dodaj Pola i Pobierz', tr: '📝 Alan Ekle ve İndir', 'zh-CN': '📝 添加字段并下载', ar: '📝 إضافة الحقول والتنزيل' },
+    multi:       false,
+    accept:      '.pdf,application/pdf',
+    implemented: true,
+    inline:      false, // dedicated-page-only, same pattern as 'fill' — canvas-based click-to-place editor, not designed to render inline in the homepage toolArea
+  },
   'compress-email': {
     icon:        '📧',
     title:       'Compress PDF for Email',

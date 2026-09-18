@@ -23,6 +23,7 @@ window.PDFREE_LOCALE = {
     meta:             ['metadata', 'titel', 'auteur', 'onderwerp', 'eigenschappen', 'bestandsinfo'],
     protect:          ['beveiligen', 'wachtwoord', 'vergrendelen', 'versleutelen', 'beveiliging', 'beperken'],
     fill:             ['invullen', 'formulier', 'selectievakje', 'keuzelijst', 'tekstveld', 'formulier invullen'],
+    formFields:       ['velden toevoegen', 'pdf formulier maken', 'invulbare pdf', 'veld toevoegen'],
     'compress-email':  ['email', 'gmail', 'outlook', 'pdf versturen', 'bijlage', 'klein bestand', 'te groot voor email'],
     'draw-pdf':        ['tekenen', 'annoteren', 'annotatie', 'markeren', 'pijl', 'vorm', 'tekstvak', 'vrije hand', 'markering'],
     ocr:              ['ocr', 'tekst extraheren', 'gescand', 'scan naar tekst', 'tekstherkenning', 'doorzoekbaar'],
@@ -81,6 +82,7 @@ window.PDFREE_LOCALE = {
   prog_rendering:    'Pagina {i} van {n} renderen...',
   prog_watermark:    'Watermerk toepassen...',
   prog_pagenum:      'Paginanummers toevoegen...',
+  prog_formfields:   'Formuliervelden toevoegen...',
 
   // pageNumUI
   pn_apply_to_pages: 'Toepassen op pagina\'s',
@@ -161,6 +163,7 @@ window.PDFREE_LOCALE = {
   desc_clean_scan:              "Opgeschoond · {pages} pagina's · {size}",
   desc_redact:              'Gebieden verborgen · {pages} pagina\'s · {size}',
   desc_fill:                'Formulier ingevuld · {pages} pagina\'s · {size}',
+  desc_formfields:          "Formuliervelden toegevoegd · {pages} pagina's · {size}",
   desc_manga_split:         "Gesplitst · {pages} pagina's · {size}",
   warn_fill_skip_one:       '{n} veld kon niet worden ingevuld en is overgeslagen — controleer de gedownloade PDF.',
   warn_fill_skip_many:      '{n} velden konden niet worden ingevuld en zijn overgeslagen — controleer de gedownloade PDF.',
@@ -674,6 +677,9 @@ window.PDFREE_LOCALE = {
   val_rotate_select:        'Draai ten minste één pagina',
   val_protect_required:     'Stel een openwachtwoord in of beperk ten minste één recht',
   val_fill_loading:         'PDF-velden worden gelezen — een moment geduld…',
+  val_formfields_loading:     'PDF analyseren — een moment geduld…',
+  val_formfields_has_fields:  'Deze PDF heeft al invulbare velden — gebruik in plaats daarvan de tool PDF Invullen',
+  val_formfields_empty:       'Klik op de pagina om ten minste één veld te plaatsen',
   val_cs_loading:         "PDF-pagina's worden gelezen — een moment geduld…",
   val_fill_no_fields:       'Geen invulbare velden gevonden in deze PDF',
   val_fill_required_prefix: 'Vereist:',
@@ -1134,6 +1140,20 @@ window.PDFREE_LOCALE = {
   fill_tab_order_auto:       'Herstellen (automatisch)',
   fill_tab_order_manual:     'Aanpassen',
   fill_tab_order_flatten_note: 'De optie "Velden afvlakken" hierboven is uitgeschakeld — een afgevlakt PDF heeft geen velden meer om met Tab te doorlopen.',
+
+  // ── formFieldsUI.js ────────────────────────────────────────────
+  formfields_analysing:          'PDF analyseren…',
+  formfields_has_fields_title:   'Deze PDF heeft al invulbare velden',
+  formfields_has_fields_body:    'PDFree heeft bestaande formuliervelden in deze PDF gedetecteerd. ',
+  formfields_has_fields_link:    'PDF Invullen gebruiken',
+  formfields_has_fields_suffix:  ' om ze in plaats daarvan in te vullen.',
+  formfields_click_hint:         'Klik ergens op de pagina om een tekstveld te plaatsen. Sleep een veld om het te verplaatsen, of de hoek ervan om het formaat te wijzigen. Typ een naam in het veld om het te labelen.',
+  formfields_name_placeholder:   'Veldnaam',
+  formfields_delete_aria:        'Veld verwijderen',
+  formfields_count_one:          '{n} veld geplaatst',
+  formfields_count_many:         '{n} velden geplaatst',
+  formfields_error_prefix:       'Kan PDF niet verwerken: {msg}',
+  formfields_default_field_name: 'Veld {n}',
 
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Laden van PDF-renderer mislukt. Controleer je internetverbinding.',

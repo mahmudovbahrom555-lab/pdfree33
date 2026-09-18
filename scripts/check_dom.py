@@ -189,7 +189,12 @@ HOMEPAGE_FILES = _discover_homepage_files()
 # If you add a new inline:false tool that also has its own JS-referenced
 # "#<tool>Options" id, add it here with the same kind of explanation —
 # otherwise this check will (correctly) demand it exist on every homepage.
-HOMEPAGE_OPTIONS_EXCLUDE = {'fillOptions', 'pdf2pdfaOptions'}
+#   formFieldsOptions — 'formFields' is inline:false in config.js, same
+#                      reasoning/precedent as 'fill' just above: a canvas-
+#                      based click-to-place editor, routed via the same
+#                      saveHandoff/restoreHandoff navigation mechanism
+#                      instead of rendering inline on the homepage.
+HOMEPAGE_OPTIONS_EXCLUDE = {'fillOptions', 'pdf2pdfaOptions', 'formFieldsOptions'}
 
 _OPTIONS_ID_REF_RE = re.compile(r"(?:id\(|getElementById\()['\"]([a-zA-Z0-9_-]*Options)['\"]\)")
 _OPTIONS_ID_DIV_RE = re.compile(r'id="([a-zA-Z0-9_-]*Options)"')

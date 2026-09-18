@@ -24,6 +24,7 @@ window.PDFREE_LOCALE = {
     meta:             ['metadata', 'judul file', 'penulis', 'properti file', 'info file'],
     protect:          ['lindungi', 'kata sandi', 'kunci pdf', 'enkripsi', 'amankan', 'proteksi'],
     fill:             ['isi formulir', 'formulir', 'kotak centang', 'isi form', 'kolom teks'],
+    formFields:       ['tambah kolom formulir', 'buat formulir pdf', 'pdf bisa diisi', 'tambah kolom'],
     'compress-email': ['email', 'gmail', 'kirim pdf', 'lampiran', 'file kecil', 'terlalu besar untuk email'],
     'draw-pdf':       ['gambar bebas', 'coret-coret', 'anotasi', 'tandai', 'panah', 'bentuk', 'kotak teks', 'sorot'],
     ocr:              ['ocr', 'ekstrak teks', 'hasil pindai', 'ubah scan jadi teks', 'pengenalan teks', 'bisa dicari'],
@@ -82,6 +83,7 @@ window.PDFREE_LOCALE = {
   prog_rendering:    'Merender halaman {i} dari {n}...',
   prog_watermark:    'Menerapkan tanda air...',
   prog_pagenum:      'Menambahkan nomor halaman...',
+  prog_formfields:   'Menambahkan kolom formulir...',
 
   // ── pageNumUI — start number card ────────────────────────────
   pn_apply_to_pages:  'Terapkan ke halaman',
@@ -162,6 +164,7 @@ window.PDFREE_LOCALE = {
   desc_clean_scan:              'Dibersihkan · {pages} halaman · {size}',
   desc_redact:              'Area ditutup · {pages} halaman · {size}',
   desc_fill:                'Formulir diisi · {pages} halaman · {size}',
+  desc_formfields:          'Kolom formulir ditambahkan · {pages} halaman · {size}',
   desc_manga_split:         'Terpotong · {pages} halaman · {size}',
   warn_fill_skip_one:       '{n} kolom tidak dapat diisi dan dilewati — silakan periksa PDF yang diunduh.',
   warn_fill_skip_many:      '{n} kolom tidak dapat diisi dan dilewati — silakan periksa PDF yang diunduh.',
@@ -675,6 +678,9 @@ window.PDFREE_LOCALE = {
   val_rotate_select:        'Putar setidaknya satu halaman',
   val_protect_required:     'Atur kata sandi buka atau batasi setidaknya satu izin',
   val_fill_loading:         'Membaca kolom PDF — mohon tunggu sebentar…',
+  val_formfields_loading:     'Menganalisis PDF — mohon tunggu sebentar…',
+  val_formfields_has_fields:  'PDF ini sudah memiliki kolom yang dapat diisi — gunakan alat Isi Formulir PDF',
+  val_formfields_empty:       'Klik pada halaman untuk menempatkan setidaknya satu kolom',
   val_cs_loading:         'Membaca halaman PDF — mohon tunggu sebentar…',
   val_fill_no_fields:       'Tidak ditemukan kolom yang dapat diisi di PDF ini',
   val_fill_required_prefix: 'Wajib:',
@@ -1135,6 +1141,20 @@ window.PDFREE_LOCALE = {
   fill_tab_order_auto:       'Perbaiki (otomatis)',
   fill_tab_order_manual:     'Sesuaikan',
   fill_tab_order_flatten_note: 'Opsi "Ratakan kolom" di atas dinonaktifkan — PDF yang diratakan tidak memiliki kolom lagi untuk dijelajahi dengan Tab.',
+
+  // ── formFieldsUI.js ────────────────────────────────────────────
+  formfields_analysing:          'Menganalisis PDF…',
+  formfields_has_fields_title:   'PDF ini sudah memiliki kolom yang dapat diisi',
+  formfields_has_fields_body:    'PDFree mendeteksi kolom formulir yang sudah ada di PDF ini. ',
+  formfields_has_fields_link:    'Gunakan Isi Formulir PDF',
+  formfields_has_fields_suffix:  ' untuk mengisinya.',
+  formfields_click_hint:         'Klik di mana saja pada halaman untuk menempatkan kolom teks. Seret kolom untuk memindahkannya, atau sudutnya untuk mengubah ukuran. Ketik nama pada kolom untuk memberi label.',
+  formfields_name_placeholder:   'Nama kolom',
+  formfields_delete_aria:        'Hapus kolom',
+  formfields_count_one:          '{n} kolom ditempatkan',
+  formfields_count_many:         '{n} kolom ditempatkan',
+  formfields_error_prefix:       'Tidak dapat memproses PDF: {msg}',
+  formfields_default_field_name: 'Kolom {n}',
 
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Gagal memuat perender PDF. Periksa koneksi internet Anda.',

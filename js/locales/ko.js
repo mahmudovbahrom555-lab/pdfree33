@@ -25,6 +25,7 @@ window.PDFREE_LOCALE = {
     meta:             ['메타데이터', '제목', '작성자', '속성', '문서 정보'],
     protect:          ['보호', '비밀번호', '잠금', '암호화', '암호 설정', '제한'],
     fill:             ['채우기', '양식', '체크박스', '드롭다운', '텍스트 필드', '양식 채우기', '폼 작성'],
+    formFields:       ['양식 필드 추가', 'pdf 양식 만들기', '작성 가능한 pdf', '필드 추가'],
     'compress-email':  ['이메일', '지메일', '아웃룩', 'pdf 보내기', '첨부파일', '작은 파일', '이메일 용량 초과'],
     'draw-pdf':        ['그리기', '주석', '마크업', '화살표', '도형', '텍스트 상자', '손그림', '드로잉', '안노테이션'],
     ocr:              ['ocr', '텍스트 추출', '스캔한 문서', '스캔을 텍스트로', '문자 인식', '검색 가능한 pdf'],
@@ -83,6 +84,7 @@ window.PDFREE_LOCALE = {
   prog_rendering:    '{n}페이지 중 {i}페이지 렌더링 중...',
   prog_watermark:    '워터마크 적용 중...',
   prog_pagenum:      '페이지 번호 추가 중...',
+  prog_formfields:   '양식 필드 추가 중...',
 
   // pageNumUI
   pn_apply_to_pages: '적용 페이지',
@@ -163,6 +165,7 @@ window.PDFREE_LOCALE = {
   desc_clean_scan:              '정리됨 · {pages}페이지 · {size}',
   desc_redact:              '영역 가려짐 · {pages}페이지 · {size}',
   desc_fill:                '양식 작성됨 · {pages}페이지 · {size}',
+  desc_formfields:          '양식 필드 추가됨 · {pages}페이지 · {size}',
   desc_manga_split:         '분할됨 · {pages}페이지 · {size}',
   warn_fill_skip_one:       '{n}개 필드를 채우지 못해 건너뛰었습니다 — 다운로드한 PDF를 확인해 주세요.',
   warn_fill_skip_many:      '{n}개 필드를 채우지 못해 건너뛰었습니다 — 다운로드한 PDF를 확인해 주세요.',
@@ -676,6 +679,9 @@ window.PDFREE_LOCALE = {
   val_rotate_select:        '최소 한 페이지를 회전해 주세요',
   val_protect_required:     '열기 암호를 설정하거나 최소 하나의 권한을 제한해 주세요',
   val_fill_loading:         'PDF 필드를 읽는 중입니다 — 잠시만 기다려 주세요…',
+  val_formfields_loading:     'PDF 분석 중 — 잠시만 기다려 주세요…',
+  val_formfields_has_fields:  '이 PDF에는 이미 작성 가능한 필드가 있습니다 — 대신 PDF 양식 작성 도구를 사용하세요',
+  val_formfields_empty:       '페이지를 클릭하여 최소 하나의 필드를 배치하세요',
   val_cs_loading:         'PDF 페이지를 읽는 중입니다 — 잠시만 기다려 주세요…',
   val_fill_no_fields:       '이 PDF에서 채울 수 있는 필드를 찾을 수 없습니다',
   val_fill_required_prefix: '필수:',
@@ -1136,6 +1142,20 @@ window.PDFREE_LOCALE = {
   fill_tab_order_auto:       '수정 (자동)',
   fill_tab_order_manual:     '사용자 지정',
   fill_tab_order_flatten_note: '위의 "필드 평면화" 옵션이 꺼졌습니다 — 평면화된 PDF에는 Tab으로 이동할 필드가 남아 있지 않습니다.',
+
+  // ── formFieldsUI.js ────────────────────────────────────────────
+  formfields_analysing:          'PDF 분석 중…',
+  formfields_has_fields_title:   '이 PDF에는 이미 작성 가능한 필드가 있습니다',
+  formfields_has_fields_body:    'PDFree가 이 PDF에서 기존 양식 필드를 감지했습니다. ',
+  formfields_has_fields_link:    'PDF 양식 작성 사용',
+  formfields_has_fields_suffix:  '하여 대신 작성하세요.',
+  formfields_click_hint:         '페이지 아무 곳이나 클릭하여 텍스트 필드를 배치하세요. 필드를 드래그하여 이동하거나 모서리를 드래그하여 크기를 조절하세요. 필드에 이름을 입력하여 라벨을 지정하세요.',
+  formfields_name_placeholder:   '필드 이름',
+  formfields_delete_aria:        '필드 삭제',
+  formfields_count_one:          '{n}개 필드 배치됨',
+  formfields_count_many:         '{n}개 필드 배치됨',
+  formfields_error_prefix:       'PDF를 처리할 수 없습니다: {msg}',
+  formfields_default_field_name: '필드 {n}',
 
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'PDF 렌더러를 불러오지 못했습니다. 인터넷 연결을 확인하세요.',

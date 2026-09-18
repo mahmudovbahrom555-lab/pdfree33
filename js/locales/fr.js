@@ -23,6 +23,7 @@ window.PDFREE_LOCALE = {
     meta:             ['métadonnées', 'titre', 'auteur', 'propriétés', 'informations sur le fichier'],
     protect:          ['protéger', 'mot de passe', 'verrouiller', 'chiffrer', 'crypter', 'restreindre'],
     fill:             ['remplir', 'formulaire', 'case à cocher', 'liste déroulante', 'champ de texte', 'remplir un formulaire'],
+    formFields:       ['ajouter des champs', 'créer un formulaire pdf', 'pdf remplissable', 'ajouter un champ'],
     'compress-email':  ['email', 'courriel', 'gmail', 'outlook', 'envoyer pdf', 'pièce jointe', 'fichier trop lourd pour email'],
     'draw-pdf':        ['dessiner', 'annoter', 'annotation', 'marquer', 'flèche', 'forme', 'zone de texte', 'main levée', 'surligner'],
     ocr:              ['ocr', 'extraire le texte', 'numérisé', 'scan en texte', 'reconnaissance de texte', 'recherchable'],
@@ -81,6 +82,7 @@ window.PDFREE_LOCALE = {
   prog_rendering:    'Rendu de la page {i} sur {n}...',
   prog_watermark:    'Application du filigrane...',
   prog_pagenum:      'Ajout des numéros de page...',
+  prog_formfields:   'Ajout des champs de formulaire...',
 
   // ── pageNumUI — start number card ────────────────────────────
   pn_apply_to_pages:  'Appliquer aux pages',
@@ -161,6 +163,7 @@ window.PDFREE_LOCALE = {
   desc_clean_scan:              'Nettoyé · {pages} pages · {size}',
   desc_redact:              'Zones masquées · {pages} pages · {size}',
   desc_fill:                'Formulaire rempli · {pages} pages · {size}',
+  desc_formfields:          'Champs de formulaire ajoutés · {pages} pages · {size}',
   desc_manga_split:         'Divisé · {pages} pages · {size}',
   warn_fill_skip_one:       "{n} champ n'a pas pu être rempli et a été ignoré — vérifiez le PDF téléchargé.",
   warn_fill_skip_many:      "{n} champs n'ont pas pu être remplis et ont été ignorés — vérifiez le PDF téléchargé.",
@@ -676,6 +679,9 @@ window.PDFREE_LOCALE = {
   val_rotate_select:        'Faites pivoter au moins une page',
   val_protect_required:     "Définissez un mot de passe d'ouverture ou restreignez au moins une autorisation",
   val_fill_loading:         'Lecture des champs du PDF — veuillez patienter…',
+  val_formfields_loading:     'Analyse du PDF — veuillez patienter…',
+  val_formfields_has_fields:  "Ce PDF contient déjà des champs remplissables — utilisez plutôt l'outil Remplir PDF",
+  val_formfields_empty:       'Cliquez sur la page pour placer au moins un champ',
   val_cs_loading:         'Lecture des pages du PDF — veuillez patienter…',
   val_fill_no_fields:       'Aucun champ remplissable trouvé dans ce PDF',
   val_fill_required_prefix: 'Requis :',
@@ -1136,6 +1142,20 @@ window.PDFREE_LOCALE = {
   fill_tab_order_auto:       'Corriger (auto)',
   fill_tab_order_manual:     'Personnaliser',
   fill_tab_order_flatten_note: "L'option « Aplatir les champs » ci-dessus a été désactivée — un PDF aplati n'a plus de champs pour naviguer avec Tab.",
+
+  // ── formFieldsUI.js ────────────────────────────────────────────
+  formfields_analysing:          'Analyse du PDF…',
+  formfields_has_fields_title:   'Ce PDF contient déjà des champs remplissables',
+  formfields_has_fields_body:    'PDFree a détecté des champs de formulaire existants dans ce PDF. ',
+  formfields_has_fields_link:    'Utiliser Remplir PDF',
+  formfields_has_fields_suffix:  ' pour les remplir à la place.',
+  formfields_click_hint:         "Cliquez n'importe où sur la page pour placer un champ de texte. Faites glisser un champ pour le déplacer, ou son coin pour le redimensionner. Tapez un nom dans le champ pour l'étiqueter.",
+  formfields_name_placeholder:   'Nom du champ',
+  formfields_delete_aria:        'Supprimer le champ',
+  formfields_count_one:          '{n} champ placé',
+  formfields_count_many:         '{n} champs placés',
+  formfields_error_prefix:       'Impossible de traiter le PDF : {msg}',
+  formfields_default_field_name: 'Champ {n}',
 
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Échec du chargement du moteur de rendu PDF. Vérifiez votre connexion internet.',

@@ -3829,6 +3829,45 @@
         "ar": "تعبئة نموذج pdf, تعبئة pdf اونلاين مجاني, تعبئة pdf, أداة تعبئة نماذج pdf, اكمال نموذج pdf اونلاين"
       }
     },
+        {
+      "id": "formFields",
+      "icon": "📝",
+      "toolKey": "formFields",
+      "slugs": {
+        "en": "add-form-fields"
+      },
+      "titles": {
+        "en": "Add Fillable Form Fields to a PDF Free — No Upload | PDFree"
+      },
+      "descs": {
+        "en": "Click to place real AcroForm text fields on a flat or scanned PDF. Processed 100% in your browser — files never leave your device."
+      },
+      "navLabels": {
+        "en": "Add Fields"
+      },
+      "cardNames": {
+        "en": "Add Form Fields"
+      },
+      "cardDescs": {
+        "en": "Turn a flat PDF into a fillable form — click to place fields"
+      },
+      "breadcrumb": {
+        "en": "Add Form Fields"
+      },
+      "metaDescs": {
+        "en": "Turn any flat or scanned PDF into a fillable form for free. Click on the page to place real text fields, then download a standard AcroForm PDF anyone can fill in. Runs in your browser, nothing uploaded, no signup."
+      },
+      "ogTitles": {
+        "en": "Add Fillable Form Fields to a PDF Free — Click to Place, No Upload"
+      },
+      "ogDescs": {
+        "en": "Turn a flat or scanned PDF into a real fillable form — click to place text fields, download a standard AcroForm PDF. Runs entirely in your browser."
+      },
+      "keywords": {
+        "en": "add form fields to pdf, make pdf fillable, create fillable pdf form, add text field to pdf, pdf form creator, turn scanned pdf into form"
+      }
+    },
+
     {
       "id": "flatten",
       "icon": "🔒",

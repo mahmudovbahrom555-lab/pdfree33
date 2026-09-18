@@ -1032,6 +1032,78 @@ async function _runWatermarkText(filesSnapshot, params) {
   }));
 }
 
+// ── Add Form Fields: dedicated Unicode-capable worker ──────────────────
+// See js/formFieldsWorker.js's own header for the full rationale — same
+// "own dedicated worker, own embedded font" pattern as the text-watermark
+// route just above, applied to a different tool.
+let _formFieldsWorker = null;
+function _ensureFormFieldsWorker() {
+  if (!_formFieldsWorker) {
+    _formFieldsWorker = new Worker(new URL('./formFieldsWorker.js', import.meta.url));
+  }
+  return _formFieldsWorker;
+}
+
+// Regular (not Bold) weight — form-field text is body copy, not a stamp.
+let _liberationSansRegularPromise = null;
+function _loadLiberationSansRegular() {
+  if (!_liberationSansRegularPromise) {
+    const url = new URL('./vendor/liberation-fonts/LiberationSans-Regular.ttf', import.meta.url).href;
+    _liberationSansRegularPromise = fetch(url).then(r => {
+      if (!r.ok) throw new Error(`Failed to load LiberationSans-Regular.ttf (${r.status})`);
+      return r.arrayBuffer();
+    });
+  }
+  return _liberationSansRegularPromise;
+}
+
+async function _formFieldsRequest(fileBuffer, fields, onProgress) {
+  const fontBytes = await _loadLiberationSansRegular();
+  return new Promise((resolve, reject) => {
+    const worker = _ensureFormFieldsWorker();
+    worker.onmessage = (e) => {
+      const data = e.data;
+      if (data.type === 'progress') { onProgress?.(data.value, data.label); return; }
+      if (data.type === 'done')     { resolve(data); return; }
+      if (data.type === 'error')    { reject(new Error(data.message)); return; }
+    };
+    worker.onerror = (e) => reject(new Error(e.message || 'Worker error'));
+    worker.postMessage({ fileBuffer, fields, fontBytes }, [fileBuffer]);
+  });
+}
+
+async function _runFormFields(filesSnapshot, params) {
+  const file = filesSnapshot[0];
+  if (!_checkSize(file, 200)) { _abortUI(); return; }
+  const buffer = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await file.arrayBuffer());
+
+  setProgress(5, t('prog_formfields'));
+
+  let data;
+  try {
+    data = await _formFieldsRequest(buffer, params.fields, (value, label) => setProgress(value, label));
+  } catch (err) {
+    isProcessing = false; setFilesLocked(false); hideCancelBtn();
+    _handleError('formFields', err.message);
+    return;
+  }
+  if (!isProcessing) return;
+
+  isProcessing = false;
+  setFilesLocked(false);
+  hideCancelBtn();
+  setProgress(100, t('prog_done'));
+
+  const blob = new Blob([data.result], { type: 'application/pdf' });
+  const base = file.name.replace(/\.pdf$/i, '');
+  const filename = `${base}-fillable.pdf`;
+  const desc = t('desc_formfields', { pages: data.pageCount, size: fmtSize(blob.size) });
+
+  document.dispatchEvent(new CustomEvent('pdfree:success', {
+    detail: { tool: 'formFields', blob, desc, filename }
+  }));
+}
+
 let _cleanScanWorker = null;
 function _ensureCleanScanWorker() {
   if (!_cleanScanWorker) {
@@ -1881,6 +1953,12 @@ async function _runWorkerTool(tool, filesSnapshot, params, bufferOverride) {
   // Image watermarks (options.kind === 'image') don't and stay below unchanged.
   if (tool === 'watermark' && params.kind !== 'image') {
     return _runWatermarkText(filesSnapshot, params);
+  }
+  // Add Form Fields — always routes to its own dedicated worker (needs a
+  // Unicode-capable embedded font for the fields it creates). See
+  // js/formFieldsWorker.js's own header for why.
+  if (tool === 'formFields') {
+    return _runFormFields(filesSnapshot, params);
   }
 
   const file   = filesSnapshot[0];

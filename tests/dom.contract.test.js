@@ -113,9 +113,10 @@ for (const [lang, html] of Object.entries(PAGES)) {
 // and the inline:false guard in app.js would be the only protection.
 
 const NAVIGATE_ONLY_FORBIDDEN = {
-  fillOptions: 'fillOptions div must not exist in index.html (fill needs /fill/ page)',
-  pdfCanvas:   'pdfCanvas must not exist in index.html (draw-pdf needs /draw-on-pdf/ page)',
-  drawCanvas:  'drawCanvas must not exist in index.html (draw-pdf needs /draw-on-pdf/ page)',
+  fillOptions:       'fillOptions div must not exist in index.html (fill needs /fill/ page)',
+  pdfCanvas:         'pdfCanvas must not exist in index.html (draw-pdf needs /draw-on-pdf/ page)',
+  drawCanvas:        'drawCanvas must not exist in index.html (draw-pdf needs /draw-on-pdf/ page)',
+  formFieldsOptions: 'formFieldsOptions div must not exist in index.html (formFields needs /add-form-fields/ page)',
 };
 
 console.log('\nNAVIGATE_ONLY: dedicated-page elements absent from homepages:');
@@ -147,15 +148,18 @@ test('fill has inline:false', () =>
 test('draw-pdf has inline:false', () =>
   assert.equal(TOOLS['draw-pdf']?.inline, false)
 );
+test('formFields has inline:false', () =>
+  assert.equal(TOOLS['formFields']?.inline, false)
+);
 test('all other implemented tools do NOT have inline:false', () => {
   const wrongly_blocked = Object.entries(TOOLS)
-    .filter(([k, t]) => t.implemented && t.inline === false && k !== 'fill' && k !== 'draw-pdf')
+    .filter(([k, t]) => t.implemented && t.inline === false && k !== 'fill' && k !== 'draw-pdf' && k !== 'formFields')
     .map(([k]) => k);
   assert.deepEqual(wrongly_blocked, [],
     `Unexpected inline:false on: ${wrongly_blocked.join(', ')}`);
 });
-test('navigate-only tools are fill and draw-pdf (update test if you add more)', () =>
-  assert.deepEqual(navigateOnly.sort(), ['draw-pdf', 'fill'])
+test('navigate-only tools are fill, draw-pdf and formFields (update test if you add more)', () =>
+  assert.deepEqual(navigateOnly.sort(), ['draw-pdf', 'fill', 'formFields'])
 );
 
 // ── Summary ───────────────────────────────────────────────────────

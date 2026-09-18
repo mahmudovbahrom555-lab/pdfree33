@@ -24,6 +24,7 @@ window.PDFREE_LOCALE = {
     meta:             ['siêu dữ liệu', 'tiêu đề', 'tác giả', 'thuộc tính file', 'thông tin file'],
     protect:          ['bảo vệ', 'mật khẩu', 'khóa file', 'mã hóa', 'đặt mật khẩu', 'bảo mật'],
     fill:             ['điền form', 'biểu mẫu', 'hộp kiểm', 'điền biểu mẫu', 'ô văn bản'],
+    formFields:       ['thêm trường biểu mẫu', 'tạo biểu mẫu pdf', 'pdf có thể điền', 'thêm trường'],
     'compress-email': ['email', 'gmail', 'gửi pdf', 'tệp đính kèm', 'file nhỏ', 'quá to để gửi mail'],
     'draw-pdf':       ['vẽ pdf', 'chú thích', 'đánh dấu', 'mũi tên', 'hình dạng', 'hộp văn bản', 'vẽ tay', 'tô sáng', 'ghi chú'],
     ocr:              ['ocr', 'trích văn bản', 'bản scan', 'chuyển scan thành văn bản', 'nhận dạng văn bản', 'có thể tìm kiếm'],
@@ -82,6 +83,7 @@ window.PDFREE_LOCALE = {
   prog_rendering:    'Đang kết xuất trang {i} / {n}...',
   prog_watermark:    'Đang thêm watermark...',
   prog_pagenum:      'Đang thêm số trang...',
+  prog_formfields:   'Đang thêm trường biểu mẫu...',
 
   // ── pageNumUI — start number card ────────────────────────────
   pn_apply_to_pages:  'Áp dụng cho trang',
@@ -162,6 +164,7 @@ window.PDFREE_LOCALE = {
   desc_clean_scan:              'Đã làm sạch · {pages} trang · {size}',
   desc_redact:              'Đã che vùng · {pages} trang · {size}',
   desc_fill:                'Đã điền biểu mẫu · {pages} trang · {size}',
+  desc_formfields:          'Đã thêm trường biểu mẫu · {pages} trang · {size}',
   desc_manga_split:         'Đã tách · {pages} trang · {size}',
   warn_fill_skip_one:       'Có {n} trường không thể điền và đã bị bỏ qua — vui lòng kiểm tra PDF đã tải xuống.',
   warn_fill_skip_many:      'Có {n} trường không thể điền và đã bị bỏ qua — vui lòng kiểm tra PDF đã tải xuống.',
@@ -675,6 +678,9 @@ window.PDFREE_LOCALE = {
   val_rotate_select:        'Xoay ít nhất một trang',
   val_protect_required:     'Đặt mật khẩu mở hoặc hạn chế ít nhất một quyền',
   val_fill_loading:         'Đang đọc các trường PDF — vui lòng đợi trong giây lát…',
+  val_formfields_loading:     'Đang phân tích PDF — vui lòng đợi một chút…',
+  val_formfields_has_fields:  'PDF này đã có các trường có thể điền — hãy dùng công cụ Điền Form PDF thay thế',
+  val_formfields_empty:       'Nhấp vào trang để đặt ít nhất một trường',
   val_cs_loading:         'Đang đọc các trang PDF — vui lòng đợi trong giây lát…',
   val_fill_no_fields:       'Không tìm thấy trường có thể điền trong PDF này',
   val_fill_required_prefix: 'Bắt buộc:',
@@ -1135,6 +1141,20 @@ window.PDFREE_LOCALE = {
   fill_tab_order_auto:       'Sửa (tự động)',
   fill_tab_order_manual:     'Tùy chỉnh',
   fill_tab_order_flatten_note: 'Đã tắt tùy chọn "Làm phẳng các trường" ở trên — PDF đã làm phẳng không còn trường nào để di chuyển bằng Tab.',
+
+  // ── formFieldsUI.js ────────────────────────────────────────────
+  formfields_analysing:          'Đang phân tích PDF…',
+  formfields_has_fields_title:   'PDF này đã có các trường có thể điền',
+  formfields_has_fields_body:    'PDFree đã phát hiện các trường biểu mẫu có sẵn trong PDF này. ',
+  formfields_has_fields_link:    'Dùng Điền Form PDF',
+  formfields_has_fields_suffix:  ' để điền chúng thay thế.',
+  formfields_click_hint:         'Nhấp vào bất kỳ đâu trên trang để đặt một trường văn bản. Kéo trường để di chuyển, hoặc góc của nó để đổi kích thước. Nhập tên vào trường để gắn nhãn.',
+  formfields_name_placeholder:   'Tên trường',
+  formfields_delete_aria:        'Xóa trường',
+  formfields_count_one:          'Đã đặt {n} trường',
+  formfields_count_many:         'Đã đặt {n} trường',
+  formfields_error_prefix:       'Không thể xử lý PDF: {msg}',
+  formfields_default_field_name: 'Trường {n}',
 
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Không thể tải trình kết xuất PDF. Kiểm tra kết nối internet của bạn.',

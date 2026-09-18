@@ -23,6 +23,7 @@ window.PDFREE_LOCALE = {
     meta:             ['metadatos', 'título', 'autor', 'propiedades', 'información del archivo'],
     protect:          ['proteger', 'contraseña', 'bloquear', 'cifrar', 'encriptar', 'restringir'],
     fill:             ['rellenar', 'formulario', 'casilla', 'lista desplegable', 'campo de texto', 'llenar formulario'],
+    formFields:       ['añadir campos', 'crear formulario pdf', 'pdf rellenable', 'agregar campo'],
     'compress-email':  ['correo', 'gmail', 'outlook', 'enviar pdf', 'adjunto', 'archivo pequeño', 'demasiado grande para email'],
     'draw-pdf':        ['dibujar', 'anotar', 'anotación', 'marcar', 'flecha', 'forma', 'cuadro de texto', 'a mano alzada', 'resaltar'],
     ocr:              ['ocr', 'extraer texto', 'escaneado', 'escanear a texto', 'reconocimiento de texto', 'buscable'],
@@ -81,6 +82,7 @@ window.PDFREE_LOCALE = {
   prog_rendering:    'Renderizando página {i} de {n}...',
   prog_watermark:    'Aplicando marca de agua...',
   prog_pagenum:      'Añadiendo números de página...',
+  prog_formfields:   'Añadiendo campos de formulario...',
 
   // ── pageNumUI — start number card ────────────────────────────
   pn_apply_to_pages:  'Aplicar a páginas',
@@ -161,6 +163,7 @@ window.PDFREE_LOCALE = {
   desc_clean_scan:              'Limpiado · {pages} páginas · {size}',
   desc_redact:              'Áreas cubiertas · {pages} páginas · {size}',
   desc_fill:                'Formulario completado · {pages} páginas · {size}',
+  desc_formfields:          'Campos de formulario añadidos · {pages} páginas · {size}',
   desc_manga_split:         'Dividido · {pages} páginas · {size}',
   warn_fill_skip_one:       '{n} campo no se pudo rellenar y se omitió — revisa el PDF descargado.',
   warn_fill_skip_many:      '{n} campos no se pudieron rellenar y se omitieron — revisa el PDF descargado.',
@@ -676,6 +679,9 @@ window.PDFREE_LOCALE = {
   val_rotate_select:        'Gira al menos una página',
   val_protect_required:     'Establece una contraseña de apertura o restringe al menos un permiso',
   val_fill_loading:         'Leyendo los campos del PDF — espera un momento…',
+  val_formfields_loading:     'Analizando PDF — espera un momento…',
+  val_formfields_has_fields:  'Este PDF ya tiene campos rellenables — usa la herramienta Rellenar PDF en su lugar',
+  val_formfields_empty:       'Haz clic en la página para colocar al menos un campo',
   val_cs_loading:         'Leyendo las páginas del PDF — espera un momento…',
   val_fill_no_fields:       'No se encontraron campos rellenables en este PDF',
   val_fill_required_prefix: 'Obligatorio:',
@@ -1136,6 +1142,20 @@ window.PDFREE_LOCALE = {
   fill_tab_order_auto:       'Corregir (automático)',
   fill_tab_order_manual:     'Personalizar',
   fill_tab_order_flatten_note: 'Se desactivó "Aplanar campos" arriba — un PDF aplanado no tiene campos por los que navegar con Tab.',
+
+  // ── formFieldsUI.js ────────────────────────────────────────────
+  formfields_analysing:          'Analizando PDF…',
+  formfields_has_fields_title:   'Este PDF ya tiene campos rellenables',
+  formfields_has_fields_body:    'PDFree detectó campos de formulario existentes en este PDF. ',
+  formfields_has_fields_link:    'Usar Rellenar PDF',
+  formfields_has_fields_suffix:  ' para rellenarlos en su lugar.',
+  formfields_click_hint:         'Haz clic en cualquier parte de la página para colocar un campo de texto. Arrastra un campo para moverlo, o su esquina para redimensionarlo. Escribe un nombre en el campo para etiquetarlo.',
+  formfields_name_placeholder:   'Nombre del campo',
+  formfields_delete_aria:        'Eliminar campo',
+  formfields_count_one:          '{n} campo colocado',
+  formfields_count_many:         '{n} campos colocados',
+  formfields_error_prefix:       'No se pudo procesar el PDF: {msg}',
+  formfields_default_field_name: 'Campo {n}',
 
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'No se pudo cargar el renderizador de PDF. Comprueba tu conexión a internet.',

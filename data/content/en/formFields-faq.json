@@ -1,0 +1,66 @@
+[
+  {
+    "@type": "Question",
+    "name": "Is my PDF uploaded anywhere when I add form fields?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Everything runs in your browser using pdf.js (to render the page you click on) and pdf-lib (to write the real AcroForm fields). Neither your original PDF nor the version with fields added is ever sent to a server. PDFree does not have access to your document."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "What's the difference between this and the Fill PDF tool?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Fill PDF is for documents that already have interactive form fields — it detects them and lets you type values into them. Add Form Fields is for the opposite case: a flat or scanned PDF with NO interactive fields yet. You place the fields yourself by clicking on the page, then download a PDF that has real, fillable fields for the first time. If PDFree detects your upload already has fields, it will point you to Fill PDF instead."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Are the fields this tool creates 'real' form fields, or just boxes drawn on the page?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Real fields. Each placed box becomes an actual AcroForm text field written into the PDF's structure with pdf-lib — the same technology used to build interactive forms in Acrobat and other PDF authoring tools. Open the result in any standards-compliant PDF reader and you can click into the field and type, tab between fields, and the values are saved as real form data, not just an image."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "What field types can I add?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "This first version supports text fields — the most common field type, covering names, dates, addresses, free-text answers, and most everyday paperwork. Checkboxes, radio buttons, and dropdown lists are on the roadmap as a follow-up."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "How do I place and adjust a field?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Click anywhere on the rendered page to drop a new text field at that spot. Drag the field to reposition it, drag its bottom-right corner to resize it, and type directly into the field's own label to name it (helpful if you or someone else will later see field names in a PDF reader's form-filling sidebar). Click the small × button to remove a field you don't want."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Does this work on multi-page PDFs?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. Use the page navigation above the preview to move between pages — fields can be placed on any page, and each page remembers its own set of fields."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I add fields to a scanned PDF (a photo or scan of a paper form)?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes — this is exactly the case this tool is built for. A scanned PDF is just a picture with no interactive layer at all, so click-to-place lets you drop real text fields directly over where the printed blanks are, turning a scan into a fillable digital form."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is this a free PDF form creator with no sign up?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. Add Form Fields is completely free, with no account, no sign up, and no installation. Open the tool, load your PDF, click to place fields, and download — no email address required."
+    }
+  }
+]

@@ -23,6 +23,7 @@ window.PDFREE_LOCALE = {
     meta:             ['metadati', 'titolo', 'autore', 'oggetto', 'proprietà', 'informazioni file'],
     protect:          ['proteggere', 'password', 'bloccare', 'crittografare', 'sicurezza', 'limitare'],
     fill:             ['compilare', 'modulo', 'casella di controllo', 'menu a tendina', 'campo di testo', 'compila modulo'],
+    formFields:       ['aggiungi campi modulo', 'crea modulo pdf', 'pdf compilabile', 'aggiungi campo'],
     'compress-email':  ['email', 'gmail', 'outlook', 'invia pdf', 'allegato', 'file piccolo', 'troppo grande per email'],
     'draw-pdf':        ['disegnare', 'annotare', 'annotazione', 'evidenziare', 'freccia', 'forma', 'casella di testo', 'a mano libera', 'evidenzia'],
     ocr:              ['ocr', 'estrai testo', 'scansionato', 'scansione in testo', 'riconoscimento testo', 'ricercabile'],
@@ -81,6 +82,7 @@ window.PDFREE_LOCALE = {
   prog_rendering:    'Rendering pagina {i} di {n}...',
   prog_watermark:    'Aggiunta filigrana...',
   prog_pagenum:      'Aggiunta numeri di pagina...',
+  prog_formfields:   'Aggiunta dei campi modulo...',
 
   // ── pageNumUI — start number card ────────────────────────────
   pn_apply_to_pages:  'Applica alle pagine',
@@ -161,6 +163,7 @@ window.PDFREE_LOCALE = {
   desc_clean_scan:              'Pulito · {pages} pagine · {size}',
   desc_redact:              'Aree oscurate · {pages} pagine · {size}',
   desc_fill:                'Modulo compilato · {pages} pagine · {size}',
+  desc_formfields:          'Campi modulo aggiunti · {pages} pagine · {size}',
   desc_manga_split:         'Diviso · {pages} pagine · {size}',
   warn_fill_skip_one:       '{n} campo non è stato compilato ed è stato saltato — controlla il PDF scaricato.',
   warn_fill_skip_many:      '{n} campi non sono stati compilati e sono stati saltati — controlla il PDF scaricato.',
@@ -674,6 +677,9 @@ window.PDFREE_LOCALE = {
   val_rotate_select:        'Ruota almeno una pagina',
   val_protect_required:     'Imposta una password di apertura o limita almeno un permesso',
   val_fill_loading:         'Lettura dei campi del PDF — attendi un momento…',
+  val_formfields_loading:     'Analisi del PDF — attendere un momento…',
+  val_formfields_has_fields:  'Questo PDF ha già campi compilabili — usa invece lo strumento Compila PDF',
+  val_formfields_empty:       'Clicca sulla pagina per posizionare almeno un campo',
   val_cs_loading:         'Lettura delle pagine del PDF — attendere un momento…',
   val_fill_no_fields:       'Nessun campo compilabile trovato in questo PDF',
   val_fill_required_prefix: 'Obbligatorio:',
@@ -1134,6 +1140,20 @@ window.PDFREE_LOCALE = {
   fill_tab_order_auto:       'Correggi (automatico)',
   fill_tab_order_manual:     'Personalizza',
   fill_tab_order_flatten_note: "L'opzione Appiattisci campi qui sopra è stata disattivata — un PDF appiattito non ha più campi tra cui spostarsi con Tab.",
+
+  // ── formFieldsUI.js ────────────────────────────────────────────
+  formfields_analysing:          'Analisi del PDF…',
+  formfields_has_fields_title:   'Questo PDF ha già campi compilabili',
+  formfields_has_fields_body:    'PDFree ha rilevato campi modulo esistenti in questo PDF. ',
+  formfields_has_fields_link:    'Usa Compila PDF',
+  formfields_has_fields_suffix:  ' per compilarli invece.',
+  formfields_click_hint:         'Clicca in un punto qualsiasi della pagina per posizionare un campo di testo. Trascina un campo per spostarlo, o il suo angolo per ridimensionarlo. Digita un nome nel campo per etichettarlo.',
+  formfields_name_placeholder:   'Nome campo',
+  formfields_delete_aria:        'Elimina campo',
+  formfields_count_one:          '{n} campo posizionato',
+  formfields_count_many:         '{n} campi posizionati',
+  formfields_error_prefix:       'Impossibile elaborare il PDF: {msg}',
+  formfields_default_field_name: 'Campo {n}',
 
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Impossibile caricare il motore di rendering PDF. Controlla la tua connessione internet.',

@@ -26,6 +26,7 @@ window.PDFREE_LOCALE = {
     meta:             ['メタデータ', 'タイトル', '作成者', 'プロパティ', 'ファイル情報'],
     protect:          ['保護', 'パスワード', 'ロック', '暗号化', '保護する', 'パスワードを設定'],
     fill:             ['フォーム入力', 'フォーム', 'チェックボックス', '入力欄', 'フォームに入力'],
+    formFields:       ['フォームフィールド追加', 'pdfフォーム作成', '入力可能pdf', 'フィールド追加'],
     'compress-email': ['メール', 'Gmail', 'Outlook', 'PDFを送る', '添付ファイル', 'ファイルが大きすぎる', 'メール添付'],
     'draw-pdf':       ['描く', '注釈', 'アノテーション', 'マークアップ', '矢印', '図形', 'テキストボックス', '手書き', 'ハイライト'],
     ocr:              ['OCR', 'テキスト抽出', 'スキャンした文書', 'スキャンをテキストに', '文字認識', '検索可能にする'],
@@ -84,6 +85,7 @@ window.PDFREE_LOCALE = {
   prog_rendering:    'ページ {i}/{n} を描画しています...',
   prog_watermark:    '透かしを適用しています...',
   prog_pagenum:      'ページ番号を追加しています...',
+  prog_formfields:   'フォームフィールドを追加中...',
 
   // ── pageNumUI — start number card ────────────────────────────
   pn_apply_to_pages:  '適用するページ',
@@ -164,6 +166,7 @@ window.PDFREE_LOCALE = {
   desc_clean_scan:              'クリーン化済み · {pages}ページ · {size}',
   desc_redact:              '範囲を塗りつぶしました · {pages}ページ · {size}',
   desc_fill:                'フォームに入力しました · {pages}ページ · {size}',
+  desc_formfields:          'フォームフィールドを追加しました · {pages} ページ · {size}',
   desc_manga_split:         '分割済み · {pages}ページ · {size}',
   warn_fill_skip_one:       '{n}件のフィールドに入力できず、スキップされました — ダウンロードしたPDFをご確認ください。',
   warn_fill_skip_many:      '{n}件のフィールドに入力できず、スキップされました — ダウンロードしたPDFをご確認ください。',
@@ -677,6 +680,9 @@ window.PDFREE_LOCALE = {
   val_rotate_select:        '少なくとも1ページを回転してください',
   val_protect_required:     'オープンパスワードを設定するか、少なくとも1つの権限を制限してください',
   val_fill_loading:         'PDFフィールドを読み込んでいます — しばらくお待ちください…',
+  val_formfields_loading:     'PDFを解析中 — しばらくお待ちください…',
+  val_formfields_has_fields:  'このPDFには既に入力可能なフィールドがあります — 代わりにPDFに記入ツールを使用してください',
+  val_formfields_empty:       'ページをクリックして、少なくとも1つのフィールドを配置してください',
   val_cs_loading:         'PDFページを読み込み中です — 少々お待ちください…',
   val_fill_no_fields:       'このPDFには入力可能なフィールドが見つかりません',
   val_fill_required_prefix: '必須:',
@@ -1137,6 +1143,20 @@ window.PDFREE_LOCALE = {
   fill_tab_order_auto:       '自動修正',
   fill_tab_order_manual:     'カスタマイズ',
   fill_tab_order_flatten_note: '上の「フィールドを固定化」はオフになりました — 固定化されたPDFにはTabで移動できるフィールドが残りません。',
+
+  // ── formFieldsUI.js ────────────────────────────────────────────
+  formfields_analysing:          'PDFを解析中…',
+  formfields_has_fields_title:   'このPDFには既に入力可能なフィールドがあります',
+  formfields_has_fields_body:    'PDFreeはこのPDFに既存のフォームフィールドを検出しました。',
+  formfields_has_fields_link:    'PDFに記入を使用',
+  formfields_has_fields_suffix:  'して、代わりに入力してください。',
+  formfields_click_hint:         'ページ上の任意の場所をクリックしてテキストフィールドを配置します。フィールドをドラッグして移動するか、角をドラッグしてサイズを変更します。フィールドに名前を入力してラベルを付けます。',
+  formfields_name_placeholder:   'フィールド名',
+  formfields_delete_aria:        'フィールドを削除',
+  formfields_count_one:          '{n} 個のフィールドを配置しました',
+  formfields_count_many:         '{n} 個のフィールドを配置しました',
+  formfields_error_prefix:       'PDFを処理できませんでした: {msg}',
+  formfields_default_field_name: 'フィールド {n}',
 
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'PDFレンダラーの読み込みに失敗しました。インターネット接続を確認してください。',
